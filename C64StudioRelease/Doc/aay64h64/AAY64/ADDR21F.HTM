@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510/65816 Addressing mode: Stack (Push) -- s
+
+ (<A HREF="BPHA.HTM">PHA</A>,<A HREF="BPHB.HTM">PHB</A>,<A HREF="BPHD.HTM">PHD</A>,<A HREF="BPHK.HTM">PHK</A>,<A HREF="BPHP.HTM">PHP</A>,<A HREF="BPHX.HTM">PHX</A>,<A HREF="BPHY.HTM">PHY</A>)
+ (1 byte)  (3 and 4 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Internal Operation    |    R     |
+    |       (1) 3a  |  0,S             | Register High         |    W     |
+    |           3   |  0,S-1           | Register Low          |    W     |
+    +---------------+------------------+-----------------------+----------+
+    (1) Add 1 cycle for M=0 or X=0 (i.e. 16 bit data).
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

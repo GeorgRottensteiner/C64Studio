@@ -1,0 +1,34 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BA28/47656:   Perform Multiply
+
+Jump from <A HREF="ROMBDDD.HTM">$BE04</A>, <A HREF="ROMBF7B.HTM">$BFAA</A>, <A HREF="ROMBFED.HTM">$BFF1</A>, <A HREF="ROME043.HTM">$E04C</A>, <A HREF="ROME043.HTM">$E056</A>, <A HREF="ROME043.HTM">$E070</A>, <A HREF="ROME097.HTM">$E0C9</A>:
+
+BA28: 20 8C BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA8C.HTM">$BA8C</A>     ; Load FAC#2 From Memory
+BA2B: D0 03     <A HREF="BBNE.HTM">BNE</A> $BA30
+BA2D: 4C 8B BA  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBA59.HTM">$BA8B</A>     ; Multiply by a Byte
+
+Jump from $BA2B:
+
+BA30: 20 B7 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBAB7.HTM">$BAB7</A>     ; Test Both Accumulators
+BA33: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+BA35: 85 26     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP26.HTM">$26</A>       ; Floating point product of Multiply and Divide
+BA37: 85 27     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP26.HTM">$27</A>       ; Floating point product of Multiply and Divide
+BA39: 85 28     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP26.HTM">$28</A>       ; Floating point product of Multiply and Divide
+BA3B: 85 29     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP26.HTM">$29</A>       ; Floating point product of Multiply and Divide
+BA3D: A5 70     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+BA3F: 20 59 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA59.HTM">$BA59</A>     ; Multiply by a Byte
+BA42: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+BA44: 20 59 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA59.HTM">$BA59</A>     ; Multiply by a Byte
+BA47: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+BA49: 20 59 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA59.HTM">$BA59</A>     ; Multiply by a Byte
+BA4C: A5 63     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+BA4E: 20 59 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA59.HTM">$BA59</A>     ; Multiply by a Byte
+BA51: A5 62     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+BA53: 20 5E BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA59.HTM">$BA5E</A>     ; Multiply by a Byte
+BA56: 4C 8F BB  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBB0F.HTM">$BB8F</A>     ; Divide FAC#2 by FAC#1
+
+    <A HREF="ROMB9EA.HTM">Previous Page</A> / <A HREF="ROMBA59.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

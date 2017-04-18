@@ -1,0 +1,49 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  SBC          SBC Subtract memory from accumulator with borrow         SBC
+
+  Operation:  A - M - ~C -&gt; A                           N V - B D I Z C
+         -                                              / / . . . . / /
+    Note:C = Borrow
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   SBC #$FF            |   $E9   |    2    |    2     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   SBC $FF             |   $E5   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   SBC $FF,X           |   $F5   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   SBC $FFFF           |   $ED   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   SBC $FFFF,X         |   $FD   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   SBC $FFFF,Y         |   $F9   |    3    |    4*    |
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   SBC ($FF,X)         |   $E1   |    2    |    6     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   SBC ($FF),Y         |   $F1   |    2    |    5*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 when page boundary is crossed.
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+  Note: See <A HREF="CPUBUGS.HTM">CPU-Bugs</A> for a description how flags are affected.
+
+ Illegal Version:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   SBC #$FF            |   $EB   |    2    |    2     |
+  +----------------+-----------------------+---------+---------+----------+
+  There doesn't seem to be a difference to the legal SBC.
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR3A.HTM">AbsoluteLong</A>   |   SBC $FFFFFF         |   $EF   |    4    |     5    |
+  | <A HREF="ADDR13.HTM">AbsoluteLong,X</A> |   SBC $FFFFFF,X       |   $FF   |    4    |     5    |
+  | <A HREF="ADDR18.HTM">(Indirect)</A>     |   SBC ($FF)           |   $F2   |    2    |     5    |
+  | <A HREF="ADDR19.HTM">[Indirect Long]</A>|   SBC [$FF]           |   $E7   |    2    |     6    |
+  | <A HREF="ADDR8.HTM">[Ind.Long],Y</A>   |   SBC [$FF],Y         |   $F7   |    2    |     6    |
+  | <A HREF="ADDR22.HTM">Relative,S</A>     |   SBC $FF,S           |   $E3   |    2    |     4    |
+  | <A HREF="ADDR23.HTM">(Indirect,S),Y</A> |   SBC ($FF,S),Y       |   $F3   |    2    |     7    |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  SBX SBX Accu AND X-Register, subtract operand, result into X-Register SBX
+
+                                                        N V - B D I Z C
+  Operation:  X &lt;- (X)/\(A) - M                         / . . . . . / /
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   SBX #$FF            |   $CB   |    2    |    2     |
+  +----------------+-----------------------+---------+---------+----------+
+
+  Note: Performs CMP and DEX at the same time, so the subtraction
+  ignores flags 'C' and 'D' (like <A HREF="BCMP.HTM">CMP</A>, unlike <A HREF="BSBC.HTM">SBC</A>).
+
+  Also known as AXS.
+
+</PRE></BODY></HTML>

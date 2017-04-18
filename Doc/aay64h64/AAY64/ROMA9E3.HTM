@@ -1,0 +1,57 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A9E3/43491:   Assign TI$
+
+A9E3: C9 06     <A HREF="BCMP.HTM">CMP</A> #$06
+A9E5: D0 3D     <A HREF="BBNE.HTM">BNE</A> $AA24
+A9E7: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+A9E9: 84 61     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+A9EB: 84 66     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+
+Jump from $AA0C:
+
+A9ED: 84 71     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+A9EF: 20 1D AA  <A HREF="BJSR.HTM">JSR</A> $AA1D
+A9F2: 20 E2 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBAE2.HTM">$BAE2</A>     ; Multiply FAC#1 by 10
+A9F5: E6 71     <A HREF="BINC.HTM">INC</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+A9F7: A4 71     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+A9F9: 20 1D AA  <A HREF="BJSR.HTM">JSR</A> $AA1D
+A9FC: 20 0C BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC0C.HTM">$BC0C</A>     ; Copy FAC#1 into FAC#2
+A9FF: AA        <A HREF="BTAX.HTM">TAX</A>
+AA00: F0 05     <A HREF="BBEQ.HTM">BEQ</A> $AA07
+AA02: E8        <A HREF="BINX.HTM">INX</A>
+AA03: 8A        <A HREF="BTXA.HTM">TXA</A>
+AA04: 20 ED BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBAE2.HTM">$BAED</A>     ; Multiply FAC#1 by 10
+
+Jump from $AA00:
+
+AA07: A4 71     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+AA09: C8        <A HREF="BINY.HTM">INY</A>
+AA0A: C0 06     <A HREF="BCPY.HTM">CPY</A> #$06
+AA0C: D0 DF     <A HREF="BBNE.HTM">BNE</A> $A9ED
+AA0E: 20 E2 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBAE2.HTM">$BAE2</A>     ; Multiply FAC#1 by 10
+AA11: 20 9B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC9B.HTM">$BC9B</A>     ; Convert FAC#1 to Integer
+AA14: A6 64     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AA16: A4 63     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+AA18: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+AA1A: 4C DB FF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMFFDB.HTM">$FFDB</A>     ; Set Real-Time Clock
+
+Jump from $A9EF, $A9F9:
+
+AA1D: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+AA1F: 20 80 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0080</A>     ; CHRGOT: Get same Byte again
+AA22: 90 03     <A HREF="BBCC.HTM">BCC</A> $AA27
+
+Jump from $A9E5:
+
+AA24: 4C 48 B2  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB248.HTM">$B248</A>     ; ?ILLEGAL QUANTITY
+
+Jump from $AA22:
+
+AA27: E9 2F     <A HREF="BSBC.HTM">SBC</A> #$2F
+AA29: 4C 7E BD  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBCF3.HTM">$BD7E</A>     ; Convert ASCII String to a Number in FAC
+
+    <A HREF="ROMA9D9.HTM">Previous Page</A> / <A HREF="ROMAA2C.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

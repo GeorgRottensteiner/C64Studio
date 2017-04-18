@@ -1,0 +1,37 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BCCC/48332:   Evaluate &lt;int&gt;
+
+Jump from <A HREF="ROMBF7B.HTM">$BF8F</A>, <A HREF="ROME000.HTM">$E00E</A>, <A HREF="ROME26B.HTM">$E27A</A>:
+
+BCCC: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BCCE: C9 A0     <A HREF="BCMP.HTM">CMP</A> #$A0
+BCD0: B0 20     <A HREF="BBCS.HTM">BCS</A> $BCF2
+BCD2: 20 9B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC9B.HTM">$BC9B</A>     ; Convert FAC#1 to Integer
+BCD5: 84 70     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+BCD7: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BCD9: 84 66     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BCDB: 49 80     <A HREF="BEOR.HTM">EOR</A> #$80
+BCDD: 2A        <A HREF="BROL.HTM">ROL</A>
+BCDE: A9 A0     <A HREF="BLDA.HTM">LDA</A> #$A0
+BCE0: 85 61     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BCE2: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+BCE4: 85 07     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+BCE6: 4C D2 B8  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB867.HTM">$B8D2</A>     ; Perform Addition
+
+Jump from <A HREF="ROMBC9B.HTM">$BC9D</A>:
+
+BCE9: 85 62     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+BCEB: 85 63     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+BCED: 85 64     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+BCEF: 85 65     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+BCF1: A8        <A HREF="BTAY.HTM">TAY</A>
+
+Jump from $BCD0:
+
+BCF2: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBC9B.HTM">Previous Page</A> / <A HREF="ROMBCF3.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  JMP                     JMP Jump to new location                      JMP
+
+  Operation:  (PC + 1) -&gt; PCL                           N V - B D I Z C
+              (PC + 2) -&gt; PCH                           . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR2C.HTM">Absolute</A>      |   JMP $FFFF           |   $4C   |    3    |    3     |
+  | <A HREF="ADDR17A.HTM">(Abs.Indirect)</A> |   JMP ($FFFF)         |   $6C   |    3    |    5     |
+  +----------------+-----------------------+---------+---------+----------+
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR20A.HTM">(Abs.Ind.,X)</A>   |   JMP ($FFFF,X)       |   $7C   |    3    |     6    |
+  | <A HREF="ADDR3B.HTM">AbsoluteLong</A>   |   JMP $FFFFFF         |   $5C   |    4    |     4    |
+  +----------------+-----------------------+---------+---------+----------+
+   See also: <A HREF="BJML.HTM">JML</A>
+
+</PRE></BODY></HTML>

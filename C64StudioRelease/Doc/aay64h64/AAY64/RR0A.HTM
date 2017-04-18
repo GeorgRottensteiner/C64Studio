@@ -1,0 +1,38 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE0A/56842/RR+10:  SilverSurfer: Interrupt Identification Register (read)
+                                   FIFO Control Register (write)
+  On read:
+
+   +----------+--------------------------------------------------------+
+   | Bit  7   |   1 = FIFO queues enabled                              |
+   | Bits 6-4 |   reserved                                             |
+   | Bit  3   |   1 = Timeout Interrupt pending                        |
+   | Bits 2+1 |   Interrupt ID Bits:                                   |
+   |          |             Meaning           |Priority   |  To reset  |
+   |          |   00 = Modem Status change    | lowest    | read <A HREF="RR0E.HTM">$DE0E</A> |
+   |          |   01 = Transmit Register empty| low       | read <A HREF="RR0A.HTM">$DE0A</A>/|
+   |          |                               |           |write <A HREF="RR08.HTM">$DE08</A> |
+   |          |   10 = Data available         | high      | read <A HREF="RR08.HTM">$DE08</A> |
+   |          |   11 = Line Status            | highest   | read <A HREF="RR0D.HTM">$DE0D</A> |
+   | Bit  0   |   0(!) = Interrupt pending                             |
+   +----------+--------------------------------------------------------+
+
+  On write:
+
+   +----------+--------------------------------------------------------+
+   | Bits 7+6 |   Trigger Level: 00,01,10,11 = 1,4,8,14 Bytes          |
+   | Bits 5-4 |   reserved                                             |
+   | Bit  3   |   1 = change RXRDY &amp; TXRDY pins to DMA Mode (unused?)  |
+   | Bit  2   |   1 = clear Transmit FIFO                              |
+   | Bit  1   |   1 = clear Reciever FIFO                              |
+   | Bit  0   |   1 = enable FIFO and clear FIFO queues                |
+   +----------+--------------------------------------------------------+
+
+   Bit 0 must be set in order to write to any other bits.
+
+   When Bits 1 or 2 are set, the FIFO is cleared and the bit is reset.
+   The corresponding shift register is not cleared.
+
+</PRE></BODY></HTML>

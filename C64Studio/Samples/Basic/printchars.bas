@@ -1,0 +1,12 @@
+10PRINT"{down}{rght}{home}{home}"
+20PRINT"{clr}";
+30PRINT"{wht}ICH BIN WEISS"
+40PRINT"{grn}GREEN"
+50?"QWERTZUIOP@* ASDFGHJKL:;="
+51?" ="
+52?" ="
+55?"YXCVBNM,./"
+56?"<>?"
+57?"<>?"
+60?"£"
+70?""

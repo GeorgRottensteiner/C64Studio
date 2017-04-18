@@ -1,0 +1,88 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B08B/45195:   Identify Variable
+
+Jump from <A HREF="ROMA9A5.HTM">$A9A5</A>, <A HREF="ROMAC06.HTM">$AC15</A>, <A HREF="ROMAD1E.HTM">$AD24</A>, <A HREF="ROMAF28.HTM">$AF28</A>, <A HREF="ROMB3AE.HTM">$B3C0</A>:
+
+B08B: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+B08D: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+
+Jump from <A HREF="ROMB07E.HTM">$B082</A>:
+
+B090: 86 0C     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP0C.HTM">$0C</A>       ; Flag: Default Array dimension
+
+Jump from <A HREF="ROMB3E1.HTM">$B3EA</A>:
+
+B092: 85 45     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP45.HTM">$45</A>       ; Name of Variable being sought in Variable Table
+B094: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+B097: 20 13 B1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB113.HTM">$B113</A>     ; Does A hold an alphabetic character?
+B09A: B0 03     <A HREF="BBCS.HTM">BCS</A> $B09F
+
+Jump from $B0CA:
+
+B09C: 4C 08 AF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAF08.HTM">$AF08</A>     ; Output ?SYNTAX Error
+
+Jump from $B09A:
+
+B09F: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+B0A1: 86 0D     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP0D.HTM">$0D</A>       ; Data type Flag
+B0A3: 86 0E     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP0E.HTM">$0E</A>       ; Data type Flag
+B0A5: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+B0A8: 90 05     <A HREF="BBCC.HTM">BCC</A> $B0AF
+B0AA: 20 13 B1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB113.HTM">$B113</A>     ; Does A hold an alphabetic character?
+B0AD: 90 0B     <A HREF="BBCC.HTM">BCC</A> $B0BA
+
+Jump from $B0A8:
+
+B0AF: AA        <A HREF="BTAX.HTM">TAX</A>
+
+Jump from $B0B3, $B0B8:
+
+B0B0: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+B0B3: 90 FB     <A HREF="BBCC.HTM">BCC</A> $B0B0
+B0B5: 20 13 B1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB113.HTM">$B113</A>     ; Does A hold an alphabetic character?
+B0B8: B0 F6     <A HREF="BBCS.HTM">BCS</A> $B0B0
+
+Jump from $B0AD:
+
+B0BA: C9 24     <A HREF="BCMP.HTM">CMP</A> #$24
+B0BC: D0 06     <A HREF="BBNE.HTM">BNE</A> $B0C4
+B0BE: A9 FF     <A HREF="BLDA.HTM">LDA</A> #$FF
+B0C0: 85 0D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0D.HTM">$0D</A>       ; Data type Flag
+B0C2: D0 10     <A HREF="BBNE.HTM">BNE</A> $B0D4
+
+Jump from $B0BC:
+
+B0C4: C9 25     <A HREF="BCMP.HTM">CMP</A> #$25
+B0C6: D0 13     <A HREF="BBNE.HTM">BNE</A> $B0DB
+B0C8: A5 10     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP10.HTM">$10</A>       ; Flag: Subscript reference/User Function call
+B0CA: D0 D0     <A HREF="BBNE.HTM">BNE</A> $B09C
+B0CC: A9 80     <A HREF="BLDA.HTM">LDA</A> #$80
+B0CE: 85 0E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0E.HTM">$0E</A>       ; Data type Flag
+B0D0: 05 45     <A HREF="BORA.HTM">ORA</A> <A HREF="ZP45.HTM">$45</A>       ; Name of Variable being sought in Variable Table
+B0D2: 85 45     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP45.HTM">$45</A>       ; Name of Variable being sought in Variable Table
+
+Jump from $B0C2:
+
+B0D4: 8A        <A HREF="BTXA.HTM">TXA</A>
+B0D5: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+B0D7: AA        <A HREF="BTAX.HTM">TAX</A>
+B0D8: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+
+Jump from $B0C6:
+
+B0DB: 86 46     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP45.HTM">$46</A>       ; Name of Variable being sought in Variable Table
+B0DD: 38        <A HREF="BSEC.HTM">SEC</A>
+B0DE: 05 10     <A HREF="BORA.HTM">ORA</A> <A HREF="ZP10.HTM">$10</A>       ; Flag: Subscript reference/User Function call
+B0E0: E9 28     <A HREF="BSBC.HTM">SBC</A> #$28
+B0E2: D0 03     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMB0E7.HTM">$B0E7</A>     ; Locate Ordinary Variable
+B0E4: 4C D1 B1  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB1D1.HTM">$B1D1</A>     ; Get Array Parameters
+
+    <A HREF="ROMB07E.HTM">Previous Page</A> / <A HREF="ROMB0E7.HTM">Next Page</A>
+
+Kernal-Reference:
+
+ BIT $B0E6   : <A HREF="ROMF92C.HTM">$F9DD</A>
+
+</PRE></BODY></HTML>

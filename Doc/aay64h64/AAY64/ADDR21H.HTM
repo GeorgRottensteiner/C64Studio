@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 65816 Addressing mode: Stack (PEI) -- s
+
+ (<A HREF="BPEI.HTM">PEI</A>)
+ (2 bytes)  (6 and 7 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Direct Offset         |    R     |
+    |       (2) 2a  |  PBR,PC+1        | Internal Operation    |    R     |
+    |           3   |  0,D+DO          | Absolute Address Low  |    R     |
+    |           4   |  0,D+DO+1        | Absolute Address High |    R     |
+    |           5   |  0,S             | Absolute Address High |    W     |
+    |           6   |  0,S-1           | Absolute Address Low  |    W     |
+    +---------------+------------------+-----------------------+----------+
+    (2) Add 1 cycle for direct register low (DL) not equal 0.
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,25 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AF14/44820:   Identify Reserved Variable
+
+Jump from <A HREF="ROMAF28.HTM">$AF3B</A>, <A HREF="ROMAF48.HTM">$AF6E</A>:
+
+AF14: 38        <A HREF="BSEC.HTM">SEC</A>
+AF15: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AF17: E9 00     <A HREF="BSBC.HTM">SBC</A> #$00
+AF19: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+AF1B: E9 A0     <A HREF="BSBC.HTM">SBC</A> #$A0
+AF1D: 90 08     <A HREF="BBCC.HTM">BCC</A> $AF27
+AF1F: A9 A2     <A HREF="BLDA.HTM">LDA</A> #$A2
+AF21: E5 64     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AF23: A9 E3     <A HREF="BLDA.HTM">LDA</A> #$E3
+AF25: E5 65     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+
+Jump from $AF1D:
+
+AF27: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMAF0D.HTM">Previous Page</A> / <A HREF="ROMAF28.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

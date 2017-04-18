@@ -1,0 +1,31 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510/65816 Addressing mode: Absolute Indexed (R-M-W) -- a,x
+ 6510 Illegal Addressing mode: Absolute Indexed (R-M-W) -- a,y
+
+ (<A HREF="BASL.HTM">ASL</A>,<A HREF="BDCP.HTM">DCP</A>,<A HREF="BDEC.HTM">DEC</A>,<A HREF="BINC.HTM">INC</A>,<A HREF="BISB.HTM">ISB</A>,<A HREF="BLSR.HTM">LSR</A>,<A HREF="BRLA.HTM">RLA</A>,<A HREF="BROL.HTM">ROL</A>,<A HREF="BROR.HTM">ROR</A>,<A HREF="BRRA.HTM">RRA</A>,<A HREF="BSLO.HTM">SLO</A>,<A HREF="BSRE.HTM">SRE</A>)
+ (3 bytes)  (7 and 9 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Absolute Address Low  |    R     |
+    |           3   |  PBR,PC+2        | Absolute Address High |    R     |
+    |           4   |  DBR,AAH,AAL+XL  | Internal Operation    |    R     |
+    |           5   |  DBR,AA+X        | Data Low              |    R     |
+    |       (1) 5a  |  DBR,AA+X+1      | Data High             |    R     |
+    |   (12)(3) 6   |  DBR,AA+X+1      | Internal Operation    |    R     |
+    |       (1) 7a  |  DBR,AA+X+1      | Data High             |    W     |
+    |           7   |  DBR,AA+X        | Data Low              |    W     |
+    +---------------+------------------+-----------------------+----------+
+    (1) Add 1 cycle for M=0 or X=0 (i.e. 16 bit data).
+    (3) Special case for aborting instruction. This is the last cycle which
+        may be aborted or the Status, PBR or DBR registers will be updated.
+   (12) Unmodified Data Low is written back to memory in 6502 emulation
+        mode (E=1).
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

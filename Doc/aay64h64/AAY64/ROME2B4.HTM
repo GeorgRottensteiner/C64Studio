@@ -1,0 +1,31 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E2B4/58036:   Evaluate &lt;tan&gt;
+
+E2B4: 20 CA BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBC7.HTM">$BBCA</A>     ; Store FAC#1 in Memory
+E2B7: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+E2B9: 85 12     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP12.HTM">$12</A>       ; Flag: TAN sign/Comparative result
+E2BB: 20 6B E2  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME26B.HTM">$E26B</A>     ; Evaluate &lt;sin&gt;
+E2BE: A2 4E     <A HREF="BLDX.HTM">LDX</A> #$4E
+E2C0: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+E2C2: 20 F6 E0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME097.HTM">$E0F6</A>     ; Evaluate &lt;rnd&gt;
+E2C5: A9 57     <A HREF="BLDA.HTM">LDA</A> #$57
+E2C7: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+E2C9: 20 A2 BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBA2.HTM">$BBA2</A>     ; Load FAC#1 From Memory
+E2CC: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+E2CE: 85 66     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+E2D0: A5 12     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP12.HTM">$12</A>       ; Flag: TAN sign/Comparative result
+E2D2: 20 DC E2  <A HREF="BJSR.HTM">JSR</A> $E2DC
+E2D5: A9 4E     <A HREF="BLDA.HTM">LDA</A> #$4E
+E2D7: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+E2D9: 4C 0F BB  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBB0F.HTM">$BB0F</A>     ; Divide FAC#2 by FAC#1
+
+Jump from $E2D2:
+
+E2DC: 48        <A HREF="BPHA.HTM">PHA</A>
+E2DD: 4C 9D E2  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME26B.HTM">$E29D</A>     ; Evaluate &lt;sin&gt;
+
+    <A HREF="ROME26B.HTM">Previous Page</A> / <A HREF="ROME2E0.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

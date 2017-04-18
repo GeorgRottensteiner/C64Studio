@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EF7E/61310:   Set Up To Receive
+
+Jump from <A HREF="ROMEF90.HTM">$EF92</A>, <A HREF="ROMEF90.HTM">$EFD8</A>:
+
+EF7E: A9 90     <A HREF="BLDA.HTM">LDA</A> #$90
+EF80: 8D 0D DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA213.HTM">$DD0D</A>     ; CIA2: Interrupt (NMI) Control Register
+EF83: 0D A1 02  <A HREF="BORA.HTM">ORA</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+EF86: 8D A1 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+EF89: 85 A9     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPA9.HTM">$A9</A>       ; RS232 Flag: Start Bit check/Tape temporary
+EF8B: A9 02     <A HREF="BLDA.HTM">LDA</A> #$02
+EF8D: 4C 3B EF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEF39.HTM">$EF3B</A>     ; Disable Timer
+
+    <A HREF="ROMEF59.HTM">Previous Page</A> / <A HREF="ROMEF90.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

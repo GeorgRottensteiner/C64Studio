@@ -1,0 +1,87 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B3F4/46068:   Perform [fn]
+
+Jump from <A HREF="ROMAEAD.HTM">$AEE7</A>:
+
+B3F4: 20 E1 B3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB3E1.HTM">$B3E1</A>     ; Check Syntax of FN
+B3F7: A5 4F     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP4E.HTM">$4F</A>       ; Temporary storage for FLPT value
+B3F9: 48        <A HREF="BPHA.HTM">PHA</A>
+B3FA: A5 4E     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP4E.HTM">$4E</A>       ; Temporary storage for FLPT value
+B3FC: 48        <A HREF="BPHA.HTM">PHA</A>
+B3FD: 20 F1 AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEF1.HTM">$AEF1</A>     ; Expression in Brackets
+B400: 20 8D AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8D</A>     ; Confirm Result
+B403: 68        <A HREF="BPLA.HTM">PLA</A>
+B404: 85 4E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4E.HTM">$4E</A>       ; Temporary storage for FLPT value
+B406: 68        <A HREF="BPLA.HTM">PLA</A>
+B407: 85 4F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4E.HTM">$4F</A>       ; Temporary storage for FLPT value
+B409: A0 02     <A HREF="BLDY.HTM">LDY</A> #$02
+B40B: B1 4E     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B40D: 85 47     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP47.HTM">$47</A>       ; Value/Descriptor-Pointer
+B40F: AA        <A HREF="BTAX.HTM">TAX</A>
+B410: C8        <A HREF="BINY.HTM">INY</A>
+B411: B1 4E     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B413: F0 99     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMB3AE.HTM">$B3AE</A>     ; ?UNDEF'D FUNCTION
+B415: 85 48     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP47.HTM">$48</A>       ; Value/Descriptor-Pointer
+B417: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from $B41C:
+
+B418: B1 47     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP47.HTM">$47</A>),Y   ; Value/Descriptor-Pointer
+B41A: 48        <A HREF="BPHA.HTM">PHA</A>
+B41B: 88        <A HREF="BDEY.HTM">DEY</A>
+B41C: 10 FA     <A HREF="BBPL.HTM">BPL</A> $B418
+B41E: A4 48     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP47.HTM">$48</A>       ; Value/Descriptor-Pointer
+B420: 20 D4 BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBC7.HTM">$BBD4</A>     ; Store FAC#1 in Memory
+B423: A5 7B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+B425: 48        <A HREF="BPHA.HTM">PHA</A>
+B426: A5 7A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+B428: 48        <A HREF="BPHA.HTM">PHA</A>
+B429: B1 4E     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B42B: 85 7A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+B42D: C8        <A HREF="BINY.HTM">INY</A>
+B42E: B1 4E     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B430: 85 7B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+B432: A5 48     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP47.HTM">$48</A>       ; Value/Descriptor-Pointer
+B434: 48        <A HREF="BPHA.HTM">PHA</A>
+B435: A5 47     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP47.HTM">$47</A>       ; Value/Descriptor-Pointer
+B437: 48        <A HREF="BPHA.HTM">PHA</A>
+B438: 20 8A AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8A</A>     ; Confirm Result
+B43B: 68        <A HREF="BPLA.HTM">PLA</A>
+B43C: 85 4E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4E.HTM">$4E</A>       ; Temporary storage for FLPT value
+B43E: 68        <A HREF="BPLA.HTM">PLA</A>
+B43F: 85 4F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4E.HTM">$4F</A>       ; Temporary storage for FLPT value
+B441: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+B444: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $B449
+B446: 4C 08 AF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAF08.HTM">$AF08</A>     ; Output ?SYNTAX Error
+
+Jump from $B444:
+
+B449: 68        <A HREF="BPLA.HTM">PLA</A>
+B44A: 85 7A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+B44C: 68        <A HREF="BPLA.HTM">PLA</A>
+B44D: 85 7B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+
+Jump from <A HREF="ROMB3AE.HTM">$B3DE</A>:
+
+B44F: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B451: 68        <A HREF="BPLA.HTM">PLA</A>
+B452: 91 4E     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B454: 68        <A HREF="BPLA.HTM">PLA</A>
+B455: C8        <A HREF="BINY.HTM">INY</A>
+B456: 91 4E     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B458: 68        <A HREF="BPLA.HTM">PLA</A>
+B459: C8        <A HREF="BINY.HTM">INY</A>
+B45A: 91 4E     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B45C: 68        <A HREF="BPLA.HTM">PLA</A>
+B45D: C8        <A HREF="BINY.HTM">INY</A>
+B45E: 91 4E     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B460: 68        <A HREF="BPLA.HTM">PLA</A>
+B461: C8        <A HREF="BINY.HTM">INY</A>
+B462: 91 4E     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B464: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB3E1.HTM">Previous Page</A> / <A HREF="ROMB465.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

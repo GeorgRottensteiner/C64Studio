@@ -1,0 +1,19 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F5D2/62930:   Print &quot;LOADING / VERIFYING&quot;
+
+Jump from <A HREF="ROMF4B8.HTM">$F4F0</A>, <A HREF="ROMF533.HTM">$F5A2</A>:
+
+F5D2: A0 49     <A HREF="BLDY.HTM">LDY</A> #$49
+F5D4: A5 93     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP93.HTM">$93</A>       ; Flag: 0 = Load, 1 = Verify
+F5D6: F0 02     <A HREF="BBEQ.HTM">BEQ</A> $F5DA
+F5D8: A0 59     <A HREF="BLDY.HTM">LDY</A> #$59
+
+Jump from $F5D6:
+
+F5DA: 4C 2B F1  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF12B.HTM">$F12B</A>     ; Print Message if Direct
+
+    <A HREF="ROMF5C1.HTM">Previous Page</A> / <A HREF="ROMF5DD.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

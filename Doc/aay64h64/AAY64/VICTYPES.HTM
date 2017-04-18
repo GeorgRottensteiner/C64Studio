@@ -1,0 +1,38 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ VIC PAL/NTSC Differences:
+
+ Here are some specifications about the different VIC types. Please note that
+ the 6567R56A was only used in very early C64s and is mentioned here only
+ for completeness.
+
+ +----------+--------+-------+---------+---------+---------+------------+
+ |   VIC    | Video  | # of  | Cycles/ | Cycles/ | Frames/ | System     |
+ |   Type   | system | lines |  line   | frame   | second  | Clock (Hz) |
+ +----------+--------+-------+---------+---------+---------+------------+
+ |   6569   |  PAL-B |  312  |   63    |  19656  | 50.125  |   985248   |
+ |  6567R8  | NTSC-M |  263  |   65    |  17095  | 59.826  |  1022727   |
+ | 6567R56A | NTSC-M |  262  |   64    |  16768  |   ?     |     ?      |
+ +----------+--------+-------+---------+---------+---------+------------+
+
+ +----------+---------+-------------+
+ |   VIC    | Visible |  Visible    |
+ |   Type   |  lines  | pixels/line |
+ +----------+---------+-------------+
+ |   6569   |   284   |     403     |
+ |  6567R8  |   235   |     418     |
+ | 6567R56A |   234   |     411     |
+ +----------+---------+-------------+
+
+ +----------+--------+--------+--------------+------------+------------+
+ |   VIC    | First  |  Last  |    First     |   First    |    Last    |
+ |   Type   | vblank | vblank |   X coord.   |  visible   |  visible   |
+ |          |  line  |  line  |  of a line   |  X coord.  |  X coord.  |
+ +----------+--------+--------+--------------+------------+------------+
+ |   6569   |  300   |   15   |  404 ($194)  | 480 ($1e0) | 380 ($17c) |
+ |  6567R8  |   13   |   40   |  412 ($19c)  | 489 ($1e9) | 396 ($18c) |
+ | 6567R56A |   13   |   40   |  412 ($19c)  | 488 ($1e8) | 388 ($184) |
+ +----------+--------+--------+--------------+------------+------------+
+
+</PRE></BODY></HTML>

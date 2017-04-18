@@ -1,0 +1,34 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E3A2/58274:   CHRGET For Zero-page
+
+Jump from $E3B1:
+
+E3A2: E6 7A     <A HREF="BINC.HTM">INC</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+E3A4: D0 02     <A HREF="BBNE.HTM">BNE</A> $E3A8
+E3A6: E6 7B     <A HREF="BINC.HTM">INC</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+
+Jump from $E3A4:
+
+E3A8: AD 60 EA  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMEA31.HTM">$EA60</A>     ; Main IRQ Entry Point
+E3AB: C9 3A     <A HREF="BCMP.HTM">CMP</A> #$3A
+E3AD: B0 0A     <A HREF="BBCS.HTM">BCS</A> $E3B9
+E3AF: C9 20     <A HREF="BCMP.HTM">CMP</A> #$20
+E3B1: F0 EF     <A HREF="BBEQ.HTM">BEQ</A> $E3A2
+E3B3: 38        <A HREF="BSEC.HTM">SEC</A>
+E3B4: E9 30     <A HREF="BSBC.HTM">SBC</A> #$30
+E3B6: 38        <A HREF="BSEC.HTM">SEC</A>
+E3B7: E9 D0     <A HREF="BSBC.HTM">SBC</A> #$D0
+
+Jump from $E3AD:
+
+E3B9: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME394.HTM">Previous Page</A> / <A HREF="ROME3BA.HTM">Next Page</A>
+
+Kernal-Reference:
+
+ LDA $E3A2,X : <A HREF="ROME3BF.HTM">$E3E2</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,23 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  SLO                   SLO ASL memory, ORA memory                      SLO
+
+                                                        N V - B D I Z C
+  Operation:  A &lt;- (M &lt;&lt; 1) \/ A                        / . . . . . / /
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   SLO $FF             |   $07   |    2    |    5     |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   SLO $FF,X           |   $17   |    2    |    6     |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   SLO $FFFF           |   $0F   |    3    |    6     |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   SLO $FFFF,X         |   $1F   |    3    |    7     |
+  |  <A HREF="ADDR12B.HTM">Absolute,Y</A>    |   SLO $FFFF,Y         |   $1B   |    3    |    7     |
+  |  <A HREF="ADDR9B.HTM">(Indirect,X)</A>  |   SLO ($FF,X)         |   $03   |    2    |    8     |
+  |  <A HREF="ADDR7B.HTM">(Indirect),Y</A>  |   SLO ($FF),Y         |   $13   |    2    |    8     |
+  +----------------+-----------------------+---------+---------+----------+
+
+  Also known as ASO.
+
+</PRE></BODY></HTML>

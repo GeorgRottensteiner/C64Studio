@@ -1,0 +1,203 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AD9E/44446:   Evaluate Expression in Text
+
+Jump from <A HREF="ROMA928.HTM">$A928</A>, <A HREF="ROMA9A5.HTM">$A9B7</A>, <A HREF="ROMAAA0.HTM">$AAB5</A>, <A HREF="ROMAD8A.HTM">$AD8A</A>, <A HREF="ROMAEF1.HTM">$AEF4</A>, <A HREF="ROMAFB1.HTM">$AFB4</A>, <A HREF="ROMB1B2.HTM">$B1B5</A>, <A HREF="ROME219.HTM">$E257</A>:
+
+AD9E: A6 7A     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+ADA0: D0 02     <A HREF="BBNE.HTM">BNE</A> $ADA4
+ADA2: C6 7B     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+
+Jump from $ADA0:
+
+ADA4: C6 7A     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+ADA6: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+ADA8: 24        .BYTE $24
+
+Jump from $AE2D:
+
+ADA9: 48        <A HREF="BPHA.HTM">PHA</A>
+ADAA: 8A        <A HREF="BTXA.HTM">TXA</A>
+ADAB: 48        <A HREF="BPHA.HTM">PHA</A>
+ADAC: A9 01     <A HREF="BLDA.HTM">LDA</A> #$01
+ADAE: 20 FB A3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA3FB.HTM">$A3FB</A>     ; Check Stack Depth
+ADB1: 20 83 AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAE83.HTM">$AE83</A>     ; Evaluate Single Term
+ADB4: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+ADB6: 85 4D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4D.HTM">$4D</A>       ; Mask used during FRMEVL
+
+Jump from <A HREF="ROMB63D.HTM">$B677</A>:
+
+ADB8: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+
+Jump from $ADD4:
+
+ADBB: 38        <A HREF="BSEC.HTM">SEC</A>
+ADBC: E9 B1     <A HREF="BSBC.HTM">SBC</A> #$B1
+ADBE: 90 17     <A HREF="BBCC.HTM">BCC</A> $ADD7
+ADC0: C9 03     <A HREF="BCMP.HTM">CMP</A> #$03
+ADC2: B0 13     <A HREF="BBCS.HTM">BCS</A> $ADD7
+ADC4: C9 01     <A HREF="BCMP.HTM">CMP</A> #$01
+ADC6: 2A        <A HREF="BROL.HTM">ROL</A>
+ADC7: 49 01     <A HREF="BEOR.HTM">EOR</A> #$01
+ADC9: 45 4D     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP4D.HTM">$4D</A>       ; Mask used during FRMEVL
+ADCB: C5 4D     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP4D.HTM">$4D</A>       ; Mask used during FRMEVL
+ADCD: 90 61     <A HREF="BBCC.HTM">BCC</A> $AE30
+ADCF: 85 4D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4D.HTM">$4D</A>       ; Mask used during FRMEVL
+ADD1: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+ADD4: 4C BB AD  <A HREF="BJMP.HTM">JMP</A> $ADBB
+
+Jump from $ADBE, $ADC2:
+
+ADD7: A6 4D     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP4D.HTM">$4D</A>       ; Mask used during FRMEVL
+ADD9: D0 2C     <A HREF="BBNE.HTM">BNE</A> $AE07
+ADDB: B0 7B     <A HREF="BBCS.HTM">BCS</A> $AE58
+ADDD: 69 07     <A HREF="BADC.HTM">ADC</A> #$07
+ADDF: 90 77     <A HREF="BBCC.HTM">BCC</A> $AE58
+ADE1: 65 0D     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP0D.HTM">$0D</A>       ; Data type Flag
+ADE3: D0 03     <A HREF="BBNE.HTM">BNE</A> $ADE8
+ADE5: 4C 3D B6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB63D.HTM">$B63D</A>     ; Concatenate Two Strings
+
+Jump from $ADE3:
+
+ADE8: 69 FF     <A HREF="BADC.HTM">ADC</A> #$FF
+ADEA: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+ADEC: 0A        <A HREF="BASL.HTM">ASL</A>
+ADED: 65 22     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+ADEF: A8        <A HREF="BTAY.HTM">TAY</A>
+
+Jump from $AE17:
+
+ADF0: 68        <A HREF="BPLA.HTM">PLA</A>
+ADF1: D9 80 A0  <A HREF="BCMP.HTM">CMP</A> <A HREF="ROMA080.HTM">$A080</A>,Y   ; BASIC Operator Vectors
+ADF4: B0 67     <A HREF="BBCS.HTM">BCS</A> $AE5D
+ADF6: 20 8D AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8D</A>     ; Confirm Result
+
+Jump from $AE1E:
+
+ADF9: 48        <A HREF="BPHA.HTM">PHA</A>
+
+Jump from <A HREF="ROMAF0D.HTM">$AF11</A>:
+
+ADFA: 20 20 AE  <A HREF="BJSR.HTM">JSR</A> $AE20
+ADFD: 68        <A HREF="BPLA.HTM">PLA</A>
+ADFE: A4 4B     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP4B.HTM">$4B</A>       ; Temporary storage for TXTPTR
+AE00: 10 17     <A HREF="BBPL.HTM">BPL</A> $AE19
+AE02: AA        <A HREF="BTAX.HTM">TAX</A>
+AE03: F0 56     <A HREF="BBEQ.HTM">BEQ</A> $AE5B
+AE05: D0 5F     <A HREF="BBNE.HTM">BNE</A> $AE66
+
+Jump from $ADD9:
+
+AE07: 46 0D     <A HREF="BLSR.HTM">LSR</A> <A HREF="ZP0D.HTM">$0D</A>       ; Data type Flag
+AE09: 8A        <A HREF="BTXA.HTM">TXA</A>
+AE0A: 2A        <A HREF="BROL.HTM">ROL</A>
+AE0B: A6 7A     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+AE0D: D0 02     <A HREF="BBNE.HTM">BNE</A> $AE11
+AE0F: C6 7B     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+
+Jump from $AE0D:
+
+AE11: C6 7A     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+AE13: A0 1B     <A HREF="BLDY.HTM">LDY</A> #$1B
+AE15: 85 4D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4D.HTM">$4D</A>       ; Mask used during FRMEVL
+AE17: D0 D7     <A HREF="BBNE.HTM">BNE</A> $ADF0
+
+Jump from $AE00:
+
+AE19: D9 80 A0  <A HREF="BCMP.HTM">CMP</A> <A HREF="ROMA080.HTM">$A080</A>,Y   ; BASIC Operator Vectors
+AE1C: B0 48     <A HREF="BBCS.HTM">BCS</A> $AE66
+AE1E: 90 D9     <A HREF="BBCC.HTM">BCC</A> $ADF9
+
+Jump from $ADFA:
+
+AE20: B9 82 A0  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMA080.HTM">$A082</A>,Y   ; BASIC Operator Vectors
+AE23: 48        <A HREF="BPHA.HTM">PHA</A>
+AE24: B9 81 A0  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMA080.HTM">$A081</A>,Y   ; BASIC Operator Vectors
+AE27: 48        <A HREF="BPHA.HTM">PHA</A>
+AE28: 20 33 AE  <A HREF="BJSR.HTM">JSR</A> $AE33
+AE2B: A5 4D     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP4D.HTM">$4D</A>       ; Mask used during FRMEVL
+AE2D: 4C A9 AD  <A HREF="BJMP.HTM">JMP</A> $ADA9
+
+Jump from $ADCD:
+
+AE30: 4C 08 AF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAF08.HTM">$AF08</A>     ; Output ?SYNTAX Error
+
+Jump from $AE28:
+
+AE33: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+AE35: BE 80 A0  <A HREF="BLDX.HTM">LDX</A> <A HREF="ROMA080.HTM">$A080</A>,Y   ; BASIC Operator Vectors
+
+Jump from <A HREF="ROMA742.HTM">$A7A2</A>:
+
+AE38: A8        <A HREF="BTAY.HTM">TAY</A>
+AE39: 68        <A HREF="BPLA.HTM">PLA</A>
+AE3A: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+AE3C: E6 22     <A HREF="BINC.HTM">INC</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+AE3E: 68        <A HREF="BPLA.HTM">PLA</A>
+AE3F: 85 23     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+AE41: 98        <A HREF="BTYA.HTM">TYA</A>
+AE42: 48        <A HREF="BPHA.HTM">PHA</A>
+
+Jump from <A HREF="ROMA742.HTM">$A788</A>:
+
+AE43: 20 1B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC1B.HTM">$BC1B</A>     ; Round FAC#1
+AE46: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+AE48: 48        <A HREF="BPHA.HTM">PHA</A>
+AE49: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AE4B: 48        <A HREF="BPHA.HTM">PHA</A>
+AE4C: A5 63     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+AE4E: 48        <A HREF="BPHA.HTM">PHA</A>
+AE4F: A5 62     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+AE51: 48        <A HREF="BPHA.HTM">PHA</A>
+AE52: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+AE54: 48        <A HREF="BPHA.HTM">PHA</A>
+AE55: 6C 22 00  <A HREF="BJMP.HTM">JMP</A> (<A HREF="ZP22.HTM">$0022</A>)   ; Second Utility Pointer
+
+Jump from $ADDB, $ADDF:
+
+AE58: A0 FF     <A HREF="BLDY.HTM">LDY</A> #$FF
+AE5A: 68        <A HREF="BPLA.HTM">PLA</A>
+
+Jump from $AE03:
+
+AE5B: F0 23     <A HREF="BBEQ.HTM">BEQ</A> $AE80
+
+Jump from $ADF4:
+
+AE5D: C9 64     <A HREF="BCMP.HTM">CMP</A> #$64
+AE5F: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $AE64
+AE61: 20 8D AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8D</A>     ; Confirm Result
+
+Jump from $AE5F:
+
+AE64: 84 4B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP4B.HTM">$4B</A>       ; Temporary storage for TXTPTR
+
+Jump from $AE05, $AE1C:
+
+AE66: 68        <A HREF="BPLA.HTM">PLA</A>
+AE67: 4A        <A HREF="BLSR.HTM">LSR</A>
+AE68: 85 12     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP12.HTM">$12</A>       ; Flag: TAN sign/Comparative result
+AE6A: 68        <A HREF="BPLA.HTM">PLA</A>
+AE6B: 85 69     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP69.HTM">$69</A>       ; AFAC Exponent
+AE6D: 68        <A HREF="BPLA.HTM">PLA</A>
+AE6E: 85 6A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6A.HTM">$6A</A>       ; AFAC Mantissa
+AE70: 68        <A HREF="BPLA.HTM">PLA</A>
+AE71: 85 6B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6A.HTM">$6B</A>       ; AFAC Mantissa
+AE73: 68        <A HREF="BPLA.HTM">PLA</A>
+AE74: 85 6C     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6A.HTM">$6C</A>       ; AFAC Mantissa
+AE76: 68        <A HREF="BPLA.HTM">PLA</A>
+AE77: 85 6D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6A.HTM">$6D</A>       ; AFAC Mantissa
+AE79: 68        <A HREF="BPLA.HTM">PLA</A>
+AE7A: 85 6E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6E.HTM">$6E</A>       ; AFAC Sign
+AE7C: 45 66     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+AE7E: 85 6F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+
+Jump from $AE5B:
+
+AE80: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+AE82: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMAD8A.HTM">Previous Page</A> / <A HREF="ROMAE83.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

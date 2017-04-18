@@ -1,0 +1,27 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AFB1/44977:   Evaluate String Function
+
+AFB1: 20 FA AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFA.HTM">$AEFA</A>     ; Test '('
+AFB4: 20 9E AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD9E.HTM">$AD9E</A>     ; Evaluate Expression in Text
+AFB7: 20 FD AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFD.HTM">$AEFD</A>     ; Test ','
+AFBA: 20 8F AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8F</A>     ; Confirm Result
+AFBD: 68        <A HREF="BPLA.HTM">PLA</A>
+AFBE: AA        <A HREF="BTAX.HTM">TAX</A>
+AFBF: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+AFC1: 48        <A HREF="BPHA.HTM">PHA</A>
+AFC2: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AFC4: 48        <A HREF="BPHA.HTM">PHA</A>
+AFC5: 8A        <A HREF="BTXA.HTM">TXA</A>
+AFC6: 48        <A HREF="BPHA.HTM">PHA</A>
+AFC7: 20 9E B7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB79B.HTM">$B79E</A>     ; Evaluate Text to 1 Byte in XR
+AFCA: 68        <A HREF="BPLA.HTM">PLA</A>
+AFCB: A8        <A HREF="BTAY.HTM">TAY</A>
+AFCC: 8A        <A HREF="BTXA.HTM">TXA</A>
+AFCD: 48        <A HREF="BPHA.HTM">PHA</A>
+AFCE: 4C D6 AF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAFD1.HTM">$AFD6</A>     ; Evaluate Numeric Function
+
+    <A HREF="ROMAFA7.HTM">Previous Page</A> / <A HREF="ROMAFD1.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

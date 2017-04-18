@@ -1,0 +1,23 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 65816 Addressing mode: Absolute Long Indexed -- al,x
+
+ (<A HREF="BADC.HTM">ADC</A>,<A HREF="BAND.HTM">AND</A>,<A HREF="BCMP.HTM">CMP</A>,<A HREF="BEOR.HTM">EOR</A>,<A HREF="BLDA.HTM">LDA</A>,<A HREF="BORA.HTM">ORA</A>,<A HREF="BSBC.HTM">SBC</A>,<A HREF="BSTA.HTM">STA</A>)
+ (4 bytes)  (5 and 6 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Absolute Address Low  |    R     |
+    |           3   |  PBR,PC+2        | Absolute Address High |    R     |
+    |           4   |  PBR,PC+3        | Absolute Address Bank |    R     |
+    |           5   |  AAB,AA+X        | Data Low              |   R/W    |
+    |       (1) 5a  |  AAB,AA+X+1      | Data High             |   R/W    |
+    +---------------+------------------+-----------------------+----------+
+    (1) Add 1 cycle for M=0 or X=0 (i.e. 16 bit data).
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

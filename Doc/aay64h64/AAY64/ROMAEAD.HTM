@@ -1,0 +1,58 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AEAD/44717:   Continue Expression
+
+Jump from <A HREF="ROMAE83.HTM">$AE9C</A>:
+
+AEAD: C9 2E     <A HREF="BCMP.HTM">CMP</A> #$2E
+AEAF: F0 DE     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMAE83.HTM">$AE8F</A>     ; Evaluate Single Term
+AEB1: C9 AB     <A HREF="BCMP.HTM">CMP</A> #$AB
+AEB3: F0 58     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMAF0D.HTM">$AF0D</A>     ; Set up NOT Function
+AEB5: C9 AA     <A HREF="BCMP.HTM">CMP</A> #$AA
+AEB7: F0 D1     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMAE83.HTM">$AE8A</A>     ; Evaluate Single Term
+AEB9: C9 22     <A HREF="BCMP.HTM">CMP</A> #$22
+AEBB: D0 0F     <A HREF="BBNE.HTM">BNE</A> $AECC
+
+Jump from <A HREF="ROMABBF.HTM">$ABC3</A>:
+
+AEBD: A5 7A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+AEBF: A4 7B     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+AEC1: 69 00     <A HREF="BADC.HTM">ADC</A> #$00
+AEC3: 90 01     <A HREF="BBCC.HTM">BCC</A> $AEC6
+AEC5: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from $AEC3:
+
+AEC6: 20 87 B4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB487.HTM">$B487</A>     ; Set Up String
+AEC9: 4C E2 B7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB7B5.HTM">$B7E2</A>     ; Convert ASCII String to Flpt
+
+Jump from $AEBB:
+
+AECC: C9 A8     <A HREF="BCMP.HTM">CMP</A> #$A8
+AECE: D0 13     <A HREF="BBNE.HTM">BNE</A> $AEE3
+AED0: A0 18     <A HREF="BLDY.HTM">LDY</A> #$18
+AED2: D0 3B     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMAF0D.HTM">$AF0F</A>     ; Set up NOT Function
+AED4: 20 BF B1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB1BF.HTM">$B1BF</A>     ; FAC#1 to Positive Integer
+AED7: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+AED9: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+AEDB: A8        <A HREF="BTAY.HTM">TAY</A>
+AEDC: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AEDE: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+AEE0: 4C 91 B3  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB391.HTM">$B391</A>     ; Convert Integer in (AC/YR) to Flpt
+
+Jump from $AECE:
+
+AEE3: C9 A5     <A HREF="BCMP.HTM">CMP</A> #$A5
+AEE5: D0 03     <A HREF="BBNE.HTM">BNE</A> $AEEA
+AEE7: 4C F4 B3  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB3F4.HTM">$B3F4</A>     ; Perform [fn]
+
+Jump from $AEE5:
+
+AEEA: C9 B4     <A HREF="BCMP.HTM">CMP</A> #$B4
+AEEC: 90 03     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMAEF1.HTM">$AEF1</A>     ; Expression in Brackets
+AEEE: 4C A7 AF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAFA7.HTM">$AFA7</A>     ; Identify Function Type
+
+    <A HREF="ROMAEA8.HTM">Previous Page</A> / <A HREF="ROMAEF1.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

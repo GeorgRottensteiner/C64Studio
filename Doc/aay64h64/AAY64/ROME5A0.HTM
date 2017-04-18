@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E5A0/58784:   Set I/O Defaults
+
+Jump from <A HREF="ROME518.HTM">$E518</A>, <A HREF="ROME59A.HTM">$E59A</A>:
+
+E5A0: A9 03     <A HREF="BLDA.HTM">LDA</A> #$03
+E5A2: 85 9A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP9A.HTM">$9A</A>       ; Default Output Device (3)
+E5A4: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+E5A6: 85 99     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP99.HTM">$99</A>       ; Default Input Device (0)
+E5A8: A2 2F     <A HREF="BLDX.HTM">LDX</A> #$2F
+
+Jump from $E5B1:
+
+E5AA: BD B8 EC  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMEC78.HTM">$ECB8</A>,X   ; Keyboard 4 -- Control
+E5AD: 9D FF CF  <A HREF="BSTA.HTM">STA</A> $CFFF,X
+E5B0: CA        <A HREF="BDEX.HTM">DEX</A>
+E5B1: D0 F7     <A HREF="BBNE.HTM">BNE</A> $E5AA
+E5B3: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME59A.HTM">Previous Page</A> / <A HREF="ROME5B4.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

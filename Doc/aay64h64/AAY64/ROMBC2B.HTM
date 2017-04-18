@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BC2B/48171:   Check Sign of FAC#1
+
+Jump from <A HREF="ROMA742.HTM">$A79F</A>, <A HREF="ROMB9EA.HTM">$B9EA</A>, <A HREF="ROMBC39.HTM">$BC39</A>, <A HREF="ROMBC5B.HTM">$BC65</A>, <A HREF="ROME097.HTM">$E097</A>:
+
+BC2B: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BC2D: F0 09     <A HREF="BBEQ.HTM">BEQ</A> $BC38
+
+Jump from <A HREF="ROMBC5B.HTM">$BC6B</A>:
+
+BC2F: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+
+Jump from <A HREF="ROMBC5B.HTM">$BC98</A>:
+
+BC31: 2A        <A HREF="BROL.HTM">ROL</A>
+BC32: A9 FF     <A HREF="BLDA.HTM">LDA</A> #$FF
+BC34: B0 02     <A HREF="BBCS.HTM">BCS</A> $BC38
+BC36: A9 01     <A HREF="BLDA.HTM">LDA</A> #$01
+
+Jump from $BC2D, $BC34:
+
+BC38: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBC1B.HTM">Previous Page</A> / <A HREF="ROMBC39.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

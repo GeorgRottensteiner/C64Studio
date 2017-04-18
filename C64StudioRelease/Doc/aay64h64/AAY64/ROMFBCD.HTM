@@ -1,0 +1,104 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FBCD/64461:   IRQ Entry Point
+
+FBCD: A5 A8     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA8.HTM">$A8</A>       ; RS232 Input Bit count/Tape temporary
+FBCF: D0 12     <A HREF="BBNE.HTM">BNE</A> $FBE3
+FBD1: A9 10     <A HREF="BLDA.HTM">LDA</A> #$10
+FBD3: A2 01     <A HREF="BLDX.HTM">LDX</A> #$01
+FBD5: 20 B1 FB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFBA6.HTM">$FBB1</A>     ; Send Tone to Tape
+FBD8: D0 2F     <A HREF="BBNE.HTM">BNE</A> $FC09
+FBDA: E6 A8     <A HREF="BINC.HTM">INC</A> <A HREF="ZPA8.HTM">$A8</A>       ; RS232 Input Bit count/Tape temporary
+FBDC: A5 B6     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB6.HTM">$B6</A>       ; RS232 Output Byte Buffer/Tape Read Error Flag
+FBDE: 10 29     <A HREF="BBPL.HTM">BPL</A> $FC09
+FBE0: 4C 57 FC  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMFC57.HTM">$FC57</A>     ; Write Tape Leader
+
+Jump from $FBCF:
+
+FBE3: A5 A9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA9.HTM">$A9</A>       ; RS232 Flag: Start Bit check/Tape temporary
+FBE5: D0 09     <A HREF="BBNE.HTM">BNE</A> $FBF0
+FBE7: 20 AD FB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFBA6.HTM">$FBAD</A>     ; Send Tone to Tape
+FBEA: D0 1D     <A HREF="BBNE.HTM">BNE</A> $FC09
+FBEC: E6 A9     <A HREF="BINC.HTM">INC</A> <A HREF="ZPA9.HTM">$A9</A>       ; RS232 Flag: Start Bit check/Tape temporary
+FBEE: D0 19     <A HREF="BBNE.HTM">BNE</A> $FC09
+
+Jump from $FBE5:
+
+FBF0: 20 A6 FB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFBA6.HTM">$FBA6</A>     ; Send Tone to Tape
+FBF3: D0 14     <A HREF="BBNE.HTM">BNE</A> $FC09
+FBF5: A5 A4     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA4.HTM">$A4</A>       ; Serial Bus shift Counter
+FBF7: 49 01     <A HREF="BEOR.HTM">EOR</A> #$01
+FBF9: 85 A4     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPA4.HTM">$A4</A>       ; Serial Bus shift Counter
+FBFB: F0 0F     <A HREF="BBEQ.HTM">BEQ</A> $FC0C
+FBFD: A5 BD     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+FBFF: 49 01     <A HREF="BEOR.HTM">EOR</A> #$01
+FC01: 85 BD     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+FC03: 29 01     <A HREF="BAND.HTM">AND</A> #$01
+FC05: 45 9B     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP9B.HTM">$9B</A>       ; Parity of Byte Output to Tape
+FC07: 85 9B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP9B.HTM">$9B</A>       ; Parity of Byte Output to Tape
+
+Jump from $FBD8, $FBDE, $FBEA, $FBEE, $FBF3, $FC14, $FC2E, $FC3D, $FC4C, <A HREF="ROMFBC8.HTM">$FBCB</A>:
+
+FC09: 4C BC FE  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMFEBC.HTM">$FEBC</A>     ; Exit Interrupt
+
+Jump from $FBFB:
+
+FC0C: 46 BD     <A HREF="BLSR.HTM">LSR</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+FC0E: C6 A3     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPA3.HTM">$A3</A>       ; Serial Bus EOI (End Of Input) Flag
+FC10: A5 A3     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA3.HTM">$A3</A>       ; Serial Bus EOI (End Of Input) Flag
+FC12: F0 3A     <A HREF="BBEQ.HTM">BEQ</A> $FC4E
+FC14: 10 F3     <A HREF="BBPL.HTM">BPL</A> $FC09
+
+Jump from <A HREF="ROMFC57.HTM">$FC91</A>:
+
+FC16: 20 97 FB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFB97.HTM">$FB97</A>     ; New Character Setup
+FC19: 58        <A HREF="BCLI.HTM">CLI</A>
+FC1A: A5 A5     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA5.HTM">$A5</A>       ; Tape Synchronising count down
+FC1C: F0 12     <A HREF="BBEQ.HTM">BEQ</A> $FC30
+FC1E: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+FC20: 86 D7     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPD7.HTM">$D7</A>       ; Current Input Character/Last Character Output
+FC22: C6 A5     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPA5.HTM">$A5</A>       ; Tape Synchronising count down
+FC24: A6 BE     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPBE.HTM">$BE</A>       ; Tape Input/Output Block count
+FC26: E0 02     <A HREF="BCPX.HTM">CPX</A> #$02
+FC28: D0 02     <A HREF="BBNE.HTM">BNE</A> $FC2C
+FC2A: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+
+Jump from $FC28:
+
+FC2C: 85 BD     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+FC2E: D0 D9     <A HREF="BBNE.HTM">BNE</A> $FC09
+
+Jump from $FC1C:
+
+FC30: 20 D1 FC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFCD1.HTM">$FCD1</A>     ; Check Read / Write Pointer
+FC33: 90 0A     <A HREF="BBCC.HTM">BCC</A> $FC3F
+FC35: D0 91     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMFBC8.HTM">$FBC8</A>     ; Write Data to Tape
+FC37: E6 AD     <A HREF="BINC.HTM">INC</A> <A HREF="ZPAC.HTM">$AD</A>       ; Pointer: Tape Buffer/Screen scrolling
+FC39: A5 D7     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD7.HTM">$D7</A>       ; Current Input Character/Last Character Output
+FC3B: 85 BD     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+FC3D: B0 CA     <A HREF="BBCS.HTM">BCS</A> $FC09
+
+Jump from $FC33:
+
+FC3F: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+FC41: B1 AC     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPAC.HTM">$AC</A>),Y   ; Pointer: Tape Buffer/Screen scrolling
+FC43: 85 BD     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+FC45: 45 D7     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZPD7.HTM">$D7</A>       ; Current Input Character/Last Character Output
+FC47: 85 D7     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPD7.HTM">$D7</A>       ; Current Input Character/Last Character Output
+FC49: 20 DB FC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFCDB.HTM">$FCDB</A>     ; Bump Read / Write Pointer
+FC4C: D0 BB     <A HREF="BBNE.HTM">BNE</A> $FC09
+
+Jump from $FC12:
+
+FC4E: A5 9B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP9B.HTM">$9B</A>       ; Parity of Byte Output to Tape
+FC50: 49 01     <A HREF="BEOR.HTM">EOR</A> #$01
+FC52: 85 BD     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+
+Jump from <A HREF="ROMFC57.HTM">$FC68</A>, <A HREF="ROMFC57.HTM">$FC6F</A>, <A HREF="ROMFC57.HTM">$FC73</A>, <A HREF="ROMFC57.HTM">$FC7A</A>, <A HREF="ROMFCB8.HTM">$FCBB</A>:
+
+FC54: 4C BC FE  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMFEBC.HTM">$FEBC</A>     ; Exit Interrupt
+
+    <A HREF="ROMFBC8.HTM">Previous Page</A> / <A HREF="ROMFC57.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

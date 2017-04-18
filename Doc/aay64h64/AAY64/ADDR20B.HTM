@@ -1,0 +1,25 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 65816 Addressing mode: Absolute Indexed Indirect (JSR) -- (a,x)
+
+ (<A HREF="BJSR.HTM">JSR</A>)
+ (3 bytes)  (8 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Absolute Address Low  |    R     |
+    |           3   |  0,S             | Program Counter High  |    W     |
+    |           4   |  0,S-1           | Program Counter Low   |    W     |
+    |           5   |  PBR,PC+2        | Absolute Address High |    R     |
+    |           6   |  PBR,PC+2        | Internal Operation    |    R     |
+    |           7   |  PBR,AA+X        | NEW PCL               |    R     |
+    |           8   |  PBR,AA+X+1      | NEW PCH               |    R     |
+    |           1   |  PBR,NEWPC       | New Op Code           |    R     |
+    +---------------+------------------+-----------------------+----------+
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

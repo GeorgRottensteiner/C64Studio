@@ -1,0 +1,47 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $ED0C/60684:   Send LISTEN Command on Serial Bus
+
+Jump from <A HREF="ROMF250.HTM">$F27A</A>, <A HREF="ROMF3D5.HTM">$F3E3</A>, <A HREF="ROMF5FA.HTM">$F60D</A>, <A HREF="ROMF5FA.HTM">$F648</A>, <A HREF="ROMFFB1.HTM">$FFB1</A>:
+
+ED0C: 09 20     <A HREF="BORA.HTM">ORA</A> #$20
+ED0E: 20 A4 F0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF0A4.HTM">$F0A4</A>     ; Serial Bus Idle
+
+Jump from <A HREF="ROMEDFE.HTM">$EE00</A>:
+
+ED11: 48        <A HREF="BPHA.HTM">PHA</A>
+ED12: 24 94     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP94.HTM">$94</A>       ; Flag: Serial Bus - Output Character buffered
+ED14: 10 0A     <A HREF="BBPL.HTM">BPL</A> $ED20
+ED16: 38        <A HREF="BSEC.HTM">SEC</A>
+ED17: 66 A3     <A HREF="BROR.HTM">ROR</A> <A HREF="ZPA3.HTM">$A3</A>       ; Serial Bus EOI (End Of Input) Flag
+ED19: 20 40 ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMED40.HTM">$ED40</A>     ; Send Data On Serial Bus
+ED1C: 46 94     <A HREF="BLSR.HTM">LSR</A> <A HREF="ZP94.HTM">$94</A>       ; Flag: Serial Bus - Output Character buffered
+ED1E: 46 A3     <A HREF="BLSR.HTM">LSR</A> <A HREF="ZPA3.HTM">$A3</A>       ; Serial Bus EOI (End Of Input) Flag
+
+Jump from $ED14:
+
+ED20: 68        <A HREF="BPLA.HTM">PLA</A>
+ED21: 85 95     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP95.HTM">$95</A>       ; Buffered Character for Serial Bus
+ED23: 78        <A HREF="BSEI.HTM">SEI</A>
+ED24: 20 97 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE97.HTM">$EE97</A>     ; Serial Output 1
+ED27: C9 3F     <A HREF="BCMP.HTM">CMP</A> #$3F
+ED29: D0 03     <A HREF="BBNE.HTM">BNE</A> $ED2E
+ED2B: 20 85 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE85.HTM">$EE85</A>     ; Serial Clock On
+
+Jump from $ED29:
+
+ED2E: AD 00 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+ED31: 09 08     <A HREF="BORA.HTM">ORA</A> #$08
+ED33: 8D 00 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+
+Jump from <A HREF="ROMEDB9.HTM">$EDBB</A>, <A HREF="ROMEDC7.HTM">$EDC9</A>:
+
+ED36: 78        <A HREF="BSEI.HTM">SEI</A>
+ED37: 20 8E EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE8E.HTM">$EE8E</A>     ; Serial Clock Off
+ED3A: 20 97 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE97.HTM">$EE97</A>     ; Serial Output 1
+ED3D: 20 B3 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEEB3.HTM">$EEB3</A>     ; Delay 1 ms
+
+    <A HREF="ROMED09.HTM">Previous Page</A> / <A HREF="ROMED40.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

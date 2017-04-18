@@ -1,0 +1,32 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BBA2/48034:   Load FAC#1 From Memory
+
+Jump from <A HREF="ROMA742.HTM">$A78F</A>, <A HREF="ROMAD1E.HTM">$AD42</A>, <A HREF="ROMAE83.HTM">$AEA2</A>, <A HREF="ROMAF48.HTM">$AFA4</A>, <A HREF="ROMBB07.HTM">$BB09</A>, <A HREF="ROMBF71.HTM">$BF78</A>, <A HREF="ROME097.HTM">$E0C2</A>, <A HREF="ROME2B4.HTM">$E2C9</A>:
+
+BBA2: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+BBA4: 84 23     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+BBA6: A0 04     <A HREF="BLDY.HTM">LDY</A> #$04
+BBA8: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BBAA: 85 65     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+BBAC: 88        <A HREF="BDEY.HTM">DEY</A>
+BBAD: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BBAF: 85 64     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+BBB1: 88        <A HREF="BDEY.HTM">DEY</A>
+BBB2: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BBB4: 85 63     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+BBB6: 88        <A HREF="BDEY.HTM">DEY</A>
+BBB7: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BBB9: 85 66     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BBBB: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+BBBD: 85 62     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+BBBF: 88        <A HREF="BDEY.HTM">DEY</A>
+BBC0: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BBC2: 85 61     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BBC4: 84 70     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+BBC6: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBB0F.HTM">Previous Page</A> / <A HREF="ROMBBC7.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

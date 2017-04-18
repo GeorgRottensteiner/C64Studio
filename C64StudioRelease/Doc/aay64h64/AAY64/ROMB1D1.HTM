@@ -1,0 +1,54 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B1D1/45521:   Get Array Parameters
+
+Jump from <A HREF="ROMB08B.HTM">$B0E4</A>:
+
+B1D1: A5 0C     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0C.HTM">$0C</A>       ; Flag: Default Array dimension
+B1D3: 05 0E     <A HREF="BORA.HTM">ORA</A> <A HREF="ZP0E.HTM">$0E</A>       ; Data type Flag
+B1D5: 48        <A HREF="BPHA.HTM">PHA</A>
+B1D6: A5 0D     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0D.HTM">$0D</A>       ; Data type Flag
+B1D8: 48        <A HREF="BPHA.HTM">PHA</A>
+B1D9: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+
+Jump from $B207:
+
+B1DB: 98        <A HREF="BTYA.HTM">TYA</A>
+B1DC: 48        <A HREF="BPHA.HTM">PHA</A>
+B1DD: A5 46     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP45.HTM">$46</A>       ; Name of Variable being sought in Variable Table
+B1DF: 48        <A HREF="BPHA.HTM">PHA</A>
+B1E0: A5 45     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP45.HTM">$45</A>       ; Name of Variable being sought in Variable Table
+B1E2: 48        <A HREF="BPHA.HTM">PHA</A>
+B1E3: 20 B2 B1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB1B2.HTM">$B1B2</A>     ; Evaluate Text for Integer
+B1E6: 68        <A HREF="BPLA.HTM">PLA</A>
+B1E7: 85 45     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP45.HTM">$45</A>       ; Name of Variable being sought in Variable Table
+B1E9: 68        <A HREF="BPLA.HTM">PLA</A>
+B1EA: 85 46     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP45.HTM">$46</A>       ; Name of Variable being sought in Variable Table
+B1EC: 68        <A HREF="BPLA.HTM">PLA</A>
+B1ED: A8        <A HREF="BTAY.HTM">TAY</A>
+B1EE: BA        <A HREF="BTSX.HTM">TSX</A>
+B1EF: BD 02 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0100.HTM">$0102</A>,X   ; 6510 Hardware Stack Area
+B1F2: 48        <A HREF="BPHA.HTM">PHA</A>
+B1F3: BD 01 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0100.HTM">$0101</A>,X   ; 6510 Hardware Stack Area
+B1F6: 48        <A HREF="BPHA.HTM">PHA</A>
+B1F7: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B1F9: 9D 02 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0100.HTM">$0102</A>,X   ; 6510 Hardware Stack Area
+B1FC: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B1FE: 9D 01 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0100.HTM">$0101</A>,X   ; 6510 Hardware Stack Area
+B201: C8        <A HREF="BINY.HTM">INY</A>
+B202: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+B205: C9 2C     <A HREF="BCMP.HTM">CMP</A> #$2C
+B207: F0 D2     <A HREF="BBEQ.HTM">BEQ</A> $B1DB
+B209: 84 0B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+B20B: 20 F7 AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEF7.HTM">$AEF7</A>     ; Test ')'
+B20E: 68        <A HREF="BPLA.HTM">PLA</A>
+B20F: 85 0D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0D.HTM">$0D</A>       ; Data type Flag
+B211: 68        <A HREF="BPLA.HTM">PLA</A>
+B212: 85 0E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0E.HTM">$0E</A>       ; Data type Flag
+B214: 29 7F     <A HREF="BAND.HTM">AND</A> #$7F
+B216: 85 0C     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0C.HTM">$0C</A>       ; Flag: Default Array dimension
+
+    <A HREF="ROMB1BF.HTM">Previous Page</A> / <A HREF="ROMB218.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

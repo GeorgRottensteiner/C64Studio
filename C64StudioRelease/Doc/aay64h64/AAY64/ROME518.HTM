@@ -1,0 +1,32 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E518/58648:   Initialize I/O
+
+Jump from <A HREF="ROMFE66.HTM">$FE6C</A>, <A HREF="ROMFF5B.HTM">$FF5B</A>:
+
+E518: 20 A0 E5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME5A0.HTM">$E5A0</A>     ; Set I/O Defaults
+E51B: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+E51D: 8D 91 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0291.HTM">$0291</A>     ; Flag: Upper/Lower Case change
+E520: 85 CF     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPCF.HTM">$CF</A>       ; Flag: Cursor Status
+E522: A9 48     <A HREF="BLDA.HTM">LDA</A> #$48
+E524: 8D 8F 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP028F.HTM">$028F</A>     ; Vector: Routine to determine Keyboard table
+E527: A9 EB     <A HREF="BLDA.HTM">LDA</A> #$EB
+E529: 8D 90 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP028F.HTM">$0290</A>     ; Vector: Routine to determine Keyboard table
+E52C: A9 0A     <A HREF="BLDA.HTM">LDA</A> #$0A
+E52E: 8D 89 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0289.HTM">$0289</A>     ; Maximum number of Bytes in Keyboard Buffer
+E531: 8D 8C 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP028C.HTM">$028C</A>     ; Repeat Key: First repeat delay Counter
+E534: A9 0E     <A HREF="BLDA.HTM">LDA</A> #$0E
+<B>* SX64:
+E534: A9 0E     <A HREF="BLDA.HTM">LDA</A> #$06
+</B>
+E536: 8D 86 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0286.HTM">$0286</A>     ; Current Character Color code
+E539: A9 04     <A HREF="BLDA.HTM">LDA</A> #$04
+E53B: 8D 8B 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP028B.HTM">$028B</A>     ; Repeat Key: Speed Counter
+E53E: A9 0C     <A HREF="BLDA.HTM">LDA</A> #$0C
+E540: 85 CD     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPCD.HTM">$CD</A>       ; Timer: Count down for Cursor blink toggle
+E542: 85 CC     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPCC.HTM">$CC</A>       ; Flag: Cursor blink
+
+    <A HREF="ROME50A.HTM">Previous Page</A> / <A HREF="ROME544.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

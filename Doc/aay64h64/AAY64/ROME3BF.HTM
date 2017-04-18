@@ -1,0 +1,65 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E3BF/58303:   Initialize BASIC RAM
+
+Jump from <A HREF="ROME394.HTM">$E397</A>:
+
+E3BF: A9 4C     <A HREF="BLDA.HTM">LDA</A> #$4C
+E3C1: 85 54     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP54.HTM">$54</A>       ; Jump Vector used in Function Evaluation
+E3C3: 8D 10 03  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0310.HTM">$0310</A>     ; USR Function JMP Instruction
+E3C6: A9 48     <A HREF="BLDA.HTM">LDA</A> #$48
+E3C8: A0 B2     <A HREF="BLDY.HTM">LDY</A> #$B2
+E3CA: 8D 11 03  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0311.HTM">$0311</A>     ; USR Address
+E3CD: 8C 12 03  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP0311.HTM">$0312</A>     ; USR Address
+E3D0: A9 91     <A HREF="BLDA.HTM">LDA</A> #$91
+E3D2: A0 B3     <A HREF="BLDY.HTM">LDY</A> #$B3
+E3D4: 85 05     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP05.HTM">$05</A>       ; Jump Vector: Convert Integer to Floating point
+E3D6: 84 06     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP05.HTM">$06</A>       ; Jump Vector: Convert Integer to Floating point
+E3D8: A9 AA     <A HREF="BLDA.HTM">LDA</A> #$AA
+E3DA: A0 B1     <A HREF="BLDY.HTM">LDY</A> #$B1
+E3DC: 85 03     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP03.HTM">$03</A>       ; Jump Vector: Convert FAC to Integer
+E3DE: 84 04     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP03.HTM">$04</A>       ; Jump Vector: Convert FAC to Integer
+E3E0: A2 1C     <A HREF="BLDX.HTM">LDX</A> #$1C
+
+Jump from $E3E8:
+
+E3E2: BD A2 E3  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROME3A2.HTM">$E3A2</A>,X   ; CHRGET For Zero-page
+E3E5: 95 73     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP73.HTM">$73</A>,X     ; CHRGET: Get next Byte of BASIC Text
+E3E7: CA        <A HREF="BDEX.HTM">DEX</A>
+E3E8: 10 F8     <A HREF="BBPL.HTM">BPL</A> $E3E2
+E3EA: A9 03     <A HREF="BLDA.HTM">LDA</A> #$03
+E3EC: 85 53     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP53.HTM">$53</A>       ; Length of String during Garbage collection
+E3EE: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+E3F0: 85 68     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP68.HTM">$68</A>       ; Bit Overflow Area during normalisation Routine
+E3F2: 85 13     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP13.HTM">$13</A>       ; File number of current Input Device
+E3F4: 85 18     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP17.HTM">$18</A>       ; Last temporary String Address
+E3F6: A2 01     <A HREF="BLDX.HTM">LDX</A> #$01
+E3F8: 8E FD 01  <A HREF="BSTX.HTM">STX</A> <A HREF="ZP013F.HTM">$01FD</A>     ; BASIC Stack Area
+E3FB: 8E FC 01  <A HREF="BSTX.HTM">STX</A> <A HREF="ZP013F.HTM">$01FC</A>     ; BASIC Stack Area
+E3FE: A2 19     <A HREF="BLDX.HTM">LDX</A> #$19
+E400: 86 16     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP16.HTM">$16</A>       ; Pointer: Temporary String Stack
+E402: 38        <A HREF="BSEC.HTM">SEC</A>
+E403: 20 9C FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFF9C.HTM">$FF9C</A>     ; Set/Read System RAM Bottom
+E406: 86 2B     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP2B.HTM">$2B</A>       ; Pointer: Start of BASIC Text Area
+E408: 84 2C     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP2B.HTM">$2C</A>       ; Pointer: Start of BASIC Text Area
+E40A: 38        <A HREF="BSEC.HTM">SEC</A>
+E40B: 20 99 FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFF99.HTM">$FF99</A>     ; Set/Read System RAM Top
+E40E: 86 37     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP37.HTM">$37</A>       ; Pointer: Highest Address available to BASIC
+E410: 84 38     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP37.HTM">$38</A>       ; Pointer: Highest Address available to BASIC
+E412: 86 33     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+E414: 84 34     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+E416: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+E418: 98        <A HREF="BTYA.HTM">TYA</A>
+E419: 91 2B     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP2B.HTM">$2B</A>),Y   ; Pointer: Start of BASIC Text Area
+E41B: E6 2B     <A HREF="BINC.HTM">INC</A> <A HREF="ZP2B.HTM">$2B</A>       ; Pointer: Start of BASIC Text Area
+E41D: D0 02     <A HREF="BBNE.HTM">BNE</A> $E421
+E41F: E6 2C     <A HREF="BINC.HTM">INC</A> <A HREF="ZP2B.HTM">$2C</A>       ; Pointer: Start of BASIC Text Area
+
+Jump from $E41D:
+
+E421: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME3BA.HTM">Previous Page</A> / <A HREF="ROME422.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

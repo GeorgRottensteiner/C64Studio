@@ -1,0 +1,107 @@
+ What's new in AAY64?
+--------------------------------------------------------------------------
+Version 0.64:  - simple form of "generated" KERNAL-comments added.
+(cool number!)   Not really the comments I want to have, but good enough
+                 to be useful. Thanx to Marzio De Biasi for inspiration.
+                 (BTW, does somebody have the book "Anatomy of the 64"
+                  to share?)
+               - added MMC64 and +60K specs
+               - more details about the CIAs and in the CHR$/ASC-tables
+               - bigger index page and more links in general
+               - changed some sort orders from random to alphabetic ;)
+               - BUGFIXES! Bugs, bugs everywhere...
+               - HTML-version has now Unix style EOLs
+               - finally moved from ZIP to TGZ (.tar.gz)
+                 (saves more than 50% for the HTML-version!)
+
+Version 0.63:  - reworked Graphic Formats according to Groepaz's (thanx!)
+                 RAYDOMAT.INI (more detailed update will follow)
+               - Info about memory configuration is now complete and
+                 correct (Thanx to Fenek/Arise for assistance)
+               - added and corrected infos about page-crossing (Thanx to
+                 Autoboy/Hack'n'Trade for mentioning)
+               - updated the Illegal Opcode section a lot
+               - VIC's PAL/NTSC Differences
+               - guess what, tons of bugfixes
+
+Version 0.62:  - complete KERNAL cross-reference!
+               - updated Exomizer- and pucrunch-infos
+                 (Thanx to Magnus Lind for clarifying the specs, note that
+                  V1.1.2 is not even out at this moment ;))
+               - even more bugfixes
+
+Version 0.61:  - Seperated from AAY1541 and AAY1581
+               - added RamLink, RetroReplay and SilverSurfer specs
+                 (Thanx to T.Baade, CountZero, Groepaz, J.Schoenfeld)
+               - added Exomizer memory map
+               - explained details (e.g. AutoLoad with REU)
+               - bugfixes
+
+Version 0.60:  - Description of address-modes
+               - Listing of CPU-bugs
+               - Added more info about carts (e.g. Final Cartridge 3)
+               - Lots of improvements in the Mnemonic-Section
+                 (e.g. WDM, BRK, finally standardized order of flags etc)
+               - introducing plain ASCII-version
+               - other cosmetic changes which could be done with a few
+                 lines of PERL :)
+               - bugfixes
+
+Version 0.59:  - Based on Frank Kontros' effort, AAY1541 has now a
+                 *commented* ROM-Listing. Thanx a lot, dude!
+               - AAY1541 now features Job Codes, Error Messages and a
+                 much more detailed index-page
+               - Illegal Opcodes in AAY64 have been worked out. Thanx to
+                 Graham/Oxyron for additional infos
+               - Added Action-Replay data
+               - usual amount of cosmetic changes and bugfixes
+
+Version 0.52:  - added table for CHR$/ASC-codes
+               - added CBMSCII-charset in 8x8-blocks
+               - some new GFX-formats
+               - default values for VIC/CIA
+               - added "VIC-Bit-Interpretation"-page
+               - finally changed the Keyboard-matrix to the
+                 correct order (Hi CountZero!)
+               - tons of tiny, nasty but not unimportant things
+
+               Big Thanx to Doc Bacardi for lots of good ideas. :)
+
+Version 0.51:  - worked out the SID-section
+               - added KERNAL-differences
+               - added more GFX-formats
+               - other little improvements (e.g. $90,$D27B,$DE01)
+               - killed some typos ;)
+
+Version 0.50:  - introducing the HTML-version
+               - lots of small changes to get full 7-bit ASCII
+               - updated documentation
+               - new address (ninja@the-dreams.de)
+
+Version 0.43:  - instruction charts for 6510 and 65816 opcodes
+               - memory maps for pucrunch, ByteBoiler, Jiffy-DOS and
+                 The Cruncher AB 2.0.
+               - detailed info about sprite priority
+               - fixed this and that
+
+Version 0.42:  - added PAL timing schemes for VIC
+               - updated SuperCPU with V2 and SuperRAM infos
+               - bugfixes...
+
+Version 0.41:  - added info about SuperCPU & Turbo232
+               - fixed some bugs in "Zeropage", "Illegals" and "VIC"
+               - cosmetic changes and other small things...
+
+Version 0.40:  - initial release
+
+--------------------------------------------------------------------------
+ What might be new in AAY64 somewhen?
+
+  - commented ROM-Listing (anyone got a digital version?)
+  - your suggestions
+
+--------------------------------------------------------------------------
+
+If you find a bug, have an idea how to improve AAY64 or simply want to
+encourage me, please send a mail to:  ninja@the-dreams.de
+

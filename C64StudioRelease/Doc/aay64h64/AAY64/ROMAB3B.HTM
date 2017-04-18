@@ -1,0 +1,30 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AB3B/43835:   Output Format Character
+
+Jump from <A HREF="ROMAAB8.HTM">$AAC5</A>, <A HREF="ROMAAE8.HTM">$AB19</A>, <A HREF="ROMABF9.HTM">$AC00</A>:
+
+AB3B: A5 13     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP13.HTM">$13</A>       ; File number of current Input Device
+AB3D: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $AB42
+AB3F: A9 20     <A HREF="BLDA.HTM">LDA</A> #$20
+AB41: 2C        .BYTE $2C
+
+Jump from $AB3D:
+
+AB42: A9 1D     <A HREF="BLDA.HTM">LDA</A> #$1D
+AB44: 2C        .BYTE $2C
+
+Jump from <A HREF="ROMA437.HTM">$A451</A>, <A HREF="ROMABF9.HTM">$ABFD</A>, <A HREF="ROMAC35.HTM">$AC47</A>:
+
+AB45: A9 3F     <A HREF="BLDA.HTM">LDA</A> #$3F
+
+Jump from <A HREF="ROMA437.HTM">$A45B</A>, <A HREF="ROMA69C.HTM">$A6F3</A>, <A HREF="ROMA717.HTM">$A73D</A>, <A HREF="ROMAAD7.HTM">$AAD9</A>, <A HREF="ROMAAD7.HTM">$AAE2</A>, <A HREF="ROMAB1E.HTM">$AB2D</A>:
+
+AB47: 20 0C E1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME10C.HTM">$E10C</A>     ; Output Character
+AB4A: 29 FF     <A HREF="BAND.HTM">AND</A> #$FF
+AB4C: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMAB1E.HTM">Previous Page</A> / <A HREF="ROMAB4D.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,97 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F291/62097:   Close File
+
+F291: 20 14 F3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF30F.HTM">$F314</A>     ; Find File
+F294: F0 02     <A HREF="BBEQ.HTM">BEQ</A> $F298
+F296: 18        <A HREF="BCLC.HTM">CLC</A>
+F297: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $F294:
+
+F298: 20 1F F3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF31F.HTM">$F31F</A>     ; Set File values
+F29B: 8A        <A HREF="BTXA.HTM">TXA</A>
+F29C: 48        <A HREF="BPHA.HTM">PHA</A>
+F29D: A5 BA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBA.HTM">$BA</A>       ; Current File - First Address (Device number)
+F29F: F0 50     <A HREF="BBEQ.HTM">BEQ</A> $F2F1
+F2A1: C9 03     <A HREF="BCMP.HTM">CMP</A> #$03
+F2A3: F0 4C     <A HREF="BBEQ.HTM">BEQ</A> $F2F1
+F2A5: B0 47     <A HREF="BBCS.HTM">BCS</A> $F2EE
+F2A7: C9 02     <A HREF="BCMP.HTM">CMP</A> #$02
+F2A9: D0 1D     <A HREF="BBNE.HTM">BNE</A> $F2C8
+F2AB: 68        <A HREF="BPLA.HTM">PLA</A>
+F2AC: 20 F2 F2  <A HREF="BJSR.HTM">JSR</A> $F2F2
+F2AF: 20 83 F4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF409.HTM">$F483</A>     ; Open RS232
+F2B2: 20 27 FE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFE25.HTM">$FE27</A>     ; Read / Set Top of Memory
+F2B5: A5 F8     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPF7.HTM">$F8</A>       ; RS232 Input Buffer Pointer
+F2B7: F0 01     <A HREF="BBEQ.HTM">BEQ</A> $F2BA
+F2B9: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from $F2B7:
+
+F2BA: A5 FA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPF9.HTM">$FA</A>       ; RS232 Output Buffer Pointer
+F2BC: F0 01     <A HREF="BBEQ.HTM">BEQ</A> $F2BF
+F2BE: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from $F2BC:
+
+F2BF: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+F2C1: 85 F8     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPF7.HTM">$F8</A>       ; RS232 Input Buffer Pointer
+F2C3: 85 FA     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPF9.HTM">$FA</A>       ; RS232 Output Buffer Pointer
+F2C5: 4C 7D F4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF409.HTM">$F47D</A>     ; Open RS232
+
+Jump from $F2A9:
+
+F2C8: A5 B9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F2CA: 29 0F     <A HREF="BAND.HTM">AND</A> #$0F
+F2CC: F0 23     <A HREF="BBEQ.HTM">BEQ</A> $F2F1
+F2CE: 20 D0 F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF7D0.HTM">$F7D0</A>     ; Get Buffer Address
+F2D1: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+F2D3: 38        <A HREF="BSEC.HTM">SEC</A>
+F2D4: 20 DD F1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF1CA.HTM">$F1DD</A>     ; Output One Character
+F2D7: 20 64 F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF864.HTM">$F864</A>     ; Initiate Tape Write
+F2DA: 90 04     <A HREF="BBCC.HTM">BCC</A> $F2E0
+F2DC: 68        <A HREF="BPLA.HTM">PLA</A>
+F2DD: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+F2DF: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $F2DA:
+
+F2E0: A5 B9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F2E2: C9 62     <A HREF="BCMP.HTM">CMP</A> #$62
+F2E4: D0 0B     <A HREF="BBNE.HTM">BNE</A> $F2F1
+F2E6: A9 05     <A HREF="BLDA.HTM">LDA</A> #$05
+F2E8: 20 6A F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF76A.HTM">$F76A</A>     ; Write Tape Header
+F2EB: 4C F1 F2  <A HREF="BJMP.HTM">JMP</A> $F2F1
+
+Jump from $F2A5:
+
+F2EE: 20 42 F6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF5FA.HTM">$F642</A>     ; Save to Serial Bus
+
+Jump from $F29F, $F2A3, $F2CC, $F2E4, $F2EB:
+
+F2F1: 68        <A HREF="BPLA.HTM">PLA</A>
+
+Jump from $F2AC:
+
+F2F2: AA        <A HREF="BTAX.HTM">TAX</A>
+F2F3: C6 98     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP98.HTM">$98</A>       ; Number of Open Files/Index to File Table
+F2F5: E4 98     <A HREF="BCPX.HTM">CPX</A> <A HREF="ZP98.HTM">$98</A>       ; Number of Open Files/Index to File Table
+F2F7: F0 14     <A HREF="BBEQ.HTM">BEQ</A> $F30D
+F2F9: A4 98     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP98.HTM">$98</A>       ; Number of Open Files/Index to File Table
+F2FB: B9 59 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0259.HTM">$0259</A>,Y   ; Active logical File numbers
+F2FE: 9D 59 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0259.HTM">$0259</A>,X   ; Active logical File numbers
+F301: B9 63 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0263.HTM">$0263</A>,Y   ; Active File First Addresses (Device numbers)
+F304: 9D 63 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0263.HTM">$0263</A>,X   ; Active File First Addresses (Device numbers)
+F307: B9 6D 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP026D.HTM">$026D</A>,Y   ; Active File Secondary Addresses
+F30A: 9D 6D 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP026D.HTM">$026D</A>,X   ; Active File Secondary Addresses
+
+Jump from $F2F7:
+
+F30D: 18        <A HREF="BCLC.HTM">CLC</A>
+F30E: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF250.HTM">Previous Page</A> / <A HREF="ROMF30F.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

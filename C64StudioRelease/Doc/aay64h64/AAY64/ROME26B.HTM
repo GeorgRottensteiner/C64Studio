@@ -1,0 +1,52 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E26B/57963:   Evaluate &lt;sin&gt;
+
+Jump from <A HREF="ROME2B4.HTM">$E2BB</A>:
+
+E26B: 20 0C BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC0C.HTM">$BC0C</A>     ; Copy FAC#1 into FAC#2
+E26E: A9 E5     <A HREF="BLDA.HTM">LDA</A> #$E5
+E270: A0 E2     <A HREF="BLDY.HTM">LDY</A> #$E2
+E272: A6 6E     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP6E.HTM">$6E</A>       ; AFAC Sign
+E274: 20 07 BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBB07.HTM">$BB07</A>     ; Divide FAC#2 by Flpt at (AC/YR)
+E277: 20 0C BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC0C.HTM">$BC0C</A>     ; Copy FAC#1 into FAC#2
+E27A: 20 CC BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBCCC.HTM">$BCCC</A>     ; Evaluate &lt;int&gt;
+E27D: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+E27F: 85 6F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+E281: 20 53 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB850.HTM">$B853</A>     ; Perform Subtraction
+E284: A9 EA     <A HREF="BLDA.HTM">LDA</A> #$EA
+E286: A0 E2     <A HREF="BLDY.HTM">LDY</A> #$E2
+E288: 20 50 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB850.HTM">$B850</A>     ; Perform Subtraction
+E28B: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+E28D: 48        <A HREF="BPHA.HTM">PHA</A>
+E28E: 10 0D     <A HREF="BBPL.HTM">BPL</A> $E29D
+E290: 20 49 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB849.HTM">$B849</A>     ; Add 0.5 to FAC#1
+E293: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+E295: 30 09     <A HREF="BBMI.HTM">BMI</A> $E2A0
+E297: A5 12     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP12.HTM">$12</A>       ; Flag: TAN sign/Comparative result
+E299: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+E29B: 85 12     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP12.HTM">$12</A>       ; Flag: TAN sign/Comparative result
+
+Jump from $E28E, <A HREF="ROME2B4.HTM">$E2DD</A>:
+
+E29D: 20 B4 BF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBFB4.HTM">$BFB4</A>     ; Negate FAC#1
+
+Jump from $E295:
+
+E2A0: A9 EA     <A HREF="BLDA.HTM">LDA</A> #$EA
+E2A2: A0 E2     <A HREF="BLDY.HTM">LDY</A> #$E2
+E2A4: 20 67 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB867.HTM">$B867</A>     ; Perform Addition
+E2A7: 68        <A HREF="BPLA.HTM">PLA</A>
+E2A8: 10 03     <A HREF="BBPL.HTM">BPL</A> $E2AD
+E2AA: 20 B4 BF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBFB4.HTM">$BFB4</A>     ; Negate FAC#1
+
+Jump from $E2A8:
+
+E2AD: A9 EF     <A HREF="BLDA.HTM">LDA</A> #$EF
+E2AF: A0 E2     <A HREF="BLDY.HTM">LDY</A> #$E2
+E2B1: 4C 43 E0  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME043.HTM">$E043</A>     ; Series Evaluation
+
+    <A HREF="ROME264.HTM">Previous Page</A> / <A HREF="ROME2B4.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

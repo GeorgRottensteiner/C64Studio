@@ -1,0 +1,23 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A480/42112:   Input &amp; Identify BASIC Line
+
+Jump from $A48E, <A HREF="ROMA4A2.HTM">$A4F6</A>, <A HREF="ROMA4A2.HTM">$A530</A>:
+
+A480: 6C 02 03  <A HREF="BJMP.HTM">JMP</A> (<A HREF="ZP0302.HTM">$0302</A>)   ; Vector: BASIC Input Line and Decode
+A483: 20 60 A5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA560.HTM">$A560</A>     ; Input Line Into Buffer
+A486: 86 7A     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A488: 84 7B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+A48A: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+A48D: AA        <A HREF="BTAX.HTM">TAX</A>
+A48E: F0 F0     <A HREF="BBEQ.HTM">BEQ</A> $A480
+A490: A2 FF     <A HREF="BLDX.HTM">LDX</A> #$FF
+A492: 86 3A     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP39.HTM">$3A</A>       ; Current BASIC Line number
+A494: 90 06     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMA49C.HTM">$A49C</A>     ; Get Line Number &amp; Tokenise Text
+A496: 20 79 A5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA579.HTM">$A579</A>     ; Tokenise Input Buffer
+A499: 4C E1 A7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA7E1.HTM">$A7E1</A>     ; Prepare to execute statement
+
+    <A HREF="ROMA474.HTM">Previous Page</A> / <A HREF="ROMA49C.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

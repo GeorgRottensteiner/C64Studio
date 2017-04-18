@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E5B4/58804:   Get Character From Keyboard Buffer
+
+Jump from <A HREF="ROME5CA.HTM">$E5E7</A>, <A HREF="ROMF13E.HTM">$F147</A>:
+
+E5B4: AC 77 02  <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP0277.HTM">$0277</A>     ; Keyboard Buffer Queue (FIFO)
+E5B7: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+
+Jump from $E5C2:
+
+E5B9: BD 78 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0277.HTM">$0278</A>,X   ; Keyboard Buffer Queue (FIFO)
+E5BC: 9D 77 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0277.HTM">$0277</A>,X   ; Keyboard Buffer Queue (FIFO)
+E5BF: E8        <A HREF="BINX.HTM">INX</A>
+E5C0: E4 C6     <A HREF="BCPX.HTM">CPX</A> <A HREF="ZPC6.HTM">$C6</A>       ; Number of Characters in Keyboard Buffer queue
+E5C2: D0 F5     <A HREF="BBNE.HTM">BNE</A> $E5B9
+E5C4: C6 C6     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPC6.HTM">$C6</A>       ; Number of Characters in Keyboard Buffer queue
+E5C6: 98        <A HREF="BTYA.HTM">TYA</A>
+E5C7: 58        <A HREF="BCLI.HTM">CLI</A>
+E5C8: 18        <A HREF="BCLC.HTM">CLC</A>
+E5C9: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME5A0.HTM">Previous Page</A> / <A HREF="ROME5CA.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

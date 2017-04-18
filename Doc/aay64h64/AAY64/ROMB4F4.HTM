@@ -1,0 +1,51 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B4F4/46324:   Allocate Space for String
+
+Jump from <A HREF="ROMB465.HTM">$B47D</A>:
+
+B4F4: 46 0F     <A HREF="BLSR.HTM">LSR</A> <A HREF="ZP0F.HTM">$0F</A>       ; Flag: DATA scan/List Quote/Garbage collection
+
+Jump from $B524:
+
+B4F6: 48        <A HREF="BPHA.HTM">PHA</A>
+B4F7: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+B4F9: 38        <A HREF="BSEC.HTM">SEC</A>
+B4FA: 65 33     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+B4FC: A4 34     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+B4FE: B0 01     <A HREF="BBCS.HTM">BCS</A> $B501
+B500: 88        <A HREF="BDEY.HTM">DEY</A>
+
+Jump from $B4FE:
+
+B501: C4 32     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZP31.HTM">$32</A>       ; Pointer: End of BASIC Arrays + 1
+B503: 90 11     <A HREF="BBCC.HTM">BCC</A> $B516
+B505: D0 04     <A HREF="BBNE.HTM">BNE</A> $B50B
+B507: C5 31     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP31.HTM">$31</A>       ; Pointer: End of BASIC Arrays + 1
+B509: 90 0B     <A HREF="BBCC.HTM">BCC</A> $B516
+
+Jump from $B505:
+
+B50B: 85 33     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+B50D: 84 34     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+B50F: 85 35     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP35.HTM">$35</A>       ; Utility String Pointer
+B511: 84 36     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP35.HTM">$36</A>       ; Utility String Pointer
+B513: AA        <A HREF="BTAX.HTM">TAX</A>
+B514: 68        <A HREF="BPLA.HTM">PLA</A>
+B515: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $B503, $B509:
+
+B516: A2 10     <A HREF="BLDX.HTM">LDX</A> #$10
+B518: A5 0F     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0F.HTM">$0F</A>       ; Flag: DATA scan/List Quote/Garbage collection
+B51A: 30 B6     <A HREF="BBMI.HTM">BMI</A> <A HREF="ROMB487.HTM">$B4D2</A>     ; Set Up String
+B51C: 20 26 B5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB526.HTM">$B526</A>     ; Garbage Collection
+B51F: A9 80     <A HREF="BLDA.HTM">LDA</A> #$80
+B521: 85 0F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0F.HTM">$0F</A>       ; Flag: DATA scan/List Quote/Garbage collection
+B523: 68        <A HREF="BPLA.HTM">PLA</A>
+B524: D0 D0     <A HREF="BBNE.HTM">BNE</A> $B4F6
+
+    <A HREF="ROMB4D5.HTM">Previous Page</A> / <A HREF="ROMB526.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

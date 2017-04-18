@@ -1,0 +1,19 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $ABF9/44025:   Do Input Prompt
+
+Jump from <A HREF="ROMABBF.HTM">$ABD6</A>, <A HREF="ROMAC35.HTM">$AC4A</A>:
+
+ABF9: A5 13     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP13.HTM">$13</A>       ; File number of current Input Device
+ABFB: D0 06     <A HREF="BBNE.HTM">BNE</A> $AC03
+ABFD: 20 45 AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAB3B.HTM">$AB45</A>     ; Output Format Character
+AC00: 20 3B AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAB3B.HTM">$AB3B</A>     ; Output Format Character
+
+Jump from $ABFB:
+
+AC03: 4C 60 A5  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA560.HTM">$A560</A>     ; Input Line Into Buffer
+
+    <A HREF="ROMABEA.HTM">Previous Page</A> / <A HREF="ROMAC06.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

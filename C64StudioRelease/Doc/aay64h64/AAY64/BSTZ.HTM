@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  STZ                      STZ Store zero in memory                     STZ
+
+ 65816 only!
+                                                        N V M X D I Z C
+  Operation:  0 -&gt; M                                    . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR2A.HTM">Absolute</A>       |   STZ $FFFF           |   $9C   |    3    |    4     |
+  | <A HREF="ADDR12A.HTM">Absolute,X</A>     |   STZ $FFFF,X         |   $9E   |    3    |    5     |
+  | <A HREF="ADDR4A.HTM">Direct Page</A>    |   STZ $FF             |   $64   |    2    |    3     |
+  | <A HREF="ADDR10A.HTM">Direct Page,X</A>  |   STZ $FF,X           |   $74   |    2    |    4     |
+  +----------------+-----------------------+---------+---------+----------+
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+</PRE></BODY></HTML>

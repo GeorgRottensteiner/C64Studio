@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510/65816 Addressing mode: Immediate -- #
+
+ (<A HREF="BADC.HTM">ADC</A>,<A HREF="BANC.HTM">ANC</A>,<A HREF="BAND.HTM">AND</A>,<A HREF="BANE.HTM">ANE</A>,<A HREF="BARR.HTM">ARR</A>,<A HREF="BASR.HTM">ASR</A>,<A HREF="BBIT.HTM">BIT</A>,<A HREF="BCMP.HTM">CMP</A>,<A HREF="BCPX.HTM">CPX</A>,<A HREF="BCPY.HTM">CPY</A>,<A HREF="BEOR.HTM">EOR</A>,<A HREF="BLDA.HTM">LDA</A>,<A HREF="BLDX.HTM">LDX</A>,<A HREF="BLDY.HTM">LDY</A>,<A HREF="BLXA.HTM">LXA</A>,<A HREF="BNOP.HTM">NOP</A>,<A HREF="BORA.HTM">ORA</A>,
+  <A HREF="BREP.HTM">REP</A>,<A HREF="BSBC.HTM">SBC</A>,<A HREF="BSBX.HTM">SBX</A>,<A HREF="BSEP.HTM">SEP</A>)
+ (2 and 3 bytes)  (2 and 3 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Immediate Data Low    |    R     |
+    |       (1) 2a  |  PBR,PC+2        | Immediate Data High   |    R     |
+    +---------------+------------------+-----------------------+----------+
+    (1) Add 1 cycle and 1 byte for M=0 or X=0 (i.e. 16 bit data).
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

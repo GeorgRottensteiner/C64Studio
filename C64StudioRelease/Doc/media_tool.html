@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Media Tool</H3>
+  <div id="mybody">
+    The Media Tool is a command line tool to handle several media project and raw formats.<br>
+    <br>
+    The Media Tool is entirely controlled by arguments passed to it:<br>
+    <br>
+    <br>
+    <pre>
+    mediatool.exe [-spriteproject &lt;sprite project file&gt;]
+                  [-sprites &lt;raw/binary sprite file&gt;]
+                  [-charsetproject &lt;charset project file&gt;]
+                  [-chars &lt;raw/binary charset file&gt;]
+                  [-type &lt;export format&gt;]
+                  [-export &lt;file name&gt;]
+                  [-offset &lt;first unit to affect, default 0&gt;]
+                  [-count &lt;count of units to affect, default all&gt;]
+    </pre>
+  </div>
+  <a name="-spriteproject"></a>
+  <H2>-spriteproject &lt;sprite project file&gt;</H2>
+  <div id="mybody">
+    Opens a C64 Studio sprite project file for its operations.
+    <br>
+    <br>
+  </div>
+  <a name="-sprites"></a>
+  <H2>-sprites &lt;raw/binary sprite file&gt;</H2>
+  <div id="mybody">
+    Opens a raw/binary file for its operations.<br>
+    Sprite data is expected to be 63 bytes of sprite data plus one filler byte.<br>
+    <br>
+    <br>
+  </div>
+  <H2>-charsetproject &lt;charset project file&gt;</H2>
+  <div id="mybody">
+    Opens a C64 Studio charset project file for its operations.
+    <br>
+    <br>
+  </div>
+  <a name="-chars"></a>
+  <H2>-chars &lt;raw/binary charset file&gt;</H2>
+  <div id="mybody">
+    Opens a raw/binary file for its operations.<br>
+    Charset data is expected to be a multiple of 8 bytes per character.<br>
+    <br>
+    <br>
+  </div>
+  <a name="-export"></a>
+  <H2>-export &lt;file name&gt;</H2>
+  <div id="mybody">
+    Exports the selected units to this file.
+    <br>
+    <br>
+  </div>
+  <a name="-offset"></a>
+  <H2>-offset &lt;Unit Index&gt;</H2>
+  <div id="mybody">
+    Offset of first unit to export. Defaults to zero.
+    <br>
+    <br>
+  </div>
+  <a name="-count"></a>
+  <H2>-count &lt;Unit Count&gt;</H2>
+  <div id="mybody">
+    Number of units to export. Defaults to all.
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>

@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DD0F/56591/CIA2+15:  Control Register B
+
+   +----------+-----------------------------------------------------+
+   | Bit  7   |   Set Alarm/TOD-Clock: 1 = Alarm, 0 = Clock         |
+   | Bits 6-5 |   Timer B Mode Select:                              |
+   |          |            00 = Count System 02 Clock Pulses        |
+   |          |            01 = Count Positive CNT Transitions      |
+   |          |            10 = Count Timer A Underflow Pulses      |
+   |          |            11 = Count Timer A Underflows While CNT  |
+   | Bit  4   |   Force Load Timer B: 1 = Yes                       |
+   | Bit  3   |   Timer B Run Mode: 1 = One-Shot, 0 = Continuous    |
+   | Bit  2   |   Timer B Output Mode to PB7: 1 = Toggle, 0 = Pulse |
+   | Bit  1   |   Timer B Output on PB7: 1 = Yes, 0 = No            |
+   | Bit  0   |   Start/Stop Timer B: 1 = Start, 0 = Stop           |
+   +----------+-----------------------------------------------------+
+
+   Default Value: $08/8 (%00001000)
+
+Kernal-Reference:
+
+ STA $DD0F   : <A HREF="ROMFDA3.HTM">$FDB9</A> <A HREF="ROMFED6.HTM">$FEF3</A> <A HREF="ROMFF07.HTM">$FF15</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,38 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  AND                  &quot;AND&quot; memory with accumulator                    AND
+
+  Operation:  A /\ M -&gt; A                               N V - B D I Z C
+                                                        / . . . . . / .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   AND #$FF            |   $29   |    2    |    2     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   AND $FF             |   $25   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   AND $FF,X           |   $35   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   AND $FFFF           |   $2D   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   AND $FFFF,X         |   $3D   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   AND $FFFF,Y         |   $39   |    3    |    4*    |
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   AND ($FF,X)         |   $21   |    2    |    6     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   AND ($FF),Y         |   $31   |    2    |    5*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 if page boundary is crossed.
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR3A.HTM">AbsoluteLong</A>   |   AND $FFFFFF         |   $2F   |    4    |     5    |
+  | <A HREF="ADDR13.HTM">AbsoluteLong,X</A> |   AND $FFFFFF,X       |   $3F   |    4    |     5    |
+  | <A HREF="ADDR18.HTM">(Indirect)</A>     |   AND ($FF)           |   $32   |    2    |     5    |
+  | <A HREF="ADDR19.HTM">[Indirect Long]</A>|   AND [$FF]           |   $27   |    2    |     6    |
+  | <A HREF="ADDR8.HTM">[Ind.Long],Y</A>   |   AND [$FF],Y         |   $37   |    2    |     6    |
+  | <A HREF="ADDR22.HTM">Relative,S</A>     |   AND $FF,S           |   $23   |    2    |     4    |
+  | <A HREF="ADDR23.HTM">(Indirect,S),Y</A> |   AND ($FF,S),Y       |   $33   |    2    |     7    |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

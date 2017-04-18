@@ -1,0 +1,53 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B67A/46714:   Store String in High RAM
+
+Jump from <A HREF="ROMAA2C.HTM">$AA61</A>, <A HREF="ROMB63D.HTM">$B660</A>:
+
+B67A: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B67C: B1 6F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP6F.HTM">$6F</A>),Y   ; Sign of result of Arithmetic Evaluation
+B67E: 48        <A HREF="BPHA.HTM">PHA</A>
+B67F: C8        <A HREF="BINY.HTM">INY</A>
+B680: B1 6F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP6F.HTM">$6F</A>),Y   ; Sign of result of Arithmetic Evaluation
+B682: AA        <A HREF="BTAX.HTM">TAX</A>
+B683: C8        <A HREF="BINY.HTM">INY</A>
+B684: B1 6F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP6F.HTM">$6F</A>),Y   ; Sign of result of Arithmetic Evaluation
+B686: A8        <A HREF="BTAY.HTM">TAY</A>
+B687: 68        <A HREF="BPLA.HTM">PLA</A>
+
+Jump from <A HREF="ROMB487.HTM">$B4C7</A>:
+
+B688: 86 22     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B68A: 84 23     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+
+Jump from <A HREF="ROMB63D.HTM">$B66A</A>, <A HREF="ROMB700.HTM">$B726</A>:
+
+B68C: A8        <A HREF="BTAY.HTM">TAY</A>
+B68D: F0 0A     <A HREF="BBEQ.HTM">BEQ</A> $B699
+B68F: 48        <A HREF="BPHA.HTM">PHA</A>
+
+Jump from $B696:
+
+B690: 88        <A HREF="BDEY.HTM">DEY</A>
+B691: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+B693: 91 35     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP35.HTM">$35</A>),Y   ; Utility String Pointer
+B695: 98        <A HREF="BTYA.HTM">TYA</A>
+B696: D0 F8     <A HREF="BBNE.HTM">BNE</A> $B690
+B698: 68        <A HREF="BPLA.HTM">PLA</A>
+
+Jump from $B68D:
+
+B699: 18        <A HREF="BCLC.HTM">CLC</A>
+B69A: 65 35     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP35.HTM">$35</A>       ; Utility String Pointer
+B69C: 85 35     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP35.HTM">$35</A>       ; Utility String Pointer
+B69E: 90 02     <A HREF="BBCC.HTM">BCC</A> $B6A2
+B6A0: E6 36     <A HREF="BINC.HTM">INC</A> <A HREF="ZP35.HTM">$36</A>       ; Utility String Pointer
+
+Jump from $B69E:
+
+B6A2: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB63D.HTM">Previous Page</A> / <A HREF="ROMB6A3.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

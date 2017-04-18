@@ -1,0 +1,31 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B82D/47149:   Perform [wait]
+
+B82D: 20 EB B7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB7EB.HTM">$B7EB</A>     ; Get parameters for POKE/WAIT
+B830: 86 49     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+B832: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+B834: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+B837: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $B83C
+B839: 20 F1 B7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB7EB.HTM">$B7F1</A>     ; Get parameters for POKE/WAIT
+
+Jump from $B837:
+
+B83C: 86 4A     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP49.HTM">$4A</A>       ; Pointer: Index Variable for FOR/NEXT loop
+B83E: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+
+Jump from $B846:
+
+B840: B1 14     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP14.HTM">$14</A>),Y   ; Temporary: Integer value
+B842: 45 4A     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP49.HTM">$4A</A>       ; Pointer: Index Variable for FOR/NEXT loop
+B844: 25 49     <A HREF="BAND.HTM">AND</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+B846: F0 F8     <A HREF="BBEQ.HTM">BEQ</A> $B840
+
+Jump from <A HREF="ROMB867.HTM">$B878</A>:
+
+B848: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB824.HTM">Previous Page</A> / <A HREF="ROMB849.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

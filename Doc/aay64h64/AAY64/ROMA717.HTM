@@ -1,0 +1,42 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A717/42775:   Handle LIST Character
+
+Jump from <A HREF="ROMA69C.HTM">$A705</A>:
+
+A717: 6C 06 03  <A HREF="BJMP.HTM">JMP</A> (<A HREF="ZP0306.HTM">$0306</A>)   ; Vector: BASIC LIST Routine
+A71A: 10 D7     <A HREF="BBPL.HTM">BPL</A> <A HREF="ROMA69C.HTM">$A6F3</A>     ; Perform [list]
+A71C: C9 FF     <A HREF="BCMP.HTM">CMP</A> #$FF
+A71E: F0 D3     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMA69C.HTM">$A6F3</A>     ; Perform [list]
+A720: 24 0F     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP0F.HTM">$0F</A>       ; Flag: DATA scan/List Quote/Garbage collection
+A722: 30 CF     <A HREF="BBMI.HTM">BMI</A> <A HREF="ROMA69C.HTM">$A6F3</A>     ; Perform [list]
+A724: 38        <A HREF="BSEC.HTM">SEC</A>
+A725: E9 7F     <A HREF="BSBC.HTM">SBC</A> #$7F
+A727: AA        <A HREF="BTAX.HTM">TAX</A>
+A728: 84 49     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+A72A: A0 FF     <A HREF="BLDY.HTM">LDY</A> #$FF
+
+Jump from $A735:
+
+A72C: CA        <A HREF="BDEX.HTM">DEX</A>
+A72D: F0 08     <A HREF="BBEQ.HTM">BEQ</A> $A737
+
+Jump from $A733:
+
+A72F: C8        <A HREF="BINY.HTM">INY</A>
+A730: B9 9E A0  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMA09E.HTM">$A09E</A>,Y   ; BASIC Command Keyword Table
+A733: 10 FA     <A HREF="BBPL.HTM">BPL</A> $A72F
+A735: 30 F5     <A HREF="BBMI.HTM">BMI</A> $A72C
+
+Jump from $A72D, $A740:
+
+A737: C8        <A HREF="BINY.HTM">INY</A>
+A738: B9 9E A0  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMA09E.HTM">$A09E</A>,Y   ; BASIC Command Keyword Table
+A73B: 30 B2     <A HREF="BBMI.HTM">BMI</A> <A HREF="ROMA69C.HTM">$A6EF</A>     ; Perform [list]
+A73D: 20 47 AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAB3B.HTM">$AB47</A>     ; Output Format Character
+A740: D0 F5     <A HREF="BBNE.HTM">BNE</A> $A737
+
+    <A HREF="ROMA69C.HTM">Previous Page</A> / <A HREF="ROMA742.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

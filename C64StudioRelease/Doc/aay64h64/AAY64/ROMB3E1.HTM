@@ -1,0 +1,19 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B3E1/46049:   Check Syntax of FN
+
+Jump from <A HREF="ROMB3AE.HTM">$B3B3</A>, <A HREF="ROMB3F4.HTM">$B3F4</A>:
+
+B3E1: A9 A5     <A HREF="BLDA.HTM">LDA</A> #$A5
+B3E3: 20 FF AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFD.HTM">$AEFF</A>     ; Test ','
+B3E6: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+B3E8: 85 10     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP10.HTM">$10</A>       ; Flag: Subscript reference/User Function call
+B3EA: 20 92 B0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB08B.HTM">$B092</A>     ; Identify Variable
+B3ED: 85 4E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4E.HTM">$4E</A>       ; Temporary storage for FLPT value
+B3EF: 84 4F     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP4E.HTM">$4F</A>       ; Temporary storage for FLPT value
+B3F1: 4C 8D AD  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAD8A.HTM">$AD8D</A>     ; Confirm Result
+
+    <A HREF="ROMB3B3.HTM">Previous Page</A> / <A HREF="ROMB3F4.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

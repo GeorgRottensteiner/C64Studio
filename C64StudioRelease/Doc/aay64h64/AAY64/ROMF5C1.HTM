@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F5C1/62913:   Print Filename
+
+Jump from <A HREF="ROMF68F.HTM">$F698</A>:
+
+F5C1: A4 B7     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPB7.HTM">$B7</A>       ; Number of Characters in Filename
+F5C3: F0 0C     <A HREF="BBEQ.HTM">BEQ</A> $F5D1
+F5C5: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+
+Jump from $F5CF:
+
+F5C7: B1 BB     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPBB.HTM">$BB</A>),Y   ; Pointer: Current File name Address
+F5C9: 20 D2 FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFD2.HTM">$FFD2</A>     ; Output Vector, chrout
+F5CC: C8        <A HREF="BINY.HTM">INY</A>
+F5CD: C4 B7     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZPB7.HTM">$B7</A>       ; Number of Characters in Filename
+F5CF: D0 F6     <A HREF="BBNE.HTM">BNE</A> $F5C7
+
+Jump from $F5C3, <A HREF="ROMF5AF.HTM">$F5B1</A>, <A HREF="ROMF5AF.HTM">$F5BA</A>:
+
+F5D1: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF5AF.HTM">Previous Page</A> / <A HREF="ROMF5D2.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

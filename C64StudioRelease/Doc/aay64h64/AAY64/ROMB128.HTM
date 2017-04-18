@@ -1,0 +1,88 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B128/45352:   Create Variable
+
+Jump from <A HREF="ROMB11D.HTM">$B121</A>:
+
+B128: A5 45     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP45.HTM">$45</A>       ; Name of Variable being sought in Variable Table
+B12A: A4 46     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP45.HTM">$46</A>       ; Name of Variable being sought in Variable Table
+B12C: C9 54     <A HREF="BCMP.HTM">CMP</A> #$54
+B12E: D0 0B     <A HREF="BBNE.HTM">BNE</A> $B13B
+B130: C0 C9     <A HREF="BCPY.HTM">CPY</A> #$C9
+B132: F0 EF     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMB11D.HTM">$B123</A>     ; Create New Variable
+B134: C0 49     <A HREF="BCPY.HTM">CPY</A> #$49
+B136: D0 03     <A HREF="BBNE.HTM">BNE</A> $B13B
+
+Jump from $B141:
+
+B138: 4C 08 AF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAF08.HTM">$AF08</A>     ; Output ?SYNTAX Error
+
+Jump from $B12E, $B136:
+
+B13B: C9 53     <A HREF="BCMP.HTM">CMP</A> #$53
+B13D: D0 04     <A HREF="BBNE.HTM">BNE</A> $B143
+B13F: C0 54     <A HREF="BCPY.HTM">CPY</A> #$54
+B141: F0 F5     <A HREF="BBEQ.HTM">BEQ</A> $B138
+
+Jump from $B13D:
+
+B143: A5 2F     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2F.HTM">$2F</A>       ; Pointer: Start of BASIC Arrays
+B145: A4 30     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP2F.HTM">$30</A>       ; Pointer: Start of BASIC Arrays
+B147: 85 5F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+B149: 84 60     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+B14B: A5 31     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP31.HTM">$31</A>       ; Pointer: End of BASIC Arrays + 1
+B14D: A4 32     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP31.HTM">$32</A>       ; Pointer: End of BASIC Arrays + 1
+B14F: 85 5A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$5A</A>       ; Temporary storage for FLPT value
+B151: 84 5B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP57.HTM">$5B</A>       ; Temporary storage for FLPT value
+B153: 18        <A HREF="BCLC.HTM">CLC</A>
+B154: 69 07     <A HREF="BADC.HTM">ADC</A> #$07
+B156: 90 01     <A HREF="BBCC.HTM">BCC</A> $B159
+B158: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from $B156:
+
+B159: 85 58     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B15B: 84 59     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B15D: 20 B8 A3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA3B8.HTM">$A3B8</A>     ; Open Space in Memory
+B160: A5 58     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B162: A4 59     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B164: C8        <A HREF="BINY.HTM">INY</A>
+B165: 85 2F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP2F.HTM">$2F</A>       ; Pointer: Start of BASIC Arrays
+B167: 84 30     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP2F.HTM">$30</A>       ; Pointer: Start of BASIC Arrays
+B169: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B16B: A5 45     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP45.HTM">$45</A>       ; Name of Variable being sought in Variable Table
+B16D: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B16F: C8        <A HREF="BINY.HTM">INY</A>
+B170: A5 46     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP45.HTM">$46</A>       ; Name of Variable being sought in Variable Table
+B172: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B174: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+B176: C8        <A HREF="BINY.HTM">INY</A>
+B177: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B179: C8        <A HREF="BINY.HTM">INY</A>
+B17A: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B17C: C8        <A HREF="BINY.HTM">INY</A>
+B17D: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B17F: C8        <A HREF="BINY.HTM">INY</A>
+B180: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B182: C8        <A HREF="BINY.HTM">INY</A>
+B183: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+
+Jump from <A HREF="ROMB0E7.HTM">$B106</A>:
+
+B185: A5 5F     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+B187: 18        <A HREF="BCLC.HTM">CLC</A>
+B188: 69 02     <A HREF="BADC.HTM">ADC</A> #$02
+B18A: A4 60     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+B18C: 90 01     <A HREF="BBCC.HTM">BCC</A> $B18F
+B18E: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from $B18C:
+
+B18F: 85 47     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP47.HTM">$47</A>       ; Value/Descriptor-Pointer
+B191: 84 48     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP47.HTM">$48</A>       ; Value/Descriptor-Pointer
+B193: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB11D.HTM">Previous Page</A> / <A HREF="ROMB194.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

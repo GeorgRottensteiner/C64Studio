@@ -1,0 +1,16 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DF00/57088/REU+0:   Status Register (read only)
+
+   +----------+---------------------------------------------------+
+   | Bit  7   |   Interrupt Pending: 1 = Interrupt occured        |
+   |          |   (always 0 with RAMLink)                         |
+   | Bit  6   |   End-of-Block: 1 = Transfer complete             |
+   | Bit  5   |   Fault: 1 = Block Verify Error                   |
+   | Bit  4   |   Size: 1 = min. 256 KB, 0 = 64 KB                |
+   |          |   (always 1 with RAMLink)                         |
+   | Bits 3-0 |   Version (always 0?)                             |
+   +----------+---------------------------------------------------+
+
+</PRE></BODY></HTML>

@@ -1,0 +1,42 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A437/42039:   Error Routine
+
+Jump from <A HREF="ROMA560.HTM">$A573</A>, <A HREF="ROMA857.HTM">$A85F</A>, <A HREF="ROMA8D2.HTM">$A8E5</A>, <A HREF="ROMAB4D.HTM">$AB68</A>, <A HREF="ROMAD1E.HTM">$AD32</A>, <A HREF="ROMAD8A.HTM">$AD9B</A>, <A HREF="ROMAF08.HTM">$AF0A</A>, <A HREF="ROMB248.HTM">$B24A</A>, <A HREF="ROMB3AE.HTM">$B3B0</A>,
+          <A HREF="ROMB487.HTM">$B4D2</A>, <A HREF="ROMB63D.HTM">$B65A</A>, <A HREF="ROMB97E.HTM">$B980</A>, <A HREF="ROMBB0F.HTM">$BB8C</A>, <A HREF="ROME0F9.HTM">$E109</A>, <A HREF="ROME165.HTM">$E19E</A>:
+
+A437: 6C 00 03  <A HREF="BJMP.HTM">JMP</A> (<A HREF="ZP0300.HTM">$0300</A>)   ; Vector: BASIC Error Message
+
+Jump from <A HREF="ROME37B.HTM">$E38E</A>:
+
+A43A: 8A        <A HREF="BTXA.HTM">TXA</A>
+A43B: 0A        <A HREF="BASL.HTM">ASL</A>
+A43C: AA        <A HREF="BTAX.HTM">TAX</A>
+A43D: BD 26 A3  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMA19E.HTM">$A326</A>,X   ; Error Message Table
+A440: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A442: BD 27 A3  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMA19E.HTM">$A327</A>,X   ; Error Message Table
+A445: 85 23     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+A447: 20 CC FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFCC.HTM">$FFCC</A>     ; Restore I/O Vector
+A44A: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+A44C: 85 13     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP13.HTM">$13</A>       ; File number of current Input Device
+A44E: 20 D7 AA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAAD7.HTM">$AAD7</A>     ; Output CR/LF
+A451: 20 45 AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAB3B.HTM">$AB45</A>     ; Output Format Character
+A454: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+
+Jump from $A460:
+
+A456: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+A458: 48        <A HREF="BPHA.HTM">PHA</A>
+A459: 29 7F     <A HREF="BAND.HTM">AND</A> #$7F
+A45B: 20 47 AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAB3B.HTM">$AB47</A>     ; Output Format Character
+A45E: C8        <A HREF="BINY.HTM">INY</A>
+A45F: 68        <A HREF="BPLA.HTM">PLA</A>
+A460: 10 F4     <A HREF="BBPL.HTM">BPL</A> $A456
+A462: 20 7A A6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA65E.HTM">$A67A</A>     ; Perform [clr]
+A465: A9 69     <A HREF="BLDA.HTM">LDA</A> #$69
+A467: A0 A3     <A HREF="BLDY.HTM">LDY</A> #$A3
+
+    <A HREF="ROMA435.HTM">Previous Page</A> / <A HREF="ROMA469.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

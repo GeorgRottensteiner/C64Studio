@@ -1,0 +1,48 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B947/47431:   2's Complement FAC#1
+
+Jump from <A HREF="ROMB867.HTM">$B8D4</A>:
+
+B947: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+B949: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+B94B: 85 66     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+
+Jump from <A HREF="ROMBC9B.HTM">$BCAB</A>:
+
+B94D: A5 62     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+B94F: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+B951: 85 62     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+B953: A5 63     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B955: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+B957: 85 63     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B959: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B95B: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+B95D: 85 64     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B95F: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B961: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+B963: 85 65     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B965: A5 70     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B967: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+B969: 85 70     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B96B: E6 70     <A HREF="BINC.HTM">INC</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B96D: D0 0E     <A HREF="BBNE.HTM">BNE</A> $B97D
+
+Jump from <A HREF="ROMBC1B.HTM">$BC23</A>:
+
+B96F: E6 65     <A HREF="BINC.HTM">INC</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B971: D0 0A     <A HREF="BBNE.HTM">BNE</A> $B97D
+B973: E6 64     <A HREF="BINC.HTM">INC</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B975: D0 06     <A HREF="BBNE.HTM">BNE</A> $B97D
+B977: E6 63     <A HREF="BINC.HTM">INC</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B979: D0 02     <A HREF="BBNE.HTM">BNE</A> $B97D
+B97B: E6 62     <A HREF="BINC.HTM">INC</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+
+Jump from $B96D, $B971, $B975, $B979:
+
+B97D: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB867.HTM">Previous Page</A> / <A HREF="ROMB97E.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

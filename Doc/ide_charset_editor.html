@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Character Set Editor - Editor Pane</H3>
+  <div id="mybody">
+    The character set editor supports editing a set of up to 256 characters. Both single color and multi color are supported. Characters can be
+    directly modified, flipped horizontally and vertically as well as copied and pasted to/from the clipboard.<br>
+    <br>
+    <br>
+    <img src="images/charset_editor.png"><br>
+    <br>
+    <br>
+    <b>Selection</b><br>
+    You can select a single char by left clicking, a range by shift-left clicking or a rectangular selection by alt-left clicking. If copied and pasted from the clipboard the copied selection style will matter when inserting.<br>
+    <br>
+    <b>Copy to Clipboard</b><br>
+    The selected character is written to the clipboard as 8x8 sized 8 bit indexed image files where the first 16 colors are set in the palette.<br>
+    Inside C64 Studio the actual selection is put on the clipboard.<br>
+    <br>
+    <b>Paste from Clipboard</b><br>
+    A character is pasted from the clipboard, the image is expected to be 8 bit index and have a size of 8x8 pixel.<br>
+    Pasting an image also will try to map to the currently set multi color colors. If the pasted image does not meet the expectations (eg. too many colors) the
+    paste will be skipped.<br>
+    <br>
+    <b>Big Paste</b><br>
+    Like wise any images from the clipboard are expected to be 8 bit indexed.<br>
+    Pasting an image also will try to map to the currently set multi color colors. If the pasted image does not meet the expectations (eg. too many colors) the
+    paste will be skipped.<br>
+    <br>
+    <b>Exchange colors</b><br>
+    Pops up a menu where multicolors can be exchanged with each other or the background color. The exchange is done for the whole charset and also affects the multi color settings.<br>
+    <br>
+    <b>Force multicolor on paste</b><br>
+    This setting affects pasting from clipboard. If checked and a pasted character looks the same as single and multi color (e.g. one of the multi color is blue) the preference is to use multi color.<br>
+    <br>
+    <b>Force Multicolor</b><br>
+    Forces all characters to be flagged as multicolor.<br>
+    <br>
+    <b>Force Hires</b><br>
+    Forces all characters to be flagged as single color.<br>
+    <br>
+    <b>Category</b><br>
+    Displays/Sets the category of a character, useful for the category pane.<br>
+    <br>
+    <b>Show grid</b><br>
+    Toggles a grid display on the character editor window.<br>
+    <br>
+  </div>
+  <H3>Character Set Editor - Project Pane</H3>
+  <div id="mybody">
+    On the project pane several import/export functions are available.<br>
+    <br>
+    <br>
+    <img src="images/charset_editor_project.png"><br>
+    <br>
+    <br>
+    <b>Export to file</b><br>
+    Exports the chosen range of characters to a binary file.<br>
+    <br>
+    <b>Export to data</b><br>
+    Exports the binary data of the chosen characters to text. The fields Prefix with and wrap are used to build the resulting text.<br>
+    <br>
+    <b>Export to image</b><br>
+    Exports the chosen characters ordered in a 16x16 grid as an PNG image.<br>
+    <br>
+    <b>Import from file</b><br>
+    Imports characters from a binary file.<br>
+    <br>
+    <b>Default Uppercase</b><br>
+    Sets the default ROM uppercase characters.<br>
+    <br>
+    <b>Default Lowercase</b><br>
+    Sets the default ROM uppercase characters.<br>
+    <br>
+    <b>Import from image</b><br>
+    Imports characters from an image. The image file is expected to to be 8 bit index and have a size of a multiple of 8 horizontally and 8 vertically.<br>
+    <br>
+  </div>
+  <H3>Character Set Editor - Categories Pane</H3>
+  <div id="mybody">
+    Categories can be used to order characters. Categories have no actual function in the editor beside helping in managing characters.<br>
+    <br>
+    <br>
+    <img src="images/charset_editor_categories.png"><br>
+    <br>
+    <br>
+    <b>Add</b><br>
+    Adds a new category.<br>
+    <br>
+    <b>Delete Category</b><br>
+    Deletes the currently selected category. Characters selected into that category are reset to uncategorized.<br>
+    <br>
+    <b>Collapse Duplicates</b><br>
+    Detects duplicate characters inside the current category and collapses them.<br>
+    <br>
+    <b>Reseat Category</b><br>
+    Resorts characters so all characters of the selected category are arranged starting with the entered index.<br>
+    <br>
+    <b>Sort by Categories</b><br>
+    Resorts characters so all characters of a category are behind each other.<br>
+    <br>
+  </div>
+</body>
+</HTML>

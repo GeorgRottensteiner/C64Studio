@@ -1,0 +1,57 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F20E/61966:   Set Input Device
+
+F20E: 20 0F F3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF30F.HTM">$F30F</A>     ; Find File
+F211: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $F216
+F213: 4C 01 F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF701.HTM">$F701</A>     ; Output I/O Error Messages: 'FILE NOT OPEN'
+
+Jump from $F211:
+
+F216: 20 1F F3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF31F.HTM">$F31F</A>     ; Set File values
+F219: A5 BA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBA.HTM">$BA</A>       ; Current File - First Address (Device number)
+F21B: F0 16     <A HREF="BBEQ.HTM">BEQ</A> $F233
+F21D: C9 03     <A HREF="BCMP.HTM">CMP</A> #$03
+F21F: F0 12     <A HREF="BBEQ.HTM">BEQ</A> $F233
+F221: B0 14     <A HREF="BBCS.HTM">BCS</A> $F237
+F223: C9 02     <A HREF="BCMP.HTM">CMP</A> #$02
+F225: D0 03     <A HREF="BBNE.HTM">BNE</A> $F22A
+F227: 4C 4D F0  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF04D.HTM">$F04D</A>     ; Input From RS232
+
+Jump from $F225:
+
+F22A: A6 B9     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F22C: E0 60     <A HREF="BCPX.HTM">CPX</A> #$60
+F22E: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $F233
+F230: 4C 0A F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF70A.HTM">$F70A</A>     ; Output I/O Error Messages: 'NOT INPUT FILE'
+
+Jump from $F21B, $F21F, $F22E, $F24B:
+
+F233: 85 99     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP99.HTM">$99</A>       ; Default Input Device (0)
+F235: 18        <A HREF="BCLC.HTM">CLC</A>
+F236: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $F221:
+
+F237: AA        <A HREF="BTAX.HTM">TAX</A>
+F238: 20 09 ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMED09.HTM">$ED09</A>     ; Send TALK Command on Serial Bus
+F23B: A5 B9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F23D: 10 06     <A HREF="BBPL.HTM">BPL</A> $F245
+F23F: 20 CC ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDCC.HTM">$EDCC</A>     ; Wait For Clock
+F242: 4C 48 F2  <A HREF="BJMP.HTM">JMP</A> $F248
+
+Jump from $F23D:
+
+F245: 20 C7 ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDC7.HTM">$EDC7</A>     ; Send TALK Secondary Address
+
+Jump from $F242:
+
+F248: 8A        <A HREF="BTXA.HTM">TXA</A>
+F249: 24 90     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP90.HTM">$90</A>       ; Kernal I/O Status Word ST
+F24B: 10 E6     <A HREF="BBPL.HTM">BPL</A> $F233
+F24D: 4C 07 F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF707.HTM">$F707</A>     ; Output I/O Error Messages: 'DEVICE NOT PRESENT'
+
+    <A HREF="ROMF1CA.HTM">Previous Page</A> / <A HREF="ROMF250.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

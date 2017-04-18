@@ -1,0 +1,42 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FF07/65287:   NMI RS232 Out
+
+Jump from <A HREF="ROMFE66.HTM">$FE9A</A>, <A HREF="ROMFE66.HTM">$FEB3</A>:
+
+FF07: AD 95 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0295.HTM">$0295</A>     ; RS232 Non-standard Bits/Second
+FF0A: 8D 06 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA26.HTM">$DD06</A>     ; CIA2: Timer B Low-Byte  (RS232)
+FF0D: AD 96 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0295.HTM">$0296</A>     ; RS232 Non-standard Bits/Second
+FF10: 8D 07 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA27.HTM">$DD07</A>     ; CIA2: Timer B High-Byte (RS232)
+FF13: A9 11     <A HREF="BLDA.HTM">LDA</A> #$11
+FF15: 8D 0F DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA215.HTM">$DD0F</A>     ; CIA2: Control Register B
+FF18: A9 12     <A HREF="BLDA.HTM">LDA</A> #$12
+FF1A: 4D A1 02  <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+FF1D: 8D A1 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+FF20: A9 FF     <A HREF="BLDA.HTM">LDA</A> #$FF
+FF22: 8D 06 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA26.HTM">$DD06</A>     ; CIA2: Timer B Low-Byte  (RS232)
+FF25: 8D 07 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA27.HTM">$DD07</A>     ; CIA2: Timer B High-Byte (RS232)
+FF28: AE 98 02  <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP0298.HTM">$0298</A>     ; RS232 Number of Bits left to send
+FF2B: 86 A8     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPA8.HTM">$A8</A>       ; RS232 Input Bit count/Tape temporary
+FF2D: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from <A HREF="ROMF409.HTM">$F44A</A>:
+
+FF2E: AA        <A HREF="BTAX.HTM">TAX</A>
+FF2F: AD 96 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0295.HTM">$0296</A>     ; RS232 Non-standard Bits/Second
+FF32: 2A        <A HREF="BROL.HTM">ROL</A>
+FF33: A8        <A HREF="BTAY.HTM">TAY</A>
+FF34: 8A        <A HREF="BTXA.HTM">TXA</A>
+FF35: 69 C8     <A HREF="BADC.HTM">ADC</A> #$C8
+FF37: 8D 99 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0299.HTM">$0299</A>     ; RS232 Baud Rate; Full Bit time microseconds
+FF3A: 98        <A HREF="BTYA.HTM">TYA</A>
+FF3B: 69 00     <A HREF="BADC.HTM">ADC</A> #$00
+FF3D: 8D 9A 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0299.HTM">$029A</A>     ; RS232 Baud Rate; Full Bit time microseconds
+FF40: 60        <A HREF="BRTS.HTM">RTS</A>
+FF41: EA        <A HREF="BNOP.HTM">NOP</A>
+FF42: EA        <A HREF="BNOP.HTM">NOP</A>
+
+    <A HREF="ROMFED6.HTM">Previous Page</A> / <A HREF="ROMFF43.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

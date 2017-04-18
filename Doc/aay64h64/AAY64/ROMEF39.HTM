@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EF39/61241:   Disable Timer
+
+Jump from <A HREF="ROMEF06.HTM">$EF24</A>:
+
+EF39: A9 01     <A HREF="BLDA.HTM">LDA</A> #$01
+
+Jump from <A HREF="ROMEF7E.HTM">$EF8D</A>, <A HREF="ROMF017.HTM">$F041</A>, <A HREF="ROMF04D.HTM">$F07A</A>:
+
+EF3B: 8D 0D DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA213.HTM">$DD0D</A>     ; CIA2: Interrupt (NMI) Control Register
+EF3E: 4D A1 02  <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+EF41: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+EF43: 8D A1 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+EF46: 8D 0D DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA213.HTM">$DD0D</A>     ; CIA2: Interrupt (NMI) Control Register
+EF49: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMEF2E.HTM">Previous Page</A> / <A HREF="ROMEF4A.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

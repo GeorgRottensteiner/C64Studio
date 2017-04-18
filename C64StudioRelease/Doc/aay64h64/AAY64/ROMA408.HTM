@@ -1,0 +1,50 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A408/41992:   Check Memory Overlap
+
+Jump from <A HREF="ROMA3B8.HTM">$A3B8</A>, <A HREF="ROMB261.HTM">$B264</A>, <A HREF="ROMB261.HTM">$B2B9</A>, <A HREF="ROME422.HTM">$E426</A>:
+
+A408: C4 34     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+A40A: 90 28     <A HREF="BBCC.HTM">BCC</A> $A434
+A40C: D0 04     <A HREF="BBNE.HTM">BNE</A> $A412
+A40E: C5 33     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+A410: 90 22     <A HREF="BBCC.HTM">BCC</A> $A434
+
+Jump from $A40C:
+
+A412: 48        <A HREF="BPHA.HTM">PHA</A>
+A413: A2 09     <A HREF="BLDX.HTM">LDX</A> #$09
+A415: 98        <A HREF="BTYA.HTM">TYA</A>
+
+Jump from $A41A:
+
+A416: 48        <A HREF="BPHA.HTM">PHA</A>
+A417: B5 57     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP57.HTM">$57</A>,X     ; Temporary storage for FLPT value
+A419: CA        <A HREF="BDEX.HTM">DEX</A>
+A41A: 10 FA     <A HREF="BBPL.HTM">BPL</A> $A416
+A41C: 20 26 B5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB526.HTM">$B526</A>     ; Garbage Collection
+A41F: A2 F7     <A HREF="BLDX.HTM">LDX</A> #$F7
+
+Jump from $A425:
+
+A421: 68        <A HREF="BPLA.HTM">PLA</A>
+A422: 95 61     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP61.HTM">$61</A>,X     ; FAC Exponent
+A424: E8        <A HREF="BINX.HTM">INX</A>
+A425: 30 FA     <A HREF="BBMI.HTM">BMI</A> $A421
+A427: 68        <A HREF="BPLA.HTM">PLA</A>
+A428: A8        <A HREF="BTAY.HTM">TAY</A>
+A429: 68        <A HREF="BPLA.HTM">PLA</A>
+A42A: C4 34     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+A42C: 90 06     <A HREF="BBCC.HTM">BCC</A> $A434
+A42E: D0 05     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMA435.HTM">$A435</A>     ; Output ?OUT OF MEMORY Error
+A430: C5 33     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+A432: B0 01     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMA435.HTM">$A435</A>     ; Output ?OUT OF MEMORY Error
+
+Jump from $A40A, $A410, $A42C:
+
+A434: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA3FB.HTM">Previous Page</A> / <A HREF="ROMA435.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

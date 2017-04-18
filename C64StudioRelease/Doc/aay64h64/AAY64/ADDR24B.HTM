@@ -1,0 +1,52 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 65816 Addressing mode: Block Move Negative (backward) -- xyc
+
+ (<A HREF="BMVN.HTM">MVN</A>)
+ (3 bytes)  (7 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |        +- 1   |  PBR,PC          | Op Code               |    R     |
+    |        |  2   |  PBR,PC+1        | Dest. Bank Address    |    R     |
+    |        |  3   |  PBR,PC+2        | Source Bank Address   |    R     |
+    |   N-2  |  4   |  SBA,X           | Source Data           |    R     |
+    |   Byte |  5   |  DBA,Y           | Dest Data             |    W     |
+    |   C=2  |  6   |  DBA,Y           | Internal Operation    |    R     |
+    |        +- 7   |  DBA,Y           | Internal Operation    |    R     |
+    |        +- 1   |  PBR,PC          | Op Code               |    R     |
+    |        |  2   |  PBR,PC+1        | Dest. Bank Address    |    R     |
+    |   N-1  |  3   |  PBR,PC+2        | Source Bank Address   |    R     |
+    |   Byte |  4   |  SBA,X+1         | Source Data           |    R     |
+    |   C=1  |  5   |  DBA,Y+1         | Dest Data             |    W     |
+    |        |  6   |  DBA,Y+1         | Internal Operation    |    R     |
+    |        +- 7   |  DBA,Y+1         | Internal Operation    |    R     |
+    |        +- 1   |  PBR,PC          | Op Code               |    R     |
+    |        |  2   |  PBR,PC+1        | Dest. Bank Address    |    R     |
+    | N Byte |  3   |  PBR,PC+2        | Source Bank Address   |    R     |
+    |   Last |  4   |  SBA,X+2         | Source Data           |    R     |
+    |   C=0  |  5   |  DBA,Y+2         | Dest Data             |    W     |
+    |        |  6   |  DBA,Y+2         | Internal Operation    |    R     |
+    |        |  7   |  DBA,Y+2         | Internal Operation    |    R     |
+    |        +- 1   |  PBR,PC+3        | New Op Code           |    R     |
+    +---------------+------------------+-----------------------+----------+
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+   x = Source Address
+   y = Destination
+   c = Number of Bytes to move -1
+   x,y Increment
+   MVN is used when the destination start address is lower (more negative)
+   than the source start address.
+
+   FFFFFF
+     |  Source End
+     |  Dest End
+     |  Source Start
+     v  Dest Start
+   000000
+
+</PRE></BODY></HTML>

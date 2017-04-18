@@ -1,0 +1,81 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F76A/63338:   Write Tape Header
+
+Jump from <A HREF="ROMF291.HTM">$F2E8</A>, <A HREF="ROMF34A.HTM">$F3BF</A>, <A HREF="ROMF659.HTM">$F677</A>, <A HREF="ROMF659.HTM">$F689</A>:
+
+F76A: 85 9E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP9E.HTM">$9E</A>       ; Tape Error log pass 1
+F76C: 20 D0 F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF7D0.HTM">$F7D0</A>     ; Get Buffer Address
+F76F: 90 5E     <A HREF="BBCC.HTM">BCC</A> $F7CF
+F771: A5 C2     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPC1.HTM">$C2</A>       ; Start Address for LOAD and Cassette Write
+F773: 48        <A HREF="BPHA.HTM">PHA</A>
+F774: A5 C1     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPC1.HTM">$C1</A>       ; Start Address for LOAD and Cassette Write
+F776: 48        <A HREF="BPHA.HTM">PHA</A>
+F777: A5 AF     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAE.HTM">$AF</A>       ; Tape End Address/End of Program
+F779: 48        <A HREF="BPHA.HTM">PHA</A>
+F77A: A5 AE     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAE.HTM">$AE</A>       ; Tape End Address/End of Program
+F77C: 48        <A HREF="BPHA.HTM">PHA</A>
+F77D: A0 BF     <A HREF="BLDY.HTM">LDY</A> #$BF
+F77F: A9 20     <A HREF="BLDA.HTM">LDA</A> #$20
+
+Jump from $F784:
+
+F781: 91 B2     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F783: 88        <A HREF="BDEY.HTM">DEY</A>
+F784: D0 FB     <A HREF="BBNE.HTM">BNE</A> $F781
+F786: A5 9E     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP9E.HTM">$9E</A>       ; Tape Error log pass 1
+F788: 91 B2     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F78A: C8        <A HREF="BINY.HTM">INY</A>
+F78B: A5 C1     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPC1.HTM">$C1</A>       ; Start Address for LOAD and Cassette Write
+F78D: 91 B2     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F78F: C8        <A HREF="BINY.HTM">INY</A>
+F790: A5 C2     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPC1.HTM">$C2</A>       ; Start Address for LOAD and Cassette Write
+F792: 91 B2     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F794: C8        <A HREF="BINY.HTM">INY</A>
+F795: A5 AE     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAE.HTM">$AE</A>       ; Tape End Address/End of Program
+F797: 91 B2     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F799: C8        <A HREF="BINY.HTM">INY</A>
+F79A: A5 AF     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAE.HTM">$AF</A>       ; Tape End Address/End of Program
+F79C: 91 B2     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F79E: C8        <A HREF="BINY.HTM">INY</A>
+F79F: 84 9F     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP9F.HTM">$9F</A>       ; Tape Error log pass 2
+F7A1: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+F7A3: 84 9E     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP9E.HTM">$9E</A>       ; Tape Error log pass 1
+
+Jump from $F7B5:
+
+F7A5: A4 9E     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP9E.HTM">$9E</A>       ; Tape Error log pass 1
+F7A7: C4 B7     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZPB7.HTM">$B7</A>       ; Number of Characters in Filename
+F7A9: F0 0C     <A HREF="BBEQ.HTM">BEQ</A> $F7B7
+F7AB: B1 BB     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPBB.HTM">$BB</A>),Y   ; Pointer: Current File name Address
+F7AD: A4 9F     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP9F.HTM">$9F</A>       ; Tape Error log pass 2
+F7AF: 91 B2     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F7B1: E6 9E     <A HREF="BINC.HTM">INC</A> <A HREF="ZP9E.HTM">$9E</A>       ; Tape Error log pass 1
+F7B3: E6 9F     <A HREF="BINC.HTM">INC</A> <A HREF="ZP9F.HTM">$9F</A>       ; Tape Error log pass 2
+F7B5: D0 EE     <A HREF="BBNE.HTM">BNE</A> $F7A5
+
+Jump from $F7A9:
+
+F7B7: 20 D7 F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF7D7.HTM">$F7D7</A>     ; Set Buffer Stat / End Pointers
+F7BA: A9 69     <A HREF="BLDA.HTM">LDA</A> #$69
+F7BC: 85 AB     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAB.HTM">$AB</A>       ; RS232 Input parity/Tape temporary
+F7BE: 20 6B F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF864.HTM">$F86B</A>     ; Initiate Tape Write
+F7C1: A8        <A HREF="BTAY.HTM">TAY</A>
+F7C2: 68        <A HREF="BPLA.HTM">PLA</A>
+F7C3: 85 AE     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AE</A>       ; Tape End Address/End of Program
+F7C5: 68        <A HREF="BPLA.HTM">PLA</A>
+F7C6: 85 AF     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AF</A>       ; Tape End Address/End of Program
+F7C8: 68        <A HREF="BPLA.HTM">PLA</A>
+F7C9: 85 C1     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC1.HTM">$C1</A>       ; Start Address for LOAD and Cassette Write
+F7CB: 68        <A HREF="BPLA.HTM">PLA</A>
+F7CC: 85 C2     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC1.HTM">$C2</A>       ; Start Address for LOAD and Cassette Write
+F7CE: 98        <A HREF="BTYA.HTM">TYA</A>
+
+Jump from $F76F:
+
+F7CF: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF72C.HTM">Previous Page</A> / <A HREF="ROMF7D0.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

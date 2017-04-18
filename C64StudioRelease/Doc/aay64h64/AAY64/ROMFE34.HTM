@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FE34/65076:   Read / Set Bottom of Memory
+
+Jump from <A HREF="ROMFF9C.HTM">$FF9C</A>:
+
+FE34: 90 06     <A HREF="BBCC.HTM">BCC</A> $FE3C
+FE36: AE 81 02  <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP0281.HTM">$0281</A>     ; Pointer: Bottom of Memory for Operating System
+FE39: AC 82 02  <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP0281.HTM">$0282</A>     ; Pointer: Bottom of Memory for Operating System
+
+Jump from $FE34:
+
+FE3C: 8E 81 02  <A HREF="BSTX.HTM">STX</A> <A HREF="ZP0281.HTM">$0281</A>     ; Pointer: Bottom of Memory for Operating System
+FE3F: 8C 82 02  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP0281.HTM">$0282</A>     ; Pointer: Bottom of Memory for Operating System
+FE42: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMFE25.HTM">Previous Page</A> / <A HREF="ROMFE43.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

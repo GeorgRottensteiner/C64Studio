@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Build Steps</H3>
+  <div id="mybody">
+    Build steps are configured per source file.<br>
+    An assembly build is done in three steps, pre build, custom build and post build.<br>
+    <br>
+    <img src="images/build_steps.png"><br>
+    <br>
+    Pre build and post build do nothing per default, but can be overridden to do custom processing (crunching, etc.).
+    If the custom build step is empty the built in assembler compiles the file. Any content in here will be run instead of the built in assembler.<br>
+    Build chains allow the building of other projects/files with different configurations. They are useful if you have a multi loader and want to assemble
+    a final disk image; which requires building all single loads upfront. Look below for details.<br>
+    <br>
+    <br>
+    Any scripts in a build step are performed sequentially. Several macros are filled with current file and project information.<br>
+    <br>
+    Available macros are:<br>
+    <br>
+    <table>
+      <tr>
+        <th>Macro</th>
+        <th>Content</th>
+      </tr>
+      <tr>
+        <td>
+          $(Filename)
+        </td>
+        <td>
+          Full path with file name of current file
+        </td>
+      </tr>
+      <tr>
+        <td>
+          $(FilenameWithoutExtension)
+        </td>
+        <td>
+          Full path with file name of current file without extensions
+        </td>
+      </tr>
+      <tr>
+        <td>
+          $(FilePath)
+        </td>
+        <td>
+          Full path of current file
+        </td>
+      </tr>
+      <tr>
+        <td>
+          $(BuildTargetPath)
+        </td>
+        <td>
+          Full path of output file without the actual file name
+        </td>
+      </tr>
+      <tr>
+        <td>
+          $(BuildTargetFilename)
+        </td>
+        <td>
+          Full path of output file
+        </td>
+      </tr>
+      <tr>
+        <td>
+          $(BuildTargetFilenameWithoutExtension)
+        </td>
+        <td>
+          Full path of output file without extension
+        </td>
+      </tr>
+      <tr>
+        <td>
+          $(DebugStartAddress)
+        </td>
+        <td>
+          Configured debug start address decimal
+        </td>
+      </tr>
+      <tr>
+        <td>
+          $(DebugStartAddressHex)
+        </td>
+        <td>
+          Configured debug start address hexadecimal
+        </td>
+      </tr>
+      <tr>
+        <td>
+          $(ConfigName)
+        </td>
+        <td>
+          Returns the chosen configuration for the build
+        </td>
+      </tr>
+      <tr>
+        <td>
+          $(ProjectPath)
+        </td>
+        <td>
+          Returns the base path of the project
+        </td>
+      </tr>
+      <tr>
+        <td>
+          $(MediaManager)
+        </td>
+        <td>
+          Returns the full path to the MediaManager executable
+        </td>
+      </tr>
+    </table>
+  </div>
+  <H3>Build Chains</H3>
+  <div id="mybody">
+    Build chains define a list of projects/files to be built with certain configurations either before the actual file (pre build chain) or after the actual file (post build chain).<br>
+    <br>
+    <img src="images/ide_properties_buildevents_buildchain.png"><br>
+    <br>
+    Choose a project, then a file from that project and a configuration. Defines in the field below may be set which are added additionally to the config pre defines.<br>
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>

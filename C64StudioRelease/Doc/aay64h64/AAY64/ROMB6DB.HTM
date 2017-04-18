@@ -1,0 +1,23 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B6DB/46811:   Clean Descriptor Stack
+
+Jump from <A HREF="ROMAA2C.HTM">$AA6C</A>, <A HREF="ROMB6A3.HTM">$B6AE</A>:
+
+B6DB: C4 18     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZP17.HTM">$18</A>       ; Last temporary String Address
+B6DD: D0 0C     <A HREF="BBNE.HTM">BNE</A> $B6EB
+B6DF: C5 17     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP17.HTM">$17</A>       ; Last temporary String Address
+B6E1: D0 08     <A HREF="BBNE.HTM">BNE</A> $B6EB
+B6E3: 85 16     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP16.HTM">$16</A>       ; Pointer: Temporary String Stack
+B6E5: E9 03     <A HREF="BSBC.HTM">SBC</A> #$03
+B6E7: 85 17     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP17.HTM">$17</A>       ; Last temporary String Address
+B6E9: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+
+Jump from $B6DD, $B6E1:
+
+B6EB: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB6A3.HTM">Previous Page</A> / <A HREF="ROMB6EC.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

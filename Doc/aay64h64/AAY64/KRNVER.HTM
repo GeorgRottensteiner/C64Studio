@@ -1,0 +1,56 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ KERNAL Versions:
+
+   Revision 1 (prototype, not mentioned in AAY64)
+   Revision 2 (&quot;old&quot;, used until 1983(?))
+   Revision 3 (&quot;new&quot;, used from 1983(?) on)
+   SX64       (like Rev. 3, but adapted for the SX64)
+
+   AAY64 contains a disassembly of the new version, but differences
+   are also stated. They are at:
+
+  +-------------------------------------------------------------------------
+  |   Rev. 2 &lt;&gt; Rev. 3
+  +-------------+-----------------------------------------------------------
+  | <A HREF="ROME4AC.HTM">$E4AC</A>       | Version Indicator(?)
+  | <A HREF="ROME4D3.HTM">$E4D3-$E4D9</A> | Patch for RS232-Routines:
+  |             |   Old Kernal didn't set Input Parity at <A HREF="ZPAB.HTM">$AB</A>
+  | <A HREF="ROME4DA.HTM">$E4DA-$E4DC</A> | Reset Character Color:
+  |             |   Old Kernal gets Color from <A HREF="VIC33.HTM">$D021</A> instead of <A HREF="ZP0286.HTM">$0286</A>.
+  | <A HREF="ROME56C.HTM">$E57C-$E599</A> | Set Screen Pointers:
+  |             |   Old Kernal lacks some error-checks
+  | <A HREF="ROME5CA.HTM">$E622+$E623</A> | Input From Keyboard:
+  |             |   Old Kernal doesn't check if cursor line = 0
+  | <A HREF="ROME9FF.HTM">$EA07-$EA12</A> | Clear Screen Line:
+  |             |   Just a differnce in order of code
+  | <A HREF="ROMEF90.HTM">$EF94-$EF96</A> | Process RS232 Byte:
+  |             |   Apply patch at <A HREF="ROME4D3.HTM">$E4D3</A> in newer version
+  | <A HREF="ROMFF80.HTM">$FF80</A>       | Version number
+  +-------------+-----------------------------------------------------------
+
+  +-------------------------------------------------------------------------
+  |   SX64 &lt;&gt; Rev. 3
+  +-------------+-----------------------------------------------------------
+  | <A HREF="ROME45F.HTM">$E479-$E4AC</A> | Power-Up Message:
+  |             |   Adapted for SX64
+  | <A HREF="ROME4AC.HTM">$E4AC</A>       | Version Indicator(?)
+  | <A HREF="ROME518.HTM">$E535</A>       | Initialize I/O:
+  |             |   Text-Color is Blue instead of Light Blue
+  | <A HREF="ROME5CA.HTM">$E5EF</A>       | Input From Keyboard:
+  |/<A HREF="ROME5CA.HTM">$E5F4+$E5F5</A> |   Other parameters for RUN/STOP-String
+  | <A HREF="ROMECB9.HTM">$ECD9+$ECDA</A> | Video Chip Setup Table:
+  |             |   Cyan Border and White Background
+  | <A HREF="ROMF0BD.HTM">$F0D8-$F0E6</A> | Table of Kernal I/O Messages:
+  |             |   New RUN/STOP-String (loads from disk as SX64 has no tape)
+  | <A HREF="ROMF34A.HTM">$F387</A>       | Open File:
+  |             |   Tape access will cause error
+  | <A HREF="ROMF49E.HTM">$F4B7</A>       | Load RAM:
+  |             |   Tape access will cause error
+  | <A HREF="ROMF5DD.HTM">$F5F9</A>       | Save RAM:
+  |             |   Tape access will cause error
+  | <A HREF="ROMFF80.HTM">$FF80</A>       | Version number
+  +-------------+-----------------------------------------------------------
+
+</PRE></BODY></HTML>

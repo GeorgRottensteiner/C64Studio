@@ -1,0 +1,134 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A579/42361:   Tokenise Input Buffer
+
+Jump from <A HREF="ROMA480.HTM">$A496</A>, <A HREF="ROMA49C.HTM">$A49F</A>:
+
+A579: 6C 04 03  <A HREF="BJMP.HTM">JMP</A> (<A HREF="ZP0304.HTM">$0304</A>)   ; Vector: BASIC Tokenise Routine
+A57C: A6 7A     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A57E: A0 04     <A HREF="BLDY.HTM">LDY</A> #$04
+A580: 84 0F     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP0F.HTM">$0F</A>       ; Flag: DATA scan/List Quote/Garbage collection
+
+Jump from $A58C, $A5E1:
+
+A582: BD 00 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0200.HTM">$0200</A>,X   ; BASIC Input Buffer (Input Line from Screen)
+A585: 10 07     <A HREF="BBPL.HTM">BPL</A> $A58E
+A587: C9 FF     <A HREF="BCMP.HTM">CMP</A> #$FF
+A589: F0 3E     <A HREF="BBEQ.HTM">BEQ</A> $A5C9
+A58B: E8        <A HREF="BINX.HTM">INX</A>
+A58C: D0 F4     <A HREF="BBNE.HTM">BNE</A> $A582
+
+Jump from $A585:
+
+A58E: C9 20     <A HREF="BCMP.HTM">CMP</A> #$20
+A590: F0 37     <A HREF="BBEQ.HTM">BEQ</A> $A5C9
+A592: 85 08     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+A594: C9 22     <A HREF="BCMP.HTM">CMP</A> #$22
+A596: F0 56     <A HREF="BBEQ.HTM">BEQ</A> $A5EE
+A598: 24 0F     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP0F.HTM">$0F</A>       ; Flag: DATA scan/List Quote/Garbage collection
+A59A: 70 2D     <A HREF="BBVS.HTM">BVS</A> $A5C9
+A59C: C9 3F     <A HREF="BCMP.HTM">CMP</A> #$3F
+A59E: D0 04     <A HREF="BBNE.HTM">BNE</A> $A5A4
+A5A0: A9 99     <A HREF="BLDA.HTM">LDA</A> #$99
+A5A2: D0 25     <A HREF="BBNE.HTM">BNE</A> $A5C9
+
+Jump from $A59E:
+
+A5A4: C9 30     <A HREF="BCMP.HTM">CMP</A> #$30
+A5A6: 90 04     <A HREF="BBCC.HTM">BCC</A> $A5AC
+A5A8: C9 3C     <A HREF="BCMP.HTM">CMP</A> #$3C
+A5AA: 90 1D     <A HREF="BBCC.HTM">BCC</A> $A5C9
+
+Jump from $A5A6:
+
+A5AC: 84 71     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+A5AE: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+A5B0: 84 0B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+A5B2: 88        <A HREF="BDEY.HTM">DEY</A>
+A5B3: 86 7A     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A5B5: CA        <A HREF="BDEX.HTM">DEX</A>
+
+Jump from $A5BF:
+
+A5B6: C8        <A HREF="BINY.HTM">INY</A>
+A5B7: E8        <A HREF="BINX.HTM">INX</A>
+
+Jump from $A602:
+
+A5B8: BD 00 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0200.HTM">$0200</A>,X   ; BASIC Input Buffer (Input Line from Screen)
+A5BB: 38        <A HREF="BSEC.HTM">SEC</A>
+A5BC: F9 9E A0  <A HREF="BSBC.HTM">SBC</A> <A HREF="ROMA09E.HTM">$A09E</A>,Y   ; BASIC Command Keyword Table
+A5BF: F0 F5     <A HREF="BBEQ.HTM">BEQ</A> $A5B6
+A5C1: C9 80     <A HREF="BCMP.HTM">CMP</A> #$80
+A5C3: D0 30     <A HREF="BBNE.HTM">BNE</A> $A5F5
+A5C5: 05 0B     <A HREF="BORA.HTM">ORA</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+
+Jump from $A607:
+
+A5C7: A4 71     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+
+Jump from $A589, $A590, $A59A, $A5A2, $A5AA, $A5E8, $A5EC:
+
+A5C9: E8        <A HREF="BINX.HTM">INX</A>
+A5CA: C8        <A HREF="BINY.HTM">INY</A>
+A5CB: 99 FB 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP013F.HTM">$01FB</A>,Y   ; BASIC Stack Area
+A5CE: B9 FB 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP013F.HTM">$01FB</A>,Y   ; BASIC Stack Area
+A5D1: F0 36     <A HREF="BBEQ.HTM">BEQ</A> $A609
+A5D3: 38        <A HREF="BSEC.HTM">SEC</A>
+A5D4: E9 3A     <A HREF="BSBC.HTM">SBC</A> #$3A
+A5D6: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $A5DC
+A5D8: C9 49     <A HREF="BCMP.HTM">CMP</A> #$49
+A5DA: D0 02     <A HREF="BBNE.HTM">BNE</A> $A5DE
+
+Jump from $A5D6:
+
+A5DC: 85 0F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0F.HTM">$0F</A>       ; Flag: DATA scan/List Quote/Garbage collection
+
+Jump from $A5DA:
+
+A5DE: 38        <A HREF="BSEC.HTM">SEC</A>
+A5DF: E9 55     <A HREF="BSBC.HTM">SBC</A> #$55
+A5E1: D0 9F     <A HREF="BBNE.HTM">BNE</A> $A582
+A5E3: 85 08     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+
+Jump from $A5F3:
+
+A5E5: BD 00 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0200.HTM">$0200</A>,X   ; BASIC Input Buffer (Input Line from Screen)
+A5E8: F0 DF     <A HREF="BBEQ.HTM">BEQ</A> $A5C9
+A5EA: C5 08     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+A5EC: F0 DB     <A HREF="BBEQ.HTM">BEQ</A> $A5C9
+
+Jump from $A596:
+
+A5EE: C8        <A HREF="BINY.HTM">INY</A>
+A5EF: 99 FB 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP013F.HTM">$01FB</A>,Y   ; BASIC Stack Area
+A5F2: E8        <A HREF="BINX.HTM">INX</A>
+A5F3: D0 F0     <A HREF="BBNE.HTM">BNE</A> $A5E5
+
+Jump from $A5C3:
+
+A5F5: A6 7A     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A5F7: E6 0B     <A HREF="BINC.HTM">INC</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+
+Jump from $A5FD:
+
+A5F9: C8        <A HREF="BINY.HTM">INY</A>
+A5FA: B9 9D A0  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMA080.HTM">$A09D</A>,Y   ; BASIC Operator Vectors
+A5FD: 10 FA     <A HREF="BBPL.HTM">BPL</A> $A5F9
+A5FF: B9 9E A0  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMA09E.HTM">$A09E</A>,Y   ; BASIC Command Keyword Table
+A602: D0 B4     <A HREF="BBNE.HTM">BNE</A> $A5B8
+A604: BD 00 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0200.HTM">$0200</A>,X   ; BASIC Input Buffer (Input Line from Screen)
+A607: 10 BE     <A HREF="BBPL.HTM">BPL</A> $A5C7
+
+Jump from $A5D1:
+
+A609: 99 FD 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP013F.HTM">$01FD</A>,Y   ; BASIC Stack Area
+A60C: C6 7B     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+A60E: A9 FF     <A HREF="BLDA.HTM">LDA</A> #$FF
+A610: 85 7A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A612: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA560.HTM">Previous Page</A> / <A HREF="ROMA613.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

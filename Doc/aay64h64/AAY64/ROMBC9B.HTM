@@ -1,0 +1,46 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BC9B/48283:   Convert FAC#1 to Integer
+
+Jump from <A HREF="ROMA9E3.HTM">$AA11</A>, <A HREF="ROMB1BF.HTM">$B1CE</A>, <A HREF="ROMB7F7.HTM">$B801</A>, <A HREF="ROMBCCC.HTM">$BCD2</A>, <A HREF="ROMBDDD.HTM">$BE32</A>:
+
+BC9B: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BC9D: F0 4A     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMBCCC.HTM">$BCE9</A>     ; Evaluate &lt;int&gt;
+BC9F: 38        <A HREF="BSEC.HTM">SEC</A>
+BCA0: E9 A0     <A HREF="BSBC.HTM">SBC</A> #$A0
+BCA2: 24 66     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BCA4: 10 09     <A HREF="BBPL.HTM">BPL</A> $BCAF
+BCA6: AA        <A HREF="BTAX.HTM">TAX</A>
+BCA7: A9 FF     <A HREF="BLDA.HTM">LDA</A> #$FF
+BCA9: 85 68     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP68.HTM">$68</A>       ; Bit Overflow Area during normalisation Routine
+BCAB: 20 4D B9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB947.HTM">$B94D</A>     ; 2's Complement FAC#1
+BCAE: 8A        <A HREF="BTXA.HTM">TXA</A>
+
+Jump from $BCA4:
+
+BCAF: A2 61     <A HREF="BLDX.HTM">LDX</A> #$61
+BCB1: C9 F9     <A HREF="BCMP.HTM">CMP</A> #$F9
+BCB3: 10 06     <A HREF="BBPL.HTM">BPL</A> $BCBB
+BCB5: 20 99 B9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB983.HTM">$B999</A>     ; Multiply by Zero Byte
+BCB8: 84 68     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP68.HTM">$68</A>       ; Bit Overflow Area during normalisation Routine
+
+Jump from <A HREF="ROMBC5B.HTM">$BC90</A>:
+
+BCBA: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $BCB3:
+
+BCBB: A8        <A HREF="BTAY.HTM">TAY</A>
+BCBC: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BCBE: 29 80     <A HREF="BAND.HTM">AND</A> #$80
+BCC0: 46 62     <A HREF="BLSR.HTM">LSR</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+BCC2: 05 62     <A HREF="BORA.HTM">ORA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+BCC4: 85 62     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+BCC6: 20 B0 B9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB983.HTM">$B9B0</A>     ; Multiply by Zero Byte
+BCC9: 84 68     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP68.HTM">$68</A>       ; Bit Overflow Area during normalisation Routine
+BCCB: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBC5B.HTM">Previous Page</A> / <A HREF="ROMBCCC.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

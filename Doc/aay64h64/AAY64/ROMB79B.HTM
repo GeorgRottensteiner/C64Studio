@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B79B/47003:   Evaluate Text to 1 Byte in XR
+
+Jump from <A HREF="ROMAAE8.HTM">$AAFF</A>:
+
+B79B: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+
+Jump from <A HREF="ROMA94B.HTM">$A94B</A>, <A HREF="ROMAA86.HTM">$AA86</A>, <A HREF="ROMAB7B.HTM">$AB85</A>, <A HREF="ROMABA5.HTM">$ABA5</A>, <A HREF="ROMAFB1.HTM">$AFC7</A>, <A HREF="ROMB737.HTM">$B745</A>, <A HREF="ROMB7EB.HTM">$B7F4</A>, <A HREF="ROME200.HTM">$E203</A>, <A HREF="ROME219.HTM">$E221</A>:
+
+B79E: 20 8A AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8A</A>     ; Confirm Result
+
+Jump from <A HREF="ROMB6EC.HTM">$B6EC</A>:
+
+B7A1: 20 B8 B1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB1B2.HTM">$B1B8</A>     ; Evaluate Text for Integer
+B7A4: A6 64     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B7A6: D0 F0     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMB78B.HTM">$B798</A>     ; Evaluate &lt;asc&gt;
+B7A8: A6 65     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B7AA: 4C 79 00  <A HREF="BJMP.HTM">JMP</A> <A HREF="ZP73.HTM">$0079</A>     ; CHRGET: Get next Byte of BASIC Text
+
+    <A HREF="ROMB78B.HTM">Previous Page</A> / <A HREF="ROMB7AD.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

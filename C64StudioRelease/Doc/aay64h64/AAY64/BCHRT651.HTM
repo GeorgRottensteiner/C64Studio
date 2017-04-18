@@ -1,0 +1,118 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+6510 instruction chart:
+
+ Hi                                                                   Low
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+   |   0   |    1   |   2   |    3    |    4   |   5    |   6    |    7   |
+ --+-------+--------+-------+---------+--------+--------+--------+--------+
+ 0 | <A HREF="BBRK.HTM">BRK</A> s |<A HREF="BORA.HTM">ORA</A>(z,x)| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BSLO.HTM">SLO</A>(z,x)| <A HREF="BNOP.HTM">NOP</A> z  | <A HREF="BORA.HTM">ORA</A> z  | <A HREF="BASL.HTM">ASL</A> z  | <A HREF="BSLO.HTM">SLO</A> z  |
+   |  2 7  |  2 6   |  1 -  |   2 8   |  2 3   |  2 3   |  2 5   |  2 5   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ 1 | <A HREF="BBPL.HTM">BPL</A> r |<A HREF="BORA.HTM">ORA</A>(z),y| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BSLO.HTM">SLO</A>(z),y| <A HREF="BNOP.HTM">NOP</A> z,x| <A HREF="BORA.HTM">ORA</A> z,x| <A HREF="BASL.HTM">ASL</A> z,x| <A HREF="BSLO.HTM">SLO</A> z,x|
+   |  2 2* |  2 5*  |  1 -  |   2 8   |  2 4   |  2 4   |  2 6   |  2 6   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ 2 | <A HREF="BJSR.HTM">JSR</A> a |<A HREF="BAND.HTM">AND</A>(z,x)| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BRLA.HTM">RLA</A>(z,x)| <A HREF="BBIT.HTM">BIT</A> z  | <A HREF="BAND.HTM">AND</A> z  | <A HREF="BROL.HTM">ROL</A> z  | <A HREF="BRLA.HTM">RLA</A> z  |
+   |  3 6  |  2 6   |  1 -  |   2 8   |  2 3   |  2 3   |  2 5   |  2 5   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ 3 | <A HREF="BBMI.HTM">BMI</A> r |<A HREF="BAND.HTM">AND</A>(z),y| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BRLA.HTM">RLA</A>(z),y| <A HREF="BNOP.HTM">NOP</A> z,x| <A HREF="BAND.HTM">AND</A> z,x| <A HREF="BROL.HTM">ROL</A> z,x| <A HREF="BRLA.HTM">RLA</A> z,x|
+   |  2 2* |  2 5*  |  1 -  |   2 8   |  2 4   |  2 4   |  2 6   |  2 6   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ 4 | <A HREF="BRTI.HTM">RTI</A> s |<A HREF="BEOR.HTM">EOR</A>(z,x)| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BSRE.HTM">SRE</A>(z,x)| <A HREF="BNOP.HTM">NOP</A> z  | <A HREF="BEOR.HTM">EOR</A> z  | <A HREF="BLSR.HTM">LSR</A> z  | <A HREF="BSRE.HTM">SRE</A> z  |
+   |  1 6  |  2 6   |  1 -  |   2 8   |  2 3   |  2 3   |  2 5   |  2 5   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ 5 | <A HREF="BBVC.HTM">BVC</A> r |<A HREF="BEOR.HTM">EOR</A>(z),y| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BSRE.HTM">SRE</A>(z),y| <A HREF="BNOP.HTM">NOP</A> z,x| <A HREF="BEOR.HTM">EOR</A> z,x| <A HREF="BLSR.HTM">LSR</A> z,x| <A HREF="BSRE.HTM">SRE</A> z,x|
+   |  2 2* |  2 5*  |  1 -  |   2 8   |  2 4   |  2 4   |  2 6   |  2 6   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ 6 | <A HREF="BRTS.HTM">RTS</A> s |<A HREF="BADC.HTM">ADC</A>(z,x)| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BRRA.HTM">RRA</A>(z,x)| <A HREF="BNOP.HTM">NOP</A> z  | <A HREF="BADC.HTM">ADC</A> z  | <A HREF="BROR.HTM">ROR</A> z  | <A HREF="BRRA.HTM">RRA</A> z  |
+   |  1 6  |  2 6   |  1 -  |   2 8   |  2 3   |  2 3   |  2 5   |  2 5   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ 7 | <A HREF="BBVS.HTM">BVS</A> r |<A HREF="BADC.HTM">ADC</A>(z),y| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BRRA.HTM">RRA</A>(z),y| <A HREF="BNOP.HTM">NOP</A> z,x| <A HREF="BADC.HTM">ADC</A> z,x| <A HREF="BROR.HTM">ROR</A> z,x| <A HREF="BRRA.HTM">RRA</A> z,x|
+   |  2 2* |  2 5*  |  1 -  |   2 8   |  2 4   |  2 4   |  2 6   |  2 6   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ 8 | <A HREF="BNOP.HTM">NOP</A> # |<A HREF="BSTA.HTM">STA</A>(z,x)| <A HREF="BNOP.HTM">NOP</A> # | <A HREF="BSAX.HTM">SAX</A>(z,x)| <A HREF="BSTY.HTM">STY</A> z  | <A HREF="BSTA.HTM">STA</A> z  | <A HREF="BSTX.HTM">STX</A> z  | <A HREF="BSAX.HTM">SAX</A> z  |
+   |  2 2  |  2 6   |  2 2  |   2 6   |  2 3   |  2 3   |  2 3   |  2 3   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ 9 | <A HREF="BBCC.HTM">BCC</A> r |<A HREF="BSTA.HTM">STA</A>(z),y| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BSHA.HTM">SHA</A> a,x | <A HREF="BSTY.HTM">STY</A>z,x | <A HREF="BSTA.HTM">STA</A> z,x| <A HREF="BSTX.HTM">STX</A> z,y| <A HREF="BSAX.HTM">SAX</A> z,y|
+   |  2 2* |  2 6   |  1 -  |<B>!</B>  3 5  <B>!</B>|  2 4   |  2 4   |  2 4   |  2 4   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ A | <A HREF="BLDY.HTM">LDY</A> # |<A HREF="BLDA.HTM">LDA</A>(z,x)| <A HREF="BLDX.HTM">LDX</A> # | <A HREF="BLAX.HTM">LAX</A>(z,x)| <A HREF="BLDY.HTM">LDY</A> z  | <A HREF="BLDA.HTM">LDA</A> z  | <A HREF="BLDX.HTM">LDX</A> z  | <A HREF="BLAX.HTM">LAX</A> z  |
+   |  2 2  |  2 6   |  2 2  |   2 6   |  2 3   |  2 3   |  2 3   |  2 3   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ B | <A HREF="BBCS.HTM">BCS</A> r |<A HREF="BLDA.HTM">LDA</A>(z),y| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BLAX.HTM">LAX</A>(z),y| <A HREF="BLDY.HTM">LDY</A> z,x| <A HREF="BLDA.HTM">LDA</A> z,x| <A HREF="BLDX.HTM">LDX</A> z,y| <A HREF="BLAX.HTM">LAX</A> z,y|
+   |  2 2* |  2 5*  |  1 -  |   2 5*  |  2 4   |  2 4   |  2 4   |  2 4   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ C | <A HREF="BCPY.HTM">CPY</A> # |<A HREF="BCMP.HTM">CMP</A>(z,x)| <A HREF="BNOP.HTM">NOP</A> # | <A HREF="BDCP.HTM">DCP</A>(z,x)| <A HREF="BCPY.HTM">CPY</A> z  | <A HREF="BCMP.HTM">CMP</A> z  | <A HREF="BDEC.HTM">DEC</A> z  | <A HREF="BDCP.HTM">DCP</A> z  |
+   |  2 2  |  2 6   |  2 2  |   2 8   |  2 3   |  2 3   |  2 5   |  2 5   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ D | <A HREF="BBNE.HTM">BNE</A> r |<A HREF="BCMP.HTM">CMP</A>(z),y| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BDCP.HTM">DCP</A>(z),y| <A HREF="BNOP.HTM">NOP</A> z,x| <A HREF="BCMP.HTM">CMP</A> z,x| <A HREF="BDEC.HTM">DEC</A> z,x| <A HREF="BDCP.HTM">DCP</A> z,x|
+   |  2 2* |  2 5*  |  1 -  |   2 8   |  2 4   |  2 4   |  2 6   |  2 6   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ E | <A HREF="BCPX.HTM">CPX</A> # |<A HREF="BSBC.HTM">SBC</A>(z,x)| <A HREF="BNOP.HTM">NOP</A> # | <A HREF="BISB.HTM">ISB</A>(z,x)| <A HREF="BCPX.HTM">CPX</A> z  | <A HREF="BSBC.HTM">SBC</A> z  | <A HREF="BINC.HTM">INC</A> z  | <A HREF="BISB.HTM">ISB</A> z  |
+   |  2 2  |  2 6   |  2 2  |   2 8   |  2 3   |  2 3   |  2 5   |  2 5   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+ F | <A HREF="BBEQ.HTM">BEQ</A> r |<A HREF="BSBC.HTM">SBC</A>(z),y| <A HREF="BJAM.HTM">JAM</A> i | <A HREF="BISB.HTM">ISB</A>(z),y| <A HREF="BNOP.HTM">NOP</A> z,x| <A HREF="BSBC.HTM">SBC</A> z,x| <A HREF="BINC.HTM">INC</A> z,x| <A HREF="BISB.HTM">ISB</A> z,x|
+   |  2 2* |  2 5*  |  1 -  |   2 8   |  2 4   |  2 4   |  2 6   |  2 6   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+   |   0   |    1   |   2   |    3    |    4   |   5    |   6    |    7   |
+   +-------+--------+-------+---------+--------+--------+--------+--------+
+
+ Hi                                                                 Low
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+   |   8   |   9    |   A   |   B   |   C    |   D    |    E   |    F   |
+ --+-------+--------+-------+-------+--------+--------+--------+--------+
+ 0 | <A HREF="BPHP.HTM">PHP</A> s | <A HREF="BORA.HTM">ORA</A> #  | <A HREF="BASL.HTM">ASL</A> A | <A HREF="BANC.HTM">ANC</A> # | <A HREF="BNOP.HTM">NOP</A> a  | <A HREF="BORA.HTM">ORA</A> a  | <A HREF="BASL.HTM">ASL</A> a  | <A HREF="BSLO.HTM">SLO</A> a  |
+   |  1 3  |  2 2   |  1 2  |  2 2  |  3 4   |  3 4   |  3 6   |  3 6   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ 1 | <A HREF="BCLC.HTM">CLC</A> i | <A HREF="BORA.HTM">ORA</A> a,y| <A HREF="BNOP.HTM">NOP</A> i |<A HREF="BSLO.HTM">SLO</A> a,y| <A HREF="BNOP.HTM">NOP</A> a,x| <A HREF="BORA.HTM">ORA</A> a,x| <A HREF="BASL.HTM">ASL</A> a,x| <A HREF="BSLO.HTM">SLO</A> a,x|
+   |  1 2  |  3 4*  |  1 2  |  3 7  |  3 4*  |  3 4*  |  3 7   |  3 7   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ 2 | <A HREF="BPLP.HTM">PLP</A> s | <A HREF="BAND.HTM">AND</A> #  | <A HREF="BROL.HTM">ROL</A> A | <A HREF="BANC.HTM">ANC</A> # | <A HREF="BBIT.HTM">BIT</A> a  | <A HREF="BAND.HTM">AND</A> a  | <A HREF="BROL.HTM">ROL</A> a  | <A HREF="BRLA.HTM">RLA</A> a  |
+   |  1 4  |  2 2   |  1 2  |  2 2  |  3 4   |  3 4   |  3 6   |  3 6   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ 3 | <A HREF="BSEC.HTM">SEC</A> i | <A HREF="BAND.HTM">AND</A> a,y| <A HREF="BNOP.HTM">NOP</A> i |<A HREF="BRLA.HTM">RLA</A> a,y| <A HREF="BNOP.HTM">NOP</A> a,x| <A HREF="BAND.HTM">AND</A> a,x| <A HREF="BROL.HTM">ROL</A> a,x| <A HREF="BRLA.HTM">RLA</A> a,x|
+   |  1 2  |  3 4*  |  1 2  |  3 7  |  3 4*  |  3 4*  |  3 7   |  3 7   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ 4 | <A HREF="BPHA.HTM">PHA</A> s | <A HREF="BEOR.HTM">EOR</A> #  | <A HREF="BLSR.HTM">LSR</A> A | <A HREF="BASR.HTM">ASR</A> # | <A HREF="BJMP.HTM">JMP</A> a  | <A HREF="BEOR.HTM">EOR</A> a  | <A HREF="BLSR.HTM">LSR</A> a  | <A HREF="BSRE.HTM">SRE</A> a  |
+   |  1 3  |  2 2   |  1 2  |  2 2  |  3 3   |  3 4   |  3 6   |  3 6   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ 5 | <A HREF="BCLI.HTM">CLI</A> i | <A HREF="BEOR.HTM">EOR</A> a,y| <A HREF="BNOP.HTM">NOP</A> i |<A HREF="BSRE.HTM">SRE</A> a,y| <A HREF="BNOP.HTM">NOP</A> a,x| <A HREF="BEOR.HTM">EOR</A> a,x| <A HREF="BLSR.HTM">LSR</A> a,x| <A HREF="BSRE.HTM">SRE</A> a,x|
+   |  1 2  |  3 4*  |  1 2  |  3 7  |  3 4*  |  3 4*  |  3 7   |  3 7   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ 6 | <A HREF="BPLA.HTM">PLA</A> s | <A HREF="BADC.HTM">ADC</A> #  | <A HREF="BROR.HTM">ROR</A> A | <A HREF="BARR.HTM">ARR</A> # | <A HREF="BJMP.HTM">JMP</A> (a)| <A HREF="BADC.HTM">ADC</A> a  | <A HREF="BROR.HTM">ROR</A> a  | <A HREF="BRRA.HTM">RRA</A> a  |
+   |  1 4  |  2 2   |  1 2  |  2 2  |  3 5   |  3 4   |  3 6   |  3 6   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ 7 | <A HREF="BSEI.HTM">SEI</A> i | <A HREF="BADC.HTM">ADC</A> a,y| <A HREF="BNOP.HTM">NOP</A> i |<A HREF="BRRA.HTM">RRA</A> a,y| <A HREF="BNOP.HTM">NOP</A> a,x| <A HREF="BADC.HTM">ADC</A> a,x| <A HREF="BROR.HTM">ROR</A> a,x| <A HREF="BRRA.HTM">RRA</A> a,x|
+   |  1 2  |  3 4*  |  1 2  |  3 7  |  3 4*  |  3 4*  |  3 7   |  3 7   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ 8 | <A HREF="BDEY.HTM">DEY</A> i | <A HREF="BNOP.HTM">NOP</A> #  | <A HREF="BTXA.HTM">TXA</A> i | <A HREF="BANE.HTM">ANE</A> # | <A HREF="BSTY.HTM">STY</A> a  | <A HREF="BSTA.HTM">STA</A> a  | <A HREF="BSTX.HTM">STX</A> a  | <A HREF="BSAX.HTM">SAX</A> a  |
+   |  1 2  |  2 2   |  1 2  |  2 2  |  3 4   |  3 4   |  3 4   |  3 4   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ 9 | <A HREF="BTYA.HTM">TYA</A> i | <A HREF="BSTA.HTM">STA</A> a,y| <A HREF="BTXS.HTM">TXS</A> i |<A HREF="BSHS.HTM">SHS</A> a,x| <A HREF="BSHY.HTM">SHY</A> a,y| <A HREF="BSTA.HTM">STA</A> a,x| <A HREF="BSHX.HTM">SHX</A> a,y| <A HREF="BSHA.HTM">SHA</A> a,y|
+   |  1 2  |  3 5   |  1 2  |<B>!</B> 3 5 <B>!</B>|<B>!</B> 3 5  <B>!</B>|  3 5   |<B>!</B> 3 5  <B>!</B>|<B>!</B> 3 5  <B>!</B>|
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ A | <A HREF="BTAY.HTM">TAY</A> i | <A HREF="BLDA.HTM">LDA</A> #  | <A HREF="BTAX.HTM">TAX</A> i | <A HREF="BLXA.HTM">LXA</A> # | <A HREF="BLDY.HTM">LDY</A> a  | <A HREF="BLDA.HTM">LDA</A> a  | <A HREF="BLDX.HTM">LDX</A> a  | <A HREF="BLAX.HTM">LAX</A> a  |
+   |  1 2  |  2 2   |  1 2  |<B>!</B> 2 2 <B>!</B>|  3 4   |  3 4   |  3 4   |  3 4   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ B | <A HREF="BCLV.HTM">CLV</A> i | <A HREF="BLDA.HTM">LDA</A> a,y| <A HREF="BTSX.HTM">TSX</A> i |<A HREF="BLAE.HTM">LAE</A> a,y| <A HREF="BLDY.HTM">LDY</A> a,x| <A HREF="BLDA.HTM">LDA</A> a,x| <A HREF="BLDX.HTM">LDX</A> a,y| <A HREF="BLAX.HTM">LAX</A> a,y|
+   |  1 2  |  3 4*  |  1 2  |<B>!</B> 3 4*<B>!</B>|  3 4   |  3 4*  |  3 4*  |  3 4*  |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ C | <A HREF="BINY.HTM">INY</A> i | <A HREF="BCMP.HTM">CMP</A> #  | <A HREF="BDEX.HTM">DEX</A> i | <A HREF="BSBX.HTM">SBX</A> # | <A HREF="BCPY.HTM">CPY</A> a  | <A HREF="BCMP.HTM">CMP</A> a  | <A HREF="BDEC.HTM">DEC</A> a  | <A HREF="BDCP.HTM">DCP</A> a  |
+   | 1 2   |  2 2   |  1 2  |  2 2  |  3 4   |  3 4   |  3 4   |  3 6   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ D | <A HREF="BCLD.HTM">CLD</A> i | <A HREF="BCMP.HTM">CMP</A> a,y| <A HREF="BNOP.HTM">NOP</A> i |<A HREF="BDCP.HTM">DCP</A> a,y| <A HREF="BNOP.HTM">NOP</A> a,x| <A HREF="BCMP.HTM">CMP</A> a,x| <A HREF="BDEC.HTM">DEC</A> a,x| <A HREF="BDCP.HTM">DCP</A> a,x|
+   |  1 2  |  3 4*  |  1 2  |  3 7  |  3 4*  |  3 4*  |  3 7   |  3 7   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ E | <A HREF="BINX.HTM">INX</A> i | <A HREF="BSBC.HTM">SBC</A> #  | <A HREF="BNOP.HTM">NOP</A> i | <A HREF="BSBC.HTM">SBC</A> # | <A HREF="BCPX.HTM">CPX</A> a  | <A HREF="BSBC.HTM">SBC</A> a  | <A HREF="BINC.HTM">INC</A> a  | <A HREF="BISB.HTM">ISB</A> a  |
+   |  1 2  |  2 2   |  1 2  |  2 2  |  3 4   |  3 4   |  3 6   |  3 6   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+ F | <A HREF="BSED.HTM">SED</A> i | <A HREF="BSBC.HTM">SBC</A> a,y| <A HREF="BNOP.HTM">NOP</A> i |<A HREF="BISB.HTM">ISB</A> a,y| <A HREF="BNOP.HTM">NOP</A> a,x| <A HREF="BSBC.HTM">SBC</A> a,x| <A HREF="BINC.HTM">INC</A> a,x| <A HREF="BISB.HTM">ISB</A> a,x|
+   |  1 2  |  3 4*  |  1 2  |  3 7  |  3 4*  |  3 4*  |  3 7   |  3 7   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+   |   8   |   9    |   A   |   B   |   C    |   D    |    E   |    F   |
+   +-------+--------+-------+-------+--------+--------+--------+--------+
+
+   * = Opcode may need more cycles      <B>!</B> = Unstable opcode!
+
+</PRE></BODY></HTML>

@@ -1,0 +1,180 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B867/47207:   Perform Addition
+
+Jump from <A HREF="ROMAD1E.HTM">$AD4F</A>, <A HREF="ROMB849.HTM">$B84D</A>, <A HREF="ROMB9EA.HTM">$BA01</A>, <A HREF="ROMB9EA.HTM">$BA1D</A>, <A HREF="ROME043.HTM">$E081</A>, <A HREF="ROME097.HTM">$E0D0</A>, <A HREF="ROME264.HTM">$E268</A>, <A HREF="ROME26B.HTM">$E2A4</A>:
+
+B867: 20 8C BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA8C.HTM">$BA8C</A>     ; Load FAC#2 From Memory
+
+Jump from <A HREF="ROMB850.HTM">$B85F</A>, <A HREF="ROMBCF3.HTM">$BD8E</A>:
+
+B86A: D0 03     <A HREF="BBNE.HTM">BNE</A> $B86F
+B86C: 4C FC BB  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBBFC.HTM">$BBFC</A>     ; Copy FAC#2 into FAC#1
+
+Jump from $B86A:
+
+B86F: A6 70     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B871: 86 56     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP54.HTM">$56</A>       ; Jump Vector used in Function Evaluation
+B873: A2 69     <A HREF="BLDX.HTM">LDX</A> #$69
+B875: A5 69     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP69.HTM">$69</A>       ; AFAC Exponent
+
+Jump from <A HREF="ROMBAE2.HTM">$BAF1</A>:
+
+B877: A8        <A HREF="BTAY.HTM">TAY</A>
+B878: F0 CE     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMB82D.HTM">$B848</A>     ; Perform [wait]
+B87A: 38        <A HREF="BSEC.HTM">SEC</A>
+B87B: E5 61     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+B87D: F0 24     <A HREF="BBEQ.HTM">BEQ</A> $B8A3
+B87F: 90 12     <A HREF="BBCC.HTM">BCC</A> $B893
+B881: 84 61     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+B883: A4 6E     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP6E.HTM">$6E</A>       ; AFAC Sign
+B885: 84 66     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+B887: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+B889: 69 00     <A HREF="BADC.HTM">ADC</A> #$00
+B88B: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B88D: 84 56     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP54.HTM">$56</A>       ; Jump Vector used in Function Evaluation
+B88F: A2 61     <A HREF="BLDX.HTM">LDX</A> #$61
+B891: D0 04     <A HREF="BBNE.HTM">BNE</A> $B897
+
+Jump from $B87F:
+
+B893: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B895: 84 70     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+
+Jump from $B891:
+
+B897: C9 F9     <A HREF="BCMP.HTM">CMP</A> #$F9
+B899: 30 C7     <A HREF="BBMI.HTM">BMI</A> <A HREF="ROMB862.HTM">$B862</A>     ; Normalise Addition
+B89B: A8        <A HREF="BTAY.HTM">TAY</A>
+B89C: A5 70     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B89E: 56 01     <A HREF="BLSR.HTM">LSR</A> <A HREF="ZP01.HTM">$01</A>,X     ; 6510 On-chip 8-bit Input/Output Register
+B8A0: 20 B0 B9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB983.HTM">$B9B0</A>     ; Multiply by Zero Byte
+
+Jump from $B87D, <A HREF="ROMB862.HTM">$B865</A>:
+
+B8A3: 24 6F     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+B8A5: 10 57     <A HREF="BBPL.HTM">BPL</A> $B8FE
+B8A7: A0 61     <A HREF="BLDY.HTM">LDY</A> #$61
+B8A9: E0 69     <A HREF="BCPX.HTM">CPX</A> #$69
+B8AB: F0 02     <A HREF="BBEQ.HTM">BEQ</A> $B8AF
+B8AD: A0 69     <A HREF="BLDY.HTM">LDY</A> #$69
+
+Jump from $B8AB:
+
+B8AF: 38        <A HREF="BSEC.HTM">SEC</A>
+B8B0: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+B8B2: 65 56     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP54.HTM">$56</A>       ; Jump Vector used in Function Evaluation
+B8B4: 85 70     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B8B6: B9 04 00  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP03.HTM">$0004</A>,Y   ; Jump Vector: Convert FAC to Integer
+B8B9: F5 04     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP03.HTM">$04</A>,X     ; Jump Vector: Convert FAC to Integer
+B8BB: 85 65     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B8BD: B9 03 00  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP03.HTM">$0003</A>,Y   ; Jump Vector: Convert FAC to Integer
+B8C0: F5 03     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP03.HTM">$03</A>,X     ; Jump Vector: Convert FAC to Integer
+B8C2: 85 64     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B8C4: B9 02 00  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP02.HTM">$0002</A>,Y   ; Unused
+B8C7: F5 02     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP02.HTM">$02</A>,X     ; Unused
+B8C9: 85 63     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B8CB: B9 01 00  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP01.HTM">$0001</A>,Y   ; 6510 On-chip 8-bit Input/Output Register
+B8CE: F5 01     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP01.HTM">$01</A>,X     ; 6510 On-chip 8-bit Input/Output Register
+B8D0: 85 62     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+
+Jump from <A HREF="ROMBC39.HTM">$BC55</A>, <A HREF="ROMBCCC.HTM">$BCE6</A>:
+
+B8D2: B0 03     <A HREF="BBCS.HTM">BCS</A> $B8D7
+B8D4: 20 47 B9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB947.HTM">$B947</A>     ; 2's Complement FAC#1
+
+Jump from $B8D2, <A HREF="ROMBB0F.HTM">$BB9F</A>, <A HREF="ROME097.HTM">$E0EF</A>:
+
+B8D7: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B8D9: 98        <A HREF="BTYA.HTM">TYA</A>
+B8DA: 18        <A HREF="BCLC.HTM">CLC</A>
+
+Jump from $B8F5:
+
+B8DB: A6 62     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+B8DD: D0 4A     <A HREF="BBNE.HTM">BNE</A> $B929
+B8DF: A6 63     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B8E1: 86 62     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+B8E3: A6 64     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B8E5: 86 63     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B8E7: A6 65     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B8E9: 86 64     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B8EB: A6 70     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B8ED: 86 65     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B8EF: 84 70     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B8F1: 69 08     <A HREF="BADC.HTM">ADC</A> #$08
+B8F3: C9 20     <A HREF="BCMP.HTM">CMP</A> #$20
+B8F5: D0 E4     <A HREF="BBNE.HTM">BNE</A> $B8DB
+
+Jump from $B92E, <A HREF="ROMB7AD.HTM">$B7B2</A>, <A HREF="ROMBAD4.HTM">$BADC</A>:
+
+B8F7: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+
+Jump from <A HREF="ROMBF7B.HTM">$BF81</A>:
+
+B8F9: 85 61     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+
+Jump from <A HREF="ROMBAB7.HTM">$BACC</A>:
+
+B8FB: 85 66     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+B8FD: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $B8A5:
+
+B8FE: 65 56     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP54.HTM">$56</A>       ; Jump Vector used in Function Evaluation
+B900: 85 70     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B902: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B904: 65 6D     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP6A.HTM">$6D</A>       ; AFAC Mantissa
+B906: 85 65     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B908: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B90A: 65 6C     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP6A.HTM">$6C</A>       ; AFAC Mantissa
+B90C: 85 64     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B90E: A5 63     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B910: 65 6B     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP6A.HTM">$6B</A>       ; AFAC Mantissa
+B912: 85 63     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B914: A5 62     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+B916: 65 6A     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP6A.HTM">$6A</A>       ; AFAC Mantissa
+B918: 85 62     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+B91A: 4C 36 B9  <A HREF="BJMP.HTM">JMP</A> $B936
+
+Jump from $B929:
+
+B91D: 69 01     <A HREF="BADC.HTM">ADC</A> #$01
+B91F: 06 70     <A HREF="BASL.HTM">ASL</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B921: 26 65     <A HREF="BROL.HTM">ROL</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B923: 26 64     <A HREF="BROL.HTM">ROL</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B925: 26 63     <A HREF="BROL.HTM">ROL</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B927: 26 62     <A HREF="BROL.HTM">ROL</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+
+Jump from $B8DD:
+
+B929: 10 F2     <A HREF="BBPL.HTM">BPL</A> $B91D
+B92B: 38        <A HREF="BSEC.HTM">SEC</A>
+B92C: E5 61     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+B92E: B0 C7     <A HREF="BBCS.HTM">BCS</A> $B8F7
+B930: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+B932: 69 01     <A HREF="BADC.HTM">ADC</A> #$01
+B934: 85 61     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+
+Jump from $B91A:
+
+B936: 90 0E     <A HREF="BBCC.HTM">BCC</A> $B946
+
+Jump from <A HREF="ROMBC1B.HTM">$BC28</A>:
+
+B938: E6 61     <A HREF="BINC.HTM">INC</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+B93A: F0 42     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMB97E.HTM">$B97E</A>     ; Output ?OVERFLOW Error
+B93C: 66 62     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+B93E: 66 63     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B940: 66 64     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B942: 66 65     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B944: 66 70     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+
+Jump from $B936:
+
+B946: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB862.HTM">Previous Page</A> / <A HREF="ROMB947.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

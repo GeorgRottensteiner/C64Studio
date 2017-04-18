@@ -1,0 +1,41 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ <B>Standard:</B>
+
+   <A HREF="RR00.HTM">$DE00</A> and <A HREF="RR01.HTM">$DE01</A> registers are active. $DF00-$DFFF contain the last page
+   of the selected 8K-bank of either ROM or RAM, whatever is selected. RAM
+   can only be accessed in $8000-$9FFF. ROM can be mapped to $8000, $A000 or
+   $E000 with the corresponding status on GAME and EXROM.
+
+   Note: If the AllowBank bit (<A HREF="RR01.HTM">$DE01</A>, Bit 1) is not set, the $DF00-$DFFF area
+   will always access bank 0 of the RAM, so the older cartridge images will
+   work. The AllowBank bit does not have any effect on the ROM mirror in that
+   area.
+
+ <B>Freeze:</B>
+
+   ROM is mapped to $E000-$FFFF, bank 0 is active directly after Freeze.
+   Writing to bits 0 and 1 of the <A HREF="RR00.HTM">$DE00</A> register will have no effect on GAME
+   and EXROM. RAM can be selected and used in $DE02 or $DF00, respectively,
+   but not in $8000. Banking bits work, so you have full read access to the
+   ROM, and access to up to four RAM pages with the AllowBank bit set (minus
+   2 bytes if REU compatible bit is set). You should leave this memory map
+   as soon as possible by setting bit 6 of <A HREF="RR00.HTM">$DE00</A> because C64 RAM in the
+   $E000 area is not available, and you don't have control of the GAME and
+   EXROM lines.
+
+ <B>REU compatible:</B>
+
+   <A HREF="RR00.HTM">$DE00</A> and <A HREF="RR01.HTM">$DE01</A> registers are active. $DE02-$DEFF contain a mirror of
+   $9E02-$9EFF of the selected 8K-bank of either ROM or RAM, whatever is
+   selected. RAM can only be accessed in $8000-$9FFF. ROM can be mapped to
+   $8000, $A000 or $E000 with the corresponding status on GAME and EXROM.
+   $DF00 stays free for use with the <A HREF="REUMAIN.HTM">17xx Ram Expansion Unit (REU)</A>.
+
+   Note: If the AllowBank bit (<A HREF="RR01.HTM">$DE01</A>, Bit 1) is not set, the $DF00-$DFFF area
+   will always access bank 0 of the RAM, so the older cartridge images will
+   work. The AllowBank bit does not have any effect on the ROM mirror in that
+   area.
+
+</PRE></BODY></HTML>

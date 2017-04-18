@@ -1,0 +1,142 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E7D4/59348:   -shifted characters-
+
+Jump from <A HREF="ROME716.HTM">$E727</A>:
+
+E7D4: 29 7F     <A HREF="BAND.HTM">AND</A> #$7F
+E7D6: C9 7F     <A HREF="BCMP.HTM">CMP</A> #$7F
+E7D8: D0 02     <A HREF="BBNE.HTM">BNE</A> $E7DC
+E7DA: A9 5E     <A HREF="BLDA.HTM">LDA</A> #$5E
+
+Jump from $E7D8:
+
+E7DC: C9 20     <A HREF="BCMP.HTM">CMP</A> #$20
+E7DE: 90 03     <A HREF="BBCC.HTM">BCC</A> $E7E3
+E7E0: 4C 91 E6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME691.HTM">$E691</A>     ; Set Up Screen Print
+
+Jump from $E7DE:
+
+E7E3: C9 0D     <A HREF="BCMP.HTM">CMP</A> #$0D
+E7E5: D0 03     <A HREF="BBNE.HTM">BNE</A> $E7EA
+E7E7: 4C 91 E8  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME891.HTM">$E891</A>     ; Output &lt;CR&gt;
+
+Jump from $E7E5:
+
+E7EA: A6 D4     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPD4.HTM">$D4</A>       ; Flag: Editor in Quote Mode
+E7EC: D0 3F     <A HREF="BBNE.HTM">BNE</A> $E82D
+E7EE: C9 14     <A HREF="BCMP.HTM">CMP</A> #$14
+E7F0: D0 37     <A HREF="BBNE.HTM">BNE</A> $E829
+E7F2: A4 D5     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPD5.HTM">$D5</A>       ; Current logical Line length: 39 or 79
+E7F4: B1 D1     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPD1.HTM">$D1</A>),Y   ; Pointer: Current Screen Line Address
+E7F6: C9 20     <A HREF="BCMP.HTM">CMP</A> #$20
+E7F8: D0 04     <A HREF="BBNE.HTM">BNE</A> $E7FE
+E7FA: C4 D3     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E7FC: D0 07     <A HREF="BBNE.HTM">BNE</A> $E805
+
+Jump from $E7F8:
+
+E7FE: C0 4F     <A HREF="BCPY.HTM">CPY</A> #$4F
+E800: F0 24     <A HREF="BBEQ.HTM">BEQ</A> $E826
+E802: 20 65 E9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME965.HTM">$E965</A>     ; Open A Space On The Screen
+
+Jump from $E7FC:
+
+E805: A4 D5     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPD5.HTM">$D5</A>       ; Current logical Line length: 39 or 79
+E807: 20 24 EA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEA24.HTM">$EA24</A>     ; Syncronise Color Pointer
+
+Jump from $E819:
+
+E80A: 88        <A HREF="BDEY.HTM">DEY</A>
+E80B: B1 D1     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPD1.HTM">$D1</A>),Y   ; Pointer: Current Screen Line Address
+E80D: C8        <A HREF="BINY.HTM">INY</A>
+E80E: 91 D1     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPD1.HTM">$D1</A>),Y   ; Pointer: Current Screen Line Address
+E810: 88        <A HREF="BDEY.HTM">DEY</A>
+E811: B1 F3     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPF3.HTM">$F3</A>),Y   ; Pointer: Current Color RAM Location
+E813: C8        <A HREF="BINY.HTM">INY</A>
+E814: 91 F3     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPF3.HTM">$F3</A>),Y   ; Pointer: Current Color RAM Location
+E816: 88        <A HREF="BDEY.HTM">DEY</A>
+E817: C4 D3     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E819: D0 EF     <A HREF="BBNE.HTM">BNE</A> $E80A
+E81B: A9 20     <A HREF="BLDA.HTM">LDA</A> #$20
+E81D: 91 D1     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPD1.HTM">$D1</A>),Y   ; Pointer: Current Screen Line Address
+E81F: AD 86 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0286.HTM">$0286</A>     ; Current Character Color code
+E822: 91 F3     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPF3.HTM">$F3</A>),Y   ; Pointer: Current Color RAM Location
+E824: E6 D8     <A HREF="BINC.HTM">INC</A> <A HREF="ZPD8.HTM">$D8</A>       ; Count of number of inserts outstanding
+
+Jump from $E800:
+
+E826: 4C A8 E6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME691.HTM">$E6A8</A>     ; Set Up Screen Print
+
+Jump from $E7F0:
+
+E829: A6 D8     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPD8.HTM">$D8</A>       ; Count of number of inserts outstanding
+E82B: F0 05     <A HREF="BBEQ.HTM">BEQ</A> $E832
+
+Jump from $E7EC:
+
+E82D: 09 40     <A HREF="BORA.HTM">ORA</A> #$40
+E82F: 4C 97 E6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME691.HTM">$E697</A>     ; Set Up Screen Print
+
+Jump from $E82B:
+
+E832: C9 11     <A HREF="BCMP.HTM">CMP</A> #$11
+E834: D0 16     <A HREF="BBNE.HTM">BNE</A> $E84C
+E836: A6 D6     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPD6.HTM">$D6</A>       ; Current Screen Line number of Cursor
+E838: F0 37     <A HREF="BBEQ.HTM">BEQ</A> $E871
+E83A: C6 D6     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPD6.HTM">$D6</A>       ; Current Screen Line number of Cursor
+E83C: A5 D3     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E83E: 38        <A HREF="BSEC.HTM">SEC</A>
+E83F: E9 28     <A HREF="BSBC.HTM">SBC</A> #$28
+E841: 90 04     <A HREF="BBCC.HTM">BCC</A> $E847
+E843: 85 D3     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E845: 10 2A     <A HREF="BBPL.HTM">BPL</A> $E871
+
+Jump from $E841:
+
+E847: 20 6C E5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME56C.HTM">$E56C</A>     ; Set Screen Pointers
+E84A: D0 25     <A HREF="BBNE.HTM">BNE</A> $E871
+
+Jump from $E834:
+
+E84C: C9 12     <A HREF="BCMP.HTM">CMP</A> #$12
+E84E: D0 04     <A HREF="BBNE.HTM">BNE</A> $E854
+E850: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+E852: 85 C7     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC7.HTM">$C7</A>       ; Flag: Reverse On/Off
+
+Jump from $E84E:
+
+E854: C9 1D     <A HREF="BCMP.HTM">CMP</A> #$1D
+E856: D0 12     <A HREF="BBNE.HTM">BNE</A> $E86A
+E858: 98        <A HREF="BTYA.HTM">TYA</A>
+E859: F0 09     <A HREF="BBEQ.HTM">BEQ</A> $E864
+E85B: 20 A1 E8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME8A1.HTM">$E8A1</A>     ; Check Line Decrement
+E85E: 88        <A HREF="BDEY.HTM">DEY</A>
+E85F: 84 D3     <A HREF="BSTY.HTM">STY</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E861: 4C A8 E6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME691.HTM">$E6A8</A>     ; Set Up Screen Print
+
+Jump from $E859:
+
+E864: 20 01 E7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME701.HTM">$E701</A>     ; Back on to Previous Line
+E867: 4C A8 E6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME691.HTM">$E6A8</A>     ; Set Up Screen Print
+
+Jump from $E856:
+
+E86A: C9 13     <A HREF="BCMP.HTM">CMP</A> #$13
+E86C: D0 06     <A HREF="BBNE.HTM">BNE</A> $E874
+E86E: 20 44 E5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME544.HTM">$E544</A>     ; Clear Screen
+
+Jump from $E838, $E845, $E84A:
+
+E871: 4C A8 E6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME691.HTM">$E6A8</A>     ; Set Up Screen Print
+
+Jump from $E86C:
+
+E874: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+E876: 20 CB E8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME8CB.HTM">$E8CB</A>     ; Set Color Code
+E879: 4C 4F EC  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEC44.HTM">$EC4F</A>     ; Graphics/Text Control
+
+    <A HREF="ROME72A.HTM">Previous Page</A> / <A HREF="ROME87C.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

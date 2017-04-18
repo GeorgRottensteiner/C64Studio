@@ -1,0 +1,34 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A642/42562:   Perform [new]
+
+A642: D0 FD     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMA613.HTM">$A641</A>     ; Search for Line Number
+
+Jump from <A HREF="ROME422.HTM">$E444</A>:
+
+A644: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+A646: A8        <A HREF="BTAY.HTM">TAY</A>
+A647: 91 2B     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP2B.HTM">$2B</A>),Y   ; Pointer: Start of BASIC Text Area
+A649: C8        <A HREF="BINY.HTM">INY</A>
+A64A: 91 2B     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP2B.HTM">$2B</A>),Y   ; Pointer: Start of BASIC Text Area
+A64C: A5 2B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2B.HTM">$2B</A>       ; Pointer: Start of BASIC Text Area
+A64E: 18        <A HREF="BCLC.HTM">CLC</A>
+A64F: 69 02     <A HREF="BADC.HTM">ADC</A> #$02
+A651: 85 2D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP2D.HTM">$2D</A>       ; Pointer: Start of BASIC Variables
+A653: A5 2C     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2B.HTM">$2C</A>       ; Pointer: Start of BASIC Text Area
+A655: 69 00     <A HREF="BADC.HTM">ADC</A> #$00
+A657: 85 2E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP2D.HTM">$2E</A>       ; Pointer: Start of BASIC Variables
+
+Jump from <A HREF="ROMA4A2.HTM">$A4ED</A>, <A HREF="ROMA4A2.HTM">$A52A</A>, <A HREF="ROMA871.HTM">$A87A</A>:
+
+A659: 20 8E A6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA68E.HTM">$A68E</A>     ; Reset TXTPTR
+A65C: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+
+    <A HREF="ROMA613.HTM">Previous Page</A> / <A HREF="ROMA65E.HTM">Next Page</A>
+
+Kernal-Reference:
+
+ BIT $A650   : <A HREF="ROMEF90.HTM">$EFC4</A>
+
+</PRE></BODY></HTML>

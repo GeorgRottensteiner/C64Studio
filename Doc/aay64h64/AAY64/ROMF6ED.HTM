@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F6ED/63213:   Check STOP Key
+
+F6ED: A5 91     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP91.HTM">$91</A>       ; Flag: $7F = STOP key
+F6EF: C9 7F     <A HREF="BCMP.HTM">CMP</A> #$7F
+F6F1: D0 07     <A HREF="BBNE.HTM">BNE</A> $F6FA
+F6F3: 08        <A HREF="BPHP.HTM">PHP</A>
+F6F4: 20 CC FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFCC.HTM">$FFCC</A>     ; Restore I/O Vector
+F6F7: 85 C6     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC6.HTM">$C6</A>       ; Number of Characters in Keyboard Buffer queue
+F6F9: 28        <A HREF="BPLP.HTM">PLP</A>
+
+Jump from $F6F1:
+
+F6FA: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF6E4.HTM">Previous Page</A> / <A HREF="ROMF6FB.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

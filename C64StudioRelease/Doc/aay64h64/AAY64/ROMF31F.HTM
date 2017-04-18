@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F31F/62239:   Set File values
+
+Jump from <A HREF="ROMF20E.HTM">$F216</A>, <A HREF="ROMF250.HTM">$F258</A>, <A HREF="ROMF291.HTM">$F298</A>:
+
+F31F: BD 59 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0259.HTM">$0259</A>,X   ; Active logical File numbers
+F322: 85 B8     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPB8.HTM">$B8</A>       ; Current File - Logical File number
+F324: BD 63 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0263.HTM">$0263</A>,X   ; Active File First Addresses (Device numbers)
+F327: 85 BA     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPBA.HTM">$BA</A>       ; Current File - First Address (Device number)
+F329: BD 6D 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP026D.HTM">$026D</A>,X   ; Active File Secondary Addresses
+F32C: 85 B9     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+
+Jump from <A HREF="ROMF30F.HTM">$F317</A>:
+
+F32E: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF30F.HTM">Previous Page</A> / <A HREF="ROMF32F.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,29 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FE43/65091:   NMI Transfer Entry
+
+FE43: 78        <A HREF="BSEI.HTM">SEI</A>
+FE44: 6C 18 03  <A HREF="BJMP.HTM">JMP</A> (<A HREF="ZP0318.HTM">$0318</A>)   ; Vector: Hardware NMI Interrupt Address
+FE47: 48        <A HREF="BPHA.HTM">PHA</A>
+FE48: 8A        <A HREF="BTXA.HTM">TXA</A>
+FE49: 48        <A HREF="BPHA.HTM">PHA</A>
+FE4A: 98        <A HREF="BTYA.HTM">TYA</A>
+FE4B: 48        <A HREF="BPHA.HTM">PHA</A>
+FE4C: A9 7F     <A HREF="BLDA.HTM">LDA</A> #$7F
+FE4E: 8D 0D DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA213.HTM">$DD0D</A>     ; CIA2: Interrupt (NMI) Control Register
+FE51: AC 0D DD  <A HREF="BLDY.HTM">LDY</A> <A HREF="CIA213.HTM">$DD0D</A>     ; CIA2: Interrupt (NMI) Control Register
+FE54: 30 1C     <A HREF="BBMI.HTM">BMI</A> <A HREF="ROMFE66.HTM">$FE72</A>     ; Warm Start Basic
+FE56: 20 02 FD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFD02.HTM">$FD02</A>     ; Check For 8-ROM
+FE59: D0 03     <A HREF="BBNE.HTM">BNE</A> $FE5E
+FE5B: 6C 02 80  <A HREF="BJMP.HTM">JMP</A> ($8002)
+
+Jump from $FE59:
+
+FE5E: 20 BC F6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF69B.HTM">$F6BC</A>     ; Bump Clock
+FE61: 20 E1 FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFE1.HTM">$FFE1</A>     ; Test-Stop Vector
+FE64: D0 0C     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMFE66.HTM">$FE72</A>     ; Warm Start Basic
+
+    <A HREF="ROMFE34.HTM">Previous Page</A> / <A HREF="ROMFE66.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

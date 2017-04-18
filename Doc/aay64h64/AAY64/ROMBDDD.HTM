@@ -1,0 +1,127 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BDDD/48605:   Convert FAC#1 to ASCII String
+
+Jump from <A HREF="ROMAAB8.HTM">$AABC</A>:
+
+BDDD: A0 01     <A HREF="BLDY.HTM">LDY</A> #$01
+
+Jump from <A HREF="ROMB465.HTM">$B46A</A>, <A HREF="ROMBDCD.HTM">$BDD7</A>:
+
+BDDF: A9 20     <A HREF="BLDA.HTM">LDA</A> #$20
+BDE1: 24 66     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BDE3: 10 02     <A HREF="BBPL.HTM">BPL</A> $BDE7
+BDE5: A9 2D     <A HREF="BLDA.HTM">LDA</A> #$2D
+
+Jump from $BDE3:
+
+BDE7: 99 FF 00  <A HREF="BSTA.HTM">STA</A> <A HREF="ZPFF.HTM">$00FF</A>,Y   ; Assembly Area for Floating point to ASCII
+BDEA: 85 66     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BDEC: 84 71     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+BDEE: C8        <A HREF="BINY.HTM">INY</A>
+BDEF: A9 30     <A HREF="BLDA.HTM">LDA</A> #$30
+BDF1: A6 61     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BDF3: D0 03     <A HREF="BBNE.HTM">BNE</A> $BDF8
+BDF5: 4C 04 BF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBE68.HTM">$BF04</A>     ; Convert TI to String
+
+Jump from $BDF3:
+
+BDF8: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+BDFA: E0 80     <A HREF="BCPX.HTM">CPX</A> #$80
+BDFC: F0 02     <A HREF="BBEQ.HTM">BEQ</A> $BE00
+BDFE: B0 09     <A HREF="BBCS.HTM">BCS</A> $BE09
+
+Jump from $BDFC:
+
+BE00: A9 BD     <A HREF="BLDA.HTM">LDA</A> #$BD
+BE02: A0 BD     <A HREF="BLDY.HTM">LDY</A> #$BD
+BE04: 20 28 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA28.HTM">$BA28</A>     ; Perform Multiply
+BE07: A9 F7     <A HREF="BLDA.HTM">LDA</A> #$F7
+
+Jump from $BDFE:
+
+BE09: 85 5D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP5C.HTM">$5D</A>       ; Temporary storage for FLPT value
+
+Jump from $BE2D:
+
+BE0B: A9 B8     <A HREF="BLDA.HTM">LDA</A> #$B8
+BE0D: A0 BD     <A HREF="BLDY.HTM">LDY</A> #$BD
+BE0F: 20 5B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC5B.HTM">$BC5B</A>     ; Compare FAC#1 With Memory
+BE12: F0 1E     <A HREF="BBEQ.HTM">BEQ</A> $BE32
+BE14: 10 12     <A HREF="BBPL.HTM">BPL</A> $BE28
+
+Jump from $BE26:
+
+BE16: A9 B3     <A HREF="BLDA.HTM">LDA</A> #$B3
+BE18: A0 BD     <A HREF="BLDY.HTM">LDY</A> #$BD
+BE1A: 20 5B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC5B.HTM">$BC5B</A>     ; Compare FAC#1 With Memory
+BE1D: F0 02     <A HREF="BBEQ.HTM">BEQ</A> $BE21
+BE1F: 10 0E     <A HREF="BBPL.HTM">BPL</A> $BE2F
+
+Jump from $BE1D:
+
+BE21: 20 E2 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBAE2.HTM">$BAE2</A>     ; Multiply FAC#1 by 10
+BE24: C6 5D     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP5C.HTM">$5D</A>       ; Temporary storage for FLPT value
+BE26: D0 EE     <A HREF="BBNE.HTM">BNE</A> $BE16
+
+Jump from $BE14:
+
+BE28: 20 FE BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBAFE.HTM">$BAFE</A>     ; Divide FAC#1 by 10
+BE2B: E6 5D     <A HREF="BINC.HTM">INC</A> <A HREF="ZP5C.HTM">$5D</A>       ; Temporary storage for FLPT value
+BE2D: D0 DC     <A HREF="BBNE.HTM">BNE</A> $BE0B
+
+Jump from $BE1F:
+
+BE2F: 20 49 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB849.HTM">$B849</A>     ; Add 0.5 to FAC#1
+
+Jump from $BE12:
+
+BE32: 20 9B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC9B.HTM">$BC9B</A>     ; Convert FAC#1 to Integer
+BE35: A2 01     <A HREF="BLDX.HTM">LDX</A> #$01
+BE37: A5 5D     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP5C.HTM">$5D</A>       ; Temporary storage for FLPT value
+BE39: 18        <A HREF="BCLC.HTM">CLC</A>
+BE3A: 69 0A     <A HREF="BADC.HTM">ADC</A> #$0A
+BE3C: 30 09     <A HREF="BBMI.HTM">BMI</A> $BE47
+BE3E: C9 0B     <A HREF="BCMP.HTM">CMP</A> #$0B
+BE40: B0 06     <A HREF="BBCS.HTM">BCS</A> $BE48
+BE42: 69 FF     <A HREF="BADC.HTM">ADC</A> #$FF
+BE44: AA        <A HREF="BTAX.HTM">TAX</A>
+BE45: A9 02     <A HREF="BLDA.HTM">LDA</A> #$02
+
+Jump from $BE3C:
+
+BE47: 38        <A HREF="BSEC.HTM">SEC</A>
+
+Jump from $BE40:
+
+BE48: E9 02     <A HREF="BSBC.HTM">SBC</A> #$02
+BE4A: 85 5E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+BE4C: 86 5D     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP5C.HTM">$5D</A>       ; Temporary storage for FLPT value
+BE4E: 8A        <A HREF="BTXA.HTM">TXA</A>
+BE4F: F0 02     <A HREF="BBEQ.HTM">BEQ</A> $BE53
+BE51: 10 13     <A HREF="BBPL.HTM">BPL</A> $BE66
+
+Jump from $BE4F:
+
+BE53: A4 71     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+BE55: A9 2E     <A HREF="BLDA.HTM">LDA</A> #$2E
+BE57: C8        <A HREF="BINY.HTM">INY</A>
+BE58: 99 FF 00  <A HREF="BSTA.HTM">STA</A> <A HREF="ZPFF.HTM">$00FF</A>,Y   ; Assembly Area for Floating point to ASCII
+BE5B: 8A        <A HREF="BTXA.HTM">TXA</A>
+BE5C: F0 06     <A HREF="BBEQ.HTM">BEQ</A> $BE64
+BE5E: A9 30     <A HREF="BLDA.HTM">LDA</A> #$30
+BE60: C8        <A HREF="BINY.HTM">INY</A>
+BE61: 99 FF 00  <A HREF="BSTA.HTM">STA</A> <A HREF="ZPFF.HTM">$00FF</A>,Y   ; Assembly Area for Floating point to ASCII
+
+Jump from $BE5C:
+
+BE64: 84 71     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+
+Jump from $BE51:
+
+BE66: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+
+    <A HREF="ROMBDCD.HTM">Previous Page</A> / <A HREF="ROMBE68.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

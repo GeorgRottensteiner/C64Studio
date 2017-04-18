@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F713/63251:   Output I/O Error Messages: 'ILLEGAL DEVICE NUMBER'
+
+Jump from <A HREF="ROMF34A.HTM">$F390</A>, <A HREF="ROMF49E.HTM">$F4AF</A>, <A HREF="ROMF533.HTM">$F536</A>, <A HREF="ROMF533.HTM">$F53E</A>, <A HREF="ROMF5DD.HTM">$F5F1</A>, <A HREF="ROMF659.HTM">$F65C</A>:
+
+F713: A9 09     <A HREF="BLDA.HTM">LDA</A> #$09
+F715: 48        <A HREF="BPHA.HTM">PHA</A>
+F716: 20 CC FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFCC.HTM">$FFCC</A>     ; Restore I/O Vector
+F719: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+F71B: 24 9D     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP9D.HTM">$9D</A>       ; Error-Mode-Flag
+F71D: 50 0A     <A HREF="BBVC.HTM">BVC</A> $F729
+F71F: 20 2F F1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF12F.HTM">$F12F</A>     ; Print Message
+F722: 68        <A HREF="BPLA.HTM">PLA</A>
+F723: 48        <A HREF="BPHA.HTM">PHA</A>
+F724: 09 30     <A HREF="BORA.HTM">ORA</A> #$30
+F726: 20 D2 FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFD2.HTM">$FFD2</A>     ; Output Vector, chrout
+
+Jump from $F71D:
+
+F729: 68        <A HREF="BPLA.HTM">PLA</A>
+F72A: 38        <A HREF="BSEC.HTM">SEC</A>
+F72B: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF710.HTM">Previous Page</A> / <A HREF="ROMF72C.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,23 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  SRE                   SRE LSR memory, EOR memory                      SRE
+
+                                                        N V - B D I Z C
+  Operation:  A &lt;- (M &gt;&gt; 1) \-/ A                       / . . . . . / /
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   SRE $FF             |   $47   |    2    |    5     |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   SRE $FF,X           |   $57   |    2    |    6     |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   SRE $FFFF           |   $4F   |    3    |    6     |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   SRE $FFFF,X         |   $5F   |    3    |    7     |
+  |  <A HREF="ADDR12B.HTM">Absolute,Y</A>    |   SRE $FFFF,Y         |   $5B   |    3    |    7     |
+  |  <A HREF="ADDR9B.HTM">(Indirect,X)</A>  |   SRE ($FF,X)         |   $43   |    2    |    8     |
+  |  <A HREF="ADDR7B.HTM">(Indirect),Y</A>  |   SRE ($FF),Y         |   $53   |    2    |    8     |
+  +----------------+-----------------------+---------+---------+----------+
+
+  Also known as LSE.
+
+</PRE></BODY></HTML>

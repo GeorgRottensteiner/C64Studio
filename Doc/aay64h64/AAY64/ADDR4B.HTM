@@ -1,0 +1,30 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510/65816 Addressing mode: Zeropage/Direct (R-M-W) -- d
+
+ (<A HREF="BASL.HTM">ASL</A>,<A HREF="BDCP.HTM">DCP</A>,<A HREF="BDEC.HTM">DEC</A>,<A HREF="BINC.HTM">INC</A>,<A HREF="BISB.HTM">ISB</A>,<A HREF="BLSR.HTM">LSR</A>,<A HREF="BRLA.HTM">RLA</A>,<A HREF="BROL.HTM">ROL</A>,<A HREF="BROR.HTM">ROR</A>,<A HREF="BRRA.HTM">RRA</A>,<A HREF="BSLO.HTM">SLO</A>,<A HREF="BSRE.HTM">SRE</A>,<A HREF="BTRB.HTM">TRB</A>,<A HREF="BTSB.HTM">TSB</A>)
+ (2 bytes)  (5,6,7 and 8 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Direct Offset         |    R     |
+    |       (2) 3a  |  PBR,PC+1        | Internal Operation    |    R     |
+    |           3   |  0,D+DO          | Data Low              |    R     |
+    |       (1) 3a  |  0,D+DO+1        | Data High             |    R     |
+    |   (12)(3) 4   |  0,D+DO+1        | Internal Operation    |    R     |
+    |       (1) 5a  |  0,D+D0+1        | Data High             |    W     |
+    |           5   |  0,D+DO          | Data Low              |    W     |
+    +---------------+------------------+-----------------------+----------+
+    (1) Add 1 cycle for M=0 or X=0 (i.e. 16 bit data).
+    (2) Add 1 cycle for direct register low (DL) not equal 0.
+    (3) Special case for aborting instruction. This is the last cycle which
+        may be aborted or the Status, PBR or DBR registers will be updated.
+   (12) Unmodified Data Low is written back to memory in 6502 emulation
+        mode (E=1).
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

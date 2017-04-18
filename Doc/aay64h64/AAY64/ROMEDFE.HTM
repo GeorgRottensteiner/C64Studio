@@ -1,0 +1,30 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EDFE/60926:   Send UNLISTEN
+
+Jump from <A HREF="ROMF333.HTM">$F339</A>, <A HREF="ROMF5FA.HTM">$F63F</A>, <A HREF="ROMF5FA.HTM">$F654</A>, <A HREF="ROMFFAE.HTM">$FFAE</A>:
+
+EDFE: A9 3F     <A HREF="BLDA.HTM">LDA</A> #$3F
+EE00: 20 11 ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMED0C.HTM">$ED11</A>     ; Send LISTEN Command on Serial Bus
+
+Jump from <A HREF="ROMEDB0.HTM">$EDB7</A>:
+
+EE03: 20 BE ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDBE.HTM">$EDBE</A>     ; Clear ATN
+
+Jump from <A HREF="ROMEE13.HTM">$EE7D</A>:
+
+EE06: 8A        <A HREF="BTXA.HTM">TXA</A>
+EE07: A2 0A     <A HREF="BLDX.HTM">LDX</A> #$0A
+
+Jump from $EE0A:
+
+EE09: CA        <A HREF="BDEX.HTM">DEX</A>
+EE0A: D0 FD     <A HREF="BBNE.HTM">BNE</A> $EE09
+EE0C: AA        <A HREF="BTAX.HTM">TAX</A>
+EE0D: 20 85 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE85.HTM">$EE85</A>     ; Serial Clock On
+EE10: 4C 97 EE  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEE97.HTM">$EE97</A>     ; Serial Output 1
+
+    <A HREF="ROMEDEF.HTM">Previous Page</A> / <A HREF="ROMEE13.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE02/56834/SWIFTLINK+2:   Command Register
+
+   +----------+---------------------------------------------------+
+   | Bits 7-5 |   Parity: 000 = None            101 = Mark        |
+   |          |           001 = Odd             111 = Space       |
+   |          |           011 = Even                              |
+   | Bit  4   |   Echo: 1 = On                                    |
+   | Bit  3-2 |         Transmitter IRQ |  RTS  | Transmitter     |
+   |          |         ----------------+-------+------------     |
+   |          |    00 =     Disabled    |  High |    Off          |
+   |          |    01 =     Enabled     |  Low  |    On           |
+   |          |    10 =     Disabled    |  Low  |    On           |
+   |          |    11 =     Disabled    |  Low  |    BRK          |
+   | Bit  1   |   Receiver Interrupt: 1 = Disabled                |
+   | Bit  0   |   Master IRQ Control: 1 = On                      |
+   +----------+---------------------------------------------------+
+
+</PRE></BODY></HTML>

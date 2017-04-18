@@ -1,0 +1,51 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EC44/60484:   Graphics/Text Control
+
+Jump from <A HREF="ROME72A.HTM">$E7D1</A>:
+
+EC44: C9 0E     <A HREF="BCMP.HTM">CMP</A> #$0E
+EC46: D0 07     <A HREF="BBNE.HTM">BNE</A> $EC4F
+EC48: AD 18 D0  <A HREF="BLDA.HTM">LDA</A> <A HREF="VIC24.HTM">$D018</A>     ; VIC: Memory Control Register
+EC4B: 09 02     <A HREF="BORA.HTM">ORA</A> #$02
+EC4D: D0 09     <A HREF="BBNE.HTM">BNE</A> $EC58
+
+Jump from $EC46, <A HREF="ROME7D4.HTM">$E879</A>:
+
+EC4F: C9 8E     <A HREF="BCMP.HTM">CMP</A> #$8E
+EC51: D0 0B     <A HREF="BBNE.HTM">BNE</A> $EC5E
+EC53: AD 18 D0  <A HREF="BLDA.HTM">LDA</A> <A HREF="VIC24.HTM">$D018</A>     ; VIC: Memory Control Register
+EC56: 29 FD     <A HREF="BAND.HTM">AND</A> #$FD
+
+Jump from $EC4D:
+
+EC58: 8D 18 D0  <A HREF="BSTA.HTM">STA</A> <A HREF="VIC24.HTM">$D018</A>     ; VIC: Memory Control Register
+
+Jump from $EC6B:
+
+EC5B: 4C A8 E6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME691.HTM">$E6A8</A>     ; Set Up Screen Print
+
+Jump from $EC51:
+
+EC5E: C9 08     <A HREF="BCMP.HTM">CMP</A> #$08
+EC60: D0 07     <A HREF="BBNE.HTM">BNE</A> $EC69
+EC62: A9 80     <A HREF="BLDA.HTM">LDA</A> #$80
+EC64: 0D 91 02  <A HREF="BORA.HTM">ORA</A> <A HREF="ZP0291.HTM">$0291</A>     ; Flag: Upper/Lower Case change
+EC67: 30 09     <A HREF="BBMI.HTM">BMI</A> $EC72
+
+Jump from $EC60:
+
+EC69: C9 09     <A HREF="BCMP.HTM">CMP</A> #$09
+EC6B: D0 EE     <A HREF="BBNE.HTM">BNE</A> $EC5B
+EC6D: A9 7F     <A HREF="BLDA.HTM">LDA</A> #$7F
+EC6F: 2D 91 02  <A HREF="BAND.HTM">AND</A> <A HREF="ZP0291.HTM">$0291</A>     ; Flag: Upper/Lower Case change
+
+Jump from $EC67:
+
+EC72: 8D 91 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0291.HTM">$0291</A>     ; Flag: Upper/Lower Case change
+EC75: 4C A8 E6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME691.HTM">$E6A8</A>     ; Set Up Screen Print
+
+    <A HREF="ROMEC03.HTM">Previous Page</A> / <A HREF="ROMEC78.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

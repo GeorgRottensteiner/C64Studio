@@ -1,0 +1,78 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B487/46215:   Set Up String
+
+Jump from <A HREF="ROMAAB8.HTM">$AABF</A>, <A HREF="ROMAB1E.HTM">$AB1E</A>, <A HREF="ROMAEAD.HTM">$AEC6</A>, <A HREF="ROMB465.HTM">$B473</A>:
+
+B487: A2 22     <A HREF="BLDX.HTM">LDX</A> #$22
+B489: 86 07     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+B48B: 86 08     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+
+Jump from <A HREF="ROMAC35.HTM">$AC7D</A>:
+
+B48D: 85 6F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+B48F: 84 70     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B491: 85 62     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+B493: 84 63     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B495: A0 FF     <A HREF="BLDY.HTM">LDY</A> #$FF
+
+Jump from $B4A2:
+
+B497: C8        <A HREF="BINY.HTM">INY</A>
+B498: B1 6F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP6F.HTM">$6F</A>),Y   ; Sign of result of Arithmetic Evaluation
+B49A: F0 0C     <A HREF="BBEQ.HTM">BEQ</A> $B4A8
+B49C: C5 07     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+B49E: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $B4A4
+B4A0: C5 08     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+B4A2: D0 F3     <A HREF="BBNE.HTM">BNE</A> $B497
+
+Jump from $B49E:
+
+B4A4: C9 22     <A HREF="BCMP.HTM">CMP</A> #$22
+B4A6: F0 01     <A HREF="BBEQ.HTM">BEQ</A> $B4A9
+
+Jump from $B49A:
+
+B4A8: 18        <A HREF="BCLC.HTM">CLC</A>
+
+Jump from $B4A6:
+
+B4A9: 84 61     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+B4AB: 98        <A HREF="BTYA.HTM">TYA</A>
+B4AC: 65 6F     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+B4AE: 85 71     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B4B0: A6 70     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B4B2: 90 01     <A HREF="BBCC.HTM">BCC</A> $B4B5
+B4B4: E8        <A HREF="BINX.HTM">INX</A>
+
+Jump from $B4B2:
+
+B4B5: 86 72     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B4B7: A5 70     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B4B9: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $B4BF
+B4BB: C9 02     <A HREF="BCMP.HTM">CMP</A> #$02
+B4BD: D0 0B     <A HREF="BBNE.HTM">BNE</A> $B4CA
+
+Jump from $B4B9:
+
+B4BF: 98        <A HREF="BTYA.HTM">TYA</A>
+B4C0: 20 75 B4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB465.HTM">$B475</A>     ; Evaluate &lt;str$&gt;
+B4C3: A6 6F     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+B4C5: A4 70     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B4C7: 20 88 B6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB67A.HTM">$B688</A>     ; Store String in High RAM
+
+Jump from $B4BD, <A HREF="ROMB63D.HTM">$B674</A>, <A HREF="ROMB6EC.HTM">$B6FD</A>, <A HREF="ROMB700.HTM">$B729</A>:
+
+B4CA: A6 16     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP16.HTM">$16</A>       ; Pointer: Temporary String Stack
+B4CC: E0 22     <A HREF="BCPX.HTM">CPX</A> #$22
+B4CE: D0 05     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMB4D5.HTM">$B4D5</A>     ; Save String Descriptor
+B4D0: A2 19     <A HREF="BLDX.HTM">LDX</A> #$19
+
+Jump from <A HREF="ROMB4F4.HTM">$B51A</A>:
+
+B4D2: 4C 37 A4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA437.HTM">$A437</A>     ; Error Routine
+
+    <A HREF="ROMB465.HTM">Previous Page</A> / <A HREF="ROMB4D5.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

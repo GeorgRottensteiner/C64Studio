@@ -1,0 +1,151 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AC35/44085:   General Purpose Read Routine
+
+AC35: 20 24 E1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME124.HTM">$E124</A>     ; Get One Character
+AC38: 8D 00 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0200.HTM">$0200</A>     ; BASIC Input Buffer (Input Line from Screen)
+AC3B: A2 FF     <A HREF="BLDX.HTM">LDX</A> #$FF
+AC3D: A0 01     <A HREF="BLDY.HTM">LDY</A> #$01
+AC3F: D0 0C     <A HREF="BBNE.HTM">BNE</A> $AC4D
+
+Jump from <A HREF="ROMAC06.HTM">$AC33</A>:
+
+AC41: 30 75     <A HREF="BBMI.HTM">BMI</A> $ACB8
+AC43: A5 13     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP13.HTM">$13</A>       ; File number of current Input Device
+AC45: D0 03     <A HREF="BBNE.HTM">BNE</A> $AC4A
+AC47: 20 45 AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAB3B.HTM">$AB45</A>     ; Output Format Character
+
+Jump from $AC45:
+
+AC4A: 20 F9 AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMABF9.HTM">$ABF9</A>     ; Do Input Prompt
+
+Jump from $AC3F:
+
+AC4D: 86 7A     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+AC4F: 84 7B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+
+Jump from $ACDC, <A HREF="ROMAC06.HTM">$AC2F</A>:
+
+AC51: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+AC54: 24 0D     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP0D.HTM">$0D</A>       ; Data type Flag
+AC56: 10 31     <A HREF="BBPL.HTM">BPL</A> $AC89
+AC58: 24 11     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP11.HTM">$11</A>       ; Input Flag
+AC5A: 50 09     <A HREF="BBVC.HTM">BVC</A> $AC65
+AC5C: E8        <A HREF="BINX.HTM">INX</A>
+AC5D: 86 7A     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+AC5F: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+AC61: 85 07     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+AC63: F0 0C     <A HREF="BBEQ.HTM">BEQ</A> $AC71
+
+Jump from $AC5A:
+
+AC65: 85 07     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+AC67: C9 22     <A HREF="BCMP.HTM">CMP</A> #$22
+AC69: F0 07     <A HREF="BBEQ.HTM">BEQ</A> $AC72
+AC6B: A9 3A     <A HREF="BLDA.HTM">LDA</A> #$3A
+AC6D: 85 07     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+AC6F: A9 2C     <A HREF="BLDA.HTM">LDA</A> #$2C
+
+Jump from $AC63:
+
+AC71: 18        <A HREF="BCLC.HTM">CLC</A>
+
+Jump from $AC69:
+
+AC72: 85 08     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+AC74: A5 7A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+AC76: A4 7B     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+AC78: 69 00     <A HREF="BADC.HTM">ADC</A> #$00
+AC7A: 90 01     <A HREF="BBCC.HTM">BCC</A> $AC7D
+AC7C: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from $AC7A:
+
+AC7D: 20 8D B4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB487.HTM">$B48D</A>     ; Set Up String
+AC80: 20 E2 B7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB7B5.HTM">$B7E2</A>     ; Convert ASCII String to Flpt
+AC83: 20 DA A9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA9D9.HTM">$A9DA</A>     ; Assign String
+AC86: 4C 91 AC  <A HREF="BJMP.HTM">JMP</A> $AC91
+
+Jump from $AC56:
+
+AC89: 20 F3 BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBCF3.HTM">$BCF3</A>     ; Convert ASCII String to a Number in FAC
+AC8C: A5 0E     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0E.HTM">$0E</A>       ; Data type Flag
+AC8E: 20 C2 A9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA9A5.HTM">$A9C2</A>     ; Perform [let]
+
+Jump from $AC86:
+
+AC91: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+AC94: F0 07     <A HREF="BBEQ.HTM">BEQ</A> $AC9D
+AC96: C9 2C     <A HREF="BCMP.HTM">CMP</A> #$2C
+AC98: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $AC9D
+AC9A: 4C 4D AB  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAB4D.HTM">$AB4D</A>     ; Handle Bad Data
+
+Jump from $AC94, $AC98:
+
+AC9D: A5 7A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+AC9F: A4 7B     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+ACA1: 85 43     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP43.HTM">$43</A>       ; Pointer: Temporary storage during INPUT
+ACA3: 84 44     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP43.HTM">$44</A>       ; Pointer: Temporary storage during INPUT
+ACA5: A5 4B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP4B.HTM">$4B</A>       ; Temporary storage for TXTPTR
+ACA7: A4 4C     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP4B.HTM">$4C</A>       ; Temporary storage for TXTPTR
+ACA9: 85 7A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+ACAB: 84 7B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+ACAD: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+ACB0: F0 2D     <A HREF="BBEQ.HTM">BEQ</A> $ACDF
+ACB2: 20 FD AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFD.HTM">$AEFD</A>     ; Test ','
+ACB5: 4C 15 AC  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAC06.HTM">$AC15</A>     ; Perform [read]
+
+Jump from $AC41, $ACDA:
+
+ACB8: 20 06 A9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA906.HTM">$A906</A>     ; Search for Next Statement / Line
+ACBB: C8        <A HREF="BINY.HTM">INY</A>
+ACBC: AA        <A HREF="BTAX.HTM">TAX</A>
+ACBD: D0 12     <A HREF="BBNE.HTM">BNE</A> $ACD1
+ACBF: A2 0D     <A HREF="BLDX.HTM">LDX</A> #$0D
+ACC1: C8        <A HREF="BINY.HTM">INY</A>
+ACC2: B1 7A     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP7A.HTM">$7A</A>),Y   ; Pointer: Current Byte of BASIC Text
+ACC4: F0 6C     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMAD1E.HTM">$AD32</A>     ; Perform [next]
+ACC6: C8        <A HREF="BINY.HTM">INY</A>
+ACC7: B1 7A     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP7A.HTM">$7A</A>),Y   ; Pointer: Current Byte of BASIC Text
+ACC9: 85 3F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP3F.HTM">$3F</A>       ; Current DATA Line number
+ACCB: C8        <A HREF="BINY.HTM">INY</A>
+ACCC: B1 7A     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP7A.HTM">$7A</A>),Y   ; Pointer: Current Byte of BASIC Text
+ACCE: C8        <A HREF="BINY.HTM">INY</A>
+ACCF: 85 40     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP3F.HTM">$40</A>       ; Current DATA Line number
+
+Jump from $ACBD:
+
+ACD1: 20 FB A8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA8F8.HTM">$A8FB</A>     ; Perform [data]
+ACD4: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+ACD7: AA        <A HREF="BTAX.HTM">TAX</A>
+ACD8: E0 83     <A HREF="BCPX.HTM">CPX</A> #$83
+ACDA: D0 DC     <A HREF="BBNE.HTM">BNE</A> $ACB8
+ACDC: 4C 51 AC  <A HREF="BJMP.HTM">JMP</A> $AC51
+
+Jump from $ACB0:
+
+ACDF: A5 43     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP43.HTM">$43</A>       ; Pointer: Temporary storage during INPUT
+ACE1: A4 44     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP43.HTM">$44</A>       ; Pointer: Temporary storage during INPUT
+ACE3: A6 11     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP11.HTM">$11</A>       ; Input Flag
+ACE5: 10 03     <A HREF="BBPL.HTM">BPL</A> $ACEA
+ACE7: 4C 27 A8  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA81D.HTM">$A827</A>     ; Perform [restore]
+
+Jump from $ACE5:
+
+ACEA: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+ACEC: B1 43     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP43.HTM">$43</A>),Y   ; Pointer: Temporary storage during INPUT
+ACEE: F0 0B     <A HREF="BBEQ.HTM">BEQ</A> $ACFB
+ACF0: A5 13     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP13.HTM">$13</A>       ; File number of current Input Device
+ACF2: D0 07     <A HREF="BBNE.HTM">BNE</A> $ACFB
+ACF4: A9 FC     <A HREF="BLDA.HTM">LDA</A> #$FC
+ACF6: A0 AC     <A HREF="BLDY.HTM">LDY</A> #$AC
+ACF8: 4C 1E AB  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAB1E.HTM">$AB1E</A>     ; Output String
+
+Jump from $ACEE, $ACF2:
+
+ACFB: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMAC06.HTM">Previous Page</A> / <A HREF="ROMACFC.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

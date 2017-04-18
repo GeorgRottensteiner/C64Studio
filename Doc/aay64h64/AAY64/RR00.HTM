@@ -1,0 +1,34 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE00/56832/RR+0:   Control-Register
+
+  On read:
+
+   +-------+--------------------------------------------------------+
+   | Bit 7 |   ROM bank selector (A15)                              |
+   | Bit 6 |   1 = REU compatible <A HREF="RRMEM.HTM">memory map</A> active                 |
+   | Bit 5 |   ROM bank selector (A16)                              |
+   | Bit 4 |   ROM bank selector (A14)                              |
+   | Bit 3 |   ROM bank selector (A13)                              |
+   | Bit 2 |   1 = Freeze button pressed                            |
+   | Bit 1 |   AllowBank bit (see <A HREF="RR01.HTM">$DE01</A> / Write)                    |
+   | Bit 0 |   1 = Flashmode active (jumper set)                    |
+   +-------+--------------------------------------------------------+
+
+  On write:
+
+   +-------+--------------------------------------------------------+
+   | Bit 7 |   ROM bank selector (A15)                              |
+   | Bit 6 |   1 = exit from Freeze mode (if not in, no effect)     |
+   | Bit 5 |   0 = select ROM, 1 = select RAM                       |
+   | Bit 4 |   ROM bank selector (A14)                              |
+   | Bit 3 |   ROM bank selector (A13)                              |
+   | Bit 2 |   1 = disable cartridge                                |
+   | Bit 1 |   1 = /EXROM high                                      |
+   | Bit 0 |   1 = /GAME low                                        |
+   +-------+--------------------------------------------------------+
+
+      Default value is $00(%00000000) ($02 (%00000010) when Flashmode active).
+
+</PRE></BODY></HTML>

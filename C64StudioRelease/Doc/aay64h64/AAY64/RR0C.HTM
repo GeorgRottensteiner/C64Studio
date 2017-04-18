@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE0C/56844/RR+12:  SilverSurfer: Modem Control Register
+
+   +----------+--------------------------------------------------------+
+   | Bit  7-5 |   reserved                                             |
+   | Bit  4   |   0 = Normal, 1 = Loop Back Test (*)                   |
+   | Bit  3   |   OUT2                                                 |
+   | Bit  2   |   OUT1                                                 |
+   | Bit  1   |   1 = activate RTS                                     |
+   | Bit  0   |   1 = activate DTR                                     |
+   +----------+--------------------------------------------------------+
+   (*)  Loop Back Test means data from the Transmit Shift Register is
+        received in the Receiver Shift Register. The SOUT line is set to
+        logic high, the SIN line and control lines are disconnected. CTS,
+        DSR, RI and CD inputs are disconnected. DTR, RTS, OUT1 and OUT2
+        are then connected internally.
+
+</PRE></BODY></HTML>

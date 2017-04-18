@@ -1,0 +1,19 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A68E/42638:   Reset TXTPTR
+
+Jump from <A HREF="ROMA642.HTM">$A659</A>, <A HREF="ROME165.HTM">$E1B5</A>:
+
+A68E: 18        <A HREF="BCLC.HTM">CLC</A>
+A68F: A5 2B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2B.HTM">$2B</A>       ; Pointer: Start of BASIC Text Area
+A691: 69 FF     <A HREF="BADC.HTM">ADC</A> #$FF
+A693: 85 7A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A695: A5 2C     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2B.HTM">$2C</A>       ; Pointer: Start of BASIC Text Area
+A697: 69 FF     <A HREF="BADC.HTM">ADC</A> #$FF
+A699: 85 7B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+A69B: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA65E.HTM">Previous Page</A> / <A HREF="ROMA69C.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

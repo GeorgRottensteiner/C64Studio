@@ -1,0 +1,328 @@
+﻿namespace C64Studio
+{
+  partial class DebugRegisters
+  {
+    /// <summary>
+    /// Erforderliche Designervariable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary> 
+    /// Verwendete Ressourcen bereinigen.
+    /// </summary>
+    /// <param name="disposing">True, wenn verwaltete Ressourcen gelöscht werden sollen; andernfalls False.</param>
+    protected override void Dispose( bool disposing )
+    {
+      if ( disposing && ( components != null ) )
+      {
+        components.Dispose();
+      }
+      base.Dispose( disposing );
+    }
+
+    #region Vom Komponenten-Designer generierter Code
+
+    /// <summary>
+    /// Erforderliche Methode für die Designerunterstützung.
+    /// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
+    /// </summary>
+    private void InitializeComponent()
+    {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager( typeof( DebugRegisters ) );
+      this.label1 = new System.Windows.Forms.Label();
+      this.editX = new System.Windows.Forms.TextBox();
+      this.label2 = new System.Windows.Forms.Label();
+      this.editY = new System.Windows.Forms.TextBox();
+      this.label3 = new System.Windows.Forms.Label();
+      this.editA = new System.Windows.Forms.TextBox();
+      this.label4 = new System.Windows.Forms.Label();
+      this.editPC = new System.Windows.Forms.TextBox();
+      this.label5 = new System.Windows.Forms.Label();
+      this.editStack = new System.Windows.Forms.TextBox();
+      this.label6 = new System.Windows.Forms.Label();
+      this.editStatus = new System.Windows.Forms.TextBox();
+      this.label7 = new System.Windows.Forms.Label();
+      this.editLIN = new System.Windows.Forms.TextBox();
+      this.label8 = new System.Windows.Forms.Label();
+      this.editCycle = new System.Windows.Forms.TextBox();
+      this.editXDec = new System.Windows.Forms.TextBox();
+      this.editYDec = new System.Windows.Forms.TextBox();
+      this.editADec = new System.Windows.Forms.TextBox();
+      this.editPCDec = new System.Windows.Forms.TextBox();
+      this.editStackDec = new System.Windows.Forms.TextBox();
+      this.label9 = new System.Windows.Forms.Label();
+      this.label10 = new System.Windows.Forms.Label();
+      this.edit01 = new System.Windows.Forms.TextBox();
+      ( (System.ComponentModel.ISupportInitialize)( this.m_FileWatcher ) ).BeginInit();
+      this.SuspendLayout();
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point( 12, 9 );
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size( 14, 13 );
+      this.label1.TabIndex = 0;
+      this.label1.Text = "X";
+      // 
+      // editX
+      // 
+      this.editX.Font = new System.Drawing.Font( "Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ) );
+      this.editX.Location = new System.Drawing.Point( 56, 6 );
+      this.editX.Name = "editX";
+      this.editX.Size = new System.Drawing.Size( 25, 21 );
+      this.editX.TabIndex = 1;
+      // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point( 12, 35 );
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size( 14, 13 );
+      this.label2.TabIndex = 0;
+      this.label2.Text = "Y";
+      // 
+      // editY
+      // 
+      this.editY.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.editY.Location = new System.Drawing.Point( 56, 32 );
+      this.editY.Name = "editY";
+      this.editY.Size = new System.Drawing.Size( 25, 21 );
+      this.editY.TabIndex = 1;
+      // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point( 12, 61 );
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size( 14, 13 );
+      this.label3.TabIndex = 0;
+      this.label3.Text = "A";
+      // 
+      // editA
+      // 
+      this.editA.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.editA.Location = new System.Drawing.Point( 56, 58 );
+      this.editA.Name = "editA";
+      this.editA.Size = new System.Drawing.Size( 25, 21 );
+      this.editA.TabIndex = 1;
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point( 12, 87 );
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size( 21, 13 );
+      this.label4.TabIndex = 0;
+      this.label4.Text = "PC";
+      // 
+      // editPC
+      // 
+      this.editPC.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.editPC.Location = new System.Drawing.Point( 56, 84 );
+      this.editPC.Name = "editPC";
+      this.editPC.Size = new System.Drawing.Size( 64, 21 );
+      this.editPC.TabIndex = 1;
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point( 12, 113 );
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size( 21, 13 );
+      this.label5.TabIndex = 0;
+      this.label5.Text = "SP";
+      // 
+      // editStack
+      // 
+      this.editStack.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.editStack.Location = new System.Drawing.Point( 56, 110 );
+      this.editStack.Name = "editStack";
+      this.editStack.Size = new System.Drawing.Size( 64, 21 );
+      this.editStack.TabIndex = 1;
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point( 12, 139 );
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size( 37, 13 );
+      this.label6.TabIndex = 0;
+      this.label6.Text = "Status";
+      // 
+      // editStatus
+      // 
+      this.editStatus.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.editStatus.Location = new System.Drawing.Point( 56, 136 );
+      this.editStatus.Name = "editStatus";
+      this.editStatus.Size = new System.Drawing.Size( 134, 21 );
+      this.editStatus.TabIndex = 1;
+      // 
+      // label7
+      // 
+      this.label7.AutoSize = true;
+      this.label7.Location = new System.Drawing.Point( 126, 9 );
+      this.label7.Name = "label7";
+      this.label7.Size = new System.Drawing.Size( 24, 13 );
+      this.label7.TabIndex = 0;
+      this.label7.Text = "LIN";
+      // 
+      // editLIN
+      // 
+      this.editLIN.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.editLIN.Location = new System.Drawing.Point( 156, 6 );
+      this.editLIN.Name = "editLIN";
+      this.editLIN.Size = new System.Drawing.Size( 46, 21 );
+      this.editLIN.TabIndex = 1;
+      // 
+      // label8
+      // 
+      this.label8.AutoSize = true;
+      this.label8.Location = new System.Drawing.Point( 126, 34 );
+      this.label8.Name = "label8";
+      this.label8.Size = new System.Drawing.Size( 28, 13 );
+      this.label8.TabIndex = 0;
+      this.label8.Text = "CYC";
+      // 
+      // editCycle
+      // 
+      this.editCycle.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.editCycle.Location = new System.Drawing.Point( 156, 31 );
+      this.editCycle.Name = "editCycle";
+      this.editCycle.Size = new System.Drawing.Size( 46, 21 );
+      this.editCycle.TabIndex = 1;
+      // 
+      // editXDec
+      // 
+      this.editXDec.Font = new System.Drawing.Font( "Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ) );
+      this.editXDec.Location = new System.Drawing.Point( 87, 6 );
+      this.editXDec.Name = "editXDec";
+      this.editXDec.Size = new System.Drawing.Size( 33, 21 );
+      this.editXDec.TabIndex = 1;
+      // 
+      // editYDec
+      // 
+      this.editYDec.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.editYDec.Location = new System.Drawing.Point( 87, 32 );
+      this.editYDec.Name = "editYDec";
+      this.editYDec.Size = new System.Drawing.Size( 33, 21 );
+      this.editYDec.TabIndex = 1;
+      // 
+      // editADec
+      // 
+      this.editADec.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.editADec.Location = new System.Drawing.Point( 87, 58 );
+      this.editADec.Name = "editADec";
+      this.editADec.Size = new System.Drawing.Size( 33, 21 );
+      this.editADec.TabIndex = 1;
+      // 
+      // editPCDec
+      // 
+      this.editPCDec.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.editPCDec.Location = new System.Drawing.Point( 126, 84 );
+      this.editPCDec.Name = "editPCDec";
+      this.editPCDec.Size = new System.Drawing.Size( 64, 21 );
+      this.editPCDec.TabIndex = 1;
+      // 
+      // editStackDec
+      // 
+      this.editStackDec.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.editStackDec.Location = new System.Drawing.Point( 126, 110 );
+      this.editStackDec.Name = "editStackDec";
+      this.editStackDec.Size = new System.Drawing.Size( 64, 21 );
+      this.editStackDec.TabIndex = 1;
+      // 
+      // label9
+      // 
+      this.label9.AutoSize = true;
+      this.label9.Font = new System.Drawing.Font( "Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ) );
+      this.label9.Location = new System.Drawing.Point( 57, 160 );
+      this.label9.Name = "label9";
+      this.label9.Size = new System.Drawing.Size( 63, 15 );
+      this.label9.TabIndex = 0;
+      this.label9.Text = "NV-BDIZC";
+      // 
+      // label10
+      // 
+      this.label10.AutoSize = true;
+      this.label10.Location = new System.Drawing.Point( 126, 61 );
+      this.label10.Name = "label10";
+      this.label10.Size = new System.Drawing.Size( 25, 13 );
+      this.label10.TabIndex = 0;
+      this.label10.Text = "$01";
+      // 
+      // edit01
+      // 
+      this.edit01.Font = new System.Drawing.Font( "Courier New", 9F );
+      this.edit01.Location = new System.Drawing.Point( 156, 57 );
+      this.edit01.Name = "edit01";
+      this.edit01.Size = new System.Drawing.Size( 46, 21 );
+      this.edit01.TabIndex = 1;
+      // 
+      // DebugRegisters
+      // 
+      this.ClientSize = new System.Drawing.Size( 534, 390 );
+      this.Controls.Add( this.editStatus );
+      this.Controls.Add( this.label9 );
+      this.Controls.Add( this.label6 );
+      this.Controls.Add( this.edit01 );
+      this.Controls.Add( this.label10 );
+      this.Controls.Add( this.editCycle );
+      this.Controls.Add( this.label8 );
+      this.Controls.Add( this.editLIN );
+      this.Controls.Add( this.label7 );
+      this.Controls.Add( this.editStackDec );
+      this.Controls.Add( this.editStack );
+      this.Controls.Add( this.label5 );
+      this.Controls.Add( this.editPCDec );
+      this.Controls.Add( this.editPC );
+      this.Controls.Add( this.editADec );
+      this.Controls.Add( this.label4 );
+      this.Controls.Add( this.editA );
+      this.Controls.Add( this.editYDec );
+      this.Controls.Add( this.label3 );
+      this.Controls.Add( this.editY );
+      this.Controls.Add( this.editXDec );
+      this.Controls.Add( this.label2 );
+      this.Controls.Add( this.editX );
+      this.Controls.Add( this.label1 );
+      this.Font = new System.Drawing.Font( "Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ) );
+      this.Icon = ( (System.Drawing.Icon)( resources.GetObject( "$this.Icon" ) ) );
+      this.Name = "DebugRegisters";
+      this.Text = "Registers";
+      ( (System.ComponentModel.ISupportInitialize)( this.m_FileWatcher ) ).EndInit();
+      this.ResumeLayout( false );
+      this.PerformLayout();
+
+    }
+
+    #endregion
+
+    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.Label label6;
+    public System.Windows.Forms.TextBox editX;
+    public System.Windows.Forms.TextBox editY;
+    public System.Windows.Forms.TextBox editA;
+    public System.Windows.Forms.TextBox editPC;
+    public System.Windows.Forms.TextBox editStack;
+    public System.Windows.Forms.TextBox editStatus;
+    private System.Windows.Forms.Label label7;
+    public System.Windows.Forms.TextBox editLIN;
+    private System.Windows.Forms.Label label8;
+    public System.Windows.Forms.TextBox editCycle;
+    public System.Windows.Forms.TextBox editXDec;
+    public System.Windows.Forms.TextBox editYDec;
+    public System.Windows.Forms.TextBox editADec;
+    public System.Windows.Forms.TextBox editPCDec;
+    public System.Windows.Forms.TextBox editStackDec;
+    private System.Windows.Forms.Label label9;
+    private System.Windows.Forms.Label label10;
+    public System.Windows.Forms.TextBox edit01;
+
+
+  }
+}

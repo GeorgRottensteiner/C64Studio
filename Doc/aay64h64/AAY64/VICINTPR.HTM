@@ -1,0 +1,30 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ +-------------------------+
+ | VIC Bit Interpretations |
+ +-------------------------+
+
+  This map shows you which bit-combination forces VIC to get
+  the color-data from which location for all the different modes.
+
+ +---------------+----------------------------------------------------------+
+ | Charset-Hires |  0 = Background (<A HREF="VIC33.HTM">$D021</A>)      1 = Color-RAM               |
+ +---------------+----------------------------------------------------------+
+ | Charset-MC    | 00 = Background (<A HREF="VIC33.HTM">$D021</A>)     01 = MC-Color1 (<A HREF="VIC34.HTM">$D022</A>)       |
+ |               | 10 = MC-Color2  (<A HREF="VIC35.HTM">$D023</A>)     11 = Color-RAM               |
+ +---------------+----------------------------------------------------------+
+ | Bitmap-Hires  |  0 = LN Screen-RAM           1 = HN Screen-RAM           |
+ +---------------+----------------------------------------------------------+
+ | Bitmap-MC     | 00 = Background (<A HREF="VIC33.HTM">$D021</A>)     01 = HN Screen-RAM           |
+ |               | 10 = LN Screen-RAM          11 = Color-RAM               |
+ +---------------+----------------------------------------------------------+
+ | Sprite-Hires  |  0 = Background (<A HREF="VIC33.HTM">$D021</A>)      1 = Sprite-Color (<A HREF="VIC39.HTM">$D027</A>..)  |
+ +---------------+----------------------------------------------------------+
+ | Sprite-MC     | 00 = Background (<A HREF="VIC33.HTM">$D021</A>)     01 = Sprite-MC-Color1 (<A HREF="VIC37.HTM">$D025</A>)|
+ |               | 10 = Sprite-Color (<A HREF="VIC39.HTM">$D027</A>..) 11 = Sprite-MC-Color2 (<A HREF="VIC38.HTM">$D026</A>)|
+ +---------------+----------------------------------------------------------+
+
+  LN = Low-Nybble ; HN = High-Nybble
+
+</PRE></BODY></HTML>

@@ -1,0 +1,16 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EEA9/61097:   Get Serial Data And Clock In
+
+Jump from $EEAF, <A HREF="ROMED40.HTM">$ED44</A>, <A HREF="ROMED40.HTM">$ED50</A>, <A HREF="ROMED40.HTM">$ED55</A>, <A HREF="ROMED40.HTM">$ED5A</A>, <A HREF="ROMED40.HTM">$EDA6</A>, <A HREF="ROMEDCC.HTM">$EDD6</A>, <A HREF="ROMEE13.HTM">$EE1B</A>, <A HREF="ROMEE13.HTM">$EE37</A>:
+
+EEA9: AD 00 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+EEAC: CD 00 DD  <A HREF="BCMP.HTM">CMP</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+EEAF: D0 F8     <A HREF="BBNE.HTM">BNE</A> $EEA9
+EEB1: 0A        <A HREF="BASL.HTM">ASL</A>
+EEB2: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMEEA0.HTM">Previous Page</A> / <A HREF="ROMEEB3.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

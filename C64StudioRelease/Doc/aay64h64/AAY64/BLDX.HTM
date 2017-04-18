@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  LDX                   LDX Load index X with memory                    LDX
+
+  Operation:  M -&gt; X                                    N V - B D I Z C
+                                                        / . . . . . / .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   LDX #$FF            |   $A2   |    2    |    2     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   LDX $FF             |   $A6   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,Y</A>    |   LDX $FF,Y           |   $B6   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   LDX $FFFF           |   $AE   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   LDX $FFFF,Y         |   $BE   |    3    |    4*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 when page boundary is crossed.
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+</PRE></BODY></HTML>

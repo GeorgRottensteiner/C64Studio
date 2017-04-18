@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  ARR                   ARR AND #immediate, ROR accu                    ARR
+
+                                                        N V - B D I Z C
+  Operation:  A &lt;- [(A /\ M) &gt;&gt; 1]                      / / . . . . / /
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   ARR #$FF            |   $6B   |    2    |    2     |
+  +----------------+-----------------------+---------+---------+----------+
+
+  Note: Part of this command are some ADC mechanisms. Following effects
+  appear after AND but before ROR: the V-Flag is set according to
+  [(A and #mem)+#mem], Bit 0 does NOT go into carry, but Bit 7 is
+  exchanged with the carry.
+
+</PRE></BODY></HTML>

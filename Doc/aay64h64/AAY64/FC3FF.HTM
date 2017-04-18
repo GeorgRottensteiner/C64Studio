@@ -1,0 +1,33 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DFFF/57343:   FC3-I/O-Register
+
+ Read:
+
+ Depends on the last value written:
+
+   +-------------+-----------------------------------------------------+
+   | Bit 7 was 1 |   value = $FF                                       |
+   | Bit 7 was 0 |   value = ((last value-1) and 2)/2*$FF              |
+   +-------------+-----------------------------------------------------+
+
+ Write:
+
+   +----------+--------------------------------------------------------+
+   | Bit  7   |   1 = always show 16KB of Bank 0 (for Reset-routine)   |
+   | Bit  6   |   unused (usually set to 1)                            |
+   | Bits 5+4 |   00 = turn on all 16 KB of FC3 ROM                    |
+   |          |   01 = start Freezer immediately                       |
+   |          |   10 = turn on first 8 KB of FC3 ROM                   |
+   |          |   11 = turn off FC3 ROM                                |
+   | Bits 3+2 |   unused (usually set to 0)                            |
+   | Bits 1+0 |   number of bank to show at $8000                      |
+   +----------+--------------------------------------------------------+
+
+  Bank 0:  BASIC, Monitor, Disk-Turbo
+  Bank 1:  Notepad, BASIC (Menu Bar)
+  Bank 2:  Desktop, Freezer/Print
+  Bank 3:  Freezer, Compression
+
+</PRE></BODY></HTML>

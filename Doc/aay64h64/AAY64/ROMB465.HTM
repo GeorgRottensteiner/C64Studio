@@ -1,0 +1,35 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B465/46181:   Evaluate &lt;str$&gt;
+
+B465: 20 8D AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8D</A>     ; Confirm Result
+B468: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B46A: 20 DF BD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBDDD.HTM">$BDDF</A>     ; Convert FAC#1 to ASCII String
+B46D: 68        <A HREF="BPLA.HTM">PLA</A>
+B46E: 68        <A HREF="BPLA.HTM">PLA</A>
+
+Jump from <A HREF="ROMAF48.HTM">$AF59</A>:
+
+B46F: A9 FF     <A HREF="BLDA.HTM">LDA</A> #$FF
+B471: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B473: F0 12     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMB487.HTM">$B487</A>     ; Set Up String
+
+Jump from <A HREF="ROMAA2C.HTM">$AA56</A>, <A HREF="ROMB487.HTM">$B4C0</A>, <A HREF="ROMB63D.HTM">$B65D</A>:
+
+B475: A6 64     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B477: A4 65     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B479: 86 50     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP4E.HTM">$50</A>       ; Temporary storage for FLPT value
+B47B: 84 51     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP4E.HTM">$51</A>       ; Temporary storage for FLPT value
+
+Jump from <A HREF="ROMB6EC.HTM">$B6F3</A>, <A HREF="ROMB700.HTM">$B70F</A>:
+
+B47D: 20 F4 B4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB4F4.HTM">$B4F4</A>     ; Allocate Space for String
+B480: 86 62     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+B482: 84 63     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+B484: 85 61     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+B486: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB3F4.HTM">Previous Page</A> / <A HREF="ROMB487.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

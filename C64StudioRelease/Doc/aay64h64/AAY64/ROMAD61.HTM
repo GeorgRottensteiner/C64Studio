@@ -1,0 +1,33 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AD61/44385:   Check Valid Loop
+
+AD61: BD 0F 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0100.HTM">$010F</A>,X   ; 6510 Hardware Stack Area
+AD64: 85 39     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP39.HTM">$39</A>       ; Current BASIC Line number
+AD66: BD 10 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0100.HTM">$0110</A>,X   ; 6510 Hardware Stack Area
+AD69: 85 3A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP39.HTM">$3A</A>       ; Current BASIC Line number
+AD6B: BD 12 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0100.HTM">$0112</A>,X   ; 6510 Hardware Stack Area
+AD6E: 85 7A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+AD70: BD 11 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0100.HTM">$0111</A>,X   ; 6510 Hardware Stack Area
+AD73: 85 7B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+
+Jump from $AD82:
+
+AD75: 4C AE A7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA7AE.HTM">$A7AE</A>     ; BASIC Warm Start
+
+Jump from <A HREF="ROMAD1E.HTM">$AD5F</A>:
+
+AD78: 8A        <A HREF="BTXA.HTM">TXA</A>
+AD79: 69 11     <A HREF="BADC.HTM">ADC</A> #$11
+AD7B: AA        <A HREF="BTAX.HTM">TAX</A>
+AD7C: 9A        <A HREF="BTXS.HTM">TXS</A>
+AD7D: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+AD80: C9 2C     <A HREF="BCMP.HTM">CMP</A> #$2C
+AD82: D0 F1     <A HREF="BBNE.HTM">BNE</A> $AD75
+AD84: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+AD87: 20 24 AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD1E.HTM">$AD24</A>     ; Perform [next]
+
+    <A HREF="ROMAD1E.HTM">Previous Page</A> / <A HREF="ROMAD8A.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

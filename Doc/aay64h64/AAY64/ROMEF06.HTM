@@ -1,0 +1,32 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EF06/61190:   Send New RS232 Byte
+
+Jump from <A HREF="ROMEEBB.HTM">$EEBD</A>, <A HREF="ROMF017.HTM">$F044</A>:
+
+EF06: AD 94 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0294.HTM">$0294</A>     ; RS232 Pseudo 6551 command Register Image
+EF09: 4A        <A HREF="BLSR.HTM">LSR</A>
+EF0A: 90 07     <A HREF="BBCC.HTM">BCC</A> $EF13
+EF0C: 2C 01 DD  <A HREF="BBIT.HTM">BIT</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+EF0F: 10 1D     <A HREF="BBPL.HTM">BPL</A> <A HREF="ROMEF2E.HTM">$EF2E</A>     ; 'No DSR' / 'No CTS' Error
+EF11: 50 1E     <A HREF="BBVC.HTM">BVC</A> <A HREF="ROMEF2E.HTM">$EF31</A>     ; 'No DSR' / 'No CTS' Error
+
+Jump from $EF0A:
+
+EF13: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+EF15: 85 BD     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+EF17: 85 B5     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPB5.HTM">$B5</A>       ; RS232 Next Bit to send/Tape Read - End of Tape
+EF19: AE 98 02  <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP0298.HTM">$0298</A>     ; RS232 Number of Bits left to send
+EF1C: 86 B4     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPB4.HTM">$B4</A>       ; RS232 Write bit count/Tape Read timing Flag
+EF1E: AC 9D 02  <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP029D.HTM">$029D</A>     ; RS232 Pointer: High Byte of Output Buffer
+EF21: CC 9E 02  <A HREF="BCPY.HTM">CPY</A> <A HREF="ZP029E.HTM">$029E</A>     ; RS232 Index to End of Output Buffer
+EF24: F0 13     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMEF39.HTM">$EF39</A>     ; Disable Timer
+EF26: B1 F9     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPF9.HTM">$F9</A>),Y   ; RS232 Output Buffer Pointer
+EF28: 85 B6     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPB6.HTM">$B6</A>       ; RS232 Output Byte Buffer/Tape Read Error Flag
+EF2A: EE 9D 02  <A HREF="BINC.HTM">INC</A> <A HREF="ZP029D.HTM">$029D</A>     ; RS232 Pointer: High Byte of Output Buffer
+EF2D: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMEEBB.HTM">Previous Page</A> / <A HREF="ROMEF2E.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

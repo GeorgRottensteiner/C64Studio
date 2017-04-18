@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B6EC/46828:   Evaluate &lt;chr$&gt;
+
+B6EC: 20 A1 B7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB79B.HTM">$B7A1</A>     ; Evaluate Text to 1 Byte in XR
+B6EF: 8A        <A HREF="BTXA.HTM">TXA</A>
+B6F0: 48        <A HREF="BPHA.HTM">PHA</A>
+B6F1: A9 01     <A HREF="BLDA.HTM">LDA</A> #$01
+B6F3: 20 7D B4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB465.HTM">$B47D</A>     ; Evaluate &lt;str$&gt;
+B6F6: 68        <A HREF="BPLA.HTM">PLA</A>
+B6F7: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B6F9: 91 62     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP62.HTM">$62</A>),Y   ; FAC Mantissa
+B6FB: 68        <A HREF="BPLA.HTM">PLA</A>
+B6FC: 68        <A HREF="BPLA.HTM">PLA</A>
+B6FD: 4C CA B4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB487.HTM">$B4CA</A>     ; Set Up String
+
+    <A HREF="ROMB6DB.HTM">Previous Page</A> / <A HREF="ROMB700.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

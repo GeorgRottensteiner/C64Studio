@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 65816 Addressing mode: Wait for Interrupt -- h
+
+ (<A HREF="BWAI.HTM">WAI</A>)
+ (1 byte)  (3 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |       (9) 2   |  PBR,PC+1        | Internal Operation    |    R     |
+    |           3   |  PBR,PC+1        | Internal Operation    |    R     |
+    |   IRQ,NMI 1   |  PBR,PC+1        | IRQ(BRK)              |    R     |
+    +---------------+------------------+-----------------------+----------+
+    (9) Wait at cycle 2 for 2 cycles after /NMI or /IRQ active input.
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

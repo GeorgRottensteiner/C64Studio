@@ -1,0 +1,15 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E394/58260:   BASIC Cold Start
+
+E394: 20 53 E4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME453.HTM">$E453</A>     ; Initialize Vectors
+E397: 20 BF E3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME3BF.HTM">$E3BF</A>     ; Initialize BASIC RAM
+E39A: 20 22 E4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME422.HTM">$E422</A>     ; Output Power-Up Message
+E39D: A2 FB     <A HREF="BLDX.HTM">LDX</A> #$FB
+E39F: 9A        <A HREF="BTXS.HTM">TXS</A>
+E3A0: D0 E4     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROME37B.HTM">$E386</A>     ; BASIC Warm Start [RUNSTOP-RESTORE]
+
+    <A HREF="ROME37B.HTM">Previous Page</A> / <A HREF="ROME3A2.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

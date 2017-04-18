@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E20E/57870:   Check For Comma
+
+Jump from <A HREF="ROME200.HTM">$E200</A>, <A HREF="ROME219.HTM">$E254</A>:
+
+E20E: 20 FD AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFD.HTM">$AEFD</A>     ; Test ','
+
+Jump from <A HREF="ROME219.HTM">$E21E</A>:
+
+E211: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+E214: D0 F7     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROME206.HTM">$E20D</A>     ; Check Default Parameters
+E216: 4C 08 AF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAF08.HTM">$AF08</A>     ; Output ?SYNTAX Error
+
+    <A HREF="ROME206.HTM">Previous Page</A> / <A HREF="ROME219.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

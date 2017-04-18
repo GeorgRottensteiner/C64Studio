@@ -1,0 +1,22 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B37D/45949:   Evaluate &lt;fre&gt;
+
+B37D: A5 0D     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0D.HTM">$0D</A>       ; Data type Flag
+B37F: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $B384
+B381: 20 A6 B6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB6A3.HTM">$B6A6</A>     ; Perform String Housekeeping
+
+Jump from $B37F:
+
+B384: 20 26 B5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB526.HTM">$B526</A>     ; Garbage Collection
+B387: 38        <A HREF="BSEC.HTM">SEC</A>
+B388: A5 33     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+B38A: E5 31     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP31.HTM">$31</A>       ; Pointer: End of BASIC Arrays + 1
+B38C: A8        <A HREF="BTAY.HTM">TAY</A>
+B38D: A5 34     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+B38F: E5 32     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP31.HTM">$32</A>       ; Pointer: End of BASIC Arrays + 1
+
+    <A HREF="ROMB34C.HTM">Previous Page</A> / <A HREF="ROMB391.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

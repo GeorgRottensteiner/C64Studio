@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A928/43304:   Perform [if]
+
+A928: 20 9E AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD9E.HTM">$AD9E</A>     ; Evaluate Expression in Text
+A92B: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+A92E: C9 89     <A HREF="BCMP.HTM">CMP</A> #$89
+A930: F0 05     <A HREF="BBEQ.HTM">BEQ</A> $A937
+A932: A9 A7     <A HREF="BLDA.HTM">LDA</A> #$A7
+A934: 20 FF AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFD.HTM">$AEFF</A>     ; Test ','
+
+Jump from $A930:
+
+A937: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+A939: D0 05     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMA93B.HTM">$A940</A>     ; Perform [rem]
+
+    <A HREF="ROMA906.HTM">Previous Page</A> / <A HREF="ROMA93B.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

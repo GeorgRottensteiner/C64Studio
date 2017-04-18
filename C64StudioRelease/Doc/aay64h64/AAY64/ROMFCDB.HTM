@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FCDB/64731:   Bump Read / Write Pointer
+
+Jump from <A HREF="ROMF5FA.HTM">$F63A</A>, <A HREF="ROMFA60.HTM">$FB43</A>, <A HREF="ROMFA60.HTM">$FB78</A>, <A HREF="ROMFBCD.HTM">$FC49</A>:
+
+FCDB: E6 AC     <A HREF="BINC.HTM">INC</A> <A HREF="ZPAC.HTM">$AC</A>       ; Pointer: Tape Buffer/Screen scrolling
+FCDD: D0 02     <A HREF="BBNE.HTM">BNE</A> $FCE1
+FCDF: E6 AD     <A HREF="BINC.HTM">INC</A> <A HREF="ZPAC.HTM">$AD</A>       ; Pointer: Tape Buffer/Screen scrolling
+
+Jump from $FCDD:
+
+FCE1: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMFCD1.HTM">Previous Page</A> / <A HREF="ROMFCE2.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,54 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AD1E/44318:   Perform [next]
+
+AD1E: D0 04     <A HREF="BBNE.HTM">BNE</A> $AD24
+AD20: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+AD22: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $AD27
+
+Jump from $AD1E, <A HREF="ROMAD61.HTM">$AD87</A>:
+
+AD24: 20 8B B0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB08B.HTM">$B08B</A>     ; Identify Variable
+
+Jump from $AD22:
+
+AD27: 85 49     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+AD29: 84 4A     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP49.HTM">$4A</A>       ; Pointer: Index Variable for FOR/NEXT loop
+AD2B: 20 8A A3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA38A.HTM">$A38A</A>     ; Find FOR/GOSUB Entry on Stack
+AD2E: F0 05     <A HREF="BBEQ.HTM">BEQ</A> $AD35
+AD30: A2 0A     <A HREF="BLDX.HTM">LDX</A> #$0A
+
+Jump from <A HREF="ROMAC35.HTM">$ACC4</A>:
+
+AD32: 4C 37 A4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA437.HTM">$A437</A>     ; Error Routine
+
+Jump from $AD2E:
+
+AD35: 9A        <A HREF="BTXS.HTM">TXS</A>
+AD36: 8A        <A HREF="BTXA.HTM">TXA</A>
+AD37: 18        <A HREF="BCLC.HTM">CLC</A>
+AD38: 69 04     <A HREF="BADC.HTM">ADC</A> #$04
+AD3A: 48        <A HREF="BPHA.HTM">PHA</A>
+AD3B: 69 06     <A HREF="BADC.HTM">ADC</A> #$06
+AD3D: 85 24     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$24</A>       ; Second Utility Pointer
+AD3F: 68        <A HREF="BPLA.HTM">PLA</A>
+AD40: A0 01     <A HREF="BLDY.HTM">LDY</A> #$01
+AD42: 20 A2 BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBA2.HTM">$BBA2</A>     ; Load FAC#1 From Memory
+AD45: BA        <A HREF="BTSX.HTM">TSX</A>
+AD46: BD 09 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0100.HTM">$0109</A>,X   ; 6510 Hardware Stack Area
+AD49: 85 66     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+AD4B: A5 49     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+AD4D: A4 4A     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP49.HTM">$4A</A>       ; Pointer: Index Variable for FOR/NEXT loop
+AD4F: 20 67 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB867.HTM">$B867</A>     ; Perform Addition
+AD52: 20 D0 BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBC7.HTM">$BBD0</A>     ; Store FAC#1 in Memory
+AD55: A0 01     <A HREF="BLDY.HTM">LDY</A> #$01
+AD57: 20 5D BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC5B.HTM">$BC5D</A>     ; Compare FAC#1 With Memory
+AD5A: BA        <A HREF="BTSX.HTM">TSX</A>
+AD5B: 38        <A HREF="BSEC.HTM">SEC</A>
+AD5C: FD 09 01  <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP0100.HTM">$0109</A>,X   ; 6510 Hardware Stack Area
+AD5F: F0 17     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMAD61.HTM">$AD78</A>     ; Check Valid Loop
+
+    <A HREF="ROMACFC.HTM">Previous Page</A> / <A HREF="ROMAD61.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

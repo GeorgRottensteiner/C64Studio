@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $D0B3/53427/SCPU+67:   Enhanced Optimization Register <B>(V2 only!)</B>
+
+   +----------+---------------------------------------------------+
+   | Bits 7-0 |   00xxx1BZ = VIC-Bank 0, $0000 - $3FFF            |                                    |
+   |          |   01xxx0B0 = VIC-Bank 1, $4000 - $7FFF            |
+   |          |   00xxx0B0 = VIC-Bank 2, $8000 - $BFFF (GEOS)     |
+   |          |   01xxx1B0 = VIC-Bank 3, $C000 - $FFFF            |
+   |          |   10xxx0B0 = BASIC Opt., $0400 - $07FF            |
+   |          |   11xxx00Z = No Opt all mem, $0:0000 - $1:FFFF    |
+   |          |               V2: Default                         |
+   |          |   11xxx1BZ = No Opt per bank, $0000 - $FFFF       |
+   |          |   10xxx100 = Full optimization (no mirroring)     |
+   +----------+---------------------------------------------------+
+
+     This register is read only with hardware registers disabled,
+     Read/Write with hardware registers enabled.
+
+     Changing values in this area affects all other optimization mode
+     registers, and changing other optimization mode registers affect
+     this location. The B-flag assigns control of this register to a
+     specific C128 bank (0 = Bank 0, 1 = Bank 1), while the Z-flag
+     controls mirroring of ZeroPage and Stack memory ($0000 - $01FF)
+     (0 = mirroring on, 1 = mirroring off). Default for Z is 1, B is 0.
+
+</PRE></BODY></HTML>

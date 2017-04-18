@@ -1,0 +1,53 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F04D/61517:   Input From RS232
+
+Jump from <A HREF="ROMF20E.HTM">$F227</A>:
+
+F04D: 85 99     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP99.HTM">$99</A>       ; Default Input Device (0)
+F04F: AD 94 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0294.HTM">$0294</A>     ; RS232 Pseudo 6551 command Register Image
+F052: 4A        <A HREF="BLSR.HTM">LSR</A>
+F053: 90 28     <A HREF="BBCC.HTM">BCC</A> $F07D
+F055: 29 08     <A HREF="BAND.HTM">AND</A> #$08
+F057: F0 24     <A HREF="BBEQ.HTM">BEQ</A> $F07D
+F059: A9 02     <A HREF="BLDA.HTM">LDA</A> #$02
+F05B: 2C 01 DD  <A HREF="BBIT.HTM">BIT</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+F05E: 10 AD     <A HREF="BBPL.HTM">BPL</A> <A HREF="ROMF00D.HTM">$F00D</A>     ; No DSR (Data Set Ready) Error
+F060: F0 22     <A HREF="BBEQ.HTM">BEQ</A> $F084
+
+Jump from $F066:
+
+F062: AD A1 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+F065: 4A        <A HREF="BLSR.HTM">LSR</A>
+F066: B0 FA     <A HREF="BBCS.HTM">BCS</A> $F062
+F068: AD 01 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+F06B: 29 FD     <A HREF="BAND.HTM">AND</A> #$FD
+F06D: 8D 01 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+
+Jump from $F075:
+
+F070: AD 01 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+F073: 29 04     <A HREF="BAND.HTM">AND</A> #$04
+F075: F0 F9     <A HREF="BBEQ.HTM">BEQ</A> $F070
+
+Jump from $F082:
+
+F077: A9 90     <A HREF="BLDA.HTM">LDA</A> #$90
+F079: 18        <A HREF="BCLC.HTM">CLC</A>
+F07A: 4C 3B EF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEF39.HTM">$EF3B</A>     ; Disable Timer
+
+Jump from $F053, $F057:
+
+F07D: AD A1 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+F080: 29 12     <A HREF="BAND.HTM">AND</A> #$12
+F082: F0 F3     <A HREF="BBEQ.HTM">BEQ</A> $F077
+
+Jump from $F060:
+
+F084: 18        <A HREF="BCLC.HTM">CLC</A>
+F085: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF017.HTM">Previous Page</A> / <A HREF="ROMF086.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

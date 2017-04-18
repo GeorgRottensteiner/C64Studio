@@ -1,0 +1,45 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B9EA/47594:   Evaluate &lt;log&gt;
+
+Jump from <A HREF="ROMBF7B.HTM">$BFA3</A>:
+
+B9EA: 20 2B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC2B.HTM">$BC2B</A>     ; Check Sign of FAC#1
+B9ED: F0 02     <A HREF="BBEQ.HTM">BEQ</A> $B9F1
+B9EF: 10 03     <A HREF="BBPL.HTM">BPL</A> $B9F4
+
+Jump from $B9ED:
+
+B9F1: 4C 48 B2  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB248.HTM">$B248</A>     ; ?ILLEGAL QUANTITY
+
+Jump from $B9EF:
+
+B9F4: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+B9F6: E9 7F     <A HREF="BSBC.HTM">SBC</A> #$7F
+B9F8: 48        <A HREF="BPHA.HTM">PHA</A>
+B9F9: A9 80     <A HREF="BLDA.HTM">LDA</A> #$80
+B9FB: 85 61     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+B9FD: A9 D6     <A HREF="BLDA.HTM">LDA</A> #$D6
+B9FF: A0 B9     <A HREF="BLDY.HTM">LDY</A> #$B9
+BA01: 20 67 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB867.HTM">$B867</A>     ; Perform Addition
+BA04: A9 DB     <A HREF="BLDA.HTM">LDA</A> #$DB
+BA06: A0 B9     <A HREF="BLDY.HTM">LDY</A> #$B9
+BA08: 20 0F BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBB0F.HTM">$BB0F</A>     ; Divide FAC#2 by FAC#1
+BA0B: A9 BC     <A HREF="BLDA.HTM">LDA</A> #$BC
+BA0D: A0 B9     <A HREF="BLDY.HTM">LDY</A> #$B9
+BA0F: 20 50 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB850.HTM">$B850</A>     ; Perform Subtraction
+BA12: A9 C1     <A HREF="BLDA.HTM">LDA</A> #$C1
+BA14: A0 B9     <A HREF="BLDY.HTM">LDY</A> #$B9
+BA16: 20 43 E0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME043.HTM">$E043</A>     ; Series Evaluation
+BA19: A9 E0     <A HREF="BLDA.HTM">LDA</A> #$E0
+BA1B: A0 B9     <A HREF="BLDY.HTM">LDY</A> #$B9
+BA1D: 20 67 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB867.HTM">$B867</A>     ; Perform Addition
+BA20: 68        <A HREF="BPLA.HTM">PLA</A>
+BA21: 20 7E BD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBCF3.HTM">$BD7E</A>     ; Convert ASCII String to a Number in FAC
+BA24: A9 E5     <A HREF="BLDA.HTM">LDA</A> #$E5
+BA26: A0 B9     <A HREF="BLDY.HTM">LDY</A> #$B9
+
+    <A HREF="ROMB9E5.HTM">Previous Page</A> / <A HREF="ROMBA28.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

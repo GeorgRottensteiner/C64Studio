@@ -1,0 +1,29 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BAE2/47842:   Multiply FAC#1 by 10
+
+Jump from <A HREF="ROMA9E3.HTM">$A9F2</A>, <A HREF="ROMA9E3.HTM">$AA0E</A>, <A HREF="ROMBCF3.HTM">$BD5B</A>, <A HREF="ROMBCF3.HTM">$BD71</A>, <A HREF="ROMBDDD.HTM">$BE21</A>:
+
+BAE2: 20 0C BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC0C.HTM">$BC0C</A>     ; Copy FAC#1 into FAC#2
+BAE5: AA        <A HREF="BTAX.HTM">TAX</A>
+BAE6: F0 10     <A HREF="BBEQ.HTM">BEQ</A> $BAF8
+BAE8: 18        <A HREF="BCLC.HTM">CLC</A>
+BAE9: 69 02     <A HREF="BADC.HTM">ADC</A> #$02
+BAEB: B0 F2     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMBAD4.HTM">$BADF</A>     ; Overflow / Underflow
+
+Jump from <A HREF="ROMA9E3.HTM">$AA04</A>:
+
+BAED: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+BAEF: 86 6F     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+BAF1: 20 77 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB867.HTM">$B877</A>     ; Perform Addition
+BAF4: E6 61     <A HREF="BINC.HTM">INC</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BAF6: F0 E7     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMBAD4.HTM">$BADF</A>     ; Overflow / Underflow
+
+Jump from $BAE6:
+
+BAF8: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBAD4.HTM">Previous Page</A> / <A HREF="ROMBAF9.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

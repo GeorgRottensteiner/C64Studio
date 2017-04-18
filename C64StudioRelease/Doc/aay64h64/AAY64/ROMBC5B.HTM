@@ -1,0 +1,54 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BC5B/48219:   Compare FAC#1 With Memory
+
+Jump from <A HREF="ROMB01B.HTM">$B027</A>, <A HREF="ROMB1BF.HTM">$B1C9</A>, <A HREF="ROMBDDD.HTM">$BE0F</A>, <A HREF="ROMBDDD.HTM">$BE1A</A>, <A HREF="ROMBF7B.HTM">$BF96</A>:
+
+BC5B: 85 24     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$24</A>       ; Second Utility Pointer
+
+Jump from <A HREF="ROMAD1E.HTM">$AD57</A>:
+
+BC5D: 84 25     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP22.HTM">$25</A>       ; Second Utility Pointer
+BC5F: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+BC61: B1 24     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$24</A>),Y   ; Second Utility Pointer
+BC63: C8        <A HREF="BINY.HTM">INY</A>
+BC64: AA        <A HREF="BTAX.HTM">TAX</A>
+BC65: F0 C4     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMBC2B.HTM">$BC2B</A>     ; Check Sign of FAC#1
+BC67: B1 24     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$24</A>),Y   ; Second Utility Pointer
+BC69: 45 66     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BC6B: 30 C2     <A HREF="BBMI.HTM">BMI</A> <A HREF="ROMBC2B.HTM">$BC2F</A>     ; Check Sign of FAC#1
+BC6D: E4 61     <A HREF="BCPX.HTM">CPX</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BC6F: D0 21     <A HREF="BBNE.HTM">BNE</A> $BC92
+BC71: B1 24     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$24</A>),Y   ; Second Utility Pointer
+BC73: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+BC75: C5 62     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+BC77: D0 19     <A HREF="BBNE.HTM">BNE</A> $BC92
+BC79: C8        <A HREF="BINY.HTM">INY</A>
+BC7A: B1 24     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$24</A>),Y   ; Second Utility Pointer
+BC7C: C5 63     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+BC7E: D0 12     <A HREF="BBNE.HTM">BNE</A> $BC92
+BC80: C8        <A HREF="BINY.HTM">INY</A>
+BC81: B1 24     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$24</A>),Y   ; Second Utility Pointer
+BC83: C5 64     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+BC85: D0 0B     <A HREF="BBNE.HTM">BNE</A> $BC92
+BC87: C8        <A HREF="BINY.HTM">INY</A>
+BC88: A9 7F     <A HREF="BLDA.HTM">LDA</A> #$7F
+BC8A: C5 70     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+BC8C: B1 24     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$24</A>),Y   ; Second Utility Pointer
+BC8E: E5 65     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+BC90: F0 28     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMBC9B.HTM">$BCBA</A>     ; Convert FAC#1 to Integer
+
+Jump from $BC6F, $BC77, $BC7E, $BC85:
+
+BC92: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BC94: 90 02     <A HREF="BBCC.HTM">BCC</A> $BC98
+BC96: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+
+Jump from $BC94:
+
+BC98: 4C 31 BC  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBC2B.HTM">$BC31</A>     ; Check Sign of FAC#1
+
+    <A HREF="ROMBC58.HTM">Previous Page</A> / <A HREF="ROMBC9B.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

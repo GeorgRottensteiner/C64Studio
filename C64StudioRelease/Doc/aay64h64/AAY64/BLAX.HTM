@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  LAX                        LAX LDA memory, TAX                        LAX
+
+                                                        N V - B D I Z C
+  Operation:  A &lt;- M, X &lt;- A                            / . . . . . / .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   LAX $FF             |   $A7   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,Y</A>    |   LAX $FF,Y           |   $B7   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   LAX $FFFF           |   $AF   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   LAX $FFFF,Y         |   $BF   |    3    |    4*    |
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   LAX ($FF,X)         |   $A3   |    2    |    6     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   LAX ($FF),Y         |   $B3   |    2    |    5*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 if page boundary is crossed.
+
+</PRE></BODY></HTML>

@@ -1,0 +1,19 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B1B2/45490:   Evaluate Text for Integer
+
+Jump from <A HREF="ROMB1D1.HTM">$B1E3</A>:
+
+B1B2: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+B1B5: 20 9E AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD9E.HTM">$AD9E</A>     ; Evaluate Expression in Text
+
+Jump from <A HREF="ROMB79B.HTM">$B7A1</A>:
+
+B1B8: 20 8D AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8D</A>     ; Confirm Result
+B1BB: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+B1BD: 30 0D     <A HREF="BBMI.HTM">BMI</A> <A HREF="ROMB1BF.HTM">$B1CC</A>     ; FAC#1 to Positive Integer
+
+    <A HREF="ROMB1AA.HTM">Previous Page</A> / <A HREF="ROMB1BF.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

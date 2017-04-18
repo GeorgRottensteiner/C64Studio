@@ -1,0 +1,42 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B63D/46653:   Concatenate Two Strings
+
+Jump from <A HREF="ROMAD9E.HTM">$ADE5</A>:
+
+B63D: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B63F: 48        <A HREF="BPHA.HTM">PHA</A>
+B640: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B642: 48        <A HREF="BPHA.HTM">PHA</A>
+B643: 20 83 AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAE83.HTM">$AE83</A>     ; Evaluate Single Term
+B646: 20 8F AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8F</A>     ; Confirm Result
+B649: 68        <A HREF="BPLA.HTM">PLA</A>
+B64A: 85 6F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+B64C: 68        <A HREF="BPLA.HTM">PLA</A>
+B64D: 85 70     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B64F: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B651: B1 6F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP6F.HTM">$6F</A>),Y   ; Sign of result of Arithmetic Evaluation
+B653: 18        <A HREF="BCLC.HTM">CLC</A>
+B654: 71 64     <A HREF="BADC.HTM">ADC</A> (<A HREF="ZP62.HTM">$64</A>),Y   ; FAC Mantissa
+B656: 90 05     <A HREF="BBCC.HTM">BCC</A> $B65D
+B658: A2 17     <A HREF="BLDX.HTM">LDX</A> #$17
+B65A: 4C 37 A4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA437.HTM">$A437</A>     ; Error Routine
+
+Jump from $B656:
+
+B65D: 20 75 B4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB465.HTM">$B475</A>     ; Evaluate &lt;str$&gt;
+B660: 20 7A B6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB67A.HTM">$B67A</A>     ; Store String in High RAM
+B663: A5 50     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP4E.HTM">$50</A>       ; Temporary storage for FLPT value
+B665: A4 51     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP4E.HTM">$51</A>       ; Temporary storage for FLPT value
+B667: 20 AA B6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB6A3.HTM">$B6AA</A>     ; Perform String Housekeeping
+B66A: 20 8C B6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB67A.HTM">$B68C</A>     ; Store String in High RAM
+B66D: A5 6F     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+B66F: A4 70     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B671: 20 AA B6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB6A3.HTM">$B6AA</A>     ; Perform String Housekeeping
+B674: 20 CA B4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB487.HTM">$B4CA</A>     ; Set Up String
+B677: 4C B8 AD  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAD9E.HTM">$ADB8</A>     ; Evaluate Expression in Text
+
+    <A HREF="ROMB606.HTM">Previous Page</A> / <A HREF="ROMB67A.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

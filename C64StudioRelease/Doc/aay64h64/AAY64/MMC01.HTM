@@ -1,0 +1,22 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DF11/57105/MMC+1:      Control Register
+
+   +-------+---------------------------------------------------------+
+   | Bit 7 |   Unused                                                |
+   | Bit 6 |   0 = SPI write trigger mode, 1 = SPI read trigger mode |
+   | Bit 5 |   0 = allow external ROM when MMC64-BIOS is disabled,   |
+   |       |   1 = disable external ROM                              |
+   | Bit 4 |   0 = Normal Operation, 1 = Flash Mode (*)              |
+   | Bit 3 |   0 = clock port at $DE00, 1 = clock port at $DF20      |
+   |       |   Shadow: 0 = MMC64 active, 1 = MMC64 disabled (**)     |
+   | Bit 2 |   0 = 250KHz transfer, 1 = 8MHz transfer                |
+   | Bit 1 |   0 = Card selected, 1 = Card not selected              |
+   | Bit 0 |   0 = MMC64-BIOS active, 1 = external ROM active        |
+   +-------+---------------------------------------------------------+
+   Notes: (*)  Bit 4 can only be written when flash jumper is set
+          (**) The shadow of Bit 3 can only be modified after
+               unlocking at <A HREF="MMC03.HTM">$DF13</A>
+
+</PRE></BODY></HTML>

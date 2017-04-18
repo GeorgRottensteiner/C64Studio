@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510/65816 Addressing mode: Zeropage/Direct -- d
+
+ (<A HREF="BADC.HTM">ADC</A>,<A HREF="BAND.HTM">AND</A>,<A HREF="BBIT.HTM">BIT</A>,<A HREF="BCMP.HTM">CMP</A>,<A HREF="BCPX.HTM">CPX</A>,<A HREF="BCPY.HTM">CPY</A>,<A HREF="BEOR.HTM">EOR</A>,<A HREF="BLAX.HTM">LAX</A>,<A HREF="BLDA.HTM">LDA</A>,<A HREF="BLDX.HTM">LDX</A>,<A HREF="BLDY.HTM">LDY</A>,<A HREF="BNOP.HTM">NOP</A>,<A HREF="BORA.HTM">ORA</A>,<A HREF="BSAX.HTM">SAX</A>,<A HREF="BSBC.HTM">SBC</A>,<A HREF="BSTA.HTM">STA</A>,<A HREF="BSTX.HTM">STX</A>,
+  <A HREF="BSTY.HTM">STY</A>,<A HREF="BSTZ.HTM">STZ</A>)
+ (2 bytes)  (3,4 and 5 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Direct Offset         |    R     |
+    |       (2) 2a  |  PBR,PC+2        | Internal Operation    |    R     |
+    |           3   |  0,D+DO          | Data Low              |   R/W    |
+    |       (1) 3a  |  0,D+DO+1        | Data High             |   R/W    |
+    +---------------+------------------+-----------------------+----------+
+    (1) Add 1 cycle for M=0 or X=0 (i.e. 16 bit data).
+    (2) Add 1 cycle for direct register low (DL) not equal 0.
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

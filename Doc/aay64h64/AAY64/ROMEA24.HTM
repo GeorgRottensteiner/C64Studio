@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EA24/59940:   Syncronise Color Pointer
+
+Jump from <A HREF="ROME56C.HTM">$E58E</A>, <A HREF="ROME72A.HTM">$E75F</A>, <A HREF="ROME7D4.HTM">$E807</A>, <A HREF="ROME9E0.HTM">$E9E0</A>, <A HREF="ROME9FF.HTM">$EA04</A>, <A HREF="ROMEA13.HTM">$EA18</A>, <A HREF="ROMEA31.HTM">$EA4F</A>:
+
+EA24: A5 D1     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD1.HTM">$D1</A>       ; Pointer: Current Screen Line Address
+EA26: 85 F3     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPF3.HTM">$F3</A>       ; Pointer: Current Color RAM Location
+EA28: A5 D2     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD1.HTM">$D2</A>       ; Pointer: Current Screen Line Address
+EA2A: 29 03     <A HREF="BAND.HTM">AND</A> #$03
+EA2C: 09 D8     <A HREF="BORA.HTM">ORA</A> #$D8
+EA2E: 85 F4     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPF3.HTM">$F4</A>       ; Pointer: Current Color RAM Location
+EA30: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMEA13.HTM">Previous Page</A> / <A HREF="ROMEA31.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,89 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EE13/60947:   Receive From Serial Bus
+
+Jump from <A HREF="ROMF199.HTM">$F1B5</A>, <A HREF="ROMF4B8.HTM">$F4D5</A>, <A HREF="ROMF4B8.HTM">$F4E0</A>, <A HREF="ROMF4B8.HTM">$F501</A>, <A HREF="ROMFFA5.HTM">$FFA5</A>:
+
+EE13: 78        <A HREF="BSEI.HTM">SEI</A>
+EE14: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+EE16: 85 A5     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPA5.HTM">$A5</A>       ; Tape Synchronising count down
+EE18: 20 85 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE85.HTM">$EE85</A>     ; Serial Clock On
+
+Jump from $EE1E:
+
+EE1B: 20 A9 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEEA9.HTM">$EEA9</A>     ; Get Serial Data And Clock In
+EE1E: 10 FB     <A HREF="BBPL.HTM">BPL</A> $EE1B
+
+Jump from $EE54:
+
+EE20: A9 01     <A HREF="BLDA.HTM">LDA</A> #$01
+EE22: 8D 07 DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA17.HTM">$DC07</A>     ; CIA1: Timer B High-Byte (Tape, Serial Port)
+EE25: A9 19     <A HREF="BLDA.HTM">LDA</A> #$19
+EE27: 8D 0F DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA115.HTM">$DC0F</A>     ; CIA1: Control Register B
+EE2A: 20 97 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE97.HTM">$EE97</A>     ; Serial Output 1
+EE2D: AD 0D DC  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA113.HTM">$DC0D</A>     ; CIA1: Interrupt (IRQ) Control Register
+
+Jump from $EE3A:
+
+EE30: AD 0D DC  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA113.HTM">$DC0D</A>     ; CIA1: Interrupt (IRQ) Control Register
+EE33: 29 02     <A HREF="BAND.HTM">AND</A> #$02
+EE35: D0 07     <A HREF="BBNE.HTM">BNE</A> $EE3E
+EE37: 20 A9 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEEA9.HTM">$EEA9</A>     ; Get Serial Data And Clock In
+EE3A: 30 F4     <A HREF="BBMI.HTM">BMI</A> $EE30
+EE3C: 10 18     <A HREF="BBPL.HTM">BPL</A> $EE56
+
+Jump from $EE35:
+
+EE3E: A5 A5     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA5.HTM">$A5</A>       ; Tape Synchronising count down
+EE40: F0 05     <A HREF="BBEQ.HTM">BEQ</A> $EE47
+EE42: A9 02     <A HREF="BLDA.HTM">LDA</A> #$02
+EE44: 4C B2 ED  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEDB0.HTM">$EDB2</A>     ; Flag Errors: Status #03 - WRITE TIMEOUT
+
+Jump from $EE40:
+
+EE47: 20 A0 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEEA0.HTM">$EEA0</A>     ; Serial Output 0
+EE4A: 20 85 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE85.HTM">$EE85</A>     ; Serial Clock On
+EE4D: A9 40     <A HREF="BLDA.HTM">LDA</A> #$40
+EE4F: 20 1C FE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFE18.HTM">$FE1C</A>     ; Control OS Messages
+EE52: E6 A5     <A HREF="BINC.HTM">INC</A> <A HREF="ZPA5.HTM">$A5</A>       ; Tape Synchronising count down
+EE54: D0 CA     <A HREF="BBNE.HTM">BNE</A> $EE20
+
+Jump from $EE3C:
+
+EE56: A9 08     <A HREF="BLDA.HTM">LDA</A> #$08
+EE58: 85 A5     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPA5.HTM">$A5</A>       ; Tape Synchronising count down
+
+Jump from $EE60, $EE63, $EE74:
+
+EE5A: AD 00 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+EE5D: CD 00 DD  <A HREF="BCMP.HTM">CMP</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+EE60: D0 F8     <A HREF="BBNE.HTM">BNE</A> $EE5A
+EE62: 0A        <A HREF="BASL.HTM">ASL</A>
+EE63: 10 F5     <A HREF="BBPL.HTM">BPL</A> $EE5A
+EE65: 66 A4     <A HREF="BROR.HTM">ROR</A> <A HREF="ZPA4.HTM">$A4</A>       ; Serial Bus shift Counter
+
+Jump from $EE6D, $EE70:
+
+EE67: AD 00 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+EE6A: CD 00 DD  <A HREF="BCMP.HTM">CMP</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+EE6D: D0 F8     <A HREF="BBNE.HTM">BNE</A> $EE67
+EE6F: 0A        <A HREF="BASL.HTM">ASL</A>
+EE70: 30 F5     <A HREF="BBMI.HTM">BMI</A> $EE67
+EE72: C6 A5     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPA5.HTM">$A5</A>       ; Tape Synchronising count down
+EE74: D0 E4     <A HREF="BBNE.HTM">BNE</A> $EE5A
+EE76: 20 A0 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEEA0.HTM">$EEA0</A>     ; Serial Output 0
+EE79: 24 90     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP90.HTM">$90</A>       ; Kernal I/O Status Word ST
+EE7B: 50 03     <A HREF="BBVC.HTM">BVC</A> $EE80
+EE7D: 20 06 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDFE.HTM">$EE06</A>     ; Send UNLISTEN
+
+Jump from $EE7B:
+
+EE80: A5 A4     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA4.HTM">$A4</A>       ; Serial Bus shift Counter
+EE82: 58        <A HREF="BCLI.HTM">CLI</A>
+EE83: 18        <A HREF="BCLC.HTM">CLC</A>
+EE84: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMEDFE.HTM">Previous Page</A> / <A HREF="ROMEE85.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

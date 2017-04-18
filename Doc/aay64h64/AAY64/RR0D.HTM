@@ -1,0 +1,47 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE0D/56845/RR+13:  SilverSurfer: Line Status Register (read only)
+
+   +-------+--------------------------------------------------------+
+   | Bit 7 |   1 = PE/FE/Break in FIFO queue                        |
+   | Bit 6 |   1 = Transmitter Shift Register empty (TSRE)          |
+   | Bit 5 |   1 = Transmitter Holding Register empty (THRE)        |
+   | Bit 4 |   1 = Break Interrupt (BI)                             |
+   | Bit 3 |   1 = Framing Error (FE)                               |
+   | Bit 2 |   1 = Parity Error (PE)                                |
+   | Bit 1 |   1 = Overrun Error (OE)                               |
+   | Bit 0 |   1 = Data Ready                                       |
+   +-------+--------------------------------------------------------+
+
+   Bit 0 is set when a byte is placed in <A HREF="RR08.HTM">$DE08</A> and cleared when the
+   byte is read by the CPU or when the FIFO is cleared. Results in Data
+   Available Interrupts if enabled.
+
+   Bits 1-4 indicate errors and result in Line Status Interrupts if enabled.
+
+     Bit 1 is set when the queue is full and the byte in the Receiver Shift
+     Register hasn't been moved into the queue. This bit is reset when the
+     CPU reads the LSR.
+
+     Bit 2 is set whenever a byte at top of the FIFO queue doesn't match the
+     requested parity. Reset upon reading the LSR.
+
+     Bit 3 is set when a character at top of the FIFO queue is received
+     without proper stop bits. Upon detecting a framing error the UART
+     attempts to resynchronize. Reset by reading the LSR.
+
+     Bit 4 is set when a break condition is sensed (when space is
+     detected for longer than 1 fullword).  A zero byte is placed in
+     the FIFO queue. Reset by reading the LSR.
+
+   Bit 5 is set when the XMIT FIFO queue is empty and is cleared when a byte
+   is written to the XMIT FIFO. Results in Transmit Holding Register Empty
+   interrupts if enabled.
+
+   Bit 6 is set when the XMIT FIFO and Transmitter Shift Register are empty.
+
+   Bit 7 indicates there is a byte in the FIFO queue that was received with
+   a Parity, Framing or Break error.
+
+</PRE></BODY></HTML>

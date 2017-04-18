@@ -1,0 +1,102 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F409/62473:   Open RS232
+
+Jump from <A HREF="ROMF34A.HTM">$F388</A>:
+
+F409: 20 83 F4  <A HREF="BJSR.HTM">JSR</A> $F483
+F40C: 8C 97 02  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP0297.HTM">$0297</A>     ; RS232 Pseudo 6551 Status Register Image
+
+Jump from $F41B:
+
+F40F: C4 B7     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZPB7.HTM">$B7</A>       ; Number of Characters in Filename
+F411: F0 0A     <A HREF="BBEQ.HTM">BEQ</A> $F41D
+F413: B1 BB     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPBB.HTM">$BB</A>),Y   ; Pointer: Current File name Address
+F415: 99 93 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0293.HTM">$0293</A>,Y   ; RS232 Pseudo 6551 control Register Image
+F418: C8        <A HREF="BINY.HTM">INY</A>
+F419: C0 04     <A HREF="BCPY.HTM">CPY</A> #$04
+F41B: D0 F2     <A HREF="BBNE.HTM">BNE</A> $F40F
+
+Jump from $F411:
+
+F41D: 20 4A EF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEF4A.HTM">$EF4A</A>     ; Compute Bit Count
+F420: 8E 98 02  <A HREF="BSTX.HTM">STX</A> <A HREF="ZP0298.HTM">$0298</A>     ; RS232 Number of Bits left to send
+F423: AD 93 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0293.HTM">$0293</A>     ; RS232 Pseudo 6551 control Register Image
+F426: 29 0F     <A HREF="BAND.HTM">AND</A> #$0F
+F428: F0 1C     <A HREF="BBEQ.HTM">BEQ</A> $F446
+F42A: 0A        <A HREF="BASL.HTM">ASL</A>
+F42B: AA        <A HREF="BTAX.HTM">TAX</A>
+F42C: AD A6 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP02A6.HTM">$02A6</A>     ; Flag: TV Standard
+F42F: D0 09     <A HREF="BBNE.HTM">BNE</A> $F43A
+F431: BC C1 FE  <A HREF="BLDY.HTM">LDY</A> <A HREF="ROMFEBC.HTM">$FEC1</A>,X   ; Exit Interrupt
+F434: BD C0 FE  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMFEBC.HTM">$FEC0</A>,X   ; Exit Interrupt
+F437: 4C 40 F4  <A HREF="BJMP.HTM">JMP</A> $F440
+
+Jump from $F42F:
+
+F43A: BC EB E4  <A HREF="BLDY.HTM">LDY</A> <A HREF="ROME4E0.HTM">$E4EB</A>,X   ; Pause After Finding Tape File
+F43D: BD EA E4  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROME4E0.HTM">$E4EA</A>,X   ; Pause After Finding Tape File
+
+Jump from $F437:
+
+F440: 8C 96 02  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP0295.HTM">$0296</A>     ; RS232 Non-standard Bits/Second
+F443: 8D 95 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0295.HTM">$0295</A>     ; RS232 Non-standard Bits/Second
+
+Jump from $F428:
+
+F446: AD 95 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0295.HTM">$0295</A>     ; RS232 Non-standard Bits/Second
+F449: 0A        <A HREF="BASL.HTM">ASL</A>
+F44A: 20 2E FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFF07.HTM">$FF2E</A>     ; NMI RS232 Out
+F44D: AD 94 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0294.HTM">$0294</A>     ; RS232 Pseudo 6551 command Register Image
+F450: 4A        <A HREF="BLSR.HTM">LSR</A>
+F451: 90 09     <A HREF="BBCC.HTM">BCC</A> $F45C
+F453: AD 01 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+F456: 0A        <A HREF="BASL.HTM">ASL</A>
+F457: B0 03     <A HREF="BBCS.HTM">BCS</A> $F45C
+F459: 20 0D F0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF00D.HTM">$F00D</A>     ; No DSR (Data Set Ready) Error
+
+Jump from $F451, $F457:
+
+F45C: AD 9B 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP029B.HTM">$029B</A>     ; RS232 Index to End of Input Buffer
+F45F: 8D 9C 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP029C.HTM">$029C</A>     ; RS232 Pointer: High Byte of Input Buffer
+F462: AD 9E 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP029E.HTM">$029E</A>     ; RS232 Index to End of Output Buffer
+F465: 8D 9D 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP029D.HTM">$029D</A>     ; RS232 Pointer: High Byte of Output Buffer
+F468: 20 27 FE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFE25.HTM">$FE27</A>     ; Read / Set Top of Memory
+F46B: A5 F8     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPF7.HTM">$F8</A>       ; RS232 Input Buffer Pointer
+F46D: D0 05     <A HREF="BBNE.HTM">BNE</A> $F474
+F46F: 88        <A HREF="BDEY.HTM">DEY</A>
+F470: 84 F8     <A HREF="BSTY.HTM">STY</A> <A HREF="ZPF7.HTM">$F8</A>       ; RS232 Input Buffer Pointer
+F472: 86 F7     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPF7.HTM">$F7</A>       ; RS232 Input Buffer Pointer
+
+Jump from $F46D:
+
+F474: A5 FA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPF9.HTM">$FA</A>       ; RS232 Output Buffer Pointer
+F476: D0 05     <A HREF="BBNE.HTM">BNE</A> $F47D
+F478: 88        <A HREF="BDEY.HTM">DEY</A>
+F479: 84 FA     <A HREF="BSTY.HTM">STY</A> <A HREF="ZPF9.HTM">$FA</A>       ; RS232 Output Buffer Pointer
+F47B: 86 F9     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPF9.HTM">$F9</A>       ; RS232 Output Buffer Pointer
+
+Jump from $F476, <A HREF="ROMF291.HTM">$F2C5</A>:
+
+F47D: 38        <A HREF="BSEC.HTM">SEC</A>
+F47E: A9 F0     <A HREF="BLDA.HTM">LDA</A> #$F0
+F480: 4C 2D FE  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMFE25.HTM">$FE2D</A>     ; Read / Set Top of Memory
+
+Jump from $F409, <A HREF="ROMF291.HTM">$F2AF</A>:
+
+F483: A9 7F     <A HREF="BLDA.HTM">LDA</A> #$7F
+F485: 8D 0D DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA213.HTM">$DD0D</A>     ; CIA2: Interrupt (NMI) Control Register
+F488: A9 06     <A HREF="BLDA.HTM">LDA</A> #$06
+F48A: 8D 03 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA23.HTM">$DD03</A>     ; CIA2: Data Direction Register B
+F48D: 8D 01 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+F490: A9 04     <A HREF="BLDA.HTM">LDA</A> #$04
+F492: 0D 00 DD  <A HREF="BORA.HTM">ORA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+F495: 8D 00 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+F498: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+F49A: 8C A1 02  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+F49D: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF3D5.HTM">Previous Page</A> / <A HREF="ROMF49E.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

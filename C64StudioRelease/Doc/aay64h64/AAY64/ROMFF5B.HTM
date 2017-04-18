@@ -1,0 +1,31 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FF5B/65371:   Initialize screen editor
+
+Jump from <A HREF="ROMFCE2.HTM">$FCFB</A>, <A HREF="ROMFF81.HTM">$FF81</A>:
+
+FF5B: 20 18 E5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME518.HTM">$E518</A>     ; Initialize I/O
+
+Jump from $FF61:
+
+FF5E: AD 12 D0  <A HREF="BLDA.HTM">LDA</A> <A HREF="VIC18.HTM">$D012</A>     ; VIC: Raster Position
+FF61: D0 FB     <A HREF="BBNE.HTM">BNE</A> $FF5E
+FF63: AD 19 D0  <A HREF="BLDA.HTM">LDA</A> <A HREF="VIC25.HTM">$D019</A>     ; VIC: Interrupt Request Register (IRR)
+FF66: 29 01     <A HREF="BAND.HTM">AND</A> #$01
+FF68: 8D A6 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP02A6.HTM">$02A6</A>     ; Flag: TV Standard
+FF6B: 4C DD FD  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMFDDD.HTM">$FDDD</A>     ; Enable Timer
+
+Jump from <A HREF="ROMFDDD.HTM">$FDF6</A>:
+
+FF6E: A9 81     <A HREF="BLDA.HTM">LDA</A> #$81
+FF70: 8D 0D DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA113.HTM">$DC0D</A>     ; CIA1: Interrupt (IRQ) Control Register
+FF73: AD 0E DC  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA114.HTM">$DC0E</A>     ; CIA1: Control Register A
+FF76: 29 80     <A HREF="BAND.HTM">AND</A> #$80
+FF78: 09 11     <A HREF="BORA.HTM">ORA</A> #$11
+FF7A: 8D 0E DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA114.HTM">$DC0E</A>     ; CIA1: Control Register A
+FF7D: 4C 8E EE  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEE8E.HTM">$EE8E</A>     ; Serial Clock Off
+
+    <A HREF="ROMFF48.HTM">Previous Page</A> / <A HREF="ROMFF80.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

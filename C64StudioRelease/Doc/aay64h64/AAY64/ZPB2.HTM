@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B2-$B3/178-179:   Pointer: Start Address of Tape Buffer
+
+  Points to <A HREF="ZP033C.HTM">$033C</A>
+
+  Used by <A HREF="MAPJD.HTM">Jiffy-DOS</A>: REGSAV ($B2)
+
+   Saved, then restored by Load routine (no other usage).
+
+Kernal-Reference:
+
+ CMP ($B2),Y : <A HREF="ROMF7EA.HTM">$F7FF</A>
+ LDA ($B2),Y : <A HREF="ROMF199.HTM">$F1A9</A> <A HREF="ROMF533.HTM">$F56E</A> <A HREF="ROMF533.HTM">$F573</A> <A HREF="ROMF533.HTM">$F57F</A> <A HREF="ROMF533.HTM">$F588</A> <A HREF="ROMF72C.HTM">$F739</A> <A HREF="ROMF72C.HTM">$F757</A>
+ LDX $B2     : <A HREF="ROMF7D0.HTM">$F7D0</A>
+ SBC ($B2),Y : <A HREF="ROMF533.HTM">$F583</A> <A HREF="ROMF533.HTM">$F58C</A>
+ STA ($B2),Y : <A HREF="ROMF1CA.HTM">$F1F3</A> <A HREF="ROMF1CA.HTM">$F1FA</A> <A HREF="ROMF34A.HTM">$F3CE</A> <A HREF="ROMF76A.HTM">$F781</A> <A HREF="ROMF76A.HTM">$F788</A> <A HREF="ROMF76A.HTM">$F78D</A> <A HREF="ROMF76A.HTM">$F792</A> <A HREF="ROMF76A.HTM">$F797</A> <A HREF="ROMF76A.HTM">$F79C</A> <A HREF="ROMF76A.HTM">$F7AF</A>
+ STX $B2     : <A HREF="ROMFD50.HTM">$FD63</A>
+
+ LDY $B3     : <A HREF="ROMF7D0.HTM">$F7D2</A>
+ STY $B3     : <A HREF="ROMFD50.HTM">$FD65</A>
+
+    <A HREF="ZPB0.HTM">Previous Page</A> / <A HREF="ZPB4.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,77 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EEBB/61115:   RS232 Send
+
+Jump from <A HREF="ROMFE66.HTM">$FE9D</A>:
+
+EEBB: A5 B4     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB4.HTM">$B4</A>       ; RS232 Write bit count/Tape Read timing Flag
+EEBD: F0 47     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMEF06.HTM">$EF06</A>     ; Send New RS232 Byte
+EEBF: 30 3F     <A HREF="BBMI.HTM">BMI</A> $EF00
+EEC1: 46 B6     <A HREF="BLSR.HTM">LSR</A> <A HREF="ZPB6.HTM">$B6</A>       ; RS232 Output Byte Buffer/Tape Read Error Flag
+EEC3: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+EEC5: 90 01     <A HREF="BBCC.HTM">BCC</A> $EEC8
+EEC7: CA        <A HREF="BDEX.HTM">DEX</A>
+
+Jump from $EEC5:
+
+EEC8: 8A        <A HREF="BTXA.HTM">TXA</A>
+EEC9: 45 BD     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+EECB: 85 BD     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+EECD: C6 B4     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPB4.HTM">$B4</A>       ; RS232 Write bit count/Tape Read timing Flag
+EECF: F0 06     <A HREF="BBEQ.HTM">BEQ</A> $EED7
+
+Jump from $EEEC, $EEF0, $EF04:
+
+EED1: 8A        <A HREF="BTXA.HTM">TXA</A>
+EED2: 29 04     <A HREF="BAND.HTM">AND</A> #$04
+EED4: 85 B5     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPB5.HTM">$B5</A>       ; RS232 Next Bit to send/Tape Read - End of Tape
+EED6: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $EECF:
+
+EED7: A9 20     <A HREF="BLDA.HTM">LDA</A> #$20
+EED9: 2C 94 02  <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP0294.HTM">$0294</A>     ; RS232 Pseudo 6551 command Register Image
+EEDC: F0 14     <A HREF="BBEQ.HTM">BEQ</A> $EEF2
+EEDE: 30 1C     <A HREF="BBMI.HTM">BMI</A> $EEFC
+EEE0: 70 14     <A HREF="BBVS.HTM">BVS</A> $EEF6
+EEE2: A5 BD     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+EEE4: D0 01     <A HREF="BBNE.HTM">BNE</A> $EEE7
+
+Jump from $EEF4, $EEFA, $EEFE:
+
+EEE6: CA        <A HREF="BDEX.HTM">DEX</A>
+
+Jump from $EEE4, $EEF8, $EEFC:
+
+EEE7: C6 B4     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPB4.HTM">$B4</A>       ; RS232 Write bit count/Tape Read timing Flag
+EEE9: AD 93 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0293.HTM">$0293</A>     ; RS232 Pseudo 6551 control Register Image
+EEEC: 10 E3     <A HREF="BBPL.HTM">BPL</A> $EED1
+EEEE: C6 B4     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPB4.HTM">$B4</A>       ; RS232 Write bit count/Tape Read timing Flag
+EEF0: D0 DF     <A HREF="BBNE.HTM">BNE</A> $EED1
+
+Jump from $EEDC:
+
+EEF2: E6 B4     <A HREF="BINC.HTM">INC</A> <A HREF="ZPB4.HTM">$B4</A>       ; RS232 Write bit count/Tape Read timing Flag
+EEF4: D0 F0     <A HREF="BBNE.HTM">BNE</A> $EEE6
+
+Jump from $EEE0:
+
+EEF6: A5 BD     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+EEF8: F0 ED     <A HREF="BBEQ.HTM">BEQ</A> $EEE7
+EEFA: D0 EA     <A HREF="BBNE.HTM">BNE</A> $EEE6
+
+Jump from $EEDE:
+
+EEFC: 70 E9     <A HREF="BBVS.HTM">BVS</A> $EEE7
+EEFE: 50 E6     <A HREF="BBVC.HTM">BVC</A> $EEE6
+
+Jump from $EEBF:
+
+EF00: E6 B4     <A HREF="BINC.HTM">INC</A> <A HREF="ZPB4.HTM">$B4</A>       ; RS232 Write bit count/Tape Read timing Flag
+EF02: A2 FF     <A HREF="BLDX.HTM">LDX</A> #$FF
+EF04: D0 CB     <A HREF="BBNE.HTM">BNE</A> $EED1
+
+    <A HREF="ROMEEB3.HTM">Previous Page</A> / <A HREF="ROMEF06.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

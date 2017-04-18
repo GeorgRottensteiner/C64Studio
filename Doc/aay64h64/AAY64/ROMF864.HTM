@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F864/63588:   Initiate Tape Write
+
+Jump from <A HREF="ROMF1CA.HTM">$F1EA</A>, <A HREF="ROMF291.HTM">$F2D7</A>:
+
+F864: 20 D7 F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF7D7.HTM">$F7D7</A>     ; Set Buffer Stat / End Pointers
+
+Jump from <A HREF="ROMF659.HTM">$F67C</A>:
+
+F867: A9 14     <A HREF="BLDA.HTM">LDA</A> #$14
+F869: 85 AB     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAB.HTM">$AB</A>       ; RS232 Input parity/Tape temporary
+
+Jump from <A HREF="ROMF76A.HTM">$F7BE</A>:
+
+F86B: 20 38 F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF838.HTM">$F838</A>     ; Print &quot;PRESS RECORD...&quot;
+
+Jump from <A HREF="ROMF841.HTM">$F84D</A>:
+
+F86E: B0 6C     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMF8D0.HTM">$F8DC</A>     ; Check Tape Stop
+F870: 78        <A HREF="BSEI.HTM">SEI</A>
+F871: A9 82     <A HREF="BLDA.HTM">LDA</A> #$82
+F873: A2 08     <A HREF="BLDX.HTM">LDX</A> #$08
+
+    <A HREF="ROMF841.HTM">Previous Page</A> / <A HREF="ROMF875.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

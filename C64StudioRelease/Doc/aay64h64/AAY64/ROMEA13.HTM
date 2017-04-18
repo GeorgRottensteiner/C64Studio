@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EA13/59923:   Print To Screen
+
+Jump from <A HREF="ROME5CA.HTM">$E5E4</A>, <A HREF="ROME691.HTM">$E6A2</A>:
+
+EA13: A8        <A HREF="BTAY.HTM">TAY</A>
+EA14: A9 02     <A HREF="BLDA.HTM">LDA</A> #$02
+EA16: 85 CD     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPCD.HTM">$CD</A>       ; Timer: Count down for Cursor blink toggle
+EA18: 20 24 EA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEA24.HTM">$EA24</A>     ; Syncronise Color Pointer
+EA1B: 98        <A HREF="BTYA.HTM">TYA</A>
+
+Jump from <A HREF="ROMEA31.HTM">$EA5E</A>:
+
+EA1C: A4 D3     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+EA1E: 91 D1     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPD1.HTM">$D1</A>),Y   ; Pointer: Current Screen Line Address
+EA20: 8A        <A HREF="BTXA.HTM">TXA</A>
+EA21: 91 F3     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPF3.HTM">$F3</A>),Y   ; Pointer: Current Color RAM Location
+EA23: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME9FF.HTM">Previous Page</A> / <A HREF="ROMEA24.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

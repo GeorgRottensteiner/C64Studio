@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A9C4/43460:   Assign Integer
+
+A9C4: 20 1B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC1B.HTM">$BC1B</A>     ; Round FAC#1
+A9C7: 20 BF B1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB1BF.HTM">$B1BF</A>     ; FAC#1 to Positive Integer
+A9CA: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+A9CC: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+A9CE: 91 49     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP49.HTM">$49</A>),Y   ; Pointer: Index Variable for FOR/NEXT loop
+A9D0: C8        <A HREF="BINY.HTM">INY</A>
+A9D1: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+A9D3: 91 49     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP49.HTM">$49</A>),Y   ; Pointer: Index Variable for FOR/NEXT loop
+A9D5: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA9A5.HTM">Previous Page</A> / <A HREF="ROMA9D6.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

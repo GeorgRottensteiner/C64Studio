@@ -1,0 +1,31 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  +------------------------------------------------------------------------
+  |
+  |      MMC64-Cartridge:
+  |
+  +------------------------------------------------------------------------
+  |
+  | Used I/O-Area:
+  |
+  |   <A HREF="MMC00.HTM">$DF10/57104/MMC+0</A>        SPI Transfer Register
+  |   <A HREF="MMC01.HTM">$DF11/57105/MMC+1</A>        Control Register
+  |   <A HREF="MMC02.HTM">$DF12/57106/MMC+2</A>        Status Register (read only)
+  |   <A HREF="MMC03.HTM">$DF13/57107/MMC+3</A>        Identification Register
+  |
+  | If Clock Port is used (Location depends on Bit 3 of <A HREF="MMC01.HTM">$DF11</A>):
+  |
+  |   <A HREF="MMC17.HTM">$DF21/57121</A>              Clock Port En-/Disable
+  |   $DF22-$DF2F/57122-57135  Clock Port I/O-Area
+  |    (or $DE01/56833 and $DE02-$DE0F/56384-56847)
+  |
+  | Memory Map:
+  |
+  |   $8000-$9FFF/32768-40959  MMC64-BIOS ROM
+  |     ROM is active when Bit 0 of <A HREF="MMC01.HTM">$DF11</A> and the Flash jumper is not set
+  |     ROM is write enabled when Bit 4 of <A HREF="MMC01.HTM">$DF11</A> and Flash jumper is set
+  |
+  +------------------------------------------------------------------------
+
+</PRE></BODY></HTML>

@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510/65816 Addressing mode: Accumulator -- A
+
+ (<A HREF="BASL.HTM">ASL</A>,<A HREF="BDEC.HTM">DEC</A>,<A HREF="BINC.HTM">INC</A>,<A HREF="BLSR.HTM">LSR</A>,<A HREF="BROL.HTM">ROL</A>,<A HREF="BROR.HTM">ROR</A>)
+ (1 byte)  (2 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Internal Operation    |    R     |
+    +---------------+------------------+-----------------------+----------+
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

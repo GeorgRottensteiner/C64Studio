@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F817/63511:   Print &quot;PRESS PLAY ON TAPE&quot;
+
+Jump from <A HREF="ROMF34A.HTM">$F399</A>, <A HREF="ROMF533.HTM">$F541</A>, <A HREF="ROMF841.HTM">$F84A</A>:
+
+F817: 20 2E F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF82E.HTM">$F82E</A>     ; Check Tape Status
+F81A: F0 1A     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMF82E.HTM">$F836</A>     ; Check Tape Status
+F81C: A0 1B     <A HREF="BLDY.HTM">LDY</A> #$1B
+
+Jump from <A HREF="ROMF838.HTM">$F83F</A>:
+
+F81E: 20 2F F1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF12F.HTM">$F12F</A>     ; Print Message
+
+Jump from $F827:
+
+F821: 20 D0 F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF8D0.HTM">$F8D0</A>     ; Check Tape Stop
+F824: 20 2E F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF82E.HTM">$F82E</A>     ; Check Tape Status
+F827: D0 F8     <A HREF="BBNE.HTM">BNE</A> $F821
+F829: A0 6A     <A HREF="BLDY.HTM">LDY</A> #$6A
+F82B: 4C 2F F1  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF12F.HTM">$F12F</A>     ; Print Message
+
+    <A HREF="ROMF80D.HTM">Previous Page</A> / <A HREF="ROMF82E.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

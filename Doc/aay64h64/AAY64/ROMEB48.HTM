@@ -1,0 +1,39 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EB48/60232:   Check for Shift, CTRL, C=
+
+EB48: AD 8D 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP028D.HTM">$028D</A>     ; Flag: Shift Keys
+EB4B: C9 03     <A HREF="BCMP.HTM">CMP</A> #$03
+EB4D: D0 15     <A HREF="BBNE.HTM">BNE</A> $EB64
+EB4F: CD 8E 02  <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP028E.HTM">$028E</A>     ; Last Shift Key used for debouncing
+EB52: F0 EE     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMEADD.HTM">$EB42</A>     ; Process Key Image
+EB54: AD 91 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0291.HTM">$0291</A>     ; Flag: Upper/Lower Case change
+EB57: 30 1D     <A HREF="BBMI.HTM">BMI</A> $EB76
+EB59: AD 18 D0  <A HREF="BLDA.HTM">LDA</A> <A HREF="VIC24.HTM">$D018</A>     ; VIC: Memory Control Register
+EB5C: 49 02     <A HREF="BEOR.HTM">EOR</A> #$02
+EB5E: 8D 18 D0  <A HREF="BSTA.HTM">STA</A> <A HREF="VIC24.HTM">$D018</A>     ; VIC: Memory Control Register
+EB61: 4C 76 EB  <A HREF="BJMP.HTM">JMP</A> $EB76
+
+Jump from $EB4D:
+
+EB64: 0A        <A HREF="BASL.HTM">ASL</A>
+EB65: C9 08     <A HREF="BCMP.HTM">CMP</A> #$08
+EB67: 90 02     <A HREF="BBCC.HTM">BCC</A> $EB6B
+EB69: A9 06     <A HREF="BLDA.HTM">LDA</A> #$06
+
+Jump from $EB67:
+
+EB6B: AA        <A HREF="BTAX.HTM">TAX</A>
+EB6C: BD 79 EB  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMEB79.HTM">$EB79</A>,X   ; Pointers to Keyboard decoding tables
+EB6F: 85 F5     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPF5.HTM">$F5</A>       ; Vector: Current Keyboard decoding Table
+EB71: BD 7A EB  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMEB79.HTM">$EB7A</A>,X   ; Pointers to Keyboard decoding tables
+EB74: 85 F6     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPF5.HTM">$F6</A>       ; Vector: Current Keyboard decoding Table
+
+Jump from $EB57, $EB61:
+
+EB76: 4C E0 EA  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEADD.HTM">$EAE0</A>     ; Process Key Image
+
+    <A HREF="ROMEADD.HTM">Previous Page</A> / <A HREF="ROMEB79.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

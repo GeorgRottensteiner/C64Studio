@@ -1,0 +1,141 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B261/45665:   Create Array
+
+Jump from <A HREF="ROMB218.HTM">$B226</A>:
+
+B261: 20 94 B1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB194.HTM">$B194</A>     ; Allocate Array Pointer Space
+B264: 20 08 A4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA408.HTM">$A408</A>     ; Check Memory Overlap
+B267: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B269: 84 72     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B26B: A2 05     <A HREF="BLDX.HTM">LDX</A> #$05
+B26D: A5 45     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP45.HTM">$45</A>       ; Name of Variable being sought in Variable Table
+B26F: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B271: 10 01     <A HREF="BBPL.HTM">BPL</A> $B274
+B273: CA        <A HREF="BDEX.HTM">DEX</A>
+
+Jump from $B271:
+
+B274: C8        <A HREF="BINY.HTM">INY</A>
+B275: A5 46     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP45.HTM">$46</A>       ; Name of Variable being sought in Variable Table
+B277: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B279: 10 02     <A HREF="BBPL.HTM">BPL</A> $B27D
+B27B: CA        <A HREF="BDEX.HTM">DEX</A>
+B27C: CA        <A HREF="BDEX.HTM">DEX</A>
+
+Jump from $B279:
+
+B27D: 86 71     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B27F: A5 0B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+B281: C8        <A HREF="BINY.HTM">INY</A>
+B282: C8        <A HREF="BINY.HTM">INY</A>
+B283: C8        <A HREF="BINY.HTM">INY</A>
+B284: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+
+Jump from $B2A8:
+
+B286: A2 0B     <A HREF="BLDX.HTM">LDX</A> #$0B
+B288: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+B28A: 24 0C     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP0C.HTM">$0C</A>       ; Flag: Default Array dimension
+B28C: 50 08     <A HREF="BBVC.HTM">BVC</A> $B296
+B28E: 68        <A HREF="BPLA.HTM">PLA</A>
+B28F: 18        <A HREF="BCLC.HTM">CLC</A>
+B290: 69 01     <A HREF="BADC.HTM">ADC</A> #$01
+B292: AA        <A HREF="BTAX.HTM">TAX</A>
+B293: 68        <A HREF="BPLA.HTM">PLA</A>
+B294: 69 00     <A HREF="BADC.HTM">ADC</A> #$00
+
+Jump from $B28C:
+
+B296: C8        <A HREF="BINY.HTM">INY</A>
+B297: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B299: C8        <A HREF="BINY.HTM">INY</A>
+B29A: 8A        <A HREF="BTXA.HTM">TXA</A>
+B29B: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B29D: 20 4C B3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB34C.HTM">$B34C</A>     ; Number of Bytes in Subscript
+B2A0: 86 71     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B2A2: 85 72     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B2A4: A4 22     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B2A6: C6 0B     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+B2A8: D0 DC     <A HREF="BBNE.HTM">BNE</A> $B286
+B2AA: 65 59     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B2AC: B0 5D     <A HREF="BBCS.HTM">BCS</A> $B30B
+B2AE: 85 59     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B2B0: A8        <A HREF="BTAY.HTM">TAY</A>
+B2B1: 8A        <A HREF="BTXA.HTM">TXA</A>
+B2B2: 65 58     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B2B4: 90 03     <A HREF="BBCC.HTM">BCC</A> $B2B9
+B2B6: C8        <A HREF="BINY.HTM">INY</A>
+B2B7: F0 52     <A HREF="BBEQ.HTM">BEQ</A> $B30B
+
+Jump from $B2B4:
+
+B2B9: 20 08 A4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA408.HTM">$A408</A>     ; Check Memory Overlap
+B2BC: 85 31     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP31.HTM">$31</A>       ; Pointer: End of BASIC Arrays + 1
+B2BE: 84 32     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP31.HTM">$32</A>       ; Pointer: End of BASIC Arrays + 1
+B2C0: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+B2C2: E6 72     <A HREF="BINC.HTM">INC</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B2C4: A4 71     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B2C6: F0 05     <A HREF="BBEQ.HTM">BEQ</A> $B2CD
+
+Jump from $B2CB, $B2D1:
+
+B2C8: 88        <A HREF="BDEY.HTM">DEY</A>
+B2C9: 91 58     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP57.HTM">$58</A>),Y   ; Temporary storage for FLPT value
+B2CB: D0 FB     <A HREF="BBNE.HTM">BNE</A> $B2C8
+
+Jump from $B2C6:
+
+B2CD: C6 59     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B2CF: C6 72     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B2D1: D0 F5     <A HREF="BBNE.HTM">BNE</A> $B2C8
+B2D3: E6 59     <A HREF="BINC.HTM">INC</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B2D5: 38        <A HREF="BSEC.HTM">SEC</A>
+B2D6: A5 31     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP31.HTM">$31</A>       ; Pointer: End of BASIC Arrays + 1
+B2D8: E5 5F     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+B2DA: A0 02     <A HREF="BLDY.HTM">LDY</A> #$02
+B2DC: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B2DE: A5 32     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP31.HTM">$32</A>       ; Pointer: End of BASIC Arrays + 1
+B2E0: C8        <A HREF="BINY.HTM">INY</A>
+B2E1: E5 60     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+B2E3: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B2E5: A5 0C     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0C.HTM">$0C</A>       ; Flag: Default Array dimension
+B2E7: D0 62     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMB30E.HTM">$B34B</A>     ; Locate Element in Array
+B2E9: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from <A HREF="ROMB24D.HTM">$B25E</A>:
+
+B2EA: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B2EC: 85 0B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+B2EE: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+B2F0: 85 71     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+
+Jump from <A HREF="ROMB30E.HTM">$B326</A>:
+
+B2F2: 85 72     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B2F4: C8        <A HREF="BINY.HTM">INY</A>
+B2F5: 68        <A HREF="BPLA.HTM">PLA</A>
+B2F6: AA        <A HREF="BTAX.HTM">TAX</A>
+B2F7: 85 64     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B2F9: 68        <A HREF="BPLA.HTM">PLA</A>
+B2FA: 85 65     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B2FC: D1 5F     <A HREF="BCMP.HTM">CMP</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B2FE: 90 0E     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMB30E.HTM">$B30E</A>     ; Locate Element in Array
+B300: D0 06     <A HREF="BBNE.HTM">BNE</A> $B308
+B302: C8        <A HREF="BINY.HTM">INY</A>
+B303: 8A        <A HREF="BTXA.HTM">TXA</A>
+B304: D1 5F     <A HREF="BCMP.HTM">CMP</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B306: 90 07     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMB30E.HTM">$B30F</A>     ; Locate Element in Array
+
+Jump from $B300:
+
+B308: 4C 45 B2  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB245.HTM">$B245</A>     ; ?BAD SUBSCRIPT
+
+Jump from $B2AC, $B2B7, <A HREF="ROMB34C.HTM">$B365</A>, <A HREF="ROMB34C.HTM">$B376</A>:
+
+B30B: 4C 35 A4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA435.HTM">$A435</A>     ; Output ?OUT OF MEMORY Error
+
+    <A HREF="ROMB24D.HTM">Previous Page</A> / <A HREF="ROMB30E.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

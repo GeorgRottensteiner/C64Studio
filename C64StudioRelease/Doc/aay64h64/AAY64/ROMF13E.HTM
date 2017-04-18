@@ -1,0 +1,31 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F13E/61758:   Get a byte
+
+F13E: A5 99     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP99.HTM">$99</A>       ; Default Input Device (0)
+F140: D0 08     <A HREF="BBNE.HTM">BNE</A> $F14A
+F142: A5 C6     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPC6.HTM">$C6</A>       ; Number of Characters in Keyboard Buffer queue
+F144: F0 0F     <A HREF="BBEQ.HTM">BEQ</A> $F155
+F146: 78        <A HREF="BSEI.HTM">SEI</A>
+F147: 4C B4 E5  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME5B4.HTM">$E5B4</A>     ; Get Character From Keyboard Buffer
+
+Jump from $F140:
+
+F14A: C9 02     <A HREF="BCMP.HTM">CMP</A> #$02
+F14C: D0 18     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMF157.HTM">$F166</A>     ; Input a byte
+
+Jump from <A HREF="ROMF199.HTM">$F1B8</A>:
+
+F14E: 84 97     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP97.HTM">$97</A>       ; Storage of Y Register during RS232 fetch
+F150: 20 86 F0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF086.HTM">$F086</A>     ; Get From RS232
+F153: A4 97     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP97.HTM">$97</A>       ; Storage of Y Register during RS232 fetch
+
+Jump from $F144:
+
+F155: 18        <A HREF="BCLC.HTM">CLC</A>
+F156: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF12F.HTM">Previous Page</A> / <A HREF="ROMF157.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,58 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F69B/63131:   Bump Clock
+
+Jump from <A HREF="ROMFFEA.HTM">$FFEA</A>:
+
+F69B: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+F69D: E6 A2     <A HREF="BINC.HTM">INC</A> <A HREF="ZPA0.HTM">$A2</A>       ; Real-time jiffy Clock
+F69F: D0 06     <A HREF="BBNE.HTM">BNE</A> $F6A7
+F6A1: E6 A1     <A HREF="BINC.HTM">INC</A> <A HREF="ZPA0.HTM">$A1</A>       ; Real-time jiffy Clock
+F6A3: D0 02     <A HREF="BBNE.HTM">BNE</A> $F6A7
+F6A5: E6 A0     <A HREF="BINC.HTM">INC</A> <A HREF="ZPA0.HTM">$A0</A>       ; Real-time jiffy Clock
+
+Jump from $F69F, $F6A3:
+
+F6A7: 38        <A HREF="BSEC.HTM">SEC</A>
+F6A8: A5 A2     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA0.HTM">$A2</A>       ; Real-time jiffy Clock
+F6AA: E9 01     <A HREF="BSBC.HTM">SBC</A> #$01
+F6AC: A5 A1     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA0.HTM">$A1</A>       ; Real-time jiffy Clock
+F6AE: E9 1A     <A HREF="BSBC.HTM">SBC</A> #$1A
+F6B0: A5 A0     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA0.HTM">$A0</A>       ; Real-time jiffy Clock
+F6B2: E9 4F     <A HREF="BSBC.HTM">SBC</A> #$4F
+F6B4: 90 06     <A HREF="BBCC.HTM">BCC</A> $F6BC
+F6B6: 86 A0     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPA0.HTM">$A0</A>       ; Real-time jiffy Clock
+F6B8: 86 A1     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPA0.HTM">$A1</A>       ; Real-time jiffy Clock
+F6BA: 86 A2     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPA0.HTM">$A2</A>       ; Real-time jiffy Clock
+
+Jump from $F6B4, $F6C2, <A HREF="ROMF875.HTM">$F8CA</A>, <A HREF="ROMFE43.HTM">$FE5E</A>:
+
+F6BC: AD 01 DC  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA11.HTM">$DC01</A>     ; CIA1: Data Port B (Keyboard, Joystick, Paddles)
+F6BF: CD 01 DC  <A HREF="BCMP.HTM">CMP</A> <A HREF="CIA11.HTM">$DC01</A>     ; CIA1: Data Port B (Keyboard, Joystick, Paddles)
+F6C2: D0 F8     <A HREF="BBNE.HTM">BNE</A> $F6BC
+F6C4: AA        <A HREF="BTAX.HTM">TAX</A>
+F6C5: 30 13     <A HREF="BBMI.HTM">BMI</A> $F6DA
+F6C7: A2 BD     <A HREF="BLDX.HTM">LDX</A> #$BD
+F6C9: 8E 00 DC  <A HREF="BSTX.HTM">STX</A> <A HREF="CIA10.HTM">$DC00</A>     ; CIA1: Data Port A (Keyboard, Joystick, Paddles)
+
+Jump from $F6D2:
+
+F6CC: AE 01 DC  <A HREF="BLDX.HTM">LDX</A> <A HREF="CIA11.HTM">$DC01</A>     ; CIA1: Data Port B (Keyboard, Joystick, Paddles)
+F6CF: EC 01 DC  <A HREF="BCPX.HTM">CPX</A> <A HREF="CIA11.HTM">$DC01</A>     ; CIA1: Data Port B (Keyboard, Joystick, Paddles)
+F6D2: D0 F8     <A HREF="BBNE.HTM">BNE</A> $F6CC
+F6D4: 8D 00 DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA10.HTM">$DC00</A>     ; CIA1: Data Port A (Keyboard, Joystick, Paddles)
+F6D7: E8        <A HREF="BINX.HTM">INX</A>
+F6D8: D0 02     <A HREF="BBNE.HTM">BNE</A> $F6DC
+
+Jump from $F6C5:
+
+F6DA: 85 91     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP91.HTM">$91</A>       ; Flag: $7F = STOP key
+
+Jump from $F6D8:
+
+F6DC: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF68F.HTM">Previous Page</A> / <A HREF="ROMF6DD.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

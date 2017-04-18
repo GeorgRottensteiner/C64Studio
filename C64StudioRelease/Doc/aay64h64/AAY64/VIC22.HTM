@@ -1,0 +1,23 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $D016/53270/VIC+22:  Control Register 2
+
+   +----------+---------------------------------------------------+
+   | Bits 7-6 |    Unused                                         |
+   | Bit  5   |    Reset-Bit: 1 = Stop VIC (no Video Out, no RAM  |
+   |          |                   refresh, no bus access)         |
+   | Bit  4   |    Multi-Color Mode: 1 = Enable (Text or Bitmap)  |
+   | Bit  3   |    Select 38/40 Column Text Display: 1 = 40 Cols  |
+   | Bits 2-0 |    Smooth Scroll to X Dot-Position (0-7)          |
+   +----------+---------------------------------------------------+
+
+   Default Value: $08/8 (%00001000).
+
+   See also: <A HREF="VICINTPR.HTM">Bit Interpretations</A> in Hires and MC-Mode
+
+Kernal-Reference:
+
+ STX $D016   : <A HREF="ROMFCE2.HTM">$FCEF</A>
+
+</PRE></BODY></HTML>

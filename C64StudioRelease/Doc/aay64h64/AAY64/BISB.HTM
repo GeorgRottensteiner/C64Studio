@@ -1,0 +1,23 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  ISB                    ISB INC memory, SBC memory                     ISB
+
+                                                        N V - B D I Z C
+  Operation:  M &lt;- (M) + 1, A &lt;- (A) - M - ~C           / / . . . . / /
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   ISB $FF             |   $E7   |    2    |    5     |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   ISB $FF,X           |   $F7   |    2    |    6     |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   ISB $FFFF           |   $EF   |    3    |    6     |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   ISB $FFFF,X         |   $FF   |    3    |    7     |
+  |  <A HREF="ADDR12B.HTM">Absolute,Y</A>    |   ISB $FFFF,Y         |   $FB   |    3    |    7     |
+  |  <A HREF="ADDR9B.HTM">(Indirect,X)</A>  |   ISB ($FF,X)         |   $E3   |    2    |    8     |
+  |  <A HREF="ADDR7B.HTM">(Indirect),Y</A>  |   ISB ($FF),Y         |   $F3   |    2    |    8     |
+  +----------------+-----------------------+---------+---------+----------+
+
+  Also known as ISC.
+
+</PRE></BODY></HTML>

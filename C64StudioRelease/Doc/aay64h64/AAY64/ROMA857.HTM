@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A857/43095:   Perform [cont]
+
+A857: D0 17     <A HREF="BBNE.HTM">BNE</A> $A870
+A859: A2 1A     <A HREF="BLDX.HTM">LDX</A> #$1A
+A85B: A4 3E     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP3D.HTM">$3E</A>       ; Pointer: BASIC Statement for CONT
+A85D: D0 03     <A HREF="BBNE.HTM">BNE</A> $A862
+A85F: 4C 37 A4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA437.HTM">$A437</A>     ; Error Routine
+
+Jump from $A85D:
+
+A862: A5 3D     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP3D.HTM">$3D</A>       ; Pointer: BASIC Statement for CONT
+A864: 85 7A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A866: 84 7B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+A868: A5 3B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP3B.HTM">$3B</A>       ; Previous BASIC Line number
+A86A: A4 3C     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP3B.HTM">$3C</A>       ; Previous BASIC Line number
+A86C: 85 39     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP39.HTM">$39</A>       ; Current BASIC Line number
+A86E: 84 3A     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP39.HTM">$3A</A>       ; Current BASIC Line number
+
+Jump from $A857, <A HREF="ROMA831.HTM">$A832</A>:
+
+A870: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA831.HTM">Previous Page</A> / <A HREF="ROMA871.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

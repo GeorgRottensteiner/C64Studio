@@ -1,0 +1,22 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B7F7/47095:   Convert FAC#1 to Integer in LINNUM
+
+Jump from <A HREF="ROMB7EB.HTM">$B7EE</A>, <A HREF="ROMB80D.HTM">$B813</A>, <A HREF="ROME12A.HTM">$E12D</A>:
+
+B7F7: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+B7F9: 30 9D     <A HREF="BBMI.HTM">BMI</A> <A HREF="ROMB78B.HTM">$B798</A>     ; Evaluate &lt;asc&gt;
+B7FB: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+B7FD: C9 91     <A HREF="BCMP.HTM">CMP</A> #$91
+B7FF: B0 97     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMB78B.HTM">$B798</A>     ; Evaluate &lt;asc&gt;
+B801: 20 9B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC9B.HTM">$BC9B</A>     ; Convert FAC#1 to Integer
+B804: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B806: A4 65     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B808: 84 14     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+B80A: 85 15     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+B80C: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB7EB.HTM">Previous Page</A> / <A HREF="ROMB80D.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

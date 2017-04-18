@@ -1,0 +1,27 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  INC                    INC Increment memory by one                    INC
+
+  Operation:  M + 1 -&gt; M                                N V - B D I Z C
+                                                        / . . . . . / .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   INC $FF             |   $E6   |    2    |    5     |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   INC $FF,X           |   $F6   |    2    |    6     |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   INC $FFFF           |   $EE   |    3    |    6     |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   INC $FFFF,X         |   $FE   |    3    |    7     |
+  +----------------+-----------------------+---------+---------+----------+
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR6A.HTM">Implied</A>        |   INC                 |   $1A   |    1    |    2     |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

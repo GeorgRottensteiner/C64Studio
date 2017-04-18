@@ -1,0 +1,29 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  BIT             BIT Test bits in memory with accumulator              BIT
+
+  Operation:  A /\ M -&gt; Z, M7 -&gt; N, M6 -&gt; V             N V - B D I Z C
+                                                        M7M6. . . . / .
+  Bit 6 and 7 are transferred to the status register.
+  If the result of A /\ M is zero then Z = 1, otherwise Z=0.
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   BIT $FF             |   $24   |    2    |    3     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   BIT $FFFF           |   $2C   |    3    |    4     |
+  +----------------+-----------------------+---------+---------+----------+
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR1.HTM">Immediate</A>      |   BIT #$FF            |   $89   |    2    |    2     |
+  | <A HREF="ADDR10A.HTM">Direct Page,X</A>  |   BIT $FF,X           |   $34   |    2    |    3     |
+  | <A HREF="ADDR12A.HTM">Absolute,X</A>     |   BIT $FFFF,X         |   $3C   |    3    |    4     |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

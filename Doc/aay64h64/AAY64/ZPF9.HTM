@@ -1,0 +1,23 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F9-$FA/249-250:   RS232 Output Buffer Pointer
+
+  Used by <A HREF="MAPPUC.HTM">pucrunch</A>: Depacker - Part 1
+                              ($FA = destination address lo)
+
+  Used by <A HREF="MAPBB.HTM">ByteBoiler</A>: Depacker
+
+Kernal-Reference:
+
+ LDA ($F9),Y : <A HREF="ROMEF06.HTM">$EF26</A>
+ STA ($F9),Y : <A HREF="ROMF017.HTM">$F026</A>
+ STX $F9     : <A HREF="ROMF409.HTM">$F47B</A>
+
+ LDA $FA     : <A HREF="ROMF291.HTM">$F2BA</A> <A HREF="ROMF409.HTM">$F474</A>
+ STA $FA     : <A HREF="ROMF291.HTM">$F2C3</A>
+ STY $FA     : <A HREF="ROMF409.HTM">$F479</A>
+
+    <A HREF="ZPF7.HTM">Previous Page</A> / <A HREF="ZPFB.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

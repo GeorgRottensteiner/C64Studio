@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Assembler - External Functions</H3>
+  <div id="mybody">
+    External functions can be used in expressions to allow more sophisticated builds. Functions are kept in namespaces to avoid name clashes.<br><br>
+    These functions are currently supported:<br>
+    <br>
+    <br>
+    <ul>
+      <li><a href="#io.filesize">io.filesize</a></li>
+      <li><a href="#math.min">math.min</a></li>
+      <li><a href="#math.max">math.max</a></li>
+    </ul>
+    <br>
+    <br>
+  </div>
+  <a name="io.filesize"></a>
+  <H2>IO.FILESIZE</H2>
+  <div id="mybody">
+    <b>file size = io.filesize( filename )</b><br><br>
+    io.filesize expects a file name and returns the file size in bytes. If the file name contains a relative path its base is the assembly path.<br>
+    <br>
+    <br>
+    <div id="code"><br>BYTES_TO_COPY = io.filesize( "file.prg" )
+    <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="math.min"></a>
+  <H2>MATH.MIN</H2>
+  <div id="mybody">
+    <b>result = math.min( 1, 5 )</b><br><br>
+    math.min compares both numeric parameters and returns the smaller one.<br>
+    <br>
+    <br>
+    <div id="code"><br>PAD_BYTES = math.min( 4, FIELD_LENGTH % 4 )
+    <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="math.max"></a>
+  <H2>MATH.MAX</H2>
+  <div id="mybody">
+    <b>result = math.max( 1, 5 )</b><br><br>
+    math.max compares both numeric parameters and returns the higher one.<br>
+    <br>
+    <br>
+    <div id="code"><br>PAD_BYTES = math.max( 128, FIELD_LENGTH )
+    <br></div>
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>

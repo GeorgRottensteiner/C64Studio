@@ -1,0 +1,38 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F7EA/63466:   Find Specific Tape Header
+
+Jump from $F801, <A HREF="ROMF34A.HTM">$F3A5</A>, <A HREF="ROMF533.HTM">$F54D</A>:
+
+F7EA: 20 2C F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF72C.HTM">$F72C</A>     ; Find Any Tape Header
+F7ED: B0 1D     <A HREF="BBCS.HTM">BCS</A> $F80C
+F7EF: A0 05     <A HREF="BLDY.HTM">LDY</A> #$05
+F7F1: 84 9F     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP9F.HTM">$9F</A>       ; Tape Error log pass 2
+F7F3: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+F7F5: 84 9E     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP9E.HTM">$9E</A>       ; Tape Error log pass 1
+
+Jump from $F809:
+
+F7F7: C4 B7     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZPB7.HTM">$B7</A>       ; Number of Characters in Filename
+F7F9: F0 10     <A HREF="BBEQ.HTM">BEQ</A> $F80B
+F7FB: B1 BB     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPBB.HTM">$BB</A>),Y   ; Pointer: Current File name Address
+F7FD: A4 9F     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP9F.HTM">$9F</A>       ; Tape Error log pass 2
+F7FF: D1 B2     <A HREF="BCMP.HTM">CMP</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F801: D0 E7     <A HREF="BBNE.HTM">BNE</A> $F7EA
+F803: E6 9E     <A HREF="BINC.HTM">INC</A> <A HREF="ZP9E.HTM">$9E</A>       ; Tape Error log pass 1
+F805: E6 9F     <A HREF="BINC.HTM">INC</A> <A HREF="ZP9F.HTM">$9F</A>       ; Tape Error log pass 2
+F807: A4 9E     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP9E.HTM">$9E</A>       ; Tape Error log pass 1
+F809: D0 EC     <A HREF="BBNE.HTM">BNE</A> $F7F7
+
+Jump from $F7F9:
+
+F80B: 18        <A HREF="BCLC.HTM">CLC</A>
+
+Jump from $F7ED:
+
+F80C: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF7D7.HTM">Previous Page</A> / <A HREF="ROMF80D.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

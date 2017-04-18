@@ -1,0 +1,56 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  Bugs and flaws of the 6510
+ +--------------------------+
+
+ Zeropage addressing modes &amp; page wraps (fixed on 65816 in native mode):
+
+   If you use an indexed-zeropage addressing mode, either direct or indirect,
+   it is not able to leave the zeropage on page-wraps. Examples:
+
+    LDX #$01
+    LDA $FF,X
+
+   will fetch from adress $0000 and not $0100.
+
+    LDA ($FF),Y
+
+    LDX #$00
+    LDA ($FF,X)
+
+    LDX #$FF
+    LDA ($00,X)
+
+   will all fetch the low-byte from $00FF and the high-byte from $0000.
+
+ Indirect addressing mode &amp; page wraps (fixed on 65816):
+
+   If you use the indirect addressing mode, PCH will not be incremented on
+   page wraps. Example:
+
+    JMP ($C0FF)
+
+   will fetch the low-byte from $C0FF and the high-byte from $C000.
+
+ Decimal mode (flags fixed on 65816):
+
+   In decimal mode, N and V are set after the high-order nibble is added or
+   subtracted but before it is decimal-corrected, according to binary rules.
+   Z is always set according to binary mode, not decimal.
+
+   When decimal-correcting a nibble for addition, following rules apply:
+
+    IF ((nibble &gt;= $A) \/ C') THEN nibble += 6
+    C'' = C' \/ (nibble + 6 &gt;= $A)
+
+   When decimal-correcting a nibble for subtraction,  following rules apply:
+
+    IF (~C') THEN nibble -= 6
+    C'' = C' \/ (nibble - 6 &lt; 0)
+
+   Thus, $F + $F in decimal mode is $14, not $24. Also, decimal correction
+   can result in nibbles ranging from $A-$F. For example, $C + $D results
+   in $19 before correction, $1F after.
+
+</PRE></BODY></HTML>

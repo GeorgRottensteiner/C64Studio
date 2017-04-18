@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E9C8/59848:   Move A Screen Line
+
+Jump from <A HREF="ROME8EA.HTM">$E90E</A>, <A HREF="ROME965.HTM">$E9A1</A>:
+
+E9C8: 29 03     <A HREF="BAND.HTM">AND</A> #$03
+E9CA: 0D 88 02  <A HREF="BORA.HTM">ORA</A> <A HREF="ZP0288.HTM">$0288</A>     ; High Byte of Screen Memory Address
+E9CD: 85 AD     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAC.HTM">$AD</A>       ; Pointer: Tape Buffer/Screen scrolling
+E9CF: 20 E0 E9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME9E0.HTM">$E9E0</A>     ; Syncronise Color Transfer
+E9D2: A0 27     <A HREF="BLDY.HTM">LDY</A> #$27
+
+Jump from $E9DD:
+
+E9D4: B1 AC     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPAC.HTM">$AC</A>),Y   ; Pointer: Tape Buffer/Screen scrolling
+E9D6: 91 D1     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPD1.HTM">$D1</A>),Y   ; Pointer: Current Screen Line Address
+E9D8: B1 AE     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPAE.HTM">$AE</A>),Y   ; Tape End Address/End of Program
+E9DA: 91 F3     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPF3.HTM">$F3</A>),Y   ; Pointer: Current Color RAM Location
+E9DC: 88        <A HREF="BDEY.HTM">DEY</A>
+E9DD: 10 F5     <A HREF="BBPL.HTM">BPL</A> $E9D4
+E9DF: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME965.HTM">Previous Page</A> / <A HREF="ROME9E0.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

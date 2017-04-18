@@ -1,0 +1,34 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FDA3/64931:   Initialise I/O
+
+Jump from <A HREF="ROMFCE2.HTM">$FCF2</A>, <A HREF="ROMFE66.HTM">$FE69</A>, <A HREF="ROMFF84.HTM">$FF84</A>:
+
+FDA3: A9 7F     <A HREF="BLDA.HTM">LDA</A> #$7F
+FDA5: 8D 0D DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA113.HTM">$DC0D</A>     ; CIA1: Interrupt (IRQ) Control Register
+FDA8: 8D 0D DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA213.HTM">$DD0D</A>     ; CIA2: Interrupt (NMI) Control Register
+FDAB: 8D 00 DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA10.HTM">$DC00</A>     ; CIA1: Data Port A (Keyboard, Joystick, Paddles)
+FDAE: A9 08     <A HREF="BLDA.HTM">LDA</A> #$08
+FDB0: 8D 0E DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA114.HTM">$DC0E</A>     ; CIA1: Control Register A
+FDB3: 8D 0E DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA214.HTM">$DD0E</A>     ; CIA2: Control Register A
+FDB6: 8D 0F DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA115.HTM">$DC0F</A>     ; CIA1: Control Register B
+FDB9: 8D 0F DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA215.HTM">$DD0F</A>     ; CIA2: Control Register B
+FDBC: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+FDBE: 8E 03 DC  <A HREF="BSTX.HTM">STX</A> <A HREF="CIA13.HTM">$DC03</A>     ; CIA1: Data Direction Register B
+FDC1: 8E 03 DD  <A HREF="BSTX.HTM">STX</A> <A HREF="CIA23.HTM">$DD03</A>     ; CIA2: Data Direction Register B
+FDC4: 8E 18 D4  <A HREF="BSTX.HTM">STX</A> <A HREF="SID24.HTM">$D418</A>     ; SID: Select Filter Mode and Volume
+FDC7: CA        <A HREF="BDEX.HTM">DEX</A>
+FDC8: 8E 02 DC  <A HREF="BSTX.HTM">STX</A> <A HREF="CIA12.HTM">$DC02</A>     ; CIA1: Data Direction Register A
+FDCB: A9 07     <A HREF="BLDA.HTM">LDA</A> #$07
+FDCD: 8D 00 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+FDD0: A9 3F     <A HREF="BLDA.HTM">LDA</A> #$3F
+FDD2: 8D 02 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA22.HTM">$DD02</A>     ; CIA2: Data Direction Register A
+FDD5: A9 E7     <A HREF="BLDA.HTM">LDA</A> #$E7
+FDD7: 85 01     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP01.HTM">$01</A>       ; 6510 On-chip 8-bit Input/Output Register
+FDD9: A9 2F     <A HREF="BLDA.HTM">LDA</A> #$2F
+FDDB: 85 00     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP00.HTM">$00</A>       ; 6510 On-chip Data Direction Register
+
+    <A HREF="ROMFD9B.HTM">Previous Page</A> / <A HREF="ROMFDDD.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

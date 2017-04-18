@@ -1,0 +1,22 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F7D7/63447:   Set Buffer Stat / End Pointers
+
+Jump from <A HREF="ROMF76A.HTM">$F7B7</A>, <A HREF="ROMF841.HTM">$F847</A>, <A HREF="ROMF864.HTM">$F864</A>:
+
+F7D7: 20 D0 F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF7D0.HTM">$F7D0</A>     ; Get Buffer Address
+F7DA: 8A        <A HREF="BTXA.HTM">TXA</A>
+F7DB: 85 C1     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC1.HTM">$C1</A>       ; Start Address for LOAD and Cassette Write
+F7DD: 18        <A HREF="BCLC.HTM">CLC</A>
+F7DE: 69 C0     <A HREF="BADC.HTM">ADC</A> #$C0
+F7E0: 85 AE     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AE</A>       ; Tape End Address/End of Program
+F7E2: 98        <A HREF="BTYA.HTM">TYA</A>
+F7E3: 85 C2     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC1.HTM">$C2</A>       ; Start Address for LOAD and Cassette Write
+F7E5: 69 00     <A HREF="BADC.HTM">ADC</A> #$00
+F7E7: 85 AF     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AF</A>       ; Tape End Address/End of Program
+F7E9: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF7D0.HTM">Previous Page</A> / <A HREF="ROMF7EA.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

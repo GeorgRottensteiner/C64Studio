@@ -1,0 +1,27 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DC00/56320/CIA1+0:   Data Port A (Keyboard, Joystick, Paddles)
+
+   +----------+---------------------------------------------------+
+   | Bits 7-0 |   Write <A HREF="KEYBMATR.HTM">Keyboard Column Values</A> for Keyboard Scan  |
+   | Bits 7-6 |   Paddles on: 01 = Port A, 10 = Port B            |
+   | Bit  4   |   Joystick A Fire Button: 0 = Pressed             |
+   | Bit  3   |   Joystick A Right: 0 = Pressed, or Paddle Button |
+   | Bit  2   |   Joystick A Left : 0 = Pressed, or Paddle Button |
+   | Bit  1   |   Joystick A Down : 0 = Pressed                   |
+   | Bit  0   |   Joystick A Up   : 0 = Pressed                   |
+   +----------+---------------------------------------------------+
+
+   <B>Do NOT use Paddles on both Ports at the same time!</B>
+
+   Joystick A is the one plugged into Port 2.
+
+   Default Value: $7F/127 (%01111111)
+
+Kernal-Reference:
+
+ STA $DC00   : <A HREF="ROME8EA.HTM">$E93A</A> <A HREF="ROME8EA.HTM">$E945</A> <A HREF="ROMEA87.HTM">$EA90</A> <A HREF="ROMEA87.HTM">$EAA5</A> <A HREF="ROMEA87.HTM">$EAD7</A> <A HREF="ROMEADD.HTM">$EB44</A> <A HREF="ROMF69B.HTM">$F6D4</A> <A HREF="ROMFDA3.HTM">$FDAB</A>
+ STX $DC00   : <A HREF="ROMF69B.HTM">$F6C9</A>
+
+</PRE></BODY></HTML>

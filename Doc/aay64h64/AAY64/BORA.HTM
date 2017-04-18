@@ -1,0 +1,38 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  ORA                 ORA &quot;OR&quot; memory with accumulator                  ORA
+
+  Operation: A V M -&gt; A                                 N V - B D I Z C
+                                                        / . . . . . / .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   ORA #$FF            |   $09   |    2    |    2     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   ORA $FF             |   $05   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   ORA $FF,X           |   $15   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   ORA $FFFF           |   $0D   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   ORA $FFFF,X         |   $1D   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   ORA $FFFF,Y         |   $19   |    3    |    4*    |
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   ORA ($FF,X)         |   $01   |    2    |    6     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   ORA ($FF),Y         |   $11   |    2    |    5*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 on page crossing
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR3A.HTM">AbsoluteLong</A>   |   ORA $FFFFFF         |   $0F   |    4    |     5    |
+  | <A HREF="ADDR13.HTM">AbsoluteLong,X</A> |   ORA $FFFFFF,X       |   $1F   |    4    |     5    |
+  | <A HREF="ADDR18.HTM">(Indirect)</A>     |   ORA ($FF)           |   $12   |    2    |     5    |
+  | <A HREF="ADDR19.HTM">[Indirect Long]</A>|   ORA [$FF]           |   $07   |    2    |     6    |
+  | <A HREF="ADDR8.HTM">[Ind.Long],Y</A>   |   ORA [$FF],Y         |   $17   |    2    |     6    |
+  | <A HREF="ADDR22.HTM">Relative,S</A>     |   ORA $FF,S           |   $03   |    2    |     4    |
+  | <A HREF="ADDR23.HTM">(Indirect,S),Y</A> |   ORA ($FF,S),Y       |   $13   |    2    |     7    |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

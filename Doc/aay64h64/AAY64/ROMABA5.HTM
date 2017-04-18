@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $ABA5/43941:   Perform [input#]
+
+ABA5: 20 9E B7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB79B.HTM">$B79E</A>     ; Evaluate Text to 1 Byte in XR
+ABA8: A9 2C     <A HREF="BLDA.HTM">LDA</A> #$2C
+ABAA: 20 FF AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFD.HTM">$AEFF</A>     ; Test ','
+ABAD: 86 13     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP13.HTM">$13</A>       ; File number of current Input Device
+ABAF: 20 1E E1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME11E.HTM">$E11E</A>     ; Set Up For Input
+ABB2: 20 CE AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMABBF.HTM">$ABCE</A>     ; Perform [input]
+
+Jump from <A HREF="ROMAA80.HTM">$AA83</A>, <A HREF="ROMABBF.HTM">$ABE4</A>:
+
+ABB5: A5 13     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP13.HTM">$13</A>       ; File number of current Input Device
+
+Jump from <A HREF="ROMAB7B.HTM">$ABA2</A>:
+
+ABB7: 20 CC FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFCC.HTM">$FFCC</A>     ; Restore I/O Vector
+ABBA: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+ABBC: 86 13     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP13.HTM">$13</A>       ; File number of current Input Device
+ABBE: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMAB7B.HTM">Previous Page</A> / <A HREF="ROMABBF.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

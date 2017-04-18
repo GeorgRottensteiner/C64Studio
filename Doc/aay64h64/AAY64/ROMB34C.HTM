@@ -1,0 +1,51 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B34C/45900:   Number of Bytes in Subscript
+
+Jump from <A HREF="ROMB261.HTM">$B29D</A>, <A HREF="ROMB30E.HTM">$B316</A>:
+
+B34C: 84 22     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B34E: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B350: 85 28     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP26.HTM">$28</A>       ; Floating point product of Multiply and Divide
+B352: 88        <A HREF="BDEY.HTM">DEY</A>
+B353: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+
+Jump from <A HREF="ROMB30E.HTM">$B33B</A>:
+
+B355: 85 29     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP26.HTM">$29</A>       ; Floating point product of Multiply and Divide
+B357: A9 10     <A HREF="BLDA.HTM">LDA</A> #$10
+B359: 85 5D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP5C.HTM">$5D</A>       ; Temporary storage for FLPT value
+B35B: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+B35D: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+
+Jump from $B37A:
+
+B35F: 8A        <A HREF="BTXA.HTM">TXA</A>
+B360: 0A        <A HREF="BASL.HTM">ASL</A>
+B361: AA        <A HREF="BTAX.HTM">TAX</A>
+B362: 98        <A HREF="BTYA.HTM">TYA</A>
+B363: 2A        <A HREF="BROL.HTM">ROL</A>
+B364: A8        <A HREF="BTAY.HTM">TAY</A>
+B365: B0 A4     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMB261.HTM">$B30B</A>     ; Create Array
+B367: 06 71     <A HREF="BASL.HTM">ASL</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B369: 26 72     <A HREF="BROL.HTM">ROL</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B36B: 90 0B     <A HREF="BBCC.HTM">BCC</A> $B378
+B36D: 18        <A HREF="BCLC.HTM">CLC</A>
+B36E: 8A        <A HREF="BTXA.HTM">TXA</A>
+B36F: 65 28     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP26.HTM">$28</A>       ; Floating point product of Multiply and Divide
+B371: AA        <A HREF="BTAX.HTM">TAX</A>
+B372: 98        <A HREF="BTYA.HTM">TYA</A>
+B373: 65 29     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP26.HTM">$29</A>       ; Floating point product of Multiply and Divide
+B375: A8        <A HREF="BTAY.HTM">TAY</A>
+B376: B0 93     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMB261.HTM">$B30B</A>     ; Create Array
+
+Jump from $B36B:
+
+B378: C6 5D     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP5C.HTM">$5D</A>       ; Temporary storage for FLPT value
+B37A: D0 E3     <A HREF="BBNE.HTM">BNE</A> $B35F
+B37C: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB30E.HTM">Previous Page</A> / <A HREF="ROMB37D.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,25 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  BRK                          BRK Force Break                          BRK
+
+  Operation:  Forced Interrupt;                         N V - B D I Z C
+              PC + 2 to Stack, P to Stack               . . . 1 0 1 . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR21B.HTM">Implied</A>/Stack |   BRK                 |   $00   |    1    |    7     |
+  +----------------+-----------------------+---------+---------+----------+
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+  1. A BRK command cannot be masked by setting I.
+  2. Although even official documents say BRK uses implied addressing-mode,
+     it is rather an immediate one, but the operand is thrown away. This is
+     why PC+2 is pushed onto stack rather than PC+1. So, better use a <A HREF="BNOP.HTM">NOP</A>
+     directly after BRK to avoid trouble.
+  3. To be very precise: The B-flag is not set by BRK. It is rather set all
+     the time, only when an external IRQ is recognized it will be cleared for
+     some cycles, so you can distinguish between BRK and IRQ.
+
+</PRE></BODY></HTML>

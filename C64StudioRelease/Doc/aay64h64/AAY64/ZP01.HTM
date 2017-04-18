@@ -1,0 +1,50 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  $01/1:   6510 On-chip 8-bit Input/Output Register
+
+   +----------+---------------------------------------------------+
+   | Bits 7-6 |   Undefined                                       |
+   | Bit  5   |   Cassette Motor Control (0 = On, 1 = Off)        |
+   | Bit  4   |   Cassette Switch Sense: 1 = Switch Closed        |
+   | Bit  3   |   Cassette Data Output Line                       |
+   | Bit  2   |   /CharEn-Signal (see <A HREF="MEMCFG.HTM">Memory Configuration</A>)       |
+   | Bit  1   |   /HiRam-Signal  (see <A HREF="MEMCFG.HTM">Memory Configuration</A>)       |
+   | Bit  0   |   /LoRam-Signal  (see <A HREF="MEMCFG.HTM">Memory Configuration</A>)       |
+   +----------+---------------------------------------------------+
+   Default Value is $37/55 (%00110111).
+
+  (German-?)C128 only:
+
+   +--------+-----------------------------------------------------+
+   | Bit  6 |   ASCII/DIN-Switch (0=DIN, 1=ASCII)                 |
+   +--------+-----------------------------------------------------+
+   Default Value is $77/119 (%01110111).
+
+  Flash_8 only:
+
+   +--------+-----------------------------------------------------+
+   | Bit  7 |   1 = 1 MHz, 0 = 8 MHz (if DIP1 closed)             |
+   | Bit  6 |   (?)                                               |
+   +--------+-----------------------------------------------------+
+   Default Value is $37/55 (%00110111).
+
+Kernal-Reference:
+
+ ASL $01,X   : <A HREF="ROMB983.HTM">$B9A6</A>
+ BIT $01     : <A HREF="ROMF82E.HTM">$F830</A> <A HREF="ROMF82E.HTM">$F834</A>
+ INC $01,X   : <A HREF="ROMB983.HTM">$B9AA</A>
+ LDA $01     : <A HREF="ROMEA31.HTM">$EA61</A> <A HREF="ROMEA31.HTM">$EA6B</A> <A HREF="ROMEA31.HTM">$EA75</A> <A HREF="ROMF875.HTM">$F8AB</A> <A HREF="ROMFBA6.HTM">$FBBF</A> <A HREF="ROMFCCA.HTM">$FCCA</A>
+     $01,X   : <A HREF="ROMF5DD.HTM">$F5E6</A>
+     $0001,Y : <A HREF="ROMB867.HTM">$B8CB</A>
+ LDY $01,X   : <A HREF="ROMB983.HTM">$B991</A>
+ LSR $01,X   : <A HREF="ROMB867.HTM">$B89E</A>
+ ROR $01,X   : <A HREF="ROMB983.HTM">$B9AC</A> <A HREF="ROMB983.HTM">$B9AE</A>
+ SBC $01,X   : <A HREF="ROMB867.HTM">$B8CE</A>
+ STA $01     : <A HREF="ROMEA31.HTM">$EA79</A> <A HREF="ROMF875.HTM">$F8AF</A> <A HREF="ROMFBA6.HTM">$FBC3</A> <A HREF="ROMFCCA.HTM">$FCCE</A> <A HREF="ROMFDA3.HTM">$FDD7</A>
+     $01,X   : <A HREF="ROMB4D5.HTM">$B4DB</A>
+ STY $01,X   : <A HREF="ROMB983.HTM">$B997</A>
+
+    <A HREF="ZP00.HTM">Previous Page</A> / <A HREF="ZP02.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

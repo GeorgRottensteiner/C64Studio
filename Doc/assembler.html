@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Assembler</H3>
+  <div id="mybody">
+    The default assembler is using the ACME syntax for parsing. Most macros of ACME are also available, but also some exclusive macros.<br>
+    <br>
+    The assembler allows at most one label, one mnemonic and one comment per line.<br>
+    <br>
+    There are three types of label, local, global and anonymous ones. Local labels are determined by starting with an '.'. To limit the scope of local labels the !ZONE macro is used. Global labels
+    start with any character. They may end with a :<br>
+    <br>
+    Anonymous labels consist of one or more '+' or '-' characters. '+' or '-' indicate the intended lookup direction.<br>
+    <br>
+    <br>
+    Comments are prefixed with an ';', macros start with an exclamation mark '!'<br>
+    <br>
+    <br>
+    C64 Studio also supports basic PDS and DASM format. To choose the assembler type for a file right click the item in the solution explorer and change "Assembler Type". Note that support for PDS and DASM is not complete.
+    Most of the common constructs work but some may not. If you encounter some problems please contact me.
+  </div>
+</body>
+</HTML>

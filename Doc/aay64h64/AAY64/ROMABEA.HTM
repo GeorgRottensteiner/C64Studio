@@ -1,0 +1,17 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $ABEA/44010:   Read Input Buffer
+
+Jump from <A HREF="ROMABBF.HTM">$ABDB</A>, <A HREF="ROMABBF.HTM">$ABE2</A>:
+
+ABEA: AD 00 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0200.HTM">$0200</A>     ; BASIC Input Buffer (Input Line from Screen)
+ABED: D0 1E     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMAC06.HTM">$AC0D</A>     ; Perform [read]
+ABEF: A5 13     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP13.HTM">$13</A>       ; File number of current Input Device
+ABF1: D0 E3     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMABBF.HTM">$ABD6</A>     ; Perform [input]
+ABF3: 20 06 A9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA906.HTM">$A906</A>     ; Search for Next Statement / Line
+ABF6: 4C FB A8  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA8F8.HTM">$A8FB</A>     ; Perform [data]
+
+    <A HREF="ROMABBF.HTM">Previous Page</A> / <A HREF="ROMABF9.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

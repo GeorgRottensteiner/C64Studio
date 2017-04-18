@@ -1,0 +1,37 @@
+processor   6502
+
+MACRO GNI
+lda #5
+sta 1064
+ENDM
+
+ORG $2000
+
+
+
+REPEAT 3
+lda #1
+sta xyz
+:GNI
+lda #1
+sta xyz
+:GNI
+lda #1
+sta xyz
+:GNI
+REPEND
+
+HULLO
+lda #0
+sta 1024
+
+REPEAT 3
+lda #1
+sta xyz
+lda #1
+sta xyz
+lda #1
+sta xyz
+REPEND
+
+rts

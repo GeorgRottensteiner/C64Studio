@@ -1,0 +1,13 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DF13/57107/MMC+3:      Identification Register
+
+  On Read:   #$64 when Bit 1 of <A HREF="MMC01.HTM">$DF11</A> is 0
+             #$01 when Bit 1 of <A HREF="MMC01.HTM">$DF11</A> is 1 and REV A hardware is used
+             #$02 when Bit 1 of <A HREF="MMC01.HTM">$DF11</A> is 1 and REV B hardware is used
+
+  On Write:  Write #$55 &amp; #$AA into this register to unlock Bit 3 of <A HREF="MMC01.HTM">$DF11</A>
+             Write #$0A &amp; #$1C into this register to re-enable MMC64 hardware
+
+</PRE></BODY></HTML>

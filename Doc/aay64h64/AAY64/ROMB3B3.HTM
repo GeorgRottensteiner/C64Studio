@@ -1,0 +1,30 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B3B3/46003:   Perform [def fn]
+
+B3B3: 20 E1 B3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB3E1.HTM">$B3E1</A>     ; Check Syntax of FN
+B3B6: 20 A6 B3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB3A6.HTM">$B3A6</A>     ; Confirm Program Mode
+B3B9: 20 FA AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFA.HTM">$AEFA</A>     ; Test '('
+B3BC: A9 80     <A HREF="BLDA.HTM">LDA</A> #$80
+B3BE: 85 10     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP10.HTM">$10</A>       ; Flag: Subscript reference/User Function call
+B3C0: 20 8B B0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB08B.HTM">$B08B</A>     ; Identify Variable
+B3C3: 20 8D AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8D</A>     ; Confirm Result
+B3C6: 20 F7 AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEF7.HTM">$AEF7</A>     ; Test ')'
+B3C9: A9 B2     <A HREF="BLDA.HTM">LDA</A> #$B2
+B3CB: 20 FF AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFD.HTM">$AEFF</A>     ; Test ','
+B3CE: 48        <A HREF="BPHA.HTM">PHA</A>
+B3CF: A5 48     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP47.HTM">$48</A>       ; Value/Descriptor-Pointer
+B3D1: 48        <A HREF="BPHA.HTM">PHA</A>
+B3D2: A5 47     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP47.HTM">$47</A>       ; Value/Descriptor-Pointer
+B3D4: 48        <A HREF="BPHA.HTM">PHA</A>
+B3D5: A5 7B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+B3D7: 48        <A HREF="BPHA.HTM">PHA</A>
+B3D8: A5 7A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+B3DA: 48        <A HREF="BPHA.HTM">PHA</A>
+B3DB: 20 F8 A8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA8F8.HTM">$A8F8</A>     ; Perform [data]
+B3DE: 4C 4F B4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB3F4.HTM">$B44F</A>     ; Perform [fn]
+
+    <A HREF="ROMB3AE.HTM">Previous Page</A> / <A HREF="ROMB3E1.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

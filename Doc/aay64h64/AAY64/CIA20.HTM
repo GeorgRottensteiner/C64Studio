@@ -1,0 +1,41 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DD00/56576/CIA2+0:   Data Port A (Serial Bus, RS232, VIC Base Mem.)
+
+   +----------+---------------------------------------------------+
+   | Bit  7   |  Serial Bus Data Input                            |
+   | Bit  6   |  Serial Bus Clock Pulse Input                     |
+   | Bit  5   |  Serial Bus Data Output                           |
+   | Bit  4   |  Serial Bus Clock Pulse Output                    |
+   | Bit  3   |  Serial Bus ATN Signal Output                     |
+   | Bit  2   |  RS232 Data Output (User Port)                    |
+   | Bit  1-0 |  VIC Chip System Memory Bank Select (low active!) |
+   |          |  %00, 0: Bank 3: $C000-$FFFF, 49152-65535         |
+   |          |  %01, 1: Bank 2: $8000-$BFFF, 32768-49151         |
+   |          |  %10, 2: Bank 1: $4000-$7FFF, 16384-32767         |
+   |          |  %11, 3: Bank 0: $0000-$3FFF, 0-16383 (Standard)  |
+   +----------+---------------------------------------------------+
+
+   Default Value: $17/23 (%00010111)
+
+Kernal-Reference:
+
+ CMP $DD00   : <A HREF="ROMED40.HTM">$ED69</A> <A HREF="ROMEE13.HTM">$EE5D</A> <A HREF="ROMEE13.HTM">$EE6A</A> <A HREF="ROMEEA9.HTM">$EEAC</A>
+ LDA $DD00   : <A HREF="ROMED0C.HTM">$ED2E</A> <A HREF="ROMED40.HTM">$ED66</A> <A HREF="ROMED40.HTM">$ED84</A> <A HREF="ROMEDBE.HTM">$EDBE</A> <A HREF="ROMEDEF.HTM">$EDF3</A> <A HREF="ROMEE13.HTM">$EE5A</A> <A HREF="ROMEE13.HTM">$EE67</A> <A HREF="ROMEE85.HTM">$EE85</A> <A HREF="ROMEE8E.HTM">$EE8E</A> <A HREF="ROMEE97.HTM">$EE97</A>
+               <A HREF="ROMEEA0.HTM">$EEA0</A> <A HREF="ROMEEA9.HTM">$EEA9</A> <A HREF="ROMFE66.HTM">$FE7B</A>
+ ORA $DD00   : <A HREF="ROMF409.HTM">$F492</A>
+ STA $DD00   : <A HREF="ROMED0C.HTM">$ED33</A> <A HREF="ROMED40.HTM">$ED8B</A> <A HREF="ROMEDBE.HTM">$EDC3</A> <A HREF="ROMEDEF.HTM">$EDF8</A> <A HREF="ROMEE85.HTM">$EE8A</A> <A HREF="ROMEE8E.HTM">$EE93</A> <A HREF="ROMEE97.HTM">$EE9C</A> <A HREF="ROMEEA0.HTM">$EEA5</A> <A HREF="ROMF409.HTM">$F495</A> <A HREF="ROMFDA3.HTM">$FDCD</A>
+               <A HREF="ROMFE66.HTM">$FE82</A>
+
+
+ Bit 0..1: VIC Bank
+
+  %00, 0: Bank 3: $C000-$FFFF, 49152-65535
+  %01, 1: Bank 2: $8000-$BFFF, 32768-49151
+  %10, 2: Bank 1: $4000-$7FFF, 16384-32767
+  %11, 3: Bank 0: $0000-$3FFF, 0-16383 (Standard)
+
+
+
+</PRE></BODY></HTML>

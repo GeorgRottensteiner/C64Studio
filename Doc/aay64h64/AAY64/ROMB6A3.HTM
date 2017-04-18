@@ -1,0 +1,56 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B6A3/46755:   Perform String Housekeeping
+
+Jump from <A HREF="ROMB782.HTM">$B782</A>, <A HREF="ROME219.HTM">$E25A</A>:
+
+B6A3: 20 8F AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8F</A>     ; Confirm Result
+
+Jump from <A HREF="ROMA9D9.HTM">$A9E0</A>, <A HREF="ROMAB1E.HTM">$AB21</A>, <A HREF="ROMB02E.HTM">$B034</A>, <A HREF="ROMB37D.HTM">$B381</A>:
+
+B6A6: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B6A8: A4 65     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+
+Jump from <A HREF="ROMB02E.HTM">$B041</A>, <A HREF="ROMB63D.HTM">$B667</A>, <A HREF="ROMB63D.HTM">$B671</A>, <A HREF="ROMB700.HTM">$B716</A>:
+
+B6AA: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B6AC: 84 23     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+B6AE: 20 DB B6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB6DB.HTM">$B6DB</A>     ; Clean Descriptor Stack
+B6B1: 08        <A HREF="BPHP.HTM">PHP</A>
+B6B2: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B6B4: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+B6B6: 48        <A HREF="BPHA.HTM">PHA</A>
+B6B7: C8        <A HREF="BINY.HTM">INY</A>
+B6B8: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+B6BA: AA        <A HREF="BTAX.HTM">TAX</A>
+B6BB: C8        <A HREF="BINY.HTM">INY</A>
+B6BC: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+B6BE: A8        <A HREF="BTAY.HTM">TAY</A>
+B6BF: 68        <A HREF="BPLA.HTM">PLA</A>
+B6C0: 28        <A HREF="BPLP.HTM">PLP</A>
+B6C1: D0 13     <A HREF="BBNE.HTM">BNE</A> $B6D6
+B6C3: C4 34     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+B6C5: D0 0F     <A HREF="BBNE.HTM">BNE</A> $B6D6
+B6C7: E4 33     <A HREF="BCPX.HTM">CPX</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+B6C9: D0 0B     <A HREF="BBNE.HTM">BNE</A> $B6D6
+B6CB: 48        <A HREF="BPHA.HTM">PHA</A>
+B6CC: 18        <A HREF="BCLC.HTM">CLC</A>
+B6CD: 65 33     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+B6CF: 85 33     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+B6D1: 90 02     <A HREF="BBCC.HTM">BCC</A> $B6D5
+B6D3: E6 34     <A HREF="BINC.HTM">INC</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+
+Jump from $B6D1:
+
+B6D5: 68        <A HREF="BPLA.HTM">PLA</A>
+
+Jump from $B6C1, $B6C5, $B6C9:
+
+B6D6: 86 22     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B6D8: 84 23     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+B6DA: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB67A.HTM">Previous Page</A> / <A HREF="ROMB6DB.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE00/56832/AR+0:   I/O-Register
+
+   +-------+--------------------------------------------------------+
+   | Bit 7 |   extra ROM bank selector (A15) (unused)               |
+   | Bit 6 |   1 = resets FREEZE-mode (turns back to normal mode)   |
+   | Bit 5 |   1 = enable RAM at ROML ($8000-$9FFF) &amp;               |
+   |       |       I/O2 ($DF00-$DFFF = $9F00-$9FFF)                 |
+   | Bit 4 |   ROM bank selector high (A14)                         |
+   | Bit 3 |   ROM bank selector low  (A13)                         |
+   | Bit 2 |   1 = disable cartridge (turn off $DE00)               |
+   | Bit 1 |   1 = /EXROM high                                      |
+   | Bit 0 |   1 = /GAME low                                        |
+   +-------+--------------------------------------------------------+
+
+   <B>Careful: Even a read-access will cause data to be written here!
+   And note that the register is mirrored from $DE00-$DEFF.</B>
+
+</PRE></BODY></HTML>

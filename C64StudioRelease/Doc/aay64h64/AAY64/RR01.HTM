@@ -1,0 +1,39 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE01/56833/RR+1:   Extended Control-Register
+
+  On read:
+
+   +-------+--------------------------------------------------------+
+   | Bit 7 |   ROM bank selector (A15)                              |
+   | Bit 6 |   1 = REU compatible <A HREF="RRMEM.HTM">memory map</A> active                 |
+   | Bit 5 |   ROM bank selector (A16)                              |
+   | Bit 4 |   ROM bank selector (A14)                              |
+   | Bit 3 |   ROM bank selector (A13)                              |
+   | Bit 2 |   1 = Freeze button pressed                            |
+   | Bit 1 |   AllowBank bit (see Write)                            |
+   | Bit 0 |   1 = Flashmode active (jumper set)                    |
+   +-------+--------------------------------------------------------+
+
+  On write:
+
+   +-------+--------------------------------------------------------+
+   | Bit 7 |   ROM bank selector (A15) - mirror of <A HREF="RR00.HTM">$DE00</A>            |
+   | Bit 6 |   1 = REU compatible <A HREF="RRMEM.HTM">memory map</A>                        |
+   | Bit 5 |   ROM bank selector (A16) - only in Flashmode          |
+   | Bit 4 |   ROM bank selector (A14) - mirror of <A HREF="RR00.HTM">$DE00</A>            |
+   | Bit 3 |   ROM bank selector (A13) - mirror of <A HREF="RR00.HTM">$DE00</A>            |
+   | Bit 2 |   1 = disables Freeze function                         |
+   | Bit 1 |   AllowBank bit (1 = allows banking of RAM in          |
+   |       |   $DE02/$DF00 areas)                                   |
+   | Bit 0 |   1 = enable accessory connector (SilverSurfer)        |
+   +-------+--------------------------------------------------------+
+
+   If not in Flash mode: Bits 1, 2, 6 can only be written once.
+                         Bit 5 is always 0.
+
+   If in Flash mode:     Bit 6 cannot be set.
+                         Register will not be disabled by the first write.
+
+</PRE></BODY></HTML>

@@ -1,0 +1,97 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A69C/42652:   Perform [list]
+
+A69C: 90 06     <A HREF="BBCC.HTM">BCC</A> $A6A4
+A69E: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $A6A4
+A6A0: C9 AB     <A HREF="BCMP.HTM">CMP</A> #$AB
+A6A2: D0 E9     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMA65E.HTM">$A68D</A>     ; Perform [clr]
+
+Jump from $A69C, $A69E:
+
+A6A4: 20 6B A9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA96B.HTM">$A96B</A>     ; Fetch linnum From BASIC
+A6A7: 20 13 A6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA613.HTM">$A613</A>     ; Search for Line Number
+A6AA: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+A6AD: F0 0C     <A HREF="BBEQ.HTM">BEQ</A> $A6BB
+A6AF: C9 AB     <A HREF="BCMP.HTM">CMP</A> #$AB
+A6B1: D0 8E     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMA613.HTM">$A641</A>     ; Search for Line Number
+A6B3: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+A6B6: 20 6B A9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA96B.HTM">$A96B</A>     ; Fetch linnum From BASIC
+A6B9: D0 86     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMA613.HTM">$A641</A>     ; Search for Line Number
+
+Jump from $A6AD:
+
+A6BB: 68        <A HREF="BPLA.HTM">PLA</A>
+A6BC: 68        <A HREF="BPLA.HTM">PLA</A>
+A6BD: A5 14     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A6BF: 05 15     <A HREF="BORA.HTM">ORA</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+A6C1: D0 06     <A HREF="BBNE.HTM">BNE</A> $A6C9
+A6C3: A9 FF     <A HREF="BLDA.HTM">LDA</A> #$FF
+A6C5: 85 14     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A6C7: 85 15     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+
+Jump from $A6C1, $A712:
+
+A6C9: A0 01     <A HREF="BLDY.HTM">LDY</A> #$01
+A6CB: 84 0F     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP0F.HTM">$0F</A>       ; Flag: DATA scan/List Quote/Garbage collection
+A6CD: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A6CF: F0 43     <A HREF="BBEQ.HTM">BEQ</A> $A714
+A6D1: 20 2C A8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA82C.HTM">$A82C</A>     ; Perform [stop]
+A6D4: 20 D7 AA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAAD7.HTM">$AAD7</A>     ; Output CR/LF
+A6D7: C8        <A HREF="BINY.HTM">INY</A>
+A6D8: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A6DA: AA        <A HREF="BTAX.HTM">TAX</A>
+A6DB: C8        <A HREF="BINY.HTM">INY</A>
+A6DC: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A6DE: C5 15     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+A6E0: D0 04     <A HREF="BBNE.HTM">BNE</A> $A6E6
+A6E2: E4 14     <A HREF="BCPX.HTM">CPX</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A6E4: F0 02     <A HREF="BBEQ.HTM">BEQ</A> $A6E8
+
+Jump from $A6E0:
+
+A6E6: B0 2C     <A HREF="BBCS.HTM">BCS</A> $A714
+
+Jump from $A6E4:
+
+A6E8: 84 49     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+A6EA: 20 CD BD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBDCD.HTM">$BDCD</A>     ; Output Positive Integer in A/X
+A6ED: A9 20     <A HREF="BLDA.HTM">LDA</A> #$20
+
+Jump from <A HREF="ROMA717.HTM">$A73B</A>:
+
+A6EF: A4 49     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+A6F1: 29 7F     <A HREF="BAND.HTM">AND</A> #$7F
+
+Jump from <A HREF="ROMA717.HTM">$A71A</A>, <A HREF="ROMA717.HTM">$A71E</A>, <A HREF="ROMA717.HTM">$A722</A>:
+
+A6F3: 20 47 AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAB3B.HTM">$AB47</A>     ; Output Format Character
+A6F6: C9 22     <A HREF="BCMP.HTM">CMP</A> #$22
+A6F8: D0 06     <A HREF="BBNE.HTM">BNE</A> $A700
+A6FA: A5 0F     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0F.HTM">$0F</A>       ; Flag: DATA scan/List Quote/Garbage collection
+A6FC: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+A6FE: 85 0F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0F.HTM">$0F</A>       ; Flag: DATA scan/List Quote/Garbage collection
+
+Jump from $A6F8:
+
+A700: C8        <A HREF="BINY.HTM">INY</A>
+A701: F0 11     <A HREF="BBEQ.HTM">BEQ</A> $A714
+A703: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A705: D0 10     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMA717.HTM">$A717</A>     ; Handle LIST Character
+A707: A8        <A HREF="BTAY.HTM">TAY</A>
+A708: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A70A: AA        <A HREF="BTAX.HTM">TAX</A>
+A70B: C8        <A HREF="BINY.HTM">INY</A>
+A70C: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A70E: 86 5F     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+A710: 85 60     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+A712: D0 B5     <A HREF="BBNE.HTM">BNE</A> $A6C9
+
+Jump from $A6CF, $A6E6, $A701:
+
+A714: 4C 86 E3  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME37B.HTM">$E386</A>     ; BASIC Warm Start [RUNSTOP-RESTORE]
+
+    <A HREF="ROMA68E.HTM">Previous Page</A> / <A HREF="ROMA717.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

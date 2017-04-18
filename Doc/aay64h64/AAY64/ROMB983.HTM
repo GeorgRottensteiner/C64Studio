@@ -1,0 +1,60 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B983/47491:   Multiply by Zero Byte
+
+Jump from <A HREF="ROMBA59.HTM">$BA5B</A>:
+
+B983: A2 25     <A HREF="BLDX.HTM">LDX</A> #$25
+
+Jump from $B99B, $B99D:
+
+B985: B4 04     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP03.HTM">$04</A>,X     ; Jump Vector: Convert FAC to Integer
+B987: 84 70     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B989: B4 03     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP03.HTM">$03</A>,X     ; Jump Vector: Convert FAC to Integer
+B98B: 94 04     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP03.HTM">$04</A>,X     ; Jump Vector: Convert FAC to Integer
+B98D: B4 02     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP02.HTM">$02</A>,X     ; Unused
+B98F: 94 03     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP03.HTM">$03</A>,X     ; Jump Vector: Convert FAC to Integer
+B991: B4 01     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP01.HTM">$01</A>,X     ; 6510 On-chip 8-bit Input/Output Register
+B993: 94 02     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP02.HTM">$02</A>,X     ; Unused
+B995: A4 68     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP68.HTM">$68</A>       ; Bit Overflow Area during normalisation Routine
+B997: 94 01     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP01.HTM">$01</A>,X     ; 6510 On-chip 8-bit Input/Output Register
+
+Jump from <A HREF="ROMB862.HTM">$B862</A>, <A HREF="ROMBC9B.HTM">$BCB5</A>:
+
+B999: 69 08     <A HREF="BADC.HTM">ADC</A> #$08
+B99B: 30 E8     <A HREF="BBMI.HTM">BMI</A> $B985
+B99D: F0 E6     <A HREF="BBEQ.HTM">BEQ</A> $B985
+B99F: E9 08     <A HREF="BSBC.HTM">SBC</A> #$08
+B9A1: A8        <A HREF="BTAY.HTM">TAY</A>
+B9A2: A5 70     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+B9A4: B0 14     <A HREF="BBCS.HTM">BCS</A> $B9BA
+
+Jump from $B9B8:
+
+B9A6: 16 01     <A HREF="BASL.HTM">ASL</A> <A HREF="ZP01.HTM">$01</A>,X     ; 6510 On-chip 8-bit Input/Output Register
+B9A8: 90 02     <A HREF="BBCC.HTM">BCC</A> $B9AC
+B9AA: F6 01     <A HREF="BINC.HTM">INC</A> <A HREF="ZP01.HTM">$01</A>,X     ; 6510 On-chip 8-bit Input/Output Register
+
+Jump from $B9A8:
+
+B9AC: 76 01     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP01.HTM">$01</A>,X     ; 6510 On-chip 8-bit Input/Output Register
+B9AE: 76 01     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP01.HTM">$01</A>,X     ; 6510 On-chip 8-bit Input/Output Register
+
+Jump from <A HREF="ROMB867.HTM">$B8A0</A>, <A HREF="ROMBC9B.HTM">$BCC6</A>:
+
+B9B0: 76 02     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP02.HTM">$02</A>,X     ; Unused
+B9B2: 76 03     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP03.HTM">$03</A>,X     ; Jump Vector: Convert FAC to Integer
+B9B4: 76 04     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP03.HTM">$04</A>,X     ; Jump Vector: Convert FAC to Integer
+B9B6: 6A        <A HREF="BROR.HTM">ROR</A>
+B9B7: C8        <A HREF="BINY.HTM">INY</A>
+B9B8: D0 EC     <A HREF="BBNE.HTM">BNE</A> $B9A6
+
+Jump from $B9A4:
+
+B9BA: 18        <A HREF="BCLC.HTM">CLC</A>
+B9BB: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB97E.HTM">Previous Page</A> / <A HREF="ROMB9BC.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

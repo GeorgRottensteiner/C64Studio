@@ -1,0 +1,36 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FBA6/64422:   Send Tone to Tape
+
+Jump from <A HREF="ROMFBCD.HTM">$FBF0</A>:
+
+FBA6: A5 BD     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBD.HTM">$BD</A>       ; RS232 Output Parity/Tape Byte temporary
+FBA8: 4A        <A HREF="BLSR.HTM">LSR</A>
+FBA9: A9 60     <A HREF="BLDA.HTM">LDA</A> #$60
+FBAB: 90 02     <A HREF="BBCC.HTM">BCC</A> $FBAF
+
+Jump from <A HREF="ROMFBCD.HTM">$FBE7</A>:
+
+FBAD: A9 B0     <A HREF="BLDA.HTM">LDA</A> #$B0
+
+Jump from $FBAB, <A HREF="ROMFC57.HTM">$FC6C</A>:
+
+FBAF: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+
+Jump from <A HREF="ROMFBCD.HTM">$FBD5</A>:
+
+FBB1: 8D 06 DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA16.HTM">$DC06</A>     ; CIA1: Timer B Low-Byte  (Tape, Serial Port)
+FBB4: 8E 07 DC  <A HREF="BSTX.HTM">STX</A> <A HREF="CIA17.HTM">$DC07</A>     ; CIA1: Timer B High-Byte (Tape, Serial Port)
+FBB7: AD 0D DC  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA113.HTM">$DC0D</A>     ; CIA1: Interrupt (IRQ) Control Register
+FBBA: A9 19     <A HREF="BLDA.HTM">LDA</A> #$19
+FBBC: 8D 0F DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA115.HTM">$DC0F</A>     ; CIA1: Control Register B
+FBBF: A5 01     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP01.HTM">$01</A>       ; 6510 On-chip 8-bit Input/Output Register
+FBC1: 49 08     <A HREF="BEOR.HTM">EOR</A> #$08
+FBC3: 85 01     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP01.HTM">$01</A>       ; 6510 On-chip 8-bit Input/Output Register
+FBC5: 29 08     <A HREF="BAND.HTM">AND</A> #$08
+FBC7: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMFB97.HTM">Previous Page</A> / <A HREF="ROMFBC8.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

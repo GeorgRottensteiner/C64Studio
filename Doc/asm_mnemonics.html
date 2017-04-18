@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Assembler - Mnemonics</H3>
+  <div id="mybody">
+    These opcodes are supported:<br>
+    <br>
+    <br>
+    <ul>
+      <li>ADC $hhll</li>
+      <li>ADC $hhll, X</li>
+      <li>ADC $hhll, Y</li>
+      <li>ADC $ll</li>
+      <li>ADC $ll, X</li>
+      <li>ADC ($ll), Y</li>
+      <li>ADC ($ll, X)</li>
+      <li>ADC #$nn</li>
+      <li>AND $hhll</li>
+      <li>AND $hhll, X</li>
+      <li>AND $hhll, Y</li>
+      <li>AND $ll</li>
+      <li>AND $ll, X</li>
+      <li>AND ($ll), Y</li>
+      <li>AND ($ll, X)</li>
+      <li>AND #$nn</li>
+      <li>ASL</li>
+      <li>ASL $hhll</li>
+      <li>ASL $hhll, X</li>
+      <li>ASL $ll</li>
+      <li>ASL $ll, X</li>
+      <li>BCC $rr</li>
+      <li>BCS $rr</li>
+      <li>BEQ $rr</li>
+      <li>BIT $hhll</li>
+      <li>BIT $ll</li>
+      <li>BMI $rr</li>
+      <li>BNE $rr</li>
+      <li>BPL $rr</li>
+      <li>BRK</li>
+      <li>BVC $rr</li>
+      <li>BVS $rr</li>
+      <li>CLC</li>
+      <li>CLD</li>
+      <li>CLI</li>
+      <li>CLV</li>
+      <li>CMP $hhll</li>
+      <li>CMP $hhll, X</li>
+      <li>CMP $hhll, Y</li>
+      <li>CMP $ll</li>
+      <li>CMP $ll, X</li>
+      <li>CMP ($ll), Y</li>
+      <li>CMP ($ll, X)</li>
+      <li>CMP #$nn</li>
+      <li>CPX $hhll</li>
+      <li>CPX $ll</li>
+      <li>CPX #$nn</li>
+      <li>CPY $hhll</li>
+      <li>CPY $ll</li>
+      <li>CPY #$nn</li>
+      <li>DEC $hhll</li>
+      <li>DEC $hhll, X</li>
+      <li>DEC $ll</li>
+      <li>DEC $ll, X</li>
+      <li>DEX</li>
+      <li>DEY</li>
+      <li>EOR $hhll</li>
+      <li>EOR $hhll, X</li>
+      <li>EOR $hhll, Y</li>
+      <li>EOR $ll</li>
+      <li>EOR $ll, X</li>
+      <li>EOR ($ll), Y</li>
+      <li>EOR ($ll, X)</li>
+      <li>EOR #$nn</li>
+      <li>INC $hhll</li>
+      <li>INC $hhll, X</li>
+      <li>INC $ll</li>
+      <li>INC $ll, X</li>
+      <li>INX</li>
+      <li>INY</li>
+      <li>JMP $hhll</li>
+      <li>JMP ($hhll)</li>
+      <li>JSR $hhll</li>
+      <li>LDA $hhll</li>
+      <li>LDA $hhll, X</li>
+      <li>LDA $hhll, Y</li>
+      <li>LDA $ll</li>
+      <li>LDA $ll, X</li>
+      <li>LDA ($ll), Y</li>
+      <li>LDA ($ll, X)</li>
+      <li>LDA #$nn</li>
+      <li>LDX $hhll</li>
+      <li>LDX $hhll, Y</li>
+      <li>LDX $ll</li>
+      <li>LDX $ll, Y</li>
+      <li>LDX #$nn</li>
+      <li>LDY $hhll</li>
+      <li>LDY $hhll, X</li>
+      <li>LDY $ll</li>
+      <li>LDY $ll, X</li>
+      <li>LDY #$nn</li>
+      <li>LSR</li>
+      <li>LSR $hhll</li>
+      <li>LSR $hhll, X</li>
+      <li>LSR $ll</li>
+      <li>LSR $ll, X</li>
+      <li>NOP</li>
+      <li>ORA $hhll</li>
+      <li>ORA $hhll, X</li>
+      <li>ORA $hhll, Y</li>
+      <li>ORA $ll</li>
+      <li>ORA $ll, X</li>
+      <li>ORA ($ll), Y</li>
+      <li>ORA ($ll, X)</li>
+      <li>ORA #$nn</li>
+      <li>PHA</li>
+      <li>PHP</li>
+      <li>PLA</li>
+      <li>PLP</li>
+      <li>ROL</li>
+      <li>ROL $hhll</li>
+      <li>ROL $hhll, X</li>
+      <li>ROL $ll</li>
+      <li>ROL $ll, X</li>
+      <li>ROR</li>
+      <li>ROR $hhll</li>
+      <li>ROR $hhll, X</li>
+      <li>ROR $ll</li>
+      <li>ROR $ll, X</li>
+      <li>RTI</li>
+      <li>RTS</li>
+      <li>SBC $hhll</li>
+      <li>SBC $hhll, X</li>
+      <li>SBC $hhll, Y</li>
+      <li>SBC $ll</li>
+      <li>SBC $ll, X</li>
+      <li>SBC ($ll), Y</li>
+      <li>SBC ($ll, X)</li>
+      <li>SBC #$nn</li>
+      <li>SEC</li>
+      <li>SED</li>
+      <li>SEI</li>
+      <li>STA $hhll</li>
+      <li>STA $hhll, X</li>
+      <li>STA $hhll, Y</li>
+      <li>STA $ll</li>
+      <li>STA $ll, X</li>
+      <li>STA ($ll), Y</li>
+      <li>STA ($ll, X)</li>
+      <li>STX $hhll</li>
+      <li>STX $ll</li>
+      <li>STX $ll, Y</li>
+      <li>STY $hhll</li>
+      <li>STY $ll</li>
+      <li>STY $ll, X</li>
+      <li>TAX</li>
+      <li>TAY</li>
+      <li>TSX</li>
+      <li>TXA</li>
+      <li>TXS</li>
+      <li>TYA</li>
+    </ul>
+  </div>
+</body>
+</HTML>

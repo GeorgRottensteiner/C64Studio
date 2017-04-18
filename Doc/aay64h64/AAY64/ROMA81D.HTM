@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A81D/43037:   Perform [restore]
+
+Jump from <A HREF="ROMA65E.HTM">$A677</A>:
+
+A81D: 38        <A HREF="BSEC.HTM">SEC</A>
+A81E: A5 2B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2B.HTM">$2B</A>       ; Pointer: Start of BASIC Text Area
+A820: E9 01     <A HREF="BSBC.HTM">SBC</A> #$01
+A822: A4 2C     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP2B.HTM">$2C</A>       ; Pointer: Start of BASIC Text Area
+A824: B0 01     <A HREF="BBCS.HTM">BCS</A> $A827
+A826: 88        <A HREF="BDEY.HTM">DEY</A>
+
+Jump from $A824, <A HREF="ROMAC35.HTM">$ACE7</A>:
+
+A827: 85 41     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP41.HTM">$41</A>       ; Pointer: Used by READ - current DATA Item
+A829: 84 42     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP41.HTM">$42</A>       ; Pointer: Used by READ - current DATA Item
+
+Jump from <A HREF="ROMA7ED.HTM">$A7ED</A>:
+
+A82B: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA7ED.HTM">Previous Page</A> / <A HREF="ROMA82C.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

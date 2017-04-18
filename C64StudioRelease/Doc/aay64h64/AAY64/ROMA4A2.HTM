@@ -1,0 +1,101 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A4A2/42146:   Insert BASIC Text
+
+A4A2: 84 0B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+A4A4: 20 13 A6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA613.HTM">$A613</A>     ; Search for Line Number
+A4A7: 90 44     <A HREF="BBCC.HTM">BCC</A> $A4ED
+A4A9: A0 01     <A HREF="BLDY.HTM">LDY</A> #$01
+A4AB: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A4AD: 85 23     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+A4AF: A5 2D     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2D.HTM">$2D</A>       ; Pointer: Start of BASIC Variables
+A4B1: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A4B3: A5 60     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+A4B5: 85 25     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$25</A>       ; Second Utility Pointer
+A4B7: A5 5F     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+A4B9: 88        <A HREF="BDEY.HTM">DEY</A>
+A4BA: F1 5F     <A HREF="BSBC.HTM">SBC</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A4BC: 18        <A HREF="BCLC.HTM">CLC</A>
+A4BD: 65 2D     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP2D.HTM">$2D</A>       ; Pointer: Start of BASIC Variables
+A4BF: 85 2D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP2D.HTM">$2D</A>       ; Pointer: Start of BASIC Variables
+A4C1: 85 24     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$24</A>       ; Second Utility Pointer
+A4C3: A5 2E     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2D.HTM">$2E</A>       ; Pointer: Start of BASIC Variables
+A4C5: 69 FF     <A HREF="BADC.HTM">ADC</A> #$FF
+A4C7: 85 2E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP2D.HTM">$2E</A>       ; Pointer: Start of BASIC Variables
+A4C9: E5 60     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+A4CB: AA        <A HREF="BTAX.HTM">TAX</A>
+A4CC: 38        <A HREF="BSEC.HTM">SEC</A>
+A4CD: A5 5F     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+A4CF: E5 2D     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP2D.HTM">$2D</A>       ; Pointer: Start of BASIC Variables
+A4D1: A8        <A HREF="BTAY.HTM">TAY</A>
+A4D2: B0 03     <A HREF="BBCS.HTM">BCS</A> $A4D7
+A4D4: E8        <A HREF="BINX.HTM">INX</A>
+A4D5: C6 25     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP22.HTM">$25</A>       ; Second Utility Pointer
+
+Jump from $A4D2:
+
+A4D7: 18        <A HREF="BCLC.HTM">CLC</A>
+A4D8: 65 22     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A4DA: 90 03     <A HREF="BBCC.HTM">BCC</A> $A4DF
+A4DC: C6 23     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+A4DE: 18        <A HREF="BCLC.HTM">CLC</A>
+
+Jump from $A4DA, $A4E4, $A4EB:
+
+A4DF: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+A4E1: 91 24     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP22.HTM">$24</A>),Y   ; Second Utility Pointer
+A4E3: C8        <A HREF="BINY.HTM">INY</A>
+A4E4: D0 F9     <A HREF="BBNE.HTM">BNE</A> $A4DF
+A4E6: E6 23     <A HREF="BINC.HTM">INC</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+A4E8: E6 25     <A HREF="BINC.HTM">INC</A> <A HREF="ZP22.HTM">$25</A>       ; Second Utility Pointer
+A4EA: CA        <A HREF="BDEX.HTM">DEX</A>
+A4EB: D0 F2     <A HREF="BBNE.HTM">BNE</A> $A4DF
+
+Jump from $A4A7:
+
+A4ED: 20 59 A6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA642.HTM">$A659</A>     ; Perform [new]
+A4F0: 20 33 A5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA533.HTM">$A533</A>     ; Rechain Lines
+A4F3: AD 00 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0200.HTM">$0200</A>     ; BASIC Input Buffer (Input Line from Screen)
+A4F6: F0 88     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMA480.HTM">$A480</A>     ; Input &amp; Identify BASIC Line
+A4F8: 18        <A HREF="BCLC.HTM">CLC</A>
+A4F9: A5 2D     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2D.HTM">$2D</A>       ; Pointer: Start of BASIC Variables
+A4FB: 85 5A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$5A</A>       ; Temporary storage for FLPT value
+A4FD: 65 0B     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+A4FF: 85 58     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+A501: A4 2E     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP2D.HTM">$2E</A>       ; Pointer: Start of BASIC Variables
+A503: 84 5B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP57.HTM">$5B</A>       ; Temporary storage for FLPT value
+A505: 90 01     <A HREF="BBCC.HTM">BCC</A> $A508
+A507: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from $A505:
+
+A508: 84 59     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+A50A: 20 B8 A3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA3B8.HTM">$A3B8</A>     ; Open Space in Memory
+A50D: A5 14     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A50F: A4 15     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+A511: 8D FE 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP013F.HTM">$01FE</A>     ; BASIC Stack Area
+A514: 8C FF 01  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP013F.HTM">$01FF</A>     ; BASIC Stack Area
+A517: A5 31     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP31.HTM">$31</A>       ; Pointer: End of BASIC Arrays + 1
+A519: A4 32     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP31.HTM">$32</A>       ; Pointer: End of BASIC Arrays + 1
+A51B: 85 2D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP2D.HTM">$2D</A>       ; Pointer: Start of BASIC Variables
+A51D: 84 2E     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP2D.HTM">$2E</A>       ; Pointer: Start of BASIC Variables
+A51F: A4 0B     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+A521: 88        <A HREF="BDEY.HTM">DEY</A>
+
+Jump from $A528:
+
+A522: B9 FC 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP013F.HTM">$01FC</A>,Y   ; BASIC Stack Area
+A525: 91 5F     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A527: 88        <A HREF="BDEY.HTM">DEY</A>
+A528: 10 F8     <A HREF="BBPL.HTM">BPL</A> $A522
+
+Jump from <A HREF="ROME165.HTM">$E1B2</A>:
+
+A52A: 20 59 A6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA642.HTM">$A659</A>     ; Perform [new]
+A52D: 20 33 A5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA533.HTM">$A533</A>     ; Rechain Lines
+A530: 4C 80 A4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA480.HTM">$A480</A>     ; Input &amp; Identify BASIC Line
+
+    <A HREF="ROMA49C.HTM">Previous Page</A> / <A HREF="ROMA533.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

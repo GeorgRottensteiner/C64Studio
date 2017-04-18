@@ -1,0 +1,41 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A831/43057:   Perform Break
+
+A831: 18        <A HREF="BCLC.HTM">CLC</A>
+
+Jump from $A82F:
+
+A832: D0 3C     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMA857.HTM">$A870</A>     ; Perform [cont]
+A834: A5 7A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A836: A4 7B     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+A838: A6 3A     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP39.HTM">$3A</A>       ; Current BASIC Line number
+A83A: E8        <A HREF="BINX.HTM">INX</A>
+A83B: F0 0C     <A HREF="BBEQ.HTM">BEQ</A> $A849
+A83D: 85 3D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP3D.HTM">$3D</A>       ; Pointer: BASIC Statement for CONT
+A83F: 84 3E     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP3D.HTM">$3E</A>       ; Pointer: BASIC Statement for CONT
+A841: A5 39     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP39.HTM">$39</A>       ; Current BASIC Line number
+A843: A4 3A     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP39.HTM">$3A</A>       ; Current BASIC Line number
+A845: 85 3B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP3B.HTM">$3B</A>       ; Previous BASIC Line number
+A847: 84 3C     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP3B.HTM">$3C</A>       ; Previous BASIC Line number
+
+Jump from $A83B:
+
+A849: 68        <A HREF="BPLA.HTM">PLA</A>
+A84A: 68        <A HREF="BPLA.HTM">PLA</A>
+
+Jump from <A HREF="ROMA7C4.HTM">$A7CB</A>:
+
+A84B: A9 81     <A HREF="BLDA.HTM">LDA</A> #$81
+A84D: A0 A3     <A HREF="BLDY.HTM">LDY</A> #$A3
+A84F: 90 03     <A HREF="BBCC.HTM">BCC</A> $A854
+A851: 4C 69 A4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA469.HTM">$A469</A>     ; Break Entry
+
+Jump from $A84F:
+
+A854: 4C 86 E3  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME37B.HTM">$E386</A>     ; BASIC Warm Start [RUNSTOP-RESTORE]
+
+    <A HREF="ROMA82F.HTM">Previous Page</A> / <A HREF="ROMA857.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

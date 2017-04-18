@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  SHX                                                                   SHX
+
+                                                        N V - B D I Z C
+  Operation:  M &lt;- (X) /\ (PCH+1)                       . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   SHX $FFFF,Y         |   $9E   |    3    |    5     |
+  +----------------+-----------------------+---------+---------+----------+
+
+  Note: Sometimes the &quot;/\ (PCH+1)&quot; drops off. Also page boundary crossing
+  won't work as expected (the bank where the value is stored may be equal
+  to the value stored).
+
+  <B>Warning: This opcode is said to be unstable!</B>
+
+</PRE></BODY></HTML>

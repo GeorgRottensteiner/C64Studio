@@ -1,0 +1,46 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A96B/43371:   Fetch linnum From BASIC
+
+Jump from <A HREF="ROMA49C.HTM">$A49C</A>, <A HREF="ROMA69C.HTM">$A6A4</A>, <A HREF="ROMA69C.HTM">$A6B6</A>, <A HREF="ROMA8A0.HTM">$A8A0</A>, <A HREF="ROMA94B.HTM">$A962</A>:
+
+A96B: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+A96D: 86 14     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A96F: 86 15     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+
+Jump from $A9A2:
+
+A971: B0 F7     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMA94B.HTM">$A96A</A>     ; Perform [on]
+A973: E9 2F     <A HREF="BSBC.HTM">SBC</A> #$2F
+A975: 85 07     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+A977: A5 15     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+A979: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A97B: C9 19     <A HREF="BCMP.HTM">CMP</A> #$19
+A97D: B0 D4     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMA94B.HTM">$A953</A>     ; Perform [on]
+A97F: A5 14     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A981: 0A        <A HREF="BASL.HTM">ASL</A>
+A982: 26 22     <A HREF="BROL.HTM">ROL</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A984: 0A        <A HREF="BASL.HTM">ASL</A>
+A985: 26 22     <A HREF="BROL.HTM">ROL</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A987: 65 14     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A989: 85 14     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A98B: A5 22     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A98D: 65 15     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+A98F: 85 15     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+A991: 06 14     <A HREF="BASL.HTM">ASL</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A993: 26 15     <A HREF="BROL.HTM">ROL</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+A995: A5 14     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A997: 65 07     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+A999: 85 14     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A99B: 90 02     <A HREF="BBCC.HTM">BCC</A> $A99F
+A99D: E6 15     <A HREF="BINC.HTM">INC</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+
+Jump from $A99B:
+
+A99F: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+A9A2: 4C 71 A9  <A HREF="BJMP.HTM">JMP</A> $A971
+
+    <A HREF="ROMA94B.HTM">Previous Page</A> / <A HREF="ROMA9A5.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

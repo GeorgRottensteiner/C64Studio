@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 65816 Addressing mode: Stop the Clock -- h
+
+ (<A HREF="BSTP.HTM">STP</A>)
+ (1 byte)  (3 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Internal Operation    |    R     |
+    |   RES=1   3   |  PBR,PC+1        | Internal Operation    |    R     |
+    |   RES=0   1c  |  PBR,PC+1        | RES(BRK)              |    R     |
+    |   RES=0   1b  |  PBR,PC+1        | RES(BRK)              |    R     |
+    |   RES=1   1a  |  PBR,PC+1        | RES(BRK)              |    R     |
+    |           1   |  PBR,PC+1        | BEGIN                 |    R     |
+    +---------------+------------------+-----------------------+----------+
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+              <A HREF="ADDR21A.HTM">Hardware interrupt</A>
+
+</PRE></BODY></HTML>

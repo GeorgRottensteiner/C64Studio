@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Graphic Screen Editor - Editor Pane</H3>
+  <div id="mybody">
+    The graphic screen editor supports converting an image of 320x200 pixels to bitmap or charset data. Currently only multi color is supported.<br>
+    <br>
+    <br>
+    <img src="images/ide_graphic_screen.png"><br>
+    <br>
+    <br>
+    <b>Checking Screen</b><br>
+    The image will be checked with the selected multi color colors whether it can be displayed via "Hires Charset", "Multicolor Charset", "Hires Bitmap" or "Multicolor Bitmap".<br>
+    <br>
+    If the check for any block fails the block is marked. Clicking on the block will show the cause of the failure.<br>
+    <br>
+    <br>
+    <b>Editing Screen</b><br>
+    The screen can only be edited block wise in the view in the lower right corner.<br>
+    <br>
+    <br>
+  </div>
+  <H3>Character Screen Editor - Project Pane</H3>
+  <div id="mybody">
+    On the project pane several import/export functions are available.<br>
+    <br>
+    <br>
+    <img src="images/ide_charset_screen_project.png"><br>
+    <br>
+    <br>
+    <b>Export image data as</b><br>
+    Choose between different options.<br>
+    The export is only enabled once a check has been successfully done.<br>
+    <br>
+    <br>
+    <b>Import from image</b><br>
+    Imports a graphic file, supports bmp, png, gif.<br>
+    <br>
+    <br>
+    <b>Import from file</b><br>
+    Currently only supports binary Koala Painter files which are saved at $6000.<br>
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>

@@ -1,0 +1,22 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE0E/56846/RR+14:  SilverSurfer: Modem Status Register (read only)
+
+   +-------+--------------------------------------------------------+
+   | Bit 7 |   1 = DCD  (Data Carrier Detect)                       |
+   | Bit 6 |   1 = RI   (Ring Indicator)                            |
+   | Bit 5 |   1 = DSR  (Data Set Ready)                            |
+   | Bit 4 |   1 = CTS  (Clear To Send)                             |
+   | Bit 3 |   1 = DDCD (Delta Data Carrier Detect = DCD changed)   |
+   | Bit 2 |   1 = TERI (Ring Indicator changed)                    |
+   | Bit 1 |   1 = DDSR (Delta DSR = DSR changed)                   |
+   | Bit 0 |   1 = DCTS (Delta CTS = CTS changed)                   |
+   +-------+--------------------------------------------------------+
+   Bits 0-3 are reset when read.
+   Bit 4 is the <A HREF="RR0C.HTM">$DE0C</A>'s RTS during loopback test.
+   Bit 5 is the <A HREF="RR0C.HTM">$DE0C</A>'s DTR during loopback test.
+   Bit 6 is the <A HREF="RR0C.HTM">$DE0C</A>'s OUT1 during loopback test.
+   Bit 7 is the <A HREF="RR0C.HTM">$DE0C</A>'s OUT2 during loopback test.
+
+</PRE></BODY></HTML>

@@ -1,0 +1,29 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FED6/65238:   NMI RS232 In
+
+Jump from <A HREF="ROMFE66.HTM">$FE94</A>, <A HREF="ROMFE66.HTM">$FEA8</A>:
+
+FED6: AD 01 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+FED9: 29 01     <A HREF="BAND.HTM">AND</A> #$01
+FEDB: 85 A7     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPA7.HTM">$A7</A>       ; Tape temporary
+FEDD: AD 06 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA26.HTM">$DD06</A>     ; CIA2: Timer B Low-Byte  (RS232)
+FEE0: E9 1C     <A HREF="BSBC.HTM">SBC</A> #$1C
+FEE2: 6D 99 02  <A HREF="BADC.HTM">ADC</A> <A HREF="ZP0299.HTM">$0299</A>     ; RS232 Baud Rate; Full Bit time microseconds
+FEE5: 8D 06 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA26.HTM">$DD06</A>     ; CIA2: Timer B Low-Byte  (RS232)
+FEE8: AD 07 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA27.HTM">$DD07</A>     ; CIA2: Timer B High-Byte (RS232)
+FEEB: 6D 9A 02  <A HREF="BADC.HTM">ADC</A> <A HREF="ZP0299.HTM">$029A</A>     ; RS232 Baud Rate; Full Bit time microseconds
+FEEE: 8D 07 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA27.HTM">$DD07</A>     ; CIA2: Timer B High-Byte (RS232)
+FEF1: A9 11     <A HREF="BLDA.HTM">LDA</A> #$11
+FEF3: 8D 0F DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA215.HTM">$DD0F</A>     ; CIA2: Control Register B
+FEF6: AD A1 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+FEF9: 8D 0D DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA213.HTM">$DD0D</A>     ; CIA2: Interrupt (NMI) Control Register
+FEFC: A9 FF     <A HREF="BLDA.HTM">LDA</A> #$FF
+FEFE: 8D 06 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA26.HTM">$DD06</A>     ; CIA2: Timer B Low-Byte  (RS232)
+FF01: 8D 07 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA27.HTM">$DD07</A>     ; CIA2: Timer B High-Byte (RS232)
+FF04: 4C 59 EF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEF59.HTM">$EF59</A>     ; RS232 Receive
+
+    <A HREF="ROMFEC2.HTM">Previous Page</A> / <A HREF="ROMFF07.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

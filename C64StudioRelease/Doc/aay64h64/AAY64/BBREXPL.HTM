@@ -1,0 +1,19 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  Branch penalty cycles
+ +---------------------+
+
+ As you can see from the <A HREF="ADDR15.HTM">relative addressing mode</A>, the relative offset is
+ added to the PC after it has been fetched, of course. That means, that the
+ penalty cycle for branching to a different page is given, if the branch
+ is taken and the high byte of the PC <B>after</B> the branch instruction is
+ different from the high byte of the destination address.
+
+ The syntax of assemblers may lead to confusion here. For example, &quot;<A HREF="BBCS.HTM">BCS</A> *+2&quot;
+ looks like an offset has to be added, but it will be coded as &quot;B0 00&quot;, so
+ this instruction will never branch to a different page.
+
+ The 65816 applies this penalty cycle only in Emulation mode.
+
+</PRE></BODY></HTML>

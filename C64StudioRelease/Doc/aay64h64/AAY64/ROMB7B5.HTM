@@ -1,0 +1,46 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B7B5/47029:   Convert ASCII String to Flpt
+
+Jump from <A HREF="ROMB7AD.HTM">$B7B0</A>:
+
+B7B5: A6 7A     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+B7B7: A4 7B     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+B7B9: 86 71     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B7BB: 84 72     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B7BD: A6 22     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B7BF: 86 7A     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+B7C1: 18        <A HREF="BCLC.HTM">CLC</A>
+B7C2: 65 22     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B7C4: 85 24     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$24</A>       ; Second Utility Pointer
+B7C6: A6 23     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+B7C8: 86 7B     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+B7CA: 90 01     <A HREF="BBCC.HTM">BCC</A> $B7CD
+B7CC: E8        <A HREF="BINX.HTM">INX</A>
+
+Jump from $B7CA:
+
+B7CD: 86 25     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP22.HTM">$25</A>       ; Second Utility Pointer
+B7CF: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B7D1: B1 24     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$24</A>),Y   ; Second Utility Pointer
+B7D3: 48        <A HREF="BPHA.HTM">PHA</A>
+B7D4: 98        <A HREF="BTYA.HTM">TYA</A>
+B7D5: 91 24     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP22.HTM">$24</A>),Y   ; Second Utility Pointer
+B7D7: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+B7DA: 20 F3 BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBCF3.HTM">$BCF3</A>     ; Convert ASCII String to a Number in FAC
+B7DD: 68        <A HREF="BPLA.HTM">PLA</A>
+B7DE: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B7E0: 91 24     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP22.HTM">$24</A>),Y   ; Second Utility Pointer
+
+Jump from <A HREF="ROMAC35.HTM">$AC80</A>, <A HREF="ROMAEAD.HTM">$AEC9</A>:
+
+B7E2: A6 71     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B7E4: A4 72     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B7E6: 86 7A     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+B7E8: 84 7B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+B7EA: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB7AD.HTM">Previous Page</A> / <A HREF="ROMB7EB.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

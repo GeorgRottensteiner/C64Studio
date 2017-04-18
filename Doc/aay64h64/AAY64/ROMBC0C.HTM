@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BC0C/48140:   Copy FAC#1 into FAC#2
+
+Jump from <A HREF="ROMA9E3.HTM">$A9FC</A>, <A HREF="ROMBAE2.HTM">$BAE2</A>, <A HREF="ROMBAFE.HTM">$BAFE</A>, <A HREF="ROMBCF3.HTM">$BD7F</A>, <A HREF="ROMBF71.HTM">$BF71</A>, <A HREF="ROME26B.HTM">$E26B</A>, <A HREF="ROME26B.HTM">$E277</A>:
+
+BC0C: 20 1B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC1B.HTM">$BC1B</A>     ; Round FAC#1
+
+Jump from <A HREF="ROME000.HTM">$E002</A>:
+
+BC0F: A2 06     <A HREF="BLDX.HTM">LDX</A> #$06
+
+Jump from $BC16:
+
+BC11: B5 60     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP5C.HTM">$60</A>,X     ; Temporary storage for FLPT value
+BC13: 95 68     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP68.HTM">$68</A>,X     ; Bit Overflow Area during normalisation Routine
+BC15: CA        <A HREF="BDEX.HTM">DEX</A>
+BC16: D0 F9     <A HREF="BBNE.HTM">BNE</A> $BC11
+BC18: 86 70     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+
+Jump from <A HREF="ROMBC1B.HTM">$BC1D</A>, <A HREF="ROMBC1B.HTM">$BC21</A>, <A HREF="ROMBC1B.HTM">$BC26</A>:
+
+BC1A: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBBFC.HTM">Previous Page</A> / <A HREF="ROMBC1B.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

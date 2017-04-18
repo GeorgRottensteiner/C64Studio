@@ -1,0 +1,30 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE08/56840/RR+8:   SilverSurfer: Receive/Transmit Buffer
+                                   Baud Rate Divisor LSB
+
+  Receive/Transmit Buffer    (if Bit 7 of <A HREF="RR0B.HTM">$DE0B</A> is 0)
+
+  Baud Rate Divisor Low Byte (if Bit 7 of <A HREF="RR0B.HTM">$DE0B</A> is 1)
+
+   Baud rate divisors can be calculated by taking the oscillating frequency
+   (7,372,800) and dividing by the quantity of the desired baud rate times
+   the UART clocking factor (16). Use the following formula (avoid 0!):
+
+   Divisor = 7372800 / (BaudRate * 16)
+
+   Examples:
+
+    BaudRate     Divisor               BaudRate     Divisor
+              dec.     hex.                      dec.     hex.
+
+       300    1536    $0600              19200     24    $0018
+       600     768    $0300              38400     12    $000c
+      1200     384    $0180              57600      8    $0008
+      1800     256    $0100             115200      4    $0004
+      2400     192    $00c0             153600      3    $0003
+      4800      96    $0060             230400      2    $0002
+      9600      48    $0030             460800      1    $0001
+
+</PRE></BODY></HTML>

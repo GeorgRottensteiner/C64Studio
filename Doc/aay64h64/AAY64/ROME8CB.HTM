@@ -1,0 +1,25 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E8CB/59595:   Set Color Code
+
+Jump from <A HREF="ROME72A.HTM">$E7CE</A>, <A HREF="ROME7D4.HTM">$E876</A>:
+
+E8CB: A2 0F     <A HREF="BLDX.HTM">LDX</A> #$0F
+
+Jump from $E8D3:
+
+E8CD: DD DA E8  <A HREF="BCMP.HTM">CMP</A> <A HREF="ROME8DA.HTM">$E8DA</A>,X   ; Color Code Table
+E8D0: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $E8D6
+E8D2: CA        <A HREF="BDEX.HTM">DEX</A>
+E8D3: 10 F8     <A HREF="BBPL.HTM">BPL</A> $E8CD
+E8D5: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $E8D0:
+
+E8D6: 8E 86 02  <A HREF="BSTX.HTM">STX</A> <A HREF="ZP0286.HTM">$0286</A>     ; Current Character Color code
+E8D9: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME8B3.HTM">Previous Page</A> / <A HREF="ROME8DA.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

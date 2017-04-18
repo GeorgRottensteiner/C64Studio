@@ -1,0 +1,64 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A3B8/41912:   Open Space in Memory
+
+Jump from <A HREF="ROMA4A2.HTM">$A50A</A>, <A HREF="ROMB128.HTM">$B15D</A>:
+
+A3B8: 20 08 A4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA408.HTM">$A408</A>     ; Check Memory Overlap
+A3BB: 85 31     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP31.HTM">$31</A>       ; Pointer: End of BASIC Arrays + 1
+A3BD: 84 32     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP31.HTM">$32</A>       ; Pointer: End of BASIC Arrays + 1
+
+Jump from <A HREF="ROMB606.HTM">$B628</A>:
+
+A3BF: 38        <A HREF="BSEC.HTM">SEC</A>
+A3C0: A5 5A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP57.HTM">$5A</A>       ; Temporary storage for FLPT value
+A3C2: E5 5F     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+A3C4: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A3C6: A8        <A HREF="BTAY.HTM">TAY</A>
+A3C7: A5 5B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP57.HTM">$5B</A>       ; Temporary storage for FLPT value
+A3C9: E5 60     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+A3CB: AA        <A HREF="BTAX.HTM">TAX</A>
+A3CC: E8        <A HREF="BINX.HTM">INX</A>
+A3CD: 98        <A HREF="BTYA.HTM">TYA</A>
+A3CE: F0 23     <A HREF="BBEQ.HTM">BEQ</A> $A3F3
+A3D0: A5 5A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP57.HTM">$5A</A>       ; Temporary storage for FLPT value
+A3D2: 38        <A HREF="BSEC.HTM">SEC</A>
+A3D3: E5 22     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A3D5: 85 5A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$5A</A>       ; Temporary storage for FLPT value
+A3D7: B0 03     <A HREF="BBCS.HTM">BCS</A> $A3DC
+A3D9: C6 5B     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP57.HTM">$5B</A>       ; Temporary storage for FLPT value
+A3DB: 38        <A HREF="BSEC.HTM">SEC</A>
+
+Jump from $A3D7:
+
+A3DC: A5 58     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+A3DE: E5 22     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A3E0: 85 58     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+A3E2: B0 08     <A HREF="BBCS.HTM">BCS</A> $A3EC
+A3E4: C6 59     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+A3E6: 90 04     <A HREF="BBCC.HTM">BCC</A> $A3EC
+
+Jump from $A3ED:
+
+A3E8: B1 5A     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP57.HTM">$5A</A>),Y   ; Temporary storage for FLPT value
+A3EA: 91 58     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP57.HTM">$58</A>),Y   ; Temporary storage for FLPT value
+
+Jump from $A3E2, $A3E6, $A3F8:
+
+A3EC: 88        <A HREF="BDEY.HTM">DEY</A>
+A3ED: D0 F9     <A HREF="BBNE.HTM">BNE</A> $A3E8
+A3EF: B1 5A     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP57.HTM">$5A</A>),Y   ; Temporary storage for FLPT value
+A3F1: 91 58     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP57.HTM">$58</A>),Y   ; Temporary storage for FLPT value
+
+Jump from $A3CE:
+
+A3F3: C6 5B     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP57.HTM">$5B</A>       ; Temporary storage for FLPT value
+A3F5: C6 59     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+A3F7: CA        <A HREF="BDEX.HTM">DEX</A>
+A3F8: D0 F2     <A HREF="BBNE.HTM">BNE</A> $A3EC
+A3FA: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA38A.HTM">Previous Page</A> / <A HREF="ROMA3FB.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

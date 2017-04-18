@@ -1,0 +1,125 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B526/46374:   Garbage Collection
+
+Jump from <A HREF="ROMA408.HTM">$A41C</A>, <A HREF="ROMB37D.HTM">$B384</A>, <A HREF="ROMB4F4.HTM">$B51C</A>:
+
+B526: A6 37     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP37.HTM">$37</A>       ; Pointer: Highest Address available to BASIC
+B528: A5 38     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP37.HTM">$38</A>       ; Pointer: Highest Address available to BASIC
+
+Jump from <A HREF="ROMB606.HTM">$B63A</A>:
+
+B52A: 86 33     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+B52C: 85 34     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+B52E: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B530: 84 4F     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP4E.HTM">$4F</A>       ; Temporary storage for FLPT value
+B532: 84 4E     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP4E.HTM">$4E</A>       ; Temporary storage for FLPT value
+B534: A5 31     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP31.HTM">$31</A>       ; Pointer: End of BASIC Arrays + 1
+B536: A6 32     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP31.HTM">$32</A>       ; Pointer: End of BASIC Arrays + 1
+B538: 85 5F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+B53A: 86 60     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+B53C: A9 19     <A HREF="BLDA.HTM">LDA</A> #$19
+B53E: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+B540: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B542: 86 23     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+
+Jump from $B54B:
+
+B544: C5 16     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP16.HTM">$16</A>       ; Pointer: Temporary String Stack
+B546: F0 05     <A HREF="BBEQ.HTM">BEQ</A> $B54D
+B548: 20 C7 B5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB5BD.HTM">$B5C7</A>     ; Search for Next String
+B54B: F0 F7     <A HREF="BBEQ.HTM">BEQ</A> $B544
+
+Jump from $B546:
+
+B54D: A9 07     <A HREF="BLDA.HTM">LDA</A> #$07
+B54F: 85 53     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP53.HTM">$53</A>       ; Length of String during Garbage collection
+B551: A5 2D     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2D.HTM">$2D</A>       ; Pointer: Start of BASIC Variables
+B553: A6 2E     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP2D.HTM">$2E</A>       ; Pointer: Start of BASIC Variables
+B555: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B557: 86 23     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+
+Jump from $B564:
+
+B559: E4 30     <A HREF="BCPX.HTM">CPX</A> <A HREF="ZP2F.HTM">$30</A>       ; Pointer: Start of BASIC Arrays
+B55B: D0 04     <A HREF="BBNE.HTM">BNE</A> $B561
+B55D: C5 2F     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP2F.HTM">$2F</A>       ; Pointer: Start of BASIC Arrays
+B55F: F0 05     <A HREF="BBEQ.HTM">BEQ</A> $B566
+
+Jump from $B55B:
+
+B561: 20 BD B5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB5BD.HTM">$B5BD</A>     ; Search for Next String
+B564: F0 F3     <A HREF="BBEQ.HTM">BEQ</A> $B559
+
+Jump from $B55F:
+
+B566: 85 58     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B568: 86 59     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B56A: A9 03     <A HREF="BLDA.HTM">LDA</A> #$03
+B56C: 85 53     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP53.HTM">$53</A>       ; Length of String during Garbage collection
+
+Jump from $B599, $B59C:
+
+B56E: A5 58     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B570: A6 59     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+
+Jump from $B5B6:
+
+B572: E4 32     <A HREF="BCPX.HTM">CPX</A> <A HREF="ZP31.HTM">$32</A>       ; Pointer: End of BASIC Arrays + 1
+B574: D0 07     <A HREF="BBNE.HTM">BNE</A> $B57D
+B576: C5 31     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP31.HTM">$31</A>       ; Pointer: End of BASIC Arrays + 1
+B578: D0 03     <A HREF="BBNE.HTM">BNE</A> $B57D
+B57A: 4C 06 B6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB606.HTM">$B606</A>     ; Collect a String
+
+Jump from $B574, $B578:
+
+B57D: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B57F: 86 23     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+B581: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B583: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+B585: AA        <A HREF="BTAX.HTM">TAX</A>
+B586: C8        <A HREF="BINY.HTM">INY</A>
+B587: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+B589: 08        <A HREF="BPHP.HTM">PHP</A>
+B58A: C8        <A HREF="BINY.HTM">INY</A>
+B58B: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+B58D: 65 58     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B58F: 85 58     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B591: C8        <A HREF="BINY.HTM">INY</A>
+B592: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+B594: 65 59     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B596: 85 59     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B598: 28        <A HREF="BPLP.HTM">PLP</A>
+B599: 10 D3     <A HREF="BBPL.HTM">BPL</A> $B56E
+B59B: 8A        <A HREF="BTXA.HTM">TXA</A>
+B59C: 30 D0     <A HREF="BBMI.HTM">BMI</A> $B56E
+B59E: C8        <A HREF="BINY.HTM">INY</A>
+B59F: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+B5A1: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B5A3: 0A        <A HREF="BASL.HTM">ASL</A>
+B5A4: 69 05     <A HREF="BADC.HTM">ADC</A> #$05
+B5A6: 65 22     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B5A8: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+B5AA: 90 02     <A HREF="BBCC.HTM">BCC</A> $B5AE
+B5AC: E6 23     <A HREF="BINC.HTM">INC</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+
+Jump from $B5AA:
+
+B5AE: A6 23     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+
+Jump from $B5BB:
+
+B5B0: E4 59     <A HREF="BCPX.HTM">CPX</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B5B2: D0 04     <A HREF="BBNE.HTM">BNE</A> $B5B8
+B5B4: C5 58     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B5B6: F0 BA     <A HREF="BBEQ.HTM">BEQ</A> $B572
+
+Jump from $B5B2:
+
+B5B8: 20 C7 B5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB5BD.HTM">$B5C7</A>     ; Search for Next String
+B5BB: F0 F3     <A HREF="BBEQ.HTM">BEQ</A> $B5B0
+
+    <A HREF="ROMB4F4.HTM">Previous Page</A> / <A HREF="ROMB5BD.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

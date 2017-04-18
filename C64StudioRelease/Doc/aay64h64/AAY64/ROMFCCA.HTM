@@ -1,0 +1,15 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FCCA/64714:   Stop Tape Motor
+
+Jump from <A HREF="ROMFC57.HTM">$FC5B</A>, <A HREF="ROMFC93.HTM">$FC9D</A>:
+
+FCCA: A5 01     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP01.HTM">$01</A>       ; 6510 On-chip 8-bit Input/Output Register
+FCCC: 09 20     <A HREF="BORA.HTM">ORA</A> #$20
+FCCE: 85 01     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP01.HTM">$01</A>       ; 6510 On-chip 8-bit Input/Output Register
+FCD0: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMFCB8.HTM">Previous Page</A> / <A HREF="ROMFCD1.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

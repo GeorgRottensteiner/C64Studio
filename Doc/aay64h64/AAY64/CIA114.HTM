@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DC0E/56334/CIA1+14:  Control Register A
+
+   +-------+--------------------------------------------------------+
+   | Bit 7 |   Time-of-Day Clock Frequency: 1 = 50 Hz, 0 = 60 Hz    |
+   | Bit 6 |   Serial Port (<A HREF="CIA112.HTM">$DC0C</A>) I/O Mode: 1 = Output, 0 = Input  |
+   | Bit 5 |   Timer A Counts: 1 = CNT Signals, 0 = System 02 Clock |
+   | Bit 4 |   Force Load Timer A: 1 = Yes                          |
+   | Bit 3 |   Timer A Run Mode: 1 = One-Shot, 0 = Continuous       |
+   | Bit 2 |   Timer A Output Mode to PB6: 1 = Toggle, 0 = Pulse    |
+   | Bit 1 |   Timer A Output on PB6: 1 = Yes, 0 = No               |
+   | Bit 0 |   Start/Stop Timer A: 1 = Start, 0 = Stop              |
+   +-------+--------------------------------------------------------+
+
+   Default Value: $11/17 (%00010001)
+
+Kernal-Reference:
+
+ LDA $DC0E   : <A HREF="ROMF875.HTM">$F87D</A> <A HREF="ROMFF5B.HTM">$FF73</A>
+ STA $DC0E   : <A HREF="ROMF8E2.HTM">$F914</A> <A HREF="ROMFDA3.HTM">$FDB0</A> <A HREF="ROMFF5B.HTM">$FF7A</A>
+
+</PRE></BODY></HTML>

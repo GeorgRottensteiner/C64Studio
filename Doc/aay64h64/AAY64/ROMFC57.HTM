@@ -1,0 +1,42 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FC57/64599:   Write Tape Leader
+
+Jump from <A HREF="ROMFBCD.HTM">$FBE0</A>:
+
+FC57: C6 BE     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPBE.HTM">$BE</A>       ; Tape Input/Output Block count
+FC59: D0 03     <A HREF="BBNE.HTM">BNE</A> $FC5E
+FC5B: 20 CA FC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFCCA.HTM">$FCCA</A>     ; Stop Tape Motor
+
+Jump from $FC59:
+
+FC5E: A9 50     <A HREF="BLDA.HTM">LDA</A> #$50
+FC60: 85 A7     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPA7.HTM">$A7</A>       ; Tape temporary
+FC62: A2 08     <A HREF="BLDX.HTM">LDX</A> #$08
+FC64: 78        <A HREF="BSEI.HTM">SEI</A>
+FC65: 20 BD FC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFCB8.HTM">$FCBD</A>     ; Set IRQ Vector
+FC68: D0 EA     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMFBCD.HTM">$FC54</A>     ; IRQ Entry Point
+FC6A: A9 78     <A HREF="BLDA.HTM">LDA</A> #$78
+FC6C: 20 AF FB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFBA6.HTM">$FBAF</A>     ; Send Tone to Tape
+FC6F: D0 E3     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMFBCD.HTM">$FC54</A>     ; IRQ Entry Point
+FC71: C6 A7     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPA7.HTM">$A7</A>       ; Tape temporary
+FC73: D0 DF     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMFBCD.HTM">$FC54</A>     ; IRQ Entry Point
+FC75: 20 97 FB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFB97.HTM">$FB97</A>     ; New Character Setup
+FC78: C6 AB     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPAB.HTM">$AB</A>       ; RS232 Input parity/Tape temporary
+FC7A: 10 D8     <A HREF="BBPL.HTM">BPL</A> <A HREF="ROMFBCD.HTM">$FC54</A>     ; IRQ Entry Point
+FC7C: A2 0A     <A HREF="BLDX.HTM">LDX</A> #$0A
+FC7E: 20 BD FC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFCB8.HTM">$FCBD</A>     ; Set IRQ Vector
+FC81: 58        <A HREF="BCLI.HTM">CLI</A>
+FC82: E6 AB     <A HREF="BINC.HTM">INC</A> <A HREF="ZPAB.HTM">$AB</A>       ; RS232 Input parity/Tape temporary
+FC84: A5 BE     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBE.HTM">$BE</A>       ; Tape Input/Output Block count
+FC86: F0 30     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMFCB8.HTM">$FCB8</A>     ; Set IRQ Vector
+FC88: 20 8E FB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFB8E.HTM">$FB8E</A>     ; Reset Tape Pointer
+FC8B: A2 09     <A HREF="BLDX.HTM">LDX</A> #$09
+FC8D: 86 A5     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPA5.HTM">$A5</A>       ; Tape Synchronising count down
+FC8F: 86 B6     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPB6.HTM">$B6</A>       ; RS232 Output Byte Buffer/Tape Read Error Flag
+FC91: D0 83     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMFBCD.HTM">$FC16</A>     ; IRQ Entry Point
+
+    <A HREF="ROMFBCD.HTM">Previous Page</A> / <A HREF="ROMFC93.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

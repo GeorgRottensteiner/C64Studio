@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  PEA            PEA Push Effective Absolute Address on Stack           PEA
+                     (or Push Immediate Data on Stack)
+
+ 65816 only!
+                                                        N V M X D I Z C
+  Operation:  W -&gt; Ws, S-2 -&gt;S                          . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR21I.HTM">Immediate</A>/Stack|   PEA #$FFFF          |   $F4   |    3    |     5    |
+  +----------------+-----------------------+---------+---------+----------+
+
+  <B>Note: Sometimes PEA is said to have Absolute-addressing-mode. But it
+  definately behaves like Immediate.</B>
+
+</PRE></BODY></HTML>

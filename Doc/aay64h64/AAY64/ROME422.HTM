@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E422/58402:   Output Power-Up Message
+
+Jump from <A HREF="ROME394.HTM">$E39A</A>:
+
+E422: A5 2B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2B.HTM">$2B</A>       ; Pointer: Start of BASIC Text Area
+E424: A4 2C     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP2B.HTM">$2C</A>       ; Pointer: Start of BASIC Text Area
+E426: 20 08 A4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA408.HTM">$A408</A>     ; Check Memory Overlap
+E429: A9 73     <A HREF="BLDA.HTM">LDA</A> #$73
+E42B: A0 E4     <A HREF="BLDY.HTM">LDY</A> #$E4
+E42D: 20 1E AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAB1E.HTM">$AB1E</A>     ; Output String
+E430: A5 37     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP37.HTM">$37</A>       ; Pointer: Highest Address available to BASIC
+E432: 38        <A HREF="BSEC.HTM">SEC</A>
+E433: E5 2B     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP2B.HTM">$2B</A>       ; Pointer: Start of BASIC Text Area
+E435: AA        <A HREF="BTAX.HTM">TAX</A>
+E436: A5 38     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP37.HTM">$38</A>       ; Pointer: Highest Address available to BASIC
+E438: E5 2C     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP2B.HTM">$2C</A>       ; Pointer: Start of BASIC Text Area
+E43A: 20 CD BD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBDCD.HTM">$BDCD</A>     ; Output Positive Integer in A/X
+E43D: A9 60     <A HREF="BLDA.HTM">LDA</A> #$60
+E43F: A0 E4     <A HREF="BLDY.HTM">LDY</A> #$E4
+E441: 20 1E AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAB1E.HTM">$AB1E</A>     ; Output String
+E444: 4C 44 A6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA642.HTM">$A644</A>     ; Perform [new]
+
+    <A HREF="ROME3BF.HTM">Previous Page</A> / <A HREF="ROME447.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

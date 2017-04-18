@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  LSR          LSR Shift right one bit (memory or accumulator)          LSR
+
+                   +-+-+-+-+-+-+-+-+
+  Operation:  0 -&gt; |7|6|5|4|3|2|1|0| -&gt; C               N V - B D I Z C
+                   +-+-+-+-+-+-+-+-+                    0 . . . . . / /
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR5.HTM">Accumulator</A>   |   LSR A               |   $4A   |    1    |    2     |
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   LSR $FF             |   $46   |    2    |    5     |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   LSR $FF,X           |   $56   |    2    |    6     |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   LSR $FFFF           |   $4E   |    3    |    6     |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   LSR $FFFF,X         |   $5E   |    3    |    7     |
+  +----------------+-----------------------+---------+---------+----------+
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+</PRE></BODY></HTML>

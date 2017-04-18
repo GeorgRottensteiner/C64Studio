@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  LAE            LAE Stack-Pointer AND with memory, TSX, TXA            LAE
+
+                                                        N V - B D I Z C
+  Operation:  S,X,A &lt;- (S /\ M)                         / . . . . . / .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   LAE $FFFF,Y         |   $BB   |    3    |    4*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 if page boundary is crossed.
+
+  Also known as LAS, LAR.
+
+  <B>Warning: This opcode is said to be unstable!</B>
+
+</PRE></BODY></HTML>

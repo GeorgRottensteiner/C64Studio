@@ -1,0 +1,51 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A65E/42590:   Perform [clr]
+
+A65E: D0 2D     <A HREF="BBNE.HTM">BNE</A> $A68D
+
+Jump from <A HREF="ROMA871.HTM">$A87D</A>:
+
+A660: 20 E7 FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFE7.HTM">$FFE7</A>     ; Close All Channels And Files
+
+Jump from <A HREF="ROME0F9.HTM">$E101</A>:
+
+A663: A5 37     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP37.HTM">$37</A>       ; Pointer: Highest Address available to BASIC
+A665: A4 38     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP37.HTM">$38</A>       ; Pointer: Highest Address available to BASIC
+A667: 85 33     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+A669: 84 34     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+A66B: A5 2D     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2D.HTM">$2D</A>       ; Pointer: Start of BASIC Variables
+A66D: A4 2E     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP2D.HTM">$2E</A>       ; Pointer: Start of BASIC Variables
+A66F: 85 2F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP2F.HTM">$2F</A>       ; Pointer: Start of BASIC Arrays
+A671: 84 30     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP2F.HTM">$30</A>       ; Pointer: Start of BASIC Arrays
+A673: 85 31     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP31.HTM">$31</A>       ; Pointer: End of BASIC Arrays + 1
+A675: 84 32     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP31.HTM">$32</A>       ; Pointer: End of BASIC Arrays + 1
+
+Jump from <A HREF="ROME165.HTM">$E1BB</A>:
+
+A677: 20 1D A8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA81D.HTM">$A81D</A>     ; Perform [restore]
+
+Jump from <A HREF="ROMA437.HTM">$A462</A>, <A HREF="ROME37B.HTM">$E382</A>:
+
+A67A: A2 19     <A HREF="BLDX.HTM">LDX</A> #$19
+A67C: 86 16     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP16.HTM">$16</A>       ; Pointer: Temporary String Stack
+A67E: 68        <A HREF="BPLA.HTM">PLA</A>
+A67F: A8        <A HREF="BTAY.HTM">TAY</A>
+A680: 68        <A HREF="BPLA.HTM">PLA</A>
+A681: A2 FA     <A HREF="BLDX.HTM">LDX</A> #$FA
+A683: 9A        <A HREF="BTXS.HTM">TXS</A>
+A684: 48        <A HREF="BPHA.HTM">PHA</A>
+A685: 98        <A HREF="BTYA.HTM">TYA</A>
+A686: 48        <A HREF="BPHA.HTM">PHA</A>
+A687: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+A689: 85 3E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP3D.HTM">$3E</A>       ; Pointer: BASIC Statement for CONT
+A68B: 85 10     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP10.HTM">$10</A>       ; Flag: Subscript reference/User Function call
+
+Jump from $A65E, <A HREF="ROMA69C.HTM">$A6A2</A>:
+
+A68D: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA642.HTM">Previous Page</A> / <A HREF="ROMA68E.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,39 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A8D2/43218:   Perform [return]
+
+A8D2: D0 FD     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMA8A0.HTM">$A8D1</A>     ; Perform [goto]
+A8D4: A9 FF     <A HREF="BLDA.HTM">LDA</A> #$FF
+A8D6: 85 4A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP49.HTM">$4A</A>       ; Pointer: Index Variable for FOR/NEXT loop
+A8D8: 20 8A A3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA38A.HTM">$A38A</A>     ; Find FOR/GOSUB Entry on Stack
+A8DB: 9A        <A HREF="BTXS.HTM">TXS</A>
+A8DC: C9 8D     <A HREF="BCMP.HTM">CMP</A> #$8D
+A8DE: F0 0B     <A HREF="BBEQ.HTM">BEQ</A> $A8EB
+A8E0: A2 0C     <A HREF="BLDX.HTM">LDX</A> #$0C
+A8E2: 2C        .BYTE $2C
+
+Jump from <A HREF="ROMA8A0.HTM">$A8C3</A>:
+
+A8E3: A2 11     <A HREF="BLDX.HTM">LDX</A> #$11
+A8E5: 4C 37 A4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA437.HTM">$A437</A>     ; Error Routine
+
+Jump from <A HREF="ROMA94B.HTM">$A955</A>:
+
+A8E8: 4C 08 AF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAF08.HTM">$AF08</A>     ; Output ?SYNTAX Error
+
+Jump from $A8DE:
+
+A8EB: 68        <A HREF="BPLA.HTM">PLA</A>
+A8EC: 68        <A HREF="BPLA.HTM">PLA</A>
+A8ED: 85 39     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP39.HTM">$39</A>       ; Current BASIC Line number
+A8EF: 68        <A HREF="BPLA.HTM">PLA</A>
+A8F0: 85 3A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP39.HTM">$3A</A>       ; Current BASIC Line number
+A8F2: 68        <A HREF="BPLA.HTM">PLA</A>
+A8F3: 85 7A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A8F5: 68        <A HREF="BPLA.HTM">PLA</A>
+A8F6: 85 7B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+
+    <A HREF="ROMA8A0.HTM">Previous Page</A> / <A HREF="ROMA8F8.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

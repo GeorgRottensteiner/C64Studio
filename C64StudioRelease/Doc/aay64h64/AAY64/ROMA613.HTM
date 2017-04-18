@@ -1,0 +1,54 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A613/42515:   Search for Line Number
+
+Jump from <A HREF="ROMA4A2.HTM">$A4A4</A>, <A HREF="ROMA69C.HTM">$A6A7</A>:
+
+A613: A5 2B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2B.HTM">$2B</A>       ; Pointer: Start of BASIC Text Area
+A615: A6 2C     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP2B.HTM">$2C</A>       ; Pointer: Start of BASIC Text Area
+
+Jump from $A63E, <A HREF="ROMA8A0.HTM">$A8C0</A>:
+
+A617: A0 01     <A HREF="BLDY.HTM">LDY</A> #$01
+A619: 85 5F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+A61B: 86 60     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+A61D: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A61F: F0 1F     <A HREF="BBEQ.HTM">BEQ</A> $A640
+A621: C8        <A HREF="BINY.HTM">INY</A>
+A622: C8        <A HREF="BINY.HTM">INY</A>
+A623: A5 15     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+A625: D1 5F     <A HREF="BCMP.HTM">CMP</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A627: 90 18     <A HREF="BBCC.HTM">BCC</A> $A641
+A629: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $A62E
+A62B: 88        <A HREF="BDEY.HTM">DEY</A>
+A62C: D0 09     <A HREF="BBNE.HTM">BNE</A> $A637
+
+Jump from $A629:
+
+A62E: A5 14     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A630: 88        <A HREF="BDEY.HTM">DEY</A>
+A631: D1 5F     <A HREF="BCMP.HTM">CMP</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A633: 90 0C     <A HREF="BBCC.HTM">BCC</A> $A641
+A635: F0 0A     <A HREF="BBEQ.HTM">BEQ</A> $A641
+
+Jump from $A62C:
+
+A637: 88        <A HREF="BDEY.HTM">DEY</A>
+A638: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A63A: AA        <A HREF="BTAX.HTM">TAX</A>
+A63B: 88        <A HREF="BDEY.HTM">DEY</A>
+A63C: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+A63E: B0 D7     <A HREF="BBCS.HTM">BCS</A> $A617
+
+Jump from $A61F:
+
+A640: 18        <A HREF="BCLC.HTM">CLC</A>
+
+Jump from $A627, $A633, $A635, <A HREF="ROMA642.HTM">$A642</A>, <A HREF="ROMA69C.HTM">$A6B1</A>, <A HREF="ROMA69C.HTM">$A6B9</A>:
+
+A641: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA579.HTM">Previous Page</A> / <A HREF="ROMA642.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

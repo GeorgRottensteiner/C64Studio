@@ -1,0 +1,49 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BBC7/48071:   Store FAC#1 in Memory
+
+Jump from <A HREF="ROME043.HTM">$E05D</A>:
+
+BBC7: A2 5C     <A HREF="BLDX.HTM">LDX</A> #$5C
+BBC9: 2C        .BYTE $2C
+
+Jump from <A HREF="ROME043.HTM">$E047</A>, <A HREF="ROME2B4.HTM">$E2B4</A>:
+
+BBCA: A2 57     <A HREF="BLDX.HTM">LDX</A> #$57
+BBCC: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+BBCE: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $BBD4
+
+Jump from <A HREF="ROMA9D6.HTM">$A9D6</A>, <A HREF="ROMAD1E.HTM">$AD52</A>:
+
+BBD0: A6 49     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+BBD2: A4 4A     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP49.HTM">$4A</A>       ; Pointer: Index Variable for FOR/NEXT loop
+
+Jump from $BBCE, <A HREF="ROMB3F4.HTM">$B420</A>, <A HREF="ROMBF7B.HTM">$BF88</A>, <A HREF="ROME097.HTM">$E0F6</A>:
+
+BBD4: 20 1B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC1B.HTM">$BC1B</A>     ; Round FAC#1
+BBD7: 86 22     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+BBD9: 84 23     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+BBDB: A0 04     <A HREF="BLDY.HTM">LDY</A> #$04
+BBDD: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+BBDF: 91 22     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BBE1: 88        <A HREF="BDEY.HTM">DEY</A>
+BBE2: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+BBE4: 91 22     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BBE6: 88        <A HREF="BDEY.HTM">DEY</A>
+BBE7: A5 63     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+BBE9: 91 22     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BBEB: 88        <A HREF="BDEY.HTM">DEY</A>
+BBEC: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BBEE: 09 7F     <A HREF="BORA.HTM">ORA</A> #$7F
+BBF0: 25 62     <A HREF="BAND.HTM">AND</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+BBF2: 91 22     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BBF4: 88        <A HREF="BDEY.HTM">DEY</A>
+BBF5: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BBF7: 91 22     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BBF9: 84 70     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+BBFB: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBBA2.HTM">Previous Page</A> / <A HREF="ROMBBFC.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

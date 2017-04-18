@@ -1,0 +1,50 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E691/59025:   Set Up Screen Print
+
+Jump from <A HREF="ROME7D4.HTM">$E7E0</A>:
+
+E691: 09 40     <A HREF="BORA.HTM">ORA</A> #$40
+
+Jump from <A HREF="ROME72A.HTM">$E742</A>:
+
+E693: A6 C7     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPC7.HTM">$C7</A>       ; Flag: Reverse On/Off
+E695: F0 02     <A HREF="BBEQ.HTM">BEQ</A> $E699
+
+Jump from <A HREF="ROME72A.HTM">$E749</A>, <A HREF="ROME72A.HTM">$E782</A>, <A HREF="ROME7D4.HTM">$E82F</A>:
+
+E697: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+
+Jump from $E695:
+
+E699: A6 D8     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPD8.HTM">$D8</A>       ; Count of number of inserts outstanding
+E69B: F0 02     <A HREF="BBEQ.HTM">BEQ</A> $E69F
+E69D: C6 D8     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPD8.HTM">$D8</A>       ; Count of number of inserts outstanding
+
+Jump from $E69B:
+
+E69F: AE 86 02  <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP0286.HTM">$0286</A>     ; Current Character Color code
+E6A2: 20 13 EA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEA13.HTM">$EA13</A>     ; Print To Screen
+E6A5: 20 B6 E6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME6B6.HTM">$E6B6</A>     ; Advance Cursor
+
+Jump from <A HREF="ROME701.HTM">$E709</A>, <A HREF="ROME72A.HTM">$E7AA</A>, <A HREF="ROME72A.HTM">$E7CB</A>, <A HREF="ROME7D4.HTM">$E826</A>, <A HREF="ROME7D4.HTM">$E861</A>, <A HREF="ROME7D4.HTM">$E867</A>, <A HREF="ROME7D4.HTM">$E871</A>, <A HREF="ROME891.HTM">$E89E</A>, <A HREF="ROMEC44.HTM">$EC5B</A>, <A HREF="ROMEC44.HTM">$EC75</A>:
+
+E6A8: 68        <A HREF="BPLA.HTM">PLA</A>
+E6A9: A8        <A HREF="BTAY.HTM">TAY</A>
+E6AA: A5 D8     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD8.HTM">$D8</A>       ; Count of number of inserts outstanding
+E6AC: F0 02     <A HREF="BBEQ.HTM">BEQ</A> $E6B0
+E6AE: 46 D4     <A HREF="BLSR.HTM">LSR</A> <A HREF="ZPD4.HTM">$D4</A>       ; Flag: Editor in Quote Mode
+
+Jump from $E6AC:
+
+E6B0: 68        <A HREF="BPLA.HTM">PLA</A>
+E6B1: AA        <A HREF="BTAX.HTM">TAX</A>
+E6B2: 68        <A HREF="BPLA.HTM">PLA</A>
+E6B3: 18        <A HREF="BCLC.HTM">CLC</A>
+E6B4: 58        <A HREF="BCLI.HTM">CLI</A>
+E6B5: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME684.HTM">Previous Page</A> / <A HREF="ROME6B6.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

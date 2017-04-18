@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  RRA                   RRA ROR memory, ADC memory                      RRA
+
+                                                        N V - B D I Z C
+  Operation:  A &lt;- (M &gt;&gt; 1) + (A) + C                   / / . . . . / /
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   RRA $FF             |   $67   |    2    |    5     |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   RRA $FF,X           |   $77   |    2    |    6     |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   RRA $FFFF           |   $6F   |    3    |    6     |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   RRA $FFFF,X         |   $7F   |    3    |    7     |
+  |  <A HREF="ADDR12B.HTM">Absolute,Y</A>    |   RRA $FFFF,Y         |   $7B   |    3    |    7     |
+  |  <A HREF="ADDR9B.HTM">(Indirect,X)</A>  |   RRA ($FF,X)         |   $63   |    2    |    8     |
+  |  <A HREF="ADDR7B.HTM">(Indirect),Y</A>  |   RRA ($FF),Y         |   $73   |    2    |    8     |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

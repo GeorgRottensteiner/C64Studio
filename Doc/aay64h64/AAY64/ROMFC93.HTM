@@ -1,0 +1,30 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FC93/64659:   Restore Normal IRQ
+
+Jump from <A HREF="ROMF8D0.HTM">$F8D6</A>, <A HREF="ROMFA60.HTM">$FB68</A>, <A HREF="ROMFCB8.HTM">$FCB8</A>:
+
+FC93: 08        <A HREF="BPHP.HTM">PHP</A>
+FC94: 78        <A HREF="BSEI.HTM">SEI</A>
+FC95: AD 11 D0  <A HREF="BLDA.HTM">LDA</A> <A HREF="VIC17.HTM">$D011</A>     ; VIC: Control Register 1
+FC98: 09 10     <A HREF="BORA.HTM">ORA</A> #$10
+FC9A: 8D 11 D0  <A HREF="BSTA.HTM">STA</A> <A HREF="VIC17.HTM">$D011</A>     ; VIC: Control Register 1
+FC9D: 20 CA FC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFCCA.HTM">$FCCA</A>     ; Stop Tape Motor
+FCA0: A9 7F     <A HREF="BLDA.HTM">LDA</A> #$7F
+FCA2: 8D 0D DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA113.HTM">$DC0D</A>     ; CIA1: Interrupt (IRQ) Control Register
+FCA5: 20 DD FD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFDDD.HTM">$FDDD</A>     ; Enable Timer
+FCA8: AD A0 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP029F.HTM">$02A0</A>     ; Temp. store for IRQ Vector during Tape I/O
+FCAB: F0 09     <A HREF="BBEQ.HTM">BEQ</A> $FCB6
+FCAD: 8D 15 03  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0314.HTM">$0315</A>     ; Vector: Hardware IRQ Interrupt Address
+FCB0: AD 9F 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP029F.HTM">$029F</A>     ; Temp. store for IRQ Vector during Tape I/O
+FCB3: 8D 14 03  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0314.HTM">$0314</A>     ; Vector: Hardware IRQ Interrupt Address
+
+Jump from $FCAB:
+
+FCB6: 28        <A HREF="BPLP.HTM">PLP</A>
+FCB7: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMFC57.HTM">Previous Page</A> / <A HREF="ROMFCB8.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

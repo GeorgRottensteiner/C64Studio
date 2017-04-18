@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E8A1/59553:   Check Line Decrement
+
+Jump from <A HREF="ROME72A.HTM">$E759</A>, <A HREF="ROME7D4.HTM">$E85B</A>:
+
+E8A1: A2 02     <A HREF="BLDX.HTM">LDX</A> #$02
+E8A3: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+
+Jump from $E8AD:
+
+E8A5: C5 D3     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E8A7: F0 07     <A HREF="BBEQ.HTM">BEQ</A> $E8B0
+E8A9: 18        <A HREF="BCLC.HTM">CLC</A>
+E8AA: 69 28     <A HREF="BADC.HTM">ADC</A> #$28
+E8AC: CA        <A HREF="BDEX.HTM">DEX</A>
+E8AD: D0 F6     <A HREF="BBNE.HTM">BNE</A> $E8A5
+E8AF: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $E8A7:
+
+E8B0: C6 D6     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPD6.HTM">$D6</A>       ; Current Screen Line number of Cursor
+E8B2: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME891.HTM">Previous Page</A> / <A HREF="ROME8B3.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

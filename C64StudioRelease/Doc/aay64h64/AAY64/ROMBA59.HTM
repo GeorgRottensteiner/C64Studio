@@ -1,0 +1,51 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BA59/47705:   Multiply by a Byte
+
+Jump from <A HREF="ROMBA28.HTM">$BA3F</A>, <A HREF="ROMBA28.HTM">$BA44</A>, <A HREF="ROMBA28.HTM">$BA49</A>, <A HREF="ROMBA28.HTM">$BA4E</A>:
+
+BA59: D0 03     <A HREF="BBNE.HTM">BNE</A> $BA5E
+BA5B: 4C 83 B9  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB983.HTM">$B983</A>     ; Multiply by Zero Byte
+
+Jump from $BA59, <A HREF="ROMBA28.HTM">$BA53</A>:
+
+BA5E: 4A        <A HREF="BLSR.HTM">LSR</A>
+BA5F: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+
+Jump from $BA89:
+
+BA61: A8        <A HREF="BTAY.HTM">TAY</A>
+BA62: 90 19     <A HREF="BBCC.HTM">BCC</A> $BA7D
+BA64: 18        <A HREF="BCLC.HTM">CLC</A>
+BA65: A5 29     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP26.HTM">$29</A>       ; Floating point product of Multiply and Divide
+BA67: 65 6D     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP6A.HTM">$6D</A>       ; AFAC Mantissa
+BA69: 85 29     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP26.HTM">$29</A>       ; Floating point product of Multiply and Divide
+BA6B: A5 28     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP26.HTM">$28</A>       ; Floating point product of Multiply and Divide
+BA6D: 65 6C     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP6A.HTM">$6C</A>       ; AFAC Mantissa
+BA6F: 85 28     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP26.HTM">$28</A>       ; Floating point product of Multiply and Divide
+BA71: A5 27     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP26.HTM">$27</A>       ; Floating point product of Multiply and Divide
+BA73: 65 6B     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP6A.HTM">$6B</A>       ; AFAC Mantissa
+BA75: 85 27     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP26.HTM">$27</A>       ; Floating point product of Multiply and Divide
+BA77: A5 26     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP26.HTM">$26</A>       ; Floating point product of Multiply and Divide
+BA79: 65 6A     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP6A.HTM">$6A</A>       ; AFAC Mantissa
+BA7B: 85 26     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP26.HTM">$26</A>       ; Floating point product of Multiply and Divide
+
+Jump from $BA62:
+
+BA7D: 66 26     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP26.HTM">$26</A>       ; Floating point product of Multiply and Divide
+BA7F: 66 27     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP26.HTM">$27</A>       ; Floating point product of Multiply and Divide
+BA81: 66 28     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP26.HTM">$28</A>       ; Floating point product of Multiply and Divide
+BA83: 66 29     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP26.HTM">$29</A>       ; Floating point product of Multiply and Divide
+BA85: 66 70     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+BA87: 98        <A HREF="BTYA.HTM">TYA</A>
+BA88: 4A        <A HREF="BLSR.HTM">LSR</A>
+BA89: D0 D6     <A HREF="BBNE.HTM">BNE</A> $BA61
+
+Jump from <A HREF="ROMBA28.HTM">$BA2D</A>:
+
+BA8B: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBA28.HTM">Previous Page</A> / <A HREF="ROMBA8C.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

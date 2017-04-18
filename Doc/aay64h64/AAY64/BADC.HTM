@@ -1,0 +1,40 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  ADC               Add memory to accumulator with carry                ADC
+
+  Operation:  A + M + C -&gt; A, C                         N V - B D I Z C
+                                                        / / . . . . / /
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   ADC #$FF            |   $69   |    2    |    2     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   ADC $FF             |   $65   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   ADC $FF,X           |   $75   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   ADC $FFFF           |   $6D   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   ADC $FFFF,X         |   $7D   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   ADC $FFFF,Y         |   $79   |    3    |    4*    |
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   ADC ($FF,X)         |   $61   |    2    |    6     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   ADC ($FF),Y         |   $71   |    2    |    5*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 if page boundary is crossed.
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+  Note: See <A HREF="CPUBUGS.HTM">CPU-Bugs</A> for a description how flags are affected.
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR3A.HTM">AbsoluteLong</A>   |   ADC $FFFFFF         |   $6F   |    4    |     5    |
+  | <A HREF="ADDR13.HTM">AbsoluteLong,X</A> |   ADC $FFFFFF,X       |   $7F   |    4    |     5    |
+  | <A HREF="ADDR18.HTM">(Indirect)</A>     |   ADC ($FF)           |   $72   |    2    |     5    |
+  | <A HREF="ADDR19.HTM">[Indirect Long]</A>|   ADC [$FF]           |   $67   |    2    |     6    |
+  | <A HREF="ADDR8.HTM">[Ind.Long],Y</A>   |   ADC [$FF],Y         |   $77   |    2    |     6    |
+  | <A HREF="ADDR22.HTM">Relative,S</A>     |   ADC $FF,S           |   $63   |    2    |     4    |
+  | <A HREF="ADDR23.HTM">(Indirect,S),Y</A> |   ADC ($FF,S),Y       |   $73   |    2    |     7    |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

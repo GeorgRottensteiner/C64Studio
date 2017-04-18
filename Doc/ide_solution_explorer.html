@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Solution Explorer</H3>
+  <div id="mybody">
+    The solution explorer provides an overview of the solution, its projects and its elements.<br>
+    <br>
+    <img src="images/ide_project_explorer.png"><br>
+    <br>
+    <br>
+    <b>Add New Item</b><br>
+    Add a new item to the selected node.<br>
+    <br>
+    <br>
+    <b>Add existing Item</b><br>
+    Add an existing item to the selected node.<br>
+    <br>
+    <br>
+    <b>Delete Item</b><br>
+    Deletes the currently selected item from the project.<br>
+    <br>
+    <br>
+    Right click to open a context menu to access either project or element options.<br>
+    <br>
+    A double click on a project opens the project properties, a double click on an element opens the element as document.<br>
+    <br>
+    The number and type of property pages shown depends on the element type.<br>
+    <br>
+    <br>
+  </div>
+  <a name="property_general"></a>
+  <H2>General</H2>
+  <div id="mybody">
+    <img src="images/ide_properties_general.png"><br>
+    <br>
+    This property page shows the element's filename and its full path.<br>
+    <br>
+    <br>
+  </div>
+  <a name="property_assembler"></a>
+  <H2>Assembler</H2>
+  <div id="mybody">
+    <img src="images/ide_properties_assembler.png"><br>
+    <br>
+    C64Studio allows using different assembler syntaxes. Per default C64Studio tries to guess the used assembler by simple
+    inspection of the provided source code. You can override this setting on this page.<br>
+    <br>
+    <br>
+    Note that on nested files (<a href="asm_macro.html#source">include source</a>) the parent file determines the actual used assembler type.<br>
+    <br>
+    <br>
+  </div>
+  <a name="property_compiletarget"></a>
+  <H2>Compile Target</H2>
+  <div id="mybody">
+    <img src="images/ide_properties_compiletarget.png"><br>
+    <br>
+    Here you can set the final filename and type of the built file. If set this overrides any <a href="asm_macro.html#to">directive</a> in the source code.<br>
+    <br>
+    <br>
+    With setting dependencies you tell the assembler which files must be up to date before building the chosen file. C64Studio will build all selected
+    dependencies (if required) and then build the current file.<br>
+    <br>
+    <br>
+    In the list you can also choose to include the symbols of a dependency. This makes it easier to build multi load programs which can access labels of other files.<br>
+    <br>
+    <br>
+  </div>
+  <a name="property_debug"></a>
+  <H2>Debug</H2>
+  <div id="mybody">
+    <img src="images/ide_properties_debug.png"><br>
+    <br>
+    In some cases you want to compile the current file but run a different file for debugging. In this dialog you can choose an alternative file name and type to be run
+    when starting the debugger.<br>
+    <br>
+    <br>
+    If the "Debug File" is empty the current compiled file name result and type is used.<br>
+    <br>
+    <br>
+  </div>
+  <a name="property_buildevents"></a>
+  <H2>Build Events</H2>
+  <div id="mybody">
+    <img src="images/ide_properties_buildevents.png"><br>
+    <br>
+    Here you can modify the pre, custom and post build events per build configuration. Details about the build event system are <a href="build events.html">here</a>.<br>
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>

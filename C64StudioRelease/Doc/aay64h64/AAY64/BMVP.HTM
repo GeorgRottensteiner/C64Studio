@@ -1,0 +1,29 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  MVP                      MVP Block Move Positive                      MVP
+
+ 65816 only!
+                                                        N V M X D I Z C
+  Operation:                                            . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR24A.HTM">Block Positive</A> |   MVP $FF,$FF         |   $44   |    3    |  7/byte  |
+  +----------------+-----------------------+---------+---------+----------+
+   X-Register = Source Address
+   Y-Register = Destination Address
+   Accumulator = Number of Bytes to move -1
+   $FF,$FF = Source Bank, Destination Bank
+
+   <B>Attention: In memory the order of the Bank-bytes is the other way
+   around (i.e. Dest, Src)! Some assemblers use this order as syntax,
+   although it is not correct.
+
+   Keep also in mind that the Data-Bank-Register will be set to Dest-Bank.</B>
+
+   MVP is used when the destination start address is higher (more positive)
+   than the source start address.
+
+</PRE></BODY></HTML>

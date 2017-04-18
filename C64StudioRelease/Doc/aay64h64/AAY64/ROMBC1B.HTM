@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BC1B/48155:   Round FAC#1
+
+Jump from <A HREF="ROMA9C4.HTM">$A9C4</A>, <A HREF="ROMAD9E.HTM">$AE43</A>, <A HREF="ROMBB0F.HTM">$BB14</A>, <A HREF="ROMBBC7.HTM">$BBD4</A>, <A HREF="ROMBC0C.HTM">$BC0C</A>:
+
+BC1B: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BC1D: F0 FB     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMBC0C.HTM">$BC1A</A>     ; Copy FAC#1 into FAC#2
+BC1F: 06 70     <A HREF="BASL.HTM">ASL</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+BC21: 90 F7     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMBC0C.HTM">$BC1A</A>     ; Copy FAC#1 into FAC#2
+
+Jump from <A HREF="ROMBFED.HTM">$BFFA</A>:
+
+BC23: 20 6F B9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB947.HTM">$B96F</A>     ; 2's Complement FAC#1
+BC26: D0 F2     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMBC0C.HTM">$BC1A</A>     ; Copy FAC#1 into FAC#2
+BC28: 4C 38 B9  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB867.HTM">$B938</A>     ; Perform Addition
+
+    <A HREF="ROMBC0C.HTM">Previous Page</A> / <A HREF="ROMBC2B.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

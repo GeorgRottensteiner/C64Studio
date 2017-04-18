@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  STY                    STY Store index Y in memory                    STY
+
+  Operation: Y -&gt; M                                     N V - B D I Z C
+                                                        . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   STY $FF             |   $84   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   STY $FF,X           |   $94   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   STY $FFFF           |   $8C   |    3    |    4     |
+  +----------------+-----------------------+---------+---------+----------+
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+</PRE></BODY></HTML>

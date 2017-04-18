@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $D01B/53275/VIC+27:  Sprite to Background Display Priority
+
+   +----------+---------------------------------------------------+
+   | Bit  x   |   Sprite x: 0 = Sprite has higher Priority        |
+   +----------+---------------------------------------------------+
+
+   Higher Priority means sprite is in front of everything.
+
+   Lower Priority means sprite is behind bit-combinations starting with
+   1 (e.g. %1 in hires mode and %1x in multi-color mode) and in front of
+   bit combinations starting with 0 (e.g. %0 in hires mode and %0x in
+   multi-color mode). So we get the following priority-tables:
+
+   Hires: Bit=0 &lt; Sprite &lt; Bit=1 ; Multi-Color: Bit=00 &lt; Sprite &lt; Bit = 10
+                                                Bit=01 &lt;        &lt; Bit = 11
+
+</PRE></BODY></HTML>

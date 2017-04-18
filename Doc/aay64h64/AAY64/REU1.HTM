@@ -1,0 +1,25 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DF01/57089/REU+1:   Command Register
+
+   +----------+---------------------------------------------------+
+   | Bit  7   |   Execute: 1 = Transfer current Configuration     |
+   |          |   (not used with RAMLink)                         |
+   | Bit  6   |   Reserved (normally 0)                           |
+   | Bit  5   |   Load: 1 = enable autoload option (addresses and |
+   |          |             transfer-length are restored to       |
+   |          |             values at beginning of transfer)      |
+   |          |         0 = addresses stay at last_byte_used+1    |
+   |          |             and transfer-length is $0001          |
+   | Bit  4   |   FF00: 1 = start immediately                     |
+   |          |         0 = wait for write access to $FF00        |
+   |          |   (not used with RAMLink)                         |
+   | Bits 3-2 |   Reserved (normally 0)                           |
+   | Bits 1-0 |   Transfer Type:  00 = transfer C64 -&gt; REU        |
+   |          |                   01 = transfer REU -&gt; C64        |
+   |          |                   10 = swap C64 &lt;-&gt; REU           |
+   |          |                   11 = compare C64 - REU          |
+   +----------+---------------------------------------------------+
+
+</PRE></BODY></HTML>

@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  LDY                   LDY Load index Y with memory                    LDY
+
+  Operation:  M -&gt; Y                                    N V - B D I Z C
+                                                        / . . . . . / .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   LDY #$FF            |   $A0   |    2    |    2     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   LDY $FF             |   $A4   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   LDY $FF,X           |   $B4   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   LDY $FFFF           |   $AC   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   LDY $FFFF,X         |   $BC   |    3    |    4*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 when page boundary is crossed.
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+</PRE></BODY></HTML>

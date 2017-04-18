@@ -1,0 +1,5 @@
+efny.prg: efny.s efny.lbm music.bin
+        benton64 efny.lbm plissken.pic -r
+        dasm efny.s -oefny.prg -v3 -p3
+        pucrunch -x2048 efny.prg efny.prg
+

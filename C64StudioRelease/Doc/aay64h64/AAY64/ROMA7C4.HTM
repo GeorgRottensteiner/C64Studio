@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A7C4/42948:   Check End of Program
+
+A7C4: A0 02     <A HREF="BLDY.HTM">LDY</A> #$02
+A7C6: B1 7A     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP7A.HTM">$7A</A>),Y   ; Pointer: Current Byte of BASIC Text
+A7C8: 18        <A HREF="BCLC.HTM">CLC</A>
+A7C9: D0 03     <A HREF="BBNE.HTM">BNE</A> $A7CE
+A7CB: 4C 4B A8  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA831.HTM">$A84B</A>     ; Perform Break
+
+Jump from $A7C9:
+
+A7CE: C8        <A HREF="BINY.HTM">INY</A>
+A7CF: B1 7A     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP7A.HTM">$7A</A>),Y   ; Pointer: Current Byte of BASIC Text
+A7D1: 85 39     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP39.HTM">$39</A>       ; Current BASIC Line number
+A7D3: C8        <A HREF="BINY.HTM">INY</A>
+A7D4: B1 7A     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP7A.HTM">$7A</A>),Y   ; Pointer: Current Byte of BASIC Text
+A7D6: 85 3A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP39.HTM">$3A</A>       ; Current BASIC Line number
+A7D8: 98        <A HREF="BTYA.HTM">TYA</A>
+A7D9: 65 7A     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A7DB: 85 7A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A7DD: 90 02     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMA7E1.HTM">$A7E1</A>     ; Prepare to execute statement
+A7DF: E6 7B     <A HREF="BINC.HTM">INC</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+
+    <A HREF="ROMA7AE.HTM">Previous Page</A> / <A HREF="ROMA7E1.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

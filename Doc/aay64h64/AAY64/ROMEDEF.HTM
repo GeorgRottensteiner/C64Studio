@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EDEF/60911:   Send UNTALK
+
+Jump from <A HREF="ROMF333.HTM">$F340</A>, <A HREF="ROMF4B8.HTM">$F528</A>, <A HREF="ROMFFAB.HTM">$FFAB</A>:
+
+EDEF: 78        <A HREF="BSEI.HTM">SEI</A>
+EDF0: 20 8E EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE8E.HTM">$EE8E</A>     ; Serial Clock Off
+EDF3: AD 00 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+EDF6: 09 08     <A HREF="BORA.HTM">ORA</A> #$08
+EDF8: 8D 00 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+EDFB: A9 5F     <A HREF="BLDA.HTM">LDA</A> #$5F
+EDFD: 2C        .BYTE $2C
+
+    <A HREF="ROMEDDD.HTM">Previous Page</A> / <A HREF="ROMEDFE.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

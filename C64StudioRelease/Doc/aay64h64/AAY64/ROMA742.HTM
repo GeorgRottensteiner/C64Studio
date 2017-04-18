@@ -1,0 +1,69 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A742/42818:   Perform [for]
+
+A742: A9 80     <A HREF="BLDA.HTM">LDA</A> #$80
+A744: 85 10     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP10.HTM">$10</A>       ; Flag: Subscript reference/User Function call
+A746: 20 A5 A9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA9A5.HTM">$A9A5</A>     ; Perform [let]
+A749: 20 8A A3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA38A.HTM">$A38A</A>     ; Find FOR/GOSUB Entry on Stack
+A74C: D0 05     <A HREF="BBNE.HTM">BNE</A> $A753
+A74E: 8A        <A HREF="BTXA.HTM">TXA</A>
+A74F: 69 0F     <A HREF="BADC.HTM">ADC</A> #$0F
+A751: AA        <A HREF="BTAX.HTM">TAX</A>
+A752: 9A        <A HREF="BTXS.HTM">TXS</A>
+
+Jump from $A74C:
+
+A753: 68        <A HREF="BPLA.HTM">PLA</A>
+A754: 68        <A HREF="BPLA.HTM">PLA</A>
+A755: A9 09     <A HREF="BLDA.HTM">LDA</A> #$09
+A757: 20 FB A3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA3FB.HTM">$A3FB</A>     ; Check Stack Depth
+A75A: 20 06 A9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA906.HTM">$A906</A>     ; Search for Next Statement / Line
+A75D: 18        <A HREF="BCLC.HTM">CLC</A>
+A75E: 98        <A HREF="BTYA.HTM">TYA</A>
+A75F: 65 7A     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A761: 48        <A HREF="BPHA.HTM">PHA</A>
+A762: A5 7B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+A764: 69 00     <A HREF="BADC.HTM">ADC</A> #$00
+A766: 48        <A HREF="BPHA.HTM">PHA</A>
+A767: A5 3A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP39.HTM">$3A</A>       ; Current BASIC Line number
+A769: 48        <A HREF="BPHA.HTM">PHA</A>
+A76A: A5 39     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP39.HTM">$39</A>       ; Current BASIC Line number
+A76C: 48        <A HREF="BPHA.HTM">PHA</A>
+A76D: A9 A4     <A HREF="BLDA.HTM">LDA</A> #$A4
+A76F: 20 FF AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFD.HTM">$AEFF</A>     ; Test ','
+A772: 20 8D AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8D</A>     ; Confirm Result
+A775: 20 8A AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8A</A>     ; Confirm Result
+A778: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+A77A: 09 7F     <A HREF="BORA.HTM">ORA</A> #$7F
+A77C: 25 62     <A HREF="BAND.HTM">AND</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+A77E: 85 62     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+A780: A9 8B     <A HREF="BLDA.HTM">LDA</A> #$8B
+A782: A0 A7     <A HREF="BLDY.HTM">LDY</A> #$A7
+A784: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A786: 84 23     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+A788: 4C 43 AE  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAD9E.HTM">$AE43</A>     ; Evaluate Expression in Text
+A78B: A9 BC     <A HREF="BLDA.HTM">LDA</A> #$BC
+A78D: A0 B9     <A HREF="BLDY.HTM">LDY</A> #$B9
+A78F: 20 A2 BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBA2.HTM">$BBA2</A>     ; Load FAC#1 From Memory
+A792: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+A795: C9 A9     <A HREF="BCMP.HTM">CMP</A> #$A9
+A797: D0 06     <A HREF="BBNE.HTM">BNE</A> $A79F
+A799: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+A79C: 20 8A AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8A</A>     ; Confirm Result
+
+Jump from $A797:
+
+A79F: 20 2B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC2B.HTM">$BC2B</A>     ; Check Sign of FAC#1
+A7A2: 20 38 AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD9E.HTM">$AE38</A>     ; Evaluate Expression in Text
+A7A5: A5 4A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP49.HTM">$4A</A>       ; Pointer: Index Variable for FOR/NEXT loop
+A7A7: 48        <A HREF="BPHA.HTM">PHA</A>
+A7A8: A5 49     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+A7AA: 48        <A HREF="BPHA.HTM">PHA</A>
+A7AB: A9 81     <A HREF="BLDA.HTM">LDA</A> #$81
+A7AD: 48        <A HREF="BPHA.HTM">PHA</A>
+
+    <A HREF="ROMA717.HTM">Previous Page</A> / <A HREF="ROMA7AE.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

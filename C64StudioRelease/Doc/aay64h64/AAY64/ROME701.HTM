@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E701/59137:   Back on to Previous Line
+
+Jump from <A HREF="ROME72A.HTM">$E753</A>, <A HREF="ROME7D4.HTM">$E864</A>:
+
+E701: A6 D6     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPD6.HTM">$D6</A>       ; Current Screen Line number of Cursor
+E703: D0 06     <A HREF="BBNE.HTM">BNE</A> $E70B
+E705: 86 D3     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E707: 68        <A HREF="BPLA.HTM">PLA</A>
+E708: 68        <A HREF="BPLA.HTM">PLA</A>
+E709: D0 9D     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROME691.HTM">$E6A8</A>     ; Set Up Screen Print
+
+Jump from $E703:
+
+E70B: CA        <A HREF="BDEX.HTM">DEX</A>
+E70C: 86 D6     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPD6.HTM">$D6</A>       ; Current Screen Line number of Cursor
+E70E: 20 6C E5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME56C.HTM">$E56C</A>     ; Set Screen Pointers
+E711: A4 D5     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPD5.HTM">$D5</A>       ; Current logical Line length: 39 or 79
+E713: 84 D3     <A HREF="BSTY.HTM">STY</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E715: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME6ED.HTM">Previous Page</A> / <A HREF="ROME716.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

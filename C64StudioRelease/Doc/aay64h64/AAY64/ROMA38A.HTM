@@ -1,0 +1,48 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A38A/41866:   Find FOR/GOSUB Entry on Stack
+
+Jump from <A HREF="ROMA742.HTM">$A749</A>, <A HREF="ROMA8D2.HTM">$A8D8</A>, <A HREF="ROMAD1E.HTM">$AD2B</A>:
+
+A38A: BA        <A HREF="BTSX.HTM">TSX</A>
+A38B: E8        <A HREF="BINX.HTM">INX</A>
+A38C: E8        <A HREF="BINX.HTM">INX</A>
+A38D: E8        <A HREF="BINX.HTM">INX</A>
+A38E: E8        <A HREF="BINX.HTM">INX</A>
+
+Jump from $A3B5:
+
+A38F: BD 01 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0100.HTM">$0101</A>,X   ; 6510 Hardware Stack Area
+A392: C9 81     <A HREF="BCMP.HTM">CMP</A> #$81
+A394: D0 21     <A HREF="BBNE.HTM">BNE</A> $A3B7
+A396: A5 4A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP49.HTM">$4A</A>       ; Pointer: Index Variable for FOR/NEXT loop
+A398: D0 0A     <A HREF="BBNE.HTM">BNE</A> $A3A4
+A39A: BD 02 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0100.HTM">$0102</A>,X   ; 6510 Hardware Stack Area
+A39D: 85 49     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+A39F: BD 03 01  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0100.HTM">$0103</A>,X   ; 6510 Hardware Stack Area
+A3A2: 85 4A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP49.HTM">$4A</A>       ; Pointer: Index Variable for FOR/NEXT loop
+
+Jump from $A398:
+
+A3A4: DD 03 01  <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP0100.HTM">$0103</A>,X   ; 6510 Hardware Stack Area
+A3A7: D0 07     <A HREF="BBNE.HTM">BNE</A> $A3B0
+A3A9: A5 49     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+A3AB: DD 02 01  <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP0100.HTM">$0102</A>,X   ; 6510 Hardware Stack Area
+A3AE: F0 07     <A HREF="BBEQ.HTM">BEQ</A> $A3B7
+
+Jump from $A3A7:
+
+A3B0: 8A        <A HREF="BTXA.HTM">TXA</A>
+A3B1: 18        <A HREF="BCLC.HTM">CLC</A>
+A3B2: 69 12     <A HREF="BADC.HTM">ADC</A> #$12
+A3B4: AA        <A HREF="BTAX.HTM">TAX</A>
+A3B5: D0 D8     <A HREF="BBNE.HTM">BNE</A> $A38F
+
+Jump from $A394, $A3AE:
+
+A3B7: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA364.HTM">Previous Page</A> / <A HREF="ROMA3B8.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,43 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B218/45592:   Find Array
+
+B218: A6 2F     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP2F.HTM">$2F</A>       ; Pointer: Start of BASIC Arrays
+B21A: A5 30     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2F.HTM">$30</A>       ; Pointer: Start of BASIC Arrays
+
+Jump from $B243:
+
+B21C: 86 5F     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+B21E: 85 60     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+B220: C5 32     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP31.HTM">$32</A>       ; Pointer: End of BASIC Arrays + 1
+B222: D0 04     <A HREF="BBNE.HTM">BNE</A> $B228
+B224: E4 31     <A HREF="BCPX.HTM">CPX</A> <A HREF="ZP31.HTM">$31</A>       ; Pointer: End of BASIC Arrays + 1
+B226: F0 39     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMB261.HTM">$B261</A>     ; Create Array
+
+Jump from $B222:
+
+B228: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B22A: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B22C: C8        <A HREF="BINY.HTM">INY</A>
+B22D: C5 45     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP45.HTM">$45</A>       ; Name of Variable being sought in Variable Table
+B22F: D0 06     <A HREF="BBNE.HTM">BNE</A> $B237
+B231: A5 46     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP45.HTM">$46</A>       ; Name of Variable being sought in Variable Table
+B233: D1 5F     <A HREF="BCMP.HTM">CMP</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B235: F0 16     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMB24D.HTM">$B24D</A>     ; ?REDIM'D ARRAY
+
+Jump from $B22F:
+
+B237: C8        <A HREF="BINY.HTM">INY</A>
+B238: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B23A: 18        <A HREF="BCLC.HTM">CLC</A>
+B23B: 65 5F     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+B23D: AA        <A HREF="BTAX.HTM">TAX</A>
+B23E: C8        <A HREF="BINY.HTM">INY</A>
+B23F: B1 5F     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP5C.HTM">$5F</A>),Y   ; Temporary storage for FLPT value
+B241: 65 60     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+B243: 90 D7     <A HREF="BBCC.HTM">BCC</A> $B21C
+
+    <A HREF="ROMB1D1.HTM">Previous Page</A> / <A HREF="ROMB245.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

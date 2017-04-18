@@ -1,0 +1,29 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F0A4/61604:   Serial Bus Idle
+
+Jump from <A HREF="ROMED0C.HTM">$ED0E</A>, <A HREF="ROMF875.HTM">$F88A</A>:
+
+F0A4: 48        <A HREF="BPHA.HTM">PHA</A>
+F0A5: AD A1 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+F0A8: F0 11     <A HREF="BBEQ.HTM">BEQ</A> $F0BB
+
+Jump from $F0AF:
+
+F0AA: AD A1 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+F0AD: 29 03     <A HREF="BAND.HTM">AND</A> #$03
+F0AF: D0 F9     <A HREF="BBNE.HTM">BNE</A> $F0AA
+F0B1: A9 10     <A HREF="BLDA.HTM">LDA</A> #$10
+F0B3: 8D 0D DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA213.HTM">$DD0D</A>     ; CIA2: Interrupt (NMI) Control Register
+F0B6: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+F0B8: 8D A1 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+
+Jump from $F0A8:
+
+F0BB: 68        <A HREF="BPLA.HTM">PLA</A>
+F0BC: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF086.HTM">Previous Page</A> / <A HREF="ROMF0BD.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

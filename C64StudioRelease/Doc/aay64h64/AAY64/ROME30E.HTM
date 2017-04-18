@@ -1,0 +1,45 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E30E/58126:   Evaluate &lt;atn&gt;
+
+E30E: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+E310: 48        <A HREF="BPHA.HTM">PHA</A>
+E311: 10 03     <A HREF="BBPL.HTM">BPL</A> $E316
+E313: 20 B4 BF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBFB4.HTM">$BFB4</A>     ; Negate FAC#1
+
+Jump from $E311:
+
+E316: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+E318: 48        <A HREF="BPHA.HTM">PHA</A>
+E319: C9 81     <A HREF="BCMP.HTM">CMP</A> #$81
+E31B: 90 07     <A HREF="BBCC.HTM">BCC</A> $E324
+E31D: A9 BC     <A HREF="BLDA.HTM">LDA</A> #$BC
+E31F: A0 B9     <A HREF="BLDY.HTM">LDY</A> #$B9
+E321: 20 0F BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBB0F.HTM">$BB0F</A>     ; Divide FAC#2 by FAC#1
+
+Jump from $E31B:
+
+E324: A9 3E     <A HREF="BLDA.HTM">LDA</A> #$3E
+E326: A0 E3     <A HREF="BLDY.HTM">LDY</A> #$E3
+E328: 20 43 E0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME043.HTM">$E043</A>     ; Series Evaluation
+E32B: 68        <A HREF="BPLA.HTM">PLA</A>
+E32C: C9 81     <A HREF="BCMP.HTM">CMP</A> #$81
+E32E: 90 07     <A HREF="BBCC.HTM">BCC</A> $E337
+E330: A9 E0     <A HREF="BLDA.HTM">LDA</A> #$E0
+E332: A0 E2     <A HREF="BLDY.HTM">LDY</A> #$E2
+E334: 20 50 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB850.HTM">$B850</A>     ; Perform Subtraction
+
+Jump from $E32E:
+
+E337: 68        <A HREF="BPLA.HTM">PLA</A>
+E338: 10 03     <A HREF="BBPL.HTM">BPL</A> $E33D
+E33A: 4C B4 BF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBFB4.HTM">$BFB4</A>     ; Negate FAC#1
+
+Jump from $E338:
+
+E33D: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME309.HTM">Previous Page</A> / <A HREF="ROME33E.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

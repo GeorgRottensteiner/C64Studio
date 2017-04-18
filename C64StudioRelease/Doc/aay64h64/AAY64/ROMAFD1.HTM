@@ -1,0 +1,23 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AFD1/45009:   Evaluate Numeric Function
+
+Jump from <A HREF="ROMAFA7.HTM">$AFAF</A>:
+
+AFD1: 20 F1 AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEF1.HTM">$AEF1</A>     ; Expression in Brackets
+AFD4: 68        <A HREF="BPLA.HTM">PLA</A>
+AFD5: A8        <A HREF="BTAY.HTM">TAY</A>
+
+Jump from <A HREF="ROMAFB1.HTM">$AFCE</A>:
+
+AFD6: B9 EA 9F  <A HREF="BLDA.HTM">LDA</A> $9FEA,Y
+AFD9: 85 55     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP54.HTM">$55</A>       ; Jump Vector used in Function Evaluation
+AFDB: B9 EB 9F  <A HREF="BLDA.HTM">LDA</A> $9FEB,Y
+AFDE: 85 56     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP54.HTM">$56</A>       ; Jump Vector used in Function Evaluation
+AFE0: 20 54 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP54.HTM">$0054</A>     ; Jump Vector used in Function Evaluation
+AFE3: 4C 8D AD  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAD8A.HTM">$AD8D</A>     ; Confirm Result
+
+    <A HREF="ROMAFB1.HTM">Previous Page</A> / <A HREF="ROMAFE6.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,79 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EF90/61328:   Process RS232 Byte
+
+Jump from <A HREF="ROMEF59.HTM">$EF5B</A>:
+
+EF90: A5 A7     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA7.HTM">$A7</A>       ; Tape temporary
+EF92: D0 EA     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMEF7E.HTM">$EF7E</A>     ; Set Up To Receive
+EF94: 4C D3 E4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME4B7.HTM">$E4D3</A>     ; Unused Bytes For Future Patches
+
+<B>* Old KERNAL:
+EF94: 85 A9     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPA9.HTM">$A9</A>       ; RS232 Flag: Start Bit check/Tape temporary
+EF96: 60        <A HREF="BRTS.HTM">RTS</A>
+</B>
+Jump from <A HREF="ROMEF59.HTM">$EF5F</A>:
+
+EF97: AC 9B 02  <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP029B.HTM">$029B</A>     ; RS232 Index to End of Input Buffer
+EF9A: C8        <A HREF="BINY.HTM">INY</A>
+EF9B: CC 9C 02  <A HREF="BCPY.HTM">CPY</A> <A HREF="ZP029C.HTM">$029C</A>     ; RS232 Pointer: High Byte of Input Buffer
+EF9E: F0 2A     <A HREF="BBEQ.HTM">BEQ</A> $EFCA
+EFA0: 8C 9B 02  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP029B.HTM">$029B</A>     ; RS232 Index to End of Input Buffer
+EFA3: 88        <A HREF="BDEY.HTM">DEY</A>
+EFA4: A5 AA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAA.HTM">$AA</A>       ; RS232 Input Byte Buffer/Tape temporary
+EFA6: AE 98 02  <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP0298.HTM">$0298</A>     ; RS232 Number of Bits left to send
+
+Jump from $EFAF:
+
+EFA9: E0 09     <A HREF="BCPX.HTM">CPX</A> #$09
+EFAB: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $EFB1
+EFAD: 4A        <A HREF="BLSR.HTM">LSR</A>
+EFAE: E8        <A HREF="BINX.HTM">INX</A>
+EFAF: D0 F8     <A HREF="BBNE.HTM">BNE</A> $EFA9
+
+Jump from $EFAB:
+
+EFB1: 91 F7     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPF7.HTM">$F7</A>),Y   ; RS232 Input Buffer Pointer
+EFB3: A9 20     <A HREF="BLDA.HTM">LDA</A> #$20
+EFB5: 2C 94 02  <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP0294.HTM">$0294</A>     ; RS232 Pseudo 6551 command Register Image
+EFB8: F0 B4     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMEF59.HTM">$EF6E</A>     ; RS232 Receive
+EFBA: 30 B1     <A HREF="BBMI.HTM">BMI</A> <A HREF="ROMEF59.HTM">$EF6D</A>     ; RS232 Receive
+EFBC: A5 A7     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA7.HTM">$A7</A>       ; Tape temporary
+EFBE: 45 AB     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZPAB.HTM">$AB</A>       ; RS232 Input parity/Tape temporary
+EFC0: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $EFC5
+EFC2: 70 A9     <A HREF="BBVS.HTM">BVS</A> <A HREF="ROMEF59.HTM">$EF6D</A>     ; RS232 Receive
+EFC4: 2C        .BYTE $2C
+
+Jump from $EFC0:
+
+EFC5: 50 A6     <A HREF="BBVC.HTM">BVC</A> <A HREF="ROMEF59.HTM">$EF6D</A>     ; RS232 Receive
+EFC7: A9 01     <A HREF="BLDA.HTM">LDA</A> #$01
+EFC9: 2C        .BYTE $2C
+
+Jump from $EF9E:
+
+EFCA: A9 04     <A HREF="BLDA.HTM">LDA</A> #$04
+EFCC: 2C        .BYTE $2C
+
+Jump from $EFDF:
+
+EFCD: A9 80     <A HREF="BLDA.HTM">LDA</A> #$80
+EFCF: 2C        .BYTE $2C
+
+Jump from $EFDD:
+
+EFD0: A9 02     <A HREF="BLDA.HTM">LDA</A> #$02
+EFD2: 0D 97 02  <A HREF="BORA.HTM">ORA</A> <A HREF="ZP0297.HTM">$0297</A>     ; RS232 Pseudo 6551 Status Register Image
+EFD5: 8D 97 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0297.HTM">$0297</A>     ; RS232 Pseudo 6551 Status Register Image
+EFD8: 4C 7E EF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEF7E.HTM">$EF7E</A>     ; Set Up To Receive
+
+Jump from <A HREF="ROMEF59.HTM">$EF72</A>:
+
+EFDB: A5 AA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAA.HTM">$AA</A>       ; RS232 Input Byte Buffer/Tape temporary
+EFDD: D0 F1     <A HREF="BBNE.HTM">BNE</A> $EFD0
+EFDF: F0 EC     <A HREF="BBEQ.HTM">BEQ</A> $EFCD
+
+    <A HREF="ROMEF7E.HTM">Previous Page</A> / <A HREF="ROMEFE1.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

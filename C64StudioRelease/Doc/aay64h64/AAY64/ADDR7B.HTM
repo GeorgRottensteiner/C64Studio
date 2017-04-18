@@ -1,0 +1,25 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510 Illegal Addressing mode: Direct Indexed Indirect (R-M-W) -- (d),y
+
+ (<A HREF="BDCP.HTM">DCP</A>,<A HREF="BISB.HTM">ISB</A>,<A HREF="BRLA.HTM">RLA</A>,<A HREF="BRRA.HTM">RRA</A>,<A HREF="BSLO.HTM">SLO</A>,<A HREF="BSRE.HTM">SRE</A>)
+ (2 bytes)  (7,8 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Direct Offset         |    R     |
+    |           3   |  0,D+DO          | Absolute Address Low  |    R     |
+    |           4   |  0,D+DO+1        | Absolute Address High |    R     |
+    |       (4) 4a  |  DBR,AAH,AAL+YL  | Internal Operation    |    R     |
+    |           5   |  DBR,AA+Y        | Data Low              |    R     |
+    |           6   |  DBR,AA          | Old Data Low          |    W     |
+    |           7   |  DBR,AA          | New Data Low          |    W     |
+    +---------------+------------------+-----------------------+----------+
+    (4) Add 1 cycle for indexing across page boundaries or write.
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

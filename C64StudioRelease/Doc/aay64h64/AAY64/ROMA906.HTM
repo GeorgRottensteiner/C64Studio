@@ -1,0 +1,38 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A906/43270:   Search for Next Statement / Line
+
+Jump from <A HREF="ROMA742.HTM">$A75A</A>, <A HREF="ROMA8F8.HTM">$A8F8</A>, <A HREF="ROMABEA.HTM">$ABF3</A>, <A HREF="ROMAC35.HTM">$ACB8</A>:
+
+A906: A2 3A     <A HREF="BLDX.HTM">LDX</A> #$3A
+A908: 2C        .BYTE $2C
+
+Jump from <A HREF="ROMA8A0.HTM">$A8A3</A>, <A HREF="ROMA93B.HTM">$A93B</A>:
+
+A909: A2 00     <A HREF="BLDX.HTM">LDX</A> #$00
+A90B: 86 07     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+A90D: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+A90F: 84 08     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+
+Jump from $A926:
+
+A911: A5 08     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+A913: A6 07     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+A915: 85 07     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+A917: 86 08     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+
+Jump from $A924:
+
+A919: B1 7A     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP7A.HTM">$7A</A>),Y   ; Pointer: Current Byte of BASIC Text
+A91B: F0 E8     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMA8F8.HTM">$A905</A>     ; Perform [data]
+A91D: C5 08     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+A91F: F0 E4     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMA8F8.HTM">$A905</A>     ; Perform [data]
+A921: C8        <A HREF="BINY.HTM">INY</A>
+A922: C9 22     <A HREF="BCMP.HTM">CMP</A> #$22
+A924: D0 F3     <A HREF="BBNE.HTM">BNE</A> $A919
+A926: F0 E9     <A HREF="BBEQ.HTM">BEQ</A> $A911
+
+    <A HREF="ROMA8F8.HTM">Previous Page</A> / <A HREF="ROMA928.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

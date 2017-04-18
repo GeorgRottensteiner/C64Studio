@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BAD4/47828:   Overflow / Underflow
+
+Jump from <A HREF="ROME000.HTM">$E00B</A>:
+
+BAD4: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BAD6: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+BAD8: 30 05     <A HREF="BBMI.HTM">BMI</A> $BADF
+
+Jump from <A HREF="ROMBAB7.HTM">$BAB9</A>, <A HREF="ROMBAB7.HTM">$BAC4</A>:
+
+BADA: 68        <A HREF="BPLA.HTM">PLA</A>
+BADB: 68        <A HREF="BPLA.HTM">PLA</A>
+BADC: 4C F7 B8  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB867.HTM">$B8F7</A>     ; Perform Addition
+
+Jump from $BAD8, <A HREF="ROMBAB7.HTM">$BAC0</A>, <A HREF="ROMBAE2.HTM">$BAEB</A>, <A HREF="ROMBAE2.HTM">$BAF6</A>, <A HREF="ROMBB0F.HTM">$BB23</A>:
+
+BADF: 4C 7E B9  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB97E.HTM">$B97E</A>     ; Output ?OVERFLOW Error
+
+    <A HREF="ROMBAB7.HTM">Previous Page</A> / <A HREF="ROMBAE2.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

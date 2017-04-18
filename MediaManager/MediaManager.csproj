@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0718AAF4-1991-4BA1-A060-476767A30E93}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MediaManager</RootNamespace>
+    <AssemblyName>MediaManager</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\C64Studio\Common\ArgumentParser.cs">
+      <Link>Common\ArgumentParser.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Formats\D64.cs">
+      <Link>Included Files\D64.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Formats\MediaFormat.cs">
+      <Link>Included Files\MediaFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Formats\T64.cs">
+      <Link>Included Files\T64.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Types\Palette.cs">
+      <Link>Included Files\Palette.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Types\Types.cs">
+      <Link>Included Files\Types.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Types\Util.cs">
+      <Link>Included Files\Util.cs</Link>
+    </Compile>
+    <Compile Include="Manager.cs" />
+    <Compile Include="p:\common#\collections\Map.cs">
+      <Link>Common\Map.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\collections\MultiMap.cs">
+      <Link>Common\MultiMap.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\collections\Set.cs">
+      <Link>Common\Set.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\debug\debug.cs">
+      <Link>Common\debug.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\forms\FastPictureBox.cs">
+      <Link>Common\FastPictureBox.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="p:\common#\forms\ImageListbox.cs">
+      <Link>Common\ImageListbox.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="p:\common#\forms\ListViewItemComparer.cs">
+      <Link>Common\ListViewItemComparer.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\forms\ScrollablePanel.cs">
+      <Link>Common\ScrollablePanel.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="p:\common#\forms\Util.cs">
+      <Link>Common\Util.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\forms\WindowStateManager.cs">
+      <Link>Common\WindowStateManager.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\imaging\FastImage.cs">
+      <Link>Common\FastImage.cs</Link>
+    </Compile>
+    <Compile Include="P:\Common#\Imaging\IImage.cs">
+      <Link>Common\IImage.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\imaging\MemoryImage.cs">
+      <Link>Common\MemoryImage.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\io\BinaryReader.cs">
+      <Link>Common\BinaryReader.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\io\BinaryWriter.cs">
+      <Link>Common\BinaryWriter.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\io\File.cs">
+      <Link>Common\File.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\io\FileChunk.cs">
+      <Link>Common\FileChunk.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\io\IReader.cs">
+      <Link>Common\IReader.cs</Link>
+    </Compile>
+    <Compile Include="P:\Common#\IO\IWriter.cs">
+      <Link>Common\IWriter.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\io\MemoryReader.cs">
+      <Link>Common\MemoryReader.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\memory\ByteBuffer.cs">
+      <Link>Common\ByteBuffer.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\misc\GenericHelper.cs">
+      <Link>Common\GenericHelper.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\string\Convert.cs">
+      <Link>Common\Convert.cs</Link>
+    </Compile>
+    <Compile Include="p:\common#\string\Path.cs">
+      <Link>Common\Path.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)C64StudioRelease\$(TargetFileName)
+copy $(TargetPath) $(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFileName)</PostBuildEvent>
+  </PropertyGroup>
+</Project>

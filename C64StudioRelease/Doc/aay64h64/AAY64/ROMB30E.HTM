@@ -1,0 +1,62 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B30E/45838:   Locate Element in Array
+
+Jump from <A HREF="ROMB261.HTM">$B2FE</A>:
+
+B30E: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from <A HREF="ROMB261.HTM">$B306</A>:
+
+B30F: A5 72     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B311: 05 71     <A HREF="BORA.HTM">ORA</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B313: 18        <A HREF="BCLC.HTM">CLC</A>
+B314: F0 0A     <A HREF="BBEQ.HTM">BEQ</A> $B320
+B316: 20 4C B3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB34C.HTM">$B34C</A>     ; Number of Bytes in Subscript
+B319: 8A        <A HREF="BTXA.HTM">TXA</A>
+B31A: 65 64     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B31C: AA        <A HREF="BTAX.HTM">TAX</A>
+B31D: 98        <A HREF="BTYA.HTM">TYA</A>
+B31E: A4 22     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+
+Jump from $B314:
+
+B320: 65 65     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B322: 86 71     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B324: C6 0B     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+B326: D0 CA     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMB261.HTM">$B2F2</A>     ; Create Array
+B328: 85 72     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+B32A: A2 05     <A HREF="BLDX.HTM">LDX</A> #$05
+B32C: A5 45     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP45.HTM">$45</A>       ; Name of Variable being sought in Variable Table
+B32E: 10 01     <A HREF="BBPL.HTM">BPL</A> $B331
+B330: CA        <A HREF="BDEX.HTM">DEX</A>
+
+Jump from $B32E:
+
+B331: A5 46     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP45.HTM">$46</A>       ; Name of Variable being sought in Variable Table
+B333: 10 02     <A HREF="BBPL.HTM">BPL</A> $B337
+B335: CA        <A HREF="BDEX.HTM">DEX</A>
+B336: CA        <A HREF="BDEX.HTM">DEX</A>
+
+Jump from $B333:
+
+B337: 86 28     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP26.HTM">$28</A>       ; Floating point product of Multiply and Divide
+B339: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+B33B: 20 55 B3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB34C.HTM">$B355</A>     ; Number of Bytes in Subscript
+B33E: 8A        <A HREF="BTXA.HTM">TXA</A>
+B33F: 65 58     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B341: 85 47     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP47.HTM">$47</A>       ; Value/Descriptor-Pointer
+B343: 98        <A HREF="BTYA.HTM">TYA</A>
+B344: 65 59     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B346: 85 48     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP47.HTM">$48</A>       ; Value/Descriptor-Pointer
+B348: A8        <A HREF="BTAY.HTM">TAY</A>
+B349: A5 47     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP47.HTM">$47</A>       ; Value/Descriptor-Pointer
+
+Jump from <A HREF="ROMB261.HTM">$B2E7</A>, <A HREF="ROMB3A6.HTM">$B3A9</A>:
+
+B34B: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB261.HTM">Previous Page</A> / <A HREF="ROMB34C.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

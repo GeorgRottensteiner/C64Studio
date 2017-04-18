@@ -1,0 +1,38 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  EOR            EOR &quot;Exclusive-Or&quot; memory with accumulator             EOR
+
+  Operation:  A EOR M -&gt; A                              N V - B D I Z C
+                                                        / . . . . . / .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   EOR #$FF            |   $49   |    2    |    2     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   EOR $FF             |   $45   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   EOR $FF,X           |   $55   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   EOR $FFFF           |   $4D   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   EOR $FFFF,X         |   $5D   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   EOR $FFFF,Y         |   $59   |    3    |    4*    |
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   EOR ($FF,X)         |   $41   |    2    |    6     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   EOR ($FF),Y         |   $51   |    2    |    5*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 if page boundary is crossed.
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR3A.HTM">AbsoluteLong</A>   |   EOR $FFFFFF         |   $4F   |    4    |     5    |
+  | <A HREF="ADDR13.HTM">AbsoluteLong,X</A> |   EOR $FFFFFF,X       |   $5F   |    4    |     5    |
+  | <A HREF="ADDR18.HTM">(Indirect)</A>     |   EOR ($FF)           |   $52   |    2    |     5    |
+  | <A HREF="ADDR19.HTM">[Indirect Long]</A>|   EOR [$FF]           |   $47   |    2    |     6    |
+  | <A HREF="ADDR8.HTM">[Ind.Long],Y</A>   |   EOR [$FF],Y         |   $57   |    2    |     6    |
+  | <A HREF="ADDR22.HTM">Relative,S</A>     |   EOR $FF,S           |   $43   |    2    |     4    |
+  | <A HREF="ADDR23.HTM">(Indirect,S),Y</A> |   EOR ($FF,S),Y       |   $53   |    2    |     7    |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

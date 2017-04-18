@@ -1,0 +1,53 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E000/57344:   EXP continued From BASIC ROM
+
+Jump from <A HREF="ROMBFED.HTM">$BFFD</A>:
+
+E000: 85 56     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP54.HTM">$56</A>       ; Jump Vector used in Function Evaluation
+E002: 20 0F BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC0C.HTM">$BC0F</A>     ; Copy FAC#1 into FAC#2
+E005: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+E007: C9 88     <A HREF="BCMP.HTM">CMP</A> #$88
+E009: 90 03     <A HREF="BBCC.HTM">BCC</A> $E00E
+
+Jump from $E016:
+
+E00B: 20 D4 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBAD4.HTM">$BAD4</A>     ; Overflow / Underflow
+
+Jump from $E009:
+
+E00E: 20 CC BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBCCC.HTM">$BCCC</A>     ; Evaluate &lt;int&gt;
+E011: A5 07     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+E013: 18        <A HREF="BCLC.HTM">CLC</A>
+E014: 69 81     <A HREF="BADC.HTM">ADC</A> #$81
+E016: F0 F3     <A HREF="BBEQ.HTM">BEQ</A> $E00B
+E018: 38        <A HREF="BSEC.HTM">SEC</A>
+E019: E9 01     <A HREF="BSBC.HTM">SBC</A> #$01
+E01B: 48        <A HREF="BPHA.HTM">PHA</A>
+E01C: A2 05     <A HREF="BLDX.HTM">LDX</A> #$05
+
+Jump from $E027:
+
+E01E: B5 69     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP69.HTM">$69</A>,X     ; AFAC Exponent
+E020: B4 61     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP61.HTM">$61</A>,X     ; FAC Exponent
+E022: 95 61     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP61.HTM">$61</A>,X     ; FAC Exponent
+E024: 94 69     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP69.HTM">$69</A>,X     ; AFAC Exponent
+E026: CA        <A HREF="BDEX.HTM">DEX</A>
+E027: 10 F5     <A HREF="BBPL.HTM">BPL</A> $E01E
+E029: A5 56     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP54.HTM">$56</A>       ; Jump Vector used in Function Evaluation
+E02B: 85 70     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+E02D: 20 53 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB850.HTM">$B853</A>     ; Perform Subtraction
+E030: 20 B4 BF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBFB4.HTM">$BFB4</A>     ; Negate FAC#1
+E033: A9 C4     <A HREF="BLDA.HTM">LDA</A> #$C4
+E035: A0 BF     <A HREF="BLDY.HTM">LDY</A> #$BF
+E037: 20 59 E0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME043.HTM">$E059</A>     ; Series Evaluation
+E03A: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+E03C: 85 6F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+E03E: 68        <A HREF="BPLA.HTM">PLA</A>
+E03F: 20 B9 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBAB7.HTM">$BAB9</A>     ; Test Both Accumulators
+E042: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBFED.HTM">Previous Page</A> / <A HREF="ROME043.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

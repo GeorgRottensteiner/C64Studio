@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FD02/64770:   Check For 8-ROM
+
+Jump from <A HREF="ROMFCE2.HTM">$FCE7</A>, <A HREF="ROMFE43.HTM">$FE56</A>:
+
+FD02: A2 05     <A HREF="BLDX.HTM">LDX</A> #$05
+
+Jump from $FD0D:
+
+FD04: BD 0F FD  <A HREF="BLDA.HTM">LDA</A> $FD0F,X
+FD07: DD 03 80  <A HREF="BCMP.HTM">CMP</A> $8003,X
+FD0A: D0 03     <A HREF="BBNE.HTM">BNE</A> $FD0F
+FD0C: CA        <A HREF="BDEX.HTM">DEX</A>
+FD0D: D0 F5     <A HREF="BBNE.HTM">BNE</A> $FD04
+
+Jump from $FD0A:
+
+FD0F: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMFCE2.HTM">Previous Page</A> / <A HREF="ROMFD10.HTM">Next Page</A>
+
+Kernal-Reference:
+
+ LDA $FD0F,X : <A HREF="ROMFD02.HTM">$FD04</A>
+
+</PRE></BODY></HTML>

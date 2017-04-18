@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B7EB/47083:   Get parameters for POKE/WAIT
+
+Jump from <A HREF="ROMB824.HTM">$B824</A>, <A HREF="ROMB82D.HTM">$B82D</A>:
+
+B7EB: 20 8A AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8A</A>     ; Confirm Result
+B7EE: 20 F7 B7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB7F7.HTM">$B7F7</A>     ; Convert FAC#1 to Integer in LINNUM
+
+Jump from <A HREF="ROMB82D.HTM">$B839</A>:
+
+B7F1: 20 FD AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFD.HTM">$AEFD</A>     ; Test ','
+B7F4: 4C 9E B7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB79B.HTM">$B79E</A>     ; Evaluate Text to 1 Byte in XR
+
+    <A HREF="ROMB7B5.HTM">Previous Page</A> / <A HREF="ROMB7F7.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

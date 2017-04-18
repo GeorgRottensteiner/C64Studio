@@ -1,0 +1,74 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F5FA/62970:   Save to Serial Bus
+
+F5FA: A9 61     <A HREF="BLDA.HTM">LDA</A> #$61
+F5FC: 85 B9     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F5FE: A4 B7     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPB7.HTM">$B7</A>       ; Number of Characters in Filename
+F600: D0 03     <A HREF="BBNE.HTM">BNE</A> $F605
+F602: 4C 10 F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF710.HTM">$F710</A>     ; Output I/O Error Messages: 'MISSING FILENAME'
+
+Jump from $F600:
+
+F605: 20 D5 F3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF3D5.HTM">$F3D5</A>     ; Send Secondary Address
+F608: 20 8F F6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF68F.HTM">$F68F</A>     ; Print &quot;SAVING&quot;
+F60B: A5 BA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBA.HTM">$BA</A>       ; Current File - First Address (Device number)
+F60D: 20 0C ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMED0C.HTM">$ED0C</A>     ; Send LISTEN Command on Serial Bus
+F610: A5 B9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F612: 20 B9 ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDB9.HTM">$EDB9</A>     ; Send LISTEN Secondary Address
+F615: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+F617: 20 8E FB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFB8E.HTM">$FB8E</A>     ; Reset Tape Pointer
+F61A: A5 AC     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAC.HTM">$AC</A>       ; Pointer: Tape Buffer/Screen scrolling
+F61C: 20 DD ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDDD.HTM">$EDDD</A>     ; Send Serial Deferred
+F61F: A5 AD     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAC.HTM">$AD</A>       ; Pointer: Tape Buffer/Screen scrolling
+F621: 20 DD ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDDD.HTM">$EDDD</A>     ; Send Serial Deferred
+
+Jump from $F63D:
+
+F624: 20 D1 FC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFCD1.HTM">$FCD1</A>     ; Check Read / Write Pointer
+F627: B0 16     <A HREF="BBCS.HTM">BCS</A> $F63F
+F629: B1 AC     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPAC.HTM">$AC</A>),Y   ; Pointer: Tape Buffer/Screen scrolling
+F62B: 20 DD ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDDD.HTM">$EDDD</A>     ; Send Serial Deferred
+F62E: 20 E1 FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFE1.HTM">$FFE1</A>     ; Test-Stop Vector
+F631: D0 07     <A HREF="BBNE.HTM">BNE</A> $F63A
+
+Jump from <A HREF="ROMF4B8.HTM">$F4FE</A>:
+
+F633: 20 42 F6  <A HREF="BJSR.HTM">JSR</A> $F642
+F636: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+F638: 38        <A HREF="BSEC.HTM">SEC</A>
+F639: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $F631:
+
+F63A: 20 DB FC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFCDB.HTM">$FCDB</A>     ; Bump Read / Write Pointer
+F63D: D0 E5     <A HREF="BBNE.HTM">BNE</A> $F624
+
+Jump from $F627:
+
+F63F: 20 FE ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDFE.HTM">$EDFE</A>     ; Send UNLISTEN
+
+Jump from $F633, <A HREF="ROMF291.HTM">$F2EE</A>, <A HREF="ROMF4B8.HTM">$F52B</A>:
+
+F642: 24 B9     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F644: 30 11     <A HREF="BBMI.HTM">BMI</A> $F657
+F646: A5 BA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBA.HTM">$BA</A>       ; Current File - First Address (Device number)
+F648: 20 0C ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMED0C.HTM">$ED0C</A>     ; Send LISTEN Command on Serial Bus
+F64B: A5 B9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F64D: 29 EF     <A HREF="BAND.HTM">AND</A> #$EF
+F64F: 09 E0     <A HREF="BORA.HTM">ORA</A> #$E0
+F651: 20 B9 ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDB9.HTM">$EDB9</A>     ; Send LISTEN Secondary Address
+
+Jump from <A HREF="ROMF3D5.HTM">$F406</A>:
+
+F654: 20 FE ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDFE.HTM">$EDFE</A>     ; Send UNLISTEN
+
+Jump from $F644:
+
+F657: 18        <A HREF="BCLC.HTM">CLC</A>
+F658: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF5DD.HTM">Previous Page</A> / <A HREF="ROMF659.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

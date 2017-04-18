@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $D018/53272/VIC+24:   Memory Control Register
+
+   +----------+---------------------------------------------------+
+   | Bits 7-4 |   Video Matrix Base Address (inside VIC)          |
+   | Bit  3   |   Bitmap-Mode: Select Base Address (inside VIC)   |
+   | Bits 3-1 |   Character Dot-Data Base Address (inside VIC)    |
+   | Bit  0   |   Unused                                          |
+   +----------+---------------------------------------------------+
+
+   Default Value: $14/20 (%00010100).
+
+Kernal-Reference:
+
+ LDA $D018   : <A HREF="ROMEB48.HTM">$EB59</A> <A HREF="ROMEC44.HTM">$EC48</A> <A HREF="ROMEC44.HTM">$EC53</A>
+ STA $D018   : <A HREF="ROMEB48.HTM">$EB5E</A> <A HREF="ROMEC44.HTM">$EC58</A>
+
+</PRE></BODY></HTML>

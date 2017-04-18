@@ -1,0 +1,53 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  NOP                         NOP No operation                          NOP
+
+  Operation:  No Operation                              N V - B D I Z C
+                                                        . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR6A.HTM">Implied</A>       |   NOP                 |   $EA   |    1    |    2     |
+  +----------------+-----------------------+---------+---------+----------+
+
+ Illegal Versions:
+
+  Can be used like <A HREF="BBIT.HTM">BIT</A> to skip the next one or two bytes,
+  but this one doesn't change flags.
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR6A.HTM">Implied</A>       |   NOP                 |   $1A   |    1    |    2     |
+  |  <A HREF="ADDR6A.HTM">Implied</A>       |   NOP                 |   $3A   |    1    |    2     |
+  |  <A HREF="ADDR6A.HTM">Implied</A>       |   NOP                 |   $5A   |    1    |    2     |
+  |  <A HREF="ADDR6A.HTM">Implied</A>       |   NOP                 |   $7A   |    1    |    2     |
+  |  <A HREF="ADDR6A.HTM">Implied</A>       |   NOP                 |   $DA   |    1    |    2     |
+  |  <A HREF="ADDR6A.HTM">Implied</A>       |   NOP                 |   $FA   |    1    |    2     |
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   NOP #$FF            |   $80   |    2    |    2     |
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   NOP #$FF            |   $82   |    2    |    2     |
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   NOP #$FF            |   $89   |    2    |    2     |
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   NOP #$FF            |   $C2   |    2    |    2     |
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   NOP #$FF            |   $E2   |    2    |    2     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   NOP $FF             |   $04   |    2    |    3     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   NOP $FF             |   $44   |    2    |    3     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   NOP $FF             |   $64   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   NOP $FF,X           |   $14   |    2    |    4     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   NOP $FF,X           |   $34   |    2    |    4     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   NOP $FF,X           |   $54   |    2    |    4     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   NOP $FF,X           |   $74   |    2    |    4     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   NOP $FF,X           |   $D4   |    2    |    4     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   NOP $FF,X           |   $F4   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   NOP $FFFF           |   $0C   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   NOP $FFFF,X         |   $1C   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   NOP $FFFF,X         |   $3C   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   NOP $FFFF,X         |   $5C   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   NOP $FFFF,X         |   $7C   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   NOP $FFFF,X         |   $DC   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   NOP $FFFF,X         |   $FC   |    3    |    4*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 if page boundary is crossed.
+
+</PRE></BODY></HTML>

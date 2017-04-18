@@ -1,0 +1,22 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F00D/61453:   No DSR (Data Set Ready) Error
+
+Jump from <A HREF="ROMEFE1.HTM">$EFEE</A>, <A HREF="ROMF04D.HTM">$F05E</A>, <A HREF="ROMF409.HTM">$F459</A>:
+
+F00D: A9 40     <A HREF="BLDA.HTM">LDA</A> #$40
+F00F: 8D 97 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0297.HTM">$0297</A>     ; RS232 Pseudo 6551 Status Register Image
+
+Jump from <A HREF="ROMEFE1.HTM">$EFE7</A>, <A HREF="ROMEFE1.HTM">$EFF0</A>, <A HREF="ROMEFE1.HTM">$F009</A>:
+
+F012: 18        <A HREF="BCLC.HTM">CLC</A>
+F013: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from <A HREF="ROMF017.HTM">$F01E</A>:
+
+F014: 20 28 F0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF017.HTM">$F028</A>     ; Send to RS232 Buffer
+
+    <A HREF="ROMEFE1.HTM">Previous Page</A> / <A HREF="ROMF017.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

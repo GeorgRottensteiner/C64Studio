@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AF28/44840:   Search for Variable
+
+Jump from <A HREF="ROMAE83.HTM">$AE97</A>:
+
+AF28: 20 8B B0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB08B.HTM">$B08B</A>     ; Identify Variable
+AF2B: 85 64     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AF2D: 84 65     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+AF2F: A6 45     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP45.HTM">$45</A>       ; Name of Variable being sought in Variable Table
+AF31: A4 46     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP45.HTM">$46</A>       ; Name of Variable being sought in Variable Table
+AF33: A5 0D     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0D.HTM">$0D</A>       ; Data type Flag
+AF35: F0 26     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMAF48.HTM">$AF5D</A>     ; Convert TI to ASCII String
+AF37: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+AF39: 85 70     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+AF3B: 20 14 AF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAF14.HTM">$AF14</A>     ; Identify Reserved Variable
+AF3E: 90 1C     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMAF48.HTM">$AF5C</A>     ; Convert TI to ASCII String
+AF40: E0 54     <A HREF="BCPX.HTM">CPX</A> #$54
+AF42: D0 18     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMAF48.HTM">$AF5C</A>     ; Convert TI to ASCII String
+AF44: C0 C9     <A HREF="BCPY.HTM">CPY</A> #$C9
+AF46: D0 14     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMAF48.HTM">$AF5C</A>     ; Convert TI to ASCII String
+
+    <A HREF="ROMAF14.HTM">Previous Page</A> / <A HREF="ROMAF48.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

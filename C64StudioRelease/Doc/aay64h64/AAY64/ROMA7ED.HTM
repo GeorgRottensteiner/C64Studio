@@ -1,0 +1,48 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A7ED/42989:   Perform BASIC Keyword
+
+Jump from <A HREF="ROMA7E1.HTM">$A7E7</A>, <A HREF="ROMA93B.HTM">$A948</A>:
+
+A7ED: F0 3C     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMA81D.HTM">$A82B</A>     ; Perform [restore]
+
+Jump from <A HREF="ROMA94B.HTM">$A95C</A>:
+
+A7EF: E9 80     <A HREF="BSBC.HTM">SBC</A> #$80
+A7F1: 90 11     <A HREF="BBCC.HTM">BCC</A> $A804
+A7F3: C9 23     <A HREF="BCMP.HTM">CMP</A> #$23
+A7F5: B0 17     <A HREF="BBCS.HTM">BCS</A> $A80E
+A7F7: 0A        <A HREF="BASL.HTM">ASL</A>
+A7F8: A8        <A HREF="BTAY.HTM">TAY</A>
+A7F9: B9 0D A0  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMA00C.HTM">$A00D</A>,Y   ; BASIC Command Vectors - 1
+A7FC: 48        <A HREF="BPHA.HTM">PHA</A>
+A7FD: B9 0C A0  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMA00C.HTM">$A00C</A>,Y   ; BASIC Command Vectors - 1
+A800: 48        <A HREF="BPHA.HTM">PHA</A>
+A801: 4C 73 00  <A HREF="BJMP.HTM">JMP</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+
+Jump from $A7F1:
+
+A804: 4C A5 A9  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA9A5.HTM">$A9A5</A>     ; Perform [let]
+
+Jump from <A HREF="ROMA7AE.HTM">$A7C2</A>:
+
+A807: C9 3A     <A HREF="BCMP.HTM">CMP</A> #$3A
+A809: F0 D6     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMA7E1.HTM">$A7E1</A>     ; Prepare to execute statement
+
+Jump from $A810:
+
+A80B: 4C 08 AF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAF08.HTM">$AF08</A>     ; Output ?SYNTAX Error
+
+Jump from $A7F5:
+
+A80E: C9 4B     <A HREF="BCMP.HTM">CMP</A> #$4B
+A810: D0 F9     <A HREF="BBNE.HTM">BNE</A> $A80B
+A812: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+A815: A9 A4     <A HREF="BLDA.HTM">LDA</A> #$A4
+A817: 20 FF AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFD.HTM">$AEFF</A>     ; Test ','
+A81A: 4C A0 A8  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA8A0.HTM">$A8A0</A>     ; Perform [goto]
+
+    <A HREF="ROMA7E1.HTM">Previous Page</A> / <A HREF="ROMA81D.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

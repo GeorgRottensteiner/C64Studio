@@ -1,0 +1,33 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A0-$A2/160-162:   Real-time jiffy Clock
+
+   Updated by IRQ Interrupt approx every 1/60 of Second
+
+   Update Routine is at <A HREF="ROMF69B.HTM">$F69B</A>
+
+Kernal-Reference:
+
+ BIT $00A0   : <A HREF="ROMAFE6.HTM">$AFE8</A>
+ INC $A0     : <A HREF="ROMF69B.HTM">$F6A5</A>
+ LDA $A0     : <A HREF="ROMF69B.HTM">$F6B0</A>
+ LDY $A0     : <A HREF="ROMF6DD.HTM">$F6E2</A>
+ STX $A0     : <A HREF="ROMF69B.HTM">$F6B6</A>
+ STY $A0     : <A HREF="ROMF6E4.HTM">$F6E9</A>
+
+ CMP $A1     : <A HREF="ROME4E0.HTM">$E4E7</A>
+ INC $A1     : <A HREF="ROMF69B.HTM">$F6A1</A>
+ LDA $A1     : <A HREF="ROMF69B.HTM">$F6AC</A> <A HREF="ROMF72C.HTM">$F761</A>
+ LDX $A1     : <A HREF="ROMF6DD.HTM">$F6E0</A>
+ STX $A1     : <A HREF="ROMF69B.HTM">$F6B8</A> <A HREF="ROMF6E4.HTM">$F6E7</A>
+
+ BIT $00A2   : <A HREF="ROMA906.HTM">$A908</A>
+ INC $A2     : <A HREF="ROMF69B.HTM">$F69D</A>
+ LDA $A2     : <A HREF="ROMF6DD.HTM">$F6DE</A>
+ STA $A2     : <A HREF="ROMF6E4.HTM">$F6E5</A>
+ STX $A2     : <A HREF="ROMF69B.HTM">$F6BA</A>
+
+    <A HREF="ZP9F.HTM">Previous Page</A> / <A HREF="ZPA3.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

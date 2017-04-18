@@ -1,0 +1,31 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  +------------------------------------------------------------------------
+  |
+  |  Amica Paint
+  |
+  +------------------------------------------------------------------------
+  |
+  |  Features (see <A HREF="GFXEXPL.HTM">Explanations</A> for details):
+  |
+  |  - 1 Bitmap, 1 Screen-RAM, Color-RAM
+  |  - Multicolor pixels
+  |
+  |  Depacking:
+  |
+  |    $C2 00    means End of Picture
+  |    $C2 xx yy means copy Byte yy xx-times to Picture
+  |    xx        copy Byte xx to Picture
+  |
+  |  Memory-Structure (e.g. $6000-$8811, 10257 Bytes, 41 Blocks):
+  |
+  |   $6000 - $7F3F: Bitmap
+  |   $7F40 - $8327: Screen-RAM
+  |   $8328 - $870F: Color-RAM
+  |   $8710        : Background-Color
+  |   $8711 - $8810: Color-Rotation-Table
+  |
+  +------------------------------------------------------------------------
+
+</PRE></BODY></HTML>

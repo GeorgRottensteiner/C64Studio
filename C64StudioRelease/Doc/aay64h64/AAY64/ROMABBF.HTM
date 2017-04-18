@@ -1,0 +1,32 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $ABBF/43967:   Perform [input]
+
+ABBF: C9 22     <A HREF="BCMP.HTM">CMP</A> #$22
+ABC1: D0 0B     <A HREF="BBNE.HTM">BNE</A> $ABCE
+ABC3: 20 BD AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEAD.HTM">$AEBD</A>     ; Continue Expression
+ABC6: A9 3B     <A HREF="BLDA.HTM">LDA</A> #$3B
+ABC8: 20 FF AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEFD.HTM">$AEFF</A>     ; Test ','
+ABCB: 20 21 AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAB1E.HTM">$AB21</A>     ; Output String
+
+Jump from $ABC1, <A HREF="ROMABA5.HTM">$ABB2</A>:
+
+ABCE: 20 A6 B3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB3A6.HTM">$B3A6</A>     ; Confirm Program Mode
+ABD1: A9 2C     <A HREF="BLDA.HTM">LDA</A> #$2C
+ABD3: 8D FF 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP013F.HTM">$01FF</A>     ; BASIC Stack Area
+
+Jump from <A HREF="ROMABEA.HTM">$ABF1</A>:
+
+ABD6: 20 F9 AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMABF9.HTM">$ABF9</A>     ; Do Input Prompt
+ABD9: A5 13     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP13.HTM">$13</A>       ; File number of current Input Device
+ABDB: F0 0D     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMABEA.HTM">$ABEA</A>     ; Read Input Buffer
+ABDD: 20 B7 FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFB7.HTM">$FFB7</A>     ; Read I/O Status Word
+ABE0: 29 02     <A HREF="BAND.HTM">AND</A> #$02
+ABE2: F0 06     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMABEA.HTM">$ABEA</A>     ; Read Input Buffer
+ABE4: 20 B5 AB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMABA5.HTM">$ABB5</A>     ; Perform [input#]
+ABE7: 4C F8 A8  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMA8F8.HTM">$A8F8</A>     ; Perform [data]
+
+    <A HREF="ROMABA5.HTM">Previous Page</A> / <A HREF="ROMABEA.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Debug Registers</H3>
+  <div id="mybody">
+    The "Debug Registers" view shows the current register and CPU flag values.<br>
+    <br>
+    <img src="images/ide_debug_registers.png"><br>
+    <br>
+    <br>
+    Values that changed during the last step are marked red.<br>
+    <br>
+    <br>
+    <b>Registers</b><br>
+    X, Y and A show the current value of the register, hex on the left, decimal on the right side<br>
+    <br>
+    <br>
+    <b>LIN</b><br>
+    LIN shows the current line of the raster ray<br>
+    <br>
+    <br>
+    <b>CYC</b><br>
+    CYC shows the current cycle on the current line of the raster ray<br>
+    <br>
+    <br>
+    <b>$01</b><br>
+    $01 shows the current value of byte $01 (CYC shows the current cycle on the current line of the raster ray<br>
+    <br>
+    <br>
+    <b>PC</b><br>
+    PC shows the current location the processor is pointing to. Hex on the left, decimal on the right side<br>
+    <br>
+    <br>
+    <b>SP</b><br>
+    SP shows the current stack pointer. Hex on the left, decimal on the right side<br>
+    <br>
+    <br>
+    <b>Status</b><br>
+    Status displays the various flags of the CPU. NV-BDIZC from left to right are Negative flag, Overflow flag, Expansion Bit (unused), Break flag, Decimal flag, Interrupt flag, Zero flag and Carry flag.<br>
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>

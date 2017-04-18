@@ -1,0 +1,18 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  JSL                      JSL Jump Subroutine Long                     JSL
+
+ 65816 only!
+                                                        N V M X D I Z C
+  Operation:  PB -&gt; Bs, S-1 -S, PC -&gt; Ws, S-2 -&gt; S,     . . . . . . . .
+              W -&gt; PC,  B -&gt; PB
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR3C.HTM">AbsoluteLong</A>   |   JSL $FFFFFF         |   $22   |    4    |     8    |
+  +----------------+-----------------------+---------+---------+----------+
+   Note: JSL is equivalent to JSR with long addressing forced.
+
+</PRE></BODY></HTML>

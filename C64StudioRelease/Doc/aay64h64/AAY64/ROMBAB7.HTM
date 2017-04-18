@@ -1,0 +1,36 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BAB7/47799:   Test Both Accumulators
+
+Jump from <A HREF="ROMBA28.HTM">$BA30</A>, <A HREF="ROMBB0F.HTM">$BB1E</A>:
+
+BAB7: A5 69     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP69.HTM">$69</A>       ; AFAC Exponent
+
+Jump from <A HREF="ROME000.HTM">$E03F</A>:
+
+BAB9: F0 1F     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMBAD4.HTM">$BADA</A>     ; Overflow / Underflow
+BABB: 18        <A HREF="BCLC.HTM">CLC</A>
+BABC: 65 61     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BABE: 90 04     <A HREF="BBCC.HTM">BCC</A> $BAC4
+BAC0: 30 1D     <A HREF="BBMI.HTM">BMI</A> <A HREF="ROMBAD4.HTM">$BADF</A>     ; Overflow / Underflow
+BAC2: 18        <A HREF="BCLC.HTM">CLC</A>
+BAC3: 2C        .BYTE $2C
+
+Jump from $BABE:
+
+BAC4: 10 14     <A HREF="BBPL.HTM">BPL</A> <A HREF="ROMBAD4.HTM">$BADA</A>     ; Overflow / Underflow
+BAC6: 69 80     <A HREF="BADC.HTM">ADC</A> #$80
+BAC8: 85 61     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BACA: D0 03     <A HREF="BBNE.HTM">BNE</A> $BACF
+BACC: 4C FB B8  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB867.HTM">$B8FB</A>     ; Perform Addition
+
+Jump from $BACA:
+
+BACF: A5 6F     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+BAD1: 85 66     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BAD3: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBA8C.HTM">Previous Page</A> / <A HREF="ROMBAD4.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

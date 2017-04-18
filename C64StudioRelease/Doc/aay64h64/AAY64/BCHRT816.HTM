@@ -1,0 +1,116 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+65816 instruction chart:
+
+ Hi                                                                      Low
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+   |   0   |    1   |   2    |    3     |    4   |   5    |   6    |    7    |
+ --+-------+--------+--------+----------+--------+--------+--------+---------+
+ 0 | <A HREF="BBRK.HTM">BRK</A> s |<A HREF="BORA.HTM">ORA</A>(d,x)| <A HREF="BCOP.HTM">COP</A> s  | <A HREF="BORA.HTM">ORA</A> d,s  | <A HREF="BTSB.HTM">TSB</A> d  | <A HREF="BORA.HTM">ORA</A> d  | <A HREF="BASL.HTM">ASL</A> d  | <A HREF="BORA.HTM">ORA</A> [d] |
+   |  2 8  |  2 6   |  2 8   |   2 4    |  2 5   |  2 3   |  2 5   |   2 6   |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ 1 | <A HREF="BBPL.HTM">BPL</A> r |<A HREF="BORA.HTM">ORA</A>(d),y| <A HREF="BORA.HTM">ORA</A>(d) |<A HREF="BORA.HTM">ORA</A>(d,s),y| <A HREF="BTRB.HTM">TRB</A> d  | <A HREF="BORA.HTM">ORA</A> d,x| <A HREF="BASL.HTM">ASL</A> d,x|<A HREF="BORA.HTM">ORA</A> [d],y|
+   |  2 2  |  2 5   |  2 5   |   2 7    |  2 5   |  2 4   |  2 6   |   2 6   |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ 2 | <A HREF="BJSR.HTM">JSR</A> a |<A HREF="BAND.HTM">AND</A>(d,x)| <A HREF="BJSL.HTM">JSL</A> al | <A HREF="BAND.HTM">AND</A> d,s  | <A HREF="BBIT.HTM">BIT</A> d  | <A HREF="BAND.HTM">AND</A> d  | <A HREF="BROL.HTM">ROL</A> d  | <A HREF="BAND.HTM">AND</A> [d] |
+   |  3 6  |  2 6   |  4 8   |   2 4    |  2 3   |  2 3   |  2 5   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ 3 | <A HREF="BBMI.HTM">BMI</A> r |<A HREF="BAND.HTM">AND</A>(d),y| <A HREF="BAND.HTM">AND</A> (d)|<A HREF="BAND.HTM">AND</A>(d,s),y| <A HREF="BBIT.HTM">BIT</A> d,x| <A HREF="BAND.HTM">AND</A> d,x| <A HREF="BROL.HTM">ROL</A> d,x|<A HREF="BAND.HTM">AND</A> [d],y|
+   |  2 2  |  2 5   |  2 5   |   2 7    |  2 4   |  2 4   |  2 6   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ 4 | <A HREF="BRTI.HTM">RTI</A> s |<A HREF="BEOR.HTM">EOR</A>(d,x)| reserve| <A HREF="BEOR.HTM">EOR</A> d,s  | <A HREF="BMVP.HTM">MVP</A> xya| <A HREF="BEOR.HTM">EOR</A> d  | <A HREF="BLSR.HTM">LSR</A> d  | <A HREF="BEOR.HTM">EOR</A> [d] |
+   |  1 7  |  2 6   |  2 2   |   2 4    |  3 7   |  2 3   |  2 5   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ 5 | <A HREF="BBVC.HTM">BVC</A> r |<A HREF="BEOR.HTM">EOR</A>(d),y| <A HREF="BEOR.HTM">EOR</A> (d)|<A HREF="BEOR.HTM">EOR</A>(d,s),y| <A HREF="BMVN.HTM">MVN</A> xya| <A HREF="BEOR.HTM">EOR</A> d,x| <A HREF="BLSR.HTM">LSR</A> d,x|<A HREF="BEOR.HTM">EOR</A> [d],y|
+   |  2 2  |  2 5   |  2 5   |   2 7    |  3 7   |  2 4   |  2 6   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ 6 | <A HREF="BRTS.HTM">RTS</A> s |<A HREF="BADC.HTM">ADC</A>(d,x)| <A HREF="BPER.HTM">PER</A> s  | <A HREF="BADC.HTM">ADC</A> d,s  | <A HREF="BSTZ.HTM">STZ</A> d  | <A HREF="BADC.HTM">ADC</A> d  | <A HREF="BROR.HTM">ROR</A> d  | <A HREF="BADC.HTM">ADC</A> [d] |
+   |  1 6  |  2 6   |  3 6   |   2 4    |  2 3   |  2 3   |  2 5   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ 7 | <A HREF="BBVS.HTM">BVS</A> r |<A HREF="BADC.HTM">ADC</A>(d),y| <A HREF="BADC.HTM">ADC</A> (d)|<A HREF="BADC.HTM">ADC</A>(d,s),y| <A HREF="BSTZ.HTM">STZ</A> d,x| <A HREF="BADC.HTM">ADC</A> d,x| <A HREF="BROR.HTM">ROR</A> d,x|<A HREF="BADC.HTM">ADC</A> [d],y|
+   |  2 2  |  2 5   |  2 5   |   2 7    |  2 4   |  2 4   |  2 6   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ 8 | <A HREF="BBRA.HTM">BRA</A> r |<A HREF="BSTA.HTM">STA</A>(d,x)| <A HREF="BBRL.HTM">BRL</A> rl | <A HREF="BSTA.HTM">STA</A> d,s  | <A HREF="BSTY.HTM">STY</A> d  | <A HREF="BSTA.HTM">STA</A> d  | <A HREF="BSTX.HTM">STX</A> d  | <A HREF="BSTA.HTM">STA</A> [d] |
+   |  2 2  |  2 6   |  3 3   |   2 4    |  2 3   |  2 3   |  2 3   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ 9 | <A HREF="BBCC.HTM">BCC</A> r |<A HREF="BSTA.HTM">STA</A>(d),y| <A HREF="BSTA.HTM">STA</A> (d)|<A HREF="BSTA.HTM">STA</A>(d,s),y| <A HREF="BSTY.HTM">STY</A>d,x | <A HREF="BSTA.HTM">STA</A> d,x| <A HREF="BSTX.HTM">STX</A> d,y|<A HREF="BSTA.HTM">STA</A> [d],y|
+   |  2 2  |  2 6   |  2 5   |   2 7    |  2 4   |  2 4   |  2 4   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ A | <A HREF="BLDY.HTM">LDY</A> # |<A HREF="BLDA.HTM">LDA</A>(d,x)|  <A HREF="BLDX.HTM">LDX</A> # | <A HREF="BLDA.HTM">LDA</A> d,s  | <A HREF="BLDY.HTM">LDY</A> d  | <A HREF="BLDA.HTM">LDA</A> d  | <A HREF="BLDX.HTM">LDX</A> d  | <A HREF="BLDA.HTM">LDA</A> [d] |
+   |  2 2  |  2 6   |  2 2   |   2 4    |  2 3   |  2 3   |  2 3   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ B | <A HREF="BBCS.HTM">BCS</A> r |<A HREF="BLDA.HTM">LDA</A>(d),y| <A HREF="BLDA.HTM">LDA</A> (d)|<A HREF="BLDA.HTM">LDA</A>(d,s),y| <A HREF="BLDY.HTM">LDY</A> d,x| <A HREF="BLDA.HTM">LDA</A> d,x| <A HREF="BLDX.HTM">LDX</A> d,y|<A HREF="BLDA.HTM">LDA</A> [d],y|
+   |  2 2  |  2 5   |  2 5   |   2 7    |  2 4   |  2 4   |  2 4   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ C | <A HREF="BCPY.HTM">CPY</A> # |<A HREF="BCMP.HTM">CMP</A>(d,x)| <A HREF="BREP.HTM">REP</A> #  | <A HREF="BCMP.HTM">CMP</A> d,s  | <A HREF="BCPY.HTM">CPY</A> d  | <A HREF="BCMP.HTM">CMP</A> d  | <A HREF="BDEC.HTM">DEC</A> d  | <A HREF="BCMP.HTM">CMP</A> [d] |
+   |  2 2  |  2 6   |  2 3   |   2 4    |  2 3   |  2 3   |  2 5   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ D | <A HREF="BBNE.HTM">BNE</A> r |<A HREF="BCMP.HTM">CMP</A>(d),y| <A HREF="BCMP.HTM">CMP</A> (d)|<A HREF="BCMP.HTM">CMP</A>(d,s),y| <A HREF="BPEI.HTM">PEI</A> s  | <A HREF="BCMP.HTM">CMP</A> d,x| <A HREF="BDEC.HTM">DEC</A> d,x|<A HREF="BCMP.HTM">CMP</A> [d],y|
+   |  2 2  |  2 5   |  2 5   |   2 7    |  2 6   |  2 4   |  2 6   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ E | <A HREF="BCPX.HTM">CPX</A> # |<A HREF="BSBC.HTM">SBC</A>(d,x)| <A HREF="BSEP.HTM">SEP</A> #  | <A HREF="BSBC.HTM">SBC</A> d,s  | <A HREF="BCPX.HTM">CPX</A> d  | <A HREF="BSBC.HTM">SBC</A> d  | <A HREF="BINC.HTM">INC</A> d  | <A HREF="BSBC.HTM">SBC</A> [d] |
+   |  2 2  |  2 6   |  2 3   |   2 4    |  2 3   |  2 3   |  2 5   |  2 6    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+ F | <A HREF="BBEQ.HTM">BEQ</A> r |<A HREF="BSBC.HTM">SBC</A>(d),y| <A HREF="BSBC.HTM">SBC</A> (d)|<A HREF="BSBC.HTM">SBC</A>(d,s),y| <A HREF="BPEA.HTM">PEA</A> s  | <A HREF="BSBC.HTM">SBC</A> d,x| <A HREF="BINC.HTM">INC</A> d,x|<A HREF="BSBC.HTM">SBC</A> [d],y|
+   |  2 2  |  2 5   |  2 5   |   2 7    |  3 5   |  2 4   |  2 6   |   2 6   |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+   |   0   |    1   |   2    |    3     |    4   |   5    |   6    |    7    |
+   +-------+--------+--------+----------+--------+--------+--------+---------+
+
+ Hi                                                                  Low
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+   |   8   |   9    |   A   |   B   |   C    |   D    |    E   |    F    |
+ --+-------+--------+-------+-------+--------+--------+--------+---------+
+ 0 | <A HREF="BPHP.HTM">PHP</A> s | <A HREF="BORA.HTM">ORA</A> #  | <A HREF="BASL.HTM">ASL</A> A | <A HREF="BPHD.HTM">PHD</A> s | <A HREF="BTSB.HTM">TSB</A> a  | <A HREF="BORA.HTM">ORA</A> a  | <A HREF="BASL.HTM">ASL</A> a  | <A HREF="BORA.HTM">ORA</A> al  |
+   |  1 3  |  2 2   |  1 2  |  1 4  |  3 6   |  3 4   |  3 6   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ 1 | <A HREF="BCLC.HTM">CLC</A> i | <A HREF="BORA.HTM">ORA</A> a,y| <A HREF="BINC.HTM">INC</A> A | <A HREF="BTCS.HTM">TCS</A> i | <A HREF="BTRB.HTM">TRB</A> a  | <A HREF="BORA.HTM">ORA</A> a,x| <A HREF="BASL.HTM">ASL</A> a,x| <A HREF="BORA.HTM">ORA</A> al,x|
+   |  1 2  |  3 4   |  1 2  |  1 2  |  3 6   |  3 4   |  3 7   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ 2 | <A HREF="BPLP.HTM">PLP</A> s | <A HREF="BAND.HTM">AND</A> #  | <A HREF="BROL.HTM">ROL</A> A | <A HREF="BPLD.HTM">PLD</A> s | <A HREF="BBIT.HTM">BIT</A> a  | <A HREF="BAND.HTM">AND</A> a  | <A HREF="BROL.HTM">ROL</A> a  | <A HREF="BAND.HTM">AND</A> al  |
+   |  1 4  |  2 2   |  1 2  |  1 5  |  3 4   |  3 4   |  3 6   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ 3 | <A HREF="BSEC.HTM">SEC</A> i | <A HREF="BAND.HTM">AND</A> a,y| <A HREF="BDEC.HTM">DEC</A> A | <A HREF="BTSC.HTM">TSC</A> i | <A HREF="BBIT.HTM">BIT</A> a,x| <A HREF="BAND.HTM">AND</A> a,x| <A HREF="BROL.HTM">ROL</A> a,x| <A HREF="BAND.HTM">AND</A> al,x|
+   |  1 2  |  3 4   |  1 2  |  1 2  |  3 4   |  3 4   |  3 7   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ 4 | <A HREF="BPHA.HTM">PHA</A> s | <A HREF="BEOR.HTM">EOR</A> #  | <A HREF="BLSR.HTM">LSR</A> A | <A HREF="BPHK.HTM">PHK</A> s | <A HREF="BJMP.HTM">JMP</A> a  | <A HREF="BEOR.HTM">EOR</A> a  | <A HREF="BLSR.HTM">LSR</A> a  | <A HREF="BEOR.HTM">EOR</A> al  |
+   |  1 3  |  2 2   |  1 2  |  1 3  |  3 3   |  3 4   |  3 6   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ 5 | <A HREF="BCLI.HTM">CLI</A> i | <A HREF="BEOR.HTM">EOR</A> a,y| <A HREF="BPHY.HTM">PHY</A> s | <A HREF="BTCD.HTM">TCD</A> i | <A HREF="BJMP.HTM">JMP</A> al | <A HREF="BEOR.HTM">EOR</A> a,x| <A HREF="BLSR.HTM">LSR</A> a,x| <A HREF="BEOR.HTM">EOR</A> al,x|
+   |  1 2  |  3 4   |  1 3  |  1 2  |  4 4   |  3 4   |  3 7   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ 6 | <A HREF="BPLA.HTM">PLA</A> s | <A HREF="BADC.HTM">ADC</A> #  | <A HREF="BROR.HTM">ROR</A> A | <A HREF="BRTL.HTM">RTL</A> s | <A HREF="BJMP.HTM">JMP</A> (a)| <A HREF="BADC.HTM">ADC</A> a  | <A HREF="BROR.HTM">ROR</A> a  | <A HREF="BADC.HTM">ADC</A> al  |
+   |  1 4  |  2 2   |  1 2  |  1 6  |  3 5   |  3 4   |  3 6   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ 7 | <A HREF="BSEI.HTM">SEI</A> i | <A HREF="BADC.HTM">ADC</A> a,y| <A HREF="BPLY.HTM">PLY</A> s | <A HREF="BTDC.HTM">TDC</A> i |<A HREF="BJMP.HTM">JMP</A>(a,x)| <A HREF="BADC.HTM">ADC</A> a,x| <A HREF="BROR.HTM">ROR</A> a,x| <A HREF="BADC.HTM">ADC</A> al,x|
+   |  1 2  |  3 4   |  1 4  |  1 2  |  3 6   |  3 4   |  3 7   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ 8 | <A HREF="BDEY.HTM">DEY</A> i | <A HREF="BBIT.HTM">BIT</A> #  | <A HREF="BTXA.HTM">TXA</A> i | <A HREF="BPHB.HTM">PHB</A> s | <A HREF="BSTY.HTM">STY</A> a  | <A HREF="BSTA.HTM">STA</A> a  | <A HREF="BSTX.HTM">STX</A> a  | <A HREF="BSTA.HTM">STA</A> al  |
+   |  1 2  |  2 2   |  1 2  |  1 3  |  3 4   |  3 4   |  3 4   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ 9 | <A HREF="BTYA.HTM">TYA</A> i | <A HREF="BSTA.HTM">STA</A> a,y| <A HREF="BTXS.HTM">TXS</A> i | <A HREF="BTXY.HTM">TXY</A> i | <A HREF="BSTZ.HTM">STZ</A> a  | <A HREF="BSTA.HTM">STA</A> a,x| <A HREF="BSTZ.HTM">STZ</A> a,x| <A HREF="BSTA.HTM">STA</A> al,x|
+   |  1 2  |  3 5   |  1 2  |  1 2  |  3 4   |  3 5   |  3 5   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ A | <A HREF="BTAY.HTM">TAY</A> i | <A HREF="BLDA.HTM">LDA</A> #  | <A HREF="BTAX.HTM">TAX</A> i | <A HREF="BPLB.HTM">PLB</A> s | <A HREF="BLDY.HTM">LDY</A> a  | <A HREF="BLDA.HTM">LDA</A> a  | <A HREF="BLDX.HTM">LDX</A> a  | <A HREF="BLDA.HTM">LDA</A> al  |
+   |  1 2  |  2 2   |  1 2  |  1 4  |  3 4   |  3 4   |  3 4   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ B | <A HREF="BCLV.HTM">CLV</A> i | <A HREF="BLDA.HTM">LDA</A> a,y| <A HREF="BTSX.HTM">TSX</A> i | <A HREF="BTYX.HTM">TYX</A> i | <A HREF="BLDY.HTM">LDY</A> a,x| <A HREF="BLDA.HTM">LDA</A> a,x| <A HREF="BLDX.HTM">LDX</A> a,y| <A HREF="BLDA.HTM">LDA</A> al,x|
+   |  1 2  |  3 4   |  1 2  |  1 2  |  3 4   |  3 4   |  3 4   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ C | <A HREF="BINY.HTM">INY</A> i | <A HREF="BCMP.HTM">CMP</A> #  | <A HREF="BDEX.HTM">DEX</A> i | <A HREF="BWAI.HTM">WAI</A> i | <A HREF="BCPY.HTM">CPY</A> a  | <A HREF="BCMP.HTM">CMP</A> a  | <A HREF="BDEC.HTM">DEC</A> a  | <A HREF="BCMP.HTM">CMP</A> al  |
+   | 1 2   |  2 2   |  1 2  |  1 3  |  3 4   |  3 4   |  3 4   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ D | <A HREF="BCLD.HTM">CLD</A> i | <A HREF="BCMP.HTM">CMP</A> a,y| <A HREF="BPHX.HTM">PHX</A> s | <A HREF="BSTP.HTM">STP</A> i | <A HREF="BJML.HTM">JML</A> (a)| <A HREF="BCMP.HTM">CMP</A> a,x| <A HREF="BDEC.HTM">DEC</A> a,x| <A HREF="BCMP.HTM">CMP</A> al,x|
+   |  1 2  |  3 4   |  1 3  |  1 3  |  3 6   |  3 4   |  3 7   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ E | <A HREF="BINX.HTM">INX</A> i | <A HREF="BSBC.HTM">SBC</A> #  | <A HREF="BNOP.HTM">NOP</A> i | <A HREF="BXBA.HTM">XBA</A> i | <A HREF="BCPX.HTM">CPX</A> a  | <A HREF="BSBC.HTM">SBC</A> a  | <A HREF="BINC.HTM">INC</A> a  | <A HREF="BSBC.HTM">SBC</A> al  |
+   |  1 2  |  2 2   |  1 2  |  1 3  |  3 4   |  3 4   |  3 6   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+ F | <A HREF="BSED.HTM">SED</A> i | <A HREF="BSBC.HTM">SBC</A> a,y| <A HREF="BPLX.HTM">PLX</A> s | <A HREF="BXCE.HTM">XCE</A> i |<A HREF="BJSR.HTM">JSR</A>(a,x)| <A HREF="BSBC.HTM">SBC</A> a,x| <A HREF="BINC.HTM">INC</A> a,x| <A HREF="BSBC.HTM">SBC</A> al,x|
+   |  1 2  |  3 4   |  1 4  |  1 2  |  3 6   |  3 4   |  3 7   |   4 5   |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+   |   8   |   9    |   A   |   B   |   C    |   D    |    E   |    F    |
+   +-------+--------+-------+-------+--------+--------+--------+---------+
+
+</PRE></BODY></HTML>

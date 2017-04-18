@@ -1,0 +1,41 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AC06/44038:   Perform [read]
+
+AC06: A6 41     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP41.HTM">$41</A>       ; Pointer: Used by READ - current DATA Item
+AC08: A4 42     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP41.HTM">$42</A>       ; Pointer: Used by READ - current DATA Item
+AC0A: A9 98     <A HREF="BLDA.HTM">LDA</A> #$98
+AC0C: 2C        .BYTE $2C
+
+Jump from <A HREF="ROMABEA.HTM">$ABED</A>:
+
+AC0D: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+
+Jump from <A HREF="ROMAB7B.HTM">$AB9D</A>:
+
+AC0F: 85 11     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP11.HTM">$11</A>       ; Input Flag
+AC11: 86 43     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP43.HTM">$43</A>       ; Pointer: Temporary storage during INPUT
+AC13: 84 44     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP43.HTM">$44</A>       ; Pointer: Temporary storage during INPUT
+
+Jump from <A HREF="ROMAC35.HTM">$ACB5</A>:
+
+AC15: 20 8B B0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB08B.HTM">$B08B</A>     ; Identify Variable
+AC18: 85 49     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP49.HTM">$49</A>       ; Pointer: Index Variable for FOR/NEXT loop
+AC1A: 84 4A     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP49.HTM">$4A</A>       ; Pointer: Index Variable for FOR/NEXT loop
+AC1C: A5 7A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+AC1E: A4 7B     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+AC20: 85 4B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4B.HTM">$4B</A>       ; Temporary storage for TXTPTR
+AC22: 84 4C     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP4B.HTM">$4C</A>       ; Temporary storage for TXTPTR
+AC24: A6 43     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP43.HTM">$43</A>       ; Pointer: Temporary storage during INPUT
+AC26: A4 44     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP43.HTM">$44</A>       ; Pointer: Temporary storage during INPUT
+AC28: 86 7A     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+AC2A: 84 7B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+AC2C: 20 79 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP79.HTM">$0079</A>     ; CHRGOT: Get same Byte again
+AC2F: D0 20     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMAC35.HTM">$AC51</A>     ; General Purpose Read Routine
+AC31: 24 11     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP11.HTM">$11</A>       ; Input Flag
+AC33: 50 0C     <A HREF="BBVC.HTM">BVC</A> <A HREF="ROMAC35.HTM">$AC41</A>     ; General Purpose Read Routine
+
+    <A HREF="ROMABF9.HTM">Previous Page</A> / <A HREF="ROMAC35.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

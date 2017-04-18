@@ -1,0 +1,39 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EFE1/61409:   Submit to RS232
+
+Jump from <A HREF="ROMF250.HTM">$F26C</A>:
+
+EFE1: 85 9A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP9A.HTM">$9A</A>       ; Default Output Device (3)
+EFE3: AD 94 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0294.HTM">$0294</A>     ; RS232 Pseudo 6551 command Register Image
+EFE6: 4A        <A HREF="BLSR.HTM">LSR</A>
+EFE7: 90 29     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMF00D.HTM">$F012</A>     ; No DSR (Data Set Ready) Error
+EFE9: A9 02     <A HREF="BLDA.HTM">LDA</A> #$02
+EFEB: 2C 01 DD  <A HREF="BBIT.HTM">BIT</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+EFEE: 10 1D     <A HREF="BBPL.HTM">BPL</A> <A HREF="ROMF00D.HTM">$F00D</A>     ; No DSR (Data Set Ready) Error
+EFF0: D0 20     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMF00D.HTM">$F012</A>     ; No DSR (Data Set Ready) Error
+
+Jump from $EFF7:
+
+EFF2: AD A1 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP02A1.HTM">$02A1</A>     ; RS232 Enables
+EFF5: 29 02     <A HREF="BAND.HTM">AND</A> #$02
+EFF7: D0 F9     <A HREF="BBNE.HTM">BNE</A> $EFF2
+
+Jump from $EFFC:
+
+EFF9: 2C 01 DD  <A HREF="BBIT.HTM">BIT</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+EFFC: 70 FB     <A HREF="BBVS.HTM">BVS</A> $EFF9
+EFFE: AD 01 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+F001: 09 02     <A HREF="BORA.HTM">ORA</A> #$02
+F003: 8D 01 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+
+Jump from $F00B:
+
+F006: 2C 01 DD  <A HREF="BBIT.HTM">BIT</A> <A HREF="CIA21.HTM">$DD01</A>     ; CIA2: Data Port B (User Port, RS232)
+F009: 70 07     <A HREF="BBVS.HTM">BVS</A> <A HREF="ROMF00D.HTM">$F012</A>     ; No DSR (Data Set Ready) Error
+F00B: 30 F9     <A HREF="BBMI.HTM">BMI</A> $F006
+
+    <A HREF="ROMEF90.HTM">Previous Page</A> / <A HREF="ROMF00D.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

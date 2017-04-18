@@ -1,0 +1,27 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE01/56833/SWIFTLINK+1:   Status Register
+
+ Read:
+
+   +-------+--------------------------------------------------------+
+   | Bit 7 |   Interrupt Flag: 1 = Interrupt caused by SwiftLink    |
+   | Bit 6 |   Carrier Detect: 1 = Carrier present                  |
+   | Bit 5 |   DSR:            1 = High, 0 = Low                    |
+   | Bit 4 |   Transmit Flag:  1 = Ready to get next Byte to        |
+   |       |                       transmit in <A HREF="SWLK0.HTM">Data Register</A>        |
+   |       |                   0 = Chip currently sending Byte      |
+   | Bit 3 |   Receive Flag:   1 = Byte received in <A HREF="SWLK0.HTM">Data Register</A>   |
+   |       |                   0 = Nothing received                 |
+   | Bit 2 |   Overrun:        1 = Overrun occured (*)              |
+   | Bit 1 |   Frame Error:    1 = Frame Error occured (*)          |
+   | Bit 0 |   Parity Error:   1 = Parity Error occured (*)         |
+   +-------+--------------------------------------------------------+
+
+    (*) = Self-Clearing when read
+
+ Write:
+         Any write access will reset SwiftLink.
+
+</PRE></BODY></HTML>

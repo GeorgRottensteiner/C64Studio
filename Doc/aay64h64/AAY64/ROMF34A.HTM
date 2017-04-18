@@ -1,0 +1,116 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F34A/62282:   Open File
+
+F34A: A6 B8     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPB8.HTM">$B8</A>       ; Current File - Logical File number
+F34C: D0 03     <A HREF="BBNE.HTM">BNE</A> $F351
+F34E: 4C 0A F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF70A.HTM">$F70A</A>     ; Output I/O Error Messages: 'NOT INPUT FILE'
+
+Jump from $F34C:
+
+F351: 20 0F F3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF30F.HTM">$F30F</A>     ; Find File
+F354: D0 03     <A HREF="BBNE.HTM">BNE</A> $F359
+F356: 4C FE F6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF6FE.HTM">$F6FE</A>     ; Output I/O Error Messages: 'FILE OPEN'
+
+Jump from $F354:
+
+F359: A6 98     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP98.HTM">$98</A>       ; Number of Open Files/Index to File Table
+F35B: E0 0A     <A HREF="BCPX.HTM">CPX</A> #$0A
+F35D: 90 03     <A HREF="BBCC.HTM">BCC</A> $F362
+F35F: 4C FB F6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF6FB.HTM">$F6FB</A>     ; Output I/O Error Messages: 'TOO MANY FILES'
+
+Jump from $F35D:
+
+F362: E6 98     <A HREF="BINC.HTM">INC</A> <A HREF="ZP98.HTM">$98</A>       ; Number of Open Files/Index to File Table
+F364: A5 B8     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB8.HTM">$B8</A>       ; Current File - Logical File number
+F366: 9D 59 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0259.HTM">$0259</A>,X   ; Active logical File numbers
+F369: A5 B9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F36B: 09 60     <A HREF="BORA.HTM">ORA</A> #$60
+F36D: 85 B9     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F36F: 9D 6D 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP026D.HTM">$026D</A>,X   ; Active File Secondary Addresses
+F372: A5 BA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBA.HTM">$BA</A>       ; Current File - First Address (Device number)
+F374: 9D 63 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0263.HTM">$0263</A>,X   ; Active File First Addresses (Device numbers)
+F377: F0 5A     <A HREF="BBEQ.HTM">BEQ</A> $F3D3
+F379: C9 03     <A HREF="BCMP.HTM">CMP</A> #$03
+F37B: F0 56     <A HREF="BBEQ.HTM">BEQ</A> $F3D3
+F37D: 90 05     <A HREF="BBCC.HTM">BCC</A> $F384
+F37F: 20 D5 F3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF3D5.HTM">$F3D5</A>     ; Send Secondary Address
+F382: 90 4F     <A HREF="BBCC.HTM">BCC</A> $F3D3
+
+Jump from $F37D:
+
+F384: C9 02     <A HREF="BCMP.HTM">CMP</A> #$02
+F386: D0 03     <A HREF="BBNE.HTM">BNE</A> $F38B
+<B>* SX64:
+F386: D0 08     <A HREF="BBNE.HTM">BNE</A> $F390
+</B>
+F388: 4C 09 F4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF409.HTM">$F409</A>     ; Open RS232
+
+Jump from $F386:
+
+F38B: 20 D0 F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF7D0.HTM">$F7D0</A>     ; Get Buffer Address
+F38E: B0 03     <A HREF="BBCS.HTM">BCS</A> $F393
+
+Jump from $F386 (SX64):
+
+F390: 4C 13 F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF713.HTM">$F713</A>     ; Output I/O Error Messages: 'ILLEGAL DEVICE NUMBER'
+
+Jump from $F38E:
+
+F393: A5 B9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F395: 29 0F     <A HREF="BAND.HTM">AND</A> #$0F
+F397: D0 1F     <A HREF="BBNE.HTM">BNE</A> $F3B8
+F399: 20 17 F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF817.HTM">$F817</A>     ; Print &quot;PRESS PLAY ON TAPE&quot;
+F39C: B0 36     <A HREF="BBCS.HTM">BCS</A> $F3D4
+F39E: 20 AF F5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF5AF.HTM">$F5AF</A>     ; Print &quot;SEARCHING&quot;
+F3A1: A5 B7     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB7.HTM">$B7</A>       ; Number of Characters in Filename
+F3A3: F0 0A     <A HREF="BBEQ.HTM">BEQ</A> $F3AF
+F3A5: 20 EA F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF7EA.HTM">$F7EA</A>     ; Find Specific Tape Header
+F3A8: 90 18     <A HREF="BBCC.HTM">BCC</A> $F3C2
+F3AA: F0 28     <A HREF="BBEQ.HTM">BEQ</A> $F3D4
+
+Jump from $F3B6:
+
+F3AC: 4C 04 F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF704.HTM">$F704</A>     ; Output I/O Error Messages: 'FILE NOT FOUND'
+
+Jump from $F3A3:
+
+F3AF: 20 2C F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF72C.HTM">$F72C</A>     ; Find Any Tape Header
+F3B2: F0 20     <A HREF="BBEQ.HTM">BEQ</A> $F3D4
+F3B4: 90 0C     <A HREF="BBCC.HTM">BCC</A> $F3C2
+F3B6: B0 F4     <A HREF="BBCS.HTM">BCS</A> $F3AC
+
+Jump from $F397:
+
+F3B8: 20 38 F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF838.HTM">$F838</A>     ; Print &quot;PRESS RECORD...&quot;
+F3BB: B0 17     <A HREF="BBCS.HTM">BCS</A> $F3D4
+F3BD: A9 04     <A HREF="BLDA.HTM">LDA</A> #$04
+F3BF: 20 6A F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF76A.HTM">$F76A</A>     ; Write Tape Header
+
+Jump from $F3A8, $F3B4:
+
+F3C2: A9 BF     <A HREF="BLDA.HTM">LDA</A> #$BF
+F3C4: A4 B9     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F3C6: C0 60     <A HREF="BCPY.HTM">CPY</A> #$60
+F3C8: F0 07     <A HREF="BBEQ.HTM">BEQ</A> $F3D1
+F3CA: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+F3CC: A9 02     <A HREF="BLDA.HTM">LDA</A> #$02
+F3CE: 91 B2     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F3D0: 98        <A HREF="BTYA.HTM">TYA</A>
+
+Jump from $F3C8:
+
+F3D1: 85 A6     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPA6.HTM">$A6</A>       ; Pointer: Tape I/O buffer
+
+Jump from $F377, $F37B, $F382, <A HREF="ROMF3D5.HTM">$F3D7</A>, <A HREF="ROMF3D5.HTM">$F3DB</A>:
+
+F3D3: 18        <A HREF="BCLC.HTM">CLC</A>
+
+Jump from $F39C, $F3AA, $F3B2, $F3BB:
+
+F3D4: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF333.HTM">Previous Page</A> / <A HREF="ROMF3D5.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

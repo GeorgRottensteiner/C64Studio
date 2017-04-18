@@ -1,0 +1,59 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F8E2/63714:   Set Read Timing
+
+Jump from <A HREF="ROMF92C.HTM">$F9CB</A>, <A HREF="ROMF92C.HTM">$FA0A</A>, <A HREF="ROMF92C.HTM">$FA2A</A>, <A HREF="ROMFA60.HTM">$FA67</A>:
+
+F8E2: 86 B1     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPB0.HTM">$B1</A>       ; Tape timing Constants
+F8E4: A5 B0     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB0.HTM">$B0</A>       ; Tape timing Constants
+F8E6: 0A        <A HREF="BASL.HTM">ASL</A>
+F8E7: 0A        <A HREF="BASL.HTM">ASL</A>
+F8E8: 18        <A HREF="BCLC.HTM">CLC</A>
+F8E9: 65 B0     <A HREF="BADC.HTM">ADC</A> <A HREF="ZPB0.HTM">$B0</A>       ; Tape timing Constants
+F8EB: 18        <A HREF="BCLC.HTM">CLC</A>
+F8EC: 65 B1     <A HREF="BADC.HTM">ADC</A> <A HREF="ZPB0.HTM">$B1</A>       ; Tape timing Constants
+F8EE: 85 B1     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPB0.HTM">$B1</A>       ; Tape timing Constants
+F8F0: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+F8F2: 24 B0     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZPB0.HTM">$B0</A>       ; Tape timing Constants
+F8F4: 30 01     <A HREF="BBMI.HTM">BMI</A> $F8F7
+F8F6: 2A        <A HREF="BROL.HTM">ROL</A>
+
+Jump from $F8F4:
+
+F8F7: 06 B1     <A HREF="BASL.HTM">ASL</A> <A HREF="ZPB0.HTM">$B1</A>       ; Tape timing Constants
+F8F9: 2A        <A HREF="BROL.HTM">ROL</A>
+F8FA: 06 B1     <A HREF="BASL.HTM">ASL</A> <A HREF="ZPB0.HTM">$B1</A>       ; Tape timing Constants
+F8FC: 2A        <A HREF="BROL.HTM">ROL</A>
+F8FD: AA        <A HREF="BTAX.HTM">TAX</A>
+
+Jump from $F903:
+
+F8FE: AD 06 DC  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA16.HTM">$DC06</A>     ; CIA1: Timer B Low-Byte  (Tape, Serial Port)
+F901: C9 16     <A HREF="BCMP.HTM">CMP</A> #$16
+F903: 90 F9     <A HREF="BBCC.HTM">BCC</A> $F8FE
+F905: 65 B1     <A HREF="BADC.HTM">ADC</A> <A HREF="ZPB0.HTM">$B1</A>       ; Tape timing Constants
+F907: 8D 04 DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA14.HTM">$DC04</A>     ; CIA1: Timer A Low-Byte  (Kernal-IRQ, Tape)
+F90A: 8A        <A HREF="BTXA.HTM">TXA</A>
+F90B: 6D 07 DC  <A HREF="BADC.HTM">ADC</A> <A HREF="CIA17.HTM">$DC07</A>     ; CIA1: Timer B High-Byte (Tape, Serial Port)
+F90E: 8D 05 DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA15.HTM">$DC05</A>     ; CIA1: Timer A High-Byte (Kernal-IRQ, Tape)
+F911: AD A2 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP02A2.HTM">$02A2</A>     ; TOD sense during Tape I/O
+F914: 8D 0E DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA114.HTM">$DC0E</A>     ; CIA1: Control Register A
+F917: 8D A4 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP02A4.HTM">$02A4</A>     ; Temporary D1IRQ Indicator during Tape READ
+F91A: AD 0D DC  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA113.HTM">$DC0D</A>     ; CIA1: Interrupt (IRQ) Control Register
+F91D: 29 10     <A HREF="BAND.HTM">AND</A> #$10
+F91F: F0 09     <A HREF="BBEQ.HTM">BEQ</A> $F92A
+F921: A9 F9     <A HREF="BLDA.HTM">LDA</A> #$F9
+F923: 48        <A HREF="BPHA.HTM">PHA</A>
+F924: A9 2A     <A HREF="BLDA.HTM">LDA</A> #$2A
+F926: 48        <A HREF="BPHA.HTM">PHA</A>
+F927: 4C 43 FF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMFF43.HTM">$FF43</A>     ; Fake IRQ Entry
+
+Jump from $F91F:
+
+F92A: 58        <A HREF="BCLI.HTM">CLI</A>
+F92B: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF8D0.HTM">Previous Page</A> / <A HREF="ROMF92C.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

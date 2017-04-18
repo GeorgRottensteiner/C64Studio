@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510/65816 Addressing mode: Zeropage/Direct Indexed Indirect -- (d,x)
+
+ (<A HREF="BADC.HTM">ADC</A>,<A HREF="BAND.HTM">AND</A>,<A HREF="BCMP.HTM">CMP</A>,<A HREF="BEOR.HTM">EOR</A>,<A HREF="BLAX.HTM">LAX</A>,<A HREF="BLDA.HTM">LDA</A>,<A HREF="BORA.HTM">ORA</A>,<A HREF="BSAX.HTM">SAX</A>,<A HREF="BSBC.HTM">SBC</A>,<A HREF="BSTA.HTM">STA</A>)
+ (2 bytes)  (6,7 and 8 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Direct Offset         |    R     |
+    |       (2) 2a  |  PBR,PC+1        | Internal Operation    |    R     |
+    |           3   |  PBR,PC+1        | Internal Operation    |    R     |
+    |           4   |  0,D+DO+X        | Absolute Address Low  |    R     |
+    |           5   |  0,D+DO+X+1      | Absolute Address High |    R     |
+    |           6   |  DBR,AA          | Data Low              |   R/W    |
+    |       (1) 6a  |  DBR,AA+1        | Data High             |   R/W    |
+    +---------------+------------------+-----------------------+----------+
+    (1) Add 1 cycle for M=0 or X=0 (i.e. 16 bit data).
+    (2) Add 1 cycle for direct register low (DL) not equal 0.
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

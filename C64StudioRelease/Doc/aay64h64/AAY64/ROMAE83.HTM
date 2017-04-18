@@ -1,0 +1,42 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AE83/44675:   Evaluate Single Term
+
+Jump from <A HREF="ROMAD9E.HTM">$ADB1</A>, <A HREF="ROMB63D.HTM">$B643</A>:
+
+AE83: 6C 0A 03  <A HREF="BJMP.HTM">JMP</A> (<A HREF="ZP030A.HTM">$030A</A>)   ; Vector: BASIC Token evaluation
+AE86: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+AE88: 85 0D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0D.HTM">$0D</A>       ; Data type Flag
+
+Jump from <A HREF="ROMAEAD.HTM">$AEB7</A>:
+
+AE8A: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+AE8D: B0 03     <A HREF="BBCS.HTM">BCS</A> $AE92
+
+Jump from <A HREF="ROMAEAD.HTM">$AEAF</A>:
+
+AE8F: 4C F3 BC  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBCF3.HTM">$BCF3</A>     ; Convert ASCII String to a Number in FAC
+
+Jump from $AE8D:
+
+AE92: 20 13 B1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB113.HTM">$B113</A>     ; Does A hold an alphabetic character?
+AE95: 90 03     <A HREF="BBCC.HTM">BCC</A> $AE9A
+AE97: 4C 28 AF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMAF28.HTM">$AF28</A>     ; Search for Variable
+
+Jump from $AE95:
+
+AE9A: C9 FF     <A HREF="BCMP.HTM">CMP</A> #$FF
+AE9C: D0 0F     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMAEAD.HTM">$AEAD</A>     ; Continue Expression
+AE9E: A9 A8     <A HREF="BLDA.HTM">LDA</A> #$A8
+AEA0: A0 AE     <A HREF="BLDY.HTM">LDY</A> #$AE
+AEA2: 20 A2 BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBA2.HTM">$BBA2</A>     ; Load FAC#1 From Memory
+AEA5: 4C 73 00  <A HREF="BJMP.HTM">JMP</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+
+    <A HREF="ROMAD9E.HTM">Previous Page</A> / <A HREF="ROMAEA8.HTM">Next Page</A>
+
+Kernal-Reference:
+
+ BIT $AE91   : <A HREF="ROMF4B8.HTM">$F51B</A>
+
+</PRE></BODY></HTML>

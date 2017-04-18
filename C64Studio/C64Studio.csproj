@@ -1,0 +1,736 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5BEA5CE5-4C5D-4EC5-83F3-83634E929858}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>C64Studio</RootNamespace>
+    <AssemblyName>C64Studio</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ApplicationIcon>c64.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AcceleratorKey.cs" />
+    <Compile Include="BASICKeyMap.cs" />
+    <Compile Include="Common\ArgumentParser.cs" />
+    <Compile Include="Common\IImage.cs" />
+    <Compile Include="CompileResultItemComparer.cs" />
+    <Compile Include="Controls\ArrangedItemList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ArrangedItemList.Designer.cs">
+      <DependentUpon>ArrangedItemList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HexBoxSpriteViewer.cs" />
+    <Compile Include="Controls\MenuButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\HexBoxCharViewer.cs" />
+    <Compile Include="Converter\CombinedGraphicsToCharset.cs" />
+    <Compile Include="Converter\PETSCIIToCharConverter.cs" />
+    <Compile Include="CustomRenderer\CustomToolStripRenderer.cs" />
+    <Compile Include="CustomRenderer\PaletteManager.cs" />
+    <Compile Include="Compiling.cs" />
+    <Compile Include="Navigating.cs" />
+    <Compile Include="Searching.cs" />
+    <Compile Include="Debugging.cs" />
+    <Compile Include="Dialogs\DlgDisassembler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\DlgDisassembler.Designer.cs">
+      <DependentUpon>DlgDisassembler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DlgInterleaveData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\DlgInterleaveData.Designer.cs">
+      <DependentUpon>DlgInterleaveData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Displayer\SpriteDisplayer.cs" />
+    <Compile Include="Displayer\CharacterDisplayer.cs" />
+    <Compile Include="Documents\BaseDocument.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClipboardData.cs" />
+    <Compile Include="ColorSystem.cs" />
+    <Compile Include="Common\BinaryReader.cs" />
+    <Compile Include="Common\BinaryWriter.cs" />
+    <Compile Include="Common\ByteBuffer.cs" />
+    <Compile Include="Common\Convert.cs" />
+    <Compile Include="Common\debug.cs" />
+    <Compile Include="Common\FastImage.cs" />
+    <Compile Include="Common\FastPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\File.cs" />
+    <Compile Include="Common\FileChunk.cs" />
+    <Compile Include="Common\GenericHelper.cs" />
+    <Compile Include="Common\ImageListbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\IReader.cs" />
+    <Compile Include="Common\IWriter.cs" />
+    <Compile Include="Common\ListViewItemComparer.cs" />
+    <Compile Include="Common\Map.cs" />
+    <Compile Include="Common\MemoryImage.cs" />
+    <Compile Include="Common\MemoryReader.cs" />
+    <Compile Include="Common\Misc.cs" />
+    <Compile Include="Common\MultiMap.cs" />
+    <Compile Include="Common\Path.cs" />
+    <Compile Include="Common\ScrollablePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\Set.cs" />
+    <Compile Include="Common\TileLayer.cs" />
+    <Compile Include="Common\Util.cs" />
+    <Compile Include="Common\WindowStateManager.cs" />
+    <Compile Include="Common\XML.cs" />
+    <Compile Include="Controls\MeasurableListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Documents\SourceBasicEx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\SourceBasicEx.Designer.cs">
+      <DependentUpon>SourceBasicEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\SourceASMEx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\SourceASMEx.Designer.cs">
+      <DependentUpon>SourceASMEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\DebugStack.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\DebugStack.Designer.cs">
+      <DependentUpon>DebugStack.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DlgImportImageResize.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\DlgImportImageResize.Designer.cs">
+      <DependentUpon>DlgImportImageResize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentInfo.cs" />
+    <Compile Include="Documents\Disassembler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\Disassembler.Designer.cs">
+      <DependentUpon>Disassembler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\SearchResults.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\SearchResults.Designer.cs">
+      <DependentUpon>SearchResults.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\DebugRegisters.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\DebugRegisters.Designer.cs">
+      <DependentUpon>DebugRegisters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\Disassembly.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\EditC64Filename.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\EditC64Filename.Designer.cs">
+      <DependentUpon>EditC64Filename.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formats\CharpadProject.cs" />
+    <Compile Include="Formats\CharsetScreenProject.cs" />
+    <Compile Include="Formats\D81.cs" />
+    <Compile Include="Formats\DisassemblyProject.cs" />
+    <Compile Include="Formats\GraphicScreenProject.cs" />
+    <Compile Include="Formats\D64.cs" />
+    <Compile Include="Documents\FileManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\FileManager.Designer.cs">
+      <DependentUpon>FileManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formats\MapProject.cs" />
+    <Compile Include="Formats\MediaFormat.cs" />
+    <Compile Include="Formats\PRG.cs" />
+    <Compile Include="Formats\Tap.cs" />
+    <Compile Include="FormFindReplace.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormFindReplace.Designer.cs">
+      <DependentUpon>FormFindReplace.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DlgGraphicImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\DlgGraphicImport.Designer.cs">
+      <DependentUpon>DlgGraphicImport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormRenameFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRenameFile.Designer.cs">
+      <DependentUpon>FormRenameFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormRenumberBASIC.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRenumberBASIC.Designer.cs">
+      <DependentUpon>FormRenumberBASIC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\Help.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\Help.Designer.cs">
+      <DependentUpon>Help.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\CharsetScreenEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\CharsetScreenEditor.Designer.cs">
+      <DependentUpon>CharsetScreenEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormProjectWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormProjectWizard.Designer.cs">
+      <DependentUpon>FormProjectWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\BinaryDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\BinaryDisplay.Designer.cs">
+      <DependentUpon>BinaryDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\DebugBreakpoints.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\DebugBreakpoints.Designer.cs">
+      <DependentUpon>DebugBreakpoints.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSolutionWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSolutionWizard.Designer.cs">
+      <DependentUpon>FormSolutionWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormLicense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormLicense.Designer.cs">
+      <DependentUpon>FormLicense.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IdleQueue\IdleRequest.cs" />
+    <Compile Include="LayoutInfo.cs" />
+    <Compile Include="Documents\MapEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\MapEditor.Designer.cs">
+      <DependentUpon>MapEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Parser\AssemblerSettings.cs" />
+    <Compile Include="Documents\PetSCIITable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Parser\CompileConfig.cs" />
+    <Compile Include="Parser\Disassembler.cs" />
+    <Compile Include="Project\Solution.cs" />
+    <Compile Include="PropertyTabs\PropBuildEventBuildChain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyTabs\PropBuildEventBuildChain.Designer.cs">
+      <DependentUpon>PropBuildEventBuildChain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyTabs\PropBuildEventScript.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyTabs\PropBuildEventScript.Designer.cs">
+      <DependentUpon>PropBuildEventScript.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyTabs\PropDebugging.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyTabs\PropDebugging.Designer.cs">
+      <DependentUpon>PropDebugging.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyTabs\PropGeneral.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyTabs\PropGeneral.Designer.cs">
+      <DependentUpon>PropGeneral.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyTabs\PropAssemblerType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyTabs\PropAssemblerType.Designer.cs">
+      <DependentUpon>PropAssemblerType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyTabs\PropBuildEvents.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyTabs\PropBuildEvents.Designer.cs">
+      <DependentUpon>PropBuildEvents.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyTabs\PropCompileTarget.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyTabs\PropCompileTarget.Designer.cs">
+      <DependentUpon>PropCompileTarget.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyTabs\PropertyTabBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StudioCore.cs" />
+    <Compile Include="Systems\CPUSystem.cs" />
+    <Compile Include="Tasks\TaskOpenSolution.cs" />
+    <Compile Include="Types\ApplicationEvent.cs" />
+    <Compile Include="Types\ASMFileInfo.cs" />
+    <Compile Include="Types\Breakpoint.cs" />
+    <Compile Include="Formats\CharsetProject.cs" />
+    <Compile Include="Documents\GraphicScreenEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\GraphicScreenEditor.Designer.cs">
+      <DependentUpon>GraphicScreenEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NoDblClkTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NoDblClkTreeView.Designer.cs">
+      <DependentUpon>NoDblClkTreeView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\Outline.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\Outline.Designer.cs">
+      <DependentUpon>Outline.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Parser\ASMFileParser.cs" />
+    <Compile Include="Documents\DebugWatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\DebugWatch.Designer.cs">
+      <DependentUpon>DebugWatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAbout.Designer.cs">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formats\T64.cs" />
+    <Compile Include="FormMacros.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMacros.Designer.cs">
+      <DependentUpon>FormMacros.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormWizard.Designer.cs">
+      <DependentUpon>FormWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\CompileResult.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\CompileResult.Designer.cs">
+      <DependentUpon>CompileResult.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ElementProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ElementProperties.Designer.cs">
+      <DependentUpon>ElementProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\DebugMemory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\DebugMemory.Designer.cs">
+      <DependentUpon>DebugMemory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HexPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Documents\CharsetEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\CharsetEditor.Designer.cs">
+      <DependentUpon>CharsetEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\Calculator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\Calculator.Designer.cs">
+      <DependentUpon>Calculator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Parser\BasicFileParser.cs" />
+    <Compile Include="Parser\ParserBase.cs" />
+    <Compile Include="Project\DependencyBuildState.cs" />
+    <Compile Include="Project\FileDependency.cs" />
+    <Compile Include="Project\ProjectConfig.cs" />
+    <Compile Include="Documents\SpriteEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\SpriteEditor.Designer.cs">
+      <DependentUpon>SpriteEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProjectProperties.Designer.cs">
+      <DependentUpon>ProjectProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectSettings.cs" />
+    <Compile Include="Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Settings.Designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\SolutionExplorer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\SolutionExplorer.Designer.cs">
+      <DependentUpon>SolutionExplorer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\OutputDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\ReadOnlyFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\ReadOnlyFile.Designer.cs">
+      <DependentUpon>ReadOnlyFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Project\Project.cs" />
+    <Compile Include="Project\ProjectElement.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\ArrangedItemList.resx">
+      <DependentUpon>ArrangedItemList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DlgDisassembler.resx">
+      <DependentUpon>DlgDisassembler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DlgInterleaveData.resx">
+      <DependentUpon>DlgInterleaveData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\BaseDocument.resx">
+      <DependentUpon>BaseDocument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\SourceBasicEx.resx">
+      <DependentUpon>SourceBasicEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\SourceASMEx.resx">
+      <DependentUpon>SourceASMEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\DebugStack.resx">
+      <DependentUpon>DebugStack.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DlgImportImageResize.resx">
+      <DependentUpon>DlgImportImageResize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\Disassembler.resx">
+      <DependentUpon>Disassembler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\SearchResults.resx">
+      <DependentUpon>SearchResults.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\DebugRegisters.resx">
+      <DependentUpon>DebugRegisters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\DebugWatch.resx">
+      <DependentUpon>DebugWatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAbout.resx">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormFindReplace.resx">
+      <DependentUpon>FormFindReplace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DlgGraphicImport.resx">
+      <DependentUpon>DlgGraphicImport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMacros.resx">
+      <DependentUpon>FormMacros.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRenameFile.resx">
+      <DependentUpon>FormRenameFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRenumberBASIC.resx">
+      <DependentUpon>FormRenumberBASIC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormWizard.resx">
+      <DependentUpon>FormWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\CompileResult.resx">
+      <DependentUpon>CompileResult.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ElementProperties.resx">
+      <DependentUpon>ElementProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\DebugMemory.resx">
+      <DependentUpon>DebugMemory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\CharsetEditor.resx">
+      <DependentUpon>CharsetEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\Calculator.resx">
+      <DependentUpon>Calculator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\FileManager.resx">
+      <DependentUpon>FileManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\Help.resx">
+      <DependentUpon>Help.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\GraphicScreenEditor.resx">
+      <DependentUpon>GraphicScreenEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\CharsetScreenEditor.resx">
+      <DependentUpon>CharsetScreenEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormProjectWizard.resx">
+      <DependentUpon>FormProjectWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\BinaryDisplay.resx">
+      <DependentUpon>BinaryDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\DebugBreakpoints.resx">
+      <DependentUpon>DebugBreakpoints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSolutionWizard.resx">
+      <DependentUpon>FormSolutionWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormLicense.resx">
+      <DependentUpon>FormLicense.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\MapEditor.resx">
+      <DependentUpon>MapEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\PetSCIITable.resx">
+      <DependentUpon>PetSCIITable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\Outline.resx">
+      <DependentUpon>Outline.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyTabs\PropBuildEventBuildChain.resx">
+      <DependentUpon>PropBuildEventBuildChain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyTabs\PropBuildEventScript.resx">
+      <DependentUpon>PropBuildEventScript.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyTabs\PropDebugging.resx">
+      <DependentUpon>PropDebugging.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyTabs\PropGeneral.resx">
+      <DependentUpon>PropGeneral.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyTabs\PropAssemblerType.resx">
+      <DependentUpon>PropAssemblerType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyTabs\PropBuildEvents.resx">
+      <DependentUpon>PropBuildEvents.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyTabs\PropCompileTarget.resx">
+      <DependentUpon>PropCompileTarget.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\SpriteEditor.resx">
+      <DependentUpon>SpriteEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\SolutionExplorer.resx">
+      <DependentUpon>SolutionExplorer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\OutputDisplay.resx">
+      <DependentUpon>OutputDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProjectProperties.resx">
+      <DependentUpon>ProjectProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\ReadOnlyFile.resx">
+      <DependentUpon>ReadOnlyFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <EmbeddedResource Include="C64_Pro_Mono_v1.0-STYLE.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="RemoteDebugger.cs" />
+    <Compile Include="Settings\StudioSettings.cs" />
+    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\TaskParseFile.cs" />
+    <Compile Include="ToolInfo.cs" />
+    <Compile Include="Formats\SpriteProject.cs" />
+    <Compile Include="Types\ASMSegment.cs" />
+    <Compile Include="Types\BuildChain.cs" />
+    <Compile Include="Types\BuildChainEntry.cs" />
+    <Compile Include="Types\MemoryMap.cs" />
+    <Compile Include="Types\Palette.cs" />
+    <Compile Include="Types\Types.cs" />
+    <Compile Include="Types\Util.cs" />
+    <Compile Include="Undo\UndoSpritesetExchangeMultiColors.cs" />
+    <Compile Include="Undo\UndoCharsetPlaygroundCharChange.cs" />
+    <Compile Include="Undo\UndoGraphicScreenSizeChange.cs" />
+    <Compile Include="Undo\UndoGraphicScreenImageChange.cs" />
+    <Compile Include="Undo\UndoCharscreenValuesChange.cs" />
+    <Compile Include="Undo\UndoCharscreenSizeChange.cs" />
+    <Compile Include="Undo\UndoCharscreenCharChange.cs" />
+    <Compile Include="Undo\UndoSpritesetExchangeLayer.cs" />
+    <Compile Include="Undo\UndoSpritesetRemoveLayer.cs" />
+    <Compile Include="Undo\UndoSpritesetAddLayer.cs" />
+    <Compile Include="Undo\UndoSpritesetValuesChange.cs" />
+    <Compile Include="Undo\UndoSpritesetSpriteChange.cs" />
+    <Compile Include="Undo\UndoCharsetRemoveCategory.cs" />
+    <Compile Include="Undo\UndoCharsetAddCategory.cs" />
+    <Compile Include="Undo\UndoCharsetExchangeMultiColors.cs" />
+    <Compile Include="Undo\UndoCharsetValuesChange.cs" />
+    <Compile Include="Undo\UndoCharsetCharChange.cs" />
+    <Compile Include="Undo\UndoMapTileExchange.cs" />
+    <Compile Include="Undo\UndoMapTileRemove.cs" />
+    <Compile Include="Undo\UndoMapTileAdd.cs" />
+    <Compile Include="Undo\UndoMapTileModified.cs" />
+    <Compile Include="Undo\UndoMapRemove.cs" />
+    <Compile Include="Undo\UndoMapAdd.cs" />
+    <Compile Include="Undo\UndoMapValueChange.cs" />
+    <Compile Include="Undo\UndoMapSizeChange.cs" />
+    <Compile Include="Undo\UndoMapTilesChange.cs" />
+    <Compile Include="Undo\UndoTask.cs" />
+    <Compile Include="Undo\UndoManager.cs" />
+    <Compile Include="UnitTests\TestManager.cs" />
+    <Compile Include="WatchEntry.cs" />
+    <Compile Include="Controls\ZoomBrowser.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="c64.ico" />
+    <None Include="Resources\flag_green_on.ico" />
+    <None Include="Resources\flag_green_off.ico" />
+    <None Include="Resources\flag_blue_on.ico" />
+    <None Include="Resources\flag_blue_off.ico" />
+    <None Include="Resources\disassembler.ico" />
+    <None Include="Resources\binary.ico" />
+    <None Include="Resources\toolbar_truedrive_enabled.bmp" />
+    <None Include="Resources\toolbar_truedrive_disabled.bmp" />
+    <None Include="Resources\spriteset.ico" />
+    <None Include="Resources\c64.ico" />
+    <None Include="Resources\charset.ico" />
+    <None Include="Resources\charsetscreen.ico" />
+    <None Include="Resources\folder.ico" />
+    <None Include="Resources\graphicscreen.ico" />
+    <None Include="Resources\mapeditor.ico" />
+    <None Include="Resources\project.ico" />
+    <None Include="Resources\solution.ico" />
+    <None Include="Resources\source.ico" />
+    <None Include="Resources\source_basic.ico" />
+    <None Include="Resources\tool_quad.ico" />
+    <None Include="Resources\tool_fill.ico" />
+    <None Include="Resources\tool_rect.ico" />
+    <None Include="Resources\tool_select.ico" />
+    <None Include="Resources\tool_none.ico" />
+    <None Include="Resources\arrow_down.png" />
+    <None Include="Resources\arrow_up.png" />
+    <None Include="Resources\delete.png" />
+    <None Include="Resources\add.png" />
+    <None Include="Resources\breakpoint.gif" />
+    <None Include="Resources\breakpoint.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FastColoredTextBox\FastColoredTextBox.csproj">
+      <Project>{6DD14A85-CCFC-4774-BD26-0F5772512319}</Project>
+      <Name>FastColoredTextBox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HexBox\HexBox.csproj">
+      <Project>{EA74431C-8749-4F1A-8F8F-FCEDAFAE89B9}</Project>
+      <Name>HexBox</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)C64StudioRelease\$(TargetFileName)</PostBuildEvent>
+  </PropertyGroup>
+</Project>

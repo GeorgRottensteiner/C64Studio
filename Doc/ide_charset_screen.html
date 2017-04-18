@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Character Screen Editor - Editor Pane</H3>
+  <div id="mybody">
+    The character screen editor supports editing a 40x25 screen of characters. Both single color and multi color are supported.<br>
+    <br>
+    <br>
+    <img src="images/ide_charset_screen.png"><br>
+    <br>
+    <br>
+    <b>Editing Screen</b><br>
+    Left click uses the current selected tool with the current char and current color, right click fetches the character/color under the mouse.<br>
+    <br>
+    <br>
+    <b>Apply Size</b><br>
+    Resizes the screen to fit the new size.<br>
+    <br>
+    <br>
+    <b>Single Character</b><br>
+    Left click sets a single character.<br>
+    <br>
+    <br>
+    <b>Rectangle</b><br>
+    Pushing left click starts a rectangle, move around until the size is fine and release to finally draw the rectangle.<br>
+    <br>
+    <br>
+    <b>Filled Rectangle</b><br>
+    Pushing left click starts a rectangle, move around until the size is fine and release to finally draw the filled rectangle.<br>
+    <br>
+    <br>
+    <b>Fill</b><br>
+    Left click flood fills the character below the cursor with the current char/color.<br>
+    <br>
+    <br>
+    <b>Selection</b><br>
+    Pushing left click starts a selection, move around until the size is fine and release to finalise the selection.<br>
+    <br>
+    Ctrl-C will copy the selection to the clipboard<br>
+    <br>
+    Ctrl-V will paste the selection as floating, move the cursor to place the selection. Pressing Escape aborts the placing.<br>
+    <br>
+    <br>
+  </div>
+  <H3>Character Screen Editor - Project Pane</H3>
+  <div id="mybody">
+    On the project pane several import/export functions are available.<br>
+    <br>
+    <br>
+    <img src="images/ide_charset_screen_project.png"><br>
+    <br>
+    <br>
+    <b>Export to Basic</b><br>
+    Exports the current screen to Basic code displaying the screen.<br>
+    <br>
+    <br>
+    <b>Export as assembly source data</b><br>
+    Exports the chosen data to assembly !byte statements. The fields Prefix with and wrap are used to build the resulting text.<br>
+    <br>
+    <br>
+    <b>Export as binary file</b><br>
+    Exports the chosen data to a binary file.<br>
+    <br>
+    <br>
+    <b>Import file</b><br>
+    Tries to import a character screen and color from a binary file. If the file length is greater or equal 1000 bytes, the first 1000 bytes are imported as the screen codes.
+    If the file length is greater or equal 2000 bytes, the second 1000 bytes are imported as the screen colors.
+    <br>
+    <br>
+    <b>Import charset</b><br>
+    Opens a .chr file to use as current character sheet.<br>
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>

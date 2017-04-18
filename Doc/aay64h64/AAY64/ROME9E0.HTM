@@ -1,0 +1,19 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E9E0/59872:   Syncronise Color Transfer
+
+Jump from <A HREF="ROME9C8.HTM">$E9CF</A>:
+
+E9E0: 20 24 EA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEA24.HTM">$EA24</A>     ; Syncronise Color Pointer
+E9E3: A5 AC     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAC.HTM">$AC</A>       ; Pointer: Tape Buffer/Screen scrolling
+E9E5: 85 AE     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AE</A>       ; Tape End Address/End of Program
+E9E7: A5 AD     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAC.HTM">$AD</A>       ; Pointer: Tape Buffer/Screen scrolling
+E9E9: 29 03     <A HREF="BAND.HTM">AND</A> #$03
+E9EB: 09 D8     <A HREF="BORA.HTM">ORA</A> #$D8
+E9ED: 85 AF     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AF</A>       ; Tape End Address/End of Program
+E9EF: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME9C8.HTM">Previous Page</A> / <A HREF="ROME9F0.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

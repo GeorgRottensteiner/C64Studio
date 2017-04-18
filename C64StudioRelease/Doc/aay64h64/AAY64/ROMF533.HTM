@@ -1,0 +1,104 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F533/62771:   Load File From Tape
+
+Jump from <A HREF="ROMF49E.HTM">$F4B6</A>:
+
+F533: 4A        <A HREF="BLSR.HTM">LSR</A>
+F534: B0 03     <A HREF="BBCS.HTM">BCS</A> $F539
+F536: 4C 13 F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF713.HTM">$F713</A>     ; Output I/O Error Messages: 'ILLEGAL DEVICE NUMBER'
+
+Jump from $F534:
+
+F539: 20 D0 F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF7D0.HTM">$F7D0</A>     ; Get Buffer Address
+F53C: B0 03     <A HREF="BBCS.HTM">BCS</A> $F541
+F53E: 4C 13 F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF713.HTM">$F713</A>     ; Output I/O Error Messages: 'ILLEGAL DEVICE NUMBER'
+
+Jump from $F53C:
+
+F541: 20 17 F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF817.HTM">$F817</A>     ; Print &quot;PRESS PLAY ON TAPE&quot;
+F544: B0 68     <A HREF="BBCS.HTM">BCS</A> $F5AE
+F546: 20 AF F5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF5AF.HTM">$F5AF</A>     ; Print &quot;SEARCHING&quot;
+
+Jump from $F56A:
+
+F549: A5 B7     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB7.HTM">$B7</A>       ; Number of Characters in Filename
+F54B: F0 09     <A HREF="BBEQ.HTM">BEQ</A> $F556
+F54D: 20 EA F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF7EA.HTM">$F7EA</A>     ; Find Specific Tape Header
+F550: 90 0B     <A HREF="BBCC.HTM">BCC</A> $F55D
+F552: F0 5A     <A HREF="BBEQ.HTM">BEQ</A> $F5AE
+F554: B0 DA     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMF4B8.HTM">$F530</A>     ; Load File From Serial Bus
+
+Jump from $F54B:
+
+F556: 20 2C F7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF72C.HTM">$F72C</A>     ; Find Any Tape Header
+F559: F0 53     <A HREF="BBEQ.HTM">BEQ</A> $F5AE
+F55B: B0 D3     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMF4B8.HTM">$F530</A>     ; Load File From Serial Bus
+
+Jump from $F550:
+
+F55D: A5 90     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP90.HTM">$90</A>       ; Kernal I/O Status Word ST
+F55F: 29 10     <A HREF="BAND.HTM">AND</A> #$10
+F561: 38        <A HREF="BSEC.HTM">SEC</A>
+F562: D0 4A     <A HREF="BBNE.HTM">BNE</A> $F5AE
+F564: E0 01     <A HREF="BCPX.HTM">CPX</A> #$01
+F566: F0 11     <A HREF="BBEQ.HTM">BEQ</A> $F579
+F568: E0 03     <A HREF="BCPX.HTM">CPX</A> #$03
+F56A: D0 DD     <A HREF="BBNE.HTM">BNE</A> $F549
+
+Jump from $F57B:
+
+F56C: A0 01     <A HREF="BLDY.HTM">LDY</A> #$01
+F56E: B1 B2     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F570: 85 C3     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC3.HTM">$C3</A>       ; Pointer: Type 3 Tape LOAD and general use
+F572: C8        <A HREF="BINY.HTM">INY</A>
+F573: B1 B2     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F575: 85 C4     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC3.HTM">$C4</A>       ; Pointer: Type 3 Tape LOAD and general use
+F577: B0 04     <A HREF="BBCS.HTM">BCS</A> $F57D
+
+Jump from $F566:
+
+F579: A5 B9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F57B: D0 EF     <A HREF="BBNE.HTM">BNE</A> $F56C
+
+Jump from $F577:
+
+F57D: A0 03     <A HREF="BLDY.HTM">LDY</A> #$03
+F57F: B1 B2     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F581: A0 01     <A HREF="BLDY.HTM">LDY</A> #$01
+F583: F1 B2     <A HREF="BSBC.HTM">SBC</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F585: AA        <A HREF="BTAX.HTM">TAX</A>
+F586: A0 04     <A HREF="BLDY.HTM">LDY</A> #$04
+F588: B1 B2     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F58A: A0 02     <A HREF="BLDY.HTM">LDY</A> #$02
+F58C: F1 B2     <A HREF="BSBC.HTM">SBC</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F58E: A8        <A HREF="BTAY.HTM">TAY</A>
+F58F: 18        <A HREF="BCLC.HTM">CLC</A>
+F590: 8A        <A HREF="BTXA.HTM">TXA</A>
+F591: 65 C3     <A HREF="BADC.HTM">ADC</A> <A HREF="ZPC3.HTM">$C3</A>       ; Pointer: Type 3 Tape LOAD and general use
+F593: 85 AE     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AE</A>       ; Tape End Address/End of Program
+F595: 98        <A HREF="BTYA.HTM">TYA</A>
+F596: 65 C4     <A HREF="BADC.HTM">ADC</A> <A HREF="ZPC3.HTM">$C4</A>       ; Pointer: Type 3 Tape LOAD and general use
+F598: 85 AF     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AF</A>       ; Tape End Address/End of Program
+F59A: A5 C3     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPC3.HTM">$C3</A>       ; Pointer: Type 3 Tape LOAD and general use
+F59C: 85 C1     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC1.HTM">$C1</A>       ; Start Address for LOAD and Cassette Write
+F59E: A5 C4     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPC3.HTM">$C4</A>       ; Pointer: Type 3 Tape LOAD and general use
+F5A0: 85 C2     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC1.HTM">$C2</A>       ; Start Address for LOAD and Cassette Write
+F5A2: 20 D2 F5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF5D2.HTM">$F5D2</A>     ; Print &quot;LOADING / VERIFYING&quot;
+F5A5: 20 4A F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF841.HTM">$F84A</A>     ; Initiate Tape Read
+F5A8: 24        .BYTE $24
+
+Jump from <A HREF="ROMF4B8.HTM">$F52E</A>:
+
+F5A9: 18        <A HREF="BCLC.HTM">CLC</A>
+F5AA: A6 AE     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPAE.HTM">$AE</A>       ; Tape End Address/End of Program
+F5AC: A4 AF     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPAE.HTM">$AF</A>       ; Tape End Address/End of Program
+
+Jump from $F544, $F552, $F559, $F562:
+
+F5AE: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF4B8.HTM">Previous Page</A> / <A HREF="ROMF5AF.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

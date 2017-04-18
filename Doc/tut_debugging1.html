@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Debugging Basics</H3>
+  <H2>Prerequisites</H2>
+  <div id="mybody">
+    <br>
+    Have VICE configured. VICE must be at least version 2.3, better 2.4.<br>
+    <br>
+    <br>
+  </div>
+    <H2>1) Open Sample Project 6</H2>
+  <div id="mybody">
+    <br>
+    <img src="images/tut_debugging1.png"><br>
+    <br>
+    From the main menu choose File -> Open -> Solution or Project.<br>
+    <br>
+    <br>
+  </div>
+    <H2>2) Chose "Sample Project 6 - Debugging" from the folder "Sample Projects"</H2>
+  <div id="mybody">
+    <br>
+    <img src="images/tut_debugging2.png"><br>
+    <br>
+    From the open file dialog enter the "Sample Projects" folder and choose "Sample Project 6 - Debugging.s64" and press "OK".<br>
+    <br>
+    <br>
+  </div>
+    <H2>3) Set Cursor to marked line</H2>
+  <div id="mybody">
+    <br>
+    <img src="images/tut_debugging3.png"><br>
+    <br>
+    Place the cursor on the marked line via mouse or keyboard.<br>
+    <br>
+    <br>
+  </div>
+    <H2>4) Use "Run to cursor"</H2>
+  <div id="mybody">
+    <br>
+    <img src="images/tut_debugging4.png"><br>
+    <br>
+    Either use the short key for "Run to Cursor" or right click at the line and choose "Run to cursor" from the context menu. You should see VICE opening your file followed by C64 Studio getting focus after a moment.
+    If VICE doesn't open make sure it is properly setup in File -> Preferences -> Tools.<br>
+    <br>
+    <br>
+  </div>
+    <H2>5) Checking runtime values</H2>
+  <div id="mybody">
+    <br>
+    <img src="images/tut_debugging5.png"><img src="images/tut_debugging5b.png"><br>
+    <br>
+    C64 Studio should now highlight the previously chosen line with a yellow background. This is where the C64's processor is currently executing code. The highlight marks the next line to be executed.<br>
+    <br>
+    Looking at the "Registers" view shows the current registers and a few crucial values of the current C64 instance. Note that the accumulator A contains the value zero.<br>
+    <br>
+    <br>
+  </div>
+    <H2>6) Stepping one command at a time</H2>
+  <div id="mybody">
+    <br>
+    <img src="images/tut_debugging6.png"><br>
+    Now press the short cut key for "Debug Step" or push the corresponding button on the toolbar.<br>
+    <br>
+    <br>
+    <img src="images/tut_debugging6c.png"><img src="images/tut_debugging6b.png"><br>
+    <br>
+    C64 Studio will highlight the next instruction and the register view will update its values.<br>
+    Note how A now contains the value 7 as per the LDA instruction before<br>
+    <br>
+    <br>
+  </div>
+    <H2>7) End debugging</b></H2>
+  <div id="mybody">
+    <br>
+    <img src="images/tut_debugging7.png"><br>
+    Use the "Stop Debugging" short cut key or push the corresponding button on the toolbar.<br>
+    <br>
+    Note that with VICE 2.4 you should always stop debugging via C64 Studio. Unfortunately VICE 2.4 does not respond to clicks or key presses when the debug mode is active.<br>
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>

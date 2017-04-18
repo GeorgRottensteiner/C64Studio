@@ -1,0 +1,81 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $ED40/60736:   Send Data On Serial Bus
+
+Jump from <A HREF="ROMED0C.HTM">$ED19</A>, <A HREF="ROMEDDD.HTM">$EDE7</A>:
+
+ED40: 78        <A HREF="BSEI.HTM">SEI</A>
+ED41: 20 97 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE97.HTM">$EE97</A>     ; Serial Output 1
+ED44: 20 A9 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEEA9.HTM">$EEA9</A>     ; Get Serial Data And Clock In
+ED47: B0 64     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMEDAD.HTM">$EDAD</A>     ; Flag Errors: Status #80 - DEVICE NOT PRESENT
+ED49: 20 85 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE85.HTM">$EE85</A>     ; Serial Clock On
+ED4C: 24 A3     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZPA3.HTM">$A3</A>       ; Serial Bus EOI (End Of Input) Flag
+ED4E: 10 0A     <A HREF="BBPL.HTM">BPL</A> $ED5A
+
+Jump from $ED53:
+
+ED50: 20 A9 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEEA9.HTM">$EEA9</A>     ; Get Serial Data And Clock In
+ED53: 90 FB     <A HREF="BBCC.HTM">BCC</A> $ED50
+
+Jump from $ED58:
+
+ED55: 20 A9 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEEA9.HTM">$EEA9</A>     ; Get Serial Data And Clock In
+ED58: B0 FB     <A HREF="BBCS.HTM">BCS</A> $ED55
+
+Jump from $ED4E, $ED5D:
+
+ED5A: 20 A9 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEEA9.HTM">$EEA9</A>     ; Get Serial Data And Clock In
+ED5D: 90 FB     <A HREF="BBCC.HTM">BCC</A> $ED5A
+ED5F: 20 8E EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE8E.HTM">$EE8E</A>     ; Serial Clock Off
+ED62: A9 08     <A HREF="BLDA.HTM">LDA</A> #$08
+ED64: 85 A5     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPA5.HTM">$A5</A>       ; Tape Synchronising count down
+
+Jump from $ED6C, $ED90:
+
+ED66: AD 00 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+ED69: CD 00 DD  <A HREF="BCMP.HTM">CMP</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+ED6C: D0 F8     <A HREF="BBNE.HTM">BNE</A> $ED66
+ED6E: 0A        <A HREF="BASL.HTM">ASL</A>
+ED6F: 90 3F     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMEDB0.HTM">$EDB0</A>     ; Flag Errors: Status #03 - WRITE TIMEOUT
+ED71: 66 95     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP95.HTM">$95</A>       ; Buffered Character for Serial Bus
+ED73: B0 05     <A HREF="BBCS.HTM">BCS</A> $ED7A
+ED75: 20 A0 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEEA0.HTM">$EEA0</A>     ; Serial Output 0
+ED78: D0 03     <A HREF="BBNE.HTM">BNE</A> $ED7D
+
+Jump from $ED73:
+
+ED7A: 20 97 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE97.HTM">$EE97</A>     ; Serial Output 1
+
+Jump from $ED78:
+
+ED7D: 20 85 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE85.HTM">$EE85</A>     ; Serial Clock On
+ED80: EA        <A HREF="BNOP.HTM">NOP</A>
+ED81: EA        <A HREF="BNOP.HTM">NOP</A>
+ED82: EA        <A HREF="BNOP.HTM">NOP</A>
+ED83: EA        <A HREF="BNOP.HTM">NOP</A>
+ED84: AD 00 DD  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+ED87: 29 DF     <A HREF="BAND.HTM">AND</A> #$DF
+ED89: 09 10     <A HREF="BORA.HTM">ORA</A> #$10
+ED8B: 8D 00 DD  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA20.HTM">$DD00</A>     ; CIA2: Data Port A (Serial Bus, RS232, VIC Base Mem.)
+ED8E: C6 A5     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPA5.HTM">$A5</A>       ; Tape Synchronising count down
+ED90: D0 D4     <A HREF="BBNE.HTM">BNE</A> $ED66
+ED92: A9 04     <A HREF="BLDA.HTM">LDA</A> #$04
+ED94: 8D 07 DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA17.HTM">$DC07</A>     ; CIA1: Timer B High-Byte (Tape, Serial Port)
+ED97: A9 19     <A HREF="BLDA.HTM">LDA</A> #$19
+ED99: 8D 0F DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA115.HTM">$DC0F</A>     ; CIA1: Control Register B
+ED9C: AD 0D DC  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA113.HTM">$DC0D</A>     ; CIA1: Interrupt (IRQ) Control Register
+
+Jump from $EDA9:
+
+ED9F: AD 0D DC  <A HREF="BLDA.HTM">LDA</A> <A HREF="CIA113.HTM">$DC0D</A>     ; CIA1: Interrupt (IRQ) Control Register
+EDA2: 29 02     <A HREF="BAND.HTM">AND</A> #$02
+EDA4: D0 0A     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMEDB0.HTM">$EDB0</A>     ; Flag Errors: Status #03 - WRITE TIMEOUT
+EDA6: 20 A9 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEEA9.HTM">$EEA9</A>     ; Get Serial Data And Clock In
+EDA9: B0 F4     <A HREF="BBCS.HTM">BCS</A> $ED9F
+EDAB: 58        <A HREF="BCLI.HTM">CLI</A>
+EDAC: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMED0C.HTM">Previous Page</A> / <A HREF="ROMEDAD.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

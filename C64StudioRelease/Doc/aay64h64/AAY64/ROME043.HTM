@@ -1,0 +1,62 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E043/57411:   Series Evaluation
+
+Jump from <A HREF="ROMB9EA.HTM">$BA16</A>, <A HREF="ROME26B.HTM">$E2B1</A>, <A HREF="ROME30E.HTM">$E328</A>:
+
+E043: 85 71     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+E045: 84 72     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+E047: 20 CA BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBC7.HTM">$BBCA</A>     ; Store FAC#1 in Memory
+E04A: A9 57     <A HREF="BLDA.HTM">LDA</A> #$57
+E04C: 20 28 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA28.HTM">$BA28</A>     ; Perform Multiply
+E04F: 20 5D E0  <A HREF="BJSR.HTM">JSR</A> $E05D
+E052: A9 57     <A HREF="BLDA.HTM">LDA</A> #$57
+E054: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+E056: 4C 28 BA  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBA28.HTM">$BA28</A>     ; Perform Multiply
+
+Jump from <A HREF="ROME000.HTM">$E037</A>:
+
+E059: 85 71     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+E05B: 84 72     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+
+Jump from $E04F:
+
+E05D: 20 C7 BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBC7.HTM">$BBC7</A>     ; Store FAC#1 in Memory
+E060: B1 71     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP71.HTM">$71</A>),Y   ; Pointer: Used during CRUNCH/ASCII conversion
+E062: 85 67     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP67.HTM">$67</A>       ; Pointer: Series Evaluation Constant
+E064: A4 71     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+E066: C8        <A HREF="BINY.HTM">INY</A>
+E067: 98        <A HREF="BTYA.HTM">TYA</A>
+E068: D0 02     <A HREF="BBNE.HTM">BNE</A> $E06C
+E06A: E6 72     <A HREF="BINC.HTM">INC</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+
+Jump from $E068:
+
+E06C: 85 71     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+E06E: A4 72     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+
+Jump from $E08A:
+
+E070: 20 28 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA28.HTM">$BA28</A>     ; Perform Multiply
+E073: A5 71     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+E075: A4 72     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+E077: 18        <A HREF="BCLC.HTM">CLC</A>
+E078: 69 05     <A HREF="BADC.HTM">ADC</A> #$05
+E07A: 90 01     <A HREF="BBCC.HTM">BCC</A> $E07D
+E07C: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from $E07A:
+
+E07D: 85 71     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+E07F: 84 72     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP71.HTM">$72</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+E081: 20 67 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB867.HTM">$B867</A>     ; Perform Addition
+E084: A9 5C     <A HREF="BLDA.HTM">LDA</A> #$5C
+E086: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+E088: C6 67     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP67.HTM">$67</A>       ; Pointer: Series Evaluation Constant
+E08A: D0 E4     <A HREF="BBNE.HTM">BNE</A> $E070
+E08C: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME000.HTM">Previous Page</A> / <A HREF="ROME08D.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

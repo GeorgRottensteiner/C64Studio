@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510/65816 Addressing mode: Absolute Long (JMP) -- al
+
+ (<A HREF="BJMP.HTM">JMP</A>)
+ (4 bytes)  (4 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | NEW PCL               |    R     |
+    |           3   |  PBR,PC+2        | NEW PCH               |    R     |
+    |           4   |  PBR,PC+3        | NEW PBR               |    R     |
+    |           1   |  NEW PBR,PC      | New Op Code           |    R     |
+    +---------------+------------------+-----------------------+----------+
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,83 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E632/58930:   Input From Screen or Keyboard
+
+Jump from <A HREF="ROMF157.HTM">$F163</A>, <A HREF="ROMF157.HTM">$F170</A>:
+
+E632: 98        <A HREF="BTYA.HTM">TYA</A>
+E633: 48        <A HREF="BPHA.HTM">PHA</A>
+E634: 8A        <A HREF="BTXA.HTM">TXA</A>
+E635: 48        <A HREF="BPHA.HTM">PHA</A>
+E636: A5 D0     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD0.HTM">$D0</A>       ; Flag: Input from ...
+E638: F0 93     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROME5CA.HTM">$E5CD</A>     ; Input From Keyboard
+
+Jump from <A HREF="ROME5CA.HTM">$E61D</A>, <A HREF="ROME5CA.HTM">$E626</A>, <A HREF="ROME5CA.HTM">$E62E</A>:
+
+E63A: A4 D3     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E63C: B1 D1     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPD1.HTM">$D1</A>),Y   ; Pointer: Current Screen Line Address
+E63E: 85 D7     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPD7.HTM">$D7</A>       ; Current Input Character/Last Character Output
+E640: 29 3F     <A HREF="BAND.HTM">AND</A> #$3F
+E642: 06 D7     <A HREF="BASL.HTM">ASL</A> <A HREF="ZPD7.HTM">$D7</A>       ; Current Input Character/Last Character Output
+E644: 24 D7     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZPD7.HTM">$D7</A>       ; Current Input Character/Last Character Output
+E646: 10 02     <A HREF="BBPL.HTM">BPL</A> $E64A
+E648: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+
+Jump from $E646:
+
+E64A: 90 04     <A HREF="BBCC.HTM">BCC</A> $E650
+E64C: A6 D4     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPD4.HTM">$D4</A>       ; Flag: Editor in Quote Mode
+E64E: D0 04     <A HREF="BBNE.HTM">BNE</A> $E654
+
+Jump from $E64A:
+
+E650: 70 02     <A HREF="BBVS.HTM">BVS</A> $E654
+E652: 09 40     <A HREF="BORA.HTM">ORA</A> #$40
+
+Jump from $E64E, $E650:
+
+E654: E6 D3     <A HREF="BINC.HTM">INC</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E656: 20 84 E6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME684.HTM">$E684</A>     ; Quotes Test
+E659: C4 C8     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZPC8.HTM">$C8</A>       ; Pointer: End of Line for Input
+E65B: D0 17     <A HREF="BBNE.HTM">BNE</A> $E674
+
+Jump from <A HREF="ROME5CA.HTM">$E630</A>:
+
+E65D: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+E65F: 85 D0     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPD0.HTM">$D0</A>       ; Flag: Input from ...
+E661: A9 0D     <A HREF="BLDA.HTM">LDA</A> #$0D
+E663: A6 99     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP99.HTM">$99</A>       ; Default Input Device (0)
+E665: E0 03     <A HREF="BCPX.HTM">CPX</A> #$03
+E667: F0 06     <A HREF="BBEQ.HTM">BEQ</A> $E66F
+E669: A6 9A     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP9A.HTM">$9A</A>       ; Default Output Device (3)
+E66B: E0 03     <A HREF="BCPX.HTM">CPX</A> #$03
+E66D: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $E672
+
+Jump from $E667:
+
+E66F: 20 16 E7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME716.HTM">$E716</A>     ; Output to Screen
+
+Jump from $E66D:
+
+E672: A9 0D     <A HREF="BLDA.HTM">LDA</A> #$0D
+
+Jump from $E65B:
+
+E674: 85 D7     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPD7.HTM">$D7</A>       ; Current Input Character/Last Character Output
+E676: 68        <A HREF="BPLA.HTM">PLA</A>
+E677: AA        <A HREF="BTAX.HTM">TAX</A>
+E678: 68        <A HREF="BPLA.HTM">PLA</A>
+E679: A8        <A HREF="BTAY.HTM">TAY</A>
+E67A: A5 D7     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD7.HTM">$D7</A>       ; Current Input Character/Last Character Output
+E67C: C9 DE     <A HREF="BCMP.HTM">CMP</A> #$DE
+E67E: D0 02     <A HREF="BBNE.HTM">BNE</A> $E682
+E680: A9 FF     <A HREF="BLDA.HTM">LDA</A> #$FF
+
+Jump from $E67E:
+
+E682: 18        <A HREF="BCLC.HTM">CLC</A>
+E683: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME5CA.HTM">Previous Page</A> / <A HREF="ROME684.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,67 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E097/57495:   Evaluate &lt;rnd&gt;
+
+E097: 20 2B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC2B.HTM">$BC2B</A>     ; Check Sign of FAC#1
+E09A: 30 37     <A HREF="BBMI.HTM">BMI</A> $E0D3
+E09C: D0 20     <A HREF="BBNE.HTM">BNE</A> $E0BE
+E09E: 20 F3 FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFF3.HTM">$FFF3</A>     ; Return I/O Base Address
+E0A1: 86 22     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+E0A3: 84 23     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+E0A5: A0 04     <A HREF="BLDY.HTM">LDY</A> #$04
+E0A7: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+E0A9: 85 62     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+E0AB: C8        <A HREF="BINY.HTM">INY</A>
+E0AC: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+E0AE: 85 64     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+E0B0: A0 08     <A HREF="BLDY.HTM">LDY</A> #$08
+E0B2: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+E0B4: 85 63     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+E0B6: C8        <A HREF="BINY.HTM">INY</A>
+E0B7: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+E0B9: 85 65     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+E0BB: 4C E3 E0  <A HREF="BJMP.HTM">JMP</A> $E0E3
+
+Jump from $E09C:
+
+E0BE: A9 8B     <A HREF="BLDA.HTM">LDA</A> #$8B
+E0C0: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+E0C2: 20 A2 BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBA2.HTM">$BBA2</A>     ; Load FAC#1 From Memory
+E0C5: A9 8D     <A HREF="BLDA.HTM">LDA</A> #$8D
+E0C7: A0 E0     <A HREF="BLDY.HTM">LDY</A> #$E0
+E0C9: 20 28 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA28.HTM">$BA28</A>     ; Perform Multiply
+E0CC: A9 92     <A HREF="BLDA.HTM">LDA</A> #$92
+E0CE: A0 E0     <A HREF="BLDY.HTM">LDY</A> #$E0
+E0D0: 20 67 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB867.HTM">$B867</A>     ; Perform Addition
+
+Jump from $E09A:
+
+E0D3: A6 65     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+E0D5: A5 62     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+E0D7: 85 65     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+E0D9: 86 62     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+E0DB: A6 63     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+E0DD: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+E0DF: 85 63     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+E0E1: 86 64     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+
+Jump from $E0BB:
+
+E0E3: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+E0E5: 85 66     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+E0E7: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+E0E9: 85 70     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+E0EB: A9 80     <A HREF="BLDA.HTM">LDA</A> #$80
+E0ED: 85 61     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+E0EF: 20 D7 B8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB867.HTM">$B8D7</A>     ; Perform Addition
+E0F2: A2 8B     <A HREF="BLDX.HTM">LDX</A> #$8B
+E0F4: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+
+Jump from <A HREF="ROME2B4.HTM">$E2C2</A>:
+
+E0F6: 4C D4 BB  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBBC7.HTM">$BBD4</A>     ; Store FAC#1 in Memory
+
+    <A HREF="ROME08D.HTM">Previous Page</A> / <A HREF="ROME0F9.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

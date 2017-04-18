@@ -1,0 +1,35 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BA8C/47756:   Load FAC#2 From Memory
+
+Jump from <A HREF="ROMB850.HTM">$B850</A>, <A HREF="ROMB867.HTM">$B867</A>, <A HREF="ROMBA28.HTM">$BA28</A>, <A HREF="ROMBB0F.HTM">$BB0F</A>:
+
+BA8C: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+BA8E: 84 23     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+BA90: A0 04     <A HREF="BLDY.HTM">LDY</A> #$04
+BA92: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BA94: 85 6D     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6A.HTM">$6D</A>       ; AFAC Mantissa
+BA96: 88        <A HREF="BDEY.HTM">DEY</A>
+BA97: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BA99: 85 6C     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6A.HTM">$6C</A>       ; AFAC Mantissa
+BA9B: 88        <A HREF="BDEY.HTM">DEY</A>
+BA9C: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BA9E: 85 6B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6A.HTM">$6B</A>       ; AFAC Mantissa
+BAA0: 88        <A HREF="BDEY.HTM">DEY</A>
+BAA1: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BAA3: 85 6E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6E.HTM">$6E</A>       ; AFAC Sign
+BAA5: 45 66     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BAA7: 85 6F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+BAA9: A5 6E     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP6E.HTM">$6E</A>       ; AFAC Sign
+BAAB: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+BAAD: 85 6A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6A.HTM">$6A</A>       ; AFAC Mantissa
+BAAF: 88        <A HREF="BDEY.HTM">DEY</A>
+BAB0: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+BAB2: 85 69     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP69.HTM">$69</A>       ; AFAC Exponent
+BAB4: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BAB6: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBA59.HTM">Previous Page</A> / <A HREF="ROMBAB7.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

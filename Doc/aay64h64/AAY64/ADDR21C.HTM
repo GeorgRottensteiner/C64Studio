@@ -1,0 +1,27 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510/65816 Addressing mode: Stack (RTI) -- s
+
+ (<A HREF="BRTI.HTM">RTI</A>)
+ (1 byte)  (6 and 7 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Internal Operation    |    R     |
+    |       (3) 3   |  PBR,PC+1        | Internal Operation    |    R     |
+    |           4   |  0,S+1           | Status Register       |    R     |
+    |           5   |  0,S+2           | New PCL               |    R     |
+    |           6   |  0,S+3           | New PCH               |    R     |
+    |       (7) 7   |  0,S+4           | Program Bank Register |    R     |
+    |           1   |  PBR,NewPC       | New Op Code           |    R     |
+    +---------------+------------------+-----------------------+----------+
+    (3) Special case for aborting instruction. This is the last cycle which
+        may be aborted or the Status, PBR or DBR registers will be updated.
+    (7) Subtract 1 cycle for 6502 emulation mode (E=1).
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

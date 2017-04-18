@@ -1,0 +1,42 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BF7B/49019:   Evaluate &lt;power&gt;
+
+BF7B: F0 70     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMBFED.HTM">$BFED</A>     ; Evaluate &lt;exp&gt;
+BF7D: A5 69     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP69.HTM">$69</A>       ; AFAC Exponent
+BF7F: D0 03     <A HREF="BBNE.HTM">BNE</A> $BF84
+BF81: 4C F9 B8  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB867.HTM">$B8F9</A>     ; Perform Addition
+
+Jump from $BF7F:
+
+BF84: A2 4E     <A HREF="BLDX.HTM">LDX</A> #$4E
+BF86: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+BF88: 20 D4 BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBC7.HTM">$BBD4</A>     ; Store FAC#1 in Memory
+BF8B: A5 6E     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP6E.HTM">$6E</A>       ; AFAC Sign
+BF8D: 10 0F     <A HREF="BBPL.HTM">BPL</A> $BF9E
+BF8F: 20 CC BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBCCC.HTM">$BCCC</A>     ; Evaluate &lt;int&gt;
+BF92: A9 4E     <A HREF="BLDA.HTM">LDA</A> #$4E
+BF94: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+BF96: 20 5B BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC5B.HTM">$BC5B</A>     ; Compare FAC#1 With Memory
+BF99: D0 03     <A HREF="BBNE.HTM">BNE</A> $BF9E
+BF9B: 98        <A HREF="BTYA.HTM">TYA</A>
+BF9C: A4 07     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+
+Jump from $BF8D, $BF99:
+
+BF9E: 20 FE BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBFC.HTM">$BBFE</A>     ; Copy FAC#2 into FAC#1
+BFA1: 98        <A HREF="BTYA.HTM">TYA</A>
+BFA2: 48        <A HREF="BPHA.HTM">PHA</A>
+BFA3: 20 EA B9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB9EA.HTM">$B9EA</A>     ; Evaluate &lt;log&gt;
+BFA6: A9 4E     <A HREF="BLDA.HTM">LDA</A> #$4E
+BFA8: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+BFAA: 20 28 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBA28.HTM">$BA28</A>     ; Perform Multiply
+BFAD: 20 ED BF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBFED.HTM">$BFED</A>     ; Evaluate &lt;exp&gt;
+BFB0: 68        <A HREF="BPLA.HTM">PLA</A>
+BFB1: 4A        <A HREF="BLSR.HTM">LSR</A>
+BFB2: 90 0A     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMBFB4.HTM">$BFBE</A>     ; Negate FAC#1
+
+    <A HREF="ROMBF71.HTM">Previous Page</A> / <A HREF="ROMBFB4.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

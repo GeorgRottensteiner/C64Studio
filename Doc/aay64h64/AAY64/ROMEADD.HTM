@@ -1,0 +1,80 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EADD/60125:   Process Key Image
+
+EADD: 6C 8F 02  <A HREF="BJMP.HTM">JMP</A> (<A HREF="ZP028F.HTM">$028F</A>)   ; Vector: Routine to determine Keyboard table
+
+Jump from <A HREF="ROMEB48.HTM">$EB76</A>:
+
+EAE0: A4 CB     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPC5.HTM">$CB</A>       ; Matrix value of last Key pressed
+EAE2: B1 F5     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPF5.HTM">$F5</A>),Y   ; Vector: Current Keyboard decoding Table
+EAE4: AA        <A HREF="BTAX.HTM">TAX</A>
+EAE5: C4 C5     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZPC5.HTM">$C5</A>       ; Matrix value of last Key pressed
+EAE7: F0 07     <A HREF="BBEQ.HTM">BEQ</A> $EAF0
+EAE9: A0 10     <A HREF="BLDY.HTM">LDY</A> #$10
+EAEB: 8C 8C 02  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP028C.HTM">$028C</A>     ; Repeat Key: First repeat delay Counter
+EAEE: D0 36     <A HREF="BBNE.HTM">BNE</A> $EB26
+
+Jump from $EAE7:
+
+EAF0: 29 7F     <A HREF="BAND.HTM">AND</A> #$7F
+EAF2: 2C 8A 02  <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP028A.HTM">$028A</A>     ; Flag: Repeat keys
+EAF5: 30 16     <A HREF="BBMI.HTM">BMI</A> $EB0D
+EAF7: 70 49     <A HREF="BBVS.HTM">BVS</A> $EB42
+EAF9: C9 7F     <A HREF="BCMP.HTM">CMP</A> #$7F
+
+Jump from <A HREF="ROMEA87.HTM">$EA98</A>:
+
+EAFB: F0 29     <A HREF="BBEQ.HTM">BEQ</A> $EB26
+EAFD: C9 14     <A HREF="BCMP.HTM">CMP</A> #$14
+EAFF: F0 0C     <A HREF="BBEQ.HTM">BEQ</A> $EB0D
+EB01: C9 20     <A HREF="BCMP.HTM">CMP</A> #$20
+EB03: F0 08     <A HREF="BBEQ.HTM">BEQ</A> $EB0D
+EB05: C9 1D     <A HREF="BCMP.HTM">CMP</A> #$1D
+EB07: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $EB0D
+EB09: C9 11     <A HREF="BCMP.HTM">CMP</A> #$11
+EB0B: D0 35     <A HREF="BBNE.HTM">BNE</A> $EB42
+
+Jump from $EAF5, $EAFF, $EB03, $EB07:
+
+EB0D: AC 8C 02  <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP028C.HTM">$028C</A>     ; Repeat Key: First repeat delay Counter
+EB10: F0 05     <A HREF="BBEQ.HTM">BEQ</A> $EB17
+EB12: CE 8C 02  <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP028C.HTM">$028C</A>     ; Repeat Key: First repeat delay Counter
+EB15: D0 2B     <A HREF="BBNE.HTM">BNE</A> $EB42
+
+Jump from $EB10:
+
+EB17: CE 8B 02  <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP028B.HTM">$028B</A>     ; Repeat Key: Speed Counter
+EB1A: D0 26     <A HREF="BBNE.HTM">BNE</A> $EB42
+EB1C: A0 04     <A HREF="BLDY.HTM">LDY</A> #$04
+EB1E: 8C 8B 02  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP028B.HTM">$028B</A>     ; Repeat Key: Speed Counter
+EB21: A4 C6     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPC6.HTM">$C6</A>       ; Number of Characters in Keyboard Buffer queue
+EB23: 88        <A HREF="BDEY.HTM">DEY</A>
+EB24: 10 1C     <A HREF="BBPL.HTM">BPL</A> $EB42
+
+Jump from $EAEE, $EAFB:
+
+EB26: A4 CB     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPC5.HTM">$CB</A>       ; Matrix value of last Key pressed
+EB28: 84 C5     <A HREF="BSTY.HTM">STY</A> <A HREF="ZPC5.HTM">$C5</A>       ; Matrix value of last Key pressed
+EB2A: AC 8D 02  <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP028D.HTM">$028D</A>     ; Flag: Shift Keys
+EB2D: 8C 8E 02  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP028E.HTM">$028E</A>     ; Last Shift Key used for debouncing
+EB30: E0 FF     <A HREF="BCPX.HTM">CPX</A> #$FF
+EB32: F0 0E     <A HREF="BBEQ.HTM">BEQ</A> $EB42
+EB34: 8A        <A HREF="BTXA.HTM">TXA</A>
+EB35: A6 C6     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPC6.HTM">$C6</A>       ; Number of Characters in Keyboard Buffer queue
+EB37: EC 89 02  <A HREF="BCPX.HTM">CPX</A> <A HREF="ZP0289.HTM">$0289</A>     ; Maximum number of Bytes in Keyboard Buffer
+EB3A: B0 06     <A HREF="BBCS.HTM">BCS</A> $EB42
+EB3C: 9D 77 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0277.HTM">$0277</A>,X   ; Keyboard Buffer Queue (FIFO)
+EB3F: E8        <A HREF="BINX.HTM">INX</A>
+EB40: 86 C6     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPC6.HTM">$C6</A>       ; Number of Characters in Keyboard Buffer queue
+
+Jump from $EAF7, $EB0B, $EB15, $EB1A, $EB24, $EB32, $EB3A, <A HREF="ROMEB48.HTM">$EB52</A>:
+
+EB42: A9 7F     <A HREF="BLDA.HTM">LDA</A> #$7F
+EB44: 8D 00 DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA10.HTM">$DC00</A>     ; CIA1: Data Port A (Keyboard, Joystick, Paddles)
+EB47: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMEA87.HTM">Previous Page</A> / <A HREF="ROMEB48.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

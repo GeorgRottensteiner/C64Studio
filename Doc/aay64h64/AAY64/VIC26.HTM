@@ -1,0 +1,19 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $D01A/53274/VIC+26:  Interrupt Mask Register (IMR)
+
+   1 = IRQ enabled
+
+   +----------+-------------------------------------------------------+
+   | Bit 7-4  |   Always 1                                            |
+   | Bit 3    |   Light-Pen Triggered IRQ Flag                        |
+   | Bit 2    |   Sprite to Sprite Collision IRQ Flag     (see <A HREF="VIC30.HTM">$D01E</A>) |
+   | Bit 1    |   Sprite to Background Collision IRQ Flag (see <A HREF="VIC31.HTM">$D01F</A>) |
+   | Bit 0    |   Raster Compare IRQ Flag                 (see <A HREF="VIC18.HTM">$D012</A>) |
+   +----------+-------------------------------------------------------+
+
+   An IRQ will be initiated, if equal bits are set in IRR and IMR.
+   Default Value: $00/0 (%00000000).
+
+</PRE></BODY></HTML>

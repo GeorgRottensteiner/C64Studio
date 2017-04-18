@@ -1,0 +1,138 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BE68/48744:   Convert TI to String
+
+Jump from <A HREF="ROMAF48.HTM">$AF56</A>:
+
+BE68: A2 80     <A HREF="BLDX.HTM">LDX</A> #$80
+
+Jump from $BE8A, $BE8E, $BEC2:
+
+BE6A: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+BE6C: 18        <A HREF="BCLC.HTM">CLC</A>
+BE6D: 79 19 BF  <A HREF="BADC.HTM">ADC</A> <A HREF="ROMBF16.HTM">$BF19</A>,Y   ; Table of Constants  4-byte powers of 10
+BE70: 85 65     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+BE72: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+BE74: 79 18 BF  <A HREF="BADC.HTM">ADC</A> <A HREF="ROMBF16.HTM">$BF18</A>,Y   ; Table of Constants  4-byte powers of 10
+BE77: 85 64     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+BE79: A5 63     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+BE7B: 79 17 BF  <A HREF="BADC.HTM">ADC</A> <A HREF="ROMBF16.HTM">$BF17</A>,Y   ; Table of Constants  4-byte powers of 10
+BE7E: 85 63     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+BE80: A5 62     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+BE82: 79 16 BF  <A HREF="BADC.HTM">ADC</A> <A HREF="ROMBF16.HTM">$BF16</A>,Y   ; Table of Constants  4-byte powers of 10
+BE85: 85 62     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+BE87: E8        <A HREF="BINX.HTM">INX</A>
+BE88: B0 04     <A HREF="BBCS.HTM">BCS</A> $BE8E
+BE8A: 10 DE     <A HREF="BBPL.HTM">BPL</A> $BE6A
+BE8C: 30 02     <A HREF="BBMI.HTM">BMI</A> $BE90
+
+Jump from $BE88:
+
+BE8E: 30 DA     <A HREF="BBMI.HTM">BMI</A> $BE6A
+
+Jump from $BE8C:
+
+BE90: 8A        <A HREF="BTXA.HTM">TXA</A>
+BE91: 90 04     <A HREF="BBCC.HTM">BCC</A> $BE97
+BE93: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+BE95: 69 0A     <A HREF="BADC.HTM">ADC</A> #$0A
+
+Jump from $BE91:
+
+BE97: 69 2F     <A HREF="BADC.HTM">ADC</A> #$2F
+BE99: C8        <A HREF="BINY.HTM">INY</A>
+BE9A: C8        <A HREF="BINY.HTM">INY</A>
+BE9B: C8        <A HREF="BINY.HTM">INY</A>
+BE9C: C8        <A HREF="BINY.HTM">INY</A>
+BE9D: 84 47     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP47.HTM">$47</A>       ; Value/Descriptor-Pointer
+BE9F: A4 71     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+BEA1: C8        <A HREF="BINY.HTM">INY</A>
+BEA2: AA        <A HREF="BTAX.HTM">TAX</A>
+BEA3: 29 7F     <A HREF="BAND.HTM">AND</A> #$7F
+BEA5: 99 FF 00  <A HREF="BSTA.HTM">STA</A> <A HREF="ZPFF.HTM">$00FF</A>,Y   ; Assembly Area for Floating point to ASCII
+BEA8: C6 5D     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP5C.HTM">$5D</A>       ; Temporary storage for FLPT value
+BEAA: D0 06     <A HREF="BBNE.HTM">BNE</A> $BEB2
+BEAC: A9 2E     <A HREF="BLDA.HTM">LDA</A> #$2E
+BEAE: C8        <A HREF="BINY.HTM">INY</A>
+BEAF: 99 FF 00  <A HREF="BSTA.HTM">STA</A> <A HREF="ZPFF.HTM">$00FF</A>,Y   ; Assembly Area for Floating point to ASCII
+
+Jump from $BEAA:
+
+BEB2: 84 71     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+BEB4: A4 47     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP47.HTM">$47</A>       ; Value/Descriptor-Pointer
+BEB6: 8A        <A HREF="BTXA.HTM">TXA</A>
+BEB7: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+BEB9: 29 80     <A HREF="BAND.HTM">AND</A> #$80
+BEBB: AA        <A HREF="BTAX.HTM">TAX</A>
+BEBC: C0 24     <A HREF="BCPY.HTM">CPY</A> #$24
+BEBE: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $BEC4
+BEC0: C0 3C     <A HREF="BCPY.HTM">CPY</A> #$3C
+BEC2: D0 A6     <A HREF="BBNE.HTM">BNE</A> $BE6A
+
+Jump from $BEBE:
+
+BEC4: A4 71     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+
+Jump from $BECC:
+
+BEC6: B9 FF 00  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPFF.HTM">$00FF</A>,Y   ; Assembly Area for Floating point to ASCII
+BEC9: 88        <A HREF="BDEY.HTM">DEY</A>
+BECA: C9 30     <A HREF="BCMP.HTM">CMP</A> #$30
+BECC: F0 F8     <A HREF="BBEQ.HTM">BEQ</A> $BEC6
+BECE: C9 2E     <A HREF="BCMP.HTM">CMP</A> #$2E
+BED0: F0 01     <A HREF="BBEQ.HTM">BEQ</A> $BED3
+BED2: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from $BED0:
+
+BED3: A9 2B     <A HREF="BLDA.HTM">LDA</A> #$2B
+BED5: A6 5E     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+BED7: F0 2E     <A HREF="BBEQ.HTM">BEQ</A> $BF07
+BED9: 10 08     <A HREF="BBPL.HTM">BPL</A> $BEE3
+BEDB: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+BEDD: 38        <A HREF="BSEC.HTM">SEC</A>
+BEDE: E5 5E     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+BEE0: AA        <A HREF="BTAX.HTM">TAX</A>
+BEE1: A9 2D     <A HREF="BLDA.HTM">LDA</A> #$2D
+
+Jump from $BED9:
+
+BEE3: 99 01 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0100.HTM">$0101</A>,Y   ; 6510 Hardware Stack Area
+BEE6: A9 45     <A HREF="BLDA.HTM">LDA</A> #$45
+BEE8: 99 00 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0100.HTM">$0100</A>,Y   ; 6510 Hardware Stack Area
+BEEB: 8A        <A HREF="BTXA.HTM">TXA</A>
+BEEC: A2 2F     <A HREF="BLDX.HTM">LDX</A> #$2F
+BEEE: 38        <A HREF="BSEC.HTM">SEC</A>
+
+Jump from $BEF2:
+
+BEEF: E8        <A HREF="BINX.HTM">INX</A>
+BEF0: E9 0A     <A HREF="BSBC.HTM">SBC</A> #$0A
+BEF2: B0 FB     <A HREF="BBCS.HTM">BCS</A> $BEEF
+BEF4: 69 3A     <A HREF="BADC.HTM">ADC</A> #$3A
+BEF6: 99 03 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0100.HTM">$0103</A>,Y   ; 6510 Hardware Stack Area
+BEF9: 8A        <A HREF="BTXA.HTM">TXA</A>
+BEFA: 99 02 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0100.HTM">$0102</A>,Y   ; 6510 Hardware Stack Area
+BEFD: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+BEFF: 99 04 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0100.HTM">$0104</A>,Y   ; 6510 Hardware Stack Area
+BF02: F0 08     <A HREF="BBEQ.HTM">BEQ</A> $BF0C
+
+Jump from <A HREF="ROMBDDD.HTM">$BDF5</A>:
+
+BF04: 99 FF 00  <A HREF="BSTA.HTM">STA</A> <A HREF="ZPFF.HTM">$00FF</A>,Y   ; Assembly Area for Floating point to ASCII
+
+Jump from $BED7:
+
+BF07: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+BF09: 99 00 01  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0100.HTM">$0100</A>,Y   ; 6510 Hardware Stack Area
+
+Jump from $BF02:
+
+BF0C: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+BF0E: A0 01     <A HREF="BLDY.HTM">LDY</A> #$01
+BF10: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBDDD.HTM">Previous Page</A> / <A HREF="ROMBF11.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,27 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  DEC                   DEC Decrement memory by one                     DEC
+
+  Operation:  M - 1 -&gt; M                                N V - B D I Z C
+                                                        / . . . . . / .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   DEC $FF             |   $C6   |    2    |    5     |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   DEC $FF,X           |   $D6   |    2    |    6     |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   DEC $FFFF           |   $CE   |    3    |    6     |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   DEC $FFFF,X         |   $DE   |    3    |    7     |
+  +----------------+-----------------------+---------+---------+----------+
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR6A.HTM">Implied</A>        |   DEC                 |   $3A   |    1    |    2     |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

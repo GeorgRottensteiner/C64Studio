@@ -1,0 +1,23 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  ROL          ROL Rotate one bit left (memory or accumulator)          ROL
+
+               +------------------------------+
+               |                              |
+               |   +-+-+-+-+-+-+-+-+    +-+   |
+  Operation:   +-&lt; |7|6|5|4|3|2|1|0| &lt;- |C| &lt;-+         N V - B D I Z C
+                   +-+-+-+-+-+-+-+-+    +-+             / . . . . . / /
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR5.HTM">Accumulator</A>   |   ROL A               |   $2A   |    1    |    2     |
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   ROL $FF             |   $26   |    2    |    5     |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   ROL $FF,X           |   $36   |    2    |    6     |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   ROL $FFFF           |   $2E   |    3    |    6     |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   ROL $FFFF,X         |   $3E   |    3    |    7     |
+  +----------------+-----------------------+---------+---------+----------+
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+</PRE></BODY></HTML>

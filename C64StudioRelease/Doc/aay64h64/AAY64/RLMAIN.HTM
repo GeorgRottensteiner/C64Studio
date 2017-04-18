@@ -1,0 +1,33 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  +------------------------------------------------------------------------
+  |
+  |      RAMLINK - REGISTER DESCRIPTIONS
+  |
+  +------------------------------------------------------------------------
+  |
+  |  Registers:
+  |
+  |   $DF7E/57214    Activate Hardware
+  |   $DF7F/57215    Deactivate Hardware
+  |
+  |   Select page from internal RAM area (see $DFC0):
+  |   $DF80/57216    Select Variables page
+  |   $DF81/57217    Select DOS RAM page 0
+  |   $DF82/57218    Select DOS RAM page 1
+  |   $DF83/57219    Select DOS RAM page 2
+  |   $DF84/57220    Select DOS RAM page 3
+  |   and so on... (until $DF??)
+  |
+  |   $DFA0/57248    Low-Byte of requested RAMCard memory page
+  |   $DFA1/57249    High-Byte of requested RAMCard memory page
+  |
+  |   $DFC0/57280    Show internal RAM page at $DE00 (default)
+  |   $DFC1/57281    Show RAMCard memory page at $DE00
+  |   $DFC2/57282    Show RAM Port device IO1 at $DE00
+  |   $DFC3/57283    Show Pass-Thru Port device IO1 at $DE00
+  |
+  +------------------------------------------------------------------------
+
+</PRE></BODY></HTML>

@@ -1,0 +1,46 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A8A0/43168:   Perform [goto]
+
+Jump from <A HREF="ROMA7ED.HTM">$A81A</A>, <A HREF="ROMA883.HTM">$A89A</A>, <A HREF="ROMA93B.HTM">$A945</A>:
+
+A8A0: 20 6B A9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA96B.HTM">$A96B</A>     ; Fetch linnum From BASIC
+A8A3: 20 09 A9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA906.HTM">$A909</A>     ; Search for Next Statement / Line
+A8A6: 38        <A HREF="BSEC.HTM">SEC</A>
+A8A7: A5 39     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP39.HTM">$39</A>       ; Current BASIC Line number
+A8A9: E5 14     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP14.HTM">$14</A>       ; Temporary: Integer value
+A8AB: A5 3A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP39.HTM">$3A</A>       ; Current BASIC Line number
+A8AD: E5 15     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP14.HTM">$15</A>       ; Temporary: Integer value
+A8AF: B0 0B     <A HREF="BBCS.HTM">BCS</A> $A8BC
+A8B1: 98        <A HREF="BTYA.HTM">TYA</A>
+A8B2: 38        <A HREF="BSEC.HTM">SEC</A>
+A8B3: 65 7A     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A8B5: A6 7B     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+A8B7: 90 07     <A HREF="BBCC.HTM">BCC</A> $A8C0
+A8B9: E8        <A HREF="BINX.HTM">INX</A>
+A8BA: B0 04     <A HREF="BBCS.HTM">BCS</A> $A8C0
+
+Jump from $A8AF:
+
+A8BC: A5 2B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2B.HTM">$2B</A>       ; Pointer: Start of BASIC Text Area
+A8BE: A6 2C     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP2B.HTM">$2C</A>       ; Pointer: Start of BASIC Text Area
+
+Jump from $A8B7, $A8BA:
+
+A8C0: 20 17 A6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA613.HTM">$A617</A>     ; Search for Line Number
+A8C3: 90 1E     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMA8D2.HTM">$A8E3</A>     ; Perform [return]
+A8C5: A5 5F     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+A8C7: E9 01     <A HREF="BSBC.HTM">SBC</A> #$01
+A8C9: 85 7A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7A</A>       ; Pointer: Current Byte of BASIC Text
+A8CB: A5 60     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+A8CD: E9 00     <A HREF="BSBC.HTM">SBC</A> #$00
+A8CF: 85 7B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP7A.HTM">$7B</A>       ; Pointer: Current Byte of BASIC Text
+
+Jump from <A HREF="ROMA8D2.HTM">$A8D2</A>:
+
+A8D1: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA883.HTM">Previous Page</A> / <A HREF="ROMA8D2.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

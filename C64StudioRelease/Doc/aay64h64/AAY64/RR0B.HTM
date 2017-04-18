@@ -1,0 +1,17 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE0B/56843/RR+11:  SilverSurfer: Line Control Register
+
+   +----------+--------------------------------------------------------+
+   | Bit  7   |   1 = Baud Rate Divisor Latch at <A HREF="RR08.HTM">$DE08</A> and <A HREF="RR09.HTM">$DE09</A>       |
+   | Bit  6   |   0 = turn Break off, 1 = force spacing Break State    |
+   | Bit  5   |   Parity: 0 = disabled, 1 = enabled                    |
+   | Bit  4   |   Parity: 0 = odd, 1 = even                            |
+   | Bit  3   |   Parity: 0 = no parity, 1 = parity                    |
+   | Bit  2   |   Stop Bits: 0 = 1, 1 = 1.5 or 2 (*)                   |
+   | Bits 1+0 |   Word Length select: 00,01,10,11 = 5,6,7,8 bits/char. |
+   +----------+--------------------------------------------------------+
+   (*) Stop Bits are 1.5 for 5 bit words or 2 for 6, 7 or 8 bit words.
+
+</PRE></BODY></HTML>

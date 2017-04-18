@@ -1,0 +1,40 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B606/46598:   Collect a String
+
+Jump from <A HREF="ROMB526.HTM">$B57A</A>:
+
+B606: A5 4F     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP4E.HTM">$4F</A>       ; Temporary storage for FLPT value
+B608: 05 4E     <A HREF="BORA.HTM">ORA</A> <A HREF="ZP4E.HTM">$4E</A>       ; Temporary storage for FLPT value
+B60A: F0 F5     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMB5BD.HTM">$B601</A>     ; Search for Next String
+B60C: A5 55     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP54.HTM">$55</A>       ; Jump Vector used in Function Evaluation
+B60E: 29 04     <A HREF="BAND.HTM">AND</A> #$04
+B610: 4A        <A HREF="BLSR.HTM">LSR</A>
+B611: A8        <A HREF="BTAY.HTM">TAY</A>
+B612: 85 55     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP54.HTM">$55</A>       ; Jump Vector used in Function Evaluation
+B614: B1 4E     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B616: 65 5F     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+B618: 85 5A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$5A</A>       ; Temporary storage for FLPT value
+B61A: A5 60     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+B61C: 69 00     <A HREF="BADC.HTM">ADC</A> #$00
+B61E: 85 5B     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$5B</A>       ; Temporary storage for FLPT value
+B620: A5 33     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+B622: A6 34     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+B624: 85 58     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B626: 86 59     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B628: 20 BF A3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMA3B8.HTM">$A3BF</A>     ; Open Space in Memory
+B62B: A4 55     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP54.HTM">$55</A>       ; Jump Vector used in Function Evaluation
+B62D: C8        <A HREF="BINY.HTM">INY</A>
+B62E: A5 58     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B630: 91 4E     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B632: AA        <A HREF="BTAX.HTM">TAX</A>
+B633: E6 59     <A HREF="BINC.HTM">INC</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B635: A5 59     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B637: C8        <A HREF="BINY.HTM">INY</A>
+B638: 91 4E     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP4E.HTM">$4E</A>),Y   ; Temporary storage for FLPT value
+B63A: 4C 2A B5  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB526.HTM">$B52A</A>     ; Garbage Collection
+
+    <A HREF="ROMB5BD.HTM">Previous Page</A> / <A HREF="ROMB63D.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,19 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B78B/46987:   Evaluate &lt;asc&gt;
+
+B78B: 20 82 B7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB782.HTM">$B782</A>     ; Exit String Mode
+B78E: F0 08     <A HREF="BBEQ.HTM">BEQ</A> $B798
+B790: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B792: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+B794: A8        <A HREF="BTAY.HTM">TAY</A>
+B795: 4C A2 B3  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB39E.HTM">$B3A2</A>     ; Evaluate &lt;pos&gt;
+
+Jump from $B78E, <A HREF="ROMB737.HTM">$B74B</A>, <A HREF="ROMB79B.HTM">$B7A6</A>, <A HREF="ROMB7F7.HTM">$B7F9</A>, <A HREF="ROMB7F7.HTM">$B7FF</A>:
+
+B798: 4C 48 B2  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB248.HTM">$B248</A>     ; ?ILLEGAL QUANTITY
+
+    <A HREF="ROMB782.HTM">Previous Page</A> / <A HREF="ROMB79B.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B194/45460:   Allocate Array Pointer Space
+
+Jump from <A HREF="ROMB24D.HTM">$B253</A>, <A HREF="ROMB261.HTM">$B261</A>:
+
+B194: A5 0B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+B196: 0A        <A HREF="BASL.HTM">ASL</A>
+B197: 69 05     <A HREF="BADC.HTM">ADC</A> #$05
+B199: 65 5F     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+B19B: A4 60     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+B19D: 90 01     <A HREF="BBCC.HTM">BCC</A> $B1A0
+B19F: C8        <A HREF="BINY.HTM">INY</A>
+
+Jump from $B19D:
+
+B1A0: 85 58     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP57.HTM">$58</A>       ; Temporary storage for FLPT value
+B1A2: 84 59     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP57.HTM">$59</A>       ; Temporary storage for FLPT value
+B1A4: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB128.HTM">Previous Page</A> / <A HREF="ROMB1A5.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

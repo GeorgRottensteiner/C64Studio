@@ -1,0 +1,58 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F157/61783:   Input a byte
+
+F157: A5 99     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP99.HTM">$99</A>       ; Default Input Device (0)
+F159: D0 0B     <A HREF="BBNE.HTM">BNE</A> $F166
+F15B: A5 D3     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+F15D: 85 CA     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC9.HTM">$CA</A>       ; Cursor X/Y position at start of Input
+F15F: A5 D6     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD6.HTM">$D6</A>       ; Current Screen Line number of Cursor
+F161: 85 C9     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC9.HTM">$C9</A>       ; Cursor X/Y position at start of Input
+F163: 4C 32 E6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME632.HTM">$E632</A>     ; Input From Screen or Keyboard
+
+Jump from $F159, <A HREF="ROMF13E.HTM">$F14C</A>:
+
+F166: C9 03     <A HREF="BCMP.HTM">CMP</A> #$03
+F168: D0 09     <A HREF="BBNE.HTM">BNE</A> $F173
+F16A: 85 D0     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPD0.HTM">$D0</A>       ; Flag: Input from ...
+F16C: A5 D5     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD5.HTM">$D5</A>       ; Current logical Line length: 39 or 79
+F16E: 85 C8     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC8.HTM">$C8</A>       ; Pointer: End of Line for Input
+F170: 4C 32 E6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME632.HTM">$E632</A>     ; Input From Screen or Keyboard
+
+Jump from $F168:
+
+F173: B0 38     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROMF199.HTM">$F1AD</A>     ; Get From Tape / Serial / RS232
+F175: C9 02     <A HREF="BCMP.HTM">CMP</A> #$02
+F177: F0 3F     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMF199.HTM">$F1B8</A>     ; Get From Tape / Serial / RS232
+F179: 86 97     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP97.HTM">$97</A>       ; Storage of Y Register during RS232 fetch
+F17B: 20 99 F1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF199.HTM">$F199</A>     ; Get From Tape / Serial / RS232
+F17E: B0 16     <A HREF="BBCS.HTM">BCS</A> $F196
+F180: 48        <A HREF="BPHA.HTM">PHA</A>
+F181: 20 99 F1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF199.HTM">$F199</A>     ; Get From Tape / Serial / RS232
+F184: B0 0D     <A HREF="BBCS.HTM">BCS</A> $F193
+F186: D0 05     <A HREF="BBNE.HTM">BNE</A> $F18D
+F188: A9 40     <A HREF="BLDA.HTM">LDA</A> #$40
+F18A: 20 1C FE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFE18.HTM">$FE1C</A>     ; Control OS Messages
+
+Jump from $F186:
+
+F18D: C6 A6     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPA6.HTM">$A6</A>       ; Pointer: Tape I/O buffer
+F18F: A6 97     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP97.HTM">$97</A>       ; Storage of Y Register during RS232 fetch
+F191: 68        <A HREF="BPLA.HTM">PLA</A>
+F192: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $F184:
+
+F193: AA        <A HREF="BTAX.HTM">TAX</A>
+F194: 68        <A HREF="BPLA.HTM">PLA</A>
+F195: 8A        <A HREF="BTXA.HTM">TXA</A>
+
+Jump from $F17E:
+
+F196: A6 97     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP97.HTM">$97</A>       ; Storage of Y Register during RS232 fetch
+F198: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMF13E.HTM">Previous Page</A> / <A HREF="ROMF199.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

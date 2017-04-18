@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EDDD/60893:   Send Serial Deferred
+
+Jump from <A HREF="ROMF1CA.HTM">$F1D8</A>, <A HREF="ROMF3D5.HTM">$F3FE</A>, <A HREF="ROMF5FA.HTM">$F61C</A>, <A HREF="ROMF5FA.HTM">$F621</A>, <A HREF="ROMF5FA.HTM">$F62B</A>, <A HREF="ROMFFA8.HTM">$FFA8</A>:
+
+EDDD: 24 94     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP94.HTM">$94</A>       ; Flag: Serial Bus - Output Character buffered
+EDDF: 30 05     <A HREF="BBMI.HTM">BMI</A> $EDE6
+EDE1: 38        <A HREF="BSEC.HTM">SEC</A>
+EDE2: 66 94     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP94.HTM">$94</A>       ; Flag: Serial Bus - Output Character buffered
+EDE4: D0 05     <A HREF="BBNE.HTM">BNE</A> $EDEB
+
+Jump from $EDDF:
+
+EDE6: 48        <A HREF="BPHA.HTM">PHA</A>
+EDE7: 20 40 ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMED40.HTM">$ED40</A>     ; Send Data On Serial Bus
+EDEA: 68        <A HREF="BPLA.HTM">PLA</A>
+
+Jump from $EDE4:
+
+EDEB: 85 95     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP95.HTM">$95</A>       ; Buffered Character for Serial Bus
+EDED: 18        <A HREF="BCLC.HTM">CLC</A>
+EDEE: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMEDCC.HTM">Previous Page</A> / <A HREF="ROMEDEF.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

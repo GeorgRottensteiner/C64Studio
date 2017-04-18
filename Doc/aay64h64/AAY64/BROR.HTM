@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  ROR          ROR Rotate one bit right (memory or accumulator)         ROR
+
+               +------------------------------+
+               |                              |
+               |   +-+    +-+-+-+-+-+-+-+-+   |
+  Operation:   +-&gt; |C| -&gt; |7|6|5|4|3|2|1|0| &gt;-+         N V - B D I Z C
+                   +-+    +-+-+-+-+-+-+-+-+             / . . . . . / /
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR5.HTM">Accumulator</A>   |   ROR A               |   $6A   |    1    |    2     |
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   ROR $FF             |   $66   |    2    |    5     |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   ROR $FF,X           |   $76   |    2    |    6     |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   ROR $FFFF           |   $6E   |    3    |    6     |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   ROR $FFFF,X         |   $7E   |    3    |    7     |
+  +----------------+-----------------------+---------+---------+----------+
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+    Note: ROR instruction is available on MCS650X microprocessors after
+          June, 1976.
+
+</PRE></BODY></HTML>

@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Disassembler</H3>
+  <div id="mybody">
+    The Disassembler allows to read a binary file and attempts to disassemble it. The disassembler supports provided labels and on the fly disassembly. It differs between jump addresses and memory addresses for easier re-labeling.
+    During disassembly the target addresses or any branch or jump opcodes are used to parse into the code. Obviously self modifying code fails to disassemble properly; also lo/hi byte jump tables are not recognized. To advance
+    disassemble you can add new jump addresses via "Jumped at addresses".<br>
+    <br>
+    <br>
+    <img src="images/ide_disassembler.png"><br>
+    <br>
+    <br>
+    <b>Disassembly</b><br>
+    This pane shows the disassembly of the provided binary blob. Do not modify directly, it will be regenerated on any change in the binary tab or the label list.<br>
+    <br>
+    <b>Binary</b><br>
+    The binary pane displays the current binary blob. Binary data can be modified directly.<br>
+    <br>
+    <b>Open</b><br>
+    Open lets you choose a file to disassemble. If a .prg extension is used, the first two bytes are interpreted as start address of the following data.<br>
+    If the data starts at address 0x0800 or 0x0801 the disassembler checks if a BASIC starter is uses and tries to extract the jump address automatically.<br>
+    <br>
+    <b>Export to Assembly</b><br>
+    Exports the disassembly to a new .asm file ready to compile.<br>
+    <br>
+    <b>Data start address</b><br>
+    Displays the determined data start address, modifying updates the disassembly. The value is interpreted as hexadecimal when prefixed with $ or 0x, any other values as decimal.<br>
+    <br>
+    <b>Jumped at addresses</b><br>
+    Contains a list of jumped at addresses which are used as disassembly start points. Any changes result in re-disassembling.<br>
+    <br>
+    <b>Named labels</b><br>
+    Any addresses that match these entries are replaced by the name (like a label) instead of their literal value.<br>
+    <br>
+    <b>Disassembly Project</b><br>
+    Allows saving and reloading of the entire settings of a disassembly session.<br>
+    <br>
+  </div>
+</body>
+</HTML>

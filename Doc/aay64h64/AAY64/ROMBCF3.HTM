@@ -1,0 +1,173 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BCF3/48371:   Convert ASCII String to a Number in FAC
+
+Jump from <A HREF="ROMAC35.HTM">$AC89</A>, <A HREF="ROMAE83.HTM">$AE8F</A>, <A HREF="ROMB7B5.HTM">$B7DA</A>:
+
+BCF3: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+BCF5: A2 0A     <A HREF="BLDX.HTM">LDX</A> #$0A
+
+Jump from $BCFA:
+
+BCF7: 94 5D     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP5C.HTM">$5D</A>,X     ; Temporary storage for FLPT value
+BCF9: CA        <A HREF="BDEX.HTM">DEX</A>
+BCFA: 10 FB     <A HREF="BBPL.HTM">BPL</A> $BCF7
+BCFC: 90 0F     <A HREF="BBCC.HTM">BCC</A> $BD0D
+BCFE: C9 2D     <A HREF="BCMP.HTM">CMP</A> #$2D
+BD00: D0 04     <A HREF="BBNE.HTM">BNE</A> $BD06
+BD02: 86 67     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP67.HTM">$67</A>       ; Pointer: Series Evaluation Constant
+BD04: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $BD0A
+
+Jump from $BD00:
+
+BD06: C9 2B     <A HREF="BCMP.HTM">CMP</A> #$2B
+BD08: D0 05     <A HREF="BBNE.HTM">BNE</A> $BD0F
+
+Jump from $BD04, $BD45, $BD7B:
+
+BD0A: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+
+Jump from $BCFC:
+
+BD0D: 90 5B     <A HREF="BBCC.HTM">BCC</A> $BD6A
+
+Jump from $BD08:
+
+BD0F: C9 2E     <A HREF="BCMP.HTM">CMP</A> #$2E
+BD11: F0 2E     <A HREF="BBEQ.HTM">BEQ</A> $BD41
+BD13: C9 45     <A HREF="BCMP.HTM">CMP</A> #$45
+BD15: D0 30     <A HREF="BBNE.HTM">BNE</A> $BD47
+BD17: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+BD1A: 90 17     <A HREF="BBCC.HTM">BCC</A> $BD33
+BD1C: C9 AB     <A HREF="BCMP.HTM">CMP</A> #$AB
+BD1E: F0 0E     <A HREF="BBEQ.HTM">BEQ</A> $BD2E
+BD20: C9 2D     <A HREF="BCMP.HTM">CMP</A> #$2D
+BD22: F0 0A     <A HREF="BBEQ.HTM">BEQ</A> $BD2E
+BD24: C9 AA     <A HREF="BCMP.HTM">CMP</A> #$AA
+BD26: F0 08     <A HREF="BBEQ.HTM">BEQ</A> $BD30
+BD28: C9 2B     <A HREF="BCMP.HTM">CMP</A> #$2B
+BD2A: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $BD30
+BD2C: D0 07     <A HREF="BBNE.HTM">BNE</A> $BD35
+
+Jump from $BD1E, $BD22:
+
+BD2E: 66 60     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+
+Jump from $BD26, $BD2A, $BDB0:
+
+BD30: 20 73 00  <A HREF="BJSR.HTM">JSR</A> <A HREF="ZP73.HTM">$0073</A>     ; CHRGET: Get next Byte of BASIC Text
+
+Jump from $BD1A:
+
+BD33: 90 5C     <A HREF="BBCC.HTM">BCC</A> $BD91
+
+Jump from $BD2C:
+
+BD35: 24 60     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+BD37: 10 0E     <A HREF="BBPL.HTM">BPL</A> $BD47
+BD39: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+BD3B: 38        <A HREF="BSEC.HTM">SEC</A>
+BD3C: E5 5E     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+BD3E: 4C 49 BD  <A HREF="BJMP.HTM">JMP</A> $BD49
+
+Jump from $BD11:
+
+BD41: 66 5F     <A HREF="BROR.HTM">ROR</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+BD43: 24 5F     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+BD45: 50 C3     <A HREF="BBVC.HTM">BVC</A> $BD0A
+
+Jump from $BD15, $BD37:
+
+BD47: A5 5E     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+
+Jump from $BD3E:
+
+BD49: 38        <A HREF="BSEC.HTM">SEC</A>
+BD4A: E5 5D     <A HREF="BSBC.HTM">SBC</A> <A HREF="ZP5C.HTM">$5D</A>       ; Temporary storage for FLPT value
+BD4C: 85 5E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+BD4E: F0 12     <A HREF="BBEQ.HTM">BEQ</A> $BD62
+BD50: 10 09     <A HREF="BBPL.HTM">BPL</A> $BD5B
+
+Jump from $BD57:
+
+BD52: 20 FE BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBAFE.HTM">$BAFE</A>     ; Divide FAC#1 by 10
+BD55: E6 5E     <A HREF="BINC.HTM">INC</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+BD57: D0 F9     <A HREF="BBNE.HTM">BNE</A> $BD52
+BD59: F0 07     <A HREF="BBEQ.HTM">BEQ</A> $BD62
+
+Jump from $BD50, $BD60:
+
+BD5B: 20 E2 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBAE2.HTM">$BAE2</A>     ; Multiply FAC#1 by 10
+BD5E: C6 5E     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+BD60: D0 F9     <A HREF="BBNE.HTM">BNE</A> $BD5B
+
+Jump from $BD4E, $BD59:
+
+BD62: A5 67     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP67.HTM">$67</A>       ; Pointer: Series Evaluation Constant
+BD64: 30 01     <A HREF="BBMI.HTM">BMI</A> $BD67
+BD66: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $BD64:
+
+BD67: 4C B4 BF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBFB4.HTM">$BFB4</A>     ; Negate FAC#1
+
+Jump from $BD0D:
+
+BD6A: 48        <A HREF="BPHA.HTM">PHA</A>
+BD6B: 24 5F     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP5C.HTM">$5F</A>       ; Temporary storage for FLPT value
+BD6D: 10 02     <A HREF="BBPL.HTM">BPL</A> $BD71
+BD6F: E6 5D     <A HREF="BINC.HTM">INC</A> <A HREF="ZP5C.HTM">$5D</A>       ; Temporary storage for FLPT value
+
+Jump from $BD6D:
+
+BD71: 20 E2 BA  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBAE2.HTM">$BAE2</A>     ; Multiply FAC#1 by 10
+BD74: 68        <A HREF="BPLA.HTM">PLA</A>
+BD75: 38        <A HREF="BSEC.HTM">SEC</A>
+BD76: E9 30     <A HREF="BSBC.HTM">SBC</A> #$30
+BD78: 20 7E BD  <A HREF="BJSR.HTM">JSR</A> $BD7E
+BD7B: 4C 0A BD  <A HREF="BJMP.HTM">JMP</A> $BD0A
+
+Jump from $BD78, <A HREF="ROMA9E3.HTM">$AA29</A>, <A HREF="ROMB9EA.HTM">$BA21</A>:
+
+BD7E: 48        <A HREF="BPHA.HTM">PHA</A>
+BD7F: 20 0C BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC0C.HTM">$BC0C</A>     ; Copy FAC#1 into FAC#2
+BD82: 68        <A HREF="BPLA.HTM">PLA</A>
+BD83: 20 3C BC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBC39.HTM">$BC3C</A>     ; Evaluate &lt;sgn&gt;
+BD86: A5 6E     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP6E.HTM">$6E</A>       ; AFAC Sign
+BD88: 45 66     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BD8A: 85 6F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+BD8C: A6 61     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BD8E: 4C 6A B8  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB867.HTM">$B86A</A>     ; Perform Addition
+
+Jump from $BD33:
+
+BD91: A5 5E     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+BD93: C9 0A     <A HREF="BCMP.HTM">CMP</A> #$0A
+BD95: 90 09     <A HREF="BBCC.HTM">BCC</A> $BDA0
+BD97: A9 64     <A HREF="BLDA.HTM">LDA</A> #$64
+BD99: 24 60     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP5C.HTM">$60</A>       ; Temporary storage for FLPT value
+BD9B: 30 11     <A HREF="BBMI.HTM">BMI</A> $BDAE
+BD9D: 4C 7E B9  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB97E.HTM">$B97E</A>     ; Output ?OVERFLOW Error
+
+Jump from $BD95:
+
+BDA0: 0A        <A HREF="BASL.HTM">ASL</A>
+BDA1: 0A        <A HREF="BASL.HTM">ASL</A>
+BDA2: 18        <A HREF="BCLC.HTM">CLC</A>
+BDA3: 65 5E     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+BDA5: 0A        <A HREF="BASL.HTM">ASL</A>
+BDA6: 18        <A HREF="BCLC.HTM">CLC</A>
+BDA7: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+BDA9: 71 7A     <A HREF="BADC.HTM">ADC</A> (<A HREF="ZP7A.HTM">$7A</A>),Y   ; Pointer: Current Byte of BASIC Text
+BDAB: 38        <A HREF="BSEC.HTM">SEC</A>
+BDAC: E9 30     <A HREF="BSBC.HTM">SBC</A> #$30
+
+Jump from $BD9B:
+
+BDAE: 85 5E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+BDB0: 4C 30 BD  <A HREF="BJMP.HTM">JMP</A> $BD30
+
+    <A HREF="ROMBCCC.HTM">Previous Page</A> / <A HREF="ROMBDB3.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

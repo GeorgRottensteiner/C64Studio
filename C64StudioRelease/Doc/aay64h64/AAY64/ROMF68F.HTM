@@ -1,0 +1,16 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F68F/63119:   Print &quot;SAVING&quot;
+
+Jump from <A HREF="ROMF5FA.HTM">$F608</A>, <A HREF="ROMF659.HTM">$F669</A>:
+
+F68F: A5 9D     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP9D.HTM">$9D</A>       ; Error-Mode-Flag
+F691: 10 FB     <A HREF="BBPL.HTM">BPL</A> <A HREF="ROMF659.HTM">$F68E</A>     ; Save to Tape
+F693: A0 51     <A HREF="BLDY.HTM">LDY</A> #$51
+F695: 20 2F F1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF12F.HTM">$F12F</A>     ; Print Message
+F698: 4C C1 F5  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF5C1.HTM">$F5C1</A>     ; Print Filename
+
+    <A HREF="ROMF659.HTM">Previous Page</A> / <A HREF="ROMF69B.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

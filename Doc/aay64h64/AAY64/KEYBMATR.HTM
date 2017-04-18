@@ -1,0 +1,45 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+                               Port B - $DC01
+              +-----+-----+-----+-----+-----+-----+-----+-----+
+              |Bit 7|Bit 6|Bit 5|Bit 4|Bit 3|Bit 2|Bit 1|Bit 0|
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+        |Bit 7| R/S |  Q  |  C= |SPACE|  2  | CTRL|A_LFT|  1  |
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+        |Bit 6|  /  | A_UP|  =  | S_R | HOME|  ;  |  *  |POUND|
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+        |Bit 5|  ,  |  @  |  :  |  .  |  -  |  L  |  P  |  +  |
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+        |Bit 4|  N  |  O  |  K  |  M  |  0  |  J  |  I  |  9  |
+ Port A +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+ $DC00  |Bit 3|  V  |  U  |  H  |  B  |  8  |  G  |  Y  |  7  |
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+        |Bit 2|  X  |  T  |  F  |  C  |  6  |  D  |  R  |  5  |
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+        |Bit 1| S_L |  E  |  S  |  Z  |  4  |  A  |  W  |  3  |
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+        |Bit 0|C_U/D|  F5 |  F3 |  F1 |  F7 |C_L/R|  CR | DEL |
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+
+  C_L/R = Cursor left/right  ;  C_U/D = Cursor up/down
+  S_L = Shift, left  ;  S_R = Shift, right  ;  R/S = RUN/STOP
+  A_UP = Arrow up    ;  A_LFT = Arrow left
+
+ C128 only:
+                               Port B - $DC01
+              +-----+-----+-----+-----+-----+-----+-----+-----+
+              |Bit 7|Bit 6|Bit 5|Bit 4|Bit 3|Bit 2|Bit 1|Bit 0|
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+        |Bit 2|NOSCR| 'R' | 'L' | 'D' | 'U' | &quot;.&quot; | &quot;0&quot; | ALT |
+ Port A*+-----+-----+-----+-----+-----+-----+-----+-----+-----+
+ $D02F  |Bit 1| &quot;3&quot; | &quot;9&quot; | &quot;6&quot; | &quot;CR&quot;|  LF | &quot;-&quot; | &quot;+&quot; | ESC |
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+        |Bit 0| &quot;1&quot; | &quot;7&quot; | &quot;4&quot; | &quot;2&quot; | TAB | &quot;5&quot; | &quot;8&quot; | HELP|
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+
+
+  &quot;x&quot; = means key is on the keypad to the right
+  'x' = means grey cursor-control key at the upper side
+        (U/D/L/R = up/down/left/right)
+
+</PRE></BODY></HTML>

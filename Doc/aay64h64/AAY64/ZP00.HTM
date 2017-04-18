@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  $00/0:   6510 On-chip Data Direction Register
+
+   +----------+---------------------------------------------------+
+   | Bit  7   |   Undefined                                       |
+   | Bit  6   |   Only available on C128, otherwise undefined     |
+   | Bits 0-5 |   1 = Output, 0 = Input (see <A HREF="ZP01.HTM">$01</A> for description) |
+   +----------+---------------------------------------------------+
+   Default Value is $2F/47 (%00101111).
+
+Kernal-Reference:
+
+ LDA $00,X   : <A HREF="ROMF5DD.HTM">$F5E2</A>
+ STA $00     : <A HREF="ROMFDA3.HTM">$FDDB</A>
+     $00,X   : <A HREF="ROMB4D5.HTM">$B4D7</A>
+
+                    <A HREF="ZP01.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

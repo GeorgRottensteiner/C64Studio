@@ -1,0 +1,30 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $90/144:   Kernal I/O Status Word ST
+
+   +-------+---------------------------------+
+   | Bit 7 |   1 = Device not present (S)    |
+   |       |   1 = End of Tape (T)           |
+   | Bit 6 |   1 = End of File (S+T)         |
+   | Bit 5 |   1 = Checksum error (T)        |
+   | Bit 4 |   1 = Different error (T)       |
+   | Bit 3 |   1 = Too many bytes (T)        |
+   | Bit 2 |   1 = Too few bytes (T)         |
+   | Bit 1 |   1 = Timeout Read (S)          |
+   | Bit 0 |   1 = Timeout Write (S)         |
+   +-------+---------------------------------+
+
+   (S) = Serial bus, (T) = Tape
+
+Kernal-Reference:
+
+ AND $90     : <A HREF="ROMF4B8.HTM">$F4F5</A>
+ BIT $90     : <A HREF="ROMEE13.HTM">$EE79</A> <A HREF="ROMF20E.HTM">$F249</A> <A HREF="ROMF250.HTM">$F28A</A> <A HREF="ROMF4B8.HTM">$F524</A>
+ LDA $90     : <A HREF="ROMF199.HTM">$F1AD</A> <A HREF="ROMF3D5.HTM">$F3ED</A> <A HREF="ROMF4B8.HTM">$F4DA</A> <A HREF="ROMF4B8.HTM">$F505</A> <A HREF="ROMF533.HTM">$F55D</A> <A HREF="ROMFE18.HTM">$FE1A</A>
+ ORA $90     : <A HREF="ROMFE18.HTM">$FE1C</A>
+ STA $90     : <A HREF="ROMF30F.HTM">$F311</A> <A HREF="ROMF3D5.HTM">$F3DF</A> <A HREF="ROMF49E.HTM">$F4A9</A> <A HREF="ROMF4B8.HTM">$F4F7</A> <A HREF="ROMF841.HTM">$F843</A> <A HREF="ROMFE18.HTM">$FE1E</A>
+
+    <A HREF="ZP8B.HTM">Previous Page</A> / <A HREF="ZP91.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

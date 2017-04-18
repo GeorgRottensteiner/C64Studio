@@ -1,0 +1,32 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AFE6/45030:   Perform [or], [and]
+
+AFE6: A0 FF     <A HREF="BLDY.HTM">LDY</A> #$FF
+AFE8: 2C        .BYTE $2C
+AFE9: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+AFEB: 84 0B     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+AFED: 20 BF B1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB1BF.HTM">$B1BF</A>     ; FAC#1 to Positive Integer
+AFF0: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AFF2: 45 0B     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+AFF4: 85 07     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+AFF6: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+AFF8: 45 0B     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+AFFA: 85 08     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+AFFC: 20 FC BB  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBBFC.HTM">$BBFC</A>     ; Copy FAC#2 into FAC#1
+AFFF: 20 BF B1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB1BF.HTM">$B1BF</A>     ; FAC#1 to Positive Integer
+B002: A5 65     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+B004: 45 0B     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+B006: 25 08     <A HREF="BAND.HTM">AND</A> <A HREF="ZP08.HTM">$08</A>       ; Flag: Scan for Quote at end of String
+B008: 45 0B     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+B00A: A8        <A HREF="BTAY.HTM">TAY</A>
+B00B: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+B00D: 45 0B     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+B00F: 25 07     <A HREF="BAND.HTM">AND</A> <A HREF="ZP07.HTM">$07</A>       ; Temporary Integer during OR/AND
+B011: 45 0B     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZP0B.HTM">$0B</A>       ; Input Buffer Pointer/Number of Subscripts
+B013: 4C 91 B3  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB391.HTM">$B391</A>     ; Convert Integer in (AC/YR) to Flpt
+
+    <A HREF="ROMAFD1.HTM">Previous Page</A> / <A HREF="ROMB016.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510/65816 Addressing mode: Relative -- r
+
+ (<A HREF="BBCC.HTM">BCC</A>,<A HREF="BBCS.HTM">BCS</A>,<A HREF="BBEQ.HTM">BEQ</A>,<A HREF="BBMI.HTM">BMI</A>,<A HREF="BBNE.HTM">BNE</A>,<A HREF="BBPL.HTM">BPL</A>,<A HREF="BBRA.HTM">BRA</A>,<A HREF="BBVC.HTM">BVC</A>,<A HREF="BBVS.HTM">BVS</A>)
+ (2 bytes)  (2,3 and 4 cycles)
+
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | Offset                |    R     |
+    |       (5) 2a  |  PBR,PC+2        | Internal Operation    |    R     |
+    |       (6) 2b  |  PBR,PC+2+OFF    | Internal Operation    |    R     |
+    |           1   |  PBR,NewPC       | New Op Code           |    R     |
+    +---------------+------------------+-----------------------+----------+
+    (5) Add 1 cycle if branch is taken.
+    (6) Add 1 cycle if branch is taken across page boundaries in 6502
+        emulation mode (E=1).
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

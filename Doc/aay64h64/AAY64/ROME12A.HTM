@@ -1,0 +1,29 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E12A/57642:   Perform [sys]
+
+E12A: 20 8A AD  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAD8A.HTM">$AD8A</A>     ; Confirm Result
+E12D: 20 F7 B7  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB7F7.HTM">$B7F7</A>     ; Convert FAC#1 to Integer in LINNUM
+E130: A9 E1     <A HREF="BLDA.HTM">LDA</A> #$E1
+E132: 48        <A HREF="BPHA.HTM">PHA</A>
+E133: A9 46     <A HREF="BLDA.HTM">LDA</A> #$46
+E135: 48        <A HREF="BPHA.HTM">PHA</A>
+E136: AD 0F 03  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP030F.HTM">$030F</A>     ; Storage for 6510 Status Register during SYS
+E139: 48        <A HREF="BPHA.HTM">PHA</A>
+E13A: AD 0C 03  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP030C.HTM">$030C</A>     ; Storage for 6510 Accumulator during SYS
+E13D: AE 0D 03  <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP030D.HTM">$030D</A>     ; Storage for 6510 X-Register during SYS
+E140: AC 0E 03  <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP030E.HTM">$030E</A>     ; Storage for 6510 Y-Register during SYS
+E143: 28        <A HREF="BPLP.HTM">PLP</A>
+E144: 6C 14 00  <A HREF="BJMP.HTM">JMP</A> (<A HREF="ZP14.HTM">$0014</A>)   ; Temporary: Integer value
+E147: 08        <A HREF="BPHP.HTM">PHP</A>
+E148: 8D 0C 03  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP030C.HTM">$030C</A>     ; Storage for 6510 Accumulator during SYS
+E14B: 8E 0D 03  <A HREF="BSTX.HTM">STX</A> <A HREF="ZP030D.HTM">$030D</A>     ; Storage for 6510 X-Register during SYS
+E14E: 8C 0E 03  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP030E.HTM">$030E</A>     ; Storage for 6510 Y-Register during SYS
+E151: 68        <A HREF="BPLA.HTM">PLA</A>
+E152: 8D 0F 03  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP030F.HTM">$030F</A>     ; Storage for 6510 Status Register during SYS
+E155: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROME124.HTM">Previous Page</A> / <A HREF="ROME156.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

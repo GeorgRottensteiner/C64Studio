@@ -1,0 +1,36 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  STA                  STA Store accumulator in memory                  STA
+
+  Operation:  A -&gt; M                                    N V - B D I Z C
+                                                        . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   STA $FF             |   $85   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   STA $FF,X           |   $95   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   STA $FFFF           |   $8D   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   STA $FFFF,X         |   $9D   |    3    |    5     |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   STA $FFFF,Y         |   $99   |    3    |    5     |
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   STA ($FF,X)         |   $81   |    2    |    6     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   STA ($FF),Y         |   $91   |    2    |    6     |
+  +----------------+-----------------------+---------+---------+----------+
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR3A.HTM">AbsoluteLong</A>   |   STA $FFFFFF         |   $8F   |    4    |     5    |
+  | <A HREF="ADDR13.HTM">AbsoluteLong,X</A> |   STA $FFFFFF,X       |   $9F   |    4    |     5    |
+  | <A HREF="ADDR18.HTM">(Indirect)</A>     |   STA ($FF)           |   $92   |    2    |     5    |
+  | <A HREF="ADDR19.HTM">[Indirect Long]</A>|   STA [$FF]           |   $87   |    2    |     6    |
+  | <A HREF="ADDR8.HTM">[Ind.Long],Y</A>   |   STA [$FF],Y         |   $97   |    2    |     6    |
+  | <A HREF="ADDR22.HTM">Relative,S</A>     |   STA $FF,S           |   $83   |    2    |     4    |
+  | <A HREF="ADDR23.HTM">(Indirect,S),Y</A> |   STA ($FF,S),Y       |   $93   |    2    |     7    |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

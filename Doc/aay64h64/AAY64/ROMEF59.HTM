@@ -1,0 +1,39 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $EF59/61273:   RS232 Receive
+
+Jump from <A HREF="ROMFED6.HTM">$FF04</A>:
+
+EF59: A6 A9     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPA9.HTM">$A9</A>       ; RS232 Flag: Start Bit check/Tape temporary
+EF5B: D0 33     <A HREF="BBNE.HTM">BNE</A> <A HREF="ROMEF90.HTM">$EF90</A>     ; Process RS232 Byte
+EF5D: C6 A8     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPA8.HTM">$A8</A>       ; RS232 Input Bit count/Tape temporary
+EF5F: F0 36     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMEF90.HTM">$EF97</A>     ; Process RS232 Byte
+EF61: 30 0D     <A HREF="BBMI.HTM">BMI</A> $EF70
+EF63: A5 A7     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA7.HTM">$A7</A>       ; Tape temporary
+EF65: 45 AB     <A HREF="BEOR.HTM">EOR</A> <A HREF="ZPAB.HTM">$AB</A>       ; RS232 Input parity/Tape temporary
+EF67: 85 AB     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAB.HTM">$AB</A>       ; RS232 Input parity/Tape temporary
+EF69: 46 A7     <A HREF="BLSR.HTM">LSR</A> <A HREF="ZPA7.HTM">$A7</A>       ; Tape temporary
+EF6B: 66 AA     <A HREF="BROR.HTM">ROR</A> <A HREF="ZPAA.HTM">$AA</A>       ; RS232 Input Byte Buffer/Tape temporary
+
+Jump from $EF7C, <A HREF="ROMEF90.HTM">$EFBA</A>, <A HREF="ROMEF90.HTM">$EFC2</A>, <A HREF="ROMEF90.HTM">$EFC5</A>:
+
+EF6D: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from <A HREF="ROMEF90.HTM">$EFB8</A>:
+
+EF6E: C6 A8     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPA8.HTM">$A8</A>       ; RS232 Input Bit count/Tape temporary
+
+Jump from $EF61:
+
+EF70: A5 A7     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPA7.HTM">$A7</A>       ; Tape temporary
+EF72: F0 67     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMEF90.HTM">$EFDB</A>     ; Process RS232 Byte
+EF74: AD 93 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0293.HTM">$0293</A>     ; RS232 Pseudo 6551 control Register Image
+EF77: 0A        <A HREF="BASL.HTM">ASL</A>
+EF78: A9 01     <A HREF="BLDA.HTM">LDA</A> #$01
+EF7A: 65 A8     <A HREF="BADC.HTM">ADC</A> <A HREF="ZPA8.HTM">$A8</A>       ; RS232 Input Bit count/Tape temporary
+EF7C: D0 EF     <A HREF="BBNE.HTM">BNE</A> $EF6D
+
+    <A HREF="ROMEF4A.HTM">Previous Page</A> / <A HREF="ROMEF7E.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

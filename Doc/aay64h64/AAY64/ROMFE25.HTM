@@ -1,0 +1,23 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FE25/65061:   Read / Set Top of Memory
+
+Jump from <A HREF="ROMFF99.HTM">$FF99</A>:
+
+FE25: 90 06     <A HREF="BBCC.HTM">BCC</A> $FE2D
+
+Jump from <A HREF="ROMF291.HTM">$F2B2</A>, <A HREF="ROMF409.HTM">$F468</A>:
+
+FE27: AE 83 02  <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP0283.HTM">$0283</A>     ; Pointer: Top of Memory for Operating System
+FE2A: AC 84 02  <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP0283.HTM">$0284</A>     ; Pointer: Top of Memory for Operating System
+
+Jump from $FE25, <A HREF="ROMF409.HTM">$F480</A>, <A HREF="ROMFD50.HTM">$FD8D</A>:
+
+FE2D: 8E 83 02  <A HREF="BSTX.HTM">STX</A> <A HREF="ZP0283.HTM">$0283</A>     ; Pointer: Top of Memory for Operating System
+FE30: 8C 84 02  <A HREF="BSTY.HTM">STY</A> <A HREF="ZP0283.HTM">$0284</A>     ; Pointer: Top of Memory for Operating System
+FE33: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMFE21.HTM">Previous Page</A> / <A HREF="ROMFE34.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,46 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $A533/42291:   Rechain Lines
+
+Jump from <A HREF="ROMA4A2.HTM">$A4F0</A>, <A HREF="ROMA4A2.HTM">$A52D</A>, <A HREF="ROME165.HTM">$E1B8</A>:
+
+A533: A5 2B     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP2B.HTM">$2B</A>       ; Pointer: Start of BASIC Text Area
+A535: A4 2C     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP2B.HTM">$2C</A>       ; Pointer: Start of BASIC Text Area
+A537: 85 22     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A539: 84 23     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+A53B: 18        <A HREF="BCLC.HTM">CLC</A>
+
+Jump from $A55D:
+
+A53C: A0 01     <A HREF="BLDY.HTM">LDY</A> #$01
+A53E: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+A540: F0 1D     <A HREF="BBEQ.HTM">BEQ</A> $A55F
+A542: A0 04     <A HREF="BLDY.HTM">LDY</A> #$04
+
+Jump from $A547:
+
+A544: C8        <A HREF="BINY.HTM">INY</A>
+A545: B1 22     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+A547: D0 FB     <A HREF="BBNE.HTM">BNE</A> $A544
+A549: C8        <A HREF="BINY.HTM">INY</A>
+A54A: 98        <A HREF="BTYA.HTM">TYA</A>
+A54B: 65 22     <A HREF="BADC.HTM">ADC</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A54D: AA        <A HREF="BTAX.HTM">TAX</A>
+A54E: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+A550: 91 22     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+A552: A5 23     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+A554: 69 00     <A HREF="BADC.HTM">ADC</A> #$00
+A556: C8        <A HREF="BINY.HTM">INY</A>
+A557: 91 22     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP22.HTM">$22</A>),Y   ; Second Utility Pointer
+A559: 86 22     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP22.HTM">$22</A>       ; Second Utility Pointer
+A55B: 85 23     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP22.HTM">$23</A>       ; Second Utility Pointer
+A55D: 90 DD     <A HREF="BBCC.HTM">BCC</A> $A53C
+
+Jump from $A540:
+
+A55F: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA4A2.HTM">Previous Page</A> / <A HREF="ROMA560.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

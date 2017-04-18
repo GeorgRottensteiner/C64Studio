@@ -1,0 +1,63 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F250/62032:   Set Output Device
+
+F250: 20 0F F3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF30F.HTM">$F30F</A>     ; Find File
+F253: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $F258
+F255: 4C 01 F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF701.HTM">$F701</A>     ; Output I/O Error Messages: 'FILE NOT OPEN'
+
+Jump from $F253:
+
+F258: 20 1F F3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF31F.HTM">$F31F</A>     ; Set File values
+F25B: A5 BA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBA.HTM">$BA</A>       ; Current File - First Address (Device number)
+F25D: D0 03     <A HREF="BBNE.HTM">BNE</A> $F262
+
+Jump from $F273:
+
+F25F: 4C 0D F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF70D.HTM">$F70D</A>     ; Output I/O Error Messages: 'NOT OUTPUT FILE'
+
+Jump from $F25D:
+
+F262: C9 03     <A HREF="BCMP.HTM">CMP</A> #$03
+F264: F0 0F     <A HREF="BBEQ.HTM">BEQ</A> $F275
+F266: B0 11     <A HREF="BBCS.HTM">BCS</A> $F279
+F268: C9 02     <A HREF="BCMP.HTM">CMP</A> #$02
+F26A: D0 03     <A HREF="BBNE.HTM">BNE</A> $F26F
+F26C: 4C E1 EF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEFE1.HTM">$EFE1</A>     ; Submit to RS232
+
+Jump from $F26A:
+
+F26F: A6 B9     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F271: E0 60     <A HREF="BCPX.HTM">CPX</A> #$60
+F273: F0 EA     <A HREF="BBEQ.HTM">BEQ</A> $F25F
+
+Jump from $F264, $F28C:
+
+F275: 85 9A     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP9A.HTM">$9A</A>       ; Default Output Device (3)
+F277: 18        <A HREF="BCLC.HTM">CLC</A>
+F278: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $F266:
+
+F279: AA        <A HREF="BTAX.HTM">TAX</A>
+F27A: 20 0C ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMED0C.HTM">$ED0C</A>     ; Send LISTEN Command on Serial Bus
+F27D: A5 B9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F27F: 10 05     <A HREF="BBPL.HTM">BPL</A> $F286
+F281: 20 BE ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDBE.HTM">$EDBE</A>     ; Clear ATN
+F284: D0 03     <A HREF="BBNE.HTM">BNE</A> $F289
+
+Jump from $F27F:
+
+F286: 20 B9 ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDB9.HTM">$EDB9</A>     ; Send LISTEN Secondary Address
+
+Jump from $F284:
+
+F289: 8A        <A HREF="BTXA.HTM">TXA</A>
+F28A: 24 90     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP90.HTM">$90</A>       ; Kernal I/O Status Word ST
+F28C: 10 E7     <A HREF="BBPL.HTM">BPL</A> $F275
+F28E: 4C 07 F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF707.HTM">$F707</A>     ; Output I/O Error Messages: 'DEVICE NOT PRESENT'
+
+    <A HREF="ROMF20E.HTM">Previous Page</A> / <A HREF="ROMF291.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

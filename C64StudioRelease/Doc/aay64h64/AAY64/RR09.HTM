@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $DE09/56841/RR+9:   SilverSurfer: Interrupt Enable Register
+                                   Baud Rate Divisor MSB
+
+  Receive/Transmit Buffer     (if Bit 7 of <A HREF="RR0B.HTM">$DE0B</A> is 0)
+
+   +-------+--------------------------------------------------------+
+   | Bit 3 |   1 = enable Modem Status change-Interrupt             |
+   | Bit 2 |   1 = enable Reciever Line Status-Interrupt            |
+   | Bit 1 |   1 = enable Transmit Holding Register empty (THRE)    |
+   | Bit 0 |   1 = enable Data available-Interrupt (and Timeout) (*)|
+   +-------+--------------------------------------------------------+
+
+   (*) 16550 will interrupt if data exists in the FIFO and isn't read
+       within the time it takes to receive four bytes or if no data
+       is received within the time it takes to receive four bytes.
+
+  Baud Rate Divisor High Byte (if Bit 7 of <A HREF="RR0B.HTM">$DE0B</A> is 1)
+
+   See <A HREF="RR08.HTM">$DE08</A> for details.
+
+</PRE></BODY></HTML>

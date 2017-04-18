@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FDDD/64989:   Enable Timer
+
+Jump from <A HREF="ROMFC93.HTM">$FCA5</A>, <A HREF="ROMFF5B.HTM">$FF6B</A>:
+
+FDDD: AD A6 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP02A6.HTM">$02A6</A>     ; Flag: TV Standard
+FDE0: F0 0A     <A HREF="BBEQ.HTM">BEQ</A> $FDEC
+FDE2: A9 25     <A HREF="BLDA.HTM">LDA</A> #$25
+FDE4: 8D 04 DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA14.HTM">$DC04</A>     ; CIA1: Timer A Low-Byte  (Kernal-IRQ, Tape)
+FDE7: A9 40     <A HREF="BLDA.HTM">LDA</A> #$40
+FDE9: 4C F3 FD  <A HREF="BJMP.HTM">JMP</A> $FDF3
+
+Jump from $FDE0:
+
+FDEC: A9 95     <A HREF="BLDA.HTM">LDA</A> #$95
+FDEE: 8D 04 DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA14.HTM">$DC04</A>     ; CIA1: Timer A Low-Byte  (Kernal-IRQ, Tape)
+FDF1: A9 42     <A HREF="BLDA.HTM">LDA</A> #$42
+
+Jump from $FDE9:
+
+FDF3: 8D 05 DC  <A HREF="BSTA.HTM">STA</A> <A HREF="CIA15.HTM">$DC05</A>     ; CIA1: Timer A High-Byte (Kernal-IRQ, Tape)
+FDF6: 4C 6E FF  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMFF5B.HTM">$FF6E</A>     ; Initialize screen editor
+
+    <A HREF="ROMFDA3.HTM">Previous Page</A> / <A HREF="ROMFDF9.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

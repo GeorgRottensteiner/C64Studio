@@ -1,0 +1,91 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F4B8/62648:   Load File From Serial Bus
+
+F4B8: A4 B7     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPB7.HTM">$B7</A>       ; Number of Characters in Filename
+F4BA: D0 03     <A HREF="BBNE.HTM">BNE</A> $F4BF
+F4BC: 4C 10 F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF710.HTM">$F710</A>     ; Output I/O Error Messages: 'MISSING FILENAME'
+
+Jump from $F4BA:
+
+F4BF: A6 B9     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F4C1: 20 AF F5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF5AF.HTM">$F5AF</A>     ; Print &quot;SEARCHING&quot;
+F4C4: A9 60     <A HREF="BLDA.HTM">LDA</A> #$60
+F4C6: 85 B9     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F4C8: 20 D5 F3  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF3D5.HTM">$F3D5</A>     ; Send Secondary Address
+F4CB: A5 BA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPBA.HTM">$BA</A>       ; Current File - First Address (Device number)
+F4CD: 20 09 ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMED09.HTM">$ED09</A>     ; Send TALK Command on Serial Bus
+F4D0: A5 B9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPB9.HTM">$B9</A>       ; Current File - Secondary Address
+F4D2: 20 C7 ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDC7.HTM">$EDC7</A>     ; Send TALK Secondary Address
+F4D5: 20 13 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE13.HTM">$EE13</A>     ; Receive From Serial Bus
+F4D8: 85 AE     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AE</A>       ; Tape End Address/End of Program
+F4DA: A5 90     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP90.HTM">$90</A>       ; Kernal I/O Status Word ST
+F4DC: 4A        <A HREF="BLSR.HTM">LSR</A>
+F4DD: 4A        <A HREF="BLSR.HTM">LSR</A>
+F4DE: B0 50     <A HREF="BBCS.HTM">BCS</A> $F530
+F4E0: 20 13 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE13.HTM">$EE13</A>     ; Receive From Serial Bus
+F4E3: 85 AF     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AF</A>       ; Tape End Address/End of Program
+F4E5: 8A        <A HREF="BTXA.HTM">TXA</A>
+F4E6: D0 08     <A HREF="BBNE.HTM">BNE</A> $F4F0
+F4E8: A5 C3     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPC3.HTM">$C3</A>       ; Pointer: Type 3 Tape LOAD and general use
+F4EA: 85 AE     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AE</A>       ; Tape End Address/End of Program
+F4EC: A5 C4     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPC3.HTM">$C4</A>       ; Pointer: Type 3 Tape LOAD and general use
+F4EE: 85 AF     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAE.HTM">$AF</A>       ; Tape End Address/End of Program
+
+Jump from $F4E6:
+
+F4F0: 20 D2 F5  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF5D2.HTM">$F5D2</A>     ; Print &quot;LOADING / VERIFYING&quot;
+
+Jump from $F509, $F526:
+
+F4F3: A9 FD     <A HREF="BLDA.HTM">LDA</A> #$FD
+F4F5: 25 90     <A HREF="BAND.HTM">AND</A> <A HREF="ZP90.HTM">$90</A>       ; Kernal I/O Status Word ST
+F4F7: 85 90     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP90.HTM">$90</A>       ; Kernal I/O Status Word ST
+F4F9: 20 E1 FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFE1.HTM">$FFE1</A>     ; Test-Stop Vector
+F4FC: D0 03     <A HREF="BBNE.HTM">BNE</A> $F501
+F4FE: 4C 33 F6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF5FA.HTM">$F633</A>     ; Save to Serial Bus
+
+Jump from $F4FC:
+
+F501: 20 13 EE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEE13.HTM">$EE13</A>     ; Receive From Serial Bus
+F504: AA        <A HREF="BTAX.HTM">TAX</A>
+F505: A5 90     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP90.HTM">$90</A>       ; Kernal I/O Status Word ST
+F507: 4A        <A HREF="BLSR.HTM">LSR</A>
+F508: 4A        <A HREF="BLSR.HTM">LSR</A>
+F509: B0 E8     <A HREF="BBCS.HTM">BCS</A> $F4F3
+F50B: 8A        <A HREF="BTXA.HTM">TXA</A>
+F50C: A4 93     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP93.HTM">$93</A>       ; Flag: 0 = Load, 1 = Verify
+F50E: F0 0C     <A HREF="BBEQ.HTM">BEQ</A> $F51C
+F510: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+F512: D1 AE     <A HREF="BCMP.HTM">CMP</A> (<A HREF="ZPAE.HTM">$AE</A>),Y   ; Tape End Address/End of Program
+F514: F0 08     <A HREF="BBEQ.HTM">BEQ</A> $F51E
+F516: A9 10     <A HREF="BLDA.HTM">LDA</A> #$10
+F518: 20 1C FE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFE18.HTM">$FE1C</A>     ; Control OS Messages
+F51B: 2C        .BYTE $2C
+
+Jump from $F50E:
+
+F51C: 91 AE     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPAE.HTM">$AE</A>),Y   ; Tape End Address/End of Program
+
+Jump from $F514:
+
+F51E: E6 AE     <A HREF="BINC.HTM">INC</A> <A HREF="ZPAE.HTM">$AE</A>       ; Tape End Address/End of Program
+F520: D0 02     <A HREF="BBNE.HTM">BNE</A> $F524
+F522: E6 AF     <A HREF="BINC.HTM">INC</A> <A HREF="ZPAE.HTM">$AF</A>       ; Tape End Address/End of Program
+
+Jump from $F520:
+
+F524: 24 90     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP90.HTM">$90</A>       ; Kernal I/O Status Word ST
+F526: 50 CB     <A HREF="BBVC.HTM">BVC</A> $F4F3
+F528: 20 EF ED  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMEDEF.HTM">$EDEF</A>     ; Send UNTALK
+F52B: 20 42 F6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF5FA.HTM">$F642</A>     ; Save to Serial Bus
+F52E: 90 79     <A HREF="BBCC.HTM">BCC</A> <A HREF="ROMF533.HTM">$F5A9</A>     ; Load File From Tape
+
+Jump from $F4DE, <A HREF="ROMF533.HTM">$F554</A>, <A HREF="ROMF533.HTM">$F55B</A>:
+
+F530: 4C 04 F7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMF704.HTM">$F704</A>     ; Output I/O Error Messages: 'FILE NOT FOUND'
+
+    <A HREF="ROMF49E.HTM">Previous Page</A> / <A HREF="ROMF533.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

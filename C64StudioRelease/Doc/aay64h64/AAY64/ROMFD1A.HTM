@@ -1,0 +1,28 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FD1A/64794:   Change Vectors For User
+
+Jump from <A HREF="ROMFF8D.HTM">$FF8D</A>:
+
+FD1A: 86 C3     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPC3.HTM">$C3</A>       ; Pointer: Type 3 Tape LOAD and general use
+FD1C: 84 C4     <A HREF="BSTY.HTM">STY</A> <A HREF="ZPC3.HTM">$C4</A>       ; Pointer: Type 3 Tape LOAD and general use
+FD1E: A0 1F     <A HREF="BLDY.HTM">LDY</A> #$1F
+
+Jump from $FD2D:
+
+FD20: B9 14 03  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0314.HTM">$0314</A>,Y   ; Vector: Hardware IRQ Interrupt Address
+FD23: B0 02     <A HREF="BBCS.HTM">BCS</A> $FD27
+FD25: B1 C3     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPC3.HTM">$C3</A>),Y   ; Pointer: Type 3 Tape LOAD and general use
+
+Jump from $FD23:
+
+FD27: 91 C3     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPC3.HTM">$C3</A>),Y   ; Pointer: Type 3 Tape LOAD and general use
+FD29: 99 14 03  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0314.HTM">$0314</A>,Y   ; Vector: Hardware IRQ Interrupt Address
+FD2C: 88        <A HREF="BDEY.HTM">DEY</A>
+FD2D: 10 F1     <A HREF="BBPL.HTM">BPL</A> $FD20
+FD2F: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMFD15.HTM">Previous Page</A> / <A HREF="ROMFD30.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

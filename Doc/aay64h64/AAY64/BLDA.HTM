@@ -1,0 +1,38 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  LDA                  LDA Load accumulator with memory                 LDA
+
+  Operation:  M -&gt; A                                    N V - B D I Z C
+                                                        / . . . . . / .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   LDA #$FF            |   $A9   |    2    |    2     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   LDA $FF             |   $A5   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   LDA $FF,X           |   $B5   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   LDA $FFFF           |   $AD   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   LDA $FFFF,X         |   $BD   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   LDA $FFFF,Y         |   $B9   |    3    |    4*    |
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   LDA ($FF,X)         |   $A1   |    2    |    6     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   LDA ($FF),Y         |   $B1   |    2    |    5*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 if page boundary is crossed.
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR3A.HTM">AbsoluteLong</A>   |   LDA $FFFFFF         |   $AF   |    4    |     5    |
+  | <A HREF="ADDR13.HTM">AbsoluteLong,X</A> |   LDA $FFFFFF,X       |   $BF   |    4    |     5    |
+  | <A HREF="ADDR18.HTM">(Indirect)</A>     |   LDA ($FF)           |   $B2   |    2    |     5    |
+  | <A HREF="ADDR19.HTM">[Indirect Long]</A>|   LDA [$FF]           |   $A7   |    2    |     6    |
+  | <A HREF="ADDR8.HTM">[Ind.Long],Y</A>   |   LDA [$FF],Y         |   $B7   |    2    |     6    |
+  | <A HREF="ADDR22.HTM">Relative,S</A>     |   LDA $FF,S           |   $A3   |    2    |     4    |
+  | <A HREF="ADDR23.HTM">(Indirect,S),Y</A> |   LDA ($FF,S),Y       |   $B3   |    2    |     7    |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

@@ -1,0 +1,268 @@
+﻿using C64Studio.Types;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+namespace C64Studio
+{
+  public partial class PropBuildEventBuildChain : PropertyTabs.PropertyTabBase
+  {
+    ProjectElement        Element;
+    StudioCore            Core;
+    BuildChain            BuildChain;
+    string                CurrentBuildConfig;
+
+
+
+    public PropBuildEventBuildChain( ProjectElement Element, StudioCore Core, BuildChain BuildChain, string CurrentBuildConfig )
+    {
+      this.Element = Element;
+      this.Core = Core;
+      this.BuildChain = BuildChain;
+      this.CurrentBuildConfig = CurrentBuildConfig;
+      TopLevel = false;
+
+      InitializeComponent();
+
+      // Build Chains
+      if ( Core.MainForm.m_Solution != null )
+      {
+        foreach ( var project in Core.MainForm.m_Solution.Projects )
+        {
+          comboBuildChainProject.Items.Add( project.Settings.Name );
+        }
+        if ( comboBuildChainProject.Items.Count > 0 )
+        {
+          comboBuildChainProject.SelectedIndex = 0;
+        }
+
+        foreach ( var entry in BuildChain.Entries )
+        {
+          var item = new ListViewItem();
+
+          item.Text = entry.ProjectName + " - " + entry.Config;
+          item.Tag = entry;
+
+          listBuildChainProjects.Items.Add( item );
+        }
+      }
+
+      checkBuildChainActive.Checked = BuildChain.Active;
+    }
+
+
+
+    public override void OnClose()
+    {
+    }
+
+
+
+    private void checkBuildChainActive_CheckedChanged( object sender, EventArgs e )
+    {
+      listBuildChainProjects.Enabled = checkBuildChainActive.Checked;
+      label6.Enabled = checkBuildChainActive.Checked;
+      label8.Enabled = checkBuildChainActive.Checked;
+      label9.Enabled = checkBuildChainActive.Checked;
+      comboBuildChainConfig.Enabled = checkBuildChainActive.Checked;
+      comboBuildChainProject.Enabled = checkBuildChainActive.Checked;
+      comboBuildChainFile.Enabled = checkBuildChainActive.Checked;
+      editBuildChainDefines.Enabled = checkBuildChainActive.Checked;
+
+      if ( BuildChain.Active != checkBuildChainActive.Checked )
+      {
+        BuildChain.Active = checkBuildChainActive.Checked;
+        Element.DocumentInfo.Project.SetModified();
+      }
+    }
+
+
+
+    private ListViewItem listBuildChainProjects_AddingItem( object sender )
+    {
+      if ( ( comboBuildChainProject.SelectedIndex == -1 )
+      ||   ( comboBuildChainConfig.SelectedIndex == -1 )
+      ||   ( comboBuildChainFile.SelectedIndex == -1 ) )
+      {
+        return null;
+      }
+      var entry = new BuildChainEntry();
+      entry.ProjectName = (string)comboBuildChainProject.SelectedItem;
+      entry.Config      = (string)comboBuildChainConfig.SelectedItem;
+      entry.DocumentFilename = (string)comboBuildChainFile.SelectedItem;
+      entry.PreDefines  = editBuildChainDefines.Text;
+
+      
+      var item = new ListViewItem();
+
+      item.Text = entry.ProjectName + " - " + entry.Config;
+      item.Tag = entry;
+
+      return item;
+    }
+
+
+
+    private void listBuildChainProjects_ItemAdded( object sender, ListViewItem Item )
+    {
+      var entry = (BuildChainEntry)Item.Tag;
+
+      BuildChain.AddEntry( entry );
+      Element.DocumentInfo.Project.SetModified();
+    }
+
+
+
+    private void listBuildChainProjects_ItemMoved( object sender, ListViewItem Item1, ListViewItem Item2 )
+    {
+      BuildChain.Entries.Clear();
+      foreach ( ListViewItem item in listBuildChainProjects.Items )
+      {
+        var entry = (BuildChainEntry)item.Tag;
+        BuildChain.Entries.Add( entry );
+      }
+      Element.DocumentInfo.Project.SetModified();
+    }
+
+
+
+    private void listBuildChainProjects_ItemRemoved( object sender, ListViewItem Item )
+    {
+      var entry = (BuildChainEntry)Item.Tag;
+      BuildChain.Entries.Remove( entry );
+      Element.DocumentInfo.Project.SetModified();
+    }
+
+
+
+    private void listBuildChainProjects_SelectedIndexChanged( object sender, ListViewItem Item )
+    {
+      if ( listBuildChainProjects.SelectedIndices.Count == 0 )
+      {
+        return;
+      }
+      var buildChainEntry = (BuildChainEntry)listBuildChainProjects.SelectedItems[0].Tag;
+
+      comboBuildChainProject.SelectedItem = buildChainEntry.ProjectName;
+      comboBuildChainConfig.SelectedItem  = buildChainEntry.Config;
+      comboBuildChainFile.SelectedItem    = buildChainEntry.DocumentFilename;
+      editBuildChainDefines.Text = buildChainEntry.PreDefines;
+    }
+
+
+
+    private void editBuildChainDefines_TextChanged( object sender, EventArgs e )
+    {
+      if ( listBuildChainProjects.SelectedIndices.Count == 0 )
+      {
+        return;
+      }
+      var buildChainEntry = (BuildChainEntry)listBuildChainProjects.SelectedItems[0].Tag;
+      if ( buildChainEntry.PreDefines != editBuildChainDefines.Text )
+      {
+        buildChainEntry.PreDefines = editBuildChainDefines.Text;
+        Element.DocumentInfo.Project.SetModified();
+      }
+    }
+
+
+
+    private void comboBuildChainProject_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      comboBuildChainConfig.Items.Clear();
+      comboBuildChainFile.Items.Clear();
+      if ( comboBuildChainProject.SelectedItem == null )
+      {
+        return;
+      }
+      var  projectName = (string)comboBuildChainProject.SelectedItem;
+      var project = Core.MainForm.m_Solution.GetProjectByName( projectName );
+
+      if ( project != null )
+      {
+        foreach ( var config in project.Settings.Configs.Keys )
+        {
+          comboBuildChainConfig.Items.Add( config );
+        }
+        foreach ( var element in project.Elements )
+        {
+          if ( element.DocumentInfo.Compilable )
+          {
+            comboBuildChainFile.Items.Add( element.DocumentInfo.DocumentFilename );
+          }
+        }
+      }
+    }
+
+
+
+    private void comboBuildChainConfig_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      UpdateAddButton();
+
+      if ( listBuildChainProjects.SelectedIndices.Count == 0 )
+      {
+        return;
+      }
+      string    newConfig = (string)comboBuildChainConfig.SelectedItem;
+      var buildChainEntry = (BuildChainEntry)listBuildChainProjects.SelectedItems[0].Tag;
+      if ( buildChainEntry.Config != newConfig )
+      {
+        buildChainEntry.Config = newConfig;
+
+        listBuildChainProjects.SelectedItems[0].Text = buildChainEntry.ProjectName + " - " + buildChainEntry.Config;
+
+        Element.DocumentInfo.Project.SetModified();
+      }
+    }
+
+
+
+    private void UpdateAddButton()
+    {
+      bool    canEnableAddButton = ( ( comboBuildChainConfig.SelectedIndex != -1 )
+                                  && ( comboBuildChainProject.SelectedIndex != -1 )
+                                  && ( comboBuildChainFile.SelectedIndex != -1 ) );
+      if ( canEnableAddButton )
+      {
+        // do not allow to add current build config
+        var projectName = (string)comboBuildChainProject.SelectedItem;
+        var project     = Core.MainForm.m_Solution.GetProjectByName( projectName );
+        string config   = (string)comboBuildChainConfig.SelectedItem;
+        string file     = (string)comboBuildChainFile.SelectedItem;
+
+        if ( ( project == Element.DocumentInfo.Project )
+        &&   ( config == CurrentBuildConfig )
+        &&   ( file == Element.DocumentInfo.DocumentFilename ) )
+        {
+          canEnableAddButton = false;
+        }
+      }
+      listBuildChainProjects.AddButtonEnabled = canEnableAddButton;
+    }
+
+
+
+    private void comboBuildChainFile_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      UpdateAddButton();
+
+      if ( listBuildChainProjects.SelectedIndices.Count == 0 )
+      {
+        return;
+      }
+      string    newFile = (string)comboBuildChainFile.SelectedItem;
+      var buildChainEntry = (BuildChainEntry)listBuildChainProjects.SelectedItems[0].Tag;
+      if ( buildChainEntry.DocumentFilename != newFile )
+      {
+        buildChainEntry.DocumentFilename = newFile;
+        Element.DocumentInfo.Project.SetModified();
+      }
+    }
+
+  }
+}

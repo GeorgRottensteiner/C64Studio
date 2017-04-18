@@ -1,0 +1,79 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E965/59749:   Open A Space On The Screen
+
+Jump from <A HREF="ROME7D4.HTM">$E802</A>:
+
+E965: A6 D6     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPD6.HTM">$D6</A>       ; Current Screen Line number of Cursor
+
+Jump from $E96A, <A HREF="ROME6B6.HTM">$E6CA</A>:
+
+E967: E8        <A HREF="BINX.HTM">INX</A>
+E968: B5 D9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD9.HTM">$D9</A>,X     ; Screen Line Link Table
+E96A: 10 FB     <A HREF="BBPL.HTM">BPL</A> $E967
+E96C: 8E A5 02  <A HREF="BSTX.HTM">STX</A> <A HREF="ZP02A5.HTM">$02A5</A>     ; Temporary for Line Index
+E96F: E0 18     <A HREF="BCPX.HTM">CPX</A> #$18
+E971: F0 0E     <A HREF="BBEQ.HTM">BEQ</A> $E981
+E973: 90 0C     <A HREF="BBCC.HTM">BCC</A> $E981
+E975: 20 EA E8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME8EA.HTM">$E8EA</A>     ; Scroll Screen
+E978: AE A5 02  <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP02A5.HTM">$02A5</A>     ; Temporary for Line Index
+E97B: CA        <A HREF="BDEX.HTM">DEX</A>
+E97C: C6 D6     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPD6.HTM">$D6</A>       ; Current Screen Line number of Cursor
+E97E: 4C DA E6  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME6B6.HTM">$E6DA</A>     ; Advance Cursor
+
+Jump from $E971, $E973:
+
+E981: A5 AC     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAC.HTM">$AC</A>       ; Pointer: Tape Buffer/Screen scrolling
+E983: 48        <A HREF="BPHA.HTM">PHA</A>
+E984: A5 AD     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAC.HTM">$AD</A>       ; Pointer: Tape Buffer/Screen scrolling
+E986: 48        <A HREF="BPHA.HTM">PHA</A>
+E987: A5 AE     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAE.HTM">$AE</A>       ; Tape End Address/End of Program
+E989: 48        <A HREF="BPHA.HTM">PHA</A>
+E98A: A5 AF     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPAE.HTM">$AF</A>       ; Tape End Address/End of Program
+E98C: 48        <A HREF="BPHA.HTM">PHA</A>
+E98D: A2 19     <A HREF="BLDX.HTM">LDX</A> #$19
+
+Jump from $E9A4:
+
+E98F: CA        <A HREF="BDEX.HTM">DEX</A>
+E990: 20 F0 E9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME9F0.HTM">$E9F0</A>     ; Set Start of Line
+E993: EC A5 02  <A HREF="BCPX.HTM">CPX</A> <A HREF="ZP02A5.HTM">$02A5</A>     ; Temporary for Line Index
+E996: 90 0E     <A HREF="BBCC.HTM">BCC</A> $E9A6
+E998: F0 0C     <A HREF="BBEQ.HTM">BEQ</A> $E9A6
+E99A: BD EF EC  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMECE7.HTM">$ECEF</A>,X   ; Shift-Run Equivalent
+E99D: 85 AC     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPAC.HTM">$AC</A>       ; Pointer: Tape Buffer/Screen scrolling
+E99F: B5 D8     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD8.HTM">$D8</A>,X     ; Count of number of inserts outstanding
+E9A1: 20 C8 E9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME9C8.HTM">$E9C8</A>     ; Move A Screen Line
+E9A4: 30 E9     <A HREF="BBMI.HTM">BMI</A> $E98F
+
+Jump from $E996, $E998:
+
+E9A6: 20 FF E9  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME9FF.HTM">$E9FF</A>     ; Clear Screen Line
+E9A9: A2 17     <A HREF="BLDX.HTM">LDX</A> #$17
+
+Jump from $E9BD:
+
+E9AB: EC A5 02  <A HREF="BCPX.HTM">CPX</A> <A HREF="ZP02A5.HTM">$02A5</A>     ; Temporary for Line Index
+E9AE: 90 0F     <A HREF="BBCC.HTM">BCC</A> $E9BF
+E9B0: B5 DA     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD9.HTM">$DA</A>,X     ; Screen Line Link Table
+E9B2: 29 7F     <A HREF="BAND.HTM">AND</A> #$7F
+E9B4: B4 D9     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPD9.HTM">$D9</A>,X     ; Screen Line Link Table
+E9B6: 10 02     <A HREF="BBPL.HTM">BPL</A> $E9BA
+E9B8: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+
+Jump from $E9B6:
+
+E9BA: 95 DA     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPD9.HTM">$DA</A>,X     ; Screen Line Link Table
+E9BC: CA        <A HREF="BDEX.HTM">DEX</A>
+E9BD: D0 EC     <A HREF="BBNE.HTM">BNE</A> $E9AB
+
+Jump from $E9AE:
+
+E9BF: AE A5 02  <A HREF="BLDX.HTM">LDX</A> <A HREF="ZP02A5.HTM">$02A5</A>     ; Temporary for Line Index
+E9C2: 20 DA E6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME6B6.HTM">$E6DA</A>     ; Advance Cursor
+E9C5: 4C 58 E9  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME8EA.HTM">$E958</A>     ; Scroll Screen
+
+    <A HREF="ROME8EA.HTM">Previous Page</A> / <A HREF="ROME9C8.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

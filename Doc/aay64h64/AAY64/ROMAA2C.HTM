@@ -1,0 +1,65 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AA2C/43564:   Add Digit to FAC#1
+
+Jump from <A HREF="ROMA9D9.HTM">$A9DE</A>:
+
+AA2C: A0 02     <A HREF="BLDY.HTM">LDY</A> #$02
+AA2E: B1 64     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP62.HTM">$64</A>),Y   ; FAC Mantissa
+AA30: C5 34     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP33.HTM">$34</A>       ; Pointer: Bottom of String space
+AA32: 90 17     <A HREF="BBCC.HTM">BCC</A> $AA4B
+AA34: D0 07     <A HREF="BBNE.HTM">BNE</A> $AA3D
+AA36: 88        <A HREF="BDEY.HTM">DEY</A>
+AA37: B1 64     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP62.HTM">$64</A>),Y   ; FAC Mantissa
+AA39: C5 33     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP33.HTM">$33</A>       ; Pointer: Bottom of String space
+AA3B: 90 0E     <A HREF="BBCC.HTM">BCC</A> $AA4B
+
+Jump from $AA34:
+
+AA3D: A4 65     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+AA3F: C4 2E     <A HREF="BCPY.HTM">CPY</A> <A HREF="ZP2D.HTM">$2E</A>       ; Pointer: Start of BASIC Variables
+AA41: 90 08     <A HREF="BBCC.HTM">BCC</A> $AA4B
+AA43: D0 0D     <A HREF="BBNE.HTM">BNE</A> $AA52
+AA45: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AA47: C5 2D     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZP2D.HTM">$2D</A>       ; Pointer: Start of BASIC Variables
+AA49: B0 07     <A HREF="BBCS.HTM">BCS</A> $AA52
+
+Jump from $AA32, $AA3B, $AA41:
+
+AA4B: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AA4D: A4 65     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+AA4F: 4C 68 AA  <A HREF="BJMP.HTM">JMP</A> $AA68
+
+Jump from $AA43, $AA49:
+
+AA52: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+AA54: B1 64     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP62.HTM">$64</A>),Y   ; FAC Mantissa
+AA56: 20 75 B4  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB465.HTM">$B475</A>     ; Evaluate &lt;str$&gt;
+AA59: A5 50     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP4E.HTM">$50</A>       ; Temporary storage for FLPT value
+AA5B: A4 51     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP4E.HTM">$51</A>       ; Temporary storage for FLPT value
+AA5D: 85 6F     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP6F.HTM">$6F</A>       ; Sign of result of Arithmetic Evaluation
+AA5F: 84 70     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP70.HTM">$70</A>       ; FAC low-order rounding
+AA61: 20 7A B6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB67A.HTM">$B67A</A>     ; Store String in High RAM
+AA64: A9 61     <A HREF="BLDA.HTM">LDA</A> #$61
+AA66: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+
+Jump from $AA4F:
+
+AA68: 85 50     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4E.HTM">$50</A>       ; Temporary storage for FLPT value
+AA6A: 84 51     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP4E.HTM">$51</A>       ; Temporary storage for FLPT value
+AA6C: 20 DB B6  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMB6DB.HTM">$B6DB</A>     ; Clean Descriptor Stack
+AA6F: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+AA71: B1 50     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP4E.HTM">$50</A>),Y   ; Temporary storage for FLPT value
+AA73: 91 49     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP49.HTM">$49</A>),Y   ; Pointer: Index Variable for FOR/NEXT loop
+AA75: C8        <A HREF="BINY.HTM">INY</A>
+AA76: B1 50     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP4E.HTM">$50</A>),Y   ; Temporary storage for FLPT value
+AA78: 91 49     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP49.HTM">$49</A>),Y   ; Pointer: Index Variable for FOR/NEXT loop
+AA7A: C8        <A HREF="BINY.HTM">INY</A>
+AA7B: B1 50     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP4E.HTM">$50</A>),Y   ; Temporary storage for FLPT value
+AA7D: 91 49     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZP49.HTM">$49</A>),Y   ; Pointer: Index Variable for FOR/NEXT loop
+AA7F: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMA9E3.HTM">Previous Page</A> / <A HREF="ROMAA80.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

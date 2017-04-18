@@ -1,0 +1,31 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $B761/46945:   Pull String Parameters
+
+Jump from <A HREF="ROMB700.HTM">$B700</A>, <A HREF="ROMB72C.HTM">$B72C</A>, <A HREF="ROMB737.HTM">$B748</A>:
+
+B761: 20 F7 AE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAEF7.HTM">$AEF7</A>     ; Test ')'
+B764: 68        <A HREF="BPLA.HTM">PLA</A>
+B765: A8        <A HREF="BTAY.HTM">TAY</A>
+B766: 68        <A HREF="BPLA.HTM">PLA</A>
+B767: 85 55     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP54.HTM">$55</A>       ; Jump Vector used in Function Evaluation
+B769: 68        <A HREF="BPLA.HTM">PLA</A>
+B76A: 68        <A HREF="BPLA.HTM">PLA</A>
+B76B: 68        <A HREF="BPLA.HTM">PLA</A>
+B76C: AA        <A HREF="BTAX.HTM">TAX</A>
+B76D: 68        <A HREF="BPLA.HTM">PLA</A>
+B76E: 85 50     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4E.HTM">$50</A>       ; Temporary storage for FLPT value
+B770: 68        <A HREF="BPLA.HTM">PLA</A>
+B771: 85 51     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP4E.HTM">$51</A>       ; Temporary storage for FLPT value
+B773: A5 55     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP54.HTM">$55</A>       ; Jump Vector used in Function Evaluation
+B775: 48        <A HREF="BPHA.HTM">PHA</A>
+B776: 98        <A HREF="BTYA.HTM">TYA</A>
+B777: 48        <A HREF="BPHA.HTM">PHA</A>
+B778: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+B77A: 8A        <A HREF="BTXA.HTM">TXA</A>
+B77B: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMB737.HTM">Previous Page</A> / <A HREF="ROMB77C.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,37 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ 6510/65816 Addressing mode: Absolute (JSR) -- a
+
+ (<A HREF="BJSR.HTM">JSR</A>)
+ (3 bytes)  (6 cycles)
+
+ On 6510:
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | NEW PCL               |    R     |
+    |           3   |  0,S             | Internal Operation    |    R     |
+    |           4   |  0,S             | Program Counter High  |    W     |
+    |           5   |  0,S-1           | Program Counter Low   |    W     |
+    |           6   |  PBR,PC+2        | NEW PCH               |    R     |
+    |           1   |  PBR,NEWPC       | New Op Code           |    R     |
+    +---------------+------------------+-----------------------+----------+
+
+ On 65816:
+    +---------------+------------------+-----------------------+----------+
+    |     Cycle     |   Address Bus    |       Data Bus        |Read/Write|
+    +---------------+------------------+-----------------------+----------+
+    |           1   |  PBR,PC          | Op Code               |    R     |
+    |           2   |  PBR,PC+1        | NEW PCL               |    R     |
+    |           3   |  PBR,PC+2        | NEW PCH               |    R     |
+    |           4   |  PBR,PC+2        | Internal Operation    |    R     |
+    |           5   |  0,S             | Program Counter High  |    W     |
+    |           6   |  0,S-1           | Program Counter Low   |    W     |
+    |           1   |  PBR,NEWPC       | New Op Code           |    R     |
+    +---------------+------------------+-----------------------+----------+
+
+    See also: <A HREF="ADDRABR.HTM">Abbreviations</A>
+
+</PRE></BODY></HTML>

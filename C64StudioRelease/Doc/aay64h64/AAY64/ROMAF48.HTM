@@ -1,0 +1,73 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $AF48/44872:   Convert TI to ASCII String
+
+AF48: 20 84 AF  <A HREF="BJSR.HTM">JSR</A> $AF84
+AF4B: 84 5E     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP5C.HTM">$5E</A>       ; Temporary storage for FLPT value
+AF4D: 88        <A HREF="BDEY.HTM">DEY</A>
+AF4E: 84 71     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP71.HTM">$71</A>       ; Pointer: Used during CRUNCH/ASCII conversion
+AF50: A0 06     <A HREF="BLDY.HTM">LDY</A> #$06
+AF52: 84 5D     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP5C.HTM">$5D</A>       ; Temporary storage for FLPT value
+AF54: A0 24     <A HREF="BLDY.HTM">LDY</A> #$24
+AF56: 20 68 BE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMBE68.HTM">$BE68</A>     ; Convert TI to String
+AF59: 4C 6F B4  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB465.HTM">$B46F</A>     ; Evaluate &lt;str$&gt;
+
+Jump from <A HREF="ROMAF28.HTM">$AF3E</A>, <A HREF="ROMAF28.HTM">$AF42</A>, <A HREF="ROMAF28.HTM">$AF46</A>:
+
+AF5C: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from <A HREF="ROMAF28.HTM">$AF35</A>:
+
+AF5D: 24 0E     <A HREF="BBIT.HTM">BIT</A> <A HREF="ZP0E.HTM">$0E</A>       ; Data type Flag
+AF5F: 10 0D     <A HREF="BBPL.HTM">BPL</A> $AF6E
+AF61: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+AF63: B1 64     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP62.HTM">$64</A>),Y   ; FAC Mantissa
+AF65: AA        <A HREF="BTAX.HTM">TAX</A>
+AF66: C8        <A HREF="BINY.HTM">INY</A>
+AF67: B1 64     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZP62.HTM">$64</A>),Y   ; FAC Mantissa
+AF69: A8        <A HREF="BTAY.HTM">TAY</A>
+AF6A: 8A        <A HREF="BTXA.HTM">TXA</A>
+AF6B: 4C 91 B3  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMB391.HTM">$B391</A>     ; Convert Integer in (AC/YR) to Flpt
+
+Jump from $AF5F:
+
+AF6E: 20 14 AF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMAF14.HTM">$AF14</A>     ; Identify Reserved Variable
+AF71: 90 2D     <A HREF="BBCC.HTM">BCC</A> $AFA0
+AF73: E0 54     <A HREF="BCPX.HTM">CPX</A> #$54
+AF75: D0 1B     <A HREF="BBNE.HTM">BNE</A> $AF92
+AF77: C0 49     <A HREF="BCPY.HTM">CPY</A> #$49
+AF79: D0 25     <A HREF="BBNE.HTM">BNE</A> $AFA0
+AF7B: 20 84 AF  <A HREF="BJSR.HTM">JSR</A> $AF84
+AF7E: 98        <A HREF="BTYA.HTM">TYA</A>
+AF7F: A2 A0     <A HREF="BLDX.HTM">LDX</A> #$A0
+AF81: 4C 4F BC  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBC39.HTM">$BC4F</A>     ; Evaluate &lt;sgn&gt;
+
+Jump from $AF48, $AF7B:
+
+AF84: 20 DE FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFDE.HTM">$FFDE</A>     ; Read Real-Time Clock
+AF87: 86 64     <A HREF="BSTX.HTM">STX</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AF89: 84 63     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP62.HTM">$63</A>       ; FAC Mantissa
+AF8B: 85 65     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+AF8D: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+AF8F: 84 62     <A HREF="BSTY.HTM">STY</A> <A HREF="ZP62.HTM">$62</A>       ; FAC Mantissa
+AF91: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $AF75:
+
+AF92: E0 53     <A HREF="BCPX.HTM">CPX</A> #$53
+AF94: D0 0A     <A HREF="BBNE.HTM">BNE</A> $AFA0
+AF96: C0 54     <A HREF="BCPY.HTM">CPY</A> #$54
+AF98: D0 06     <A HREF="BBNE.HTM">BNE</A> $AFA0
+AF9A: 20 B7 FF  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFFB7.HTM">$FFB7</A>     ; Read I/O Status Word
+AF9D: 4C 3C BC  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBC39.HTM">$BC3C</A>     ; Evaluate &lt;sgn&gt;
+
+Jump from $AF71, $AF79, $AF94, $AF98:
+
+AFA0: A5 64     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP62.HTM">$64</A>       ; FAC Mantissa
+AFA2: A4 65     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZP62.HTM">$65</A>       ; FAC Mantissa
+AFA4: 4C A2 BB  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMBBA2.HTM">$BBA2</A>     ; Load FAC#1 From Memory
+
+    <A HREF="ROMAF28.HTM">Previous Page</A> / <A HREF="ROMAFA7.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

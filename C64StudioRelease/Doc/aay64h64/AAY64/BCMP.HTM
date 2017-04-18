@@ -1,0 +1,38 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  CMP                CMP Compare memory and accumulator                 CMP
+
+  Operation:  A - M                                     N V - B D I Z C
+                                                        / . . . . . / /
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   CMP #$FF            |   $C9   |    2    |    2     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   CMP $FF             |   $C5   |    2    |    3     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   CMP $FF,X           |   $D5   |    2    |    4     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   CMP $FFFF           |   $CD   |    3    |    4     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   CMP $FFFF,X         |   $DD   |    3    |    4*    |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   CMP $FFFF,Y         |   $D9   |    3    |    4*    |
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   CMP ($FF,X)         |   $C1   |    2    |    6     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   CMP ($FF),Y         |   $D1   |    2    |    5*    |
+  +----------------+-----------------------+---------+---------+----------+
+  * Add 1 if page boundary is crossed.
+  For penalty cycles on the 65816, check the desired addressing mode.
+
+ 65816 Extensions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR3A.HTM">AbsoluteLong</A>   |   CMP $FFFFFF         |   $CF   |    4    |     5    |
+  | <A HREF="ADDR13.HTM">AbsoluteLong,X</A> |   CMP $FFFFFF,X       |   $DF   |    4    |     5    |
+  | <A HREF="ADDR18.HTM">(Indirect)</A>     |   CMP ($FF)           |   $D2   |    2    |     5    |
+  | <A HREF="ADDR19.HTM">[Indirect Long]</A>|   CMP [$FF]           |   $C7   |    2    |     6    |
+  | <A HREF="ADDR8.HTM">[Ind.Long],Y</A>   |   CMP [$FF],Y         |   $D7   |    2    |     6    |
+  | <A HREF="ADDR22.HTM">Relative,S</A>     |   CMP $FF,S           |   $C3   |    2    |     4    |
+  | <A HREF="ADDR23.HTM">(Indirect,S),Y</A> |   CMP ($FF,S),Y       |   $D3   |    2    |     7    |
+  +----------------+-----------------------+---------+---------+----------+
+
+</PRE></BODY></HTML>

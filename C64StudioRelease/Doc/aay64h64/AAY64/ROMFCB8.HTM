@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FCB8/64696:   Set IRQ Vector
+
+Jump from <A HREF="ROMFC57.HTM">$FC86</A>:
+
+FCB8: 20 93 FC  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFC93.HTM">$FC93</A>     ; Restore Normal IRQ
+FCBB: F0 97     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROMFBCD.HTM">$FC54</A>     ; IRQ Entry Point
+
+Jump from <A HREF="ROMF875.HTM">$F8A1</A>, <A HREF="ROMFC57.HTM">$FC65</A>, <A HREF="ROMFC57.HTM">$FC7E</A>:
+
+FCBD: BD 93 FD  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMFD50.HTM">$FD93</A>,X   ; Initialise System Constants
+FCC0: 8D 14 03  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0314.HTM">$0314</A>     ; Vector: Hardware IRQ Interrupt Address
+FCC3: BD 94 FD  <A HREF="BLDA.HTM">LDA</A> <A HREF="ROMFD50.HTM">$FD94</A>,X   ; Initialise System Constants
+FCC6: 8D 15 03  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0314.HTM">$0315</A>     ; Vector: Hardware IRQ Interrupt Address
+FCC9: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMFC93.HTM">Previous Page</A> / <A HREF="ROMFCCA.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $BFB4/49076:   Negate FAC#1
+
+Jump from <A HREF="ROMBCF3.HTM">$BD67</A>, <A HREF="ROME000.HTM">$E030</A>, <A HREF="ROME26B.HTM">$E29D</A>, <A HREF="ROME26B.HTM">$E2AA</A>, <A HREF="ROME30E.HTM">$E313</A>, <A HREF="ROME30E.HTM">$E33A</A>:
+
+BFB4: A5 61     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP61.HTM">$61</A>       ; FAC Exponent
+BFB6: F0 06     <A HREF="BBEQ.HTM">BEQ</A> $BFBE
+BFB8: A5 66     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+BFBA: 49 FF     <A HREF="BEOR.HTM">EOR</A> #$FF
+BFBC: 85 66     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP66.HTM">$66</A>       ; FAC Sign
+
+Jump from $BFB6, <A HREF="ROMBF7B.HTM">$BFB2</A>:
+
+BFBE: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMBF7B.HTM">Previous Page</A> / <A HREF="ROMBFBF.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ PAL-Timing scheme for a overscan raster line or blanked screen, no sprites:
+
+  +---------------------------------------------------------------+
+  |         1         2         3         4         5         6   |
+  |123456789012345678901234567890123456789012345678901234567890123|Cycles
+  +---------[------(--------------------------------------)---]---+<A HREF="VICSCRN.HTM">Borders</A>
+  |3-4-5-6-7-rrrrr++++++++++++++++++++++++++++++++++++++++-N0-1-2-|Phi-1 VIC
+  |                                                               |Phi-2 VIC
+  |xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|Phi-2 CPU
+  +---------------------------------------------------------------+
+
+  '-' = idle bus cycle (reads from the last byte of the video bank)
+  '+' = idle bus cycle (just like '-', but reads from
+        video_bank_base_address + $39FF if ECM (<A HREF="VIC17.HTM">$D011</A> Bit 6) is selected)
+
+   &lt;num&gt; = pointer fetch for sprite &lt;num&gt;  ;  r = memory refresh cycle
+   N = extra '-' cycles for NTSC added here
+
+   x = processor executes instructions (BA high, AEC high)
+
+</PRE></BODY></HTML>

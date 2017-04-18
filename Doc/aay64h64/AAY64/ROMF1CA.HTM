@@ -1,0 +1,72 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F1CA/61898:   Output One Character
+
+F1CA: 48        <A HREF="BPHA.HTM">PHA</A>
+F1CB: A5 9A     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP9A.HTM">$9A</A>       ; Default Output Device (3)
+F1CD: C9 03     <A HREF="BCMP.HTM">CMP</A> #$03
+F1CF: D0 04     <A HREF="BBNE.HTM">BNE</A> $F1D5
+F1D1: 68        <A HREF="BPLA.HTM">PLA</A>
+F1D2: 4C 16 E7  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME716.HTM">$E716</A>     ; Output to Screen
+
+Jump from $F1CF:
+
+F1D5: 90 04     <A HREF="BBCC.HTM">BCC</A> $F1DB
+F1D7: 68        <A HREF="BPLA.HTM">PLA</A>
+F1D8: 4C DD ED  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEDDD.HTM">$EDDD</A>     ; Send Serial Deferred
+
+Jump from $F1D5:
+
+F1DB: 4A        <A HREF="BLSR.HTM">LSR</A>
+F1DC: 68        <A HREF="BPLA.HTM">PLA</A>
+
+Jump from <A HREF="ROMF291.HTM">$F2D4</A>:
+
+F1DD: 85 9E     <A HREF="BSTA.HTM">STA</A> <A HREF="ZP9E.HTM">$9E</A>       ; Tape Error log pass 1
+F1DF: 8A        <A HREF="BTXA.HTM">TXA</A>
+F1E0: 48        <A HREF="BPHA.HTM">PHA</A>
+F1E1: 98        <A HREF="BTYA.HTM">TYA</A>
+F1E2: 48        <A HREF="BPHA.HTM">PHA</A>
+F1E3: 90 23     <A HREF="BBCC.HTM">BCC</A> $F208
+F1E5: 20 0D F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF80D.HTM">$F80D</A>     ; Bump Tape Pointer
+F1E8: D0 0E     <A HREF="BBNE.HTM">BNE</A> $F1F8
+F1EA: 20 64 F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF864.HTM">$F864</A>     ; Initiate Tape Write
+F1ED: B0 0E     <A HREF="BBCS.HTM">BCS</A> $F1FD
+F1EF: A9 02     <A HREF="BLDA.HTM">LDA</A> #$02
+F1F1: A0 00     <A HREF="BLDY.HTM">LDY</A> #$00
+F1F3: 91 B2     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F1F5: C8        <A HREF="BINY.HTM">INY</A>
+F1F6: 84 A6     <A HREF="BSTY.HTM">STY</A> <A HREF="ZPA6.HTM">$A6</A>       ; Pointer: Tape I/O buffer
+
+Jump from $F1E8:
+
+F1F8: A5 9E     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP9E.HTM">$9E</A>       ; Tape Error log pass 1
+F1FA: 91 B2     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+
+Jump from $F20B:
+
+F1FC: 18        <A HREF="BCLC.HTM">CLC</A>
+
+Jump from $F1ED:
+
+F1FD: 68        <A HREF="BPLA.HTM">PLA</A>
+F1FE: A8        <A HREF="BTAY.HTM">TAY</A>
+F1FF: 68        <A HREF="BPLA.HTM">PLA</A>
+F200: AA        <A HREF="BTAX.HTM">TAX</A>
+F201: A5 9E     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP9E.HTM">$9E</A>       ; Tape Error log pass 1
+F203: 90 02     <A HREF="BBCC.HTM">BCC</A> $F207
+F205: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+
+Jump from $F203:
+
+F207: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $F1E3:
+
+F208: 20 17 F0  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF017.HTM">$F017</A>     ; Send to RS232 Buffer
+F20B: 4C FC F1  <A HREF="BJMP.HTM">JMP</A> $F1FC
+
+    <A HREF="ROMF199.HTM">Previous Page</A> / <A HREF="ROMF20E.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

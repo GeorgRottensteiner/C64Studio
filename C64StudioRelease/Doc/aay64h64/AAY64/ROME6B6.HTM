@@ -1,0 +1,44 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $E6B6/59062:   Advance Cursor
+
+Jump from <A HREF="ROME691.HTM">$E6A5</A>:
+
+E6B6: 20 B3 E8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME8B3.HTM">$E8B3</A>     ; Check Line Increment
+E6B9: E6 D3     <A HREF="BINC.HTM">INC</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E6BB: A5 D5     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD5.HTM">$D5</A>       ; Current logical Line length: 39 or 79
+E6BD: C5 D3     <A HREF="BCMP.HTM">CMP</A> <A HREF="ZPD3.HTM">$D3</A>       ; Cursor Column on current Line
+E6BF: B0 3F     <A HREF="BBCS.HTM">BCS</A> <A HREF="ROME6ED.HTM">$E700</A>     ; Retreat Cursor
+E6C1: C9 4F     <A HREF="BCMP.HTM">CMP</A> #$4F
+E6C3: F0 32     <A HREF="BBEQ.HTM">BEQ</A> <A HREF="ROME6ED.HTM">$E6F7</A>     ; Retreat Cursor
+E6C5: AD 92 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0292.HTM">$0292</A>     ; Flag: Auto scroll down
+E6C8: F0 03     <A HREF="BBEQ.HTM">BEQ</A> $E6CD
+E6CA: 4C 67 E9  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROME965.HTM">$E967</A>     ; Open A Space On The Screen
+
+Jump from $E6C8:
+
+E6CD: A6 D6     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPD6.HTM">$D6</A>       ; Current Screen Line number of Cursor
+E6CF: E0 19     <A HREF="BCPX.HTM">CPX</A> #$19
+E6D1: 90 07     <A HREF="BBCC.HTM">BCC</A> $E6DA
+E6D3: 20 EA E8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROME8EA.HTM">$E8EA</A>     ; Scroll Screen
+E6D6: C6 D6     <A HREF="BDEC.HTM">DEC</A> <A HREF="ZPD6.HTM">$D6</A>       ; Current Screen Line number of Cursor
+E6D8: A6 D6     <A HREF="BLDX.HTM">LDX</A> <A HREF="ZPD6.HTM">$D6</A>       ; Current Screen Line number of Cursor
+
+Jump from $E6D1, <A HREF="ROME965.HTM">$E97E</A>, <A HREF="ROME965.HTM">$E9C2</A>:
+
+E6DA: 16 D9     <A HREF="BASL.HTM">ASL</A> <A HREF="ZPD9.HTM">$D9</A>,X     ; Screen Line Link Table
+E6DC: 56 D9     <A HREF="BLSR.HTM">LSR</A> <A HREF="ZPD9.HTM">$D9</A>,X     ; Screen Line Link Table
+E6DE: E8        <A HREF="BINX.HTM">INX</A>
+E6DF: B5 D9     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD9.HTM">$D9</A>,X     ; Screen Line Link Table
+E6E1: 09 80     <A HREF="BORA.HTM">ORA</A> #$80
+E6E3: 95 D9     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPD9.HTM">$D9</A>,X     ; Screen Line Link Table
+E6E5: CA        <A HREF="BDEX.HTM">DEX</A>
+E6E6: A5 D5     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZPD5.HTM">$D5</A>       ; Current logical Line length: 39 or 79
+E6E8: 18        <A HREF="BCLC.HTM">CLC</A>
+E6E9: 69 28     <A HREF="BADC.HTM">ADC</A> #$28
+E6EB: 85 D5     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPD5.HTM">$D5</A>       ; Current logical Line length: 39 or 79
+
+    <A HREF="ROME691.HTM">Previous Page</A> / <A HREF="ROME6ED.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

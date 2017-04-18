@@ -1,0 +1,56 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $F199/61849:   Get From Tape / Serial / RS232
+
+Jump from $F1A7, <A HREF="ROMF157.HTM">$F17B</A>, <A HREF="ROMF157.HTM">$F181</A>:
+
+F199: 20 0D F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF80D.HTM">$F80D</A>     ; Bump Tape Pointer
+F19C: D0 0B     <A HREF="BBNE.HTM">BNE</A> $F1A9
+F19E: 20 41 F8  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF841.HTM">$F841</A>     ; Initiate Tape Read
+F1A1: B0 11     <A HREF="BBCS.HTM">BCS</A> $F1B4
+F1A3: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+F1A5: 85 A6     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPA6.HTM">$A6</A>       ; Pointer: Tape I/O buffer
+F1A7: F0 F0     <A HREF="BBEQ.HTM">BEQ</A> $F199
+
+Jump from $F19C:
+
+F1A9: B1 B2     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPB2.HTM">$B2</A>),Y   ; Pointer: Start Address of Tape Buffer
+F1AB: 18        <A HREF="BCLC.HTM">CLC</A>
+F1AC: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from <A HREF="ROMF157.HTM">$F173</A>:
+
+F1AD: A5 90     <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP90.HTM">$90</A>       ; Kernal I/O Status Word ST
+F1AF: F0 04     <A HREF="BBEQ.HTM">BEQ</A> $F1B5
+
+Jump from $F1C6:
+
+F1B1: A9 0D     <A HREF="BLDA.HTM">LDA</A> #$0D
+
+Jump from $F1BF:
+
+F1B3: 18        <A HREF="BCLC.HTM">CLC</A>
+
+Jump from $F1A1, $F1BB:
+
+F1B4: 60        <A HREF="BRTS.HTM">RTS</A>
+
+Jump from $F1AF:
+
+F1B5: 4C 13 EE  <A HREF="BJMP.HTM">JMP</A> <A HREF="ROMEE13.HTM">$EE13</A>     ; Receive From Serial Bus
+
+Jump from $F1C8, <A HREF="ROMF157.HTM">$F177</A>:
+
+F1B8: 20 4E F1  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMF13E.HTM">$F14E</A>     ; Get a byte
+F1BB: B0 F7     <A HREF="BBCS.HTM">BCS</A> $F1B4
+F1BD: C9 00     <A HREF="BCMP.HTM">CMP</A> #$00
+F1BF: D0 F2     <A HREF="BBNE.HTM">BNE</A> $F1B3
+F1C1: AD 97 02  <A HREF="BLDA.HTM">LDA</A> <A HREF="ZP0297.HTM">$0297</A>     ; RS232 Pseudo 6551 Status Register Image
+F1C4: 29 60     <A HREF="BAND.HTM">AND</A> #$60
+F1C6: D0 E9     <A HREF="BBNE.HTM">BNE</A> $F1B1
+F1C8: F0 EE     <A HREF="BBEQ.HTM">BEQ</A> $F1B8
+
+    <A HREF="ROMF157.HTM">Previous Page</A> / <A HREF="ROMF1CA.HTM">Next Page</A>
+
+</PRE></BODY></HTML>

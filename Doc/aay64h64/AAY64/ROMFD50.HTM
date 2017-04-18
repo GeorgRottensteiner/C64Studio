@@ -1,0 +1,69 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+ $FD50/64848:   Initialise System Constants
+
+Jump from <A HREF="ROMFCE2.HTM">$FCF5</A>, <A HREF="ROMFF87.HTM">$FF87</A>:
+
+FD50: A9 00     <A HREF="BLDA.HTM">LDA</A> #$00
+FD52: A8        <A HREF="BTAY.HTM">TAY</A>
+
+Jump from $FD5D:
+
+FD53: 99 02 00  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP02.HTM">$0002</A>,Y   ; Unused
+FD56: 99 00 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0200.HTM">$0200</A>,Y   ; BASIC Input Buffer (Input Line from Screen)
+FD59: 99 00 03  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0300.HTM">$0300</A>,Y   ; Vector: BASIC Error Message
+FD5C: C8        <A HREF="BINY.HTM">INY</A>
+FD5D: D0 F4     <A HREF="BBNE.HTM">BNE</A> $FD53
+FD5F: A2 3C     <A HREF="BLDX.HTM">LDX</A> #$3C
+FD61: A0 03     <A HREF="BLDY.HTM">LDY</A> #$03
+FD63: 86 B2     <A HREF="BSTX.HTM">STX</A> <A HREF="ZPB2.HTM">$B2</A>       ; Pointer: Start Address of Tape Buffer
+FD65: 84 B3     <A HREF="BSTY.HTM">STY</A> <A HREF="ZPB2.HTM">$B3</A>       ; Pointer: Start Address of Tape Buffer
+FD67: A8        <A HREF="BTAY.HTM">TAY</A>
+FD68: A9 03     <A HREF="BLDA.HTM">LDA</A> #$03
+FD6A: 85 C2     <A HREF="BSTA.HTM">STA</A> <A HREF="ZPC1.HTM">$C2</A>       ; Start Address for LOAD and Cassette Write
+
+Jump from $FD86:
+
+FD6C: E6 C2     <A HREF="BINC.HTM">INC</A> <A HREF="ZPC1.HTM">$C2</A>       ; Start Address for LOAD and Cassette Write
+
+Jump from $FD84:
+
+FD6E: B1 C1     <A HREF="BLDA.HTM">LDA</A> (<A HREF="ZPC1.HTM">$C1</A>),Y   ; Start Address for LOAD and Cassette Write
+FD70: AA        <A HREF="BTAX.HTM">TAX</A>
+FD71: A9 55     <A HREF="BLDA.HTM">LDA</A> #$55
+FD73: 91 C1     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPC1.HTM">$C1</A>),Y   ; Start Address for LOAD and Cassette Write
+FD75: D1 C1     <A HREF="BCMP.HTM">CMP</A> (<A HREF="ZPC1.HTM">$C1</A>),Y   ; Start Address for LOAD and Cassette Write
+FD77: D0 0F     <A HREF="BBNE.HTM">BNE</A> $FD88
+FD79: 2A        <A HREF="BROL.HTM">ROL</A>
+FD7A: 91 C1     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPC1.HTM">$C1</A>),Y   ; Start Address for LOAD and Cassette Write
+FD7C: D1 C1     <A HREF="BCMP.HTM">CMP</A> (<A HREF="ZPC1.HTM">$C1</A>),Y   ; Start Address for LOAD and Cassette Write
+FD7E: D0 08     <A HREF="BBNE.HTM">BNE</A> $FD88
+FD80: 8A        <A HREF="BTXA.HTM">TXA</A>
+FD81: 91 C1     <A HREF="BSTA.HTM">STA</A> (<A HREF="ZPC1.HTM">$C1</A>),Y   ; Start Address for LOAD and Cassette Write
+FD83: C8        <A HREF="BINY.HTM">INY</A>
+FD84: D0 E8     <A HREF="BBNE.HTM">BNE</A> $FD6E
+FD86: F0 E4     <A HREF="BBEQ.HTM">BEQ</A> $FD6C
+
+Jump from $FD77, $FD7E:
+
+FD88: 98        <A HREF="BTYA.HTM">TYA</A>
+FD89: AA        <A HREF="BTAX.HTM">TAX</A>
+FD8A: A4 C2     <A HREF="BLDY.HTM">LDY</A> <A HREF="ZPC1.HTM">$C2</A>       ; Start Address for LOAD and Cassette Write
+FD8C: 18        <A HREF="BCLC.HTM">CLC</A>
+FD8D: 20 2D FE  <A HREF="BJSR.HTM">JSR</A> <A HREF="ROMFE25.HTM">$FE2D</A>     ; Read / Set Top of Memory
+FD90: A9 08     <A HREF="BLDA.HTM">LDA</A> #$08
+FD92: 8D 82 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0281.HTM">$0282</A>     ; Pointer: Bottom of Memory for Operating System
+FD95: A9 04     <A HREF="BLDA.HTM">LDA</A> #$04
+FD97: 8D 88 02  <A HREF="BSTA.HTM">STA</A> <A HREF="ZP0288.HTM">$0288</A>     ; High Byte of Screen Memory Address
+FD9A: 60        <A HREF="BRTS.HTM">RTS</A>
+
+    <A HREF="ROMFD30.HTM">Previous Page</A> / <A HREF="ROMFD9B.HTM">Next Page</A>
+
+Kernal-Reference:
+
+ LDA $FD93,X : <A HREF="ROMFCB8.HTM">$FCBD</A>
+
+ LDA $FD94,X : <A HREF="ROMFCB8.HTM">$FCC3</A>
+
+</PRE></BODY></HTML>
