@@ -223,6 +223,26 @@ namespace C64Studio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon icon_memory_cpu {
+            get {
+                object obj = ResourceManager.GetObject("icon_memory_cpu", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon icon_memory_ram {
+            get {
+                object obj = ResourceManager.GetObject("icon_memory_ram", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon mapeditor {
             get {
                 object obj = ResourceManager.GetObject("mapeditor", resourceCulture);
@@ -326,6 +346,26 @@ namespace C64Studio.Properties {
         internal static System.Drawing.Bitmap tool_select {
             get {
                 object obj = ResourceManager.GetObject("tool_select", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap toolbar_basic_symbols_disabled {
+            get {
+                object obj = ResourceManager.GetObject("toolbar_basic_symbols_disabled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap toolbar_basic_symbols_enabled {
+            get {
+                object obj = ResourceManager.GetObject("toolbar_basic_symbols_enabled", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -55,7 +55,9 @@ namespace C64Studio
     [Description( "FindReplace" )]
     FIND_REPLACE,
     [Description( "SearchResults" )]
-    SEARCH_RESULTS
+    SEARCH_RESULTS,
+    [Description( "Disassembler" )]
+    DISASSEMBLER
   };
 
   public class ToolWindow
@@ -100,6 +102,7 @@ namespace C64Studio
     public bool                                 ASMShowBytes        = true;//false;
     public bool                                 ASMShowCycles       = true;//false;
     public bool                                 ASMShowMiniView     = true;
+    public bool                                 ASMAutoTruncateLiteralValues = false;
 
     public bool                                 OutlineShowLocalLabels = true;
     public bool                                 OutlineShowShortCutLabels = true;
@@ -575,6 +578,7 @@ namespace C64Studio
       chunkASMEditor.AppendU8( (byte)( !ASMShowCycles ? 1 : 0 ) );
       chunkASMEditor.AppendU8( (byte)( !ASMShowBytes ? 1 : 0 ) );
       chunkASMEditor.AppendU8( (byte)( !ASMShowMiniView ? 1 : 0 ) );
+      chunkASMEditor.AppendU8( (byte)( ASMAutoTruncateLiteralValues ? 1 : 0 ) );
       SettingsData.Append( chunkASMEditor.ToBuffer() );
 
       // Outline settings
@@ -904,6 +908,7 @@ namespace C64Studio
               ASMShowCycles       = ( binIn.ReadUInt8() == 0 );
               ASMShowBytes        = ( binIn.ReadUInt8() == 0 );
               ASMShowMiniView     = ( binIn.ReadUInt8() == 0 );
+              ASMAutoTruncateLiteralValues = ( binIn.ReadUInt8() != 0 );
             }
             break;
           case Types.FileChunk.SETTINGS_BASIC_PARSER:

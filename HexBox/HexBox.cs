@@ -1597,7 +1597,9 @@ namespace Be.Windows.Forms
 				return (int)value;
 		}
 
-		void PerformScrollToLine(long pos)
+
+
+		public void PerformScrollToLine(long pos)
 		{
 			if (pos < _scrollVmin || pos > _scrollVmax || pos == _scrollVpos)
 				return;
@@ -1609,6 +1611,8 @@ namespace Be.Windows.Forms
 			UpdateCaret();
 			Invalidate();
 		}
+
+
 
 		void PerformScrollLines(int lines)
 		{

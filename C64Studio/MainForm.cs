@@ -16,13 +16,8 @@ using C64Studio.Types;
 
 namespace C64Studio
 {
-  public partial class MainForm : Form, IMessageFilter 
+  public partial class MainForm : Form
   {
-    [DllImport("USER32.DLL")]
-    public static extern bool SetForegroundWindow(IntPtr hWnd);
-
-
-
     //public Project          m_Project = null;
     private Project         m_CurrentProject = null;
 
@@ -38,6 +33,7 @@ namespace C64Studio
     public DebugBreakpoints m_DebugBreakpoints = new DebugBreakpoints();
     public CompileResult    m_CompileResult = new CompileResult();
     public CharsetEditor    m_CharsetEditor = null;
+    public Disassembler     m_Disassembler = null;
     public CharsetScreenEditor  m_CharScreenEditor = null;
     public GraphicScreenEditor  m_GraphicScreenEditor = null;
     public SpriteEditor     m_SpriteEditor = null;
@@ -53,8 +49,6 @@ namespace C64Studio
 
     public System.Diagnostics.Process CompilerProcess = null;
     private System.Diagnostics.Process  m_ExternalProcess = null;
-
-    public System.Diagnostics.Process RunProcess = null;
 
     public StudioCore       StudioCore = new StudioCore();
 
@@ -88,12 +82,16 @@ namespace C64Studio
     delegate void SetGUIForWaitOnExternalToolCallback( bool Wait );
     delegate void SetDebuggerValuesCallback( string[] RegisterValues );
     delegate void StartDebugAtCallback( DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, int DebugAddress );
-    delegate void ParameterLessCallback();
+    public delegate void ParameterLessCallback();
     delegate void UpdateWatchInfoCallback( RemoteDebugger.RequestData Request, GR.Memory.ByteBuffer Data );
     delegate bool ParseFileCallback( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration );
-    delegate void DocCallback( BaseDocument Document );
+    public delegate void DocCallback( BaseDocument Document );
     delegate void DocumentEventHandlerCallback( BaseDocument.DocEvent Event );
     delegate void NotifyAllDocumentsCallback( bool CanToggleBreakpoints );
+    delegate void TaskFinishedCallback( C64Studio.Tasks.Task FinishedTask );
+    public delegate void ASMFileInfoCallback( Types.ASM.FileInfo ASMFileInfo );
+
+    
 
 
     /*
@@ -495,8 +493,6 @@ namespace C64Studio
 
       StudioCore.Debugging.Debugger = new RemoteDebugger( StudioCore );
 
-      Application.AddMessageFilter( this );
-
       m_CharsetEditor = new CharsetEditor( StudioCore );
       m_SpriteEditor = new SpriteEditor( StudioCore );
       m_GraphicScreenEditor = new GraphicScreenEditor( StudioCore );
@@ -504,12 +500,14 @@ namespace C64Studio
       m_PetSCIITable = new PetSCIITable( StudioCore );
       m_Calculator = new Calculator();
       m_MapEditor = new MapEditor( StudioCore );
+      m_Disassembler = new Disassembler( StudioCore );
 
       m_CharsetEditor.SetInternal();
       m_SpriteEditor.SetInternal();
       m_GraphicScreenEditor.SetInternal();
       m_CharScreenEditor.SetInternal();
       m_MapEditor.SetInternal();
+      m_Disassembler.SetInternal();
 
       // build default panes
       AddToolWindow( ToolWindowType.OUTLINE, m_Outline, DockState.DockRight, outlineToolStripMenuItem, true, true );
@@ -522,6 +520,7 @@ namespace C64Studio
       m_DebugMemory.ViewScrolled += new DebugMemory.DebugMemoryEventCallback( m_DebugMemory_ViewScrolled );
       AddToolWindow( ToolWindowType.DEBUG_BREAKPOINTS, m_DebugBreakpoints, DockState.DockRight, breakpointsToolStripMenuItem, false, true );
       m_DebugBreakpoints.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );
+      AddToolWindow( ToolWindowType.DISASSEMBLER, m_Disassembler, DockState.Document, disassemblerToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.CHARSET_EDITOR, m_CharsetEditor, DockState.Document, charsetEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.SPRITE_EDITOR, m_SpriteEditor, DockState.Document, spriteEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.CHAR_SCREEN_EDITOR, m_CharScreenEditor, DockState.Document, charScreenEditorToolStripMenuItem, false, false );
@@ -543,6 +542,7 @@ namespace C64Studio
       StudioCore.Settings.GenericTools["DebugWatch"] = m_DebugWatch;
       StudioCore.Settings.GenericTools["DebugMemory"] = m_DebugMemory;
       StudioCore.Settings.GenericTools["DebugBreakpoints"] = m_DebugBreakpoints;
+      StudioCore.Settings.GenericTools["Disassembler"] = m_Disassembler;
       StudioCore.Settings.GenericTools["CharsetEditor"] = m_CharsetEditor;
       StudioCore.Settings.GenericTools["SpriteEditor"] = m_SpriteEditor;
       StudioCore.Settings.GenericTools["CharScreenEditor"] = m_CharScreenEditor;
@@ -675,6 +675,8 @@ namespace C64Studio
       panelMain.AllowDrop = true;
       panelMain.DragEnter += new DragEventHandler( MainForm_DragEnter );
       panelMain.DragDrop += new DragEventHandler( MainForm_DragDrop );
+
+      m_Disassembler.RefreshDisplayOptions();
 
       //DumpPanes( panelMain, "" );
 
@@ -1045,7 +1047,7 @@ namespace C64Studio
           {
             m_ActiveSource = baseDoc;
             //Debug.Log( "m_Outline.RefreshFromDocument after active content change" );
-            m_Outline.RefreshFromDocument( baseDoc );
+            AddTask( new Tasks.TaskRefreshOutline( baseDoc ) );
           }
         }
         saveToolStripMenuItem.Enabled = baseDoc.Modified;
@@ -1189,6 +1191,12 @@ namespace C64Studio
         RemoteDebugger.RequestData requestRefresh = new RemoteDebugger.RequestData( RemoteDebugger.Request.REFRESH_MEMORY, m_DebugMemory.MemoryStart, m_DebugMemory.MemorySize );
         requestRefresh.Reason = RemoteDebugger.RequestReason.MEMORY_FETCH;
 
+        if ( !m_DebugMemory.MemoryAsCPU )
+        {
+          requestRefresh.Type = RemoteDebugger.Request.REFRESH_MEMORY_RAM;
+        }
+
+
         IdleRequest debugFetch = new IdleRequest();
         debugFetch.DebugRequest = requestRefresh;
 
@@ -1278,27 +1286,6 @@ namespace C64Studio
     private static extern IntPtr WindowFromPoint(Point pt);     
     [DllImport("user32.dll")]     
     private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
-    [DllImport( "user32.dll" )]
-    static extern bool InvalidateRect( IntPtr hWnd, IntPtr lpRect, bool bErase );
-
-
-
-    public bool PreFilterMessage( ref Message m ) 
-    {       
-      // hack for scintilla to work with Katmouse
-      if ( m.Msg == 0x20a ) 
-      {         
-        // WM_MOUSEWHEEL, find the control at screen position m.LParam         
-        Point pos = new Point( m.LParam.ToInt32() & 0xffff, m.LParam.ToInt32() >> 16 );         
-        IntPtr hWnd = WindowFromPoint( pos );         
-        if ( hWnd != IntPtr.Zero && hWnd != m.HWnd )//&& Control.FromHandle( hWnd ) != null ) 
-        {           
-          SendMessage( hWnd, m.Msg, m.WParam, m.LParam );           
-          return true;         
-        }       
-      }       
-      return false;     
-    } 
 
 
 
@@ -1309,8 +1296,14 @@ namespace C64Studio
 
 
 
-    private void SaveAllDocuments()
+    public void SaveAllDocuments()
     {
+      if ( InvokeRequired )
+      {
+        Invoke( new ParameterLessCallback( SaveAllDocuments ) );
+        return;
+      }
+
       foreach ( IDockContent dockContent in panelMain.Contents )
       {
         BaseDocument baseDoc = (BaseDocument)dockContent;
@@ -1401,54 +1394,6 @@ namespace C64Studio
 
 
 
-    private Parser.ParserBase DetermineParser( DocumentInfo Doc )
-    {
-      if ( Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
-      {
-        return StudioCore.Compiling.ParserASM;
-      }
-      if ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
-      {
-        return StudioCore.Compiling.ParserBasic;
-      }
-      return null;
-    }
-
-
-
-    private ToolInfo DetermineTool( DocumentInfo Document, bool Run )
-    {
-      foreach ( ToolInfo tool in StudioCore.Settings.ToolInfos )
-      {
-        if ( ( Run )
-        &&   ( tool.Type == ToolInfo.ToolType.EMULATOR )
-        &&   ( tool.Name.ToUpper() == StudioCore.Settings.EmulatorToRun ) )
-        {
-          //AddToOutput( "Determined tool to run = " + tool.Name );
-          return tool;
-        }
-      }
-
-      // fallback
-      foreach ( ToolInfo tool in StudioCore.Settings.ToolInfos )
-      {
-        if ( ( Run )
-        &&   ( tool.Type == ToolInfo.ToolType.EMULATOR ) )
-        {
-          //AddToOutput( "fallback emulator = " + tool.Name );
-          return tool;
-        }
-        if ( ( !Run )
-        &&   ( tool.Type == ToolInfo.ToolType.ASSEMBLER ) )
-        {
-          return tool;
-        }
-      }
-      return null;
-    }
-
-
-
     public string FillParameters( string Mask, DocumentInfo Document, bool FillForRunning, out bool Error )
     {
       Error = false;
@@ -1532,6 +1477,14 @@ namespace C64Studio
       result = result.Replace( "$(RunPath)", runPath );
       result = result.Replace( "$(RunFilename)", fullRunFilename );
       result = result.Replace( "$(RunFilenameWithoutExtension)", fullRunFilenameWithoutExtension );
+
+      if ( Document.Project != null )
+      {
+        result = result.Replace( "$(ConfigName)", Document.Project.Settings.CurrentConfig.Name );
+      }
+
+      //m_DocumentToRun.Project.Settings.CurrentConfig.Name
+        /*
       if ( mainToolConfig.SelectedItem != null )
       {
         result = result.Replace( "$(ConfigName)", mainToolConfig.SelectedItem.ToString() );
@@ -1539,7 +1492,7 @@ namespace C64Studio
       if ( Document.Project != null )
       {
         result = result.Replace( "$(ProjectPath)", Document.Project.Settings.BasePath );
-      }
+      }*/
       result = result.Replace( "$(MediaManager)", System.IO.Path.Combine( Application.StartupPath, "mediamanager.exe" ) );
       result = result.Replace( "$(MediaTool)", System.IO.Path.Combine( Application.StartupPath, "mediatool.exe" ) );
 
@@ -1597,7 +1550,7 @@ namespace C64Studio
 
 
 
-    bool RunCommand( DocumentInfo Doc, string StepDesc, string Command )
+    public bool RunCommand( DocumentInfo Doc, string StepDesc, string Command )
     {
       if ( !RunExternalCommand( Doc, Command ) )
       {
@@ -1610,47 +1563,8 @@ namespace C64Studio
 
 
 
-    private Types.CompileTargetType DetermineTargetType( DocumentInfo Doc, Parser.ParserBase Parser )
-    {
-      // compile target
-      Types.CompileTargetType   compileTarget = C64Studio.Types.CompileTargetType.NONE;
-      if ( Doc.Element != null )
-      {
-        compileTarget = Doc.Element.TargetType;
-      }
-      if ( compileTarget == C64Studio.Types.CompileTargetType.NONE )
-      {
-        compileTarget = Parser.CompileTarget;
-      }
-      return compileTarget;
-    }
-
-
-
-    private string DetermineTargetFilename( DocumentInfo Doc, Parser.ParserBase Parser )
-    {
-      if ( ( String.IsNullOrEmpty( Parser.CompileTargetFile ) )
-      &&   ( ( Doc.Element == null )
-      ||     ( String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) ) )
-      {
-        // default to same name.prg and cbm
-        if ( Doc.Project == null )
-        {
-          return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Doc.FullPath ), System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) ) + ".prg";
-        }
-        return System.IO.Path.Combine( Doc.Project.Settings.BasePath, System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) + ".prg" );
-      }
-      if ( ( Doc.Element != null )
-      &&   ( !String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) )
-      {
-        return GR.Path.Append( Doc.Project.Settings.BasePath, Doc.Element.TargetFilename );
-      }
-      return Parser.CompileTargetFile;
-    }
-
-
-
-    bool BuildElement( DocumentInfo Doc, string ConfigSetting, string AdditionalPredefines, out Types.BuildInfo BuildInfo, out Types.ASM.FileInfo FileInfo )
+    /*
+    bool BuildElement( DocumentInfo Doc, string ConfigSetting, string AdditionalPredefines, bool OutputMessages, out Types.BuildInfo BuildInfo, out Types.ASM.FileInfo FileInfo )
     {
       BuildInfo = new C64Studio.Types.BuildInfo();
 
@@ -1693,7 +1607,7 @@ namespace C64Studio
           {
             Types.BuildInfo tempInfo = new C64Studio.Types.BuildInfo();
             
-            if ( !BuildElement( elementDependency.DocumentInfo, ConfigSetting, null, out tempInfo, out dependencyFileInfo ) )
+            if ( !BuildElement( elementDependency.DocumentInfo, ConfigSetting, null, false, out tempInfo, out dependencyFileInfo ) )
             {
               return false;
             }
@@ -1712,12 +1626,6 @@ namespace C64Studio
               {
                 combinedFileInfo.Labels.Add( entry.Key, entry.Value );
               }
-                /*
-              else
-              {
-                // override "old" info
-                combinedFileInfo.Labels[entry.Key] = entry.Value;
-              }*/
             }
             //Debug.Log( "Doc " + Doc.Text + " receives " + dependencyFileInfo.Labels.Count + " dependency labels from dependency " + dependency.Filename );
           }
@@ -1731,11 +1639,11 @@ namespace C64Studio
         return true;
       }
 
-      ToolInfo tool = DetermineTool( Doc, false );
+      ToolInfo tool = StudioCore.DetermineTool( Doc, false );
 
       ProjectElement.PerConfigSettings configSetting = null;
 
-      Parser.ParserBase parser = DetermineParser( Doc );
+      Parser.ParserBase parser = StudioCore.DetermineParser( Doc );
 
       if ( Doc.Element != null )
       {
@@ -1755,7 +1663,7 @@ namespace C64Studio
         }
         if ( configSetting.PreBuildChain.Active )
         {
-          if ( !BuildChain( configSetting.PreBuildChain, "pre build chain" ) )
+          if ( !BuildChain( configSetting.PreBuildChain, "pre build chain", false ) )
           {
             return false;
           }
@@ -1793,7 +1701,7 @@ namespace C64Studio
       else
       {
         //EnsureFileIsParsed();
-        //AddTask( new C64Studio.Tasks.TaskParseFile( baseDoc ) );
+        //AddTask( new C64Studio.Tasks.TaskParseFile( Doc, config ) );
 
         ProjectConfig config = null;
         if ( Doc.Project != null )
@@ -1801,25 +1709,26 @@ namespace C64Studio
           config = Doc.Project.Settings.Configs[ConfigSetting];
         }
 
-        if ( ( !ParseFile( parser, Doc, config ) )
+        if ( ( !ParseFile( parser, Doc, config, true ) )
         ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
                                         { 
-                                          TargetType = DetermineTargetType( Doc, parser ), 
-                                          OutputFile = DetermineTargetFilename( Doc, parser )
+                                          TargetType = StudioCore.DetermineTargetType( Doc, parser ),
+                                          OutputFile = StudioCore.DetermineTargetFilename( Doc, parser ),
+                                          AutoTruncateLiteralValues = StudioCore.Settings.ASMAutoTruncateLiteralValues
                                         }  ) )
         ||   ( parser.Errors > 0 ) )
         {
           AddOutputMessages( parser );
 
           StudioCore.AddToOutput( "Build failed, " + parser.Warnings.ToString() + " warnings, " + parser.Errors.ToString() + " errors encountered" + System.Environment.NewLine );
-          StudioCore.Navigating.UpdateFromMessages( parser.Messages, 
-                                                    ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null, 
-                                                    Doc.Project );
-          m_CompileResult.UpdateFromMessages( parser, Doc.Project );
-          if ( !m_CompileResult.Visible )
+          if ( OutputMessages )
           {
-            m_CompileResult.Show();
+            StudioCore.Navigating.UpdateFromMessages( parser.Messages,
+                                                      ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
+                                                      Doc.Project );
+            m_CompileResult.UpdateFromMessages( parser, Doc.Project );
           }
+          StudioCore.ShowDocument( m_CompileResult );
           AppState = Types.StudioState.NORMAL;
 
           if ( StudioCore.Settings.PlaySoundOnBuildFailure )
@@ -1830,8 +1739,8 @@ namespace C64Studio
         }
         AddOutputMessages( parser );
 
-        var compileTarget = DetermineTargetType( Doc, parser );
-        string compileTargetFile = DetermineTargetFilename( Doc, parser );
+        var compileTarget = StudioCore.DetermineTargetType( Doc, parser );
+        string compileTargetFile = StudioCore.DetermineTargetFilename( Doc, parser );
         if ( Doc.Element != null )
         {
           Doc.Element.CompileTargetFile = compileTargetFile;
@@ -1847,15 +1756,15 @@ namespace C64Studio
           {
             parser.AddError( -1, Types.ErrorCode.E0001_NO_OUTPUT_FILENAME, "No output filename was given, missing element setting" );
           }
-          StudioCore.Navigating.UpdateFromMessages( parser.Messages,
-                                          ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
-                                          Doc.Project );
-
-          m_CompileResult.UpdateFromMessages( parser, Doc.Project );
-          if ( !m_CompileResult.Visible )
+          if ( OutputMessages )
           {
-            m_CompileResult.Show();
+            StudioCore.Navigating.UpdateFromMessages( parser.Messages,
+                                            ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
+                                            Doc.Project );
+
+            m_CompileResult.UpdateFromMessages( parser, Doc.Project );
           }
+          StudioCore.ShowDocument( m_CompileResult );
           AppState = Types.StudioState.NORMAL;
 
           if ( StudioCore.Settings.PlaySoundOnBuildFailure )
@@ -1869,16 +1778,15 @@ namespace C64Studio
 
         if ( parser.Warnings > 0 )
         {
-          StudioCore.Navigating.UpdateFromMessages( parser.Messages,
-                                          ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
-                                          Doc.Project );
-
-          m_CompileResult.UpdateFromMessages( parser, Doc.Project );
-
-          if ( !m_CompileResult.Visible )
+          if ( OutputMessages )
           {
-            m_CompileResult.Show();
+            StudioCore.Navigating.UpdateFromMessages( parser.Messages,
+                                            ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
+                                            Doc.Project );
+
+            m_CompileResult.UpdateFromMessages( parser, Doc.Project );
           }
+          StudioCore.ShowDocument( m_CompileResult );
         }
       }
 
@@ -1918,7 +1826,7 @@ namespace C64Studio
       if ( ( configSetting != null )
       &&   ( configSetting.PostBuildChain.Active ) )
       {
-        if ( !BuildChain( configSetting.PostBuildChain, "post build chain" ) )
+        if ( !BuildChain( configSetting.PostBuildChain, "post build chain", OutputMessages ) )
         {
           return false;
         }
@@ -1958,67 +1866,11 @@ namespace C64Studio
       StudioCore.Compiling.m_RebuiltFiles.Add( Doc.DocumentFilename );
       return true;
     }
+    */
 
 
 
-    private bool BuildChain( Types.BuildChain BuildChain, string BuildChainDescription )
-    {
-      if ( StudioCore.Compiling.m_BuildChainStack.Contains( BuildChain ) )
-      {
-        // already on stack, silent "success"
-        return true;
-      }
-
-      StudioCore.AddToOutput( "Running " + BuildChainDescription + System.Environment.NewLine );
-      StudioCore.Compiling.m_BuildChainStack.Push( BuildChain );
-      foreach ( var entry in BuildChain.Entries )
-      {
-        BuildInfo                     buildInfo;
-        Types.ASM.FileInfo            fileInfo;
-
-        string  buildInfoKey = entry.ProjectName + "/" + entry.DocumentFilename + "/" + entry.Config;
-
-        StudioCore.AddToOutput( "Building " + buildInfoKey + System.Environment.NewLine );
-        if ( StudioCore.Compiling.m_RebuiltBuildConfigFiles.ContainsValue( buildInfoKey ) )
-        {
-          StudioCore.AddToOutput( "-already built, skipping step" + System.Environment.NewLine );
-          continue;
-        }
-
-        var project = m_Solution.GetProjectByName( entry.ProjectName );
-        if ( project == null )
-        {
-          StudioCore.AddToOutput( "-could not find referenced project " + entry.ProjectName + System.Environment.NewLine );
-          StudioCore.Compiling.m_BuildChainStack.Pop();
-          return false;
-        }
-
-        var element = project.GetElementByFilename( entry.DocumentFilename );
-        if ( element == null )
-        {
-          StudioCore.AddToOutput( "-could not find document " + entry.DocumentFilename + " in project " + entry.ProjectName + System.Environment.NewLine );
-          StudioCore.Compiling.m_BuildChainStack.Pop();
-          return false;
-        }
-
-        // ugly hack to force rebuild -> problem: we do not check output file timestamps if we need to recompile -> can't have build chain with same file in different configs!
-        MarkAsDirty( element.DocumentInfo );
-
-        if ( !BuildElement( element.DocumentInfo, entry.Config, entry.PreDefines, out buildInfo, out fileInfo ) )
-        {
-          StudioCore.Compiling.m_BuildChainStack.Pop();
-          return false;
-        }
-        StudioCore.Compiling.m_RebuiltBuildConfigFiles.Add( buildInfoKey );
-      }
-      StudioCore.AddToOutput( "Running " + BuildChainDescription + " completed successfully" + System.Environment.NewLine );
-      StudioCore.Compiling.m_BuildChainStack.Pop();
-      return true;
-    }
-
-
-
-    private void DumpLabelFile( Types.ASM.FileInfo FileInfo )
+    public void DumpLabelFile( Types.ASM.FileInfo FileInfo )
     {
       StringBuilder   sb = new StringBuilder();
 
@@ -2049,7 +1901,7 @@ namespace C64Studio
 
 
 
-    private void MarkAsDirty( DocumentInfo DocInfo )
+    public void MarkAsDirty( DocumentInfo DocInfo )
     {
       if ( DocInfo == null )
       {
@@ -2073,200 +1925,37 @@ namespace C64Studio
           MarkAsDirty( elementDependency.DocumentInfo );
         }
       }
-      if ( !DocInfo.DeducedDependency.ContainsKey( DocInfo.Project.Settings.CurrentConfig.Name ) )
+      if ( DocInfo.Project != null )
       {
-        DocInfo.DeducedDependency.Add( DocInfo.Project.Settings.CurrentConfig.Name, new DependencyBuildState() );
-      }
-      foreach ( var deducedDependency in DocInfo.DeducedDependency[DocInfo.Project.Settings.CurrentConfig.Name].BuildState )
-      {
-        ProjectElement elementDependency = DocInfo.Project.GetElementByFilename( deducedDependency.Key );
-        if ( elementDependency == null )
+        if ( !DocInfo.DeducedDependency.ContainsKey( DocInfo.Project.Settings.CurrentConfig.Name ) )
         {
-          return;
+          DocInfo.DeducedDependency.Add( DocInfo.Project.Settings.CurrentConfig.Name, new DependencyBuildState() );
         }
-        MarkAsDirty( elementDependency.DocumentInfo );
+        foreach ( var deducedDependency in DocInfo.DeducedDependency[DocInfo.Project.Settings.CurrentConfig.Name].BuildState )
+        {
+          ProjectElement elementDependency = DocInfo.Project.GetElementByFilename( deducedDependency.Key );
+          if ( elementDependency == null )
+          {
+            return;
+          }
+          MarkAsDirty( elementDependency.DocumentInfo );
+        }
       }
     }
 
 
 
-    private bool StartCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun )
+    private bool StartCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, Solution Solution )
     {
-      StudioCore.SetStatus( "Building..." );
-      StudioCore.Compiling.m_RebuiltFiles.Clear();
-      StudioCore.Compiling.m_RebuiltBuildConfigFiles.Clear();
-      StudioCore.Compiling.m_BuildChainStack.Clear();
-      bool needsRebuild = StudioCore.Compiling.NeedsRebuild( DocumentToBuild );
-      if ( needsRebuild )
-      {
-        StudioCore.Compiling.m_BuildIsCurrent = false;
-        if ( DocumentToBuild.Project != null )
-        {
-          if ( !SaveProject( DocumentToBuild.Project ) )
-          {
-            StudioCore.SetStatus( "Failed to save project" );
-            return false;
-          }
-        }
-        SaveAllDocuments();
-        if ( DocumentToBuild.Project != null )
-        {
-          if ( !SaveProject( DocumentToBuild.Project ) )
-          {
-            StudioCore.SetStatus( "Failed to save project" );
-            return false;
-          }
-        }
-      }
+      AddTask( new Tasks.TaskCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, ActiveDocumentInfo, Solution ) );
 
-      DocumentInfo baseDoc = DocumentToBuild;
-      if ( baseDoc == null )
-      {
-        StudioCore.SetStatus( "No active document" );
-        return false;
-      }
-      if ( ( baseDoc.Element == null )
-      &&   ( !baseDoc.Compilable ) )
-      {
-        StudioCore.AddToOutput( "Document is not part of project, cannot build" + System.Environment.NewLine );
-        StudioCore.SetStatus( "Document is not part of project, cannot build" );
-        return false;
-      }
-      m_Output.SetText( "" );
-      StudioCore.AddToOutput( "Determined " + baseDoc.DocumentFilename + " as active document" + System.Environment.NewLine );
-
-      Types.BuildInfo buildInfo = new C64Studio.Types.BuildInfo();
-      if ( !StudioCore.Compiling.m_BuildIsCurrent )
-      {
-        C64Studio.Types.ASM.FileInfo    dummyInfo;
-
-        string  configSetting = null;
-        if ( baseDoc.Project != null )
-        {
-          configSetting = baseDoc.Project.Settings.CurrentConfig.Name;
-        }
-
-        if ( !BuildElement( baseDoc, configSetting, null, out buildInfo, out dummyInfo ) )
-        {
-          StudioCore.SetStatus( "Build failed" );
-          return false;
-        }
-        StudioCore.Compiling.m_LastBuildInfo = buildInfo;
-        StudioCore.Compiling.m_BuildIsCurrent = true;
-      }
-      else
-      {
-        if ( baseDoc.Element != null )
-        {
-          buildInfo.TargetType = baseDoc.Element.TargetType;
-        }
-        else
-        {
-          buildInfo = StudioCore.Compiling.m_LastBuildInfo;
-        }
-        if ( buildInfo.TargetType == C64Studio.Types.CompileTargetType.NONE )
-        {
-          buildInfo.TargetType = StudioCore.Compiling.m_LastBuildInfo.TargetType;
-        }
-
-        StudioCore.AddToOutput( "Build is current" + System.Environment.NewLine );
-      }
-      if ( StudioCore.Navigating.DetermineASMFileInfo( baseDoc ) == StudioCore.Navigating.DetermineASMFileInfo( ActiveDocumentInfo ) )
-      {
-        //Debug.Log( "m_Outline.RefreshFromDocument after compile" );
-        m_Outline.RefreshFromDocument( baseDoc.BaseDoc );
-      }
-      StudioCore.SetStatus( "Build successful" );
-
-      switch ( AppState )
-      {
-        case Types.StudioState.COMPILE:
-        case Types.StudioState.BUILD:
-          AppState = Types.StudioState.NORMAL;
-          if ( StudioCore.Settings.PlaySoundOnSuccessfulBuild )
-          {
-            System.Media.SystemSounds.Asterisk.Play();
-          }
-          break;
-        case Types.StudioState.BUILD_AND_RUN:
-          // run program
-          {
-            Types.CompileTargetType targetType = buildInfo.TargetType;
-            if ( DocumentToRun.Element != null )
-            {
-              if ( DocumentToRun.Element.TargetType != C64Studio.Types.CompileTargetType.NONE )
-              {
-                targetType = DocumentToRun.Element.TargetType;
-              }
-              ProjectElement.PerConfigSettings  configSetting = DocumentToRun.Element.Settings[DocumentToRun.Project.Settings.CurrentConfig.Name];
-              if ( !string.IsNullOrEmpty( configSetting.DebugFile ) )
-              {
-                targetType = configSetting.DebugFileType;
-              }
-            }
-            if ( !RunCompiledFile( DocumentToRun, targetType ) )
-            {
-              AppState = Types.StudioState.NORMAL;
-              return false;
-            }
-          }
-          break;
-        case Types.StudioState.BUILD_AND_DEBUG:
-          // run program
-          if ( !DebugCompiledFile( DocumentToDebug, DocumentToRun ) )
-          {
-            AppState = Types.StudioState.NORMAL;
-            return false;
-          }
-          break;
-        default:
-          AppState = Types.StudioState.NORMAL;
-          break;
-      }
-
-      /*
-      CompilerProcess = new System.Diagnostics.Process();
-      CompilerProcess.StartInfo.FileName = tool.Filename;
-      CompilerProcess.StartInfo.WorkingDirectory = FillParameters( tool.WorkPath, baseDoc );
-      CompilerProcess.StartInfo.CreateNoWindow = true;
-      CompilerProcess.EnableRaisingEvents = true;
-      CompilerProcess.StartInfo.Arguments = "";
-      if ( AppState == State.COMPILE_AND_DEBUG )
-      {
-        CompilerProcess.StartInfo.Arguments += FillParameters( tool.DebugArguments, baseDoc );
-      }
-      CompilerProcess.StartInfo.Arguments += " " + FillParameters( tool.Arguments, baseDoc );
-      CompilerProcess.StartInfo.UseShellExecute = false;
-      CompilerProcess.StartInfo.RedirectStandardError = true;
-      CompilerProcess.StartInfo.RedirectStandardOutput = true;
-      CompilerProcess.StartInfo.RedirectStandardInput = true;
-      CompilerProcess.Exited += new EventHandler( compilerProcess_Exited );
-
-      CompilerProcess.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler( compilerProcess_OutputDataReceived );
-      CompilerProcess.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler( compilerProcess_OutputDataReceived );
-
-      try
-      {
-        SetGUIForWaitOnExternalTool( true );
-        CompilerProcess.Start();
-
-        CompilerProcess.BeginOutputReadLine();
-        CompilerProcess.BeginErrorReadLine();
-
-        System.IO.StreamWriter writer = CompilerProcess.StandardInput;
-
-        writer.Write( baseDoc.GetContent() );
-        writer.Close();
-      }
-      catch ( Win32Exception ex )
-      {
-        CompilerProcess.Close();
-        AddToOutput( ex.Message );
-        SetGUIForWaitOnExternalTool( false );
-        return false;
-      }
-       */
       return true;
+    }
+
+
+
+    public void OnBuildFinished( DocumentInfo baseDoc, DocumentInfo ActiveDocumentInfo )
+    {
     }
 
 
@@ -2451,7 +2140,7 @@ namespace C64Studio
 
       AppState = Types.StudioState.BUILD;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocInfo, null, null ) )
+      if ( !StartCompile( DocInfo, null, null, m_Solution ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -2467,7 +2156,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.BUILD;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( Document, null, null ) )
+      if ( !StartCompile( Document, null, null, m_Solution ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -2483,7 +2172,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.COMPILE;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( Document, null, null ) )
+      if ( !StartCompile( Document, null, null, m_Solution ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -2623,7 +2312,7 @@ namespace C64Studio
 
 
 
-    private bool RunCompiledFile( DocumentInfo Document, Types.CompileTargetType TargetType )
+    public bool RunCompiledFile( DocumentInfo Document, Types.CompileTargetType TargetType )
     {
       if ( Document.Element != null )
       {
@@ -2634,7 +2323,7 @@ namespace C64Studio
         StudioCore.AddToOutput( "Running " + Document.DocumentFilename + System.Environment.NewLine );
       }
 
-      ToolInfo toolRun = DetermineTool( Document, true );
+      ToolInfo toolRun = StudioCore.DetermineTool( Document, true );
       if ( toolRun == null )
       {
         System.Windows.Forms.MessageBox.Show( "No emulator tool has been configured yet!", "Missing emulator tool" );
@@ -2648,21 +2337,14 @@ namespace C64Studio
         return false;
       }
 
-      bool error = false;
-
-      RunProcess = new System.Diagnostics.Process();
-      RunProcess.StartInfo.FileName = toolRun.Filename;
-      RunProcess.StartInfo.WorkingDirectory = FillParameters( toolRun.WorkPath, Document, true, out error );
-      RunProcess.EnableRaisingEvents = true;
-
-      if ( error )
+      if ( !StudioCore.Executing.StartProcess( toolRun, Document ) )
       {
         return false;
       }
 
-      if ( !System.IO.Directory.Exists( RunProcess.StartInfo.WorkingDirectory.Trim( new char[]{ '\"' } ) ) )
+      if ( !System.IO.Directory.Exists( StudioCore.Executing.RunProcess.StartInfo.WorkingDirectory.Trim( new char[] { '\"' } ) ) )
       {
-        StudioCore.AddToOutput( "The determined working directory" + RunProcess.StartInfo.WorkingDirectory + " does not exist" + System.Environment.NewLine );
+        StudioCore.AddToOutput( "The determined working directory" + StudioCore.Executing.RunProcess.StartInfo.WorkingDirectory + " does not exist" + System.Environment.NewLine );
         return false;
       }
 
@@ -2711,150 +2393,18 @@ namespace C64Studio
           }
         }
       }
-      RunProcess.StartInfo.Arguments = FillParameters( runArguments, Document, true, out error );
+      bool    error = false;
+      StudioCore.Executing.RunProcess.StartInfo.Arguments = FillParameters( runArguments, Document, true, out error );
       if ( error )
       {
         return false;
       }
 
-      RunProcess.Exited += new EventHandler( runProcess_Exited );
-      StudioCore.AddToOutput( "Calling " + RunProcess.StartInfo.FileName + " with " + RunProcess.StartInfo.Arguments + System.Environment.NewLine );
+      StudioCore.Executing.RunProcess.Exited += new EventHandler( runProcess_Exited );
+      StudioCore.AddToOutput( "Calling " + StudioCore.Executing.RunProcess.StartInfo.FileName + " with " + StudioCore.Executing.RunProcess.StartInfo.Arguments + System.Environment.NewLine );
 
       SetGUIForWaitOnExternalTool( true );
-      return RunProcess.Start();
-    }
-
-
-
-    private Types.Breakpoint BreakpointAtAddress( int Address )
-    {
-      foreach ( var dock in StudioCore.Debugging.BreakPoints.Keys )
-      {
-        foreach ( var bp in StudioCore.Debugging.BreakPoints[dock] )
-        {
-          if ( bp.Address == Address )
-          {
-            return bp;
-          }
-        }
-      }
-      return null;
-    }
-
-
-
-    private void AddVirtualBreakpoints( Types.ASM.FileInfo ASMFileInfo )
-    {
-      foreach ( var virtualBP in ASMFileInfo.VirtualBreakpoints.Values )
-      {
-        virtualBP.IsVirtual = true;
-        int globalLineIndex = -1;
-        if ( !ASMFileInfo.FindGlobalLineIndex( virtualBP.LineIndex, virtualBP.DocumentFilename, out globalLineIndex ) )
-        {
-          StudioCore.AddToOutput( "Cannot assign breakpoint for line " + virtualBP.LineIndex + ", no address found" + System.Environment.NewLine );
-          continue;
-        }
-        int address = ASMFileInfo.FindLineAddress( globalLineIndex );
-        if ( address != -1 )
-        {
-          var existingBP = BreakpointAtAddress( address );
-
-          if ( existingBP == null )
-          {
-            C64Studio.Types.Breakpoint bp = new C64Studio.Types.Breakpoint();
-
-            bp.LineIndex = virtualBP.LineIndex;
-            bp.Address = address;
-            bp.TriggerOnExec = true;
-            bp.IsVirtual = true;
-            bp.DocumentFilename = virtualBP.DocumentFilename;
-            bp.Virtual.Add( virtualBP );
-            virtualBP.Address = address;
-            // we just need any key (as null is not allowed)
-            if ( !StudioCore.Debugging.BreakPoints.ContainsKey( "C64Studio.DebugBreakpoints" ) )
-            {
-              StudioCore.Debugging.BreakPoints.Add( "C64Studio.DebugBreakpoints", new List<C64Studio.Types.Breakpoint>() );
-            }
-            StudioCore.Debugging.BreakPoints["C64Studio.DebugBreakpoints"].Add( bp );
-            //AddBreakpoint( bp );
-            Debug.Log( "Add virtual bp for $" + address.ToString( "X4" ) );
-          }
-          else
-          {
-            // merge with existing
-            existingBP.TriggerOnExec = true;
-            existingBP.Virtual.Add( virtualBP );
-          }
-        }
-        else
-        {
-          StudioCore.AddToOutput( "Cannot assign breakpoint for line " + virtualBP.LineIndex + ", no address found" + System.Environment.NewLine );
-        }
-      }
-    }
-
-
-
-    private void RemoveVirtualBreakpoints()
-    {
-      foreach ( var key in StudioCore.Debugging.BreakPoints.Keys )
-      {
-        repeat:
-        foreach ( Types.Breakpoint breakPoint in StudioCore.Debugging.BreakPoints[key] )
-        {
-          if ( !breakPoint.HasNonVirtual() )
-          {
-            StudioCore.Debugging.BreakPoints[key].Remove( breakPoint );
-            goto repeat;
-          }
-        }
-      }
-    }
-
-
-
-    private void ReseatBreakpoints( Types.ASM.FileInfo ASMFileInfo )
-    {
-      foreach ( var key in StudioCore.Debugging.BreakPoints.Keys )
-      {
-        foreach ( Types.Breakpoint breakPoint in StudioCore.Debugging.BreakPoints[key] )
-        {
-          breakPoint.RemoteIndex = -1;
-          breakPoint.IsVirtual = false;
-          breakPoint.Virtual.Clear();
-          breakPoint.Virtual.Add( breakPoint );
-
-          if ( key != "C64Studio.DebugBreakpoints" )
-          {
-            breakPoint.Address = -1;
-            int globalLineIndex = 0;
-            if ( ASMFileInfo.FindGlobalLineIndex( breakPoint.LineIndex, breakPoint.DocumentFilename, out globalLineIndex ) )
-            {
-              int address = ASMFileInfo.FindLineAddress( globalLineIndex );
-              if ( breakPoint.Address != address )
-              {
-                breakPoint.Address = address;
-
-                Document_DocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, breakPoint ) );
-              }
-              if ( address != -1 )
-              {
-                //Debug.Log( "Found breakpoint at address " + address );
-              }
-            }
-            else if ( breakPoint.AddressSource != null )
-            {
-              var address = ASMFileInfo.AddressFromToken( breakPoint.AddressSource );
-              if ( address != -1 )
-              {
-                breakPoint.Address = address;
-
-                Document_DocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, breakPoint ) );
-              }
-            }
-          }
-        }
-      }
+      return StudioCore.Executing.RunProcess.Start();
     }
 
 
@@ -2866,7 +2416,7 @@ namespace C64Studio
 
 
 
-    private bool DebugCompiledFile( DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun )
+    public bool DebugCompiledFile( DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun )
     {
       if ( DocumentToDebug.Element == null )
       {
@@ -2877,7 +2427,7 @@ namespace C64Studio
         StudioCore.AddToOutput( "Debugging " + DocumentToDebug.Element.Name + System.Environment.NewLine );
       }
 
-      ToolInfo toolRun = DetermineTool( DocumentToRun, true );
+      ToolInfo toolRun = StudioCore.DetermineTool( DocumentToRun, true );
       if ( toolRun == null )
       {
         System.Windows.Forms.MessageBox.Show( "No emulator tool has been configured yet!", "Missing emulator tool" );
@@ -2895,10 +2445,11 @@ namespace C64Studio
 
       m_DebugWatch.ReseatWatches( DocumentToDebug.ASMFileInfo );
       StudioCore.Debugging.Debugger.ClearCaches();
-      ReseatBreakpoints( DocumentToDebug.ASMFileInfo );
-      AddVirtualBreakpoints( DocumentToDebug.ASMFileInfo );
+      StudioCore.Debugging.ReseatBreakpoints( DocumentToDebug.ASMFileInfo );
+      StudioCore.Debugging.AddVirtualBreakpoints( DocumentToDebug.ASMFileInfo );
       StudioCore.Debugging.Debugger.SetBreakPoints( StudioCore.Debugging.BreakPoints );
-
+      StudioCore.Debugging.MarkedDocument     = null;
+      StudioCore.Debugging.MarkedDocumentLine = -1;
       /*
       Debug.Log( "Breakpoints." );
       foreach ( var bplist in m_BreakPoints.Values )
@@ -2913,121 +2464,19 @@ namespace C64Studio
         }
       }*/
 
-      StudioCore.Debugging.MarkedDocument     = null;
-      StudioCore.Debugging.MarkedDocumentLine = -1;
 
-      bool error = false;
-
-      RunProcess = new System.Diagnostics.Process();
-      RunProcess.StartInfo.FileName = toolRun.Filename;
-      RunProcess.StartInfo.WorkingDirectory = FillParameters( toolRun.WorkPath, DocumentToRun, true, out error );
-      RunProcess.EnableRaisingEvents = true;
-
-      if ( error )
+      if ( !StudioCore.Executing.StartProcess( toolRun, DocumentToRun ) )
       {
         return false;
       }
-      if ( !System.IO.Directory.Exists( RunProcess.StartInfo.WorkingDirectory.Trim( new char[]{ '"' } ) ) )
+      if ( !System.IO.Directory.Exists( StudioCore.Executing.RunProcess.StartInfo.WorkingDirectory.Trim( new char[] { '"' } ) ) )
       {
-        StudioCore.AddToOutput( "The determined working directory " + RunProcess.StartInfo.WorkingDirectory + " does not exist" + System.Environment.NewLine );
+        StudioCore.AddToOutput( "The determined working directory " + StudioCore.Executing.RunProcess.StartInfo.WorkingDirectory + " does not exist" + System.Environment.NewLine );
         return false;
       }
 
-      StudioCore.Debugging.BreakpointsToAddAfterStartup.Clear();
-
-      string  breakPointFile = "";
-      int     remoteIndex = 2;    // 1 is the init breakpoint
-      foreach ( var key in StudioCore.Debugging.BreakPoints.Keys )
-      {
-        foreach ( Types.Breakpoint breakPoint in StudioCore.Debugging.BreakPoints[key] )
-        {
-          if ( key != "C64Studio.DebugBreakpoints" )
-          {
-            bool mustBeAddedLater = false;
-
-            if ( breakPoint.Address != -1 )
-            {
-              if ( breakPoint.TriggerOnLoad )
-              {
-                // store for later addition
-                StudioCore.Debugging.BreakpointsToAddAfterStartup.Add( breakPoint );
-                mustBeAddedLater = true;
-              }
-              if ( breakPoint.TriggerOnStore )
-              {
-                if ( !StudioCore.Debugging.BreakpointsToAddAfterStartup.Contains( breakPoint ) )
-                {
-                  // store for later addition
-                  StudioCore.Debugging.BreakpointsToAddAfterStartup.Add( breakPoint );
-                  mustBeAddedLater = true;
-                }
-                //request += "store ";
-              }
-
-              if ( !mustBeAddedLater )
-              {
-                Debug.Log( "Found breakpoint at address " + breakPoint.Address.ToString( "x4" ) );
-                breakPointFile += "break $" + breakPoint.Address.ToString( "x4" ) + "\r\n";
-                breakPoint.RemoteIndex = remoteIndex;
-                ++remoteIndex;
-
-                Document_DocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, breakPoint ) );
-              }
-            }
-            else
-            {
-              breakPoint.Address = -1;
-              breakPoint.RemoteIndex = -1;
-
-              Document_DocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, breakPoint ) );
-            }
-          }
-          else
-          {
-            // manual breakpoint
-            string request = "break ";
-            bool mustBeAddedOnStartup = false;
-
-            if ( breakPoint.TriggerOnExec )
-            {
-              request += "exec ";
-              mustBeAddedOnStartup = true;
-            }
-            if ( StudioCore.Debugging.Debugger.m_ViceVersion > RemoteDebugger.WinViceVersion.V_2_3 )
-            {
-              if ( breakPoint.TriggerOnLoad )
-              {
-                // store for later addition
-                StudioCore.Debugging.BreakpointsToAddAfterStartup.Add( breakPoint );
-                //request += "load ";
-              }
-              if ( breakPoint.TriggerOnStore )
-              {
-                if ( !StudioCore.Debugging.BreakpointsToAddAfterStartup.Contains( breakPoint ) )
-                {
-                  // store for later addition
-                  StudioCore.Debugging.BreakpointsToAddAfterStartup.Add( breakPoint );
-                }
-                //request += "store ";
-              }
-            }
-            if ( mustBeAddedOnStartup )
-            {
-              if ( !string.IsNullOrEmpty( breakPoint.Conditions ) )
-              {
-                request += breakPoint.Conditions + " ";
-              }
-              request += "$" + breakPoint.Address.ToString( "x4" );
-              breakPointFile += request + "\r\n";
-              breakPoint.RemoteIndex = remoteIndex;
-              ++remoteIndex;
-            }
-
-            Document_DocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, breakPoint ) );
-          }
-        }
-      }
-      string command = toolRun.DebugArguments;
+      string breakPointFile = StudioCore.Debugging.PrepareAfterStartBreakPoints();
+      string command        = toolRun.DebugArguments;
 
       if ( toolRun.PassLabelsToEmulator )
       {
@@ -3113,7 +2562,9 @@ namespace C64Studio
         command = toolRun.TrueDriveOffArguments + " " + command;
       }
 
-      RunProcess.StartInfo.Arguments = FillParameters( command, DocumentToRun, true, out error );
+      bool error = false;
+
+      StudioCore.Executing.RunProcess.StartInfo.Arguments = FillParameters( command, DocumentToRun, true, out error );
       if ( error )
       {
         return false;
@@ -3130,23 +2581,23 @@ namespace C64Studio
       ||   ( targetType == Types.CompileTargetType.CARTRIDGE_8K_BIN )
       ||   ( targetType == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
       {
-        RunProcess.StartInfo.Arguments += " " + FillParameters( toolRun.CartArguments, DocumentToRun, true, out error );
+        StudioCore.Executing.RunProcess.StartInfo.Arguments += " " + FillParameters( toolRun.CartArguments, DocumentToRun, true, out error );
       }
       else
       {
-        RunProcess.StartInfo.Arguments += " " + FillParameters( toolRun.PRGArguments, DocumentToRun, true, out error );
+        StudioCore.Executing.RunProcess.StartInfo.Arguments += " " + FillParameters( toolRun.PRGArguments, DocumentToRun, true, out error );
       }
       if ( error )
       {
         return false;
       }
 
-      StudioCore.AddToOutput( "Calling " + RunProcess.StartInfo.FileName + " with " + RunProcess.StartInfo.Arguments + System.Environment.NewLine );
-      RunProcess.Exited += new EventHandler( runProcess_Exited );
+      StudioCore.AddToOutput( "Calling " + StudioCore.Executing.RunProcess.StartInfo.FileName + " with " + StudioCore.Executing.RunProcess.StartInfo.Arguments + System.Environment.NewLine );
+      StudioCore.Executing.RunProcess.Exited += new EventHandler( runProcess_Exited );
 
       SetGUIForWaitOnExternalTool( true );
-      if ( ( RunProcess.Start() )
-      &&   ( RunProcess.WaitForInputIdle() ) )
+      if ( ( StudioCore.Executing.RunProcess.Start() )
+      &&   ( StudioCore.Executing.RunProcess.WaitForInputIdle() ) )
       {
         // only connect with debugger if VICE
         if ( EmulatorSupportsDebugging( toolRun ) )
@@ -3169,8 +2620,6 @@ namespace C64Studio
       }
       return true;
     }
-
-
 
     /*
     void compilerProcess_Exited( object sender, EventArgs e )
@@ -3215,7 +2664,7 @@ namespace C64Studio
 
     void runProcess_Exited( object sender, EventArgs e )
     {
-      if ( RunProcess == null )
+      if ( StudioCore.Executing.RunProcess == null )
       {
         StudioCore.AddToOutput( "Run exited unexpectedly" + System.Environment.NewLine );
       }
@@ -3223,16 +2672,16 @@ namespace C64Studio
       {
         try
         {
-          StudioCore.AddToOutput( "Run exited with result code " + RunProcess.ExitCode + System.Environment.NewLine );
-          RunProcess.Close();
-          RunProcess.Dispose();
+          StudioCore.AddToOutput( "Run exited with result code " + StudioCore.Executing.RunProcess.ExitCode + System.Environment.NewLine );
+          StudioCore.Executing.RunProcess.Close();
+          StudioCore.Executing.RunProcess.Dispose();
         }
         catch ( System.Exception ex )
         {
           StudioCore.AddToOutput( "Run aborted with error: " + ex.Message + System.Environment.NewLine );
         }
       }
-      RunProcess = null;
+      StudioCore.Executing.RunProcess = null;
 
       StudioCore.Debugging.Debugger.Disconnect();
 
@@ -3251,7 +2700,7 @@ namespace C64Studio
 
       AppState = Types.StudioState.NORMAL;
 
-      RemoveVirtualBreakpoints();
+      StudioCore.Debugging.RemoveVirtualBreakpoints();
 
       SetGUIForDebugging( false );
       SetGUIForWaitOnExternalTool( false );
@@ -3702,7 +3151,7 @@ namespace C64Studio
 
 
 
-    private bool SaveProject( Project ProjectToSave )
+    public bool SaveProject( Project ProjectToSave )
     {
       if ( ProjectToSave == null )
       {
@@ -3824,86 +3273,98 @@ namespace C64Studio
 
         SetActiveProject( newProject );
 
-        List<string>        updatedFiles = new List<string>();
+        AddTask( new Tasks.TaskPreparseFilesInProject( newProject, mainToolConfig.SelectedItem.ToString() ) );
+        //PreparseFilesInProject( newProject );
 
-        List<ProjectElement>    elementsToPreParse = new List<ProjectElement>( newProject.Elements );
-
-        try
-        {
-          // check if main doc is set, parse this one first as it's likely to include most other files
-          if ( !string.IsNullOrEmpty( newProject.Settings.MainDocument ) )
-          {
-            ProjectElement          mainElement = newProject.GetElementByFilename( newProject.Settings.MainDocument );
-
-            if ( mainElement != null )
-            {
-              elementsToPreParse.Remove( mainElement );
-              elementsToPreParse.Insert( 0, mainElement );
-            }
-          }
-
-
-          foreach ( ProjectElement element in elementsToPreParse )
-          {
-            if ( element.Document == null )
-            {
-              continue;
-            }
-            if ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
-            {
-              if ( updatedFiles.Contains( element.DocumentInfo.FullPath ) )
-              {
-                // do not reparse already parsed element
-                continue;
-              }
-              ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configs[mainToolConfig.SelectedItem.ToString()] );
-
-              //var knownTokens = ParserASM.KnownTokens();
-              //var knownTokenInfos = ParserASM.KnownTokenInfo();
-              //Debug.Log( "SetASMFileInfo on " + element.DocumentInfo.DocumentFilename );
-              //element.DocumentInfo.SetASMFileInfo( ParserASM.ASMFileInfo, knownTokens, knownTokenInfos );
-
-              updatedFiles.Add( element.DocumentInfo.FullPath );
-
-              ( (SourceASMEx)element.Document ).SetLineInfos( StudioCore.Compiling.ParserASM.ASMFileInfo );
-              ( (SourceASMEx)element.Document ).OnKnownKeywordsChanged();
-              ( (SourceASMEx)element.Document ).OnKnownTokensChanged();
-
-              foreach ( var dependencyBuildState in element.DocumentInfo.DeducedDependency.Values )
-              {
-                foreach ( var dependency in dependencyBuildState.BuildState.Keys )
-                {
-                  ProjectElement    element2 = newProject.GetElementByFilename( dependency );
-                  if ( ( element2 != null )
-                  && ( element2.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
-                  {
-                    if ( element2.Document != null )
-                    {
-                      ( (SourceASMEx)element2.Document ).SetLineInfos( StudioCore.Compiling.ParserASM.ASMFileInfo );
-                    }
-                    updatedFiles.Add( element2.DocumentInfo.FullPath );
-                  }
-                }
-              }
-            }
-          }
-          m_CompileResult.ClearMessages();
-          if ( m_ActiveSource != null )
-          {
-            //Debug.Log( "RefreshFromDocument after openproject" );
-            m_Outline.RefreshFromDocument( m_ActiveSource );
-          }
-          UpdateCaption();
-          SaveSolution();
-        }
-        catch ( Exception ex )
-        {
-          StudioCore.AddToOutput( "An error occurred during opening and preparsing the project\r\n" + ex.ToString() );
-        }
         return newProject;
       }
       m_LoadingProject = false;
       return null;
+    }
+
+
+
+    public void PreparseFilesInProject( Project newProject, string SelectedConfig )
+    {
+      List<string>            updatedFiles = new List<string>();
+
+      List<ProjectElement>    elementsToPreParse = new List<ProjectElement>( newProject.Elements );
+
+      try
+      {
+        // check if main doc is set, parse this one first as it's likely to include most other files
+        if ( !string.IsNullOrEmpty( newProject.Settings.MainDocument ) )
+        {
+          ProjectElement          mainElement = newProject.GetElementByFilename( newProject.Settings.MainDocument );
+
+          if ( mainElement != null )
+          {
+            elementsToPreParse.Remove( mainElement );
+            elementsToPreParse.Insert( 0, mainElement );
+          }
+        }
+
+
+        foreach ( ProjectElement element in elementsToPreParse )
+        {
+          if ( element.Document == null )
+          {
+            continue;
+          }
+          if ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+          {
+            if ( updatedFiles.Contains( element.DocumentInfo.FullPath ) )
+            {
+              // do not reparse already parsed element
+              continue;
+            }
+            ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configs[SelectedConfig], false );
+
+            //var knownTokens = ParserASM.KnownTokens();
+            //var knownTokenInfos = ParserASM.KnownTokenInfo();
+            //Debug.Log( "SetASMFileInfo on " + element.DocumentInfo.DocumentFilename );
+            //element.DocumentInfo.SetASMFileInfo( ParserASM.ASMFileInfo, knownTokens, knownTokenInfos );
+
+            updatedFiles.Add( element.DocumentInfo.FullPath );
+
+            ( (SourceASMEx)element.Document ).SetLineInfos( StudioCore.Compiling.ParserASM.ASMFileInfo );
+
+            AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
+            /*
+            ( (SourceASMEx)element.Document ).OnKnownKeywordsChanged();
+            ( (SourceASMEx)element.Document ).OnKnownTokensChanged();*/
+
+            foreach ( var dependencyBuildState in element.DocumentInfo.DeducedDependency.Values )
+            {
+              foreach ( var dependency in dependencyBuildState.BuildState.Keys )
+              {
+                ProjectElement    element2 = newProject.GetElementByFilename( dependency );
+                if ( ( element2 != null )
+                && ( element2.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
+                {
+                  if ( element2.Document != null )
+                  {
+                    ( (SourceASMEx)element2.Document ).SetLineInfos( StudioCore.Compiling.ParserASM.ASMFileInfo );
+                  }
+                  updatedFiles.Add( element2.DocumentInfo.FullPath );
+                }
+              }
+            }
+          }
+        }
+        //m_CompileResult.ClearMessages();
+        if ( m_ActiveSource != null )
+        {
+          //Debug.Log( "RefreshFromDocument after openproject" );
+          m_Outline.RefreshFromDocument( m_ActiveSource );
+        }
+        UpdateCaption();
+        SaveSolution();
+      }
+      catch ( Exception ex )
+      {
+        StudioCore.AddToOutput( "An error occurred during opening and preparsing the project\r\n" + ex.ToString() );
+      }
     }
 
 
@@ -3968,7 +3429,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.BUILD_AND_RUN;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocumentToBuild, null, DocumentToRun ) )
+      if ( !StartCompile( DocumentToBuild, null, DocumentToRun, m_Solution ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -3979,58 +3440,6 @@ namespace C64Studio
     private void mainToolCompileAndRun_Click( object sender, EventArgs e )
     {
       ApplyFunction( C64Studio.Types.Function.BUILD_AND_RUN );
-    }
-
-
-
-    public void MarkLine( Project MarkProject, string DocumentFilename, int Line )
-    {
-      if ( InvokeRequired )
-      {
-        Invoke( new Navigating.OpenDocumentAndGotoLineCallback( MarkLine ), new object[] { MarkProject, DocumentFilename, Line } );
-        return;
-      }
-      if ( StudioCore.Debugging.MarkedDocument != null )
-      {
-        StudioCore.Debugging.MarkedDocument.SetLineMarked( StudioCore.Debugging.MarkedDocumentLine, false );
-      }
-      string  inPath = DocumentFilename.Replace( "\\", "/" );
-      if ( MarkProject != null )
-      {
-        foreach ( ProjectElement element in MarkProject.Elements )
-        {
-          string myPath = GR.Path.Append( MarkProject.Settings.BasePath, element.Filename ).Replace( "\\", "/" );
-          if ( String.Compare( myPath, inPath, true ) == 0 )
-          {
-            BaseDocument doc = MarkProject.ShowDocument( element );
-            StudioCore.Debugging.MarkedDocument = doc;
-            StudioCore.Debugging.MarkedDocumentLine = Line;
-            if ( doc != null )
-            {
-              doc.SetLineMarked( Line, Line != -1 );
-            }
-            return;
-          }
-        }
-      }
-      foreach ( IDockContent dockContent in panelMain.Documents )
-      {
-        BaseDocument baseDoc = (BaseDocument)dockContent;
-        if ( baseDoc.DocumentFilename == null )
-        {
-          continue;
-        }
-
-        string myPath = baseDoc.DocumentFilename.Replace( "\\", "/" );
-        if ( String.Compare( myPath, inPath, true ) == 0 )
-        {
-          StudioCore.Debugging.MarkedDocument = baseDoc;
-          StudioCore.Debugging.MarkedDocumentLine = Line;
-          baseDoc.Select();
-          baseDoc.SetLineMarked( Line, Line != -1 );
-          return;
-        }
-      }
     }
 
 
@@ -4219,7 +3628,7 @@ namespace C64Studio
 
 
 
-    private void SetGUIForDebugging( bool DebugModeActive )
+    public void SetGUIForDebugging( bool DebugModeActive )
     {
       if ( InvokeRequired )
       {
@@ -4390,7 +3799,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.BUILD_AND_DEBUG;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocumentToBuild, DocumentToDebug, DocumentToRun ) )
+      if ( !StartCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, m_Solution ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -4416,20 +3825,18 @@ namespace C64Studio
         // unmark current marked line
         if ( StudioCore.Debugging.MarkedDocument != null )
         {
-          MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
+          StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
           StudioCore.Debugging.MarkedDocument = null;
         }
 
-        if ( ( RunProcess != null )
-        &&   ( RunProcess.MainWindowHandle != IntPtr.Zero ) )
-        {
-          SetForegroundWindow( RunProcess.MainWindowHandle );
-        }
+        StudioCore.Executing.BringToForeground();
 
         AppState = Types.StudioState.DEBUGGING_RUN;
         StudioCore.Debugging.FirstActionAfterBreak = false;
-        mainDebugGo.Enabled = false;
-        mainDebugBreak.Enabled = true;
+
+        StudioCore.MainForm.SetGUIForDebugging( true );
+        //mainDebugGo.Enabled = false;
+        //mainDebugBreak.Enabled = true;
 
         Types.Breakpoint    tempBP = new C64Studio.Types.Breakpoint();
         tempBP.Address = DebugAddress;
@@ -4451,33 +3858,15 @@ namespace C64Studio
 
       if ( InvokeRequired )
       {
-        Invoke( new StartDebugAtCallback( StartDebugAt ), new object[] { DebugAddress } );
+        Invoke( new StartDebugAtCallback( StartDebugAt ), new object[] { DocumentToDebug, DocumentToRun, DebugAddress } );
       }
       else
       {
         AppState = Types.StudioState.BUILD_AND_DEBUG;
         StudioCore.Debugging.OverrideDebugStart = DebugAddress;
-        if ( !StartCompile( DocumentToRun, DocumentToDebug, DocumentToRun ) )
+        if ( !StartCompile( DocumentToRun, DocumentToDebug, DocumentToRun, m_Solution ) )
         {
           AppState = Types.StudioState.NORMAL;
-        }
-      }
-    }
-
-
-
-    public void ForceEmulatorRefresh()
-    {
-      if ( RunProcess != null )
-      {
-        try
-        {
-          // hack that's needed for WinVICE to continue
-          // fixed in WinVICE r25309
-          InvalidateRect( RunProcess.MainWindowHandle, IntPtr.Zero, false );
-        }
-        catch ( System.InvalidOperationException )
-        {
         }
       }
     }
@@ -4498,15 +3887,11 @@ namespace C64Studio
 
         if ( StudioCore.Debugging.MarkedDocument != null )
         {
-          MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
+          StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
           StudioCore.Debugging.MarkedDocument = null;
         }
 
-        if ( ( RunProcess != null )
-        &&   ( RunProcess.MainWindowHandle != IntPtr.Zero ) )
-        {
-          SetForegroundWindow( RunProcess.MainWindowHandle );
-        }
+        StudioCore.Executing.BringToForeground();
 
         AppState = Types.StudioState.DEBUGGING_RUN;
         StudioCore.Debugging.FirstActionAfterBreak = false;
@@ -4541,7 +3926,7 @@ namespace C64Studio
           StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
           StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, m_DebugMemory.MemoryStart, m_DebugMemory.MemorySize );
 
-          SetForegroundWindow( this.Handle );
+          StudioCore.Executing.BringStudioToForeground();
         }
         catch ( Exception ex )
         {
@@ -4577,10 +3962,10 @@ namespace C64Studio
           if ( ( m_CurrentActiveTool != null )
           &&   ( !EmulatorSupportsDebugging( m_CurrentActiveTool ) ) )
           {
-            if ( RunProcess != null )
+            if ( StudioCore.Executing.RunProcess != null )
             {
-              RunProcess.Kill();
-              RunProcess = null;
+              StudioCore.Executing.RunProcess.Kill();
+              StudioCore.Executing.RunProcess = null;
             }
             return;
           }
@@ -4593,7 +3978,7 @@ namespace C64Studio
 
             if ( StudioCore.Debugging.MarkedDocument != null )
             {
-              MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
+              StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
               StudioCore.Debugging.MarkedDocument = null;
             }
             /*
@@ -4654,7 +4039,7 @@ namespace C64Studio
         StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
         StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, m_DebugMemory.MemoryStart, m_DebugMemory.MemorySize );
 
-        SetForegroundWindow( this.Handle );
+        StudioCore.Executing.BringStudioToForeground();
 
         AppState = Types.StudioState.DEBUGGING_BROKEN;
         if ( AppState == Types.StudioState.DEBUGGING_RUN )
@@ -4687,7 +4072,7 @@ namespace C64Studio
         {
           StudioCore.Debugging.FirstActionAfterBreak = true;
         }
-        SetForegroundWindow( this.Handle );
+        StudioCore.Executing.BringStudioToForeground();
         AppState = Types.StudioState.DEBUGGING_BROKEN;
         mainDebugGo.Enabled = true;
         mainDebugBreak.Enabled = false;
@@ -4724,7 +4109,7 @@ namespace C64Studio
         {
           StudioCore.Debugging.FirstActionAfterBreak = true;
         }
-        SetForegroundWindow( this.Handle );
+        StudioCore.Executing.BringStudioToForeground();
         AppState = Types.StudioState.DEBUGGING_BROKEN;
         mainDebugGo.Enabled = true;
         mainDebugBreak.Enabled = false;
@@ -4743,7 +4128,7 @@ namespace C64Studio
         {
           StudioCore.Debugging.FirstActionAfterBreak = true;
         }
-        SetForegroundWindow( this.Handle );
+        StudioCore.Executing.BringStudioToForeground();
         AppState = Types.StudioState.DEBUGGING_BROKEN;
       }
     }
@@ -4868,7 +4253,7 @@ namespace C64Studio
         if ( activeFile.ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) )
         {
           StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
-          MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
+          StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
           return true;
         }
       }
@@ -4879,7 +4264,7 @@ namespace C64Studio
         if ( currentMarkedFile.ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) )
         {
           StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
-          MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
+          StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
           return true;
         }
       }
@@ -4890,7 +4275,7 @@ namespace C64Studio
       {
         //Debug.Log( "use first of left overs: " + foundMatches[0].FullPath );
         StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
-        MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
+        StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
         return true;
       }
       return false;
@@ -4913,7 +4298,7 @@ namespace C64Studio
           {
             StudioCore.Debugging.FirstActionAfterBreak = true;
           }
-          SetForegroundWindow( this.Handle );
+          StudioCore.Executing.BringStudioToForeground();
           AppState = Types.StudioState.DEBUGGING_BROKEN;
           m_DebugRegisters.SetRegisters( RegisterValues[1], RegisterValues[2], RegisterValues[3], RegisterValues[4],
                                          RegisterValues[7], RegisterValues[0].Substring( 2 ), RegisterValues[8], RegisterValues[9], RegisterValues[6] );
@@ -4928,7 +4313,7 @@ namespace C64Studio
             ||   ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
             {
               StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
-              MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
+              StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
             }
           }
           else
@@ -5447,145 +4832,12 @@ namespace C64Studio
               break;
             }
 
+            // this potentially starts a task
             EnsureFileIsParsed( docToHandle );
 
-          Types.ASM.FileInfo debugFileInfo        = StudioCore.Navigating.DetermineASMFileInfo( docToHandle );
-          Types.ASM.FileInfo localDebugFileInfo   = StudioCore.Navigating.DetermineLocalASMFileInfo( docToDebug );
-          Types.ASM.FileInfo localDebugFileInfo2  = StudioCore.Navigating.DetermineLocalASMFileInfo( docActive );
-
-          int           lineIndex = -1;
-
-          if ( debugFileInfo.FindGlobalLineIndex( docActive.BaseDoc.CurrentLineIndex, docActive.FullPath, out lineIndex ) )
-          {
-            int targetAddress = debugFileInfo.FindLineAddress( lineIndex );
-            if ( targetAddress != -1 )
-            {
-              if ( ( StudioCore.Debugging.Debugger.m_ViceVersion == RemoteDebugger.WinViceVersion.V_2_3 )
-              &&   ( StudioCore.Debugging.FirstActionAfterBreak ) )
-              {
-                StudioCore.Debugging.FirstActionAfterBreak = false;
-                RunToAddress( docToDebug, docToHandle, targetAddress );
-              }
-              RunToAddress( docToDebug, docToHandle, targetAddress );
-            }
-            else
-            {
-              System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
-            }
-          }
-          else if ( localDebugFileInfo.FindGlobalLineIndex( docActive.BaseDoc.CurrentLineIndex, docActive.FullPath, out lineIndex ) )
-          {
-            // retry at local debug info
-            int targetAddress = localDebugFileInfo.FindLineAddress( lineIndex );
-            if ( targetAddress != -1 )
-            {
-              if ( ( StudioCore.Debugging.Debugger.m_ViceVersion == RemoteDebugger.WinViceVersion.V_2_3 )
-              &&   ( StudioCore.Debugging.FirstActionAfterBreak ) )
-              {
-                StudioCore.Debugging.FirstActionAfterBreak = false;
-                RunToAddress( docToDebug, docToHandle, targetAddress );
-              }
-              RunToAddress( docToDebug, docToHandle, targetAddress );
-            }
-            else
-            {
-              System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
-            }
-          }
-          else if ( localDebugFileInfo2.FindGlobalLineIndex( docActive.BaseDoc.CurrentLineIndex, docActive.FullPath, out lineIndex ) )
-          {
-            // retry at local debug info
-            int targetAddress = localDebugFileInfo2.FindLineAddress( lineIndex );
-            if ( targetAddress != -1 )
-            {
-              if ( ( StudioCore.Debugging.Debugger.m_ViceVersion == RemoteDebugger.WinViceVersion.V_2_3 )
-              &&   ( StudioCore.Debugging.FirstActionAfterBreak ) )
-              {
-                StudioCore.Debugging.FirstActionAfterBreak = false;
-                RunToAddress( docToDebug, docToHandle, targetAddress );
-              }
-              RunToAddress( docToDebug, docToHandle, targetAddress );
-            }
-            else
-            {
-              System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
-            }
-          }
-          else
-          {
-            System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
-          }
-            /*
-            }
-            else if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-            {
-              EnsureFileIsParsed( docToDebug );
-              Types.ASM.FileInfo localDebugFileInfo = DetermineLocalASMFileInfo( docToDebug );
-              Types.ASM.FileInfo localDebugFileInfo2 = DetermineLocalASMFileInfo( docActive );
-
-              int           lineIndex = -1;
-
-              if ( debugFileInfo.FindGlobalLineIndex( docActive.CurrentLineIndex, docActive.FullPath, out lineIndex ) )
-              {
-                int targetAddress = debugFileInfo.FindLineAddress( lineIndex );
-                if ( targetAddress != -1 )
-                {
-                  if ( ( Debugger.m_ViceVersion == RemoteDebugger.WinViceVersion.V_2_3 )
-                  &&   ( m_FirstActionAfterBreak ) )
-                  {
-                    m_FirstActionAfterBreak = false;
-                    RunToAddress( docToDebug, null, targetAddress );
-                  }
-                  RunToAddress( docToDebug, null, targetAddress );
-                }
-                else
-                {
-                  System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
-                }
-              }
-              else if ( localDebugFileInfo.FindGlobalLineIndex( docActive.CurrentLineIndex, docActive.FullPath, out lineIndex ) )
-              {
-                // retry at local debug info
-                int targetAddress = localDebugFileInfo.FindLineAddress( lineIndex );
-                if ( targetAddress != -1 )
-                {
-                  if ( ( Debugger.m_ViceVersion == RemoteDebugger.WinViceVersion.V_2_3 )
-                  && ( m_FirstActionAfterBreak ) )
-                  {
-                    m_FirstActionAfterBreak = false;
-                    RunToAddress( docToDebug, docToHandle, targetAddress );
-                  }
-                  RunToAddress( docToDebug, docToHandle, targetAddress );
-                }
-                else
-                {
-                  System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
-                }
-              }
-              else if ( localDebugFileInfo2.FindGlobalLineIndex( docActive.CurrentLineIndex, docActive.FullPath, out lineIndex ) )
-              {
-                // retry at local debug info
-                int targetAddress = localDebugFileInfo2.FindLineAddress( lineIndex );
-                if ( targetAddress != -1 )
-                {
-                  if ( ( Debugger.m_ViceVersion == RemoteDebugger.WinViceVersion.V_2_3 )
-                  &&   ( m_FirstActionAfterBreak ) )
-                  {
-                    m_FirstActionAfterBreak = false;
-                    RunToAddress( docToDebug, docToHandle, targetAddress );
-                  }
-                  RunToAddress( docToDebug, docToHandle, targetAddress );
-                }
-                else
-                {
-                  System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
-                }
-              }
-              else
-              {
-                System.Windows.Forms.MessageBox.Show( "No reachable code was detected in this line (or could not assemble)" );
-              }
-            }*/
+            // so this should become one too!
+            AddTask( new Tasks.TaskDebugRunTo( docToHandle, docToDebug, docActive ) );
+            
           }
           break;
         case C64Studio.Types.Function.SAVE_ALL:
@@ -5767,7 +5019,7 @@ namespace C64Studio
             {
               string wordBelow = sourceEx.FindWordAtCaretPosition();
               string zone = sourceEx.FindZoneAtCaretPosition();
-              GotoDeclaration( docToHandle, wordBelow, zone );
+              StudioCore.Navigating.GotoDeclaration( docToHandle, wordBelow, zone );
             }
           }
           break;
@@ -5887,7 +5139,7 @@ namespace C64Studio
               {
                 if ( StudioCore.Debugging.MarkedDocument != null )
                 {
-                  MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
+                  StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
                   StudioCore.Debugging.MarkedDocument = null;
                 }
                 StudioCore.Debugging.DebugDisassembly.SetText( "Disassembly\r\nfailed\r\n" + disassembly );
@@ -5919,14 +5171,16 @@ namespace C64Studio
 
 
 
-    public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration )
+    public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, bool OutputMessages )
     {
+      Debug.Log( "Parsefile called for " + Document.DocumentFilename );
       C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
       config.Assembler = Types.AssemblerType.AUTO;
       if ( Document.Element != null )
       {
         config.Assembler = Document.Element.AssemblerType;
       }
+      config.AutoTruncateLiteralValues = StudioCore.Settings.ASMAutoTruncateLiteralValues;
 
       bool result = Parser.ParseFile( Document, Configuration, config );
 
@@ -6016,8 +5270,9 @@ namespace C64Studio
               elementToUpdate.DocumentInfo.KnownTokens = knownTokenInfos;
               if ( elementToUpdate.Document != null )
               {
-                elementToUpdate.Document.OnKnownKeywordsChanged();
-                elementToUpdate.Document.OnKnownTokensChanged();
+                AddTask( new Tasks.TaskUpdateKeywords( elementToUpdate.Document ) );
+                //elementToUpdate.Document.OnKnownKeywordsChanged();
+                //elementToUpdate.Document.OnKnownTokensChanged();
               }
             }
           }
@@ -6043,16 +5298,9 @@ namespace C64Studio
         }
       }
 
-      if ( InvokeRequired )
+      if ( OutputMessages )
       {
-        Invoke( new ParseFileCallback( ParseFile ), new object[] { Document, Configuration } );
-      }
-      else
-      {
-        StudioCore.Navigating.UpdateFromMessages( Parser.Messages,
-                                          ( Parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)Parser ).ASMFileInfo : null,
-                                          Document.Project );
-        m_CompileResult.UpdateFromMessages( Parser, Document.Project );
+        AddTask( new Tasks.TaskUpdateCompileResult( Parser, Document ) );
       }
       if ( ( result )
       &&   ( Document.BaseDoc != null ) )
@@ -6089,7 +5337,7 @@ namespace C64Studio
         {
           config = Document.Project.Settings.Configs[mainToolConfig.SelectedItem.ToString()];
         }
-        ParseFile( DetermineParser( Document ), Document, config );
+        ParseFile( StudioCore.DetermineParser( Document ), Document, config, false );
       }
     }
 
@@ -6164,41 +5412,6 @@ namespace C64Studio
       FormAbout   about = new FormAbout();
 
       about.ShowDialog();
-    }
-
-
-
-    public void GotoDeclaration( DocumentInfo ASMDoc, string Word, string Zone )
-    {
-      Types.ASM.FileInfo fileToDebug = StudioCore.Navigating.DetermineASMFileInfo( ASMDoc );
-
-      Types.SymbolInfo tokenInfo = fileToDebug.TokenInfoFromName( Word, Zone );
-      if ( tokenInfo == null )
-      {
-        fileToDebug = ASMDoc.ASMFileInfo;
-        tokenInfo = ASMDoc.ASMFileInfo.TokenInfoFromName( Word, Zone );
-      }
-      if ( tokenInfo != null )
-      {
-        string documentFile = "";
-        int documentLine = -1;
-        if ( ( tokenInfo.LineIndex == 0 )
-        &&   ( !string.IsNullOrEmpty( tokenInfo.DocumentFilename ) ) )
-        {
-          // try stored info first
-          StudioCore.Navigating.OpenDocumentAndGotoLine( ASMDoc.Project, tokenInfo.DocumentFilename, tokenInfo.LocalLineIndex );
-          return;
-        }
-
-        if ( fileToDebug.FindTrueLineSource( tokenInfo.LineIndex, out documentFile, out documentLine ) )
-        {
-          StudioCore.Navigating.OpenDocumentAndGotoLine( ASMDoc.Project, documentFile, documentLine );
-        }
-      }
-      else
-      {
-        System.Windows.Forms.MessageBox.Show( "Could not determine item source" );
-      }
     }
 
 
@@ -6498,7 +5711,6 @@ namespace C64Studio
       switch ( Type )
       {
         case ProjectElement.ElementType.ASM_SOURCE:
-          //newDoc = new SourceASM( this );
           newDoc = new SourceASMEx( StudioCore );
           break;
         case ProjectElement.ElementType.BASIC_SOURCE:
@@ -6636,42 +5848,38 @@ namespace C64Studio
     public void MainForm_DragEnter( object sender, DragEventArgs e )
     {
       e.Effect = DragDropEffects.All;
-      /*
-      if ( !e.Data.GetDataPresent( DataFormats.FileDrop ) )
-      {
-        e.Effect = DragDropEffects.None;
-      }
-      else
-      {
-        e.Effect = DragDropEffects.Link;
-      }*/
     }
 
 
 
     public void AddTask( Tasks.Task Task )
     {
+      Debug.Log( "Add task " + Task.ToString() );
+      Task.Core = StudioCore;
+      StudioCore.TaskManager.AddTask( Task );
+      /*
+      Task.Core = StudioCore;
       m_Tasks.Add( Task );
       Task.Main = this;
       Task.TaskFinished += new C64Studio.Tasks.Task.delTaskFinished( Task_TaskFinished );
 
       if ( m_CurrentTask == null )
       {
-        m_CurrentTask = m_Tasks[0];
-        m_Tasks.RemoveAt( 0 );
-
-        System.Threading.Thread workerThread = new System.Threading.Thread( new System.Threading.ThreadStart( m_CurrentTask.RunTask ) );
-
-        StudioCore.SetStatus( m_CurrentTask.Description, true, 0 );
-        
-        workerThread.Start();
-      }
+        StartNextTask();
+      }*/
     }
 
 
 
     void Task_TaskFinished( C64Studio.Tasks.Task FinishedTask )
     {
+      if ( InvokeRequired )
+      {
+        Invoke( new TaskFinishedCallback( Task_TaskFinished ), new object[] { FinishedTask } );
+        return;
+      }
+
+      //Debug.Log( "task finished" );
       m_CurrentTask = null;
 
       switch ( FinishedTask.Type )
@@ -6700,16 +5908,33 @@ namespace C64Studio
 
       StudioCore.SetStatus( "Ready", false, 0 );
 
+      StartNextTask();
+    }
+
+
+
+    private void StartNextTask()
+    {
       if ( m_Tasks.Count > 0 )
       {
         m_CurrentTask = m_Tasks[0];
         m_Tasks.RemoveAt( 0 );
 
-        System.Threading.Thread workerThread = new System.Threading.Thread( new System.Threading.ThreadStart( m_CurrentTask.RunTask ) );
+        /*
+        if ( m_CurrentTask.InvokeRequired )
+        {
+          //Debug.Log( "Running direct task" );
+          m_CurrentTask.RunTask();
+        }
+        else*/
+        {
+          //Debug.Log( "Running threaded task" );
+          System.Threading.Thread workerThread = new System.Threading.Thread( new System.Threading.ThreadStart( m_CurrentTask.RunTask ) );
 
-        StudioCore.SetStatus( m_CurrentTask.Description, true, 0 );
+          StudioCore.SetStatus( m_CurrentTask.Description, true, 0 );
 
-        workerThread.Start();
+          workerThread.Start();
+        }
       }
     }
 
@@ -7151,70 +6376,6 @@ namespace C64Studio
 
 
 
-    public bool OnInitialBreakpointReached( int Address, int BreakpointIndex )
-    {
-      if ( StudioCore.Debugging.BreakpointsToAddAfterStartup.Count == 0 )
-      {
-        return false;
-      }
-      // now add all later breakpoints
-      foreach ( Types.Breakpoint bp in StudioCore.Debugging.BreakpointsToAddAfterStartup )
-      {
-        if ( ( bp.TriggerOnLoad )
-        ||   ( bp.TriggerOnStore ) )
-        {
-          if ( bp.TriggerOnExec )
-          {
-            // this was already added, remove
-            RemoteDebugger.RequestData requData = new RemoteDebugger.RequestData( RemoteDebugger.Request.DELETE_BREAKPOINT, bp.RemoteIndex );
-            requData.Breakpoint = bp;
-            StudioCore.Debugging.Debugger.QueueRequest( requData );
-            bp.RemoteIndex = -1;
-          }
-          RemoteDebugger.RequestData delData = new RemoteDebugger.RequestData( RemoteDebugger.Request.ADD_BREAKPOINT, bp.Address );
-          delData.Breakpoint = bp;
-          StudioCore.Debugging.Debugger.QueueRequest( delData );
-        }
-      }
-      // only auto-go on if the initial break point was not the fake first breakpoint
-      if ( Address != StudioCore.Debugging.LateBreakpointOverrideDebugStart )
-      {
-        // need to add new intermediate break point
-        Types.Breakpoint bpTemp = new C64Studio.Types.Breakpoint();
-
-        bpTemp.Address = StudioCore.Debugging.LateBreakpointOverrideDebugStart;
-        bpTemp.TriggerOnExec = true;
-        bpTemp.Temporary = true;
-
-        StudioCore.Debugging.Debugger.AddBreakpoint( bpTemp );
-        /*
-        RemoteDebugger.RequestData addNewBP = new RemoteDebugger.RequestData( RemoteDebugger.Request.ADD_BREAKPOINT, m_LateBreakpointOverrideDebugStart );
-        addNewBP.Breakpoint = bpTemp;
-        Debugger.QueueRequest( addNewBP );*/
-      }
-      // and auto-go on with debugging
-      StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.EXIT );
-
-      if ( StudioCore.Debugging.MarkedDocument != null )
-      {
-        MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
-        StudioCore.Debugging.MarkedDocument = null;
-      }
-
-      if ( ( RunProcess != null )
-      &&   ( RunProcess.MainWindowHandle != IntPtr.Zero ) )
-      {
-        SetForegroundWindow( RunProcess.MainWindowHandle );
-      }
-
-      StudioCore.Debugging.FirstActionAfterBreak = false;
-      mainDebugGo.Enabled = false;
-      mainDebugBreak.Enabled = true;
-      return true;
-    }
-
-
-
     private void fileNewBinaryEditorToolStripMenuItem_Click( object sender, EventArgs e )
     {
       GR.Memory.ByteBuffer emptyData = new GR.Memory.ByteBuffer( 2 );
@@ -7224,73 +6385,6 @@ namespace C64Studio
       document.Text = "New Binary Data";
       document.Load();
       document.Show( panelMain );
-    }
-
-
-
-    public string GetElementText( ProjectElement Element )
-    {
-      string elementPath = "";
-      if ( System.IO.Path.IsPathRooted( Element.Filename ) )
-      {
-        elementPath = Element.Filename;
-      }
-      else
-      {
-        elementPath = GR.Path.Normalize( GR.Path.Append( Element.DocumentInfo.Project.Settings.BasePath, Element.Filename ), false );
-      }
-
-      if ( Element.Document != null )
-      {
-        if ( Element.Document is SourceASMEx )
-        {
-          DateTime    lastModificationTimeStamp = ( (SourceASMEx)Element.Document ).LastChange;
-
-          if ( ( GR.Path.IsPathEqual( StudioCore.Searching.PreviousSearchedFile, elementPath ) )
-          &&   ( lastModificationTimeStamp <= StudioCore.Searching.PreviousSearchedFileTimeStamp ) ) 
-          {
-            return StudioCore.Searching.PreviousSearchedFileContent;
-          }
-          StudioCore.Searching.PreviousSearchedFile = elementPath;
-          StudioCore.Searching.PreviousSearchedFileTimeStamp = lastModificationTimeStamp;
-          StudioCore.Searching.PreviousSearchedFileContent = ( (SourceASMEx)Element.Document ).editSource.Text;
-          return StudioCore.Searching.PreviousSearchedFileContent;
-        }
-        else if ( Element.Document is SourceBasicEx )
-        {
-          StudioCore.Searching.PreviousSearchedFile = elementPath;
-          return ( (SourceBasicEx)Element.Document ).editSource.Text;
-        }
-        return "";
-      }
-
-      // can we use cached text?
-      bool    cacheIsUpToDate = false;
-
-      DateTime    lastAccessTimeStamp;
-
-      try
-      {
-        lastAccessTimeStamp = System.IO.File.GetLastWriteTime( elementPath );
-
-        cacheIsUpToDate = ( lastAccessTimeStamp <= StudioCore.Searching.PreviousSearchedFileTimeStamp );
-
-        StudioCore.Searching.PreviousSearchedFileTimeStamp = lastAccessTimeStamp;
-      }
-      catch ( Exception )
-      {
-      }
-
-      if ( ( GR.Path.IsPathEqual( StudioCore.Searching.PreviousSearchedFile, elementPath ) )
-      &&   ( cacheIsUpToDate )
-      &&   ( StudioCore.Searching.PreviousSearchedFileContent != null ) )
-      {
-        return StudioCore.Searching.PreviousSearchedFileContent;
-      }
-
-      StudioCore.Searching.PreviousSearchedFileContent = GR.IO.File.ReadAllText( elementPath );
-      StudioCore.Searching.PreviousSearchedFile = elementPath;
-      return StudioCore.Searching.PreviousSearchedFileContent;
     }
 
 
@@ -7847,79 +6941,7 @@ namespace C64Studio
 
 
 
-    internal string GetDocumentInfoText( DocumentInfo DocInfo )
-    {
-      string elementPath = "";
-      if ( System.IO.Path.IsPathRooted( DocInfo.FullPath ) )
-      {
-        elementPath = DocInfo.FullPath;
-      }
-      else if ( DocInfo.Project != null )
-      {
-        elementPath = GR.Path.Normalize( GR.Path.Append( DocInfo.Project.Settings.BasePath, DocInfo.FullPath ), false );
-      }
-      else
-      {
-        elementPath = DocInfo.FullPath;
-      }
 
-      if ( DocInfo.BaseDoc != null )
-      {
-        if ( DocInfo.BaseDoc is SourceASMEx )
-        {
-          DateTime    lastModificationTimeStamp = ( (SourceASMEx)DocInfo.BaseDoc ).LastChange;
-
-          if ( ( GR.Path.IsPathEqual( StudioCore.Searching.PreviousSearchedFile, elementPath ) )
-          &&   ( lastModificationTimeStamp <= StudioCore.Searching.PreviousSearchedFileTimeStamp ) )
-          {
-            return StudioCore.Searching.PreviousSearchedFileContent;
-          }
-          StudioCore.Searching.PreviousSearchedFile = elementPath;
-          StudioCore.Searching.PreviousSearchedFileTimeStamp = lastModificationTimeStamp;
-          StudioCore.Searching.PreviousSearchedFileContent = ( (SourceASMEx)DocInfo.BaseDoc ).editSource.Text;
-          return StudioCore.Searching.PreviousSearchedFileContent;
-        }
-        else if ( DocInfo.BaseDoc is SourceBasicEx )
-        {
-          StudioCore.Searching.PreviousSearchedFile = elementPath;
-          return ( (SourceBasicEx)DocInfo.BaseDoc ).editSource.Text;
-        }
-        else if ( DocInfo.BaseDoc is Disassembler )
-        {
-          StudioCore.Searching.PreviousSearchedFile = elementPath;
-          return ( (Disassembler)DocInfo.BaseDoc ).editDisassembly.Text;
-        }
-        return "";
-      }
-
-      // can we use cached text?
-      bool    cacheIsUpToDate = false;
-
-      DateTime    lastAccessTimeStamp;
-
-      try
-      {
-        lastAccessTimeStamp = System.IO.File.GetLastWriteTime( elementPath );
-
-        cacheIsUpToDate = ( lastAccessTimeStamp <= StudioCore.Searching.PreviousSearchedFileTimeStamp );
-
-        StudioCore.Searching.PreviousSearchedFileTimeStamp = lastAccessTimeStamp;
-      }
-      catch ( Exception )
-      {
-      }
-
-      if ( ( GR.Path.IsPathEqual( StudioCore.Searching.PreviousSearchedFile, elementPath ) )
-      &&   ( cacheIsUpToDate )
-      &&   ( StudioCore.Searching.PreviousSearchedFileContent != null ) )
-      {
-        return StudioCore.Searching.PreviousSearchedFileContent;
-      }
-
-      StudioCore.Searching.PreviousSearchedFileContent = GR.IO.File.ReadAllText( elementPath );
-      StudioCore.Searching.PreviousSearchedFile = elementPath;
-      return StudioCore.Searching.PreviousSearchedFileContent;
-    }
 
   }
 }

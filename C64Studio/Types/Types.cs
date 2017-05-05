@@ -991,7 +991,7 @@ namespace C64Studio.Types
 
       AddC64Key( KeyboardKey.KEY_RUN_STOP, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 131 + 64, true, 131, true, (char)0xeec3, true, "LOAD+RUN", "L+R" );   // TODO load+run
 
-      AddC64Key( KeyboardKey.KEY_D, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 196, true, 0, false, (char)0xeec4, true, "REVERSE SHIFT D" ).Replacements.Add( "SHIFT-D" );
+      AddC64Key( KeyboardKey.KEY_D, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 196, true, 0, false, (char)0xeec4, true, "REVERSE SHIFT D" );
 
       AddC64Key( KeyboardKey.KEY_F1, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 133 + 64, true, 133, true, (char)0xeec5, true, "F1" ).Replacements.Add( "F1" );   // TODO F1
       AddC64Key( KeyboardKey.KEY_F3, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 134 + 64, true, 134, true, (char)0xeec6, true, "F3" ).Replacements.Add( "F3" );   // TODO F3

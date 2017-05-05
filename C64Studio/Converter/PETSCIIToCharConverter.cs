@@ -9,6 +9,10 @@ namespace C64Studio.Converter
   {
     public char ToChar( byte b )
     {
+      if ( !Types.ConstantData.ScreenCodeToChar.ContainsKey( b ) )
+      {
+        return '.';
+      }
       return Types.ConstantData.ScreenCodeToChar[b].CharValue;
     }
 

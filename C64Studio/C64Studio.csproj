@@ -75,6 +75,7 @@
     <Compile Include="CustomRenderer\PaletteManager.cs" />
     <Compile Include="Compiling.cs" />
     <Compile Include="Navigating.cs" />
+    <Compile Include="Executing.cs" />
     <Compile Include="Searching.cs" />
     <Compile Include="Debugging.cs" />
     <Compile Include="Dialogs\DlgDisassembler.cs">
@@ -327,7 +328,15 @@
     </Compile>
     <Compile Include="StudioCore.cs" />
     <Compile Include="Systems\CPUSystem.cs" />
+    <Compile Include="Tasks\TaskManager.cs" />
+    <Compile Include="Tasks\TaskDebugRunTo.cs" />
     <Compile Include="Tasks\TaskOpenSolution.cs" />
+    <Compile Include="Tasks\TaskCompile.cs" />
+    <Compile Include="Tasks\TaskUpdateWatches.cs" />
+    <Compile Include="Tasks\TaskRefreshOutline.cs" />
+    <Compile Include="Tasks\TaskPreparseFilesInProject.cs" />
+    <Compile Include="Tasks\TaskUpdateCompileResult.cs" />
+    <Compile Include="Tasks\TaskUpdateKeywords.cs" />
     <Compile Include="Types\ApplicationEvent.cs" />
     <Compile Include="Types\ASMFileInfo.cs" />
     <Compile Include="Types\Breakpoint.cs" />
@@ -472,6 +481,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Documents\SourceBasicEx.resx">
       <DependentUpon>SourceBasicEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Documents\SourceASMEx.resx">
       <DependentUpon>SourceASMEx.cs</DependentUpon>
@@ -681,6 +691,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="c64.ico" />
+    <None Include="Resources\icon_memory_ram.ico" />
+    <None Include="Resources\icon_memory_cpu.ico" />
+    <None Include="Resources\toolbar_basic_symbols_enabled.png" />
+    <None Include="Resources\toolbar_basic_symbols_disabled.png" />
     <None Include="Resources\flag_green_on.ico" />
     <None Include="Resources\flag_green_off.ico" />
     <None Include="Resources\flag_blue_on.ico" />
@@ -731,6 +745,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)C64StudioRelease\$(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

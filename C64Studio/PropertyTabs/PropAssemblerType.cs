@@ -68,7 +68,7 @@ namespace C64Studio
     private void btnParseAssembler_Click( object sender, EventArgs e )
     {
       // fetch text from file
-      string  textFromDocument = Core.MainForm.GetElementText( Element );
+      string  textFromDocument = Core.Searching.GetDocumentInfoText( Element.DocumentInfo );
 
       Types.AssemblerType type = Parser.ASMFileParser.DetectAssemblerType( textFromDocument );
 

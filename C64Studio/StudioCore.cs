@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace C64Studio
@@ -9,10 +10,12 @@ namespace C64Studio
     public MainForm           MainForm = null;
     public Types.StudioState  State = Types.StudioState.NORMAL;
     public StudioSettings     Settings = new StudioSettings();
-    public Debugging          Debugging = new Debugging();
+    public Debugging          Debugging;
     public Compiling          Compiling;
     public Searching          Searching;
     public Navigating         Navigating;
+    public Executing          Executing;
+    public Tasks.TaskManager  TaskManager;
 
 
 
@@ -25,6 +28,112 @@ namespace C64Studio
       Compiling = new Compiling( this );
       Searching = new Searching( this );
       Navigating = new Navigating( this );
+      TaskManager = new Tasks.TaskManager( this );
+      Debugging = new Debugging( this );
+      Executing = new Executing( this );
+    }
+
+
+
+    public ToolInfo DetermineTool( DocumentInfo Document, bool Run )
+    {
+      foreach ( ToolInfo tool in Settings.ToolInfos )
+      {
+        if ( ( Run )
+        && ( tool.Type == ToolInfo.ToolType.EMULATOR )
+        && ( tool.Name.ToUpper() == Settings.EmulatorToRun ) )
+        {
+          //AddToOutput( "Determined tool to run = " + tool.Name );
+          return tool;
+        }
+      }
+
+      // fallback
+      foreach ( ToolInfo tool in Settings.ToolInfos )
+      {
+        if ( ( Run )
+        && ( tool.Type == ToolInfo.ToolType.EMULATOR ) )
+        {
+          //AddToOutput( "fallback emulator = " + tool.Name );
+          return tool;
+        }
+        if ( ( !Run )
+        && ( tool.Type == ToolInfo.ToolType.ASSEMBLER ) )
+        {
+          return tool;
+        }
+      }
+      return null;
+    }
+
+
+
+    public Parser.ParserBase DetermineParser( DocumentInfo Doc )
+    {
+      if ( Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
+      {
+        return Compiling.ParserASM;
+      }
+      if ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
+      {
+        return Compiling.ParserBasic;
+      }
+      return null;
+    }
+
+
+
+    public Types.CompileTargetType DetermineTargetType( DocumentInfo Doc, Parser.ParserBase Parser )
+    {
+      // compile target
+      Types.CompileTargetType   compileTarget = C64Studio.Types.CompileTargetType.NONE;
+      if ( Doc.Element != null )
+      {
+        compileTarget = Doc.Element.TargetType;
+      }
+      if ( compileTarget == C64Studio.Types.CompileTargetType.NONE )
+      {
+        compileTarget = Parser.CompileTarget;
+      }
+      return compileTarget;
+    }
+
+
+
+    public string DetermineTargetFilename( DocumentInfo Doc, Parser.ParserBase Parser )
+    {
+      if ( ( String.IsNullOrEmpty( Parser.CompileTargetFile ) )
+      && ( ( Doc.Element == null )
+      || ( String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) ) )
+      {
+        // default to same name.prg and cbm
+        if ( Doc.Project == null )
+        {
+          return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Doc.FullPath ), System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) ) + ".prg";
+        }
+        return System.IO.Path.Combine( Doc.Project.Settings.BasePath, System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) + ".prg" );
+      }
+      if ( ( Doc.Element != null )
+      && ( !String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) )
+      {
+        return GR.Path.Append( Doc.Project.Settings.BasePath, Doc.Element.TargetFilename );
+      }
+      return Parser.CompileTargetFile;
+    }
+
+
+
+    public void ShowDocument( BaseDocument Doc )
+    {
+      if ( Doc.InvokeRequired )
+      {
+        Doc.Invoke( new MainForm.DocCallback( ShowDocument ), new object[] { Doc } );
+        return;
+      }
+      if ( !Doc.Visible )
+      {
+        Doc.Show();
+      }
     }
 
 
@@ -78,6 +187,16 @@ namespace C64Studio
     }
 
 
+
+    internal void ClearOutput()
+    {
+      if ( MainForm.InvokeRequired )
+      {
+        MainForm.Invoke( new MainForm.ParameterLessCallback( ClearOutput ) );
+        return;
+      }
+      MainForm.m_Output.SetText( "" );
+    }
 
 
 

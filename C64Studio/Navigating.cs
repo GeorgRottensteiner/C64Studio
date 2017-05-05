@@ -159,8 +159,45 @@ namespace C64Studio
         }
         --offset;
       }
-
     }
+
+
+
+    public void GotoDeclaration( DocumentInfo ASMDoc, string Word, string Zone )
+    {
+      Types.ASM.FileInfo fileToDebug = DetermineASMFileInfo( ASMDoc );
+
+      Types.SymbolInfo tokenInfo = fileToDebug.TokenInfoFromName( Word, Zone );
+      if ( tokenInfo == null )
+      {
+        fileToDebug = ASMDoc.ASMFileInfo;
+        tokenInfo = ASMDoc.ASMFileInfo.TokenInfoFromName( Word, Zone );
+      }
+      if ( tokenInfo != null )
+      {
+        string documentFile = "";
+        int documentLine = -1;
+        if ( ( tokenInfo.LineIndex == 0 )
+        && ( !string.IsNullOrEmpty( tokenInfo.DocumentFilename ) ) )
+        {
+          // try stored info first
+          OpenDocumentAndGotoLine( ASMDoc.Project, tokenInfo.DocumentFilename, tokenInfo.LocalLineIndex );
+          return;
+        }
+
+        if ( fileToDebug.FindTrueLineSource( tokenInfo.LineIndex, out documentFile, out documentLine ) )
+        {
+          OpenDocumentAndGotoLine( ASMDoc.Project, documentFile, documentLine );
+        }
+      }
+      else
+      {
+        System.Windows.Forms.MessageBox.Show( "Could not determine item source" );
+      }
+    }
+
+
+
 
   }
 }

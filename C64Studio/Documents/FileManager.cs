@@ -31,7 +31,6 @@ namespace C64Studio
       this.Core     = Core;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       DocumentInfo.Type = ProjectElement.ElementType.MEDIA_MANAGER;
-      DocumentInfo.Type = ProjectElement.ElementType.MEDIA_MANAGER;
 
       InitializeComponent();
       oldFont = listFiles.Font;
@@ -347,7 +346,7 @@ namespace C64Studio
         {
           System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
-          string readableFilename = Util.FilenameToReadableUnicode( fileToExport.Filename );
+          string readableFilename = Util.FilenameToReadableUnicode( fileToExport.Filename ).TrimEnd();
 
           char[] invalidChars = System.IO.Path.GetInvalidFileNameChars();
           foreach ( char invChar in invalidChars )
@@ -640,22 +639,37 @@ namespace C64Studio
 
 
 
+    void OpenInHexEditor( C64Studio.Types.FileInfo FileToImport )
+    {
+      C64Studio.Types.FileInfo fileInfo = null;
+
+      if ( m_Media != null )
+      {
+        fileInfo = m_Media.LoadFile( FileToImport.Filename );
+      }
+      if ( fileInfo != null )
+      {
+        BinaryDisplay display = new BinaryDisplay( Core, fileInfo.Data, false, true );
+        display.Show( Core.MainForm.panelMain, DockState.Float );
+      }
+    }
+
+
+
     void itemViewInHexEditor_Click( object sender, EventArgs e )
+    {
+      OpenSelectedItemsInHexEditor();
+    }
+
+
+
+    void OpenSelectedItemsInHexEditor()
     {
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
         C64Studio.Types.FileInfo fileToExport = (C64Studio.Types.FileInfo)item.Tag;
-        C64Studio.Types.FileInfo fileInfo = null;
 
-        if ( m_Media != null )
-        {
-          fileInfo = m_Media.LoadFile( fileToExport.Filename );
-        }
-        if ( fileInfo != null )
-        {
-          BinaryDisplay display = new BinaryDisplay( Core, fileInfo.Data, false, true );
-          display.Show( Core.MainForm.panelMain, DockState.Float );
-        }
+        OpenInHexEditor( fileToExport );
       }
     }
 
@@ -663,41 +677,56 @@ namespace C64Studio
 
     void itemExportToBasic_Click( object sender, EventArgs e )
     {
+      ExportSelectedItemsToBASIC();
+    }
+
+
+
+    void ExportSelectedItemsToBASIC()
+    {
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
         C64Studio.Types.FileInfo  fileToExport = (C64Studio.Types.FileInfo)item.Tag;
-        C64Studio.Types.FileInfo  fileInfo = null;
 
-        if ( m_Media != null )
+        ExportToBASIC( fileToExport );
+      }
+    }
+
+
+
+    private void ExportToBASIC( Types.FileInfo fileToExport )
+    {
+      C64Studio.Types.FileInfo  fileInfo = null;
+
+      if ( m_Media != null )
+      {
+        fileInfo = m_Media.LoadFile( fileToExport.Filename );
+      }
+      if ( fileInfo != null )
+      {
+        if ( fileInfo.Data.Length >= 2 )
         {
-          fileInfo = m_Media.LoadFile( fileToExport.Filename );
-        }
-        if ( fileInfo != null )
-        {
-          if ( fileInfo.Data.Length >= 2 )
+          //if ( startAddress == 0x0801 )
           {
-            //if ( startAddress == 0x0801 )
+            // can only load from that address
+
+            List<string>    lines;
+
+            // trunc load address
+            if ( C64Studio.Parser.BasicFileParser.Disassemble( fileInfo.Data.SubBuffer( 2 ), out lines ) )
             {
-              // can only load from that address
+              BaseDocument document = new SourceBasicEx( Core );
+              document.ShowHint = DockState.Document;
 
-              List<string>    lines;
+              document.Core = Core;
+              document.Show( Core.MainForm.panelMain );
 
-              // trunc load address
-              if ( C64Studio.Parser.BasicFileParser.Disassemble( fileInfo.Data.SubBuffer( 2 ), out lines ) )
+              StringBuilder sb = new StringBuilder();
+              foreach ( string line in lines )
               {
-                BaseDocument document = new SourceBasicEx( Core );
-                document.ShowHint = DockState.Document;
-
-                document.Core = Core;
-                document.Show( Core.MainForm.panelMain );
-
-                StringBuilder sb = new StringBuilder();
-                foreach ( string line in lines )
-                {
-                  sb.AppendLine( line );
-                }
-                document.FillContent( sb.ToString() );
+                sb.AppendLine( line );
               }
+              document.FillContent( sb.ToString() );
             }
           }
         }
@@ -861,11 +890,36 @@ namespace C64Studio
 
     private void listFiles_SelectedIndexChanged( object sender, EventArgs e )
     {
+      if ( listFiles.SelectedIndices.Count == 0 )
+      {
+        toolStripBtnOpenHex.Enabled = false;
+        toolStripBtnOpenBASIC.Enabled = false;
+        toolStripBtnExportToFile.Enabled = false;
+      }
+      else
+      {
+        toolStripBtnOpenHex.Enabled = true;
+        toolStripBtnExportToFile.Enabled = true;
+
+        bool  exportToBasicPossible = true;
+        foreach ( ListViewItem listItem in listFiles.SelectedItems )
+        {
+          C64Studio.Types.FileInfo fileInfo = (C64Studio.Types.FileInfo)listItem.Tag;
+          if ( fileInfo.Type != C64Studio.Types.FileType.PRG )
+          {
+            exportToBasicPossible = false;
+            break;
+          }
+        }
+        toolStripBtnOpenBASIC.Enabled = exportToBasicPossible;
+      }
+
       if ( ( listFiles.Items.Count <= 1 )
       ||   ( listFiles.SelectedIndices.Count == 0 ) )
       {
         toolStripBtnMoveFileDown.Enabled = false;
         toolStripBtnMoveFileUp.Enabled = false;
+
         return;
       }
       toolStripBtnMoveFileUp.Enabled = ( listFiles.SelectedIndices[0] > 0 );
@@ -944,6 +998,56 @@ namespace C64Studio
       SetUnmodified();
       RefreshFileView();
       UpdateStatusInfo();
+    }
+
+
+
+    private void toolStripBtnOpenHex_Click( object sender, EventArgs e )
+    {
+      OpenSelectedItemsInHexEditor();
+    }
+
+
+
+    private void toolStripBtnOpenBASIC_Click( object sender, EventArgs e )
+    {
+      ExportSelectedItemsToBASIC();
+    }
+
+
+
+    private void toolStripBtnExportToFile_Click( object sender, EventArgs e )
+    {
+      ExportSelectedItems();
+    }
+
+
+
+    private void toolStripBtnImportFile_Click( object sender, EventArgs e )
+    {
+      OpenFileDialog      openDlg = new OpenFileDialog();
+
+      openDlg.Title = "Choose a file to import";
+      openDlg.Filter = Core.MainForm.FilterString( C64Studio.Types.Constants.FILEFILTER_ALL );
+      openDlg.Multiselect = true;
+      if ( openDlg.ShowDialog() == DialogResult.OK )
+      {
+        bool  changedFile = false;
+
+        foreach ( var file in openDlg.FileNames )
+        {
+          if ( ImportFile( file ) )
+          {
+            changedFile = true;
+          }
+        }
+        if ( changedFile )
+        {
+          RefreshFileView();
+          SetModified();
+          UpdateStatusInfo();
+        }
+      }
     }
 
 

@@ -93,7 +93,7 @@ namespace C64Studio
         byte petscii = Filename.ByteAt( i );
         char character = Types.ConstantData.PETSCIIToUnicode[petscii];
         if ( ( character >= 32 )
-        && ( character < 128 ) )
+        &&   ( character < 128 ) )
         {
           filename += character;
         }

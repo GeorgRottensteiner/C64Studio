@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text;
 using System.Windows.Forms;
 
 namespace C64Studio
@@ -465,115 +466,12 @@ namespace C64Studio
       {
         string basicText = System.IO.File.ReadAllText( DocumentInfo.FullPath );
 
-        uint curNeutralLangID = (uint)( System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID & 0xff );
-
-        for ( int i = 0; i < basicText.Length; ++i )
+        if ( m_SymbolMode )
         {
-          char    chartoCheck = basicText[i];
-
-          if ( chartoCheck > (char)255 )
-          {
-            var c64Key = Types.ConstantData.FindC64KeyByUnicode( chartoCheck );
-            if ( c64Key != null )
-            {
-              if ( c64Key.Replacements.Count > 0 )
-              {
-                string    replacement = c64Key.Replacements[0];
-
-                basicText = basicText.Substring( 0, i ) + "{" + replacement + "}" + basicText.Substring( i + 1 );
-                i += replacement.Length - 1;
-              }
-            }
-
-            /*
-            // a character
-            foreach ( var token in Core.Settings.BASICKeyMap.AllKeyInfos.Values )
-            {
-              if ( token.Shifted == chartoCheck )
-              {
-                string    replacementMacro = "{Shift-" + token.Normal + "}";
-                bool      foundEntry = false;
-
-
-                foreach ( var entry in Types.ConstantData.PETSCIIToUnicode )
-                {
-                  if ( entry.Value == token.Shifted )
-                  {
-                    foundEntry = true;
-                    if ( Parser.BasicFileParser.ActionTokenByByteValue.ContainsKey( entry.Key ) )
-                    {
-                      string    replacement = Parser.BasicFileParser.ActionTokenByByteValue[entry.Key].Replacement;
-                      replacementMacro = "{" + replacement.Substring( 1, replacement.Length - 2 ) + "}";
-                    }
-                    break;
-                  }
-                }
-                if ( !foundEntry )
-                {
-                  foreach ( var entry in Types.ConstantData.PETSCIIToUnicode )
-                  {
-                    if ( entry.Value == token.Normal )
-                    {
-                      foundEntry = true;
-                      if ( Parser.BasicFileParser.ActionTokenByByteValue.ContainsKey( entry.Key ) )
-                      {
-                        string    replacement = Parser.BasicFileParser.ActionTokenByByteValue[entry.Key].Replacement;
-                        replacementMacro = "{Shift-" + replacement.Substring( 1, replacement.Length - 2 ) + "}";
-                      }
-                      break;
-                    }
-                  }
-                }
-                basicText = basicText.Substring( 0, i ) + replacementMacro + basicText.Substring( i + 1 );
-                i += replacementMacro.Length - 1;
-                break;
-              }
-              else if ( token.Controlled == chartoCheck )
-              {
-                string    replacementMacro = "{Ctrl-" + token.Normal + "}";
-
-                if ( token.Controlled <= (char)255 )
-                {
-                  replacementMacro = "" + token.Controlled;
-                }
-                basicText = basicText.Substring( 0, i ) + replacementMacro + basicText.Substring( i + 1 );
-                i += replacementMacro.Length - 1;
-                break;
-              }
-              else if ( token.Commodore == chartoCheck )
-              {
-                string    replacementMacro = "{CBM-" + token.Normal + "}";
-
-                if ( token.Commodore <= (char)255 )
-                {
-                  replacementMacro = "" + token.Commodore;
-                }
-                basicText = basicText.Substring( 0, i ) + replacementMacro + basicText.Substring( i + 1 );
-                i += replacementMacro.Length - 1;
-                break;
-              }
-              else if ( token.Normal == chartoCheck )
-              {
-                string    replacementMacro = "" + token.Normal;
-
-                foreach ( var entry in Types.ConstantData.PETSCIIToUnicode )
-                {
-                  if ( entry.Value == chartoCheck )
-                  {
-                    if ( Parser.BasicFileParser.ActionTokenByByteValue.ContainsKey( entry.Key ) )
-                    {
-                      replacementMacro = Parser.BasicFileParser.ActionTokenByByteValue[entry.Key].Replacement;
-                    }
-                    break;
-                  }
-                }
-                basicText = basicText.Substring( 0, i ) + replacementMacro + basicText.Substring( i + 1 );
-                i += replacementMacro.Length - 1;
-                break;
-              }
-            }
-             */
-          }
+        }
+        else
+        {
+          basicText = ReplaceAllSymbolsByMacros( basicText );
         }
 
         editSource.Text = basicText;
@@ -596,6 +494,89 @@ namespace C64Studio
         EnableFileWatcher();
       }
       return true;
+    }
+
+
+
+    private string ReplaceAllSymbolsByMacros( string BasicText )
+    {
+      for ( int i = 0; i < BasicText.Length; ++i )
+      {
+        char    chartoCheck = BasicText[i];
+
+        if ( chartoCheck > (char)255 )
+        {
+          var c64Key = Types.ConstantData.FindC64KeyByUnicode( chartoCheck );
+          if ( c64Key != null )
+          {
+            if ( c64Key.Replacements.Count > 0 )
+            {
+              string    replacement = c64Key.Replacements[0];
+
+              BasicText = BasicText.Substring( 0, i ) + "{" + replacement + "}" + BasicText.Substring( i + 1 );
+              i += replacement.Length - 1;
+            }
+          }
+        }
+      }
+      return BasicText;
+    }
+
+
+
+    private string ReplaceAllMacrosBySymbols( string BasicText, out bool HadError )
+    {
+      StringBuilder     sb = new StringBuilder();
+
+      int               posInLine = 0;
+      int               macroStartPos = 0;
+      bool              insideMacro = false;
+
+      HadError = false;
+
+      while ( posInLine < BasicText.Length )
+      {
+        char    curChar = BasicText[posInLine];
+        if ( insideMacro )
+        {
+          if ( curChar == '}' )
+          {
+            insideMacro = false;
+
+            string macro = BasicText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
+
+            bool  foundMacro = false;
+            foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
+            {
+              if ( key.Replacements.Contains( macro ) )
+              {
+                sb.Append( key.CharValue );
+                foundMacro = true;
+                break;
+              }
+            }
+            if ( !foundMacro )
+            {
+              Debug.Log( "Unknown macro " + macro );
+              HadError = true;
+              return null;
+            }
+          }
+          ++posInLine;
+          continue;
+        }
+        if ( curChar == '{' )
+        {
+          insideMacro = true;
+          macroStartPos = posInLine;
+          ++posInLine;
+          continue;
+        }
+        // normal chars are passed on (also tabs, cr, lf)
+        sb.Append( curChar );
+        ++posInLine;
+      }
+      return sb.ToString();
     }
 
 
@@ -1046,7 +1027,6 @@ namespace C64Studio
         // we misuse tab as command key, avoid common processing
         return true;
       }
-      uint curNeutralLangID = (uint)( System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID & 0xff );
       System.Windows.Forms.Keys bareKey = keyData & ~( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.ShiftKey | System.Windows.Forms.Keys.Alt );
 
       bareKey = keyData;
@@ -1334,6 +1314,9 @@ namespace C64Studio
       if ( !parser.Parse( editSource.Text, null, compilerConfig ) )
       {
         Core.MainForm.m_CompileResult.UpdateFromMessages( parser, DocumentInfo.Project );
+        Core.Navigating.UpdateFromMessages( parser.Messages,
+                                            null,
+                                            DocumentInfo.Project );
         Core.MainForm.m_CompileResult.Show();
         btnToggleLabelMode.Checked = false;
         return false;
@@ -1351,6 +1334,9 @@ namespace C64Studio
       if ( parser.Errors > 0 )
       {
         Core.MainForm.m_CompileResult.UpdateFromMessages( parser, DocumentInfo.Project );
+        Core.Navigating.UpdateFromMessages( parser.Messages,
+                                            null,
+                                            DocumentInfo.Project );
         Core.MainForm.m_CompileResult.Show();
         return false;
       }
@@ -1406,7 +1392,32 @@ namespace C64Studio
 
     private void btnToggleSymbolMode_CheckedChanged( object sender, EventArgs e )
     {
-      m_SymbolMode = !m_SymbolMode;
+      m_SymbolMode = btnToggleSymbolMode.Checked;
+
+      btnToggleSymbolMode.Image = m_SymbolMode ? global::C64Studio.Properties.Resources.toolbar_basic_symbols_enabled : global::C64Studio.Properties.Resources.toolbar_basic_symbols_disabled;
+
+      bool    hadError = false;
+      string  newText;
+
+      if ( m_SymbolMode )
+      {
+        newText = ReplaceAllMacrosBySymbols( editSource.Text, out hadError );
+      }
+      else
+      {
+        newText = ReplaceAllSymbolsByMacros( editSource.Text );
+      }
+      if ( hadError )
+      {
+        m_SymbolMode = !m_SymbolMode;
+        btnToggleSymbolMode.Image = m_SymbolMode ? global::C64Studio.Properties.Resources.toolbar_basic_symbols_enabled : global::C64Studio.Properties.Resources.toolbar_basic_symbols_disabled;
+        return;
+      }
+      int     offset = editSource.VerticalScroll.Value;
+
+      editSource.Text = newText;
+      editSource.VerticalScroll.Value = offset;
+      editSource.UpdateScrollbars();
     }
 
 

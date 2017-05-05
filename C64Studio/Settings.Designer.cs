@@ -124,6 +124,7 @@
       this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.label21 = new System.Windows.Forms.Label();
       this.tabBASIC = new System.Windows.Forms.TabPage();
+      this.checkBASICShowControlCodes = new System.Windows.Forms.CheckBox();
       this.checkBASICStripSpaces = new System.Windows.Forms.CheckBox();
       this.label22 = new System.Windows.Forms.Label();
       this.btnExportAllSettings = new System.Windows.Forms.Button();
@@ -131,7 +132,7 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.checkBASICShowControlCodes = new System.Windows.Forms.CheckBox();
+      this.checkASMAutoTruncateLiteralValues = new System.Windows.Forms.CheckBox();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -172,6 +173,7 @@
       this.tabGeneral.Controls.Add(this.editTabSize);
       this.tabGeneral.Controls.Add(this.label14);
       this.tabGeneral.Controls.Add(this.checkAutoOpenLastSolution);
+      this.tabGeneral.Controls.Add(this.checkASMAutoTruncateLiteralValues);
       this.tabGeneral.Controls.Add(this.checkASMShowMiniMap);
       this.tabGeneral.Controls.Add(this.checkASMShowSizes);
       this.tabGeneral.Controls.Add(this.checkASMShowCycles);
@@ -272,7 +274,7 @@
       // checkAutoOpenLastSolution
       // 
       this.checkAutoOpenLastSolution.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkAutoOpenLastSolution.Location = new System.Drawing.Point(347, 152);
+      this.checkAutoOpenLastSolution.Location = new System.Drawing.Point(347, 180);
       this.checkAutoOpenLastSolution.Name = "checkAutoOpenLastSolution";
       this.checkAutoOpenLastSolution.Size = new System.Drawing.Size(214, 24);
       this.checkAutoOpenLastSolution.TabIndex = 10;
@@ -388,7 +390,7 @@
       // label28
       // 
       this.label28.AutoSize = true;
-      this.label28.Location = new System.Drawing.Point(333, 136);
+      this.label28.Location = new System.Drawing.Point(333, 164);
       this.label28.Name = "label28";
       this.label28.Size = new System.Drawing.Size(69, 13);
       this.label28.TabIndex = 2;
@@ -1149,6 +1151,17 @@
       this.tabBASIC.Text = "BASIC";
       this.tabBASIC.UseVisualStyleBackColor = true;
       // 
+      // checkBASICShowControlCodes
+      // 
+      this.checkBASICShowControlCodes.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkBASICShowControlCodes.Location = new System.Drawing.Point(23, 55);
+      this.checkBASICShowControlCodes.Name = "checkBASICShowControlCodes";
+      this.checkBASICShowControlCodes.Size = new System.Drawing.Size(266, 24);
+      this.checkBASICShowControlCodes.TabIndex = 3;
+      this.checkBASICShowControlCodes.Text = "Show control codes as characters";
+      this.checkBASICShowControlCodes.UseVisualStyleBackColor = true;
+      this.checkBASICShowControlCodes.CheckedChanged += new System.EventHandler(this.checkBASICShowControlCodesAsChars_CheckedChanged);
+      // 
       // checkBASICStripSpaces
       // 
       this.checkBASICStripSpaces.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1220,16 +1233,16 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
-      // checkBASICShowControlCodes
+      // checkASMAutoTruncateLiteralValues
       // 
-      this.checkBASICShowControlCodes.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkBASICShowControlCodes.Location = new System.Drawing.Point(23, 55);
-      this.checkBASICShowControlCodes.Name = "checkBASICShowControlCodes";
-      this.checkBASICShowControlCodes.Size = new System.Drawing.Size(266, 24);
-      this.checkBASICShowControlCodes.TabIndex = 3;
-      this.checkBASICShowControlCodes.Text = "Show control codes as characters";
-      this.checkBASICShowControlCodes.UseVisualStyleBackColor = true;
-      this.checkBASICShowControlCodes.CheckedChanged += new System.EventHandler(this.checkBASICShowControlCodesAsChars_CheckedChanged);
+      this.checkASMAutoTruncateLiteralValues.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkASMAutoTruncateLiteralValues.Location = new System.Drawing.Point(347, 117);
+      this.checkASMAutoTruncateLiteralValues.Name = "checkASMAutoTruncateLiteralValues";
+      this.checkASMAutoTruncateLiteralValues.Size = new System.Drawing.Size(214, 24);
+      this.checkASMAutoTruncateLiteralValues.TabIndex = 6;
+      this.checkASMAutoTruncateLiteralValues.Text = "Truncate literal values";
+      this.checkASMAutoTruncateLiteralValues.UseVisualStyleBackColor = true;
+      this.checkASMAutoTruncateLiteralValues.CheckedChanged += new System.EventHandler(this.checkASMAutoTruncateLiteralValues_CheckedChanged);
       // 
       // Settings
       // 
@@ -1379,5 +1392,6 @@
     private System.Windows.Forms.Button btnImportCurrentPageSettings;
     private System.Windows.Forms.Button btnExportCurrentPageSettings;
     private System.Windows.Forms.CheckBox checkBASICShowControlCodes;
+    private System.Windows.Forms.CheckBox checkASMAutoTruncateLiteralValues;
   }
 }

@@ -14,5 +14,6 @@ namespace C64Studio.Parser
     public int                                  StartAddress = -1;
     public C64Studio.Types.CompileTargetType    TargetType = C64Studio.Types.CompileTargetType.NONE;
     public Types.AssemblerType                  Assembler = Types.AssemblerType.AUTO;
+    public bool                                 AutoTruncateLiteralValues = false;
   }
 }

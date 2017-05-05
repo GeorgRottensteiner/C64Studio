@@ -38,6 +38,7 @@
       this.createEmptyTapeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.newDiskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.d64ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.d64With40TracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.d81ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.validateMediumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,7 +58,12 @@
       this.toolStripBtnMoveFileUp = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnMoveFileDown = new System.Windows.Forms.ToolStripButton();
       this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
-      this.d64With40TracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+      this.toolStripBtnExportToFile = new System.Windows.Forms.ToolStripButton();
+      this.toolStripBtnOpenHex = new System.Windows.Forms.ToolStripButton();
+      this.toolStripBtnOpenBASIC = new System.Windows.Forms.ToolStripButton();
+      this.toolStripBtnImportFile = new System.Windows.Forms.ToolStripButton();
+      this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuFileManager.SuspendLayout();
       this.statusMedia.SuspendLayout();
@@ -143,6 +149,13 @@
       this.d64ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
       this.d64ToolStripMenuItem.Text = "D64";
       this.d64ToolStripMenuItem.Click += new System.EventHandler(this.d64ToolStripMenuItem_Click);
+      // 
+      // d64With40TracksToolStripMenuItem
+      // 
+      this.d64With40TracksToolStripMenuItem.Name = "d64With40TracksToolStripMenuItem";
+      this.d64With40TracksToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+      this.d64With40TracksToolStripMenuItem.Text = "D64 with 40 tracks";
+      this.d64With40TracksToolStripMenuItem.Click += new System.EventHandler(this.d64With40TracksToolStripMenuItem_Click);
       // 
       // d81ToolStripMenuItem
       // 
@@ -262,8 +275,14 @@
       // toolStrip1
       // 
       this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripBtnImportFile,
+            this.toolStripSeparator6,
             this.toolStripBtnMoveFileUp,
             this.toolStripBtnMoveFileDown,
+            this.toolStripSeparator5,
+            this.toolStripBtnExportToFile,
+            this.toolStripBtnOpenHex,
+            this.toolStripBtnOpenBASIC,
             this.labelMediaTitle});
       this.toolStrip1.Location = new System.Drawing.Point(0, 24);
       this.toolStrip1.Name = "toolStrip1";
@@ -303,12 +322,61 @@
       this.labelMediaTitle.Text = "toolStripLabel1";
       this.labelMediaTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
-      // d64With40TracksToolStripMenuItem
+      // toolStripSeparator5
       // 
-      this.d64With40TracksToolStripMenuItem.Name = "d64With40TracksToolStripMenuItem";
-      this.d64With40TracksToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-      this.d64With40TracksToolStripMenuItem.Text = "D64 with 40 tracks";
-      this.d64With40TracksToolStripMenuItem.Click += new System.EventHandler(this.d64With40TracksToolStripMenuItem_Click);
+      this.toolStripSeparator5.Name = "toolStripSeparator5";
+      this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+      // 
+      // toolStripBtnExportToFile
+      // 
+      this.toolStripBtnExportToFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripBtnExportToFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnExportToFile.Image")));
+      this.toolStripBtnExportToFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripBtnExportToFile.Name = "toolStripBtnExportToFile";
+      this.toolStripBtnExportToFile.Size = new System.Drawing.Size(23, 22);
+      this.toolStripBtnExportToFile.Text = "toolStripButton1";
+      this.toolStripBtnExportToFile.ToolTipText = "Export to File";
+      this.toolStripBtnExportToFile.Click += new System.EventHandler(this.toolStripBtnExportToFile_Click);
+      // 
+      // toolStripBtnOpenHex
+      // 
+      this.toolStripBtnOpenHex.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripBtnOpenHex.Enabled = false;
+      this.toolStripBtnOpenHex.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnOpenHex.Image")));
+      this.toolStripBtnOpenHex.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripBtnOpenHex.Name = "toolStripBtnOpenHex";
+      this.toolStripBtnOpenHex.Size = new System.Drawing.Size(23, 22);
+      this.toolStripBtnOpenHex.Text = "toolStripButton1";
+      this.toolStripBtnOpenHex.ToolTipText = "Open in Hex Editor";
+      this.toolStripBtnOpenHex.Click += new System.EventHandler(this.toolStripBtnOpenHex_Click);
+      // 
+      // toolStripBtnOpenBASIC
+      // 
+      this.toolStripBtnOpenBASIC.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripBtnOpenBASIC.Enabled = false;
+      this.toolStripBtnOpenBASIC.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnOpenBASIC.Image")));
+      this.toolStripBtnOpenBASIC.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripBtnOpenBASIC.Name = "toolStripBtnOpenBASIC";
+      this.toolStripBtnOpenBASIC.Size = new System.Drawing.Size(23, 22);
+      this.toolStripBtnOpenBASIC.Text = "toolStripButton1";
+      this.toolStripBtnOpenBASIC.ToolTipText = "Open in BASIC editor";
+      this.toolStripBtnOpenBASIC.Click += new System.EventHandler(this.toolStripBtnOpenBASIC_Click);
+      // 
+      // toolStripBtnImportFile
+      // 
+      this.toolStripBtnImportFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripBtnImportFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnImportFile.Image")));
+      this.toolStripBtnImportFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripBtnImportFile.Name = "toolStripBtnImportFile";
+      this.toolStripBtnImportFile.Size = new System.Drawing.Size(23, 22);
+      this.toolStripBtnImportFile.Text = "toolStripButton1";
+      this.toolStripBtnImportFile.ToolTipText = "Import File";
+      this.toolStripBtnImportFile.Click += new System.EventHandler(this.toolStripBtnImportFile_Click);
+      // 
+      // toolStripSeparator6
+      // 
+      this.toolStripSeparator6.Name = "toolStripSeparator6";
+      this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
       // 
       // FileManager
       // 
@@ -364,6 +432,12 @@
     private System.Windows.Forms.ToolStripMenuItem d64ToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem d81ToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem d64With40TracksToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+    private System.Windows.Forms.ToolStripButton toolStripBtnOpenHex;
+    private System.Windows.Forms.ToolStripButton toolStripBtnOpenBASIC;
+    private System.Windows.Forms.ToolStripButton toolStripBtnExportToFile;
+    private System.Windows.Forms.ToolStripButton toolStripBtnImportFile;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
 
 
 

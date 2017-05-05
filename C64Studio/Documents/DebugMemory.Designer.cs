@@ -34,6 +34,8 @@
       this.btnBinaryStringView = new System.Windows.Forms.ToolStripButton();
       this.btnBinaryCharView = new System.Windows.Forms.ToolStripButton();
       this.btnBinarySpriteView = new System.Windows.Forms.ToolStripButton();
+      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+      this.toolStripBtnMemoryFromCPU = new System.Windows.Forms.ToolStripButton();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolDebugMemory.SuspendLayout();
       this.SuspendLayout();
@@ -66,7 +68,9 @@
       this.toolDebugMemory.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnBinaryStringView,
             this.btnBinaryCharView,
-            this.btnBinarySpriteView});
+            this.btnBinarySpriteView,
+            this.toolStripSeparator1,
+            this.toolStripBtnMemoryFromCPU});
       this.toolDebugMemory.Location = new System.Drawing.Point(0, 0);
       this.toolDebugMemory.Name = "toolDebugMemory";
       this.toolDebugMemory.Size = new System.Drawing.Size(431, 25);
@@ -111,6 +115,24 @@
       this.btnBinarySpriteView.ToolTipText = "View as Sprites";
       this.btnBinarySpriteView.Click += new System.EventHandler(this.btnBinarySpriteView_Click);
       // 
+      // toolStripSeparator1
+      // 
+      this.toolStripSeparator1.Name = "toolStripSeparator1";
+      this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+      // 
+      // toolStripBtnMemoryFromCPU
+      // 
+      this.toolStripBtnMemoryFromCPU.Checked = true;
+      this.toolStripBtnMemoryFromCPU.CheckOnClick = true;
+      this.toolStripBtnMemoryFromCPU.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.toolStripBtnMemoryFromCPU.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripBtnMemoryFromCPU.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnMemoryFromCPU.Image")));
+      this.toolStripBtnMemoryFromCPU.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripBtnMemoryFromCPU.Name = "toolStripBtnMemoryFromCPU";
+      this.toolStripBtnMemoryFromCPU.Size = new System.Drawing.Size(23, 22);
+      this.toolStripBtnMemoryFromCPU.ToolTipText = "Show Memory as CPU sees it";
+      this.toolStripBtnMemoryFromCPU.Click += new System.EventHandler(this.toolStripBtnMemoryFromCPU_Click);
+      // 
       // DebugMemory
       // 
       this.ClientSize = new System.Drawing.Size(431, 485);
@@ -134,6 +156,8 @@
     private System.Windows.Forms.ToolStripButton btnBinaryStringView;
     private System.Windows.Forms.ToolStripButton btnBinaryCharView;
     private System.Windows.Forms.ToolStripButton btnBinarySpriteView;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+    private System.Windows.Forms.ToolStripButton toolStripBtnMemoryFromCPU;
 
 
   }

@@ -150,6 +150,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)C64StudioRelease\$(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

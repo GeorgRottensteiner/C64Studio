@@ -124,6 +124,7 @@
       this.runTestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.disassembleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.markErrorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.throwExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.disassembleToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -200,7 +201,6 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.throwExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -891,6 +891,13 @@
       this.markErrorToolStripMenuItem.Text = "Mark Error";
       this.markErrorToolStripMenuItem.Click += new System.EventHandler(this.markErrorToolStripMenuItem_Click);
       // 
+      // throwExceptionToolStripMenuItem
+      // 
+      this.throwExceptionToolStripMenuItem.Name = "throwExceptionToolStripMenuItem";
+      this.throwExceptionToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+      this.throwExceptionToolStripMenuItem.Text = "Throw Exception";
+      this.throwExceptionToolStripMenuItem.Click += new System.EventHandler(this.throwExceptionToolStripMenuItem_Click);
+      // 
       // toolsToolStripMenuItem
       // 
       this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1557,13 +1564,6 @@
       this.mainDebugStepOut.Size = new System.Drawing.Size(23, 22);
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
-      // 
-      // throwExceptionToolStripMenuItem
-      // 
-      this.throwExceptionToolStripMenuItem.Name = "throwExceptionToolStripMenuItem";
-      this.throwExceptionToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-      this.throwExceptionToolStripMenuItem.Text = "Throw Exception";
-      this.throwExceptionToolStripMenuItem.Click += new System.EventHandler(this.throwExceptionToolStripMenuItem_Click);
       // 
       // MainForm
       // 

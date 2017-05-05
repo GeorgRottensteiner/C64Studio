@@ -90,6 +90,7 @@ namespace C64Studio
       checkASMShowCycles.Checked              = Core.Settings.ASMShowCycles;
       checkASMShowSizes.Checked               = Core.Settings.ASMShowBytes;
       checkASMShowMiniMap.Checked             = Core.Settings.ASMShowMiniView;
+      checkASMAutoTruncateLiteralValues.Checked = Core.Settings.ASMAutoTruncateLiteralValues;
 
       btnChangeBASICFont.Enabled = !checkBASICUseC64Font.Checked;
 
@@ -2126,6 +2127,13 @@ namespace C64Studio
     private void checkBASICShowControlCodesAsChars_CheckedChanged( object sender, EventArgs e )
     {
       Core.Settings.BASICShowControlCodesAsChars = checkBASICShowControlCodes.Checked;
+    }
+
+
+
+    private void checkASMAutoTruncateLiteralValues_CheckedChanged( object sender, EventArgs e )
+    {
+      Core.Settings.ASMAutoTruncateLiteralValues = checkASMAutoTruncateLiteralValues.Checked;
     }
 
 

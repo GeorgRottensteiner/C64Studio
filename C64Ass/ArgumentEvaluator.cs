@@ -22,6 +22,7 @@ namespace C64Ass
       _Args.AddParameter( "-FORMAT", true );
       _Args.AddParameter( "F", true );
       _Args.AddParameter( "-SETPC", true );
+      _Args.AddSwitch( "-AUTOTRUNCATELITERALS", true );
     }
 
 
@@ -76,6 +77,7 @@ namespace C64Ass
       {
         config.LabelDumpFile = _Args.Parameter( "LABELDUMP" );
       }
+      config.AutoTruncateLiteralValues = _Args.IsParameterSet( "-AUTOTRUNCATELITERALS" );
 
       if ( ( _Args.IsParameterSet( "F" ) )
       ||   ( _Args.IsParameterSet( "-FORMAT" ) ) )

@@ -80,12 +80,24 @@ namespace C64Studio
       {
         return;
       }
+      if ( ( OutlineProject == Doc.DocumentInfo.Project )
+      &&   ( OutlineTokens == Doc.DocumentInfo.KnownTokens ) )
+      {
+        // nothing to do
+        return;
+      }
+
+      if ( InvokeRequired )
+      {
+        Invoke( new MainForm.DocCallback( RefreshFromDocument ), new object[] { Doc } );
+        return;
+      }
+
       OutlineProject = Doc.DocumentInfo.Project;
       OutlineTokens = Doc.DocumentInfo.KnownTokens;
       //Debug.Log( "Set to " + OutlineTokens.Count + " tokens from doc " + Doc.DocumentInfo.DocumentFilename );
 
       StoreOpenNodes();
-
       RefreshNodes();
     }
 
@@ -93,6 +105,7 @@ namespace C64Studio
 
     private void RefreshNodes()
     {
+      treeProject.BeginUpdate();
       NodeRoot.Nodes.Clear();
 
       IList<Types.SymbolInfo>     sortedTokens = null;
@@ -231,6 +244,7 @@ namespace C64Studio
 
       }
       NodeRoot.Expand();
+      treeProject.EndUpdate();
     }
 
 

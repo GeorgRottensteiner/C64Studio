@@ -15,6 +15,8 @@ namespace C64Studio
 
     private GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo>       m_TokenInfos = null;
 
+    private delegate void SetTokensCallback( GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo> TokenInfo );
+
 
 
     public DebugBreakpoints()
@@ -261,6 +263,12 @@ namespace C64Studio
 
     public void SetTokens( GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo> TokenInfo )
     {
+      if ( InvokeRequired )
+      {
+        Invoke( new SetTokensCallback( SetTokens ), new object[] { TokenInfo } );
+        return;
+      }
+
       comboSymbols.Items.Clear();
 
       GR.Collections.Set<string>    keys = TokenInfo.GetUniqueKeys();

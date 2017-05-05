@@ -1008,7 +1008,6 @@ namespace C64Studio
           // this check is only useful for hires sprites
           if ( ( determinedBackgroundColor > -1 )
           &&   ( numColors > 1 )
-          &&   ( numColors > 1 )
           &&   ( !usedBackgroundColor ) )
           {
             AddError( "Looks like single color, but doesn't use the set background color", sx * 24, sy * 21, 24, 21 );

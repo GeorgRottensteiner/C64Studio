@@ -304,13 +304,97 @@ namespace C64Studio
 
 
 
+    public void UpdateValues()
+    {
+      if ( InvokeRequired )
+      {
+        Invoke( new MainForm.ParameterLessCallback( UpdateValues ) );
+        return;
+      }
+
+      foreach ( var watchEntry in m_WatchEntries )
+      {
+        ListViewItem itemToModify = null;
+        foreach ( ListViewItem item in listWatch.Items )
+        {
+          WatchEntry oldWatchEntry = (WatchEntry)item.Tag;
+
+          if ( oldWatchEntry == watchEntry )
+          {
+            itemToModify = item;
+            break;
+          }
+        }
+        if ( itemToModify == null )
+        {
+          itemToModify = new ListViewItem();
+
+          itemToModify.Text = watchEntry.Name;
+          if ( watchEntry.IndexedX )
+          {
+            itemToModify.Text += ",x";
+          }
+          if ( watchEntry.IndexedY )
+          {
+            itemToModify.Text += ",y";
+          }
+          itemToModify.SubItems.Add( watchEntry.Type.ToString() );
+          if ( watchEntry.DisplayMemory )
+          {
+            itemToModify.SubItems.Add( "(unread)" );
+          }
+          else if ( !watchEntry.DisplayMemory )
+          {
+            if ( watchEntry.SizeInBytes == 1 )
+            {
+              GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer( watchEntry.Address.ToString( "x02" ) );
+              watchEntry.CurrentValue = data;
+              itemToModify.SubItems.Add( data.ToString() );
+            }
+            else if ( watchEntry.SizeInBytes == 2 )
+            {
+              GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer( watchEntry.Address.ToString( "x04" ) );
+              watchEntry.CurrentValue = data;
+              itemToModify.SubItems.Add( data.ToString() );
+            }
+          }
+          else
+          {
+            itemToModify.SubItems.Add( "(unread)" );
+          }
+          itemToModify.Tag = watchEntry;
+          listWatch.Items.Add( itemToModify );
+        }
+
+        if ( !watchEntry.DisplayMemory )
+        {
+          switch ( watchEntry.Type )
+          {
+            case WatchEntry.DisplayType.HEX:
+              itemToModify.SubItems[2].Text = "$" + watchEntry.Address.ToString( "x4" );
+              break;
+            case WatchEntry.DisplayType.DEZ:
+              itemToModify.SubItems[2].Text = watchEntry.Address.ToString();
+              break;
+            case WatchEntry.DisplayType.BINARY:
+              itemToModify.SubItems[2].Text = "%" + Convert.ToString( watchEntry.Address, 2 );
+              break;
+            default:
+              itemToModify.SubItems[2].Text = watchEntry.Address.ToString( "x4" );
+              break;
+          }
+        }
+      }
+    }
+
+
+
     public void ReseatWatches( Types.ASM.FileInfo ASMFileInfo )
     {
-      restart:;
-      foreach ( ListViewItem item in listWatch.Items )
+      List<WatchEntry>    entriesToRemove = new List<WatchEntry>();
+      bool                hadChanges = false;
+      foreach ( var watchEntry in m_WatchEntries )
       {
-        WatchEntry watchEntry = (WatchEntry)item.Tag;
-
         if ( watchEntry.LiteralValue )
         {
           // is literal value, no need to reseat
@@ -319,35 +403,25 @@ namespace C64Studio
         int addressOfEntry = ASMFileInfo.AddressFromToken( watchEntry.Name );
         if ( addressOfEntry == -1 )
         {
-          m_WatchEntries.Remove( watchEntry );
-          listWatch.Items.Remove( item );
-          goto restart;
+          entriesToRemove.Add( watchEntry );
+          hadChanges = true;
         }
         else
         {
           if ( watchEntry.Address != addressOfEntry )
           {
             watchEntry.Address = addressOfEntry;
-            if ( !watchEntry.DisplayMemory )
-            {
-              switch ( watchEntry.Type )
-              {
-                case WatchEntry.DisplayType.HEX:
-                  item.SubItems[2].Text = "$" + watchEntry.Address.ToString( "x4" );
-                  break;
-                case WatchEntry.DisplayType.DEZ:
-                  item.SubItems[2].Text = watchEntry.Address.ToString();
-                  break;
-                case WatchEntry.DisplayType.BINARY:
-                  item.SubItems[2].Text = "%" + Convert.ToString( watchEntry.Address, 2 );
-                  break;
-                default:
-                  item.SubItems[2].Text = watchEntry.Address.ToString( "x4" );
-                  break;
-              }
-            }
+            hadChanges = true;
           }
         }
+      }
+      foreach ( var entryToRemove in entriesToRemove )
+      {
+        m_WatchEntries.Remove( entryToRemove );
+      }
+      if ( hadChanges )
+      {
+        Core.TaskManager.AddTask( new Tasks.TaskUpdateWatches() );
       }
     }
 

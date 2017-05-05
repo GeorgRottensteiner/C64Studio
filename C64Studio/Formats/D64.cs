@@ -458,12 +458,31 @@ namespace C64Studio.Formats
         _LastError = "Could not open/read file";
         return false;
       }
-      if ( diskData.Length != 174848 )
+
+      /*
+      35 track, no errors        174848
+      35 track, 683 error bytes  175531
+      40 track, no errors        196608
+      40 track, 768 error bytes  197376
+      */
+
+      if ( ( diskData.Length != 174848 )
+      //&&   ( diskData.Length != 175531 )
+      &&   ( diskData.Length != 196608 ) )
+      //&&   ( diskData.Length != 197376 ) )
       {
-        _LastError = "disk image size is not equal 174848 bytes";
+        _LastError = "disk image size is not supported";
         return false;
       }
-      CreateEmptyMedia();
+      switch ( diskData.Length )
+      {
+        case 174848:
+          CreateEmptyMedia();
+          break;
+        case 196608:
+          CreateEmptyMedia40Tracks();
+          break;
+      }
 
       int     dataPos = 0;
       for ( int i = 0; i < Tracks.Count; ++i )

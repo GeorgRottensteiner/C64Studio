@@ -118,32 +118,77 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tool_none" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tool_none.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="arrow_up" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\arrow_up.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="tool_fill" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tool_fill.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\add.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="flag_blue_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\flag_blue_off.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="arrow_up" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\arrow_up.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\delete.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="tool_select" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tool_select.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="tool_rect" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tool_rect.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="graphicscreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\graphicscreen.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="arrow_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow_down.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="tool_select" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tool_select.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="toolbar_truedrive_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\toolbar_truedrive_disabled.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="solution" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\solution.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="breakpoint" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\breakpoint.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disassembler" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disassembler.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flag_green_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\flag_green_off.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="project" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\project.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mapeditor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mapeditor.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\add.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="charset" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\charset.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="binary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\binary.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="toolbar_truedrive_enabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\toolbar_truedrive_enabled.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flag_blue_on" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\flag_blue_on.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tool_none" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tool_none.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="charsetscreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\charsetscreen.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flag_green_on" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\flag_green_on.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="source_basic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\source_basic.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="tool_quad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tool_quad.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -151,58 +196,25 @@
   <data name="c64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\c64.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="charset" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\charset.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="charsetscreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\charsetscreen.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\folder.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="graphicscreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\graphicscreen.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="mapeditor" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\mapeditor.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="project" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\project.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="solution" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\solution.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="spriteset" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\spriteset.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="source" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\source.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="source_basic" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\source_basic.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="tool_rect" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tool_rect.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="spriteset" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\spriteset.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="toolbar_basic_symbols_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\toolbar_basic_symbols_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="toolbar_truedrive_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\toolbar_truedrive_disabled.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="toolbar_basic_symbols_enabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\toolbar_basic_symbols_enabled.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="toolbar_truedrive_enabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\toolbar_truedrive_enabled.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="icon_memory_cpu" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_memory_cpu.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="binary" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\binary.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="disassembler" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\disassembler.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="flag_blue_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\flag_blue_off.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="flag_blue_on" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\flag_blue_on.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="flag_green_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\flag_green_off.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="flag_green_on" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\flag_green_on.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="icon_memory_ram" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_memory_ram.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -1366,6 +1366,12 @@ namespace C64Studio
 
     void RefreshAutoComplete()
     {
+      if ( editSource.InvokeRequired )
+      {
+        editSource.Invoke( new C64Studio.MainForm.ParameterLessCallback( RefreshAutoComplete ) );
+        return;
+      }
+
       var   newList = new List<FastColoredTextBoxNS.AutocompleteItem>();
 
       foreach ( var entry in DocumentInfo.KnownKeywords )
@@ -2045,7 +2051,7 @@ namespace C64Studio
       string wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
       string zone = FindZoneFromLine( m_ContextMenuLineIndex );
 
-      Core.MainForm.GotoDeclaration( DocumentInfo, wordBelow, zone );
+      Core.Navigating.GotoDeclaration( DocumentInfo, wordBelow, zone );
       CenterOnCaret();
     }
 

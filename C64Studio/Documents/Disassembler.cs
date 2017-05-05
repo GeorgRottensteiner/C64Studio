@@ -25,6 +25,7 @@ namespace C64Studio
     public Disassembler( StudioCore Core )
     {
       this.Core = Core;
+      DocumentInfo.Type = ProjectElement.ElementType.DISASSEMBLER;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
 
       string opCodes = @"\b(lda|sta|ldy|sty|ldx|stx|rts|jmp|jsr|rti|sei|cli|asl|lsr|inc|dec|inx|dex|iny|dey|cpx|cpy|cmp|bit|bne|beq|bcc|bcs|bpl|bmi|adc|sec|clc|sbc|tax|tay|tya|txa|pha|pla|eor|and|ora|ror|rol|php|plp|clv|cld|bvc|bvs|brk|nop|txs|tsx|slo|rla|sre|rra|sax|lax|dcp|isc|anc|alr|arr|xaa|axs|ahx|shy|shx|tas|las|sed)\b";
@@ -155,6 +156,11 @@ namespace C64Studio
 
     public override void RefreshDisplayOptions()
     {
+      if ( Core.Settings.SyntaxColoring.Count == 0 )
+      {
+        return;
+      }
+
       // Font
       editDisassembly.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
 

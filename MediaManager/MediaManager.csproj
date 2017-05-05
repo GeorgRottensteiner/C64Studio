@@ -48,6 +48,84 @@
     <Compile Include="..\C64Studio\Common\ArgumentParser.cs">
       <Link>Common\ArgumentParser.cs</Link>
     </Compile>
+    <Compile Include="..\C64Studio\Common\BinaryReader.cs">
+      <Link>Common\BinaryReader.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\BinaryWriter.cs">
+      <Link>Common\BinaryWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\ByteBuffer.cs">
+      <Link>Common\ByteBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Convert.cs">
+      <Link>Common\Convert.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\debug.cs">
+      <Link>Common\debug.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\FastImage.cs">
+      <Link>Common\FastImage.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\FastPictureBox.cs">
+      <Link>Common\FastPictureBox.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\File.cs">
+      <Link>Common\File.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\FileChunk.cs">
+      <Link>Common\FileChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\GenericHelper.cs">
+      <Link>Common\GenericHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\IImage.cs">
+      <Link>Common\IImage.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\ImageListbox.cs">
+      <Link>Common\ImageListbox.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\IReader.cs">
+      <Link>Common\IReader.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\IWriter.cs">
+      <Link>Common\IWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\ListViewItemComparer.cs">
+      <Link>Common\ListViewItemComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Map.cs">
+      <Link>Common\Map.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\MemoryImage.cs">
+      <Link>Common\MemoryImage.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\MemoryReader.cs">
+      <Link>Common\MemoryReader.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Misc.cs">
+      <Link>Common\Misc.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\MultiMap.cs">
+      <Link>Common\MultiMap.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Path.cs">
+      <Link>Common\Path.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\ScrollablePanel.cs">
+      <Link>Common\ScrollablePanel.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Set.cs">
+      <Link>Common\Set.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\TileLayer.cs">
+      <Link>Common\TileLayer.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Util.cs">
+      <Link>Common\Util.cs</Link>
+    </Compile>
     <Compile Include="..\C64Studio\Formats\D64.cs">
       <Link>Included Files\D64.cs</Link>
     </Compile>
@@ -67,81 +145,6 @@
       <Link>Included Files\Util.cs</Link>
     </Compile>
     <Compile Include="Manager.cs" />
-    <Compile Include="p:\common#\collections\Map.cs">
-      <Link>Common\Map.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\collections\MultiMap.cs">
-      <Link>Common\MultiMap.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\collections\Set.cs">
-      <Link>Common\Set.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\debug\debug.cs">
-      <Link>Common\debug.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\forms\FastPictureBox.cs">
-      <Link>Common\FastPictureBox.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="p:\common#\forms\ImageListbox.cs">
-      <Link>Common\ImageListbox.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="p:\common#\forms\ListViewItemComparer.cs">
-      <Link>Common\ListViewItemComparer.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\forms\ScrollablePanel.cs">
-      <Link>Common\ScrollablePanel.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="p:\common#\forms\Util.cs">
-      <Link>Common\Util.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\forms\WindowStateManager.cs">
-      <Link>Common\WindowStateManager.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\imaging\FastImage.cs">
-      <Link>Common\FastImage.cs</Link>
-    </Compile>
-    <Compile Include="P:\Common#\Imaging\IImage.cs">
-      <Link>Common\IImage.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\imaging\MemoryImage.cs">
-      <Link>Common\MemoryImage.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\io\BinaryReader.cs">
-      <Link>Common\BinaryReader.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\io\BinaryWriter.cs">
-      <Link>Common\BinaryWriter.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\io\File.cs">
-      <Link>Common\File.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\io\FileChunk.cs">
-      <Link>Common\FileChunk.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\io\IReader.cs">
-      <Link>Common\IReader.cs</Link>
-    </Compile>
-    <Compile Include="P:\Common#\IO\IWriter.cs">
-      <Link>Common\IWriter.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\io\MemoryReader.cs">
-      <Link>Common\MemoryReader.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\memory\ByteBuffer.cs">
-      <Link>Common\ByteBuffer.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\misc\GenericHelper.cs">
-      <Link>Common\GenericHelper.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\string\Convert.cs">
-      <Link>Common\Convert.cs</Link>
-    </Compile>
-    <Compile Include="p:\common#\string\Path.cs">
-      <Link>Common\Path.cs</Link>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -154,7 +157,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) $(SolutionDir)C64StudioRelease\$(TargetFileName)
-copy $(TargetPath) $(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
+copy "$(TargetPath)" "$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

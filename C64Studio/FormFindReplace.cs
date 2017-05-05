@@ -893,7 +893,7 @@ namespace C64Studio
 
         retry_search:
         ;
-        string textFromElement = Core.MainForm.GetElementText( elementToSearch );
+        string textFromElement = Core.Searching.GetDocumentInfoText( elementToSearch.DocumentInfo );
         SearchLocation newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
         if ( newLocation.StartPosition == -1 )
         {
@@ -1324,7 +1324,7 @@ namespace C64Studio
             {
               return;
             }
-            string textFromElement = Core.MainForm.GetDocumentInfoText( docInfoToReplaceIn );
+            string textFromElement = Core.Searching.GetDocumentInfoText( docInfoToReplaceIn );
             elementsToReplaceIn.Add( docInfoToReplaceIn, textFromElement );
           }
           break;
@@ -1335,7 +1335,7 @@ namespace C64Studio
             ||   ( doc.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
             ||   ( doc.DocumentInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
             {
-              string textFromElement = Core.MainForm.GetDocumentInfoText( doc.DocumentInfo );
+              string textFromElement = Core.Searching.GetDocumentInfoText( doc.DocumentInfo );
               elementsToReplaceIn.Add( doc.DocumentInfo, textFromElement );
             }
           }
@@ -1352,7 +1352,7 @@ namespace C64Studio
                 ||   ( docInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
                 ||   ( docInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
                 {
-                  string textFromElement = Core.MainForm.GetDocumentInfoText( docInfo );
+                  string textFromElement = Core.Searching.GetDocumentInfoText( docInfo );
                   elementsToReplaceIn.Add( docInfo, textFromElement );
                 }
               }

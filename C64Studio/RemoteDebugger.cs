@@ -20,6 +20,7 @@ namespace C64Studio
       DELETE_BREAKPOINT,
       REFRESH_VALUES,
       REFRESH_MEMORY,
+      REFRESH_MEMORY_RAM,
       READ_REGISTERS,
       RETURN,
       NEXT,
@@ -28,7 +29,8 @@ namespace C64Studio
       QUIT,
       MEM_DUMP,
       ADD_BREAKPOINT,
-      TRACE_MEM_DUMP
+      TRACE_MEM_DUMP,
+      RAM_MODE
     };
 
     public enum RequestReason
@@ -88,8 +90,7 @@ namespace C64Studio
     private int                       m_BrokenAtBreakPoint = -1;
     private bool                      m_InitialBreakpointRemoved = false;
     public WinViceVersion             m_ViceVersion = WinViceVersion.V_2_3;
-    //private bool                      m_BinaryMemDump = false;
-    public bool                       m_BinaryMemDump = false;
+    public bool                       m_BinaryMemDump = true;
 
     GR.Collections.Map<int, byte>     m_MemoryValues = new GR.Collections.Map<int, byte>();
     GR.Collections.Map<int, bool>     m_RequestedMemoryValues = new GR.Collections.Map<int, bool>();
@@ -414,7 +415,7 @@ namespace C64Studio
           //Debug.Log( "Sent " + sent + " bytes (expected " + m_BytesToSend + ")" );
         }
 
-        m_Core.MainForm.ForceEmulatorRefresh();
+        m_Core.Debugging.ForceEmulatorRefresh();
 
         if ( ( m_BinaryMemDump )
         &&   ( m_ViceVersion >= WinViceVersion.V_2_4 )
@@ -575,7 +576,7 @@ namespace C64Studio
         m_Core.AddToOutput( "SendCommand Exception:" + ex.ToString() );
       }
 
-      m_Core.MainForm.ForceEmulatorRefresh();
+      m_Core.Debugging.ForceEmulatorRefresh();
 
       if ( ( m_BinaryMemDump )
       &&   ( m_ViceVersion >= WinViceVersion.V_2_4 )
@@ -847,7 +848,7 @@ namespace C64Studio
                 //Debug.Log( "Remove initial breakpoint " + m_BrokenAtBreakPoint );
                 QueueRequest( Request.DELETE_BREAKPOINT, m_BrokenAtBreakPoint );
 
-                skipRefresh = m_Core.MainForm.OnInitialBreakpointReached( breakAddress, m_BrokenAtBreakPoint );
+                skipRefresh = m_Core.Debugging.OnInitialBreakpointReached( breakAddress, m_BrokenAtBreakPoint );
               }
             }
             else
@@ -864,7 +865,7 @@ namespace C64Studio
             if ( !skipRefresh )
             {
               QueueRequest( Request.REFRESH_VALUES );
-              QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, m_Core.MainForm.m_DebugMemory.MemoryStart, m_Core.MainForm.m_DebugMemory.MemorySize );
+              RefreshMemory( m_Core.MainForm.m_DebugMemory.MemoryStart, m_Core.MainForm.m_DebugMemory.MemorySize, m_Core.MainForm.m_DebugMemory.MemoryAsCPU );
             }
             m_Request = new RequestData( Request.NONE );
           }
@@ -975,7 +976,7 @@ namespace C64Studio
                   {
                     Debug.Log( "Has non virtual bp" );
                     QueueRequest( Request.REFRESH_VALUES );
-                    QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, m_Core.MainForm.m_DebugMemory.MemoryStart, m_Core.MainForm.m_DebugMemory.MemorySize );
+                    RefreshMemory( m_Core.MainForm.m_DebugMemory.MemoryStart, m_Core.MainForm.m_DebugMemory.MemorySize, m_Core.MainForm.m_DebugMemory.MemoryAsCPU );
                   }
                 }
               }
@@ -992,6 +993,13 @@ namespace C64Studio
             }
           }
           break;
+        case Request.RAM_MODE:
+          if ( m_ResponseLines.Count == 0 )
+          {
+            m_ResponseLines.Clear();
+            m_Request = new RequestData( Request.NONE );
+          }
+          break;
         default:
           Debug.Log( "Unknown request state! " + m_Request.ToString() );
           m_ResponseLines.Clear();
@@ -1002,6 +1010,22 @@ namespace C64Studio
         StartNextRequestIfAvailable();
       }
     }
+
+
+
+    public void RefreshMemory( int MemoryStartAddress, int MemorySize, bool AsCPU )
+    {
+      if ( AsCPU )
+      {
+        QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, MemoryStartAddress, MemorySize );
+      }
+      else
+      {
+        QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY_RAM, MemoryStartAddress, MemorySize );
+      }
+    }
+
+
 
     private void StartNextRequestIfAvailable()
     {
@@ -1078,6 +1102,8 @@ namespace C64Studio
           }
         case Request.DELETE_BREAKPOINT:
           return SendCommand( "delete " + m_Request.Parameter1.ToString() );
+        case Request.RAM_MODE:
+          return SendCommand( "bank " + m_Request.Info );
         case Request.MEM_DUMP:
         case Request.TRACE_MEM_DUMP:
           {
@@ -1259,6 +1285,28 @@ namespace C64Studio
         }
 
         QueueRequest( requData );
+        return;
+      }
+      else if ( Data.Type == Request.REFRESH_MEMORY_RAM )
+      {
+        RequestData requRAM = new RequestData( Request.RAM_MODE );
+        requRAM.Info = "ram";
+        QueueRequest( requRAM );
+
+        RequestData requData  = new RequestData( Request.MEM_DUMP );
+        requData.Parameter1 = Data.Parameter1;
+        requData.Parameter2 = Data.Parameter1 + Data.Parameter2 - 1;
+        requData.Info = "C64Studio.MemDump";
+        requData.Reason = Data.Reason;
+        if ( requData.Parameter2 >= 0x10000 )
+        {
+          requData.Parameter2 = 0xffff;
+        }
+        QueueRequest( requData );
+
+        requRAM = new RequestData( Request.RAM_MODE );
+        requRAM.Info = "cpu";
+        QueueRequest( requRAM );
         return;
       }
 

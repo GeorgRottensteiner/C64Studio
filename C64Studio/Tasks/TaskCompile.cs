@@ -1,0 +1,591 @@
+﻿using C64Studio.Types;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace C64Studio.Tasks
+{
+  public class TaskCompile : Task
+  {
+    private DocumentInfo    m_DocumentToBuild;
+    private DocumentInfo    m_DocumentToDebug;
+    private DocumentInfo    m_DocumentToRun;
+    private DocumentInfo    m_ActiveDocument;
+    private Solution        m_Solution;
+
+
+
+    public TaskCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, DocumentInfo ActiveDocumentInfo, Solution Solution )
+    {
+      m_DocumentToBuild = DocumentToBuild;
+      m_DocumentToDebug = DocumentToDebug;
+      m_DocumentToRun = DocumentToRun;
+      m_ActiveDocument = ActiveDocumentInfo;
+      m_Solution = Solution;
+    }
+
+
+
+    protected override bool ProcessTask()
+    {
+      Core.SetStatus( "Building..." );
+      Core.Compiling.m_RebuiltFiles.Clear();
+      Core.Compiling.m_RebuiltBuildConfigFiles.Clear();
+      Core.Compiling.m_BuildChainStack.Clear();
+      bool needsRebuild = Core.Compiling.NeedsRebuild( m_DocumentToBuild );
+      if ( needsRebuild )
+      {
+        Core.Compiling.m_BuildIsCurrent = false;
+        if ( m_DocumentToBuild.Project != null )
+        {
+          if ( !Core.MainForm.SaveProject( m_DocumentToBuild.Project ) )
+          {
+            Core.SetStatus( "Failed to save project" );
+            return false;
+          }
+        }
+        Core.MainForm.SaveAllDocuments();
+        if ( m_DocumentToBuild.Project != null )
+        {
+          if ( !Core.MainForm.SaveProject( m_DocumentToBuild.Project ) )
+          {
+            Core.SetStatus( "Failed to save project" );
+            return false;
+          }
+        }
+      }
+
+      DocumentInfo baseDoc = m_DocumentToBuild;
+      if ( baseDoc == null )
+      {
+        Core.SetStatus( "No active document" );
+        return false;
+      }
+      if ( ( baseDoc.Element == null )
+      &&   ( !baseDoc.Compilable ) )
+      {
+        Core.AddToOutput( "Document is not part of project, cannot build" + System.Environment.NewLine );
+        Core.SetStatus( "Document is not part of project, cannot build" );
+        return false;
+      }
+      Core.ClearOutput();
+      Core.AddToOutput( "Determined " + baseDoc.DocumentFilename + " as active document" + System.Environment.NewLine );
+
+      Types.BuildInfo buildInfo = new C64Studio.Types.BuildInfo();
+      if ( !Core.Compiling.m_BuildIsCurrent )
+      {
+        C64Studio.Types.ASM.FileInfo    dummyInfo;
+
+        string  configSetting = null;
+        if ( baseDoc.Project != null )
+        {
+          configSetting = baseDoc.Project.Settings.CurrentConfig.Name;
+        }
+
+        if ( !BuildElement( baseDoc, configSetting, null, true, out buildInfo, out dummyInfo ) )
+        {
+          Core.SetStatus( "Build failed" );
+          return false;
+        }
+        Core.Compiling.m_LastBuildInfo = buildInfo;
+        Core.Compiling.m_BuildIsCurrent = true;
+      }
+      else
+      {
+        if ( baseDoc.Element != null )
+        {
+          buildInfo.TargetType = baseDoc.Element.TargetType;
+        }
+        else
+        {
+          buildInfo = Core.Compiling.m_LastBuildInfo;
+        }
+        if ( buildInfo.TargetType == C64Studio.Types.CompileTargetType.NONE )
+        {
+          buildInfo.TargetType = Core.Compiling.m_LastBuildInfo.TargetType;
+        }
+
+        Core.AddToOutput( "Build is current" + System.Environment.NewLine );
+      }
+      if ( Core.Navigating.DetermineASMFileInfo( baseDoc ) == Core.Navigating.DetermineASMFileInfo( m_ActiveDocument ) )
+      {
+        //Debug.Log( "m_Outline.RefreshFromDocument after compile" );
+        Core.MainForm.m_Outline.RefreshFromDocument( baseDoc.BaseDoc );
+      }
+      Core.SetStatus( "Build successful" );
+
+      switch ( Core.MainForm.AppState )
+      {
+        case Types.StudioState.COMPILE:
+        case Types.StudioState.BUILD:
+          Core.MainForm.AppState = Types.StudioState.NORMAL;
+          if ( Core.Settings.PlaySoundOnSuccessfulBuild )
+          {
+            System.Media.SystemSounds.Asterisk.Play();
+          }
+          break;
+        case Types.StudioState.BUILD_AND_RUN:
+          // run program
+          {
+            Types.CompileTargetType targetType = buildInfo.TargetType;
+            if ( m_DocumentToRun.Element != null )
+            {
+              if ( m_DocumentToRun.Element.TargetType != C64Studio.Types.CompileTargetType.NONE )
+              {
+                targetType = m_DocumentToRun.Element.TargetType;
+              }
+              ProjectElement.PerConfigSettings  configSetting = m_DocumentToRun.Element.Settings[m_DocumentToRun.Project.Settings.CurrentConfig.Name];
+              if ( !string.IsNullOrEmpty( configSetting.DebugFile ) )
+              {
+                targetType = configSetting.DebugFileType;
+              }
+            }
+            if ( !Core.MainForm.RunCompiledFile( m_DocumentToRun, targetType ) )
+            {
+              Core.MainForm.AppState = Types.StudioState.NORMAL;
+              return false;
+            }
+          }
+          break;
+        case Types.StudioState.BUILD_AND_DEBUG:
+          // run program
+          if ( !Core.MainForm.DebugCompiledFile( m_DocumentToDebug, m_DocumentToRun ) )
+          {
+            Core.MainForm.AppState = Types.StudioState.NORMAL;
+            return false;
+          }
+          break;
+        default:
+          Core.MainForm.AppState = Types.StudioState.NORMAL;
+          break;
+      }
+
+      /*
+      CompilerProcess = new System.Diagnostics.Process();
+      CompilerProcess.StartInfo.FileName = tool.Filename;
+      CompilerProcess.StartInfo.WorkingDirectory = FillParameters( tool.WorkPath, baseDoc );
+      CompilerProcess.StartInfo.CreateNoWindow = true;
+      CompilerProcess.EnableRaisingEvents = true;
+      CompilerProcess.StartInfo.Arguments = "";
+      if ( AppState == State.COMPILE_AND_DEBUG )
+      {
+        CompilerProcess.StartInfo.Arguments += FillParameters( tool.DebugArguments, baseDoc );
+      }
+      CompilerProcess.StartInfo.Arguments += " " + FillParameters( tool.Arguments, baseDoc );
+      CompilerProcess.StartInfo.UseShellExecute = false;
+      CompilerProcess.StartInfo.RedirectStandardError = true;
+      CompilerProcess.StartInfo.RedirectStandardOutput = true;
+      CompilerProcess.StartInfo.RedirectStandardInput = true;
+      CompilerProcess.Exited += new EventHandler( compilerProcess_Exited );
+
+      CompilerProcess.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler( compilerProcess_OutputDataReceived );
+      CompilerProcess.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler( compilerProcess_OutputDataReceived );
+
+      try
+      {
+        SetGUIForWaitOnExternalTool( true );
+        CompilerProcess.Start();
+
+        CompilerProcess.BeginOutputReadLine();
+        CompilerProcess.BeginErrorReadLine();
+
+        System.IO.StreamWriter writer = CompilerProcess.StandardInput;
+
+        writer.Write( baseDoc.GetContent() );
+        writer.Close();
+      }
+      catch ( Win32Exception ex )
+      {
+        CompilerProcess.Close();
+        AddToOutput( ex.Message );
+        SetGUIForWaitOnExternalTool( false );
+        return false;
+      }
+       */
+      return true;
+
+      /*
+      Types.BuildInfo buildInfo;
+      Types.ASM.FileInfo fileInfo;
+
+      if ( !BuildElement( m_Document, m_Configuration, m_AdditionalDefines, out buildInfo, out fileInfo ) )
+      {
+        Core.SetStatus( "Build failed" );
+        return false;
+      }
+      Core.Compiling.m_LastBuildInfo  = buildInfo;
+      Core.Compiling.m_BuildIsCurrent = true;
+      Main.OnBuildFinished( m_Document, m_ActiveDocumentAtStart );
+      return true;*/
+    }
+
+
+
+    bool BuildElement( DocumentInfo Doc, string ConfigSetting, string AdditionalPredefines, bool OutputMessages, out Types.BuildInfo BuildInfo, out Types.ASM.FileInfo FileInfo )
+    {
+      BuildInfo = new C64Studio.Types.BuildInfo();
+
+      BuildInfo.TargetFile = "";
+      BuildInfo.TargetType = Types.CompileTargetType.NONE;
+
+      FileInfo = null;
+
+      Types.ASM.FileInfo combinedFileInfo = null;
+
+      if ( Doc.Element != null )
+      {
+        Doc.Element.CompileTarget = Types.CompileTargetType.NONE;
+        Doc.Element.CompileTargetFile = null;
+
+        // check dependencies
+        foreach ( var dependency in Doc.Element.ForcedDependency.DependentOnFile )
+        {
+          ProjectElement elementDependency = Doc.Project.GetElementByFilename( dependency.Filename );
+          if ( elementDependency == null )
+          {
+            Core.AddToOutput( "Could not find dependency for " + dependency.Filename + System.Environment.NewLine );
+            return false;
+          }
+
+          Types.ASM.FileInfo    dependencyFileInfo = null;
+
+          // skip building if not required
+          if ( !Core.Compiling.NeedsRebuild( elementDependency.DocumentInfo, ConfigSetting ) )
+          {
+            Core.AddToOutput( "Dependency " + dependency.Filename + " is current for config " + ConfigSetting + System.Environment.NewLine );
+
+            if ( Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
+            {
+              dependencyFileInfo = elementDependency.DocumentInfo.ASMFileInfo;
+              //Debug.Log( "Doc " + Doc.Text + " receives " + dependencyFileInfo.Labels.Count + " dependency labels from dependency " + dependency.Filename );
+            }
+          }
+          else
+          {
+            Types.BuildInfo tempInfo = new C64Studio.Types.BuildInfo();
+
+            if ( !BuildElement( elementDependency.DocumentInfo, ConfigSetting, null, false, out tempInfo, out dependencyFileInfo ) )
+            {
+              return false;
+            }
+          }
+          // include symbols from dependency
+          if ( dependency.IncludeSymbols )
+          {
+            if ( combinedFileInfo == null )
+            {
+              combinedFileInfo = new C64Studio.Types.ASM.FileInfo();
+            }
+            // merge label info
+            foreach ( var entry in dependencyFileInfo.Labels )
+            {
+              if ( !combinedFileInfo.Labels.ContainsKey( entry.Key ) )
+              {
+                combinedFileInfo.Labels.Add( entry.Key, entry.Value );
+              }
+            }
+            //Debug.Log( "Doc " + Doc.Text + " receives " + dependencyFileInfo.Labels.Count + " dependency labels from dependency " + dependency.Filename );
+          }
+        }
+      }
+
+      if ( !Doc.Compilable )
+      {
+        // not buildable 
+        // TODO - Autoexport?
+        return true;
+      }
+
+      ToolInfo tool = Core.DetermineTool( Doc, false );
+
+      ProjectElement.PerConfigSettings configSetting = null;
+
+      Parser.ParserBase parser = Core.DetermineParser( Doc );
+
+      if ( Doc.Element != null )
+      {
+        if ( !Doc.Element.Settings.ContainsKey( ConfigSetting ) )
+        {
+          Doc.Element.Settings.Add( ConfigSetting, new ProjectElement.PerConfigSettings() );
+        }
+        configSetting = Doc.Element.Settings[ConfigSetting];
+
+        if ( !string.IsNullOrEmpty( configSetting.PreBuild ) )
+        {
+          Core.AddToOutput( "Running pre build step on " + Doc.Element.Name + System.Environment.NewLine );
+          if ( !Core.MainForm.RunCommand( Doc, "pre build", configSetting.PreBuild ) )
+          {
+            return false;
+          }
+        }
+        if ( configSetting.PreBuildChain.Active )
+        {
+          if ( !BuildChain( configSetting.PreBuildChain, "pre build chain", OutputMessages ) )
+          {
+            return false;
+          }
+        }
+        Core.AddToOutput( "Running build on " + Doc.Element.Name + " with configuration " + ConfigSetting + System.Environment.NewLine );
+      }
+      else
+      {
+        Core.AddToOutput( "Running build on " + Doc.DocumentFilename + System.Environment.NewLine );
+      }
+
+      // include previous symbols
+      if ( parser is Parser.ASMFileParser )
+      {
+        ( (Parser.ASMFileParser)parser ).InitialFileInfo = combinedFileInfo;
+        if ( combinedFileInfo != null )
+        {
+          //Debug.Log( "Doc " + Doc.Text + " receives " + combinedFileInfo.Labels.Count + " initial labels" );
+        }
+        if ( !string.IsNullOrEmpty( AdditionalPredefines ) )
+        {
+          ( (Parser.ASMFileParser)parser ).ParseAndAddPreDefines( AdditionalPredefines );
+        }
+      }
+
+      if ( ( configSetting != null )
+      &&   ( !string.IsNullOrEmpty( configSetting.CustomBuild ) ) )
+      {
+        Core.AddToOutput( "Running custom build step on " + Doc.Element.Name + " with configuration " + ConfigSetting + System.Environment.NewLine );
+        if ( !Core.MainForm.RunCommand( Doc, "custom build", configSetting.CustomBuild ) )
+        {
+          return false;
+        }
+      }
+      else
+      {
+        //EnsureFileIsParsed();
+        //AddTask( new C64Studio.Tasks.TaskParseFile( Doc, config ) );
+
+        ProjectConfig config = null;
+        if ( Doc.Project != null )
+        {
+          config = Doc.Project.Settings.Configs[ConfigSetting];
+        }
+
+        if ( ( !Core.MainForm.ParseFile( parser, Doc, config, OutputMessages ) )
+        ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
+                                      {
+                                        TargetType = Core.DetermineTargetType( Doc, parser ),
+                                        OutputFile = Core.DetermineTargetFilename( Doc, parser ),
+                                        AutoTruncateLiteralValues = Core.Settings.ASMAutoTruncateLiteralValues
+                                      } ) )
+        ||   ( parser.Errors > 0 ) )
+        {
+          Core.MainForm.AddOutputMessages( parser );
+
+          Core.AddToOutput( "Build failed, " + parser.Warnings.ToString() + " warnings, " + parser.Errors.ToString() + " errors encountered" + System.Environment.NewLine );
+          if ( OutputMessages )
+          {
+            Core.Navigating.UpdateFromMessages( parser.Messages,
+                                                      ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
+                                                      Doc.Project );
+            Core.MainForm.m_CompileResult.UpdateFromMessages( parser, Doc.Project );
+          }
+          Core.ShowDocument( Core.MainForm.m_CompileResult );
+          Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+          if ( Core.Settings.PlaySoundOnBuildFailure )
+          {
+            System.Media.SystemSounds.Exclamation.Play();
+          }
+          return false;
+        }
+        Core.MainForm.AddOutputMessages( parser );
+
+        var compileTarget = Core.DetermineTargetType( Doc, parser );
+        string compileTargetFile = Core.DetermineTargetFilename( Doc, parser );
+        if ( Doc.Element != null )
+        {
+          Doc.Element.CompileTargetFile = compileTargetFile;
+        }
+
+        if ( compileTargetFile == null )
+        {
+          if ( parser is Parser.ASMFileParser )
+          {
+            parser.AddError( -1, Types.ErrorCode.E0001_NO_OUTPUT_FILENAME, "No output filename was given, missing element setting or !to <Filename>,<FileType> macro?" );
+          }
+          else
+          {
+            parser.AddError( -1, Types.ErrorCode.E0001_NO_OUTPUT_FILENAME, "No output filename was given, missing element setting" );
+          }
+          if ( OutputMessages )
+          {
+            Core.Navigating.UpdateFromMessages( parser.Messages,
+                                            ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
+                                            Doc.Project );
+
+            Core.MainForm.m_CompileResult.UpdateFromMessages( parser, Doc.Project );
+          }
+          Core.ShowDocument( Core.MainForm.m_CompileResult );
+          Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+          if ( Core.Settings.PlaySoundOnBuildFailure )
+          {
+            System.Media.SystemSounds.Exclamation.Play();
+          }
+          return false;
+        }
+        BuildInfo.TargetFile = compileTargetFile;
+        BuildInfo.TargetType = compileTarget;
+
+        if ( parser.Warnings > 0 )
+        {
+          if ( OutputMessages )
+          {
+            Core.Navigating.UpdateFromMessages( parser.Messages,
+                                            ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
+                                            Doc.Project );
+
+            Core.MainForm.m_CompileResult.UpdateFromMessages( parser, Doc.Project );
+          }
+          Core.ShowDocument( Core.MainForm.m_CompileResult );
+        }
+      }
+
+      if ( string.IsNullOrEmpty( BuildInfo.TargetFile ) )
+      {
+        Core.AddToOutput( "No target file name specified" + System.Environment.NewLine );
+        Core.MainForm.AppState = Types.StudioState.NORMAL;
+        if ( Core.Settings.PlaySoundOnBuildFailure )
+        {
+          System.Media.SystemSounds.Exclamation.Play();
+        }
+        return false;
+      }
+      // write output if applicable
+      if ( parser.Assembly != null )
+      {
+        try
+        {
+          System.IO.File.WriteAllBytes( BuildInfo.TargetFile, parser.Assembly.Data() );
+        }
+        catch ( System.Exception ex )
+        {
+          Core.AddToOutput( "Build failed, Could not create output file " + parser.CompileTargetFile + System.Environment.NewLine );
+          Core.AddToOutput( ex.ToString() + System.Environment.NewLine );
+          Core.MainForm.AppState = Types.StudioState.NORMAL;
+          if ( Core.Settings.PlaySoundOnBuildFailure )
+          {
+            System.Media.SystemSounds.Exclamation.Play();
+          }
+          return false;
+        }
+        Core.AddToOutput( "Build successful, " + parser.Warnings.ToString() + " warnings, 0 errors encountered, compiled to file " + BuildInfo.TargetFile + ", " + parser.Assembly.Length + " bytes" + System.Environment.NewLine );
+
+        //Debug.Log( "File " + Doc.DocumentFilename + " was rebuilt for config " + ConfigSetting + " this round" );
+      }
+
+      if ( ( configSetting != null )
+      &&   ( configSetting.PostBuildChain.Active ) )
+      {
+        if ( !BuildChain( configSetting.PostBuildChain, "post build chain", OutputMessages ) )
+        {
+          return false;
+        }
+      }
+
+
+      if ( ( configSetting != null )
+      &&   ( !string.IsNullOrEmpty( configSetting.PostBuild ) ) )
+      {
+        Core.ShowDocument( Core.MainForm.m_Output );
+        Core.AddToOutput( "Running post build step on " + Doc.Element.Name + System.Environment.NewLine );
+        if ( !Core.MainForm.RunCommand( Doc, "post build", configSetting.PostBuild ) )
+        {
+          return false;
+        }
+      }
+
+      Doc.HasBeenSuccessfullyBuilt = true;
+
+      if ( parser is Parser.ASMFileParser )
+      {
+        FileInfo = ( (Parser.ASMFileParser)parser ).ASMFileInfo;
+        // update symbols in main asm file
+        Doc.SetASMFileInfo( FileInfo, parser.KnownTokens(), parser.KnownTokenInfo() );
+        //Debug.Log( "Doc " + Doc.Text + " gets " + ( (SourceASM)Doc ).ASMFileInfo.Labels.Count + " labels" );
+      }
+
+      if ( FileInfo != null )
+      {
+        if ( !string.IsNullOrEmpty( FileInfo.LabelDumpFile ) )
+        {
+          Core.MainForm.DumpLabelFile( FileInfo );
+        }
+      }
+
+      Core.Compiling.m_RebuiltFiles.Add( Doc.DocumentFilename );
+      return true;
+    }
+
+
+
+    bool BuildChain( Types.BuildChain BuildChain, string BuildChainDescription, bool OutputMessages )
+    {
+      if ( Core.Compiling.m_BuildChainStack.Contains( BuildChain ) )
+      {
+        // already on stack, silent "success"
+        return true;
+      }
+
+      Core.AddToOutput( "Running " + BuildChainDescription + System.Environment.NewLine );
+      Core.Compiling.m_BuildChainStack.Push( BuildChain );
+      foreach ( var entry in BuildChain.Entries )
+      {
+        BuildInfo                     buildInfo;
+        Types.ASM.FileInfo            fileInfo;
+
+        string  buildInfoKey = entry.ProjectName + "/" + entry.DocumentFilename + "/" + entry.Config;
+
+        Core.AddToOutput( "Building " + buildInfoKey + System.Environment.NewLine );
+        if ( Core.Compiling.m_RebuiltBuildConfigFiles.ContainsValue( buildInfoKey ) )
+        {
+          Core.AddToOutput( "-already built, skipping step" + System.Environment.NewLine );
+          continue;
+        }
+
+        var project = m_Solution.GetProjectByName( entry.ProjectName );
+        if ( project == null )
+        {
+          Core.AddToOutput( "-could not find referenced project " + entry.ProjectName + System.Environment.NewLine );
+          Core.Compiling.m_BuildChainStack.Pop();
+          return false;
+        }
+
+        var element = project.GetElementByFilename( entry.DocumentFilename );
+        if ( element == null )
+        {
+          Core.AddToOutput( "-could not find document " + entry.DocumentFilename + " in project " + entry.ProjectName + System.Environment.NewLine );
+          Core.Compiling.m_BuildChainStack.Pop();
+          return false;
+        }
+
+        // ugly hack to force rebuild -> problem: we do not check output file timestamps if we need to recompile -> can't have build chain with same file in different configs!
+        Core.MainForm.MarkAsDirty( element.DocumentInfo );
+
+        if ( !BuildElement( element.DocumentInfo, entry.Config, entry.PreDefines, OutputMessages, out buildInfo, out fileInfo ) )
+        {
+          Core.Compiling.m_BuildChainStack.Pop();
+          return false;
+        }
+        Core.Compiling.m_RebuiltBuildConfigFiles.Add( buildInfoKey );
+      }
+      Core.AddToOutput( "Running " + BuildChainDescription + " completed successfully" + System.Environment.NewLine );
+      Core.Compiling.m_BuildChainStack.Pop();
+      return true;
+    }
+
+
+
+    public override string ToString()
+    {
+      return base.ToString() + " - " + m_DocumentToBuild.DocumentFilename;
+    }
+
+  }
+}

@@ -37,6 +37,7 @@
       this.bASICToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.renumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.btnToggleSymbolMode = new System.Windows.Forms.CheckBox();
+      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.menuBASIC.SuspendLayout();
@@ -125,11 +126,12 @@
       // 
       this.btnToggleSymbolMode.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleSymbolMode.AutoSize = true;
+      this.btnToggleSymbolMode.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleSymbolMode.Image")));
       this.btnToggleSymbolMode.Location = new System.Drawing.Point(79, 27);
       this.btnToggleSymbolMode.Name = "btnToggleSymbolMode";
-      this.btnToggleSymbolMode.Size = new System.Drawing.Size(99, 23);
+      this.btnToggleSymbolMode.Size = new System.Drawing.Size(22, 22);
       this.btnToggleSymbolMode.TabIndex = 2;
-      this.btnToggleSymbolMode.Text = "Replace Symbols";
+      this.toolTip1.SetToolTip(this.btnToggleSymbolMode, "Toggle Symbol/Macro");
       this.btnToggleSymbolMode.UseVisualStyleBackColor = true;
       this.btnToggleSymbolMode.CheckedChanged += new System.EventHandler(this.btnToggleSymbolMode_CheckedChanged);
       // 
@@ -163,5 +165,6 @@
     private System.Windows.Forms.ToolStripMenuItem bASICToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem renumberToolStripMenuItem;
     private System.Windows.Forms.CheckBox btnToggleSymbolMode;
+    private System.Windows.Forms.ToolTip toolTip1;
   }
 }

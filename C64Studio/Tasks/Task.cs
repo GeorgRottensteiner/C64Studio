@@ -6,6 +6,10 @@ namespace C64Studio.Tasks
 {
   public class Task
   {
+    protected delegate bool ProcessTaskCallback();
+
+
+
     public enum TaskType
     {
       INVALID,
@@ -16,12 +20,13 @@ namespace C64Studio.Tasks
     public TaskType     Type = TaskType.INVALID;
     public string       Description = "";
     public bool         TaskSuccessful = false;
+    public StudioCore   Core = null;
+
+
 
     public delegate void delTaskFinished( Task FinishedTask );
 
     public event delTaskFinished TaskFinished;
-
-    public MainForm     Main = null;
 
 
 

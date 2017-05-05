@@ -33,8 +33,16 @@ namespace C64Studio
 
 
 
+    delegate void UpdateFromMessagesCallback( Parser.ParserBase Parser, Project ParsedProject );
+
     public void UpdateFromMessages( Parser.ParserBase Parser, Project ParsedProject )
     {
+      if ( InvokeRequired )
+      {
+        Invoke( new UpdateFromMessagesCallback( UpdateFromMessages ), new object[] { Parser, ParsedProject } );
+        return;
+      }
+
       m_ListProject = ParsedProject;
       ClearMessages();
 
