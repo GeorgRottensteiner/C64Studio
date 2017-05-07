@@ -1,10 +1,7 @@
 C64 Studio is a .NET based IDE.
 
 The program supports project based C64 assembly and/or Basic V2 and is geared towards game development.
-
-C64 Studio is a .NET based IDE.
-
-The program supports project based C64 assembly or Basic V2. The internal assembler is using the ACME syntax.
+The internal assembler is using the ACME syntax.
 
 In connection with Vice the IDE allows you to debug through your code and watch variables/memory locations, registers and memory.
 Any other emulator can be set up as well if it's startable via runtime arguments.
