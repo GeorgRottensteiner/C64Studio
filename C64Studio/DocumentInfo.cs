@@ -148,7 +148,7 @@ namespace C64Studio
       KnownTokens = KnownTokenInfo;
       if ( BaseDoc != null )
       {
-        Project.Core.MainForm.AddTask( new Tasks.TaskUpdateKeywords( BaseDoc ) );
+        BaseDoc.Core.MainForm.AddTask( new Tasks.TaskUpdateKeywords( BaseDoc ) );
         //BaseDoc.OnKnownKeywordsChanged();
         //BaseDoc.OnKnownTokensChanged();
       }

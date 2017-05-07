@@ -133,7 +133,7 @@ namespace C64Studio.Parser
         else if ( byteValue == (byte)'@' )
         {
           m_TextCodeMappingScr[byteValue] = 0;
-          m_TextCodeMappingPet[byteValue] = 0;
+          m_TextCodeMappingPet[byteValue] = (byte)64;
         }
         else
         {
