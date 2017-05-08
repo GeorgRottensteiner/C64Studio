@@ -28,3 +28,8 @@
 /TestProject/obj/Release
 /packages
 *.suo
+/C64StudioRelease/C64Studio.exe
+/C64StudioRelease/FastColoredTextBox.dll
+/C64StudioRelease/HexBox.dll
+/C64StudioRelease/MediaManager.exe
+/C64StudioRelease/MediaTool.exe
