@@ -12,7 +12,8 @@ namespace C64Studio.Types
     C64_STUDIO,
     PDS,
     DASM,
-    C64ASM
+    C64ASM,
+    CBMPRGSTUDIO
   };
 
   public enum CharsetMode

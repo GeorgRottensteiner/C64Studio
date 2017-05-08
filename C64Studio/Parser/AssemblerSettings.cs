@@ -331,6 +331,81 @@ namespace C64Studio.Parser
           CaseSensitive = false;
           IncludeExpectsStringLiteral = true;
           break;
+        case Types.AssemblerType.CBMPRGSTUDIO:
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#:";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_STRING] = "\"";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_STRING] = "\"";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEF$%";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEFx";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.MACRO] = "!";
+          AllowedTokenChars[Types.TokenInfo.TokenType.MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = ":";
+          AllowedTokenChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
+
+          AllowedSingleTokens = ",#(){}*";
+
+          AddMacro( "DC.B", Types.MacroInfo.MacroType.TEXT );
+          AddMacro( "DC.W", Types.MacroInfo.MacroType.WORD );
+          AddMacro( "MAC", Types.MacroInfo.MacroType.MACRO );
+          AddMacro( "ENDM", Types.MacroInfo.MacroType.END );
+          AddMacro( "!TEXT", Types.MacroInfo.MacroType.TEXT );
+          AddMacro( "!TX", Types.MacroInfo.MacroType.TEXT );
+          AddMacro( "!SCR", Types.MacroInfo.MacroType.TEXT_SCREEN );
+          AddMacro( "RORG", Types.MacroInfo.MacroType.PSEUDO_PC );
+          AddMacro( "REND", Types.MacroInfo.MacroType.REAL_PC );
+          AddMacro( "!BANK", Types.MacroInfo.MacroType.BANK );
+          AddMacro( "!CONVTAB", Types.MacroInfo.MacroType.CONVERSION_TAB );
+          AddMacro( "!CT", Types.MacroInfo.MacroType.CONVERSION_TAB );
+          AddMacro( "INCBIN", Types.MacroInfo.MacroType.INCLUDE_BINARY );
+          AddMacro( "INCLUDE", Types.MacroInfo.MacroType.INCLUDE_SOURCE );
+          AddMacro( "!TO", Types.MacroInfo.MacroType.COMPILE_TARGET );
+          AddMacro( "SUBROUTINE", Types.MacroInfo.MacroType.ZONE );
+          AddMacro( "!ERROR", Types.MacroInfo.MacroType.ERROR );
+          AddMacro( "!IFDEF", Types.MacroInfo.MacroType.IFDEF );
+          AddMacro( "!IFNDEF", Types.MacroInfo.MacroType.IFNDEF );
+          AddMacro( "IF", Types.MacroInfo.MacroType.IF );
+          AddMacro( "ELSE", Types.MacroInfo.MacroType.ELSE );
+          AddMacro( "ENDIF", Types.MacroInfo.MacroType.END_IF );
+          AddMacro( "DS.Z", Types.MacroInfo.MacroType.FILL );
+          AddMacro( "DS", Types.MacroInfo.MacroType.FILL );
+          AddMacro( "DS.B", Types.MacroInfo.MacroType.FILL );
+          AddMacro( "ALIGN", Types.MacroInfo.MacroType.ALIGN_DASM );
+          AddMacro( "!ENDOFFILE", Types.MacroInfo.MacroType.END_OF_FILE );
+
+          AddMacro( "REPEAT", Types.MacroInfo.MacroType.LOOP_START );
+          AddMacro( "REPEND", Types.MacroInfo.MacroType.LOOP_END );
+
+          AddMacro( "PROCESSOR", Types.MacroInfo.MacroType.IGNORE );
+          AddMacro( "ORG", Types.MacroInfo.MacroType.ORG );
+          AddMacro( "SEG", Types.MacroInfo.MacroType.SEG );
+          AddMacro( "SEG.U", Types.MacroInfo.MacroType.SEG );
+          AddMacro( "BYTE", Types.MacroInfo.MacroType.BYTE );
+
+          LabelPostfix = ":";
+          MacroFunctionCallPrefix = ":";
+          GlobalLabelsAutoZone = false;
+          DefineSeparatorKeywords.Add( "SET" );
+          DefineSeparatorKeywords.Add( "=" );
+          MacroIsZone = true;
+          MacrosHaveVariableNumberOfArguments = true;
+          IncludeExpectsStringLiteral = false;
+          break;
       }
     }
 

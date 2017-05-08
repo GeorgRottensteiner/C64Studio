@@ -28,6 +28,7 @@ namespace C64Studio
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "PDS", C64Studio.Types.AssemblerType.PDS ) );
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "DASM", C64Studio.Types.AssemblerType.DASM ) );
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "C64ASM", C64Studio.Types.AssemblerType.C64ASM ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "CBMPRGSTUDIO", C64Studio.Types.AssemblerType.CBMPRGSTUDIO ) );
 
       SetType( Element.AssemblerType );
     }
