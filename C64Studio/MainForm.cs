@@ -4347,10 +4347,9 @@ namespace C64Studio
         StudioCore.Debugging.DebugDisassembly.Name = "Disassembly";
         StudioCore.Debugging.DebugDisassembly.SetDocumentFilename( "Disassembly" );
         StudioCore.Debugging.DebugDisassembly.Show( panelMain );
-        //Settings.Tools[StudioCore.Debugging.DebugDisassembly.Text].Visible = true;
       }
 
-      // TODO - put disassembly in there
+      // put disassembly in there
       StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, Address, 32 );
       StudioCore.Debugging.DebugDisassembly.SetText( "Disassembly will\r\nappear here" );
 

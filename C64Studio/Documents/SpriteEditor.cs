@@ -1631,7 +1631,7 @@ namespace C64Studio
 
     private void CopySpriteToClipboard()
     {
-      // TODO - copy selected range/column (put custom data in clipboard?)
+      // copy selected range/column (put custom data in clipboard)
       List<int>     selectedImages = panelSprites.SelectedIndices;
       if ( selectedImages.Count == 0 )
       {
@@ -1662,7 +1662,7 @@ namespace C64Studio
 
       dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
 
-      // TODO - compile image from selection
+      // TODO - compile image from selection, not only current sprite
       GR.Memory.ByteBuffer dibData = m_SpriteProject.Sprites[m_CurrentSprite].Image.CreateHDIBAsBuffer();
 
       System.IO.MemoryStream ms = dibData.MemoryStream();

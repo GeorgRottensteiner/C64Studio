@@ -75,6 +75,9 @@ namespace C64Studio.Parser
 
     public Types.ASM.FileInfo           InitialFileInfo = null;
 
+    public const string                 INTERNAL_OPENING_BRACE = "╚";
+    public const string                 INTERNAL_CLOSING_BRACE = "╝";
+
 
 
     public ASMFileParser()
@@ -1213,7 +1216,7 @@ namespace C64Studio.Parser
             // evaluate token now!
             int result = -1;
 
-            // TODO - check if we've got a hi/lo byte operator
+            // check if we've got a hi/lo byte operator
             if ( highestPrecedence == 7 )
             {
               // must be directly connected
@@ -1337,7 +1340,7 @@ namespace C64Studio.Parser
     private bool IsOpeningBraceChar( string Token )
     {
       if ( ( Token == "(" )
-      ||   ( Token == "╚" ) )
+      ||   ( Token == INTERNAL_OPENING_BRACE ) )
       {
         return true;
       }
@@ -1349,7 +1352,7 @@ namespace C64Studio.Parser
     private bool IsClosingBraceChar( string Token )
     {
       if ( ( Token == ")" )
-      ||   ( Token == "╝" ) )
+      ||   ( Token == INTERNAL_CLOSING_BRACE ) )
       {
         return true;
       }
@@ -1887,18 +1890,8 @@ namespace C64Studio.Parser
     {
       for ( int i = 0; i < Lines.Length; ++i )
       {
-        // TODOTODOTODO - keep leading spaces/tabs intact and cope with any problems that appear!
         string tempLine = Lines[i].TrimEnd();
-        //string tempLine = Lines[i].Trim();
         tempLine = tempLine.Replace( '\t', ' ' );
-
-        /*
-        // truncate comments
-        int commentPosTemp = tempLine.IndexOf( ';' );
-        if ( commentPosTemp != -1 )
-        {
-          tempLine = tempLine.Substring( 0, commentPosTemp );
-        }*/
         Lines[i] = tempLine;
       }
     }
@@ -4210,9 +4203,8 @@ namespace C64Studio.Parser
           if ( lineTokenInfos[i].Content == "," )
           {
             // separator
-            //param.Add( "(" + parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) + ")" );
-            param.Add( "╚" + parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) + "╝" );
-            //param.Add( parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) );
+            // we're using a custom internal brace to not mix up opcode detection with expression parsing
+            param.Add( INTERNAL_OPENING_BRACE + parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) + INTERNAL_CLOSING_BRACE );
 
             // is reference properly matched?
             if ( param.Count > functionInfo.ParametersAreReferences.Count )
@@ -4257,7 +4249,7 @@ namespace C64Studio.Parser
           else
           {
             // braces so potential original operators are evaluated before the rest is
-            param.Add( "╚" + TokensToExpression( lineTokenInfos, startIndex, lineTokenInfos.Count - startIndex ) + "╝" );
+            param.Add( INTERNAL_OPENING_BRACE + TokensToExpression( lineTokenInfos, startIndex, lineTokenInfos.Count - startIndex ) + INTERNAL_CLOSING_BRACE );
           }
           //param.Add( lineTokenInfos[startIndex].Content );
           // is reference properly matched?
@@ -4467,57 +4459,12 @@ namespace C64Studio.Parser
 
         // TODO - damit geht ; in Strings auch nicht!
         int commentPos = -1;
-        bool firstNonWhiteSpaceCharFound = false;
-        bool insideStringLiteral = false;
-        bool insideCharLiteral = false;
 
-        for ( int i = 0; i < parseLine.Length; ++i )
-        {
-          char aChar = parseLine[i];
-          if ( aChar == '\'' )
-          {
-            if ( !insideStringLiteral )
-            {
-              insideCharLiteral = !insideCharLiteral;
-            }
-          }
-          if ( aChar == '"' )
-          {
-            insideStringLiteral = !insideStringLiteral;
-          }
-          if ( ( insideCharLiteral )
-          ||   ( insideStringLiteral ) )
-          {
-            continue;
-          }
-          if ( ( !firstNonWhiteSpaceCharFound )
-          &&   ( aChar != ' ' )
-          &&   ( aChar != '\t' ) )
-          {
-            firstNonWhiteSpaceCharFound = true;
-            if ( ( m_AssemblerSettings.AllowedTokenStartChars.ContainsKey( C64Studio.Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR ) )
-            &&   ( m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR].IndexOf( aChar ) != -1 ) )
-            {
-              commentPos = 0;
-              break;
-            }
-            if ( m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.COMMENT].IndexOf( aChar ) != -1 )
-            {
-              commentPos = i;
-              break;
-            }
-          }
-          if ( m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.COMMENT].IndexOf( aChar ) != -1 )
-          {
-            commentPos = i;
-            break;
-          }
-        }
-        if ( commentPos != -1 )
+        if ( FindStartOfComment( parseLine, out commentPos ) )
         {
           m_CurrentCommentSB.AppendLine( parseLine.Substring( commentPos + 1 ) );
-          parseLine = parseLine.Substring( 0, commentPos );
-          hadCommentInLine = true;
+          parseLine         = parseLine.Substring( 0, commentPos );
+          hadCommentInLine  = true;
         }
 
         Types.ASM.LineInfo info = new Types.ASM.LineInfo();
@@ -6790,7 +6737,61 @@ namespace C64Studio.Parser
 
 
 
-    private void OnScopeRemoved( int LineIndex, List<Types.ScopeInfo> Scopes )
+    private bool FindStartOfComment( string parseLine, out int commentPos )
+    {
+ 	    bool firstNonWhiteSpaceCharFound = false;
+      bool insideStringLiteral = false;
+      bool insideCharLiteral = false;
+
+      commentPos = -1;
+
+      for ( int i = 0; i < parseLine.Length; ++i )
+      {
+        char aChar = parseLine[i];
+        if ( aChar == '\'' )
+        {
+          if ( !insideStringLiteral )
+          {
+            insideCharLiteral = !insideCharLiteral;
+          }
+        }
+        if ( aChar == '"' )
+        {
+          insideStringLiteral = !insideStringLiteral;
+        }
+        if ( ( insideCharLiteral )
+        ||   ( insideStringLiteral ) )
+        {
+          continue;
+        }
+        if ( ( !firstNonWhiteSpaceCharFound )
+        &&   ( aChar != ' ' )
+        &&   ( aChar != '\t' ) )
+        {
+          firstNonWhiteSpaceCharFound = true;
+          if ( ( m_AssemblerSettings.AllowedTokenStartChars.ContainsKey( C64Studio.Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR ) )
+          &&   ( m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR].IndexOf( aChar ) != -1 ) )
+          {
+            commentPos = 0;
+            break;
+          }
+          if ( m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.COMMENT].IndexOf( aChar ) != -1 )
+          {
+            commentPos = i;
+            return true;
+          }
+        }
+        if ( m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.COMMENT].IndexOf( aChar ) != -1 )
+        {
+          commentPos = i;
+          return true;
+        }
+      }
+      return false;
+    } 
+
+
+    void OnScopeRemoved( int LineIndex, List<Types.ScopeInfo> Scopes )
     {
       /*
       var scope = Scopes[Scopes.Count - 1];

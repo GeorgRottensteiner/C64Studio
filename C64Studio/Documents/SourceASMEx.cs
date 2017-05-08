@@ -1864,7 +1864,6 @@ namespace C64Studio
 
     private void addToWatchToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      // TODO - check for ,y or ,x
       int     lineIndex = m_ContextMenuLineIndex;
       string  wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
       bool    indexedX = false;

@@ -75,7 +75,7 @@ namespace C64Studio.Parser
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
-          AllowedSingleTokens = ",#(){}*╚╝";
+          AllowedSingleTokens = ",#(){}*" + ASMFileParser.INTERNAL_OPENING_BRACE + ASMFileParser.INTERNAL_CLOSING_BRACE;
 
           AddMacro( "!BYTE", Types.MacroInfo.MacroType.BYTE );
           AddMacro( "!BY", Types.MacroInfo.MacroType.BYTE );

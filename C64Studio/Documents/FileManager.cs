@@ -468,7 +468,7 @@ namespace C64Studio
         }
       }
 
-      // TODO - insert file
+      // insert file
       bool changed = false;
       foreach ( C64Studio.Types.FileInfo file in dragData.Files )
       {

@@ -149,8 +149,6 @@ namespace C64Studio
       if ( BaseDoc != null )
       {
         BaseDoc.Core.MainForm.AddTask( new Tasks.TaskUpdateKeywords( BaseDoc ) );
-        //BaseDoc.OnKnownKeywordsChanged();
-        //BaseDoc.OnKnownTokensChanged();
       }
 
       if ( Element != null )
