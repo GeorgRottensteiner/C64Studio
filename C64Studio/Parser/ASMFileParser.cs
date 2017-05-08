@@ -4448,11 +4448,6 @@ namespace C64Studio.Parser
         //string parseLine = Lines[lineIndex].Trim();
         string parseLine = Lines[lineIndex].TrimEnd();
 
-        if ( parseLine.Contains( "lda#0" ) )
-        {
-          Debug.Log( "aha" );
-        }
-
         lineSizeInBytes = 0;
         hadCommentInLine = false;
         hadMacro = false;
