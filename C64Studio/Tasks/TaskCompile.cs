@@ -85,6 +85,7 @@ namespace C64Studio.Tasks
         if ( !BuildElement( baseDoc, configSetting, null, true, out buildInfo, out dummyInfo ) )
         {
           Core.SetStatus( "Build failed" );
+          Core.MainForm.AppState = Types.StudioState.NORMAL;
           return false;
         }
         Core.Compiling.m_LastBuildInfo = buildInfo;
