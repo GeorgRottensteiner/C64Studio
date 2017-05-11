@@ -935,7 +935,23 @@ namespace GR.Image
         CreateBitmap();
       }
       switch ( BitsPerPixel )
-      {
+      { 
+        case 1:
+          unsafe
+          {
+            int   pitch = ( Width + 7 ) / 8;
+            byte* pData = (byte*)m_ImageData;
+
+            if ( Value != 0 )
+            {
+              pData[Y * pitch + X / 8] |= (byte)( 128 >> ( 7 - ( X % 8 ) ) );
+            }
+            else
+            {
+              pData[Y * pitch + X / 8] &= (byte)(~( 128 >> ( 7 - ( X % 8 ) ) ) );
+            }
+          }
+          break;
         case 4:
           unsafe
           {
@@ -1086,6 +1102,22 @@ namespace GR.Image
       {
         switch ( m_PixelFormat )
         {
+          case System.Drawing.Imaging.PixelFormat.Format1bppIndexed:
+            unsafe
+            {
+              int   pitch = ( Width + 7 ) / 8;
+              byte* pData = (byte*)m_ImageData;
+
+              if ( Color != 0 )
+              {
+                pData[Y * pitch + X / 8] |= (byte)( 128 >> ( 7 - ( X % 8 ) ) );
+              }
+              else
+              {
+                pData[Y * pitch + X / 8] &= (byte)( ~( 128 >> ( 7 - ( X % 8 ) ) ) );
+              }
+            }
+            break;
           case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
           case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
             {
@@ -1141,6 +1173,14 @@ namespace GR.Image
       {
         switch ( m_PixelFormat )
         {
+          case System.Drawing.Imaging.PixelFormat.Format1bppIndexed :
+            unsafe
+            {
+              int   pitch = ( Width + 7 ) / 8;
+              byte* pData = (byte*)m_ImageData;
+
+              return (uint)( ( pData[Y * pitch + X / 8] >> ( 7 - ( X % 8 ) ) ) & 1 );
+            };
           case System.Drawing.Imaging.PixelFormat.Format4bppIndexed:
             unsafe
             {
@@ -1563,14 +1603,14 @@ namespace GR.Image
                 {
                   for ( int i = 0; i < ( iWidth + 7 ) / 8; i++ )
                   {
+                    uint    colorValue = (uint)( ( pData[i / 8 + j * iLO] >> ( 7 - ( i % 8 ) ) ) & 1 );
                     if ( iHeight < 0 )
                     {
-                      ImageData.SetPixelData( i, j, pData[i + j * iLO] );
-                      //( (byte*)ImageData.Data() )[i + j * ImageData.LineOffsetInBytes()] = pData[i + j * iLO];
+                      ImageData.SetPixelData( i, j, colorValue );
                     }
                     else
                     {
-                      ImageData.SetPixelData( i, System.Math.Abs( iHeight ) - j - 1, pData[i + j * iLO] );
+                      ImageData.SetPixelData( i, System.Math.Abs( iHeight ) - j - 1, colorValue );
                     }
                   }
                 }

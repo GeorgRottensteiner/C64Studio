@@ -609,6 +609,24 @@ namespace GR.Image
       }
       switch ( BitsPerPixel )
       {
+        case 1:
+          unsafe
+          {
+            int   pitch = ( Width + 7 ) / 8;
+            byte  origValue = m_ImageData.ByteAt( Y * pitch + X / 8 );
+            byte  newValue = origValue;
+
+            if ( Value != 0 )
+            {
+              newValue = (byte)( origValue | ( 128 >> ( 7 - ( X % 8 ) ) ) );
+            }
+            else
+            {
+              newValue = (byte)( origValue & ( ~( 128 >> ( 7 - ( X % 8 ) ) ) ) );
+            }
+            m_ImageData.SetU8At( Y * pitch + X / 8, newValue );
+          }
+          break;
         case 4:
           unsafe
           {
@@ -745,6 +763,13 @@ namespace GR.Image
         byte*   pDataSource = (byte*)PinData();
         switch ( m_PixelFormat )
         {
+          case System.Drawing.Imaging.PixelFormat.Format1bppIndexed:
+            unsafe
+            {
+              int   pitch = ( Width + 7 ) / 8;
+
+              return (uint)( ( pDataSource[Y * pitch + X / 8] >> ( 7 - ( X % 8 ) ) ) & 1 );
+            };
           case System.Drawing.Imaging.PixelFormat.Format4bppIndexed:
             {
               int   pitch = Width / 2;
