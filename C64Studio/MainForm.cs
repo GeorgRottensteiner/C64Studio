@@ -6582,7 +6582,7 @@ namespace C64Studio
       }
 
       DlgGraphicImport importGFX = new DlgGraphicImport( StudioCore, ImportType, IncomingImage, Filename, MCSettings );
-      if ( importGFX.ShowDialog() != DialogResult.OK )
+      if ( importGFX.ShowDialog() != DialogResult.OK ) 
       {
         IncomingImage.Dispose();
         NewMCSettings = MCSettings;

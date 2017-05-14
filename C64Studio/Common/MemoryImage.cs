@@ -618,11 +618,11 @@ namespace GR.Image
 
             if ( Value != 0 )
             {
-              newValue = (byte)( origValue | ( 128 >> ( 7 - ( X % 8 ) ) ) );
+              newValue = (byte)( origValue | ( 128 >> ( X % 8 ) ) );
             }
             else
             {
-              newValue = (byte)( origValue & ( ~( 128 >> ( 7 - ( X % 8 ) ) ) ) );
+              newValue = (byte)( origValue & ( ~( 128 >> ( X % 8 ) ) ) );
             }
             m_ImageData.SetU8At( Y * pitch + X / 8, newValue );
           }
@@ -768,7 +768,7 @@ namespace GR.Image
             {
               int   pitch = ( Width + 7 ) / 8;
 
-              return (uint)( ( pDataSource[Y * pitch + X / 8] >> ( 7 - ( X % 8 ) ) ) & 1 );
+              return (uint)( ( pDataSource[Y * pitch + X / 8] >> ( X % 8 ) ) & 1 );
             };
           case System.Drawing.Imaging.PixelFormat.Format4bppIndexed:
             {

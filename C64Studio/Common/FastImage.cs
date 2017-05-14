@@ -372,11 +372,7 @@ namespace GR.Image
           case System.Drawing.Imaging.PixelFormat.Format16bppRgb565:
             return Width * 2;
           case System.Drawing.Imaging.PixelFormat.Format1bppIndexed:
-            if ( ( Width % 8 ) != 0 )
-            {
-              return Width / 8 + 1;
-            }
-            return Width / 8;
+            return ( ( Width + 7 ) / 8 );
           case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
             if ( ( ( Width * 3 ) % 4 ) != 0 )
             {
@@ -944,11 +940,11 @@ namespace GR.Image
 
             if ( Value != 0 )
             {
-              pData[Y * pitch + X / 8] |= (byte)( 128 >> ( 7 - ( X % 8 ) ) );
+              pData[Y * pitch + X / 8] |= (byte)( 128 >> ( X % 8 ) );
             }
             else
             {
-              pData[Y * pitch + X / 8] &= (byte)(~( 128 >> ( 7 - ( X % 8 ) ) ) );
+              pData[Y * pitch + X / 8] &= (byte)(~( 128 >> ( X % 8 ) ) );
             }
           }
           break;
@@ -1601,9 +1597,9 @@ namespace GR.Image
                 ImageData.Create( iWidth, iHeight, System.Drawing.Imaging.PixelFormat.Format1bppIndexed );
                 for ( int j = 0; j < System.Math.Abs( iHeight ); j++ )
                 {
-                  for ( int i = 0; i < ( iWidth + 7 ) / 8; i++ )
+                  for ( int i = 0; i < iWidth; i++ )
                   {
-                    uint    colorValue = (uint)( ( pData[i / 8 + j * iLO] >> ( 7 - ( i % 8 ) ) ) & 1 );
+                    uint    colorValue = (uint)( ( pData[i / 8 + j * iLO] >> ( i % 8 ) ) & 1 );
                     if ( iHeight < 0 )
                     {
                       ImageData.SetPixelData( i, j, colorValue );
