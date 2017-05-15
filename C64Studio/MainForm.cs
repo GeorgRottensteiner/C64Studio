@@ -4476,8 +4476,9 @@ namespace C64Studio
     public DocumentInfo DetermineDocumentToCompile()
     {
       BaseDocument baseDocToCompile = ActiveContent;
-      if ( ( baseDocToCompile != null )
-      &&   ( !baseDocToCompile.DocumentInfo.Compilable ) )
+      if ( ( ( baseDocToCompile != null )
+      &&     ( !baseDocToCompile.DocumentInfo.Compilable ) )
+      ||   ( baseDocToCompile == null ) )
       {
         baseDocToCompile = ActiveDocument;
       }
