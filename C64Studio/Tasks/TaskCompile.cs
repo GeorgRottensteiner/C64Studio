@@ -41,6 +41,7 @@ namespace C64Studio.Tasks
           if ( !Core.MainForm.SaveProject( m_DocumentToBuild.Project ) )
           {
             Core.SetStatus( "Failed to save project" );
+            Core.MainForm.AppState = Types.StudioState.NORMAL;
             return false;
           }
         }
@@ -50,6 +51,7 @@ namespace C64Studio.Tasks
           if ( !Core.MainForm.SaveProject( m_DocumentToBuild.Project ) )
           {
             Core.SetStatus( "Failed to save project" );
+            Core.MainForm.AppState = Types.StudioState.NORMAL;
             return false;
           }
         }
@@ -59,6 +61,7 @@ namespace C64Studio.Tasks
       if ( baseDoc == null )
       {
         Core.SetStatus( "No active document" );
+        Core.MainForm.AppState = Types.StudioState.NORMAL;
         return false;
       }
       if ( ( baseDoc.Element == null )
@@ -66,6 +69,7 @@ namespace C64Studio.Tasks
       {
         Core.AddToOutput( "Document is not part of project, cannot build" + System.Environment.NewLine );
         Core.SetStatus( "Document is not part of project, cannot build" );
+        Core.MainForm.AppState = Types.StudioState.NORMAL;
         return false;
       }
       Core.ClearOutput();
