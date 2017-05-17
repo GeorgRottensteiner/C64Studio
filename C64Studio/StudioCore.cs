@@ -16,6 +16,7 @@ namespace C64Studio
     public Navigating         Navigating;
     public Executing          Executing;
     public Tasks.TaskManager  TaskManager;
+    public bool               ShuttingDown = false;
 
 
 

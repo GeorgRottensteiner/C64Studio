@@ -25,7 +25,7 @@ namespace C64Studio.Tasks
 
     void m_BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
     {
-      while ( true )
+      while ( !Core.ShuttingDown  )
       {
         Tasks.Task    newTask = null;
         lock ( m_TaskQueue )

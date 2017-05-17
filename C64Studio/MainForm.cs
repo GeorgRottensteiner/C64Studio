@@ -5403,6 +5403,7 @@ namespace C64Studio
         }
       }
       SaveSettings();
+      StudioCore.ShuttingDown = true;
     }
 
 
