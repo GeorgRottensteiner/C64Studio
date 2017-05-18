@@ -6,8 +6,16 @@ namespace C64Studio.Systems
 {
   public class CPUSystem
   {
+    public string                                               Name = "";
     public Dictionary<string, List<Types.ASM.Opcode>>           Opcodes = new Dictionary<string, List<Types.ASM.Opcode>>();
     public Dictionary<byte, Types.ASM.Opcode>                   OpcodeByValue = new Dictionary<byte, Types.ASM.Opcode>();
+
+
+
+    public CPUSystem( string Name )
+    {
+      this.Name = Name;
+    }
 
 
 
@@ -48,7 +56,7 @@ namespace C64Studio.Systems
 
     public static CPUSystem Create6510System()
     {
-      CPUSystem  sys = new CPUSystem();
+      CPUSystem  sys = new CPUSystem( "6510" );
 
       sys.AddOpcode( "adc", 0x6d, 2, Types.ASM.Opcode.AddressingType.ABSOLUTE, 4 );           // ADC $hhll
       sys.AddOpcode( "adc", 0x7d, 2, Types.ASM.Opcode.AddressingType.ABSOLUTE_X, 4, 1 );      // ADC $hhll, X

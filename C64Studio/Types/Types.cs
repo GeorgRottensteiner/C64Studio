@@ -222,10 +222,10 @@ namespace C64Studio.Types
     W0005_USER_WARNING                      = 0x8004,
     [Description( "W0006: Label dump file name already provided" )]
     W0006_LABEL_DUMP_FILE_ALREADY_GIVEN     = 0x8005,
+    [Description( "W0007: Potential problem detected" )]
+    W0007_POTENTIAL_PROBLEM                 = 0x8006,
     [Description( "W1000: Unused label" )]
     W1000_UNUSED_LABEL                      = 0x9003,
-
-    
 
     WARNING_LAST_PLUS_ONE
   };

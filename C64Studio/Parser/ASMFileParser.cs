@@ -47,7 +47,7 @@ namespace C64Studio.Parser
     internal static string              InternalLabelPrefix = "c64_local_label";
     internal static string              InternalLabelPostfix = "_";
 
-    public Systems.CPUSystem            m_Processor = new C64Studio.Systems.CPUSystem();
+    public Systems.CPUSystem            m_Processor = Systems.CPUSystem.Create6510System();
 
     private GR.Collections.Map<string,int>                      m_OperatorPrecedence = new GR.Collections.Map<string,int>();
 
@@ -1827,6 +1827,16 @@ namespace C64Studio.Parser
               //dh.Log( "Parsed to: " + value );
               if ( lineInfo.Opcode != null )
               {
+                if ( ( lineInfo.Opcode.ByteValue == 0x6C )
+                &&   ( m_Processor.Name == "6510" )
+                &&   ( ( value & 0xff ) == 0xff ) )
+                {
+                  AddWarning( lineIndex,
+                              Types.ErrorCode.W0007_POTENTIAL_PROBLEM,
+                              "A indirect JMP with an address ending on 0xff will not work as expected on NMOS CPUs",
+                              lineInfo.NeededParsedExpression[0].StartPos,
+                              lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );
+                }
                 // check value size
                 if ( ( lineInfo.Opcode.Addressing == Types.ASM.Opcode.AddressingType.INDIRECT_Y )
                 ||   ( lineInfo.Opcode.Addressing == Types.ASM.Opcode.AddressingType.INDIRECT_X )
@@ -5136,6 +5146,17 @@ namespace C64Studio.Parser
               }
               if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, countTokens, out byteValue ) )
               {
+                if ( ( info.Opcode.ByteValue == 0x6C )
+                &&   ( m_Processor.Name == "6510" )
+                &&   ( ( byteValue & 0xff ) == 0xff ) )
+                {
+                  AddWarning( lineIndex,
+                              Types.ErrorCode.W0007_POTENTIAL_PROBLEM,
+                              "A indirect JMP with an address ending on 0xff will not work as expected on NMOS CPUs",
+                              lineTokenInfos[1].StartPos,
+                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
+                }
+
                 if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
                 &&   ( ( byteValue < 0 )
                 ||     ( byteValue >= 65536 ) ) )
