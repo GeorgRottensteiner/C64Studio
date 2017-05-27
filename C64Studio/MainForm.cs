@@ -2307,6 +2307,12 @@ namespace C64Studio
         StudioCore.Debugging.Debugger.m_ViceVersion = RemoteDebugger.WinViceVersion.V_3_0;
         StudioCore.Debugging.Debugger.m_BinaryMemDump = true;
       }
+      else if ( ( !string.IsNullOrEmpty( fileVersion.ProductVersion ) )
+      &&        ( GR.Convert.ToI32( fileVersion.ProductVersion.Substring( 0, 1 ) ) >= 3 ) )
+      {
+        StudioCore.Debugging.Debugger.m_ViceVersion = RemoteDebugger.WinViceVersion.V_3_0;
+        StudioCore.Debugging.Debugger.m_BinaryMemDump = true;
+      }
       return true;
     }
 

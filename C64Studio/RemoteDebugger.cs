@@ -905,6 +905,8 @@ namespace C64Studio
           {
             // [0] = "(C:$01f8) BREAK: 3 C:$0855   enabled"
             // oder  "BREAK: 4  C:$25c1  (Stop on exec)<10>(C:$0007) "
+            // oder            #1 (Stop on  exec 9258)  279 018
+            //                 .C:9258  A9 36       LDA #$36       - A:34 X:3F Y:00 SP:f2 .V-..IZC   29285379
             int breakpointID = 0;
             int responsePos = m_ResponseLines.First.Value.IndexOf( "BREAK: " );
             if ( responsePos == -1 )
