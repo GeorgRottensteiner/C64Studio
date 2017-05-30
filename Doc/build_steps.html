@@ -16,6 +16,8 @@
     <br>
     Pre build and post build do nothing per default, but can be overridden to do custom processing (crunching, etc.).
     If the custom build step is empty the built in assembler compiles the file. Any content in here will be run instead of the built in assembler.<br>
+    Build chains allow the building of other projects/files with different configurations. They are useful if you have a multi loader and want to assemble
+    a final disk image; which requires building all single loads upfront. Look below for details.<br>
     <br>
     <br>
     Any scripts in a build step are performed sequentially. Several macros are filled with current file and project information.<br>
@@ -116,6 +118,16 @@
         </td>
       </tr>
     </table>
+  </div>
+  <H3>Build Chains</H3>
+  <div id="mybody">
+    Build chains define a list of projects/files to be built with certain configurations either before the actual file (pre build chain) or after the actual file (post build chain).<br>
+    <br>
+    <img src="images/ide_properties_buildevents_buildchain.png"><br>
+    <br>
+    Choose a project, then a file from that project and a configuration. Defines in the field below may be set which are added additionally to the config pre defines.<br>
+    <br>
+    <br>
   </div>
 </body>
 </HTML>

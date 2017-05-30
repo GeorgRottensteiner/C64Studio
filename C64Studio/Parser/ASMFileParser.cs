@@ -7689,14 +7689,17 @@ namespace C64Studio.Parser
       {
         if ( lines != null )
         {
+          /*
           string path = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
-          System.IO.File.WriteAllLines( path, lines );
+          System.IO.File.WriteAllLines( path, lines );*/
         }
         return false;
       }
 
+      /*
       string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
       System.IO.File.WriteAllLines( pathLog, lines );
+      */
 
       DetermineUnparsedLabels();
       //Debug.Log( "DetermineUnparsedLabels done" );
