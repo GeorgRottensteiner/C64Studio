@@ -1,0 +1,538 @@
+C64 Studio
+==========
+
+C64 Studio is a .NET based IDE written by Georg Rottensteiner
+
+This app supports project based C64 assembly or Basic V2. The internal assembler is using the ACME syntax.
+
+In connection with Vice the IDE allows you to debug through your code and watch variables/memory locations, registers and memory.
+Any other emulator can be set up as well if it's startable via runtime arguments.
+
+C64 Studio allows you to compile to raw binary, .prg, .t64, .d64 or cartridge format (several formats are available)
+
+Additionally to this C64 Studio comes with a charset, sprite and media editor.
+
+
+
+Version history:
+================
+
+30.05.2017 - 5.2:         Fix: Crash if "rebuild" with non project was clicked in toolbar
+                          Fix: 40 track .d64 images can now be opened in File Manager
+                          Add/Fix: Background worker to speed up general behaviour (switching docs, etc.)
+                          Fix: Proper support for VICE 3.1
+                          Add: 1bit image import
+                          Add: quick hacked CBMPrgStudio support
+                          Fix: Fixed bug in !pet, @ was compiled to $00 instead of $40 (increases ACME compatiblity)
+                          Fix: Allow key mapped actions to work even if no document is currently active
+
+27.02.2017 - 5.1:         Add: Action to jump to next warning/error message
+                          Add: Support for VICE 3.0 remote debugger, now works with binary mem dump => way faster memory reads!
+                          Add/Fix: Total rewrite of BASIC key mapping, now it should do what's on the tin.
+                          Add/Fix: Replace all now works with selection, open documents and whole solution
+                          Add: !media supports spritedata for sprite files
+                          Fix: Build chain dependency building properly now
+                          Fix: Random crash at !macro with expression parameter replacing
+                          Fix: BASIC label mode could mess up if commands were used following ON GOTO,GOSUB
+                          Fix: Several crashes with drag & drop in Solution Explorer
+
+16.11.2016 - 5.0:         Add: Sprite editor image list adjusts to size
+                          Add: <> operator (works same as !=)
+                          Add: !pseudopc now also allows bracketed scope (like ACME)
+                          Add: Build chains
+
+31.08.2016 - 4.9:         Add: Exact error marking
+                          Add: Option to disable automatic vice label file creation
+                          Add: Outline - sorting by source or alphabetically
+                          Add: Outline - filtering by text
+                          Fix: Expressions in macro parameters could lead to an "can't detect correct opcode" error
+
+06.07.2016 - 4.8:         Add: Highlight of other occurrances of current selected text
+                          Add: Display of memory content optionally as sprites/chars
+                          Add: Exchange colors methods to sprite editor
+                          Fix: Key mapping for BASIC should now be really functional
+                          Fix: Pi constant for BASIC was mapped to wrong value
+                          Fix: Lots of smaller fixes and added errors for compilation and opcode detection
+
+08.05.2016 - 4.7:         Add: Label file for VICE (run and debug mode)
+                          Add: Outline allows for showing/hiding local/shortcut labels
+                          Add: BASIC - Short cut of commands automatically replaced with full command
+                          Add: !macros now also work with {} brackets similar to ACME
+                          Add: Code folding, also saved
+                          Add: MediaTool for simple pre/post build processing
+
+21.02.2016 - 4.6:         Add: Byte and cycle display in left border
+                          Add: Fastscroll display on the right border
+                          Add: Change marker on left border
+                          Add: Group modification of selected chars in charset editor
+                          Add: Segments now build properly
+                          Fix: Display memory view with Commodore font
+                          Add: Check for HiRes bitmap mode in graphic editor
+                          Fix: Several bugs in import dialog format checks
+
+05.12.2015 - 4.5:         Fix: Search/replace with tabs enabled now places selection properly
+                          Fix: Color preferences now really don't mess up the settings anymore
+                          Add: Sprite Preview now allows expand h/v
+                          Add: Charset can clear selected chars
+                          Add: Enhanced Character Mode (ECM) in charset, charset screen and map editor (not for paste detection yet though)
+                          Add: !addr/!address as pseudo pseudo ops for ACME compatibility (they are ignored for now and do not trigger a "unknown pseudo op" warning anymore)
+
+02.10.2015 - 4.4:         Fix: Import of 4-bit images now works
+                          Fix: symbols are now distributed to files in sub folders correctly
+                          Add: Direct calculation to Calculator (allows all variants just like in assembly)
+                          Add: Mem-Dump update put in idle queue (debug memory view now scrolls smoothly), downside, update takes a bit
+                          Add: Open last session as option
+                          Add: Setting colors, keybinding, fonts to defaults per button
+                          Add: Tool Windows visibility is now saved for edit and debug perspectives
+
+24.07.2015 - 4.3:         Fix: Colors on startup with new settings are now set to sensible values
+                          Fix: Replaced Scintilla in most places with a pure .NET control. A big step towards better cross platform. Also better syntax coloring
+                          Fix: !ifs inside macro definitions now work
+                          Fix: Big speed up on preparsing when opening multi file projects
+
+04.06.2015 - 4.2:         Fix: Import File in Media Manager now refreshes the file view
+                          Fix: Nested for loops now really work as intended
+                          Fix: Crash with combined binary complements
+                          Fix: Bitmap export now properly uses actual size (not forced to 320x200)
+                          Fix: Crash yet again in projectless mode (using files without project/solution)
+                          Add: !BASIC pseudo op
+                          Add: Sprite editor effects (shift, rotate, mirror, etc.) now work on whole selection
+                          Add: Undo for charset and graphic screens
+                          Add. Graphic screen now directly resizable
+
+01.05.2015 - 4.1:         Add: alternative BG color to map editor
+                          Add: True drive toggleable
+                          Add: Emulator choice
+                          Add: Undo for map editor, charset editor, sprite editor
+                          Fix: Easyflash creation would crash for files bigger than 65536 bytes
+                          Fix: Way better PETSCII table dialog
+                          Fix: Set tiles could visually disappear when changing to other tool (but were actually set)
+                          Fix: Dependency during chained build now also rebuilds dependant element if it has been rebuilt during the same build cycle
+
+16.02.2015 - 4.0:         Fix: Several crashes with out of bounds selection in charset and charset screen editor
+                          Fix: Several crashes when pasting out of bounds in sprite and charset editor
+                          Fix: Loops nested in macros now work properly
+                          Fix: PETSCII Table now works on single click
+                          Fix: BASIC toggling between label/non label mode doesn't add spaces everywhere
+                          Fix: BASIC macros now work case insensitive
+                          Fix: BASIC source fonts correctly use for every part
+                          Add: DASM pseudo op ALIGN
+                          Add: alternative multicolors in map editor
+                          Add: Proper creation of project and non-project documents
+                          Add: BASIC files compile file name default to file name plus .prg
+                          Add: Color exchange for charsets
+                          Add: Allow BASIC font to be different than C64 font
+
+25.11.2014 - 3.9:         Add: Tools (rect, box, selection, fill) for charset screen editor
+                          Add: Tools (rect, box, selection, fill) for map editor
+                          Add: Store/show comment info for labels, display in tooltip (continuous and after line comments are considered)
+                          Add: Newer Scintilla control
+                          Add: Better disassembler, now allows to modify binary, jump addresses and save/load project settings
+                          Fix: Crash when "find all" in non opened files was used
+                          Fix: Run to cursor from context menu could use wrong address
+                          Fix: Exporting graphic screen into existing charscreen project did not honour multicolor setting
+                          Fix: Moving tiles up/down in map editor could mess up tile indices in editor
+                          Fix: Pseudo op !CT could modify previously used custom conv table
+
+01.10.2014 - 3.8:         Fix: Comments with non ASCII characters could break macro insertion
+                          Fix: Several DASM pseudo ops have been added and/or fixed
+                          Fix: Adding new item could overwrite existing file
+                          Fix: !error, !warn and !message pseudo op now properly evaluate expressions as text
+                          Fix: Dependencies can now be compiled without opening the file
+                          Fix: Running external commands with spaces in path now finally really works (ouch!)
+                          Fix: Import of paletted images now works (didn't show up in the preview dialog)
+                          Add: Symbols/tokens of dependencies and included files are now also updated after successful compile
+                          Add: !warn pseudo op
+                          Add: binary not operator (!)
+                          Add: Methods CHARVERT, COLORVERT, CHARCOLORVERT, COLORCHARVERT, CHARSET to !media and !mediasrc for character screen projects
+                          Add: Tab Context menu to close, or close all but this
+
+05.08.2014 - 3.7:         Fix: Charpad .ctm import could have wrong colours
+                          Add: Dependencies allow to include symbols (useful for multiparters)
+                          Add: Add existing item asks to copy file if not inside project folder
+                          Add: Better range export for sprites
+                          Add: Symbol import for dependencies
+                          Fix: !media did not work right for spritesets
+                          Fix: potential hang with !for pseudo op if step values did not add up to end value exactly
+
+18.06.2014 - 3.6:         Add: Extra data per map in map editor
+                          Add: License information
+                          Add: Finally, IDE layout saving
+                          Add: !convtab, !ct allows now spreading custom mappings over several lines
+                          Add: Charpad .ctm import (charset and map editor)
+                          Add: !media and !mediasrc pseudo op (direct or assembly import of charset/spriteset/screens/maps)
+                          Fix: Several bugs in map editor (only last map saved, update name)
+                          Fix: Pseudo breakpoints (Ctrl-F10) would only work twice
+                          Fix: Import existing file in sub folder would not properly build file hierarchy
+                          Doc: Added !RAW
+
+15.05.2014 - 3.5:         Add: BASIC renumber function
+                          Add: !PET pseudo op
+                          Add: elseif for !if, } else { pseudo op
+                          Add: !TRACE pseudo op
+                          Add: Watches are saved/restored with a solution
+                          Add: Ctrl-A works now in export assembly controls
+                          Add: Preliminary graphic import dialog (not fully functional yet)
+                          Add: range and block selection in sprite/charset editor (Shift-Click = range, Alt-Click = block)
+                          Fix: Expression evaluator could miscalculate when both division and multiplication were in an expression without parenthesis
+
+21.01.2014 - 3.4:         Fix: Copy/Paste for BASIC
+                          Fix: local labels in macros
+                          Fix: Replace all in selections
+                          Fix: Keyboard shortcuts mode based
+                          Add: Commenting/Uncommenting selection
+                          Add: Solutions, support for more than one project
+                          Add: Folders in solutions/projects
+                          Add: Included aay64 documentation
+                          Add: Context help (currently only for opcodes)
+
+28.11.2013 - 3.3:         Add: Tile map editor
+                          Add: Ignore warning settings
+                          Add: Modifiable constants (instead of redefinition error)
+                          Add: Way better PDS and a little better DASM support
+                          Fix: overlapping segments are now properly written to the final result
+                          Fix: Temporary breakpoint did not work, if a store breakpoint was set
+                          Fix: Find in selection
+                          Fix: Crash in Find/Replace
+
+22.10.2013 - 3.2:         Add: Add item to project asks for filename upfront
+                          Fix: Pasting image in graphic editor does not check for validity
+                          Add: Binary editor (File->New->Binary Editor)
+                          Fix: Deleting live breakpoints while in broken state might delete wrong breakpoint
+                          Add: Better PDS assembler support, DH, DL, CBM, EQU, proper local labels
+                          Fix: Major speedup on longer warning/error list
+                          Fix: Media Manager: Rewrote file handling (load address was getting messed up again)
+                          Fix: Assembler type auto detect now really working
+
+13.09.2013 - 3.1:         Fix: Read Only displays (Output) are now really read only
+                          Fix: Search All had off by one line numbers
+                          Fix: Replace all could run into endless loops if the replaced text contained the search text
+                          Add: Search All now brings search result list to foreground
+                          Add: Search All now shows proper line numbers for currently closed documents
+                          Add: Debugger now jumps to disassembly if cpu pointer is not in code
+                          
+
+09.08.2013 - 3.0:         Fix: Saving element outside project path doesn't crash anymore
+                          Fix: Complete rebuild of BASIC tokenizer according to C64 kernal
+                          Add: Support for store/load/exec breakpoint types
+                          Add: Focus now shifts to Emulator/IDE during debugging depending on state
+                          Add: Find/Replace dialog of Scintilla replaced by self built dialog, now allows search in file and properly holds search/replace history (may be buggy)
+                          Add: Button to force hires/multicolor on all characters in Charset Editor
+
+20.06.2013 - 2.9:         Add: Build Macros ConfigName and ProjectPath
+                          Add: Command line tool MediaManager
+                          Add: Renaming files in File Manager
+                          Add: !for pseudo op
+                          Add: !macro pseudo op
+                          Fix: Disassembler would abort if jumps were out of bounds, relative addresses were calculated wrong
+                          Fix: lo/hi-byte operator now works properly also inside an expression
+                          Fix: Exception when !source-ing empty file
+                          Fix: Adding Watch of local label now works
+                          
+                          Breaking Change: Fixing the lo/hi-byte operator now makes expression like #<buff + $20 or !byte <a + b behave differently. 
+                                           In case of doubt add paranthesis! #<( buff + $20 ) or !byte <( a + b )
+                          
+
+08.04.2013 - 2.8:         Fix: Import and Export from disk image in media manager was corrupt
+                          Fix: Graphic screen editor now properly handles repeated checks for MC charset
+                          Fix: Basic string macros were borked when toggling label mode
+                          Fix: Disassembler now produces better output (and doesn't stop cold too easily)
+                          Fix: Hanging debugger with Vice 2.4
+                          Add: Saving of graphic screen editor data
+                          Add: Export of graphic screen to binary data
+                          Add: "External functions" to assembler (e.g. io.filesize)
+                          Add: Open Explorer from Project Explorer
+                          Add: Code labels can now be used in Pre/Post-Build Events (e.g. moving addresses)
+                          Add: Binary display for Media Manager
+
+12.02.2013 - 2.7c:        Fix: Changing Tab text to * should be gone now
+                          Fix: !binary was wrong again
+                          Add: #<xxx, #>xxx, ... allowed now
+
+06.02.2013 - 2.7:         Fix: Step In/Step Out for WinVICE 2.4
+                          Fix: Paste bug in sprite editor
+                          Fix: several %<literal_number> statements in one line had a syntax error
+                          Fix: Color preferences should now properly remember chosen colors
+                          Fix: Mapping of !CT scr and raw was not correctly applied
+                          Fix: Duplicate "save changes" request on closing on a new, unsaved file removed
+                          Add: General project element info
+                          Add: Toolbar can now be disabled
+                          Add: Binary exchange with Vice for mem dumps should lead to faster response
+                          Add: New Project wizard
+                          
+
+18.11.2012 - 2.6:         Add: support for WinVICE 2.4 (debugger responses changed)
+                          Add: support for PDS style assembler
+
+20.10.2012 - 2.5:         Add: save warning on project->close
+                          Fix: screen char editor
+                          Add: charscreen to Basic exporter
+                          Add: invert to char/sprite editor
+                          Add: Dependencies are now only built when required
+                          Fix: Breakpoint move with code changes now properly
+                          Add: Syntax coloring for empty space was added
+                          Add: Rotating sprites/charset
+                          Fix: Basic normal/label mode now properly handles string literals
+                          
+
+23.09.2012 - 2.4:         Changed ASM parser, now checks for * inside !IF work
+                          Fixed saving of charset export file name
+                          Proper behaviour for files saved outside of project folder
+                          Enabled watches for ,x and ,y (needs to be selected)
+                          Fixed Basic bugs: * was resulting in @, PRINTX was not recognized as PRINT
+                          Fixed asm bugs: 3 digit hex numbers were treates as single byte
+                          Fixed crash for properties of new Basic files that were not saved yet
+                          Syntax Coloring customizable (in certain limits)
+                          Grid in sprite/charset editor
+                          Copy/Paste in sprite/charset editor now doesn't care about image size
+                          PETSCII character table
+
+26.06.2012 - 2.3:         Fixed T64 export
+                          Fixed nested preprocessor blocks
+                          Enhanced !CT pseudo op to allow for custom tables
+                          Fixed !binary pseudo op, had extra bytes when a part of a file was included
+                          Added !align pseudo op
+                          Added a few basic code macros
+                          Added category sorting to charset editor
+                          Added memory change coloring
+
+
+06.04.2012 - 2.2:         Stored open state of element (not all elements are opened automatically)
+                          Fixed D64 export bug (file was truncated)
+                          Added breakpoint support
+                          Added !bank pseudo op
+                          Added Magic Desk cartridge type
+                          Added help documentation (not complete yet)
+
+19.02.2012 - 2.1:         Fixed drop bug (.c64 file would not open project)
+                          Fixed run bug if basic project was run after asm project
+                          Synced toolbar new menu with menu new
+                          Fixed bug in !bin pseudo op (!bin <filename>,1000,0 would raise an error even when the file was big enough)
+                          Added syntax coloring for opcodes (ror, rol, bvc, bvs, brk, php, plp, clv, cld)
+                          Fixed bug in Basic parser, now to/from label mode works again for goto
+
+11.02.2012 - 2.0:         Added !endoffile pseudo op
+                          Allow umlauts in labels
+                          Fixed tooltip flicker
+                          Fixed bug in charset paste
+                          Fixed ASM parser to decide to use 8bit/16bit arguments based on source
+                          Enhanced watcher (allow to view memory blocks)
+                          Enhanced debugger (auto-refresh memory view and registers)
+                          Enhanced Media Manager
+
+07.12.2011 - 1.9:         Fixed bug in !bin when more bytes were requested than available in the file
+                          Fixed treatment of non document elements (source would not build if floating)
+                          Added Media Manager to manipulate .T64 and .D64 files
+                          Added .d64 export
+                          Added tooltips in ASM files (plus debug info)
+
+01.11.2011 - 1.8:         Fixed bug in resume to during active debug session
+                          Added preliminary Basic V2 support
+
+10.09.2011 - 1.7:         Added code font configuration
+                          Added notification for externally changed files
+                          Added intelligent dependency checks
+                          Fixed !CT SCR mapping
+
+16.08.2011 - 1.6:         Fixed parse bug, things like LDA #'H' can now be parsed
+                          Complete rewrote GDI handling for sprite and charset editor (no more resource leaks)
+                          Added Pre/Custom/Post Build events per configuration (useful for exomizing)
+                          Fixed some crash bugs
+
+31.07.2011 - 1.5:         Fixed bug in parsing !byte with binary values
+                          Fixed bug in file info storage, sometimes error messages were accredited to the wrong file
+                          Fixed bug where warnings were not displayed (segment overwrite)
+                          Added charset/sprite functions as buttons
+                          Changed charset copy/paste to always use clipboard
+
+14.07.2011 - 1.4:         Added warnings for unused labels
+                          TODO - fix copy/paste bug in sprite editor
+                          Sped up compiler (less restart of parsing)
+                          Following element dependencies on build
+                          Disallow circular dependencies
+                          Readjusted watches after restart
+                          Save current open document and position
+
+21.06.2011 - 1.3a:        Fixed weird exception when using Umlauts at the line end
+                          Added tab configuration
+                          Added undo/redo to toolbar/menu
+                          Autocreate project if new document is created without project
+
+19.06.2011 - 1.3:         Added image export for sprites
+                          Fixed wrong modified state in sprite editor (selecting single/multi-color chars would set the project as modified)
+                          Added import/export of all sprites as image
+                          Added import/export of all characters as image
+                          Added !pseudopc pseudo op
+                          Added project configurations with predefines
+                          Added element dependencies
+                          Enabled sprite/charset files as part of projects
+                          Added !ifndef pseudo op
+
+02.06.2011 - 1.2b:        Fixed crash when pushing "Macros" without active document
+                          Fixed copy/paste bug in charset editor
+                          Added clipboard import for sprites
+                          Cleared undo buffer on direct file load
+                          Fixed parse bug which allowed LDA/STA (xxx),x
+                          Added copy/paste for sprites
+
+24.05.2011 - 1.2a:        Fixed sprite editor import and export (horribly messed up)
+
+
+
+License
+=======
+
+C64 Studio is licensed under
+
+The MIT License (MIT)
+
+Copyright (c) 2011 - 2014 Georg Rottensteiner
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+IN THE SOFTWARE.
+
+
+
+C64 Studio uses FastColoredTextBox by Pavel Torgashov under the Lesser Gnu Public License v3.0:
+
+From http://opensource.org/licenses/lgpl-3.0.html:
+
+This license is a set of additional permissions added to version 3 of the GNU General Public License. 
+
+GNU LESSER GENERAL PUBLIC LICENSE
+
+Version 3, 29 June 2007
+
+Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
+
+Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
+
+This version of the GNU Lesser General Public License incorporates the terms and conditions of version 3 of the GNU General Public License, 
+supplemented by the additional permissions listed below.
+
+0. Additional Definitions.
+
+As used herein, “this License” refers to version 3 of the GNU Lesser General Public License, and the “GNU GPL” refers to 
+version 3 of the GNU General Public License.
+
+“The Library” refers to a covered work governed by this License, other than an Application or a Combined Work as defined below.
+
+An “Application” is any work that makes use of an interface provided by the Library, but which is not otherwise based on the 
+Library. Defining a subclass of a class defined by the Library is deemed a mode of using an interface provided by the Library.
+
+A “Combined Work” is a work produced by combining or linking an Application with the Library. The particular version of the 
+Library with which the Combined Work was made is also called the “Linked Version”.
+
+The “Minimal Corresponding Source” for a Combined Work means the Corresponding Source for the Combined Work, excluding any 
+source code for portions of the Combined Work that, considered in isolation, are based on the Application, and not on the Linked Version.
+
+The “Corresponding Application Code” for a Combined Work means the object code and/or source code for the Application, including 
+any data and utility programs needed for reproducing the Combined Work from the Application, but excluding the System Libraries 
+of the Combined Work.
+
+1. Exception to Section 3 of the GNU GPL.
+
+You may convey a covered work under sections 3 and 4 of this License without being bound by section 3 of the GNU GPL.
+
+2. Conveying Modified Versions.
+
+If you modify a copy of the Library, and, in your modifications, a facility refers to a function or data to be supplied by an
+Application that uses the facility (other than as an argument passed when the facility is invoked), then you may convey a copy
+of the modified version:
+##a) under this License, provided that you make a good faith effort to ensure that, in the event an Application does not supply
+the function or data, the facility still operates, and performs whatever part of its purpose remains meaningful, or
+##b) under the GNU GPL, with none of the additional permissions of this License applicable to that copy.
+
+3. Object Code Incorporating Material from Library Header Files.
+
+The object code form of an Application may incorporate material from a header file that is part of the Library. You may convey 
+such object code under terms of your choice, provided that, if the incorporated material is not limited to numerical parameters, 
+data structure layouts and accessors, or small macros, inline functions and templates (ten or fewer lines in length), you do 
+both of the following:
+##a) Give prominent notice with each copy of the object code that the Library is used in it and that the Library and its use 
+     are covered by this License.
+##b) Accompany the object code with a copy of the GNU GPL and this license document.
+
+4. Combined Works.
+
+You may convey a Combined Work under terms of your choice that, taken together, effectively do not restrict modification of the 
+portions of the Library contained in the Combined Work and reverse engineering for debugging such modifications, if you also do 
+each of the following:
+##a) Give prominent notice with each copy of the Combined Work that the Library is used in it and that the Library and its use
+are covered by this License.
+##b) Accompany the Combined Work with a copy of the GNU GPL and this license document.
+##c) For a Combined Work that displays copyright notices during execution, include the copyright notice for the Library among 
+these notices, as well as a reference directing the user to the copies of the GNU GPL and this license document.
+##d) Do one of the following: ##0) Convey the Minimal Corresponding Source under the terms of this License, and the Corresponding 
+Application Code in a form suitable for, and under terms that permit, the user to recombine or relink the Application with a 
+modified version of the Linked Version to produce a modified Combined Work, in the manner specified by section 6 of the GNU GPL 
+for conveying Corresponding Source.
+##1) Use a suitable shared library mechanism for linking with the Library. A suitable mechanism is one that (a) uses at run time
+a copy of the Library already present on the user's computer system, and (b) will operate properly with a modified version of the
+Library that is interface-compatible with the Linked Version.
+
+##e) Provide Installation Information, but only if you would otherwise be required to provide such information under section 6 of
+the GNU GPL, and only to the extent that such information is necessary to install and execute a modified version of the Combined 
+Work produced by recombining or relinking the Application with a modified version of the Linked Version. (If you use option 4d0, 
+the Installation Information must accompany the Minimal Corresponding Source and Corresponding Application Code. If you use option
+4d1, you must provide the Installation Information in the manner specified by section 6 of the GNU GPL for conveying Corresponding 
+Source.)
+
+5. Combined Libraries.
+
+You may place library facilities that are a work based on the Library side by side in a single library together with other 
+library facilities that are not Applications and are not covered by this License, and convey such a combined library under 
+terms of your choice, if you do both of the following:
+##a) Accompany the combined library with a copy of the same work based on the Library, uncombined with any other library 
+facilities, conveyed under the terms of this License.
+##b) Give prominent notice with the combined library that part of it is a work based on the Library, and explaining where to find 
+the accompanying uncombined form of the same work.
+
+6. Revised Versions of the GNU Lesser General Public License.
+
+The Free Software Foundation may publish revised and/or new versions of the GNU Lesser General Public License from time to time. 
+Such new versions will be similar in spirit to the present version, but may differ in detail to address new problems or concerns.
+
+Each version is given a distinguishing version number. If the Library as you received it specifies that a certain numbered version
+of the GNU Lesser General Public License “or any later version” applies to it, you have the option of following the terms and 
+conditions either of that published version or of any later version published by the Free Software Foundation. If the Library as 
+you received it does not specify a version number of the GNU Lesser General Public License, you may choose any version of the GNU 
+Lesser General Public License ever published by the Free Software Foundation.
+
+If the Library as you received it specifies that a proxy can decide whether future versions of the GNU Lesser General Public 
+License shall apply, that proxy's public statement of acceptance of any version is permanent authorization for you to choose 
+that version for the Library.
+
+
+
+
+C64 Studio also uses Weifen Luo's Dockpanel Suite which is licensed under:
+
+
+The MIT License
+
+
+Copyright (c) 2007 Weifen Luo (email: weifenluo@yahoo.com)
+
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, 
+modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
+Software is furnished to do so, subject to the following conditions:
+
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
