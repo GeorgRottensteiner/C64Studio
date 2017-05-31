@@ -1113,7 +1113,7 @@ namespace C64Studio
             }
           }
           if ( ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-          && ( tokens[i].Content == "," ) )
+          &&   ( tokens[i].Content == "," ) )
           {
             if ( hadOpcodeFirst )
             {
@@ -1145,6 +1145,10 @@ namespace C64Studio
       //List<string>    newList = new List<string>();
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {
+        if ( entry.Token.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        {
+          continue;
+        }
         // always add common entries
         newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Token ) { ToolTipTitle = entry.ToolTipTitle, ToolTipText = entry.ToolTipText } );
         // special case local labels
@@ -1155,6 +1159,11 @@ namespace C64Studio
       }
       foreach ( var entry in DocumentInfo.KnownTokens )
       {
+        if ( entry.Key.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        {
+          continue;
+        }
+
         // always add common entries
         string    toolTipText = "$" + entry.Value.AddressOrValue.ToString( "X4" ) + "," + entry.Value.AddressOrValue.ToString();
         newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Key ) { ToolTipTitle = entry.Key, ToolTipText = toolTipText } );
@@ -1376,12 +1385,22 @@ namespace C64Studio
 
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {
+        if ( entry.Token.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        {
+          // skip internal labels in autocomplete
+          continue;
+        }
         newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Token ) { ToolTipTitle = entry.ToolTipTitle, ToolTipText = entry.ToolTipText } );
         //newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Token.Substring( zone.Length ) ) { ToolTipTitle = entry.ToolTipTitle, ToolTipText = entry.ToolTipText } );
       }
       GR.Collections.Set<string>    uniqueKeys = DocumentInfo.KnownTokens.GetUniqueKeys();
       foreach ( string entry in uniqueKeys )
       {
+        if ( entry.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        {
+          // skip internal labels in autocomplete
+          continue;
+        }
         newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry ) { ToolTipTitle = entry, ToolTipText = "sowas" } );
         //newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Substring( zone.Length ) ) { ToolTipTitle = entry.Substring( zone.Length ), ToolTipText = "tool tip text" } );
       }

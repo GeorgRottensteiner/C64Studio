@@ -17,7 +17,7 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
-xx.xx.2017 - 5.3:          
+xx.xx.2017 - 5.3:         Add: Intellisense now shows entries which contain the typed string instead of only starting with
 
 30.05.2017 - 5.2:         Fix: Crash if "rebuild" with non project was clicked in toolbar
                           Fix: 40 track .d64 images can now be opened in File Manager
