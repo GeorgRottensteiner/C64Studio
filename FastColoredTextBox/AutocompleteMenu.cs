@@ -128,7 +128,7 @@ namespace FastColoredTextBoxNS
       CalcSize();
       base.Items.Add( host );
       listView.Parent = this;
-      SearchPattern = @"[\w\.]";
+      SearchPattern = @"[\w_\.]";
       MinFragmentLength = 2;
 
     }
