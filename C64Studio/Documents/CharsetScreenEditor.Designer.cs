@@ -97,6 +97,8 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnDefaultLowerCase = new System.Windows.Forms.Button();
+      this.btnDefaultUppercase = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -165,6 +167,8 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Controls.Add(this.btnDefaultLowerCase);
+      this.groupBox1.Controls.Add(this.btnDefaultUppercase);
       this.groupBox1.Controls.Add(this.btnImportCharset);
       this.groupBox1.Controls.Add(this.btnImportFromFile);
       this.groupBox1.Location = new System.Drawing.Point(458, 6);
@@ -812,6 +816,26 @@
       this.tabCharsetEditor.Size = new System.Drawing.Size(964, 501);
       this.tabCharsetEditor.TabIndex = 0;
       // 
+      // btnDefaultLowerCase
+      // 
+      this.btnDefaultLowerCase.Location = new System.Drawing.Point(129, 77);
+      this.btnDefaultLowerCase.Name = "btnDefaultLowerCase";
+      this.btnDefaultLowerCase.Size = new System.Drawing.Size(117, 23);
+      this.btnDefaultLowerCase.TabIndex = 3;
+      this.btnDefaultLowerCase.Text = "Default Lowercase";
+      this.btnDefaultLowerCase.UseVisualStyleBackColor = true;
+      this.btnDefaultLowerCase.Click += new System.EventHandler(this.btnDefaultLowerCase_Click);
+      // 
+      // btnDefaultUppercase
+      // 
+      this.btnDefaultUppercase.Location = new System.Drawing.Point(6, 77);
+      this.btnDefaultUppercase.Name = "btnDefaultUppercase";
+      this.btnDefaultUppercase.Size = new System.Drawing.Size(117, 23);
+      this.btnDefaultUppercase.TabIndex = 4;
+      this.btnDefaultUppercase.Text = "Default Uppercase";
+      this.btnDefaultUppercase.UseVisualStyleBackColor = true;
+      this.btnDefaultUppercase.Click += new System.EventHandler(this.btnDefaultUppercase_Click);
+      // 
       // CharsetScreenEditor
       // 
       this.ClientSize = new System.Drawing.Size(964, 525);
@@ -904,6 +928,8 @@
     private System.Windows.Forms.ComboBox comboBGColor4;
     private System.Windows.Forms.ComboBox comboCharsetFiles;
     private System.Windows.Forms.Button btnExportCharset;
+    private System.Windows.Forms.Button btnDefaultLowerCase;
+    private System.Windows.Forms.Button btnDefaultUppercase;
 
 
 

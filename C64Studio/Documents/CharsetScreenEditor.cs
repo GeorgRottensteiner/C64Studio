@@ -2308,5 +2308,53 @@ namespace C64Studio
 
 
 
+    private void btnDefaultUppercase_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharsetChange( m_CharsetScreen, this ) );
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        for ( int j = 0; j < 8; ++j )
+        {
+          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, Types.ConstantData.UpperCaseCharset.ByteAt( i * 8 + j ) );
+        }
+        m_CharsetScreen.CharSet.Characters[i].Mode = C64Studio.Types.CharsetMode.HIRES;
+        m_CharsetScreen.CharSet.Characters[i].Color = 1;
+      }
+      Modified = true;
+      CharsetChanged();
+    }
+
+
+
+    private void btnDefaultLowerCase_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharsetChange( m_CharsetScreen, this ) );
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        for ( int j = 0; j < 8; ++j )
+        {
+          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, Types.ConstantData.LowerCaseCharset.ByteAt( i * 8 + j ) );
+        }
+        m_CharsetScreen.CharSet.Characters[i].Mode = C64Studio.Types.CharsetMode.HIRES;
+        m_CharsetScreen.CharSet.Characters[i].Color = 1;
+      }
+      Modified = true;
+      CharsetChanged();
+    }
+
+
+
+    internal void CharsetChanged()
+    {
+      for ( int i = 0; i < 256; ++i )
+      {
+        RebuildCharImage( i );
+      }
+      panelCharacters.Invalidate();
+      pictureEditor.Invalidate();
+      RedrawFullScreen();
+    }
   }
 }

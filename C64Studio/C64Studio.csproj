@@ -655,6 +655,7 @@
     <Compile Include="Types\Palette.cs" />
     <Compile Include="Types\Types.cs" />
     <Compile Include="Types\Util.cs" />
+    <Compile Include="Undo\UndoCharscreenCharsetChange.cs" />
     <Compile Include="Undo\UndoSpritesetExchangeMultiColors.cs" />
     <Compile Include="Undo\UndoCharsetPlaygroundCharChange.cs" />
     <Compile Include="Undo\UndoGraphicScreenSizeChange.cs" />
