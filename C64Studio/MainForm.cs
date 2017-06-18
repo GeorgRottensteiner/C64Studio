@@ -29,7 +29,7 @@ namespace C64Studio
 
     public DebugRegisters   m_DebugRegisters = new DebugRegisters();
     public DebugWatch       m_DebugWatch = new DebugWatch();
-    public DebugMemory      m_DebugMemory = new DebugMemory();
+    public DebugMemory      m_DebugMemory = null;
     public DebugBreakpoints m_DebugBreakpoints = new DebugBreakpoints();
     public CompileResult    m_CompileResult = new CompileResult();
     public CharsetEditor    m_CharsetEditor = null;
@@ -501,6 +501,7 @@ namespace C64Studio
       m_Calculator = new Calculator();
       m_MapEditor = new MapEditor( StudioCore );
       m_Disassembler = new Disassembler( StudioCore );
+      m_DebugMemory = new DebugMemory( StudioCore );
 
       m_CharsetEditor.SetInternal();
       m_SpriteEditor.SetInternal();

@@ -9,15 +9,35 @@ namespace Be.Windows.Forms
 {
   public class HexBoxSpriteViewer : ICustomHexViewer
   {
-    enum ViewMode
+    public byte BackgroundColor
     {
-      HIRES,
-      MULTI_COLOR
-    };
+      get;
+      set;
+    }
 
+    public byte CustomColor
+    {
+      get;
+      set;
+    }
 
-    private ViewMode          m_ViewMode = ViewMode.HIRES;
+    public byte MultiColor1
+    {
+      get;
+      set;
+    }
 
+    public byte MultiColor2
+    {
+      get;
+      set;
+    }
+
+    public bool MultiColor
+    {
+      get;
+      set;
+    }
 
 
 
@@ -52,14 +72,13 @@ namespace Be.Windows.Forms
           spriteImage.Box( 0, 0, 24, 21, 1 );
           C64Studio.CustomRenderer.PaletteManager.ApplyPalette( spriteImage );
 
-          switch ( m_ViewMode )
+          if ( MultiColor )
           {
-            case ViewMode.HIRES:
-              SpriteDisplayer.DisplayHiResSprite( spriteData, 1, 0, spriteImage, 0, 0 );
-              break;
-            case ViewMode.MULTI_COLOR:
-              SpriteDisplayer.DisplayMultiColorSprite( spriteData, 1, 0, 2, 6, spriteImage, 0, 0 );
-              break;
+            SpriteDisplayer.DisplayMultiColorSprite( spriteData, BackgroundColor, MultiColor1, MultiColor2, CustomColor, spriteImage, 0, 0 );
+          }
+          else
+          {
+            SpriteDisplayer.DisplayHiResSprite( spriteData, BackgroundColor, CustomColor, spriteImage, 0, 0 );
           }
 
           int     offsetY = (int)( Box.CharSize.Height * ( j - firstSprite ) * 8 + ( Box.CharSize.Height * 8 - spriteSize ) / 2 ) - (int)( Box.CharSize.Height * firstLineOffset );
@@ -81,16 +100,7 @@ namespace Be.Windows.Forms
 
     internal void ToggleViewMode()
     {
-      switch ( m_ViewMode )
-      {
-        case ViewMode.HIRES:
-          m_ViewMode = ViewMode.MULTI_COLOR;
-          break;
-        case ViewMode.MULTI_COLOR:
-        default:
-          m_ViewMode = ViewMode.HIRES;
-          break;
-      }
+      MultiColor = !MultiColor;
     }
 
   }

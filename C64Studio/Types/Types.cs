@@ -476,6 +476,7 @@ namespace C64Studio.Types
     public const System.UInt16    SETTINGS_PERSPECTIVES = 0x2013;
     public const System.UInt16    SETTINGS_PERSPECTIVE  = 0x2014;
     public const System.UInt16    SETTINGS_OUTLINE      = 0x2015;
+    public const System.UInt16    SETTINGS_HEX_VIEW     = 0x2016;
   }
 
   public enum KeyboardKey

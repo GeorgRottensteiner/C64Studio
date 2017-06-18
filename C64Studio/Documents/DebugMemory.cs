@@ -30,10 +30,6 @@ namespace C64Studio
     private ToolStripMenuItem         m_MenuItemHexCharView = null;
     private ToolStripMenuItem         m_MenuItemHexSpriteView = null;
 
-    private bool                      m_ShowMemoryFromCPU = true;
-
-
-
 
 
     public class DebugMemoryEvent
@@ -55,9 +51,11 @@ namespace C64Studio
 
 
 
-    public DebugMemory()
+    public DebugMemory( StudioCore Core )
     {
       InitializeComponent();
+
+      this.Core = Core;
 
       m_ActiveMemory = m_MemoryCPU;
 
@@ -80,6 +78,23 @@ namespace C64Studio
       m_MenuItemHexSpriteView = new ToolStripMenuItem( "Set to Sprite View" );
       m_MenuItemHexSpriteView.Click += btnBinarySpriteView_Click;
       hexView.ContextMenuStrip.Items.Add( m_MenuItemHexSpriteView );
+
+      switch ( Core.Settings.MemoryDisplay )
+      {
+        case MemoryDisplayType.CHARSET:
+          btnBinaryCharView_Click( null, null );
+          hexView.ContextMenuStrip.Items.Add( "-" );
+          break;
+        case MemoryDisplayType.SPRITES:
+          btnBinarySpriteView_Click( null, null );
+          hexView.ContextMenuStrip.Items.Add( "-" );
+
+          TODO  
+          m_MenuItemHexSpriteView = new ToolStripMenuItem( "Set Colors" );
+          m_MenuItemHexSpriteView.Click += btnBinarySpriteView_Click;
+          hexView.ContextMenuStrip.Items.Add( m_MenuItemHexSpriteView );
+          break;
+      }
     }
 
 
@@ -133,7 +148,7 @@ namespace C64Studio
     {
       get
       {
-        return m_ShowMemoryFromCPU;
+        return Core.Settings.MemorySource == MemorySourceType.CPU;
       }
     }
 
@@ -303,6 +318,8 @@ namespace C64Studio
     {
       hexView.CustomHexViewer = null;
 
+      Core.Settings.MemoryDisplay = MemoryDisplayType.ASCII;
+
       //btnBinaryStringView.Enabled = false;
       m_MenuItemHexStringView.Checked = true;
 
@@ -327,6 +344,8 @@ namespace C64Studio
       {
         hexView.CustomHexViewer = new HexBoxCharViewer();
       }
+
+      Core.Settings.MemoryDisplay = MemoryDisplayType.CHARSET;
 
       //btnBinaryCharView.Enabled = false;
       m_MenuItemHexCharView.Checked = true;
@@ -353,6 +372,8 @@ namespace C64Studio
         hexView.CustomHexViewer = new HexBoxSpriteViewer();
       }
 
+      Core.Settings.MemoryDisplay = MemoryDisplayType.SPRITES;
+
       //btnBinarySpriteView.Enabled = false;
       m_MenuItemHexSpriteView.Checked = true;
 
@@ -369,9 +390,16 @@ namespace C64Studio
 
     private void toolStripBtnMemoryFromCPU_Click( object sender, EventArgs e )
     {
-      m_ShowMemoryFromCPU = toolStripBtnMemoryFromCPU.Checked;
+      if ( toolStripBtnMemoryFromCPU.Checked )
+      {
+        Core.Settings.MemorySource = MemorySourceType.CPU;
+      }
+      else
+      {
+        Core.Settings.MemorySource = MemorySourceType.RAM;
+      }
 
-      if ( m_ShowMemoryFromCPU )
+      if ( MemoryAsCPU )
       {
         toolStripBtnMemoryFromCPU.Image = C64Studio.Properties.Resources.icon_memory_cpu.ToBitmap();
         toolStripBtnMemoryFromCPU.ToolTipText = "Show RAM as CPU sees it";

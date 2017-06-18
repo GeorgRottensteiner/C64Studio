@@ -60,6 +60,19 @@ namespace C64Studio
     DISASSEMBLER
   };
 
+  public enum MemoryDisplayType
+  {
+    ASCII,
+    CHARSET,
+    SPRITES
+  };
+
+  public enum MemorySourceType
+  {
+    CPU,
+    RAM
+  };
+
   public class ToolWindow
   {
     public ToolWindowType     Type = ToolWindowType.UNKNOWN;
@@ -130,6 +143,21 @@ namespace C64Studio
     public BASICKeyMap                          BASICKeyMap = new BASICKeyMap();
     public bool                                 BASICStripSpaces = true;
     public bool                                 BASICShowControlCodesAsChars = true;
+
+    public MemoryDisplayType                    MemoryDisplay = MemoryDisplayType.ASCII;
+    public MemorySourceType                     MemorySource = MemorySourceType.CPU;
+    public Types.CharsetMode                    MemoryDisplayCharsetMode = Types.CharsetMode.HIRES;
+    public int                                  MemoryDisplayCharsetBackgroundColor = 1;
+    public int                                  MemoryDisplayCharsetCustomColor = 0;
+    public int                                  MemoryDisplayCharsetMulticolor1 = 5;
+    public int                                  MemoryDisplayCharsetMulticolor2 = 10;
+    public int                                  MemoryDisplayCharsetMulticolor3 = 6;
+    public int                                  MemoryDisplayCharsetMulticolor4 = 7;
+    public int                                  MemoryDisplaySpriteBackgroundColor = 1;
+    public bool                                 MemoryDisplaySpriteMulticolor = false;
+    public int                                  MemoryDisplaySpriteCustomColor = 0;
+    public int                                  MemoryDisplaySpriteMulticolor1 = 5;
+    public int                                  MemoryDisplaySpriteMulticolor2 = 10;
 
     public GR.Collections.Map<string, LayoutInfo> ToolLayout = new GR.Collections.Map<string,LayoutInfo>();
 
@@ -628,6 +656,27 @@ namespace C64Studio
       }
       SettingsData.Append( chunkPerspectives.ToBuffer() );
 
+      // hex view 
+      GR.IO.FileChunk chunkHexView = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_HEX_VIEW );
+
+      chunkHexView.AppendI32( (int)MemoryDisplay );
+      chunkHexView.AppendI32( (int)MemorySource );
+
+      chunkHexView.AppendU8( (byte)MemoryDisplayCharsetMode );
+      chunkHexView.AppendU8( (byte)MemoryDisplayCharsetBackgroundColor );
+      chunkHexView.AppendU8( (byte)MemoryDisplayCharsetCustomColor );
+      chunkHexView.AppendU8( (byte)MemoryDisplayCharsetMulticolor1 );
+      chunkHexView.AppendU8( (byte)MemoryDisplayCharsetMulticolor2 );
+      chunkHexView.AppendU8( (byte)MemoryDisplayCharsetMulticolor3 );
+      chunkHexView.AppendU8( (byte)MemoryDisplayCharsetMulticolor4 );
+
+      chunkHexView.AppendU8( (byte)( MemoryDisplaySpriteMulticolor ? 1 : 0 ) );
+      chunkHexView.AppendU8( (byte)MemoryDisplaySpriteBackgroundColor );
+      chunkHexView.AppendU8( (byte)MemoryDisplaySpriteCustomColor );
+      chunkHexView.AppendU8( (byte)MemoryDisplaySpriteMulticolor1 );
+      chunkHexView.AppendU8( (byte)MemoryDisplaySpriteMulticolor2 );
+      SettingsData.Append( chunkHexView.ToBuffer() );
+
       return SettingsData;
     }
 
@@ -956,6 +1005,26 @@ namespace C64Studio
                     break;
                 }
               }
+            }
+            break;
+          case Types.FileChunk.SETTINGS_HEX_VIEW:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              MemoryDisplay = (MemoryDisplayType)binIn.ReadInt32();
+              MemorySource = (MemorySourceType)binIn.ReadInt32();
+              MemoryDisplayCharsetMode = (Types.CharsetMode)binIn.ReadUInt8();
+              MemoryDisplayCharsetBackgroundColor = binIn.ReadUInt8();
+              MemoryDisplayCharsetCustomColor = binIn.ReadUInt8();
+              MemoryDisplayCharsetMulticolor1 = binIn.ReadUInt8();
+              MemoryDisplayCharsetMulticolor2 = binIn.ReadUInt8();
+              MemoryDisplayCharsetMulticolor3 = binIn.ReadUInt8();
+              MemoryDisplayCharsetMulticolor4 = binIn.ReadUInt8();
+              MemoryDisplaySpriteMulticolor = ( binIn.ReadUInt8() != 0 );
+              MemoryDisplaySpriteBackgroundColor = binIn.ReadUInt8();
+              MemoryDisplaySpriteCustomColor = binIn.ReadUInt8();
+              MemoryDisplaySpriteMulticolor1 = binIn.ReadUInt8();
+              MemoryDisplaySpriteMulticolor2 = binIn.ReadUInt8();
             }
             break;
         }
