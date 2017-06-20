@@ -9,15 +9,48 @@ namespace Be.Windows.Forms
 {
   public class HexBoxCharViewer : ICustomHexViewer
   {
-    enum ViewMode
+    public byte BackgroundColor
     {
-      HIRES,
-      MULTI_COLOR,
-      ECM
-    };
+      get;
+      set;
+    }
 
+    public byte CustomColor
+    {
+      get;
+      set;
+    }
 
-    private ViewMode          m_ViewMode = ViewMode.HIRES;
+    public byte MultiColor1
+    {
+      get;
+      set;
+    }
+
+    public byte MultiColor2
+    {
+      get;
+      set;
+    }
+
+    public byte MultiColor3
+    {
+      get;
+      set;
+    }
+
+    public byte MultiColor4
+    {
+      get;
+      set;
+    }
+
+    public C64Studio.Types.CharsetMode Mode
+    {
+      get;
+      set;
+    }
+
 
 
 
@@ -39,17 +72,17 @@ namespace Be.Windows.Forms
           GR.Image.FastImage  charImage = new GR.Image.FastImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
           C64Studio.CustomRenderer.PaletteManager.ApplyPalette( charImage );
 
-          switch ( m_ViewMode )
+          switch ( Mode )
           {
-            case ViewMode.HIRES:
-              CharacterDisplayer.DisplayHiResChar( charData, 1, 0, charImage, 0, 0 );
+            case C64Studio.Types.CharsetMode.HIRES:
+              CharacterDisplayer.DisplayHiResChar( charData, BackgroundColor, CustomColor, charImage, 0, 0 );
               break;
-            case ViewMode.MULTI_COLOR:
-              CharacterDisplayer.DisplayMultiColorChar( charData, 1, 0, 2, 14, charImage, 0, 0 );
+            case C64Studio.Types.CharsetMode.MULTICOLOR:
+              CharacterDisplayer.DisplayMultiColorChar( charData, BackgroundColor, CustomColor, MultiColor1, MultiColor2, charImage, 0, 0 );
               break;
-            case ViewMode.ECM:
+            case C64Studio.Types.CharsetMode.ECM:
               // TODO!
-              CharacterDisplayer.DisplayHiResChar( charData, 1, 0, charImage, 0, 0 );
+              CharacterDisplayer.DisplayHiResChar( charData, BackgroundColor, CustomColor, charImage, 0, 0 );
               break;
           }
 
@@ -67,17 +100,17 @@ namespace Be.Windows.Forms
 
     internal void ToggleViewMode()
     {
-      switch ( m_ViewMode )
+      switch ( Mode )
       {
-        case ViewMode.HIRES:
-          m_ViewMode = ViewMode.MULTI_COLOR;
+        case C64Studio.Types.CharsetMode.HIRES:
+          Mode = C64Studio.Types.CharsetMode.MULTICOLOR;
           break;
-        case ViewMode.MULTI_COLOR:
-          m_ViewMode = ViewMode.ECM;
+        case C64Studio.Types.CharsetMode.MULTICOLOR:
+          Mode = C64Studio.Types.CharsetMode.ECM;
           break;
-        case ViewMode.ECM:
+        case C64Studio.Types.CharsetMode.ECM:
         default:
-          m_ViewMode = ViewMode.HIRES;
+          Mode = C64Studio.Types.CharsetMode.HIRES;
           break;
       }
     }

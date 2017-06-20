@@ -11,6 +11,22 @@ namespace C64Studio
 {
   public partial class DebugMemory : BaseDocument
   {
+    private enum ColorType
+    {
+      CHARS_BACKGROUND,
+      CHARS_CUSTOM,
+      CHARS_MULTICOLOR1,
+      CHARS_MULTICOLOR2,
+      CHARS_MULTICOLOR3,
+      CHARS_MULTICOLOR4,
+      SPRITES_BACKGROUND,
+      SPRITES_CUSTOM,
+      SPRITES_MULTICOLOR1,
+      SPRITES_MULTICOLOR2,
+      SPRITES_MULTICOLOR3,
+      SPRITES_MULTICOLOR4
+    };
+
     private class MemoryView
     {
       public GR.Memory.ByteBuffer      RAM = new GR.Memory.ByteBuffer( 65536 );
@@ -29,6 +45,8 @@ namespace C64Studio
     private ToolStripMenuItem         m_MenuItemHexStringView = null;
     private ToolStripMenuItem         m_MenuItemHexCharView = null;
     private ToolStripMenuItem         m_MenuItemHexSpriteView = null;
+    private ToolStripMenuItem         m_MenuItemPreSetColorsSeparator = null;
+    private ToolStripMenuItem         m_MenuItemSetColors = null;
 
 
 
@@ -79,22 +97,125 @@ namespace C64Studio
       m_MenuItemHexSpriteView.Click += btnBinarySpriteView_Click;
       hexView.ContextMenuStrip.Items.Add( m_MenuItemHexSpriteView );
 
+      SetMemoryDisplayType();
+    }
+
+
+
+    public void SetMemoryDisplayType()
+    {
       switch ( Core.Settings.MemoryDisplay )
       {
         case MemoryDisplayType.CHARSET:
           btnBinaryCharView_Click( null, null );
-          hexView.ContextMenuStrip.Items.Add( "-" );
           break;
         case MemoryDisplayType.SPRITES:
           btnBinarySpriteView_Click( null, null );
-          hexView.ContextMenuStrip.Items.Add( "-" );
-
-          TODO  
-          m_MenuItemHexSpriteView = new ToolStripMenuItem( "Set Colors" );
-          m_MenuItemHexSpriteView.Click += btnBinarySpriteView_Click;
-          hexView.ContextMenuStrip.Items.Add( m_MenuItemHexSpriteView );
+          break;
+        default:
+          btnBinaryStringView_Click( null, null );
           break;
       }
+    }
+
+
+
+    private void SetColorSubmenu()
+    {
+      if ( m_MenuItemPreSetColorsSeparator != null )
+      {
+        hexView.ContextMenuStrip.Items.Remove( m_MenuItemPreSetColorsSeparator );
+        m_MenuItemPreSetColorsSeparator = null;
+      }
+      if ( m_MenuItemSetColors != null )
+      {
+        m_MenuItemSetColors.DropDownItems.Clear();
+        hexView.ContextMenuStrip.Items.Remove( m_MenuItemSetColors );
+        m_MenuItemSetColors = null;
+      }
+
+      m_MenuItemSetColors = new ToolStripMenuItem( "Set Colors" );
+      hexView.ContextMenuStrip.Items.Add( m_MenuItemSetColors );
+
+      switch ( Core.Settings.MemoryDisplay )
+      {
+        case MemoryDisplayType.CHARSET:
+          break;
+        case MemoryDisplayType.SPRITES:
+          AddSubMenu( m_MenuItemSetColors, "Background Color", ColorType.SPRITES_BACKGROUND );
+          AddSubMenu( m_MenuItemSetColors, "Custom Color", ColorType.SPRITES_CUSTOM );
+          AddSubMenu( m_MenuItemSetColors, "Multicolor 1", ColorType.SPRITES_MULTICOLOR1 );
+          AddSubMenu( m_MenuItemSetColors, "Multicolor 2", ColorType.SPRITES_MULTICOLOR2 );
+          break;
+      }
+    }
+
+
+
+    private void AddSubMenu( ToolStripMenuItem ParentMenu, string Text, ColorType Type )
+    {
+      var menu = new ToolStripMenuItem( Text );
+      ParentMenu.DropDownItems.Add( menu );
+
+      for ( int i = 0; i < 16; ++i )
+      {
+        var newItem = menu.DropDownItems.Add( i.ToString() );
+        newItem.Tag = Type;
+        newItem.Click += ColorMenuItem_Click;
+      }
+    }
+
+
+
+    void ColorMenuItem_Click( object sender, EventArgs e )
+    {
+      ToolStripMenuItem     item = (ToolStripMenuItem)sender;
+
+      int     colorIndex = GR.Convert.ToI32( item.Text );
+      switch ( (ColorType)item.Tag )
+      {
+        case ColorType.CHARS_BACKGROUND:
+          Core.Settings.MemoryDisplayCharsetBackgroundColor = colorIndex;
+          ( (HexBoxCharViewer)hexView.CustomHexViewer ).BackgroundColor = (byte)colorIndex;
+          break;
+        case ColorType.CHARS_CUSTOM:
+          Core.Settings.MemoryDisplayCharsetCustomColor = colorIndex;
+          ( (HexBoxCharViewer)hexView.CustomHexViewer ).CustomColor = (byte)colorIndex;
+          break;
+        case ColorType.CHARS_MULTICOLOR1:
+          Core.Settings.MemoryDisplayCharsetMulticolor1 = colorIndex;
+          ( (HexBoxCharViewer)hexView.CustomHexViewer ).MultiColor1 = (byte)colorIndex;
+          break;
+        case ColorType.CHARS_MULTICOLOR2:
+          Core.Settings.MemoryDisplayCharsetMulticolor2 = colorIndex;
+          ( (HexBoxCharViewer)hexView.CustomHexViewer ).MultiColor2 = (byte)colorIndex;
+          break;
+        case ColorType.CHARS_MULTICOLOR3:
+          Core.Settings.MemoryDisplayCharsetMulticolor3 = colorIndex;
+          ( (HexBoxCharViewer)hexView.CustomHexViewer ).MultiColor3 = (byte)colorIndex;
+          break;
+        case ColorType.CHARS_MULTICOLOR4:
+          Core.Settings.MemoryDisplayCharsetMulticolor4 = colorIndex;
+          ( (HexBoxCharViewer)hexView.CustomHexViewer ).MultiColor4 = (byte)colorIndex;
+          break;
+        case ColorType.SPRITES_BACKGROUND:
+          Core.Settings.MemoryDisplaySpriteBackgroundColor = colorIndex;
+          ( (HexBoxSpriteViewer)hexView.CustomHexViewer ).BackgroundColor = (byte)colorIndex;
+          break;
+        case ColorType.SPRITES_CUSTOM:
+          Core.Settings.MemoryDisplaySpriteCustomColor = colorIndex;
+          ( (HexBoxSpriteViewer)hexView.CustomHexViewer ).CustomColor = (byte)colorIndex;
+          break;
+        case ColorType.SPRITES_MULTICOLOR1:
+          Core.Settings.MemoryDisplaySpriteMulticolor1 = colorIndex;
+          ( (HexBoxSpriteViewer)hexView.CustomHexViewer ).MultiColor1 = (byte)colorIndex;
+          break;
+        case ColorType.SPRITES_MULTICOLOR2:
+          Core.Settings.MemoryDisplaySpriteMulticolor2 = colorIndex;
+          ( (HexBoxSpriteViewer)hexView.CustomHexViewer ).MultiColor2 = (byte)colorIndex;
+          break;
+      }
+      hexView.Invalidate();
     }
 
 
@@ -316,6 +437,9 @@ namespace C64Studio
 
     private void btnBinaryStringView_Click( object sender, EventArgs e )
     {
+      btnBinaryCharView.Checked = false;
+      btnBinarySpriteView.Checked = false;
+      btnBinaryStringView.Checked = true;
       hexView.CustomHexViewer = null;
 
       Core.Settings.MemoryDisplay = MemoryDisplayType.ASCII;
@@ -330,12 +454,17 @@ namespace C64Studio
       //btnBinaryCharView.Enabled = true;
       m_MenuItemHexCharView.Checked = false;
       hexView.Invalidate();
+      SetColorSubmenu();
     }
 
 
 
     private void btnBinaryCharView_Click( object sender, EventArgs e )
     {
+      btnBinaryCharView.Checked = true;
+      btnBinarySpriteView.Checked = false;
+      btnBinaryStringView.Checked = false;
+
       if ( hexView.CustomHexViewer is HexBoxCharViewer )
       {
         ( (HexBoxCharViewer)hexView.CustomHexViewer ).ToggleViewMode();
@@ -356,16 +485,24 @@ namespace C64Studio
       btnBinarySpriteView.Checked = false;
       //btnBinarySpriteView.Enabled = true;
       m_MenuItemHexSpriteView.Checked = false;
+
+      ApplyHexViewColors();
+
       hexView.Invalidate();
+      SetColorSubmenu();
     }
 
 
 
     private void btnBinarySpriteView_Click( object sender, EventArgs e )
     {
+      btnBinaryCharView.Checked = false;
+      btnBinarySpriteView.Checked = true;
+      btnBinaryStringView.Checked = false;
       if ( hexView.CustomHexViewer is HexBoxSpriteViewer )
       {
         ( (HexBoxSpriteViewer)hexView.CustomHexViewer ).ToggleViewMode();
+        Core.Settings.MemoryDisplaySpriteMulticolor = ( (HexBoxSpriteViewer)hexView.CustomHexViewer ).MultiColor;
       }
       else
       {
@@ -383,7 +520,39 @@ namespace C64Studio
       btnBinaryCharView.Checked = false;
       //btnBinaryCharView.Enabled = true;
       m_MenuItemHexCharView.Checked = false;
+
+      ApplyHexViewColors();
+
       hexView.Invalidate();
+      SetColorSubmenu();
+    }
+
+
+
+    public void ApplyHexViewColors()
+    {
+      if ( hexView.CustomHexViewer is HexBoxCharViewer )
+      {
+        var charViewer = (HexBoxCharViewer)hexView.CustomHexViewer;
+
+        charViewer.BackgroundColor  = (byte)Core.Settings.MemoryDisplayCharsetBackgroundColor;
+        charViewer.CustomColor      = (byte)Core.Settings.MemoryDisplayCharsetCustomColor;
+        charViewer.MultiColor1      = (byte)Core.Settings.MemoryDisplayCharsetMulticolor1;
+        charViewer.MultiColor2      = (byte)Core.Settings.MemoryDisplayCharsetMulticolor2;
+        charViewer.MultiColor3      = (byte)Core.Settings.MemoryDisplayCharsetMulticolor3;
+        charViewer.MultiColor4      = (byte)Core.Settings.MemoryDisplayCharsetMulticolor4;
+        charViewer.Mode             = Core.Settings.MemoryDisplayCharsetMode;
+      }
+      if ( hexView.CustomHexViewer is HexBoxSpriteViewer )
+      {
+        var spriteViewer = (HexBoxSpriteViewer)hexView.CustomHexViewer;
+
+        spriteViewer.BackgroundColor  = (byte)Core.Settings.MemoryDisplaySpriteBackgroundColor;
+        spriteViewer.CustomColor      = (byte)Core.Settings.MemoryDisplaySpriteCustomColor;
+        spriteViewer.MultiColor1      = (byte)Core.Settings.MemoryDisplaySpriteMulticolor1;
+        spriteViewer.MultiColor2      = (byte)Core.Settings.MemoryDisplaySpriteMulticolor2;
+        spriteViewer.MultiColor       = Core.Settings.MemoryDisplaySpriteMulticolor;
+      }
     }
 
 

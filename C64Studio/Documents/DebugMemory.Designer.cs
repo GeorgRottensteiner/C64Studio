@@ -80,7 +80,6 @@
       // btnBinaryStringView
       // 
       this.btnBinaryStringView.Checked = true;
-      this.btnBinaryStringView.CheckOnClick = true;
       this.btnBinaryStringView.CheckState = System.Windows.Forms.CheckState.Checked;
       this.btnBinaryStringView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.btnBinaryStringView.Image = ((System.Drawing.Image)(resources.GetObject("btnBinaryStringView.Image")));
@@ -93,7 +92,6 @@
       // 
       // btnBinaryCharView
       // 
-      this.btnBinaryCharView.CheckOnClick = true;
       this.btnBinaryCharView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.btnBinaryCharView.Image = ((System.Drawing.Image)(resources.GetObject("btnBinaryCharView.Image")));
       this.btnBinaryCharView.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -105,7 +103,6 @@
       // 
       // btnBinarySpriteView
       // 
-      this.btnBinarySpriteView.CheckOnClick = true;
       this.btnBinarySpriteView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.btnBinarySpriteView.Image = ((System.Drawing.Image)(resources.GetObject("btnBinarySpriteView.Image")));
       this.btnBinarySpriteView.ImageTransparentColor = System.Drawing.Color.Magenta;

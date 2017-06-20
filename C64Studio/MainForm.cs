@@ -3773,6 +3773,9 @@ namespace C64Studio
         return false;
       }
 
+      m_DebugMemory.SetMemoryDisplayType();
+      m_DebugMemory.ApplyHexViewColors();
+
       if ( StudioCore.Settings.SyntaxColoring.Count == 0 )
       {
         StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.NONE, new C64Studio.Types.ColorSetting( "Common Code", 0xff000000 ) );
