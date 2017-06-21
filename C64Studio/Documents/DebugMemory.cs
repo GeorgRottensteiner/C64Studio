@@ -444,14 +444,11 @@ namespace C64Studio
 
       Core.Settings.MemoryDisplay = MemoryDisplayType.ASCII;
 
-      //btnBinaryStringView.Enabled = false;
       m_MenuItemHexStringView.Checked = true;
 
       btnBinarySpriteView.Checked = false;
-      //btnBinarySpriteView.Enabled = true;
       m_MenuItemHexSpriteView.Checked = false;
       btnBinaryCharView.Checked = false;
-      //btnBinaryCharView.Enabled = true;
       m_MenuItemHexCharView.Checked = false;
       hexView.Invalidate();
       SetColorSubmenu();
