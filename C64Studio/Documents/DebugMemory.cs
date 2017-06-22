@@ -140,27 +140,39 @@ namespace C64Studio
       switch ( Core.Settings.MemoryDisplay )
       {
         case MemoryDisplayType.CHARSET:
+          AddSubMenu( m_MenuItemSetColors, "Background Color", ColorType.CHARS_BACKGROUND, Core.Settings.MemoryDisplayCharsetBackgroundColor );
+          AddSubMenu( m_MenuItemSetColors, "Custom Color", ColorType.CHARS_CUSTOM, Core.Settings.MemoryDisplayCharsetCustomColor );
+          AddSubMenu( m_MenuItemSetColors, "Multicolor 1", ColorType.CHARS_MULTICOLOR1, Core.Settings.MemoryDisplayCharsetMulticolor1 );
+          AddSubMenu( m_MenuItemSetColors, "Multicolor 2", ColorType.CHARS_MULTICOLOR2, Core.Settings.MemoryDisplayCharsetMulticolor2 );
+          AddSubMenu( m_MenuItemSetColors, "Multicolor 3", ColorType.CHARS_MULTICOLOR2, Core.Settings.MemoryDisplayCharsetMulticolor3 );
+          AddSubMenu( m_MenuItemSetColors, "Multicolor 4", ColorType.CHARS_MULTICOLOR2, Core.Settings.MemoryDisplayCharsetMulticolor4 );
           break;
         case MemoryDisplayType.SPRITES:
-          AddSubMenu( m_MenuItemSetColors, "Background Color", ColorType.SPRITES_BACKGROUND );
-          AddSubMenu( m_MenuItemSetColors, "Custom Color", ColorType.SPRITES_CUSTOM );
-          AddSubMenu( m_MenuItemSetColors, "Multicolor 1", ColorType.SPRITES_MULTICOLOR1 );
-          AddSubMenu( m_MenuItemSetColors, "Multicolor 2", ColorType.SPRITES_MULTICOLOR2 );
+          AddSubMenu( m_MenuItemSetColors, "Background Color", ColorType.SPRITES_BACKGROUND, Core.Settings.MemoryDisplaySpriteBackgroundColor );
+          AddSubMenu( m_MenuItemSetColors, "Custom Color", ColorType.SPRITES_CUSTOM, Core.Settings.MemoryDisplaySpriteCustomColor );
+          AddSubMenu( m_MenuItemSetColors, "Multicolor 1", ColorType.SPRITES_MULTICOLOR1, Core.Settings.MemoryDisplaySpriteMulticolor1 );
+          AddSubMenu( m_MenuItemSetColors, "Multicolor 2", ColorType.SPRITES_MULTICOLOR2, Core.Settings.MemoryDisplaySpriteMulticolor2 );
           break;
       }
     }
 
 
 
-    private void AddSubMenu( ToolStripMenuItem ParentMenu, string Text, ColorType Type )
+    private void AddSubMenu( ToolStripMenuItem ParentMenu, string Text, ColorType Type, int Default )
     {
       var menu = new ToolStripMenuItem( Text );
       ParentMenu.DropDownItems.Add( menu );
 
       for ( int i = 0; i < 16; ++i )
       {
-        var newItem = menu.DropDownItems.Add( i.ToString() );
+        var newItem = new ToolStripMenuItem( i.ToString() );
+        menu.DropDownItems.Add( newItem );
         newItem.Tag = Type;
+        if ( i == Default )
+        {
+          newItem.Enabled = false;
+          newItem.Checked = true;
+        }
         newItem.Click += ColorMenuItem_Click;
       }
     }
@@ -170,6 +182,20 @@ namespace C64Studio
     void ColorMenuItem_Click( object sender, EventArgs e )
     {
       ToolStripMenuItem     item = (ToolStripMenuItem)sender;
+
+      item.Checked = true;
+      item.Enabled = false;
+
+      var parentMenu = item.GetCurrentParent();
+      foreach ( ToolStripMenuItem menuItem in parentMenu.Items )
+      {
+        if ( ( menuItem != item )
+        &&   ( menuItem.Checked ) )
+        {
+          menuItem.Enabled = true;
+          menuItem.Checked = false;
+        }
+      }
 
       int     colorIndex = GR.Convert.ToI32( item.Text );
       switch ( (ColorType)item.Tag )
