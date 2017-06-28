@@ -110,6 +110,12 @@ namespace C64Studio
         &&   ( watchEntry.IndexedY == IndexedY ) )
         {
           watchEntry.CurrentValue = Data;
+
+          if ( watchEntry.SizeInBytes != watchEntry.CurrentValue.Length )
+          {
+            Debug.Log( "Watch entry received different size than expected!" );
+          }
+
           switch ( watchEntry.Type )
           {
             case WatchEntry.DisplayType.HEX:
