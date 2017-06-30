@@ -5183,7 +5183,7 @@ namespace C64Studio
 
     public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, bool OutputMessages )
     {
-      Debug.Log( "Parsefile called for " + Document.DocumentFilename );
+      //Debug.Log( "Parsefile called for " + Document.DocumentFilename );
       C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
       config.Assembler = Types.AssemblerType.AUTO;
       if ( Document.Element != null )
@@ -5865,19 +5865,9 @@ namespace C64Studio
 
     public void AddTask( Tasks.Task Task )
     {
-      Debug.Log( "Add task " + Task.ToString() );
+      //Debug.Log( "Add task " + Task.ToString() );
       Task.Core = StudioCore;
       StudioCore.TaskManager.AddTask( Task );
-      /*
-      Task.Core = StudioCore;
-      m_Tasks.Add( Task );
-      Task.Main = this;
-      Task.TaskFinished += new C64Studio.Tasks.Task.delTaskFinished( Task_TaskFinished );
-
-      if ( m_CurrentTask == null )
-      {
-        StartNextTask();
-      }*/
     }
 
 
