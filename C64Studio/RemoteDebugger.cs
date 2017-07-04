@@ -51,6 +51,7 @@ namespace C64Studio
       public bool               MemDumpOffsetX = false;
       public bool               MemDumpOffsetY = false;
       public bool               LastInGroup = true;
+      public int                AdjustedStartAddress = -1;
 
 
 
@@ -217,6 +218,15 @@ namespace C64Studio
               }
               else
               {
+                if ( m_Request.Parameter1 != m_Request.AdjustedStartAddress )
+                {
+                  Debug.Log( "Shifted start address" );
+                }
+                if ( ( answerLength != m_Request.Parameter2 - m_Request.Parameter1 + 1 )
+                &&   ( m_Request.Parameter2 != -1 ) )
+                {
+                  Debug.Log( "warped size" );
+                }
                 Debug.Log( "Received " + answerLength + " bytes beginning at " + m_Request.Parameter1.ToString( "x" ) );
                 for ( int i = 0; i < answerLength; ++i )
                 {
@@ -514,23 +524,6 @@ namespace C64Studio
       {
         m_Core.AddToOutput( "SendCommand Exception:" + ex.ToString() );
       }
-
-      /*
-      byte[]    receiveData = new byte[1024];
-
-      int   recvCount = 0;
-      try
-      {
-        recvCount = client.GetStream().Read( receiveData, 0, receiveData.Length );
-      }
-      catch ( System.IO.IOException ex )
-      {
-        dh.Log( "Debugger receive: " + ex.ToString() );
-      }
-      dh.Log( "Received " + recvCount.ToString() + " bytes" );
-      string    received = enc.GetString( receiveData );
-      dh.Log( received );
-       */
       return true;
     }
 
@@ -589,26 +582,6 @@ namespace C64Studio
       {
         ProcessResponse();
       }
-
-      /*
-      byte[]    receiveData = new byte[1024];
-
-      int   recvCount = 0;
-      try
-      {
-        recvCount = client.Receive( receiveData );//.GetStream().Read( receiveData, 0, receiveData.Length );
-      }
-      catch ( System.IO.IOException ex )
-      {
-        Debug.Log( "Debugger receive: " + ex.ToString() );
-      }
-
-      System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-      Debug.Log( "Received " + recvCount.ToString() + " bytes" );
-      var receivedData = new GR.Memory.ByteBuffer( receiveData );
-      receivedData.TruncateAt( (uint)recvCount );
-      //string    received = enc.GetString( receiveData );
-      Debug.Log( receivedData.ToString() );*/
       return true;
     }
 
@@ -1156,6 +1129,7 @@ namespace C64Studio
                 ++endAddress;
               }
             }
+            m_Request.AdjustedStartAddress = startAddress;
 
             // binary dump (since Vice 2.4)
             /* The binary remote monitor commands are injected into the "normal" commands. 

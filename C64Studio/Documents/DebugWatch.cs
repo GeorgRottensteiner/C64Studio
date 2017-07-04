@@ -195,7 +195,28 @@ namespace C64Studio
 
     public void UpdateValue( RemoteDebugger.RequestData WatchData, GR.Memory.ByteBuffer Data )
     {
-      UpdateValue( WatchData.Info, WatchData.MemDumpOffsetX, WatchData.MemDumpOffsetY, Data );
+      int     delta = WatchData.AdjustedStartAddress - WatchData.Parameter1;
+      int     expectedSize = (int)Data.Length;
+      if ( WatchData.Parameter2 != -1 )
+      {
+        expectedSize = WatchData.Parameter2 - WatchData.Parameter1 + 1;
+      }
+      if ( delta > 0 )
+      {
+        // offset had to be adjusted due to VICE weird binary offset/end offset format
+        if ( delta < Data.Length )
+        {
+          UpdateValue( WatchData.Info, WatchData.MemDumpOffsetX, WatchData.MemDumpOffsetY, Data.SubBuffer( delta, expectedSize ) );
+        }
+      }
+      else if ( expectedSize < Data.Length )
+      {
+        UpdateValue( WatchData.Info, WatchData.MemDumpOffsetX, WatchData.MemDumpOffsetY, Data.SubBuffer( 0, expectedSize ) );
+      }
+      else
+      {
+        UpdateValue( WatchData.Info, WatchData.MemDumpOffsetX, WatchData.MemDumpOffsetY, Data );
+      }
     }
 
 
