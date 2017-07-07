@@ -338,6 +338,10 @@ namespace C64Studio.Parser
 
     public Types.SymbolInfo AddLabel( string Name, int Value, int SourceLine, string Zone, int CharIndex, int Length )
     {
+      if ( Name == "Loop" )
+      {
+        Debug.Log( "aha" );
+      }
       string    filename;
       int       localIndex = 0;
 
@@ -4924,7 +4928,17 @@ namespace C64Studio.Parser
           }
           labelInFront = lineTokenInfos[0].Content;
           tokenInFront = lineTokenInfos[0];
-          AddLabel( labelInFront, programStepPos, lineIndex, zoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+          if ( programStepPos != -1 )
+          {
+            // only add if we know the start address!
+            AddLabel( labelInFront, programStepPos, lineIndex, zoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+          }
+          else
+          {
+            AddError( lineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Can't provide value if no start address is set", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+          }
+
+
           // cut off label for neededparsedexpression
           if ( lineTokenInfos.Count > 1 )
           {
@@ -5074,6 +5088,10 @@ namespace C64Studio.Parser
                   }
                 }
               }
+              if ( lineIndex == 1196 )
+              {
+                Debug.Log( "aha" );
+              }
               if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out byteValue ) )
               {
                 if ( info.Opcode.Addressing == Types.ASM.Opcode.AddressingType.RELATIVE )
@@ -5143,6 +5161,11 @@ namespace C64Studio.Parser
               ||   ( info.Opcode.Addressing == C64Studio.Types.ASM.Opcode.AddressingType.INDIRECT_Y ) )
               {
                 countTokens -= 2;
+              }
+              if ( ( lineTokenInfos.Count == 2 )
+              && ( lineTokenInfos[1].Content == "Loop" ) )
+              {
+                Debug.Log( "aha" );
               }
               if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, countTokens, out byteValue ) )
               {
@@ -6633,15 +6656,23 @@ namespace C64Studio.Parser
           if ( labelInFront.Length > 0 )
           {
             // a label
-            var label = AddLabel( labelInFront, programStepPos, lineIndex, zoneName, tokenInFront.StartPos, tokenInFront.Length );
-
-            label.Info = m_CurrentCommentSB.ToString();
-            m_CurrentCommentSB = new StringBuilder();
-
-            if ( ( !evaluatedContent )
-            &&   ( lineTokenInfos.Count >= 1 ) )
+            if ( programStepPos != -1 )
             {
-              AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error: " + TokensToExpression( lineTokenInfos ) );
+              // only if we have a valid address!
+              var label = AddLabel( labelInFront, programStepPos, lineIndex, zoneName, tokenInFront.StartPos, tokenInFront.Length );
+
+              label.Info = m_CurrentCommentSB.ToString();
+              m_CurrentCommentSB = new StringBuilder();
+
+              if ( ( !evaluatedContent )
+              &&   ( lineTokenInfos.Count >= 1 ) )
+              {
+                AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error: " + TokensToExpression( lineTokenInfos ) );
+              }
+            }
+            else
+            {
+              AddError( lineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Can't provide value if no start address is set", tokenInFront.StartPos, tokenInFront.Length );
             }
           }
           else if ( ( !evaluatedContent )

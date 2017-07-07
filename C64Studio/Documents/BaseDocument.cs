@@ -268,6 +268,12 @@ namespace C64Studio
 
     public void SetModified()
     {
+      if ( InvokeRequired )
+      {
+        Invoke( new C64Studio.MainForm.ParameterLessCallback( SetModified ) );
+        return;
+      }
+
       if ( !m_Modified )
       {
         m_Modified = true;
