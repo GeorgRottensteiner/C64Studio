@@ -2409,6 +2409,7 @@ namespace C64Studio
 
       StudioCore.Executing.RunProcess.Exited += new EventHandler( runProcess_Exited );
       StudioCore.AddToOutput( "Calling " + StudioCore.Executing.RunProcess.StartInfo.FileName + " with " + StudioCore.Executing.RunProcess.StartInfo.Arguments + System.Environment.NewLine );
+      StudioCore.SetStatus( "Running..." );
 
       SetGUIForWaitOnExternalTool( true );
       return StudioCore.Executing.RunProcess.Start();
@@ -2601,6 +2602,7 @@ namespace C64Studio
 
       StudioCore.AddToOutput( "Calling " + StudioCore.Executing.RunProcess.StartInfo.FileName + " with " + StudioCore.Executing.RunProcess.StartInfo.Arguments + System.Environment.NewLine );
       StudioCore.Executing.RunProcess.Exited += new EventHandler( runProcess_Exited );
+      StudioCore.SetStatus( "Running..." );
 
       SetGUIForWaitOnExternalTool( true );
       if ( ( StudioCore.Executing.RunProcess.Start() )
@@ -2708,6 +2710,7 @@ namespace C64Studio
       AppState = Types.StudioState.NORMAL;
 
       StudioCore.Debugging.RemoveVirtualBreakpoints();
+      StudioCore.SetStatus( "Ready", false, 0 );
 
       SetGUIForDebugging( false );
       SetGUIForWaitOnExternalTool( false );
