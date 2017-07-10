@@ -736,6 +736,10 @@
       <Project>{EA74431C-8749-4F1A-8F8F-FCEDAFAE89B9}</Project>
       <Name>HexBox</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tiny64\Tiny64.csproj">
+      <Project>{6f3bd3cf-015f-4d68-a015-4695ddd0e44b}</Project>
+      <Name>Tiny64</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

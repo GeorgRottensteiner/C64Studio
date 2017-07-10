@@ -405,6 +405,14 @@ namespace C64Studio
 
     public MainForm( string[] args )
     {
+      Tiny64.Machine    machine = new Tiny64.Machine();
+
+      while ( true )
+      {
+        machine.RunCycle();
+      }
+
+
       s_MainForm = this;
 
       //m_FontC64.AddFontFile( @"D:\privat\projekte\C64Studio\C64Studio\C64_Pro_Mono_v1.0-STYLE.ttf" );
