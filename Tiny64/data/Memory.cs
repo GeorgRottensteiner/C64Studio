@@ -32,7 +32,7 @@ namespace Tiny64.data
     public byte[]         Kernal = new byte[8192];
     public byte[]         BASICROM = new byte[8192];
     public byte[]         CharacterROM = new byte[4096];
-    public byte[]         IO = new byte[4096];
+    public byte[]         IO = new byte[16];
     public byte[]         CartLO = new byte[16384];
     public byte[]         CartHI = new byte[16384];
 
@@ -50,7 +50,7 @@ namespace Tiny64.data
     internal void Initialize()
     {
       RAM = new byte[65536];
-      IO = new byte[4096];
+      IO = new byte[16];
       CartLO = new byte[16384];
       CartHI = new byte[16384];
 
@@ -527,7 +527,8 @@ namespace Tiny64.data
 
     private byte ReadFromIO( ushort Address )
     {
-      return IO[Address];
+      // TODO
+      return IO[Address & 0xf];
     }
 
 

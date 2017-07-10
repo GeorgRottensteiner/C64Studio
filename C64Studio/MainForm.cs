@@ -411,7 +411,7 @@ namespace C64Studio
       {
         machine.RunCycle();
       }
-
+       
 
       s_MainForm = this;
 
