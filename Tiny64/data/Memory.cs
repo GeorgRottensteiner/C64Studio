@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Tiny64.data
 {
-  class Memory
+  public class Memory
   {
     public enum ReadType
     {
@@ -32,9 +32,13 @@ namespace Tiny64.data
     public byte[]         Kernal = new byte[8192];
     public byte[]         BASICROM = new byte[8192];
     public byte[]         CharacterROM = new byte[4096];
-    public byte[]         IO = new byte[16];
+    public byte[]         ColorRAM = new byte[1024];
     public byte[]         CartLO = new byte[16384];
     public byte[]         CartHI = new byte[16384];
+    public VIC            VIC = new VIC();
+    public SID            SID = new SID();
+    public CIA            CIA1 = new CIA();
+    public CIA            CIA2 = new CIA();
 
     internal MemorySource   Range0000To0FFF = MemorySource.RAM;
     internal MemorySource   Range1000To7FFF = MemorySource.RAM;
@@ -50,7 +54,7 @@ namespace Tiny64.data
     internal void Initialize()
     {
       RAM = new byte[65536];
-      IO = new byte[16];
+      ColorRAM = new byte[1024];
       CartLO = new byte[16384];
       CartHI = new byte[16384];
 
@@ -65,6 +69,11 @@ namespace Tiny64.data
       RangeC000ToCFFF = MemorySource.RAM;
       RangeD000ToDFFF = MemorySource.IO;
       RangeE000ToFFFF = MemorySource.KERNAL_ROM;
+
+      VIC.Init();
+      SID.Init();
+      CIA1.Init();
+      CIA2.Init();
     }
 
 
@@ -525,14 +534,6 @@ namespace Tiny64.data
 
 
 
-    private byte ReadFromIO( ushort Address )
-    {
-      // TODO
-      return IO[Address & 0xf];
-    }
-
-
-
     internal byte ReadByte( int Address )
     {
       if ( Address >= 65536 )
@@ -565,7 +566,7 @@ namespace Tiny64.data
         switch ( Range1000To7FFF )
         {
           case MemorySource.RAM:
-            RAM[Address - 0x1000] = Value;
+            RAM[Address] = Value;
             return;
           case MemorySource.UNDEFINED:
             return;
@@ -578,7 +579,7 @@ namespace Tiny64.data
         {
           case MemorySource.CART_LO:
           case MemorySource.RAM:
-            RAM[Address - 0x8000] = Value;
+            RAM[Address] = Value;
             return;
         }
       }
@@ -590,7 +591,7 @@ namespace Tiny64.data
           case MemorySource.CART_HI:
           case MemorySource.BASIC_ROM:
           case MemorySource.RAM:
-            RAM[Address - 0xA000] = Value;
+            RAM[Address] = Value;
             return;
           case MemorySource.UNDEFINED:
             return;
@@ -602,7 +603,7 @@ namespace Tiny64.data
         switch ( RangeC000ToCFFF )
         {
           case MemorySource.RAM:
-            RAM[Address - 0xc000] = Value;
+            RAM[Address] = Value;
             return;
           case MemorySource.UNDEFINED:
             return;
@@ -615,7 +616,7 @@ namespace Tiny64.data
         {
           case MemorySource.CHARSET_ROM:
           case MemorySource.RAM:
-            RAM[Address - 0xd000] = Value;
+            RAM[Address] = Value;
             return;
           case MemorySource.IO:
             WriteToIO( Address, Value );
@@ -629,16 +630,103 @@ namespace Tiny64.data
           case MemorySource.RAM:
           case MemorySource.KERNAL_ROM:
           case MemorySource.CART_HI:
-            RAM[Address - 0xe000] = Value;
+            RAM[Address] = Value;
             return;
         }
       }
     }
 
 
+
+    private byte ReadFromIO( ushort Address )
+    {
+      if ( ( Address >= 0xd000 )
+      &&   ( Address < 0xd400 ) )
+      {
+        // VIC
+
+        // TODO - proper handling!
+        byte vicAddress = (byte)( Address & 0x003f );
+        return VIC.ReadByte( vicAddress );
+      }
+      else if ( ( Address >= 0xd400 )
+      &&        ( Address < 0xd800 ) )
+      {
+        // SID
+        return SID.ReadByte( (byte)( Address & 0x0ff ) );
+      }
+      else if ( ( Address >= 0xd800 )
+      &&        ( Address < 0xd800 + 1024 ) )
+      {
+        // Color RAM
+        byte    color = ColorRAM[Address - 0xd800];
+
+        // random upper nibble
+        color = (byte)( color + ( new Random().Next( 16 ) << 4 ) );
+        return color;
+      }
+      else if ( ( Address >= 0xdc00 )
+      &&        ( Address < 0xdd00 ) )
+      {
+        // CIA1
+        return CIA1.ReadByte( (byte)( Address & 0x0f ) );
+      }
+      else if ( ( Address >= 0xdd00 )
+      &&        ( Address < 0xde00 ) )
+      {
+        // CIA2
+        return CIA2.ReadByte( (byte)( Address & 0x0f ) );
+      }
+      // TODO
+      throw new NotSupportedException( "Unsupported IO address " + Address.ToString( "X4" ) );
+    }
+
+
+
     private void WriteToIO( ushort Address, byte Value )
     {
       // TODO - send to VIC/SID/CIA/etc...
+      if ( ( Address >= 0xd000 )
+      &&   ( Address < 0xd400 ) )
+      {
+        // VIC
+        byte vicAddress = (byte)( Address & 0x003f );
+
+        if ( vicAddress == 0x11 )
+        {
+          Debug.Log( "oh oh" );
+        }
+
+        VIC.WriteByte( vicAddress, Value );
+      }
+      else if ( ( Address >= 0xd400 )
+      &&        ( Address < 0xd800 ) )
+      {
+        // SID
+        SID.WriteByte( (byte)( Address & 0x0ff ), Value );
+      }
+      else if ( ( Address >= 0xd800 )
+      &&        ( Address < 0xd800 + 1024 ) )
+      {
+        // Color RAM
+        ColorRAM[Address - 0xd800] = (byte)( Value & 0x0f );
+      }
+      else if ( ( Address >= 0xdc00 )
+      &&        ( Address < 0xdd00 ) )
+      {
+        // CIA1
+        CIA1.WriteByte( (byte)( Address & 0x0f ), Value );
+      }
+      else if ( ( Address >= 0xdd00 )
+      &&        ( Address < 0xde00 ) )
+      {
+        // CIA2
+        CIA2.WriteByte( (byte)( Address & 0x0f ), Value );
+      }
+      else
+      {
+        throw new NotSupportedException( "Unsupported write to IO address " + Address.ToString( "X4" ) );
+      }
     }
 
   }

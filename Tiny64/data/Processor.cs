@@ -6,12 +6,12 @@ using System.Text;
 
 namespace Tiny64.data
 {
-  class Processor
+  public class Processor
   {
     public byte   Accu = 0;
     public byte   X = 0;
     public byte   Y = 0;
-    byte          Flags = 0;
+    public byte   Flags = 0x10;
 
     int           CurrentCycle = 0;
 
@@ -38,6 +38,8 @@ namespace Tiny64.data
         }
       }
     }
+
+
 
     public bool FlagOverflow
     {
@@ -144,7 +146,7 @@ namespace Tiny64.data
       Accu          = 0;
       X             = 0;
       Y             = 0;
-      Flags         = 0;
+      Flags         = 0x10;   // break is set
       CurrentCycle  = 0;
       PC            = 0;
       StackPointer  = 0xff;
@@ -167,5 +169,30 @@ namespace Tiny64.data
 
 
 
+    internal void CheckFlagZeroY()
+    {
+      FlagZero = ( Y == 0 );
+    }
+
+
+
+    internal void CheckFlagNegativeY()
+    {
+      FlagNegative = ( ( Y & 0x80 ) != 0 );
+    }
+
+
+
+    internal void CheckFlagZeroX()
+    {
+      FlagZero = ( X == 0 );
+    }
+
+
+
+    internal void CheckFlagNegativeX()
+    {
+      FlagNegative = ( ( X & 0x80 ) != 0 );
+    }
   }
 }
