@@ -168,7 +168,7 @@ namespace Tiny64
           {
             Memory.ReadByte( CPU.PC + 1 );
             PushStack( (byte)( ( CPU.PC + 2 ) >> 8 ) );
-            PushStack( (byte)( CPU.PC & 0xff ) );
+            PushStack( (byte)( ( CPU.PC + 2 ) & 0xff ) );
             PushStack( CPU.Flags );
             CPU.FlagIRQ = true;
 
@@ -361,7 +361,7 @@ namespace Tiny64
             ushort    returnAddress = (ushort)( PopStack() << 8 );
             returnAddress = (ushort)( returnAddress | PopStack() );
             
-            TODO - $e421 has broken return address!  (0x0199)
+            //TODO - $e421 has broken return address!  (0x0199)
             CPU.PC = (ushort)( returnAddress + 1 );
           }
           return 6;
