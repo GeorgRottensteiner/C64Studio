@@ -15,8 +15,8 @@ namespace Tiny64.data
 
     int           CurrentCycle = 0;
 
-    public ushort        PC = 0;
-    public ushort        StackPointer = 0xff;
+    public ushort         PC = 0;
+    public byte           StackPointer = 0xff;
 
 
 

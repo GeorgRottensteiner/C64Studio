@@ -185,6 +185,27 @@ namespace Tiny64
             throw new NotSupportedException( "JAM" );
           }
           return 0;
+        case 0x05:
+          // ORA $FF             2b, 3c
+          {
+            ushort    address = Memory.ReadByte( CPU.PC + 1 );
+            byte    operand = Memory.ReadByte( address );
+
+            CPU.Accu = (byte)( CPU.Accu | operand );
+
+            CPU.CheckFlagZero();
+            CPU.CheckFlagNegative();
+            CPU.PC += 2;
+          }
+          return 3;
+        case 0x08:
+          // PHP                 1b, 3c
+          {
+            PushStack( CPU.Flags );
+
+            CPU.PC += 1;
+          }
+          return 3;
         case 0x09:
           // ORA #$FF   2b, 2c
           {
@@ -246,9 +267,31 @@ namespace Tiny64
 
             CPU.PC = address;
 
-            Debug.Log( "JSR $" + CPU.PC.ToString( "X4" ) );
+            //Debug.Log( "JSR $" + CPU.PC.ToString( "X4" ) );
           }
           return 6;
+        case 0x24:
+          // BIT $FF             2b, 3c
+          {
+            ushort    address = Memory.ReadByte( CPU.PC + 1 );
+            byte      operand = Memory.ReadByte( address );
+
+            byte      result = (byte)( operand & CPU.Accu );
+
+            CPU.FlagNegative = ( ( result & 0x80 ) != 0 );
+            CPU.FlagOverflow = ( ( result & 0x40 ) != 0 );
+            CPU.FlagZero = ( result == 0 );
+            CPU.PC += 2;
+          }
+          return 3;
+        case 0x28:
+          // PLP                 1b, 4c
+          {
+            CPU.Flags = PopStack();
+
+            CPU.PC += 1;
+          }
+          return 4;
         case 0x29:
           // AND #$FF            2b, 2c
           {
@@ -316,6 +359,21 @@ namespace Tiny64
             CPU.PC = address;
           }
           return 6;
+        case 0x46:
+          // LSR $FF             2b, 5c
+          {
+            ushort    address = Memory.ReadByte( CPU.PC + 1 );
+            byte    operand = Memory.ReadByte( address );
+
+            CPU.FlagCarry = ( ( operand & 0x01 ) != 0 );
+
+            CPU.Accu = (byte)( CPU.Accu >> 1 );
+
+            CPU.CheckFlagZero();
+            CPU.CheckFlagNegative();
+            CPU.PC += 2;
+          }
+          return 5;
         case 0x48:
           // PHA              1b, 3c
           {
@@ -324,6 +382,18 @@ namespace Tiny64
             CPU.PC += 1;
           }
           return 3;
+        case 0x49:
+          // EOR #$FF            2b, 2c
+          {
+            byte operand = Memory.ReadByte( CPU.PC + 1 );
+
+            CPU.Accu = (byte)( CPU.Accu ^ operand );
+
+            CPU.CheckFlagZero();
+            CPU.CheckFlagNegative();
+            CPU.PC += 2;
+          }
+          return 2;
         case 0x4a:
           // LSR A               1b, 2c
           {
@@ -343,7 +413,7 @@ namespace Tiny64
 
             CPU.PC = address;
 
-            Debug.Log( "JMP $" + CPU.PC.ToString( "X4" ) );
+            //Debug.Log( "JMP $" + CPU.PC.ToString( "X4" ) );
           }
           return 3;
         case 0x58:
@@ -361,10 +431,36 @@ namespace Tiny64
             ushort    returnAddress = (ushort)( PopStack() << 8 );
             returnAddress = (ushort)( returnAddress | PopStack() );
             
+            //Debug.Log( "RTS from " + CPU.PC.ToString( "X4" ) + " to " + ( returnAddress + 1 ).ToString( "X4" ) );
+
             //TODO - $e421 has broken return address!  (0x0199)
             CPU.PC = (ushort)( returnAddress + 1 );
+
+            
           }
           return 6;
+        case 0x65:
+          // ADC $FF             2b, 3c
+          {
+            ushort  address = Memory.ReadByte( CPU.PC + 1 );
+            byte    operand = Memory.ReadByte( address );
+            byte    startValue = CPU.Accu;
+
+            if ( CPU.FlagCarry )
+            {
+              operand = (byte)( operand + 1 );
+            }
+
+            CPU.Accu = (byte)( CPU.Accu + operand );
+
+            CPU.CheckFlagNegative();
+            CPU.CheckFlagZero();
+            CPU.FlagOverflow = ( startValue & 0x80 ) != ( CPU.Accu & 0x80 );
+            CPU.FlagCarry = ( operand + CPU.Accu > 255 );
+
+            CPU.PC += 2;
+          }
+          return 3;
         case 0x68:
           // PLA                 1b, 4c
           {
@@ -380,7 +476,6 @@ namespace Tiny64
           // ADC #$FF            2b, 2c
           {
             byte    operand = Memory.ReadByte( CPU.PC + 1 );
-
             byte    startValue = CPU.Accu;
 
             if ( CPU.FlagCarry )
@@ -406,7 +501,7 @@ namespace Tiny64
 
             CPU.PC = finalAddress;
 
-            Debug.Log( "JMP indirect to $" + CPU.PC.ToString( "X4" ) );
+            //Debug.Log( "JMP indirect to $" + CPU.PC.ToString( "X4" ) );
           }
           return 5;
         case 0x70:
@@ -510,6 +605,11 @@ namespace Tiny64
             ushort    address = Memory.ReadByte( CPU.PC + 1 );
             ushort    finalAddress = CalcIndirectY( address, CPU.Y );
 
+            if ( CPU.PC == 0xea0c )
+            {
+              Debug.Log( "Write " + CPU.Accu.ToString( "X2" ) + " to " + finalAddress.ToString( "X4" ) );
+            }
+
             Memory.WriteByte( finalAddress, CPU.Accu );
             CPU.CheckFlagZero();
             CPU.CheckFlagNegative();
@@ -564,7 +664,7 @@ namespace Tiny64
         case 0x9a:
           // TXS        1 byte, 2 cycles
           {
-            PushStack( CPU.X );
+            CPU.StackPointer = CPU.X;
 
             CPU.PC += 1;
           }
@@ -775,7 +875,7 @@ namespace Tiny64
         case 0xba:
           // TSX            1b, 2c
           {
-            CPU.X = CPU.Flags;
+            CPU.X = CPU.StackPointer;
 
             CPU.CheckFlagZeroX();
             CPU.CheckFlagNegativeX();
@@ -835,6 +935,21 @@ namespace Tiny64
             CPU.FlagZero = ( compareWith == CPU.Y );
             CPU.FlagCarry = ( result < 0x100 );
             CPU.FlagNegative = ( ( ( compareWith - CPU.Y ) & 0x80 ) != 0 );
+
+            CPU.PC += 2;
+          }
+          return 3;
+        case 0xc5:
+          // CMP $FF             2b, 3c
+          {
+            ushort  address = Memory.ReadByte( CPU.PC + 1 );
+            byte  compareWith = Memory.ReadByte( address );
+
+            int   result = CPU.Accu - compareWith;
+
+            CPU.FlagZero = ( compareWith == CPU.Accu );
+            CPU.FlagCarry = ( result < 0x100 );
+            CPU.FlagNegative = ( ( ( compareWith - CPU.Accu ) & 0x80 ) != 0 );
 
             CPU.PC += 2;
           }
@@ -961,6 +1076,21 @@ namespace Tiny64
             CPU.PC += 2;
           }
           return 2;
+        case 0xe4:
+          // CPX $FF             2b, 3c
+          {
+            ushort  address = Memory.ReadByte( CPU.PC + 1 );
+            byte    compareWith = Memory.ReadByte( address );
+
+            int result = CPU.X - compareWith;
+
+            CPU.FlagZero = ( compareWith == CPU.X );
+            CPU.FlagCarry = ( result < 0x100 );
+            CPU.FlagNegative = ( ( ( compareWith - CPU.X ) & 0x80 ) != 0 );
+
+            CPU.PC += 2;
+          }
+          return 3;
         case 0xe6:
           // INC $FF             2b, 5c
           {
@@ -1124,6 +1254,8 @@ namespace Tiny64
     {
       Memory.RAM[0x100 + CPU.StackPointer] = Value;
       CPU.StackPointer = (byte)( CPU.StackPointer - 1 );
+
+      //Debug.Log( "PUSH " + Value.ToString( "X2" ) );
     }
 
 
@@ -1131,6 +1263,8 @@ namespace Tiny64
     private byte PopStack()
     {
       CPU.StackPointer = (byte)( CPU.StackPointer + 1 );
+
+      //Debug.Log( "POP " + Memory.RAM[0x100 + CPU.StackPointer].ToString( "X2" ) );
       return Memory.RAM[0x100 + CPU.StackPointer];
     }
 
