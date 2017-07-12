@@ -29,7 +29,7 @@ namespace Tiny64
       else
       {
         Registers[Address] = Value;
-        Debug.Log( "VIC 0xd0" + Address.ToString( "X2" ) + "=" + Value.ToString( "X2" ) );
+        //Debug.Log( "VIC 0xd0" + Address.ToString( "X2" ) + "=" + Value.ToString( "X2" ) );
       }
     }
 
