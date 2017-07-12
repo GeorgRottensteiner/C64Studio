@@ -162,7 +162,7 @@ namespace Tiny64
       //Debug.Log( CPU.PC.ToString( "X4" ) + ":" + opCode.ToString( "X2" ) + " A:" + CPU.Accu.ToString( "X2" )  + " X:" + CPU.X.ToString( "X2" ) + " Y:" + CPU.Y.ToString( "X2" ) + " " + ( Memory.RAM[0xc1] + ( Memory.RAM[0xc2] << 8 ) ).ToString( "X4" ) );
 
       //Debug.Log( "PC: " + CPU.PC.ToString( "X4" ) );
-      if ( CPU.PC == 0xe43a )
+      if ( CPU.PC == 0xb87b )
       {
         Debug.Log( CPU.PC.ToString( "X4" ) + ":" + opCode.ToString( "X2" ) + " A:" + CPU.Accu.ToString( "X2" ) + " X:" + CPU.X.ToString( "X2" ) + " Y:" + CPU.Y.ToString( "X2" ) + " " + ( Memory.RAM[0xc1] + ( Memory.RAM[0xc2] << 8 ) ).ToString( "X4" ) );
 
@@ -530,7 +530,7 @@ namespace Tiny64
             CPU.CheckFlagNegative();
             CPU.CheckFlagZero();
             CPU.FlagOverflow = ( startValue & 0x80 ) != ( CPU.Accu & 0x80 );
-            CPU.FlagCarry = ( operand + CPU.Accu > 255 );
+            CPU.FlagCarry = ( ( operand + CPU.Accu ) > 255 );
 
             CPU.PC += 2;
           }
@@ -580,7 +580,7 @@ namespace Tiny64
               operand = (byte)( operand + 1 );
             }
 
-            CPU.FlagCarry = ( operand + CPU.Accu > 255 );
+            CPU.FlagCarry = ( ( operand + CPU.Accu ) > 255 );
             CPU.Accu = (byte)( CPU.Accu + operand );
 
             CPU.CheckFlagNegative();
@@ -678,7 +678,7 @@ namespace Tiny64
               operand = (byte)( operand + 1 );
             }
 
-            CPU.FlagCarry = ( operand + CPU.Accu > 255 );
+            CPU.FlagCarry = ( ( operand + CPU.Accu ) > 255 );
             CPU.Accu = (byte)( CPU.Accu + operand );
 
             CPU.CheckFlagNegative();
@@ -1083,7 +1083,7 @@ namespace Tiny64
 
             CPU.FlagZero = ( compareWith == CPU.Y );
             CPU.FlagCarry = ( result >= 0 );
-            CPU.FlagNegative = ( ( ( compareWith - CPU.Y ) & 0x80 ) != 0 );
+            CPU.FlagNegative = ( ( ( (byte)( result ) ) & 0x80 ) != 0 );
 
             CPU.PC += 2;
           }
@@ -1104,7 +1104,7 @@ namespace Tiny64
 
             CPU.FlagZero = ( compareWith == CPU.Y );
             CPU.FlagCarry = ( result >= 0 );
-            CPU.FlagNegative = ( ( ( compareWith - CPU.Y ) & 0x80 ) != 0 );
+            CPU.FlagNegative = ( ( ( (byte)( result ) ) & 0x80 ) != 0 );
 
             CPU.PC += 2;
           }
@@ -1119,7 +1119,7 @@ namespace Tiny64
 
             CPU.FlagZero = ( compareWith == CPU.Accu );
             CPU.FlagCarry = ( result >= 0 );
-            CPU.FlagNegative = ( ( ( compareWith - CPU.Accu ) & 0x80 ) != 0 );
+            CPU.FlagNegative = ( ( ( (byte)( result ) ) & 0x80 ) != 0 );
 
             CPU.PC += 2;
           }
@@ -1158,7 +1158,7 @@ namespace Tiny64
 
             CPU.FlagZero = ( compareWith == CPU.Accu );
             CPU.FlagCarry = ( result >= 0 );
-            CPU.FlagNegative = ( ( ( compareWith - CPU.Accu ) & 0x80 ) != 0 );
+            CPU.FlagNegative = ( ( ( (byte)( result ) ) & 0x80 ) != 0 );
 
             CPU.PC += 2;
           }
@@ -1185,7 +1185,7 @@ namespace Tiny64
 
             CPU.FlagZero = ( compareWith == CPU.Accu );
             CPU.FlagCarry = ( result >= 0 );
-            CPU.FlagNegative = ( ( ( compareWith - CPU.Accu ) & 0x80 ) != 0 );
+            CPU.FlagNegative = ( ( ( (byte)( result ) ) & 0x80 ) != 0 );
 
             CPU.PC += 3;
           }
@@ -1210,7 +1210,7 @@ namespace Tiny64
 
             CPU.FlagZero = ( compareWith == CPU.Accu );
             CPU.FlagCarry = ( result >= 0 );
-            CPU.FlagNegative = ( ( ( compareWith - CPU.Accu ) & 0x80 ) != 0 );
+            CPU.FlagNegative = ( ( ( (byte)( result ) ) & 0x80 ) != 0 );
 
             CPU.PC += 2;
 
@@ -1241,7 +1241,7 @@ namespace Tiny64
 
             CPU.FlagZero      = ( compareWith == CPU.Accu );
             CPU.FlagCarry = ( result >= 0 );
-            CPU.FlagNegative  = ( ( ( compareWith - CPU.Accu ) & 0x80 ) != 0 );
+            CPU.FlagNegative = ( ( ( (byte)( result ) ) & 0x80 ) != 0 );
 
             CPU.PC += 3;
 
@@ -1256,7 +1256,7 @@ namespace Tiny64
 
             CPU.FlagZero = ( compareWith == CPU.X );
             CPU.FlagCarry = ( result >= 0 );
-            CPU.FlagNegative = ( ( ( compareWith - CPU.X ) & 0x80 ) != 0 );
+            CPU.FlagNegative = ( ( ( (byte)( result ) ) & 0x80 ) != 0 );
 
             CPU.PC += 2;
           }
@@ -1271,7 +1271,7 @@ namespace Tiny64
 
             CPU.FlagZero = ( compareWith == CPU.X );
             CPU.FlagCarry = ( result >= 0 );
-            CPU.FlagNegative = ( ( ( compareWith - CPU.X ) & 0x80 ) != 0 );
+            CPU.FlagNegative = ( ( ( (byte)( result ) ) & 0x80 ) != 0 );
 
             CPU.PC += 2;
           }
@@ -1290,11 +1290,14 @@ namespace Tiny64
             }
             CPU.FlagCarry = ( operand <= CPU.Accu );
 
+            int result = CPU.Accu - operand;
+
             CPU.Accu = (byte)( CPU.Accu - operand );
 
             CPU.CheckFlagNegative();
             CPU.CheckFlagZero();
-            CPU.FlagOverflow = ( ( startValue & 0x80 ) != ( CPU.Accu & 0x80 ) );
+            //CPU.FlagOverflow = ( ( startValue & 0x80 ) != ( CPU.Accu & 0x80 ) );
+            CPU.FlagOverflow = ( ( startValue & 0x80 ) == ( result & 0x80 ) );
 
             CPU.PC += 2;
           }
@@ -1356,7 +1359,7 @@ namespace Tiny64
 
             CPU.FlagZero = ( compareWith == CPU.X );
             CPU.FlagCarry = ( result >= 0 );
-            CPU.FlagNegative = ( ( ( compareWith - CPU.X ) & 0x80 ) != 0 );
+            CPU.FlagNegative = ( ( ( (byte)( result ) ) & 0x80 ) != 0 );
 
             CPU.PC += 3;
           }
