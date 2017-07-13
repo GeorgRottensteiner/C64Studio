@@ -161,7 +161,7 @@ namespace Tiny64
       //Debug.Log( CPU.PC.ToString( "X4" ) + ":" + opCode.ToString( "X2" ) + " A:" + CPU.Accu.ToString( "X2" )  + " X:" + CPU.X.ToString( "X2" ) + " Y:" + CPU.Y.ToString( "X2" ) + " " + ( Memory.RAM[0xc1] + ( Memory.RAM[0xc2] << 8 ) ).ToString( "X4" ) );
 
       //Debug.Log( "PC: " + CPU.PC.ToString( "X4" ) );
-      if ( CPU.PC == 0xbe35 )
+      if ( CPU.PC == 0xbcc0 )
       {
         Debug.Log( CPU.PC.ToString( "X4" ) + ":" + opCode.ToString( "X2" ) + " A:" + CPU.Accu.ToString( "X2" ) + " X:" + CPU.X.ToString( "X2" ) + " Y:" + CPU.Y.ToString( "X2" ) + " " + ( Memory.RAM[0xc1] + ( Memory.RAM[0xc2] << 8 ) ).ToString( "X4" ) );
 
@@ -422,10 +422,11 @@ namespace Tiny64
 
             CPU.FlagCarry = ( ( operand & 0x01 ) != 0 );
 
-            CPU.Accu = (byte)( CPU.Accu >> 1 );
+            byte  result = (byte)( operand >> 1 );
+            Memory.WriteByte( address, result );
 
-            CPU.CheckFlagZero();
-            CPU.CheckFlagNegative();
+            CPU.FlagZero = ( result == 0 );
+            CPU.FlagNegative = ( ( result & 0x80 ) != 0 );
             CPU.PC += 2;
           }
           return 5;
@@ -517,13 +518,14 @@ namespace Tiny64
             byte    operand = Memory.ReadByte( address );
             byte    origOperand = operand;
             byte    startValue = CPU.Accu;
+            int     result = startValue + operand;
 
             if ( CPU.FlagCarry )
             {
-              operand = (byte)( operand + 1 );
+              ++result;
             }
 
-            CPU.Accu = (byte)( CPU.Accu + operand );
+            CPU.Accu = (byte)( result );
 
             CPU.CheckFlagNegative();
             CPU.CheckFlagZero();
@@ -533,7 +535,7 @@ namespace Tiny64
             CPU.FlagOverflow = ( ( ( startValue ^ origOperand ) & 0x80 ) == 0 ) && ( ( ( startValue ^ CPU.Accu ) & 0x80 ) != 0 );
             //CPU.FlagOverflow = ( startValue & 0x80 ) != ( CPU.Accu & 0x80 );
 
-            CPU.FlagCarry = ( ( operand + startValue ) > 255 );
+            CPU.FlagCarry = ( result > 255 );
 
             CPU.PC += 2;
           }
@@ -578,14 +580,15 @@ namespace Tiny64
             byte    operand = Memory.ReadByte( CPU.PC + 1 );
             byte    startValue = CPU.Accu;
             byte    origOperand = operand;
+            int     result = startValue + operand;
 
             if ( CPU.FlagCarry )
             {
-              operand = (byte)( operand + 1 );
+              ++result;
             }
 
-            CPU.FlagCarry = ( ( operand + startValue ) > 255 );
-            CPU.Accu = (byte)( CPU.Accu + operand );
+            CPU.FlagCarry = ( result > 255 );
+            CPU.Accu = (byte)( result );
 
             CPU.CheckFlagNegative();
             CPU.CheckFlagZero();
@@ -666,6 +669,9 @@ namespace Tiny64
         case 0x79:
           // ADC $FFFF,Y         3b, 4*c
           {
+            // SOLL Carry und Overflow setzen
+            //.C:be7b  79 17 BF    ADC $BF17,Y    - A:8B X:80 Y:08 SP:f9 N.-.....    2227475
+
             int numCycles = 4;
 
             ushort    address = Memory.ReadWord( CPU.PC + 1 );
@@ -680,14 +686,15 @@ namespace Tiny64
             byte operand = Memory.ReadByte( finalAddress );
             byte origOperand = operand;
             byte startValue = CPU.Accu;
+            int  result = operand + startValue;
 
             if ( CPU.FlagCarry )
             {
-              operand = (byte)( operand + 1 );
+              ++result;
             }
 
-            CPU.FlagCarry = ( ( operand + startValue ) > 255 );
-            CPU.Accu = (byte)( CPU.Accu + operand );
+            CPU.FlagCarry = ( result > 255 );
+            CPU.Accu = (byte)( result );
 
             CPU.CheckFlagNegative();
             CPU.CheckFlagZero();

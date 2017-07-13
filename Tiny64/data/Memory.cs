@@ -557,6 +557,11 @@ namespace Tiny64.data
       if ( ( Address >= 0x0000 )
       &&   ( Address < 0x1000 ) )
       {
+        if ( ( Address == 0x101 )
+        && ( Value == 0x38 ) )
+        {
+          Debug.Log( "sh" );
+        }
         if ( ( Address >= 0x100 )
         &&   ( Address <= 0x10a ) )
         {
