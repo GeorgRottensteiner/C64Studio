@@ -17,6 +17,7 @@ namespace Tiny64
 
     int             RasterPos = 0;
     int             CyclesInLine = 0;
+    int             TotalCycles = 0;
 
     bool            Game = false;
     bool            ExRom = false;
@@ -110,6 +111,7 @@ namespace Tiny64
       PortRegister  = 55;
       RasterPos     = 0;
       CyclesInLine  = 0;
+      TotalCycles   = 0;
 
       //Beim Hard-Reset startet die CPU bei der in $FFFC/$FFFD abgelegten Adresse (springt nach $FCE2, RESET
       CPU.PC = Memory.ReadWordDirect( 0xfffc );
@@ -125,10 +127,7 @@ namespace Tiny64
         ushort    oldPC = CPU.PC;
         int curCycles = RunCycle();
 
-        if ( CPU.PC == 0xa435 )
-        {
-          Debug.Log( "Vorher war " + oldPC.ToString( "X4" ) );
-        }
+        TotalCycles += curCycles;
 
         MaxCycles -= curCycles;
 
@@ -162,7 +161,7 @@ namespace Tiny64
       //Debug.Log( CPU.PC.ToString( "X4" ) + ":" + opCode.ToString( "X2" ) + " A:" + CPU.Accu.ToString( "X2" )  + " X:" + CPU.X.ToString( "X2" ) + " Y:" + CPU.Y.ToString( "X2" ) + " " + ( Memory.RAM[0xc1] + ( Memory.RAM[0xc2] << 8 ) ).ToString( "X4" ) );
 
       //Debug.Log( "PC: " + CPU.PC.ToString( "X4" ) );
-      if ( CPU.PC == 0xb87b )
+      if ( CPU.PC == 0xbe35 )
       {
         Debug.Log( CPU.PC.ToString( "X4" ) + ":" + opCode.ToString( "X2" ) + " A:" + CPU.Accu.ToString( "X2" ) + " X:" + CPU.X.ToString( "X2" ) + " Y:" + CPU.Y.ToString( "X2" ) + " " + ( Memory.RAM[0xc1] + ( Memory.RAM[0xc2] << 8 ) ).ToString( "X4" ) );
 
@@ -305,8 +304,8 @@ namespace Tiny64
 
             ushort    returnAddress = (ushort)( CPU.PC + 2 );
 
-            PushStack( (byte)( returnAddress & 0xff ) );
             PushStack( (byte)( ( returnAddress >> 8 ) & 0xff ) );
+            PushStack( (byte)( returnAddress & 0xff ) );
 
             CPU.PC = address;
 
@@ -502,15 +501,13 @@ namespace Tiny64
           // RTS        1 byte, 6 cycles
           {
             // PC from Stack, PC + 1 -> PC               
-            ushort    returnAddress = (ushort)( PopStack() << 8 );
-            returnAddress = (ushort)( returnAddress | PopStack() );
+            ushort    returnAddress = PopStack();
+            returnAddress |= (ushort)( PopStack() << 8 );
             
             //Debug.Log( "RTS from " + CPU.PC.ToString( "X4" ) + " to " + ( returnAddress + 1 ).ToString( "X4" ) );
 
             //TODO - $e421 has broken return address!  (0x0199)
             CPU.PC = (ushort)( returnAddress + 1 );
-
-            
           }
           return 6;
         case 0x65:
@@ -518,6 +515,7 @@ namespace Tiny64
           {
             ushort  address = Memory.ReadByte( CPU.PC + 1 );
             byte    operand = Memory.ReadByte( address );
+            byte    origOperand = operand;
             byte    startValue = CPU.Accu;
 
             if ( CPU.FlagCarry )
@@ -529,8 +527,13 @@ namespace Tiny64
 
             CPU.CheckFlagNegative();
             CPU.CheckFlagZero();
-            CPU.FlagOverflow = ( startValue & 0x80 ) != ( CPU.Accu & 0x80 );
-            CPU.FlagCarry = ( ( operand + CPU.Accu ) > 255 );
+
+            // from VICE
+            // (!((reg_a_read ^ tmp_value) & 0x80)  && ((reg_a_read ^ tmp) & 0x80)); 
+            CPU.FlagOverflow = ( ( ( startValue ^ origOperand ) & 0x80 ) == 0 ) && ( ( ( startValue ^ CPU.Accu ) & 0x80 ) != 0 );
+            //CPU.FlagOverflow = ( startValue & 0x80 ) != ( CPU.Accu & 0x80 );
+
+            CPU.FlagCarry = ( ( operand + startValue ) > 255 );
 
             CPU.PC += 2;
           }
@@ -574,19 +577,23 @@ namespace Tiny64
           {
             byte    operand = Memory.ReadByte( CPU.PC + 1 );
             byte    startValue = CPU.Accu;
+            byte    origOperand = operand;
 
             if ( CPU.FlagCarry )
             {
               operand = (byte)( operand + 1 );
             }
 
-            CPU.FlagCarry = ( ( operand + CPU.Accu ) > 255 );
+            CPU.FlagCarry = ( ( operand + startValue ) > 255 );
             CPU.Accu = (byte)( CPU.Accu + operand );
 
             CPU.CheckFlagNegative();
             CPU.CheckFlagZero();
-            CPU.FlagOverflow = ( startValue & 0x80 ) != ( CPU.Accu & 0x80 );
-            
+
+            // from VICE
+            // ( ! ( ( reg_a_read ^ tmp_value ) & 0x80 )  && ( ( reg_a_read ^ tmp ) & 0x80 ) ); 
+            CPU.FlagOverflow = ( ( ( startValue ^ origOperand ) & 0x80 ) == 0 ) && ( ( ( startValue ^ CPU.Accu ) & 0x80 ) != 0 );
+            //CPU.FlagOverflow = ( startValue & 0x80 ) != ( CPU.Accu & 0x80 );
 
             CPU.PC += 2;
           }
@@ -671,6 +678,7 @@ namespace Tiny64
             ushort    finalAddress = CalcAbsoluteY( address, CPU.Y );
 
             byte operand = Memory.ReadByte( finalAddress );
+            byte origOperand = operand;
             byte startValue = CPU.Accu;
 
             if ( CPU.FlagCarry )
@@ -678,12 +686,17 @@ namespace Tiny64
               operand = (byte)( operand + 1 );
             }
 
-            CPU.FlagCarry = ( ( operand + CPU.Accu ) > 255 );
+            CPU.FlagCarry = ( ( operand + startValue ) > 255 );
             CPU.Accu = (byte)( CPU.Accu + operand );
 
             CPU.CheckFlagNegative();
             CPU.CheckFlagZero();
-            CPU.FlagOverflow = ( startValue & 0x80 ) != ( CPU.Accu & 0x80 );
+
+            // from VICE
+            // (!((reg_a_read ^ tmp_value) & 0x80)  && ((reg_a_read ^ tmp) & 0x80)); 
+            CPU.FlagOverflow = ( ( ( startValue ^ origOperand ) & 0x80 ) == 0 ) && ( ( ( startValue ^ CPU.Accu ) & 0x80 ) != 0 );
+            //CPU.FlagOverflow = ( startValue & 0x80 ) != ( CPU.Accu & 0x80 );
+
 
             CPU.PC += 3;
 

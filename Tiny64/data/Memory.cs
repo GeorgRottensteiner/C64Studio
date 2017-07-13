@@ -557,12 +557,10 @@ namespace Tiny64.data
       if ( ( Address >= 0x0000 )
       &&   ( Address < 0x1000 ) )
       {
-        if ( Address == 1064 )
+        if ( ( Address >= 0x100 )
+        &&   ( Address <= 0x10a ) )
         {
-          if ( Value == 0x1f )
-          {
-            Debug.Log( "Screen char " + Address.ToString( "X4" ) + "=" + Value.ToString( "X2" ) );
-          }
+          Debug.Log( Address.ToString( "X4" ) + " set to " + Value.ToString( "X2" ) );
         }
         RAM[Address] = Value;
         return;
