@@ -1225,13 +1225,13 @@ namespace C64Studio.Parser
             {
               // must be directly connected
               // the token before must not be a evaluatable type
-              if ( ( subTokenRange[highestPrecedenceTokenIndex].StartPos + subTokenRange[highestPrecedenceTokenIndex].Length == subTokenRange[highestPrecedenceTokenIndex + 1].StartPos )
-              &&   ( ( highestPrecedenceTokenIndex == 0 )
+              //if ( ( subTokenRange[highestPrecedenceTokenIndex].StartPos + subTokenRange[highestPrecedenceTokenIndex].Length == subTokenRange[highestPrecedenceTokenIndex + 1].StartPos )
+              if ( ( highestPrecedenceTokenIndex == 0 )
               ||     ( ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_CHAR )
-              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER ) ) ) )
+              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER ) ) )
               {
                 // eval hi/lo byte
                 if ( subTokenRange[highestPrecedenceTokenIndex].Content == "<" )
@@ -5088,10 +5088,6 @@ namespace C64Studio.Parser
                   }
                 }
               }
-              if ( lineIndex == 1196 )
-              {
-                Debug.Log( "aha" );
-              }
               if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out byteValue ) )
               {
                 if ( info.Opcode.Addressing == Types.ASM.Opcode.AddressingType.RELATIVE )
@@ -7087,11 +7083,13 @@ namespace C64Studio.Parser
           return null;
         }
         bool replacedParam = false;
+        bool modifiedToken = false;
 
-        //foreach ( Types.TokenInfo token in tokens )
+        List<Types.TokenInfo>  replacingTokens = new List<Types.TokenInfo>();
         for ( int tokenIndex = 0; tokenIndex < tokens.Count; ++tokenIndex )
         {
           var token = tokens[tokenIndex];
+          modifiedToken = false;
           // may look useless, but stores actual content in token
           token.Content = token.Content;
           if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
@@ -7106,6 +7104,7 @@ namespace C64Studio.Parser
               &&   ( !functionInfo.ParametersAreReferences[j] ) )
               {
                 // replace parameter!
+                modifiedToken = true;
                 token.Content = param[j];
                 token.Length = param[j].Length;
 
@@ -7148,6 +7147,7 @@ namespace C64Studio.Parser
                     }
                   }
                 }
+                replacingTokens.Add( token );
                 replacedParam = true;
                 break;
               }
@@ -7158,8 +7158,15 @@ namespace C64Studio.Parser
               tokenIsExpression = true;
               if ( tokenIsExpression )
               {
-                tokens.RemoveAt( tokenIndex );
-                tokens.InsertRange( tokenIndex, tempTokens );
+                if ( !modifiedToken )
+                {
+                  modifiedToken = true;
+                  //tokens.RemoveAt( tokenIndex );
+                  //tokens.InsertRange( tokenIndex, tempTokens );
+
+                  replacingTokens.AddRange( tempTokens );
+                }
+                /*
                 // re-position following tokens
                 int     curStartPos = 0;
                 if ( tokenIndex > 0 )
@@ -7173,7 +7180,7 @@ namespace C64Studio.Parser
                   // +1 to put a space between tokens
                   tokens[j].StartPos = curStartPos + 1;
                   curStartPos = tokens[j].StartPos + tokens[j].Length;
-                }
+                }*/
               }
                 /*
               else if ( !ScopeInsideLoop( Scopes ) )
@@ -7191,6 +7198,10 @@ namespace C64Studio.Parser
             }
           }
           //++tokenIndex;
+          if ( !modifiedToken )
+          {
+            replacingTokens.Add( token );
+          }
         }
         if ( replacedParam )
         {

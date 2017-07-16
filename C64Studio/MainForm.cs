@@ -406,7 +406,11 @@ namespace C64Studio
 
     public MainForm( string[] args )
     {
+      /*
       Tiny64.Machine    machine = new Tiny64.Machine();
+
+      GR.Image.MemoryImage    img = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      CustomRenderer.PaletteManager.ApplyPalette( img );
 
       while ( true )
       {
@@ -427,9 +431,6 @@ namespace C64Studio
           int   localCharDataPos = ( machine.Memory.VIC.ReadByte( 0x18 ) & 0x0e ) * 1024;
           int   charDataPos = localCharDataPos + vicBank * 16384;
           byte  bgColor = (byte)( machine.Memory.VIC.ReadByte( 0x21 ) & 0x0f );
-
-          GR.Image.MemoryImage    img = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-          CustomRenderer.PaletteManager.ApplyPalette( img );
 
           GR.Memory.ByteBuffer    charData = null;
           if ( ( ( vicBank == 0 )
@@ -473,7 +474,7 @@ namespace C64Studio
           Clipboard.SetDataObject( dataObj, true );
         }
       }
-       
+       */
 
       s_MainForm = this;
 

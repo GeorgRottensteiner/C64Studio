@@ -135,6 +135,13 @@ namespace C64Studio
       {
         Doc.Show();
       }
+      if ( Doc.Pane != null )
+      {
+        if ( Doc.Pane.ActiveContent != Doc )
+        {
+          Doc.Pane.ActiveContent = Doc;
+        }
+      }
     }
 
 
