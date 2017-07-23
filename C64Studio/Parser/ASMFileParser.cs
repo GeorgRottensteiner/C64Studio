@@ -1230,6 +1230,7 @@ namespace C64Studio.Parser
               ||     ( ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Content != "*" )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_CHAR )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER ) ) )
               {
@@ -4935,7 +4936,9 @@ namespace C64Studio.Parser
           }
           else
           {
-            AddError( lineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Can't provide value if no start address is set", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+            // label without value, like a define
+            AddLabel( labelInFront, -1, lineIndex, zoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+            //AddError( lineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Can't provide value if no start address is set", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
           }
 
 
@@ -6668,7 +6671,9 @@ namespace C64Studio.Parser
             }
             else
             {
-              AddError( lineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Can't provide value if no start address is set", tokenInFront.StartPos, tokenInFront.Length );
+              // a label as define, set to value -1
+              AddLabel( labelInFront, -1, lineIndex, zoneName, tokenInFront.StartPos, tokenInFront.Length );
+              //AddError( lineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Can't provide value if no start address is set", tokenInFront.StartPos, tokenInFront.Length );
             }
           }
           else if ( ( !evaluatedContent )
