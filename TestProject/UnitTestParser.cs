@@ -808,6 +808,39 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestMacroWithIfInside()
+    {
+      string      source = @"* = $2000
+
+                          !macro jne label
+                          !if ( ( label - *) > 127 ) or ( ( * - label ) < ( -127 ) ) { 
+                           beq *+5 
+                           jmp label 
+                           } else { 
+                           bne label 
+                           } 
+                           !end 
+ 
+                          .BG = $200b 
+ 
+                                    lda #1
+                                    +jne .BG
+                                    sta $d020
+                                    rts
+          
+                          ;.BG
+                                    sta $d021
+                                    rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0020A901D0078D20D0608D21D060", assembly.ToString() );
+    }
+
+
+
+
+    [TestMethod]
     public void TestLabelKnownAfterBytePseudoOp()
     {
       string      source = @"* = $2000

@@ -5877,6 +5877,14 @@ namespace C64Studio.Parser
               if ( ScopeInsideMacroDefinition( stackScopes ) )
               {
                 Debug.Log( "Skip !if check inside macro definition" );
+
+                // still need to add scope!
+                Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                scope.StartIndex = lineIndex;
+                scope.Active = false;
+
+                stackScopes.Add( scope );
+                OnScopeAdded( scope );
                 continue;
               }
 
@@ -5919,6 +5927,8 @@ namespace C64Studio.Parser
               if ( ScopeInsideMacroDefinition( stackScopes ) )
               {
                 Debug.Log( "Skip !if check inside macro definition" );
+
+                // might still need to toggle scope, but keep it as inactive
                 continue;
               }
 
@@ -5938,6 +5948,9 @@ namespace C64Studio.Parser
               if ( ScopeInsideMacroDefinition( stackScopes ) )
               {
                 Debug.Log( "Skip !if check inside macro definition" );
+
+                // still need to remove scope!
+                stackScopes.RemoveAt( stackScopes.Count - 1 );
                 continue;
               }
 
