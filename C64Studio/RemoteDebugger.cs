@@ -675,11 +675,26 @@ namespace C64Studio
       switch ( m_Request.Type )
       {
         case Request.READ_REGISTERS:
-          if ( m_ResponseLines.Count == 2 )
+          if ( m_ResponseLines.Count >= 2 )
           {
             // ReadRegisters:(C:$0810)   ADDR AC XR YR SP 00 01 NV-BDIZC LIN CYC
             // ReadRegisters:.;0810 00 00 00 f6 2f 37 00100000 055 015
             string    registers = m_ResponseLines.Last.Value;
+
+            if ( m_ViceVersion >= WinViceVersion.V_3_0 )
+            {
+              // since of 3.1 and data break points the register values may be in the third line - yay
+              //  don't we just love a human text cmd line as interface
+              // .C:8e77  AC A9 A6    LDY .ARMOR_TURN_POS - A:00 X:00 Y:08 SP:f2 ..-.....   29087560
+              // (C:$8e77)   ADDR A  X  Y  SP 00 01 NV-BDIZC LIN CYC  STOPWATCH
+              // could there be a nother line??
+              if ( registers.IndexOf( "ADDR A  X  Y" ) != -1 )
+              {
+                // Incomplete registers data encountered, fetch another line?
+                // yes! - require another one! 
+                break;
+              }
+            }
 
             char[] separators = new char[1];
             separators[0] = ' ';
