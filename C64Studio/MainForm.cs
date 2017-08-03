@@ -5360,6 +5360,7 @@ namespace C64Studio
               }
             }
           }
+
           m_DebugBreakpoints.SetTokens( knownTokenInfos );
         }
         else

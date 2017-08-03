@@ -70,6 +70,19 @@ namespace FastColoredTextBoxNS
         }
 
         /// <summary>
+        /// Clears style of chars, does not delete folding markers
+        /// </summary>
+        public void ClearStyleWithoutAffectingFoldingMarkers( StyleIndex styleIndex )
+        {
+          for ( int i = 0; i < Count; i++ )
+          {
+            Char c = this[i];
+            c.style &= ~styleIndex;
+            this[i] = c;
+          }
+        }
+
+        /// <summary>
         /// Text of the line
         /// </summary>
         public virtual string Text

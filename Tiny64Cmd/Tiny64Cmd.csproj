@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6F69DB22-F5B9-4446-ADB1-56F18B64374E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tiny64Cmd</RootNamespace>
+    <AssemblyName>Tiny64Cmd</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\C64Studio\Common\ArgumentParser.cs">
+      <Link>Common\ArgumentParser.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\BinaryReader.cs">
+      <Link>Common\BinaryReader.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\BinaryWriter.cs">
+      <Link>Common\BinaryWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\ByteBuffer.cs">
+      <Link>Common\ByteBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Convert.cs">
+      <Link>Common\Convert.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\debug.cs">
+      <Link>Common\debug.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\FastImage.cs">
+      <Link>Common\FastImage.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\FastPictureBox.cs">
+      <Link>Common\FastPictureBox.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\File.cs">
+      <Link>Common\File.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\FileChunk.cs">
+      <Link>Common\FileChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\GenericHelper.cs">
+      <Link>Common\GenericHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\IImage.cs">
+      <Link>Common\IImage.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\ImageListbox.cs">
+      <Link>Common\ImageListbox.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\IReader.cs">
+      <Link>Common\IReader.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\IWriter.cs">
+      <Link>Common\IWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\ListViewItemComparer.cs">
+      <Link>Common\ListViewItemComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Map.cs">
+      <Link>Common\Map.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\MemoryImage.cs">
+      <Link>Common\MemoryImage.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\MemoryReader.cs">
+      <Link>Common\MemoryReader.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Misc.cs">
+      <Link>Common\Misc.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\MultiMap.cs">
+      <Link>Common\MultiMap.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Path.cs">
+      <Link>Common\Path.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\ScrollablePanel.cs">
+      <Link>Common\ScrollablePanel.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Set.cs">
+      <Link>Common\Set.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\TileLayer.cs">
+      <Link>Common\TileLayer.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Util.cs">
+      <Link>Common\Util.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\Utils.cs">
+      <Link>Common\Utils.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\WindowStateManager.cs">
+      <Link>Common\WindowStateManager.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Common\XML.cs">
+      <Link>Common\XML.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\CustomRenderer\CustomToolStripRenderer.cs">
+      <Link>Common\CustomToolStripRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\CustomRenderer\PaletteManager.cs">
+      <Link>Common\PaletteManager.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Displayer\CharacterDisplayer.cs">
+      <Link>Common\CharacterDisplayer.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Displayer\SpriteDisplayer.cs">
+      <Link>Common\SpriteDisplayer.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Formats\CharsetProject.cs">
+      <Link>Common\CharsetProject.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Types\Palette.cs">
+      <Link>Common\Palette.cs</Link>
+    </Compile>
+    <Compile Include="..\C64Studio\Types\Types.cs">
+      <Link>Common\Types.cs</Link>
+    </Compile>
+    <Compile Include="Emulator.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tiny64\Tiny64.csproj">
+      <Project>{6f3bd3cf-015f-4d68-a015-4695ddd0e44b}</Project>
+      <Name>Tiny64</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

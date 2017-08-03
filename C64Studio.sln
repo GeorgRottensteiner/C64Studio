@@ -28,6 +28,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiny64", "Tiny64\Tiny64.csproj", "{6F3BD3CF-015F-4D68-A015-4695DDD0E44B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiny64Cmd", "Tiny64Cmd\Tiny64Cmd.csproj", "{6F69DB22-F5B9-4446-ADB1-56F18B64374E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiny64Emu", "Tiny64Emu\Tiny64Emu.csproj", "{85F30A2D-5636-4648-8125-A22F11A56F1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +70,14 @@ Global
 		{6F3BD3CF-015F-4D68-A015-4695DDD0E44B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F3BD3CF-015F-4D68-A015-4695DDD0E44B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F3BD3CF-015F-4D68-A015-4695DDD0E44B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F69DB22-F5B9-4446-ADB1-56F18B64374E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F69DB22-F5B9-4446-ADB1-56F18B64374E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F69DB22-F5B9-4446-ADB1-56F18B64374E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F69DB22-F5B9-4446-ADB1-56F18B64374E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85F30A2D-5636-4648-8125-A22F11A56F1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85F30A2D-5636-4648-8125-A22F11A56F1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85F30A2D-5636-4648-8125-A22F11A56F1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85F30A2D-5636-4648-8125-A22F11A56F1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

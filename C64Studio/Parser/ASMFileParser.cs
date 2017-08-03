@@ -7744,6 +7744,7 @@ namespace C64Studio.Parser
 
       //Debug.Log( "PreProcess" );
       lines = PreProcess( lines, m_Filename, Configuration );
+
       if ( ( lines == null )
       ||   ( m_ErrorMessages > 0 ) )
       {
@@ -8516,6 +8517,7 @@ namespace C64Studio.Parser
           }
         }
       }
+
       return true;
     }
 

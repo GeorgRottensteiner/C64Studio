@@ -120,7 +120,6 @@ namespace C64Studio
 
       //editSource.FindEndOfFoldingBlockStrategy = FastColoredTextBoxNS.FindEndOfFoldingBlockStrategy.Strategy2;
 
-
       Parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
 
       contextSource.Opening += new CancelEventHandler( contextSource_Opening );
@@ -296,7 +295,7 @@ namespace C64Studio
 
 
 
-    void UpdateFoldingBlocks()
+    internal void UpdateFoldingBlocks()
     {
       if ( m_InsertingText )
       {
@@ -1149,12 +1148,32 @@ namespace C64Studio
         {
           continue;
         }
+
+        string    toolTipText = entry.ToolTipText;
+        if ( ( entry.Symbol != null )
+        &&   ( !string.IsNullOrEmpty( entry.Symbol.Info ) ) )
+        {
+          toolTipText = entry.Symbol.Info.Trim() + "\n" + toolTipText;
+        }
+        if ( entry.Symbol != null )
+        {
+          toolTipText += "$" + entry.Symbol.AddressOrValue.ToString( "X4" ) + "," + entry.Symbol.AddressOrValue.ToString();
+        }
+
         // always add common entries
-        newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Token ) { ToolTipTitle = entry.ToolTipTitle, ToolTipText = entry.ToolTipText } );
+        newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Token )
+        {
+          ToolTipTitle = entry.ToolTipTitle,
+          ToolTipText = toolTipText
+        } );
         // special case local labels
         if ( entry.Token.StartsWith( zone + ".", StringComparison.CurrentCultureIgnoreCase ) )
         {
-          newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Token.Substring( zone.Length ) ) { ToolTipTitle = entry.ToolTipTitle, ToolTipText = entry.ToolTipText } );
+          newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Token.Substring( zone.Length ) )
+          {
+            ToolTipTitle = entry.ToolTipTitle,
+            ToolTipText = toolTipText
+          } );
         }
       }
       foreach ( var entry in DocumentInfo.KnownTokens )
@@ -1164,8 +1183,9 @@ namespace C64Studio
           continue;
         }
 
+        string    toolTipText =  "$" + entry.Value.AddressOrValue.ToString( "X4" ) + "," + entry.Value.AddressOrValue.ToString();
+
         // always add common entries
-        string    toolTipText = "$" + entry.Value.AddressOrValue.ToString( "X4" ) + "," + entry.Value.AddressOrValue.ToString();
         newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Key ) { ToolTipTitle = entry.Key, ToolTipText = toolTipText } );
         // special case local labels
         if ( entry.Key.StartsWith( zone + ".", StringComparison.CurrentCultureIgnoreCase ) )
@@ -2744,7 +2764,7 @@ namespace C64Studio
 
     internal void RemoveAllErrorMarkings()
     {
-      editSource.ClearStyle( FastColoredTextBoxNS.StyleIndex.Style10 );
+      editSource.ClearStyleWithoutAffectingFoldingMarkers( FastColoredTextBoxNS.StyleIndex.Style10 );
     }
 
   }

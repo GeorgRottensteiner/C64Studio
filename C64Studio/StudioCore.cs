@@ -18,6 +18,8 @@ namespace C64Studio
     public Tasks.TaskManager  TaskManager;
     public bool               ShuttingDown = false;
 
+    public static StudioCore  StaticCore = null;
+
 
 
     delegate void AddToOutputCallback( string Text );
@@ -32,6 +34,8 @@ namespace C64Studio
       TaskManager = new Tasks.TaskManager( this );
       Debugging = new Debugging( this );
       Executing = new Executing( this );
+
+      StaticCore = this;
     }
 
 

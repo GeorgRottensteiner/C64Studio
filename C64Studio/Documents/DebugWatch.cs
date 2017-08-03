@@ -10,7 +10,7 @@ namespace C64Studio
 {
   public partial class DebugWatch : BaseDocument
   {
-    public LinkedList<WatchEntry>   m_WatchEntries = new LinkedList<WatchEntry>();
+    public List<WatchEntry>         m_WatchEntries = new List<WatchEntry>();
     private int                     m_ListWatchSortColumn = 0;
 
     public Project                  DebuggedProject = null;
@@ -41,7 +41,7 @@ namespace C64Studio
       if ( Watch.DisplayMemory )
       {
         item.SubItems.Add( "(unread)" );
-        m_WatchEntries.AddLast( Watch );
+        m_WatchEntries.Add( Watch );
       }
       else if ( !Watch.DisplayMemory )
       {
@@ -61,7 +61,7 @@ namespace C64Studio
       else
       {
         item.SubItems.Add( "(unread)" );
-        m_WatchEntries.AddLast( Watch );
+        m_WatchEntries.Add( Watch );
       }
       item.Tag = Watch;
 
@@ -317,6 +317,9 @@ namespace C64Studio
 
       watchReadFromMemoryToolStripMenuItem.Checked = entry.DisplayMemory;
       displayBoundsToolStripMenuItem.Visible = entry.DisplayMemory;
+
+      moveDownToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] + 1 < listWatch.Items.Count );
+      moveUpToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] > 0 );
 
       if ( displayBoundsToolStripMenuItem.Visible )
       {
@@ -609,6 +612,60 @@ namespace C64Studio
           Core.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
         }
       }
+    }
+
+
+
+    private void moveUpToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( listWatch.SelectedItems.Count == 0 )
+      {
+        return;
+      }
+      if ( listWatch.SelectedIndices[0] == 0 )
+      {
+        return;
+      }
+      int     index = listWatch.SelectedIndices[0];
+
+      WatchEntry entry = (WatchEntry)listWatch.SelectedItems[0].Tag;
+      var     item = listWatch.Items[index];
+
+      listWatch.Items.RemoveAt( index );
+      listWatch.Items.Insert( index - 1, item );
+
+      // also exchange in project settings!
+      var oldItem = m_WatchEntries[index];
+      m_WatchEntries.RemoveAt( index );
+      m_WatchEntries.Insert( index - 1, oldItem );
+    }
+
+
+
+    private void moveDownToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( listWatch.SelectedItems.Count == 0 )
+      {
+        return;
+      }
+      if ( listWatch.SelectedIndices[0] + 1 == listWatch.Items.Count )
+      {
+        return;
+      }
+      int     index = listWatch.SelectedIndices[0];
+
+      WatchEntry entry = (WatchEntry)listWatch.SelectedItems[0].Tag;
+      var     item = listWatch.Items[index];
+
+      listWatch.Items.RemoveAt( index );
+      listWatch.Items.Insert( index + 1, item );
+
+      // also exchange in project settings!
+      var oldItem = m_WatchEntries[index];
+      m_WatchEntries.RemoveAt( index );
+      m_WatchEntries.Insert( index + 1, oldItem );
+
+      
     }
 
 

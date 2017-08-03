@@ -92,6 +92,7 @@ namespace C64Studio.Tasks
           Core.MainForm.AppState = Types.StudioState.NORMAL;
           return false;
         }
+
         Core.Compiling.m_LastBuildInfo = buildInfo;
         Core.Compiling.m_BuildIsCurrent = true;
       }
@@ -371,6 +372,9 @@ namespace C64Studio.Tasks
           config = Doc.Project.Settings.Configs[ConfigSetting];
         }
 
+        //Core.MainForm.AppState = Types.StudioState.NORMAL;
+        //return false;
+
         if ( ( !Core.MainForm.ParseFile( parser, Doc, config, OutputMessages ) )
         ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
                                       {
@@ -383,7 +387,8 @@ namespace C64Studio.Tasks
           Core.MainForm.AddOutputMessages( parser );
 
           Core.AddToOutput( "Build failed, " + parser.Warnings.ToString() + " warnings, " + parser.Errors.ToString() + " errors encountered" + System.Environment.NewLine );
-          if ( OutputMessages )
+          // always show messages if we fail!
+          //if ( OutputMessages )
           {
             Core.Navigating.UpdateFromMessages( parser.Messages,
                                                       ( parser is Parser.ASMFileParser ) ? ( (Parser.ASMFileParser)parser ).ASMFileInfo : null,
@@ -399,6 +404,7 @@ namespace C64Studio.Tasks
           }
           return false;
         }
+
         Core.MainForm.AddOutputMessages( parser );
 
         var compileTarget = Core.DetermineTargetType( Doc, parser );

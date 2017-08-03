@@ -3217,6 +3217,21 @@ namespace FastColoredTextBoxNS
 
 
     /// <summary>
+    /// Clear style of all text
+    /// </summary>
+    public void ClearStyleWithoutAffectingFoldingMarkers( StyleIndex styleIndex )
+    {
+      foreach ( Line line in lines )
+        line.ClearStyleWithoutAffectingFoldingMarkers( styleIndex );
+
+      for ( int i = 0; i < LineInfos.Count; i++ )
+        SetVisibleState( i, VisibleState.Visible );
+
+      Invalidate();
+    }
+
+
+    /// <summary>
     /// Clears undo and redo stacks
     /// </summary>
     public void ClearUndo()
