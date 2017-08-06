@@ -74,6 +74,7 @@
     <Compile Include="CustomRenderer\CustomToolStripRenderer.cs" />
     <Compile Include="CustomRenderer\PaletteManager.cs" />
     <Compile Include="Compiling.cs" />
+    <Compile Include="Debugger\IDebugger.cs" />
     <Compile Include="Navigating.cs" />
     <Compile Include="Executing.cs" />
     <Compile Include="Searching.cs" />
@@ -642,7 +643,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="RemoteDebugger.cs" />
+    <Compile Include="Debugger\VICERemoteDebugger.cs" />
     <Compile Include="Settings\StudioSettings.cs" />
     <Compile Include="Tasks\Task.cs" />
     <Compile Include="Tasks\TaskParseFile.cs" />
@@ -735,10 +736,6 @@
     <ProjectReference Include="..\HexBox\HexBox.csproj">
       <Project>{EA74431C-8749-4F1A-8F8F-FCEDAFAE89B9}</Project>
       <Name>HexBox</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tiny64\Tiny64.csproj">
-      <Project>{6f3bd3cf-015f-4d68-a015-4695ddd0e44b}</Project>
-      <Name>Tiny64</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

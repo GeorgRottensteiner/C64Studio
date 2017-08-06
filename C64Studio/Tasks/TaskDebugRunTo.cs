@@ -34,13 +34,7 @@ namespace C64Studio.Tasks
         int targetAddress = debugFileInfo.FindLineAddress( lineIndex );
         if ( targetAddress != -1 )
         {
-          if ( ( Core.Debugging.Debugger.m_ViceVersion == RemoteDebugger.WinViceVersion.V_2_3 )
-          &&   ( Core.Debugging.FirstActionAfterBreak ) )
-          {
-            Core.Debugging.FirstActionAfterBreak = false;
-            Core.MainForm.RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
-          }
-          Core.MainForm.RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
+          RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
         }
         else
         {
@@ -53,13 +47,7 @@ namespace C64Studio.Tasks
         int targetAddress = localDebugFileInfo.FindLineAddress( lineIndex );
         if ( targetAddress != -1 )
         {
-          if ( ( Core.Debugging.Debugger.m_ViceVersion == RemoteDebugger.WinViceVersion.V_2_3 )
-          &&   ( Core.Debugging.FirstActionAfterBreak ) )
-          {
-            Core.Debugging.FirstActionAfterBreak = false;
-            Core.MainForm.RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
-          }
-          Core.MainForm.RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
+          RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
         }
         else
         {
@@ -72,13 +60,7 @@ namespace C64Studio.Tasks
         int targetAddress = localDebugFileInfo2.FindLineAddress( lineIndex );
         if ( targetAddress != -1 )
         {
-          if ( ( Core.Debugging.Debugger.m_ViceVersion == RemoteDebugger.WinViceVersion.V_2_3 )
-          &&   ( Core.Debugging.FirstActionAfterBreak ) )
-          {
-            Core.Debugging.FirstActionAfterBreak = false;
-            Core.MainForm.RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
-          }
-          Core.MainForm.RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
+          RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
         }
         else
         {
@@ -91,5 +73,21 @@ namespace C64Studio.Tasks
       }
       return true;
     }
+
+
+
+    private void RunToAddress( DocumentInfo m_DocToDebug, DocumentInfo m_DocToHandle, int targetAddress )
+    {
+      if ( ( Core.Debugging.Debugger.SupportsFeature( DebuggerFeature.REQUIRES_DOUBLE_ACTION_AFTER_BREAK ) )
+      &&   ( Core.Debugging.FirstActionAfterBreak ) )
+      {
+        Core.Debugging.FirstActionAfterBreak = false;
+        Core.MainForm.RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
+      }
+      Core.MainForm.RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
+    }
+
+
+
   }
 }

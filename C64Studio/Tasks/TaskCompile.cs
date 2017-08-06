@@ -372,9 +372,6 @@ namespace C64Studio.Tasks
           config = Doc.Project.Settings.Configs[ConfigSetting];
         }
 
-        //Core.MainForm.AppState = Types.StudioState.NORMAL;
-        //return false;
-
         if ( ( !Core.MainForm.ParseFile( parser, Doc, config, OutputMessages ) )
         ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
                                       {

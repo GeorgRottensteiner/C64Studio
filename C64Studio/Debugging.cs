@@ -10,11 +10,11 @@ namespace C64Studio
   public class Debugging
   {
     [DllImport( "user32.dll" )]
-    static extern bool InvalidateRect( IntPtr hWnd, IntPtr lpRect, bool bErase );
+    static extern public bool InvalidateRect( IntPtr hWnd, IntPtr lpRect, bool bErase );
 
 
 
-    public RemoteDebugger   Debugger              = null;
+    public IDebugger        Debugger              = null;
     public BaseDocument     MarkedDocument        = null;
     public int              MarkedDocumentLine    = -1;
     public int              CurrentCodePosition   = -1;
@@ -182,19 +182,20 @@ namespace C64Studio
       foreach ( Types.Breakpoint bp in BreakpointsToAddAfterStartup )
       {
         if ( ( bp.TriggerOnLoad )
-        || ( bp.TriggerOnStore ) )
+        ||   ( bp.TriggerOnStore ) )
         {
           if ( bp.TriggerOnExec )
           {
             // this was already added, remove
-            RemoteDebugger.RequestData requData = new RemoteDebugger.RequestData( RemoteDebugger.Request.DELETE_BREAKPOINT, bp.RemoteIndex );
-            requData.Breakpoint = bp;
-            Debugger.QueueRequest( requData );
+            Debugger.DeleteBreakpoint( bp.RemoteIndex, bp );
             bp.RemoteIndex = -1;
           }
-          RemoteDebugger.RequestData delData = new RemoteDebugger.RequestData( RemoteDebugger.Request.ADD_BREAKPOINT, bp.Address );
+          /*
+          VICERemoteDebugger.RequestData delData = new VICERemoteDebugger.RequestData( VICERemoteDebugger.Request.ADD_BREAKPOINT, bp.Address );
           delData.Breakpoint = bp;
           Debugger.QueueRequest( delData );
+          */
+          Debugger.AddBreakpoint( bp );
         }
       }
       // only auto-go on if the initial break point was not the fake first breakpoint
@@ -214,7 +215,7 @@ namespace C64Studio
         Debugger.QueueRequest( addNewBP );*/
       }
       // and auto-go on with debugging
-      Debugger.QueueRequest( RemoteDebugger.Request.EXIT );
+      Debugger.Run();
 
       if ( MarkedDocument != null )
       {
@@ -226,8 +227,6 @@ namespace C64Studio
 
       FirstActionAfterBreak = false;
       Core.MainForm.SetGUIForDebugging( true );
-      //Core.MainForm.mainDebugGo.Enabled = false;
-      //Core.MainForm.mainDebugBreak.Enabled = true;
       return true;
     }
 
@@ -289,19 +288,68 @@ namespace C64Studio
     {
       if ( Core.Executing.RunProcess != null )
       {
-        if ( Debugger.m_ViceVersion < RemoteDebugger.WinViceVersion.V_3_0 )
-        {
-          try
-          {
-            // hack that's needed for WinVICE to continue
-            // fixed in WinVICE r25309
-            InvalidateRect( Core.Executing.RunProcess.MainWindowHandle, IntPtr.Zero, false );
-          }
-          catch ( System.InvalidOperationException )
-          {
-          }
-        }
+        Debugger.ForceEmulatorRefresh();
       }
+    }
+
+
+
+    public bool OnVirtualBreakpointReached( Types.Breakpoint Breakpoint )
+    {
+      Debug.Log( "OnVirtualBreakpointReached" );
+      bool    addedRequest = false;
+      VICERemoteDebugger.RequestData prevRequest = null;
+      foreach ( var virtualBP in Breakpoint.Virtual )
+      {
+        if ( !virtualBP.IsVirtual )
+        {
+          continue;
+        }
+        int   errorPos = -1;
+
+        var tokenInfos = Core.Compiling.ParserASM.ParseTokenInfo( virtualBP.Expression, 0, virtualBP.Expression.Length, out errorPos );
+        if ( errorPos != -1 )
+        {
+          Core.AddToOutput( "Failed to ParseTokenInfo" + System.Environment.NewLine );
+          continue;
+        }
+        int   result = -1;
+        if ( !Core.Compiling.ParserASM.EvaluateTokens( -1, tokenInfos, out result ) )
+        {
+          Core.AddToOutput( "Failed to evaluate " + virtualBP.Expression + System.Environment.NewLine );
+          continue;
+        }
+        if ( ( result < 0 )
+        ||   ( result >= 65536 ) )
+        {
+          Core.AddToOutput( "Evaluated address out of range " + result + System.Environment.NewLine );
+          continue;
+        }
+
+        if ( prevRequest != null )
+        {
+          prevRequest.LastInGroup = false;
+        }
+
+        int     traceSize = 1;
+        var requData = Debugger.RefreshTraceMemory( result, result + traceSize - 1, virtualBP.Expression, virtualBP, Breakpoint );
+
+        if ( requData.Parameter2 >= 0x10000 )
+        {
+          requData.Parameter2 = 0xffff;
+        }
+
+        prevRequest = requData;
+
+        addedRequest = true;
+      }
+      if ( !addedRequest )
+      {
+        // and auto-go on with debugging
+        Debugger.Run();
+        return false;
+      }
+      return true;
     }
 
 
@@ -341,7 +389,7 @@ namespace C64Studio
 
               if ( !mustBeAddedLater )
               {
-                Debug.Log( "Found breakpoint at address " + breakPoint.Address.ToString( "x4" ) );
+                //Debug.Log( "Found breakpoint at address " + breakPoint.Address.ToString( "x4" ) );
                 breakPointFile += "break $" + breakPoint.Address.ToString( "x4" ) + "\r\n";
                 breakPoint.RemoteIndex = remoteIndex;
                 ++remoteIndex;
@@ -368,7 +416,7 @@ namespace C64Studio
               request += "exec ";
               mustBeAddedOnStartup = true;
             }
-            if ( Debugger.m_ViceVersion > RemoteDebugger.WinViceVersion.V_2_3 )
+            if ( Debugger.SupportsFeature( DebuggerFeature.ADD_BREAKPOINTS_AFTER_STARTUP ) )
             {
               if ( breakPoint.TriggerOnLoad )
               {
@@ -407,6 +455,126 @@ namespace C64Studio
 
 
 
+    public void DebugStep()
+    {
+      if ( ( Core.MainForm.m_CurrentActiveTool != null )
+      &&   ( !Core.MainForm.EmulatorSupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
+      {
+        return;
+      }
+      if ( ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
+      ||   ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN ) )
+      {
+        Core.MainForm.m_DebugMemory.InvalidateAllMemory();
+        Debugger.StepInto();
+        Debugger.RefreshRegistersAndWatches();
+        Debugger.SetAutoRefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
+                                       Core.MainForm.m_DebugMemory.MemorySize,
+                                       Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+        Debugger.RefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
+                                Core.MainForm.m_DebugMemory.MemorySize,
+                                Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
 
+        Core.Executing.BringStudioToForeground();
+
+        if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN )
+        {
+          FirstActionAfterBreak = true;
+        }
+        Core.MainForm.AppState = Types.StudioState.DEBUGGING_BROKEN;
+
+        Core.MainForm.SetGUIForDebugging( true );
+      }
+    }
+
+
+
+    internal void DebugStepInto()
+    {
+      if ( ( Core.Debugging.Debugger.SupportsFeature( DebuggerFeature.REQUIRES_DOUBLE_ACTION_AFTER_BREAK ) )
+      &&   ( Core.Debugging.FirstActionAfterBreak ) )
+      {
+        Core.Debugging.FirstActionAfterBreak = false;
+        DebugStep();
+      }
+      DebugStep();
+    }
+
+
+
+    public void StepOver()
+    {
+      if ( ( Core.MainForm.m_CurrentActiveTool != null )
+      &&   ( !Core.MainForm.EmulatorSupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
+      {
+        return;
+      }
+      if ( ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
+      ||   ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN ) )
+      {
+        Core.MainForm.m_DebugMemory.InvalidateAllMemory();
+        Debugger.StepOver();
+        Debugger.RefreshRegistersAndWatches();
+        Debugger.SetAutoRefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
+                                       Core.MainForm.m_DebugMemory.MemorySize,
+                                       Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+        Debugger.RefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
+                                Core.MainForm.m_DebugMemory.MemorySize,
+                                Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+
+        if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN )
+        {
+          FirstActionAfterBreak = true;
+        }
+        Core.Executing.BringStudioToForeground();
+        Core.MainForm.AppState = Types.StudioState.DEBUGGING_BROKEN;
+        Core.MainForm.SetGUIForDebugging( true );
+      }
+    }
+
+
+
+    internal void DebugStepOver()
+    {
+      if ( ( Core.Debugging.Debugger.SupportsFeature( DebuggerFeature.REQUIRES_DOUBLE_ACTION_AFTER_BREAK ) )
+      &&   ( Core.Debugging.FirstActionAfterBreak ) )
+      {
+        Core.Debugging.FirstActionAfterBreak = false;
+        StepOver();
+      }
+      StepOver();
+    }
+
+
+
+    internal void DebugBreak()
+    {
+      if ( ( Core.MainForm.m_CurrentActiveTool != null )
+      &&   ( !Core.MainForm.EmulatorSupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
+      {
+        return;
+      }
+
+      if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN )
+      {
+        // send any command to break into the monitor again
+        try
+        {
+          Debugger.Break();
+
+          Core.Executing.BringStudioToForeground();
+        }
+        catch ( Exception ex )
+        {
+          Core.AddToOutput( "Exception while debug break:" + ex.ToString() );
+        }
+
+        Core.MainForm.AppState = Types.StudioState.DEBUGGING_BROKEN;
+        FirstActionAfterBreak = true;
+        Core.MainForm.SetGUIForDebugging( true );
+        //mainDebugGo.Enabled = true;
+        //mainDebugBreak.Enabled = false;
+      }
+    }
   }
 }

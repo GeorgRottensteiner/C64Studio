@@ -35,3 +35,7 @@
 /C64StudioRelease/MediaTool.exe
 /Tiny64/bin/Debug
 /Tiny64/obj/Debug
+/Tiny64Emu/bin/Debug
+/Tiny64Emu/obj/Debug
+/Tiny64Cmd/bin/Debug
+/Tiny64Cmd/obj/Debug

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace C64Studio
 {
-  public class RemoteDebugger : IDisposable
+  public class VICERemoteDebugger : IDebugger
   {
     public enum WinViceVersion
     {
@@ -36,7 +36,6 @@ namespace C64Studio
     public enum RequestReason
     {
       UNKNOWN = 0,
-      MEMORY_DIRTY,
       MEMORY_FETCH
     };
 
@@ -47,11 +46,12 @@ namespace C64Studio
       public int                Parameter2 = -1;
       public string             Info = "";
       public Types.Breakpoint   Breakpoint = null;
-      public RequestReason      Reason = RequestReason.UNKNOWN;
       public bool               MemDumpOffsetX = false;
       public bool               MemDumpOffsetY = false;
+      public byte               AppliedOffset = 0;    // offset resulting from ,x or ,y
       public bool               LastInGroup = true;
       public int                AdjustedStartAddress = -1;
+      public RequestReason      Reason = RequestReason.UNKNOWN;
 
 
 
@@ -85,13 +85,20 @@ namespace C64Studio
     private RequestData               m_Request = new RequestData( Request.NONE );
     private LinkedList<string>        m_ResponseLines = new LinkedList<string>();
     private LinkedList<RequestData>   m_RequestQueue = new LinkedList<RequestData>();
-    private StudioCore                m_Core = null;
+    private StudioCore                Core = null;
     private LinkedList<WatchEntry>    m_WatchEntries = new LinkedList<WatchEntry>();
     private int                       m_BytesToSend = 0;
     private int                       m_BrokenAtBreakPoint = -1;
     private bool                      m_InitialBreakpointRemoved = false;
     public WinViceVersion             m_ViceVersion = WinViceVersion.V_2_3;
     public bool                       m_BinaryMemDump = true;
+    private DebuggerState             m_State = DebuggerState.NOT_CONNECTED;
+
+    private int                       m_LastRequestedMemoryStartAddress = 0;
+    private int                       m_LastRequestedMemorySize = 32;
+    private MemorySource              m_LastRequestedMemorySource = MemorySource.AS_CPU;
+    private RegisterInfo              CurrentRegisterValues = new RegisterInfo();
+
 
     GR.Collections.Map<int, byte>     m_MemoryValues = new GR.Collections.Map<int, byte>();
     GR.Collections.Map<int, bool>     m_RequestedMemoryValues = new GR.Collections.Map<int, bool>();
@@ -101,15 +108,14 @@ namespace C64Studio
     public event BaseDocument.DocumentEventHandler DocumentEvent;
 
 
-
-    public RemoteDebugger( StudioCore Core )
+    public VICERemoteDebugger( StudioCore Core )
     {
-      m_Core = Core;
+      this.Core = Core;
     }
 
 
 
-    public bool Connect()
+    public bool ConnectToEmulator()
     {
       /*
       Register
@@ -125,6 +131,10 @@ namespace C64Studio
       CYC
        */
 
+      if ( State != DebuggerState.NOT_CONNECTED )
+      {
+        return false;
+      }
       try
       {
         connectResultReceived = false;
@@ -142,12 +152,16 @@ namespace C64Studio
       }
       catch ( System.Net.Sockets.SocketException se )
       {
-        m_Core.AddToOutput( "RemoteDebugger.Connect Exception:" + se.ToString() );
+        Core.AddToOutput( "RemoteDebugger.Connect Exception:" + se.ToString() );
         return false;
       }
       while ( !connectResultReceived )
       {
         System.Threading.Thread.Sleep( 50 );
+      }
+      if ( client.Connected )
+      {
+        m_State = DebuggerState.RUNNING;
       }
       return client.Connected;
     }
@@ -164,7 +178,7 @@ namespace C64Studio
       }
       catch ( System.Net.Sockets.SocketException se )
       {
-        m_Core.AddToOutput( "RemoteDebugger.Connected Exception:" + se.ToString() );
+        Core.AddToOutput( "RemoteDebugger.Connected Exception:" + se.ToString() );
         //conStatus.Text = "Error connecting";
       }
       connectResultReceived = true;
@@ -209,7 +223,7 @@ namespace C64Studio
               // byte 5: error code
               // byte 6 - (answer length+6): the binary answer
 
-              Debug.Log( "Got MemDump data as " + m_ReceivedDataBin.SubBuffer( 0, 6 + (int)answerLength ).ToString() );
+              //Debug.Log( "Got MemDump data as " + m_ReceivedDataBin.SubBuffer( 0, 6 + (int)answerLength ).ToString() );
               // 0201010000 00 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
               byte    resultCode = m_ReceivedDataBin.ByteAt( 5 );
               if ( resultCode != 0 )
@@ -218,6 +232,7 @@ namespace C64Studio
               }
               else
               {
+                /*
                 if ( m_Request.Parameter1 != m_Request.AdjustedStartAddress )
                 {
                   Debug.Log( "Shifted start address" );
@@ -228,11 +243,15 @@ namespace C64Studio
                   Debug.Log( "warped size" );
                 }
                 Debug.Log( "Received " + answerLength + " bytes beginning at " + m_Request.Parameter1.ToString( "x" ) );
+                 */
                 for ( int i = 0; i < answerLength; ++i )
                 {
                   m_MemoryValues[m_Request.Parameter1 + i] = m_ReceivedDataBin.ByteAt( i + 6 );
                 }
-                m_Core.MainForm.UpdateWatchInfo( m_Request, m_ReceivedDataBin.SubBuffer( 6, (int)answerLength ) );
+                DebugEvent( new DebugEventData() { Type = C64Studio.DebugEvent.UPDATE_WATCH,
+                                                   Request = m_Request,
+                                                   Data = m_ReceivedDataBin.SubBuffer( 6, (int)answerLength ) } );
+
                 m_ResponseLines.Clear();
                 m_ReceivedDataBin.TruncateFront( 6 + (int)answerLength );
                 /*
@@ -377,10 +396,13 @@ namespace C64Studio
         if ( recv == 0 )
         {
           // we were closed
-          Debug.Log( "Other side closed" );
-          m_Core.MainForm.StopDebugging();
+          //Debug.Log( "Other side closed" );
+          DebugEvent( new DebugEventData()
+          {
+            Type = C64Studio.DebugEvent.EMULATOR_CLOSED
+          }  );
           m_Request.Type = Request.NONE;
-          Disconnect();
+          DisconnectFromEmulator();
           return;
         }
 
@@ -393,11 +415,11 @@ namespace C64Studio
       }
       catch ( System.ObjectDisposedException od )
       {
-        m_Core.AddToOutput( "ReceiveData Exception:" + od.ToString() );
+        Core.AddToOutput( "ReceiveData Exception:" + od.ToString() );
       }
       catch ( System.Net.Sockets.SocketException se )
       {
-        m_Core.AddToOutput( "ReceiveData Exception:" + se.ToString() );
+        Core.AddToOutput( "ReceiveData Exception:" + se.ToString() );
       }
     }
 
@@ -425,7 +447,7 @@ namespace C64Studio
           //Debug.Log( "Sent " + sent + " bytes (expected " + m_BytesToSend + ")" );
         }
 
-        m_Core.Debugging.ForceEmulatorRefresh();
+        Core.Debugging.ForceEmulatorRefresh();
 
         if ( ( m_BinaryMemDump )
         &&   ( m_ViceVersion >= WinViceVersion.V_2_4 )
@@ -441,13 +463,13 @@ namespace C64Studio
       }
       catch ( System.Net.Sockets.SocketException se )
       {
-        m_Core.AddToOutput( "SendData Exception:" + se.ToString() );
+        Core.AddToOutput( "SendData Exception:" + se.ToString() );
       }
     }
 
 
 
-    public void Disconnect()
+    public void DisconnectFromEmulator()
     {
       if ( client != null )
       {
@@ -460,6 +482,7 @@ namespace C64Studio
           // who cares
           //m_MainForm.AddToOutput( "Exception in Disconnect: " + se.ToString() );
         }
+        m_State = DebuggerState.NOT_CONNECTED;
         client = null;
         m_ResponseLines.Clear();
         Debug.Log( "Set request to none" );
@@ -471,7 +494,7 @@ namespace C64Studio
 
     public void Dispose()
     {
-      Disconnect();
+      DisconnectFromEmulator();
     }
 
 
@@ -484,7 +507,7 @@ namespace C64Studio
       }
       if ( !client.Connected )
       {
-        if ( !Connect() )
+        if ( !ConnectToEmulator() )
         {
           return false;
         }
@@ -522,7 +545,7 @@ namespace C64Studio
       }
       catch ( System.IO.IOException ex )
       {
-        m_Core.AddToOutput( "SendCommand Exception:" + ex.ToString() );
+        Core.AddToOutput( "SendCommand Exception:" + ex.ToString() );
       }
       return true;
     }
@@ -537,7 +560,7 @@ namespace C64Studio
       }
       if ( !client.Connected )
       {
-        if ( !Connect() )
+        if ( !ConnectToEmulator() )
         {
           return false;
         }
@@ -566,10 +589,10 @@ namespace C64Studio
       }
       catch ( System.IO.IOException ex )
       {
-        m_Core.AddToOutput( "SendCommand Exception:" + ex.ToString() );
+        Core.AddToOutput( "SendCommand Exception:" + ex.ToString() );
       }
 
-      m_Core.Debugging.ForceEmulatorRefresh();
+      Core.Debugging.ForceEmulatorRefresh();
 
       if ( ( m_BinaryMemDump )
       &&   ( m_ViceVersion >= WinViceVersion.V_2_4 )
@@ -624,9 +647,27 @@ namespace C64Studio
 
 
 
+    public RequestData RefreshTraceMemory( int StartAddress, int Size, string Info, Types.Breakpoint VirtualBP, Types.Breakpoint TraceBP )
+    {
+      VICERemoteDebugger.RequestData requData    = new VICERemoteDebugger.RequestData( VICERemoteDebugger.Request.TRACE_MEM_DUMP );
+      requData.Parameter1 = StartAddress;
+      requData.Parameter2 = StartAddress + Size - 1;
+      requData.MemDumpOffsetX = false; //watchEntry.IndexedX;
+      requData.MemDumpOffsetY = false; //watchEntry.IndexedY;
+      requData.Info = VirtualBP.Expression;
+      requData.Breakpoint = TraceBP;
+
+      QueueRequest( requData );
+
+      return requData;
+    }
+
+
+
     private void HandleBreakpoint()
     {
       int breakpointToRemove = 1;
+      m_State = DebuggerState.PAUSED;
 
       if ( ( ( m_ViceVersion == WinViceVersion.V_2_3 )
       &&     ( m_ResponseLines.Count >= 3 ) )
@@ -704,7 +745,9 @@ namespace C64Studio
             ||   ( ( m_ViceVersion >= WinViceVersion.V_2_4 )
             &&     ( registerValues.Length == 11 ) ) )
             {
-              m_Core.MainForm.SetDebuggerValues( registerValues );
+              var ded = DebugEventDataFromRegisterValueString( registerValues );
+
+              DebugEvent( ded );
             }
             m_ResponseLines.Clear();
             m_Request = new RequestData( Request.NONE );
@@ -728,13 +771,14 @@ namespace C64Studio
           {
             m_ResponseLines.Clear();
             m_Request = new RequestData( Request.NONE );
+            m_State = DebuggerState.PAUSED;
 
             if ( m_ViceVersion >= WinViceVersion.V_3_0 )
             {
               // TODO - chances are there are register infos in this one line!
               //        looking like this:
               //        .C:a3f8  D0 24       BNE .TitleLoop - A:00 X:13 Y:E8 SP:f6 N.-..... 
-              //m_Core.MainForm.SetDebuggerValues( registerValues );
+              //Core.MainForm.SetDebuggerValues( registerValues );
             }
           }
           break;
@@ -745,10 +789,12 @@ namespace C64Studio
           &&     ( m_ResponseLines.Count == 1 ) ) )
           {
             m_ResponseLines.Clear();
+            m_State = DebuggerState.PAUSED;
             m_Request = new RequestData( Request.NONE );
           }
           break;
         case Request.EXIT:
+          m_State = DebuggerState.RUNNING;
           m_ResponseLines.Clear();
           m_Request = new RequestData( Request.NONE );
           break;
@@ -766,6 +812,7 @@ namespace C64Studio
           &&     ( m_ResponseLines.Count == 1 ) ) )
           {
             m_ResponseLines.Clear();
+            m_State = DebuggerState.PAUSED;
             m_Request = new RequestData( Request.NONE );
           }
           break;
@@ -803,6 +850,7 @@ namespace C64Studio
             }
             Debug.Log( "Last line, should be (C:$xxxx): " + m_ResponseLines.Last.Value );
             m_ResponseLines.Clear();
+            m_State = DebuggerState.PAUSED;
 
             // TODO - only remove if auto startup breakpoint
             int breakAddress = -1;
@@ -836,7 +884,7 @@ namespace C64Studio
                 //Debug.Log( "Remove initial breakpoint " + m_BrokenAtBreakPoint );
                 QueueRequest( Request.DELETE_BREAKPOINT, m_BrokenAtBreakPoint );
 
-                skipRefresh = m_Core.Debugging.OnInitialBreakpointReached( breakAddress, m_BrokenAtBreakPoint );
+                skipRefresh = Core.Debugging.OnInitialBreakpointReached( breakAddress, m_BrokenAtBreakPoint );
               }
             }
             else
@@ -845,7 +893,7 @@ namespace C64Studio
               &&   ( brokenBP.HasVirtual() ) )
               {
                 // a trace breakpoint, only fetch trace info and continue
-                skipRefresh = m_Core.MainForm.OnVirtualBreakpointReached( brokenBP );
+                skipRefresh = Core.Debugging.OnVirtualBreakpointReached( brokenBP );
                 // we added a trace mem dump request
               }
             }
@@ -853,7 +901,7 @@ namespace C64Studio
             if ( !skipRefresh )
             {
               QueueRequest( Request.REFRESH_VALUES );
-              RefreshMemory( m_Core.MainForm.m_DebugMemory.MemoryStart, m_Core.MainForm.m_DebugMemory.MemorySize, m_Core.MainForm.m_DebugMemory.MemoryAsCPU );
+              RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
             }
             m_Request = new RequestData( Request.NONE );
           }
@@ -951,7 +999,7 @@ namespace C64Studio
               //dh.Log( "Got MemDump data as " + dumpData.ToString() );
               if ( m_Request.Type == Request.TRACE_MEM_DUMP )
               {
-                m_Core.MainForm.AddToOutputAndShow( "Trace " + m_Request.Info + " from $" + m_Request.Parameter1.ToString( "X4" ) + " as $" + dumpData.ToString() + "/" + dumpData.ByteAt( 0 ) + System.Environment.NewLine );
+                Core.MainForm.AddToOutputAndShow( "Trace " + m_Request.Info + " from $" + m_Request.Parameter1.ToString( "X4" ) + " as $" + dumpData.ToString() + "/" + dumpData.ByteAt( 0 ) + System.Environment.NewLine );
 
                 if ( m_Request.LastInGroup )
                 {
@@ -960,13 +1008,13 @@ namespace C64Studio
                   {
                     // and auto-go on with debugging
                     Debug.Log( "Virtual only, go on" );
-                    QueueRequest( RemoteDebugger.Request.EXIT );
+                    QueueRequest( VICERemoteDebugger.Request.EXIT );
                   }
                   else
                   {
                     Debug.Log( "Has non virtual bp" );
                     QueueRequest( Request.REFRESH_VALUES );
-                    RefreshMemory( m_Core.MainForm.m_DebugMemory.MemoryStart, m_Core.MainForm.m_DebugMemory.MemorySize, m_Core.MainForm.m_DebugMemory.MemoryAsCPU );
+                    RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
                   }
                 }
               }
@@ -976,7 +1024,12 @@ namespace C64Studio
                 {
                   m_MemoryValues[m_Request.Parameter1 + i] = dumpData.ByteAt( i );
                 }
-                m_Core.MainForm.UpdateWatchInfo( m_Request, dumpData );
+                DebugEvent( new DebugEventData()
+                {
+                  Type = C64Studio.DebugEvent.UPDATE_WATCH,
+                  Request = m_Request,
+                  Data = dumpData
+                } );
               }
               m_ResponseLines.Clear();
               m_Request = new RequestData( Request.NONE );
@@ -1003,15 +1056,64 @@ namespace C64Studio
 
 
 
-    public void RefreshMemory( int MemoryStartAddress, int MemorySize, bool AsCPU )
+    private DebugEventData DebugEventDataFromRegisterValueString( string[] registerValues )
     {
+      DebugEventData  ded = new DebugEventData()
+      {
+        Type = C64Studio.DebugEvent.REGISTER_INFO
+      };
+
+      ded.Registers = new RegisterInfo();
+
+      ded.Registers.A = GR.Convert.ToU8( registerValues[1], 16 );
+      ded.Registers.X = GR.Convert.ToU8( registerValues[2], 16 );
+      ded.Registers.Y = GR.Convert.ToU8( registerValues[3], 16 );
+      ded.Registers.StackPointer = GR.Convert.ToU8( registerValues[4], 16 );
+      ded.Registers.StatusFlags = GR.Convert.ToU8( registerValues[7], 2 );
+      ded.Registers.PC = GR.Convert.ToU16( registerValues[0].Substring( 2 ), 16 );
+      ded.Registers.RasterLine = GR.Convert.ToU16( registerValues[8] );
+      ded.Registers.Cycles = GR.Convert.ToI32( registerValues[9] );
+      ded.Registers.ProcessorPort01 = GR.Convert.ToU8( registerValues[6] );
+
+      CurrentRegisterValues = ded.Registers;
+
+      return ded;
+    }
+
+
+
+    private byte VICEFlagsToByte( string Flags )
+    {
+      byte    result = 0;
+
+
+      // .V-..IZC
+      result |= (byte)( ( Flags[0] == 'N' ) ? 0x80 : 0 );
+      result |= (byte)( ( Flags[1] == 'V' ) ? 0x40 : 0 );
+      //result |= (byte)0x20;
+      result |= (byte)( ( Flags[3] == 'B' ) ? 0x10 : 0 );
+      result |= (byte)( ( Flags[4] == 'D' ) ? 0x08 : 0 );
+      result |= (byte)( ( Flags[5] == 'I' ) ? 0x04 : 0 );
+      result |= (byte)( ( Flags[6] == 'Z' ) ? 0x02 : 0 );
+      result |= (byte)( ( Flags[7] == 'C' ) ? 0x01 : 0 );
+
+      return result;
+    } 
+    
+    
+    
+    void RefreshMemory( int MemoryStartAddress, int MemorySize, bool AsCPU )
+    {
+
+      
+
       if ( AsCPU )
       {
-        QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, MemoryStartAddress, MemorySize );
+        QueueRequest( VICERemoteDebugger.Request.REFRESH_MEMORY, MemoryStartAddress, MemorySize );
       }
       else
       {
-        QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY_RAM, MemoryStartAddress, MemorySize );
+        QueueRequest( VICERemoteDebugger.Request.REFRESH_MEMORY_RAM, MemoryStartAddress, MemorySize );
       }
     }
 
@@ -1048,13 +1150,16 @@ namespace C64Studio
         case Request.NEXT:
           m_MemoryValues.Clear();
           m_RequestedMemoryValues.Clear();
+          m_State = DebuggerState.RUNNING;
           return SendCommand( "next" );
         case Request.STEP:
           m_MemoryValues.Clear();
           m_RequestedMemoryValues.Clear();
+          m_State = DebuggerState.RUNNING;
           return SendCommand( "step" );
         case Request.EXIT:
           m_Request.Type = Request.NONE;
+          m_State = DebuggerState.RUNNING;
           m_RequestedMemoryValues.Clear();
           return SendCommand( "exit" );
         case Request.QUIT:
@@ -1062,6 +1167,7 @@ namespace C64Studio
         case Request.RETURN:
           m_MemoryValues.Clear();
           m_RequestedMemoryValues.Clear();
+          m_State = DebuggerState.RUNNING;
           return SendCommand( "return" );
         case Request.ADD_BREAKPOINT:
           {
@@ -1100,12 +1206,13 @@ namespace C64Studio
             int offset = 0;
             if ( m_Request.MemDumpOffsetX )
             {
-              offset += GR.Convert.ToI32( m_Core.MainForm.m_DebugRegisters.editXDec.Text );
+              offset += CurrentRegisterValues.X;
             }
             if ( m_Request.MemDumpOffsetY )
             {
-              offset += GR.Convert.ToI32( m_Core.MainForm.m_DebugRegisters.editYDec.Text );
+              offset += CurrentRegisterValues.Y;
             }
+            m_Request.AppliedOffset = (byte)offset;
 
             if ( !m_BinaryMemDump )
             //if ( m_ViceVersion == WinViceVersion.V_2_3 )
@@ -1335,7 +1442,7 @@ namespace C64Studio
     public bool FetchValue( int Address, out byte Content )
     {
       Content = 0;
-      if ( m_Core.MainForm.AppState != Types.StudioState.DEBUGGING_BROKEN )
+      if ( State != DebuggerState.PAUSED )
       {
         return false;
       }
@@ -1485,6 +1592,202 @@ namespace C64Studio
           }
         }
       }
+    }
+
+
+
+    public void StepInto()
+    {
+      QueueRequest( VICERemoteDebugger.Request.STEP );
+    }
+
+
+
+    public void StepOver()
+    {
+      QueueRequest( VICERemoteDebugger.Request.NEXT );
+    }
+
+
+
+    public void StepOut()
+    {
+      QueueRequest( VICERemoteDebugger.Request.RETURN );
+    }
+
+
+
+    public void RefreshRegistersAndWatches()
+    {
+      QueueRequest( VICERemoteDebugger.Request.REFRESH_VALUES );
+    }
+
+
+
+    public void RefreshMemory( int StartAddress, int Size )
+    {
+      QueueRequest( VICERemoteDebugger.Request.REFRESH_MEMORY, StartAddress, Size );
+    }
+
+
+
+    public void Run()
+    {
+      QueueRequest( VICERemoteDebugger.Request.EXIT );
+    }
+
+
+
+    public void Break()
+    {
+      StepOver();
+      RefreshRegistersAndWatches();
+      RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+      m_State = DebuggerState.PAUSED;
+      /*
+      if ( SendCommand( "break" ) )
+      {
+        m_State = DebuggerState.PAUSED;
+      }*/
+    }
+
+
+
+    public void DeleteBreakpoint( int RemoteIndex, Types.Breakpoint bp )
+    {
+      VICERemoteDebugger.RequestData requData = new VICERemoteDebugger.RequestData( VICERemoteDebugger.Request.DELETE_BREAKPOINT, bp.RemoteIndex );
+      requData.Breakpoint = bp;
+      QueueRequest( requData );
+    }
+
+
+
+    public bool SupportsFeature( DebuggerFeature Feature )
+    {
+      switch ( Feature )
+      {
+        case DebuggerFeature.ADD_BREAKPOINTS_AFTER_STARTUP:
+          return m_ViceVersion > VICERemoteDebugger.WinViceVersion.V_2_3;
+        case DebuggerFeature.REQUIRES_DOUBLE_ACTION_AFTER_BREAK:
+          return m_ViceVersion == VICERemoteDebugger.WinViceVersion.V_2_3;
+      }
+      return false;
+    }
+
+
+
+    public bool CheckEmulatorVersion( ToolInfo ToolRun )
+    {
+      System.Diagnostics.FileVersionInfo    fileVersion;
+
+      try
+      {
+        fileVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo( ToolRun.Filename );
+      }
+      catch ( System.Exception io )
+      {
+        Core.AddToOutput( "Could not check emulator version: " + io.Message );
+        return false;
+      }
+      m_BinaryMemDump = false;
+      if ( ( fileVersion.ProductVersion == "2.3" )
+      ||   ( fileVersion.ProductVersion.StartsWith( "2.3." ) ) )
+      {
+        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_2_3;
+      }
+      else if ( ( fileVersion.ProductVersion == "2.4" )
+      ||        ( fileVersion.ProductVersion.StartsWith( "2.4." ) ) )
+      {
+        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_2_4;
+      }
+      else if ( ( fileVersion.ProductVersion == "3.0" )
+      ||        ( fileVersion.ProductVersion.StartsWith( "3.0." ) ) )
+      {
+        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
+        m_BinaryMemDump = true;
+      }
+      else if ( ( !string.IsNullOrEmpty( fileVersion.ProductVersion ) )
+      &&        ( GR.Convert.ToI32( fileVersion.ProductVersion.Substring( 0, 1 ) ) >= 3 ) )
+      {
+        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
+        m_BinaryMemDump = true;
+      }
+      return true;
+    }
+
+
+
+    public bool Start( ToolInfo toolRun )
+    {
+      if ( !CheckEmulatorVersion( toolRun ) )
+      {
+        return false;
+      }
+      throw new NotImplementedException();
+    }
+
+
+
+    public void ForceEmulatorRefresh()
+    {
+      if ( m_ViceVersion < VICERemoteDebugger.WinViceVersion.V_3_0 )
+      {
+        try
+        {
+          // hack that's needed for WinVICE to continue
+          // fixed in WinVICE r25309
+          C64Studio.Debugging.InvalidateRect( Core.Executing.RunProcess.MainWindowHandle, IntPtr.Zero, false );
+        }
+        catch ( System.InvalidOperationException )
+        {
+        }
+      }
+    }
+
+
+
+    public void RefreshMemory( int StartAddress, int Size, MemorySource Source )
+    {
+      switch ( Source )
+      {
+        case MemorySource.AS_CPU:
+          RefreshMemory( StartAddress, Size );
+          break;
+        case MemorySource.RAM:
+          {
+            RequestData data = new RequestData( VICERemoteDebugger.Request.REFRESH_MEMORY_RAM, StartAddress, Size );
+            QueueRequest( data );
+          }
+          break;
+      }
+    }
+
+
+
+    public void Quit()
+    {
+      QueueRequest( VICERemoteDebugger.Request.QUIT );
+    }
+
+
+    public event DebugEventHandler DebugEvent;
+
+
+    public DebuggerState State
+    {
+      get
+      {
+        return m_State;
+      }
+    }
+
+
+
+    public void SetAutoRefreshMemory( int StartAddress, int Size, MemorySource Source )
+    {
+      m_LastRequestedMemoryStartAddress = StartAddress;
+      m_LastRequestedMemorySize         = Size;
+      m_LastRequestedMemorySource       = Source;
     }
   }
 }

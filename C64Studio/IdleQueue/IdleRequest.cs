@@ -6,7 +6,7 @@ namespace C64Studio.IdleQueue
 {
   public class IdleRequest
   {
-    public RemoteDebugger.RequestData   DebugRequest = null;
+    public VICERemoteDebugger.RequestData   DebugRequest = null;
     public string                       OpenLastSolution = null;
   }
 }

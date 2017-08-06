@@ -193,10 +193,15 @@ namespace C64Studio
 
 
 
-    public void UpdateValue( RemoteDebugger.RequestData WatchData, GR.Memory.ByteBuffer Data )
+    public void UpdateValue( VICERemoteDebugger.RequestData WatchData, GR.Memory.ByteBuffer Data )
     {
       int     delta = WatchData.AdjustedStartAddress - WatchData.Parameter1;
       int     expectedSize = (int)Data.Length;
+      if ( ( WatchData.MemDumpOffsetX )
+      ||   ( WatchData.MemDumpOffsetY ) )
+      {
+        delta -= WatchData.AppliedOffset;
+      }
       if ( WatchData.Parameter2 != -1 )
       {
         expectedSize = WatchData.Parameter2 - WatchData.Parameter1 + 1;
@@ -289,7 +294,7 @@ namespace C64Studio
       }
       if ( watchReadFromMemoryToolStripMenuItem.Checked )
       {
-        Core.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
+        Core.Debugging.Debugger.RefreshRegistersAndWatches();
       }
 
     }
@@ -495,7 +500,7 @@ namespace C64Studio
 
         if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
         {
-          Core.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
+          Core.Debugging.Debugger.RefreshRegistersAndWatches();
         }
       }
     }
@@ -512,7 +517,7 @@ namespace C64Studio
         UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
         if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
         {
-          Core.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
+          Core.Debugging.Debugger.RefreshRegistersAndWatches();
         }
       }
     }
@@ -529,7 +534,7 @@ namespace C64Studio
         UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
         if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
         {
-          Core.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
+          Core.Debugging.Debugger.RefreshRegistersAndWatches();
         }
       }
     }
@@ -546,7 +551,7 @@ namespace C64Studio
         UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
         if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
         {
-          Core.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
+          Core.Debugging.Debugger.RefreshRegistersAndWatches();
         }
       }
     }
@@ -563,7 +568,7 @@ namespace C64Studio
         UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
         if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
         {
-          Core.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
+          Core.Debugging.Debugger.RefreshRegistersAndWatches();
         }
       }
 
@@ -609,7 +614,7 @@ namespace C64Studio
         UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
         if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
         {
-          Core.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
+          Core.Debugging.Debugger.RefreshRegistersAndWatches();
         }
       }
     }

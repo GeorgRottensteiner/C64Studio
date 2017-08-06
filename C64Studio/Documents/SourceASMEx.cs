@@ -1773,14 +1773,22 @@ namespace C64Studio
         {
           editSource[m_CurrentMarkedLineIndex].BackgroundBrush = null;
         }
+        else
+        {
+          Debug.Log( "Line Index out of bounds!" );
+        }
         m_CurrentMarkedLineIndex = -1;
       }
       if ( Set )
       {
-        if ( m_CurrentMarkedLineIndex < editSource.LinesCount )
+        if ( Line < editSource.LinesCount )
         {
           m_CurrentMarkedLineIndex = Line;
           editSource[m_CurrentMarkedLineIndex].BackgroundBrush = new System.Drawing.SolidBrush( System.Drawing.Color.FromArgb( (int)Core.Settings.SyntaxColoring[Types.ColorableElement.CURRENT_DEBUG_LINE].BGColor ) );
+        }
+        else
+        {
+          Debug.Log( "Line Index out of bounds!" );
         }
       }
     }

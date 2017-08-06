@@ -46,7 +46,14 @@ namespace C64Studio.Tasks
 
     public void RunTask()
     {
-      TaskSuccessful = ProcessTask();
+      try
+      {
+        TaskSuccessful = ProcessTask();
+      }
+      catch ( Exception ex )
+      {
+        Core.AddToOutput( "An exception occurred: " + ex.Message );
+      }
       if ( TaskFinished != null )
       {
         TaskFinished( this );

@@ -19,7 +19,6 @@ namespace C64Studio
 {
   public partial class MainForm : Form
   {
-    //public Project          m_Project = null;
     private Project         m_CurrentProject = null;
 
     public Solution         m_Solution = null;
@@ -62,7 +61,7 @@ namespace C64Studio
     private bool            m_LoadingProject = false;
 
     private BaseDocument    m_ActiveSource = null;
-    private ToolInfo        m_CurrentActiveTool = null;
+    internal ToolInfo        m_CurrentActiveTool = null;
     public SortedDictionary<string, Types.Palette> Palettes = new SortedDictionary<string, C64Studio.Types.Palette>();
 
     private static MainForm s_MainForm = null;
@@ -81,10 +80,10 @@ namespace C64Studio
 
     delegate void AddToOutputAndShowCallback( string Text );
     delegate void SetGUIForWaitOnExternalToolCallback( bool Wait );
-    delegate void SetDebuggerValuesCallback( string[] RegisterValues );
+    delegate void SetDebuggerValuesCallback( RegisterInfo RegisterValues );
     delegate void StartDebugAtCallback( DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, int DebugAddress );
     public delegate void ParameterLessCallback();
-    delegate void UpdateWatchInfoCallback( RemoteDebugger.RequestData Request, GR.Memory.ByteBuffer Data );
+    delegate void UpdateWatchInfoCallback( VICERemoteDebugger.RequestData Request, GR.Memory.ByteBuffer Data );
     delegate bool ParseFileCallback( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration );
     public delegate void DocCallback( BaseDocument Document );
     delegate void DocumentEventHandlerCallback( BaseDocument.DocEvent Event );
@@ -562,7 +561,8 @@ namespace C64Studio
 
       Palettes.Add( defaultPalette.Name, defaultPalette );
 
-      StudioCore.Debugging.Debugger = new RemoteDebugger( StudioCore );
+      StudioCore.Debugging.Debugger = new VICERemoteDebugger( StudioCore );
+      StudioCore.Debugging.Debugger.DebugEvent += Debugger_DebugEvent;
 
       m_CharsetEditor = new CharsetEditor( StudioCore );
       m_SpriteEditor = new SpriteEditor( StudioCore );
@@ -604,7 +604,8 @@ namespace C64Studio
       AddToolWindow( ToolWindowType.FIND_REPLACE, m_FindReplace, DockState.Float, searchReplaceToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.SEARCH_RESULTS, m_SearchResults, DockState.DockBottom, searchResultsToolStripMenuItem, false, false );
 
-      StudioCore.Debugging.Debugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );
+      var viceDebugger = StudioCore.Debugging.Debugger as VICERemoteDebugger;
+      viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );
 
       StudioCore.Settings.GenericTools["Outline"] = m_Outline;
       StudioCore.Settings.GenericTools["SolutionExplorer"] = m_SolutionExplorer;
@@ -773,6 +774,24 @@ namespace C64Studio
 
 
 
+    void Debugger_DebugEvent( DebugEventData Event )
+    {
+      switch ( Event.Type )
+      {
+        case DebugEvent.REGISTER_INFO:
+          SetDebuggerValues( Event.Registers );
+          break;
+        case DebugEvent.EMULATOR_CLOSED:
+          StopDebugging();
+          break;
+        case DebugEvent.UPDATE_WATCH:
+          UpdateWatchInfo( Event.Request, Event.Data );
+          break;
+      }
+    }
+
+
+
     void SetToolPerspective( Perspective NewPerspective )
     {
       if ( m_ActivePerspective == NewPerspective )
@@ -820,7 +839,13 @@ namespace C64Studio
 
         if ( request.DebugRequest != null )
         {
-          StudioCore.Debugging.Debugger.QueueRequest( request.DebugRequest );
+          StudioCore.Debugging.Debugger.SetAutoRefreshMemory( request.DebugRequest.Parameter1,
+                                                       request.DebugRequest.Parameter2,
+                                                       ( request.DebugRequest.Type == VICERemoteDebugger.Request.REFRESH_MEMORY_RAM ) ? MemorySource.RAM : MemorySource.AS_CPU );
+        
+          StudioCore.Debugging.Debugger.RefreshMemory( request.DebugRequest.Parameter1,
+                                                       request.DebugRequest.Parameter2,
+                                                       ( request.DebugRequest.Type == VICERemoteDebugger.Request.REFRESH_MEMORY_RAM ) ? MemorySource.RAM : MemorySource.AS_CPU );
         }
         else if ( request.OpenLastSolution != null )
         {
@@ -1260,12 +1285,12 @@ namespace C64Studio
       if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
       {
         // request new memory
-        RemoteDebugger.RequestData requestRefresh = new RemoteDebugger.RequestData( RemoteDebugger.Request.REFRESH_MEMORY, m_DebugMemory.MemoryStart, m_DebugMemory.MemorySize );
-        requestRefresh.Reason = RemoteDebugger.RequestReason.MEMORY_FETCH;
+        VICERemoteDebugger.RequestData requestRefresh = new VICERemoteDebugger.RequestData( VICERemoteDebugger.Request.REFRESH_MEMORY, m_DebugMemory.MemoryStart, m_DebugMemory.MemorySize );
+        requestRefresh.Reason = VICERemoteDebugger.RequestReason.MEMORY_FETCH;
 
         if ( !m_DebugMemory.MemoryAsCPU )
         {
-          requestRefresh.Type = RemoteDebugger.Request.REFRESH_MEMORY_RAM;
+          requestRefresh.Type = VICERemoteDebugger.Request.REFRESH_MEMORY_RAM;
         }
 
 
@@ -2350,46 +2375,6 @@ namespace C64Studio
 
 
 
-    private bool CheckViceVersion( ToolInfo toolRun )
-    {
-      System.Diagnostics.FileVersionInfo    fileVersion;
-      try
-      {
-        fileVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo( toolRun.Filename );
-      }
-      catch ( System.Exception io )
-      {
-        StudioCore.AddToOutput( "Could not check emulator version: " + io.Message );
-        return false;
-      }
-      StudioCore.Debugging.Debugger.m_BinaryMemDump = false;
-      if ( ( fileVersion.ProductVersion == "2.3" )
-      ||   ( fileVersion.ProductVersion.StartsWith( "2.3." ) ) )
-      {
-        StudioCore.Debugging.Debugger.m_ViceVersion = RemoteDebugger.WinViceVersion.V_2_3;
-      }
-      else if ( ( fileVersion.ProductVersion == "2.4" )
-      ||        ( fileVersion.ProductVersion.StartsWith( "2.4." ) ) )
-      {
-        StudioCore.Debugging.Debugger.m_ViceVersion = RemoteDebugger.WinViceVersion.V_2_4;
-      }
-      else if ( ( fileVersion.ProductVersion == "3.0" )
-      ||        ( fileVersion.ProductVersion.StartsWith( "3.0." ) ) )
-      {
-        StudioCore.Debugging.Debugger.m_ViceVersion = RemoteDebugger.WinViceVersion.V_3_0;
-        StudioCore.Debugging.Debugger.m_BinaryMemDump = true;
-      }
-      else if ( ( !string.IsNullOrEmpty( fileVersion.ProductVersion ) )
-      &&        ( GR.Convert.ToI32( fileVersion.ProductVersion.Substring( 0, 1 ) ) >= 3 ) )
-      {
-        StudioCore.Debugging.Debugger.m_ViceVersion = RemoteDebugger.WinViceVersion.V_3_0;
-        StudioCore.Debugging.Debugger.m_BinaryMemDump = true;
-      }
-      return true;
-    }
-
-
-
     public bool RunCompiledFile( DocumentInfo Document, Types.CompileTargetType TargetType )
     {
       if ( Document.Element != null )
@@ -2410,7 +2395,7 @@ namespace C64Studio
       }
 
       // check file version (WinVICE remote debugger changes)
-      if ( !CheckViceVersion( toolRun ) )
+      if ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) )
       {
         return false;
       }
@@ -2488,7 +2473,7 @@ namespace C64Studio
 
 
 
-    private bool EmulatorSupportsDebugging( ToolInfo Emulator )
+    internal bool EmulatorSupportsDebugging( ToolInfo Emulator )
     {
       return System.IO.Path.GetFileNameWithoutExtension( Emulator.Filename ).ToUpper().StartsWith( "X64" );    
     }
@@ -2514,7 +2499,7 @@ namespace C64Studio
         return false;
       }
 
-      if ( !CheckViceVersion( toolRun ) )
+      if ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) )
       {
         return false;
       }
@@ -2682,7 +2667,7 @@ namespace C64Studio
         // only connect with debugger if VICE
         if ( EmulatorSupportsDebugging( toolRun ) )
         {
-          if ( StudioCore.Debugging.Debugger.Connect() )
+          if ( StudioCore.Debugging.Debugger.ConnectToEmulator() )
           {
             m_CurrentActiveTool = toolRun;
             StudioCore.Debugging.DebuggedProject = DocumentToRun.Project;
@@ -2763,7 +2748,7 @@ namespace C64Studio
       }
       StudioCore.Executing.RunProcess = null;
 
-      StudioCore.Debugging.Debugger.Disconnect();
+      StudioCore.Debugging.Debugger.DisconnectFromEmulator();
 
       if ( StudioCore.Debugging.TempDebuggerStartupFilename.Length > 0 )
       {
@@ -3724,49 +3709,12 @@ namespace C64Studio
           if ( DebugModeActive )
           {
             SetToolPerspective( Perspective.DEBUG );
-            /*
-            m_DebugBreakpoints.Show( panelMain );
-            breakpointsToolStripMenuItem.Checked = true;
-            Settings.Tools[m_DebugBreakpoints.Text].Visible = true;
-
-            m_DebugWatch.Show( panelMain );
-            debugWatchToolStripMenuItem.Checked = true;
-            Settings.Tools[m_DebugWatch.Text].Visible = true;
-
-            m_DebugMemory.Show( panelMain );
-            debugMemoryToolStripMenuItem.Checked = true;
-            Settings.Tools[m_DebugMemory.Text].Visible = true;
-
-            m_DebugRegisters.Show( panelMain );
-            debugRegistersToolStripMenuItem.Checked = true;
-            Settings.Tools[m_DebugRegisters.Text].Visible = true;
-            */
-
             mainDebugGo.Enabled = ( AppState != Types.StudioState.DEBUGGING_RUN );
             mainDebugBreak.Enabled = ( AppState == Types.StudioState.DEBUGGING_RUN );
           }
           else
           {
             SetToolPerspective( Perspective.EDIT );
-
-            /*
-            m_DebugBreakpoints.Hide();
-            breakpointsToolStripMenuItem.Checked = false;
-            Settings.Tools[m_DebugBreakpoints.Text].Visible = false;
-
-            m_DebugRegisters.Hide();
-            debugRegistersToolStripMenuItem.Checked = false;
-            Settings.Tools[m_DebugRegisters.Text].Visible = false;
-
-            m_DebugWatch.Hide();
-            debugWatchToolStripMenuItem.Checked = false;
-            Settings.Tools[m_DebugWatch.Text].Visible = false;
-
-            m_DebugMemory.Hide();
-            debugMemoryToolStripMenuItem.Checked = false;
-            Settings.Tools[m_DebugMemory.Text].Visible = false;
-            */
-
             mainDebugGo.Enabled = true;
           }
         }
@@ -3781,7 +3729,7 @@ namespace C64Studio
 
     private void debugConnectToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      if ( !StudioCore.Debugging.Debugger.Connect() )
+      if ( !StudioCore.Debugging.Debugger.ConnectToEmulator() )
       {
         Debug.Log( "Connect failed" );
       }
@@ -3791,7 +3739,7 @@ namespace C64Studio
 
     private void debugDisconnectToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      StudioCore.Debugging.Debugger.Disconnect();
+      StudioCore.Debugging.Debugger.DisconnectFromEmulator();
     }
 
 
@@ -3870,7 +3818,7 @@ namespace C64Studio
 
     private void MainForm_FormClosed( object sender, FormClosedEventArgs e )
     {
-      StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.QUIT );
+      StudioCore.Debugging.Debugger.Quit();
     }
 
 
@@ -3927,7 +3875,7 @@ namespace C64Studio
         tempBP.Temporary = true;
         Debug.Log( "Try to add Breakpoint at $" + DebugAddress.ToString( "X4" ) );
         StudioCore.Debugging.Debugger.AddBreakpoint( tempBP );
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.EXIT );
+        StudioCore.Debugging.Debugger.Run();
       }
     }
 
@@ -3967,7 +3915,7 @@ namespace C64Studio
 
       if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
       {
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.EXIT );
+        StudioCore.Debugging.Debugger.Run();
 
         if ( StudioCore.Debugging.MarkedDocument != null )
         {
@@ -3993,42 +3941,9 @@ namespace C64Studio
 
 
 
-    private void DebugBreak()
-    {
-      if ( ( m_CurrentActiveTool != null )
-      &&   ( !EmulatorSupportsDebugging( m_CurrentActiveTool ) ) )
-      {
-        return;
-      }
-
-      if ( AppState == Types.StudioState.DEBUGGING_RUN )
-      {
-        // send any command to break into the monitor again
-        try
-        {
-          StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.NEXT );
-          StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
-          StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, m_DebugMemory.MemoryStart, m_DebugMemory.MemorySize );
-
-          StudioCore.Executing.BringStudioToForeground();
-        }
-        catch ( Exception ex )
-        {
-          StudioCore.AddToOutput( "Exception while debug break:" + ex.ToString() );
-        }
-
-        AppState = Types.StudioState.DEBUGGING_BROKEN;
-        StudioCore.Debugging.FirstActionAfterBreak = true;
-        mainDebugGo.Enabled = true;
-        mainDebugBreak.Enabled = false;
-      }
-    }
-
-
-
     private void mainDebugBreak_Click( object sender, EventArgs e )
     {
-      DebugBreak();
+      StudioCore.Debugging.DebugBreak();
     }
 
 
@@ -4058,7 +3973,7 @@ namespace C64Studio
           ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
           {
             // send any command to break into the monitor again
-            StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.QUIT );
+            StudioCore.Debugging.Debugger.Quit();
 
             if ( StudioCore.Debugging.MarkedDocument != null )
             {
@@ -4108,73 +4023,16 @@ namespace C64Studio
 
 
 
-    private void DebugStep()
-    {
-      if ( ( m_CurrentActiveTool != null )
-      &&   ( !EmulatorSupportsDebugging( m_CurrentActiveTool ) ) )
-      {
-        return;
-      }
-      if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
-      {
-        m_DebugMemory.InvalidateAllMemory();
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.STEP );
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, m_DebugMemory.MemoryStart, m_DebugMemory.MemorySize );
-
-        StudioCore.Executing.BringStudioToForeground();
-
-        AppState = Types.StudioState.DEBUGGING_BROKEN;
-        if ( AppState == Types.StudioState.DEBUGGING_RUN )
-        {
-          StudioCore.Debugging.FirstActionAfterBreak = true;
-        }
-        mainDebugGo.Enabled = false;
-        mainDebugBreak.Enabled = true;
-      }
-    }
-
-
-
-    private void DebugStepOver()
-    {
-      if ( ( m_CurrentActiveTool != null )
-      && ( !EmulatorSupportsDebugging( m_CurrentActiveTool ) ) )
-      {
-        return;
-      }
-      if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
-      {
-        m_DebugMemory.InvalidateAllMemory();
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.NEXT );
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, m_DebugMemory.MemoryStart, m_DebugMemory.MemorySize );
-
-        if ( AppState == Types.StudioState.DEBUGGING_RUN )
-        {
-          StudioCore.Debugging.FirstActionAfterBreak = true;
-        }
-        StudioCore.Executing.BringStudioToForeground();
-        AppState = Types.StudioState.DEBUGGING_BROKEN;
-        mainDebugGo.Enabled = true;
-        mainDebugBreak.Enabled = false;
-      }
-    }
-
-
-
     private void mainDebugStepInto_Click( object sender, EventArgs e )
     {
-      DebugStep();
+      StudioCore.Debugging.DebugStep();
     }
 
 
 
     private void mainDebugStepOver_Click( object sender, EventArgs e )
     {
-      DebugStepOver();
+      StudioCore.Debugging.StepOver();
     }
 
 
@@ -4185,9 +4043,14 @@ namespace C64Studio
       ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
       {
         m_DebugMemory.InvalidateAllMemory();
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.RETURN );
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, m_DebugMemory.MemoryStart, m_DebugMemory.MemorySize );
+        StudioCore.Debugging.Debugger.StepOut();
+        StudioCore.Debugging.Debugger.RefreshRegistersAndWatches();
+        StudioCore.Debugging.Debugger.SetAutoRefreshMemory( m_DebugMemory.MemoryStart,
+                                                            m_DebugMemory.MemorySize,
+                                                            m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+        StudioCore.Debugging.Debugger.RefreshMemory( m_DebugMemory.MemoryStart,
+                                                     m_DebugMemory.MemorySize,
+                                                     m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
 
         if ( AppState == Types.StudioState.DEBUGGING_RUN )
         {
@@ -4207,7 +4070,7 @@ namespace C64Studio
       if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
       ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
       {
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
+        StudioCore.Debugging.Debugger.RefreshRegistersAndWatches();
         if ( AppState == Types.StudioState.DEBUGGING_RUN )
         {
           StudioCore.Debugging.FirstActionAfterBreak = true;
@@ -4367,11 +4230,11 @@ namespace C64Studio
 
 
 
-    public void SetDebuggerValues( string[] RegisterValues )
+    public void SetDebuggerValues( RegisterInfo Registers )
     {
       if ( InvokeRequired )
       {
-        Invoke( new SetDebuggerValuesCallback( SetDebuggerValues ), new object[] { RegisterValues } );
+        Invoke( new SetDebuggerValuesCallback( SetDebuggerValues ), new object[] { Registers } );
       }
       else
       {
@@ -4384,12 +4247,18 @@ namespace C64Studio
           }
           StudioCore.Executing.BringStudioToForeground();
           AppState = Types.StudioState.DEBUGGING_BROKEN;
+
+          m_DebugRegisters.SetRegisters( Registers );
+          /*
           m_DebugRegisters.SetRegisters( RegisterValues[1], RegisterValues[2], RegisterValues[3], RegisterValues[4],
                                          RegisterValues[7], RegisterValues[0].Substring( 2 ), RegisterValues[8], RegisterValues[9], RegisterValues[6] );
-
-          int currentPos = GR.Convert.ToI32( RegisterValues[0].Substring( 2 ), 16 );
+          int currentPos = GR.Convert.ToI32( RegisterValues[0].Substring( 2 ), 16 );*/
+          int currentPos = Registers.PC;
           string documentFile = "";
           int documentLine = -1;
+
+          //currentPos = 0x918;   // $918 -  $2cbb
+          //currentPos = 0x2430;  // für fehler in Downhill innerhalb speedscroll nested loop
           if ( StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.DocumentAndLineFromAddress( currentPos, out documentFile, out documentLine ) )
           {
             if ( ( StudioCore.Debugging.MarkedDocument == null )
@@ -4434,7 +4303,7 @@ namespace C64Studio
       }
 
       // put disassembly in there
-      StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_MEMORY, Address, 32 );
+      StudioCore.Debugging.Debugger.RefreshMemory( Address, 32, MemorySource.AS_CPU );
       StudioCore.Debugging.DebugDisassembly.SetText( "Disassembly will\r\nappear here" );
 
       StudioCore.Debugging.DebugDisassembly.SetCursorToLine( 1, true );
@@ -4874,22 +4743,10 @@ namespace C64Studio
           }
           break;
         case C64Studio.Types.Function.DEBUG_STEP:
-          if ( ( StudioCore.Debugging.Debugger.m_ViceVersion == RemoteDebugger.WinViceVersion.V_2_3 )
-          &&   ( StudioCore.Debugging.FirstActionAfterBreak ) )
-          {
-            StudioCore.Debugging.FirstActionAfterBreak = false;
-            DebugStep();
-          }
-          DebugStep();
+          StudioCore.Debugging.DebugStepInto();
           break;
         case C64Studio.Types.Function.DEBUG_STEP_OVER:
-          if ( ( StudioCore.Debugging.Debugger.m_ViceVersion == RemoteDebugger.WinViceVersion.V_2_3 )
-          &&   ( StudioCore.Debugging.FirstActionAfterBreak ) )
-          {
-            StudioCore.Debugging.FirstActionAfterBreak = false;
-            DebugStepOver();
-          }
-          DebugStepOver();
+          StudioCore.Debugging.DebugStepOver();
           break;
         case C64Studio.Types.Function.DEBUG_STOP:
           StopDebugging();
@@ -4898,7 +4755,7 @@ namespace C64Studio
           DebugGo();
           break;
         case C64Studio.Types.Function.DEBUG_BREAK:
-          DebugBreak();
+          StudioCore.Debugging.DebugBreak();
           break;
         case C64Studio.Types.Function.DEBUG_RUN_TO:
           if ( ( AppState != Types.StudioState.NORMAL )
@@ -5147,7 +5004,7 @@ namespace C64Studio
     {
       if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
       {
-        StudioCore.Debugging.Debugger.SendCommand( "break" );
+        StudioCore.Debugging.Debugger.Break();
       }
     }
 
@@ -5164,7 +5021,7 @@ namespace C64Studio
 
         if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
         {
-          StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.REFRESH_VALUES );
+          StudioCore.Debugging.Debugger.RefreshRegistersAndWatches();
         }
       }
     }
@@ -5179,7 +5036,7 @@ namespace C64Studio
 
 
 
-    public void UpdateWatchInfo( RemoteDebugger.RequestData Request, GR.Memory.ByteBuffer Data )
+    private void UpdateWatchInfo( VICERemoteDebugger.RequestData Request, GR.Memory.ByteBuffer Data )
     {
       if ( InvokeRequired )
       {
@@ -5194,8 +5051,9 @@ namespace C64Studio
       }
       else
       {
-        if ( Request.Type == RemoteDebugger.Request.MEM_DUMP )
+        if ( Request.Type == VICERemoteDebugger.Request.MEM_DUMP )
         {
+          // display disassembly?
           if ( Request.Parameter1 == StudioCore.Debugging.CurrentCodePosition )
           {
             if ( StudioCore.Debugging.DebugDisassembly != null )
@@ -6381,73 +6239,6 @@ namespace C64Studio
     {
       StudioCore.Settings.ToolbarActiveDebugger = menuWindowToolbarDebugger.Checked;
       debugTools.Visible = StudioCore.Settings.ToolbarActiveDebugger;
-    }
-
-
-
-    public bool OnVirtualBreakpointReached( Types.Breakpoint Breakpoint )
-    {
-      Debug.Log( "OnVirtualBreakpointReached" );
-      bool    addedRequest = false;
-      RemoteDebugger.RequestData prevRequest = null;
-      foreach ( var virtualBP in Breakpoint.Virtual )
-      {
-        if ( !virtualBP.IsVirtual )
-        {
-          continue;
-        }
-        int   errorPos = -1;
-
-        var tokenInfos = StudioCore.Compiling.ParserASM.ParseTokenInfo( virtualBP.Expression, 0, virtualBP.Expression.Length, out errorPos );
-        if ( errorPos != -1 )
-        {
-          StudioCore.AddToOutput( "Failed to ParseTokenInfo" + System.Environment.NewLine );
-          continue;
-        }
-        int   result = -1;
-        if ( !StudioCore.Compiling.ParserASM.EvaluateTokens( -1, tokenInfos, out result ) )
-        {
-          StudioCore.AddToOutput( "Failed to evaluate " + virtualBP.Expression + System.Environment.NewLine );
-          continue;
-        }
-        if ( ( result < 0 )
-        ||   ( result >= 65536 ) )
-        {
-          StudioCore.AddToOutput( "Evaluated address out of range " + result + System.Environment.NewLine );
-          continue;
-        }
-
-        if ( prevRequest != null )
-        {
-          prevRequest.LastInGroup = false;
-        }
-
-        int     traceSize = 1;
-        RemoteDebugger.RequestData requData    = new RemoteDebugger.RequestData( RemoteDebugger.Request.TRACE_MEM_DUMP );
-        requData.Parameter1 = result;
-        requData.Parameter2 = result + traceSize - 1;
-        requData.MemDumpOffsetX = false; //watchEntry.IndexedX;
-        requData.MemDumpOffsetY = false; //watchEntry.IndexedY;
-        requData.Info = virtualBP.Expression;
-        requData.Breakpoint = Breakpoint;
-        StudioCore.Debugging.Debugger.QueueRequest( requData );
-
-        if ( requData.Parameter2 >= 0x10000 )
-        {
-          requData.Parameter2 = 0xffff;
-        }
-
-        prevRequest = requData;
-
-        addedRequest = true;
-      }
-      if ( !addedRequest )
-      {
-        // and auto-go on with debugging
-        StudioCore.Debugging.Debugger.QueueRequest( RemoteDebugger.Request.EXIT );
-        return false;
-      }
-      return true;
     }
 
 
