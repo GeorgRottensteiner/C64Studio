@@ -10,6 +10,9 @@ namespace Tiny64Cmd
   {
     static void Main( string[] args )
     {
+      var emu = new Emulator();
+
+      emu.Run();
     }
   }
 }
