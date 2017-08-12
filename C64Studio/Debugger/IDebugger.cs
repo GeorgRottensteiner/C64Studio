@@ -23,7 +23,8 @@ namespace C64Studio
     UPDATE_MEMORY,
     UPDATE_WATCH,
     EMULATOR_CLOSED,
-    REGISTER_INFO
+    REGISTER_INFO,
+    TRACE_OUTPUT
   };
 
   public enum DebuggerState
@@ -54,6 +55,7 @@ namespace C64Studio
     public Types.Breakpoint   VirtualBP = null;
     public C64Studio.VICERemoteDebugger.RequestData    Request = null;
     public ByteBuffer         Data = null;
+    public string             Text = null;
   };
 
   public delegate void DebugEventHandler( DebugEventData Event ); 

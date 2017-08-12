@@ -787,6 +787,9 @@ namespace C64Studio
         case DebugEvent.UPDATE_WATCH:
           UpdateWatchInfo( Event.Request, Event.Data );
           break;
+        case DebugEvent.TRACE_OUTPUT:
+          AddToOutputAndShow( Event.Text );
+          break;
       }
     }
 

@@ -485,7 +485,6 @@ namespace C64Studio
         m_State = DebuggerState.NOT_CONNECTED;
         client = null;
         m_ResponseLines.Clear();
-        Debug.Log( "Set request to none" );
         m_Request = new RequestData( Request.NONE );
       }
     }
@@ -999,7 +998,12 @@ namespace C64Studio
               //dh.Log( "Got MemDump data as " + dumpData.ToString() );
               if ( m_Request.Type == Request.TRACE_MEM_DUMP )
               {
-                Core.MainForm.AddToOutputAndShow( "Trace " + m_Request.Info + " from $" + m_Request.Parameter1.ToString( "X4" ) + " as $" + dumpData.ToString() + "/" + dumpData.ByteAt( 0 ) + System.Environment.NewLine );
+                string    traceText = "Trace " + m_Request.Info + " from $" + m_Request.Parameter1.ToString( "X4" ) + " as $" + dumpData.ToString() + "/" + dumpData.ByteAt( 0 ) + System.Environment.NewLine;
+                DebugEvent( new DebugEventData()
+                {
+                  Type = C64Studio.DebugEvent.TRACE_OUTPUT,
+                  Text = traceText
+                } );
 
                 if ( m_Request.LastInGroup )
                 {
