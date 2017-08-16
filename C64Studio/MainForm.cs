@@ -1593,8 +1593,8 @@ namespace C64Studio
       {
         result = result.Replace( "$(ProjectPath)", Document.Project.Settings.BasePath );
       }*/
-      result = result.Replace( "$(MediaManager)", System.IO.Path.Combine( Application.StartupPath, "mediamanager.exe" ) );
-      result = result.Replace( "$(MediaTool)", System.IO.Path.Combine( Application.StartupPath, "mediatool.exe" ) );
+      result = result.Replace( "$(MediaManager)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediamanager.exe" ) + "\"" );
+      result = result.Replace( "$(MediaTool)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediatool.exe" ) + "\"" );
 
       int     debugStartAddress = StudioCore.Debugging.OverrideDebugStart;
       if ( debugStartAddress == -1 )
