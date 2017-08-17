@@ -23,7 +23,7 @@ namespace FastColoredTextBoxNS
     }
 
     /// <summary>
-    /// Regex pattern for serach fragment around caret
+    /// Regex pattern for search fragment around caret
     /// </summary>
     public string SearchPattern
     {

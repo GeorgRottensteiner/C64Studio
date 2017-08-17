@@ -110,6 +110,8 @@ namespace C64Studio
       m_DelayedEventTimer.Tick += m_DelayedEventTimer_Tick;
 
       AutoComplete = new FastColoredTextBoxNS.AutocompleteMenu( editSource );
+      //AutoComplete.SearchPattern = @"([A-Za-z_.]|(?<=[A-Za-z_.][\w]))";
+      AutoComplete.SearchPattern = @"[A-Za-z_.][\w]*";
 
       editSource.AutoIndentExistingLines = false;
       editSource.AutoIndentChars = false;

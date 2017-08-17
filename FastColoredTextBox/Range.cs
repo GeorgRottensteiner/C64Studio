@@ -1440,7 +1440,7 @@ namespace FastColoredTextBoxNS
     }
 
     /// <summary>
-    /// Get fragment of text around Start place. Returns maximal mathed to pattern fragment.
+    /// Get fragment of text around Start place. Returns maximal matched to pattern fragment.
     /// </summary>
     /// <param name="allowedSymbolsPattern">Allowed chars pattern for fragment</param>
     /// <returns>Range of found fragment</returns>
@@ -1449,6 +1449,52 @@ namespace FastColoredTextBoxNS
       Range r = new Range( tb );
       r.Start = Start;
       Regex regex = new Regex( allowedSymbolsPattern, options );
+
+      var match = regex.Match( tb[r.Start.iLine].Text );
+
+      Place startFragment = r.Start;
+      Place endFragment = r.Start;
+      while ( match.Success )
+      {
+        if ( ( match.Index <= Start.iChar )
+        &&   ( match.Index + match.Length >= Start.iChar ) )
+        {
+          startFragment = new Place( match.Index, Start.iLine );
+          endFragment = new Place( match.Index + match.Length, Start.iLine );
+          break;
+        }
+      }
+
+      /*
+      //go left, check symbols
+      while ( r.GoLeftThroughFolded() )
+      {
+        var match = regex.Match( tb[r.Start.iLine].Text.Substring( r.Start.iChar ) );
+        if ( ( !match.Success )
+        ||   ( match.Index > 0 )
+        ||   ( r.Start.iChar + match.Length < Start.iChar ) )
+        {
+          r.GoRightThroughFolded();
+          break;
+        }
+      }
+      Place startFragment = r.Start;
+
+      r.Start = Start;
+      //go right, check symbols
+      do
+      {
+        var match = regex.Match( tb[startFragment.iLine].Text.Substring( startFragment.iChar ) );
+        if ( ( !match.Success )
+        ||   ( startFragment.iChar + match.Length <= r.Start.iChar ) )
+        {
+          break;
+        }
+      } 
+      while ( r.GoRightThroughFolded() );
+      Place endFragment = r.Start;
+      */
+      /*
       //go left, check symbols
       while ( r.GoLeftThroughFolded() )
       {
@@ -1467,7 +1513,7 @@ namespace FastColoredTextBoxNS
         if ( !regex.IsMatch( r.CharAfterStart.ToString() ) )
           break;
       } while ( r.GoRightThroughFolded() );
-      Place endFragment = r.Start;
+      Place endFragment = r.Start;*/
 
       return new Range( tb, startFragment, endFragment );
     }
