@@ -7912,7 +7912,8 @@ namespace FastColoredTextBoxNS
       lines.Manager.ExecuteCommand( new SelectCommand( TextSource ) );
       for ( int i = from; i <= to; i++ )
       {
-        string text = lines[i].Text;
+        // retabify to get the real number of chars
+        string text = ReTabifyLine( lines[i].Text, TabLength );
         string trimmedText = text.TrimStart();
         if ( trimmedText.StartsWith( prefix ) )
         {
