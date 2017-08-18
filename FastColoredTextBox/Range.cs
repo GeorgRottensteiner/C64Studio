@@ -1463,6 +1463,7 @@ namespace FastColoredTextBoxNS
           endFragment = new Place( match.Index + match.Length, Start.iLine );
           break;
         }
+        match = match.NextMatch();
       }
 
       /*
