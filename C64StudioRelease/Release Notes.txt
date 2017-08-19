@@ -17,7 +17,15 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
-xx.xx.2017 - 5.3:         Add: Intellisense now shows entries which contain the typed string instead of only starting with
+19.08.2017 - 5.3:         Add: Intellisense now shows entries which contain the typed string instead of only starting with
+                          Fix: Mediatool and Mediamanager paths are now properly in apostrophes for paths with spaces
+                          Add: Added debugger interface to decouple VICE remote debugger
+                          Add: simple emulator framework (capable of running up to the BASIC startup screen)
+                          Add: Watches can now be moved up/down via context menu
+                          Fix: !if inside !macros didn't work properly
+                          Fix: Bug in watches due to VICEs binary mem dump when only one byte is wanted
+                          Add: Undo for default upper/lower case charsets in charset screen
+                          Add: Custom colors for sprite/charset display in memory view
 
 30.05.2017 - 5.2:         Fix: Crash if "rebuild" with non project was clicked in toolbar
                           Fix: 40 track .d64 images can now be opened in File Manager
