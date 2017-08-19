@@ -164,8 +164,6 @@ namespace Tiny64
       if ( CPU.PC == 0xbcc0 )
       {
         Debug.Log( CPU.PC.ToString( "X4" ) + ":" + opCode.ToString( "X2" ) + " A:" + CPU.Accu.ToString( "X2" ) + " X:" + CPU.X.ToString( "X2" ) + " Y:" + CPU.Y.ToString( "X2" ) + " " + ( Memory.RAM[0xc1] + ( Memory.RAM[0xc2] << 8 ) ).ToString( "X4" ) );
-
-        int i = 0;
       }
 
       switch ( opCode )
