@@ -16,7 +16,7 @@ namespace C64Studio
 
     private const int BORDER_MARKER_WIDTH   = 20;
     private const int BORDER_SIZE_WIDTH     = 24;
-    private const int BORDER_CYCLES_WIDTH   = 24;
+    private const int BORDER_CYCLES_WIDTH   = 48;
 
      
     [DllImport("user32.dll")]

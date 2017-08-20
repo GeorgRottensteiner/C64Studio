@@ -30,6 +30,7 @@
     {
       this.tabPreferences = new System.Windows.Forms.TabControl();
       this.tabGeneral = new System.Windows.Forms.TabPage();
+      this.comboAppMode = new System.Windows.Forms.ComboBox();
       this.btnSetDefaultsFont = new System.Windows.Forms.Button();
       this.checkBASICUseC64Font = new System.Windows.Forms.CheckBox();
       this.btnChangeBASICFont = new System.Windows.Forms.Button();
@@ -52,6 +53,7 @@
       this.label15 = new System.Windows.Forms.Label();
       this.label28 = new System.Windows.Forms.Label();
       this.label26 = new System.Windows.Forms.Label();
+      this.label29 = new System.Windows.Forms.Label();
       this.label13 = new System.Windows.Forms.Label();
       this.label11 = new System.Windows.Forms.Label();
       this.tabTools = new System.Windows.Forms.TabPage();
@@ -118,6 +120,11 @@
       this.btnBindBASICKeyMapBinding = new System.Windows.Forms.Button();
       this.editBASICKeyMapBinding = new System.Windows.Forms.TextBox();
       this.label25 = new System.Windows.Forms.Label();
+      this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
+      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.label21 = new System.Windows.Forms.Label();
       this.tabBASIC = new System.Windows.Forms.TabPage();
       this.checkBASICShowControlCodes = new System.Windows.Forms.CheckBox();
@@ -128,13 +135,6 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.label29 = new System.Windows.Forms.Label();
-      this.comboAppMode = new System.Windows.Forms.ComboBox();
-      this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
-      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -198,6 +198,20 @@
       this.tabGeneral.TabIndex = 2;
       this.tabGeneral.Text = "General";
       this.tabGeneral.UseVisualStyleBackColor = true;
+      // 
+      // comboAppMode
+      // 
+      this.comboAppMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboAppMode.FormattingEnabled = true;
+      this.comboAppMode.Items.AddRange(new object[] {
+            "Undecided",
+            "Normal (settings in UserAppData)",
+            "Portable Mode (settings local)"});
+      this.comboAppMode.Location = new System.Drawing.Point(28, 227);
+      this.comboAppMode.Name = "comboAppMode";
+      this.comboAppMode.Size = new System.Drawing.Size(209, 21);
+      this.comboAppMode.TabIndex = 14;
+      this.comboAppMode.SelectedIndexChanged += new System.EventHandler(this.comboAppMode_SelectedIndexChanged);
       // 
       // btnSetDefaultsFont
       // 
@@ -419,6 +433,15 @@
       this.label26.Size = new System.Drawing.Size(88, 13);
       this.label26.TabIndex = 2;
       this.label26.Text = "Assembler Editor:";
+      // 
+      // label29
+      // 
+      this.label29.AutoSize = true;
+      this.label29.Location = new System.Drawing.Point(9, 211);
+      this.label29.Name = "label29";
+      this.label29.Size = new System.Drawing.Size(92, 13);
+      this.label29.TabIndex = 2;
+      this.label29.Text = "Application Mode:";
       // 
       // label13
       // 
@@ -1101,6 +1124,49 @@
       this.label25.TabIndex = 5;
       this.label25.Text = "Key Binding:";
       // 
+      // listBASICKeyMap
+      // 
+      this.listBASICKeyMap.AllowDrop = true;
+      this.listBASICKeyMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.listBASICKeyMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6,
+            this.columnHeader7,
+            this.columnHeader10});
+      this.listBASICKeyMap.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      this.listBASICKeyMap.FullRowSelect = true;
+      this.listBASICKeyMap.ItemHeight = 14;
+      this.listBASICKeyMap.Location = new System.Drawing.Point(11, 25);
+      this.listBASICKeyMap.MultiSelect = false;
+      this.listBASICKeyMap.Name = "listBASICKeyMap";
+      this.listBASICKeyMap.Size = new System.Drawing.Size(655, 348);
+      this.listBASICKeyMap.TabIndex = 4;
+      this.listBASICKeyMap.UseCompatibleStateImageBehavior = false;
+      this.listBASICKeyMap.View = System.Windows.Forms.View.Details;
+      this.listBASICKeyMap.SelectedIndexChanged += new System.EventHandler(this.listBASICKeyMap_SelectedIndexChanged);
+      // 
+      // columnHeader5
+      // 
+      this.columnHeader5.Text = "C64 Key";
+      this.columnHeader5.Width = 145;
+      // 
+      // columnHeader6
+      // 
+      this.columnHeader6.Text = "PETSCII";
+      this.columnHeader6.Width = 62;
+      // 
+      // columnHeader7
+      // 
+      this.columnHeader7.Text = "PC Key";
+      this.columnHeader7.Width = 309;
+      // 
+      // columnHeader10
+      // 
+      this.columnHeader10.Text = "Display";
+      this.columnHeader10.Width = 108;
+      // 
       // label21
       // 
       this.label21.AutoSize = true;
@@ -1204,71 +1270,6 @@
       this.btnExportCurrentPageSettings.Text = "Export here";
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
-      // 
-      // label29
-      // 
-      this.label29.AutoSize = true;
-      this.label29.Location = new System.Drawing.Point(9, 211);
-      this.label29.Name = "label29";
-      this.label29.Size = new System.Drawing.Size(92, 13);
-      this.label29.TabIndex = 2;
-      this.label29.Text = "Application Mode:";
-      // 
-      // comboAppMode
-      // 
-      this.comboAppMode.FormattingEnabled = true;
-      this.comboAppMode.Items.AddRange(new object[] {
-            "Undecided",
-            "Normal (settings in UserAppData)",
-            "Portable Mode (settings local)"});
-      this.comboAppMode.Location = new System.Drawing.Point(28, 227);
-      this.comboAppMode.Name = "comboAppMode";
-      this.comboAppMode.Size = new System.Drawing.Size(209, 21);
-      this.comboAppMode.TabIndex = 14;
-      this.comboAppMode.SelectedIndexChanged += new System.EventHandler(this.comboAppMode_SelectedIndexChanged);
-      // 
-      // listBASICKeyMap
-      // 
-      this.listBASICKeyMap.AllowDrop = true;
-      this.listBASICKeyMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.listBASICKeyMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6,
-            this.columnHeader7,
-            this.columnHeader10});
-      this.listBASICKeyMap.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.listBASICKeyMap.FullRowSelect = true;
-      this.listBASICKeyMap.ItemHeight = 14;
-      this.listBASICKeyMap.Location = new System.Drawing.Point(11, 25);
-      this.listBASICKeyMap.MultiSelect = false;
-      this.listBASICKeyMap.Name = "listBASICKeyMap";
-      this.listBASICKeyMap.Size = new System.Drawing.Size(655, 348);
-      this.listBASICKeyMap.TabIndex = 4;
-      this.listBASICKeyMap.UseCompatibleStateImageBehavior = false;
-      this.listBASICKeyMap.View = System.Windows.Forms.View.Details;
-      this.listBASICKeyMap.SelectedIndexChanged += new System.EventHandler(this.listBASICKeyMap_SelectedIndexChanged);
-      // 
-      // columnHeader5
-      // 
-      this.columnHeader5.Text = "C64 Key";
-      this.columnHeader5.Width = 145;
-      // 
-      // columnHeader6
-      // 
-      this.columnHeader6.Text = "PETSCII";
-      this.columnHeader6.Width = 62;
-      // 
-      // columnHeader7
-      // 
-      this.columnHeader7.Text = "PC Key";
-      this.columnHeader7.Width = 309;
-      // 
-      // columnHeader10
-      // 
-      this.columnHeader10.Text = "Display";
-      this.columnHeader10.Width = 108;
       // 
       // Settings
       // 
