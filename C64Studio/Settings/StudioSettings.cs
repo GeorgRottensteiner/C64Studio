@@ -15,7 +15,12 @@ namespace C64Studio
     DEBUG = 1
   };
 
-
+  public enum AppMode
+  {
+    UNDECIDED     = 0,
+    GOOD_APP      = 1,
+    PORTABLE_APP  = 2
+  };
 
   public enum ToolWindowType
   {
@@ -158,6 +163,8 @@ namespace C64Studio
     public int                                  MemoryDisplaySpriteCustomColor = 0;
     public int                                  MemoryDisplaySpriteMulticolor1 = 5;
     public int                                  MemoryDisplaySpriteMulticolor2 = 10;
+
+    public AppMode                              StudioAppMode = AppMode.UNDECIDED;
 
     public GR.Collections.Map<string, LayoutInfo> ToolLayout = new GR.Collections.Map<string,LayoutInfo>();
 

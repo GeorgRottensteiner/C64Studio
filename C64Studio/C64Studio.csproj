@@ -75,6 +75,12 @@
     <Compile Include="CustomRenderer\PaletteManager.cs" />
     <Compile Include="Compiling.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
+    <Compile Include="FormAppMode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAppMode.Designer.cs">
+      <DependentUpon>FormAppMode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Navigating.cs" />
     <Compile Include="Executing.cs" />
     <Compile Include="Searching.cs" />
@@ -522,6 +528,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormRenumberBASIC.resx">
       <DependentUpon>FormRenumberBASIC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAppMode.resx">
+      <DependentUpon>FormAppMode.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormWizard.resx">
       <DependentUpon>FormWizard.cs</DependentUpon>

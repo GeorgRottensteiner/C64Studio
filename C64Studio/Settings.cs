@@ -92,6 +92,8 @@ namespace C64Studio
       checkASMShowMiniMap.Checked             = Core.Settings.ASMShowMiniView;
       checkASMAutoTruncateLiteralValues.Checked = Core.Settings.ASMAutoTruncateLiteralValues;
 
+      comboAppMode.SelectedIndex = (int)Core.Settings.StudioAppMode;
+
       btnChangeBASICFont.Enabled = !checkBASICUseC64Font.Checked;
 
       switch ( PageToOpen )
@@ -1353,7 +1355,7 @@ namespace C64Studio
 
     private void checkASMShowSizes_CheckedChanged( object sender, EventArgs e )
     {
-      if ( checkASMShowSizes.Checked != Core.Settings.ASMShowCycles )
+      if ( checkASMShowSizes.Checked != Core.Settings.ASMShowBytes )
       {
         Core.Settings.ASMShowBytes = checkASMShowSizes.Checked;
         RefreshDisplayOnDocuments();
@@ -2134,6 +2136,13 @@ namespace C64Studio
     private void checkASMAutoTruncateLiteralValues_CheckedChanged( object sender, EventArgs e )
     {
       Core.Settings.ASMAutoTruncateLiteralValues = checkASMAutoTruncateLiteralValues.Checked;
+    }
+
+
+
+    private void comboAppMode_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      Core.Settings.StudioAppMode = (AppMode)comboAppMode.SelectedIndex;
     }
 
 

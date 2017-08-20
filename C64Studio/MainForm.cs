@@ -630,8 +630,16 @@ namespace C64Studio
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new C64Studio.Converter.PETSCIIToCharConverter();
 
+      // auto-set app mode by checking for existing settings files
+      DetermineSettingsPath();
+
       if ( !LoadSettings() )
       {
+        // that means either an error occurred or no settings file has been found (first startup?)
+        // no settings file found, ask user which mode is wanted
+        var form = new FormAppMode( StudioCore );
+        form.ShowDialog();
+
         if ( StudioCore.Settings.BASICKeyMap.DefaultKeymaps.ContainsKey( (uint)System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID ) )
         {
           StudioCore.Settings.BASICKeyMap.Keymap = StudioCore.Settings.BASICKeyMap.DefaultKeymaps[(uint)System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID];
@@ -3764,7 +3772,7 @@ namespace C64Studio
 
       GR.Memory.ByteBuffer SettingsData = StudioCore.Settings.ToBuffer();
 
-      string    settingFilename = System.IO.Path.Combine( Application.UserAppDataPath, "settings.dat" );
+      string    settingFilename = SettingsPath();
 
       System.IO.Directory.CreateDirectory( System.IO.Directory.GetParent( settingFilename ).FullName );
       System.IO.File.WriteAllBytes( settingFilename, SettingsData.Data() );
@@ -3774,9 +3782,48 @@ namespace C64Studio
 
 
 
+    private void DetermineSettingsPath()
+    {
+      if ( StudioCore.Settings.StudioAppMode == AppMode.UNDECIDED )
+      {
+        // decide by checking for existance of settings file
+        if ( System.IO.File.Exists( System.IO.Path.Combine( Application.StartupPath, "settings.dat" ) ) )
+        {
+          StudioCore.Settings.StudioAppMode = AppMode.PORTABLE_APP;
+        }
+        else if ( System.IO.File.Exists( System.IO.Path.Combine( Application.UserAppDataPath, "settings.dat" ) ) )
+        {
+          StudioCore.Settings.StudioAppMode = AppMode.GOOD_APP;
+        }
+      }
+    }
+
+
+
+    private string SettingsPath()
+    {
+      try
+      {
+        if ( StudioCore.Settings.StudioAppMode == AppMode.PORTABLE_APP )
+        {
+          // return local path
+          return System.IO.Path.Combine( Application.StartupPath, "settings.dat" );
+        }
+        // return clean user app data path
+        return System.IO.Path.Combine( Application.UserAppDataPath, "settings.dat" );
+      }
+      catch ( Exception )
+      {
+        // fallback to clean path
+        return System.IO.Path.Combine( Application.UserAppDataPath, "settings.dat" );
+      }
+    }
+
+
+
     private bool LoadSettings()
     {
-      string    SettingFile = System.IO.Path.Combine( Application.UserAppDataPath, "settings.dat" );
+      string    SettingFile = SettingsPath();
 
       GR.Memory.ByteBuffer    SettingsData = null;
       try
