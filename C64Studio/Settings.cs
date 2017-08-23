@@ -332,6 +332,12 @@ namespace C64Studio
 
     private void btnBrowseTool_Click( object sender, EventArgs e )
     {
+      var tool = SelectedTool();
+      if ( tool == null )
+      {
+        return;
+      }
+
       System.Windows.Forms.OpenFileDialog   dlgTool = new OpenFileDialog();
 
       dlgTool.Filter = FilterString( Types.Constants.FILEFILTER_EXECUTABLE + Types.Constants.FILEFILTER_ALL );
@@ -343,17 +349,9 @@ namespace C64Studio
       {
         labelToolPath.Text = dlgTool.FileName;
 
-        if ( listTools.SelectedItem == null )
-        {
-          return;
-        }
-        var toolInfo = (GR.Generic.Tupel<string, ToolInfo>)listTools.SelectedItem;
-
-        var tool = toolInfo.second;
-
         if ( tool.Filename != labelToolPath.Text )
         {
-          btnApplyToolSettings.Enabled = true;
+          tool.Filename = labelToolPath.Text;
         }
       }
     }
@@ -370,7 +368,6 @@ namespace C64Studio
         editToolTrueDriveOnArguments.Enabled = false;
         editToolTrueDriveOffArguments.Enabled = false;
         btnBrowseTool.Enabled = false;
-        btnApplyToolSettings.Enabled = false;
         checkPassLabelsToEmulator.Enabled = false;
         btnCloneTool.Enabled = false;
         return;
@@ -380,7 +377,6 @@ namespace C64Studio
       editToolCartArguments.Enabled = true;
       editToolTrueDriveOnArguments.Enabled = true;
       editToolTrueDriveOffArguments.Enabled = true;
-      btnApplyToolSettings.Enabled = false;
       btnBrowseTool.Enabled = true;
       btnCloneTool.Enabled = true;
       checkPassLabelsToEmulator.Enabled = true;
@@ -417,17 +413,28 @@ namespace C64Studio
 
 
 
-    private void btnApplyToolSettings_click( object sender, EventArgs e )
+    private ToolInfo SelectedTool()
     {
       if ( listTools.SelectedItem == null )
       {
+        return null;
+      }
+      var toolInfo = (GR.Generic.Tupel<string, ToolInfo>)listTools.SelectedItem;
+
+      return toolInfo.second;
+    }
+
+
+
+    private void btnApplyToolSettings_click( object sender, EventArgs e )
+    {
+      var tool = SelectedTool();
+      if ( tool == null )
+      {
         return;
       }
-      var toolInfo = (GR.Generic.Tupel<string,ToolInfo>)listTools.SelectedItem;
 
-      var tool = toolInfo.second;
-
-      bool  emulatorAffected = tool.Type == ( ToolInfo.ToolType.EMULATOR );
+      bool  emulatorAffected = ( tool.Type == ( ToolInfo.ToolType.EMULATOR ) );
 
       tool.Name           = editToolName.Text;
       tool.Filename       = labelToolPath.Text;
@@ -467,10 +474,18 @@ namespace C64Studio
 
     private void btnBrowseToolWorkPath_Click( object sender, EventArgs e )
     {
+      var tool = SelectedTool();
+      if ( tool == null )
+      {
+        return;
+      }
+
+
       System.Windows.Forms.FolderBrowserDialog    dlgFolder = new FolderBrowserDialog();
 
       if ( dlgFolder.ShowDialog() == DialogResult.OK )
       {
+        tool.WorkPath = dlgFolder.SelectedPath;
         editWorkPath.Text = dlgFolder.SelectedPath;
       }
     }
@@ -991,55 +1006,56 @@ namespace C64Studio
 
     private void editToolTrueDriveOnArguments_TextChanged( object sender, EventArgs e )
     {
-      if ( listTools.SelectedItem == null )
+      var tool = SelectedTool();
+      if ( tool == null )
       {
         return;
       }
-      var toolInfo = (GR.Generic.Tupel<string, ToolInfo>)listTools.SelectedItem;
-
-      var tool = toolInfo.second;
-
-      if ( tool.TrueDriveOnArguments != editToolTrueDriveOnArguments.Text )
-      {
-        btnApplyToolSettings.Enabled = true;
-      }
-
+      tool.TrueDriveOnArguments = editToolTrueDriveOnArguments.Text;
     }
 
 
 
     private void editToolTrueDriveOffArguments_TextChanged( object sender, EventArgs e )
     {
-      if ( listTools.SelectedItem == null )
+      var tool = SelectedTool();
+      if ( tool == null )
       {
         return;
       }
-      var toolInfo = (GR.Generic.Tupel<string, ToolInfo>)listTools.SelectedItem;
 
-      var tool = toolInfo.second;
-
-      if ( tool.TrueDriveOffArguments != editToolTrueDriveOffArguments.Text )
-      {
-        btnApplyToolSettings.Enabled = true;
-      }
+      tool.TrueDriveOffArguments = editToolTrueDriveOffArguments.Text;
     }
 
 
 
     private void comboToolType_SelectedIndexChanged( object sender, EventArgs e )
     {
-      if ( listTools.SelectedItem == null )
+      var tool = SelectedTool();
+      if ( tool == null )
       {
         return;
       }
-      var toolInfo = (GR.Generic.Tupel<string,ToolInfo>)listTools.SelectedItem;
 
-      var tool = toolInfo.second;
+      bool  emulatorAffected = ( tool.Type == ( ToolInfo.ToolType.EMULATOR ) );
 
-      if ( ( comboToolType.SelectedIndex > 0 )
-      &&   ( comboToolType.SelectedIndex != (int)tool.Type ) )
+      switch ( comboToolType.SelectedIndex )
       {
-        btnApplyToolSettings.Enabled = true;
+        case 1:
+          tool.Type = ToolInfo.ToolType.ASSEMBLER;
+          break;
+        case 2:
+          tool.Type = ToolInfo.ToolType.EMULATOR;
+          emulatorAffected = true;
+          break;
+        default:
+          tool.Type = ToolInfo.ToolType.UNKNOWN;
+          break;
+      }
+
+      if ( emulatorAffected )
+      {
+        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
       }
     }
 
@@ -1047,72 +1063,50 @@ namespace C64Studio
 
     private void editToolPRGArguments_TextChanged( object sender, EventArgs e )
     {
-      if ( listTools.SelectedItem == null )
+      var tool = SelectedTool();
+      if ( tool == null )
       {
         return;
       }
-      var toolInfo = (GR.Generic.Tupel<string, ToolInfo>)listTools.SelectedItem;
-
-      var tool = toolInfo.second;
-
-      if ( tool.PRGArguments != editToolPRGArguments.Text )
-      {
-        btnApplyToolSettings.Enabled = true;
-      }
+      tool.PRGArguments = editToolPRGArguments.Text;
     }
 
 
 
     private void editToolCartArguments_TextChanged( object sender, EventArgs e )
     {
-      if ( listTools.SelectedItem == null )
+      var tool = SelectedTool();
+      if ( tool == null )
       {
         return;
       }
-      var toolInfo = (GR.Generic.Tupel<string, ToolInfo>)listTools.SelectedItem;
 
-      var tool = toolInfo.second;
-
-      if ( tool.CartArguments != editToolCartArguments.Text )
-      {
-        btnApplyToolSettings.Enabled = true;
-      }
+      tool.CartArguments = editToolCartArguments.Text;
     }
 
 
 
     private void editToolDebugArguments_TextChanged( object sender, EventArgs e )
     {
-      if ( listTools.SelectedItem == null )
+      var tool = SelectedTool();
+      if ( tool == null )
       {
         return;
       }
-      var toolInfo = (GR.Generic.Tupel<string, ToolInfo>)listTools.SelectedItem;
 
-      var tool = toolInfo.second;
-
-      if ( tool.DebugArguments != editToolDebugArguments.Text )
-      {
-        btnApplyToolSettings.Enabled = true;
-      }
+      tool.DebugArguments = editToolDebugArguments.Text;
     }
 
 
 
     private void editWorkPath_TextChanged( object sender, EventArgs e )
     {
-      if ( listTools.SelectedItem == null )
+      var tool = SelectedTool();
+      if ( tool == null )
       {
         return;
       }
-      var toolInfo = (GR.Generic.Tupel<string, ToolInfo>)listTools.SelectedItem;
-
-      var tool = toolInfo.second;
-
-      if ( tool.WorkPath != editWorkPath.Text )
-      {
-        btnApplyToolSettings.Enabled = true;
-      }
+      tool.WorkPath = editWorkPath.Text;
     }
 
 
@@ -1366,18 +1360,12 @@ namespace C64Studio
 
     private void checkPassLabelsToEmulator_CheckedChanged( object sender, EventArgs e )
     {
-      if ( listTools.SelectedItem == null )
+      var tool = SelectedTool();
+      if ( tool == null )
       {
         return;
       }
-      var toolInfo = (GR.Generic.Tupel<string, ToolInfo>)listTools.SelectedItem;
-
-      var tool = toolInfo.second;
-
-      if ( tool.PassLabelsToEmulator != checkPassLabelsToEmulator.Checked )
-      {
-        btnApplyToolSettings.Enabled = true;
-      }
+      tool.PassLabelsToEmulator = checkPassLabelsToEmulator.Checked;
     }
 
 
@@ -2143,6 +2131,30 @@ namespace C64Studio
     private void comboAppMode_SelectedIndexChanged( object sender, EventArgs e )
     {
       Core.Settings.StudioAppMode = (AppMode)comboAppMode.SelectedIndex;
+    }
+
+
+
+    private void editToolName_TextChanged( object sender, EventArgs e )
+    {
+      var tool = SelectedTool();
+      if ( tool == null )
+      {
+        return;
+      }
+
+      bool  emulatorAffected = ( tool.Type == ( ToolInfo.ToolType.EMULATOR ) );
+
+      tool.Name = editToolName.Text;
+      // butt ugly hack to enforce list item text update (didn't update if case changes)
+      listTools.Items[listTools.SelectedIndex] = new GR.Generic.Tupel<string, ToolInfo>( "", null );
+      listTools.Items[listTools.SelectedIndex] = new GR.Generic.Tupel<string, ToolInfo>( tool.Name, tool );
+
+      if ( emulatorAffected )
+      {
+        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
+      }
+
     }
 
 

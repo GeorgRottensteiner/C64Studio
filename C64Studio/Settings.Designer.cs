@@ -81,7 +81,6 @@
       this.label8 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
       this.btnDeleteTool = new System.Windows.Forms.Button();
-      this.btnApplyToolSettings = new System.Windows.Forms.Button();
       this.btnCloneTool = new System.Windows.Forms.Button();
       this.btnAddTool = new System.Windows.Forms.Button();
       this.label2 = new System.Windows.Forms.Label();
@@ -120,11 +119,6 @@
       this.btnBindBASICKeyMapBinding = new System.Windows.Forms.Button();
       this.editBASICKeyMapBinding = new System.Windows.Forms.TextBox();
       this.label25 = new System.Windows.Forms.Label();
-      this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
-      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.label21 = new System.Windows.Forms.Label();
       this.tabBASIC = new System.Windows.Forms.TabPage();
       this.checkBASICShowControlCodes = new System.Windows.Forms.CheckBox();
@@ -135,6 +129,11 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
+      this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
+      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -476,7 +475,6 @@
       this.tabTools.Controls.Add(this.label8);
       this.tabTools.Controls.Add(this.label3);
       this.tabTools.Controls.Add(this.btnDeleteTool);
-      this.tabTools.Controls.Add(this.btnApplyToolSettings);
       this.tabTools.Controls.Add(this.btnCloneTool);
       this.tabTools.Controls.Add(this.btnAddTool);
       this.tabTools.Controls.Add(this.label2);
@@ -632,6 +630,7 @@
       this.editToolName.Name = "editToolName";
       this.editToolName.Size = new System.Drawing.Size(296, 20);
       this.editToolName.TabIndex = 6;
+      this.editToolName.TextChanged += new System.EventHandler(this.editToolName_TextChanged);
       // 
       // editWorkPath
       // 
@@ -715,17 +714,6 @@
       this.btnDeleteTool.Text = "Del";
       this.btnDeleteTool.UseVisualStyleBackColor = true;
       this.btnDeleteTool.Click += new System.EventHandler(this.btnRemove_Click);
-      // 
-      // btnApplyToolSettings
-      // 
-      this.btnApplyToolSettings.Enabled = false;
-      this.btnApplyToolSettings.Location = new System.Drawing.Point(521, 368);
-      this.btnApplyToolSettings.Name = "btnApplyToolSettings";
-      this.btnApplyToolSettings.Size = new System.Drawing.Size(80, 23);
-      this.btnApplyToolSettings.TabIndex = 2;
-      this.btnApplyToolSettings.Text = "Apply";
-      this.btnApplyToolSettings.UseVisualStyleBackColor = true;
-      this.btnApplyToolSettings.Click += new System.EventHandler(this.btnApplyToolSettings_click);
       // 
       // btnCloneTool
       // 
@@ -1124,49 +1112,6 @@
       this.label25.TabIndex = 5;
       this.label25.Text = "Key Binding:";
       // 
-      // listBASICKeyMap
-      // 
-      this.listBASICKeyMap.AllowDrop = true;
-      this.listBASICKeyMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.listBASICKeyMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6,
-            this.columnHeader7,
-            this.columnHeader10});
-      this.listBASICKeyMap.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.listBASICKeyMap.FullRowSelect = true;
-      this.listBASICKeyMap.ItemHeight = 14;
-      this.listBASICKeyMap.Location = new System.Drawing.Point(11, 25);
-      this.listBASICKeyMap.MultiSelect = false;
-      this.listBASICKeyMap.Name = "listBASICKeyMap";
-      this.listBASICKeyMap.Size = new System.Drawing.Size(655, 348);
-      this.listBASICKeyMap.TabIndex = 4;
-      this.listBASICKeyMap.UseCompatibleStateImageBehavior = false;
-      this.listBASICKeyMap.View = System.Windows.Forms.View.Details;
-      this.listBASICKeyMap.SelectedIndexChanged += new System.EventHandler(this.listBASICKeyMap_SelectedIndexChanged);
-      // 
-      // columnHeader5
-      // 
-      this.columnHeader5.Text = "C64 Key";
-      this.columnHeader5.Width = 145;
-      // 
-      // columnHeader6
-      // 
-      this.columnHeader6.Text = "PETSCII";
-      this.columnHeader6.Width = 62;
-      // 
-      // columnHeader7
-      // 
-      this.columnHeader7.Text = "PC Key";
-      this.columnHeader7.Width = 309;
-      // 
-      // columnHeader10
-      // 
-      this.columnHeader10.Text = "Display";
-      this.columnHeader10.Width = 108;
-      // 
       // label21
       // 
       this.label21.AutoSize = true;
@@ -1271,6 +1216,49 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
+      // listBASICKeyMap
+      // 
+      this.listBASICKeyMap.AllowDrop = true;
+      this.listBASICKeyMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.listBASICKeyMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6,
+            this.columnHeader7,
+            this.columnHeader10});
+      this.listBASICKeyMap.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      this.listBASICKeyMap.FullRowSelect = true;
+      this.listBASICKeyMap.ItemHeight = 14;
+      this.listBASICKeyMap.Location = new System.Drawing.Point(11, 25);
+      this.listBASICKeyMap.MultiSelect = false;
+      this.listBASICKeyMap.Name = "listBASICKeyMap";
+      this.listBASICKeyMap.Size = new System.Drawing.Size(655, 348);
+      this.listBASICKeyMap.TabIndex = 4;
+      this.listBASICKeyMap.UseCompatibleStateImageBehavior = false;
+      this.listBASICKeyMap.View = System.Windows.Forms.View.Details;
+      this.listBASICKeyMap.SelectedIndexChanged += new System.EventHandler(this.listBASICKeyMap_SelectedIndexChanged);
+      // 
+      // columnHeader5
+      // 
+      this.columnHeader5.Text = "C64 Key";
+      this.columnHeader5.Width = 145;
+      // 
+      // columnHeader6
+      // 
+      this.columnHeader6.Text = "PETSCII";
+      this.columnHeader6.Width = 62;
+      // 
+      // columnHeader7
+      // 
+      this.columnHeader7.Text = "PC Key";
+      this.columnHeader7.Width = 309;
+      // 
+      // columnHeader10
+      // 
+      this.columnHeader10.Text = "Display";
+      this.columnHeader10.Width = 108;
+      // 
       // Settings
       // 
       this.AcceptButton = this.btnOK;
@@ -1333,7 +1321,6 @@
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.ComboBox comboToolType;
     private System.Windows.Forms.Label label6;
-    private System.Windows.Forms.Button btnApplyToolSettings;
     private System.Windows.Forms.TextBox editToolName;
     private System.Windows.Forms.Label label7;
     private System.Windows.Forms.Label label8;
