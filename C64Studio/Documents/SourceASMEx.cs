@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using C64Studio.CustomRenderer;
 
 namespace C64Studio
 {
@@ -2328,6 +2329,8 @@ namespace C64Studio
 
     public override void RefreshDisplayOptions()
     {
+      //BackColor = ( (LightToolStripRenderer)ToolStripManager.Renderer ).BackColor;
+
       // Font
       editSource.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
 

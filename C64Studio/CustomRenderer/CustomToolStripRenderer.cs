@@ -9,31 +9,51 @@ namespace C64Studio.CustomRenderer
 {
   internal class LightToolStripRenderer : ToolStripProfessionalRenderer
   {
+    public Color      BackColor = Color.FromArgb( 0xd6, 0xdb, 0xe9 );
+    public Color      ForeColor = Color.Black;
+    public Color      MenuBackgroundHighlighted = Color.FromArgb( 0xff, 0xff, 0x00 );
+
+
+
+    protected override void OnRenderLabelBackground( ToolStripItemRenderEventArgs e )
+    {
+      e.Graphics.FillRectangle( new SolidBrush( BackColor ), e.Item.Bounds );
+      //base.OnRenderLabelBackground( e );
+    }
+
+    protected override void OnRenderToolStripStatusLabelBackground( ToolStripItemRenderEventArgs e )
+    {
+      e.Graphics.FillRectangle( new SolidBrush( BackColor ), 0, 0, e.Item.Width, e.Item.Height );
+      //base.OnRenderToolStripStatusLabelBackground( e );
+    }
+
+
+
     protected override void OnRenderMenuItemBackground( ToolStripItemRenderEventArgs e )
     {
-      e.Item.BackColor = Color.FromArgb( 0xd6, 0xdb, 0xe9 );
-      e.Item.ForeColor = System.Drawing.Color.Black;
+      e.Item.BackColor = BackColor;// Color.FromArgb( 0xd6, 0xdb, 0xe9 );
+      e.Item.ForeColor = ForeColor;// System.Drawing.Color.Black;
       if ( ( e.Item.Pressed )
       ||   ( e.Item.Selected ) )
       {
-        e.Graphics.FillRectangle( new SolidBrush( Color.FromArgb( 0xff, 0xff, 0x00 ) ), 0, 0, e.Item.Width, e.Item.Height );
+        e.Graphics.FillRectangle( new SolidBrush( MenuBackgroundHighlighted ), 0, 0, e.Item.Width, e.Item.Height );
         //base.OnRenderMenuItemBackground( e );
       }
       else
       {
-        e.Graphics.FillRectangle( new SolidBrush( Color.FromArgb( 0xd6, 0xdb, 0xe9 ) ), 0, 0, e.Item.Width, e.Item.Height );
+        e.Graphics.FillRectangle( new SolidBrush( BackColor ), 0, 0, e.Item.Width, e.Item.Height );
       }
     }
 
     protected override void OnRenderToolStripBackground( ToolStripRenderEventArgs e )
     {
-      e.Graphics.FillRectangle( new SolidBrush( Color.FromArgb( 0xd6, 0xdb, 0xe9 ) ), e.AffectedBounds );
+      e.Graphics.FillRectangle( new SolidBrush( BackColor ), e.AffectedBounds );
     }
 
     protected override void OnRenderButtonBackground( ToolStripItemRenderEventArgs e )
     {
       // - selected menu item
-      e.Graphics.FillRectangle( new SolidBrush( Color.FromArgb( 0xd6, 0xdb, 0xe9 ) ), e.Item.Bounds );
+      e.Graphics.FillRectangle( new SolidBrush( BackColor ), e.Item.Bounds );
     }
 
     protected override void OnRenderSeparator( ToolStripSeparatorRenderEventArgs e )

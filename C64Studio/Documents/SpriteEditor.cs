@@ -1,4 +1,5 @@
-﻿using C64Studio.Displayer;
+﻿using C64Studio.CustomRenderer;
+using C64Studio.Displayer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -132,6 +133,21 @@ namespace C64Studio
       pictureEditor.Image = m_SpriteProject.Sprites[m_CurrentSprite].Image;
 
       panelCharacters_SelectedIndexChanged( null, null );
+
+      RefreshDisplayOptions();
+    }
+
+
+
+    public override void RefreshDisplayOptions()
+    {
+      /*
+      tabEditor.BackColor = ( (LightToolStripRenderer)ToolStripManager.Renderer ).BackColor;
+
+      foreach ( TabPage tab in tabSpriteEditor.TabPages )
+      {
+        tab.BackColor = ( (LightToolStripRenderer)ToolStripManager.Renderer ).BackColor;
+      }*/
     }
 
 

@@ -75,10 +75,10 @@
     <Compile Include="CustomRenderer\PaletteManager.cs" />
     <Compile Include="Compiling.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
-    <Compile Include="FormAppMode.cs">
+    <Compile Include="Dialogs\FormAppMode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormAppMode.Designer.cs">
+    <Compile Include="Dialogs\FormAppMode.Designer.cs">
       <DependentUpon>FormAppMode.cs</DependentUpon>
     </Compile>
     <Compile Include="Navigating.cs" />
@@ -207,10 +207,10 @@
     <Compile Include="Formats\MediaFormat.cs" />
     <Compile Include="Formats\PRG.cs" />
     <Compile Include="Formats\Tap.cs" />
-    <Compile Include="FormFindReplace.cs">
+    <Compile Include="Dialogs\FormFindReplace.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormFindReplace.Designer.cs">
+    <Compile Include="Dialogs\FormFindReplace.Designer.cs">
       <DependentUpon>FormFindReplace.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DlgGraphicImport.cs">
@@ -219,16 +219,16 @@
     <Compile Include="Dialogs\DlgGraphicImport.Designer.cs">
       <DependentUpon>DlgGraphicImport.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormRenameFile.cs">
+    <Compile Include="Dialogs\FormRenameFile.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRenameFile.Designer.cs">
+    <Compile Include="Dialogs\FormRenameFile.Designer.cs">
       <DependentUpon>FormRenameFile.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormRenumberBASIC.cs">
+    <Compile Include="Dialogs\FormRenumberBASIC.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRenumberBASIC.Designer.cs">
+    <Compile Include="Dialogs\FormRenumberBASIC.Designer.cs">
       <DependentUpon>FormRenumberBASIC.cs</DependentUpon>
     </Compile>
     <Compile Include="Documents\Help.cs">
@@ -243,10 +243,10 @@
     <Compile Include="Documents\CharsetScreenEditor.Designer.cs">
       <DependentUpon>CharsetScreenEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormProjectWizard.cs">
+    <Compile Include="Dialogs\FormProjectWizard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormProjectWizard.Designer.cs">
+    <Compile Include="Dialogs\FormProjectWizard.Designer.cs">
       <DependentUpon>FormProjectWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="Documents\BinaryDisplay.cs">
@@ -261,16 +261,16 @@
     <Compile Include="Documents\DebugBreakpoints.Designer.cs">
       <DependentUpon>DebugBreakpoints.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSolutionWizard.cs">
+    <Compile Include="Dialogs\FormSolutionWizard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSolutionWizard.Designer.cs">
+    <Compile Include="Dialogs\FormSolutionWizard.Designer.cs">
       <DependentUpon>FormSolutionWizard.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormLicense.cs">
+    <Compile Include="Dialogs\FormLicense.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormLicense.Designer.cs">
+    <Compile Include="Dialogs\FormLicense.Designer.cs">
       <DependentUpon>FormLicense.cs</DependentUpon>
     </Compile>
     <Compile Include="IdleQueue\IdleRequest.cs" />
@@ -373,23 +373,23 @@
     <Compile Include="Documents\DebugWatch.Designer.cs">
       <DependentUpon>DebugWatch.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormAbout.cs">
+    <Compile Include="Dialogs\FormAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormAbout.Designer.cs">
+    <Compile Include="Dialogs\FormAbout.Designer.cs">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </Compile>
     <Compile Include="Formats\T64.cs" />
-    <Compile Include="FormMacros.cs">
+    <Compile Include="Dialogs\FormMacros.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormMacros.Designer.cs">
+    <Compile Include="Dialogs\FormMacros.Designer.cs">
       <DependentUpon>FormMacros.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormWizard.cs">
+    <Compile Include="Dialogs\FormWizard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormWizard.Designer.cs">
+    <Compile Include="Dialogs\FormWizard.Designer.cs">
       <DependentUpon>FormWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="Documents\CompileResult.cs">
@@ -398,10 +398,10 @@
     <Compile Include="Documents\CompileResult.Designer.cs">
       <DependentUpon>CompileResult.cs</DependentUpon>
     </Compile>
-    <Compile Include="ElementProperties.cs">
+    <Compile Include="Dialogs\ElementProperties.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ElementProperties.Designer.cs">
+    <Compile Include="Dialogs\ElementProperties.Designer.cs">
       <DependentUpon>ElementProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Documents\DebugMemory.cs">
@@ -436,17 +436,17 @@
     <Compile Include="Documents\SpriteEditor.Designer.cs">
       <DependentUpon>SpriteEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProjectProperties.cs">
+    <Compile Include="Dialogs\ProjectProperties.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProjectProperties.Designer.cs">
+    <Compile Include="Dialogs\ProjectProperties.Designer.cs">
       <DependentUpon>ProjectProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="ProjectSettings.cs" />
-    <Compile Include="Settings.cs">
+    <Compile Include="Dialogs\Settings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Settings.Designer.cs">
+    <Compile Include="Dialogs\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Documents\SolutionExplorer.cs">
@@ -511,34 +511,34 @@
     <EmbeddedResource Include="Documents\DebugWatch.resx">
       <DependentUpon>DebugWatch.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormAbout.resx">
+    <EmbeddedResource Include="Dialogs\FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormFindReplace.resx">
+    <EmbeddedResource Include="Dialogs\FormFindReplace.resx">
       <DependentUpon>FormFindReplace.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgGraphicImport.resx">
       <DependentUpon>DlgGraphicImport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormMacros.resx">
+    <EmbeddedResource Include="Dialogs\FormMacros.resx">
       <DependentUpon>FormMacros.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormRenameFile.resx">
+    <EmbeddedResource Include="Dialogs\FormRenameFile.resx">
       <DependentUpon>FormRenameFile.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormRenumberBASIC.resx">
+    <EmbeddedResource Include="Dialogs\FormRenumberBASIC.resx">
       <DependentUpon>FormRenumberBASIC.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormAppMode.resx">
+    <EmbeddedResource Include="Dialogs\FormAppMode.resx">
       <DependentUpon>FormAppMode.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormWizard.resx">
+    <EmbeddedResource Include="Dialogs\FormWizard.resx">
       <DependentUpon>FormWizard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Documents\CompileResult.resx">
       <DependentUpon>CompileResult.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ElementProperties.resx">
+    <EmbeddedResource Include="Dialogs\ElementProperties.resx">
       <DependentUpon>ElementProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Documents\DebugMemory.resx">
@@ -562,7 +562,7 @@
     <EmbeddedResource Include="Documents\CharsetScreenEditor.resx">
       <DependentUpon>CharsetScreenEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormProjectWizard.resx">
+    <EmbeddedResource Include="Dialogs\FormProjectWizard.resx">
       <DependentUpon>FormProjectWizard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Documents\BinaryDisplay.resx">
@@ -571,11 +571,11 @@
     <EmbeddedResource Include="Documents\DebugBreakpoints.resx">
       <DependentUpon>DebugBreakpoints.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSolutionWizard.resx">
+    <EmbeddedResource Include="Dialogs\FormSolutionWizard.resx">
       <DependentUpon>FormSolutionWizard.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormLicense.resx">
+    <EmbeddedResource Include="Dialogs\FormLicense.resx">
       <DependentUpon>FormLicense.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Documents\MapEditor.resx">
@@ -617,7 +617,7 @@
     <EmbeddedResource Include="Documents\OutputDisplay.resx">
       <DependentUpon>OutputDisplay.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProjectProperties.resx">
+    <EmbeddedResource Include="Dialogs\ProjectProperties.resx">
       <DependentUpon>ProjectProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Documents\ReadOnlyFile.resx">
@@ -631,7 +631,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Settings.resx">
+    <EmbeddedResource Include="Dialogs\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
