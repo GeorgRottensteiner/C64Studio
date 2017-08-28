@@ -112,7 +112,7 @@ namespace C64Studio.Parser
     protected string            m_Filename = "";
 
 
-    public AssemblyOutput Assembly = null;
+    public AssemblyOutput AssembledOutput = null;
 
 
 

@@ -58,7 +58,7 @@ namespace C64Ass
         return 1;
       }
 
-      if ( !GR.IO.File.WriteAllBytes( config.OutputFile, parser.Assembly.Assembly ) )
+      if ( !GR.IO.File.WriteAllBytes( config.OutputFile, parser.AssembledOutput.Assembly ) )
       {
         System.Console.WriteLine( "Failed to write output file" );
         return 1;

@@ -178,7 +178,7 @@ namespace C64Studio
       if ( ( asmParser.Parse( temp, null, config ) )
       &&   ( asmParser.Assemble( config ) ) )
       {
-        SetHexData( asmParser.Assembly.Assembly );
+        SetHexData( asmParser.AssembledOutput.Assembly );
       }
     }
 

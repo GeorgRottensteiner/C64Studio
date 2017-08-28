@@ -466,11 +466,12 @@ namespace C64Studio.Tasks
         return false;
       }
       // write output if applicable
-      if ( parser.Assembly != null )
+      if ( ( parser.AssembledOutput != null )
+      &&   ( parser.AssembledOutput.Assembly != null ) )
       {
         try
         {
-          System.IO.File.WriteAllBytes( BuildInfo.TargetFile, parser.Assembly.Assembly.Data() );
+          System.IO.File.WriteAllBytes( BuildInfo.TargetFile, parser.AssembledOutput.Assembly.Data() );
         }
         catch ( System.Exception ex )
         {
@@ -483,7 +484,11 @@ namespace C64Studio.Tasks
           }
           return false;
         }
-        Core.AddToOutput( "Build successful, " + parser.Warnings.ToString() + " warnings, 0 errors encountered, compiled to file " + BuildInfo.TargetFile + ", " + parser.Assembly.Assembly.Length + " bytes" + System.Environment.NewLine );
+        Core.AddToOutput( "Build successful, " + parser.Warnings.ToString() + " warnings, 0 errors encountered" + System.Environment.NewLine );
+        Core.AddToOutput( "Start address $" + parser.AssembledOutput.OriginalAssemblyStartAddress.ToString( "X4" ) 
+                          + " to $" + ( parser.AssembledOutput.OriginalAssemblyStartAddress + parser.AssembledOutput.OriginalAssemblySize - 1 ).ToString( "X4" )
+                          + ", size " + parser.AssembledOutput.OriginalAssemblySize + " bytes" + System.Environment.NewLine );
+        Core.AddToOutput( "Compiled to file " + BuildInfo.TargetFile + ", " + parser.AssembledOutput.Assembly.Length + " bytes" + System.Environment.NewLine );
 
         //Debug.Log( "File " + Doc.DocumentFilename + " was rebuilt for config " + ConfigSetting + " this round" );
       }

@@ -27,7 +27,7 @@ namespace TestProject
 
       Assert.IsTrue( parser.Assemble( config ) );
 
-      var assembly = parser.Assembly;
+      var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( 1, parser.Warnings );
       Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.SEVERE_WARNING, parser.Messages.Values[0].Type  );
@@ -59,7 +59,7 @@ namespace TestProject
 
       Assert.IsTrue( parser.Assemble( config ) );
 
-      var assembly = parser.Assembly;
+      var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( 1, parser.Warnings );
       Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
@@ -91,7 +91,7 @@ namespace TestProject
 
       Assert.IsTrue( parser.Assemble( config ) );
 
-      var assembly = parser.Assembly;
+      var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( 1, parser.Warnings );
       Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
