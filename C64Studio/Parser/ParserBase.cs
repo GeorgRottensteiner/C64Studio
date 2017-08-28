@@ -112,7 +112,7 @@ namespace C64Studio.Parser
     protected string            m_Filename = "";
 
 
-    public GR.Memory.ByteBuffer Assembly = null;
+    public AssemblyOutput Assembly = null;
 
 
 

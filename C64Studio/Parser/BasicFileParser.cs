@@ -1089,7 +1089,7 @@ namespace C64Studio.Parser
 
       int     fileStartAddress = -1;
 
-      Assembly = result;
+      Assembly.Assembly = result;
       if ( Config.TargetType == Types.CompileTargetType.T64 )
       {
         Formats.T64 t64 = new C64Studio.Formats.T64();
@@ -1107,7 +1107,7 @@ namespace C64Studio.Parser
         t64.FileRecords.Add( record );
         t64.FileDatas.Add( result );
 
-        Assembly = t64.Compile();
+        Assembly.Assembly = t64.Compile();
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_BIN )
       ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
@@ -1115,7 +1115,7 @@ namespace C64Studio.Parser
         if ( result.Length < 8192 )
         {
           // fill up
-          Assembly = result + new GR.Memory.ByteBuffer( 8192 - result.Length );
+          Assembly.Assembly = result + new GR.Memory.ByteBuffer( 8192 - result.Length );
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_16K_BIN )
@@ -1174,7 +1174,7 @@ namespace C64Studio.Parser
 
           chip.Append( result );
 
-          Assembly = header + chip;
+          Assembly.Assembly = header + chip;
         }
       }
 

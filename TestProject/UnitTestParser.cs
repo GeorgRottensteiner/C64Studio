@@ -19,7 +19,7 @@ namespace TestProject
       Assert.IsTrue( parser.Parse( Source, null, config ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
-      return parser.Assembly;
+      return parser.Assembly.Assembly;
     }
 
 

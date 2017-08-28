@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="Navigating.cs" />
     <Compile Include="Executing.cs" />
+    <Compile Include="Parser\AssemblyOutput.cs" />
     <Compile Include="Searching.cs" />
     <Compile Include="Debugging.cs" />
     <Compile Include="Dialogs\DlgDisassembler.cs">

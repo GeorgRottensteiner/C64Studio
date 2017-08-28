@@ -470,7 +470,7 @@ namespace C64Studio.Tasks
       {
         try
         {
-          System.IO.File.WriteAllBytes( BuildInfo.TargetFile, parser.Assembly.Data() );
+          System.IO.File.WriteAllBytes( BuildInfo.TargetFile, parser.Assembly.Assembly.Data() );
         }
         catch ( System.Exception ex )
         {
@@ -483,7 +483,7 @@ namespace C64Studio.Tasks
           }
           return false;
         }
-        Core.AddToOutput( "Build successful, " + parser.Warnings.ToString() + " warnings, 0 errors encountered, compiled to file " + BuildInfo.TargetFile + ", " + parser.Assembly.Length + " bytes" + System.Environment.NewLine );
+        Core.AddToOutput( "Build successful, " + parser.Warnings.ToString() + " warnings, 0 errors encountered, compiled to file " + BuildInfo.TargetFile + ", " + parser.Assembly.Assembly.Length + " bytes" + System.Environment.NewLine );
 
         //Debug.Log( "File " + Doc.DocumentFilename + " was rebuilt for config " + ConfigSetting + " this round" );
       }

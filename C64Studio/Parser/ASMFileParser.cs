@@ -8115,7 +8115,8 @@ namespace C64Studio.Parser
       }
 
       //Assembly = result;
-      Assembly = assembledData;
+      Assembly = new AssemblyOutput();
+      Assembly.Assembly = assembledData;
       if ( Config.TargetType == Types.CompileTargetType.T64 )
       {
         Formats.T64 t64 = new C64Studio.Formats.T64();
@@ -8133,15 +8134,15 @@ namespace C64Studio.Parser
         t64.TapeInfo.Description = "C64S tape file\r\nDemo tape";
         t64.TapeInfo.UserDescription = "USERDESC";
         t64.FileRecords.Add( record );
-        t64.FileDatas.Add( Assembly );
+        t64.FileDatas.Add( Assembly.Assembly );
 
-        Assembly = t64.Compile();
+        Assembly.Assembly = t64.Compile();
       }
       else if ( Config.TargetType == Types.CompileTargetType.TAP )
       {
         Formats.Tap tap = new C64Studio.Formats.Tap();
 
-        tap.WriteFile( Util.ToFilename( "HURZ" ), Assembly, C64Studio.Types.FileType.PRG );
+        tap.WriteFile( Util.ToFilename( "HURZ" ), Assembly.Assembly, C64Studio.Types.FileType.PRG );
         /*
         Formats.T64.FileRecord  record = new C64Studio.Formats.T64.FileRecord();
 
@@ -8157,7 +8158,7 @@ namespace C64Studio.Parser
         t64.FileRecords.Add( record );
         t64.FileDatas.Add( Assembly );
         */
-        Assembly = tap.Compile();
+        Assembly.Assembly = tap.Compile();
       }
       else if ( Config.TargetType == Types.CompileTargetType.D64 )
       {
@@ -8171,21 +8172,21 @@ namespace C64Studio.Parser
         {
           bufName.AppendU8( 0xa0 );
         }
-        d64.WriteFile( bufName, Assembly, C64Studio.Types.FileType.PRG );
+        d64.WriteFile( bufName, Assembly.Assembly, C64Studio.Types.FileType.PRG );
 
-        Assembly = d64.Compile();
+        Assembly.Assembly = d64.Compile();
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_BIN )
       ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
       {
-        if ( Assembly.Length < 8192 )
+        if ( Assembly.Assembly.Length < 8192 )
         {
           // fill up
-          Assembly = Assembly + new GR.Memory.ByteBuffer( 8192 - Assembly.Length );
+          Assembly.Assembly = Assembly.Assembly + new GR.Memory.ByteBuffer( 8192 - Assembly.Assembly.Length );
         }
-        else if ( Assembly.Length > 8192 )
+        else if ( Assembly.Assembly.Length > 8192 )
         {
-          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + Assembly.Length.ToString() + " > 8192" );
+          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + Assembly.Assembly.Length.ToString() + " > 8192" );
           return false;
         }
         if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT )
@@ -8227,29 +8228,29 @@ namespace C64Studio.Parser
           GR.Memory.ByteBuffer chip = new GR.Memory.ByteBuffer();
 
           chip.AppendHex( "43484950" );   // chip
-          uint length = 16 + Assembly.Length;
+          uint length = 16 + Assembly.Assembly.Length;
           chip.AppendU32NetworkOrder( length );
           chip.AppendU16( 0 );  // ROM
           chip.AppendU16( 0 );  // Bank number
           chip.AppendU16NetworkOrder( 0x8000 ); // loading start address
           chip.AppendU16NetworkOrder( 0x2000 ); // rom size
 
-          chip.Append( Assembly );
+          chip.Append( Assembly.Assembly );
 
-          Assembly = header + chip;
+          Assembly.Assembly = header + chip;
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_16K_BIN )
       ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_16K_CRT ) )
       {
-        if ( Assembly.Length < 16384 )
+        if ( Assembly.Assembly.Length < 16384 )
         {
           // fill up
-          Assembly = Assembly + new GR.Memory.ByteBuffer( 16384 - Assembly.Length );
+          Assembly.Assembly = Assembly.Assembly + new GR.Memory.ByteBuffer( 16384 - Assembly.Assembly.Length );
         }
-        else if ( Assembly.Length > 16384 )
+        else if ( Assembly.Assembly.Length > 16384 )
         {
-          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + Assembly.Length.ToString() + " > 16384" );
+          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + Assembly.Assembly.Length.ToString() + " > 16384" );
           return false;
         }
         if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_16K_CRT )
@@ -8291,29 +8292,29 @@ namespace C64Studio.Parser
           GR.Memory.ByteBuffer chip = new GR.Memory.ByteBuffer();
 
           chip.AppendHex( "43484950" );   // chip
-          uint length = 16 + Assembly.Length;
+          uint length = 16 + Assembly.Assembly.Length;
           chip.AppendU32NetworkOrder( length );
           chip.AppendU16( 0 );  // ROM
           chip.AppendU16( 0 );  // Bank number
           chip.AppendU16NetworkOrder( 0x8000 ); // loading start address
           chip.AppendU16NetworkOrder( 0x4000 ); // rom size
 
-          chip.Append( Assembly );
+          chip.Append( Assembly.Assembly );
 
-          Assembly = header + chip;
+          Assembly.Assembly = header + chip;
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN )
       ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT ) )
       {
-        if ( Assembly.Length < 65536 )
+        if ( Assembly.Assembly.Length < 65536 )
         {
           // fill up
-          Assembly = Assembly + new GR.Memory.ByteBuffer( 65536 - Assembly.Length );
+          Assembly.Assembly = Assembly.Assembly + new GR.Memory.ByteBuffer( 65536 - Assembly.Assembly.Length );
         }
-        else if ( Assembly.Length > 65536 )
+        else if ( Assembly.Assembly.Length > 65536 )
         {
-          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + Assembly.Length.ToString() + " > 65536" );
+          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + Assembly.Assembly.Length.ToString() + " > 65536" );
           return false;
         }
         if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT )
@@ -8353,7 +8354,7 @@ namespace C64Studio.Parser
           }
 
           // 8 x 8kb
-          Assembly = header;
+          Assembly.Assembly = header;
           for ( int i = 0; i < 8; ++i )
           {
             GR.Memory.ByteBuffer chip = new GR.Memory.ByteBuffer();
@@ -8366,23 +8367,23 @@ namespace C64Studio.Parser
             chip.AppendU16NetworkOrder( 0x8000 ); // loading start address
             chip.AppendU16NetworkOrder( 0x2000 ); // rom size
 
-            chip.Append( Assembly.SubBuffer( i * 0x2000, 0x2000 ) );
+            chip.Append( Assembly.Assembly.SubBuffer( i * 0x2000, 0x2000 ) );
 
-            Assembly += chip;
+            Assembly.Assembly += chip;
           }
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
       ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_CRT ) )
       {
-        if ( Assembly.Length < 65536 )
+        if ( Assembly.Assembly.Length < 65536 )
         {
           // fill up
-          Assembly = Assembly + new GR.Memory.ByteBuffer( 65536 - Assembly.Length );
+          Assembly.Assembly = Assembly.Assembly + new GR.Memory.ByteBuffer( 65536 - Assembly.Assembly.Length );
         }
-        else if ( Assembly.Length > 65536 )
+        else if ( Assembly.Assembly.Length > 65536 )
         {
-          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + Assembly.Length.ToString() + " > 65536" );
+          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + Assembly.Assembly.Length.ToString() + " > 65536" );
           return false;
         }
         if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_CRT )
@@ -8422,7 +8423,7 @@ namespace C64Studio.Parser
           }
 
           // 8 x 8kb
-          Assembly = header;
+          Assembly.Assembly = header;
           for ( int i = 0; i < 8; ++i )
           {
             GR.Memory.ByteBuffer chip = new GR.Memory.ByteBuffer();
@@ -8435,23 +8436,23 @@ namespace C64Studio.Parser
             chip.AppendU16NetworkOrder( 0x8000 ); // loading start address
             chip.AppendU16NetworkOrder( 0x2000 ); // rom size
 
-            chip.Append( Assembly.SubBuffer( i * 0x2000, 0x2000 ) );
+            chip.Append( Assembly.Assembly.SubBuffer( i * 0x2000, 0x2000 ) );
 
-            Assembly += chip;
+            Assembly.Assembly += chip;
           }
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
       ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT ) )
       {
-        if ( Assembly.Length < 524288 )
+        if ( Assembly.Assembly.Length < 524288 )
         {
           // fill up
-          Assembly = Assembly + new GR.Memory.ByteBuffer( 524288 - Assembly.Length );
+          Assembly.Assembly = Assembly.Assembly + new GR.Memory.ByteBuffer( 524288 - Assembly.Assembly.Length );
         }
-        else if ( Assembly.Length > 524288 )
+        else if ( Assembly.Assembly.Length > 524288 )
         {
-          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + Assembly.Length.ToString() + " > 524288" );
+          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + Assembly.Assembly.Length.ToString() + " > 524288" );
           return false;
         }
         if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
@@ -8491,7 +8492,7 @@ namespace C64Studio.Parser
           }
 
           // 64 x 8kb
-          Assembly = header;
+          Assembly.Assembly = header;
           for ( int i = 0; i < 64; ++i )
           {
             GR.Memory.ByteBuffer chip = new GR.Memory.ByteBuffer();
@@ -8511,9 +8512,9 @@ namespace C64Studio.Parser
             }
             chip.AppendU16NetworkOrder( 0x2000 ); // rom size
 
-            chip.Append( Assembly.SubBuffer( i * 0x2000, 0x2000 ) );
+            chip.Append( Assembly.Assembly.SubBuffer( i * 0x2000, 0x2000 ) );
 
-            Assembly += chip;
+            Assembly.Assembly += chip;
           }
         }
       }
