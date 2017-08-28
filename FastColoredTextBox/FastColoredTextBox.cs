@@ -673,7 +673,7 @@ namespace FastColoredTextBoxNS
         if ( tabLength != value )
         {
           // re-tab-ify
-          if ( AllowTabs )
+          //if ( AllowTabs )
           {
             string    newTab = new string( '\t', value );
             foreach ( var line in lines )
@@ -718,10 +718,11 @@ namespace FastColoredTextBoxNS
 
     public string ReTabifyLine( string DetabbedText, int TabLength )
     {
+      /*
       if ( !AllowTabs )
       {
         return DetabbedText;
-      }
+      }*/
 
       // get de-tabbed line
       StringBuilder   sb = new StringBuilder();
@@ -5266,7 +5267,7 @@ namespace FastColoredTextBoxNS
       Selection.Start = new Place( 0, iLine );
       if ( needToInsert > 0 )
       {
-        if ( AllowTabs )
+        //if ( AllowTabs )
         {
           int     stillNeedToInsert = needToInsert;
 
@@ -5279,11 +5280,11 @@ namespace FastColoredTextBoxNS
           }
           dummy += new String( ' ', stillNeedToInsert );
           InsertText( dummy );
-        }
+        }/*
         else
         {
           InsertText( new String( ' ', needToInsert ) );
-        }
+        }*/
       }
       else
       {
@@ -6216,8 +6217,9 @@ namespace FastColoredTextBoxNS
           Selection.Start = PointToPlace( e.Location );
       }
 
-      if ( ( AllowTabs )
-      &&   ( Selection.Start.iChar < this[Selection.Start.iLine].Count )
+      //if ( ( AllowTabs )
+      //&&   ( Selection.Start.iChar < this[Selection.Start.iLine].Count )
+      if ( ( Selection.Start.iChar < this[Selection.Start.iLine].Count )
       &&   ( this[Selection.Start.iLine][Selection.Start.iChar].c == '\t' ) )
       {
         Selection.Start = new Place( AdjustXPosForTabs( Selection.Start.iLine, Selection.Start.iChar ), Selection.Start.iLine );
@@ -6431,8 +6433,9 @@ namespace FastColoredTextBoxNS
         else
           place = PointToPlace( e.Location );
 
-        if ( ( AllowTabs )
-        &&   ( place.iChar != Selection.Start.iChar )
+        //if ( ( AllowTabs )
+        //&&   ( place.iChar != Selection.Start.iChar )
+        if ( ( place.iChar != Selection.Start.iChar )
         &&   ( ( place.iChar % TabLength ) != 0 ) )
         {
           place.iChar = AdjustXPosForTabs( place.iLine, place.iChar );
@@ -6929,10 +6932,11 @@ namespace FastColoredTextBoxNS
         return new Place( 0, 0 );
       }
 
+      /*
       if ( !AllowTabs )
       {
         return pos;
-      }
+      }*/
 
       Place     resultPlace = new Place( 0, pos.iLine );
 
@@ -6985,10 +6989,11 @@ namespace FastColoredTextBoxNS
         return 0;
       }
 
+      /*
       if ( !AllowTabs )
       {
         return pos;
-      }
+      }*/
 
       int     virtualPos = 0;
 
@@ -7054,10 +7059,11 @@ namespace FastColoredTextBoxNS
         return 0;
       }
 
+      /*
       if ( !AllowTabs )
       {
         return pos;
-      }
+      }*/
 
       int     virtualPos = 0;
 

@@ -129,7 +129,7 @@ namespace FastColoredTextBoxNS
         {
           StringBuilder   sb = new StringBuilder();
 
-          if ( TextBox.AllowTabs )
+          //if ( TextBox.AllowTabs )
           {
             for ( int j = Offset; j < Count; )
             {
@@ -151,12 +151,12 @@ namespace FastColoredTextBoxNS
             }
             return sb.ToString();
           }
-
+          /*
           for ( int j = Offset; j < Count; ++j )
           {
             sb.Append( chars[j].c );
           }
-          return sb.ToString();
+          return sb.ToString();*/
         }
 
 
@@ -175,34 +175,34 @@ namespace FastColoredTextBoxNS
         /// </summary>
         public int StartSpacesCount
         {
-            get
+          get
+          {
+            int spacesCount = 0;
+            //if ( TextBox.AllowTabs )
             {
-                int spacesCount = 0;
-                if ( TextBox.AllowTabs )
+              for ( int i = 0; i < Count; i++ )
+              {
+                if ( ( this[i].c == ' ' )
+                ||   ( this[i].c == '\t' ) )
                 {
-                  for ( int i = 0; i < Count; i++ )
-                  {
-                    if ( ( this[i].c == ' ' )
-                    || ( this[i].c == '\t' ) )
-                    {
-                      spacesCount++;
-                    }
-                    else
-                    {
-                      break;
-                    }
-                  }
+                  spacesCount++;
                 }
                 else
                 {
-                  for ( int i = 0; i < Count; i++ )
-                    if ( this[i].c == ' ' )
-                      spacesCount++;
-                    else
-                      break;
+                  break;
                 }
-                return spacesCount;
-            }
+              }
+            }/*
+            else
+            {
+              for ( int i = 0; i < Count; i++ )
+                if ( this[i].c == ' ' )
+                  spacesCount++;
+                else
+                  break;
+            }*/
+            return spacesCount;
+          }
         }
 
         public int IndexOf(Char item)

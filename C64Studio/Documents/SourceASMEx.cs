@@ -2386,6 +2386,7 @@ namespace C64Studio
       editSource.LeftPadding = newPadding;
 
       //call OnTextChanged for refresh syntax highlighting
+      ResetAllStyles( editSource.Range );
       editSource.OnSyntaxHighlight( new FastColoredTextBoxNS.TextChangedEventArgs( editSource.Range ) );
 
       // update manually set accelerators
