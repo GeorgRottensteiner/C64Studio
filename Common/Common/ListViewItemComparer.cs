@@ -5,7 +5,7 @@ namespace GR
 {
   namespace Forms
   {
-    class ListViewItemComparer : IComparer
+    public class ListViewItemComparer : IComparer
     {
       private int col;
       private SortOrder order;
@@ -70,7 +70,7 @@ namespace GR
 
 
 
-    class NumericListViewItemComparer : IComparer
+    public class NumericListViewItemComparer : IComparer
     {
       private int col;
       private SortOrder order;

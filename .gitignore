@@ -45,3 +45,5 @@
 /Tiny64Cmd/obj/Release
 /Tiny64Emu/bin/Release
 /Tiny64Emu/obj/Release
+/Common/bin
+/Common/obj

@@ -62,6 +62,10 @@
       <Project>{5bea5ce5-4c5d-4ec5-83f3-83634e929858}</Project>
       <Name>C64Studio</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{237ea67c-2697-4880-9d71-131112130081}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tiny64\Tiny64.csproj">
       <Project>{6f3bd3cf-015f-4d68-a015-4695ddd0e44b}</Project>
       <Name>Tiny64</Name>

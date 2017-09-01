@@ -45,87 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\C64Studio\Common\ArgumentParser.cs">
-      <Link>Common\ArgumentParser.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\BinaryReader.cs">
-      <Link>Common\BinaryReader.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\BinaryWriter.cs">
-      <Link>Common\BinaryWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\ByteBuffer.cs">
-      <Link>Common\ByteBuffer.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\Convert.cs">
-      <Link>Common\Convert.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\debug.cs">
-      <Link>Common\debug.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\FastImage.cs">
-      <Link>Common\FastImage.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\FastPictureBox.cs">
-      <Link>Common\FastPictureBox.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\File.cs">
-      <Link>Common\File.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\FileChunk.cs">
-      <Link>Common\FileChunk.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\GenericHelper.cs">
-      <Link>Common\GenericHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\IImage.cs">
-      <Link>Common\IImage.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\ImageListbox.cs">
-      <Link>Common\ImageListbox.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\IReader.cs">
-      <Link>Common\IReader.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\IWriter.cs">
-      <Link>Common\IWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\ListViewItemComparer.cs">
-      <Link>Common\ListViewItemComparer.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\Map.cs">
-      <Link>Common\Map.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\MemoryImage.cs">
-      <Link>Common\MemoryImage.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\MemoryReader.cs">
-      <Link>Common\MemoryReader.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\Misc.cs">
-      <Link>Common\Misc.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\MultiMap.cs">
-      <Link>Common\MultiMap.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\Path.cs">
-      <Link>Common\Path.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\ScrollablePanel.cs">
-      <Link>Common\ScrollablePanel.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\Set.cs">
-      <Link>Common\Set.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\TileLayer.cs">
-      <Link>Common\TileLayer.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Common\Util.cs">
-      <Link>Common\Util.cs</Link>
-    </Compile>
     <Compile Include="..\C64Studio\Formats\D64.cs">
       <Link>Included Files\D64.cs</Link>
     </Compile>
@@ -147,6 +66,12 @@
     <Compile Include="Manager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{237ea67c-2697-4880-9d71-131112130081}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

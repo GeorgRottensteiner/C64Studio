@@ -55,8 +55,6 @@
   <ItemGroup>
     <Compile Include="AcceleratorKey.cs" />
     <Compile Include="BASICKeyMap.cs" />
-    <Compile Include="Common\ArgumentParser.cs" />
-    <Compile Include="Common\IImage.cs" />
     <Compile Include="CompileResultItemComparer.cs" />
     <Compile Include="Controls\ArrangedItemList.cs">
       <SubType>UserControl</SubType>
@@ -105,38 +103,6 @@
     </Compile>
     <Compile Include="ClipboardData.cs" />
     <Compile Include="ColorSystem.cs" />
-    <Compile Include="Common\BinaryReader.cs" />
-    <Compile Include="Common\BinaryWriter.cs" />
-    <Compile Include="Common\ByteBuffer.cs" />
-    <Compile Include="Common\Convert.cs" />
-    <Compile Include="Common\debug.cs" />
-    <Compile Include="Common\FastImage.cs" />
-    <Compile Include="Common\FastPictureBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Common\File.cs" />
-    <Compile Include="Common\FileChunk.cs" />
-    <Compile Include="Common\GenericHelper.cs" />
-    <Compile Include="Common\ImageListbox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Common\IReader.cs" />
-    <Compile Include="Common\IWriter.cs" />
-    <Compile Include="Common\ListViewItemComparer.cs" />
-    <Compile Include="Common\Map.cs" />
-    <Compile Include="Common\MemoryImage.cs" />
-    <Compile Include="Common\MemoryReader.cs" />
-    <Compile Include="Common\Misc.cs" />
-    <Compile Include="Common\MultiMap.cs" />
-    <Compile Include="Common\Path.cs" />
-    <Compile Include="Common\ScrollablePanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Common\Set.cs" />
-    <Compile Include="Common\TileLayer.cs" />
-    <Compile Include="Common\Util.cs" />
-    <Compile Include="Common\WindowStateManager.cs" />
-    <Compile Include="Common\XML.cs" />
     <Compile Include="Controls\MeasurableListView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -739,6 +705,10 @@
     <None Include="Resources\breakpoint.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{237ea67c-2697-4880-9d71-131112130081}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FastColoredTextBox\FastColoredTextBox.csproj">
       <Project>{6dd14a85-ccfc-4774-bd26-0f5772512319}</Project>
       <Name>FastColoredTextBox</Name>
@@ -757,6 +727,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
+copy "$(TargetDir)common.dll" "$(SolutionDir)C64StudioRelease"</PostBuildEvent>
   </PropertyGroup>
 </Project>

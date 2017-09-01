@@ -1,15 +1,12 @@
-﻿using C64Studio.CustomRenderer;
-using C64Studio.Displayer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
 
 
 
 namespace Tiny64Cmd
 {
-  class Emulator
+  public class Emulator
   {
     Tiny64.Machine    Machine = new Tiny64.Machine();
 
@@ -37,8 +34,9 @@ namespace Tiny64Cmd
     {
       Machine = new Tiny64.Machine();
 
+      /*
       GR.Image.MemoryImage    img = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      C64Studio.CustomRenderer.PaletteManager.ApplyPalette( img );
+      C64Studio.CustomRenderer.PaletteManager.ApplyPalette( img );*/
 
       while ( true )
       {
@@ -74,14 +72,16 @@ namespace Tiny64Cmd
         && ( localCharDataPos == 0x1000 ) )
         {
           // use default upper case chars
-          charData = C64Studio.Types.ConstantData.UpperCaseCharset;
+          charData = new GR.Memory.ByteBuffer();
+          charData.Append( Machine.Memory.CharacterROM, 0, 2048 );
         }
         else if ( ( ( vicBank == 0 )
         || ( vicBank == 2 ) )
         && ( localCharDataPos == 0x2000 ) )
         {
           // use default lower case chars
-          charData = C64Studio.Types.ConstantData.LowerCaseCharset;
+          charData = new GR.Memory.ByteBuffer();
+          charData.Append( Machine.Memory.CharacterROM, 2048, 2048 );
         }
         else
         {
@@ -96,9 +96,10 @@ namespace Tiny64Cmd
             byte    charIndex = machine.Memory.RAM[screenPos + x + y * 40];
             byte    charColor = machine.Memory.ColorRAM[x + y * 40];
 
-            CharacterDisplayer.DisplayHiResChar( charData.SubBuffer( charIndex * 8, 8 ), bgColor, charColor, img, x * 8, y * 8 );
+            //CharacterDisplayer.DisplayHiResChar( charData.SubBuffer( charIndex * 8, 8 ), bgColor, charColor, img, x * 8, y * 8 );
           }
         }
+        /*
         DataObject dataObj = new DataObject();
 
         GR.Memory.ByteBuffer      dibData = img.CreateHDIBAsBuffer();
@@ -107,7 +108,7 @@ namespace Tiny64Cmd
 
         // WTF - SetData requires streams, NOT global data (HGLOBAL)
         dataObj.SetData( "DeviceIndependentBitmap", ms );
-        Clipboard.SetDataObject( dataObj, true );
+        Clipboard.SetDataObject( dataObj, true );*/
       }
     }
 

@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6F69DB22-F5B9-4446-ADB1-56F18B64374E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{237EA67C-2697-4880-9D71-131112130081}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tiny64Cmd</RootNamespace>
-    <AssemblyName>Tiny64Cmd</AssemblyName>
+    <RootNamespace>Common</RootNamespace>
+    <AssemblyName>Common</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +24,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -36,27 +34,47 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Common\ArgumentParser.cs" />
+    <Compile Include="Common\BinaryReader.cs" />
+    <Compile Include="Common\BinaryWriter.cs" />
+    <Compile Include="Common\ByteBuffer.cs" />
+    <Compile Include="Common\Convert.cs" />
+    <Compile Include="Common\debug.cs" />
+    <Compile Include="Common\FastImage.cs" />
+    <Compile Include="Common\FastPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\File.cs" />
+    <Compile Include="Common\FileChunk.cs" />
+    <Compile Include="Common\GenericHelper.cs" />
+    <Compile Include="Common\IImage.cs" />
+    <Compile Include="Common\ImageListbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\IReader.cs" />
+    <Compile Include="Common\IWriter.cs" />
+    <Compile Include="Common\ListViewItemComparer.cs" />
+    <Compile Include="Common\Map.cs" />
+    <Compile Include="Common\MemoryImage.cs" />
+    <Compile Include="Common\MemoryReader.cs" />
+    <Compile Include="Common\Misc.cs" />
+    <Compile Include="Common\MultiMap.cs" />
+    <Compile Include="Common\Path.cs" />
+    <Compile Include="Common\ScrollablePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\Set.cs" />
+    <Compile Include="Common\TileLayer.cs" />
+    <Compile Include="Common\Util.cs" />
+    <Compile Include="Common\WindowStateManager.cs" />
+    <Compile Include="Common\XML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{237ea67c-2697-4880-9d71-131112130081}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tiny64\Tiny64.csproj">
-      <Project>{6f3bd3cf-015f-4d68-a015-4695ddd0e44b}</Project>
-      <Name>Tiny64</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

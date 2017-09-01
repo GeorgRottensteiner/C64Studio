@@ -51,6 +51,10 @@
       <Project>{5bea5ce5-4c5d-4ec5-83f3-83634e929858}</Project>
       <Name>C64Studio</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{237ea67c-2697-4880-9d71-131112130081}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

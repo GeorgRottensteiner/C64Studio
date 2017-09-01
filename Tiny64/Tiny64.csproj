@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,24 +30,33 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\C64Studio\Common\debug.cs">
-      <Link>debug.cs</Link>
-    </Compile>
-    <Compile Include="data\Memory.cs" />
-    <Compile Include="data\Processor.cs" />
-    <Compile Include="Machine.cs" />
+    <Compile Include="Emulator\Breakpoint.cs" />
+    <Compile Include="Emulator\data\Memory.cs" />
+    <Compile Include="Emulator\data\Processor.cs" />
+    <Compile Include="Emulator\Emulator.cs" />
+    <Compile Include="Emulator\Machine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CIA.cs" />
-    <Compile Include="SID.cs" />
-    <Compile Include="VIC.cs" />
+    <Compile Include="Emulator\CIA.cs" />
+    <Compile Include="Emulator\SID.cs" />
+    <Compile Include="Emulator\VIC.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{237ea67c-2697-4880-9d71-131112130081}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
