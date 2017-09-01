@@ -8,6 +8,7 @@ namespace Tiny64Cmd
 {
   class Program
   {
+    [STAThreadAttribute]
     static void Main( string[] args )
     {
       var emu = new Emulator();

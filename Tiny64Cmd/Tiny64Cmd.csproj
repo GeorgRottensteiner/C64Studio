@@ -153,6 +153,7 @@
     <Compile Include="..\C64Studio\Types\Types.cs">
       <Link>Common\Types.cs</Link>
     </Compile>
+    <Compile Include="Breakpoint.cs" />
     <Compile Include="Emulator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

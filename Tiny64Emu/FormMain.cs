@@ -12,6 +12,10 @@ namespace Tiny64Emu
 {
   public partial class FormMain : Form
   {
+    private         Tiny64.Machine        m_Emulator = new Tiny64.Machine();
+
+
+
     public FormMain()
     {
       InitializeComponent();

@@ -449,7 +449,7 @@ namespace Tiny64.data
 
 
 
-    private byte ReadByteDirect( ushort Address )
+    internal byte ReadByteDirect( ushort Address )
     {
       if ( ( Address >= 0x0000 )
       &&   ( Address < 0x1000 ) )
