@@ -101,7 +101,7 @@ namespace C64Studio
 
 
 
-    private string MnemonicToString( Types.ASM.Opcode opcode, GR.Memory.ByteBuffer Data, ref int CodePos )
+    private string MnemonicToString( Tiny64.Opcode opcode, GR.Memory.ByteBuffer Data, ref int CodePos )
     {
       string output = opcode.Mnemonic.ToLower();
 
@@ -115,30 +115,30 @@ namespace C64Studio
       }
       switch ( opcode.Addressing )
       {
-        case Types.ASM.Opcode.AddressingType.IMPLICIT:
+        case Tiny64.Opcode.AddressingType.IMPLICIT:
           break;
-        case Types.ASM.Opcode.AddressingType.ABSOLUTE:
+        case Tiny64.Opcode.AddressingType.ABSOLUTE:
           output += " " + addressText;
           break;
-        case Types.ASM.Opcode.AddressingType.ABSOLUTE_X:
+        case Tiny64.Opcode.AddressingType.ABSOLUTE_X:
           output += " " + addressText + ", x";
           break;
-        case Types.ASM.Opcode.AddressingType.ABSOLUTE_Y:
+        case Tiny64.Opcode.AddressingType.ABSOLUTE_Y:
           output += " " + addressText + ", y";
           break;
-        case Types.ASM.Opcode.AddressingType.IMMEDIATE:
+        case Tiny64.Opcode.AddressingType.IMMEDIATE:
           output += " #" + addressText;
           break;
-        case Types.ASM.Opcode.AddressingType.INDIRECT:
+        case Tiny64.Opcode.AddressingType.INDIRECT:
           output += " ( " + addressText + " )";
           break;
-        case Types.ASM.Opcode.AddressingType.INDIRECT_X:
+        case Tiny64.Opcode.AddressingType.INDIRECT_X:
           output += " ( " + addressText + ", x)";
           break;
-        case Types.ASM.Opcode.AddressingType.INDIRECT_Y:
+        case Tiny64.Opcode.AddressingType.INDIRECT_Y:
           output += " ( " + addressText + " ), y";
           break;
-        case Types.ASM.Opcode.AddressingType.RELATIVE:
+        case Tiny64.Opcode.AddressingType.RELATIVE:
           {
             // int delta = value - lineInfo.AddressStart - 2;
 
@@ -146,13 +146,13 @@ namespace C64Studio
             //output += " (" + delta.ToString( "X2" ) + ")";
           }
           break;
-        case Types.ASM.Opcode.AddressingType.ZEROPAGE:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE:
           output += " " + addressText;
           break;
-        case Types.ASM.Opcode.AddressingType.ZEROPAGE_X:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_X:
           output += " " + addressText + ", x";
           break;
-        case Types.ASM.Opcode.AddressingType.ZEROPAGE_Y:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_Y:
           output += " " + addressText + ", y";
           break;
       }
@@ -5109,7 +5109,7 @@ namespace C64Studio
             if ( StudioCore.Debugging.DebugDisassembly != null )
             {
               // update disassembly
-              Parser.Disassembler       disassembler = new C64Studio.Parser.Disassembler( Systems.CPUSystem.Create6510System() );
+              Parser.Disassembler       disassembler = new C64Studio.Parser.Disassembler( Tiny64.Processor.Create6510() );
               string                    disassembly = "";
 
               disassembler.SetData( Data );

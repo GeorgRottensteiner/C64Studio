@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tiny64;
 
 
 
@@ -9,11 +10,11 @@ namespace Tiny64Cmd
   class Program
   {
     [STAThreadAttribute]
-    static void Main( string[] args )
+    static int Main( string[] args )
     {
-      var emu = new Emulator();
+      var frameWork = new EmulatorFramework();
 
-      emu.Run();
+      return frameWork.Run();
     }
   }
 }

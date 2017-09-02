@@ -4,7 +4,7 @@ using System.Text;
 
 
 
-namespace Tiny64.data
+namespace Tiny64
 {
   public class Memory
   {
@@ -440,7 +440,7 @@ namespace Tiny64.data
 
 
 
-    internal ushort ReadWordDirect( ushort Address )
+    public ushort ReadWordDirect( ushort Address )
     {
       byte  lo = ReadByteDirect( Address );
       byte  hi = ReadByteDirect( (ushort)( Address + 1 ) );
@@ -450,7 +450,7 @@ namespace Tiny64.data
 
 
 
-    internal byte ReadByteDirect( ushort Address )
+    public byte ReadByteDirect( ushort Address )
     {
       if ( ( Address >= 0x0000 )
       &&   ( Address < 0x1000 ) )
@@ -558,16 +558,6 @@ namespace Tiny64.data
       if ( ( Address >= 0x0000 )
       &&   ( Address < 0x1000 ) )
       {
-        if ( ( Address == 0x101 )
-        && ( Value == 0x38 ) )
-        {
-          Debug.Log( "sh" );
-        }
-        if ( ( Address >= 0x100 )
-        &&   ( Address <= 0x10a ) )
-        {
-          Debug.Log( Address.ToString( "X4" ) + " set to " + Value.ToString( "X2" ) );
-        }
         RAM[Address] = Value;
         return;
       }
@@ -702,11 +692,6 @@ namespace Tiny64.data
       {
         // VIC
         byte vicAddress = (byte)( Address & 0x003f );
-
-        if ( vicAddress == 0x11 )
-        {
-          Debug.Log( "oh oh" );
-        }
 
         VIC.WriteByte( vicAddress, Value );
       }

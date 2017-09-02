@@ -301,7 +301,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="StudioCore.cs" />
-    <Compile Include="Systems\CPUSystem.cs" />
     <Compile Include="Tasks\TaskManager.cs" />
     <Compile Include="Tasks\TaskDebugRunTo.cs" />
     <Compile Include="Tasks\TaskOpenSolution.cs" />
@@ -717,6 +716,13 @@
       <Project>{EA74431C-8749-4F1A-8F8F-FCEDAFAE89B9}</Project>
       <Name>HexBox</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tiny64\Tiny64.csproj">
+      <Project>{6f3bd3cf-015f-4d68-a015-4695ddd0e44b}</Project>
+      <Name>Tiny64</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Systems\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

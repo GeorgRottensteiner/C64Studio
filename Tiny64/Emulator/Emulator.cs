@@ -4,13 +4,13 @@ using System.Text;
 
 
 
-namespace Tiny64Cmd
+namespace Tiny64
 {
   public class Emulator
   {
-    Tiny64.Machine    Machine = new Tiny64.Machine();
+    public Tiny64.Machine    Machine = new Tiny64.Machine();
 
-    GR.Collections.MultiMap<ushort,Breakpoint>        Breakpoints = new GR.Collections.MultiMap<ushort,Breakpoint>();
+    public EmulatorState     State = EmulatorState.STOPPED;
 
 
 
@@ -32,18 +32,41 @@ namespace Tiny64Cmd
 
     public void Run()
     {
-      Machine = new Tiny64.Machine();
+      do
+      {
+        Run( 16384 );
+      }
+      while ( State == EmulatorState.RUNNING );
+    }
+
+
+
+    public void Run( int MaxCycles )
+    {
+      // TODO - reset?
+      //Machine = new Tiny64.Machine();
 
       /*
       GR.Image.MemoryImage    img = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       C64Studio.CustomRenderer.PaletteManager.ApplyPalette( img );*/
 
-      while ( true )
+      State = EmulatorState.RUNNING;
+      int   usedCycles = 0;
+      while ( usedCycles < MaxCycles )
       {
         // round about one frame
-        int     numCycles = 19656;
+        //int     numCycles = 19656;
 
-        RunCycles( numCycles );
+        ushort    oldPC = Machine.CPU.PC;
+        // TODO - single cycle steps?
+        int curCycles = Machine.RunCycle();
+        if ( Machine.TriggeredBreakpoints.Count > 0 )
+        {
+          Debug.Log( "Breakpoint triggered at $" + Machine.CPU.PC.ToString( "X4" ) );
+          State = EmulatorState.PAUSED;
+          return;
+        }
+        usedCycles += curCycles;
 
         //Debug.Log( machine.CPU.PC.ToString( "X4" ) + ":" + opCode.ToString( "X2" ) + " A:" + CPU.Accu.ToString( "X2" ) + " X:" + CPU.X.ToString( "X2" ) + " Y:" + CPU.Y.ToString( "X2" ) + " " + ( Memory.RAM[0xc1] + ( Memory.RAM[0xc2] << 8 ) ).ToString( "X4" ) );
         //Debug.Log( machine.CPU.PC.ToString( "X4" ) + ": A:" + machine.CPU.Accu.ToString( "X2" ) + " X:" + machine.CPU.X.ToString( "X2" ) + " Y:" + machine.CPU.Y.ToString( "X2" ) + " " + ( machine.Memory.RAM[0xc1] + ( machine.Memory.RAM[0xc2] << 8 ) ).ToString( "X4" ) );
@@ -112,6 +135,30 @@ namespace Tiny64Cmd
       }
     }
 
+
+
+    public void AddBreakpoint( ushort Address, bool Read, bool Write, bool Execute )
+    {
+      Machine.AddBreakpoint( Address, Read, Write, Execute );
+    }
+
+
+
+    public void StepOver()
+    {
+      var opCode = Machine.CPU.OpcodeByValue[Machine.Memory.ReadByteDirect( Machine.CPU.PC )];
+
+
+      Machine.AddTemporaryBreakpoint( (ushort)( Machine.CPU.PC + opCode.NumOperands + 1 ), false, false, true );
+      State = EmulatorState.RUNNING;
+    }
+
+
+
+    public void StepInto()
+    {
+      Machine.RunCycle();
+    }
 
 
   }

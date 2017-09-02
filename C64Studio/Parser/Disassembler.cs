@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tiny64;
+
+
 
 namespace C64Studio.Parser
 {
@@ -9,18 +12,18 @@ namespace C64Studio.Parser
     GR.Memory.ByteBuffer                m_SourceData = null;
     bool[]                              m_CoveredData = null;
 
-    public Systems.CPUSystem            m_Processor = null;
+    public Processor                    m_Processor = null;
 
 
 
-    public Disassembler( Systems.CPUSystem System )
+    public Disassembler( Processor Processor )
     {
-      m_Processor = System;
+      m_Processor = Processor;
     }
 
 
 
-    protected bool DisassembleInstruction( GR.Memory.ByteBuffer Data, int DataStartAddress, int CodeStartAddress, out Types.ASM.Opcode opcode, out bool NotComplete )
+    protected bool DisassembleInstruction( GR.Memory.ByteBuffer Data, int DataStartAddress, int CodeStartAddress, out Tiny64.Opcode opcode, out bool NotComplete )
     {
       opcode = null;
       NotComplete = false;
@@ -50,7 +53,7 @@ namespace C64Studio.Parser
 
 
 
-    private string MnemonicToString( Types.ASM.Opcode opcode, GR.Memory.ByteBuffer Data, int DataStartAddress, int CodePos, GR.Collections.Set<ushort> AccessedAddresses, GR.Collections.Map<int,string> NamedLabels )
+    private string MnemonicToString( Tiny64.Opcode opcode, GR.Memory.ByteBuffer Data, int DataStartAddress, int CodePos, GR.Collections.Set<ushort> AccessedAddresses, GR.Collections.Map<int,string> NamedLabels )
     {
       string output = opcode.Mnemonic.ToLower();
 
@@ -59,33 +62,33 @@ namespace C64Studio.Parser
 
       switch ( opcode.Addressing )
       {
-        case Types.ASM.Opcode.AddressingType.IMPLICIT:
+        case Tiny64.Opcode.AddressingType.IMPLICIT:
           break;
-        case Types.ASM.Opcode.AddressingType.ABSOLUTE:
+        case Tiny64.Opcode.AddressingType.ABSOLUTE:
           targetAddress = Data.UInt16At( CodePos + 1 - DataStartAddress );
           break;
-        case Types.ASM.Opcode.AddressingType.ABSOLUTE_X:
+        case Tiny64.Opcode.AddressingType.ABSOLUTE_X:
           targetAddress = Data.UInt16At( CodePos + 1 - DataStartAddress );
           break;
-        case Types.ASM.Opcode.AddressingType.ABSOLUTE_Y:
+        case Tiny64.Opcode.AddressingType.ABSOLUTE_Y:
           targetAddress = Data.UInt16At( CodePos + 1 - DataStartAddress );
           break;
-        case Types.ASM.Opcode.AddressingType.IMMEDIATE:
+        case Tiny64.Opcode.AddressingType.IMMEDIATE:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
           break;
-        case Types.ASM.Opcode.AddressingType.INDIRECT:
+        case Tiny64.Opcode.AddressingType.INDIRECT:
           targetAddress = Data.UInt16At( CodePos + 1 - DataStartAddress );
           break;
-        case Types.ASM.Opcode.AddressingType.INDIRECT_X:
+        case Tiny64.Opcode.AddressingType.INDIRECT_X:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
           break;
-        case Types.ASM.Opcode.AddressingType.INDIRECT_Y:
+        case Tiny64.Opcode.AddressingType.INDIRECT_Y:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
           break;
-        case Types.ASM.Opcode.AddressingType.RELATIVE:
+        case Tiny64.Opcode.AddressingType.RELATIVE:
           {
             // int delta = value - lineInfo.AddressStart - 2;
             sbyte relValue = (sbyte)Data.ByteAt( CodePos + 1 - DataStartAddress );
@@ -93,15 +96,15 @@ namespace C64Studio.Parser
             targetAddress = (ushort)( relValue + 2 + CodePos );
           }
           break;
-        case Types.ASM.Opcode.AddressingType.ZEROPAGE:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
           break;
-        case Types.ASM.Opcode.AddressingType.ZEROPAGE_X:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_X:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
           break;
-        case Types.ASM.Opcode.AddressingType.ZEROPAGE_Y:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_Y:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
           break;
@@ -129,30 +132,30 @@ namespace C64Studio.Parser
 
       switch ( opcode.Addressing )
       {
-        case Types.ASM.Opcode.AddressingType.IMPLICIT:
+        case Tiny64.Opcode.AddressingType.IMPLICIT:
           break;
-        case Types.ASM.Opcode.AddressingType.ABSOLUTE:
+        case Tiny64.Opcode.AddressingType.ABSOLUTE:
           output += " " + addressPlacement;
           break;
-        case Types.ASM.Opcode.AddressingType.ABSOLUTE_X:
+        case Tiny64.Opcode.AddressingType.ABSOLUTE_X:
           output += " " + addressPlacement + ", x";
           break;
-        case Types.ASM.Opcode.AddressingType.ABSOLUTE_Y:
+        case Tiny64.Opcode.AddressingType.ABSOLUTE_Y:
           output += " " + addressPlacement + ", y";
           break;
-        case Types.ASM.Opcode.AddressingType.IMMEDIATE:
+        case Tiny64.Opcode.AddressingType.IMMEDIATE:
           output += " #" + addressPlacement;
           break;
-        case Types.ASM.Opcode.AddressingType.INDIRECT:
+        case Tiny64.Opcode.AddressingType.INDIRECT:
           output += " ( " + addressPlacement + " )";
           break;
-        case Types.ASM.Opcode.AddressingType.INDIRECT_X:
+        case Tiny64.Opcode.AddressingType.INDIRECT_X:
           output += " ( " + addressPlacement + ", x)";
           break;
-        case Types.ASM.Opcode.AddressingType.INDIRECT_Y:
+        case Tiny64.Opcode.AddressingType.INDIRECT_Y:
           output += " ( " + addressPlacement + " ), y";
           break;
-        case Types.ASM.Opcode.AddressingType.RELATIVE:
+        case Tiny64.Opcode.AddressingType.RELATIVE:
           {
             // int delta = value - lineInfo.AddressStart - 2;
 
@@ -160,13 +163,13 @@ namespace C64Studio.Parser
             //output += " (" + delta.ToString( "X2" ) + ")";
           }
           break;
-        case Types.ASM.Opcode.AddressingType.ZEROPAGE:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE:
           output += " " + addressPlacement;
           break;
-        case Types.ASM.Opcode.AddressingType.ZEROPAGE_X:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_X:
           output += " " + addressPlacement + ", x";
           break;
-        case Types.ASM.Opcode.AddressingType.ZEROPAGE_Y:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_Y:
           output += " " + addressPlacement + ", y";
           break;
       }
@@ -304,7 +307,7 @@ namespace C64Studio.Parser
 
       int     codeStartPos = progStepPos;
 
-      GR.Collections.Map<ushort, GR.Generic.Tupel<Types.ASM.Opcode, ushort>> disassembly = new GR.Collections.Map<ushort, GR.Generic.Tupel<Types.ASM.Opcode, ushort>>();
+      GR.Collections.Map<ushort, GR.Generic.Tupel<Tiny64.Opcode, ushort>> disassembly = new GR.Collections.Map<ushort, GR.Generic.Tupel<Tiny64.Opcode, ushort>>();
 
       while ( addressesToCheck.Count > 0 )
       {
@@ -332,7 +335,7 @@ namespace C64Studio.Parser
             break;
           }
 
-          Types.ASM.Opcode  opcode = null;
+          Tiny64.Opcode  opcode = null;
           bool              outsideData = false;
           if ( !DisassembleInstruction( m_SourceData, DataStartAddress, progStepPos, out opcode, out outsideData ) )
           {
@@ -365,7 +368,7 @@ namespace C64Studio.Parser
           {
             probableLabel.Add( m_SourceData.UInt16At( progStepPos + 1 - DataStartAddress ) );
           }
-          else if ( opcode.Addressing == Types.ASM.Opcode.AddressingType.RELATIVE )
+          else if ( opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
           {
             int targetAddress = (sbyte)m_SourceData.ByteAt( progStepPos + 1 - DataStartAddress ) + 2 + progStepPos;
             probableLabel.Add( (ushort)targetAddress );
@@ -373,7 +376,7 @@ namespace C64Studio.Parser
             accessedAddresses.Add( (ushort)targetAddress );
           }
 
-          disassembly[(ushort)progStepPos] = new GR.Generic.Tupel<Types.ASM.Opcode, ushort>( opcode, m_SourceData.UInt16At( progStepPos + 1 ) );
+          disassembly[(ushort)progStepPos] = new GR.Generic.Tupel<Tiny64.Opcode, ushort>( opcode, m_SourceData.UInt16At( progStepPos + 1 ) );
 
           if ( ( opcode.ByteValue == 0x40 )     // rts
           ||   ( opcode.ByteValue == 0x60 )     // rti
@@ -435,7 +438,7 @@ namespace C64Studio.Parser
             sb.Append( DisassembleBinary( m_SourceData, DataStartAddress, hadBytesStart, trueAddress - hadBytesStart, AddLineAddresses ) );
             hadBytes = false;
           }
-          GR.Generic.Tupel<Types.ASM.Opcode, ushort> instruction = disassembly[(ushort)trueAddress];
+          GR.Generic.Tupel<Tiny64.Opcode, ushort> instruction = disassembly[(ushort)trueAddress];
           if ( AddLineAddresses )
           {
             sb.Append( trueAddress.ToString( "X4" ) + ":" );

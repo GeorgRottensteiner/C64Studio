@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Tiny64.data;
 
 
 
@@ -10,17 +9,20 @@ namespace Tiny64
   public class Machine
   {
     public Memory     Memory = new Memory();
-    public Processor  CPU = new Processor();
+    public Processor  CPU = Processor.Create6510();
 
     byte            IODirection = 0x2f;   // RAM 0000
     byte            PortRegister = 55;    // RAM 0001
 
     int             RasterPos = 0;
     int             CyclesInLine = 0;
-    int             TotalCycles = 0;
+    public int      TotalCycles = 0;
 
     bool            Game = false;
     bool            ExRom = false;
+
+    GR.Collections.MultiMap<ushort,Breakpoint>        Breakpoints = new GR.Collections.MultiMap<ushort, Breakpoint>();
+    public List<Breakpoint>      TriggeredBreakpoints = new List<Breakpoint>();
 
 
 
@@ -111,7 +113,7 @@ namespace Tiny64
       PortRegister  = 55;
       RasterPos     = 0;
       CyclesInLine  = 0;
-      TotalCycles   = 0;
+      TotalCycles   = 6;
 
       //Beim Hard-Reset startet die CPU bei der in $FFFC/$FFFD abgelegten Adresse (springt nach $FCE2, RESET
       CPU.PC = Memory.ReadWordDirect( 0xfffc );
@@ -155,18 +157,33 @@ namespace Tiny64
     // returns numbers of cycles used
     public int RunCycle()
     {
+      int numCycles = RunOpcode();
+
+      TotalCycles += numCycles;
+      return numCycles;
+    }
+
+
+
+    int RunOpcode()
+    {
       // TODO - split opcodes for number of cycles!!
       byte    opCode = Memory.ReadByteDirect( CPU.PC );
 
       OnExecAddress( CPU.PC );
+      if ( TriggeredBreakpoints.Count > 0 )
+      {
+        foreach ( var bp in TriggeredBreakpoints )
+        {
+          if ( bp.Temporary )
+          {
+            RemoveBreakpoint( bp );
+          }
+        }
+        return 0;
+      }
 
       //Debug.Log( CPU.PC.ToString( "X4" ) + ":" + opCode.ToString( "X2" ) + " A:" + CPU.Accu.ToString( "X2" )  + " X:" + CPU.X.ToString( "X2" ) + " Y:" + CPU.Y.ToString( "X2" ) + " " + ( Memory.RAM[0xc1] + ( Memory.RAM[0xc2] << 8 ) ).ToString( "X4" ) );
-
-      //Debug.Log( "PC: " + CPU.PC.ToString( "X4" ) );
-      if ( CPU.PC == 0xbcc0 )
-      {
-        Debug.Log( CPU.PC.ToString( "X4" ) + ":" + opCode.ToString( "X2" ) + " A:" + CPU.Accu.ToString( "X2" ) + " X:" + CPU.X.ToString( "X2" ) + " Y:" + CPU.Y.ToString( "X2" ) + " " + ( Memory.RAM[0xc1] + ( Memory.RAM[0xc2] << 8 ) ).ToString( "X4" ) );
-      }
 
       switch ( opCode )
       {
@@ -213,7 +230,7 @@ namespace Tiny64
             CPU.FlagCarry = ( ( operand & 0x80 ) != 0 );
             operand = (byte)( operand << 1 );
 
-            Memory.WriteByte( address, operand );
+            OnWriteAddress( address, operand );
 
             CPU.FlagZero = ( operand == 0 );
             CPU.FlagNegative = ( ( operand & 0x80 ) != 0 );
@@ -280,7 +297,7 @@ namespace Tiny64
             CPU.FlagCarry = ( ( operand & 0x80 ) != 0 );
             operand = (byte)( operand << 1 );
 
-            Memory.WriteByte( finalAddress, operand );
+            OnWriteAddress( finalAddress, operand );
 
             CPU.FlagZero = ( operand == 0 );
             CPU.FlagNegative = ( ( operand & 0x80 ) != 0 );
@@ -422,7 +439,7 @@ namespace Tiny64
             CPU.FlagCarry = ( ( operand & 0x01 ) != 0 );
 
             byte  result = (byte)( operand >> 1 );
-            Memory.WriteByte( address, result );
+            OnWriteAddress( address, result );
 
             CPU.FlagZero = ( result == 0 );
             CPU.FlagNegative = ( ( result & 0x80 ) != 0 );
@@ -482,7 +499,7 @@ namespace Tiny64
 
             operand = (byte)( operand >> 1 );
 
-            Memory.WriteByte( finalAddress, operand );
+            OnWriteAddress( finalAddress, operand );
 
             CPU.FlagZero = ( operand == 0 );
             CPU.FlagNegative = ( ( operand & 0x80 ) != 0 );
@@ -552,7 +569,7 @@ namespace Tiny64
               operand = (byte)( operand | 0x80 );
             }
 
-            Memory.WriteByte( address, operand );
+            OnWriteAddress( address, operand );
 
             CPU.FlagCarry = ( temp == 1 );
 
@@ -648,7 +665,7 @@ namespace Tiny64
               operand = (byte)( operand | 0x80 );
             }
 
-            Memory.WriteByte( finalAddress, operand );
+            OnWriteAddress( finalAddress, operand );
 
             CPU.FlagCarry = ( temp == 1 );
 
@@ -713,7 +730,7 @@ namespace Tiny64
           {
             ushort    address = OnReadAddress( (ushort)( CPU.PC + 1 ) );
 
-            Memory.WriteByte( address, CPU.Y );
+            OnWriteAddress( address, CPU.Y );
 
             CPU.PC += 2;
           }
@@ -723,7 +740,7 @@ namespace Tiny64
           {
             ushort    address = OnReadAddress( (ushort)( CPU.PC + 1 ) );
 
-            Memory.WriteByte( address, CPU.Accu );
+            OnWriteAddress( address, CPU.Accu );
 
             CPU.PC += 2;
           }
@@ -733,7 +750,7 @@ namespace Tiny64
           {
             ushort    address = OnReadAddress( (ushort)( CPU.PC + 1 ) );
 
-            Memory.WriteByte( address, CPU.X );
+            OnWriteAddress( address, CPU.X );
 
             CPU.PC += 2;
           }
@@ -765,7 +782,7 @@ namespace Tiny64
           {
             ushort    address = OnReadWord( (ushort)( CPU.PC + 1 ) );
 
-            Memory.WriteByte( address, CPU.Y );
+            OnWriteAddress( address, CPU.Y );
 
             CPU.PC += 3;
           }
@@ -775,7 +792,7 @@ namespace Tiny64
           {
             ushort    address = OnReadWord( (ushort)( CPU.PC + 1 ) );
 
-            Memory.WriteByte( address, CPU.Accu );
+            OnWriteAddress( address, CPU.Accu );
 
             CPU.PC += 3;
           }
@@ -785,7 +802,7 @@ namespace Tiny64
             // STX $FFFF             3 bytes, 4 cycles
             ushort    address = OnReadWord( (ushort)( CPU.PC + 1 ) );
 
-            Memory.WriteByte( address, CPU.X );
+            OnWriteAddress( address, CPU.X );
 
             CPU.PC += 3;
           }
@@ -799,7 +816,7 @@ namespace Tiny64
             ushort    address = OnReadAddress( (ushort)( CPU.PC + 1 ) );
             ushort    finalAddress = CalcIndirectY( address, CPU.Y );
 
-            Memory.WriteByte( finalAddress, CPU.Accu );
+            OnWriteAddress( finalAddress, CPU.Accu );
             CPU.CheckFlagZero();
             CPU.CheckFlagNegative();
 
@@ -812,7 +829,7 @@ namespace Tiny64
             ushort    address = OnReadAddress( (ushort)( CPU.PC + 1 ) );
             ushort    finalAddress = CalcZeropageX( address, CPU.X );
 
-            Memory.WriteByte( finalAddress, CPU.Y );
+            OnWriteAddress( finalAddress, CPU.Y );
 
             CPU.PC += 2;
           }
@@ -823,7 +840,7 @@ namespace Tiny64
             ushort    address = OnReadAddress( (ushort)( CPU.PC + 1 ) );
             ushort    finalAddress = CalcZeropageX( address, CPU.X );
 
-            Memory.WriteByte( finalAddress, CPU.Accu );
+            OnWriteAddress( finalAddress, CPU.Accu );
 
             CPU.PC += 2;
           }
@@ -845,7 +862,7 @@ namespace Tiny64
             ushort    address = OnReadWord( (ushort)( CPU.PC + 1 ) );
             ushort    finalAddress = CalcAbsoluteY( address, CPU.Y );
 
-            Memory.WriteByte( finalAddress, CPU.Accu );
+            OnWriteAddress( finalAddress, CPU.Accu );
 
             CPU.PC += 3;
           }
@@ -864,7 +881,7 @@ namespace Tiny64
             ushort    address = OnReadWord( (ushort)( CPU.PC + 1 ) );
             ushort    finalAddress = CalcAbsoluteX( address, CPU.X );
 
-            Memory.WriteByte( finalAddress, CPU.Accu );
+            OnWriteAddress( finalAddress, CPU.Accu );
 
             CPU.PC += 3;
           }
@@ -1150,7 +1167,7 @@ namespace Tiny64
             byte  operand = OnReadAddress( address );
             operand = (byte)( operand - 1 );
 
-            Memory.WriteByte( address, operand );
+            OnWriteAddress( address, operand );
 
             CPU.FlagZero = ( operand == 0 );
             CPU.FlagNegative = ( ( operand & 0x80 ) != 0 );
@@ -1327,7 +1344,7 @@ namespace Tiny64
             ushort  address = OnReadAddress( (ushort)( CPU.PC + 1 ) );
             byte    value = OnReadAddress( address );
             value = (byte)( value + 1 );
-            Memory.WriteByte( address, value );
+            OnWriteAddress( address, value );
 
             CPU.FlagZero = ( value == 0 );
             CPU.FlagNegative = ( ( value & 0x80 ) != 0 );
@@ -1385,6 +1402,8 @@ namespace Tiny64
           return 4;
         case 0xf0:
           // BEQ $FFFF           2b, 2c
+          return HandleBranch( CPU.FlagZero );
+          /*
           {
             if ( CPU.FlagZero )
             {
@@ -1396,7 +1415,7 @@ namespace Tiny64
               CPU.PC += 2;
             }
           }
-          return 2;
+          return 2;*/
         case 0xf6:
           // INC $FF,X           2b, 6c
           {
@@ -1404,7 +1423,7 @@ namespace Tiny64
             ushort  finalAddress = CalcZeropageX( address, CPU.X );
             byte    value = OnReadAddress( finalAddress );
             value = (byte)( value + 1 );
-            Memory.WriteByte( finalAddress, value );
+            OnWriteAddress( finalAddress, value );
 
             CPU.FlagZero = ( value == 0 );
             CPU.FlagNegative = ( ( value & 0x80 ) != 0 );
@@ -1419,10 +1438,21 @@ namespace Tiny64
 
 
 
+    private void RemoveBreakpoint( Breakpoint bp )
+    {
+      var bpList = Breakpoints.GetValues( (ushort)bp.Address, true );
+      bpList.Remove( bp );
+    }
+
+
+
     private ushort OnReadWord( ushort Address )
     {
       //TODO - breakpoints
-      return Memory.ReadWord( Address );
+      byte  lo = OnReadAddress( Address );
+      byte  hi = OnReadAddress( (ushort)( Address + 1 ) );
+
+      return (ushort)( lo + ( hi << 8 ) );
     }
 
 
@@ -1431,6 +1461,7 @@ namespace Tiny64
     {
       //TODO - breakpoints
       return Memory.ReadByte( Address );
+      CheckBreakpoints( Address, true, false, false );
     }
 
 
@@ -1438,7 +1469,34 @@ namespace Tiny64
     private void OnExecAddress( ushort Address )
     {
       //TODO - breakpoints
-      //throw new NotImplementedException();
+      CheckBreakpoints( Address, false, false, true );
+    }
+
+
+
+    private void OnWriteAddress( ushort Address, byte Value )
+    {
+      //TODO - breakpoints
+      Memory.WriteByte( Address, Value );
+      CheckBreakpoints( Address, false, true, false );
+    }
+
+
+
+    private void CheckBreakpoints( ushort Address, bool Read, bool Write, bool Exec )
+    {
+      TriggeredBreakpoints.Clear();
+
+      var potentialBreakPoints = Breakpoints.GetValues( Address, true );
+      foreach ( var bp in potentialBreakPoints )
+      {
+        if ( ( bp.OnExecute == Exec )
+        ||   ( bp.OnRead == Read )
+        ||   ( bp.OnWrite == Write ) )
+        {
+          TriggeredBreakpoints.Add( bp );
+        }
+      }
     }
 
 
@@ -1535,6 +1593,20 @@ namespace Tiny64
 
       //Debug.Log( "POP " + Memory.RAM[0x100 + CPU.StackPointer].ToString( "X2" ) );
       return Memory.RAM[0x100 + CPU.StackPointer];
+    }
+
+
+
+    internal void AddBreakpoint( ushort Address, bool Read, bool Write, bool Execute )
+    {
+      Breakpoints.Add( Address, new Breakpoint() { Address = Address, OnRead = Read, OnWrite = Write, OnExecute = Execute } );
+    }
+
+
+
+    internal void AddTemporaryBreakpoint( ushort Address, bool Read, bool Write, bool Execute )
+    {
+      Breakpoints.Add( Address, new Breakpoint() { Address = Address, OnRead = Read, OnWrite = Write, OnExecute = Execute, Temporary = true } );
     }
 
   }

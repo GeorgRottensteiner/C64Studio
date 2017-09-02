@@ -12,7 +12,7 @@ namespace C64Studio
   {
     private Formats.DisassemblyProject  m_DisassemblyProject = new C64Studio.Formats.DisassemblyProject();
 
-    private Parser.Disassembler         m_Disassembler = new C64Studio.Parser.Disassembler( C64Studio.Systems.CPUSystem.Create6510System() );
+    private Parser.Disassembler         m_Disassembler = new C64Studio.Parser.Disassembler( Tiny64.Processor.Create6510() );
 
     private string                      m_OpenedFilename = "";
 
