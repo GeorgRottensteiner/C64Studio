@@ -14,8 +14,6 @@ namespace Tiny64
     byte            IODirection = 0x2f;   // RAM 0000
     byte            PortRegister = 55;    // RAM 0001
 
-    int             RasterPos = 0;
-    int             CyclesInLine = 0;
     public int      TotalCycles = 0;
 
     bool            Game = false;
@@ -111,8 +109,6 @@ namespace Tiny64
 
       IODirection   = 0x2f;
       PortRegister  = 55;
-      RasterPos     = 0;
-      CyclesInLine  = 0;
       TotalCycles   = 6;
 
       //Beim Hard-Reset startet die CPU bei der in $FFFC/$FFFD abgelegten Adresse (springt nach $FCE2, RESET
@@ -134,18 +130,9 @@ namespace Tiny64
         MaxCycles -= curCycles;
 
         // "update" VIC raster pos
-        CyclesInLine += curCycles;
-        if ( CyclesInLine >= 63 )
+        for ( int i = 0; i < curCycles; ++i )
         {
-          CyclesInLine -= 63;
-
-          ++RasterPos;
-          if ( RasterPos >= 312 )
-          {
-            RasterPos = 0;
-          }
-
-          Memory.VIC.SetRasterPos( RasterPos );
+          Memory.VIC.RunCycle();
         }
       }
       cyclesUsed -= MaxCycles;

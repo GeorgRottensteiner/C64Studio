@@ -9,6 +9,7 @@ namespace Tiny64
     byte[]        Registers = new byte[64];
     int           RasterLinePos = 0;
     int           IRQRasterLinePos = 0;
+    int           CycleInLinePos = 0;
 
 
 
@@ -20,6 +21,22 @@ namespace Tiny64
       for ( int i = 47; i < 64; ++i )
       {
         Registers[i] = 0xff;
+      }
+    }
+
+
+
+    public void RunCycle()
+    {
+      ++CycleInLinePos;
+      if ( CycleInLinePos == 63 )
+      {
+        CycleInLinePos = 0;
+        ++RasterLinePos;
+        if ( RasterLinePos == 312 )
+        {
+          RasterLinePos = 0;
+        }
       }
     }
 
@@ -70,6 +87,13 @@ namespace Tiny64
         throw new NotImplementedException( "VIC only supports 0x40 registers!" );
       }
       return Registers[Address];
+    }
+
+
+
+    int RasterPos()
+    {
+      return RasterLinePos;
     }
 
 
