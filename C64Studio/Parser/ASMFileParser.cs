@@ -1846,13 +1846,19 @@ namespace C64Studio.Parser
                 // check value size
                 if ( ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.INDIRECT_Y )
                 ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.INDIRECT_X )
+                ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE )
                 ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_X )
                 ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_Y ) )
                 {
                   if ( ( value < 0 )
                   ||   ( value > 255 ) )
                   {
-                    AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Evaluated value invalid for opcode (" + value + ")" );
+                    AddError( lineIndex, 
+                              Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, 
+                              "Value out of bounds for byte, needs to be >= 0 and <= 255. Expression:"
+                                + TokensToExpression( lineInfo.NeededParsedExpression ),
+                              lineInfo.NeededParsedExpression[0].StartPos,
+                              lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos - lineInfo.NeededParsedExpression[0].StartPos + 1 );
                     lineInfo.LineData.AppendU8( 0 );
                     continue;
                   }
@@ -7746,17 +7752,17 @@ namespace C64Studio.Parser
       //Debug.Log( "PreProcess" );
       lines = PreProcess( lines, m_Filename, Configuration );
 
+      /*
       if ( ( lines == null )
       ||   ( m_ErrorMessages > 0 ) )
       {
         if ( lines != null )
         {
-          /*
-          string path = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
-          System.IO.File.WriteAllLines( path, lines );*/
+          //string path = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
+          //System.IO.File.WriteAllLines( path, lines );
         }
         return false;
-      }
+      }*/
 
       /*
       string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
