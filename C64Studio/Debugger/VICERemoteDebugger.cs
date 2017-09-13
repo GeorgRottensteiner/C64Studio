@@ -520,7 +520,7 @@ namespace C64Studio
       try
       {
         var bufferData = new GR.Memory.ByteBuffer( m_DataToSend );
-        Debug.Log( "Debugger>" + Command + "/" + bufferData.ToString() );
+        InterfaceLog( "Debugger>" + Command + "/" + bufferData.ToString() );
         m_BytesToSend = m_DataToSend.Length;
 
         // sync send
@@ -533,7 +533,7 @@ namespace C64Studio
           //Debug.Log( "Sent " + bytesSent + " bytes" );
           if ( bytesSent == 0 )
           {
-            Debug.Log( "Could not send " + m_BytesToSend + " bytes" );
+            InterfaceLog( "Could not send " + m_BytesToSend + " bytes" );
             break;
           }
           m_BytesToSend -= bytesSent;
@@ -547,6 +547,13 @@ namespace C64Studio
         Core.AddToOutput( "SendCommand Exception:" + ex.ToString() );
       }
       return true;
+    }
+
+
+
+    private void InterfaceLog( string Text )
+    {
+      //Debug.Log( Text );
     }
 
 
