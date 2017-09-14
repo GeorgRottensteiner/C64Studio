@@ -3284,10 +3284,13 @@ namespace C64Studio.Parser
         GR.Memory.ByteBuffer screenChar   = new GR.Memory.ByteBuffer();
         GR.Memory.ByteBuffer screenColor  = new GR.Memory.ByteBuffer();
         GR.Memory.ByteBuffer bitmapData   = new GR.Memory.ByteBuffer();
+        Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
+
+        // TODO - forcedpattern from graphicscreenproject!
 
         if ( importAsMC )
         {
-          screenProject.ImageToMCBitmapData( null, null, out bitmapData, out screenChar, out screenColor );
+          screenProject.ImageToMCBitmapData( forcedPattern, null, null, out bitmapData, out screenChar, out screenColor );
         }
         else
         {

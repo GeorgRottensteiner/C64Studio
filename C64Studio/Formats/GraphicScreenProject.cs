@@ -296,7 +296,7 @@ namespace C64Studio.Formats
 
 
 
-    public int ImageToMCBitmapData( List<Formats.CharData> Chars, bool[,] ErrornousBlocks, out GR.Memory.ByteBuffer bitmapData, out GR.Memory.ByteBuffer screenChar, out GR.Memory.ByteBuffer screenColor )
+    public int ImageToMCBitmapData( Dictionary<int,byte> ForceBitPattern, List<Formats.CharData> Chars, bool[,] ErrornousBlocks, out GR.Memory.ByteBuffer bitmapData, out GR.Memory.ByteBuffer screenChar, out GR.Memory.ByteBuffer screenColor )
     {
       int numErrors = 0;
 
@@ -359,8 +359,69 @@ namespace C64Studio.Formats
             {
               int colorTarget = 0;
               List<byte> keys = new List<byte>( usedColors.Keys );
+
+              // check for overlaps - two colors are used that would map to the same target pattern?
+              GR.Collections.Set<int>   forcedPattern = new GR.Collections.Set<int>();
+              Dictionary<int,byte>      recommendedPattern = new Dictionary<int, byte>();
               foreach ( byte colorIndex in keys )
               {
+                if ( ForceBitPattern.ContainsKey( colorIndex ) )
+                {
+                  byte  wantedBitPattern = ForceBitPattern[colorIndex];
+                  if ( forcedPattern.ContainsValue( wantedBitPattern ) )
+                  {
+                    // duplicate -> is problem!
+                    if ( ( ErrornousBlocks != null )
+                    &&   ( !ErrornousBlocks[x, y] ) )
+                    {
+                      ErrornousBlocks[x, y] = true;
+                      ++numErrors;
+                    }
+                  }
+                  else
+                  {
+                    recommendedPattern.Add( colorIndex, wantedBitPattern );
+                    forcedPattern.Add( wantedBitPattern );
+                  }
+                }
+              }
+
+              foreach ( byte colorIndex in keys )
+              {
+                if ( recommendedPattern.ContainsKey( colorIndex ) )
+                {
+                  usedColors[colorIndex] = recommendedPattern[colorIndex];
+
+                  switch ( recommendedPattern[colorIndex] )
+                  {
+                    case 0x01:
+                      {
+                        // upper screen char nibble
+                        byte value = screenChar.ByteAt( x + y * BlockWidth );
+                        value &= 0x0f;
+                        value |= (byte)( colorIndex << 4 );
+
+                        screenChar.SetU8At( x + y * BlockWidth, value );
+                      }
+                      break;
+                    case 0x02:
+                      {
+                        // lower nibble in screen char
+                        byte value = screenChar.ByteAt( x + y * BlockWidth );
+                        value &= 0xf0;
+                        value |= (byte)( colorIndex );
+
+                        screenChar.SetU8At( x + y * BlockWidth, value );
+                      }
+                      break;
+                    case 0x03:
+                      // color ram
+                      screenColor.SetU8At( x + y * BlockWidth, colorIndex );
+                      break;
+                  }
+                  continue;
+                }
+
                 if ( colorTarget == 0 )
                 {
                   // upper screen char nibble
@@ -430,7 +491,6 @@ namespace C64Studio.Formats
           }
         }
       }
-
       return numErrors;
     }
 

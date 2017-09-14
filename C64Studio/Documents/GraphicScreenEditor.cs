@@ -2026,8 +2026,9 @@ namespace C64Studio
       GR.Memory.ByteBuffer              screenChar;
       GR.Memory.ByteBuffer              screenColor;
       GR.Memory.ByteBuffer              bitmapData;
+      Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
 
-      m_GraphicScreenProject.ImageToMCBitmapData( m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+      m_GraphicScreenProject.ImageToMCBitmapData( forcedPattern, m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
 
       // export data
       string    result = ";bitmap data" + System.Environment.NewLine + ToASMData( bitmapData );
@@ -2266,6 +2267,7 @@ namespace C64Studio
       GR.Memory.ByteBuffer screenChar   = new GR.Memory.ByteBuffer();
       GR.Memory.ByteBuffer screenColor  = new GR.Memory.ByteBuffer();
       GR.Memory.ByteBuffer bitmapData   = new GR.Memory.ByteBuffer();
+      Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
 
       switch ( comboExportType.SelectedIndex )
       {
@@ -2275,7 +2277,7 @@ namespace C64Studio
           break;
         case 1:
           // MC bitmap
-          m_GraphicScreenProject.ImageToMCBitmapData( m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+          m_GraphicScreenProject.ImageToMCBitmapData( forcedPattern, m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
           break;
         case 2:
           // hires charset
