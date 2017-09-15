@@ -592,6 +592,7 @@ namespace C64Studio
         Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_CLOSED, DocumentInfo.Element ) );
         DocumentInfo.Element.IsShown = false;
         DocumentInfo.Element.Document = null;
+        DocumentInfo.BaseDoc = null;
       }
       else
       {
