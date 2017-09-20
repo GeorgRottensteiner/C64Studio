@@ -79,6 +79,7 @@
     <Compile Include="Dialogs\FormAppMode.Designer.cs">
       <DependentUpon>FormAppMode.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formats\Disk.cs" />
     <Compile Include="Navigating.cs" />
     <Compile Include="Executing.cs" />
     <Compile Include="Parser\AssemblyOutput.cs" />

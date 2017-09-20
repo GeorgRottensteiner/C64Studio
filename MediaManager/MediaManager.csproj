@@ -48,6 +48,9 @@
     <Compile Include="..\C64Studio\Formats\D64.cs">
       <Link>Included Files\D64.cs</Link>
     </Compile>
+    <Compile Include="..\C64Studio\Formats\Disk.cs">
+      <Link>Included Files\Disk.cs</Link>
+    </Compile>
     <Compile Include="..\C64Studio\Formats\MediaFormat.cs">
       <Link>Included Files\MediaFormat.cs</Link>
     </Compile>
