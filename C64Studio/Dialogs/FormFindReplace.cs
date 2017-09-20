@@ -219,7 +219,19 @@ namespace C64Studio
           Debug.Log( "Failed to find document from LastSearchFound:" + LastSearchFound.FoundInDocument + ", line " + LastSearchFound.FoundLine );
           return;
         }
-        LastSearchFound.FoundInDocument.BaseDoc.Show( Core.MainForm.panelMain );
+        if ( LastSearchFound.FoundInDocument.BaseDoc == null )
+        {
+          if ( ( LastSearchFound.FoundInDocument.Element != null )
+          &&   ( LastSearchFound.FoundInDocument.Project != null ) )
+          {
+            LastSearchFound.FoundInDocument.Element.Document = LastSearchFound.FoundInDocument.Project.ShowDocument( LastSearchFound.FoundInDocument.Element );
+            LastSearchFound.FoundInDocument.BaseDoc.Show( Core.MainForm.panelMain );
+          }
+        }
+        else
+        {
+          LastSearchFound.FoundInDocument.BaseDoc.Show( Core.MainForm.panelMain );
+        }
 
         var edit = EditFromDocumentEx( LastSearchFound.FoundInDocument );
 
