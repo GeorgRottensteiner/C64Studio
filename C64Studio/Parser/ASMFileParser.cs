@@ -339,10 +339,6 @@ namespace C64Studio.Parser
 
     public Types.SymbolInfo AddLabel( string Name, int Value, int SourceLine, string Zone, int CharIndex, int Length )
     {
-      if ( Name == "Loop" )
-      {
-        Debug.Log( "aha" );
-      }
       string    filename;
       int       localIndex = 0;
 
@@ -3284,13 +3280,10 @@ namespace C64Studio.Parser
         GR.Memory.ByteBuffer screenChar   = new GR.Memory.ByteBuffer();
         GR.Memory.ByteBuffer screenColor  = new GR.Memory.ByteBuffer();
         GR.Memory.ByteBuffer bitmapData   = new GR.Memory.ByteBuffer();
-        Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
-
-        // TODO - forcedpattern from graphicscreenproject!
 
         if ( importAsMC )
         {
-          screenProject.ImageToMCBitmapData( forcedPattern, null, null, out bitmapData, out screenChar, out screenColor );
+          screenProject.ImageToMCBitmapData( screenProject.ColorMapping, null, null, out bitmapData, out screenChar, out screenColor );
         }
         else
         {
@@ -5170,11 +5163,6 @@ namespace C64Studio.Parser
               ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.INDIRECT_Y ) )
               {
                 countTokens -= 2;
-              }
-              if ( ( lineTokenInfos.Count == 2 )
-              && ( lineTokenInfos[1].Content == "Loop" ) )
-              {
-                Debug.Log( "aha" );
               }
               if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, countTokens, out byteValue ) )
               {

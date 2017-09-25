@@ -83,17 +83,25 @@ namespace C64Studio
       CustomRenderer.PaletteManager.ApplyPalette( charEditor.DisplayPage );
       CustomRenderer.PaletteManager.ApplyPalette( m_GraphicScreenProject.Image );
 
+      foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
+      {
+        comboColorMappingTargets.Items.Add( GR.EnumHelper.GetDescription( entry ) );
+      }
+
       for ( int i = 0; i < 16; ++i )
       {
         comboBackground.Items.Add( i.ToString( "d2" ) );
         comboMulticolor1.Items.Add( i.ToString( "d2" ) );
         comboMulticolor2.Items.Add( i.ToString( "d2" ) );
         comboCharColor.Items.Add( i.ToString( "d2" ) );
+
+        listColorMappingColors.Items.Add( i.ToString( "d2" ) );
       }
       comboBackground.SelectedIndex = 0;
       comboMulticolor1.SelectedIndex = 0;
       comboMulticolor2.SelectedIndex = 0;
       comboCharColor.SelectedIndex = 1;
+      comboColorMappingTargets.SelectedIndex = 0;
       radioCharColor.Checked = true;
 
       foreach ( Formats.GraphicScreenProject.CheckType checkType in System.Enum.GetValues( typeof( Formats.GraphicScreenProject.CheckType ) ) )
@@ -2026,9 +2034,9 @@ namespace C64Studio
       GR.Memory.ByteBuffer              screenChar;
       GR.Memory.ByteBuffer              screenColor;
       GR.Memory.ByteBuffer              bitmapData;
-      Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
+      //Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
 
-      m_GraphicScreenProject.ImageToMCBitmapData( forcedPattern, m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+      m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
 
       // export data
       string    result = ";bitmap data" + System.Environment.NewLine + ToASMData( bitmapData );
@@ -2267,7 +2275,6 @@ namespace C64Studio
       GR.Memory.ByteBuffer screenChar   = new GR.Memory.ByteBuffer();
       GR.Memory.ByteBuffer screenColor  = new GR.Memory.ByteBuffer();
       GR.Memory.ByteBuffer bitmapData   = new GR.Memory.ByteBuffer();
-      Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
 
       switch ( comboExportType.SelectedIndex )
       {
@@ -2277,7 +2284,7 @@ namespace C64Studio
           break;
         case 1:
           // MC bitmap
-          m_GraphicScreenProject.ImageToMCBitmapData( forcedPattern, m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+          m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
           break;
         case 2:
           // hires charset
@@ -2546,6 +2553,152 @@ namespace C64Studio
       charEditor.DisplayPage.DrawFromMemoryImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
       charEditor.Invalidate();
       Redraw();
+    }
+
+
+
+    private void btnColorMappingRemove_Click( object sender, EventArgs e )
+    {
+
+    }
+
+
+
+    private void listColorMappingTargets_SelectedIndexChanged( object sender, EventArgs e )
+    {
+
+    }
+
+
+
+    private void listColorMappingColors_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      listColorMappingTargets.Items.Clear();
+      if ( listColorMappingColors.SelectedIndex == -1 )
+      {
+        UpdateColorMappingButtons();
+        return;
+      }
+      foreach ( var entry in m_GraphicScreenProject.ColorMapping[listColorMappingColors.SelectedIndex] )
+      {
+        listColorMappingTargets.Items.Add( GR.EnumHelper.GetDescription( entry ) );
+      }
+      UpdateColorMappingButtons();
+    }
+
+
+
+    private void comboColorMappingTargets_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      UpdateColorMappingButtons();
+    }
+
+
+
+    void UpdateColorMappingButtons()
+    {
+      C64Studio.Formats.GraphicScreenProject.ColorMappingTarget   targetIndex = (C64Studio.Formats.GraphicScreenProject.ColorMappingTarget)comboColorMappingTargets.SelectedIndex;
+
+      int     sourceColor = listColorMappingColors.SelectedIndex;
+      if ( sourceColor == -1 )
+      {
+        return;
+      }
+      listColorMappingTargets.AddButtonEnabled = ( !m_GraphicScreenProject.ColorMapping[sourceColor].Contains( targetIndex ) );
+    }
+
+
+
+    private void listColorMappingColors_DrawItem( object sender, DrawItemEventArgs e )
+    {
+      ListBox list = (ListBox)sender;
+
+      e.DrawBackground();
+      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20, e.Bounds.Top, e.Bounds.Width - 20, e.Bounds.Height );
+      if ( e.Index != -1 )
+      {
+        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
+        if ( ( e.State & DrawItemState.Selected ) != 0 )
+        {
+          e.Graphics.DrawString( list.Items[e.Index].ToString(), list.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + 1.0f );
+        }
+        else
+        {
+          e.Graphics.DrawString( list.Items[e.Index].ToString(), list.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Black ), 3.0f, e.Bounds.Top + 1.0f );
+        }
+      }
+    }
+
+
+
+    private ListViewItem listColorMappingTargets_AddingItem( object sender )
+    {
+      C64Studio.Formats.GraphicScreenProject.ColorMappingTarget   targetIndex = (C64Studio.Formats.GraphicScreenProject.ColorMappingTarget)comboColorMappingTargets.SelectedIndex;
+
+      int     sourceColor = listColorMappingColors.SelectedIndex;
+      if ( sourceColor == -1 )
+      {
+        return null;
+      }
+
+      if ( m_GraphicScreenProject.ColorMapping[sourceColor].Contains( targetIndex ) )
+      {
+        return null;
+      }
+      m_GraphicScreenProject.ColorMapping[sourceColor].Add( targetIndex );
+
+      var newItem = new ListViewItem( GR.EnumHelper.GetDescription( targetIndex ) );
+
+      Modified = true;
+      UpdateColorMappingButtons();
+      return newItem;
+    }
+
+
+
+    private void listColorMappingTargets_ItemRemoved( object sender, ListViewItem Item )
+    {
+      int     sourceColor = listColorMappingColors.SelectedIndex;
+      if ( sourceColor == -1 )
+      {
+        return;
+      }
+      if ( m_GraphicScreenProject.ColorMapping[sourceColor].Count == 1 )
+      {
+        return;
+      }
+
+      foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
+      {
+        if ( GR.EnumHelper.GetDescription( entry ) == Item.Text )
+        {
+          m_GraphicScreenProject.ColorMapping[sourceColor].Remove( entry );
+          break;
+        }
+      }
+    }
+
+
+
+    private void listColorMappingTargets_ItemMoved( object sender, ListViewItem Item1, ListViewItem Item2 )
+    {
+      int     sourceColor = listColorMappingColors.SelectedIndex;
+      if ( sourceColor == -1 )
+      {
+        return;
+      }
+
+      m_GraphicScreenProject.ColorMapping[sourceColor].Clear();
+      foreach ( ListViewItem item in listColorMappingTargets.Items )
+      {
+        foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
+        {
+          if ( GR.EnumHelper.GetDescription( entry ) == item.Text )
+          {
+            m_GraphicScreenProject.ColorMapping[sourceColor].Add( entry );
+          }
+        }
+      }
     }
 
   }

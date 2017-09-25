@@ -21,6 +21,20 @@ namespace C64Studio.Formats
       MULTICOLOR_CHARSET,
     };
 
+    public enum ColorMappingTarget
+    {
+      [Description( "00 (Background)" )]
+      BITS_00 = 0,
+      [Description( "01 (Hi-Nibble of Screen)" )]
+      BITS_01 = 1,
+      [Description( "10 (Lo-Nibble of Screen)" )]
+      BITS_10 = 2,
+      [Description( "11 (Color RAM)" )]
+      BITS_11 = 3,
+      [Description( "Any" )]
+      ANY = 4
+    };
+
 
 
     public int                          BackgroundColor = 0;
@@ -37,12 +51,19 @@ namespace C64Studio.Formats
     public int                          ScreenWidth = 320;
     public int                          ScreenHeight = 200;
 
+    public Dictionary<int,List<ColorMappingTarget>>   ColorMapping = new Dictionary<int, List<ColorMappingTarget>>();
+
 
 
 
     public GraphicScreenProject()
     {
       CustomRenderer.PaletteManager.ApplyPalette( Image );
+
+      for ( int i = 0; i < 16; ++i )
+      {
+        ColorMapping.Add( i, new List<ColorMappingTarget> { ColorMappingTarget.ANY } );
+      }
     }
 
 
@@ -104,6 +125,19 @@ namespace C64Studio.Formats
       chunkScreenMultiColorData.AppendU8( (byte)MultiColor2 );
       data.Append( chunkScreenMultiColorData.ToBuffer() );
 
+      GR.IO.FileChunk chunkColorMapping = new GR.IO.FileChunk( C64Studio.Types.FileChunk.GRAPHIC_COLOR_MAPPING );
+      chunkColorMapping.AppendI32( ColorMapping.Count );
+      for ( int i = 0; i < ColorMapping.Count; ++i )
+      {
+        var     mappings = ColorMapping[i];
+
+        chunkColorMapping.AppendI32( mappings.Count );
+        for ( int j = 0; j < mappings.Count; ++j )
+        {
+          chunkColorMapping.AppendU8( (byte)mappings[j] );
+        }
+      }
+      data.Append( chunkColorMapping.ToBuffer() );
       return data;
     }
 
@@ -111,6 +145,12 @@ namespace C64Studio.Formats
 
     public bool ReadFromBuffer( GR.Memory.ByteBuffer ProjectFile )
     {
+      ColorMapping.Clear();
+      for ( int i = 0; i < 16; ++i )
+      {
+        ColorMapping.Add( i, new List<ColorMappingTarget> { ColorMappingTarget.ANY } );
+      }
+
       GR.IO.MemoryReader memReader = new GR.IO.MemoryReader( ProjectFile );
 
       GR.IO.FileChunk chunk = new GR.IO.FileChunk();
@@ -132,6 +172,27 @@ namespace C64Studio.Formats
             {
               ScreenWidth = 320;
               ScreenHeight = 200;
+            }
+            break;
+          case C64Studio.Types.FileChunk.GRAPHIC_COLOR_MAPPING:
+            {
+              ColorMapping.Clear();
+
+              int     numEntries = chunkReader.ReadInt32();
+
+              for ( int i = 0; i < numEntries; ++i )
+              {
+                ColorMapping.Add( i, new List<ColorMappingTarget>() );
+
+                int     numMappings = chunkReader.ReadInt32();
+
+                for ( int j = 0; j < numMappings; ++j )
+                {
+                  ColorMappingTarget    mappingTarget = (ColorMappingTarget)chunkReader.ReadUInt8();
+
+                  ColorMapping[i].Add( mappingTarget );
+                }
+              }
             }
             break;
           case C64Studio.Types.FileChunk.GRAPHIC_DATA:
@@ -296,15 +357,23 @@ namespace C64Studio.Formats
 
 
 
-    public int ImageToMCBitmapData( Dictionary<int,byte> ForceBitPattern, List<Formats.CharData> Chars, bool[,] ErrornousBlocks, out GR.Memory.ByteBuffer bitmapData, out GR.Memory.ByteBuffer screenChar, out GR.Memory.ByteBuffer screenColor )
+    public int ImageToMCBitmapData( Dictionary<int, List<ColorMappingTarget>> ForceBitPattern, List<Formats.CharData> Chars, bool[,] ErrornousBlocks, out GR.Memory.ByteBuffer bitmapData, out GR.Memory.ByteBuffer screenChar, out GR.Memory.ByteBuffer screenColor )
     {
       int numErrors = 0;
+
+      Dictionary<int,GR.Collections.Set<ColorMappingTarget>>    usedPatterns = new Dictionary<int, GR.Collections.Set<ColorMappingTarget>>();
 
       screenChar = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
       screenColor = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
       bitmapData = new GR.Memory.ByteBuffer( (uint)( 8 * BlockWidth * BlockHeight ) );
 
-      GR.Collections.Map<byte, byte> usedColors = new GR.Collections.Map<byte, byte>();
+      GR.Collections.Map<byte, ColorMappingTarget> usedColors = new GR.Collections.Map<byte, ColorMappingTarget>();
+
+      /*
+      ForceBitPattern = new Dictionary<int, byte>();
+      ForceBitPattern.Add( 4, 1 );
+      ForceBitPattern.Add( 1, 2 );
+      ForceBitPattern.Add( 3, 3 );*/
 
       for ( int y = 0; y < BlockHeight; ++y )
       {
@@ -361,30 +430,9 @@ namespace C64Studio.Formats
               List<byte> keys = new List<byte>( usedColors.Keys );
 
               // check for overlaps - two colors are used that would map to the same target pattern?
-              GR.Collections.Set<int>   forcedPattern = new GR.Collections.Set<int>();
-              Dictionary<int,byte>      recommendedPattern = new Dictionary<int, byte>();
-              foreach ( byte colorIndex in keys )
-              {
-                if ( ForceBitPattern.ContainsKey( colorIndex ) )
-                {
-                  byte  wantedBitPattern = ForceBitPattern[colorIndex];
-                  if ( forcedPattern.ContainsValue( wantedBitPattern ) )
-                  {
-                    // duplicate -> is problem!
-                    if ( ( ErrornousBlocks != null )
-                    &&   ( !ErrornousBlocks[x, y] ) )
-                    {
-                      ErrornousBlocks[x, y] = true;
-                      ++numErrors;
-                    }
-                  }
-                  else
-                  {
-                    recommendedPattern.Add( colorIndex, wantedBitPattern );
-                    forcedPattern.Add( wantedBitPattern );
-                  }
-                }
-              }
+              Dictionary<int,ColorMappingTarget>       recommendedPattern = new Dictionary<int, ColorMappingTarget>();
+
+              numErrors += DetermineBestMapping( keys, x, y, ForceBitPattern, recommendedPattern, ErrornousBlocks );
 
               foreach ( byte colorIndex in keys )
               {
@@ -392,9 +440,15 @@ namespace C64Studio.Formats
                 {
                   usedColors[colorIndex] = recommendedPattern[colorIndex];
 
+                  if ( !usedPatterns.ContainsKey( colorIndex ) )
+                  {
+                    usedPatterns.Add( colorIndex, new GR.Collections.Set<ColorMappingTarget>() );
+                  }
+                  usedPatterns[colorIndex].Add( recommendedPattern[colorIndex] );
+
                   switch ( recommendedPattern[colorIndex] )
                   {
-                    case 0x01:
+                    case ColorMappingTarget.BITS_01:
                       {
                         // upper screen char nibble
                         byte value = screenChar.ByteAt( x + y * BlockWidth );
@@ -404,7 +458,7 @@ namespace C64Studio.Formats
                         screenChar.SetU8At( x + y * BlockWidth, value );
                       }
                       break;
-                    case 0x02:
+                    case ColorMappingTarget.BITS_10:
                       {
                         // lower nibble in screen char
                         byte value = screenChar.ByteAt( x + y * BlockWidth );
@@ -414,12 +468,29 @@ namespace C64Studio.Formats
                         screenChar.SetU8At( x + y * BlockWidth, value );
                       }
                       break;
-                    case 0x03:
+                    case ColorMappingTarget.BITS_11:
                       // color ram
                       screenColor.SetU8At( x + y * BlockWidth, colorIndex );
                       break;
                   }
                   continue;
+                }
+
+                if ( !usedPatterns.ContainsKey( colorIndex ) )
+                {
+                  usedPatterns.Add( colorIndex, new GR.Collections.Set<ColorMappingTarget>() );
+                }
+                switch ( colorTarget )
+                {
+                  case 0:
+                    usedPatterns[colorIndex].Add( ColorMappingTarget.BITS_01 );
+                    break;
+                  case 1:
+                    usedPatterns[colorIndex].Add( ColorMappingTarget.BITS_10 );
+                    break;
+                  case 2:
+                    usedPatterns[colorIndex].Add( ColorMappingTarget.BITS_11 );
+                    break;
                 }
 
                 if ( colorTarget == 0 )
@@ -430,7 +501,7 @@ namespace C64Studio.Formats
                   value |= (byte)( colorIndex << 4 );
 
                   screenChar.SetU8At( x + y * BlockWidth, value );
-                  usedColors[colorIndex] = 1;
+                  usedColors[colorIndex] = ColorMappingTarget.BITS_01;
                 }
                 else if ( colorTarget == 1 )
                 {
@@ -440,13 +511,13 @@ namespace C64Studio.Formats
                   value |= (byte)( colorIndex );
 
                   screenChar.SetU8At( x + y * BlockWidth, value );
-                  usedColors[colorIndex] = 2;
+                  usedColors[colorIndex] = ColorMappingTarget.BITS_10;
                 }
                 else if ( colorTarget == 2 )
                 {
                   // color ram
                   screenColor.SetU8At( x + y * BlockWidth, colorIndex );
-                  usedColors[colorIndex] = 3;
+                  usedColors[colorIndex] = ColorMappingTarget.BITS_11;
                 }
                 ++colorTarget;
               }
@@ -460,7 +531,20 @@ namespace C64Studio.Formats
                 if ( colorIndex != BackgroundColor )
                 {
                   // other color
-                  byte colorValue = usedColors[colorIndex];
+                  byte colorValue = 0;
+                  
+                  switch ( usedColors[colorIndex] )
+                  {
+                    case ColorMappingTarget.BITS_01:
+                      colorValue = 0x01;
+                      break;
+                    case ColorMappingTarget.BITS_10:
+                      colorValue = 0x10;
+                      break;
+                    case ColorMappingTarget.BITS_11:
+                      colorValue = 0x11;
+                      break;
+                  }
                   int bitmapIndex = x * 8 + y * 8 * BlockWidth + charY;
 
                   byte value = bitmapData.ByteAt( bitmapIndex );
@@ -491,6 +575,95 @@ namespace C64Studio.Formats
           }
         }
       }
+
+      Debug.Log( "Used patterns:" );
+      foreach ( var entry in usedPatterns )
+      {
+        Debug.Log( "Index " + entry.Key );
+        foreach ( var pattern in entry.Value )
+        {
+          Debug.Log( " used " + pattern );
+        }
+      }
+      return numErrors;
+    }
+
+
+
+    private int DetermineBestMapping( List<byte> keys, int x, int y, Dictionary<int, List<ColorMappingTarget>> ForceBitPattern, Dictionary<int, ColorMappingTarget> recommendedPattern, bool[,] ErrornousBlocks )
+    {
+      int   numErrors = 0;
+      Dictionary<int,ColorMappingTarget>    potentialMapping = new Dictionary<int, ColorMappingTarget>();
+      Dictionary<int,int>                   potentialMappingIndices = new Dictionary<int,int>();
+
+      int                                   currentVariant = 0;
+      int                                   totalVariants = 0;
+
+      foreach ( byte colorIndex in keys )
+      {
+        if ( ForceBitPattern.ContainsKey( colorIndex ) )
+        {
+          totalVariants += ForceBitPattern[colorIndex].Count;
+        }
+      }
+
+      while ( currentVariant < totalVariants )
+      {
+        // build potential mapping
+        potentialMappingIndices.Clear();
+
+        int     tempIndex = currentVariant;
+        foreach ( var forceMap in ForceBitPattern )
+        {
+          potentialMapping.Add( forceMap.Key, forceMap.Value[tempIndex % forceMap.Value.Count] );
+          tempIndex -= forceMap.Value.Count;
+        }
+
+        ++currentVariant;
+      }
+      /*
+      
+          
+
+          for ( int i = 0; i < ForceBitPattern[colorIndex].Count; ++i )
+          {
+            // check if duplicate exists already for this mapping
+            bool    hasDuplicate = false;
+            if ( ( potentialMapping.ContainsKey( colorIndex ) )
+            &&   ( potentialMapping[colorIndex] != ForceBitPattern[colorIndex][i] ) )
+            {
+              hasDuplicate = true;
+            }
+            if ( !hasDuplicate )
+            {
+              if ( !potentialMapping.ContainsKey( colorIndex ) )
+              {
+                potentialMapping.Add( colorIndex, ForceBitPattern[colorIndex][i] );
+              }
+            }
+          }
+          
+          potentialMapping.Add( colorIndex, ForceBitPattern[colorIndex][0];
+
+          var  wantedBitPattern = ForceBitPattern[colorIndex];
+          if ( forcedPattern.ContainsValue( wantedBitPattern ) )
+          {
+            // duplicate -> is problem!
+            if ( ( ErrornousBlocks != null )
+            && ( !ErrornousBlocks[x, y] ) )
+            {
+              ErrornousBlocks[x, y] = true;
+              ++numErrors;
+            }
+          }
+          else
+          {
+            recommendedPattern.Add( colorIndex, wantedBitPattern );
+            forcedPattern.Add( wantedBitPattern );
+          }
+        }
+      }*/
+
       return numErrors;
     }
 

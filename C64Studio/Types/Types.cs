@@ -431,6 +431,7 @@ namespace C64Studio.Types
     public const System.UInt16    SCREEN_COLOR_DATA     = 0x1301;
     public const System.UInt16    GRAPHIC_SCREEN_INFO   = 0x1310;
     public const System.UInt16    GRAPHIC_DATA          = 0x1311;   // uint width, uint height, uint image type, uint palette entry count, byte r,g,b, uint data size, data
+    public const System.UInt16    GRAPHIC_COLOR_MAPPING = 0x1312;   // Dictionar<int,List<byte>>
 
     public const System.UInt16    MAP_PROJECT_INFO      = 0x1320;
     public const System.UInt16    MAP_PROJECT_DATA      = 0x1321;

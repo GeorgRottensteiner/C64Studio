@@ -1653,10 +1653,6 @@ namespace C64Studio.Parser
             var c64Key = Types.ConstantData.FindC64KeyByPETSCII( byteValue );
             if ( c64Key != null )
             {
-              if ( lineContent.Contains( "B$" ) )
-              {
-                Debug.Log( "aha" );
-              }
               lineContent += c64Key.CharValue;
             }
             else
