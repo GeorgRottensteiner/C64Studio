@@ -85,7 +85,10 @@ namespace C64Studio
 
       foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
       {
-        comboColorMappingTargets.Items.Add( GR.EnumHelper.GetDescription( entry ) );
+        if ( entry != Formats.GraphicScreenProject.ColorMappingTarget.ANY )
+        {
+          comboColorMappingTargets.Items.Add( GR.EnumHelper.GetDescription( entry ) );
+        }
       }
 
       for ( int i = 0; i < 16; ++i )
@@ -2564,9 +2567,9 @@ namespace C64Studio
 
 
 
-    private void listColorMappingTargets_SelectedIndexChanged( object sender, EventArgs e )
+    private void listColorMappingTargets_SelectedIndexChanged( object sender, ListViewItem Item )
     {
-
+      UpdateColorMappingButtons();
     }
 
 
@@ -2599,9 +2602,28 @@ namespace C64Studio
     {
       C64Studio.Formats.GraphicScreenProject.ColorMappingTarget   targetIndex = (C64Studio.Formats.GraphicScreenProject.ColorMappingTarget)comboColorMappingTargets.SelectedIndex;
 
+      listColorMappingTargets.DeleteButtonEnabled = ( ( listColorMappingTargets.SelectedIndices.Count > 0 )
+                                                && ( listColorMappingTargets.SelectedIndices[0] + 1 < listColorMappingTargets.Items.Count ) );
+
+      if ( ( listColorMappingTargets.Items.Count <= 1 )
+      ||   ( listColorMappingTargets.SelectedIndices.Count < 1 ) )
+      {
+        listColorMappingTargets.MoveUpButtonEnabled = false;
+        listColorMappingTargets.MoveDownButtonEnabled = false;
+      }
+      else
+      {
+        listColorMappingTargets.MoveUpButtonEnabled = ( ( listColorMappingTargets.SelectedIndices[0] > 0 )
+                                                  && ( ColorMappingFromItem( listColorMappingTargets.Items[listColorMappingTargets.SelectedIndices[0]] ) != Formats.GraphicScreenProject.ColorMappingTarget.ANY ) );
+        listColorMappingTargets.MoveDownButtonEnabled = ( ( listColorMappingTargets.SelectedIndices[0] + 1 < listColorMappingTargets.Items.Count )
+                                                       && ( ColorMappingFromItem( listColorMappingTargets.Items[listColorMappingTargets.SelectedIndices[0] + 1] ) != Formats.GraphicScreenProject.ColorMappingTarget.ANY ) );
+      }
+
+
       int     sourceColor = listColorMappingColors.SelectedIndex;
       if ( sourceColor == -1 )
       {
+        listColorMappingTargets.AddButtonEnabled = false;
         return;
       }
       listColorMappingTargets.AddButtonEnabled = ( !m_GraphicScreenProject.ColorMapping[sourceColor].Contains( targetIndex ) );
@@ -2645,7 +2667,7 @@ namespace C64Studio
       {
         return null;
       }
-      m_GraphicScreenProject.ColorMapping[sourceColor].Add( targetIndex );
+      m_GraphicScreenProject.ColorMapping[sourceColor].Insert( m_GraphicScreenProject.ColorMapping[sourceColor].Count - 1, targetIndex );
 
       var newItem = new ListViewItem( GR.EnumHelper.GetDescription( targetIndex ) );
 
@@ -2689,17 +2711,50 @@ namespace C64Studio
       }
 
       m_GraphicScreenProject.ColorMapping[sourceColor].Clear();
+
       foreach ( ListViewItem item in listColorMappingTargets.Items )
       {
-        foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
+        m_GraphicScreenProject.ColorMapping[sourceColor].Add( ColorMappingFromItem( item ) );
+      }
+    }
+
+
+
+    private C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ColorMappingFromItem( ListViewItem Item )
+    {
+      foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
+      {
+        if ( GR.EnumHelper.GetDescription( entry ) == Item.Text )
         {
-          if ( GR.EnumHelper.GetDescription( entry ) == item.Text )
-          {
-            m_GraphicScreenProject.ColorMapping[sourceColor].Add( entry );
-          }
+          return entry;
         }
       }
+      return Formats.GraphicScreenProject.ColorMappingTarget.ANY;
+    }
+
+
+
+    private bool listColorMappingTargets_MovingItem( object sender, ListViewItem Item1, ListViewItem Item2 )
+    {
+      var     colorMapping1 = ColorMappingFromItem( Item1 );
+      var     colorMapping2 = ColorMappingFromItem( Item2 );
+
+      if ( ( colorMapping1 == Formats.GraphicScreenProject.ColorMappingTarget.ANY )
+      ||   ( colorMapping2 == Formats.GraphicScreenProject.ColorMappingTarget.ANY ) )
+      {
+        return false;
+      }
+      return true;
+    }
+
+
+
+    private void listColorMappingTargets_ItemAdded( object sender, ListViewItem Item )
+    {
+      listColorMappingTargets.Items.Remove( Item );
+      listColorMappingTargets.Items.Insert( listColorMappingTargets.Items.Count - 1, Item );
     }
 
   }
 }
+

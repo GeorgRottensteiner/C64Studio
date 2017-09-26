@@ -2915,15 +2915,18 @@ namespace C64Studio
 
 
 
-    private void listLayerSprites_MovingItem( object sender, ListViewItem Item1, ListViewItem Item2 )
+    private bool listLayerSprites_MovingItem( object sender, ListViewItem Item1, ListViewItem Item2 )
     {
+      return true;
     }
 
 
 
-    private void listLayers_MovingItem( object sender, ListViewItem Item1, ListViewItem Item2 )
+    private bool listLayers_MovingItem( object sender, ListViewItem Item1, ListViewItem Item2 )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetExchangeLayer( this, m_SpriteProject, Item1.Index, Item2.Index ) );
+
+      return true;
     }
 
 

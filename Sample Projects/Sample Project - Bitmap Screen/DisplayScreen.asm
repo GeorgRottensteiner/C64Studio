@@ -33,20 +33,23 @@
           inx
           cpx #250
           bne .CopyLoop
-          
+           
 EndlessLoop
           jmp EndlessLoop
 
 
 ;bitmap data
 * = $2000
-!bin "Bitmap-Binary.bin",$1f40
+!media "Image.graphicscreen",BITMAP
+;!bin "Bitmap-Binary.bin",$1f40
 
 ;charscreen colors
 * = $4000
-!bin "Bitmap-Binary.bin",1000,$1f40
+!media "Image.graphicscreen",SCREEN
+;!bin "Bitmap-Binary.bin",1000,$1f40
 
 ;color ram colors
 * = $4400
-!bin "Bitmap-Binary.bin",1000,$1f40 + 1000
+!media "Image.graphicscreen",COLOR
+;!bin "Bitmap-Binary.bin",1000,$1f40 + 1000
 

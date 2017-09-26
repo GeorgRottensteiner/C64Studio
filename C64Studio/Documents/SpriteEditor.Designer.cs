@@ -333,7 +333,7 @@
       this.listLayerSprites.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listLayerSprites_AddingItem);
       this.listLayerSprites.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_ItemAdded);
       this.listLayerSprites.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_ItemRemoved);
-      this.listLayerSprites.MovingItem += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.listLayerSprites_MovingItem);
+      this.listLayerSprites.MovingItem += new C64Studio.ArrangedItemList.ItemExchangingEventHandler(this.listLayerSprites_MovingItem);
       this.listLayerSprites.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.listLayerSprites_ItemMoved);
       this.listLayerSprites.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_SelectedIndexChanged);
       // 
@@ -349,7 +349,7 @@
       this.listLayers.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listLayers_AddingItem);
       this.listLayers.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_ItemAdded);
       this.listLayers.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_ItemRemoved);
-      this.listLayers.MovingItem += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.listLayers_MovingItem);
+      this.listLayers.MovingItem += new C64Studio.ArrangedItemList.ItemExchangingEventHandler( this.listLayers_MovingItem );
       this.listLayers.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.listLayers_ItemMoved);
       this.listLayers.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_SelectedIndexChanged);
       // 

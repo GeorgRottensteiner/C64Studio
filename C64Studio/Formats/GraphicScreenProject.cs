@@ -539,10 +539,10 @@ namespace C64Studio.Formats
                       colorValue = 0x01;
                       break;
                     case ColorMappingTarget.BITS_10:
-                      colorValue = 0x10;
+                      colorValue = 0x02;
                       break;
                     case ColorMappingTarget.BITS_11:
-                      colorValue = 0x11;
+                      colorValue = 0x03;
                       break;
                   }
                   int bitmapIndex = x * 8 + y * 8 * BlockWidth + charY;
@@ -590,80 +590,96 @@ namespace C64Studio.Formats
 
 
 
-    private int DetermineBestMapping( List<byte> keys, int x, int y, Dictionary<int, List<ColorMappingTarget>> ForceBitPattern, Dictionary<int, ColorMappingTarget> recommendedPattern, bool[,] ErrornousBlocks )
+    private int DetermineBestMapping( List<byte> keys, int x, int y, Dictionary<int, List<ColorMappingTarget>> ForceBitPattern, Dictionary<int, ColorMappingTarget> RecommendedPattern, bool[,] ErrornousBlocks )
     {
       int   numErrors = 0;
       Dictionary<int,ColorMappingTarget>    potentialMapping = new Dictionary<int, ColorMappingTarget>();
       Dictionary<int,int>                   potentialMappingIndices = new Dictionary<int,int>();
 
-      int                                   currentVariant = 0;
-      int                                   totalVariants = 0;
+      int                                   numForcedPatterns = 0;
 
       foreach ( byte colorIndex in keys )
       {
         if ( ForceBitPattern.ContainsKey( colorIndex ) )
         {
-          totalVariants += ForceBitPattern[colorIndex].Count;
+          ++numForcedPatterns;
+          potentialMappingIndices[colorIndex] = 0;
         }
       }
-
-      while ( currentVariant < totalVariants )
+      // nothing to map?
+      if ( numForcedPatterns == 0 )
       {
-        // build potential mapping
-        potentialMappingIndices.Clear();
+        return numErrors;
+      }
 
-        int     tempIndex = currentVariant;
-        foreach ( var forceMap in ForceBitPattern )
+      bool doneDetermination = false;
+
+      do
+      {
+        // set current variant
+        potentialMapping.Clear();
+        foreach ( var entry in potentialMappingIndices )
         {
-          potentialMapping.Add( forceMap.Key, forceMap.Value[tempIndex % forceMap.Value.Count] );
-          tempIndex -= forceMap.Value.Count;
+          potentialMapping[entry.Key] = ForceBitPattern[entry.Key][entry.Value];
         }
 
-        ++currentVariant;
-      }
-      /*
-      
-          
-
-          for ( int i = 0; i < ForceBitPattern[colorIndex].Count; ++i )
+        // check current variant for overlaps
+        bool    hasDuplicate = false;
+        foreach ( var entry in potentialMapping )
+        {
+          // check if duplicate exists already for this mapping
+          foreach ( var otherEntry in potentialMapping )
           {
-            // check if duplicate exists already for this mapping
-            bool    hasDuplicate = false;
-            if ( ( potentialMapping.ContainsKey( colorIndex ) )
-            &&   ( potentialMapping[colorIndex] != ForceBitPattern[colorIndex][i] ) )
+            if ( otherEntry.Key == entry.Key )
+            {
+              continue;
+            }
+            if ( ( entry.Value == otherEntry.Value )
+            &&   ( entry.Value != ColorMappingTarget.ANY ) )
             {
               hasDuplicate = true;
             }
-            if ( !hasDuplicate )
-            {
-              if ( !potentialMapping.ContainsKey( colorIndex ) )
-              {
-                potentialMapping.Add( colorIndex, ForceBitPattern[colorIndex][i] );
-              }
-            }
-          }
-          
-          potentialMapping.Add( colorIndex, ForceBitPattern[colorIndex][0];
-
-          var  wantedBitPattern = ForceBitPattern[colorIndex];
-          if ( forcedPattern.ContainsValue( wantedBitPattern ) )
-          {
-            // duplicate -> is problem!
-            if ( ( ErrornousBlocks != null )
-            && ( !ErrornousBlocks[x, y] ) )
-            {
-              ErrornousBlocks[x, y] = true;
-              ++numErrors;
-            }
-          }
-          else
-          {
-            recommendedPattern.Add( colorIndex, wantedBitPattern );
-            forcedPattern.Add( wantedBitPattern );
           }
         }
-      }*/
+        if ( !hasDuplicate )
+        {
+          // valid variant!
+          foreach ( var entry in potentialMapping )
+          {
+            if ( entry.Value != ColorMappingTarget.ANY )
+            {
+              RecommendedPattern.Add( entry.Key, entry.Value );
+            }
+          }
+          return 0;
+        }
 
+        // next variant
+        bool    couldUpdate = false;
+        foreach ( var entry in potentialMappingIndices.Keys )
+        {
+          ++potentialMappingIndices[entry];
+          if ( potentialMappingIndices[entry] < ForceBitPattern[entry].Count )
+          {
+            // updated indices, carry on
+            couldUpdate = true;
+            break;
+          }
+          potentialMappingIndices[entry] = 0;
+        }
+        if ( !couldUpdate )
+        {
+          doneDetermination = true;
+        }
+      }
+      while ( !doneDetermination );
+
+      if ( ( ErrornousBlocks != null )
+      &&   ( !ErrornousBlocks[x, y] ) )
+      {
+        ErrornousBlocks[x, y] = true;
+        ++numErrors;
+      }
       return numErrors;
     }
 

@@ -716,14 +716,18 @@
       // listColorMappingTargets
       // 
       this.listColorMappingTargets.AddButtonEnabled = true;
+      this.listColorMappingTargets.DeleteButtonEnabled = false;
       this.listColorMappingTargets.Location = new System.Drawing.Point(206, 16);
       this.listColorMappingTargets.MustHaveOneElement = true;
       this.listColorMappingTargets.Name = "listColorMappingTargets";
       this.listColorMappingTargets.Size = new System.Drawing.Size(207, 247);
       this.listColorMappingTargets.TabIndex = 5;
       this.listColorMappingTargets.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listColorMappingTargets_AddingItem);
+      this.listColorMappingTargets.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemAdded);
       this.listColorMappingTargets.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemRemoved);
+      this.listColorMappingTargets.MovingItem += new C64Studio.ArrangedItemList.ItemExchangingEventHandler(this.listColorMappingTargets_MovingItem);
       this.listColorMappingTargets.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.listColorMappingTargets_ItemMoved);
+      this.listColorMappingTargets.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_SelectedIndexChanged);
       // 
       // comboColorMappingTargets
       // 

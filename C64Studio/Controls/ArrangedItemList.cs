@@ -14,7 +14,7 @@ namespace C64Studio
     public delegate ListViewItem AddingItemEventHandler( object sender );
     public delegate void RemovingItemEventHandler( object sender, ListViewItem Item );
     public delegate void ItemModifiedEventHandler( object sender, ListViewItem Item );
-    public delegate void ItemExchangingEventHandler( object sender, ListViewItem Item1, ListViewItem Item2 );
+    public delegate bool ItemExchangingEventHandler( object sender, ListViewItem Item1, ListViewItem Item2 );
     public delegate void ItemExchangedEventHandler( object sender, ListViewItem Item1, ListViewItem Item2 );
 
 
@@ -22,7 +22,8 @@ namespace C64Studio
     public event RemovingItemEventHandler RemovingItem;
     public event ItemModifiedEventHandler ItemAdded;
     public event ItemModifiedEventHandler ItemRemoved;
-    public event ItemExchangedEventHandler MovingItem;
+    // return true to allow move
+    public event ItemExchangingEventHandler MovingItem;
     public event ItemExchangedEventHandler ItemMoved;
     public event ItemModifiedEventHandler SelectedIndexChanged;
 
@@ -37,7 +38,6 @@ namespace C64Studio
     }
 
 
-
     public bool AddButtonEnabled
     {
       get
@@ -47,6 +47,48 @@ namespace C64Studio
       set
       {
         btnAdd.Enabled = value;
+      }
+    }
+
+
+
+    public bool DeleteButtonEnabled
+    {
+      get
+      {
+        return btnDelete.Enabled;
+      }
+      set
+      {
+        btnDelete.Enabled = value;
+      }
+    }
+
+
+
+    public bool MoveUpButtonEnabled
+    {
+      get
+      {
+        return btnMoveUp.Enabled;
+      }
+      set
+      {
+        btnMoveUp.Enabled = value;
+      }
+    }
+
+
+
+    public bool MoveDownButtonEnabled
+    {
+      get
+      {
+        return btnMoveDown.Enabled;
+      }
+      set
+      {
+        btnMoveDown.Enabled = value;
       }
     }
 
@@ -192,9 +234,14 @@ namespace C64Studio
       ListViewItem  itemToMove = listItems.SelectedItems[0];
       ListViewItem  otherItem = listItems.Items[indexToMove - 1];
 
+      bool    allowMove = true;
       if ( MovingItem != null )
       {
-        MovingItem( this, itemToMove, otherItem );
+        allowMove = MovingItem( this, itemToMove, otherItem );
+      }
+      if ( !allowMove )
+      {
+        return;
       }
 
       listItems.Items.RemoveAt( indexToMove );
@@ -219,9 +266,14 @@ namespace C64Studio
       ListViewItem  itemToMove = listItems.SelectedItems[0];
       ListViewItem  otherItem = listItems.Items[indexToMove + 1];
 
+      bool    allowMove = true;
       if ( MovingItem != null )
       {
-        MovingItem( this, itemToMove, otherItem );
+        allowMove = MovingItem( this, itemToMove, otherItem );
+      }
+      if ( !allowMove )
+      {
+        return;
       }
 
       listItems.Items.RemoveAt( indexToMove );
