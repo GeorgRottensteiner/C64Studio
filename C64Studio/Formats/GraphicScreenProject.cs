@@ -657,7 +657,9 @@ namespace C64Studio.Formats
 
         // next variant
         bool    couldUpdate = false;
-        foreach ( var entry in potentialMappingIndices.Keys )
+        List<int> mappingKeys = new List<int>( potentialMappingIndices.Keys );
+
+        foreach ( var entry in mappingKeys )
         {
           ++potentialMappingIndices[entry];
           if ( potentialMappingIndices[entry] < ForceBitPattern[entry].Count )
@@ -668,7 +670,7 @@ namespace C64Studio.Formats
           }
           potentialMappingIndices[entry] = 0;
         }
-        if ( !couldUpdate )
+        if ( couldUpdate )
         {
           doneDetermination = true;
         }

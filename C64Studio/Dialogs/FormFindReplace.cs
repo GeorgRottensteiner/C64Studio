@@ -666,7 +666,7 @@ namespace C64Studio
       int   virtualStart = Edit.PositionToVirtualPosition( start );
 
       if ( ( virtualStart >= Edit.Text.Length )
-      ||   ( virtualStart + Location.Length >= Edit.Text.Length ) )
+      ||   ( virtualStart + Location.Length > Edit.Text.Length ) )
       {
         return null;
       }
