@@ -576,6 +576,7 @@ namespace C64Studio.Formats
         }
       }
 
+      /*
       Debug.Log( "Used patterns:" );
       foreach ( var entry in usedPatterns )
       {
@@ -584,7 +585,7 @@ namespace C64Studio.Formats
         {
           Debug.Log( " used " + pattern );
         }
-      }
+      }*/
       return numErrors;
     }
 
