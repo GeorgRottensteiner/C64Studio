@@ -29,8 +29,8 @@
     private void InitializeComponent()
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,6 +91,11 @@
       this.comboColorMappingTargets = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
+      this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
+      this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
+      this.label3 = new System.Windows.Forms.Label();
+      this.label4 = new System.Windows.Forms.Label();
+      this.btnExportToBASICData = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -192,6 +197,11 @@
       // 
       // groupExport
       // 
+      this.groupExport.Controls.Add(this.editExportBASICLineOffset);
+      this.groupExport.Controls.Add(this.editExportBASICLineNo);
+      this.groupExport.Controls.Add(this.label3);
+      this.groupExport.Controls.Add(this.label4);
+      this.groupExport.Controls.Add(this.btnExportToBASICData);
       this.groupExport.Controls.Add(this.comboCharScreens);
       this.groupExport.Controls.Add(this.comboExportData);
       this.groupExport.Controls.Add(this.comboExportType);
@@ -329,11 +339,11 @@
       // 
       this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(6, 167);
+      this.editDataExport.Location = new System.Drawing.Point(6, 213);
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 213);
+      this.editDataExport.Size = new System.Drawing.Size(429, 167);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
@@ -495,7 +505,7 @@
       // charEditor
       // 
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage1;
+      this.charEditor.DisplayPage = fastImage3;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(683, 148);
       this.charEditor.Name = "charEditor";
@@ -663,7 +673,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage4;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -718,6 +728,8 @@
       this.listColorMappingTargets.AddButtonEnabled = true;
       this.listColorMappingTargets.DeleteButtonEnabled = false;
       this.listColorMappingTargets.Location = new System.Drawing.Point(206, 16);
+      this.listColorMappingTargets.MoveDownButtonEnabled = false;
+      this.listColorMappingTargets.MoveUpButtonEnabled = false;
       this.listColorMappingTargets.MustHaveOneElement = true;
       this.listColorMappingTargets.Name = "listColorMappingTargets";
       this.listColorMappingTargets.Size = new System.Drawing.Size(207, 247);
@@ -759,6 +771,50 @@
       this.listColorMappingColors.TabIndex = 0;
       this.listColorMappingColors.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listColorMappingColors_DrawItem);
       this.listColorMappingColors.SelectedIndexChanged += new System.EventHandler(this.listColorMappingColors_SelectedIndexChanged);
+      // 
+      // editExportBASICLineOffset
+      // 
+      this.editExportBASICLineOffset.Location = new System.Drawing.Point(355, 166);
+      this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
+      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
+      this.editExportBASICLineOffset.TabIndex = 28;
+      this.editExportBASICLineOffset.Text = "10";
+      // 
+      // editExportBASICLineNo
+      // 
+      this.editExportBASICLineNo.Location = new System.Drawing.Point(184, 166);
+      this.editExportBASICLineNo.Name = "editExportBASICLineNo";
+      this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
+      this.editExportBASICLineNo.TabIndex = 29;
+      this.editExportBASICLineNo.Text = "10";
+      // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(288, 169);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(61, 13);
+      this.label3.TabIndex = 26;
+      this.label3.Text = "Line Offset:";
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(131, 169);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(47, 13);
+      this.label4.TabIndex = 27;
+      this.label4.Text = "Line No:";
+      // 
+      // btnExportToBASICData
+      // 
+      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 164);
+      this.btnExportToBASICData.Name = "btnExportToBASICData";
+      this.btnExportToBASICData.Size = new System.Drawing.Size(120, 23);
+      this.btnExportToBASICData.TabIndex = 25;
+      this.btnExportToBASICData.Text = "Export to BASIC data";
+      this.btnExportToBASICData.UseVisualStyleBackColor = true;
+      this.btnExportToBASICData.Click += new System.EventHandler(this.btnExportToBASICData_Click);
       // 
       // GraphicScreenEditor
       // 
@@ -850,6 +906,11 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.ListBox listColorMappingColors;
     private ArrangedItemList listColorMappingTargets;
+    private System.Windows.Forms.TextBox editExportBASICLineOffset;
+    private System.Windows.Forms.TextBox editExportBASICLineNo;
+    private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.Button btnExportToBASICData;
 
 
 

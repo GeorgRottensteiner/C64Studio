@@ -2894,6 +2894,36 @@ namespace C64Studio
 
 
 
+    private void btnExportCharsetToBASIC_Click( object sender, EventArgs e )
+    {
+      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
+      if ( ( startLine < 0 )
+      ||   ( startLine > 63999 ) )
+      {
+        startLine = 10;
+      }
+      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
+      if ( ( lineOffset < 0 )
+      ||   ( lineOffset > 63999 ) )
+      {
+        startLine = 10;
+      }
+
+      List<int>     exportIndices = ListOfExportIndices();
+
+      GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
+      foreach ( int index in exportIndices )
+      {
+        charSet.Append( m_Charset.Characters[index].Data );
+      }
+
+      string    resultText = Util.ToBASICData( charSet, startLine, lineOffset );
+
+      editDataExport.Text = resultText;
+    }
+
+
+
   }
 }
 

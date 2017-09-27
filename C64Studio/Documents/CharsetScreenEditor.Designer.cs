@@ -39,6 +39,8 @@
       this.closeCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.tabProject = new System.Windows.Forms.TabPage();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.btnDefaultLowerCase = new System.Windows.Forms.Button();
+      this.btnDefaultUppercase = new System.Windows.Forms.Button();
       this.btnImportCharset = new System.Windows.Forms.Button();
       this.btnImportFromFile = new System.Windows.Forms.Button();
       this.groupExport = new System.Windows.Forms.GroupBox();
@@ -97,8 +99,11 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnDefaultLowerCase = new System.Windows.Forms.Button();
-      this.btnDefaultUppercase = new System.Windows.Forms.Button();
+      this.btnExportToBASICData = new System.Windows.Forms.Button();
+      this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
+      this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
+      this.label3 = new System.Windows.Forms.Label();
+      this.label4 = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -178,6 +183,26 @@
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
       // 
+      // btnDefaultLowerCase
+      // 
+      this.btnDefaultLowerCase.Location = new System.Drawing.Point(129, 77);
+      this.btnDefaultLowerCase.Name = "btnDefaultLowerCase";
+      this.btnDefaultLowerCase.Size = new System.Drawing.Size(117, 23);
+      this.btnDefaultLowerCase.TabIndex = 3;
+      this.btnDefaultLowerCase.Text = "Default Lowercase";
+      this.btnDefaultLowerCase.UseVisualStyleBackColor = true;
+      this.btnDefaultLowerCase.Click += new System.EventHandler(this.btnDefaultLowerCase_Click);
+      // 
+      // btnDefaultUppercase
+      // 
+      this.btnDefaultUppercase.Location = new System.Drawing.Point(6, 77);
+      this.btnDefaultUppercase.Name = "btnDefaultUppercase";
+      this.btnDefaultUppercase.Size = new System.Drawing.Size(117, 23);
+      this.btnDefaultUppercase.TabIndex = 4;
+      this.btnDefaultUppercase.Text = "Default Uppercase";
+      this.btnDefaultUppercase.UseVisualStyleBackColor = true;
+      this.btnDefaultUppercase.Click += new System.EventHandler(this.btnDefaultUppercase_Click);
+      // 
       // btnImportCharset
       // 
       this.btnImportCharset.Location = new System.Drawing.Point(6, 48);
@@ -200,6 +225,12 @@
       // 
       // groupExport
       // 
+      this.groupExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+      this.groupExport.Controls.Add(this.editExportBASICLineOffset);
+      this.groupExport.Controls.Add(this.editExportBASICLineNo);
+      this.groupExport.Controls.Add(this.label3);
+      this.groupExport.Controls.Add(this.label4);
       this.groupExport.Controls.Add(this.checkExportHex);
       this.groupExport.Controls.Add(this.comboExportArea);
       this.groupExport.Controls.Add(this.editAreaHeight);
@@ -224,6 +255,7 @@
       this.groupExport.Controls.Add(this.checkExportToDataIncludeRes);
       this.groupExport.Controls.Add(this.btnExportCharset);
       this.groupExport.Controls.Add(this.editDataExport);
+      this.groupExport.Controls.Add(this.btnExportToBASICData);
       this.groupExport.Controls.Add(this.btnExportToBasic);
       this.groupExport.Controls.Add(this.btnExportToFile);
       this.groupExport.Controls.Add(this.btnExportToData);
@@ -451,13 +483,14 @@
       // 
       // editDataExport
       // 
-      this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+      this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(6, 272);
+      this.editDataExport.Location = new System.Drawing.Point(6, 301);
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 183);
+      this.editDataExport.Size = new System.Drawing.Size(429, 154);
       this.editDataExport.TabIndex = 20;
       this.editDataExport.WordWrap = false;
       this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
@@ -816,25 +849,49 @@
       this.tabCharsetEditor.Size = new System.Drawing.Size(964, 501);
       this.tabCharsetEditor.TabIndex = 0;
       // 
-      // btnDefaultLowerCase
+      // btnExportToBASICData
       // 
-      this.btnDefaultLowerCase.Location = new System.Drawing.Point(129, 77);
-      this.btnDefaultLowerCase.Name = "btnDefaultLowerCase";
-      this.btnDefaultLowerCase.Size = new System.Drawing.Size(117, 23);
-      this.btnDefaultLowerCase.TabIndex = 3;
-      this.btnDefaultLowerCase.Text = "Default Lowercase";
-      this.btnDefaultLowerCase.UseVisualStyleBackColor = true;
-      this.btnDefaultLowerCase.Click += new System.EventHandler(this.btnDefaultLowerCase_Click);
+      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 272);
+      this.btnExportToBASICData.Name = "btnExportToBASICData";
+      this.btnExportToBASICData.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToBASICData.TabIndex = 6;
+      this.btnExportToBASICData.Text = "to BASIC data";
+      this.btnExportToBASICData.UseVisualStyleBackColor = true;
+      this.btnExportToBASICData.Click += new System.EventHandler(this.btnExportToBASICData_Click);
       // 
-      // btnDefaultUppercase
+      // editExportBASICLineOffset
       // 
-      this.btnDefaultUppercase.Location = new System.Drawing.Point(6, 77);
-      this.btnDefaultUppercase.Name = "btnDefaultUppercase";
-      this.btnDefaultUppercase.Size = new System.Drawing.Size(117, 23);
-      this.btnDefaultUppercase.TabIndex = 4;
-      this.btnDefaultUppercase.Text = "Default Uppercase";
-      this.btnDefaultUppercase.UseVisualStyleBackColor = true;
-      this.btnDefaultUppercase.Click += new System.EventHandler(this.btnDefaultUppercase_Click);
+      this.editExportBASICLineOffset.Location = new System.Drawing.Point(341, 274);
+      this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
+      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
+      this.editExportBASICLineOffset.TabIndex = 23;
+      this.editExportBASICLineOffset.Text = "10";
+      // 
+      // editExportBASICLineNo
+      // 
+      this.editExportBASICLineNo.Location = new System.Drawing.Point(170, 274);
+      this.editExportBASICLineNo.Name = "editExportBASICLineNo";
+      this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
+      this.editExportBASICLineNo.TabIndex = 24;
+      this.editExportBASICLineNo.Text = "10";
+      // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(274, 277);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(61, 13);
+      this.label3.TabIndex = 21;
+      this.label3.Text = "Line Offset:";
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(117, 277);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(47, 13);
+      this.label4.TabIndex = 22;
+      this.label4.Text = "Line No:";
       // 
       // CharsetScreenEditor
       // 
@@ -930,6 +987,11 @@
     private System.Windows.Forms.Button btnExportCharset;
     private System.Windows.Forms.Button btnDefaultLowerCase;
     private System.Windows.Forms.Button btnDefaultUppercase;
+    private System.Windows.Forms.Button btnExportToBASICData;
+    private System.Windows.Forms.TextBox editExportBASICLineOffset;
+    private System.Windows.Forms.TextBox editExportBASICLineNo;
+    private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.Label label4;
 
 
 

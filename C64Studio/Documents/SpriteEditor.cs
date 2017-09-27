@@ -3353,6 +3353,46 @@ namespace C64Studio
 
 
 
+    private void btnExportToBASICData_Click( object sender, EventArgs e )
+    {
+      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
+      if ( ( startLine < 0 )
+      ||   ( startLine > 63999 ) )
+      {
+        startLine = 10;
+      }
+      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
+      if ( ( lineOffset < 0 )
+      ||   ( lineOffset > 63999 ) )
+      {
+        startLine = 10;
+      }
+
+      var exportIndices = GetExportIndices();
+      if ( exportIndices.Count == 0 )
+      {
+        return;
+      }
+
+
+      GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
+      for ( int i = 0; i < exportIndices.Count; ++i )
+      {
+        exportData.Append( m_SpriteProject.Sprites[exportIndices[i]].Data );
+
+        byte color = (byte)m_SpriteProject.Sprites[exportIndices[i]].Color;
+        if ( m_SpriteProject.Sprites[exportIndices[i]].Multicolor )
+        {
+          color |= 0x80;
+        }
+        exportData.AppendU8( color );
+      }
+
+      editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset );
+    }
+
+
+
 
   }
 }
