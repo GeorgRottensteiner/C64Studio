@@ -2904,17 +2904,23 @@ namespace C64Studio
       }
       var nextChar = m_CurrentEditedTile.Chars[( currentTileCharIndex + 1 ) % m_CurrentEditedTile.Chars.Width, ( currentTileCharIndex + 1 ) / m_CurrentEditedTile.Chars.Width];
 
-      nextChar.Character  = m_CurrentTileChar.Character;
-      nextChar.Color      = m_CurrentTileChar.Color;
+      if ( ( nextChar.Character != m_CurrentTileChar.Character )
+      ||   ( nextChar.Color != m_CurrentTileChar.Color ) )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileModified( this, m_MapProject, m_CurrentEditedTile.Index ) );
 
-      listTileChars.Items[currentTileCharIndex + 1].SubItems[1].Text = nextChar.Character.ToString();
-      listTileChars.Items[currentTileCharIndex + 1].SubItems[2].Text = nextChar.Color.ToString();
-      RedrawTile();
-      RedrawMap();
-      SetModified();
+        nextChar.Character  = m_CurrentTileChar.Character;
+        nextChar.Color      = m_CurrentTileChar.Color;
 
-      listTileChars.SelectedIndices.Clear();
-      listTileChars.SelectedIndices.Add( currentTileCharIndex + 1 );
+        listTileChars.Items[currentTileCharIndex + 1].SubItems[1].Text = nextChar.Character.ToString();
+        listTileChars.Items[currentTileCharIndex + 1].SubItems[2].Text = nextChar.Color.ToString();
+        RedrawTile();
+        RedrawMap();
+        SetModified();
+
+        listTileChars.SelectedIndices.Clear();
+        listTileChars.SelectedIndices.Add( currentTileCharIndex + 1 );
+      }
     }
 
 
@@ -2934,17 +2940,122 @@ namespace C64Studio
       }
       var nextChar = m_CurrentEditedTile.Chars[( currentTileCharIndex + 1 ) % m_CurrentEditedTile.Chars.Width, ( currentTileCharIndex + 1 ) / m_CurrentEditedTile.Chars.Width];
 
-      nextChar.Character = (byte)( m_CurrentTileChar.Character + 1 );
-      nextChar.Color = m_CurrentTileChar.Color;
+      if ( ( nextChar.Character != (byte)( m_CurrentTileChar.Character + 1 ) )
+      ||   ( nextChar.Color != m_CurrentColor ) )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileModified( this, m_MapProject, m_CurrentEditedTile.Index ) );
 
-      listTileChars.Items[currentTileCharIndex + 1].SubItems[1].Text = nextChar.Character.ToString();
-      listTileChars.Items[currentTileCharIndex + 1].SubItems[2].Text = nextChar.Color.ToString();
-      RedrawTile();
-      RedrawMap();
-      SetModified();
+        nextChar.Character  = (byte)( m_CurrentTileChar.Character + 1 );
+        nextChar.Color      = m_CurrentTileChar.Color;
 
-      listTileChars.SelectedIndices.Clear();
-      listTileChars.SelectedIndices.Add( currentTileCharIndex + 1 );
+        listTileChars.Items[currentTileCharIndex + 1].SubItems[1].Text = nextChar.Character.ToString();
+        listTileChars.Items[currentTileCharIndex + 1].SubItems[2].Text = nextChar.Color.ToString();
+        RedrawTile();
+        RedrawMap();
+        SetModified();
+
+        listTileChars.SelectedIndices.Clear();
+        listTileChars.SelectedIndices.Add( currentTileCharIndex + 1 );
+      }
+    }
+
+
+
+    private void pictureTileDisplay_MouseDown( object sender, MouseEventArgs e )
+    {
+      if ( ( e.Button & System.Windows.Forms.MouseButtons.Left ) != 0 )
+      {
+        PaintTileChar( e );
+      }
+      if ( ( e.Button & System.Windows.Forms.MouseButtons.Right ) != 0 )
+      {
+        FetchTileChar( e );
+      }
+    }
+
+
+
+    private void PaintTileChar( MouseEventArgs e )
+    {
+      if ( m_CurrentEditedTile == null )
+      {
+        return;
+      }
+
+      int     tx = e.X / 16;
+      int     ty = e.Y / 16;
+
+      if ( ( tx < 0 )
+      ||   ( tx >= m_CurrentEditedTile.Chars.Width )
+      ||   ( ty < 0 )
+      ||   ( ty >= m_CurrentEditedTile.Chars.Height ) )
+      {
+        return;
+      }
+
+      int     currentTileCharIndex = tx + ty * m_CurrentEditedTile.Chars.Width;
+
+      var curChar = m_CurrentEditedTile.Chars[tx, ty];
+
+      if ( ( curChar.Character != m_CurrentChar )
+      ||   ( curChar.Color != m_CurrentColor ) )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileModified( this, m_MapProject, m_CurrentEditedTile.Index ) );
+
+        curChar.Character = m_CurrentChar;
+        curChar.Color = m_CurrentColor;
+        Modified = true;
+
+        listTileChars.Items[currentTileCharIndex].SubItems[1].Text = curChar.Character.ToString();
+        listTileChars.Items[currentTileCharIndex].SubItems[2].Text = curChar.Color.ToString();
+
+        RedrawTile();
+        pictureTileDisplay.Invalidate();
+      }
+    }
+
+
+
+    private void FetchTileChar( MouseEventArgs e )
+    {
+      if ( m_CurrentEditedTile == null )
+      {
+        return;
+      }
+
+      int     tx = e.X / 16;
+      int     ty = e.Y / 16;
+
+      if ( ( tx < 0 )
+      ||   ( tx >= m_CurrentEditedTile.Chars.Width )
+      ||   ( ty < 0 )
+      ||   ( ty >= m_CurrentEditedTile.Chars.Height ) )
+      {
+        return;
+      }
+
+      int     currentTileCharIndex = tx + ty * m_CurrentEditedTile.Chars.Width;
+
+      if ( ( listTileChars.SelectedIndices.Count == 0 )
+      ||   ( listTileChars.SelectedIndices[0] != currentTileCharIndex ) )
+      {
+        listTileChars.SelectedIndices.Clear();
+        listTileChars.SelectedIndices.Add( currentTileCharIndex );
+      }
+    }
+
+
+
+    private void pictureTileDisplay_MouseMove( object sender, MouseEventArgs e )
+    {
+      if ( ( e.Button & System.Windows.Forms.MouseButtons.Left ) != 0 )
+      {
+        PaintTileChar( e );
+      }
+      if ( ( e.Button & System.Windows.Forms.MouseButtons.Right ) != 0 )
+      {
+        FetchTileChar( e );
+      }
     }
 
 

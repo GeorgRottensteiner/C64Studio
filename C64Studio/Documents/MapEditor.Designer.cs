@@ -98,6 +98,8 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabMapEditor = new System.Windows.Forms.TabControl();
       this.tabTiles = new System.Windows.Forms.TabPage();
+      this.btnCopyTileCharToNextIncreased = new System.Windows.Forms.Button();
+      this.btnSetNextTileChar = new System.Windows.Forms.Button();
       this.comboTileMode = new System.Windows.Forms.ComboBox();
       this.btnMoveTileDown = new System.Windows.Forms.Button();
       this.btnMoveTileUp = new System.Windows.Forms.Button();
@@ -161,8 +163,6 @@
       this.button3 = new System.Windows.Forms.Button();
       this.button4 = new System.Windows.Forms.Button();
       this.button5 = new System.Windows.Forms.Button();
-      this.btnSetNextTileChar = new System.Windows.Forms.Button();
-      this.btnCopyTileCharToNextIncreased = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
@@ -887,6 +887,30 @@
       this.tabTiles.Text = "Tiles";
       this.tabTiles.UseVisualStyleBackColor = true;
       // 
+      // btnCopyTileCharToNextIncreased
+      // 
+      this.btnCopyTileCharToNextIncreased.Enabled = false;
+      this.btnCopyTileCharToNextIncreased.Location = new System.Drawing.Point(273, 247);
+      this.btnCopyTileCharToNextIncreased.Name = "btnCopyTileCharToNextIncreased";
+      this.btnCopyTileCharToNextIncreased.Size = new System.Drawing.Size(75, 23);
+      this.btnCopyTileCharToNextIncreased.TabIndex = 28;
+      this.btnCopyTileCharToNextIncreased.Text = "Copy inc\'ed";
+      this.toolTip1.SetToolTip(this.btnCopyTileCharToNextIncreased, "Copy char+1/color to next slot");
+      this.btnCopyTileCharToNextIncreased.UseVisualStyleBackColor = true;
+      this.btnCopyTileCharToNextIncreased.Click += new System.EventHandler(this.btnCopyTileCharToNextIncreased_Click);
+      // 
+      // btnSetNextTileChar
+      // 
+      this.btnSetNextTileChar.Enabled = false;
+      this.btnSetNextTileChar.Location = new System.Drawing.Point(192, 247);
+      this.btnSetNextTileChar.Name = "btnSetNextTileChar";
+      this.btnSetNextTileChar.Size = new System.Drawing.Size(75, 23);
+      this.btnSetNextTileChar.TabIndex = 28;
+      this.btnSetNextTileChar.Text = "Copy to next";
+      this.toolTip1.SetToolTip(this.btnSetNextTileChar, "Copy char/color to next slot");
+      this.btnSetNextTileChar.UseVisualStyleBackColor = true;
+      this.btnSetNextTileChar.Click += new System.EventHandler(this.btnSetNextTileChar_Click);
+      // 
       // comboTileMode
       // 
       this.comboTileMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -1207,6 +1231,8 @@
       this.pictureTileDisplay.Size = new System.Drawing.Size(286, 286);
       this.pictureTileDisplay.TabIndex = 0;
       this.pictureTileDisplay.TabStop = false;
+      this.pictureTileDisplay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureTileDisplay_MouseDown);
+      this.pictureTileDisplay.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureTileDisplay_MouseMove);
       // 
       // tabPage1
       // 
@@ -1543,30 +1569,6 @@
       this.button5.TabIndex = 2;
       this.button5.Text = "as assembly source";
       this.button5.UseVisualStyleBackColor = true;
-      // 
-      // btnSetNextTileChar
-      // 
-      this.btnSetNextTileChar.Enabled = false;
-      this.btnSetNextTileChar.Location = new System.Drawing.Point(192, 247);
-      this.btnSetNextTileChar.Name = "btnSetNextTileChar";
-      this.btnSetNextTileChar.Size = new System.Drawing.Size(75, 23);
-      this.btnSetNextTileChar.TabIndex = 28;
-      this.btnSetNextTileChar.Text = "Copy to next";
-      this.toolTip1.SetToolTip(this.btnSetNextTileChar, "Copy char/color to next slot");
-      this.btnSetNextTileChar.UseVisualStyleBackColor = true;
-      this.btnSetNextTileChar.Click += new System.EventHandler(this.btnSetNextTileChar_Click);
-      // 
-      // btnCopyTileCharToNextIncreased
-      // 
-      this.btnCopyTileCharToNextIncreased.Enabled = false;
-      this.btnCopyTileCharToNextIncreased.Location = new System.Drawing.Point(273, 247);
-      this.btnCopyTileCharToNextIncreased.Name = "btnCopyTileCharToNextIncreased";
-      this.btnCopyTileCharToNextIncreased.Size = new System.Drawing.Size(75, 23);
-      this.btnCopyTileCharToNextIncreased.TabIndex = 28;
-      this.btnCopyTileCharToNextIncreased.Text = "Copy inc\'ed";
-      this.toolTip1.SetToolTip(this.btnCopyTileCharToNextIncreased, "Copy char+1/color to next slot");
-      this.btnCopyTileCharToNextIncreased.UseVisualStyleBackColor = true;
-      this.btnCopyTileCharToNextIncreased.Click += new System.EventHandler(this.btnCopyTileCharToNextIncreased_Click);
       // 
       // MapEditor
       // 
