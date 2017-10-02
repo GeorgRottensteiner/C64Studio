@@ -458,9 +458,18 @@ namespace C64Studio
     {
       m_LastChange = DateTime.Now;
 
-      //FastColoredTextBoxNS.Range range = new FastColoredTextBoxNS.Range( editSource, e.ChangedRange.Start, new FastColoredTextBoxNS.Place( 0, 0 ) );
+      // only reset style in active line to keep speed up
+      if ( e.ChangedRange.Start.iLine == e.ChangedRange.End.iLine )
+      {
+        ResetAllStyles( e.ChangedRange );
+      }
+      else
+      {
+        // reset only affected line
+        ResetAllStyles( editSource.GetLine( e.ChangedRange.Start.iLine ) );
+      }
 
-      //ShowAutoComplete();
+      ResetAllStyles( e.ChangedRange );
 
       if ( UndoPossible )
       {
