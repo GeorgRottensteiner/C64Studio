@@ -166,63 +166,7 @@ namespace C64Studio.Tasks
           break;
       }
 
-      /*
-      CompilerProcess = new System.Diagnostics.Process();
-      CompilerProcess.StartInfo.FileName = tool.Filename;
-      CompilerProcess.StartInfo.WorkingDirectory = FillParameters( tool.WorkPath, baseDoc );
-      CompilerProcess.StartInfo.CreateNoWindow = true;
-      CompilerProcess.EnableRaisingEvents = true;
-      CompilerProcess.StartInfo.Arguments = "";
-      if ( AppState == State.COMPILE_AND_DEBUG )
-      {
-        CompilerProcess.StartInfo.Arguments += FillParameters( tool.DebugArguments, baseDoc );
-      }
-      CompilerProcess.StartInfo.Arguments += " " + FillParameters( tool.Arguments, baseDoc );
-      CompilerProcess.StartInfo.UseShellExecute = false;
-      CompilerProcess.StartInfo.RedirectStandardError = true;
-      CompilerProcess.StartInfo.RedirectStandardOutput = true;
-      CompilerProcess.StartInfo.RedirectStandardInput = true;
-      CompilerProcess.Exited += new EventHandler( compilerProcess_Exited );
-
-      CompilerProcess.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler( compilerProcess_OutputDataReceived );
-      CompilerProcess.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler( compilerProcess_OutputDataReceived );
-
-      try
-      {
-        SetGUIForWaitOnExternalTool( true );
-        CompilerProcess.Start();
-
-        CompilerProcess.BeginOutputReadLine();
-        CompilerProcess.BeginErrorReadLine();
-
-        System.IO.StreamWriter writer = CompilerProcess.StandardInput;
-
-        writer.Write( baseDoc.GetContent() );
-        writer.Close();
-      }
-      catch ( Win32Exception ex )
-      {
-        CompilerProcess.Close();
-        AddToOutput( ex.Message );
-        SetGUIForWaitOnExternalTool( false );
-        return false;
-      }
-       */
       return true;
-
-      /*
-      Types.BuildInfo buildInfo;
-      Types.ASM.FileInfo fileInfo;
-
-      if ( !BuildElement( m_Document, m_Configuration, m_AdditionalDefines, out buildInfo, out fileInfo ) )
-      {
-        Core.SetStatus( "Build failed" );
-        return false;
-      }
-      Core.Compiling.m_LastBuildInfo  = buildInfo;
-      Core.Compiling.m_BuildIsCurrent = true;
-      Main.OnBuildFinished( m_Document, m_ActiveDocumentAtStart );
-      return true;*/
     }
 
 
@@ -495,7 +439,7 @@ namespace C64Studio.Tasks
         }
 
         if ( ( configSetting != null )
-        && ( configSetting.PostBuildChain.Active ) )
+        &&   ( configSetting.PostBuildChain.Active ) )
         {
           if ( !BuildChain( configSetting.PostBuildChain, "post build chain", OutputMessages ) )
           {
@@ -505,7 +449,7 @@ namespace C64Studio.Tasks
 
 
         if ( ( configSetting != null )
-        && ( !string.IsNullOrEmpty( configSetting.PostBuild ) ) )
+        &&   ( !string.IsNullOrEmpty( configSetting.PostBuild ) ) )
         {
           Core.ShowDocument( Core.MainForm.m_Output );
           Core.AddToOutput( "Running post build step on " + Doc.Element.Name + System.Environment.NewLine );

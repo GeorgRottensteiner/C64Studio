@@ -137,7 +137,8 @@ namespace C64Studio
       }
       if ( !Doc.Visible )
       {
-        Doc.Show();
+        //Doc.Show();
+        Doc.Activate();
       }
       if ( Doc.Pane != null )
       {
