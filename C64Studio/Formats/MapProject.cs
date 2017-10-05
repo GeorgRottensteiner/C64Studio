@@ -612,6 +612,55 @@ namespace C64Studio.Formats
 
 
 
+    public bool ExportTileDataAsAssembly( out string TileData, string LabelPrefix, bool WrapData, int WrapByteCount, string DataByteDirective )
+    {
+      var sbTileChars = new StringBuilder();
+      var sbTileColors = new StringBuilder();
+
+      int tileIndex = 0;
+      foreach ( var tile in Tiles )
+      {
+        sbTileChars.Append( LabelPrefix );
+        sbTileChars.Append( '_' );
+        sbTileChars.Append( tileIndex );
+        sbTileChars.AppendLine( "_CHARS" );
+        sbTileChars.Append( DataByteDirective );
+        sbTileChars.Append( ' ' );
+
+        sbTileColors.Append( LabelPrefix );
+        sbTileColors.Append( '_' );
+        sbTileColors.Append( tileIndex );
+        sbTileColors.AppendLine( "_COLORS" );
+        sbTileColors.Append( DataByteDirective );
+        sbTileColors.Append( ' ' );
+        for ( int j = 0; j < tile.Chars.Height; ++j )
+        {
+          for ( int i = 0; i < tile.Chars.Width; ++i )
+          {
+            sbTileChars.Append( "$" );
+            sbTileChars.Append( tile.Chars[i, j].Character.ToString( "X2" ) );
+            sbTileColors.Append( "$" );
+            sbTileColors.Append( tile.Chars[i, j].Color.ToString( "X2" ) );
+
+            if ( ( i + 1 < tile.Chars.Width )
+            ||   ( j + 1 < tile.Chars.Height ) )
+            {
+              sbTileChars.Append( ',' );
+              sbTileColors.Append( ',' );
+            }
+          }
+        }
+        sbTileChars.AppendLine();
+        sbTileColors.AppendLine();
+        ++tileIndex;
+      }
+
+      TileData = sbTileChars.ToString() + sbTileColors.ToString();
+      return true;
+    }
+
+
+
     public bool ExportMapsAsAssembly( bool Vertical, out string MapData, string LabelPrefix, bool WrapData, int WrapByteCount, string DataByteDirective )
     {
       bool hasExtraData = false;

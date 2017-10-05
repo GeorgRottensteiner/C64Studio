@@ -3364,17 +3364,18 @@ namespace C64Studio.Parser
         // maptile
         if ( paramTokens.Count > 4 )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <Map|Tile|MapTile|TileElements>[,<Index>[,<Count>]]" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <Map|Tile|MapTile|TileElements|TileData>[,<Index>[,<Count>]]" );
           return false;
         }
         if ( ( method != "TILE" )
+        &&   ( method != "TILEDATA" )
         &&   ( method != "MAP" )
         &&   ( method != "MAPVERTICAL" )
         &&   ( method != "TILEELEMENTS" )
         &&   ( method != "MAPTILE" )
         &&   ( method != "MAPVERTICALTILE" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are MAP, MAPVERTICAL, TILE, TILEELEMENTS, MAPTILE, MAPVERTICALTILE" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are MAP, MAPVERTICAL, TILE, TILEDATA, TILEELEMENTS, MAPTILE, MAPVERTICALTILE" );
           return false;
         }
 
@@ -3417,6 +3418,10 @@ namespace C64Studio.Parser
         else if ( method == "TILE" )
         {
           map.ExportTilesAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.MacroType.BYTE ) );
+        }
+        else if ( method == "TILEDATA" )
+        {
+          map.ExportTileDataAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.MacroType.BYTE ) );
         }
         else if ( method == "MAPTILE" )
         {
