@@ -1089,6 +1089,7 @@ namespace C64Studio.Parser
 
       int     fileStartAddress = -1;
 
+      AssembledOutput = new AssemblyOutput();
       AssembledOutput.Assembly = result;
       if ( Config.TargetType == Types.CompileTargetType.T64 )
       {
