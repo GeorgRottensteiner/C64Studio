@@ -275,72 +275,58 @@ namespace C64Studio.Parser
       AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-£}", 168 );
       AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-*}", 127 );
 
-      AddActionToken( TokenValue.BLACK, "{Black}", 144 );
       AddActionToken( TokenValue.BLACK, "{black}", 144 );
       AddActionToken( TokenValue.BLACK, "{blk}", 144 );
-      AddActionToken( TokenValue.WHITE, "{White}", 5 );
       AddActionToken( TokenValue.WHITE, "{white}", 5 );
       AddActionToken( TokenValue.WHITE, "{wht}", 5 );
-      AddActionToken( TokenValue.RED, "{Red}", 28 );
       AddActionToken( TokenValue.RED, "{red}", 28 );
-      AddActionToken( TokenValue.CYAN, "{Cyn}", 159 );
       AddActionToken( TokenValue.CYAN, "{cyn}", 159 );
-      AddActionToken( TokenValue.PURPLE, "{Purple}", 156 );
       AddActionToken( TokenValue.PURPLE, "{purple}", 156 );
       AddActionToken( TokenValue.PURPLE, "{pur}", 156 );
-      AddActionToken( TokenValue.GREEN, "{Green}", 30 );
       AddActionToken( TokenValue.GREEN, "{green}", 30 );
       AddActionToken( TokenValue.GREEN, "{grn}", 30 );
-      AddActionToken( TokenValue.BLUE, "{Blue}", 31 );
       AddActionToken( TokenValue.BLUE, "{blue}", 31 );
       AddActionToken( TokenValue.BLUE, "{blu}", 31 );
-      AddActionToken( TokenValue.YELLOW, "{Yellow}", 158 );
       AddActionToken( TokenValue.YELLOW, "{yellow}", 158 );
       AddActionToken( TokenValue.YELLOW, "{yel}", 158 );
-      AddActionToken( TokenValue.ORANGE, "{Orange}", 129 );
       AddActionToken( TokenValue.ORANGE, "{orange}", 129 );
       AddActionToken( TokenValue.ORANGE, "{orng}", 129 );
-      AddActionToken( TokenValue.BROWN, "{Brown}", 149 );
       AddActionToken( TokenValue.BROWN, "{brown}", 149 );
       AddActionToken( TokenValue.BROWN, "{brn}", 149 );
-      AddActionToken( TokenValue.LIGHT_RED, "{Light Red}", 150 );
       AddActionToken( TokenValue.LIGHT_RED, "{light red}", 150 );
       AddActionToken( TokenValue.LIGHT_RED, "{lred}", 150 );
-      AddActionToken( TokenValue.DARK_GREY, "{Dark Grey}", 151 );
+      AddActionToken( TokenValue.DARK_GREY, "{dark gray}", 151 );
       AddActionToken( TokenValue.DARK_GREY, "{dark grey}", 151 );
       AddActionToken( TokenValue.DARK_GREY, "{gry1}", 151 );
-      AddActionToken( TokenValue.GREY, "{Grey}", 152 );
+      AddActionToken( TokenValue.GREY, "{gray}", 152 );
       AddActionToken( TokenValue.GREY, "{grey}", 152 );
       AddActionToken( TokenValue.GREY, "{gry2}", 152 );
-      AddActionToken( TokenValue.LIGHT_GREEN, "{Light Green}", 153 );
       AddActionToken( TokenValue.LIGHT_GREEN, "{light green}", 153 );
       AddActionToken( TokenValue.LIGHT_GREEN, "{lgrn}", 153 );
-      AddActionToken( TokenValue.LIGHT_BLUE, "{Light Blue}", 154 );
       AddActionToken( TokenValue.LIGHT_BLUE, "{light blue}", 154 );
       AddActionToken( TokenValue.LIGHT_BLUE, "{lblu}", 154 );
-      AddActionToken( TokenValue.LIGHT_GREY, "{Light Grey}", 155 );
+      AddActionToken( TokenValue.LIGHT_GREY, "{light gray}", 155 );
       AddActionToken( TokenValue.LIGHT_GREY, "{light grey}", 155 );
       AddActionToken( TokenValue.LIGHT_GREY, "{gry3}", 155 );
-      AddActionToken( TokenValue.REVERSE_ON, "{Reverse On}", 18 );
+      AddActionToken( TokenValue.REVERSE_ON, "{reverse on}", 18 );
       AddActionToken( TokenValue.REVERSE_ON, "{rvson}", 18 );
       AddActionToken( TokenValue.REVERSE_ON, "{rvon}", 18 );
-      AddActionToken( TokenValue.REVERSE_OFF, "{Reverse Off}", 146 );
+      AddActionToken( TokenValue.REVERSE_OFF, "{reverse off}", 146 );
       AddActionToken( TokenValue.REVERSE_OFF, "{rvsoff}", 146 );
       AddActionToken( TokenValue.REVERSE_OFF, "{rvof}", 146 );
-      AddActionToken( TokenValue.CURSOR_DOWN, "{Cursor Down}", 17 );
+      AddActionToken( TokenValue.CURSOR_DOWN, "{cursor down}", 17 );
       AddActionToken( TokenValue.CURSOR_DOWN, "{down}", 17 );
-      AddActionToken( TokenValue.CURSOR_UP, "{Cursor Up}", 145 );
+      AddActionToken( TokenValue.CURSOR_UP, "{cursor up}", 145 );
       AddActionToken( TokenValue.CURSOR_UP, "{up}", 145 );
-      AddActionToken( TokenValue.CURSOR_LEFT, "{Cursor Left}", 157 );
+      AddActionToken( TokenValue.CURSOR_LEFT, "{cursor left}", 157 );
       AddActionToken( TokenValue.CURSOR_LEFT, "{left}", 157 );
-      AddActionToken( TokenValue.CURSOR_RIGHT, "{Cursor Right}", 29 );
+      AddActionToken( TokenValue.CURSOR_RIGHT, "{cursor right}", 29 );
       AddActionToken( TokenValue.CURSOR_RIGHT, "{rght}", 29 );
       AddActionToken( TokenValue.CURSOR_RIGHT, "{right}", 29 );
-      AddActionToken( TokenValue.DELETE, "{Del}", 20 );
-      AddActionToken( TokenValue.INSERT, "{Insert}", 148 );
-      AddActionToken( TokenValue.CLEAR, "{Clr}", 147 );
+      AddActionToken( TokenValue.DELETE, "{del}", 20 );
+      AddActionToken( TokenValue.INSERT, "{insert}", 148 );
+      AddActionToken( TokenValue.INSERT, "{ins}", 148 );
       AddActionToken( TokenValue.CLEAR, "{clr}", 147 );
-      AddActionToken( TokenValue.HOME, "{Home}", 19 );
       AddActionToken( TokenValue.HOME, "{home}", 19 );
       AddActionToken( TokenValue.F1, "{F1}", 133 );
       AddActionToken( TokenValue.F3, "{F3}", 134 );
@@ -596,18 +582,16 @@ namespace C64Studio.Parser
         }
         if ( !foundMacro )
         {
-          AddError( LineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unknown macro " + macro );
+          byte  petsciiValue = 0;
+          if ( byte.TryParse( macro, out petsciiValue ) )
+          {
+            result += (char)petsciiValue;
+          }
+          else
+          {
+            AddError( LineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unknown macro " + macro );
+          }
         }
-        /*
-        if ( ActionTokens.ContainsKey( macro.ToUpper() ) )
-        {
-          result += (char)ActionTokens[macro].ByteValue;
-          //info.LineData.AppendU8( (byte)ActionTokens[token].ByteValue );
-        }
-        else
-        {
-          AddError( LineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unknown macro " + macro );
-        }*/
         lastStartPos = bracketEndPos + 1;
         bracketStartPos = Line.IndexOf( '{', bracketEndPos );
       }
@@ -748,17 +732,16 @@ namespace C64Studio.Parser
               }
               if ( !foundMacro )
               {
-                AddError( lineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unknown macro " + macro );
+                byte  petsciiValue = 0;
+                if ( byte.TryParse( macro, out petsciiValue ) )
+                {
+                  tempData.AppendU8( petsciiValue );
+                }
+                else
+                {
+                  AddError( lineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unknown macro " + macro );
+                }
               }
-              /*
-              if ( ActionTokens.ContainsKey( macro ) )
-              {
-                tempData.AppendU8( (byte)ActionTokens[macro].ByteValue );
-              }
-              else
-              {
-                AddError( lineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Unknown macro " + macro );
-              }*/
             } 
             ++posInLine;
             continue;
@@ -1660,21 +1643,6 @@ namespace C64Studio.Parser
             {
               Debug.Log( "Unknown byte value " + byteValue );
             }
-
-            /*
-            if ( Types.ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
-            {
-              char charToUse = Types.ConstantData.PETSCIIToUnicode[byteValue];
-              lineContent += charToUse;
-            }
-            else if ( ActionTokenByByteValue.ContainsKey( byteValue ) )
-            {
-              lineContent += ActionTokenByByteValue[byteValue].Replacement; 
-            }
-            else
-            {
-              Debug.Log( "Unknown byte value " + byteValue );
-            }*/
           }
           else
           {
