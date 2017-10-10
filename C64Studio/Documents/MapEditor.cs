@@ -1019,12 +1019,11 @@ namespace C64Studio
       comboTileMulticolor2.SelectedIndex = m_MapProject.MultiColor2;
       comboTileBGColor4.SelectedIndex = m_MapProject.BGColor4;
       comboTileMode.SelectedIndex = (int)m_MapProject.Mode;
-      /*
-      if ( importedCharSet.Length != 0 )
+
+      for ( int i = 0; i < 256; ++i )
       {
-        OpenExternalCharset( m_Project.FullPath( importedCharSet ) );
-        m_MapProject.ExternalCharset = importedCharSet;
-      }*/
+        RebuildCharImage( i );
+      }
       RedrawMap();
       RedrawColorChooser();
       Modified = false;
