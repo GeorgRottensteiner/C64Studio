@@ -1108,6 +1108,10 @@ namespace C64Studio
     {
       for ( int i = 0; i < 256; ++i )
       {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetCharChange( this, m_Charset, i ), i == 0 );
+      }
+      for ( int i = 0; i < 256; ++i )
+      {
         for ( int j = 0; j < 8; ++j )
         {
           m_Charset.Characters[i].Data.SetU8At( j, Types.ConstantData.UpperCaseCharset.ByteAt( i * 8 + j ) );
@@ -1125,6 +1129,10 @@ namespace C64Studio
 
     private void btnDefaultLowercase_Click( object sender, EventArgs e )
     {
+      for ( int i = 0; i < 256; ++i )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetCharChange( this, m_Charset, i ), i == 0 );
+      }
       for ( int i = 0; i < 256; ++i )
       {
         for ( int j = 0; j < 8; ++j )
