@@ -1084,7 +1084,7 @@ namespace C64Studio
       ded.Registers.PC = GR.Convert.ToU16( registerValues[0].Substring( 2 ), 16 );
       ded.Registers.RasterLine = GR.Convert.ToU16( registerValues[8] );
       ded.Registers.Cycles = GR.Convert.ToI32( registerValues[9] );
-      ded.Registers.ProcessorPort01 = GR.Convert.ToU8( registerValues[6] );
+      ded.Registers.ProcessorPort01 = GR.Convert.ToU8( registerValues[6], 16 );
 
       CurrentRegisterValues = ded.Registers;
 

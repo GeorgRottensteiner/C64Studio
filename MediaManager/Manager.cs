@@ -19,6 +19,7 @@ namespace MediaManager
         System.Console.WriteLine( "  [-export <file name>]" );
         System.Console.WriteLine( "  [-rename <file name>]" );
         System.Console.WriteLine( "  [-renameto <file name>]" );
+        System.Console.WriteLine( "  [-delete <file name>]" );
         System.Console.WriteLine( "  [-listfiles]" );
         System.Console.WriteLine( "" );
         System.Console.WriteLine( "load address can be given as decimal, hexadecimal (prefix $ or 0x). If load address is given it is prepended to the import file data." );
@@ -43,6 +44,7 @@ namespace MediaManager
         else if ( ( args[i].ToUpper() == "-D64" )
         ||        ( args[i].ToUpper() == "-T64" )
         ||        ( args[i].ToUpper() == "-IMPORT" )
+        ||        ( args[i].ToUpper() == "-DELETE" )
         ||        ( args[i].ToUpper() == "-RENAME" )
         ||        ( args[i].ToUpper() == "-RENAMETO" )
         ||        ( args[i].ToUpper() == "-EXPORT" ) )
@@ -52,6 +54,7 @@ namespace MediaManager
 
           if ( ( expectingParameterName == "-IMPORT" )
           ||   ( expectingParameterName == "-EXPORT" )
+          ||   ( expectingParameterName == "-DELETE" )
           ||   ( expectingParameterName == "-RENAME" ) )
           {
             methodToUse = expectingParameterName;
@@ -117,7 +120,6 @@ namespace MediaManager
       else if ( methodToUse == "-EXPORT" )
       {
         C64Studio.Types.FileInfo fileInfo = medium.LoadFile( C64Studio.Util.ToFilename( paramMap["-EXPORT"] ) );
-
         if ( fileInfo != null )
         {
           string outputFilename = paramMap["-EXPORT"];
@@ -131,6 +133,26 @@ namespace MediaManager
         else
         {
           System.Console.Error.WriteLine( "File " + paramMap["-EXPORT"] + " not found in medium" );
+        }
+      }
+      else if ( methodToUse == "-DELETE" )
+      {
+        C64Studio.Types.FileInfo fileInfo = medium.LoadFile( C64Studio.Util.ToFilename( paramMap["-DELETE"] ) );
+        if ( fileInfo != null )
+        {
+          if ( !medium.DeleteFile( C64Studio.Util.ToFilename( paramMap["-DELETE"] ) ) )
+          {
+            System.Console.Error.WriteLine( "File could not be deleted: " + medium.LastError );
+          }
+          else
+          {
+            System.Console.WriteLine( "File deleted" );
+            medium.Save( mediumFilename );
+          }
+        }
+        else
+        {
+          System.Console.Error.WriteLine( "File " + paramMap["-DELETE"] + " not found in medium" );
         }
       }
       else if ( methodToUse == "-IMPORT" )
