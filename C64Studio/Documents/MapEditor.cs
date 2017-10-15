@@ -1620,12 +1620,12 @@ namespace C64Studio
 
       if ( exportType == ExportType.TILE_DATA_AS_ELEMENTS )
       {
-        m_MapProject.ExportTilesAsElements( out tileData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), editPrefix.Text );
+        m_MapProject.ExportTilesAsElements( out tileData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
       }
       if ( ( exportType == ExportType.TILE_DATA )
       ||   ( exportType == ExportType.TILE_AND_MAP_DATA ) )
       {
-        m_MapProject.ExportTilesAsAssembly( out tileData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), editPrefix.Text );
+        m_MapProject.ExportTilesAsAssembly( out tileData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
       }
       if ( exportType == ExportType.MAP_DATA_SELECTION )
       {
@@ -1641,12 +1641,12 @@ namespace C64Studio
             }
           }
         }
-        mapData = Util.ToASMData( selectionData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), editPrefix.Text );
+        mapData = Util.ToASMData( selectionData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
       }
       if ( ( exportType == ExportType.MAP_DATA )
       ||   ( exportType == ExportType.TILE_AND_MAP_DATA ) )
       {
-        m_MapProject.ExportMapsAsAssembly( false, out mapData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), editPrefix.Text );
+        m_MapProject.ExportMapsAsAssembly( false, out mapData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
       }
 
 
