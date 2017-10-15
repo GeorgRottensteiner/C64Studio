@@ -219,8 +219,17 @@ namespace C64Studio
 
       string      lines = "";
       int         numChars = 0;
-      int         curLineNumber = 0;
+      int         lineDelta = GR.Convert.ToI32( editToBASICLineDelta.Text );
+      if ( lineDelta <= 0 )
+      {
+        lineDelta = 1;
+      }
 
+      int         curLineNumber = GR.Convert.ToI32( editToBASICStartLine.Text );
+      if ( curLineNumber < 0 )
+      {
+        curLineNumber = 0;
+      }
 
       for ( uint i = 0; i < data.Length; ++i )
       {
@@ -228,12 +237,13 @@ namespace C64Studio
 
         if ( numChars == 0 )
         {
-          curLineNumber += 10;
           lines += curLineNumber.ToString() + "DATA";
           numChars += 4 + curLineNumber.ToString().Length;
 
           lines += data.ByteAt( (int)i ).ToString();
           numChars += neededChars;
+
+          curLineNumber += lineDelta;
           continue;
         }
         
