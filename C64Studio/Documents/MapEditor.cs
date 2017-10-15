@@ -1629,19 +1629,35 @@ namespace C64Studio
       }
       if ( exportType == ExportType.MAP_DATA_SELECTION )
       {
-        GR.Memory.ByteBuffer      selectionData = new GR.Memory.ByteBuffer();
-
-        for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+        if ( m_CurrentMap != null )
         {
-          for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+          GR.Memory.ByteBuffer      selectionData = new GR.Memory.ByteBuffer();
+          bool                      hasSelection = false;
+
+          for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
           {
-            if ( m_SelectedTiles[i, j] )
+            for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
             {
-              selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+              if ( m_SelectedTiles[i, j] )
+              {
+                selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                hasSelection = true;
+              }
             }
           }
+          if ( !hasSelection )
+          {
+            // select all
+            for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+            {
+              for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+              {
+                selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+              }
+            }
+          }
+          mapData = Util.ToASMData( selectionData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
         }
-        mapData = Util.ToASMData( selectionData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
       }
       if ( ( exportType == ExportType.MAP_DATA )
       ||   ( exportType == ExportType.TILE_AND_MAP_DATA ) )
