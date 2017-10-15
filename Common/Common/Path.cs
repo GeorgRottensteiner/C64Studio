@@ -436,6 +436,16 @@ namespace GR
 
     public static bool IsPathEqual( string Path1, string Path2, string Separators )
     {
+      if ( ( string.IsNullOrEmpty( Path1 ) )
+      &&   ( string.IsNullOrEmpty( Path2 ) ) )
+      {
+        return true;
+      }
+      if ( ( string.IsNullOrEmpty( Path1 ) )
+      ||   ( string.IsNullOrEmpty( Path2 ) ) )
+      {
+        return false;
+      }
       if ( Path2.Length > Path1.Length )
       {
         return ( CommonPrefix( Path1, Path2, Separators ).Length == Path2.Length );

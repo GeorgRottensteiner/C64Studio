@@ -603,6 +603,22 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestOpcodeRelativeInsideZeroPage()
+    {
+      string      source = @"    * = $02
+                              lsmf
+
+                              lda #1
+                              bne lsmf";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0200A901D0FC", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestBracesNotOnLineStart()
     {
       string      source = "    * = $c000\r\n!if 1 {\r\n!byte $17\r\n}\r\n\r\n    !if 2{\r\n    !byte $18\r\n    }";

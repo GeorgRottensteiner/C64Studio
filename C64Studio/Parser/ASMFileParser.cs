@@ -9380,8 +9380,12 @@ namespace C64Studio.Parser
         else
         {
           if ( numBytesFirstParam == 1 )
-          { 
-            addressing = Tiny64.Opcode.AddressingType.ZEROPAGE;
+          {
+            // don't map relatiev to zeropage, even inside zero page
+            if ( addressing != Opcode.AddressingType.RELATIVE )
+            {
+              addressing = Tiny64.Opcode.AddressingType.ZEROPAGE;
+            }
           }
           else if ( numBytesFirstParam == 2 )
           {
