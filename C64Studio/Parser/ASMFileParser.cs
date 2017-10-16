@@ -616,6 +616,19 @@ namespace C64Studio.Parser
           }
         }
       }
+      else if ( Value.StartsWith( "#" ) )
+      {
+        try
+        {
+          Result = System.Convert.ToInt32( Value.Substring( 1 ), 2 );
+          NumGivenBytes = ( Value.Length - 1 + 7 ) / 8;
+          return true;
+        }
+        catch ( Exception )
+        {
+          return false;
+        }
+      }
       else if ( Value.StartsWith( "'" ) )
       {
         if ( !Value.EndsWith( "'" ) )
@@ -690,25 +703,29 @@ namespace C64Studio.Parser
 
 
 
-    public bool ParseValue( int LineIndex, string Value, out int Result )
+    public bool ParseValue( int LineIndex, string Value, out int Result, out ErrorInfo Error )
     {
       int  numDigits = 0;
-      return ParseValue( LineIndex, Value, out Result, out numDigits );
+      Error = null;
+      return ParseValue( LineIndex, Value, out Result, out numDigits, out Error );
     }
 
 
 
-    public bool ParseValue( int LineIndex, string Value, out int Result, out int NumGivenBytes )
+    public bool ParseValue( int LineIndex, string Value, out int Result, out int NumGivenBytes, out ErrorInfo ErrorInfo )
     {
-      Result          = -1;
+      Result        = -1;
       NumGivenBytes = 0;
-      bool failed = false;
+      ErrorInfo     = null;
+      bool failed   = false;
+
       if ( ParseLiteralValue( Value, out failed, out Result, out NumGivenBytes ) )
       {
         return true;
       }
       if ( failed )
       {
+        ErrorInfo = new ErrorInfo( LineIndex, 0, Value.Length, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
         return false;
       }
 
@@ -731,6 +748,7 @@ namespace C64Studio.Parser
         {
           ASMFileInfo.UnparsedLabels[Value].Used = true;
         }
+        ErrorInfo = new ErrorInfo( LineIndex, 0, Value.Length, Types.ErrorCode.E1010_UNKNOWN_LABEL );
         return false;
       }
 
@@ -757,104 +775,110 @@ namespace C64Studio.Parser
 
 
 
-    private bool EvaluateLabel( int LineIndex, string LabelContent, out int Result )
+    private bool EvaluateLabel( int LineIndex, string LabelContent, out int Result, out ErrorInfo Error )
     {
-      int errorPos = -1;
-      List<Types.TokenInfo>  tokens = ParseTokenInfo( LabelContent, 0, LabelContent.Length, out errorPos );
+      Error = null;
 
-      if ( errorPos != -1 )
+      List<Types.TokenInfo>  tokens = ParseTokenInfo( LabelContent, 0, LabelContent.Length, out Error );
+      if ( Error != null )
       {
         Result = 0;
         return false;
       }
 
       //dh.Log( "Eval Label (" + LabelContent + ") = " + tokens.Count + " parts" );
-      return EvaluateTokens( LineIndex, tokens, out Result );
+      return EvaluateTokens( LineIndex, tokens, out Result, out Error );
     }
 
 
 
-    private bool HandleOperator( int LineIndex, string Operator, string Token1String, string Token2String, out int Result )
+    private bool HandleOperator( int LineIndex, Types.TokenInfo OperatorToken, Types.TokenInfo Token1, Types.TokenInfo Token2, out int Result, out ErrorInfo Error )
     {
       Result = -1;
+      Error = null;
 
-      int Token1 = -1;
-      int Token2 = -1;
+      int token1 = -1;
+      int token2 = -1;
+      string    opText = OperatorToken.Content;
 
-      if ( ( !ParseValue( LineIndex, Token1String, out Token1 ) )
-      ||   ( !ParseValue( LineIndex, Token2String, out Token2 ) ) )
+      if ( !ParseValue( LineIndex, Token1.Content, out token1, out Error ) )
       {
+        Error.Pos += Token1.StartPos;
+        return false;
+      }
+      if ( !ParseValue( LineIndex, Token2.Content, out token2, out Error ) )
+      {
+        Error.Pos += Token2.StartPos;
         return false;
       }
 
-
-      if ( Operator == "*" )
+      if ( opText == "*" )
       {
-        Result = Token1 * Token2;
+        Result = token1 * token2;
         return true;
       }
-      else if ( Operator == "/" )
+      else if ( opText == "/" )
       {
-        if ( Token2 == 0 )
+        if ( token2 == 0 )
         {
           return false;
         }
-        Result = Token1 / Token2;
+        Result = token1 / token2;
         return true;
       }
-      else if ( Operator == "%" )
+      else if ( opText == "%" )
       {
-        if ( Token2 == 0 )
+        if ( token2 == 0 )
         {
           return false;
         }
-        Result = Token1 % Token2;
+        Result = token1 % token2;
         return true;
       }
-      else if ( Operator == "+" )
+      else if ( opText == "+" )
       {
-        Result = Token1 + Token2;
+        Result = token1 + token2;
         return true;
       }
-      else if ( Operator == "-" )
+      else if ( opText == "-" )
       {
-        Result = Token1 - Token2;
+        Result = token1 - token2;
         return true;
       }
-      else if ( ( Operator == "&" )
-      ||        ( Operator == "AND" )
-      ||        ( Operator == "and" ) )
+      else if ( ( opText == "&" )
+      ||        ( opText == "AND" )
+      ||        ( opText == "and" ) )
       {
-        Result = Token1 & Token2;
+        Result = token1 & token2;
         return true;
       }
-      else if ( ( Operator == "EOR" )
-      ||        ( Operator == "eor" )
-      ||        ( Operator == "^" ) )
+      else if ( ( opText == "EOR" )
+      ||        ( opText == "eor" )
+      ||        ( opText == "^" ) )
       {
-        Result = Token1 ^ Token2;
+        Result = token1 ^ token2;
         return true;
       }
-      else if ( ( Operator == "|" )
-      ||        ( Operator == "or" )
-      ||        ( Operator == "OR" ) )
+      else if ( ( opText == "|" )
+      ||        ( opText == "or" )
+      ||        ( opText == "OR" ) )
       {
-        Result = Token1 | Token2;
+        Result = token1 | token2;
         return true;
       }
-      else if ( Operator == ">>" )
+      else if ( opText == ">>" )
       {
-        Result = Token1 >> Token2;
+        Result = token1 >> token2;
         return true;
       }
-      else if ( Operator == "<<" )
+      else if ( opText == "<<" )
       {
-        Result = Token1 << Token2;
+        Result = token1 << token2;
         return true;
       }
-      else if ( Operator == "=" )
+      else if ( opText == "=" )
       {
-        if ( Token1 == Token2 )
+        if ( token1 == token2 )
         {
           Result = 1;
         }
@@ -864,10 +888,10 @@ namespace C64Studio.Parser
         }
         return true;
       }
-      else if ( ( Operator == "!=" )
-      ||        ( Operator == "<>" ) )
+      else if ( ( opText == "!=" )
+      ||        ( opText == "<>" ) )
       {
-        if ( Token1 != Token2 )
+        if ( token1 != token2 )
         {
           Result = 1;
         }
@@ -877,9 +901,9 @@ namespace C64Studio.Parser
         }
         return true;
       }
-      else if ( Operator == ">" )
+      else if ( opText == ">" )
       {
-        if ( Token1 > Token2 )
+        if ( token1 > token2 )
         {
           Result = 1;
         }
@@ -889,9 +913,9 @@ namespace C64Studio.Parser
         }
         return true;
       }
-      else if ( Operator == "<" )
+      else if ( opText == "<" )
       {
-        if ( Token1 < Token2 )
+        if ( token1 < token2 )
         {
           Result = 1;
         }
@@ -901,9 +925,9 @@ namespace C64Studio.Parser
         }
         return true;
       }
-      else if ( Operator == ">=" )
+      else if ( opText == ">=" )
       {
-        if ( Token1 >= Token2 )
+        if ( token1 >= token2 )
         {
           Result = 1;
         }
@@ -913,9 +937,9 @@ namespace C64Studio.Parser
         }
         return true;
       }
-      else if ( Operator == "<=" )
+      else if ( opText == "<=" )
       {
-        if ( Token1 <= Token2 )
+        if ( token1 <= token2 )
         {
           Result = 1;
         }
@@ -995,35 +1019,37 @@ namespace C64Studio.Parser
 
 
 
-    public bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, out int Result )
+    public bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, out int Result, out ErrorInfo Error )
     {
       int dummy = 0;
-      return EvaluateTokens( LineIndex, Tokens, out Result, out dummy );
+      Error = null;
+      return EvaluateTokens( LineIndex, Tokens, out Result, out dummy, out Error );
     }
 
 
 
-    private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, int StartIndex, int Count, out int Result )
+    private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, int StartIndex, int Count, out int Result, out ErrorInfo Error )
     {
       int dummy = 0;
-      return EvaluateTokens( LineIndex, Tokens, StartIndex, Count, out Result, out dummy );
+      Error = null;
+      return EvaluateTokens( LineIndex, Tokens, StartIndex, Count, out Result, out dummy, out Error );
     }
 
 
 
-    private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, out int Result, out int NumBytesGiven )
+    private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, out int Result, out int NumBytesGiven, out ErrorInfo ErrorInfo )
     {
-      return EvaluateTokens( LineIndex, Tokens, 0, Tokens.Count, out Result, out NumBytesGiven );
+      return EvaluateTokens( LineIndex, Tokens, 0, Tokens.Count, out Result, out NumBytesGiven, out ErrorInfo );
     }
 
 
 
-    private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, int StartIndex, int Count, out int Result, out int NumBytesGiven )
+    private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, int StartIndex, int Count, out int Result, out int NumBytesGiven, out ErrorInfo ErrorInfo )
     {
       Result = -1;
       NumBytesGiven = 0;
+      ErrorInfo = null;
       if ( Count == 0 )
-
       {
         return false;
       }
@@ -1033,7 +1059,7 @@ namespace C64Studio.Parser
 
       if ( Count == 1 )
       {
-        return ParseValue( LineIndex, Tokens[StartIndex].Content, out Result, out NumBytesGiven );
+        return ParseValue( LineIndex, Tokens[StartIndex].Content, out Result, out NumBytesGiven, out ErrorInfo );
       }
       if ( Count == 2 )
       {
@@ -1042,7 +1068,7 @@ namespace C64Studio.Parser
         {
           int     value = -1;
 
-          if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, out value, out NumBytesGiven ) )
+          if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, out value, out NumBytesGiven, out ErrorInfo ) )
           {
             Result = -value;
             return true;
@@ -1051,20 +1077,29 @@ namespace C64Studio.Parser
         else if ( Tokens[StartIndex + 1].Content.StartsWith( "%" ) )
         {
           // a "x % y" case, where % is prefixed to the second operator
-          if ( ParseValue( LineIndex, Tokens[StartIndex].Content, out dummy, out numBytesGiven ) )
+          if ( ParseValue( LineIndex, Tokens[StartIndex].Content, out dummy, out numBytesGiven, out ErrorInfo ) )
           {
             NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
           }
-          if ( ParseValue( LineIndex, Tokens[StartIndex + 1].Content.Substring( 1 ), out dummy, out numBytesGiven ) )
+          if ( ParseValue( LineIndex, Tokens[StartIndex + 1].Content.Substring( 1 ), out dummy, out numBytesGiven, out ErrorInfo ) )
           {
             NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
           }
-          return HandleOperator( LineIndex, "%", Tokens[StartIndex].Content, Tokens[StartIndex + 1].Content.Substring( 1 ), out Result );
+          Types.TokenInfo   tempTokenOperator = new Types.TokenInfo();
+          tempTokenOperator.Content = "%";
+          tempTokenOperator.StartPos = Tokens[StartIndex + 1].StartPos;
+          tempTokenOperator.Length = 1;
+
+          Types.TokenInfo   tempToken = new Types.TokenInfo();
+          tempToken.Content = Tokens[StartIndex + 1].Content.Substring( 1 );
+          tempToken.StartPos = Tokens[StartIndex + 1].StartPos + 1;
+          tempToken.Length = Tokens[StartIndex + 1].Length - 1;
+          return HandleOperator( LineIndex, tempTokenOperator, Tokens[StartIndex], tempToken, out Result, out ErrorInfo );
         }
         else if ( Tokens[StartIndex].Content == "%" )
         {
           // a binary expression
-          return ParseValue( LineIndex, TokensToExpression( Tokens, StartIndex, 2 ), out Result, out NumBytesGiven );
+          return ParseValue( LineIndex, TokensToExpression( Tokens, StartIndex, 2 ), out Result, out NumBytesGiven, out ErrorInfo );
         }
         else if ( ( Tokens[StartIndex].Content == "!" )
         ||        ( Tokens[StartIndex].Content == "~" ) )
@@ -1072,7 +1107,7 @@ namespace C64Studio.Parser
           // binary not
           int     value = -1;
 
-          if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, out value, out NumBytesGiven ) )
+          if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, out value, out NumBytesGiven, out ErrorInfo ) )
           {
             if ( NumBytesGiven == 2 )
             {
@@ -1162,7 +1197,7 @@ namespace C64Studio.Parser
             }
           }
 
-          if ( !EvaluateTokens( LineIndex, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, out resultValue, out numBytesGiven ) )
+          if ( !EvaluateTokens( LineIndex, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, out resultValue, out numBytesGiven, out ErrorInfo ) )
           {
             return false;
           }
@@ -1235,7 +1270,7 @@ namespace C64Studio.Parser
                 if ( subTokenRange[highestPrecedenceTokenIndex].Content == "<" )
                 {
                   int     value = -1;
-                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, out value, out numBytesGiven ) )
+                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, out value, out numBytesGiven, out ErrorInfo ) )
                   {
                     NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
 
@@ -1256,7 +1291,7 @@ namespace C64Studio.Parser
                 else if ( subTokenRange[highestPrecedenceTokenIndex].Content == ">" )
                 {
                   int value = -1;
-                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, out value, out numBytesGiven ) )
+                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, out value, out numBytesGiven, out ErrorInfo ) )
                   {
                     NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
 
@@ -1278,7 +1313,7 @@ namespace C64Studio.Parser
                 {
                   int     value = -1;
 
-                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, Count - highestPrecedenceTokenIndex - 1, out value, out NumBytesGiven ) )
+                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, Count - highestPrecedenceTokenIndex - 1, out value, out NumBytesGiven, out ErrorInfo ) )
                   {
                     if ( NumBytesGiven == 2 )
                     {
@@ -1303,13 +1338,13 @@ namespace C64Studio.Parser
                 }
               }
             }
-            if ( HandleOperator( LineIndex, subTokenRange[highestPrecedenceTokenIndex].Content, subTokenRange[highestPrecedenceTokenIndex - 1].Content, subTokenRange[highestPrecedenceTokenIndex + 1].Content, out result ) )
+            if ( HandleOperator( LineIndex, subTokenRange[highestPrecedenceTokenIndex], subTokenRange[highestPrecedenceTokenIndex - 1], subTokenRange[highestPrecedenceTokenIndex + 1], out result, out ErrorInfo ) )
             {
-              if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex - 1].Content, out dummy, out numBytesGiven ) )
+              if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex - 1].Content, out dummy, out numBytesGiven, out ErrorInfo ) )
               {
                 NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
               }
-              if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex + 1].Content, out dummy, out numBytesGiven ) )
+              if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex + 1].Content, out dummy, out numBytesGiven, out ErrorInfo ) )
               {
                 NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
               }
@@ -1332,7 +1367,7 @@ namespace C64Studio.Parser
 
       if ( Count == 1 )
       {
-        return ParseValue( LineIndex, subTokenRange[0].Content, out Result, out NumBytesGiven );
+        return ParseValue( LineIndex, subTokenRange[0].Content, out Result, out NumBytesGiven, out ErrorInfo );
       }
       return false;
     }
@@ -1402,7 +1437,8 @@ namespace C64Studio.Parser
             else
             {
               int value = -1;
-              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
+              ErrorInfo error;
+              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value, out error ) )
               {
                 if ( AddErrors )
                 {
@@ -1416,7 +1452,8 @@ namespace C64Studio.Parser
           else
           {
             int value = -1;
-            if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
+            ErrorInfo error;
+            if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value, out error ) )
             {
               if ( AddErrors )
               {
@@ -1450,7 +1487,8 @@ namespace C64Studio.Parser
               else
               {
                 int value = -1;
-                if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
+                ErrorInfo error;
+                if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value, out error ) )
                 {
                   if ( AddErrors )
                   {
@@ -1464,7 +1502,8 @@ namespace C64Studio.Parser
             else
             {
               int value = -1;
-              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
+              ErrorInfo error;
+              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex, out value, out error ) )
               {
                 if ( AddErrors )
                 {
@@ -1564,7 +1603,10 @@ namespace C64Studio.Parser
           m_CompileCurrentAddress = ASMFileInfo.LineInfo[curLine].AddressStart;
           trueCompileCurrentAddress = m_CompileCurrentAddress;
 
-          if ( EvaluateLabel( ASMFileInfo.UnparsedLabels[label].LineIndex, ASMFileInfo.UnparsedLabels[label].ToEval, out result ) )
+
+          ErrorInfo error;
+
+          if ( EvaluateLabel( ASMFileInfo.UnparsedLabels[label].LineIndex, ASMFileInfo.UnparsedLabels[label].ToEval, out result, out error ) )
           {
             //dh.Log( "evaluated unparsed label " + label + " to " + result );
             if ( ASMFileInfo.Labels.ContainsKey( label ) )
@@ -1752,8 +1794,10 @@ namespace C64Studio.Parser
 
               int     count = -1;
               int     value = -1;
+              int     dummyBytesGiven;
+              ErrorInfo   errorInfo;
 
-              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, 0, tokenCommaIndex, out count ) )
+              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, 0, tokenCommaIndex, out count, out dummyBytesGiven, out errorInfo ) )
               {
                 AddError( lineIndex, 
                           Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
@@ -1761,7 +1805,7 @@ namespace C64Studio.Parser
                           lineInfo.NeededParsedExpression[0].StartPos,
                           lineInfo.NeededParsedExpression[tokenCommaIndex - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );
               }
-              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, tokenCommaIndex + 1, lineInfo.NeededParsedExpression.Count - tokenCommaIndex - 1, out value ) )
+              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, tokenCommaIndex + 1, lineInfo.NeededParsedExpression.Count - tokenCommaIndex - 1, out value, out errorInfo ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineInfo.NeededParsedExpression, tokenCommaIndex + 1, lineInfo.NeededParsedExpression.Count - tokenCommaIndex - 1 ) );
               }
@@ -1810,19 +1854,25 @@ namespace C64Studio.Parser
                 }
               }
             }
-            if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, out value ) )
+            ErrorInfo error;
+            if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, out value, out error ) )
             {
               /*
               Debug.Log( "need to assemble unparsed expression:" );
               Debug.Log( "=> Could not parse!" );
               Debug.Log( "=> from line: " + lineInfo.Line );
                */
-
+              AddError( lineIndex,
+                        error.Code,
+                        "Could not evaluate " + lineInfo.Line.Substring( error.Pos, error.Length ),
+                        error.Pos,
+                        error.Length );
+              /*
               AddError( lineIndex, 
                         Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
                         "Could not evaluate " + TokensToExpression( lineInfo.NeededParsedExpression ),
                         lineInfo.NeededParsedExpression[0].StartPos,
-                        lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );
+                        lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );*/
             }
             else
             {
@@ -1947,8 +1997,9 @@ namespace C64Studio.Parser
           {
             int     byteValue = -1;
             int     numBytesGiven = 0;
+            ErrorInfo   error;
 
-            if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, out byteValue, out numBytesGiven ) )
+            if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, out byteValue, out numBytesGiven, out error ) )
             {
               switch ( Type )
               {
@@ -2000,7 +2051,8 @@ namespace C64Studio.Parser
       {
         int byteValue = -1;
         int numBytesGiven = 0;
-        if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, out byteValue, out numBytesGiven ) )
+        ErrorInfo error;
+        if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, out byteValue, out numBytesGiven, out error ) )
         {
           switch ( Type )
           {
@@ -2255,10 +2307,10 @@ namespace C64Studio.Parser
 
 
 
-    public List<Types.TokenInfo> PrepareLineTokens( string Line, out int ErrorPos )
+    public List<Types.TokenInfo> PrepareLineTokens( string Line, out ErrorInfo Error )
     {
-      List<Types.TokenInfo> lineTokenInfos = ParseTokenInfo( Line, 0, Line.Length, out ErrorPos );
-      if ( ErrorPos != -1 )
+      List<Types.TokenInfo> lineTokenInfos = ParseTokenInfo( Line, 0, Line.Length, out Error );
+      if ( Error != null )
       {
         return null;
       }
@@ -2316,8 +2368,8 @@ namespace C64Studio.Parser
       {
         string parseLine = Lines[lineIndex];
 
-        int errorPos = -1;
-        List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine, out errorPos );
+        ErrorInfo error;
+        List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine, out error );
         if ( lineTokenInfos == null )
         {
           return -1;
@@ -2546,14 +2598,15 @@ namespace C64Studio.Parser
         }
         int   startIndex = 0;
         int   numChars = 256;
+        ErrorInfo error;
 
         if ( ( paramTokens.Count >= 3 )
-        &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
+        &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex, out error ) ) )
         {
           startIndex = 0;
         }
         if ( ( paramTokens.Count >= 4 )
-        &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numChars ) ) )
+        &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numChars, out error ) ) )
         {
           numChars = 256;
         }
@@ -2608,14 +2661,15 @@ namespace C64Studio.Parser
         }
         int   startIndex = 0;
         int   numChars = 256;
+        ErrorInfo error;
 
         if ( ( paramTokens.Count >= 3 )
-        &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
+        &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex, out error ) ) )
         {
           startIndex = 0;
         }
         if ( ( paramTokens.Count >= 4 )
-        &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numChars ) ) )
+        &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numChars, out error ) ) )
         {
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Failed to evaluate expression " + TokensToExpression( paramTokens[3] ) );
           return false;
@@ -2700,14 +2754,15 @@ namespace C64Studio.Parser
         {
           int   startIndex = 0;
           int   numSprites = -1;
+          ErrorInfo error;
 
           if ( ( paramTokens.Count >= 3 )
-          &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex, out error ) ) )
           {
             startIndex = 0;
           }
           if ( ( paramTokens.Count >= 4 )
-          &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numSprites ) ) )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numSprites, out error ) ) )
           {
             numSprites = -1;
           }
@@ -2749,20 +2804,21 @@ namespace C64Studio.Parser
           int   numSprites = -1;
           int   offsetBytes = 0;
           int   numBytes = numSprites * 64;
+          ErrorInfo error;
 
-          if ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) )
+          if ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex, out error ) )
           {
             startIndex = 0;
           }
-          if ( !EvaluateTokens( lineIndex, paramTokens[3], out numSprites ) )
+          if ( !EvaluateTokens( lineIndex, paramTokens[3], out numSprites, out error ) )
           {
             numSprites = -1;
           }
-          if ( !EvaluateTokens( lineIndex, paramTokens[4], out offsetBytes ) )
+          if ( !EvaluateTokens( lineIndex, paramTokens[4], out offsetBytes, out error ) )
           {
             offsetBytes = 0;
           }
-          if ( !EvaluateTokens( lineIndex, paramTokens[5], out numBytes ) )
+          if ( !EvaluateTokens( lineIndex, paramTokens[5], out numBytes, out error ) )
           {
             numBytes = numSprites * 64;
           }
@@ -2845,15 +2901,16 @@ namespace C64Studio.Parser
         if ( method == "SPRITE" )
         {
           int   startIndex = 0;
-          int   numSprites = 256;
+          int   numSprites = 256; 
+          ErrorInfo error;
 
           if ( ( paramTokens.Count >= 3 )
-          &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex, out error ) ) )
           {
             startIndex = 0;
           }
           if ( ( paramTokens.Count >= 4 )
-          &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numSprites ) ) )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numSprites, out error ) ) )
           {
             numSprites = 256;
           }
@@ -2904,20 +2961,21 @@ namespace C64Studio.Parser
           int   numSprites = 256;
           int   offsetBytes = 0;
           int   numBytes = numSprites * 64;
+          ErrorInfo error;
 
-          if ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) )
+          if ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex, out error ) )
           {
             startIndex = 0;
           }
-          if ( !EvaluateTokens( lineIndex, paramTokens[3], out numSprites ) )
+          if ( !EvaluateTokens( lineIndex, paramTokens[3], out numSprites, out error ) )
           {
             numSprites = 256;
           }
-          if ( !EvaluateTokens( lineIndex, paramTokens[4], out offsetBytes ) )
+          if ( !EvaluateTokens( lineIndex, paramTokens[4], out offsetBytes, out error ) )
           {
             offsetBytes = 0;
           }
-          if ( !EvaluateTokens( lineIndex, paramTokens[5], out numBytes ) )
+          if ( !EvaluateTokens( lineIndex, paramTokens[5], out numBytes, out error ) )
           {
             numBytes = numSprites * 64;
           }
@@ -3039,14 +3097,15 @@ namespace C64Studio.Parser
 
           int startIndex = 0;
           int numChars = screenProject.CharSet.NumCharacters;
+          ErrorInfo error;
 
           if ( ( paramTokens.Count >= 3 )
-          &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex, out error ) ) )
           {
             startIndex = 0;
           }
           if ( ( paramTokens.Count >= 4 )
-          &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numChars ) ) )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numChars, out error ) ) )
           {
             numChars = screenProject.CharSet.NumCharacters;
           }
@@ -3070,23 +3129,25 @@ namespace C64Studio.Parser
           int   y = 0;
           int   w = screenProject.ScreenWidth;
           int   h = screenProject.ScreenHeight;
+          ErrorInfo error;
+
           if ( ( paramTokens.Count >= 3 )
-          &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out x ) ) )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out x, out error ) ) )
           {
             x = 0;
           }
           if ( ( paramTokens.Count >= 4 )
-          &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out y ) ) )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out y, out error ) ) )
           {
             y = 0;
           }
           if ( ( paramTokens.Count >= 5 )
-          &&   ( !EvaluateTokens( lineIndex, paramTokens[4], out w ) ) )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[4], out w, out error ) ) )
           {
             w = screenProject.ScreenWidth;
           }
           if ( ( paramTokens.Count >= 6 )
-          &&   ( !EvaluateTokens( lineIndex, paramTokens[5], out h ) ) )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[5], out h, out error ) ) )
           {
             h = screenProject.ScreenHeight;
           }
@@ -3235,24 +3296,25 @@ namespace C64Studio.Parser
         int   y = 0;
         int   w = screenProject.ScreenWidth;
         int   h = screenProject.ScreenHeight;
+        ErrorInfo error;
 
         if ( ( paramTokens.Count >= 3 )
-        &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out x ) ) )
+        &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out x, out error ) ) )
         {
           x = 0;
         }
         if ( ( paramTokens.Count >= 4 )
-        &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out y ) ) )
+        &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out y, out error ) ) )
         {
           y = 0;
         }
         if ( ( paramTokens.Count >= 5 )
-        &&   ( !EvaluateTokens( lineIndex, paramTokens[4], out w ) ) )
+        &&   ( !EvaluateTokens( lineIndex, paramTokens[4], out w, out error ) ) )
         {
           w = screenProject.ScreenWidth;
         }
         if ( ( paramTokens.Count >= 6 )
-        && ( !EvaluateTokens( lineIndex, paramTokens[5], out h ) ) )
+        && ( !EvaluateTokens( lineIndex, paramTokens[5], out h, out error ) ) )
         {
           h = screenProject.ScreenHeight;
         }
@@ -3482,7 +3544,9 @@ namespace C64Studio.Parser
       else
       {
         int numLoops = -1;
-        if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out numLoops ) )
+        ErrorInfo error;
+
+        if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out numLoops, out error ) )
         {
           bool hadError = false;
           if ( numLoops <= 0 )
@@ -3558,10 +3622,10 @@ namespace C64Studio.Parser
 
 
 
-    private ParseLineResult POFill( List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, string parseLine, out int lineSizeInBytes, out int errorPos )
+    private ParseLineResult POFill( List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, string parseLine, out int lineSizeInBytes, out ErrorInfo Error )
     {
       lineSizeInBytes = 0;
-      errorPos = -1;
+      Error = null;
 
       string fillNumberToken = "";
       bool firstToken = true;
@@ -3573,8 +3637,9 @@ namespace C64Studio.Parser
         {
           hadComma = true;
           int numBytes = -1;
-          List<Types.TokenInfo> tokens = ParseTokenInfo( fillNumberToken, 0, fillNumberToken.Length, out errorPos );
-          if ( !EvaluateTokens( lineIndex, tokens, out numBytes ) )
+
+          List<Types.TokenInfo> tokens = ParseTokenInfo( fillNumberToken, 0, fillNumberToken.Length, out Error );
+          if ( !EvaluateTokens( lineIndex, tokens, out numBytes, out Error ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not determine fill parameter " + fillNumberToken );
             return ParseLineResult.RETURN_NULL;
@@ -3600,8 +3665,8 @@ namespace C64Studio.Parser
         // only number of bytes, default 0
         hadComma = true;
         int numBytes = -1;
-        List<Types.TokenInfo> tokens = ParseTokenInfo( fillNumberToken, 0, fillNumberToken.Length, out errorPos );
-        if ( !EvaluateTokens( lineIndex, tokens, out numBytes ) )
+        List<Types.TokenInfo> tokens = ParseTokenInfo( fillNumberToken, 0, fillNumberToken.Length, out Error );
+        if ( !EvaluateTokens( lineIndex, tokens, out numBytes, out Error ) )
         {
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill count parameter " + fillNumberToken );
           return ParseLineResult.RETURN_NULL;
@@ -3685,7 +3750,9 @@ namespace C64Studio.Parser
       }
       else
       {
-        if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out jumpAddress ) )
+        ErrorInfo error;
+
+        if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out jumpAddress, out error ) )
         {
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos.GetRange( 0, lineTokenInfos.Count );
@@ -3778,8 +3845,9 @@ namespace C64Studio.Parser
         {
           // found an expression
           int value = -1;
+          ErrorInfo error;
 
-          if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
+          if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out value, out error ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
             return ParseLineResult.RETURN_NULL;
@@ -3793,7 +3861,9 @@ namespace C64Studio.Parser
           {
             // there's still data to evaluate
             int value = -1;
-            if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
+            ErrorInfo error;
+
+            if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out value, out error ) )
             {
               AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
               return ParseLineResult.RETURN_NULL;
@@ -3805,7 +3875,7 @@ namespace C64Studio.Parser
       while ( tokenIndex < lineTokenInfos.Count );
 
       if ( ( tokenParams.Count < 1 )
-      || ( tokenParams.Count > 3 ) )
+      ||   ( tokenParams.Count > 3 ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected align <byte boundary>,[,<FillValue>]" );
         return ParseLineResult.RETURN_NULL;
@@ -3872,8 +3942,9 @@ namespace C64Studio.Parser
           {
             int     wordValue = -1;
             int     numBytesGiven = 0;
+            ErrorInfo error;
 
-            if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, out wordValue, out numBytesGiven ) )
+            if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, out wordValue, out numBytesGiven, out error ) )
             {
               if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
               &&   ( ( wordValue < 0 )
@@ -3917,7 +3988,8 @@ namespace C64Studio.Parser
       {
         int wordValue = -1;
         int numBytesGiven = 0;
-        if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, out wordValue, out numBytesGiven ) )
+        ErrorInfo error;
+        if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, out wordValue, out numBytesGiven, out error ) )
         {
           if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
           &&   ( ( wordValue < 0 )
@@ -4088,8 +4160,9 @@ namespace C64Studio.Parser
 
       int     fileSize = -1;
       int     fileSkip = -1;
-      bool    fileSizeValid = EvaluateTokens( lineIndex, paramsSize, out fileSize );
-      bool    fileSkipValid = EvaluateTokens( lineIndex, paramsSkip, out fileSkip );
+      ErrorInfo error;
+      bool    fileSizeValid = EvaluateTokens( lineIndex, paramsSize, out fileSize, out error );
+      bool    fileSkipValid = EvaluateTokens( lineIndex, paramsSkip, out fileSkip, out error );
 
       if ( ( paramsSize.Count > 0 )
       &&   ( !fileSizeValid ) )
@@ -4308,11 +4381,11 @@ namespace C64Studio.Parser
           //string[] replacementLines = RelabelLocalLabels( functionInfo.Content );
 
           int lineIndexInMacro = -1;
-          int errorPosInMacro = -1;
-          string[] replacementLines = RelabelLocalLabelsForMacro( Lines, Scopes, lineIndex, functionName, functionInfo, param, out lineIndexInMacro, out errorPosInMacro );
+          ErrorInfo error;
+          string[] replacementLines = RelabelLocalLabelsForMacro( Lines, Scopes, lineIndex, functionName, functionInfo, param, out lineIndexInMacro, out error );
           if ( replacementLines == null )
           {
-            AddError( lineIndexInMacro, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + errorPosInMacro );
+            AddError( lineIndexInMacro, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + error.Pos );
           }
           else
           {
@@ -4518,11 +4591,11 @@ namespace C64Studio.Parser
           }
         }
 
-        int errorPos = -1;
-        List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine, out errorPos );
+        ErrorInfo error;
+        List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine, out error );
         if ( lineTokenInfos == null )
         {
-          AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error at position " + ( errorPos + 1 ).ToString() + " (" + parseLine[errorPos] + ")" );
+          AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error at position " + ( error.Pos + 1 ).ToString() + " (" + parseLine[error.Pos] + ")" );
           continue;
         }
 
@@ -4731,7 +4804,8 @@ namespace C64Studio.Parser
           }
           int   defineLength = lineTokenInfos[lineTokenInfos.Count - 1].StartPos + lineTokenInfos[lineTokenInfos.Count - 1].Length - ( equPos + lineTokenInfos[1].Content.Length );
           string defineValue = parseLine.Substring( equPos + lineTokenInfos[1].Content.Length, defineLength ).Trim();
-          List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, out errorPos );
+
+          List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, out error );
           int address = -1;
 
           if ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
@@ -4744,8 +4818,8 @@ namespace C64Studio.Parser
             // set program step
             int     newStepPos = 0;
 
-            List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length, out errorPos );
-            if ( !EvaluateTokens( lineIndex, tokens, out newStepPos ) )
+            List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length, out error );
+            if ( !EvaluateTokens( lineIndex, tokens, out newStepPos, out error ) )
             {
               AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate * position value", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
               return null;
@@ -4758,7 +4832,7 @@ namespace C64Studio.Parser
           }
           else
           {
-            if ( !EvaluateTokens( lineIndex, valueTokens, out address ) )
+            if ( !EvaluateTokens( lineIndex, valueTokens, out address, out error ) )
             {
               if ( defineName == "*" )
               {
@@ -4904,7 +4978,7 @@ namespace C64Studio.Parser
 
                     Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                     scope.StartIndex = lineIndex;
-                    if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, out defineResult ) )
+                    if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, out defineResult, out error ) )
                     {
                       AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
                                 + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
@@ -5099,7 +5173,7 @@ namespace C64Studio.Parser
                   }
                 }
               }
-              if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out byteValue ) )
+              if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out byteValue, out error ) )
               {
                 if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
                 {
@@ -5169,7 +5243,7 @@ namespace C64Studio.Parser
               {
                 countTokens -= 2;
               }
-              if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, countTokens, out byteValue ) )
+              if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, countTokens, out byteValue, out error ) )
               {
                 if ( ( info.Opcode.ByteValue == 0x6C )
                 &&   ( m_Processor.Name == "6510" )
@@ -5377,7 +5451,7 @@ namespace C64Studio.Parser
                   defineName = defineName.ToUpper();
                 }
                 string defineValue = parseLine.Substring( equPos + lineTokenInfos[2].Content.Length ).Trim();
-                List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, out errorPos );
+                List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, out error );
                 int address = -1;
 
                 if ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
@@ -5390,8 +5464,8 @@ namespace C64Studio.Parser
                   // set program step
                   int     newStepPos = 0;
 
-                  List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length, out errorPos );
-                  if ( !EvaluateTokens( lineIndex, tokens, out newStepPos ) )
+                  List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length, out error );
+                  if ( !EvaluateTokens( lineIndex, tokens, out newStepPos, out error ) )
                   {
                     AddError( lineIndex, 
                               Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
@@ -5406,7 +5480,7 @@ namespace C64Studio.Parser
                 }
                 else
                 {
-                  if ( !EvaluateTokens( lineIndex, valueTokens, out address ) )
+                  if ( !EvaluateTokens( lineIndex, valueTokens, out address, out error ) )
                   {
                     if ( defineName == "*" )
                     {
@@ -5507,7 +5581,7 @@ namespace C64Studio.Parser
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.FILL )
             {
-              var result = POFill( lineTokenInfos, lineIndex, info, parseLine, out lineSizeInBytes, out errorPos );
+              var result = POFill( lineTokenInfos, lineIndex, info, parseLine, out lineSizeInBytes, out error );
               if ( result == ParseLineResult.CALL_CONTINUE )
               {
                 continue;
@@ -5775,7 +5849,7 @@ namespace C64Studio.Parser
 
                   // only evaluate the first token
                   // TODO - have to evaluate the rest of the line if it exists!!
-                  if ( ( !EvaluateTokens( lineIndex, tokens, 0, 1, out defineResult ) )
+                  if ( ( !EvaluateTokens( lineIndex, tokens, 0, 1, out defineResult, out error ) )
                   ||   ( defineResult == 0 ) )
                   {
                     scope.Active = hadElse;
@@ -5856,13 +5930,13 @@ namespace C64Studio.Parser
               {
                 string defineCheck = parseLine.Substring( 7, startBracket - 7 ).Trim();
 
-                List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, out errorPos );
+                List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, out error );
 
                 int defineResult = -1;
 
                 Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
-                if ( ( !EvaluateTokens( lineIndex, tokens, out defineResult ) )
+                if ( ( !EvaluateTokens( lineIndex, tokens, out defineResult, out error ) )
                 || ( defineResult == 0 ) )
                 {
                   scope.Active = true;
@@ -5902,13 +5976,13 @@ namespace C64Studio.Parser
                 int     posAfterMacro = lineTokenInfos[0].StartPos + lineTokenInfos[0].Length;
                 string expressionCheck = parseLine.Substring( posAfterMacro, startBracket - posAfterMacro ).Trim();
 
-                List<Types.TokenInfo> tokens = ParseTokenInfo( expressionCheck, 0, expressionCheck.Length, out errorPos );
+                List<Types.TokenInfo> tokens = ParseTokenInfo( expressionCheck, 0, expressionCheck.Length, out error );
 
                 int defineResult = -1;
 
                 Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
-                if ( !EvaluateTokens( lineIndex, tokens, out defineResult ) )
+                if ( !EvaluateTokens( lineIndex, tokens, out defineResult, out error ) )
                 {
                   AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + expressionCheck );
                   scope.Active = true;
@@ -6044,14 +6118,14 @@ namespace C64Studio.Parser
               {
                 int number = -1;
                 int size = -1;
-                if ( !EvaluateTokens( lineIndex, paramsNo, out number ) )
+                if ( !EvaluateTokens( lineIndex, paramsNo, out number, out error ) )
                 {
                   string expressionCheck = TokensToExpression( paramsNo );
 
                   AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression " + expressionCheck );
                 }
                 else if ( ( paramsSize.Count > 0 )
-                && ( !EvaluateTokens( lineIndex, paramsSize, out size ) ) )
+                && ( !EvaluateTokens( lineIndex, paramsSize, out size, out error ) ) )
                 {
                   string expressionCheck = TokensToExpression( paramsNo );
 
@@ -6137,7 +6211,7 @@ namespace C64Studio.Parser
                   // found an expression
                   int value = -1;
 
-                  if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
+                  if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out value, out error ) )
                   {
                     AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
                     return null;
@@ -6152,7 +6226,7 @@ namespace C64Studio.Parser
                   {
                     // there's still data to evaluate
                     int value = -1;
-                    if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
+                    if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out value, out error ) )
                     {
                       AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
                       return null;
@@ -6300,7 +6374,7 @@ namespace C64Studio.Parser
                     {
                       int aByte = -1;
 
-                      if ( EvaluateTokens( lineIndex, lineTokenInfos, startTokenIndex, tokenIndex - startTokenIndex, out aByte ) )
+                      if ( EvaluateTokens( lineIndex, lineTokenInfos, startTokenIndex, tokenIndex - startTokenIndex, out aByte, out error ) )
                       {
                         data.AppendU8( (byte)aByte );
                       }
@@ -6345,7 +6419,7 @@ namespace C64Studio.Parser
                 {
                   int aByte = -1;
 
-                  if ( EvaluateTokens( lineIndex, lineTokenInfos, startTokenIndex, lineTokenInfos.Count - startTokenIndex, out aByte ) )
+                  if ( EvaluateTokens( lineIndex, lineTokenInfos, startTokenIndex, lineTokenInfos.Count - startTokenIndex, out aByte, out error ) )
                   {
                     data.AppendU8( (byte)aByte );
                   }
@@ -6458,12 +6532,12 @@ namespace C64Studio.Parser
             }
             if ( commaCount == 1 )
             {
-              if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, commaPos - 1, out newStepPos ) )
+              if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, commaPos - 1, out newStepPos, out error ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate ORG position value" );
                 return null;
               }
-              if ( !EvaluateTokens( lineIndex, lineTokenInfos, commaPos + 1, lineTokenInfos.Count - commaPos - 1, out newPseudoPos ) )
+              if ( !EvaluateTokens( lineIndex, lineTokenInfos, commaPos + 1, lineTokenInfos.Count - commaPos - 1, out newPseudoPos, out error ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate ORG pseudo position value" );
                 return null;
@@ -6471,7 +6545,7 @@ namespace C64Studio.Parser
             }
             else
             {
-              if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out newStepPos ) )
+              if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out newStepPos, out error ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate ORG position value" );
                 return null;
@@ -6518,7 +6592,7 @@ namespace C64Studio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.MacroType.FILL )
           {
-            var result = POFill( lineTokenInfos, lineIndex, info, parseLine, out lineSizeInBytes, out errorPos );
+            var result = POFill( lineTokenInfos, lineIndex, info, parseLine, out lineSizeInBytes, out error );
             if ( result == ParseLineResult.CALL_CONTINUE )
             {
               continue;
@@ -6608,7 +6682,7 @@ namespace C64Studio.Parser
 
             Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
             scope.StartIndex = lineIndex;
-            if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out defineResult ) )
+            if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out defineResult, out error ) )
             {
               AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ) );
               scope.Active = true;
@@ -6913,7 +6987,8 @@ namespace C64Studio.Parser
       }
 
       int pseudoStepPos = -1;
-      if ( !EvaluateTokens( lineIndex, lineTokenInfos, TokenStartIndex, TokenCount, out pseudoStepPos ) )
+      ErrorInfo error;
+      if ( !EvaluateTokens( lineIndex, lineTokenInfos, TokenStartIndex, TokenCount, out pseudoStepPos, out error ) )
       {
         string expressionCheck = TokensToExpression( lineTokenInfos, TokenStartIndex, TokenCount );
 
@@ -6985,7 +7060,8 @@ namespace C64Studio.Parser
           }
           if ( indexStep != -1 )
           {
-            if ( !EvaluateTokens( lineIndex, lineTokenInfos, indexStep + 1, lineTokenInfos.Count - indexStep - 1, out stepValue ) )
+            ErrorInfo error;
+            if ( !EvaluateTokens( lineIndex, lineTokenInfos, indexStep + 1, lineTokenInfos.Count - indexStep - 1, out stepValue, out error ) )
             {
               AddError( lineIndex,
                         C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -7013,7 +7089,8 @@ namespace C64Studio.Parser
           {
             int   startValue = 0;
             int   endValue = 0;
-            if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, indexTo - 3, out startValue ) )
+            ErrorInfo error;
+            if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, indexTo - 3, out startValue, out error ) )
             {
               AddError( lineIndex,
                         C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -7022,7 +7099,7 @@ namespace C64Studio.Parser
                         lineTokenInfos[indexTo - 3].EndPos + 1 - lineTokenInfos[3].StartPos );
               hadError = true;
             }
-            else if ( !EvaluateTokens( lineIndex, lineTokenInfos, indexTo + 1, indexStep - indexTo - 1, out endValue ) )
+            else if ( !EvaluateTokens( lineIndex, lineTokenInfos, indexTo + 1, indexStep - indexTo - 1, out endValue, out error ) )
             {
               AddError( lineIndex,
                         C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -7084,23 +7161,21 @@ namespace C64Studio.Parser
 
 
 
-    private string[] RelabelLocalLabelsForMacro( string[] Lines, List<Types.ScopeInfo> Scopes, int lineIndex, string functionName, Types.MacroFunctionInfo functionInfo, List<string> param, out int LineIndexInsideMacro, out int ErrorPosInLine )
+    private string[] RelabelLocalLabelsForMacro( string[] Lines, List<Types.ScopeInfo> Scopes, int lineIndex, string functionName, Types.MacroFunctionInfo functionInfo, List<string> param, out int LineIndexInsideMacro, out ErrorInfo Error )
     {
       string[] replacementLines = new string[functionInfo.LineEnd - functionInfo.LineIndex - 1];
       int replacementLineIndex = 0;
 
       LineIndexInsideMacro = -1;
-      ErrorPosInLine = -1;
+      Error = null;
 
       for ( int i = functionInfo.LineIndex + 1; i < functionInfo.LineEnd; ++i )
       {
-        int errorPos = -1;
-        List<Types.TokenInfo> tokens = ParseTokenInfo( functionInfo.Content[i - functionInfo.LineIndex - 1], 0, functionInfo.Content[i - functionInfo.LineIndex - 1].Length, out errorPos );
+        List<Types.TokenInfo> tokens = ParseTokenInfo( functionInfo.Content[i - functionInfo.LineIndex - 1], 0, functionInfo.Content[i - functionInfo.LineIndex - 1].Length, out Error );
         if ( tokens == null )
         {
           // there was an error!
           LineIndexInsideMacro = i;
-          ErrorPosInLine = errorPos;
           return null;
         }
         bool replacedParam = false;
@@ -7129,15 +7204,14 @@ namespace C64Studio.Parser
                 token.Content = param[j];
                 token.Length = param[j].Length;
 
-                errorPos = -1;
-                tempTokens = ParseTokenInfo( token.Content, 0, token.Content.Length, out errorPos );
+                tempTokens = ParseTokenInfo( token.Content, 0, token.Content.Length, out Error );
                 for ( int k = 0; k < tempTokens.Count; ++k )
                 {
                   // may look useless, but actually fetches the substring and stores it in the content cache
                   tempTokens[k].Content = tempTokens[k].Content;
                   tempTokens[k].Length = tempTokens[k].Content.Length;
                 }
-                if ( ( errorPos == -1 )
+                if ( ( Error == null )
                 &&   ( tempTokens.Count >= 1 ) )
                 {
                   if ( ( tempTokens[0].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
@@ -7247,8 +7321,8 @@ namespace C64Studio.Parser
 
       for ( int i = 0; i < Lines.Length; ++i )
       {
-        int errorPos = -1;
-        List<Types.TokenInfo> tokens = ParseTokenInfo( Lines[i], 0, Lines[i].Length, out errorPos );
+        ErrorInfo error;
+        List<Types.TokenInfo> tokens = ParseTokenInfo( Lines[i], 0, Lines[i].Length, out error );
         bool replacedParam = false;
 
         foreach ( Types.TokenInfo token in tokens )
@@ -7668,9 +7742,9 @@ namespace C64Studio.Parser
       foreach ( string makro in makros )
       {
         string singleMakro = makro.Trim();
-        int errorPos = -1;
+        ErrorInfo error;
 
-        List<Types.TokenInfo> lineTokens = ParseTokenInfo( singleMakro, 0, singleMakro.Length, out errorPos );
+        List<Types.TokenInfo> lineTokens = ParseTokenInfo( singleMakro, 0, singleMakro.Length, out error );
 
         if ( lineTokens.Count == 1 )
         {
@@ -7683,9 +7757,9 @@ namespace C64Studio.Parser
           int equPos = lineTokens[1].StartPos;
           string defineName = singleMakro.Substring( 0, equPos ).Trim();
           string defineValue = singleMakro.Substring( equPos + 1 ).Trim();
-          List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, out errorPos );
+          List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, out error );
           int address = -1;
-          if ( !EvaluateTokens( -1, valueTokens, out address ) )
+          if ( !EvaluateTokens( -1, valueTokens, out address, out error ) )
           {
             AddError( -1, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Cannot evaluate predefine expression " + defineValue );
           }
@@ -8530,6 +8604,7 @@ namespace C64Studio.Parser
 
 
 
+    /*
     public List<Types.TokenInfo> ParseTokenInfo( string Source, int Start, int Length, out int ErrorPos )
     {
       ErrorPos = -1;
@@ -8542,7 +8617,7 @@ namespace C64Studio.Parser
         ErrorPos = errInfo.Pos;
       }
       return result;
-    }
+    }*/
 
 
 
@@ -9258,9 +9333,10 @@ namespace C64Studio.Parser
 
           int value = -1;
           int numGivenBytes = 0;
+          ErrorInfo error;
 
           // determine addressing from parameter size
-          bool  couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex, expressionTokenCount, out value, out numGivenBytes );
+          bool  couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex, expressionTokenCount, out value, out numGivenBytes, out error );
           if ( couldEvaluate )
           //if ( ParseValue( LineIndex, LineTokens[1].Content, out value, out numGivenBytes ) )
           {
@@ -9332,7 +9408,8 @@ namespace C64Studio.Parser
           if ( extraTokens.Count > 0 )
           {
             int     expressionResult = -1;
-            if ( EvaluateTokens( LineIndex, extraTokens, out expressionResult ) )
+            ErrorInfo error;
+            if ( EvaluateTokens( LineIndex, extraTokens, out expressionResult, out error ) )
             {
               LineTokens.RemoveRange( 2, LineTokens.Count - 2 );
               if ( LineTokens[1].Length > 1 )
@@ -9579,7 +9656,8 @@ namespace C64Studio.Parser
             else
             {
               int result = -1;
-              if ( !EvaluateTokens( lineIndex, Tokens, startTokenIndex, StartIndex + i - startTokenIndex, out result ) )
+              ErrorInfo error;
+              if ( !EvaluateTokens( lineIndex, Tokens, startTokenIndex, StartIndex + i - startTokenIndex, out result, out error ) )
               {
                 return "";
               }
@@ -9602,7 +9680,8 @@ namespace C64Studio.Parser
         else
         {
           int result = -1;
-          if ( !EvaluateTokens( lineIndex, Tokens, startTokenIndex, StartIndex + Count - startTokenIndex, out result ) )
+          ErrorInfo error;
+          if ( !EvaluateTokens( lineIndex, Tokens, startTokenIndex, StartIndex + Count - startTokenIndex, out result, out error ) )
           {
             return "";
           }
