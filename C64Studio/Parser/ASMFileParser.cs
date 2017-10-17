@@ -1059,7 +1059,15 @@ namespace C64Studio.Parser
 
       if ( Count == 1 )
       {
-        return ParseValue( LineIndex, Tokens[StartIndex].Content, out Result, out NumBytesGiven, out ErrorInfo );
+        if ( !ParseValue( LineIndex, Tokens[StartIndex].Content, out Result, out NumBytesGiven, out ErrorInfo ) )
+        {
+          // adjust start pos
+          // adjust length since we could have a replaced token (globalized local label)
+          ErrorInfo.Pos += Tokens[StartIndex].StartPos;
+          ErrorInfo.Length = Tokens[StartIndex].Length;
+          return false;
+        }
+        return true;
       }
       if ( Count == 2 )
       {
