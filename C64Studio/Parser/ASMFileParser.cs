@@ -1860,7 +1860,7 @@ namespace C64Studio.Parser
                 {
                   lineInfo.NeededParsedExpression[0].Content = closestLabel;
                 }
-              }
+             } 
             }
             ErrorInfo error;
             if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, out value, out error ) )
