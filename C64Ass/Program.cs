@@ -32,10 +32,19 @@ namespace C64Ass
 
       docInfo.DocumentFilename = System.IO.Path.GetFullPath( config.InputFile );
 
+      if ( string.IsNullOrEmpty( config.OutputFile ) )
+      {
+        // provide a default
+        config.OutputFile = GR.Path.RenameExtension( config.InputFile, ".prg" );
+        config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      }
+
       bool result = parser.ParseFile( docInfo, projectConfig, config );
       if ( !result )
       {
-        System.Console.WriteLine( "Parsing the file failed" );
+        System.Console.WriteLine( "Parsing the file failed:" );
+
+        DisplayOutput( parser );
         return 1;
       }
 
@@ -55,6 +64,7 @@ namespace C64Ass
       if ( !parser.Assemble( config ) )
       {
         System.Console.WriteLine( "Assembling the output failed" );
+        DisplayOutput( parser );
         return 1;
       }
 
@@ -64,6 +74,26 @@ namespace C64Ass
         return 1;
       }
       return 0;
+    }
+
+
+
+    private static void DisplayOutput( ASMFileParser Parser )
+    {
+      foreach ( var entry in Parser.Messages )
+      {
+        string    file;
+        int       lineIndex;
+
+        if ( Parser.ASMFileInfo.FindTrueLineSource( entry.Key, out file, out lineIndex ) )
+        {
+          System.Console.WriteLine( file + "(" + lineIndex + "): " + entry.Value.Code.ToString() + " - " + entry.Value.Message );
+        }
+        else
+        {
+          System.Console.WriteLine( entry.Value.Code.ToString() + " - " + entry.Value.Message );
+        }
+      }
     }
   }
 }
