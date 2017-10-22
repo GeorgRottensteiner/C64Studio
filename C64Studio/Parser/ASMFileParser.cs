@@ -1159,6 +1159,7 @@ namespace C64Studio.Parser
             {
               // syntax error!
               // closing bracket without opening bracket
+              ErrorInfo = new ErrorInfo( LineIndex, bracketEndPos, 1, Types.ErrorCode.E1004_MISSING_OPENING_BRACKET );
               return false;
             }
             bracketEndPos = i;
@@ -1170,6 +1171,7 @@ namespace C64Studio.Parser
         {
           // syntax error
           // opening bracket without closing bracket
+          ErrorInfo = new ErrorInfo( LineIndex, bracketStartPos, 1, Types.ErrorCode.E1005_MISSING_CLOSING_BRACKET );
           return false;
         }
 
@@ -1377,6 +1379,7 @@ namespace C64Studio.Parser
       {
         return ParseValue( LineIndex, subTokenRange[0].Content, out Result, out NumBytesGiven, out ErrorInfo );
       }
+      ErrorInfo = new ErrorInfo( LineIndex, subTokenRange[0].StartPos, subTokenRange[subTokenRange.Count - 1].EndPos - subTokenRange[0].StartPos, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
       return false;
     }
 
@@ -1863,6 +1866,10 @@ namespace C64Studio.Parser
              } 
             }
             ErrorInfo error;
+            if ( lineIndex == 183 )
+            {
+              Debug.Log( "aha" );
+            }
             if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, out value, out error ) )
             {
               /*
@@ -1870,17 +1877,23 @@ namespace C64Studio.Parser
               Debug.Log( "=> Could not parse!" );
               Debug.Log( "=> from line: " + lineInfo.Line );
                */
-              AddError( lineIndex,
-                        error.Code,
-                        "Could not evaluate " + lineInfo.Line.Substring( error.Pos, error.Length ),
-                        error.Pos,
-                        error.Length );
-              /*
-              AddError( lineIndex, 
-                        Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
-                        "Could not evaluate " + TokensToExpression( lineInfo.NeededParsedExpression ),
-                        lineInfo.NeededParsedExpression[0].StartPos,
-                        lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );*/
+              if ( error == null )
+              {
+                Debug.Log( "EvaluateTokens failed without error info!" );
+                AddError( lineIndex, 
+                          Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
+                          "Could not evaluate " + TokensToExpression( lineInfo.NeededParsedExpression ),
+                          lineInfo.NeededParsedExpression[0].StartPos,
+                          lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );
+              }
+              else
+              {
+                AddError( lineIndex,
+                          error.Code,
+                          "Could not evaluate " + lineInfo.Line.Substring( error.Pos, error.Length ),
+                          error.Pos,
+                          error.Length );
+              }
             }
             else
             {
@@ -4528,6 +4541,7 @@ namespace C64Studio.Parser
       {
         ParseAndAddPreDefines( Configuration.Defines );
       }
+      AddPreprocessorConstant( "ASSEMBLER_C64STUDIO", 1, -1 );
 
       GR.Collections.Map<byte, byte> textCodeMapping = m_TextCodeMappingRaw;
       Dictionary<string,string> previousMinusLabel = new Dictionary<string, string>();
