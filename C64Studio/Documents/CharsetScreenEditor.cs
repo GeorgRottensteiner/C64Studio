@@ -1174,7 +1174,8 @@ namespace C64Studio
           pictureEditor.Invalidate();
           labelInfo.Text = InfoText();
 
-          if ( string.IsNullOrEmpty( DocumentInfo.Project.Settings.BasePath ) )
+          if ( ( DocumentInfo.Project == null )
+          ||   ( string.IsNullOrEmpty( DocumentInfo.Project.Settings.BasePath ) ) )
           {
             m_CharsetScreen.ExternalCharset = filename;
           }
@@ -1506,7 +1507,7 @@ namespace C64Studio
         sb.Append( " PRINT\"" );
         for ( int x = exportRect.Left; x < exportRect.Right; ++x )
         {
-          byte newColor = (byte)( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff00 ) >> 8 );
+          byte newColor = (byte)( ( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff00 ) >> 8 ) & 0x0f );
           byte newChar = (byte)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff );
 
           if ( newColor != curColor )

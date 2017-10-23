@@ -49,3 +49,4 @@
 /Common/obj
 /C64StudioRelease/Common.dll
 /C64StudioRelease.zip
+*.user
