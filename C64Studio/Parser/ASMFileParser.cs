@@ -565,31 +565,24 @@ namespace C64Studio.Parser
 
       if ( Value.StartsWith( "$" ) )
       {
-        try
+        if ( int.TryParse( Value.Substring( 1 ), System.Globalization.NumberStyles.HexNumber, null, out Result ) )
         {
-          Result = System.Convert.ToInt32( Value.Substring( 1 ), 16 );
+          //Result = System.Convert.ToInt32( Value.Substring( 1 ), 16 );
           NumGivenBytes = ( Value.Length - 1 + 1 ) / 2;
           return true;
         }
-        catch ( Exception )
-        {
-          Failed = true;
-          return false;
-        }
+        Failed = true;
+        return false;
       }
       else if ( Value.StartsWith( "0x" ) )
       {
-        try
+        if ( int.TryParse( Value.Substring( 2 ), System.Globalization.NumberStyles.HexNumber, null, out Result ) )
         {
-          Result = System.Convert.ToInt32( Value.Substring( 2 ), 16 );
           NumGivenBytes = ( Value.Length - 2 + 1 ) / 2;
           return true;
         }
-        catch ( Exception )
-        {
-          Failed = true;
-          return false;
-        }
+        Failed = true;
+        return false;
       }
       else if ( Value.StartsWith( "%" ) )
       {
