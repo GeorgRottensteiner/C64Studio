@@ -17,7 +17,35 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
-24.10.2017 - 5.4:         
+24.10.2017 - 5.4:         Add: Assembler system label ASSEMBLER_C64STUDIO
+                          Fix: Crash in "import file" for text screen editor without solution
+                          Add: Better error marking in code
+                          Fix: Branches in zero page now assemble
+                          Add: Binary export "To BASIC" now supports line start and delta
+                          Add: Export for map data from selection now selects all if no selection exists on the map
+                          Fix: Export in map editor now only adds prefix if selected
+                          Add: Missing undo for default charsets in charset editor
+                          Add: Delete option to Media Manager
+                          Fix: Register display for $01 (off by one error)
+                          Fix: Map project now properly builds charset selector from loaded charset
+                          Add: BASIC macro variants for "gray" with a and numeric PETSCII {147} equals clrscr
+                          Add: tiledata option to !mediasrc pseudo op
+                          Fix: crash bug in BASIC compiler
+                          Fix: Panels activate now without stealing focus, updates .NET framework to 3.5 (for latest DockPanelSuite)
+                          Add: Syntax coloring updates in current line right away (instead of delayed as the rest of the file)
+                          Add: Direct paint option for tiles in map editor
+                          Add: More missing undo steps for map editor
+                          Add: Export to BASIC to sprite and graphic screen editor
+                          Fix: invalidoperation bug in MC export
+                          Add: Manual color mapping in graphic screen editor
+                          Fix: Search string not found it at very end of file
+                          Add: Sector error info support for D64/D81 to File Manager 
+                          Fix: Crash in find next when target document was not open or previously closed
+                          Fix: No error if opcide with immediate addressing and late evaluation was out of bounds
+                          Add: Additional output of start address and size after successful compile
+                          Add: Changed tab support to also work without TabsAllowed enabled
+                          Fix: Removed "apply functionality" in tool settings
+                          Add: Portable mode (has to be chosen once in settings dialog)
 
 19.08.2017 - 5.3:         Add: Intellisense now shows entries which contain the typed string instead of only starting with
                           Fix: Mediatool and Mediamanager paths are now properly in apostrophes for paths with spaces
