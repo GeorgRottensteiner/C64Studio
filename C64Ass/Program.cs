@@ -2,6 +2,7 @@
 using C64Studio.Parser;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 
@@ -10,6 +11,7 @@ namespace C64Ass
 {
   class Program
   {
+
     static int Main( string[] args )
     {
       var configReader = new ArgumentEvaluator();
@@ -67,7 +69,7 @@ namespace C64Ass
         DisplayOutput( parser );
         return 1;
       }
-
+      DisplayOutput( parser );
       if ( !GR.IO.File.WriteAllBytes( config.OutputFile, parser.AssembledOutput.Assembly ) )
       {
         System.Console.WriteLine( "Failed to write output file" );

@@ -57,7 +57,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)*.exe" "$(SolutionDir)C64StudioRelease\C64Ass"
+    <PostBuildEvent>copy "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\C64Ass"
+copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\C64Ass"
 copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\C64Ass"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

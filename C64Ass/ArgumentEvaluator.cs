@@ -30,6 +30,14 @@ namespace C64Ass
     void WriteHelp()
     {
       System.Console.WriteLine( "Call with C64Ass [options] [file]" );
+      System.Console.WriteLine();
+      System.Console.WriteLine( "-H, --HELP                 - Display this help" );
+      System.Console.WriteLine( "-O, --OUTFILE [Filename]   - Determine output file name" );
+      System.Console.WriteLine( "-L, --LABELDUMP [Filename] - Write a label file" );
+      System.Console.WriteLine( "-F, --FORMAT [PLAIN/CBM]   - Sets the output file format" );
+      System.Console.WriteLine( "                             PLAIN is a raw binary, CBM a .prg file" );
+      //System.Console.WriteLine( "--SETPC                    - Forces " );
+      System.Console.WriteLine( "-AUTOTRUNCATELITERALS      - Clamps literal values to bytes/words without error" );
     }
 
 

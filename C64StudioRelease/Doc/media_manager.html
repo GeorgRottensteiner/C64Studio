@@ -19,7 +19,9 @@
                      [-t64 &lt;tape file&gt;]
                      [-import &lt;file name&gt;[,load address]]
                      [-export &lt;file name&gt;]
+                     [-rename &lt;file name&gt;]
                      [-renameto &lt;file name&gt;]
+                     [-delete &lt;file name&gt;]
                      [-listfiles]
     </pre>
 
@@ -60,10 +62,24 @@
     <br>
     <br>
   </div>
+  <a name="-rename"></a>
+  <H2>-rename &lt;file name&gt;</H2>
+  <div id="mybody">
+    Source file name to rename, new file name must be given via -renameto.
+    <br>
+    <br>
+  </div>
   <a name="-renameto"></a>
   <H2>-renameto &lt;file name&gt;</H2>
   <div id="mybody">
     Can be used to override the defaulting file name for export/import.
+    <br>
+    <br>
+  </div>
+  <a name="-delete"></a>
+  <H2>-delete &lt;file name&gt;</H2>
+  <div id="mybody">
+    Delete file from medium.
     <br>
     <br>
   </div>
