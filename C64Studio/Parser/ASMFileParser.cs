@@ -1680,6 +1680,7 @@ namespace C64Studio.Parser
           if ( m_AssemblerSettings.MacroPrefix.Length == 0 )
           {
             string startToken = "";
+            lineToCheck = lineToCheck.Trim();
             int spacePos = lineToCheck.IndexOf( ' ' );
             if ( spacePos == -1 )
             {
