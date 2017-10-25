@@ -69,11 +69,13 @@
     </Compile>
     <Compile Include="Controls\HexBoxCharViewer.cs" />
     <Compile Include="Converter\CombinedGraphicsToCharset.cs" />
+    <Compile Include="Converter\KoalaToBitmap.cs" />
     <Compile Include="Converter\PETSCIIToCharConverter.cs" />
     <Compile Include="CustomRenderer\CustomToolStripRenderer.cs" />
     <Compile Include="CustomRenderer\PaletteManager.cs" />
     <Compile Include="Compiling.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
+    <Compile Include="Imaging.cs" />
     <Compile Include="Dialogs\FormAppMode.cs">
       <SubType>Form</SubType>
     </Compile>

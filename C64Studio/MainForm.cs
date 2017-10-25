@@ -6468,12 +6468,11 @@ namespace C64Studio
     public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, Types.GraphicType ImportType, Types.MulticolorSettings MCSettings, out GR.Image.FastImage MappedImage, out Types.MulticolorSettings NewMCSettings, out bool PasteAsBlock )
     {
       PasteAsBlock = false;
+
       // shortcut possible? (check if palette matches ours)
       if ( IncomingImage == null )
       {
-        System.Drawing.Bitmap bmpImage = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile( Filename );
-        IncomingImage = GR.Image.FastImage.FromImage( bmpImage );
-        bmpImage.Dispose();
+        IncomingImage = StudioCore.Imaging.LoadImageFromFile( Filename );
       }
 
       MappedImage = null;

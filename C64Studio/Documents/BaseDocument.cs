@@ -846,7 +846,8 @@ namespace C64Studio
       {
         openDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
       }
-      if ( openDlg.ShowDialog() != DialogResult.OK )
+      if ( ( openDlg.ShowDialog() != DialogResult.OK ) 
+      ||   ( string.IsNullOrEmpty( openDlg.FileName ) ) )
       {
         return false;
       }

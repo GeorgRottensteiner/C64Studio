@@ -169,9 +169,7 @@ namespace C64Studio
         return;
       }
 
-      System.Drawing.Bitmap   bmpImage = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile( m_OrigFilename );
-      GR.Image.FastImage      newImage = GR.Image.FastImage.FromImage( bmpImage );
-      bmpImage.Dispose();
+      GR.Image.FastImage newImage = Core.Imaging.LoadImageFromFile( m_OrigFilename );
 
       OpenImage( newImage );
     }
@@ -188,13 +186,13 @@ namespace C64Studio
       {
         openDlg.InitialDirectory = Core.MainForm.CurrentProject.Settings.BasePath;
       }
-      if ( openDlg.ShowDialog() != DialogResult.OK )
+      if ( ( openDlg.ShowDialog() != DialogResult.OK ) 
+      ||   ( string.IsNullOrEmpty( openDlg.FileName ) ) )
       {
         return;
       }
-      System.Drawing.Bitmap   bmpImage = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile( openDlg.FileName );
-      GR.Image.FastImage      newImage = GR.Image.FastImage.FromImage( bmpImage );
-      bmpImage.Dispose();
+
+      GR.Image.FastImage newImage = Core.Imaging.LoadImageFromFile( openDlg.FileName );
 
       OpenImage( newImage );
     }
