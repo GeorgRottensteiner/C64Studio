@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<C64StudioSettings>
+  <EditorColors>
+    <Color Element="NONE" FGColor="FF800000" BGColor="Auto"/>
+    <Color Element="CODE" FGColor="FF000000" BGColor="Auto"/>
+    <Color Element="LITERAL_STRING" FGColor="FF008000" BGColor="Auto"/>
+    <Color Element="LITERAL_NUMBER" FGColor="FF0000FF" BGColor="Auto"/>
+    <Color Element="LABEL" FGColor="FF800000" BGColor="Auto"/>
+    <Color Element="COMMENT" FGColor="FF008000" BGColor="Auto"/>
+    <Color Element="PSEUDO_OP" FGColor="FFFF8000" BGColor="Auto"/>
+    <Color Element="CURRENT_DEBUG_LINE" FGColor="FF000000" BGColor="FFFFFF00"/>
+    <Color Element="EMPTY_SPACE" FGColor="FF000000" BGColor="FFFFFFFF"/>
+    <Color Element="OPERATOR" FGColor="FF000080" BGColor="Auto"/>
+    <Color Element="HIGHLIGHTED_SEARCH_RESULTS" FGColor="FF000000" BGColor="FFFFBC79"/>
+    <Color Element="ERROR_UNDERLINE" FGColor="FFFF0000" BGColor="FF008000"/>
+  </EditorColors>
+</C64StudioSettings>
