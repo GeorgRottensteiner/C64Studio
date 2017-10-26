@@ -1880,13 +1880,23 @@ namespace C64Studio.Parser
                           lineInfo.NeededParsedExpression[0].StartPos,
                           lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );
               }
-              else
+              else if ( ( error.Pos >= 0 )
+              &&        ( error.Pos + error.Length <= lineInfo.Line.Length ) )
               {
                 AddError( lineIndex,
                           error.Code,
                           "Could not evaluate " + lineInfo.Line.Substring( error.Pos, error.Length ),
                           error.Pos,
                           error.Length );
+              }
+              else
+              {
+                Debug.Log( "EvaluateTokens failed with error info, but pos/length was out of bounds!" );
+                AddError( lineIndex,
+                          Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
+                          "Could not evaluate " + TokensToExpression( lineInfo.NeededParsedExpression ),
+                          lineInfo.NeededParsedExpression[0].StartPos,
+                          lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );
               }
             }
             else
