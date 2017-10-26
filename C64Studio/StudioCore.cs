@@ -11,6 +11,7 @@ namespace C64Studio
     public Types.StudioState  State = Types.StudioState.NORMAL;
     public StudioSettings     Settings = new StudioSettings();
     public Debugging          Debugging;
+    public Imaging            Imaging;
     public Compiling          Compiling;
     public Searching          Searching;
     public Navigating         Navigating;
@@ -34,6 +35,7 @@ namespace C64Studio
       TaskManager = new Tasks.TaskManager( this );
       Debugging = new Debugging( this );
       Executing = new Executing( this );
+      Imaging = new Imaging( this );
 
       StaticCore = this;
     }

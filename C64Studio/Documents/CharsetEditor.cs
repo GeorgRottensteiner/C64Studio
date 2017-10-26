@@ -1513,13 +1513,13 @@ namespace C64Studio
     {
       string filename;
 
-      if ( !OpenFile( "Import Sprites from Image", C64Studio.Types.Constants.FILEFILTER_IMAGE_FILES, out filename ) )
+      if ( !OpenFile( "Import Charset from Image", C64Studio.Types.Constants.FILEFILTER_IMAGE_FILES, out filename ) )
       {
         return;
       }
-      System.Drawing.Bitmap bmpImage = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile( filename );
-      GR.Image.FastImage imgClip = GR.Image.FastImage.FromImage( bmpImage );
-      bmpImage.Dispose();
+
+      GR.Image.FastImage imgClip = Core.Imaging.LoadImageFromFile( filename );
+
       if ( ( ( imgClip.Width % 8 ) != 0 )
       ||   ( ( imgClip.Height % 8 ) != 0 )
       ||   ( imgClip.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )

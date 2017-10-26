@@ -1940,27 +1940,12 @@ namespace C64Studio
 
     private void btnImportFromImage_Click( object sender, EventArgs e )
     {
-      System.Windows.Forms.OpenFileDialog openDlg = new OpenFileDialog();
+      string filename;
 
-      openDlg.Title = "Import Sprites from Image";
-      openDlg.Filter = "PNG File|*.png|BMP File|*.bmp";
-      if ( openDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      if ( !OpenFile( "Import Sprites from Image", C64Studio.Types.Constants.FILEFILTER_IMAGE_FILES, out filename ) )
       {
         return;
       }
-      /*
-      System.Drawing.Bitmap bmpSprites = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile( openDlg.FileName );
-      if ( ( bmpSprites.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed )
-      ||   ( ( bmpSprites.Width % 24 ) != 0 )
-      ||   ( ( bmpSprites.Height % 21 ) != 0 ) )
-      {
-        bmpSprites.Dispose();
-        System.Windows.Forms.MessageBox.Show( "The image must be 8bit indexed, with width being a multiple of 24 and height being a multiple of 21", "Could not import image" );
-        return;
-      }
-      GR.Image.FastImage spriteImage = GR.Image.FastImage.FromImage( bmpSprites );
-      bmpSprites.Dispose();
-      */
 
       GR.Image.FastImage spriteImage;
 
@@ -1970,7 +1955,7 @@ namespace C64Studio
       mcSettings.MultiColor2      = m_SpriteProject.MultiColor2;
 
       bool pasteAsBlock = false;
-      if ( !Core.MainForm.ImportImage( openDlg.FileName, null, C64Studio.Types.GraphicType.SPRITES, mcSettings, out spriteImage, out mcSettings, out pasteAsBlock ) )
+      if ( !Core.MainForm.ImportImage(filename, null, C64Studio.Types.GraphicType.SPRITES, mcSettings, out spriteImage, out mcSettings, out pasteAsBlock ) )
       {
         return;
       }
