@@ -1372,7 +1372,10 @@ namespace C64Studio.Parser
       {
         return ParseValue( LineIndex, subTokenRange[0].Content, out Result, out NumBytesGiven, out ErrorInfo );
       }
-      ErrorInfo = new ErrorInfo( LineIndex, subTokenRange[0].StartPos, subTokenRange[subTokenRange.Count - 1].EndPos - subTokenRange[0].StartPos, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
+      if ( ErrorInfo == null )
+      {
+        ErrorInfo = new ErrorInfo( LineIndex, subTokenRange[0].StartPos, subTokenRange[subTokenRange.Count - 1].EndPos - subTokenRange[0].StartPos, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
+      }
       return false;
     }
 
@@ -1860,7 +1863,7 @@ namespace C64Studio.Parser
              } 
             }
             ErrorInfo error;
-            if ( lineIndex == 183 )
+            if ( lineIndex == 126 )
             {
               Debug.Log( "aha" );
             }
@@ -3693,7 +3696,7 @@ namespace C64Studio.Parser
         List<Types.TokenInfo> tokens = ParseTokenInfo( fillNumberToken, 0, fillNumberToken.Length, out Error );
         if ( !EvaluateTokens( lineIndex, tokens, out numBytes, out Error ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill count parameter " + fillNumberToken );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill count parameter: " + fillNumberToken.Substring( Error.Pos, Error.Length ) );
           return ParseLineResult.RETURN_NULL;
         }
         info.NumBytes = numBytes;
