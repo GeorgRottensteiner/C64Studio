@@ -1105,5 +1105,26 @@ GREEN=5
 
 
 
+    [TestMethod]
+    public void TestCheapLocals()
+    {
+      string      source = @"* = $2000
+                             Main
+                              @cheap
+                             lda #$ff
+                             jmp @cheap
+
+                             NotMain
+                              @cheap
+                               inc $d020
+                                jmp @cheap";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0020A9FF4C0020EE20D04C0520", assembly.ToString() );
+    }
+
+
+
   }
 }

@@ -25,6 +25,7 @@ namespace C64Studio.Types.ASM
     public int LineIndex = -1;
     public string Line = "";
     public string Zone = "";
+    public string CheapLabelZone = "";
     public List<Types.TokenInfo> NeededParsedExpression = null;
     public GR.Collections.Map<byte, byte> LineCodeMapping = null;
     public Tiny64.Opcode Opcode = null;
@@ -115,31 +116,32 @@ namespace C64Studio.Types.ASM
     }
 
 
-    public string FindZoneFromDocumentLine( string DocumentFilename, int LineIndex )
+    public bool FindZoneInfoFromDocumentLine( string DocumentFilename, int LineIndex, out string Zone, out string CheapLabelZone )
     {
       // find global line index
       int     globalLineIndex = 0;
+      Zone = "";
+      CheapLabelZone = "";
 
       if ( !FindGlobalLineIndex( LineIndex, DocumentFilename, out globalLineIndex ) )
       {
-        return "";
+        return false;
       }
 
       // work from there
-      string zone = "";
-
       while ( globalLineIndex >= 0 )
       {
         if ( LineInfo.ContainsKey( globalLineIndex ) )
         {
           Types.ASM.LineInfo lineInfo = LineInfo[globalLineIndex];
 
-          zone = lineInfo.Zone;
+          Zone            = lineInfo.Zone;
+          CheapLabelZone  = lineInfo.CheapLabelZone;
           break;
         }
         --globalLineIndex;
       }
-      return zone;
+      return true;
     }
 
 
@@ -237,7 +239,7 @@ namespace C64Studio.Types.ASM
 
 
 
-    public Types.SymbolInfo TokenInfoFromName( string Token, string Zone )
+    public Types.SymbolInfo TokenInfoFromName( string Token, string Zone, string CheapLabelParent )
     {
       if ( AssemblerSettings != null )
       {
@@ -248,6 +250,13 @@ namespace C64Studio.Types.ASM
       }
       if ( !Labels.ContainsKey( Token ) )
       {
+        if ( Token.StartsWith( "@" ) )
+        {
+          if ( Labels.ContainsKey( CheapLabelParent + Token ) )
+          {
+            return Labels[CheapLabelParent + Token];
+          }
+        }
         if ( Labels.ContainsKey( Zone + Token ) )
         {
           return Labels[Zone + Token];
@@ -335,6 +344,7 @@ namespace C64Studio.Types.ASM
       }
       return sb.ToString();
     }
+
 
   }
 }

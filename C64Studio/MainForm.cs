@@ -3404,7 +3404,10 @@ namespace C64Studio
 
             updatedFiles.Add( element.DocumentInfo.FullPath );
 
-            ( (SourceASMEx)element.Document ).SetLineInfos( StudioCore.Compiling.ParserASM.ASMFileInfo );
+            if ( element.Document != null )
+            {
+              ( (SourceASMEx)element.Document ).SetLineInfos( StudioCore.Compiling.ParserASM.ASMFileInfo );
+            }
 
             AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
             /*
@@ -5009,8 +5012,11 @@ namespace C64Studio
             if ( sourceEx != null )
             {
               string wordBelow = sourceEx.FindWordAtCaretPosition();
-              string zone = sourceEx.FindZoneAtCaretPosition();
-              StudioCore.Navigating.GotoDeclaration( docToHandle, wordBelow, zone );
+              string zone;
+              string cheapLabelParent;
+
+              sourceEx.FindZoneAtCaretPosition( out zone, out cheapLabelParent );
+              StudioCore.Navigating.GotoDeclaration( docToHandle, wordBelow, zone, cheapLabelParent );
             }
           }
           break;

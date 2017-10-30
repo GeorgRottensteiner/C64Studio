@@ -19,6 +19,10 @@ namespace C64Studio.Tasks
 
     protected override bool ProcessTask()
     {
+      if ( m_Doc == null )
+      {
+        return false;
+      }
       if ( m_Doc.InvokeRequired )
       {
         return (bool)m_Doc.Invoke( new ProcessTaskCallback( ProcessTask ) );

@@ -58,6 +58,8 @@ namespace C64Studio.Parser
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "@";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";

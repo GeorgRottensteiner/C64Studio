@@ -163,15 +163,15 @@ namespace C64Studio
 
 
 
-    public void GotoDeclaration( DocumentInfo ASMDoc, string Word, string Zone )
+    public void GotoDeclaration( DocumentInfo ASMDoc, string Word, string Zone, string CheapLabelParent )
     {
       Types.ASM.FileInfo fileToDebug = DetermineASMFileInfo( ASMDoc );
 
-      Types.SymbolInfo tokenInfo = fileToDebug.TokenInfoFromName( Word, Zone );
+      Types.SymbolInfo tokenInfo = fileToDebug.TokenInfoFromName( Word, Zone, CheapLabelParent );
       if ( tokenInfo == null )
       {
         fileToDebug = ASMDoc.ASMFileInfo;
-        tokenInfo = ASMDoc.ASMFileInfo.TokenInfoFromName( Word, Zone );
+        tokenInfo = ASMDoc.ASMFileInfo.TokenInfoFromName( Word, Zone, CheapLabelParent );
       }
       if ( tokenInfo != null )
       {

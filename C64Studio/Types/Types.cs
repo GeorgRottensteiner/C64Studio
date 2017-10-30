@@ -1350,7 +1350,8 @@ namespace C64Studio.Types
       COMMENT_IF_FIRST_CHAR,
       OPCODE_FIXED_ZP,
       OPCODE_FIXED_NON_ZP,
-      OPCODE_DIRECT_VALUE
+      OPCODE_DIRECT_VALUE,
+      LABEL_CHEAP_LOCAL
     }
 
     public string     OriginatingString;

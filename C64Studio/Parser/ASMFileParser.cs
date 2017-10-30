@@ -4556,6 +4556,7 @@ namespace C64Studio.Parser
       m_CompileCurrentAddress = -1;
       int trueCompileCurrentAddress = -1;
       string zoneName = "";
+      string cheapLabelParent = "";
       int   intermediateLineOffset = 0;
       bool  hadCommentInLine = false;
       bool hadMacro = false;
@@ -4585,9 +4586,10 @@ namespace C64Studio.Parser
         }
 
         Types.ASM.LineInfo info = new Types.ASM.LineInfo();
-        info.LineIndex = lineIndex;
-        info.Zone = zoneName;
-        info.AddressStart = programStepPos;
+        info.LineIndex      = lineIndex;
+        info.Zone           = zoneName;
+        info.CheapLabelZone = cheapLabelParent;
+        info.AddressStart   = programStepPos;
 
         if ( ScopeInsideMacroDefinition( stackScopes ) )
         {
@@ -4631,6 +4633,7 @@ namespace C64Studio.Parser
         &&   ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.SEPARATOR )
         &&   ( ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
         ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_INTERNAL )
+        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
         ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_LOCAL ) ) )
         {
           // remove separator
@@ -4665,9 +4668,10 @@ namespace C64Studio.Parser
           // turn all labels/macros to upper case
           foreach ( Types.TokenInfo token in lineTokenInfos )
           {
-            if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-            ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
-            ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+            if ( ( token.Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+            ||   ( token.Type == Types.TokenInfo.TokenType.LABEL_INTERNAL )
+            ||   ( token.Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+            ||   ( token.Type == Types.TokenInfo.TokenType.LABEL_LOCAL ) )
             {
               token.Content = token.Content.ToUpper();
             }
@@ -4680,15 +4684,17 @@ namespace C64Studio.Parser
         int   tokenOffset = 0;
         if ( ( lineTokenInfos.Count > 1 )
         &&   ( !m_AssemblerSettings.Macros.ContainsKey( lineTokenInfos[0].Content.ToUpper() ) )
-        &&   ( ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        ||     ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
-        ||     ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) ) )
+        &&   ( ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_INTERNAL )
+        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_LOCAL ) ) )
         {
           ++tokenOffset;
         }
-        if ( ( ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        ||     ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
-        ||     ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+        if ( ( ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_INTERNAL )
+        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_LOCAL ) )
         &&   ( m_AssemblerSettings.Macros.ContainsKey( lineTokenInfos[tokenOffset].Content.ToUpper() ) ) )
         {
           var macroInfo = m_AssemblerSettings.Macros[lineTokenInfos[tokenOffset].Content.ToUpper()];
@@ -4793,6 +4799,10 @@ namespace C64Studio.Parser
         //prefix zone to local labels
         for ( int i = 0; i < lineTokenInfos.Count; ++i )
         {
+          if ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+          {
+            cheapLabelParent = lineTokenInfos[i].Content;
+          }
           if ( ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_LOCAL )
           ||   ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
           {
@@ -4806,6 +4816,14 @@ namespace C64Studio.Parser
           if ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_LOCAL )
           {
             lineTokenInfos[i].Content = zoneName + lineTokenInfos[i].Content;
+            if ( i == 0 )
+            {
+              upToken = lineTokenInfos[i].Content.ToUpper();
+            }
+          }
+          if ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+          {
+            lineTokenInfos[i].Content = cheapLabelParent + lineTokenInfos[i].Content;
             if ( i == 0 )
             {
               upToken = lineTokenInfos[i].Content.ToUpper();

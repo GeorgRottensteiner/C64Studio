@@ -98,7 +98,7 @@ namespace C64Studio
       m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( opCodes, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
       m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] = new System.Text.RegularExpressions.Regex( pseudoOps, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
 
-      m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[.]{0,1}[+\-a-zA-Z]+[a-zA-Z_\d.]*[:]*" );
+      m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[.@]{0,1}[+\-a-zA-Z]+[a-zA-Z_\d.]*[:]*" );
       m_TextRegExp[(int)Types.ColorableElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";.*" );
 
       m_TextRegExp[(int)Types.ColorableElement.OPERATOR] = new System.Text.RegularExpressions.Regex( @"[+\-/*(){}=<>,#]" );
@@ -766,9 +766,10 @@ namespace C64Studio
 
       
 
-      string zone = FindZoneAtCaretPosition();
-      //string localLabel = FindLocalLabelAtCaretPosition();
-      //Debug.Log( "zone found:" + zone );
+      string zone;
+      string cheapLabelParent;
+
+      FindZoneAtCaretPosition( out zone, out cheapLabelParent );
 
       C64Studio.Types.SymbolInfo symbol = (C64Studio.Types.SymbolInfo)comboZoneSelector.SelectedItem;
       if ( ( symbol != null )
@@ -910,10 +911,13 @@ namespace C64Studio
       }
 
       //string zone = FindZoneFromLine( lineNumber );
-      string zone = debugFileInfo.FindZoneFromDocumentLine( DocumentInfo.FullPath, lineNumber );
+      string zone;
+      string cheapLabelParent;
+
+      debugFileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineNumber, out zone, out cheapLabelParent );
 
       //MainForm.EnsureFileIsParsed();
-      Types.SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone );
+      Types.SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
       if ( ( tokenInfo != null )
       &&   ( tokenInfo.Type != Types.SymbolInfo.Types.UNKNOWN ) )
       {
@@ -1144,7 +1148,10 @@ namespace C64Studio
 
       int lineIndex = CurrentLineIndex;
       string wordBelow = FindWordFromPosition( CurrentPosition() - 1, lineIndex );
-      string zone = FindZoneFromLine( lineIndex );
+      string zone;
+      string cheapLabelParent;
+
+      FindZoneFromLine( lineIndex, out zone, out cheapLabelParent );
       /*
       if ( wordBelow.Length <= 0 )
       {
@@ -1853,7 +1860,9 @@ namespace C64Studio
 
       string wordBelow = "";
 
-      string tokenAllowedChars = ".ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
+      // TODO - use assembler settings!!
+
+      string tokenAllowedChars = ".@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
       if ( DocumentInfo.Element != null )
       {
         // TODO - should not be defined here
@@ -1861,13 +1870,13 @@ namespace C64Studio
         {
           case Types.AssemblerType.PDS:
           case Types.AssemblerType.AUTO:
-            tokenAllowedChars = "!ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+            tokenAllowedChars = "!@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
             break;
           case Types.AssemblerType.DASM:
             tokenAllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
             break;
           default:
-            tokenAllowedChars = ".ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
+            tokenAllowedChars = ".@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
             break;
         }
       }
@@ -1982,7 +1991,10 @@ namespace C64Studio
         return;
       }
 
-      string zone = debugFileInfo.FindZoneFromDocumentLine( DocumentInfo.FullPath, lineIndex );
+      string zone;
+      string cheapLabelParent;
+      
+      debugFileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineIndex, out zone, out cheapLabelParent );
 
       // TODO - determine if known label/var
       int     result = -1;
@@ -2007,7 +2019,7 @@ namespace C64Studio
         return;
       }
 
-      Types.SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone );
+      Types.SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
       if ( tokenInfo != null )
       {
         WatchEntry entry = new WatchEntry();
@@ -2031,19 +2043,20 @@ namespace C64Studio
 
 
 
-    private string FindZoneFromLine( int LineIndex )
+    private bool FindZoneFromLine( int LineIndex, out string Zone, out string CheapLabelParent )
     {
+      Zone = "";
+      CheapLabelParent = "";
+
       Types.ASM.FileInfo debugFileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
       if ( debugFileInfo == null )
       {
-        return "";
+        return false;
       }
       if ( !debugFileInfo.IsDocumentPart( DocumentInfo.FullPath ) )
       {
         debugFileInfo = DocumentInfo.ASMFileInfo;
       }
-
-      string  zone = "";
 
       while ( LineIndex >= 0 )
       {
@@ -2054,17 +2067,18 @@ namespace C64Studio
           {
             Types.ASM.LineInfo lineInfo = debugFileInfo.LineInfo[globalLineIndex];
 
-            zone = lineInfo.Zone;
+            Zone              = lineInfo.Zone;
+            CheapLabelParent  = lineInfo.CheapLabelZone;
             break;
           }
         }
         else
         {
-          return "";
+          return false;
         }
         --LineIndex;
       }
-      return zone;
+      return true;
     }
 
 
@@ -2107,9 +2121,12 @@ namespace C64Studio
     private void gotoDeclarationToolStripMenuItem_Click( object sender, EventArgs e )
     {
       string wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
-      string zone = FindZoneFromLine( m_ContextMenuLineIndex );
+      string zone;
+      string cheapLabelParent;
+      
+      FindZoneFromLine( m_ContextMenuLineIndex, out zone, out cheapLabelParent );
 
-      Core.Navigating.GotoDeclaration( DocumentInfo, wordBelow, zone );
+      Core.Navigating.GotoDeclaration( DocumentInfo, wordBelow, zone, cheapLabelParent );
       CenterOnCaret();
     }
 
@@ -2130,9 +2147,9 @@ namespace C64Studio
 
 
 
-    public string FindZoneAtCaretPosition()
+    public bool FindZoneAtCaretPosition( out string Zone, out string CheapLabelParent )
     {
-      return FindZoneFromLine( CurrentLineIndex );
+      return FindZoneFromLine( CurrentLineIndex, out Zone, out CheapLabelParent );
     }
 
 
@@ -2178,10 +2195,13 @@ namespace C64Studio
     private void showAddressToolStripMenuItem_Click( object sender, EventArgs e )
     {
       string wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
-      string zone = FindZoneFromLine( m_ContextMenuLineIndex );
+      string zone;
+      string cheapLabelParent;
+      
+      FindZoneFromLine( m_ContextMenuLineIndex, out zone, out cheapLabelParent );
 
       Core.MainForm.EnsureFileIsParsed();
-      Types.SymbolInfo tokenInfo = DocumentInfo.ASMFileInfo.TokenInfoFromName( wordBelow, zone );
+      Types.SymbolInfo tokenInfo = DocumentInfo.ASMFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
       if ( ( tokenInfo != null )
       &&   ( tokenInfo.Type != Types.SymbolInfo.Types.UNKNOWN ) )
       {
@@ -2695,7 +2715,11 @@ namespace C64Studio
         return;
       }
 
-      string  zone = debugFileInfo.FindZoneFromDocumentLine( DocumentInfo.FullPath, lineIndex );
+      string  zone;
+      string cheapLabelParent;
+      
+      debugFileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineIndex, out zone, out cheapLabelParent );
+
       int     address = -1;
       string  addressSource = wordBelow;
 
@@ -2710,7 +2734,7 @@ namespace C64Studio
           }
         }
       }
-      var tokenInfo = DocumentInfo.ASMFileInfo.TokenInfoFromName( wordBelow, zone );
+      var tokenInfo = DocumentInfo.ASMFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
       if ( ( tokenInfo != null )
       &&   ( tokenInfo.AddressOrValue != -1 ) )
       {
