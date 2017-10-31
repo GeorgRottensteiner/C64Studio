@@ -4802,7 +4802,8 @@ namespace C64Studio.Parser
         //prefix zone to local labels
         for ( int i = 0; i < lineTokenInfos.Count; ++i )
         {
-          if ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+          if ( ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+          &&   ( i == 0 ) )
           {
             cheapLabelParent = lineTokenInfos[i].Content;
           }
