@@ -703,7 +703,12 @@ namespace C64Studio
 
     private void pictureEditor_MouseMove( object sender, MouseEventArgs e )
     {
-      HandleMouseOnEditor( e.X, e.Y, e.Button );
+      MouseButtons    buttons = e.Button;
+      if ( !pictureEditor.Focused )
+      {
+        buttons = 0;
+      }
+      HandleMouseOnEditor( e.X, e.Y, buttons );
     }
 
 

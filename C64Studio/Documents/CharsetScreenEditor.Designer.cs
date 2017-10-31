@@ -44,6 +44,10 @@
       this.btnImportCharset = new System.Windows.Forms.Button();
       this.btnImportFromFile = new System.Windows.Forms.Button();
       this.groupExport = new System.Windows.Forms.GroupBox();
+      this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
+      this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
+      this.label3 = new System.Windows.Forms.Label();
+      this.label4 = new System.Windows.Forms.Label();
       this.checkExportHex = new System.Windows.Forms.CheckBox();
       this.comboExportArea = new System.Windows.Forms.ComboBox();
       this.editAreaHeight = new System.Windows.Forms.TextBox();
@@ -68,10 +72,13 @@
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.btnExportCharset = new System.Windows.Forms.Button();
       this.editDataExport = new System.Windows.Forms.TextBox();
+      this.btnExportToBASICData = new System.Windows.Forms.Button();
       this.btnExportToBasic = new System.Windows.Forms.Button();
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.checkApplyColors = new System.Windows.Forms.CheckBox();
+      this.checkApplyCharacter = new System.Windows.Forms.CheckBox();
       this.label9 = new System.Windows.Forms.Label();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
       this.labelInfo = new System.Windows.Forms.Label();
@@ -99,11 +106,6 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnExportToBASICData = new System.Windows.Forms.Button();
-      this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
-      this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
-      this.label3 = new System.Windows.Forms.Label();
-      this.label4 = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -265,6 +267,40 @@
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
+      // 
+      // editExportBASICLineOffset
+      // 
+      this.editExportBASICLineOffset.Location = new System.Drawing.Point(341, 274);
+      this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
+      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
+      this.editExportBASICLineOffset.TabIndex = 23;
+      this.editExportBASICLineOffset.Text = "10";
+      // 
+      // editExportBASICLineNo
+      // 
+      this.editExportBASICLineNo.Location = new System.Drawing.Point(170, 274);
+      this.editExportBASICLineNo.Name = "editExportBASICLineNo";
+      this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
+      this.editExportBASICLineNo.TabIndex = 24;
+      this.editExportBASICLineNo.Text = "10";
+      // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(274, 277);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(61, 13);
+      this.label3.TabIndex = 21;
+      this.label3.Text = "Line Offset:";
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(117, 277);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(47, 13);
+      this.label4.TabIndex = 22;
+      this.label4.Text = "Line No:";
       // 
       // checkExportHex
       // 
@@ -495,6 +531,16 @@
       this.editDataExport.WordWrap = false;
       this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
       // 
+      // btnExportToBASICData
+      // 
+      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 272);
+      this.btnExportToBASICData.Name = "btnExportToBASICData";
+      this.btnExportToBASICData.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToBASICData.TabIndex = 6;
+      this.btnExportToBASICData.Text = "to BASIC data";
+      this.btnExportToBASICData.UseVisualStyleBackColor = true;
+      this.btnExportToBASICData.Click += new System.EventHandler(this.btnExportToBASICData_Click);
+      // 
       // btnExportToBasic
       // 
       this.btnExportToBasic.Location = new System.Drawing.Point(6, 141);
@@ -527,6 +573,8 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.checkApplyColors);
+      this.tabEditor.Controls.Add(this.checkApplyCharacter);
       this.tabEditor.Controls.Add(this.label9);
       this.tabEditor.Controls.Add(this.comboCharsetMode);
       this.tabEditor.Controls.Add(this.labelInfo);
@@ -552,6 +600,7 @@
       this.tabEditor.Controls.Add(this.comboBackground);
       this.tabEditor.Controls.Add(this.panelCharColors);
       this.tabEditor.Controls.Add(this.pictureEditor);
+      this.tabEditor.ImageKey = "(none)";
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
@@ -559,6 +608,34 @@
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // checkApplyColors
+      // 
+      this.checkApplyColors.Appearance = System.Windows.Forms.Appearance.Button;
+      this.checkApplyColors.Checked = true;
+      this.checkApplyColors.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkApplyColors.Image = global::C64Studio.Properties.Resources.charscreen_colors;
+      this.checkApplyColors.Location = new System.Drawing.Point(198, 432);
+      this.checkApplyColors.Name = "checkApplyColors";
+      this.checkApplyColors.Size = new System.Drawing.Size(24, 24);
+      this.checkApplyColors.TabIndex = 36;
+      this.toolTip1.SetToolTip(this.checkApplyColors, "Affect Colors");
+      this.checkApplyColors.UseVisualStyleBackColor = true;
+      this.checkApplyColors.CheckedChanged += new System.EventHandler(this.checkApplyColors_CheckedChanged);
+      // 
+      // checkApplyCharacter
+      // 
+      this.checkApplyCharacter.Appearance = System.Windows.Forms.Appearance.Button;
+      this.checkApplyCharacter.Checked = true;
+      this.checkApplyCharacter.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkApplyCharacter.Image = global::C64Studio.Properties.Resources.charscreen_chars;
+      this.checkApplyCharacter.Location = new System.Drawing.Point(168, 432);
+      this.checkApplyCharacter.Name = "checkApplyCharacter";
+      this.checkApplyCharacter.Size = new System.Drawing.Size(24, 24);
+      this.checkApplyCharacter.TabIndex = 36;
+      this.toolTip1.SetToolTip(this.checkApplyCharacter, "Affect Characters");
+      this.checkApplyCharacter.UseVisualStyleBackColor = true;
+      this.checkApplyCharacter.CheckedChanged += new System.EventHandler(this.checkApplyCharacter_CheckedChanged);
       // 
       // label9
       // 
@@ -849,50 +926,6 @@
       this.tabCharsetEditor.Size = new System.Drawing.Size(964, 501);
       this.tabCharsetEditor.TabIndex = 0;
       // 
-      // btnExportToBASICData
-      // 
-      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 272);
-      this.btnExportToBASICData.Name = "btnExportToBASICData";
-      this.btnExportToBASICData.Size = new System.Drawing.Size(106, 23);
-      this.btnExportToBASICData.TabIndex = 6;
-      this.btnExportToBASICData.Text = "to BASIC data";
-      this.btnExportToBASICData.UseVisualStyleBackColor = true;
-      this.btnExportToBASICData.Click += new System.EventHandler(this.btnExportToBASICData_Click);
-      // 
-      // editExportBASICLineOffset
-      // 
-      this.editExportBASICLineOffset.Location = new System.Drawing.Point(341, 274);
-      this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
-      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
-      this.editExportBASICLineOffset.TabIndex = 23;
-      this.editExportBASICLineOffset.Text = "10";
-      // 
-      // editExportBASICLineNo
-      // 
-      this.editExportBASICLineNo.Location = new System.Drawing.Point(170, 274);
-      this.editExportBASICLineNo.Name = "editExportBASICLineNo";
-      this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
-      this.editExportBASICLineNo.TabIndex = 24;
-      this.editExportBASICLineNo.Text = "10";
-      // 
-      // label3
-      // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(274, 277);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(61, 13);
-      this.label3.TabIndex = 21;
-      this.label3.Text = "Line Offset:";
-      // 
-      // label4
-      // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(117, 277);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(47, 13);
-      this.label4.TabIndex = 22;
-      this.label4.Text = "Line No:";
-      // 
       // CharsetScreenEditor
       // 
       this.ClientSize = new System.Drawing.Size(964, 525);
@@ -992,6 +1025,8 @@
     private System.Windows.Forms.TextBox editExportBASICLineNo;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.CheckBox checkApplyCharacter;
+    private System.Windows.Forms.CheckBox checkApplyColors;
 
 
 
