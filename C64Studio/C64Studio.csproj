@@ -86,6 +86,11 @@
     <Compile Include="Navigating.cs" />
     <Compile Include="Executing.cs" />
     <Compile Include="Parser\AssemblyOutput.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Searching.cs" />
     <Compile Include="Debugging.cs" />
     <Compile Include="Dialogs\DlgDisassembler.cs">
@@ -598,17 +603,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="app.config" />
     <EmbeddedResource Include="C64_Pro_Mono_v1.0-STYLE.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
