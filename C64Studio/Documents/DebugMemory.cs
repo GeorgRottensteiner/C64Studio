@@ -466,7 +466,15 @@ namespace C64Studio
       btnBinaryCharView.Checked = false;
       btnBinarySpriteView.Checked = false;
       btnBinaryStringView.Checked = true;
-      hexView.CustomHexViewer = null;
+
+      if ( hexView.CustomHexViewer is HexBoxPETSCIIViewer )
+      {
+        ( (HexBoxPETSCIIViewer)hexView.CustomHexViewer ).ToggleViewMode();
+      }
+      else
+      {
+        hexView.CustomHexViewer = new HexBoxPETSCIIViewer();
+      }
 
       Core.Settings.MemoryDisplay = MemoryDisplayType.ASCII;
 

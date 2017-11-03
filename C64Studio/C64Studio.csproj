@@ -63,6 +63,7 @@
     <Compile Include="Controls\ArrangedItemList.Designer.cs">
       <DependentUpon>ArrangedItemList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\HexBoxCharPETSCIIViewer.cs" />
     <Compile Include="Controls\HexBoxSpriteViewer.cs" />
     <Compile Include="Controls\MenuButton.cs">
       <SubType>Component</SubType>
