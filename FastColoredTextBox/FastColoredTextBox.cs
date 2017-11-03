@@ -309,6 +309,21 @@ namespace FastColoredTextBoxNS
       set;
     }
 
+
+
+    /// <summary>
+    /// Characters which are used for a "word" (double click auto selection, ctrl-left/right etc.)
+    /// </summary>
+    [DefaultValue( "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_" )]
+    [Description( "Characters which are used for a \"word\" (double click auto selection, ctrl-left/right etc.)" )]
+    public string WordCharacters
+    {
+      get;
+      set;
+    }
+
+
+
     MacrosManager macrosManager;
     /// <summary>
     /// MacrosManager records, stores and executes the macroses
@@ -6524,20 +6539,22 @@ namespace FastColoredTextBoxNS
 
       for ( int i = p.iChar; i < lines[p.iLine].Count; i++ )
       {
-        char c = lines[p.iLine][i].c;
-        if ( char.IsLetterOrDigit( c ) || c == '_' )
-          toX = i + 1;
-        else
+        char c = char.ToUpper( lines[p.iLine][i].c );
+        if ( WordCharacters.IndexOf( c ) == -1 )
+        {
           break;
+        }
+        toX = i + 1;
       }
 
       for ( int i = p.iChar - 1; i >= 0; i-- )
       {
-        char c = lines[p.iLine][i].c;
-        if ( char.IsLetterOrDigit( c ) || c == '_' )
-          fromX = i;
-        else
+        char c = char.ToUpper( lines[p.iLine][i].c );
+        if ( WordCharacters.IndexOf( c ) == -1 )
+        {
           break;
+        }
+        fromX = i;
       }
 
       Selection = new Range( this, toX, p.iLine, fromX, p.iLine );

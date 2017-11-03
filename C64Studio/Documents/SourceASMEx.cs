@@ -116,6 +116,7 @@ namespace C64Studio
 
       editSource.AutoIndentExistingLines = false;
       editSource.AutoIndentChars = false;
+      editSource.WordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_@";
 
       // allows auto indent on new lines, indents similar to previous line
       editSource.AutoIndent = true;
