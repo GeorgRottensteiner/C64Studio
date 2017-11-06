@@ -584,43 +584,25 @@ namespace C64Studio.Parser
         Failed = true;
         return false;
       }
-      else if ( Value.StartsWith( "%" ) )
+      else if ( ( Value.StartsWith( "%" ) )
+      ||        ( Value.StartsWith( "#" ) ) )
       {
-        try
+        string    convertValue = Value.Substring( 1 );
+        if ( IsBinary( convertValue ) )
         {
-          Result = System.Convert.ToInt32( Value.Substring( 1 ), 2 );
+          Result = GR.Convert.ToI32( convertValue, 2 );
           NumGivenBytes = ( Value.Length - 1 + 7 ) / 8;
           return true;
         }
-        catch ( Exception )
+        convertValue = convertValue.Replace( '#', '1' ).Replace( '.', '0' );
+        if ( IsBinary( convertValue ) )
         {
-          string temp = Value.Substring( 1 ).Replace( '#', '1' ).Replace( '.', '0' );
-
-          try
-          {
-            Result = System.Convert.ToInt32( temp, 2 );
-            NumGivenBytes = ( Value.Length - 1 + 7 ) / 8;
-            return true;
-          }
-          catch ( Exception )
-          {
-            Failed = true;
-            return false;
-          }
-        }
-      }
-      else if ( Value.StartsWith( "#" ) )
-      {
-        try
-        {
-          Result = System.Convert.ToInt32( Value.Substring( 1 ), 2 );
+          Result = GR.Convert.ToI32( convertValue, 2 );
           NumGivenBytes = ( Value.Length - 1 + 7 ) / 8;
           return true;
         }
-        catch ( Exception )
-        {
-          return false;
-        }
+        Failed = true;
+        return false;
       }
       else if ( Value.StartsWith( "'" ) )
       {
@@ -692,6 +674,21 @@ namespace C64Studio.Parser
         return true;
       }
       return false;
+    }
+
+
+
+    private bool IsBinary( string ConvertValue )
+    {
+      for ( int i = 0; i < ConvertValue.Length; ++i )
+      {
+        if ( ( ConvertValue[i] != '0' )
+        &&   ( ConvertValue[i] != '1' ) )
+        {
+          return false;
+        }
+      }
+      return true;
     }
 
 
