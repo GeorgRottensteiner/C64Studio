@@ -1014,8 +1014,8 @@ namespace C64Studio
       {
         comboZoneSelector.SelectedIndex = 0;
       }
-      RefreshLocalSymbols();
-      RefreshAutoComplete();
+      //RefreshLocalSymbols();
+      //RefreshAutoComplete();
     }
 
 
