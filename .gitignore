@@ -53,3 +53,5 @@
 /C64StudioRelease/Tiny64.dll
 /C64StudioRelease/Tiny64.dll
 /C64StudioRelease/C64Ass
+*.psess
+/C64Studio171106.vspx

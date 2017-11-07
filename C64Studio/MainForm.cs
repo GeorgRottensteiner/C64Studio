@@ -3410,9 +3410,6 @@ namespace C64Studio
             }
 
             AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
-            /*
-            ( (SourceASMEx)element.Document ).OnKnownKeywordsChanged();
-            ( (SourceASMEx)element.Document ).OnKnownTokensChanged();*/
 
             foreach ( var dependencyBuildState in element.DocumentInfo.DeducedDependency.Values )
             {
@@ -5269,8 +5266,6 @@ namespace C64Studio
               if ( elementToUpdate.Document != null )
               {
                 AddTask( new Tasks.TaskUpdateKeywords( elementToUpdate.Document ) );
-                //elementToUpdate.Document.OnKnownKeywordsChanged();
-                //elementToUpdate.Document.OnKnownTokensChanged();
               }
             }
           }
