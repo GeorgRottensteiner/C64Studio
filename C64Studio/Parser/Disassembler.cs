@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Tiny64;
 
-
-
 namespace C64Studio.Parser
 {
   public class Disassembler

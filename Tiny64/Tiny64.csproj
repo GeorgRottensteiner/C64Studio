@@ -54,13 +54,8 @@
     <Compile Include="Emulator\C64\SID.cs" />
     <Compile Include="Emulator\C64\VIC.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{237ea67c-2697-4880-9d71-131112130081}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
+  <Import Project="..\Common\SharedCommon.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

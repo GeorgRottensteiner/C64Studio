@@ -7,12 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Tiny64;
+
+
 
 namespace Tiny64Emu
 {
   public partial class FormMain : Form
   {
-    private         Tiny64.Machine        m_Emulator = new Tiny64.Machine();
+    private         Machine        m_Emulator = new Machine();
 
 
 

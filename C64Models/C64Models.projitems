@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>b6f4568c-7d3f-48f5-a5ad-2f4dc2247c40</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>C64Models</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\Breakpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\CIA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Processor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\SID.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\VIC.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Memory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Opcode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Processor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\Disassembler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\Emulator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\Machine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\Types.cs" />
+  </ItemGroup>
+</Project>
