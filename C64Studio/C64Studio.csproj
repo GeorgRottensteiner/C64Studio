@@ -634,8 +634,6 @@
     <Compile Include="Types\BuildChain.cs" />
     <Compile Include="Types\BuildChainEntry.cs" />
     <Compile Include="Types\MemoryMap.cs" />
-    <Compile Include="Types\Palette.cs" />
-    <Compile Include="Types\Types.cs" />
     <Compile Include="Types\Util.cs" />
     <Compile Include="Undo\UndoCharscreenCharsetChange.cs" />
     <Compile Include="Undo\UndoSpritesetExchangeMultiColors.cs" />

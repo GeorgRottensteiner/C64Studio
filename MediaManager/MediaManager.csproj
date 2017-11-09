@@ -57,12 +57,6 @@
     <Compile Include="..\C64Studio\Formats\T64.cs">
       <Link>Included Files\T64.cs</Link>
     </Compile>
-    <Compile Include="..\C64Studio\Types\Palette.cs">
-      <Link>Included Files\Palette.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Types\Types.cs">
-      <Link>Included Files\Types.cs</Link>
-    </Compile>
     <Compile Include="..\C64Studio\Types\Util.cs">
       <Link>Included Files\Util.cs</Link>
     </Compile>
@@ -71,6 +65,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
+  <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

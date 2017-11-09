@@ -21,5 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Emulator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Machine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Types.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Palette.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Types.cs" />
   </ItemGroup>
 </Project>

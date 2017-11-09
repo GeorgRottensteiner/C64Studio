@@ -17,8 +17,6 @@ namespace Tiny64
     public byte           Y = 0;
     public byte           Flags = 0x10;
 
-    int                   CurrentCycle = 0;
-
     public ushort         PC = 0;
     public byte           StackPointer = 0xff;
 
@@ -158,7 +156,6 @@ namespace Tiny64
       X             = 0;
       Y             = 0;
       Flags         = 0x10;   // break is set
-      CurrentCycle  = 0;
       PC            = 0;
       StackPointer  = 0xff;
     }

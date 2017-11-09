@@ -54,12 +54,6 @@
     <Compile Include="..\C64Studio\Formats\SpriteProject.cs">
       <Link>Included Files\SpriteProject.cs</Link>
     </Compile>
-    <Compile Include="..\C64Studio\Types\Palette.cs">
-      <Link>Included Files\Palette.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Types\Types.cs">
-      <Link>Included Files\Types.cs</Link>
-    </Compile>
     <Compile Include="Manager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +62,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="..\Common\Common.projitems" Label="Shared" />
+  <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"

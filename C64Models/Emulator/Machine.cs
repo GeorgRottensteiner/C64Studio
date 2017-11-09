@@ -194,7 +194,8 @@ namespace Tiny64
           {
             throw new NotSupportedException( "JAM" );
           }
-          return 0;
+          // TODO?
+          //return 0;
         case 0x05:
           // ORA $FF             2b, 3c
           {
@@ -1446,9 +1447,11 @@ namespace Tiny64
 
     private byte OnReadAddress( ushort Address )
     {
-      //TODO - breakpoints
-      return Memory.ReadByte( Address );
+      byte  value = Memory.ReadByte( Address );
+
       CheckBreakpoints( Address, true, false, false );
+
+      return value;
     }
 
 
