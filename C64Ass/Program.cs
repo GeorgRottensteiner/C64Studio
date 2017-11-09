@@ -32,7 +32,7 @@ namespace C64Ass
       var projectConfig = new ProjectConfig();
       // TODO - add defines if given
 
-      docInfo.DocumentFilename = System.IO.Path.GetFullPath( config.InputFile );
+      string  fullPath = System.IO.Path.GetFullPath( config.InputFile );
 
       if ( string.IsNullOrEmpty( config.OutputFile ) )
       {
@@ -41,7 +41,7 @@ namespace C64Ass
         config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       }
 
-      bool result = parser.ParseFile( docInfo, projectConfig, config );
+      bool result = parser.ParseFile( fullPath, "", projectConfig, config );
       if ( !result )
       {
         System.Console.WriteLine( "Parsing the file failed:" );

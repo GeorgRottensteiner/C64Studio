@@ -78,8 +78,6 @@ namespace C64Studio.Parser
 
     public Types.ASM.FileInfo           InitialFileInfo = null;
 
-    public const string                 INTERNAL_OPENING_BRACE = "╚";
-    public const string                 INTERNAL_CLOSING_BRACE = "╝";
 
 
 
@@ -1383,7 +1381,7 @@ namespace C64Studio.Parser
     private bool IsOpeningBraceChar( string Token )
     {
       if ( ( Token == "(" )
-      ||   ( Token == INTERNAL_OPENING_BRACE ) )
+      ||   ( Token == AssemblerSettings.INTERNAL_OPENING_BRACE ) )
       {
         return true;
       }
@@ -1395,7 +1393,7 @@ namespace C64Studio.Parser
     private bool IsClosingBraceChar( string Token )
     {
       if ( ( Token == ")" )
-      ||   ( Token == INTERNAL_CLOSING_BRACE ) )
+      ||   ( Token == AssemblerSettings.INTERNAL_CLOSING_BRACE ) )
       {
         return true;
       }
@@ -4327,7 +4325,7 @@ namespace C64Studio.Parser
           {
             // separator
             // we're using a custom internal brace to not mix up opcode detection with expression parsing
-            param.Add( INTERNAL_OPENING_BRACE + parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) + INTERNAL_CLOSING_BRACE );
+            param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
 
             // is reference properly matched?
             if ( param.Count > functionInfo.ParametersAreReferences.Count )
@@ -4372,7 +4370,7 @@ namespace C64Studio.Parser
           else
           {
             // braces so potential original operators are evaluated before the rest is
-            param.Add( INTERNAL_OPENING_BRACE + TokensToExpression( lineTokenInfos, startIndex, lineTokenInfos.Count - startIndex ) + INTERNAL_CLOSING_BRACE );
+            param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + TokensToExpression( lineTokenInfos, startIndex, lineTokenInfos.Count - startIndex ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
           }
           //param.Add( lineTokenInfos[startIndex].Content );
           // is reference properly matched?

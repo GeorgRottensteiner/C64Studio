@@ -22,6 +22,9 @@ namespace C64Studio.Parser
     public bool                                                     IncludeExpectsStringLiteral = true;
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
 
+    public const string                 INTERNAL_OPENING_BRACE = "╚";
+    public const string                 INTERNAL_CLOSING_BRACE = "╝";
+
 
 
     public void AddMacro( string Macro, Types.MacroInfo.MacroType Type )
@@ -77,7 +80,7 @@ namespace C64Studio.Parser
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
-          AllowedSingleTokens = ",#(){}*" + ASMFileParser.INTERNAL_OPENING_BRACE + ASMFileParser.INTERNAL_CLOSING_BRACE;
+          AllowedSingleTokens = ",#(){}*" + INTERNAL_OPENING_BRACE + INTERNAL_CLOSING_BRACE;
 
           AddMacro( "!BYTE", Types.MacroInfo.MacroType.BYTE );
           AddMacro( "!BY", Types.MacroInfo.MacroType.BYTE );

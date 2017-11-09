@@ -258,11 +258,9 @@
     <Compile Include="Documents\MapEditor.Designer.cs">
       <DependentUpon>MapEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Parser\AssemblerSettings.cs" />
     <Compile Include="Documents\PetSCIITable.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Parser\CompileConfig.cs" />
     <Compile Include="Parser\Disassembler.cs" />
     <Compile Include="Project\Solution.cs" />
     <Compile Include="PropertyTabs\PropBuildEventBuildChain.cs">
@@ -322,7 +320,6 @@
     <Compile Include="Tasks\TaskUpdateKeywords.cs" />
     <Compile Include="Types\ApplicationEvent.cs" />
     <Compile Include="Types\ASMFileInfo.cs" />
-    <Compile Include="Types\Breakpoint.cs" />
     <Compile Include="Formats\CharsetProject.cs" />
     <Compile Include="Documents\GraphicScreenEditor.cs">
       <SubType>Form</SubType>

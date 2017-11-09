@@ -258,7 +258,7 @@ namespace C64Studio.Parser
 
 
 
-    public bool ParseFile( DocumentInfo Document, ProjectConfig Configuration, CompileConfig Config )
+    public bool ParseFileOrig( DocumentInfo Document, ProjectConfig Configuration, CompileConfig Config )
     {
       Clear();
 
@@ -325,6 +325,62 @@ namespace C64Studio.Parser
       }
       return Parse( text, Configuration, Config );
     }
+
+
+
+    public bool ParseFile( string Filename, string SourceCode, ProjectConfig Configuration, CompileConfig Config )
+    {
+      Clear();
+
+      if ( string.IsNullOrEmpty( Filename ) )
+      {
+        return false;
+      }
+
+      m_Filename = Filename;
+      m_DocBasePath = GR.Path.RemoveFileSpec( Filename );
+      if ( Filename.Length == 0 )
+      {
+        return false;
+      }
+
+      string text = SourceCode;
+
+      if ( string.IsNullOrEmpty( text ) )
+      {
+        try
+        {
+          text = System.IO.File.ReadAllText( Filename );
+        }
+        catch ( System.Exception )
+        {
+          AddError( -1, Types.ErrorCode.E2000_FILE_OPEN_ERROR, "Could not open file " + Filename );
+          return false;
+        }
+      }
+
+      if ( Config.Assembler == C64Studio.Types.AssemblerType.AUTO )
+      {
+        // try to detect
+        Config.Assembler = DetectAssemblerType( text );
+        if ( Config.Assembler != C64Studio.Types.AssemblerType.AUTO )
+        {
+          /*
+          if ( Document.Element != null )
+          {
+            Document.Element.AssemblerType = Config.Assembler;
+            Document.BaseDoc.SetModified();
+          }*/
+        }
+      }
+      if ( Config.Assembler == C64Studio.Types.AssemblerType.AUTO )
+      {
+        // safety fallback to avoid crashes
+        Config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      }
+      return Parse( text, Configuration, Config );
+    }
+
 
 
     public abstract bool DocumentAndLineFromGlobalLine( int GlobalLine, out string DocumentFile, out int DocumentLine );

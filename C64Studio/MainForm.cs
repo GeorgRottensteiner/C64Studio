@@ -5177,7 +5177,29 @@ namespace C64Studio
       }
       config.AutoTruncateLiteralValues = StudioCore.Settings.ASMAutoTruncateLiteralValues;
 
-      bool result = Parser.ParseFile( Document, Configuration, config );
+      string sourceCode = "";
+
+      if ( Document.BaseDoc != null )
+      {
+        if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
+        {
+          sourceCode = ( (SourceASMEx)Document.BaseDoc ).editSource.Text;
+        }
+        else if ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
+        {
+          sourceCode = ( (SourceBasicEx)Document.BaseDoc ).editSource.Text;
+        }
+      }
+
+      bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config );
+
+      if ( ( config.Assembler != C64Studio.Types.AssemblerType.AUTO )
+      &&   ( Document.BaseDoc != null )
+      &&   ( Document.Element != null ) )
+      {
+        Document.Element.AssemblerType = config.Assembler;
+        Document.BaseDoc.SetModified();
+      }
 
       if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
       {

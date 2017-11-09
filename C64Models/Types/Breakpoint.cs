@@ -6,9 +6,7 @@ namespace C64Studio.Types
 {
   public class Breakpoint
   {
-    //public WeifenLuo.WinFormsUI.Docking.DockContent     Document = null;
     public string             DocumentFilename = "";
-    //public int                GlobalLineIndex = -1;
     public int                LineIndex = -1;
     public int                Address = -1;
     public string             AddressSource = null;
