@@ -45,21 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\C64Studio\Formats\D64.cs">
-      <Link>Included Files\D64.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Formats\Disk.cs">
-      <Link>Included Files\Disk.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Formats\MediaFormat.cs">
-      <Link>Included Files\MediaFormat.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Formats\T64.cs">
-      <Link>Included Files\T64.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Types\Util.cs">
-      <Link>Included Files\Util.cs</Link>
-    </Compile>
     <Compile Include="Manager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

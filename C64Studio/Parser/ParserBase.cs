@@ -258,76 +258,6 @@ namespace C64Studio.Parser
 
 
 
-    public bool ParseFileOrig( DocumentInfo Document, ProjectConfig Configuration, CompileConfig Config )
-    {
-      Clear();
-
-      string Filename = Document.FullPath;
-
-      if ( string.IsNullOrEmpty( Filename ) )
-      {
-        return false;
-      }
-
-      m_Filename = Filename;
-      m_DocBasePath = GR.Path.RemoveFileSpec( Filename );
-      if ( Filename.Length == 0 )
-      {
-        return false;
-      }
-
-      string text = "";
-
-      // get text from control directly if possible
-      if ( Document.BaseDoc != null )
-      {
-        if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
-        {
-          text = ( (SourceASMEx)Document.BaseDoc ).editSource.Text;
-        }
-        else if ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
-        {
-          text = ( (SourceBasicEx)Document.BaseDoc ).editSource.Text;
-        }
-      }
-
-      //Debug.Log( "Start " + Filename );
-      if ( string.IsNullOrEmpty( text ) )
-      {
-        try
-        {
-          text = System.IO.File.ReadAllText( Filename );
-        }
-        catch ( System.Exception )
-        {
-          AddError( -1, Types.ErrorCode.E2000_FILE_OPEN_ERROR, "Could not open file " + Filename );
-          return false;
-        }
-      }
-
-      if ( Config.Assembler == C64Studio.Types.AssemblerType.AUTO )
-      {
-        // try to detect
-        Config.Assembler = DetectAssemblerType( text );
-        if ( Config.Assembler != C64Studio.Types.AssemblerType.AUTO )
-        {
-          if ( Document.Element != null )
-          {
-            Document.Element.AssemblerType = Config.Assembler;
-            Document.BaseDoc.SetModified();
-          }
-        }
-      }
-      if ( Config.Assembler == C64Studio.Types.AssemblerType.AUTO )
-      {
-        // safety fallback to avoid crashes
-        Config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      }
-      return Parse( text, Configuration, Config );
-    }
-
-
-
     public bool ParseFile( string Filename, string SourceCode, ProjectConfig Configuration, CompileConfig Config )
     {
       Clear();
@@ -361,17 +291,8 @@ namespace C64Studio.Parser
 
       if ( Config.Assembler == C64Studio.Types.AssemblerType.AUTO )
       {
-        // try to detect
+        // try to detect -> modifying passed in Config!!
         Config.Assembler = DetectAssemblerType( text );
-        if ( Config.Assembler != C64Studio.Types.AssemblerType.AUTO )
-        {
-          /*
-          if ( Document.Element != null )
-          {
-            Document.Element.AssemblerType = Config.Assembler;
-            Document.BaseDoc.SetModified();
-          }*/
-        }
       }
       if ( Config.Assembler == C64Studio.Types.AssemblerType.AUTO )
       {

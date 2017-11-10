@@ -46,8 +46,11 @@ namespace C64Studio.Tasks
       &&   ( m_Document.BaseDoc != null )
       &&   ( m_Document.Element != null ) )
       {
-        m_Document.Element.AssemblerType = compileConfig.Assembler;
-        m_Document.BaseDoc.SetModified();
+        if ( m_Document.Element.AssemblerType != compileConfig.Assembler )
+        {
+          m_Document.Element.AssemblerType = compileConfig.Assembler;
+          m_Document.BaseDoc.SetModified();
+        }
       }
 
       return true;

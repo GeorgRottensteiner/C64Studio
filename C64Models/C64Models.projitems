@@ -9,6 +9,7 @@
     <Import_RootNamespace>C64Models</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Breakpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\CIA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Processor.cs" />
@@ -21,10 +22,29 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Emulator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Machine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Types.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\CharpadProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\CharsetProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\CharsetScreenProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\D64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\D81.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Disk.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\GraphicScreenProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\MapProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\MediaFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\PRG.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\SpriteProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\T64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\AssemblerSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\CompileConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Project\ProjectConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\ASMFileInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\ASMSegment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\AssemblyOutput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Breakpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\MemoryMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Palette.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Types.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Util.cs" />
   </ItemGroup>
 </Project>

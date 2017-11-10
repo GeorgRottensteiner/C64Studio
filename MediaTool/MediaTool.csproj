@@ -42,18 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\C64Studio\CustomRenderer\CustomToolStripRenderer.cs">
-      <Link>Included Files\CustomToolStripRenderer.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\CustomRenderer\PaletteManager.cs">
-      <Link>Included Files\PaletteManager.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Formats\CharsetProject.cs">
-      <Link>Included Files\CharsetProject.cs</Link>
-    </Compile>
-    <Compile Include="..\C64Studio\Formats\SpriteProject.cs">
-      <Link>Included Files\SpriteProject.cs</Link>
-    </Compile>
     <Compile Include="Manager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +49,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

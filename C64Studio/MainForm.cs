@@ -554,7 +554,7 @@ namespace C64Studio
       StudioCore.Settings.PanelMain = panelMain;
       StudioCore.Settings.Main = this;
 
-      Parser.BasicFileParser.KeyMap = StudioCore.Settings.BASICKeyMap;
+      //Parser.BasicFileParser.KeyMap = StudioCore.Settings.BASICKeyMap;
 
       Types.Palette defaultPalette = new C64Studio.Types.Palette();
       defaultPalette.Name = "C64Studio";
@@ -5197,8 +5197,11 @@ namespace C64Studio
       &&   ( Document.BaseDoc != null )
       &&   ( Document.Element != null ) )
       {
-        Document.Element.AssemblerType = config.Assembler;
-        Document.BaseDoc.SetModified();
+        if ( Document.Element.AssemblerType != config.Assembler )
+        {
+          Document.Element.AssemblerType = config.Assembler;
+          Document.BaseDoc.SetModified();
+        }
       }
 
       if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )

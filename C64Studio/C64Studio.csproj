@@ -73,7 +73,6 @@
     <Compile Include="Converter\KoalaToBitmap.cs" />
     <Compile Include="Converter\PETSCIIToCharConverter.cs" />
     <Compile Include="CustomRenderer\CustomToolStripRenderer.cs" />
-    <Compile Include="CustomRenderer\PaletteManager.cs" />
     <Compile Include="Compiling.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
     <Compile Include="Imaging.cs" />
@@ -83,10 +82,10 @@
     <Compile Include="Dialogs\FormAppMode.Designer.cs">
       <DependentUpon>FormAppMode.cs</DependentUpon>
     </Compile>
-    <Compile Include="Formats\Disk.cs" />
     <Compile Include="Navigating.cs" />
     <Compile Include="Executing.cs" />
-    <Compile Include="Parser\AssemblyOutput.cs" />
+    <Compile Include="Parser\BasicFileParser.cs" />
+    <Compile Include="Parser\ParserBase.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -168,22 +167,13 @@
     <Compile Include="Controls\EditC64Filename.Designer.cs">
       <DependentUpon>EditC64Filename.cs</DependentUpon>
     </Compile>
-    <Compile Include="Formats\CharpadProject.cs" />
-    <Compile Include="Formats\CharsetScreenProject.cs" />
-    <Compile Include="Formats\D81.cs" />
     <Compile Include="Formats\DisassemblyProject.cs" />
-    <Compile Include="Formats\GraphicScreenProject.cs" />
-    <Compile Include="Formats\D64.cs" />
     <Compile Include="Documents\FileManager.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Documents\FileManager.Designer.cs">
       <DependentUpon>FileManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="Formats\MapProject.cs" />
-    <Compile Include="Formats\MediaFormat.cs" />
-    <Compile Include="Formats\PRG.cs" />
-    <Compile Include="Formats\Tap.cs" />
     <Compile Include="Dialogs\FormFindReplace.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -319,8 +309,6 @@
     <Compile Include="Tasks\TaskUpdateCompileResult.cs" />
     <Compile Include="Tasks\TaskUpdateKeywords.cs" />
     <Compile Include="Types\ApplicationEvent.cs" />
-    <Compile Include="Types\ASMFileInfo.cs" />
-    <Compile Include="Formats\CharsetProject.cs" />
     <Compile Include="Documents\GraphicScreenEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -352,7 +340,6 @@
     <Compile Include="Dialogs\FormAbout.Designer.cs">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="Formats\T64.cs" />
     <Compile Include="Dialogs\FormMacros.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -398,11 +385,8 @@
     <Compile Include="Documents\Calculator.Designer.cs">
       <DependentUpon>Calculator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Parser\BasicFileParser.cs" />
-    <Compile Include="Parser\ParserBase.cs" />
     <Compile Include="Project\DependencyBuildState.cs" />
     <Compile Include="Project\FileDependency.cs" />
-    <Compile Include="Project\ProjectConfig.cs" />
     <Compile Include="Documents\SpriteEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -626,12 +610,8 @@
     <Compile Include="Tasks\Task.cs" />
     <Compile Include="Tasks\TaskParseFile.cs" />
     <Compile Include="ToolInfo.cs" />
-    <Compile Include="Formats\SpriteProject.cs" />
-    <Compile Include="Types\ASMSegment.cs" />
     <Compile Include="Types\BuildChain.cs" />
     <Compile Include="Types\BuildChainEntry.cs" />
-    <Compile Include="Types\MemoryMap.cs" />
-    <Compile Include="Types\Util.cs" />
     <Compile Include="Undo\UndoCharscreenCharsetChange.cs" />
     <Compile Include="Undo\UndoSpritesetExchangeMultiColors.cs" />
     <Compile Include="Undo\UndoCharsetPlaygroundCharChange.cs" />
@@ -724,9 +704,7 @@
       <Name>HexBox</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Systems\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

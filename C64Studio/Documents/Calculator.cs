@@ -77,12 +77,11 @@ namespace C64Studio
     private void editCalc_TextChanged( object sender, EventArgs e )
     {
       Parser.ASMFileParser    parser = new C64Studio.Parser.ASMFileParser();
-      C64Studio.Parser.ASMFileParser.ErrorInfo error;
-      var tokens = parser.ParseTokenInfo( editCalc.Text, 0, editCalc.TextLength, out error );
+      var tokens = parser.ParseTokenInfo( editCalc.Text, 0, editCalc.TextLength );
       if ( tokens != null )
       {
         int   result = -1;
-        if ( parser.EvaluateTokens( -1, tokens, out result, out error ) )
+        if ( parser.EvaluateTokens( -1, tokens, out result ) )
         {
           editResult.Text = "$" + result.ToString( "X" ) + ", " + result.ToString();
           editCalc.BackColor = System.Drawing.SystemColors.Window;

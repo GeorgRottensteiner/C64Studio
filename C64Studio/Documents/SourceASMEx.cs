@@ -1087,8 +1087,7 @@ namespace C64Studio
       int posX = editSource.Selection.Start.iChar;
 
       // ugly quick hack, allow x and y as index fields for opcodes (e.g. sta $fff,x)
-      C64Studio.Parser.ASMFileParser.ErrorInfo error;
-      var tokens = Parser.PrepareLineTokens( curLine, out error );
+      var tokens = Parser.PrepareLineTokens( curLine );
       bool hadOpcodeFirst = false;
       if ( tokens != null )
       {
@@ -1946,8 +1945,7 @@ namespace C64Studio
         string watchedSelection = editSource.Selection.Text;
 
         // allow for single label; label,x; label,y; (label),y; (label),x
-        C64Studio.Parser.ASMFileParser.ErrorInfo error;
-        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length, out error );
+        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length );
 
         if ( tokens.Count != 0 )
         {
@@ -2700,8 +2698,7 @@ namespace C64Studio
         string watchedSelection = editSource.Selection.Text;
 
         // allow for single label; label,x; label,y; (label),y; (label),x
-        C64Studio.Parser.ASMFileParser.ErrorInfo error;
-        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length, out error );
+        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length );
 
         if ( tokens.Count > 0 )
         {

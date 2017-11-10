@@ -305,16 +305,14 @@ namespace C64Studio
         {
           continue;
         }
-        C64Studio.Parser.ASMFileParser.ErrorInfo   error;
-
-        var tokenInfos = Core.Compiling.ParserASM.ParseTokenInfo( virtualBP.Expression, 0, virtualBP.Expression.Length, out error );
-        if ( error != null )
+        var tokenInfos = Core.Compiling.ParserASM.ParseTokenInfo( virtualBP.Expression, 0, virtualBP.Expression.Length );
+        if ( Core.Compiling.ParserASM.HasError() )
         {
           Core.AddToOutput( "Failed to ParseTokenInfo" + System.Environment.NewLine );
           continue;
         }
         int   result = -1;
-        if ( !Core.Compiling.ParserASM.EvaluateTokens( -1, tokenInfos, out result, out error ) )
+        if ( !Core.Compiling.ParserASM.EvaluateTokens( -1, tokenInfos, out result ) )
         {
           Core.AddToOutput( "Failed to evaluate " + virtualBP.Expression + System.Environment.NewLine );
           continue;
