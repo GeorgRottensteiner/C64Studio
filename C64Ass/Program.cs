@@ -24,11 +24,6 @@ namespace C64Ass
 
       var parser = new ASMFileParser();
 
-      var docInfo = new DocumentInfo() 
-        { 
-          Type = ProjectElement.ElementType.ASM_SOURCE 
-        };
-
       var projectConfig = new ProjectConfig();
       // TODO - add defines if given
 

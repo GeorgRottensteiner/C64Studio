@@ -32,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -48,17 +49,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\C64Studio\C64Studio.csproj">
-      <Project>{5bea5ce5-4c5d-4ec5-83f3-83634e929858}</Project>
-      <Name>C64Studio</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
+  <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\C64Ass"
-copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\C64Ass"
-copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\C64Ass"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\C64Ass"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

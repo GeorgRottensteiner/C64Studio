@@ -84,8 +84,6 @@
     </Compile>
     <Compile Include="Navigating.cs" />
     <Compile Include="Executing.cs" />
-    <Compile Include="Parser\BasicFileParser.cs" />
-    <Compile Include="Parser\ParserBase.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -327,7 +325,6 @@
     <Compile Include="Documents\Outline.Designer.cs">
       <DependentUpon>Outline.cs</DependentUpon>
     </Compile>
-    <Compile Include="Parser\ASMFileParser.cs" />
     <Compile Include="Documents\DebugWatch.cs">
       <SubType>Form</SubType>
     </Compile>
