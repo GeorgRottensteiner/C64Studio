@@ -1821,6 +1821,11 @@ namespace C64Studio
         editSource.Focus();
       }
 
+      if ( ( Line < 0 )
+      ||   ( Line >= editSource.LinesCount ) )
+      {
+        Line = 0;
+      }
       editSource.Navigate( Line );
       ///editSource.Caret.Goto( editSource.Lines[Line].StartPosition );
       ///editSource.Scrolling.ScrollToCaret();

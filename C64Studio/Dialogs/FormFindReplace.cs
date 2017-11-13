@@ -761,6 +761,7 @@ namespace C64Studio
 
         // find line from pos
         FindLineAndTextFromResult( activeDocument, newLocation, LastFound, edit.Text );
+        newLocation.LineNumber = LastFound.LineNumber;
 
         var start = edit.VirtualPositionToPosition( newLocation.StartPosition );
         var end = edit.VirtualPositionToPosition( newLocation.StartPosition + newLocation.Length );
