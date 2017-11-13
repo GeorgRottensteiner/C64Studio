@@ -75,6 +75,12 @@
     <Compile Include="CustomRenderer\CustomToolStripRenderer.cs" />
     <Compile Include="Compiling.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
+    <Compile Include="Documents\ValueTableEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\ValueTableEditor.Designer.cs">
+      <DependentUpon>ValueTableEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Imaging.cs" />
     <Compile Include="Dialogs\FormAppMode.cs">
       <SubType>Form</SubType>
@@ -544,6 +550,9 @@
     <EmbeddedResource Include="Documents\Outline.resx">
       <DependentUpon>Outline.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Documents\ValueTableEditor.resx">
+      <DependentUpon>ValueTableEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PropertyTabs\PropBuildEventBuildChain.resx">
       <DependentUpon>PropBuildEventBuildChain.cs</DependentUpon>
     </EmbeddedResource>
@@ -649,6 +658,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="c64.ico" />
+    <None Include="Resources\valuetable.ico" />
     <None Include="Resources\charscreen_colors_off.ico" />
     <None Include="Resources\charscreen_chars_off.ico" />
     <None Include="Resources\charscreen_colors2.ico" />

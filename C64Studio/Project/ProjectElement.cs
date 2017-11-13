@@ -22,7 +22,8 @@ namespace C64Studio
       PROJECT,
       DISASSEMBLER,
       BINARY_FILE,
-      MEDIA_MANAGER
+      MEDIA_MANAGER,
+      VALUE_TABLE
     };
 
     public enum BuildTypes

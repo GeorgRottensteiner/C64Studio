@@ -11,8 +11,6 @@ namespace C64Studio
 {
   public partial class SolutionExplorer : BaseDocument
   {
-    //public System.Windows.Forms.TreeNode      NodeProject = null;
-
     private System.Windows.Forms.TreeNode     m_ContextMenuNode = null;
 
     private System.Drawing.Font               m_BoldFont = null;
@@ -142,6 +140,10 @@ namespace C64Studio
             System.Windows.Forms.ToolStripMenuItem subItemNewMap = new System.Windows.Forms.ToolStripMenuItem( "Map" );
             subItemNewMap.Click += new EventHandler( projectAddMap_Click );
             subItem.DropDownItems.Add( subItemNewMap );
+
+            System.Windows.Forms.ToolStripMenuItem subItemNewValueTable = new System.Windows.Forms.ToolStripMenuItem( "Value Table" );
+            subItemNewValueTable.Click += new EventHandler( projectAddValueTable_Click );
+            subItem.DropDownItems.Add( subItemNewValueTable );
 
             System.Windows.Forms.ToolStripMenuItem subItemAddExisting = new System.Windows.Forms.ToolStripMenuItem( "Existing File(s)" );
             subItemAddExisting.Click += new EventHandler( projectAddExistingFile_Click );
@@ -292,6 +294,13 @@ namespace C64Studio
         }
         contextMenu.Show( treeProject.PointToScreen( e.Location ) );
       }
+    }
+
+
+
+    private void projectAddValueTable_Click( object sender, EventArgs e )
+    {
+      AddNewFile( ProjectElement.ElementType.VALUE_TABLE, "Value Table", m_ContextMenuNode );
     }
 
 

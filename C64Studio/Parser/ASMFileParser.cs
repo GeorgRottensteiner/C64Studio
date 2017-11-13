@@ -187,7 +187,7 @@ namespace C64Studio.Parser
 
 
 
-    private void AddExtFunction( string Name, int NumArguments, int NumResults, ExtFunction Function )
+    public void AddExtFunction( string Name, int NumArguments, int NumResults, ExtFunction Function )
     {
       ExtFunctionInfo   fInfo = new ExtFunctionInfo();
       fInfo.Name = Name;
@@ -324,6 +324,13 @@ namespace C64Studio.Parser
     internal bool HasError()
     {
       return m_LastErrorInfo.Code != Types.ErrorCode.OK;
+    }
+
+
+
+    internal ErrorInfo GetError()
+    {
+      return m_LastErrorInfo;
     }
 
 
@@ -733,6 +740,27 @@ namespace C64Studio.Parser
 
 
 
+    public bool ParseValueNumeric( int LineIndex, string Value, out double Result )
+    {
+      int     numDigits = 0;
+      ClearErrorInfo();
+
+      if ( double.TryParse( Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out Result ) )
+      {
+        return true;
+      }
+      int     dummy = -1;
+
+      if ( !ParseValue( LineIndex, Value, out dummy, out numDigits ) )
+      {
+        return false;
+      }
+      Result = (double)dummy;
+      return true;
+    }
+
+
+
     public bool ParseValue( int LineIndex, string Value, out int Result, out int NumGivenBytes )
     {
       Result        = -1;
@@ -1040,6 +1068,20 @@ namespace C64Studio.Parser
 
 
 
+    private bool EvaluateExtFunctionNumeric( string FunctionName, List<Types.TokenInfo> Tokens, int StartIndex, int Count, out double Result )
+    {
+      Result = 0;
+
+      List<Types.TokenInfo> results = ProcessExtFunction( FunctionName, Tokens, StartIndex, Count );
+      if ( results.Count != 1 )
+      {
+        return false;
+      }
+      return double.TryParse( results[0].Content, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out Result );
+    }
+
+
+
     public bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, out int Result )
     {
       int dummy = 0;
@@ -1061,6 +1103,14 @@ namespace C64Studio.Parser
     private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, out int Result, out int NumBytesGiven )
     {
       return EvaluateTokens( LineIndex, Tokens, 0, Tokens.Count, out Result, out NumBytesGiven );
+    }
+
+
+
+    public bool EvaluateTokensNumeric( int LineIndex, List<Types.TokenInfo> Tokens, out double Result )
+    {
+      ClearErrorInfo();
+      return EvaluateTokensNumeric( LineIndex, Tokens, 0, Tokens.Count, out Result );
     }
 
 
@@ -1399,6 +1449,341 @@ namespace C64Studio.Parser
       if ( Count == 1 )
       {
         return ParseValue( LineIndex, subTokenRange[0].Content, out Result, out NumBytesGiven );
+      }
+      if ( !HasError() )
+      {
+        m_LastErrorInfo.Set( LineIndex, subTokenRange[0].StartPos, subTokenRange[subTokenRange.Count - 1].EndPos - subTokenRange[0].StartPos, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
+      }
+      return false;
+    }
+
+
+
+    private bool EvaluateTokensNumeric( int LineIndex, List<Types.TokenInfo> Tokens, int StartIndex, int Count, out double Result )
+    {
+      Result = 0;
+      ClearErrorInfo();
+      if ( Count == 0 )
+      {
+        return false;
+      }
+
+      int numBytesGiven = 0;
+      int dummy = 0;
+
+      if ( Count == 1 )
+      {
+        if ( !ParseValue( LineIndex, Tokens[StartIndex].Content, out dummy ) )
+        {
+          // adjust start pos
+          // adjust length since we could have a replaced token (globalized local label)
+          m_LastErrorInfo.Pos += Tokens[StartIndex].StartPos;
+          m_LastErrorInfo.Length = Tokens[StartIndex].Length;
+          return false;
+        }
+        Result = (double)dummy;
+        return true;
+      }
+      if ( Count == 2 )
+      {
+        // unary operators
+        if ( Tokens[StartIndex].Content == "-" )
+        {
+          int     value = -1;
+
+          if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, out value ) )
+          {
+            Result = (double)-value;
+            return true;
+          }
+        }
+        else if ( Tokens[StartIndex + 1].Content.StartsWith( "%" ) )
+        {
+          // a "x % y" case, where % is prefixed to the second operator
+          if ( ParseValue( LineIndex, Tokens[StartIndex].Content, out dummy, out numBytesGiven ) )
+          {
+          }
+          if ( ParseValue( LineIndex, Tokens[StartIndex + 1].Content.Substring( 1 ), out dummy, out numBytesGiven ) )
+          {
+          }
+          Types.TokenInfo   tempTokenOperator = new Types.TokenInfo();
+          tempTokenOperator.Content = "%";
+          tempTokenOperator.StartPos = Tokens[StartIndex + 1].StartPos;
+          tempTokenOperator.Length = 1;
+
+          Types.TokenInfo   tempToken = new Types.TokenInfo();
+          tempToken.Content = Tokens[StartIndex + 1].Content.Substring( 1 );
+          tempToken.StartPos = Tokens[StartIndex + 1].StartPos + 1;
+          tempToken.Length = Tokens[StartIndex + 1].Length - 1;
+
+          int   resultInt = 0;
+          if ( !HandleOperator( LineIndex, tempTokenOperator, Tokens[StartIndex], tempToken, out resultInt ) )
+          {
+            return false;
+          }
+          Result = (double)resultInt;
+          return true;
+        }
+        else if ( Tokens[StartIndex].Content == "%" )
+        {
+          // a binary expression
+          if ( !ParseValue( LineIndex, TokensToExpression( Tokens, StartIndex, 2 ), out dummy ) )
+          {
+            return false;
+          }
+          Result = (double)dummy;
+          return true;
+        }
+        else if ( ( Tokens[StartIndex].Content == "!" )
+        || ( Tokens[StartIndex].Content == "~" ) )
+        {
+          // binary not
+          int     value = -1;
+
+          if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, out value ) )
+          {
+            Result = 0xffff ^ value;
+            return true;
+          }
+          return false;
+        }
+      }
+
+      if ( Count < 2 )
+      {
+        return false;
+      }
+
+      List<Types.TokenInfo> subTokenRange = Tokens.GetRange( StartIndex, Count );
+
+      bool  evaluatedPart = false;
+
+      do
+      {
+        evaluatedPart = false;
+        // check brackets first
+
+        // find bracket pair
+        int     bracketStartPos = -1;
+        int     bracketEndPos = -1;
+
+        for ( int i = 0; i < Count; ++i )
+        {
+          if ( IsOpeningBraceChar( subTokenRange[i].Content ) )
+          {
+            bracketStartPos = i;
+          }
+          else if ( IsClosingBraceChar( subTokenRange[i].Content ) )
+          {
+            if ( bracketStartPos == -1 )
+            {
+              // syntax error!
+              // closing bracket without opening bracket
+              m_LastErrorInfo.Set( LineIndex, bracketEndPos, 1, Types.ErrorCode.E1004_MISSING_OPENING_BRACKET );
+              return false;
+            }
+            bracketEndPos = i;
+            break;
+          }
+        }
+        if ( ( bracketStartPos != -1 )
+        &&   ( bracketEndPos == -1 ) )
+        {
+          // syntax error
+          // opening bracket without closing bracket
+          m_LastErrorInfo.Set( LineIndex, bracketStartPos, 1, Types.ErrorCode.E1005_MISSING_CLOSING_BRACKET );
+          return false;
+        }
+
+        if ( ( bracketStartPos != -1 )
+        &&   ( bracketEndPos != -1 ) )
+        {
+          double resultValue = 0;
+
+          // could we have a function?
+          if ( bracketStartPos > 0 )
+          {
+            string    possibleFunction = subTokenRange[bracketStartPos - 1].Content.ToLower();
+            if ( m_ExtFunctions.ContainsKey( possibleFunction ) )
+            {
+              // handle function!
+              if ( !EvaluateExtFunctionNumeric( possibleFunction, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, out resultValue ) )
+              {
+                return false;
+              }
+              int     startPosB = subTokenRange[bracketStartPos - 1].StartPos;
+              subTokenRange.RemoveRange( bracketStartPos - 1, bracketEndPos - bracketStartPos + 2 );
+              Count -= bracketEndPos - bracketStartPos + 2;
+
+              Types.TokenInfo tokenResultF = new Types.TokenInfo();
+              tokenResultF.Content = resultValue.ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture );
+              tokenResultF.Type = Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
+              tokenResultF.StartPos = startPosB;
+
+              subTokenRange.Insert( bracketStartPos - 1, tokenResultF );
+              ++Count;
+              evaluatedPart = true;
+              continue;
+            }
+          }
+
+          if ( !EvaluateTokensNumeric( LineIndex, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, out resultValue ) )
+          {
+            return false;
+          }
+
+          int     startPos = subTokenRange[bracketStartPos].StartPos;
+          subTokenRange.RemoveRange( bracketStartPos, bracketEndPos - bracketStartPos + 1 );
+          Count -= bracketEndPos - bracketStartPos + 1;
+
+          Types.TokenInfo tokenResult = new Types.TokenInfo();
+          tokenResult.Content = Result.ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture );
+          tokenResult.Type = Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
+          tokenResult.StartPos = startPos;
+          subTokenRange.Insert( bracketStartPos, tokenResult );
+          ++Count;
+          evaluatedPart = true;
+          continue;
+        }
+        if ( Count >= 2 )
+        {
+          int highestPrecedence = -1;
+          int highestPrecedenceTokenIndex = -1;
+          int numHighestPrecedenceEntries = 0;
+          for ( int tokenIndex = 0; tokenIndex < Count - 1; ++tokenIndex )
+          {
+            foreach ( KeyValuePair<string, int> oper in m_OperatorPrecedence )
+            {
+              if ( subTokenRange[tokenIndex].Content == oper.Key )
+              {
+                if ( ( tokenIndex == 0 )
+                && ( oper.Value != 7 ) )
+                {
+                  // only allow < and > on first pos
+                  continue;
+                }
+
+                if ( oper.Value > highestPrecedence )
+                {
+                  numHighestPrecedenceEntries = 1;
+                  highestPrecedence = oper.Value;
+                  highestPrecedenceTokenIndex = tokenIndex;
+                }
+                else if ( oper.Value == highestPrecedence )
+                {
+                  ++numHighestPrecedenceEntries;
+                }
+              }
+            }
+          }
+          if ( highestPrecedence != -1 )
+          {
+            // evaluate token now!
+            int result = -1;
+
+            // check if we've got a hi/lo byte operator
+            if ( highestPrecedence == 7 )
+            {
+              // must be directly connected
+              // the token before must not be a evaluatable type
+              //if ( ( subTokenRange[highestPrecedenceTokenIndex].StartPos + subTokenRange[highestPrecedenceTokenIndex].Length == subTokenRange[highestPrecedenceTokenIndex + 1].StartPos )
+              if ( ( highestPrecedenceTokenIndex == 0 )
+              || ( ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+              && ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+              && ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+              && ( subTokenRange[highestPrecedenceTokenIndex - 1].Content != "*" )
+              && ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_CHAR )
+              && ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER ) ) )
+              {
+                // eval hi/lo byte
+                if ( subTokenRange[highestPrecedenceTokenIndex].Content == "<" )
+                {
+                  int     value = -1;
+                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, out value, out numBytesGiven ) )
+                  {
+                    int resultValue = ( value & 0x00ff );
+
+                    subTokenRange.RemoveRange( highestPrecedenceTokenIndex, 2 );
+
+                    Types.TokenInfo tokenResult = new Types.TokenInfo();
+                    tokenResult.Content = Result.ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture );
+                    tokenResult.Type = Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
+                    subTokenRange.Insert( highestPrecedenceTokenIndex, tokenResult );
+                    evaluatedPart = true;
+                    Count -= 1;
+                    continue;
+                  }
+                  return false;
+                }
+                else if ( subTokenRange[highestPrecedenceTokenIndex].Content == ">" )
+                {
+                  int value = -1;
+                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, out value, out numBytesGiven ) )
+                  {
+                    int resultValue = ( value & 0xff00 ) >> 8;
+                    subTokenRange.RemoveRange( highestPrecedenceTokenIndex, 2 );
+
+                    Types.TokenInfo tokenResult = new Types.TokenInfo();
+                    tokenResult.Content = Result.ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture );
+                    tokenResult.Type = Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
+                    subTokenRange.Insert( highestPrecedenceTokenIndex, tokenResult );
+                    evaluatedPart = true;
+                    Count -= 1;
+                    continue;
+                  }
+                  return false;
+                }
+                else if ( ( subTokenRange[highestPrecedenceTokenIndex].Content == "~" )
+                || ( subTokenRange[highestPrecedenceTokenIndex].Content == "!" ) )
+                {
+                  int     value = -1;
+
+                  if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, Count - highestPrecedenceTokenIndex - 1, out value ) )
+                  {
+                    Result = 0xffff ^ value;
+
+                    subTokenRange.RemoveRange( highestPrecedenceTokenIndex, 2 );
+
+                    Types.TokenInfo tokenResult = new Types.TokenInfo();
+                    tokenResult.Content = Result.ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture );
+                    tokenResult.Type = Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
+                    subTokenRange.Insert( highestPrecedenceTokenIndex, tokenResult );
+                    evaluatedPart = true;
+                    Count -= 1;
+                    return true;
+                  }
+                  return false;
+                }
+              }
+            }
+            if ( HandleOperator( LineIndex, subTokenRange[highestPrecedenceTokenIndex], subTokenRange[highestPrecedenceTokenIndex - 1], subTokenRange[highestPrecedenceTokenIndex + 1], out result ) )
+            {
+              if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex - 1].Content, out dummy, out numBytesGiven ) )
+              {
+              }
+              if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex + 1].Content, out dummy, out numBytesGiven ) )
+              {
+              }
+
+              int     startPos = subTokenRange[highestPrecedenceTokenIndex - 1].StartPos;
+              subTokenRange.RemoveRange( highestPrecedenceTokenIndex - 1, 3 );
+
+              Types.TokenInfo tokenResult = new Types.TokenInfo();
+              tokenResult.Content = result.ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture );
+              tokenResult.Type = Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
+              tokenResult.StartPos = startPos;
+              subTokenRange.Insert( highestPrecedenceTokenIndex - 1, tokenResult );
+              evaluatedPart = true;
+              Count -= 2;
+            }
+          }
+        }
+      }
+      while ( evaluatedPart );
+
+      if ( Count == 1 )
+      {
+        return ParseValueNumeric( LineIndex, subTokenRange[0].Content, out Result );
       }
       if ( !HasError() )
       {

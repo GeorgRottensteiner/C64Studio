@@ -3223,6 +3223,10 @@ namespace C64Studio
 
     public string FilterString( string Source )
     {
+      if ( string.IsNullOrEmpty( Source ) )
+      {
+        return Source;
+      }
       return Source.Substring( 0, Source.Length - 1 );
     }
 
@@ -5640,6 +5644,11 @@ namespace C64Studio
         document = new SpriteEditor( StudioCore );
         document.ShowHint = DockState.Document;
       }
+      else if ( extension == ".VALUETABLEPROJECT" )
+      {
+        document = new ValueTableEditor( StudioCore );
+        document.ShowHint = DockState.Document;
+      }
       else if ( ( extension == ".CHARSETPROJECT" )
       ||        ( extension == ".CHR" ) )
       {
@@ -5718,6 +5727,8 @@ namespace C64Studio
           return C64Studio.Properties.Resources.spriteset;
         case ProjectElement.ElementType.BINARY_FILE:
           return C64Studio.Properties.Resources.binary;
+        case ProjectElement.ElementType.VALUE_TABLE:
+          return C64Studio.Properties.Resources.valuetable;
       }
       return System.Drawing.SystemIcons.Asterisk;
     }
@@ -5756,6 +5767,9 @@ namespace C64Studio
           break;
         case ProjectElement.ElementType.BINARY_FILE:
           newDoc = new BinaryDisplay( StudioCore, null, true, false );
+          break;
+        case ProjectElement.ElementType.VALUE_TABLE:
+          newDoc = new ValueTableEditor( StudioCore );
           break;
       }
       if ( newDoc != null )
@@ -5804,6 +5818,9 @@ namespace C64Studio
           break;
         case ProjectElement.ElementType.MAP_EDITOR:
           filterSource += Types.Constants.FILEFILTER_MAP;
+          break;
+        case ProjectElement.ElementType.VALUE_TABLE:
+          filterSource += Types.Constants.FILEFILTER_VALUE_TABLE_PROJECT;
           break;
       }
       openDlg.Filter = FilterString( filterSource );
@@ -6883,7 +6900,10 @@ namespace C64Studio
 
 
 
-
+    private void valueTableToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddNewDocumentOrElement( ProjectElement.ElementType.VALUE_TABLE, "Value Table", m_CurrentProject, ( m_CurrentProject != null ) ? m_CurrentProject.Node : null );
+    }
 
   }
 }

@@ -229,4 +229,7 @@
   <data name="charscreen_colors_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\charscreen_colors_off.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="valuetable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\valuetable.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

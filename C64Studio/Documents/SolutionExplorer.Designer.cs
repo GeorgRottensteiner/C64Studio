@@ -35,6 +35,8 @@
       this.timerDragDrop = new System.Windows.Forms.Timer(this.components);
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
       this.seBtnAddNewItem = new System.Windows.Forms.ToolStripSplitButton();
+      this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.seBtnAddNewFolder = new System.Windows.Forms.ToolStripMenuItem();
       this.seBtnAddNewASMFile = new System.Windows.Forms.ToolStripMenuItem();
       this.seBtnAddNewBASICFile = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,8 +47,6 @@
       this.seBtnAddNewMap = new System.Windows.Forms.ToolStripMenuItem();
       this.seBtnAddExisting = new System.Windows.Forms.ToolStripButton();
       this.seBtnDelete = new System.Windows.Forms.ToolStripButton();
-      this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -94,6 +94,8 @@
       this.imageListExplorer.Images.SetKeyName(10, "project.ico");
       this.imageListExplorer.Images.SetKeyName(11, "disassembler.ico");
       this.imageListExplorer.Images.SetKeyName(12, "binary.ico");
+      this.imageListExplorer.Images.SetKeyName(13, "filemanager.ico");
+      this.imageListExplorer.Images.SetKeyName(14, "valuetable.ico");
       // 
       // toolStrip1
       // 
@@ -127,6 +129,18 @@
       this.seBtnAddNewItem.Name = "seBtnAddNewItem";
       this.seBtnAddNewItem.Size = new System.Drawing.Size(32, 22);
       this.seBtnAddNewItem.Text = "Add New Item";
+      // 
+      // projectToolStripMenuItem
+      // 
+      this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
+      this.projectToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+      this.projectToolStripMenuItem.Text = "Project";
+      this.projectToolStripMenuItem.Click += new System.EventHandler(this.projectToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator1
+      // 
+      this.toolStripSeparator1.Name = "toolStripSeparator1";
+      this.toolStripSeparator1.Size = new System.Drawing.Size(160, 6);
       // 
       // seBtnAddNewFolder
       // 
@@ -205,18 +219,6 @@
       this.seBtnDelete.Size = new System.Drawing.Size(23, 22);
       this.seBtnDelete.Text = "Delete";
       this.seBtnDelete.Click += new System.EventHandler(this.seBtnDelete_Click);
-      // 
-      // projectToolStripMenuItem
-      // 
-      this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
-      this.projectToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-      this.projectToolStripMenuItem.Text = "Project";
-      this.projectToolStripMenuItem.Click += new System.EventHandler(this.projectToolStripMenuItem_Click);
-      // 
-      // toolStripSeparator1
-      // 
-      this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(160, 6);
       // 
       // SolutionExplorer
       // 

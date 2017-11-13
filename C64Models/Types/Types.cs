@@ -410,6 +410,7 @@ namespace C64Studio.Types
     public static string FILEFILTER_IMAGE_FILES = "Image Files|*.png;*.bmp;*.gif|PNG Files|*.png|BMP Files|*.bmp|GIF Files|*.gif|Koala Files|*.koa;*.kla|";
     public static string FILEFILTER_TAPE = "Tape Files|*.t64,*.prg|";
     public static string FILEFILTER_DISK = "Disk Files|*.d64,*.d81|";
+    public static string FILEFILTER_VALUE_TABLE_PROJECT = "Value Table Project Files|*.valuetableproject|";
   }
 
   public class FileChunk
@@ -1351,7 +1352,8 @@ namespace C64Studio.Types
       OPCODE_FIXED_ZP,
       OPCODE_FIXED_NON_ZP,
       OPCODE_DIRECT_VALUE,
-      LABEL_CHEAP_LOCAL
+      LABEL_CHEAP_LOCAL,
+      LITERAL_REAL_NUMBER
     }
 
     public string     OriginatingString;
