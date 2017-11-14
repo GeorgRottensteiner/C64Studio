@@ -6571,7 +6571,7 @@ namespace C64Studio
     {
       BaseDocument  dummy = m_SolutionExplorer;
 
-      Panel.SaveAsXml( @"d:\gnu.xml" );
+      //Panel.SaveAsXml( @"d:\gnu.xml" );
 
       Debug.Log( Indent + "Container" );
       foreach ( var docs in Panel.Documents )
@@ -6579,11 +6579,16 @@ namespace C64Studio
         if ( docs is BaseDocument )
         {
           Debug.Log( Indent + "-document " + ( (BaseDocument)docs ).Text );
+          if ( docs == Panel.ActiveDocument )
+          {
+            Debug.Log( Indent + " =Active" );
+          }
         }
       }
       foreach ( var pane in Panel.Panes )
       {
         Debug.Log( Indent + "-Pane at " + pane.DockState + " is visible: " + pane.Visible + " at " + pane.Location.X + "," + pane.Location.Y );
+
         foreach ( BaseDocument content in pane.Contents )
         {
           if ( pane.DockState == content.DockState )
@@ -6625,8 +6630,8 @@ namespace C64Studio
 
       GR.Memory.ByteBuffer    data = new GR.Memory.ByteBuffer( memOut.ToArray() );
 
-      Debug.Log( data.ToString() );
-      //DumpPanel( "", panelMain );
+      //Debug.Log( data.ToString() );
+      DumpPanel( "", panelMain );
 
       /*
       foreach ( var tool in Settings.Tools )
