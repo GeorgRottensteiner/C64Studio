@@ -117,7 +117,9 @@ namespace C64Studio.Types
     COMMENT_SELECTION,
     UNCOMMENT_SELECTION,
     OPEN_FILES,
-    FIND_NEXT_MESSAGE
+    FIND_NEXT_MESSAGE,
+    UNDO,
+    REDO
   }
 
   public enum StudioState

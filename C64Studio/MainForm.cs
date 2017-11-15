@@ -4667,8 +4667,26 @@ namespace C64Studio
             CallHelp( keywordBelow );
           }
           return true;
-        case C64Studio.Types.Function.DELETE_LINE:
-          return false;
+        case C64Studio.Types.Function.UNDO:
+          {
+            BaseDocument docUndo = ActiveDocument;
+            if ( ( docUndo != null )
+            &&   ( docUndo.UndoPossible ) )
+            {
+              docUndo.Undo();
+            }
+          }
+          break;
+        case C64Studio.Types.Function.REDO:
+          {
+            BaseDocument docRedo = ActiveDocument;
+            if ( ( docRedo != null )
+            &&   ( docRedo.RedoPossible ) )
+            {
+              docRedo.Redo();
+            }
+          }
+          break;
         case C64Studio.Types.Function.FIND_NEXT:
           m_FindReplace.FindNext( ActiveDocument );
           break;
@@ -5021,6 +5039,7 @@ namespace C64Studio
             }
           }
           break;
+        case C64Studio.Types.Function.DELETE_LINE:
         case C64Studio.Types.Function.COPY_LINE_UP:
         case C64Studio.Types.Function.COPY_LINE_DOWN:
         case C64Studio.Types.Function.MOVE_LINE_DOWN:
@@ -6910,5 +6929,39 @@ namespace C64Studio
       AddNewDocumentOrElement( ProjectElement.ElementType.VALUE_TABLE, "Value Table", m_CurrentProject, ( m_CurrentProject != null ) ? m_CurrentProject.Node : null );
     }
 
+
+
+    private void compileToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.COMPILE );
+    }
+
+
+
+    private void buildToolStripMenuItem1_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.BUILD );
+    }
+
+
+
+    private void rebuildToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.REBUILD );
+    }
+
+
+
+    private void buildandRunToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.BUILD_AND_RUN );
+    }
+
+
+
+    private void debugToolStripMenuItem1_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.BUILD_AND_DEBUG );
+    }
   }
 }
