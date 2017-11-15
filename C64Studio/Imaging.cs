@@ -25,8 +25,8 @@ namespace C64Studio
       string                extension = System.IO.Path.GetExtension( Filename ).ToUpper();
       GR.Image.FastImage    newImage;
 
-      if ( ( extension == "KOA" )
-      ||   ( extension == "KLA" ) )
+      if ( ( extension == ".KOA" )
+      ||   ( extension == ".KLA" ) )
       {
         var koalaImage = C64Studio.Converter.KoalaToBitmap.BitmapFromKoala( Filename );
         var bitmap = koalaImage.GetAsBitmap();
