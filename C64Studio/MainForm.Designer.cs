@@ -43,6 +43,7 @@
       this.fileNewCharacterScreenEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileNewGraphicScreenEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileNewMapEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.valueTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileNewBinaryEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mediaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.newTapeImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -191,7 +192,8 @@
       this.buildToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.rebuildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.buildandRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.debugToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem(); this.valueTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.debugToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem(); 
+      this.valueTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -264,6 +266,7 @@
             this.valueTableToolStripMenuItem,
             this.fileNewBinaryEditorToolStripMenuItem,
             this.mediaToolStripMenuItem});
+      this.newToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolNewItem;
       this.newToolStripMenuItem.Name = "newToolStripMenuItem";
       this.newToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
       this.newToolStripMenuItem.Text = "&New";
@@ -336,6 +339,13 @@
       this.fileNewMapEditorToolStripMenuItem.Text = "Map";
       this.fileNewMapEditorToolStripMenuItem.Click += new System.EventHandler(this.fileNewMapEditorToolStripMenuItem_Click);
       // 
+      // valueTableToolStripMenuItem
+      // 
+      this.valueTableToolStripMenuItem.Name = "valueTableToolStripMenuItem";
+      this.valueTableToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+      this.valueTableToolStripMenuItem.Text = "Value Table";
+      this.valueTableToolStripMenuItem.Click += new System.EventHandler(this.valueTableToolStripMenuItem_Click);
+      // 
       // fileNewBinaryEditorToolStripMenuItem
       // 
       this.fileNewBinaryEditorToolStripMenuItem.Name = "fileNewBinaryEditorToolStripMenuItem";
@@ -381,6 +391,7 @@
             this.toolStripSeparator6,
             this.projectOpenTapeDiskFileMenuItem,
             this.editorOpenToolStripMenuItem});
+      this.openToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolOpenFile;
       this.openToolStripMenuItem.Name = "openToolStripMenuItem";
       this.openToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
       this.openToolStripMenuItem.Text = "&Open";
@@ -421,6 +432,7 @@
       // saveToolStripMenuItem
       // 
       this.saveToolStripMenuItem.Enabled = false;
+      this.saveToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolSave;
       this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
       this.saveToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
       this.saveToolStripMenuItem.Text = "&Save";
@@ -429,6 +441,7 @@
       // saveAsToolStripMenuItem
       // 
       this.saveAsToolStripMenuItem.Enabled = false;
+      this.saveAsToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolSaveAll;
       this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
       this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
       this.saveAsToolStripMenuItem.Text = "Save &as...";
@@ -697,52 +710,54 @@
       // toolStripSeparator7
       // 
       this.toolStripSeparator7.Name = "toolStripSeparator7";
-      this.toolStripSeparator7.Size = new System.Drawing.Size(140, 6);
+      this.toolStripSeparator7.Size = new System.Drawing.Size(149, 6);
       // 
       // cutToolStripMenuItem
       // 
       this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-      this.cutToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+      this.cutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this.cutToolStripMenuItem.Text = "Cut";
       this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
       // 
       // copyToolStripMenuItem
       // 
       this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-      this.copyToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+      this.copyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this.copyToolStripMenuItem.Text = "Copy";
       this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
       // 
       // pasteToolStripMenuItem
       // 
       this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-      this.pasteToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+      this.pasteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this.pasteToolStripMenuItem.Text = "Paste";
       this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
       // 
       // deleteToolStripMenuItem
       // 
       this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-      this.deleteToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+      this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this.deleteToolStripMenuItem.Text = "Delete";
       this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
       // 
       // toolStripSeparator10
       // 
       this.toolStripSeparator10.Name = "toolStripSeparator10";
-      this.toolStripSeparator10.Size = new System.Drawing.Size(140, 6);
+      this.toolStripSeparator10.Size = new System.Drawing.Size(149, 6);
       // 
       // searchToolStripMenuItem
       // 
+      this.searchToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolFind;
       this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-      this.searchToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+      this.searchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this.searchToolStripMenuItem.Text = "&Search...";
       this.searchToolStripMenuItem.Click += new System.EventHandler(this.searchToolStripMenuItem_Click);
       // 
       // findReplaceToolStripMenuItem
       // 
+      this.findReplaceToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolFindReplace;
       this.findReplaceToolStripMenuItem.Name = "findReplaceToolStripMenuItem";
-      this.findReplaceToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+      this.findReplaceToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this.findReplaceToolStripMenuItem.Text = "&Find/Replace";
       this.findReplaceToolStripMenuItem.Click += new System.EventHandler(this.findReplaceToolStripMenuItem_Click);
       // 
@@ -1052,26 +1067,27 @@
       // helpToolStripMenuItem1
       // 
       this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
-      this.helpToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
+      this.helpToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+      this.helpToolStripMenuItem1.Tag = "HELP";
       this.helpToolStripMenuItem1.Text = "&Help";
       this.helpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
       // 
       // toolStripSeparator5
       // 
       this.toolStripSeparator5.Name = "toolStripSeparator5";
-      this.toolStripSeparator5.Size = new System.Drawing.Size(110, 6);
+      this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
       // 
       // licenseToolStripMenuItem
       // 
       this.licenseToolStripMenuItem.Name = "licenseToolStripMenuItem";
-      this.licenseToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+      this.licenseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this.licenseToolStripMenuItem.Text = "License";
       this.licenseToolStripMenuItem.Click += new System.EventHandler(this.licenseToolStripMenuItem_Click_1);
       // 
       // aboutToolStripMenuItem1
       // 
       this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-      this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
+      this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
       this.aboutToolStripMenuItem1.Text = "&About";
       this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
       // 
@@ -1120,7 +1136,7 @@
             this.mapToolStripMenuItem,
             this.toolStripSeparator9,
             this.toolStripMenuItem1});
-      this.mainToolNewItem.Image = ((System.Drawing.Image)(resources.GetObject("mainToolNewItem.Image")));
+      this.mainToolNewItem.Image = global::C64Studio.Properties.Resources.ToolNewItem;
       this.mainToolNewItem.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolNewItem.Name = "mainToolNewItem";
       this.mainToolNewItem.Size = new System.Drawing.Size(32, 22);
@@ -1226,7 +1242,7 @@
       // mainToolOpenFile
       // 
       this.mainToolOpenFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolOpenFile.Image = ((System.Drawing.Image)(resources.GetObject("mainToolOpenFile.Image")));
+      this.mainToolOpenFile.Image = global::C64Studio.Properties.Resources.ToolOpenFile;
       this.mainToolOpenFile.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolOpenFile.Name = "mainToolOpenFile";
       this.mainToolOpenFile.Size = new System.Drawing.Size(23, 22);
@@ -1237,7 +1253,7 @@
       // 
       this.mainToolSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolSave.Enabled = false;
-      this.mainToolSave.Image = ((System.Drawing.Image)(resources.GetObject("mainToolSave.Image")));
+      this.mainToolSave.Image = global::C64Studio.Properties.Resources.ToolSave;
       this.mainToolSave.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolSave.Name = "mainToolSave";
       this.mainToolSave.Size = new System.Drawing.Size(23, 22);
@@ -1248,7 +1264,7 @@
       // 
       this.mainToolSaveAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolSaveAll.Enabled = false;
-      this.mainToolSaveAll.Image = ((System.Drawing.Image)(resources.GetObject("mainToolSaveAll.Image")));
+      this.mainToolSaveAll.Image = global::C64Studio.Properties.Resources.ToolSaveAll;
       this.mainToolSaveAll.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolSaveAll.Name = "mainToolSaveAll";
       this.mainToolSaveAll.Size = new System.Drawing.Size(23, 22);
@@ -1258,7 +1274,7 @@
       // mainToolCommentSelection
       // 
       this.mainToolCommentSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolCommentSelection.Image = ((System.Drawing.Image)(resources.GetObject("mainToolCommentSelection.Image")));
+      this.mainToolCommentSelection.Image = global::C64Studio.Properties.Resources.ToolCommentSelection;
       this.mainToolCommentSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolCommentSelection.Name = "mainToolCommentSelection";
       this.mainToolCommentSelection.Size = new System.Drawing.Size(23, 22);
@@ -1268,7 +1284,7 @@
       // mainToolUncommentSelection
       // 
       this.mainToolUncommentSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolUncommentSelection.Image = ((System.Drawing.Image)(resources.GetObject("mainToolUncommentSelection.Image")));
+      this.mainToolUncommentSelection.Image = global::C64Studio.Properties.Resources.ToolUncommentSelection;
       this.mainToolUncommentSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolUncommentSelection.Name = "mainToolUncommentSelection";
       this.mainToolUncommentSelection.Size = new System.Drawing.Size(23, 22);
@@ -1278,7 +1294,7 @@
       // mainToolCompile
       // 
       this.mainToolCompile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolCompile.Image = ((System.Drawing.Image)(resources.GetObject("mainToolCompile.Image")));
+      this.mainToolCompile.Image = global::C64Studio.Properties.Resources.ToolCompile;
       this.mainToolCompile.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolCompile.Name = "mainToolCompile";
       this.mainToolCompile.Size = new System.Drawing.Size(23, 22);
@@ -1288,7 +1304,7 @@
       // mainToolBuild
       // 
       this.mainToolBuild.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolBuild.Image = ((System.Drawing.Image)(resources.GetObject("mainToolBuild.Image")));
+      this.mainToolBuild.Image = global::C64Studio.Properties.Resources.ToolBuild;
       this.mainToolBuild.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolBuild.Name = "mainToolBuild";
       this.mainToolBuild.Size = new System.Drawing.Size(23, 22);
@@ -1298,7 +1314,7 @@
       // mainToolRebuild
       // 
       this.mainToolRebuild.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolRebuild.Image = ((System.Drawing.Image)(resources.GetObject("mainToolRebuild.Image")));
+      this.mainToolRebuild.Image = global::C64Studio.Properties.Resources.ToolRebuild;
       this.mainToolRebuild.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolRebuild.Name = "mainToolRebuild";
       this.mainToolRebuild.Size = new System.Drawing.Size(23, 22);
@@ -1308,7 +1324,7 @@
       // mainToolBuildAndRun
       // 
       this.mainToolBuildAndRun.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolBuildAndRun.Image = ((System.Drawing.Image)(resources.GetObject("mainToolBuildAndRun.Image")));
+      this.mainToolBuildAndRun.Image = global::C64Studio.Properties.Resources.ToolBuildAndRun;
       this.mainToolBuildAndRun.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolBuildAndRun.Name = "mainToolBuildAndRun";
       this.mainToolBuildAndRun.Size = new System.Drawing.Size(23, 22);
@@ -1318,7 +1334,7 @@
       // mainToolDebug
       // 
       this.mainToolDebug.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolDebug.Image = ((System.Drawing.Image)(resources.GetObject("mainToolDebug.Image")));
+      this.mainToolDebug.Image = global::C64Studio.Properties.Resources.ToolDebug;
       this.mainToolDebug.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolDebug.Name = "mainToolDebug";
       this.mainToolDebug.Size = new System.Drawing.Size(23, 22);
@@ -1335,7 +1351,7 @@
       // mainToolToggleTrueDrive
       // 
       this.mainToolToggleTrueDrive.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolToggleTrueDrive.Image = ((System.Drawing.Image)(resources.GetObject("mainToolToggleTrueDrive.Image")));
+      this.mainToolToggleTrueDrive.Image = global::C64Studio.Properties.Resources.toolbar_truedrive_enabled;
       this.mainToolToggleTrueDrive.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolToggleTrueDrive.Name = "mainToolToggleTrueDrive";
       this.mainToolToggleTrueDrive.Size = new System.Drawing.Size(23, 22);
@@ -1353,7 +1369,7 @@
       // 
       this.mainToolUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolUndo.Enabled = false;
-      this.mainToolUndo.Image = ((System.Drawing.Image)(resources.GetObject("mainToolUndo.Image")));
+      this.mainToolUndo.Image = global::C64Studio.Properties.Resources.ToolUndo;
       this.mainToolUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolUndo.Name = "mainToolUndo";
       this.mainToolUndo.Size = new System.Drawing.Size(23, 22);
@@ -1364,7 +1380,7 @@
       // 
       this.mainToolRedo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolRedo.Enabled = false;
-      this.mainToolRedo.Image = ((System.Drawing.Image)(resources.GetObject("mainToolRedo.Image")));
+      this.mainToolRedo.Image = global::C64Studio.Properties.Resources.ToolRedo;
       this.mainToolRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolRedo.Name = "mainToolRedo";
       this.mainToolRedo.Size = new System.Drawing.Size(23, 22);
@@ -1375,7 +1391,7 @@
       // 
       this.mainToolFind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolFind.Enabled = false;
-      this.mainToolFind.Image = ((System.Drawing.Image)(resources.GetObject("mainToolFind.Image")));
+      this.mainToolFind.Image = global::C64Studio.Properties.Resources.ToolFind;
       this.mainToolFind.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolFind.Name = "mainToolFind";
       this.mainToolFind.Size = new System.Drawing.Size(23, 22);
@@ -1386,7 +1402,7 @@
       // 
       this.mainToolFindReplace.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolFindReplace.Enabled = false;
-      this.mainToolFindReplace.Image = ((System.Drawing.Image)(resources.GetObject("mainToolFindReplace.Image")));
+      this.mainToolFindReplace.Image = global::C64Studio.Properties.Resources.ToolFindReplace;
       this.mainToolFindReplace.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolFindReplace.Name = "mainToolFindReplace";
       this.mainToolFindReplace.Size = new System.Drawing.Size(23, 22);
@@ -1397,7 +1413,7 @@
       // 
       this.mainToolPrint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolPrint.Enabled = false;
-      this.mainToolPrint.Image = ((System.Drawing.Image)(resources.GetObject("mainToolPrint.Image")));
+      this.mainToolPrint.Image = global::C64Studio.Properties.Resources.ToolPrint;
       this.mainToolPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolPrint.Name = "mainToolPrint";
       this.mainToolPrint.Size = new System.Drawing.Size(23, 22);
@@ -1457,7 +1473,7 @@
       // mainDebugGo
       // 
       this.mainDebugGo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugGo.Image = ((System.Drawing.Image)(resources.GetObject("mainDebugGo.Image")));
+      this.mainDebugGo.Image = global::C64Studio.Properties.Resources.DebugGo;
       this.mainDebugGo.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugGo.Name = "mainDebugGo";
       this.mainDebugGo.Size = new System.Drawing.Size(23, 22);
@@ -1467,7 +1483,7 @@
       // mainDebugBreak
       // 
       this.mainDebugBreak.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugBreak.Image = ((System.Drawing.Image)(resources.GetObject("mainDebugBreak.Image")));
+      this.mainDebugBreak.Image = global::C64Studio.Properties.Resources.DebugBreak;
       this.mainDebugBreak.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugBreak.Name = "mainDebugBreak";
       this.mainDebugBreak.Size = new System.Drawing.Size(23, 22);
@@ -1477,7 +1493,7 @@
       // mainDebugStop
       // 
       this.mainDebugStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugStop.Image = ((System.Drawing.Image)(resources.GetObject("mainDebugStop.Image")));
+      this.mainDebugStop.Image = global::C64Studio.Properties.Resources.DebugStop;
       this.mainDebugStop.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStop.Name = "mainDebugStop";
       this.mainDebugStop.Size = new System.Drawing.Size(23, 22);
@@ -1487,7 +1503,7 @@
       // mainDebugStepInto
       // 
       this.mainDebugStepInto.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugStepInto.Image = ((System.Drawing.Image)(resources.GetObject("mainDebugStepInto.Image")));
+      this.mainDebugStepInto.Image = global::C64Studio.Properties.Resources.DebugStepInto;
       this.mainDebugStepInto.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStepInto.Name = "mainDebugStepInto";
       this.mainDebugStepInto.Size = new System.Drawing.Size(23, 22);
@@ -1497,7 +1513,7 @@
       // mainDebugStepOver
       // 
       this.mainDebugStepOver.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugStepOver.Image = ((System.Drawing.Image)(resources.GetObject("mainDebugStepOver.Image")));
+      this.mainDebugStepOver.Image = global::C64Studio.Properties.Resources.DebugStepOver;
       this.mainDebugStepOver.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStepOver.Name = "mainDebugStepOver";
       this.mainDebugStepOver.Size = new System.Drawing.Size(23, 22);
@@ -1507,7 +1523,7 @@
       // mainDebugStepOut
       // 
       this.mainDebugStepOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugStepOut.Image = ((System.Drawing.Image)(resources.GetObject("mainDebugStepOut.Image")));
+      this.mainDebugStepOut.Image = global::C64Studio.Properties.Resources.DebugStepOut;
       this.mainDebugStepOut.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStepOut.Name = "mainDebugStepOut";
       this.mainDebugStepOut.Size = new System.Drawing.Size(23, 22);
