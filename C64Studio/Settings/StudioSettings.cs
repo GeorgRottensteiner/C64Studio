@@ -220,8 +220,8 @@ namespace C64Studio
       Functions.Add( C64Studio.Types.Function.COMMENT_SELECTION, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.COMMENT_SELECTION, "Comment Selection", C64Studio.Types.FunctionStudioState.ANY ) );
       Functions.Add( C64Studio.Types.Function.UNCOMMENT_SELECTION, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.UNCOMMENT_SELECTION, "Uncomment Selection", C64Studio.Types.FunctionStudioState.ANY ) );
       Functions.Add( C64Studio.Types.Function.FIND_NEXT_MESSAGE, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.FIND_NEXT_MESSAGE, "Jump to next message", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.UNDO, new C64Studio.Types.FunctionInfo(C64Studio.Types.Function.UNDO, "Undo", C64Studio.Types.FunctionStudioState.ANY));
-      Functions.Add( C64Studio.Types.Function.REDO, new C64Studio.Types.FunctionInfo(C64Studio.Types.Function.REDO, "Redo", C64Studio.Types.FunctionStudioState.ANY));
+      Functions.Add( C64Studio.Types.Function.UNDO, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.UNDO, "Undo", C64Studio.Types.FunctionStudioState.ANY ) );
+      Functions.Add( C64Studio.Types.Function.REDO, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.REDO, "Redo", C64Studio.Types.FunctionStudioState.ANY ) );
 
       // functions for running debugger
       Functions.Add( C64Studio.Types.Function.DEBUG_BREAK, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_BREAK, "Break into Debugger", C64Studio.Types.FunctionStudioState.DEBUGGER_RUNNING ) );
@@ -1089,8 +1089,8 @@ namespace C64Studio
       SetKeyBindingKey( C64Studio.Types.Function.HELP, Keys.F1 );
       SetKeyBindingKey( C64Studio.Types.Function.SAVE_DOCUMENT_AS, Keys.F12 );
       SetKeyBindingKey( C64Studio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
-      SetKeyBindingKey( C64Studio.Types.Function.UNDO, Keys.Control | Keys.Z);
-      SetKeyBindingKey( C64Studio.Types.Function.REDO, Keys.Control | Keys.Shift | Keys.Z);
+      SetKeyBindingKey( C64Studio.Types.Function.UNDO, Keys.Alt | Keys.Back );
+      SetKeyBindingKey( C64Studio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
     }
 
 

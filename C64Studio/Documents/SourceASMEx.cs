@@ -706,10 +706,14 @@ namespace C64Studio
           selRange.Normalize();
 
           int   numLines = selRange.End.iLine - selRange.Start.iLine + 1;
-          string    selText = selRange.Text;
-          if ( selText.EndsWith( System.Environment.NewLine ) )
+          if ( ( selRange.Start.iLine >= 0 )
+          &&   ( selRange.End.iLine < editSource.LinesCount ) )
           {
-            --numLines;
+            string    selText = selRange.Text;
+            if ( selText.EndsWith( System.Environment.NewLine ) )
+            {
+              --numLines;
+            }
           }
           newInfo += ", " + editSource.SelectionLength.ToString() + " bytes, " + numLines.ToString() + " lines selected";
 

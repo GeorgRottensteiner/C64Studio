@@ -631,7 +631,8 @@ namespace C64Studio.Types
       PREPROCESSOR_CONSTANT_2,
       CONSTANT_1,
       CONSTANT_2,
-      ZONE
+      ZONE,
+      CONSTANT_F
     };
 
     public Types      Type = Types.UNKNOWN;
@@ -641,6 +642,7 @@ namespace C64Studio.Types
     public string     DocumentFilename = "";
     public int        LocalLineIndex = 0;
     public int        AddressOrValue = -1;
+    public double     RealValue = 0;
     public bool       Used = false;
     public string     Zone = "";
     public bool       FromDependency = false;

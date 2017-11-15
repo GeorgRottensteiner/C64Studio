@@ -6960,5 +6960,39 @@ namespace C64Studio
       ApplyFunction(C64Studio.Types.Function.BUILD_AND_DEBUG);
     }
 
+
+
+    private void compileToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.COMPILE );
+    }
+
+
+
+    private void buildToolStripMenuItem1_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.BUILD );
+    }
+
+
+
+    private void rebuildToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.REBUILD );
+    }
+
+
+
+    private void buildandRunToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.BUILD_AND_RUN );
+    }
+
+
+
+    private void debugToolStripMenuItem1_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.BUILD_AND_DEBUG );
+    }
   }
 }

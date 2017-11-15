@@ -6,6 +6,25 @@ namespace C64Studio
 {
   public class Util
   {
+    public static double StringToDouble( string Text )
+    {
+      double  result = 0;
+
+      StringToDouble( Text, out result );
+      return result;
+    }
+
+
+
+    public static bool StringToDouble( string Text, out double Result )
+    {
+      Result = 0;
+
+      return double.TryParse( Text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out Result );
+    }
+
+
+
     public static GR.Memory.ByteBuffer ToFilename( string Name )
     {
       GR.Memory.ByteBuffer bufName = new GR.Memory.ByteBuffer();
