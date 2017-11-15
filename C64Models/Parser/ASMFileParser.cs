@@ -468,6 +468,35 @@ namespace C64Studio.Parser
 
 
 
+    public void AddConstantF( string Name, double Value, int SourceLine, string Info, int CharIndex, int Length )
+    {
+      string    filename = "";
+      int       localIndex = -1;
+      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex );
+
+      if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
+      {
+        Types.SymbolInfo token = new Types.SymbolInfo();
+        token.Type = Types.SymbolInfo.Types.CONSTANT_F;
+        token.RealValue = Value;
+        token.Name = Name;
+        token.LineIndex = SourceLine;
+        token.Used = true;
+        token.Info = Info;
+        token.DocumentFilename = filename;
+        token.LocalLineIndex = localIndex;
+
+        ASMFileInfo.Labels.Add( Name, token );
+      }
+      else
+      {
+        ASMFileInfo.Labels[Name].RealValue = Value;
+        ASMFileInfo.Labels[Name].Type = Types.SymbolInfo.Types.CONSTANT_F;
+      }
+    }
+
+
+
     public void AddConstant( string Name, int Value, int SourceLine, string Info, int CharIndex, int Length )
     {
       string    filename = "";
@@ -706,6 +735,29 @@ namespace C64Studio.Parser
 
 
 
+    public bool ParseLiteralValueNumeric( string Value, out bool Failed, out double Result )
+    {
+      Result = 0;
+      int NumGivenBytes = 0;
+      Failed = false;
+
+      if ( Util.StringToDouble( Value, out Result ) )
+      {
+        return true;
+      }
+
+      int   dummyInt = -1;
+
+      if ( !ParseLiteralValue( Value, out Failed, out dummyInt, out NumGivenBytes ) )
+      {
+        return false;
+      }
+      Result = (double)dummyInt;
+      return true;
+    }
+
+
+
     private bool IsBinary( string ConvertValue )
     {
       for ( int i = 0; i < ConvertValue.Length; ++i )
@@ -745,17 +797,57 @@ namespace C64Studio.Parser
       int     numDigits = 0;
       ClearErrorInfo();
 
-      if ( double.TryParse( Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out Result ) )
+      if ( Util.StringToDouble( Value, out Result ) )
       {
         return true;
       }
-      int     dummy = -1;
 
-      if ( !ParseValue( LineIndex, Value, out dummy, out numDigits ) )
+      Result = -1;
+      ClearErrorInfo();
+      bool failed   = false;
+
+      if ( ParseLiteralValueNumeric( Value, out failed, out Result ) )
       {
+        return true;
+      }
+      if ( failed )
+      {
+        m_LastErrorInfo.Set( LineIndex, 0, Value.Length, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
         return false;
       }
-      Result = (double)dummy;
+
+      // check for temp labels
+      foreach ( Types.ASM.TemporaryLabelInfo labelInfo in ASMFileInfo.TempLabelInfo )
+      {
+        if ( ( LineIndex >= labelInfo.LineIndex )
+        &&   ( ( LineIndex < labelInfo.LineIndex + labelInfo.LineCount )
+        ||     ( labelInfo.LineCount == -1 ) )
+        &&   ( labelInfo.Name == Value ) )
+        {
+          Result = labelInfo.Value;
+          return true;
+        }
+      }
+      // parse labels
+      if ( !ASMFileInfo.Labels.ContainsKey( Value ) )
+      {
+        if ( ASMFileInfo.UnparsedLabels.ContainsKey( Value ) )
+        {
+          ASMFileInfo.UnparsedLabels[Value].Used = true;
+        }
+        m_LastErrorInfo = new ErrorInfo( LineIndex, 0, Value.Length, Types.ErrorCode.E1010_UNKNOWN_LABEL );
+        return false;
+      }
+
+      if ( ASMFileInfo.Labels[Value].Type == Types.SymbolInfo.Types.CONSTANT_F )
+      {
+        Result = ASMFileInfo.Labels[Value].RealValue;
+      }
+      else
+      {
+        Result = (double)ASMFileInfo.Labels[Value].AddressOrValue;
+      }
+      ASMFileInfo.Labels[Value].Used = true;
       return true;
     }
 
@@ -1077,7 +1169,7 @@ namespace C64Studio.Parser
       {
         return false;
       }
-      return double.TryParse( results[0].Content, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out Result );
+      return Util.StringToDouble( results[0].Content, out Result );
     }
 
 
@@ -1469,11 +1561,11 @@ namespace C64Studio.Parser
       }
 
       int numBytesGiven = 0;
-      int dummy = 0;
+      double dummy = 0;
 
       if ( Count == 1 )
       {
-        if ( !ParseValue( LineIndex, Tokens[StartIndex].Content, out dummy ) )
+        if ( !ParseValueNumeric( LineIndex, Tokens[StartIndex].Content, out dummy ) )
         {
           // adjust start pos
           // adjust length since we could have a replaced token (globalized local label)
@@ -1489,21 +1581,22 @@ namespace C64Studio.Parser
         // unary operators
         if ( Tokens[StartIndex].Content == "-" )
         {
-          int     value = -1;
+          double     value = -1;
 
-          if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, out value ) )
+          if ( EvaluateTokensNumeric( LineIndex, Tokens, StartIndex + 1, Count - 1, out value ) )
           {
-            Result = (double)-value;
+            Result = -value;
             return true;
           }
         }
         else if ( Tokens[StartIndex + 1].Content.StartsWith( "%" ) )
         {
           // a "x % y" case, where % is prefixed to the second operator
-          if ( ParseValue( LineIndex, Tokens[StartIndex].Content, out dummy, out numBytesGiven ) )
+          int     dummyInt = -1;
+          if ( ParseValue( LineIndex, Tokens[StartIndex].Content, out dummyInt, out numBytesGiven ) )
           {
           }
-          if ( ParseValue( LineIndex, Tokens[StartIndex + 1].Content.Substring( 1 ), out dummy, out numBytesGiven ) )
+          if ( ParseValue( LineIndex, Tokens[StartIndex + 1].Content.Substring( 1 ), out dummyInt, out numBytesGiven ) )
           {
           }
           Types.TokenInfo   tempTokenOperator = new Types.TokenInfo();
@@ -1527,7 +1620,7 @@ namespace C64Studio.Parser
         else if ( Tokens[StartIndex].Content == "%" )
         {
           // a binary expression
-          if ( !ParseValue( LineIndex, TokensToExpression( Tokens, StartIndex, 2 ), out dummy ) )
+          if ( !ParseValueNumeric( LineIndex, TokensToExpression( Tokens, StartIndex, 2 ), out dummy ) )
           {
             return false;
           }
@@ -1535,7 +1628,7 @@ namespace C64Studio.Parser
           return true;
         }
         else if ( ( Tokens[StartIndex].Content == "!" )
-        || ( Tokens[StartIndex].Content == "~" ) )
+        ||        ( Tokens[StartIndex].Content == "~" ) )
         {
           // binary not
           int     value = -1;
@@ -1758,10 +1851,11 @@ namespace C64Studio.Parser
             }
             if ( HandleOperator( LineIndex, subTokenRange[highestPrecedenceTokenIndex], subTokenRange[highestPrecedenceTokenIndex - 1], subTokenRange[highestPrecedenceTokenIndex + 1], out result ) )
             {
-              if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex - 1].Content, out dummy, out numBytesGiven ) )
+              int dummyInt;
+              if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex - 1].Content, out dummyInt, out numBytesGiven ) )
               {
               }
-              if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex + 1].Content, out dummy, out numBytesGiven ) )
+              if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex + 1].Content, out dummyInt, out numBytesGiven ) )
               {
               }
 

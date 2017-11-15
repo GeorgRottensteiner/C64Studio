@@ -525,9 +525,9 @@ namespace C64Studio
 
       m_Parser.AddExtFunction( "sin", 1, 1, ExtSinus );
 
-      int     startValue = GR.Convert.ToI32( m_Project.ValueTable.StartValue );
-      int     endValue = GR.Convert.ToI32( m_Project.ValueTable.EndValue );
-      int     stepValue = GR.Convert.ToI32( m_Project.ValueTable.StepValue );
+      double  startValue = Util.StringToDouble( m_Project.ValueTable.StartValue );
+      double  endValue = Util.StringToDouble( m_Project.ValueTable.EndValue );
+      double  stepValue = Util.StringToDouble( m_Project.ValueTable.StepValue );
 
       if ( ( startValue != endValue )
       &&   ( stepValue == 0 ) )
@@ -554,12 +554,12 @@ namespace C64Studio
         listValues.Items.Clear();
       }
 
-      int     curValue = startValue;
+      double  curValue = startValue;
       bool    completed = false;
 
       do
       {
-        m_Parser.AddLabel( "x", curValue, 0, "", 0, 1 );
+        m_Parser.AddConstantF( "x", curValue, 0, "", 0, 1 );
         var tokens = m_Parser.ParseTokenInfo( m_Project.ValueTable.Formula, 0, m_Project.ValueTable.Formula.Length );
         if ( tokens == null )
         {
@@ -609,8 +609,8 @@ namespace C64Studio
         SetError( "Invalid argument count" );
         return result;
       }
-      int     functionResult = 0;
-      if ( !m_Parser.EvaluateTokens( 0, Arguments, out functionResult ) )
+      double functionResult = 0;
+      if ( !m_Parser.EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
