@@ -1143,11 +1143,15 @@ namespace C64Studio
       {
         mainToolUndo.Enabled = false;
         mainToolRedo.Enabled = false;
+        undoToolStripMenuItem.Enabled = false;
+        redoToolStripMenuItem.Enabled = false;
       }
       else
       {
         mainToolUndo.Enabled = baseDoc.UndoPossible;
         mainToolRedo.Enabled = baseDoc.RedoPossible;
+        undoToolStripMenuItem.Enabled = baseDoc.UndoPossible;
+        redoToolStripMenuItem.Enabled = baseDoc.RedoPossible;
 
         if (baseDoc.DocumentInfo.ContainsCode)
         {
@@ -3704,6 +3708,7 @@ namespace C64Studio
       else
       {
         mainTools.Enabled = !Wait;
+        mainMenu.Enabled = !Wait;
       }
     }
 
