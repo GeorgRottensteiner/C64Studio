@@ -1110,10 +1110,42 @@ namespace Be.Windows.Forms
       }
     }
 
-		/// <summary>
-		/// Contains the whole content bounds of all text
-		/// </summary>
-		Rectangle _recContent;
+
+    /// <summary>
+    /// gets/sets the number of digits for the offset on the left side
+    /// obviously must be matched to the shown memory size
+    /// </summary>
+    public int NumDigitsMemorySize
+    {
+      get
+      {
+        return _NumDigitsMemorySize;
+      }
+      set
+      {
+        if ( value < 4 )
+        {
+          _NumDigitsMemorySize = 4;
+        }
+        else if ( value > 8 )
+        {
+          _NumDigitsMemorySize = 8;
+        }
+        else
+        {
+          _NumDigitsMemorySize = value;
+        }
+      }
+    }
+
+
+
+    int _NumDigitsMemorySize = 8;
+
+    /// <summary>
+    /// Contains the whole content bounds of all text
+    /// </summary>
+    Rectangle _recContent;
 		/// <summary>
 		/// Contains the line info bounds
 		/// </summary>
@@ -2454,15 +2486,16 @@ namespace Be.Windows.Forms
 
 				PointF bytePointF = GetBytePointF(new Point(0, 0 + i));
 				string info = firstLineByte.ToString(_hexStringFormat, System.Threading.Thread.CurrentThread.CurrentCulture);
-				int nulls = 8 - info.Length;
+
+				int nulls = _NumDigitsMemorySize - info.Length;
 				string formattedInfo;
 				if (nulls > -1)
 				{
-					formattedInfo = new string('0', 8 - info.Length) + info;
+					formattedInfo = new string('0', _NumDigitsMemorySize - info.Length) + info;
 				}
 				else
 				{
-					formattedInfo = new string('~', 8);
+					formattedInfo = new string('~', _NumDigitsMemorySize );
 				}
 
 				g.DrawString(formattedInfo, Font, brush, new PointF(_recLineInfo.X, bytePointF.Y), _stringFormat);
@@ -2860,8 +2893,8 @@ namespace Be.Windows.Forms
 			{
 				_recLineInfo = new Rectangle(_recContent.X + marginLeft,
 					_recContent.Y,
-					(int)(_charSize.Width * 10),
-					_recContent.Height);
+          (int)( _charSize.Width * ( 2 + _NumDigitsMemorySize ) ),
+          _recContent.Height);
 			}
 			else
 			{

@@ -53,6 +53,7 @@
       this.hexView.LineInfoVisible = true;
       this.hexView.Location = new System.Drawing.Point(0, 28);
       this.hexView.Name = "hexView";
+      this.hexView.NumDigitsMemorySize = 4;
       this.hexView.ReadOnly = true;
       this.hexView.SelectedByteProvider = null;
       this.hexView.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
