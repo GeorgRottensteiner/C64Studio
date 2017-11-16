@@ -642,6 +642,25 @@ namespace C64Studio
       StudioCore.Settings.Functions[Function.UNDO].ToolBarButton = mainToolUndo;
       StudioCore.Settings.Functions[Function.REDO].MenuItem = redoToolStripMenuItem;
       StudioCore.Settings.Functions[Function.REDO].ToolBarButton = mainToolRedo;
+      StudioCore.Settings.Functions[Function.HELP].MenuItem = helpToolStripMenuItem1;
+      StudioCore.Settings.Functions[Function.COMMENT_SELECTION].ToolBarButton = mainToolCommentSelection;
+      StudioCore.Settings.Functions[Function.UNCOMMENT_SELECTION].ToolBarButton = mainToolUncommentSelection;
+      StudioCore.Settings.Functions[Function.SAVE_DOCUMENT].MenuItem = saveToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.SAVE_DOCUMENT].ToolBarButton = mainToolSave;
+      StudioCore.Settings.Functions[Function.SAVE_ALL].MenuItem = saveAllToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.SAVE_ALL].ToolBarButton = mainToolSaveAll;
+      StudioCore.Settings.Functions[Function.SAVE_DOCUMENT_AS].MenuItem = saveAsToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.DEBUG_BREAK].ToolBarButton = mainDebugBreak;
+      StudioCore.Settings.Functions[Function.DEBUG_GO].ToolBarButton = mainDebugGo;
+      StudioCore.Settings.Functions[Function.DEBUG_STOP].ToolBarButton = mainDebugStop;
+      StudioCore.Settings.Functions[Function.DEBUG_STEP_OVER].ToolBarButton = mainDebugStepOver;
+      StudioCore.Settings.Functions[Function.DEBUG_STEP_OUT].ToolBarButton = mainDebugStepOut;
+      StudioCore.Settings.Functions[Function.DEBUG_STEP].ToolBarButton = mainDebugStepInto;
+      StudioCore.Settings.Functions[Function.FIND].MenuItem = searchToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.FIND].ToolBarButton = mainToolFind;
+      StudioCore.Settings.Functions[Function.FIND_REPLACE].MenuItem = findReplaceToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.FIND_REPLACE].ToolBarButton = mainToolFindReplace;
+      StudioCore.Settings.Functions[Function.PRINT].ToolBarButton = mainToolPrint;
 
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new C64Studio.Converter.PETSCIIToCharConverter();
