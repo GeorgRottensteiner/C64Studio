@@ -40,6 +40,9 @@
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.addToWatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.addDataBreakpointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readAndWriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.readOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.writeOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.addBreakpointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.gotoDeclarationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,9 +56,8 @@
       this.comboZoneSelector = new System.Windows.Forms.ComboBox();
       this.comboLocalLabelSelector = new System.Windows.Forms.ComboBox();
       this.documentMap1 = new FastColoredTextBoxNS.DocumentMap();
-      this.readAndWriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.readOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.writeOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.showMemoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -122,6 +124,8 @@
             this.toolStripSeparator3,
             this.commentSelectionToolStripMenuItem,
             this.uncommentSelectionToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.showMemoryToolStripMenuItem,
             this.separatorCommenting,
             this.openFileToolStripMenuItem});
       this.contextSource.Name = "contextSource";
@@ -181,6 +185,27 @@
       this.addDataBreakpointToolStripMenuItem.Name = "addDataBreakpointToolStripMenuItem";
       this.addDataBreakpointToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
       this.addDataBreakpointToolStripMenuItem.Text = "Add Data Breakpoint";
+      // 
+      // readAndWriteToolStripMenuItem
+      // 
+      this.readAndWriteToolStripMenuItem.Name = "readAndWriteToolStripMenuItem";
+      this.readAndWriteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+      this.readAndWriteToolStripMenuItem.Text = "Read and Write";
+      this.readAndWriteToolStripMenuItem.Click += new System.EventHandler(this.readAndWriteToolStripMenuItem_Click);
+      // 
+      // readOnlyToolStripMenuItem
+      // 
+      this.readOnlyToolStripMenuItem.Name = "readOnlyToolStripMenuItem";
+      this.readOnlyToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+      this.readOnlyToolStripMenuItem.Text = "Read only";
+      this.readOnlyToolStripMenuItem.Click += new System.EventHandler(this.readOnlyToolStripMenuItem_Click);
+      // 
+      // writeOnlyToolStripMenuItem
+      // 
+      this.writeOnlyToolStripMenuItem.Name = "writeOnlyToolStripMenuItem";
+      this.writeOnlyToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+      this.writeOnlyToolStripMenuItem.Text = "Write only";
+      this.writeOnlyToolStripMenuItem.Click += new System.EventHandler(this.writeOnlyToolStripMenuItem_Click);
       // 
       // addBreakpointToolStripMenuItem
       // 
@@ -282,26 +307,17 @@
       this.documentMap1.Target = this.editSource;
       this.documentMap1.Text = "documentMap1";
       // 
-      // readAndWriteToolStripMenuItem
+      // showMemoryToolStripMenuItem
       // 
-      this.readAndWriteToolStripMenuItem.Name = "readAndWriteToolStripMenuItem";
-      this.readAndWriteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-      this.readAndWriteToolStripMenuItem.Text = "Read and Write";
-      this.readAndWriteToolStripMenuItem.Click += new System.EventHandler(this.readAndWriteToolStripMenuItem_Click);
+      this.showMemoryToolStripMenuItem.Name = "showMemoryToolStripMenuItem";
+      this.showMemoryToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+      this.showMemoryToolStripMenuItem.Text = "Show Memory";
+      this.showMemoryToolStripMenuItem.Click += new System.EventHandler(this.addShowMemoryToolStripMenuItem_Click);
       // 
-      // readOnlyToolStripMenuItem
+      // toolStripMenuItem1
       // 
-      this.readOnlyToolStripMenuItem.Name = "readOnlyToolStripMenuItem";
-      this.readOnlyToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-      this.readOnlyToolStripMenuItem.Text = "Read only";
-      this.readOnlyToolStripMenuItem.Click += new System.EventHandler(this.readOnlyToolStripMenuItem_Click);
-      // 
-      // writeOnlyToolStripMenuItem
-      // 
-      this.writeOnlyToolStripMenuItem.Name = "writeOnlyToolStripMenuItem";
-      this.writeOnlyToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-      this.writeOnlyToolStripMenuItem.Text = "Write only";
-      this.writeOnlyToolStripMenuItem.Click += new System.EventHandler(this.writeOnlyToolStripMenuItem_Click);
+      this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+      this.toolStripMenuItem1.Size = new System.Drawing.Size(189, 6);
       // 
       // SourceASMEx
       // 
@@ -346,5 +362,7 @@
     private System.Windows.Forms.ToolStripMenuItem readAndWriteToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem readOnlyToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem writeOnlyToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+    private System.Windows.Forms.ToolStripMenuItem showMemoryToolStripMenuItem;
   }
 }

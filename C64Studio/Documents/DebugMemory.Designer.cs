@@ -36,6 +36,8 @@
       this.btnBinarySpriteView = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.toolStripBtnMemoryFromCPU = new System.Windows.Forms.ToolStripButton();
+      this.toolStripBtnGoto = new System.Windows.Forms.ToolStripButton();
+      this.toolStripBtnHexCaseSwitch = new System.Windows.Forms.ToolStripButton();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolDebugMemory.SuspendLayout();
       this.SuspendLayout();
@@ -70,7 +72,9 @@
             this.btnBinaryCharView,
             this.btnBinarySpriteView,
             this.toolStripSeparator1,
-            this.toolStripBtnMemoryFromCPU});
+            this.toolStripBtnMemoryFromCPU,
+            this.toolStripBtnGoto,
+            this.toolStripBtnHexCaseSwitch});
       this.toolDebugMemory.Location = new System.Drawing.Point(0, 0);
       this.toolDebugMemory.Name = "toolDebugMemory";
       this.toolDebugMemory.Size = new System.Drawing.Size(431, 25);
@@ -130,6 +134,26 @@
       this.toolStripBtnMemoryFromCPU.ToolTipText = "Show Memory as CPU sees it";
       this.toolStripBtnMemoryFromCPU.Click += new System.EventHandler(this.toolStripBtnMemoryFromCPU_Click);
       // 
+      // toolStripBtnGoto
+      // 
+      this.toolStripBtnGoto.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripBtnGoto.Image = global::C64Studio.Properties.Resources.DebugMemoryGoto;
+      this.toolStripBtnGoto.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripBtnGoto.Name = "toolStripBtnGoto";
+      this.toolStripBtnGoto.Size = new System.Drawing.Size(23, 22);
+      this.toolStripBtnGoto.Text = "Goto Address";
+      this.toolStripBtnGoto.Click += new System.EventHandler(this.toolStripButtonGoto_Click);
+      // 
+      // toolStripBtnHexCaseSwitch
+      // 
+      this.toolStripBtnHexCaseSwitch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripBtnHexCaseSwitch.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnHexCaseSwitch.Image")));
+      this.toolStripBtnHexCaseSwitch.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripBtnHexCaseSwitch.Name = "toolStripBtnHexCaseSwitch";
+      this.toolStripBtnHexCaseSwitch.Size = new System.Drawing.Size(23, 22);
+      this.toolStripBtnHexCaseSwitch.Text = "Switch Capital";
+      this.toolStripBtnHexCaseSwitch.Click += new System.EventHandler(this.toolStripBtnHexCaseSwitch_Click);
+      // 
       // DebugMemory
       // 
       this.ClientSize = new System.Drawing.Size(431, 485);
@@ -155,7 +179,7 @@
     private System.Windows.Forms.ToolStripButton btnBinarySpriteView;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.Windows.Forms.ToolStripButton toolStripBtnMemoryFromCPU;
-
-
+    private System.Windows.Forms.ToolStripButton toolStripBtnGoto;
+    private System.Windows.Forms.ToolStripButton toolStripBtnHexCaseSwitch;
   }
 }

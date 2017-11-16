@@ -75,6 +75,12 @@
     <Compile Include="CustomRenderer\CustomToolStripRenderer.cs" />
     <Compile Include="Compiling.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
+    <Compile Include="Dialogs\FormGoto.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\FormGoto.Designer.cs">
+      <DependentUpon>FormGoto.cs</DependentUpon>
+    </Compile>
     <Compile Include="Documents\ValueTableEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -443,6 +449,9 @@
     <EmbeddedResource Include="Dialogs\DlgInterleaveData.resx">
       <DependentUpon>DlgInterleaveData.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FormGoto.resx">
+      <DependentUpon>FormGoto.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Documents\BaseDocument.resx">
       <DependentUpon>BaseDocument.cs</DependentUpon>
     </EmbeddedResource>
@@ -655,6 +664,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="c64.ico" />
+    <None Include="Resources\DebugMemoryGoto.png" />
+    <None Include="Resources\toolStripBtnHexCaseSwitch.Image.png" />
+    <None Include="Resources\toolStripButton1.Image.png" />
     <None Include="Resources\valuetable.ico" />
     <None Include="Resources\charscreen_colors_off.ico" />
     <None Include="Resources\charscreen_chars_off.ico" />

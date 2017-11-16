@@ -193,7 +193,6 @@
       this.rebuildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.buildandRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.debugToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem(); 
-      this.valueTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
