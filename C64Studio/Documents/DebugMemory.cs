@@ -260,6 +260,12 @@ namespace C64Studio
 
 
 
+    public void RefreshViewScroller()
+    {
+      hexView_ViewScrolled( this, new EventArgs() );
+    }
+
+
 
     public void SetHexData( GR.Memory.ByteBuffer Data )
     {
@@ -267,6 +273,49 @@ namespace C64Studio
 
       hexView.ByteProvider = new Be.Windows.Forms.DynamicByteProvider( Data.Data() );
       hexView.PerformScrollToLine( oldOffset );
+    }
+
+
+
+    private void toolStripButtonGoto_Click( object sender, EventArgs e )
+    {
+      FormGoto frmGoto = new FormGoto();
+
+      if ( frmGoto.ShowDialog() == DialogResult.OK )
+      {
+        int address = -1;
+
+        if ( frmGoto.chkHex.Checked )
+        {
+          int.TryParse( frmGoto.editAddress.Text, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out address );
+        }
+        else
+        {
+          int.TryParse( frmGoto.editAddress.Text, out address );
+        }
+
+        if ( address >= 0 && address <= 65535 )
+        {
+          int line = address / hexView.BytesPerLine;
+
+          hexView.PerformScrollToLine( line );
+          RefreshViewScroller();
+        }
+      }
+    }
+
+
+
+    private void toolStripBtnHexCaseSwitch_Click( object sender, EventArgs e )
+    {
+      if ( hexView.HexCasing == Be.Windows.Forms.HexCasing.Lower )
+      {
+        hexView.HexCasing = Be.Windows.Forms.HexCasing.Upper;
+      }
+      else
+      {
+        hexView.HexCasing = Be.Windows.Forms.HexCasing.Lower;
+      }
     }
 
 

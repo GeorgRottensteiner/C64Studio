@@ -2065,6 +2065,36 @@ namespace C64Studio
 
 
 
+    private void addShowMemoryToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      string wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
+      string zone;
+      string cheapLabelParent;
+
+      FindZoneFromLine( m_ContextMenuLineIndex, out zone, out cheapLabelParent );
+
+      //Core.MainForm.EnsureFileIsParsed();
+      Types.SymbolInfo tokenInfo = DocumentInfo.ASMFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
+      if ( ( tokenInfo != null )
+      &&   ( tokenInfo.Type != Types.SymbolInfo.Types.UNKNOWN ) )
+      {
+        if ( ( tokenInfo.AddressOrValue >= 0 )
+        &&   ( tokenInfo.AddressOrValue <= 65535 ) )
+        {
+          int line = tokenInfo.AddressOrValue / Core.MainForm.m_DebugMemory.hexView.BytesPerLine;
+          Core.MainForm.m_DebugMemory.Show();
+          Core.MainForm.m_DebugMemory.hexView.PerformScrollToLine( line );
+          Core.MainForm.m_DebugMemory.RefreshViewScroller();
+        }
+        else
+        {
+          System.Windows.Forms.MessageBox.Show( "Could not determine item address of " + wordBelow );
+        }
+      }
+    }
+
+
+
     private bool FindZoneFromLine( int LineIndex, out string Zone, out string CheapLabelParent )
     {
       Zone = "";
