@@ -23,7 +23,8 @@ namespace C64Studio.Types
       SOLUTION_CLOSED,
       DOCUMENT_INFO_CREATED,
       DOCUMENT_INFO_REMOVED,
-      EMULATOR_LIST_CHANGED
+      EMULATOR_LIST_CHANGED,
+      KEY_BINDINGS_MODIFIED
     }
 
     public Type             EventType = Type.NONE;

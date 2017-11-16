@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace C64Studio.Types
 {
@@ -1462,6 +1463,8 @@ namespace C64Studio.Types
     public Function             Function = Function.NONE;
     public string               Description = "";
     public FunctionStudioState  State = FunctionStudioState.ANY;
+    public ToolStripMenuItem    MenuItem = null;
+    public ToolStripButton      ToolBarButton = null;
 
     public FunctionInfo( Function Func, string Desc, FunctionStudioState State )
     {

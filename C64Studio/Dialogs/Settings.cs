@@ -548,6 +548,7 @@ namespace C64Studio
       listFunctions.SelectedItems[0].SubItems[2].Text = m_PressedKey.ToString();
       btnUnbindKey.Enabled = ( Core.Settings.DetermineAccelerator( function ) != null );
 
+      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
       RefreshDisplayOnDocuments();
     }
 
@@ -954,6 +955,8 @@ namespace C64Studio
         if ( accPair.Value.Function == function )
         {
           Core.Settings.Accelerators.Remove( accPair.Key, accPair.Value );
+
+          Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
           break;
         }
       }
@@ -1300,6 +1303,7 @@ namespace C64Studio
       {
         btnUnbindKey.Enabled = ( Core.Settings.DetermineAccelerator( (Types.Function)listFunctions.SelectedItems[0].Tag ) != null );
       }
+      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
     }
 
 

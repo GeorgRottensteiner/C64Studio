@@ -627,6 +627,22 @@ namespace C64Studio
       StudioCore.Settings.GenericTools["FindReplace"]         = m_FindReplace;
       StudioCore.Settings.GenericTools["SearchResults"]       = m_SearchResults;
 
+
+      StudioCore.Settings.Functions[Function.COMPILE].MenuItem = compileToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.COMPILE].ToolBarButton = mainToolCompile;
+      StudioCore.Settings.Functions[Function.BUILD].MenuItem = buildToolStripMenuItem1;
+      StudioCore.Settings.Functions[Function.BUILD].ToolBarButton = mainToolBuild;
+      StudioCore.Settings.Functions[Function.BUILD_AND_DEBUG].MenuItem = debugToolStripMenuItem1;
+      StudioCore.Settings.Functions[Function.BUILD_AND_DEBUG].ToolBarButton = mainToolDebug;
+      StudioCore.Settings.Functions[Function.BUILD_AND_RUN].MenuItem = buildandRunToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.BUILD_AND_RUN].ToolBarButton = mainToolBuildAndRun;
+      StudioCore.Settings.Functions[Function.REBUILD].MenuItem = rebuildToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.REBUILD].ToolBarButton = mainToolRebuild;
+      StudioCore.Settings.Functions[Function.UNDO].MenuItem = undoToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.UNDO].ToolBarButton = mainToolUndo;
+      StudioCore.Settings.Functions[Function.REDO].MenuItem = redoToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.REDO].ToolBarButton = mainToolRedo;
+
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new C64Studio.Converter.PETSCIIToCharConverter();
 
@@ -673,6 +689,9 @@ namespace C64Studio
         }
       }
       StudioCore.Settings.SanitizeSettings();
+
+      ApplyMenuShortCuts();
+
       StudioCore.Compiling.ParserBasic.Settings.StripSpaces = StudioCore.Settings.BASICStripSpaces;
       m_Outline.checkShowLocalLabels.Image = StudioCore.Settings.OutlineShowLocalLabels ? C64Studio.Properties.Resources.flag_green_on.ToBitmap() : C64Studio.Properties.Resources.flag_green_off.ToBitmap();
       m_Outline.checkShowShortCutLabels.Image = StudioCore.Settings.OutlineShowShortCutLabels ? C64Studio.Properties.Resources.flag_blue_on.ToBitmap() : C64Studio.Properties.Resources.flag_blue_off.ToBitmap();
@@ -778,6 +797,54 @@ namespace C64Studio
           IdleQueue.Add( idleRequest );
         }
       }
+    }
+
+
+
+    private void ApplyMenuShortCuts()
+    {
+      foreach ( var function in StudioCore.Settings.Functions.Values )
+      {
+        if ( function.MenuItem != null )
+        {
+          var key = StudioCore.Settings.DetermineAcceleratorKeyForFunction( function.Function, AppState );
+          function.MenuItem.ShortcutKeys = key;
+        }
+        if ( function.ToolBarButton != null )
+        {
+          var key = StudioCore.Settings.DetermineAcceleratorKeyForFunction( function.Function, AppState );
+          if ( key != Keys.None )
+          {
+            function.ToolBarButton.ToolTipText = function.Description + System.Environment.NewLine + KeyToNiceString( key );
+          }
+          else
+          {
+            function.ToolBarButton.ToolTipText = function.Description;
+          }
+        }
+      }
+    }
+
+
+
+    private string KeyToNiceString( Keys Key )
+    {
+      StringBuilder sb = new StringBuilder();
+
+      if ( ( Key & Keys.Control ) != 0 )
+      {
+        sb.Append( "Ctrl+" );
+      }
+      if ( ( Key & Keys.Shift) != 0 )
+      {
+        sb.Append( "Shift+" );
+      }
+      if ( ( Key & Keys.Alt ) != 0 )
+      {
+        sb.Append( "Alt+" );
+      }
+      sb.Append( Key & ~( Keys.Control | Keys.Shift | Keys.Alt ) );
+      return sb.ToString();
     }
 
 
@@ -1009,6 +1076,9 @@ namespace C64Studio
     {
       switch ( Event.EventType )
       {
+        case Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED:
+          ApplyMenuShortCuts();
+          break;
         case C64Studio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED:
           EmulatorListUpdated();
           break;
@@ -5803,6 +5873,8 @@ namespace C64Studio
         newDoc.Show( panelMain );
         newDoc.DocumentInfo.Project = Project;
         newDoc.Icon = IconFromType( newDoc.DocumentInfo );
+
+        ApplicationEvent += newDoc.OnApplicationEvent;
       }
       return newDoc;
     }

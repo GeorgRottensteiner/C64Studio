@@ -161,6 +161,12 @@ namespace C64Studio
 
 
 
+    public virtual void OnApplicationEvent( C64Studio.Types.ApplicationEvent Event )
+    {
+    }
+
+
+
     public StudioCore   Core
     {
       get;
@@ -586,6 +592,7 @@ namespace C64Studio
         return;
       }
       DisposeWatcher();
+      Core.MainForm.ApplicationEvent -= OnApplicationEvent;
       Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, DocumentInfo ) );
       if ( DocumentInfo.Element != null )
       {

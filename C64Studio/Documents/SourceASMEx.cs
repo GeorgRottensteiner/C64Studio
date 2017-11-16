@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using C64Studio.CustomRenderer;
+using C64Studio.Types;
 
 namespace C64Studio
 {
@@ -1020,6 +1021,19 @@ namespace C64Studio
       }
       //RefreshLocalSymbols();
       //RefreshAutoComplete();
+    }
+
+
+
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      base.OnApplicationEvent( Event );
+
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.KEY_BINDINGS_MODIFIED:
+          break;
+      }
     }
 
 

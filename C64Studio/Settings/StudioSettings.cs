@@ -373,6 +373,23 @@ namespace C64Studio
 
 
 
+    public Keys DetermineAcceleratorKeyForFunction( Types.Function Function, Types.StudioState State )
+    {
+      Types.FunctionStudioState functionMask = FunctionMaskFromAppState( State );
+
+      foreach ( var key in Accelerators )
+      {
+        if ( ( key.Value.Function == Function )
+        &&   ( ( Functions[Function].State & functionMask ) != 0 ) )
+        {
+          return key.Key;
+        }
+      }
+      return Keys.None;
+    }
+
+
+
     public AcceleratorKey DetermineAccelerator( Keys Key, Types.StudioState State )
     {
       if ( !Accelerators.ContainsKey( Key ) )
@@ -380,6 +397,27 @@ namespace C64Studio
         return null;
       }
 
+      Types.FunctionStudioState functionMask = FunctionMaskFromAppState( State );
+
+      List<AcceleratorKey> possibleKeys = Accelerators.GetValues( Key, true );
+      if ( possibleKeys == null )
+      {
+        return null;
+      }
+      foreach ( AcceleratorKey key in possibleKeys )
+      {
+        if ( ( functionMask & Functions[key.Function].State ) != 0 )
+        {
+          return key;
+        }
+      }
+      return null;
+    }
+
+
+
+    private Types.FunctionStudioState FunctionMaskFromAppState( Types.StudioState State )
+    {
       Types.FunctionStudioState   functionMask = 0;
       switch ( State )
       {
@@ -399,20 +437,7 @@ namespace C64Studio
           functionMask |= C64Studio.Types.FunctionStudioState.DEBUGGER_RUNNING;
           break;
       }
-
-      List<AcceleratorKey> possibleKeys = Accelerators.GetValues( Key, true );
-      if ( possibleKeys == null )
-      {
-        return null;
-      }
-      foreach ( AcceleratorKey key in possibleKeys )
-      {
-        if ( ( functionMask & Functions[key.Function].State ) != 0 )
-        {
-          return key;
-        }
-      }
-      return null;
+      return functionMask;
     }
 
 
