@@ -193,7 +193,6 @@
       this.rebuildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.buildandRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.debugToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem(); 
-      this.valueTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -338,13 +337,6 @@
       this.fileNewMapEditorToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewMapEditorToolStripMenuItem.Text = "Map";
       this.fileNewMapEditorToolStripMenuItem.Click += new System.EventHandler(this.fileNewMapEditorToolStripMenuItem_Click);
-      // 
-      // valueTableToolStripMenuItem
-      // 
-      this.valueTableToolStripMenuItem.Name = "valueTableToolStripMenuItem";
-      this.valueTableToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-      this.valueTableToolStripMenuItem.Text = "Value Table";
-      this.valueTableToolStripMenuItem.Click += new System.EventHandler(this.valueTableToolStripMenuItem_Click);
       // 
       // fileNewBinaryEditorToolStripMenuItem
       // 

@@ -19,49 +19,49 @@ namespace C64Studio
 {
   public partial class MainForm : Form
   {
-    private Project m_CurrentProject = null;
+    private Project               m_CurrentProject = null;
 
-    public Solution m_Solution = null;
+    public Solution               m_Solution = null;
 
-    public OutputDisplay m_Output = new OutputDisplay();
+    public OutputDisplay          m_Output = new OutputDisplay();
 
-    public SolutionExplorer m_SolutionExplorer = new SolutionExplorer();
+    public SolutionExplorer       m_SolutionExplorer = new SolutionExplorer();
 
-    public DebugRegisters m_DebugRegisters = new DebugRegisters();
-    public DebugWatch m_DebugWatch = new DebugWatch();
-    public DebugMemory m_DebugMemory = null;
-    public DebugBreakpoints m_DebugBreakpoints = new DebugBreakpoints();
-    public CompileResult m_CompileResult = new CompileResult();
-    public CharsetEditor m_CharsetEditor = null;
-    public Disassembler m_Disassembler = null;
-    public CharsetScreenEditor m_CharScreenEditor = null;
-    public GraphicScreenEditor m_GraphicScreenEditor = null;
-    public SpriteEditor m_SpriteEditor = null;
-    public MapEditor m_MapEditor = null;
-    public Calculator m_Calculator = null;
-    public PetSCIITable m_PetSCIITable = null;
-    public Outline m_Outline = new Outline();
-    public Help m_Help = new Help();
-    public FormFindReplace m_FindReplace = new FormFindReplace();
+    public DebugRegisters         m_DebugRegisters = new DebugRegisters();
+    public DebugWatch             m_DebugWatch = new DebugWatch();
+    public DebugMemory            m_DebugMemory = null;
+    public DebugBreakpoints       m_DebugBreakpoints = new DebugBreakpoints();
+    public CompileResult          m_CompileResult = new CompileResult();
+    public CharsetEditor          m_CharsetEditor = null;
+    public Disassembler           m_Disassembler = null;
+    public CharsetScreenEditor    m_CharScreenEditor = null;
+    public GraphicScreenEditor    m_GraphicScreenEditor = null;
+    public SpriteEditor           m_SpriteEditor = null;
+    public MapEditor              m_MapEditor = null;
+    public Calculator             m_Calculator = null;
+    public PetSCIITable           m_PetSCIITable = null;
+    public Outline                m_Outline = new Outline();
+    public Help                   m_Help = new Help();
+    public FormFindReplace        m_FindReplace = new FormFindReplace();
 
-    public SearchResults m_SearchResults = new SearchResults();
-    public Perspective m_ActivePerspective = Perspective.DEBUG;
+    public SearchResults          m_SearchResults = new SearchResults();
+    public Perspective            m_ActivePerspective = Perspective.DEBUG;
 
     public System.Diagnostics.Process CompilerProcess = null;
     private System.Diagnostics.Process m_ExternalProcess = null;
 
-    public StudioCore StudioCore = new StudioCore();
+    public StudioCore             StudioCore = new StudioCore();
 
-    private List<Tasks.Task> m_Tasks = new List<C64Studio.Tasks.Task>();
-    private Tasks.Task m_CurrentTask = null;
+    private List<Tasks.Task>      m_Tasks = new List<C64Studio.Tasks.Task>();
+    private Tasks.Task            m_CurrentTask = null;
 
-    private System.DateTime m_LastReceivedOutputTime;
+    private System.DateTime       m_LastReceivedOutputTime;
 
-    private bool m_ChangingToolWindows = false;
-    private bool m_LoadingProject = false;
+    private bool                  m_ChangingToolWindows = false;
+    private bool                  m_LoadingProject = false;
 
-    private BaseDocument m_ActiveSource = null;
-    internal ToolInfo m_CurrentActiveTool = null;
+    private BaseDocument          m_ActiveSource = null;
+    internal ToolInfo             m_CurrentActiveTool = null;
     public SortedDictionary<string, Types.Palette> Palettes = new SortedDictionary<string, C64Studio.Types.Palette>();
 
     private static MainForm s_MainForm = null;
@@ -564,15 +564,15 @@ namespace C64Studio
       StudioCore.Debugging.Debugger = new VICERemoteDebugger( StudioCore );
       StudioCore.Debugging.Debugger.DebugEvent += Debugger_DebugEvent;
 
-      m_CharsetEditor = new CharsetEditor( StudioCore );
-      m_SpriteEditor = new SpriteEditor( StudioCore );
+      m_CharsetEditor       = new CharsetEditor( StudioCore );
+      m_SpriteEditor        = new SpriteEditor( StudioCore );
       m_GraphicScreenEditor = new GraphicScreenEditor( StudioCore );
-      m_CharScreenEditor = new CharsetScreenEditor( StudioCore );
-      m_PetSCIITable = new PetSCIITable( StudioCore );
-      m_Calculator = new Calculator();
-      m_MapEditor = new MapEditor( StudioCore );
-      m_Disassembler = new Disassembler( StudioCore );
-      m_DebugMemory = new DebugMemory( StudioCore );
+      m_CharScreenEditor    = new CharsetScreenEditor( StudioCore );
+      m_PetSCIITable        = new PetSCIITable( StudioCore );
+      m_Calculator          = new Calculator();
+      m_MapEditor           = new MapEditor( StudioCore );
+      m_Disassembler        = new Disassembler( StudioCore );
+      m_DebugMemory         = new DebugMemory( StudioCore );
 
       m_CharsetEditor.SetInternal();
       m_SpriteEditor.SetInternal();
@@ -607,25 +607,25 @@ namespace C64Studio
       var viceDebugger = StudioCore.Debugging.Debugger as VICERemoteDebugger;
       viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );
 
-      StudioCore.Settings.GenericTools["Outline"] = m_Outline;
-      StudioCore.Settings.GenericTools["SolutionExplorer"] = m_SolutionExplorer;
-      StudioCore.Settings.GenericTools["Output"] = m_Output;
-      StudioCore.Settings.GenericTools["CompileResult"] = m_CompileResult;
-      StudioCore.Settings.GenericTools["DebugRegisters"] = m_DebugRegisters;
-      StudioCore.Settings.GenericTools["DebugWatch"] = m_DebugWatch;
-      StudioCore.Settings.GenericTools["DebugMemory"] = m_DebugMemory;
-      StudioCore.Settings.GenericTools["DebugBreakpoints"] = m_DebugBreakpoints;
-      StudioCore.Settings.GenericTools["Disassembler"] = m_Disassembler;
-      StudioCore.Settings.GenericTools["CharsetEditor"] = m_CharsetEditor;
-      StudioCore.Settings.GenericTools["SpriteEditor"] = m_SpriteEditor;
-      StudioCore.Settings.GenericTools["CharScreenEditor"] = m_CharScreenEditor;
+      StudioCore.Settings.GenericTools["Outline"]             = m_Outline;
+      StudioCore.Settings.GenericTools["SolutionExplorer"]    = m_SolutionExplorer;
+      StudioCore.Settings.GenericTools["Output"]              = m_Output;
+      StudioCore.Settings.GenericTools["CompileResult"]       = m_CompileResult;
+      StudioCore.Settings.GenericTools["DebugRegisters"]      = m_DebugRegisters;
+      StudioCore.Settings.GenericTools["DebugWatch"]          = m_DebugWatch;
+      StudioCore.Settings.GenericTools["DebugMemory"]         = m_DebugMemory;
+      StudioCore.Settings.GenericTools["DebugBreakpoints"]    = m_DebugBreakpoints;
+      StudioCore.Settings.GenericTools["Disassembler"]        = m_Disassembler;
+      StudioCore.Settings.GenericTools["CharsetEditor"]       = m_CharsetEditor;
+      StudioCore.Settings.GenericTools["SpriteEditor"]        = m_SpriteEditor;
+      StudioCore.Settings.GenericTools["CharScreenEditor"]    = m_CharScreenEditor;
       StudioCore.Settings.GenericTools["GraphicScreenEditor"] = m_GraphicScreenEditor;
-      StudioCore.Settings.GenericTools["MapEditor"] = m_MapEditor;
-      StudioCore.Settings.GenericTools["PetSCIITable"] = m_PetSCIITable;
-      StudioCore.Settings.GenericTools["Calculator"] = m_Calculator;
-      StudioCore.Settings.GenericTools["Help"] = m_Help;
-      StudioCore.Settings.GenericTools["FindReplace"] = m_FindReplace;
-      StudioCore.Settings.GenericTools["SearchResults"] = m_SearchResults;
+      StudioCore.Settings.GenericTools["MapEditor"]           = m_MapEditor;
+      StudioCore.Settings.GenericTools["PetSCIITable"]        = m_PetSCIITable;
+      StudioCore.Settings.GenericTools["Calculator"]          = m_Calculator;
+      StudioCore.Settings.GenericTools["Help"]                = m_Help;
+      StudioCore.Settings.GenericTools["FindReplace"]         = m_FindReplace;
+      StudioCore.Settings.GenericTools["SearchResults"]       = m_SearchResults;
 
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new C64Studio.Converter.PETSCIIToCharConverter();
