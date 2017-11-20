@@ -797,6 +797,11 @@ namespace C64Studio
 
       m_Disassembler.RefreshDisplayOptions();
 
+#if DEBUG
+      showLineinfosToolStripMenuItem.Visible = true;
+#endif
+
+
       //DumpPanes( panelMain, "" );
 
       ApplicationEvent += new ApplicationEventHandler( MainForm_ApplicationEvent );
@@ -4510,7 +4515,7 @@ namespace C64Studio
       }
       foreach ( Types.ASM.SourceInfo sourceInfo in StudioCore.Compiling.ParserASM.ASMFileInfo.SourceInfo.Values )
       {
-        Debug.Log( "Source " + sourceInfo.Filename + " in " + sourceInfo.FilenameParent + " from line " + sourceInfo.GlobalStartLine + " to " + ( sourceInfo.GlobalStartLine + sourceInfo.LineCount - 1 ) );
+        Debug.Log( "Source " + sourceInfo.Filename + " in " + sourceInfo.FilenameParent + " from line " + sourceInfo.GlobalStartLine + " to " + ( sourceInfo.GlobalStartLine + sourceInfo.LineCount - 1 ) + " orig at " + sourceInfo.LocalStartLine + " to " + ( sourceInfo.LocalStartLine + sourceInfo.LineCount - 1 ) );
       }
     }
 
@@ -4905,7 +4910,7 @@ namespace C64Studio
           break;
         case C64Studio.Types.Function.DEBUG_RUN_TO:
           if ( ( AppState != Types.StudioState.NORMAL )
-          && ( AppState != C64Studio.Types.StudioState.DEBUGGING_BROKEN ) )
+          &&   ( AppState != C64Studio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }

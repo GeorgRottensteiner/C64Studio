@@ -2853,6 +2853,12 @@ namespace C64Studio
 
     public void MarkTextAsError( int LineIndex, int CharPosStart, int CharLength )
     {
+      if ( ( LineIndex < 0 )
+      ||   ( LineIndex >= editSource.LinesCount ) )
+      {
+        Debug.Log( "MarkTextAsError lineindex out of bounds!" );
+        return;
+      }
       var range = new FastColoredTextBoxNS.Range( editSource, new FastColoredTextBoxNS.Place( CharPosStart, LineIndex ), new FastColoredTextBoxNS.Place( CharPosStart + CharLength, LineIndex ) );
 
       range.SetStyle( FastColoredTextBoxNS.StyleIndex.Style10 );

@@ -5892,10 +5892,13 @@ namespace C64Studio.Parser
           evaluatedContent = true;
           hadMacro = true;
 
-          var result = POCallMacro( lineTokenInfos, ref lineIndex, info, parseLine, ParentFilename, labelInFront, macroFunctions, ref Lines, stackScopes, out lineSizeInBytes );
-          if ( result == ParseLineResult.CALL_CONTINUE )
+          if ( !ScopeInsideMacroDefinition( stackScopes ) )
           {
-            continue;
+            var result = POCallMacro( lineTokenInfos, ref lineIndex, info, parseLine, ParentFilename, labelInFront, macroFunctions, ref Lines, stackScopes, out lineSizeInBytes );
+            if ( result == ParseLineResult.CALL_CONTINUE )
+            {
+              continue;
+            }
           }
         }
         else if ( ( m_AssemblerSettings.MacroPrefix.Length > 0 )
@@ -8342,10 +8345,8 @@ namespace C64Studio.Parser
         return false;
       }*/
 
-      /*
       string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
       System.IO.File.WriteAllLines( pathLog, lines );
-      */
 
       DetermineUnparsedLabels();
       //Debug.Log( "DetermineUnparsedLabels done" );
