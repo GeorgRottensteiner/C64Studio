@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
-      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.btnExchangeColors = new C64Studio.Controls.MenuButton();
@@ -39,10 +39,12 @@
       this.exchangeMultiColor1WithBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMultiColor2WithBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.forAllSpritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.forSelectedSpritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+      this.exchangeBGColorWithSpriteColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.tabSpriteDetails = new System.Windows.Forms.TabControl();
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.panelSprites = new GR.Forms.ImageListbox();
@@ -93,10 +95,15 @@
       this.btnImportFromHex = new System.Windows.Forms.Button();
       this.button2 = new System.Windows.Forms.Button();
       this.groupExport = new System.Windows.Forms.GroupBox();
+      this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
       this.comboExportRange = new System.Windows.Forms.ComboBox();
+      this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
       this.editSpriteCount = new System.Windows.Forms.TextBox();
+      this.label1 = new System.Windows.Forms.Label();
       this.editSpriteFrom = new System.Windows.Forms.TextBox();
+      this.label8 = new System.Windows.Forms.Label();
       this.labelCharactersTo = new System.Windows.Forms.Label();
+      this.btnExportToBASICData = new System.Windows.Forms.Button();
       this.labelCharactersFrom = new System.Windows.Forms.Label();
       this.editPrefix = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
@@ -119,11 +126,7 @@
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
-      this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
-      this.label1 = new System.Windows.Forms.Label();
-      this.label8 = new System.Windows.Forms.Label();
-      this.btnExportToBASICData = new System.Windows.Forms.Button();
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabSpriteEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -202,7 +205,6 @@
             this.exchangeMultiColor1WithBGColorToolStripMenuItem,
             this.exchangeMultiColor2WithBGColorToolStripMenuItem,
             this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem,
-            this.forAllSpritesToolStripMenuItem,
             this.forSelectedSpritesToolStripMenuItem});
       this.contextMenuExchangeColors.Name = "contextMenuExchangeColors";
       this.contextMenuExchangeColors.Size = new System.Drawing.Size(295, 114);
@@ -228,17 +230,15 @@
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Text = "Exchange Multi Color 1 with Multi Color 2";
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem_Click);
       // 
-      // forAllSpritesToolStripMenuItem
-      // 
-      this.forAllSpritesToolStripMenuItem.Name = "forAllSpritesToolStripMenuItem";
-      this.forAllSpritesToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
-      this.forAllSpritesToolStripMenuItem.Text = "For all Sprites";
-      // 
       // forSelectedSpritesToolStripMenuItem
       // 
       this.forSelectedSpritesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1,
-            this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1});
+            this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1,
+            this.exchangeBGColorWithSpriteColorToolStripMenuItem,
+            this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem,
+            this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem,
+            this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1});
       this.forSelectedSpritesToolStripMenuItem.Name = "forSelectedSpritesToolStripMenuItem";
       this.forSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
       this.forSelectedSpritesToolStripMenuItem.Text = "For selected Sprites";
@@ -246,16 +246,37 @@
       // exchangeMulticolor1WithSpriteColorToolStripMenuItem1
       // 
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Name = "exchangeMulticolor1WithSpriteColorToolStripMenuItem1";
-      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(279, 22);
+      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Text = "Exchange Multicolor 1 with sprite color";
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1_Click);
       // 
       // exchangeMulticolor2WithSpriteColorToolStripMenuItem1
       // 
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Name = "exchangeMulticolor2WithSpriteColorToolStripMenuItem1";
-      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(279, 22);
+      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Text = "Exchange Multicolor 2 with sprite color";
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1_Click);
+      // 
+      // exchangeBGColorWithSpriteColorToolStripMenuItem
+      // 
+      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Name = "exchangeBGColorWithSpriteColorToolStripMenuItem";
+      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Text = "Exchange BG color with sprite color";
+      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeBGColorWithSpriteColorToolStripMenuItem_Click);
+      // 
+      // exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem
+      // 
+      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Name = "exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem";
+      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Text = "Exchange Multicolor 1 with BG color";
+      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Click += new System.EventHandler(this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem_Click);
+      // 
+      // exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem
+      // 
+      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Name = "exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem";
+      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Text = "Exchange Multicolor 2 with BG color";
+      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Click += new System.EventHandler(this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem_Click);
       // 
       // tabSpriteDetails
       // 
@@ -510,7 +531,7 @@
       // layerPreview
       // 
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.layerPreview.DisplayPage = fastImage5;
+      this.layerPreview.DisplayPage = fastImage1;
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(136, 3);
       this.layerPreview.Name = "layerPreview";
@@ -777,7 +798,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage6;
+      this.pictureEditor.DisplayPage = fastImage2;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -873,6 +894,14 @@
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
       // 
+      // editExportBASICLineOffset
+      // 
+      this.editExportBASICLineOffset.Location = new System.Drawing.Point(352, 108);
+      this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
+      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
+      this.editExportBASICLineOffset.TabIndex = 28;
+      this.editExportBASICLineOffset.Text = "10";
+      // 
       // comboExportRange
       // 
       this.comboExportRange.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -883,6 +912,14 @@
       this.comboExportRange.TabIndex = 14;
       this.comboExportRange.SelectedIndexChanged += new System.EventHandler(this.comboExportRange_SelectedIndexChanged);
       // 
+      // editExportBASICLineNo
+      // 
+      this.editExportBASICLineNo.Location = new System.Drawing.Point(181, 108);
+      this.editExportBASICLineNo.Name = "editExportBASICLineNo";
+      this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
+      this.editExportBASICLineNo.TabIndex = 29;
+      this.editExportBASICLineNo.Text = "10";
+      // 
       // editSpriteCount
       // 
       this.editSpriteCount.Location = new System.Drawing.Point(367, 21);
@@ -890,6 +927,15 @@
       this.editSpriteCount.Size = new System.Drawing.Size(56, 20);
       this.editSpriteCount.TabIndex = 12;
       this.editSpriteCount.TextChanged += new System.EventHandler(this.editSpriteCount_TextChanged);
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(285, 111);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(61, 13);
+      this.label1.TabIndex = 26;
+      this.label1.Text = "Line Offset:";
       // 
       // editSpriteFrom
       // 
@@ -899,6 +945,15 @@
       this.editSpriteFrom.TabIndex = 11;
       this.editSpriteFrom.TextChanged += new System.EventHandler(this.editSpriteFrom_TextChanged);
       // 
+      // label8
+      // 
+      this.label8.AutoSize = true;
+      this.label8.Location = new System.Drawing.Point(128, 111);
+      this.label8.Name = "label8";
+      this.label8.Size = new System.Drawing.Size(47, 13);
+      this.label8.TabIndex = 27;
+      this.label8.Text = "Line No:";
+      // 
       // labelCharactersTo
       // 
       this.labelCharactersTo.AutoSize = true;
@@ -907,6 +962,16 @@
       this.labelCharactersTo.Size = new System.Drawing.Size(37, 13);
       this.labelCharactersTo.TabIndex = 10;
       this.labelCharactersTo.Text = "count:";
+      // 
+      // btnExportToBASICData
+      // 
+      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 106);
+      this.btnExportToBASICData.Name = "btnExportToBASICData";
+      this.btnExportToBASICData.Size = new System.Drawing.Size(117, 23);
+      this.btnExportToBASICData.TabIndex = 25;
+      this.btnExportToBASICData.Text = "To BASIC data";
+      this.btnExportToBASICData.UseVisualStyleBackColor = true;
+      this.btnExportToBASICData.Click += new System.EventHandler(this.btnExportToBASICData_Click);
       // 
       // labelCharactersFrom
       // 
@@ -1065,49 +1130,12 @@
       this.columnHeader6.Text = "Y";
       this.columnHeader6.Width = 30;
       // 
-      // editExportBASICLineOffset
+      // exchangeMulticolor1WithMulticolor2ToolStripMenuItem1
       // 
-      this.editExportBASICLineOffset.Location = new System.Drawing.Point(352, 108);
-      this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
-      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
-      this.editExportBASICLineOffset.TabIndex = 28;
-      this.editExportBASICLineOffset.Text = "10";
-      // 
-      // editExportBASICLineNo
-      // 
-      this.editExportBASICLineNo.Location = new System.Drawing.Point(181, 108);
-      this.editExportBASICLineNo.Name = "editExportBASICLineNo";
-      this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
-      this.editExportBASICLineNo.TabIndex = 29;
-      this.editExportBASICLineNo.Text = "10";
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(285, 111);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(61, 13);
-      this.label1.TabIndex = 26;
-      this.label1.Text = "Line Offset:";
-      // 
-      // label8
-      // 
-      this.label8.AutoSize = true;
-      this.label8.Location = new System.Drawing.Point(128, 111);
-      this.label8.Name = "label8";
-      this.label8.Size = new System.Drawing.Size(47, 13);
-      this.label8.TabIndex = 27;
-      this.label8.Text = "Line No:";
-      // 
-      // btnExportToBASICData
-      // 
-      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 106);
-      this.btnExportToBASICData.Name = "btnExportToBASICData";
-      this.btnExportToBASICData.Size = new System.Drawing.Size(117, 23);
-      this.btnExportToBASICData.TabIndex = 25;
-      this.btnExportToBASICData.Text = "To BASIC data";
-      this.btnExportToBASICData.UseVisualStyleBackColor = true;
-      this.btnExportToBASICData.Click += new System.EventHandler(this.btnExportToBASICData_Click);
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Name = "exchangeMulticolor1WithMulticolor2ToolStripMenuItem1";
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Text = "Exchange Multicolor 1 with Multicolor 2";
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1_Click);
       // 
       // SpriteEditor
       // 
@@ -1224,7 +1252,6 @@
     private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithMultiColor2ToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithBGColorToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor2WithBGColorToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem forAllSpritesToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem forSelectedSpritesToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor1WithSpriteColorToolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor2WithSpriteColorToolStripMenuItem1;
@@ -1233,8 +1260,9 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Button btnExportToBASICData;
-
-
-
+    private System.Windows.Forms.ToolStripMenuItem exchangeBGColorWithSpriteColorToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor1WithMulticolor2ToolStripMenuItem1;
   }
 }

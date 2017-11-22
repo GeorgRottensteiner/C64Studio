@@ -794,7 +794,6 @@ namespace C64Studio.Parser
 
     public bool ParseValueNumeric( int LineIndex, string Value, out double Result )
     {
-      int     numDigits = 0;
       ClearErrorInfo();
 
       if ( Util.StringToDouble( Value, out Result ) )

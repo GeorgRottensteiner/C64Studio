@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using C64Studio.Formats;
 
 namespace C64Studio
 {
@@ -231,85 +232,6 @@ namespace C64Studio
       {
         SpriteDisplayer.DisplayHiResSprite( Data, m_SpriteProject.BackgroundColor, CustomColor, Target, X, Y, ExpandX, ExpandY );
       }
-      /*
-      int     pixelStepX = 1;
-      int     pixelStepY = 1;
-      if ( ExpandX )
-      {
-        pixelStepX = 2;
-      }
-      if ( ExpandY )
-      {
-        pixelStepY = 2;
-      }
-
-      if ( !Multicolor )
-      {
-        // single color
-        for ( int j = 0; j < 21; ++j )
-        {
-          for ( int pp = 0; pp < pixelStepY; ++pp )
-          {
-            for ( int k = 0; k < 3; ++k )
-            {
-              for ( int i = 0; i < 8; ++i )
-              {
-                if ( ( Data.ByteAt( j * 3 + k ) & ( 1 << ( 7 - i ) ) ) != 0 )
-                {
-                  //Data.Image.SetPixel( k * 8 + i, j, m_ColorValues[Data.Color] );
-                  Target.SetPixel( X + k * 8 + i, Y + j * pixelStepY + pp, (uint)CustomColor );
-                }
-                else
-                {
-                  //Data.Image.SetPixel( k * 8 + i, j, m_ColorValues[m_BackgroundColor] );
-                  //Target.SetPixel( k * 8 + i, j, (uint)BackgroundColor );
-                }
-              }
-            }
-          }
-        }
-      }
-      else
-      {
-        // multicolor
-        for ( int j = 0; j < 21; ++j )
-        {
-          for ( int pp = 0; pp < pixelStepY; ++pp )
-          {
-            for ( int k = 0; k < 3; ++k )
-            {
-              for ( int i = 0; i < 4; ++i )
-              {
-                int pixelValue = ( Data.ByteAt( j * 3 + k ) & ( 3 << ( ( 3 - i ) * 2 ) ) ) >> ( ( 3 - i ) * 2 );
-
-                switch ( pixelValue )
-                {
-                  case 0:
-                    //pixelValue = BackgroundColor;
-                    continue;
-                  case 1:
-                    pixelValue = MultiColor1;
-                    break;
-                  case 3:
-                    pixelValue = MultiColor2;
-                    break;
-                  case 2:
-                    pixelValue = CustomColor;
-                    break;
-                }
-                Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX, Y + j * pixelStepY + pp, (uint)pixelValue );
-                Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 1, Y + j * pixelStepY + pp, (uint)pixelValue );
-                if ( pixelStepX == 2 )
-                {
-                  Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 2, Y + j * pixelStepY + pp, (uint)pixelValue );
-                  Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 3, Y + j * pixelStepY + pp, (uint)pixelValue );
-                }
-              }
-            }
-          }
-        }
-      }
-       */
     }
 
 
@@ -3034,44 +2956,12 @@ namespace C64Studio
       m_SpriteProject.MultiColor1 = m_SpriteProject.MultiColor2;
       m_SpriteProject.MultiColor2 = temp;
 
-      int   spriteIndex = 0;
-      foreach ( var sprite in m_SpriteProject.Sprites )
+      List<int>     allIndices = new List<int>();
+      for ( int i = 0; i < 256; ++i )
       {
-        if ( sprite.Multicolor )
-        {
-          for ( int y = 0; y < 21; ++y )
-          {
-            for ( int x = 0; x < 3; ++x )
-            {
-              int     bytePos = y * 3 + x;
-              for ( int b = 0; b < 4; ++b )
-              {
-                int pixelValue = ( sprite.Data.ByteAt( bytePos ) & ( 3 << ( ( 3 - b ) * 2 ) ) ) >> ( ( 3 - b ) * 2 );
-
-                if ( pixelValue == 1 )
-                {
-                  byte  newValue = (byte)( sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-                  newValue |= (byte)( 3 << ( ( 3 - b ) * 2 ) );
-
-                  sprite.Data.SetU8At( bytePos, newValue );
-                }
-                else if ( pixelValue == 3 )
-                {
-                  byte  newValue = (byte)( sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-                  newValue |= (byte)( 1 << ( ( 3 - b ) * 2 ) );
-
-                  sprite.Data.SetU8At( bytePos, newValue );
-                }
-              }
-            }
-          }
-          RebuildSpriteImage( spriteIndex );
-          panelSprites.InvalidateItemRect( spriteIndex );
-        }
-        ++spriteIndex;
+        allIndices.Add( i );
       }
+      ExchangeMultiColors( allIndices, false );
 
       pictureEditor.Invalidate();
 
@@ -3079,6 +2969,75 @@ namespace C64Studio
       comboMulticolor2.SelectedIndex = m_SpriteProject.MultiColor2;
 
       Modified = true;
+    }
+
+
+
+    private void ExchangeMultiColors( List<int> SelectedSprites, bool AddUndo )
+    {
+      bool    firstEntry = true;
+      foreach ( int spriteIndex in SelectedSprites )
+      {
+        var sprite = m_SpriteProject.Sprites[spriteIndex];
+        if ( sprite.Multicolor )
+        {
+          if ( AddUndo )
+          {
+            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
+          }
+          firstEntry = false;
+          ReplaceSpriteColors( sprite, 1, 3 );
+          RebuildSpriteImage( spriteIndex );
+          panelSprites.InvalidateItemRect( spriteIndex );
+        }
+      }
+    }
+
+
+
+    private void ReplaceSpriteColors( SpriteProject.SpriteData Sprite, int PixelPattern1, int PixelPattern2 )
+    {
+      if ( Sprite == null )
+      {
+        Debug.Log( "ReplaceSpriteColors invalid sprite passed" );
+        return;
+      }
+      if ( ( PixelPattern1 < 0 )
+      ||   ( PixelPattern1 > 3 )
+      ||   ( PixelPattern2 < 0 )
+      ||   ( PixelPattern2 > 3 ) )
+      {
+        Debug.Log( "ReplaceSpriteColors: Invalid pixel patterns passed " + PixelPattern1 + "," + PixelPattern2 );
+        return;
+      }
+      for ( int y = 0; y < 21; ++y )
+      {
+        for ( int x = 0; x < 3; ++x )
+        {
+          int     bytePos = y * 3 + x;
+          for ( int b = 0; b < 4; ++b )
+          {
+            int pixelValue = ( Sprite.Data.ByteAt( bytePos ) & ( 3 << ( ( 3 - b ) * 2 ) ) ) >> ( ( 3 - b ) * 2 );
+
+            if ( pixelValue == PixelPattern1 )
+            {
+              byte  newValue = (byte)( Sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
+
+              newValue |= (byte)( PixelPattern2 << ( ( 3 - b ) * 2 ) );
+
+              Sprite.Data.SetU8At( bytePos, newValue );
+            }
+            else if ( pixelValue == PixelPattern2 )
+            {
+              byte  newValue = (byte)( Sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
+
+              newValue |= (byte)( PixelPattern1 << ( ( 3 - b ) * 2 ) );
+
+              Sprite.Data.SetU8At( bytePos, newValue );
+            }
+          }
+        }
+      }
     }
 
 
@@ -3089,99 +3048,88 @@ namespace C64Studio
       m_SpriteProject.BackgroundColor = m_SpriteProject.MultiColor1;
       m_SpriteProject.MultiColor1 = temp;
 
-      int   spriteIndex = 0;
-      foreach ( var sprite in m_SpriteProject.Sprites )
+      List<int>     allIndices = new List<int>();
+      for ( int i = 0; i < 256; ++i )
       {
-        if ( sprite.Multicolor )
-        {
-          for ( int y = 0; y < 21; ++y )
-          {
-            for ( int x = 0; x < 3; ++x )
-            {
-              int     bytePos = y * 3 + x;
-              for ( int b = 0; b < 4; ++b )
-              {
-                int pixelValue = ( sprite.Data.ByteAt( bytePos ) & ( 3 << ( ( 3 - b ) * 2 ) ) ) >> ( ( 3 - b ) * 2 );
-
-                if ( pixelValue == 1 )
-                {
-                  byte  newValue = (byte)( sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-                  sprite.Data.SetU8At( bytePos, newValue );
-                }
-                else if ( pixelValue == 0 )
-                {
-                  byte  newValue = (byte)( sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-                  newValue |= (byte)( 1 << ( ( 3 - b ) * 2 ) );
-
-                  sprite.Data.SetU8At( bytePos, newValue );
-                }
-              }
-            }
-          }
-          RebuildSpriteImage( spriteIndex );
-          panelSprites.Invalidate();
-        }
-        ++spriteIndex;
+        allIndices.Add( i );
       }
+      ExchangeMultiColor1WithBackground( allIndices, false );
+
       pictureEditor.Invalidate();
       comboMulticolor1.SelectedIndex = m_SpriteProject.MultiColor1;
       comboBackground.SelectedIndex = m_SpriteProject.BackgroundColor;
 
+    }
+
+
+
+    public void ExchangeMultiColor1WithBackground( List<int> SelectedSprites, bool AddUndo )
+    {
+      bool    firstEntry = true;
+      foreach ( int spriteIndex in SelectedSprites )
+      {
+        var sprite = m_SpriteProject.Sprites[spriteIndex];
+        if ( sprite.Multicolor )
+        {
+          if ( AddUndo )
+          {
+            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
+          }
+          firstEntry = false;
+          ReplaceSpriteColors( sprite, 0, 1 );
+          RebuildSpriteImage( spriteIndex );
+          panelSprites.Invalidate();
+        }
+      }
       Modified = true;
     }
 
 
 
-    public void ExchangeMultiColor2WithBackground()
+    public void ExchangeMultiColor2WithBackground( List<int> SelectedSprites, bool AddUndo )
     {
-      int   temp = m_SpriteProject.BackgroundColor;
-      m_SpriteProject.BackgroundColor = m_SpriteProject.MultiColor2;
-      m_SpriteProject.MultiColor2 = temp;
-
-      int   spriteIndex = 0;
-      foreach ( var sprite in m_SpriteProject.Sprites )
+      bool    firstEntry = true;
+      foreach ( int spriteIndex in SelectedSprites )
       {
+        var sprite = m_SpriteProject.Sprites[spriteIndex];
         if ( sprite.Multicolor )
         {
-          for ( int y = 0; y < 21; ++y )
+          if ( AddUndo )
           {
-            for ( int x = 0; x < 3; ++x )
-            {
-              int     bytePos = y * 3 + x;
-              for ( int b = 0; b < 4; ++b )
-              {
-                int pixelValue = ( sprite.Data.ByteAt( bytePos ) & ( 3 << ( ( 3 - b ) * 2 ) ) ) >> ( ( 3 - b ) * 2 );
-
-                if ( pixelValue == 3 )
-                {
-                  byte  newValue = (byte)( sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-                  //newValue |= (byte)( 2 << ( ( 3 - x ) * 2 ) );
-
-                  sprite.Data.SetU8At( bytePos, newValue );
-                }
-                else if ( pixelValue == 0 )
-                {
-                  byte  newValue = (byte)( sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-                  newValue |= (byte)( 3 << ( ( 3 - b ) * 2 ) );
-
-                  sprite.Data.SetU8At( bytePos, newValue );
-                }
-              }
-            }
+            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
           }
+          firstEntry = false;
+          ReplaceSpriteColors( sprite, 3, 0 );
           RebuildSpriteImage( spriteIndex );
           panelSprites.Invalidate();
         }
-        ++spriteIndex;
+      }
+      Modified = true;
+    }
+
+
+
+    void ExchangeBGColorWithSpriteColor( List<int> SpritesToModify, bool AddUndo )
+    {
+      bool firstEntry = true;
+      foreach ( var spriteIndex in SpritesToModify )
+      {
+        var sprite = m_SpriteProject.Sprites[spriteIndex];
+
+        if ( !sprite.Multicolor )
+        {
+          continue;
+        }
+        if ( AddUndo )
+        {
+          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
+        }
+        firstEntry = false;
+        ReplaceSpriteColors( sprite, 0, 2 );
+        RebuildSpriteImage( spriteIndex );
+        panelSprites.InvalidateItemRect( spriteIndex );
       }
       pictureEditor.Invalidate();
-      comboMulticolor2.SelectedIndex = m_SpriteProject.MultiColor2;
-      comboBackground.SelectedIndex = m_SpriteProject.BackgroundColor;
-
       Modified = true;
     }
 
@@ -3214,6 +3162,26 @@ namespace C64Studio
 
 
 
+    public void ExchangeMultiColor2WithBackground()
+    {
+      int   temp = m_SpriteProject.BackgroundColor;
+      m_SpriteProject.BackgroundColor = m_SpriteProject.MultiColor2;
+      m_SpriteProject.MultiColor2 = temp;
+
+      List<int>     allIndices = new List<int>();
+      for ( int i = 0; i < 256; ++i )
+      {
+        allIndices.Add( i );
+      }
+      ExchangeMultiColor2WithBackground( allIndices, false );
+
+      pictureEditor.Invalidate();
+      comboMulticolor2.SelectedIndex = m_SpriteProject.MultiColor2;
+      comboBackground.SelectedIndex = m_SpriteProject.BackgroundColor;
+    }
+
+
+
     private void panelSprites_Resize( object sender, EventArgs e )
     {
       panelSprites.SetDisplaySize( panelSprites.ClientSize.Width / 2, panelSprites.ClientSize.Height / 2 );
@@ -3221,12 +3189,10 @@ namespace C64Studio
 
 
 
-    void ExchangeMultiColor1WithSpriteColor()
+    void ExchangeMultiColor1WithSpriteColor( List<int> SpritesToModify, bool AddUndo )
     {
-      var selectedSprites = panelSprites.SelectedIndices;
-
       bool firstEntry = true;
-      foreach ( var spriteIndex in selectedSprites )
+      foreach ( var spriteIndex in SpritesToModify )
       {
         var sprite = m_SpriteProject.Sprites[spriteIndex];
 
@@ -3234,38 +3200,12 @@ namespace C64Studio
         {
           continue;
         }
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
-        firstEntry = false;
-
-        for ( int y = 0; y < 21; ++y )
+        if ( AddUndo )
         {
-          for ( int x = 0; x < 3; ++x )
-          {
-            int     bytePos = y * 3 + x;
-            for ( int b = 0; b < 4; ++b )
-            {
-              int pixelValue = ( sprite.Data.ByteAt( bytePos ) & ( 3 << ( ( 3 - b ) * 2 ) ) ) >> ( ( 3 - b ) * 2 );
-
-              if ( pixelValue == 1 )
-              {
-                byte  newValue = (byte)( sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-                newValue |= (byte)( 2 << ( ( 3 - b ) * 2 ) );
-
-                sprite.Data.SetU8At( bytePos, newValue );
-              }
-              else if ( pixelValue == 2 )
-              {
-                byte  newValue = (byte)( sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-                newValue |= (byte)( 1 << ( ( 3 - b ) * 2 ) );
-
-                sprite.Data.SetU8At( bytePos, newValue );
-              }
-            }
-          }
+          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
         }
-
+        firstEntry = false;
+        ReplaceSpriteColors( sprite, 1, 2 );
         RebuildSpriteImage( spriteIndex );
         panelSprites.InvalidateItemRect( spriteIndex );
       }
@@ -3275,12 +3215,10 @@ namespace C64Studio
 
 
 
-    void ExchangeMultiColor2WithSpriteColor()
+    void ExchangeMultiColor2WithSpriteColor( List<int> SpritesToModify, bool AddUndo )
     {
-      var selectedSprites = panelSprites.SelectedIndices;
-
       bool firstEntry = true;
-      foreach ( var spriteIndex in selectedSprites )
+      foreach ( var spriteIndex in SpritesToModify )
       {
         var sprite = m_SpriteProject.Sprites[spriteIndex];
 
@@ -3288,38 +3226,12 @@ namespace C64Studio
         {
           continue;
         }
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
-        firstEntry = false;
-
-        for ( int y = 0; y < 21; ++y )
+        if ( AddUndo )
         {
-          for ( int x = 0; x < 3; ++x )
-          {
-            int     bytePos = y * 3 + x;
-            for ( int b = 0; b < 4; ++b )
-            {
-              int pixelValue = ( sprite.Data.ByteAt( bytePos ) & ( 3 << ( ( 3 - b ) * 2 ) ) ) >> ( ( 3 - b ) * 2 );
-
-              if ( pixelValue == 3 )
-              {
-                byte  newValue = (byte)( sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-                newValue |= (byte)( 2 << ( ( 3 - b ) * 2 ) );
-
-                sprite.Data.SetU8At( bytePos, newValue );
-              }
-              else if ( pixelValue == 2 )
-              {
-                byte  newValue = (byte)( sprite.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-                newValue |= (byte)( 3 << ( ( 3 - b ) * 2 ) );
-
-                sprite.Data.SetU8At( bytePos, newValue );
-              }
-            }
-          }
+          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
         }
-
+        firstEntry = false;
+        ReplaceSpriteColors( sprite, 2, 3 );
         RebuildSpriteImage( spriteIndex );
         panelSprites.InvalidateItemRect( spriteIndex );
       }
@@ -3331,14 +3243,14 @@ namespace C64Studio
 
     private void exchangeMulticolor1WithSpriteColorToolStripMenuItem1_Click( object sender, EventArgs e )
     {
-      ExchangeMultiColor1WithSpriteColor();
+      ExchangeMultiColor1WithSpriteColor( panelSprites.SelectedIndices, true );
     }
 
 
 
     private void exchangeMulticolor2WithSpriteColorToolStripMenuItem1_Click( object sender, EventArgs e )
     {
-      ExchangeMultiColor2WithSpriteColor();
+      ExchangeMultiColor2WithSpriteColor( panelSprites.SelectedIndices, true );
     }
 
 
@@ -3383,6 +3295,31 @@ namespace C64Studio
 
 
 
+    private void exchangeBGColorWithSpriteColorToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ExchangeBGColorWithSpriteColor( panelSprites.SelectedIndices, true );
+    }
+
+
+
+    private void exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ExchangeMultiColor1WithBackground( panelSprites.SelectedIndices, true );
+    }
+
+
+
+    private void exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ExchangeMultiColor2WithBackground( panelSprites.SelectedIndices, true );
+    }
+
+
+
+    private void exchangeMulticolor1WithMulticolor2ToolStripMenuItem1_Click( object sender, EventArgs e )
+    {
+      ExchangeMultiColors( panelSprites.SelectedIndices, true );
+    }
 
   }
 }
