@@ -4890,16 +4890,24 @@ namespace C64Studio.Parser
           else
           {
             // insert macro code with clearing macro call line
+            Debug.Log( "Replace macro code for " + functionName );
+            if ( functionName == "print_hex16_adr" )
+            {
+              Debug.Log( "aha" );
+            }
 
             // readd label if there was one before the +macro
             if ( labelInFront.Length > 0 )
             {
-              // if label in front insert macro one line below
+              // if label in front insert macro one line below!
               string[] newLines = new string[Lines.Length + replacementLines.Length];
 
               System.Array.Copy( Lines, 0, newLines, 0, lineIndex + 1  );
               System.Array.Copy( replacementLines, 0, newLines, lineIndex + 1, replacementLines.Length );
-              System.Array.Copy( Lines, lineIndex + 1, newLines, lineIndex + 1 + replacementLines.Length, Lines.Length - lineIndex - 1 );
+              if ( Lines.Length - lineIndex - 1 >= 1 )
+              {
+                System.Array.Copy( Lines, lineIndex + 1, newLines, lineIndex + 1 + replacementLines.Length, Lines.Length - lineIndex - 1 );
+              }
 
               newLines[lineIndex] = labelInFront;
 
@@ -4921,15 +4929,14 @@ namespace C64Studio.Parser
             }
             else
             {
-              string[] newLines = new string[Lines.Length + replacementLines.Length];
+              string[] newLines = new string[Lines.Length + replacementLines.Length - 1];
 
               System.Array.Copy( Lines, 0, newLines, 0, lineIndex );
               System.Array.Copy( replacementLines, 0, newLines, lineIndex, replacementLines.Length );
-              System.Array.Copy( Lines, lineIndex, newLines, lineIndex + replacementLines.Length, Lines.Length - lineIndex );
-
-              // replace !source with empty line (otherwise source infos would have one line more!)
-              newLines[lineIndex + replacementLines.Length] = "";
-
+              if ( Lines.Length - lineIndex - 1 >= 1 )
+              {
+                System.Array.Copy( Lines, lineIndex + 1, newLines, lineIndex + replacementLines.Length, Lines.Length - lineIndex - 1 );
+              }
 
               // remove probably stored info on line
               ASMFileInfo.LineInfo.Remove( lineIndex );
@@ -8107,6 +8114,16 @@ namespace C64Studio.Parser
         {
           if ( oldInfo.GlobalStartLine >= sourceInfo.GlobalStartLine )
           {
+            // if directly connected to inserted block remove first line!
+            if ( oldInfo.GlobalStartLine == sourceInfo.GlobalStartLine )
+            {
+              // BREAKING CHANGE !!! -> second half gets first line removed!!
+              ++oldInfo.LocalStartLine;
+              --oldInfo.LineCount;
+
+              PROBLEM
+              ++oldInfo.GlobalStartLine;
+            }
             // shift down completely
             oldInfo.GlobalStartLine += lineCount;
             movedInfos.Add( oldInfo );
@@ -8125,6 +8142,11 @@ namespace C64Studio.Parser
 
             secondHalf.LocalStartLine = oldInfo.LocalStartLine + oldInfo.LineCount;
 
+            // BREAKING CHANGE !!! -> second half gets first line removed!!
+            ++secondHalf.LocalStartLine;
+            --secondHalf.LineCount;
+
+
             movedInfos.Add( secondHalf );
           }
         }
@@ -8141,7 +8163,7 @@ namespace C64Studio.Parser
         }
       }
 
-      bool    dumpInfos = false;
+      bool    dumpInfos = true;
 
       ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
       foreach ( Types.ASM.SourceInfo oldInfo in movedInfos )
