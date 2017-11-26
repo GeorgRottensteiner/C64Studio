@@ -92,7 +92,7 @@ namespace C64Studio.Parser
 
     private ErrorInfo                   m_LastErrorInfo = new ErrorInfo();
 
-
+    private bool                        DoLogSourceInfo = false;
 
 
     public ASMFileParser()
@@ -182,6 +182,16 @@ namespace C64Studio.Parser
       {
         ASMFileInfo.AssemblerSettings = new AssemblerSettings();
         ASMFileInfo.AssemblerSettings.SetAssemblerType( Type );
+      }
+    }
+
+
+
+    private void SourceInfoLog( string Message )
+    {
+      if ( DoLogSourceInfo )
+      {
+        Debug.Log( Message );
       }
     }
 
@@ -2686,6 +2696,7 @@ namespace C64Studio.Parser
         }
 
         // fetch line data in between
+        SourceInfoLog( "Insert loop block for " + lastLoop.Label + " from " + Lines[lastLoop.LineIndex] );
 
         // loop body
         int loopBlockLength = lastLoop.LoopLength;
@@ -2762,11 +2773,15 @@ namespace C64Studio.Parser
             lineLoopEndOffset = 0;
           }
 
+          DumpLines( Lines, "a" );
+
           string[] newLines = new string[Lines.Length + linesToCopy];
 
           System.Array.Copy( Lines, 0, newLines, 0, lineIndex );
           System.Array.Copy( lastLoop.Content, 0, newLines, lineIndex, linesToCopy );
           System.Array.Copy( Lines, lineIndex + lineLoopEndOffset, newLines, lineIndex + linesToCopy, Lines.Length - lineIndex - lineLoopEndOffset );
+
+          DumpLines( newLines, "b" );
 
           // also copy scoped variables if overlapping!!!
           if ( !endReached )
@@ -2792,13 +2807,18 @@ namespace C64Studio.Parser
           {
             intermediateLineOffset -= lineIndex - lastLoop.LineIndex - 1;
           }
-          
-          //Debug.Log( "Add subfile section at " + sourceInfo.LocalStartLine + " (global " + sourceInfo.GlobalStartLine + ") for " + sourceInfo.FilenameParent + " with " + sourceInfo.LineCount + " lines" );
-          InsertSourceInfo( sourceInfo );
 
+          SourceInfoLog( "Add subfile section at " + sourceInfo.LocalStartLine + " (global " + sourceInfo.GlobalStartLine + ") for " + sourceInfo.FilenameParent + " with " + sourceInfo.LineCount + " lines" );
+
+          InsertSourceInfo( sourceInfo, true, false );
+
+          // scheint die Ursache zu sein!!
+          // clone all source infos inside the loop
           CloneSourceInfos( sourceInfo.LocalStartLine, linesToCopy, lineIndex );
 
           Lines = newLines;
+
+          DumpSourceInfos( OrigLines, Lines );
 
           //Debug.Log( "New total " + Lines.Length + " lines" );
 
@@ -2806,6 +2826,20 @@ namespace C64Studio.Parser
         }
       }
       return false;
+    }
+
+
+
+    int       dumpCount = 0;
+    private void DumpLines( string[] lines, string Text )
+    {
+      string    outName = "before" + dumpCount + ".txt";
+      if ( Text == "b" )
+      {
+        outName = "after" + dumpCount + ".txt";
+      }
+      string    outPut = "Step " + dumpCount + "\r\n" + string.Join( "\r\n", lines );
+      System.IO.File.WriteAllText( outName, outPut );
     }
 
 
@@ -4535,6 +4569,7 @@ namespace C64Studio.Parser
 
     private ParseLineResult POIncludeSource( string subFilename, string ParentFilename, ref int lineIndex, ref string[] Lines )
     {
+      SourceInfoLog( "Include file " + subFilename );
       if ( m_LoadedFiles[ParentFilename] == null )
       {
         m_LoadedFiles[ParentFilename] = new GR.Collections.Set<string>();
@@ -4544,6 +4579,17 @@ namespace C64Studio.Parser
         AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, "Circular inclusion in line " + lineIndex );
         return ParseLineResult.RETURN_NULL;
       }
+
+      if ( DoLogSourceInfo )
+      {
+        string subFilenameFull2 = GR.Path.Append( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
+        if ( !OrigLines.ContainsKey( subFilenameFull2 ) )
+        {
+          OrigLines.Add( subFilenameFull2, new string[Lines.Length] );
+          Array.Copy( Lines, OrigLines[subFilenameFull2], Lines.Length );
+        }
+      }
+
       m_LoadedFiles[ParentFilename].Add( subFilename );
 
       string[]  subFile = null;
@@ -4580,15 +4626,18 @@ namespace C64Studio.Parser
       sourceInfo.LineCount = subFile.Length;
       sourceInfo.FilenameParent = ParentFilename;
 
+      SourceInfoLog( "-include at global index " + lineIndex );
+      SourceInfoLog( "-has " + subFile.Length + " lines" );
+
       InsertSourceInfo( sourceInfo );
 
-      string[] result = new string[Lines.Length + subFile.Length];
+      string[] result = new string[Lines.Length + subFile.Length - 1];
 
       System.Array.Copy( Lines, 0, result, 0, lineIndex );
       System.Array.Copy( subFile, 0, result, lineIndex, subFile.Length );
-      System.Array.Copy( Lines, lineIndex, result, lineIndex + subFile.Length, Lines.Length - lineIndex );
+      System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + subFile.Length, Lines.Length - lineIndex - 1 );
       // replace !source with empty line (otherwise source infos would have one line more!)
-      result[lineIndex + subFile.Length] = "";
+      //result[lineIndex + subFile.Length] = "";
 
       Lines = result;
 
@@ -4972,6 +5021,7 @@ namespace C64Studio.Parser
     }
 
 
+    Dictionary<string,string[]>   OrigLines = null;
 
     private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration )
     {
@@ -4981,6 +5031,13 @@ namespace C64Studio.Parser
 
       ASMFileInfo.Labels.Clear();
       m_CurrentCommentSB = new StringBuilder();
+
+      if ( DoLogSourceInfo )
+      {
+        OrigLines = new Dictionary<string, string[]>();
+        OrigLines[ParentFilename] = new string[Lines.Length];
+        Array.Copy( Lines, OrigLines[ParentFilename], Lines.Length );
+      }
 
       // include previous symbols
       if ( InitialFileInfo != null )
@@ -6087,6 +6144,7 @@ namespace C64Studio.Parser
               string filename = "";
               if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
               {
+                DumpSourceInfos( OrigLines, Lines );
                 AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
                 return null;
               }
@@ -8036,7 +8094,8 @@ namespace C64Studio.Parser
 
       foreach ( var infoToAdd in infosToAdd )
       {
-        InsertSourceInfo( infoToAdd, false );
+        Debug.Log( "Adding cloned source info at " + infoToAdd.GlobalStartLine + " to " + ( infoToAdd.GlobalStartLine + infoToAdd.LineCount - 1 ) + " from orig " + ( 1 + infoToAdd.GlobalStartLine - ( TargetIndex - SourceIndex ) ) );
+        InsertSourceInfo( infoToAdd, false, false );
       }
     }
 
@@ -8044,12 +8103,19 @@ namespace C64Studio.Parser
 
     private void InsertSourceInfo( Types.ASM.SourceInfo sourceInfo )
     {
-      InsertSourceInfo( sourceInfo, true );
+      InsertSourceInfo( sourceInfo, true, true );
     }
 
 
 
-    private void InsertSourceInfo( Types.ASM.SourceInfo sourceInfo, bool AllowShifting )
+    /// <summary>
+    /// Inserts SourceInfo in other Infos, removes the line of an existing overlapping info at the location of the new info!!
+    /// </summary>
+    /// <param name="sourceInfo"></param>
+    /// <param name="AllowShifting"></param>
+    /// 
+
+    private void InsertSourceInfo( Types.ASM.SourceInfo sourceInfo, bool AllowShifting, bool OverwriteFirstLineOfOverlapping )
     {
       int lineCount = sourceInfo.LineCount;
 
@@ -8114,40 +8180,53 @@ namespace C64Studio.Parser
         {
           if ( oldInfo.GlobalStartLine >= sourceInfo.GlobalStartLine )
           {
-            // if directly connected to inserted block remove first line!
-            if ( oldInfo.GlobalStartLine == sourceInfo.GlobalStartLine )
-            {
-              // BREAKING CHANGE !!! -> second half gets first line removed!!
-              ++oldInfo.LocalStartLine;
-              --oldInfo.LineCount;
-
-              PROBLEM
-              ++oldInfo.GlobalStartLine;
-            }
             // shift down completely
-            oldInfo.GlobalStartLine += lineCount;
-            movedInfos.Add( oldInfo );
+            /*
+            if ( OverwriteFirstLineOfOverlapping )
+            {
+              if ( lineCount > 1 )
+              {
+                oldInfo.GlobalStartLine += lineCount - 1;
+                movedInfos.Add( oldInfo );
+              }
+            }
+            else*/
+            {
+              oldInfo.GlobalStartLine += lineCount;
+              movedInfos.Add( oldInfo );
+            }
           }
           else if ( oldInfo.GlobalStartLine + oldInfo.LineCount > sourceInfo.GlobalStartLine )
           {
-            // split!
-            Types.ASM.SourceInfo secondHalf = new Types.ASM.SourceInfo();
-            secondHalf.Filename = oldInfo.Filename;
-            secondHalf.FilenameParent = oldInfo.FilenameParent;
-            secondHalf.FullPath = oldInfo.FullPath;
-            secondHalf.GlobalStartLine = sourceInfo.GlobalStartLine + sourceInfo.LineCount;
-            secondHalf.LineCount = oldInfo.LineCount - ( sourceInfo.GlobalStartLine - oldInfo.GlobalStartLine );
+            // only split if snippets do not end at the same line
+            //if ( sourceInfo.GlobalStartLine + sourceInfo.LineCount != oldInfo.GlobalStartLine + oldInfo.LineCount )
+            {
+              // split!
+              Types.ASM.SourceInfo secondHalf = new Types.ASM.SourceInfo();
+              secondHalf.Filename = oldInfo.Filename;
+              secondHalf.FilenameParent = oldInfo.FilenameParent;
+              secondHalf.FullPath = oldInfo.FullPath;
+              secondHalf.GlobalStartLine = sourceInfo.GlobalStartLine + sourceInfo.LineCount;
+              secondHalf.LineCount = oldInfo.LineCount - ( sourceInfo.GlobalStartLine - oldInfo.GlobalStartLine );
 
-            oldInfo.LineCount -= secondHalf.LineCount;
+              oldInfo.LineCount -= secondHalf.LineCount;
 
-            secondHalf.LocalStartLine = oldInfo.LocalStartLine + oldInfo.LineCount;
+              secondHalf.LocalStartLine = oldInfo.LocalStartLine + oldInfo.LineCount;
 
-            // BREAKING CHANGE !!! -> second half gets first line removed!!
-            ++secondHalf.LocalStartLine;
-            --secondHalf.LineCount;
-
-
-            movedInfos.Add( secondHalf );
+              /*
+              if ( OverwriteFirstLineOfOverlapping )
+              {
+                // BREAKING CHANGE !!! -> second half gets first line removed!!
+                ++secondHalf.LocalStartLine;
+                --secondHalf.LineCount;
+              }*/
+              movedInfos.Add( secondHalf );
+            }
+            /*
+            else
+            {
+              oldInfo.LineCount -= sourceInfo.LineCount;
+            }*/
           }
         }
       }
@@ -8163,7 +8242,13 @@ namespace C64Studio.Parser
         }
       }
 
-      bool    dumpInfos = true;
+      bool    dumpInfos = false;
+
+      if ( ASMFileInfo.SourceInfo.ContainsKey( sourceInfo.GlobalStartLine ) )
+      {
+        Debug.Log( "Source Info already exists at global line index " + sourceInfo.GlobalStartLine );
+        return;
+      }
 
       ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
       foreach ( Types.ASM.SourceInfo oldInfo in movedInfos )
@@ -8189,7 +8274,8 @@ namespace C64Studio.Parser
         foreach ( var pair in ASMFileInfo.SourceInfo )
         {
           var info = pair.Value;
-          Debug.Log( "Key " + pair.Key + ": Source from " + info.GlobalStartLine + ", " + info.LineCount + " lines, from file " + info.Filename + " at offset " + info.LocalStartLine );
+          //Debug.Log( "Key " + pair.Key + ": Source from " + info.GlobalStartLine + ", " + info.LineCount + " lines, from file " + info.Filename + " at offset " + info.LocalStartLine );
+          Debug.Log( "From " + info.GlobalStartLine + " to " + ( info.GlobalStartLine + info.LineCount - 1 ) + ", " + info.LineCount + " lines, from file " + System.IO.Path.GetFileNameWithoutExtension( info.Filename ) + " at offset " + info.LocalStartLine );
           fullLines += info.LineCount;
         }
         Debug.Log( "Total " + fullLines + " lines" );
@@ -8316,13 +8402,39 @@ namespace C64Studio.Parser
 
 
 
-    private void DumpSourceInfos()
+    private void DumpSourceInfos( Dictionary<string,string[]> OrigLines, string[] Lines )
     {
+      if ( !DoLogSourceInfo )
+      {
+        return;
+      }
       // source infos
+      StringBuilder   sb = new StringBuilder();
+
+
+      Debug.Log( "=======> Step " + dumpCount );
       foreach ( KeyValuePair<int,Types.ASM.SourceInfo> pair in ASMFileInfo.SourceInfo )
       {
-        Debug.Log( "From line " + ( pair.Value.GlobalStartLine + 1 ) + " to " + ( pair.Value.GlobalStartLine + pair.Value.LineCount - 1 + 1 ) + ", local start " + ( pair.Value.LocalStartLine + 1 ) + " : " + pair.Value.Filename );
+        Debug.Log( "From line " + ( pair.Value.GlobalStartLine + 1 ) + " to " + ( pair.Value.GlobalStartLine + pair.Value.LineCount - 1 + 1 ) + ", local " + ( pair.Value.LocalStartLine + 1 ) + ", " + pair.Value.LineCount + " lines from " + pair.Value.Filename );
+        for ( int i = 0; i < pair.Value.LineCount; ++i )
+        {
+          if ( pair.Value.LocalStartLine + i >= OrigLines[pair.Value.Filename].Length )
+          {
+            Debug.Log( "DumpSourceInfos: Out of bounds! " + ( pair.Value.LocalStartLine + i ).ToString() + " >= " + OrigLines[pair.Value.Filename].Length );
+            sb.AppendLine( "OUT OF BOUNDS!" );
+            break;
+          }
+          else
+          {
+            sb.AppendLine( OrigLines[pair.Value.Filename][pair.Value.LocalStartLine + i] );
+          }
+        }
+        sb.AppendLine( "======================" );
       }
+      string    outFile = "sourceinfo" + dumpCount + ".txt";
+      ++dumpCount;
+
+      System.IO.File.WriteAllText( outFile, sb.ToString() );
     }
 
 
@@ -8367,6 +8479,18 @@ namespace C64Studio.Parser
       }*/
 
       string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
+
+      if ( lines == null )
+      {
+        return false;
+      }
+      for ( int i = 0; i < lines.Length; ++i )
+      {
+        if ( lines[i] == null )
+        {
+          Debug.Log( "no!" );
+        }
+      }
       System.IO.File.WriteAllLines( pathLog, lines );
 
       DetermineUnparsedLabels();
