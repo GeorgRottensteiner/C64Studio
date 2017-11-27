@@ -38,7 +38,7 @@ GNI
  
 GNA          
 
-;!source "include_nested_for.asm"
+!source "include_nested_for.asm"
 
 !zone Hinz
 Hinz
