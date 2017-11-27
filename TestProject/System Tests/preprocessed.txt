@@ -1,0 +1,32 @@
+!to "formain.prg",cbm
+
+
+* = $2000
+lda #0
+sta 53280
+
+FIRST_LINE
+!for ROW = 0 to 2
+lda ROW
+sta 1024 + ROW
+lda ROW
+sta 1024 + ROW
+lda ROW
+sta 1024 + ROW
+!end
+SECOND_LOOP
+!for ROW = 0 to 2
+lda ROW
+sta 1064 + ROW
+lda ROW
+sta 1064 + ROW
+lda ROW
+sta 1064 + ROW
+!end
+LAST_LINE
+
+
+END_OF_FOR
+lda #1
+sta 53280
+rts
