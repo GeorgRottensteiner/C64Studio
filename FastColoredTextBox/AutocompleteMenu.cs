@@ -130,8 +130,9 @@ namespace FastColoredTextBoxNS
       listView.Parent = this;
       SearchPattern = @"[\w_\.]";
       MinFragmentLength = 2;
-
     }
+
+
 
     public new Font Font
     {

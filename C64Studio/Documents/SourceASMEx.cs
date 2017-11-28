@@ -113,7 +113,7 @@ namespace C64Studio
 
       AutoComplete = new FastColoredTextBoxNS.AutocompleteMenu( editSource );
       //AutoComplete.SearchPattern = @"([A-Za-z_.]|(?<=[A-Za-z_.][\w]))";
-      AutoComplete.SearchPattern = @"[A-Za-z_.][\w]*";
+      AutoComplete.SearchPattern = @"[A-Za-z_.][\w.]*";
 
       editSource.AutoIndentExistingLines = false;
       editSource.AutoIndentChars = false;
@@ -1872,12 +1872,22 @@ namespace C64Studio
 
     public string FindWordFromPosition( int Position, int LineIndex )
     {
+      int dummy;
+
+      return FindWordFromPosition( Position, LineIndex, out dummy );
+    }
+
+
+
+    public string FindWordFromPosition( int Position, int LineIndex, out int TrueStartCharInLine )
+    {
       int position = Position;
       string currentLine = editSource.ReTabifyLine( editSource.Lines[LineIndex], editSource.TabLength );
       // TODO - bloat Tabs again
-      int posX = position - editSource.PlaceToPosition( new FastColoredTextBoxNS.Place( 0, LineIndex ) );
-      if ( posX < 0 )
+      TrueStartCharInLine = position - editSource.PlaceToPosition( new FastColoredTextBoxNS.Place( 0, LineIndex ) );
+      if ( TrueStartCharInLine < 0 )
       {
+        // should not happen!
         return "";
       }
 
@@ -1904,6 +1914,7 @@ namespace C64Studio
         }
       }
 
+      int posX = TrueStartCharInLine;
       int left = posX;
       if ( left >= currentLine.Length )
       {
@@ -1920,6 +1931,8 @@ namespace C64Studio
         wordBelow = curChar + wordBelow;
         --left;
       }
+
+      TrueStartCharInLine = left;
 
       int right = posX + 1;
       while ( right < currentLine.Length )
