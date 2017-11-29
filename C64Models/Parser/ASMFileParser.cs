@@ -4631,13 +4631,17 @@ namespace C64Studio.Parser
 
       InsertSourceInfo( sourceInfo );
 
-      string[] result = new string[Lines.Length + subFile.Length - 1];
+      //string[] result = new string[Lines.Length + subFile.Length - 1];
+      string[] result = new string[Lines.Length + subFile.Length];
 
       System.Array.Copy( Lines, 0, result, 0, lineIndex );
       System.Array.Copy( subFile, 0, result, lineIndex, subFile.Length );
-      System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + subFile.Length, Lines.Length - lineIndex - 1 );
+      //System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + subFile.Length, Lines.Length - lineIndex - 1 );
+
+      // this keeps the !source line in the final code, makes working with source infos easier though
+      System.Array.Copy( Lines, lineIndex, result, lineIndex + subFile.Length, Lines.Length - lineIndex );
       // replace !source with empty line (otherwise source infos would have one line more!)
-      //result[lineIndex + subFile.Length] = "";
+      result[lineIndex + subFile.Length] = "";
 
       Lines = result;
 
