@@ -9747,6 +9747,11 @@ namespace C64Studio.Parser
               ++dotEnd;
             }
 
+            if ( dotEnd == -1 )
+            {
+              // nothing to do
+              continue;
+            }
             if ( dotEnd + 1 == result[i + 1].Content.Length )
             {
               // only dots
