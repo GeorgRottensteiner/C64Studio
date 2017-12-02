@@ -5591,18 +5591,21 @@ namespace C64Studio.Parser
           }
           labelInFront = lineTokenInfos[0].Content;
           tokenInFront = lineTokenInfos[0];
-          if ( programStepPos != -1 )
-          {
-            // only add if we know the start address!
-            AddLabel( labelInFront, programStepPos, lineIndex, zoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-          }
-          else
-          {
-            // label without value, like a define
-            AddLabel( labelInFront, -1, lineIndex, zoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-            //AddError( lineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Can't provide value if no start address is set", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-          }
 
+          if ( !ScopeInsideMacroDefinition( stackScopes ) )
+          {
+            if ( programStepPos != -1 )
+            {
+              // only add if we know the start address!
+              AddLabel( labelInFront, programStepPos, lineIndex, zoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+            }
+            else
+            {
+              // label without value, like a define
+              AddLabel( labelInFront, -1, lineIndex, zoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+              //AddError( lineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Can't provide value if no start address is set", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+            }
+          }
 
           // cut off label for neededparsedexpression
           if ( lineTokenInfos.Count > 1 )
