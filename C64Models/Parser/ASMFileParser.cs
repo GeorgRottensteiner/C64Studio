@@ -4944,12 +4944,74 @@ namespace C64Studio.Parser
           else
           {
             // insert macro code with clearing macro call line
-            Debug.Log( "Replace macro code for " + functionName );
-            if ( functionName == "print_hex16_adr" )
+            // readd label if there was one before the +macro
+            //if ( labelInFront.Length > 0 )
             {
-              Debug.Log( "aha" );
-            }
+              // if label in front insert macro one line below!
+              string[] newLines = new string[Lines.Length + replacementLines.Length];
 
+              System.Array.Copy( Lines, 0, newLines, 0, lineIndex + 1 );
+              System.Array.Copy( replacementLines, 0, newLines, lineIndex + 1, replacementLines.Length );
+              if ( Lines.Length - lineIndex - 1 >= 1 )
+              {
+                System.Array.Copy( Lines, lineIndex + 1, newLines, lineIndex + 1 + replacementLines.Length, Lines.Length - lineIndex - 1 );
+              }
+
+              newLines[lineIndex] = labelInFront;
+
+              // adjust source infos to make lookup work correctly
+              Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
+              sourceInfo.Filename = ParentFilename;
+              sourceInfo.FullPath = ParentFilename;
+              sourceInfo.GlobalStartLine = lineIndex + 1;
+              sourceInfo.LineCount = replacementLines.Length;
+              string dummy;
+              ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1, out dummy, out sourceInfo.LocalStartLine );
+
+              //Debug.Log( "Add subfile section at " + ( LineOffset + lineIndex + 1 ) + " for " + ParentFilename + " with " + sourceInfo.LineCount + " lines" );
+              InsertSourceInfo( sourceInfo );
+
+              Lines = newLines;
+
+              return ParseLineResult.CALL_CONTINUE;
+            }
+            /*
+            else
+            {
+              string[] newLines = new string[Lines.Length + replacementLines.Length - 1];
+
+              System.Array.Copy( Lines, 0, newLines, 0, lineIndex );
+              System.Array.Copy( replacementLines, 0, newLines, lineIndex, replacementLines.Length );
+              if ( Lines.Length - lineIndex - 1 >= 1 )
+              {
+                System.Array.Copy( Lines, lineIndex + 1, newLines, lineIndex + replacementLines.Length, Lines.Length - lineIndex - 1 );
+              }
+
+              // remove probably stored info on line
+              ASMFileInfo.LineInfo.Remove( lineIndex );
+
+              if ( replacementLines.Length > 0 )
+              {
+                // adjust source infos to make lookup work correctly
+                Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
+                sourceInfo.Filename = ParentFilename;
+                sourceInfo.FullPath = ParentFilename;
+                sourceInfo.GlobalStartLine = lineIndex;
+                sourceInfo.LineCount = replacementLines.Length;
+                //sourceInfo.LocalStartLine = functionInfo.LineIndex + 1;
+                string dummy;
+                ASMFileInfo.FindTrueLineSource( functionInfo.LineIndex + 1, out dummy, out sourceInfo.LocalStartLine );
+
+                sourceInfo.Filename = dummy;
+                sourceInfo.FullPath = dummy;
+
+                //Debug.Log( "Add subfile section at " + ( LineOffset + lineIndex + 1 ) + " for " + ParentFilename + " with " + sourceInfo.LineCount + " lines" );
+                InsertSourceInfo( sourceInfo );
+              }
+              Lines = newLines;
+            }*/
+
+            /*
             // readd label if there was one before the +macro
             if ( labelInFront.Length > 0 )
             {
@@ -5015,8 +5077,8 @@ namespace C64Studio.Parser
               }
               Lines = newLines;
             }
+            */
 
-                
             --lineIndex;
             return ParseLineResult.CALL_CONTINUE;
           }

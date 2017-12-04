@@ -76,7 +76,7 @@ mksolid
          lda .char+7 
          sta .sprite+21 
 } 
-            +GenChrSpr chr,spr 
+            +GenChrSpr CHARS,spr 
          rts 
 CHARS 
 !byte $00,$7e,$42,$42,$42,$42,$7e,$00 
