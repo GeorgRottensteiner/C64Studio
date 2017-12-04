@@ -5077,10 +5077,8 @@ namespace C64Studio.Parser
               }
               Lines = newLines;
             }
-            */
-
             --lineIndex;
-            return ParseLineResult.CALL_CONTINUE;
+            return ParseLineResult.CALL_CONTINUE;*/
           }
         }
       }
@@ -8548,20 +8546,10 @@ namespace C64Studio.Parser
         return false;
       }*/
 
-      string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
-
-      if ( lines == null )
+      if ( Config.CreatePreProcesseFile )
       {
-        return false;
+        CreatePreProcessedFile( lines );
       }
-      for ( int i = 0; i < lines.Length; ++i )
-      {
-        if ( lines[i] == null )
-        {
-          Debug.Log( "no!" );
-        }
-      }
-      System.IO.File.WriteAllLines( pathLog, lines );
 
       DetermineUnparsedLabels();
       //Debug.Log( "DetermineUnparsedLabels done" );
@@ -8601,6 +8589,32 @@ namespace C64Studio.Parser
       }
 
       return true;
+    }
+
+
+
+    private void CreatePreProcessedFile( string[] Lines )
+    {
+      try
+      {
+        string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
+
+        if ( Lines == null )
+        {
+          return;
+        }
+        System.IO.File.WriteAllLines( pathLog, Lines );
+
+        ParseMessage message = new ParseMessage( ParseMessage.LineType.MESSAGE, Types.ErrorCode.OK, "Preprocessed file written to " + pathLog );
+        message.AlternativeFile = pathLog;
+        message.AlternativeLineIndex = 0;
+        Messages.Add( -1, message );
+        ++m_Messages;
+      }
+      catch ( Exception ex )
+      {
+        AddWarning( -1, Types.ErrorCode.E1401_INTERNAL_ERROR, "Can't write preprocessed file:" + ex.Message, 0, 0 );
+      }
     }
 
 

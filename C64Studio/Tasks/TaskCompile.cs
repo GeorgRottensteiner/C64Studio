@@ -12,11 +12,13 @@ namespace C64Studio.Tasks
     private DocumentInfo    m_DocumentToRun;
     private DocumentInfo    m_ActiveDocument;
     private Solution        m_Solution;
+    private bool            CreatePreProcessedFile = false;
 
 
 
-    public TaskCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, DocumentInfo ActiveDocumentInfo, Solution Solution )
+    public TaskCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, DocumentInfo ActiveDocumentInfo, Solution Solution, bool CreatePreProcessedFile )
     {
+      this.CreatePreProcessedFile = CreatePreProcessedFile;
       m_DocumentToBuild = DocumentToBuild;
       m_DocumentToDebug = DocumentToDebug;
       m_DocumentToRun = DocumentToRun;
@@ -124,6 +126,7 @@ namespace C64Studio.Tasks
       {
         case Types.StudioState.COMPILE:
         case Types.StudioState.BUILD:
+        case StudioState.BUILD_PRE_PROCESSED_FILE:
           Core.MainForm.AppState = Types.StudioState.NORMAL;
           if ( Core.Settings.PlaySoundOnSuccessfulBuild )
           {
@@ -317,14 +320,14 @@ namespace C64Studio.Tasks
             config = Doc.Project.Settings.Configs[ConfigSetting];
           }
 
-          if ( ( !Core.MainForm.ParseFile( parser, Doc, config, OutputMessages ) )
-          || ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
+          if ( ( !Core.MainForm.ParseFile( parser, Doc, config, OutputMessages, CreatePreProcessedFile ) )
+          ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
                                         {
                                           TargetType = Core.DetermineTargetType( Doc, parser ),
                                           OutputFile = Core.DetermineTargetFilename( Doc, parser ),
                                           AutoTruncateLiteralValues = Core.Settings.ASMAutoTruncateLiteralValues
                                         } ) )
-          || ( parser.Errors > 0 ) )
+          ||   ( parser.Errors > 0 ) )
           {
             Core.MainForm.AddOutputMessages( parser );
 

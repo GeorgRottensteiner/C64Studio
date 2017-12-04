@@ -193,6 +193,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
+      this.preprocessedFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -767,7 +768,8 @@
             this.buildToolStripMenuItem1,
             this.rebuildToolStripMenuItem,
             this.buildandRunToolStripMenuItem,
-            this.debugToolStripMenuItem1});
+            this.debugToolStripMenuItem1,
+            this.preprocessedFileToolStripMenuItem});
       this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
       this.buildToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
       this.buildToolStripMenuItem.Text = "&Build";
@@ -776,7 +778,7 @@
       // 
       this.compileToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolCompile;
       this.compileToolStripMenuItem.Name = "compileToolStripMenuItem";
-      this.compileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.compileToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
       this.compileToolStripMenuItem.Tag = "";
       this.compileToolStripMenuItem.Text = "&Compile";
       this.compileToolStripMenuItem.Click += new System.EventHandler(this.compileToolStripMenuItem_Click);
@@ -785,7 +787,7 @@
       // 
       this.buildToolStripMenuItem1.Image = global::C64Studio.Properties.Resources.ToolBuild;
       this.buildToolStripMenuItem1.Name = "buildToolStripMenuItem1";
-      this.buildToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+      this.buildToolStripMenuItem1.Size = new System.Drawing.Size(165, 22);
       this.buildToolStripMenuItem1.Text = "&Build";
       this.buildToolStripMenuItem1.Click += new System.EventHandler(this.buildToolStripMenuItem1_Click);
       // 
@@ -793,7 +795,7 @@
       // 
       this.rebuildToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolRebuild;
       this.rebuildToolStripMenuItem.Name = "rebuildToolStripMenuItem";
-      this.rebuildToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.rebuildToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
       this.rebuildToolStripMenuItem.Text = "&Rebuild";
       this.rebuildToolStripMenuItem.Click += new System.EventHandler(this.rebuildToolStripMenuItem_Click);
       // 
@@ -801,7 +803,7 @@
       // 
       this.buildandRunToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolBuildAndRun;
       this.buildandRunToolStripMenuItem.Name = "buildandRunToolStripMenuItem";
-      this.buildandRunToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.buildandRunToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
       this.buildandRunToolStripMenuItem.Text = "Build &and Run";
       this.buildandRunToolStripMenuItem.Click += new System.EventHandler(this.buildandRunToolStripMenuItem_Click);
       // 
@@ -809,7 +811,7 @@
       // 
       this.debugToolStripMenuItem1.Image = global::C64Studio.Properties.Resources.ToolDebug;
       this.debugToolStripMenuItem1.Name = "debugToolStripMenuItem1";
-      this.debugToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+      this.debugToolStripMenuItem1.Size = new System.Drawing.Size(165, 22);
       this.debugToolStripMenuItem1.Text = "D&ebug";
       this.debugToolStripMenuItem1.Click += new System.EventHandler(this.debugToolStripMenuItem1_Click);
       // 
@@ -1119,7 +1121,7 @@
       // helpToolStripMenuItem1
       // 
       this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
-      this.helpToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+      this.helpToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
       this.helpToolStripMenuItem1.Tag = "HELP";
       this.helpToolStripMenuItem1.Text = "&Help";
       this.helpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
@@ -1127,19 +1129,19 @@
       // toolStripSeparator5
       // 
       this.toolStripSeparator5.Name = "toolStripSeparator5";
-      this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
+      this.toolStripSeparator5.Size = new System.Drawing.Size(110, 6);
       // 
       // licenseToolStripMenuItem
       // 
       this.licenseToolStripMenuItem.Name = "licenseToolStripMenuItem";
-      this.licenseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.licenseToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
       this.licenseToolStripMenuItem.Text = "License";
       this.licenseToolStripMenuItem.Click += new System.EventHandler(this.licenseToolStripMenuItem_Click_1);
       // 
       // aboutToolStripMenuItem1
       // 
       this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-      this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+      this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
       this.aboutToolStripMenuItem1.Text = "&About";
       this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
       // 
@@ -1582,6 +1584,13 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
+      // preprocessedFileToolStripMenuItem
+      // 
+      this.preprocessedFileToolStripMenuItem.Name = "preprocessedFileToolStripMenuItem";
+      this.preprocessedFileToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+      this.preprocessedFileToolStripMenuItem.Text = "Preprocessed File";
+      this.preprocessedFileToolStripMenuItem.Click += new System.EventHandler(this.preprocessedFileToolStripMenuItem_Click);
+      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -1783,6 +1792,7 @@
     private System.Windows.Forms.ToolStripMenuItem rebuildToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem buildandRunToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem1;
+    private System.Windows.Forms.ToolStripMenuItem preprocessedFileToolStripMenuItem;
   }
 }
 

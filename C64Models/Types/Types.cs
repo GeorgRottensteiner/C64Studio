@@ -120,7 +120,8 @@ namespace C64Studio.Types
     OPEN_FILES,
     FIND_NEXT_MESSAGE,
     UNDO,
-    REDO
+    REDO,
+    BUILD_TO_PREPROCESSED_FILE
   }
 
   public enum StudioState
@@ -131,7 +132,8 @@ namespace C64Studio.Types
     BUILD_AND_RUN,
     BUILD_AND_DEBUG,
     DEBUGGING_RUN,
-    DEBUGGING_BROKEN
+    DEBUGGING_BROKEN,
+    BUILD_PRE_PROCESSED_FILE
   };
 
   [Flags]

@@ -2151,10 +2151,9 @@ namespace C64Studio
 
 
 
-    private bool StartCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, Solution Solution )
+    private bool StartCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, Solution Solution, bool CreatePreProcessedFile )
     {
-      AddTask( new Tasks.TaskCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, ActiveDocumentInfo, Solution ) );
-
+      AddTask( new Tasks.TaskCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, ActiveDocumentInfo, Solution, CreatePreProcessedFile ) );
       return true;
     }
 
@@ -2346,7 +2345,7 @@ namespace C64Studio
 
       AppState = Types.StudioState.BUILD;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocInfo, null, null, m_Solution ) )
+      if ( !StartCompile( DocInfo, null, null, m_Solution, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -2356,13 +2355,29 @@ namespace C64Studio
 
     public void Build( DocumentInfo Document )
     {
+      Build( Document, false );
+    }
+
+
+
+    public void Build( DocumentInfo Document, bool CreatePreProcessedFile )
+    {
       if ( AppState != Types.StudioState.NORMAL )
       {
         return;
       }
-      AppState = Types.StudioState.BUILD;
+      if ( CreatePreProcessedFile )
+      {
+        AppState = Types.StudioState.BUILD_PRE_PROCESSED_FILE;
+        // always build if preprocessed file is wanted
+        MarkAsDirty( Document );
+      }
+      else
+      {
+        AppState = Types.StudioState.BUILD;
+      }
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( Document, null, null, m_Solution ) )
+      if ( !StartCompile( Document, null, null, m_Solution, CreatePreProcessedFile ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -2378,7 +2393,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.COMPILE;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( Document, null, null, m_Solution ) )
+      if ( !StartCompile( Document, null, null, m_Solution, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -3497,7 +3512,7 @@ namespace C64Studio
               // do not reparse already parsed element
               continue;
             }
-            ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configs[SelectedConfig], false );
+            ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configs[SelectedConfig], false, false );
 
             //var knownTokens = ParserASM.KnownTokens();
             //var knownTokenInfos = ParserASM.KnownTokenInfo();
@@ -3608,7 +3623,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.BUILD_AND_RUN;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocumentToBuild, null, DocumentToRun, m_Solution ) )
+      if ( !StartCompile( DocumentToBuild, null, DocumentToRun, m_Solution, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -3984,7 +3999,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.BUILD_AND_DEBUG;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, m_Solution ) )
+      if ( !StartCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, m_Solution, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -4049,7 +4064,7 @@ namespace C64Studio
       {
         AppState = Types.StudioState.BUILD_AND_DEBUG;
         StudioCore.Debugging.OverrideDebugStart = DebugAddress;
-        if ( !StartCompile( DocumentToRun, DocumentToDebug, DocumentToRun, m_Solution ) )
+        if ( !StartCompile( DocumentToRun, DocumentToDebug, DocumentToRun, m_Solution, false ) )
         {
           AppState = Types.StudioState.NORMAL;
         }
@@ -5058,6 +5073,15 @@ namespace C64Studio
             }
           }
           break;
+        case Function.BUILD_TO_PREPROCESSED_FILE:
+          {
+            DocumentInfo docToCompile = DetermineDocumentToCompile();
+            if ( docToCompile != null )
+            {
+              Build( docToCompile, true );
+            }
+          }
+          break;
         case C64Studio.Types.Function.REBUILD:
           {
             DocumentInfo docToCompile = DetermineDocumentToCompile();
@@ -5284,7 +5308,7 @@ namespace C64Studio
 
 
 
-    public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, bool OutputMessages )
+    public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, bool OutputMessages, bool CreatePreProcessedFile )
     {
       //Debug.Log( "Parsefile called for " + Document.DocumentFilename );
       C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
@@ -5293,7 +5317,8 @@ namespace C64Studio
       {
         config.Assembler = Document.Element.AssemblerType;
       }
-      config.AutoTruncateLiteralValues = StudioCore.Settings.ASMAutoTruncateLiteralValues;
+      config.AutoTruncateLiteralValues  = StudioCore.Settings.ASMAutoTruncateLiteralValues;
+      config.CreatePreProcesseFile      = CreatePreProcessedFile;
 
       string sourceCode = "";
 
@@ -5312,8 +5337,8 @@ namespace C64Studio
       bool result = Parser.ParseFile(Document.FullPath, sourceCode, Configuration, config);
 
       if ( ( config.Assembler != C64Studio.Types.AssemblerType.AUTO )
-      && ( Document.BaseDoc != null )
-      && ( Document.Element != null ) )
+      &&   ( Document.BaseDoc != null )
+      &&   ( Document.Element != null ) )
       {
         if ( Document.Element.AssemblerType != config.Assembler )
         {
@@ -5371,8 +5396,8 @@ namespace C64Studio
         }
 
         if ( ( Document.Project != null )
-        && ( !string.IsNullOrEmpty( Document.Project.Settings.MainDocument ) )
-        && ( System.IO.Path.GetFileName( Document.FullPath ) == Document.Project.Settings.MainDocument ) )
+        &&   ( !string.IsNullOrEmpty( Document.Project.Settings.MainDocument ) )
+        &&   ( System.IO.Path.GetFileName( Document.FullPath ) == Document.Project.Settings.MainDocument ) )
         {
           // give all other files the same keywords!
           var knownTokens = StudioCore.Compiling.ParserASM.KnownTokens();
@@ -5392,7 +5417,7 @@ namespace C64Studio
             {
               ProjectElement element2 = Document.Project.GetElementByFilename(dependency);
               if ( ( element2 != null )
-              && ( element2.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
+              &&   ( element2.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
               {
                 filesToUpdate.Add( element2.DocumentInfo.FullPath );
               }
@@ -5474,7 +5499,7 @@ namespace C64Studio
         {
           config = Document.Project.Settings.Configs[mainToolConfig.SelectedItem.ToString()];
         }
-        ParseFile( StudioCore.DetermineParser( Document ), Document, config, false );
+        ParseFile( StudioCore.DetermineParser( Document ), Document, config, false, false );
       }
     }
 
@@ -7057,6 +7082,11 @@ namespace C64Studio
     }
 
 
+
+    private void preprocessedFileToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.BUILD_TO_PREPROCESSED_FILE );
+    }
 
   }
 }
