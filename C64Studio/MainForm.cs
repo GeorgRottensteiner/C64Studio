@@ -912,7 +912,10 @@ namespace C64Studio
         }
         if ( tool.Visible[NewPerspective] )
         {
-          tool.Document.Show( panelMain );
+          if ( tool.Document.Visible )
+          {
+            tool.Document.Show( panelMain );
+          }
           tool.MenuItem.Checked = true;
         }
         else
@@ -3889,7 +3892,7 @@ namespace C64Studio
 
       m_FindReplace.ToSettings( StudioCore.Settings );
 
-      GR.Memory.ByteBuffer SettingsData = StudioCore.Settings.ToBuffer();
+      GR.Memory.ByteBuffer SettingsData = StudioCore.Settings.ToBuffer( StudioCore );
 
       string settingFilename = SettingsPath();
 

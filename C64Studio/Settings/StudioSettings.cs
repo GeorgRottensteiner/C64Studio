@@ -4,8 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using System.ComponentModel;
-
-
+using GR.Memory;
 
 namespace C64Studio
 {
@@ -489,7 +488,7 @@ namespace C64Studio
 
 
 
-    public GR.Memory.ByteBuffer ToBuffer()
+    public GR.Memory.ByteBuffer ToBuffer( StudioCore Core )
     {
       GR.Memory.ByteBuffer SettingsData = new GR.Memory.ByteBuffer();
 
@@ -620,15 +619,15 @@ namespace C64Studio
 
       foreach ( var pair in GenericTools )
       {
-        GR.Memory.ByteBuffer    data = pair.Value.DisplayDetails();
-        if ( data != null )
+        GR.Memory.ByteBuffer    displayDetailData = pair.Value.DisplayDetails();
+        if ( displayDetailData != null )
         {
           GR.IO.FileChunk   chunkPanelDisplayDetails = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_PANEL_DISPLAY_DETAILS );
 
           chunkPanelDisplayDetails.AppendString( pair.Key );
 
-          chunkPanelDisplayDetails.AppendU32( data.Length );
-          chunkPanelDisplayDetails.Append( data );
+          chunkPanelDisplayDetails.AppendU32( displayDetailData.Length );
+          chunkPanelDisplayDetails.Append( displayDetailData );
 
           SettingsData.Append( chunkPanelDisplayDetails.ToBuffer() );
         }
