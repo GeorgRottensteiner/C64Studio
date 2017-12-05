@@ -197,6 +197,7 @@ namespace C64Studio
       Functions.Add( C64Studio.Types.Function.BUILD_AND_RUN, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.BUILD_AND_RUN, "Build and Run", C64Studio.Types.FunctionStudioState.NORMAL ) );
       Functions.Add( C64Studio.Types.Function.COMPILE, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.COMPILE, "Compile", C64Studio.Types.FunctionStudioState.NORMAL ) );
       Functions.Add( C64Studio.Types.Function.REBUILD, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.REBUILD, "Rebuild", C64Studio.Types.FunctionStudioState.NORMAL ) );
+      Functions.Add( C64Studio.Types.Function.BUILD_TO_PREPROCESSED_FILE, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.BUILD_TO_PREPROCESSED_FILE, "Build Preprocessed File", C64Studio.Types.FunctionStudioState.NORMAL ) );
 
       // functions for any state
       Functions.Add( C64Studio.Types.Function.CENTER_ON_CURSOR, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.CENTER_ON_CURSOR, "Center on Cursor", C64Studio.Types.FunctionStudioState.ANY ) );

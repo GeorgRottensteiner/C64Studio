@@ -661,6 +661,7 @@ namespace C64Studio
       StudioCore.Settings.Functions[Function.FIND_REPLACE].MenuItem = findReplaceToolStripMenuItem;
       StudioCore.Settings.Functions[Function.FIND_REPLACE].ToolBarButton = mainToolFindReplace;
       StudioCore.Settings.Functions[Function.PRINT].ToolBarButton = mainToolPrint;
+      StudioCore.Settings.Functions[Function.BUILD_TO_PREPROCESSED_FILE].MenuItem = preprocessedFileToolStripMenuItem;
 
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new C64Studio.Converter.PETSCIIToCharConverter();

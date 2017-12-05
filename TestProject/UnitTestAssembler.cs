@@ -191,18 +191,28 @@ namespace TestProject
       int       lineIndex;
       parser.ASMFileInfo.DocumentAndLineFromAddress( 0x2000, out file, out lineIndex );
 
+      Assert.IsTrue( parser.ASMFileInfo.Labels.ContainsKey( "CALLEDLED_MACRO" ) );
+      Assert.IsTrue( parser.ASMFileInfo.Labels.ContainsKey( "CALLEDLED_MACRO_END" ) );
+
       Assert.AreEqual( 28, lineIndex );
 
-      /*
-      parser.ASMFileInfo.FindTrueLineSource( AddressToLine ( (.DocumentAndLineFromAddress( 0x2000, out file, out lineIndex );
+      var label = parser.ASMFileInfo.Labels["CALLEDLED_MACRO"];
+      var label2 = parser.ASMFileInfo.Labels["CALLEDLED_MACRO_END"];
 
-      Assert.AreEqual( 2, parser.Warnings );
-      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.W1000_UNUSED_LABEL, parser.Messages.Values[0].Code );
+      Assert.AreEqual( 30, label.LocalLineIndex );
+      Assert.AreEqual( 32, label2.LocalLineIndex );
 
-      Assert.AreEqual( "00200102030405060708", assembly.Assembly.ToString() );*/
+      Assert.AreEqual( 0x2005, label.AddressOrValue );
+      Assert.AreEqual( 0x201e, label2.AddressOrValue );
+
+      var tokenInfo = parser.ASMFileInfo.TokenInfoFromName( "CALLEDLED_MACRO", "", "" );
+      Assert.IsNotNull( tokenInfo );
+      Assert.AreEqual( 30, tokenInfo.LocalLineIndex );
+
+      tokenInfo = parser.ASMFileInfo.TokenInfoFromName( "CALLEDLED_MACRO_END", "", "" );
+      Assert.IsNotNull( tokenInfo );
+      Assert.AreEqual( 32, tokenInfo.LocalLineIndex );
     }
-
 
   }
 }
