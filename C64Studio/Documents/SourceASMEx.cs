@@ -1522,7 +1522,7 @@ namespace C64Studio
 
     void contextSource_Opened( object sender, EventArgs e )
     {
-      System.Drawing.Point mousePos = editSource.PointToClient( contextSource.Location );
+      System.Drawing.Point mousePos = editSource.PointToClient( Control.MousePosition );
 
       int position            = editSource.PointToPosition( mousePos );
       m_ContextMenuLineIndex  = editSource.PositionToPlace( position ).iLine;
