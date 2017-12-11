@@ -123,7 +123,7 @@
 
     #endregion
 
-    private System.Windows.Forms.ListView listItems;
+    internal System.Windows.Forms.ListView listItems;
     private System.Windows.Forms.Button btnAdd;
     private System.Windows.Forms.Button btnDelete;
     private System.Windows.Forms.Button btnMoveUp;

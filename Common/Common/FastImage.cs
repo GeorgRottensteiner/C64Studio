@@ -438,6 +438,71 @@ namespace GR.Image
 
 
 
+    public void Line( int X1, int Y1, int X2, int Y2, uint Color )
+    {
+      int dy = Y2 - Y1;
+      int dx = X2 - X1;
+      int stepx, stepy;
+
+      if ( dy < 0 )
+      {
+        dy = -dy;
+        stepy = -1;
+      }
+      else
+      {
+        stepy = 1;
+      }
+      if ( dx < 0 )
+      {
+        dx = -dx;
+        stepx = -1;
+      }
+      else
+      {
+        stepx = 1;
+      }
+
+      dy <<= 1;
+      dx <<= 1;
+
+      SetPixel( X1, Y1, Color );
+      if ( dx > dy )
+      {
+        int fraction = dy - ( dx >> 1 );
+
+        while ( X1 != X2 )
+        {
+          if ( fraction >= 0 )
+          {
+            Y1 += stepy;
+            fraction -= dx;
+          }
+          X1 += stepx;
+          fraction += dy;
+          SetPixel( X1, Y1, Color );
+        }
+      }
+      else
+      {
+        int fraction = dx - ( dy >> 1 );
+
+        while ( Y1 != Y2 )
+        {
+          if ( fraction >= 0 )
+          {
+            X1 += stepx;
+            fraction -= dy;
+          }
+          Y1 += stepy;
+          fraction += dx;
+          SetPixel( X1, Y1, Color );
+        }
+      }
+    }
+
+
+
     public FastImage()
     {
     }

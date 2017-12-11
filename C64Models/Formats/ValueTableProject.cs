@@ -53,6 +53,11 @@ namespace C64Studio.Formats
     {
       GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
 
+      foreach ( var entry in ValueTable.Values )
+      {
+        exportData.AppendU8( GR.Convert.ToU8( entry ) );
+      }
+
       return exportData;
     }
 

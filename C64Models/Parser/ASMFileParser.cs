@@ -1104,6 +1104,164 @@ namespace C64Studio.Parser
 
 
 
+    private bool HandleOperatorNumeric( int LineIndex, Types.TokenInfo OperatorToken, Types.TokenInfo Token1, Types.TokenInfo Token2, out double Result )
+    {
+      Result = 0;
+      ClearErrorInfo();
+
+      double token1 = 0;
+      double token2 = 0;
+      string    opText = OperatorToken.Content;
+
+      if ( !ParseValueNumeric( LineIndex, Token1.Content, out token1 ) )
+      {
+        m_LastErrorInfo.Pos += Token1.StartPos;
+        return false;
+      }
+      if ( !ParseValueNumeric( LineIndex, Token2.Content, out token2 ) )
+      {
+        m_LastErrorInfo.Pos += Token2.StartPos;
+        return false;
+      }
+
+      if ( opText == "*" )
+      {
+        Result = token1 * token2;
+        return true;
+      }
+      else if ( opText == "/" )
+      {
+        Result = token1 / token2;
+        return true;
+      }
+      else if ( opText == "%" )
+      {
+        if ( token2 == 0 )
+        {
+          return false;
+        }
+        Result = token1 % token2;
+        return true;
+      }
+      else if ( opText == "+" )
+      {
+        Result = token1 + token2;
+        return true;
+      }
+      else if ( opText == "-" )
+      {
+        Result = token1 - token2;
+        return true;
+      }
+      else if ( ( opText == "&" )
+      ||        ( opText == "AND" )
+      ||        ( opText == "and" ) )
+      {
+        Result = (int)token1 & (int)token2;
+        return true;
+      }
+      else if ( ( opText == "EOR" )
+      ||        ( opText == "eor" )
+      ||        ( opText == "^" ) )
+      {
+        Result = (int)token1 ^ (int)token2;
+        return true;
+      }
+      else if ( ( opText == "|" )
+      ||        ( opText == "or" )
+      ||        ( opText == "OR" ) )
+      {
+        Result = (int)token1 | (int)token2;
+        return true;
+      }
+      else if ( opText == ">>" )
+      {
+        Result = (int)token1 >> (int)token2;
+        return true;
+      }
+      else if ( opText == "<<" )
+      {
+        Result = (int)token1 << (int)token2;
+        return true;
+      }
+      else if ( opText == "=" )
+      {
+        if ( token1 == token2 )
+        {
+          Result = 1;
+        }
+        else
+        {
+          Result = 0;
+        }
+        return true;
+      }
+      else if ( ( opText == "!=" )
+      ||        ( opText == "<>" ) )
+      {
+        if ( token1 != token2 )
+        {
+          Result = 1;
+        }
+        else
+        {
+          Result = 0;
+        }
+        return true;
+      }
+      else if ( opText == ">" )
+      {
+        if ( token1 > token2 )
+        {
+          Result = 1;
+        }
+        else
+        {
+          Result = 0;
+        }
+        return true;
+      }
+      else if ( opText == "<" )
+      {
+        if ( token1 < token2 )
+        {
+          Result = 1;
+        }
+        else
+        {
+          Result = 0;
+        }
+        return true;
+      }
+      else if ( opText == ">=" )
+      {
+        if ( token1 >= token2 )
+        {
+          Result = 1;
+        }
+        else
+        {
+          Result = 0;
+        }
+        return true;
+      }
+      else if ( opText == "<=" )
+      {
+        if ( token1 <= token2 )
+        {
+          Result = 1;
+        }
+        else
+        {
+          Result = 0;
+        }
+        return true;
+      }
+      return false;
+    }
+
+
+
     private List<Types.TokenInfo> ProcessExtFunction( string FunctionName, List<Types.TokenInfo> Tokens, int StartIndex, int Count )
     {
       ExtFunctionInfo   fInfo = m_ExtFunctions[FunctionName];
@@ -1781,7 +1939,7 @@ namespace C64Studio.Parser
           if ( highestPrecedence != -1 )
           {
             // evaluate token now!
-            int result = -1;
+            double result = 0;
 
             // check if we've got a hi/lo byte operator
             if ( highestPrecedence == 7 )
@@ -1790,12 +1948,12 @@ namespace C64Studio.Parser
               // the token before must not be a evaluatable type
               //if ( ( subTokenRange[highestPrecedenceTokenIndex].StartPos + subTokenRange[highestPrecedenceTokenIndex].Length == subTokenRange[highestPrecedenceTokenIndex + 1].StartPos )
               if ( ( highestPrecedenceTokenIndex == 0 )
-              || ( ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-              && ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
-              && ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
-              && ( subTokenRange[highestPrecedenceTokenIndex - 1].Content != "*" )
-              && ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_CHAR )
-              && ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER ) ) )
+              ||   ( ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+              &&     ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+              &&     ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+              &&     ( subTokenRange[highestPrecedenceTokenIndex - 1].Content != "*" )
+              &&     ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_CHAR )
+              &&     ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER ) ) )
               {
                 // eval hi/lo byte
                 if ( subTokenRange[highestPrecedenceTokenIndex].Content == "<" )
@@ -1858,7 +2016,7 @@ namespace C64Studio.Parser
                 }
               }
             }
-            if ( HandleOperator( LineIndex, subTokenRange[highestPrecedenceTokenIndex], subTokenRange[highestPrecedenceTokenIndex - 1], subTokenRange[highestPrecedenceTokenIndex + 1], out result ) )
+            if ( HandleOperatorNumeric( LineIndex, subTokenRange[highestPrecedenceTokenIndex], subTokenRange[highestPrecedenceTokenIndex - 1], subTokenRange[highestPrecedenceTokenIndex + 1], out result ) )
             {
               int dummyInt;
               if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex - 1].Content, out dummyInt, out numBytesGiven ) )
@@ -3272,6 +3430,48 @@ namespace C64Studio.Parser
           }
         }
         dataToInclude = charData;
+      }
+      else if ( extension == ".VALUETABLEPROJECT" )
+      {
+        if ( !Binary )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Assembly include for value table projects is not supported" );
+          return false;
+        }
+
+        // value table project file
+        if ( paramTokens.Count > 2 )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <Data>" );
+          return false;
+        }
+        if ( method != "DATA" )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are DATA" );
+          return false;
+        }
+        Formats.ValueTableProject   valueTableProject = new Formats.ValueTableProject();
+
+        try
+        {
+          dataToInclude = GR.IO.File.ReadAllBytes( subFilename );
+          if ( dataToInclude == null )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + subFilename );
+            return false;
+          }
+        }
+        catch ( System.IO.IOException )
+        {
+          AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + subFilename );
+          return false;
+        }
+        if ( !valueTableProject.ReadFromBuffer( dataToInclude ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read value table project file " + subFilename );
+          return false;
+        }
+        dataToInclude = valueTableProject.GenerateTableData();
       }
       else if ( extension == ".SPR" )
       {

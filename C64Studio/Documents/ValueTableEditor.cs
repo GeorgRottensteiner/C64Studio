@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using C64Studio.Types;
+using GR.Memory;
 
 namespace C64Studio
 {
@@ -31,10 +32,9 @@ namespace C64Studio
 
       checkExportToDataIncludeRes.Checked = true;
       checkExportToDataWrap.Checked = true;
-      comboExportRange.Items.Add( "All" );
-      comboExportRange.Items.Add( "Selection" );
-      comboExportRange.Items.Add( "Range" );
-      comboExportRange.SelectedIndex = 0;
+
+      pictureGraphPreview.DisplayPage.Box( 0, 0, pictureGraphPreview.DisplayPage.Width, pictureGraphPreview.DisplayPage.Height, (uint)System.Drawing.SystemColors.Window.ToArgb() );
+      pictureGraphPreview.Invalidate();
 
       RefreshDisplayOptions();
     }
@@ -148,6 +148,7 @@ namespace C64Studio
         System.Windows.Forms.MessageBox.Show( "Could not load value table project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message, "Could not load file" );
         return false;
       }
+      pictureGraphPreview.Invalidate();
       SetUnmodified();
       return true;
     }
@@ -294,49 +295,6 @@ namespace C64Studio
 
 
 
-    private void btnExportSpriteToData_Click( object sender, EventArgs e )
-    {
-      /*
-      var exportIndices = GetExportIndices();
-      if ( exportIndices.Count == 0 )
-      {
-        return;
-      }
-
-      int wrapByteCount = GR.Convert.ToI32( editWrapByteCount.Text );
-      if ( wrapByteCount <= 0 )
-      {
-        wrapByteCount = 8;
-      }
-      string prefix = editPrefix.Text;
-
-      GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
-      for ( int i = 0; i < exportIndices.Count; ++i )
-      {
-        exportData.Append( m_SpriteProject.Sprites[exportIndices[i]].Data );
-
-        byte color = (byte)m_SpriteProject.Sprites[exportIndices[i]].Color;
-        if ( m_SpriteProject.Sprites[exportIndices[i]].Multicolor )
-        {
-          color |= 0x80;
-        }
-        exportData.AppendU8( color );
-      }
-
-      bool wrapData = checkExportToDataWrap.Checked;
-      bool prefixRes = checkExportToDataIncludeRes.Checked;
-      if ( !prefixRes )
-      {
-        prefix = "";
-      }
-
-      string line = Util.ToASMData( exportData, wrapData, wrapByteCount, prefix );
-      editDataExport.Text = line;
-      */
-    }
-
-
-
     private void checkExportToDataWrap_CheckedChanged( object sender, EventArgs e )
     {
       editWrapByteCount.Enabled = checkExportToDataWrap.Checked;
@@ -351,19 +309,6 @@ namespace C64Studio
 
 
 
-    private void btnImportSprite_Click( object sender, EventArgs e )
-    {
-      /*
-      string filename;
-
-      if ( OpenFile( "Open sprite file", Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_ALL, out filename ) )
-      {
-        ImportSprites( filename, true, true );
-      }*/
-    }
-
-
-
     private void editDataExport_KeyPress( object sender, KeyPressEventArgs e )
     {
       if ( ( System.Windows.Forms.Control.ModifierKeys == Keys.Control )
@@ -372,16 +317,6 @@ namespace C64Studio
         editDataExport.SelectAll();
         e.Handled = true;
       }
-    }
-
-
-
-    private void comboExportRange_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      labelCharactersFrom.Enabled = ( comboExportRange.SelectedIndex == 2 );
-      editSpriteFrom.Enabled = ( comboExportRange.SelectedIndex == 2 );
-      labelCharactersTo.Enabled = ( comboExportRange.SelectedIndex == 2 );
-      editSpriteCount.Enabled = ( comboExportRange.SelectedIndex == 2 );
     }
 
 
@@ -514,7 +449,57 @@ namespace C64Studio
       {
         return;
       }
+      pictureGraphPreview.DisplayPage.Box( 0, 0, pictureGraphPreview.DisplayPage.Width, pictureGraphPreview.DisplayPage.Height, (uint)System.Drawing.SystemColors.Window.ToArgb() );
+      if ( string.IsNullOrEmpty( m_Project.ValueTable.Formula ) )
+      {
+        return;
+      }
       GenerateValues();
+
+      // build preview
+      double      min = double.MaxValue;
+      double      max = double.MinValue;
+
+      foreach ( var entry in m_Project.ValueTable.Values )
+      {
+        double    calcedValue = 0;
+        if ( double.TryParse( entry, out calcedValue ) )
+        {
+          min = Math.Min( min, calcedValue );
+          max = Math.Max( max, calcedValue );
+        }
+      }
+      if ( min == max )
+      {
+        pictureGraphPreview.DisplayPage.Line( 0, pictureGraphPreview.DisplayPage.Height / 2, pictureGraphPreview.DisplayPage.Width - 1, pictureGraphPreview.DisplayPage.Height / 2, 0 );
+        pictureGraphPreview.Invalidate();
+        return;
+      }
+
+      int   currentIndex = 0;
+      int   prevY = 0;
+      foreach ( var entry in m_Project.ValueTable.Values )
+      {
+        double    calcedValue = 0;
+        uint      color = 0xffff0000;
+        if ( double.TryParse( entry, out calcedValue ) )
+        {
+          color = 0xff000000;
+        }
+
+        int     x1 = (int)( ( currentIndex - 1 ) * (double)pictureGraphPreview.DisplayPage.Width / ( m_Project.ValueTable.Values.Count - 1 ) );
+        int     x2 = (int)( currentIndex * (double)pictureGraphPreview.DisplayPage.Width / ( m_Project.ValueTable.Values.Count - 1 ) );
+
+        int     y = (int)( pictureGraphPreview.DisplayPage.Height - 1 - ( calcedValue * pictureGraphPreview.DisplayPage.Height / ( max - min ) ) );
+        if ( currentIndex > 0 )
+        {
+          pictureGraphPreview.DisplayPage.Line( x1, prevY, x2, y, color );
+        }
+
+        prevY = y;
+        ++currentIndex;
+      }
+      pictureGraphPreview.Invalidate();
     }
 
 
@@ -596,6 +581,15 @@ namespace C64Studio
       while ( !completed );
 
       SetError( "OK" );
+
+      m_Project.ValueTable.Data = new ByteBuffer( (uint)m_Project.ValueTable.Values.Count );
+      int index = 0;
+      foreach ( var entry in m_Project.ValueTable.Values )
+      {
+        m_Project.ValueTable.Data.SetU8At( index, GR.Convert.ToU8( entry ) );
+
+        ++index;
+      }
     }
 
 
@@ -646,6 +640,166 @@ namespace C64Studio
       GenerateValues();
     }
 
+
+
+    private void btnImportFromASM_Click( object sender, EventArgs e )
+    {
+      var parser = new Parser.ASMFileParser();
+
+      Parser.CompileConfig    config = new Parser.CompileConfig();
+      config.TargetType = Types.CompileTargetType.PLAIN;
+      config.OutputFile = "temp.bin";
+      config.Assembler = Types.AssemblerType.C64_STUDIO;
+
+      string    temp = "* = $0801\n" + editDataExport.Text;
+
+
+      if ( ( !parser.Parse( temp, new ProjectConfig(), config ) )
+      ||   ( !parser.Assemble( config ) ) )
+      {
+        return;
+      }
+      var output = parser.AssembledOutput;
+
+      m_Project.ValueTable.Data.Clear();
+      m_Project.ValueTable.Values.Clear();
+      listValues.Items.Clear();
+
+      for ( int i = 0; i < output.Assembly.Length; ++i )
+      {
+        byte    nextValue = output.Assembly.ByteAt( i );
+        m_Project.ValueTable.Values.Add( nextValue.ToString() );
+        m_Project.ValueTable.Data.AppendU8( nextValue );
+        listValues.Items.Add( nextValue.ToString() );
+      }
+      SetModified();
+    }
+
+
+
+    private void btnExportToData_Click( object sender, EventArgs e )
+    {
+      GR.Memory.ByteBuffer      exportData = GetValueData();
+
+      int wrapByteCount = GR.Convert.ToI32( editWrapByteCount.Text );
+      if ( wrapByteCount <= 0 )
+      {
+        wrapByteCount = 8;
+      }
+      string prefix = editPrefix.Text;
+      bool wrapData = checkExportToDataWrap.Checked;
+      bool prefixRes = checkExportToDataIncludeRes.Checked;
+      if ( !prefixRes )
+      {
+        prefix = "";
+      }
+
+      string line = Util.ToASMData( exportData, wrapData, wrapByteCount, prefix );
+      editDataExport.Text = line;
+    }
+
+
+
+    private ByteBuffer GetValueData()
+    {
+      var data = new ByteBuffer();
+
+      if ( string.IsNullOrEmpty( m_Project.ValueTable.Formula ) )
+      {
+        foreach ( var entry in m_Project.ValueTable.Values )
+        {
+          data.AppendU8( GR.Convert.ToU8( entry ) );
+        }
+        return data;
+      }
+
+      GenerateValues();
+      return m_Project.ValueTable.Data;
+    }
+
+
+
+    private void btnExportToBASICData_Click( object sender, EventArgs e )
+    {
+      GR.Memory.ByteBuffer      exportData = GetValueData();
+
+      int         lineDelta = GR.Convert.ToI32( editExportBASICLineOffset.Text );
+      int         curLineNumber = GR.Convert.ToI32( editExportBASICLineNo.Text );
+      editDataExport.Text = Util.ToBASICData( exportData, curLineNumber, lineDelta );
+    }
+
+
+
+    private void btnExportToFile_Click( object sender, EventArgs e )
+    {
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Export Data to";
+      saveDlg.Filter = "Data File|*.dat|All Files|*.*";
+      saveDlg.FileName = GR.Path.RenameExtension( DocumentInfo.FullPath, "dat" );
+      if ( DocumentInfo.Project != null )
+      {
+        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
+      }
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return;
+      }
+
+      GR.IO.File.WriteAllBytes( saveDlg.FileName, GetValueData() );
+    }
+
+
+
+    private void btnImportFromFile_Click( object sender, EventArgs e )
+    {
+      string    filename;
+
+      if ( !OpenFile( "Open data file", Types.Constants.FILEFILTER_VALUE_TABLE_DATA + Types.Constants.FILEFILTER_ALL, out filename ) )
+      {
+        return;
+      }
+
+      var buffer = GR.IO.File.ReadAllBytes( filename );
+      if ( buffer == null )
+      {
+        return;
+      }
+
+      m_Project.ValueTable.Values.Clear();
+      m_Project.ValueTable.Data = buffer;
+      for ( int i = 0; i < buffer.Length; ++i )
+      {
+        m_Project.ValueTable.Values.Add( buffer.ByteAt( i ).ToString() );
+      }
+      SetModified();
+    }
+
+
+
+    private void btnImportFromHex_Click( object sender, EventArgs e )
+    {
+      string    binaryText = editDataExport.Text.Replace( " ", "" ).Replace( "\r", "" ).Replace( "\n", "" );
+
+      GR.Memory.ByteBuffer    data = new GR.Memory.ByteBuffer( binaryText );
+
+      m_Project.ValueTable.Values.Clear();
+      m_Project.ValueTable.Data = data;
+      for ( int i = 0; i < data.Length; ++i )
+      {
+        m_Project.ValueTable.Values.Add( data.ByteAt( i ).ToString() );
+      }
+      SetModified();
+    }
+
+
+
+    protected override void OnLoad( EventArgs e )
+    {
+      base.OnLoad( e );
+      pictureGraphPreview.DisplayPage.Box( 0, 0, pictureGraphPreview.DisplayPage.Width, pictureGraphPreview.DisplayPage.Height, (uint)System.Drawing.SystemColors.Window.ToArgb() );
+      pictureGraphPreview.Invalidate();
+    }
 
 
   }

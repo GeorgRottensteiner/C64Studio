@@ -5,9 +5,122 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using System.Collections;
+using static System.Windows.Forms.ListView;
 
 namespace C64Studio
 {
+  public class ArrangedItemListCollection : ICollection
+  {
+    private ArrangedItemList  _Owner = null;
+    private object   _SyncRoot = new object();
+    private bool      _IsSynchronized = false;
+
+
+
+    public int Count
+    {
+      get
+      {
+        return _Owner.listItems.Items.Count;
+      }
+    }
+
+    public object SyncRoot
+    {
+      get
+      {
+        return _SyncRoot;
+      }
+    }
+
+    public bool IsSynchronized
+    {
+      get
+      {
+        return _IsSynchronized;
+      }
+    }
+
+
+
+    public ArrangedItemListCollection( ArrangedItemList owner )
+    {
+      _Owner = owner;
+    }
+
+
+    public ListViewItem Add( ListViewItem Value )
+    {
+      _Owner.listItems.Items.Add( Value );
+      /*
+      if ( _Owner.ItemAdded != null )
+      {
+        _Owner.ItemAdded( this, Value );
+      }*/
+      _Owner.UpdateUI();
+
+      return Value;
+    }
+
+
+
+    public ListViewItem Add( string Value )
+    {
+      var result = _Owner.listItems.Items.Add( Value );
+      /*
+      if ( _Owner.ItemAdded != null )
+      {
+        _Owner.ItemAdded( this, Value );
+      }*/
+      _Owner.UpdateUI();
+
+      return result;
+    }
+
+    public void CopyTo( Array array, int index )
+    {
+      _Owner.Items.CopyTo( array, index );
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+      return _Owner.listItems.Items.GetEnumerator();
+    }
+
+    public ListViewItem this[int Index]
+    {
+      get
+      {
+        return _Owner.listItems.Items[Index];
+      }
+      set
+      {
+        _Owner.listItems.Items[Index] = value;
+      }
+    }
+
+    internal void Clear()
+    {
+      _Owner.listItems.Items.Clear();
+      _Owner.UpdateUI();
+    }
+
+    internal void Remove( ListViewItem item )
+    {
+      _Owner.listItems.Items.Remove( item );
+      _Owner.UpdateUI();
+    }
+
+    internal void Insert( int v, ListViewItem item )
+    {
+      _Owner.listItems.Items.Insert( v, item );
+      _Owner.UpdateUI();
+    }
+  }
+
+
+
   public partial class ArrangedItemList : UserControl
   {
     // Declare the delegate (if using non-generic pattern).
@@ -27,12 +140,15 @@ namespace C64Studio
     public event ItemExchangedEventHandler ItemMoved;
     public event ItemModifiedEventHandler SelectedIndexChanged;
 
+    private ArrangedItemListCollection _Items;
+
     public bool MustHaveOneElement { get; set; }
 
 
 
     public ArrangedItemList()
     {
+      _Items = new ArrangedItemListCollection( this );
       InitializeComponent();
       UpdateUI();
     }
@@ -104,11 +220,11 @@ namespace C64Studio
 
 
 
-    public ListView.ListViewItemCollection Items
+    public ArrangedItemListCollection Items
     {
       get
       {
-        return listItems.Items;
+        return _Items;
       }
     }
 
@@ -153,7 +269,8 @@ namespace C64Studio
           newItem.SubItems.Add( "" );
         }
       }
-      listItems.Items.Add( newItem );
+      _Items.Add( newItem );
+      //listItems.Items.Add( newItem );
       if ( ItemAdded != null )
       {
         ItemAdded( this, newItem );

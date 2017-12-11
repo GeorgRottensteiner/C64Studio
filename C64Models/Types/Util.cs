@@ -204,6 +204,14 @@ namespace C64Studio
     {
       StringBuilder   sb = new StringBuilder();
 
+      if ( LineOffset <= 0 )
+      {
+        LineOffset = 1;
+      }
+      if ( StartLine < 0 )
+      {
+        StartLine = 0;
+      }
       int     dataPos = 0;
 
       while ( dataPos < Data.Length )

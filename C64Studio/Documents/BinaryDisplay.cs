@@ -217,8 +217,6 @@ namespace C64Studio
     {
       GR.Memory.ByteBuffer data = DataFromHex();
 
-      string      lines = "";
-      int         numChars = 0;
       int         lineDelta = GR.Convert.ToI32( editToBASICLineDelta.Text );
       if ( lineDelta <= 0 )
       {
@@ -231,34 +229,7 @@ namespace C64Studio
         curLineNumber = 0;
       }
 
-      for ( uint i = 0; i < data.Length; ++i )
-      {
-        int     neededChars = data.ByteAt( (int)i ).ToString().Length;
-
-        if ( numChars == 0 )
-        {
-          lines += curLineNumber.ToString() + "DATA";
-          numChars += 4 + curLineNumber.ToString().Length;
-
-          lines += data.ByteAt( (int)i ).ToString();
-          numChars += neededChars;
-
-          curLineNumber += lineDelta;
-          continue;
-        }
-        
-        if ( numChars + 1 + neededChars >= 80 )
-        {
-          // max length hit
-          lines += System.Environment.NewLine;
-          numChars = 0;
-          --i;
-          continue;
-        }
-        lines += "," + data.ByteAt( (int)i ).ToString();
-        numChars += 1 + neededChars;
-      }
-      textBinaryData.Text = lines;
+      textBinaryData.Text = Util.ToBASICData( data, curLineNumber, lineDelta );
     }
 
 

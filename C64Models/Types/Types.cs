@@ -416,6 +416,7 @@ namespace C64Studio.Types
     public static string FILEFILTER_TAPE = "Tape Files|*.t64,*.prg|";
     public static string FILEFILTER_DISK = "Disk Files|*.d64,*.d81|";
     public static string FILEFILTER_VALUE_TABLE_PROJECT = "Value Table Project Files|*.valuetableproject|";
+    public static string FILEFILTER_VALUE_TABLE_DATA = "Value Table Data Files|*.dat|";
   }
 
   public class FileChunk
