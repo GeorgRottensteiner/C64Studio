@@ -865,15 +865,15 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_F, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 134, true, 6, false, (char)0xee86, true, "REVERSE F" ).Replacements.Add( "CTRL-F" );
       AddC64Key( KeyboardKey.KEY_G, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 135, true, 7, false, (char)0xee87, true, "REVERSE G" ).Replacements.Add( "CTRL-G" );
 
-      AddC64Key( KeyboardKey.KEY_H, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 8, true, 8, true, (char)0xee88, false, "SHIFT C= OFF", "SH C= OFF" ).Replacements.Add( "CTRL-H" );   // Shift-C= aus
-      AddC64Key( KeyboardKey.KEY_I, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 9, true, 9, true, (char)0xee89, false, "SHIFT C= ON", "SH C= ON" ).Replacements.Add( "CTRL-I" );   // Shift-C= an
+      AddC64Key( KeyboardKey.KEY_H, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 8, true, 8, true, (char)0xee88, true, "SHIFT C= OFF", "SH C= OFF" ).Replacements.Add( "CTRL-H" );   // Shift-C= aus
+      AddC64Key( KeyboardKey.KEY_I, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 9, true, 9, true, (char)0xee89, true, "SHIFT C= ON", "SH C= ON" ).Replacements.Add( "CTRL-I" );   // Shift-C= an
 
       AddC64Key( KeyboardKey.KEY_J, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 138, true, 10, false, (char)0xee8a, true, "REVERSE J" ).Replacements.Add( "CTRL-J" );
       AddC64Key( KeyboardKey.KEY_K, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 139, true, 11, false, (char)0xee8b, true, "REVERSE K" ).Replacements.Add( "CTRL-K" );
       AddC64Key( KeyboardKey.KEY_L, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 140, true, 12, false, (char)0xee8c, true, "REVERSE L" ).Replacements.Add( "CTRL-L" );
 
       AddC64Key( KeyboardKey.KEY_RETURN, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 13, true, 13, true, (char)0xee8d, false, "RETURN", "RET" );  // return
-      AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 14, true, 14, true, (char)0xee8e, false, "SHIFT C=", "SH C=" );  // toggle upper/lower
+      AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 14, true, 14, true, (char)0xee8e, true, "SHIFT C=", "SH C=" );  // toggle upper/lower
 
       AddC64Key( KeyboardKey.KEY_O, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 143, true, 15, false, (char)0xee8f, true, "REVERSE O" ).Replacements.Add( "CTRL-O" ); ;
       AddC64Key( KeyboardKey.KEY_P, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 144, true, 16, false, (char)0xee90, true, "REVERSE P" ).Replacements.Add( "CTRL-P" ); ;
