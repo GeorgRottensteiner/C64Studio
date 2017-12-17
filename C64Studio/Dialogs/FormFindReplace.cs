@@ -891,6 +891,7 @@ namespace C64Studio
         if ( LastFound.FoundInDocument != null )
         {
           elementToSearch = LastFound.FoundInDocument.Element;
+          firstElement = elementToSearch;
         }
         if ( elementToSearch == null )
         {
