@@ -1154,5 +1154,20 @@ GREEN=5
 
       Assert.AreEqual( "0000", assembly.ToString() );
     }
+
+
+    [TestMethod]
+    public void TestPseudoOpIfndefWithIndention()
+    {
+      string      source = @"idt1 = 1
+                              !ifndef idt1 {
+                                !error ""!!!""
+                                }
+                            ";
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0000", assembly.ToString() );
+    }
+
   }
 }

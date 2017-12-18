@@ -6776,7 +6776,8 @@ namespace C64Studio.Parser
               }
               else
               {
-                string defineCheck = parseLine.Substring( 7, startBracket - 7 ).Trim();
+                int     pseudoOpEndPos = lineTokenInfos[0].StartPos + lineTokenInfos[0].Length;
+                string defineCheck = parseLine.Substring( pseudoOpEndPos, startBracket - pseudoOpEndPos ).Trim();
 
                 List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length );
 
