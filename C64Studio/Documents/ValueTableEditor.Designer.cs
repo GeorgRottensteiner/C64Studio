@@ -220,6 +220,7 @@
       this.pictureGraphPreview.Size = new System.Drawing.Size(620, 323);
       this.pictureGraphPreview.TabIndex = 4;
       this.pictureGraphPreview.TabStop = false;
+      this.pictureGraphPreview.SizeChanged += new System.EventHandler(this.pictureGraphPreview_SizeChanged);
       // 
       // checkAutomatedGeneration
       // 
@@ -229,7 +230,7 @@
       this.checkAutomatedGeneration.Location = new System.Drawing.Point(220, 70);
       this.checkAutomatedGeneration.Name = "checkAutomatedGeneration";
       this.checkAutomatedGeneration.Size = new System.Drawing.Size(128, 17);
-      this.checkAutomatedGeneration.TabIndex = 3;
+      this.checkAutomatedGeneration.TabIndex = 4;
       this.checkAutomatedGeneration.Text = "Automatic Generation";
       this.checkAutomatedGeneration.UseVisualStyleBackColor = true;
       // 
@@ -241,18 +242,17 @@
       this.checkClearPreviousValues.Location = new System.Drawing.Point(220, 96);
       this.checkClearPreviousValues.Name = "checkClearPreviousValues";
       this.checkClearPreviousValues.Size = new System.Drawing.Size(129, 17);
-      this.checkClearPreviousValues.TabIndex = 3;
+      this.checkClearPreviousValues.TabIndex = 5;
       this.checkClearPreviousValues.Text = "Clear Previous Values";
       this.checkClearPreviousValues.UseVisualStyleBackColor = true;
       // 
       // btnGenerateValues
       // 
-      this.btnGenerateValues.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnGenerateValues.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnGenerateValues.Location = new System.Drawing.Point(534, 92);
       this.btnGenerateValues.Name = "btnGenerateValues";
       this.btnGenerateValues.Size = new System.Drawing.Size(95, 23);
-      this.btnGenerateValues.TabIndex = 2;
+      this.btnGenerateValues.TabIndex = 6;
       this.btnGenerateValues.Text = "Generate Values";
       this.btnGenerateValues.UseVisualStyleBackColor = true;
       this.btnGenerateValues.Click += new System.EventHandler(this.btnGenerateValues_Click);
@@ -262,7 +262,7 @@
       this.editStepValue.Location = new System.Drawing.Point(82, 94);
       this.editStepValue.Name = "editStepValue";
       this.editStepValue.Size = new System.Drawing.Size(129, 20);
-      this.editStepValue.TabIndex = 1;
+      this.editStepValue.TabIndex = 3;
       this.editStepValue.Text = "1";
       this.editStepValue.TextChanged += new System.EventHandler(this.editStepValue_TextChanged);
       // 
@@ -271,7 +271,7 @@
       this.editEndValue.Location = new System.Drawing.Point(82, 68);
       this.editEndValue.Name = "editEndValue";
       this.editEndValue.Size = new System.Drawing.Size(129, 20);
-      this.editEndValue.TabIndex = 1;
+      this.editEndValue.TabIndex = 2;
       this.editEndValue.Text = "10";
       this.editEndValue.TextChanged += new System.EventHandler(this.editEndValue_TextChanged);
       // 
@@ -309,7 +309,7 @@
       this.editValueFunction.Location = new System.Drawing.Point(82, 16);
       this.editValueFunction.Name = "editValueFunction";
       this.editValueFunction.Size = new System.Drawing.Size(547, 20);
-      this.editValueFunction.TabIndex = 1;
+      this.editValueFunction.TabIndex = 0;
       this.editValueFunction.Text = "x*2";
       this.editValueFunction.TextChanged += new System.EventHandler(this.editValueFunction_TextChanged);
       // 

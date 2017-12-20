@@ -449,12 +449,20 @@ namespace C64Studio
       {
         return;
       }
+
+      GenerateValues();
+      RedrawPreview();
+    }
+
+
+
+    private void RedrawPreview()
+    {
       pictureGraphPreview.DisplayPage.Box( 0, 0, pictureGraphPreview.DisplayPage.Width, pictureGraphPreview.DisplayPage.Height, (uint)System.Drawing.SystemColors.Window.ToArgb() );
       if ( string.IsNullOrEmpty( m_Project.ValueTable.Formula ) )
       {
         return;
       }
-      GenerateValues();
 
       // build preview
       double      min = double.MaxValue;
@@ -490,7 +498,7 @@ namespace C64Studio
         int     x1 = (int)( ( currentIndex - 1 ) * (double)pictureGraphPreview.DisplayPage.Width / ( m_Project.ValueTable.Values.Count - 1 ) );
         int     x2 = (int)( currentIndex * (double)pictureGraphPreview.DisplayPage.Width / ( m_Project.ValueTable.Values.Count - 1 ) );
 
-        int     y = (int)( pictureGraphPreview.DisplayPage.Height - 1 - ( calcedValue * pictureGraphPreview.DisplayPage.Height / ( max - min ) ) );
+        int     y = (int)( pictureGraphPreview.DisplayPage.Height - 1 - ( ( calcedValue - min ) * pictureGraphPreview.DisplayPage.Height / ( max - min ) ) );
         if ( currentIndex > 0 )
         {
           pictureGraphPreview.DisplayPage.Line( x1, prevY, x2, y, color );
@@ -509,6 +517,8 @@ namespace C64Studio
       m_Parser = new Parser.ASMFileParser();
 
       m_Parser.AddExtFunction( "sin", 1, 1, ExtSinus );
+      m_Parser.AddExtFunction( "cos", 1, 1, ExtCosinus );
+      m_Parser.AddExtFunction( "tan", 1, 1, ExtTan );
 
       double  startValue = Util.StringToDouble( m_Project.ValueTable.StartValue );
       double  endValue = Util.StringToDouble( m_Project.ValueTable.EndValue );
@@ -613,6 +623,58 @@ namespace C64Studio
       {
         Type = TokenInfo.TokenType.LITERAL_NUMBER,
         Content = Math.Sin( functionResult * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
+      };
+      result.Add( resultValue );
+      return result;
+    }
+
+
+
+    private List<TokenInfo> ExtCosinus( List<TokenInfo> Arguments )
+    {
+      var result = new List<TokenInfo>();
+
+      if ( Arguments.Count != 1 )
+      {
+        SetError( "Invalid argument count" );
+        return result;
+      }
+      double functionResult = 0;
+      if ( !m_Parser.EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
+      {
+        SetError( "Invalid argument" );
+        return result;
+      }
+      var resultValue = new TokenInfo()
+      {
+        Type = TokenInfo.TokenType.LITERAL_NUMBER,
+        Content = Math.Cos( functionResult * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
+      };
+      result.Add( resultValue );
+      return result;
+    }
+
+
+
+    private List<TokenInfo> ExtTan( List<TokenInfo> Arguments )
+    {
+      var result = new List<TokenInfo>();
+
+      if ( Arguments.Count != 1 )
+      {
+        SetError( "Invalid argument count" );
+        return result;
+      }
+      double functionResult = 0;
+      if ( !m_Parser.EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
+      {
+        SetError( "Invalid argument" );
+        return result;
+      }
+      var resultValue = new TokenInfo()
+      {
+        Type = TokenInfo.TokenType.LITERAL_NUMBER,
+        Content = Math.Tan( functionResult * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
       };
       result.Add( resultValue );
       return result;
@@ -801,6 +863,12 @@ namespace C64Studio
       pictureGraphPreview.Invalidate();
     }
 
+
+
+    private void pictureGraphPreview_SizeChanged( object sender, EventArgs e )
+    {
+      RedrawPreview();
+    }
 
   }
 }
