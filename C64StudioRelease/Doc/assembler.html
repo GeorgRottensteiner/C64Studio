@@ -13,17 +13,63 @@
     <br>
     The assembler allows at most one label, one mnemonic and one comment per line.<br>
     <br>
-    There are three types of label, local, global and anonymous ones. Local labels are determined by starting with an '.'. To limit the scope of local labels the !ZONE macro is used. Global labels
+    C64 Studio also supports basic PDS and DASM format. To choose the assembler type for a file right click the item in the solution explorer and change "Assembler Type". Note that support for PDS and DASM is not complete.
+    Most of the common constructs work but some may not. If you encounter some problems please contact me.
+    <br>
+  </div>
+  <a name="labels"></a>
+  <H2>Labels</H2>
+  <div id="mybody">
+    There are four types of labels, local, global, cheap locals and anonymous ones. Local labels are determined by starting with an '.'. To limit the scope of local labels the !ZONE macro is used. Cheap local labels start with an '@'. They are automatically scoped into the last previous global label. Global labels
     start with any character. They may end with a :<br>
     <br>
     Anonymous labels consist of one or more '+' or '-' characters. '+' or '-' indicate the intended lookup direction.<br>
     <br>
+    <div id="code"><br>  GLOBAL_LABEL         ;simple global label
+  GLOBAL_LABEL:        ;simple global label with trailing :
+      jmp GLOBAL_LABEL
+
+  .LOCAL_LABEL         ;local label, scoped inside a !zone
+      jmp .LOCAL_LABEL
+
+  @CHEAP_LOCAL_LABEL   ;cheap local label, scoped globally as GLOBAL_LABEL@CHEAP_LOCAL_LABEL
+      jmp @CHEAP_LOCAL_LABEL
+
+  GLOBAL_LABEL2        ;another global scope
+      jmp GLOBAL_LABEL2
+  @CHEAP_LOCAL_LABEL   ;cheap local label, scoped globally as GLOBAL_LABEL2@CHEAP_LOCAL_LABEL
+      jmp @CHEAP_LOCAL_LABEL
+
+  -                    ;anonymous label backwards
+    jmp -
+
+    jmp +
+  +                    ;anonymous label forwards
+
+
+        <br></div>
     <br>
-    Comments are prefixed with an ';', macros start with an exclamation mark '!'<br>
+  <br>
+  </div>
+  <a name="comments"></a>
+  <H2>Comments</H2>
+  <div id="mybody">
+    Comments are prefixed with an ';'.<br>
+    <br>
+    <div id="code"><br>  bcs .SomeLabel        ;branch if carry is set
+    </div>
     <br>
     <br>
-    C64 Studio also supports basic PDS and DASM format. To choose the assembler type for a file right click the item in the solution explorer and change "Assembler Type". Note that support for PDS and DASM is not complete.
-    Most of the common constructs work but some may not. If you encounter some problems please contact me.
+  </div>
+  <a name="pseudo operations"></a>
+  <H2>Pseudo Operations</H2>
+  <div id="mybody">
+    Pseudo Operations start with an exclamation mark '!'<br>
+    <br>
+    <div id="code"><br>  !byte 1,2,$03,$04
+    </div>
+    <br>
+    <br>
   </div>
 </body>
 </HTML>

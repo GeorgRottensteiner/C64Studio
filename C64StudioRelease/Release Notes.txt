@@ -17,6 +17,19 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+20.12.2017 - 5.5:         Add: Value Table editor
+                          Fix: dc.b for PDS assembler
+                          Add: Koala import support courtesy SouIstealer
+                          Add: Cheap local labels
+                          Add: Charscreen editor now has char/color only options
+                          Add: Debug Memory allows toggling upper/lower case in PETSCII view
+                          Fix: Crash if line number in search out of bounds
+                          Add: Shortcuts displayed on toolbar/menu, courtesy SouIstealer
+                          Add: Missing exchange color options for charsets/sprites plus undo
+                          Fix: Code ordering for nested macros could get off by one
+                          Add: Ctrl-H and Ctrl-N now properly "compiled" for BASIC editor
+                          Fix: Potential endless loop in find/search
+         
 24.10.2017 - 5.4:         Add: Assembler system label ASSEMBLER_C64STUDIO
                           Fix: Crash in "import file" for text screen editor without solution
                           Add: Better error marking in code
