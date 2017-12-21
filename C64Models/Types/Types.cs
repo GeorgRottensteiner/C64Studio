@@ -1449,6 +1449,7 @@ namespace C64Studio.Types
     public List<bool> ParametersAreReferences = new List<bool>();
     public string[] Content = null;
     public bool     UsesBracket = false;
+    public string   ParentFileName = "";
   };
 
 

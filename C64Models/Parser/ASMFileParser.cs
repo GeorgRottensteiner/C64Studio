@@ -2806,10 +2806,10 @@ namespace C64Studio.Parser
 
 
     private bool HandleScopeEnd( GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions,
-                                       List<Types.ScopeInfo> ScopeList,
-                                       ref int lineIndex,
-                                       ref int intermediateLineOffset,
-                                       ref String[] Lines )
+                                 List<Types.ScopeInfo> ScopeList,
+                                 ref int lineIndex,
+                                 ref int intermediateLineOffset,
+                                 ref String[] Lines )
     {
       if ( ScopeList.Count == 0 )
       {
@@ -5161,8 +5161,8 @@ namespace C64Studio.Parser
 
               // adjust source infos to make lookup work correctly
               Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-              sourceInfo.Filename = ParentFilename;
-              sourceInfo.FullPath = ParentFilename;
+              sourceInfo.Filename = functionInfo.ParentFileName;
+              sourceInfo.FullPath = functionInfo.ParentFileName;
               sourceInfo.GlobalStartLine = lineIndex + 1;
               sourceInfo.LineCount = replacementLines.Length;
               string dummy;
@@ -6744,8 +6744,11 @@ namespace C64Studio.Parser
             else if ( macro.Type == Types.MacroInfo.MacroType.MACRO )
             {
               string macroName = "";
+              string outerFilename = "";
+              int localLineIndex = 0;
+              ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
 
-              if ( POMacro( macroFunctions, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
+              if ( POMacro( macroFunctions, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
               {
                 if ( m_AssemblerSettings.MacroIsZone )
                 {
@@ -7471,7 +7474,11 @@ namespace C64Studio.Parser
           {
             string macroName = "";
 
-            if ( POMacro( macroFunctions, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
+            string outerFilename = "";
+            int localLineIndex = 0;
+            ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
+
+            if ( POMacro( macroFunctions, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
             {
               if ( m_AssemblerSettings.MacroIsZone )
               {
@@ -8201,7 +8208,12 @@ namespace C64Studio.Parser
 
 
 
-    private bool POMacro( GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions, int lineIndex, List<Types.TokenInfo> lineTokenInfos, List<Types.ScopeInfo> Scopes, out string MacroFunctionName )
+    private bool POMacro( GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions, 
+                          string OuterFilename,
+                          int lineIndex, 
+                          List<Types.TokenInfo> lineTokenInfos, 
+                          List<Types.ScopeInfo> Scopes, 
+                          out string MacroFunctionName )
     {
       // !macro Macroname [param1[,param2]]
       bool  hadError = false;
@@ -8301,6 +8313,7 @@ namespace C64Studio.Parser
 
             macroFunction.Name            = macroName;
             macroFunction.LineIndex       = lineIndex;
+            macroFunction.ParentFileName  = OuterFilename;
             macroFunction.ParameterNames  = param;
             macroFunction.ParametersAreReferences = paramIsRef;
             macroFunction.UsesBracket     = hasBracket;
