@@ -18,6 +18,7 @@ namespace C64Studio
     private ValueTableProject         m_Project = new ValueTableProject();
 
     private Parser.ASMFileParser      m_Parser = new Parser.ASMFileParser();
+    private bool                      m_DoNotUpdate = false;
 
 
 
@@ -109,6 +110,8 @@ namespace C64Studio
         return false;
       }
 
+      m_DoNotUpdate = true;
+
       // TODO - controls
       foreach ( var value in m_Project.ValueTable.Values )
       {
@@ -118,6 +121,8 @@ namespace C64Studio
       editEndValue.Text       = m_Project.ValueTable.EndValue;
       editStepValue.Text      = m_Project.ValueTable.StepValue;
       editValueFunction.Text  = m_Project.ValueTable.Formula;
+
+      m_DoNotUpdate = false;
 
       Modified = false;
 
@@ -397,6 +402,10 @@ namespace C64Studio
 
     private void editValueFunction_TextChanged( object sender, EventArgs e )
     {
+      if ( m_DoNotUpdate )
+      {
+        return;
+      }
       if ( editValueFunction.Text != m_Project.ValueTable.Formula )
       {
         m_Project.ValueTable.Formula = editValueFunction.Text;
@@ -409,6 +418,10 @@ namespace C64Studio
 
     private void editStartValue_TextChanged( object sender, EventArgs e )
     {
+      if ( m_DoNotUpdate )
+      {
+        return;
+      }
       if ( editStartValue.Text != m_Project.ValueTable.StartValue )
       {
         m_Project.ValueTable.StartValue = editStartValue.Text;
@@ -421,6 +434,10 @@ namespace C64Studio
 
     private void editEndValue_TextChanged( object sender, EventArgs e )
     {
+      if ( m_DoNotUpdate )
+      {
+        return;
+      }
       if ( editEndValue.Text != m_Project.ValueTable.EndValue )
       {
         m_Project.ValueTable.EndValue = editEndValue.Text;
@@ -433,6 +450,10 @@ namespace C64Studio
 
     private void editStepValue_TextChanged( object sender, EventArgs e )
     {
+      if ( m_DoNotUpdate )
+      {
+        return;
+      }
       if ( editStepValue.Text != m_Project.ValueTable.StepValue )
       {
         m_Project.ValueTable.StepValue = editStepValue.Text;

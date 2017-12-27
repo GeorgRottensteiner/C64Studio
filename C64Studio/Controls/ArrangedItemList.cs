@@ -6,7 +6,6 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections;
-using static System.Windows.Forms.ListView;
 
 namespace C64Studio
 {
