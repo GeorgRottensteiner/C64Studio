@@ -3440,15 +3440,27 @@ namespace C64Studio.Parser
         }
 
         // value table project file
-        if ( paramTokens.Count > 2 )
+        if ( paramTokens.Count > 4 )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <Data>" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <Data>[,<Offset>[,<Bytes>]]" );
           return false;
         }
         if ( method != "DATA" )
         {
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are DATA" );
           return false;
+        }
+        int     numBytes = -1;
+        int     startIndex = 0;
+        if ( ( paramTokens.Count >= 3 )
+        &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
+        {
+          startIndex = 0;
+        }
+        if ( ( paramTokens.Count >= 4 )
+        &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numBytes ) ) )
+        {
+          numBytes = 0;
         }
         Formats.ValueTableProject   valueTableProject = new Formats.ValueTableProject();
 
@@ -3472,6 +3484,23 @@ namespace C64Studio.Parser
           return false;
         }
         dataToInclude = valueTableProject.GenerateTableData();
+        if ( ( startIndex < 0 )
+        ||   ( startIndex >= dataToInclude.Length ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid start index " + startIndex );
+          return false;
+        }
+        if ( numBytes== -1 )
+        {
+          numBytes = (int)dataToInclude.Length;
+        }
+        if ( ( numBytes <= 0 )
+        || ( ( startIndex + numBytes ) > dataToInclude.Length ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid byte count " + numBytes );
+          return false;
+        }
+        dataToInclude = dataToInclude.SubBuffer( 0, numBytes );
       }
       else if ( extension == ".SPR" )
       {
