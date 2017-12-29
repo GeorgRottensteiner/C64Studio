@@ -1639,30 +1639,60 @@ namespace C64Studio
       }
       if ( exportType == ExportType.MAP_DATA_SELECTION )
       {
+        bool    vertical = ( comboExportOrientation.SelectedIndex == 0 );
+
         if ( m_CurrentMap != null )
         {
           GR.Memory.ByteBuffer      selectionData = new GR.Memory.ByteBuffer();
           bool                      hasSelection = false;
 
-          for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+          if ( vertical )
           {
             for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
             {
-              if ( m_SelectedTiles[i, j] )
+              for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
               {
-                selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
-                hasSelection = true;
+                if ( m_SelectedTiles[i, j] )
+                {
+                  selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                  hasSelection = true;
+                }
+              }
+            }
+            if ( !hasSelection )
+            {
+              // select all
+              for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+              {
+                for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+                {
+                  selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                }
               }
             }
           }
-          if ( !hasSelection )
+          else
           {
-            // select all
             for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
             {
               for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
               {
-                selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                if ( m_SelectedTiles[i, j] )
+                {
+                  selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                  hasSelection = true;
+                }
+              }
+            }
+            if ( !hasSelection )
+            {
+              // select all
+              for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+              {
+                for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+                {
+                  selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                }
               }
             }
           }
@@ -1672,7 +1702,7 @@ namespace C64Studio
       if ( ( exportType == ExportType.MAP_DATA )
       ||   ( exportType == ExportType.TILE_AND_MAP_DATA ) )
       {
-        m_MapProject.ExportMapsAsAssembly( false, out mapData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
+        m_MapProject.ExportMapsAsAssembly( comboExportOrientation.SelectedIndex == 0, out mapData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
       }
 
 
