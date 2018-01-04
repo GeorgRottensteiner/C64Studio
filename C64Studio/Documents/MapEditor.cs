@@ -1639,7 +1639,7 @@ namespace C64Studio
       }
       if ( exportType == ExportType.MAP_DATA_SELECTION )
       {
-        bool    vertical = ( comboExportOrientation.SelectedIndex == 0 );
+        bool    vertical = ( comboExportOrientation.SelectedIndex != 0 );
 
         if ( m_CurrentMap != null )
         {
@@ -1702,7 +1702,7 @@ namespace C64Studio
       if ( ( exportType == ExportType.MAP_DATA )
       ||   ( exportType == ExportType.TILE_AND_MAP_DATA ) )
       {
-        m_MapProject.ExportMapsAsAssembly( comboExportOrientation.SelectedIndex == 0, out mapData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
+        m_MapProject.ExportMapsAsAssembly( comboExportOrientation.SelectedIndex != 0, out mapData, "", checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), prefix );
       }
 
 
@@ -1755,6 +1755,103 @@ namespace C64Studio
           m_MapProject.ExportTilesAsBuffer( comboExportOrientation.SelectedIndex == 0, out tileData );
           mapData = m_MapProject.ExportMapsAsBuffer( comboExportOrientation.SelectedIndex == 0 );
           finalData = tileData + mapData;
+          break;
+        case ExportType.MAP_DATA:
+          {
+            bool    vertical = ( comboExportOrientation.SelectedIndex != 0 );
+
+            if ( m_CurrentMap != null )
+            {
+              GR.Memory.ByteBuffer      selectionData = new GR.Memory.ByteBuffer();
+
+              if ( vertical )
+              {
+                // select all
+                for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+                {
+                  for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+                  {
+                    selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                  }
+                }
+              }
+              else
+              {
+                // select all
+                for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+                {
+                  for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+                  {
+                    selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                  }
+                }
+              }
+              finalData = selectionData;
+            }
+          }
+          break;
+        case ExportType.MAP_DATA_SELECTION:
+          {
+            bool    vertical = ( comboExportOrientation.SelectedIndex != 0 );
+
+            if ( m_CurrentMap != null )
+            {
+              GR.Memory.ByteBuffer      selectionData = new GR.Memory.ByteBuffer();
+              bool                      hasSelection = false;
+
+              if ( vertical )
+              {
+                for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+                {
+                  for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+                  {
+                    if ( m_SelectedTiles[i, j] )
+                    {
+                      selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                      hasSelection = true;
+                    }
+                  }
+                }
+                if ( !hasSelection )
+                {
+                  // select all
+                  for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+                  {
+                    for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+                    {
+                      selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                    }
+                  }
+                }
+              }
+              else
+              {
+                for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+                {
+                  for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+                  {
+                    if ( m_SelectedTiles[i, j] )
+                    {
+                      selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                      hasSelection = true;
+                    }
+                  }
+                }
+                if ( !hasSelection )
+                {
+                  // select all
+                  for ( int j = 0; j < m_CurrentMap.Tiles.Height; ++j )
+                  {
+                    for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )
+                    {
+                      selectionData.AppendU8( (byte)m_CurrentMap.Tiles[i, j] );
+                    }
+                  }
+                }
+              }
+              finalData = selectionData;
+            }
+          }
           break;
         default:
           MessageBox.Show( "The export type " + (ExportType)comboExportData.SelectedIndex + " is not supported for binary export.", "Export type not supported" );
