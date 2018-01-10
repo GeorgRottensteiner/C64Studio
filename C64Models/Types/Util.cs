@@ -51,6 +51,19 @@ namespace C64Studio
 
 
 
+    public static string RemoveQuotes( string Orig )
+    {
+      if ( ( Orig.Length >= 2 )
+      &&   ( Orig.StartsWith( "\"" ) )
+      &&   ( Orig.EndsWith( "\"" ) ) )
+      {
+        return Orig.Substring( 1, Orig.Length - 2 );
+      }
+      return Orig;
+    }
+
+
+
     public static GR.Memory.ByteBuffer ToPETSCII( string Name )
     {
       GR.Memory.ByteBuffer bufName = new GR.Memory.ByteBuffer();

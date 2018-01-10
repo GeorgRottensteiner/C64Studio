@@ -4505,20 +4505,191 @@ namespace C64Studio.Parser
       lineSizeInBytes = 13;
       info.NumBytes   = 13;
 
-      List<int> tokenParams = new List<int>();
+      int       basicLineNumber = 10;
+      string    basicComment = "";
 
-      if ( ( lineTokenInfos.Count > 2 )
-      ||   ( lineTokenInfos.Count < 1 ) )
+      List<int> tokenParams = new List<int>();
+      bool      paramsValid = false;
+      int       jumpAddress = -1;
+
+      int       realNumParams = 1;
+      int       numDigits = -1;
+
+      List<List<Types.TokenInfo>>   poParams = new List<List<Types.TokenInfo>>();
+
+      int     firstTokenIndex = 1;
+      for ( int i = 1; i < lineTokenInfos.Count; ++i )
       {
-        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected !basic [<jump address>]" );
+        if ( ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.SEPARATOR )
+        &&   ( lineTokenInfos[i].Content == "," ) )
+        {
+          if ( i - firstTokenIndex > 0 )
+          {
+            poParams.Add( lineTokenInfos.GetRange( firstTokenIndex, i - firstTokenIndex ) );
+          }
+          else
+          {
+            poParams.Add( new List<Types.TokenInfo>() );
+          }
+          
+          ++realNumParams;
+          firstTokenIndex = i + 1;
+        }
+      }
+      if ( firstTokenIndex < lineTokenInfos.Count )
+      {
+        poParams.Add( lineTokenInfos.GetRange( firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ) );
+      }
+
+      if ( lineTokenInfos.Count == 1 )
+      {
+        // !basic
+        paramsValid = true;
+      }
+      else if ( ( lineTokenInfos.Count > 1 )
+      &&        ( poParams.Count == 1 ) )
+      {
+        // !basic <jump address>
+        if ( !EvaluateTokens( lineIndex, poParams[0], 0, poParams[0].Count, out jumpAddress ) )
+        {
+          // could not fully parse
+          info.NeededParsedExpression = lineTokenInfos;
+          info.Line = Line;
+          // can we use 4 digits?
+          if ( info.AddressStart + 12 < 10000 )
+          {
+            lineSizeInBytes = 12;
+            info.NumBytes = 12;
+          }
+          return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
+        }
+        if ( ( jumpAddress < 0 )
+        ||   ( jumpAddress >= 65536 ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, "Jump target address is out of bounds" );
+          return ParseLineResult.RETURN_NULL;
+        }
+        paramsValid = true;
+      }
+      else if ( ( lineTokenInfos.Count > 1 )
+      &&        ( realNumParams == 2 ) )
+      {
+        // !basic <line number>,<jump address>
+        if ( !EvaluateTokens( lineIndex, poParams[0], 0, poParams[0].Count, out basicLineNumber ) )
+        {
+          // could not fully parse
+          info.NeededParsedExpression = lineTokenInfos;
+          info.Line = Line;
+          // can we use 4 digits?
+          if ( info.AddressStart + 12 < 10000 )
+          {
+            lineSizeInBytes = 12;
+            info.NumBytes = 12;
+          }
+          return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
+        }
+        if ( ( basicLineNumber < 0 )
+        ||   ( basicLineNumber > 63999 ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER, "Unsupported line number, must be in the range 0 to 63999" );
+          return ParseLineResult.RETURN_NULL;
+        }
+
+        if ( !EvaluateTokens( lineIndex, poParams[1], 0, poParams[1].Count, out jumpAddress ) )
+        {
+          // could not fully parse
+          info.NeededParsedExpression = lineTokenInfos;
+          info.Line = Line;
+          // can we use 4 digits?
+          if ( info.AddressStart + 12 < 10000 )
+          {
+            lineSizeInBytes = 12;
+            info.NumBytes = 12;
+          }
+          return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
+        }
+        if ( ( jumpAddress < 0 )
+        ||   ( jumpAddress >= 65536 ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, "Jump target address is out of bounds" );
+          return ParseLineResult.RETURN_NULL;
+        }
+        paramsValid = true;
+      }
+      else if ( ( lineTokenInfos.Count > 1 )
+      &&        ( realNumParams == 3 ) )
+      {
+        // !basic <line number>,<comment>,<jump address>
+        if ( !EvaluateTokens( lineIndex, poParams[0], 0, poParams[0].Count, out basicLineNumber ) )
+        {
+          // could not fully parse
+          info.NeededParsedExpression = lineTokenInfos;
+          info.Line = Line;
+          // can we use 4 digits?
+          if ( info.AddressStart + 12 < 10000 )
+          {
+            lineSizeInBytes = 12;
+            info.NumBytes = 12;
+          }
+          return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
+        }
+        if ( ( basicLineNumber < 0 )
+        ||   ( basicLineNumber > 63999 ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER, "Unsupported line number, must be in the range 0 to 63999" );
+          return ParseLineResult.RETURN_NULL;
+        }
+
+        if ( ( poParams[1].Count != 1 )
+        ||   ( poParams[1][0].Type != Types.TokenInfo.TokenType.LITERAL_STRING ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "String literal expected for comment" );
+          return ParseLineResult.RETURN_NULL;
+        }
+        basicComment = poParams[1][0].Content;
+
+        var commentDataTemp = Util.ToPETSCII( Util.RemoveQuotes( basicComment ) );
+        int   lengthOfCommentData = (int)commentDataTemp.Length;
+
+        if ( !EvaluateTokens( lineIndex, poParams[2], 0, poParams[2].Count, out jumpAddress ) )
+        {
+          // could not fully parse
+          info.NeededParsedExpression = lineTokenInfos;
+          info.Line = Line;
+          // can we use 4 digits?
+          if ( info.AddressStart + 12 + lengthOfCommentData < 10000 )
+          {
+            lineSizeInBytes = 12 + lengthOfCommentData;
+            info.NumBytes = 12 + lengthOfCommentData;
+          }
+          return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
+        }
+        if ( ( jumpAddress < 0 )
+        ||   ( jumpAddress >= 65536 ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, "Jump target address is out of bounds" );
+          return ParseLineResult.RETURN_NULL;
+        }
+        paramsValid = true;
+      }
+
+      if ( ( lineTokenInfos.Count != 1 )
+      &&   ( lineTokenInfos.Count != 2 ) 
+      &&   ( lineTokenInfos.Count != 3 ) )
+
+      if ( !paramsValid )
+      {
+        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected !basic [<jump address>] or !basic <line number>,<jump address> or !basic <line number>,<comment>,<jump address>" );
         return ParseLineResult.RETURN_NULL;
       }
 
-      int jumpAddress = -1;
+      /*
       if ( lineTokenInfos.Count == 1 )
       {
         // no jump address, auto-target after 2049, so it's always 4 digits
-        jumpAddress = info.AddressStart + 13;
+        // +1, we fix the offset later
+        int   endAddress = info.AddressStart + 8 + 5;
+        jumpAddress = endAddress - 5 + CalcNumDigits( endAddress );
       }
       else
       {
@@ -4536,16 +4707,47 @@ namespace C64Studio.Parser
           AddError( lineIndex, Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, "Jump target address is out of bounds" );
           return ParseLineResult.RETURN_NULL;
         }
+      }*/
+
+      if ( jumpAddress == -1 )
+      {
+        int   endAddress = info.AddressStart + 8 + 5;
+        jumpAddress = endAddress - 5 + CalcNumDigits( endAddress );
       }
 
-      int     numDigits = CalcNumDigits( jumpAddress );
+      numDigits = CalcNumDigits( jumpAddress );
 
-      jumpAddress -= 5 - numDigits;
+      var commentData = Util.ToPETSCII( Util.RemoveQuotes( basicComment ) );
+
+      /*
+      if ( jumpAddress != -1 )
+      {
+        jumpAddress -= 5 - numDigits;
+      }*/
 
       info.LineData = new GR.Memory.ByteBuffer();
 
-      info.LineData.AppendU8( (byte)( 0x0C - 5 + numDigits ) );
-      info.LineData.AppendHex( "08A0009E" );
+      // Startadresse der folgenden Programmzeile in der Reihenfolge Low - Byte, High - Byte($0000 kennzeichnet das Programmende ).
+      // Zeilennummer in der Form Low - Byte, High - Byte.
+      // Der eigentliche Programmcode (bis zu 250 Bytes) im Token-Format.
+      // Ein Null - Byte kennzeichnet das Ende der Programmzeile.
+
+      info.LineData.AppendU8( (byte)( 0x0b - 5 + numDigits ) );
+      // 0x08   high byte of address of next line
+      // 0xa000 line number 160 ?
+      // 0x9e   SYS
+      info.LineData.AppendHex( "08" );
+      info.LineData.AppendU16( (ushort)basicLineNumber );
+      info.LineData.AppendHex( "9E" );
+      int     lineLength = (int)info.LineData.Length;
+      info.LineData.SetU16At( 0, (ushort)( info.AddressStart + lineLength ) );
+
+      lineSizeInBytes = (int)info.LineData.Length + numDigits + 1 + (int)commentData.Length;
+
+      if ( jumpAddress == -1 )
+      {
+        jumpAddress = info.AddressStart + lineSizeInBytes + 2;
+      }
 
       if ( numDigits >= 5 )
       {
@@ -4564,7 +4766,14 @@ namespace C64Studio.Parser
         info.LineData.AppendU8( (byte)( 0x30 + ( ( jumpAddress / 10 ) % 10 ) ) );
       }
       info.LineData.AppendU8( (byte)( 0x30 + ( jumpAddress % 10 ) ) );
+
+      //info.LineData.AppendU8( 0x20 );
+      info.LineData.Append( commentData );
+
       info.LineData.AppendHex( "000000" );
+
+      lineSizeInBytes = (int)info.LineData.Length;
+      info.NumBytes = lineSizeInBytes;
 
       return ParseLineResult.OK;
     }
@@ -4585,7 +4794,7 @@ namespace C64Studio.Parser
       {
         return 3;
       }
-      if ( Number < 1000 )
+      if ( Number < 10000 )
       {
         return 4;
       }
