@@ -161,6 +161,16 @@ namespace C64Studio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap charscreen_text {
+            get {
+                object obj = ResourceManager.GetObject("charscreen_text", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon charset {
@@ -203,6 +213,16 @@ namespace C64Studio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DebugMemoryGoto {
+            get {
+                object obj = ResourceManager.GetObject("DebugMemoryGoto", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DebugStepInto {
             get {
                 object obj = ResourceManager.GetObject("DebugStepInto", resourceCulture);
@@ -210,16 +230,6 @@ namespace C64Studio.Properties {
             }
         }
         
-        /// <summary> 
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap. 
-        /// </summary> 
-        internal static System.Drawing.Bitmap DebugMemoryGoto { 
-            get { 
-                object obj = ResourceManager.GetObject("DebugMemoryGoto", resourceCulture); 
-                return ((System.Drawing.Bitmap)(obj)); 
-            } 
-        } 
-
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>

@@ -663,6 +663,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="c64.ico" />
+    <None Include="Resources\charscreen_text1.ico" />
+    <None Include="Resources\charscreen_text.ico" />
     <None Include="Resources\valuetable.ico" />
     <None Include="Resources\charscreen_colors_off.ico" />
     <None Include="Resources\charscreen_chars_off.ico" />

@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
       GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,6 +82,7 @@
       this.label9 = new System.Windows.Forms.Label();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
       this.labelInfo = new System.Windows.Forms.Label();
+      this.btnToolText = new System.Windows.Forms.RadioButton();
       this.btnToolSelect = new System.Windows.Forms.RadioButton();
       this.btnToolFill = new System.Windows.Forms.RadioButton();
       this.btnToolQuad = new System.Windows.Forms.RadioButton();
@@ -578,6 +579,7 @@
       this.tabEditor.Controls.Add(this.label9);
       this.tabEditor.Controls.Add(this.comboCharsetMode);
       this.tabEditor.Controls.Add(this.labelInfo);
+      this.tabEditor.Controls.Add(this.btnToolText);
       this.tabEditor.Controls.Add(this.btnToolSelect);
       this.tabEditor.Controls.Add(this.btnToolFill);
       this.tabEditor.Controls.Add(this.btnToolQuad);
@@ -663,6 +665,17 @@
       this.labelInfo.Size = new System.Drawing.Size(315, 23);
       this.labelInfo.TabIndex = 33;
       this.labelInfo.Text = "Pos: 0,0  Offset: $0000";
+      // 
+      // btnToolText
+      // 
+      this.btnToolText.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolText.Image = ((System.Drawing.Image)(resources.GetObject("btnToolText.Image")));
+      this.btnToolText.Location = new System.Drawing.Point(128, 432);
+      this.btnToolText.Name = "btnToolText";
+      this.btnToolText.Size = new System.Drawing.Size(24, 24);
+      this.btnToolText.TabIndex = 32;
+      this.btnToolText.UseVisualStyleBackColor = true;
+      this.btnToolText.CheckedChanged += new System.EventHandler(this.btnToolText_CheckedChanged);
       // 
       // btnToolSelect
       // 
@@ -1027,8 +1040,6 @@
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.CheckBox checkApplyCharacter;
     private System.Windows.Forms.CheckBox checkApplyColors;
-
-
-
+    private System.Windows.Forms.RadioButton btnToolText;
   }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C64Studio.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -16,7 +17,8 @@ namespace C64Studio
       RECTANGLE,
       FILLED_RECTANGLE,
       FILL,
-      SELECT
+      SELECT,
+      TEXT
     };
 
 
@@ -607,6 +609,16 @@ namespace C64Studio
 
         switch ( m_ToolMode )
         {
+          case ToolMode.TEXT:
+            if ( ( m_SelectedChar.X != charX )
+            ||   ( m_SelectedChar.Y != charY ) )
+            {
+              m_SelectedChar.X = charX;
+              m_SelectedChar.Y = charY;
+              Redraw();
+              pictureEditor.Invalidate();
+            }
+            break;
           case ToolMode.SINGLE_CHAR:
             if ( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] != (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) ) )
             {
@@ -782,21 +794,28 @@ namespace C64Studio
 
     private void SetCharacter( int X, int Y )
     {
+      SetCharacter( X, Y, m_CurrentChar, m_CurrentColor );
+    }
+
+
+
+    private void SetCharacter( int X, int Y, byte Char, byte Color )
+    {
       if ( ( m_AffectChars )
       &&   ( m_AffectColors ) )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, m_CurrentChar, m_CurrentColor );
-        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, Char, Color );
+        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( Char | ( Color << 8 ) );
       }
       else if ( m_AffectChars )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, m_CurrentChar, (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 8 ) );
-        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( m_CurrentChar | ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff00 ) );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, Char, (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 8 ) );
+        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( Char | ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff00 ) );
       }
       else if ( m_AffectColors )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff ), m_CurrentColor );
-        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff ) | ( m_CurrentColor << 8 ) );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff ), Color );
+        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff ) | ( Color << 8 ) );
       }
     }
 
@@ -1988,6 +2007,13 @@ namespace C64Studio
 
 
 
+    private void btnToolText_CheckedChanged( object sender, EventArgs e )
+    {
+      m_ToolMode = ToolMode.TEXT;
+    }
+
+
+
     private void CopyToClipboard()
     {
       // not only rectangular pieces
@@ -2117,6 +2143,100 @@ namespace C64Studio
 
     private void pictureEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
     {
+      if ( m_ToolMode == ToolMode.TEXT )
+      {
+        System.Windows.Forms.Keys bareKey = e.KeyData & ~( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.ShiftKey | System.Windows.Forms.Keys.Alt );
+        bareKey = e.KeyData;
+
+        bool    controlPushed = false;
+        bool    commodorePushed = false;
+        bool    shiftPushed = false;
+        if ( ( bareKey & System.Windows.Forms.Keys.Shift ) == System.Windows.Forms.Keys.Shift )
+        {
+          bareKey &= ~System.Windows.Forms.Keys.Shift;
+          shiftPushed = true;
+        }
+        if ( ( bareKey & System.Windows.Forms.Keys.Control ) == System.Windows.Forms.Keys.Control )
+        {
+          bareKey &= ~System.Windows.Forms.Keys.Control;
+          commodorePushed = true;
+        }
+        if ( GR.Win32.KeyboardInfo.GetKeyState( System.Windows.Forms.Keys.Tab ).IsPressed )
+        {
+          controlPushed = true;
+        }
+        if ( Core.Settings.BASICKeyMap.KeymapEntryExists( bareKey ) )
+        {
+          //Debug.Log( "KeyData " + bareKey );
+
+          var key = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
+
+          if ( !Types.ConstantData.PhysicalKeyInfo.ContainsKey( key.KeyboardKey ) )
+          {
+            Debug.Log( "No physical key info for " + key.KeyboardKey );
+          }
+          var physKey = Types.ConstantData.PhysicalKeyInfo[key.KeyboardKey];
+
+          C64Character    c64Key = physKey.Normal;
+          if ( shiftPushed )
+          {
+            c64Key = physKey.WithShift;
+            if ( c64Key == null )
+            {
+              c64Key = physKey.Normal;
+            }
+          }
+          if ( controlPushed )
+          {
+            c64Key = physKey.WithControl;
+            if ( c64Key == null )
+            {
+              c64Key = physKey.Normal;
+            }
+          }
+          if ( commodorePushed )
+          {
+            c64Key = physKey.WithCommodore;
+            if ( c64Key == null )
+            {
+              c64Key = physKey.Normal;
+            }
+          }
+
+          if ( c64Key != null )
+          {
+            byte    charIndex = c64Key.ScreenCodeValue;
+            int     charX = m_SelectedChar.X;
+            int     charY = m_SelectedChar.Y;
+            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ) );
+
+            if ( m_SelectedChar.X >= 39 )
+            {
+              m_SelectedChar.X = 0;
+              ++m_SelectedChar.Y;
+              if ( m_SelectedChar.Y >= 24 )
+              {
+                m_SelectedChar.Y = 0;
+              }
+            }
+            else
+            {
+              ++m_SelectedChar.X;
+            }
+            SetCharacter( charX, charY, charIndex, m_CurrentColor );
+            pictureEditor.DisplayPage.DrawTo( m_Image,
+                                              charX * 8, charY * 8,
+                                              ( charX - m_CharsetScreen.ScreenOffsetX ) * 8, ( charY - m_CharsetScreen.ScreenOffsetY ) * 8,
+                                              8, 8 );
+
+            Redraw();
+            Modified = true;
+            pictureEditor.Invalidate( new System.Drawing.Rectangle( charX * 8, charY * 8, 8, 8 ) );
+            pictureEditor.Invalidate( new System.Drawing.Rectangle( m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+          }
+        }
+      }
+
       if ( m_ToolMode == ToolMode.SELECT )
       {
         if ( ( e.Modifiers == Keys.Control )
@@ -2473,6 +2593,8 @@ namespace C64Studio
         checkApplyColors.Image = global::C64Studio.Properties.Resources.charscreen_colors_off.ToBitmap();
       }
     }
+
+
 
   }
 }
