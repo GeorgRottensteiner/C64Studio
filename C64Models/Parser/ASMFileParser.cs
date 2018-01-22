@@ -2605,7 +2605,7 @@ namespace C64Studio.Parser
                   if ( ( delta < -128 )
                   ||   ( delta > 127 ) )
                   {
-                    AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far" );
+                    AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
                     lineInfo.LineData.AppendU8( 0 );
                     //return false;
                   }
@@ -6265,7 +6265,7 @@ namespace C64Studio.Parser
                   {
                     AddError( lineIndex, 
                               Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, 
-                              "Relative jump too far",
+                              "Relative jump too far, trying to jump " + delta + " bytes",
                               lineTokenInfos[1].StartPos,
                               lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
                     info.LineData.AppendU8( 0 );
