@@ -4739,7 +4739,7 @@ namespace C64Studio.Parser
       info.LineData.AppendHex( "08" );
       info.LineData.AppendU16( (ushort)basicLineNumber );
       info.LineData.AppendHex( "9E" );
-      int     lineLength = (int)info.LineData.Length;
+      int     lineLength = (int)( 2 + 3 + numDigits + commentData.Length + 1 );
       info.LineData.SetU16At( 0, (ushort)( info.AddressStart + lineLength ) );
 
       lineSizeInBytes = (int)info.LineData.Length + numDigits + 1 + (int)commentData.Length;
