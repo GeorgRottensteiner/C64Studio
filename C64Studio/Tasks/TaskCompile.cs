@@ -231,14 +231,17 @@ namespace C64Studio.Tasks
                 combinedFileInfo = new C64Studio.Types.ASM.FileInfo();
               }
               // merge label info
-              foreach ( var entry in dependencyFileInfo.Labels )
+              if ( dependencyFileInfo != null )
               {
-                if ( !combinedFileInfo.Labels.ContainsKey( entry.Key ) )
+                foreach ( var entry in dependencyFileInfo.Labels )
                 {
-                  combinedFileInfo.Labels.Add( entry.Key, entry.Value );
+                  if ( !combinedFileInfo.Labels.ContainsKey( entry.Key ) )
+                  {
+                    combinedFileInfo.Labels.Add( entry.Key, entry.Value );
+                  }
                 }
+                //Debug.Log( "Doc " + Doc.Text + " receives " + dependencyFileInfo.Labels.Count + " dependency labels from dependency " + dependency.Filename );
               }
-              //Debug.Log( "Doc " + Doc.Text + " receives " + dependencyFileInfo.Labels.Count + " dependency labels from dependency " + dependency.Filename );
             }
           }
         }
@@ -299,9 +302,14 @@ namespace C64Studio.Tasks
             ( (Parser.ASMFileParser)parser ).ParseAndAddPreDefines( AdditionalPredefines );
           }
         }
+        else if ( parser is Parser.BasicFileParser )
+        {
+          // BASIC may receive symbols from assembly
+          Doc.ASMFileInfo = combinedFileInfo;
+        }
 
         if ( ( configSetting != null )
-        && ( !string.IsNullOrEmpty( configSetting.CustomBuild ) ) )
+        &&   ( !string.IsNullOrEmpty( configSetting.CustomBuild ) ) )
         {
           Core.AddToOutput( "Running custom build step on " + Doc.Element.Name + " with configuration " + ConfigSetting + System.Environment.NewLine );
           if ( !Core.MainForm.RunCommand( Doc, "custom build", configSetting.CustomBuild ) )

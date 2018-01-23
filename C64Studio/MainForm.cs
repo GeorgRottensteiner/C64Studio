@@ -4623,12 +4623,13 @@ namespace C64Studio
         //&&   ( element.Document != null ) )
         {
           if ( ( docToCompile != null )
-          && ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
+          &&   ( ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+          ||     ( element.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE ) ) )
           {
             if ( ( element.DocumentInfo.ASMFileInfo.LineInfo.Count != 0 )
-            && ( docToCompile.Compilable )
-            && ( !element.DocumentInfo.ASMFileInfo.IsDocumentPart( docToCompile.FullPath ) )
-            && ( !( element.IsDependentOn( docToCompile.FullPath ) ) ) )
+            &&   ( docToCompile.Compilable )
+            &&   ( !element.DocumentInfo.ASMFileInfo.IsDocumentPart( docToCompile.FullPath ) )
+            &&   ( !( element.IsDependentOn( docToCompile.FullPath ) ) ) )
             {
               return docToCompile;
             }
@@ -4938,7 +4939,8 @@ namespace C64Studio
             DocumentInfo docToHandle = DetermineDocumentToCompile();
             DocumentInfo docActive = DetermineDocument();
 
-            if ( docToDebug.Type != ProjectElement.ElementType.ASM_SOURCE )
+            if ( ( docToDebug.Type != ProjectElement.ElementType.ASM_SOURCE )
+            &&   ( docActive.Type != ProjectElement.ElementType.ASM_SOURCE ) )
             {
               break;
             }
