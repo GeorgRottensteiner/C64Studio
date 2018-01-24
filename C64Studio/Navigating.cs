@@ -31,10 +31,26 @@ namespace C64Studio
                                     Project ParsedProject )
     {
       CompileMessages = Messages;
-      Project         = ParsedProject;
-      this.ASMInfo    = ASMInfo;
+      Project = ParsedProject;
+      this.ASMInfo = ASMInfo;
 
       LastShownMessageIndex = -1;
+    }
+
+
+
+    public bool DocumentHasASMFileInfo( DocumentInfo Doc )
+    {
+      if ( Doc == null )
+      {
+        return false;
+      }
+      if ( ( Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
+      ||   ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -44,13 +60,11 @@ namespace C64Studio
       DocumentInfo possibleDoc = Core.MainForm.DetermineDocumentToCompile();
 
       if ( ( possibleDoc != null )
-      &&   ( ( possibleDoc.Type == ProjectElement.ElementType.ASM_SOURCE )
-      ||     ( possibleDoc.Type == ProjectElement.ElementType.BASIC_SOURCE ) ) )
+      &&   ( DocumentHasASMFileInfo( possibleDoc ) ) )
       {
         return possibleDoc.ASMFileInfo;
       }
-      if ( ( doc.Type == ProjectElement.ElementType.ASM_SOURCE )
-      ||   ( doc.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+      if ( DocumentHasASMFileInfo( doc ) )
       {
         return doc.ASMFileInfo;
       }
@@ -61,8 +75,7 @@ namespace C64Studio
 
     public Types.ASM.FileInfo DetermineLocalASMFileInfo( DocumentInfo doc )
     {
-      if ( ( doc.Type == ProjectElement.ElementType.ASM_SOURCE )
-      ||   ( doc.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+      if ( DocumentHasASMFileInfo( doc ) )
       {
         return doc.ASMFileInfo;
       }

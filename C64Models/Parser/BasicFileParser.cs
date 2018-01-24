@@ -122,6 +122,8 @@ namespace C64Studio.Parser
     public static GR.Collections.Map<byte, ActionToken>       ActionTokenByByteValue = new GR.Collections.Map<byte,ActionToken>();
     public ParserSettings       Settings = new ParserSettings();
 
+    public Types.ASM.FileInfo           ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
+    public Types.ASM.FileInfo           InitialFileInfo = null;
 
 
     static BasicFileParser()
@@ -475,6 +477,10 @@ namespace C64Studio.Parser
       string[] lines = Content.Split( '\n' );
 
       CleanLines( lines );
+
+      ASMFileInfo.Labels.Clear();
+      IncludePreviousSymbols();
+
       ProcessLines( lines, LabelMode );
 
       DumpSourceInfos();
@@ -485,6 +491,42 @@ namespace C64Studio.Parser
       }
 
       return true;
+    }
+
+
+
+    private void IncludePreviousSymbols()
+    {
+      // include previous symbols
+      if ( InitialFileInfo != null )
+      {
+        foreach ( var entry in InitialFileInfo.Labels )
+        {
+          if ( ( entry.Value.Type != C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_CONSTANT_1 )
+          &&   ( entry.Value.Type != C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_CONSTANT_2 )
+          &&   ( entry.Value.Type != C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_LABEL ) )
+          {
+            if ( ( entry.Value.Type == C64Studio.Types.SymbolInfo.Types.LABEL )
+            &&   ( entry.Key.StartsWith( ASMFileParser.InternalLabelPrefix ) ) )
+            {
+              // do not pass on internal local labels
+              continue;
+            }
+            C64Studio.Types.SymbolInfo    symbol = new C64Studio.Types.SymbolInfo();
+            symbol.AddressOrValue = entry.Value.AddressOrValue;
+            symbol.DocumentFilename = entry.Value.DocumentFilename;
+            symbol.LocalLineIndex = entry.Value.LocalLineIndex;
+            symbol.Name = entry.Value.Name;
+            symbol.Type = entry.Value.Type;
+            symbol.Used = true;
+            symbol.Zone = entry.Value.Zone;
+            symbol.FromDependency = true;
+            symbol.Info = entry.Value.Info;
+
+            ASMFileInfo.Labels.Add( entry.Key, symbol );
+          }
+        }
+      }
     }
 
 
@@ -737,7 +779,20 @@ namespace C64Studio.Parser
                 }
                 else
                 {
-                  AddError( lineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unknown macro " + macro );
+                  // do we have a label?
+                  if ( ASMFileInfo.Labels.ContainsKey( macro ) )
+                  {
+                    string value = ASMFileInfo.Labels[macro].AddressOrValue.ToString();
+
+                    for ( int i = 0; i < value.Length; ++i )
+                    {
+                      tempData.AppendU8( (byte)value[i] );
+                    }
+                  }
+                  else
+                  {
+                    AddError( lineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unknown macro " + macro );
+                  }
                 }
               }
             } 

@@ -5526,22 +5526,10 @@ namespace C64Studio.Parser
 
     Dictionary<string,string[]>   OrigLines = null;
 
-    private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration )
+
+
+    private void IncludePreviousSymbols()
     {
-      List<Types.ScopeInfo>   stackScopes = new List<C64Studio.Types.ScopeInfo>();
-      //List<Types.LoopInfo>    loopList = new List<C64Studio.Types.LoopInfo>();
-      GR.Collections.Map<string,Types.MacroFunctionInfo>     macroFunctions = new GR.Collections.Map<string,C64Studio.Types.MacroFunctionInfo>();
-
-      ASMFileInfo.Labels.Clear();
-      m_CurrentCommentSB = new StringBuilder();
-
-      if ( DoLogSourceInfo )
-      {
-        OrigLines = new Dictionary<string, string[]>();
-        OrigLines[ParentFilename] = new string[Lines.Length];
-        Array.Copy( Lines, OrigLines[ParentFilename], Lines.Length );
-      }
-
       // include previous symbols
       if ( InitialFileInfo != null )
       {
@@ -5572,6 +5560,28 @@ namespace C64Studio.Parser
           }
         }
       }
+    }
+
+
+
+
+    private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration )
+    {
+      List<Types.ScopeInfo>   stackScopes = new List<C64Studio.Types.ScopeInfo>();
+      //List<Types.LoopInfo>    loopList = new List<C64Studio.Types.LoopInfo>();
+      GR.Collections.Map<string,Types.MacroFunctionInfo>     macroFunctions = new GR.Collections.Map<string,C64Studio.Types.MacroFunctionInfo>();
+
+      ASMFileInfo.Labels.Clear();
+      m_CurrentCommentSB = new StringBuilder();
+
+      if ( DoLogSourceInfo )
+      {
+        OrigLines = new Dictionary<string, string[]>();
+        OrigLines[ParentFilename] = new string[Lines.Length];
+        Array.Copy( Lines, OrigLines[ParentFilename], Lines.Length );
+      }
+
+      IncludePreviousSymbols();
 
       ASMFileInfo.UnparsedLabels.Clear();
       ASMFileInfo.Zones.Clear();
