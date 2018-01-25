@@ -777,6 +777,24 @@ namespace C64Studio.Parser
                 {
                   tempData.AppendU8( petsciiValue );
                 }
+                else if ( macro.StartsWith( "$" ) )
+                {
+                  // a hex value?
+                  uint    hexValue = 0;
+
+                  if ( uint.TryParse( macro.Substring( 1 ), System.Globalization.NumberStyles.HexNumber, null, out hexValue ) )
+                  {
+                    string    value = hexValue.ToString();
+                    for ( int i = 0; i < value.Length; ++i )
+                    {
+                      tempData.AppendU8( (byte)value[i] );
+                    }
+                  }
+                  else
+                  {
+                    AddError( lineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unknown macro " + macro );
+                  }
+                }
                 else
                 {
                   // do we have a label?

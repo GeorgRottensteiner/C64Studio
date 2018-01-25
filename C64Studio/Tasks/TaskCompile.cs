@@ -208,7 +208,8 @@ namespace C64Studio.Tasks
             {
               Core.AddToOutput( "Dependency " + dependency.Filename + " is current for config " + ConfigSetting + System.Environment.NewLine );
 
-              if ( Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
+              if ( ( Doc.Type == ProjectElement.ElementType.ASM_SOURCE )
+              ||   ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
               {
                 dependencyFileInfo = elementDependency.DocumentInfo.ASMFileInfo;
                 //Debug.Log( "Doc " + Doc.Text + " receives " + dependencyFileInfo.Labels.Count + " dependency labels from dependency " + dependency.Filename );
