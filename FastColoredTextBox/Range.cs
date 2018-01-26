@@ -441,7 +441,7 @@ namespace FastColoredTextBoxNS
       if ( start.iChar < tb[start.iLine].Count )
       {
         if ( ( tb.AllowTabs )
-                  && ( tb[start.iLine][start.iChar].c == '\t' ) )
+        &&   ( tb[start.iLine][start.iChar].c == '\t' ) )
         {
           int delta = tb.TabLength - ( start.iChar % tb.TabLength );
           if ( delta == 0 )
@@ -643,6 +643,10 @@ namespace FastColoredTextBoxNS
       }
       for ( int i = 0; i < delta; ++i )
       {
+        if ( CharPos == 0 )
+        {
+          break;
+        }
         if ( tb[Line][CharPos - 1].c == '\t' )
         {
           --CharPos;
@@ -1447,10 +1451,14 @@ namespace FastColoredTextBoxNS
     public Range GetFragment( string allowedSymbolsPattern, RegexOptions options )
     {
       Range r = new Range( tb );
-      r.Start = Start;
+      //r.Start = Start;
+      r.Start = new Place( AdjustXPosForTabs( Start.iLine, Start.iChar ), Start.iLine );
       Regex regex = new Regex( allowedSymbolsPattern, options );
 
-      var match = regex.Match( tb[r.Start.iLine].Text );
+      //var match = regex.Match( tb[r.Start.iLine].Text );
+      string matchText = tb[r.Start.iLine].Text;
+      matchText = tb.ReTabifyLine( matchText, tb.TabLength );
+      var match = regex.Match( matchText );
 
       Place startFragment = r.Start;
       Place endFragment = r.Start;
