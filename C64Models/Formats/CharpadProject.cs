@@ -132,26 +132,38 @@ namespace C64Studio.Formats
         return false;
       }
       int version = Data.ByteAt( 3 );
-      if ( version != 4 )
+      if ( ( version != 4 )
+      &&   ( version != 5 ) )
       {
-        System.Windows.Forms.MessageBox.Show( "Currently only version 4 of Charpad project files is supported. Sorry!", "Unsupported version " + version );
+        System.Windows.Forms.MessageBox.Show( "Currently only version 4 or 5 of Charpad project files is supported. Sorry!", "Unsupported version " + version );
         return false;
       }
 
+      if ( version == 4 )
+      {
+        return LoadVersion4( Data );
+      }
+      return LoadVersion5( Data );
+    }
+
+
+
+    private bool LoadVersion4( GR.Memory.ByteBuffer Data )
+    {
       BackgroundColor = Data.ByteAt( 4 );
-      MultiColor1     = Data.ByteAt( 5 );
-      MultiColor2     = Data.ByteAt( 6 );
-      CustomColor     = Data.ByteAt( 7 );
+      MultiColor1 = Data.ByteAt( 5 );
+      MultiColor2 = Data.ByteAt( 6 );
+      CustomColor = Data.ByteAt( 7 );
       TileColorMode = (ColorMode)Data.ByteAt( 8 );
-      MultiColor      = ( Data.ByteAt( 9 ) != 0 );
+      MultiColor = ( Data.ByteAt( 9 ) != 0 );
 
-      NumChars    = Data.UInt16At( 10 ) + 1;
-      NumTiles    = Data.ByteAt( 12 ) + 1;
-      TileWidth   = Data.ByteAt( 13 );
-      TileHeight  = Data.ByteAt( 14 );
+      NumChars = Data.UInt16At( 10 ) + 1;
+      NumTiles = Data.ByteAt( 12 ) + 1;
+      TileWidth = Data.ByteAt( 13 );
+      TileHeight = Data.ByteAt( 14 );
 
-      MapWidth    = Data.UInt16At( 15 );
-      MapHeight   = Data.UInt16At( 17 );
+      MapWidth = Data.UInt16At( 15 );
+      MapHeight = Data.UInt16At( 17 );
 
       bool isExpanded = ( Data.ByteAt( 19 ) != 0 );
 
@@ -264,6 +276,149 @@ namespace C64Studio.Formats
       }
 
       MapData = Data.SubBuffer( offsetMapData, MapWidth * MapHeight );
+      return true;
+    }
+
+
+
+    private bool LoadVersion5( GR.Memory.ByteBuffer Data )
+    {
+      BackgroundColor = Data.ByteAt( 4 );
+      MultiColor1 = Data.ByteAt( 5 );
+      MultiColor2 = Data.ByteAt( 6 );
+      CustomColor = Data.ByteAt( 7 );
+      TileColorMode = (ColorMode)Data.ByteAt( 8 );
+
+      byte  flags = Data.ByteAt( 9 );
+      MultiColor = ( ( flags & 0x04 ) != 0 );
+      bool isExpanded = ( ( flags & 0x02 ) != 0 );
+
+      NumChars = Data.UInt16At( 10 ) + 1;
+      NumTiles = Data.UInt16At( 12 ) + 1;
+      TileWidth = Data.ByteAt( 14 );
+      TileHeight = Data.ByteAt( 15 );
+
+      MapWidth = Data.UInt16At( 16 );
+      MapHeight = Data.UInt16At( 18 );
+
+      
+
+      int offsetToCharAttribs = 20 + NumChars * 8;
+
+      for ( int charIndex = 0; charIndex < NumChars; ++charIndex )
+      {
+        SingleChar    newChar = new SingleChar();
+        newChar.Data = Data.SubBuffer( 20 + charIndex * 8, 8 );
+        if ( TileColorMode == ColorMode.PER_TILE_CELL )
+        {
+          newChar.Color = Data.ByteAt( offsetToCharAttribs + charIndex ) & 0x0f;
+        }
+        else
+        {
+          newChar.Color = CustomColor;
+        }
+
+        Characters.Add( newChar );
+      }
+
+      for ( int i = 0; i < NumTiles; ++i )
+      {
+        Tile tile = new Tile();
+
+        tile.CharData.Resize( (uint)( TileWidth * TileHeight * 2 ) );
+        tile.ColorData.Resize( (uint)( TileWidth * TileHeight ) );
+
+        Tiles.Add( tile );
+      }
+
+      if ( isExpanded )
+      {
+        byte curCharIndex = 0;
+        for ( int i = 0; i < NumTiles; ++i )
+        {
+          for ( int j = 0; j < TileWidth * TileHeight; ++j )
+          {
+            Tiles[i].CharData.SetU16At( j * 2, curCharIndex );
+            ++curCharIndex;
+          }
+        }
+      }
+      else
+      {
+        // CELL_DATA.      Size = NUM_TILES * TILE_SIZE * TILE_SIZE bytes * 2 bytes. (only exists if CHAR_DATA is not "Expanded")
+        int offsetCellData = 20 + NumChars * 8 + NumChars;
+        for ( int i = 0; i < NumTiles; ++i )
+        {
+          for ( int j = 0; j < TileWidth * TileHeight; ++j )
+          {
+            Tiles[i].CharData.SetU16At( j * 2, Data.UInt16At( offsetCellData + i * TileWidth * TileHeight * 2 + j * 2 ) );
+          }
+        }
+      }
+      // CELL_ATTRIBS.   Size = NUM_TILES * TILE_SIZE * TILE_SIZE bytes (exists for ALL modes)
+
+      int offsetCellAttribs = 20 + NumChars * 8 + NumChars;
+      if ( !isExpanded )
+      {
+        offsetCellAttribs += NumTiles * TileWidth * TileHeight * 2;
+      }
+      for ( int i = 0; i < NumTiles; ++i )
+      {
+        for ( int y = 0; y < TileHeight; ++y )
+        {
+          for ( int x = 0; x < TileWidth; ++x )
+          {
+            if ( TileColorMode == ColorMode.PER_TILE_CELL )
+            {
+              Tiles[i].ColorData.SetU8At( x + y * TileWidth, (byte)( Data.ByteAt( offsetCellAttribs + i * TileWidth * TileHeight + x + y * TileHeight ) & 0x0f ) );
+            }
+            else
+            {
+              Tiles[i].ColorData.SetU8At( x + y * TileWidth, (byte)CustomColor );
+            }
+          }
+        }
+      }
+
+      // TILE_ATTRIBS.   Size = NUM_TILES bytes (1 byte per tile = "RAM colour". only exists if COLOR_MODE = 1 (Per Tile)
+      int   offsetTileAttribs = offsetCellAttribs + NumTiles * TileWidth * TileHeight;
+      if ( TileColorMode == ColorMode.PER_TILE )
+      {
+        for ( int i = 0; i < NumTiles; ++i )
+        {
+          for ( int y = 0; y < TileHeight; ++y )
+          {
+            for ( int x = 0; x < TileWidth; ++x )
+            {
+              Tiles[i].ColorData.SetU8At( x + y * TileWidth, (byte)( Data.ByteAt( offsetTileAttribs + i ) & 0x0f ) );
+            }
+          }
+        }
+      }
+
+      /*
+      if ( TileColorMode == ColorMode.PER_TILE_CELL )
+      {
+        for ( int i = 0; i < NumTiles; ++i )
+        {
+          for ( int y = 0; y < TileHeight; ++y )
+          {
+            for ( int x = 0; x < TileWidth; ++x )
+            {
+              Tiles[i].ColorData.SetU8At( x + y * TileWidth, (byte)( Data.ByteAt( offsetCellAttribs + i * TileWidth * TileHeight + x + y * TileHeight ) & 0x0f ) );
+            }
+          }
+        }
+      }*/
+
+      // MAP_DATA.        Size =  MAP_WID x MAP_HEI bytes.
+      int offsetMapData = offsetTileAttribs;
+      if ( TileColorMode == ColorMode.PER_TILE )
+      {
+        offsetMapData += NumTiles;
+      }
+
+      MapData = Data.SubBuffer( offsetMapData, MapWidth * MapHeight * 2 );
       return true;
     }
 
