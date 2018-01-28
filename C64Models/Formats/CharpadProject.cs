@@ -290,6 +290,7 @@ namespace C64Studio.Formats
       TileColorMode = (ColorMode)Data.ByteAt( 8 );
 
       byte  flags = Data.ByteAt( 9 );
+      bool  noTiles = ( ( flags & 0x01 ) == 0 );
       MultiColor = ( ( flags & 0x04 ) != 0 );
       bool isExpanded = ( ( flags & 0x02 ) != 0 );
 
@@ -301,14 +302,37 @@ namespace C64Studio.Formats
       MapWidth = Data.UInt16At( 16 );
       MapHeight = Data.UInt16At( 18 );
 
-      
+      if ( noTiles )
+      {
+        // fake tiles
+        TileWidth = 1;
+        TileHeight = 1;
+        NumTiles = 256;
+      }
 
-      int offsetToCharAttribs = 20 + NumChars * 8;
 
+      int headerSize = 20;
+      int offsetToCharData = headerSize;
+      int offsetToCharAttribs = offsetToCharData + NumChars * 8;
+      int offsetToTileData = offsetToCharAttribs + NumChars;
+      int offsetToTileColors = offsetToTileData + NumTiles * TileWidth * TileHeight * 2;
+      if ( ( isExpanded )
+      ||   ( noTiles ) )
+      {
+        offsetToTileColors = offsetToTileData;
+      }
+      int offsetToMapData = offsetToTileColors + NumTiles;
+      if ( ( TileColorMode != ColorMode.PER_TILE )
+      ||   ( noTiles ) )
+      {
+        offsetToMapData = offsetToTileColors;
+      }
+
+      // char_data/char_attribs
       for ( int charIndex = 0; charIndex < NumChars; ++charIndex )
       {
         SingleChar    newChar = new SingleChar();
-        newChar.Data = Data.SubBuffer( 20 + charIndex * 8, 8 );
+        newChar.Data = Data.SubBuffer( offsetToCharData + charIndex * 8, 8 );
         if ( TileColorMode == ColorMode.PER_TILE_CELL )
         {
           newChar.Color = Data.ByteAt( offsetToCharAttribs + charIndex ) & 0x0f;
@@ -321,67 +345,60 @@ namespace C64Studio.Formats
         Characters.Add( newChar );
       }
 
-      for ( int i = 0; i < NumTiles; ++i )
+      // tile_data
+      if ( noTiles )
       {
-        Tile tile = new Tile();
-
-        tile.CharData.Resize( (uint)( TileWidth * TileHeight * 2 ) );
-        tile.ColorData.Resize( (uint)( TileWidth * TileHeight ) );
-
-        Tiles.Add( tile );
-      }
-
-      if ( isExpanded )
-      {
-        byte curCharIndex = 0;
         for ( int i = 0; i < NumTiles; ++i )
         {
-          for ( int j = 0; j < TileWidth * TileHeight; ++j )
-          {
-            Tiles[i].CharData.SetU16At( j * 2, curCharIndex );
-            ++curCharIndex;
-          }
+          Tile tile = new Tile();
+
+          tile.CharData.Resize( (uint)( TileWidth * TileHeight * 2 ) );
+          tile.CharData.SetU16At( 0, (ushort)i );
+
+          tile.ColorData.Resize( (uint)( TileWidth * TileHeight ) );
+          tile.ColorData.SetU8At( 0, (byte)CustomColor );
+
+          Tiles.Add( tile );
         }
       }
       else
       {
-        // CELL_DATA.      Size = NUM_TILES * TILE_SIZE * TILE_SIZE bytes * 2 bytes. (only exists if CHAR_DATA is not "Expanded")
-        int offsetCellData = 20 + NumChars * 8 + NumChars;
         for ( int i = 0; i < NumTiles; ++i )
         {
-          for ( int j = 0; j < TileWidth * TileHeight; ++j )
-          {
-            Tiles[i].CharData.SetU16At( j * 2, Data.UInt16At( offsetCellData + i * TileWidth * TileHeight * 2 + j * 2 ) );
-          }
-        }
-      }
-      // CELL_ATTRIBS.   Size = NUM_TILES * TILE_SIZE * TILE_SIZE bytes (exists for ALL modes)
+          Tile tile = new Tile();
 
-      int offsetCellAttribs = 20 + NumChars * 8 + NumChars;
-      if ( !isExpanded )
-      {
-        offsetCellAttribs += NumTiles * TileWidth * TileHeight * 2;
-      }
-      for ( int i = 0; i < NumTiles; ++i )
-      {
-        for ( int y = 0; y < TileHeight; ++y )
+          tile.CharData.Resize( (uint)( TileWidth * TileHeight * 2 ) );
+          tile.ColorData.Resize( (uint)( TileWidth * TileHeight ) );
+
+          Tiles.Add( tile );
+        }
+
+        if ( isExpanded )
         {
-          for ( int x = 0; x < TileWidth; ++x )
+          byte curCharIndex = 0;
+          for ( int i = 0; i < NumTiles; ++i )
           {
-            if ( TileColorMode == ColorMode.PER_TILE_CELL )
+            for ( int j = 0; j < TileWidth * TileHeight; ++j )
             {
-              Tiles[i].ColorData.SetU8At( x + y * TileWidth, (byte)( Data.ByteAt( offsetCellAttribs + i * TileWidth * TileHeight + x + y * TileHeight ) & 0x0f ) );
+              Tiles[i].CharData.SetU16At( j * 2, curCharIndex );
+              ++curCharIndex;
             }
-            else
+          }
+        }
+        else
+        {
+          // tile_data.      Size = NUM_TILES * TILE_WIDTH * TILE_HEIGHT bytes * 2 bytes. (only exists if CHAR_DATA is not "Expanded")
+          for ( int i = 0; i < NumTiles; ++i )
+          {
+            for ( int j = 0; j < TileWidth * TileHeight; ++j )
             {
-              Tiles[i].ColorData.SetU8At( x + y * TileWidth, (byte)CustomColor );
+              Tiles[i].CharData.SetU16At( j * 2, Data.UInt16At( offsetToTileData + i * TileWidth * TileHeight * 2 + j * 2 ) );
             }
           }
         }
       }
 
-      // TILE_ATTRIBS.   Size = NUM_TILES bytes (1 byte per tile = "RAM colour". only exists if COLOR_MODE = 1 (Per Tile)
-      int   offsetTileAttribs = offsetCellAttribs + NumTiles * TileWidth * TileHeight;
+      // TILE_COLOURS.   Size = NUM_TILES bytes (1 byte per tile = "RAM colour". only exists if COLOR_MODE = 1 (Per Tile)
       if ( TileColorMode == ColorMode.PER_TILE )
       {
         for ( int i = 0; i < NumTiles; ++i )
@@ -390,14 +407,41 @@ namespace C64Studio.Formats
           {
             for ( int x = 0; x < TileWidth; ++x )
             {
-              Tiles[i].ColorData.SetU8At( x + y * TileWidth, (byte)( Data.ByteAt( offsetTileAttribs + i ) & 0x0f ) );
+              Tiles[i].ColorData.SetU8At( x + y * TileWidth, (byte)( Data.ByteAt( offsetToTileColors + i ) & 0x0f ) );
             }
           }
         }
       }
-
+      else if ( TileColorMode == ColorMode.PER_TILE_CELL )
+      {
+        // with V5 this actually means per character
+        for ( int i = 0; i < NumTiles; ++i )
+        {
+          for ( int y = 0; y < TileHeight; ++y )
+          {
+            for ( int x = 0; x < TileWidth; ++x )
+            {
+              byte    charColor = (byte)Characters[Tiles[i].CharData.ByteAt( 2 * ( x + y * TileWidth ) )].Color;
+              Tiles[i].ColorData.SetU8At( x + y * TileWidth, charColor );
+            }
+          }
+        }
+      }
+      else if ( TileColorMode == ColorMode.GLOBAL )
+      {
+        for ( int i = 0; i < NumTiles; ++i )
+        {
+          for ( int y = 0; y < TileHeight; ++y )
+          {
+            for ( int x = 0; x < TileWidth; ++x )
+            {
+              Tiles[i].ColorData.SetU8At( x + y * TileWidth, (byte)CustomColor );
+            }
+          }
+        }
+      }
       /*
-      if ( TileColorMode == ColorMode.PER_TILE_CELL )
+      else if ( TileColorMode == ColorMode.PER_TILE_CELL )
       {
         for ( int i = 0; i < NumTiles; ++i )
         {
@@ -412,13 +456,19 @@ namespace C64Studio.Formats
       }*/
 
       // MAP_DATA.        Size =  MAP_WID x MAP_HEI bytes.
-      int offsetMapData = offsetTileAttribs;
-      if ( TileColorMode == ColorMode.PER_TILE )
-      {
-        offsetMapData += NumTiles;
-      }
+      // tile indices are now 16 bit! for now force 8bit
 
-      MapData = Data.SubBuffer( offsetMapData, MapWidth * MapHeight * 2 );
+      //MapData = Data.SubBuffer( offsetMapData, MapWidth * MapHeight * 2 );
+
+      MapData = new GR.Memory.ByteBuffer( (uint)( MapWidth * MapHeight ) );
+
+      for ( int i = 0; i < MapHeight; ++i )
+      {
+        for ( int j = 0; j < MapWidth; ++j )
+        {
+          MapData.SetU8At( i * MapWidth + j, Data.ByteAt( offsetToMapData + 2 * ( i * MapWidth + j ) ) );
+        }
+      }
       return true;
     }
 
