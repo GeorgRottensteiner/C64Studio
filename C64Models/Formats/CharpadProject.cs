@@ -360,6 +360,25 @@ namespace C64Studio.Formats
 
           Tiles.Add( tile );
         }
+        if ( NumChars < 256 )
+        {
+          // add all chars for safety reasons
+          for ( int i = NumChars; i < 256; ++i )
+          {
+            SingleChar    newChar = new SingleChar();
+            newChar.Data = new GR.Memory.ByteBuffer( 8 );
+            if ( TileColorMode == ColorMode.PER_TILE_CELL )
+            {
+              newChar.Color = Data.ByteAt( offsetToCharAttribs + i ) & 0x0f;
+            }
+            else
+            {
+              newChar.Color = CustomColor;
+            }
+
+            Characters.Add( newChar );
+          }
+        }
       }
       else
       {
