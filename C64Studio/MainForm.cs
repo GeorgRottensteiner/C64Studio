@@ -4975,9 +4975,19 @@ namespace C64Studio
                 }
               }
             }
+            // elements saving could have changed project settings, so save again
             foreach ( Project project in m_Solution.Projects )
             {
               SaveProject( project );
+            }
+            // save all changed non project files!
+            foreach ( BaseDocument doc in panelMain.Documents )
+            {
+              if ( ( doc.DocumentInfo.Element == null )
+              &&   ( doc.Modified ) )
+              {
+                doc.Save();
+              }
             }
           }
           else
