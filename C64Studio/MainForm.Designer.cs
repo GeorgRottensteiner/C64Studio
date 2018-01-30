@@ -122,24 +122,28 @@
       this.disassembleToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.breakpointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.calculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.charsetEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.charScreenEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.compileResulttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.debugMemoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.debugRegistersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.debugWatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.disassemblerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+      this.binaryEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.charsetEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.charScreenEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.graphicScreenEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mapEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.spriteEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+      this.calculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.compileResulttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.disassemblerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.outlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.outputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.petSCIITableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.searchReplaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.searchResultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.projectExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.spriteEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+      this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
       this.toolbarsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuWindowToolbarMain = new System.Windows.Forms.ToolStripMenuItem();
@@ -194,10 +198,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.binaryEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-      this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
-      this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+      this.valueTableEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -956,6 +957,7 @@
             this.graphicScreenEditorToolStripMenuItem,
             this.mapEditorToolStripMenuItem,
             this.spriteEditorToolStripMenuItem,
+            this.valueTableEditorToolStripMenuItem,
             this.toolStripSeparator13,
             this.calculatorToolStripMenuItem,
             this.compileResulttoolStripMenuItem,
@@ -980,30 +982,6 @@
       this.breakpointsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
       this.breakpointsToolStripMenuItem.Text = "Breakpoints";
       // 
-      // calculatorToolStripMenuItem
-      // 
-      this.calculatorToolStripMenuItem.Name = "calculatorToolStripMenuItem";
-      this.calculatorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-      this.calculatorToolStripMenuItem.Text = "Calculator";
-      // 
-      // charsetEditorToolStripMenuItem
-      // 
-      this.charsetEditorToolStripMenuItem.Name = "charsetEditorToolStripMenuItem";
-      this.charsetEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-      this.charsetEditorToolStripMenuItem.Text = "Charset Editor";
-      // 
-      // charScreenEditorToolStripMenuItem
-      // 
-      this.charScreenEditorToolStripMenuItem.Name = "charScreenEditorToolStripMenuItem";
-      this.charScreenEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-      this.charScreenEditorToolStripMenuItem.Text = "Char Screen Editor";
-      // 
-      // compileResulttoolStripMenuItem
-      // 
-      this.compileResulttoolStripMenuItem.Name = "compileResulttoolStripMenuItem";
-      this.compileResulttoolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-      this.compileResulttoolStripMenuItem.Text = "&Compile Result";
-      // 
       // debugMemoryToolStripMenuItem
       // 
       this.debugMemoryToolStripMenuItem.Name = "debugMemoryToolStripMenuItem";
@@ -1022,11 +1000,28 @@
       this.debugWatchToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
       this.debugWatchToolStripMenuItem.Text = "Debug &Watch";
       // 
-      // disassemblerToolStripMenuItem
+      // toolStripSeparator11
       // 
-      this.disassemblerToolStripMenuItem.Name = "disassemblerToolStripMenuItem";
-      this.disassemblerToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-      this.disassemblerToolStripMenuItem.Text = "Disassembler";
+      this.toolStripSeparator11.Name = "toolStripSeparator11";
+      this.toolStripSeparator11.Size = new System.Drawing.Size(184, 6);
+      // 
+      // binaryEditorToolStripMenuItem
+      // 
+      this.binaryEditorToolStripMenuItem.Name = "binaryEditorToolStripMenuItem";
+      this.binaryEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.binaryEditorToolStripMenuItem.Text = "Binary Editor";
+      // 
+      // charsetEditorToolStripMenuItem
+      // 
+      this.charsetEditorToolStripMenuItem.Name = "charsetEditorToolStripMenuItem";
+      this.charsetEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.charsetEditorToolStripMenuItem.Text = "Charset Editor";
+      // 
+      // charScreenEditorToolStripMenuItem
+      // 
+      this.charScreenEditorToolStripMenuItem.Name = "charScreenEditorToolStripMenuItem";
+      this.charScreenEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.charScreenEditorToolStripMenuItem.Text = "Char Screen Editor";
       // 
       // graphicScreenEditorToolStripMenuItem
       // 
@@ -1034,17 +1029,40 @@
       this.graphicScreenEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
       this.graphicScreenEditorToolStripMenuItem.Text = "Graphic Screen Editor";
       // 
-      // helpToolStripMenuItem
-      // 
-      this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-      this.helpToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-      this.helpToolStripMenuItem.Text = "&Help";
-      // 
       // mapEditorToolStripMenuItem
       // 
       this.mapEditorToolStripMenuItem.Name = "mapEditorToolStripMenuItem";
       this.mapEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
       this.mapEditorToolStripMenuItem.Text = "Map Editor";
+      // 
+      // spriteEditorToolStripMenuItem
+      // 
+      this.spriteEditorToolStripMenuItem.Name = "spriteEditorToolStripMenuItem";
+      this.spriteEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.spriteEditorToolStripMenuItem.Text = "Sprite Editor";
+      // 
+      // toolStripSeparator13
+      // 
+      this.toolStripSeparator13.Name = "toolStripSeparator13";
+      this.toolStripSeparator13.Size = new System.Drawing.Size(184, 6);
+      // 
+      // calculatorToolStripMenuItem
+      // 
+      this.calculatorToolStripMenuItem.Name = "calculatorToolStripMenuItem";
+      this.calculatorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.calculatorToolStripMenuItem.Text = "Calculator";
+      // 
+      // compileResulttoolStripMenuItem
+      // 
+      this.compileResulttoolStripMenuItem.Name = "compileResulttoolStripMenuItem";
+      this.compileResulttoolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.compileResulttoolStripMenuItem.Text = "&Compile Result";
+      // 
+      // disassemblerToolStripMenuItem
+      // 
+      this.disassemblerToolStripMenuItem.Name = "disassemblerToolStripMenuItem";
+      this.disassemblerToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.disassemblerToolStripMenuItem.Text = "Disassembler";
       // 
       // outlineToolStripMenuItem
       // 
@@ -1082,11 +1100,16 @@
       this.projectExplorerToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
       this.projectExplorerToolStripMenuItem.Text = "Solution &Explorer";
       // 
-      // spriteEditorToolStripMenuItem
+      // toolStripSeparator12
       // 
-      this.spriteEditorToolStripMenuItem.Name = "spriteEditorToolStripMenuItem";
-      this.spriteEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-      this.spriteEditorToolStripMenuItem.Text = "Sprite Editor";
+      this.toolStripSeparator12.Name = "toolStripSeparator12";
+      this.toolStripSeparator12.Size = new System.Drawing.Size(184, 6);
+      // 
+      // helpToolStripMenuItem
+      // 
+      this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+      this.helpToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.helpToolStripMenuItem.Text = "&Help";
       // 
       // toolStripSeparator8
       // 
@@ -1136,7 +1159,7 @@
       // helpToolStripMenuItem1
       // 
       this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
-      this.helpToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+      this.helpToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
       this.helpToolStripMenuItem1.Tag = "HELP";
       this.helpToolStripMenuItem1.Text = "&Help";
       this.helpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
@@ -1144,19 +1167,19 @@
       // toolStripSeparator5
       // 
       this.toolStripSeparator5.Name = "toolStripSeparator5";
-      this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
+      this.toolStripSeparator5.Size = new System.Drawing.Size(110, 6);
       // 
       // licenseToolStripMenuItem
       // 
       this.licenseToolStripMenuItem.Name = "licenseToolStripMenuItem";
-      this.licenseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.licenseToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
       this.licenseToolStripMenuItem.Text = "License";
       this.licenseToolStripMenuItem.Click += new System.EventHandler(this.licenseToolStripMenuItem_Click_1);
       // 
       // aboutToolStripMenuItem1
       // 
       this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-      this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+      this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
       this.aboutToolStripMenuItem1.Text = "&About";
       this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
       // 
@@ -1599,26 +1622,11 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
-      // binaryEditorToolStripMenuItem
+      // valueTableEditorToolStripMenuItem
       // 
-      this.binaryEditorToolStripMenuItem.Name = "binaryEditorToolStripMenuItem";
-      this.binaryEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-      this.binaryEditorToolStripMenuItem.Text = "Binary Editor";
-      // 
-      // toolStripSeparator11
-      // 
-      this.toolStripSeparator11.Name = "toolStripSeparator11";
-      this.toolStripSeparator11.Size = new System.Drawing.Size(184, 6);
-      // 
-      // toolStripSeparator12
-      // 
-      this.toolStripSeparator12.Name = "toolStripSeparator12";
-      this.toolStripSeparator12.Size = new System.Drawing.Size(184, 6);
-      // 
-      // toolStripSeparator13
-      // 
-      this.toolStripSeparator13.Name = "toolStripSeparator13";
-      this.toolStripSeparator13.Size = new System.Drawing.Size(184, 6);
+      this.valueTableEditorToolStripMenuItem.Name = "valueTableEditorToolStripMenuItem";
+      this.valueTableEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.valueTableEditorToolStripMenuItem.Text = "Value Table Editor";
       // 
       // MainForm
       // 
@@ -1826,6 +1834,7 @@
     private System.Windows.Forms.ToolStripMenuItem binaryEditorToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+    private System.Windows.Forms.ToolStripMenuItem valueTableEditorToolStripMenuItem;
   }
 }
 

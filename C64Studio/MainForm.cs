@@ -42,6 +42,7 @@ namespace C64Studio
     public Calculator             m_Calculator = null;
     public PetSCIITable           m_PetSCIITable = null;
     public Outline                m_Outline = new Outline();
+    public ValueTableEditor       m_ValueTableEditor = null;
     public Help                   m_Help = new Help();
     public FormFindReplace        m_FindReplace = new FormFindReplace();
 
@@ -575,6 +576,7 @@ namespace C64Studio
       m_MapEditor           = new MapEditor( StudioCore );
       m_Disassembler        = new Disassembler( StudioCore );
       m_DebugMemory         = new DebugMemory( StudioCore );
+      m_ValueTableEditor    = new ValueTableEditor( StudioCore );
 
       m_BinaryEditor.SetInternal();
       m_CharsetEditor.SetInternal();
@@ -583,6 +585,7 @@ namespace C64Studio
       m_CharScreenEditor.SetInternal();
       m_MapEditor.SetInternal();
       m_Disassembler.SetInternal();
+      m_ValueTableEditor.SetInternal();
 
       // build default panes
       AddToolWindow( ToolWindowType.OUTLINE, m_Outline, DockState.DockRight, outlineToolStripMenuItem, true, true );
@@ -607,6 +610,7 @@ namespace C64Studio
       AddToolWindow( ToolWindowType.HELP, m_Help, DockState.Document, helpToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.FIND_REPLACE, m_FindReplace, DockState.Float, searchReplaceToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.SEARCH_RESULTS, m_SearchResults, DockState.DockBottom, searchResultsToolStripMenuItem, false, false );
+      AddToolWindow( ToolWindowType.VALUE_TABLE_EDITOR, m_ValueTableEditor, DockState.Document, valueTableEditorToolStripMenuItem, false, false );
 
       var viceDebugger = StudioCore.Debugging.Debugger as VICERemoteDebugger;
       viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );

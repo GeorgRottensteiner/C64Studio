@@ -37,7 +37,15 @@ namespace C64Studio
       pictureGraphPreview.DisplayPage.Box( 0, 0, pictureGraphPreview.DisplayPage.Width, pictureGraphPreview.DisplayPage.Height, (uint)System.Drawing.SystemColors.Window.ToArgb() );
       pictureGraphPreview.Invalidate();
 
+      // default values
+      m_Project.ValueTable.StartValue = "0";
+      m_Project.ValueTable.StepValue = "1";
+      m_Project.ValueTable.Formula = "x*2";
+      m_Project.ValueTable.EndValue = "10";
+
       RefreshDisplayOptions();
+
+      GenerateValues();
     }
 
 
@@ -134,6 +142,14 @@ namespace C64Studio
       saveValueTableProjectToolStripMenuItem.Enabled = true;
       closeValueTableProjectToolStripMenuItem.Enabled = true;
       return true;
+    }
+
+
+
+    protected override void OnCreateControl()
+    {
+      base.OnCreateControl();
+      RedrawPreview();
     }
 
 
