@@ -27,6 +27,7 @@ namespace C64Studio
 
     public SolutionExplorer       m_SolutionExplorer = new SolutionExplorer();
 
+    public BinaryDisplay          m_BinaryEditor = null;
     public DebugRegisters         m_DebugRegisters = new DebugRegisters();
     public DebugWatch             m_DebugWatch = new DebugWatch();
     public DebugMemory            m_DebugMemory = null;
@@ -564,6 +565,7 @@ namespace C64Studio
       StudioCore.Debugging.Debugger = new VICERemoteDebugger( StudioCore );
       StudioCore.Debugging.Debugger.DebugEvent += Debugger_DebugEvent;
 
+      m_BinaryEditor        = new BinaryDisplay( StudioCore, new GR.Memory.ByteBuffer( 2 ), true, false );
       m_CharsetEditor       = new CharsetEditor( StudioCore );
       m_SpriteEditor        = new SpriteEditor( StudioCore );
       m_GraphicScreenEditor = new GraphicScreenEditor( StudioCore );
@@ -574,6 +576,7 @@ namespace C64Studio
       m_Disassembler        = new Disassembler( StudioCore );
       m_DebugMemory         = new DebugMemory( StudioCore );
 
+      m_BinaryEditor.SetInternal();
       m_CharsetEditor.SetInternal();
       m_SpriteEditor.SetInternal();
       m_GraphicScreenEditor.SetInternal();
@@ -583,6 +586,7 @@ namespace C64Studio
 
       // build default panes
       AddToolWindow( ToolWindowType.OUTLINE, m_Outline, DockState.DockRight, outlineToolStripMenuItem, true, true );
+      AddToolWindow( ToolWindowType.BINARY_EDITOR, m_BinaryEditor, DockState.Document, binaryEditorToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.SOLUTION_EXPLORER, m_SolutionExplorer, DockState.DockRight, projectExplorerToolStripMenuItem, true, true );
       AddToolWindow( ToolWindowType.OUTPUT, m_Output, DockState.DockBottom, outputToolStripMenuItem, true, true );
       AddToolWindow( ToolWindowType.COMPILE_RESULT, m_CompileResult, DockState.DockBottom, compileResulttoolStripMenuItem, true, true );

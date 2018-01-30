@@ -61,7 +61,9 @@ namespace C64Studio
     [Description( "SearchResults" )]
     SEARCH_RESULTS,
     [Description( "Disassembler" )]
-    DISASSEMBLER
+    DISASSEMBLER,
+    [Description( "Binary Editor" )]
+    BINARY_EDITOR
   };
 
   public enum MemoryDisplayType
