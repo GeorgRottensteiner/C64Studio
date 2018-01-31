@@ -225,6 +225,8 @@ namespace FastColoredTextBoxNS
       timer2.Tick += timer2_Tick;
       timer3.Tick += timer3_Tick;
       middleClickScrollingTimer.Tick += middleClickScrollingTimer_Tick;
+
+      WordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
     }
 
     private char[] autoCompleteBracketsList = { '(', ')', '{', '}', '[', ']', '"', '"', '\'', '\'' };

@@ -23,6 +23,8 @@ namespace C64Studio
     private FastColoredTextBoxNS.TextStyle[]  m_TextStyles = new FastColoredTextBoxNS.TextStyle[(int)Types.ColorableElement.LAST_ENTRY];
     private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
 
+    private string                            m_CurrentHighlightText = null;
+
 
     public override int CursorLine
     {
@@ -150,6 +152,7 @@ namespace C64Studio
       editSource.KeyUp += new System.Windows.Forms.KeyEventHandler( editSource_KeyUp );
       editSource.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler( editSource_PreviewKeyDown );
       editSource.TextChanged += new EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>( editSource_TextChanged );
+      editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
 
       ///editSource.Scrolling.HorizontalScrollWidth = 3000;
 
@@ -161,6 +164,54 @@ namespace C64Studio
       m_ToolTip.Popup += new System.Windows.Forms.PopupEventHandler( m_ToolTip_Popup );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+    }
+
+
+
+    void editSource_SelectionChangedDelayed( object sender, EventArgs e )
+    {
+      string    newHighlightText = null;
+      if ( editSource.Selection.End.iLine != editSource.Selection.Start.iLine )
+      {
+        // no extra highlight 
+        newHighlightText = null;
+      }
+      else
+      {
+        newHighlightText = editSource.SelectedText;
+      }
+      if ( string.IsNullOrEmpty( newHighlightText ) )
+      {
+        newHighlightText = null;
+      }
+      if ( m_CurrentHighlightText != newHighlightText )
+      {
+        if ( !string.IsNullOrEmpty( m_CurrentHighlightText ) )
+        {
+          editSource.Range.ClearStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS )] );
+        }
+
+        m_CurrentHighlightText = newHighlightText;
+        //ResetStyles( editSource.Range );
+        if ( !string.IsNullOrEmpty( m_CurrentHighlightText ) )
+        {
+          string    regex = m_CurrentHighlightText.Replace( @"\", @"\\" );
+          regex = regex.Replace( @"^", @"\^" );
+          regex = regex.Replace( @"$", @"\$" );
+          regex = regex.Replace( @".", @"\." );
+          regex = regex.Replace( @"|", @"\|" );
+          regex = regex.Replace( @"?", @"\?" );
+          regex = regex.Replace( @"*", @"\*" );
+          regex = regex.Replace( @"+", @"\+" );
+          regex = regex.Replace( @"-", @"\-" );
+          regex = regex.Replace( @"(", @"\(" );
+          regex = regex.Replace( @")", @"\)" );
+          regex = regex.Replace( @"{", @"\{" );
+          regex = regex.Replace( @"[", @"\[" );
+
+          editSource.Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS )], regex );
+        }
+      }
     }
 
 
@@ -210,6 +261,7 @@ namespace C64Studio
       ApplySyntaxColoring( Types.ColorableElement.CURRENT_DEBUG_LINE );
       ApplySyntaxColoring( Types.ColorableElement.NONE );
       ApplySyntaxColoring( Types.ColorableElement.PSEUDO_OP );
+      ApplySyntaxColoring( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS );
 
       editSource.CommentPrefix = "REM";
 
@@ -229,36 +281,43 @@ namespace C64Studio
 
       switch ( Element )
       {
-        case C64Studio.Types.ColorableElement.CODE:
-          value = 7;
+        case C64Studio.Types.ColorableElement.EMPTY_SPACE:
+          value = 0;
+          break;
+        case C64Studio.Types.ColorableElement.CURRENT_DEBUG_LINE:
+          value = 1;
+          break;
+        case C64Studio.Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS:
+          value = 2;
           break;
         case C64Studio.Types.ColorableElement.COMMENT:
           value = 3;
           break;
-        case C64Studio.Types.ColorableElement.CURRENT_DEBUG_LINE:
-          value = 2;
-          break;
-        case C64Studio.Types.ColorableElement.EMPTY_SPACE:
-          value = 1;
-          break;
-        case C64Studio.Types.ColorableElement.LABEL:
-          value = 8;
+        case C64Studio.Types.ColorableElement.LITERAL_STRING:
+          value = 4;
           break;
         case C64Studio.Types.ColorableElement.LITERAL_NUMBER:
           value = 5;
           break;
-        case C64Studio.Types.ColorableElement.LITERAL_STRING:
-          value = 4;
-          break;
         case C64Studio.Types.ColorableElement.OPERATOR:
-          value = 0;
-          break;
-        case C64Studio.Types.ColorableElement.PSEUDO_OP:
           value = 6;
           break;
-        case C64Studio.Types.ColorableElement.NONE:
+        case C64Studio.Types.ColorableElement.PSEUDO_OP:
+          value = 7;
+          break;
+        case C64Studio.Types.ColorableElement.CODE:
+          value = 8;
+          break;
+        case C64Studio.Types.ColorableElement.LABEL:
           value = 9;
           break;
+        case C64Studio.Types.ColorableElement.ERROR_UNDERLINE:
+          value = 10;
+          break;
+        case C64Studio.Types.ColorableElement.NONE:
+          value = 11;
+          break;
+
       }
       return value;
     }
