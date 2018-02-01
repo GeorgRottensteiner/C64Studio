@@ -641,13 +641,19 @@ namespace FastColoredTextBoxNS
       {
         delta = tb.TabLength;
       }
+      var  curLine = tb[Line];
       for ( int i = 0; i < delta; ++i )
       {
         if ( CharPos == 0 )
         {
           break;
         }
-        if ( tb[Line][CharPos - 1].c == '\t' )
+        if ( CharPos - 1 >= curLine.Length )
+        {
+          --CharPos;
+          continue;
+        }
+        if ( curLine[CharPos - 1].c == '\t' )
         {
           --CharPos;
         }

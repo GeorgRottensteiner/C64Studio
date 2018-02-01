@@ -95,6 +95,16 @@ namespace FastColoredTextBoxNS
 
 
 
+        public int Length
+        {
+          get
+          {
+            return chars.Count;
+          }
+        }
+
+
+
         public void AddTabified( string Text )
         {
           int     curPos = chars.Count;
