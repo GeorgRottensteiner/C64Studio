@@ -159,6 +159,8 @@ namespace C64Studio
       ///editSource.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
       editSource.TabLength = Core.Settings.TabSize;
 
+      //editSource.OnSyntaxHighlight
+
       m_ToolTip.Active = true;
       m_ToolTip.SetToolTip( editSource, "x" );
       m_ToolTip.Popup += new System.Windows.Forms.PopupEventHandler( m_ToolTip_Popup );
@@ -1204,7 +1206,6 @@ namespace C64Studio
           {
             return base.ProcessCmdKey( ref msg, keyData );
           }
-          //editSource.SelectedText = MapToAction( key, modifier, charToLookFor );
           if ( ( m_SymbolMode )
           ||   ( c64Key.Replacements.Count == 0 ) )
           {
@@ -1217,73 +1218,6 @@ namespace C64Studio
           }
           return true;
         }
-        /*
-        char          charToLookFor = key.Normal;
-        KeyModifier   modifier = KeyModifier.NORMAL;
-        if ( shiftPushed )
-        {
-          modifier = KeyModifier.SHIFT;
-          charToLookFor = key.Shifted;
-          if ( key.Shifted == '\"' )
-          {
-            m_StringEnterMode = !m_StringEnterMode;
-          }
-
-          if ( !m_StringEnterMode )
-          {
-            // BASIC short cut?
-            if ( shiftPushed )
-            {
-              if ( ( key.Normal >= 'A' )
-              &&   ( key.Normal <= 'Z' ) )
-              {
-                // could be a token
-                string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
-                if ( ( leftText.Length >= 1 )
-                &&   ( leftText[leftText.Length - 1] >= 'A' )
-                &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
-                {
-                  leftText = leftText.ToLower() + (char)keyData;
-                  foreach ( var opcode in Parser.BasicFileParser.m_Opcodes.Values )
-                  {
-                    if ( ( opcode.ShortCut != null )
-                    && ( opcode.ShortCut.Length <= leftText.Length )
-                    && ( string.Compare( opcode.ShortCut, 0, leftText, leftText.Length - opcode.ShortCut.Length, opcode.ShortCut.Length ) == 0 ) )
-                    {
-                      editSource.SelectedText = opcode.Command.Substring( opcode.ShortCut.Length - 1 );
-                      return true;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if ( commodorePushed )
-        {
-          modifier = KeyModifier.COMMODORE;
-          charToLookFor = key.Commodore;
-        }
-        if ( controlPushed )
-        {
-          modifier = KeyModifier.CONTROL;
-          charToLookFor = key.Controlled;
-        }
-        if ( charToLookFor != 65535 )
-        {
-          var c64Key = FindPhysicalKey( key, modifier, charToLookFor );
-          if ( ( c64Key != null )
-          &&   ( ( ( !m_StringEnterMode )
-          &&       ( ( c64Key.Type == KeyType.GRAPHIC_SYMBOL ) 
-          ||         ( c64Key.Type == KeyType.CONTROL_CODE ) ) )
-          ||     ( c64Key.Type == KeyType.EDITOR_CONTROL_CODE ) ) )
-          {
-            return base.ProcessCmdKey( ref msg, keyData );
-          }
-          editSource.SelectedText = MapToAction( key, modifier, charToLookFor );
-          return true;
-        }
-         */
         return base.ProcessCmdKey( ref msg, keyData );
       }
       else
@@ -1331,25 +1265,6 @@ namespace C64Studio
         }
       }
       return null;*/
-    }
-
-
-
-    private string MapToAction( KeymapEntry Key, KeyModifier Modifier, char UnicodeChar )
-    {
-      var     c64Char = FindPhysicalKey( Key, Modifier, UnicodeChar );
-      if ( c64Char == null )
-      {
-        return "" + UnicodeChar;
-      }
-
-      if ( ( !Parser.BasicFileParser.ActionTokenByByteValue.ContainsKey( c64Char.PetSCIIValue ) )
-      ||   ( m_SymbolMode ) )
-      {
-        //Debug.Log( "Trying to map unknown token: " + key.ToString() );
-        return "" + c64Char.CharValue;
-      }
-      return Parser.BasicFileParser.ActionTokenByByteValue[c64Char.PetSCIIValue].Replacement;
     }
 
 

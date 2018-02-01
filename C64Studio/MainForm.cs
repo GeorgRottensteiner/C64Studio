@@ -4634,7 +4634,8 @@ namespace C64Studio
           &&   ( ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
           ||     ( element.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE ) ) )
           {
-            if ( ( element.DocumentInfo.ASMFileInfo.LineInfo.Count != 0 )
+            if ( ( element.DocumentInfo.ASMFileInfo != null )
+            &&   ( element.DocumentInfo.ASMFileInfo.LineInfo.Count != 0 )
             &&   ( docToCompile.Compilable )
             &&   ( !element.DocumentInfo.ASMFileInfo.IsDocumentPart( docToCompile.FullPath ) )
             &&   ( !( element.IsDependentOn( docToCompile.FullPath ) ) ) )
