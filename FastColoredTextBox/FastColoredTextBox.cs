@@ -2477,6 +2477,14 @@ namespace FastColoredTextBoxNS
     [Description( "It occurs when visible char is enetered (alphabetic, digit, punctuation, DEL, BACKSPACE)." )]
     public event KeyPressEventHandler KeyPressed;
 
+
+    /// <summary>
+    /// Occurs when a word is to be selected (double click)
+    /// </summary>
+    [Browsable( true )]
+    [Description( "Occurs when a word is to be selected (double click)" )]
+    public event EventHandler<SelectingWordEventArgs> SelectingWord;
+
     /// <summary>
     /// It occurs when calculates AutoIndent for new line
     /// </summary>
@@ -3105,22 +3113,22 @@ namespace FastColoredTextBoxNS
       }
       else
         if ( LinesCount == 1 )
+      {
+        Selection.SelectAll();
+        Copy();
+        ClearSelected();
+      }
+      else
+      {
+        Copy();
+        //remove current line
+        if ( Selection.Start.iLine >= 0 && Selection.Start.iLine < LinesCount )
         {
-          Selection.SelectAll();
-          Copy();
-          ClearSelected();
+          int iLine = Selection.Start.iLine;
+          RemoveLines( new List<int> { iLine } );
+          Selection.Start = new Place( 0, Math.Max( 0, Math.Min( iLine, LinesCount - 1 ) ) );
         }
-        else
-        {
-          Copy();
-          //remove current line
-          if ( Selection.Start.iLine >= 0 && Selection.Start.iLine < LinesCount )
-          {
-            int iLine = Selection.Start.iLine;
-            RemoveLines( new List<int> { iLine } );
-            Selection.Start = new Place( 0, Math.Max( 0, Math.Min( iLine, LinesCount - 1 ) ) );
-          }
-        }
+      }
     }
 
     /// <summary>
@@ -3141,10 +3149,10 @@ namespace FastColoredTextBoxNS
       if ( Pasting != null )
       {
         var args = new TextChangingEventArgs
-                       {
-                         Cancel = false,
-                         InsertingText = text
-                       };
+        {
+          Cancel = false,
+          InsertingText = text
+        };
 
         Pasting( this, args );
 
@@ -3752,7 +3760,7 @@ namespace FastColoredTextBoxNS
           }
           else
             if ( !char.IsLetterOrDigit( c ) && c != '_' && c != '\'' && c != '\xa0' )
-              cutOff = Math.Min( i + 1, line.Count - 1 );
+            cutOff = Math.Min( i + 1, line.Count - 1 );
         }
 
         segmentLength++;
@@ -4170,7 +4178,7 @@ namespace FastColoredTextBoxNS
                 Selection = new Range( this, line.StartSpacesCount, sel.Start.iLine, line.Count, sel.Start.iLine );
               else
                 if ( sel.Start.iChar == line.Count && sel.End.iChar == 0 )
-                  Selection = new Range( this, line.Count, sel.Start.iLine, line.StartSpacesCount, sel.Start.iLine );
+                Selection = new Range( this, line.Count, sel.Start.iLine, line.StartSpacesCount, sel.Start.iLine );
             }
 
 
@@ -4374,7 +4382,7 @@ namespace FastColoredTextBoxNS
           break;
         case FCTBAction.CopyLineUp:
           if ( ( !Selection.ColumnSelectionMode )
-          &&   ( Selection.Start.iLine > 0 ) )
+          && ( Selection.Start.iLine > 0 ) )
           {
             CopyLineUp();
           }
@@ -4849,9 +4857,11 @@ namespace FastColoredTextBoxNS
 
     public void OnKeyPressed( char c )
     {
-      var args = new KeyPressEventArgs( c );
       if ( KeyPressed != null )
+      {
+        var args = new KeyPressEventArgs( c );
         KeyPressed( this, args );
+      }
     }
 
     protected override bool ProcessMnemonic( char charCode )
@@ -4905,7 +4915,7 @@ namespace FastColoredTextBoxNS
           ClearSelected();
         else
           if ( !Selection.IsReadOnlyLeftChar() ) //is not left char readonly?
-            InsertChar( '\b' );
+          InsertChar( '\b' );
 
         if ( AutoIndentChars )
           DoAutoIndentChars( Selection.Start.iLine );
@@ -5206,12 +5216,12 @@ namespace FastColoredTextBoxNS
       }
       else
         if ( Selection.IsEmpty )
-        {
-          InsertText( left + "" + right );
-          Selection.GoLeft();
-        }
-        else
-          InsertText( left + SelectedText + right );
+      {
+        InsertText( left + "" + right );
+        Selection.GoLeft();
+      }
+      else
+        InsertText( left + SelectedText + right );
 
       return true;
     }
@@ -5818,12 +5828,12 @@ namespace FastColoredTextBoxNS
             ( m as CollapseFoldingMarker ).Draw( e.Graphics, border, bk, fore );
         else
           if ( m is ExpandFoldingMarker )
-            using ( var bk = new SolidBrush( ServiceColors.ExpandMarkerBackColor ) )
-            using ( var fore = new Pen( ServiceColors.ExpandMarkerForeColor ) )
-            using ( var border = new Pen( ServiceColors.ExpandMarkerBorderColor ) )
-              ( m as ExpandFoldingMarker ).Draw( e.Graphics, border, bk, fore );
-          else
-            m.Draw( e.Graphics, servicePen );
+          using ( var bk = new SolidBrush( ServiceColors.ExpandMarkerBackColor ) )
+          using ( var fore = new Pen( ServiceColors.ExpandMarkerForeColor ) )
+          using ( var border = new Pen( ServiceColors.ExpandMarkerBorderColor ) )
+            ( m as ExpandFoldingMarker ).Draw( e.Graphics, border, bk, fore );
+        else
+          m.Draw( e.Graphics, servicePen );
       }
     }
 
@@ -6059,12 +6069,12 @@ namespace FastColoredTextBoxNS
     {
       // only raise click event if down/up in same area (left border or edit area)
       if ( ( mouseDownInLeftBorderArea )
-      &&   ( e.Location.X < LeftIndentLine ) )
+      && ( e.Location.X < LeftIndentLine ) )
       {
         base.OnMouseClick( e );
       }
       else if ( ( !mouseDownInLeftBorderArea )
-      &&        ( e.Location.X >= LeftIndentLine ) )
+      && ( e.Location.X >= LeftIndentLine ) )
       {
         base.OnMouseClick( e );
       }
@@ -6127,11 +6137,14 @@ namespace FastColoredTextBoxNS
 
           if ( e.Clicks == 2 )
           {
+            // double click!
             mouseIsDrag = false;
             mouseIsDragDrop = false;
             draggedRange = null;
 
-            SelectWord( p );
+            OnSelectingWord( p );
+
+
             return;
           }
 
@@ -6159,9 +6172,25 @@ namespace FastColoredTextBoxNS
       }
       else
         if ( e.Button == MouseButtons.Middle )
+      {
+        ActivateMiddleClickScrollingMode( e );
+      }
+    }
+
+
+
+    private void OnSelectingWord( Place p )
+    {
+      if ( SelectingWord != null )
+      {
+        var args = new SelectingWordEventArgs( p );
+        SelectingWord( this, args );
+        if ( args.Handled )
         {
-          ActivateMiddleClickScrollingMode( e );
+          return;
         }
+      }
+      SelectWord( p );
     }
 
 
@@ -6176,8 +6205,8 @@ namespace FastColoredTextBoxNS
       for ( int i = 0; i < delta; ++i )
       {
         if ( ( CharPos > 0 )
-        &&   ( ( CharPos - 1 >= this[Line].Count)
-        ||     ( this[Line][CharPos - 1].c == '\t' ) ) )
+        && ( ( CharPos - 1 >= this[Line].Count )
+        || ( this[Line][CharPos - 1].c == '\t' ) ) )
         {
           --CharPos;
         }
@@ -6201,7 +6230,7 @@ namespace FastColoredTextBoxNS
       for ( int i = 0; i < delta; ++i )
       {
         if ( ( CharPos < lines[Line].Count )
-        &&   ( lines[Line][CharPos].c == '\t' ) )
+        && ( lines[Line][CharPos].c == '\t' ) )
         {
           ++CharPos;
         }
@@ -6237,7 +6266,7 @@ namespace FastColoredTextBoxNS
       //if ( ( AllowTabs )
       //&&   ( Selection.Start.iChar < this[Selection.Start.iLine].Count )
       if ( ( Selection.Start.iChar < this[Selection.Start.iLine].Count )
-      &&   ( this[Selection.Start.iLine][Selection.Start.iChar].c == '\t' ) )
+      && ( this[Selection.Start.iLine][Selection.Start.iChar].c == '\t' ) )
       {
         Selection.Start = new Place( AdjustXPosForTabs( Selection.Start.iLine, Selection.Start.iChar ), Selection.Start.iLine );
       }
@@ -6278,16 +6307,16 @@ namespace FastColoredTextBoxNS
       }
       else
         if ( VerticalScroll.Visible || !ShowScrollBars )
-        {
-          //base.OnMouseWheel(e);
+      {
+        //base.OnMouseWheel(e);
 
-          // Determine scoll offset
-          int mouseWheelScrollLinesSetting = GetControlPanelWheelScrollLinesValue();
+        // Determine scoll offset
+        int mouseWheelScrollLinesSetting = GetControlPanelWheelScrollLinesValue();
 
-          DoScrollVertical( mouseWheelScrollLinesSetting, e.Delta );
+        DoScrollVertical( mouseWheelScrollLinesSetting, e.Delta );
 
-          ( (HandledMouseEventArgs)e ).Handled = true;
-        }
+        ( (HandledMouseEventArgs)e ).Handled = true;
+      }
 
       DeactivateMiddleClickScrollingMode();
     }
@@ -6453,7 +6482,7 @@ namespace FastColoredTextBoxNS
         //if ( ( AllowTabs )
         //&&   ( place.iChar != Selection.Start.iChar )
         if ( ( place.iChar != Selection.Start.iChar )
-        &&   ( ( place.iChar % TabLength ) != 0 ) )
+        && ( ( place.iChar % TabLength ) != 0 ) )
         {
           place.iChar = AdjustXPosForTabs( place.iLine, place.iChar );
         }
@@ -7897,7 +7926,7 @@ namespace FastColoredTextBoxNS
       for ( int i = from; i <= to; i++ )
       {
         if ( ( i == from )
-        &&   ( spaces < startOffset ) )
+        && ( spaces < startOffset ) )
         {
           Selection.Start = new Place( startOffset, i );
         }
@@ -7905,7 +7934,7 @@ namespace FastColoredTextBoxNS
         {
           Selection.Start = new Place( spaces, i );
         }
-        
+
         lines.Manager.ExecuteCommand( new InsertTextCommand( TextSource, prefix ) );
       }
       Selection.Start = new Place( startOffset, from );
@@ -8391,9 +8420,9 @@ namespace FastColoredTextBoxNS
     {
       Print( Range,
             new PrintDialogSettings
-                {
-                  ShowPageSetupDialog = false, ShowPrintDialog = false, ShowPrintPreviewDialog = false
-                } );
+            {
+              ShowPageSetupDialog = false, ShowPrintDialog = false, ShowPrintPreviewDialog = false
+            } );
     }
 
     private string SelectHTMLRangeScript()
@@ -8813,9 +8842,9 @@ window.status = ""#print"";
           Selection = new Range( this, place,
                                   new Place( place.iChar + draggedRange.End.iChar - draggedRange.Start.iChar,
                                           place.iLine + draggedRange.End.iLine - draggedRange.Start.iLine ) )
-                                          {
-                                            ColumnSelectionMode = true
-                                          };
+          {
+            ColumnSelectionMode = true
+          };
         }
       }
 
@@ -9277,6 +9306,27 @@ window.status = ""#print"";
 
     #endregion
   }
+
+  public class SelectingWordEventArgs : EventArgs
+  {
+    public Place Place
+    {
+      get;
+      private set;
+    }
+
+    public bool Handled
+    {
+      get;
+      set;
+    }
+
+    public SelectingWordEventArgs( Place P )
+    {
+      Place = P;
+      Handled = false;
+    }
+}
 
   public class PaintLineEventArgs : PaintEventArgs
   {

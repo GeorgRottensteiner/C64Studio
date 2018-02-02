@@ -726,7 +726,6 @@ namespace C64Studio.Parser
       int       posInLine = endOfDigitPos + 1;
       bool      insideMacro = false;
       bool      insideDataStatement = false;
-      bool      insideREMStatement = false;
       bool      insideStringLiteral = false;
       int       lastCharStartPos = -1;
       int       stringLiteralStartPos = -1;
@@ -890,24 +889,6 @@ namespace C64Studio.Parser
               ++posInLine;
               continue;
             }
-            /*
-            if ( ( nextByte >= 0x30 )
-            &&   ( nextByte < 0x3c ) )
-            {
-              // numerisch bzw. Klammern?, direkt einsetzen
-              // TODO - separate between brackets and numbers
-              Token basicToken3      = new Token();
-              basicToken3.TokenType  = Token.Type.DIRECT_TOKEN;
-              basicToken3.ByteValue  = nextByte;
-              basicToken3.Content    = "" + Types.ConstantData.PetSCIIToChar[nextByte].CharValue;
-              basicToken3.StartIndex = posInLine;
-              info.Tokens.Add( basicToken3 );
-
-              tempData.Clear();
-              tempDataStartPos = -1;
-              ++posInLine;
-              continue;
-            }*/
             // is there a token now?
             bool entryFound = true;
             bool potentialToken = false;
@@ -948,8 +929,6 @@ namespace C64Studio.Parser
                 insideDataStatement = ( opcode.Command == "DATA" );
                 if ( opcode.Command == "REM" )
                 {
-                  insideREMStatement = true;
-
                   if ( basicToken4.StartIndex + 3 < Line.Length )
                   {
                     // everything else is comment

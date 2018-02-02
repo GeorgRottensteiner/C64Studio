@@ -106,6 +106,7 @@ namespace C64Studio
 
       editSource.AutoIndentChars = false;
       editSource.SyntaxHighlighter = new BASICSyntaxHighlighter();
+      editSource.SelectingWord += EditSource_SelectingWord;
 
       if ( Core.Settings.DetermineAccelerator( C64Studio.Types.Function.DELETE_LINE ) != null )
       {
@@ -168,6 +169,23 @@ namespace C64Studio
       m_ToolTip.Popup += new System.Windows.Forms.PopupEventHandler( m_ToolTip_Popup );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+    }
+
+
+
+    private void EditSource_SelectingWord( object sender, FastColoredTextBoxNS.SelectingWordEventArgs e )
+    {
+      var info = Core.Compiling.ParserBasic.PureTokenizeLine( editSource.Lines[e.Place.iLine], e.Place.iLine );
+
+      foreach ( var token in info.Tokens )
+      {
+        if ( ( token.StartIndex <= e.Place.iChar )
+        &&   ( e.Place.iChar < token.StartIndex + token.Content.Length ) )
+        {
+          editSource.Selection = new FastColoredTextBoxNS.Range( editSource, token.StartIndex, e.Place.iLine, token.StartIndex + token.Content.Length, e.Place.iLine );
+          e.Handled = true;
+        }
+      }
     }
 
 
@@ -1447,6 +1465,8 @@ namespace C64Studio
     {
       SourceBasicEx_DragEnter( sender, e );
     }
+
+
 
 
   }
