@@ -1,4 +1,5 @@
-﻿using C64Studio.Types;
+﻿using C64Studio.CustomRenderer;
+using C64Studio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -104,6 +105,7 @@ namespace C64Studio
       contextSource.Opening += new CancelEventHandler( contextSource_Opening );
 
       editSource.AutoIndentChars = false;
+      editSource.SyntaxHighlighter = new BASICSyntaxHighlighter();
 
       if ( Core.Settings.DetermineAccelerator( C64Studio.Types.Function.DELETE_LINE ) != null )
       {
@@ -220,6 +222,7 @@ namespace C64Studio
 
     void editSource_TextChanged( object sender, FastColoredTextBoxNS.TextChangedEventArgs e )
     {
+      /*
       //clear previous highlighting
       e.ChangedRange.ClearStyle( m_TextStyles );
 
@@ -230,7 +233,7 @@ namespace C64Studio
       e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )], m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] );
       e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LABEL )], m_TextRegExp[(int)Types.ColorableElement.LABEL] );
       //e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.SyntaxElement.COMMENT )], m_TextRegExp[(int)Types.SyntaxElement.COMMENT] );
-
+      */
       if ( UndoPossible )
       {
         SetModified();
@@ -264,6 +267,7 @@ namespace C64Studio
       ApplySyntaxColoring( Types.ColorableElement.NONE );
       ApplySyntaxColoring( Types.ColorableElement.PSEUDO_OP );
       ApplySyntaxColoring( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS );
+      ApplySyntaxColoring( Types.ColorableElement.ERROR_UNDERLINE );
 
       editSource.CommentPrefix = "REM";
 

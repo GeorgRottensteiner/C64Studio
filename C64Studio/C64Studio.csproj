@@ -70,6 +70,7 @@
     <Compile Include="Converter\CombinedGraphicsToCharset.cs" />
     <Compile Include="Converter\KoalaToBitmap.cs" />
     <Compile Include="Converter\PETSCIIToCharConverter.cs" />
+    <Compile Include="CustomRenderer\BASICSyntaxHighlighter.cs" />
     <Compile Include="CustomRenderer\CustomToolStripRenderer.cs" />
     <Compile Include="Compiling.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
