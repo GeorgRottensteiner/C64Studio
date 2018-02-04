@@ -64,7 +64,7 @@
       this.labelInfo.Name = "labelInfo";
       this.labelInfo.Size = new System.Drawing.Size(351, 96);
       this.labelInfo.TabIndex = 2;
-      this.labelInfo.Text = "C64 Studio 5.5g\r\n\r\nWritten by Georg Rottensteiner 2011-2018\r\n\r\nBased on WinVICE\r\n" +
+      this.labelInfo.Text = "C64 Studio 5.5h\r\n\r\nWritten by Georg Rottensteiner 2011-2018\r\n\r\nBased on WinVICE\r\n" +
     "";
       this.labelInfo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
       // 
