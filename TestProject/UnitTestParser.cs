@@ -631,6 +631,38 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestIfWithHiLoByteNotEqualAndLabelInFront()
+    {
+      string      source = @"*=$c000
+                          s_Ausgleich nop
+                          .wa3    !if (>(s_Ausgleich) <> >(.wa3)) {
+                          .wa4    nop
+                          }";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00C0EA", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestIfWithHiLoByteNotEqualAndLabelInFront2()
+    {
+      string      source = @"*=$c000
+                          s_Ausgleich nop
+                          .wa3    !if (>(s_Ausgleich) != >(.wa3)) {
+                          .wa4    nop
+                          }";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00C0EA", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestBinaryLiterals()
     {
       string      source = @"    * = $c000

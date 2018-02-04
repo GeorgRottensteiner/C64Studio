@@ -113,14 +113,14 @@ namespace C64Studio.Parser
       m_OperatorPrecedence["&"] = 5;
       m_OperatorPrecedence[">>"] = 6;
       m_OperatorPrecedence["<<"] = 6;
-      m_OperatorPrecedence["<>"] = 7;
+      m_OperatorPrecedence["<>"] = 6;
       m_OperatorPrecedence[">"] = 7;
       m_OperatorPrecedence["<"] = 7;
       m_OperatorPrecedence["!"] = 7;
       m_OperatorPrecedence["~"] = 7;
-      m_OperatorPrecedence[">="] = 8;
-      m_OperatorPrecedence["<="] = 8;
-      m_OperatorPrecedence["!="] = 8;
+      m_OperatorPrecedence[">="] = 6;
+      m_OperatorPrecedence["<="] = 6;
+      m_OperatorPrecedence["!="] = 6;
       m_OperatorPrecedence["="] = 8;
 
       for ( int i = 0; i < 256; ++i )
@@ -7073,7 +7073,11 @@ namespace C64Studio.Parser
               }
               else
               {
-                int     posAfterMacro = lineTokenInfos[0].StartPos + lineTokenInfos[0].Length;
+                int     posAfterMacro = labelInFront.Length;
+                if ( labelInFront.Length == 0 )
+                {
+                  posAfterMacro = lineTokenInfos[0].StartPos + lineTokenInfos[0].Length;
+                }
                 string expressionCheck = parseLine.Substring( posAfterMacro, startBracket - posAfterMacro ).Trim();
 
                 List<Types.TokenInfo> tokens = ParseTokenInfo( expressionCheck, 0, expressionCheck.Length );
