@@ -868,12 +868,13 @@ namespace C64Studio.Parser
             if ( nextByte == 0x3f )
             {
               // ? durch PRINT ersetzen
+              /*
               if ( tempData.Length > 0 )
               {
                 ConsolidateTokens( info, tempData, tempDataStartPos );
                 tempData.Clear();
                 tempDataStartPos = -1;
-              }
+              }*/
               nextByte = 0x99;
 
               Token basicToken2      = new Token();
@@ -1162,7 +1163,8 @@ namespace C64Studio.Parser
         ++endOfDigitPos;
       }
       LineInfo info = new LineInfo();
-      info.LineIndex = LineIndex;
+      info.LineIndex  = LineIndex;
+      info.Line       = Line;
       if ( !LabelMode )
       {
         if ( endOfDigitPos == -1 )
@@ -1178,9 +1180,8 @@ namespace C64Studio.Parser
           lineNumberToken.StartIndex = 0;
           info.Tokens.Add( lineNumberToken );
           info.LineNumber = lineNumberToken.ByteValue;
-          info.Line = Line.Substring( endOfDigitPos + 1 ).Trim();
           if ( ( info.LineNumber < 0 )
-          || ( info.LineNumber > 63999 ) )
+          ||   ( info.LineNumber > 63999 ) )
           {
             AddError( LineIndex, Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER, "Unsupported line number, must be in the range 0 to 63999" );
           }
@@ -2281,14 +2282,15 @@ namespace C64Studio.Parser
       }
 
       curLine = LineStart;
-      foreach ( KeyValuePair<int,LineInfo> lineInfo in m_LineInfos )
+      foreach ( KeyValuePair<int,LineInfo> lineInfoOrig in m_LineInfos )
       {
-        for ( int i = 0; i < lineInfo.Value.Tokens.Count; ++i )
+        var lineInfo = PureTokenizeLine( lineInfoOrig.Value.Line, lineInfoOrig.Value.LineNumber );
+        for ( int i = 0; i < lineInfo.Tokens.Count; ++i )
         {
-          Token token = lineInfo.Value.Tokens[i];
+          Token token = lineInfo.Tokens[i];
           if ( token.TokenType == Token.Type.LINE_NUMBER )
           {
-            sb.Append( lineNumberReference[lineInfo.Value.LineNumber] );
+            sb.Append( lineNumberReference[lineInfo.LineNumber] );
             continue;
           }
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
@@ -2297,10 +2299,10 @@ namespace C64Studio.Parser
             ||   ( token.ByteValue == m_Opcodes["THEN"].ByteValue ) )
             {
               // insert label instead of line number
-              if ( i + 1 < lineInfo.Value.Tokens.Count )
+              if ( i + 1 < lineInfo.Tokens.Count )
               {
                 int     refNo = -1;
-                if ( int.TryParse( lineInfo.Value.Tokens[i + 1].Content, out refNo ) )
+                if ( int.TryParse( lineInfo.Tokens[i + 1].Content, out refNo ) )
                 {
                   sb.Append( token.Content + lineNumberReference[refNo].ToString() );
                   ++i;
@@ -2315,9 +2317,9 @@ namespace C64Studio.Parser
               // insert label instead of line number
               int nextIndex = i + 1;
               bool mustBeComma = false;
-              while ( nextIndex < lineInfo.Value.Tokens.Count )
+              while ( nextIndex < lineInfo.Tokens.Count )
               {
-                Token nextToken = lineInfo.Value.Tokens[nextIndex];
+                Token nextToken = lineInfo.Tokens[nextIndex];
                 if ( !mustBeComma )
                 {
                   if ( nextToken.TokenType == Token.Type.NUMERIC_LITERAL )
@@ -2377,6 +2379,12 @@ namespace C64Studio.Parser
         sb.Append( "\r\n" );
         //sb.Append( lineInfo.Value.Line + "\r\n" );
         // TODO - replace goto/numbers with label
+      }
+
+      // strip last line break
+      if ( m_LineInfos.Count > 0 )
+      {
+        sb.Remove( sb.Length - 2, 2 );
       }
       return sb.ToString();
     }
