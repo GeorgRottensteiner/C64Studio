@@ -663,6 +663,22 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestIfWithHiLoByteNotEqualAndLabelInFrontAndEqualsOperator()
+    {
+      string      source = @"*=$c000
+                          s_Ausgleich nop
+                          .wa3    !if (>s_Ausgleich = >.wa3) {
+                          .wa4    nop
+                          }";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00C0EAEA", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestBinaryLiterals()
     {
       string      source = @"    * = $c000

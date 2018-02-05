@@ -114,14 +114,14 @@ namespace C64Studio.Parser
       m_OperatorPrecedence[">>"] = 6;
       m_OperatorPrecedence["<<"] = 6;
       m_OperatorPrecedence["<>"] = 6;
+      m_OperatorPrecedence[">="] = 6;
+      m_OperatorPrecedence["<="] = 6;
+      m_OperatorPrecedence["!="] = 6;
+      m_OperatorPrecedence["="] = 6;
       m_OperatorPrecedence[">"] = 7;
       m_OperatorPrecedence["<"] = 7;
       m_OperatorPrecedence["!"] = 7;
       m_OperatorPrecedence["~"] = 7;
-      m_OperatorPrecedence[">="] = 6;
-      m_OperatorPrecedence["<="] = 6;
-      m_OperatorPrecedence["!="] = 6;
-      m_OperatorPrecedence["="] = 8;
 
       for ( int i = 0; i < 256; ++i )
       {
