@@ -839,9 +839,8 @@ namespace C64Studio.Parser
           }
           else
           {
-            if ( posInLine > endOfDigitPos + 1 )
+            //if ( posInLine > endOfDigitPos + 1 )
             {
-              // strip spaces after line numbers
               if ( tempDataStartPos == -1 )
               {
                 tempDataStartPos = posInLine;
@@ -2325,7 +2324,15 @@ namespace C64Studio.Parser
                   {
                     // numeric!
                     int refNo = GR.Convert.ToI32( nextToken.Content );
-                    sb.Append( token.Content + lineNumberReference[refNo].ToString() );
+                    if ( lineNumberReference.ContainsKey( refNo ) )
+                    {
+                      sb.Append( token.Content + lineNumberReference[refNo].ToString() );
+                    }
+                    else
+                    {
+                      // no reference found, keep old value
+                      sb.Append( token.Content + nextToken.Content );
+                    }
                   }
                   else if ( ( nextToken.TokenType == Token.Type.DIRECT_TOKEN )
                   &&        ( nextToken.Content == " " ) )
