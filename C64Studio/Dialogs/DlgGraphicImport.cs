@@ -497,8 +497,27 @@ namespace C64Studio
           if ( ( MultiColor )
           &&   ( hasSinglePixel ) )
           {
-            AddError( "Chosen multicolor, but has a single pixel", sx * 8, sy * 8, 8, 8 );
-            continue;
+            bool  safeUseOfHires = false;
+
+            if ( ( numColors == 2 )
+            &&   ( usedBackgroundColor ) )
+            {
+              // using a hires color is ok
+              for ( int i = 0; i < 8; ++i )
+              {
+                if ( ( usedColor[i] )
+                &&   ( i != determinedBackgroundColor ) )
+                {
+                  safeUseOfHires = true;
+                  break;
+                }
+              }
+            }
+            if ( !safeUseOfHires )
+            {
+              AddError( "Chosen multicolor, but has a single pixel", sx * 8, sy * 8, 8, 8 );
+              continue;
+            }
           }
           if ( ( hasSinglePixel )
           &&   ( numColors > 2 ) )

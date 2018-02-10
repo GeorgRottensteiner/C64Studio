@@ -234,6 +234,11 @@ namespace C64Studio
       ComboBox combo = (ComboBox)sender;
 
       e.DrawBackground();
+      if ( e.Index == -1 )
+      {
+        return;
+      }
+
       System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20, e.Bounds.Top, e.Bounds.Width - 20, e.Bounds.Height );
       if ( ( e.State & DrawItemState.Disabled ) != 0 )
       {
@@ -1233,6 +1238,7 @@ namespace C64Studio
             }
           }
         }
+        //Debug.Log( "For Char " + CharIndex + ", hasSinglePixel = " + hasSinglePixel + ", numColors = " + numColors + ", usedBackgroundColor = " + usedBackgroundColor );
         if ( ( hasSinglePixel )
         &&   ( numColors > 2 ) )
         {
@@ -1420,12 +1426,12 @@ namespace C64Studio
         return;
       }
 
-      PasteImage( imgClip, checkPasteMultiColor.Checked );
+      PasteImage( "", imgClip, checkPasteMultiColor.Checked );
     }
 
 
 
-    private void PasteImage( GR.Image.FastImage Image, bool ForceMulticolor )
+    private void PasteImage( string FromFile, GR.Image.FastImage Image, bool ForceMulticolor )
     {
       GR.Image.FastImage mappedImage = null;
 
@@ -1435,7 +1441,7 @@ namespace C64Studio
       mcSettings.MultiColor2      = m_Charset.MultiColor2;
 
       bool pasteAsBlock = false;
-      if ( !Core.MainForm.ImportImage( "", Image, Types.GraphicType.CHARACTERS, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
+      if ( !Core.MainForm.ImportImage( FromFile, Image, Types.GraphicType.CHARACTERS, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
       {
         Image.Dispose();
         return;
@@ -1525,6 +1531,9 @@ namespace C64Studio
 
       GR.Image.FastImage imgClip = Core.Imaging.LoadImageFromFile( filename );
 
+      PasteImage( filename, imgClip, false );
+      /*
+
       if ( ( ( imgClip.Width % 8 ) != 0 )
       ||   ( ( imgClip.Height % 8 ) != 0 )
       ||   ( imgClip.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )
@@ -1553,7 +1562,7 @@ namespace C64Studio
         }
       }
       pictureEditor.Invalidate();
-      Modified = true;
+      Modified = true;*/
     }
 
 
@@ -2056,7 +2065,7 @@ namespace C64Studio
         System.Windows.Forms.MessageBox.Show( "No image on clipboard" );
         return;
       }
-      PasteImage( imgClip, checkPasteMultiColor.Checked );
+      PasteImage( "", imgClip, checkPasteMultiColor.Checked );
     }
 
 
