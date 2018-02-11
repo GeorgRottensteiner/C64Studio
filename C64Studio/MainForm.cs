@@ -841,7 +841,14 @@ namespace C64Studio
         if ( function.MenuItem != null )
         {
           var key = StudioCore.Settings.DetermineAcceleratorKeyForFunction( function.Function, AppState );
-          function.MenuItem.ShortcutKeys = key;
+          try
+          {
+            function.MenuItem.ShortcutKeys = key;
+          }
+          catch ( Exception )
+          {
+            // there are some enum values that are invalid as keys!
+          }
         }
         if ( function.ToolBarButton != null )
         {
