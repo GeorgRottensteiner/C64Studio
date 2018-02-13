@@ -1217,17 +1217,22 @@ namespace C64Studio
       }
       set
       {
-        StudioCore.State = value;
-
-        bool canToggleBreakpoints = false;
-
-        if ( ( StudioCore.State == Types.StudioState.NORMAL )
-        || ( StudioCore.State == Types.StudioState.DEBUGGING_BROKEN ) )
+        if ( StudioCore.State != value )
         {
-          canToggleBreakpoints = true;
-        }
+          StudioCore.State = value;
 
-        NotifyAllDocuments( canToggleBreakpoints );
+          ApplyMenuShortCuts();
+
+          bool canToggleBreakpoints = false;
+
+          if ( ( StudioCore.State == Types.StudioState.NORMAL )
+          ||   ( StudioCore.State == Types.StudioState.DEBUGGING_BROKEN ) )
+          {
+            canToggleBreakpoints = true;
+          }
+
+          NotifyAllDocuments( canToggleBreakpoints );
+        }
       }
     }
 
