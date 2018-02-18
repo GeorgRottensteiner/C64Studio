@@ -1271,7 +1271,10 @@ namespace C64Studio
 
     void ShowAutoComplete()
     {
-      AutoComplete.Show( true );
+      if ( Core.Settings.ASMShowAutoComplete )
+      {
+        AutoComplete.Show( true );
+      }
       /*
       return;
 
@@ -2492,6 +2495,8 @@ namespace C64Studio
       UpdateKeyBinding( C64Studio.Types.Function.COPY_LINE_UP, FastColoredTextBoxNS.FCTBAction.CopyLineUp );
       UpdateKeyBinding( C64Studio.Types.Function.MOVE_LINE_UP, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesUp );
       UpdateKeyBinding( C64Studio.Types.Function.MOVE_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesDown );
+
+      AutoComplete.Enabled = Core.Settings.ASMShowAutoComplete;
     }
 
 

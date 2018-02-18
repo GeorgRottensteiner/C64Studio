@@ -91,6 +91,7 @@ namespace C64Studio
       checkASMShowSizes.Checked               = Core.Settings.ASMShowBytes;
       checkASMShowMiniMap.Checked             = Core.Settings.ASMShowMiniView;
       checkASMAutoTruncateLiteralValues.Checked = Core.Settings.ASMAutoTruncateLiteralValues;
+      checkASMShowAutoComplete.Checked        = Core.Settings.ASMShowAutoComplete;
 
       comboAppMode.SelectedIndex = (int)Core.Settings.StudioAppMode;
 
@@ -2162,6 +2163,15 @@ namespace C64Studio
     }
 
 
+
+    private void checkASMShowAutoComplete_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( checkASMShowAutoComplete.Checked != Core.Settings.ASMShowAutoComplete )
+      {
+        Core.Settings.ASMShowAutoComplete = checkASMShowAutoComplete.Checked;
+        RefreshDisplayOnDocuments();
+      }
+    }
 
   }
 }

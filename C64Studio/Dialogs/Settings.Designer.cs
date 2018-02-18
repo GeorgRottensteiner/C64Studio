@@ -119,6 +119,11 @@
       this.btnBindBASICKeyMapBinding = new System.Windows.Forms.Button();
       this.editBASICKeyMapBinding = new System.Windows.Forms.TextBox();
       this.label25 = new System.Windows.Forms.Label();
+      this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
+      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.label21 = new System.Windows.Forms.Label();
       this.tabBASIC = new System.Windows.Forms.TabPage();
       this.checkBASICShowControlCodes = new System.Windows.Forms.CheckBox();
@@ -129,11 +134,7 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
-      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.checkASMShowAutoComplete = new System.Windows.Forms.CheckBox();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -175,6 +176,7 @@
       this.tabGeneral.Controls.Add(this.editTabSize);
       this.tabGeneral.Controls.Add(this.label14);
       this.tabGeneral.Controls.Add(this.checkAutoOpenLastSolution);
+      this.tabGeneral.Controls.Add(this.checkASMShowAutoComplete);
       this.tabGeneral.Controls.Add(this.checkASMAutoTruncateLiteralValues);
       this.tabGeneral.Controls.Add(this.checkASMShowMiniMap);
       this.tabGeneral.Controls.Add(this.checkASMShowSizes);
@@ -209,7 +211,7 @@
       this.comboAppMode.Location = new System.Drawing.Point(28, 227);
       this.comboAppMode.Name = "comboAppMode";
       this.comboAppMode.Size = new System.Drawing.Size(209, 21);
-      this.comboAppMode.TabIndex = 14;
+      this.comboAppMode.TabIndex = 6;
       this.comboAppMode.SelectedIndexChanged += new System.EventHandler(this.comboAppMode_SelectedIndexChanged);
       // 
       // btnSetDefaultsFont
@@ -217,7 +219,7 @@
       this.btnSetDefaultsFont.Location = new System.Drawing.Point(478, 287);
       this.btnSetDefaultsFont.Name = "btnSetDefaultsFont";
       this.btnSetDefaultsFont.Size = new System.Drawing.Size(124, 23);
-      this.btnSetDefaultsFont.TabIndex = 12;
+      this.btnSetDefaultsFont.TabIndex = 15;
       this.btnSetDefaultsFont.Text = "Set Default Fonts";
       this.btnSetDefaultsFont.UseVisualStyleBackColor = true;
       this.btnSetDefaultsFont.Click += new System.EventHandler(this.btnSetDefaultsFont_Click);
@@ -239,7 +241,7 @@
       this.btnChangeBASICFont.Location = new System.Drawing.Point(242, 339);
       this.btnChangeBASICFont.Name = "btnChangeBASICFont";
       this.btnChangeBASICFont.Size = new System.Drawing.Size(88, 23);
-      this.btnChangeBASICFont.TabIndex = 13;
+      this.btnChangeBASICFont.TabIndex = 16;
       this.btnChangeBASICFont.Text = "Change Font";
       this.btnChangeBASICFont.UseVisualStyleBackColor = true;
       this.btnChangeBASICFont.Click += new System.EventHandler(this.btnChooseBASICFont_Click);
@@ -257,7 +259,7 @@
       this.btnChooseFont.Location = new System.Drawing.Point(242, 287);
       this.btnChooseFont.Name = "btnChooseFont";
       this.btnChooseFont.Size = new System.Drawing.Size(88, 23);
-      this.btnChooseFont.TabIndex = 11;
+      this.btnChooseFont.TabIndex = 14;
       this.btnChooseFont.Text = "Change Font";
       this.btnChooseFont.UseVisualStyleBackColor = true;
       this.btnChooseFont.Click += new System.EventHandler(this.btnChooseFont_Click);
@@ -276,7 +278,7 @@
       this.editTabSize.MaxLength = 1;
       this.editTabSize.Name = "editTabSize";
       this.editTabSize.Size = new System.Drawing.Size(88, 20);
-      this.editTabSize.TabIndex = 9;
+      this.editTabSize.TabIndex = 5;
       this.editTabSize.TextChanged += new System.EventHandler(this.editTabSize_TextChanged);
       // 
       // label14
@@ -291,10 +293,10 @@
       // checkAutoOpenLastSolution
       // 
       this.checkAutoOpenLastSolution.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkAutoOpenLastSolution.Location = new System.Drawing.Point(347, 180);
+      this.checkAutoOpenLastSolution.Location = new System.Drawing.Point(347, 206);
       this.checkAutoOpenLastSolution.Name = "checkAutoOpenLastSolution";
       this.checkAutoOpenLastSolution.Size = new System.Drawing.Size(214, 24);
-      this.checkAutoOpenLastSolution.TabIndex = 10;
+      this.checkAutoOpenLastSolution.TabIndex = 13;
       this.checkAutoOpenLastSolution.Text = "Open last solution on startup";
       this.checkAutoOpenLastSolution.UseVisualStyleBackColor = true;
       this.checkAutoOpenLastSolution.CheckedChanged += new System.EventHandler(this.checkOpenLastSolution_CheckedChanged);
@@ -305,7 +307,7 @@
       this.checkASMAutoTruncateLiteralValues.Location = new System.Drawing.Point(347, 117);
       this.checkASMAutoTruncateLiteralValues.Name = "checkASMAutoTruncateLiteralValues";
       this.checkASMAutoTruncateLiteralValues.Size = new System.Drawing.Size(214, 24);
-      this.checkASMAutoTruncateLiteralValues.TabIndex = 6;
+      this.checkASMAutoTruncateLiteralValues.TabIndex = 11;
       this.checkASMAutoTruncateLiteralValues.Text = "Truncate literal values";
       this.checkASMAutoTruncateLiteralValues.UseVisualStyleBackColor = true;
       this.checkASMAutoTruncateLiteralValues.CheckedChanged += new System.EventHandler(this.checkASMAutoTruncateLiteralValues_CheckedChanged);
@@ -316,7 +318,7 @@
       this.checkASMShowMiniMap.Location = new System.Drawing.Point(347, 94);
       this.checkASMShowMiniMap.Name = "checkASMShowMiniMap";
       this.checkASMShowMiniMap.Size = new System.Drawing.Size(214, 24);
-      this.checkASMShowMiniMap.TabIndex = 6;
+      this.checkASMShowMiniMap.TabIndex = 10;
       this.checkASMShowMiniMap.Text = "Show Mini View";
       this.checkASMShowMiniMap.UseVisualStyleBackColor = true;
       this.checkASMShowMiniMap.CheckedChanged += new System.EventHandler(this.checkASMShowMiniView_CheckedChanged);
@@ -327,7 +329,7 @@
       this.checkASMShowSizes.Location = new System.Drawing.Point(347, 71);
       this.checkASMShowSizes.Name = "checkASMShowSizes";
       this.checkASMShowSizes.Size = new System.Drawing.Size(214, 24);
-      this.checkASMShowSizes.TabIndex = 5;
+      this.checkASMShowSizes.TabIndex = 9;
       this.checkASMShowSizes.Text = "Show Sizes";
       this.checkASMShowSizes.UseVisualStyleBackColor = true;
       this.checkASMShowSizes.CheckedChanged += new System.EventHandler(this.checkASMShowSizes_CheckedChanged);
@@ -338,7 +340,7 @@
       this.checkASMShowCycles.Location = new System.Drawing.Point(347, 48);
       this.checkASMShowCycles.Name = "checkASMShowCycles";
       this.checkASMShowCycles.Size = new System.Drawing.Size(214, 24);
-      this.checkASMShowCycles.TabIndex = 4;
+      this.checkASMShowCycles.TabIndex = 8;
       this.checkASMShowCycles.Text = "Show Cycles";
       this.checkASMShowCycles.UseVisualStyleBackColor = true;
       this.checkASMShowCycles.CheckedChanged += new System.EventHandler(this.checkASMShowCycles_CheckedChanged);
@@ -349,7 +351,7 @@
       this.checkASMShowLineNumbers.Location = new System.Drawing.Point(347, 25);
       this.checkASMShowLineNumbers.Name = "checkASMShowLineNumbers";
       this.checkASMShowLineNumbers.Size = new System.Drawing.Size(214, 24);
-      this.checkASMShowLineNumbers.TabIndex = 3;
+      this.checkASMShowLineNumbers.TabIndex = 7;
       this.checkASMShowLineNumbers.Text = "Show Line Numbers";
       this.checkASMShowLineNumbers.UseVisualStyleBackColor = true;
       this.checkASMShowLineNumbers.CheckedChanged += new System.EventHandler(this.checkASMShowLineNumbers_CheckedChanged);
@@ -360,7 +362,7 @@
       this.checkAllowTabs.Location = new System.Drawing.Point(23, 125);
       this.checkAllowTabs.Name = "checkAllowTabs";
       this.checkAllowTabs.Size = new System.Drawing.Size(214, 24);
-      this.checkAllowTabs.TabIndex = 7;
+      this.checkAllowTabs.TabIndex = 3;
       this.checkAllowTabs.Text = "Allow Tabs";
       this.checkAllowTabs.UseVisualStyleBackColor = true;
       this.checkAllowTabs.CheckedChanged += new System.EventHandler(this.checkAllowTabs_CheckedChanged);
@@ -371,7 +373,7 @@
       this.checkConvertTabsToSpaces.Location = new System.Drawing.Point(23, 148);
       this.checkConvertTabsToSpaces.Name = "checkConvertTabsToSpaces";
       this.checkConvertTabsToSpaces.Size = new System.Drawing.Size(214, 24);
-      this.checkConvertTabsToSpaces.TabIndex = 8;
+      this.checkConvertTabsToSpaces.TabIndex = 4;
       this.checkConvertTabsToSpaces.Text = "Convert tabs to spaces";
       this.checkConvertTabsToSpaces.UseVisualStyleBackColor = true;
       this.checkConvertTabsToSpaces.CheckedChanged += new System.EventHandler(this.checkConvertTabsToSpaces_CheckedChanged);
@@ -418,7 +420,7 @@
       // label28
       // 
       this.label28.AutoSize = true;
-      this.label28.Location = new System.Drawing.Point(333, 164);
+      this.label28.Location = new System.Drawing.Point(333, 190);
       this.label28.Name = "label28";
       this.label28.Size = new System.Drawing.Size(69, 13);
       this.label28.TabIndex = 2;
@@ -1112,6 +1114,49 @@
       this.label25.TabIndex = 5;
       this.label25.Text = "Key Binding:";
       // 
+      // listBASICKeyMap
+      // 
+      this.listBASICKeyMap.AllowDrop = true;
+      this.listBASICKeyMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.listBASICKeyMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6,
+            this.columnHeader7,
+            this.columnHeader10});
+      this.listBASICKeyMap.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      this.listBASICKeyMap.FullRowSelect = true;
+      this.listBASICKeyMap.ItemHeight = 14;
+      this.listBASICKeyMap.Location = new System.Drawing.Point(11, 25);
+      this.listBASICKeyMap.MultiSelect = false;
+      this.listBASICKeyMap.Name = "listBASICKeyMap";
+      this.listBASICKeyMap.Size = new System.Drawing.Size(655, 348);
+      this.listBASICKeyMap.TabIndex = 4;
+      this.listBASICKeyMap.UseCompatibleStateImageBehavior = false;
+      this.listBASICKeyMap.View = System.Windows.Forms.View.Details;
+      this.listBASICKeyMap.SelectedIndexChanged += new System.EventHandler(this.listBASICKeyMap_SelectedIndexChanged);
+      // 
+      // columnHeader5
+      // 
+      this.columnHeader5.Text = "C64 Key";
+      this.columnHeader5.Width = 145;
+      // 
+      // columnHeader6
+      // 
+      this.columnHeader6.Text = "PETSCII";
+      this.columnHeader6.Width = 62;
+      // 
+      // columnHeader7
+      // 
+      this.columnHeader7.Text = "PC Key";
+      this.columnHeader7.Width = 309;
+      // 
+      // columnHeader10
+      // 
+      this.columnHeader10.Text = "Display";
+      this.columnHeader10.Width = 108;
+      // 
       // label21
       // 
       this.label21.AutoSize = true;
@@ -1216,48 +1261,16 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
-      // listBASICKeyMap
+      // checkASMShowAutoComplete
       // 
-      this.listBASICKeyMap.AllowDrop = true;
-      this.listBASICKeyMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.listBASICKeyMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6,
-            this.columnHeader7,
-            this.columnHeader10});
-      this.listBASICKeyMap.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.listBASICKeyMap.FullRowSelect = true;
-      this.listBASICKeyMap.ItemHeight = 14;
-      this.listBASICKeyMap.Location = new System.Drawing.Point(11, 25);
-      this.listBASICKeyMap.MultiSelect = false;
-      this.listBASICKeyMap.Name = "listBASICKeyMap";
-      this.listBASICKeyMap.Size = new System.Drawing.Size(655, 348);
-      this.listBASICKeyMap.TabIndex = 4;
-      this.listBASICKeyMap.UseCompatibleStateImageBehavior = false;
-      this.listBASICKeyMap.View = System.Windows.Forms.View.Details;
-      this.listBASICKeyMap.SelectedIndexChanged += new System.EventHandler(this.listBASICKeyMap_SelectedIndexChanged);
-      // 
-      // columnHeader5
-      // 
-      this.columnHeader5.Text = "C64 Key";
-      this.columnHeader5.Width = 145;
-      // 
-      // columnHeader6
-      // 
-      this.columnHeader6.Text = "PETSCII";
-      this.columnHeader6.Width = 62;
-      // 
-      // columnHeader7
-      // 
-      this.columnHeader7.Text = "PC Key";
-      this.columnHeader7.Width = 309;
-      // 
-      // columnHeader10
-      // 
-      this.columnHeader10.Text = "Display";
-      this.columnHeader10.Width = 108;
+      this.checkASMShowAutoComplete.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkASMShowAutoComplete.Location = new System.Drawing.Point(347, 140);
+      this.checkASMShowAutoComplete.Name = "checkASMShowAutoComplete";
+      this.checkASMShowAutoComplete.Size = new System.Drawing.Size(214, 24);
+      this.checkASMShowAutoComplete.TabIndex = 12;
+      this.checkASMShowAutoComplete.Text = "Show Auto-Complete";
+      this.checkASMShowAutoComplete.UseVisualStyleBackColor = true;
+      this.checkASMShowAutoComplete.CheckedChanged += new System.EventHandler(this.checkASMShowAutoComplete_CheckedChanged);
       // 
       // Settings
       // 
@@ -1409,5 +1422,6 @@
     private System.Windows.Forms.CheckBox checkASMAutoTruncateLiteralValues;
     private System.Windows.Forms.ComboBox comboAppMode;
     private System.Windows.Forms.Label label29;
+    private System.Windows.Forms.CheckBox checkASMShowAutoComplete;
   }
 }
