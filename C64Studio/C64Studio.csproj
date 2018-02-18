@@ -664,6 +664,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="c64.ico" />
+    <Content Include="TODO.txt" />
     <None Include="Resources\charscreen_text1.ico" />
     <None Include="Resources\charscreen_text.ico" />
     <None Include="Resources\valuetable.ico" />

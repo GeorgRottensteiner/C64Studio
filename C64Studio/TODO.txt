@@ -1,0 +1,67 @@
+﻿C64Studio
+o Timed- Auto-Step im Debug-Modus
+o SpritePad support
+o CharPad support auch mit !media?
+o  Wenn eine Datei mit !source eingebunden wird, diese Datei aber nicht zum Projekt gehört, dann kann man in dieser Datei keine Breakpoints 
+   setzen. 
+o TO CHECK Bei Suchen und Ersetzen springt man am Ende immer an den Anfang des Dokuments statt an die alte Stelle.
+o TO CHECK Bei Suchen und Ersetzen loescht manchmal (zum Glueck selten) den kompletten Dokumenteninhalt. 
+o Immer wenn man lda (zeropageadresse),y tippt macht er fuer das ",y" einen Vorschlag, was man statt dessen besser schreiben sollte, 
+  also z.B. "check_ready", weil das auch ein y im Namen hat. Das ist doch eher ungeschickt so.
+Support fuer den CC65 compiler, so dass man auch in C programmieren kann. Das waere obersuperspitzenkomfortionoes! 
+o Ist die Hilfe beim Debuggen offen, dann wird bei mir, sobald das Debuggen beendet wird, immer zur Hilfe-Tab gewechselt.
+o Refactoring/Rename 
+o Farben der GUI-Elemente
+o If you go to the preview pane, where it says Entries, i can't see whats underneath that because the slider bar is in the way. 
+
+Samples:
+o Tutorials in Release
+o add an example of a single sprite with x extend handling
+
+o Quelltext ist Ansi, 64Studio erwartet aber UTF-8
+o Doppelpunkte, wenn sich mehrere Befehle nur mit anderen Adressen wiederholen.
+o Nach dem Ersetzen der Doppelpunkte durch einen Zeilenumbruch wollten STA's neu mit Tab eingerückt werden. Nach dem Tab sprang aber die 
+  Auto-Vervollständigung an, die mir das Label "start" angeboten hat. 
+
+o A 'label explorer' (C64 Prg Studio has this) 
+
+Disassemble:
+o In disassembler, the ability to highlight data and select how it should be disassembled (byte, word, text etc) and the number of 
+  elements on one line (say 1 byte per line, 8 bytes, 20 chars, 40 chars etc). Here you should be able to auto-add lables if needed. 
+o In the editor, the ability to highlight and reformat data, the same way as the disassembler.
+
+o Text Screen Editor - select and apply colour to whole area (hires/multicolour) 
+
+o Text Screen Project 
+- Import From File : Seems to only import binary (not assembly) and then only characters. This means that the colours are lost. 
+  -> Sizes von aktuellem Screen? Oder bei anderer File-Größe abfragen
+
+o When you Import From File and then import a Charset then the Screen does  not update with the new Charset. You need to Import From 
+  File once again. 
+
+o Pressing the Export To Assembly should create a 
+  new tab+running number. 
+
+o IDE Generally 
+ Once you undock a tab there is no way to get it back. This means the search and find/replace don't seem to work on the undocked window. 
+
+o Source/Constant
+ I've not been using a project or solution. Only compiling the ASM that 
+  C64Studio made for me in the disassembler.
+
+o Replace:
+   Another nice to have would be an assembly listing (showing all the addresses etc)
+
+o auch multiple Files aus dem Solution-Explorer löschen
+
+o I'd like to be able in Char Screen editor/Map editor/Tile editor to be able to set cells like you draw in sprite editor. 
+  That will make easier to do tiles/maps/etc. => grid?
+
+Speaking of sprite/character editors... It would be nice to add basic 
+drawing tools like ellipses/lines
+
+
+
+Ideas:
+o Incorporate VICE directly instead of hanging onto remote monitor (would speed up debugging dramatically)
+o Lastly, while I realize it is big suggestion, it would be nice if you could make some SID tracker... 
