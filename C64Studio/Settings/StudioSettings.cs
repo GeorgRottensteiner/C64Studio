@@ -421,6 +421,17 @@ namespace C64Studio
 
 
 
+    internal void RefreshDisplayOnAllDocuments( StudioCore Core )
+    {
+      foreach ( WeifenLuo.WinFormsUI.Docking.IDockContent doc in Core.MainForm.panelMain.Documents )
+      {
+        BaseDocument baseDoc = (BaseDocument)doc;
+        baseDoc.RefreshDisplayOptions();
+      }
+    }
+
+
+
     private Types.FunctionStudioState FunctionMaskFromAppState( Types.StudioState State )
     {
       Types.FunctionStudioState   functionMask = 0;

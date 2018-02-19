@@ -1523,6 +1523,14 @@ namespace C64Studio
         uncommentSelectionToolStripMenuItem.Enabled = false;
         //separatorCommenting.Visible = false;
       }
+      if ( !Core.Settings.ASMShowMiniView )
+      {
+        showMiniOverviewToolStripMenuItem.Text = "Show Mini Overview";
+      }
+      else
+      {
+        showMiniOverviewToolStripMenuItem.Text = "Hide Mini Overview";
+      }
     }
 
 
@@ -2459,12 +2467,12 @@ namespace C64Studio
 
       if ( Core.Settings.ASMShowMiniView )
       {
-        documentMap1.Visible = Core.Settings.ASMShowMiniView;
-        editSource.Width = documentMap1.Left;
+        miniMap.Visible = Core.Settings.ASMShowMiniView;
+        editSource.Width = miniMap.Left;
       }
       else
       {
-        documentMap1.Visible = Core.Settings.ASMShowMiniView;
+        miniMap.Visible = Core.Settings.ASMShowMiniView;
         editSource.Width = ClientSize.Width;
       }
 
@@ -2892,6 +2900,26 @@ namespace C64Studio
     {
       editSource.ClearStyleWithoutAffectingFoldingMarkers( FastColoredTextBoxNS.StyleIndex.Style10 );
     }
+
+
+
+    private void hideToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( Core.Settings.ASMShowMiniView )
+      {
+        Core.Settings.ASMShowMiniView = false;
+        Core.Settings.RefreshDisplayOnAllDocuments( Core );
+      }
+    }
+
+
+
+    private void showMiniOverviewToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      Core.Settings.ASMShowMiniView = !Core.Settings.ASMShowMiniView;
+      Core.Settings.RefreshDisplayOnAllDocuments( Core );
+    }
+
 
   }
 }

@@ -597,12 +597,7 @@ namespace C64Studio
 
     private void RefreshDisplayOnDocuments()
     {
-      // apply font settings
-      foreach ( WeifenLuo.WinFormsUI.Docking.IDockContent doc in Core.MainForm.panelMain.Documents )
-      {
-        BaseDocument baseDoc = (BaseDocument)doc;
-        baseDoc.RefreshDisplayOptions();
-      }
+      Core.Settings.RefreshDisplayOnAllDocuments( Core );
     }
 
 
