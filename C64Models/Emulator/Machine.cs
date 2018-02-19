@@ -11,7 +11,7 @@ namespace Tiny64
     public Memory     Memory = new Memory();
     public Processor  CPU = Processor.Create6510();
 
-    byte            IODirection = 0x2f;   // RAM 0000
+    //byte            IODirection = 0x2f;   // RAM 0000
     byte            PortRegister = 55;    // RAM 0001
 
     public int      TotalCycles = 0;
@@ -107,7 +107,7 @@ namespace Tiny64
       Memory.Initialize();
       CPU.Initialize();
 
-      IODirection   = 0x2f;
+      //IODirection   = 0x2f;
       PortRegister  = 55;
       TotalCycles   = 6;
 

@@ -379,6 +379,8 @@ namespace C64Studio
 
     void editSource_LineInserted( object sender, FastColoredTextBoxNS.LineInsertedEventArgs e )
     {
+      Core.Navigating.InsertLines( DocumentInfo, e.Index, e.Count );
+
       // move related breakpoints!
       for ( int i = 0; i < e.Count; ++i )
       {
@@ -418,6 +420,8 @@ namespace C64Studio
 
     void editSource_LineRemoved( object sender, FastColoredTextBoxNS.LineRemovedEventArgs e )
     {
+      Core.Navigating.RemoveLines( DocumentInfo, e.Index, e.Count );
+
       //Debug.Log( "Lines removed " + e.Index + ", " + e.Count );
       m_LineInfos.RemoveRange( e.Index - 1, e.Count );
 

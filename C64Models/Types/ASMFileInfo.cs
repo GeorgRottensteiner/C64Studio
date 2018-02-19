@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Generic;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -222,6 +223,292 @@ namespace C64Studio.Types.ASM
           {
             AddressToLine.Add( LineInfo[lineIndex].AddressStart, lineIndex );
           }
+        }
+      }
+    }
+
+
+
+    internal void InsertLines( int GlobalLineIndex, int LocalLineIndex, int LineCount )
+    {
+      // move all infos/symbols below down
+      List<Tupel<int,int>>    lineAddressesToMove = new List<Tupel<int, int>>();
+      foreach ( var entry in AddressToLine )
+      {
+        if ( entry.Value >= GlobalLineIndex )
+        {
+          lineAddressesToMove.Add( new Tupel<int, int>( entry.Key, entry.Value ) );
+        }
+      }
+      foreach ( var entry in lineAddressesToMove )
+      {
+        AddressToLine.Remove( entry.first );
+      }
+      foreach ( var entry in lineAddressesToMove )
+      {
+        AddressToLine.Add( entry.first, entry.second + LineCount );
+      }
+
+      foreach ( var bank in Banks )
+      {
+        if ( bank.StartLine >= GlobalLineIndex )
+        {
+          bank.StartLine += LineCount;
+        }
+      }
+      foreach ( var label in Labels )
+      {
+        if ( label.Value.LineIndex >= GlobalLineIndex )
+        {
+          label.Value.LineIndex += LineCount;
+          label.Value.LocalLineIndex += LineCount;
+        }
+      }
+
+      List<LineInfo>    linesToMove = new List<ASM.LineInfo>();
+      foreach ( var line in LineInfo )
+      {
+        if ( line.Key >= GlobalLineIndex )
+        {
+          linesToMove.Add( line.Value );
+          line.Value.LineIndex += LineCount;
+        }
+      }
+      foreach ( var lineToMove in linesToMove )
+      {
+        LineInfo.Remove( lineToMove.LineIndex - LineCount );
+      }
+      foreach ( var lineToMove in linesToMove )
+      {
+        LineInfo.Add( lineToMove.LineIndex, lineToMove );
+      }
+
+      List<SourceInfo>    sourceInfosToMove = new List<ASM.SourceInfo>();
+      foreach ( var sourceInfo in SourceInfo )
+      {
+        // Grow or move
+        if ( ( sourceInfo.Value.GlobalStartLine < GlobalLineIndex )
+        &&   ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount >= GlobalLineIndex + LineCount ) )
+        {
+          sourceInfo.Value.LineCount += LineCount;
+        }
+        if ( sourceInfo.Value.GlobalStartLine >= GlobalLineIndex )
+        {
+          sourceInfosToMove.Add( sourceInfo.Value );
+        }
+      }
+      foreach ( var sourceInfoToMove in sourceInfosToMove )
+      {
+        SourceInfo.Remove( sourceInfoToMove.GlobalStartLine );
+      }
+      foreach ( var sourceInfoToMove in sourceInfosToMove )
+      {
+        sourceInfoToMove.GlobalStartLine += LineCount;
+        sourceInfoToMove.LocalStartLine += LineCount;
+        SourceInfo.Add( sourceInfoToMove.GlobalStartLine, sourceInfoToMove );
+      }
+
+      foreach ( var tempLabel in TempLabelInfo )
+      {
+        if ( tempLabel.LineIndex >= GlobalLineIndex )
+        {
+          tempLabel.LineIndex += LineCount;
+        }
+      }
+
+      foreach ( var unparsedLabel in UnparsedLabels )
+      {
+        if ( unparsedLabel.Value.LineIndex >= GlobalLineIndex )
+        {
+          unparsedLabel.Value.LineIndex += LineCount;
+        }
+      }
+
+      foreach ( var virtualBP in VirtualBreakpoints )
+      {
+        if ( virtualBP.Value.LineIndex >= GlobalLineIndex )
+        {
+          virtualBP.Value.LineIndex += LineCount;
+        }
+      }
+      foreach ( var zone in Zones )
+      {
+        // Grow or move
+        if ( ( zone.Value.LineIndex < GlobalLineIndex )
+        &&   ( zone.Value.LineIndex + zone.Value.LineCount >= GlobalLineIndex + LineCount ) )
+        {
+          zone.Value.LineCount += LineCount;
+        }
+        if ( zone.Value.LineIndex >= GlobalLineIndex )
+        {
+          zone.Value.LineIndex += LineCount;
+        }
+      }
+    }
+
+
+
+    internal void RemoveLines( int GlobalLineIndex, int LocalLineIndex, int LineCount )
+    {
+      // move all infos/symbols below up
+      List<Tupel<int,int>>    lineAddressesToMove = new List<Tupel<int, int>>();
+      List<Tupel<int,int>>    lineAddressesToRemove = new List<Tupel<int, int>>();
+      foreach ( var entry in AddressToLine )
+      {
+        if ( entry.Value >= GlobalLineIndex + LineCount )
+        {
+          lineAddressesToMove.Add( new Tupel<int, int>( entry.Key, entry.Value ) );
+        }
+        else if ( ( entry.Value >= GlobalLineIndex )
+        &&        ( entry.Value < GlobalLineIndex + LineCount ) )
+        {
+          lineAddressesToRemove.Add( new Tupel<int, int>( entry.Key, entry.Value ) );
+        } 
+      }
+      foreach ( var entry in lineAddressesToMove )
+      {
+        AddressToLine.Remove( entry.first );
+      }
+      foreach ( var entry in lineAddressesToRemove )
+      {
+        AddressToLine.Remove( entry.first );
+      }
+      foreach ( var entry in lineAddressesToMove )
+      {
+        AddressToLine.Add( entry.first, entry.second - LineCount );
+      }
+
+      foreach ( var bank in Banks )
+      {
+        if ( bank.StartLine >= GlobalLineIndex + LineCount )
+        {
+          bank.StartLine -= LineCount;
+        }
+      }
+      foreach ( var label in Labels )
+      {
+        if ( label.Value.LineIndex >= GlobalLineIndex + LineCount )
+        {
+          label.Value.LineIndex -= LineCount;
+          label.Value.LocalLineIndex -= LineCount;
+        }
+      }
+
+      List<LineInfo>    linesToMove = new List<ASM.LineInfo>();
+      List<LineInfo>    linesToRemove = new List<ASM.LineInfo>();
+      foreach ( var line in LineInfo )
+      {
+        if ( line.Key >= GlobalLineIndex + LineCount )
+        {
+          linesToMove.Add( line.Value );
+          line.Value.LineIndex -= LineCount;
+        }
+        else if ( line.Key >= GlobalLineIndex )
+        {
+          linesToRemove.Add( line.Value );
+        }
+      }
+      foreach ( var lineToMove in linesToMove )
+      {
+        LineInfo.Remove( lineToMove.LineIndex + LineCount );
+      }
+      foreach ( var lineToMove in linesToRemove )
+      {
+        LineInfo.Remove( lineToMove.LineIndex );
+      }
+      foreach ( var lineToMove in linesToMove )
+      {
+        LineInfo.Add( lineToMove.LineIndex, lineToMove );
+      }
+
+      List<SourceInfo>    sourceInfosToMove = new List<ASM.SourceInfo>();
+      List<SourceInfo>    sourceInfosToRemove = new List<ASM.SourceInfo>();
+      foreach ( var sourceInfo in SourceInfo )
+      {
+        // shrink or move
+        if ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount <= GlobalLineIndex )
+        {
+          continue;
+        }
+        if ( ( sourceInfo.Value.GlobalStartLine >= GlobalLineIndex )
+        &&   ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount <= GlobalLineIndex + LineCount ) )
+        {
+          // completely inside, remove
+          sourceInfosToRemove.Add( sourceInfo.Value );
+          continue;
+        }
+        if ( ( sourceInfo.Value.GlobalStartLine < GlobalLineIndex )
+        &&   ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount <= GlobalLineIndex + LineCount ) )
+        {
+          // outside top
+          int     linesToCutTop = GlobalLineIndex - sourceInfo.Value.GlobalStartLine;
+          //sourceInfo.Value.LocalStartLine -= linesToCutTop;
+          //sourceInfo.Value.GlobalStartLine -= linesToCutTop;
+          sourceInfo.Value.LineCount -= linesToCutTop;
+
+          sourceInfosToMove.Add( sourceInfo.Value );
+          continue;
+        }
+        if ( ( sourceInfo.Value.GlobalStartLine >= GlobalLineIndex )
+        &&   ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount > GlobalLineIndex + LineCount ) )
+        {
+          // outside bottom
+          int     linesToCut = sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount - ( GlobalLineIndex + LineCount );
+          sourceInfo.Value.LineCount -= linesToCut;
+          continue;
+        }
+        // cutting a part out of this
+        sourceInfo.Value.LineCount -= LineCount;
+      }
+      foreach ( var sourceInfoToMove in sourceInfosToMove )
+      {
+        SourceInfo.Remove( sourceInfoToMove.GlobalStartLine );
+      }
+      foreach ( var sourceInfoToMove in sourceInfosToRemove )
+      {
+        SourceInfo.Remove( sourceInfoToMove.GlobalStartLine );
+      }
+      foreach ( var sourceInfoToMove in sourceInfosToMove )
+      {
+        sourceInfoToMove.GlobalStartLine -= LineCount;
+        sourceInfoToMove.LocalStartLine -= LineCount;
+        SourceInfo.Add( sourceInfoToMove.GlobalStartLine, sourceInfoToMove );
+      }
+
+      foreach ( var tempLabel in TempLabelInfo )
+      {
+        if ( tempLabel.LineIndex >= GlobalLineIndex + LineCount )
+        {
+          tempLabel.LineIndex -= LineCount;
+        }
+      }
+
+      foreach ( var unparsedLabel in UnparsedLabels )
+      {
+        if ( unparsedLabel.Value.LineIndex >= GlobalLineIndex + LineCount )
+        {
+          unparsedLabel.Value.LineIndex -= LineCount;
+        }
+      }
+
+      foreach ( var virtualBP in VirtualBreakpoints )
+      {
+        if ( virtualBP.Value.LineIndex >= GlobalLineIndex + LineCount )
+        {
+          virtualBP.Value.LineIndex -= LineCount;
+        }
+      }
+      foreach ( var zone in Zones )
+      {
+        // shrink or move
+        if ( ( zone.Value.LineIndex < GlobalLineIndex )
+        &&   ( zone.Value.LineIndex + zone.Value.LineCount >= GlobalLineIndex + LineCount ) )
+        {
+          zone.Value.LineCount -= LineCount;
+        }
+        if ( zone.Value.LineIndex >= GlobalLineIndex + LineCount )
+        {
+          zone.Value.LineIndex -= LineCount;
         }
       }
     }

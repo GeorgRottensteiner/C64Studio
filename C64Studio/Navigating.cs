@@ -214,6 +214,39 @@ namespace C64Studio
 
 
 
+    internal void InsertLines( DocumentInfo DocumentInfo, int LocalLineIndex, int LineCount )
+    {
+      if ( ( DocumentInfo == null )
+      ||   ( DocumentInfo.ASMFileInfo == null ) )
+      {
+        return;
+      }
+      int   globalLineIndex = -1;
+      if ( !DocumentInfo.ASMFileInfo.FindGlobalLineIndex( LocalLineIndex, DocumentInfo.FullPath, out globalLineIndex ) )
+      {
+        return;
+      }
+
+      DocumentInfo.ASMFileInfo.InsertLines( globalLineIndex, LocalLineIndex, LineCount );
+    }
+
+
+
+    internal void RemoveLines( DocumentInfo DocumentInfo, int LocalLineIndex, int LineCount )
+    {
+      if ( ( DocumentInfo == null )
+      ||   ( DocumentInfo.ASMFileInfo == null ) )
+      {
+        return;
+      }
+      int   globalLineIndex = -1;
+      if ( !DocumentInfo.ASMFileInfo.FindGlobalLineIndex( LocalLineIndex, DocumentInfo.FullPath, out globalLineIndex ) )
+      {
+        return;
+      }
+
+      DocumentInfo.ASMFileInfo.RemoveLines( globalLineIndex, LocalLineIndex, LineCount );
+    }
 
   }
 }

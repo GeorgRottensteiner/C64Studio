@@ -5166,7 +5166,7 @@ namespace C64Studio
             }
             SourceASMEx sourceEx = docToHandle.BaseDoc as SourceASMEx;
 
-            EnsureFileIsParsed( docToDebug );
+            //EnsureFileIsParsed( docToDebug );
 
             if ( sourceEx != null )
             {
