@@ -72,6 +72,7 @@ namespace MediaTool
 
       if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), spriteData ) )
       {
+        Console.WriteLine( "Could not write to file " + ArgParser.Parameter( "EXPORT" ) );
         return 1;
       }
       return 0;
@@ -125,6 +126,7 @@ namespace MediaTool
 
       if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), spriteData ) )
       {
+        Console.WriteLine( "Could not write to file " + ArgParser.Parameter( "EXPORT" ) );
         return 1;
       }
       return 0;
@@ -183,6 +185,7 @@ namespace MediaTool
 
       if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), exportData ) )
       {
+        Console.WriteLine( "Could not write to file " + ArgParser.Parameter( "EXPORT" ) );
         return 1;
       }
       return 0;
@@ -236,6 +239,95 @@ namespace MediaTool
 
       if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), spriteData ) )
       {
+        Console.WriteLine( "Could not write to file " + ArgParser.Parameter( "EXPORT" ) );
+        return 1;
+      }
+      return 0;
+    }
+
+
+
+    private int HandleCharscreenFile( GR.Text.ArgumentParser ArgParser )
+    {
+      if ( !ValidateExportType( "charscreen file", ArgParser.Parameter( "TYPE" ), new string[] { "CHARS", "CHARSCOLORS", "COLORS" } ) )
+      {
+        return 1;
+      }
+
+      GR.Memory.ByteBuffer    data = GR.IO.File.ReadAllBytes( ArgParser.Parameter( "CHARSCREEN" ) );
+      if ( data == null )
+      {
+        System.Console.WriteLine( "Couldn't read binary char file " + ArgParser.Parameter( "CHARSCREEN" ) );
+        return 1;
+      }
+
+      var charScreenProject = new C64Studio.Formats.CharsetScreenProject();
+      if ( !charScreenProject.ReadFromBuffer( data ) )
+      {
+        System.Console.WriteLine( "Couldn't read charscreen project from file " + ArgParser.Parameter( "CHARSCREEN" ) );
+        return 1;
+      }
+
+      int     x = 0;
+      int     y = 0;
+      int     width = -1;
+      int     height = -1;
+      if ( ArgParser.IsParameterSet( "AREA" ) )
+      {
+        string      rangeInfo = ArgParser.Parameter( "AREA" );
+        string[]    rangeParts = rangeInfo.Split( ',' );
+        if ( rangeParts.Length != 4 )
+        {
+          System.Console.WriteLine( "AREA is invalid, expected four values separated by comma: x,y,width,height" );
+          return 1;
+        }
+        x       = GR.Convert.ToI32( rangeParts[0] );
+        y       = GR.Convert.ToI32( rangeParts[1] );
+        width   = GR.Convert.ToI32( rangeParts[2] );
+        height  = GR.Convert.ToI32( rangeParts[3] );
+
+        if ( ( width <= 0 )
+        ||   ( height <= 0 )
+        ||   ( x < 0 )
+        ||   ( y < 0 )
+        ||   ( x + width > charScreenProject.ScreenWidth )
+        ||   ( y + height > charScreenProject.ScreenHeight ) )
+        {
+          System.Console.WriteLine( "AREA values are out of bounds or invalid, expected four values separated by comma: x,y,width,height" );
+          return 1;
+        }
+      }
+      else
+      {
+        width = charScreenProject.ScreenWidth;
+        height = charScreenProject.ScreenHeight;
+      }
+
+      GR.Memory.ByteBuffer    resultingData = new GR.Memory.ByteBuffer();
+
+      if ( ArgParser.Parameter( "TYPE" ).Contains( "CHARS" ) )
+      {
+        for ( int j = y; j < y + height; ++j )
+        {
+          for ( int i = x; i < x + width; ++i )
+          {
+            resultingData.AppendU8( (byte)charScreenProject.Chars[i + j * charScreenProject.ScreenWidth] );
+          }
+        }
+      }
+      if ( ArgParser.Parameter( "TYPE" ).Contains( "COLORS" ) )
+      {
+        for ( int j = y; j < y + height; ++j )
+        {
+          for ( int i = x; i < x + width; ++i )
+          {
+            resultingData.AppendU8( (byte)( charScreenProject.Chars[i + j * charScreenProject.ScreenWidth] >> 8 ) );
+          }
+        }
+      }
+      if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), resultingData ) )
+      {
+        Console.WriteLine( "Could not write to file " + ArgParser.Parameter( "EXPORT" ) );
         return 1;
       }
       return 0;
@@ -251,12 +343,16 @@ namespace MediaTool
       argParser.AddOptionalParameter( "SPRITES" );
       argParser.AddOptionalParameter( "CHARSETPROJECT" );
       argParser.AddOptionalParameter( "CHARS" );
+      argParser.AddOptionalParameter( "CHARSCREEN" );
       argParser.AddOptionalParameter( "OFFSET" );
       argParser.AddOptionalParameter( "COUNT" );
+      argParser.AddOptionalParameter( "AREA" );
       argParser.AddParameter( "EXPORT" );
       argParser.AddSwitch( "TYPE", false );
       argParser.AddSwitchValue( "TYPE", "SPRITES" );
       argParser.AddSwitchValue( "TYPE", "CHARS" );
+      argParser.AddSwitchValue( "TYPE", "CHARSCOLORS" );
+      argParser.AddSwitchValue( "TYPE", "COLORS" );
 
       if ( !argParser.CheckParameters( args ) )
       {
@@ -271,10 +367,14 @@ namespace MediaTool
         System.Console.WriteLine( "  [-sprites <binary sprite file>]" );
         System.Console.WriteLine( "  [-charsetproject <charset project file>]" );
         System.Console.WriteLine( "  [-chars <binary charset file>]" );
+        System.Console.WriteLine( "  [-charscreen <charscreen project file>]" );
         System.Console.WriteLine( "  [-type <export format>]" );
         System.Console.WriteLine( "  [-export <file name>]" );
+        System.Console.WriteLine( "  [-area <x,y,width,height>]" );
         System.Console.WriteLine( "  [-offset <first unit to affect, default 0>]" );
         System.Console.WriteLine( "  [-count <count of units to affect, default all>]" );
+        System.Console.WriteLine( "" );
+        System.Console.WriteLine( "  -area is only applicable for charscreen" );
         return 1;
       }
 
@@ -293,6 +393,10 @@ namespace MediaTool
       else if ( argParser.IsParameterSet( "CHARS" ) )
       {
         return HandleCharFile( argParser );
+      }
+      else if ( argParser.IsParameterSet( "CHARSCREEN" ) )
+      {
+        return HandleCharscreenFile( argParser );
       }
       System.Console.Error.WriteLine( "Missing medium" );
       return 1;
