@@ -1,8 +1,6 @@
 ﻿C64Studio
 o Timed- Auto-Step im Debug-Modus
-o SpritePad support
 o “Insert Text mode” in Text/char Screen Editor, inverted chars
-o “Insert Text mode” is missing tooltip
 o CharPad support auch mit !media?
 o  Wenn eine Datei mit !source eingebunden wird, diese Datei aber nicht zum Projekt gehört, dann kann man in dieser Datei keine Breakpoints 
    setzen. 

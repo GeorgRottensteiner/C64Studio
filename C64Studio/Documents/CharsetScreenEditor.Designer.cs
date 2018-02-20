@@ -674,6 +674,7 @@
       this.btnToolText.Name = "btnToolText";
       this.btnToolText.Size = new System.Drawing.Size(24, 24);
       this.btnToolText.TabIndex = 32;
+      this.toolTip1.SetToolTip(this.btnToolText, "Direct Text Entry");
       this.btnToolText.UseVisualStyleBackColor = true;
       this.btnToolText.CheckedChanged += new System.EventHandler(this.btnToolText_CheckedChanged);
       // 
