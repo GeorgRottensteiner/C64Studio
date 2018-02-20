@@ -775,7 +775,7 @@ namespace C64Studio
     {
       string filename;
 
-      if ( OpenFile( "Open Sprite Project or File", Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Open Sprite Project or File", Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_SPRITE_SPRITEPAD + Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         ImportSprites( filename, true, true );
       }
@@ -842,7 +842,55 @@ namespace C64Studio
 
       GR.IO.MemoryReader memIn = projectFile.MemoryReader();
 
-      if ( System.IO.Path.GetExtension( Filename ).ToUpper() != ".SPRITEPROJECT" )
+      if ( System.IO.Path.GetExtension( Filename ).ToUpper() == ".SPD" )
+      {
+        var spritePad = new SpritePadProject();
+
+        if ( !spritePad.ReadFromBuffer( projectFile ) )
+        {
+          return false;
+        }
+        m_SpriteProject.BackgroundColor = spritePad.BackgroundColor;
+        m_SpriteProject.MultiColor1     = spritePad.MultiColor1;
+        m_SpriteProject.MultiColor2     = spritePad.MultiColor2;
+        for ( int i = 0; i < spritePad.NumSprites; ++i )
+        {
+          if ( i < m_SpriteProject.Sprites.Count )
+          {
+            if ( AddUndo )
+            {
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ), i == 0 );
+            }
+
+            spritePad.Sprites[i].Data.CopyTo( m_SpriteProject.Sprites[i].Data, 0, 63 );
+            m_SpriteProject.Sprites[i].Color      = spritePad.Sprites[i].Color;
+            m_SpriteProject.Sprites[i].Multicolor = spritePad.Sprites[i].Multicolor;
+            RebuildSpriteImage( i );
+          }
+        }
+
+        editSpriteFrom.Text = "0";
+        editSpriteCount.Text = spritePad.NumSprites.ToString();
+
+        comboBackground.SelectedIndex = m_SpriteProject.BackgroundColor;
+        comboMulticolor1.SelectedIndex = m_SpriteProject.MultiColor1;
+        comboMulticolor2.SelectedIndex = m_SpriteProject.MultiColor2;
+
+        if ( ( m_SpriteProject.StartIndex != 0 )
+        ||   ( m_SpriteProject.UsedSprites != 256 ) )
+        {
+          comboExportRange.SelectedIndex = 2;
+        }
+
+        panelSprites.Invalidate();
+        pictureEditor.Invalidate();
+        Modified = false;
+
+        saveSpriteProjectToolStripMenuItem.Enabled = true;
+        closeCharsetProjectToolStripMenuItem.Enabled = true;
+        return true;
+      }
+      else if ( System.IO.Path.GetExtension( Filename ).ToUpper() != ".SPRITEPROJECT" )
       {
         //m_IsSpriteProject = false;
         int numSprites = (int)projectFile.Length / 64;
@@ -1357,7 +1405,7 @@ namespace C64Studio
     {
       string filename;
 
-      if ( OpenFile( "Open sprite file", Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Open sprite file", Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_SPRITE_SPRITEPAD + Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         ImportSprites( filename, true, true );
       }

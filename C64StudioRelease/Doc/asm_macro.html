@@ -73,14 +73,16 @@
     <br>
   </div>
   <a name="basic"></a>
-  <H2>!BASIC [,&lt;jump address&gt;]</H2>
+  <H2>!BASIC [,&lt;jump address&gt;], !BASIC &lt;line number&gt;,&lt;label&gt; !BASIC &lt;line number&gt;,&lt;text comment,&gt;,&lt;label&gt;</H2>
   <div id="mybody">
-    This pseudo op adds a BASIC start line with a sys call to either the given jump address or the first statement after the pseudo op. The added BASIC line always has line number 10 and a 5 digit target address. This way the BASIC line will always require 13 bytes.<br>
+    This pseudo op adds a BASIC start line with a sys call to either the given jump address or the first statement after the pseudo op. If not provided otherwise the added BASIC line always has line number 10 and a 4 digit target address. This way the BASIC line will always require 12 bytes.<br>
     <br>
-    If the size argument is not used the size from a previous !BANK statement will be used.<br>
+    If the string comment is used it is appended directly after the SYS number.<br>
     <br>
     <br>
     <div id="code"><br>      !basic InitTitle
+      !basic 2018,START_ADDRESS
+      !basic 2018," BY RGCD",START_ADDRESS
     <br></div>
     <br>
     <br>
@@ -490,6 +492,57 @@
         </td>
         <td>
           *.spriteproject
+        </td>
+        <td>
+          spritedata
+        </td>
+        <td>
+          Index, Count, Offset, Number of Bytes
+        </td>
+        <td>
+          Takes the sprite data for Count sprites starting at Index (*64) and exports Number of Bytes bytes starting at Offset from there
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Spritepad Project File
+        </td>
+        <td>
+          *.spd
+        </td>
+        <td>
+          sprite
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports 256 * 64 bytes of the sprite data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Spritepad Project File
+        </td>
+        <td>
+          *.spd
+        </td>
+        <td>
+          sprite
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports Count * 64 bytes starting at Index * 64 bytes of the sprite data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Spritepad Project File
+        </td>
+        <td>
+          *.spd
         </td>
         <td>
           spritedata

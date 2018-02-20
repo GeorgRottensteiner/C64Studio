@@ -399,6 +399,7 @@ namespace C64Studio.Types
     public static string FILEFILTER_SPRITE_PROJECT = "Sprite Project|*.spriteproject|";
     public static string FILEFILTER_SPRITE_FILE = "Sprite File|*.spr|";
     public static string FILEFILTER_SPRITE = "Sprite Project or File|*.spriteproject;*.spr|";
+    public static string FILEFILTER_SPRITE_SPRITEPAD = "Spritepad Project|*.spd|";
     public static string FILEFILTER_GRAPHIC_SCREEN = "Graphic Screen Project|*.graphicscreen|";
     public static string FILEFILTER_MAP = "Map Project|*.mapproject|";
     public static string FILEFILTER_EXECUTABLE = "Executable Files|*.exe|";

@@ -3679,7 +3679,7 @@ namespace C64Studio.Parser
         if ( method == "SPRITE" )
         {
           int   startIndex = 0;
-          int   numSprites = 256; 
+          int   numSprites = -1; 
 
           if ( ( paramTokens.Count >= 3 )
           &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
@@ -3689,7 +3689,7 @@ namespace C64Studio.Parser
           if ( ( paramTokens.Count >= 4 )
           &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numSprites ) ) )
           {
-            numSprites = 256;
+            numSprites = -1;
           }
           Formats.SpriteProject   spriteProject = new C64Studio.Formats.SpriteProject();
 
@@ -3709,8 +3709,12 @@ namespace C64Studio.Parser
           }
           if ( !spriteProject.ReadFromBuffer( dataToInclude ) )
           {
-            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read charset project file " + subFilename );
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read sprite project file " + subFilename );
             return false;
+          }
+          if ( numSprites == -1 )
+          {
+            numSprites = spriteProject.NumSprites;
           }
           if ( ( startIndex < 0 )
           ||   ( startIndex >= spriteProject.NumSprites ) )
@@ -3721,7 +3725,7 @@ namespace C64Studio.Parser
           if ( ( numSprites <= 0 )
           ||   ( ( startIndex + numSprites ) > spriteProject.NumSprites ) )
           {
-            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid char count " + numSprites );
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid sprite count " + numSprites );
             return false;
           }
           GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( numSprites * 64 ) );
@@ -3774,8 +3778,12 @@ namespace C64Studio.Parser
           }
           if ( !spriteProject.ReadFromBuffer( dataToInclude ) )
           {
-            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read charset project file " + subFilename );
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read sprite project file " + subFilename );
             return false;
+          }
+          if ( numSprites == -1 )
+          {
+            numSprites = spriteProject.NumSprites;
           }
           if ( ( startIndex < 0 )
           ||   ( startIndex >= spriteProject.NumSprites ) )
@@ -3786,7 +3794,7 @@ namespace C64Studio.Parser
           if ( ( numSprites <= 0 )
           ||   ( ( startIndex + numSprites ) > spriteProject.NumSprites ) )
           {
-            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid char count " + numSprites );
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid sprite count " + numSprites );
             return false;
           }
           GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( numSprites * 64 ) );
@@ -3804,6 +3812,174 @@ namespace C64Studio.Parser
           }
           if ( ( offsetBytes + numBytes > spriteData.Length )
           ||   ( numBytes <= 0 ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid data size " + numBytes );
+            return false;
+          }
+          dataToInclude = spriteData.SubBuffer( offsetBytes, numBytes );
+        }
+      }
+      else if ( extension == ".SPD" )
+      {
+        if ( !Binary )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Assembly include for sprite projects is not supported" );
+          return false;
+        }
+
+        if ( ( method != "SPRITE" )
+        &&   ( method != "SPRITEDATA" ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are SPRITE and SPRITEDATA" );
+          return false;
+        }
+
+        // sprite set file
+        // sprites,index,count
+        if ( ( method == "SPRITE" )
+        &&   ( paramTokens.Count > 4 ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <Sprite>[,<Index>[,<Count>]]" );
+          return false;
+        }
+        if ( ( method == "SPRITEDATA" )
+        &&   ( paramTokens.Count != 6 ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <SpriteData>,<Index>,<Count>,<Offset>,<NumBytes>" );
+          return false;
+        }
+        if ( method == "SPRITE" )
+        {
+          int   startIndex = 0;
+          int   numSprites = -1;
+
+          if ( ( paramTokens.Count >= 3 )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
+          {
+            startIndex = 0;
+          }
+          if ( ( paramTokens.Count >= 4 )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numSprites ) ) )
+          {
+            numSprites = -1;
+          }
+          Formats.SpritePadProject    spriteProject = new Formats.SpritePadProject();
+
+          try
+          {
+            dataToInclude = GR.IO.File.ReadAllBytes( subFilename );
+            if ( dataToInclude == null )
+            {
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + subFilename );
+              return false;
+            }
+          }
+          catch ( System.IO.IOException )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + subFilename );
+            return false;
+          }
+          if ( !spriteProject.ReadFromBuffer( dataToInclude ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read sprite project file " + subFilename );
+            return false;
+          }
+          if ( numSprites == -1 )
+          {
+            numSprites = spriteProject.NumSprites;
+          }
+          if ( ( startIndex < 0 )
+          ||   ( startIndex >= spriteProject.NumSprites ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid start index " + startIndex );
+            return false;
+          }
+          if ( ( numSprites <= 0 )
+          ||   ( ( startIndex + numSprites ) > spriteProject.NumSprites ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid sprite count " + numSprites );
+            return false;
+          }
+          GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( numSprites * 64 ) );
+
+          for ( int i = 0; i < numSprites; ++i )
+          {
+            spriteProject.Sprites[startIndex + i].Data.CopyTo( spriteData, 0, 63, i * 64 );
+          }
+          dataToInclude = spriteData;
+        }
+        else if ( method == "SPRITEDATA" )
+        {
+          int   startIndex = 0;
+          int   numSprites = 256;
+          int   offsetBytes = 0;
+          int   numBytes = numSprites * 64;
+
+          if ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) )
+          {
+            startIndex = 0;
+          }
+          if ( !EvaluateTokens( lineIndex, paramTokens[3], out numSprites ) )
+          {
+            numSprites = 256;
+          }
+          if ( !EvaluateTokens( lineIndex, paramTokens[4], out offsetBytes ) )
+          {
+            offsetBytes = 0;
+          }
+          if ( !EvaluateTokens( lineIndex, paramTokens[5], out numBytes ) )
+          {
+            numBytes = numSprites * 64;
+          }
+
+          Formats.SpritePadProject    spriteProject = new Formats.SpritePadProject();
+
+          try
+          {
+            dataToInclude = GR.IO.File.ReadAllBytes( subFilename );
+            if ( dataToInclude == null )
+            {
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + subFilename );
+              return false;
+            }
+          }
+          catch ( System.IO.IOException )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + subFilename );
+            return false;
+          }
+          if ( !spriteProject.ReadFromBuffer( dataToInclude ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read sprite project file " + subFilename );
+            return false;
+          }
+          if ( ( startIndex < 0 )
+          ||   ( startIndex >= spriteProject.NumSprites ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid start index " + startIndex );
+            return false;
+          }
+          if ( ( numSprites <= 0 )
+          ||   ( ( startIndex + numSprites ) > spriteProject.NumSprites ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid sprite count " + numSprites );
+            return false;
+          }
+          GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( numSprites * 64 ) );
+
+          for ( int i = 0; i < numSprites; ++i )
+          {
+            spriteProject.Sprites[startIndex + i].Data.CopyTo( spriteData, 0, 63, i * 64 );
+          }
+
+          if ( ( offsetBytes >= spriteData.Length )
+          ||   ( offsetBytes < 0 ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid data offset " + offsetBytes );
+            return false;
+          }
+          if ( ( offsetBytes + numBytes > spriteData.Length )
+          || ( numBytes <= 0 ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid data size " + numBytes );
             return false;
