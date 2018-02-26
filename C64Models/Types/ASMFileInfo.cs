@@ -472,7 +472,11 @@ namespace C64Studio.Types.ASM
       {
         sourceInfoToMove.GlobalStartLine -= LineCount;
         sourceInfoToMove.LocalStartLine -= LineCount;
-        SourceInfo.Add( sourceInfoToMove.GlobalStartLine, sourceInfoToMove );
+        if ( !SourceInfo.ContainsKey( sourceInfoToMove.GlobalStartLine ) )
+        {
+          // safety measure, if there's duplicate entries somethings off
+          SourceInfo.Add( sourceInfoToMove.GlobalStartLine, sourceInfoToMove );
+        }
       }
 
       foreach ( var tempLabel in TempLabelInfo )
