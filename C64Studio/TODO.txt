@@ -12,7 +12,7 @@ Support fuer den CC65 compiler, so dass man auch in C programmieren kann. Das wa
 o Ist die Hilfe beim Debuggen offen, dann wird bei mir, sobald das Debuggen beendet wird, immer zur Hilfe-Tab gewechselt.
 o Refactoring/Rename 
 o Farben der GUI-Elemente
-o If you go to the preview pane, where it says Entries, i can't see whats underneath that because the slider bar is in the way. 
+o If you go to the preview pane, where it says Entries, i can't see whats underneath that because the slider bar is in the way. (DPI settings!)
 
 Samples:
 o Tutorials in Release

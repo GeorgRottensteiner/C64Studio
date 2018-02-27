@@ -29,8 +29,9 @@
     private void InitializeComponent()
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,6 +42,11 @@
       this.btnImportCharsetFromImage = new System.Windows.Forms.Button();
       this.btnImportFromFile = new System.Windows.Forms.Button();
       this.groupExport = new System.Windows.Forms.GroupBox();
+      this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
+      this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
+      this.label3 = new System.Windows.Forms.Label();
+      this.label4 = new System.Windows.Forms.Label();
+      this.btnExportToBASICData = new System.Windows.Forms.Button();
       this.comboCharScreens = new System.Windows.Forms.ComboBox();
       this.comboExportData = new System.Windows.Forms.ComboBox();
       this.comboExportType = new System.Windows.Forms.ComboBox();
@@ -68,6 +74,7 @@
       this.btnShiftUp = new System.Windows.Forms.Button();
       this.btnShiftRight = new System.Windows.Forms.Button();
       this.btnShiftLeft = new System.Windows.Forms.Button();
+      this.colorSelector = new GR.Forms.FastPictureBox();
       this.charEditor = new GR.Forms.FastPictureBox();
       this.btnPaste = new System.Windows.Forms.Button();
       this.btnCopy = new System.Windows.Forms.Button();
@@ -75,10 +82,6 @@
       this.btnPasteFromClipboard = new System.Windows.Forms.Button();
       this.labelCharInfo = new System.Windows.Forms.Label();
       this.checkMulticolor = new System.Windows.Forms.CheckBox();
-      this.radioCharColor = new System.Windows.Forms.RadioButton();
-      this.radioMulticolor2 = new System.Windows.Forms.RadioButton();
-      this.radioMultiColor1 = new System.Windows.Forms.RadioButton();
-      this.radioBackground = new System.Windows.Forms.RadioButton();
       this.comboCharColor = new System.Windows.Forms.ComboBox();
       this.comboMulticolor2 = new System.Windows.Forms.ComboBox();
       this.comboMulticolor1 = new System.Windows.Forms.ComboBox();
@@ -91,17 +94,17 @@
       this.comboColorMappingTargets = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
-      this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
-      this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
-      this.label3 = new System.Windows.Forms.Label();
-      this.label4 = new System.Windows.Forms.Label();
-      this.btnExportToBASICData = new System.Windows.Forms.Button();
+      this.label5 = new System.Windows.Forms.Label();
+      this.label6 = new System.Windows.Forms.Label();
+      this.label8 = new System.Windows.Forms.Label();
+      this.label9 = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.groupExport.SuspendLayout();
       this.tabEditor.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.colorSelector)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.charEditor)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).BeginInit();
       this.tabGraphicScreenEditor.SuspendLayout();
@@ -221,6 +224,50 @@
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
+      // 
+      // editExportBASICLineOffset
+      // 
+      this.editExportBASICLineOffset.Location = new System.Drawing.Point(355, 166);
+      this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
+      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
+      this.editExportBASICLineOffset.TabIndex = 28;
+      this.editExportBASICLineOffset.Text = "10";
+      // 
+      // editExportBASICLineNo
+      // 
+      this.editExportBASICLineNo.Location = new System.Drawing.Point(184, 166);
+      this.editExportBASICLineNo.Name = "editExportBASICLineNo";
+      this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
+      this.editExportBASICLineNo.TabIndex = 29;
+      this.editExportBASICLineNo.Text = "10";
+      // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(288, 169);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(61, 13);
+      this.label3.TabIndex = 26;
+      this.label3.Text = "Line Offset:";
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(131, 169);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(47, 13);
+      this.label4.TabIndex = 27;
+      this.label4.Text = "Line No:";
+      // 
+      // btnExportToBASICData
+      // 
+      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 164);
+      this.btnExportToBASICData.Name = "btnExportToBASICData";
+      this.btnExportToBASICData.Size = new System.Drawing.Size(120, 23);
+      this.btnExportToBASICData.TabIndex = 25;
+      this.btnExportToBASICData.Text = "Export to BASIC data";
+      this.btnExportToBASICData.UseVisualStyleBackColor = true;
+      this.btnExportToBASICData.Click += new System.EventHandler(this.btnExportToBASICData_Click);
       // 
       // comboCharScreens
       // 
@@ -350,6 +397,10 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.label9);
+      this.tabEditor.Controls.Add(this.label8);
+      this.tabEditor.Controls.Add(this.label6);
+      this.tabEditor.Controls.Add(this.label5);
       this.tabEditor.Controls.Add(this.btnApplyScreenSize);
       this.tabEditor.Controls.Add(this.editScreenHeight);
       this.tabEditor.Controls.Add(this.editScreenWidth);
@@ -363,6 +414,7 @@
       this.tabEditor.Controls.Add(this.btnShiftUp);
       this.tabEditor.Controls.Add(this.btnShiftRight);
       this.tabEditor.Controls.Add(this.btnShiftLeft);
+      this.tabEditor.Controls.Add(this.colorSelector);
       this.tabEditor.Controls.Add(this.charEditor);
       this.tabEditor.Controls.Add(this.btnPaste);
       this.tabEditor.Controls.Add(this.btnCopy);
@@ -370,10 +422,6 @@
       this.tabEditor.Controls.Add(this.btnPasteFromClipboard);
       this.tabEditor.Controls.Add(this.labelCharInfo);
       this.tabEditor.Controls.Add(this.checkMulticolor);
-      this.tabEditor.Controls.Add(this.radioCharColor);
-      this.tabEditor.Controls.Add(this.radioMulticolor2);
-      this.tabEditor.Controls.Add(this.radioMultiColor1);
-      this.tabEditor.Controls.Add(this.radioBackground);
       this.tabEditor.Controls.Add(this.comboCharColor);
       this.tabEditor.Controls.Add(this.comboMulticolor2);
       this.tabEditor.Controls.Add(this.comboMulticolor1);
@@ -451,7 +499,7 @@
       // btnMirrorY
       // 
       this.btnMirrorY.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorY.Image")));
-      this.btnMirrorY.Location = new System.Drawing.Point(843, 414);
+      this.btnMirrorY.Location = new System.Drawing.Point(844, 438);
       this.btnMirrorY.Name = "btnMirrorY";
       this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorY.TabIndex = 18;
@@ -460,7 +508,7 @@
       // btnMirrorX
       // 
       this.btnMirrorX.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorX.Image")));
-      this.btnMirrorX.Location = new System.Drawing.Point(811, 414);
+      this.btnMirrorX.Location = new System.Drawing.Point(812, 438);
       this.btnMirrorX.Name = "btnMirrorX";
       this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorX.TabIndex = 19;
@@ -469,7 +517,7 @@
       // btnShiftDown
       // 
       this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
-      this.btnShiftDown.Location = new System.Drawing.Point(779, 414);
+      this.btnShiftDown.Location = new System.Drawing.Point(780, 438);
       this.btnShiftDown.Name = "btnShiftDown";
       this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
       this.btnShiftDown.TabIndex = 20;
@@ -478,7 +526,7 @@
       // btnShiftUp
       // 
       this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
-      this.btnShiftUp.Location = new System.Drawing.Point(747, 414);
+      this.btnShiftUp.Location = new System.Drawing.Point(748, 438);
       this.btnShiftUp.Name = "btnShiftUp";
       this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
       this.btnShiftUp.TabIndex = 15;
@@ -487,7 +535,7 @@
       // btnShiftRight
       // 
       this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
-      this.btnShiftRight.Location = new System.Drawing.Point(715, 414);
+      this.btnShiftRight.Location = new System.Drawing.Point(716, 438);
       this.btnShiftRight.Name = "btnShiftRight";
       this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
       this.btnShiftRight.TabIndex = 16;
@@ -496,16 +544,28 @@
       // btnShiftLeft
       // 
       this.btnShiftLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftLeft.Image")));
-      this.btnShiftLeft.Location = new System.Drawing.Point(683, 414);
+      this.btnShiftLeft.Location = new System.Drawing.Point(684, 438);
       this.btnShiftLeft.Name = "btnShiftLeft";
       this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
       this.btnShiftLeft.TabIndex = 17;
       this.btnShiftLeft.UseVisualStyleBackColor = true;
       // 
+      // colorSelector
+      // 
+      this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.colorSelector.DisplayPage = fastImage1;
+      this.colorSelector.Image = null;
+      this.colorSelector.Location = new System.Drawing.Point(683, 413);
+      this.colorSelector.Name = "colorSelector";
+      this.colorSelector.Size = new System.Drawing.Size(260, 19);
+      this.colorSelector.TabIndex = 14;
+      this.colorSelector.TabStop = false;
+      this.colorSelector.MouseDown += new System.Windows.Forms.MouseEventHandler(this.colorSelector_MouseDown);
+      // 
       // charEditor
       // 
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage3;
+      this.charEditor.DisplayPage = fastImage2;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(683, 148);
       this.charEditor.Name = "charEditor";
@@ -574,54 +634,6 @@
       this.checkMulticolor.UseVisualStyleBackColor = true;
       this.checkMulticolor.CheckedChanged += new System.EventHandler(this.checkMulticolor_CheckedChanged);
       // 
-      // radioCharColor
-      // 
-      this.radioCharColor.AutoSize = true;
-      this.radioCharColor.Location = new System.Drawing.Point(683, 87);
-      this.radioCharColor.Name = "radioCharColor";
-      this.radioCharColor.Size = new System.Drawing.Size(74, 17);
-      this.radioCharColor.TabIndex = 2;
-      this.radioCharColor.TabStop = true;
-      this.radioCharColor.Text = "Char Color";
-      this.radioCharColor.UseVisualStyleBackColor = true;
-      this.radioCharColor.CheckedChanged += new System.EventHandler(this.radioCharColor_CheckedChanged);
-      // 
-      // radioMulticolor2
-      // 
-      this.radioMulticolor2.AutoSize = true;
-      this.radioMulticolor2.Location = new System.Drawing.Point(683, 60);
-      this.radioMulticolor2.Name = "radioMulticolor2";
-      this.radioMulticolor2.Size = new System.Drawing.Size(79, 17);
-      this.radioMulticolor2.TabIndex = 2;
-      this.radioMulticolor2.TabStop = true;
-      this.radioMulticolor2.Text = "Multicolor 2";
-      this.radioMulticolor2.UseVisualStyleBackColor = true;
-      this.radioMulticolor2.CheckedChanged += new System.EventHandler(this.radioMulticolor2_CheckedChanged);
-      // 
-      // radioMultiColor1
-      // 
-      this.radioMultiColor1.AutoSize = true;
-      this.radioMultiColor1.Location = new System.Drawing.Point(683, 33);
-      this.radioMultiColor1.Name = "radioMultiColor1";
-      this.radioMultiColor1.Size = new System.Drawing.Size(79, 17);
-      this.radioMultiColor1.TabIndex = 2;
-      this.radioMultiColor1.TabStop = true;
-      this.radioMultiColor1.Text = "Multicolor 1";
-      this.radioMultiColor1.UseVisualStyleBackColor = true;
-      this.radioMultiColor1.CheckedChanged += new System.EventHandler(this.radioMultiColor1_CheckedChanged);
-      // 
-      // radioBackground
-      // 
-      this.radioBackground.AutoSize = true;
-      this.radioBackground.Location = new System.Drawing.Point(683, 6);
-      this.radioBackground.Name = "radioBackground";
-      this.radioBackground.Size = new System.Drawing.Size(83, 17);
-      this.radioBackground.TabIndex = 2;
-      this.radioBackground.TabStop = true;
-      this.radioBackground.Text = "Background";
-      this.radioBackground.UseVisualStyleBackColor = true;
-      this.radioBackground.CheckedChanged += new System.EventHandler(this.radioBackground_CheckedChanged);
-      // 
       // comboCharColor
       // 
       this.comboCharColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
@@ -673,7 +685,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage4;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -772,49 +784,41 @@
       this.listColorMappingColors.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listColorMappingColors_DrawItem);
       this.listColorMappingColors.SelectedIndexChanged += new System.EventHandler(this.listColorMappingColors_SelectedIndexChanged);
       // 
-      // editExportBASICLineOffset
+      // label5
       // 
-      this.editExportBASICLineOffset.Location = new System.Drawing.Point(355, 166);
-      this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
-      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
-      this.editExportBASICLineOffset.TabIndex = 28;
-      this.editExportBASICLineOffset.Text = "10";
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(681, 9);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(65, 13);
+      this.label5.TabIndex = 35;
+      this.label5.Text = "Background";
       // 
-      // editExportBASICLineNo
+      // label6
       // 
-      this.editExportBASICLineNo.Location = new System.Drawing.Point(184, 166);
-      this.editExportBASICLineNo.Name = "editExportBASICLineNo";
-      this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
-      this.editExportBASICLineNo.TabIndex = 29;
-      this.editExportBASICLineNo.Text = "10";
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(680, 36);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(61, 13);
+      this.label6.TabIndex = 35;
+      this.label6.Text = "Multicolor 1";
       // 
-      // label3
+      // label8
       // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(288, 169);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(61, 13);
-      this.label3.TabIndex = 26;
-      this.label3.Text = "Line Offset:";
+      this.label8.AutoSize = true;
+      this.label8.Location = new System.Drawing.Point(680, 63);
+      this.label8.Name = "label8";
+      this.label8.Size = new System.Drawing.Size(61, 13);
+      this.label8.TabIndex = 35;
+      this.label8.Text = "Multicolor 2";
       // 
-      // label4
+      // label9
       // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(131, 169);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(47, 13);
-      this.label4.TabIndex = 27;
-      this.label4.Text = "Line No:";
-      // 
-      // btnExportToBASICData
-      // 
-      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 164);
-      this.btnExportToBASICData.Name = "btnExportToBASICData";
-      this.btnExportToBASICData.Size = new System.Drawing.Size(120, 23);
-      this.btnExportToBASICData.TabIndex = 25;
-      this.btnExportToBASICData.Text = "Export to BASIC data";
-      this.btnExportToBASICData.UseVisualStyleBackColor = true;
-      this.btnExportToBASICData.Click += new System.EventHandler(this.btnExportToBASICData_Click);
+      this.label9.AutoSize = true;
+      this.label9.Location = new System.Drawing.Point(681, 90);
+      this.label9.Name = "label9";
+      this.label9.Size = new System.Drawing.Size(69, 13);
+      this.label9.TabIndex = 35;
+      this.label9.Text = "Custom Color";
       // 
       // GraphicScreenEditor
       // 
@@ -833,6 +837,7 @@
       this.groupExport.PerformLayout();
       this.tabEditor.ResumeLayout(false);
       this.tabEditor.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.colorSelector)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.charEditor)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).EndInit();
       this.tabGraphicScreenEditor.ResumeLayout(false);
@@ -868,10 +873,6 @@
     private System.Windows.Forms.Button btnPasteFromClipboard;
     private System.Windows.Forms.Label labelCharInfo;
     private System.Windows.Forms.CheckBox checkMulticolor;
-    private System.Windows.Forms.RadioButton radioCharColor;
-    private System.Windows.Forms.RadioButton radioMulticolor2;
-    private System.Windows.Forms.RadioButton radioMultiColor1;
-    private System.Windows.Forms.RadioButton radioBackground;
     private System.Windows.Forms.ComboBox comboCharColor;
     private System.Windows.Forms.ComboBox comboMulticolor2;
     private System.Windows.Forms.ComboBox comboMulticolor1;
@@ -911,8 +912,10 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Button btnExportToBASICData;
-
-
-
+    private GR.Forms.FastPictureBox colorSelector;
+    private System.Windows.Forms.Label label9;
+    private System.Windows.Forms.Label label8;
+    private System.Windows.Forms.Label label6;
+    private System.Windows.Forms.Label label5;
   }
 }

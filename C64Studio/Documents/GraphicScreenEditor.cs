@@ -54,11 +54,12 @@ namespace C64Studio
 
 
     private int                         m_CurrentChar = 0;
-    private ColorType                   m_CurrentColorType = ColorType.CHAR_COLOR;
 
     private bool[,]                     m_ErrornousChars = new bool[40, 25];
 
     private bool                        m_ButtonReleased = false;
+
+    private byte                        m_CurrentColor = 1;
 
     private List<Formats.CharData>      m_Chars = new List<Formats.CharData>();
     private System.Drawing.Point        m_SelectedChar = new System.Drawing.Point( -1, -1 );
@@ -78,10 +79,12 @@ namespace C64Studio
       pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       charEditor.DisplayPage.Create( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       m_GraphicScreenProject.Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      colorSelector.DisplayPage.Create( 16 * 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
       CustomRenderer.PaletteManager.ApplyPalette( pictureEditor.DisplayPage );
       CustomRenderer.PaletteManager.ApplyPalette( charEditor.DisplayPage );
       CustomRenderer.PaletteManager.ApplyPalette( m_GraphicScreenProject.Image );
+      CustomRenderer.PaletteManager.ApplyPalette( colorSelector.DisplayPage );
 
       foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
       {
@@ -99,13 +102,15 @@ namespace C64Studio
         comboCharColor.Items.Add( i.ToString( "d2" ) );
 
         listColorMappingColors.Items.Add( i.ToString( "d2" ) );
+
+        colorSelector.DisplayPage.Box( i * 8, 0, 8, 8, (uint)i );
       }
+      colorSelector.DisplayPage.Rectangle( m_CurrentColor * 8, 0, 8, 8, 16 );
       comboBackground.SelectedIndex = 0;
       comboMulticolor1.SelectedIndex = 0;
       comboMulticolor2.SelectedIndex = 0;
       comboCharColor.SelectedIndex = 1;
       comboColorMappingTargets.SelectedIndex = 0;
-      radioCharColor.Checked = true;
 
       foreach ( Formats.GraphicScreenProject.CheckType checkType in System.Enum.GetValues( typeof( Formats.GraphicScreenProject.CheckType ) ) )
       {
@@ -345,97 +350,9 @@ namespace C64Studio
           }
         }
         comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Color;
-        /*
-        byte    charByte = m_Characters[m_CurrentChar].Data.ByteAt( charY );
-        byte    newByte = charByte;
-        int     colorIndex = m_Characters[m_CurrentChar].Color;
-
-        if ( ( !m_Characters[m_CurrentChar].Multicolor )
-        ||   ( m_Characters[m_CurrentChar].Color < 8 ) )
-        {
-          // single color
-          charX = 7 - charX;
-          if ( m_CurrentColorType == ColorType.CHAR_COLOR )
-          {
-            newByte |= (byte)( 1 << charX );
-          }
-          else
-          {
-            newByte &= (byte)~( 1 << charX );
-            colorIndex = m_BackgroundColor;
-          }
-        }
-        else
-        {
-          // multi color
-          charX = X / ( pictureEditor.ClientRectangle.Width / 4 );
-          charX = 3 - charX;
-
-          newByte &= (byte)~( 3 << ( 2 * charX ) );
-
-          int     replacementBytes = 0;
-
-          switch ( m_CurrentColorType )
-          {
-            case ColorType.BACKGROUND:
-              colorIndex = m_BackgroundColor;
-              break;
-            case ColorType.CHAR_COLOR:
-              replacementBytes = 3;
-              colorIndex = m_Characters[m_CurrentChar].Color;
-              break;
-            case ColorType.MULTICOLOR_1:
-              replacementBytes = 1;
-              colorIndex = m_MultiColor1;
-              break;
-            case ColorType.MULTICOLOR_2:
-              replacementBytes = 2;
-              colorIndex = m_MultiColor2;
-              break;
-          }
-          newByte |= (byte)( replacementBytes << ( 2 * charX ) );
-        }
-        if ( newByte != charByte )
-        {
-          Modified = true;
-          m_Characters[m_CurrentChar].Data.SetU8At( charY, newByte );
-
-          RebuildCharImage( m_CurrentChar );
-          //m_Characters[m_CurrentChar].Image.SetPixel( X / ( pictureEditor.ClientRectangle.Width / 8 ), charY, m_ColorValues[colorIndex] );
-
-          pictureEditor.Invalidate();
-        }
-         */
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
-        /*
-        byte charByte = m_Characters[m_CurrentChar].Data.ByteAt( charY );
-        byte newByte = charByte;
-
-        if ( ( !m_Characters[m_CurrentChar].Multicolor )
-        ||   ( m_Characters[m_CurrentChar].Color < 8 ) )
-        {
-          // single color
-          charX = 7 - charX;
-          newByte &= (byte)~( 1 << charX );
-        }
-        else
-        {
-          // multi color
-          charX = X / ( pictureEditor.ClientRectangle.Width / 4 );
-          charX = 3 - charX;
-
-          newByte &= (byte)~( 3 << ( 2 * charX ) );
-        }
-        if ( newByte != charByte )
-        {
-          Modified = true;
-          m_Characters[m_CurrentChar].Data.SetU8At( charY, newByte );
-          RebuildCharImage( m_CurrentChar );
-          pictureEditor.Invalidate();
-        }
-         */
       }
     }
 
@@ -443,28 +360,24 @@ namespace C64Studio
 
     private void radioBackground_CheckedChanged( object sender, EventArgs e )
     {
-      m_CurrentColorType = ColorType.BACKGROUND;
     }
 
 
 
     private void radioMultiColor1_CheckedChanged( object sender, EventArgs e )
     {
-      m_CurrentColorType = ColorType.MULTICOLOR_1;
     }
 
 
 
     private void radioMulticolor2_CheckedChanged( object sender, EventArgs e )
     {
-      m_CurrentColorType = ColorType.MULTICOLOR_2;
     }
 
 
 
     private void radioCharColor_CheckedChanged( object sender, EventArgs e )
     {
-      m_CurrentColorType = ColorType.CHAR_COLOR;
     }
 
 
@@ -1450,13 +1363,6 @@ namespace C64Studio
       btnExportAs.Enabled = false;
 
       bool      foundError = false;
-      foreach ( Formats.CharData aChar in m_Chars )
-      {
-        aChar.Error = "";
-        aChar.Mode = C64Studio.Types.CharsetMode.HIRES;
-        aChar.Color = 0;
-        aChar.Replacement = null;
-      }
       for ( int j = 0; j < BlockHeight; ++j )
       {
         for ( int i = 0; i < BlockWidth; ++i )
@@ -1533,13 +1439,6 @@ namespace C64Studio
       btnExportAs.Enabled = false;
 
       bool      foundError = false;
-      foreach ( Formats.CharData aChar in m_Chars )
-      {
-        aChar.Error = "";
-        aChar.Mode = C64Studio.Types.CharsetMode.HIRES;
-        aChar.Color = 0;
-        aChar.Replacement = null;
-      }
       for ( int j = 0; j < BlockHeight; ++j )
       {
         for ( int i = 0; i < BlockWidth; ++i )
@@ -1627,7 +1526,7 @@ namespace C64Studio
         for ( int x = 0; x < BlockWidth; ++x )
         {
           // ein zeichen-block
-          m_ErrornousChars[x, y] = false;          
+          m_ErrornousChars[x, y] = false;
 
           // determine single/multi color
           bool[] usedColor = new bool[16];
@@ -1845,6 +1744,14 @@ namespace C64Studio
 
     private void btnCheck_Click( object sender, EventArgs e )
     {
+      foreach ( Formats.CharData aChar in m_Chars )
+      {
+        aChar.Error = "";
+        aChar.Mode = C64Studio.Types.CharsetMode.HIRES;
+        aChar.Color = 0;
+        aChar.Replacement = null;
+      }
+
       switch ( (Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex )
       {
         case C64Studio.Formats.GraphicScreenProject.CheckType.HIRES_BITMAP:
@@ -1903,23 +1810,7 @@ namespace C64Studio
         }
         if ( charToEdit.Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
         {
-          byte  colorToSet = (byte)charToEdit.Color;
-
-          switch ( m_CurrentColorType )
-          {
-            case ColorType.BACKGROUND:
-              colorToSet = (byte)m_GraphicScreenProject.BackgroundColor;
-              break;
-            case ColorType.CHAR_COLOR:
-              colorToSet = (byte)charToEdit.Color;
-              break;
-            case ColorType.MULTICOLOR_1:
-              colorToSet = (byte)m_GraphicScreenProject.MultiColor1;
-              break;
-            case ColorType.MULTICOLOR_2:
-              colorToSet = (byte)m_GraphicScreenProject.MultiColor2;
-              break;
-          }
+          byte    colorToSet = m_CurrentColor;
 
           charX /= 2;
           m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX * 2, m_SelectedChar.Y * 8 + charY, colorToSet );
@@ -1933,11 +1824,7 @@ namespace C64Studio
         }
         else
         {
-          byte  colorToSet = (byte)charToEdit.Color;
-          if ( m_CurrentColorType == ColorType.BACKGROUND )
-          {
-            colorToSet = (byte)m_GraphicScreenProject.BackgroundColor;
-          }
+          byte    colorToSet = m_CurrentColor;
 
           m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + charX, m_SelectedChar.Y * 8 + charY, colorToSet );
 
@@ -2909,6 +2796,20 @@ namespace C64Studio
           break;
       }
     }
+
+
+
+    private void colorSelector_MouseDown( object sender, MouseEventArgs e )
+    {
+      int     colorIndex = ( e.X * 16 * 8 / colorSelector.ClientSize.Width ) / 8;
+      colorSelector.DisplayPage.Rectangle( m_CurrentColor * 8, 0, 8, 8, (uint)m_CurrentColor );
+
+      m_CurrentColor = (byte)colorIndex;
+      colorSelector.DisplayPage.Rectangle( m_CurrentColor * 8, 0, 8, 8, 16 );
+      colorSelector.Invalidate();
+    }
+
+
 
   }
 }
