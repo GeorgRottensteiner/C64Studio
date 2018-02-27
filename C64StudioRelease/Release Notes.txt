@@ -17,6 +17,43 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+27.02.2018 - 5.6:         Fix: Macro source info was using file name at calling location, not of the macro source location
+                          Fix: Fixed loading bug in ValueTableEditor, table with values was refilled but automatically cleared when loading tables without formula
+                          Add: making !media accept startindex/count optionally for value tables
+                          Fix: fixed source export of map editor column by column.
+                          Add: Added MAP_DATA binary export to MapEditor also fixed row by row and column by column where it was the wrong way around
+                          Add: Enhanced !basic pseudo op to allow line number and text comment
+                          Add: Added text entry mode for char screen designer
+                          Add: Added delta info to relative-jump-too-far
+                          Fix: Corrected stupid bug in !basic pseudo op, pointer to basic file end was totally wrong
+                          Add: Enabled including of assembly symbols in BASIC files (and subsequently debugging the called assembly)
+                          Add: BASIC macros now allow hex values (prefixed with $)
+                          Fix: Fixed autocomplete for enabled tabs (hopefully not breaking everything else with tabs)
+                          Add: support for V5 of charpad ctm files
+                          Add: a include map sample project with charset
+                          Add: added binary editor to "Window" menu as well
+                          Fix: save all now also saves documents which are not part of the solution
+                          Add: Added value table editor to Window menu as well
+                          Fix: selection highlighting now also works in BASIC
+                          Fix: added missing BASIC macro symbols
+                          Fix: total rewrite of syntax coloring for BASIC
+                          Add: double click selection in BASIC now selects the token beneath
+                          Fix: Fixed operator precedence, hi-/lo-byte operators had lower prio than comparison
+                          Fix: Fixed renumber issue: Non-existing target line numbers were set to zero, now they stay unchanged
+                          Fix: BASIC: Renumber does not mess up spaces anymore
+                               BASIC: Renumbering does not at new line at the end
+                               BASIC: Renumbering does not mess up control codes
+                          Fix: Importing image in charset editor now used the import dialog.
+                               Import dialog checks does not bitch about hires chars anymore if they have a valid custom color
+                          Fix: Fixed crash when shortcutkeys in toolbarstrip doesn't like the short cut
+                          Fix: Shortcut tooltips are now adjusted when app state changes (debug toolbar shortcuts)
+                          Add: Option to hide auto complete
+                          Add: Experimental auto-adjusting of moved symbols (editing will move symbol infos accordingly)
+                          Add: Added export for charscreen projects
+                          Add: Made miniview toggle-able via context menu
+                          Add: added spritepad support (*.spd), Importing in sprite editor and reading via !media
+                          Add: better color selection for manual drawing in graphic screen editor
+
 20.12.2017 - 5.5:         Add: Value Table editor
                           Fix: dc.b for PDS assembler
                           Add: Koala import support courtesy SouIstealer
