@@ -9905,14 +9905,15 @@ namespace C64Studio.Parser
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
       ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT ) )
       {
-        if ( AssembledOutput.Assembly.Length < 524288 )
+        GR.Memory.ByteBuffer    resultingAssembly = AssembledOutput.Assembly;
+        if ( resultingAssembly.Length < 524288 )
         {
           // fill up
-          AssembledOutput.Assembly = AssembledOutput.Assembly + new GR.Memory.ByteBuffer( 524288 - AssembledOutput.Assembly.Length );
+          resultingAssembly = resultingAssembly + new GR.Memory.ByteBuffer( 524288 - resultingAssembly.Length );
         }
-        else if ( AssembledOutput.Assembly.Length > 524288 )
+        else if ( resultingAssembly.Length > 524288 )
         {
-          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + AssembledOutput.Assembly.Length.ToString() + " > 524288" );
+          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + resultingAssembly.Length.ToString() + " > 524288" );
           return false;
         }
         if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
@@ -9972,7 +9973,7 @@ namespace C64Studio.Parser
             }
             chip.AppendU16NetworkOrder( 0x2000 ); // rom size
 
-            chip.Append( AssembledOutput.Assembly.SubBuffer( i * 0x2000, 0x2000 ) );
+            chip.Append( resultingAssembly.SubBuffer( i * 0x2000, 0x2000 ) );
 
             AssembledOutput.Assembly += chip;
           }

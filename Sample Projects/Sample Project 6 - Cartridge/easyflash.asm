@@ -5,4 +5,4 @@
         lda #$0
         sta 53280
 -
-        jmp -
+        jmp - 
