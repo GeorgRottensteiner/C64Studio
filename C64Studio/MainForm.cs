@@ -5361,13 +5361,10 @@ namespace C64Studio
 
       if ( Document.BaseDoc != null )
       {
-        if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
+        if ( ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
+        ||   ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
         {
-          sourceCode = ( (SourceASMEx)Document.BaseDoc ).editSource.Text;
-        }
-        else if ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
-        {
-          sourceCode = ( (SourceBasicEx)Document.BaseDoc ).editSource.Text;
+          sourceCode = Document.BaseDoc.GetContent();
         }
       }
 

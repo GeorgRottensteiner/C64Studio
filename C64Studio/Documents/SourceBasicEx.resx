@@ -144,15 +144,25 @@
   <metadata name="menuBASIC.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>421, 17</value>
   </metadata>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>536, 17</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnToggleSymbolMode.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAABeSURBVDhPlYvBDcAgDAPZfy/WYJYiKqXOxSog3SO2L631cQfzlppJEVLwZKfY0dhSL2621Iub
-        LfXiZku9uNlSL262/K4VPNmRsDIpQs4TPLzIKmoAeyKTeCcw/9PHA/SzYErwY/gjAAAAAElFTkSuQmCC
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABGdBTUEAALGPC/xhBQAAAF5JREFUOE+V
+        i8ENwCAMA9l/L9ZgliIqpc7FKiDdI7YvrfVxB/OWmkkRUvBkp9jR2FIvbrbUi5st9eJmS7242VIvbrb8
+        rhU82ZGwMilCzhM8vMgqagB7IpN4JzD/08cD9LNgSvBj+CMAAAAASUVORK5CYII=
 </value>
   </data>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>536, 17</value>
   </metadata>
+  <data name="btnToggleUpperLowerCase.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAABaSURBVDhP1YxBDoBACMT4/6dxzHQTwKjZeLIXQkmJ3ORbEDF7GcNeAy69QV0D9MJSsI8A1+G8
+        8CqengnUTwOWzul9Frj6rIP0EOgSCFT9wrwJxDDz/MpmkHkAibsOD0K1vu4AAAAASUVORK5CYII=
+</value>
+  </data>
 </root>

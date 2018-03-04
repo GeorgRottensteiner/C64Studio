@@ -17,6 +17,7 @@ namespace C64Studio
     bool                                      m_StringEnterMode = false;
     bool                                      m_LabelMode = false;
     bool                                      m_SymbolMode = false;
+    bool                                      m_LowerCaseMode = false;
     System.Windows.Forms.Keys m_ControlKeyReplacement = System.Windows.Forms.Keys.Tab;
     System.Windows.Forms.Keys m_CommodoreKeyReplacement = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.ControlKey;
     private FastColoredTextBoxNS.AutocompleteMenu   AutoComplete = null;
@@ -534,7 +535,12 @@ namespace C64Studio
 
     public override string GetContent()
     {
-      return editSource.Text;
+      string    content = editSource.Text;
+      if ( m_LowerCaseMode )
+      {
+        content = MakeUpperCase( content );
+      }
+      return content;
     }
 
 
@@ -734,6 +740,8 @@ namespace C64Studio
       try
       {
         DisableFileWatcher();
+
+        
         System.IO.File.WriteAllText( Filename, GetContent() );
       }
       catch ( System.IO.IOException ex )
@@ -991,117 +999,6 @@ namespace C64Studio
 
 
 
-    System.Windows.Forms.Keys ResolveKey( char charToResolve ) 
-    {
-      switch ( charToResolve )
-      {
-        case 'A':
-        case 'a':
-          return System.Windows.Forms.Keys.A;
-        case 'B':
-        case 'b':
-          return System.Windows.Forms.Keys.B;
-        case 'C':
-        case 'c':
-          return System.Windows.Forms.Keys.C;
-        case 'D':
-        case 'd':
-          return System.Windows.Forms.Keys.D;
-        case 'E':
-        case 'e':
-          return System.Windows.Forms.Keys.E;
-        case 'F':
-        case 'f':
-          return System.Windows.Forms.Keys.F;
-        case 'G':
-        case 'g':
-          return System.Windows.Forms.Keys.G;
-        case 'H':
-        case 'h':
-          return System.Windows.Forms.Keys.H;
-        case 'I':
-        case 'i':
-          return System.Windows.Forms.Keys.I;
-        case 'J':
-        case 'j':
-          return System.Windows.Forms.Keys.J;
-        case 'K':
-        case 'k':
-          return System.Windows.Forms.Keys.K;
-        case 'L':
-        case 'l':
-          return System.Windows.Forms.Keys.L;
-        case 'M':
-        case 'm':
-          return System.Windows.Forms.Keys.M;
-        case 'N':
-        case 'n':
-          return System.Windows.Forms.Keys.N;
-        case 'O':
-        case 'o':
-          return System.Windows.Forms.Keys.O;
-        case 'P':
-        case 'p':
-          return System.Windows.Forms.Keys.P;
-        case 'Q':
-        case 'q':
-          return System.Windows.Forms.Keys.Q;
-        case 'R':
-        case 'r':
-          return System.Windows.Forms.Keys.R;
-        case 'S':
-        case 's':
-          return System.Windows.Forms.Keys.S;
-        case 'T':
-        case 't':
-          return System.Windows.Forms.Keys.T;
-        case 'U':
-        case 'u':
-          return System.Windows.Forms.Keys.U;
-        case 'V':
-        case 'v':
-          return System.Windows.Forms.Keys.V;
-        case 'W':
-        case 'w':
-          return System.Windows.Forms.Keys.W;
-        case 'X':
-        case 'x':
-          return System.Windows.Forms.Keys.X;
-        case 'Y':
-        case 'y':
-          return System.Windows.Forms.Keys.Y;
-        case 'Z':
-        case 'z':
-          return System.Windows.Forms.Keys.Z;
-        case ' ':
-          return System.Windows.Forms.Keys.Space;
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-          return (System.Windows.Forms.Keys)charToResolve;
-        case '+':
-          return System.Windows.Forms.Keys.Add;
-        case '-':
-          return System.Windows.Forms.Keys.OemCloseBrackets;
-        case ',':
-          return (System.Windows.Forms.Keys)188;
-          /*
-        case ',':
-        case ':':
-          return (System.Windows.Forms.Keys)charToResolve;*/
-      }
-      return System.Windows.Forms.Keys.None;
-    }
-
-
-
     protected override bool ProcessCmdKey( ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData )
     {
       if ( ( keyData == m_ControlKeyReplacement )
@@ -1183,6 +1080,11 @@ namespace C64Studio
             {
               // could be a token
               string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
+              if ( m_LowerCaseMode )
+              {
+                leftText = MakeUpperCase( leftText );
+              }
+
               if ( ( leftText.Length >= 1 )
               &&   ( leftText[leftText.Length - 1] >= 'A' )
               &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
@@ -1194,7 +1096,15 @@ namespace C64Studio
                   &&   ( opcode.ShortCut.Length <= leftText.Length )
                   &&   ( string.Compare( opcode.ShortCut, 0, leftText, leftText.Length - opcode.ShortCut.Length, opcode.ShortCut.Length ) == 0 ) )
                   {
-                    editSource.SelectedText = opcode.Command.Substring( opcode.ShortCut.Length - 1 );
+                    // TODO - case!
+                    if ( m_LowerCaseMode )
+                    {
+                      editSource.SelectedText = MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ) );
+                    }
+                    else
+                    {
+                      editSource.SelectedText = opcode.Command.Substring( opcode.ShortCut.Length - 1 );
+                    }
                     return true;
                   }
                 }
@@ -1232,7 +1142,14 @@ namespace C64Studio
           ||   ( c64Key.Replacements.Count == 0 ) )
           {
             //Debug.Log( "Trying to map unknown token: " + key.ToString() );
-            editSource.SelectedText = "" + c64Key.CharValue;
+            if ( m_LowerCaseMode )
+            {
+              editSource.SelectedText = "" + c64Key.LowerCaseChar;
+            }
+            else
+            {
+              editSource.SelectedText = "" + c64Key.CharValue;
+            }
           }
           else
           {
@@ -1345,6 +1262,10 @@ namespace C64Studio
 
     public override void FillContent( string Text )
     {
+      if ( m_LowerCaseMode )
+      {
+        Text = MakeLowerCase( Text );
+      }
       editSource.Text = Text;
       SetModified();
     }
@@ -1468,6 +1389,125 @@ namespace C64Studio
 
 
 
+    private void btnToggleUpperLowerCase_CheckedChanged( object sender, EventArgs e )
+    {
+      ToggleCase();
+    }
+
+
+
+    private void ToggleCase()
+    {
+      m_LowerCaseMode = !m_LowerCaseMode;
+
+      string    text = editSource.Text;
+
+      if ( m_LowerCaseMode )
+      {
+        text = MakeLowerCase( text );
+      }
+      else
+      {
+        text = MakeUpperCase( text );
+      }
+      /*
+      StringBuilder   sb = new StringBuilder( text.Length );
+
+      foreach ( var singleChar in text )
+      {
+        if ( m_LowerCaseMode )
+        {
+          if ( ( singleChar & 0xff00 ) == 0xee00 )
+          {
+            sb.Append( (char)( ( singleChar & 0x00ff ) | 0xef00 ) );
+          }
+          else if ( ( singleChar >= 'A')
+          &&        ( singleChar <= 'Z' ) )
+          {
+            sb.Append( (char)( ( singleChar - 'A' + 1 ) | 0xef00 ) );
+          }
+          else
+          {
+            sb.Append( singleChar );
+          }
+        }
+        else
+        {
+          if ( ( singleChar & 0xff00 ) == 0xef00 )
+          {
+            sb.Append( (char)( ( singleChar & 0x00ff ) | 0xee00 ) );
+          }
+          else
+          {
+            sb.Append( singleChar );
+          }
+        }
+      }*/
+      editSource.Text = text;
+    }
+
+
+
+    private string MakeUpperCase( string BASICText )
+    {
+      StringBuilder   sb = new StringBuilder( BASICText.Length );
+
+      foreach ( var singleChar in BASICText )
+      {
+        if ( ( singleChar & 0xff00 ) == 0xef00 )
+        {
+          char    newChar = (char)( ( singleChar & 0x00ff ) | 0xee00 );
+          if ( ( newChar >= 0xee01 )
+          &&   ( newChar <= 0xee01 + 25 ) )
+          {
+            sb.Append( (char)( newChar - 0xee01 + 'A' ) );
+          }
+          else
+          {
+            sb.Append( newChar );
+          }
+        }
+        else
+        {
+          sb.Append( singleChar );
+        }
+      }
+      return sb.ToString();
+    }
+
+
+
+    private string MakeLowerCase( string BASICText )
+    {
+      StringBuilder   sb = new StringBuilder( BASICText.Length );
+
+      foreach ( var singleChar in BASICText )
+      {
+        if ( ( singleChar & 0xff00 ) == 0xee00 )
+        {
+          char    newChar = (char)( ( singleChar & 0x00ff ) | 0xef00 );
+          if ( ( newChar >= 'A' )
+          &&   ( newChar <= 'Z' ) )
+          {
+            sb.Append( (char)( newChar + 0xef01 - 'A' ) );
+          }
+          else
+          {
+            sb.Append( newChar );
+          }
+        }
+        else if ( ( singleChar >= 'A' )
+        &&        ( singleChar <= 'Z' ) )
+        {
+          sb.Append( (char)( singleChar + 0xef01 - 'A' ) );
+        }
+        else
+        {
+          sb.Append( singleChar );
+        }
+      }
+      return sb.ToString();
+    }
 
   }
 }

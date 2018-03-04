@@ -38,6 +38,7 @@
       this.renumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.btnToggleSymbolMode = new System.Windows.Forms.CheckBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnToggleUpperLowerCase = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.menuBASIC.SuspendLayout();
@@ -135,12 +136,26 @@
       this.btnToggleSymbolMode.UseVisualStyleBackColor = true;
       this.btnToggleSymbolMode.CheckedChanged += new System.EventHandler(this.btnToggleSymbolMode_CheckedChanged);
       // 
+      // btnToggleUpperLowerCase
+      // 
+      this.btnToggleUpperLowerCase.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToggleUpperLowerCase.AutoSize = true;
+      this.btnToggleUpperLowerCase.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleUpperLowerCase.Image")));
+      this.btnToggleUpperLowerCase.Location = new System.Drawing.Point(107, 27);
+      this.btnToggleUpperLowerCase.Name = "btnToggleUpperLowerCase";
+      this.btnToggleUpperLowerCase.Size = new System.Drawing.Size(22, 22);
+      this.btnToggleUpperLowerCase.TabIndex = 2;
+      this.toolTip1.SetToolTip(this.btnToggleUpperLowerCase, "Toggle Upper/Lower Case");
+      this.btnToggleUpperLowerCase.UseVisualStyleBackColor = true;
+      this.btnToggleUpperLowerCase.CheckedChanged += new System.EventHandler(this.btnToggleUpperLowerCase_CheckedChanged);
+      // 
       // SourceBasicEx
       // 
       this.AllowDrop = true;
       this.ClientSize = new System.Drawing.Size(698, 588);
       this.Controls.Add(this.menuBASIC);
       this.Controls.Add(this.editSource);
+      this.Controls.Add(this.btnToggleUpperLowerCase);
       this.Controls.Add(this.btnToggleSymbolMode);
       this.Controls.Add(this.btnToggleLabelMode);
       this.MainMenuStrip = this.menuBASIC;
@@ -166,5 +181,6 @@
     private System.Windows.Forms.ToolStripMenuItem renumberToolStripMenuItem;
     private System.Windows.Forms.CheckBox btnToggleSymbolMode;
     private System.Windows.Forms.ToolTip toolTip1;
+    private System.Windows.Forms.CheckBox btnToggleUpperLowerCase;
   }
 }

@@ -672,6 +672,7 @@ namespace C64Studio.Types
     public bool           HasPetSCII = false;
     public char           CharValue = ' ';
     public bool           HasChar = false;
+    public char           LowerCaseChar = 'X';
     public string         Desc = "";
     public string         ShortDesc = "";
     public KeyboardKey    PhysicalKey = KeyboardKey.UNDEFINED;
@@ -717,7 +718,7 @@ namespace C64Studio.Types
     public static GR.Collections.Map<char, C64Character>    CharToC64Char = new GR.Collections.Map<char,C64Character>();
     public static GR.Collections.Map<byte, byte>            ColorToPetSCIIChar = new GR.Collections.Map<byte, byte>();
     public static GR.Collections.Map<KeyboardKey, C64Key>   PhysicalKeyInfo = new GR.Collections.Map<KeyboardKey,C64Key>();
-    public static List<C64Character>   AllPhysicalKeyInfos = new List<C64Character>();
+    public static List<C64Character>                        AllPhysicalKeyInfos = new List<C64Character>();
 
 
 
@@ -861,7 +862,7 @@ namespace C64Studio.Types
 
       AddC64Key( KeyboardKey.KEY_D, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 132, true, 4, false, (char)0xee84, true, "REVERSE D" ).Replacements.Add( "CTRL-D" );
 
-      AddC64Key( KeyboardKey.KEY_2, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 5, true, 5, true, (char)0xee85, true, "WHITE", "WHI" ).Replacements.AddRange( new string[] { "WHITE", "WHT" } );
+      AddC64Key( KeyboardKey .KEY_2, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 5, true, 5, true, (char)0xee85, true, "WHITE", "WHI" ).Replacements.AddRange( new string[] { "WHITE", "WHT" } );
 
       AddC64Key( KeyboardKey.KEY_F, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 134, true, 6, false, (char)0xee86, true, "REVERSE F" ).Replacements.Add( "CTRL-F" );
       AddC64Key( KeyboardKey.KEY_G, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 135, true, 7, false, (char)0xee87, true, "REVERSE G" ).Replacements.Add( "CTRL-G" );
@@ -1232,6 +1233,22 @@ namespace C64Studio.Types
       C64Character  c64Char = new C64Character( Key, ScreenCodeValue, HasScreenCode, PetSCIIValue, HasPetSCII, CharValue, HasChar, Desc, ShortDesc );
       c64Char.Modifier = Modifier;
       c64Char.Type = Type;
+      if ( c64Char.HasChar )
+      {
+        if ( ( c64Char.CharValue & 0xff00 ) == 0xee00 )
+        {
+          c64Char.LowerCaseChar = (char)( 0x100 + c64Char.CharValue );
+        }
+        else if ( ( c64Char.CharValue >= 'A' )
+        &&        ( c64Char.CharValue <= 'Z' ) )
+        {
+          c64Char.LowerCaseChar = (char)( 0xef00 + ( c64Char.CharValue - 'A' + 1 ) );
+        }
+        else
+        {
+          c64Char.LowerCaseChar = c64Char.CharValue;
+        }
+      }
 
       AllPhysicalKeyInfos.Add( c64Char );
 
