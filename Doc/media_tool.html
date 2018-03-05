@@ -19,11 +19,16 @@
                   [-sprites &lt;raw/binary sprite file&gt;]
                   [-charsetproject &lt;charset project file&gt;]
                   [-chars &lt;raw/binary charset file&gt;]
+                  [-charscreen &lt;charscreen project file&gt;]
                   [-type &lt;export format&gt;]
                   [-export &lt;file name&gt;]
+                  [-area &lt;x,y,width,height&gt;]
                   [-offset &lt;first unit to affect, default 0&gt;]
                   [-count &lt;count of units to affect, default all&gt;]
     </pre>
+    -area is only applicable for charscreen
+    <br>
+    <br>
   </div>
   <a name="-spriteproject"></a>
   <H2>-spriteproject &lt;sprite project file&gt;</H2>
@@ -99,6 +104,39 @@
         </td>
         <td>
           A number of characters, 8 bytes each
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -CHARSCREEN
+        </td>
+        <td>
+          CHARS
+        </td>
+        <td>
+          A number of characters, 1 byte each
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -CHARSCREEN
+        </td>
+        <td>
+          COLORS
+        </td>
+        <td>
+          A number of colors, 1 byte each
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -CHARSCREEN
+        </td>
+        <td>
+          CHARSCOLORS
+        </td>
+        <td>
+          A number of chars, followed by number of colors, 2 bytes each
         </td>
       </tr>
     </table>

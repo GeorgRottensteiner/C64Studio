@@ -76,7 +76,7 @@ namespace C64Studio
         else if ( DocInfo.BaseDoc is SourceBasicEx )
         {
           PreviousSearchedFile = elementPath;
-          return ( (SourceBasicEx)DocInfo.BaseDoc ).editSource.Text;
+          return DocInfo.BaseDoc.GetContent();
         }
         else if ( DocInfo.BaseDoc is Disassembler )
         {

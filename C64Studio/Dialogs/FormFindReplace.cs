@@ -715,6 +715,13 @@ namespace C64Studio
 
       FastColoredTextBoxNS.FastColoredTextBox  edit = null;
 
+      if ( ( Target == FindTarget.FULL_SOLUTION )
+      &&   ( Core.MainForm.CurrentProject == null ) )
+      {
+        // fall back - full solution without solution
+        Target = FindTarget.ALL_OPEN_DOCUMENTS;
+      }
+
       if ( Target == FindTarget.ACTIVE_DOCUMENT )
       {
         if ( activeDocument == null )
@@ -738,18 +745,27 @@ namespace C64Studio
           lastPosition = edit.PositionToVirtualPosition( lastPosition );
         }
 
-        SearchLocation newLocation = FindNextOccurrence( edit.Text, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
+        string    textToLookIn = edit.Text;
+        if ( activeDocument.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+        {
+          if ( activeDocument.DocumentInfo.BaseDoc != null )
+          {
+            textToLookIn = activeDocument.DocumentInfo.BaseDoc.GetContent();
+          }
+        }
+
+        SearchLocation newLocation = FindNextOccurrence( textToLookIn, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
         if ( newLocation.StartPosition == -1 )
         {
           if ( Wrap )
           {
             if ( SearchDown )
             {
-              newLocation = FindNextOccurrence( edit.Text, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, 0 );
+              newLocation = FindNextOccurrence( textToLookIn, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, 0 );
             }
             else
             {
-              newLocation = FindNextOccurrence( edit.Text, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, edit.Text.Length );
+              newLocation = FindNextOccurrence( textToLookIn, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, edit.Text.Length );
             }
           }
           if ( newLocation.StartPosition == -1 )
@@ -760,7 +776,7 @@ namespace C64Studio
         }
 
         // find line from pos
-        FindLineAndTextFromResult( activeDocument, newLocation, LastFound, edit.Text );
+        FindLineAndTextFromResult( activeDocument, newLocation, LastFound, textToLookIn );
         newLocation.LineNumber = LastFound.LineNumber;
 
         var start = edit.VirtualPositionToPosition( newLocation.StartPosition );
@@ -858,7 +874,17 @@ namespace C64Studio
         retry_search:
         ;
         edit = EditFromDocumentEx( docToSearch.DocumentInfo );
-        SearchLocation newLocation = FindNextOccurrence( edit.Text, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
+
+        string    textToLookIn = edit.Text;
+        if ( activeDocument.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+        {
+          if ( activeDocument.DocumentInfo.BaseDoc != null )
+          {
+            textToLookIn = activeDocument.DocumentInfo.BaseDoc.GetContent();
+          }
+        }
+
+        SearchLocation newLocation = FindNextOccurrence( textToLookIn, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
         if ( newLocation.StartPosition == -1 )
         {
           docToSearch = GetNextOpenDocument( docToSearch, SearchDown, Wrap );
@@ -876,7 +902,7 @@ namespace C64Studio
           goto retry_search;
         }
         // find line from pos
-        FindLineAndTextFromResult( docToSearch, newLocation, LastFound, edit.Text );
+        FindLineAndTextFromResult( docToSearch, newLocation, LastFound, textToLookIn );
 
         LastFound.FoundInDocument = docToSearch.DocumentInfo;
         LastFound.StartPosition = newLocation.StartPosition;

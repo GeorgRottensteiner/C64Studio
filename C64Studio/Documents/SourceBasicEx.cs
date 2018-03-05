@@ -1400,6 +1400,8 @@ namespace C64Studio
     {
       m_LowerCaseMode = !m_LowerCaseMode;
 
+      int     topLine = editSource.VerticalScroll.Value;
+
       string    text = editSource.Text;
 
       if ( m_LowerCaseMode )
@@ -1444,6 +1446,9 @@ namespace C64Studio
         }
       }*/
       editSource.Text = text;
+
+      editSource.VerticalScroll.Value = topLine;
+      editSource.UpdateScrollbars();
     }
 
 
