@@ -2196,6 +2196,10 @@ namespace C64Studio
 
 
 
+    private void tabPreferences_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      asmLibraryPathList.PerformLayout();
+    }
   }
 }
 
