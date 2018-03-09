@@ -379,7 +379,10 @@ namespace C64Studio
 
     void editSource_LineInserted( object sender, FastColoredTextBoxNS.LineInsertedEventArgs e )
     {
-      Core.Navigating.InsertLines( DocumentInfo, e.Index, e.Count );
+      if ( !m_InsertingText )
+      {
+        Core.Navigating.InsertLines( DocumentInfo, e.Index, e.Count );
+      }
 
       // move related breakpoints!
       for ( int i = 0; i < e.Count; ++i )
@@ -387,33 +390,36 @@ namespace C64Studio
         m_LineInfos.Insert( e.Index - 1, new Types.ASM.LineInfo() );
       }
 
-      int                         insertedAtLine = e.Index;
-
-      GR.Collections.Map<int,Types.Breakpoint>   origBreakpoints = new GR.Collections.Map<int,C64Studio.Types.Breakpoint>( m_BreakPoints );
-      List<Types.Breakpoint>                     movedBreakpoints = new List<C64Studio.Types.Breakpoint>();
-
-      foreach ( int breakpointLine in origBreakpoints.Keys )
+      if ( !m_InsertingText )
       {
-        var bp = origBreakpoints[breakpointLine];
+        int                         insertedAtLine = e.Index;
 
-        if ( breakpointLine >= insertedAtLine )
-        {
-          bp.LineIndex += e.Count;
-          movedBreakpoints.Add( bp );
-        }
-        else
-        {
-          movedBreakpoints.Add( bp );
-        }
-      }
-      m_BreakPoints.Clear();
+        GR.Collections.Map<int,Types.Breakpoint>   origBreakpoints = new GR.Collections.Map<int,C64Studio.Types.Breakpoint>( m_BreakPoints );
+        List<Types.Breakpoint>                     movedBreakpoints = new List<C64Studio.Types.Breakpoint>();
 
-      foreach ( var bp in movedBreakpoints )
-      {
-        m_BreakPoints[bp.LineIndex] = bp;
+        foreach ( int breakpointLine in origBreakpoints.Keys )
+        {
+          var bp = origBreakpoints[breakpointLine];
+
+          if ( breakpointLine >= insertedAtLine )
+          {
+            bp.LineIndex += e.Count;
+            movedBreakpoints.Add( bp );
+          }
+          else
+          {
+            movedBreakpoints.Add( bp );
+          }
+        }
+        m_BreakPoints.Clear();
+
+        foreach ( var bp in movedBreakpoints )
+        {
+          m_BreakPoints[bp.LineIndex] = bp;
+        }
+        //UpdateFoldingBlocks();
+        //StoreFoldedBlocks();
       }
-      //UpdateFoldingBlocks();
-      //StoreFoldedBlocks();
     }
 
 
