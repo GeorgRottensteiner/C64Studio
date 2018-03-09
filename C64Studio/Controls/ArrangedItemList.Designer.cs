@@ -28,6 +28,9 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 13F );
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+
       this.listItems = new System.Windows.Forms.ListView();
       this.btnMoveDown = new System.Windows.Forms.Button();
       this.btnMoveUp = new System.Windows.Forms.Button();
@@ -52,6 +55,7 @@
       this.listItems.UseCompatibleStateImageBehavior = false;
       this.listItems.View = System.Windows.Forms.View.Details;
       this.listItems.SelectedIndexChanged += new System.EventHandler( this.listItems_SelectedIndexChanged );
+
       // 
       // btnMoveDown
       // 

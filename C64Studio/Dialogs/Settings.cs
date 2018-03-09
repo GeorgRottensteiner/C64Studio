@@ -115,6 +115,24 @@ namespace C64Studio
           tabPreferences.SelectedIndex = 1;
           break;
       }
+
+      foreach ( var libPath in Core.Settings.ASMLibraryPaths )
+      {
+        asmLibraryPathList.Items.Add( libPath );
+      }
+
+      asmLibraryPathList.PerformAutoScale();
+      asmLibraryPathList.PerformLayout();
+
+      asmLibraryPathList.SizeChanged += AsmLibraryPathList_SizeChanged;
+    }
+
+
+
+    private void AsmLibraryPathList_SizeChanged( object sender, EventArgs e )
+    {
+      asmLibraryPathList.PerformAutoScale();
+      asmLibraryPathList.PerformLayout();
     }
 
 
@@ -2167,6 +2185,16 @@ namespace C64Studio
         RefreshDisplayOnDocuments();
       }
     }
+
+
+
+    private ListViewItem asmLibraryPathList_AddingItem( object sender )
+    {
+      var newEntry = new ListViewItem();
+      return newEntry;
+    }
+
+
 
   }
 }

@@ -125,6 +125,7 @@ namespace C64Studio
     public bool                                 ASMShowMiniView     = true;
     public bool                                 ASMAutoTruncateLiteralValues = false;
     public bool                                 ASMShowAutoComplete = true;
+    public List<string>                         ASMLibraryPaths     = new List<string>();
 
     public bool                                 OutlineShowLocalLabels = true;
     public bool                                 OutlineShowShortCutLabels = true;
@@ -657,6 +658,11 @@ namespace C64Studio
       chunkASMEditor.AppendU8( (byte)( !ASMShowMiniView ? 1 : 0 ) );
       chunkASMEditor.AppendU8( (byte)( ASMAutoTruncateLiteralValues ? 1 : 0 ) );
       chunkASMEditor.AppendU8( (byte)( !ASMShowAutoComplete ? 1 : 0 ) );
+      chunkASMEditor.AppendI32( ASMLibraryPaths.Count );
+      foreach ( var libPath in ASMLibraryPaths )
+      {
+        chunkASMEditor.AppendString( libPath );
+      }
       SettingsData.Append( chunkASMEditor.ToBuffer() );
 
       // Outline settings
@@ -1009,6 +1015,12 @@ namespace C64Studio
               ASMShowMiniView     = ( binIn.ReadUInt8() == 0 );
               ASMAutoTruncateLiteralValues = ( binIn.ReadUInt8() != 0 );
               ASMShowAutoComplete = ( binIn.ReadUInt8() == 0 );
+
+              int numLibPaths = binIn.ReadInt32();
+              for ( int i = 0; i < numLibPaths; ++i )
+              {
+                ASMLibraryPaths.Add( binIn.ReadString() );
+              }
             }
             break;
           case Types.FileChunk.SETTINGS_BASIC_PARSER:

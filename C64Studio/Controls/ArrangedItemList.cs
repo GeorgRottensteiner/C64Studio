@@ -153,6 +153,7 @@ namespace C64Studio
     }
 
 
+
     public bool AddButtonEnabled
     {
       get
