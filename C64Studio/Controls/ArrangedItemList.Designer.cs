@@ -28,8 +28,8 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 13F );
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+      //this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 13F );
+      //this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 
       this.listItems = new System.Windows.Forms.ListView();
       this.btnMoveDown = new System.Windows.Forms.Button();

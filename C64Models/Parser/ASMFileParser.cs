@@ -5182,13 +5182,14 @@ namespace C64Studio.Parser
 
 
 
-    private ParseLineResult POIncludeSource( string subFilename, string ParentFilename, ref int lineIndex, ref string[] Lines )
+    private ParseLineResult POIncludeSource( bool LibraryFile, string subFilename, string ParentFilename, ref int lineIndex, ref string[] Lines )
     {
-      SourceInfoLog( "Include file " + subFilename );
+      SourceInfoLog( "Include file " + subFilename + ", lib file " + LibraryFile );
       if ( m_LoadedFiles[ParentFilename] == null )
       {
         m_LoadedFiles[ParentFilename] = new GR.Collections.Set<string>();
       }
+
       if ( GR.Path.IsPathEqual( ParentFilename, subFilename ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, "Circular inclusion in line " + lineIndex );
@@ -5208,7 +5209,22 @@ namespace C64Studio.Parser
       m_LoadedFiles[ParentFilename].Add( subFilename );
 
       string[]  subFile = null;
-      string subFilenameFull = GR.Path.Append( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
+      string subFilenameFull = subFilename;
+
+      if ( LibraryFile )
+      {
+        subFilenameFull = DetermineFullLibraryFilePath( subFilename );
+        if ( string.IsNullOrEmpty( subFilenameFull ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching library file in line " + lineIndex );
+          return ParseLineResult.RETURN_NULL;
+        }
+      }
+      else
+      {
+        subFilenameFull = GR.Path.Append( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
+      }
+
       if ( GR.Path.IsPathEqual( ParentFilename, subFilenameFull ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1400_CIRCULAR_INCLUSION, "Circular inclusion in line " + lineIndex );
@@ -5264,6 +5280,30 @@ namespace C64Studio.Parser
 
       --lineIndex;
       return ParseLineResult.CALL_CONTINUE;
+    }
+
+
+
+    private string DetermineFullLibraryFilePath( string subFilename )
+    {
+      foreach ( var libFile in m_CompileConfig.LibraryFiles )
+      {
+        string    fullBasePath = libFile;
+        if ( !System.IO.Path.IsPathRooted( libFile ) )
+        {
+#if DEBUG
+          fullBasePath = System.IO.Path.GetFullPath( "../../" + libFile );
+#else
+          fullBasePath = System.IO.Path.GetFullPath( libFile );
+#endif
+        }
+        if ( System.IO.File.Exists( System.IO.Path.Combine( fullBasePath, subFilename ) ) )
+        {
+          return System.IO.Path.Combine( fullBasePath, subFilename );
+        }
+
+      }
+      return "";
     }
 
 
@@ -6812,26 +6852,32 @@ namespace C64Studio.Parser
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.INCLUDE_SOURCE )
             {
-              if ( lineTokenInfos.Count != 2 )
+              string  subFilename = "";
+              bool    libraryFile = false;
+
+              if ( ( lineTokenInfos.Count == 2 )
+              &&   ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+              {
+                // regular include
+                subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
+              }
+              else if ( ( lineTokenInfos.Count > 3 )
+              &&        ( lineTokenInfos[1].Content == "<" )
+              &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
+              {
+                // library include
+                subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
+                libraryFile = true;
+              }
+              else 
               {
                 AddError( lineIndex, 
                           Types.ErrorCode.E1302_MALFORMED_MACRO, 
-                          "Expecting file name",
+                          "Expecting file name, either \"filename\" or \"library filename\"",
                           lineTokenInfos[0].StartPos,
                           lineTokenInfos[0].Length );
                 return null;
               }
-              if ( lineTokenInfos[1].Type != Types.TokenInfo.TokenType.LITERAL_STRING )
-              {
-                AddError( lineIndex,
-                          Types.ErrorCode.E1307_FILENAME_INCOMPLETE,
-                          "File name incomplete",
-                          lineTokenInfos[1].StartPos,
-                          lineTokenInfos[1].Length );
-                return null;
-              }
-              string subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
-
               int   localIndex = 0;
               string filename = "";
               if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
@@ -6841,7 +6887,7 @@ namespace C64Studio.Parser
                 return null;
               }
 
-              ParseLineResult   plResult = POIncludeSource( subFilename, filename, ref lineIndex, ref Lines );
+              ParseLineResult   plResult = POIncludeSource( libraryFile, subFilename, filename, ref lineIndex, ref Lines );
               if ( plResult == ParseLineResult.RETURN_NULL )
               {
                 return null;
@@ -7938,19 +7984,41 @@ namespace C64Studio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.MacroType.INCLUDE_SOURCE )
           {
-            if ( lineTokenInfos.Count != 2 )
-            {
-              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Expecting file name" );
-              return null;
-            }
-            if ( lineTokenInfos[1].Type != Types.TokenInfo.TokenType.LABEL_GLOBAL )
-            {
-              AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "File name incomplete" );
-              return null;
-            }
-            string subFilename = lineTokenInfos[1].Content;
+            string  subFilename = "";
+            bool    libraryFile = false;
 
-            ParseLineResult   plResult = POIncludeSource( subFilename, ParentFilename, ref lineIndex, ref Lines );
+            if ( ( lineTokenInfos.Count == 2 )
+            &&   ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+            {
+              // regular include
+              subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
+            }
+            else if ( ( lineTokenInfos.Count > 3 )
+            &&        ( lineTokenInfos[1].Content == "<" )
+            &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
+            {
+              // library include
+              subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
+              libraryFile = true;
+            }
+            else 
+            {
+              AddError( lineIndex, 
+                        Types.ErrorCode.E1302_MALFORMED_MACRO, 
+                        "Expecting file name, either \"filename\" or \"library filename\"",
+                        lineTokenInfos[0].StartPos,
+                        lineTokenInfos[0].Length );
+              return null;
+            }
+            int   localIndex = 0;
+            string filename = "";
+            if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
+            {
+              DumpSourceInfos( OrigLines, Lines );
+              AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
+              return null;
+            }
+            ParseLineResult   plResult = POIncludeSource( libraryFile, subFilename, ParentFilename, ref lineIndex, ref Lines );
             if ( plResult == ParseLineResult.RETURN_NULL )
             {
               return null;

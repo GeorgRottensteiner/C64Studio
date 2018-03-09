@@ -1834,10 +1834,13 @@
   <a name="source"></a>
   <H2>!SOURCE &lt;file name&gt;</H2>
   <div id="mybody">
-    This pseudo op includes another source file at the current location.<br>
+    This pseudo op includes another source file at the current location. File names are used relative to the file containing the directive.<br>
+    <br>
+    If the file name is given in &lt;,&gt; the file is searched for in the configured library paths.<br>
     <br>
     <br>
     <div id="code"><br>      !source "tiles.asm"
+      !source &lt;kernal.asm&gt;
     <br></div>
     <br>
     <br>

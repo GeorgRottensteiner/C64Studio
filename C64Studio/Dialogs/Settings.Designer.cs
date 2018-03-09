@@ -131,6 +131,8 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
+      this.editASMLibraryPath = new System.Windows.Forms.TextBox();
+      this.btmASMLibraryPathBrowse = new System.Windows.Forms.Button();
       this.asmLibraryPathList = new C64Studio.ArrangedItemList();
       this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
       this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -416,7 +418,7 @@
       this.tabTools.Controls.Add(this.listTools);
       this.tabTools.Location = new System.Drawing.Point(4, 22);
       this.tabTools.Name = "tabTools";
-      this.tabTools.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+      this.tabTools.Padding = new System.Windows.Forms.Padding(3);
       this.tabTools.Size = new System.Drawing.Size(689, 437);
       this.tabTools.TabIndex = 0;
       this.tabTools.Text = "Tools";
@@ -710,7 +712,7 @@
       this.tabKeyBindings.Controls.Add(this.label9);
       this.tabKeyBindings.Location = new System.Drawing.Point(4, 22);
       this.tabKeyBindings.Name = "tabKeyBindings";
-      this.tabKeyBindings.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+      this.tabKeyBindings.Padding = new System.Windows.Forms.Padding(3);
       this.tabKeyBindings.Size = new System.Drawing.Size(689, 437);
       this.tabKeyBindings.TabIndex = 1;
       this.tabKeyBindings.Text = "Key Bindings";
@@ -813,6 +815,8 @@
       // 
       // tabErrorsWarnings
       // 
+      this.tabErrorsWarnings.Controls.Add(this.btmASMLibraryPathBrowse);
+      this.tabErrorsWarnings.Controls.Add(this.editASMLibraryPath);
       this.tabErrorsWarnings.Controls.Add(this.asmLibraryPathList);
       this.tabErrorsWarnings.Controls.Add(this.checkASMShowAutoComplete);
       this.tabErrorsWarnings.Controls.Add(this.checkASMAutoTruncateLiteralValues);
@@ -1149,7 +1153,7 @@
       this.tabBASIC.Controls.Add(this.label22);
       this.tabBASIC.Location = new System.Drawing.Point(4, 22);
       this.tabBASIC.Name = "tabBASIC";
-      this.tabBASIC.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+      this.tabBASIC.Padding = new System.Windows.Forms.Padding(3);
       this.tabBASIC.Size = new System.Drawing.Size(689, 437);
       this.tabBASIC.TabIndex = 6;
       this.tabBASIC.Text = "BASIC";
@@ -1237,13 +1241,27 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
+      // editASMLibraryPath
+      // 
+      this.editASMLibraryPath.Location = new System.Drawing.Point(21, 397);
+      this.editASMLibraryPath.Name = "editASMLibraryPath";
+      this.editASMLibraryPath.Size = new System.Drawing.Size(522, 20);
+      this.editASMLibraryPath.TabIndex = 21;
+      // 
+      // btmASMLibraryPathBrowse
+      // 
+      this.btmASMLibraryPathBrowse.Location = new System.Drawing.Point(549, 396);
+      this.btmASMLibraryPathBrowse.Name = "btmASMLibraryPathBrowse";
+      this.btmASMLibraryPathBrowse.Size = new System.Drawing.Size(35, 20);
+      this.btmASMLibraryPathBrowse.TabIndex = 22;
+      this.btmASMLibraryPathBrowse.Text = "...";
+      this.btmASMLibraryPathBrowse.UseVisualStyleBackColor = true;
+      this.btmASMLibraryPathBrowse.Click += new System.EventHandler(this.btmASMLibraryPathBrowse_Click);
+      // 
       // asmLibraryPathList
       // 
       this.asmLibraryPathList.AddButtonEnabled = true;
-      this.asmLibraryPathList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.asmLibraryPathList.AutoSize = true;
+      this.asmLibraryPathList.Anchor = System.Windows.Forms.AnchorStyles.None;
       this.asmLibraryPathList.DeleteButtonEnabled = false;
       this.asmLibraryPathList.Location = new System.Drawing.Point(21, 240);
       this.asmLibraryPathList.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
@@ -1251,9 +1269,12 @@
       this.asmLibraryPathList.MoveUpButtonEnabled = false;
       this.asmLibraryPathList.MustHaveOneElement = false;
       this.asmLibraryPathList.Name = "asmLibraryPathList";
-      this.asmLibraryPathList.Size = new System.Drawing.Size(573, 108);
+      this.asmLibraryPathList.Size = new System.Drawing.Size(563, 154);
       this.asmLibraryPathList.TabIndex = 20;
       this.asmLibraryPathList.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.asmLibraryPathList_AddingItem);
+      this.asmLibraryPathList.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemAdded);
+      this.asmLibraryPathList.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemRemoved);
+      this.asmLibraryPathList.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.asmLibraryPathList_ItemMoved);
       // 
       // listBASICKeyMap
       // 
@@ -1451,5 +1472,7 @@
     private System.Windows.Forms.CheckBox checkASMShowLineNumbers;
     private System.Windows.Forms.Label label30;
     private System.Windows.Forms.Label label26;
+    private System.Windows.Forms.Button btmASMLibraryPathBrowse;
+    private System.Windows.Forms.TextBox editASMLibraryPath;
   }
 }

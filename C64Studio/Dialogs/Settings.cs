@@ -26,6 +26,8 @@ namespace C64Studio
     private System.Windows.Forms.Keys       m_PressedKey = Keys.None;
     private System.Windows.Forms.Keys       m_PressedKeyMapKey = Keys.None;
 
+    private bool                            m_ResizeHackApplied = false;
+
 
 
     public Settings( StudioCore Core, TabPage PageToOpen )
@@ -121,18 +123,8 @@ namespace C64Studio
         asmLibraryPathList.Items.Add( libPath );
       }
 
-      asmLibraryPathList.PerformAutoScale();
-      asmLibraryPathList.PerformLayout();
-
-      asmLibraryPathList.SizeChanged += AsmLibraryPathList_SizeChanged;
-    }
-
-
-
-    private void AsmLibraryPathList_SizeChanged( object sender, EventArgs e )
-    {
-      asmLibraryPathList.PerformAutoScale();
-      asmLibraryPathList.PerformLayout();
+      //asmLibraryPathList.PerformAutoScale();
+      //asmLibraryPathList.PerformLayout();
     }
 
 
@@ -2190,7 +2182,7 @@ namespace C64Studio
 
     private ListViewItem asmLibraryPathList_AddingItem( object sender )
     {
-      var newEntry = new ListViewItem();
+      var newEntry = new ListViewItem( editASMLibraryPath.Text );
       return newEntry;
     }
 
@@ -2198,8 +2190,59 @@ namespace C64Studio
 
     private void tabPreferences_SelectedIndexChanged( object sender, EventArgs e )
     {
-      asmLibraryPathList.PerformLayout();
+      if ( !m_ResizeHackApplied )
+      {
+        m_ResizeHackApplied = true;
+        asmLibraryPathList.PerformLayout();
+      }
     }
+
+
+
+    private void btmASMLibraryPathBrowse_Click( object sender, EventArgs e )
+    {
+      FolderBrowserDialog dlg = new FolderBrowserDialog();
+
+      dlg.Description = "Choose Library Folder";
+      if ( dlg.ShowDialog() == DialogResult.OK )
+      {
+        editASMLibraryPath.Text = dlg.SelectedPath;
+      }
+    }
+
+
+
+    private void asmLibraryPathList_ItemAdded( object sender, ListViewItem Item )
+    {
+      Core.Settings.ASMLibraryPaths.Clear();
+      foreach ( ListViewItem entry in asmLibraryPathList.Items )
+      {
+        Core.Settings.ASMLibraryPaths.Add( entry.Text );
+      }
+    }
+
+
+
+    private void asmLibraryPathList_ItemMoved( object sender, ListViewItem Item1, ListViewItem Item2 )
+    {
+      Core.Settings.ASMLibraryPaths.Clear();
+      foreach ( ListViewItem entry in asmLibraryPathList.Items )
+      {
+        Core.Settings.ASMLibraryPaths.Add( entry.Text );
+      }
+    }
+
+
+
+    private void asmLibraryPathList_ItemRemoved( object sender, ListViewItem Item )
+    {
+      Core.Settings.ASMLibraryPaths.Clear();
+      foreach ( ListViewItem entry in asmLibraryPathList.Items )
+      {
+        Core.Settings.ASMLibraryPaths.Add( entry.Text );
+      }
+    }
+
   }
 }
 

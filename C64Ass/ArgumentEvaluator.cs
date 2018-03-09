@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 
@@ -19,6 +20,8 @@ namespace C64Ass
       _Args.AddParameter( "-OUTFILE", true );
       _Args.AddParameter( "L", true );
       _Args.AddParameter( "-LABELDUMP", true );
+      _Args.AddParameter( "LIB", true );
+      _Args.AddParameter( "-LIBRARY", true );
       _Args.AddParameter( "-FORMAT", true );
       _Args.AddParameter( "F", true );
       _Args.AddParameter( "-SETPC", true );
@@ -31,11 +34,13 @@ namespace C64Ass
     {
       System.Console.WriteLine( "Call with C64Ass [options] [file]" );
       System.Console.WriteLine();
-      System.Console.WriteLine( "-H, --HELP                 - Display this help" );
-      System.Console.WriteLine( "-O, --OUTFILE [Filename]   - Determine output file name" );
-      System.Console.WriteLine( "-L, --LABELDUMP [Filename] - Write a label file" );
-      System.Console.WriteLine( "-F, --FORMAT [PLAIN/CBM]   - Sets the output file format" );
-      System.Console.WriteLine( "                             PLAIN is a raw binary, CBM a .prg file" );
+      System.Console.WriteLine( "-H, --HELP                     - Display this help" );
+      System.Console.WriteLine( "-O, --OUTFILE [Filename]       - Determine output file name" );
+      System.Console.WriteLine( "-L, --LABELDUMP [Filename]     - Write a label file" );
+      System.Console.WriteLine( "-LIB, --LIBRARY [Library Path] - Add path(s) to library paths" );
+      System.Console.WriteLine( "                                 Multiple paths are separated by comma" );
+      System.Console.WriteLine( "-F, --FORMAT [PLAIN/CBM]       - Sets the output file format" );
+      System.Console.WriteLine( "                                 PLAIN is a raw binary, CBM a .prg file" );
       //System.Console.WriteLine( "--SETPC                    - Forces " );
       System.Console.WriteLine( "-AUTOTRUNCATELITERALS      - Clamps literal values to bytes/words without error" );
     }
@@ -84,6 +89,14 @@ namespace C64Ass
       if ( _Args.IsParameterSet( "-LABELDUMP" ) )
       {
         config.LabelDumpFile = _Args.Parameter( "LABELDUMP" );
+      }
+      if ( _Args.IsParameterSet( "LIB" ) )
+      {
+        config.LibraryFiles = _Args.Parameter( "LIB" ).Split( ',' ).ToList();
+      }
+      if ( _Args.IsParameterSet( "LIBRARY" ) )
+      {
+        config.LibraryFiles = _Args.Parameter( "LIBRARY" ).Split( ',' ).ToList();
       }
       config.AutoTruncateLiteralValues = _Args.IsParameterSet( "-AUTOTRUNCATELITERALS" );
 

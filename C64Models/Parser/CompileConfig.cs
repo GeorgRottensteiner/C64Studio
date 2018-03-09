@@ -16,5 +16,6 @@ namespace C64Studio.Parser
     public Types.AssemblerType                  Assembler = Types.AssemblerType.AUTO;
     public bool                                 AutoTruncateLiteralValues = false;
     public bool                                 CreatePreProcesseFile = false;
+    public List<string>                         LibraryFiles = new List<string>();
   }
 }
