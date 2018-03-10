@@ -9845,8 +9845,7 @@ namespace C64Studio.Parser
           AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + AssembledOutput.Assembly.Length.ToString() + " > 65536" );
           return false;
         }
-        if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT )
-        {
+          if (Config.TargetType != Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT) return true;
           // build cartridge header
           GR.Memory.ByteBuffer    header = new GR.Memory.ByteBuffer();
 
@@ -9870,36 +9869,41 @@ namespace C64Studio.Parser
 
           if ( name.Length > 32 )
           {
-            name = name.Substring( 0, 32 );
+              name = name.Substring( 0, 32 );
           }
           while ( name.Length < 32 )
           {
-            name += (char)0;
+              name += (char)0;
           }
           foreach ( char aChar in name )
           {
-            header.AppendU8( (byte)aChar );
+              header.AppendU8( (byte)aChar );
           }
 
-          // 8 x 8kb
-          AssembledOutput.Assembly = header;
+                // Backup Cartridge Data
+                GR.Memory.ByteBuffer backup = new GR.Memory.ByteBuffer(65536);
+                AssembledOutput.Assembly.CopyTo(backup);
+
+                // 8 x 8kb
+                AssembledOutput.Assembly = header;
+
+
           for ( int i = 0; i < 8; ++i )
           {
-            GR.Memory.ByteBuffer chip = new GR.Memory.ByteBuffer();
+              GR.Memory.ByteBuffer chip = new GR.Memory.ByteBuffer();
 
-            chip.AppendHex( "43484950" );   // chip
-            uint length = 16 + 8192;
-            chip.AppendU32NetworkOrder( length );
-            chip.AppendU16NetworkOrder( 0 );  // ROM
-            chip.AppendU16NetworkOrder( (ushort)i );  // Bank number
-            chip.AppendU16NetworkOrder( 0x8000 ); // loading start address
-            chip.AppendU16NetworkOrder( 0x2000 ); // rom size
+              chip.AppendHex( "43484950" );   // chip
+              uint length = 16 + 8192;
+              chip.AppendU32NetworkOrder( length );
+              chip.AppendU16NetworkOrder( 0 );  // ROM
+              chip.AppendU16NetworkOrder( (ushort)i );  // Bank number
+              chip.AppendU16NetworkOrder( 0x8000 ); // loading start address
+              chip.AppendU16NetworkOrder( 0x2000 ); // rom size
 
-            chip.Append( AssembledOutput.Assembly.SubBuffer( i * 0x2000, 0x2000 ) );
+              chip.Append(backup.SubBuffer( i * 0x2000, 0x2000 ) );
 
-            AssembledOutput.Assembly += chip;
+              AssembledOutput.Assembly += chip;
           }
-        }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
       ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_CRT ) )
