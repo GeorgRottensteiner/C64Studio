@@ -4309,11 +4309,11 @@ namespace C64Studio.Parser
         int numBytesCopiedColor = 0;
         for ( int j = 0; j < h / 8; ++j )
         {
-          bitmapData.CopyTo( bitmapClipped, ( y + j * 8 ) * 40 + x, ( w / 8 ) * 8, numBytesCopiedBM );
+          bitmapData.CopyTo( bitmapClipped, ( y + j * 8 ) * screenProject.ScreenWidth / 8 + x, ( w / 8 ) * 8, numBytesCopiedBM );
           numBytesCopiedBM += w;
 
-          screenChar.CopyTo( screenClipped, ( y / 8 + j ) * 40 + x / 8, w / 8, numBytesCopiedColor );
-          screenColor.CopyTo( colorClipped, ( y / 8 + j ) * 40 + x / 8, w / 8, numBytesCopiedColor );
+          screenChar.CopyTo( screenClipped, ( y / 8 + j ) * screenProject.ScreenWidth / 8 + x / 8, w / 8, numBytesCopiedColor );
+          screenColor.CopyTo( colorClipped, ( y / 8 + j ) * screenProject.ScreenWidth / 8 + x / 8, w / 8, numBytesCopiedColor );
           numBytesCopiedColor += w / 8;
         }
 
