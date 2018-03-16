@@ -495,6 +495,7 @@ namespace C64Studio.Tasks
         }
 
         Core.Compiling.m_RebuiltFiles.Add( Doc.DocumentFilename );
+
         return true;
       }
       catch ( Exception ex )

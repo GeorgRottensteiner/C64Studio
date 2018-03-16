@@ -9453,21 +9453,6 @@ namespace C64Studio.Parser
             }
           }*/
 
-          if ( line.AddressStart < currentAddress )
-          {
-            /*
-            // Why this check?
-            if ( line.PseudoPCOffset == -1 )
-            &&   ( line.NumBytes == 0 ) )
-            {
-              setNewAddress = false;
-            }*/
-            if ( ( line.PseudoPCOffset == -1 )
-            &&   ( line.NumBytes > 0 ) )
-            {
-              //AddSevereWarning( line.LineIndex, Types.ErrorCode.W0001_SEGMENT_OVERLAP, "Segment starts inside another one, overwriting it" );
-            }
-          }
           // need to fill a gap?
           if ( trueCurrentAddress == currentAddress )
           {
@@ -9614,6 +9599,12 @@ namespace C64Studio.Parser
               var message = AddSevereWarning( builtSegments[i].second.GlobalLineIndex, Types.ErrorCode.W0001_SEGMENT_OVERLAP, "Segment starts inside another one, overwriting it" );
 
               message.AddMessage( "  overlapping block starts in " + builtSegments[j].second.Filename + " at line " + builtSegments[j].second.LocalLineIndex,
+                                  builtSegments[j].second.Filename,
+                                  builtSegments[j].second.LocalLineIndex );
+              message.AddMessage( "  first block from $" + builtSegments[i].second.StartAddress.ToString( "X4" ) + " to $" + ( builtSegments[i].second.StartAddress + builtSegments[i].second.Length - 1 ).ToString( "X4" ),
+                                  builtSegments[i].second.Filename,
+                                  builtSegments[i].second.LocalLineIndex );
+              message.AddMessage( "  second block from $" + builtSegments[j].second.StartAddress.ToString( "X4" ) + " to $" + ( builtSegments[j].second.StartAddress + builtSegments[j].second.Length - 1 ).ToString( "X4" ),
                                   builtSegments[j].second.Filename,
                                   builtSegments[j].second.LocalLineIndex );
             }
