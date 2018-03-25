@@ -13,6 +13,8 @@ namespace C64Studio
     public FormAbout()
     {
       InitializeComponent();
+
+      labelInfo.Text = labelInfo.Text.Replace( "<v>", StudioCore.StudioVersion );
     }
 
     private void btnOK_Click( object sender, EventArgs e )

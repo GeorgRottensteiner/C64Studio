@@ -18,6 +18,7 @@ namespace C64Studio
     public Executing          Executing;
     public Tasks.TaskManager  TaskManager;
     public bool               ShuttingDown = false;
+    public static string      StudioVersion = "5.6";
 
     public static StudioCore  StaticCore = null;
 

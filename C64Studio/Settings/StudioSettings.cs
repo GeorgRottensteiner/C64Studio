@@ -169,6 +169,9 @@ namespace C64Studio
     public int                                  MemoryDisplaySpriteMulticolor1 = 5;
     public int                                  MemoryDisplaySpriteMulticolor2 = 10;
 
+    public bool                                 CheckForUpdates = true;
+    public DateTime                             LastUpdateCheck = DateTime.MinValue;
+
     public AppMode                              StudioAppMode = AppMode.UNDECIDED;
 
     public GR.Collections.Map<string, LayoutInfo> ToolLayout = new GR.Collections.Map<string,LayoutInfo>();
@@ -693,6 +696,11 @@ namespace C64Studio
       GR.IO.FileChunk chunkEnvironment = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_ENVIRONMENT );
       chunkEnvironment.AppendU8( (byte)( AutoOpenLastSolution ? 1 : 0 ) );
       chunkEnvironment.AppendU8( (byte)( LastSolutionWasEmpty ? 1 : 0 ) );
+      chunkEnvironment.AppendU8( (byte)( !CheckForUpdates ? 1 : 0 ) );
+      chunkEnvironment.AppendU8( (byte)LastUpdateCheck.Day );
+      chunkEnvironment.AppendU8( (byte)LastUpdateCheck.Month );
+      chunkEnvironment.AppendI32( (byte)LastUpdateCheck.Year );
+
       SettingsData.Append( chunkEnvironment.ToBuffer() );
 
       // tool window settings
@@ -1035,8 +1043,22 @@ namespace C64Studio
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
-              AutoOpenLastSolution = ( binIn.ReadUInt8() != 0 );
-              LastSolutionWasEmpty = ( binIn.ReadUInt8() != 0 );
+              AutoOpenLastSolution  = ( binIn.ReadUInt8() != 0 );
+              LastSolutionWasEmpty  = ( binIn.ReadUInt8() != 0 );
+              CheckForUpdates       = ( binIn.ReadUInt8() == 0 );
+
+              int     day   = binIn.ReadUInt8();
+              int     month = binIn.ReadUInt8();
+              int     year  = binIn.ReadInt32();
+
+              try
+              {
+                LastUpdateCheck = new DateTime( year, month, day );
+              }
+              catch ( ArgumentOutOfRangeException )
+              {
+                LastUpdateCheck = DateTime.Now;
+              }
             }
             break;
           case Types.FileChunk.SETTINGS_PERSPECTIVES:

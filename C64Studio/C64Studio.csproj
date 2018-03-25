@@ -308,6 +308,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="StudioCore.cs" />
+    <Compile Include="Tasks\TaskCheckForUpdate.cs" />
     <Compile Include="Tasks\TaskManager.cs" />
     <Compile Include="Tasks\TaskDebugRunTo.cs" />
     <Compile Include="Tasks\TaskOpenSolution.cs" />

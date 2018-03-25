@@ -815,6 +815,8 @@ namespace C64Studio
 
       ApplicationEvent += new ApplicationEventHandler( MainForm_ApplicationEvent );
 
+      CheckForUpdate();
+
       if ( args.Length > 0 )
       {
         OpenFile( args[0] );
@@ -830,6 +832,18 @@ namespace C64Studio
           IdleQueue.Add( idleRequest );
         }
       }
+    }
+
+
+
+    private void CheckForUpdate()
+    {
+      // TODO - date check!
+      if ( StudioCore.Settings.CheckForUpdates )
+      {
+        AddTask( new Tasks.TaskCheckForUpdate() );
+      }
+
     }
 
 
