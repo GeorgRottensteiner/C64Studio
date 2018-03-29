@@ -1,4 +1,5 @@
 ﻿C64Studio
+o AutoComplete mit Tabs geht nicht!
 o Timed- Auto-Step im Debug-Modus
 o Im Screeneditor würde ich gerne mit einem klick oder so den Wert um 64 für ECM / 128 für PETSCII erhöhen können
 o !for loops with implicit !zone
