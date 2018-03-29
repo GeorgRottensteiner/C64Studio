@@ -3,7 +3,7 @@ o AutoComplete mit Tabs geht nicht!
 o Timed- Auto-Step im Debug-Modus
 o Im Screeneditor würde ich gerne mit einem klick oder so den Wert um 64 für ECM / 128 für PETSCII erhöhen können
 o !for loops with implicit !zone
-o BASIC: Upper/Lowercase toggle
+o BASIC: Upper/Lowercase toggle <- everything covered yet? (Find/replace)
 o “Insert Text mode” in Text/char Screen Editor, inverted chars
 o CharPad support auch mit !media?
 o  Wenn eine Datei mit !source eingebunden wird, diese Datei aber nicht zum Projekt gehört, dann kann man in dieser Datei keine Breakpoints 

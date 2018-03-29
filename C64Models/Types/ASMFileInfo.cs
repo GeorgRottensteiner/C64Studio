@@ -630,7 +630,7 @@ namespace C64Studio.Types.ASM
           sb.Append( "add_label $" );
           sb.Append( token.Value.AddressOrValue.ToString( "X4" ) );
           sb.Append( " ." );
-          sb.AppendLine( token.Key.Replace( '.', '_' ) );
+          sb.AppendLine( token.Key.Replace( '.', '_' ).Replace( '-', '_' ).Replace( "+", "plus" ) );
         }
       }
       return sb.ToString();

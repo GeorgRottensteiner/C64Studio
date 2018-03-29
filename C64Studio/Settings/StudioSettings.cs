@@ -1053,7 +1053,16 @@ namespace C64Studio
 
               try
               {
-                LastUpdateCheck = new DateTime( year, month, day );
+                if ( ( day == 0 )
+                &&   ( month == 0 )
+                &&   ( year == 0 ) )
+                {
+                    LastUpdateCheck = DateTime.Now;
+                }
+                else
+                {
+                    LastUpdateCheck = new DateTime( year, month, day );
+                }
               }
               catch ( ArgumentOutOfRangeException )
               {

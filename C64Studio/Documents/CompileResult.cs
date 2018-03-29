@@ -59,6 +59,7 @@ namespace C64Studio
           SourceASMEx   source = (SourceASMEx)docInfos.BaseDoc;
 
           source.RemoveAllErrorMarkings();
+          //source.UpdateFoldingBlocks();
         }
       }
       foreach ( System.Collections.Generic.KeyValuePair<int, Parser.ParserBase.ParseMessage> msg in Parser.Messages )
