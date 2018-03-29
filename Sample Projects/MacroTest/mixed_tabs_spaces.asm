@@ -1,4 +1,7 @@
 
 	  	lsmf		;tab space tab
 
-  	  hurz    ;space tab space
+  	  hurz    ;space tab space´
+			
+			
+			this  ls

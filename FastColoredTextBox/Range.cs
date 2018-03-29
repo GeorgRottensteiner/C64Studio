@@ -235,13 +235,18 @@ namespace FastColoredTextBoxNS
           return null;
         //
         StringBuilder sb = new StringBuilder();
+
         for ( int y = fromLine; y <= toLine; y++ )
         {
+          string    text = tb.ReTabifyLine( tb[y].ToText( 0 ), tb.TabLength );// tb.TextSource.ToText(  .ToT tb.Deta  tFCTBAction.D Det tb.GetLineText( y );// tb[y].Text;
+
           int fromX = y == fromLine ? fromChar : 0;
-          int toX = y == toLine ? Math.Min( tb[y].Count - 1, toChar - 1 ) : tb[y].Count - 1;
+          //int toX = y == toLine ? Math.Min( tb[y].Count - 1, toChar - 1 ) : tb[y].Count - 1;
+          int toX = y == toLine ? Math.Min( text.Length - 1, toChar - 1 ) : text.Length - 1;
           for ( int x = fromX; x <= toX; x++ )
           {
-            var  singleChar = tb[y][x].c;
+            //var  singleChar = tb[y][x].c;
+            var     singleChar = text[x];
             if ( ( tb.AllowTabs )
             &&   ( singleChar == '\t' ) )
             {
@@ -258,7 +263,7 @@ namespace FastColoredTextBoxNS
             }
             else
             {
-              sb.Append( tb[y][x].c );
+              sb.Append( singleChar );
             }
           }
           if ( y != toLine && fromLine != toLine )
@@ -1464,6 +1469,8 @@ namespace FastColoredTextBoxNS
       //var match = regex.Match( tb[r.Start.iLine].Text );
       string matchText = tb[r.Start.iLine].Text;
       matchText = tb.ReTabifyLine( matchText, tb.TabLength );
+      // get rid of those horrible horrible tabs
+      matchText = matchText.Replace( "\t", " " );
       var match = regex.Match( matchText );
 
       Place startFragment = r.Start;

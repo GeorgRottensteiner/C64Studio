@@ -752,7 +752,10 @@ namespace FastColoredTextBoxNS
         if ( gni == '\t' )
         {
           // have to add more tabs?
-          sb.Append( gni, TabLength - ( sb.Length % TabLength ) );
+          if ( ( sb.Length % TabLength ) != 0 )
+          {
+            sb.Append( gni, TabLength - ( sb.Length % TabLength ) );
+          }
         }
       }
       return sb.ToString();

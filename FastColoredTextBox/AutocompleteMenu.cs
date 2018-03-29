@@ -451,6 +451,7 @@ namespace FastColoredTextBoxNS
       //some magic for update scrolls
       AutoScrollMinSize -= new Size( 1, 0 );
       AutoScrollMinSize += new Size( 1, 0 );
+
       //get fragment around caret
       Range fragment = tb.Selection.GetFragment( Menu.SearchPattern );
       string text = fragment.Text;

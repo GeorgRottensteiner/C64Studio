@@ -244,7 +244,7 @@ namespace C64Studio
     void editSource_FoldingBlockStateChanged( object sender, EventArgs e )
     {
       StoreFoldedBlocks();
-      Debug.Log( "Folded block state changed" );
+      //Debug.Log( "Folded block state changed" );
     }
 
 
