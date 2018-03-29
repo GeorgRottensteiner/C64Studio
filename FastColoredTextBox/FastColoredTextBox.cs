@@ -3250,8 +3250,10 @@ namespace FastColoredTextBoxNS
       foreach ( Line line in lines )
         line.ClearStyleWithoutAffectingFoldingMarkers( styleIndex );
 
+      /*
+      // what for?? THIS OPENS FOLDED BLOCKS!
       for ( int i = 0; i < LineInfos.Count; i++ )
-        SetVisibleState( i, VisibleState.Visible );
+        SetVisibleState( i, VisibleState.Visible );*/
 
       Invalidate();
     }

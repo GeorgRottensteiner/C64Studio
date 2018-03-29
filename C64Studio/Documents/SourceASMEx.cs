@@ -2905,8 +2905,8 @@ namespace C64Studio
 
     internal void RemoveAllErrorMarkings()
     {
-      TODO das macht schon wieder die folding markers weg!!
-      //editSource.ClearStyleWithoutAffectingFoldingMarkers( FastColoredTextBoxNS.StyleIndex.Style10 );
+      //TODO das macht schon wieder die folding markers weg!!
+      editSource.ClearStyleWithoutAffectingFoldingMarkers( FastColoredTextBoxNS.StyleIndex.Style10 );
     }
 
 
