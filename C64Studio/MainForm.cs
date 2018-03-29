@@ -5207,7 +5207,7 @@ namespace C64Studio
         AddTask( new Tasks.TaskUpdateCompileResult( Parser, Document ) );
       }
       if ( ( result )
-      && ( Document.BaseDoc != null ) )
+      &&   ( Document.BaseDoc != null ) )
       {
         Document.BaseDoc.FileParsed = true;
       }

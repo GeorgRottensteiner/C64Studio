@@ -333,7 +333,6 @@ namespace C64Studio.Tasks
           {
             config = Doc.Project.Settings.Configs[ConfigSetting];
           }
-
           if ( ( !Core.MainForm.ParseFile( parser, Doc, config, OutputMessages, CreatePreProcessedFile ) )
           ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
                                         {

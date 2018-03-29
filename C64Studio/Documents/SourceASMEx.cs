@@ -244,13 +244,14 @@ namespace C64Studio
     void editSource_FoldingBlockStateChanged( object sender, EventArgs e )
     {
       StoreFoldedBlocks();
-      //Debug.Log( "Folded block state changed" );
+      Debug.Log( "Folded block state changed" );
     }
 
 
 
     void editSource_TextChangedDelayed( object sender, FastColoredTextBoxNS.TextChangedEventArgs e )
     {
+      //Debug.Log( "editSource_TextChangedDelayed for " + DocumentInfo.FullPath );
       ResetAllStyles( e.ChangedRange );
 
       //ShowAutoComplete();
@@ -2904,7 +2905,8 @@ namespace C64Studio
 
     internal void RemoveAllErrorMarkings()
     {
-      editSource.ClearStyleWithoutAffectingFoldingMarkers( FastColoredTextBoxNS.StyleIndex.Style10 );
+      TODO das macht schon wieder die folding markers weg!!
+      //editSource.ClearStyleWithoutAffectingFoldingMarkers( FastColoredTextBoxNS.StyleIndex.Style10 );
     }
 
 
