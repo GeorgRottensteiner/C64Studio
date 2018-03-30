@@ -28,7 +28,7 @@ namespace C64Studio.Tasks
 
       try
       {
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create( "http://www.georg-rottensteiner.de/scripts/checkversion.php?checkversion=AppVersion&name=1" );
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create( "http://www.georg-rottensteiner.de/scripts/checkversion.php?checkversion=AppVersion&name=3" );
 
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
@@ -76,6 +76,13 @@ namespace C64Studio.Tasks
 
       bool    newerVersionAvailable = false;
 
+      if ( ( receivedVersionInfo.Major < myVersionInfo.Major )
+      ||   ( ( receivedVersionInfo.Major == myVersionInfo.Major )
+      &&     ( receivedVersionInfo.Minor < myVersionInfo.Minor ) ) )
+      {
+        Core.SetStatus( "Newest version looks older than local: " + ReceivedVersion );
+        return;
+      }
       if ( ( receivedVersionInfo.Major > myVersionInfo.Major )
       ||   ( ( receivedVersionInfo.Major == myVersionInfo.Major )
       &&     ( receivedVersionInfo.Minor > myVersionInfo.Minor ) )

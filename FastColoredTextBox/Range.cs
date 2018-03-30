@@ -639,7 +639,7 @@ namespace FastColoredTextBoxNS
 
 
 
-    internal int AdjustXPosForTabs( int Line, int CharPos )
+    public int AdjustXPosForTabs( int Line, int CharPos )
     {
       int delta = CharPos % tb.TabLength;
       if ( delta == 0 )

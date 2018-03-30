@@ -2896,7 +2896,18 @@ namespace C64Studio
         Debug.Log( "MarkTextAsError lineindex out of bounds!" );
         return;
       }
-      var range = new FastColoredTextBoxNS.Range( editSource, new FastColoredTextBoxNS.Place( CharPosStart, LineIndex ), new FastColoredTextBoxNS.Place( CharPosStart + CharLength, LineIndex ) );
+      int     startPos = CharPosStart;
+      if ( editSource.AllowTabs )
+      {
+        // adjust offset in case of tabs (butt ugly hackaround)
+        var origText = editSource[LineIndex].Text.Substring( 0, CharPosStart );
+
+        origText = editSource.ReTabifyLine( origText, editSource.TabLength );
+
+        startPos = origText.Length;
+        //startPos = rng.AdjustXPosForTabs( LineIndex, startPos );
+      }
+      var range = new FastColoredTextBoxNS.Range( editSource, new FastColoredTextBoxNS.Place( startPos, LineIndex ), new FastColoredTextBoxNS.Place( startPos + CharLength, LineIndex ) );
 
       range.SetStyle( FastColoredTextBoxNS.StyleIndex.Style10 );
     }
