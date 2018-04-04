@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Tiny64;
 
@@ -9256,11 +9257,6 @@ namespace C64Studio.Parser
         return false;
       }*/
 
-      if ( Config.CreatePreProcesseFile )
-      {
-        CreatePreProcessedFile( lines );
-      }
-
       DetermineUnparsedLabels();
       //Debug.Log( "DetermineUnparsedLabels done" );
 
@@ -9298,22 +9294,96 @@ namespace C64Studio.Parser
         return false;
       }
 
+      if ( Config.CreatePreProcesseFile )
+      {
+        CreatePreProcessedFile( Config.InputFile, lines, ASMFileInfo );
+      }
+
       return true;
     }
 
 
 
-    private void CreatePreProcessedFile( string[] Lines )
+    private void CreatePreProcessedFile( string SourceFile, string[] Lines, Types.ASM.FileInfo FileInfo )
     {
       try
       {
-        string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
+        //string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
+        string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( SourceFile ), System.IO.Path.GetFileNameWithoutExtension( SourceFile ) + ".dump" );
 
         if ( Lines == null )
         {
           return;
         }
-        System.IO.File.WriteAllLines( pathLog, Lines );
+
+        using ( StreamWriter writer = File.CreateText( pathLog ) )
+        {
+          int     numLineDigits = Lines.Length.ToString().Length;
+
+          string  formatString = "D" + numLineDigits.ToString();
+
+          for ( int i = 0; i < Lines.Length; ++i )
+          {
+            writer.Write( i.ToString( formatString ) );
+            writer.Write( "  " );
+
+            if ( FileInfo.LineInfo.ContainsKey( i ) )
+            {
+              var     info = FileInfo.LineInfo[i];
+              if ( info != null )
+              {
+                if ( info.AddressStart < 0 )
+                {
+                  writer.Write( "----" );
+                }
+                else
+                {
+                  writer.Write( info.AddressStart.ToString( "X4" ) );
+                }
+
+                writer.Write( "  " );
+                if ( info.LineData != null )
+                {
+                  int     numBytesToPrint = (int)info.LineData.Length;
+                  int     numLettersPrinted = 0;
+
+                  for ( int j = 0; j < numBytesToPrint; ++j )
+                  {
+                    writer.Write( info.LineData.ByteAt( j ).ToString( "X2" ) );
+                    numLettersPrinted += 2;
+                    if ( j + 1 < numBytesToPrint )
+                    {
+                      writer.Write( ' ' );
+                      ++numLettersPrinted;
+                    }
+                  }
+                  for ( int j = numLettersPrinted; j < 10; ++j )
+                  {
+                    writer.Write( ' ' );
+                  }
+                  //writer.Write( info.LineData.ToString() );
+                }
+                else
+                {
+                  writer.Write( "          " );
+                }
+                writer.Write( "  " );
+                writer.WriteLine( Lines[i].TrimStart() );
+              }
+              else
+              {
+                writer.Write( "????              " );
+                writer.WriteLine( Lines[i].TrimStart() );
+              }
+            }
+            else
+            {
+              writer.Write( "????              " );
+              writer.WriteLine( Lines[i].TrimStart() );
+            }
+          }
+          writer.Close();
+        }
 
         ParseMessage message = new ParseMessage( ParseMessage.LineType.MESSAGE, Types.ErrorCode.OK, "Preprocessed file written to " + pathLog );
         message.AlternativeFile = pathLog;
