@@ -2366,7 +2366,8 @@ namespace C64Studio
       StudioCore.Debugging.Debugger.ClearCaches();
       StudioCore.Debugging.ReseatBreakpoints( DocumentToDebug.ASMFileInfo );
       StudioCore.Debugging.AddVirtualBreakpoints( DocumentToDebug.ASMFileInfo );
-      StudioCore.Debugging.Debugger.SetBreakPoints( StudioCore.Debugging.BreakPoints );
+      //StudioCore.Debugging.Debugger.SetBreakPoints( StudioCore.Debugging.BreakPoints );
+      StudioCore.Debugging.Debugger.ClearAllBreakpoints();
       StudioCore.Debugging.MarkedDocument = null;
       StudioCore.Debugging.MarkedDocumentLine = -1;
       /*
