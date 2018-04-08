@@ -9943,6 +9943,7 @@ namespace C64Studio.Parser
           }
 
           // 8 x 8kb
+          var   assembledCode = AssembledOutput.Assembly;
           AssembledOutput.Assembly = header;
           for ( int i = 0; i < 8; ++i )
           {
@@ -9956,7 +9957,7 @@ namespace C64Studio.Parser
             chip.AppendU16NetworkOrder( 0x8000 ); // loading start address
             chip.AppendU16NetworkOrder( 0x2000 ); // rom size
 
-            chip.Append( AssembledOutput.Assembly.SubBuffer( i * 0x2000, 0x2000 ) );
+            chip.Append( assembledCode.SubBuffer( i * 0x2000, 0x2000 ) );
 
             AssembledOutput.Assembly += chip;
           }
@@ -10012,6 +10013,7 @@ namespace C64Studio.Parser
           }
 
           // 8 x 8kb
+          var   assembledCode = AssembledOutput.Assembly;
           AssembledOutput.Assembly = header;
           for ( int i = 0; i < 8; ++i )
           {
@@ -10025,7 +10027,7 @@ namespace C64Studio.Parser
             chip.AppendU16NetworkOrder( 0x8000 ); // loading start address
             chip.AppendU16NetworkOrder( 0x2000 ); // rom size
 
-            chip.Append( AssembledOutput.Assembly.SubBuffer( i * 0x2000, 0x2000 ) );
+            chip.Append( assembledCode.SubBuffer( i * 0x2000, 0x2000 ) );
 
             AssembledOutput.Assembly += chip;
           }
