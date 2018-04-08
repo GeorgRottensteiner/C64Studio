@@ -10109,6 +10109,10 @@ namespace C64Studio.Parser
             AssembledOutput.Assembly += chip;
           }
         }
+        else
+        {
+          AssembledOutput.Assembly = resultingAssembly;
+        }
       }
 
       return true;
