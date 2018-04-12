@@ -1,4 +1,23 @@
 ﻿C64Studio
+o Replace All in active doc:
+  Replace All (in the active document) sometimes empties the editor/buffer instead.
+  Using undo after that causes C64Studio to crash with this stacktrace:
+
+  System.InvalidOperationException: Collection was modified; enumeration operation may not execute.
+     at System.Collections.ArrayList.ArrayListEnumeratorSimple.MoveNext()
+     at System.Windows.Forms.Application.ExitInternal()
+     at System.Windows.Forms.Application.ThreadContext.OnThreadException(Exception t)
+     at System.Windows.Forms.Application.ThreadContext.PreTranslateMessage(MSG& msg)
+     at System.Windows.Forms.Application.ThreadContext.System.Windows.Forms.UnsafeNativeMethods.IMsoComponent.FPreTranslateMessage(MSG& msg)
+     at System.Windows.Forms.Application.ComponentManager.System.Windows.Forms.UnsafeNativeMethods.IMsoComponentManager.FPushMessageLoop(Int32 dwComponentID, Int32 reason, Int32 pvLoopData)
+     at System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
+     at System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 reason, ApplicationContext context)
+     at System.Windows.Forms.Application.Run(Form mainForm)
+     at C64Studio.Program.Main(String[] args)
+
+  When C64Studio is started up again the search/replace work fine, so I'm not sure what it reacts to.
+  I've also noticed sometimes the cursor isn't moved to the right line during a search, which may be why the replace fails.
+
 o Timed- Auto-Step im Debug-Modus
 o Im Screeneditor würde ich gerne mit einem klick oder so den Wert um 64 für ECM / 128 für PETSCII erhöhen können
 o !for loops with implicit !zone
