@@ -6145,6 +6145,10 @@ namespace C64Studio.Parser
           }
           else
           {
+            if ( ScopeInsideMacroDefinition( stackScopes ) )
+            {
+              continue;
+            }
             if ( !EvaluateTokens( lineIndex, valueTokens, out address ) )
             {
               if ( defineName == "*" )

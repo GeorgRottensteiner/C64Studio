@@ -1363,6 +1363,24 @@ GREEN=5
 
 
 
+    [TestMethod]
+    public void TestMacroWithNumericArgumentAndNotEndingInUnparsedLabel()
+    {
+      string      source = @"* = 49152
+                            !macro set_poke_pos poke_positionX {
+                              poke_position = poke_positionX
+                              }
+
+                            +set_poke_pos 1024
+
+                            lda #65
+                            sta poke_position
+                            rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00C0A9418D000460", assembly.ToString() );
+    }
 
   }
 }
