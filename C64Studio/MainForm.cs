@@ -3549,7 +3549,17 @@ namespace C64Studio
       else
       {
         mainTools.Enabled = !Wait;
-        mainMenu.Enabled = !Wait;
+
+        foreach ( ToolStripMenuItem subMenu in mainMenu.Items )
+        {
+          // leave Window and Help submenu intact!
+          if ( ( subMenu.Text != "&Window" )
+          &&   ( subMenu.Text != "&Help" ) )   
+          {
+            subMenu.Enabled = !Wait;
+          }
+        }
+        //mainMenu.Enabled = !Wait;
       }
     }
 
