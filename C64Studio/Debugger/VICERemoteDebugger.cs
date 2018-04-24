@@ -1199,11 +1199,13 @@ namespace C64Studio
                 request += "store ";
               }
             }
+            request += m_Request.Parameter1.ToString( "x" );
             if ( !string.IsNullOrEmpty( m_Request.Breakpoint.Conditions ) )
             {
-              request += m_Request.Breakpoint.Conditions + " ";
+              request += " if " + m_Request.Breakpoint.Conditions;
             }
-            request += m_Request.Parameter1.ToString( "x" );
+
+            Debug.Log( "Add breakpoint request " + request );
 
             return SendCommand( request );
           }

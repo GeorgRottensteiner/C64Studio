@@ -2396,6 +2396,8 @@ namespace C64Studio
       }
 
       string breakPointFile = StudioCore.Debugging.PrepareAfterStartBreakPoints();
+
+      Debug.Log( "breakPointFile = " + breakPointFile );
       string command = toolRun.DebugArguments;
 
       if ( toolRun.PassLabelsToEmulator )

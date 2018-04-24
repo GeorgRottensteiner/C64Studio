@@ -434,11 +434,11 @@ namespace C64Studio
             }
             if ( mustBeAddedOnStartup )
             {
+              request += "$" + breakPoint.Address.ToString( "x4" );
               if ( !string.IsNullOrEmpty( breakPoint.Conditions ) )
               {
-                request += breakPoint.Conditions + " ";
+                request += " if " + breakPoint.Conditions;
               }
-              request += "$" + breakPoint.Address.ToString( "x4" );
               breakPointFile += request + "\r\n";
               breakPoint.RemoteIndex = remoteIndex;
               ++remoteIndex;
