@@ -5,6 +5,7 @@ o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
 o BASIC: Renumber bei THEN <zeile> tut nicht
 o BASIC: Renumber nur von Ausschnitten
 o BASIC: Einzelne Zeilennummer ändern (mit Referenzen die angepasst werden)
+o BASIC: Keymapping Default: Z ist nicht auf Y gemappt (aber Y auf Z)
 o Replace All in active doc:
   Replace All (in the active document) sometimes empties the editor/buffer instead.
   Using undo after that causes C64Studio to crash with this stacktrace:
