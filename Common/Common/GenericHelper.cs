@@ -44,6 +44,11 @@ namespace GR
         second = Value2;
       }
 
+      public override int GetHashCode()
+      {
+        return (int)( first.GetHashCode() * 17 + second.GetHashCode() * 31 );
+      }
+
       public override string ToString()
       {
         if ( first is string )
@@ -55,6 +60,31 @@ namespace GR
           return second.ToString();
         }
         return base.ToString();
+      }
+
+      public override bool Equals( object obj )
+      {
+        if ( obj is Tupel<T1, T2> )
+        {
+          return Equals( (Tupel<T1, T2>)obj );
+        }
+        return false;
+      }
+
+      public static bool operator ==( Tupel<T1, T2> Obj1, Tupel<T1, T2> Obj2 )
+      {
+        return Obj1.Equals( Obj2 );
+      }
+
+      public static bool operator !=( Tupel<T1, T2> Obj1, Tupel<T1, T2> Obj2 )
+      {
+        return !Obj1.Equals( Obj2 );
+      }
+
+      public bool Equals( Tupel<T1,T2> OtherTupel )
+      {
+        return ( ( OtherTupel.first.Equals( first ) )
+           &&  ( OtherTupel.second.Equals( second ) ) );
       }
 
     }

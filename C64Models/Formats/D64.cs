@@ -235,14 +235,23 @@ namespace C64Studio.Formats
         for ( int j = 0; j < Tracks[i].Sectors.Count; ++j )
         {
           diskData.CopyTo( Tracks[i].Sectors[j].Data, dataPos, 256 );
+          /*
           if ( ( diskData.ByteAt( dataPos ) != 0 )
           ||   ( diskData.ByteAt( dataPos + 1 ) != 0 ) )
           {
             Tracks[i].Sectors[j].Free = false;
-          }
+          }*/
           dataPos += 256;
         }
       }
+      for ( int i = 0; i < Tracks.Count; ++i )
+      {
+        for ( int j = 0; j < Tracks[i].Sectors.Count; ++j )
+        {
+          Tracks[i].Sectors[j].Free = !IsSectorMarkedAsUsedInBAM( i + 1, j );
+        }
+      }
+
       if ( ( diskData.Length == 175531 )
       ||   ( diskData.Length == 197376 ) )
       {
@@ -405,6 +414,37 @@ namespace C64Studio.Formats
       }
       return files;
     }
+
+
+
+    private bool IsSectorMarkedAsUsedInBAM( int Track, int Sector )
+    {
+      _LastError = "";
+      if ( ( Track < 1 )
+      ||   ( Track > Tracks.Count ) )
+      {
+        _LastError = "track index out of bounds";
+        return false;
+      }
+      Track track = Tracks[Track - 1];
+
+      if ( ( Sector < 0 )
+      ||   ( Sector >= track.Sectors.Count ) )
+      {
+        _LastError = "sector index out of bounds";
+        return false;
+      }
+      Sector  bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
+
+      byte mask = (byte)( 1 << ( Sector & 7 ) );
+
+      if ( ( bam.Data.ByteAt( Track * 4 + Sector / 8 + 1 ) & mask ) == 0 )
+      {
+        return true;
+      }
+      return false;
+    }
+
 
 
 
@@ -975,6 +1015,77 @@ namespace C64Studio.Formats
         return _LastError;
       }
     }
+
+
+
+    public override void Validate()
+    {
+      var files = Files();
+
+      GR.Collections.Set<GR.Generic.Tupel<int,int>>    usedTracksAndSectors = new GR.Collections.Set<GR.Generic.Tupel<int, int>>();
+
+      usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( TRACK_HEADER, SECTOR_HEADER ) );
+      usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( TRACK_BAM, SECTOR_BAM ) );
+
+      int   curTrack = TRACK_DIRECTORY;
+      int   curSector = SECTOR_DIRECTORY;
+      usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( curTrack, curSector ) );
+      while ( true )
+      {
+        Sector sec = Tracks[curTrack - 1].Sectors[curSector];
+
+        curTrack = sec.Data.ByteAt( 0 );
+        curSector = sec.Data.ByteAt( 1 );
+
+        if ( curTrack == 0 )
+        {
+          // track = 0 marks last directory entry
+          break;
+        }
+        usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( curTrack, curSector ) );
+      }
+
+      foreach ( var file in files )
+      {
+        curTrack = file.StartTrack;
+        curSector = file.StartSector;
+
+        while ( true )
+        {
+          Sector sec = Tracks[curTrack - 1].Sectors[curSector];
+
+          usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( curTrack, curSector ) );
+
+          curTrack = sec.Data.ByteAt( 0 );
+          curSector = sec.Data.ByteAt( 1 );
+
+          if ( curTrack == 0 )
+          {
+            // track = 0 marks last directory entry
+            break;
+          }
+        }
+      }
+      Debug.Log( "Used" );
+      foreach ( var entry in usedTracksAndSectors )
+      {
+        Debug.Log( "Entry " + entry.first + ", Sector " + entry.second );
+      }
+      Debug.Log( "Entries " + usedTracksAndSectors.Count );
+      foreach ( var track in Tracks )
+      {
+        foreach ( var sector in track.Sectors )
+        {
+          if ( ( !sector.Free )
+          &&   ( !usedTracksAndSectors.ContainsValue( new GR.Generic.Tupel<int, int>( track.TrackNo, sector.SectorNo ) ) ) )
+          {
+            Debug.Log( "Track " + track.TrackNo + ", Sector " + sector.SectorNo + " should be free, but aren't" );
+            sector.Free = true;
+          }
+        }
+      }
+    }
+
 
   }
 }

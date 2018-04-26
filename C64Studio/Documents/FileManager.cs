@@ -811,7 +811,13 @@ namespace C64Studio
 
     private void validateMediumToolStripMenuItem_Click( object sender, EventArgs e )
     {
-
+      if ( m_Media != null )
+      {
+        m_Media.Validate();
+        RefreshFileView();
+        SetModified();
+        UpdateStatusInfo();
+      }
     }
 
 
