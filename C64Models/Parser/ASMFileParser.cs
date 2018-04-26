@@ -6109,6 +6109,12 @@ namespace C64Studio.Parser
         ||     ( !lineTokenInfos[0].Content.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) )
         {
           // a define
+          if ( ScopeInsideMacroDefinition( stackScopes ) )
+          {
+            continue;
+          }
+
+
           int equPos = lineTokenInfos[1].StartPos;
           string defineName = parseLine.Substring( 0, equPos ).Trim();
           if ( !m_AssemblerSettings.CaseSensitive )
@@ -6759,6 +6765,10 @@ namespace C64Studio.Parser
               &&   ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
               ||     ( !lineTokenInfos[1].Content.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) )
               {
+                if ( ScopeInsideMacroDefinition( stackScopes ) )
+                {
+                  continue;
+                }
                 // a define
                 int equPos = lineTokenInfos[2].StartPos;
                 string defineName = lineTokenInfos[1].Content;

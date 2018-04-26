@@ -1,4 +1,5 @@
 ﻿C64Studio
+o Disk-Image Delete doesn't mark sectors as free! (downhillchallenge)
 o BASIC: Renumber bei THEN <zeile> tut nicht
 o BASIC: Renumber nur von Ausschnitten
 o BASIC: Einzelne Zeilennummer ändern (mit Referenzen die angepasst werden)
