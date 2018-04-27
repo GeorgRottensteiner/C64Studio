@@ -30,10 +30,12 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DlgGraphicImport));
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.tabImportSettings = new System.Windows.Forms.TabControl();
       this.tabSettings = new System.Windows.Forms.TabPage();
+      this.groupBox5 = new System.Windows.Forms.GroupBox();
+      this.checkPasteAsBlock = new System.Windows.Forms.CheckBox();
       this.groupBox4 = new System.Windows.Forms.GroupBox();
       this.label3 = new System.Windows.Forms.Label();
       this.listDirectReplaceColors = new System.Windows.Forms.ListView();
@@ -85,10 +87,10 @@
       this.lightGreyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.picPreview = new GR.Forms.FastPictureBox();
       this.picOriginal = new GR.Forms.FastPictureBox();
-      this.groupBox5 = new System.Windows.Forms.GroupBox();
-      this.checkPasteAsBlock = new System.Windows.Forms.CheckBox();
+      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.tabImportSettings.SuspendLayout();
       this.tabSettings.SuspendLayout();
+      this.groupBox5.SuspendLayout();
       this.groupBox4.SuspendLayout();
       this.groupBox3.SuspendLayout();
       this.groupBox2.SuspendLayout();
@@ -97,7 +99,6 @@
       this.contextMenuOrigPic.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.picOriginal)).BeginInit();
-      this.groupBox5.SuspendLayout();
       this.SuspendLayout();
       // 
       // tabImportSettings
@@ -124,6 +125,27 @@
       this.tabSettings.TabIndex = 0;
       this.tabSettings.Text = "Settings";
       this.tabSettings.UseVisualStyleBackColor = true;
+      // 
+      // groupBox5
+      // 
+      this.groupBox5.Controls.Add(this.checkPasteAsBlock);
+      this.groupBox5.Location = new System.Drawing.Point(6, 388);
+      this.groupBox5.Name = "groupBox5";
+      this.groupBox5.Size = new System.Drawing.Size(265, 56);
+      this.groupBox5.TabIndex = 12;
+      this.groupBox5.TabStop = false;
+      this.groupBox5.Text = "Paste Options";
+      // 
+      // checkPasteAsBlock
+      // 
+      this.checkPasteAsBlock.AutoSize = true;
+      this.checkPasteAsBlock.Location = new System.Drawing.Point(9, 19);
+      this.checkPasteAsBlock.Name = "checkPasteAsBlock";
+      this.checkPasteAsBlock.Size = new System.Drawing.Size(97, 17);
+      this.checkPasteAsBlock.TabIndex = 0;
+      this.checkPasteAsBlock.Text = "Paste as Block";
+      this.checkPasteAsBlock.UseVisualStyleBackColor = true;
+      this.checkPasteAsBlock.CheckedChanged += new System.EventHandler(this.checkPasteAsBlock_CheckedChanged);
       // 
       // groupBox4
       // 
@@ -312,7 +334,7 @@
       this.tabPalette.Location = new System.Drawing.Point(4, 22);
       this.tabPalette.Name = "tabPalette";
       this.tabPalette.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPalette.Size = new System.Drawing.Size(283, 416);
+      this.tabPalette.Size = new System.Drawing.Size(283, 450);
       this.tabPalette.TabIndex = 1;
       this.tabPalette.Text = "Palette";
       this.tabPalette.UseVisualStyleBackColor = true;
@@ -400,6 +422,7 @@
       this.btnZoomIn.Name = "btnZoomIn";
       this.btnZoomIn.Size = new System.Drawing.Size(24, 24);
       this.btnZoomIn.TabIndex = 6;
+      this.toolTip1.SetToolTip(this.btnZoomIn, "Zoom In");
       this.btnZoomIn.UseVisualStyleBackColor = true;
       this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
       // 
@@ -410,6 +433,7 @@
       this.btnZoomOut.Name = "btnZoomOut";
       this.btnZoomOut.Size = new System.Drawing.Size(24, 24);
       this.btnZoomOut.TabIndex = 6;
+      this.toolTip1.SetToolTip(this.btnZoomOut, "Zoom Out");
       this.btnZoomOut.UseVisualStyleBackColor = true;
       this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
       // 
@@ -420,6 +444,7 @@
       this.btnReload.Name = "btnReload";
       this.btnReload.Size = new System.Drawing.Size(24, 24);
       this.btnReload.TabIndex = 6;
+      this.toolTip1.SetToolTip(this.btnReload, "Reload from File");
       this.btnReload.UseVisualStyleBackColor = true;
       this.btnReload.Click += new System.EventHandler(this.btnReload_Click);
       // 
@@ -585,7 +610,7 @@
       // picPreview
       // 
       this.picPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picPreview.DisplayPage = fastImage3;
+      this.picPreview.DisplayPage = fastImage1;
       this.picPreview.Image = null;
       this.picPreview.Location = new System.Drawing.Point(0, 439);
       this.picPreview.Name = "picPreview";
@@ -600,7 +625,7 @@
       // 
       this.picOriginal.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.picOriginal.ContextMenuStrip = this.contextMenuOrigPic;
-      this.picOriginal.DisplayPage = fastImage4;
+      this.picOriginal.DisplayPage = fastImage2;
       this.picOriginal.Image = null;
       this.picOriginal.Location = new System.Drawing.Point(0, 29);
       this.picOriginal.Name = "picOriginal";
@@ -610,27 +635,6 @@
       this.picOriginal.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picOriginal_MouseDown);
       this.picOriginal.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picOriginal_MouseMove);
       this.picOriginal.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picOriginal_MouseUp);
-      // 
-      // groupBox5
-      // 
-      this.groupBox5.Controls.Add(this.checkPasteAsBlock);
-      this.groupBox5.Location = new System.Drawing.Point(6, 388);
-      this.groupBox5.Name = "groupBox5";
-      this.groupBox5.Size = new System.Drawing.Size(265, 56);
-      this.groupBox5.TabIndex = 12;
-      this.groupBox5.TabStop = false;
-      this.groupBox5.Text = "Paste Options";
-      // 
-      // checkPasteAsBlock
-      // 
-      this.checkPasteAsBlock.AutoSize = true;
-      this.checkPasteAsBlock.Location = new System.Drawing.Point(9, 19);
-      this.checkPasteAsBlock.Name = "checkPasteAsBlock";
-      this.checkPasteAsBlock.Size = new System.Drawing.Size(97, 17);
-      this.checkPasteAsBlock.TabIndex = 0;
-      this.checkPasteAsBlock.Text = "Paste as Block";
-      this.checkPasteAsBlock.UseVisualStyleBackColor = true;
-      this.checkPasteAsBlock.CheckedChanged += new System.EventHandler(this.checkPasteAsBlock_CheckedChanged);
       // 
       // DlgGraphicImport
       // 
@@ -660,6 +664,8 @@
       this.Text = "Import Graphic";
       this.tabImportSettings.ResumeLayout(false);
       this.tabSettings.ResumeLayout(false);
+      this.groupBox5.ResumeLayout(false);
+      this.groupBox5.PerformLayout();
       this.groupBox4.ResumeLayout(false);
       this.groupBox3.ResumeLayout(false);
       this.groupBox3.PerformLayout();
@@ -672,8 +678,6 @@
       this.contextMenuOrigPic.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.picOriginal)).EndInit();
-      this.groupBox5.ResumeLayout(false);
-      this.groupBox5.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -736,5 +740,6 @@
     private System.Windows.Forms.ColumnHeader columnHeader4;
     private System.Windows.Forms.GroupBox groupBox5;
     private System.Windows.Forms.CheckBox checkPasteAsBlock;
+    private System.Windows.Forms.ToolTip toolTip1;
   }
 }
