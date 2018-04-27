@@ -82,6 +82,45 @@ namespace C64Studio.Formats
 
 
 
+    private bool IsSectorMarkedAsUsedInBAM( int Track, int Sector )
+    {
+      _LastError = "";
+      if ( ( Track < 1 )
+      ||   ( Track > Tracks.Count ) )
+      {
+        _LastError = "track index out of bounds";
+        return false;
+      }
+      Track track = Tracks[Track - 1];
+
+      if ( ( Sector < 0 )
+      ||   ( Sector >= track.Sectors.Count ) )
+      {
+        _LastError = "sector index out of bounds";
+        return false;
+      }
+
+      Sector  bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM];
+      int     trackOffset = -1;
+      if ( Track >= 41 )
+      {
+        bam = Tracks[TRACK_BAM - 1].Sectors[SECTOR_BAM + 1];
+        trackOffset = -41;
+      }
+
+      // mask out sector
+      byte mask = (byte)( 1 << ( Sector & 7 ) );
+
+      if ( ( bam.Data.ByteAt( 16 + ( Track + trackOffset ) * 6 + Sector / 8 + 1 ) & mask ) == 0 )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+
     void CreateBAM()
     {
       _LastError = "";
@@ -207,12 +246,15 @@ namespace C64Studio.Formats
         for ( int j = 0; j < Tracks[i].Sectors.Count; ++j )
         {
           diskData.CopyTo( Tracks[i].Sectors[j].Data, dataPos, 256 );
-          if ( ( diskData.ByteAt( dataPos ) != 0 )
-          ||   ( diskData.ByteAt( dataPos + 1 ) != 0 ) )
-          {
-            Tracks[i].Sectors[j].Free = false;
-          }
           dataPos += 256;
+        }
+      }
+
+      for ( int i = 0; i < Tracks.Count; ++i )
+      {
+        for ( int j = 0; j < Tracks[i].Sectors.Count; ++j )
+        {
+          Tracks[i].Sectors[j].Free = !IsSectorMarkedAsUsedInBAM( i + 1, j );
         }
       }
 

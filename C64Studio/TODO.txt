@@ -2,7 +2,8 @@
 o Disk-Image Validate auch für nicht-D64!
 o Disk-Images sector free setzen auch für nicht-D64
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
-o BASIC: Renumber bei THEN <zeile> tut nicht
+o Graphic Screen Editor: Export as Koala
+o BASIC: Renumber bei THEN <zeile> tut nicht ?? Seems to work fine
 o BASIC: Renumber nur von Ausschnitten
 o BASIC: Einzelne Zeilennummer ändern (mit Referenzen die angepasst werden)
 o BASIC: Keymapping Default: Z ist nicht auf Y gemappt (aber Y auf Z)

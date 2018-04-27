@@ -235,12 +235,6 @@ namespace C64Studio.Formats
         for ( int j = 0; j < Tracks[i].Sectors.Count; ++j )
         {
           diskData.CopyTo( Tracks[i].Sectors[j].Data, dataPos, 256 );
-          /*
-          if ( ( diskData.ByteAt( dataPos ) != 0 )
-          ||   ( diskData.ByteAt( dataPos + 1 ) != 0 ) )
-          {
-            Tracks[i].Sectors[j].Free = false;
-          }*/
           dataPos += 256;
         }
       }
