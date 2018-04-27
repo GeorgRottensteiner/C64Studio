@@ -1029,5 +1029,69 @@ namespace C64Studio.Formats
       }
     }
 
+
+
+    public override void Validate()
+    {
+      var files = Files();
+
+      GR.Collections.Set<GR.Generic.Tupel<int,int>>    usedTracksAndSectors = new GR.Collections.Set<GR.Generic.Tupel<int, int>>();
+
+      usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( TRACK_HEADER, SECTOR_HEADER ) );
+      usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( TRACK_BAM, SECTOR_BAM ) );
+
+      int   curTrack = TRACK_DIRECTORY;
+      int   curSector = SECTOR_DIRECTORY;
+      usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( curTrack, curSector ) );
+      while ( true )
+      {
+        Sector sec = Tracks[curTrack - 1].Sectors[curSector];
+
+        curTrack = sec.Data.ByteAt( 0 );
+        curSector = sec.Data.ByteAt( 1 );
+
+        if ( curTrack == 0 )
+        {
+          // track = 0 marks last directory entry
+          break;
+        }
+        usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( curTrack, curSector ) );
+      }
+
+      foreach ( var file in files )
+      {
+        curTrack = file.StartTrack;
+        curSector = file.StartSector;
+
+        while ( true )
+        {
+          Sector sec = Tracks[curTrack - 1].Sectors[curSector];
+
+          usedTracksAndSectors.Add( new GR.Generic.Tupel<int, int>( curTrack, curSector ) );
+
+          curTrack = sec.Data.ByteAt( 0 );
+          curSector = sec.Data.ByteAt( 1 );
+
+          if ( curTrack == 0 )
+          {
+            // track = 0 marks last directory entry
+            break;
+          }
+        }
+      }
+      foreach ( var track in Tracks )
+      {
+        foreach ( var sector in track.Sectors )
+        {
+          if ( ( !sector.Free )
+          && ( !usedTracksAndSectors.ContainsValue( new GR.Generic.Tupel<int, int>( track.TrackNo, sector.SectorNo ) ) ) )
+          {
+            sector.Free = true;
+          }
+        }
+      }
+
+    }
+
   }
 }

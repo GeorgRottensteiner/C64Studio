@@ -1,6 +1,5 @@
 ﻿C64Studio
 o Disk-Image Validate auch für nicht-D64!
-o Disk-Images sector free setzen auch für nicht-D64
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
 o Graphic Screen Editor: Export as Koala
 o BASIC: Renumber bei THEN <zeile> tut nicht ?? Seems to work fine

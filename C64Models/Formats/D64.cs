@@ -1060,12 +1060,6 @@ namespace C64Studio.Formats
           }
         }
       }
-      Debug.Log( "Used" );
-      foreach ( var entry in usedTracksAndSectors )
-      {
-        Debug.Log( "Entry " + entry.first + ", Sector " + entry.second );
-      }
-      Debug.Log( "Entries " + usedTracksAndSectors.Count );
       foreach ( var track in Tracks )
       {
         foreach ( var sector in track.Sectors )
@@ -1073,7 +1067,6 @@ namespace C64Studio.Formats
           if ( ( !sector.Free )
           &&   ( !usedTracksAndSectors.ContainsValue( new GR.Generic.Tupel<int, int>( track.TrackNo, sector.SectorNo ) ) ) )
           {
-            Debug.Log( "Track " + track.TrackNo + ", Sector " + sector.SectorNo + " should be free, but aren't" );
             sector.Free = true;
           }
         }
