@@ -1,5 +1,4 @@
 ﻿C64Studio
-o Disk-Image Validate auch für nicht-D64!
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
 o Graphic Screen Editor: Export as Koala
 o BASIC: Renumber bei THEN <zeile> tut nicht ?? Seems to work fine
@@ -38,7 +37,6 @@ o TO CHECK Bei Suchen und Ersetzen loescht manchmal (zum Glueck selten) den komp
 o Immer wenn man lda (zeropageadresse),y tippt macht er fuer das ",y" einen Vorschlag, was man statt dessen besser schreiben sollte, 
   also z.B. "check_ready", weil das auch ein y im Namen hat. Das ist doch eher ungeschickt so.
 Support fuer den CC65 compiler, so dass man auch in C programmieren kann. Das waere obersuperspitzenkomfortionoes! 
-o Ist die Hilfe beim Debuggen offen, dann wird bei mir, sobald das Debuggen beendet wird, immer zur Hilfe-Tab gewechselt.
 o Refactoring/Rename 
 o Farben der GUI-Elemente
 o If you go to the preview pane, where it says Entries, i can't see whats underneath that because the slider bar is in the way. (DPI settings!)

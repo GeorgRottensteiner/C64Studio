@@ -932,6 +932,8 @@ namespace C64Studio
       }
       m_ActivePerspective = NewPerspective;
 
+      var previousActiveDoc = ActiveDocumentInfo;
+
       foreach ( ToolWindow tool in StudioCore.Settings.Tools.Values )
       {
         if ( tool.Type == ToolWindowType.FIND_REPLACE )
@@ -953,6 +955,13 @@ namespace C64Studio
           tool.Document.DockState = DockState.Hidden;
           tool.MenuItem.Checked = false;
         }
+      }
+
+      // restore previous active doc if it exists
+      if ( ( previousActiveDoc != null )
+      &&   ( previousActiveDoc.BaseDoc != null ) )
+      {
+        previousActiveDoc.BaseDoc.Show();
       }
     }
 
@@ -2397,7 +2406,6 @@ namespace C64Studio
 
       string breakPointFile = StudioCore.Debugging.PrepareAfterStartBreakPoints();
 
-      Debug.Log( "breakPointFile = " + breakPointFile );
       string command = toolRun.DebugArguments;
 
       if ( toolRun.PassLabelsToEmulator )
