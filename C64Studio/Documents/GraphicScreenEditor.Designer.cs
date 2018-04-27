@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +61,10 @@
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.label9 = new System.Windows.Forms.Label();
+      this.label8 = new System.Windows.Forms.Label();
+      this.label6 = new System.Windows.Forms.Label();
+      this.label5 = new System.Windows.Forms.Label();
       this.btnApplyScreenSize = new System.Windows.Forms.Button();
       this.editScreenHeight = new System.Windows.Forms.TextBox();
       this.editScreenWidth = new System.Windows.Forms.TextBox();
@@ -94,10 +98,7 @@
       this.comboColorMappingTargets = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
-      this.label5 = new System.Windows.Forms.Label();
-      this.label6 = new System.Windows.Forms.Label();
-      this.label8 = new System.Windows.Forms.Label();
-      this.label9 = new System.Windows.Forms.Label();
+      this.btnExportToImage = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -169,11 +170,13 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
       this.groupBox1.Controls.Add(this.btnImportCharsetFromImage);
       this.groupBox1.Controls.Add(this.btnImportFromFile);
       this.groupBox1.Location = new System.Drawing.Point(458, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(324, 386);
+      this.groupBox1.Size = new System.Drawing.Size(324, 461);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -200,6 +203,8 @@
       // 
       // groupExport
       // 
+      this.groupExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
       this.groupExport.Controls.Add(this.editExportBASICLineOffset);
       this.groupExport.Controls.Add(this.editExportBASICLineNo);
       this.groupExport.Controls.Add(this.label3);
@@ -211,6 +216,7 @@
       this.groupExport.Controls.Add(this.btnExportToCharScreen);
       this.groupExport.Controls.Add(this.labelCharInfoExport);
       this.groupExport.Controls.Add(this.btnExportAsBinary);
+      this.groupExport.Controls.Add(this.btnExportToImage);
       this.groupExport.Controls.Add(this.btnExportAs);
       this.groupExport.Controls.Add(this.editPrefix);
       this.groupExport.Controls.Add(this.label2);
@@ -220,14 +226,14 @@
       this.groupExport.Controls.Add(this.editDataExport);
       this.groupExport.Location = new System.Drawing.Point(11, 6);
       this.groupExport.Name = "groupExport";
-      this.groupExport.Size = new System.Drawing.Size(441, 386);
+      this.groupExport.Size = new System.Drawing.Size(441, 461);
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
       // 
       // editExportBASICLineOffset
       // 
-      this.editExportBASICLineOffset.Location = new System.Drawing.Point(355, 166);
+      this.editExportBASICLineOffset.Location = new System.Drawing.Point(355, 192);
       this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
       this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
       this.editExportBASICLineOffset.TabIndex = 28;
@@ -235,7 +241,7 @@
       // 
       // editExportBASICLineNo
       // 
-      this.editExportBASICLineNo.Location = new System.Drawing.Point(184, 166);
+      this.editExportBASICLineNo.Location = new System.Drawing.Point(184, 192);
       this.editExportBASICLineNo.Name = "editExportBASICLineNo";
       this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
       this.editExportBASICLineNo.TabIndex = 29;
@@ -244,7 +250,7 @@
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(288, 169);
+      this.label3.Location = new System.Drawing.Point(288, 195);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(61, 13);
       this.label3.TabIndex = 26;
@@ -253,7 +259,7 @@
       // label4
       // 
       this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(131, 169);
+      this.label4.Location = new System.Drawing.Point(131, 195);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(47, 13);
       this.label4.TabIndex = 27;
@@ -261,7 +267,7 @@
       // 
       // btnExportToBASICData
       // 
-      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 164);
+      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 190);
       this.btnExportToBASICData.Name = "btnExportToBASICData";
       this.btnExportToBASICData.Size = new System.Drawing.Size(120, 23);
       this.btnExportToBASICData.TabIndex = 25;
@@ -336,7 +342,7 @@
       // 
       // editPrefix
       // 
-      this.editPrefix.Location = new System.Drawing.Point(209, 138);
+      this.editPrefix.Location = new System.Drawing.Point(209, 164);
       this.editPrefix.Name = "editPrefix";
       this.editPrefix.Size = new System.Drawing.Size(43, 20);
       this.editPrefix.TabIndex = 7;
@@ -345,7 +351,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(403, 141);
+      this.label2.Location = new System.Drawing.Point(403, 167);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(32, 13);
       this.label2.TabIndex = 6;
@@ -354,7 +360,7 @@
       // editWrapByteCount
       // 
       this.editWrapByteCount.Enabled = false;
-      this.editWrapByteCount.Location = new System.Drawing.Point(343, 138);
+      this.editWrapByteCount.Location = new System.Drawing.Point(343, 164);
       this.editWrapByteCount.Name = "editWrapByteCount";
       this.editWrapByteCount.Size = new System.Drawing.Size(54, 20);
       this.editWrapByteCount.TabIndex = 5;
@@ -363,7 +369,7 @@
       // checkExportToDataWrap
       // 
       this.checkExportToDataWrap.AutoSize = true;
-      this.checkExportToDataWrap.Location = new System.Drawing.Point(273, 140);
+      this.checkExportToDataWrap.Location = new System.Drawing.Point(273, 166);
       this.checkExportToDataWrap.Name = "checkExportToDataWrap";
       this.checkExportToDataWrap.Size = new System.Drawing.Size(64, 17);
       this.checkExportToDataWrap.TabIndex = 4;
@@ -374,7 +380,7 @@
       // checkExportToDataIncludeRes
       // 
       this.checkExportToDataIncludeRes.AutoSize = true;
-      this.checkExportToDataIncludeRes.Location = new System.Drawing.Point(138, 140);
+      this.checkExportToDataIncludeRes.Location = new System.Drawing.Point(138, 166);
       this.checkExportToDataIncludeRes.Name = "checkExportToDataIncludeRes";
       this.checkExportToDataIncludeRes.Size = new System.Drawing.Size(74, 17);
       this.checkExportToDataIncludeRes.TabIndex = 4;
@@ -384,13 +390,14 @@
       // 
       // editDataExport
       // 
-      this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+      this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(6, 213);
+      this.editDataExport.Location = new System.Drawing.Point(6, 239);
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 167);
+      this.editDataExport.Size = new System.Drawing.Size(429, 216);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
@@ -434,6 +441,42 @@
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // label9
+      // 
+      this.label9.AutoSize = true;
+      this.label9.Location = new System.Drawing.Point(681, 90);
+      this.label9.Name = "label9";
+      this.label9.Size = new System.Drawing.Size(69, 13);
+      this.label9.TabIndex = 35;
+      this.label9.Text = "Custom Color";
+      // 
+      // label8
+      // 
+      this.label8.AutoSize = true;
+      this.label8.Location = new System.Drawing.Point(680, 63);
+      this.label8.Name = "label8";
+      this.label8.Size = new System.Drawing.Size(61, 13);
+      this.label8.TabIndex = 35;
+      this.label8.Text = "Multicolor 2";
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(680, 36);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(61, 13);
+      this.label6.TabIndex = 35;
+      this.label6.Text = "Multicolor 1";
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(681, 9);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(65, 13);
+      this.label5.TabIndex = 35;
+      this.label5.Text = "Background";
       // 
       // btnApplyScreenSize
       // 
@@ -553,7 +596,7 @@
       // colorSelector
       // 
       this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage1;
+      this.colorSelector.DisplayPage = fastImage4;
       this.colorSelector.Image = null;
       this.colorSelector.Location = new System.Drawing.Point(683, 413);
       this.colorSelector.Name = "colorSelector";
@@ -565,7 +608,7 @@
       // charEditor
       // 
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage2;
+      this.charEditor.DisplayPage = fastImage5;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(683, 148);
       this.charEditor.Name = "charEditor";
@@ -685,7 +728,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage3;
+      this.pictureEditor.DisplayPage = fastImage6;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -784,41 +827,15 @@
       this.listColorMappingColors.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listColorMappingColors_DrawItem);
       this.listColorMappingColors.SelectedIndexChanged += new System.EventHandler(this.listColorMappingColors_SelectedIndexChanged);
       // 
-      // label5
+      // btnExportToImage
       // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(681, 9);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(65, 13);
-      this.label5.TabIndex = 35;
-      this.label5.Text = "Background";
-      // 
-      // label6
-      // 
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(680, 36);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(61, 13);
-      this.label6.TabIndex = 35;
-      this.label6.Text = "Multicolor 1";
-      // 
-      // label8
-      // 
-      this.label8.AutoSize = true;
-      this.label8.Location = new System.Drawing.Point(680, 63);
-      this.label8.Name = "label8";
-      this.label8.Size = new System.Drawing.Size(61, 13);
-      this.label8.TabIndex = 35;
-      this.label8.Text = "Multicolor 2";
-      // 
-      // label9
-      // 
-      this.label9.AutoSize = true;
-      this.label9.Location = new System.Drawing.Point(681, 90);
-      this.label9.Name = "label9";
-      this.label9.Size = new System.Drawing.Size(69, 13);
-      this.label9.TabIndex = 35;
-      this.label9.Text = "Custom Color";
+      this.btnExportToImage.Location = new System.Drawing.Point(6, 128);
+      this.btnExportToImage.Name = "btnExportToImage";
+      this.btnExportToImage.Size = new System.Drawing.Size(120, 23);
+      this.btnExportToImage.TabIndex = 8;
+      this.btnExportToImage.Text = "Export to Image";
+      this.btnExportToImage.UseVisualStyleBackColor = true;
+      this.btnExportToImage.Click += new System.EventHandler(this.btnExportToImage_Click);
       // 
       // GraphicScreenEditor
       // 
@@ -917,5 +934,6 @@
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.Button btnExportToImage;
   }
 }

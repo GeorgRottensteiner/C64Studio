@@ -32,6 +32,20 @@ namespace C64Studio.Converter
         11	        Color-RAM                                   55296-56295
       */
 
+
+    public static GR.Memory.ByteBuffer KoalaFromBitmap( GR.Memory.ByteBuffer BitmapData, GR.Memory.ByteBuffer ScreenRAM, GR.Memory.ByteBuffer ColorRAM, byte BackgroundColor )
+    {
+      GR.Memory.ByteBuffer      result = new GR.Memory.ByteBuffer();
+      result.AppendU16( 0x6000 );
+      result.Append( BitmapData );
+      result.Append( ScreenRAM );
+      result.Append( ColorRAM );
+
+      return result;
+    }
+
+
+
     public static GR.Image.MemoryImage BitmapFromKoala( GR.Memory.ByteBuffer koala )
     {
       byte fullValue;

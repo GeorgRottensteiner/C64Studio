@@ -2811,6 +2811,78 @@ namespace C64Studio
 
 
 
+    private void btnExportToImage_Click( object sender, EventArgs e )
+    {
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Export Characters to Image";
+      saveDlg.Filter = Core.MainForm.FilterString( C64Studio.Types.Constants.FILEFILTER_IMAGE_FILES );
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return;
+      }
+
+      string    extension = System.IO.Path.GetExtension( saveDlg.FileName ).ToUpper();
+
+      if ( ( extension == ".KLA" )
+      ||   ( extension == ".KOA" ) )
+      {
+        if ( ( m_GraphicScreenProject.ScreenWidth != 320 )
+        ||   ( m_GraphicScreenProject.ScreenHeight != 200 ) )
+        {
+          MessageBox.Show( "A graphic can only be exported to Koala format if the size is 320x200!", "Can't export to Koala" );
+          return;
+        }
+      }
+
+      GR.Memory.ByteBuffer              screenChar;
+      GR.Memory.ByteBuffer              screenColor;
+      GR.Memory.ByteBuffer              bitmapData;
+
+      m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+
+      System.Drawing.Imaging.ImageFormat formatToSave = System.Drawing.Imaging.ImageFormat.Png;
+
+      if ( ( extension == ".KLA" )
+      ||   ( extension == ".KOA" ) )
+      {
+        var koalaData = C64Studio.Converter.KoalaToBitmap.KoalaFromBitmap( bitmapData, screenChar, screenColor, (byte)m_GraphicScreenProject.BackgroundColor );
+
+        if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, koalaData ) )
+        {
+          MessageBox.Show( "Could not export to file " + saveDlg.FileName, "Error writing to file" );
+        }
+        return;
+      }
+      if ( extension == ".BMP" )
+      {
+        formatToSave = System.Drawing.Imaging.ImageFormat.Bmp;
+      }
+      else if ( extension == ".PNG" )
+      {
+        formatToSave = System.Drawing.Imaging.ImageFormat.Png;
+      }
+      else if ( extension == ".GIF" )
+      {
+        formatToSave = System.Drawing.Imaging.ImageFormat.Gif;
+      }
+      else
+      {
+        MessageBox.Show( "Unsupported image file format " + extension + ". Please make sure to use the proper extension.", "Unsupported format" );
+        return;
+      }
+
+      var bitmap = m_GraphicScreenProject.Image.GetAsBitmap();
+      try
+      {
+        bitmap.Save( saveDlg.FileName, formatToSave );
+      }
+      catch ( Exception ex )
+      {
+        MessageBox.Show( "An error occurred while writing to file: " + ex.Message, "An Error occurred" );
+      }
+    }
+
   }
 }
 
