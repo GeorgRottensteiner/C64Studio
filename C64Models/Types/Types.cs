@@ -180,6 +180,7 @@ namespace C64Studio.Types
     E1103_SEGMENT_OVERLAP                   = 0x1103,
     E1104_BANK_SIZE_INVALID                 = 0x1104,
     E1105_INVALID_OPCODE                    = 0x1105,
+    E1106_SEGMENT_OUT_OF_BOUNDS             = 0x1106,
 
     E1200_REDEFINITION_OF_LABEL             = 0x1200,
     E1201_REDEFINITION_OF_PREPROCESSOR_DEFINE = 0x1201,

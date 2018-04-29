@@ -1,12 +1,15 @@
-* = $2000
+* = $ff00
+jmp $12345
 
-  lda #$ffff
+* = $ffff
+
+  lda #$ff
   
   
   Zeropage_Routine = $0020
 
 jmp Zeropage_Routine
 
-!byte 50+300
+!byte 50+100
 
-Zeropage_Routine
+Zeropage_Routine2

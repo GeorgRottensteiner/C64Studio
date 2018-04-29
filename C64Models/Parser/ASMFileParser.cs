@@ -2621,6 +2621,15 @@ namespace C64Studio.Parser
                 }
                 else if ( lineInfo.Opcode.NumOperands == 2 )
                 {
+                  if ( ( value < 0 )
+                  ||   ( value > 0xffff ) )
+                  {
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
+                              "Value $" + value.ToString( "X" ) + " (" + value + ") is out of bounds",
+                              lineInfo.NeededParsedExpression[0].StartPos,
+                              lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos - lineInfo.NeededParsedExpression[0].StartPos + 1 );
+                  }
                   lineInfo.LineData.AppendU16( (ushort)value );
                 }
               }
@@ -6581,7 +6590,7 @@ namespace C64Studio.Parser
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
-                            "Value " + byteValue + " is out of bounds",
+                            "Value $" + byteValue.ToString( "X" ) + " (" + byteValue + ") is out of bounds",
                             lineTokenInfos[1].StartPos,
                             lineTokenInfos[1 + countTokens - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
                 }
@@ -9491,6 +9500,7 @@ namespace C64Studio.Parser
 
             builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
             currentResultBlock = asmSegment.Data;
+
           }
         }
         bool setNewAddress = true;
@@ -9668,6 +9678,17 @@ namespace C64Studio.Parser
       {
         lowestStart = Math.Min( segment.first, lowestStart );
         highestEnd = Math.Max( segment.second.StartAddress + segment.second.Length, highestEnd );
+
+        if ( ( segment.first < 0 )
+        ||   ( segment.second.StartAddress + segment.second.Length >= 65535 ) )
+        {
+          AddError( segment.second.GlobalLineIndex, 
+                    Types.ErrorCode.E1106_SEGMENT_OUT_OF_BOUNDS, 
+                    "Segment from $" 
+                      + segment.second.StartAddress.ToString( "X" ) 
+                      + " to $" + ( segment.second.StartAddress + segment.second.Length - 1 ).ToString( "X" )
+                      + " is out of bounds" );
+        }
       }
 
       // check for overlaps

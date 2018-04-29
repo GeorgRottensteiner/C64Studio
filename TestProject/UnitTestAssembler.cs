@@ -214,5 +214,83 @@ namespace TestProject
       Assert.AreEqual( 32, tokenInfo.LocalLineIndex );
     }
 
+
+
+    [TestMethod]
+    public void TestSegmentOutOfBounds()
+    {
+      string      source = @"* = $ffff
+                            lda #$ff
+                            Zeropage_Routine = $0020
+                            jmp Zeropage_Routine
+                            !byte 50+100";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config ) );
+
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      var assembly = parser.AssembledOutput;
+
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
+      Assert.AreEqual( C64Studio.Types.ErrorCode.E1106_SEGMENT_OUT_OF_BOUNDS, parser.Messages.Values[0].Code );
+    }
+
+
+
+    [TestMethod]
+    public void TestValueOutOfBoundsLiteral()
+    {
+      string      source = @"* = $ff00
+                             jmp $12345";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsFalse( parser.Parse( source, null, config ) );
+
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
+      Assert.AreEqual( C64Studio.Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, parser.Messages.Values[0].Code );
+    }
+
+
+
+    [TestMethod]
+    public void TestValueOutOfBoundsLabel()
+    {
+      string      source = @"* = $ffff
+                             lda #$ff
+                             jmp Zeropage_Routine2
+                             Zeropage_Routine2";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsFalse( parser.Parse( source, null, config ) );
+
+      Assert.AreEqual( 1, parser.Errors );
+      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
+      Assert.AreEqual( C64Studio.Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, parser.Messages.Values[0].Code );
+    }
+
   }
 }
