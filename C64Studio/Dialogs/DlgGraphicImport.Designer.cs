@@ -85,9 +85,9 @@
       this.lightGreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.lightBlueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.lightGreyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.picPreview = new GR.Forms.FastPictureBox();
       this.picOriginal = new GR.Forms.FastPictureBox();
-      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.tabImportSettings.SuspendLayout();
       this.tabSettings.SuspendLayout();
       this.groupBox5.SuspendLayout();
@@ -103,6 +103,7 @@
       // 
       // tabImportSettings
       // 
+      this.tabImportSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.tabImportSettings.Controls.Add(this.tabSettings);
       this.tabImportSettings.Controls.Add(this.tabPalette);
       this.tabImportSettings.Location = new System.Drawing.Point(650, 29);
@@ -341,6 +342,7 @@
       // 
       // btnCancel
       // 
+      this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.btnCancel.Location = new System.Drawing.Point(862, 820);
       this.btnCancel.Name = "btnCancel";
@@ -351,6 +353,7 @@
       // 
       // btnOK
       // 
+      this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnOK.Location = new System.Drawing.Point(781, 820);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
@@ -361,6 +364,8 @@
       // 
       // listProblems
       // 
+      this.listProblems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.listProblems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
@@ -417,6 +422,7 @@
       // 
       // btnZoomIn
       // 
+      this.btnZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomIn.Image")));
       this.btnZoomIn.Location = new System.Drawing.Point(650, 819);
       this.btnZoomIn.Name = "btnZoomIn";
@@ -428,6 +434,7 @@
       // 
       // btnZoomOut
       // 
+      this.btnZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomOut.Image")));
       this.btnZoomOut.Location = new System.Drawing.Point(680, 819);
       this.btnZoomOut.Name = "btnZoomOut";
@@ -439,6 +446,7 @@
       // 
       // btnReload
       // 
+      this.btnReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnReload.Image = ((System.Drawing.Image)(resources.GetObject("btnReload.Image")));
       this.btnReload.Location = new System.Drawing.Point(710, 819);
       this.btnReload.Name = "btnReload";
@@ -609,6 +617,8 @@
       // 
       // picPreview
       // 
+      this.picPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.picPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.picPreview.DisplayPage = fastImage1;
       this.picPreview.Image = null;
@@ -623,6 +633,8 @@
       // 
       // picOriginal
       // 
+      this.picOriginal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.picOriginal.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.picOriginal.ContextMenuStrip = this.contextMenuOrigPic;
       this.picOriginal.DisplayPage = fastImage2;
@@ -653,7 +665,6 @@
       this.Controls.Add(this.picPreview);
       this.Controls.Add(this.picOriginal);
       this.Controls.Add(this.menuImport);
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
       this.MainMenuStrip = this.menuImport;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
@@ -662,6 +673,8 @@
       this.ShowInTaskbar = false;
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
       this.Text = "Import Graphic";
+      this.ResizeEnd += new System.EventHandler(this.DlgGraphicImport_ResizeEnd);
+      this.SizeChanged += new System.EventHandler(this.DlgGraphicImport_SizeChanged);
       this.tabImportSettings.ResumeLayout(false);
       this.tabSettings.ResumeLayout(false);
       this.groupBox5.ResumeLayout(false);

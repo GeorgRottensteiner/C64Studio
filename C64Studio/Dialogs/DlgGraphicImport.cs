@@ -1468,5 +1468,31 @@ namespace C64Studio
 
 
 
+    private void DlgGraphicImport_SizeChanged( object sender, EventArgs e )
+    {
+      int     height = ClientSize.Height;
+
+      picOriginal.Height = height / 2 - 8;
+      picPreview.Location = new Point( picPreview.Location.X, picOriginal.Location.Y + picOriginal.Height + 4 );
+      picPreview.Height = height / 2 - 8;
+    }
+
+
+
+    private void DlgGraphicImport_ResizeEnd( object sender, EventArgs e )
+    {
+      picOriginal.DisplayPage.DrawFromMemoryImage( m_OriginalImage, 0, 0 );
+
+      m_OrigSize.Width = m_OriginalImage.Width;
+      m_OrigSize.Height = m_OriginalImage.Height;
+
+      RecalcImport();
+
+      picPreview.Invalidate();
+      picOriginal.Invalidate();
+    }
+
+
+
   }
 }
