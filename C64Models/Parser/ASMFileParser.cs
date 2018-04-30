@@ -381,6 +381,11 @@ namespace C64Studio.Parser
       string    filename;
       int       localIndex = 0;
 
+      if ( Name == "STACK1" )
+      {
+        Debug.Log( "STACK1 set to " + Value );
+      }
+
       ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex );
 
       if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
@@ -6501,6 +6506,11 @@ namespace C64Studio.Parser
                   }
                 }
               }
+              if ( ScopeInsideMacroDefinition( stackScopes ) )
+              {
+                continue;
+              }
+
               if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out byteValue ) )
               {
                 if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
