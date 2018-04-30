@@ -529,7 +529,6 @@ namespace C64Studio.Formats
           if ( sect.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) == 0 )
           {
             // scratched (empty) entry
-
             // default set PRG
             if ( i > 0 )
             {
@@ -550,10 +549,17 @@ namespace C64Studio.Formats
           }
         }
         // do we need to alloc next dir sector?
-        sector = ( sector + directoryInterleave ) % dirTrack.Sectors.Count;
+        do
+        {
+          sector = ( sector + directoryInterleave ) % dirTrack.Sectors.Count;
+
+          // do NOT write into BAM
+        }
+        while ( sector == SECTOR_BAM );
+
         if ( sector == 1 )
         {
-          // disk full!!
+          // arrived at starting sector, disk full!
           break;
         }
         if ( sect.Data.ByteAt( 0 ) == 0 )
@@ -746,7 +752,6 @@ namespace C64Studio.Formats
             previousSector = track.Sectors[searchSector];
             if ( bytesToWrite > 254 )
             {
-              //Debug.Log( "Write to T/S " + trackIndex + "," + searchSector );
               dataToWrite.CopyTo( previousSector.Data, writeOffset, 254, 2 );
               previousSector.Free = false;
               writeOffset += 254;
@@ -756,7 +761,6 @@ namespace C64Studio.Formats
               goto write_next_sector;
             }
             // last sector
-            //Debug.Log( "Write to T/S " + trackIndex + "," + searchSector );
             previousSector.Free = false;
             previousSector.Data.SetU8At( 0, 0 );
             previousSector.Data.SetU8At( 1, (byte)( 1 + bytesToWrite ) );
