@@ -565,12 +565,14 @@ namespace C64Studio
         if ( ( m_Media is Formats.D64 )
         ||   ( m_Media is Formats.D81 ) )
         {
-          statusFileManager.Text = m_Media.FreeSlots.ToString() + "/" + m_Media.Slots.ToString() + " blocks free";
+          statusFileManager.Text = m_Media.FreeSlots.ToString() + "/" + m_Media.Slots.ToString() + " blocks free"
+              + "  " + listFiles.Items.Count + " files";
           return;
         }
         if ( m_Media != null )
         {
-          statusFileManager.Text = m_Media.FreeSlots.ToString() + "/" + m_Media.Slots.ToString() + " files free";
+          statusFileManager.Text = m_Media.FreeSlots.ToString() + "/" + m_Media.Slots.ToString() + " files free"
+            + "  " + listFiles.Items.Count + " files";
           return;
         }
         statusFileManager.Text = "No media opened";

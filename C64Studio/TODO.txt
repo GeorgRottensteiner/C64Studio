@@ -1,10 +1,24 @@
 ﻿C64Studio
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
+o MediaManagers: Besteht die Möglichkeit diese Ausgabe (bzw. alle Bildschirmausgaben) des MediaManagers mittels einer zusätzlichen Option zu deaktivieren?
 o Graphic Screen Editor: Export as Koala
 o BASIC: Renumber bei THEN <zeile> tut nicht ?? Seems to work fine
 o BASIC: Renumber nur von Ausschnitten
 o BASIC: Einzelne Zeilennummer ändern (mit Referenzen die angepasst werden)
 o BASIC: Keymapping Default: Z ist nicht auf Y gemappt (aber Y auf Z)
+o BASIC: Snippet-Wizard
+o BASIC: alls isch da bisher etwas übersehen haben sollte, habe ich eine Anregung für einen neuen Editor: Memorymap in Basic erstellen, d.h.:
+  4. Memory Map für Basic
+  Einstellen des Basicstarts mit den Pokes auf z. B. $401
+  Einstellen des Bildschirms auf beliebige, aber mögliche Bank und Adresse, z. B. starte Bildschirm in Bank 3
+  Einstellen des Zeichensatzspeichers und Farbrams auf beliebeige mögliche Bank mit allen Pokes
+  Das verwendete Charset hierfür verwenden inkl. Copy und Basic start hierfür, korrekte Pokes setzen
+  alles weitere, was zum korrekten Aufsetzen einer Memory Map für ASM-Blödies dazugehört in Basic mit allen Ladern und ggfs. Startroutine
+  Nr. 5 Editor Zeileninterrupt:
+  Einstellen von 1 bis 5 Zeileninterrupts erstmal von mir aus ohne irgendwelche Spezialeffekte, einfach nur dass ich in einer Bildschirmzeile dort andere Farben, Zeichensätze oder solche Einstellungen vornehmen kann. Nix für Rasterbars, Schirm öffnen oder solch Schweinkram, einfach nur: jetzt kannst Du Farben, Zeichensatz usw. wechseln.
+hierbei natürlich nur Bad Lines abfangen, aber keinen Superschweinkram abfangen.
+Man könnte auch optional kleine ASM-Pakete anbieten, z. B. Grafik-Fensterroutine um kleine Grafiken, gerne aus Grafikprogrammen anzuzeigen, und dabei ein ASM-Modul mit SYS, USR oder POKEs anzubieten zur Verwaltung, oder ein ASM-Modul zum Abspielen eines SIDs, ebenso mit SYS, USR oder POKEs und Angabe des Stücks, also einen SID-Player, ich glaube, Du weißt, was ich meine, kann, muss aber nicht angeboten werden :), oder einen Parser (den habe ich bereits in Basic gemacht)
+
 o Replace All in active doc:
   Replace All (in the active document) sometimes empties the editor/buffer instead.
   Using undo after that causes C64Studio to crash with this stacktrace:
