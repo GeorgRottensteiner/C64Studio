@@ -21,6 +21,7 @@ namespace MediaManager
         System.Console.WriteLine( "  [-renameto <file name>]" );
         System.Console.WriteLine( "  [-delete <file name>]" );
         System.Console.WriteLine( "  [-listfiles]" );
+        System.Console.WriteLine( "  [-nosuccessmessages]" );
         System.Console.WriteLine( "" );
         System.Console.WriteLine( "load address can be given as decimal, hexadecimal (prefix $ or 0x). If load address is given it is prepended to the import file data." );
         System.Console.WriteLine( "The filename given to -renameto is used for the actually written file when exporting" );
@@ -31,6 +32,7 @@ namespace MediaManager
       bool    expectingParameter = false;
       string  expectingParameterName = "";
       string  methodToUse = "";
+      bool    verboseLog = true;
 
       GR.Collections.Map<string,string>   paramMap = new GR.Collections.Map<string,string>();
 
@@ -64,6 +66,10 @@ namespace MediaManager
         {
           paramMap[args[i].ToUpper()] = "";
           methodToUse = args[i].ToUpper();
+        }
+        else if ( args[i].ToUpper() == "-NOSUCCESSMESSAGES" )
+        {
+          verboseLog = true;
         }
         else
         {
@@ -128,7 +134,10 @@ namespace MediaManager
             outputFilename = paramMap["-RENAMETO"];
           }
           GR.IO.File.WriteAllBytes( outputFilename, fileInfo.Data );
-          System.Console.WriteLine( "File " + paramMap["-EXPORT"] + " exported" );
+          if ( verboseLog )
+          {
+            System.Console.WriteLine( "File " + paramMap["-EXPORT"] + " exported" );
+          }
         }
         else
         {
@@ -146,7 +155,10 @@ namespace MediaManager
           }
           else
           {
-            System.Console.WriteLine( "File deleted" );
+            if ( verboseLog )
+            {
+              System.Console.WriteLine( "File deleted" );
+            }
             medium.Save( mediumFilename );
           }
         }
@@ -217,7 +229,10 @@ namespace MediaManager
           System.Console.Error.WriteLine( "Could not write file to medium: " + medium.LastError );
           return 1;
         }
-        System.Console.WriteLine( "File imported" );
+        if ( verboseLog )
+        {
+          System.Console.WriteLine( "File imported" );
+        }
         medium.Save( mediumFilename );
       }
       else if ( methodToUse == "-RENAME" )
@@ -237,7 +252,10 @@ namespace MediaManager
           System.Console.Error.WriteLine( "Failed to rename file" );
           return 1;
         }
-        System.Console.WriteLine( "File renamed" );
+        if ( verboseLog )
+        {
+          System.Console.WriteLine( "File renamed" );
+        }
         medium.Save( mediumFilename );
       }
       else
