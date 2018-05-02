@@ -1786,7 +1786,7 @@ namespace C64Studio
           {
             for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
             {
-              m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( ( data.ByteAt( m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight + i + j * m_CharsetScreen.ScreenWidth ) << 8 ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ) );
+              m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( ( ( data.ByteAt( m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight + i + j * m_CharsetScreen.ScreenWidth ) & 0x0f ) << 8 ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ) );
             }
           }
         }

@@ -1,7 +1,11 @@
 ﻿C64Studio
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
+o TAP-Export: Filename says "Hurz" hard coded -> use original filename as inner filename 
 o MediaManagers: Besteht die Möglichkeit diese Ausgabe (bzw. alle Bildschirmausgaben) des MediaManagers mittels einer zusätzlichen Option zu deaktivieren?
 o Graphic Screen Editor: Export as Koala
+o Beim suchen uns ersetzen scheint er seltsam die Suchergebnisse zu ersetzen. Alle ersetzen funzt, wenn ich aber zuerst auf Suchen klicke 
+  springt er zu dem nächsten gefunden Eintrag, wenn ich jetzt ersetzen klicke erwarte ich, dass nur dieser Eintrag ersetzt. 
+  Es werden aber alle ausser dem gefundenen ersetzt  
 o BASIC: Renumber bei THEN <zeile> tut nicht ?? Seems to work fine
 o BASIC: Renumber nur von Ausschnitten
 o BASIC: Einzelne Zeilennummer ändern (mit Referenzen die angepasst werden)
