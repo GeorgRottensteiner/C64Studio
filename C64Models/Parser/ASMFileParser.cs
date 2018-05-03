@@ -9751,16 +9751,23 @@ namespace C64Studio.Parser
       AssembledOutput.OriginalAssemblyStartAddress  = lowestStart;
       AssembledOutput.OriginalAssemblySize          = highestEnd - lowestStart;
 
+      string    outputPureFilename = "HURZ";
+      try
+      {
+        outputPureFilename = System.IO.Path.GetFileNameWithoutExtension( Config.OutputFile );
+      }
+      catch ( Exception )
+      {
+        // arghh exceptions!
+      }
+
       if ( Config.TargetType == Types.CompileTargetType.T64 )
       {
         Formats.T64 t64 = new C64Studio.Formats.T64();
 
         Formats.T64.FileRecord  record = new C64Studio.Formats.T64.FileRecord();
 
-        record.Filename.AppendU8( (byte)'H' );
-        record.Filename.AppendU8( (byte)'U' );
-        record.Filename.AppendU8( (byte)'R' );
-        record.Filename.AppendU8( (byte)'Z' );
+        record.Filename = Util.ToFilename( outputPureFilename );
         record.StartAddress = (ushort)fileStartAddress;
         record.C64FileType  = C64Studio.Types.FileType.PRG;
         record.EntryType    = 1;
@@ -9776,22 +9783,7 @@ namespace C64Studio.Parser
       {
         Formats.Tap tap = new C64Studio.Formats.Tap();
 
-        tap.WriteFile( Util.ToFilename( "HURZ" ), AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
-        /*
-        Formats.T64.FileRecord  record = new C64Studio.Formats.T64.FileRecord();
-
-        record.Filename.AppendU8( (byte)'H' );
-        record.Filename.AppendU8( (byte)'U' );
-        record.Filename.AppendU8( (byte)'R' );
-        record.Filename.AppendU8( (byte)'Z' );
-        record.StartAddress = (ushort)fileStartAddress;
-        record.C64FileType = C64Studio.Types.FileType.PRG;
-
-        t64.TapeInfo.Description = "C64S tape file\r\nDemo tape";
-        t64.TapeInfo.UserDescription = "USERDESC";
-        t64.FileRecords.Add( record );
-        t64.FileDatas.Add( Assembly );
-        */
+        tap.WriteFile( Util.ToFilename( outputPureFilename ), AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
         AssembledOutput.Assembly = tap.Compile();
       }
       else if ( Config.TargetType == Types.CompileTargetType.D64 )
@@ -9800,12 +9792,7 @@ namespace C64Studio.Parser
 
         d64.CreateEmptyMedia();
 
-        GR.Memory.ByteBuffer    bufName = new GR.Memory.ByteBuffer();
-        bufName.AppendU8( (byte)'H' );
-        for ( int i = 0; i < 15; ++i )
-        {
-          bufName.AppendU8( 0xa0 );
-        }
+        GR.Memory.ByteBuffer    bufName = Util.ToFilename( outputPureFilename );
         d64.WriteFile( bufName, AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
 
         AssembledOutput.Assembly = d64.Compile();
