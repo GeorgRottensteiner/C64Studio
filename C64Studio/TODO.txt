@@ -1,8 +1,5 @@
 ﻿C64Studio
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
-o TAP-Export: Filename says "Hurz" hard coded -> use original filename as inner filename 
-o MediaManagers: Besteht die Möglichkeit diese Ausgabe (bzw. alle Bildschirmausgaben) des MediaManagers mittels einer zusätzlichen Option zu deaktivieren?
-o Graphic Screen Editor: Export as Koala
 o Beim suchen uns ersetzen scheint er seltsam die Suchergebnisse zu ersetzen. Alle ersetzen funzt, wenn ich aber zuerst auf Suchen klicke 
   springt er zu dem nächsten gefunden Eintrag, wenn ich jetzt ersetzen klicke erwarte ich, dass nur dieser Eintrag ersetzt. 
   Es werden aber alle ausser dem gefundenen ersetzt  
@@ -11,7 +8,8 @@ o BASIC: Renumber nur von Ausschnitten
 o BASIC: Einzelne Zeilennummer ändern (mit Referenzen die angepasst werden)
 o BASIC: Keymapping Default: Z ist nicht auf Y gemappt (aber Y auf Z)
 o BASIC: Snippet-Wizard
-o BASIC: alls isch da bisher etwas übersehen haben sollte, habe ich eine Anregung für einen neuen Editor: Memorymap in Basic erstellen, d.h.:
+o BASIC: alls isch da bisher etwas übersehen haben sollte, habe ich eine Anregung für einen neuen Editor: 
+  Memorymap in Basic erstellen, d.h.:
   4. Memory Map für Basic
   Einstellen des Basicstarts mit den Pokes auf z. B. $401
   Einstellen des Bildschirms auf beliebige, aber mögliche Bank und Adresse, z. B. starte Bildschirm in Bank 3
@@ -51,13 +49,13 @@ o CharPad support auch mit !media?
 o  Wenn eine Datei mit !source eingebunden wird, diese Datei aber nicht zum Projekt gehört, dann kann man in dieser Datei keine Breakpoints 
    setzen. 
 o TO CHECK Bei Suchen und Ersetzen springt man am Ende immer an den Anfang des Dokuments statt an die alte Stelle.
-o TO CHECK Bei Suchen und Ersetzen loescht manchmal (zum Glueck selten) den kompletten Dokumenteninhalt. 
 o Immer wenn man lda (zeropageadresse),y tippt macht er fuer das ",y" einen Vorschlag, was man statt dessen besser schreiben sollte, 
   also z.B. "check_ready", weil das auch ein y im Namen hat. Das ist doch eher ungeschickt so.
 Support fuer den CC65 compiler, so dass man auch in C programmieren kann. Das waere obersuperspitzenkomfortionoes! 
 o Refactoring/Rename 
 o Farben der GUI-Elemente
-o If you go to the preview pane, where it says Entries, i can't see whats underneath that because the slider bar is in the way. (DPI settings!)
+o If you go to the preview pane, where it says Entries, i can't see whats underneath that because the slider bar is in the way. 
+  (DPI settings!)
 
 Samples:
 o Tutorials in Release
@@ -94,13 +92,7 @@ o Source/Constant
  I've not been using a project or solution. Only compiling the ASM that 
   C64Studio made for me in the disassembler.
 
-o Replace:
-   Another nice to have would be an assembly listing (showing all the addresses etc)
-
 o auch multiple Files aus dem Solution-Explorer löschen
-
-o I'd like to be able in Char Screen editor/Map editor/Tile editor to be able to set cells like you draw in sprite editor. 
-  That will make easier to do tiles/maps/etc. => grid?
 
 Speaking of sprite/character editors... It would be nice to add basic 
 drawing tools like ellipses/lines

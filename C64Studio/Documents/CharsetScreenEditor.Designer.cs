@@ -107,6 +107,7 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.checkShowGrid = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -574,6 +575,7 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.checkShowGrid);
       this.tabEditor.Controls.Add(this.checkApplyColors);
       this.tabEditor.Controls.Add(this.checkApplyCharacter);
       this.tabEditor.Controls.Add(this.label9);
@@ -940,6 +942,17 @@
       this.tabCharsetEditor.Size = new System.Drawing.Size(964, 501);
       this.tabCharsetEditor.TabIndex = 0;
       // 
+      // checkShowGrid
+      // 
+      this.checkShowGrid.AutoSize = true;
+      this.checkShowGrid.Location = new System.Drawing.Point(838, 33);
+      this.checkShowGrid.Name = "checkShowGrid";
+      this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
+      this.checkShowGrid.TabIndex = 37;
+      this.checkShowGrid.Text = "Show Grid";
+      this.checkShowGrid.UseVisualStyleBackColor = true;
+      this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
+      // 
       // CharsetScreenEditor
       // 
       this.ClientSize = new System.Drawing.Size(964, 525);
@@ -1042,5 +1055,6 @@
     private System.Windows.Forms.CheckBox checkApplyCharacter;
     private System.Windows.Forms.CheckBox checkApplyColors;
     private System.Windows.Forms.RadioButton btnToolText;
+    private System.Windows.Forms.CheckBox checkShowGrid;
   }
 }

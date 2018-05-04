@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using GR.Image;
 
 namespace C64Studio
 {
@@ -40,6 +41,8 @@ namespace C64Studio
     private bool                        m_MouseButtonReleased = false;
     private System.Drawing.Point        m_MousePos;
 
+    private bool                        m_ShowGrid = false;
+
     private System.Drawing.Point        m_DragStartPos = new System.Drawing.Point();
     private System.Drawing.Point        m_DragEndPos = new System.Drawing.Point();
     private System.Drawing.Point        m_LastDragEndPos = new System.Drawing.Point( -1, -1 );
@@ -61,6 +64,8 @@ namespace C64Studio
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       m_IsSaveable = true;
       InitializeComponent();
+
+      pictureEditor.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback( pictureEditor_PostPaint );
 
       pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
@@ -136,6 +141,29 @@ namespace C64Studio
       {
         RebuildCharImage( i );
         panelCharacters.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Image );
+      }
+    }
+
+
+
+    private void pictureEditor_PostPaint( FastImage TargetBuffer )
+    {
+      if ( m_ShowGrid )
+      {
+        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+        {
+          for ( int j = 0; j < TargetBuffer.Height; ++j )
+          {
+            TargetBuffer.SetPixel( i * ( pictureEditor.ClientRectangle.Width / 40 ), j, 0xffc0c0c0 );
+          }
+        }
+        for ( int i = 0; i < m_CharsetScreen.ScreenHeight; ++i )
+        {
+          for ( int j = 0; j < TargetBuffer.Width; ++j )
+          {
+            TargetBuffer.SetPixel( j, i * ( pictureEditor.ClientRectangle.Height / 25 ), 0xffc0c0c0 );
+          }
+        }
       }
     }
 
@@ -881,6 +909,7 @@ namespace C64Studio
                                             8, 8 );
         }
       }
+
       pictureEditor.Invalidate();
     }
 
@@ -2595,6 +2624,12 @@ namespace C64Studio
     }
 
 
+
+    private void checkShowGrid_CheckedChanged( object sender, EventArgs e )
+    {
+      m_ShowGrid = checkShowGrid.Checked;
+      pictureEditor.Invalidate();
+    }
 
   }
 }
