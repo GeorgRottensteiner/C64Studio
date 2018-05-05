@@ -30,10 +30,10 @@ namespace C64Studio
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      GR.Image.FastImage fastImage7 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage8 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetEditor));
-      GR.Image.FastImage fastImage9 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.panelCharColors = new GR.Forms.FastPictureBox();
@@ -83,6 +83,10 @@ namespace C64Studio
       this.btnImportCharsetFromImage = new System.Windows.Forms.Button();
       this.btnImportFromFile = new System.Windows.Forms.Button();
       this.groupExport = new System.Windows.Forms.GroupBox();
+      this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
+      this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
+      this.label7 = new System.Windows.Forms.Label();
+      this.label6 = new System.Windows.Forms.Label();
       this.comboExportRange = new System.Windows.Forms.ComboBox();
       this.editPrefix = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
@@ -96,6 +100,7 @@ namespace C64Studio
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.button1 = new System.Windows.Forms.Button();
+      this.btnExportToBASIC = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.btnExportCharset = new System.Windows.Forms.Button();
       this.tabCategories = new System.Windows.Forms.TabPage();
@@ -123,11 +128,8 @@ namespace C64Studio
       this.exchangeMultiColor1AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMultiColor2AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnExportToBASIC = new System.Windows.Forms.Button();
-      this.label6 = new System.Windows.Forms.Label();
-      this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
-      this.label7 = new System.Windows.Forms.Label();
-      this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
+      this.editDataImport = new System.Windows.Forms.TextBox();
+      this.btnImportFromAssembly = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabCharsetEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -203,7 +205,7 @@ namespace C64Studio
       // panelCharColors
       // 
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage7;
+      this.panelCharColors.DisplayPage = fastImage1;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(782, 274);
       this.panelCharColors.Name = "panelCharColors";
@@ -216,7 +218,7 @@ namespace C64Studio
       // picturePlayground
       // 
       this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picturePlayground.DisplayPage = fastImage8;
+      this.picturePlayground.DisplayPage = fastImage2;
       this.picturePlayground.Image = null;
       this.picturePlayground.Location = new System.Drawing.Point(782, 6);
       this.picturePlayground.Name = "picturePlayground";
@@ -635,7 +637,7 @@ namespace C64Studio
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage9;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -659,15 +661,18 @@ namespace C64Studio
       // 
       // groupBox1
       // 
-      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox1.Controls.Add(this.btnDefaultLowerCase);
       this.groupBox1.Controls.Add(this.btnDefaultUppercase);
+      this.groupBox1.Controls.Add(this.btnImportFromAssembly);
       this.groupBox1.Controls.Add(this.btnImportCharsetFromImage);
       this.groupBox1.Controls.Add(this.btnImportFromFile);
+      this.groupBox1.Controls.Add(this.editDataImport);
       this.groupBox1.Location = new System.Drawing.Point(453, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(324, 465);
+      this.groupBox1.Size = new System.Drawing.Size(595, 465);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -742,6 +747,40 @@ namespace C64Studio
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
+      // 
+      // editExportBASICLineOffset
+      // 
+      this.editExportBASICLineOffset.Location = new System.Drawing.Point(359, 108);
+      this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
+      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
+      this.editExportBASICLineOffset.TabIndex = 10;
+      this.editExportBASICLineOffset.Text = "10";
+      // 
+      // editExportBASICLineNo
+      // 
+      this.editExportBASICLineNo.Location = new System.Drawing.Point(188, 108);
+      this.editExportBASICLineNo.Name = "editExportBASICLineNo";
+      this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
+      this.editExportBASICLineNo.TabIndex = 10;
+      this.editExportBASICLineNo.Text = "10";
+      // 
+      // label7
+      // 
+      this.label7.AutoSize = true;
+      this.label7.Location = new System.Drawing.Point(292, 111);
+      this.label7.Name = "label7";
+      this.label7.Size = new System.Drawing.Size(61, 13);
+      this.label7.TabIndex = 9;
+      this.label7.Text = "Line Offset:";
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(135, 111);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(47, 13);
+      this.label6.TabIndex = 9;
+      this.label6.Text = "Line No:";
       // 
       // comboExportRange
       // 
@@ -868,6 +907,16 @@ namespace C64Studio
       this.button1.Text = "To Image...";
       this.button1.UseVisualStyleBackColor = true;
       this.button1.Click += new System.EventHandler(this.btnExportCharsetToImage_Click);
+      // 
+      // btnExportToBASIC
+      // 
+      this.btnExportToBASIC.Location = new System.Drawing.Point(6, 106);
+      this.btnExportToBASIC.Name = "btnExportToBASIC";
+      this.btnExportToBASIC.Size = new System.Drawing.Size(117, 23);
+      this.btnExportToBASIC.TabIndex = 2;
+      this.btnExportToBASIC.Text = "To BASIC";
+      this.btnExportToBASIC.UseVisualStyleBackColor = true;
+      this.btnExportToBASIC.Click += new System.EventHandler(this.btnExportCharsetToBASIC_Click);
       // 
       // btnExportToData
       // 
@@ -1113,49 +1162,29 @@ namespace C64Studio
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Text = "Exchange Multi color 2 and BG color";
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor2AndBGColorToolStripMenuItem_Click);
       // 
-      // btnExportToBASIC
+      // editDataImport
       // 
-      this.btnExportToBASIC.Location = new System.Drawing.Point(6, 106);
-      this.btnExportToBASIC.Name = "btnExportToBASIC";
-      this.btnExportToBASIC.Size = new System.Drawing.Size(117, 23);
-      this.btnExportToBASIC.TabIndex = 2;
-      this.btnExportToBASIC.Text = "To BASIC";
-      this.btnExportToBASIC.UseVisualStyleBackColor = true;
-      this.btnExportToBASIC.Click += new System.EventHandler(this.btnExportCharsetToBASIC_Click);
+      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editDataImport.Location = new System.Drawing.Point(6, 145);
+      this.editDataImport.Multiline = true;
+      this.editDataImport.Name = "editDataImport";
+      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      this.editDataImport.Size = new System.Drawing.Size(583, 314);
+      this.editDataImport.TabIndex = 3;
+      this.editDataImport.WordWrap = false;
+      this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
       // 
-      // label6
+      // btnImportFromAssembly
       // 
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(135, 111);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(47, 13);
-      this.label6.TabIndex = 9;
-      this.label6.Text = "Line No:";
-      // 
-      // editExportBASICLineNo
-      // 
-      this.editExportBASICLineNo.Location = new System.Drawing.Point(188, 108);
-      this.editExportBASICLineNo.Name = "editExportBASICLineNo";
-      this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
-      this.editExportBASICLineNo.TabIndex = 10;
-      this.editExportBASICLineNo.Text = "10";
-      // 
-      // label7
-      // 
-      this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(292, 111);
-      this.label7.Name = "label7";
-      this.label7.Size = new System.Drawing.Size(61, 13);
-      this.label7.TabIndex = 9;
-      this.label7.Text = "Line Offset:";
-      // 
-      // editExportBASICLineOffset
-      // 
-      this.editExportBASICLineOffset.Location = new System.Drawing.Point(359, 108);
-      this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
-      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
-      this.editExportBASICLineOffset.TabIndex = 10;
-      this.editExportBASICLineOffset.Text = "10";
+      this.btnImportFromAssembly.Location = new System.Drawing.Point(6, 106);
+      this.btnImportFromAssembly.Name = "btnImportFromAssembly";
+      this.btnImportFromAssembly.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromAssembly.TabIndex = 2;
+      this.btnImportFromAssembly.Text = "From ASM";
+      this.btnImportFromAssembly.UseVisualStyleBackColor = true;
+      this.btnImportFromAssembly.Click += new System.EventHandler(this.btnImportCharsetFromASM_Click);
       // 
       // CharsetEditor
       // 
@@ -1177,6 +1206,7 @@ namespace C64Studio
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).EndInit();
       this.tabProject.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
+      this.groupBox1.PerformLayout();
       this.groupExport.ResumeLayout(false);
       this.groupExport.PerformLayout();
       this.tabCategories.ResumeLayout(false);
@@ -1287,8 +1317,7 @@ namespace C64Studio
     private System.Windows.Forms.Label label7;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.Button btnExportToBASIC;
-
-
-
+    private System.Windows.Forms.Button btnImportFromAssembly;
+    private System.Windows.Forms.TextBox editDataImport;
   }
 }

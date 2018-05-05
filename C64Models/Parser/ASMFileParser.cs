@@ -381,11 +381,6 @@ namespace C64Studio.Parser
       string    filename;
       int       localIndex = 0;
 
-      if ( Name == "STACK1" )
-      {
-        Debug.Log( "STACK1 set to " + Value );
-      }
-
       ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex );
 
       if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
@@ -515,6 +510,13 @@ namespace C64Studio.Parser
 
     public void AddConstant( string Name, int Value, int SourceLine, string Info, int CharIndex, int Length )
     {
+      if ( Name == "__hla_STACK9" )
+      {
+        Debug.Log( "Constant " + Name + " set to " + Value + " in line " + SourceLine );
+      }
+
+
+
       string    filename = "";
       int       localIndex = -1;
       ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex );
@@ -8906,7 +8908,7 @@ namespace C64Studio.Parser
 
       foreach ( var infoToAdd in infosToAdd )
       {
-        Debug.Log( "Adding cloned source info at " + infoToAdd.GlobalStartLine + " to " + ( infoToAdd.GlobalStartLine + infoToAdd.LineCount - 1 ) + " from orig " + ( 1 + infoToAdd.GlobalStartLine - ( TargetIndex - SourceIndex ) ) );
+        //Debug.Log( "Adding cloned source info at " + infoToAdd.GlobalStartLine + " to " + ( infoToAdd.GlobalStartLine + infoToAdd.LineCount - 1 ) + " from orig " + ( 1 + infoToAdd.GlobalStartLine - ( TargetIndex - SourceIndex ) ) );
         InsertSourceInfo( infoToAdd, false, false );
       }
     }
@@ -9321,15 +9323,16 @@ namespace C64Studio.Parser
         }
       }
 
+      // create preprocessed file even with errors (might be the reason to get the preprocessed file in the first place)
+      if ( Config.CreatePreProcesseFile )
+      {
+        CreatePreProcessedFile( Config.InputFile, lines, ASMFileInfo );
+      }
+
       if ( ( ASMFileInfo.UnparsedLabels.Count > 0 )
       ||   ( m_ErrorMessages > 0 ) )
       {
         return false;
-      }
-
-      if ( Config.CreatePreProcesseFile )
-      {
-        CreatePreProcessedFile( Config.InputFile, lines, ASMFileInfo );
       }
 
       return true;

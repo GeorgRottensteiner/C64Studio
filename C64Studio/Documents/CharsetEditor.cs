@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
+using GR.Memory;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace C64Studio
@@ -1091,25 +1092,32 @@ namespace C64Studio
         // treat as binary .chr file
         GR.Memory.ByteBuffer charData = GR.IO.File.ReadAllBytes( filename );
 
-        int charsToImport = (int)charData.Length / 8;
-        if ( charsToImport > 256 )
-        {
-          charsToImport = 256;
-        }
-        for ( int i = 0; i < charsToImport; ++i )
-        {
-          for ( int j = 0; j < 8; ++j )
-          {
-            m_Charset.Characters[i].Data.SetU8At( j, charData.ByteAt( i * 8 + j ) );
-          }
-          m_Charset.Characters[i].Mode = C64Studio.Types.CharsetMode.HIRES;
-          m_Charset.Characters[i].Color = 1;
-          RebuildCharImage( i );
-        }
-        panelCharacters.Invalidate();
-        pictureEditor.Invalidate();
-        SetModified();
+        ImportFromData( charData );
       }
+    }
+
+
+
+    private void ImportFromData( ByteBuffer CharData )
+    {
+      int charsToImport = (int)CharData.Length / 8;
+      if ( charsToImport > 256 )
+      {
+        charsToImport = 256;
+      }
+      for ( int i = 0; i < charsToImport; ++i )
+      {
+        for ( int j = 0; j < 8; ++j )
+        {
+          m_Charset.Characters[i].Data.SetU8At( j, CharData.ByteAt( i * 8 + j ) );
+        }
+        m_Charset.Characters[i].Mode = C64Studio.Types.CharsetMode.HIRES;
+        m_Charset.Characters[i].Color = 1;
+        RebuildCharImage( i );
+      }
+      panelCharacters.Invalidate();
+      pictureEditor.Invalidate();
+      SetModified();
     }
 
 
@@ -2955,6 +2963,25 @@ namespace C64Studio
     }
 
 
+
+    private void btnImportCharsetFromASM_Click( object sender, EventArgs e )
+    {
+      Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
+
+      Parser.CompileConfig config = new Parser.CompileConfig();
+      config.TargetType = Types.CompileTargetType.PLAIN;
+      config.OutputFile = "temp.bin";
+      config.Assembler = Types.AssemblerType.C64_STUDIO;
+
+      string    temp = "* = $0801\n" + editDataImport.Text;
+      if ( ( asmParser.Parse( temp, null, config ) )
+      &&   ( asmParser.Assemble( config ) ) )
+      {
+        GR.Memory.ByteBuffer charData = asmParser.AssembledOutput.Assembly;
+
+        ImportFromData( charData );
+      }
+    }
 
   }
 }

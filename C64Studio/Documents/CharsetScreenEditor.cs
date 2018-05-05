@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using GR.Image;
+using GR.Memory;
 
 namespace C64Studio
 {
@@ -1792,36 +1793,43 @@ namespace C64Studio
       {
         GR.Memory.ByteBuffer data = GR.IO.File.ReadAllBytes( filename );
 
-        if ( data.Length == 1000 )
-        {
-          SetScreenSize( 40, 25 );
-        }
-
-        if ( data.Length >= m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight )
-        {
-          // chars first
-          for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
-          {
-            for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
-            {
-              m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( data.ByteAt( i + j * m_CharsetScreen.ScreenWidth ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff00 ) );
-            }
-          }
-        }
-        if ( data.Length >= 2 * m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight )
-        {
-          // colors
-          for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
-          {
-            for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
-            {
-              m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( ( ( data.ByteAt( m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight + i + j * m_CharsetScreen.ScreenWidth ) & 0x0f ) << 8 ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ) );
-            }
-          }
-        }
-        Modified = true;
-        RedrawFullScreen();
+        ImportFromData( data );
       }
+    }
+
+
+
+    private void ImportFromData( ByteBuffer Data )
+    {
+      if ( Data.Length == 1000 )
+      {
+        SetScreenSize( 40, 25 );
+      }
+
+      if ( Data.Length >= m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight )
+      {
+        // chars first
+        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        {
+          for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+          {
+            m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( Data.ByteAt( i + j * m_CharsetScreen.ScreenWidth ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff00 ) );
+          }
+        }
+      }
+      if ( Data.Length >= 2 * m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight )
+      {
+        // colors
+        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        {
+          for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+          {
+            m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( ( ( Data.ByteAt( m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight + i + j * m_CharsetScreen.ScreenWidth ) & 0x0f ) << 8 ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ) );
+          }
+        }
+      }
+      Modified = true;
+      RedrawFullScreen();
     }
 
 
@@ -2630,6 +2638,27 @@ namespace C64Studio
       m_ShowGrid = checkShowGrid.Checked;
       pictureEditor.Invalidate();
     }
+
+
+
+    private void btnImportFromASM_Click( object sender, EventArgs e )
+    {
+      Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
+
+      Parser.CompileConfig config = new Parser.CompileConfig();
+      config.TargetType = Types.CompileTargetType.PLAIN;
+      config.OutputFile = "temp.bin";
+      config.Assembler = Types.AssemblerType.C64_STUDIO;
+
+      string    temp = "* = $0801\n" + editDataImport.Text;
+      if ( ( asmParser.Parse( temp, null, config ) )
+      &&   ( asmParser.Assemble( config ) ) )
+      {
+        GR.Memory.ByteBuffer data = asmParser.AssembledOutput.Assembly;
+        ImportFromData( data );
+      }
+    }
+
 
   }
 }

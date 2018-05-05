@@ -77,6 +77,7 @@
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.checkShowGrid = new System.Windows.Forms.CheckBox();
       this.checkApplyColors = new System.Windows.Forms.CheckBox();
       this.checkApplyCharacter = new System.Windows.Forms.CheckBox();
       this.label9 = new System.Windows.Forms.Label();
@@ -107,7 +108,8 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.checkShowGrid = new System.Windows.Forms.CheckBox();
+      this.editDataImport = new System.Windows.Forms.TextBox();
+      this.btnImportFromASM = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -176,13 +178,18 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox1.Controls.Add(this.btnDefaultLowerCase);
       this.groupBox1.Controls.Add(this.btnDefaultUppercase);
       this.groupBox1.Controls.Add(this.btnImportCharset);
+      this.groupBox1.Controls.Add(this.btnImportFromASM);
       this.groupBox1.Controls.Add(this.btnImportFromFile);
+      this.groupBox1.Controls.Add(this.editDataImport);
       this.groupBox1.Location = new System.Drawing.Point(458, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(324, 343);
+      this.groupBox1.Size = new System.Drawing.Size(490, 461);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -613,6 +620,17 @@
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // checkShowGrid
+      // 
+      this.checkShowGrid.AutoSize = true;
+      this.checkShowGrid.Location = new System.Drawing.Point(838, 33);
+      this.checkShowGrid.Name = "checkShowGrid";
+      this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
+      this.checkShowGrid.TabIndex = 37;
+      this.checkShowGrid.Text = "Show Grid";
+      this.checkShowGrid.UseVisualStyleBackColor = true;
+      this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
+      // 
       // checkApplyColors
       // 
       this.checkApplyColors.Appearance = System.Windows.Forms.Appearance.Button;
@@ -942,16 +960,29 @@
       this.tabCharsetEditor.Size = new System.Drawing.Size(964, 501);
       this.tabCharsetEditor.TabIndex = 0;
       // 
-      // checkShowGrid
+      // editDataImport
       // 
-      this.checkShowGrid.AutoSize = true;
-      this.checkShowGrid.Location = new System.Drawing.Point(838, 33);
-      this.checkShowGrid.Name = "checkShowGrid";
-      this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
-      this.checkShowGrid.TabIndex = 37;
-      this.checkShowGrid.Text = "Show Grid";
-      this.checkShowGrid.UseVisualStyleBackColor = true;
-      this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
+      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editDataImport.Location = new System.Drawing.Point(6, 143);
+      this.editDataImport.Multiline = true;
+      this.editDataImport.Name = "editDataImport";
+      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      this.editDataImport.Size = new System.Drawing.Size(478, 312);
+      this.editDataImport.TabIndex = 20;
+      this.editDataImport.WordWrap = false;
+      this.editDataImport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
+      // 
+      // btnImportFromASM
+      // 
+      this.btnImportFromASM.Location = new System.Drawing.Point(6, 106);
+      this.btnImportFromASM.Name = "btnImportFromASM";
+      this.btnImportFromASM.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromASM.TabIndex = 0;
+      this.btnImportFromASM.Text = "From ASM";
+      this.btnImportFromASM.UseVisualStyleBackColor = true;
+      this.btnImportFromASM.Click += new System.EventHandler(this.btnImportFromASM_Click);
       // 
       // CharsetScreenEditor
       // 
@@ -966,6 +997,7 @@
       this.menuStrip1.PerformLayout();
       this.tabProject.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
+      this.groupBox1.PerformLayout();
       this.groupExport.ResumeLayout(false);
       this.groupExport.PerformLayout();
       this.tabEditor.ResumeLayout(false);
@@ -1056,5 +1088,7 @@
     private System.Windows.Forms.CheckBox checkApplyColors;
     private System.Windows.Forms.RadioButton btnToolText;
     private System.Windows.Forms.CheckBox checkShowGrid;
+    private System.Windows.Forms.TextBox editDataImport;
+    private System.Windows.Forms.Button btnImportFromASM;
   }
 }

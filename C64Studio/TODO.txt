@@ -1,8 +1,24 @@
 ﻿C64Studio
+o export "to petscii" in the text screen editor
+o import screen/color from ASM in the text screen editor
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
+o Code-Ergänzungvorschlag nicht nur für Labels/Variablen, sondern auch für Macros.
 o Beim suchen uns ersetzen scheint er seltsam die Suchergebnisse zu ersetzen. Alle ersetzen funzt, wenn ich aber zuerst auf Suchen klicke 
   springt er zu dem nächsten gefunden Eintrag, wenn ich jetzt ersetzen klicke erwarte ich, dass nur dieser Eintrag ersetzt. 
   Es werden aber alle ausser dem gefundenen ersetzt  
+o In Macros das zusammenfügen von Textteilen.
+      STACK_LEVEL = 12
+      STACK#STACK_LEVEL:
+      --> expandiert dann als:
+      STACK12:
+o Optionale Parameter und eine Assemblervariable, die anzeigt, wieviele Parameter es gibt.
+    far = 1
+    !macro IF_EQUAL ?range
+      if Ass_ParameterCount=1 & range=far { ; eigtl. könnte man & range=far auch bleiben lassen
+        .. mache Code für far jump ..
+    } 
+o MediaManager: * Dateien mit gleichem Namen unterbinden (bzw. nachfragen!)
+                * Titel und ID ändern bzw. angeben beim neu erstellen
 o BASIC: Renumber bei THEN <zeile> tut nicht ?? Seems to work fine
 o BASIC: Renumber nur von Ausschnitten
 o BASIC: Einzelne Zeilennummer ändern (mit Referenzen die angepasst werden)
