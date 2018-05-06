@@ -1687,60 +1687,28 @@ namespace C64Studio
 
       if ( checkExportASMAsPetSCII.Checked )
       {
+        // pet export only exports chars, no color changes
         StringBuilder   sb = new StringBuilder();
-        int             curColor = -1;
         bool            isReverse = false;
         for ( int i = exportRect.Top; i < exportRect.Bottom; ++i )
         {
           sb.Append( "!pet \"" );
           for ( int x = exportRect.Left; x < exportRect.Right; ++x )
           {
-            byte newColor = (byte)( ( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff00 ) >> 8 ) & 0x0f );
             byte newChar = (byte)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff );
-            bool isChar = false;
             byte charToAdd = newChar;
 
-            if ( newColor != curColor )
-            {
-              //sb.Append( Types.ConstantData.PetSCIIToChar[Types.ConstantData.ColorToPetSCIIChar[newColor]].CharValue );
-              curColor = newColor;
-            }
             if ( newChar >= 128 )
             {
-              if ( !isReverse )
-              {
-                isReverse = true;
-                //sb.Append( Types.ConstantData.PetSCIIToChar[18].CharValue );
-              }
+              isReverse = true;
             }
             else if ( isReverse )
             {
               isReverse = false;
-              //sb.Append( Types.ConstantData.PetSCIIToChar[146].CharValue );
             }
             if ( isReverse )
             {
-              isChar = true;
               charToAdd -= 128;
-              //sb.Append( Types.ConstantData.ScreenCodeToChar[(byte)( newChar - 128 )].CharValue );
-            }
-            else
-            {
-              /*
-              if ( newChar == 34 )
-              {
-                // an apostrohpe!
-                string    replacement = "\";CHR$(34);\"";
-
-                for ( int t = 0; t < replacement.Length; ++t )
-                {
-                  sb.Append( Types.ConstantData.CharToC64Char[replacement[t]].CharValue );
-                }
-              }
-              else
-              {
-                sb.Append( Types.ConstantData.ScreenCodeToChar[newChar].CharValue );
-              }*/
             }
             sb.Append( Types.ConstantData.ScreenCodeToChar[newChar].CharValue );
           }
