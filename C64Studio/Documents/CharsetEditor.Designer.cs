@@ -80,8 +80,10 @@ namespace C64Studio
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnDefaultLowerCase = new System.Windows.Forms.Button();
       this.btnDefaultUppercase = new System.Windows.Forms.Button();
+      this.btnImportFromAssembly = new System.Windows.Forms.Button();
       this.btnImportCharsetFromImage = new System.Windows.Forms.Button();
       this.btnImportFromFile = new System.Windows.Forms.Button();
+      this.editDataImport = new System.Windows.Forms.TextBox();
       this.groupExport = new System.Windows.Forms.GroupBox();
       this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
       this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
@@ -128,8 +130,7 @@ namespace C64Studio
       this.exchangeMultiColor1AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMultiColor2AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.editDataImport = new System.Windows.Forms.TextBox();
-      this.btnImportFromAssembly = new System.Windows.Forms.Button();
+      this.btnClearImportData = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabCharsetEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -666,6 +667,7 @@ namespace C64Studio
             | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox1.Controls.Add(this.btnDefaultLowerCase);
       this.groupBox1.Controls.Add(this.btnDefaultUppercase);
+      this.groupBox1.Controls.Add(this.btnClearImportData);
       this.groupBox1.Controls.Add(this.btnImportFromAssembly);
       this.groupBox1.Controls.Add(this.btnImportCharsetFromImage);
       this.groupBox1.Controls.Add(this.btnImportFromFile);
@@ -697,6 +699,16 @@ namespace C64Studio
       this.btnDefaultUppercase.UseVisualStyleBackColor = true;
       this.btnDefaultUppercase.Click += new System.EventHandler(this.btnDefaultUppercase_Click);
       // 
+      // btnImportFromAssembly
+      // 
+      this.btnImportFromAssembly.Location = new System.Drawing.Point(6, 106);
+      this.btnImportFromAssembly.Name = "btnImportFromAssembly";
+      this.btnImportFromAssembly.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromAssembly.TabIndex = 2;
+      this.btnImportFromAssembly.Text = "From ASM";
+      this.btnImportFromAssembly.UseVisualStyleBackColor = true;
+      this.btnImportFromAssembly.Click += new System.EventHandler(this.btnImportCharsetFromASM_Click);
+      // 
       // btnImportCharsetFromImage
       // 
       this.btnImportCharsetFromImage.Location = new System.Drawing.Point(6, 77);
@@ -716,6 +728,20 @@ namespace C64Studio
       this.btnImportFromFile.Text = "From File...";
       this.btnImportFromFile.UseVisualStyleBackColor = true;
       this.btnImportFromFile.Click += new System.EventHandler(this.btnImportCharset_Click);
+      // 
+      // editDataImport
+      // 
+      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editDataImport.Location = new System.Drawing.Point(6, 145);
+      this.editDataImport.Multiline = true;
+      this.editDataImport.Name = "editDataImport";
+      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      this.editDataImport.Size = new System.Drawing.Size(583, 314);
+      this.editDataImport.TabIndex = 3;
+      this.editDataImport.WordWrap = false;
+      this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataImport_KeyPress);
       // 
       // groupExport
       // 
@@ -1162,29 +1188,15 @@ namespace C64Studio
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Text = "Exchange Multi color 2 and BG color";
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor2AndBGColorToolStripMenuItem_Click);
       // 
-      // editDataImport
+      // btnClearImportData
       // 
-      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataImport.Location = new System.Drawing.Point(6, 145);
-      this.editDataImport.Multiline = true;
-      this.editDataImport.Name = "editDataImport";
-      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataImport.Size = new System.Drawing.Size(583, 314);
-      this.editDataImport.TabIndex = 3;
-      this.editDataImport.WordWrap = false;
-      this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
-      // 
-      // btnImportFromAssembly
-      // 
-      this.btnImportFromAssembly.Location = new System.Drawing.Point(6, 106);
-      this.btnImportFromAssembly.Name = "btnImportFromAssembly";
-      this.btnImportFromAssembly.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromAssembly.TabIndex = 2;
-      this.btnImportFromAssembly.Text = "From ASM";
-      this.btnImportFromAssembly.UseVisualStyleBackColor = true;
-      this.btnImportFromAssembly.Click += new System.EventHandler(this.btnImportCharsetFromASM_Click);
+      this.btnClearImportData.Location = new System.Drawing.Point(129, 106);
+      this.btnClearImportData.Name = "btnClearImportData";
+      this.btnClearImportData.Size = new System.Drawing.Size(117, 23);
+      this.btnClearImportData.TabIndex = 2;
+      this.btnClearImportData.Text = "Clear";
+      this.btnClearImportData.UseVisualStyleBackColor = true;
+      this.btnClearImportData.Click += new System.EventHandler(this.btnClearImportData_Click);
       // 
       // CharsetEditor
       // 
@@ -1319,5 +1331,6 @@ namespace C64Studio
     private System.Windows.Forms.Button btnExportToBASIC;
     private System.Windows.Forms.Button btnImportFromAssembly;
     private System.Windows.Forms.TextBox editDataImport;
+    private System.Windows.Forms.Button btnClearImportData;
   }
 }

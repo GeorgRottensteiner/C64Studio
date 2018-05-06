@@ -1,6 +1,6 @@
 ﻿C64Studio
 o export "to petscii" in the text screen editor
-o import screen/color from ASM in the text screen editor
+o default open path for solutions/files
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
 o Code-Ergänzungvorschlag nicht nur für Labels/Variablen, sondern auch für Macros.
 o Beim suchen uns ersetzen scheint er seltsam die Suchergebnisse zu ersetzen. Alle ersetzen funzt, wenn ich aber zuerst auf Suchen klicke 

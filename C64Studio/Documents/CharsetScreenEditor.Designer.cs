@@ -42,7 +42,10 @@
       this.btnDefaultLowerCase = new System.Windows.Forms.Button();
       this.btnDefaultUppercase = new System.Windows.Forms.Button();
       this.btnImportCharset = new System.Windows.Forms.Button();
+      this.btnClearImportData = new System.Windows.Forms.Button();
+      this.btnImportFromASM = new System.Windows.Forms.Button();
       this.btnImportFromFile = new System.Windows.Forms.Button();
+      this.editDataImport = new System.Windows.Forms.TextBox();
       this.groupExport = new System.Windows.Forms.GroupBox();
       this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
       this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
@@ -108,8 +111,7 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.editDataImport = new System.Windows.Forms.TextBox();
-      this.btnImportFromASM = new System.Windows.Forms.Button();
+      this.checkExportASMAsPetSCII = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -184,6 +186,7 @@
       this.groupBox1.Controls.Add(this.btnDefaultLowerCase);
       this.groupBox1.Controls.Add(this.btnDefaultUppercase);
       this.groupBox1.Controls.Add(this.btnImportCharset);
+      this.groupBox1.Controls.Add(this.btnClearImportData);
       this.groupBox1.Controls.Add(this.btnImportFromASM);
       this.groupBox1.Controls.Add(this.btnImportFromFile);
       this.groupBox1.Controls.Add(this.editDataImport);
@@ -224,6 +227,26 @@
       this.btnImportCharset.UseVisualStyleBackColor = true;
       this.btnImportCharset.Click += new System.EventHandler(this.btnImportCharset_Click);
       // 
+      // btnClearImportData
+      // 
+      this.btnClearImportData.Location = new System.Drawing.Point(129, 106);
+      this.btnClearImportData.Name = "btnClearImportData";
+      this.btnClearImportData.Size = new System.Drawing.Size(117, 23);
+      this.btnClearImportData.TabIndex = 0;
+      this.btnClearImportData.Text = "Clear";
+      this.btnClearImportData.UseVisualStyleBackColor = true;
+      this.btnClearImportData.Click += new System.EventHandler(this.btnClearImportData_Click);
+      // 
+      // btnImportFromASM
+      // 
+      this.btnImportFromASM.Location = new System.Drawing.Point(6, 106);
+      this.btnImportFromASM.Name = "btnImportFromASM";
+      this.btnImportFromASM.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromASM.TabIndex = 0;
+      this.btnImportFromASM.Text = "From ASM";
+      this.btnImportFromASM.UseVisualStyleBackColor = true;
+      this.btnImportFromASM.Click += new System.EventHandler(this.btnImportFromASM_Click);
+      // 
       // btnImportFromFile
       // 
       this.btnImportFromFile.Location = new System.Drawing.Point(6, 19);
@@ -234,10 +257,25 @@
       this.btnImportFromFile.UseVisualStyleBackColor = true;
       this.btnImportFromFile.Click += new System.EventHandler(this.btnImportFromFile_Click);
       // 
+      // editDataImport
+      // 
+      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editDataImport.Location = new System.Drawing.Point(6, 143);
+      this.editDataImport.Multiline = true;
+      this.editDataImport.Name = "editDataImport";
+      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      this.editDataImport.Size = new System.Drawing.Size(478, 312);
+      this.editDataImport.TabIndex = 20;
+      this.editDataImport.WordWrap = false;
+      this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataImport_KeyPress);
+      // 
       // groupExport
       // 
       this.groupExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+      this.groupExport.Controls.Add(this.checkExportASMAsPetSCII);
       this.groupExport.Controls.Add(this.editExportBASICLineOffset);
       this.groupExport.Controls.Add(this.editExportBASICLineNo);
       this.groupExport.Controls.Add(this.label3);
@@ -538,6 +576,7 @@
       this.editDataExport.Size = new System.Drawing.Size(429, 154);
       this.editDataExport.TabIndex = 20;
       this.editDataExport.WordWrap = false;
+      this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
       this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
       // 
       // btnExportToBASICData
@@ -960,29 +999,15 @@
       this.tabCharsetEditor.Size = new System.Drawing.Size(964, 501);
       this.tabCharsetEditor.TabIndex = 0;
       // 
-      // editDataImport
+      // checkExportASMAsPetSCII
       // 
-      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataImport.Location = new System.Drawing.Point(6, 143);
-      this.editDataImport.Multiline = true;
-      this.editDataImport.Name = "editDataImport";
-      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataImport.Size = new System.Drawing.Size(478, 312);
-      this.editDataImport.TabIndex = 20;
-      this.editDataImport.WordWrap = false;
-      this.editDataImport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
-      // 
-      // btnImportFromASM
-      // 
-      this.btnImportFromASM.Location = new System.Drawing.Point(6, 106);
-      this.btnImportFromASM.Name = "btnImportFromASM";
-      this.btnImportFromASM.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromASM.TabIndex = 0;
-      this.btnImportFromASM.Text = "From ASM";
-      this.btnImportFromASM.UseVisualStyleBackColor = true;
-      this.btnImportFromASM.Click += new System.EventHandler(this.btnImportFromASM_Click);
+      this.checkExportASMAsPetSCII.AutoSize = true;
+      this.checkExportASMAsPetSCII.Location = new System.Drawing.Point(264, 222);
+      this.checkExportASMAsPetSCII.Name = "checkExportASMAsPetSCII";
+      this.checkExportASMAsPetSCII.Size = new System.Drawing.Size(93, 17);
+      this.checkExportASMAsPetSCII.TabIndex = 25;
+      this.checkExportASMAsPetSCII.Text = "Prefer PetSCII";
+      this.checkExportASMAsPetSCII.UseVisualStyleBackColor = true;
       // 
       // CharsetScreenEditor
       // 
@@ -1090,5 +1115,7 @@
     private System.Windows.Forms.CheckBox checkShowGrid;
     private System.Windows.Forms.TextBox editDataImport;
     private System.Windows.Forms.Button btnImportFromASM;
+    private System.Windows.Forms.Button btnClearImportData;
+    private System.Windows.Forms.CheckBox checkExportASMAsPetSCII;
   }
 }

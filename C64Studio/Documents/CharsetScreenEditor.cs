@@ -1685,6 +1685,71 @@ namespace C64Studio
 
       var exportRect = DetermineExportRectangle();
 
+      if ( checkExportASMAsPetSCII.Checked )
+      {
+        StringBuilder   sb = new StringBuilder();
+        int             curColor = -1;
+        bool            isReverse = false;
+        for ( int i = exportRect.Top; i < exportRect.Bottom; ++i )
+        {
+          sb.Append( "!pet \"" );
+          for ( int x = exportRect.Left; x < exportRect.Right; ++x )
+          {
+            byte newColor = (byte)( ( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff00 ) >> 8 ) & 0x0f );
+            byte newChar = (byte)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff );
+            bool isChar = false;
+            byte charToAdd = newChar;
+
+            if ( newColor != curColor )
+            {
+              //sb.Append( Types.ConstantData.PetSCIIToChar[Types.ConstantData.ColorToPetSCIIChar[newColor]].CharValue );
+              curColor = newColor;
+            }
+            if ( newChar >= 128 )
+            {
+              if ( !isReverse )
+              {
+                isReverse = true;
+                //sb.Append( Types.ConstantData.PetSCIIToChar[18].CharValue );
+              }
+            }
+            else if ( isReverse )
+            {
+              isReverse = false;
+              //sb.Append( Types.ConstantData.PetSCIIToChar[146].CharValue );
+            }
+            if ( isReverse )
+            {
+              isChar = true;
+              charToAdd -= 128;
+              //sb.Append( Types.ConstantData.ScreenCodeToChar[(byte)( newChar - 128 )].CharValue );
+            }
+            else
+            {
+              /*
+              if ( newChar == 34 )
+              {
+                // an apostrohpe!
+                string    replacement = "\";CHR$(34);\"";
+
+                for ( int t = 0; t < replacement.Length; ++t )
+                {
+                  sb.Append( Types.ConstantData.CharToC64Char[replacement[t]].CharValue );
+                }
+              }
+              else
+              {
+                sb.Append( Types.ConstantData.ScreenCodeToChar[newChar].CharValue );
+              }*/
+            }
+            sb.Append( Types.ConstantData.ScreenCodeToChar[newChar].CharValue );
+          }
+          sb.AppendLine( "\"" );
+        }
+        editDataExport.Text = sb.ToString();
+        return;
+      }
+
       m_CharsetScreen.ExportToBuffer( out screenCharData, out screenColorData, out charsetData, exportRect.Left, exportRect.Top, exportRect.Width, exportRect.Height, ( comboExportOrientation.SelectedIndex == 0 ) );
 
       string screenData = Util.ToASMData( screenCharData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), editPrefix.Text, checkExportHex.Checked );
@@ -2658,6 +2723,38 @@ namespace C64Studio
         ImportFromData( data );
       }
     }
+
+
+
+    private void btnClearImportData_Click( object sender, EventArgs e )
+    {
+      editDataImport.Text = "";
+    }
+
+
+
+    private void editDataExport_KeyPress( object sender, KeyPressEventArgs e )
+    {
+      if ( ( System.Windows.Forms.Control.ModifierKeys == Keys.Control )
+      &&   ( e.KeyChar == 1 ) )
+      {
+        editDataExport.SelectAll();
+        e.Handled = true;
+      }
+    }
+
+
+
+    private void editDataImport_KeyPress( object sender, KeyPressEventArgs e )
+    {
+      if ( ( System.Windows.Forms.Control.ModifierKeys == Keys.Control )
+      &&   ( e.KeyChar == 1 ) )
+      {
+        editDataImport.SelectAll();
+        e.Handled = true;
+      }
+    }
+
 
 
   }

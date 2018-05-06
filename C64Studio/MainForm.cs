@@ -1655,7 +1655,11 @@ namespace C64Studio
         return Mask;
       }
       string fullDocPath = Document.FullPath;
-      string result = Mask.Replace("$(Filename)", fullDocPath);
+      if ( fullDocPath == null )
+      {
+        return Mask;
+      }
+      string result = Mask.Replace( "$(Filename)", fullDocPath );
       result = result.Replace( "$(FilenameWithoutExtension)", System.IO.Path.GetFileNameWithoutExtension( fullDocPath ) );
       result = result.Replace( "$(FilePath)", GR.Path.RemoveFileSpec( fullDocPath ) );
 

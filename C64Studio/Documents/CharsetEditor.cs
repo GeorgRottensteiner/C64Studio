@@ -2983,6 +2983,27 @@ namespace C64Studio
       }
     }
 
+
+
+    private void editDataImport_KeyPress( object sender, KeyPressEventArgs e )
+    {
+      if ( ( System.Windows.Forms.Control.ModifierKeys == Keys.Control )
+      &&   ( e.KeyChar == 1 ) )
+      {
+        editDataImport.SelectAll();
+        e.Handled = true;
+      }
+    }
+
+
+
+    private void btnClearImportData_Click( object sender, EventArgs e )
+    {
+      editDataImport.Text = "";
+    }
+
+
+
   }
 }
 
