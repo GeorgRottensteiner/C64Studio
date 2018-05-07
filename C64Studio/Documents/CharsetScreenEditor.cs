@@ -1710,7 +1710,16 @@ namespace C64Studio
             {
               charToAdd -= 128;
             }
-            sb.Append( Types.ConstantData.ScreenCodeToChar[newChar].CharValue );
+            if ( Types.ConstantData.ScreenCodeToChar[newChar].HasPetSCII )
+            {
+              sb.Append( Types.ConstantData.ScreenCodeToChar[charToAdd].CharValue );
+            }
+            else
+            {
+              sb.Append( "\", $" );
+              sb.Append( newChar.ToString( "X2" ) );
+              sb.Append( "\"" );
+            }
           }
           sb.AppendLine( "\"" );
         }
