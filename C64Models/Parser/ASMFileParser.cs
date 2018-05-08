@@ -285,6 +285,13 @@ namespace C64Studio.Parser
 
     public Types.ASM.TemporaryLabelInfo AddTempLabel( string Name, int LineIndex, int LineCount, int Value, string Info, int CharIndex, int Length )
     {
+      if ( ( Name == "__hla_STACK0" )
+      &&   ( Value == 2088 )
+      &&   ( LineIndex == 840 )
+      &&   ( LineCount == 853 - 840 + 1 ) )
+      {
+        Debug.Log( "aha" );
+      }
       foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
       {
         if ( oldTempInfo.Name == Name )
@@ -300,13 +307,26 @@ namespace C64Studio.Parser
           if ( oldTempInfo.LineIndex + oldTempInfo.LineCount > LineIndex )
           {
             // overlap! no duplicate!
-            AddError( LineIndex, Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Redefinition of label " + Name, CharIndex, Length );
+            var msg = AddError( LineIndex, Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Redefinition of label " + Name, CharIndex, Length );
 
             string    filename;
             int       localLine = 0;
             if ( ASMFileInfo.FindTrueLineSource( oldTempInfo.LineIndex, out filename, out localLine ) )
             {
-              AddError( LineIndex, Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "  already defined in " + filename + "(" + ( localLine + 1 ) + ")", oldTempInfo.CharIndex, oldTempInfo.Length );
+              msg.AddMessage( "  already defined in " + filename + "(" + ( localLine + 1 ) + ")", filename, localLine, oldTempInfo.CharIndex, oldTempInfo.Length );
+              //AddError( LineIndex, Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "  already defined in " + filename + "(" + ( localLine + 1 ) + ")", oldTempInfo.CharIndex, oldTempInfo.Length );
+            }
+
+            if ( Name == "__hla_STACK0" )
+            {
+              foreach ( var tempInfo2 in ASMFileInfo.TempLabelInfo )
+              {
+                if ( tempInfo2.Name == Name )
+                {
+                  Debug.Log( "Label " + Name + " already defined with value " + tempInfo2.Value + " for line " + ( tempInfo2.LineIndex + 1 ) + " to " + ( tempInfo2.LineIndex + 1 + tempInfo2.LineCount - 1 ) );
+                }
+              }
+              Debug.Log( "During AddTempLabel for " + Name + " with value " + Value + " for line " + ( LineIndex + 1 ) + " to " + ( LineIndex + 1 + LineCount - 1 ) );
             }
             return null;
           }
@@ -367,6 +387,16 @@ namespace C64Studio.Parser
           tempInfo.Value      = oldTempInfo.Value;
           tempInfo.Info       = oldTempInfo.Info;
 
+          foreach ( var origTempInfo in ASMFileInfo.TempLabelInfo )
+          {
+            // we're cloning a label after a trailing label (label till the end) of the same name -> adjust line count!
+            if ( ( origTempInfo.LineCount == -1 )
+            &&   ( origTempInfo.Name == tempInfo.Name )
+            &&   ( origTempInfo.LineIndex < tempInfo.LineIndex ) )
+            {
+              origTempInfo.LineCount = tempInfo.LineIndex - origTempInfo.LineIndex;
+            }
+          }
           infosToAdd.Add( tempInfo );
         }
       }
@@ -510,13 +540,6 @@ namespace C64Studio.Parser
 
     public void AddConstant( string Name, int Value, int SourceLine, string Info, int CharIndex, int Length )
     {
-      if ( Name == "__hla_STACK9" )
-      {
-        Debug.Log( "Constant " + Name + " set to " + Value + " in line " + SourceLine );
-      }
-
-
-
       string    filename = "";
       int       localIndex = -1;
       ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex );
@@ -2917,7 +2940,10 @@ namespace C64Studio.Parser
           Lines[lastLoop.LineIndex] = ";ex for loop";
           Lines[lineIndex] = ";ex loop end";
 
+          Debug.Log( "Cloning last loop for " + lastLoop.Label );
           CloneTempLabelsExcept( lastLoop.LineIndex, lastLoop.LoopLength, lineIndex - lastLoop.LoopLength - 1, lastLoop.Label );
+
+          DumpTempLabelInfos( "__hla_STACK0" );
 
           //Debug.Log( "Last loop for " + lastLoop.Label + " reached" );
           //CloneSourceInfos( lastLoop.LineIndex, lastLoop.LoopLength, lineIndex - lastLoop.LoopLength );
@@ -2961,7 +2987,9 @@ namespace C64Studio.Parser
           // also copy scoped variables if overlapping!!!
           if ( !endReached )
           {
+            Debug.Log( "Cloning loop " + lastLoop.CurrentValue + "/" + lastLoop.EndValue + " for " + lastLoop.Label );
             CloneTempLabelsExcept( lastLoop.LineIndex, linesToCopy, lineIndex - 1, lastLoop.Label );
+            DumpTempLabelInfos( "__hla_STACK0" );
           }
 
           // adjust source infos to make lookup work correctly
@@ -2996,6 +3024,9 @@ namespace C64Studio.Parser
           DumpSourceInfos( OrigLines, Lines );
 
           //Debug.Log( "New total " + Lines.Length + " lines" );
+
+          // TEST TEST TEST
+          //lineIndex += linesToCopy;
 
           return true;
         }
@@ -9211,6 +9242,19 @@ namespace C64Studio.Parser
       foreach ( var entry in ASMFileInfo.TempLabelInfo )
       {
         Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to " + ( entry.LineIndex + 1 + entry.LineCount - 1 ) + ", name " + entry.Name + ", value " + entry.Value );
+      }
+    }
+
+
+
+    private void DumpTempLabelInfos( string Name )
+    {
+      foreach ( var entry in ASMFileInfo.TempLabelInfo )
+      {
+        if ( entry.Name == Name )
+        {
+          Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to " + ( entry.LineIndex + 1 + entry.LineCount - 1 ) + ", name " + entry.Name + ", value " + entry.Value );
+        }
       }
     }
 
