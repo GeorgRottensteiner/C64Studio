@@ -231,6 +231,8 @@ namespace C64Studio
       Functions.Add( C64Studio.Types.Function.FIND_NEXT_MESSAGE, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.FIND_NEXT_MESSAGE, "Jump to next message", C64Studio.Types.FunctionStudioState.ANY ) );
       Functions.Add( C64Studio.Types.Function.UNDO, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.UNDO, "Undo", C64Studio.Types.FunctionStudioState.ANY ) );
       Functions.Add( C64Studio.Types.Function.REDO, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.REDO, "Redo", C64Studio.Types.FunctionStudioState.ANY ) );
+      Functions.Add( C64Studio.Types.Function.COLLAPSE_ALL_FOLDING_BLOCKS, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.COLLAPSE_ALL_FOLDING_BLOCKS, "Collapse all folding blocks", C64Studio.Types.FunctionStudioState.ANY ) );
+      Functions.Add( C64Studio.Types.Function.EXPAND_ALL_FOLDING_BLOCKS, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.EXPAND_ALL_FOLDING_BLOCKS, "Expand all folding blocks", C64Studio.Types.FunctionStudioState.ANY ) );
 
       // functions for running debugger
       Functions.Add( C64Studio.Types.Function.DEBUG_BREAK, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_BREAK, "Break into Debugger", C64Studio.Types.FunctionStudioState.DEBUGGER_RUNNING ) );

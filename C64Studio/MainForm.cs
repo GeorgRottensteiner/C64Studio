@@ -4631,6 +4631,8 @@ namespace C64Studio
         case C64Studio.Types.Function.PRINT:
         case C64Studio.Types.Function.COMMENT_SELECTION:
         case C64Studio.Types.Function.UNCOMMENT_SELECTION:
+        case Function.COLLAPSE_ALL_FOLDING_BLOCKS:
+        case Function.EXPAND_ALL_FOLDING_BLOCKS:
           {
             var curDoc = ActiveDocumentInfo;
             if ( ( curDoc != null )
