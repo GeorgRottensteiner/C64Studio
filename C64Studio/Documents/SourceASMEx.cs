@@ -2550,7 +2550,27 @@ namespace C64Studio
         case C64Studio.Types.Function.UNCOMMENT_SELECTION:
           UncommentSelection();
           break;
+        case Function.COLLAPSE_ALL_FOLDING_BLOCKS:
+          CollapseAllFoldingBlocks();
+          break;
+        case Function.EXPAND_ALL_FOLDING_BLOCKS:
+          ExpandAllFoldingBlocks();
+          break;
       }
+    }
+
+
+
+    private void CollapseAllFoldingBlocks()
+    {
+      editSource.CollapseAllFoldingBlocks();
+    }
+
+
+
+    private void ExpandAllFoldingBlocks()
+    {
+      editSource.ExpandAllFoldingBlocks();
     }
 
 
