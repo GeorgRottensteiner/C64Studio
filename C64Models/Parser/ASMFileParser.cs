@@ -9716,7 +9716,7 @@ namespace C64Studio.Parser
               //Debug.Log( "block overlap! " + builtSegments[i].first + "," + builtSegments[i].second.Length + " <> " + builtSegments[j].first + "," + builtSegments[j].second.Length );
               var message = AddSevereWarning( builtSegments[i].second.GlobalLineIndex, Types.ErrorCode.W0001_SEGMENT_OVERLAP, "Segment starts inside another one, overwriting it" );
 
-              message.AddMessage( "  overlapping block starts in " + builtSegments[j].second.Filename + " at line " + builtSegments[j].second.LocalLineIndex,
+              message.AddMessage( "  overlapping block starts in " + builtSegments[j].second.Filename + " at line " + ( builtSegments[j].second.LocalLineIndex + 1 ),
                                   builtSegments[j].second.Filename,
                                   builtSegments[j].second.LocalLineIndex );
               message.AddMessage( "  first block from $" + builtSegments[i].second.StartAddress.ToString( "X4" ) + " to $" + ( builtSegments[i].second.StartAddress + builtSegments[i].second.Length - 1 ).ToString( "X4" ),
