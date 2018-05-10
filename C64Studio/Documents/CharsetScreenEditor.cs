@@ -1844,11 +1844,114 @@ namespace C64Studio
     {
       string filename;
 
-      if ( OpenFile( "Open binary data", C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Open Charpad project or binary data", C64Studio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
-        GR.Memory.ByteBuffer data = GR.IO.File.ReadAllBytes( filename );
+        if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
+        {
+          // a charpad project file
+          GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
 
-        ImportFromData( data );
+          Formats.CharpadProject    cpProject = new C64Studio.Formats.CharpadProject();
+          if ( !cpProject.LoadFromFile( projectFile ) )
+          {
+            return;
+          }
+
+          m_CharsetScreen.CharSet.BackgroundColor = cpProject.BackgroundColor;
+          m_CharsetScreen.CharSet.MultiColor1 = cpProject.MultiColor1;
+          m_CharsetScreen.CharSet.MultiColor2 = cpProject.MultiColor2;
+
+          int maxChars = cpProject.NumChars;
+          if ( maxChars > 256 )
+          {
+            maxChars = 256;
+          }
+
+          m_CharsetScreen.CharSet.NumCharacters = maxChars;
+          for ( int charIndex = 0; charIndex < m_CharsetScreen.CharSet.NumCharacters; ++charIndex )
+          {
+            m_CharsetScreen.CharSet.Characters[charIndex].Data = cpProject.Characters[charIndex].Data;
+            m_CharsetScreen.CharSet.Characters[charIndex].Color = cpProject.Characters[charIndex].Color;
+            m_CharsetScreen.CharSet.Characters[charIndex].Mode = cpProject.MultiColor ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
+
+            RebuildCharImage( charIndex );
+          }
+
+          // import tiles
+          var mapProject = new MapProject();
+
+          for ( int i = 0; i < cpProject.NumTiles; ++i )
+          {
+            Formats.MapProject.Tile tile = new Formats.MapProject.Tile();
+
+            tile.Name = "Tile " + ( i + 1 ).ToString();
+            tile.Chars.Resize( cpProject.TileWidth, cpProject.TileHeight );
+            tile.Index = i;
+
+            for ( int y = 0; y < tile.Chars.Height; ++y )
+            {
+              for ( int x = 0; x < tile.Chars.Width; ++x )
+              {
+                tile.Chars[x, y].Character = (byte)cpProject.Tiles[i].CharData.UInt16At( 2 * ( x + y * tile.Chars.Width ) );
+                tile.Chars[x, y].Color = cpProject.Tiles[i].ColorData.ByteAt( x + y * tile.Chars.Width );
+              }
+            }
+            mapProject.Tiles.Add( tile );
+          }
+
+          var map = new Formats.MapProject.Map();
+          map.Tiles.Resize( cpProject.MapWidth, cpProject.MapHeight );
+          for ( int j = 0; j < cpProject.MapHeight; ++j )
+          {
+            for ( int i = 0; i < cpProject.MapWidth; ++i )
+            {
+              map.Tiles[i, j] = cpProject.MapData.ByteAt( i + j * cpProject.MapWidth );
+            }
+          }
+          map.TileSpacingX = cpProject.TileWidth;
+          map.TileSpacingY = cpProject.TileHeight;
+          mapProject.Maps.Add( map );
+
+          comboBackground.SelectedIndex = mapProject.Charset.BackgroundColor;
+          comboMulticolor1.SelectedIndex = mapProject.Charset.MultiColor1;
+          comboMulticolor2.SelectedIndex = mapProject.Charset.MultiColor2;
+          comboCharsetMode.SelectedIndex = (int)( cpProject.MultiColor ? Types.CharsetMode.MULTICOLOR : Types.CharsetMode.HIRES );
+
+          GR.Memory.ByteBuffer      charData = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.TileSpacingX * map.Tiles.Height * map.TileSpacingY ) );
+          GR.Memory.ByteBuffer      colorData = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.TileSpacingX * map.Tiles.Height * map.TileSpacingY ) );
+
+          for ( int y = 0; y < map.Tiles.Height; ++y )
+          {
+            for ( int x = 0; x < map.Tiles.Width; ++x )
+            {
+              int tileIndex = map.Tiles[x, y];
+              if ( tileIndex < mapProject.Tiles.Count )
+              {
+                // a real tile
+                var tile = mapProject.Tiles[tileIndex];
+
+                for ( int j = 0; j < tile.Chars.Height; ++j )
+                {
+                  for ( int i = 0; i < tile.Chars.Width; ++i )
+                  {
+                    charData.SetU8At( x * map.TileSpacingX + i + ( y * map.TileSpacingY + j ) * ( map.Tiles.Width * map.TileSpacingX ), tile.Chars[i, j].Character );
+                    colorData.SetU8At( x * map.TileSpacingX + i + ( y * map.TileSpacingY + j ) * ( map.Tiles.Width * map.TileSpacingX ), tile.Chars[i, j].Color );
+                  }
+                }
+              }
+            }
+          }
+
+          ImportFromData( map.TileSpacingX * map.Tiles.Width,
+                          map.TileSpacingY * map.Tiles.Height,
+                          charData, colorData, m_CharsetScreen.CharSet );
+        }
+        else
+        {
+          GR.Memory.ByteBuffer data = GR.IO.File.ReadAllBytes( filename );
+
+          ImportFromData( data );
+        }
       }
     }
 
