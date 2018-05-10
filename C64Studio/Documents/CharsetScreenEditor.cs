@@ -495,6 +495,18 @@ namespace C64Studio
       sb.Append( m_CurrentColor.ToString( "X2" ) );
       sb.Append( ',' );
       sb.Append( m_CurrentColor );
+      sb.AppendLine();
+      sb.Append( "Sprite Pos $" );
+
+      int spritePosX = charX * 8 + 24;
+      int spritePosY = charY * 8 + 50;
+      sb.Append( spritePosX.ToString( "X3" ) );
+      sb.Append( '/' );
+      sb.Append( spritePosX );
+      sb.Append( ", $" );
+      sb.Append( spritePosY.ToString( "X2" ) );
+      sb.Append( '/' );
+      sb.Append( spritePosY );
 
       return sb.ToString();
     }

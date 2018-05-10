@@ -47,6 +47,7 @@
       this.btnImportFromFile = new System.Windows.Forms.Button();
       this.editDataImport = new System.Windows.Forms.TextBox();
       this.groupExport = new System.Windows.Forms.GroupBox();
+      this.checkExportASMAsPetSCII = new System.Windows.Forms.CheckBox();
       this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
       this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
@@ -111,7 +112,6 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.checkExportASMAsPetSCII = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -314,6 +314,16 @@
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
+      // 
+      // checkExportASMAsPetSCII
+      // 
+      this.checkExportASMAsPetSCII.AutoSize = true;
+      this.checkExportASMAsPetSCII.Location = new System.Drawing.Point(264, 222);
+      this.checkExportASMAsPetSCII.Name = "checkExportASMAsPetSCII";
+      this.checkExportASMAsPetSCII.Size = new System.Drawing.Size(93, 17);
+      this.checkExportASMAsPetSCII.TabIndex = 25;
+      this.checkExportASMAsPetSCII.Text = "Prefer PetSCII";
+      this.checkExportASMAsPetSCII.UseVisualStyleBackColor = true;
       // 
       // editExportBASICLineOffset
       // 
@@ -654,7 +664,7 @@
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(956, 475);
+      this.tabEditor.Size = new System.Drawing.Size(956, 512);
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
@@ -721,9 +731,9 @@
       // 
       this.labelInfo.Location = new System.Drawing.Point(337, 438);
       this.labelInfo.Name = "labelInfo";
-      this.labelInfo.Size = new System.Drawing.Size(315, 23);
+      this.labelInfo.Size = new System.Drawing.Size(315, 45);
       this.labelInfo.TabIndex = 33;
-      this.labelInfo.Text = "Pos: 0,0  Offset: $0000";
+      this.labelInfo.Text = "Pos: 0,0  Offset: $0000\r\nline 2";
       // 
       // btnToolText
       // 
@@ -996,22 +1006,12 @@
       this.tabCharsetEditor.Location = new System.Drawing.Point(0, 24);
       this.tabCharsetEditor.Name = "tabCharsetEditor";
       this.tabCharsetEditor.SelectedIndex = 0;
-      this.tabCharsetEditor.Size = new System.Drawing.Size(964, 501);
+      this.tabCharsetEditor.Size = new System.Drawing.Size(964, 538);
       this.tabCharsetEditor.TabIndex = 0;
-      // 
-      // checkExportASMAsPetSCII
-      // 
-      this.checkExportASMAsPetSCII.AutoSize = true;
-      this.checkExportASMAsPetSCII.Location = new System.Drawing.Point(264, 222);
-      this.checkExportASMAsPetSCII.Name = "checkExportASMAsPetSCII";
-      this.checkExportASMAsPetSCII.Size = new System.Drawing.Size(93, 17);
-      this.checkExportASMAsPetSCII.TabIndex = 25;
-      this.checkExportASMAsPetSCII.Text = "Prefer PetSCII";
-      this.checkExportASMAsPetSCII.UseVisualStyleBackColor = true;
       // 
       // CharsetScreenEditor
       // 
-      this.ClientSize = new System.Drawing.Size(964, 525);
+      this.ClientSize = new System.Drawing.Size(964, 562);
       this.Controls.Add(this.tabCharsetEditor);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
