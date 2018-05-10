@@ -173,7 +173,7 @@
       this.tabProject.Location = new System.Drawing.Point(4, 22);
       this.tabProject.Name = "tabProject";
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
-      this.tabProject.Size = new System.Drawing.Size(956, 475);
+      this.tabProject.Size = new System.Drawing.Size(956, 512);
       this.tabProject.TabIndex = 1;
       this.tabProject.Text = "Project";
       this.tabProject.UseVisualStyleBackColor = true;
@@ -192,7 +192,7 @@
       this.groupBox1.Controls.Add(this.editDataImport);
       this.groupBox1.Location = new System.Drawing.Point(458, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(490, 461);
+      this.groupBox1.Size = new System.Drawing.Size(490, 498);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -266,7 +266,7 @@
       this.editDataImport.Multiline = true;
       this.editDataImport.Name = "editDataImport";
       this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataImport.Size = new System.Drawing.Size(478, 312);
+      this.editDataImport.Size = new System.Drawing.Size(478, 349);
       this.editDataImport.TabIndex = 20;
       this.editDataImport.WordWrap = false;
       this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataImport_KeyPress);
@@ -310,7 +310,7 @@
       this.groupExport.Controls.Add(this.btnExportToData);
       this.groupExport.Location = new System.Drawing.Point(11, 6);
       this.groupExport.Name = "groupExport";
-      this.groupExport.Size = new System.Drawing.Size(441, 461);
+      this.groupExport.Size = new System.Drawing.Size(441, 498);
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
@@ -583,7 +583,7 @@
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 154);
+      this.editDataExport.Size = new System.Drawing.Size(429, 191);
       this.editDataExport.TabIndex = 20;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);

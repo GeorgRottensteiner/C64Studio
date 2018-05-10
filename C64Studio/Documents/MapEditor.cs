@@ -85,6 +85,16 @@ namespace C64Studio
         comboExportData.Items.Add( new GR.Generic.Tupel<string,ExportType>( GR.EnumHelper.GetDescription( exportType ), exportType ) );
       }
 
+      comboCharScreens.Items.Add( new Types.ComboItem( "To new char screen project" ) );
+      foreach ( BaseDocument doc in Core.MainForm.panelMain.Documents )
+      {
+        if ( doc.DocumentInfo.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
+        {
+          comboCharScreens.Items.Add( new Types.ComboItem( doc.Name, doc ) );
+        }
+      }
+      comboCharScreens.SelectedIndex = 0;
+
       pictureEditor.MouseWheel += pictureEditor_MouseWheel;
       pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       pictureTileDisplay.ClientSize = new System.Drawing.Size( 256, 256 );
@@ -186,6 +196,32 @@ namespace C64Studio
 
     void MainForm_ApplicationEvent( C64Studio.Types.ApplicationEvent Event )
     {
+      if ( Event.EventType == C64Studio.Types.ApplicationEvent.Type.ELEMENT_CREATED )
+      {
+        if ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
+        {
+          string    nameToUse = Event.Doc.DocumentFilename ?? "New File";
+          comboCharScreens.Items.Add( new Types.ComboItem( nameToUse, Event.Doc ) );
+        }
+      }
+      if ( Event.EventType == C64Studio.Types.ApplicationEvent.Type.ELEMENT_REMOVED )
+      {
+        if ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
+        {
+          foreach ( Types.ComboItem comboItem in comboCharScreens.Items )
+          {
+            if ( (DocumentInfo)comboItem.Tag == Event.Doc )
+            {
+              comboCharScreens.Items.Remove( comboItem );
+              if ( comboCharScreens.SelectedIndex == -1 )
+              {
+                comboCharScreens.SelectedIndex = 0;
+              }
+              break;
+            }
+          }
+        }
+      }
     }
 
 
@@ -3210,6 +3246,75 @@ namespace C64Studio
       }
     }
 
+
+
+    private void btnExportToCharScreen_Click( object sender, EventArgs e )
+    {
+      if ( m_CurrentMap == null )
+      {
+        return;
+      }
+
+      GR.Memory.ByteBuffer      charData = new GR.Memory.ByteBuffer( (uint)( m_CurrentMap.Tiles.Width * m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Height * m_CurrentMap.TileSpacingY ) );
+      GR.Memory.ByteBuffer      colorData = new GR.Memory.ByteBuffer( (uint)( m_CurrentMap.Tiles.Width * m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Height * m_CurrentMap.TileSpacingY ) );
+
+      for ( int y = 0; y < m_CurrentMap.Tiles.Height; ++y )
+      {
+        for ( int x = 0; x < m_CurrentMap.Tiles.Width; ++x )
+        {
+          int tileIndex = m_CurrentMap.Tiles[x, y];
+          if ( tileIndex < m_MapProject.Tiles.Count )
+          {
+            // a real tile
+            var tile = m_MapProject.Tiles[tileIndex];
+
+            for ( int j = 0; j < tile.Chars.Height; ++j )
+            {
+              for ( int i = 0; i < tile.Chars.Width; ++i )
+              {
+                charData.SetU8At( x * m_CurrentMap.TileSpacingX + i + ( y * m_CurrentMap.TileSpacingY + j ) * ( m_CurrentMap.Tiles.Width * m_CurrentMap.TileSpacingX ), tile.Chars[i, j].Character );
+                colorData.SetU8At( x * m_CurrentMap.TileSpacingX + i + ( y * m_CurrentMap.TileSpacingY + j ) * ( m_CurrentMap.Tiles.Width * m_CurrentMap.TileSpacingX ), tile.Chars[i, j].Color );
+              }
+            }
+          }
+        }
+      }
+
+      Types.ComboItem comboItem = (Types.ComboItem)comboCharScreens.SelectedItem;
+      if ( comboItem.Tag == null )
+      {
+        // to new file
+        BaseDocument document = null;
+        if ( DocumentInfo.Project == null )
+        {
+          document = Core.MainForm.CreateNewDocument( ProjectElement.ElementType.CHARACTER_SCREEN, null );
+        }
+        else
+        {
+          document = Core.MainForm.CreateNewElement( ProjectElement.ElementType.CHARACTER_SCREEN, "Charset Screen", DocumentInfo.Project ).Document;
+        }
+        if ( document.DocumentInfo.Element != null )
+        {
+          document.SetDocumentFilename( "New Charset Screen.bas" );
+          document.DocumentInfo.Element.Filename = document.DocumentInfo.DocumentFilename;
+        }
+        CharsetScreenEditor   charEditor = (CharsetScreenEditor)document;
+        charEditor.ImportFromData( m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width,
+                                   m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height,
+                                   charData, colorData, m_MapProject.Charset );
+        document.SetModified();
+        document.Save();
+      }
+      else
+      {
+        BaseDocument document = (BaseDocument)comboItem.Tag;
+        CharsetScreenEditor   charEditor = (CharsetScreenEditor)document;
+        charEditor.ImportFromData( m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width,
+                                   m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height,
+                                   charData, colorData, m_MapProject.Charset );
+        document.SetModified();
+      }
+    }
 
   }
 }

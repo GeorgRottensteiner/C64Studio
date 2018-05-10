@@ -1,5 +1,8 @@
 ﻿C64Studio
 o export "to petscii" in the text screen editor
+o Charscreen editor: swapping character ranges in the charset with automated reindexing of the screen?
+o Map Editor: Export to charscreen
+o Charscreen editor: Open Charpad files
 o default open path for solutions/files
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
 o Code-Ergänzungvorschlag nicht nur für Labels/Variablen, sondern auch für Macros.

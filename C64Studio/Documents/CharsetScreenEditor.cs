@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using GR.Image;
 using GR.Memory;
+using C64Studio.Formats;
 
 namespace C64Studio
 {
@@ -2745,6 +2746,41 @@ namespace C64Studio
     }
 
 
+
+    public void ImportFromData( int Width, int Height, ByteBuffer CharData, ByteBuffer ColorData, CharsetProject Charset )
+    {
+      m_CharsetScreen.SetScreenSize( Width, Height );
+      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.BackgroundColor;
+      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.MultiColor1;
+      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.MultiColor2;
+      comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
+      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.BGColor4;
+      editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
+      editScreenHeight.Text = m_CharsetScreen.ScreenHeight.ToString();
+      AdjustScrollbars();
+
+      screenHScroll.Value = m_CharsetScreen.ScreenOffsetX;
+      screenVScroll.Value = m_CharsetScreen.ScreenOffsetY;
+
+      for ( int j = 0; j < Height; ++j )
+      {
+        for ( int i = 0; i < Width; ++i )
+        {
+          int     bufferIndex = i + j * Width;
+          m_CharsetScreen.Chars[bufferIndex] = (ushort)( CharData.ByteAt( bufferIndex ) + ( ColorData.ByteAt( bufferIndex ) << 8 ) );
+        }
+      }
+
+      ByteBuffer    CharsetProject = Charset.SaveToBuffer();
+      m_CharsetScreen.CharSet.ReadFromBuffer( CharsetProject );
+      for ( int i = 0; i < m_CharsetScreen.CharSet.NumCharacters; ++i )
+      {
+        RebuildCharImage( i );
+      }
+      RedrawFullScreen();
+      RedrawColorChooser();
+      Modified = true;
+    }
 
   }
 }

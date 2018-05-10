@@ -164,6 +164,8 @@
       this.button4 = new System.Windows.Forms.Button();
       this.button5 = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnExportToCharScreen = new System.Windows.Forms.Button();
+      this.comboCharScreens = new System.Windows.Forms.ComboBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -242,11 +244,14 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox1.Controls.Add(this.btnImportCharset);
       this.groupBox1.Controls.Add(this.btnImportFromFile);
       this.groupBox1.Location = new System.Drawing.Point(458, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(324, 343);
+      this.groupBox1.Size = new System.Drawing.Size(490, 461);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -273,6 +278,10 @@
       // 
       // groupExport
       // 
+      this.groupExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+      this.groupExport.Controls.Add(this.comboCharScreens);
+      this.groupExport.Controls.Add(this.btnExportToCharScreen);
       this.groupExport.Controls.Add(this.label6);
       this.groupExport.Controls.Add(this.comboExportData);
       this.groupExport.Controls.Add(this.label5);
@@ -287,7 +296,7 @@
       this.groupExport.Controls.Add(this.btnExportToData);
       this.groupExport.Location = new System.Drawing.Point(11, 6);
       this.groupExport.Name = "groupExport";
-      this.groupExport.Size = new System.Drawing.Size(441, 343);
+      this.groupExport.Size = new System.Drawing.Size(441, 461);
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
@@ -381,13 +390,14 @@
       // 
       // editDataExport
       // 
-      this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+      this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.editDataExport.Location = new System.Drawing.Point(6, 139);
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 198);
+      this.editDataExport.Size = new System.Drawing.Size(429, 316);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
@@ -1570,6 +1580,25 @@
       this.button5.Text = "as assembly source";
       this.button5.UseVisualStyleBackColor = true;
       // 
+      // btnExportToCharScreen
+      // 
+      this.btnExportToCharScreen.Location = new System.Drawing.Point(6, 110);
+      this.btnExportToCharScreen.Name = "btnExportToCharScreen";
+      this.btnExportToCharScreen.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToCharScreen.TabIndex = 12;
+      this.btnExportToCharScreen.Text = "To Charscreen";
+      this.btnExportToCharScreen.UseVisualStyleBackColor = true;
+      this.btnExportToCharScreen.Click += new System.EventHandler(this.btnExportToCharScreen_Click);
+      // 
+      // comboCharScreens
+      // 
+      this.comboCharScreens.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboCharScreens.FormattingEnabled = true;
+      this.comboCharScreens.Location = new System.Drawing.Point(118, 112);
+      this.comboCharScreens.Name = "comboCharScreens";
+      this.comboCharScreens.Size = new System.Drawing.Size(230, 21);
+      this.comboCharScreens.TabIndex = 13;
+      // 
       // MapEditor
       // 
       this.ClientSize = new System.Drawing.Size(964, 525);
@@ -1741,8 +1770,7 @@
     private System.Windows.Forms.Button btnCopyTileCharToNextIncreased;
     private System.Windows.Forms.ToolTip toolTip1;
     private System.Windows.Forms.Button btnSetNextTileChar;
-
-
-
+    private System.Windows.Forms.ComboBox comboCharScreens;
+    private System.Windows.Forms.Button btnExportToCharScreen;
   }
 }
