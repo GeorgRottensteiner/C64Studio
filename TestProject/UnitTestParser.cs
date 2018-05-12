@@ -1403,6 +1403,46 @@ GREEN=5
     }
 
 
+    [TestMethod]
+    public void TestMacroWithLocalLabels()
+    {
+      string      source = @"*=$0801
+        !basic
+        A_REG  = 256
+        X_REG  = 257
+        Y_REG  = 258
+        C_FLAG = 259
+        Z_FLAG = 260
+        N_FLAG = 261
+
+
+        !macro IF value1, type1, condition, value2, type2, distance
+           .error=1
+           !if value1 = A_REG {
+              !if value2 = X_REG {
+                    .error=0
+                    stx .cpyval+1
+                 .cpyval
+                    cpy #$ff
+              }
+        }
+
+           !if .error=1 {
+              !error 'E'
+           }
+        !end
+
+
+        ;+IF value1, type1, condition, value2, type2, distance
+        +IF A_REG, 0, 0, X_REG, 0, 0
+        +IF A_REG, 0, 0, X_REG, 0, 0 ; sollte ich das hier auskommentieren, dann gehts
+            rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "01080B080A009E323036310000008E1108C0FF8E1608C0FF60", assembly.ToString() );
+    }
+
 
   }
 }

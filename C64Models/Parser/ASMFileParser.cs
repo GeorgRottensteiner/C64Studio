@@ -8674,8 +8674,18 @@ namespace C64Studio.Parser
                   modifiedToken = true;
                   //tokens.RemoveAt( tokenIndex );
                   //tokens.InsertRange( tokenIndex, tempTokens );
-
-                  replacingTokens.AddRange( tempTokens );
+                  if ( !ScopeInsideLoop( Scopes ) )
+                  {
+                    //token.Content = functionName + "_" + i.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
+                    token.Content = functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
+                  }
+                  else
+                  {
+                    // need to take loop into account, force new local label!
+                    token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
+                                  + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + "_" + token.Content;
+                  }
+                  replacingTokens.Add( token );
                 }
                 /*
                 // re-position following tokens

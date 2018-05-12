@@ -1,8 +1,7 @@
 ﻿C64Studio
-o export "to petscii" in the text screen editor
+o export "to petscii" in the text screen editor <- test mit vollem charscreen mit allen Werten
 o Charscreen editor: swapping character ranges in the charset with automated reindexing of the screen?
 o default open path for solutions/files
-o Disassembler: Bytes anzeigen ($0801: >> a5 d0 <<   lda #d0...)
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
 o Code-Ergänzungvorschlag nicht nur für Labels/Variablen, sondern auch für Macros.
 o Beim suchen uns ersetzen scheint er seltsam die Suchergebnisse zu ersetzen. Alle ersetzen funzt, wenn ich aber zuerst auf Suchen klicke 
