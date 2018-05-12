@@ -411,7 +411,7 @@ namespace C64Studio
     {
       SaveFileDialog    saveDialog = new SaveFileDialog();
 
-      saveDialog.Title = "Choose binary file";
+      saveDialog.Title = "Choose project file name";
       saveDialog.Filter = "Disassembly Projects|*.disassembly|All Files|*.*";
       if ( saveDialog.ShowDialog() == DialogResult.OK )
       {

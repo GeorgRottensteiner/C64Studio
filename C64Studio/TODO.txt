@@ -2,6 +2,7 @@
 o export "to petscii" in the text screen editor
 o Charscreen editor: swapping character ranges in the charset with automated reindexing of the screen?
 o default open path for solutions/files
+o Disassembler: Bytes anzeigen ($0801: >> a5 d0 <<   lda #d0...)
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
 o Code-Ergänzungvorschlag nicht nur für Labels/Variablen, sondern auch für Macros.
 o Beim suchen uns ersetzen scheint er seltsam die Suchergebnisse zu ersetzen. Alle ersetzen funzt, wenn ich aber zuerst auf Suchen klicke 
@@ -25,7 +26,7 @@ o BASIC: Renumber nur von Ausschnitten
 o BASIC: Einzelne Zeilennummer ändern (mit Referenzen die angepasst werden)
 o BASIC: Keymapping Default: Z ist nicht auf Y gemappt (aber Y auf Z)
 o BASIC: Snippet-Wizard
-o BASIC: alls isch da bisher etwas übersehen haben sollte, habe ich eine Anregung für einen neuen Editor: 
+o BASIC: falls ich da bisher etwas übersehen haben sollte, habe ich eine Anregung für einen neuen Editor: 
   Memorymap in Basic erstellen, d.h.:
   4. Memory Map für Basic
   Einstellen des Basicstarts mit den Pokes auf z. B. $401

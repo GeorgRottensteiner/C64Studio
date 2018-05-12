@@ -188,7 +188,8 @@ namespace C64Studio.Parser
         {
           sb.Append( ExportStartAddress.ToString( "X4" ) + ":" );
         }
-        sb.Append( "          !byte " );
+        //sb.Append( "          !byte " );
+        sb.Append( "!byte " );
         for ( int i = 0; i < wrapSize; ++i )
         {
           sb.Append( "$" + Data.ByteAt( ExportStartAddress - DataStartAddress + i ).ToString( "X2" ) );
@@ -208,7 +209,8 @@ namespace C64Studio.Parser
         {
           sb.Append( ExportStartAddress.ToString( "X4" ) + ":" );
         }
-        sb.Append( "          !byte " );
+        //sb.Append( "          !byte " );
+        sb.Append( "!byte " );
         for ( int i = 0; i < Length; ++i )
         {
           sb.Append( "$" + Data.ByteAt( ExportStartAddress - DataStartAddress + i ).ToString( "X2" ) );
@@ -439,11 +441,18 @@ namespace C64Studio.Parser
           GR.Generic.Tupel<Tiny64.Opcode, ushort> instruction = disassembly[(ushort)trueAddress];
           if ( AddLineAddresses )
           {
-            sb.Append( trueAddress.ToString( "X4" ) + ":" );
+            sb.Append( trueAddress.ToString( "X4" ) + ": " );
           }
 
           if ( accessedAddresses.ContainsValue( (ushort)trueAddress ) )
           {
+            // line break in front of named label
+            sb.AppendLine();
+            if ( AddLineAddresses )
+            {
+              sb.Append( trueAddress.ToString( "X4" ) + ": " );
+            }
+
             if ( NamedLabels.ContainsKey( trueAddress ) )
             {
               sb.AppendLine( NamedLabels[trueAddress] );
@@ -454,20 +463,47 @@ namespace C64Studio.Parser
             }
             if ( AddLineAddresses )
             {
-              sb.Append( trueAddress.ToString( "X4" ) + ":" );
+              sb.Append( trueAddress.ToString( "X4" ) + ": " );
             }
           }
           else if ( NamedLabels.ContainsKey( trueAddress ) )
           {
-            sb.AppendLine( NamedLabels[trueAddress] );
-
+            // line break in front of named label
+            sb.AppendLine();
             if ( AddLineAddresses )
             {
-              sb.Append( trueAddress.ToString( "X4" ) + ":" );
+              sb.Append( trueAddress.ToString( "X4" ) + ": " );
+            }
+
+            sb.AppendLine( NamedLabels[trueAddress] );
+            if ( AddLineAddresses )
+            {
+              sb.Append( trueAddress.ToString( "X4" ) + ": " );
             }
           }
 
-          sb.Append( "          " + MnemonicToString( instruction.first, m_SourceData, DataStartAddress, trueAddress, accessedAddresses, NamedLabels ) );
+          sb.Append( " " );
+          sb.Append( instruction.first.ByteValue.ToString( "X2" ) );
+
+          switch ( instruction.first.NumOperands )
+          {
+            case 0:
+              sb.Append( "      " );
+              break;
+            case 1:
+              sb.Append( " " );
+              sb.Append( ( instruction.second & 0xff ).ToString( "X2" ) );
+              sb.Append( "   " );
+              break;
+            case 2:
+              sb.Append( " " );
+              sb.Append( ( instruction.second & 0xff ).ToString( "X2" ) );
+              sb.Append( " " );
+              sb.Append( ( instruction.second >> 8 ).ToString( "X2" ) );
+              break;
+          }
+          //sb.Append( "          " + MnemonicToString( instruction.first, m_SourceData, DataStartAddress, trueAddress, accessedAddresses, NamedLabels ) );
+          sb.Append( "   " + MnemonicToString( instruction.first, m_SourceData, DataStartAddress, trueAddress, accessedAddresses, NamedLabels ) );
           sb.Append( "\r\n" );
           //Debug.Log( output );
           trueAddress += instruction.first.NumOperands + 1;

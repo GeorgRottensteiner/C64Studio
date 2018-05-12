@@ -34,6 +34,7 @@
       this.panel1 = new System.Windows.Forms.Panel();
       this.btnOpenBinary = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.btnImportFromBinary = new System.Windows.Forms.Button();
       this.editStartAddress = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
       this.btnExportToASM = new System.Windows.Forms.Button();
@@ -62,7 +63,8 @@
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnImportFromBinary = new System.Windows.Forms.Button();
+      this.label3 = new System.Windows.Forms.Label();
+      this.label4 = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).BeginInit();
       this.panel1.SuspendLayout();
@@ -104,7 +106,7 @@
       this.editDisassembly.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
       this.editDisassembly.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("editDisassembly.ServiceColors")));
       this.editDisassembly.ShowLineNumbers = false;
-      this.editDisassembly.Size = new System.Drawing.Size(430, 618);
+      this.editDisassembly.Size = new System.Drawing.Size(456, 618);
       this.editDisassembly.TabIndex = 1;
       this.editDisassembly.TabLength = 2;
       this.editDisassembly.Zoom = 100;
@@ -116,7 +118,7 @@
       this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.panel1.Location = new System.Drawing.Point(3, 3);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(434, 622);
+      this.panel1.Size = new System.Drawing.Size(460, 622);
       this.panel1.TabIndex = 2;
       // 
       // btnOpenBinary
@@ -131,17 +133,30 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox1.Controls.Add(this.btnImportFromBinary);
       this.groupBox1.Controls.Add(this.editStartAddress);
       this.groupBox1.Controls.Add(this.label1);
       this.groupBox1.Controls.Add(this.btnExportToASM);
       this.groupBox1.Controls.Add(this.btnOpenBinary);
-      this.groupBox1.Location = new System.Drawing.Point(466, 14);
+      this.groupBox1.Location = new System.Drawing.Point(492, 14);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(395, 80);
+      this.groupBox1.Size = new System.Drawing.Size(464, 80);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Data";
+      // 
+      // btnImportFromBinary
+      // 
+      this.btnImportFromBinary.Location = new System.Drawing.Point(134, 48);
+      this.btnImportFromBinary.Name = "btnImportFromBinary";
+      this.btnImportFromBinary.Size = new System.Drawing.Size(122, 23);
+      this.btnImportFromBinary.TabIndex = 3;
+      this.btnImportFromBinary.Text = "Binary from clipboard";
+      this.toolTip1.SetToolTip(this.btnImportFromBinary, "Binary from clipboard");
+      this.btnImportFromBinary.UseVisualStyleBackColor = true;
+      this.btnImportFromBinary.Click += new System.EventHandler(this.btnImportBinary_Click);
       // 
       // editStartAddress
       // 
@@ -176,7 +191,7 @@
       this.groupBox2.Controls.Add(this.btnAddJumpAddress);
       this.groupBox2.Controls.Add(this.editJumpAddress);
       this.groupBox2.Controls.Add(this.listJumpedAtAddresses);
-      this.groupBox2.Location = new System.Drawing.Point(466, 100);
+      this.groupBox2.Location = new System.Drawing.Point(492, 100);
       this.groupBox2.Name = "groupBox2";
       this.groupBox2.Size = new System.Drawing.Size(182, 197);
       this.groupBox2.TabIndex = 4;
@@ -243,7 +258,7 @@
       this.tabContent.Location = new System.Drawing.Point(12, 14);
       this.tabContent.Name = "tabContent";
       this.tabContent.SelectedIndex = 0;
-      this.tabContent.Size = new System.Drawing.Size(448, 654);
+      this.tabContent.Size = new System.Drawing.Size(474, 654);
       this.tabContent.TabIndex = 5;
       // 
       // tabDisassembly
@@ -252,7 +267,7 @@
       this.tabDisassembly.Location = new System.Drawing.Point(4, 22);
       this.tabDisassembly.Name = "tabDisassembly";
       this.tabDisassembly.Padding = new System.Windows.Forms.Padding(3);
-      this.tabDisassembly.Size = new System.Drawing.Size(440, 628);
+      this.tabDisassembly.Size = new System.Drawing.Size(466, 628);
       this.tabDisassembly.TabIndex = 0;
       this.tabDisassembly.Text = "Disassembly";
       this.tabDisassembly.UseVisualStyleBackColor = true;
@@ -279,6 +294,7 @@
       this.hexView.LineInfoVisible = true;
       this.hexView.Location = new System.Drawing.Point(3, 3);
       this.hexView.Name = "hexView";
+      this.hexView.NumDigitsMemorySize = 8;
       this.hexView.SelectedByteProvider = null;
       this.hexView.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
       this.hexView.Size = new System.Drawing.Size(434, 622);
@@ -290,13 +306,15 @@
       // 
       // groupBox3
       // 
+      this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox3.Controls.Add(this.btnSaveProject);
       this.groupBox3.Controls.Add(this.btnOpenProject);
       this.groupBox3.Controls.Add(this.editDisassemblyProjectName);
       this.groupBox3.Controls.Add(this.label2);
-      this.groupBox3.Location = new System.Drawing.Point(466, 303);
+      this.groupBox3.Location = new System.Drawing.Point(492, 303);
       this.groupBox3.Name = "groupBox3";
-      this.groupBox3.Size = new System.Drawing.Size(395, 77);
+      this.groupBox3.Size = new System.Drawing.Size(464, 77);
       this.groupBox3.TabIndex = 6;
       this.groupBox3.TabStop = false;
       this.groupBox3.Text = "Disassembly Project";
@@ -342,14 +360,16 @@
       // 
       this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.groupBox4.Controls.Add(this.label4);
+      this.groupBox4.Controls.Add(this.label3);
       this.groupBox4.Controls.Add(this.btnDeleteNamedLabel);
       this.groupBox4.Controls.Add(this.btnAddNamedLabel);
       this.groupBox4.Controls.Add(this.editLabelAddress);
       this.groupBox4.Controls.Add(this.editLabelName);
       this.groupBox4.Controls.Add(this.listNamedLabels);
-      this.groupBox4.Location = new System.Drawing.Point(654, 100);
+      this.groupBox4.Location = new System.Drawing.Point(680, 100);
       this.groupBox4.Name = "groupBox4";
-      this.groupBox4.Size = new System.Drawing.Size(207, 197);
+      this.groupBox4.Size = new System.Drawing.Size(276, 197);
       this.groupBox4.TabIndex = 4;
       this.groupBox4.TabStop = false;
       this.groupBox4.Text = "Named Labels";
@@ -369,7 +389,7 @@
       // 
       this.btnAddNamedLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
       this.btnAddNamedLabel.Enabled = false;
-      this.btnAddNamedLabel.Location = new System.Drawing.Point(137, 43);
+      this.btnAddNamedLabel.Location = new System.Drawing.Point(206, 42);
       this.btnAddNamedLabel.Name = "btnAddNamedLabel";
       this.btnAddNamedLabel.Size = new System.Drawing.Size(64, 22);
       this.btnAddNamedLabel.TabIndex = 2;
@@ -379,9 +399,9 @@
       // 
       // editLabelAddress
       // 
-      this.editLabelAddress.Location = new System.Drawing.Point(6, 45);
+      this.editLabelAddress.Location = new System.Drawing.Point(53, 44);
       this.editLabelAddress.Name = "editLabelAddress";
-      this.editLabelAddress.Size = new System.Drawing.Size(125, 20);
+      this.editLabelAddress.Size = new System.Drawing.Size(147, 20);
       this.editLabelAddress.TabIndex = 1;
       this.toolTip1.SetToolTip(this.editLabelAddress, "Label Address\r\n$XXXX or 0xXXXX for hex, otherwise decimal");
       this.editLabelAddress.TextChanged += new System.EventHandler(this.editLabelAddress_TextChanged);
@@ -390,9 +410,9 @@
       // 
       this.editLabelName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.editLabelName.Location = new System.Drawing.Point(6, 19);
+      this.editLabelName.Location = new System.Drawing.Point(53, 19);
       this.editLabelName.Name = "editLabelName";
-      this.editLabelName.Size = new System.Drawing.Size(195, 20);
+      this.editLabelName.Size = new System.Drawing.Size(217, 20);
       this.editLabelName.TabIndex = 1;
       this.toolTip1.SetToolTip(this.editLabelName, "Label Name");
       // 
@@ -405,7 +425,7 @@
             this.columnHeader4});
       this.listNamedLabels.Location = new System.Drawing.Point(6, 70);
       this.listNamedLabels.Name = "listNamedLabels";
-      this.listNamedLabels.Size = new System.Drawing.Size(195, 93);
+      this.listNamedLabels.Size = new System.Drawing.Size(264, 93);
       this.listNamedLabels.TabIndex = 0;
       this.listNamedLabels.UseCompatibleStateImageBehavior = false;
       this.listNamedLabels.View = System.Windows.Forms.View.Details;
@@ -414,32 +434,40 @@
       // columnHeader3
       // 
       this.columnHeader3.Text = "Label";
-      this.columnHeader3.Width = 90;
+      this.columnHeader3.Width = 132;
       // 
       // columnHeader4
       // 
       this.columnHeader4.Text = "Address";
+      this.columnHeader4.Width = 106;
       // 
       // toolTip1
       // 
       this.toolTip1.ShowAlways = true;
       // 
-      // btnImportFromBinary
+      // label3
       // 
-      this.btnImportFromBinary.Location = new System.Drawing.Point(134, 48);
-      this.btnImportFromBinary.Name = "btnImportFromBinary";
-      this.btnImportFromBinary.Size = new System.Drawing.Size(122, 23);
-      this.btnImportFromBinary.TabIndex = 3;
-      this.btnImportFromBinary.Text = "Binary from clipboard";
-      this.toolTip1.SetToolTip(this.btnImportFromBinary, "Binary from clipboard");
-      this.btnImportFromBinary.UseVisualStyleBackColor = true;
-      this.btnImportFromBinary.Click += new System.EventHandler(this.btnImportBinary_Click);
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(9, 24);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(38, 13);
+      this.label3.TabIndex = 3;
+      this.label3.Text = "Name:";
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(9, 47);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(37, 13);
+      this.label4.TabIndex = 3;
+      this.label4.Text = "Value:";
       // 
       // Disassembler
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(873, 680);
+      this.ClientSize = new System.Drawing.Size(968, 680);
       this.Controls.Add(this.groupBox3);
       this.Controls.Add(this.tabContent);
       this.Controls.Add(this.groupBox4);
@@ -504,5 +532,7 @@
     private System.Windows.Forms.ColumnHeader columnHeader4;
     private System.Windows.Forms.ToolTip toolTip1;
     private System.Windows.Forms.Button btnImportFromBinary;
+    private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.Label label3;
   }
 }
