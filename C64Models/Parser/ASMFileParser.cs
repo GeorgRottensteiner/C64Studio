@@ -2940,7 +2940,7 @@ namespace C64Studio.Parser
           Lines[lastLoop.LineIndex] = ";ex for loop";
           Lines[lineIndex] = ";ex loop end";
 
-          Debug.Log( "Cloning last loop for " + lastLoop.Label );
+          //Debug.Log( "Cloning last loop for " + lastLoop.Label );
           CloneTempLabelsExcept( lastLoop.LineIndex, lastLoop.LoopLength, lineIndex - lastLoop.LoopLength - 1, lastLoop.Label );
 
           DumpTempLabelInfos( "__hla_STACK0" );
@@ -2987,7 +2987,7 @@ namespace C64Studio.Parser
           // also copy scoped variables if overlapping!!!
           if ( !endReached )
           {
-            Debug.Log( "Cloning loop " + lastLoop.CurrentValue + "/" + lastLoop.EndValue + " for " + lastLoop.Label );
+            //Debug.Log( "Cloning loop " + lastLoop.CurrentValue + "/" + lastLoop.EndValue + " for " + lastLoop.Label );
             CloneTempLabelsExcept( lastLoop.LineIndex, linesToCopy, lineIndex - 1, lastLoop.Label );
             DumpTempLabelInfos( "__hla_STACK0" );
           }
