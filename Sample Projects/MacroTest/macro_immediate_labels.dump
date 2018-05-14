@@ -1,0 +1,18 @@
+00  0801              * = $0801
+01  0801              !macro SOME_MACRO
+02  ????              cmp #4
+03  ????              bne +
+04  ????              jmp $0870
+05  ????              +
+06  ????              !end
+07  0801              
+08  0801              
+09  0801  D0 07       bne +
+10  0803              
+11  0803  C9 04       cmp #4
+12  0805  D0          bne +_c64studiointernal_SOME_MACRO_1_10
+13  0807  4C 70 08    jmp $0870
+14  080A              +_c64studiointernal_SOME_MACRO_1_10
+15  080A              +
+16  080A              
+17  080A  60          rts

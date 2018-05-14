@@ -4410,26 +4410,30 @@ namespace C64Studio
     {
       BaseDocument baseDocToCompile = ActiveContent;
       if ( ( baseDocToCompile != null )
-      && ( !baseDocToCompile.DocumentInfo.Compilable ) )
+      &&   ( !baseDocToCompile.DocumentInfo.Compilable ) )
       {
         baseDocToCompile = ActiveDocument;
+      }
+      if ( baseDocToCompile == null )
+      {
+        return null;
       }
 
       DocumentInfo docToCompile = baseDocToCompile.DocumentInfo;
 
       // if there is a main document AND we are part of it's compile chain
       if ( ( docToCompile.Element != null )
-      && ( !string.IsNullOrEmpty( docToCompile.Project.Settings.MainDocument ) ) )
+      &&   ( !string.IsNullOrEmpty( docToCompile.Project.Settings.MainDocument ) ) )
       {
         ProjectElement element = docToCompile.Project.GetElementByFilename(docToCompile.Project.Settings.MainDocument);
         if ( ( element != null )
-        && ( element.Document != null ) )
+        &&   ( element.Document != null ) )
         {
           if ( docToCompile != null )
           {
             if ( ( docToCompile.Compilable )
-            && ( !element.DocumentInfo.ASMFileInfo.IsDocumentPart( docToCompile.FullPath ) )
-            && ( !element.IsDependentOn( docToCompile.FullPath ) ) )
+            &&   ( !element.DocumentInfo.ASMFileInfo.IsDocumentPart( docToCompile.FullPath ) )
+            &&   ( !element.IsDependentOn( docToCompile.FullPath ) ) )
             {
               return docToCompile;
             }
@@ -4439,7 +4443,7 @@ namespace C64Studio
       }
 
       if ( ( docToCompile == null )
-      || ( !docToCompile.Compilable ) )
+      ||   ( !docToCompile.Compilable ) )
       {
         return null;
       }

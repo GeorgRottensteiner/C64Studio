@@ -1,30 +1,18 @@
 * = $2000
-
-REGISTER = 1
-A_REG = 2
-Y_REG = 3
-X_REG = 4
-
-
-
-IF_7_31_.error=1
-!if ╚REGISTER╝=REGISTER & ╚REGISTER╝=REGISTER {
-!if ╚A_REG╝=A_REG& Y_REG =X_REG {
-IF_7_31_.error=0
-stx IF_7_31_.tmp+1
-IF_7_31_.tmp:
-cmp #$ff
-}
-
-!if ╚A_REG╝=A_REG& Y_REG =Y_REG {
-IF_7_31_.error=0 ; <========================= HIER
-}
-
-
-}
-
-!if IF_7_31_.error=1 {
-!error "Wrong Parameters in 'IF'"
-}
-
-rts
+                           CHARACTER_ROM   = 1024
+                           CUSTOM_CHAR_SET = $4000
+                           !macro copy_character_range_from_rom start, end 
+                           ;removed some code for simplicity 
+                           ; Copy char rom to ram 
+                           !for char = start to end 
+                           ldx #0 
+                           - 
+                           lda CHARACTER_ROM + char*8, x 
+                           sta CUSTOM_CHAR_SET + char*8, x 
+                           inx 
+                           cpx #8 
+                           bne - 
+                           !end 
+                           !end
+                           +copy_character_range_from_rom 0, 2
+                           rts

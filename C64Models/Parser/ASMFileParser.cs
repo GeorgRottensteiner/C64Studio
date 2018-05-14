@@ -286,13 +286,6 @@ namespace C64Studio.Parser
 
     public Types.ASM.TemporaryLabelInfo AddTempLabel( string Name, int LineIndex, int LineCount, int Value, string Info, int CharIndex, int Length )
     {
-      if ( ( Name == "__hla_STACK0" )
-      &&   ( Value == 2088 )
-      &&   ( LineIndex == 840 )
-      &&   ( LineCount == 853 - 840 + 1 ) )
-      {
-        Debug.Log( "aha" );
-      }
       foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
       {
         if ( oldTempInfo.Name == Name )
@@ -2910,6 +2903,9 @@ namespace C64Studio.Parser
         {
           lastLoop.Content = new string[lastLoop.LoopLength];
           System.Array.Copy( Lines, lastLoop.LineIndex + 1, lastLoop.Content, 0, lastLoop.LoopLength );
+
+          // fix up internal labels
+          lastLoop.Content = RelabelLocalLabelsForLoop( lastLoop.Content, ScopeList, lineIndex );
         }
 
         // label exists only after !for
@@ -2982,6 +2978,9 @@ namespace C64Studio.Parser
           System.Array.Copy( Lines, 0, newLines, 0, lineIndex );
           System.Array.Copy( lastLoop.Content, 0, newLines, lineIndex, linesToCopy );
           System.Array.Copy( Lines, lineIndex + lineLoopEndOffset, newLines, lineIndex + linesToCopy, Lines.Length - lineIndex - lineLoopEndOffset );
+
+          // fix up internal labels
+          lastLoop.Content = RelabelLocalLabelsForLoop( lastLoop.Content, ScopeList, lineIndex );
 
           DumpLines( newLines, "b" );
 
@@ -6083,11 +6082,13 @@ namespace C64Studio.Parser
             previousMinusLabel[lineTokenInfos[0].Content] = InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString();
           }
         }
+        // identify internal labels as such
         if ( ( lineTokenInfos[0].Type != C64Studio.Types.TokenInfo.TokenType.CALL_MACRO )
         &&   ( ( lineTokenInfos[0].Content.StartsWith( "-" ) )
         ||     ( lineTokenInfos[0].Content.StartsWith( "+" ) ) ) )
         {
           lineTokenInfos[0].Content = InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString();
+          lineTokenInfos[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
         }
 
         string  upToken = lineTokenInfos[0].Content.ToUpper();
@@ -8630,7 +8631,8 @@ namespace C64Studio.Parser
           // may look useless, but stores actual content in token
           token.Content = token.Content;
           if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-          ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+          ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+          ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
           {
             bool                    tokenIsExpression = false;
             List<Types.TokenInfo>   tempTokens = new List<C64Studio.Types.TokenInfo>();
@@ -8689,7 +8691,8 @@ namespace C64Studio.Parser
               }
             }
             // Dasm - Macro local labels start with ., add macro and LINE and loop specific prefix
-            if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+            if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+            ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
             {
               tokenIsExpression = true;
               if ( tokenIsExpression )
@@ -8699,7 +8702,16 @@ namespace C64Studio.Parser
                   modifiedToken = true;
                   //tokens.RemoveAt( tokenIndex );
                   //tokens.InsertRange( tokenIndex, tempTokens );
-                  if ( !ScopeInsideLoop( Scopes ) )
+                  if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+                  {
+                    // TODO - take i in account, 
+                    //token.Content = "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + token.Content;
+                    token.Content += InternalLabelPrefix + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes );
+                    //token.Content = token.Content.Replace( "+", "_plus_" );
+                    //token.Content = token.Content.Replace( "-", "_minus_" );
+                    //Debug.Log( "Replaced internal label in line " + i + " with " + token.Content );
+                  }
+                  else if ( !ScopeInsideLoop( Scopes ) )
                   {
                     // uniquefy labels
                     token.Content = "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
@@ -8775,10 +8787,12 @@ namespace C64Studio.Parser
         List<Types.TokenInfo> tokens = ParseTokenInfo( Lines[i], 0, Lines[i].Length );
         bool replacedParam = false;
 
+        int   tokenIndex = 0;
         foreach ( Types.TokenInfo token in tokens )
         {
           if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-          || ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+          ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+          ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
           {
             // Dasm - Macro local labels start with ., add macro and LINE and loop specific prefix
             if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
@@ -8788,7 +8802,16 @@ namespace C64Studio.Parser
                             + GetLoopGUID( Scopes ) + "_" + i.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
               replacedParam = true;
             }
+            else if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+            {
+              // need to take loop into account, force new local label!
+              //token.Content += GetLoopGUID( Scopes ) + "_" + i.ToString() + "_" + lineIndex.ToString();
+              token.Content += GetLoopGUID( Scopes ) + "_" + lineIndex.ToString();
+              //Debug.Log( "RelabelLocalLabelsForLoop Replaced internal label at line " + i + " in loop with " + token.Content );
+              replacedParam = true;
+            }
           }
+          ++tokenIndex;
         }
         if ( replacedParam )
         {
@@ -10859,7 +10882,50 @@ namespace C64Studio.Parser
             result[i].Type = Types.TokenInfo.TokenType.LABEL_INTERNAL;
             result.RemoveAt( i + 1 );
             i = -1;
+            continue;
           }
+          // internal label in front
+          if ( ( result[i].Type == TokenInfo.TokenType.OPERATOR )
+          &&   ( ( result[i].Content.StartsWith( "+" ) )
+          ||     ( result[i].Content.StartsWith( "-" ) ) ) )
+          {
+            // is directly connected to global label then the internal label is split
+            if ( ( result.Count > 1 )
+            &&   ( result[i + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+            &&   ( result[i + 1].StartPos == result[i].StartPos + result[i].Length )
+            &&   ( result[i + 1].Content.StartsWith( InternalLabelPrefix ) ) )
+            {
+              result[i].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+              result[i].Content += result[i + 1].Content;
+              result[i].Length += result[i + 1].Length;
+              result.RemoveAt( i + 1 );
+              i = -1;
+              continue;
+            }
+          }
+        }
+        // opcode followed by internal label?
+        if ( ( result[0].Type == TokenInfo.TokenType.OPCODE )
+        ||   ( result[0].Type == TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
+        ||   ( result[0].Type == TokenInfo.TokenType.OPCODE_FIXED_ZP )
+        ||   ( result[0].Type == TokenInfo.TokenType.OPCODE_DIRECT_VALUE ) )
+        {
+          if ( ( result[1].Type == TokenInfo.TokenType.OPERATOR )
+          &&   ( ( result[1].Content.StartsWith( "+" ) )
+          ||     ( result[1].Content.StartsWith( "-" ) ) ) )
+          {
+            result[1].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+          }
+        }
+      }
+      if ( result.Count >= 1 )
+      {
+        // starting with internal label?
+        if ( ( result[0].Type == TokenInfo.TokenType.OPERATOR )
+        &&   ( ( result[0].Content.StartsWith( "+" ) )
+        ||     ( result[0].Content.StartsWith( "-" ) ) ) )
+        {
+          result[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
         }
       }
       return result;
