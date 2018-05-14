@@ -1,0 +1,17 @@
+00  ----              
+01  C000              *=$c000
+02  C000              
+03  C000              STACK_LEVEL0 = 0
+04  C000              GLOBAL_VAR = 3
+05  C000              
+06  C000              !macro PUSH value
+07  ????              ; some fancy code to move stack values down
+08  ????              STACK_LEVEL0=value
+09  ????              !end
+10  C000              
+11  C000              !macro SOME_MACRO_THAT_USES_PUSH
+12  ????              +PUSH 7
+13  ????              !end
+14  C000              
+15  C000              
+16  C000              +c64_local_labelSOME_MACRO_THAT_USES_PUSH_11_15_PUSH 7

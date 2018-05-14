@@ -1,0 +1,90 @@
+00  0801              * = $0801
+01  0801              
+02  0801              stab_irq_line = $30
+03  0801              
+04  0801  0B 08 0A 00 9E 32 30 36 31 00 00 00  !basic
+05  080D              
+06  080D              ekran1 = $0400
+07  080D              
+08  080D              
+09  080D              !macro IRQ_SETUP irq_proc, irq_line
+10  ????              lda #<(irq_line)
+11  ????              sta $d012
+12  ????              lda $d011
+13  ????              and #$7f
+14  ????              ora #(>(irq_line) << 7 )
+15  ????              sta $d011
+16  ????              lda #<irq_proc
+17  ????              sta $fffe
+18  ????              lda #>irq_proc
+19  ????              sta $ffff
+20  ????              !end
+21  080D              
+22  080D              
+23  080D              
+24  080D              
+25  080D              !macro FILL_MEM add, pages, val
+26  ????              lda #<add
+27  ????              sta $02
+28  ????              lda #>add
+29  ????              sta $03
+30  ????              ldy #0
+31  ????              lda #val
+32  ????              ldx #pages
+33  ????              -           sta ($02),y
+34  ????              iny
+35  ????              bne -
+36  ????              inc $03
+37  ????              dex
+38  ????              bne -
+39  ????              !end
+40  080D              
+41  080D              !macro SYNC
+42  ????              lda $d011
+43  ????              bpl *-3
+44  ????              lda $d011
+45  ????              bmi *-3
+46  ????              !end
+47  080D              
+48  080D              
+49  080D  A9 30       lda #<(stab_irq_line)
+50  080F  8D 12 D0    sta $d012
+51  0812  AD 11 D0    lda $d011
+52  0815  29 7F       and #$7f
+53  0817  09 00       ora #(>(stab_irq_line)<<7)
+54  0819  8D 11 D0    sta $d011
+55  081C  A9 26       lda #<╚stab_irq╝
+56  081E  8D FE FF    sta $fffe
+57  0821  A9 08       lda #>╚stab_irq╝
+58  0823  8D FF FF    sta $ffff
+59  0826              
+60  0826              stab_irq
+61  0826              
+62  0826  78          sei
+63  0827              
+64  0827  AD 11 D0    lda $d011
+65  082A  10 FB       bpl *-3
+66  082C  AD 11 D0    lda $d011
+67  082F  30 FB       bmi *-3
+68  0831  A9 00       lda #$00
+69  0833  8D 11 D0    sta $d011
+70  0836              
+71  0836              
+72  0836  A9 00       lda #<╚ekran1╝
+73  0838  85 02       sta $02
+74  083A  A9 04       lda #>╚ekran1╝
+75  083C  85 03       sta $03
+76  083E  A0 00       ldy #0
+77  0840  A9 1B       lda #$1b
+78  0842  A2 04       ldx #╚4╝
+79  0844  91 02       -           sta ($02),y
+80  0846  C8          iny
+81  0847  D0          bne -c64_local_labelFILL_MEM_25_71_
+82  0849  E6 03       inc $03
+83  084B  CA          dex
+84  084C  D0          bne -c64_local_labelFILL_MEM_25_71_
+85  084E              
+86  084E              
+87  084E              
+88  084E              .Loop
+89  084E  4C 4E 08    jmp .Loop

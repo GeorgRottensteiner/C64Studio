@@ -5101,7 +5101,7 @@ namespace C64Studio.Parser
         info.LineData.AppendU8( fillValue );
         if ( programStepPos == 65536 )
         {
-          AddError( lineIndex, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Program step pos out of bounds, check align condition" );
+          AddError( lineIndex, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Program step pos out of bounds, check !align condition" );
           return ParseLineResult.RETURN_NULL;
         }
       }
@@ -8620,6 +8620,32 @@ namespace C64Studio.Parser
           LineIndexInsideMacro = i;
           return null;
         }
+        if ( tokens.Count > 1 )
+        {
+          if ( ( tokens[0].Type == TokenInfo.TokenType.OPERATOR )
+          &&   ( ( tokens[0].Content.StartsWith( "+" ) )
+          ||     ( tokens[0].Content.StartsWith( "-" ) ) ) )
+          {
+            if ( ( tokens.Count > 1 )
+            &&   ( tokens[1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+            &&   ( tokens[1].StartPos == tokens[0].StartPos + tokens[0].Length )
+            &&   ( tokens[1].Content.StartsWith( InternalLabelPrefix ) ) )
+            {
+              tokens[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+            }
+            else if ( ( tokens.Count > 1 )
+            &&        ( tokens[1].StartPos > tokens[0].StartPos + tokens[0].Length ) )
+            {
+              // not directly connected to anything
+              tokens[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+            }
+            else if ( tokens.Count == 1 )
+            {
+              tokens[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+            }
+            //tokens[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+          }
+        }
         bool replacedParam = false;
         bool modifiedToken = false;
 
@@ -10925,7 +10951,17 @@ namespace C64Studio.Parser
         &&   ( ( result[0].Content.StartsWith( "+" ) )
         ||     ( result[0].Content.StartsWith( "-" ) ) ) )
         {
-          result[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+          if ( ( result.Count > 1 )
+          &&   ( result[1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+          &&   ( result[1].StartPos == result[0].StartPos + result[0].Length )
+          &&   ( result[1].Content.StartsWith( InternalLabelPrefix ) ) )
+          {
+            result[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+          }
+          else if ( result.Count == 1 )
+          {
+            result[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+          }
         }
       }
       return result;

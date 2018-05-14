@@ -8,6 +8,9 @@
   zptrMemDest1 = $a7
   testAdressFix = $8000
   testAdressPreCalc = .testLongNamedAdr + 2 + offset_2
+  
+;  .testLongNamedAdr 
+  !word 0
 
   ; ===============================
   ; Makros mit einem Parameter
@@ -93,7 +96,7 @@
   nop
   nop
   ; funktioniert nicht: !align 3, $ea
-  !align 3, $ea
+  ;!align 3, $ea
 
   ; $c09e
   +setPtrA testAdressFix + offset40, zptrMemDest1                     ; OK
