@@ -1,0 +1,53 @@
+00  2000              * = $2000
+01  2000              
+02  2000              REGISTER = 1
+03  2000              A_REG = 2
+04  2000              Y_REG = 3
+05  2000              X_REG = 4
+06  2000              
+07  2000              !macro IF type1, value1, condition, type2, value2
+08  ????              .error=1
+09  ????              !if type1=REGISTER & type2=REGISTER {
+10  ????              !if value1=A_REG & value2=X_REG {
+11  ????              .error=0
+12  ????              stx .tmp+1
+13  ????              .tmp:
+14  ????              cmp #$ff
+15  ????              }
+16  ????              
+17  ????              !if value1=A_REG & value2=Y_REG {
+18  ????              .error=0 ; <========================= HIER
+19  ????              }
+20  ????              
+21  ????              
+22  ????              }
+23  ????              
+24  ????              !if .error=1 {
+25  ????              !error "Wrong Parameters in 'IF'"
+26  ????              }
+27  ????              
+28  ????              !end
+29  2000              
+30  2000              
+31  2000              
+32  2000              IF_7_31_.error=1
+33  2000              !if ╚REGISTER╝=REGISTER & ╚REGISTER╝=REGISTER {
+34  2000              !if ╚A_REG╝=A_REG& Y_REG =X_REG {
+35  2000              IF_7_31_.error=0
+36  2000              stx IF_7_31_.tmp+1
+37  2000              IF_7_31_.tmp:
+38  2000              cmp #$ff
+39  2000              }
+40  2000              
+41  2000              !if ╚A_REG╝=A_REG& Y_REG =Y_REG {
+42  2000              IF_7_31_.error=0 ; <========================= HIER
+43  2000              }
+44  2000              
+45  2000              
+46  2000              }
+47  2000              
+48  2000              !if IF_7_31_.error=1 {
+49  2000              !error "Wrong Parameters in 'IF'"
+50  2000              }
+51  2000              
+52  2000              rts

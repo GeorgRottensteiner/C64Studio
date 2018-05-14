@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using C64Studio.Types;
 using Tiny64;
 
 
@@ -6039,8 +6040,7 @@ namespace C64Studio.Parser
           {
             // defined away
             // TODO - HACK UGLY - use keywords from AssemblerSettings!
-            if ( ( lineTokenInfos[0].Content.ToUpper().StartsWith( "!IF" ) )
-            ||   ( lineTokenInfos[0].Content.ToUpper().StartsWith( "IF" ) ) )
+            if ( TokenIsConditionalThatStartsScope( lineTokenInfos[0] ) )
             {
               // a new block starts here!
               // false, since it doesn't matter
@@ -6051,7 +6051,7 @@ namespace C64Studio.Parser
 
               OnScopeAdded( scope );
             }
-            else if ( ( lineTokenInfos[0].Content.ToUpper().StartsWith( "!PSEUDOPC" ) )
+            else if ( ( TokenIsPseudoPC( lineTokenInfos[0] ) )
             &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" ) )
             {
               // ACME style pseudo pc with bracket
@@ -8294,6 +8294,32 @@ namespace C64Studio.Parser
 
 
 
+    private bool TokenIsPseudoPC( TokenInfo Token )
+    {
+      if ( ( Token.Type == TokenInfo.TokenType.MACRO )
+      &&   ( Token.Content.ToUpper() == MacroByType( MacroInfo.MacroType.PSEUDO_PC ) ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    private bool TokenIsConditionalThatStartsScope( TokenInfo Token )
+    {
+      if ( ( Token.Type == TokenInfo.TokenType.MACRO )
+      &&   ( ( Token.Content.ToUpper() == MacroByType( MacroInfo.MacroType.IF ).ToUpper() )
+      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.MacroType.IFDEF ).ToUpper() )
+      ||     ( Token.Content.ToUpper() == MacroByType( MacroInfo.MacroType.IFNDEF ).ToUpper() ) ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
     private bool FindStartOfComment( string parseLine, out int commentPos )
     {
  	    bool firstNonWhiteSpaceCharFound = false;
@@ -8348,6 +8374,7 @@ namespace C64Studio.Parser
     } 
 
 
+
     void OnScopeRemoved( int LineIndex, List<Types.ScopeInfo> Scopes )
     {
       /*
@@ -8356,8 +8383,7 @@ namespace C64Studio.Parser
       int       localLine = -1;
 
       ASMFileInfo.FindTrueLineSource( LineIndex, out doc, out localLine );
-      Debug.Log( "Scope " + scope.Type + " removed in " + doc + " at " + ( localLine + 1 ) );
-       */
+      Debug.Log( "Scope " + scope.Type + " removed in " + doc + " at " + ( localLine + 1 ) );*/
     }
 
 
@@ -8369,8 +8395,7 @@ namespace C64Studio.Parser
       int       localLine = -1;
 
       ASMFileInfo.FindTrueLineSource( scope.StartIndex, out doc, out localLine );
-      Debug.Log( "Scope " + scope.Type + " added in " + doc + " at " + ( localLine + 1 ) );
-       */
+      Debug.Log( "Scope " + scope.Type + " added in " + doc + " at " + ( localLine + 1 ) );*/
     }
 
 
@@ -8676,14 +8701,14 @@ namespace C64Studio.Parser
                   //tokens.InsertRange( tokenIndex, tempTokens );
                   if ( !ScopeInsideLoop( Scopes ) )
                   {
-                    //token.Content = functionName + "_" + i.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
-                    token.Content = functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
+                    // uniquefy labels
+                    token.Content = "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
                   }
                   else
                   {
                     // need to take loop into account, force new local label!
                     token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
-                                  + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + "_" + token.Content;
+                                  + "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + "_" + token.Content;
                   }
                   replacingTokens.Add( token );
                 }

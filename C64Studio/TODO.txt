@@ -1,4 +1,5 @@
 ﻿C64Studio
+o +/--Labels innerhalb Makros mit GUID versehen!
 o export "to petscii" in the text screen editor <- test mit vollem charscreen mit allen Werten
 o generic file import, if size is not the optimum, allow custom skip bytes range (e.g. 2 load bytes)
 o Charscreen editor: swapping character ranges in the charset with automated reindexing of the screen?
