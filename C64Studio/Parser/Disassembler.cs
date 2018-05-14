@@ -492,14 +492,14 @@ namespace C64Studio.Parser
               break;
             case 1:
               sb.Append( " " );
-              sb.Append( ( instruction.second & 0xff ).ToString( "X2" ) );
+              sb.Append( m_SourceData.ByteAt( trueAddress + 1 - DataStartAddress ).ToString( "X2" ) );
               sb.Append( "   " );
               break;
             case 2:
               sb.Append( " " );
-              sb.Append( ( instruction.second & 0xff ).ToString( "X2" ) );
+              sb.Append( m_SourceData.ByteAt( trueAddress + 1 - DataStartAddress ).ToString( "X2" ) );
               sb.Append( " " );
-              sb.Append( ( instruction.second >> 8 ).ToString( "X2" ) );
+              sb.Append( m_SourceData.ByteAt( trueAddress + 1 - DataStartAddress + 1 ).ToString( "X2" ) );
               break;
           }
           //sb.Append( "          " + MnemonicToString( instruction.first, m_SourceData, DataStartAddress, trueAddress, accessedAddresses, NamedLabels ) );

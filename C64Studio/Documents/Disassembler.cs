@@ -144,6 +144,15 @@ namespace C64Studio
             FillItemFromAddress( item, sysAddress );
             listJumpedAtAddresses.Items.Add( item );
           }
+          else
+          {
+            // we have no jump address, assume first byte as address
+            m_DisassemblyProject.JumpedAtAddresses.Add( loadAddress );
+
+            ListViewItem    item = new ListViewItem();
+            FillItemFromAddress( item, loadAddress );
+            listJumpedAtAddresses.Items.Add( item );
+          }
 
           SetHexData( data );
 
