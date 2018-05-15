@@ -728,7 +728,7 @@ namespace C64Studio
             // ReadRegisters:.;0810 00 00 00 f6 2f 37 00100000 055 015
             string    registers = m_ResponseLines.Last.Value;
 
-            if ( m_ViceVersion >= WinViceVersion.V_3_0 )
+            //if ( m_ViceVersion >= WinViceVersion.V_3_0 )
             {
               // since of 3.1 and data break points the register values may be in the third line - yay
               //  don't we just love a human text cmd line as interface
