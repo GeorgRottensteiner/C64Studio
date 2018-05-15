@@ -83,8 +83,12 @@ namespace GR
 
       public bool Equals( Tupel<T1,T2> OtherTupel )
       {
+        if ( object.ReferenceEquals( OtherTupel, null ) )
+        {
+          return false;
+        }
         return ( ( OtherTupel.first.Equals( first ) )
-           &&  ( OtherTupel.second.Equals( second ) ) );
+             &&  ( OtherTupel.second.Equals( second ) ) );
       }
 
     }
