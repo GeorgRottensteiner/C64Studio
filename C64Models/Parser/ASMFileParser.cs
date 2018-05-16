@@ -9405,37 +9405,11 @@ namespace C64Studio.Parser
 
       m_WarningsToIgnore.Clear();
 
-      //Debug.Log( "PreProcess" );
       lines = PreProcess( lines, m_Filename, Configuration );
 
-      /*
-      if ( ( lines == null )
-      ||   ( m_ErrorMessages > 0 ) )
-      {
-        if ( lines != null )
-        {
-          //string path = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
-          //System.IO.File.WriteAllLines( path, lines );
-        }
-        return false;
-      }*/
-
       DetermineUnparsedLabels();
-      //Debug.Log( "DetermineUnparsedLabels done" );
 
       ASMFileInfo.PopulateAddressToLine();
-      //Debug.Log( "PopulateAddressToLine done" );
-
-      //DumpSourceInfos();
-      //DumpTempLabelInfos();
-
-      /*
-      Debug.Log( "Preprocessed file:" );
-      foreach ( string line in lines )
-      {
-        Debug.Log( line );
-      }
-      */
 
       foreach ( Types.SymbolInfo token in ASMFileInfo.Labels.Values )
       {
@@ -9472,7 +9446,6 @@ namespace C64Studio.Parser
     {
       try
       {
-        //string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( System.Reflection.Assembly.GetExecutingAssembly().Location ), "preprocessed.txt" );
         string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( SourceFile ), System.IO.Path.GetFileNameWithoutExtension( SourceFile ) + ".dump" );
 
         if ( Lines == null )
@@ -9498,11 +9471,11 @@ namespace C64Studio.Parser
               {
                 if ( info.AddressStart < 0 )
                 {
-                  writer.Write( "----" );
+                  writer.Write( " ----" );
                 }
                 else
                 {
-                  writer.Write( info.AddressStart.ToString( "X4" ) );
+                  writer.Write( "$" + info.AddressStart.ToString( "X4" ) );
                 }
 
                 writer.Write( "  " );

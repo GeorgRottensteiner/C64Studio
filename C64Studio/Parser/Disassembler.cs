@@ -186,6 +186,7 @@ namespace C64Studio.Parser
       {
         if ( AddLineAddresses )
         {
+          sb.Append( "$" );
           sb.Append( ExportStartAddress.ToString( "X4" ) + ":" );
         }
         //sb.Append( "          !byte " );
@@ -207,6 +208,7 @@ namespace C64Studio.Parser
       {
         if ( AddLineAddresses )
         {
+          sb.Append( "$" );
           sb.Append( ExportStartAddress.ToString( "X4" ) + ":" );
         }
         //sb.Append( "          !byte " );
@@ -441,6 +443,7 @@ namespace C64Studio.Parser
           GR.Generic.Tupel<Tiny64.Opcode, ushort> instruction = disassembly[(ushort)trueAddress];
           if ( AddLineAddresses )
           {
+            sb.Append( "$" );
             sb.Append( trueAddress.ToString( "X4" ) + ": " );
           }
 
@@ -450,6 +453,7 @@ namespace C64Studio.Parser
             sb.AppendLine();
             if ( AddLineAddresses )
             {
+              sb.Append( "$" );
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
             }
 
@@ -463,6 +467,7 @@ namespace C64Studio.Parser
             }
             if ( AddLineAddresses )
             {
+              sb.Append( "$" );
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
             }
           }
@@ -472,12 +477,14 @@ namespace C64Studio.Parser
             sb.AppendLine();
             if ( AddLineAddresses )
             {
+              sb.Append( "$" );
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
             }
 
             sb.AppendLine( NamedLabels[trueAddress] );
             if ( AddLineAddresses )
             {
+              sb.Append( "$" );
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
             }
           }
