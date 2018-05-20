@@ -277,9 +277,20 @@ namespace C64Studio
       {
         editSource.Font = new System.Drawing.Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize );
       }
+
       editSource.CharHeight = 18;
 
       editSource.Language = FastColoredTextBoxNS.Language.Custom;
+
+      // adjust caret color (Thanks Tulan!)
+      if ( ( 0.2126 * editSource.BackColor.R + 0.7152 * editSource.BackColor.G + 0.0722 * editSource.BackColor.B ) < 127.5 )
+      {
+        editSource.CaretColor = System.Drawing.Color.White;
+      }
+      else
+      {
+        editSource.CaretColor = System.Drawing.Color.Black;
+      }
 
       ApplySyntaxColoring( Types.ColorableElement.EMPTY_SPACE );
       ApplySyntaxColoring( Types.ColorableElement.COMMENT );
