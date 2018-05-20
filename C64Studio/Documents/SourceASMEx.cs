@@ -103,6 +103,7 @@ namespace C64Studio
       m_TextRegExp[(int)Types.ColorableElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";.*" );
 
       m_TextRegExp[(int)Types.ColorableElement.OPERATOR] = new System.Text.RegularExpressions.Regex( @"[+\-/*(){}=<>,#]" );
+      m_TextRegExp[(int)Types.ColorableElement.NONE] = new System.Text.RegularExpressions.Regex( @"\S" );
 
 
       m_IsSaveable = true;
@@ -280,6 +281,7 @@ namespace C64Studio
       Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LABEL )], m_TextRegExp[(int)Types.ColorableElement.LABEL] );
       Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.COMMENT )], m_TextRegExp[(int)Types.ColorableElement.COMMENT] );
       Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.OPERATOR )], m_TextRegExp[(int)Types.ColorableElement.OPERATOR] );
+      Range.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.NONE )], m_TextRegExp[(int)Types.ColorableElement.NONE] );
       if ( m_CurrentHighlightText != null )
       {
         string    regex = m_CurrentHighlightText.Replace( @"\", @"\\" );

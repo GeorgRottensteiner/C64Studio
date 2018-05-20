@@ -78,6 +78,7 @@ namespace C64Studio
 
       m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[+\-a-zA-Z]+[a-zA-Z_\d]*[:]*" );
       //m_TextRegExp[(int)Types.SyntaxElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";.*" );
+      m_TextRegExp[(int)Types.ColorableElement.NONE] = new System.Text.RegularExpressions.Regex( @"\S" );
 
       m_IsSaveable = true;
 
