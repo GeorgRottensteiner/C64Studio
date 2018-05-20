@@ -350,13 +350,13 @@ namespace C64Studio
         case C64Studio.Types.ColorableElement.LITERAL_STRING:
           value = 4;
           break;
-        case C64Studio.Types.ColorableElement.LITERAL_NUMBER:
+        case C64Studio.Types.ColorableElement.OPERATOR:
           value = 5;
           break;
-        case C64Studio.Types.ColorableElement.OPERATOR:
+        case C64Studio.Types.ColorableElement.PSEUDO_OP:
           value = 6;
           break;
-        case C64Studio.Types.ColorableElement.PSEUDO_OP:
+        case C64Studio.Types.ColorableElement.LITERAL_NUMBER:
           value = 7;
           break;
         case C64Studio.Types.ColorableElement.CODE:
