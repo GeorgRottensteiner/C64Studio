@@ -1213,6 +1213,7 @@ namespace C64Studio
       SetSyntaxColor( C64Studio.Types.ColorableElement.OPERATOR, 0xff000080, 0xffffffff, true );
       SetSyntaxColor( C64Studio.Types.ColorableElement.ERROR_UNDERLINE, 0xffff0000, 0xffffffff, false );
       SetSyntaxColor( C64Studio.Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS, 0xff000080, 0xffff8000, true );
+      SetSyntaxColor( C64Studio.Types.ColorableElement.SELECTED_TEXT, 0xff800000, 0xff800000, true );
 
       foreach ( Types.ColorableElement color in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {

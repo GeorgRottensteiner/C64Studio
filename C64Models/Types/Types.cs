@@ -320,6 +320,9 @@ namespace C64Studio.Types
     [Description( "Error Underline" )]
     ERROR_UNDERLINE,
 
+    [Description( "Selected Text" )]
+    SELECTED_TEXT,
+
     [Description( "Control Text" )]
     CONTROL_TEXT,
 
@@ -327,7 +330,6 @@ namespace C64Studio.Types
 
     [Description( "Control Background" )]
     BACKGROUND_CONTROL,
-
 
     LAST_ENTRY
   }

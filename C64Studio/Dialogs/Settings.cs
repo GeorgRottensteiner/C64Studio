@@ -57,12 +57,6 @@ namespace C64Studio
 
       RefillAcceleratorList();
 
-      // make sure empty space is on top
-      /*
-      ListViewItem itemSC = new ListViewItem( GR.EnumHelper.GetDescription( Types.SyntaxElement.EMPTY_SPACE ) );
-      itemSC.Tag = Core.Settings.SyntaxColoring[Types.SyntaxElement.EMPTY_SPACE];
-      listColoring.Items.Add( itemSC );*/
-
       RefillColorList();
       comboElementBG.Items.Add( new Types.ColorSetting( "Auto", 0xffffffff ) );
 

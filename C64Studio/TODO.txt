@@ -4,7 +4,9 @@ o export "to petscii" in the text screen editor <- test mit vollem charscreen mi
 o generic file import, if size is not the optimum, allow custom skip bytes range (e.g. 2 load bytes)
 o Charscreen editor: swapping character ranges in the charset with automated reindexing of the screen?
 o default open path for solutions/files
+o Docking: DockPanelSuite Restored nicht sauber
 o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
+o Syntax-Coloring -> Preview im Setting Editor mit FastColoredTextBox
 o Code-Ergänzungvorschlag nicht nur für Labels/Variablen, sondern auch für Macros.
 o Beim suchen uns ersetzen scheint er seltsam die Suchergebnisse zu ersetzen. Alle ersetzen funzt, wenn ich aber zuerst auf Suchen klicke 
   springt er zu dem nächsten gefunden Eintrag, wenn ich jetzt ersetzen klicke erwarte ich, dass nur dieser Eintrag ersetzt. 
@@ -103,9 +105,6 @@ o When you Import From File and then import a Charset then the Screen does  not 
 
 o Pressing the Export To Assembly should create a 
   new tab+running number. 
-
-o IDE Generally 
- Once you undock a tab there is no way to get it back. This means the search and find/replace don't seem to work on the undocked window. 
 
 o Source/Constant
  I've not been using a project or solution. Only compiling the ASM that 
