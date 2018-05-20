@@ -89,6 +89,8 @@ namespace C64Studio
       checkASMAutoTruncateLiteralValues.Checked = Core.Settings.ASMAutoTruncateLiteralValues;
       checkASMShowAutoComplete.Checked        = Core.Settings.ASMShowAutoComplete;
 
+      editDefaultOpenSolutionPath.Text        = Core.Settings.DefaultProjectBasePath;
+
       comboAppMode.SelectedIndex = (int)Core.Settings.StudioAppMode;
 
       btnChangeBASICFont.Enabled = !checkBASICUseC64Font.Checked;
@@ -2234,6 +2236,21 @@ namespace C64Studio
       foreach ( ListViewItem entry in asmLibraryPathList.Items )
       {
         Core.Settings.ASMLibraryPaths.Add( entry.Text );
+      }
+    }
+
+
+
+    private void btnBrowseDefaultOpenSolutionPath_Click( object sender, EventArgs e )
+    {
+      FolderBrowserDialog   dlg = new FolderBrowserDialog();
+
+      dlg.SelectedPath = Core.Settings.DefaultProjectBasePath;
+      dlg.Description = "Choose default open solution/project path";
+      if ( dlg.ShowDialog() == DialogResult.OK )
+      {
+        Core.Settings.DefaultProjectBasePath = dlg.SelectedPath;
+        editDefaultOpenSolutionPath.Text = dlg.SelectedPath;
       }
     }
 

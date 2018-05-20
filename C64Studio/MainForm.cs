@@ -3330,6 +3330,7 @@ namespace C64Studio
       System.Windows.Forms.OpenFileDialog openDlg = new System.Windows.Forms.OpenFileDialog();
       openDlg.Title = "Open solution or project";
       openDlg.Filter = FilterString( Types.Constants.FILEFILTER_SOLUTION_OR_PROJECTS + Types.Constants.FILEFILTER_SOLUTION + Types.Constants.FILEFILTER_PROJECT + Types.Constants.FILEFILTER_ALL );
+      openDlg.InitialDirectory = StudioCore.Settings.DefaultProjectBasePath;
       if ( openDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
       {
         return;
@@ -5743,6 +5744,10 @@ namespace C64Studio
       {
         openDlg.InitialDirectory = ParentProject.Settings.BasePath;
       }
+      else
+      {
+        openDlg.InitialDirectory = StudioCore.Settings.DefaultProjectBasePath;
+      }
       openDlg.CheckFileExists = false;
       openDlg.CheckPathExists = true;
       if ( openDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
@@ -6366,7 +6371,7 @@ namespace C64Studio
     {
       if ( m_Solution == null )
       {
-        FormSolutionWizard solWizard = new FormSolutionWizard("New Solution", StudioCore.Settings);
+        FormSolutionWizard solWizard = new FormSolutionWizard( "New Solution", StudioCore.Settings );
         if ( solWizard.ShowDialog() == DialogResult.OK )
         {
           try

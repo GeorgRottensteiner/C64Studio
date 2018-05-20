@@ -82,23 +82,6 @@ namespace C64Studio
 
       m_IsSaveable = true;
 
-      /*
-
-        <wht> <dish> <ensh> <swlc> <down> <rvon> <home> <del> <esc>
-                   <red>  <rght>  <grn>  <blu> <orng> <F1> <F3> <F5> <F7> <F2>
-                   <F4> <F6> <F8> <sret> <swuc> <blk> <up> <rvof> <clr> <inst>
-                   <brn>  <lred>  <gry1>  <gry2>  <lgrn>  <lblu>  <gry3> <pur>
-                   <left> <yel> <cyn>
-
-       List of alternate mnemonics:
-                   <wht> <up/lo lock on>  <up/lo  lock  off>  <return>  <lower
-                   case>  <down>  <rvs on> <home> <delete> <esc> <red> <right>
-                   <grn> <blu> <orange> <f1> <f3> <f5>  <f7>  <f2>  <f4>  <f6>
-                   <f8> <shift return> <upper case> <blk> <up> <rvs off> <clr>
-                   <insert> <brown> <lt red> <grey1> <grey2>  <lt  green>  <lt
-                   blue> <grey3> <pur> <left> <yel> <cyn>
-      */
-
       InitializeComponent();
 
       btnToggleSymbolMode.Checked = Core.Settings.BASICShowControlCodesAsChars;
