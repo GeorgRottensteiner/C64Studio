@@ -176,7 +176,13 @@ namespace C64Studio
 
     private void EditSource_SelectingWord( object sender, FastColoredTextBoxNS.SelectingWordEventArgs e )
     {
-      var info = Core.Compiling.ParserBasic.PureTokenizeLine( editSource.Lines[e.Place.iLine], e.Place.iLine );
+      string    content = editSource.Lines[e.Place.iLine];
+      if ( m_LowerCaseMode )
+      {
+        content = MakeUpperCase( content );
+      }
+
+      var info = Core.Compiling.ParserBasic.PureTokenizeLine( content, e.Place.iLine );
 
       foreach ( var token in info.Tokens )
       {
