@@ -45,6 +45,7 @@
       this.exchangeBGColorWithSpriteColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.tabSpriteDetails = new System.Windows.Forms.TabControl();
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.panelSprites = new GR.Forms.ImageListbox();
@@ -126,7 +127,6 @@
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabSpriteEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -207,7 +207,7 @@
             this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem,
             this.forSelectedSpritesToolStripMenuItem});
       this.contextMenuExchangeColors.Name = "contextMenuExchangeColors";
-      this.contextMenuExchangeColors.Size = new System.Drawing.Size(295, 114);
+      this.contextMenuExchangeColors.Size = new System.Drawing.Size(295, 92);
       // 
       // exchangeMultiColor1WithBGColorToolStripMenuItem
       // 
@@ -277,6 +277,13 @@
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Text = "Exchange Multicolor 2 with BG color";
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Click += new System.EventHandler(this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem_Click);
+      // 
+      // exchangeMulticolor1WithMulticolor2ToolStripMenuItem1
+      // 
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Name = "exchangeMulticolor1WithMulticolor2ToolStripMenuItem1";
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Text = "Exchange Multicolor 1 with Multicolor 2";
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1_Click);
       // 
       // tabSpriteDetails
       // 
@@ -1129,13 +1136,6 @@
       // 
       this.columnHeader6.Text = "Y";
       this.columnHeader6.Width = 30;
-      // 
-      // exchangeMulticolor1WithMulticolor2ToolStripMenuItem1
-      // 
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Name = "exchangeMulticolor1WithMulticolor2ToolStripMenuItem1";
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Text = "Exchange Multicolor 1 with Multicolor 2";
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1_Click);
       // 
       // SpriteEditor
       // 

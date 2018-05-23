@@ -1059,7 +1059,7 @@ namespace C64Studio
       {
         ListViewItem item = new ListViewItem();
 
-        item.Text = ( spriteIndex + 1 ).ToString();
+        item.Text = ( sprite.Index + 1 ).ToString();
         item.SubItems.Add( sprite.X.ToString() );
         item.SubItems.Add( sprite.Y.ToString() );
         item.Tag = sprite;
@@ -2632,7 +2632,7 @@ namespace C64Studio
       m_CurrentLayer.Sprites.Add( sprite );
 
       ListViewItem item = new ListViewItem();
-      item.Text = m_CurrentLayer.Sprites.Count.ToString();
+      item.Text = sprite.Index.ToString();
       item.SubItems.Add( sprite.X.ToString() );
       item.SubItems.Add( sprite.Y.ToString() );
       item.Tag = sprite;
@@ -2743,7 +2743,7 @@ namespace C64Studio
       {
         ListViewItem item = new ListViewItem();
 
-        item.Text = ( spriteIndex + 1 ).ToString();
+        item.Text = ( sprite.Index + 1 ).ToString();
         item.SubItems.Add( sprite.X.ToString() );
         item.SubItems.Add( sprite.Y.ToString() );
         item.Tag = sprite;
