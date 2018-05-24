@@ -112,6 +112,12 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.tabCharset = new System.Windows.Forms.TabPage();
+      this.panelCharsetDetails = new GR.Forms.ImageListbox();
+      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.label10 = new System.Windows.Forms.Label();
+      this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
+      this.btnMoveSelectionToTarget = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -121,6 +127,8 @@
       ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).BeginInit();
       this.tabCharsetEditor.SuspendLayout();
+      this.tabCharset.SuspendLayout();
+      this.groupBox2.SuspendLayout();
       this.SuspendLayout();
       // 
       // menuStrip1
@@ -175,7 +183,7 @@
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
       this.tabProject.Size = new System.Drawing.Size(956, 512);
       this.tabProject.TabIndex = 1;
-      this.tabProject.Text = "Project";
+      this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
       // 
       // groupBox1
@@ -1001,6 +1009,7 @@
       // tabCharsetEditor
       // 
       this.tabCharsetEditor.Controls.Add(this.tabEditor);
+      this.tabCharsetEditor.Controls.Add(this.tabCharset);
       this.tabCharsetEditor.Controls.Add(this.tabProject);
       this.tabCharsetEditor.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tabCharsetEditor.Location = new System.Drawing.Point(0, 24);
@@ -1008,6 +1017,80 @@
       this.tabCharsetEditor.SelectedIndex = 0;
       this.tabCharsetEditor.Size = new System.Drawing.Size(964, 538);
       this.tabCharsetEditor.TabIndex = 0;
+      // 
+      // tabCharset
+      // 
+      this.tabCharset.Controls.Add(this.groupBox2);
+      this.tabCharset.Controls.Add(this.panelCharsetDetails);
+      this.tabCharset.Location = new System.Drawing.Point(4, 22);
+      this.tabCharset.Name = "tabCharset";
+      this.tabCharset.Size = new System.Drawing.Size(956, 512);
+      this.tabCharset.TabIndex = 2;
+      this.tabCharset.Text = "Charset";
+      this.tabCharset.UseVisualStyleBackColor = true;
+      // 
+      // panelCharsetDetails
+      // 
+      this.panelCharsetDetails.AutoScroll = true;
+      this.panelCharsetDetails.AutoScrollHorizontalMaximum = 100;
+      this.panelCharsetDetails.AutoScrollHorizontalMinimum = 0;
+      this.panelCharsetDetails.AutoScrollHPos = 0;
+      this.panelCharsetDetails.AutoScrollVerticalMaximum = -23;
+      this.panelCharsetDetails.AutoScrollVerticalMinimum = 0;
+      this.panelCharsetDetails.AutoScrollVPos = 0;
+      this.panelCharsetDetails.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.panelCharsetDetails.EnableAutoScrollHorizontal = true;
+      this.panelCharsetDetails.EnableAutoScrollVertical = true;
+      this.panelCharsetDetails.HottrackColor = ((uint)(2151694591u));
+      this.panelCharsetDetails.ItemHeight = 8;
+      this.panelCharsetDetails.ItemWidth = 8;
+      this.panelCharsetDetails.Location = new System.Drawing.Point(8, 3);
+      this.panelCharsetDetails.Name = "panelCharsetDetails";
+      this.panelCharsetDetails.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
+      this.panelCharsetDetails.SelectedIndex = -1;
+      this.panelCharsetDetails.Size = new System.Drawing.Size(260, 260);
+      this.panelCharsetDetails.TabIndex = 22;
+      this.panelCharsetDetails.TabStop = true;
+      this.panelCharsetDetails.VisibleAutoScrollHorizontal = false;
+      this.panelCharsetDetails.VisibleAutoScrollVertical = false;
+      // 
+      // groupBox2
+      // 
+      this.groupBox2.Controls.Add(this.btnMoveSelectionToTarget);
+      this.groupBox2.Controls.Add(this.editMoveTargetIndex);
+      this.groupBox2.Controls.Add(this.label10);
+      this.groupBox2.Location = new System.Drawing.Point(274, 3);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Size = new System.Drawing.Size(249, 45);
+      this.groupBox2.TabIndex = 23;
+      this.groupBox2.TabStop = false;
+      this.groupBox2.Text = "Move Selection To";
+      // 
+      // label10
+      // 
+      this.label10.AutoSize = true;
+      this.label10.Location = new System.Drawing.Point(6, 16);
+      this.label10.Name = "label10";
+      this.label10.Size = new System.Drawing.Size(70, 13);
+      this.label10.TabIndex = 0;
+      this.label10.Text = "Target Index:";
+      // 
+      // editMoveTargetIndex
+      // 
+      this.editMoveTargetIndex.Location = new System.Drawing.Point(82, 13);
+      this.editMoveTargetIndex.Name = "editMoveTargetIndex";
+      this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
+      this.editMoveTargetIndex.TabIndex = 1;
+      // 
+      // btnMoveSelectionToTarget
+      // 
+      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 11);
+      this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
+      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 23);
+      this.btnMoveSelectionToTarget.TabIndex = 2;
+      this.btnMoveSelectionToTarget.Text = "Move";
+      this.btnMoveSelectionToTarget.UseVisualStyleBackColor = true;
+      this.btnMoveSelectionToTarget.Click += new System.EventHandler(this.btnMoveSelectionToTarget_Click);
       // 
       // CharsetScreenEditor
       // 
@@ -1030,6 +1113,9 @@
       ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).EndInit();
       this.tabCharsetEditor.ResumeLayout(false);
+      this.tabCharset.ResumeLayout(false);
+      this.groupBox2.ResumeLayout(false);
+      this.groupBox2.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1117,5 +1203,11 @@
     private System.Windows.Forms.Button btnImportFromASM;
     private System.Windows.Forms.Button btnClearImportData;
     private System.Windows.Forms.CheckBox checkExportASMAsPetSCII;
+    private System.Windows.Forms.TabPage tabCharset;
+    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.Button btnMoveSelectionToTarget;
+    private System.Windows.Forms.TextBox editMoveTargetIndex;
+    private System.Windows.Forms.Label label10;
+    private GR.Forms.ImageListbox panelCharsetDetails;
   }
 }
