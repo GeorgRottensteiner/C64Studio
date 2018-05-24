@@ -111,13 +111,14 @@
       this.panelCharColors = new GR.Forms.FastPictureBox();
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
-      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.tabCharset = new System.Windows.Forms.TabPage();
-      this.panelCharsetDetails = new GR.Forms.ImageListbox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.label10 = new System.Windows.Forms.Label();
-      this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
       this.btnMoveSelectionToTarget = new System.Windows.Forms.Button();
+      this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
+      this.label10 = new System.Windows.Forms.Label();
+      this.panelCharsetDetails = new GR.Forms.ImageListbox();
+      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.checkOverrideOriginalColorSettings = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -639,6 +640,7 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.checkOverrideOriginalColorSettings);
       this.tabEditor.Controls.Add(this.checkShowGrid);
       this.tabEditor.Controls.Add(this.checkApplyColors);
       this.tabEditor.Controls.Add(this.checkApplyCharacter);
@@ -1029,6 +1031,44 @@
       this.tabCharset.Text = "Charset";
       this.tabCharset.UseVisualStyleBackColor = true;
       // 
+      // groupBox2
+      // 
+      this.groupBox2.Controls.Add(this.btnMoveSelectionToTarget);
+      this.groupBox2.Controls.Add(this.editMoveTargetIndex);
+      this.groupBox2.Controls.Add(this.label10);
+      this.groupBox2.Location = new System.Drawing.Point(274, 3);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Size = new System.Drawing.Size(249, 45);
+      this.groupBox2.TabIndex = 23;
+      this.groupBox2.TabStop = false;
+      this.groupBox2.Text = "Move Selection To";
+      // 
+      // btnMoveSelectionToTarget
+      // 
+      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 11);
+      this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
+      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 23);
+      this.btnMoveSelectionToTarget.TabIndex = 2;
+      this.btnMoveSelectionToTarget.Text = "Move";
+      this.btnMoveSelectionToTarget.UseVisualStyleBackColor = true;
+      this.btnMoveSelectionToTarget.Click += new System.EventHandler(this.btnMoveSelectionToTarget_Click);
+      // 
+      // editMoveTargetIndex
+      // 
+      this.editMoveTargetIndex.Location = new System.Drawing.Point(82, 13);
+      this.editMoveTargetIndex.Name = "editMoveTargetIndex";
+      this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
+      this.editMoveTargetIndex.TabIndex = 1;
+      // 
+      // label10
+      // 
+      this.label10.AutoSize = true;
+      this.label10.Location = new System.Drawing.Point(6, 16);
+      this.label10.Name = "label10";
+      this.label10.Size = new System.Drawing.Size(70, 13);
+      this.label10.TabIndex = 0;
+      this.label10.Text = "Target Index:";
+      // 
       // panelCharsetDetails
       // 
       this.panelCharsetDetails.AutoScroll = true;
@@ -1054,43 +1094,16 @@
       this.panelCharsetDetails.VisibleAutoScrollHorizontal = false;
       this.panelCharsetDetails.VisibleAutoScrollVertical = false;
       // 
-      // groupBox2
+      // checkOverrideOriginalColorSettings
       // 
-      this.groupBox2.Controls.Add(this.btnMoveSelectionToTarget);
-      this.groupBox2.Controls.Add(this.editMoveTargetIndex);
-      this.groupBox2.Controls.Add(this.label10);
-      this.groupBox2.Location = new System.Drawing.Point(274, 3);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(249, 45);
-      this.groupBox2.TabIndex = 23;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Move Selection To";
-      // 
-      // label10
-      // 
-      this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(6, 16);
-      this.label10.Name = "label10";
-      this.label10.Size = new System.Drawing.Size(70, 13);
-      this.label10.TabIndex = 0;
-      this.label10.Text = "Target Index:";
-      // 
-      // editMoveTargetIndex
-      // 
-      this.editMoveTargetIndex.Location = new System.Drawing.Point(82, 13);
-      this.editMoveTargetIndex.Name = "editMoveTargetIndex";
-      this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
-      this.editMoveTargetIndex.TabIndex = 1;
-      // 
-      // btnMoveSelectionToTarget
-      // 
-      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 11);
-      this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
-      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 23);
-      this.btnMoveSelectionToTarget.TabIndex = 2;
-      this.btnMoveSelectionToTarget.Text = "Move";
-      this.btnMoveSelectionToTarget.UseVisualStyleBackColor = true;
-      this.btnMoveSelectionToTarget.Click += new System.EventHandler(this.btnMoveSelectionToTarget_Click);
+      this.checkOverrideOriginalColorSettings.AutoSize = true;
+      this.checkOverrideOriginalColorSettings.Location = new System.Drawing.Point(838, 59);
+      this.checkOverrideOriginalColorSettings.Name = "checkOverrideOriginalColorSettings";
+      this.checkOverrideOriginalColorSettings.Size = new System.Drawing.Size(96, 17);
+      this.checkOverrideOriginalColorSettings.TabIndex = 37;
+      this.checkOverrideOriginalColorSettings.Text = "Override Mode";
+      this.checkOverrideOriginalColorSettings.UseVisualStyleBackColor = true;
+      this.checkOverrideOriginalColorSettings.CheckedChanged += new System.EventHandler(this.checkOverrideMode_CheckedChanged);
       // 
       // CharsetScreenEditor
       // 
@@ -1209,5 +1222,6 @@
     private System.Windows.Forms.TextBox editMoveTargetIndex;
     private System.Windows.Forms.Label label10;
     private GR.Forms.ImageListbox panelCharsetDetails;
+    private System.Windows.Forms.CheckBox checkOverrideOriginalColorSettings;
   }
 }

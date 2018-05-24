@@ -28,6 +28,7 @@ namespace C64Studio
 
     private byte                        m_CurrentChar = 0;
     private byte                        m_CurrentColor = 1;
+    private bool                        m_OverrideCharMode = false;
 
     private GR.Image.MemoryImage        m_Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
@@ -238,7 +239,19 @@ namespace C64Studio
     {
       Formats.CharData Char = m_CharsetScreen.CharSet.Characters[CharIndex];
 
-      Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Image, 0, 0 );
+      if ( m_OverrideCharMode )
+      {
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Image, 0, 0, m_CurrentColor,
+                m_CharsetScreen.BackgroundColor,
+                m_CharsetScreen.MultiColor1,
+                m_CharsetScreen.MultiColor2,
+                m_CharsetScreen.BGColor4,
+                m_CharsetScreen.Mode );
+      }
+      else
+      {
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Image, 0, 0 );
+      }
     }
 
 
@@ -1518,6 +1531,11 @@ namespace C64Studio
         m_CurrentColor = (byte)colorIndex;
         RedrawColorChooser();
         labelInfo.Text = InfoText();
+
+        if ( m_OverrideCharMode )
+        {
+          RebuildCharPanelImages();
+        }
       }
     }
 
@@ -2560,6 +2578,11 @@ namespace C64Studio
         RedrawFullScreen();
       }
 
+      if ( m_OverrideCharMode )
+      {
+        RebuildCharPanelImages();
+      }
+
       switch ( m_CharsetScreen.Mode )
       {
         case C64Studio.Types.CharsetMode.HIRES:
@@ -2952,6 +2975,9 @@ namespace C64Studio
       }
 
       // TODO - undo!
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharsetChange( m_CharsetScreen, this ), false );
+
 
       // now shift all characters
       for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
@@ -2988,6 +3014,32 @@ namespace C64Studio
       RedrawColorChooser();
       Modified = true;
     }
+
+
+
+    private void checkOverrideMode_CheckedChanged( object sender, EventArgs e )
+    {
+      m_OverrideCharMode = checkOverrideOriginalColorSettings.Checked;
+
+      RebuildCharPanelImages();
+    }
+
+
+
+    private void RebuildCharPanelImages()
+    {
+      for ( int i = 0; i < 256; ++i )
+      {
+        RebuildCharImage( i );
+
+        panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Image;
+        panelCharsetDetails.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Image;
+      }
+      panelCharacters.Invalidate();
+      panelCharsetDetails.Invalidate();
+    }
+
+
 
   } 
 }
