@@ -299,6 +299,7 @@ namespace C64Studio.Formats
           }
           else
           {
+            int     firstColorIndex = -1;
             if ( usedColors.Count > 0 )
             {
               int colorTarget = 0;
@@ -314,6 +315,7 @@ namespace C64Studio.Formats
 
                   screenChar.SetU8At( x + y * BlockWidth, value );
                   usedColors[colorIndex] = 1;
+                  firstColorIndex = colorIndex;
                 }
                 else if ( colorTarget == 1 )
                 {
@@ -334,7 +336,7 @@ namespace C64Studio.Formats
               for ( int charX = 0; charX < 8; ++charX )
               {
                 byte colorIndex = (byte)Image.GetPixel( x * 8 + charX, y * 8 + charY );
-                if ( colorIndex != BackgroundColor )
+                if ( colorIndex == firstColorIndex )
                 {
                   // other color
                   byte colorValue = usedColors[colorIndex];

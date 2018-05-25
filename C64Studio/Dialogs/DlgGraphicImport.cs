@@ -751,9 +751,10 @@ namespace C64Studio
             AddError( "Uses more than two colors", sx * 8, sy * 8, 8, 8 );
             continue;
           }
+          /*
           if ( determinedBackgroundColor == -1 )
           {
-            // set background color as one of the 2 found, prefer 0, than the lower one
+            // set background color as one of the 2 found, prefer 0, then the lower one
             if ( usedColor[0] )
             {
               determinedBackgroundColor = 0;
@@ -769,7 +770,7 @@ namespace C64Studio
                 }
               }
             }
-          }
+          }*/
           if ( ( determinedBackgroundColor != -1 )
           &&   ( !usedBackgroundColor )
           &&   ( numColors >= 2 ) )
@@ -782,7 +783,8 @@ namespace C64Studio
           {
             if ( usedColor[i] )
             {
-              if ( i != determinedBackgroundColor )
+              if ( ( i != determinedBackgroundColor )
+              &&   ( determinedBackgroundColor != -1 ) )
               {
                 if ( usedFreeColor != -1 )
                 {

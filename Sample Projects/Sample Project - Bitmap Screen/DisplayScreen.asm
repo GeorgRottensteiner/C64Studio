@@ -1,3 +1,5 @@
+;USE_HIRES = 1   ;comment out this line to use multicolor
+
 * = $0801
 
 !if 0 {
@@ -17,7 +19,11 @@ BITMAP_LOCATION = $a000
           sta $D018 
           
           ;Enable char/bitmap multicolour 
+!ifdef USE_HIRES {
+          lda #$08
+} else {  
           lda #$18 
+}          
           sta $D016 
           
           lda #$3B 
@@ -63,16 +69,24 @@ EndlessLoop
 
 ;bitmap data
 * = $2000
-!media "Image.graphicscreen",BITMAP
-;!bin "Bitmap-Binary.bin",$1f40
+!ifdef USE_HIRES { 
+!media "hires.graphicscreen",BITMAPHIRES
+} else {
+!media "multicolor.graphicscreen",BITMAP
+}
 
 ;charscreen colors
 * = $4000
-!media "Image.graphicscreen",SCREEN
-;!bin "Bitmap-Binary.bin",1000,$1f40
+!ifdef USE_HIRES {
+!media "hires.graphicscreen",SCREEN
+} else {
+!media "multicolor.graphicscreen",SCREEN
+}
 
 ;color ram colors
 * = $4400
-!media "Image.graphicscreen",COLOR
-;!bin "Bitmap-Binary.bin",1000,$1f40 + 1000
-
+!ifdef USE_HIRES {
+!media "hires.graphicscreen",COLOR
+} else {
+!media "multicolor.graphicscreen",COLOR
+}

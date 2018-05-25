@@ -1532,7 +1532,7 @@ namespace C64Studio
           bool[] usedColor = new bool[16];
           int numColors = 0;
           bool usedBackgroundColor = false;
-          int determinedBackgroundColor = comboBackground.SelectedIndex;
+          int determinedBackgroundColor = -1;// comboBackground.SelectedIndex;
 
           for ( int charY = 0; charY < 8; ++charY )
           {
@@ -1566,6 +1566,7 @@ namespace C64Studio
             m_Chars[x + y * BlockWidth].Error = "Uses more than two colors at " + ( x * 8 ) + "," + ( y * 8 );
             continue;
           }
+          /*
           if ( determinedBackgroundColor == -1 )
           {
             // set background color as one of the 2 found, prefer 0, than the lower one
@@ -1584,10 +1585,10 @@ namespace C64Studio
                 }
               }
             }
-          }
+          }*/
           if ( ( determinedBackgroundColor != -1 )
-          && ( !usedBackgroundColor )
-          && ( numColors >= 2 ) )
+          &&   ( !usedBackgroundColor )
+          &&   ( numColors >= 2 ) )
           {
             m_ErrornousChars[x, y] = true;
             m_Chars[x + y * BlockWidth].Error = "Looks like single color, but doesn't use the set background color " + ( x * 8 ) + "," + ( y * 8 );
@@ -1598,7 +1599,8 @@ namespace C64Studio
           {
             if ( usedColor[i] )
             {
-              if ( i != determinedBackgroundColor )
+              if ( ( i != determinedBackgroundColor )
+              &&   ( determinedBackgroundColor != -1 ) )
               {
                 if ( usedFreeColor != -1 )
                 {
