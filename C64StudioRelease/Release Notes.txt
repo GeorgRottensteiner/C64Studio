@@ -17,6 +17,29 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+xx.xx.2018 - 5.8: 
+
+25.05.2018 - 5.7:         Fix: easyflash, RGCD and magic desk cart generation was borked
+                          Add: BASIC upper/lowercase toggle
+                          Add: Library paths
+                          Fix: Bug in !media for graphicscreen not being full width
+                          Add: Simple up to date check
+                          Fix: Unfolding of folded blocks during compiling
+                          Add: Enhanced disassembly and preprocessed file output
+                          Fix: Late breakpoints not working at all
+                          Fix: several bugs in loops inside macros, nested macros
+                          Fix: D64/D81 disk image BAM check for free space
+                          Add: Graphic screen editor allows export to Koala
+                          Fix: Binary import for charset screen if color bytes are > 15
+                          Fix: Set filename in container media to outer filename (not HURZ anymore)
+                          Add: Grid in charset screen editor
+                          Add: Import charset and charset screen from assembly
+                          Add: Key binding for collapsing/expaning all folded blocks
+                          Add: Export to charset screen from map editor
+                          Fix: Local labels in macros were not properly localized
+                          Add: Option to move range of charset in charset screen editor with automatic screen adjustment
+                          Add: Override charset display mode in charset screen editor
+
 27.02.2018 - 5.6:         Fix: Macro source info was using file name at calling location, not of the macro source location
                           Fix: Fixed loading bug in ValueTableEditor, table with values was refilled but automatically cleared when loading tables without formula
                           Add: making !media accept startindex/count optionally for value tables
