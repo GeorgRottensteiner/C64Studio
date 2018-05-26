@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Machine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Types.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\CharpadProject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\D71.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\SpritePadProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ValueTableProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\CharsetProject.cs" />

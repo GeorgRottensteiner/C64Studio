@@ -55,15 +55,16 @@
       this.statusMedia = new System.Windows.Forms.StatusStrip();
       this.statusFileManager = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+      this.toolStripBtnImportFile = new System.Windows.Forms.ToolStripButton();
+      this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
       this.toolStripBtnMoveFileUp = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnMoveFileDown = new System.Windows.Forms.ToolStripButton();
-      this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
       this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
       this.toolStripBtnExportToFile = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnOpenHex = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnOpenBASIC = new System.Windows.Forms.ToolStripButton();
-      this.toolStripBtnImportFile = new System.Windows.Forms.ToolStripButton();
-      this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+      this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
+      this.d71ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuFileManager.SuspendLayout();
       this.statusMedia.SuspendLayout();
@@ -138,6 +139,7 @@
       this.newDiskToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.d64ToolStripMenuItem,
             this.d64With40TracksToolStripMenuItem,
+            this.d71ToolStripMenuItem,
             this.d81ToolStripMenuItem});
       this.newDiskToolStripMenuItem.Name = "newDiskToolStripMenuItem";
       this.newDiskToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
@@ -290,6 +292,22 @@
       this.toolStrip1.TabIndex = 3;
       this.toolStrip1.Text = "toolStrip1";
       // 
+      // toolStripBtnImportFile
+      // 
+      this.toolStripBtnImportFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripBtnImportFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnImportFile.Image")));
+      this.toolStripBtnImportFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripBtnImportFile.Name = "toolStripBtnImportFile";
+      this.toolStripBtnImportFile.Size = new System.Drawing.Size(23, 22);
+      this.toolStripBtnImportFile.Text = "toolStripButton1";
+      this.toolStripBtnImportFile.ToolTipText = "Import File";
+      this.toolStripBtnImportFile.Click += new System.EventHandler(this.toolStripBtnImportFile_Click);
+      // 
+      // toolStripSeparator6
+      // 
+      this.toolStripSeparator6.Name = "toolStripSeparator6";
+      this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+      // 
       // toolStripBtnMoveFileUp
       // 
       this.toolStripBtnMoveFileUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -313,14 +331,6 @@
       this.toolStripBtnMoveFileDown.Text = "toolStripButton1";
       this.toolStripBtnMoveFileDown.ToolTipText = "Move File Down";
       this.toolStripBtnMoveFileDown.Click += new System.EventHandler(this.toolStripBtnMoveFileDown_Click);
-      // 
-      // labelMediaTitle
-      // 
-      this.labelMediaTitle.AutoSize = false;
-      this.labelMediaTitle.Name = "labelMediaTitle";
-      this.labelMediaTitle.Size = new System.Drawing.Size(300, 22);
-      this.labelMediaTitle.Text = "toolStripLabel1";
-      this.labelMediaTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // toolStripSeparator5
       // 
@@ -362,21 +372,20 @@
       this.toolStripBtnOpenBASIC.ToolTipText = "Open in BASIC editor";
       this.toolStripBtnOpenBASIC.Click += new System.EventHandler(this.toolStripBtnOpenBASIC_Click);
       // 
-      // toolStripBtnImportFile
+      // labelMediaTitle
       // 
-      this.toolStripBtnImportFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.toolStripBtnImportFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnImportFile.Image")));
-      this.toolStripBtnImportFile.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.toolStripBtnImportFile.Name = "toolStripBtnImportFile";
-      this.toolStripBtnImportFile.Size = new System.Drawing.Size(23, 22);
-      this.toolStripBtnImportFile.Text = "toolStripButton1";
-      this.toolStripBtnImportFile.ToolTipText = "Import File";
-      this.toolStripBtnImportFile.Click += new System.EventHandler(this.toolStripBtnImportFile_Click);
+      this.labelMediaTitle.AutoSize = false;
+      this.labelMediaTitle.Name = "labelMediaTitle";
+      this.labelMediaTitle.Size = new System.Drawing.Size(300, 22);
+      this.labelMediaTitle.Text = "toolStripLabel1";
+      this.labelMediaTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
-      // toolStripSeparator6
+      // d71ToolStripMenuItem
       // 
-      this.toolStripSeparator6.Name = "toolStripSeparator6";
-      this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+      this.d71ToolStripMenuItem.Name = "d71ToolStripMenuItem";
+      this.d71ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+      this.d71ToolStripMenuItem.Text = "D71";
+      this.d71ToolStripMenuItem.Click += new System.EventHandler(this.d71ToolStripMenuItem_Click);
       // 
       // FileManager
       // 
@@ -438,8 +447,6 @@
     private System.Windows.Forms.ToolStripButton toolStripBtnExportToFile;
     private System.Windows.Forms.ToolStripButton toolStripBtnImportFile;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-
-
-
+    private System.Windows.Forms.ToolStripMenuItem d71ToolStripMenuItem;
   }
 }

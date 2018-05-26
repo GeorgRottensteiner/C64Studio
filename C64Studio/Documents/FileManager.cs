@@ -88,6 +88,11 @@ namespace C64Studio
         // disk file
         m_Media = new C64Studio.Formats.D64();
       }
+      else if ( upperName.EndsWith( ".D71" ) )
+      {
+        // disk file
+        m_Media = new C64Studio.Formats.D71();
+      }
       else if ( upperName.EndsWith( ".D81" ) )
       {
         // disk file
@@ -563,6 +568,7 @@ namespace C64Studio
       if ( listFiles.SelectedItems.Count == 0 )
       {
         if ( ( m_Media is Formats.D64 )
+        ||   ( m_Media is Formats.D71 )
         ||   ( m_Media is Formats.D81 ) )
         {
           statusFileManager.Text = m_Media.FreeSlots.ToString() + "/" + m_Media.Slots.ToString() + " blocks free"
@@ -877,6 +883,21 @@ namespace C64Studio
           UpdateStatusInfo();
         }
       }
+      else if ( m_Media is Formats.D71 )
+      {
+        Formats.D71 disk = m_Media as Formats.D71;
+        C64Studio.Types.FileInfo fileToMove = (C64Studio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
+
+        int oldIndex = listFiles.SelectedIndices[0];
+        if ( disk.MoveFileDown( fileToMove ) )
+        {
+          RefreshFileView();
+          listFiles.SelectedIndices.Clear();
+          listFiles.SelectedIndices.Add( oldIndex + 1 );
+          SetModified();
+          UpdateStatusInfo();
+        }
+      }
       else if ( m_Media is Formats.D81 )
       {
         Formats.D81 disk = m_Media as Formats.D81;
@@ -1056,6 +1077,19 @@ namespace C64Studio
           UpdateStatusInfo();
         }
       }
+    }
+
+
+
+    private void d71ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      CloseMedia();
+
+      m_Media = new C64Studio.Formats.D71();
+      m_Media.CreateEmptyMedia();
+      SetUnmodified();
+      RefreshFileView();
+      UpdateStatusInfo();
     }
 
 

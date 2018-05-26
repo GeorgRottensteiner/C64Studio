@@ -5545,15 +5545,16 @@ namespace C64Studio
         return null;
       }
       else if ( ( extension == ".D64" )
-      || ( extension == ".D81" )
-      || ( extension == ".T64" )
-      || ( extension == ".PRG" ) )
+      ||        ( extension == ".D71" )
+      ||        ( extension == ".D81" )
+      ||        ( extension == ".T64" )
+      ||        ( extension == ".PRG" ) )
       {
         document = new FileManager( StudioCore, Filename );
         document.ShowHint = DockState.Float;
       }
       else if ( ( extension == ".SPRITEPROJECT" )
-      || ( extension == ".SPR" ) )
+      ||        ( extension == ".SPR" ) )
       {
         document = new SpriteEditor( StudioCore );
         document.ShowHint = DockState.Document;
@@ -5564,7 +5565,7 @@ namespace C64Studio
         document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".CHARSETPROJECT" )
-      || ( extension == ".CHR" ) )
+      ||        ( extension == ".CHR" ) )
       {
         document = new CharsetEditor( StudioCore );
         document.ShowHint = DockState.Document;
