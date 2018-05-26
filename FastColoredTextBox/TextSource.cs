@@ -362,15 +362,31 @@ namespace FastColoredTextBoxNS
       return lines[i].Count;
     }
 
-    public virtual bool LineHasFoldingStartMarker( int iLine )
+
+
+    public virtual bool LineHasFoldingStartMarker( int LineIndex )
     {
-      return !string.IsNullOrEmpty( lines[iLine].FoldingStartMarker );
+      if ( ( LineIndex < 0 )
+      ||   ( LineIndex >= lines.Count ) )
+      {
+        return false;
+      }
+      return !string.IsNullOrEmpty( lines[LineIndex].FoldingStartMarker );
     }
 
-    public virtual bool LineHasFoldingEndMarker( int iLine )
+
+
+    public virtual bool LineHasFoldingEndMarker( int LineIndex )
     {
-      return !string.IsNullOrEmpty( lines[iLine].FoldingEndMarker );
+      if ( ( LineIndex < 0 )
+      ||   ( LineIndex >= lines.Count ) )
+      {
+        return false;
+      }
+      return !string.IsNullOrEmpty( lines[LineIndex].FoldingEndMarker );
     }
+
+
 
     public virtual void Dispose()
     {
