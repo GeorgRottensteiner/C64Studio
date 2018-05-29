@@ -589,5 +589,29 @@ namespace C64Studio
 
 
 
+    private void btnReloadFile_Click( object sender, EventArgs e )
+    {
+      GR.Memory.ByteBuffer    data = GR.IO.File.ReadAllBytes( m_OpenedFilename );
+      if ( data != null )
+      {
+        ushort    loadAddress = 0x801;
+
+        if ( System.IO.Path.GetExtension( m_OpenedFilename ).ToUpper() == ".PRG" )
+        {
+          // treat first two bytes as load address
+          loadAddress = data.UInt16At( 0 );
+
+          data = data.SubBuffer( 2 );
+        }
+        m_Disassembler.SetData( data );
+        m_DisassemblyProject.Data = data;
+
+        SetHexData( data );
+
+        UpdateDisassembly();
+      }
+
+    }
+
   }
 }

@@ -400,5 +400,24 @@ namespace C64Studio.Dialogs
 
 
 
+    private void btnReloadFile_Click( object sender, EventArgs e )
+    {
+      if ( string.IsNullOrEmpty( m_OpenedFilename ) )
+      {
+        return;
+      }
+
+      GR.Memory.ByteBuffer    data = GR.IO.File.ReadAllBytes( m_OpenedFilename );
+      if ( data != null )
+      {
+        m_Disassembler.SetData( data );
+        m_DisassemblyProject.Data = data;
+
+        SetHexData( data );
+
+        UpdateDisassembly();
+      }
+    }
+
   }
 }

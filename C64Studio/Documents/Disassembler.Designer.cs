@@ -55,6 +55,8 @@
       this.editDisassemblyProjectName = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.groupBox4 = new System.Windows.Forms.GroupBox();
+      this.label4 = new System.Windows.Forms.Label();
+      this.label3 = new System.Windows.Forms.Label();
       this.btnDeleteNamedLabel = new System.Windows.Forms.Button();
       this.btnAddNamedLabel = new System.Windows.Forms.Button();
       this.editLabelAddress = new System.Windows.Forms.TextBox();
@@ -63,8 +65,7 @@
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.label3 = new System.Windows.Forms.Label();
-      this.label4 = new System.Windows.Forms.Label();
+      this.btnReloadFile = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).BeginInit();
       this.panel1.SuspendLayout();
@@ -139,6 +140,7 @@
       this.groupBox1.Controls.Add(this.editStartAddress);
       this.groupBox1.Controls.Add(this.label1);
       this.groupBox1.Controls.Add(this.btnExportToASM);
+      this.groupBox1.Controls.Add(this.btnReloadFile);
       this.groupBox1.Controls.Add(this.btnOpenBinary);
       this.groupBox1.Location = new System.Drawing.Point(492, 14);
       this.groupBox1.Name = "groupBox1";
@@ -160,7 +162,7 @@
       // 
       // editStartAddress
       // 
-      this.editStartAddress.Location = new System.Drawing.Point(289, 21);
+      this.editStartAddress.Location = new System.Drawing.Point(354, 48);
       this.editStartAddress.Name = "editStartAddress";
       this.editStartAddress.Size = new System.Drawing.Size(100, 20);
       this.editStartAddress.TabIndex = 6;
@@ -169,7 +171,7 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(184, 24);
+      this.label1.Location = new System.Drawing.Point(355, 24);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(99, 13);
       this.label1.TabIndex = 5;
@@ -278,7 +280,7 @@
       this.tabBinary.Location = new System.Drawing.Point(4, 22);
       this.tabBinary.Name = "tabBinary";
       this.tabBinary.Padding = new System.Windows.Forms.Padding(3);
-      this.tabBinary.Size = new System.Drawing.Size(440, 628);
+      this.tabBinary.Size = new System.Drawing.Size(466, 628);
       this.tabBinary.TabIndex = 1;
       this.tabBinary.Text = "Binary";
       this.tabBinary.UseVisualStyleBackColor = true;
@@ -297,7 +299,7 @@
       this.hexView.NumDigitsMemorySize = 8;
       this.hexView.SelectedByteProvider = null;
       this.hexView.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
-      this.hexView.Size = new System.Drawing.Size(434, 622);
+      this.hexView.Size = new System.Drawing.Size(460, 622);
       this.hexView.StringViewVisible = true;
       this.hexView.TabIndex = 1;
       this.hexView.TextFont = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -374,6 +376,24 @@
       this.groupBox4.TabStop = false;
       this.groupBox4.Text = "Named Labels";
       // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(9, 47);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(37, 13);
+      this.label4.TabIndex = 3;
+      this.label4.Text = "Value:";
+      // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(9, 24);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(38, 13);
+      this.label3.TabIndex = 3;
+      this.label3.Text = "Name:";
+      // 
       // btnDeleteNamedLabel
       // 
       this.btnDeleteNamedLabel.Enabled = false;
@@ -445,23 +465,15 @@
       // 
       this.toolTip1.ShowAlways = true;
       // 
-      // label3
+      // btnReloadFile
       // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(9, 24);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(38, 13);
-      this.label3.TabIndex = 3;
-      this.label3.Text = "Name:";
-      // 
-      // label4
-      // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(9, 47);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(37, 13);
-      this.label4.TabIndex = 3;
-      this.label4.Text = "Value:";
+      this.btnReloadFile.Location = new System.Drawing.Point(134, 19);
+      this.btnReloadFile.Name = "btnReloadFile";
+      this.btnReloadFile.Size = new System.Drawing.Size(122, 23);
+      this.btnReloadFile.TabIndex = 3;
+      this.btnReloadFile.Text = "Reload File";
+      this.btnReloadFile.UseVisualStyleBackColor = true;
+      this.btnReloadFile.Click += new System.EventHandler(this.btnReloadFile_Click);
       // 
       // Disassembler
       // 
@@ -534,5 +546,6 @@
     private System.Windows.Forms.Button btnImportFromBinary;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.Button btnReloadFile;
   }
 }

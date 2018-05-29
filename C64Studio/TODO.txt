@@ -1,11 +1,12 @@
 ﻿C64Studio
 o Disassembler: rechtsklick auf Adresse um die als Sprungadresse zu nehmen
-o Diassembler: Option, um alles zu disassemblieren, auch ohne weitere Sprungpunkte
+o Disassembler: Option, um alles zu disassemblieren, auch ohne weitere Sprungpunkte
+o Disassembler: Update-Button für Update aus der Datei
+o Disassembler: Syntax-Coloring zerhunzt (Farbe von Zeile davor geht mit)
 o 176 Zeichen Zeile mit TAB-Support langsam? (TAB-Support generell langsam?)
 o export "to petscii" in the text screen editor <- test mit vollem charscreen mit allen Werten
 o generic file import, if size is not the optimum, allow custom skip bytes range (e.g. 2 load bytes)
 o Docking: DockPanelSuite Restored nicht sauber
-o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
 o Syntax-Coloring -> Preview im Setting Editor mit FastColoredTextBox
 o Code-Ergänzungvorschlag nicht nur für Labels/Variablen, sondern auch für Macros.
 o Beim suchen uns ersetzen scheint er seltsam die Suchergebnisse zu ersetzen. Alle ersetzen funzt, wenn ich aber zuerst auf Suchen klicke 
