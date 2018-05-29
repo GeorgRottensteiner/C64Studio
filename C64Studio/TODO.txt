@@ -1,6 +1,7 @@
 ﻿C64Studio
 o Disassembler: rechtsklick auf Adresse um die als Sprungadresse zu nehmen
-o Diassembler: Option, um alles zu disassemblieren, auch ohne weitere Sprungpunkte
+o Disassembler: Option, um alles zu disassemblieren, auch ohne weitere Sprungpunkte
+o Disassembler: Update from file
 o 176 Zeichen Zeile mit TAB-Support langsam? (TAB-Support generell langsam?)
 o export "to petscii" in the text screen editor <- test mit vollem charscreen mit allen Werten
 o generic file import, if size is not the optimum, allow custom skip bytes range (e.g. 2 load bytes)
