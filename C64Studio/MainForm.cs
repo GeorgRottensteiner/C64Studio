@@ -6148,12 +6148,6 @@ namespace C64Studio
 
     private void disassembleToolsToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      /*
-      Dialogs.DlgDisassembler   dlgDis = new C64Studio.Dialogs.DlgDisassembler( this );
-
-      dlgDis.ShowDialog();
-       */
-
       CreateNewDocument( ProjectElement.ElementType.DISASSEMBLER, m_CurrentProject );
     }
 

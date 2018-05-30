@@ -102,12 +102,6 @@
     </Compile>
     <Compile Include="Searching.cs" />
     <Compile Include="Debugging.cs" />
-    <Compile Include="Dialogs\DlgDisassembler.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\DlgDisassembler.Designer.cs">
-      <DependentUpon>DlgDisassembler.cs</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\DlgInterleaveData.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -442,9 +436,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Controls\ArrangedItemList.resx">
       <DependentUpon>ArrangedItemList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\DlgDisassembler.resx">
-      <DependentUpon>DlgDisassembler.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgInterleaveData.resx">
       <DependentUpon>DlgInterleaveData.cs</DependentUpon>
