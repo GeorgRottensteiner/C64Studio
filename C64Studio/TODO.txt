@@ -2,6 +2,15 @@
 o Disassembler: rechtsklick auf Adresse um die als Sprungadresse zu nehmen
 o Disassembler: Option, um alles zu disassemblieren, auch ohne weitere Sprungpunkte
 o Disassembler: Syntax-Coloring zerhunzt (Farbe von Zeile davor geht mit)
+o Automated code formatting
+o Map Editor:
+  Map: 
+    hier wären Hilfslinien super, gerne auch mit Zeilen/Spaltennummerierung
+    möglichkeit die Reihenfolge der Maps zu verschieben, wie bei den Tiles (Up/Down)
+  Tiles: 
+    wenn die Hintergrundfarbe weiß=charcolor ist, kann ich nix sehen (habe als Workaround auf dunkelgrau gestellt)
+    schön wäre es noch, wenn man das obere Nibble der colortables für "material" hätte = 16 Werte für lau
+    ODER Optional die Werte von mehreren Farbtabellen zusammenfassen, so dass man mit 4*LSR jeweils den zweiten Wert selbst ausrechnen muss
 o 176 Zeichen Zeile mit TAB-Support langsam? (TAB-Support generell langsam?)
 o export "to petscii" in the text screen editor <- test mit vollem charscreen mit allen Werten
 o generic file import, if size is not the optimum, allow custom skip bytes range (e.g. 2 load bytes)

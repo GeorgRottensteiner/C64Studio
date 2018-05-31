@@ -292,5 +292,26 @@ namespace TestProject
       Assert.AreEqual( C64Studio.Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, parser.Messages.Values[0].Code );
     }
 
+
+
+    [TestMethod]
+    public void TestHugeFile()
+    {
+      string      source = @"* = $2000
+                             !fill $80000";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config ) );
+
+      Assert.AreEqual( 0x80002, parser.AssembledOutput.Assembly.Length );
+    }
+
   }
 }

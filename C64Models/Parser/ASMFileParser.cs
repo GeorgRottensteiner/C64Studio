@@ -9793,8 +9793,9 @@ namespace C64Studio.Parser
         lowestStart = Math.Min( segment.first, lowestStart );
         highestEnd = Math.Max( segment.second.StartAddress + segment.second.Length, highestEnd );
 
-        if ( ( segment.first < 0 )
-        ||   ( segment.second.StartAddress + segment.second.Length >= 65535 ) )
+        // check, whether segments bigger than $ffff are possible!
+        if ( segment.first < 0 )
+        // ( segment.second.StartAddress + segment.second.Length >= 65535 ) )
         {
           AddError( segment.second.GlobalLineIndex, 
                     Types.ErrorCode.E1106_SEGMENT_OUT_OF_BOUNDS, 
