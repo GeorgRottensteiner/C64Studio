@@ -7917,11 +7917,23 @@ namespace FastColoredTextBoxNS
       Range old = Selection.Clone();
       int from = Math.Min( Selection.Start.iLine, Selection.End.iLine );
       int to = Math.Max( Selection.Start.iLine, Selection.End.iLine );
+      
 
       int   startOffset = old.Start.iChar;
       if ( old.Start.iLine > old.End.iLine )
       {
         startOffset = old.End.iChar;
+        if ( Selection.Start.iChar == 0 )
+        {
+          --to;
+        }
+      }
+      else
+      {
+        if ( Selection.End.iChar == 0 )
+        {
+          --to;
+        }
       }
       BeginUpdate();
       Selection.BeginUpdate();
@@ -7931,7 +7943,7 @@ namespace FastColoredTextBoxNS
       for ( int i = from; i <= to; i++ )
       {
         if ( ( i == from )
-        && ( spaces < startOffset ) )
+        &&   ( spaces < startOffset ) )
         {
           Selection.Start = new Place( startOffset, i );
         }
