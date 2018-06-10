@@ -2887,6 +2887,7 @@ namespace C64Studio
 
     public void ImportFromData( int Width, int Height, ByteBuffer CharData, ByteBuffer ColorData, CharsetProject Charset )
     {
+      SetScreenSize( Width, Height );
       m_CharsetScreen.SetScreenSize( Width, Height );
       comboBackground.SelectedIndex = m_CharsetScreen.CharSet.BackgroundColor;
       comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.MultiColor1;
