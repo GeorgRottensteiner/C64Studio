@@ -219,6 +219,8 @@ namespace TestProject
     [TestMethod]
     public void TestSegmentOutOfBounds()
     {
+      // this test is probably obsolete as you can assemble files bigger than $ffff
+      /*
       string      source = @"* = $ffff
                             lda #$ff
                             Zeropage_Routine = $0020
@@ -241,7 +243,7 @@ namespace TestProject
 
       Assert.AreEqual( 1, parser.Errors );
       Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.E1106_SEGMENT_OUT_OF_BOUNDS, parser.Messages.Values[0].Code );
+      Assert.AreEqual( C64Studio.Types.ErrorCode.E1106_SEGMENT_OUT_OF_BOUNDS, parser.Messages.Values[0].Code );*/
     }
 
 
@@ -309,8 +311,9 @@ namespace TestProject
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Assemble( config ) );
 
-      Assert.AreEqual( 0x80002, parser.AssembledOutput.Assembly.Length );
+      Assert.AreEqual( 0x80002, (int)parser.AssembledOutput.Assembly.Length );
     }
 
   }
