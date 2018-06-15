@@ -30,6 +30,8 @@
     {
       this.tabPreferences = new System.Windows.Forms.TabControl();
       this.tabGeneral = new System.Windows.Forms.TabPage();
+      this.btnBrowseDefaultOpenSolutionPath = new System.Windows.Forms.Button();
+      this.editDefaultOpenSolutionPath = new System.Windows.Forms.TextBox();
       this.comboAppMode = new System.Windows.Forms.ComboBox();
       this.btnSetDefaultsFont = new System.Windows.Forms.Button();
       this.checkBASICUseC64Font = new System.Windows.Forms.CheckBox();
@@ -38,6 +40,7 @@
       this.btnChooseFont = new System.Windows.Forms.Button();
       this.labelFontPreview = new System.Windows.Forms.Label();
       this.editTabSize = new System.Windows.Forms.TextBox();
+      this.label31 = new System.Windows.Forms.Label();
       this.label14 = new System.Windows.Forms.Label();
       this.checkAutoOpenLastSolution = new System.Windows.Forms.CheckBox();
       this.checkAllowTabs = new System.Windows.Forms.CheckBox();
@@ -139,9 +142,6 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.label31 = new System.Windows.Forms.Label();
-      this.editDefaultOpenSolutionPath = new System.Windows.Forms.TextBox();
-      this.btnBrowseDefaultOpenSolutionPath = new System.Windows.Forms.Button();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -203,6 +203,23 @@
       this.tabGeneral.TabIndex = 2;
       this.tabGeneral.Text = "General";
       this.tabGeneral.UseVisualStyleBackColor = true;
+      // 
+      // btnBrowseDefaultOpenSolutionPath
+      // 
+      this.btnBrowseDefaultOpenSolutionPath.Location = new System.Drawing.Point(624, 46);
+      this.btnBrowseDefaultOpenSolutionPath.Name = "btnBrowseDefaultOpenSolutionPath";
+      this.btnBrowseDefaultOpenSolutionPath.Size = new System.Drawing.Size(23, 20);
+      this.btnBrowseDefaultOpenSolutionPath.TabIndex = 18;
+      this.btnBrowseDefaultOpenSolutionPath.Text = "...";
+      this.btnBrowseDefaultOpenSolutionPath.UseVisualStyleBackColor = true;
+      this.btnBrowseDefaultOpenSolutionPath.Click += new System.EventHandler(this.btnBrowseDefaultOpenSolutionPath_Click);
+      // 
+      // editDefaultOpenSolutionPath
+      // 
+      this.editDefaultOpenSolutionPath.Location = new System.Drawing.Point(478, 46);
+      this.editDefaultOpenSolutionPath.Name = "editDefaultOpenSolutionPath";
+      this.editDefaultOpenSolutionPath.Size = new System.Drawing.Size(140, 20);
+      this.editDefaultOpenSolutionPath.TabIndex = 17;
       // 
       // comboAppMode
       // 
@@ -284,6 +301,15 @@
       this.editTabSize.Size = new System.Drawing.Size(88, 20);
       this.editTabSize.TabIndex = 5;
       this.editTabSize.TextChanged += new System.EventHandler(this.editTabSize_TextChanged);
+      // 
+      // label31
+      // 
+      this.label31.AutoSize = true;
+      this.label31.Location = new System.Drawing.Point(333, 49);
+      this.label31.Name = "label31";
+      this.label31.Size = new System.Drawing.Size(139, 13);
+      this.label31.TabIndex = 5;
+      this.label31.Text = "Default Solution Open Path:";
       // 
       // label14
       // 
@@ -885,6 +911,7 @@
       this.checkASMShowAutoComplete.TabIndex = 19;
       this.checkASMShowAutoComplete.Text = "Show Auto-Complete";
       this.checkASMShowAutoComplete.UseVisualStyleBackColor = true;
+      this.checkASMShowAutoComplete.CheckedChanged += new System.EventHandler(this.checkASMShowAutoComplete_CheckedChanged);
       // 
       // checkASMAutoTruncateLiteralValues
       // 
@@ -895,6 +922,7 @@
       this.checkASMAutoTruncateLiteralValues.TabIndex = 18;
       this.checkASMAutoTruncateLiteralValues.Text = "Truncate literal values";
       this.checkASMAutoTruncateLiteralValues.UseVisualStyleBackColor = true;
+      this.checkASMAutoTruncateLiteralValues.CheckedChanged += new System.EventHandler(this.checkASMAutoTruncateLiteralValues_CheckedChanged);
       // 
       // checkASMShowMiniMap
       // 
@@ -905,6 +933,7 @@
       this.checkASMShowMiniMap.TabIndex = 17;
       this.checkASMShowMiniMap.Text = "Show Mini View";
       this.checkASMShowMiniMap.UseVisualStyleBackColor = true;
+      this.checkASMShowMiniMap.CheckedChanged += new System.EventHandler(this.checkASMShowMiniView_CheckedChanged);
       // 
       // checkASMShowSizes
       // 
@@ -915,6 +944,7 @@
       this.checkASMShowSizes.TabIndex = 16;
       this.checkASMShowSizes.Text = "Show Sizes";
       this.checkASMShowSizes.UseVisualStyleBackColor = true;
+      this.checkASMShowSizes.CheckedChanged += new System.EventHandler(this.checkASMShowSizes_CheckedChanged);
       // 
       // checkASMShowCycles
       // 
@@ -925,6 +955,7 @@
       this.checkASMShowCycles.TabIndex = 15;
       this.checkASMShowCycles.Text = "Show Cycles";
       this.checkASMShowCycles.UseVisualStyleBackColor = true;
+      this.checkASMShowCycles.CheckedChanged += new System.EventHandler(this.checkASMShowCycles_CheckedChanged);
       // 
       // checkASMShowLineNumbers
       // 
@@ -935,6 +966,7 @@
       this.checkASMShowLineNumbers.TabIndex = 14;
       this.checkASMShowLineNumbers.Text = "Show Line Numbers";
       this.checkASMShowLineNumbers.UseVisualStyleBackColor = true;
+      this.checkASMShowLineNumbers.CheckedChanged += new System.EventHandler(this.checkASMShowLineNumbers_CheckedChanged);
       // 
       // label30
       // 
@@ -1324,32 +1356,6 @@
       this.btnExportCurrentPageSettings.Text = "Export here";
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
-      // 
-      // label31
-      // 
-      this.label31.AutoSize = true;
-      this.label31.Location = new System.Drawing.Point(333, 49);
-      this.label31.Name = "label31";
-      this.label31.Size = new System.Drawing.Size(139, 13);
-      this.label31.TabIndex = 5;
-      this.label31.Text = "Default Solution Open Path:";
-      // 
-      // editDefaultOpenSolutionPath
-      // 
-      this.editDefaultOpenSolutionPath.Location = new System.Drawing.Point(478, 46);
-      this.editDefaultOpenSolutionPath.Name = "editDefaultOpenSolutionPath";
-      this.editDefaultOpenSolutionPath.Size = new System.Drawing.Size(140, 20);
-      this.editDefaultOpenSolutionPath.TabIndex = 17;
-      // 
-      // btnBrowseDefaultOpenSolutionPath
-      // 
-      this.btnBrowseDefaultOpenSolutionPath.Location = new System.Drawing.Point(624, 46);
-      this.btnBrowseDefaultOpenSolutionPath.Name = "btnBrowseDefaultOpenSolutionPath";
-      this.btnBrowseDefaultOpenSolutionPath.Size = new System.Drawing.Size(23, 20);
-      this.btnBrowseDefaultOpenSolutionPath.TabIndex = 18;
-      this.btnBrowseDefaultOpenSolutionPath.Text = "...";
-      this.btnBrowseDefaultOpenSolutionPath.UseVisualStyleBackColor = true;
-      this.btnBrowseDefaultOpenSolutionPath.Click += new System.EventHandler(this.btnBrowseDefaultOpenSolutionPath_Click);
       // 
       // Settings
       // 

@@ -2610,8 +2610,9 @@ namespace C64Studio.Parser
                 ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_X )
                 ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_Y ) )
                 {
-                  if ( ( value < 0 )
-                  ||   ( value > 255 ) )
+                  if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
+                  &&   ( ( value < 0 )
+                  ||     ( value > 255 ) ) )
                   {
                     AddError( lineIndex, 
                               Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, 
