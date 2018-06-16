@@ -19,8 +19,9 @@ namespace C64Studio
     private const int BORDER_MARKER_WIDTH   = 20;
     private const int BORDER_SIZE_WIDTH     = 24;
     private const int BORDER_CYCLES_WIDTH   = 48;
+    private const int BORDER_ADDRESS_WIDTH  = 52;
 
-     
+
     [DllImport("user32.dll")]
     public static extern bool TrackMouseEvent(ref TRACKMOUSEEVENT lpEventTrack);
      
@@ -43,6 +44,7 @@ namespace C64Studio
     int                                       m_BreakpointOffset = 0;
     int                                       m_CycleOffset = -1;
     int                                       m_ByteSizeOffset = -1;
+    int                                       m_AddressOffset = -1;
 
     bool                                      m_RecalcZone = false;
 
@@ -2500,21 +2502,23 @@ namespace C64Studio
       m_BreakpointOffset = 0;
       m_CycleOffset = -1;
       m_ByteSizeOffset = -1;
+      m_AddressOffset = -1;
 
       int     newPadding = BORDER_MARKER_WIDTH;    // space for marker symbol on left side
+      if ( Core.Settings.ASMShowAddress )
+      {
+        m_AddressOffset = newPadding;
+        newPadding += BORDER_ADDRESS_WIDTH;
+      }
       if ( Core.Settings.ASMShowBytes )
       {
+        m_ByteSizeOffset = newPadding;
         newPadding += BORDER_SIZE_WIDTH;
-        m_ByteSizeOffset = BORDER_MARKER_WIDTH;
       }
       if ( Core.Settings.ASMShowCycles )
       {
+        m_CycleOffset = newPadding;
         newPadding += BORDER_CYCLES_WIDTH;
-        m_CycleOffset = BORDER_MARKER_WIDTH;
-        if ( Core.Settings.ASMShowBytes )
-        {
-          m_CycleOffset += BORDER_SIZE_WIDTH;
-        }
       }
       editSource.LeftPadding = newPadding;
 
@@ -2772,6 +2776,17 @@ namespace C64Studio
         if ( m_ByteSizeOffset != -1 )
         {
           e.Graphics.DrawString( lineInfo.NumBytes.ToString(), editSource.Font, System.Drawing.SystemBrushes.WindowText, m_ByteSizeOffset, e.LineRect.Top );
+        }
+        if ( m_AddressOffset != -1 )
+        {
+          if ( lineInfo.AddressStart != -1 )
+          {
+            e.Graphics.DrawString( "$" + lineInfo.AddressStart.ToString( "X4" ), editSource.Font, System.Drawing.SystemBrushes.WindowText, m_AddressOffset, e.LineRect.Top );
+          }
+          else
+          {
+            e.Graphics.DrawString( "????", editSource.Font, System.Drawing.SystemBrushes.WindowText, m_AddressOffset, e.LineRect.Top );
+          }
         }
       }
     }
