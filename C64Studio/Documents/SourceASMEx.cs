@@ -142,6 +142,7 @@ namespace C64Studio
       editSource.SelectionChanged += new EventHandler( editSource_SelectionChanged );
 
       editSource.MouseHover += new EventHandler( editSource_MouseHover );
+      editSource.ZoomChanged += EditSource_ZoomChanged;
 
       this.Activated += new EventHandler( SourceASM_Activated );
 
@@ -179,6 +180,44 @@ namespace C64Studio
       m_LineInfos.Add( new Types.ASM.LineInfo() );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+    }
+
+
+
+    private void EditSource_ZoomChanged( object sender, EventArgs e )
+    {
+      AdjustFontSizeInLeftBorder();
+    }
+
+
+
+    private void AdjustFontSizeInLeftBorder()
+    {
+      int approxWidthOfChar = TextRenderer.MeasureText( "$", editSource.Font ).Width;
+
+      float     zoomFactor = editSource.Zoom / 100.0f;
+
+      approxWidthOfChar = (int)( approxWidthOfChar * editSource.Zoom / 100.0f );
+
+      Debug.Log( "Zoom = " + editSource.Zoom + ", approx width = " + approxWidthOfChar );
+
+      int     newPadding = BORDER_MARKER_WIDTH;    // space for marker symbol on left side
+      if ( Core.Settings.ASMShowAddress )
+      {
+        m_AddressOffset = newPadding;
+        newPadding += (int)( BORDER_ADDRESS_WIDTH * zoomFactor );
+      }
+      if ( Core.Settings.ASMShowBytes )
+      {
+        m_ByteSizeOffset = newPadding;
+        newPadding += (int)( BORDER_SIZE_WIDTH * zoomFactor );
+      }
+      if ( Core.Settings.ASMShowCycles )
+      {
+        m_CycleOffset = newPadding;
+        newPadding += (int)( BORDER_CYCLES_WIDTH * zoomFactor );
+      }
+      editSource.LeftPadding = newPadding;
     }
 
 
@@ -2504,23 +2543,7 @@ namespace C64Studio
       m_ByteSizeOffset = -1;
       m_AddressOffset = -1;
 
-      int     newPadding = BORDER_MARKER_WIDTH;    // space for marker symbol on left side
-      if ( Core.Settings.ASMShowAddress )
-      {
-        m_AddressOffset = newPadding;
-        newPadding += BORDER_ADDRESS_WIDTH;
-      }
-      if ( Core.Settings.ASMShowBytes )
-      {
-        m_ByteSizeOffset = newPadding;
-        newPadding += BORDER_SIZE_WIDTH;
-      }
-      if ( Core.Settings.ASMShowCycles )
-      {
-        m_CycleOffset = newPadding;
-        newPadding += BORDER_CYCLES_WIDTH;
-      }
-      editSource.LeftPadding = newPadding;
+      AdjustFontSizeInLeftBorder();
 
       //call OnTextChanged for refresh syntax highlighting
       ResetAllStyles( editSource.Range );
