@@ -88,6 +88,7 @@ namespace C64Studio
       checkASMShowMiniMap.Checked             = Core.Settings.ASMShowMiniView;
       checkASMAutoTruncateLiteralValues.Checked = Core.Settings.ASMAutoTruncateLiteralValues;
       checkASMShowAutoComplete.Checked        = Core.Settings.ASMShowAutoComplete;
+      checkASMShowAddress.Checked             = Core.Settings.ASMShowAddress;
 
       editDefaultOpenSolutionPath.Text        = Core.Settings.DefaultProjectBasePath;
 
@@ -2253,6 +2254,19 @@ namespace C64Studio
         editDefaultOpenSolutionPath.Text = dlg.SelectedPath;
       }
     }
+
+
+
+    private void checkASMShowAddress_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( checkASMShowAddress.Checked != Core.Settings.ASMShowAddress )
+      {
+        Core.Settings.ASMShowAddress = checkASMShowAddress.Checked;
+        RefreshDisplayOnDocuments();
+      }
+    }
+
+
 
   }
 }

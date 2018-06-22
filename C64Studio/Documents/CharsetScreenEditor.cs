@@ -894,7 +894,7 @@ namespace C64Studio
 
     private void RedrawFullScreen()
     {
-      pictureEditor.DisplayPage.Box( 0, 0, 320, 200, 16 );
+      pictureEditor.DisplayPage.Box( 0, 0, pictureEditor.DisplayPage.Width, pictureEditor.DisplayPage.Height, 16 );
       int     x1 = m_CharsetScreen.ScreenOffsetX;
       int     y1 = m_CharsetScreen.ScreenOffsetY;
       int     x2 = x1 + m_CharsetScreen.ScreenWidth - 1;
@@ -908,9 +908,9 @@ namespace C64Studio
       {
         x2 = m_CharsetScreen.ScreenWidth - 1;
       }
-      if ( x2 - x1 > 40 )
+      if ( x2 - x1 > m_CharsetScreen.ScreenWidth )
       {
-        x2 = x1 + 39;
+        x2 = x1 + m_CharsetScreen.ScreenWidth - 1;
       }
       if ( y1 < 0 )
       {
@@ -920,9 +920,9 @@ namespace C64Studio
       {
         y2 = m_CharsetScreen.ScreenHeight - 1;
       }
-      if ( y2 - y1 > 25 )
+      if ( y2 - y1 > m_CharsetScreen.ScreenHeight )
       {
-        y2 = y1 + 24;
+        y2 = y1 + m_CharsetScreen.ScreenHeight - 1;
       }
 
       for ( int i = x1; i <= x2; ++i )
@@ -934,10 +934,9 @@ namespace C64Studio
                          ( j - y1 ) * 8,
                          (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ),
                          (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 8 ) );
-          pictureEditor.DisplayPage.DrawTo( m_Image,
-                                            ( i - x1 ) * 8 + m_CharsetScreen.ScreenOffsetX, ( j - y1 ) * 8 + m_CharsetScreen.ScreenOffsetY,
-                                            ( i - x1 ) * 8, ( j - y1 ) * 8,
-                                            8, 8 );
+          DrawCharImage( m_Image, ( i - x1 ) * 8 + m_CharsetScreen.ScreenOffsetX, ( j - y1 ) * 8 + m_CharsetScreen.ScreenOffsetY,
+                         (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ),
+                         (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 8 ) );
         }
       }
 
@@ -1317,7 +1316,7 @@ namespace C64Studio
 
     private void Redraw()
     {
-      pictureEditor.DisplayPage.Box( 0, 0, 320, 200, 16 );
+      pictureEditor.DisplayPage.Box( 0, 0, pictureEditor.DisplayPage.Width, pictureEditor.DisplayPage.Height, 16 );
       pictureEditor.DisplayPage.DrawFromMemoryImage( m_Image, -m_CharsetScreen.ScreenOffsetX * 8, -m_CharsetScreen.ScreenOffsetY * 8 );
 
       int     x1 = m_CharsetScreen.ScreenOffsetX;

@@ -142,6 +142,7 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
+      this.checkASMShowAddress = new System.Windows.Forms.CheckBox();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -850,6 +851,7 @@
       this.tabErrorsWarnings.Controls.Add(this.btmASMLibraryPathBrowse);
       this.tabErrorsWarnings.Controls.Add(this.editASMLibraryPath);
       this.tabErrorsWarnings.Controls.Add(this.asmLibraryPathList);
+      this.tabErrorsWarnings.Controls.Add(this.checkASMShowAddress);
       this.tabErrorsWarnings.Controls.Add(this.checkASMShowAutoComplete);
       this.tabErrorsWarnings.Controls.Add(this.checkASMAutoTruncateLiteralValues);
       this.tabErrorsWarnings.Controls.Add(this.checkASMShowMiniMap);
@@ -1357,6 +1359,17 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
+      // checkASMShowAddress
+      // 
+      this.checkASMShowAddress.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkASMShowAddress.Location = new System.Drawing.Point(21, 160);
+      this.checkASMShowAddress.Name = "checkASMShowAddress";
+      this.checkASMShowAddress.Size = new System.Drawing.Size(214, 24);
+      this.checkASMShowAddress.TabIndex = 19;
+      this.checkASMShowAddress.Text = "Show Address";
+      this.checkASMShowAddress.UseVisualStyleBackColor = true;
+      this.checkASMShowAddress.CheckedChanged += new System.EventHandler(this.checkASMShowAddress_CheckedChanged);
+      // 
       // Settings
       // 
       this.AcceptButton = this.btnOK;
@@ -1515,5 +1528,6 @@
     private System.Windows.Forms.Button btnBrowseDefaultOpenSolutionPath;
     private System.Windows.Forms.TextBox editDefaultOpenSolutionPath;
     private System.Windows.Forms.Label label31;
+    private System.Windows.Forms.CheckBox checkASMShowAddress;
   }
 }

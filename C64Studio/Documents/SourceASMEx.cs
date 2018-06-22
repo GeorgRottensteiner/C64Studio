@@ -19,8 +19,9 @@ namespace C64Studio
     private const int BORDER_MARKER_WIDTH   = 20;
     private const int BORDER_SIZE_WIDTH     = 24;
     private const int BORDER_CYCLES_WIDTH   = 48;
+    private const int BORDER_ADDRESS_WIDTH  = 52;
 
-     
+
     [DllImport("user32.dll")]
     public static extern bool TrackMouseEvent(ref TRACKMOUSEEVENT lpEventTrack);
      
@@ -43,6 +44,7 @@ namespace C64Studio
     int                                       m_BreakpointOffset = 0;
     int                                       m_CycleOffset = -1;
     int                                       m_ByteSizeOffset = -1;
+    int                                       m_AddressOffset = -1;
 
     bool                                      m_RecalcZone = false;
 
@@ -140,6 +142,7 @@ namespace C64Studio
       editSource.SelectionChanged += new EventHandler( editSource_SelectionChanged );
 
       editSource.MouseHover += new EventHandler( editSource_MouseHover );
+      editSource.ZoomChanged += EditSource_ZoomChanged;
 
       this.Activated += new EventHandler( SourceASM_Activated );
 
@@ -177,6 +180,44 @@ namespace C64Studio
       m_LineInfos.Add( new Types.ASM.LineInfo() );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+    }
+
+
+
+    private void EditSource_ZoomChanged( object sender, EventArgs e )
+    {
+      AdjustFontSizeInLeftBorder();
+    }
+
+
+
+    private void AdjustFontSizeInLeftBorder()
+    {
+      int approxWidthOfChar = TextRenderer.MeasureText( "$", editSource.Font ).Width;
+
+      float     zoomFactor = editSource.Zoom / 100.0f;
+
+      approxWidthOfChar = (int)( approxWidthOfChar * editSource.Zoom / 100.0f );
+
+      Debug.Log( "Zoom = " + editSource.Zoom + ", approx width = " + approxWidthOfChar );
+
+      int     newPadding = BORDER_MARKER_WIDTH;    // space for marker symbol on left side
+      if ( Core.Settings.ASMShowAddress )
+      {
+        m_AddressOffset = newPadding;
+        newPadding += (int)( BORDER_ADDRESS_WIDTH * zoomFactor );
+      }
+      if ( Core.Settings.ASMShowBytes )
+      {
+        m_ByteSizeOffset = newPadding;
+        newPadding += (int)( BORDER_SIZE_WIDTH * zoomFactor );
+      }
+      if ( Core.Settings.ASMShowCycles )
+      {
+        m_CycleOffset = newPadding;
+        newPadding += (int)( BORDER_CYCLES_WIDTH * zoomFactor );
+      }
+      editSource.LeftPadding = newPadding;
     }
 
 
@@ -2500,23 +2541,9 @@ namespace C64Studio
       m_BreakpointOffset = 0;
       m_CycleOffset = -1;
       m_ByteSizeOffset = -1;
+      m_AddressOffset = -1;
 
-      int     newPadding = BORDER_MARKER_WIDTH;    // space for marker symbol on left side
-      if ( Core.Settings.ASMShowBytes )
-      {
-        newPadding += BORDER_SIZE_WIDTH;
-        m_ByteSizeOffset = BORDER_MARKER_WIDTH;
-      }
-      if ( Core.Settings.ASMShowCycles )
-      {
-        newPadding += BORDER_CYCLES_WIDTH;
-        m_CycleOffset = BORDER_MARKER_WIDTH;
-        if ( Core.Settings.ASMShowBytes )
-        {
-          m_CycleOffset += BORDER_SIZE_WIDTH;
-        }
-      }
-      editSource.LeftPadding = newPadding;
+      AdjustFontSizeInLeftBorder();
 
       //call OnTextChanged for refresh syntax highlighting
       ResetAllStyles( editSource.Range );
@@ -2772,6 +2799,17 @@ namespace C64Studio
         if ( m_ByteSizeOffset != -1 )
         {
           e.Graphics.DrawString( lineInfo.NumBytes.ToString(), editSource.Font, System.Drawing.SystemBrushes.WindowText, m_ByteSizeOffset, e.LineRect.Top );
+        }
+        if ( m_AddressOffset != -1 )
+        {
+          if ( lineInfo.AddressStart != -1 )
+          {
+            e.Graphics.DrawString( "$" + lineInfo.AddressStart.ToString( "X4" ), editSource.Font, System.Drawing.SystemBrushes.WindowText, m_AddressOffset, e.LineRect.Top );
+          }
+          else
+          {
+            e.Graphics.DrawString( "????", editSource.Font, System.Drawing.SystemBrushes.WindowText, m_AddressOffset, e.LineRect.Top );
+          }
         }
       }
     }
