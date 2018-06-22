@@ -296,7 +296,7 @@
       // editTabSize
       // 
       this.editTabSize.Location = new System.Drawing.Point(149, 170);
-      this.editTabSize.MaxLength = 1;
+      this.editTabSize.MaxLength = 2;
       this.editTabSize.Name = "editTabSize";
       this.editTabSize.Size = new System.Drawing.Size(88, 20);
       this.editTabSize.TabIndex = 5;
