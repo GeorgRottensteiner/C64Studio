@@ -38,6 +38,7 @@
       this.editStartAddress = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
       this.btnExportToASM = new System.Windows.Forms.Button();
+      this.btnReloadFile = new System.Windows.Forms.Button();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.btnDeleteJumpedAtAddress = new System.Windows.Forms.Button();
       this.btnAddJumpAddress = new System.Windows.Forms.Button();
@@ -65,7 +66,8 @@
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnReloadFile = new System.Windows.Forms.Button();
+      this.contextMenuDisassembler = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.addJumpAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).BeginInit();
       this.panel1.SuspendLayout();
@@ -76,6 +78,7 @@
       this.tabBinary.SuspendLayout();
       this.groupBox3.SuspendLayout();
       this.groupBox4.SuspendLayout();
+      this.contextMenuDisassembler.SuspendLayout();
       this.SuspendLayout();
       // 
       // editDisassembly
@@ -95,6 +98,7 @@
       this.editDisassembly.BackBrush = null;
       this.editDisassembly.CharHeight = 13;
       this.editDisassembly.CharWidth = 7;
+      this.editDisassembly.ContextMenuStrip = this.contextMenuDisassembler;
       this.editDisassembly.ConvertTabsToSpaces = false;
       this.editDisassembly.Cursor = System.Windows.Forms.Cursors.IBeam;
       this.editDisassembly.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
@@ -186,6 +190,16 @@
       this.btnExportToASM.Text = "Export to Assembly";
       this.btnExportToASM.UseVisualStyleBackColor = true;
       this.btnExportToASM.Click += new System.EventHandler(this.btnExportAssembly_Click);
+      // 
+      // btnReloadFile
+      // 
+      this.btnReloadFile.Location = new System.Drawing.Point(134, 19);
+      this.btnReloadFile.Name = "btnReloadFile";
+      this.btnReloadFile.Size = new System.Drawing.Size(122, 23);
+      this.btnReloadFile.TabIndex = 3;
+      this.btnReloadFile.Text = "Reload File";
+      this.btnReloadFile.UseVisualStyleBackColor = true;
+      this.btnReloadFile.Click += new System.EventHandler(this.btnReloadFile_Click);
       // 
       // groupBox2
       // 
@@ -465,15 +479,20 @@
       // 
       this.toolTip1.ShowAlways = true;
       // 
-      // btnReloadFile
+      // contextMenuDisassembler
       // 
-      this.btnReloadFile.Location = new System.Drawing.Point(134, 19);
-      this.btnReloadFile.Name = "btnReloadFile";
-      this.btnReloadFile.Size = new System.Drawing.Size(122, 23);
-      this.btnReloadFile.TabIndex = 3;
-      this.btnReloadFile.Text = "Reload File";
-      this.btnReloadFile.UseVisualStyleBackColor = true;
-      this.btnReloadFile.Click += new System.EventHandler(this.btnReloadFile_Click);
+      this.contextMenuDisassembler.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addJumpAddressToolStripMenuItem});
+      this.contextMenuDisassembler.Name = "contextMenuDisassembler";
+      this.contextMenuDisassembler.Size = new System.Drawing.Size(174, 26);
+      this.contextMenuDisassembler.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuDisassembler_Opening);
+      // 
+      // addJumpAddressToolStripMenuItem
+      // 
+      this.addJumpAddressToolStripMenuItem.Name = "addJumpAddressToolStripMenuItem";
+      this.addJumpAddressToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.addJumpAddressToolStripMenuItem.Text = "Add Jump Address";
+      this.addJumpAddressToolStripMenuItem.Click += new System.EventHandler(this.addJumpAddressToolStripMenuItem_Click);
       // 
       // Disassembler
       // 
@@ -505,6 +524,7 @@
       this.groupBox3.PerformLayout();
       this.groupBox4.ResumeLayout(false);
       this.groupBox4.PerformLayout();
+      this.contextMenuDisassembler.ResumeLayout(false);
       this.ResumeLayout(false);
 
     }
@@ -547,5 +567,7 @@
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Button btnReloadFile;
+    private System.Windows.Forms.ContextMenuStrip contextMenuDisassembler;
+    private System.Windows.Forms.ToolStripMenuItem addJumpAddressToolStripMenuItem;
   }
 }

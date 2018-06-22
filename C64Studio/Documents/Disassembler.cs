@@ -18,7 +18,9 @@ namespace C64Studio
 
     private FastColoredTextBoxNS.TextStyle[]          m_TextStyles = new FastColoredTextBoxNS.TextStyle[(int)Types.ColorableElement.LAST_ENTRY];
     private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
-    
+
+    private int                         m_ContextMenuOpeningInLineIndex = -1;
+
 
 
 
@@ -187,8 +189,8 @@ namespace C64Studio
       editDisassembly.CommentPrefix = ";";
 
       //editSource.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
-      editDisassembly.AllowTabs            = Core.Settings.AllowTabs;
-      editDisassembly.ConvertTabsToSpaces  = Core.Settings.TabConvertToSpaces;
+      editDisassembly.AllowTabs = Core.Settings.AllowTabs;
+      editDisassembly.ConvertTabsToSpaces = Core.Settings.TabConvertToSpaces;
       editDisassembly.TabLength = Core.Settings.TabSize;
 
       //call OnTextChanged for refresh syntax highlighting
@@ -337,17 +339,24 @@ namespace C64Studio
         {
           address = GR.Convert.ToI32( addressT );
         }
-        if ( !m_DisassemblyProject.JumpedAtAddresses.ContainsValue( (ushort)address ) )
-        {
-          m_DisassemblyProject.JumpedAtAddresses.Add( (ushort)address );
+        AddJumpedAtAddress( (ushort)address );
+      }
+    }
 
 
-          ListViewItem    item = new ListViewItem();
-          FillItemFromAddress( item, address );
-          listJumpedAtAddresses.Items.Add( item );
 
-          UpdateDisassembly();
-        }
+    private void AddJumpedAtAddress( ushort Address )
+    {
+      if ( !m_DisassemblyProject.JumpedAtAddresses.ContainsValue( Address ) )
+      {
+        m_DisassemblyProject.JumpedAtAddresses.Add( Address );
+
+
+        ListViewItem    item = new ListViewItem();
+        FillItemFromAddress( item, Address );
+        listJumpedAtAddresses.Items.Add( item );
+
+        UpdateDisassembly();
       }
     }
 
@@ -386,7 +395,7 @@ namespace C64Studio
       {
         GR.Memory.ByteBuffer    data = GR.IO.File.ReadAllBytes( openDialog.FileName );
         if ( ( data != null )
-        &&   ( m_DisassemblyProject.ReadFromBuffer( data ) ) )
+        && ( m_DisassemblyProject.ReadFromBuffer( data ) ) )
         {
           m_Disassembler.SetData( m_DisassemblyProject.Data );
           editStartAddress.Text = "$" + m_DisassemblyProject.DataStartAddress.ToString( "X4" );
@@ -467,9 +476,9 @@ namespace C64Studio
       }
       SourceASMEx document = new SourceASMEx( Core );
 
-      document.ShowHint   = WeifenLuo.WinFormsUI.Docking.DockState.Document;
-      document.Core       = Core;
-      document.Text       = System.IO.Path.GetFileName( newFilename );
+      document.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
+      document.Core = Core;
+      document.Text = System.IO.Path.GetFileName( newFilename );
       document.FillContent( disassembly );
       document.Show( Core.MainForm.panelMain );
     }
@@ -555,7 +564,7 @@ namespace C64Studio
     private bool IsValidNamedLabel()
     {
       if ( ( editLabelAddress.Text.Length == 0 )
-      ||   ( editLabelName.Text.Length == 0 ) )
+      || ( editLabelName.Text.Length == 0 ) )
       {
         return false;
       }
@@ -611,6 +620,58 @@ namespace C64Studio
         UpdateDisassembly();
       }
 
+    }
+
+
+
+    private void addJumpAddressToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      int     addressInLine = ExtractAddressFromLine( m_ContextMenuOpeningInLineIndex );
+
+      if ( ( addressInLine >= 0 )
+      &&   ( addressInLine < 0x10000 ) )
+      {
+        AddJumpedAtAddress( (ushort)addressInLine );
+      }
+    }
+
+
+
+    private int ExtractAddressFromLine( int LineIndex )
+    {
+      if ( ( LineIndex < 0 )
+      ||   ( LineIndex >= editDisassembly.LinesCount ) )
+      {
+        return - 1;
+      }
+      string    curLine = editDisassembly.Lines[LineIndex];
+      if ( ( curLine.Length >= 5 )
+      &&   ( curLine.StartsWith( "$" ) ) )
+      {
+        return GR.Convert.ToI32( curLine.Substring( 1, 4 ), 16 );
+      }
+      return -1;
+    }
+
+
+
+    private void contextMenuDisassembler_Opening( object sender, CancelEventArgs e )
+    {
+      System.Drawing.Point mousePos = editDisassembly.PointToClient( Control.MousePosition );
+
+      int position                    = editDisassembly.PointToPosition( mousePos );
+      m_ContextMenuOpeningInLineIndex = editDisassembly.PositionToPlace( position ).iLine;
+
+      int     addressInLine = ExtractAddressFromLine( m_ContextMenuOpeningInLineIndex );
+
+      if ( addressInLine != -1 )
+      {
+        addJumpAddressToolStripMenuItem.Text = "Add jump address ($" + addressInLine.ToString( "X4" ) + ")";
+      }
+      else
+      {
+        addJumpAddressToolStripMenuItem.Text = "Add jump address";
+      }
     }
 
   }
