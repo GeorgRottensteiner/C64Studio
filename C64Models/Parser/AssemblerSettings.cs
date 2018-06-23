@@ -82,6 +82,8 @@ namespace C64Studio.Parser
 
           AllowedSingleTokens = ",#(){}*" + INTERNAL_OPENING_BRACE + INTERNAL_CLOSING_BRACE;
 
+          AddMacro( "!ADDR", Types.MacroInfo.MacroType.ADDRESS );
+          AddMacro( "!ADDRESS", Types.MacroInfo.MacroType.ADDRESS );
           AddMacro( "!BYTE", Types.MacroInfo.MacroType.BYTE );
           AddMacro( "!BY", Types.MacroInfo.MacroType.BYTE );
           AddMacro( "!BASIC", Types.MacroInfo.MacroType.BASIC );
@@ -132,8 +134,8 @@ namespace C64Studio.Parser
           AddMacro( "!SET", Types.MacroInfo.MacroType.SET );
 
           // helper pseudo ops from ACME to generate some address vs. value warnings
-          AddMacro( "!ADDR", Types.MacroInfo.MacroType.IGNORE );
-          AddMacro( "!ADDRESS", Types.MacroInfo.MacroType.IGNORE );
+          //AddMacro( "!ADDR", Types.MacroInfo.MacroType.IGNORE );
+          //AddMacro( "!ADDRESS", Types.MacroInfo.MacroType.IGNORE );
 
           MacroPrefix = "!";
           MacroFunctionCallPrefix = "+";

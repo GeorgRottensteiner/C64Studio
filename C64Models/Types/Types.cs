@@ -74,7 +74,8 @@ namespace C64Studio.Types
       LABEL_FILE,     // ACME: !sl
       SET,
       ALIGN_DASM,
-      BASIC
+      BASIC,
+      ADDRESS         // ACME: !ADDR with or without braces
     }
 
     public MacroType      Type = MacroType.UNKNOWN;
@@ -1445,7 +1446,8 @@ namespace C64Studio.Types
       LOOP,
       MACRO_FUNCTION,
       PSEUDO_PC,
-      ZONE
+      ZONE,
+      ADDRESS
     };
 
     public int                      StartIndex = 0;

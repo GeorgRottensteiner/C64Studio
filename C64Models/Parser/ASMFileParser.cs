@@ -106,7 +106,9 @@ namespace C64Studio.Parser
       m_OperatorPrecedence["%"] = 2;
       m_OperatorPrecedence["EOR"] = 3;
       m_OperatorPrecedence["eor"] = 3;
-      m_OperatorPrecedence["^"] = 3;
+      m_OperatorPrecedence["XOR"] = 3;
+      m_OperatorPrecedence["xor"] = 3;
+      m_OperatorPrecedence["^"] = 6;
       m_OperatorPrecedence["OR"] = 4;
       m_OperatorPrecedence["or"] = 4;
       m_OperatorPrecedence["|"] = 4;
@@ -1029,7 +1031,8 @@ namespace C64Studio.Parser
       }
       else if ( ( opText == "EOR" )
       ||        ( opText == "eor" )
-      ||        ( opText == "^" ) )
+      ||        ( opText == "XOR" )
+      ||        ( opText == "xor" ) )
       {
         Result = token1 ^ token2;
         return true;
@@ -1044,6 +1047,11 @@ namespace C64Studio.Parser
       else if ( opText == ">>" )
       {
         Result = token1 >> token2;
+        return true;
+      }
+      else if ( opText == "^" )
+      {
+        Result = (int)Math.Pow( (int)token1, (int)token2 );
         return true;
       }
       else if ( opText == "<<" )
@@ -1179,22 +1187,23 @@ namespace C64Studio.Parser
         return true;
       }
       else if ( ( opText == "&" )
-      ||        ( opText == "AND" )
-      ||        ( opText == "and" ) )
+      || ( opText == "AND" )
+      || ( opText == "and" ) )
       {
         Result = (int)token1 & (int)token2;
         return true;
       }
       else if ( ( opText == "EOR" )
-      ||        ( opText == "eor" )
-      ||        ( opText == "^" ) )
+      || ( opText == "eor" )
+      || ( opText == "XOR" )
+      || ( opText == "xor" ) )
       {
         Result = (int)token1 ^ (int)token2;
         return true;
       }
       else if ( ( opText == "|" )
-      ||        ( opText == "or" )
-      ||        ( opText == "OR" ) )
+      || ( opText == "or" )
+      || ( opText == "OR" ) )
       {
         Result = (int)token1 | (int)token2;
         return true;
@@ -1202,6 +1211,11 @@ namespace C64Studio.Parser
       else if ( opText == ">>" )
       {
         Result = (int)token1 >> (int)token2;
+        return true;
+      }
+      else if ( opText == "^" )
+      {
+        Result = Math.Pow( token1, token2 );
         return true;
       }
       else if ( opText == "<<" )
@@ -1222,7 +1236,7 @@ namespace C64Studio.Parser
         return true;
       }
       else if ( ( opText == "!=" )
-      ||        ( opText == "<>" ) )
+      || ( opText == "<>" ) )
       {
         if ( token1 != token2 )
         {
@@ -3136,7 +3150,6 @@ namespace C64Studio.Parser
         }
         if ( ( lineTokenInfos.Count > 0 )
         &&   ( lineTokenInfos[0].Content != "}" ) )
-        //if ( !parseLine.StartsWith( "}" ) )
         {
           bool isActive = true;
           for ( int i = 0; i < stackDefineBlocks.Count; ++i )
@@ -3169,6 +3182,17 @@ namespace C64Studio.Parser
             {
               // ACME style pseudo pc with bracket
               Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.PSEUDO_PC );
+              scope.StartIndex = lineIndex;
+              scope.Active = false;
+              stackDefineBlocks.Add( scope );
+              OnScopeAdded( scope );
+            }
+            else if ( ( lineTokenInfos[0].Content.ToUpper().StartsWith( "!ADDR" ) )
+            &&        ( lineTokenInfos.Count >= 2 )
+            &&        ( lineTokenInfos[1].Content == "{" ) )
+            {
+              // ACME style pseudo pc with bracket
+              Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ADDRESS );
               scope.StartIndex = lineIndex;
               scope.Active = false;
               stackDefineBlocks.Add( scope );
@@ -5888,6 +5912,11 @@ namespace C64Studio.Parser
         //string parseLine = Lines[lineIndex].Trim();
         string parseLine = Lines[lineIndex].TrimEnd();
 
+        if ( lineIndex == 50 )
+        {
+          Debug.Log( "aha" );
+        }
+
         lineSizeInBytes = 0;
         hadCommentInLine = false;
         hadMacro = false;
@@ -5943,6 +5972,7 @@ namespace C64Studio.Parser
           continue;
         }
 
+        recheck_line:;
         // quick hack to "avoid" multiple statements per line
         //  special case label with : before statement
         if ( ( lineTokenInfos.Count >= 2 )
@@ -6165,13 +6195,15 @@ namespace C64Studio.Parser
 
 
           int equPos = lineTokenInfos[1].StartPos;
-          string defineName = parseLine.Substring( 0, equPos ).Trim();
+          //string defineName = parseLine.Substring( 0, equPos ).Trim();
+          string defineName = lineTokenInfos[0].Content;
           if ( !m_AssemblerSettings.CaseSensitive )
           {
             defineName = defineName.ToUpper();
           }
           int   defineLength = lineTokenInfos[lineTokenInfos.Count - 1].StartPos + lineTokenInfos[lineTokenInfos.Count - 1].Length - ( equPos + lineTokenInfos[1].Content.Length );
-          string defineValue = parseLine.Substring( equPos + lineTokenInfos[1].Content.Length, defineLength ).Trim();
+          string defineValue = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 2 );
+            //parseLine.Substring( equPos + lineTokenInfos[1].Content.Length, defineLength ).Trim();
 
           List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
           int address = -1;
@@ -6336,7 +6368,6 @@ namespace C64Studio.Parser
 
                     // end previous block
                     stackScopes.RemoveAt( stackScopes.Count - 1 );
-                    Debug.Log( "Add Scope else if " + lineIndex );
 
                     // start new block
                     int defineResult = -1;
@@ -6802,8 +6833,8 @@ namespace C64Studio.Parser
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.WARN )
             {
-              AddWarning( lineIndex, 
-                          Types.ErrorCode.W0005_USER_WARNING, 
+              AddWarning( lineIndex,
+                          Types.ErrorCode.W0005_USER_WARNING,
                           EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1 ),
                           lineTokenInfos[1].StartPos,
                           lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
@@ -6815,9 +6846,9 @@ namespace C64Studio.Parser
             else if ( macro.Type == Types.MacroInfo.MacroType.SET )
             {
               if ( ( lineTokenInfos.Count >= 4 )
-              &&   ( m_AssemblerSettings.DefineSeparatorKeywords.ContainsValue( lineTokenInfos[2].Content )
-              &&   ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
-              ||     ( !lineTokenInfos[1].Content.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) )
+              && ( m_AssemblerSettings.DefineSeparatorKeywords.ContainsValue( lineTokenInfos[2].Content )
+              && ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
+              || ( !lineTokenInfos[1].Content.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) )
               {
                 if ( ScopeInsideMacroDefinition( stackScopes ) )
                 {
@@ -6847,8 +6878,8 @@ namespace C64Studio.Parser
                   List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
                   if ( !EvaluateTokens( lineIndex, tokens, out newStepPos ) )
                   {
-                    AddError( lineIndex, 
-                              Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
                               "Could not evaluate * position value",
                               lineTokenInfos[3].StartPos,
                               lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
@@ -6864,8 +6895,8 @@ namespace C64Studio.Parser
                   {
                     if ( defineName == "*" )
                     {
-                      AddError( lineIndex, 
-                                Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
+                      AddError( lineIndex,
+                                Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
                                 "Cannot evaluate expression for *",
                                 valueTokens[0].StartPos,
                                 valueTokens[valueTokens.Count - 1].EndPos + 1 - valueTokens[0].StartPos );
@@ -6886,9 +6917,9 @@ namespace C64Studio.Parser
                     if ( defineName == "*" )
                     {
                       if ( ( address >= 0 )
-                      &&   ( address <= 0xffff ) )
+                      && ( address <= 0xffff ) )
                       {
-                        AddError( lineIndex, 
+                        AddError( lineIndex,
                                   Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
                                   "Evaluated constant out of bounds, " + address + " must be >= 0 and <= 65535",
                                   valueTokens[0].StartPos,
@@ -6925,23 +6956,23 @@ namespace C64Studio.Parser
               bool    libraryFile = false;
 
               if ( ( lineTokenInfos.Count == 2 )
-              &&   ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+              && ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
               {
                 // regular include
                 subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
               }
               else if ( ( lineTokenInfos.Count > 3 )
-              &&        ( lineTokenInfos[1].Content == "<" )
-              &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
+              && ( lineTokenInfos[1].Content == "<" )
+              && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
               {
                 // library include
                 subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
                 libraryFile = true;
               }
-              else 
+              else
               {
-                AddError( lineIndex, 
-                          Types.ErrorCode.E1302_MALFORMED_MACRO, 
+                AddError( lineIndex,
+                          Types.ErrorCode.E1302_MALFORMED_MACRO,
                           "Expecting file name, either \"filename\" or \"library filename\"",
                           lineTokenInfos[0].StartPos,
                           lineTokenInfos[0].Length );
@@ -7058,10 +7089,10 @@ namespace C64Studio.Parser
               //     outputtype = cbm (default) oder plain
               if ( !string.IsNullOrEmpty( m_CompileTargetFile ) )
               {
-                AddWarning( lineIndex, 
-                            C64Studio.Types.ErrorCode.W0004_TARGET_FILENAME_ALREADY_PROVIDED, 
+                AddWarning( lineIndex,
+                            C64Studio.Types.ErrorCode.W0004_TARGET_FILENAME_ALREADY_PROVIDED,
                             "A target file name was already provided, ignoring this one",
-                            -1, 
+                            -1,
                             0 );
               }
               else
@@ -7069,17 +7100,17 @@ namespace C64Studio.Parser
                 lineTokenInfos.RemoveAt( 0 );
 
                 if ( ( lineTokenInfos.Count != 3 )
-                ||   ( lineTokenInfos[1].Content != "," ) )
+                || ( lineTokenInfos[1].Content != "," ) )
                 {
-                  AddError( lineIndex, 
+                  AddError( lineIndex,
                             Types.ErrorCode.E1302_MALFORMED_MACRO,
                             "Expected !to <Filename>,<Type = cbm, plain, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, t64, tap or d64>" );
                   return null;
                 }
                 if ( lineTokenInfos[0].Type != Types.TokenInfo.TokenType.LITERAL_STRING )
                 {
-                  AddError( lineIndex, 
-                            Types.ErrorCode.E1307_FILENAME_INCOMPLETE, 
+                  AddError( lineIndex,
+                            Types.ErrorCode.E1307_FILENAME_INCOMPLETE,
                             "String as file name expected",
                             lineTokenInfos[0].StartPos,
                             lineTokenInfos[0].Length );
@@ -7087,23 +7118,23 @@ namespace C64Studio.Parser
                 }
                 string    targetType = lineTokenInfos[2].Content.ToUpper();
                 if ( ( targetType != "CBM" )
-                &&   ( targetType != "PLAIN" )
-                &&   ( targetType != "CART8BIN" )
-                &&   ( targetType != "CART8CRT" )
-                &&   ( targetType != "CART16BIN" )
-                &&   ( targetType != "CART16CRT" )
-                &&   ( targetType != "MAGICDESKBIN" )
-                &&   ( targetType != "MAGICDESKCRT" )
-                &&   ( targetType != "RGCDBIN" )
-                &&   ( targetType != "RGCDCRT" )
-                &&   ( targetType != "EASYFLASHBIN" )
-                &&   ( targetType != "EASYFLASHCRT" )
-                &&   ( targetType != "D64" )
-                &&   ( targetType != "TAP" )
-                &&   ( targetType != "T64" ) )
+                && ( targetType != "PLAIN" )
+                && ( targetType != "CART8BIN" )
+                && ( targetType != "CART8CRT" )
+                && ( targetType != "CART16BIN" )
+                && ( targetType != "CART16CRT" )
+                && ( targetType != "MAGICDESKBIN" )
+                && ( targetType != "MAGICDESKCRT" )
+                && ( targetType != "RGCDBIN" )
+                && ( targetType != "RGCDCRT" )
+                && ( targetType != "EASYFLASHBIN" )
+                && ( targetType != "EASYFLASHCRT" )
+                && ( targetType != "D64" )
+                && ( targetType != "TAP" )
+                && ( targetType != "T64" ) )
                 {
-                  AddError( lineIndex, 
-                            Types.ErrorCode.E1304_UNSUPPORTED_TARGET_TYPE, 
+                  AddError( lineIndex,
+                            Types.ErrorCode.E1304_UNSUPPORTED_TARGET_TYPE,
                             "Unsupported target type " + lineTokenInfos[2].Content + ", only cbm, plain, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, t64, tap or d64 supported",
                             lineTokenInfos[2].StartPos,
                             lineTokenInfos[2].Length );
@@ -7181,6 +7212,35 @@ namespace C64Studio.Parser
                 }
               }
             }
+            else if ( macro.Type == Types.MacroInfo.MacroType.ADDRESS )
+            {
+              int     openingBracketTokenIndex = -1;
+              for ( int i = 0; i < lineTokenInfos.Count; ++i )
+              {
+                if ( lineTokenInfos[i].Content == "{" )
+                {
+                  openingBracketTokenIndex = i;
+                  break;
+                }
+              }
+
+              if ( openingBracketTokenIndex != -1 )
+              {
+                /*
+                // remove starting tokens
+                for ( int i = 0; i < openingBracketTokenIndex; ++i )
+                {
+                  lineTokenInfos.RemoveAt( 0 );
+                }*/
+                stackScopes.Add( new ScopeInfo( ScopeInfo.ScopeType.ADDRESS ) { Active = true, StartIndex = lineIndex } );
+                continue;
+              }
+              else
+              {
+                lineTokenInfos.RemoveAt( 0 );
+                goto recheck_line;
+              }
+            }
             else if ( macro.Type == Types.MacroInfo.MacroType.IFDEF )
             {
               // !ifdef MUSIC_ON {
@@ -7196,8 +7256,8 @@ namespace C64Studio.Parser
 
               if ( openingBracketTokenIndex == -1 )
               {
-                AddError( lineIndex, 
-                          Types.ErrorCode.E1004_MISSING_OPENING_BRACKET, 
+                AddError( lineIndex,
+                          Types.ErrorCode.E1004_MISSING_OPENING_BRACKET,
                           "Missing opening brace",
                           lineTokenInfos[0].StartPos,
                           lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
@@ -7217,8 +7277,8 @@ namespace C64Studio.Parser
                   if ( trailingtokens.Count >= 3 )
                   {
                     if ( ( trailingtokens[trailingtokens.Count - 3].Content == "}" )
-                    &&   ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
-                    &&   ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
+                    && ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
+                    && ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
                     {
                       hadElse = true;
                     }
@@ -7237,7 +7297,7 @@ namespace C64Studio.Parser
                   // only evaluate the first token
                   // TODO - have to evaluate the rest of the line if it exists!!
                   if ( ( !EvaluateTokens( lineIndex, tokens, 0, 1, out defineResult ) )
-                  ||   ( defineResult == 0 ) )
+                  || ( defineResult == 0 ) )
                   {
                     scope.Active = hadElse;
                   }
@@ -7261,8 +7321,8 @@ namespace C64Studio.Parser
               }
               if ( lineTokenInfos[0].Type != Types.TokenInfo.TokenType.LITERAL_STRING )
               {
-                AddError( lineIndex, 
-                          Types.ErrorCode.E1307_FILENAME_INCOMPLETE, 
+                AddError( lineIndex,
+                          Types.ErrorCode.E1307_FILENAME_INCOMPLETE,
                           "String as file name expected",
                           lineTokenInfos[0].StartPos,
                           lineTokenInfos[0].Length );
@@ -7270,8 +7330,8 @@ namespace C64Studio.Parser
               }
               if ( !string.IsNullOrEmpty( ASMFileInfo.LabelDumpFile ) )
               {
-                AddWarning( lineIndex, 
-                            C64Studio.Types.ErrorCode.W0006_LABEL_DUMP_FILE_ALREADY_GIVEN, 
+                AddWarning( lineIndex,
+                            C64Studio.Types.ErrorCode.W0006_LABEL_DUMP_FILE_ALREADY_GIVEN,
                             "Label dump file name has already been provided",
                             lineTokenInfos[0].StartPos,
                             lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
@@ -7505,7 +7565,7 @@ namespace C64Studio.Parser
                 }
               }
               if ( ( paramPos == 0 )
-              ||   ( paramPos > 1 ) )
+              || ( paramPos > 1 ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !bank <Number>[,<Size>]" );
               }
@@ -7569,8 +7629,8 @@ namespace C64Studio.Parser
                   {
                     if ( oldBank.Number == number )
                     {
-                      AddWarning( lineIndex, 
-                                  Types.ErrorCode.W0003_BANK_INDEX_ALREADY_USED, 
+                      AddWarning( lineIndex,
+                                  Types.ErrorCode.W0003_BANK_INDEX_ALREADY_USED,
                                   "Bank with index " + number + " already exists",
                                   lineTokenInfos[0].StartPos,
                                   lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
@@ -7642,8 +7702,8 @@ namespace C64Studio.Parser
               if ( tokenParams.Count == 3 )
               {
                 if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-                &&   ( ( tokenParams[2] < 0 )
-                ||   ( tokenParams[2] > 255 ) ) )
+                && ( ( tokenParams[2] < 0 )
+                || ( tokenParams[2] > 255 ) ) )
                 {
                   AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "FillValue out of bounds" );
                   return null;
