@@ -199,8 +199,6 @@ namespace C64Studio
 
       approxWidthOfChar = (int)( approxWidthOfChar * editSource.Zoom / 100.0f );
 
-      Debug.Log( "Zoom = " + editSource.Zoom + ", approx width = " + approxWidthOfChar );
-
       int     newPadding = BORDER_MARKER_WIDTH;    // space for marker symbol on left side
       if ( Core.Settings.ASMShowAddress )
       {
