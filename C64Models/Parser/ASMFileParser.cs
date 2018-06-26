@@ -5902,19 +5902,16 @@ namespace C64Studio.Parser
       bool  hadCommentInLine = false;
       bool hadMacro = false;
 
-      List<Types.TokenInfo>     previousLineTokens = null;
-
       //int lineIndex = 0;
       //foreach ( string line in Lines )
       for ( int lineIndex = 0; lineIndex < Lines.Length; ++lineIndex )
       {
         // there was a reason for this (leading spaces), but shouldn't be needed anymore
         //string parseLine = Lines[lineIndex].Trim();
-        string parseLine = Lines[lineIndex].TrimEnd();
-
-        if ( lineIndex == 50 )
+        string parseLine = "";
+        if ( Lines[lineIndex] != null )
         {
-          Debug.Log( "aha" );
+          parseLine = Lines[lineIndex].TrimEnd();
         }
 
         lineSizeInBytes = 0;
@@ -5973,32 +5970,21 @@ namespace C64Studio.Parser
         }
 
         recheck_line:;
-        // quick hack to "avoid" multiple statements per line
-        //  special case label with : before statement
-        if ( ( lineTokenInfos.Count >= 2 )
-        &&   ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.SEPARATOR )
-        &&   ( ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_INTERNAL )
-        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
-        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_LOCAL ) ) )
-        {
-          // remove separator
-          lineTokenInfos.RemoveAt( 1 );
-        }
 
         // split lines by ':'
-        for ( int tokenIndex = 0; tokenIndex < lineTokenInfos.Count; ++tokenIndex )
+        int   localIndex = 0;
+        string filename = "";
+        if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
         {
-          var token = lineTokenInfos[tokenIndex];
-
-          if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-          &&   ( token.Content == ":" ) )
-          {
-            previousLineTokens = lineTokenInfos.GetRange( tokenIndex + 1, lineTokenInfos.Count - tokenIndex - 1 );
-            lineTokenInfos.RemoveRange( tokenIndex, lineTokenInfos.Count - tokenIndex );
-          }
+          DumpSourceInfos( OrigLines, Lines );
+          AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Can't determine filename from line" );
+          return null;
         }
-        
+        var handleSeparatorsResult = HandleLineSeparators( ref lineIndex, lineTokenInfos, ref Lines, filename );
+        if ( handleSeparatorsResult == ParseLineResult.CALL_CONTINUE )
+        {
+          continue;
+        }
 
         if ( lineTokenInfos.Count == 0 )
         {
@@ -6208,10 +6194,11 @@ namespace C64Studio.Parser
           List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
           int address = -1;
 
+          /*
           if ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
           {
             defineName = zoneName + defineName;
-          }
+          }*/
 
           if ( defineName == "*" )
           {
@@ -6820,11 +6807,11 @@ namespace C64Studio.Parser
             }
             else if ( macro.Type == C64Studio.Types.MacroInfo.MacroType.TRACE )
             {
-              string  filename;
+              string  traceFilename;
               int     localLineIndex = -1;
-              if ( ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localLineIndex ) )
+              if ( ASMFileInfo.FindTrueLineSource( lineIndex, out traceFilename, out localLineIndex ) )
               {
-                AddVirtualBreakpoint( localLineIndex, filename, TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ) );
+                AddVirtualBreakpoint( localLineIndex, traceFilename, TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ) );
               }
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.ERROR )
@@ -6978,8 +6965,9 @@ namespace C64Studio.Parser
                           lineTokenInfos[0].Length );
                 return null;
               }
-              int   localIndex = 0;
-              string filename = "";
+
+              localIndex = 0;
+              filename = "";
               if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
               {
                 DumpSourceInfos( OrigLines, Lines );
@@ -7024,7 +7012,6 @@ namespace C64Studio.Parser
             else if ( macro.Type == Types.MacroInfo.MacroType.INCLUDE_MEDIA )
             {
               string[] replacementLines = null;
-              string filename;
               int dummy;
               ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out dummy );
 
@@ -7036,7 +7023,6 @@ namespace C64Studio.Parser
             else if ( macro.Type == Types.MacroInfo.MacroType.INCLUDE_MEDIA_SOURCE )
             {
               string[] replacementLines = null;
-              string filename;
               int dummy;
               ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out dummy );
               if ( !POIncludeMedia( lineTokenInfos, lineIndex, false, info, filename, out lineSizeInBytes, out replacementLines ) )
@@ -7118,20 +7104,20 @@ namespace C64Studio.Parser
                 }
                 string    targetType = lineTokenInfos[2].Content.ToUpper();
                 if ( ( targetType != "CBM" )
-                && ( targetType != "PLAIN" )
-                && ( targetType != "CART8BIN" )
-                && ( targetType != "CART8CRT" )
-                && ( targetType != "CART16BIN" )
-                && ( targetType != "CART16CRT" )
-                && ( targetType != "MAGICDESKBIN" )
-                && ( targetType != "MAGICDESKCRT" )
-                && ( targetType != "RGCDBIN" )
-                && ( targetType != "RGCDCRT" )
-                && ( targetType != "EASYFLASHBIN" )
-                && ( targetType != "EASYFLASHCRT" )
-                && ( targetType != "D64" )
-                && ( targetType != "TAP" )
-                && ( targetType != "T64" ) )
+                &&   ( targetType != "PLAIN" )
+                &&   ( targetType != "CART8BIN" )
+                &&   ( targetType != "CART8CRT" )
+                &&   ( targetType != "CART16BIN" )
+                &&   ( targetType != "CART16CRT" )
+                &&   ( targetType != "MAGICDESKBIN" )
+                &&   ( targetType != "MAGICDESKCRT" )
+                &&   ( targetType != "RGCDBIN" )
+                &&   ( targetType != "RGCDCRT" )
+                &&   ( targetType != "EASYFLASHBIN" )
+                &&   ( targetType != "EASYFLASHCRT" )
+                &&   ( targetType != "D64" )
+                &&   ( targetType != "TAP" )
+                &&   ( targetType != "T64" ) )
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1304_UNSUPPORTED_TARGET_TYPE,
@@ -7140,7 +7126,7 @@ namespace C64Studio.Parser
                             lineTokenInfos[2].Length );
                   return null;
                 }
-                string    filename = lineTokenInfos[0].Content.Substring( 1, lineTokenInfos[0].Length - 2 );
+                filename = lineTokenInfos[0].Content.Substring( 1, lineTokenInfos[0].Length - 2 );
                 // do not append to absolute path!
                 if ( System.IO.Path.IsPathRooted( filename ) )
                 {
@@ -8139,8 +8125,9 @@ namespace C64Studio.Parser
                         lineTokenInfos[0].Length );
               return null;
             }
-            int   localIndex = 0;
-            string filename = "";
+
+            localIndex = 0;
+            filename = "";
             if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
             {
               DumpSourceInfos( OrigLines, Lines );
@@ -8352,6 +8339,79 @@ namespace C64Studio.Parser
       //Debug.Log( "PreProcess done" );
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private ParseLineResult HandleLineSeparators( ref int lineIndex, List<TokenInfo> lineTokenInfos, ref string[] Lines, string ParentFilename )
+    {
+      bool    doesContainSeparator = false;
+      int     numSeparators = 0;
+      for ( int tokenIndex = 0; tokenIndex < lineTokenInfos.Count; ++tokenIndex )
+      {
+        var token = lineTokenInfos[tokenIndex];
+
+        if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+        && ( token.Content == ":" ) )
+        {
+          doesContainSeparator = true;
+          ++numSeparators;
+        }
+      }
+      if ( doesContainSeparator )
+      {
+        string[]      newLines = new string[numSeparators + 1];
+
+        int     partStartIndex = 0;
+        int     partIndex = 0;
+        for ( int tokenIndex = 0; tokenIndex < lineTokenInfos.Count; ++tokenIndex )
+        {
+          var token = lineTokenInfos[tokenIndex];
+
+          if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+          && ( token.Content == ":" ) )
+          {
+            newLines[partIndex] = TokensToExpression( lineTokenInfos, partStartIndex, tokenIndex - partStartIndex );
+            partStartIndex = tokenIndex + 1;
+            ++partIndex;
+          }
+        }
+        if ( partStartIndex < lineTokenInfos.Count )
+        {
+          newLines[partIndex] = TokensToExpression( lineTokenInfos, partStartIndex, lineTokenInfos.Count - partStartIndex );
+        }
+
+        Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
+        sourceInfo.Filename         = ParentFilename;
+        sourceInfo.FullPath         = ParentFilename;
+        sourceInfo.GlobalStartLine  = lineIndex;
+        sourceInfo.LineCount        = newLines.Length;
+        sourceInfo.FilenameParent   = ParentFilename;
+
+        SourceInfoLog( "-include at global index " + lineIndex );
+        SourceInfoLog( "-has " + sourceInfo.LineCount + " lines" );
+
+        InsertSourceInfo( sourceInfo );
+
+        string[] result = new string[Lines.Length + sourceInfo.LineCount];
+
+        System.Array.Copy( Lines, 0, result, 0, lineIndex );
+        System.Array.Copy( newLines, 0, result, lineIndex, newLines.Length );
+
+        // this keeps the !source line in the final code, makes working with source infos easier though
+        System.Array.Copy( Lines, lineIndex, result, lineIndex + newLines.Length, Lines.Length - lineIndex );
+
+        // replace !source with empty line (otherwise source infos would have one line more!)
+        result[lineIndex + newLines.Length] = "";
+
+        Lines = result;
+
+        ASMFileInfo.LineInfo.Remove( lineIndex );
+
+        --lineIndex;
+        return ParseLineResult.CALL_CONTINUE;
+      }
+      return ParseLineResult.OK;
     }
 
 
