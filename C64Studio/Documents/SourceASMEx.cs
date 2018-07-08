@@ -2970,13 +2970,26 @@ namespace C64Studio
       if ( editSource.AllowTabs )
       {
         // adjust offset in case of tabs (butt ugly hackaround)
-        var origText = editSource[LineIndex].Text.Substring( 0, CharPosStart );
+        string origText = editSource[LineIndex].Text;
 
+        if ( CharPosStart < origText.Length )
+        {
+          origText = editSource[LineIndex].Text.Substring( 0, CharPosStart );
+        }
         origText = editSource.ReTabifyLine( origText, editSource.TabLength );
 
         startPos = origText.Length;
+
+        if ( ( startPos >= origText.Length )
+        ||   ( startPos + CharLength > origText.Length ) )
+        {
+          startPos = 0;
+          CharLength = origText.Length;
+        }
+
         //startPos = rng.AdjustXPosForTabs( LineIndex, startPos );
       }
+
       var range = new FastColoredTextBoxNS.Range( editSource, new FastColoredTextBoxNS.Place( startPos, LineIndex ), new FastColoredTextBoxNS.Place( startPos + CharLength, LineIndex ) );
 
       range.SetStyle( FastColoredTextBoxNS.StyleIndex.Style10 );
