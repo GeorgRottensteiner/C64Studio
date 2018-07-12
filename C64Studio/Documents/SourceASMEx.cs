@@ -2824,6 +2824,7 @@ namespace C64Studio
           {
             // TODO - happens if we edit code while compiling
             if ( ( sourceInfo.Value.LocalStartLine + i < m_LineInfos.Count )
+            &&   ( sourceInfo.Value.LocalStartLine + i >= 0 )
             &&   ( FileInfo.LineInfo.ContainsKey( sourceInfo.Value.GlobalStartLine + i ) ) )
             {
               m_LineInfos[sourceInfo.Value.LocalStartLine + i] = FileInfo.LineInfo[sourceInfo.Value.GlobalStartLine + i];
