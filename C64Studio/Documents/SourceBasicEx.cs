@@ -3,6 +3,7 @@ using C64Studio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -142,6 +143,9 @@ namespace C64Studio
       editSource.TextChanged += new EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>( editSource_TextChanged );
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
 
+
+      editSource.KeyPressing += EditSource_KeyPressing;
+
       ///editSource.Scrolling.HorizontalScrollWidth = 3000;
 
       ///editSource.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
@@ -154,6 +158,16 @@ namespace C64Studio
       m_ToolTip.Popup += new System.Windows.Forms.PopupEventHandler( m_ToolTip_Popup );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+    }
+
+
+
+    private void EditSource_KeyPressing( object sender, KeyPressEventArgs e )
+    {
+      if ( e.KeyChar == '"' )
+      {
+        m_StringEnterMode = !m_StringEnterMode;
+      }
     }
 
 
@@ -1000,6 +1014,11 @@ namespace C64Studio
 
 
 
+    [DllImport( "user32.dll" )]
+    static extern int MapVirtualKey( uint uCode, uint uMapType );
+
+
+
     protected override bool ProcessCmdKey( ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData )
     {
       if ( ( keyData == m_ControlKeyReplacement )
@@ -1008,6 +1027,7 @@ namespace C64Studio
         // we misuse tab as command key, avoid common processing
         return true;
       }
+
       System.Windows.Forms.Keys bareKey = keyData & ~( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.ShiftKey | System.Windows.Forms.Keys.Alt );
 
       bareKey = keyData;
@@ -1046,6 +1066,36 @@ namespace C64Studio
         }
       }
 
+
+      /*
+      char    mykey = (char)keyData;
+
+      Debug.Log( "key " + mykey + "/" + (int)mykey );
+      if ( ( (char)keyData  != '\"' )
+      &&   ( !m_StringEnterMode ) )
+      {
+        // simply insert, no key mapping!
+        return base.ProcessCmdKey( ref msg, keyData );
+      }*/
+
+      if ( !m_StringEnterMode )
+      {
+        // simply insert, no key mapping!
+
+        // need uppercase when lowercase mode is not active!
+        if ( !m_LowerCaseMode )
+        {
+          if ( ( (char)keyData >= 'A' )
+          &&   ( (char)keyData <= 'Z' ) )
+          {
+            editSource.SelectedText = "" + char.ToUpper( (char)keyData );
+            return true;
+          }
+        }
+        // TODO - only allow valid keys!
+
+        return base.ProcessCmdKey( ref msg, keyData );
+      }
       //Debug.Log( "Key: " + keyData.ToString() + ", Bare Key: " + bareKey.ToString() );
 
       if ( Core.Settings.BASICKeyMap.KeymapEntryExists( bareKey ) )

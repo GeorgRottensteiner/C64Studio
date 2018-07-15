@@ -1,5 +1,6 @@
 ﻿C64Studio
 o Doppelpunkte: Mit InsertSourceInfo behandeln?
+o Docs: list illegal opcodes in help
 o Disassembler: rechtsklick auf Adresse um die als Sprungadresse zu nehmen
 o Disassembler: Option, um alles zu disassemblieren, auch ohne weitere Sprungpunkte
 o Disassembler: Syntax-Coloring zerhunzt (Farbe von Zeile davor geht mit)
