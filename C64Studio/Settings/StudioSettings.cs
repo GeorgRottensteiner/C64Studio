@@ -234,6 +234,9 @@ namespace C64Studio
       Functions.Add( C64Studio.Types.Function.REDO, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.REDO, "Redo", C64Studio.Types.FunctionStudioState.ANY ) );
       Functions.Add( C64Studio.Types.Function.COLLAPSE_ALL_FOLDING_BLOCKS, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.COLLAPSE_ALL_FOLDING_BLOCKS, "Collapse all folding blocks", C64Studio.Types.FunctionStudioState.ANY ) );
       Functions.Add( C64Studio.Types.Function.EXPAND_ALL_FOLDING_BLOCKS, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.EXPAND_ALL_FOLDING_BLOCKS, "Expand all folding blocks", C64Studio.Types.FunctionStudioState.ANY ) );
+      Functions.Add( Types.Function.COPY, new Types.FunctionInfo( Types.Function.COPY, "Copy", Types.FunctionStudioState.ANY ) );
+      Functions.Add( Types.Function.PASTE, new Types.FunctionInfo( Types.Function.PASTE, "Paste", Types.FunctionStudioState.ANY ) );
+      Functions.Add( Types.Function.CUT, new Types.FunctionInfo( Types.Function.CUT, "Cut", Types.FunctionStudioState.ANY ) );
 
       // functions for running debugger
       Functions.Add( C64Studio.Types.Function.DEBUG_BREAK, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_BREAK, "Break into Debugger", C64Studio.Types.FunctionStudioState.DEBUGGER_RUNNING ) );
@@ -1183,6 +1186,10 @@ namespace C64Studio
       SetKeyBindingKey( C64Studio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
       SetKeyBindingKey( C64Studio.Types.Function.UNDO, Keys.Alt | Keys.Back );
       SetKeyBindingKey( C64Studio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
+
+      SetKeyBindingKey( C64Studio.Types.Function.COPY, Keys.Control | Keys.C );
+      SetKeyBindingKey( C64Studio.Types.Function.PASTE, Keys.Control | Keys.V );
+      SetKeyBindingKey( C64Studio.Types.Function.CUT, Keys.Control | Keys.X );
     }
 
 

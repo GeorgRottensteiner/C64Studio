@@ -4941,6 +4941,27 @@ namespace C64Studio
         case C64Studio.Types.Function.MOVE_LINE_UP:
           // let control handle it
           return false;
+        case Function.COPY:
+          if ( !ActiveDocument.CopyPossible )
+          {
+            return false;
+          }
+          ActiveDocument.Copy();
+          break;
+        case Function.PASTE:
+          if ( !ActiveDocument.PastePossible )
+          {
+            return false;
+          }
+          ActiveDocument.Paste();
+          break;
+        case Function.CUT:
+          if ( !ActiveDocument.CutPossible )
+          {
+            return false;
+          }
+          ActiveDocument.Cut();
+          break;
       }
       return true;
     }

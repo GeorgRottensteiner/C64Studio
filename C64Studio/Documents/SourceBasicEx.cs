@@ -265,6 +265,20 @@ namespace C64Studio
 
 
 
+    private void UpdateKeyBinding( C64Studio.Types.Function Function, FastColoredTextBoxNS.FCTBAction Action )
+    {
+      editSource.HotkeysMapping.RemoveAllMappingsForAction( Action );
+
+      var     accelerator = Core.Settings.DetermineAccelerator( Function );
+      if ( accelerator != null )
+      {
+        editSource.HotkeysMapping.Remove( accelerator.Key );
+        editSource.HotkeysMapping.Add( accelerator.Key, Action );
+      }
+    }
+
+
+
     public override void RefreshDisplayOptions()
     {
       if ( !Core.Settings.BASICUseNonC64Font )
@@ -310,6 +324,10 @@ namespace C64Studio
 
       //call OnTextChanged for refresh syntax highlighting
       editSource.OnTextChanged();
+
+      UpdateKeyBinding( C64Studio.Types.Function.COPY, FastColoredTextBoxNS.FCTBAction.Copy );
+      UpdateKeyBinding( C64Studio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
+      UpdateKeyBinding( C64Studio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
     }
 
 
@@ -1019,6 +1037,35 @@ namespace C64Studio
 
 
 
+    public string KeyCodeToUnicode( Keys key )
+    {
+      byte[] keyboardState = new byte[255];
+      bool keyboardStateStatus = GetKeyboardState(keyboardState);
+
+      if ( !keyboardStateStatus )
+      {
+        return "";
+      }
+
+      uint virtualKeyCode = (uint)key;
+      uint scanCode = (uint)MapVirtualKey(virtualKeyCode, 0);
+      IntPtr inputLocaleIdentifier = GetKeyboardLayout(0);
+
+      StringBuilder result = new StringBuilder();
+      ToUnicodeEx( virtualKeyCode, scanCode, keyboardState, result, (int)5, (uint)0, inputLocaleIdentifier );
+
+      return result.ToString();
+    }
+
+    [DllImport( "user32.dll" )]
+    static extern bool GetKeyboardState( byte[] lpKeyState );
+
+    [DllImport( "user32.dll" )]
+    static extern IntPtr GetKeyboardLayout( uint idThread );
+
+    [DllImport( "user32.dll" )]
+    static extern int ToUnicodeEx( uint wVirtKey, uint wScanCode, byte[] lpKeyState, [Out, MarshalAs( UnmanagedType.LPWStr )] StringBuilder pwszBuff, int cchBuff, uint wFlags, IntPtr dwhkl );
+
     protected override bool ProcessCmdKey( ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData )
     {
       if ( ( keyData == m_ControlKeyReplacement )
@@ -1033,6 +1080,7 @@ namespace C64Studio
       bareKey = keyData;
 
       bool    controlPushed = false;
+      bool    altPushed = false;
       bool    commodorePushed = false;
       bool    shiftPushed = false;
       if ( ( bareKey & System.Windows.Forms.Keys.Shift ) == System.Windows.Forms.Keys.Shift )
@@ -1044,6 +1092,10 @@ namespace C64Studio
       {
         bareKey &= ~System.Windows.Forms.Keys.Control;
         commodorePushed = true;
+      }
+      if ( ( bareKey & System.Windows.Forms.Keys.Alt ) == System.Windows.Forms.Keys.Alt )
+      {
+        altPushed = true;
       }
       if ( GR.Win32.KeyboardInfo.GetKeyState( m_ControlKeyReplacement ).IsPressed )
       {
@@ -1083,17 +1135,67 @@ namespace C64Studio
         // simply insert, no key mapping!
 
         // need uppercase when lowercase mode is not active!
-        if ( !m_LowerCaseMode )
+        if ( ( !m_LowerCaseMode )
+        &&   ( !commodorePushed )
+        &&   ( !altPushed ) )
         {
           if ( ( (char)keyData >= 'A' )
           &&   ( (char)keyData <= 'Z' ) )
           {
+            if ( shiftPushed )
+            {
+              // could be a token
+              string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
+              if ( m_LowerCaseMode )
+              {
+                leftText = MakeUpperCase( leftText );
+              }
+
+              if ( ( leftText.Length >= 1 )
+              &&   ( leftText[leftText.Length - 1] >= 'A' )
+              &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
+              {
+                leftText = leftText.ToLower() + (char)keyData;
+                foreach ( var opcode in Parser.BasicFileParser.m_Opcodes.Values )
+                {
+                  if ( ( opcode.ShortCut != null )
+                  &&   ( opcode.ShortCut.Length <= leftText.Length )
+                  &&   ( string.Compare( opcode.ShortCut, 0, leftText, leftText.Length - opcode.ShortCut.Length, opcode.ShortCut.Length ) == 0 ) )
+                  {
+                    // TODO - case!
+                    if ( m_LowerCaseMode )
+                    {
+                      editSource.SelectedText = MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ) );
+                    }
+                    else
+                    {
+                      editSource.SelectedText = opcode.Command.Substring( opcode.ShortCut.Length - 1 );
+                    }
+                    return true;
+                  }
+                }
+              }
+            }
+
             editSource.SelectedText = "" + char.ToUpper( (char)keyData );
             return true;
           }
         }
         // TODO - only allow valid keys!
-
+        //int mappedKey = MapVirtualKey( (uint)keyData, 2 );
+        var mappedKey = KeyCodeToUnicode( keyData );
+        //Debug.Log( "Barekey=" + bareKey + "/keyData = " + keyData + "/(char)keyData=" + (char)keyData + "/(int)bareKey=" + (int)bareKey + "/mappedKey=" + mappedKey );
+        /*
+        if ( ( (int)bareKey >= 0x30 )
+        &&   ( !Core.Settings.BASICKeyMap.KeymapEntryExists( bareKey ) ) )*/
+        if ( ( (int)bareKey >= 0x30 )
+        &&   ( IsNotValidKey( mappedKey ) )
+        &&   ( !Core.Settings.Accelerators.ContainsKey( keyData ) ) )
+        {
+          // swallow invalid keys
+          //Debug.Log( "-swallowed" );
+          return true;
+        }
         return base.ProcessCmdKey( ref msg, keyData );
       }
       //Debug.Log( "Key: " + keyData.ToString() + ", Bare Key: " + bareKey.ToString() );
@@ -1216,6 +1318,18 @@ namespace C64Studio
       }
       // swallow unmapped keys that would produce text (or disallowed characters, e.g. small letters)
       return base.ProcessCmdKey( ref msg, keyData );
+    }
+
+
+
+    private bool IsNotValidKey( string MappedKey )
+    {
+      if ( string.IsNullOrEmpty( MappedKey ) )
+      {
+        return true;
+      }
+      // check all keys!
+      return !Types.ConstantData.CharToC64Char.ContainsKey( MappedKey[0] );
     }
 
 

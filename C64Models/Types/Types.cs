@@ -124,7 +124,10 @@ namespace C64Studio.Types
     REDO,
     BUILD_TO_PREPROCESSED_FILE,
     COLLAPSE_ALL_FOLDING_BLOCKS,
-    EXPAND_ALL_FOLDING_BLOCKS
+    EXPAND_ALL_FOLDING_BLOCKS,
+    COPY,
+    PASTE,
+    CUT
   }
 
   public enum StudioState
