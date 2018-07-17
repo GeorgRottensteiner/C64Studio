@@ -1,4 +1,10 @@
 ﻿C64Studio
+o Linux: 
+  WINEPREFIX=~/.winedir WINEARCH=win32 wineboot 
+  WINEPREFIX=~/.winedir winetricks dotnet35sp1 -q 
+  cd ~/.winedir/drive_c/Program Files/C64StudioRelease 
+  WINEPREFIX=~/.winedir wine C64Studio.exe 
+
 o Doppelpunkte: Mit InsertSourceInfo behandeln?
 o PETSCII table: Rewrite
 o Docs: list illegal opcodes in help
