@@ -789,7 +789,7 @@ namespace C64Studio
 
       panelMain.ActiveContentChanged += new EventHandler( panelMain_ActiveContentChanged );
       panelMain.ActiveDocumentChanged += new EventHandler( panelMain_ActiveDocumentChanged );
-      StudioCore.Settings.ReadMRU();
+      StudioCore.Settings.ReadMRUFromRegistry();
       UpdateMenuMRU();
       UpdateUndoSettings();
 
@@ -824,10 +824,10 @@ namespace C64Studio
       else if ( StudioCore.Settings.AutoOpenLastSolution )
       {
         if ( ( !StudioCore.Settings.LastSolutionWasEmpty )
-        && ( StudioCore.Settings.MRU.Count > 0 ) )
+        &&   ( StudioCore.Settings.MRUProjects.Count > 0 ) )
         {
           var idleRequest = new IdleRequest();
-          idleRequest.OpenLastSolution = StudioCore.Settings.MRU[0];
+          idleRequest.OpenLastSolution = StudioCore.Settings.MRUProjects[0];
 
           IdleQueue.Add( idleRequest );
         }
@@ -1460,6 +1460,7 @@ namespace C64Studio
 
     public void UpdateMenuMRU()
     {
+      /*
       int indexTop = fileToolStripMenuItem.DropDownItems.IndexOf(toolStripSeparatorAboveMRU);
       int index = fileToolStripMenuItem.DropDownItems.IndexOf(toolStripSeparatorBelowMRU);
       while ( indexTop + 1 < index )
@@ -1467,13 +1468,21 @@ namespace C64Studio
         fileToolStripMenuItem.DropDownItems[index - 1].Click -= menuMRUItem_Click;
         fileToolStripMenuItem.DropDownItems.RemoveAt( index - 1 );
         index = fileToolStripMenuItem.DropDownItems.IndexOf( toolStripSeparatorBelowMRU );
-      }
-      foreach ( string entry in StudioCore.Settings.MRU )
+      }*/
+
+      fileRecentlyOpenedProjectsToolStripMenuItem.DropDownItems.Clear();
+      fileRecentlyOpenedFilesToolStripMenuItem.DropDownItems.Clear();
+      foreach ( string entry in StudioCore.Settings.MRUProjects )
       {
         ToolStripMenuItem menuItem = new ToolStripMenuItem(entry);
         menuItem.Click += new EventHandler( menuMRUItem_Click );
-        fileToolStripMenuItem.DropDownItems.Insert( index, menuItem );
-        ++index;
+        fileRecentlyOpenedProjectsToolStripMenuItem.DropDownItems.Add( menuItem );
+      }
+      foreach ( string entry in StudioCore.Settings.MRUFiles )
+      {
+        ToolStripMenuItem menuItem = new ToolStripMenuItem(entry);
+        menuItem.Click += new EventHandler( menuMRUItem_Click );
+        fileRecentlyOpenedFilesToolStripMenuItem.DropDownItems.Add( menuItem );
       }
     }
 
@@ -1513,22 +1522,29 @@ namespace C64Studio
 
     void menuMRUItem_Click( object sender, EventArgs e )
     {
-      CloseSolution();
-
       string extension = System.IO.Path.GetExtension(sender.ToString()).ToUpper();
 
       if ( extension == ".C64" )
       {
+        CloseSolution();
         if ( OpenProject( sender.ToString() ) == null )
         {
-          StudioCore.Settings.RemoveFromMRU( sender.ToString(), this );
+          StudioCore.Settings.RemoveFromMRU( StudioCore.Settings.MRUProjects, sender.ToString(), this );
         }
       }
       else if ( extension == ".S64" )
       {
+        CloseSolution();
         if ( !OpenSolution( sender.ToString() ) )
         {
-          StudioCore.Settings.RemoveFromMRU( sender.ToString(), this );
+          StudioCore.Settings.RemoveFromMRU( StudioCore.Settings.MRUProjects, sender.ToString(), this );
+        }
+      }
+      else
+      {
+        if ( OpenFile( sender.ToString() ) == null )
+        {
+          StudioCore.Settings.RemoveFromMRU( StudioCore.Settings.MRUFiles, sender.ToString(), this );
         }
       }
     }
@@ -5509,12 +5525,12 @@ namespace C64Studio
       }
       if ( !m_Solution.FromBuffer( solutionData, Filename ) )
       {
-        StudioCore.Settings.RemoveFromMRU( Filename, this );
+        StudioCore.Settings.RemoveFromMRU( StudioCore.Settings.MRUProjects, Filename, this );
         CloseSolution();
         m_Solution = null;
         return false;
       }
-      StudioCore.Settings.UpdateInMRU( Filename, this );
+      StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, Filename, this );
       StudioCore.Settings.LastSolutionWasEmpty = false;
 
       m_Solution.Modified = false;
@@ -5545,7 +5561,7 @@ namespace C64Studio
       }
       GR.IO.File.WriteAllBytes( m_Solution.Filename, m_Solution.ToBuffer( m_Solution.Filename ) );
       m_Solution.Modified = false;
-      StudioCore.Settings.UpdateInMRU( m_Solution.Filename, this );
+      StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, m_Solution.Filename, this );
     }
 
 
@@ -5624,6 +5640,8 @@ namespace C64Studio
       document.Show( panelMain );
       document.Icon = IconFromType( document.DocumentInfo );
       document.DocumentInfo.UndoManager.MainForm = this;
+
+      StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
 
       RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED, document.DocumentInfo ) );
 
@@ -5861,12 +5879,12 @@ namespace C64Studio
 
             if ( !FinishedTask.TaskSuccessful )
             {
-              StudioCore.Settings.RemoveFromMRU( taskOS.SolutionFilename, this );
+              StudioCore.Settings.RemoveFromMRU( StudioCore.Settings.MRUProjects, taskOS.SolutionFilename, this );
               CloseSolution();
             }
             else
             {
-              StudioCore.Settings.UpdateInMRU( taskOS.SolutionFilename, this );
+              StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, taskOS.SolutionFilename, this );
               m_Solution = taskOS.Solution;
               m_Solution.Modified = false;
               RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );

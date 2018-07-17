@@ -1,14 +1,14 @@
 ﻿C64Studio
 o Doppelpunkte: Mit InsertSourceInfo behandeln?
+o PETSCII table: Rewrite
 o Docs: list illegal opcodes in help
 o Disassembler: rechtsklick auf Adresse um die als Sprungadresse zu nehmen
 o Disassembler: Option, um alles zu disassemblieren, auch ohne weitere Sprungpunkte
 o Disassembler: Syntax-Coloring zerhunzt (Farbe von Zeile davor geht mit)
-o ASM: Anzeige der Adresse links im Rahmen
 o Automated code formatting
 o Map Editor:
   Map: 
-    hier wären Hilfslinien super, gerne auch mit Zeilen/Spaltennummerierung
+    hier wären Hilfslinien super, gerne auch mit Zeilen/Spaltennumerierung
     möglichkeit die Reihenfolge der Maps zu verschieben, wie bei den Tiles (Up/Down)
   Tiles: 
     wenn die Hintergrundfarbe weiß=charcolor ist, kann ich nix sehen (habe als Workaround auf dunkelgrau gestellt)
@@ -18,10 +18,9 @@ o 176 Zeichen Zeile mit TAB-Support langsam? (TAB-Support generell langsam?)
 o export "to petscii" in the text screen editor <- test mit vollem charscreen mit allen Werten
 o generic file import, if size is not the optimum, allow custom skip bytes range (e.g. 2 load bytes)
 o Docking: DockPanelSuite Restored nicht sauber
-o Syntax-Coloring im Disassembler zerhunzt (Farbe von Zeile davor geht mit)
 o Syntax-Coloring -> Preview im Setting Editor mit FastColoredTextBox
 o Code-Ergänzungvorschlag nicht nur für Labels/Variablen, sondern auch für Macros.
-o Beim suchen uns ersetzen scheint er seltsam die Suchergebnisse zu ersetzen. Alle ersetzen funzt, wenn ich aber zuerst auf Suchen klicke 
+o Beim suchen und ersetzen scheint er seltsam die Suchergebnisse zu ersetzen. Alle ersetzen funzt, wenn ich aber zuerst auf Suchen klicke 
   springt er zu dem nächsten gefunden Eintrag, wenn ich jetzt ersetzen klicke erwarte ich, dass nur dieser Eintrag ersetzt. 
   Es werden aber alle ausser dem gefundenen ersetzt  
 o In Macros das zusammenfügen von Textteilen.
