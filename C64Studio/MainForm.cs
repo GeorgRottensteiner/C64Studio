@@ -2849,7 +2849,7 @@ namespace C64Studio
     {
       if ( ParentProject != null )
       {
-        var dialogResult = System.Windows.Forms.MessageBox.Show("Add the new document to the current project?\r\nIf you choose no, the document will be created not as part of the current project.", "Add to current project?", System.Windows.Forms.MessageBoxButtons.YesNoCancel);
+        var dialogResult = System.Windows.Forms.MessageBox.Show( "Add the new document to the current project?\r\nIf you choose no, the document will be created not as part of the current project.", "Add to current project?", System.Windows.Forms.MessageBoxButtons.YesNoCancel );
         if ( dialogResult == DialogResult.Cancel )
         {
           return;
@@ -2872,7 +2872,7 @@ namespace C64Studio
 
       if ( System.IO.File.Exists( newFilename ) )
       {
-        var result = System.Windows.Forms.MessageBox.Show("There is already an existing file at " + newFilename + ".\r\nDo you want to overwrite it?", "Overwrite existing file?", MessageBoxButtons.YesNo);
+        var result = System.Windows.Forms.MessageBox.Show( "There is already an existing file at " + newFilename + ".\r\nDo you want to overwrite it?", "Overwrite existing file?", MessageBoxButtons.YesNo );
         if ( result == DialogResult.No )
         {
           return;
@@ -2881,6 +2881,8 @@ namespace C64Studio
       var doc = CreateNewDocument(Type, null);
       doc.SetDocumentFilename( newFilename );
       doc.SetModified();
+
+      StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, newFilename, this );
     }
 
 
