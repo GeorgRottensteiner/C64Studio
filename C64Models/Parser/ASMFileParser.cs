@@ -3326,7 +3326,7 @@ namespace C64Studio.Parser
       int       includeMethodParamIndex = 1;
       string    labelPrefix = "";
 
-      subFilename = GR.Path.Append( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
+      subFilename = BuildFullPath( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
 
       if ( !Binary )
       {
@@ -5295,7 +5295,7 @@ namespace C64Studio.Parser
       }
       else
       {
-        subFilenameFull = GR.Path.Append( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
+        subFilenameFull = BuildFullPath( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
       }
 
       if ( GR.Path.IsPathEqual( ParentFilename, subFilenameFull ) )
@@ -5353,6 +5353,17 @@ namespace C64Studio.Parser
 
       --lineIndex;
       return ParseLineResult.CALL_CONTINUE;
+    }
+
+
+
+    private string BuildFullPath( string ParentPath, string SubFilename )
+    {
+      if ( System.IO.Path.IsPathRooted( SubFilename ) )
+      {
+        return SubFilename;
+      }
+      return GR.Path.Append( ParentPath, SubFilename );
     }
 
 
@@ -5473,7 +5484,7 @@ namespace C64Studio.Parser
 
       try
       {
-        subFile = GR.IO.File.ReadAllBytes( GR.Path.Append( m_DocBasePath, subFilename ) );
+        subFile = GR.IO.File.ReadAllBytes( BuildFullPath( m_DocBasePath, subFilename ) );
         if ( subFile == null )
         {
           AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + GR.Path.Append( m_DocBasePath, subFilename ) );
