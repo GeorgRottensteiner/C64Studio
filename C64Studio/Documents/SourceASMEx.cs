@@ -104,7 +104,7 @@ namespace C64Studio
       m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[.@]{0,1}[+\-a-zA-Z]+[a-zA-Z_\d.]*[:]*" );
       m_TextRegExp[(int)Types.ColorableElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";.*" );
 
-      m_TextRegExp[(int)Types.ColorableElement.OPERATOR] = new System.Text.RegularExpressions.Regex( @"[+\-/*(){}=<>,#]" );
+      m_TextRegExp[(int)Types.ColorableElement.OPERATOR] = new System.Text.RegularExpressions.Regex( @"[+\-/*(){}=<>,#%]" );
       m_TextRegExp[(int)Types.ColorableElement.NONE] = new System.Text.RegularExpressions.Regex( @"\S" );
 
 
