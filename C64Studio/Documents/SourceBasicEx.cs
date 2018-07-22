@@ -1185,6 +1185,19 @@ namespace C64Studio
         //int mappedKey = MapVirtualKey( (uint)keyData, 2 );
         var mappedKey = KeyCodeToUnicode( keyData );
         //Debug.Log( "Barekey=" + bareKey + "/keyData = " + keyData + "/(char)keyData=" + (char)keyData + "/(int)bareKey=" + (int)bareKey + "/mappedKey=" + mappedKey );
+
+        // hard coded mapping from ^ to arrow up (power)
+        if ( mappedKey == "^" )
+        {
+          editSource.SelectedText = "" + Types.ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].Normal.CharValue;
+          return true;
+        }
+        // PI
+        if ( mappedKey == "~" )
+        {
+          editSource.SelectedText = "" + Types.ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].WithShift.CharValue;
+          return true;
+        }
         /*
         if ( ( (int)bareKey >= 0x30 )
         &&   ( !Core.Settings.BASICKeyMap.KeymapEntryExists( bareKey ) ) )*/
