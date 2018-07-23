@@ -2428,7 +2428,8 @@ namespace C64Studio
 
       string command = toolRun.DebugArguments;
 
-      if ( toolRun.PassLabelsToEmulator )
+      if ( ( toolRun.PassLabelsToEmulator )
+      &&   ( StudioCore.Debugging.DebuggedASMBase.ASMFileInfo != null ) )
       {
         breakPointFile += StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.LabelsAsFile();
       }
