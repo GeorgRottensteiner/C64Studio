@@ -4960,25 +4960,25 @@ namespace C64Studio
           // let control handle it
           return false;
         case Function.COPY:
-          if ( !ActiveDocument.CopyPossible )
+          if ( !ActiveContent.CopyPossible )
           {
             return false;
           }
-          ActiveDocument.Copy();
+          ActiveContent.Copy();
           break;
         case Function.PASTE:
-          if ( !ActiveDocument.PastePossible )
+          if ( !ActiveContent.PastePossible )
           {
             return false;
           }
-          ActiveDocument.Paste();
+          ActiveContent.Paste();
           break;
         case Function.CUT:
-          if ( !ActiveDocument.CutPossible )
+          if ( !ActiveContent.CutPossible )
           {
             return false;
           }
-          ActiveDocument.Cut();
+          ActiveContent.Cut();
           break;
       }
       return true;
