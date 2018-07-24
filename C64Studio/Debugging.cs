@@ -41,6 +41,10 @@ namespace C64Studio
 
     public void AddVirtualBreakpoints( Types.ASM.FileInfo ASMFileInfo )
     {
+      if ( ASMFileInfo == null )
+      {
+        return;
+      }
       foreach ( var virtualBP in ASMFileInfo.VirtualBreakpoints.Values )
       {
         virtualBP.IsVirtual = true;
