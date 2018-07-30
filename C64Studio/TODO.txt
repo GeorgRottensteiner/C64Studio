@@ -5,7 +5,6 @@ o Linux:
   cd ~/.winedir/drive_c/Program Files/C64StudioRelease 
   WINEPREFIX=~/.winedir wine C64Studio.exe 
 
-o ASM: Border text width is utterly wrong with bigger font
 o Doppelpunkte: Mit InsertSourceInfo behandeln?
 o PETSCII table: Rewrite
 o Docs: list illegal opcodes in help

@@ -193,29 +193,26 @@ namespace C64Studio
 
     private void AdjustFontSizeInLeftBorder()
     {
-      int approxWidthOfChar = (int)( TextRenderer.MeasureText( "$", editSource.Font ).Width * editSource.Size.Height / 9 );
-      int approxWidthOfAddress = (int)( TextRenderer.MeasureText( "$FFFF", editSource.Font ).Width * editSource.Size.Height / 9 );
+      float     zoomFactor = editSource.Zoom / 100.0f;
 
-      float     zoomFactor = editSource.Zoom / 90.0f;
-
-      approxWidthOfChar = (int)( approxWidthOfChar * zoomFactor );
+      int approxWidthOfChar = editSource.CharWidth;
+      int approxWidthOfAddress = 5 * approxWidthOfChar;
 
       int     newPadding = (int)( BORDER_MARKER_WIDTH * zoomFactor );    // space for marker symbol on left side
       if ( Core.Settings.ASMShowAddress )
       {
         m_AddressOffset = newPadding;
-        newPadding += (int)( BORDER_ADDRESS_WIDTH * zoomFactor );
-        //newPadding += (int)( approxWidthOfAddress * zoomFactor );
+        newPadding += approxWidthOfAddress + approxWidthOfChar;
       }
       if ( Core.Settings.ASMShowBytes )
       {
         m_ByteSizeOffset = newPadding;
-        newPadding += (int)( BORDER_SIZE_WIDTH * zoomFactor );
+        newPadding += 3 * approxWidthOfChar;
       }
       if ( Core.Settings.ASMShowCycles )
       {
         m_CycleOffset = newPadding;
-        newPadding += (int)( BORDER_CYCLES_WIDTH * zoomFactor );
+        newPadding += 4 * approxWidthOfChar;
       }
       editSource.LeftPadding = newPadding;
     }
