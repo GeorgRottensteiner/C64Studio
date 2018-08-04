@@ -2308,6 +2308,11 @@ namespace C64Studio
         docBasePath = DocumentInfo.Project.Settings.BasePath;
       }
       string            fullPath = GR.Path.Append( docBasePath, m_FilenameToOpen );
+      if ( DocumentInfo.Project == null )
+      {
+        Core.MainForm.OpenFile( fullPath );
+        return;
+      }
       ProjectElement    element = DocumentInfo.Project.GetElementByFilename( fullPath );
       if ( element != null )
       {

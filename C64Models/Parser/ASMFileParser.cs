@@ -2595,6 +2595,7 @@ namespace C64Studio.Parser
               else
               {
                 Debug.Log( "EvaluateTokens failed with error info, but pos/length was out of bounds!" );
+                Debug.Log( "for line " + TokensToExpression( lineInfo.NeededParsedExpression ) );
                 AddError( lineIndex,
                           Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
                           "Could not evaluate " + TokensToExpression( lineInfo.NeededParsedExpression ),
