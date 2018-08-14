@@ -60,7 +60,7 @@
       this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileCloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparatorAboveMRU = new System.Windows.Forms.ToolStripSeparator();
-      this.fileRecentlyOpenedProjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.fileRecentlyOpenedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparatorBelowMRU = new System.Windows.Forms.ToolStripSeparator();
       this.filePreferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileSetupWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -132,6 +132,7 @@
       this.graphicScreenEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mapEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.spriteEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.valueTableEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
       this.calculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.compileResulttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -198,7 +199,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.valueTableEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.fileRecentlyOpenedProjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -246,6 +247,7 @@
             this.fileCloseToolStripMenuItem,
             this.toolStripSeparatorAboveMRU,
             this.fileRecentlyOpenedProjectsToolStripMenuItem,
+            this.fileRecentlyOpenedFilesToolStripMenuItem,
             this.toolStripSeparatorBelowMRU,
             this.filePreferencesToolStripMenuItem,
             this.fileSetupWizardToolStripMenuItem,
@@ -473,11 +475,11 @@
       this.toolStripSeparatorAboveMRU.Name = "toolStripSeparatorAboveMRU";
       this.toolStripSeparatorAboveMRU.Size = new System.Drawing.Size(204, 6);
       // 
-      // fileRecentlyOpenedProjectsToolStripMenuItem
+      // fileRecentlyOpenedFilesToolStripMenuItem
       // 
-      this.fileRecentlyOpenedProjectsToolStripMenuItem.Name = "fileRecentlyOpenedProjectsToolStripMenuItem";
-      this.fileRecentlyOpenedProjectsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-      this.fileRecentlyOpenedProjectsToolStripMenuItem.Text = "Recently opened projects";
+      this.fileRecentlyOpenedFilesToolStripMenuItem.Name = "fileRecentlyOpenedFilesToolStripMenuItem";
+      this.fileRecentlyOpenedFilesToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+      this.fileRecentlyOpenedFilesToolStripMenuItem.Text = "Recently opened files";
       // 
       // toolStripSeparatorBelowMRU
       // 
@@ -1040,6 +1042,12 @@
       this.spriteEditorToolStripMenuItem.Name = "spriteEditorToolStripMenuItem";
       this.spriteEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
       this.spriteEditorToolStripMenuItem.Text = "Sprite Editor";
+      // 
+      // valueTableEditorToolStripMenuItem
+      // 
+      this.valueTableEditorToolStripMenuItem.Name = "valueTableEditorToolStripMenuItem";
+      this.valueTableEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.valueTableEditorToolStripMenuItem.Text = "Value Table Editor";
       // 
       // toolStripSeparator13
       // 
@@ -1622,11 +1630,11 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
-      // valueTableEditorToolStripMenuItem
+      // fileRecentlyOpenedProjectsToolStripMenuItem
       // 
-      this.valueTableEditorToolStripMenuItem.Name = "valueTableEditorToolStripMenuItem";
-      this.valueTableEditorToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-      this.valueTableEditorToolStripMenuItem.Text = "Value Table Editor";
+      this.fileRecentlyOpenedProjectsToolStripMenuItem.Name = "fileRecentlyOpenedProjectsToolStripMenuItem";
+      this.fileRecentlyOpenedProjectsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+      this.fileRecentlyOpenedProjectsToolStripMenuItem.Text = "Recently opened projects";
       // 
       // MainForm
       // 
@@ -1705,7 +1713,7 @@
     private System.Windows.Forms.ToolStripMenuItem showLineinfosToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem debugBreakpointsToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparatorAboveMRU;
-    private System.Windows.Forms.ToolStripMenuItem fileRecentlyOpenedProjectsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem fileRecentlyOpenedFilesToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
@@ -1835,6 +1843,7 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
     private System.Windows.Forms.ToolStripMenuItem valueTableEditorToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem fileRecentlyOpenedProjectsToolStripMenuItem;
   }
 }
 

@@ -1623,6 +1623,10 @@ namespace C64Studio.Parser
         curAddress += (int)info.LineData.Length + 5;
       }
       result.AppendU16( 0 );
+
+      int     originalSize = (int)result.Length - 2;
+      
+
       //Debug.Log( "Compiled: " + result.ToString() );
 
       int     fileStartAddress = -1;
@@ -1716,7 +1720,8 @@ namespace C64Studio.Parser
           AssembledOutput.Assembly = header + chip;
         }
       }
-
+      AssembledOutput.OriginalAssemblyStartAddress  = 0x0801;
+      AssembledOutput.OriginalAssemblySize          = originalSize;
       return true;
     }
 

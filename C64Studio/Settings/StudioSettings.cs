@@ -103,7 +103,9 @@ namespace C64Studio
 
     public LinkedList<ToolInfo>                 ToolInfos = new LinkedList<ToolInfo>();
 
-    public List<string>                         MRU = new List<string>();
+    //public List<string>                         MRU = new List<string>();
+    public List<string>                         MRUProjects = new List<string>();
+    public List<string>                         MRUFiles = new List<string>();
 
     public Dictionary<string,BaseDocument>      GenericTools = new Dictionary<string, BaseDocument>();
 
@@ -234,6 +236,9 @@ namespace C64Studio
       Functions.Add( C64Studio.Types.Function.REDO, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.REDO, "Redo", C64Studio.Types.FunctionStudioState.ANY ) );
       Functions.Add( C64Studio.Types.Function.COLLAPSE_ALL_FOLDING_BLOCKS, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.COLLAPSE_ALL_FOLDING_BLOCKS, "Collapse all folding blocks", C64Studio.Types.FunctionStudioState.ANY ) );
       Functions.Add( C64Studio.Types.Function.EXPAND_ALL_FOLDING_BLOCKS, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.EXPAND_ALL_FOLDING_BLOCKS, "Expand all folding blocks", C64Studio.Types.FunctionStudioState.ANY ) );
+      Functions.Add( Types.Function.COPY, new Types.FunctionInfo( Types.Function.COPY, "Copy", Types.FunctionStudioState.ANY ) );
+      Functions.Add( Types.Function.PASTE, new Types.FunctionInfo( Types.Function.PASTE, "Paste", Types.FunctionStudioState.ANY ) );
+      Functions.Add( Types.Function.CUT, new Types.FunctionInfo( Types.Function.CUT, "Cut", Types.FunctionStudioState.ANY ) );
 
       // functions for running debugger
       Functions.Add( C64Studio.Types.Function.DEBUG_BREAK, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_BREAK, "Break into Debugger", C64Studio.Types.FunctionStudioState.DEBUGGER_RUNNING ) );
@@ -283,10 +288,14 @@ namespace C64Studio
 
 
 
-    public void ReadMRU()
+    public void ReadMRUFromRegistry()
     {
-      MRU.Clear();
-
+      // only for legacy reasons, can be removed later
+      if ( ( MRUProjects.Count > 0 )
+      ||   ( MRUFiles.Count > 0 ) )
+      {
+        return;
+      }
       Microsoft.Win32.RegistryKey Key = Application.UserAppDataRegistry.OpenSubKey( "MRU.File" );
       if ( Key != null )
       {
@@ -298,44 +307,27 @@ namespace C64Studio
             if ( value != null )
             {
               string normalizedPath = GR.Path.Normalize( value.ToString(), false );
-              MRU.Add( normalizedPath );
+
+              if ( ( System.IO.Path.GetExtension( normalizedPath ).ToUpper() == ".C64" )
+              ||   ( System.IO.Path.GetExtension( normalizedPath ).ToUpper() == ".S64" ) )
+              {
+                MRUProjects.Add( normalizedPath );
+              }
+              else
+              {
+                MRUFiles.Add( normalizedPath );
+              }
             }
           }
         }
         Key.Close();
+        Application.UserAppDataRegistry.DeleteSubKey( "MRU.File" );
       }
     }
 
 
 
-    public void SaveMRU()
-    {
-      Microsoft.Win32.RegistryKey Key = Application.UserAppDataRegistry.OpenSubKey( "MRU.File", true );
-      if ( Key == null )
-      {
-        Key = Application.UserAppDataRegistry.CreateSubKey( "MRU.File" );
-      }
-      if ( Key != null )
-      {
-        for ( int i = 1; i <= 4; ++i )
-        {
-          if ( Key.GetValue( i.ToString() ) != null )
-          {
-            Key.DeleteValue( i.ToString() );
-          }
-        }
-
-        for ( int i = 0; i < MRU.Count; ++i )
-        {
-          Key.SetValue( ( i + 1 ).ToString(), MRU[i] );
-        }
-        Key.Close();
-      }
-    }
-
-
-
-    public void UpdateInMRU( string Filename, MainForm MainForm )
+    public void UpdateInMRU( List<string> MRU, string Filename, MainForm MainForm )
     {
       for ( int i = 0; i < MRU.Count; ++i )
       {
@@ -345,7 +337,6 @@ namespace C64Studio
           {
             MRU.RemoveAt( i );
             MRU.Insert( 0, Filename );
-            SaveMRU();
             MainForm.UpdateMenuMRU();
           }
           return;
@@ -356,20 +347,18 @@ namespace C64Studio
       {
         MRU.RemoveAt( 4 );
       }
-      SaveMRU();
       MainForm.UpdateMenuMRU();
     }
 
 
 
-    public void RemoveFromMRU( string Filename, MainForm MainForm )
+    public void RemoveFromMRU( List<string> MRU, string Filename, MainForm MainForm )
     {
       for ( int i = 0; i < MRU.Count; ++i )
       {
         if ( MRU[i] == Filename )
         {
           MRU.RemoveAt( i );
-          SaveMRU();
           MainForm.UpdateMenuMRU();
           return;
         }
@@ -744,6 +733,27 @@ namespace C64Studio
       chunkHexView.AppendU8( (byte)MemoryDisplaySpriteMulticolor1 );
       chunkHexView.AppendU8( (byte)MemoryDisplaySpriteMulticolor2 );
       SettingsData.Append( chunkHexView.ToBuffer() );
+
+
+      // MRU projects
+      GR.IO.FileChunk chunkMRUProjects = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_MRU_PROJECTS );
+
+      chunkMRUProjects.AppendI32( MRUProjects.Count );
+      for ( int i = 0; i < MRUProjects.Count; ++i )
+      {
+        chunkMRUProjects.AppendString( MRUProjects[i] );
+      }
+      SettingsData.Append( chunkMRUProjects.ToBuffer() );
+
+      // MRU files
+      GR.IO.FileChunk chunkMRUFiles = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_MRU_FILES );
+
+      chunkMRUFiles.AppendI32( MRUFiles.Count );
+      for ( int i = 0; i < MRUFiles.Count; ++i )
+      {
+        chunkMRUFiles.AppendString( MRUFiles[i] );
+      }
+      SettingsData.Append( chunkMRUFiles.ToBuffer() );
 
       return SettingsData;
     }
@@ -1127,6 +1137,30 @@ namespace C64Studio
               MemoryDisplaySpriteMulticolor2 = binIn.ReadUInt8();
             }
             break;
+          case Types.FileChunk.SETTINGS_MRU_PROJECTS:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              int   numEntries = binIn.ReadInt32();
+              for ( int i = 0; i < numEntries; ++i )
+              {
+                string    file = binIn.ReadString();
+                MRUProjects.Add( file );
+              }
+            }
+            break;
+          case Types.FileChunk.SETTINGS_MRU_FILES:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              int   numEntries = binIn.ReadInt32();
+              for ( int i = 0; i < numEntries; ++i )
+              {
+                string    file = binIn.ReadString();
+                MRUFiles.Add( file );
+              }
+            }
+            break;
         }
       }
       return true;
@@ -1183,6 +1217,10 @@ namespace C64Studio
       SetKeyBindingKey( C64Studio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
       SetKeyBindingKey( C64Studio.Types.Function.UNDO, Keys.Alt | Keys.Back );
       SetKeyBindingKey( C64Studio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
+
+      SetKeyBindingKey( C64Studio.Types.Function.COPY, Keys.Control | Keys.C );
+      SetKeyBindingKey( C64Studio.Types.Function.PASTE, Keys.Control | Keys.V );
+      SetKeyBindingKey( C64Studio.Types.Function.CUT, Keys.Control | Keys.X );
     }
 
 

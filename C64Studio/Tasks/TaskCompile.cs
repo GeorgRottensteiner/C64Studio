@@ -428,7 +428,7 @@ namespace C64Studio.Tasks
         }
         // write output if applicable
         if ( ( parser.AssembledOutput != null )
-        && ( parser.AssembledOutput.Assembly != null ) )
+        &&   ( parser.AssembledOutput.Assembly != null ) )
         {
           try
           {

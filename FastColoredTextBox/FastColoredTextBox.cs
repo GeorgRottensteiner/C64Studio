@@ -2466,18 +2466,18 @@ namespace FastColoredTextBoxNS
     public event EventHandler<VisualMarkerEventArgs> VisualMarkerClick;
 
     /// <summary>
-    /// It occurs when visible char is enetering (alphabetic, digit, punctuation, DEL, BACKSPACE)
+    /// It occurs before visible char is entered (alphabetic, digit, punctuation, DEL, BACKSPACE)
     /// </summary>
     /// <remarks>Set Handle to True for cancel key</remarks>
     [Browsable( true )]
-    [Description( "It occurs when visible char is enetering (alphabetic, digit, punctuation, DEL, BACKSPACE)." )]
+    [Description( "It occurs before visible char is entered (alphabetic, digit, punctuation, DEL, BACKSPACE)." )]
     public event KeyPressEventHandler KeyPressing;
 
     /// <summary>
     /// It occurs when visible char is enetered (alphabetic, digit, punctuation, DEL, BACKSPACE)
     /// </summary>
     [Browsable( true )]
-    [Description( "It occurs when visible char is enetered (alphabetic, digit, punctuation, DEL, BACKSPACE)." )]
+    [Description( "It occurs when visible char is entered (alphabetic, digit, punctuation, DEL, BACKSPACE)." )]
     public event KeyPressEventHandler KeyPressed;
 
 

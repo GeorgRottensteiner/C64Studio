@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using C64Studio.Formats;
+using GR.Memory;
 
 namespace C64Studio
 {
@@ -2964,7 +2965,7 @@ namespace C64Studio
 
     private void btnImportFromHex_Click( object sender, EventArgs e )
     {
-      string    binaryText = editDataExport.Text.Replace( " ", "" ).Replace( "\r", "" ).Replace( "\n", "" );
+      string    binaryText = editDataImport.Text.Replace( " ", "" ).Replace( "\r", "" ).Replace( "\n", "" );
 
       GR.Memory.ByteBuffer    data = new GR.Memory.ByteBuffer( binaryText );
 
@@ -3368,6 +3369,106 @@ namespace C64Studio
     {
       ExchangeMultiColors( panelSprites.SelectedIndices, true );
     }
+
+
+
+    private void btnImportFromASM_Click( object sender, EventArgs e )
+    {
+      Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
+
+      Parser.CompileConfig config = new Parser.CompileConfig();
+      config.TargetType = Types.CompileTargetType.PLAIN;
+      config.OutputFile = "temp.bin";
+      config.Assembler = Types.AssemblerType.C64_STUDIO;
+
+      string    temp = "* = $0801\n" + editDataImport.Text;
+      if ( ( asmParser.Parse( temp, null, config ) )
+      &&   ( asmParser.Assemble( config ) ) )
+      {
+        GR.Memory.ByteBuffer spriteData = asmParser.AssembledOutput.Assembly;
+
+        ImportFromData( spriteData );
+      }
+    }
+
+
+
+    private void ImportFromData( ByteBuffer SpriteData )
+    {
+      if ( SpriteData == null )
+      {
+        return;
+      }
+      int   spriteSizeGuess = 63;
+      if ( ( SpriteData.Length % 64 ) == 0 )
+      {
+        spriteSizeGuess = 64;
+      }
+      int numSprites = (int)SpriteData.Length / spriteSizeGuess;
+      for ( int i = 0; i < numSprites; ++i )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ), i == 0 );
+
+        SpriteData.CopyTo( m_SpriteProject.Sprites[i].Data, i * spriteSizeGuess, 63 );
+        if ( spriteSizeGuess == 64 )
+        {
+          m_SpriteProject.Sprites[i].Color = ( SpriteData.ByteAt( i * 64 + 63 ) & 0xf );
+        }
+        else
+        {
+          m_SpriteProject.Sprites[i].Color = 1;
+        }
+        RebuildSpriteImage( i );
+      }
+
+      editSpriteFrom.Text = "0";
+      editSpriteCount.Text = numSprites.ToString();
+
+      panelSprites.Invalidate();
+      pictureEditor.Invalidate();
+      Modified = false;
+
+      saveSpriteProjectToolStripMenuItem.Enabled = true;
+      closeCharsetProjectToolStripMenuItem.Enabled = true;
+    }
+
+
+
+    private void btnImportFromBASIC_Click( object sender, EventArgs e )
+    {
+      string[]  lines = editDataImport.Text.Split( new char[] { '\n' } );
+
+      GR.Memory.ByteBuffer    resultData = new GR.Memory.ByteBuffer();
+
+      for ( int i = 0; i < lines.Length; ++i )
+      {
+        string    cleanLine = lines[i].Trim().ToUpper();
+
+        int   dataPos = cleanLine.IndexOf( "DATA" );
+        if ( dataPos != -1 )
+        {
+          int     commaPos = -1;
+          int     byteStartPos = dataPos + 4;
+
+          do
+          {
+            commaPos = cleanLine.IndexOf( ',', byteStartPos );
+            if ( commaPos == -1 )
+            {
+              commaPos = cleanLine.Length;
+            }
+            int     value = GR.Convert.ToI32( cleanLine.Substring( byteStartPos, commaPos - byteStartPos ).Trim() );
+            resultData.AppendU8( (byte)value );
+
+            byteStartPos = commaPos + 1;
+          }
+          while ( commaPos < cleanLine.Length );
+        }
+      }
+      ImportFromData( resultData );
+    }
+
+
 
   }
 }

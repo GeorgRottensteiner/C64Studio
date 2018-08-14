@@ -104,7 +104,7 @@ namespace C64Studio
       m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[.@]{0,1}[+\-a-zA-Z]+[a-zA-Z_\d.]*[:]*" );
       m_TextRegExp[(int)Types.ColorableElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";.*" );
 
-      m_TextRegExp[(int)Types.ColorableElement.OPERATOR] = new System.Text.RegularExpressions.Regex( @"[+\-/*(){}=<>,#]" );
+      m_TextRegExp[(int)Types.ColorableElement.OPERATOR] = new System.Text.RegularExpressions.Regex( @"[+\-/*(){}=<>,#%]" );
       m_TextRegExp[(int)Types.ColorableElement.NONE] = new System.Text.RegularExpressions.Regex( @"\S" );
 
 
@@ -193,27 +193,26 @@ namespace C64Studio
 
     private void AdjustFontSizeInLeftBorder()
     {
-      int approxWidthOfChar = TextRenderer.MeasureText( "$", editSource.Font ).Width;
-
       float     zoomFactor = editSource.Zoom / 100.0f;
 
-      approxWidthOfChar = (int)( approxWidthOfChar * editSource.Zoom / 100.0f );
+      int approxWidthOfChar = editSource.CharWidth;
+      int approxWidthOfAddress = 5 * approxWidthOfChar;
 
-      int     newPadding = BORDER_MARKER_WIDTH;    // space for marker symbol on left side
+      int     newPadding = (int)( BORDER_MARKER_WIDTH * zoomFactor );    // space for marker symbol on left side
       if ( Core.Settings.ASMShowAddress )
       {
         m_AddressOffset = newPadding;
-        newPadding += (int)( BORDER_ADDRESS_WIDTH * zoomFactor );
+        newPadding += approxWidthOfAddress + approxWidthOfChar;
       }
       if ( Core.Settings.ASMShowBytes )
       {
         m_ByteSizeOffset = newPadding;
-        newPadding += (int)( BORDER_SIZE_WIDTH * zoomFactor );
+        newPadding += 3 * approxWidthOfChar;
       }
       if ( Core.Settings.ASMShowCycles )
       {
         m_CycleOffset = newPadding;
-        newPadding += (int)( BORDER_CYCLES_WIDTH * zoomFactor );
+        newPadding += 4 * approxWidthOfChar;
       }
       editSource.LeftPadding = newPadding;
     }
@@ -2309,6 +2308,11 @@ namespace C64Studio
         docBasePath = DocumentInfo.Project.Settings.BasePath;
       }
       string            fullPath = GR.Path.Append( docBasePath, m_FilenameToOpen );
+      if ( DocumentInfo.Project == null )
+      {
+        Core.MainForm.OpenFile( fullPath );
+        return;
+      }
       ProjectElement    element = DocumentInfo.Project.GetElementByFilename( fullPath );
       if ( element != null )
       {
@@ -2553,6 +2557,10 @@ namespace C64Studio
       UpdateKeyBinding( C64Studio.Types.Function.COPY_LINE_UP, FastColoredTextBoxNS.FCTBAction.CopyLineUp );
       UpdateKeyBinding( C64Studio.Types.Function.MOVE_LINE_UP, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesUp );
       UpdateKeyBinding( C64Studio.Types.Function.MOVE_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesDown );
+
+      UpdateKeyBinding( C64Studio.Types.Function.COPY, FastColoredTextBoxNS.FCTBAction.Copy );
+      UpdateKeyBinding( C64Studio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
+      UpdateKeyBinding( C64Studio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
 
       AutoComplete.Enabled = Core.Settings.ASMShowAutoComplete;
     }
@@ -2824,6 +2832,7 @@ namespace C64Studio
           {
             // TODO - happens if we edit code while compiling
             if ( ( sourceInfo.Value.LocalStartLine + i < m_LineInfos.Count )
+            &&   ( sourceInfo.Value.LocalStartLine + i >= 0 )
             &&   ( FileInfo.LineInfo.ContainsKey( sourceInfo.Value.GlobalStartLine + i ) ) )
             {
               m_LineInfos[sourceInfo.Value.LocalStartLine + i] = FileInfo.LineInfo[sourceInfo.Value.GlobalStartLine + i];
@@ -2970,13 +2979,26 @@ namespace C64Studio
       if ( editSource.AllowTabs )
       {
         // adjust offset in case of tabs (butt ugly hackaround)
-        var origText = editSource[LineIndex].Text.Substring( 0, CharPosStart );
+        string origText = editSource[LineIndex].Text;
 
+        if ( CharPosStart < origText.Length )
+        {
+          origText = editSource[LineIndex].Text.Substring( 0, CharPosStart );
+        }
         origText = editSource.ReTabifyLine( origText, editSource.TabLength );
 
         startPos = origText.Length;
+
+        if ( ( startPos >= origText.Length )
+        ||   ( startPos + CharLength > origText.Length ) )
+        {
+          startPos = 0;
+          CharLength = origText.Length;
+        }
+
         //startPos = rng.AdjustXPosForTabs( LineIndex, startPos );
       }
+
       var range = new FastColoredTextBoxNS.Range( editSource, new FastColoredTextBoxNS.Place( startPos, LineIndex ), new FastColoredTextBoxNS.Place( startPos + CharLength, LineIndex ) );
 
       range.SetStyle( FastColoredTextBoxNS.StyleIndex.Style10 );

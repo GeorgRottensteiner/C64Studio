@@ -93,8 +93,11 @@
       this.tabProject = new System.Windows.Forms.TabPage();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnImportFromFile = new System.Windows.Forms.Button();
+      this.btnImportFromASM = new System.Windows.Forms.Button();
+      this.btnImportFromBASIC = new System.Windows.Forms.Button();
       this.btnImportFromHex = new System.Windows.Forms.Button();
       this.button2 = new System.Windows.Forms.Button();
+      this.editDataImport = new System.Windows.Forms.TextBox();
       this.groupExport = new System.Windows.Forms.GroupBox();
       this.editExportBASICLineOffset = new System.Windows.Forms.TextBox();
       this.comboExportRange = new System.Windows.Forms.ComboBox();
@@ -832,11 +835,14 @@
       this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
       this.groupBox1.Controls.Add(this.btnImportFromFile);
+      this.groupBox1.Controls.Add(this.btnImportFromASM);
+      this.groupBox1.Controls.Add(this.btnImportFromBASIC);
       this.groupBox1.Controls.Add(this.btnImportFromHex);
       this.groupBox1.Controls.Add(this.button2);
+      this.groupBox1.Controls.Add(this.editDataImport);
       this.groupBox1.Location = new System.Drawing.Point(455, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(135, 463);
+      this.groupBox1.Size = new System.Drawing.Size(430, 463);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -850,6 +856,26 @@
       this.btnImportFromFile.Text = "From File...";
       this.btnImportFromFile.UseVisualStyleBackColor = true;
       this.btnImportFromFile.Click += new System.EventHandler(this.btnImportSprite_Click);
+      // 
+      // btnImportFromASM
+      // 
+      this.btnImportFromASM.Location = new System.Drawing.Point(132, 77);
+      this.btnImportFromASM.Name = "btnImportFromASM";
+      this.btnImportFromASM.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromASM.TabIndex = 2;
+      this.btnImportFromASM.Text = "From ASM";
+      this.btnImportFromASM.UseVisualStyleBackColor = true;
+      this.btnImportFromASM.Click += new System.EventHandler(this.btnImportFromASM_Click);
+      // 
+      // btnImportFromBASIC
+      // 
+      this.btnImportFromBASIC.Location = new System.Drawing.Point(255, 77);
+      this.btnImportFromBASIC.Name = "btnImportFromBASIC";
+      this.btnImportFromBASIC.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromBASIC.TabIndex = 2;
+      this.btnImportFromBASIC.Text = "From BASIC";
+      this.btnImportFromBASIC.UseVisualStyleBackColor = true;
+      this.btnImportFromBASIC.Click += new System.EventHandler(this.btnImportFromBASIC_Click);
       // 
       // btnImportFromHex
       // 
@@ -870,6 +896,20 @@
       this.button2.Text = "From Image...";
       this.button2.UseVisualStyleBackColor = true;
       this.button2.Click += new System.EventHandler(this.btnImportFromImage_Click);
+      // 
+      // editDataImport
+      // 
+      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editDataImport.Location = new System.Drawing.Point(9, 148);
+      this.editDataImport.Multiline = true;
+      this.editDataImport.Name = "editDataImport";
+      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      this.editDataImport.Size = new System.Drawing.Size(429, 309);
+      this.editDataImport.TabIndex = 3;
+      this.editDataImport.WordWrap = false;
+      this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
       // 
       // groupExport
       // 
@@ -1158,6 +1198,7 @@
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).EndInit();
       this.tabProject.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
+      this.groupBox1.PerformLayout();
       this.groupExport.ResumeLayout(false);
       this.groupExport.PerformLayout();
       this.menuStrip1.ResumeLayout(false);
@@ -1264,5 +1305,8 @@
     private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor1WithMulticolor2ToolStripMenuItem1;
+    private System.Windows.Forms.TextBox editDataImport;
+    private System.Windows.Forms.Button btnImportFromASM;
+    private System.Windows.Forms.Button btnImportFromBASIC;
   }
 }
