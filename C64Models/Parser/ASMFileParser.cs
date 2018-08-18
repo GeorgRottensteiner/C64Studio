@@ -7125,6 +7125,8 @@ namespace C64Studio.Parser
                 &&   ( targetType != "MAGICDESKCRT" )
                 &&   ( targetType != "RGCDBIN" )
                 &&   ( targetType != "RGCDCRT" )
+                &&   ( targetType != "GMOD2BIN" )
+                &&   ( targetType != "GMOD2CRT" )
                 &&   ( targetType != "EASYFLASHBIN" )
                 &&   ( targetType != "EASYFLASHCRT" )
                 &&   ( targetType != "D64" )
@@ -7133,7 +7135,7 @@ namespace C64Studio.Parser
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1304_UNSUPPORTED_TARGET_TYPE,
-                            "Unsupported target type " + lineTokenInfos[2].Content + ", only cbm, plain, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, t64, tap or d64 supported",
+                            "Unsupported target type " + lineTokenInfos[2].Content + ", only cbm, plain, t64, tap, d64, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, gmod2bin or gmod2crt supported",
                             lineTokenInfos[2].StartPos,
                             lineTokenInfos[2].Length );
                   return null;
@@ -7207,6 +7209,14 @@ namespace C64Studio.Parser
                 else if ( targetType == "EASYFLASHCRT" )
                 {
                   m_CompileTarget = Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT;
+                }
+                else if ( targetType == "GMOD2BIN" )
+                {
+                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_GMOD2_BIN;
+                }
+                else if ( targetType == "GMOD2CRT" )
+                {
+                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_GMOD2_CRT;
                 }
               }
             }
@@ -9678,6 +9688,8 @@ namespace C64Studio.Parser
       &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_8K_CRT )
       &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
       &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
+      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_GMOD2_BIN )
+      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_GMOD2_CRT )
       &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
       &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_RGCD_CRT )
       &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN )
@@ -10007,8 +10019,8 @@ namespace C64Studio.Parser
 
         record.Filename = Util.ToFilename( outputPureFilename );
         record.StartAddress = (ushort)fileStartAddress;
-        record.C64FileType  = C64Studio.Types.FileType.PRG;
-        record.EntryType    = 1;
+        record.C64FileType = C64Studio.Types.FileType.PRG;
+        record.EntryType = 1;
 
         t64.TapeInfo.Description = "C64S tape file\r\nDemo tape";
         t64.TapeInfo.UserDescription = "USERDESC";
@@ -10036,7 +10048,7 @@ namespace C64Studio.Parser
         AssembledOutput.Assembly = d64.Compile();
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_BIN )
-      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
+      || ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
       {
         if ( AssembledOutput.Assembly.Length < 8192 )
         {
@@ -10100,7 +10112,7 @@ namespace C64Studio.Parser
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_16K_BIN )
-      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_16K_CRT ) )
+      || ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_16K_CRT ) )
       {
         if ( AssembledOutput.Assembly.Length < 16384 )
         {
@@ -10130,7 +10142,7 @@ namespace C64Studio.Parser
           header.AppendU8( 0 );
           header.AppendU8( 0 );
           header.AppendU8( 0 );
-          header.AppendU8( 0 );   
+          header.AppendU8( 0 );
 
           // cartridge name
           string name = System.IO.Path.GetFileNameWithoutExtension( m_CompileTargetFile ).ToUpper();
@@ -10164,7 +10176,7 @@ namespace C64Studio.Parser
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN )
-      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT ) )
+      || ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT ) )
       {
         if ( AssembledOutput.Assembly.Length < 65536 )
         {
@@ -10234,7 +10246,7 @@ namespace C64Studio.Parser
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
-      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_CRT ) )
+      || ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_CRT ) )
       {
         if ( AssembledOutput.Assembly.Length < 65536 )
         {
@@ -10304,7 +10316,7 @@ namespace C64Studio.Parser
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
-      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT ) )
+      || ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT ) )
       {
         GR.Memory.ByteBuffer    resultingAssembly = AssembledOutput.Assembly;
         if ( resultingAssembly.Length < 524288 )
@@ -10384,7 +10396,80 @@ namespace C64Studio.Parser
           AssembledOutput.Assembly = resultingAssembly;
         }
       }
+      else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_GMOD2_BIN )
+      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_GMOD2_CRT ) )
+      {
+        GR.Memory.ByteBuffer    resultingAssembly = AssembledOutput.Assembly;
+        if ( resultingAssembly.Length < 524288 )
+        {
+          // fill up
+          resultingAssembly = resultingAssembly + new GR.Memory.ByteBuffer( 524288 - resultingAssembly.Length );
+        }
+        else if ( resultingAssembly.Length > 524288 )
+        {
+          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + resultingAssembly.Length.ToString() + " > 524288" );
+          return false;
+        }
+        if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_GMOD2_CRT )
+        {
+          // build cartridge header
+          GR.Memory.ByteBuffer    header = new GR.Memory.ByteBuffer();
 
+          header.AppendHex( "43363420434152545249444745202020" ); // "C64 CARTRIDGE   "
+          header.AppendU32NetworkOrder( 0x40 );
+          header.AppendU16NetworkOrder( 0x0100 );
+          header.AppendU16NetworkOrder( 60 ); // Easyflash
+          header.AppendU8( 0 );     // EXROM
+          header.AppendU8( 1 );     // GAME
+
+          // reserved
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+
+          // cartridge name
+          string name = System.IO.Path.GetFileNameWithoutExtension( m_CompileTargetFile ).ToUpper();
+
+          if ( name.Length > 32 )
+          {
+            name = name.Substring( 0, 32 );
+          }
+          while ( name.Length < 32 )
+          {
+            name += (char)0;
+          }
+          foreach ( char aChar in name )
+          {
+            header.AppendU8( (byte)aChar );
+          }
+
+          // 64 x 8kb
+          AssembledOutput.Assembly = header;
+          for ( int i = 0; i < 64; ++i )
+          {
+            GR.Memory.ByteBuffer chip = new GR.Memory.ByteBuffer();
+
+            chip.AppendHex( "43484950" );   // chip
+            uint length = 16 + 8192;
+            chip.AppendU32NetworkOrder( length );
+            chip.AppendU16NetworkOrder( 0 );
+            chip.AppendU16NetworkOrder( (ushort)i );  // Bank number
+            chip.AppendU16NetworkOrder( 0x8000 ); // loading start address
+            chip.AppendU16NetworkOrder( 0x2000 ); // rom size
+
+            chip.Append( resultingAssembly.SubBuffer( i * 0x2000, 0x2000 ) );
+
+            AssembledOutput.Assembly += chip;
+          }
+        }
+        else
+        {
+          AssembledOutput.Assembly = resultingAssembly;
+        }
+      }
       return true;
     }
 
