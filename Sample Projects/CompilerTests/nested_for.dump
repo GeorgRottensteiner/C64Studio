@@ -1,0 +1,17 @@
+00  $2000              * = $2000
+01  $2000              
+02  $2000              
+03  $2000              .COLOR_SOURCE = $0400
+04  $2000              .COLOR_TARGET = $d800
+05  $2000              
+06  $2000              ;ex for loop
+07  $2000              ;ex for loop
+08  $2000  AD 00 04    lda .0__1_11_.0_0__0_10_.COLOR_SOURCE + ROW * 40 + COL
+09  $2003  8D 00 D8    sta .0__2_11_.0_0__1_10_.COLOR_TARGET + ROW * 40 + COL
+10  $2006              ;ex loop end
+11  $2006              ;ex for loop
+12  $2006  AD          lda .0__1_11_.0_0__0_10_.COLOR_SOURCE + ROW * 40 + COL
+13  $2009  8D          sta .0__2_11_.0_0__1_10_.COLOR_TARGET + ROW * 40 + COL
+14  $200C              ;ex loop end
+15  $200C              ;ex loop end
+16  $200C              

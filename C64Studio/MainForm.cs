@@ -5634,7 +5634,11 @@ namespace C64Studio
       document.Core = StudioCore;
       document.SetDocumentFilename( Filename );
       document.Text = System.IO.Path.GetFileName( Filename );
-      document.Load();
+      if ( !document.Load() )
+      {
+        return null;
+      }
+
       document.Show( panelMain );
       document.Icon = IconFromType( document.DocumentInfo );
       document.DocumentInfo.UndoManager.MainForm = this;

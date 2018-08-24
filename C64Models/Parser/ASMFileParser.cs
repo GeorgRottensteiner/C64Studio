@@ -2920,6 +2920,12 @@ namespace C64Studio.Parser
           lastLoop.Content = new string[lastLoop.LoopLength];
           System.Array.Copy( Lines, lastLoop.LineIndex + 1, lastLoop.Content, 0, lastLoop.LoopLength );
 
+          // fix up internal labels for first loop
+          var lineReplacement = new string[lastLoop.LoopLength];
+          System.Array.Copy( Lines, lastLoop.LineIndex + 1, lineReplacement, 0, lastLoop.LoopLength );
+          lineReplacement = RelabelLocalLabelsForLoop( lineReplacement, ScopeList, lineIndex );
+          System.Array.Copy( lineReplacement, 0, Lines, lastLoop.LineIndex + 1, lastLoop.LoopLength );
+
           // fix up internal labels
           lastLoop.Content = RelabelLocalLabelsForLoop( lastLoop.Content, ScopeList, lineIndex );
         }
@@ -8704,7 +8710,7 @@ namespace C64Studio.Parser
               hadError = true;
             }
             else if ( ( stepValue > 0 )
-            &&        ( endValue <= startValue ) )
+            &&        ( endValue < startValue ) )
             {
               AddError( lineIndex,
                         C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
