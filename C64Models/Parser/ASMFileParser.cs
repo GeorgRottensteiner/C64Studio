@@ -6355,8 +6355,11 @@ namespace C64Studio.Parser
                   &&   ( lineTokenInfos[2].Content == "{" )
                   &&   ( lineTokenInfos[1].Content.ToUpper() == "ELSE" ) )
                   {
-                    stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
-                    //Debug.Log( "toggle scope state " + lineIndex );
+                    if ( !ScopeInsideMacroDefinition( stackScopes ) )
+                    {
+                      stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
+                      //Debug.Log( "toggle scope state " + lineIndex );
+                    }
                   }
                   else if ( lineTokenInfos.Count == 1 )
                   {
@@ -6369,32 +6372,35 @@ namespace C64Studio.Parser
                   &&        ( lineTokenInfos[1].Content.ToUpper() == "ELSE" )
                   &&        ( lineTokenInfos[2].Content.ToUpper() == "IF" ) )
                   {
-                    // else if
-
-                    // end previous block
-                    stackScopes.RemoveAt( stackScopes.Count - 1 );
-
-                    // start new block
-                    int defineResult = -1;
-
-                    Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
-                    scope.StartIndex = lineIndex;
-                    if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, out defineResult ) )
+                    if ( !ScopeInsideMacroDefinition( stackScopes ) )
                     {
-                      AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
-                                + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
-                                lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
-                      scope.Active = true;
+                      // else if
+
+                      // end previous block
+                      stackScopes.RemoveAt( stackScopes.Count - 1 );
+
+                      // start new block
+                      int defineResult = -1;
+
+                      Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                      scope.StartIndex = lineIndex;
+                      if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, out defineResult ) )
+                      {
+                        AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
+                                  + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
+                                  lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
+                        scope.Active = true;
+                      }
+                      else if ( defineResult == 0 )
+                      {
+                        scope.Active = false;
+                      }
+                      else
+                      {
+                        scope.Active = true;
+                      }
+                      stackScopes.Add( scope );
                     }
-                    else if ( defineResult == 0 )
-                    {
-                      scope.Active = false;
-                    }
-                    else
-                    {
-                      scope.Active = true;
-                    }
-                    stackScopes.Add( scope );
                   }
                   else
                   {
