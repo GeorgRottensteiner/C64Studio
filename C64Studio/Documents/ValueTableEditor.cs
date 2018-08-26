@@ -129,6 +129,7 @@ namespace C64Studio
       editEndValue.Text       = m_Project.ValueTable.EndValue;
       editStepValue.Text      = m_Project.ValueTable.StepValue;
       editValueFunction.Text  = m_Project.ValueTable.Formula;
+      checkGenerateDeltas.Checked = m_Project.ValueTable.GenerateDeltas;
 
       m_DoNotUpdate = false;
 
@@ -588,6 +589,8 @@ namespace C64Studio
 
       double  curValue = startValue;
       bool    completed = false;
+      bool    firstValue = true;
+      double  lastValue = curValue;
 
       do
       {
@@ -605,9 +608,22 @@ namespace C64Studio
           return;
         }
 
-        m_Project.ValueTable.Values.Add( result.ToString() );
-        listValues.Items.Add( result.ToString() );
+        if ( m_Project.ValueTable.GenerateDeltas )
+        {
+          if ( !firstValue )
+          {
+            m_Project.ValueTable.Values.Add( ( result - lastValue ).ToString() );
+            listValues.Items.Add( ( result - lastValue ).ToString() );
+          }
+          firstValue = false;
+        }
+        else
+        {
+          m_Project.ValueTable.Values.Add( result.ToString() );
+          listValues.Items.Add( result.ToString() );
+        }
 
+        lastValue = result;
         curValue += stepValue;
 
         if ( startValue == endValue )
@@ -906,6 +922,20 @@ namespace C64Studio
     {
       RedrawPreview();
     }
+
+
+
+    private void checkGenerateDeltas_CheckedChanged( object sender, EventArgs e )
+    {
+      if ( m_Project.ValueTable.GenerateDeltas != checkGenerateDeltas.Checked )
+      {
+        m_Project.ValueTable.GenerateDeltas = checkGenerateDeltas.Checked;
+        SetModified();
+        GeneratorValuesChanged();
+      }
+    }
+
+
 
   }
 }
