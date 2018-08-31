@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using System.ComponentModel;
 using GR.Memory;
+using C64Studio.Types;
 
 namespace C64Studio
 {
@@ -1217,7 +1218,6 @@ namespace C64Studio
       SetKeyBindingKey( C64Studio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
       SetKeyBindingKey( C64Studio.Types.Function.UNDO, Keys.Alt | Keys.Back );
       SetKeyBindingKey( C64Studio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
-
       SetKeyBindingKey( C64Studio.Types.Function.COPY, Keys.Control | Keys.C );
       SetKeyBindingKey( C64Studio.Types.Function.PASTE, Keys.Control | Keys.V );
       SetKeyBindingKey( C64Studio.Types.Function.CUT, Keys.Control | Keys.X );
@@ -1306,6 +1306,51 @@ namespace C64Studio
       {
         TabSize = 800;
       }
+
+      // key bindings
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.SAVE_DOCUMENT, Keys.Control | Keys.S );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.BUILD_AND_RUN, Keys.Control | Keys.F5 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.BUILD, Keys.F7 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.BUILD_AND_DEBUG, Keys.F5 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_GO, Keys.F5 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_STEP_OUT, Keys.F9 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.CENTER_ON_CURSOR, Keys.Clear );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DELETE_LINE, Keys.Control | Keys.Y );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_STEP, Keys.F11 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_STEP_OVER, Keys.F10 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_STOP, Keys.Shift | Keys.F5 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_RUN_TO, Keys.Control | Keys.F10 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.GO_TO_DECLARATION, Keys.Control | Keys.G );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.COMPILE, Keys.Control | Keys.B );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.FIND, Keys.Control | Keys.F );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.FIND_NEXT, Keys.Control | Keys.L );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.FIND_REPLACE, Keys.Control | Keys.H );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.FIND_IN_PROJECT, Keys.Control | Keys.Shift | Keys.F );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.REPLACE_IN_PROJECT, Keys.Control | Keys.Shift | Keys.H );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.SAVE_ALL, Keys.Control | Keys.Shift | Keys.S );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.PRINT, Keys.Control | Keys.P );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.HELP, Keys.F1 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.SAVE_DOCUMENT_AS, Keys.F12 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.UNDO, Keys.Alt | Keys.Back );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.COPY, Keys.Control | Keys.C );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.PASTE, Keys.Control | Keys.V );
+      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.CUT, Keys.Control | Keys.X );
+    }
+
+
+
+    private void ValidateOrSetKeyBindingKey( Function Func, Keys KeyBinding )
+    {
+      foreach ( var accPair in Accelerators )
+      {
+        if ( accPair.Value.Function == Func )
+        {
+          return;
+        }
+      }
+      SetKeyBindingKey( Func, KeyBinding );
     }
 
   }

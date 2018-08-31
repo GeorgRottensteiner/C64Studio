@@ -6,7 +6,6 @@ o TODO - Nested for loops using a local label from outside:
     lda .LABEL + ROW * 5 + COL
     !end
     !end
-o Set default values for cut/copy/paste
 o (1) In the File | Preferences | Tools tab, add buttons to move the individual items for Available Tools up/down in the list; 
 i.e., allow changing the order of the tools, similar to the up/down buttons found on the Assembler tab of that same Preferences window. 
 (I have many items in that tools list and want them to show up differently in the drop-down box on the main window, especially since 
