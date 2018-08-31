@@ -102,7 +102,7 @@ namespace C64Studio
   {
     public GR.Collections.MultiMap<Keys, AcceleratorKey> Accelerators = new GR.Collections.MultiMap<Keys, AcceleratorKey>();
 
-    public LinkedList<ToolInfo>                 ToolInfos = new LinkedList<ToolInfo>();
+    public List<ToolInfo>                       ToolInfos = new List<ToolInfo>();
 
     //public List<string>                         MRU = new List<string>();
     public List<string>                         MRUProjects = new List<string>();
@@ -828,7 +828,7 @@ namespace C64Studio
               {
                 tool.PRGArguments = tool.PRGArguments.Replace( " -truedrive", "" );
               }
-              ToolInfos.AddLast( tool );
+              ToolInfos.Add( tool );
             }
             break;
           case Types.FileChunk.SETTINGS_ACCELERATOR:

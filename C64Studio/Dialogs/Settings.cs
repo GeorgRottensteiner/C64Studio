@@ -319,7 +319,7 @@ namespace C64Studio
       ToolInfo    tool = new ToolInfo();
 
       tool.Name = "New Tool";
-      Core.Settings.ToolInfos.AddLast( tool );
+      Core.Settings.ToolInfos.Add( tool );
 
       listTools.Items.Add( new GR.Generic.Tupel<string,ToolInfo>( tool.Name, tool ) );
 
@@ -378,6 +378,8 @@ namespace C64Studio
         btnBrowseTool.Enabled = false;
         checkPassLabelsToEmulator.Enabled = false;
         btnCloneTool.Enabled = false;
+        btnToolDown.Enabled = false;
+        btnToolUp.Enabled = false;
         return;
       }
       editToolPRGArguments.Enabled = true;
@@ -388,6 +390,17 @@ namespace C64Studio
       btnBrowseTool.Enabled = true;
       btnCloneTool.Enabled = true;
       checkPassLabelsToEmulator.Enabled = true;
+
+      if ( listTools.Items.Count < 2 )
+      {
+        btnToolDown.Enabled = false;
+        btnToolUp.Enabled = false;
+      }
+      else
+      {
+        btnToolUp.Enabled = ( listTools.SelectedIndex > 0 );
+        btnToolDown.Enabled = ( listTools.SelectedIndex + 1 < listTools.Items.Count );
+      }
 
       ToolInfo    tool = ( (GR.Generic.Tupel<string,ToolInfo>)listTools.SelectedItem ).second;
       if ( tool == null )
@@ -1416,7 +1429,7 @@ namespace C64Studio
          };
 
 
-      Core.Settings.ToolInfos.AddLast( newTool );
+      Core.Settings.ToolInfos.Add( newTool );
 
       listTools.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( newTool.Name, newTool ) );
 
@@ -1576,7 +1589,7 @@ namespace C64Studio
             toolInfo.WorkPath       = xmlKey.Attribute( "WorkPath" );
             toolInfo.PassLabelsToEmulator = GetBooleanFromString( xmlKey.Attribute( "PassLabelsToEmulator" ) );
 
-            Core.Settings.ToolInfos.AddLast( toolInfo );
+            Core.Settings.ToolInfos.Add( toolInfo );
           }
           catch ( Exception ex )
           {
@@ -2264,6 +2277,56 @@ namespace C64Studio
         Core.Settings.ASMShowAddress = checkASMShowAddress.Checked;
         RefreshDisplayOnDocuments();
       }
+    }
+
+
+
+    private void btnToolUp_Click( object sender, EventArgs e )
+    {
+      if ( ( listTools.SelectedItem == null )
+      || ( listTools.SelectedIndex < 1 ) )
+      {
+        return;
+      }
+      int     index1 = listTools.SelectedIndex - 1;
+      int     index2 = listTools.SelectedIndex;
+      SwapTools( index1, index2 );
+    }
+
+
+
+    private void SwapTools( int index1, int index2 )
+    {
+      var tool1 = (GR.Generic.Tupel<string, ToolInfo>)listTools.Items[index1];
+      var tool2 = (GR.Generic.Tupel<string, ToolInfo>)listTools.Items[index2];
+
+      var toolInfoTemp = Core.Settings.ToolInfos[index1];
+      Core.Settings.ToolInfos[index1] = Core.Settings.ToolInfos[index2];
+      Core.Settings.ToolInfos[index2] = toolInfoTemp;
+
+      listTools.Items[index1] = tool2;
+      listTools.Items[index2] = tool1;
+
+      listTools.SelectedIndex = index1;
+      if ( ( tool1.second.Type == ToolInfo.ToolType.EMULATOR )
+      || ( tool2.second.Type == ToolInfo.ToolType.EMULATOR ) )
+      {
+        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
+      }
+    }
+
+
+
+    private void btnToolDown_Click( object sender, EventArgs e )
+    {
+      if ( ( listTools.SelectedItem == null )
+      ||   ( listTools.SelectedIndex + 1 >= listTools.Items.Count ) )
+      {
+        return;
+      }
+      int     index1 = listTools.SelectedIndex + 1;
+      int     index2 = listTools.SelectedIndex;
+      SwapTools( index1, index2 );
     }
 
 

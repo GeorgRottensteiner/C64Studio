@@ -98,6 +98,7 @@
       this.btmASMLibraryPathBrowse = new System.Windows.Forms.Button();
       this.editASMLibraryPath = new System.Windows.Forms.TextBox();
       this.asmLibraryPathList = new C64Studio.ArrangedItemList();
+      this.checkASMShowAddress = new System.Windows.Forms.CheckBox();
       this.checkASMShowAutoComplete = new System.Windows.Forms.CheckBox();
       this.checkASMAutoTruncateLiteralValues = new System.Windows.Forms.CheckBox();
       this.checkASMShowMiniMap = new System.Windows.Forms.CheckBox();
@@ -142,7 +143,8 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.checkASMShowAddress = new System.Windows.Forms.CheckBox();
+      this.btnToolUp = new System.Windows.Forms.Button();
+      this.btnToolDown = new System.Windows.Forms.Button();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -431,6 +433,8 @@
       // 
       // tabTools
       // 
+      this.tabTools.Controls.Add(this.btnToolDown);
+      this.tabTools.Controls.Add(this.btnToolUp);
       this.tabTools.Controls.Add(this.checkPassLabelsToEmulator);
       this.tabTools.Controls.Add(this.groupBox1);
       this.tabTools.Controls.Add(this.comboToolType);
@@ -463,7 +467,7 @@
       this.checkPassLabelsToEmulator.Location = new System.Drawing.Point(223, 338);
       this.checkPassLabelsToEmulator.Name = "checkPassLabelsToEmulator";
       this.checkPassLabelsToEmulator.Size = new System.Drawing.Size(363, 24);
-      this.checkPassLabelsToEmulator.TabIndex = 9;
+      this.checkPassLabelsToEmulator.TabIndex = 10;
       this.checkPassLabelsToEmulator.Text = "Forward labels to emulator";
       this.checkPassLabelsToEmulator.UseVisualStyleBackColor = true;
       this.checkPassLabelsToEmulator.CheckedChanged += new System.EventHandler(this.checkPassLabelsToEmulator_CheckedChanged);
@@ -493,7 +497,7 @@
       this.button1.Location = new System.Drawing.Point(16, 152);
       this.button1.Name = "button1";
       this.button1.Size = new System.Drawing.Size(75, 23);
-      this.button1.TabIndex = 7;
+      this.button1.TabIndex = 5;
       this.button1.Text = "Macros";
       this.button1.UseVisualStyleBackColor = true;
       this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -503,7 +507,7 @@
       this.editToolCartArguments.Location = new System.Drawing.Point(83, 45);
       this.editToolCartArguments.Name = "editToolCartArguments";
       this.editToolCartArguments.Size = new System.Drawing.Size(281, 20);
-      this.editToolCartArguments.TabIndex = 6;
+      this.editToolCartArguments.TabIndex = 1;
       this.editToolCartArguments.TextChanged += new System.EventHandler(this.editToolCartArguments_TextChanged);
       // 
       // label4
@@ -529,7 +533,7 @@
       this.editToolTrueDriveOffArguments.Location = new System.Drawing.Point(83, 123);
       this.editToolTrueDriveOffArguments.Name = "editToolTrueDriveOffArguments";
       this.editToolTrueDriveOffArguments.Size = new System.Drawing.Size(281, 20);
-      this.editToolTrueDriveOffArguments.TabIndex = 6;
+      this.editToolTrueDriveOffArguments.TabIndex = 4;
       this.editToolTrueDriveOffArguments.TextChanged += new System.EventHandler(this.editToolTrueDriveOffArguments_TextChanged);
       // 
       // label24
@@ -546,7 +550,7 @@
       this.editToolTrueDriveOnArguments.Location = new System.Drawing.Point(83, 97);
       this.editToolTrueDriveOnArguments.Name = "editToolTrueDriveOnArguments";
       this.editToolTrueDriveOnArguments.Size = new System.Drawing.Size(281, 20);
-      this.editToolTrueDriveOnArguments.TabIndex = 6;
+      this.editToolTrueDriveOnArguments.TabIndex = 3;
       this.editToolTrueDriveOnArguments.TextChanged += new System.EventHandler(this.editToolTrueDriveOnArguments_TextChanged);
       // 
       // label23
@@ -563,7 +567,7 @@
       this.editToolDebugArguments.Location = new System.Drawing.Point(83, 71);
       this.editToolDebugArguments.Name = "editToolDebugArguments";
       this.editToolDebugArguments.Size = new System.Drawing.Size(281, 20);
-      this.editToolDebugArguments.TabIndex = 6;
+      this.editToolDebugArguments.TabIndex = 2;
       this.editToolDebugArguments.TextChanged += new System.EventHandler(this.editToolDebugArguments_TextChanged);
       // 
       // label5
@@ -580,7 +584,7 @@
       this.editToolPRGArguments.Location = new System.Drawing.Point(83, 19);
       this.editToolPRGArguments.Name = "editToolPRGArguments";
       this.editToolPRGArguments.Size = new System.Drawing.Size(281, 20);
-      this.editToolPRGArguments.TabIndex = 6;
+      this.editToolPRGArguments.TabIndex = 0;
       this.editToolPRGArguments.TextChanged += new System.EventHandler(this.editToolPRGArguments_TextChanged);
       // 
       // comboToolType
@@ -606,7 +610,7 @@
       this.editWorkPath.Location = new System.Drawing.Point(305, 114);
       this.editWorkPath.Name = "editWorkPath";
       this.editWorkPath.Size = new System.Drawing.Size(266, 20);
-      this.editWorkPath.TabIndex = 6;
+      this.editWorkPath.TabIndex = 9;
       this.editWorkPath.TextChanged += new System.EventHandler(this.editWorkPath_TextChanged);
       // 
       // btnBrowseToolWorkPath
@@ -644,7 +648,7 @@
       this.labelToolPath.Location = new System.Drawing.Point(302, 89);
       this.labelToolPath.Name = "labelToolPath";
       this.labelToolPath.Size = new System.Drawing.Size(269, 23);
-      this.labelToolPath.TabIndex = 4;
+      this.labelToolPath.TabIndex = 8;
       this.labelToolPath.Text = "Tool Path";
       // 
       // label6
@@ -676,10 +680,10 @@
       // 
       // btnDeleteTool
       // 
-      this.btnDeleteTool.Location = new System.Drawing.Point(154, 368);
+      this.btnDeleteTool.Location = new System.Drawing.Point(161, 368);
       this.btnDeleteTool.Name = "btnDeleteTool";
-      this.btnDeleteTool.Size = new System.Drawing.Size(39, 23);
-      this.btnDeleteTool.TabIndex = 2;
+      this.btnDeleteTool.Size = new System.Drawing.Size(32, 23);
+      this.btnDeleteTool.TabIndex = 5;
       this.btnDeleteTool.Text = "Del";
       this.btnDeleteTool.UseVisualStyleBackColor = true;
       this.btnDeleteTool.Click += new System.EventHandler(this.btnRemove_Click);
@@ -700,7 +704,7 @@
       this.btnAddTool.Location = new System.Drawing.Point(9, 368);
       this.btnAddTool.Name = "btnAddTool";
       this.btnAddTool.Size = new System.Drawing.Size(42, 23);
-      this.btnAddTool.TabIndex = 2;
+      this.btnAddTool.TabIndex = 1;
       this.btnAddTool.Text = "Add";
       this.btnAddTool.UseVisualStyleBackColor = true;
       this.btnAddTool.Click += new System.EventHandler(this.btnAddTool_Click);
@@ -903,6 +907,17 @@
       this.asmLibraryPathList.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemAdded);
       this.asmLibraryPathList.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemRemoved);
       this.asmLibraryPathList.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.asmLibraryPathList_ItemMoved);
+      // 
+      // checkASMShowAddress
+      // 
+      this.checkASMShowAddress.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkASMShowAddress.Location = new System.Drawing.Point(21, 160);
+      this.checkASMShowAddress.Name = "checkASMShowAddress";
+      this.checkASMShowAddress.Size = new System.Drawing.Size(214, 24);
+      this.checkASMShowAddress.TabIndex = 19;
+      this.checkASMShowAddress.Text = "Show Address";
+      this.checkASMShowAddress.UseVisualStyleBackColor = true;
+      this.checkASMShowAddress.CheckedChanged += new System.EventHandler(this.checkASMShowAddress_CheckedChanged);
       // 
       // checkASMShowAutoComplete
       // 
@@ -1359,16 +1374,27 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
-      // checkASMShowAddress
+      // btnToolUp
       // 
-      this.checkASMShowAddress.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkASMShowAddress.Location = new System.Drawing.Point(21, 160);
-      this.checkASMShowAddress.Name = "checkASMShowAddress";
-      this.checkASMShowAddress.Size = new System.Drawing.Size(214, 24);
-      this.checkASMShowAddress.TabIndex = 19;
-      this.checkASMShowAddress.Text = "Show Address";
-      this.checkASMShowAddress.UseVisualStyleBackColor = true;
-      this.checkASMShowAddress.CheckedChanged += new System.EventHandler(this.checkASMShowAddress_CheckedChanged);
+      this.btnToolUp.Enabled = false;
+      this.btnToolUp.Image = global::C64Studio.Properties.Resources.arrow_up;
+      this.btnToolUp.Location = new System.Drawing.Point(105, 368);
+      this.btnToolUp.Name = "btnToolUp";
+      this.btnToolUp.Size = new System.Drawing.Size(22, 23);
+      this.btnToolUp.TabIndex = 3;
+      this.btnToolUp.UseVisualStyleBackColor = true;
+      this.btnToolUp.Click += new System.EventHandler(this.btnToolUp_Click);
+      // 
+      // btnToolDown
+      // 
+      this.btnToolDown.Enabled = false;
+      this.btnToolDown.Image = global::C64Studio.Properties.Resources.arrow_down;
+      this.btnToolDown.Location = new System.Drawing.Point(133, 368);
+      this.btnToolDown.Name = "btnToolDown";
+      this.btnToolDown.Size = new System.Drawing.Size(22, 23);
+      this.btnToolDown.TabIndex = 4;
+      this.btnToolDown.UseVisualStyleBackColor = true;
+      this.btnToolDown.Click += new System.EventHandler(this.btnToolDown_Click);
       // 
       // Settings
       // 
@@ -1529,5 +1555,7 @@
     private System.Windows.Forms.TextBox editDefaultOpenSolutionPath;
     private System.Windows.Forms.Label label31;
     private System.Windows.Forms.CheckBox checkASMShowAddress;
+    private System.Windows.Forms.Button btnToolDown;
+    private System.Windows.Forms.Button btnToolUp;
   }
 }

@@ -5446,7 +5446,8 @@ namespace C64Studio
         toolEmulator.TrueDriveOnArguments = "-truedrive +virtualdev";
         toolEmulator.TrueDriveOffArguments = "+truedrive -virtualdev";
         toolEmulator.Type = ToolInfo.ToolType.EMULATOR;
-        StudioCore.Settings.ToolInfos.AddLast( toolEmulator );
+
+        StudioCore.Settings.ToolInfos.Add( toolEmulator );
       }
     }
 
