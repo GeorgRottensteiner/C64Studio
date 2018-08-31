@@ -8386,7 +8386,7 @@ namespace C64Studio.Parser
         var token = lineTokenInfos[tokenIndex];
 
         if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-        && ( token.Content == ":" ) )
+        &&   ( token.Content == ":" ) )
         {
           doesContainSeparator = true;
           ++numSeparators;
@@ -8403,7 +8403,7 @@ namespace C64Studio.Parser
           var token = lineTokenInfos[tokenIndex];
 
           if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-          && ( token.Content == ":" ) )
+          &&   ( token.Content == ":" ) )
           {
             newLines[partIndex] = TokensToExpression( lineTokenInfos, partStartIndex, tokenIndex - partStartIndex );
             partStartIndex = tokenIndex + 1;
@@ -8413,6 +8413,14 @@ namespace C64Studio.Parser
         if ( partStartIndex < lineTokenInfos.Count )
         {
           newLines[partIndex] = TokensToExpression( lineTokenInfos, partStartIndex, lineTokenInfos.Count - partStartIndex );
+        }
+        // if any part was null, set to empty
+        for ( int i = 0; i < newLines.Length; ++i )
+        {
+          if ( newLines[i] == null )
+          {
+            newLines[i] = "";
+          }
         }
 
         Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();

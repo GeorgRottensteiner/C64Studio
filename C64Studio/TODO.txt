@@ -6,6 +6,18 @@ o TODO - Nested for loops using a local label from outside:
     lda .LABEL + ROW * 5 + COL
     !end
     !end
+o Set default values for cut/copy/paste
+o (1) In the File | Preferences | Tools tab, add buttons to move the individual items for Available Tools up/down in the list; 
+i.e., allow changing the order of the tools, similar to the up/down buttons found on the Assembler tab of that same Preferences window. 
+(I have many items in that tools list and want them to show up differently in the drop-down box on the main window, especially since 
+I keep adding/removing/editing the list, and they don't currently show in an ideal order; also because the AppData settings.dat file 
+is essentially binary data, and it cannot easily be edited manually to change the order.)
+(2) In the main window's toolbar at the top, please add some space/separation between the Undo button and the small drop-down arrow 
+next to it for tool selection. (I often click accidentally on the Undo button when aiming for that drop-down button right next to it.)
+(3) In BASIC source-code files, allow numbers to be added before "codes in string literals" (macro names?) to indicate the repeat count, 
+as is a convention in many C64 books and other listing; also allow zero or multiple space characters between the number and real name, 
+such as for {8 right} and {4down} (This would allow one to paste some code as-is from various places, for example, the BASIC program at
+ https://bumbershootsoft.wordpress.com/2014/12/06/flickering-scanlines-the-vic-ii-and-bad-lines/ ).
 o Linux: 
   WINEPREFIX=~/.winedir WINEARCH=win32 wineboot 
   WINEPREFIX=~/.winedir winetricks dotnet35sp1 -q 
