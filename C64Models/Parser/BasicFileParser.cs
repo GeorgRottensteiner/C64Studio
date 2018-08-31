@@ -665,7 +665,7 @@ namespace C64Studio.Parser
     /// <param name="Macro"></param>
     /// <param name="MacroCount"></param>
     /// <returns></returns>
-    private string DetermineMacroCount( string Macro, out int MacroCount )
+    public static string DetermineMacroCount( string Macro, out int MacroCount )
     {
       MacroCount = 1;
       if ( string.IsNullOrEmpty( Macro ) )
