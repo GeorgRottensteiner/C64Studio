@@ -262,7 +262,9 @@ namespace C64Studio.Types
     CARTRIDGE_EASYFLASH_BIN,
     CARTRIDGE_EASYFLASH_CRT,
     CARTRIDGE_RGCD_BIN,
-    CARTRIDGE_RGCD_CRT
+    CARTRIDGE_RGCD_CRT,
+    CARTRIDGE_GMOD2_BIN,
+    CARTRIDGE_GMOD2_CRT
   };
 
 
@@ -1457,6 +1459,7 @@ namespace C64Studio.Types
 
     public int                      StartIndex = 0;
     public bool                     Active = true;
+    public bool                     IfChainHadActiveEntry = false;    // used for if/ifelse/else..chains
     public Types.LoopInfo           Loop = null;
     public Types.MacroFunctionInfo  Macro = null;
     public ScopeType                Type = ScopeType.LOOP;

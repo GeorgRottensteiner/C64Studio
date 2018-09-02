@@ -12,6 +12,7 @@ namespace C64Studio.Formats
     public string               EndValue = "";
     public string               StepValue = "";
     public List<string>         Values = new List<string>();
+    public bool                 GenerateDeltas = false;
 
 
     public ValueTable()
@@ -28,7 +29,7 @@ namespace C64Studio.Formats
       copy.EndValue   = EndValue;
       copy.StepValue  = StepValue;
       copy.Values     = new List<string>( Values );
-
+      copy.GenerateDeltas = GenerateDeltas;
       return copy;
     }
   }
@@ -82,6 +83,7 @@ namespace C64Studio.Formats
       projectFile.AppendString( ValueTable.StartValue );
       projectFile.AppendString( ValueTable.EndValue );
       projectFile.AppendString( ValueTable.StepValue );
+      projectFile.AppendU8( (byte)( ValueTable.GenerateDeltas ? 1 : 0 ) );
 
       return projectFile;
     }
@@ -111,6 +113,7 @@ namespace C64Studio.Formats
       ValueTable.StartValue = memIn.ReadString();
       ValueTable.EndValue   = memIn.ReadString();
       ValueTable.StepValue  = memIn.ReadString();
+      ValueTable.GenerateDeltas = ( memIn.ReadUInt8() == 1 );
       return true;
     }
 
@@ -124,6 +127,7 @@ namespace C64Studio.Formats
       ValueTable.EndValue = "";
       ValueTable.Formula = "";
       ValueTable.StepValue = "";
+      ValueTable.GenerateDeltas = false;
     }
 
   }

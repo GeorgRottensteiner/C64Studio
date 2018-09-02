@@ -40,6 +40,7 @@
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.labelGenerationResult = new System.Windows.Forms.Label();
       this.pictureGraphPreview = new GR.Forms.FastPictureBox();
+      this.checkGenerateDeltas = new System.Windows.Forms.CheckBox();
       this.checkAutomatedGeneration = new System.Windows.Forms.CheckBox();
       this.checkClearPreviousValues = new System.Windows.Forms.CheckBox();
       this.btnGenerateValues = new System.Windows.Forms.Button();
@@ -180,6 +181,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox2.Controls.Add(this.labelGenerationResult);
       this.groupBox2.Controls.Add(this.pictureGraphPreview);
+      this.groupBox2.Controls.Add(this.checkGenerateDeltas);
       this.groupBox2.Controls.Add(this.checkAutomatedGeneration);
       this.groupBox2.Controls.Add(this.checkClearPreviousValues);
       this.groupBox2.Controls.Add(this.btnGenerateValues);
@@ -221,6 +223,17 @@
       this.pictureGraphPreview.TabIndex = 4;
       this.pictureGraphPreview.TabStop = false;
       this.pictureGraphPreview.SizeChanged += new System.EventHandler(this.pictureGraphPreview_SizeChanged);
+      // 
+      // checkGenerateDeltas
+      // 
+      this.checkGenerateDeltas.AutoSize = true;
+      this.checkGenerateDeltas.Location = new System.Drawing.Point(354, 70);
+      this.checkGenerateDeltas.Name = "checkGenerateDeltas";
+      this.checkGenerateDeltas.Size = new System.Drawing.Size(98, 17);
+      this.checkGenerateDeltas.TabIndex = 4;
+      this.checkGenerateDeltas.Text = "Generate Delta";
+      this.checkGenerateDeltas.UseVisualStyleBackColor = true;
+      this.checkGenerateDeltas.CheckedChanged += new System.EventHandler(this.checkGenerateDeltas_CheckedChanged);
       // 
       // checkAutomatedGeneration
       // 
@@ -571,20 +584,20 @@
             this.saveValueTableProjectToolStripMenuItem,
             this.closeValueTableProjectToolStripMenuItem});
       this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-      this.fileToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
+      this.fileToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
       this.fileToolStripMenuItem.Text = "&Value Table";
       // 
       // openValueTableProjectToolStripMenuItem
       // 
       this.openValueTableProjectToolStripMenuItem.Name = "openValueTableProjectToolStripMenuItem";
-      this.openValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+      this.openValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
       this.openValueTableProjectToolStripMenuItem.Text = "&Open Value Table Project...";
       this.openValueTableProjectToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
       // 
       // saveValueTableProjectToolStripMenuItem
       // 
       this.saveValueTableProjectToolStripMenuItem.Name = "saveValueTableProjectToolStripMenuItem";
-      this.saveValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+      this.saveValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
       this.saveValueTableProjectToolStripMenuItem.Text = "&Save Project";
       this.saveValueTableProjectToolStripMenuItem.Click += new System.EventHandler(this.saveCharsetProjectToolStripMenuItem_Click);
       // 
@@ -592,7 +605,7 @@
       // 
       this.closeValueTableProjectToolStripMenuItem.Enabled = false;
       this.closeValueTableProjectToolStripMenuItem.Name = "closeValueTableProjectToolStripMenuItem";
-      this.closeValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+      this.closeValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
       this.closeValueTableProjectToolStripMenuItem.Text = "&Close Value Table Project";
       this.closeValueTableProjectToolStripMenuItem.Click += new System.EventHandler(this.closeCharsetProjectToolStripMenuItem_Click);
       // 
@@ -696,5 +709,6 @@
     private System.Windows.Forms.CheckBox checkAutomatedGeneration;
     private System.Windows.Forms.Label labelGenerationResult;
     private System.Windows.Forms.Button btnImportFromASM;
+    private System.Windows.Forms.CheckBox checkGenerateDeltas;
   }
 }

@@ -666,13 +666,19 @@ namespace C64Studio
             insideMacro = false;
 
             string macro = BasicText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
+            int macroCount = 1;
+
+            macro = Parser.BasicFileParser.DetermineMacroCount( macro, out macroCount );
 
             bool  foundMacro = false;
             foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
             {
               if ( key.Replacements.Contains( macro ) )
               {
-                sb.Append( key.CharValue );
+                for ( int i = 0; i < macroCount; ++i )
+                {
+                  sb.Append( key.CharValue );
+                }
                 foundMacro = true;
                 break;
               }

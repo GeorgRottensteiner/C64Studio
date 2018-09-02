@@ -2296,16 +2296,7 @@ namespace C64Studio
       }
 
       string runArguments = toolRun.PRGArguments;
-      if ( ( TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN )
-      || ( TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT )
-      || ( TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
-      || ( TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
-      || ( TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
-      || ( TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_CRT )
-      || ( TargetType == Types.CompileTargetType.CARTRIDGE_16K_BIN )
-      || ( TargetType == Types.CompileTargetType.CARTRIDGE_16K_CRT )
-      || ( TargetType == Types.CompileTargetType.CARTRIDGE_8K_BIN )
-      || ( TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
+      if ( IsCartridge( TargetType ) )
       {
         runArguments = toolRun.CartArguments;
       }
@@ -2483,16 +2474,7 @@ namespace C64Studio
 
         // special start addresses for different run types
 
-        if ( ( targetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN )
-        || ( targetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT )
-        || ( targetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
-        || ( targetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
-        || ( targetType == Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
-        || ( targetType == Types.CompileTargetType.CARTRIDGE_RGCD_CRT )
-        || ( targetType == Types.CompileTargetType.CARTRIDGE_16K_BIN )
-        || ( targetType == Types.CompileTargetType.CARTRIDGE_16K_CRT )
-        || ( targetType == Types.CompileTargetType.CARTRIDGE_8K_BIN )
-        || ( targetType == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
+        if ( IsCartridge( targetType ) )
         {
           StudioCore.Debugging.OverrideDebugStart = 0x8000;
         }
@@ -2521,16 +2503,7 @@ namespace C64Studio
         return false;
       }
 
-      if ( ( targetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN )
-      || ( targetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT )
-      || ( targetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
-      || ( targetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
-      || ( targetType == Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
-      || ( targetType == Types.CompileTargetType.CARTRIDGE_RGCD_CRT )
-      || ( targetType == Types.CompileTargetType.CARTRIDGE_16K_BIN )
-      || ( targetType == Types.CompileTargetType.CARTRIDGE_16K_CRT )
-      || ( targetType == Types.CompileTargetType.CARTRIDGE_8K_BIN )
-      || ( targetType == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
+      if ( IsCartridge( targetType ) )
       {
         StudioCore.Executing.RunProcess.StartInfo.Arguments += " " + FillParameters( toolRun.CartArguments, DocumentToRun, true, out error );
       }
@@ -2571,6 +2544,28 @@ namespace C64Studio
         }
       }
       return true;
+    }
+
+
+
+    private bool IsCartridge( CompileTargetType Type )
+    {
+      if ( ( Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_RGCD_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_GMOD2_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_GMOD2_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_16K_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_16K_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_8K_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
+      {
+        return true;
+      }
+      return false;
     }
 
     /*
@@ -5451,7 +5446,8 @@ namespace C64Studio
         toolEmulator.TrueDriveOnArguments = "-truedrive +virtualdev";
         toolEmulator.TrueDriveOffArguments = "+truedrive -virtualdev";
         toolEmulator.Type = ToolInfo.ToolType.EMULATOR;
-        StudioCore.Settings.ToolInfos.AddLast( toolEmulator );
+
+        StudioCore.Settings.ToolInfos.Add( toolEmulator );
       }
     }
 
@@ -5639,7 +5635,11 @@ namespace C64Studio
       document.Core = StudioCore;
       document.SetDocumentFilename( Filename );
       document.Text = System.IO.Path.GetFileName( Filename );
-      document.Load();
+      if ( !document.Load() )
+      {
+        return null;
+      }
+
       document.Show( panelMain );
       document.Icon = IconFromType( document.DocumentInfo );
       document.DocumentInfo.UndoManager.MainForm = this;

@@ -613,14 +613,21 @@ namespace C64Studio.Parser
           AddError( LineIndex, Types.ErrorCode.E1005_MISSING_CLOSING_BRACKET, "Missing closing bracket on macro" );
           return result;
         }
-        string macro = Line.Substring( bracketStartPos, bracketEndPos - bracketStartPos + 1 );
+        string  macro = Line.Substring( bracketStartPos, bracketEndPos - bracketStartPos + 1 );
+        int     macroCount = 1;
+
+        macro = DetermineMacroCount( macro, out macroCount );
+
 
         bool  foundMacro = false;
         foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
         {
           if ( key.Replacements.Contains( macro ) )
           {
-            result += (char)key.PetSCIIValue;
+            for ( int i = 0; i < macroCount; ++i )
+            {
+              result += (char)key.PetSCIIValue;
+            }
             foundMacro = true;
             break;
           }
@@ -630,7 +637,10 @@ namespace C64Studio.Parser
           byte  petsciiValue = 0;
           if ( byte.TryParse( macro, out petsciiValue ) )
           {
-            result += (char)petsciiValue;
+            for ( int i = 0; i < macroCount; ++i )
+            {
+              result += (char)petsciiValue;
+            }
           }
           else
           {
@@ -645,6 +655,46 @@ namespace C64Studio.Parser
         result += Line.Substring( lastStartPos );
       }
       return result;
+    }
+
+
+
+    /// <summary>
+    /// looks for numbers at beginning of string, returns as separate entities (e.g. {4down} = "down" and 4}
+    /// </summary>
+    /// <param name="Macro"></param>
+    /// <param name="MacroCount"></param>
+    /// <returns></returns>
+    public static string DetermineMacroCount( string Macro, out int MacroCount )
+    {
+      MacroCount = 1;
+      if ( string.IsNullOrEmpty( Macro ) )
+      {
+        return Macro;
+      }
+
+      if ( !char.IsDigit( Macro[0] ) )
+      {
+        return Macro;
+      }
+
+      int     lastDigitPos = 0;
+
+      while ( ( lastDigitPos + 1 < Macro.Length )
+      &&      ( char.IsDigit( Macro[lastDigitPos + 1] ) ) )
+      {
+        ++lastDigitPos;
+      }
+
+      int.TryParse( Macro.Substring( 0, lastDigitPos + 1 ), out MacroCount );
+
+      if ( ( MacroCount < 0 )
+      ||   ( MacroCount > 999 ) )
+      {
+        MacroCount = 1;
+      }
+
+      return Macro.Substring( lastDigitPos + 1 ).TrimStart();
     }
 
 
@@ -1212,13 +1262,19 @@ namespace C64Studio.Parser
             insideMacro = false;
 
             string macro = Line.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
+            int macroCount = 1;
+
+            macro = DetermineMacroCount( macro, out macroCount );
 
             bool  foundMacro = false;
             foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
             {
               if ( key.Replacements.Contains( macro ) )
               {
-                tempData.AppendU8( key.PetSCIIValue );
+                for ( int i = 0; i < macroCount; ++i )
+                {
+                  tempData.AppendU8( key.PetSCIIValue );
+                }
                 foundMacro = true;
                 break;
               }
@@ -1228,7 +1284,10 @@ namespace C64Studio.Parser
               byte  petsciiValue = 0;
               if ( byte.TryParse( macro, out petsciiValue ) )
               {
-                tempData.AppendU8( petsciiValue );
+                for ( int i = 0; i < macroCount; ++i )
+                {
+                  tempData.AppendU8( petsciiValue );
+                }
               }
               else if ( macro.StartsWith( "$" ) )
               {
@@ -1238,9 +1297,13 @@ namespace C64Studio.Parser
                 if ( uint.TryParse( macro.Substring( 1 ), System.Globalization.NumberStyles.HexNumber, null, out hexValue ) )
                 {
                   string    value = hexValue.ToString();
-                  for ( int i = 0; i < value.Length; ++i )
+
+                  for ( int j = 0; j < macroCount; ++j )
                   {
-                    tempData.AppendU8( (byte)value[i] );
+                    for ( int i = 0; i < value.Length; ++i )
+                    {
+                      tempData.AppendU8( (byte)value[i] );
+                    }
                   }
                 }
                 else
@@ -1255,9 +1318,12 @@ namespace C64Studio.Parser
                 {
                   string value = ASMFileInfo.Labels[macro].AddressOrValue.ToString();
 
-                  for ( int i = 0; i < value.Length; ++i )
+                  for ( int j = 0; j < macroCount; ++j )
                   {
-                    tempData.AppendU8( (byte)value[i] );
+                    for ( int i = 0; i < value.Length; ++i )
+                    {
+                      tempData.AppendU8( (byte)value[i] );
+                    }
                   }
                 }
                 else

@@ -60,6 +60,7 @@
       this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileCloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparatorAboveMRU = new System.Windows.Forms.ToolStripSeparator();
+      this.fileRecentlyOpenedProjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileRecentlyOpenedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparatorBelowMRU = new System.Windows.Forms.ToolStripSeparator();
       this.filePreferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -199,7 +200,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.fileRecentlyOpenedProjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -474,6 +475,12 @@
       // 
       this.toolStripSeparatorAboveMRU.Name = "toolStripSeparatorAboveMRU";
       this.toolStripSeparatorAboveMRU.Size = new System.Drawing.Size(204, 6);
+      // 
+      // fileRecentlyOpenedProjectsToolStripMenuItem
+      // 
+      this.fileRecentlyOpenedProjectsToolStripMenuItem.Name = "fileRecentlyOpenedProjectsToolStripMenuItem";
+      this.fileRecentlyOpenedProjectsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+      this.fileRecentlyOpenedProjectsToolStripMenuItem.Text = "Recently opened projects";
       // 
       // fileRecentlyOpenedFilesToolStripMenuItem
       // 
@@ -1209,6 +1216,7 @@
             this.mainToolConfig,
             this.mainToolToggleTrueDrive,
             this.mainToolEmulator,
+            this.toolStripSeparator14,
             this.mainToolUndo,
             this.mainToolRedo,
             this.mainToolFind,
@@ -1216,7 +1224,7 @@
             this.mainToolPrint});
       this.mainTools.Location = new System.Drawing.Point(0, 24);
       this.mainTools.Name = "mainTools";
-      this.mainTools.Size = new System.Drawing.Size(658, 25);
+      this.mainTools.Size = new System.Drawing.Size(664, 25);
       this.mainTools.TabIndex = 4;
       this.mainTools.Text = "toolStrip1";
       // 
@@ -1630,11 +1638,10 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
-      // fileRecentlyOpenedProjectsToolStripMenuItem
+      // toolStripSeparator14
       // 
-      this.fileRecentlyOpenedProjectsToolStripMenuItem.Name = "fileRecentlyOpenedProjectsToolStripMenuItem";
-      this.fileRecentlyOpenedProjectsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-      this.fileRecentlyOpenedProjectsToolStripMenuItem.Text = "Recently opened projects";
+      this.toolStripSeparator14.Name = "toolStripSeparator14";
+      this.toolStripSeparator14.Size = new System.Drawing.Size(6, 25);
       // 
       // MainForm
       // 
@@ -1844,6 +1851,7 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
     private System.Windows.Forms.ToolStripMenuItem valueTableEditorToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem fileRecentlyOpenedProjectsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
   }
 }
 

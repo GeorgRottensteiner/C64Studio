@@ -2301,6 +2301,10 @@ namespace C64Studio
 
     private void openFileToolStripMenuItem_Click( object sender, EventArgs e )
     {
+      if ( DocumentInfo == null )
+      {
+        return;
+      }
       string docBasePath = GR.Path.RemoveFileSpec( DocumentInfo.FullPath );
       if ( ( string.IsNullOrEmpty( docBasePath ) )
       &&   ( DocumentInfo.Project != null ) )

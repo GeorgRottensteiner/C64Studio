@@ -1,4 +1,11 @@
 ﻿C64Studio
+o TODO - Nested for loops using a local label from outside:
+    .LABEL
+    !for ROW = 0 to 5
+    !for COL = 0 to 5
+    lda .LABEL + ROW * 5 + COL
+    !end
+    !end
 o Linux: 
   WINEPREFIX=~/.winedir WINEARCH=win32 wineboot 
   WINEPREFIX=~/.winedir winetricks dotnet35sp1 -q 
