@@ -6357,7 +6357,8 @@ namespace C64Studio.Parser
                   {
                     if ( !ScopeInsideMacroDefinition( stackScopes ) )
                     {
-                      stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
+                      stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].IfChainHadActiveEntry;
+                      //stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
                       //Debug.Log( "toggle scope state " + lineIndex );
                     }
                   }
@@ -6377,6 +6378,7 @@ namespace C64Studio.Parser
                       // else if
 
                       // end previous block
+                      var prevScope = stackScopes[stackScopes.Count - 1];
                       stackScopes.RemoveAt( stackScopes.Count - 1 );
 
                       // start new block
@@ -6390,6 +6392,7 @@ namespace C64Studio.Parser
                                   + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
                                   lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
                         scope.Active = true;
+                        scope.IfChainHadActiveEntry = true;
                       }
                       else if ( defineResult == 0 )
                       {
@@ -6398,6 +6401,13 @@ namespace C64Studio.Parser
                       else
                       {
                         scope.Active = true;
+                        scope.IfChainHadActiveEntry = true;
+                      }
+                      // if chain already had an active entry?
+                      if ( prevScope.IfChainHadActiveEntry )
+                      {
+                        scope.Active = false;
+                        scope.IfChainHadActiveEntry = true;
                       }
                       stackScopes.Add( scope );
                     }
@@ -7297,8 +7307,8 @@ namespace C64Studio.Parser
                   if ( trailingtokens.Count >= 3 )
                   {
                     if ( ( trailingtokens[trailingtokens.Count - 3].Content == "}" )
-                    && ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
-                    && ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
+                    &&   ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
+                    &&   ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
                     {
                       hadElse = true;
                     }
@@ -7317,13 +7327,17 @@ namespace C64Studio.Parser
                   // only evaluate the first token
                   // TODO - have to evaluate the rest of the line if it exists!!
                   if ( ( !EvaluateTokens( lineIndex, tokens, 0, 1, out defineResult ) )
-                  || ( defineResult == 0 ) )
+                  ||   ( defineResult == 0 ) )
                   {
                     scope.Active = hadElse;
                   }
                   else
                   {
                     scope.Active = !hadElse;
+                  }
+                  if ( scope.Active )
+                  {
+                    scope.IfChainHadActiveEntry = true;
                   }
                   stackScopes.Add( scope );
                   //Debug.Log( "Add Scope ifdefa " + lineIndex );
@@ -7408,9 +7422,10 @@ namespace C64Studio.Parser
                 Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
                 if ( ( !EvaluateTokens( lineIndex, tokens, out defineResult ) )
-                || ( defineResult == 0 ) )
+                ||   ( defineResult == 0 ) )
                 {
                   scope.Active = true;
+                  scope.IfChainHadActiveEntry = true;
                 }
                 else
                 {
@@ -7461,6 +7476,7 @@ namespace C64Studio.Parser
                 {
                   AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + expressionCheck );
                   scope.Active = true;
+                  scope.IfChainHadActiveEntry = true;
                 }
                 else if ( defineResult == 0 )
                 {
@@ -7469,6 +7485,7 @@ namespace C64Studio.Parser
                 else
                 {
                   scope.Active = true;
+                  scope.IfChainHadActiveEntry = true;
                 }
                 stackScopes.Add( scope );
                 OnScopeAdded( scope );
@@ -7491,7 +7508,8 @@ namespace C64Studio.Parser
               }
               else
               {
-                stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
+                stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].IfChainHadActiveEntry;
+                //stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
                 //Debug.Log( "toggle scope active " + lineIndex );
               }
             }
@@ -8188,6 +8206,7 @@ namespace C64Studio.Parser
             {
               AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ) );
               scope.Active = true;
+              scope.IfChainHadActiveEntry = true;
             }
             else if ( defineResult == 0 )
             {
@@ -8196,6 +8215,7 @@ namespace C64Studio.Parser
             else
             {
               scope.Active = true;
+              scope.IfChainHadActiveEntry = true;
             }
             stackScopes.Add( scope );
             //Debug.Log( "add scope if " + lineIndex );
@@ -8209,7 +8229,8 @@ namespace C64Studio.Parser
             }
             else
             {
-              stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
+              stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].IfChainHadActiveEntry;
+              //stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
               //Debug.Log( "toggle else " + lineIndex );
             }
           }

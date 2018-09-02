@@ -1459,6 +1459,7 @@ namespace C64Studio.Types
 
     public int                      StartIndex = 0;
     public bool                     Active = true;
+    public bool                     IfChainHadActiveEntry = false;    // used for if/ifelse/else..chains
     public Types.LoopInfo           Loop = null;
     public Types.MacroFunctionInfo  Macro = null;
     public ScopeType                Type = ScopeType.LOOP;
