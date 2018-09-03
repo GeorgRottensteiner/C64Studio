@@ -3577,7 +3577,18 @@ namespace C64Studio
       }
       else
       {
+        // dockpanelsuite activates the first document, not the currently shown one if focus is set to it (by disabling the toolbar)
+        BaseDocument    prevActiveDocument = ActiveDocument;
+
         mainTools.Enabled = !Wait;
+
+        if ( Wait )
+        {
+          if ( ActiveDocument != prevActiveDocument )
+          {
+            ActiveDocument = prevActiveDocument;
+          }
+        }
 
         foreach ( ToolStripMenuItem subMenu in mainMenu.Items )
         {
