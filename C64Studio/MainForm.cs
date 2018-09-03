@@ -2357,6 +2357,12 @@ namespace C64Studio
 
     public bool DebugCompiledFile( DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun )
     {
+      if ( DocumentToDebug == null )
+      {
+        StudioCore.AddToOutput( "Debug document not found, this is an internal error!" );
+        return false;
+      }
+
       if ( DocumentToDebug.Element == null )
       {
         StudioCore.AddToOutput( "Debugging " + DocumentToDebug.DocumentFilename + System.Environment.NewLine );
@@ -4435,6 +4441,10 @@ namespace C64Studio
     private DocumentInfo DetermineDocumentToHandle()
     {
       BaseDocument baseDocToCompile = ActiveContent;
+      if ( baseDocToCompile == null )
+      {
+        baseDocToCompile = ActiveDocument;
+      }
       if ( ( baseDocToCompile != null )
       &&   ( !baseDocToCompile.DocumentInfo.Compilable ) )
       {
