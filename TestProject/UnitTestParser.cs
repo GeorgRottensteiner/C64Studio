@@ -1592,5 +1592,71 @@ ContrivedTest:
       Assert.AreEqual( "01080B080A009E32303631000000A90F8D20D0094020D2FFA9008D20D0094020D2FFA9038D20D0094020D2FFA9048D20D0094020D2FFA9068D20D0094020D2FFA9078D20D0094020D2FF60", assembly.ToString() );
     }
 
+
+
+    [TestMethod]
+    public void TestIfElseChain1()
+    {
+      string      source = @"*=$0801
+                             label = 3
+                            
+                              !if label < 5 {
+                              lda #0
+                              } else if label < 10 {
+                              lda #1
+                              } else {
+                              lda #2
+                              }
+                              rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0108A90060", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestIfElseChain2()
+    {
+      string      source = @"*=$0801
+                             label = 8
+                            
+                              !if label < 5 {
+                              lda #0
+                              } else if label < 10 {
+                              lda #1
+                              } else {
+                              lda #2
+                              }
+                              rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0108A90160", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestIfElseChain3()
+    {
+      string      source = @"*=$0801
+                             label = 18
+                            
+                              !if label < 5 {
+                              lda #0
+                              } else if label < 10 {
+                              lda #1
+                              } else {
+                              lda #2
+                              }
+                              rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0108A90260", assembly.ToString() );
+    }
+
   }
 }
