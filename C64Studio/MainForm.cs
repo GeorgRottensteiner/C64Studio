@@ -2357,6 +2357,12 @@ namespace C64Studio
 
     public bool DebugCompiledFile( DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun )
     {
+      if ( DocumentToDebug == null )
+      {
+        StudioCore.AddToOutput( "Debug document not found, this is an internal error!" );
+        return false;
+      }
+
       if ( DocumentToDebug.Element == null )
       {
         StudioCore.AddToOutput( "Debugging " + DocumentToDebug.DocumentFilename + System.Environment.NewLine );
@@ -3577,7 +3583,18 @@ namespace C64Studio
       }
       else
       {
+        // dockpanelsuite activates the first document, not the currently shown one if focus is set to it (by disabling the toolbar)
+        BaseDocument    prevActiveDocument = ActiveDocument;
+
         mainTools.Enabled = !Wait;
+
+        if ( Wait )
+        {
+          if ( ActiveDocument != prevActiveDocument )
+          {
+            ActiveDocument = prevActiveDocument;
+          }
+        }
 
         foreach ( ToolStripMenuItem subMenu in mainMenu.Items )
         {
@@ -4424,6 +4441,10 @@ namespace C64Studio
     private DocumentInfo DetermineDocumentToHandle()
     {
       BaseDocument baseDocToCompile = ActiveContent;
+      if ( baseDocToCompile == null )
+      {
+        baseDocToCompile = ActiveDocument;
+      }
       if ( ( baseDocToCompile != null )
       &&   ( !baseDocToCompile.DocumentInfo.Compilable ) )
       {
