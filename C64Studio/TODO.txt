@@ -6,6 +6,21 @@ o TODO - Nested for loops using a local label from outside:
     lda .LABEL + ROW * 5 + COL
     !end
     !end
+o System.InvalidOperationException: Collection was modified after the enumerator was instantiated.
+   at System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   at System.Collections.Generic.TreeSet`1.Enumerator.MoveNext()
+   at System.Collections.Generic.SortedDictionary`2.Enumerator.MoveNext()
+   at System.Collections.Generic.SortedDictionary`2.ValueCollection.Enumerator.MoveNext()
+   at C64Studio.Types.ASM.FileInfo.ContainsFile(String DocumentFilename)
+   at C64Studio.Project.ShowDocument(ProjectElement Element)
+   at C64Studio.SolutionExplorer.treeProject_NodeMouseDoubleClick(Object sender, TreeNodeMouseClickEventArgs e)
+   at System.Windows.Forms.TreeView.OnNodeMouseDoubleClick(TreeNodeMouseClickEventArgs e)
+   at System.Windows.Forms.TreeView.WndProc(Message& m)
+   at System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   at System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   at System.Windows.Forms.NativeWindow.Callback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+
+
 o Linux: 
   WINEPREFIX=~/.winedir WINEARCH=win32 wineboot 
   WINEPREFIX=~/.winedir winetricks dotnet35sp1 -q 
