@@ -653,7 +653,10 @@ namespace C64Studio
           {
             if ( element.DocumentInfo.ASMFileInfo.ContainsFile( Element.DocumentInfo.FullPath ) )
             {
-              Element.DocumentInfo.SetASMFileInfo( element.DocumentInfo.ASMFileInfo, element.DocumentInfo.KnownKeywords, element.DocumentInfo.KnownTokens );
+              if ( !Core.Compiling.IsCurrentlyBuilding() )
+              {
+                Element.DocumentInfo.SetASMFileInfo( element.DocumentInfo.ASMFileInfo, element.DocumentInfo.KnownKeywords, element.DocumentInfo.KnownTokens );
+              }
               setFromMainDoc = true;
             }
           }
@@ -661,7 +664,10 @@ namespace C64Studio
         if ( ( !setFromMainDoc )
         &&   ( Core.Compiling.ParserASM.ASMFileInfo.ContainsFile( Element.DocumentInfo.FullPath ) ) )
         {
-          Element.DocumentInfo.SetASMFileInfo( Core.Compiling.ParserASM.ASMFileInfo, Core.Compiling.ParserASM.KnownTokens(), Core.Compiling.ParserASM.KnownTokenInfo() );
+          if ( !Core.Compiling.IsCurrentlyBuilding() )
+          {
+            Element.DocumentInfo.SetASMFileInfo( Core.Compiling.ParserASM.ASMFileInfo, Core.Compiling.ParserASM.KnownTokens(), Core.Compiling.ParserASM.KnownTokenInfo() );
+          }
         }
         //Debug.Log( "m_Outline.RefreshFromDocument after showdoc" );
         Core.MainForm.m_Outline.RefreshFromDocument( Element.DocumentInfo.BaseDoc );

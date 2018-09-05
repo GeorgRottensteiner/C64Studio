@@ -18,6 +18,7 @@ namespace C64Studio.Parser
       RETURN_NULL,
       RETURN_FALSE,
       CALL_CONTINUE,
+      ERROR_ABORT
     }
 
     public class ErrorInfo
@@ -2855,7 +2856,7 @@ namespace C64Studio.Parser
 
 
 
-    private bool HandleScopeEnd( GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions,
+    private ParseLineResult HandleScopeEnd( GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions,
                                  List<Types.ScopeInfo> ScopeList,
                                  ref int lineIndex,
                                  ref int intermediateLineOffset,
@@ -2864,7 +2865,7 @@ namespace C64Studio.Parser
       if ( ScopeList.Count == 0 )
       {
         AddError( lineIndex, Types.ErrorCode.E1007_MISSING_LOOP_START, "Missing loop start or opening bracket" );
-        return false;
+        return ParseLineResult.ERROR_ABORT;
       }
 
       Types.ScopeInfo   lastOpenedScope = ScopeList[ScopeList.Count - 1];
@@ -2874,6 +2875,7 @@ namespace C64Studio.Parser
       &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.PSEUDO_PC ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1007_MISSING_LOOP_START, "Missing loop start" );
+        return ParseLineResult.ERROR_ABORT;
       }
       else if ( lastOpenedScope.Macro != null )
       {
@@ -2888,6 +2890,28 @@ namespace C64Studio.Parser
         // backup macro content
         macroInfo.Content = new string[macroInfo.LineEnd - macroInfo.LineIndex - 1];
         System.Array.Copy( Lines, macroInfo.LineIndex + 1, macroInfo.Content, 0, macroInfo.LineEnd - macroInfo.LineIndex - 1 );
+
+        // safety check, see if macro contains call to itself
+        for ( int i = 0; i < macroInfo.Content.Length; ++i )
+        {
+          var lineTokens = ParseTokenInfo( macroInfo.Content[i], 0, macroInfo.Content[i].Length );
+          if ( lineTokens != null )
+          {
+            for ( int j = 0; j < lineTokens.Count; ++j )
+            {
+              if ( ( lineTokens[j].Type == TokenInfo.TokenType.OPERATOR )
+              &&   ( lineTokens[j].Content == "+" )
+              &&   ( j + 1 < lineTokens.Count )
+              &&   ( lineTokens[j].EndPos + 1 == lineTokens[j + 1].StartPos )
+              &&   ( lineTokens[j + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+              &&   ( lineTokens[j + 1].Content == macroInfo.Name ) )
+              {
+                AddError( macroInfo.LineIndex + 1 + i, ErrorCode.E1302_MALFORMED_MACRO, "Macro " + macroInfo.Name + " is calling itself" );
+                return ParseLineResult.ERROR_ABORT;
+              }
+            }
+          }
+        }
       }
       else if ( lastOpenedScope.Loop != null )
       {
@@ -2900,7 +2924,7 @@ namespace C64Studio.Parser
 
           OnScopeRemoved( lineIndex, ScopeList );
           ScopeList.RemoveAt( ScopeList.Count - 1 );
-          return false;
+          return ParseLineResult.OK;
         }
 
         // fetch line data in between
@@ -3049,11 +3073,10 @@ namespace C64Studio.Parser
 
           // TEST TEST TEST
           //lineIndex += linesToCopy;
-
-          return true;
+          return ParseLineResult.CALL_CONTINUE;
         }
       }
-      return false;
+      return ParseLineResult.OK;
     }
 
 
@@ -6303,10 +6326,15 @@ namespace C64Studio.Parser
                       AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
                       continue;
                     }
-                    if ( HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines ) )
+                    var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                    if ( result == ParseLineResult.CALL_CONTINUE )
                     {
                       --lineIndex;
                       continue;
+                    }
+                    else if ( result == ParseLineResult.ERROR_ABORT )
+                    {
+                      return null;
                     }
                   }
                   break;
@@ -6320,10 +6348,15 @@ namespace C64Studio.Parser
                     }
                     OnScopeRemoved( lineIndex, stackScopes );
                     stackScopes.RemoveAt( stackScopes.Count - 1 );
-                    if ( HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines ) )
+                    var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                    if ( result == ParseLineResult.CALL_CONTINUE )
                     {
                       --lineIndex;
                       continue;
+                    }
+                    else if ( result == ParseLineResult.ERROR_ABORT )
+                    {
+                      return null;
                     }
                   }
                   break;
@@ -7397,10 +7430,15 @@ namespace C64Studio.Parser
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.END )
             {
-              if ( HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines ) )
+              var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
+              if ( result == ParseLineResult.CALL_CONTINUE )
               {
                 --lineIndex;
                 continue;
+              }
+              else if ( result == ParseLineResult.ERROR_ABORT )
+              {
+                return null;
               }
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.IFNDEF )
@@ -8131,10 +8169,15 @@ namespace C64Studio.Parser
           else if ( ( macroInfo.Type == Types.MacroInfo.MacroType.END )
           ||        ( macroInfo.Type == Types.MacroInfo.MacroType.LOOP_END ) )
           {
-            if ( HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines ) )
+            var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
+            if ( result == ParseLineResult.CALL_CONTINUE )
             {
               --lineIndex;
               continue;
+            }
+            else if ( result == ParseLineResult.ERROR_ABORT )
+            {
+              return null;
             }
           }
           else if ( macroInfo.Type == Types.MacroInfo.MacroType.INCLUDE_BINARY )
