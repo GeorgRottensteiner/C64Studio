@@ -1463,7 +1463,7 @@
       this.mainToolToggleTrueDrive.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolToggleTrueDrive.Name = "mainToolToggleTrueDrive";
       this.mainToolToggleTrueDrive.Size = new System.Drawing.Size(23, 22);
-      this.mainToolToggleTrueDrive.Text = "Toogle True Drive";
+      this.mainToolToggleTrueDrive.Text = "Toggle True Drive";
       this.mainToolToggleTrueDrive.Click += new System.EventHandler(this.mainToolToggleTrueDrive_Click);
       // 
       // mainToolEmulator
