@@ -125,5 +125,22 @@ namespace C64Studio
       return NeedsRebuild( DocumentToBuild, DocumentToBuild.Project.Settings.CurrentConfig.Name );
     }
 
+
+
+    internal bool IsCurrentlyBuilding()
+    {
+      if ( ( Core.State == StudioState.BUILD )
+      ||   ( Core.State == StudioState.BUILD_AND_DEBUG )
+      ||   ( Core.State == StudioState.BUILD_AND_RUN )
+      ||   ( Core.State == StudioState.BUILD_PRE_PROCESSED_FILE )
+      ||   ( Core.State == StudioState.COMPILE ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
   }
 }

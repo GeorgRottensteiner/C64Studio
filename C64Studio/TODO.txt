@@ -12,7 +12,6 @@ o Linux:
   cd ~/.winedir/drive_c/Program Files/C64StudioRelease 
   WINEPREFIX=~/.winedir wine C64Studio.exe 
 
-o Doppelpunkte: Mit InsertSourceInfo behandeln?
 o PETSCII table: Rewrite
 o Docs: list illegal opcodes in help
 o Disassembler: rechtsklick auf Adresse um die als Sprungadresse zu nehmen
@@ -89,7 +88,6 @@ o Replace All in active doc:
 o Timed- Auto-Step im Debug-Modus
 o Im Screeneditor würde ich gerne mit einem klick oder so den Wert um 64 für ECM / 128 für PETSCII erhöhen können
 o !for loops with implicit !zone
-o BASIC: Upper/Lowercase toggle <- everything covered yet? (Find/replace)
 o “Insert Text mode” in Text/char Screen Editor, inverted chars
 o CharPad support auch mit !media?
 o  Wenn eine Datei mit !source eingebunden wird, diese Datei aber nicht zum Projekt gehört, dann kann man in dieser Datei keine Breakpoints 
@@ -111,8 +109,6 @@ o Quelltext ist Ansi, 64Studio erwartet aber UTF-8
 o Doppelpunkte, wenn sich mehrere Befehle nur mit anderen Adressen wiederholen.
 o Nach dem Ersetzen der Doppelpunkte durch einen Zeilenumbruch wollten STA's neu mit Tab eingerückt werden. Nach dem Tab sprang aber die 
   Auto-Vervollständigung an, die mir das Label "start" angeboten hat. 
-
-o A 'label explorer' (C64 Prg Studio has this) 
 
 Disassemble:
 o In disassembler, the ability to highlight data and select how it should be disassembled (byte, word, text etc) and the number of 

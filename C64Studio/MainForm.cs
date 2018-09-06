@@ -850,6 +850,12 @@ namespace C64Studio
 
     private void ApplyMenuShortCuts()
     {
+      if ( InvokeRequired )
+      {
+        Invoke( new ParameterLessCallback( ApplyMenuShortCuts ) );
+        return;
+      }
+
       foreach ( var function in StudioCore.Settings.Functions.Values )
       {
         if ( function.MenuItem != null )
