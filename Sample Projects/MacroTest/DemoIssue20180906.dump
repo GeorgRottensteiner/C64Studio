@@ -1,0 +1,68 @@
+00   ----              ; ============================================================================
+01   ----              ; Demo of C64Studio 5.8 messages for !addr/!address issue of 2018-09-06.
+02   ----              ; Produces E1004 "Missing opening brace" and W1000 "Unused label }".
+03   ----              ; ============================================================================
+04   ----              
+05   ----              !ifndef THE_ADDR_LABELS {
+06   ----              THE_ADDR_LABELS = 1
+07   ----              ; ============================================================================
+08   ----              
+09   ----              !message "Message from the include file"
+10   ----              
+11   ----              ; Snippet based on...
+12   ----              ; https://sourceforge.net/p/acme-crossass/code-0/102/tree/trunk/docs/AllPOs.txt#l937
+13   ----              
+14   ----              !addr {
+15   ----              sid_v1_control = $d404
+16   ----              sid_v2_control = $d40b
+17   ----              sid_v3_control = $d412
+18   ----              }
+19   ----              
+20   ----              ;!address sid_v3_control = $d412
+21   ----              
+22   ----              ; ============================================================================
+23   ----              }  ; THE_ADDR_LABELS
+24   ----              
+25   ----              !ifndef THE_ADDR_LABELS {
+26   ----              THE_ADDR_LABELS = 1
+27   ----              ; ============================================================================
+28   ----              
+29   ----              !message "Message from the include file"
+30   ----              
+31   ----              ; Snippet based on...
+32   ----              ; https://sourceforge.net/p/acme-crossass/code-0/102/tree/trunk/docs/AllPOs.txt#l937
+33   ----              
+34   ----              !addr {
+35   ----              sid_v1_control = $d404
+36   ----              sid_v2_control = $d40b
+37   ----              sid_v3_control = $d412
+38   ----              }
+39   ----              
+40   ----              ;!address sid_v3_control = $d412
+41   ----              
+42   ----              ; ============================================================================
+43   ----              }  ; THE_ADDR_LABELS
+44   ----              
+45   ----              
+46   ----              ; ----------------------------------------------------------------------------
+47   ----              
+48  $0801              *=$0801
+49  $0801  0B 08 0A 00 9E 32 30 36 31 00 00 00  !basic
+50  $080D              
+51  $080D  EA          nop
+52  $080E              !ifdef sid_v3_control {
+53  $080E              !message "Address label defined okay."
+54  $080E  A9 80       lda #$80
+55  $0810  8D 18 D4    sta $d418
+56  $0813  A9 80       lda #$80
+57  $0815  8D 12 D4    sta sid_v3_control
+58  $0818  AD 1B D4    lda $d41b
+59  $081B              } else {
+60  $081B              !warn "Oops, address label NOT defined. Where did it go? It is needed!"
+61  $081B              brk
+62  $081B              }
+63  $081B              
+64  $081B  60          rts
+65  $081C              
+66  $081C              ; ============================================================================
+67  $081C              

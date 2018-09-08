@@ -3221,7 +3221,7 @@ namespace C64Studio.Parser
             &&        ( lineTokenInfos.Count >= 2 )
             &&        ( lineTokenInfos[1].Content == "{" ) )
             {
-              // ACME style pseudo pc with bracket
+              // ACME style Addr with bracket
               Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ADDRESS );
               scope.StartIndex = lineIndex;
               scope.Active = false;
@@ -5975,6 +5975,11 @@ namespace C64Studio.Parser
         info.CheapLabelZone = cheapLabelParent;
         info.AddressStart   = programStepPos;
 
+        if ( lineIndex == 34 )
+        {
+          Debug.Log( "aha" );
+        }
+
         if ( ScopeInsideMacroDefinition( stackScopes ) )
         {
           // do not store code inside a macro definition
@@ -6112,7 +6117,17 @@ namespace C64Studio.Parser
             &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" ) )
             {
               // ACME style pseudo pc with bracket
-              Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.PSEUDO_PC );
+              Types.ScopeInfo scope = new ScopeInfo( Types.ScopeInfo.ScopeType.PSEUDO_PC );
+              scope.StartIndex = lineIndex;
+              scope.Active = false;
+              stackScopes.Add( scope );
+              OnScopeAdded( scope );
+            }
+            else if ( ( TokenStartsScope( lineTokenInfos[0] ) )
+            &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" ) )
+            {
+              // ACME style other scopes with bracket
+              Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ADDRESS );
               scope.StartIndex = lineIndex;
               scope.Active = false;
               stackScopes.Add( scope );
@@ -8437,6 +8452,18 @@ namespace C64Studio.Parser
       //Debug.Log( "PreProcess done" );
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private bool TokenStartsScope( TokenInfo Token )
+    {
+      if ( ( Token.Type == TokenInfo.TokenType.MACRO )
+      &&   ( Token.Content.ToUpper() == MacroByType( MacroInfo.MacroType.ADDRESS ) ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
