@@ -2267,89 +2267,98 @@ namespace C64Studio
 
     public bool RunCompiledFile( DocumentInfo Document, Types.CompileTargetType TargetType )
     {
-      if ( Document.Element != null )
+      try
       {
-        StudioCore.AddToOutput( "Running " + Document.Element.Name + System.Environment.NewLine );
-      }
-      else
-      {
-        StudioCore.AddToOutput( "Running " + Document.DocumentFilename + System.Environment.NewLine );
-      }
-
-      ToolInfo toolRun = StudioCore.DetermineTool(Document, true);
-      if ( toolRun == null )
-      {
-        System.Windows.Forms.MessageBox.Show( "No emulator tool has been configured yet!", "Missing emulator tool" );
-        StudioCore.AddToOutput( "There is no emulator tool configured!" );
-        return false;
-      }
-
-      // check file version (WinVICE remote debugger changes)
-      if ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) )
-      {
-        return false;
-      }
-
-      if ( !StudioCore.Executing.StartProcess( toolRun, Document ) )
-      {
-        return false;
-      }
-
-      if ( !System.IO.Directory.Exists( StudioCore.Executing.RunProcess.StartInfo.WorkingDirectory.Trim( new char[] { '\"' } ) ) )
-      {
-        StudioCore.AddToOutput( "The determined working directory" + StudioCore.Executing.RunProcess.StartInfo.WorkingDirectory + " does not exist" + System.Environment.NewLine );
-        return false;
-      }
-
-      string runArguments = toolRun.PRGArguments;
-      if ( IsCartridge( TargetType ) )
-      {
-        runArguments = toolRun.CartArguments;
-      }
-      if ( StudioCore.Settings.TrueDriveEnabled )
-      {
-        runArguments = toolRun.TrueDriveOnArguments + " " + runArguments;
-      }
-      else
-      {
-        runArguments = toolRun.TrueDriveOffArguments + " " + runArguments;
-      }
-
-      if ( ( Document != null )
-      && ( Document.ASMFileInfo != null )
-      && ( toolRun.PassLabelsToEmulator ) )
-      {
-        string labelInfo = Document.ASMFileInfo.LabelsAsFile();
-        if ( labelInfo.Length > 0 )
+        if ( Document.Element != null )
         {
-          try
+          StudioCore.AddToOutput( "Running " + Document.Element.Name + System.Environment.NewLine );
+        }
+        else
+        {
+          StudioCore.AddToOutput( "Running " + Document.DocumentFilename + System.Environment.NewLine );
+        }
+
+        ToolInfo toolRun = StudioCore.DetermineTool(Document, true);
+        if ( toolRun == null )
+        {
+          System.Windows.Forms.MessageBox.Show( "No emulator tool has been configured yet!", "Missing emulator tool" );
+          StudioCore.AddToOutput( "There is no emulator tool configured!" );
+          return false;
+        }
+
+        // check file version (WinVICE remote debugger changes)
+        if ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) )
+        {
+          return false;
+        }
+
+        if ( !StudioCore.Executing.StartProcess( toolRun, Document ) )
+        {
+          return false;
+        }
+
+        if ( !System.IO.Directory.Exists( StudioCore.Executing.RunProcess.StartInfo.WorkingDirectory.Trim( new char[] { '\"' } ) ) )
+        {
+          StudioCore.AddToOutput( "The determined working directory" + StudioCore.Executing.RunProcess.StartInfo.WorkingDirectory + " does not exist" + System.Environment.NewLine );
+          return false;
+        }
+
+        toolRun = null;
+        string runArguments = toolRun.PRGArguments;
+        if ( IsCartridge( TargetType ) )
+        {
+          runArguments = toolRun.CartArguments;
+        }
+        if ( StudioCore.Settings.TrueDriveEnabled )
+        {
+          runArguments = toolRun.TrueDriveOnArguments + " " + runArguments;
+        }
+        else
+        {
+          runArguments = toolRun.TrueDriveOffArguments + " " + runArguments;
+        }
+
+        if ( ( Document != null )
+        && ( Document.ASMFileInfo != null )
+        && ( toolRun.PassLabelsToEmulator ) )
+        {
+          string labelInfo = Document.ASMFileInfo.LabelsAsFile();
+          if ( labelInfo.Length > 0 )
           {
-            StudioCore.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
-            System.IO.File.WriteAllText( StudioCore.Debugging.TempDebuggerStartupFilename, labelInfo );
-            runArguments = "-moncommands \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
-          }
-          catch ( System.IO.IOException ioe )
-          {
-            System.Windows.Forms.MessageBox.Show( ioe.Message, "Error writing temporary file" );
-            StudioCore.AddToOutput( "Error writing temporary file" );
-            StudioCore.Debugging.TempDebuggerStartupFilename = "";
-            return false;
+            try
+            {
+              StudioCore.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
+              System.IO.File.WriteAllText( StudioCore.Debugging.TempDebuggerStartupFilename, labelInfo );
+              runArguments = "-moncommands \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+            }
+            catch ( System.IO.IOException ioe )
+            {
+              System.Windows.Forms.MessageBox.Show( ioe.Message, "Error writing temporary file" );
+              StudioCore.AddToOutput( "Error writing temporary file" );
+              StudioCore.Debugging.TempDebuggerStartupFilename = "";
+              return false;
+            }
           }
         }
+        bool error = false;
+        StudioCore.Executing.RunProcess.StartInfo.Arguments = FillParameters( runArguments, Document, true, out error );
+        if ( error )
+        {
+          return false;
+        }
+
+        StudioCore.Executing.RunProcess.Exited += new EventHandler( runProcess_Exited );
+        StudioCore.AddToOutput( "Calling " + StudioCore.Executing.RunProcess.StartInfo.FileName + " with " + StudioCore.Executing.RunProcess.StartInfo.Arguments + System.Environment.NewLine );
+        StudioCore.SetStatus( "Running..." );
+
+        SetGUIForWaitOnExternalTool( true );
+        return StudioCore.Executing.RunProcess.Start();
       }
-      bool error = false;
-      StudioCore.Executing.RunProcess.StartInfo.Arguments = FillParameters( runArguments, Document, true, out error );
-      if ( error )
+      catch ( Exception ex )
       {
+        StudioCore.AddToOutput( "Internal Error in RunCompiledFile: " + ex.ToString() );
         return false;
       }
-
-      StudioCore.Executing.RunProcess.Exited += new EventHandler( runProcess_Exited );
-      StudioCore.AddToOutput( "Calling " + StudioCore.Executing.RunProcess.StartInfo.FileName + " with " + StudioCore.Executing.RunProcess.StartInfo.Arguments + System.Environment.NewLine );
-      StudioCore.SetStatus( "Running..." );
-
-      SetGUIForWaitOnExternalTool( true );
-      return StudioCore.Executing.RunProcess.Start();
     }
 
 
