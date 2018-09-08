@@ -1658,5 +1658,27 @@ ContrivedTest:
       Assert.AreEqual( "0108A90260", assembly.ToString() );
     }
 
+
+    
+    [TestMethod]
+    public void TestLineSeparators()
+    {
+      string      source = @"*=3000
+                            RND=$de1b
+                            lda #111:ldx #222:ldy #33      ; This works.  :)
+                            lda 111:ldx 222:ldy 33         ; This works.  :)
+                            lda $de1b:ldx $de1b:ldy $de1b  ; This works.  :)
+                            lda RND:ldx RND:ldy RND        ; *** But this FAILS. ***  :(
+                            lda RND :ldx RND :ldy RND      ; Oddly, this again works.
+                            lda RND : ldx RND : ldy RND    ; This also works.
+                            lda RND: ldx RND: ldy RND      ; *** But this again FAILS. ***";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "B80BA96FA2DEA021A56FA6DEA421AD1BDEAE1BDEAC1BDEAD1BDEAE1BDEAC1BDEAD1BDEAE1BDEAC1BDEAD1BDEAE1BDEAC1BDEAD1BDEAE1BDEAC1BDE", assembly.ToString() );
+    }
+
+
+
   }
 }

@@ -48,8 +48,9 @@ namespace C64Studio
       foreach ( ToolInfo tool in Settings.ToolInfos )
       {
         if ( ( Run )
-        && ( tool.Type == ToolInfo.ToolType.EMULATOR )
-        && ( tool.Name.ToUpper() == Settings.EmulatorToRun ) )
+        &&   ( tool.Type == ToolInfo.ToolType.EMULATOR )
+        &&   ( tool.Name != null )
+        &&   ( tool.Name.ToUpper() == Settings.EmulatorToRun ) )
         {
           //AddToOutput( "Determined tool to run = " + tool.Name );
           return tool;
@@ -60,13 +61,13 @@ namespace C64Studio
       foreach ( ToolInfo tool in Settings.ToolInfos )
       {
         if ( ( Run )
-        && ( tool.Type == ToolInfo.ToolType.EMULATOR ) )
+        &&   ( tool.Type == ToolInfo.ToolType.EMULATOR ) )
         {
           //AddToOutput( "fallback emulator = " + tool.Name );
           return tool;
         }
         if ( ( !Run )
-        && ( tool.Type == ToolInfo.ToolType.ASSEMBLER ) )
+        &&   ( tool.Type == ToolInfo.ToolType.ASSEMBLER ) )
         {
           return tool;
         }

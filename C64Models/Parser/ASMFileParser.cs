@@ -6008,6 +6008,10 @@ namespace C64Studio.Parser
           }
         }
 
+        if ( lineIndex == 14 )
+        {
+          Debug.Log( "aha" );
+        }
         List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine );
         if ( lineTokenInfos == null )
         {

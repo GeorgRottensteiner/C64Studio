@@ -1718,7 +1718,7 @@ namespace C64Studio
 
       // alternative run file name
       if ( ( FillForRunning )
-      && ( Document.Element != null ) )
+      &&   ( Document.Element != null ) )
       {
         ProjectElement.PerConfigSettings configSettingRun = Document.Element.Settings[Document.Project.Settings.CurrentConfig.Name];
         if ( !string.IsNullOrEmpty( configSettingRun.DebugFile ) )
@@ -2303,7 +2303,6 @@ namespace C64Studio
           return false;
         }
 
-        toolRun = null;
         string runArguments = toolRun.PRGArguments;
         if ( IsCartridge( TargetType ) )
         {
@@ -2319,8 +2318,8 @@ namespace C64Studio
         }
 
         if ( ( Document != null )
-        && ( Document.ASMFileInfo != null )
-        && ( toolRun.PassLabelsToEmulator ) )
+        &&   ( Document.ASMFileInfo != null )
+        &&   ( toolRun.PassLabelsToEmulator ) )
         {
           string labelInfo = Document.ASMFileInfo.LabelsAsFile();
           if ( labelInfo.Length > 0 )
