@@ -535,7 +535,7 @@ namespace C64Studio.Parser
 
 
 
-    public void AddConstant( string Name, int Value, int SourceLine, string Info, int CharIndex, int Length )
+    public void AddConstant( string Name, int Value, int SourceLine, string Info, string Zone, int CharIndex, int Length )
     {
       string    filename = "";
       int       localIndex = -1;
@@ -567,6 +567,7 @@ namespace C64Studio.Parser
         {
           token.Type = Types.SymbolInfo.Types.CONSTANT_1;
         }
+        token.Zone = Zone;
 
         ASMFileInfo.Labels.Add( Name, token );
       }
@@ -6296,7 +6297,7 @@ namespace C64Studio.Parser
             }
             else 
             {
-              AddConstant( defineName, address, lineIndex, m_CurrentCommentSB.ToString(), lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+              AddConstant( defineName, address, lineIndex, m_CurrentCommentSB.ToString(), zoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
               if ( defineName == "*" )
               {
                 if ( ( address >= 0 )
@@ -6985,6 +6986,7 @@ namespace C64Studio.Parser
                                  address,
                                  lineIndex,
                                  m_CurrentCommentSB.ToString(),
+                                 zoneName,
                                  valueTokens[0].StartPos,
                                  valueTokens[valueTokens.Count - 1].EndPos + 1 - valueTokens[0].StartPos );
                     if ( defineName == "*" )

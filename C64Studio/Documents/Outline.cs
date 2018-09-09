@@ -159,24 +159,46 @@ namespace C64Studio
       NodeRoot.Nodes.Add( parentNode );
       System.Windows.Forms.TreeNode globalZone = parentNode;
 
+      Dictionary<string,TreeNode>     zoneNodes = new Dictionary<string, TreeNode>();
+      zoneNodes.Add( parentNode.Text, globalZone );
+
+      // add zone nodes first
       foreach ( var token in sortedTokens )
       {
+        if ( token.Type == C64Studio.Types.SymbolInfo.Types.ZONE )
+        {
+          System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode();
+
+          node.Text = token.Name;
+          node.Tag = token;
+
+          parentNode = new System.Windows.Forms.TreeNode();
+          parentNode.Text = token.Zone;
+          parentNode.ImageIndex = parentNode.SelectedImageIndex = 0;
+          NodeRoot.Nodes.Add( parentNode );
+          parentNode.Tag = token;
+
+          zoneNodes.Add( parentNode.Text, parentNode );
+        }
+      }
+
+      // now add child nodes
+      parentNode = globalZone;
+      foreach ( var token in sortedTokens )
+      {
+        if ( token.Type == C64Studio.Types.SymbolInfo.Types.ZONE )
+        {
+          curZone = token.Zone;
+          parentNode = zoneNodes[token.Zone];
+          continue;
+        }
+
         System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode();
         bool addNode = true;
 
         node.Text = token.Name;
         node.Tag = token;
 
-        if ( token.Type == C64Studio.Types.SymbolInfo.Types.ZONE )
-        {
-          curZone = token.Zone;
-          parentNode = new System.Windows.Forms.TreeNode();
-          parentNode.Text = token.Zone;
-          parentNode.ImageIndex = parentNode.SelectedImageIndex = 0;
-          NodeRoot.Nodes.Add( parentNode );
-          parentNode.Tag = token;
-          continue;
-        }
         switch ( token.Type )
         {
           case C64Studio.Types.SymbolInfo.Types.CONSTANT_1:
@@ -216,25 +238,30 @@ namespace C64Studio
         // cut off zone
         try
         {
-          if ( curZone.Length > 0 )
+          // find parent node
+          if ( ( string.IsNullOrEmpty( token.Zone ) )
+          ||   ( !zoneNodes.ContainsKey( token.Zone ) ) )
           {
+            globalZone.Nodes.Add( node );
+          }
+          else 
+          //if ( curZone.Length > 0 )
+          {
+            var   parentZoneNode = zoneNodes[token.Zone];
+
             int dotPos = node.Text.IndexOf( '.' );
-            string    nodeParentText = parentNode.Text;
+            string    nodeParentText = parentZoneNode.Text;
             if ( dotPos != -1 )
             {
               node.Text = node.Text.Substring( dotPos );
             }
-            parentNode.Nodes.Add( node );
+            parentZoneNode.Nodes.Add( node );
 
             if ( ( _ExpandedNodes.ContainsKey( nodeParentText ) )
             &&   ( _ExpandedNodes[nodeParentText] ) )
             {
-              parentNode.Expand();
+              parentZoneNode.Expand();
             }
-          }
-          else
-          {
-            globalZone.Nodes.Add( node );
           }
         }
         catch ( Exception ex )

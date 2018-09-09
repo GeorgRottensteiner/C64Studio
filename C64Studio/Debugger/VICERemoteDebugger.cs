@@ -1691,6 +1691,12 @@ namespace C64Studio
 
     public bool CheckEmulatorVersion( ToolInfo ToolRun )
     {
+      if ( ToolRun == null )
+      {
+        Core.AddToOutput( "The emulator to run was not properly configured (ToolRun = null )" );
+        return false;
+      }
+
       System.Diagnostics.FileVersionInfo    fileVersion;
 
       try
@@ -1702,6 +1708,22 @@ namespace C64Studio
         Core.AddToOutput( "Could not check emulator version: " + io.Message );
         return false;
       }
+      if ( fileVersion == null )
+      {
+        Core.AddToOutput( "Could not check emulator version, no fileversion was found, assume VICE > 3.2" );
+        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
+        m_BinaryMemDump = true;
+        return true;
+      }
+
+      if ( string.IsNullOrEmpty( fileVersion.ProductVersion ) )
+      {
+        Core.AddToOutput( "Could not check emulator version, no ProductVersion tag was found, assume VICE > 3.2" );
+        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
+        m_BinaryMemDump = true;
+        return true;
+      }
+
       m_BinaryMemDump = false;
       if ( ( fileVersion.ProductVersion == "2.3" )
       ||   ( fileVersion.ProductVersion.StartsWith( "2.3." ) ) )
