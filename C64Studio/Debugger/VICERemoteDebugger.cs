@@ -1710,7 +1710,7 @@ namespace C64Studio
       }
       if ( fileVersion == null )
       {
-        Core.AddToOutput( "Could not check emulator version, no fileversion was found, assume VICE > 3.2" );
+        //Core.AddToOutput( "Could not check emulator version, no fileversion was found, assume VICE > 3.2" );
         m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
         m_BinaryMemDump = true;
         return true;
@@ -1718,7 +1718,7 @@ namespace C64Studio
 
       if ( string.IsNullOrEmpty( fileVersion.ProductVersion ) )
       {
-        Core.AddToOutput( "Could not check emulator version, no ProductVersion tag was found, assume VICE > 3.2" );
+        //Core.AddToOutput( "Could not check emulator version, no ProductVersion tag was found, assume VICE > 3.2" );
         m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
         m_BinaryMemDump = true;
         return true;
