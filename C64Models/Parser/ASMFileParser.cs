@@ -663,7 +663,6 @@ namespace C64Studio.Parser
       {
         if ( int.TryParse( Value.Substring( 1 ), System.Globalization.NumberStyles.HexNumber, null, out Result ) )
         {
-          //Result = System.Convert.ToInt32( Value.Substring( 1 ), 16 );
           NumGivenBytes = ( Value.Length - 1 + 1 ) / 2;
           return true;
         }
@@ -1446,6 +1445,25 @@ namespace C64Studio.Parser
         if ( Tokens[StartIndex].Content == "-" )
         {
           int     value = -1;
+
+          // special case, try parsing as numeric directly to avoid plus/minus off by one edge case
+          if ( Tokens[StartIndex].EndPos + 1 == Tokens[StartIndex + 1].StartPos )
+          {
+            if ( int.TryParse( Tokens[StartIndex].Content + Tokens[StartIndex + 1].Content, out value ) )
+            {
+              if ( ( value <= 0 )
+              &&   ( value > -254 ) )
+              {
+                NumBytesGiven = 1;
+              }
+              else
+              {
+                NumBytesGiven = 2;
+              }
+              Result = value;
+              return true;
+            }
+          }
 
           if ( EvaluateTokens( LineIndex, Tokens, StartIndex + 1, Count - 1, out value, out NumBytesGiven ) )
           {
@@ -5976,11 +5994,6 @@ namespace C64Studio.Parser
         info.CheapLabelZone = cheapLabelParent;
         info.AddressStart   = programStepPos;
 
-        if ( lineIndex == 34 )
-        {
-          Debug.Log( "aha" );
-        }
-
         if ( ScopeInsideMacroDefinition( stackScopes ) )
         {
           // do not store code inside a macro definition
@@ -6009,10 +6022,6 @@ namespace C64Studio.Parser
           }
         }
 
-        if ( lineIndex == 14 )
-        {
-          Debug.Log( "aha" );
-        }
         List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine );
         if ( lineTokenInfos == null )
         {
