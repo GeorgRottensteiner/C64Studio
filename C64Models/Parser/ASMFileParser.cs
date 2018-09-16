@@ -11045,6 +11045,24 @@ namespace C64Studio.Parser
       {
         for ( int i = 0; i < result.Count - 1; ++i )
         {
+          if ( ( i > 0 )
+          &&   ( result[i].Content == "-" )
+          &&   ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
+          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
+          &&   ( ( result[i - 1].EndPos + 1 < result[i].StartPos )
+          ||     ( ( result[i - 1].EndPos + 1 == result[i].StartPos )
+          &&       ( result[i - 1].Type != TokenInfo.TokenType.LITERAL_NUMBER )
+          &&       ( result[i - 1].Content != "*" ) ) ) )
+          {
+            // collapse 
+            result[i].Content = "-" + result[i + 1].Content;
+            result[i].Length = result[i].Content.Length;
+            result[i].Type = Types.TokenInfo.TokenType.LITERAL_NUMBER;
+            result.RemoveAt( i + 1 );
+            --i;
+            continue;
+          }
+
           if ( ( result[i].Content == "%" )
           &&   ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
           &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
