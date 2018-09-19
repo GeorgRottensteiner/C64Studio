@@ -5976,11 +5976,6 @@ namespace C64Studio.Parser
         info.CheapLabelZone = cheapLabelParent;
         info.AddressStart   = programStepPos;
 
-        if ( lineIndex == 34 )
-        {
-          Debug.Log( "aha" );
-        }
-
         if ( ScopeInsideMacroDefinition( stackScopes ) )
         {
           // do not store code inside a macro definition
@@ -6009,10 +6004,6 @@ namespace C64Studio.Parser
           }
         }
 
-        if ( lineIndex == 14 )
-        {
-          Debug.Log( "aha" );
-        }
         List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine );
         if ( lineTokenInfos == null )
         {

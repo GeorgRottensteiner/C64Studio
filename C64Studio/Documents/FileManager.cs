@@ -647,6 +647,13 @@ namespace C64Studio
 
 
 
+    public override bool Load()
+    {
+      return LoadMediaFile();
+    }
+
+
+
     void OpenInHexEditor( C64Studio.Types.FileInfo FileToImport )
     {
       C64Studio.Types.FileInfo fileInfo = null;
