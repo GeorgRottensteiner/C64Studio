@@ -108,7 +108,7 @@ namespace C64Studio
       AddKeymapEntry( Types.KeyboardKey.KEY_T, 9, System.Windows.Forms.Keys.T );
                                                                               
                                                                               
-      AddKeymapEntry( Types.KeyboardKey.KEY_Y, 9, System.Windows.Forms.Keys.Z );
+      AddKeymapEntry( Types.KeyboardKey.KEY_Y, 9, System.Windows.Forms.Keys.Y );
       AddKeymapEntry( Types.KeyboardKey.KEY_U, 9, System.Windows.Forms.Keys.U );
       AddKeymapEntry( Types.KeyboardKey.KEY_I, 9, System.Windows.Forms.Keys.I );
       AddKeymapEntry( Types.KeyboardKey.KEY_O, 9, System.Windows.Forms.Keys.O );
@@ -124,7 +124,7 @@ namespace C64Studio
       AddKeymapEntry( Types.KeyboardKey.KEY_J, 9, System.Windows.Forms.Keys.J );
       AddKeymapEntry( Types.KeyboardKey.KEY_K, 9, System.Windows.Forms.Keys.K );
       AddKeymapEntry( Types.KeyboardKey.KEY_L, 9, System.Windows.Forms.Keys.L );
-      AddKeymapEntry( Types.KeyboardKey.KEY_Y, 9, System.Windows.Forms.Keys.Y );
+      AddKeymapEntry( Types.KeyboardKey.KEY_Z, 9, System.Windows.Forms.Keys.Z );
       AddKeymapEntry( Types.KeyboardKey.KEY_X, 9, System.Windows.Forms.Keys.X );
       AddKeymapEntry( Types.KeyboardKey.KEY_C, 9, System.Windows.Forms.Keys.C );
       AddKeymapEntry( Types.KeyboardKey.KEY_V, 9, System.Windows.Forms.Keys.V );
