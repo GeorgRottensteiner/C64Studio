@@ -11051,8 +11051,12 @@ namespace C64Studio.Parser
           &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
           &&   ( ( result[i - 1].EndPos + 1 < result[i].StartPos )
           ||     ( ( result[i - 1].EndPos + 1 == result[i].StartPos )
-          &&       ( result[i - 1].Type != TokenInfo.TokenType.LITERAL_NUMBER )
-          &&       ( result[i - 1].Content != "*" ) ) ) )
+          &&       ( result[i - 1].Type != TokenInfo.TokenType.LITERAL_NUMBER ) ) )
+          &&   ( result[i - 1].Type != TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+          &&   ( result[i - 1].Type != TokenInfo.TokenType.LABEL_GLOBAL )
+          &&   ( result[i - 1].Type != TokenInfo.TokenType.LABEL_INTERNAL )
+          &&   ( result[i - 1].Type != TokenInfo.TokenType.LABEL_LOCAL )
+          &&   ( result[i - 1].Content != "*" ) )
           {
             // collapse 
             result[i].Content = "-" + result[i + 1].Content;
