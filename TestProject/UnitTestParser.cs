@@ -1742,6 +1742,80 @@ ContrivedTest:
     }
 
 
+    [TestMethod]
+    public void TestNegativeLiteralCollapsing()
+    {
+      string      source = @"!macro Fill1000 .startAddress
+                            {
+                              ldx #250
+                            .loop
+                              sta .startAddress-1+0,x
+                              sta .startAddress-1+250,x
+                              sta .startAddress-1+500,x
+                              sta .startAddress-1+750,x
+                              dex
+                              bne .loop
+                                }
+
+                                SCREEN_RAM  = $0400  ; 1024
+
+                              *=$0801
+                              !basic
+
+                              ldy #0
+                            forever:
+                              tya
+                              +Fill1000 SCREEN_RAM
+                              iny
+                              jmp forever";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "01080B080A009E32303631000000A00098A2FA9DFF039DF9049DF3059DED06CAD0F1C84C0F08", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestNegativeLiteralCollapsingNested()
+    {
+      string      source = @"    !macro Fill1000 .startAddress {
+                                  ldx #250
+                            .loop
+                              sta .startAddress-1+0,x
+                              sta .startAddress-1+250,x
+                              sta .startAddress-1+500,x
+                              sta .startAddress-1+750,x
+                              dex
+                              bne .loop
+                                }
+
+                            !macro Fill1000v2 .startAddress, .byteConstant {
+                                  lda #.byteConstant
+                              +Fill1000 .startAddress
+                            }
+
+                                SCREEN_RAM = $0400  ; 1024
+                            SCREENCODE = 46
+
+                              *=$0801
+                              !basic
+
+                              ldy #0
+                            forever:
+                              tya
+                              +Fill1000 SCREEN_RAM
+                              +Fill1000v2 SCREEN_RAM,32
+                              +Fill1000v2 SCREEN_RAM, SCREENCODE
+                              iny
+                              jmp forever
+                            ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "01080B080A009E32303631000000A00098A2FA9DFF039DF9049DF3059DED06CAD0F1A920A2FA9DFF039DF9049DF3059DED06CAD0F1A92EA2FA9DFF039DF9049DF3059DED06CAD0F1C84C0F08", assembly.ToString() );
+    }
+
 
   }
 }

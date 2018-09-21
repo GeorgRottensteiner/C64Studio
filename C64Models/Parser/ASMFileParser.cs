@@ -11045,6 +11045,7 @@ namespace C64Studio.Parser
       {
         for ( int i = 0; i < result.Count - 1; ++i )
         {
+          // collapse - with literal to negative number, this requires all kind of checks
           if ( ( i > 0 )
           &&   ( result[i].Content == "-" )
           &&   ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
@@ -11056,6 +11057,9 @@ namespace C64Studio.Parser
           &&   ( result[i - 1].Type != TokenInfo.TokenType.LABEL_GLOBAL )
           &&   ( result[i - 1].Type != TokenInfo.TokenType.LABEL_INTERNAL )
           &&   ( result[i - 1].Type != TokenInfo.TokenType.LABEL_LOCAL )
+          &&   ( ( result[i - 1].Type != TokenInfo.TokenType.SEPARATOR )
+          ||     ( ( result[i - 1].Content != AssemblerSettings.INTERNAL_CLOSING_BRACE )
+          &&       ( result[i - 1].Content != ")" ) ) )
           &&   ( result[i - 1].Content != "*" ) )
           {
             // collapse 
