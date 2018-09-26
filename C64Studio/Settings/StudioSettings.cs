@@ -240,6 +240,7 @@ namespace C64Studio
       Functions.Add( Types.Function.COPY, new Types.FunctionInfo( Types.Function.COPY, "Copy", Types.FunctionStudioState.ANY ) );
       Functions.Add( Types.Function.PASTE, new Types.FunctionInfo( Types.Function.PASTE, "Paste", Types.FunctionStudioState.ANY ) );
       Functions.Add( Types.Function.CUT, new Types.FunctionInfo( Types.Function.CUT, "Cut", Types.FunctionStudioState.ANY ) );
+      Functions.Add( Function.JUMP_TO_LINE, new FunctionInfo( Function.JUMP_TO_LINE, "Jump to Line", FunctionStudioState.ANY ) );
 
       // functions for running debugger
       Functions.Add( C64Studio.Types.Function.DEBUG_BREAK, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_BREAK, "Break into Debugger", C64Studio.Types.FunctionStudioState.DEBUGGER_RUNNING ) );

@@ -74,6 +74,12 @@
     <Compile Include="CustomRenderer\CustomToolStripRenderer.cs" />
     <Compile Include="Compiling.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
+    <Compile Include="Dialogs\FormGotoLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\FormGotoLine.Designer.cs">
+      <DependentUpon>FormGotoLine.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\FormGoto.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -439,6 +445,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgInterleaveData.resx">
       <DependentUpon>DlgInterleaveData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FormGotoLine.resx">
+      <DependentUpon>FormGotoLine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\FormGoto.resx">
       <DependentUpon>FormGoto.cs</DependentUpon>

@@ -1477,6 +1477,21 @@ namespace C64Studio
         case C64Studio.Types.Function.PRINT:
           editSource.Print();
           break;
+        case Function.JUMP_TO_LINE:
+          JumpToLine();
+          break;
+      }
+    }
+
+
+
+    private void JumpToLine()
+    {
+      var formLine = new FormGotoLine();
+
+      if ( formLine.ShowDialog() == DialogResult.OK )
+      {
+        editSource.Navigate( formLine.LineNumber - 1 );
       }
     }
 

@@ -4687,11 +4687,12 @@ namespace C64Studio
         case C64Studio.Types.Function.UNCOMMENT_SELECTION:
         case Function.COLLAPSE_ALL_FOLDING_BLOCKS:
         case Function.EXPAND_ALL_FOLDING_BLOCKS:
+        case Function.JUMP_TO_LINE:
           {
             var curDoc = ActiveDocumentInfo;
             if ( ( curDoc != null )
-            && ( curDoc.BaseDoc != null )
-            && ( curDoc.ContainsCode ) )
+            &&   ( curDoc.BaseDoc != null )
+            &&   ( curDoc.ContainsCode ) )
             {
               curDoc.BaseDoc.ApplyFunction( Function );
             }
@@ -4970,7 +4971,7 @@ namespace C64Studio
         case C64Studio.Types.Function.UNDO:
           BaseDocument docUndo = ActiveDocument;
           if ( ( docUndo != null )
-          && ( docUndo.UndoPossible ) )
+          &&   ( docUndo.UndoPossible ) )
           {
             docUndo.Undo();
           }
@@ -4978,7 +4979,7 @@ namespace C64Studio
         case C64Studio.Types.Function.REDO:
           BaseDocument docRedo = ActiveDocument;
           if ( ( docRedo != null )
-          && ( docRedo.RedoPossible ) )
+          &&   ( docRedo.RedoPossible ) )
           {
             docRedo.Redo();
           }

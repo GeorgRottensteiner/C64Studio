@@ -2607,6 +2607,21 @@ namespace C64Studio
         case Function.EXPAND_ALL_FOLDING_BLOCKS:
           ExpandAllFoldingBlocks();
           break;
+        case Function.JUMP_TO_LINE:
+          JumpToLine();
+          break;
+      }
+    }
+
+
+
+    private void JumpToLine()
+    {
+      var formLine = new FormGotoLine();
+
+      if ( formLine.ShowDialog() == DialogResult.OK )
+      {
+        editSource.Navigate( formLine.LineNumber - 1 );
       }
     }
 
