@@ -6,10 +6,14 @@ o TODO - Nested for loops using a local label from outside:
     lda .LABEL + ROW * 5 + COL
     !end
     !end
+o negative values are possible with ACME
+o Separate ACME from C64Studio, re-introduce lda #< to behave like hi/lo is part of the mnemonic for ACME and CBM PRG Studio
 o Charset editor, multi-chars (1x2, 2x2, ..) in one window, with adjustable char offsets (+$40,$80,$c0)
 o Hätte wieder mal einen kleinen Feature-Request (falls es das nicht eh' schon gibt und ich nur nicht weiß, wo der Knopf ist):
   Im Debugger würde ich gerne die Cycle-Zahl auf NULL stellen können, um die Cycles ab einem bestimmten Punkt starten und zählen zu können.
 
+o Source-Code Repo integration (git,svn)
+o Source-Code - jump to line number
 o Linux: 
   WINEPREFIX=~/.winedir WINEARCH=win32 wineboot 
   WINEPREFIX=~/.winedir winetricks dotnet35sp1 -q 
