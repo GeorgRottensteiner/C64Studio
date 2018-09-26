@@ -127,7 +127,8 @@ namespace C64Studio.Types
     EXPAND_ALL_FOLDING_BLOCKS,
     COPY,
     PASTE,
-    CUT
+    CUT,
+    JUMP_TO_LINE
   }
 
   public enum StudioState

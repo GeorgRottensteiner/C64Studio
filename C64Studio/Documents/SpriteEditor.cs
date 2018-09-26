@@ -1060,7 +1060,7 @@ namespace C64Studio
       {
         ListViewItem item = new ListViewItem();
 
-        item.Text = ( sprite.Index + 1 ).ToString();
+        item.Text = sprite.Index.ToString();
         item.SubItems.Add( sprite.X.ToString() );
         item.SubItems.Add( sprite.Y.ToString() );
         item.Tag = sprite;
@@ -2443,7 +2443,7 @@ namespace C64Studio
     private void btnUp_Click( object sender, EventArgs e )
     {
       if ( ( listLayerSprites.SelectedIndices.Count > 0 )
-      && ( listLayerSprites.SelectedIndices[0] > 0 ) )
+      &&   ( listLayerSprites.SelectedIndices[0] > 0 ) )
       {
         int insertIndex = listLayerSprites.SelectedIndices[0] - 1;
 
@@ -2467,7 +2467,7 @@ namespace C64Studio
     private void btnDown_Click( object sender, EventArgs e )
     {
       if ( ( listLayerSprites.SelectedIndices.Count > 0 )
-      && ( listLayerSprites.SelectedIndices[0] + 1 < listLayerSprites.Items.Count ) )
+      &&   ( listLayerSprites.SelectedIndices[0] + 1 < listLayerSprites.Items.Count ) )
       {
         int insertIndex = listLayerSprites.SelectedIndices[0] + 1;
 
@@ -2625,10 +2625,12 @@ namespace C64Studio
     private ListViewItem listLayerSprites_AddingItem( object sender )
     {
       Formats.SpriteProject.LayerSprite sprite = new Formats.SpriteProject.LayerSprite();
-      sprite.X = GR.Convert.ToI32( editLayerX.Text );
-      sprite.Y = GR.Convert.ToI32( editLayerY.Text );
-      sprite.Index = comboSprite.SelectedIndex;
-      sprite.Color = comboLayerColor.SelectedIndex;
+      sprite.X        = GR.Convert.ToI32( editLayerX.Text );
+      sprite.Y        = GR.Convert.ToI32( editLayerY.Text );
+      sprite.Index    = comboSprite.SelectedIndex;
+      sprite.Color    = comboLayerColor.SelectedIndex;
+      sprite.ExpandX  = checkExpandX.Checked;
+      sprite.ExpandY  = checkExpandY.Checked;
 
       m_CurrentLayer.Sprites.Add( sprite );
 
@@ -2678,12 +2680,12 @@ namespace C64Studio
       if ( Item != null )
       {
         Formats.SpriteProject.LayerSprite sprite = (Formats.SpriteProject.LayerSprite)Item.Tag;
-        editLayerX.Text = sprite.X.ToString();
-        editLayerY.Text = sprite.Y.ToString();
+        editLayerX.Text               = sprite.X.ToString();
+        editLayerY.Text               = sprite.Y.ToString();
         comboLayerColor.SelectedIndex = sprite.Color;
-        comboSprite.SelectedIndex = sprite.Index;
-        checkExpandX.Checked = sprite.ExpandX;
-        checkExpandY.Checked = sprite.ExpandY;
+        comboSprite.SelectedIndex     = sprite.Index;
+        checkExpandX.Checked          = sprite.ExpandX;
+        checkExpandY.Checked          = sprite.ExpandY;
       }
     }
 
@@ -2744,7 +2746,7 @@ namespace C64Studio
       {
         ListViewItem item = new ListViewItem();
 
-        item.Text = ( sprite.Index + 1 ).ToString();
+        item.Text = sprite.Index.ToString();
         item.SubItems.Add( sprite.X.ToString() );
         item.SubItems.Add( sprite.Y.ToString() );
         item.Tag = sprite;
@@ -2759,6 +2761,13 @@ namespace C64Studio
 
     private void listLayers_ItemRemoved( object sender, ListViewItem Item )
     {
+      m_SpriteProject.SpriteLayers.Clear();
+      foreach ( ListViewItem item in listLayers.Items )
+      {
+        var layer = (Formats.SpriteProject.Layer)item.Tag;
+
+        m_SpriteProject.SpriteLayers.Add( layer );
+      }
       SetModified();
       if ( m_CurrentLayer == (Formats.SpriteProject.Layer)Item.Tag )
       {
@@ -2782,6 +2791,13 @@ namespace C64Studio
 
     private void listLayers_ItemMoved( object sender, ListViewItem Item, ListViewItem OtherItem )
     {
+      m_SpriteProject.SpriteLayers.Clear();
+      foreach ( ListViewItem item in listLayers.Items )
+      {
+        var layer = (Formats.SpriteProject.Layer)item.Tag;
+
+        m_SpriteProject.SpriteLayers.Add( layer );
+      }
       SetModified();
     }
 
@@ -3467,8 +3483,6 @@ namespace C64Studio
       }
       ImportFromData( resultData );
     }
-
-
 
   }
 }
