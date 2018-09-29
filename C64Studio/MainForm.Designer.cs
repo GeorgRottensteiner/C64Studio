@@ -1224,7 +1224,7 @@
             this.mainToolPrint});
       this.mainTools.Location = new System.Drawing.Point(0, 24);
       this.mainTools.Name = "mainTools";
-      this.mainTools.Size = new System.Drawing.Size(739, 25);
+      this.mainTools.Size = new System.Drawing.Size(749, 25);
       this.mainTools.TabIndex = 4;
       this.mainTools.Text = "toolStrip1";
       // 
@@ -1470,7 +1470,7 @@
       // 
       this.mainToolEmulator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.mainToolEmulator.Name = "mainToolEmulator";
-      this.mainToolEmulator.Size = new System.Drawing.Size(196, 25);
+      this.mainToolEmulator.Size = new System.Drawing.Size(206, 25);
       this.mainToolEmulator.SelectedIndexChanged += new System.EventHandler(this.mainToolEmulator_SelectedIndexChanged);
       // 
       // mainToolUndo
@@ -1572,7 +1572,7 @@
             this.mainDebugStepInto,
             this.mainDebugStepOver,
             this.mainDebugStepOut});
-      this.debugTools.Location = new System.Drawing.Point(733, 24);
+      this.debugTools.Location = new System.Drawing.Point(743, 24);
       this.debugTools.Name = "debugTools";
       this.debugTools.Size = new System.Drawing.Size(150, 25);
       this.debugTools.TabIndex = 8;
