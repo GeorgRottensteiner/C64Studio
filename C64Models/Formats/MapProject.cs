@@ -51,6 +51,7 @@ namespace C64Studio.Formats
     public int                         BGColor4 = 0;
     public Types.CharsetMode           Mode = C64Studio.Types.CharsetMode.HIRES;
     public CharsetProject              Charset = new C64Studio.Formats.CharsetProject();
+    public bool                        ShowGrid = false;
 
 
 
@@ -85,6 +86,7 @@ namespace C64Studio.Formats
       // version
       chunkProjectInfo.AppendU32( 0 );
       chunkProjectInfo.AppendString( ExternalCharset );
+      chunkProjectInfo.AppendI32( ShowGrid ? 1 : 0 );
       projectFile.Append( chunkProjectInfo.ToBuffer() );
 
       GR.IO.FileChunk chunkCharset = new GR.IO.FileChunk( Types.FileChunk.MAP_CHARSET );
@@ -194,6 +196,8 @@ namespace C64Studio.Formats
             {
               uint version  = chunkReader.ReadUInt32();
               importedCharSet = chunkReader.ReadString();
+
+              ShowGrid = ( chunkReader.ReadInt32() == 1 );
             }
             break;
           case Types.FileChunk.MAP_CHARSET:

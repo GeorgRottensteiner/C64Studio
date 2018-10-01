@@ -45,6 +45,8 @@
       this.btnImportCharset = new System.Windows.Forms.Button();
       this.btnImportFromFile = new System.Windows.Forms.Button();
       this.groupExport = new System.Windows.Forms.GroupBox();
+      this.comboCharScreens = new System.Windows.Forms.ComboBox();
+      this.btnExportToCharScreen = new System.Windows.Forms.Button();
       this.label6 = new System.Windows.Forms.Label();
       this.comboExportData = new System.Windows.Forms.ComboBox();
       this.label5 = new System.Windows.Forms.Label();
@@ -164,8 +166,7 @@
       this.button4 = new System.Windows.Forms.Button();
       this.button5 = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnExportToCharScreen = new System.Windows.Forms.Button();
-      this.comboCharScreens = new System.Windows.Forms.ComboBox();
+      this.checkShowGrid = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -300,6 +301,25 @@
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
+      // 
+      // comboCharScreens
+      // 
+      this.comboCharScreens.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboCharScreens.FormattingEnabled = true;
+      this.comboCharScreens.Location = new System.Drawing.Point(118, 112);
+      this.comboCharScreens.Name = "comboCharScreens";
+      this.comboCharScreens.Size = new System.Drawing.Size(230, 21);
+      this.comboCharScreens.TabIndex = 13;
+      // 
+      // btnExportToCharScreen
+      // 
+      this.btnExportToCharScreen.Location = new System.Drawing.Point(6, 110);
+      this.btnExportToCharScreen.Name = "btnExportToCharScreen";
+      this.btnExportToCharScreen.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToCharScreen.TabIndex = 12;
+      this.btnExportToCharScreen.Text = "To Charscreen";
+      this.btnExportToCharScreen.UseVisualStyleBackColor = true;
+      this.btnExportToCharScreen.Click += new System.EventHandler(this.btnExportToCharScreen_Click);
       // 
       // label6
       // 
@@ -567,6 +587,7 @@
       // 
       // groupSize
       // 
+      this.groupSize.Controls.Add(this.checkShowGrid);
       this.groupSize.Controls.Add(this.comboMapAlternativeMode);
       this.groupSize.Controls.Add(this.comboMapAlternativeBGColor4);
       this.groupSize.Controls.Add(this.comboMapMultiColor2);
@@ -1580,24 +1601,16 @@
       this.button5.Text = "as assembly source";
       this.button5.UseVisualStyleBackColor = true;
       // 
-      // btnExportToCharScreen
+      // checkShowGrid
       // 
-      this.btnExportToCharScreen.Location = new System.Drawing.Point(6, 110);
-      this.btnExportToCharScreen.Name = "btnExportToCharScreen";
-      this.btnExportToCharScreen.Size = new System.Drawing.Size(106, 23);
-      this.btnExportToCharScreen.TabIndex = 12;
-      this.btnExportToCharScreen.Text = "To Charscreen";
-      this.btnExportToCharScreen.UseVisualStyleBackColor = true;
-      this.btnExportToCharScreen.Click += new System.EventHandler(this.btnExportToCharScreen_Click);
-      // 
-      // comboCharScreens
-      // 
-      this.comboCharScreens.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboCharScreens.FormattingEnabled = true;
-      this.comboCharScreens.Location = new System.Drawing.Point(118, 112);
-      this.comboCharScreens.Name = "comboCharScreens";
-      this.comboCharScreens.Size = new System.Drawing.Size(230, 21);
-      this.comboCharScreens.TabIndex = 13;
+      this.checkShowGrid.AutoSize = true;
+      this.checkShowGrid.Location = new System.Drawing.Point(191, 99);
+      this.checkShowGrid.Name = "checkShowGrid";
+      this.checkShowGrid.Size = new System.Drawing.Size(45, 17);
+      this.checkShowGrid.TabIndex = 30;
+      this.checkShowGrid.Text = "Grid";
+      this.checkShowGrid.UseVisualStyleBackColor = true;
+      this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
       // 
       // MapEditor
       // 
@@ -1772,5 +1785,6 @@
     private System.Windows.Forms.Button btnSetNextTileChar;
     private System.Windows.Forms.ComboBox comboCharScreens;
     private System.Windows.Forms.Button btnExportToCharScreen;
+    private System.Windows.Forms.CheckBox checkShowGrid;
   }
 }
