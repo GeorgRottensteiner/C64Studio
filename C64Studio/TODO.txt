@@ -13,7 +13,6 @@ o Hätte wieder mal einen kleinen Feature-Request (falls es das nicht eh' schon 
   Im Debugger würde ich gerne die Cycle-Zahl auf NULL stellen können, um die Cycles ab einem bestimmten Punkt starten und zählen zu können.
 
 o Source-Code Repo integration (git,svn)
-o Source-Code - jump to line number
 o Linux: 
   WINEPREFIX=~/.winedir WINEARCH=win32 wineboot 
   WINEPREFIX=~/.winedir winetricks dotnet35sp1 -q 
@@ -28,7 +27,7 @@ o Disassembler: Syntax-Coloring zerhunzt (Farbe von Zeile davor geht mit)
 o Automated code formatting
 o Map Editor:
   Map: 
-    hier wären Hilfslinien super, gerne auch mit Zeilen/Spaltennumerierung
+    gerne auch mit Zeilen/Spaltennumerierung
     möglichkeit die Reihenfolge der Maps zu verschieben, wie bei den Tiles (Up/Down)
   Tiles: 
     wenn die Hintergrundfarbe weiß=charcolor ist, kann ich nix sehen (habe als Workaround auf dunkelgrau gestellt)

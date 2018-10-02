@@ -97,6 +97,7 @@ namespace C64Studio
 
       pictureEditor.MouseWheel += pictureEditor_MouseWheel;
       pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      pictureEditor.PostPaint += PictureEditor_PostPaint;
       pictureTileDisplay.ClientSize = new System.Drawing.Size( 256, 256 );
       pictureTileDisplay.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
@@ -164,6 +165,36 @@ namespace C64Studio
         panelCharacters.Items.Add( i.ToString(), m_MapProject.Charset.Characters[i].Image );
       }
       Modified = false;
+    }
+
+
+
+    private void PictureEditor_PostPaint( GR.Image.FastImage TargetBuffer )
+    {
+      if ( m_MapProject.ShowGrid )
+      {
+        if ( m_CurrentMap == null )
+        {
+          pictureEditor.Invalidate();
+          return;
+        }
+
+        int offsetX = m_CurEditorOffsetX;
+        int offsetY = m_CurEditorOffsetY;
+
+        int x1 = offsetX;
+        int x2 = offsetX + m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width;
+        int y1 = offsetY;
+        int y2 = offsetY + m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height;
+
+        for ( int y = y1; y <= y2; ++y )
+        {
+          for ( int x = x1; x <= x2; ++x )
+          {
+            TargetBuffer.Rectangle( ( x - offsetX ) * m_CurrentMap.TileSpacingX * 16, ( y - offsetY ) * m_CurrentMap.TileSpacingY * 16, m_CurrentMap.TileSpacingX * 16, m_CurrentMap.TileSpacingY * 16, 0xffffffff );
+          }
+        }
+      }
     }
 
 
@@ -1060,6 +1091,7 @@ namespace C64Studio
       comboTileMulticolor2.SelectedIndex = m_MapProject.MultiColor2;
       comboTileBGColor4.SelectedIndex = m_MapProject.BGColor4;
       comboTileMode.SelectedIndex = (int)m_MapProject.Mode;
+      checkShowGrid.Checked = m_MapProject.ShowGrid;
 
       for ( int i = 0; i < 256; ++i )
       {
@@ -3314,6 +3346,14 @@ namespace C64Studio
                                    charData, colorData, m_MapProject.Charset );
         document.SetModified();
       }
+    }
+
+
+
+    private void checkShowGrid_CheckedChanged( object sender, EventArgs e )
+    {
+      m_MapProject.ShowGrid = checkShowGrid.Checked;
+      Redraw();
     }
 
   }
