@@ -9093,9 +9093,12 @@ namespace C64Studio.Parser
             if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
             {
               // need to take loop into account, force new local label!
+              /*
               token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
-                            + GetLoopGUID( Scopes ) + "_" + i.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
-              replacedParam = true;
+                            + GetLoopGUID( Scopes ) + "_" + i.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;*/
+              token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
+                            + GetLoopGUID( Scopes ) + "_" + lineIndex.ToString() + "_" + token.Content;
+               replacedParam = true;
             }
             else if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
             {
