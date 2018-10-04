@@ -1,16 +1,25 @@
 * = $2000
 
 
-!for j = 0 to 15
 
-           *=$4000+256*j
+!Zone Test
 
-.Einsprung   Lda #20
+!for j = 0 to 2
 
-.Zweisprung  Ldx $2000+8*j
+  *= $4000+256*j
 
-            inx
+.s_Main
 
-!end
-          
-          
+      !for i = 31 to 0 step -1
+
+        sta $2000+8*i+256*j,y
+
+      !end
+
+      jmp .return_1
+
+.return_1
+
+rts
+
+!end          
