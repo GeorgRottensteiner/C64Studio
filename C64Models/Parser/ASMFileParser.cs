@@ -9097,8 +9097,9 @@ namespace C64Studio.Parser
               token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
                             + GetLoopGUID( Scopes ) + "_" + i.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;*/
               token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
+                            + AssemblerSettings.INTERNAL_LOCAL_LOOP_LABEL_PREFIX
                             + GetLoopGUID( Scopes ) + "_" + lineIndex.ToString() + "_" + token.Content;
-               replacedParam = true;
+              replacedParam = true;
             }
             else if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
             {
@@ -9687,6 +9688,7 @@ namespace C64Studio.Parser
       {
         if ( ( !token.Used )
         &&   ( token.Name != "*" )
+        &&   ( !token.Name.Contains( AssemblerSettings.INTERNAL_LOCAL_LOOP_LABEL_PREFIX ) )
         &&   ( token.Type != C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_LABEL ) )
         {
           AddWarning( token.LineIndex, 
