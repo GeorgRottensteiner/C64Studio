@@ -830,6 +830,12 @@ namespace FastColoredTextBoxNS
     {
       sourceItems = items;
 
+      if ( InvokeRequired )
+      {
+        BeginInvoke( new MethodInvoker( () => SetAutocompleteItems( items ) ) );
+        return;
+      }
+
       ResizeToContent();
     }
 
