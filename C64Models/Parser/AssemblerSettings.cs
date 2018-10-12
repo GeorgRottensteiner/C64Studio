@@ -24,6 +24,7 @@ namespace C64Studio.Parser
 
     public const string                 INTERNAL_OPENING_BRACE = "╚";
     public const string                 INTERNAL_CLOSING_BRACE = "╝";
+    public const string                 INTERNAL_LOCAL_LOOP_LABEL_PREFIX = "_C64STUDIO_LL_";
 
 
 
