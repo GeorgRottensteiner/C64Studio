@@ -7,6 +7,9 @@ o TODO - Nested for loops using a local label from outside:
     !end
     !end
 o negative values are possible with ACME
+  > Eine Zeile wie "lda #-10" verursacht einen "...Value out of bounds for byte, needs to be >= 0 and <= 255. Expression:-10".
+o float point Konstante eingebe? z.B. wie beim CBM Program Studio, da ging das irgendwie (habs nicht ganz parat) so: !flp 32.442.
+Das ist logisch auf den ersten Blick, es wäre aber cool, wenn man auch sigened values eintippen könnte und der Assembler das gleich umrechnet in die entsprechende 2-complement Zahl.
 o eine Datei, wo alle verwendeten Symbole, Labels usw. mit Adresse aufgelistet werden
 o Separate ACME from C64Studio, re-introduce lda #< to behave like hi/lo is part of the mnemonic for ACME and CBM PRG Studio
 o Charset editor, multi-chars (1x2, 2x2, ..) in one window, with adjustable char offsets (+$40,$80,$c0)
