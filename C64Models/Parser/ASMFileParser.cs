@@ -2645,13 +2645,11 @@ namespace C64Studio.Parser
                 ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_X )
                 ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_Y ) )
                 {
-                  if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-                  &&   ( ( value < 0 )
-                  ||     ( value > 255 ) ) )
+                  if ( !ValidByteValue( value ) )
                   {
                     AddError( lineIndex, 
                               Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, 
-                              "Value out of bounds for byte, needs to be >= 0 and <= 255. Expression:"
+                              "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:"
                                 + TokensToExpression( lineInfo.NeededParsedExpression ),
                               lineInfo.NeededParsedExpression[0].StartPos,
                               lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos - lineInfo.NeededParsedExpression[0].StartPos + 1 );
@@ -2768,11 +2766,9 @@ namespace C64Studio.Parser
                   byteValue = ( byteValue >> 8 ) & 0xff;
                   break;
               }
-              if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-              &&   ( ( byteValue < 0 )
-              ||     ( byteValue > 255 ) ) )
+              if ( !ValidByteValue( byteValue ) )
               {
-                AddError( info.LineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Value out of bounds for byte, needs to be >= 0 and <= 255. Expression:"
+                AddError( info.LineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:"
                           + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
                           lineTokenInfos[firstTokenIndex].StartPos,
                           lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
@@ -2820,11 +2816,9 @@ namespace C64Studio.Parser
               byteValue = ( byteValue >> 8 ) & 0xff;
               break;
           }
-          if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-          &&   ( ( byteValue < 0 )
-          ||     ( byteValue > 255 ) ) )
+          if ( !ValidByteValue( byteValue ) )
           {
-            AddError( info.LineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Value out of bounds for byte, needs to be >= 0 and <= 255. Expression:"
+            AddError( info.LineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:"
                       + TokensToExpression( lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ),
                       lineTokenInfos[firstTokenIndex].StartPos,
                       lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
@@ -2850,6 +2844,19 @@ namespace C64Studio.Parser
         info.LineData = data;
       }
       info.NumBytes = commaCount + 1;
+    }
+
+
+
+    private bool ValidByteValue( int ByteValue )
+    {
+      if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
+      &&   ( ( ByteValue < -128 )
+      ||     ( ByteValue > 255 ) ) )
+      {
+        return false;
+      }
+      return true;
     }
 
 
@@ -5158,9 +5165,7 @@ namespace C64Studio.Parser
       byte fillValue = 0;
       if ( tokenParams.Count == 2 )
       {
-        if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-        &&   ( ( tokenParams[1] < 0 )
-        ||     ( tokenParams[1] > 255 ) ) )
+        if ( !ValidByteValue( tokenParams[1] ) )
         {
           AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "FillValue out of bounds" );
           return ParseLineResult.RETURN_NULL;
@@ -5220,13 +5225,11 @@ namespace C64Studio.Parser
 
             if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, out wordValue, out numBytesGiven ) )
             {
-              if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-              &&   ( ( wordValue < 0 )
-              ||     ( wordValue > 65535 ) ) )
+              if ( !ValidWordValue( wordValue ) )
               {
                 AddError( info.LineIndex,
                           Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
-                          "Value out of bounds for word, needs to be >= 0 and <= 65535. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
+                          "Value out of bounds for word, needs to be >= -32768 and <= 65535. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
                           lineTokenInfos[firstTokenIndex].StartPos,
                           lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
               }
@@ -5264,13 +5267,11 @@ namespace C64Studio.Parser
         int numBytesGiven = 0;
         if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, out wordValue, out numBytesGiven ) )
         {
-          if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-          &&   ( ( wordValue < 0 )
-          ||     ( wordValue > 65535 ) ) )
+          if ( !ValidWordValue( wordValue ) )
           {
             AddError( info.LineIndex,
                       Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, 
-                      "Value out of bounds for word, needs to be >= 0 and <= 65535. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ),
+                      "Value out of bounds for word, needs to be >= -32768 and <= 65535. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ),
                       lineTokenInfos[firstTokenIndex].StartPos,
                       lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
           }
@@ -5300,6 +5301,19 @@ namespace C64Studio.Parser
       info.Line = parseLine;
       lineSizeInBytes = info.NumBytes;
       return ParseLineResult.OK;
+    }
+
+
+
+    private bool ValidWordValue( int WordValue )
+    {
+      if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
+      &&   ( ( WordValue < -32768 )
+      ||     ( WordValue > 65535 ) ) )
+      {
+        return false;
+      }
+      return true;
     }
 
 
@@ -6682,13 +6696,11 @@ namespace C64Studio.Parser
                 }
                 else if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE )
                 {
-                  if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-                  &&   ( ( byteValue < 0 )
-                  ||     ( byteValue > 255 ) ) )
+                  if ( !ValidByteValue( byteValue ) )
                   {
                     AddError( lineIndex,
                               Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
-                              "Value out of bounds for byte, needs to be >= 0 and <= 255. Expression:" + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ),
+                              "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:" + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ),
                               lineTokenInfos[1].StartPos,
                               lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
 
@@ -7799,7 +7811,7 @@ namespace C64Studio.Parser
               while ( tokenIndex < lineTokenInfos.Count );
 
               if ( ( tokenParams.Count < 2 )
-              || ( tokenParams.Count > 3 ) )
+              ||   ( tokenParams.Count > 3 ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !align <AndValue>,<EqualValue>[,<FillValue>]" );
                 return null;
@@ -7807,9 +7819,7 @@ namespace C64Studio.Parser
               byte fillValue = 0;
               if ( tokenParams.Count == 3 )
               {
-                if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
-                && ( ( tokenParams[2] < 0 )
-                || ( tokenParams[2] > 255 ) ) )
+                if ( !ValidByteValue( tokenParams[2] ) )
                 {
                   AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "FillValue out of bounds" );
                   return null;
