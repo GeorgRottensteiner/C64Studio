@@ -7485,6 +7485,20 @@ namespace C64Studio.Parser
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.IFNDEF )
             {
+              if ( ScopeInsideMacroDefinition( stackScopes ) )
+              {
+                // Skip !if check inside macro definition
+
+                // still need to add scope!
+                Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                scope.StartIndex = lineIndex;
+                scope.Active = false;
+
+                stackScopes.Add( scope );
+                OnScopeAdded( scope );
+                continue;
+              }
+
               int startBracket = parseLine.IndexOf( "{" );
               if ( startBracket == -1 )
               {

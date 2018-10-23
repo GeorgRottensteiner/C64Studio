@@ -1817,5 +1817,42 @@ ContrivedTest:
     }
 
 
+
+    [TestMethod]
+    public void TestMacroWithIfNotDefinedWhichShouldNotBeEvaluatedEarly()
+    {
+      string      source = @"* = $2000
+                           
+
+                           !macro testmacro
+                           !ifndef UNDEFINED_SYMBOL {
+                           UNDEFINED_SYMBOL
+                           !warn ""This warning should not trigger!""
+                           }
+                           !end
+                           rts";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config ) );
+
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      var assembly = parser.AssembledOutput;
+
+      Assert.AreEqual( 0, parser.Warnings );
+
+      Assert.AreEqual( "002060", assembly.Assembly.ToString() );
+    }
+
+
+
+
   }
 }
