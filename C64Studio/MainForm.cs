@@ -1780,7 +1780,12 @@ namespace C64Studio
       {
         if ( Document.Project != null )
         {
-          debugStartAddress = Document.Project.Settings.DebugStartAddress;
+          if ( !DetermineDebugStartAddress( Document, Document.Project.Settings.CurrentConfig.DebugStartAddressLabel, out debugStartAddress ) )
+          {
+            Error = true;
+            StudioCore.AddToOutput( "Cannot determine value for debug start address from '" + Document.Project.Settings.CurrentConfig.DebugStartAddressLabel + "'" + System.Environment.NewLine );
+            return "";
+          }
         }
       }
       result = result.Replace( "$(DebugStartAddress)", debugStartAddress.ToString() );
@@ -1825,6 +1830,44 @@ namespace C64Studio
         dollarPos = result.IndexOf( "$(", macroEndPos + 1 );
       }
       return result;
+    }
+
+
+
+    private bool DetermineDebugStartAddress( DocumentInfo Document, string Label, out int Address )
+    {
+      Address = -1;
+      if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
+      {
+        if ( Document.ASMFileInfo.Labels.ContainsKey( Label ) )
+        {
+          Address = Document.ASMFileInfo.Labels[Label].AddressOrValue;
+          return true;
+        }
+      }
+      if ( Label.StartsWith( "0x" ) )
+      {
+        if ( Label.Length >= 3 )
+        {
+          Address = System.Convert.ToUInt16( Label.Substring( 2 ), 16 );
+          return true;
+        }
+      }
+      else if ( Label.StartsWith( "$" ) )
+      {
+        if ( Label.Length >= 2 )
+        {
+          Address = System.Convert.ToUInt16( Label.Substring( 1 ), 16 );
+          return true;
+        }
+      }
+      ushort     debugStartAddressValue = 2049;
+      if ( ushort.TryParse( Label, out debugStartAddressValue ) )
+      {
+        Address = debugStartAddressValue;
+        return true;
+      }
+      return false;
     }
 
 
@@ -1961,12 +2004,15 @@ namespace C64Studio
       bool error = false;
       bool errorAtArgs = false;
 
-      string command = FillParameters(Command, CommandDocument, false, out error);
-      //fullCommand = FillParameters( fullCommand, CommandDocument, false, out error );
+      string command = FillParameters( Command, CommandDocument, false, out error );
+      if ( error )
+      {
+        return false;
+      }
       args = "/C \"" + command + "\"";
       args = FillParameters( args, CommandDocument, false, out errorAtArgs );
       if ( ( error )
-      || ( errorAtArgs ) )
+      ||   ( errorAtArgs ) )
       {
         return false;
       }

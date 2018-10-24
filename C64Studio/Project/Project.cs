@@ -184,7 +184,7 @@ namespace C64Studio
       chunkProject.AppendString( Settings.Name );
       chunkProject.AppendString( Settings.Filename );
       chunkProject.AppendU16( Settings.DebugPort );
-      chunkProject.AppendU16( Settings.DebugStartAddress );
+      chunkProject.AppendU16( 2049 );// obsolete Settings.DebugStartAddress
       chunkProject.AppendString( Settings.BuildTool );
       chunkProject.AppendString( Settings.RunTool );
       chunkProject.AppendString( Settings.MainDocument );
@@ -303,6 +303,7 @@ namespace C64Studio
       GR.IO.MemoryReader memIn = new GR.IO.MemoryReader( ProjectData );
 
       GR.IO.FileChunk           chunk = new GR.IO.FileChunk();
+      ushort                    origDebugStartAddress = 2049;
 
       while ( chunk.ReadFromStream( memIn ) )
       {
@@ -317,7 +318,7 @@ namespace C64Studio
             Settings.Name = memChunk.ReadString();
             Settings.Filename = memChunk.ReadString();
             Settings.DebugPort = memChunk.ReadUInt16();
-            Settings.DebugStartAddress = memChunk.ReadUInt16();
+            origDebugStartAddress = memChunk.ReadUInt16();
             Settings.BuildTool = memChunk.ReadString();
             Settings.RunTool = memChunk.ReadString();
             Settings.MainDocument = memChunk.ReadString();
@@ -510,6 +511,11 @@ namespace C64Studio
               ProjectConfig  config = new ProjectConfig();
 
               config.Load( memChunk );
+
+              if ( string.IsNullOrEmpty( config.DebugStartAddressLabel ) )
+              {
+                config.DebugStartAddressLabel = origDebugStartAddress.ToString();
+              }
 
               Settings.Configs.Add( config.Name, config );
             }

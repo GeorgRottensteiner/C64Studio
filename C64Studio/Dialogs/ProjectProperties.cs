@@ -26,7 +26,6 @@ namespace C64Studio
       m_Project   = MyProject;
       InitializeComponent();
 
-      editDebugStartAddress.Text  = m_Settings.DebugStartAddress.ToString();
       editProjectName.Text        = m_Settings.Name;
 
       foreach ( string configName in m_Settings.Configs.Keys )
@@ -48,19 +47,6 @@ namespace C64Studio
 
     private void btnClose_Click( object sender, EventArgs e )
     {
-      string    debugStartAddress = editDebugStartAddress.Text;
-      if ( debugStartAddress.StartsWith( "0x" ) )
-      {
-        m_Settings.DebugStartAddress = System.Convert.ToUInt16( debugStartAddress.Substring( 2 ), 16 );
-      }
-      else if ( debugStartAddress.StartsWith( "$" ) )
-      {
-        m_Settings.DebugStartAddress = System.Convert.ToUInt16( debugStartAddress.Substring( 1 ), 16 );
-      }
-      else
-      {
-        ushort.TryParse( debugStartAddress, out m_Settings.DebugStartAddress );
-      }
       Close();
     }
 
@@ -83,8 +69,9 @@ namespace C64Studio
       // cannot delete default config
       btnDeleteConfig.Enabled = ( m_ProjectConfig.Name != "Default" );
 
-      editConfigName.Text = m_ProjectConfig.Name;
-      editPreDefines.Text = m_ProjectConfig.Defines;
+      editConfigName.Text         = m_ProjectConfig.Name;
+      editPreDefines.Text         = m_ProjectConfig.Defines;
+      editDebugStartAddress.Text  = m_ProjectConfig.DebugStartAddressLabel;
 
       btnApplyChanges.Enabled = false;
     }
@@ -100,8 +87,9 @@ namespace C64Studio
         return;
       }
       ProjectConfig   config = new ProjectConfig();
-      config.Name = newConfigName;
-      config.Defines = editPreDefines.Text;
+      config.Name                   = newConfigName;
+      config.Defines                = editPreDefines.Text;
+      config.DebugStartAddressLabel = editDebugStartAddress.Text;
 
       foreach ( ProjectElement element in m_Project.Elements )
       {
@@ -121,6 +109,37 @@ namespace C64Studio
       m_Core.MainForm.mainToolConfig.Items.Add( config.Name );
 
       Modified = true;
+    }
+
+
+
+    private bool DebugStartAddressFromControl( out int Address )
+    {
+      Address = -1;
+      string    debugStartAddress = editDebugStartAddress.Text;
+      if ( debugStartAddress.StartsWith( "0x" ) )
+      {
+        if ( debugStartAddress.Length >= 3 )
+        {
+          Address = System.Convert.ToUInt16( debugStartAddress.Substring( 2 ), 16 );
+          return true;
+        }
+      }
+      else if ( debugStartAddress.StartsWith( "$" ) )
+      {
+        if ( debugStartAddress.Length >= 2 )
+        {
+          Address = System.Convert.ToUInt16( debugStartAddress.Substring( 1 ), 16 );
+          return true;
+        }
+      }
+      ushort     debugStartAddressValue = 2049;
+      if ( ushort.TryParse( debugStartAddress, out debugStartAddressValue ) )
+      {
+        Address = debugStartAddressValue;
+        return true;
+      }
+      return false;
     }
 
 
@@ -155,7 +174,8 @@ namespace C64Studio
 
       if ( m_Settings.Configs.ContainsKey( configName ) )
       {
-        m_ProjectConfig.Defines = editPreDefines.Text;
+        m_ProjectConfig.Defines                 = editPreDefines.Text;
+        m_ProjectConfig.DebugStartAddressLabel  = editDebugStartAddress.Text;
         Modified = true;
 
         // invalidate elements to they have to be built
@@ -168,6 +188,16 @@ namespace C64Studio
     private void editPreDefines_TextChanged( object sender, EventArgs e )
     {
       btnApplyChanges.Enabled = true;
+    }
+
+
+
+    private void editDebugStartAddress_TextChanged( object sender, EventArgs e )
+    {
+      if ( editDebugStartAddress.Text != m_ProjectConfig.DebugStartAddressLabel )
+      {
+        btnApplyChanges.Enabled = true;
+      }
     }
 
 

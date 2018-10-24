@@ -11,7 +11,6 @@ namespace C64Studio
     public string       Filename = null;
     public string       BasePath = null;
     public ushort       DebugPort = 6510;
-    public ushort       DebugStartAddress = 0x0801;
     public string       BuildTool = "";
     public string       RunTool = "";
     public string       MainDocument = "";

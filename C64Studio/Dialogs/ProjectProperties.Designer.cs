@@ -167,6 +167,7 @@
       this.editDebugStartAddress.Name = "editDebugStartAddress";
       this.editDebugStartAddress.Size = new System.Drawing.Size(86, 20);
       this.editDebugStartAddress.TabIndex = 5;
+      this.editDebugStartAddress.TextChanged += new System.EventHandler(this.editDebugStartAddress_TextChanged);
       // 
       // label5
       // 
