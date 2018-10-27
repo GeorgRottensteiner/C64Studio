@@ -4955,6 +4955,10 @@ namespace C64Studio.Parser
 
         var commentDataTemp = Util.ToPETSCII( Util.RemoveQuotes( basicComment ) );
         int   lengthOfCommentData = (int)commentDataTemp.Length;
+        if ( lengthOfCommentData > 0 )
+        {
+          lengthOfCommentData += 6;
+        }
 
         if ( !EvaluateTokens( lineIndex, poParams[2], 0, poParams[2].Count, out jumpAddress ) )
         {
@@ -5023,6 +5027,18 @@ namespace C64Studio.Parser
       numDigits = CalcNumDigits( jumpAddress );
 
       var commentData = Util.ToPETSCII( Util.RemoveQuotes( basicComment ) );
+
+      if ( commentData.Length > 0 )
+      {
+        commentData = new GR.Memory.ByteBuffer( "3A8F14141414" ) + commentData;
+        /*
+      !byte ':'
+      !byte 0x8F; REM
+      !byte 20
+      !byte 20
+      !byte 20
+      !byte 20*/
+      }
 
       /*
       if ( jumpAddress != -1 )
