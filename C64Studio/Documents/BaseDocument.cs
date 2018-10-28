@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C64Studio.Types;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
@@ -820,6 +821,7 @@ namespace C64Studio
 
     public virtual void RefreshDisplayOptions()
     {
+      Core.Theming.ApplyTheme( this );
     }
 
 

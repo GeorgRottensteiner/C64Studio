@@ -421,11 +421,18 @@ namespace C64Studio
 
     internal void RefreshDisplayOnAllDocuments( StudioCore Core )
     {
-      foreach ( WeifenLuo.WinFormsUI.Docking.IDockContent doc in Core.MainForm.panelMain.Documents )
+      // also refresh main elements
+      Core.MainForm.RefreshDisplayOnAllDocuments();
+
+      Core.Theming.ApplyThemeToToolStripItems( Core.MainForm.MainMenuStrip.Items );
+
+      //foreach ( WeifenLuo.WinFormsUI.Docking.IDockContent doc in Core.MainForm.panelMain.Documents )
+      foreach ( WeifenLuo.WinFormsUI.Docking.IDockContent doc in Core.MainForm.panelMain.Contents )
       {
         BaseDocument baseDoc = (BaseDocument)doc;
         baseDoc.RefreshDisplayOptions();
       }
+      Core.MainForm.Invalidate();
     }
 
 

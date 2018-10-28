@@ -281,6 +281,8 @@ namespace C64Studio
 
     public override void RefreshDisplayOptions()
     {
+      base.RefreshDisplayOptions();
+
       if ( !Core.Settings.BASICUseNonC64Font )
       {
         editSource.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize );

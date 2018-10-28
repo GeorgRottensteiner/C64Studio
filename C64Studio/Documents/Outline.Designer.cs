@@ -64,10 +64,10 @@
       // 
       this.m_ImageListOutline.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("m_ImageListOutline.ImageStream")));
       this.m_ImageListOutline.TransparentColor = System.Drawing.Color.Transparent;
-      this.m_ImageListOutline.Images.SetKeyName(0, "outline-zone.png");
-      this.m_ImageListOutline.Images.SetKeyName(1, "outline-label.png");
-      this.m_ImageListOutline.Images.SetKeyName(2, "outline-constant.png");
-      this.m_ImageListOutline.Images.SetKeyName(3, "outline-preprocessor-constant.png");
+      this.m_ImageListOutline.Images.SetKeyName(0, "outline-zone.ico");
+      this.m_ImageListOutline.Images.SetKeyName(1, "outline-label.ico");
+      this.m_ImageListOutline.Images.SetKeyName(2, "outline-constant.ico");
+      this.m_ImageListOutline.Images.SetKeyName(3, "outline-preprocessor-constant.ico");
       // 
       // toolStripOutline
       // 
@@ -140,8 +140,9 @@
       // editOutlineFilter
       // 
       this.editOutlineFilter.AutoSize = false;
+      this.editOutlineFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.editOutlineFilter.Name = "editOutlineFilter";
-      this.editOutlineFilter.Size = new System.Drawing.Size(200, 25);
+      this.editOutlineFilter.Size = new System.Drawing.Size(200, 23);
       this.editOutlineFilter.TextChanged += new System.EventHandler(this.editOutlineFilter_TextChanged);
       // 
       // Outline

@@ -184,6 +184,7 @@
       this.mainToolConfig = new System.Windows.Forms.ToolStripComboBox();
       this.mainToolToggleTrueDrive = new System.Windows.Forms.ToolStripButton();
       this.mainToolEmulator = new System.Windows.Forms.ToolStripComboBox();
+      this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
       this.mainToolUndo = new System.Windows.Forms.ToolStripButton();
       this.mainToolRedo = new System.Windows.Forms.ToolStripButton();
       this.mainToolFind = new System.Windows.Forms.ToolStripButton();
@@ -200,7 +201,6 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -1224,7 +1224,7 @@
             this.mainToolPrint});
       this.mainTools.Location = new System.Drawing.Point(0, 24);
       this.mainTools.Name = "mainTools";
-      this.mainTools.Size = new System.Drawing.Size(749, 25);
+      this.mainTools.Size = new System.Drawing.Size(780, 25);
       this.mainTools.TabIndex = 4;
       this.mainTools.Text = "toolStrip1";
       // 
@@ -1473,6 +1473,11 @@
       this.mainToolEmulator.Size = new System.Drawing.Size(206, 25);
       this.mainToolEmulator.SelectedIndexChanged += new System.EventHandler(this.mainToolEmulator_SelectedIndexChanged);
       // 
+      // toolStripSeparator14
+      // 
+      this.toolStripSeparator14.Name = "toolStripSeparator14";
+      this.toolStripSeparator14.Size = new System.Drawing.Size(6, 25);
+      // 
       // mainToolUndo
       // 
       this.mainToolUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -1638,11 +1643,6 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
-      // toolStripSeparator14
-      // 
-      this.toolStripSeparator14.Name = "toolStripSeparator14";
-      this.toolStripSeparator14.Size = new System.Drawing.Size(6, 25);
-      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -1661,7 +1661,6 @@
       this.Text = "C64Studio";
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
       this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
-      this.Load += new System.EventHandler(this.MainForm_Load);
       this.Shown += new System.EventHandler(this.MainForm_Shown);
       this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
       this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);

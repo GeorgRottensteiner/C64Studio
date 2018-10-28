@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using C64Studio.IdleQueue;
 using C64Studio.Types;
 using C64Studio.Displayer;
+using C64Studio.CustomRenderer;
 
 // 0.9f - added else for !ifdef macro
 // 0.9b - fixed crash bug if opening project with modified active project
@@ -732,7 +733,7 @@ namespace C64Studio
       }
       else
       {
-        mainToolToggleTrueDrive.Image = Properties.Resources.toolbar_truedrive_disabled;
+        //mainToolToggleTrueDrive.Image = Properties.Resources.toolbar_truedrive_disabled;
       }
 
       // place all toolbars
@@ -796,6 +797,8 @@ namespace C64Studio
       mainTools.Visible = StudioCore.Settings.ToolbarActiveMain;
       debugTools.Visible = StudioCore.Settings.ToolbarActiveDebugger;
 
+      StudioCore.Settings.RefreshDisplayOnAllDocuments( StudioCore );
+
       SetGUIForWaitOnExternalTool( false );
 
       projectToolStripMenuItem.Visible = false;
@@ -830,6 +833,74 @@ namespace C64Studio
           idleRequest.OpenLastSolution = StudioCore.Settings.MRUProjects[0];
 
           IdleQueue.Add( idleRequest );
+        }
+      }
+    }
+
+
+
+    internal void RefreshDisplayOnAllDocuments()
+    {
+      var bgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor );
+      var fgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].FGColor );
+
+      MainMenuStrip.BackColor = bgColor;
+      MainMenuStrip.ForeColor = fgColor;
+
+      mainTools.BackColor = bgColor;
+      mainTools.ForeColor = fgColor;
+      debugTools.BackColor = bgColor;
+      debugTools.ForeColor = fgColor;
+
+      mainStatus.BackColor = bgColor;
+      mainStatus.ForeColor = fgColor;
+
+      mainMenu.Renderer = new ToolStripSeparatorRenderer( StudioCore );
+
+      StudioCore.Theming.ApplyThemeToToolStripItems( mainTools.Items );
+      StudioCore.Theming.ApplyThemeToToolStripItems( debugTools.Items );
+
+      panelMain.Theme.Skin.DockPaneStripSkin.DocumentGradient.InactiveTabGradient.StartColor = StudioCore.Theming.DarkenColor( bgColor );
+      panelMain.Theme.Skin.DockPaneStripSkin.DocumentGradient.InactiveTabGradient.EndColor = StudioCore.Theming.DarkenColor( bgColor );
+      panelMain.Theme.Skin.DockPaneStripSkin.DocumentGradient.InactiveTabGradient.TextColor = fgColor;
+      panelMain.Theme.Skin.DockPaneStripSkin.DocumentGradient.ActiveTabGradient.StartColor = bgColor;
+      panelMain.Theme.Skin.DockPaneStripSkin.DocumentGradient.ActiveTabGradient.EndColor = bgColor;
+      panelMain.Theme.Skin.DockPaneStripSkin.DocumentGradient.ActiveTabGradient.TextColor = fgColor;
+      panelMain.Theme.Skin.DockPaneStripSkin.DocumentGradient.DockStripGradient.StartColor = StudioCore.Theming.DarkenColor( bgColor );
+      panelMain.Theme.Skin.DockPaneStripSkin.DocumentGradient.DockStripGradient.EndColor = StudioCore.Theming.DarkenColor( bgColor );
+
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.ActiveTabGradient.StartColor = bgColor;
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.ActiveTabGradient.EndColor = bgColor;
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.ActiveTabGradient.TextColor = fgColor;
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.InactiveTabGradient.StartColor = StudioCore.Theming.DarkenColor( bgColor );
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.InactiveTabGradient.EndColor = StudioCore.Theming.DarkenColor( bgColor );
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.InactiveTabGradient.TextColor = fgColor;
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.DockStripGradient.StartColor = StudioCore.Theming.DarkenColor( bgColor );
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.DockStripGradient.EndColor = StudioCore.Theming.DarkenColor( bgColor );
+
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.ActiveCaptionGradient.StartColor = bgColor;
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.ActiveCaptionGradient.EndColor = StudioCore.Theming.DarkenColor( bgColor );
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.ActiveCaptionGradient.TextColor = fgColor;
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.InactiveCaptionGradient.StartColor = StudioCore.Theming.DarkenColor( bgColor );
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.InactiveCaptionGradient.EndColor = StudioCore.Theming.DarkenColor( StudioCore.Theming.DarkenColor( bgColor ) );
+      panelMain.Theme.Skin.DockPaneStripSkin.ToolWindowGradient.InactiveCaptionGradient.TextColor = fgColor;
+      panelMain.Theme.Skin.AutoHideStripSkin.DockStripBackground.StartColor = StudioCore.Theming.DarkenColor( bgColor );
+      panelMain.Theme.Skin.AutoHideStripSkin.DockStripBackground.EndColor = StudioCore.Theming.DarkenColor( bgColor );
+
+
+      panelMain.DockBackColor = StudioCore.Theming.DarkenColor( bgColor );
+      panelMain.ForeColor = fgColor;
+      foreach ( var pane in panelMain.Panes )
+      {
+        pane.DockPanel.DockBackColor = bgColor;
+        pane.DockPanel.ForeColor = fgColor;
+      }
+
+      foreach ( Control ctrl in this.Controls )
+      {
+        if ( ctrl is MdiClient )
+        {
+          ctrl.BackColor = StudioCore.Theming.DarkenColor( bgColor );
         }
       }
     }
@@ -5535,13 +5606,6 @@ namespace C64Studio
 
 
 
-    private void MainForm_Load( object sender, EventArgs e )
-    {
-
-    }
-
-
-
     private void MainForm_Shown( object sender, EventArgs e )
     {
       if ( StudioCore.Settings.ToolInfos.Count == 0 )
@@ -6912,15 +6976,6 @@ namespace C64Studio
     private void mainToolUncommentSelection_Click( object sender, EventArgs e )
     {
       ApplyFunction( C64Studio.Types.Function.UNCOMMENT_SELECTION );
-    }
-
-
-
-    internal void RefreshGUIColors()
-    {
-      mainMenu.BackColor = System.Drawing.Color.FromArgb( (int)StudioCore.Settings.SyntaxColoring[Types.ColorableElement.BACKGROUND_CONTROL].BGColor );
-
-      Invalidate();
     }
 
 

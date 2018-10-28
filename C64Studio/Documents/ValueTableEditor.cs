@@ -52,9 +52,8 @@ namespace C64Studio
 
     public override void RefreshDisplayOptions()
     {
+      base.RefreshDisplayOptions();
       /*
-      tabEditor.BackColor = ( (LightToolStripRenderer)ToolStripManager.Renderer ).BackColor;
-
       foreach ( TabPage tab in tabSpriteEditor.TabPages )
       {
         tab.BackColor = ( (LightToolStripRenderer)ToolStripManager.Renderer ).BackColor;

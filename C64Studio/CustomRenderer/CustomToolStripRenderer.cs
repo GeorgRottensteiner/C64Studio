@@ -7,6 +7,26 @@ using System.Windows.Forms;
 
 namespace C64Studio.CustomRenderer
 {
+  class LightThemeColorTable : ProfessionalColorTable
+  {
+    public override Color ToolStripGradientBegin
+    { get { return Color.FromArgb( 0xd6, 0xdb, 0xe9 ); } }
+
+    public override Color ToolStripGradientMiddle
+    { get { return Color.CadetBlue; } }
+
+    public override Color ToolStripGradientEnd
+    { get { return Color.CornflowerBlue; } }
+
+    public override Color MenuStripGradientBegin
+    { get { return Color.FromArgb( 0xd6, 0xdb, 0xe9 ); } }
+
+    public override Color MenuStripGradientEnd
+    { get { return Color.CornflowerBlue; } }
+  }
+
+
+
   internal class LightToolStripRenderer : ToolStripProfessionalRenderer
   {
     public Color      BackColor = Color.FromArgb( 0xd6, 0xdb, 0xe9 );
@@ -15,6 +35,13 @@ namespace C64Studio.CustomRenderer
 
 
 
+    public LightToolStripRenderer() : base( new LightThemeColorTable() )
+    {
+    }
+
+
+
+    /*
     protected override void OnRenderLabelBackground( ToolStripItemRenderEventArgs e )
     {
       e.Graphics.FillRectangle( new SolidBrush( BackColor ), e.Item.Bounds );
@@ -60,7 +87,7 @@ namespace C64Studio.CustomRenderer
     {
       e.Graphics.FillRectangle( new SolidBrush( Color.FromArgb( 0xff, 0x00, 0xff ) ), e.Item.Bounds );
       //base.OnRenderSeparator( e );
-    }
+    }*/
   }
 
 

@@ -1580,6 +1580,7 @@ namespace C64Studio
       {
         showMiniOverviewToolStripMenuItem.Text = "Hide Mini Overview";
       }
+      Core.Theming.ApplyThemeToToolStripItems( contextSource.Items );
     }
 
 
@@ -2496,7 +2497,7 @@ namespace C64Studio
 
     public override void RefreshDisplayOptions()
     {
-      //BackColor = ( (LightToolStripRenderer)ToolStripManager.Renderer ).BackColor;
+      base.RefreshDisplayOptions();
 
       // Font
       editSource.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
@@ -2567,6 +2568,9 @@ namespace C64Studio
       UpdateKeyBinding( C64Studio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
 
       AutoComplete.Enabled = Core.Settings.ASMShowAutoComplete;
+
+      miniMap.ForeColor = GR.Color.Helper.FromARGB( 0xffff0000 );
+      miniMap.BackColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.EMPTY_SPACE].BGColor );
     }
 
 

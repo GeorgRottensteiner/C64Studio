@@ -198,11 +198,12 @@ namespace C64Studio
         {
           continue;
         }
+        /*
         if ( element >= Types.ColorableElement.FIRST_GUI_ELEMENT )
         {
           // TODO - for now GUI elements not custom drawn (yet)
           break;
-        }
+        }*/
         ListViewItem itemSCLocal = new ListViewItem( GR.EnumHelper.GetDescription( element ) );
         itemSCLocal.Tag = Core.Settings.SyntaxColoring[element];
         listColoring.Items.Add( itemSCLocal );
@@ -622,14 +623,6 @@ namespace C64Studio
 
 
 
-    private void RefreshGUIColors()
-    {
-      // is that enough?
-      Core.MainForm.RefreshGUIColors();
-    }
-
-
-
     private void btnChooseFont_Click( object sender, EventArgs e )
     {
       System.Windows.Forms.FontDialog fontDialog = new FontDialog();
@@ -836,14 +829,7 @@ namespace C64Studio
 
     private void ColorsChanged( Types.ColorableElement Color )
     {
-      if ( Color < Types.ColorableElement.FIRST_GUI_ELEMENT )
-      {
-        RefreshDisplayOnDocuments();
-      }
-      else
-      {
-        RefreshGUIColors();
-      }
+      RefreshDisplayOnDocuments();
     }
 
 

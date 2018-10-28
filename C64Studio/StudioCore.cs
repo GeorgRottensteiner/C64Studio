@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C64Studio.CustomRenderer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -19,6 +20,7 @@ namespace C64Studio
     public Tasks.TaskManager  TaskManager;
     public bool               ShuttingDown = false;
     public static string      StudioVersion = "5.8";
+    public StudioTheme        Theming;
 
     public static StudioCore  StaticCore = null;
 
@@ -37,6 +39,7 @@ namespace C64Studio
       Debugging = new Debugging( this );
       Executing = new Executing( this );
       Imaging = new Imaging( this );
+      Theming = new StudioTheme( this );
 
       StaticCore = this;
     }

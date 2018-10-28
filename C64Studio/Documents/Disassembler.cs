@@ -171,6 +171,7 @@ namespace C64Studio
       {
         return;
       }
+      base.RefreshDisplayOptions();
 
       // Font
       editDisassembly.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
