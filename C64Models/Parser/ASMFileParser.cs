@@ -8576,6 +8576,11 @@ namespace C64Studio.Parser
         sourceInfo.LineCount        = newLines.Length;
         sourceInfo.FilenameParent   = ParentFilename;
 
+        string  dummyFile = "";
+        int     localFileIndex = -1;
+        ASMFileInfo.FindTrueLineSource( lineIndex, out dummyFile, out localFileIndex );
+        sourceInfo.LocalStartLine   = localFileIndex;
+
         SourceInfoLog( "-include at global index " + lineIndex );
         SourceInfoLog( "-has " + sourceInfo.LineCount + " lines" );
 
