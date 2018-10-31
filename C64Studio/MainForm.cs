@@ -892,7 +892,7 @@ namespace C64Studio
       panelMain.ForeColor = fgColor;
       foreach ( var pane in panelMain.Panes )
       {
-        pane.DockPanel.DockBackColor = bgColor;
+        pane.DockPanel.DockBackColor = StudioCore.Theming.DarkenColor( bgColor );
         pane.DockPanel.ForeColor = fgColor;
       }
 
