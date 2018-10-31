@@ -1358,6 +1358,23 @@ GREEN=5
 
       var assembly = TestAssemble( source );
 
+      Assert.AreEqual( "01081208E2079E32303638434F4D4D454E54000000EE20D060", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestPseudoOpBASICWithLineNumberMultiCommentAndLabel()
+    {
+      string      source = @"* = $0801
+                            ;jump with line number, comment and label directly after PO
+                            !basic 2018,58,$8f,20,20,20,20,""COMMENT"",label
+                            label
+                                      inc $d020
+                                      rts";
+
+      var assembly = TestAssemble( source );
+
       Assert.AreEqual( "01081808E2079E323037343A8F14141414434F4D4D454E54000000EE20D060", assembly.ToString() );
     }
 

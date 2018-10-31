@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using C64Studio.Types;
+using GR.Collections;
+using GR.Memory;
 using Tiny64;
 
 
@@ -2447,7 +2449,7 @@ namespace C64Studio.Parser
                 case C64Studio.Types.MacroInfo.MacroType.BASIC:
                   {
                     int lineSize = -1;
-                    if ( POBasic( lineInfo.Line, lineInfo.NeededParsedExpression, lineInfo.LineIndex, lineInfo, out lineSize ) != ParseLineResult.OK )
+                    if ( POBasic( lineInfo.Line, lineInfo.NeededParsedExpression, lineInfo.LineIndex, lineInfo, m_TextCodeMappingRaw, out lineSize ) != ParseLineResult.OK )
                     {
                       AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, TokensToExpression( lineInfo.NeededParsedExpression ) );
                     }
@@ -2479,7 +2481,7 @@ namespace C64Studio.Parser
 
               if ( isByte )
               {
-                PODataByte( lineIndex, lineInfo.NeededParsedExpression, 0, lineInfo.NeededParsedExpression.Count, lineInfo, Types.MacroInfo.MacroType.BYTE, false );
+                PODataByte( lineIndex, lineInfo.NeededParsedExpression, 0, lineInfo.NeededParsedExpression.Count, lineInfo, Types.MacroInfo.MacroType.BYTE, lineInfo.LineCodeMapping, false );
               }
               else
               {
@@ -2723,7 +2725,7 @@ namespace C64Studio.Parser
 
 
 
-    private void PODataByte( int LineIndex, List<Types.TokenInfo> lineTokenInfos, int StartIndex, int Count, Types.ASM.LineInfo info, Types.MacroInfo.MacroType Type, bool AllowNeededExpression )
+    private void PODataByte( int LineIndex, List<Types.TokenInfo> lineTokenInfos, int StartIndex, int Count, Types.ASM.LineInfo info, Types.MacroInfo.MacroType Type, GR.Collections.Map<byte, byte> TextMapping, bool AllowNeededExpression )
     {
       GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
 
@@ -4805,13 +4807,13 @@ namespace C64Studio.Parser
 
 
 
-    private ParseLineResult POBasic( string Line, List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, out int lineSizeInBytes )
+    private ParseLineResult POBasic( string Line, List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, GR.Collections.Map<byte,byte> textCodeMapping, out int lineSizeInBytes )
     {
       lineSizeInBytes = 13;
       info.NumBytes   = 13;
 
       int       basicLineNumber = 10;
-      string    basicComment = "";
+      GR.Memory.ByteBuffer    commentData = new ByteBuffer();
 
       List<int> tokenParams = new List<int>();
       bool      paramsValid = false;
@@ -4823,6 +4825,7 @@ namespace C64Studio.Parser
       List<List<Types.TokenInfo>>   poParams = new List<List<Types.TokenInfo>>();
 
       int     firstTokenIndex = 1;
+      int     secondTokenIndex = -1;
       for ( int i = 1; i < lineTokenInfos.Count; ++i )
       {
         if ( ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.SEPARATOR )
@@ -4840,6 +4843,12 @@ namespace C64Studio.Parser
           ++realNumParams;
           firstTokenIndex = i + 1;
         }
+        else if ( ( firstTokenIndex > 1 )
+        &&        ( secondTokenIndex == -1 ) )
+        {
+          secondTokenIndex = i;
+        }
+
       }
       if ( firstTokenIndex < lineTokenInfos.Count )
       {
@@ -4922,9 +4931,10 @@ namespace C64Studio.Parser
         paramsValid = true;
       }
       else if ( ( lineTokenInfos.Count > 1 )
-      &&        ( realNumParams == 3 ) )
+      &&        ( realNumParams >= 3 ) )
       {
-        // !basic <line number>,<comment>,<jump address>
+        info.NeededParsedExpression = null;
+        // !basic <line number>,<comment>[,<comment-bytes>],<jump address>
         if ( !EvaluateTokens( lineIndex, poParams[0], 0, poParams[0].Count, out basicLineNumber ) )
         {
           // could not fully parse
@@ -4945,6 +4955,43 @@ namespace C64Studio.Parser
           return ParseLineResult.RETURN_NULL;
         }
 
+        var dummyLineInfo = new Types.ASM.LineInfo();
+        var subRange = lineTokenInfos.GetRange( secondTokenIndex, lineTokenInfos.Count - secondTokenIndex - 2 );
+
+        //PODataByte( lineIndex, subRange, 0, subRange.Count, dummyLineInfo, MacroInfo.MacroType.BYTE, textCodeMapping, false );
+        //int numBytes = 0;
+        //POText( subRange, dummyLineInfo, Line, textCodeMapping, out numBytes );
+        for ( int i = 1; i < poParams.Count - 1; ++i )
+        {
+          GR.Memory.ByteBuffer    dataOut;
+
+          if ( EvaluateTokensBinary( lineIndex, poParams[i], textCodeMapping, out dataOut ) )
+          {
+            if ( dummyLineInfo.LineData == null )
+            {
+              dummyLineInfo.LineData = new ByteBuffer();
+            }
+            dummyLineInfo.LineData.Append( dataOut );
+          }
+          else
+          {
+            AddError( info.LineIndex,
+                      Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
+                      "Failed to evaluate expression " + TokensToExpression( poParams[i], 0, poParams[i].Count ),
+                      poParams[i][0].StartPos,
+                      poParams[i][poParams[i].Count - 1].EndPos - poParams[i][0].StartPos + 1 );
+            return ParseLineResult.ERROR_ABORT;
+          }
+        }
+
+        var commentDataTemp = dummyLineInfo.LineData;
+        if ( commentDataTemp == null )
+        {
+          commentDataTemp = new GR.Memory.ByteBuffer();
+        }
+
+
+        /*
         if ( ( poParams[1].Count != 1 )
         ||   ( poParams[1][0].Type != Types.TokenInfo.TokenType.LITERAL_STRING ) )
         {
@@ -4953,14 +5000,15 @@ namespace C64Studio.Parser
         }
         basicComment = poParams[1][0].Content;
 
-        var commentDataTemp = Util.ToPETSCII( Util.RemoveQuotes( basicComment ) );
+        var commentDataTemp = Util.ToPETSCII( Util.RemoveQuotes( basicComment ) );*/
         int   lengthOfCommentData = (int)commentDataTemp.Length;
+        /*
         if ( lengthOfCommentData > 0 )
         {
           lengthOfCommentData += 6;
-        }
+        }*/
 
-        if ( !EvaluateTokens( lineIndex, poParams[2], 0, poParams[2].Count, out jumpAddress ) )
+        if ( !EvaluateTokens( lineIndex, poParams[poParams.Count - 1], 0, poParams[poParams.Count - 1].Count, out jumpAddress ) )
         {
           // could not fully parse
           info.NeededParsedExpression = lineTokenInfos;
@@ -4979,16 +5027,14 @@ namespace C64Studio.Parser
           AddError( lineIndex, Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, "Jump target address is out of bounds" );
           return ParseLineResult.RETURN_NULL;
         }
+        commentData = commentDataTemp;
         paramsValid = true;
       }
 
-      if ( ( lineTokenInfos.Count != 1 )
-      &&   ( lineTokenInfos.Count != 2 ) 
-      &&   ( lineTokenInfos.Count != 3 ) )
-
-      if ( !paramsValid )
+      if ( ( lineTokenInfos.Count < 1 )
+      ||   ( !paramsValid ) )
       {
-        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected !basic [<jump address>] or !basic <line number>,<jump address> or !basic <line number>,<comment>,<jump address>" );
+        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected !basic [<jump address>] or !basic <line number>,<jump address> or !basic <line number>,<comment>[,<more comment-bytes>],<jump address>" );
         return ParseLineResult.RETURN_NULL;
       }
 
@@ -5025,20 +5071,6 @@ namespace C64Studio.Parser
       }
 
       numDigits = CalcNumDigits( jumpAddress );
-
-      var commentData = Util.ToPETSCII( Util.RemoveQuotes( basicComment ) );
-
-      if ( commentData.Length > 0 )
-      {
-        commentData = new GR.Memory.ByteBuffer( "3A8F14141414" ) + commentData;
-        /*
-      !byte ':'
-      !byte 0x8F; REM
-      !byte 20
-      !byte 20
-      !byte 20
-      !byte 20*/
-      }
 
       /*
       if ( jumpAddress != -1 )
@@ -5097,6 +5129,48 @@ namespace C64Studio.Parser
       info.NumBytes = lineSizeInBytes;
 
       return ParseLineResult.OK;
+    }
+
+
+
+    private bool EvaluateTokensBinary( int LineIndex, List<TokenInfo> Tokens, Map<byte, byte> TextCodeMapping, out ByteBuffer DataOut )
+    {
+      DataOut = new ByteBuffer();
+
+      int numBytes = 0;
+
+      foreach ( var token in Tokens )
+      {
+        switch ( token.Type )
+        {
+          case TokenInfo.TokenType.LITERAL_STRING:
+            if ( ( token.Content.StartsWith( "\"" ) )
+            &&   ( token.Content.EndsWith( "\"" ) ) )
+            {
+              numBytes += token.Length - 2;
+
+              foreach ( char aChar in token.Content.Substring( 1, token.Content.Length - 2 ) )
+              {
+                DataOut.AppendU8( MapTextCharacter( TextCodeMapping, (byte)aChar ) );
+              }
+            }
+            break;
+          case TokenInfo.TokenType.LITERAL_NUMBER:
+            {
+              int     result = -1;
+              if ( !ParseValue( LineIndex, token.Content, out result ) )
+              {
+                return false;
+              }
+              DataOut.AppendU8( (byte)result );
+            }
+            break;
+          default:
+            return false;
+        }
+      }
+
+      return true;
     }
 
 
@@ -7882,7 +7956,7 @@ namespace C64Studio.Parser
             ||        ( macro.Type == Types.MacroInfo.MacroType.LOW_BYTE )
             ||        ( macro.Type == Types.MacroInfo.MacroType.HIGH_BYTE ) )
             {
-              PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, macro.Type, true );
+              PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, macro.Type, textCodeMapping, true );
               info.Line = parseLine;
               lineSizeInBytes = info.NumBytes;
             }
@@ -8050,7 +8124,7 @@ namespace C64Studio.Parser
             }
             else if ( macro.Type == C64Studio.Types.MacroInfo.MacroType.BASIC )
             {
-              var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, out lineSizeInBytes );
+              var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, out lineSizeInBytes );
               if ( parseResult == ParseLineResult.RETURN_NULL )
               {
                 return null;
@@ -8100,7 +8174,7 @@ namespace C64Studio.Parser
           }
           else if ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.BASIC )
           {
-            var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, out lineSizeInBytes );
+            var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, out lineSizeInBytes );
             if ( parseResult == ParseLineResult.RETURN_NULL )
             {
               return null;
@@ -8175,7 +8249,7 @@ namespace C64Studio.Parser
           ||        ( macroInfo.Type == Types.MacroInfo.MacroType.LOW_BYTE )
           ||        ( macroInfo.Type == Types.MacroInfo.MacroType.HIGH_BYTE ) )
           {
-            PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, macroInfo.Type, true );
+            PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, macroInfo.Type, textCodeMapping, true );
             info.Line = parseLine;
             lineSizeInBytes = info.NumBytes;
           }
