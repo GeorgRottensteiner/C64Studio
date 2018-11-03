@@ -2499,6 +2499,8 @@ namespace C64Studio
     {
       base.RefreshDisplayOptions();
 
+      BackColor = Core.Theming.DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor ) );
+
       // Font
       editSource.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
 

@@ -153,7 +153,8 @@ namespace C64Studio.CustomRenderer
 
     internal Color DarkenColor( Color OrigColor )
     {
-      return System.Drawing.Color.FromArgb( OrigColor.A, (int)( OrigColor.R * 0.75f ), (int)( OrigColor.G * 0.75f ), (int)( OrigColor.B * 0.75f ) );
+      float   darkFactor = 0.85f; // 0.75f
+      return System.Drawing.Color.FromArgb( OrigColor.A, (int)( OrigColor.R * darkFactor ), (int)( OrigColor.G * darkFactor ), (int)( OrigColor.B * darkFactor ) );
     }
 
 

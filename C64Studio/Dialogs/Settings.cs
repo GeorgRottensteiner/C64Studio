@@ -1893,12 +1893,6 @@ namespace C64Studio
         {
           continue;
         }
-        if ( element >= Types.ColorableElement.FIRST_GUI_ELEMENT )
-        {
-          // TODO - for now GUI elements not custom drawn (yet)
-          break;
-        }
-
         var xmlColor = new GR.Strings.XMLElement( "Color" );
         xmlColor.AddAttribute( "Element", element.ToString() );
 
