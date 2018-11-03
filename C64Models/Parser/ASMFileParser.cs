@@ -2449,9 +2449,10 @@ namespace C64Studio.Parser
                 case C64Studio.Types.MacroInfo.MacroType.BASIC:
                   {
                     int lineSize = -1;
-                    if ( POBasic( lineInfo.Line, lineInfo.NeededParsedExpression, lineInfo.LineIndex, lineInfo, m_TextCodeMappingRaw, out lineSize ) != ParseLineResult.OK )
+                    if ( POBasic( lineInfo.Line, lineInfo.NeededParsedExpression, lineInfo.LineIndex, lineInfo, m_TextCodeMappingRaw, false, out lineSize ) != ParseLineResult.OK )
                     {
-                      AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, TokensToExpression( lineInfo.NeededParsedExpression ) );
+                      AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
+                        "Failed to evaluate expression: " + TokensToExpression( lineInfo.NeededParsedExpression ) );
                     }
                     pseudoOpHandled = true;
                   }
@@ -4807,7 +4808,7 @@ namespace C64Studio.Parser
 
 
 
-    private ParseLineResult POBasic( string Line, List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, GR.Collections.Map<byte,byte> textCodeMapping, out int lineSizeInBytes )
+    private ParseLineResult POBasic( string Line, List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, GR.Collections.Map<byte,byte> textCodeMapping, bool AllowLaterEvaluation, out int lineSizeInBytes )
     {
       lineSizeInBytes = 13;
       info.NumBytes   = 13;
@@ -4875,6 +4876,10 @@ namespace C64Studio.Parser
             lineSizeInBytes = 12;
             info.NumBytes = 12;
           }
+          if ( !AllowLaterEvaluation )
+          {
+            info.NeededParsedExpression = poParams[0];
+          }
           return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
         }
         if ( ( jumpAddress < 0 )
@@ -4900,6 +4905,10 @@ namespace C64Studio.Parser
             lineSizeInBytes = 12;
             info.NumBytes = 12;
           }
+          if ( !AllowLaterEvaluation )
+          {
+            info.NeededParsedExpression = poParams[0];
+          }
           return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
         }
         if ( ( basicLineNumber < 0 )
@@ -4919,6 +4928,10 @@ namespace C64Studio.Parser
           {
             lineSizeInBytes = 12;
             info.NumBytes = 12;
+          }
+          if ( !AllowLaterEvaluation )
+          {
+            info.NeededParsedExpression = poParams[1];
           }
           return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
         }
@@ -4946,6 +4959,10 @@ namespace C64Studio.Parser
             lineSizeInBytes = 12;
             info.NumBytes = 12;
           }
+          if ( !AllowLaterEvaluation )
+          {
+            info.NeededParsedExpression = poParams[0];
+          }
           return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
         }
         if ( ( basicLineNumber < 0 )
@@ -4958,9 +4975,6 @@ namespace C64Studio.Parser
         var dummyLineInfo = new Types.ASM.LineInfo();
         var subRange = lineTokenInfos.GetRange( secondTokenIndex, lineTokenInfos.Count - secondTokenIndex - 2 );
 
-        //PODataByte( lineIndex, subRange, 0, subRange.Count, dummyLineInfo, MacroInfo.MacroType.BYTE, textCodeMapping, false );
-        //int numBytes = 0;
-        //POText( subRange, dummyLineInfo, Line, textCodeMapping, out numBytes );
         for ( int i = 1; i < poParams.Count - 1; ++i )
         {
           GR.Memory.ByteBuffer    dataOut;
@@ -4990,34 +5004,22 @@ namespace C64Studio.Parser
           commentDataTemp = new GR.Memory.ByteBuffer();
         }
 
-
-        /*
-        if ( ( poParams[1].Count != 1 )
-        ||   ( poParams[1][0].Type != Types.TokenInfo.TokenType.LITERAL_STRING ) )
-        {
-          AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "String literal expected for comment" );
-          return ParseLineResult.RETURN_NULL;
-        }
-        basicComment = poParams[1][0].Content;
-
-        var commentDataTemp = Util.ToPETSCII( Util.RemoveQuotes( basicComment ) );*/
         int   lengthOfCommentData = (int)commentDataTemp.Length;
-        /*
-        if ( lengthOfCommentData > 0 )
-        {
-          lengthOfCommentData += 6;
-        }*/
 
         if ( !EvaluateTokens( lineIndex, poParams[poParams.Count - 1], 0, poParams[poParams.Count - 1].Count, out jumpAddress ) )
         {
           // could not fully parse
-          info.NeededParsedExpression = lineTokenInfos;
+          info.NeededParsedExpression = lineTokenInfos;// poParams[poParams.Count - 1];
           info.Line = Line;
           // can we use 4 digits?
           if ( info.AddressStart + 12 + lengthOfCommentData < 10000 )
           {
             lineSizeInBytes = 12 + lengthOfCommentData;
             info.NumBytes = 12 + lengthOfCommentData;
+          }
+          if ( !AllowLaterEvaluation )
+          {
+            info.NeededParsedExpression = poParams[poParams.Count - 1];
           }
           return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
         }
@@ -5037,32 +5039,6 @@ namespace C64Studio.Parser
         AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected !basic [<jump address>] or !basic <line number>,<jump address> or !basic <line number>,<comment>[,<more comment-bytes>],<jump address>" );
         return ParseLineResult.RETURN_NULL;
       }
-
-      /*
-      if ( lineTokenInfos.Count == 1 )
-      {
-        // no jump address, auto-target after 2049, so it's always 4 digits
-        // +1, we fix the offset later
-        int   endAddress = info.AddressStart + 8 + 5;
-        jumpAddress = endAddress - 5 + CalcNumDigits( endAddress );
-      }
-      else
-      {
-        if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out jumpAddress ) )
-        {
-          // could not fully parse
-          info.NeededParsedExpression = lineTokenInfos.GetRange( 0, lineTokenInfos.Count );
-          info.Line = Line;
-          return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
-        }
-
-        if ( ( jumpAddress < 0 )
-        ||   ( jumpAddress >= 65536 ) )
-        {
-          AddError( lineIndex, Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, "Jump target address is out of bounds" );
-          return ParseLineResult.RETURN_NULL;
-        }
-      }*/
 
       if ( jumpAddress == -1 )
       {
@@ -5159,6 +5135,19 @@ namespace C64Studio.Parser
             {
               int     result = -1;
               if ( !ParseValue( LineIndex, token.Content, out result ) )
+              {
+                return false;
+              }
+              DataOut.AppendU8( (byte)result );
+            }
+            break;
+          case TokenInfo.TokenType.LABEL_GLOBAL:
+          case TokenInfo.TokenType.LABEL_CHEAP_LOCAL:
+          case TokenInfo.TokenType.LABEL_INTERNAL:
+          case TokenInfo.TokenType.LABEL_LOCAL:
+            {
+              int   result = -1;
+              if ( !ParseValue( LineIndex, token.Content, out result, out numBytes ) )
               {
                 return false;
               }
@@ -8124,7 +8113,7 @@ namespace C64Studio.Parser
             }
             else if ( macro.Type == C64Studio.Types.MacroInfo.MacroType.BASIC )
             {
-              var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, out lineSizeInBytes );
+              var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, out lineSizeInBytes );
               if ( parseResult == ParseLineResult.RETURN_NULL )
               {
                 return null;
@@ -8174,7 +8163,7 @@ namespace C64Studio.Parser
           }
           else if ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.BASIC )
           {
-            var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, out lineSizeInBytes );
+            var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, out lineSizeInBytes );
             if ( parseResult == ParseLineResult.RETURN_NULL )
             {
               return null;
