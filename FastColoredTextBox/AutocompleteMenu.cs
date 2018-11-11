@@ -8,6 +8,32 @@ using System.Text.RegularExpressions;
 
 namespace FastColoredTextBoxNS
 {
+  public class PrepareOpeningEventArgs : EventArgs
+  {
+    public PrepareOpeningEventArgs()
+    {
+      Cancel = false;
+    }
+
+    public PrepareOpeningEventArgs( bool cancel )
+    {
+      Cancel = cancel;
+    }
+
+    public PrepareOpeningEventArgs( bool cancel, string text, Place startPos )
+    {
+      Cancel = cancel;
+      Text = text;
+      StartPos = startPos;
+    }
+
+    public bool Cancel { get; set; }
+    public string Text { get; set; }
+    public Place StartPos { get; set; }
+  }
+
+
+
   /// <summary>
   /// Popup menu for autocomplete
   /// </summary>
@@ -50,6 +76,10 @@ namespace FastColoredTextBoxNS
     /// Occurs when popup menu is opening
     /// </summary>
     public new event EventHandler<CancelEventArgs> Opening;
+    /// <summary>
+    /// Occurs before popup menu is filtered pre opening
+    /// </summary>
+    public new event EventHandler<PrepareOpeningEventArgs> PrepareOpening;
     /// <summary>
     /// Allow TAB for select menu item
     /// </summary>
@@ -262,6 +292,19 @@ namespace FastColoredTextBoxNS
         Items.toolTip = value;
       }
     }
+
+
+
+    internal void OnPrepareOpening( PrepareOpeningEventArgs args )
+    {
+      if ( PrepareOpening != null )
+      {
+        PrepareOpening( this, args );
+      }
+    }
+
+
+
   }
 
   [System.ComponentModel.ToolboxItem( false )]
@@ -455,8 +498,18 @@ namespace FastColoredTextBoxNS
       //get fragment around caret
       Range fragment = tb.Selection.GetFragment( Menu.SearchPattern );
       string text = fragment.Text;
-      //calc screen point for popup menu
-      Point point = tb.PlaceToPoint( fragment.End );
+
+      PrepareOpeningEventArgs args = new PrepareOpeningEventArgs( false, text, fragment.Start );
+      Menu.OnPrepareOpening( args );
+      if ( args.Cancel )
+      {
+        Menu.Close();
+        return;
+      }
+
+
+        //calc screen point for popup menu
+        Point point = tb.PlaceToPoint( fragment.End );
       point.Offset( 2, tb.CharHeight );
       //
       if ( forced || ( text.Length >= Menu.MinFragmentLength
@@ -491,8 +544,8 @@ namespace FastColoredTextBoxNS
       {
         if ( !Menu.Visible )
         {
-          CancelEventArgs args = new CancelEventArgs();
-          Menu.OnOpening( args );
+          CancelEventArgs args2 = new CancelEventArgs();
+          Menu.OnOpening( args2 );
           if ( !args.Cancel )
             Menu.Show( tb, point );
         }

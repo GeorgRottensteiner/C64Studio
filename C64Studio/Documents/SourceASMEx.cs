@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using C64Studio.CustomRenderer;
 using C64Studio.Types;
+using FastColoredTextBoxNS;
 
 namespace C64Studio
 {
@@ -117,6 +118,7 @@ namespace C64Studio
       AutoComplete = new FastColoredTextBoxNS.AutocompleteMenu( editSource );
       //AutoComplete.SearchPattern = @"([A-Za-z_.]|(?<=[A-Za-z_.][\w]))";
       AutoComplete.SearchPattern = @"[A-Za-z_.][\w.]*";
+      AutoComplete.PrepareOpening += AutoComplete_PrepareOpening;
 
       editSource.AutoIndentExistingLines = false;
       editSource.AutoIndentChars = false;
@@ -180,6 +182,39 @@ namespace C64Studio
       m_LineInfos.Add( new Types.ASM.LineInfo() );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+    }
+
+
+
+    private void AutoComplete_PrepareOpening( object sender, PrepareOpeningEventArgs e )
+    {
+      // check the 
+      int     sourceLineIndex = e.StartPos.iLine;
+      if ( ( sourceLineIndex < 0 )
+      ||   ( sourceLineIndex >= editSource.LinesCount ) )
+      {
+        return;
+      }
+
+      // TODO - adjust the content depending on the content
+      string    line = editSource.Lines[sourceLineIndex];
+      var tokens = Parser.ParseTokenInfo( line, 0, line.Length );
+
+      if ( ( tokens.Count > 0 )
+      &&   ( tokens[0].Type == TokenInfo.TokenType.MACRO )
+      &&   ( tokens[0].Content.ToUpper() == "!BASIC" ) )
+      {
+        var   newList = new List<FastColoredTextBoxNS.AutocompleteItem>();
+
+        int i = 0;
+        newList.Add( new FastColoredTextBoxNS.AutocompleteItem( "hullo" ) { ToolTipTitle = tokens[i].Content + ",x", ToolTipText = tokens[i].Content + ",x" } );
+
+        AutoComplete.Items.SetAutocompleteItems( newList );
+        return;
+      }
+
+      // common stuff
+      FilterAutoComplete();
     }
 
 
