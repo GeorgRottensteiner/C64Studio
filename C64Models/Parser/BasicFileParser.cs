@@ -794,13 +794,16 @@ namespace C64Studio.Parser
           {
             insideMacro = false;
 
-            string macro = Line.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
+            if ( !insideStringLiteral )
+            {
+              string macro = Line.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
 
-            Token tokenMacro = new Token();
-            tokenMacro.TokenType  = Token.Type.MACRO;
-            tokenMacro.Content    = macro;
-            tokenMacro.StartIndex = macroStartPos;
-            info.Tokens.Add( tokenMacro );
+              Token tokenMacro = new Token();
+              tokenMacro.TokenType = Token.Type.MACRO;
+              tokenMacro.Content = macro;
+              tokenMacro.StartIndex = macroStartPos;
+              info.Tokens.Add( tokenMacro );
+            }
           }
           ++posInLine;
           continue;

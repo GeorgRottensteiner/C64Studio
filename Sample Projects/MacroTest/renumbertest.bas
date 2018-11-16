@@ -3,3 +3,5 @@
 30IFA$="G"THEN50
 40?"ENDE":END
 50?"YOU WIN!"
+
+400 P=(A$="{RIGHT}")*-1+(A$="{LEFT}")
