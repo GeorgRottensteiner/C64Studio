@@ -1,4 +1,6 @@
 ﻿C64Studio
+left-arrow character , up-arrow character (as found above the pi-sign on the C64)
+
 o DPI-Skalierung wirkt sich komisch aus (Windows Skalierung der GUI/Oberfläche auf 125%)
 
 o TODO - Nested for loops using a local label from outside:

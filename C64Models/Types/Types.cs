@@ -895,7 +895,7 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_P, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 144, true, 16, false, (char)0xee90, true, "REVERSE P" ).Replacements.Add( "CTRL-P" );
 
       AddC64Key( KeyboardKey.KEY_CURSOR_UP_DOWN, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 17, true, 17, true, (char)0xee91, true, "CURSOR DOWN", "CUR DOWN" ).Replacements.Add( "DOWN" );
-      AddC64Key( KeyboardKey.KEY_9, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 18, true, 18, true, (char)0xee92, true, "REVERSE ON", "RVS ON" ).Replacements.AddRange( new string[] { "RVSON", "RVON" } );
+      AddC64Key( KeyboardKey.KEY_9, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 18, true, 18, true, (char)0xee92, true, "REVERSE ON", "RVS ON" ).Replacements.AddRange( new string[] { "RVSON", "RVON", "RVS" } );
       AddC64Key( KeyboardKey.KEY_CLR_HOME, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 19, true, 19, true, (char)0xee93, true, "HOME", "HOM" ).Replacements.AddRange( new string[] { "HOME", "HOM" } );
       AddC64Key( KeyboardKey.KEY_INST_DEL, KeyModifier.NORMAL, KeyType.EDITOR_CONTROL_CODE, 128 + 20, true, 20, true, (char)0xee94, true, "DEL" ).Replacements.AddRange( new string[]{ "DEL", "DELETE" } );
 
@@ -912,7 +912,7 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_6, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 30, true, 30, true, (char)0xee9e, true, "GREEN", "GRN" ).Replacements.AddRange( new string[] { "GREEN", "GRN" } );
       AddC64Key( KeyboardKey.KEY_7, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 31, true, 31, true, (char)0xee9f, true, "BLUE", "BLU" ).Replacements.AddRange( new string[] { "BLUE", "BLU" } );
       //  32- 63 $20-$3F       0 $00         32- 63 $20-$3F  
-      AddC64Key( KeyboardKey.KEY_SPACE, KeyModifier.NORMAL, KeyType.NORMAL, 32, true, 32, true, ' ', true, "SPACE" );
+      AddC64Key( KeyboardKey.KEY_SPACE, KeyModifier.NORMAL, KeyType.NORMAL, 32, true, 32, true, ' ', true, "SPACE", "SPC" ).Replacements.AddRange( new string[] { "SPACE", "SPACES" } );
       AddC64Key( KeyboardKey.KEY_1, KeyModifier.SHIFT, KeyType.NORMAL, 33, true, 33, true, '!', true );
       AddC64Key( KeyboardKey.KEY_2, KeyModifier.SHIFT, KeyType.NORMAL, 34, true, 34, true, '"', true );
       AddC64Key( KeyboardKey.KEY_3, KeyModifier.SHIFT, KeyType.NORMAL, 35, true, 35, true, '#', true );
@@ -975,8 +975,8 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 91 - 64, true, 91, true, '[', true );//(char)0xee1b, true );//'[', true );
       AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.NORMAL, KeyType.NORMAL, 92 - 64, true, 92, true, '£', true ).Replacements.Add( "POUND" );
       AddC64Key( KeyboardKey.KEY_SEMI_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 93 - 64, true, 93, true, ']', true );//(char)0xee1d, true );// ']', true );
-      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.NORMAL, KeyType.NORMAL, 94 - 64, true, 94, true, (char)0xee1e, true, "ARROW UP" );
-      AddC64Key( KeyboardKey.KEY_ARROW_LEFT, KeyModifier.NORMAL, KeyType.NORMAL, 95 - 64, true, 95, true, (char)0xee1f, true, "ARROW LEFT" );   // arrow left
+      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.NORMAL, KeyType.NORMAL, 94 - 64, true, 94, true, (char)0xee1e, true, "ARROW UP" ).Replacements.Add( "ARROW UP" );
+      AddC64Key( KeyboardKey.KEY_ARROW_LEFT, KeyModifier.NORMAL, KeyType.NORMAL, 95 - 64, true, 95, true, (char)0xee1f, true, "ARROW LEFT" ).Replacements.Add( "ARROW LEFT" ); // arrow left
       //  96-127 $60-$7F     -32 $E0         64- 95 $40-$5F  
       AddC64Key( KeyboardKey.KEY_STAR, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 96 - 32, true, 96, true, (char)0xee40, true, "SHIFT *" );   // Shift *
       AddC64Key( KeyboardKey.KEY_A, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 97 - 32, true, 97, true, (char)0xee41, true, "SHIFT A" );   // Shift-A
@@ -1037,7 +1037,7 @@ namespace C64Studio.Types
 
       AddC64Key( KeyboardKey.KEY_1, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 144 + 64, true, 144, true, (char)0xeed0, true, "BLACK", "BLK" ).Replacements.AddRange( new string[] { "BLACK", "BLK" } );   // black
       AddC64Key( KeyboardKey.KEY_CURSOR_UP_DOWN, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 145 + 64, true, 145, true, (char)0xeed1, true, "CURSOR UP", "CUR UP" ).Replacements.Add( "UP" );   // TODO cursor up
-      AddC64Key( KeyboardKey.KEY_0, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 146 + 64, true, 146, true, (char)0xeed2, true, "REVERSE OFF", "RVS OFF" ).Replacements.AddRange( new string[] { "RVSOFF", "RVOF" } );   // TODO rvs off
+      AddC64Key( KeyboardKey.KEY_0, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 146 + 64, true, 146, true, (char)0xeed2, true, "REVERSE OFF", "RVS OFF" ).Replacements.AddRange( new string[] { "RVSOFF", "RVOF", "OFF" } );   // TODO rvs off
       AddC64Key( KeyboardKey.KEY_CLR_HOME, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 147 + 64, true, 147, true, (char)0xeed3, true, "CLEAR", "CLR" ).Replacements.Add( "CLR" );   // clr (with shift)
       AddC64Key( KeyboardKey.KEY_CLR_HOME, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 147 + 64, true, 147, true, (char)0xeed3, true, "CLEAR", "CLR" ).Replacements.Add( "CLR" );   // clr (with commodore)
       AddC64Key( KeyboardKey.KEY_2, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 149 + 64, true, 149, true, (char)0xeed5, true, "BROWN", "BRN" ).Replacements.AddRange( new string[] { "BROWN", "BRN" } );   // brown
