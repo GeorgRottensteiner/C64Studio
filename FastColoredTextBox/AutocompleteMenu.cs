@@ -79,7 +79,7 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Occurs before popup menu is filtered pre opening
     /// </summary>
-    public new event EventHandler<PrepareOpeningEventArgs> PrepareOpening;
+    public event EventHandler<PrepareOpeningEventArgs> PrepareOpening;
     /// <summary>
     /// Allow TAB for select menu item
     /// </summary>
