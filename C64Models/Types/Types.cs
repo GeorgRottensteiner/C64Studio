@@ -1450,6 +1450,7 @@ namespace C64Studio.Types
   {
     public enum ScopeType
     {
+      UNKNOWN,
       IF_OR_IFDEF,
       LOOP,
       MACRO_FUNCTION,
@@ -1464,7 +1465,6 @@ namespace C64Studio.Types
     public Types.LoopInfo           Loop = null;
     public Types.MacroFunctionInfo  Macro = null;
     public ScopeType                Type = ScopeType.LOOP;
-    public bool                     Zone = false;
 
     public ScopeInfo( ScopeType Type )
     {

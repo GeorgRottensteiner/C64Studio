@@ -1870,6 +1870,30 @@ ContrivedTest:
 
 
 
+    [TestMethod]
+    public void TestZoneInsideInactiveScope()
+    {
+      string      source = @"magicValue = 0
+                      ; ----------------------------------------------------------------------------
+                        *=$0801
+                        !basic
+                        lda #2  ; Red
+                        !if (magicValue = 42) {
+                          jsr MagicLabel
+                        }
+                        sta $d020
+                        rts
+                      ; ----------------------------------------------------------------------------
+                      !if (magicValue = 42) {
+                      MagicLabel: !zone {
+                          lda #5  ; Green
+                          rts
+                        }
+                      }";
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "01080B080A009E32303631000000A9028D20D060", assembly.ToString() );
+    }
 
   }
 }

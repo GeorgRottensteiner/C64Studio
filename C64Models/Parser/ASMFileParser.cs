@@ -3257,6 +3257,17 @@ namespace C64Studio.Parser
               stackDefineBlocks.Add( scope );
               OnScopeAdded( scope );
             }
+            else if ( ( lineTokenInfos[0].Content.ToUpper().StartsWith( "!ZONE" ) )
+            &&        ( lineTokenInfos.Count >= 2 )
+            &&        ( lineTokenInfos[1].Content == "{" ) )
+            {
+              Types.ScopeInfo   zoneScope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
+              zoneScope.StartIndex = lineIndex;
+              zoneScope.Active = false;
+
+              stackDefineBlocks.Add( zoneScope );
+              OnScopeAdded( zoneScope );
+            }
             continue;
           }
         }
@@ -6208,6 +6219,8 @@ namespace C64Studio.Parser
           if ( !isActive )
           {
             // defined away
+            Types.ScopeInfo.ScopeType   detectedScopeType = ScopeInfo.ScopeType.UNKNOWN;
+
             // TODO - HACK UGLY - use keywords from AssemblerSettings!
             if ( TokenIsConditionalThatStartsScope( lineTokenInfos[0] ) )
             {
@@ -6230,11 +6243,11 @@ namespace C64Studio.Parser
               stackScopes.Add( scope );
               OnScopeAdded( scope );
             }
-            else if ( ( TokenStartsScope( lineTokenInfos[0] ) )
+            else if ( ( TokenStartsScope( lineTokenInfos[0], out detectedScopeType ) )
             &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" ) )
             {
               // ACME style other scopes with bracket
-              Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ADDRESS );
+              Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( detectedScopeType );
               scope.StartIndex = lineIndex;
               scope.Active = false;
               stackScopes.Add( scope );
@@ -6483,17 +6496,14 @@ namespace C64Studio.Parser
                   }
                   break;
                 case Types.ScopeInfo.ScopeType.ZONE:
-                  if ( closingScope.Zone )
+                  if ( lineTokenInfos.Count != 1 )
                   {
-                    if ( lineTokenInfos.Count != 1 )
-                    {
-                      AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
-                      continue;
-                    }
-                    OnScopeRemoved( lineIndex, stackScopes );
-                    stackScopes.RemoveAt( stackScopes.Count - 1 );
-                    zoneName = "";
+                    AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
+                    continue;
                   }
+                  OnScopeRemoved( lineIndex, stackScopes );
+                  stackScopes.RemoveAt( stackScopes.Count - 1 );
+                  zoneName = "";
                   break;
                 case Types.ScopeInfo.ScopeType.PSEUDO_PC:
                   PORealPC( info );
@@ -7693,6 +7703,7 @@ namespace C64Studio.Parser
                 // Skip !if check inside macro definition
 
                 // still need to remove scope!
+                OnScopeRemoved( lineIndex, stackScopes );
                 stackScopes.RemoveAt( stackScopes.Count - 1 );
                 continue;
               }
@@ -7704,8 +7715,8 @@ namespace C64Studio.Parser
               }
               else
               {
+                OnScopeRemoved( lineIndex, stackScopes );
                 stackScopes.RemoveAt( stackScopes.Count - 1 );
-                //Debug.Log( "Add Scope endif " + lineIndex );
               }
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.ZONE )
@@ -7718,10 +7729,9 @@ namespace C64Studio.Parser
 
                 Types.ScopeInfo   zoneScope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
                 zoneScope.StartIndex = lineIndex;
-                zoneScope.Zone = true;
 
                 stackScopes.Add( zoneScope );
-                //Debug.Log( "Add Scope zone " + lineIndex );
+                OnScopeAdded( zoneScope );
               }
               if ( lineTokenInfos.Count > 2 )
               {
@@ -8574,12 +8584,38 @@ namespace C64Studio.Parser
 
 
 
-    private bool TokenStartsScope( TokenInfo Token )
+    private bool MatchesMacroByType( string Token, MacroInfo.MacroType Type )
     {
-      if ( ( Token.Type == TokenInfo.TokenType.MACRO )
-      &&   ( Token.Content.ToUpper() == MacroByType( MacroInfo.MacroType.ADDRESS ) ) )
+      string    upToken = Token.ToUpper();
+
+      foreach ( var macro in m_AssemblerSettings.Macros )
       {
-        return true;
+        if ( ( macro.Value.Type == Type )
+        &&   ( macro.Value.Keyword == upToken ) )
+        {
+          return true;
+        }
+      }
+      return false;
+    }
+
+
+
+    private bool TokenStartsScope( TokenInfo Token, out Types.ScopeInfo.ScopeType Type )
+    {
+      Type = ScopeInfo.ScopeType.UNKNOWN;
+      if ( Token.Type == TokenInfo.TokenType.MACRO )
+      {
+        if ( MatchesMacroByType( Token.Content, MacroInfo.MacroType.ADDRESS ) )
+        {
+          Type = ScopeInfo.ScopeType.ADDRESS;
+          return true;
+        }
+        if ( MatchesMacroByType( Token.Content, MacroInfo.MacroType.ZONE ) )
+        {
+          Type = ScopeInfo.ScopeType.ZONE;
+          return true;
+        }
       }
       return false;
     }
@@ -8842,7 +8878,6 @@ namespace C64Studio.Parser
         scope.Active = true;
         scope.Loop = loop;
         scope.StartIndex = lineIndex;
-        scope.Zone = false;
         stackScopes.Add( scope );
         return;
       }
@@ -8964,7 +8999,6 @@ namespace C64Studio.Parser
               scope.Active = true;
               scope.Loop = loop;
               scope.StartIndex = lineIndex;
-              scope.Zone = false;
               stackScopes.Add( scope );
 
               AddLabel( loop.Label, loop.StartValue, lineIndex + 1, zoneName, lineTokenInfos[1].StartPos, lineTokenInfos[1].Length );
