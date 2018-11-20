@@ -2884,6 +2884,7 @@ namespace C64Studio
 
     internal void SetLineInfos( Types.ASM.FileInfo FileInfo )
     {
+      GR.Collections.Set<int>   setLines = new GR.Collections.Set<int>();
       foreach ( var sourceInfo in FileInfo.SourceInfo )
       {
         if ( GR.Path.IsPathEqual( sourceInfo.Value.FullPath, DocumentInfo.FullPath ) )
@@ -2895,7 +2896,21 @@ namespace C64Studio
             &&   ( sourceInfo.Value.LocalStartLine + i >= 0 )
             &&   ( FileInfo.LineInfo.ContainsKey( sourceInfo.Value.GlobalStartLine + i ) ) )
             {
-              m_LineInfos[sourceInfo.Value.LocalStartLine + i] = FileInfo.LineInfo[sourceInfo.Value.GlobalStartLine + i];
+              if ( !setLines.ContainsValue( sourceInfo.Value.LocalStartLine + i ) )
+              {
+                m_LineInfos[sourceInfo.Value.LocalStartLine + i] = FileInfo.LineInfo[sourceInfo.Value.GlobalStartLine + i];
+                //setLines.Add( sourceInfo.Value.LocalStartLine + i );
+              }
+              else
+              {
+                // accumulate values!
+                var curInfo = m_LineInfos[sourceInfo.Value.LocalStartLine + i];
+                var newInfo = FileInfo.LineInfo[sourceInfo.Value.GlobalStartLine + i];
+
+                curInfo.NumBytes += newInfo.NumBytes;
+
+                // TODO - cycles!
+              }
             }
           }
         }

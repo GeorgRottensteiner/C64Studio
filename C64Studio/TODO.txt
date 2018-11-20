@@ -1,5 +1,5 @@
 ﻿C64Studio
-left-arrow character , up-arrow character (as found above the pi-sign on the C64)
+o Combined line cycle and byte count info (currently only info of first line is shown in border!)
 
 o DPI-Skalierung wirkt sich komisch aus (Windows Skalierung der GUI/Oberfläche auf 125%)
 
