@@ -12,13 +12,15 @@ namespace C64Studio
   {
     SourceBasicEx m_Basic = null;
     StudioCore    m_Core = null;
+    bool          m_SymbolMode = false;
 
 
 
-    public FormRenumberBASIC( StudioCore Core, SourceBasicEx Basic )
+    public FormRenumberBASIC( StudioCore Core, SourceBasicEx Basic, bool SymbolMode )
     {
       m_Basic = Basic;
       m_Core  = Core;
+      m_SymbolMode = SymbolMode;
 
       InitializeComponent();
 
@@ -86,6 +88,17 @@ namespace C64Studio
       int lineStep = GR.Convert.ToI32( editLineStep.Text );
 
       string newText = m_Core.Compiling.ParserBasic.Renumber( lineStart, lineStep );
+
+      if ( m_SymbolMode )
+      {
+        bool hadError = false;
+        newText = m_Core.Compiling.ParserBasic.ReplaceAllMacrosBySymbols( newText, out hadError );
+      }
+      else
+      {
+        newText = m_Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( newText );
+      }
+
       m_Basic.FillContent( newText );
       Close();
     }

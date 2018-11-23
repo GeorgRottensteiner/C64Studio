@@ -595,7 +595,7 @@ namespace C64Studio
         }
         else
         {
-          basicText = ReplaceAllSymbolsByMacros( basicText );
+          basicText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( basicText );
         }
 
         editSource.Text = basicText;
@@ -618,95 +618,6 @@ namespace C64Studio
         EnableFileWatcher();
       }
       return true;
-    }
-
-
-
-    private string ReplaceAllSymbolsByMacros( string BasicText )
-    {
-      for ( int i = 0; i < BasicText.Length; ++i )
-      {
-        char    chartoCheck = BasicText[i];
-
-        if ( chartoCheck > (char)255 )
-        {
-          var c64Key = Types.ConstantData.FindC64KeyByUnicode( chartoCheck );
-          if ( c64Key != null )
-          {
-            if ( c64Key.Replacements.Count > 0 )
-            {
-              string    replacement = c64Key.Replacements[0];
-
-              BasicText = BasicText.Substring( 0, i ) + "{" + replacement + "}" + BasicText.Substring( i + 1 );
-              i += replacement.Length - 1;
-            }
-          }
-        }
-      }
-      return BasicText;
-    }
-
-
-
-    private string ReplaceAllMacrosBySymbols( string BasicText, out bool HadError )
-    {
-      StringBuilder     sb = new StringBuilder();
-
-      int               posInLine = 0;
-      int               macroStartPos = 0;
-      bool              insideMacro = false;
-
-      HadError = false;
-
-      while ( posInLine < BasicText.Length )
-      {
-        char    curChar = BasicText[posInLine];
-        if ( insideMacro )
-        {
-          if ( curChar == '}' )
-          {
-            insideMacro = false;
-
-            string macro = BasicText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
-            int macroCount = 1;
-
-            macro = Parser.BasicFileParser.DetermineMacroCount( macro, out macroCount );
-
-            bool  foundMacro = false;
-            foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
-            {
-              if ( key.Replacements.Contains( macro ) )
-              {
-                for ( int i = 0; i < macroCount; ++i )
-                {
-                  sb.Append( key.CharValue );
-                }
-                foundMacro = true;
-                break;
-              }
-            }
-            if ( !foundMacro )
-            {
-              Debug.Log( "Unknown macro " + macro );
-              HadError = true;
-              return null;
-            }
-          }
-          ++posInLine;
-          continue;
-        }
-        if ( curChar == '{' )
-        {
-          insideMacro = true;
-          macroStartPos = posInLine;
-          ++posInLine;
-          continue;
-        }
-        // normal chars are passed on (also tabs, cr, lf)
-        sb.Append( curChar );
-        ++posInLine;
-      }
-      return sb.ToString();
     }
 
 
@@ -1501,7 +1412,7 @@ namespace C64Studio
 
     private void renumberToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      FormRenumberBASIC     formRenum = new FormRenumberBASIC( Core, this );
+      FormRenumberBASIC     formRenum = new FormRenumberBASIC( Core, this, m_SymbolMode );
 
       formRenum.ShowDialog();
     }
@@ -1519,11 +1430,11 @@ namespace C64Studio
 
       if ( m_SymbolMode )
       {
-        newText = ReplaceAllMacrosBySymbols( editSource.Text, out hadError );
+        newText = Core.Compiling.ParserBasic.ReplaceAllMacrosBySymbols( editSource.Text, out hadError );
       }
       else
       {
-        newText = ReplaceAllSymbolsByMacros( editSource.Text );
+        newText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( editSource.Text );
       }
       if ( hadError )
       {

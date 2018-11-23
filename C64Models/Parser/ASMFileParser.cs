@@ -8683,18 +8683,19 @@ namespace C64Studio.Parser
         SourceInfoLog( "-include at global index " + lineIndex );
         SourceInfoLog( "-has " + sourceInfo.LineCount + " lines" );
 
-        InsertSourceInfo( sourceInfo );
+        InsertSourceInfo( sourceInfo, true, true );
 
         string[] result = new string[Lines.Length + sourceInfo.LineCount];
 
-        System.Array.Copy( Lines, 0, result, 0, lineIndex );
-        System.Array.Copy( newLines, 0, result, lineIndex, newLines.Length );
+        System.Array.Copy( Lines, 0, result, 0, lineIndex + 1 );
+        System.Array.Copy( newLines, 0, result, lineIndex + 1, newLines.Length );
 
         // this keeps the !source line in the final code, makes working with source infos easier though
-        System.Array.Copy( Lines, lineIndex, result, lineIndex + newLines.Length, Lines.Length - lineIndex );
+        System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + newLines.Length + 1, Lines.Length - lineIndex - 1 );
 
         // replace !source with empty line (otherwise source infos would have one line more!)
-        result[lineIndex + newLines.Length] = "";
+        //result[lineIndex + newLines.Length] = "";
+        result[lineIndex] = "";
 
         Lines = result;
 
@@ -9447,7 +9448,7 @@ namespace C64Studio.Parser
 
     private void InsertSourceInfo( Types.ASM.SourceInfo sourceInfo )
     {
-      InsertSourceInfo( sourceInfo, true, true );
+      InsertSourceInfo( sourceInfo, true, false );
     }
 
 
@@ -9462,6 +9463,11 @@ namespace C64Studio.Parser
     private void InsertSourceInfo( Types.ASM.SourceInfo sourceInfo, bool AllowShifting, bool OverwriteFirstLineOfOverlapping )
     {
       int lineCount = sourceInfo.LineCount;
+      /*
+      if ( OverwriteFirstLineOfOverlapping )
+      {
+        --lineCount;
+      }*/
 
       // move zones
       foreach ( var zoneInfo in ASMFileInfo.Zones.Values )

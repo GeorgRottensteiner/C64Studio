@@ -1414,6 +1414,7 @@ namespace C64Studio.Parser
             {
               var c64Key = Types.ConstantData.FindC64KeyByPETSCII( nextByte );
               if ( ( c64Key != null )
+              &&   ( nextByte != 32 )   // do not replace for Space
               &&   ( c64Key.Replacements.Count > 0 ) )
               {
                 stringLiteral += "{" + c64Key.Replacements[0] + "}";
@@ -2356,9 +2357,19 @@ namespace C64Studio.Parser
       }
 
       curLine = LineStart;
+
+      int     firstLineIndex = -1;
       foreach ( KeyValuePair<int,LineInfo> lineInfoOrig in m_LineInfos )
       {
-        var lineInfo = PureTokenizeLine( lineInfoOrig.Value.Line, lineInfoOrig.Value.LineNumber );
+        ++firstLineIndex;
+        // keep empty lines
+        while ( firstLineIndex < lineInfoOrig.Key )
+        {
+          sb.Append( "\r\n" );
+          ++firstLineIndex;
+        }
+        //var lineInfo = PureTokenizeLine( lineInfoOrig.Value.Line, lineInfoOrig.Value.LineNumber );
+        var lineInfo = TokenizeLine( lineInfoOrig.Value.Line, 0, ref curLine );
         for ( int i = 0; i < lineInfo.Tokens.Count; ++i )
         {
           Token token = lineInfo.Tokens[i];
@@ -2389,6 +2400,7 @@ namespace C64Studio.Parser
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number
+              sb.Append( token.Content );
               int nextIndex = i + 1;
               bool mustBeComma = false;
               while ( nextIndex < lineInfo.Tokens.Count )
@@ -2402,13 +2414,14 @@ namespace C64Studio.Parser
                     int refNo = GR.Convert.ToI32( nextToken.Content );
                     if ( lineNumberReference.ContainsKey( refNo ) )
                     {
-                      sb.Append( token.Content + lineNumberReference[refNo].ToString() );
+                      sb.Append( lineNumberReference[refNo].ToString() );
                     }
                     else
                     {
                       // no reference found, keep old value
-                      sb.Append( token.Content + nextToken.Content );
+                      sb.Append( nextToken.Content );
                     }
+                    ++nextIndex;
                   }
                   else if ( ( nextToken.TokenType == Token.Type.DIRECT_TOKEN )
                   &&        ( nextToken.Content == " " ) )
@@ -2432,7 +2445,9 @@ namespace C64Studio.Parser
                     // error or end, not a comma
                     break;
                   }
+                  sb.Append( nextToken.Content );
                   mustBeComma = false;
+                  ++nextIndex;
                 }
               }
               i = nextIndex;
@@ -2459,6 +2474,95 @@ namespace C64Studio.Parser
       if ( m_LineInfos.Count > 0 )
       {
         sb.Remove( sb.Length - 2, 2 );
+      }
+      return sb.ToString();
+    }
+
+
+
+    public string ReplaceAllSymbolsByMacros( string BasicText )
+    {
+      for ( int i = 0; i < BasicText.Length; ++i )
+      {
+        char    chartoCheck = BasicText[i];
+
+        if ( chartoCheck > (char)255 )
+        {
+          var c64Key = Types.ConstantData.FindC64KeyByUnicode( chartoCheck );
+          if ( c64Key != null )
+          {
+            if ( c64Key.Replacements.Count > 0 )
+            {
+              string    replacement = c64Key.Replacements[0];
+
+              BasicText = BasicText.Substring( 0, i ) + "{" + replacement + "}" + BasicText.Substring( i + 1 );
+              i += replacement.Length - 1;
+            }
+          }
+        }
+      }
+      return BasicText;
+    }
+
+
+
+    public string ReplaceAllMacrosBySymbols( string BasicText, out bool HadError )
+    {
+      StringBuilder     sb = new StringBuilder();
+
+      int               posInLine = 0;
+      int               macroStartPos = 0;
+      bool              insideMacro = false;
+
+      HadError = false;
+
+      while ( posInLine < BasicText.Length )
+      {
+        char    curChar = BasicText[posInLine];
+        if ( insideMacro )
+        {
+          if ( curChar == '}' )
+          {
+            insideMacro = false;
+
+            string macro = BasicText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
+            int macroCount = 1;
+
+            macro = Parser.BasicFileParser.DetermineMacroCount( macro, out macroCount );
+
+            bool  foundMacro = false;
+            foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
+            {
+              if ( key.Replacements.Contains( macro ) )
+              {
+                for ( int i = 0; i < macroCount; ++i )
+                {
+                  sb.Append( key.CharValue );
+                }
+                foundMacro = true;
+                break;
+              }
+            }
+            if ( !foundMacro )
+            {
+              Debug.Log( "Unknown macro " + macro );
+              HadError = true;
+              return null;
+            }
+          }
+          ++posInLine;
+          continue;
+        }
+        if ( curChar == '{' )
+        {
+          insideMacro = true;
+          macroStartPos = posInLine;
+          ++posInLine;
+          continue;
+        }
+        // normal chars are passed on (also tabs, cr, lf)
+        sb.Append( curChar );
+        ++posInLine;
       }
       return sb.ToString();
     }

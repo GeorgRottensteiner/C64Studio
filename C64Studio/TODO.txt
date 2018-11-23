@@ -1,5 +1,7 @@
 ﻿C64Studio
 o Combined line cycle and byte count info (currently only info of first line is shown in border!)
+o line separation by ':' messes up cycle/byte count (see above) but also label locationing!
+o BASIC : renumber with on ... gosub/goto only replaces the first number
 
 o DPI-Skalierung wirkt sich komisch aus (Windows Skalierung der GUI/Oberfläche auf 125%)
 
