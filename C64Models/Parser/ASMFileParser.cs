@@ -7604,8 +7604,7 @@ namespace C64Studio.Parser
 
                 Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
-                if ( ( !EvaluateTokens( lineIndex, tokens, out defineResult ) )
-                ||   ( defineResult == 0 ) )
+                if ( !EvaluateTokens( lineIndex, tokens, out defineResult ) )
                 {
                   scope.Active = true;
                   scope.IfChainHadActiveEntry = true;
@@ -9731,8 +9730,7 @@ namespace C64Studio.Parser
           {
             AddError( -1, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Cannot evaluate predefine expression " + defineValue );
           }
-          else if ( ( address >= 0 )
-          &&        ( address <= 0xffff ) )
+          else
           {
             AddPreprocessorConstant( defineName, address, -1 );
           }
