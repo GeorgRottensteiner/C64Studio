@@ -7490,8 +7490,7 @@ namespace C64Studio.Parser
 
                   // only evaluate the first token
                   // TODO - have to evaluate the rest of the line if it exists!!
-                  if ( ( !EvaluateTokens( lineIndex, tokens, 0, 1, out defineResult ) )
-                  ||   ( defineResult == 0 ) )
+                  if ( !EvaluateTokens( lineIndex, tokens, 0, 1, out defineResult ) )
                   {
                     scope.Active = hadElse;
                   }
