@@ -52,6 +52,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="UnitTestBASICParser.cs" />
     <Compile Include="UnitTestTargetAssembler.cs" />
     <Compile Include="UnitTestAssembler.cs" />
     <Compile Include="UnitTestTiny64.cs" />
