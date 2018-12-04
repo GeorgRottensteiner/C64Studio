@@ -9030,6 +9030,13 @@ namespace C64Studio.Parser
           LineIndexInsideMacro = i;
           return null;
         }
+        var originatingTokens = new List<Types.TokenInfo>();
+        for ( int j = 0; j < tokens.Count; ++j )
+        {
+          var clonedToken = new Types.TokenInfo() { Content = tokens[j].Content, Length = tokens[j].Length, OriginatingString = tokens[j].OriginatingString, StartPos = tokens[j].StartPos, Type = tokens[j].Type };
+          originatingTokens.Add( clonedToken );
+        }
+
         if ( tokens.Count > 1 )
         {
           if ( ( tokens[0].Type == TokenInfo.TokenType.OPERATOR )
@@ -9100,9 +9107,22 @@ namespace C64Studio.Parser
                   }
                   else
                   {
+                    // keep offsets intact!
                     StringBuilder   sb = new StringBuilder();
 
                     int     curOffset = 0;
+                    for ( int k = 0; k < originatingTokens.Count; ++k )
+                    {
+                      while ( originatingTokens[k].StartPos > sb.Length )
+                      {
+                        sb.Append( ' ' );
+                        ++curOffset;
+                      }
+                      sb.Append( originatingTokens[k].Content );
+                      originatingTokens[k].StartPos = curOffset;
+                      curOffset = sb.Length;
+                    }
+                    /*
                     for ( int k = 0; k < tokens.Count; ++k )
                     {
                       while ( tokens[k].StartPos > sb.Length )
@@ -9113,8 +9133,8 @@ namespace C64Studio.Parser
                       sb.Append( tokens[k].Content );
                       tokens[k].StartPos = curOffset;
                       curOffset = sb.Length;
-                    }
-                    string    newLine = sb.ToString();
+                    }*/
+                   string    newLine = sb.ToString();
                     for ( int k = 0; k < tokens.Count; ++k )
                     {
                       tokens[k].OriginatingString = newLine;
