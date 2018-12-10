@@ -99,6 +99,9 @@ namespace C64Studio.Parser
 
     private bool                        DoLogSourceInfo = false;
 
+    private string                      m_CurrentZoneName = "";
+
+
 
     public ASMFileParser()
     {
@@ -870,6 +873,17 @@ namespace C64Studio.Parser
       // parse labels
       if ( !ASMFileInfo.Labels.ContainsKey( Value ) )
       {
+        if ( ( IsLocalLabel( Value ) )
+        &&   ( !string.IsNullOrEmpty( m_CurrentZoneName ) ) )
+        {
+          // a local label inside a zone has the actual zone name in front!
+          if ( ASMFileInfo.Labels.ContainsKey( m_CurrentZoneName + Value ) )
+          {
+            Result = ASMFileInfo.Labels[m_CurrentZoneName + Value].AddressOrValue;
+            ASMFileInfo.Labels[m_CurrentZoneName + Value].Used = true;
+            return true;
+          }
+        }
         if ( ASMFileInfo.UnparsedLabels.ContainsKey( Value ) )
         {
           ASMFileInfo.UnparsedLabels[Value].Used = true;
@@ -924,6 +938,17 @@ namespace C64Studio.Parser
       // parse labels
       if ( !ASMFileInfo.Labels.ContainsKey( Value ) )
       {
+        if ( ( IsLocalLabel( Value ) )
+        &&   ( !string.IsNullOrEmpty( m_CurrentZoneName ) ) )
+        {
+          // a local label inside a zone has the actual zone name in front!
+          if ( ASMFileInfo.Labels.ContainsKey( m_CurrentZoneName + Value ) )
+          {
+            Result = ASMFileInfo.Labels[m_CurrentZoneName + Value].AddressOrValue;
+            ASMFileInfo.Labels[m_CurrentZoneName + Value].Used = true;
+            return true;
+          }
+        }
         if ( ASMFileInfo.UnparsedLabels.ContainsKey( Value ) )
         {
           ASMFileInfo.UnparsedLabels[Value].Used = true;
@@ -935,6 +960,21 @@ namespace C64Studio.Parser
       Result = ASMFileInfo.Labels[Value].AddressOrValue;
       ASMFileInfo.Labels[Value].Used = true;
       return true;
+    }
+
+
+
+    private bool IsLocalLabel( string LabelName )
+    {
+      if ( string.IsNullOrEmpty( LabelName ) )
+      {
+        return false;
+      }
+      if ( ASMFileInfo.AssemblerSettings.AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL].IndexOf( LabelName[0] ) != -1 )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -6060,7 +6100,6 @@ namespace C64Studio.Parser
       int   sizeInBytes = 0;
       m_CompileCurrentAddress = -1;
       int trueCompileCurrentAddress = -1;
-      string zoneName = "";
       string cheapLabelParent = "";
       int   intermediateLineOffset = 0;
       bool  hadCommentInLine = false;
@@ -6094,7 +6133,7 @@ namespace C64Studio.Parser
 
         Types.ASM.LineInfo info = new Types.ASM.LineInfo();
         info.LineIndex      = lineIndex;
-        info.Zone           = zoneName;
+        info.Zone           = m_CurrentZoneName;
         info.CheapLabelZone = cheapLabelParent;
         info.AddressStart   = programStepPos;
 
@@ -6113,7 +6152,7 @@ namespace C64Studio.Parser
               info = ASMFileInfo.LineInfo[lineIndex];
 
               info.AddressStart = programStepPos;
-              info.Zone = zoneName;
+              info.Zone = m_CurrentZoneName;
             }
             else
             {
@@ -6299,8 +6338,8 @@ namespace C64Studio.Parser
             if ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
             {
               // auto-zone
-              zoneName = lineTokenInfos[0].Content;
-              info.Zone = zoneName;
+              m_CurrentZoneName = lineTokenInfos[0].Content;
+              info.Zone = m_CurrentZoneName;
             }
           }
         }
@@ -6325,7 +6364,7 @@ namespace C64Studio.Parser
           }
           if ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_LOCAL )
           {
-            lineTokenInfos[i].Content = zoneName + lineTokenInfos[i].Content;
+            lineTokenInfos[i].Content = m_CurrentZoneName + lineTokenInfos[i].Content;
             if ( i == 0 )
             {
               upToken = lineTokenInfos[i].Content.ToUpper();
@@ -6412,7 +6451,7 @@ namespace C64Studio.Parser
             }
             else 
             {
-              AddConstant( defineName, address, lineIndex, m_CurrentCommentSB.ToString(), zoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+              AddConstant( defineName, address, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
               if ( defineName == "*" )
               {
                 if ( ( address >= 0 )
@@ -6503,7 +6542,7 @@ namespace C64Studio.Parser
                   }
                   OnScopeRemoved( lineIndex, stackScopes );
                   stackScopes.RemoveAt( stackScopes.Count - 1 );
-                  zoneName = "";
+                  m_CurrentZoneName = "";
                   break;
                 case Types.ScopeInfo.ScopeType.PSEUDO_PC:
                   PORealPC( info );
@@ -6599,12 +6638,12 @@ namespace C64Studio.Parser
             if ( programStepPos != -1 )
             {
               // only add if we know the start address!
-              AddLabel( labelInFront, programStepPos, lineIndex, zoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+              AddLabel( labelInFront, programStepPos, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
             }
             else
             {
               // label without value, like a define
-              AddLabel( labelInFront, -1, lineIndex, zoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+              AddLabel( labelInFront, -1, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
               //AddError( lineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Can't provide value if no start address is set", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
             }
           }
@@ -7051,7 +7090,7 @@ namespace C64Studio.Parser
 
                 if ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
                 {
-                  defineName = zoneName + defineName;
+                  defineName = m_CurrentZoneName + defineName;
                 }
 
                 if ( defineName == "*" )
@@ -7096,7 +7135,7 @@ namespace C64Studio.Parser
                                  address,
                                  lineIndex,
                                  m_CurrentCommentSB.ToString(),
-                                 zoneName,
+                                 m_CurrentZoneName,
                                  valueTokens[0].StartPos,
                                  valueTokens[valueTokens.Count - 1].EndPos + 1 - valueTokens[0].StartPos );
                     if ( defineName == "*" )
@@ -7490,8 +7529,7 @@ namespace C64Studio.Parser
 
                   // only evaluate the first token
                   // TODO - have to evaluate the rest of the line if it exists!!
-                  if ( ( !EvaluateTokens( lineIndex, tokens, 0, 1, out defineResult ) )
-                  ||   ( defineResult == 0 ) )
+                  if ( !EvaluateTokens( lineIndex, tokens, 0, 1, out defineResult ) )
                   {
                     scope.Active = hadElse;
                   }
@@ -7549,15 +7587,15 @@ namespace C64Studio.Parser
               {
                 if ( m_AssemblerSettings.MacroIsZone )
                 {
-                  zoneName = macroName;
-                  info.Zone = zoneName;
+                  m_CurrentZoneName = macroName;
+                  info.Zone = m_CurrentZoneName;
                 }
               }
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.FOR )
             {
               // !FOR var = start TO stop
-              POFor( stackScopes, zoneName, ref intermediateLineOffset, lineIndex, lineTokenInfos );
+              POFor( stackScopes, m_CurrentZoneName, ref intermediateLineOffset, lineIndex, lineTokenInfos );
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.END )
             {
@@ -7742,16 +7780,16 @@ namespace C64Studio.Parser
                 if ( lineTokenInfos.Count == 1 )
                 {
                   // anonymous zone
-                  zoneName = "anon_scope_" + lineIndex.ToString();
+                  m_CurrentZoneName = "anon_scope_" + lineIndex.ToString();
                 }
                 else
                 {
-                  zoneName = lineTokenInfos[1].Content;
+                  m_CurrentZoneName = lineTokenInfos[1].Content;
                   zoneToken = lineTokenInfos[1];
                 }
-                info.Zone = zoneName;
+                info.Zone = m_CurrentZoneName;
 
-                AddZone( zoneName, lineIndex, zoneToken.StartPos, zoneToken.Length );
+                AddZone( m_CurrentZoneName, lineIndex, zoneToken.StartPos, zoneToken.Length );
               }
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.BANK )
@@ -8303,8 +8341,8 @@ namespace C64Studio.Parser
             {
               if ( m_AssemblerSettings.MacroIsZone )
               {
-                zoneName = macroName;
-                info.Zone = zoneName;
+                m_CurrentZoneName = macroName;
+                info.Zone = m_CurrentZoneName;
               }
             }
           }
@@ -8456,7 +8494,7 @@ namespace C64Studio.Parser
             if ( programStepPos != -1 )
             {
               // only if we have a valid address!
-              var label = AddLabel( labelInFront, programStepPos, lineIndex, zoneName, tokenInFront.StartPos, tokenInFront.Length );
+              var label = AddLabel( labelInFront, programStepPos, lineIndex, m_CurrentZoneName, tokenInFront.StartPos, tokenInFront.Length );
 
               label.Info = m_CurrentCommentSB.ToString();
               m_CurrentCommentSB = new StringBuilder();
@@ -8470,7 +8508,7 @@ namespace C64Studio.Parser
             else
             {
               // a label as define, set to value -1
-              AddLabel( labelInFront, -1, lineIndex, zoneName, tokenInFront.StartPos, tokenInFront.Length );
+              AddLabel( labelInFront, -1, lineIndex, m_CurrentZoneName, tokenInFront.StartPos, tokenInFront.Length );
               //AddError( lineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Can't provide value if no start address is set", tokenInFront.StartPos, tokenInFront.Length );
             }
           }
@@ -9031,6 +9069,13 @@ namespace C64Studio.Parser
           LineIndexInsideMacro = i;
           return null;
         }
+        var originatingTokens = new List<Types.TokenInfo>();
+        for ( int j = 0; j < tokens.Count; ++j )
+        {
+          var clonedToken = new Types.TokenInfo() { Content = tokens[j].Content, Length = tokens[j].Length, OriginatingString = tokens[j].OriginatingString, StartPos = tokens[j].StartPos, Type = tokens[j].Type };
+          originatingTokens.Add( clonedToken );
+        }
+
         if ( tokens.Count > 1 )
         {
           if ( ( tokens[0].Type == TokenInfo.TokenType.OPERATOR )
@@ -9101,9 +9146,22 @@ namespace C64Studio.Parser
                   }
                   else
                   {
+                    // keep offsets intact!
                     StringBuilder   sb = new StringBuilder();
 
                     int     curOffset = 0;
+                    for ( int k = 0; k < originatingTokens.Count; ++k )
+                    {
+                      while ( originatingTokens[k].StartPos > sb.Length )
+                      {
+                        sb.Append( ' ' );
+                        ++curOffset;
+                      }
+                      sb.Append( originatingTokens[k].Content );
+                      originatingTokens[k].StartPos = curOffset;
+                      curOffset = sb.Length;
+                    }
+                    /*
                     for ( int k = 0; k < tokens.Count; ++k )
                     {
                       while ( tokens[k].StartPos > sb.Length )
@@ -9114,8 +9172,8 @@ namespace C64Studio.Parser
                       sb.Append( tokens[k].Content );
                       tokens[k].StartPos = curOffset;
                       curOffset = sb.Length;
-                    }
-                    string    newLine = sb.ToString();
+                    }*/
+                   string    newLine = sb.ToString();
                     for ( int k = 0; k < tokens.Count; ++k )
                     {
                       tokens[k].OriginatingString = newLine;
@@ -9825,6 +9883,8 @@ namespace C64Studio.Parser
       m_WarningsToIgnore.Clear();
 
       lines = PreProcess( lines, m_Filename, Configuration );
+
+      DumpSourceInfos( OrigLines, lines );
 
       DetermineUnparsedLabels();
 

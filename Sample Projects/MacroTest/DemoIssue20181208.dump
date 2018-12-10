@@ -1,0 +1,99 @@
+00   ----              ; ============================================================================
+01   ----              ; Demo unexpected behaviour seen on the C64Studio 5.8 WIP build of 2018-12-04.
+02   ----              ; When assembled, This produces an E1001 (Could not evaluate expression).
+03   ----              ; ============================================================================
+04   ----              
+05   ----              !macro MacroA1 .theParam1 {
+06  ????              !if ((.theParam1 < 1) or (.theParam1 > 0)) {
+07  ????              bvc *+4
+08  ????              !byte $11, .theParam1
+09  ????              }
+10  ????              }
+11   ----              
+12   ----              !macro MacroB2 .theParam1, .theParam2 {
+13  ????              !if ((.theParam2 < 1) or (.theParam2 > 0)) {
+14  ????              bvc *+5
+15  ????              !byte $22, .theParam1, .theParam2
+16  ????              }
+17  ????              }
+18   ----              
+19   ----              !macro MacroC3 .theParam1, .theParam2, .theParam3 {
+20  ????              !if ((.theParam3 < 1) or (.theParam3 > 0)) {
+21  ????              bvc *+6
+22  ????              !byte $33, .theParam1, .theParam2, .theParam3
+23  ????              }
+24  ????              }
+25   ----              
+26   ----              !macro MacroD4 .theParam1, .theParam2, .theParam3, .theParam4 {
+27  ????              !if ((.theParam4 < 1) or (.theParam4 > 0)) {
+28  ????              bvc *+7
+29  ????              !byte $44, .theParam1, .theParam2, .theParam3, .theParam4
+30  ????              }
+31  ????              }
+32   ----              
+33   ----              !macro MacroD3 .theParam1, .theParam2, .theParam3, .theParam4 {
+34  ????              !if ((.theParam3 < 1) or (.theParam3 > 0)) {
+35  ????              bvc *+7
+36  ????              !byte $43, .theParam1, .theParam2, .theParam3, .theParam4
+37  ????              }
+38  ????              }
+39   ----              
+40   ----              ; ----------------------------------------------------------------------------
+41  $0801              *=$0801
+42  $0801  16 08 01 08 9E 32 30 37 32 3A 8F 20 32 30 31 38 31 32 30 38 00 00 00  !basic *, ":", $8F, " 20181208", DemoIssue
+43  $0818              
+44  $0818              DemoIssue
+45  $0818              
+46  $0818              
+47  $0818              GlobalConst = 11
+48  $0818              
+49  $0818              
+50  $0818  A0 07       ldy #7
+51  $081A  8C 20 D0    sty $d020
+52  $081D  B8          clv
+53  $081E              
+54  $081E              .LocalConstX = 22
+55  $081E              ;+MacroA1 GlobalConst            ; OK
+56  $081E              ;+MacroA1 .LocalConstX           ; OK
+57  $081E              ;+MacroB2 1, GlobalConst         ; OK
+58  $081E              ;+MacroB2 1, .LocalConstX        ; OK
+59  $081E              ;+MacroC3 1, 2, GlobalConst      ; OK
+60  $081E              ;+MacroC3 1, 2, .LocalConstX     ; OK
+61  $081E              ;+MacroD4 1, 2, 3, GlobalConst   ; OK
+62  $081E              ;+MacroD4 1, 2, 3, .LocalConstX  ; OK
+63  $081E              ;+MacroD3 1, 2, 3, GlobalConst   ; OK
+64  $081E              ;+MacroD3 1, 2, 3, .LocalConstX  ; OK
+65  $081E              ;+MacroD4 1, 2, GlobalConst, 4   ; OK
+66  $081E              ;+MacroD4 1, 2, .LocalConstX, 4  ; OK
+67  $081E              ;+MacroD3 1, 2, GlobalConst, 4   ; OK
+68  $081E              ;+MacroD3 1, 2, .LocalConstX, 4  ; OK
+69  $081E              
+70  $081E              !zone {
+71  $081E              .LocalConstY = 33
+72  $081E              ;+MacroA1 GlobalConst            ; OK
+73  $081E              ;+MacroA1 .LocalConstY           ; OK
+74  $081E              ;+MacroB2 1, GlobalConst         ; OK
+75  $081E              ;+MacroB2 1, .LocalConstY        ; OK
+76  $081E              ;+MacroC3 1, 2, GlobalConst      ; OK
+77  $081E              ;+MacroC3 1, 2, .LocalConstY     ; OK
+78  $081E              ;+MacroD4 1, 2, 3, GlobalConst   ; OK
+79  $081E              ;+MacroD4 1, 2, 3, .LocalConstY  ; OK
+80  $081E              ;+MacroD3 1, 2, 3, GlobalConst   ; OK
+81  $081E              ;+MacroD3 1, 2, 3, .LocalConstY  ; OK
+82  $081E              ;+MacroD4 1, 2, GlobalConst, 4   ; OK
+83  $081E              ;+MacroD4 1, 2, .LocalConstY, 4  ; OK
+84  $081E              ;+MacroD3 1, 2, GlobalConst, 4   ; OK
+85  $081E              
+86  $081E              !if ((╚.LocalConstY╝< 1) or (╚.LocalConstY╝> 0)) {
+87  $081E  50 05       bvc *+7
+88  $0820  43 01 02 21 04  !byte $43, ╚1╝       , ╚2╝       , ╚.LocalConstY╝, 4
+89  $0825              }
+90  $0825              }  ; !zone
+91  $0825              
+92  $0825              
+93  $0825  A0 05       ldy #5
+94  $0827  8C 20 D0    sty $d020
+95  $082A  60          rts
+96  $082B              
+97  $082B              ; ============================================================================
+98  $082B              
