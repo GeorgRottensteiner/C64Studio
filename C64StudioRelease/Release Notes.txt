@@ -17,7 +17,35 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
-xx.xx.2018 - 5.8: 
+15.12.2018 - 5.9:         Add: Reload functionality for disassembler
+
+
+06.09.2018 - 5.8:         Add: Reload functionality for disassembler
+                          Fix: Over zealous check on compiled file > $ffff
+                          Fix: Import of Charpad file
+                          Fix: Missing ASM settings in settings dialog restored
+                          Add: Allow tabs with more than 9 spaces
+                          Fix: Bug in non 40x25 sized char screens
+                          Add: Line address display
+                          Add: Context menu to jump to memory view from label
+                          Add: Proper support for !addr pseudo op
+                          Add: XOR as operator
+                          Add: Now line separators (:) work properly
+                          Add: Sample projects to release folder
+                          Add/Fix: BASIC editor entry now does normal keyboard for normal entry, only positional mode in string enter mode
+                          Add: Separated MRU in projects/files
+                          Add: Import from ASM/BASIC to sprite editor
+                          Fix: Memory block output display for BASIC
+                          Fix: Running BASIC files with debugging enabled
+                          Fix: Copy/Paste for Find/Replace
+                          Add: GMOD2 cartridge support
+                          Fix: Bug in macro evaluation, else if was evaluated
+                          Add: Delta values in value table
+                          Add: Set default key binding if no binding is set
+                          Add: Allow reordering of tools
+                          Add: BASIC macro multiplicator {4 down} now works
+                          Fix: Totally broken if else chains
+                          Fix: Endless loop if macro calls itself
 
 25.05.2018 - 5.7:         Fix: easyflash, RGCD and magic desk cart generation was borked
                           Add: BASIC upper/lowercase toggle
