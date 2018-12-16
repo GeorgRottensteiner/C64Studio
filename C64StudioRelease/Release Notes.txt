@@ -17,8 +17,41 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
-15.12.2018 - 5.9:         Add: Reload functionality for disassembler
+xx.xx.2019 - 6.0:
 
+15.12.2018 - 5.9:         Fix: issue where local labels inside bracketed zones were not properly recognized inside macros
+                          Fix: improper token offset during macro call relabeling
+                          Fix: Set default debug start address label (was empty on first creation)
+                          Fix: ifdef issue that was present in ifndef (defines evaluating to zero)
+                          Fix: bug with config values outside 0 to 0xffff which were silently swallowed 
+                          Fix: !ifndef also checking if value was not zero
+                          Fix: BASIC, several renumber bugs (on gosub/goto) empty lines were removed {space} was inserted for blanks
+                          Fix: Fixed scoping bug with !zone inside inactive zone
+                          Add: missing BASIC macros, RVS, OFF, SPACE, SPACES, ARROW UP, ARROW LEFT
+                          Fix: Fixed renumber bug for BASIC, when macros were inside string literals
+                          Add: Allow late evaluation of symbols in !basic pseudo op
+                          Add: Added support for several statements for !basic pseudo op
+                          Add: theming shenanigans (new color entry "control background"), should allow for "dark themes"
+                          Fix: Fixed wrong label zone info (local line index was not set properly) for labels in lines with separating colons
+                          Add: Allowed debug start address setting per config instead of global Allow debug start address also to use a label
+                          Fix: Fixed early evaluation of ifndef inside macros
+                          Fix: allow negative values automatically
+                          Fix: Disable "unused label" message for local labels inside a !for loop
+                          Add: added missing petcat macros (swlc, swuc, ensh, dish)
+                          Fix: Fixed bug in local label uniquification inside loops.
+                          Fix: Fixed potential cross-thread-invocation of method
+                          Add: grid for map editor
+                          Fix: Fixed several sprite editor issues (off by one on sprite index, layer re-sorting/removing was not properly saved)
+                          Add: added jump to line
+                          Fix: Fixed errornous collapsing of - with literal number when a subtraction was intended
+                          Fix: Fixed wrong duplicate Y mapping for BASIC in english defaults
+                          Fix: Fixed int +/- off by one edge case
+                          Fix: Fixed file not properly opening on dragging drop
+                          Fix: Allow emulator run without productversion (would bail before)
+                          Fix: Outline sorting totally borked, labels/constants were not added in their zone depending on sorting
+                          Fix: Potentially fixed Compyx' crash problem
+                          Fix: Fixed line separator issue, separators where fused into labels
+                          Fix: Fixed !addr scope check if inside inactive scope
 
 06.09.2018 - 5.8:         Add: Reload functionality for disassembler
                           Fix: Over zealous check on compiled file > $ffff

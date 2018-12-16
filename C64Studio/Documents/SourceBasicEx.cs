@@ -94,11 +94,6 @@ namespace C64Studio
       editSource.SyntaxHighlighter = new BASICSyntaxHighlighter();
       editSource.SelectingWord += EditSource_SelectingWord;
 
-      if ( Core.Settings.DetermineAccelerator( C64Studio.Types.Function.DELETE_LINE ) != null )
-      {
-        editSource.HotkeysMapping.Add( Core.Settings.DetermineAccelerator( C64Studio.Types.Function.DELETE_LINE ).Key, FastColoredTextBoxNS.FCTBAction.DeleteLine );
-      }
-
       if ( !Core.Settings.BASICUseNonC64Font )
       {
         editSource.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize );
@@ -330,6 +325,7 @@ namespace C64Studio
       UpdateKeyBinding( C64Studio.Types.Function.COPY, FastColoredTextBoxNS.FCTBAction.Copy );
       UpdateKeyBinding( C64Studio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
       UpdateKeyBinding( C64Studio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
+      UpdateKeyBinding( C64Studio.Types.Function.DELETE_LINE, FastColoredTextBoxNS.FCTBAction.DeleteLine );
     }
 
 

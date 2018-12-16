@@ -11058,7 +11058,7 @@ namespace C64Studio.Parser
 
             currentTokenType = Types.TokenInfo.TokenType.UNKNOWN;
 
-            if ( curChar == ' ' )
+            if ( IsBlankChar( curChar ) )
             {
               tokenStartPos = charPos + 1;
               continue;
@@ -11085,7 +11085,7 @@ namespace C64Studio.Parser
           }
           else
           {
-            if ( curChar == ' ' )
+            if ( IsBlankChar( curChar ) )
             {
               ++tokenStartPos;
               ++charPos;
@@ -11520,6 +11520,18 @@ namespace C64Studio.Parser
         }
       }
       return result;
+    }
+
+
+
+    private bool IsBlankChar( char Character )
+    {
+      if ( ( Character == ' ' )
+      ||   ( Character == '\t' ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
