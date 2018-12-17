@@ -338,6 +338,9 @@ namespace C64Studio.Types
     [Description( "Control Background" )]
     BACKGROUND_CONTROL,
 
+    [Description( "Debug Changed Element" )]
+    CHANGED_DEBUG_ELEMENT,
+
     LAST_ENTRY
   }
 

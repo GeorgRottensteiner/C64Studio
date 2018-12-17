@@ -2808,7 +2808,11 @@ namespace Be.Windows.Forms
 
     Color GetMarkedForeColor()
     {
-      return Color.Red;
+      if ( Enabled )
+      {
+        return MarkedForeColor;
+      }
+      return Color.Gray;
     }
 
 
@@ -3654,7 +3658,15 @@ namespace Be.Windows.Forms
 					Invalidate();
 				}
 			}
-		} IByteCharConverter _byteCharConverter;
+		}
+
+
+
+    public Color MarkedForeColor { get; set; }
+
+
+
+    IByteCharConverter _byteCharConverter;
 
 		#endregion
 

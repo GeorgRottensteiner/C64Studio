@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using Be.Windows.Forms;
+using System.Drawing;
+using C64Studio.Types;
 
 namespace C64Studio
 {
@@ -47,6 +49,9 @@ namespace C64Studio
     private ToolStripMenuItem         m_MenuItemHexSpriteView = null;
     private ToolStripMenuItem         m_MenuItemPreSetColorsSeparator = null;
     private ToolStripMenuItem         m_MenuItemSetColors = null;
+
+    private Color                     ChangedColor = Color.Red;
+    private Color                     UnchangedColor = Color.Black;
 
 
 
@@ -662,6 +667,18 @@ namespace C64Studio
       }
       SetHexData( m_ActiveMemory.RAM );
       ViewScrolled( this, new DebugMemoryEvent( m_Offset * hexView.BytesPerLine, hexView.BytesPerLine * hexView.VerticalByteCount ) );
+    }
+
+
+
+    public override void RefreshDisplayOptions()
+    {
+      base.RefreshDisplayOptions();
+
+      ChangedColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.CHANGED_DEBUG_ELEMENT].FGColor );
+      UnchangedColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].FGColor );
+
+      hexView.MarkedForeColor = ChangedColor;
     }
 
   }

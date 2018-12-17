@@ -1265,6 +1265,7 @@ namespace C64Studio
       SetSyntaxColor( C64Studio.Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS, 0xff000080, 0xffff8000, true );
       SetSyntaxColor( C64Studio.Types.ColorableElement.SELECTED_TEXT, 0xff800000, 0xff800000, true );
       SetSyntaxColor( C64Studio.Types.ColorableElement.BACKGROUND_CONTROL, 0xff000000, 0xfff0f0f0, true );
+      SetSyntaxColor( C64Studio.Types.ColorableElement.CHANGED_DEBUG_ELEMENT, 0xffff0000, 0xfff0f0f0, true );
 
       foreach ( Types.ColorableElement color in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {
