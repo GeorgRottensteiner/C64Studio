@@ -44,37 +44,37 @@
 450 IFRU>7TE=TE+1:BO=BO+2
 460 REM WEIHNACHTSGESCHENKE
 470 :
-480 PRINT""AB(24)"EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ"
-490 PRINTTAB(24)"KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH"
+480 PRINT""AB(24)"EFGHIJKLEFGHIJKLEFGHIJ"
+490 PRINTTAB(24)"KLEFGHIJKLEFGHIJKLEFGH"
 500 :
-510 PRINT""TAB(26)"IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF"
-520 PRINTTAB(26)"GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL"
+510 PRINT""TAB(26)"IJKLEFGHIJKLEFGHIJKLEF"
+520 PRINTTAB(26)"GHIJKLEFGHIJKLEFGHIJKL"
 530 :
-540 PRINT""TAB(28)"EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ"
-550 PRINTTAB(28)"KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH"
+540 PRINT""TAB(28)"EFGHIJKLEFGHIJKLEFGHIJ"
+550 PRINTTAB(28)"KLEFGHIJKLEFGHIJKLEFGH"
 560 :
-570 PRINT""TAB(30)"IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF"
-580 PRINTTAB(30)"GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL"
+570 PRINT""TAB(30)"IJKLEFGHIJKLEFGHIJKLEF"
+580 PRINTTAB(30)"GHIJKLEFGHIJKLEFGHIJKL"
 590 :
-600 PRINT""TAB(32)"EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH"
-610 PRINTTAB(32)"IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL{left}{left}EF{left}{left}GH{left}{left}IJ{left}{left}KL"
-620 PRINTTAB(32)"EF{left}{left}GH"
+600 PRINT""TAB(32)"EFGHIJKLEFGHIJKLEFGH"
+610 PRINTTAB(32)"IJKLEFGHIJKLEFGHIJKL"
+620 PRINTTAB(32)"EFGH"
 630 FORI=1TO17:PRINT"AB";:NEXT:PRINT
 640 FORI=1TO17:PRINT"CD";:NEXT:PRINT
 650 FORI=1TO34:PRINT" ";:NEXT
 660 REM WEIHNACHTSBAEUME
-670 PRINT"AB{left}{left}CD"
-680 PRINT""TAB(15)"AB{left}{left}CD"
-690 PRINT""TAB(8)"AB{left}{left}CD"
-700 PRINT""TAB(17)"AB{left}{left}CD"
-710 PRINT""TAB(6)"AB{left}{left}CD"
-720 PRINT""TAB(35)"===={left}{left}{left}{left}PU:{left}{left}{left}===={left}{left}{left}{left}RU:{left}{left}{left}===={left}{left}{left}{left}HI:"
+670 PRINT"ABCD"
+680 PRINT""TAB(15)"ABCD"
+690 PRINT""TAB(8)"ABCD"
+700 PRINT""TAB(17)"ABCD"
+710 PRINT""TAB(6)"ABCD"
+720 PRINT""TAB(35)"====PU:====RU:====HI:"
 730 PRINTTAB(35)"===="
-740 SYS43269
+740 SYS49269
 750 POKEV+2,XC:POKEV+3,128
 760 PRINT""TAB(34);PU:POKEV+21,3
 770 PRINT""TAB(35);RU
-780 PRINT""TAB834);HI
+780 PRINT""TAB(34);HI
 790 YK=INT(RND(1)*156)+50
 800 POKEV+1,YK
 810 AG=AG+TE
@@ -104,7 +104,7 @@
 1050 RU=RU+1:RZ=RZ+1:IFRZ=2THENRZ=0:GOTO1080
 1060 PRINT""TAB(16)"RUNDE";RU
 1070 FORI=1TO3000:NEXT:PRINT"":GOTO380
-1080 PRINT""TAB(9)"=================AB"
+1080 PRINT""TAB(9)"======================="
 1090 PRINTTAB(9)"AB  HERZLICHEN       AB"
 1100 PRINTTAB(9)"CD      GLUECKWUNSCH CD"
 1110 PRINTTAB(13)"ZU IHRER TOLLEN"
@@ -113,7 +113,7 @@
 1140 PRINTTAB(9)"CD"TAB(30)"CD"
 1150 PRINTTAB(13)"JETZT SIND ES"
 1160 PRINTTAB(9)"AB  NUR NOCH";GS
-1170 PRINT"{up}"TAB(30)"AB"
+1170 PRINT""TAB(30)"AB"
 1180 PRINTTAB(9)"AB  PUNKTE BIS ZUM   CD"
 1190 PRINTTAB(13)"HIGHSCORE."
 1200 PRINTTAB(9)"AB"TAB(30)"AB"
@@ -143,7 +143,7 @@
 2060 DATA138,56,233,52,144,20,138,233,3,170,76,43,192
 2070 DATA138,24,105,51,176,7,138,105,3,170,142,3,208,96
 2080 DATA152,24,105,242,176,6,160,14,140,249,7,96,160,13,140,249,7,96
-2090 DATA120,165,1,72,42,251,133,1,169,208,133,3,169,48,133,5
+2090 DATA120,165,1,72,41,251,133,1,169,208,133,3,169,48,133,5
 2100 DATA160,0,132,2,132,4,162,32,177,2,145,4,200,208,249,230,3
 2110 DATA230,5,202,208,242,104,133,1,173,24,208,41,241
 2120 DATA9,12,141,24,208,88,160,13,162,128,96

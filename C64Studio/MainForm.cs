@@ -3462,6 +3462,11 @@ namespace C64Studio
 
     private void UpdateCaption()
     {
+      if ( InvokeRequired )
+      {
+        Invoke( new ParameterLessCallback( UpdateCaption ) );
+        return;
+      }
       if ( CurrentProject != null )
       {
         Text = "C64Studio - " + CurrentProject.Settings.Name;
