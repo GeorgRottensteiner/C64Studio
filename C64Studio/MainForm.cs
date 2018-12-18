@@ -5699,6 +5699,11 @@ namespace C64Studio
       }
       if ( string.IsNullOrEmpty( m_Solution.Filename ) )
       {
+        if ( InvokeRequired )
+        {
+          // skip saving if we're in the wrong thread!
+          return;
+        }
         System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
         saveDlg.Title = "Save Solution as";

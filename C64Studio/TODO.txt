@@ -1,4 +1,5 @@
 ﻿C64Studio
+o opening .c64 file, cancel on solution saving, now building doesn't work?
 o Combined line cycle and byte count info (currently only info of first line is shown in border!)
 o line separation by ':' messes up cycle/byte count (see above) but also label locationing!
 
