@@ -141,6 +141,10 @@ namespace C64Studio
         }
       }
 
+      editScreenWidth.Text = "320";
+      editScreenHeight.Text = "200";
+      SetScreenSize( 320, 200 );
+
       Core.MainForm.ApplicationEvent += new MainForm.ApplicationEventHandler( MainForm_ApplicationEvent );
 
       comboCharScreens.Items.Add( new Types.ComboItem( "To new file" ) );
