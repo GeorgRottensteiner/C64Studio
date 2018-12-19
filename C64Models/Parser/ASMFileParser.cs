@@ -7180,14 +7180,14 @@ namespace C64Studio.Parser
               bool    libraryFile = false;
 
               if ( ( lineTokenInfos.Count == 2 )
-              && ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+              &&   ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
               {
                 // regular include
                 subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
               }
               else if ( ( lineTokenInfos.Count > 3 )
-              && ( lineTokenInfos[1].Content == "<" )
-              && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
+              &&        ( lineTokenInfos[1].Content == "<" )
+              &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
               {
                 // library include
                 subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );

@@ -1647,6 +1647,16 @@ namespace C64Studio
           openFileToolStripMenuItem.Text = "Open \"" + fileName.Substring( 1, fileName.Length - 2 ) + "\"";
           m_FilenameToOpen = fileName.Substring( 1, fileName.Length - 2 );
         }
+        if ( ( fileName.Length > 2 )
+        &&   ( fileName.StartsWith( "<" ) )
+        &&   ( fileName.EndsWith( ">" ) ) )
+        {
+          showOpenFile = true;
+          openFileToolStripMenuItem.Text = "Open <" + fileName.Substring( 1, fileName.Length - 2 ) + ">";
+          m_FilenameToOpen = fileName.Substring( 1, fileName.Length - 2 );
+
+          m_FilenameToOpen = DetermineFullLibraryFilePath( m_FilenameToOpen );
+        }
       }
       openFileToolStripMenuItem.Visible = showOpenFile;
       separatorCommenting.Visible = showOpenFile;
@@ -1654,6 +1664,29 @@ namespace C64Studio
       copyToolStripMenuItem.Enabled = ( editSource.SelectionLength != 0 );
       cutToolStripMenuItem.Enabled = copyToolStripMenuItem.Enabled;
       pasteToolStripMenuItem.Enabled = System.Windows.Forms.Clipboard.ContainsText();
+    }
+
+
+
+    private string DetermineFullLibraryFilePath( string SubFilename )
+    {
+      foreach ( var libFile in Core.Settings.ASMLibraryPaths )
+      {
+        string    fullBasePath = libFile;
+        if ( !System.IO.Path.IsPathRooted( libFile ) )
+        {
+#if DEBUG
+          fullBasePath = System.IO.Path.GetFullPath( "../../" + libFile );
+#else
+          fullBasePath = System.IO.Path.GetFullPath( libFile );
+#endif
+        }
+        if ( System.IO.File.Exists( System.IO.Path.Combine( fullBasePath, SubFilename ) ) )
+        {
+          return System.IO.Path.Combine( fullBasePath, SubFilename );
+        }
+      }
+      return "";
     }
 
 
@@ -2347,7 +2380,12 @@ namespace C64Studio
       {
         docBasePath = DocumentInfo.Project.Settings.BasePath;
       }
-      string            fullPath = GR.Path.Append( docBasePath, m_FilenameToOpen );
+      string            fullPath = m_FilenameToOpen;
+
+      if ( !System.IO.Path.IsPathRooted( fullPath ) )
+      {
+        fullPath = GR.Path.Append( docBasePath, fullPath );
+      }
       if ( DocumentInfo.Project == null )
       {
         Core.MainForm.OpenFile( fullPath );
