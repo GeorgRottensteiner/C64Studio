@@ -218,13 +218,13 @@ namespace C64Studio
       &&   ( e.KeyCode == Keys.C ) )
       {
         // copy
-        CopyImageToClipboard();
+        CopySelectedImageToClipboard();
       }
       else if ( ( e.Modifiers == Keys.Control )
       &&        ( e.KeyCode == Keys.V ) )
       {
         // paste
-        PasteClipboardImageToChar();
+        PasteClipboardImageToSelectedChar();
       }
     }
 
@@ -981,7 +981,24 @@ namespace C64Studio
 
 
 
-    private void PasteClipboardImageToChar()
+    private void CopySelectedImageToClipboard()
+    {
+      if ( m_SelectedChar.X == -1 )
+      {
+        CopyImageToClipboard();
+        return;
+      }
+
+      GR.Memory.ByteBuffer      dibData = m_GraphicScreenProject.Image.GetImage( m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ).CreateHDIBAsBuffer();
+
+      System.IO.MemoryStream    ms = dibData.MemoryStream();
+
+      Clipboard.SetData( "DeviceIndependentBitmap", ms );
+    }
+
+
+
+    private void PasteClipboardImageToSelectedChar()
     {
       if ( !Clipboard.ContainsImage() )
       {
@@ -1011,14 +1028,14 @@ namespace C64Studio
 
     private void btnCopy_Click( object sender, EventArgs e )
     {
-      CopyImageToClipboard();
+      CopySelectedImageToClipboard();
     }
 
 
 
     private void btnPaste_Click( object sender, EventArgs e )
     {
-      PasteClipboardImageToChar();
+      PasteClipboardImageToSelectedChar();
     }
 
 
@@ -2888,6 +2905,15 @@ namespace C64Studio
         MessageBox.Show( "An error occurred while writing to file: " + ex.Message, "An Error occurred" );
       }
     }
+
+
+
+    private void btnFullCopyToClipboard_Click( object sender, EventArgs e )
+    {
+      CopyImageToClipboard();
+    }
+
+
 
   }
 }

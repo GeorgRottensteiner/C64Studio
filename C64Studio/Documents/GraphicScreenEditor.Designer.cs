@@ -53,6 +53,7 @@
       this.btnExportToCharScreen = new System.Windows.Forms.Button();
       this.labelCharInfoExport = new System.Windows.Forms.Label();
       this.btnExportAsBinary = new System.Windows.Forms.Button();
+      this.btnExportToImage = new System.Windows.Forms.Button();
       this.btnExportAs = new System.Windows.Forms.Button();
       this.editPrefix = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
@@ -98,7 +99,7 @@
       this.comboColorMappingTargets = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
-      this.btnExportToImage = new System.Windows.Forms.Button();
+      this.btnFullCopy = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -330,6 +331,16 @@
       this.btnExportAsBinary.UseVisualStyleBackColor = true;
       this.btnExportAsBinary.Click += new System.EventHandler(this.btnExportAsBinary_Click);
       // 
+      // btnExportToImage
+      // 
+      this.btnExportToImage.Location = new System.Drawing.Point(6, 128);
+      this.btnExportToImage.Name = "btnExportToImage";
+      this.btnExportToImage.Size = new System.Drawing.Size(120, 23);
+      this.btnExportToImage.TabIndex = 8;
+      this.btnExportToImage.Text = "Export to Image";
+      this.btnExportToImage.UseVisualStyleBackColor = true;
+      this.btnExportToImage.Click += new System.EventHandler(this.btnExportToImage_Click);
+      // 
       // btnExportAs
       // 
       this.btnExportAs.Location = new System.Drawing.Point(6, 99);
@@ -426,6 +437,7 @@
       this.tabEditor.Controls.Add(this.btnPaste);
       this.tabEditor.Controls.Add(this.btnCopy);
       this.tabEditor.Controls.Add(this.btnCheck);
+      this.tabEditor.Controls.Add(this.btnFullCopy);
       this.tabEditor.Controls.Add(this.btnPasteFromClipboard);
       this.tabEditor.Controls.Add(this.labelCharInfo);
       this.tabEditor.Controls.Add(this.checkMulticolor);
@@ -650,11 +662,11 @@
       // 
       // btnPasteFromClipboard
       // 
-      this.btnPasteFromClipboard.Location = new System.Drawing.Point(72, 441);
+      this.btnPasteFromClipboard.Location = new System.Drawing.Point(202, 440);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
-      this.btnPasteFromClipboard.Size = new System.Drawing.Size(117, 23);
+      this.btnPasteFromClipboard.Size = new System.Drawing.Size(84, 23);
       this.btnPasteFromClipboard.TabIndex = 6;
-      this.btnPasteFromClipboard.Text = "Big Paste";
+      this.btnPasteFromClipboard.Text = "Full Paste";
       this.btnPasteFromClipboard.UseVisualStyleBackColor = true;
       this.btnPasteFromClipboard.Click += new System.EventHandler(this.btnPasteFromClipboard_Click);
       // 
@@ -827,15 +839,15 @@
       this.listColorMappingColors.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listColorMappingColors_DrawItem);
       this.listColorMappingColors.SelectedIndexChanged += new System.EventHandler(this.listColorMappingColors_SelectedIndexChanged);
       // 
-      // btnExportToImage
+      // btnFullCopy
       // 
-      this.btnExportToImage.Location = new System.Drawing.Point(6, 128);
-      this.btnExportToImage.Name = "btnExportToImage";
-      this.btnExportToImage.Size = new System.Drawing.Size(120, 23);
-      this.btnExportToImage.TabIndex = 8;
-      this.btnExportToImage.Text = "Export to Image";
-      this.btnExportToImage.UseVisualStyleBackColor = true;
-      this.btnExportToImage.Click += new System.EventHandler(this.btnExportToImage_Click);
+      this.btnFullCopy.Location = new System.Drawing.Point(116, 440);
+      this.btnFullCopy.Name = "btnFullCopy";
+      this.btnFullCopy.Size = new System.Drawing.Size(80, 23);
+      this.btnFullCopy.TabIndex = 6;
+      this.btnFullCopy.Text = "Full Copy";
+      this.btnFullCopy.UseVisualStyleBackColor = true;
+      this.btnFullCopy.Click += new System.EventHandler(this.btnFullCopyToClipboard_Click);
       // 
       // GraphicScreenEditor
       // 
@@ -935,5 +947,6 @@
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Button btnExportToImage;
+    private System.Windows.Forms.Button btnFullCopy;
   }
 }

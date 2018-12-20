@@ -2450,7 +2450,7 @@ namespace C64Studio.Parser
                   ++nextIndex;
                 }
               }
-              i = nextIndex;
+              i = nextIndex - 1;
               continue;
             }
           }

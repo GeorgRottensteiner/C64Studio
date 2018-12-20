@@ -123,6 +123,7 @@ namespace C64Studio
         Close();
         return;
       }
+      CheckRenumbering();
     }
 
   }
