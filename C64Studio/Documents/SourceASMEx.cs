@@ -2937,7 +2937,7 @@ namespace C64Studio
               if ( !setLines.ContainsValue( sourceInfo.Value.LocalStartLine + i ) )
               {
                 m_LineInfos[sourceInfo.Value.LocalStartLine + i] = FileInfo.LineInfo[sourceInfo.Value.GlobalStartLine + i];
-                //setLines.Add( sourceInfo.Value.LocalStartLine + i );
+                setLines.Add( sourceInfo.Value.LocalStartLine + i );
               }
               else
               {

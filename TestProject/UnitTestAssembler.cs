@@ -217,6 +217,49 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestMacroWithLocalLabels()
+    {
+      string   source = @"* = $0801
+
+        !basic
+
+        LABEL_POS = $2000
+
+        ; add immediate 16bit value to memory 
+        !macro add16im .dest, .val {
+              lda #<.val 
+        clc
+        adc .dest
+        sta .dest
+        lda #>.val 
+        adc .dest + 1
+        sta .dest + 1
+        } 
+
+
+        +add16im LABEL_POS, 256
+        rts";
+
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      var assembly = parser.AssembledOutput;
+
+      Assert.AreEqual( "01080B080A009E32303631000000A900186D00208D0020A9016D01208D012060", assembly.Assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestSegmentOutOfBounds()
     {
       // this test is probably obsolete as you can assemble files bigger than $ffff

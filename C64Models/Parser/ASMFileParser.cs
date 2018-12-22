@@ -9052,6 +9052,7 @@ namespace C64Studio.Parser
 
 
 
+    // relabels local labels in macros to avoid clashes with duplicate calls - spares parameters
     private string[] RelabelLocalLabelsForMacro( string[] Lines, List<Types.ScopeInfo> Scopes, int lineIndex, string functionName, Types.MacroFunctionInfo functionInfo, List<string> param, out int LineIndexInsideMacro )
     {
       string[] replacementLines = new string[functionInfo.LineEnd - functionInfo.LineIndex - 1];

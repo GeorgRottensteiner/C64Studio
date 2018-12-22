@@ -1,16 +1,7 @@
 ﻿C64Studio
-o BASIC Renumber bug:
-Original Zeile
-700 ON-(O(0)<>S(Z(SI))ORO(2)<>12)GOTO710:PL(Z(SI))=PL(Z(SI))+1:PT=PT+1:GOSUB720:GOSUB1080:GOSUB830:GOTO360
-
-Nach 1. Renumber (10,10)
-700ON-(O(0)<>S(Z(SI))ORO(2)<>12)GOTO710PL(Z(SI))=PL(Z(SI))+1:PT=PT+1:GOSUB720GOSUB1080GOSUB830GOTO360
-
-Nach 2. Renumber(10,10)
-700ON-(O(0)<>S(Z(SI))ORO(2)<>12)GOTO710L(Z(SI))=PL(Z(SI))+1:PT=PT+1:GOSUB7201080GOSUB830360
-
-Nach 3. Renumber (10,10)
-700ON-(O(0)<>S(Z(SI))ORO(2)<>12)GOTO710(Z(SI))=PL(Z(SI))+1:PT=PT+1:GOSUB7201080830360
+o Beim Erstparsen beim öffnen ein Fehler -> Intellisense wird nicht gefüllt?
+o Adress-Anzeige im linken Rand fehlerhaft (bei For-Loops)
+o Bessere Anzeige der optionalen Zyklen
 
 o Debug Watch - Variablen auch gedreht anzeigen? (lo<>hi)
 o Mehrere Memory-Fenster, machbar?

@@ -1,11 +1,24 @@
 VIC_SPRITE_X_POS        = $d000
 VIC_SPRITE_Y_POS        = $d001
 VIC_SPRITE_X_EXTEND     = $d010
+
+;| Bit  7   |    Raster Position Bit 8 from $D012
+;| Bit  6   |    Extended Color Text Mode: 1 = Enable
+;| Bit  5   |    Bitmap Mode: 1 = Enable
+;| Bit  4   |    Blank Screen to Border Color: 0 = Blank
+;| Bit  3   |    Select 24/25 Row Text Display: 1 = 25 Rows
+;| Bits 2-0 |    Smooth Scroll to Y Dot-Position (0-7)
 VIC_CONTROL_1           = $d011
 VIC_RASTER_POS          = $d012
 VIC_STROBE_X            = $d013   ;light pen x
 VIC_STROBE_Y            = $d014   ;light pen y
 VIC_SPRITE_ENABLE       = $d015 
+
+;| Bits 7-6 |    Unused
+;| Bit  5   |    Reset-Bit: 1 = Stop VIC (no Video Out, no RAM refresh, no bus access)
+;| Bit  4   |    Multi-Color Mode: 1 = Enable (Text or Bitmap)
+;| Bit  3   |    Select 38/40 Column Text Display: 1 = 40 Cols
+;| Bits 2-0 |    Smooth Scroll to X Dot-Position (0-7)
 VIC_CONTROL_2           = $d016
 VIC_SPRITE_EXPAND_Y     = $d017
 VIC_MEMORY_CONTROL      = $d018
@@ -38,4 +51,5 @@ JOYSTICK_PORT_I         = $dc01
 
 PROCESSOR_PORT          = $01
 
-
+KERNAL_IRQ_LO           = $fffe
+KERNAL_IRQ_HI           = $ffff
