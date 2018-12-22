@@ -1,6 +1,5 @@
 ﻿C64Studio
 o Beim Erstparsen beim öffnen ein Fehler -> Intellisense wird nicht gefüllt?
-o Adress-Anzeige im linken Rand fehlerhaft (bei For-Loops)
 o Bessere Anzeige der optionalen Zyklen
 
 o Debug Watch - Variablen auch gedreht anzeigen? (lo<>hi)
