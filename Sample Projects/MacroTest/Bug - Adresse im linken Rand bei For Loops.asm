@@ -1,7 +1,7 @@
 !to "Lady-Bug.prg",cbm
 
 Pos       = $50
-Bank        = $4000*3
+xBank        = $4000*3
 Matrix      = $3C00
 Farbram     = $D800
 Fenster_X     = $C000
