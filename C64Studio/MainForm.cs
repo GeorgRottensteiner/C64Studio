@@ -2658,9 +2658,24 @@ namespace C64Studio
       StudioCore.SetStatus( "Running..." );
 
       SetGUIForWaitOnExternalTool( true );
-      if ( ( StudioCore.Executing.RunProcess.Start() )
-      && ( StudioCore.Executing.RunProcess.WaitForInputIdle() ) )
+
+      if ( StudioCore.Executing.RunProcess.Start() )
       {
+        DateTime    current = DateTime.Now;
+
+        // new GTK VICE opens up with console window (yuck) which nicely interferes with WaitForInputIdle -> give it 5 seconds to open main window
+        while ( ( DateTime.Now - current ).TotalMilliseconds < 5000 )
+        {
+          if ( StudioCore.Executing.RunProcess.MainWindowHandle != IntPtr.Zero )
+          {
+            if ( StudioCore.Executing.RunProcess.WaitForInputIdle() )
+            {
+              break;
+            }
+          }
+          System.Threading.Thread.Sleep( 100 );
+        }
+
         // only connect with debugger if VICE
         if ( EmulatorSupportsDebugging( toolRun ) )
         {
