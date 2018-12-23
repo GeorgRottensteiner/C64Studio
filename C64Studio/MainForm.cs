@@ -2664,16 +2664,13 @@ namespace C64Studio
         DateTime    current = DateTime.Now;
 
         // new GTK VICE opens up with console window (yuck) which nicely interferes with WaitForInputIdle -> give it 5 seconds to open main window
-        while ( ( DateTime.Now - current ).TotalMilliseconds < 5000 )
+        try
         {
-          if ( StudioCore.Executing.RunProcess.MainWindowHandle != IntPtr.Zero )
-          {
-            if ( StudioCore.Executing.RunProcess.WaitForInputIdle() )
-            {
-              break;
-            }
-          }
-          System.Threading.Thread.Sleep( 100 );
+          StudioCore.Executing.RunProcess.WaitForInputIdle( 5000 );
+        }
+        catch ( Exception ex )
+        {
+          Debug.Log( "WaitForInputIdle failed: " + ex.ToString() );
         }
 
         // only connect with debugger if VICE
@@ -2681,6 +2678,7 @@ namespace C64Studio
         {
           if ( StudioCore.Debugging.Debugger.ConnectToEmulator() )
           {
+            Debug.Log( "connected" );
             m_CurrentActiveTool = toolRun;
             StudioCore.Debugging.DebuggedProject = DocumentToRun.Project;
             AppState = Types.StudioState.DEBUGGING_RUN;
