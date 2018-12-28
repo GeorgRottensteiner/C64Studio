@@ -21,6 +21,11 @@ VIC_SPRITE_ENABLE       = $d015
 ;| Bits 2-0 |    Smooth Scroll to X Dot-Position (0-7)
 VIC_CONTROL_2           = $d016
 VIC_SPRITE_EXPAND_Y     = $d017
+
+;| Bits 7-4 |   Video Matrix Base Address (inside VIC)
+;| Bit  3   |   Bitmap-Mode: Select Base Address (inside VIC)
+;| Bits 3-1 |   Character Dot-Data Base Address (inside VIC)
+;| Bit  0   |   Unused
 VIC_MEMORY_CONTROL      = $d018
 VIC_IRQ_REQUEST         = $d019 
 VIC_IRQ_MASK            = $d01a

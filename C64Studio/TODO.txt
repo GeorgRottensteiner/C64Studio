@@ -1,5 +1,6 @@
 ﻿C64Studio
 o Beim Erstparsen beim öffnen ein Fehler -> Intellisense wird nicht gefüllt?
+o beim exportieren von Map-Daten, funktioniert der wrap m.E. nicht richtig. Zumindest bei den Tiles werden die nicht wie gewünscht "gewrappt
 o Bessere Anzeige der optionalen Zyklen
 
 o Debug Watch - Variablen auch gedreht anzeigen? (lo<>hi)

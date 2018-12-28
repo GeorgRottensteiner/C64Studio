@@ -2678,7 +2678,6 @@ namespace C64Studio
         {
           if ( StudioCore.Debugging.Debugger.ConnectToEmulator() )
           {
-            Debug.Log( "connected" );
             m_CurrentActiveTool = toolRun;
             StudioCore.Debugging.DebuggedProject = DocumentToRun.Project;
             AppState = Types.StudioState.DEBUGGING_RUN;
