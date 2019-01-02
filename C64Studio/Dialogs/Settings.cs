@@ -600,18 +600,25 @@ namespace C64Studio
     private void button1_Click( object sender, EventArgs e )
     {
       string    macroInfo = "";
+      bool      error = false;
 
-      bool   error = false;
-
-      macroInfo = "$(Filename) = " + Core.MainForm.FillParameters( "$(Filename)", Core.MainForm.ActiveDocumentInfo, false, out error ) + System.Environment.NewLine;
-      macroInfo += "$(FilenameWithoutExtension) = " + Core.MainForm.FillParameters( "$(FilenameWithoutExtension)", Core.MainForm.ActiveDocumentInfo, false, out error ) + System.Environment.NewLine;
-      macroInfo += "$(FilePath) = " + Core.MainForm.FillParameters( "$(FilePath)", Core.MainForm.ActiveDocumentInfo, false, out error ) + System.Environment.NewLine;
-      macroInfo += "$(BuildTargetFilename) = " + Core.MainForm.FillParameters( "$(BuildTargetFilename)", Core.MainForm.ActiveDocumentInfo, false, out error ) + System.Environment.NewLine;
-      macroInfo += "$(BuildTargetFilenameWithoutExtension) = " + Core.MainForm.FillParameters( "$(BuildTargetFilenameWithoutExtension)", Core.MainForm.ActiveDocumentInfo, false, out error ) + System.Environment.NewLine;
-      macroInfo += "$(DebugStartAddress) = " + Core.MainForm.FillParameters( "$(DebugStartAddress)", Core.MainForm.ActiveDocumentInfo, false, out error ) + System.Environment.NewLine;
-      macroInfo += "$(DebugStartAddressHex) = " + Core.MainForm.FillParameters( "$(DebugStartAddressHex)", Core.MainForm.ActiveDocumentInfo, false, out error ) + System.Environment.NewLine;
-
-      System.Windows.Forms.MessageBox.Show( macroInfo );
+      var Document = Core.MainForm.ActiveDocumentInfo;
+      if ( Document == null )
+      {
+        macroInfo = "Sorry, but no document is currently active.";
+        error = true;
+      }
+      else
+      {
+        macroInfo = "$(Filename) = " + Core.MainForm.FillParameters( "$(Filename)", Document, false, out error ) + System.Environment.NewLine;
+        macroInfo += "$(FilenameWithoutExtension) = " + Core.MainForm.FillParameters( "$(FilenameWithoutExtension)", Document, false, out error ) + System.Environment.NewLine;
+        macroInfo += "$(FilePath) = " + Core.MainForm.FillParameters( "$(FilePath)", Document, false, out error ) + System.Environment.NewLine;
+        macroInfo += "$(BuildTargetFilename) = " + Core.MainForm.FillParameters( "$(BuildTargetFilename)", Document, false, out error ) + System.Environment.NewLine;
+        macroInfo += "$(BuildTargetFilenameWithoutExtension) = " + Core.MainForm.FillParameters( "$(BuildTargetFilenameWithoutExtension)", Document, false, out error ) + System.Environment.NewLine;
+        macroInfo += "$(DebugStartAddress) = " + Core.MainForm.FillParameters( "$(DebugStartAddress)", Document, false, out error ) + System.Environment.NewLine;
+        macroInfo += "$(DebugStartAddressHex) = " + Core.MainForm.FillParameters( "$(DebugStartAddressHex)", Document, false, out error ) + System.Environment.NewLine;
+      }
+      System.Windows.Forms.MessageBox.Show( macroInfo, "Macros" );
     }
 
 
