@@ -104,8 +104,10 @@ namespace C64Studio
 
 
 
-    public FormFindReplace()
+    public FormFindReplace( StudioCore Core )
     {
+      this.Core = Core;
+
       InitializeComponent();
 
       foreach ( FindTarget target in Enum.GetValues( typeof( FindTarget ) ) )
@@ -117,6 +119,7 @@ namespace C64Studio
       comboReplaceTarget.SelectedIndex = (int)FindTarget.ACTIVE_DOCUMENT;
       comboSearchText.Focus();
       AcceptButton = btnFindNext;
+      RefreshDisplayOptions();
     }
 
 
