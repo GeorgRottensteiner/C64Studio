@@ -68,28 +68,29 @@ namespace Be.Windows.Forms
           {
             spriteData.SetU8At( i, Box.ByteProvider.ReadByte( firstTrueByte + ( j - firstSprite ) * 64 + i ) );
           }
-          GR.Image.FastImage  spriteImage = new GR.Image.FastImage( 24, 21, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-          spriteImage.Box( 0, 0, 24, 21, 1 );
-          C64Studio.CustomRenderer.PaletteManager.ApplyPalette( spriteImage );
-
-          if ( MultiColor )
+          using ( GR.Image.FastImage spriteImage = new GR.Image.FastImage( 24, 21, System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )
           {
-            SpriteDisplayer.DisplayMultiColorSprite( spriteData, BackgroundColor, MultiColor1, MultiColor2, CustomColor, spriteImage, 0, 0 );
+            spriteImage.Box( 0, 0, 24, 21, 1 );
+            C64Studio.CustomRenderer.PaletteManager.ApplyPalette( spriteImage );
+
+            if ( MultiColor )
+            {
+              SpriteDisplayer.DisplayMultiColorSprite( spriteData, BackgroundColor, MultiColor1, MultiColor2, CustomColor, spriteImage, 0, 0 );
+            }
+            else
+            {
+              SpriteDisplayer.DisplayHiResSprite( spriteData, BackgroundColor, CustomColor, spriteImage, 0, 0 );
+            }
+
+            int     offsetY = (int)( Box.CharSize.Height * ( j - firstSprite ) * 8 + ( Box.CharSize.Height * 8 - spriteSize ) / 2 ) - (int)( Box.CharSize.Height * firstLineOffset );
+
+            using ( System.Drawing.Image img = spriteImage.GetAsBitmap() )
+            {
+              graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+
+              graphics.DrawImage( img, new Rectangle( _recHex.Left, _recHex.Top + offsetY, spriteSize, spriteSize ) );
+            }
           }
-          else
-          {
-            SpriteDisplayer.DisplayHiResSprite( spriteData, BackgroundColor, CustomColor, spriteImage, 0, 0 );
-          }
-
-          int     offsetY = (int)( Box.CharSize.Height * ( j - firstSprite ) * 8 + ( Box.CharSize.Height * 8 - spriteSize ) / 2 ) - (int)( Box.CharSize.Height * firstLineOffset );
-
-          System.Drawing.Image    img = spriteImage.GetAsBitmap();
-
-          graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-
-          graphics.DrawImage( img, new Rectangle( _recHex.Left, _recHex.Top + offsetY, spriteSize, spriteSize ) );
-
-          img.Dispose();
         }
 
         graphics.Clip = oldClip;
