@@ -87,7 +87,6 @@ namespace Be.Windows.Forms
             using ( System.Drawing.Image img = spriteImage.GetAsBitmap() )
             {
               graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-
               graphics.DrawImage( img, new Rectangle( _recHex.Left, _recHex.Top + offsetY, spriteSize, spriteSize ) );
             }
           }

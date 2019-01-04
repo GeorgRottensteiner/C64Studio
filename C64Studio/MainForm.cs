@@ -45,7 +45,7 @@ namespace C64Studio
     public Outline                m_Outline = new Outline();
     public ValueTableEditor       m_ValueTableEditor = null;
     public Help                   m_Help = new Help();
-    public FormFindReplace        m_FindReplace = new FormFindReplace();
+    public FormFindReplace        m_FindReplace = null;
 
     public SearchResults          m_SearchResults = new SearchResults();
     public Perspective            m_ActivePerspective = Perspective.DEBUG;
@@ -578,6 +578,7 @@ namespace C64Studio
       m_Disassembler        = new Disassembler( StudioCore );
       m_DebugMemory         = new DebugMemory( StudioCore );
       m_ValueTableEditor    = new ValueTableEditor( StudioCore );
+      m_FindReplace         = new FormFindReplace( StudioCore );
 
       m_BinaryEditor.SetInternal();
       m_CharsetEditor.SetInternal();
@@ -797,6 +798,7 @@ namespace C64Studio
       mainTools.Visible = StudioCore.Settings.ToolbarActiveMain;
       debugTools.Visible = StudioCore.Settings.ToolbarActiveDebugger;
 
+      m_FindReplace.RefreshDisplayOptions();
       StudioCore.Settings.RefreshDisplayOnAllDocuments( StudioCore );
 
       SetGUIForWaitOnExternalTool( false );
