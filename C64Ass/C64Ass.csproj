@@ -57,7 +57,8 @@
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\C64Ass"</PostBuildEvent>
+    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">copy "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\C64Ass"</PostBuildEvent>
+    <PostBuildEvent Condition="'$(OS)' == 'Unix' ">cp "$(TargetDir)C64Ass.exe" "$(SolutionDir)C64StudioRelease\C64Ass"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
