@@ -9,11 +9,10 @@ namespace GR
 	  /// </summary>
 	  public class ByteBuffer
 	  {
-      private static readonly byte[] EmptyByteArray = new byte[0];  // alternatively use System.Array.Empty<byte>()
+      private static readonly byte[] EmptyByteArray = new byte[0];  // alternatively alias System.Array.Empty<byte>()
 
       private System.Runtime.InteropServices.GCHandle   m_PinnedHandle = default( System.Runtime.InteropServices.GCHandle );
 
-      //private byte[] m_Data = new byte[0];
       private byte[] m_Data = EmptyByteArray;
 
       private UInt32 m_UsedBytes = 0;
@@ -148,15 +147,10 @@ namespace GR
         if ( ( iIndex < 0 )
         ||   ( iIndex + iBytes >= Length ) )
         {
-          //return new byte[0];
           return EmptyByteArray;
         }
         byte[] bReturn = new byte[iBytes];
 
-        //for ( int i = 0; i < iBytes; ++i )
-        //{
-        //  bReturn[i] = m_Data[iIndex + i];
-        //}
         Array.Copy( m_Data, iIndex, bReturn, 0, iBytes );
         return bReturn;
       }
@@ -380,10 +374,6 @@ namespace GR
         {
           m_Data = new byte[iLength];
 
-          //for ( int i = 0; i < iLength; ++i )
-          //{
-          //  m_Data[i] = bData[iStartIndex + i];
-          //}
           Array.Copy( bData, iStartIndex, m_Data, 0, iLength );
           m_UsedBytes = (UInt32)iLength;
         }
@@ -391,10 +381,6 @@ namespace GR
         {
           if ( m_UsedBytes + iLength <= m_Data.Length )
           {
-            //for ( int i = 0; i < iLength; ++i )
-            //{
-            //  m_Data[m_UsedBytes + i] = bData[iStartIndex + i];
-            //}
             Array.Copy( bData, iStartIndex, m_Data, m_UsedBytes, iLength );
             m_UsedBytes += (UInt32)iLength;
           }
@@ -403,10 +389,6 @@ namespace GR
             byte[] bTemp = new byte[m_Data.Length + iLength];
 
             m_Data.CopyTo( bTemp, 0 );
-            //for ( int i = 0; i < iLength; ++i )
-            //{
-            //  bTemp[m_Data.Length + i] = bData[iStartIndex + i];
-            //}
             Array.Copy( bData, iStartIndex, bTemp, m_Data.Length, iLength );
             m_Data = bTemp;
             m_UsedBytes = (UInt32)m_Data.Length;
@@ -483,7 +465,6 @@ namespace GR
 
       public void Clear()
       {
-        //m_Data = new byte[0];
         m_Data = EmptyByteArray;
         m_UsedBytes = 0;
       }
@@ -513,17 +494,6 @@ namespace GR
 
       public override string ToString()
       {
-        //if ( m_Data != null )
-        //{
-        //  System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        //
-        //  for ( int i = 0; i < m_UsedBytes; i++ )
-        //  {
-        //    sb.Append( m_Data[i].ToString( "X2" ) );
-        //  }
-        //  return sb.ToString();
-        //}
-        //return "";
         return ArrayToHexString( m_Data, 0, (int)m_UsedBytes );
       }
 
@@ -541,13 +511,6 @@ namespace GR
         }
         UInt32 iAnzahl = m_UsedBytes - iStartIndex;
 
-        //string    strDatenInHexFormat = "";
-        //
-        //for ( UInt32 i = iStartIndex; i < iStartIndex + iAnzahl; i++ )
-        //{
-        //  strDatenInHexFormat += m_Data[i].ToString( "X2" );
-        //}
-        //return strDatenInHexFormat;
         return ArrayToHexString( m_Data, (int)iStartIndex, (int)iAnzahl );
       }
 
@@ -566,14 +529,7 @@ namespace GR
           return "";
         }
 
-        //string    strDatenInHexFormat = "";
-        //
-        //for ( int i = 0; i < iAnzahl; i++ )
-        //{
-        //  strDatenInHexFormat += m_Data[iStartIndex + i].ToString( "X2" );
-        //}
-        //return strDatenInHexFormat;
-        return ArrayToHexString( m_Data, (int)iStartIndex, iAnzahl );
+        return ArrayToHexString( m_Data, iStartIndex, iAnzahl );
       }
 
 
@@ -720,12 +676,7 @@ namespace GR
         }
         byte[] bTemp = new byte[BytesToReserve];
 
-        System.Diagnostics.Debug.Assert( Array.TrueForAll( bTemp, bTempItem => (bTempItem == 0) ), "Double-check assumptions about removed code (after next line) [1]" );
         m_Data.CopyTo( bTemp, 0 );
-        //for ( int i = m_Data.Length; i < BytesToReserve; ++i )
-        //{
-        //  bTemp[i] = 0;
-        //}
         m_Data = bTemp;
       }
 
@@ -734,11 +685,6 @@ namespace GR
         if ( m_Data == null )
         {
           m_Data = new byte[iSize];
-          //for ( int i = 0; i < iSize; ++i )
-          //{
-          //  m_Data[i] = 0;
-          //}
-          System.Diagnostics.Debug.Assert( Array.TrueForAll( m_Data, m_DataItem => (m_DataItem == 0) ), "Double-check assumptions about removed code (after next line) [2]" );
         }
         else
         {
@@ -749,24 +695,7 @@ namespace GR
           }
           byte[] bTemp = new byte[iSize];
 
-          System.Diagnostics.Debug.Assert( ( m_Data.Length < iSize ), "Double-check assumptions about removed code (if-else clause) [3]" );
-          //if ( m_Data.Length < iSize )
-          //{
-            System.Diagnostics.Debug.Assert( Array.TrueForAll( bTemp, bTempItem => (bTempItem == 0) ), "Double-check assumptions about removed code (after next line) [4]" );
-            m_Data.CopyTo( bTemp, 0 );
-            //for ( int i = m_Data.Length; i < iSize; ++i )
-            //{
-            //  bTemp[i] = 0;
-            //}
-          //}
-          //else
-          //{
-          //  System.Diagnostics.Debug.Fail( "Double-check assumptions about removed code (immediately below) [5]" );
-          //  //for ( int i = 0; i < iSize; ++i )
-          //  //{
-          //  //  bTemp[i] = m_Data[i];
-          //  //}
-          //}
+          m_Data.CopyTo( bTemp, 0 );
           m_Data = bTemp;
         }
         m_UsedBytes = iSize;
