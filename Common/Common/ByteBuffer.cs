@@ -176,7 +176,7 @@ namespace GR
       public byte[] Data( int StartIndex, int NumBytes )
       {
         if ( ( StartIndex < 0 )
-        ||   ( StartIndex + NumBytes >= Length ) )
+        ||   ( StartIndex + NumBytes > Length ) )
         {
           return EmptyByteArray;
         }
