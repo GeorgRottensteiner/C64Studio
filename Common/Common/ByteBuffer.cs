@@ -67,6 +67,50 @@ namespace GR
 
 
 
+      public static bool operator ==( ByteBuffer BB1, ByteBuffer BB2 )
+      {
+        if ( object.ReferenceEquals( BB1, null ) )
+        {
+          return object.ReferenceEquals( BB2, null );
+        }
+        if ( object.ReferenceEquals( BB2, null ) )
+        {
+          return false;
+        }
+        return ( BB1.Compare( BB2 ) == 0 );
+      }
+
+
+
+      public override bool Equals( object obj )
+      {
+        return this == (ByteBuffer)obj;
+      }
+
+
+
+      public override int GetHashCode()
+      {
+        return base.GetHashCode();
+      }
+
+
+
+      public static bool operator !=( ByteBuffer BB1, ByteBuffer BB2 )
+      {
+        if ( object.ReferenceEquals( BB1, null ) )
+        {
+          return !object.ReferenceEquals( BB2, null );
+        }
+        if ( object.ReferenceEquals( BB2, null ) )
+        {
+          return true;
+        }
+        return ( BB1.Compare( BB2 ) != 0 );
+      }
+
+
+
       public int Compare( GR.Memory.ByteBuffer OtherBuffer )
       {
         for ( int i = 0; i < Length; ++i )

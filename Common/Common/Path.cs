@@ -13,19 +13,24 @@ namespace GR
       return IsSeparator( Char, PotentialPathSeparators );
     }
 
+
+
     public static bool IsSeparator( char Char, string Separator )
     {
       return ( Separator.IndexOf( Char ) != -1 );
     }
+
+
 
     public static string AddBackslash( string Path )
     {
       return AddBackslash( Path, PotentialPathSeparators );
     }
 
+
+
     public static string AddBackslash( string Path, string Separators )
     {
-
       if ( String.IsNullOrEmpty( Path ) )
       {
         return Separators.Substring( 0, 1 );
@@ -38,10 +43,14 @@ namespace GR
       return Path;
     }
 
+
+
     public static string RemoveBackslash( string Path )
     {
       return RemoveBackslash( Path, PotentialPathSeparators );
     }
+
+
 
     public static string RemoveBackslash( string Path, string Separators )
     {
@@ -113,7 +122,7 @@ namespace GR
 
       if ( !IsDir )
       {
-        while ( true )
+        while ( pos >= 0 )
         {
           char letter = Path[pos];
           --pos;
@@ -217,8 +226,6 @@ namespace GR
 
 
 
-
-
     public static string RemoveFileSpec( string Path )
     {
       return RemoveFileSpec( Path, PotentialPathSeparators );
@@ -252,13 +259,17 @@ namespace GR
 
 
 
-    public static string CommonPrefix( string Path1, string Path2, string Separator )
+    public static string CommonPrefix( string PathArg1, string PathArg2, string Separator )
     {
-      if ( ( String.IsNullOrEmpty( Path1 ) )
-      ||   ( String.IsNullOrEmpty( Path2 ) ) )
+      if ( ( String.IsNullOrEmpty( PathArg1 ) )
+      ||   ( String.IsNullOrEmpty( PathArg2 ) ) )
       {
         return "";
       }
+
+      string Path1 = Normalize( PathArg1, false );
+      string Path2 = Normalize( PathArg2, false );
+
       if ( Path1.ToUpper() == Path2.ToUpper() )
       {
         return Path1;
@@ -341,88 +352,87 @@ namespace GR
 
 
 
-    public static string RelativePathTo( string strFrom, bool bFromDir, string strTo, bool bToDir, string Separators )
+    public static string RelativePathTo( string From, bool FromIsDir, string To, bool ToIsDir, string Separators )
     {
-      string     strTempFrom = strFrom;
-      string     strTempTo   = strTo;
+      string     tempFrom = From;
+      string     tempTo   = To;
 
-      if ( ( String.IsNullOrEmpty( strFrom ) )
-      ||   ( String.IsNullOrEmpty( strTo ) ) )
+      if ( ( String.IsNullOrEmpty( From ) )
+      ||   ( String.IsNullOrEmpty( To ) ) )
       {
-        return strTo;
+        return To;
       }
 
-      if ( !bFromDir )
+      if ( !FromIsDir )
       {
-        strTempFrom = RemoveFileSpec( strTempFrom, Separators );
+        tempFrom = RemoveFileSpec( tempFrom, Separators );
       }
-      if ( !bToDir )
+      if ( !ToIsDir )
       {
-        strTempTo = RemoveFileSpec( strTempTo, Separators );
+        tempTo = RemoveFileSpec( tempTo, Separators );
       }
 
-      strTempFrom = AddBackslash( strTempFrom );
-      strTempTo = AddBackslash( strTempTo );
+      tempFrom = AddBackslash( tempFrom );
+      tempTo = AddBackslash( tempTo );
 
 
-      if ( Char.ToUpper( strFrom[0] ) != Char.ToUpper( strTo[0] ) )
+      if ( Char.ToUpper( From[0] ) != Char.ToUpper( To[0] ) )
       {
         // unterschiedliches Hauptverzeichnis
-        if ( ( bToDir )
-        &&   ( !bFromDir ) )
+        if ( ( ToIsDir )
+        &&   ( !FromIsDir ) )
         {
           // add file name to result
-          return strFrom;
+          return From;
         }
-        return strTo;
+        return To;
       }
 
-      string      strCommon = CommonPrefix( strTempFrom, strTempTo, Separators );
-      string      strResult = "";
+      string      common = CommonPrefix( tempFrom, tempTo, Separators );
+      string      result = "";
 
-      int         iPos =  strCommon.Length;
+      int         pos =  common.Length;
 
-      while ( iPos < strTempFrom.Length )
+      while ( pos < tempFrom.Length )
       {
-        if ( Separators.IndexOf( strTempFrom[iPos] ) == -1 )
+        if ( Separators.IndexOf( tempFrom[pos] ) == -1 )
         {
-          int iPos2 = FindNextSeparator( strTempFrom, iPos + 1, Separators );
+          int iPos2 = FindNextSeparator( tempFrom, pos + 1, Separators );
           if ( iPos2 != -1 )
           {
-            strResult += "..";
-            strResult += Separators[0];
+            result += "..";
+            result += Separators[0];
           }
           else
           {
-            strResult += "..";
+            result += "..";
             break;
           }
-          iPos = iPos2;
+          pos = iPos2;
         }
 
-        ++iPos;
+        ++pos;
       }
 
-      if ( strCommon.Length < strTo.Length )
+      if ( common.Length < To.Length )
       {
-        strResult = Append( strResult, strTo.Substring( strCommon.Length ) );
+        result = Append( result, To.Substring( common.Length ) );
       }
 
-      if ( ( strResult.Length > 0 )
-      &&   ( Separators.IndexOf( strResult[0] ) != -1 ) )
+      if ( ( result.Length > 0 )
+      &&   ( Separators.IndexOf( result[0] ) != -1 ) )
       {
-        strResult = strResult.Substring( 1 );
+        result = result.Substring( 1 );
       }
-      strResult = RemoveBackslash( strResult, Separators );
+      result = RemoveBackslash( result, Separators );
 
-      if ( ( bToDir )
-      &&   ( !bFromDir ) )
+      if ( ( ToIsDir )
+      &&   ( !FromIsDir ) )
       {
         // re-append filename
-        strResult = Append( strResult, System.IO.Path.GetFileName( strFrom ) );
+        result = Append( result, System.IO.Path.GetFileName( From ) );
       }
-
-      return strResult;
+      return result;
     }
 
 
@@ -436,22 +446,19 @@ namespace GR
 
     public static bool IsPathEqual( string Path1, string Path2, string Separators )
     {
-      if ( ( string.IsNullOrEmpty( Path1 ) )
-      &&   ( string.IsNullOrEmpty( Path2 ) ) )
+      string commonPrefix = RemoveBackslash( CommonPrefix( Path1, Path2, Separators ) );
+      if ( ( commonPrefix.Length == RemoveBackslash( Normalize( Path1, false ) ).Length )
+      &&   ( commonPrefix.Length == RemoveBackslash( Normalize( Path2, false ) ).Length ) )
       {
         return true;
       }
-      if ( ( string.IsNullOrEmpty( Path1 ) )
-      ||   ( string.IsNullOrEmpty( Path2 ) ) )
-      {
-        return false;
-      }
-      if ( Path2.Length > Path1.Length )
-      {
-        return ( CommonPrefix( Path1, Path2, Separators ).Length == Path2.Length );
-      }
-      return ( CommonPrefix( Path1, Path2, Separators ).Length == Path1.Length );
+      return false;
     }
+
+
+
+
+
 
 
 
@@ -476,6 +483,7 @@ namespace GR
     }
 
 
+
     public static string RenameExtension( string OrigFilename, string NewExtension )
     {
       return System.IO.Path.GetFileNameWithoutExtension( OrigFilename ) + NewExtension;
@@ -483,10 +491,25 @@ namespace GR
 
 
 
-    public static string RenameFilenameWithoutExtension( string OrigFilename, string NewFilename )
+    /// <summary>
+    /// renames the file without extension in a full path and returns the new full path
+    /// </summary>
+    /// <param name="FullPath"></param>
+    /// <param name="NewFilename"></param>
+    /// <returns>full path with renamed file</returns>
+    public static string RenameFilenameWithoutExtension( string FullPath, string NewFilename )
     {
-      return Append( System.IO.Path.GetDirectoryName( OrigFilename ), NewFilename + System.IO.Path.GetExtension( OrigFilename ) );
+      return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( FullPath ), NewFilename + System.IO.Path.GetExtension( FullPath ) );
     }
+
+
+
+    public static string RenameFile( string OriginalFullPath, string NewFileName )
+    {
+      return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( OriginalFullPath ), NewFileName );
+    }
+
+
 
   }
 }
