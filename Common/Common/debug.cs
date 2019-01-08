@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
       public System.IntPtr pData;
     };
 
+    //[System.Diagnostics.Conditional( "DEBUG" )]  // When needed, uncomment this line to remove debug logging from Release builds
     static public void Log( string sText )
     {
       int   iWnd = FindWindow( null, "DebugHost V2" );
@@ -38,6 +39,10 @@ using System.Runtime.InteropServices;
 
         System.Runtime.InteropServices.Marshal.FreeHGlobal( iPtr );
         System.Runtime.InteropServices.Marshal.FreeHGlobal( cds.pData );
+      }
+      else
+      {
+        System.Diagnostics.Trace.WriteLine( sText );
       }
     }
 	}
