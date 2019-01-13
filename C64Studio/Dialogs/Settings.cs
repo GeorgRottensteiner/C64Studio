@@ -192,7 +192,7 @@ namespace C64Studio
     private void RefillColorList()
     {
       listColoring.Items.Clear();
-      foreach ( Types.ColorableElement element in Core.Settings.SyntaxColoring.Keys )
+      foreach ( Types.ColorableElement element in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {
         if ( element == C64Studio.Types.ColorableElement.LAST_ENTRY )
         {
@@ -822,7 +822,7 @@ namespace C64Studio
       Types.ColorSetting color = (Types.ColorSetting)comboElementBG.Items[e.Index];
       if ( color.Name == "Auto" )
       {
-        color = new C64Studio.Types.ColorSetting( "Auto", Core.Settings.SyntaxColoring[C64Studio.Types.ColorableElement.EMPTY_SPACE].BGColor, Core.Settings.SyntaxColoring[C64Studio.Types.ColorableElement.EMPTY_SPACE].BGColor );
+        color = new C64Studio.Types.ColorSetting( "Auto", Core.Settings.BGColor( C64Studio.Types.ColorableElement.EMPTY_SPACE ), Core.Settings.BGColor( C64Studio.Types.ColorableElement.EMPTY_SPACE ) );
       }
       System.Drawing.Rectangle colorBox = new Rectangle( e.Bounds.Left + 2, e.Bounds.Top + 2, 50, e.Bounds.Height - 4 );
 
@@ -916,11 +916,10 @@ namespace C64Studio
       drawFormat.Alignment = StringAlignment.Center;
       drawFormat.LineAlignment = StringAlignment.Center;
 
-
       if ( color.BGColorAuto )
       {
-        Types.ColorSetting bgColor = Core.Settings.SyntaxColoring[C64Studio.Types.ColorableElement.EMPTY_SPACE];
-        e.Graphics.FillRectangle( new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( bgColor.BGColor ) ), panelElementPreview.ClientRectangle );
+        var bgElementColor = Core.Settings.BGColor( C64Studio.Types.ColorableElement.EMPTY_SPACE );
+        e.Graphics.FillRectangle( new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( bgElementColor ) ), panelElementPreview.ClientRectangle );
       }
       else
       {
@@ -1680,14 +1679,10 @@ namespace C64Studio
           {
             Types.ColorableElement element = (Types.ColorableElement)Enum.Parse( typeof( Types.ColorableElement ), xmlKey.Attribute( "Element" ), true );
 
-            if ( !Core.Settings.SyntaxColoring.ContainsKey( element ) )
-            {
-              Core.Settings.SyntaxColoring[element] = new Types.ColorSetting( GR.EnumHelper.GetDescription( element ) );
-            }
-            Core.Settings.SyntaxColoring[element].FGColor = GR.Convert.ToU32( xmlKey.Attribute( "FGColor" ), 16 );
-
-            Core.Settings.SyntaxColoring[element].BGColorAuto = ( xmlKey.Attribute( "BGColor" ).ToUpper() == "AUTO" );
-            Core.Settings.SyntaxColoring[element].BGColor = GR.Convert.ToU32( xmlKey.Attribute( "BGColor" ), 16 );
+            Core.Settings.SetSyntaxColor( element,
+                                          GR.Convert.ToU32( xmlKey.Attribute( "FGColor" ), 16 ),
+                                          GR.Convert.ToU32( xmlKey.Attribute( "BGColor" ), 16 ),
+                                          ( xmlKey.Attribute( "BGColor" ).ToUpper() == "AUTO" ) );
           }
           catch ( Exception ex )
           {
@@ -1894,7 +1889,7 @@ namespace C64Studio
       GR.Strings.XMLElement     xmlSettingRoot = new GR.Strings.XMLElement( "EditorColors" );
       XMLRoot.AddChild( xmlSettingRoot );
 
-      foreach ( Types.ColorableElement element in Core.Settings.SyntaxColoring.Keys )
+      foreach ( Types.ColorableElement element in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {
         if ( element == C64Studio.Types.ColorableElement.LAST_ENTRY )
         {
@@ -1903,14 +1898,14 @@ namespace C64Studio
         var xmlColor = new GR.Strings.XMLElement( "Color" );
         xmlColor.AddAttribute( "Element", element.ToString() );
 
-        xmlColor.AddAttribute( "FGColor", Core.Settings.SyntaxColoring[element].FGColor.ToString( "X4" ) );
-        if ( Core.Settings.SyntaxColoring[element].BGColorAuto )
+        xmlColor.AddAttribute( "FGColor", Core.Settings.FGColor( element ).ToString( "X4" ) );
+        if ( Core.Settings.BGColorIsAuto( element ) )
         {
           xmlColor.AddAttribute( "BGColor", "Auto" );
         }
         else
         {
-          xmlColor.AddAttribute( "BGColor", Core.Settings.SyntaxColoring[element].BGColor.ToString( "X4" ) );
+          xmlColor.AddAttribute( "BGColor", Core.Settings.BGColor( element ).ToString( "X4" ) );
         }
         xmlSettingRoot.AddChild( xmlColor );
       }

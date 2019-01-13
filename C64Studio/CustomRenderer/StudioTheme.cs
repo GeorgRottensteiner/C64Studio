@@ -25,13 +25,13 @@ namespace C64Studio.CustomRenderer
     {
       var bounds = new Rectangle( Point.Empty, e.Item.Size );
 
-      e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor ) ), bounds );
+      e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) ), bounds );
 
       int     lineY = bounds.Bottom - ( bounds.Height / 2 ) - 1;
       int     lineLeft = bounds.Left + 3;
       int     lineRight = bounds.Right;
 
-      e.Graphics.DrawLine( new System.Drawing.Pen( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].FGColor ) ), lineLeft, lineY, lineRight, lineY );
+      e.Graphics.DrawLine( new System.Drawing.Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) ) ), lineLeft, lineY, lineRight, lineY );
       //base.OnRenderSeparator( e );
     }
   }
@@ -55,18 +55,14 @@ namespace C64Studio.CustomRenderer
     {
       foreach ( ToolStripItem item in Items )
       {
-        //if ( item is ToolStripMenuItem )
-        {
-          //var tsItem = item as ToolStripMenuItem;
-          item.BackColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor );
-          item.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].FGColor );
-        }
+        item.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
+        item.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
         if ( item is ToolStripSeparator )
         {
           var tsItem = item as ToolStripSeparator;
 
-          tsItem.BackColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor );
-          tsItem.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].FGColor );
+          tsItem.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
+          tsItem.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
         }
         if ( item is ToolStripDropDownItem )
         {
@@ -80,11 +76,7 @@ namespace C64Studio.CustomRenderer
 
     internal void ApplyTheme( BaseDocument BaseDoc )
     {
-      if ( Core.Settings.SyntaxColoring.Count == 0 )
-      {
-        return;
-      }
-      BaseDoc.BackColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor );
+      BaseDoc.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
 
       RecolorControlsRecursive( BaseDoc.Controls );
     }
@@ -95,14 +87,14 @@ namespace C64Studio.CustomRenderer
     {
       foreach ( Control control in Controls )
       {
-        control.BackColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor );
-        control.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].FGColor );
+        control.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
+        control.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
 
         if ( control is ComboBox )
         {
           var combo = control as ComboBox;
 
-          combo.BackColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor );
+          combo.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
         }
         if ( control is ToolStrip )
         {

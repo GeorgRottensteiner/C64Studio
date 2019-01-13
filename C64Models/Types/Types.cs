@@ -333,7 +333,7 @@ namespace C64Studio.Types
     [Description( "Control Text" )]
     CONTROL_TEXT,
 
-    FIRST_GUI_ELEMENT = CONTROL_TEXT,
+    //FIRST_GUI_ELEMENT = CONTROL_TEXT,
 
     [Description( "Control Background" )]
     BACKGROUND_CONTROL,

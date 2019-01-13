@@ -292,7 +292,7 @@ namespace C64Studio
       editSource.Language = FastColoredTextBoxNS.Language.Custom;
 
       // adjust caret color (Thanks Tulan!)
-      System.Drawing.Color    backColorForCaret = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.EMPTY_SPACE].BGColor );
+      System.Drawing.Color    backColorForCaret = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.EMPTY_SPACE ) );
       if ( ( 0.2126 * backColorForCaret.R + 0.7152 * backColorForCaret.G + 0.0722 * backColorForCaret.B ) < 127.5 )
       {
         editSource.CaretColor = System.Drawing.Color.White;
@@ -383,27 +383,19 @@ namespace C64Studio
 
     void ApplySyntaxColoring( Types.ColorableElement Element )
     {
-      System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Element].FGColor ) );
+      System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
       System.Drawing.Brush      backBrush = null;
       System.Drawing.FontStyle  fontStyle = System.Drawing.FontStyle.Regular;
 
-      if ( Core.Settings.SyntaxColoring[Element].BGColorAuto )
-      {
-        backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.EMPTY_SPACE].BGColor ) );
-      }
-      else
-      {
-        backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Element].BGColor ) );
-      }
-
+      backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( Element ) ) );
       m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.TextStyle( foreBrush, backBrush, fontStyle );
 
       //editSource.AddStyle( m_TextStyles[(int)Element] );
       editSource.Styles[SyntaxElementStylePrio( Element )] = m_TextStyles[SyntaxElementStylePrio( Element )];
 
       // empty space
-      editSource.BackColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.EMPTY_SPACE].BGColor );
-      editSource.SelectionColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.SELECTED_TEXT].FGColor );
+      editSource.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( Types.ColorableElement.EMPTY_SPACE ) );
+      editSource.SelectionColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( Types.ColorableElement.SELECTED_TEXT ) );
     }
 
 
@@ -722,7 +714,7 @@ namespace C64Studio
       if ( Set )
       {
         m_CurrentMarkedLineIndex = Line;
-        editSource[m_CurrentMarkedLineIndex].BackgroundBrush = new System.Drawing.SolidBrush( System.Drawing.Color.FromArgb( (int)Core.Settings.SyntaxColoring[Types.ColorableElement.CURRENT_DEBUG_LINE].BGColor ) );
+        editSource[m_CurrentMarkedLineIndex].BackgroundBrush = new System.Drawing.SolidBrush( System.Drawing.Color.FromArgb( (int)Core.Settings.BGColor( Types.ColorableElement.CURRENT_DEBUG_LINE ) ) );
       }
     }
 

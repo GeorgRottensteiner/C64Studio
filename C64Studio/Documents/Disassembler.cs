@@ -167,10 +167,6 @@ namespace C64Studio
 
     public override void RefreshDisplayOptions()
     {
-      if ( Core.Settings.SyntaxColoring.Count == 0 )
-      {
-        return;
-      }
       base.RefreshDisplayOptions();
 
       // Font
@@ -244,23 +240,15 @@ namespace C64Studio
 
     void ApplySyntaxColoring( Types.ColorableElement Element )
     {
-      System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Element].FGColor ) );
+      System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
       System.Drawing.Brush      backBrush = null;
       System.Drawing.FontStyle  fontStyle = System.Drawing.FontStyle.Regular;
 
-      if ( Core.Settings.SyntaxColoring[Element].BGColorAuto )
-      {
-        backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.EMPTY_SPACE].BGColor ) );
-      }
-      else
-      {
-        backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Element].BGColor ) );
-      }
-
+      backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( Element ) ) );
       m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.TextStyle( foreBrush, backBrush, fontStyle );
 
       //editSource.AddStyle( m_TextStyles[(int)Element] );
-      editDisassembly.SelectionColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.SELECTED_TEXT].FGColor );
+      editDisassembly.SelectionColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( Types.ColorableElement.SELECTED_TEXT ) );
       editDisassembly.Styles[SyntaxElementStylePrio( Element )] = m_TextStyles[SyntaxElementStylePrio( Element )];
     }
 

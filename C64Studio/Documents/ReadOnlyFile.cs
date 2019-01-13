@@ -61,7 +61,7 @@ namespace C64Studio
       if ( Set )
       {
         m_CurrentMarkedLineIndex = Line;
-        editText[m_CurrentMarkedLineIndex].BackgroundBrush = new System.Drawing.SolidBrush( System.Drawing.Color.FromArgb( (int)Core.Settings.SyntaxColoring[Types.ColorableElement.CURRENT_DEBUG_LINE].BGColor ) );
+        editText[m_CurrentMarkedLineIndex].BackgroundBrush = new System.Drawing.SolidBrush( System.Drawing.Color.FromArgb( (int)Core.Settings.BGColor( Types.ColorableElement.CURRENT_DEBUG_LINE ) ) );
       }
     }
 

@@ -745,6 +745,7 @@ namespace C64Studio
         GR.Forms.WindowStateManager.GeometryFromString( StudioCore.Settings.MainWindowPlacement, this );
       }
 
+      /*
       foreach ( Types.ColorableElement syntax in Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {
         if ( StudioCore.Settings.SyntaxColoring[syntax] == null )
@@ -786,7 +787,7 @@ namespace C64Studio
         {
           StudioCore.Settings.SyntaxColoring[syntax] = new C64Studio.Types.ColorSetting( GR.EnumHelper.GetDescription( syntax ) );
         }
-      }
+      }*/
       m_FindReplace.Fill( StudioCore.Settings );
 
       panelMain.ActiveContentChanged += new EventHandler( panelMain_ActiveContentChanged );
@@ -843,8 +844,8 @@ namespace C64Studio
 
     internal void RefreshDisplayOnAllDocuments()
     {
-      var bgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor );
-      var fgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].FGColor );
+      var bgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
+      var fgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
 
       MainMenuStrip.BackColor = bgColor;
       MainMenuStrip.ForeColor = fgColor;
@@ -3904,19 +3905,7 @@ namespace C64Studio
       m_DebugMemory.SetMemoryDisplayType();
       m_DebugMemory.ApplyHexViewColors();
 
-      if ( StudioCore.Settings.SyntaxColoring.Count == 0 )
-      {
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.NONE, new C64Studio.Types.ColorSetting( "Common Code", 0xff000000 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.CODE, new C64Studio.Types.ColorSetting( "Code", 0xff000000 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.LITERAL_STRING, new C64Studio.Types.ColorSetting( "String Literal", 0xff800000 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.LITERAL_NUMBER, new C64Studio.Types.ColorSetting( "Numeric Literal", 0xff0000ff ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.LABEL, new C64Studio.Types.ColorSetting( "Label", 0xff800000 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.COMMENT, new C64Studio.Types.ColorSetting( "Comment", 0xff008000 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.PSEUDO_OP, new C64Studio.Types.ColorSetting( "Macro", 0xffffff00 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.CURRENT_DEBUG_LINE, new C64Studio.Types.ColorSetting( "Current Debug Line", 0xff000000, 0xffffff00 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.EMPTY_SPACE, new C64Studio.Types.ColorSetting( "Macro", 0xff000000, 0xffffffff ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.OPERATOR, new C64Studio.Types.ColorSetting( "Macro", 0xff000000 ) );
-      }
+      StudioCore.Settings.SanitizeSettings();
       return true;
     }
 
