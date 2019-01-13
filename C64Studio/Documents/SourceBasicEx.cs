@@ -292,7 +292,8 @@ namespace C64Studio
       editSource.Language = FastColoredTextBoxNS.Language.Custom;
 
       // adjust caret color (Thanks Tulan!)
-      if ( ( 0.2126 * editSource.BackColor.R + 0.7152 * editSource.BackColor.G + 0.0722 * editSource.BackColor.B ) < 127.5 )
+      System.Drawing.Color    backColorForCaret = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.EMPTY_SPACE].BGColor );
+      if ( ( 0.2126 * backColorForCaret.R + 0.7152 * backColorForCaret.G + 0.0722 * backColorForCaret.B ) < 127.5 )
       {
         editSource.CaretColor = System.Drawing.Color.White;
       }
