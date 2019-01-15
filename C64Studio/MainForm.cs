@@ -1622,9 +1622,21 @@ namespace C64Studio
       }
       else
       {
-        if ( OpenFile( sender.ToString() ) == null )
+        var newDoc = OpenFile( sender.ToString() );
+        if ( newDoc == null )
         {
           StudioCore.Settings.RemoveFromMRU( StudioCore.Settings.MRUFiles, sender.ToString(), this );
+        }
+        else
+        {
+          if ( newDoc.DocumentInfo.Project != null )
+          {
+            AddTask( new C64Studio.Tasks.TaskParseFile( newDoc.DocumentInfo, newDoc.DocumentInfo.Project.Settings.CurrentConfig ) );
+          }
+          else
+          {
+            AddTask( new C64Studio.Tasks.TaskParseFile( newDoc.DocumentInfo, null ) );
+          }
         }
       }
     }
