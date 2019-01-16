@@ -377,6 +377,13 @@ namespace GR
 
 
 
+      public void AppendF32( float Value )
+      {
+        Append( System.BitConverter.GetBytes( Value ) );
+      }
+
+
+
       public void Append( byte[] Array )
       {
         if ( Array == null )
