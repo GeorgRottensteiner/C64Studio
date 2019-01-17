@@ -200,7 +200,8 @@ namespace C64Studio
       string    line = editSource.Lines[sourceLineIndex];
       var tokens = Parser.ParseTokenInfo( line, 0, line.Length );
 
-      if ( ( tokens.Count > 0 )
+      if ( ( tokens != null )
+      &&   ( tokens.Count > 0 )
       &&   ( tokens[0].Type == TokenInfo.TokenType.MACRO )
       &&   ( tokens[0].Content.ToUpper() == "!BASIC" ) )
       {

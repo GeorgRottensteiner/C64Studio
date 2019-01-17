@@ -11151,7 +11151,8 @@ namespace C64Studio.Parser
               {
                 // some chars were before, but they didn't form a token
                 m_LastErrorInfo.Set( -1, tokenStartPos, charPos - tokenStartPos, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR );
-                return null;
+                result.Clear();
+                return result;
               }
               foreach ( KeyValuePair<Types.TokenInfo.TokenType, string> pair in m_AssemblerSettings.AllowedTokenStartChars )
               {
