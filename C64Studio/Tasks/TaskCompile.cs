@@ -325,9 +325,6 @@ namespace C64Studio.Tasks
         }
         else
         {
-          //EnsureFileIsParsed();
-          //AddTask( new C64Studio.Tasks.TaskParseFile( Doc, config ) );
-
           ProjectConfig config = null;
           if ( Doc.Project != null )
           {

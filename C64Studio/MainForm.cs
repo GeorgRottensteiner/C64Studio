@@ -1629,14 +1629,7 @@ namespace C64Studio
         }
         else
         {
-          if ( newDoc.DocumentInfo.Project != null )
-          {
-            AddTask( new C64Studio.Tasks.TaskParseFile( newDoc.DocumentInfo, newDoc.DocumentInfo.Project.Settings.CurrentConfig ) );
-          }
-          else
-          {
-            AddTask( new C64Studio.Tasks.TaskParseFile( newDoc.DocumentInfo, null ) );
-          }
+          StudioCore.Compiling.PreparseDocument( newDoc );
         }
       }
     }

@@ -142,5 +142,19 @@ namespace C64Studio
 
 
 
+    internal void PreparseDocument( BaseDocument Document )
+    {
+      if ( Document.DocumentInfo.Project != null )
+      {
+        Core.MainForm.AddTask( new C64Studio.Tasks.TaskParseFile( Document.DocumentInfo, Document.DocumentInfo.Project.Settings.CurrentConfig ) );
+      }
+      else
+      {
+        Core.MainForm.AddTask( new C64Studio.Tasks.TaskParseFile( Document.DocumentInfo, null ) );
+      }
+    }
+
+
+
   }
 }

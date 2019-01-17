@@ -2392,16 +2392,10 @@ namespace C64Studio
       else
       {
         var newDoc = Core.MainForm.OpenFile( fullPath );
-
-        if ( newDoc.DocumentInfo.Project != null )
+        if ( newDoc != null )
         {
-          Core.MainForm.AddTask( new C64Studio.Tasks.TaskParseFile( newDoc.DocumentInfo, newDoc.DocumentInfo.Project.Settings.CurrentConfig ) );
+          Core.Compiling.PreparseDocument( newDoc );
         }
-        else
-        {
-          Core.MainForm.AddTask( new C64Studio.Tasks.TaskParseFile( newDoc.DocumentInfo, null ) );
-        }
-
       }
     }
 
