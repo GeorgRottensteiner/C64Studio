@@ -729,7 +729,9 @@ namespace C64Studio
 
       Elements.Remove( Element );
 
-      if ( GR.Path.IsPathEqual( Element.Filename, Settings.MainDocument ) )
+      if ( ( Element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
+      &&   ( Element.Filename != null )
+      &&   ( GR.Path.IsPathEqual( Element.Filename, Settings.MainDocument ) ) )
       {
         Settings.MainDocument = "";
       }

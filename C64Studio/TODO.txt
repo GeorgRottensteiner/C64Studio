@@ -1,4 +1,7 @@
 ﻿C64Studio
+o Still having problems with creating a new sollution/project when another sollution/project is loaded.
+	Both the times I have done this, it's like it's overwritting the previous .s64 file!!!
+o  when creating a new project, shouldn't you clear the breakpoint list ?
 o Intellisense in Kommentaren nicht mehr
 o Breakpoints im Source tauchen im BP-Dialog nicht auf?
 o beim exportieren von Map-Daten, funktioniert der wrap m.E. nicht richtig. Zumindest bei den Tiles werden die nicht wie gewünscht "gewrappt
