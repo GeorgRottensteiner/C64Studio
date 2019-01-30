@@ -77,7 +77,6 @@ o MediaManager: * Dateien mit gleichem Namen unterbinden (bzw. nachfragen!)
 o BASIC: Renumber bei THEN <zeile> tut nicht ?? Seems to work fine
 o BASIC: Renumber nur von Ausschnitten
 o BASIC: Einzelne Zeilennummer ändern (mit Referenzen die angepasst werden)
-o BASIC: Keymapping Default: Z ist nicht auf Y gemappt (aber Y auf Z)
 o BASIC: Snippet-Wizard
 o BASIC: falls ich da bisher etwas übersehen haben sollte, habe ich eine Anregung für einen neuen Editor: 
   Memorymap in Basic erstellen, d.h.:
@@ -123,7 +122,6 @@ o Immer wenn man lda (zeropageadresse),y tippt macht er fuer das ",y" einen Vors
   also z.B. "check_ready", weil das auch ein y im Namen hat. Das ist doch eher ungeschickt so.
 Support fuer den CC65 compiler, so dass man auch in C programmieren kann. Das waere obersuperspitzenkomfortionoes! 
 o Refactoring/Rename 
-o Farben der GUI-Elemente
 o If you go to the preview pane, where it says Entries, i can't see whats underneath that because the slider bar is in the way. 
   (DPI settings!)
 
