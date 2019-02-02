@@ -7059,5 +7059,69 @@ namespace C64Studio
       ApplyFunction( C64Studio.Types.Function.BUILD_TO_PREPROCESSED_FILE );
     }
 
+
+
+    private void debugTestToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      // This is an example test that just downloads all 64KB of RAM quickly from the emulator and displays the round-trip time.
+      var senderGUI = ( sender as ToolStripItem );
+      Action<bool, string> showResult = null;
+      showResult =
+        ( isError, result ) =>
+        {
+          if ( InvokeRequired )
+          {
+            Invoke( showResult, isError, result );
+          }
+          else
+          {
+            MessageBox.Show( ( string.IsNullOrEmpty( result ) ? "No result" : result ), "Debug Test", MessageBoxButtons.OK, ( isError ? MessageBoxIcon.Exclamation : MessageBoxIcon.None ) );
+            senderGUI.Enabled = true;
+          }
+        };
+
+      senderGUI.Enabled = false;
+      try
+      {
+        var debugger = StudioCore.Debugging.Debugger;
+        if ( debugger.State == DebuggerState.NOT_CONNECTED )
+        {
+          showResult( true, string.Format( "Please first Debug|Connect to the emulator.{0}(using the remote monitor option)", Environment.NewLine ) );
+        }
+        else
+        {
+          var sw = System.Diagnostics.Stopwatch.StartNew();
+          DebugEventHandler debugEventHandler = null;
+          debugEventHandler =
+            ( DebugEventData debugEventData ) =>
+            {
+              if ( debugEventData.Type == DebugEvent.UPDATE_WATCH )
+              {
+                sw.Stop();
+                debugger.DebugEvent -= debugEventHandler;
+
+                byte[] dataBytes = debugEventData.Data.Data();
+                var dataString = BitConverter.ToString(dataBytes);
+                if ( dataString.Length > 1023 )
+                {
+                  dataString = dataString.Substring( 0, 510 ) + "..." + dataString.Substring( ( dataString.Length - 510 ), 510 );
+                }
+
+                string message = string.Format( "Received all {1} bytes of RAM in {2:G} milliseconds :{0}{0}{3}", Environment.NewLine, debugEventData.Data.Length.ToString(), sw.Elapsed.TotalMilliseconds, dataString );
+                showResult( false, message );
+              }
+            };
+
+          debugger.DebugEvent += debugEventHandler;
+          debugger.RefreshMemory( 0, 65536, MemorySource.AS_CPU );
+        }
+      }
+      catch ( Exception exception )
+      {
+        Debug.Log( exception.ToString() );
+        showResult( true, exception.Message );
+      }
+    }
+
   }
 }
