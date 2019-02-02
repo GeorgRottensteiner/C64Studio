@@ -39,6 +39,8 @@
       this.btnToggleSymbolMode = new System.Windows.Forms.CheckBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.btnToggleUpperLowerCase = new System.Windows.Forms.CheckBox();
+      this.editBASICStartAddress = new System.Windows.Forms.TextBox();
+      this.label1 = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.menuBASIC.SuspendLayout();
@@ -149,10 +151,31 @@
       this.btnToggleUpperLowerCase.UseVisualStyleBackColor = true;
       this.btnToggleUpperLowerCase.CheckedChanged += new System.EventHandler(this.btnToggleUpperLowerCase_CheckedChanged);
       // 
+      // editBASICStartAddress
+      // 
+      this.editBASICStartAddress.Location = new System.Drawing.Point(214, 30);
+      this.editBASICStartAddress.MaxLength = 7;
+      this.editBASICStartAddress.Name = "editBASICStartAddress";
+      this.editBASICStartAddress.Size = new System.Drawing.Size(65, 20);
+      this.editBASICStartAddress.TabIndex = 4;
+      this.editBASICStartAddress.Text = "2049";
+      this.editBASICStartAddress.TextChanged += new System.EventHandler(this.editBASICStartAddress_TextChanged);
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(135, 33);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(73, 13);
+      this.label1.TabIndex = 5;
+      this.label1.Text = "Start Address:";
+      // 
       // SourceBasicEx
       // 
       this.AllowDrop = true;
       this.ClientSize = new System.Drawing.Size(698, 588);
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.editBASICStartAddress);
       this.Controls.Add(this.menuBASIC);
       this.Controls.Add(this.editSource);
       this.Controls.Add(this.btnToggleUpperLowerCase);
@@ -182,5 +205,7 @@
     private System.Windows.Forms.CheckBox btnToggleSymbolMode;
     private System.Windows.Forms.ToolTip toolTip1;
     private System.Windows.Forms.CheckBox btnToggleUpperLowerCase;
+    private System.Windows.Forms.TextBox editBASICStartAddress;
+    private System.Windows.Forms.Label label1;
   }
 }

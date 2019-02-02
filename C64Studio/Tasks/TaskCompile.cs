@@ -330,12 +330,21 @@ namespace C64Studio.Tasks
           {
             config = Doc.Project.Settings.Configs[ConfigSetting];
           }
+
+          int   startAddress = -1;
+          if ( ( Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
+          &&   ( Doc.BaseDoc != null ) )
+          {
+            // BASIC files bring a start address
+            startAddress = ( (SourceBasicEx)Doc.BaseDoc ).StartAddress;
+          }
           if ( ( !Core.MainForm.ParseFile( parser, Doc, config, OutputMessages, CreatePreProcessedFile ) )
           ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
                                         {
                                           TargetType = Core.DetermineTargetType( Doc, parser ),
                                           OutputFile = Core.DetermineTargetFilename( Doc, parser ),
-                                          AutoTruncateLiteralValues = Core.Settings.ASMAutoTruncateLiteralValues
+                                          AutoTruncateLiteralValues = Core.Settings.ASMAutoTruncateLiteralValues,
+                                          StartAddress = startAddress
                                         } ) )
           ||   ( parser.Errors > 0 ) )
           {

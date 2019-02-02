@@ -85,8 +85,8 @@ namespace C64Studio
         chunkElement.AppendString( dependency.Filename );
       }
 
-      // 3 free strings
-      chunkElement.AppendString( "" );
+      chunkElement.AppendString( Element.StartAddress );
+      // 2 free strings
       chunkElement.AppendString( "" );
       chunkElement.AppendString( "" );
 
@@ -382,8 +382,8 @@ namespace C64Studio
                 string dependency = memChunk.ReadString();
                 element.ForcedDependency.DependentOnFile.Add( new FileDependency.DependencyInfo( dependency, true, false ) );
               }
-              // 3 free strings
-              memChunk.ReadString();
+              element.StartAddress = memChunk.ReadString();
+              // 2 free strings
               memChunk.ReadString();
               memChunk.ReadString();
 

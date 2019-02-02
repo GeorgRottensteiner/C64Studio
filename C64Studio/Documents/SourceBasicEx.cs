@@ -28,6 +28,8 @@ namespace C64Studio
 
     private string                            m_CurrentHighlightText = null;
 
+    private string                            m_StartAddress = "";
+
 
     public override int CursorLine
     {
@@ -153,6 +155,20 @@ namespace C64Studio
       m_ToolTip.Popup += new System.Windows.Forms.PopupEventHandler( m_ToolTip_Popup );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+    }
+
+
+
+    public int StartAddress
+    {
+      get
+      {
+        if ( DocumentInfo.Element != null )
+        {
+          return GR.Convert.ToI32( DocumentInfo.Element.StartAddress );
+        }
+        return GR.Convert.ToI32( m_StartAddress );
+      }
     }
 
 
@@ -589,6 +605,16 @@ namespace C64Studio
 
         editSource.Text = basicText;
         editSource.ClearUndo();
+
+        if ( DocumentInfo.Element != null )
+        {
+          editBASICStartAddress.Text = DocumentInfo.Element.StartAddress;
+          m_StartAddress = DocumentInfo.Element.StartAddress;
+        }
+        if ( string.IsNullOrEmpty( m_StartAddress ) )
+        {
+          editBASICStartAddress.Text = "2049";
+        }
       }
       catch ( System.IO.IOException ex )
       {
@@ -1513,39 +1539,6 @@ namespace C64Studio
       {
         text = MakeUpperCase( text );
       }
-      /*
-      StringBuilder   sb = new StringBuilder( text.Length );
-
-      foreach ( var singleChar in text )
-      {
-        if ( m_LowerCaseMode )
-        {
-          if ( ( singleChar & 0xff00 ) == 0xee00 )
-          {
-            sb.Append( (char)( ( singleChar & 0x00ff ) | 0xef00 ) );
-          }
-          else if ( ( singleChar >= 'A')
-          &&        ( singleChar <= 'Z' ) )
-          {
-            sb.Append( (char)( ( singleChar - 'A' + 1 ) | 0xef00 ) );
-          }
-          else
-          {
-            sb.Append( singleChar );
-          }
-        }
-        else
-        {
-          if ( ( singleChar & 0xff00 ) == 0xef00 )
-          {
-            sb.Append( (char)( ( singleChar & 0x00ff ) | 0xee00 ) );
-          }
-          else
-          {
-            sb.Append( singleChar );
-          }
-        }
-      }*/
       editSource.Text = text;
 
       editSource.VerticalScroll.Value = topLine;
@@ -1614,6 +1607,23 @@ namespace C64Studio
       }
       return sb.ToString();
     }
+
+
+
+    private void editBASICStartAddress_TextChanged( object sender, EventArgs e )
+    {
+      if ( DocumentInfo.Element != null )
+      {
+        if ( DocumentInfo.Element.StartAddress != editBASICStartAddress.Text )
+        {
+          DocumentInfo.Element.StartAddress = editBASICStartAddress.Text;
+          SetModified();
+        }
+      }
+      m_StartAddress = editBASICStartAddress.Text;
+    }
+
+
 
   }
 }
