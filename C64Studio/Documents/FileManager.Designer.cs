@@ -39,6 +39,7 @@
       this.newDiskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.d64ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.d64With40TracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.d71ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.d81ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.validateMediumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,7 +65,7 @@
       this.toolStripBtnOpenHex = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnOpenBASIC = new System.Windows.Forms.ToolStripButton();
       this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
-      this.d71ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripBtnSave = new System.Windows.Forms.ToolStripButton();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuFileManager.SuspendLayout();
       this.statusMedia.SuspendLayout();
@@ -158,6 +159,13 @@
       this.d64With40TracksToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
       this.d64With40TracksToolStripMenuItem.Text = "D64 with 40 tracks";
       this.d64With40TracksToolStripMenuItem.Click += new System.EventHandler(this.d64With40TracksToolStripMenuItem_Click);
+      // 
+      // d71ToolStripMenuItem
+      // 
+      this.d71ToolStripMenuItem.Name = "d71ToolStripMenuItem";
+      this.d71ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+      this.d71ToolStripMenuItem.Text = "D71";
+      this.d71ToolStripMenuItem.Click += new System.EventHandler(this.d71ToolStripMenuItem_Click);
       // 
       // d81ToolStripMenuItem
       // 
@@ -278,6 +286,7 @@
       // 
       this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripBtnImportFile,
+            this.toolStripBtnSave,
             this.toolStripSeparator6,
             this.toolStripBtnMoveFileUp,
             this.toolStripBtnMoveFileDown,
@@ -380,12 +389,15 @@
       this.labelMediaTitle.Text = "toolStripLabel1";
       this.labelMediaTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
-      // d71ToolStripMenuItem
+      // toolStripBtnSave
       // 
-      this.d71ToolStripMenuItem.Name = "d71ToolStripMenuItem";
-      this.d71ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-      this.d71ToolStripMenuItem.Text = "D71";
-      this.d71ToolStripMenuItem.Click += new System.EventHandler(this.d71ToolStripMenuItem_Click);
+      this.toolStripBtnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripBtnSave.Image = global::C64Studio.Properties.Resources.ToolSave;
+      this.toolStripBtnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripBtnSave.Name = "toolStripBtnSave";
+      this.toolStripBtnSave.Size = new System.Drawing.Size(23, 22);
+      this.toolStripBtnSave.Text = "Save";
+      this.toolStripBtnSave.Click += new System.EventHandler(this.toolStripBtnSave_Click);
       // 
       // FileManager
       // 
@@ -448,5 +460,6 @@
     private System.Windows.Forms.ToolStripButton toolStripBtnImportFile;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
     private System.Windows.Forms.ToolStripMenuItem d71ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripButton toolStripBtnSave;
   }
 }
