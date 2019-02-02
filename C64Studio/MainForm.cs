@@ -3864,6 +3864,11 @@ namespace C64Studio
 
     private string SettingsPath()
     {
+      // prefix hard coded version number so we can use our proper version number
+      string    userAppDataPath = GR.Path.ParentDirectory( Application.UserAppDataPath );
+
+      userAppDataPath = System.IO.Path.Combine( userAppDataPath, "1.0.0.0" );
+
       try
       {
         if ( StudioCore.Settings.StudioAppMode == AppMode.PORTABLE_APP )
@@ -3872,12 +3877,12 @@ namespace C64Studio
           return System.IO.Path.Combine( Application.StartupPath, "settings.dat" );
         }
         // return clean user app data path
-        return System.IO.Path.Combine( Application.UserAppDataPath, "settings.dat" );
+        return System.IO.Path.Combine( userAppDataPath, "settings.dat" );
       }
       catch ( Exception )
       {
         // fallback to clean path
-        return System.IO.Path.Combine( Application.UserAppDataPath, "settings.dat" );
+        return System.IO.Path.Combine( userAppDataPath, "settings.dat" );
       }
     }
 

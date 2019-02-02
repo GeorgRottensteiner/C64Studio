@@ -457,11 +457,6 @@ namespace GR
 
 
 
-
-
-
-
-
     public static bool IsSubPath( string ParentPath, string PathToCheck )
     {
       return IsSubPath( ParentPath, PathToCheck, PotentialPathSeparators );
@@ -507,6 +502,27 @@ namespace GR
     public static string RenameFile( string OriginalFullPath, string NewFileName )
     {
       return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( OriginalFullPath ), NewFileName );
+    }
+
+
+
+    public static string ParentDirectory( string OrigPath )
+    {
+      return ParentDirectory( OrigPath, PotentialPathSeparators );
+    }
+
+
+
+    public static string ParentDirectory( string OrigPath, string Separators )
+    {
+      string    cleanEnd = RemoveBackslash( OrigPath, Separators );
+
+      int     prevPos = cleanEnd.LastIndexOfAny( Separators.ToCharArray() );
+      if ( prevPos == -1 )
+      {
+        return "";
+      }
+      return cleanEnd.Substring( 0, prevPos );
     }
 
 
