@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "GR Games" )]
 [assembly: AssemblyProduct( "C64Studio" )]
-[assembly: AssemblyCopyright( "Copyright © GR Games 2011" )]
+[assembly: AssemblyCopyright( "Copyright © GR Games 2011–2019" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion( "1.0.0.0" )]
-[assembly: AssemblyFileVersion( "1.0.0.0" )]
+[assembly: AssemblyVersion( C64Studio.StudioCore.StudioVersion )]
+[assembly: AssemblyFileVersion( C64Studio.StudioCore.StudioVersion )]
