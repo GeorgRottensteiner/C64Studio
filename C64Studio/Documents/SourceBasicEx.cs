@@ -613,6 +613,7 @@ namespace C64Studio
         }
         if ( string.IsNullOrEmpty( m_StartAddress ) )
         {
+          m_StartAddress = "2049";
           editBASICStartAddress.Text = "2049";
         }
       }
