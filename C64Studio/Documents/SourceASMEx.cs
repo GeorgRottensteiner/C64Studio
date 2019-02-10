@@ -11,7 +11,7 @@ using FastColoredTextBoxNS;
 
 namespace C64Studio
 {
-  public partial class SourceASMEx : BaseDocument
+  public partial class SourceASMEx : CompilableDocument
   {
     private const uint TME_HOVER = 0x00000001;
     private const uint TME_LEAVE = 0x00000002;
@@ -83,6 +83,17 @@ namespace C64Studio
         return editSource.Selection.Start.iLine;
       }
     }
+
+
+
+    public override FastColoredTextBoxNS.FastColoredTextBox SourceControl
+    {
+      get
+      {
+        return editSource;
+      }
+    }
+
 
 
     public SourceASMEx( StudioCore Core )
@@ -2352,15 +2363,6 @@ namespace C64Studio
 
 
 
-    public void CenterOnCaret()
-    {
-      // automatically centers
-      //editSource.Navigate( CurrentLineIndex );
-      editSource.DoSelectionVisible();
-    }
-
-
-
     private void openFileToolStripMenuItem_Click( object sender, EventArgs e )
     {
       if ( DocumentInfo == null )
@@ -3074,53 +3076,6 @@ namespace C64Studio
     private void writeOnlyToolStripMenuItem_Click( object sender, EventArgs e )
     {
       AddDataBreakPoint( false, false, true );
-    }
-
-
-
-    public void MarkTextAsError( int LineIndex, int CharPosStart, int CharLength )
-    {
-      if ( ( LineIndex < 0 )
-      ||   ( LineIndex >= editSource.LinesCount ) )
-      {
-        Debug.Log( "MarkTextAsError lineindex out of bounds!" );
-        return;
-      }
-      int     startPos = CharPosStart;
-      if ( editSource.AllowTabs )
-      {
-        // adjust offset in case of tabs (butt ugly hackaround)
-        string origText = editSource[LineIndex].Text;
-
-        if ( CharPosStart < origText.Length )
-        {
-          origText = editSource[LineIndex].Text.Substring( 0, CharPosStart );
-        }
-        origText = editSource.ReTabifyLine( origText, editSource.TabLength );
-
-        startPos = origText.Length;
-
-        if ( ( startPos >= origText.Length )
-        ||   ( startPos + CharLength > origText.Length ) )
-        {
-          startPos = 0;
-          CharLength = origText.Length;
-        }
-
-        //startPos = rng.AdjustXPosForTabs( LineIndex, startPos );
-      }
-
-      var range = new FastColoredTextBoxNS.Range( editSource, new FastColoredTextBoxNS.Place( startPos, LineIndex ), new FastColoredTextBoxNS.Place( startPos + CharLength, LineIndex ) );
-
-      range.SetStyle( FastColoredTextBoxNS.StyleIndex.Style10 );
-    }
-
-
-
-    internal void RemoveAllErrorMarkings()
-    {
-      //TODO das macht schon wieder die folding markers weg!!
-      editSource.ClearStyleWithoutAffectingFoldingMarkers( FastColoredTextBoxNS.StyleIndex.Style10 );
     }
 
 

@@ -87,6 +87,9 @@
     <Compile Include="Dialogs\FormGoto.Designer.cs">
       <DependentUpon>FormGoto.cs</DependentUpon>
     </Compile>
+    <Compile Include="Documents\CompilableDocument.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Documents\ValueTableEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -453,6 +456,9 @@
     <EmbeddedResource Include="Dialogs\FormGoto.resx">
       <DependentUpon>FormGoto.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Documents\CompilableDocument.resx">
+      <DependentUpon>CompilableDocument.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Documents\BaseDocument.resx">
       <DependentUpon>BaseDocument.cs</DependentUpon>
     </EmbeddedResource>
@@ -742,7 +748,7 @@
   <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
 copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"</PostBuildEvent>
-     <PostBuildEvent Condition="'$(OS)' == 'Unix' ">cp "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
+    <PostBuildEvent Condition="'$(OS)' == 'Unix' ">cp "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
         for i in $(TargetDir)*.dll; do cp $i $(SolutionDir)C64StudioRelease; done</PostBuildEvent>
   </PropertyGroup>
 </Project>

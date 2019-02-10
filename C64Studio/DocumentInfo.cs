@@ -107,6 +107,20 @@ namespace C64Studio
 
 
 
+    public CompilableDocument CompilableDocument
+    {
+      get
+      {
+        if ( !Compilable )
+        {
+          return null;
+        }
+        return (CompilableDocument)BaseDoc;
+      }
+    }
+
+
+
     public string FullPath
     {
       get

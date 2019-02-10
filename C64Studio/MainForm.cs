@@ -2932,8 +2932,8 @@ namespace C64Studio
         {
           ProjectElement element = CurrentProject.GetElementByFilename(Breakpoint.DocumentFilename);
           if ( ( element != null )
-          && ( element.Document != null )
-          && ( element.Document is SourceASMEx ) )
+          &&   ( element.Document != null )
+          &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
           {
             SourceASMEx asm = (SourceASMEx)element.Document;
             asm.RemoveBreakpoint( Breakpoint );
@@ -4697,7 +4697,7 @@ namespace C64Studio
           break;
         case C64Studio.Types.Function.TOGGLE_BREAKPOINT:
           if ( ( AppState != Types.StudioState.NORMAL )
-          && ( AppState != C64Studio.Types.StudioState.DEBUGGING_BROKEN ) )
+          &&   ( AppState != C64Studio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -4712,7 +4712,7 @@ namespace C64Studio
           {
             string keywordBelow = null;
             if ( ( ActiveContent != null )
-            && ( ActiveContent is SourceASMEx ) )
+            &&   ( ActiveContent is SourceASMEx ) )
             {
               SourceASMEx asm = ActiveContent as SourceASMEx;
 
@@ -4732,13 +4732,12 @@ namespace C64Studio
           m_FindReplace.FindNext( ActiveDocument );
           break;
         case C64Studio.Types.Function.FIND:
-          if ( ActiveDocument is SourceASMEx )
           {
-            m_FindReplace.AdjustSettings( ( (SourceASMEx)ActiveDocument ).editSource );
-          }
-          else if ( ActiveDocument is SourceBasicEx )
-          {
-            m_FindReplace.AdjustSettings( ( (SourceBasicEx)ActiveDocument ).editSource );
+            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+            if ( compilableDoc != null )
+            {
+              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+            }
           }
           if ( m_FindReplace.Visible )
           {
@@ -4755,13 +4754,12 @@ namespace C64Studio
           m_FindReplace.AcceptButton = m_FindReplace.btnFindNext;
           break;
         case C64Studio.Types.Function.FIND_IN_PROJECT:
-          if ( ActiveDocument is SourceASMEx )
           {
-            m_FindReplace.AdjustSettings( ( (SourceASMEx)ActiveDocument ).editSource );
-          }
-          else if ( ActiveDocument is SourceBasicEx )
-          {
-            m_FindReplace.AdjustSettings( ( (SourceBasicEx)ActiveDocument ).editSource );
+            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+            if ( compilableDoc != null )
+            {
+              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+            }
           }
           if ( m_FindReplace.Visible )
           {
@@ -4777,13 +4775,12 @@ namespace C64Studio
           m_FindReplace.AcceptButton = m_FindReplace.btnFindAll;
           break;
         case C64Studio.Types.Function.FIND_REPLACE:
-          if ( ActiveDocument is SourceASMEx )
           {
-            m_FindReplace.AdjustSettings( ( (SourceASMEx)ActiveDocument ).editSource );
-          }
-          else if ( ActiveDocument is SourceBasicEx )
-          {
-            m_FindReplace.AdjustSettings( ( (SourceBasicEx)ActiveDocument ).editSource );
+            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+            if ( compilableDoc != null )
+            {
+              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+            }
           }
           if ( m_FindReplace.Visible )
           {
@@ -4797,13 +4794,12 @@ namespace C64Studio
           m_FindReplace.tabFindReplace.SelectedIndex = 1;
           break;
         case C64Studio.Types.Function.REPLACE_IN_PROJECT:
-          if ( ActiveDocument is SourceASMEx )
           {
-            m_FindReplace.AdjustSettings( ( (SourceASMEx)ActiveDocument ).editSource );
-          }
-          else if ( ActiveDocument is SourceBasicEx )
-          {
-            m_FindReplace.AdjustSettings( ( (SourceBasicEx)ActiveDocument ).editSource );
+            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+            if ( compilableDoc != null )
+            {
+              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+            }
           }
           if ( m_FindReplace.Visible )
           {
@@ -4838,23 +4834,14 @@ namespace C64Studio
             // save current document
             BaseDocument curDoc = ActiveContent;
             if ( ( curDoc != null )
-            && ( !curDoc.DocumentInfo.ContainsCode ) )
+            &&   ( !curDoc.DocumentInfo.ContainsCode ) )
             {
               curDoc = ActiveDocument;
             }
-            if ( ( curDoc != null )
-            && ( curDoc is SourceASMEx ) )
+            if ( curDoc != null )
             {
-              SourceASMEx source = (SourceASMEx)curDoc;
-
-              source.CenterOnCaret();
-            }
-            if ( ( curDoc != null )
-            && ( curDoc is SourceBasicEx ) )
-            {
-              SourceBasicEx source = (SourceBasicEx)curDoc;
-
-              source.CenterOnCaret();
+              var compilableDoc = curDoc.DocumentInfo.CompilableDocument;
+              compilableDoc?.CenterOnCaret();
             }
           }
           break;
@@ -6999,18 +6986,6 @@ namespace C64Studio
     private void mainToolUncommentSelection_Click( object sender, EventArgs e )
     {
       ApplyFunction( C64Studio.Types.Function.UNCOMMENT_SELECTION );
-    }
-
-
-
-    private void markErrorToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      if ( m_ActiveSource != null )
-      {
-        SourceASMEx source = m_ActiveSource as SourceASMEx;
-
-        source.MarkTextAsError( 1, 2, 5 );
-      }
     }
 
 

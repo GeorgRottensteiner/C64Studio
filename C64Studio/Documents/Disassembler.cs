@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace C64Studio
 {
-  public partial class Disassembler : BaseDocument
+  public partial class Disassembler : CompilableDocument
   {
     private Formats.DisassemblyProject  m_DisassemblyProject = new C64Studio.Formats.DisassemblyProject();
 
@@ -21,6 +21,16 @@ namespace C64Studio
 
     private int                         m_ContextMenuOpeningInLineIndex = -1;
 
+
+
+
+    public override FastColoredTextBoxNS.FastColoredTextBox SourceControl
+    {
+      get
+      {
+        return editDisassembly;
+      }
+    }
 
 
 

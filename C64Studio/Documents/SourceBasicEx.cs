@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace C64Studio
 {
-  public partial class SourceBasicEx : BaseDocument
+  public partial class SourceBasicEx : CompilableDocument
   {
     int                                       m_CurrentMarkedLineIndex = -1;
     string                                    m_FilenameToOpen = "";
@@ -36,6 +36,16 @@ namespace C64Studio
       get
       {
         return editSource.Selection.Start.iLine;
+      }
+    }
+
+
+
+    public override FastColoredTextBoxNS.FastColoredTextBox SourceControl
+    {
+      get
+      {
+        return editSource;
       }
     }
 
@@ -772,9 +782,6 @@ namespace C64Studio
         editSource.Focus();
       }
       editSource.Navigate( Line );
-      ///editSource.Caret.Goto( editSource.Lines[Line].StartPosition );
-      ///editSource.Scrolling.ScrollToCaret();
-      //CenterOnCaret();
     }
 
 
@@ -855,14 +862,6 @@ namespace C64Studio
     public string FindZoneAtCaretPosition()
     {
       return FindZoneFromLine( CurrentLineIndex );
-    }
-
-
-
-    public void CenterOnCaret()
-    {
-      // automatically centers
-      editSource.Navigate( CurrentLineIndex );
     }
 
 

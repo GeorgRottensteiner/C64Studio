@@ -240,6 +240,8 @@ namespace C64Studio.Types
     W0007_POTENTIAL_PROBLEM                 = 0x8006,
     [Description( "W1000: Unused label" )]
     W1000_UNUSED_LABEL                      = 0x9003,
+    [Description( "W1001: BASIC line is too long for manual entry" )]
+    W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY = 0x9004,
 
     WARNING_LAST_PLUS_ONE
   };

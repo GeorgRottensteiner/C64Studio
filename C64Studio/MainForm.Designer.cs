@@ -117,7 +117,6 @@
       this.dumpDockStateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.runTestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.disassembleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.markErrorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.throwExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.disassembleToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -849,7 +848,6 @@
             this.dumpDockStateToolStripMenuItem,
             this.runTestsToolStripMenuItem,
             this.disassembleToolStripMenuItem,
-            this.markErrorToolStripMenuItem,
             this.throwExceptionToolStripMenuItem});
       this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
       this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
@@ -923,13 +921,6 @@
       this.disassembleToolStripMenuItem.Name = "disassembleToolStripMenuItem";
       this.disassembleToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
       this.disassembleToolStripMenuItem.Text = "Disassemble";
-      // 
-      // markErrorToolStripMenuItem
-      // 
-      this.markErrorToolStripMenuItem.Name = "markErrorToolStripMenuItem";
-      this.markErrorToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-      this.markErrorToolStripMenuItem.Text = "Mark Error";
-      this.markErrorToolStripMenuItem.Click += new System.EventHandler(this.markErrorToolStripMenuItem_Click);
       // 
       // throwExceptionToolStripMenuItem
       // 
@@ -1835,7 +1826,6 @@
     private System.Windows.Forms.ToolStripButton mainToolOpenFile;
     private System.Windows.Forms.ToolStripButton mainToolCommentSelection;
     private System.Windows.Forms.ToolStripButton mainToolUncommentSelection;
-    private System.Windows.Forms.ToolStripMenuItem markErrorToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem throwExceptionToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem valueTableToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem buildToolStripMenuItem;

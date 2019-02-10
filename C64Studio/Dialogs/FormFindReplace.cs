@@ -416,24 +416,12 @@ namespace C64Studio
       {
         return null;
       }
-
-      if ( Document.BaseDoc == null )
+      var compilableDoc = Document.CompilableDocument;
+      if ( compilableDoc == null )
       {
         return null;
       }
-      if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
-      {
-        return ( (SourceASMEx)Document.BaseDoc ).editSource;
-      }
-      else if ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
-      {
-        return ( (SourceBasicEx)Document.BaseDoc ).editSource;
-      }
-      else if ( Document.Type == ProjectElement.ElementType.DISASSEMBLER )
-      {
-        return ( (Disassembler)Document.BaseDoc ).editDisassembly;
-      }
-      return null;
+      return compilableDoc.SourceControl;
     }
 
 
