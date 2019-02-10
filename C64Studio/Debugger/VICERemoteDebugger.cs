@@ -719,6 +719,14 @@ namespace C64Studio
       }
       Debug.Log( "Responselines are:" + total );
 
+      if ( total.ToUpper().Contains( "AN ERROR OCCURRED: MAIN CPU: JAM" ) )
+      {
+        InterfaceLog( "CPU JAM encountered: " + total );
+        InterfaceLog( "Disconnecting from VICE" );
+        DisconnectFromEmulator();
+        return;
+      }
+
       switch ( m_Request.Type )
       {
         case Request.READ_REGISTERS:

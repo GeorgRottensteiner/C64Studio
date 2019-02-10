@@ -133,12 +133,16 @@ namespace C64Studio
       editSource.MouseEnter += new EventHandler( editSource_MouseEnter );
       editSource.MouseLeave += new EventHandler(editSource_MouseLeave);
       editSource.MouseMove += new System.Windows.Forms.MouseEventHandler( editSource_MouseMove );
+      editSource.MouseDown += new System.Windows.Forms.MouseEventHandler( editSource_MouseDown );
+      editSource.MouseUp += new System.Windows.Forms.MouseEventHandler( editSource_MouseUp );
       editSource.KeyDown += new System.Windows.Forms.KeyEventHandler( editSource_KeyDown );
       editSource.KeyPress += new System.Windows.Forms.KeyPressEventHandler( editSource_KeyPress );
       editSource.KeyUp += new System.Windows.Forms.KeyEventHandler( editSource_KeyUp );
       editSource.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler( editSource_PreviewKeyDown );
       editSource.TextChanged += new EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>( editSource_TextChanged );
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
+
+      editSource.PreferredLineWidth = 80;
 
 
       editSource.KeyPressing += EditSource_KeyPressing;
@@ -155,6 +159,20 @@ namespace C64Studio
       m_ToolTip.Popup += new System.Windows.Forms.PopupEventHandler( m_ToolTip_Popup );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+    }
+
+
+
+    private void editSource_MouseUp( object sender, MouseEventArgs e )
+    {
+      UpdateStatusInfo();
+    }
+
+
+
+    private void editSource_MouseDown( object sender, MouseEventArgs e )
+    {
+      UpdateStatusInfo();
     }
 
 
