@@ -6638,9 +6638,9 @@ namespace C64Studio
         bool match = true;
         for ( int i = 0; i < 16; ++i )
         {
-          if ( ( IncomingImage.PaletteRed( i ) != ( Types.ConstantData.Palette.ColorValues[i] & 0xff0000 >> 16 ) )
-          || ( IncomingImage.PaletteGreen( i ) != ( Types.ConstantData.Palette.ColorValues[i] & 0xff00 >> 8 ) )
-          || ( IncomingImage.PaletteBlue( i ) != ( Types.ConstantData.Palette.ColorValues[i] & 0xff ) ) )
+          if ( ( IncomingImage.PaletteRed( i ) != ( ( Types.ConstantData.Palette.ColorValues[i] & 0xff0000 ) >> 16 ) )
+          ||   ( IncomingImage.PaletteGreen( i ) != ( ( Types.ConstantData.Palette.ColorValues[i] & 0xff00 ) >> 8 ) )
+          ||   ( IncomingImage.PaletteBlue( i ) != ( ( Types.ConstantData.Palette.ColorValues[i] & 0xff ) ) ) )
           {
             match = false;
             break;

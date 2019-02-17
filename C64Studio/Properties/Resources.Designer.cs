@@ -473,6 +473,16 @@ namespace C64Studio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap tool_validate {
+            get {
+                object obj = ResourceManager.GetObject("tool_validate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap toolbar_basic_symbols_disabled {
             get {
                 object obj = ResourceManager.GetObject("toolbar_basic_symbols_disabled", resourceCulture);

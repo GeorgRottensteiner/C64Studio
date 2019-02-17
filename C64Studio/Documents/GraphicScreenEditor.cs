@@ -460,7 +460,7 @@ namespace C64Studio
 
 
 
-    private bool ImportImage( string Filename, GR.Image.FastImage IncomingImage )
+    private bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, bool InsertAtSelectedLocation )
     {
       GR.Image.FastImage mappedImage = null;
 
@@ -484,19 +484,21 @@ namespace C64Studio
 
       Dialogs.DlgImportImageResize.ImportBehaviour    behaviour = C64Studio.Dialogs.DlgImportImageResize.ImportBehaviour.CLIP_IMAGE;
 
-      if ( ( mappedImage.Width != m_GraphicScreenProject.Image.Width )
-      ||   ( mappedImage.Height != m_GraphicScreenProject.Image.Height ) )
+      if ( !InsertAtSelectedLocation )
       {
-        Dialogs.DlgImportImageResize    dlg = new C64Studio.Dialogs.DlgImportImageResize( mappedImage.Width, mappedImage.Height, m_GraphicScreenProject.Image.Width, m_GraphicScreenProject.Image.Height );
-
-        dlg.ShowDialog();
-        if ( dlg.ChosenResult == C64Studio.Dialogs.DlgImportImageResize.ImportBehaviour.CANCEL )
+        if ( ( mappedImage.Width != m_GraphicScreenProject.Image.Width )
+        ||   ( mappedImage.Height != m_GraphicScreenProject.Image.Height ) )
         {
-          return false;
-        }
-        behaviour = dlg.ChosenResult;
-      }
+          Dialogs.DlgImportImageResize    dlg = new C64Studio.Dialogs.DlgImportImageResize( mappedImage.Width, mappedImage.Height, m_GraphicScreenProject.Image.Width, m_GraphicScreenProject.Image.Height );
 
+          dlg.ShowDialog();
+          if ( dlg.ChosenResult == C64Studio.Dialogs.DlgImportImageResize.ImportBehaviour.CANCEL )
+          {
+            return false;
+          }
+          behaviour = dlg.ChosenResult;
+        }
+      }
       if ( behaviour == C64Studio.Dialogs.DlgImportImageResize.ImportBehaviour.ADJUST_SCREEN_SIZE )
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenSizeChange( m_GraphicScreenProject, this, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
@@ -506,7 +508,14 @@ namespace C64Studio
         DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
       }
 
-      mappedImage.DrawTo( m_GraphicScreenProject.Image, 0, 0 );
+      if ( InsertAtSelectedLocation )
+      {
+        mappedImage.DrawTo( m_GraphicScreenProject.Image, m_SelectedChar.X * 8, m_SelectedChar.Y * 8 );
+      }
+      else
+      {
+        mappedImage.DrawTo( m_GraphicScreenProject.Image, 0, 0 );
+      }
       mappedImage.Dispose();
 
       comboBackground.SelectedIndex   = NormalizeColor( mcSettings.BackgroundColor );
@@ -570,7 +579,7 @@ namespace C64Studio
 
       if ( OpenFile( "Open Image", Types.Constants.FILEFILTER_IMAGE_FILES + Types.Constants.FILEFILTER_ALL, out filename ) )
       {
-        ImportImage( filename, null );
+        ImportImage( filename, null, false );
       }
     }
 
@@ -712,7 +721,7 @@ namespace C64Studio
       }
       if ( Modified )
       {
-        DialogResult doSave = MessageBox.Show( "There are unsaved changes in your character set. Save now?", "Save changes?", MessageBoxButtons.YesNoCancel );
+        DialogResult doSave = MessageBox.Show( "There are unsaved changes in your graphic screen. Save now?", "Save changes?", MessageBoxButtons.YesNoCancel );
         if ( doSave == DialogResult.Cancel )
         {
           return;
@@ -965,7 +974,7 @@ namespace C64Studio
       {
         return;
       }
-      ImportImage( filename, null );
+      ImportImage( filename, null, false );
     }
 
 
@@ -1021,7 +1030,7 @@ namespace C64Studio
         return;
       }
 
-      ImportImage( null, imgClip );
+      ImportImage( null, imgClip, true );
     }
 
 
@@ -2911,6 +2920,48 @@ namespace C64Studio
     private void btnFullCopyToClipboard_Click( object sender, EventArgs e )
     {
       CopyImageToClipboard();
+    }
+
+
+
+    private void btnToolPaint_CheckedChanged( object sender, EventArgs e )
+    {
+
+    }
+
+
+
+    private void btnToolRect_CheckedChanged( object sender, EventArgs e )
+    {
+
+    }
+
+
+
+    private void btnToolQuad_CheckedChanged( object sender, EventArgs e )
+    {
+
+    }
+
+
+
+    private void btnToolFill_CheckedChanged( object sender, EventArgs e )
+    {
+
+    }
+
+
+
+    private void btnToolSelect_CheckedChanged( object sender, EventArgs e )
+    {
+
+    }
+
+
+
+    private void btnToolValidate_CheckedChanged( object sender, EventArgs e )
+    {
+
     }
 
 
