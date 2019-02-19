@@ -18,6 +18,16 @@ namespace C64Studio
       CHAR_COLOR
     }
 
+    private enum PaintTool
+    {
+      DRAW_PIXEL,
+      DRAW_RECTANGLE,
+      DRAW_BOX,
+      FLOOD_FILL,
+      SELECT,
+      VALIDATE
+    }
+
     private enum ExportBinaryType
     {
       [Description( "Bitmap, Screen, Color" )] 
@@ -65,6 +75,8 @@ namespace C64Studio
     private System.Drawing.Point        m_SelectedChar = new System.Drawing.Point( -1, -1 );
 
     public Formats.GraphicScreenProject m_GraphicScreenProject = new C64Studio.Formats.GraphicScreenProject();
+
+    private PaintTool                   m_PaintTool = PaintTool.VALIDATE;
 
 
 
@@ -295,6 +307,9 @@ namespace C64Studio
       int     charX = X / ( pictureEditor.ClientRectangle.Width / 40 ) + m_GraphicScreenProject.ScreenOffsetX;
       int     charY = Y / ( pictureEditor.ClientRectangle.Height / 25 ) + m_GraphicScreenProject.ScreenOffsetY;
 
+      int     pixelX = ( X / ( pictureEditor.ClientRectangle.Width / pictureEditor.DisplayPage.Width ) ) + m_GraphicScreenProject.ScreenOffsetX;
+      int     pixelY = ( Y / ( pictureEditor.ClientRectangle.Height / pictureEditor.DisplayPage.Height ) ) + m_GraphicScreenProject.ScreenOffsetY;
+
       if ( ( charX < 0 )
       ||   ( charX >= BlockWidth )
       ||   ( charY < 0 )
@@ -305,55 +320,60 @@ namespace C64Studio
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
-        if ( ( m_SelectedChar.X != charX )
-        ||   ( m_SelectedChar.Y != charY ) )
+        switch ( m_PaintTool )
         {
-          m_SelectedChar.X = charX;
-          m_SelectedChar.Y = charY;
-
-          charEditor.DisplayPage.DrawFromMemoryImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
-          charEditor.Invalidate();
-
-          if ( m_GraphicScreenProject.SelectedCheckType == C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
-          {
-            m_Chars[charX + charY * BlockWidth].Mode = C64Studio.Types.CharsetMode.MULTICOLOR;
-            checkMulticolor.Checked = true;
-          }
-          else if ( m_GraphicScreenProject.SelectedCheckType == C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET )
-          {
-            checkMulticolor.Checked = ( m_Chars[charX + charY * BlockWidth].Mode == C64Studio.Types.CharsetMode.MULTICOLOR );
-          }
-          else
-          {
-            m_Chars[charX + charY * BlockWidth].Mode = C64Studio.Types.CharsetMode.HIRES;
-            checkMulticolor.Checked = false;
-          }
-          comboCharColor.SelectedIndex  = m_Chars[charX + charY * BlockWidth].Color;
-
-          Redraw();
-        }
-        if ( !string.IsNullOrEmpty( m_Chars[charX + charY * BlockWidth].Error ) )
-        {
-          labelCharInfo.Text = m_Chars[charX + charY * BlockWidth].Error;
-          labelCharInfoExport.Text = m_Chars[charX + charY * BlockWidth].Error;
-        }
-        else
-        {
-          C64Studio.Formats.CharData usedChar = m_Chars[charX + charY * BlockWidth];
-          if ( usedChar.Replacement != null )
-          {
-            while ( usedChar.Replacement != null )
+          case PaintTool.VALIDATE:
+            if ( ( m_SelectedChar.X != charX )
+            ||   ( m_SelectedChar.Y != charY ) )
             {
-              usedChar = usedChar.Replacement;
+              m_SelectedChar.X = charX;
+              m_SelectedChar.Y = charY;
+
+              charEditor.DisplayPage.DrawFromMemoryImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+              charEditor.Invalidate();
+
+              if ( m_GraphicScreenProject.SelectedCheckType == C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
+              {
+                m_Chars[charX + charY * BlockWidth].Mode = C64Studio.Types.CharsetMode.MULTICOLOR;
+                checkMulticolor.Checked = true;
+              }
+              else if ( m_GraphicScreenProject.SelectedCheckType == C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET )
+              {
+                checkMulticolor.Checked = ( m_Chars[charX + charY * BlockWidth].Mode == C64Studio.Types.CharsetMode.MULTICOLOR );
+              }
+              else
+              {
+                m_Chars[charX + charY * BlockWidth].Mode = C64Studio.Types.CharsetMode.HIRES;
+                checkMulticolor.Checked = false;
+              }
+              comboCharColor.SelectedIndex  = m_Chars[charX + charY * BlockWidth].Color;
+
+              Redraw();
             }
-            labelCharInfo.Text = "Duplicate of " + usedChar.Index;
-          }
-          else
-          {
-            labelCharInfo.Text = "Determined index " + usedChar.Index;
-          }
+            if ( !string.IsNullOrEmpty( m_Chars[charX + charY * BlockWidth].Error ) )
+            {
+              labelCharInfo.Text = m_Chars[charX + charY * BlockWidth].Error;
+              labelCharInfoExport.Text = m_Chars[charX + charY * BlockWidth].Error;
+            }
+            else
+            {
+              C64Studio.Formats.CharData usedChar = m_Chars[charX + charY * BlockWidth];
+              if ( usedChar.Replacement != null )
+              {
+                while ( usedChar.Replacement != null )
+                {
+                  usedChar = usedChar.Replacement;
+                }
+                labelCharInfo.Text = "Duplicate of " + usedChar.Index;
+              }
+              else
+              {
+                labelCharInfo.Text = "Determined index " + usedChar.Index;
+              }
+            }
+            comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Color;
+            break;
         }
-        comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Color;
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
@@ -2926,42 +2946,42 @@ namespace C64Studio
 
     private void btnToolPaint_CheckedChanged( object sender, EventArgs e )
     {
-
+      m_PaintTool = PaintTool.DRAW_PIXEL;
     }
 
 
 
     private void btnToolRect_CheckedChanged( object sender, EventArgs e )
     {
-
+      m_PaintTool = PaintTool.DRAW_RECTANGLE;
     }
 
 
 
     private void btnToolQuad_CheckedChanged( object sender, EventArgs e )
     {
-
+      m_PaintTool = PaintTool.DRAW_BOX;
     }
 
 
 
     private void btnToolFill_CheckedChanged( object sender, EventArgs e )
     {
-
+      m_PaintTool = PaintTool.FLOOD_FILL;
     }
 
 
 
     private void btnToolSelect_CheckedChanged( object sender, EventArgs e )
     {
-
+      m_PaintTool = PaintTool.SELECT;
     }
 
 
 
     private void btnToolValidate_CheckedChanged( object sender, EventArgs e )
     {
-
+      m_PaintTool = PaintTool.VALIDATE;
     }
 
 

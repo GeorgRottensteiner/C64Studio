@@ -469,11 +469,13 @@
       // btnToolValidate
       // 
       this.btnToolValidate.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolValidate.Checked = true;
       this.btnToolValidate.Image = global::C64Studio.Properties.Resources.tool_validate;
       this.btnToolValidate.Location = new System.Drawing.Point(128, 438);
       this.btnToolValidate.Name = "btnToolValidate";
       this.btnToolValidate.Size = new System.Drawing.Size(24, 24);
       this.btnToolValidate.TabIndex = 36;
+      this.btnToolValidate.TabStop = true;
       this.btnToolValidate.UseVisualStyleBackColor = true;
       this.btnToolValidate.CheckedChanged += new System.EventHandler(this.btnToolValidate_CheckedChanged);
       // 
@@ -524,13 +526,11 @@
       // btnToolPaint
       // 
       this.btnToolPaint.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolPaint.Checked = true;
       this.btnToolPaint.Image = global::C64Studio.Properties.Resources.tool_none;
       this.btnToolPaint.Location = new System.Drawing.Point(8, 438);
       this.btnToolPaint.Name = "btnToolPaint";
       this.btnToolPaint.Size = new System.Drawing.Size(24, 24);
       this.btnToolPaint.TabIndex = 40;
-      this.btnToolPaint.TabStop = true;
       this.btnToolPaint.UseVisualStyleBackColor = true;
       this.btnToolPaint.CheckedChanged += new System.EventHandler(this.btnToolPaint_CheckedChanged);
       // 
