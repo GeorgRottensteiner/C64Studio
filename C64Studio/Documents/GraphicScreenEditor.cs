@@ -322,6 +322,12 @@ namespace C64Studio
       {
         switch ( m_PaintTool )
         {
+          case PaintTool.DRAW_PIXEL:
+            m_GraphicScreenProject.Image.SetPixel( pixelX, pixelY, m_CurrentColor );
+            Redraw();
+            pictureEditor.Invalidate();
+            Modified = true;
+            break;
           case PaintTool.VALIDATE:
             if ( ( m_SelectedChar.X != charX )
             ||   ( m_SelectedChar.Y != charY ) )
