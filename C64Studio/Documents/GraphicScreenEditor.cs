@@ -323,10 +323,43 @@ namespace C64Studio
         switch ( m_PaintTool )
         {
           case PaintTool.DRAW_PIXEL:
+            if ( m_ButtonReleased )
+            {
+              m_ButtonReleased = false;
+              DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+            }
             m_GraphicScreenProject.Image.SetPixel( pixelX, pixelY, m_CurrentColor );
             Redraw();
             pictureEditor.Invalidate();
             Modified = true;
+            break;
+          case PaintTool.DRAW_RECTANGLE:
+            if ( m_ButtonReleased )
+            {
+              m_ButtonReleased = false;
+              DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+            }
+            /*
+            m_GraphicScreenProject.Image.SetPixel( pixelX, pixelY, m_CurrentColor );
+            Redraw();
+            pictureEditor.Invalidate();
+            Modified = true;*/
+            break;
+          case PaintTool.DRAW_BOX:
+            if ( m_ButtonReleased )
+            {
+              m_ButtonReleased = false;
+              DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+            }
+            /*
+            m_GraphicScreenProject.Image.SetPixel( pixelX, pixelY, m_CurrentColor );
+            Redraw();
+            pictureEditor.Invalidate();
+            Modified = true;*/
+            break;
+          case PaintTool.FLOOD_FILL:
+            break;
+          case PaintTool.SELECT:
             break;
           case PaintTool.VALIDATE:
             if ( ( m_SelectedChar.X != charX )
@@ -352,7 +385,7 @@ namespace C64Studio
                 m_Chars[charX + charY * BlockWidth].Mode = C64Studio.Types.CharsetMode.HIRES;
                 checkMulticolor.Checked = false;
               }
-              comboCharColor.SelectedIndex  = m_Chars[charX + charY * BlockWidth].Color;
+              comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Color;
 
               Redraw();
             }
@@ -380,6 +413,10 @@ namespace C64Studio
             comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Color;
             break;
         }
+      }
+      else
+      {
+        m_ButtonReleased = true;
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
