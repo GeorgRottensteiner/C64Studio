@@ -326,7 +326,11 @@ namespace C64Studio
             if ( m_ButtonReleased )
             {
               m_ButtonReleased = false;
-              DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+            }
+            if ( m_GraphicScreenProject.MultiColor )
+            {
+              m_GraphicScreenProject.Image.SetPixel( pixelX ^ 1, pixelY, m_CurrentColor );
             }
             m_GraphicScreenProject.Image.SetPixel( pixelX, pixelY, m_CurrentColor );
             Redraw();
@@ -337,7 +341,7 @@ namespace C64Studio
             if ( m_ButtonReleased )
             {
               m_ButtonReleased = false;
-              DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
             }
             /*
             m_GraphicScreenProject.Image.SetPixel( pixelX, pixelY, m_CurrentColor );
@@ -349,7 +353,7 @@ namespace C64Studio
             if ( m_ButtonReleased )
             {
               m_ButtonReleased = false;
-              DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
             }
             /*
             m_GraphicScreenProject.Image.SetPixel( pixelX, pixelY, m_CurrentColor );
@@ -472,6 +476,11 @@ namespace C64Studio
           m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Mode = C64Studio.Types.CharsetMode.HIRES;
           Modified = true;
         }
+      }
+      if ( m_GraphicScreenProject.MultiColor != checkMulticolor.Checked )
+      {
+        m_GraphicScreenProject.MultiColor = checkMulticolor.Checked;
+        Modified = true;
       }
     }
 
@@ -1117,29 +1126,33 @@ namespace C64Studio
       m_GraphicScreenProject.Image.DrawTo( pictureEditor.DisplayPage, -m_GraphicScreenProject.ScreenOffsetX * 8, -m_GraphicScreenProject.ScreenOffsetY * 8 );
       //pictureEditor.DisplayPage.DrawFromMemoryImage( m_GraphicScreenProject.Image, -m_GraphicScreenProject.ScreenOffsetX * 8, -m_GraphicScreenProject.ScreenOffsetY * 8 );
 
-      for ( int j = 0; j < BlockHeight; ++j )
+      switch ( m_PaintTool )
       {
-        for ( int i = 0; i < BlockWidth; ++i )
-        {
-          if ( m_ErrornousChars[i, j] )
+        case PaintTool.VALIDATE:
+          for ( int j = 0; j < BlockHeight; ++j )
+          {
+            for ( int i = 0; i < BlockWidth; ++i )
+            {
+              if ( m_ErrornousChars[i, j] )
+              {
+                for ( int x = 0; x < 8; ++x )
+                {
+                  pictureEditor.DisplayPage.SetPixel( i * 8 + x - m_GraphicScreenProject.ScreenOffsetX * 8, j * 8 - m_GraphicScreenProject.ScreenOffsetY * 8, (uint)( 1 + ( x & 1 ) * 15 ) );
+                  pictureEditor.DisplayPage.SetPixel( i * 8 - m_GraphicScreenProject.ScreenOffsetX * 8, j * 8 + x - m_GraphicScreenProject.ScreenOffsetY * 8, (uint)( 1 + ( x & 1 ) * 15 ) );
+                }
+              }
+            }
+          }
+          if ( m_SelectedChar.X != -1 )
           {
             for ( int x = 0; x < 8; ++x )
             {
-              pictureEditor.DisplayPage.SetPixel( i * 8 + x - m_GraphicScreenProject.ScreenOffsetX * 8, j * 8 - m_GraphicScreenProject.ScreenOffsetY * 8, (uint)( 1 + ( x & 1 ) * 15 ) );
-              pictureEditor.DisplayPage.SetPixel( i * 8 - m_GraphicScreenProject.ScreenOffsetX * 8, j * 8 + x - m_GraphicScreenProject.ScreenOffsetY * 8, (uint)( 1 + ( x & 1 ) * 15 ) );
+              pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8 + x - m_GraphicScreenProject.ScreenOffsetX * 8, m_SelectedChar.Y * 8 - m_GraphicScreenProject.ScreenOffsetY * 8, 16 );
+              pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8 - m_GraphicScreenProject.ScreenOffsetX * 8, m_SelectedChar.Y * 8 + x - m_GraphicScreenProject.ScreenOffsetY * 8, 16 );
             }
           }
-        }
+          break;
       }
-      if ( m_SelectedChar.X != -1 )
-      {
-        for ( int x = 0; x < 8; ++x )
-        {
-          pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8 + x - m_GraphicScreenProject.ScreenOffsetX * 8, m_SelectedChar.Y * 8 - m_GraphicScreenProject.ScreenOffsetY * 8, 16 );
-          pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8 - m_GraphicScreenProject.ScreenOffsetX * 8, m_SelectedChar.Y * 8 + x - m_GraphicScreenProject.ScreenOffsetY * 8, 16 );
-        }
-      }
-
       // color for area outside active image
       if ( m_GraphicScreenProject.Image.Width < pictureEditor.DisplayPage.Width )
       {
@@ -1377,8 +1390,8 @@ namespace C64Studio
             if ( usedColor[i] )
             {
               if ( ( i == m_GraphicScreenProject.MultiColor1 )
-              || ( i == m_GraphicScreenProject.MultiColor2 )
-              || ( i == m_GraphicScreenProject.BackgroundColor ) )
+              ||   ( i == m_GraphicScreenProject.MultiColor2 )
+              ||   ( i == m_GraphicScreenProject.BackgroundColor ) )
               {
                 ++usedMultiColors;
               }
@@ -2990,6 +3003,7 @@ namespace C64Studio
     private void btnToolPaint_CheckedChanged( object sender, EventArgs e )
     {
       m_PaintTool = PaintTool.DRAW_PIXEL;
+      Redraw();
     }
 
 
@@ -2997,6 +3011,7 @@ namespace C64Studio
     private void btnToolRect_CheckedChanged( object sender, EventArgs e )
     {
       m_PaintTool = PaintTool.DRAW_RECTANGLE;
+      Redraw();
     }
 
 
@@ -3004,6 +3019,7 @@ namespace C64Studio
     private void btnToolQuad_CheckedChanged( object sender, EventArgs e )
     {
       m_PaintTool = PaintTool.DRAW_BOX;
+      Redraw();
     }
 
 
@@ -3011,6 +3027,7 @@ namespace C64Studio
     private void btnToolFill_CheckedChanged( object sender, EventArgs e )
     {
       m_PaintTool = PaintTool.FLOOD_FILL;
+      Redraw();
     }
 
 
@@ -3018,6 +3035,7 @@ namespace C64Studio
     private void btnToolSelect_CheckedChanged( object sender, EventArgs e )
     {
       m_PaintTool = PaintTool.SELECT;
+      Redraw();
     }
 
 
@@ -3025,8 +3043,15 @@ namespace C64Studio
     private void btnToolValidate_CheckedChanged( object sender, EventArgs e )
     {
       m_PaintTool = PaintTool.VALIDATE;
+      Redraw();
     }
 
+
+
+    private void pictureEditor_MouseUp( object sender, MouseEventArgs e )
+    {
+      HandleMouseOnEditor( e.X, e.Y, e.Button );
+    }
 
 
   }
