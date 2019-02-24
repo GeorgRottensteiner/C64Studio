@@ -9,6 +9,8 @@ namespace GR.Image
     void SetPixel( int X, int Y, uint Color );
 
     void Box( int X, int Y, int Width, int Height, uint Color );
+    void Rectangle( int X, int Y, int Width, int Height, uint Color );
+    void Line( int X1, int Y1, int X2, int Y2, uint Color );
 
     IntPtr PinData();
     void UnpinData();

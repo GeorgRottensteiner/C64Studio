@@ -78,6 +78,9 @@ namespace C64Studio
 
     private PaintTool                   m_PaintTool = PaintTool.VALIDATE;
 
+    private System.Drawing.Point        m_DragStartPoint = new System.Drawing.Point( -1, -1 );
+    private System.Drawing.Point        m_DragCurrentPoint;
+
 
 
     public GraphicScreenEditor( StudioCore Core )
@@ -310,14 +313,6 @@ namespace C64Studio
       int     pixelX = ( X / ( pictureEditor.ClientRectangle.Width / pictureEditor.DisplayPage.Width ) ) + m_GraphicScreenProject.ScreenOffsetX;
       int     pixelY = ( Y / ( pictureEditor.ClientRectangle.Height / pictureEditor.DisplayPage.Height ) ) + m_GraphicScreenProject.ScreenOffsetY;
 
-      if ( ( charX < 0 )
-      ||   ( charX >= BlockWidth )
-      ||   ( charY < 0 )
-      ||   ( charY >= BlockHeight ) )
-      {
-        return;
-      }
-
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
         switch ( m_PaintTool )
@@ -341,31 +336,35 @@ namespace C64Studio
             if ( m_ButtonReleased )
             {
               m_ButtonReleased = false;
-              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+              m_DragStartPoint = new System.Drawing.Point( pixelX, pixelY );
             }
-            /*
-            m_GraphicScreenProject.Image.SetPixel( pixelX, pixelY, m_CurrentColor );
+            m_DragCurrentPoint = new System.Drawing.Point( pixelX, pixelY );
             Redraw();
             pictureEditor.Invalidate();
-            Modified = true;*/
             break;
           case PaintTool.DRAW_BOX:
             if ( m_ButtonReleased )
             {
               m_ButtonReleased = false;
-              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+              m_DragStartPoint = new System.Drawing.Point( pixelX, pixelY );
             }
-            /*
-            m_GraphicScreenProject.Image.SetPixel( pixelX, pixelY, m_CurrentColor );
+            m_DragCurrentPoint = new System.Drawing.Point( pixelX, pixelY );
             Redraw();
             pictureEditor.Invalidate();
-            Modified = true;*/
             break;
           case PaintTool.FLOOD_FILL:
             break;
           case PaintTool.SELECT:
             break;
           case PaintTool.VALIDATE:
+            if ( ( charX < 0 )
+            ||   ( charX >= BlockWidth )
+            ||   ( charY < 0 )
+            ||   ( charY >= BlockHeight ) )
+            {
+              return;
+            }
+
             if ( ( m_SelectedChar.X != charX )
             ||   ( m_SelectedChar.Y != charY ) )
             {
@@ -418,8 +417,44 @@ namespace C64Studio
             break;
         }
       }
-      else
+      else if ( !m_ButtonReleased )
       {
+        switch ( m_PaintTool )
+        {
+          case PaintTool.DRAW_BOX:
+          case PaintTool.DRAW_RECTANGLE:
+            int     x1 = Math.Min( m_DragStartPoint.X, m_DragCurrentPoint.X );
+            int     x2 = Math.Max( m_DragStartPoint.X, m_DragCurrentPoint.X );
+            int     y1 = Math.Min( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
+            int     y2 = Math.Max( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
+
+            if ( m_GraphicScreenProject.MultiColor )
+            {
+              x1 &= ~1;
+              x2 |= 1;
+            }
+
+            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, x1, y1, x2 - x1 + 1, y2 - y1 + 1 ) );
+
+            if ( m_PaintTool == PaintTool.DRAW_BOX )
+            {
+              m_GraphicScreenProject.Image.Box( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
+            }
+            else
+            {
+              m_GraphicScreenProject.Image.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
+              if ( m_GraphicScreenProject.MultiColor )
+              {
+                m_GraphicScreenProject.Image.Line( x1 + 1, y1, x1 + 1, y2, m_CurrentColor );
+                m_GraphicScreenProject.Image.Line( x2 - 1, y1, x2 - 1, y2, m_CurrentColor );
+              }
+            }
+            m_DragStartPoint.X = -1;
+            Redraw();
+            pictureEditor.Invalidate();
+            Modified = true;
+            break;
+        }
         m_ButtonReleased = true;
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
@@ -1124,7 +1159,6 @@ namespace C64Studio
     private void Redraw()
     {
       m_GraphicScreenProject.Image.DrawTo( pictureEditor.DisplayPage, -m_GraphicScreenProject.ScreenOffsetX * 8, -m_GraphicScreenProject.ScreenOffsetY * 8 );
-      //pictureEditor.DisplayPage.DrawFromMemoryImage( m_GraphicScreenProject.Image, -m_GraphicScreenProject.ScreenOffsetX * 8, -m_GraphicScreenProject.ScreenOffsetY * 8 );
 
       switch ( m_PaintTool )
       {
@@ -1149,6 +1183,29 @@ namespace C64Studio
             {
               pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8 + x - m_GraphicScreenProject.ScreenOffsetX * 8, m_SelectedChar.Y * 8 - m_GraphicScreenProject.ScreenOffsetY * 8, 16 );
               pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8 - m_GraphicScreenProject.ScreenOffsetX * 8, m_SelectedChar.Y * 8 + x - m_GraphicScreenProject.ScreenOffsetY * 8, 16 );
+            }
+          }
+          break;
+        case PaintTool.DRAW_BOX:
+        case PaintTool.DRAW_RECTANGLE:
+          if ( m_DragStartPoint.X != -1 )
+          {
+            int     x1 = Math.Min( m_DragStartPoint.X, m_DragCurrentPoint.X );
+            int     x2 = Math.Max( m_DragStartPoint.X, m_DragCurrentPoint.X );
+            int     y1 = Math.Min( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
+            int     y2 = Math.Max( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
+
+            if ( m_GraphicScreenProject.MultiColor )
+            {
+              x1 &= ~1;
+              x2 |= 1;
+            }
+
+            pictureEditor.DisplayPage.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
+            if ( m_GraphicScreenProject.MultiColor )
+            {
+              pictureEditor.DisplayPage.Line( x1 + 1, y1, x1 + 1, y2, m_CurrentColor );
+              pictureEditor.DisplayPage.Line( x2 - 1, y1, x2 - 1, y2, m_CurrentColor );
             }
           }
           break;
