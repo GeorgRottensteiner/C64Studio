@@ -80,6 +80,7 @@ namespace C64Studio
 
     private System.Drawing.Point        m_DragStartPoint = new System.Drawing.Point( -1, -1 );
     private System.Drawing.Point        m_DragCurrentPoint;
+    private System.Drawing.Rectangle    m_Selection = new System.Drawing.Rectangle( 0, 0, 0, 0 );
 
 
 
@@ -333,16 +334,8 @@ namespace C64Studio
             Modified = true;
             break;
           case PaintTool.DRAW_RECTANGLE:
-            if ( m_ButtonReleased )
-            {
-              m_ButtonReleased = false;
-              m_DragStartPoint = new System.Drawing.Point( pixelX, pixelY );
-            }
-            m_DragCurrentPoint = new System.Drawing.Point( pixelX, pixelY );
-            Redraw();
-            pictureEditor.Invalidate();
-            break;
           case PaintTool.DRAW_BOX:
+          case PaintTool.SELECT:
             if ( m_ButtonReleased )
             {
               m_ButtonReleased = false;
@@ -351,10 +344,6 @@ namespace C64Studio
             m_DragCurrentPoint = new System.Drawing.Point( pixelX, pixelY );
             Redraw();
             pictureEditor.Invalidate();
-            break;
-          case PaintTool.FLOOD_FILL:
-            break;
-          case PaintTool.SELECT:
             break;
           case PaintTool.VALIDATE:
             if ( ( charX < 0 )
@@ -423,6 +412,7 @@ namespace C64Studio
         {
           case PaintTool.DRAW_BOX:
           case PaintTool.DRAW_RECTANGLE:
+          case PaintTool.SELECT:
             int     x1 = Math.Min( m_DragStartPoint.X, m_DragCurrentPoint.X );
             int     x2 = Math.Max( m_DragStartPoint.X, m_DragCurrentPoint.X );
             int     y1 = Math.Min( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
@@ -434,20 +424,23 @@ namespace C64Studio
               x2 |= 1;
             }
 
-            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, x1, y1, x2 - x1 + 1, y2 - y1 + 1 ) );
-
-            if ( m_PaintTool == PaintTool.DRAW_BOX )
+            switch ( m_PaintTool )
             {
-              m_GraphicScreenProject.Image.Box( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
-            }
-            else
-            {
-              m_GraphicScreenProject.Image.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
-              if ( m_GraphicScreenProject.MultiColor )
-              {
-                m_GraphicScreenProject.Image.Line( x1 + 1, y1, x1 + 1, y2, m_CurrentColor );
-                m_GraphicScreenProject.Image.Line( x2 - 1, y1, x2 - 1, y2, m_CurrentColor );
-              }
+              case PaintTool.DRAW_BOX:
+                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, x1, y1, x2 - x1 + 1, y2 - y1 + 1 ) );
+                m_GraphicScreenProject.Image.Box( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
+                break;
+              case PaintTool.DRAW_RECTANGLE:
+                m_GraphicScreenProject.Image.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
+                if ( m_GraphicScreenProject.MultiColor )
+                {
+                  m_GraphicScreenProject.Image.Line( x1 + 1, y1, x1 + 1, y2, m_CurrentColor );
+                  m_GraphicScreenProject.Image.Line( x2 - 1, y1, x2 - 1, y2, m_CurrentColor );
+                }
+                break;
+              case PaintTool.SELECT:
+                m_Selection = new System.Drawing.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1 );
+                break;
             }
             m_DragStartPoint.X = -1;
             Redraw();
@@ -1207,6 +1200,12 @@ namespace C64Studio
               pictureEditor.DisplayPage.Line( x1 + 1, y1, x1 + 1, y2, m_CurrentColor );
               pictureEditor.DisplayPage.Line( x2 - 1, y1, x2 - 1, y2, m_CurrentColor );
             }
+          }
+          break;
+        case PaintTool.SELECT:
+          if ( m_Selection.Width > 0 )
+          {
+            pictureEditor.DisplayPage.Rectangle( m_Selection.X, m_Selection.Y, m_Selection.Width, m_Selection.Height, 16 );
           }
           break;
       }
