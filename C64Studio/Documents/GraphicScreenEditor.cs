@@ -314,6 +314,23 @@ namespace C64Studio
       int     pixelX = ( X / ( pictureEditor.ClientRectangle.Width / pictureEditor.DisplayPage.Width ) ) + m_GraphicScreenProject.ScreenOffsetX;
       int     pixelY = ( Y / ( pictureEditor.ClientRectangle.Height / pictureEditor.DisplayPage.Height ) ) + m_GraphicScreenProject.ScreenOffsetY;
 
+      if ( pixelX < 0 )
+      {
+        pixelX = 0;
+      }
+      if ( pixelX >= m_GraphicScreenProject.ScreenWidth )
+      {
+        pixelX = m_GraphicScreenProject.ScreenWidth - 1;
+      }
+      if ( pixelY < 0 )
+      {
+        pixelY = 0;
+      }
+      if ( pixelY >= m_GraphicScreenProject.ScreenHeight )
+      {
+        pixelY = m_GraphicScreenProject.ScreenHeight - 1;
+      }
+
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
         switch ( m_PaintTool )
@@ -418,7 +435,8 @@ namespace C64Studio
             int     y1 = Math.Min( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
             int     y2 = Math.Max( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
 
-            if ( m_GraphicScreenProject.MultiColor )
+            if ( ( m_GraphicScreenProject.MultiColor )
+            &&   ( m_PaintTool != PaintTool.SELECT ) )
             {
               x1 &= ~1;
               x2 |= 1;
@@ -1179,6 +1197,21 @@ namespace C64Studio
             }
           }
           break;
+        case PaintTool.SELECT:
+          if ( m_DragStartPoint.X != -1 )
+          {
+            int     x1 = Math.Min( m_DragStartPoint.X, m_DragCurrentPoint.X );
+            int     x2 = Math.Max( m_DragStartPoint.X, m_DragCurrentPoint.X );
+            int     y1 = Math.Min( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
+            int     y2 = Math.Max( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
+
+            pictureEditor.DisplayPage.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1, 16 );
+          }
+          if ( m_Selection.Width > 0 )
+          {
+            pictureEditor.DisplayPage.Rectangle( m_Selection.X, m_Selection.Y, m_Selection.Width, m_Selection.Height, 16 );
+          }
+          break;
         case PaintTool.DRAW_BOX:
         case PaintTool.DRAW_RECTANGLE:
           if ( m_DragStartPoint.X != -1 )
@@ -1200,12 +1233,6 @@ namespace C64Studio
               pictureEditor.DisplayPage.Line( x1 + 1, y1, x1 + 1, y2, m_CurrentColor );
               pictureEditor.DisplayPage.Line( x2 - 1, y1, x2 - 1, y2, m_CurrentColor );
             }
-          }
-          break;
-        case PaintTool.SELECT:
-          if ( m_Selection.Width > 0 )
-          {
-            pictureEditor.DisplayPage.Rectangle( m_Selection.X, m_Selection.Y, m_Selection.Width, m_Selection.Height, 16 );
           }
           break;
       }
