@@ -1587,7 +1587,7 @@ namespace C64Studio
 
           DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, currentTargetSprite ), ( i == 0 ) && ( j == 0 ) );
 
-          GR.Image.FastImage imgSprite = mappedImage.GetImage( i * 24, j * 21, copyWidth, copyHeight );
+          GR.Image.FastImage imgSprite = mappedImage.GetImage( i * 24, j * 21, copyWidth, copyHeight ) as GR.Image.FastImage;
           ImportSprite( imgSprite, currentTargetSprite );
           imgSprite.Dispose();
           RebuildSpriteImage( currentTargetSprite );
@@ -1642,14 +1642,7 @@ namespace C64Studio
       dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
 
       // TODO - compile image from selection, not only current sprite
-      GR.Memory.ByteBuffer dibData = m_SpriteProject.Sprites[m_CurrentSprite].Image.CreateHDIBAsBuffer();
-
-      System.IO.MemoryStream ms = dibData.MemoryStream();
-
-      // WTF - SetData requires streams, NOT global data (HGLOBAL)
-      dataObj.SetData( "DeviceIndependentBitmap", ms );
-
-      Clipboard.SetDataObject( dataObj, true );
+      Core.Imaging.ImageToClipboard( m_SpriteProject.Sprites[m_CurrentSprite].Image );
     }
 
 
@@ -1934,7 +1927,7 @@ namespace C64Studio
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, currentSpriteIndex ), currentSpriteIndex == 0 );
 
-        ImportSprite( spriteImage.GetImage( curX, curY, 24, 21 ), currentSpriteIndex );
+        ImportSprite( spriteImage.GetImage( curX, curY, 24, 21 ) as GR.Image.FastImage, currentSpriteIndex );
 
         ++currentSpriteIndex;
         curX += 24;
@@ -2347,8 +2340,7 @@ namespace C64Studio
       CustomRenderer.PaletteManager.ApplyPalette( memImage );
 
       DrawSpriteImage( memImage, m_SpriteProject.Sprites[e.Index].Data, m_SpriteProject.BackgroundColor, comboLayerColor.SelectedIndex, m_SpriteProject.Sprites[e.Index].Multicolor, m_SpriteProject.MultiColor1, m_SpriteProject.MultiColor2 );
-      fastImage.DrawFromMemoryImage( memImage, 0, 0 );
-      //fastImage.DrawFromMemoryImage( m_SpriteProject.Sprites[e.Index].Image, 0, 0 );
+      fastImage.DrawImage( memImage, 0, 0 );
       System.Drawing.Rectangle drawRect = new System.Drawing.Rectangle( e.Bounds.Location, e.Bounds.Size );
       drawRect.X += 20;
       drawRect.Width = 48;

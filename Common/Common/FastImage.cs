@@ -535,7 +535,7 @@ namespace GR.Image
         SetPaletteColor( i, Source.PaletteRed( i ), Source.PaletteGreen( i ), Source.PaletteBlue( i ) );
       }
 
-      DrawFromMemoryImage( Source, 0, 0 );
+      DrawImage( Source, 0, 0 );
     }
 
 
@@ -634,7 +634,7 @@ namespace GR.Image
 
 
 
-    public void DrawFromMemoryImage( GR.Image.MemoryImage Image, int X, int Y, int SourceX, int SourceY, int DrawWidth, int DrawHeight )
+    public void DrawImage( GR.Image.IImage Image, int X, int Y, int SourceX, int SourceY, int DrawWidth, int DrawHeight )
     {
       if ( Image.PixelFormat != PixelFormat )
       {
@@ -741,9 +741,9 @@ namespace GR.Image
 
 
 
-    public void DrawFromMemoryImage( GR.Image.MemoryImage Image, int X, int Y )
+    public void DrawImage( GR.Image.IImage Image, int X, int Y )
     {
-      DrawFromMemoryImage( Image, X, Y, 0, 0, Image.Width, Image.Height );
+      DrawImage( Image, X, Y, 0, 0, Image.Width, Image.Height );
     }
 
 
@@ -2416,14 +2416,15 @@ namespace GR.Image
 
 
 
-    public void DrawTo( GR.Image.FastImage TargetImage, int X, int Y )
+    /*
+    public void DrawTo( GR.Image.IImage TargetImage, int X, int Y )
     {
       DrawTo( TargetImage, X, Y, 0, 0, Width, Height );
     }
 
 
 
-    public void DrawTo( GR.Image.FastImage TargetImage, int X, int Y, int SourceX, int SourceY, int DrawWidth, int DrawHeight )
+    public void DrawTo( GR.Image.IImage TargetImage, int X, int Y, int SourceX, int SourceY, int DrawWidth, int DrawHeight )
     {
       // clip to source
       if ( ( SourceX >= Width )
@@ -2518,17 +2519,24 @@ namespace GR.Image
         }
       }
     }
+    */
 
 
-
-    public void DrawTo( GR.Image.MemoryImage TargetImage, int X, int Y )
+    public void DrawTo( GR.Image.IImage TargetImage, int X, int Y )
     {
       DrawTo( TargetImage, X, Y, 0, 0, Width, Height );
     }
 
 
 
-    public void DrawTo( GR.Image.MemoryImage TargetImage, int X, int Y, int SourceX, int SourceY, int DrawWidth, int DrawHeight )
+    public void DrawTo( GR.Image.IImage TargetImage, int X, int Y, int Width, int Height )
+    {
+      DrawTo( TargetImage, X, Y, 0, 0, Width, Height );
+    }
+
+
+
+    public void DrawTo( GR.Image.IImage TargetImage, int X, int Y, int SourceX, int SourceY, int DrawWidth, int DrawHeight )
     {
       // clip to source
       if ( ( SourceX >= Width )
@@ -2627,7 +2635,7 @@ namespace GR.Image
 
 
 
-    public FastImage GetImage( int X, int Y, int ImageWidth, int ImageHeight )
+    public IImage GetImage( int X, int Y, int ImageWidth, int ImageHeight )
     {
       GR.Image.FastImage subImage = new FastImage( ImageWidth, ImageHeight, m_PixelFormat );
 

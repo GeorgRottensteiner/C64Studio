@@ -736,7 +736,7 @@ namespace GR.Forms
         }
         else if ( Items[itemIndex].MemoryImage != null )
         {
-          m_DisplayPage.DrawFromMemoryImage( Items[itemIndex].MemoryImage, itemRect.X, itemRect.Y );
+          m_DisplayPage.DrawImage( Items[itemIndex].MemoryImage, itemRect.X, itemRect.Y );
         }
         ++itemIndex;
         itemInLine = ( ( itemInLine + 1 ) % m_ItemsPerLine );

@@ -32,7 +32,7 @@ namespace C64Studio.Undo
       this.Editor = Editor;
       this.Project = Project;
 
-      ChangedSection = Project.Image.GetImage( X, Y, Width, Height );
+      ChangedSection = Project.Image.GetImage( X, Y, Width, Height ) as GR.Image.MemoryImage;
     }
 
 

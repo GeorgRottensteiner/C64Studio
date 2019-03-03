@@ -231,7 +231,7 @@ namespace C64Studio
       picOriginal.SetImageSize( picOriginal.ClientSize.Width * m_Zoom / 1024, picOriginal.ClientSize.Height * m_Zoom / 1024 );
       picPreview.SetImageSize( picPreview.ClientSize.Width * m_Zoom / 1024, picPreview.ClientSize.Height * m_Zoom / 1024 );
 
-      picOriginal.DisplayPage.DrawFromMemoryImage( m_OriginalImage, 0, 0 );
+      picOriginal.DisplayPage.DrawImage( m_OriginalImage, 0, 0 );
 
       m_OrigSize.Width  = m_OriginalImage.Width;
       m_OrigSize.Height = m_OriginalImage.Height;
@@ -395,7 +395,7 @@ namespace C64Studio
           }
         }
       }
-      picPreview.DisplayPage.DrawFromMemoryImage( m_ImportImage, 0, 0 );
+      picPreview.DisplayPage.DrawImage( m_ImportImage, 0, 0 );
       picPreview.Invalidate();
       return true;
     }
@@ -1344,9 +1344,9 @@ namespace C64Studio
       {
         m_Zoom /= 2;
         picOriginal.SetImageSize( picOriginal.ClientSize.Width * m_Zoom / 1024, picOriginal.ClientSize.Height * m_Zoom / 1024 );
-        picOriginal.DisplayPage.DrawFromMemoryImage( m_OriginalImage, 0, 0 );
+        picOriginal.DisplayPage.DrawImage( m_OriginalImage, 0, 0 );
         picPreview.SetImageSize( picPreview.ClientSize.Width * m_Zoom / 1024, picPreview.ClientSize.Height * m_Zoom / 1024 );
-        picPreview.DisplayPage.DrawFromMemoryImage( m_ImportImage, 0, 0 );
+        picPreview.DisplayPage.DrawImage( m_ImportImage, 0, 0 );
       }
     }
 
@@ -1358,9 +1358,9 @@ namespace C64Studio
       {
         m_Zoom *= 2;
         picOriginal.SetImageSize( picOriginal.ClientSize.Width * m_Zoom / 1024, picOriginal.ClientSize.Height * m_Zoom / 1024 );
-        picOriginal.DisplayPage.DrawFromMemoryImage( m_OriginalImage, 0, 0 );
+        picOriginal.DisplayPage.DrawImage( m_OriginalImage, 0, 0 );
         picPreview.SetImageSize( picPreview.ClientSize.Width * m_Zoom / 1024, picPreview.ClientSize.Height * m_Zoom / 1024 );
-        picPreview.DisplayPage.DrawFromMemoryImage( m_ImportImage, 0, 0 );
+        picPreview.DisplayPage.DrawImage( m_ImportImage, 0, 0 );
       }
     }
 
@@ -1483,7 +1483,7 @@ namespace C64Studio
 
     private void DlgGraphicImport_ResizeEnd( object sender, EventArgs e )
     {
-      picOriginal.DisplayPage.DrawFromMemoryImage( m_OriginalImage, 0, 0 );
+      picOriginal.DisplayPage.DrawImage( m_OriginalImage, 0, 0 );
 
       m_OrigSize.Width = m_OriginalImage.Width;
       m_OrigSize.Height = m_OriginalImage.Height;

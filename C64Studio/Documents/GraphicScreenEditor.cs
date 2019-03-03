@@ -8,8 +8,15 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace C64Studio
 {
-  public partial class GraphicScreenEditor : BaseDocument
+  public partial class GraphicScreenEditor : BaseDocument, IDisposable
   {
+    private enum ImageInsertionMode
+    {
+      AS_FULL_SCREEN,
+      AT_SELECTED_LOCATION,
+      AS_FLOATING_SELECTION
+    }
+
     private enum ColorType
     {
       BACKGROUND = 0,
@@ -81,6 +88,10 @@ namespace C64Studio
     private System.Drawing.Point        m_DragStartPoint = new System.Drawing.Point( -1, -1 );
     private System.Drawing.Point        m_DragCurrentPoint;
     private System.Drawing.Rectangle    m_Selection = new System.Drawing.Rectangle( 0, 0, 0, 0 );
+
+    private bool                        m_SelectionFloating = false;
+    private GR.Image.IImage             m_SelectionFloatingImage = null;
+    private System.Drawing.Point        m_SelectionFloatingPos = new System.Drawing.Point( 0, 0 );
 
 
 
@@ -356,6 +367,23 @@ namespace C64Studio
             if ( m_ButtonReleased )
             {
               m_ButtonReleased = false;
+              if ( ( m_PaintTool == PaintTool.SELECT )
+              &&   ( m_SelectionFloating ) )
+              {
+                // insert floating selection
+                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, pixelX, pixelY, m_SelectionFloatingImage.Width, m_SelectionFloatingImage.Height ) );
+
+                m_SelectionFloatingImage.DrawTo( m_GraphicScreenProject.Image, pixelX, pixelY );
+                Redraw();
+                SetModified();
+                pictureEditor.Invalidate();
+
+                m_DragStartPoint.X = -1;
+                m_SelectionFloating = false;
+                m_SelectionFloatingImage.Dispose();
+                m_SelectionFloatingImage = null;
+                return;
+              }
               m_DragStartPoint = new System.Drawing.Point( pixelX, pixelY );
             }
             m_DragCurrentPoint = new System.Drawing.Point( pixelX, pixelY );
@@ -364,20 +392,20 @@ namespace C64Studio
             break;
           case PaintTool.VALIDATE:
             if ( ( charX < 0 )
-            ||   ( charX >= BlockWidth )
-            ||   ( charY < 0 )
-            ||   ( charY >= BlockHeight ) )
+            || ( charX >= BlockWidth )
+            || ( charY < 0 )
+            || ( charY >= BlockHeight ) )
             {
               return;
             }
 
             if ( ( m_SelectedChar.X != charX )
-            ||   ( m_SelectedChar.Y != charY ) )
+            || ( m_SelectedChar.Y != charY ) )
             {
               m_SelectedChar.X = charX;
               m_SelectedChar.Y = charY;
 
-              charEditor.DisplayPage.DrawFromMemoryImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+              charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
               charEditor.Invalidate();
 
               if ( m_GraphicScreenProject.SelectedCheckType == C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
@@ -457,7 +485,11 @@ namespace C64Studio
                 }
                 break;
               case PaintTool.SELECT:
-                m_Selection = new System.Drawing.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1 );
+                // only make selection if we didn't place a floating selection before
+                if ( m_DragStartPoint.X != -1 )
+                {
+                  m_Selection = new System.Drawing.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1 );
+                }
                 break;
             }
             m_DragStartPoint.X = -1;
@@ -468,6 +500,21 @@ namespace C64Studio
         }
         m_ButtonReleased = true;
       }
+      else
+      {
+        switch ( m_PaintTool )
+        {
+          case PaintTool.SELECT:
+            if ( m_SelectionFloating )
+            {
+              m_SelectionFloatingPos.X = pixelX;
+              m_SelectionFloatingPos.Y = pixelY;
+              Redraw();
+            }
+            break;
+        }
+      }
+
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
       }
@@ -578,7 +625,7 @@ namespace C64Studio
 
 
 
-    private bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, bool InsertAtSelectedLocation )
+    private bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, ImageInsertionMode InsertMode )
     {
       GR.Image.FastImage mappedImage = null;
 
@@ -602,7 +649,7 @@ namespace C64Studio
 
       Dialogs.DlgImportImageResize.ImportBehaviour    behaviour = C64Studio.Dialogs.DlgImportImageResize.ImportBehaviour.CLIP_IMAGE;
 
-      if ( !InsertAtSelectedLocation )
+      if ( InsertMode == ImageInsertionMode.AS_FULL_SCREEN )
       {
         if ( ( mappedImage.Width != m_GraphicScreenProject.Image.Width )
         ||   ( mappedImage.Height != m_GraphicScreenProject.Image.Height ) )
@@ -626,9 +673,16 @@ namespace C64Studio
         DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
       }
 
-      if ( InsertAtSelectedLocation )
+      if ( InsertMode == ImageInsertionMode.AT_SELECTED_LOCATION )
       {
         mappedImage.DrawTo( m_GraphicScreenProject.Image, m_SelectedChar.X * 8, m_SelectedChar.Y * 8 );
+      }
+      else if ( InsertMode == ImageInsertionMode.AS_FLOATING_SELECTION )
+      {
+        m_SelectionFloating       = true;
+        m_SelectionFloatingImage = mappedImage.GetImage( 0, 0, mappedImage.Width, mappedImage.Height );
+        Redraw();
+        return true;
       }
       else
       {
@@ -668,7 +722,7 @@ namespace C64Studio
       editScreenWidth.Text  = Width.ToString();
       editScreenHeight.Text = Height.ToString();
 
-      m_GraphicScreenProject.Image = m_GraphicScreenProject.Image.GetImage( 0, 0, Width, Height );
+      m_GraphicScreenProject.Image = m_GraphicScreenProject.Image.GetImage( 0, 0, Width, Height ) as GR.Image.MemoryImage;
 
       m_ErrornousChars = new bool[( Width + 7 ) / 8, ( Height + 7 ) / 8];
       m_Chars.Clear();
@@ -697,7 +751,7 @@ namespace C64Studio
 
       if ( OpenFile( "Open Image", Types.Constants.FILEFILTER_IMAGE_FILES + Types.Constants.FILEFILTER_ALL, out filename ) )
       {
-        ImportImage( filename, null, false );
+        ImportImage( filename, null, ImageInsertionMode.AS_FULL_SCREEN );
       }
     }
 
@@ -1092,35 +1146,33 @@ namespace C64Studio
       {
         return;
       }
-      ImportImage( filename, null, false );
+      ImportImage( filename, null, ImageInsertionMode.AS_FULL_SCREEN );
     }
 
 
 
     private void CopyImageToClipboard()
     {
-      GR.Memory.ByteBuffer      dibData = m_GraphicScreenProject.Image.CreateHDIBAsBuffer();
-
-      System.IO.MemoryStream    ms = dibData.MemoryStream();
-
-      Clipboard.SetData( "DeviceIndependentBitmap", ms );
+      Core.Imaging.ImageToClipboard( m_GraphicScreenProject.Image );
     }
 
 
 
     private void CopySelectedImageToClipboard()
     {
+      if ( ( m_PaintTool == PaintTool.SELECT )
+      &&   ( m_Selection.X != -1 ) )
+      {
+        Core.Imaging.ImageToClipboard( m_GraphicScreenProject.Image, m_Selection );
+        return;
+      }
       if ( m_SelectedChar.X == -1 )
       {
         CopyImageToClipboard();
         return;
       }
 
-      GR.Memory.ByteBuffer      dibData = m_GraphicScreenProject.Image.GetImage( m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ).CreateHDIBAsBuffer();
-
-      System.IO.MemoryStream    ms = dibData.MemoryStream();
-
-      Clipboard.SetData( "DeviceIndependentBitmap", ms );
+      Core.Imaging.ImageToClipboard( m_GraphicScreenProject.Image, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
     }
 
 
@@ -1148,7 +1200,19 @@ namespace C64Studio
         return;
       }
 
-      ImportImage( null, imgClip, true );
+      ImageInsertionMode    mode = ImageInsertionMode.AT_SELECTED_LOCATION;
+
+      if ( m_PaintTool == PaintTool.SELECT )
+      {
+        if ( m_SelectionFloating )
+        {
+          m_SelectionFloatingImage.Dispose();
+          m_SelectionFloatingImage = null;
+        }
+        m_SelectionFloating = true;
+        mode = ImageInsertionMode.AS_FLOATING_SELECTION;
+      }
+      ImportImage( null, imgClip, mode );
     }
 
 
@@ -1210,6 +1274,10 @@ namespace C64Studio
           if ( m_Selection.Width > 0 )
           {
             pictureEditor.DisplayPage.Rectangle( m_Selection.X, m_Selection.Y, m_Selection.Width, m_Selection.Height, 16 );
+          }
+          if ( m_SelectionFloating )
+          {
+            pictureEditor.DisplayPage.DrawImage( m_SelectionFloatingImage, m_SelectionFloatingPos.X, m_SelectionFloatingPos.Y );
           }
           break;
         case PaintTool.DRAW_BOX:
@@ -2407,14 +2475,7 @@ namespace C64Studio
 
       dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
 
-      GR.Memory.ByteBuffer      dibData = projectToExport.Characters[m_CurrentChar].Image.CreateHDIBAsBuffer();
-
-      System.IO.MemoryStream    ms = dibData.MemoryStream();
-
-      // WTF - SetData requires streams, NOT global data (HGLOBAL)
-      dataObj.SetData( "DeviceIndependentBitmap", ms );
-
-      Clipboard.SetDataObject( dataObj, true );
+      Core.Imaging.ImageToClipboard( projectToExport.Characters[m_CurrentChar].Image );
     }
 
 
@@ -2747,7 +2808,7 @@ namespace C64Studio
     {
       pictureEditor.Invalidate();
       // in case the selected char was modified
-      charEditor.DisplayPage.DrawFromMemoryImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
       charEditor.Invalidate();
       Redraw();
     }
@@ -3135,6 +3196,20 @@ namespace C64Studio
     {
       HandleMouseOnEditor( e.X, e.Y, e.Button );
     }
+
+
+
+    public new void Dispose()
+    {
+      if ( m_SelectionFloatingImage != null )
+      {
+        m_SelectionFloatingImage.Dispose();
+        m_SelectionFloatingImage = null;
+      }
+      base.Dispose();
+    }
+
+
 
 
   }

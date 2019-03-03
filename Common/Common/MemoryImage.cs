@@ -424,6 +424,13 @@ namespace GR.Image
 
 
 
+    public void DrawTo( GR.Image.IImage TargetImage, int X, int Y, int Width, int Height )
+    {
+      DrawTo( TargetImage, X, Y, 0, 0, Width, Height );
+    }
+
+
+
     public void DrawTo( GR.Image.IImage TargetImage, int X, int Y, int SourceX, int SourceY, int DrawWidth, int DrawHeight )
     {
       // clip to source
@@ -824,7 +831,7 @@ namespace GR.Image
 
 
 
-    public MemoryImage GetImage( int X, int Y, int ImageWidth, int ImageHeight )
+    public IImage GetImage( int X, int Y, int ImageWidth, int ImageHeight )
     {
       GR.Image.MemoryImage subImage = new MemoryImage( ImageWidth, ImageHeight, m_PixelFormat );
 
@@ -1332,6 +1339,14 @@ namespace GR.Image
         SetPixel( X + Width - 1, Y + i, Value );
       }
     }
+
+
+
+    public void Dispose()
+    {
+    }
+
+
 
   }
 }

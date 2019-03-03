@@ -175,7 +175,7 @@ namespace GR.Forms
         {
           if ( m_MemoryImage != null )
           {
-            m_DisplayPage.DrawFromMemoryImage( m_MemoryImage, 0, 0 );
+            m_DisplayPage.DrawImage( m_MemoryImage, 0, 0 );
           }
           for ( int i = 0; i < 256; ++i )
           {
