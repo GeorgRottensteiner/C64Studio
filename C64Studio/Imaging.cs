@@ -96,5 +96,70 @@ namespace C64Studio
 
 
 
+    internal void FloodFill( IImage Image, int X, int Y, byte FillColor )
+    {
+      if ( Image == null )
+      {
+        return;
+      }
+
+      if ( ( X < 0 )
+      ||   ( X >= Image.Width )
+      ||   ( Y < 0 )
+      ||   ( Y >= Image.Height ) )
+      {
+        return;
+      }
+
+      uint targetColor = Image.GetPixel( X, Y );
+      if ( targetColor == FillColor )
+      {
+        return;
+      }
+
+      Stack<Point> pixels = new Stack<Point>();
+
+      pixels.Push( new Point( X, Y ) );
+      while ( pixels.Count != 0 )
+      {
+        Point temp = pixels.Pop();
+        int y1 = temp.Y;
+        while ( y1 >= 0 && Image.GetPixel( temp.X, y1 ) == targetColor )
+        {
+          y1--;
+        }
+        y1++;
+        bool spanLeft = false;
+        bool spanRight = false;
+        while ( y1 < Image.Height && Image.GetPixel( temp.X, y1 ) == targetColor )
+        {
+          Image.SetPixel( temp.X, y1, FillColor );
+
+          if ( !spanLeft && temp.X > 0 && Image.GetPixel( temp.X - 1, y1 ) == targetColor )
+          {
+            pixels.Push( new Point( temp.X - 1, y1 ) );
+            spanLeft = true;
+          }
+          else if ( spanLeft && temp.X - 1 == 0 && Image.GetPixel( temp.X - 1, y1 ) != targetColor )
+          {
+            spanLeft = false;
+          }
+          if ( !spanRight && temp.X < Image.Width - 1 && Image.GetPixel( temp.X + 1, y1 ) == targetColor )
+          {
+            pixels.Push( new Point( temp.X + 1, y1 ) );
+            spanRight = true;
+          }
+          else if ( spanRight && temp.X < Image.Width - 1 && Image.GetPixel( temp.X + 1, y1 ) != targetColor )
+          {
+            spanRight = false;
+          }
+          y1++;
+        }
+
+      }
+    }
+
+
+
   }
 }

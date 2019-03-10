@@ -392,15 +392,15 @@ namespace C64Studio
             break;
           case PaintTool.VALIDATE:
             if ( ( charX < 0 )
-            || ( charX >= BlockWidth )
-            || ( charY < 0 )
-            || ( charY >= BlockHeight ) )
+            ||   ( charX >= BlockWidth )
+            ||   ( charY < 0 )
+            ||   ( charY >= BlockHeight ) )
             {
               return;
             }
 
             if ( ( m_SelectedChar.X != charX )
-            || ( m_SelectedChar.Y != charY ) )
+            ||   ( m_SelectedChar.Y != charY ) )
             {
               m_SelectedChar.X = charX;
               m_SelectedChar.Y = charY;
@@ -448,6 +448,17 @@ namespace C64Studio
               }
             }
             comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Color;
+            break;
+          case PaintTool.FLOOD_FILL:
+            if ( m_ButtonReleased )
+            {
+              m_ButtonReleased = false;
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+              FloodFill( pixelX, pixelY, m_CurrentColor );
+              Redraw();
+              pictureEditor.Invalidate();
+              Modified = true;
+            }
             break;
         }
       }
@@ -518,6 +529,13 @@ namespace C64Studio
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
       }
+    }
+
+
+
+    private void FloodFill( int X, int Y, byte CurrentColor )
+    {
+      Core.Imaging.FloodFill( m_GraphicScreenProject.Image, X, Y, CurrentColor );
     }
 
 
