@@ -3849,11 +3849,15 @@ namespace C64Studio
       if ( StudioCore.Settings.StudioAppMode == AppMode.UNDECIDED )
       {
         // decide by checking for existance of settings file
+        var settingsPath = System.IO.Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ), "GR Games" );
+        settingsPath = System.IO.Path.Combine( settingsPath, "C64Studio" );
+        settingsPath = System.IO.Path.Combine( settingsPath, "1.0.0.0" );
+        settingsPath = System.IO.Path.Combine( settingsPath, "settings.dat" );
         if ( System.IO.File.Exists( System.IO.Path.Combine( Application.StartupPath, "settings.dat" ) ) )
         {
           StudioCore.Settings.StudioAppMode = AppMode.PORTABLE_APP;
         }
-        else if ( System.IO.File.Exists( System.IO.Path.Combine( System.IO.Directory.GetParent( Application.UserAppDataPath ).FullName, System.IO.Path.Combine( "1.0.0.0", "settings.dat" ) ) ) )
+        else if ( System.IO.File.Exists( settingsPath ) )
         {
           StudioCore.Settings.StudioAppMode = AppMode.GOOD_APP;
         }
