@@ -3853,7 +3853,7 @@ namespace C64Studio
         {
           StudioCore.Settings.StudioAppMode = AppMode.PORTABLE_APP;
         }
-        else if ( System.IO.File.Exists( System.IO.Path.Combine( Application.UserAppDataPath, "settings.dat" ) ) )
+        else if ( System.IO.File.Exists( System.IO.Path.Combine( System.IO.Directory.GetParent( Application.UserAppDataPath ).FullName, System.IO.Path.Combine( "1.0.0.0", "settings.dat" ) ) ) )
         {
           StudioCore.Settings.StudioAppMode = AppMode.GOOD_APP;
         }
@@ -3898,6 +3898,10 @@ namespace C64Studio
         SettingsData = new GR.Memory.ByteBuffer( System.IO.File.ReadAllBytes( SettingFile ) );
       }
       catch ( System.IO.FileNotFoundException )
+      {
+        return false;
+      }
+      catch ( System.IO.DirectoryNotFoundException )
       {
         return false;
       }
