@@ -386,7 +386,7 @@ namespace GR.Image
           {
             for ( int j = 0; j < Width; ++j )
             {
-              m_ImageData.SetU8At( X + BytesPerLine * Y, (byte)Value );
+              m_ImageData.SetU8At( j + X + BytesPerLine * ( Y + i ), (byte)Value );
             }
           }
           break;
@@ -395,9 +395,9 @@ namespace GR.Image
           {
             for ( int j = 0; j < Width; ++j )
             {
-              m_ImageData.SetU8At( X * 3 + BytesPerLine * Y, (byte)( Value & 0xff ) );
-              m_ImageData.SetU8At( X * 3 + BytesPerLine * Y + 1, (byte)( ( Value & 0xff00 ) >> 8 ) );
-              m_ImageData.SetU8At( X * 3 + BytesPerLine * Y + 2, (byte)( ( Value & 0xff0000 ) >> 16 ) );
+              m_ImageData.SetU8At( ( j + X ) * 3 + BytesPerLine * ( Y + i ), (byte)( Value & 0xff ) );
+              m_ImageData.SetU8At( ( j + X ) * 3 + BytesPerLine * ( Y + i ) + 1, (byte)( ( Value & 0xff00 ) >> 8 ) );
+              m_ImageData.SetU8At( ( j + X ) * 3 + BytesPerLine * ( Y + i ) + 2, (byte)( ( Value & 0xff0000 ) >> 16 ) );
             }
           }
           break;
@@ -406,7 +406,7 @@ namespace GR.Image
           {
             for ( int j = 0; j < Width; ++j )
             {
-              m_ImageData.SetU32At( X * 4 + BytesPerLine * Y, Value );
+              m_ImageData.SetU32At( ( j + X ) * 4 + BytesPerLine * ( Y + i ), Value );
             }
           }
           break;
@@ -418,6 +418,13 @@ namespace GR.Image
 
 
     public void DrawTo( GR.Image.IImage TargetImage, int X, int Y )
+    {
+      DrawTo( TargetImage, X, Y, 0, 0, Width, Height );
+    }
+
+
+
+    public void DrawTo( GR.Image.IImage TargetImage, int X, int Y, int Width, int Height )
     {
       DrawTo( TargetImage, X, Y, 0, 0, Width, Height );
     }
@@ -824,7 +831,7 @@ namespace GR.Image
 
 
 
-    public MemoryImage GetImage( int X, int Y, int ImageWidth, int ImageHeight )
+    public IImage GetImage( int X, int Y, int ImageWidth, int ImageHeight )
     {
       GR.Image.MemoryImage subImage = new MemoryImage( ImageWidth, ImageHeight, m_PixelFormat );
 
@@ -1254,6 +1261,92 @@ namespace GR.Image
         SetPaletteColor( i, r, g, b );
       }
     }
+
+
+
+    public void Line( int X1, int Y1, int X2, int Y2, uint Color )
+    {
+      int dy = Y2 - Y1;
+      int dx = X2 - X1;
+      int stepx, stepy;
+
+      if ( dy < 0 )
+      {
+        dy = -dy;
+        stepy = -1;
+      }
+      else
+      {
+        stepy = 1;
+      }
+      if ( dx < 0 )
+      {
+        dx = -dx;
+        stepx = -1;
+      }
+      else
+      {
+        stepx = 1;
+      }
+
+      dy <<= 1;
+      dx <<= 1;
+
+      SetPixel( X1, Y1, Color );
+      if ( dx > dy )
+      {
+        int fraction = dy - ( dx >> 1 );
+
+        while ( X1 != X2 )
+        {
+          if ( fraction >= 0 )
+          {
+            Y1 += stepy;
+            fraction -= dx;
+          }
+          X1 += stepx;
+          fraction += dy;
+          SetPixel( X1, Y1, Color );
+        }
+      }
+      else
+      {
+        int fraction = dx - ( dy >> 1 );
+
+        while ( Y1 != Y2 )
+        {
+          if ( fraction >= 0 )
+          {
+            X1 += stepx;
+            fraction -= dy;
+          }
+          Y1 += stepy;
+          fraction += dx;
+          SetPixel( X1, Y1, Color );
+        }
+      }
+    }
+
+
+
+    public void Rectangle( int X, int Y, int Width, int Height, uint Value )
+    {
+      Box( X, Y, Width, 1, Value );
+      Box( X, Y + Height - 1, Width, 1, Value );
+      for ( int i = 1; i < Height - 1; ++i )
+      {
+        SetPixel( X, Y + i, Value );
+        SetPixel( X + Width - 1, Y + i, Value );
+      }
+    }
+
+
+
+    public void Dispose()
+    {
+    }
+
+
 
   }
 }

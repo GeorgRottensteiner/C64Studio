@@ -28,14 +28,14 @@
     /// </summary>
     private void InitializeComponent()
     {
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager( typeof( DebugBreakpoints ) );
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DebugBreakpoints));
       this.listBreakpoints = new System.Windows.Forms.ListView();
-      this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-      this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
-      this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
-      this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
-      this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-      this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.btnAddBreakpoint = new System.Windows.Forms.Button();
       this.btnDeleteBreakpoint = new System.Windows.Forms.Button();
       this.btnApplyChanges = new System.Windows.Forms.Button();
@@ -49,29 +49,30 @@
       this.label2 = new System.Windows.Forms.Label();
       this.editBPAddress = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
-      ( (System.ComponentModel.ISupportInitialize)( this.m_FileWatcher ) ).BeginInit();
+      this.btnDeleteAll = new System.Windows.Forms.Button();
+      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.groupBreakpointData.SuspendLayout();
       this.SuspendLayout();
       // 
       // listBreakpoints
       // 
-      this.listBreakpoints.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left )
-                  | System.Windows.Forms.AnchorStyles.Right ) ) );
-      this.listBreakpoints.Columns.AddRange( new System.Windows.Forms.ColumnHeader[] {
+      this.listBreakpoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.listBreakpoints.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader4,
             this.columnHeader5,
             this.columnHeader6,
             this.columnHeader3,
-            this.columnHeader2} );
+            this.columnHeader2});
       this.listBreakpoints.FullRowSelect = true;
-      this.listBreakpoints.Location = new System.Drawing.Point( 12, 12 );
+      this.listBreakpoints.Location = new System.Drawing.Point(12, 12);
       this.listBreakpoints.Name = "listBreakpoints";
-      this.listBreakpoints.Size = new System.Drawing.Size( 510, 166 );
+      this.listBreakpoints.Size = new System.Drawing.Size(510, 166);
       this.listBreakpoints.TabIndex = 0;
       this.listBreakpoints.UseCompatibleStateImageBehavior = false;
       this.listBreakpoints.View = System.Windows.Forms.View.Details;
-      this.listBreakpoints.SelectedIndexChanged += new System.EventHandler( this.listBreakpoints_SelectedIndexChanged );
+      this.listBreakpoints.SelectedIndexChanged += new System.EventHandler(this.listBreakpoints_SelectedIndexChanged);
       // 
       // columnHeader1
       // 
@@ -105,51 +106,51 @@
       // btnAddBreakpoint
       // 
       this.btnAddBreakpoint.Enabled = false;
-      this.btnAddBreakpoint.Location = new System.Drawing.Point( 12, 184 );
+      this.btnAddBreakpoint.Location = new System.Drawing.Point(12, 184);
       this.btnAddBreakpoint.Name = "btnAddBreakpoint";
-      this.btnAddBreakpoint.Size = new System.Drawing.Size( 75, 23 );
+      this.btnAddBreakpoint.Size = new System.Drawing.Size(75, 23);
       this.btnAddBreakpoint.TabIndex = 1;
       this.btnAddBreakpoint.Text = "Add";
       this.btnAddBreakpoint.UseVisualStyleBackColor = true;
-      this.btnAddBreakpoint.Click += new System.EventHandler( this.btnAddBreakpoint_Click );
+      this.btnAddBreakpoint.Click += new System.EventHandler(this.btnAddBreakpoint_Click);
       // 
       // btnDeleteBreakpoint
       // 
       this.btnDeleteBreakpoint.Enabled = false;
-      this.btnDeleteBreakpoint.Location = new System.Drawing.Point( 93, 184 );
+      this.btnDeleteBreakpoint.Location = new System.Drawing.Point(93, 184);
       this.btnDeleteBreakpoint.Name = "btnDeleteBreakpoint";
-      this.btnDeleteBreakpoint.Size = new System.Drawing.Size( 75, 23 );
+      this.btnDeleteBreakpoint.Size = new System.Drawing.Size(75, 23);
       this.btnDeleteBreakpoint.TabIndex = 1;
       this.btnDeleteBreakpoint.Text = "Del";
       this.btnDeleteBreakpoint.UseVisualStyleBackColor = true;
-      this.btnDeleteBreakpoint.Click += new System.EventHandler( this.btnDeleteBreakpoint_Click );
+      this.btnDeleteBreakpoint.Click += new System.EventHandler(this.btnDeleteBreakpoint_Click);
       // 
       // btnApplyChanges
       // 
-      this.btnApplyChanges.Location = new System.Drawing.Point( 174, 184 );
+      this.btnApplyChanges.Location = new System.Drawing.Point(271, 184);
       this.btnApplyChanges.Name = "btnApplyChanges";
-      this.btnApplyChanges.Size = new System.Drawing.Size( 75, 23 );
+      this.btnApplyChanges.Size = new System.Drawing.Size(75, 23);
       this.btnApplyChanges.TabIndex = 1;
       this.btnApplyChanges.Text = "Apply";
       this.btnApplyChanges.UseVisualStyleBackColor = true;
-      this.btnApplyChanges.Click += new System.EventHandler( this.btnApplyChanges_Click );
+      this.btnApplyChanges.Click += new System.EventHandler(this.btnApplyChanges_Click);
       // 
       // groupBreakpointData
       // 
-      this.groupBreakpointData.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left )
-                  | System.Windows.Forms.AnchorStyles.Right ) ) );
-      this.groupBreakpointData.Controls.Add( this.comboSymbols );
-      this.groupBreakpointData.Controls.Add( this.checkTriggerStore );
-      this.groupBreakpointData.Controls.Add( this.checkTriggerLoad );
-      this.groupBreakpointData.Controls.Add( this.checkTriggerExec );
-      this.groupBreakpointData.Controls.Add( this.editTriggerConditions );
-      this.groupBreakpointData.Controls.Add( this.label3 );
-      this.groupBreakpointData.Controls.Add( this.label2 );
-      this.groupBreakpointData.Controls.Add( this.editBPAddress );
-      this.groupBreakpointData.Controls.Add( this.label1 );
-      this.groupBreakpointData.Location = new System.Drawing.Point( 12, 213 );
+      this.groupBreakpointData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.groupBreakpointData.Controls.Add(this.comboSymbols);
+      this.groupBreakpointData.Controls.Add(this.checkTriggerStore);
+      this.groupBreakpointData.Controls.Add(this.checkTriggerLoad);
+      this.groupBreakpointData.Controls.Add(this.checkTriggerExec);
+      this.groupBreakpointData.Controls.Add(this.editTriggerConditions);
+      this.groupBreakpointData.Controls.Add(this.label3);
+      this.groupBreakpointData.Controls.Add(this.label2);
+      this.groupBreakpointData.Controls.Add(this.editBPAddress);
+      this.groupBreakpointData.Controls.Add(this.label1);
+      this.groupBreakpointData.Location = new System.Drawing.Point(12, 213);
       this.groupBreakpointData.Name = "groupBreakpointData";
-      this.groupBreakpointData.Size = new System.Drawing.Size( 510, 99 );
+      this.groupBreakpointData.Size = new System.Drawing.Size(510, 99);
       this.groupBreakpointData.TabIndex = 2;
       this.groupBreakpointData.TabStop = false;
       this.groupBreakpointData.Text = "Breakpoint Settings";
@@ -158,105 +159,116 @@
       // 
       this.comboSymbols.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboSymbols.FormattingEnabled = true;
-      this.comboSymbols.Location = new System.Drawing.Point( 210, 19 );
+      this.comboSymbols.Location = new System.Drawing.Point(210, 19);
       this.comboSymbols.Name = "comboSymbols";
-      this.comboSymbols.Size = new System.Drawing.Size( 145, 21 );
+      this.comboSymbols.Size = new System.Drawing.Size(145, 21);
       this.comboSymbols.TabIndex = 3;
-      this.comboSymbols.SelectedIndexChanged += new System.EventHandler( this.comboSymbols_SelectedIndexChanged );
+      this.comboSymbols.SelectedIndexChanged += new System.EventHandler(this.comboSymbols_SelectedIndexChanged);
       // 
       // checkTriggerStore
       // 
       this.checkTriggerStore.AutoSize = true;
-      this.checkTriggerStore.Location = new System.Drawing.Point( 210, 71 );
+      this.checkTriggerStore.Location = new System.Drawing.Point(210, 71);
       this.checkTriggerStore.Name = "checkTriggerStore";
-      this.checkTriggerStore.Size = new System.Drawing.Size( 51, 17 );
+      this.checkTriggerStore.Size = new System.Drawing.Size(51, 17);
       this.checkTriggerStore.TabIndex = 2;
       this.checkTriggerStore.Text = "Store";
       this.checkTriggerStore.UseVisualStyleBackColor = true;
-      this.checkTriggerStore.CheckedChanged += new System.EventHandler( this.checkTriggerStore_CheckedChanged );
+      this.checkTriggerStore.CheckedChanged += new System.EventHandler(this.checkTriggerStore_CheckedChanged);
       // 
       // checkTriggerLoad
       // 
       this.checkTriggerLoad.AutoSize = true;
-      this.checkTriggerLoad.Location = new System.Drawing.Point( 146, 71 );
+      this.checkTriggerLoad.Location = new System.Drawing.Point(146, 71);
       this.checkTriggerLoad.Name = "checkTriggerLoad";
-      this.checkTriggerLoad.Size = new System.Drawing.Size( 50, 17 );
+      this.checkTriggerLoad.Size = new System.Drawing.Size(50, 17);
       this.checkTriggerLoad.TabIndex = 2;
       this.checkTriggerLoad.Text = "Load";
       this.checkTriggerLoad.UseVisualStyleBackColor = true;
-      this.checkTriggerLoad.CheckedChanged += new System.EventHandler( this.checkTriggerLoad_CheckedChanged );
+      this.checkTriggerLoad.CheckedChanged += new System.EventHandler(this.checkTriggerLoad_CheckedChanged);
       // 
       // checkTriggerExec
       // 
       this.checkTriggerExec.AutoSize = true;
       this.checkTriggerExec.Checked = true;
       this.checkTriggerExec.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkTriggerExec.Location = new System.Drawing.Point( 67, 71 );
+      this.checkTriggerExec.Location = new System.Drawing.Point(67, 71);
       this.checkTriggerExec.Name = "checkTriggerExec";
-      this.checkTriggerExec.Size = new System.Drawing.Size( 65, 17 );
+      this.checkTriggerExec.Size = new System.Drawing.Size(65, 17);
       this.checkTriggerExec.TabIndex = 2;
       this.checkTriggerExec.Text = "Execute";
       this.checkTriggerExec.UseVisualStyleBackColor = true;
-      this.checkTriggerExec.CheckedChanged += new System.EventHandler( this.checkTriggerExec_CheckedChanged );
+      this.checkTriggerExec.CheckedChanged += new System.EventHandler(this.checkTriggerExec_CheckedChanged);
       // 
       // editTriggerConditions
       // 
-      this.editTriggerConditions.Location = new System.Drawing.Point( 67, 45 );
+      this.editTriggerConditions.Location = new System.Drawing.Point(67, 45);
       this.editTriggerConditions.Name = "editTriggerConditions";
-      this.editTriggerConditions.Size = new System.Drawing.Size( 288, 20 );
+      this.editTriggerConditions.Size = new System.Drawing.Size(288, 20);
       this.editTriggerConditions.TabIndex = 1;
-      this.editTriggerConditions.TextChanged += new System.EventHandler( this.editTriggerConditions_TextChanged );
+      this.editTriggerConditions.TextChanged += new System.EventHandler(this.editTriggerConditions_TextChanged);
       // 
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point( 2, 72 );
+      this.label3.Location = new System.Drawing.Point(2, 72);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size( 58, 13 );
+      this.label3.Size = new System.Drawing.Size(58, 13);
       this.label3.TabIndex = 0;
       this.label3.Text = "Trigger on:";
       // 
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point( 2, 48 );
+      this.label2.Location = new System.Drawing.Point(2, 48);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size( 59, 13 );
+      this.label2.Size = new System.Drawing.Size(59, 13);
       this.label2.TabIndex = 0;
       this.label2.Text = "Conditions:";
       // 
       // editBPAddress
       // 
-      this.editBPAddress.Location = new System.Drawing.Point( 67, 19 );
+      this.editBPAddress.Location = new System.Drawing.Point(67, 19);
       this.editBPAddress.Name = "editBPAddress";
-      this.editBPAddress.Size = new System.Drawing.Size( 129, 20 );
+      this.editBPAddress.Size = new System.Drawing.Size(129, 20);
       this.editBPAddress.TabIndex = 1;
-      this.editBPAddress.TextChanged += new System.EventHandler( this.editBPAddress_TextChanged );
+      this.editBPAddress.TextChanged += new System.EventHandler(this.editBPAddress_TextChanged);
       // 
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point( 2, 22 );
+      this.label1.Location = new System.Drawing.Point(2, 22);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size( 48, 13 );
+      this.label1.Size = new System.Drawing.Size(48, 13);
       this.label1.TabIndex = 0;
       this.label1.Text = "Address:";
       // 
+      // btnDeleteAll
+      // 
+      this.btnDeleteAll.Location = new System.Drawing.Point(174, 184);
+      this.btnDeleteAll.Name = "btnDeleteAll";
+      this.btnDeleteAll.Size = new System.Drawing.Size(75, 23);
+      this.btnDeleteAll.TabIndex = 1;
+      this.btnDeleteAll.Text = "Del All";
+      this.btnDeleteAll.UseVisualStyleBackColor = true;
+      this.btnDeleteAll.Click += new System.EventHandler(this.btnDeleteAllBreakpoints_Click);
+      // 
       // DebugBreakpoints
       // 
-      this.ClientSize = new System.Drawing.Size( 534, 390 );
-      this.Controls.Add( this.groupBreakpointData );
-      this.Controls.Add( this.btnDeleteBreakpoint );
-      this.Controls.Add( this.btnApplyChanges );
-      this.Controls.Add( this.btnAddBreakpoint );
-      this.Controls.Add( this.listBreakpoints );
-      this.Icon = ( (System.Drawing.Icon)( resources.GetObject( "$this.Icon" ) ) );
+      this.ClientSize = new System.Drawing.Size(534, 390);
+      this.Controls.Add(this.groupBreakpointData);
+      this.Controls.Add(this.btnDeleteAll);
+      this.Controls.Add(this.btnDeleteBreakpoint);
+      this.Controls.Add(this.btnApplyChanges);
+      this.Controls.Add(this.btnAddBreakpoint);
+      this.Controls.Add(this.listBreakpoints);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "DebugBreakpoints";
       this.Text = "Breakpoints";
-      ( (System.ComponentModel.ISupportInitialize)( this.m_FileWatcher ) ).EndInit();
-      this.groupBreakpointData.ResumeLayout( false );
+      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
+      this.groupBreakpointData.ResumeLayout(false);
       this.groupBreakpointData.PerformLayout();
-      this.ResumeLayout( false );
+      this.ResumeLayout(false);
 
     }
 
@@ -282,8 +294,6 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.ColumnHeader columnHeader6;
     private System.Windows.Forms.ComboBox comboSymbols;
-
-
-
+    private System.Windows.Forms.Button btnDeleteAll;
   }
 }

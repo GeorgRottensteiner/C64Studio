@@ -1291,7 +1291,7 @@ namespace C64Studio
 
     private void Redraw()
     {
-      pictureEditor.DisplayPage.DrawFromMemoryImage( m_Image, 0, 0 );
+      pictureEditor.DisplayPage.DrawImage( m_Image, 0, 0 );
 
       if ( m_CurrentMap == null )
       {

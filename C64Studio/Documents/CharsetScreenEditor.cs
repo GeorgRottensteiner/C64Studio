@@ -1317,7 +1317,7 @@ namespace C64Studio
     private void Redraw()
     {
       pictureEditor.DisplayPage.Box( 0, 0, pictureEditor.DisplayPage.Width, pictureEditor.DisplayPage.Height, 16 );
-      pictureEditor.DisplayPage.DrawFromMemoryImage( m_Image, -m_CharsetScreen.ScreenOffsetX * 8, -m_CharsetScreen.ScreenOffsetY * 8 );
+      pictureEditor.DisplayPage.DrawImage( m_Image, -m_CharsetScreen.ScreenOffsetX * 8, -m_CharsetScreen.ScreenOffsetY * 8 );
 
       int     x1 = m_CharsetScreen.ScreenOffsetX;
       int     y1 = m_CharsetScreen.ScreenOffsetY;

@@ -104,8 +104,10 @@ namespace C64Studio
 
 
 
-    public FormFindReplace()
+    public FormFindReplace( StudioCore Core )
     {
+      this.Core = Core;
+
       InitializeComponent();
 
       foreach ( FindTarget target in Enum.GetValues( typeof( FindTarget ) ) )
@@ -117,6 +119,7 @@ namespace C64Studio
       comboReplaceTarget.SelectedIndex = (int)FindTarget.ACTIVE_DOCUMENT;
       comboSearchText.Focus();
       AcceptButton = btnFindNext;
+      RefreshDisplayOptions();
     }
 
 
@@ -413,24 +416,12 @@ namespace C64Studio
       {
         return null;
       }
-
-      if ( Document.BaseDoc == null )
+      var compilableDoc = Document.CompilableDocument;
+      if ( compilableDoc == null )
       {
         return null;
       }
-      if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
-      {
-        return ( (SourceASMEx)Document.BaseDoc ).editSource;
-      }
-      else if ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
-      {
-        return ( (SourceBasicEx)Document.BaseDoc ).editSource;
-      }
-      else if ( Document.Type == ProjectElement.ElementType.DISASSEMBLER )
-      {
-        return ( (Disassembler)Document.BaseDoc ).editDisassembly;
-      }
-      return null;
+      return compilableDoc.SourceControl;
     }
 
 

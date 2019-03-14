@@ -1279,13 +1279,69 @@ namespace C64Studio
           };
         }
       }
+    }
 
+
+
+    public uint FGColor( Types.ColorableElement Element )
+    {
+      if ( !SyntaxColoring.ContainsKey( Element ) )
+      {
+        SyntaxColoring[Element] = new Types.ColorSetting( GR.EnumHelper.GetDescription( Element ) )
+        {
+          FGColor = 0xff000000,
+          BGColor = 0xffffffff,
+          BGColorAuto = false
+        };
+      }
+      return SyntaxColoring[Element].FGColor;
+    }
+
+
+
+    public bool BGColorIsAuto( Types.ColorableElement Element )
+    {
+      if ( !SyntaxColoring.ContainsKey( Element ) )
+      {
+        SyntaxColoring[Element] = new Types.ColorSetting( GR.EnumHelper.GetDescription( Element ) )
+        {
+          FGColor = 0xff000000,
+          BGColor = 0xffffffff,
+          BGColorAuto = false
+        };
+      }
+      return SyntaxColoring[Element].BGColorAuto;
+    }
+
+
+
+    public uint BGColor( Types.ColorableElement Element )
+    {
+      if ( !SyntaxColoring.ContainsKey( Element ) )
+      {
+        SyntaxColoring[Element] = new Types.ColorSetting( GR.EnumHelper.GetDescription( Element ) )
+        {
+          FGColor = 0xff000000,
+          BGColor = 0xffffffff,
+          BGColorAuto = false
+        };
+      }
+      if ( SyntaxColoring[Element].BGColorAuto )
+      {
+        return BGColor( ColorableElement.EMPTY_SPACE );
+      }
+      return SyntaxColoring[Element].BGColor;
     }
 
 
 
     public void SanitizeSettings()
     {
+      if ( SyntaxColoring.Count == 0 )
+      {
+        SetDefaultColors();
+      }
+
       foreach ( var syntaxColor in SyntaxColoring )
       {
         var trueBGColor = syntaxColor.Value.BGColor;

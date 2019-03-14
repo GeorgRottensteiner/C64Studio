@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,6 +62,12 @@
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnToolValidate = new System.Windows.Forms.RadioButton();
+      this.btnToolSelect = new System.Windows.Forms.RadioButton();
+      this.btnToolFill = new System.Windows.Forms.RadioButton();
+      this.btnToolQuad = new System.Windows.Forms.RadioButton();
+      this.btnToolRect = new System.Windows.Forms.RadioButton();
+      this.btnToolPaint = new System.Windows.Forms.RadioButton();
       this.label9 = new System.Windows.Forms.Label();
       this.label8 = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
@@ -84,6 +90,7 @@
       this.btnPaste = new System.Windows.Forms.Button();
       this.btnCopy = new System.Windows.Forms.Button();
       this.btnCheck = new System.Windows.Forms.Button();
+      this.btnFullCopy = new System.Windows.Forms.Button();
       this.btnPasteFromClipboard = new System.Windows.Forms.Button();
       this.labelCharInfo = new System.Windows.Forms.Label();
       this.checkMulticolor = new System.Windows.Forms.CheckBox();
@@ -99,7 +106,6 @@
       this.comboColorMappingTargets = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
-      this.btnFullCopy = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -137,7 +143,7 @@
       // importImageToolStripMenuItem
       // 
       this.importImageToolStripMenuItem.Name = "importImageToolStripMenuItem";
-      this.importImageToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+      this.importImageToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
       this.importImageToolStripMenuItem.Text = "&Import Image";
       this.importImageToolStripMenuItem.Click += new System.EventHandler(this.importImagetoolStripMenuItem_Click);
       // 
@@ -145,7 +151,7 @@
       // 
       this.saveCharsetProjectToolStripMenuItem.Enabled = false;
       this.saveCharsetProjectToolStripMenuItem.Name = "saveCharsetProjectToolStripMenuItem";
-      this.saveCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+      this.saveCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
       this.saveCharsetProjectToolStripMenuItem.Text = "&Save Project";
       this.saveCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.saveCharsetProjectToolStripMenuItem_Click);
       // 
@@ -153,8 +159,8 @@
       // 
       this.closeCharsetProjectToolStripMenuItem.Enabled = false;
       this.closeCharsetProjectToolStripMenuItem.Name = "closeCharsetProjectToolStripMenuItem";
-      this.closeCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
-      this.closeCharsetProjectToolStripMenuItem.Text = "&Close Charset Project";
+      this.closeCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+      this.closeCharsetProjectToolStripMenuItem.Text = "&Close Graphic Screen Project";
       this.closeCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.closeCharsetProjectToolStripMenuItem_Click);
       // 
       // tabProject
@@ -164,7 +170,7 @@
       this.tabProject.Location = new System.Drawing.Point(4, 22);
       this.tabProject.Name = "tabProject";
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
-      this.tabProject.Size = new System.Drawing.Size(956, 475);
+      this.tabProject.Size = new System.Drawing.Size(956, 502);
       this.tabProject.TabIndex = 1;
       this.tabProject.Text = "Project";
       this.tabProject.UseVisualStyleBackColor = true;
@@ -177,7 +183,7 @@
       this.groupBox1.Controls.Add(this.btnImportFromFile);
       this.groupBox1.Location = new System.Drawing.Point(458, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(324, 461);
+      this.groupBox1.Size = new System.Drawing.Size(324, 488);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -227,7 +233,7 @@
       this.groupExport.Controls.Add(this.editDataExport);
       this.groupExport.Location = new System.Drawing.Point(11, 6);
       this.groupExport.Name = "groupExport";
-      this.groupExport.Size = new System.Drawing.Size(441, 461);
+      this.groupExport.Size = new System.Drawing.Size(441, 488);
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
@@ -408,13 +414,19 @@
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 216);
+      this.editDataExport.Size = new System.Drawing.Size(429, 243);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnToolValidate);
+      this.tabEditor.Controls.Add(this.btnToolSelect);
+      this.tabEditor.Controls.Add(this.btnToolFill);
+      this.tabEditor.Controls.Add(this.btnToolQuad);
+      this.tabEditor.Controls.Add(this.btnToolRect);
+      this.tabEditor.Controls.Add(this.btnToolPaint);
       this.tabEditor.Controls.Add(this.label9);
       this.tabEditor.Controls.Add(this.label8);
       this.tabEditor.Controls.Add(this.label6);
@@ -449,10 +461,78 @@
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(956, 475);
+      this.tabEditor.Size = new System.Drawing.Size(956, 502);
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // btnToolValidate
+      // 
+      this.btnToolValidate.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolValidate.Checked = true;
+      this.btnToolValidate.Image = global::C64Studio.Properties.Resources.tool_validate;
+      this.btnToolValidate.Location = new System.Drawing.Point(128, 438);
+      this.btnToolValidate.Name = "btnToolValidate";
+      this.btnToolValidate.Size = new System.Drawing.Size(24, 24);
+      this.btnToolValidate.TabIndex = 36;
+      this.btnToolValidate.TabStop = true;
+      this.btnToolValidate.UseVisualStyleBackColor = true;
+      this.btnToolValidate.CheckedChanged += new System.EventHandler(this.btnToolValidate_CheckedChanged);
+      // 
+      // btnToolSelect
+      // 
+      this.btnToolSelect.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolSelect.Image = global::C64Studio.Properties.Resources.tool_select;
+      this.btnToolSelect.Location = new System.Drawing.Point(104, 438);
+      this.btnToolSelect.Name = "btnToolSelect";
+      this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
+      this.btnToolSelect.TabIndex = 36;
+      this.btnToolSelect.UseVisualStyleBackColor = true;
+      this.btnToolSelect.CheckedChanged += new System.EventHandler(this.btnToolSelect_CheckedChanged);
+      // 
+      // btnToolFill
+      // 
+      this.btnToolFill.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolFill.Image = global::C64Studio.Properties.Resources.tool_fill;
+      this.btnToolFill.Location = new System.Drawing.Point(80, 438);
+      this.btnToolFill.Name = "btnToolFill";
+      this.btnToolFill.Size = new System.Drawing.Size(24, 24);
+      this.btnToolFill.TabIndex = 37;
+      this.btnToolFill.UseVisualStyleBackColor = true;
+      this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
+      // 
+      // btnToolQuad
+      // 
+      this.btnToolQuad.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolQuad.Image = global::C64Studio.Properties.Resources.tool_quad;
+      this.btnToolQuad.Location = new System.Drawing.Point(56, 438);
+      this.btnToolQuad.Name = "btnToolQuad";
+      this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
+      this.btnToolQuad.TabIndex = 38;
+      this.btnToolQuad.UseVisualStyleBackColor = true;
+      this.btnToolQuad.CheckedChanged += new System.EventHandler(this.btnToolQuad_CheckedChanged);
+      // 
+      // btnToolRect
+      // 
+      this.btnToolRect.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolRect.Image = global::C64Studio.Properties.Resources.tool_rect;
+      this.btnToolRect.Location = new System.Drawing.Point(32, 438);
+      this.btnToolRect.Name = "btnToolRect";
+      this.btnToolRect.Size = new System.Drawing.Size(24, 24);
+      this.btnToolRect.TabIndex = 39;
+      this.btnToolRect.UseVisualStyleBackColor = true;
+      this.btnToolRect.CheckedChanged += new System.EventHandler(this.btnToolRect_CheckedChanged);
+      // 
+      // btnToolPaint
+      // 
+      this.btnToolPaint.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolPaint.Image = global::C64Studio.Properties.Resources.tool_none;
+      this.btnToolPaint.Location = new System.Drawing.Point(8, 438);
+      this.btnToolPaint.Name = "btnToolPaint";
+      this.btnToolPaint.Size = new System.Drawing.Size(24, 24);
+      this.btnToolPaint.TabIndex = 40;
+      this.btnToolPaint.UseVisualStyleBackColor = true;
+      this.btnToolPaint.CheckedChanged += new System.EventHandler(this.btnToolPaint_CheckedChanged);
       // 
       // label9
       // 
@@ -545,7 +625,7 @@
       // 
       this.comboCheckType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboCheckType.FormattingEnabled = true;
-      this.comboCheckType.Location = new System.Drawing.Point(376, 443);
+      this.comboCheckType.Location = new System.Drawing.Point(377, 473);
       this.comboCheckType.Name = "comboCheckType";
       this.comboCheckType.Size = new System.Drawing.Size(100, 21);
       this.comboCheckType.TabIndex = 21;
@@ -608,7 +688,7 @@
       // colorSelector
       // 
       this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage4;
+      this.colorSelector.DisplayPage = fastImage1;
       this.colorSelector.Image = null;
       this.colorSelector.Location = new System.Drawing.Point(683, 413);
       this.colorSelector.Name = "colorSelector";
@@ -620,7 +700,7 @@
       // charEditor
       // 
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage5;
+      this.charEditor.DisplayPage = fastImage2;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(683, 148);
       this.charEditor.Name = "charEditor";
@@ -633,7 +713,7 @@
       // btnPaste
       // 
       this.btnPaste.Image = ((System.Drawing.Image)(resources.GetObject("btnPaste.Image")));
-      this.btnPaste.Location = new System.Drawing.Point(40, 439);
+      this.btnPaste.Location = new System.Drawing.Point(41, 469);
       this.btnPaste.Name = "btnPaste";
       this.btnPaste.Size = new System.Drawing.Size(26, 26);
       this.btnPaste.TabIndex = 11;
@@ -643,7 +723,7 @@
       // btnCopy
       // 
       this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
-      this.btnCopy.Location = new System.Drawing.Point(8, 439);
+      this.btnCopy.Location = new System.Drawing.Point(9, 469);
       this.btnCopy.Name = "btnCopy";
       this.btnCopy.Size = new System.Drawing.Size(26, 26);
       this.btnCopy.TabIndex = 11;
@@ -652,7 +732,7 @@
       // 
       // btnCheck
       // 
-      this.btnCheck.Location = new System.Drawing.Point(303, 441);
+      this.btnCheck.Location = new System.Drawing.Point(304, 471);
       this.btnCheck.Name = "btnCheck";
       this.btnCheck.Size = new System.Drawing.Size(67, 23);
       this.btnCheck.TabIndex = 6;
@@ -660,9 +740,19 @@
       this.btnCheck.UseVisualStyleBackColor = true;
       this.btnCheck.Click += new System.EventHandler(this.btnCheck_Click);
       // 
+      // btnFullCopy
+      // 
+      this.btnFullCopy.Location = new System.Drawing.Point(117, 470);
+      this.btnFullCopy.Name = "btnFullCopy";
+      this.btnFullCopy.Size = new System.Drawing.Size(80, 23);
+      this.btnFullCopy.TabIndex = 6;
+      this.btnFullCopy.Text = "Full Copy";
+      this.btnFullCopy.UseVisualStyleBackColor = true;
+      this.btnFullCopy.Click += new System.EventHandler(this.btnFullCopyToClipboard_Click);
+      // 
       // btnPasteFromClipboard
       // 
-      this.btnPasteFromClipboard.Location = new System.Drawing.Point(202, 440);
+      this.btnPasteFromClipboard.Location = new System.Drawing.Point(203, 470);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
       this.btnPasteFromClipboard.Size = new System.Drawing.Size(84, 23);
       this.btnPasteFromClipboard.TabIndex = 6;
@@ -672,7 +762,7 @@
       // 
       // labelCharInfo
       // 
-      this.labelCharInfo.Location = new System.Drawing.Point(482, 446);
+      this.labelCharInfo.Location = new System.Drawing.Point(483, 476);
       this.labelCharInfo.Name = "labelCharInfo";
       this.labelCharInfo.Size = new System.Drawing.Size(170, 24);
       this.labelCharInfo.TabIndex = 5;
@@ -740,7 +830,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage6;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -750,6 +840,7 @@
       this.pictureEditor.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureEditor_Paint);
       this.pictureEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseDown);
       this.pictureEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseMove);
+      this.pictureEditor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseUp);
       // 
       // tabGraphicScreenEditor
       // 
@@ -760,7 +851,7 @@
       this.tabGraphicScreenEditor.Location = new System.Drawing.Point(0, 24);
       this.tabGraphicScreenEditor.Name = "tabGraphicScreenEditor";
       this.tabGraphicScreenEditor.SelectedIndex = 0;
-      this.tabGraphicScreenEditor.Size = new System.Drawing.Size(964, 501);
+      this.tabGraphicScreenEditor.Size = new System.Drawing.Size(964, 528);
       this.tabGraphicScreenEditor.TabIndex = 0;
       // 
       // tabColorMapping
@@ -769,7 +860,7 @@
       this.tabColorMapping.Location = new System.Drawing.Point(4, 22);
       this.tabColorMapping.Name = "tabColorMapping";
       this.tabColorMapping.Padding = new System.Windows.Forms.Padding(3);
-      this.tabColorMapping.Size = new System.Drawing.Size(956, 475);
+      this.tabColorMapping.Size = new System.Drawing.Size(956, 502);
       this.tabColorMapping.TabIndex = 2;
       this.tabColorMapping.Text = "Color Mapping";
       this.tabColorMapping.UseVisualStyleBackColor = true;
@@ -785,7 +876,7 @@
       this.groupColorMapping.Controls.Add(this.listColorMappingColors);
       this.groupColorMapping.Location = new System.Drawing.Point(6, 6);
       this.groupColorMapping.Name = "groupColorMapping";
-      this.groupColorMapping.Size = new System.Drawing.Size(942, 461);
+      this.groupColorMapping.Size = new System.Drawing.Size(942, 488);
       this.groupColorMapping.TabIndex = 0;
       this.groupColorMapping.TabStop = false;
       this.groupColorMapping.Text = "Map Multi-Colors";
@@ -839,19 +930,9 @@
       this.listColorMappingColors.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listColorMappingColors_DrawItem);
       this.listColorMappingColors.SelectedIndexChanged += new System.EventHandler(this.listColorMappingColors_SelectedIndexChanged);
       // 
-      // btnFullCopy
-      // 
-      this.btnFullCopy.Location = new System.Drawing.Point(116, 440);
-      this.btnFullCopy.Name = "btnFullCopy";
-      this.btnFullCopy.Size = new System.Drawing.Size(80, 23);
-      this.btnFullCopy.TabIndex = 6;
-      this.btnFullCopy.Text = "Full Copy";
-      this.btnFullCopy.UseVisualStyleBackColor = true;
-      this.btnFullCopy.Click += new System.EventHandler(this.btnFullCopyToClipboard_Click);
-      // 
       // GraphicScreenEditor
       // 
-      this.ClientSize = new System.Drawing.Size(964, 525);
+      this.ClientSize = new System.Drawing.Size(964, 552);
       this.Controls.Add(this.tabGraphicScreenEditor);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -948,5 +1029,11 @@
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Button btnExportToImage;
     private System.Windows.Forms.Button btnFullCopy;
+    private System.Windows.Forms.RadioButton btnToolValidate;
+    private System.Windows.Forms.RadioButton btnToolSelect;
+    private System.Windows.Forms.RadioButton btnToolFill;
+    private System.Windows.Forms.RadioButton btnToolQuad;
+    private System.Windows.Forms.RadioButton btnToolRect;
+    private System.Windows.Forms.RadioButton btnToolPaint;
   }
 }

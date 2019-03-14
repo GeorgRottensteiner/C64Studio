@@ -84,13 +84,6 @@ namespace GR
 
 
 
-      public void AppendF32( float Value )
-      {
-        Append( System.BitConverter.GetBytes( Value ) );
-      }
-
-
-
 	  }
   }
 }

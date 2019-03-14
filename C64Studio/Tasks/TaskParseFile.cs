@@ -4,6 +4,9 @@ using System.Text;
 
 namespace C64Studio.Tasks
 {
+  /// <summary>
+  /// preparses a single file (without project) and populates hover and label info
+  /// </summary>
   public class TaskParseFile : Task
   {
     private DocumentInfo    m_Document;
@@ -21,10 +24,18 @@ namespace C64Studio.Tasks
 
     protected override bool ProcessTask()
     {
+      if ( m_Document.Type != ProjectElement.ElementType.ASM_SOURCE )
+      {
+        return true;
+      }
+
       Parser.ASMFileParser parser = new Parser.ASMFileParser();
 
       var compileConfig = new C64Studio.Parser.CompileConfig();
-      compileConfig.Assembler = m_Document.Element.AssemblerType;
+      if ( m_Document.Element != null )
+      {
+        compileConfig.Assembler = m_Document.Element.AssemblerType;
+      }
 
       string sourceCode = "";
 
@@ -52,6 +63,16 @@ namespace C64Studio.Tasks
           m_Document.BaseDoc.SetModified();
         }
       }
+
+      ( (SourceASMEx)m_Document.BaseDoc ).SetLineInfos( parser.ASMFileInfo );
+
+      var knownTokens = parser.KnownTokens();
+      GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo> knownTokenInfos = parser.KnownTokenInfo();
+
+      m_Document.SetASMFileInfo( parser.ASMFileInfo, knownTokens, knownTokenInfos );
+
+      var task = new Tasks.TaskUpdateKeywords( m_Document.BaseDoc );
+      task.RunTask();
 
       return true;
     }

@@ -45,7 +45,7 @@ namespace C64Studio
     public Outline                m_Outline = new Outline();
     public ValueTableEditor       m_ValueTableEditor = null;
     public Help                   m_Help = new Help();
-    public FormFindReplace        m_FindReplace = new FormFindReplace();
+    public FormFindReplace        m_FindReplace = null;
 
     public SearchResults          m_SearchResults = new SearchResults();
     public Perspective            m_ActivePerspective = Perspective.DEBUG;
@@ -578,6 +578,7 @@ namespace C64Studio
       m_Disassembler        = new Disassembler( StudioCore );
       m_DebugMemory         = new DebugMemory( StudioCore );
       m_ValueTableEditor    = new ValueTableEditor( StudioCore );
+      m_FindReplace         = new FormFindReplace( StudioCore );
 
       m_BinaryEditor.SetInternal();
       m_CharsetEditor.SetInternal();
@@ -744,6 +745,7 @@ namespace C64Studio
         GR.Forms.WindowStateManager.GeometryFromString( StudioCore.Settings.MainWindowPlacement, this );
       }
 
+      /*
       foreach ( Types.ColorableElement syntax in Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {
         if ( StudioCore.Settings.SyntaxColoring[syntax] == null )
@@ -785,7 +787,7 @@ namespace C64Studio
         {
           StudioCore.Settings.SyntaxColoring[syntax] = new C64Studio.Types.ColorSetting( GR.EnumHelper.GetDescription( syntax ) );
         }
-      }
+      }*/
       m_FindReplace.Fill( StudioCore.Settings );
 
       panelMain.ActiveContentChanged += new EventHandler( panelMain_ActiveContentChanged );
@@ -797,6 +799,7 @@ namespace C64Studio
       mainTools.Visible = StudioCore.Settings.ToolbarActiveMain;
       debugTools.Visible = StudioCore.Settings.ToolbarActiveDebugger;
 
+      m_FindReplace.RefreshDisplayOptions();
       StudioCore.Settings.RefreshDisplayOnAllDocuments( StudioCore );
 
       SetGUIForWaitOnExternalTool( false );
@@ -841,8 +844,8 @@ namespace C64Studio
 
     internal void RefreshDisplayOnAllDocuments()
     {
-      var bgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor );
-      var fgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].FGColor );
+      var bgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
+      var fgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
 
       MainMenuStrip.BackColor = bgColor;
       MainMenuStrip.ForeColor = fgColor;
@@ -1619,9 +1622,14 @@ namespace C64Studio
       }
       else
       {
-        if ( OpenFile( sender.ToString() ) == null )
+        var newDoc = OpenFile( sender.ToString() );
+        if ( newDoc == null )
         {
           StudioCore.Settings.RemoveFromMRU( StudioCore.Settings.MRUFiles, sender.ToString(), this );
+        }
+        else
+        {
+          StudioCore.Compiling.PreparseDocument( newDoc );
         }
       }
     }
@@ -2924,8 +2932,8 @@ namespace C64Studio
         {
           ProjectElement element = CurrentProject.GetElementByFilename(Breakpoint.DocumentFilename);
           if ( ( element != null )
-          && ( element.Document != null )
-          && ( element.Document is SourceASMEx ) )
+          &&   ( element.Document != null )
+          &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
           {
             SourceASMEx asm = (SourceASMEx)element.Document;
             asm.RemoveBreakpoint( Breakpoint );
@@ -3841,11 +3849,15 @@ namespace C64Studio
       if ( StudioCore.Settings.StudioAppMode == AppMode.UNDECIDED )
       {
         // decide by checking for existance of settings file
+        var settingsPath = System.IO.Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ), "GR Games" );
+        settingsPath = System.IO.Path.Combine( settingsPath, "C64Studio" );
+        settingsPath = System.IO.Path.Combine( settingsPath, "1.0.0.0" );
+        settingsPath = System.IO.Path.Combine( settingsPath, "settings.dat" );
         if ( System.IO.File.Exists( System.IO.Path.Combine( Application.StartupPath, "settings.dat" ) ) )
         {
           StudioCore.Settings.StudioAppMode = AppMode.PORTABLE_APP;
         }
-        else if ( System.IO.File.Exists( System.IO.Path.Combine( Application.UserAppDataPath, "settings.dat" ) ) )
+        else if ( System.IO.File.Exists( settingsPath ) )
         {
           StudioCore.Settings.StudioAppMode = AppMode.GOOD_APP;
         }
@@ -3856,6 +3868,11 @@ namespace C64Studio
 
     private string SettingsPath()
     {
+      // prefix hard coded version number so we can use our proper version number
+      string    userAppDataPath = GR.Path.ParentDirectory( Application.UserAppDataPath );
+
+      userAppDataPath = System.IO.Path.Combine( userAppDataPath, "1.0.0.0" );
+
       try
       {
         if ( StudioCore.Settings.StudioAppMode == AppMode.PORTABLE_APP )
@@ -3864,12 +3881,12 @@ namespace C64Studio
           return System.IO.Path.Combine( Application.StartupPath, "settings.dat" );
         }
         // return clean user app data path
-        return System.IO.Path.Combine( Application.UserAppDataPath, "settings.dat" );
+        return System.IO.Path.Combine( userAppDataPath, "settings.dat" );
       }
       catch ( Exception )
       {
         // fallback to clean path
-        return System.IO.Path.Combine( Application.UserAppDataPath, "settings.dat" );
+        return System.IO.Path.Combine( userAppDataPath, "settings.dat" );
       }
     }
 
@@ -3888,6 +3905,10 @@ namespace C64Studio
       {
         return false;
       }
+      catch ( System.IO.DirectoryNotFoundException )
+      {
+        return false;
+      }
 
       if ( SettingsData.Empty() )
       {
@@ -3902,19 +3923,7 @@ namespace C64Studio
       m_DebugMemory.SetMemoryDisplayType();
       m_DebugMemory.ApplyHexViewColors();
 
-      if ( StudioCore.Settings.SyntaxColoring.Count == 0 )
-      {
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.NONE, new C64Studio.Types.ColorSetting( "Common Code", 0xff000000 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.CODE, new C64Studio.Types.ColorSetting( "Code", 0xff000000 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.LITERAL_STRING, new C64Studio.Types.ColorSetting( "String Literal", 0xff800000 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.LITERAL_NUMBER, new C64Studio.Types.ColorSetting( "Numeric Literal", 0xff0000ff ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.LABEL, new C64Studio.Types.ColorSetting( "Label", 0xff800000 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.COMMENT, new C64Studio.Types.ColorSetting( "Comment", 0xff008000 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.PSEUDO_OP, new C64Studio.Types.ColorSetting( "Macro", 0xffffff00 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.CURRENT_DEBUG_LINE, new C64Studio.Types.ColorSetting( "Current Debug Line", 0xff000000, 0xffffff00 ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.EMPTY_SPACE, new C64Studio.Types.ColorSetting( "Macro", 0xff000000, 0xffffffff ) );
-        StudioCore.Settings.SyntaxColoring.Add( C64Studio.Types.ColorableElement.OPERATOR, new C64Studio.Types.ColorSetting( "Macro", 0xff000000 ) );
-      }
+      StudioCore.Settings.SanitizeSettings();
       return true;
     }
 
@@ -4696,7 +4705,7 @@ namespace C64Studio
           break;
         case C64Studio.Types.Function.TOGGLE_BREAKPOINT:
           if ( ( AppState != Types.StudioState.NORMAL )
-          && ( AppState != C64Studio.Types.StudioState.DEBUGGING_BROKEN ) )
+          &&   ( AppState != C64Studio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -4711,7 +4720,7 @@ namespace C64Studio
           {
             string keywordBelow = null;
             if ( ( ActiveContent != null )
-            && ( ActiveContent is SourceASMEx ) )
+            &&   ( ActiveContent is SourceASMEx ) )
             {
               SourceASMEx asm = ActiveContent as SourceASMEx;
 
@@ -4731,13 +4740,12 @@ namespace C64Studio
           m_FindReplace.FindNext( ActiveDocument );
           break;
         case C64Studio.Types.Function.FIND:
-          if ( ActiveDocument is SourceASMEx )
           {
-            m_FindReplace.AdjustSettings( ( (SourceASMEx)ActiveDocument ).editSource );
-          }
-          else if ( ActiveDocument is SourceBasicEx )
-          {
-            m_FindReplace.AdjustSettings( ( (SourceBasicEx)ActiveDocument ).editSource );
+            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+            if ( compilableDoc != null )
+            {
+              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+            }
           }
           if ( m_FindReplace.Visible )
           {
@@ -4754,13 +4762,12 @@ namespace C64Studio
           m_FindReplace.AcceptButton = m_FindReplace.btnFindNext;
           break;
         case C64Studio.Types.Function.FIND_IN_PROJECT:
-          if ( ActiveDocument is SourceASMEx )
           {
-            m_FindReplace.AdjustSettings( ( (SourceASMEx)ActiveDocument ).editSource );
-          }
-          else if ( ActiveDocument is SourceBasicEx )
-          {
-            m_FindReplace.AdjustSettings( ( (SourceBasicEx)ActiveDocument ).editSource );
+            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+            if ( compilableDoc != null )
+            {
+              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+            }
           }
           if ( m_FindReplace.Visible )
           {
@@ -4776,13 +4783,12 @@ namespace C64Studio
           m_FindReplace.AcceptButton = m_FindReplace.btnFindAll;
           break;
         case C64Studio.Types.Function.FIND_REPLACE:
-          if ( ActiveDocument is SourceASMEx )
           {
-            m_FindReplace.AdjustSettings( ( (SourceASMEx)ActiveDocument ).editSource );
-          }
-          else if ( ActiveDocument is SourceBasicEx )
-          {
-            m_FindReplace.AdjustSettings( ( (SourceBasicEx)ActiveDocument ).editSource );
+            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+            if ( compilableDoc != null )
+            {
+              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+            }
           }
           if ( m_FindReplace.Visible )
           {
@@ -4796,13 +4802,12 @@ namespace C64Studio
           m_FindReplace.tabFindReplace.SelectedIndex = 1;
           break;
         case C64Studio.Types.Function.REPLACE_IN_PROJECT:
-          if ( ActiveDocument is SourceASMEx )
           {
-            m_FindReplace.AdjustSettings( ( (SourceASMEx)ActiveDocument ).editSource );
-          }
-          else if ( ActiveDocument is SourceBasicEx )
-          {
-            m_FindReplace.AdjustSettings( ( (SourceBasicEx)ActiveDocument ).editSource );
+            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+            if ( compilableDoc != null )
+            {
+              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+            }
           }
           if ( m_FindReplace.Visible )
           {
@@ -4837,23 +4842,14 @@ namespace C64Studio
             // save current document
             BaseDocument curDoc = ActiveContent;
             if ( ( curDoc != null )
-            && ( !curDoc.DocumentInfo.ContainsCode ) )
+            &&   ( !curDoc.DocumentInfo.ContainsCode ) )
             {
               curDoc = ActiveDocument;
             }
-            if ( ( curDoc != null )
-            && ( curDoc is SourceASMEx ) )
+            if ( curDoc != null )
             {
-              SourceASMEx source = (SourceASMEx)curDoc;
-
-              source.CenterOnCaret();
-            }
-            if ( ( curDoc != null )
-            && ( curDoc is SourceBasicEx ) )
-            {
-              SourceBasicEx source = (SourceBasicEx)curDoc;
-
-              source.CenterOnCaret();
+              var compilableDoc = curDoc.DocumentInfo.CompilableDocument;
+              compilableDoc?.CenterOnCaret();
             }
           }
           break;
@@ -6650,9 +6646,9 @@ namespace C64Studio
         bool match = true;
         for ( int i = 0; i < 16; ++i )
         {
-          if ( ( IncomingImage.PaletteRed( i ) != ( Types.ConstantData.Palette.ColorValues[i] & 0xff0000 >> 16 ) )
-          || ( IncomingImage.PaletteGreen( i ) != ( Types.ConstantData.Palette.ColorValues[i] & 0xff00 >> 8 ) )
-          || ( IncomingImage.PaletteBlue( i ) != ( Types.ConstantData.Palette.ColorValues[i] & 0xff ) ) )
+          if ( ( IncomingImage.PaletteRed( i ) != ( ( Types.ConstantData.Palette.ColorValues[i] & 0xff0000 ) >> 16 ) )
+          ||   ( IncomingImage.PaletteGreen( i ) != ( ( Types.ConstantData.Palette.ColorValues[i] & 0xff00 ) >> 8 ) )
+          ||   ( IncomingImage.PaletteBlue( i ) != ( ( Types.ConstantData.Palette.ColorValues[i] & 0xff ) ) ) )
           {
             match = false;
             break;
@@ -7002,18 +6998,6 @@ namespace C64Studio
 
 
 
-    private void markErrorToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      if ( m_ActiveSource != null )
-      {
-        SourceASMEx source = m_ActiveSource as SourceASMEx;
-
-        source.MarkTextAsError( 1, 2, 5 );
-      }
-    }
-
-
-
     private void throwExceptionToolStripMenuItem_Click( object sender, EventArgs e )
     {
       throw new Exception( "oh the noes" );
@@ -7061,6 +7045,70 @@ namespace C64Studio
     private void preprocessedFileToolStripMenuItem_Click( object sender, EventArgs e )
     {
       ApplyFunction( C64Studio.Types.Function.BUILD_TO_PREPROCESSED_FILE );
+    }
+
+
+
+    private void debugTestToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      // This is an example test that just downloads all 64KB of RAM quickly from the emulator and displays the round-trip time.
+      var senderGUI = ( sender as ToolStripItem );
+      Action<bool, string> showResult = null;
+      showResult =
+        ( isError, result ) =>
+        {
+          if ( InvokeRequired )
+          {
+            Invoke( showResult, isError, result );
+          }
+          else
+          {
+            MessageBox.Show( ( string.IsNullOrEmpty( result ) ? "No result" : result ), "Debug Test", MessageBoxButtons.OK, ( isError ? MessageBoxIcon.Exclamation : MessageBoxIcon.None ) );
+            senderGUI.Enabled = true;
+          }
+        };
+
+      senderGUI.Enabled = false;
+      try
+      {
+        var debugger = StudioCore.Debugging.Debugger;
+        if ( debugger.State == DebuggerState.NOT_CONNECTED )
+        {
+          showResult( true, string.Format( "Please first Debug|Connect to the emulator.{0}(using the remote monitor option)", Environment.NewLine ) );
+        }
+        else
+        {
+          var sw = System.Diagnostics.Stopwatch.StartNew();
+          DebugEventHandler debugEventHandler = null;
+          debugEventHandler =
+            ( DebugEventData debugEventData ) =>
+            {
+              if ( debugEventData.Type == DebugEvent.UPDATE_WATCH )
+              {
+                sw.Stop();
+                debugger.DebugEvent -= debugEventHandler;
+
+                byte[] dataBytes = debugEventData.Data.Data();
+                var dataString = BitConverter.ToString(dataBytes);
+                if ( dataString.Length > 1023 )
+                {
+                  dataString = dataString.Substring( 0, 510 ) + "..." + dataString.Substring( ( dataString.Length - 510 ), 510 );
+                }
+
+                string message = string.Format( "Received all {1} bytes of RAM in {2:G} milliseconds :{0}{0}{3}", Environment.NewLine, debugEventData.Data.Length.ToString(), sw.Elapsed.TotalMilliseconds, dataString );
+                showResult( false, message );
+              }
+            };
+
+          debugger.DebugEvent += debugEventHandler;
+          debugger.RefreshMemory( 0, 65536, MemorySource.AS_CPU );
+        }
+      }
+      catch ( Exception exception )
+      {
+        Debug.Log( exception.ToString() );
+        showResult( true, exception.Message );
+      }
     }
 
   }

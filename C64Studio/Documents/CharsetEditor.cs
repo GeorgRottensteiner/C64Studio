@@ -1506,7 +1506,7 @@ namespace C64Studio
           {
             copyHeight = 8;
           }
-          GR.Image.FastImage singleChar = mappedImage.GetImage( i * 8, j * 8, copyWidth, copyHeight );
+          GR.Image.FastImage singleChar = mappedImage.GetImage( i * 8, j * 8, copyWidth, copyHeight ) as GR.Image.FastImage;
 
           ImportChar( singleChar, currentTargetChar, ForceMulticolor );
           panelCharacters.InvalidateItemRect( currentTargetChar );
@@ -1955,14 +1955,7 @@ namespace C64Studio
 
       dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
 
-      GR.Memory.ByteBuffer      dibData = m_Charset.Characters[m_CurrentChar].Image.CreateHDIBAsBuffer();
-
-      System.IO.MemoryStream    ms = dibData.MemoryStream();
-
-      // WTF - SetData requires streams, NOT global data (HGLOBAL)
-      dataObj.SetData( "DeviceIndependentBitmap", ms );
-
-      Clipboard.SetDataObject( dataObj, true );
+      Core.Imaging.ImageToClipboard( m_Charset.Characters[m_CurrentChar].Image );
     }
 
 
@@ -2817,7 +2810,7 @@ namespace C64Studio
 
     private void RedrawPlayground()
     {
-      picturePlayground.DisplayPage.DrawFromMemoryImage( m_ImagePlayground, 0, 0 );
+      picturePlayground.DisplayPage.DrawImage( m_ImagePlayground, 0, 0 );
       picturePlayground.Invalidate();
     }
 

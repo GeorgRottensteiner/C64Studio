@@ -36,19 +36,11 @@ namespace C64Studio
 
     void ApplySyntaxColoring( Types.ColorableElement Element )
     {
-      System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Element].FGColor ) );
+      System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
       System.Drawing.Brush      backBrush = null;
       System.Drawing.FontStyle  fontStyle = System.Drawing.FontStyle.Regular;
 
-      if ( Core.Settings.SyntaxColoring[Element].BGColorAuto )
-      {
-        backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.EMPTY_SPACE].BGColor ) );
-      }
-      else
-      {
-        backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Element].BGColor ) );
-      }
-
+      backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( Element ) ) );
       m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.TextStyle( foreBrush, backBrush, fontStyle );
 
       //editSource.AddStyle( m_TextStyles[(int)Element] );

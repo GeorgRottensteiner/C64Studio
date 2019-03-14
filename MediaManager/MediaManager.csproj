@@ -60,7 +60,9 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
+    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">copy "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
 copy "$(TargetPath)" "$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent Condition="'$(OS)' == 'Unix' ">cp "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
+cp "$(TargetPath)" "$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

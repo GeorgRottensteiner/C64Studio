@@ -675,8 +675,8 @@ namespace C64Studio
     {
       base.RefreshDisplayOptions();
 
-      ChangedColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.CHANGED_DEBUG_ELEMENT].FGColor );
-      UnchangedColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].FGColor );
+      ChangedColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CHANGED_DEBUG_ELEMENT ) );
+      UnchangedColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
 
       hexView.MarkedForeColor = ChangedColor;
     }

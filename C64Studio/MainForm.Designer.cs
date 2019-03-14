@@ -109,7 +109,7 @@
       this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.debugConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.debugDisconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.tToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.debugTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.refreshRegistersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.debugBreakpointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.dumpLabelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -117,7 +117,6 @@
       this.dumpDockStateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.runTestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.disassembleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.markErrorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.throwExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.disassembleToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -841,7 +840,7 @@
       this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.debugConnectToolStripMenuItem,
             this.debugDisconnectToolStripMenuItem,
-            this.tToolStripMenuItem,
+            this.debugTestToolStripMenuItem,
             this.refreshRegistersToolStripMenuItem,
             this.debugBreakpointsToolStripMenuItem,
             this.dumpLabelsToolStripMenuItem,
@@ -849,7 +848,6 @@
             this.dumpDockStateToolStripMenuItem,
             this.runTestsToolStripMenuItem,
             this.disassembleToolStripMenuItem,
-            this.markErrorToolStripMenuItem,
             this.throwExceptionToolStripMenuItem});
       this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
       this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
@@ -869,11 +867,12 @@
       this.debugDisconnectToolStripMenuItem.Text = "Disconnect";
       this.debugDisconnectToolStripMenuItem.Click += new System.EventHandler(this.debugDisconnectToolStripMenuItem_Click);
       // 
-      // tToolStripMenuItem
+      // debugTestToolStripMenuItem
       // 
-      this.tToolStripMenuItem.Name = "tToolStripMenuItem";
-      this.tToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-      this.tToolStripMenuItem.Text = "Test";
+      this.debugTestToolStripMenuItem.Name = "debugTestToolStripMenuItem";
+      this.debugTestToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+      this.debugTestToolStripMenuItem.Text = "Test";
+      this.debugTestToolStripMenuItem.Click += new System.EventHandler(this.debugTestToolStripMenuItem_Click);
       // 
       // refreshRegistersToolStripMenuItem
       // 
@@ -922,13 +921,6 @@
       this.disassembleToolStripMenuItem.Name = "disassembleToolStripMenuItem";
       this.disassembleToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
       this.disassembleToolStripMenuItem.Text = "Disassemble";
-      // 
-      // markErrorToolStripMenuItem
-      // 
-      this.markErrorToolStripMenuItem.Name = "markErrorToolStripMenuItem";
-      this.markErrorToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-      this.markErrorToolStripMenuItem.Text = "Mark Error";
-      this.markErrorToolStripMenuItem.Click += new System.EventHandler(this.markErrorToolStripMenuItem_Click);
       // 
       // throwExceptionToolStripMenuItem
       // 
@@ -1703,7 +1695,7 @@
     private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem debugConnectToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem debugDisconnectToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem tToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem debugTestToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     private System.Windows.Forms.ToolStripMenuItem filePreferencesToolStripMenuItem;
     private System.Windows.Forms.ToolStripButton mainToolDebug;
@@ -1834,7 +1826,6 @@
     private System.Windows.Forms.ToolStripButton mainToolOpenFile;
     private System.Windows.Forms.ToolStripButton mainToolCommentSelection;
     private System.Windows.Forms.ToolStripButton mainToolUncommentSelection;
-    private System.Windows.Forms.ToolStripMenuItem markErrorToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem throwExceptionToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem valueTableToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem buildToolStripMenuItem;

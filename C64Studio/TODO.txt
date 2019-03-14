@@ -1,5 +1,13 @@
 ﻿C64Studio
-o Beim Erstparsen beim öffnen ein Fehler -> Intellisense wird nicht gefüllt?
+o Still having problems with creating a new sollution/project when another sollution/project is loaded.
+	Both the times I have done this, it's like it's overwritting the previous .s64 file!!!
+o Zeilenabstand nicht fixiert, einstellbar
+o  when creating a new project, shouldn't you clear the breakpoint list ?
+o Char screen editor, move chars, optionally do not move other chars around
+o Version control support (how?)
+o Comparison of file (as addon to version control)
+o Intellisense in Kommentaren nicht mehr
+o Breakpoints im Source tauchen im BP-Dialog nicht auf?
 o beim exportieren von Map-Daten, funktioniert der wrap m.E. nicht richtig. Zumindest bei den Tiles werden die nicht wie gewünscht "gewrappt
 o Bessere Anzeige der optionalen Zyklen
 
@@ -72,7 +80,6 @@ o MediaManager: * Dateien mit gleichem Namen unterbinden (bzw. nachfragen!)
 o BASIC: Renumber bei THEN <zeile> tut nicht ?? Seems to work fine
 o BASIC: Renumber nur von Ausschnitten
 o BASIC: Einzelne Zeilennummer ändern (mit Referenzen die angepasst werden)
-o BASIC: Keymapping Default: Z ist nicht auf Y gemappt (aber Y auf Z)
 o BASIC: Snippet-Wizard
 o BASIC: falls ich da bisher etwas übersehen haben sollte, habe ich eine Anregung für einen neuen Editor: 
   Memorymap in Basic erstellen, d.h.:
@@ -118,7 +125,6 @@ o Immer wenn man lda (zeropageadresse),y tippt macht er fuer das ",y" einen Vors
   also z.B. "check_ready", weil das auch ein y im Namen hat. Das ist doch eher ungeschickt so.
 Support fuer den CC65 compiler, so dass man auch in C programmieren kann. Das waere obersuperspitzenkomfortionoes! 
 o Refactoring/Rename 
-o Farben der GUI-Elemente
 o If you go to the preview pane, where it says Entries, i can't see whats underneath that because the slider bar is in the way. 
   (DPI settings!)
 

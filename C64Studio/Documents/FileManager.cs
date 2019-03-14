@@ -1101,5 +1101,12 @@ namespace C64Studio
 
 
 
+    private void toolStripBtnSave_Click( object sender, EventArgs e )
+    {
+      Save();
+    }
+
+
+
   }
 }

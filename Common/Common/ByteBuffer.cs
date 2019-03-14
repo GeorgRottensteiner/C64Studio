@@ -9,9 +9,11 @@ namespace GR
 	  /// </summary>
 	  public class ByteBuffer
 	  {
+      private static readonly byte[] EmptyByteArray = new byte[0];  // alternatively alias System.Array.Empty<byte>()
+
       private System.Runtime.InteropServices.GCHandle   m_PinnedHandle = default( System.Runtime.InteropServices.GCHandle );
 
-      private byte[] m_Data = new byte[0];
+      private byte[] m_Data = EmptyByteArray;
 
       private UInt32 m_UsedBytes = 0;
 
@@ -40,27 +42,71 @@ namespace GR
 
 
 
-      public ByteBuffer( byte[] bData )
+      public ByteBuffer( byte[] Data )
       {
-        Append( bData );
+        Append( Data );
       }
 
 
 
-		  public ByteBuffer( string strHexData )
+		  public ByteBuffer( string HexData )
 		  {
-        FromHexString( strHexData );
+        FromHexString( HexData );
 		  }
 
 
 
-      public static ByteBuffer operator +( ByteBuffer bb1, ByteBuffer bb2 )
+      public static ByteBuffer operator +( ByteBuffer BB1, ByteBuffer BB2 )
       {
-        ByteBuffer bbNew = new ByteBuffer( bb1.Data() );
+        ByteBuffer newBuffer = new ByteBuffer( BB1.Data() );
 
-        bbNew.Append( bb2 );
+        newBuffer.Append( BB2 );
 
-        return bbNew;
+        return newBuffer;
+      }
+
+
+
+      public static bool operator ==( ByteBuffer BB1, ByteBuffer BB2 )
+      {
+        if ( object.ReferenceEquals( BB1, null ) )
+        {
+          return object.ReferenceEquals( BB2, null );
+        }
+        if ( object.ReferenceEquals( BB2, null ) )
+        {
+          return false;
+        }
+        return ( BB1.Compare( BB2 ) == 0 );
+      }
+
+
+
+      public override bool Equals( object obj )
+      {
+        return this == (ByteBuffer)obj;
+      }
+
+
+
+      public override int GetHashCode()
+      {
+        return base.GetHashCode();
+      }
+
+
+
+      public static bool operator !=( ByteBuffer BB1, ByteBuffer BB2 )
+      {
+        if ( object.ReferenceEquals( BB1, null ) )
+        {
+          return !object.ReferenceEquals( BB2, null );
+        }
+        if ( object.ReferenceEquals( BB2, null ) )
+        {
+          return true;
+        }
+        return ( BB1.Compare( BB2 ) != 0 );
       }
 
 
@@ -91,38 +137,23 @@ namespace GR
 
 
 
-      public GR.Memory.ByteBuffer SubBuffer( int iIndex )
+      public GR.Memory.ByteBuffer SubBuffer( int StartIndex )
       {
-        GR.Memory.ByteBuffer    bbResult = new GR.Memory.ByteBuffer();
-
-        if ( iIndex >= Length )
+        if ( StartIndex >= Length )
         {
-          return bbResult;
+          return new GR.Memory.ByteBuffer();
         }
-        for ( int i = iIndex; i < Length; ++i )
-        {
-          bbResult.AppendU8( ByteAt( i ) );
-        }
-        return bbResult;
+        return new ByteBuffer( Data( StartIndex, (int)Length - StartIndex ) );
       }
 
 
 
-      public GR.Memory.ByteBuffer SubBuffer( int iIndex, int iLength )
+      public GR.Memory.ByteBuffer SubBuffer( int StartIndex, int NumBytes )
       {
-        GR.Memory.ByteBuffer    bbResult = new GR.Memory.ByteBuffer();
-
-        if ( ( iIndex >= Length )
-        ||   ( iIndex + iLength > Length ) )
-        {
-          return bbResult;
-        }
-        for ( int i = iIndex; i < iIndex + iLength; ++i )
-        {
-          bbResult.AppendU8( ByteAt( i ) );
-        }
-        return bbResult;
+        return new GR.Memory.ByteBuffer( Data( StartIndex, NumBytes ) );
       }
+
+
 
       public byte[] Data()
       {
@@ -140,116 +171,133 @@ namespace GR
         return SubArray;
       }
 
-      public byte[] Data( int iIndex, int iBytes )
-      {
-        if ( ( iIndex < 0 )
-        ||   ( iIndex + iBytes >= Length ) )
-        {
-          return new byte[0];
-        }
-        byte[] bReturn = new byte[iBytes];
 
-        for ( int i = 0; i < iBytes; ++i )
+
+      public byte[] Data( int StartIndex, int NumBytes )
+      {
+        if ( ( StartIndex < 0 )
+        ||   ( StartIndex + NumBytes > Length ) )
         {
-          bReturn[i] = m_Data[iIndex + i];
+          return EmptyByteArray;
         }
-        return bReturn;
+        byte[] result = new byte[NumBytes];
+
+        Array.Copy( m_Data, StartIndex, result, 0, NumBytes );
+        return result;
       }
 
-      public void Append( ByteBuffer bbOther )
-      {
-        if ( bbOther != null )
-        {
-          Append( bbOther.Data() );
-        }
-      }
 
-      public void AppendRepeated( System.Byte bByte, int iCount )
+
+      public void Append( ByteBuffer Other )
       {
-        for ( int i = 0; i < iCount; ++i )
+        if ( Other != null )
         {
-          AppendU8( bByte );
+          Append( Other.Data() );
         }
       }
 
-      public bool AppendHex( string strHexData )
+
+
+      public void AppendRepeated( byte ByteValue, int Count )
       {
-        if ( ( strHexData.Length == 0 )
-        ||   ( ( strHexData.Length % 2 ) == 1 ) )
+        for ( int i = 0; i < Count; ++i )
+        {
+          AppendU8( ByteValue );
+        }
+      }
+
+
+
+      public bool AppendHex( string HexData )
+      {
+        if ( ( HexData.Length == 0 )
+        ||   ( ( HexData.Length % 2 ) == 1 ) )
         {
           return false;
         }
 
-        for ( int i = 0; i < strHexData.Length; i += 2 )
+        for ( int i = 0; i < HexData.Length; i += 2 )
         {
-          AppendU8( GR.Convert.ToU8( strHexData.Substring( i, 2 ), 16 ) );
+          AppendU8( GR.Convert.ToU8( HexData.Substring( i, 2 ), 16 ) );
         }
         return true;
       }
 
-      public void AppendU16( UInt16 wData )
+
+
+      public void AppendU16( UInt16 WordValue )
       {
-        AppendU8( (byte)( wData & 0xff ) );
-        AppendU8( (byte)( wData >> 8 ) );
+        AppendU8( (byte)( WordValue & 0xff ) );
+        AppendU8( (byte)( WordValue >> 8 ) );
       }
 
-      public void AppendU16NetworkOrder( UInt16 wData )
+
+
+      public void AppendU16NetworkOrder( UInt16 WordValue )
       {
-        AppendU8( (byte)( wData >> 8 ) );
-        AppendU8( (byte)( wData & 0xff ) );
+        AppendU8( (byte)( WordValue >> 8 ) );
+        AppendU8( (byte)( WordValue & 0xff ) );
       }
 
-      public void AppendU32( UInt32 dwData )
+
+
+      public void AppendU32( UInt32 DWordValue )
       {
-        AppendU8( (byte)( dwData & 0xff ) );
-        AppendU8( (byte)( dwData >> 8 ) );
-        AppendU8( (byte)( dwData >> 16 ) );
-        AppendU8( (byte)( dwData >> 24 ) );
+        AppendU8( (byte)( DWordValue & 0xff ) );
+        AppendU8( (byte)( DWordValue >> 8 ) );
+        AppendU8( (byte)( DWordValue >> 16 ) );
+        AppendU8( (byte)( DWordValue >> 24 ) );
         
       }
 
-      public void AppendI32( Int32 dwData )
+      public void AppendI32( Int32 DWordValue )
       {
-        AppendU32( (UInt32)dwData );
+        AppendU32( (UInt32)DWordValue );
       }
 
-      public void AppendU32NetworkOrder( UInt32 dwData )
+
+
+      public void AppendU32NetworkOrder( UInt32 DWordValue )
       {
-        AppendU8( (byte)( dwData >> 24 ) );
-        AppendU8( (byte)( dwData >> 16 ) );
-        AppendU8( (byte)( dwData >> 8 ) );
-        AppendU8( (byte)( dwData & 0xff ) );
+        AppendU8( (byte)( DWordValue >> 24 ) );
+        AppendU8( (byte)( DWordValue >> 16 ) );
+        AppendU8( (byte)( DWordValue >> 8 ) );
+        AppendU8( (byte)( DWordValue & 0xff ) );
       }
 
-      public void AppendString( string strData )
+
+
+      public void AppendString( string TextData )
       {
-        if ( strData == null )
+        if ( TextData == null )
         {
           AppendU32( 0 );
           return;
         }
 
-        AppendU32( (UInt32)strData.Length );
-        for ( int i = 0; i < strData.Length; ++i )
+        AppendU32( (UInt32)TextData.Length );
+        for ( int i = 0; i < TextData.Length; ++i )
         {
-          AppendU8( (byte)strData[i] );
+          AppendU8( (byte)TextData[i] );
         }
       }
 
-      public void AppendU8( byte bData )
+
+
+      public void AppendU8( byte ByteValue )
       {
         if ( m_Data == null )
         {
           m_Data = new byte[1];
 
-          m_Data.SetValue( bData, 0 );
+          m_Data.SetValue( ByteValue, 0 );
           m_UsedBytes = 1;
         }
         else
         {
           if ( m_UsedBytes < m_Data.Length )
           {
-            m_Data[m_UsedBytes] = bData;
+            m_Data[m_UsedBytes] = ByteValue;
             ++m_UsedBytes;
           }
           else
@@ -257,7 +305,7 @@ namespace GR
             byte[] bTemp = new byte[m_Data.Length + 1];
 
             m_Data.CopyTo( bTemp, 0 );
-            bTemp.SetValue( bData, m_Data.Length );
+            bTemp.SetValue( ByteValue, m_Data.Length );
 
             m_Data = bTemp;
             m_UsedBytes = (UInt32)m_Data.Length;
@@ -265,13 +313,15 @@ namespace GR
         }
       }
 
-      public void AppendU8Front( byte bData )
+
+
+      public void AppendU8Front( byte ByteValue )
       {
         if ( m_Data == null )
         {
           m_Data = new byte[1];
 
-          m_Data.SetValue( bData, 0 );
+          m_Data.SetValue( ByteValue, 0 );
           m_UsedBytes = 1;
         }
         else
@@ -279,78 +329,89 @@ namespace GR
           byte[] bTemp = new byte[m_Data.Length + 1];
              
           m_Data.CopyTo( bTemp, 1 );
-          bTemp[0] = bData;
+          bTemp[0] = ByteValue;
           m_Data = bTemp;
           m_UsedBytes = (UInt32)m_Data.Length;
         }
       }
 
-      public void SetU32At( int iIndex, System.UInt32 dwValue )
-      {
-        if ( ( iIndex < 0 )
-        ||   ( iIndex + 3 >= Length ) )
-        {
-          return;
-        }
-        m_Data[iIndex]     = (byte)( dwValue & 0xff );
-        m_Data[iIndex + 1] = (byte)( ( dwValue >> 8 ) & 0xff );
-        m_Data[iIndex + 2] = (byte)( ( dwValue >> 16 ) & 0xff );
-        m_Data[iIndex + 3] = (byte)( ( dwValue >> 24 ) & 0xff );
-      }
 
-      public void SetU16At( int iIndex, System.UInt16 wWord )
+
+      public void SetU32At( int Index, System.UInt32 DWordValue )
       {
-        if ( ( iIndex < 0 )
-        ||   ( iIndex + 1 >= Length ) )
+        if ( ( Index < 0 )
+        ||   ( Index + 3 >= Length ) )
         {
           return;
         }
-        m_Data[iIndex]     = (byte)( wWord & 0xff );
-        m_Data[iIndex + 1] = (byte)( wWord >> 8 );
+        m_Data[Index]     = (byte)( DWordValue & 0xff );
+        m_Data[Index + 1] = (byte)( ( DWordValue >> 8 ) & 0xff );
+        m_Data[Index + 2] = (byte)( ( DWordValue >> 16 ) & 0xff );
+        m_Data[Index + 3] = (byte)( ( DWordValue >> 24 ) & 0xff );
       }
 
 
 
-      public void SetU8At( int iIndex, System.Byte Byte )
+      public void SetU16At( int Index, System.UInt16 WordValue )
       {
-        if ( ( iIndex < 0 )
-        ||   ( iIndex >= Length ) )
+        if ( ( Index < 0 )
+        ||   ( Index + 1 >= Length ) )
         {
           return;
         }
-        m_Data[iIndex] = Byte;
+        m_Data[Index]     = (byte)( WordValue & 0xff );
+        m_Data[Index + 1] = (byte)( WordValue >> 8 );
       }
 
 
 
-      public void Append( byte[] bData )
+      public void SetU8At( int Index, System.Byte Byte )
       {
-        if ( bData == null )
+        if ( ( Index < 0 )
+        ||   ( Index >= Length ) )
+        {
+          return;
+        }
+        m_Data[Index] = Byte;
+      }
+
+
+
+      public void AppendF32( float Value )
+      {
+        Append( System.BitConverter.GetBytes( Value ) );
+      }
+
+
+
+      public void Append( byte[] Array )
+      {
+        if ( Array == null )
         {
           Debug.Log( "Fehler: GR.Memory.ByteBuffer, trying to append null" );
           return;
         }
         if ( m_Data == null )
         {
-          m_Data = new byte[bData.Length];
+          m_Data = new byte[Array.Length];
 
-          bData.CopyTo( m_Data, 0 );
-          m_UsedBytes = (UInt32)bData.Length;
+          Array.CopyTo( m_Data, 0 );
+          m_UsedBytes = (UInt32)Array.Length;
         }
         else
         {
-          if ( m_UsedBytes + bData.Length <= m_Data.Length )
+          if ( m_UsedBytes + Array.Length <= m_Data.Length )
           {
-            bData.CopyTo( m_Data, m_UsedBytes );
-            m_UsedBytes += (UInt32)bData.Length;
+            Array.CopyTo( m_Data, m_UsedBytes );
+            m_UsedBytes += (UInt32)Array.Length;
           }
           else
           {
-            byte[] bTemp = new byte[m_UsedBytes + bData.Length];
+            byte[] bTemp = new byte[m_UsedBytes + Array.Length];
 
-            Array.Copy( m_Data, 0, bTemp, 0, m_UsedBytes );
+            System.Array.Copy( m_Data, 0, bTemp, 0, m_UsedBytes );
             //m_Data.CopyTo( bTemp, 0 );
-            bData.CopyTo( bTemp, m_UsedBytes );
+            Array.CopyTo( bTemp, m_UsedBytes );
 
             m_Data = bTemp;
             m_UsedBytes = (UInt32)m_Data.Length;
@@ -358,53 +419,48 @@ namespace GR
         }
       }
 
-      public void Append( byte[] bData, int iStartIndex, int iLength )
+
+
+      public void Append( byte[] Array, int StartIndex, int NumBytes )
       {
-        if ( bData == null )
+        if ( Array == null )
         {
           Debug.Log( "Fehler: GR.Memory.ByteBuffer, trying to append null" );
           return;
         }
-        if ( ( iStartIndex >= bData.Length )
-        ||   ( iStartIndex + iLength > bData.Length ) )
+        if ( ( StartIndex >= Array.Length )
+        ||   ( StartIndex + NumBytes > Array.Length ) )
         {
           Debug.Log( "Fehler: GR.Memory.ByteBuffer trying to append Array out of bounds" );
           return;
         }
         if ( m_Data == null )
         {
-          m_Data = new byte[iLength];
+          m_Data = new byte[NumBytes];
 
-          for ( int i = 0; i < iLength; ++i )
-          {
-            m_Data[i] = bData[iStartIndex + i];
-          }
-          m_UsedBytes = (UInt32)iLength;
+          System.Array.Copy( Array, StartIndex, m_Data, 0, NumBytes );
+          m_UsedBytes = (UInt32)NumBytes;
         }
         else
         {
-          if ( m_UsedBytes + iLength <= m_Data.Length )
+          if ( m_UsedBytes + NumBytes <= m_Data.Length )
           {
-            for ( int i = 0; i < iLength; ++i )
-            {
-              m_Data[m_UsedBytes + i] = bData[iStartIndex + i];
-            }
-            m_UsedBytes += (UInt32)iLength;
+            System.Array.Copy( Array, StartIndex, m_Data, m_UsedBytes, NumBytes );
+            m_UsedBytes += (UInt32)NumBytes;
           }
           else
           {
-            byte[] bTemp = new byte[m_Data.Length + iLength];
+            byte[] bTemp = new byte[m_Data.Length + NumBytes];
 
             m_Data.CopyTo( bTemp, 0 );
-            for ( int i = 0; i < iLength; ++i )
-            {
-              bTemp[m_Data.Length + i] = bData[iStartIndex + i];
-            }
+            System.Array.Copy( Array, StartIndex, bTemp, m_Data.Length, NumBytes );
             m_Data = bTemp;
             m_UsedBytes = (UInt32)m_Data.Length;
           }
         }
       }
+
+
 
       public bool TruncateAt( UInt32 TruncateIndex )
       {
@@ -425,6 +481,8 @@ namespace GR
         return true;
       }
 
+
+
       public bool Truncate( UInt32 NumberOfBytesToTruncate )
       {
         if ( m_Data == null )
@@ -440,29 +498,33 @@ namespace GR
         return true;
       }
 
-      public bool TruncateFront( int iBytesToTruncate )
+
+
+      public bool TruncateFront( int NumberOfBytesToTruncate )
       {
         if ( m_Data == null )
         {
           return false;
         }
-        if ( m_Data.Length <= iBytesToTruncate )
+        if ( m_Data.Length <= NumberOfBytesToTruncate )
         {
           m_Data = null;
           return true;
         }
 
-        byte[] bTemp = new byte[m_Data.Length - iBytesToTruncate];
+        byte[] bTemp = new byte[m_Data.Length - NumberOfBytesToTruncate];
             
-        for ( int i = iBytesToTruncate; i < m_Data.Length; ++i )
+        for ( int i = NumberOfBytesToTruncate; i < m_Data.Length; ++i )
         {
-          bTemp.SetValue( m_Data[i], i - iBytesToTruncate );
+          bTemp.SetValue( m_Data[i], i - NumberOfBytesToTruncate );
         }
         m_Data      = bTemp;
         m_UsedBytes = (UInt32)m_Data.Length;
 
         return true;
       }
+
+
 
       public bool Empty()
       {
@@ -473,11 +535,15 @@ namespace GR
         return ( m_UsedBytes == 0 );
       }
 
+
+
       public void Clear()
       {
-        m_Data = new byte[0];
+        m_Data = EmptyByteArray;
         m_UsedBytes = 0;
       }
+
+
 
       public string ToAsciiString()
       {
@@ -486,83 +552,78 @@ namespace GR
           return "";
         }
 
-        string    strDaten = System.Text.ASCIIEncoding.UTF8.GetString( m_Data, 0, (int)m_UsedBytes );
-        /*
-        string    strDaten = "";
-
-        for ( int i = 0; i < m_UsedBytes; i++ )
-			  {
-				  strDaten += (char)m_Data[i];
-          //strDaten += m_Data[i].ToString( System.Text.ASCIIEncoding.UTF8.GetString.Environment.Cu;
-			  }
-         */
-			  return strDaten;
-
+        return System.Text.ASCIIEncoding.UTF8.GetString( m_Data, 0, (int)m_UsedBytes );
       }
 
 
 
       public override string ToString()
       {
-        if ( m_Data != null )
-        {
-          System.Text.StringBuilder sb = new System.Text.StringBuilder();
-
-          for ( int i = 0; i < m_UsedBytes; i++ )
-			    {
-            sb.Append( m_Data[i].ToString( "X2" ) );
-			    }
-			    return sb.ToString();
-        }
-        return "";
+        return ArrayToHexString( m_Data, 0, (int)m_UsedBytes );
       }
 
 
 
-      public string ToString( UInt32 iStartIndex )
+      public string ToString( UInt32 StartIndex )
       {
         if ( m_Data == null )
         {
           return "";
         }
-        if ( iStartIndex >= m_UsedBytes )
+        if ( StartIndex >= m_UsedBytes )
         {
           return "";
         }
-        UInt32 iAnzahl = m_UsedBytes - iStartIndex;
+        UInt32 iAnzahl = m_UsedBytes - StartIndex;
 
-			  string    strDatenInHexFormat = "";
-
-        for ( UInt32 i = iStartIndex; i < iStartIndex + iAnzahl; i++ )
-			  {
-				  strDatenInHexFormat += m_Data[i].ToString( "X2" );
-			  }
-			  return strDatenInHexFormat;
+        return ArrayToHexString( m_Data, (int)StartIndex, (int)iAnzahl );
       }
 
-      public string ToString( int iStartIndex, int iAnzahl )
+
+
+      public string ToString( int StartIndex, int NumBytes )
       {
         if ( m_Data == null )
         {
           return "";
         }
-        if ( iStartIndex >= m_UsedBytes )
+        if ( StartIndex >= m_UsedBytes )
         {
           return "";
         }
-        if ( iStartIndex + iAnzahl > m_UsedBytes )
+        if ( StartIndex + NumBytes > m_UsedBytes )
         {
           return "";
         }
 
-			  string    strDatenInHexFormat = "";
-
-			  for ( int i = 0; i < iAnzahl; i++ )
-			  {
-          strDatenInHexFormat += m_Data[iStartIndex + i].ToString( "X2" );
-			  }
-			  return strDatenInHexFormat;
+        return ArrayToHexString( m_Data, StartIndex, NumBytes );
       }
+
+
+
+      private static string ArrayToHexString( byte[] Array, int StartIndex, int NumBytes )
+      {
+        if ( Array == null )
+        {
+          return string.Empty;
+        }
+
+        var sb = new System.Text.StringBuilder( NumBytes * 2 );
+
+        byte dataByte;
+        int stopIndex = StartIndex + NumBytes;
+        const string HexChars = "0123456789ABCDEF";
+        for ( int i = StartIndex; i < stopIndex; i++ )
+        {
+          dataByte = Array[i];
+          sb.Append( HexChars[(int)(dataByte >> 4)] );
+          sb.Append( HexChars[(int)(dataByte & 0xF)] );
+        }
+
+        return sb.ToString();
+      }
+
+
 
       public UInt32 Length
       {
@@ -576,99 +637,115 @@ namespace GR
         }
       }
 
-      public string StringAt( int iIndex )
+
+
+      public string StringAt( int Index )
       {
-        if ( ( iIndex < 0 )
-        ||   ( iIndex >= Length ) )
+        if ( ( Index < 0 )
+        ||   ( Index >= Length ) )
         {
           return "";
         }
 
-        int iLength = (int)UInt32At( iIndex );
-        iIndex += 4;
-        if ( iIndex + iLength > Length )
+        int length = (int)UInt32At( Index );
+        Index += 4;
+        if ( Index + length > Length )
         {
           return "";
         }
 
-        string      strResult = "";
+        string      result = "";
 
-        for ( int i = 0; i < iLength; ++i )
+        for ( int i = 0; i < length; ++i )
         {
-          char      cChar = (char)ByteAt( iIndex + i );
+          char      cChar = (char)ByteAt( Index + i );
 
-          strResult += cChar;
+          result += cChar;
         }
 
-        return strResult;
+        return result;
       }
 
-      public System.UInt16 UInt16At( int iIndex )
+
+
+      public System.UInt16 UInt16At( int Index )
       {
-        if ( ( iIndex < 0 )
-        || ( iIndex + 1 >= Length ) )
+        if ( ( Index < 0 )
+        ||   ( Index + 1 >= Length ) )
         {
           return 0;
         }
-        System.UInt16   Value =   (System.UInt16)( ( ByteAt( iIndex + 1 ) << 8 )
-                                                 + ByteAt( iIndex ) );
+        System.UInt16   Value =   (System.UInt16)( ( ByteAt( Index + 1 ) << 8 )
+                                                 + ByteAt( Index ) );
         return Value;
       }
 
-      public System.UInt16 UInt16NetworkOrderAt( int iIndex )
+
+
+      public System.UInt16 UInt16NetworkOrderAt( int Index )
       {
-        if ( ( iIndex < 0 )
-        || ( iIndex + 1 >= Length ) )
+        if ( ( Index < 0 )
+        ||   ( Index + 1 >= Length ) )
         {
           return 0;
         }
-        System.UInt16 Value = (System.UInt16)( ( ByteAt( iIndex ) << 8 )
-                                                 + ByteAt( iIndex + 1 ) );
+        System.UInt16 Value = (System.UInt16)( ( ByteAt( Index ) << 8 )
+                                                 + ByteAt( Index + 1 ) );
         return Value;
       }
 
-      public System.UInt32 UInt32At( int iIndex )
+
+
+      public System.UInt32 UInt32At( int Index )
       {
-        if ( ( iIndex < 0 )
-        ||   ( iIndex + 3 >= Length ) )
+        if ( ( Index < 0 )
+        ||   ( Index + 3 >= Length ) )
         {
           return 0;
         }
-        System.UInt32   dwValue = ( (System.UInt32)ByteAt( iIndex + 3 ) << 24 )
-                                + ( (System.UInt32)ByteAt( iIndex + 2 ) << 16 )
-                                + ( (System.UInt32)ByteAt( iIndex + 1 ) << 8 )
-                                + ( (System.UInt32)ByteAt( iIndex ) );
+        System.UInt32   dwValue = ( (System.UInt32)ByteAt( Index + 3 ) << 24 )
+                                + ( (System.UInt32)ByteAt( Index + 2 ) << 16 )
+                                + ( (System.UInt32)ByteAt( Index + 1 ) << 8 )
+                                + ( (System.UInt32)ByteAt( Index ) );
         return dwValue;
       }
 
-      public byte ByteAt( int iIndex )
+
+
+      public byte ByteAt( int Index )
       {
         if ( m_Data == null )
         {
           return 0;
         }
-        if ( ( iIndex < 0 )
-        ||   ( iIndex >= Length ) )
+        if ( ( Index < 0 )
+        ||   ( Index >= Length ) )
         {
           return 0;
         }
-        return m_Data[iIndex];
+        return m_Data[Index];
       }
 
-      public void FromString( string strData )
+
+
+      public void FromString( string Text )
       {
         Clear();
-        for ( int i = 0; i < strData.Length; ++i )
+        for ( int i = 0; i < Text.Length; ++i )
         {
-          AppendU8( System.Convert.ToByte( strData[i] ) );
+          AppendU8( System.Convert.ToByte( Text[i] ) );
         }
       }
 
-      public bool FromHexString( string strHexData )
+
+
+      public bool FromHexString( string HexData )
       {
         Clear();
-        return AppendHex( strHexData );
+        return AppendHex( HexData );
       }
+
+
 
       public void Reserve( int BytesToReserve )
       {
@@ -685,50 +762,30 @@ namespace GR
         byte[] bTemp = new byte[BytesToReserve];
 
         m_Data.CopyTo( bTemp, 0 );
-        for ( int i = m_Data.Length; i < BytesToReserve; ++i )
-        {
-          bTemp[i] = 0;
-        }
         m_Data = bTemp;
       }
 
-      public void Resize( UInt32 iSize )
+
+
+      public void Resize( UInt32 Size )
       {
         if ( m_Data == null )
         {
-          m_Data = new byte[iSize];
-          for ( int i = 0; i < iSize; ++i )
-          {
-            m_Data[i] = 0;
-          }
+          m_Data = new byte[Size];
         }
         else
         {
-          if ( m_Data.Length >= iSize )
+          if ( m_Data.Length >= Size )
           {
-            m_UsedBytes = iSize;
+            m_UsedBytes = Size;
             return;
           }
-          byte[] bTemp = new byte[iSize];
-          
-          if ( m_Data.Length < iSize )
-          {
-            m_Data.CopyTo( bTemp, 0 );
-            for ( int i = m_Data.Length; i < iSize; ++i )
-            {
-              bTemp[i] = 0;
-            }
-          }
-          else
-          {
-            for ( int i = 0; i < iSize; ++i )
-            {
-              bTemp[i] = m_Data[i];
-            }
-          }
+          byte[] bTemp = new byte[Size];
+
+          m_Data.CopyTo( bTemp, 0 );
           m_Data = bTemp;
         }
-        m_UsedBytes = iSize;
+        m_UsedBytes = Size;
       }
 
 
@@ -745,22 +802,26 @@ namespace GR
         return new System.IO.MemoryStream( Data() );
       }
 
+
+
       public int Find( byte Value )
       {
         return Find( Value, 0 );
       }
 
-      public int Find( byte Value, int Offset )
+
+
+      public int Find( byte Value, int StartIndex )
       {
         if ( m_Data == null )
         {
           return -1;
         }
-        if ( Offset >= Length )
+        if ( StartIndex >= Length )
         {
           return -1;
         }
-        for ( int i = Offset;  i < Length; ++i )
+        for ( int i = StartIndex;  i < Length; ++i )
         {
           if ( m_Data[i] == Value )
           {
@@ -770,20 +831,22 @@ namespace GR
         return -1;
       }
 
-      public int PackedStringLength( string strText )
+
+
+      public int PackedStringLength( string Text )
       {
-        int   iBytes = strText.Length * 2;
+        int   numBytes = Text.Length * 2;
 
-        int   iLength = strText.Length * 2;
+        int   length = Text.Length * 2;
 
-        while ( iLength > 127 )
+        while ( length > 127 )
         {
-          iLength >>= 7;
-          ++iBytes;
+          length >>= 7;
+          ++numBytes;
         }
-        ++iBytes;
+        ++numBytes;
 
-        return iBytes;
+        return numBytes;
       }
 
 

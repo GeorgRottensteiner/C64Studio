@@ -69,27 +69,28 @@ namespace Be.Windows.Forms
           {
             charData.SetU8At( i, Box.ByteProvider.ReadByte( _startByte + j * 8 + i ) );
           }
-          GR.Image.FastImage  charImage = new GR.Image.FastImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-          C64Studio.CustomRenderer.PaletteManager.ApplyPalette( charImage );
-
-          switch ( Mode )
+          using ( GR.Image.FastImage charImage = new GR.Image.FastImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )
           {
-            case C64Studio.Types.CharsetMode.HIRES:
-              CharacterDisplayer.DisplayHiResChar( charData, BackgroundColor, CustomColor, charImage, 0, 0 );
-              break;
-            case C64Studio.Types.CharsetMode.MULTICOLOR:
-              CharacterDisplayer.DisplayMultiColorChar( charData, BackgroundColor, CustomColor, MultiColor1, MultiColor2, charImage, 0, 0 );
-              break;
-            case C64Studio.Types.CharsetMode.ECM:
-              // TODO!
-              CharacterDisplayer.DisplayHiResChar( charData, BackgroundColor, CustomColor, charImage, 0, 0 );
-              break;
-          }
+            C64Studio.CustomRenderer.PaletteManager.ApplyPalette( charImage );
 
-          charImage.DrawToHDC( graphics.GetHdc(),
-                               new Rectangle( _recHex.Left, (int)( _recHex.Top + Box.CharSize.Height * j + ( Box.CharSize.Height - boxSize ) / 2 ), boxSize, boxSize ) );
-          graphics.ReleaseHdc();
-          charImage.Dispose();
+            switch ( Mode )
+            {
+              case C64Studio.Types.CharsetMode.HIRES:
+                CharacterDisplayer.DisplayHiResChar( charData, BackgroundColor, CustomColor, charImage, 0, 0 );
+                break;
+              case C64Studio.Types.CharsetMode.MULTICOLOR:
+                CharacterDisplayer.DisplayMultiColorChar( charData, BackgroundColor, CustomColor, MultiColor1, MultiColor2, charImage, 0, 0 );
+                break;
+              case C64Studio.Types.CharsetMode.ECM:
+                // TODO!
+                CharacterDisplayer.DisplayHiResChar( charData, BackgroundColor, CustomColor, charImage, 0, 0 );
+                break;
+            }
+
+            charImage.DrawToHDC( graphics.GetHdc(),
+                                 new Rectangle( _recHex.Left, (int)( _recHex.Top + Box.CharSize.Height * j + ( Box.CharSize.Height - boxSize ) / 2 ), boxSize, boxSize ) );
+            graphics.ReleaseHdc();
+          }
         }
 
         graphics.Clip = oldClip;

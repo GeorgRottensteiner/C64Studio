@@ -344,5 +344,24 @@ namespace C64Studio
       RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_ADDED, bp ) );
     }
 
+
+
+    private void btnDeleteAllBreakpoints_Click( object sender, EventArgs e )
+    {
+      List<Types.Breakpoint>    bpsToRemove = new List<Types.Breakpoint>();
+      foreach ( ListViewItem item in listBreakpoints.Items )
+      {
+        var bp = (Types.Breakpoint)item.Tag;
+        bpsToRemove.Add( bp );
+      }
+
+      foreach ( var bp in bpsToRemove )
+      {
+        RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, bp ) );
+      }
+    }
+
+
+
   }
 }

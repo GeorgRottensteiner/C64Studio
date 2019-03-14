@@ -11,7 +11,7 @@ using FastColoredTextBoxNS;
 
 namespace C64Studio
 {
-  public partial class SourceASMEx : BaseDocument
+  public partial class SourceASMEx : CompilableDocument
   {
     private const uint TME_HOVER = 0x00000001;
     private const uint TME_LEAVE = 0x00000002;
@@ -83,6 +83,17 @@ namespace C64Studio
         return editSource.Selection.Start.iLine;
       }
     }
+
+
+
+    public override FastColoredTextBoxNS.FastColoredTextBox SourceControl
+    {
+      get
+      {
+        return editSource;
+      }
+    }
+
 
 
     public SourceASMEx( StudioCore Core )
@@ -200,7 +211,8 @@ namespace C64Studio
       string    line = editSource.Lines[sourceLineIndex];
       var tokens = Parser.ParseTokenInfo( line, 0, line.Length );
 
-      if ( ( tokens.Count > 0 )
+      if ( ( tokens != null )
+      &&   ( tokens.Count > 0 )
       &&   ( tokens[0].Type == TokenInfo.TokenType.MACRO )
       &&   ( tokens[0].Content.ToUpper() == "!BASIC" ) )
       {
@@ -577,31 +589,23 @@ namespace C64Studio
     {
       if ( Element == Types.ColorableElement.ERROR_UNDERLINE )
       {
-        m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.WavyLineStyle( 255, GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Element].FGColor ) );
+        m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.WavyLineStyle( 255, GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
         editSource.Styles[SyntaxElementStylePrio( Element )] = m_TextStyles[SyntaxElementStylePrio( Element )];
         return;
       }
-      System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Element].FGColor ) );
+      System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
       System.Drawing.Brush      backBrush = null;
       System.Drawing.FontStyle  fontStyle = System.Drawing.FontStyle.Regular;
 
-      if ( Core.Settings.SyntaxColoring[Element].BGColorAuto )
-      {
-        backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.EMPTY_SPACE].BGColor ) );
-      }
-      else
-      {
-        backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Element].BGColor ) );
-      }
-
+      backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( Element ) ) );
       m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.TextStyle( foreBrush, backBrush, fontStyle );
 
       editSource.Styles[SyntaxElementStylePrio( Element )] = m_TextStyles[SyntaxElementStylePrio( Element )];
 
       // empty space
-      editSource.BackColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.EMPTY_SPACE].BGColor );
+      editSource.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( Types.ColorableElement.EMPTY_SPACE ) );
 
-      editSource.SelectionColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.SELECTED_TEXT].FGColor );
+      editSource.SelectionColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( Types.ColorableElement.SELECTED_TEXT ) );
     }
 
 
@@ -1954,7 +1958,7 @@ namespace C64Studio
         if ( Line < editSource.LinesCount )
         {
           m_CurrentMarkedLineIndex = Line;
-          editSource[m_CurrentMarkedLineIndex].BackgroundBrush = new System.Drawing.SolidBrush( System.Drawing.Color.FromArgb( (int)Core.Settings.SyntaxColoring[Types.ColorableElement.CURRENT_DEBUG_LINE].BGColor ) );
+          editSource[m_CurrentMarkedLineIndex].BackgroundBrush = new System.Drawing.SolidBrush( System.Drawing.Color.FromArgb( (int)Core.Settings.BGColor( Types.ColorableElement.CURRENT_DEBUG_LINE ) ) );
         }
         else
         {
@@ -2359,15 +2363,6 @@ namespace C64Studio
 
 
 
-    public void CenterOnCaret()
-    {
-      // automatically centers
-      //editSource.Navigate( CurrentLineIndex );
-      editSource.DoSelectionVisible();
-    }
-
-
-
     private void openFileToolStripMenuItem_Click( object sender, EventArgs e )
     {
       if ( DocumentInfo == null )
@@ -2398,7 +2393,11 @@ namespace C64Studio
       }
       else
       {
-        Core.MainForm.OpenFile( fullPath );
+        var newDoc = Core.MainForm.OpenFile( fullPath );
+        if ( newDoc != null )
+        {
+          Core.Compiling.PreparseDocument( newDoc );
+        }
       }
     }
 
@@ -2572,7 +2571,7 @@ namespace C64Studio
     {
       base.RefreshDisplayOptions();
 
-      BackColor = Core.Theming.DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor ) );
+      BackColor = Core.Theming.DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) );
 
       // Font
       editSource.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
@@ -2582,7 +2581,8 @@ namespace C64Studio
       editSource.CommentPrefix = ";";
 
       // adjust caret color (Thanks Tulan!)
-      if ( ( 0.2126 * editSource.BackColor.R + 0.7152 * editSource.BackColor.G + 0.0722 * editSource.BackColor.B ) < 127.5 )
+      System.Drawing.Color    backColorForCaret = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.EMPTY_SPACE ) );
+      if ( ( 0.2126 * backColorForCaret.R + 0.7152 * backColorForCaret.G + 0.0722 * backColorForCaret.B ) < 127.5 )
       {
         editSource.CaretColor = System.Drawing.Color.White;
       }
@@ -2645,7 +2645,7 @@ namespace C64Studio
       AutoComplete.Enabled = Core.Settings.ASMShowAutoComplete;
 
       miniMap.ForeColor = GR.Color.Helper.FromARGB( 0xffff0000 );
-      miniMap.BackColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.EMPTY_SPACE].BGColor );
+      miniMap.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.EMPTY_SPACE ) );
     }
 
 
@@ -3076,53 +3076,6 @@ namespace C64Studio
     private void writeOnlyToolStripMenuItem_Click( object sender, EventArgs e )
     {
       AddDataBreakPoint( false, false, true );
-    }
-
-
-
-    public void MarkTextAsError( int LineIndex, int CharPosStart, int CharLength )
-    {
-      if ( ( LineIndex < 0 )
-      ||   ( LineIndex >= editSource.LinesCount ) )
-      {
-        Debug.Log( "MarkTextAsError lineindex out of bounds!" );
-        return;
-      }
-      int     startPos = CharPosStart;
-      if ( editSource.AllowTabs )
-      {
-        // adjust offset in case of tabs (butt ugly hackaround)
-        string origText = editSource[LineIndex].Text;
-
-        if ( CharPosStart < origText.Length )
-        {
-          origText = editSource[LineIndex].Text.Substring( 0, CharPosStart );
-        }
-        origText = editSource.ReTabifyLine( origText, editSource.TabLength );
-
-        startPos = origText.Length;
-
-        if ( ( startPos >= origText.Length )
-        ||   ( startPos + CharLength > origText.Length ) )
-        {
-          startPos = 0;
-          CharLength = origText.Length;
-        }
-
-        //startPos = rng.AdjustXPosForTabs( LineIndex, startPos );
-      }
-
-      var range = new FastColoredTextBoxNS.Range( editSource, new FastColoredTextBoxNS.Place( startPos, LineIndex ), new FastColoredTextBoxNS.Place( startPos + CharLength, LineIndex ) );
-
-      range.SetStyle( FastColoredTextBoxNS.StyleIndex.Style10 );
-    }
-
-
-
-    internal void RemoveAllErrorMarkings()
-    {
-      //TODO das macht schon wieder die folding markers weg!!
-      editSource.ClearStyleWithoutAffectingFoldingMarkers( FastColoredTextBoxNS.StyleIndex.Style10 );
     }
 
 

@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace C64Studio
 {
-  public partial class SourceBasicEx : BaseDocument
+  public partial class SourceBasicEx : CompilableDocument
   {
     int                                       m_CurrentMarkedLineIndex = -1;
     string                                    m_FilenameToOpen = "";
@@ -28,12 +28,24 @@ namespace C64Studio
 
     private string                            m_CurrentHighlightText = null;
 
+    private string                            m_StartAddress = "";
+
 
     public override int CursorLine
     {
       get
       {
         return editSource.Selection.Start.iLine;
+      }
+    }
+
+
+
+    public override FastColoredTextBoxNS.FastColoredTextBox SourceControl
+    {
+      get
+      {
+        return editSource;
       }
     }
 
@@ -131,12 +143,16 @@ namespace C64Studio
       editSource.MouseEnter += new EventHandler( editSource_MouseEnter );
       editSource.MouseLeave += new EventHandler(editSource_MouseLeave);
       editSource.MouseMove += new System.Windows.Forms.MouseEventHandler( editSource_MouseMove );
+      editSource.MouseDown += new System.Windows.Forms.MouseEventHandler( editSource_MouseDown );
+      editSource.MouseUp += new System.Windows.Forms.MouseEventHandler( editSource_MouseUp );
       editSource.KeyDown += new System.Windows.Forms.KeyEventHandler( editSource_KeyDown );
       editSource.KeyPress += new System.Windows.Forms.KeyPressEventHandler( editSource_KeyPress );
       editSource.KeyUp += new System.Windows.Forms.KeyEventHandler( editSource_KeyUp );
       editSource.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler( editSource_PreviewKeyDown );
       editSource.TextChanged += new EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>( editSource_TextChanged );
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
+
+      editSource.PreferredLineWidth = 80;
 
 
       editSource.KeyPressing += EditSource_KeyPressing;
@@ -153,6 +169,34 @@ namespace C64Studio
       m_ToolTip.Popup += new System.Windows.Forms.PopupEventHandler( m_ToolTip_Popup );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+    }
+
+
+
+    private void editSource_MouseUp( object sender, MouseEventArgs e )
+    {
+      UpdateStatusInfo();
+    }
+
+
+
+    private void editSource_MouseDown( object sender, MouseEventArgs e )
+    {
+      UpdateStatusInfo();
+    }
+
+
+
+    public int StartAddress
+    {
+      get
+      {
+        if ( DocumentInfo.Element != null )
+        {
+          return GR.Convert.ToI32( DocumentInfo.Element.StartAddress );
+        }
+        return GR.Convert.ToI32( m_StartAddress );
+      }
     }
 
 
@@ -292,7 +336,8 @@ namespace C64Studio
       editSource.Language = FastColoredTextBoxNS.Language.Custom;
 
       // adjust caret color (Thanks Tulan!)
-      if ( ( 0.2126 * editSource.BackColor.R + 0.7152 * editSource.BackColor.G + 0.0722 * editSource.BackColor.B ) < 127.5 )
+      System.Drawing.Color    backColorForCaret = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.EMPTY_SPACE ) );
+      if ( ( 0.2126 * backColorForCaret.R + 0.7152 * backColorForCaret.G + 0.0722 * backColorForCaret.B ) < 127.5 )
       {
         editSource.CaretColor = System.Drawing.Color.White;
       }
@@ -382,27 +427,19 @@ namespace C64Studio
 
     void ApplySyntaxColoring( Types.ColorableElement Element )
     {
-      System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Element].FGColor ) );
+      System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
       System.Drawing.Brush      backBrush = null;
       System.Drawing.FontStyle  fontStyle = System.Drawing.FontStyle.Regular;
 
-      if ( Core.Settings.SyntaxColoring[Element].BGColorAuto )
-      {
-        backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.EMPTY_SPACE].BGColor ) );
-      }
-      else
-      {
-        backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Element].BGColor ) );
-      }
-
+      backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( Element ) ) );
       m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.TextStyle( foreBrush, backBrush, fontStyle );
 
       //editSource.AddStyle( m_TextStyles[(int)Element] );
       editSource.Styles[SyntaxElementStylePrio( Element )] = m_TextStyles[SyntaxElementStylePrio( Element )];
 
       // empty space
-      editSource.BackColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.EMPTY_SPACE].BGColor );
-      editSource.SelectionColor = GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[Types.ColorableElement.SELECTED_TEXT].FGColor );
+      editSource.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( Types.ColorableElement.EMPTY_SPACE ) );
+      editSource.SelectionColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( Types.ColorableElement.SELECTED_TEXT ) );
     }
 
 
@@ -596,6 +633,17 @@ namespace C64Studio
 
         editSource.Text = basicText;
         editSource.ClearUndo();
+
+        if ( DocumentInfo.Element != null )
+        {
+          editBASICStartAddress.Text = DocumentInfo.Element.StartAddress;
+          m_StartAddress = DocumentInfo.Element.StartAddress;
+        }
+        if ( string.IsNullOrEmpty( m_StartAddress ) )
+        {
+          m_StartAddress = "2049";
+          editBASICStartAddress.Text = "2049";
+        }
       }
       catch ( System.IO.IOException ex )
       {
@@ -721,7 +769,7 @@ namespace C64Studio
       if ( Set )
       {
         m_CurrentMarkedLineIndex = Line;
-        editSource[m_CurrentMarkedLineIndex].BackgroundBrush = new System.Drawing.SolidBrush( System.Drawing.Color.FromArgb( (int)Core.Settings.SyntaxColoring[Types.ColorableElement.CURRENT_DEBUG_LINE].BGColor ) );
+        editSource[m_CurrentMarkedLineIndex].BackgroundBrush = new System.Drawing.SolidBrush( System.Drawing.Color.FromArgb( (int)Core.Settings.BGColor( Types.ColorableElement.CURRENT_DEBUG_LINE ) ) );
       }
     }
 
@@ -734,9 +782,6 @@ namespace C64Studio
         editSource.Focus();
       }
       editSource.Navigate( Line );
-      ///editSource.Caret.Goto( editSource.Lines[Line].StartPosition );
-      ///editSource.Scrolling.ScrollToCaret();
-      //CenterOnCaret();
     }
 
 
@@ -817,14 +862,6 @@ namespace C64Studio
     public string FindZoneAtCaretPosition()
     {
       return FindZoneFromLine( CurrentLineIndex );
-    }
-
-
-
-    public void CenterOnCaret()
-    {
-      // automatically centers
-      editSource.Navigate( CurrentLineIndex );
     }
 
 
@@ -1520,39 +1557,6 @@ namespace C64Studio
       {
         text = MakeUpperCase( text );
       }
-      /*
-      StringBuilder   sb = new StringBuilder( text.Length );
-
-      foreach ( var singleChar in text )
-      {
-        if ( m_LowerCaseMode )
-        {
-          if ( ( singleChar & 0xff00 ) == 0xee00 )
-          {
-            sb.Append( (char)( ( singleChar & 0x00ff ) | 0xef00 ) );
-          }
-          else if ( ( singleChar >= 'A')
-          &&        ( singleChar <= 'Z' ) )
-          {
-            sb.Append( (char)( ( singleChar - 'A' + 1 ) | 0xef00 ) );
-          }
-          else
-          {
-            sb.Append( singleChar );
-          }
-        }
-        else
-        {
-          if ( ( singleChar & 0xff00 ) == 0xef00 )
-          {
-            sb.Append( (char)( ( singleChar & 0x00ff ) | 0xee00 ) );
-          }
-          else
-          {
-            sb.Append( singleChar );
-          }
-        }
-      }*/
       editSource.Text = text;
 
       editSource.VerticalScroll.Value = topLine;
@@ -1621,6 +1625,23 @@ namespace C64Studio
       }
       return sb.ToString();
     }
+
+
+
+    private void editBASICStartAddress_TextChanged( object sender, EventArgs e )
+    {
+      if ( DocumentInfo.Element != null )
+      {
+        if ( DocumentInfo.Element.StartAddress != editBASICStartAddress.Text )
+        {
+          DocumentInfo.Element.StartAddress = editBASICStartAddress.Text;
+          SetModified();
+        }
+      }
+      m_StartAddress = editBASICStartAddress.Text;
+    }
+
+
 
   }
 }

@@ -87,6 +87,9 @@
     <Compile Include="Dialogs\FormGoto.Designer.cs">
       <DependentUpon>FormGoto.cs</DependentUpon>
     </Compile>
+    <Compile Include="Documents\CompilableDocument.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Documents\ValueTableEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -453,6 +456,9 @@
     <EmbeddedResource Include="Dialogs\FormGoto.resx">
       <DependentUpon>FormGoto.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Documents\CompilableDocument.resx">
+      <DependentUpon>CompilableDocument.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Documents\BaseDocument.resx">
       <DependentUpon>BaseDocument.cs</DependentUpon>
     </EmbeddedResource>
@@ -670,6 +676,7 @@
     <None Include="Resources\toolbar_truedrive_enabled1.ico" />
     <None Include="Resources\toolbar_truedrive_disabled.ico" />
     <None Include="Resources\toolbar_truedrive_disabled.bmp" />
+    <None Include="Resources\tool_validate.ico" />
     <Content Include="TODO.txt" />
     <None Include="Resources\charscreen_text1.ico" />
     <None Include="Resources\charscreen_text.ico" />
@@ -740,7 +747,9 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
+    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
 copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"</PostBuildEvent>
+    <PostBuildEvent Condition="'$(OS)' == 'Unix' ">cp "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
+        for i in $(TargetDir)*.dll; do cp $i $(SolutionDir)C64StudioRelease; done</PostBuildEvent>
   </PropertyGroup>
 </Project>

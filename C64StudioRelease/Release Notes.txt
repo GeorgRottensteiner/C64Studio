@@ -17,7 +17,25 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
-xx.xx.2019 - 6.0:
+11.03.2019 - 6.0:         Add: Graphic screen editor paint tools
+                          Add: BASIC editor 80 char pos line
+                          Add: Allow changing of start address for BASIC
+                          Add: Save to File Manager
+                          Add: Real version number to properties/details
+                          Fix: Crash when deleting folder in Solution Explorer
+                          Add: Prepare file opened via context menu on !source PO
+                          Fix: Crash when unknown character encountered
+                          Fix: caret color detection
+                          Add: Support for alternative Debug.Log viewers
+                          Fix: Different post build commands for Win/Unix
+                          Fix: Resource leak in Hex sprite viewer
+                          Fix: Crash in sprite viewer
+                          Fix: Crash in macro viewer without active project
+                          Add: Support for GTK Vice' console window
+                          Fix: BASIC renumber bug (first token after line number went missing)
+                          Add: Opening of base libs via context menu
+                          Fix: Default graphic screen start size 320x200
+                          Add: Debug Views (memory/register) color adjustable
 
 15.12.2018 - 5.9:         Fix: issue where local labels inside bracketed zones were not properly recognized inside macros
                           Fix: improper token offset during macro call relabeling

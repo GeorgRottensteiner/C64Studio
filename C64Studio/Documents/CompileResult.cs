@@ -51,27 +51,17 @@ namespace C64Studio
       listMessages.Sorting = SortOrder.None;
       listMessages.ListViewItemSorter = null; 
 
-      foreach ( var docInfos in Core.MainForm.DocumentInfos )
+      foreach ( var docInfo in Core.MainForm.DocumentInfos )
       {
-        if ( ( docInfos.Type == ProjectElement.ElementType.ASM_SOURCE )
-        &&   ( docInfos.BaseDoc != null ) )
-        {
-          SourceASMEx   source = (SourceASMEx)docInfos.BaseDoc;
+        var compilableDoc = docInfo.CompilableDocument;
 
-          source.RemoveAllErrorMarkings();
-          //source.UpdateFoldingBlocks();
-        }
+        compilableDoc?.RemoveAllErrorMarkings();
       }
       foreach ( System.Collections.Generic.KeyValuePair<int, Parser.ParserBase.ParseMessage> msg in Parser.Messages )
       {
         int lineIndex = msg.Key;
         Parser.ParserBase.ParseMessage message = msg.Value;
 
-        /*
-        if ( message.Type == C64Studio.Parser.ParserBase.ParseMessage.LineType.MESSAGE )
-        {
-          continue;
-        }*/
         if ( Core.Settings.IgnoredWarnings.ContainsValue( message.Code ) )
         {
           // ignore warning
@@ -80,9 +70,7 @@ namespace C64Studio
 
         string documentFile = "";
         int documentLine = -1;
-        //Debug.Log( "a" );
         Parser.DocumentAndLineFromGlobalLine( lineIndex, out documentFile, out documentLine );
-        //Debug.Log( "b" );
         if ( message.AlternativeFile == null )
         {
           message.AlternativeFile = documentFile;
@@ -94,15 +82,11 @@ namespace C64Studio
           if ( ParsedProject == null )
           {
             var sourceDocInfo = Core.MainForm.DetermineDocumentByFileName( documentFile );
-            if ( ( sourceDocInfo != null )
-            &&   ( sourceDocInfo.BaseDoc != null )
-            &&   ( sourceDocInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
+            if ( sourceDocInfo != null )
             {
-              var  sourceFile = (SourceASMEx)sourceDocInfo.BaseDoc;
-              if ( sourceFile != null )
-              {
-                sourceFile.MarkTextAsError( documentLine, message.CharIndex, message.Length );
-              }
+              var compilableDoc = sourceDocInfo.CompilableDocument;
+
+              compilableDoc?.MarkTextAsError( documentLine, message.CharIndex, message.Length );
             }
           }
           else
@@ -110,24 +94,14 @@ namespace C64Studio
             var  sourceElement = ParsedProject.GetElementByFilename( documentFile );
             if ( sourceElement != null )
             {
-              var  sourceFile = (SourceASMEx)sourceElement.Document;
-              if ( sourceFile != null )
+              if ( sourceElement.Document != null )
               {
-                sourceFile.MarkTextAsError( documentLine, message.CharIndex, message.Length );
+                var compilableDoc = sourceElement.DocumentInfo.CompilableDocument;
+                compilableDoc?.MarkTextAsError( documentLine, message.CharIndex, message.Length );
               }
-              else
-              {
-                // TODO - have no document to mark?
-              }
-            }
-            else
-            {
-              // TODO - have no document to mark?
             }
           }
         }
-
-        //dh.Log( "Error in " + lineIndex );
 
         ++documentLine;
 
@@ -174,9 +148,7 @@ namespace C64Studio
         item.SubItems.Add( message.Message );
         item.Tag = message;
 
-        //Debug.Log( "c" );
         listMessages.Items.Add( item );
-        //Debug.Log( "d" );
         if ( message.ChildMessages != null )
         {
           foreach ( var childMessage in message.ChildMessages )
@@ -215,16 +187,12 @@ namespace C64Studio
             childItem.SubItems.Add( childMessage.Message );
             childItem.Tag = childMessage;
 
-            //Debug.Log( "c" );
             listMessages.Items.Add( childItem );
           }
         }
       }
-      //Debug.Log( "e" );
       listMessages.Sorting = oldOrder;
       listMessages.ListViewItemSorter = new CompileResultItemComparer( listMessagesSortColumn, listMessages.Sorting );
-      //listMessages.Sort();
-      //Debug.Log( "f" );
       listMessages.EndUpdate();
     }
 

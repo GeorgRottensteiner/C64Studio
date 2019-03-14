@@ -1590,6 +1590,10 @@ namespace C64Studio.Parser
       {
         AddError( LineIndex, Types.ErrorCode.E3006_BASIC_LINE_TOO_LONG, "Line is too long, max. 250 bytes possible" );
       }
+      else if ( info.LineData.Length > 80 )
+      {
+        AddWarning( LineIndex, Types.ErrorCode.W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY, "Line is too long for manual entry", 0, info.Line.Length );
+      }
 
       // update line number references
       for ( int i = 0; i < info.Tokens.Count; ++i )
@@ -1678,9 +1682,15 @@ namespace C64Studio.Parser
     {
       GR.Memory.ByteBuffer result = new GR.Memory.ByteBuffer();
 
-      result.AppendU16( 0x0801 );
+      int     startAddress = Config.StartAddress;
+      if ( startAddress == -1 )
+      {
+        startAddress = 0x0801;
+      }
 
-      int     curAddress = 0x0801;
+      result.AppendU16( (ushort)startAddress );
+
+      int     curAddress = startAddress;
       foreach ( LineInfo info in m_LineInfos.Values )
       {
         // pointer to next line
@@ -1790,7 +1800,7 @@ namespace C64Studio.Parser
           AssembledOutput.Assembly = header + chip;
         }
       }
-      AssembledOutput.OriginalAssemblyStartAddress  = 0x0801;
+      AssembledOutput.OriginalAssemblyStartAddress  = startAddress;
       AssembledOutput.OriginalAssemblySize          = originalSize;
       return true;
     }
