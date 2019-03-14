@@ -53,9 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutocompleteItem.cs" />
-    <Compile Include="AutocompleteMenu.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="AutocompleteMenu.cs" />
     <Compile Include="Bookmarks.cs" />
     <Compile Include="Char.cs" />
     <Compile Include="DocumentMap.cs">
