@@ -39,6 +39,10 @@
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.label5 = new System.Windows.Forms.Label();
+      this.btnAddExternalDependency = new System.Windows.Forms.Button();
+      this.btnRemoveExternalDependency = new System.Windows.Forms.Button();
+      this.listExternalDependencies = new System.Windows.Forms.ListBox();
       this.SuspendLayout();
       // 
       // comboTargetType
@@ -108,8 +112,7 @@
       // 
       // listDependencies
       // 
-      this.listDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+      this.listDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.listDependencies.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
@@ -118,7 +121,7 @@
       this.listDependencies.Location = new System.Drawing.Point(100, 107);
       this.listDependencies.Name = "listDependencies";
       this.listDependencies.OwnerDraw = true;
-      this.listDependencies.Size = new System.Drawing.Size(487, 245);
+      this.listDependencies.Size = new System.Drawing.Size(487, 126);
       this.listDependencies.TabIndex = 14;
       this.listDependencies.UseCompatibleStateImageBehavior = false;
       this.listDependencies.View = System.Windows.Forms.View.Details;
@@ -140,15 +143,58 @@
       // 
       this.columnHeader3.Text = "Symbols";
       // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(6, 239);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(79, 26);
+      this.label5.TabIndex = 6;
+      this.label5.Text = "External\r\nDependencies:";
+      // 
+      // btnAddExternalDependency
+      // 
+      this.btnAddExternalDependency.Image = global::C64Studio.Properties.Resources.add;
+      this.btnAddExternalDependency.Location = new System.Drawing.Point(100, 326);
+      this.btnAddExternalDependency.Name = "btnAddExternalDependency";
+      this.btnAddExternalDependency.Size = new System.Drawing.Size(38, 23);
+      this.btnAddExternalDependency.TabIndex = 15;
+      this.btnAddExternalDependency.UseVisualStyleBackColor = true;
+      this.btnAddExternalDependency.Click += new System.EventHandler(this.btnAddExternalDependency_Click);
+      // 
+      // btnRemoveExternalDependency
+      // 
+      this.btnRemoveExternalDependency.Enabled = false;
+      this.btnRemoveExternalDependency.Image = global::C64Studio.Properties.Resources.delete;
+      this.btnRemoveExternalDependency.Location = new System.Drawing.Point(144, 326);
+      this.btnRemoveExternalDependency.Name = "btnRemoveExternalDependency";
+      this.btnRemoveExternalDependency.Size = new System.Drawing.Size(38, 23);
+      this.btnRemoveExternalDependency.TabIndex = 15;
+      this.btnRemoveExternalDependency.UseVisualStyleBackColor = true;
+      this.btnRemoveExternalDependency.Click += new System.EventHandler(this.btnRemoveExternalDependency_Click);
+      // 
+      // listExternalDependencies
+      // 
+      this.listExternalDependencies.FormattingEnabled = true;
+      this.listExternalDependencies.Location = new System.Drawing.Point(100, 239);
+      this.listExternalDependencies.Name = "listExternalDependencies";
+      this.listExternalDependencies.Size = new System.Drawing.Size(487, 82);
+      this.listExternalDependencies.TabIndex = 16;
+      this.listExternalDependencies.SelectedIndexChanged += new System.EventHandler(this.listExternalDependencies_SelectedIndexChanged);
+      // 
       // PropCompileTarget
       // 
       this.ClientSize = new System.Drawing.Size(599, 364);
       this.ControlBox = false;
+      this.Controls.Add(this.listExternalDependencies);
+      this.Controls.Add(this.btnRemoveExternalDependency);
+      this.Controls.Add(this.btnAddExternalDependency);
       this.Controls.Add(this.listDependencies);
       this.Controls.Add(this.comboTargetType);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.btnParseTarget);
       this.Controls.Add(this.editTargetFilename);
+      this.Controls.Add(this.label5);
       this.Controls.Add(this.label4);
       this.Controls.Add(this.label3);
       this.Controls.Add(this.label2);
@@ -174,5 +220,9 @@
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.ColumnHeader columnHeader3;
+    private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.Button btnAddExternalDependency;
+    private System.Windows.Forms.Button btnRemoveExternalDependency;
+    private System.Windows.Forms.ListBox listExternalDependencies;
   }
 }

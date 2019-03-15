@@ -32,6 +32,17 @@ namespace C64Studio
 
 
 
+    private string BuildFullPath( string ParentPath, string SubFilename )
+    {
+      if ( System.IO.Path.IsPathRooted( SubFilename ) )
+      {
+        return SubFilename;
+      }
+      return GR.Path.Append( ParentPath, SubFilename );
+    }
+
+
+
     public bool NeedsRebuild( DocumentInfo DocInfo, string ConfigSetting )
     {
       if ( DocInfo == null )
@@ -71,6 +82,37 @@ namespace C64Studio
               return true;
             }
           }
+        }
+        if ( DocInfo.DeducedDependency[ConfigSetting] != null )
+        {
+          foreach ( var dependency in DocInfo.Element.ExternalDependencies.DependentOnFile )
+          {
+            string      fullPath = BuildFullPath( DocInfo.Project.Settings.BasePath, dependency.Filename );
+
+            DateTime    fileTime = new DateTime();
+
+            try
+            {
+              fileTime = System.IO.File.GetLastWriteTime( fullPath );
+            }
+            catch
+            {
+            }
+
+            if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] )
+            {
+              Core.AddToOutput( "External Dependency " + fullPath + " was modified, need to rebuild dependent element " + DocInfo.DocumentFilename + System.Environment.NewLine );
+
+              DocInfo.DeducedDependency[ConfigSetting].BuildState.Add( fullPath, fileTime );
+              return true;
+            }
+          }
+        }
+        else
+        {
+          // no build time stored yet, needs rebuild
+          DocInfo.DeducedDependency[ConfigSetting] = new DependencyBuildState();
+          return true;
         }
       }
       if ( DocInfo.Compilable )

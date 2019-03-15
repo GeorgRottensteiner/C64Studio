@@ -146,6 +146,13 @@ namespace C64Studio
         //Debug.Log( "Save folded block for line " + foldStartLine );
       }
 
+      // external dependencies
+      chunkElement.AppendI32( Element.ExternalDependencies.DependentOnFile.Count );
+      foreach ( var dependency in Element.ExternalDependencies.DependentOnFile )
+      {
+        chunkElement.AppendString( dependency.Filename );
+      }
+
       buffer.Append( chunkElement.ToBuffer() );
 
       if ( Element.Document != null )
@@ -473,6 +480,14 @@ namespace C64Studio
                 int   collapsedBlockLine = memChunk.ReadInt32();
                 element.DocumentInfo.CollapsedFoldingBlocks.Add( collapsedBlockLine  );
                 //Debug.Log( "Get collapsed blocked for " + element.DocumentInfo.FullPath + ", line " + collapsedBlockLine );
+              }
+
+              // external dependencies
+              int externalDependencyCount = memChunk.ReadInt32();
+              for ( int i = 0; i < externalDependencyCount; ++i )
+              {
+                string dependency = memChunk.ReadString();
+                element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( dependency, true, false ) );
               }
 
               // TODO - load other stuff

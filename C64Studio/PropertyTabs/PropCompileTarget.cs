@@ -60,7 +60,7 @@ namespace C64Studio
       foreach ( ProjectElement element in Element.DocumentInfo.Project.Elements )
       {
         if ( ( element != Element )
-        &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
+        && ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
         {
           var dependencies = Element.DocumentInfo.Project.GetDependencies( element );
 
@@ -108,8 +108,12 @@ namespace C64Studio
           }
         }
       }
-    }
 
+      foreach ( var entry in Element.ExternalDependencies.DependentOnFile )
+      {
+        listExternalDependencies.Items.Add( entry.Filename );
+      }
+    }
 
 
     private void btnParseTarget_Click( object sender, EventArgs e )
@@ -242,6 +246,66 @@ namespace C64Studio
         Element.DocumentInfo.Project.SetModified();
       }
     }
+
+
+
+    private void listExternalDependencies_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      btnRemoveExternalDependency.Enabled = ( listExternalDependencies.SelectedIndex != -1 );
+    }
+
+
+
+    private string BuildFullPath( string ParentPath, string SubFilename )
+    {
+      if ( System.IO.Path.IsPathRooted( SubFilename ) )
+      {
+        return SubFilename;
+      }
+      return GR.Path.Append( ParentPath, SubFilename );
+    }
+
+
+
+    private void btnAddExternalDependency_Click( object sender, EventArgs e )
+    {
+      var dlg = new OpenFileDialog();
+
+      dlg.Title = "Select external dependency";
+
+      if ( dlg.ShowDialog() != DialogResult.OK )
+      {
+        return;
+      }
+
+      // no duplicates!
+      foreach ( var entry in Element.ExternalDependencies.DependentOnFile )
+      {
+        if ( GR.Path.IsPathEqual( BuildFullPath( Element.DocumentInfo.Project.Settings.BasePath, entry.Filename ), dlg.FileName ) )
+        {
+          MessageBox.Show( "File " + dlg.FileName + " is already set as external dependency!", "Dependency already exists" );
+          return;
+        }
+      }
+      string  relativeFilename = GR.Path.RelativePathTo( dlg.FileName, false, Element.DocumentInfo.Project.Settings.BasePath, true );
+      Element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( relativeFilename, true, false ) );
+      listExternalDependencies.Items.Add( relativeFilename );
+      Element.DocumentInfo.Project.SetModified();
+    }
+
+
+
+    private void btnRemoveExternalDependency_Click( object sender, EventArgs e )
+    {
+      if ( listExternalDependencies.SelectedIndex == -1 )
+      {
+        return;
+      }
+      Element.ExternalDependencies.DependentOnFile.RemoveAt( listExternalDependencies.SelectedIndex );
+      listExternalDependencies.Items.RemoveAt( listExternalDependencies.SelectedIndex );
+      Element.DocumentInfo.Project.SetModified();
+    }
+
 
   }
 }

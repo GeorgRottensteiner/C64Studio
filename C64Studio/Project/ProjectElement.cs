@@ -66,6 +66,7 @@ namespace C64Studio
     public Types.CompileTargetType TargetType = Types.CompileTargetType.NONE;
     public Types.CompileTargetType CompileTarget = Types.CompileTargetType.NONE;
     public FileDependency   ForcedDependency = new FileDependency();
+    public FileDependency   ExternalDependencies = new FileDependency();
     // per setting
     public GR.Collections.Map<string,PerConfigSettings>     Settings = new GR.Collections.Map<string, PerConfigSettings>();
     public bool             IsShown = false;

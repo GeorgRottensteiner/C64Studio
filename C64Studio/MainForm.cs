@@ -5340,6 +5340,26 @@ namespace C64Studio
           Document.DeducedDependency[Configuration.Name] = buildState;
         }
         buildState.Clear();
+
+        // auto-add all external dependencies with their current time stamp
+        if ( Document.Element != null )
+        {
+          foreach ( var externalDependency in Document.Element.ExternalDependencies.DependentOnFile )
+          {
+            string fullPath = Document.Project.FullPath( externalDependency.Filename );
+
+            DateTime    fileTime = new DateTime();
+
+            try
+            {
+              fileTime = System.IO.File.GetLastWriteTime( fullPath );
+            }
+            catch
+            {
+            }
+            buildState.BuildState[fullPath] = fileTime;
+          }
+        }
       }
 
       if ( Document.Element != null )
