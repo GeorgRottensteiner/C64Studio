@@ -2,7 +2,7 @@
 o Still having problems with creating a new solution/project when another solution/project is loaded.
 	Both the times I have done this, it's like it's overwritting the previous .s64 file!!!
 o Start without existing settings, code colors blank!! Crash on exit?
-
+o Basic-Loader (ASM to BASIC-Loader)
 o Zeilenabstand nicht fixiert, einstellbar
 o  when creating a new project, shouldn't you clear the breakpoint list ?
 o Char screen editor, move chars, optionally do not move other chars around
