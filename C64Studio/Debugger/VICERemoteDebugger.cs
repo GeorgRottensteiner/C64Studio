@@ -420,6 +420,28 @@ namespace C64Studio
       catch ( System.Net.Sockets.SocketException se )
       {
         Core.AddToOutput( "ReceiveData Exception:" + se.ToString() );
+        Core.AddToOutput( "Connection to VICE was closed" );
+        /*
+        DebugEvent( new DebugEventData()
+        {
+          Type = C64Studio.DebugEvent.EMULATOR_CLOSED
+        } );*/
+        m_Request.Type = Request.NONE;
+        DisconnectFromEmulator();
+
+        Core.AddToOutput( "Attempt reconnect" );
+        if ( !ConnectToEmulator() )
+        {
+          Core.AddToOutput( "Reconnect failed, stopping debug session" );
+          DebugEvent( new DebugEventData()
+          {
+            Type = C64Studio.DebugEvent.EMULATOR_CLOSED
+          } );
+        }
+        else
+        {
+          Core.AddToOutput( "Reconnect successful" );
+        }
       }
     }
 

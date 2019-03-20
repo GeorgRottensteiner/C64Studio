@@ -46,6 +46,7 @@ namespace C64Studio
     public ValueTableEditor       m_ValueTableEditor = null;
     public Help                   m_Help = new Help();
     public FormFindReplace        m_FindReplace = null;
+    public FormFilesChanged       m_FilesChanged = null;
 
     public SearchResults          m_SearchResults = new SearchResults();
     public Perspective            m_ActivePerspective = Perspective.DEBUG;
@@ -6258,14 +6259,35 @@ namespace C64Studio
       }
       else
       {
+        /*
         if ( System.Windows.Forms.MessageBox.Show( this, "The file " + Doc.DocumentInfo.FullPath + " has changed externally. Do you want to reload the file?", "Reload externally changed file?", MessageBoxButtons.YesNo ) == DialogResult.Yes )
         {
           int cursorLine = Doc.CursorLine;
           Doc.Load();
           Doc.SetModified();
           Doc.SetCursorToLine( cursorLine, true );
-        }
+        }*/
+
         m_ExternallyChangedDocuments.Remove( Doc );
+        if ( m_FilesChanged == null )
+        {
+          m_FilesChanged = new FormFilesChanged( Doc.DocumentInfo );
+          if ( m_FilesChanged.ShowDialog( this ) == DialogResult.OK )
+          {
+            foreach ( var changedDoc in m_FilesChanged.ChangedDocuments )
+            {
+              int cursorLine = changedDoc.BaseDoc.CursorLine;
+              changedDoc.BaseDoc.Load();
+              changedDoc.BaseDoc.SetModified();
+              changedDoc.BaseDoc.SetCursorToLine( cursorLine, true );
+            }
+            m_FilesChanged = null;
+          }
+        }
+        else
+        {
+          m_FilesChanged.AddChangedFile( Doc.DocumentInfo );
+        }
       }
     }
 

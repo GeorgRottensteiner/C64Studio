@@ -87,6 +87,12 @@
     <Compile Include="Dialogs\FormGoto.Designer.cs">
       <DependentUpon>FormGoto.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\FormFilesChanged.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\FormFilesChanged.Designer.cs">
+      <DependentUpon>FormFilesChanged.cs</DependentUpon>
+    </Compile>
     <Compile Include="Documents\CompilableDocument.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -455,6 +461,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\FormGoto.resx">
       <DependentUpon>FormGoto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FormFilesChanged.resx">
+      <DependentUpon>FormFilesChanged.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Documents\CompilableDocument.resx">
       <DependentUpon>CompilableDocument.cs</DependentUpon>
