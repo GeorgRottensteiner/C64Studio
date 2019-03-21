@@ -512,9 +512,7 @@ namespace C64Studio
     protected virtual void OnFileChanged()
     {
       // notify main form
-      //Debug.Log( "File " + DocumentInfo.DocumentFilename + " has changed!" );
       Core.MainForm.OnDocumentExternallyChanged( this );
-      //Debug.Log( "File " + DocumentInfo.DocumentFilename + " has changed!" );
     }
 
 

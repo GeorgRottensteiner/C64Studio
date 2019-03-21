@@ -6259,21 +6259,12 @@ namespace C64Studio
       }
       else
       {
-        /*
-        if ( System.Windows.Forms.MessageBox.Show( this, "The file " + Doc.DocumentInfo.FullPath + " has changed externally. Do you want to reload the file?", "Reload externally changed file?", MessageBoxButtons.YesNo ) == DialogResult.Yes )
-        {
-          int cursorLine = Doc.CursorLine;
-          Doc.Load();
-          Doc.SetModified();
-          Doc.SetCursorToLine( cursorLine, true );
-        }*/
-
-        m_ExternallyChangedDocuments.Remove( Doc );
         if ( m_FilesChanged == null )
         {
           m_FilesChanged = new FormFilesChanged( Doc.DocumentInfo );
           if ( m_FilesChanged.ShowDialog( this ) == DialogResult.OK )
           {
+            // TODO - prefer project files (need to be watched as well)
             foreach ( var changedDoc in m_FilesChanged.ChangedDocuments )
             {
               int cursorLine = changedDoc.BaseDoc.CursorLine;
@@ -6281,11 +6272,14 @@ namespace C64Studio
               changedDoc.BaseDoc.SetModified();
               changedDoc.BaseDoc.SetCursorToLine( cursorLine, true );
             }
-            m_FilesChanged = null;
           }
+          m_FilesChanged.Dispose();
+          m_FilesChanged = null;
+          m_ExternallyChangedDocuments.Clear();
         }
         else
         {
+          m_ExternallyChangedDocuments.Remove( Doc );
           m_FilesChanged.AddChangedFile( Doc.DocumentInfo );
         }
       }
