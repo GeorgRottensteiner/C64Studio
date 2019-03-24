@@ -37,7 +37,7 @@ namespace C64Studio
       {
         item.Text += ",y";
       }
-      item.SubItems.Add( Watch.Type.ToString() );
+      item.SubItems.Add( TypeToString( Watch ) );
       if ( Watch.DisplayMemory )
       {
         item.SubItems.Add( "(unread)" );
@@ -116,6 +116,12 @@ namespace C64Studio
             Debug.Log( "Watch entry received different size than expected!" );
           }
 
+          if ( watchEntry.CurrentValue.Length == 0 )
+          {
+            item.SubItems[2].Text = "(unread)";
+            continue;
+          }
+
           switch ( watchEntry.Type )
           {
             case WatchEntry.DisplayType.HEX:
@@ -124,12 +130,26 @@ namespace C64Studio
                 StringBuilder sb = new StringBuilder();
 
                 sb.Append( "$" );
-                for ( int i = 0; i < Data.Length; ++i )
+                if ( watchEntry.BigEndian )
                 {
-                  sb.Append( Data.ByteAt( i ).ToString( "x2" ) );
-                  if ( i + 1 < Data.Length )
+                  for ( int i = 0; i < Data.Length; ++i )
                   {
-                    sb.Append( " " );
+                    sb.Append( Data.ByteAt( i ).ToString( "x2" ) );
+                    if ( i + 1 < Data.Length )
+                    {
+                      sb.Append( " " );
+                    }
+                  }
+                }
+                else
+                {
+                  for ( int i = 0; i < Data.Length; ++i )
+                  {
+                    sb.Append( Data.ByteAt( (int)Data.Length - 1 - i ).ToString( "x2" ) );
+                    if ( i + 1 < Data.Length )
+                    {
+                      sb.Append( " " );
+                    }
                   }
                 }
                 item.SubItems[2].Text = sb.ToString();
@@ -148,12 +168,21 @@ namespace C64Studio
               {
                 item.SubItems[2].Text = Data.ByteAt( 0 ).ToString();
               }
-              else
+              else if ( watchEntry.BigEndian )
               {
                 string totalText = "";
                 for ( uint i = 0; i < Data.Length; ++i )
                 {
                   totalText += Data.ByteAt( (int)i ).ToString( "d" ) + " ";
+                }
+                item.SubItems[2].Text = totalText;
+              }
+              else
+              {
+                string totalText = "";
+                for ( uint i = 0; i < Data.Length; ++i )
+                {
+                  totalText += Data.ByteAt( (int)Data.Length - 1 - (int)i ).ToString( "d" ) + " ";
                 }
                 item.SubItems[2].Text = totalText;
               }
@@ -246,7 +275,7 @@ namespace C64Studio
         WatchEntry    entry = (WatchEntry)item.Tag;
 
         entry.Type = WatchEntry.DisplayType.HEX;
-        item.SubItems[1].Text = entry.Type.ToString();
+        item.SubItems[1].Text = TypeToString( entry );
         UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
       }
     }
@@ -260,7 +289,7 @@ namespace C64Studio
         WatchEntry entry = (WatchEntry)item.Tag;
 
         entry.Type = WatchEntry.DisplayType.DEZ;
-        item.SubItems[1].Text = entry.Type.ToString();
+        item.SubItems[1].Text = TypeToString( entry );
         UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
       }
     }
@@ -274,7 +303,7 @@ namespace C64Studio
         WatchEntry entry = (WatchEntry)item.Tag;
 
         entry.Type = WatchEntry.DisplayType.BINARY;
-        item.SubItems[1].Text = entry.Type.ToString();
+        item.SubItems[1].Text = TypeToString( entry );
         UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
       }
     }
@@ -296,7 +325,6 @@ namespace C64Studio
       {
         Core.Debugging.Debugger.RefreshRegistersAndWatches();
       }
-
     }
 
 
@@ -322,6 +350,7 @@ namespace C64Studio
 
       watchReadFromMemoryToolStripMenuItem.Checked = entry.DisplayMemory;
       displayBoundsToolStripMenuItem.Visible = entry.DisplayMemory;
+      toggleEndiannessToolStripMenuItem.Checked = !entry.BigEndian;
 
       moveDownToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] + 1 < listWatch.Items.Count );
       moveUpToolStripMenuItem.Enabled = ( listWatch.SelectedIndices[0] > 0 );
@@ -373,7 +402,7 @@ namespace C64Studio
           {
             itemToModify.Text += ",y";
           }
-          itemToModify.SubItems.Add( watchEntry.Type.ToString() );
+          itemToModify.SubItems.Add( TypeToString( watchEntry ) );
           if ( watchEntry.DisplayMemory )
           {
             itemToModify.SubItems.Add( "(unread)" );
@@ -420,6 +449,18 @@ namespace C64Studio
           }
         }
       }
+    }
+
+
+
+    private string TypeToString( WatchEntry Entry )
+    {
+      string    result = Entry.Type.ToString();
+      if ( !Entry.BigEndian )
+      {
+        result += ", LE";
+      }
+      return result;
     }
 
 
@@ -672,6 +713,23 @@ namespace C64Studio
 
       
     }
+
+
+
+    private void toggleEndiannessToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      toggleEndiannessToolStripMenuItem.Checked = !toggleEndiannessToolStripMenuItem.Checked;
+      foreach ( ListViewItem item in listWatch.SelectedItems )
+      {
+        WatchEntry entry = (WatchEntry)item.Tag;
+
+        entry.BigEndian = !toggleEndiannessToolStripMenuItem.Checked;
+        item.SubItems[1].Text = TypeToString( entry );
+
+        UpdateValue( entry.Name, entry.IndexedX, entry.IndexedY, entry.CurrentValue );
+      }
+    }
+
 
 
   }
