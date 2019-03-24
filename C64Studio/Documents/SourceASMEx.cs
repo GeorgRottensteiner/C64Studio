@@ -642,6 +642,9 @@ namespace C64Studio
 
     public void ToggleBreakpoint( int LineIndex )
     {
+      ToggleBreakpointOnEvent( LineIndex );
+      return;
+
       // break point set
       if ( !m_BreakPoints.ContainsKey( LineIndex ) )
       {
