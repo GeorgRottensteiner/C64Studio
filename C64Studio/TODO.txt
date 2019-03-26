@@ -1,4 +1,6 @@
 ﻿C64Studio
+o wie kann ich beim laufenden debuggen den Speicher ändern? (die Register sind ja änderbar - der Mem auch?)
+o wie kann ich dem Debugger beibringen, dass er das Mem-Fenster weiterhin mit der gew. Adresse anzeigt?
 o Still having problems with creating a new solution/project when another solution/project is loaded.
 	Both the times I have done this, it's like it's overwritting the previous .s64 file!!!
 o Start without existing settings, code colors blank!! Crash on exit?
