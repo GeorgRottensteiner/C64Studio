@@ -48,11 +48,12 @@
       this.bytes16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.bytes32ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.watchReadFromMemoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toggleEndiannessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-      this.removeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+      this.removeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.contextDebugItem.SuspendLayout();
       this.SuspendLayout();
@@ -96,6 +97,7 @@
             this.displayAsToolStripMenuItem,
             this.displayBoundsToolStripMenuItem,
             this.watchReadFromMemoryToolStripMenuItem,
+            this.toggleEndiannessToolStripMenuItem,
             this.toolStripSeparator1,
             this.moveUpToolStripMenuItem,
             this.moveDownToolStripMenuItem,
@@ -206,22 +208,17 @@
       this.watchReadFromMemoryToolStripMenuItem.Text = "Read from memory";
       this.watchReadFromMemoryToolStripMenuItem.Click += new System.EventHandler(this.watchReadFromMemoryToolStripMenuItem_Click);
       // 
+      // toggleEndiannessToolStripMenuItem
+      // 
+      this.toggleEndiannessToolStripMenuItem.Name = "toggleEndiannessToolStripMenuItem";
+      this.toggleEndiannessToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+      this.toggleEndiannessToolStripMenuItem.Text = "Little Endian";
+      this.toggleEndiannessToolStripMenuItem.Click += new System.EventHandler(this.toggleEndiannessToolStripMenuItem_Click);
+      // 
       // toolStripSeparator1
       // 
       this.toolStripSeparator1.Name = "toolStripSeparator1";
       this.toolStripSeparator1.Size = new System.Drawing.Size(174, 6);
-      // 
-      // removeEntryToolStripMenuItem
-      // 
-      this.removeEntryToolStripMenuItem.Name = "removeEntryToolStripMenuItem";
-      this.removeEntryToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
-      this.removeEntryToolStripMenuItem.Text = "&Remove entry";
-      this.removeEntryToolStripMenuItem.Click += new System.EventHandler(this.removeEntryToolStripMenuItem_Click);
-      // 
-      // toolStripSeparator2
-      // 
-      this.toolStripSeparator2.Name = "toolStripSeparator2";
-      this.toolStripSeparator2.Size = new System.Drawing.Size(174, 6);
       // 
       // moveUpToolStripMenuItem
       // 
@@ -236,6 +233,18 @@
       this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
       this.moveDownToolStripMenuItem.Text = "Move Down";
       this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator2
+      // 
+      this.toolStripSeparator2.Name = "toolStripSeparator2";
+      this.toolStripSeparator2.Size = new System.Drawing.Size(174, 6);
+      // 
+      // removeEntryToolStripMenuItem
+      // 
+      this.removeEntryToolStripMenuItem.Name = "removeEntryToolStripMenuItem";
+      this.removeEntryToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+      this.removeEntryToolStripMenuItem.Text = "&Remove entry";
+      this.removeEntryToolStripMenuItem.Click += new System.EventHandler(this.removeEntryToolStripMenuItem_Click);
       // 
       // DebugWatch
       // 
@@ -275,8 +284,6 @@
     private System.Windows.Forms.ToolStripMenuItem moveUpToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-
-
-
+    private System.Windows.Forms.ToolStripMenuItem toggleEndiannessToolStripMenuItem;
   }
 }

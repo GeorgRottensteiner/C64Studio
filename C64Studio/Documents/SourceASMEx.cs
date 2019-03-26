@@ -642,28 +642,7 @@ namespace C64Studio
 
     public void ToggleBreakpoint( int LineIndex )
     {
-      // break point set
-      if ( !m_BreakPoints.ContainsKey( LineIndex ) )
-      {
-        Types.Breakpoint bp = new C64Studio.Types.Breakpoint();
-
-        bp.DocumentFilename = DocumentInfo.FullPath;
-        bp.LineIndex = LineIndex;
-
-        m_BreakPoints.Add( LineIndex, bp );
-
-        InvalidateMarkerAreaAtLine( LineIndex );
-      }
-      else
-      {
-        if ( m_BreakPoints.ContainsKey( LineIndex ) )
-        {
-          Types.Breakpoint bp = m_BreakPoints[LineIndex];
-          m_BreakPoints.Remove( LineIndex );
-
-          InvalidateMarkerAreaAtLine( LineIndex );
-        }
-      }
+      ToggleBreakpointOnEvent( LineIndex );
     }
 
 

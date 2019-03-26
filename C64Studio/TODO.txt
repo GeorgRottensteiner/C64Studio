@@ -8,16 +8,12 @@ o Basic-Loader (ASM to BASIC-Loader)
 o Zeilenabstand nicht fixiert, einstellbar
 o  when creating a new project, shouldn't you clear the breakpoint list ?
 o Char screen editor, move chars, optionally do not move other chars around
-o Version control support (how?)
+o Version control support, GIT/SVN (how?)
 o Comparison of file (as addon to version control)
 o Intellisense in Kommentaren nicht mehr
-o Breakpoints im Source tauchen im BP-Dialog nicht auf?
 o beim exportieren von Map-Daten, funktioniert der wrap m.E. nicht richtig. Zumindest bei den Tiles werden die nicht wie gewünscht "gewrappt
 o Bessere Anzeige der optionalen Zyklen
-
-o Debug Watch - Variablen auch gedreht anzeigen? (lo<>hi)
 o Mehrere Memory-Fenster, machbar?
-
 o Combined line cycle and byte count info (currently only info of first line is shown in border!)
 o line separation by ':' messes up cycle/byte count (see above) but also label locationing!
 
@@ -38,7 +34,6 @@ o Charset editor, multi-chars (1x2, 2x2, ..) in one window, with adjustable char
 o Hätte wieder mal einen kleinen Feature-Request (falls es das nicht eh' schon gibt und ich nur nicht weiß, wo der Knopf ist):
   Im Debugger würde ich gerne die Cycle-Zahl auf NULL stellen können, um die Cycles ab einem bestimmten Punkt starten und zählen zu können.
 
-o Source-Code Repo integration (git,svn)
 o Linux: 
   WINEPREFIX=~/.winedir WINEARCH=win32 wineboot 
   WINEPREFIX=~/.winedir winetricks dotnet35sp1 -q 

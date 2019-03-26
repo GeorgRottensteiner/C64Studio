@@ -23,6 +23,7 @@ namespace C64Studio
     public bool                 IndexedX = false;
     public bool                 IndexedY = false;
     public bool                 LiteralValue = false;
+    public bool                 BigEndian = true;
 
 
 
@@ -38,6 +39,7 @@ namespace C64Studio
       chunkWatch.AppendU8( (byte)( IndexedY ? 1 : 0 ) );
       chunkWatch.AppendU8( (byte)( LiteralValue ? 1 : 0 ) );
       chunkWatch.AppendI32( Address );
+      chunkWatch.AppendU8( (byte)( BigEndian ? 1 : 0 ) );
 
       return chunkWatch.ToBuffer();
     }
@@ -54,6 +56,7 @@ namespace C64Studio
       IndexedY      = ( MemIn.ReadUInt8() != 0 );
       LiteralValue  = ( MemIn.ReadUInt8() != 0 );
       Address       = MemIn.ReadInt32();
+      BigEndian     = ( MemIn.ReadUInt8() != 0 );
     }
   }
 }
