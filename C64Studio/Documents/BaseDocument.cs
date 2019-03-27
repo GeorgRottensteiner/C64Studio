@@ -1,4 +1,5 @@
 ﻿using C64Studio.Types;
+using GR.Memory;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -893,6 +894,25 @@ namespace C64Studio
         doc.Close();
       }
     }
+
+
+
+    protected bool SaveDocumentData( string SaveFilename, ByteBuffer Data, bool SaveAs )
+    {
+      DisableFileWatcher();
+      if ( !GR.IO.File.WriteAllBytes( SaveFilename, Data ) )
+      {
+        EnableFileWatcher();
+        return false;
+      }
+      if ( !SaveAs )
+      {
+        m_Modified = false;
+      }
+      EnableFileWatcher();
+      return true;
+    }
+
 
     
   }

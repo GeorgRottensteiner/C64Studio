@@ -707,6 +707,8 @@ namespace C64Studio
 
     public void OpenProject( string Filename )
     {
+      DisableFileWatcher();
+
       Clear();
 
       GR.Memory.ByteBuffer    projectFile = GR.IO.File.ReadAllBytes( Filename );
@@ -714,6 +716,8 @@ namespace C64Studio
       DocumentInfo.DocumentFilename = Filename;
 
       OpenProject( projectFile );
+
+      EnableFileWatcher();
     }
 
 
@@ -826,15 +830,8 @@ namespace C64Studio
         m_Charset.UsedTiles = GR.Convert.ToU32( editCharactersFrom.Text );
       }
       GR.Memory.ByteBuffer projectFile = SaveToBuffer();
-      if ( !GR.IO.File.WriteAllBytes( saveFilename, projectFile ) )
-      {
-        return false;
-      }
-      if ( !SaveAs )
-      {
-        Modified = false;
-      }
-      return true;
+
+      return SaveDocumentData( saveFilename, projectFile, SaveAs );
     }
 
 

@@ -809,6 +809,7 @@ namespace C64Studio
       screenVScroll.Value = m_GraphicScreenProject.ScreenOffsetY;
 
       Redraw();
+      EnableFileWatcher();
     }
 
 
@@ -889,16 +890,10 @@ namespace C64Studio
       {
         Name = DocumentInfo.DocumentFilename;
       }
+
       GR.Memory.ByteBuffer projectFile = SaveToBuffer();
-      if ( !GR.IO.File.WriteAllBytes( saveFilename, projectFile ) )
-      {
-        return false;
-      }
-      if ( !SaveAs )
-      {
-        Modified = false;
-      }
-      return true;
+
+      return SaveDocumentData( saveFilename, projectFile, SaveAs );
     }
 
 

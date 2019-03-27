@@ -1077,6 +1077,8 @@ namespace C64Studio
 
       RedrawColorChooser();
       RedrawFullScreen();
+
+      EnableFileWatcher();
       return true;
     }
 
@@ -1157,12 +1159,7 @@ namespace C64Studio
 
       GR.Memory.ByteBuffer projectFile = SaveToBuffer();
 
-      if ( !GR.IO.File.WriteAllBytes( saveFilename, projectFile ) )
-      {
-        return false;
-      }
-      Modified = false;
-      return true;
+      return SaveDocumentData( saveFilename, projectFile, SaveAs );
     }
 
 

@@ -876,6 +876,7 @@ namespace C64Studio
 
         saveSpriteProjectToolStripMenuItem.Enabled = true;
         closeCharsetProjectToolStripMenuItem.Enabled = true;
+        EnableFileWatcher();
         return true;
       }
       else if ( System.IO.Path.GetExtension( Filename ).ToUpper() != ".SPRITEPROJECT" )
@@ -909,6 +910,7 @@ namespace C64Studio
 
         saveSpriteProjectToolStripMenuItem.Enabled = true;
         closeCharsetProjectToolStripMenuItem.Enabled = true;
+        EnableFileWatcher();
         return true;
       }
 
@@ -1027,6 +1029,7 @@ namespace C64Studio
       saveSpriteProjectToolStripMenuItem.Enabled = true;
       closeCharsetProjectToolStripMenuItem.Enabled = true;
       comboSprite.SelectedIndex = 0;
+      EnableFileWatcher();
       return true;
     }
 
@@ -1115,12 +1118,8 @@ namespace C64Studio
       }
 
       GR.Memory.ByteBuffer dataToSave = SaveToBuffer();
-      if ( !GR.IO.File.WriteAllBytes( saveFilename, dataToSave ) )
-      {
-        return false;
-      }
-      Modified = false;
-      return true;
+
+      return SaveDocumentData( saveFilename, dataToSave, SaveAs );
     }
 
 

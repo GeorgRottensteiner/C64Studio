@@ -141,6 +141,7 @@ namespace C64Studio
 
       saveValueTableProjectToolStripMenuItem.Enabled = true;
       closeValueTableProjectToolStripMenuItem.Enabled = true;
+      EnableFileWatcher();
       return true;
     }
 
@@ -211,12 +212,8 @@ namespace C64Studio
       }
 
       GR.Memory.ByteBuffer dataToSave = SaveToBuffer();
-      if ( !GR.IO.File.WriteAllBytes( saveFilename, dataToSave ) )
-      {
-        return false;
-      }
-      Modified = false;
-      return true;
+
+      return SaveDocumentData( saveFilename, dataToSave, SaveAs );
     }
 
 
