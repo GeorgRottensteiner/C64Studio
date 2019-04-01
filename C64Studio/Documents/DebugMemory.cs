@@ -8,6 +8,8 @@ using WeifenLuo.WinFormsUI.Docking;
 using Be.Windows.Forms;
 using System.Drawing;
 using C64Studio.Types;
+using GR.Memory;
+using C64Studio.Debugger;
 
 namespace C64Studio
 {
@@ -29,16 +31,6 @@ namespace C64Studio
       SPRITES_MULTICOLOR4
     };
 
-    private class MemoryView
-    {
-      public GR.Memory.ByteBuffer      RAM = new GR.Memory.ByteBuffer( 65536 );
-      public bool[]                    RAMChanged = new bool[65536];
-      public Dictionary<int,int>       ValidMemory = new Dictionary<int, int>();
-    };
-
-    private MemoryView                m_MemoryCPU     = new MemoryView();
-    private MemoryView                m_MemoryRAM     = new MemoryView();
-    private MemoryView                m_ActiveMemory;
 
     public Project                    DebuggedProject = null;
 
@@ -57,12 +49,14 @@ namespace C64Studio
 
     public class DebugMemoryEvent
     {
-      public int      Offset = 0;
-      public int      Length = 0;
+      public DebugMemory      Viewer = null;
+      public int              Offset = 0;
+      public int              Length = 0;
 
 
-      public DebugMemoryEvent( int Offset, int Length )
+      public DebugMemoryEvent( DebugMemory Viewer, int Offset, int Length )
       {
+        this.Viewer = Viewer;
         this.Offset = Offset;
         this.Length = Length;
       }
@@ -80,13 +74,11 @@ namespace C64Studio
 
       this.Core = Core;
 
-      m_ActiveMemory = m_MemoryCPU;
-
-      SetHexData( m_ActiveMemory.RAM );
+      Core.Debugging.MemoryViews.Add( this );
+      SetHexData( Core.Debugging.ActiveMemory.RAM );
      
       hexView.SelectedByteProvider = new DynamicByteSelectionProvider( 65536 );
       hexView.ViewScrolled += new EventHandler( hexView_ViewScrolled );
-
       hexView.ContextMenuStrip.Items.Add( "-" );
 
       m_MenuItemHexStringView = new ToolStripMenuItem( "Set to String View" );
@@ -103,6 +95,8 @@ namespace C64Studio
       hexView.ContextMenuStrip.Items.Add( m_MenuItemHexSpriteView );
 
       SetMemoryDisplayType();
+
+      ViewScrolled += new DebugMemory.DebugMemoryEventCallback( Core.MainForm.m_DebugMemory_ViewScrolled );
     }
 
 
@@ -259,7 +253,10 @@ namespace C64Studio
       {
         m_Offset = newValue;
 
-        ViewScrolled( this, new DebugMemoryEvent( m_Offset * hexView.BytesPerLine, hexView.BytesPerLine * hexView.VerticalByteCount ) );
+        if ( ViewScrolled != null )
+        {
+          ViewScrolled( this, new DebugMemoryEvent( this, m_Offset * hexView.BytesPerLine, hexView.BytesPerLine * hexView.VerticalByteCount ) );
+        }
       }
     }
 
@@ -277,6 +274,8 @@ namespace C64Studio
       long     oldOffset = hexView.VScrollPos;
 
       hexView.ByteProvider = new Be.Windows.Forms.DynamicByteProvider( Data.Data() );
+
+      Debug.Log( "DebugMemory::SetHexData called with " + oldOffset + ", setting " + Data.Length + " bytes" );
       hexView.PerformScrollToLine( oldOffset );
     }
 
@@ -302,6 +301,8 @@ namespace C64Studio
         if ( address >= 0 && address <= 65535 )
         {
           int line = address / hexView.BytesPerLine;
+
+          Debug.Log( "DebugMemory::Goto called with " + line );
 
           hexView.PerformScrollToLine( line );
           RefreshViewScroller();
@@ -355,82 +356,17 @@ namespace C64Studio
 
 
 
+    public ByteBuffer HexData
+    {
+      get;
+
+    }
+
+
+
     public void InvalidateAllMemory()
     {
-      m_ActiveMemory.ValidMemory.Clear();
-    }
-
-
-
-    private void ValidateMemory( int Offset, int Length )
-    {
-      foreach ( int offset in m_ActiveMemory.ValidMemory.Keys )
-      {
-        int     storedlength = m_ActiveMemory.ValidMemory[offset];
-
-        if ( ( Offset >= offset )
-        &&   ( Offset < offset + storedlength ) )
-        {
-          // we are at least partially in here
-          if ( Offset + Length < offset + storedlength )
-          {
-            // already fully validated
-            return;
-          }
-          Length -= Offset - offset;
-          Offset = offset + storedlength;
-          if ( Length == 0 )
-          {
-            return;
-          }
-        }
-      }
-      if ( Length > 0 )
-      {
-        m_ActiveMemory.ValidMemory.Add( Offset, Length );
-      }
-      // TODO normalize entries
-      /*
-      var enumerator = m_ValidMemory.GetEnumerator();
-
-      foreach ( int offset in m_ValidMemory.Keys )
-      {
-        int storedlength = m_ValidMemory[offset];
-
-        if ( ( Offset >= offset )
-        && ( Offset < offset + storedlength ) )
-        {
-          // we are at least partially in here
-          if ( Offset + Length < offset + storedlength )
-          {
-            // already fully validated
-            return;
-          }
-          Length -= Offset - offset;
-          Offset = offset + storedlength;
-          if ( Length == 0 )
-          {
-            return;
-          }
-        }
-      }*/
-    }
-
-
-
-    private bool IsMemoryValid( int Offset )
-    {
-      foreach ( int offset in m_ActiveMemory.ValidMemory.Keys )
-      {
-        int     storedlength = m_ActiveMemory.ValidMemory[offset];
-
-        if ( ( Offset >= offset )
-        &&   ( Offset < offset + storedlength ) )
-        {
-          return true;
-        }
-      }
-      return false;
+      Core.Debugging.ActiveMemory.ValidMemory.Clear();
     }
 
 
@@ -445,23 +381,25 @@ namespace C64Studio
 
         if ( Request.Reason != VICERemoteDebugger.RequestReason.MEMORY_FETCH )
         {
-          if ( ramByte != m_ActiveMemory.RAM.ByteAt( Offset + i ) )
+          /*
+          if ( ramByte != Core.Debugging.ActiveMemory.RAM.ByteAt( Offset + i ) )
           {
-            m_ActiveMemory.RAMChanged[Offset + i] = true;
+            Core.Debugging.ActiveMemory.RAMChanged[Offset + i] = true;
 
             hexView.SelectedByteProvider.SetByteSelectionState( Offset + i, true );
           }
           else
           {
-            m_ActiveMemory.RAMChanged[Offset + i] = false;
+            Core.Debugging.ActiveMemory.RAMChanged[Offset + i] = false;
 
             hexView.SelectedByteProvider.SetByteSelectionState( Offset + i, false );
-          }
+          }*/
+          hexView.SelectedByteProvider.SetByteSelectionState( Offset + i, Core.Debugging.ActiveMemory.RAMChanged[Offset + i] );
         }
-        m_ActiveMemory.RAM.SetU8At( Offset + i, ramByte );
+        //Core.Debugging.ActiveMemory.RAM.SetU8At( Offset + i, ramByte );
         hexView.ByteProvider.WriteByte( Offset + i, ramByte );
       }
-      ValidateMemory( Offset, (int)Data.Length );
+      //ValidateMemory( Offset, (int)Data.Length );
 
       hexView.Invalidate();
     }
@@ -477,37 +415,37 @@ namespace C64Studio
       {
         sb.Append( ( i * 16 ).ToString( "x4" ) );
         sb.Append( ": " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 0 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 0 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 1 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 1 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 2 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 2 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 3 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 3 ).ToString( "x2" ) );
         sb.Append( "  " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 4 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 4 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 5 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 5 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 6 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 6 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 7 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 7 ).ToString( "x2" ) );
         sb.Append( "  " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 8 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 8 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 9 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 9 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 10 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 10 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 11 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 11 ).ToString( "x2" ) );
         sb.Append( "  " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 12 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 12 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 13 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 13 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 14 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 14 ).ToString( "x2" ) );
         sb.Append( " " );
-        sb.Append( m_ActiveMemory.RAM.ByteAt( i * 16 + 15 ).ToString( "x2" ) );
+        sb.Append( Core.Debugging.ActiveMemory.RAM.ByteAt( i * 16 + 15 ).ToString( "x2" ) );
         sb.Append( "\r\n" );
       }
       Debug.Log( sb.ToString() );
@@ -642,6 +580,15 @@ namespace C64Studio
 
 
 
+    protected override void OnClosed( EventArgs e )
+    {
+      ViewScrolled -= new DebugMemory.DebugMemoryEventCallback( Core.MainForm.m_DebugMemory_ViewScrolled );
+      Core.Debugging.MemoryViews.Remove( this );
+      base.OnClosed( e );
+    }
+
+
+
     private void toolStripBtnMemoryFromCPU_Click( object sender, EventArgs e )
     {
       if ( toolStripBtnMemoryFromCPU.Checked )
@@ -657,16 +604,20 @@ namespace C64Studio
       {
         toolStripBtnMemoryFromCPU.Image = C64Studio.Properties.Resources.icon_memory_cpu.ToBitmap();
         toolStripBtnMemoryFromCPU.ToolTipText = "Show RAM as CPU sees it";
-        m_ActiveMemory = m_MemoryCPU;
+        Core.Debugging.ActiveMemory = Core.Debugging.MemoryCPU;
       }
       else
       {
         toolStripBtnMemoryFromCPU.Image = C64Studio.Properties.Resources.icon_memory_ram.ToBitmap();
         toolStripBtnMemoryFromCPU.ToolTipText = "Show RAM";
-        m_ActiveMemory = m_MemoryRAM;
+        Core.Debugging.ActiveMemory = Core.Debugging.MemoryRAM;
       }
-      SetHexData( m_ActiveMemory.RAM );
-      ViewScrolled( this, new DebugMemoryEvent( m_Offset * hexView.BytesPerLine, hexView.BytesPerLine * hexView.VerticalByteCount ) );
+      SetHexData( Core.Debugging.ActiveMemory.RAM );
+
+      if ( ViewScrolled != null )
+      {
+        ViewScrolled( this, new DebugMemoryEvent( this, m_Offset * hexView.BytesPerLine, hexView.BytesPerLine * hexView.VerticalByteCount ) );
+      }
     }
 
 
@@ -680,6 +631,20 @@ namespace C64Studio
 
       hexView.MarkedForeColor = ChangedColor;
     }
+
+
+
+    private void toolStripBtnAddView_Click( object sender, EventArgs e )
+    {
+      var document = new DebugMemory( Core );
+      document.ShowHint = DockState.Float;
+      document.Core = Core;
+      document.Text = "Memory View";
+      document.Load();
+      document.Show( Core.MainForm.panelMain );
+    }
+
+
 
   }
 }

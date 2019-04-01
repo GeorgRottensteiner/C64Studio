@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugger\MemoryView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Breakpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\CIA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Processor.cs" />

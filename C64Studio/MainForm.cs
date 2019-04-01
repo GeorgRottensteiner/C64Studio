@@ -599,7 +599,6 @@ namespace C64Studio
       AddToolWindow( ToolWindowType.DEBUG_REGISTERS, m_DebugRegisters, DockState.DockRight, debugRegistersToolStripMenuItem, false, true );
       AddToolWindow( ToolWindowType.DEBUG_WATCH, m_DebugWatch, DockState.DockBottom, debugWatchToolStripMenuItem, false, true );
       AddToolWindow( ToolWindowType.DEBUG_MEMORY, m_DebugMemory, DockState.DockRight, debugMemoryToolStripMenuItem, false, true );
-      m_DebugMemory.ViewScrolled += new DebugMemory.DebugMemoryEventCallback( m_DebugMemory_ViewScrolled );
       AddToolWindow( ToolWindowType.DEBUG_BREAKPOINTS, m_DebugBreakpoints, DockState.DockRight, breakpointsToolStripMenuItem, false, true );
       m_DebugBreakpoints.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );
       AddToolWindow( ToolWindowType.DISASSEMBLER, m_Disassembler, DockState.Document, disassemblerToolStripMenuItem, false, false );
@@ -1517,15 +1516,15 @@ namespace C64Studio
 
 
 
-    void m_DebugMemory_ViewScrolled( object Sender, DebugMemory.DebugMemoryEvent Event )
+    public void m_DebugMemory_ViewScrolled( object Sender, DebugMemory.DebugMemoryEvent Event )
     {
       if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
       {
         // request new memory
-        VICERemoteDebugger.RequestData requestRefresh = new VICERemoteDebugger.RequestData(VICERemoteDebugger.Request.REFRESH_MEMORY, m_DebugMemory.MemoryStart, m_DebugMemory.MemorySize);
+        VICERemoteDebugger.RequestData requestRefresh = new VICERemoteDebugger.RequestData(VICERemoteDebugger.Request.REFRESH_MEMORY, Event.Viewer.MemoryStart, Event.Viewer.MemorySize );
         requestRefresh.Reason = VICERemoteDebugger.RequestReason.MEMORY_FETCH;
 
-        if ( !m_DebugMemory.MemoryAsCPU )
+        if ( !Event.Viewer.MemoryAsCPU )
         {
           requestRefresh.Type = VICERemoteDebugger.Request.REFRESH_MEMORY_RAM;
         }
@@ -1537,6 +1536,7 @@ namespace C64Studio
         IdleQueue.Add( debugFetch );
       }
     }
+
 
 
     public void UpdateMenuMRU()
@@ -5265,7 +5265,7 @@ namespace C64Studio
 
         if ( Request.Info == "C64Studio.MemDump" )
         {
-          m_DebugMemory.UpdateMemory( Request, Data );
+          StudioCore.Debugging.UpdateMemory( Request, Data );
         }
         else
         {
@@ -7146,6 +7146,20 @@ namespace C64Studio
         showResult( true, exception.Message );
       }
     }
+
+
+
+    private void memoryViewToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      var document = new DebugMemory( StudioCore );
+      document.ShowHint = DockState.Float;
+      document.Core = StudioCore;
+      document.Text = "Memory View";
+      document.Load();
+      document.Show( panelMain );
+    }
+
+
 
   }
 }

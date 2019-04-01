@@ -38,7 +38,9 @@
       this.toolStripBtnMemoryFromCPU = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnGoto = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnHexCaseSwitch = new System.Windows.Forms.ToolStripButton();
-      ( (System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
+      this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+      this.toolStripBtnAddView = new System.Windows.Forms.ToolStripButton();
+      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolDebugMemory.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -54,6 +56,7 @@
       this.hexView.InfoForeColor = System.Drawing.SystemColors.AppWorkspace;
       this.hexView.LineInfoVisible = true;
       this.hexView.Location = new System.Drawing.Point(0, 28);
+      this.hexView.MarkedForeColor = System.Drawing.Color.Empty;
       this.hexView.Name = "hexView";
       this.hexView.NumDigitsMemorySize = 4;
       this.hexView.ReadOnly = true;
@@ -75,7 +78,9 @@
             this.toolStripSeparator1,
             this.toolStripBtnMemoryFromCPU,
             this.toolStripBtnGoto,
-            this.toolStripBtnHexCaseSwitch} );
+            this.toolStripBtnHexCaseSwitch,
+            this.toolStripSeparator2,
+            this.toolStripBtnAddView});
       this.toolDebugMemory.Location = new System.Drawing.Point(0, 0);
       this.toolDebugMemory.Name = "toolDebugMemory";
       this.toolDebugMemory.Size = new System.Drawing.Size(431, 25);
@@ -134,26 +139,42 @@
       this.toolStripBtnMemoryFromCPU.Size = new System.Drawing.Size(23, 22);
       this.toolStripBtnMemoryFromCPU.ToolTipText = "Show Memory as CPU sees it";
       this.toolStripBtnMemoryFromCPU.Click += new System.EventHandler(this.toolStripBtnMemoryFromCPU_Click);
-      //  
-      // toolStripBtnGoto 
-      //  
+      // 
+      // toolStripBtnGoto
+      // 
       this.toolStripBtnGoto.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.toolStripBtnGoto.Image = global::C64Studio.Properties.Resources.DebugMemoryGoto;
       this.toolStripBtnGoto.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnGoto.Name = "toolStripBtnGoto";
-      this.toolStripBtnGoto.Size = new System.Drawing.Size( 23, 22 );
+      this.toolStripBtnGoto.Size = new System.Drawing.Size(23, 22);
       this.toolStripBtnGoto.Text = "Goto Address";
-      this.toolStripBtnGoto.Click += new System.EventHandler( this.toolStripButtonGoto_Click );
-      //  
-      // toolStripBtnHexCaseSwitch 
-      //  
+      this.toolStripBtnGoto.Click += new System.EventHandler(this.toolStripButtonGoto_Click);
+      // 
+      // toolStripBtnHexCaseSwitch
+      // 
       this.toolStripBtnHexCaseSwitch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.toolStripBtnHexCaseSwitch.Image = ( (System.Drawing.Image)( resources.GetObject( "toolStripBtnHexCaseSwitch.Image" ) ) );
+      this.toolStripBtnHexCaseSwitch.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnHexCaseSwitch.Image")));
       this.toolStripBtnHexCaseSwitch.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnHexCaseSwitch.Name = "toolStripBtnHexCaseSwitch";
-      this.toolStripBtnHexCaseSwitch.Size = new System.Drawing.Size( 23, 22 );
+      this.toolStripBtnHexCaseSwitch.Size = new System.Drawing.Size(23, 22);
       this.toolStripBtnHexCaseSwitch.Text = "Switch Capital";
-      this.toolStripBtnHexCaseSwitch.Click += new System.EventHandler( this.toolStripBtnHexCaseSwitch_Click );       // 
+      this.toolStripBtnHexCaseSwitch.Click += new System.EventHandler(this.toolStripBtnHexCaseSwitch_Click);
+      // 
+      // toolStripSeparator2
+      // 
+      this.toolStripSeparator2.Name = "toolStripSeparator2";
+      this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+      // 
+      // toolStripBtnAddView
+      // 
+      this.toolStripBtnAddView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripBtnAddView.Image = global::C64Studio.Properties.Resources.add;
+      this.toolStripBtnAddView.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripBtnAddView.Name = "toolStripBtnAddView";
+      this.toolStripBtnAddView.Size = new System.Drawing.Size(23, 22);
+      this.toolStripBtnAddView.Text = "Add View";
+      this.toolStripBtnAddView.Click += new System.EventHandler(this.toolStripBtnAddView_Click);
+      // 
       // DebugMemory
       // 
       this.ClientSize = new System.Drawing.Size(431, 485);
@@ -181,6 +202,7 @@
     private System.Windows.Forms.ToolStripButton toolStripBtnMemoryFromCPU;
     private System.Windows.Forms.ToolStripButton toolStripBtnGoto;
     private System.Windows.Forms.ToolStripButton toolStripBtnHexCaseSwitch;
-
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+    private System.Windows.Forms.ToolStripButton toolStripBtnAddView;
   }
 }

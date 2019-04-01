@@ -200,6 +200,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
+      this.memoryViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -272,6 +273,7 @@
             this.fileNewMapEditorToolStripMenuItem,
             this.valueTableToolStripMenuItem,
             this.fileNewBinaryEditorToolStripMenuItem,
+            this.memoryViewToolStripMenuItem,
             this.mediaToolStripMenuItem});
       this.newToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolNewItem;
       this.newToolStripMenuItem.Name = "newToolStripMenuItem";
@@ -1216,7 +1218,7 @@
             this.mainToolPrint});
       this.mainTools.Location = new System.Drawing.Point(0, 24);
       this.mainTools.Name = "mainTools";
-      this.mainTools.Size = new System.Drawing.Size(780, 25);
+      this.mainTools.Size = new System.Drawing.Size(749, 25);
       this.mainTools.TabIndex = 4;
       this.mainTools.Text = "toolStrip1";
       // 
@@ -1635,6 +1637,13 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
+      // memoryViewToolStripMenuItem
+      // 
+      this.memoryViewToolStripMenuItem.Name = "memoryViewToolStripMenuItem";
+      this.memoryViewToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+      this.memoryViewToolStripMenuItem.Text = "Memory View";
+      this.memoryViewToolStripMenuItem.Click += new System.EventHandler(this.memoryViewToolStripMenuItem_Click);
+      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -1842,6 +1851,7 @@
     private System.Windows.Forms.ToolStripMenuItem valueTableEditorToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem fileRecentlyOpenedProjectsToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
+    private System.Windows.Forms.ToolStripMenuItem memoryViewToolStripMenuItem;
   }
 }
 

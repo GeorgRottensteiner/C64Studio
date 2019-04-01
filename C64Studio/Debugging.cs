@@ -1,9 +1,10 @@
-﻿using System;
+﻿using C64Studio.Debugger;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
-
+using GR.Memory;
 
 namespace C64Studio
 {
@@ -28,6 +29,13 @@ namespace C64Studio
     public Disassembly      DebugDisassembly      = null;
     public StudioCore       Core = null;
 
+    public MemoryView           MemoryCPU     = new MemoryView();
+    public MemoryView           MemoryRAM     = new MemoryView();
+    public MemoryView           ActiveMemory  = null;
+
+    public List<DebugMemory>    MemoryViews = new List<DebugMemory>();
+
+
     public GR.Collections.Map<string, List<Types.Breakpoint>> BreakPoints = new GR.Collections.Map<string, List<C64Studio.Types.Breakpoint>>();
     public List<Types.Breakpoint>                             BreakpointsToAddAfterStartup = new List<C64Studio.Types.Breakpoint>();
 
@@ -35,6 +43,7 @@ namespace C64Studio
     public Debugging( StudioCore Core )
     {
       this.Core = Core;
+      ActiveMemory = MemoryCPU;
     }
 
 
@@ -578,5 +587,112 @@ namespace C64Studio
         //mainDebugBreak.Enabled = false;
       }
     }
+
+
+
+    private void ValidateMemory( int Offset, int Length )
+    {
+      foreach ( int offset in Core.Debugging.ActiveMemory.ValidMemory.Keys )
+      {
+        int     storedlength = Core.Debugging.ActiveMemory.ValidMemory[offset];
+
+        if ( ( Offset >= offset )
+        &&   ( Offset < offset + storedlength ) )
+        {
+          // we are at least partially in here
+          if ( Offset + Length < offset + storedlength )
+          {
+            // already fully validated
+            return;
+          }
+          Length -= Offset - offset;
+          Offset = offset + storedlength;
+          if ( Length == 0 )
+          {
+            return;
+          }
+        }
+      }
+      if ( Length > 0 )
+      {
+        Core.Debugging.ActiveMemory.ValidMemory.Add( Offset, Length );
+      }
+      // TODO normalize entries
+      /*
+      var enumerator = m_ValidMemory.GetEnumerator();
+
+      foreach ( int offset in m_ValidMemory.Keys )
+      {
+        int storedlength = m_ValidMemory[offset];
+
+        if ( ( Offset >= offset )
+        && ( Offset < offset + storedlength ) )
+        {
+          // we are at least partially in here
+          if ( Offset + Length < offset + storedlength )
+          {
+            // already fully validated
+            return;
+          }
+          Length -= Offset - offset;
+          Offset = offset + storedlength;
+          if ( Length == 0 )
+          {
+            return;
+          }
+        }
+      }*/
+    }
+
+
+
+    private bool IsMemoryValid( int Offset )
+    {
+      foreach ( int offset in Core.Debugging.ActiveMemory.ValidMemory.Keys )
+      {
+        int     storedlength = Core.Debugging.ActiveMemory.ValidMemory[offset];
+
+        if ( ( Offset >= offset )
+        && ( Offset < offset + storedlength ) )
+        {
+          return true;
+        }
+      }
+      return false;
+    }
+
+
+
+    internal void UpdateMemory( VICERemoteDebugger.RequestData Request, ByteBuffer Data )
+    {
+      int Offset = Request.Parameter1;
+
+      for ( int i = 0; i < Data.Length; ++i )
+      {
+        byte    ramByte = Data.ByteAt( i );
+
+        if ( Request.Reason != VICERemoteDebugger.RequestReason.MEMORY_FETCH )
+        {
+          if ( ramByte != Core.Debugging.ActiveMemory.RAM.ByteAt( Offset + i ) )
+          {
+            Core.Debugging.ActiveMemory.RAMChanged[Offset + i] = true;
+          }
+          else
+          {
+            Core.Debugging.ActiveMemory.RAMChanged[Offset + i] = false;
+          }
+        }
+        Core.Debugging.ActiveMemory.RAM.SetU8At( Offset + i, ramByte );
+      }
+      ValidateMemory( Offset, (int)Data.Length );
+
+      foreach ( var debugView in MemoryViews )
+      {
+        debugView.UpdateMemory( Request, Data );
+      }
+    }
+
+
+
   }
 }
