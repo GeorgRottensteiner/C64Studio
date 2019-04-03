@@ -907,7 +907,7 @@ namespace C64Studio
       }
       if ( !SaveAs )
       {
-        m_Modified = false;
+        SetUnmodified();
       }
       EnableFileWatcher();
       return true;
