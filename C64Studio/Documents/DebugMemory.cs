@@ -275,7 +275,7 @@ namespace C64Studio
 
       hexView.ByteProvider = new Be.Windows.Forms.DynamicByteProvider( Data.Data() );
 
-      Debug.Log( "DebugMemory::SetHexData called with " + oldOffset + ", setting " + Data.Length + " bytes" );
+      //Debug.Log( "DebugMemory::SetHexData called with " + oldOffset + ", setting " + Data.Length + " bytes" );
       hexView.PerformScrollToLine( oldOffset );
     }
 

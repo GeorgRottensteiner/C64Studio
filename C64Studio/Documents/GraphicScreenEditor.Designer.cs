@@ -639,6 +639,7 @@
       this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorY.TabIndex = 18;
       this.btnMirrorY.UseVisualStyleBackColor = true;
+      this.btnMirrorY.Click += new System.EventHandler(this.btnMirrorY_Click);
       // 
       // btnMirrorX
       // 
@@ -648,6 +649,7 @@
       this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorX.TabIndex = 19;
       this.btnMirrorX.UseVisualStyleBackColor = true;
+      this.btnMirrorX.Click += new System.EventHandler(this.btnMirrorX_Click);
       // 
       // btnShiftDown
       // 
@@ -657,6 +659,7 @@
       this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
       this.btnShiftDown.TabIndex = 20;
       this.btnShiftDown.UseVisualStyleBackColor = true;
+      this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
       // 
       // btnShiftUp
       // 
@@ -666,6 +669,7 @@
       this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
       this.btnShiftUp.TabIndex = 15;
       this.btnShiftUp.UseVisualStyleBackColor = true;
+      this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
       // 
       // btnShiftRight
       // 
@@ -675,6 +679,7 @@
       this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
       this.btnShiftRight.TabIndex = 16;
       this.btnShiftRight.UseVisualStyleBackColor = true;
+      this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
       // 
       // btnShiftLeft
       // 
@@ -684,6 +689,7 @@
       this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
       this.btnShiftLeft.TabIndex = 17;
       this.btnShiftLeft.UseVisualStyleBackColor = true;
+      this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
       // 
       // colorSelector
       // 

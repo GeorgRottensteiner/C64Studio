@@ -3224,7 +3224,155 @@ namespace C64Studio
 
 
 
+    private void btnMirrorX_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
 
+      for ( int j = 0; j < 8; ++j )
+      {
+        for ( int i = 0; i < 4; ++i )
+        {
+          uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j, 
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + 7 - i, m_SelectedChar.Y * 8 + j ) );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + 7 - i, m_SelectedChar.Y * 8 + j, curColor );
+        }
+      }
+
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.Invalidate();
+
+      Redraw();
+      pictureEditor.Invalidate();
+      Modified = true;
+    }
+
+
+
+    private void btnMirrorY_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+
+      for ( int j = 0; j < 4; ++j )
+      {
+        for ( int i = 0; i < 8; ++i )
+        {
+          uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j,
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7 - j ) );
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7 - j, curColor );
+        }
+      }
+
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.Invalidate();
+
+      Redraw();
+      pictureEditor.Invalidate();
+      Modified = true;
+    }
+
+
+
+    private void btnShiftUp_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+
+      for ( int i = 0; i < 8; ++i )
+      {
+        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 );
+        for ( int j = 0; j < 7; ++j )
+        {
+          
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j,
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + j + 1 ) );
+        }
+        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7, curColor );
+      }
+
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.Invalidate();
+
+      Redraw();
+      pictureEditor.Invalidate();
+      Modified = true;
+    }
+
+
+
+    private void btnShiftDown_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+
+      for ( int i = 0; i < 8; ++i )
+      {
+        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7 );
+        for ( int j = 0; j < 7; ++j )
+        {
+
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7 - j,
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 6 - j ) );
+        }
+        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8, curColor );
+      }
+
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.Invalidate();
+
+      Redraw();
+      pictureEditor.Invalidate();
+      Modified = true;
+    }
+
+
+
+    private void btnShiftRight_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+
+      for ( int i = 0; i < 8; ++i )
+      {
+        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + 7, m_SelectedChar.Y * 8 + i );
+        for ( int j = 0; j < 7; ++j )
+        {
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + 7 - j, m_SelectedChar.Y * 8 + i,
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + 6 - j, m_SelectedChar.Y * 8 + i ) );
+        }
+        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8, m_SelectedChar.Y * 8 + i, curColor );
+      }
+
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.Invalidate();
+
+      Redraw();
+      pictureEditor.Invalidate();
+      Modified = true;
+    }
+
+
+
+    private void btnShiftLeft_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+
+      for ( int i = 0; i < 8; ++i )
+      {
+        uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8, m_SelectedChar.Y * 8 + i );
+        for ( int j = 0; j < 7; ++j )
+        {
+          m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + j, m_SelectedChar.Y * 8 + i,
+            m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + j + 1, m_SelectedChar.Y * 8 + i ) );
+        }
+        m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + 7, m_SelectedChar.Y * 8 + i, curColor );
+      }
+
+      charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+      charEditor.Invalidate();
+
+      Redraw();
+      pictureEditor.Invalidate();
+      Modified = true;
+    }
   }
 }
 
