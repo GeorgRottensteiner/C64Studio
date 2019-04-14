@@ -1589,6 +1589,14 @@ namespace C64Studio
           GR.Image.FastImage imgSprite = mappedImage.GetImage( i * 24, j * 21, copyWidth, copyHeight ) as GR.Image.FastImage;
           ImportSprite( imgSprite, currentTargetSprite );
           imgSprite.Dispose();
+
+          if ( currentTargetSprite == m_CurrentSprite )
+          {
+            CurrentSpriteModified();
+            DoNotUpdateFromControls = true;
+            comboSpriteColor.SelectedIndex = m_SpriteProject.Sprites[currentTargetSprite].Color;
+            DoNotUpdateFromControls = false;
+          }
           RebuildSpriteImage( currentTargetSprite );
 
           panelSprites.InvalidateItemRect( currentTargetSprite );
