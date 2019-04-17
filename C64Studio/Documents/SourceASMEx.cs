@@ -727,6 +727,11 @@ namespace C64Studio
 
     void UpdateStatusInfo()
     {
+      if ( Core.MainForm.ActiveDocumentInfo != this.DocumentInfo )
+      {
+        return;
+      }
+
       string    newInfo = "Row " + ( editSource.Selection.Start.iLine + 1 ).ToString() + ", Col " + editSource.Selection.Start.iChar.ToString();
 
       int       numBytes = 0;
@@ -1103,6 +1108,9 @@ namespace C64Studio
       switch ( Event.EventType )
       {
         case ApplicationEvent.Type.KEY_BINDINGS_MODIFIED:
+          break;
+        case ApplicationEvent.Type.DOCUMENT_ACTIVATED:
+          UpdateStatusInfo();
           break;
       }
     }

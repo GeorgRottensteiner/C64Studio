@@ -1643,5 +1643,19 @@ namespace C64Studio
 
 
 
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      base.OnApplicationEvent( Event );
+
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.DOCUMENT_ACTIVATED:
+          UpdateStatusInfo();
+          break;
+      }
+    }
+
+
+
   }
 }

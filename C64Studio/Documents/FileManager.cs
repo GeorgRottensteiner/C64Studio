@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
+using C64Studio.Types;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace C64Studio
@@ -1104,6 +1105,20 @@ namespace C64Studio
     private void toolStripBtnSave_Click( object sender, EventArgs e )
     {
       Save();
+    }
+
+
+
+    public override void OnApplicationEvent( ApplicationEvent Event )
+    {
+      base.OnApplicationEvent( Event );
+
+      switch ( Event.EventType )
+      {
+        case ApplicationEvent.Type.DOCUMENT_ACTIVATED:
+          UpdateStatusInfo();
+          break;
+      }
     }
 
 
