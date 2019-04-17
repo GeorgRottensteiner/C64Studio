@@ -1895,5 +1895,35 @@ ContrivedTest:
       Assert.AreEqual( "01080B080A009E32303631000000A9028D20D060", assembly.ToString() );
     }
 
+
+
+    [TestMethod]
+    public void TestCheapLabelInFrontOfMacroCall()
+    {
+
+      string source = @"!MACRO jmp_init_alert text_id, count, sfx      ; setup a hud alert macro 
+                          ldx #text_id 
+                          ldy #count 
+                          lda #sfx 
+                          jmp hud_alert_init 
+                          !END
+      
+      
+                    * = $0801
+
+                    !basic
+
+                    @end    +jmp_init_alert 1, 2, 3
+                            rts
+        
+                    hud_alert_init
+                            rts";
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "01080B080A009E32303631000000A201A002A9034C17086060", assembly.ToString() );
+    }
+
+
+
   }
 }

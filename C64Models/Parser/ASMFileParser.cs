@@ -6653,6 +6653,11 @@ namespace C64Studio.Parser
           {
             info.Line = parseLine.Substring( lineTokenInfos[1].StartPos );
             parseLine = parseLine.Substring( lineTokenInfos[1].StartPos );
+
+            // shift all tokens back
+            lineTokenInfos = ParseTokenInfo( parseLine, 0, parseLine.Length );
+            // insert dummy entry to be removed later
+            lineTokenInfos.Insert( 0, new TokenInfo() );
           }
           else
           {
