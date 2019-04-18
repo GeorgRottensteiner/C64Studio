@@ -28,6 +28,11 @@ VIC_SPRITE_EXPAND_Y     = $d017
 ;| Bit  0   |   Unused
 VIC_MEMORY_CONTROL      = $d018
 VIC_IRQ_REQUEST         = $d019 
+;| Bit 7-4  |   Always 1
+;| Bit 3    |   Light-Pen Triggered IRQ Flag
+;| Bit 2    |   Sprite to Sprite Collision IRQ Flag     (see $D01E)
+;| Bit 1    |   Sprite to Background Collision IRQ Flag (see $D01F)
+;| Bit 0    |   Raster Compare IRQ Flag                 (see $D012)
 VIC_IRQ_MASK            = $d01a
 VIC_SPRITE_PRIORITY     = $d01b
 VIC_SPRITE_MULTICOLOR   = $d01c
@@ -53,6 +58,15 @@ IRQ_RETURN_KERNAL_KEYBOARD  = $ea31
  
 JOYSTICK_PORT_II        = $dc00
 JOYSTICK_PORT_I         = $dc01
+
+;| Bit 7 |   On Read:  1 = Interrupt occured
+;|       |   On Write: 1 = Set Int.-Flags, 0 = Clear Int-.Flags
+;| Bit 4 |   FLAG1 IRQ (Cassette Read / Serial Bus SRQ Input)
+;| Bit 3 |   Serial Port Interrupt ($DC0C full/empty)
+;| Bit 2 |   Time-of-Day Clock Alarm Interrupt
+;| Bit 1 |   Timer B Interrupt (Tape, Serial Port)
+;| Bit 0 |   Timer A Interrupt (Kernal-IRQ, Tape)
+CIA_IRQ_CONTROL         = $dc0d
 
 PROCESSOR_PORT          = $01
 
