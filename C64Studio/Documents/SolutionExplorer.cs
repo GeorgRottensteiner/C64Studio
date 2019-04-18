@@ -942,24 +942,28 @@ namespace C64Studio
         {
           treeProject.SelectedNode.BeginEdit();
           e.Handled = true;
+          e.SuppressKeyPress = true;
         }
       }
       else if ( e.KeyCode == System.Windows.Forms.Keys.Delete )
       {
         DeleteNode( treeProject.SelectedNode );
         e.Handled = true;
+        e.SuppressKeyPress = true;
       }
       else if ( ( e.KeyCode == System.Windows.Forms.Keys.C )
       &&        ( e.Control ) )
       {
         CopyElement( treeProject.SelectedNode );
         e.Handled = true;
+        e.SuppressKeyPress = true;
       }
       else if ( ( e.KeyCode == System.Windows.Forms.Keys.V )
       &&        ( e.Control ) )
       {
         PasteElement( treeProject.SelectedNode );
         e.Handled = true;
+        e.SuppressKeyPress = true;
       }
     }
 
