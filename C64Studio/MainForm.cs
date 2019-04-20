@@ -5240,7 +5240,10 @@ namespace C64Studio
               GR.Collections.Set<int> jumpedAtAddresses = new GR.Collections.Set<int>();
               jumpedAtAddresses.Add( StudioCore.Debugging.CurrentCodePosition );
               GR.Collections.Map<int, string> namedLabels = new GR.Collections.Map<int, string>();
-              if ( disassembler.Disassemble( StudioCore.Debugging.CurrentCodePosition, jumpedAtAddresses, namedLabels, true, out disassembly ) )
+
+              var settings = new DisassemblerSettings() { AddLineAddresses = true, AddAssembledBytes = true };
+
+              if ( disassembler.Disassemble( StudioCore.Debugging.CurrentCodePosition, jumpedAtAddresses, namedLabels, settings, out disassembly ) )
               {
                 StudioCore.Debugging.DebugDisassembly.SetText( disassembly );
                 StudioCore.Debugging.MarkedDocument.SetLineMarked( StudioCore.Debugging.MarkedDocumentLine, false );

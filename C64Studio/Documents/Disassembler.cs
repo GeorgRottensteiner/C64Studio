@@ -269,8 +269,9 @@ namespace C64Studio
       int     topLine = editDisassembly.VisibleRange.Start.iLine;
 
       string  disassembly;
+      var settings = new DisassemblerSettings() { AddLineAddresses = true, AddAssembledBytes = true };
 
-      if ( m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, true, out disassembly ) )
+      if ( m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out disassembly ) )
       {
         editDisassembly.Text = disassembly;
 
@@ -450,7 +451,9 @@ namespace C64Studio
     {
       string  disassembly;
 
-      if ( !m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, false, out disassembly ) )
+      var settings = new DisassemblerSettings();
+
+      if ( !m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out disassembly ) )
       {
         return;
       }

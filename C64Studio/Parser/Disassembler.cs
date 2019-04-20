@@ -176,7 +176,7 @@ namespace C64Studio.Parser
 
 
 
-    public string DisassembleBinary( GR.Memory.ByteBuffer Data, int DataStartAddress, int ExportStartAddress, int Length, bool AddLineAddresses )
+    public string DisassembleBinary( GR.Memory.ByteBuffer Data, int DataStartAddress, int ExportStartAddress, int Length, DisassemblerSettings Settings )
     {
       StringBuilder sb = new StringBuilder();
 
@@ -184,7 +184,7 @@ namespace C64Studio.Parser
 
       while ( Length >= wrapSize )
       {
-        if ( AddLineAddresses )
+        if ( Settings.AddLineAddresses )
         {
           sb.Append( "$" );
           sb.Append( ExportStartAddress.ToString( "X4" ) + ":" );
@@ -206,7 +206,7 @@ namespace C64Studio.Parser
       }
       if ( Length > 0 )
       {
-        if ( AddLineAddresses )
+        if ( Settings.AddLineAddresses )
         {
           sb.Append( "$" );
           sb.Append( ExportStartAddress.ToString( "X4" ) + ":" );
@@ -276,7 +276,7 @@ namespace C64Studio.Parser
 
 
 
-    public bool Disassemble( int DataStartAddress, GR.Collections.Set<int> JumpedAtAddresses, GR.Collections.Map<int,string> NamedLabels, bool AddLineAddresses, out string Disassembly )
+    public bool Disassemble( int DataStartAddress, GR.Collections.Set<int> JumpedAtAddresses, GR.Collections.Map<int,string> NamedLabels, DisassemblerSettings Settings, out string Disassembly )
     {
       StringBuilder sb = new StringBuilder();
       Disassembly = "";
@@ -414,7 +414,7 @@ namespace C64Studio.Parser
       sb.Append( "* = $" );
       sb.AppendLine( DataStartAddress.ToString( "x4" ) );
 
-      if ( !AddLineAddresses )
+      if ( !Settings.AddLineAddresses )
       {
         foreach ( var namedLabel in NamedLabels )
         {
@@ -437,11 +437,11 @@ namespace C64Studio.Parser
         {
           if ( hadBytes )
           {
-            sb.Append( DisassembleBinary( m_SourceData, DataStartAddress, hadBytesStart, trueAddress - hadBytesStart, AddLineAddresses ) );
+            sb.Append( DisassembleBinary( m_SourceData, DataStartAddress, hadBytesStart, trueAddress - hadBytesStart, Settings ) );
             hadBytes = false;
           }
           GR.Generic.Tupel<Tiny64.Opcode, ushort> instruction = disassembly[(ushort)trueAddress];
-          if ( AddLineAddresses )
+          if ( Settings.AddLineAddresses )
           {
             sb.Append( "$" );
             sb.Append( trueAddress.ToString( "X4" ) + ": " );
@@ -451,7 +451,7 @@ namespace C64Studio.Parser
           {
             // line break in front of named label
             sb.AppendLine();
-            if ( AddLineAddresses )
+            if ( Settings.AddLineAddresses )
             {
               sb.Append( "$" );
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
@@ -465,7 +465,7 @@ namespace C64Studio.Parser
             {
               sb.Append( "label_" + trueAddress.ToString( "x4" ) + "\r\n" );
             }
-            if ( AddLineAddresses )
+            if ( Settings.AddLineAddresses )
             {
               sb.Append( "$" );
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
@@ -475,44 +475,45 @@ namespace C64Studio.Parser
           {
             // line break in front of named label
             sb.AppendLine();
-            if ( AddLineAddresses )
+            if ( Settings.AddLineAddresses )
             {
               sb.Append( "$" );
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
             }
 
             sb.AppendLine( NamedLabels[trueAddress] );
-            if ( AddLineAddresses )
+            if ( Settings.AddLineAddresses )
             {
               sb.Append( "$" );
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
             }
           }
 
-          sb.Append( " " );
-          sb.Append( instruction.first.ByteValue.ToString( "X2" ) );
-
-          switch ( instruction.first.NumOperands )
+          if ( Settings.AddAssembledBytes )
           {
-            case 0:
-              sb.Append( "      " );
-              break;
-            case 1:
-              sb.Append( " " );
-              sb.Append( m_SourceData.ByteAt( trueAddress + 1 - DataStartAddress ).ToString( "X2" ) );
-              sb.Append( "   " );
-              break;
-            case 2:
-              sb.Append( " " );
-              sb.Append( m_SourceData.ByteAt( trueAddress + 1 - DataStartAddress ).ToString( "X2" ) );
-              sb.Append( " " );
-              sb.Append( m_SourceData.ByteAt( trueAddress + 1 - DataStartAddress + 1 ).ToString( "X2" ) );
-              break;
+            sb.Append( " " );
+            sb.Append( instruction.first.ByteValue.ToString( "X2" ) );
+
+            switch ( instruction.first.NumOperands )
+            {
+              case 0:
+                sb.Append( "      " );
+                break;
+              case 1:
+                sb.Append( " " );
+                sb.Append( m_SourceData.ByteAt( trueAddress + 1 - DataStartAddress ).ToString( "X2" ) );
+                sb.Append( "   " );
+                break;
+              case 2:
+                sb.Append( " " );
+                sb.Append( m_SourceData.ByteAt( trueAddress + 1 - DataStartAddress ).ToString( "X2" ) );
+                sb.Append( " " );
+                sb.Append( m_SourceData.ByteAt( trueAddress + 1 - DataStartAddress + 1 ).ToString( "X2" ) );
+                break;
+            }
           }
-          //sb.Append( "          " + MnemonicToString( instruction.first, m_SourceData, DataStartAddress, trueAddress, accessedAddresses, NamedLabels ) );
           sb.Append( "   " + MnemonicToString( instruction.first, m_SourceData, DataStartAddress, trueAddress, accessedAddresses, NamedLabels ) );
           sb.Append( "\r\n" );
-          //Debug.Log( output );
           trueAddress += instruction.first.NumOperands + 1;
         }
         else
@@ -527,7 +528,7 @@ namespace C64Studio.Parser
       }
       if ( hadBytes )
       {
-        sb.Append( DisassembleBinary( m_SourceData, DataStartAddress, hadBytesStart, trueAddress - hadBytesStart, AddLineAddresses ) );
+        sb.Append( DisassembleBinary( m_SourceData, DataStartAddress, hadBytesStart, trueAddress - hadBytesStart, Settings ) );
         hadBytes = false;
       }
       Disassembly = sb.ToString();
