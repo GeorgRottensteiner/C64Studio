@@ -70,8 +70,6 @@ namespace C64Studio
     };
 
 
-    private int                         m_CurrentChar = 0;
-
     private bool[,]                     m_ErrornousChars = new bool[40, 25];
 
     private bool                        m_ButtonReleased = false;
@@ -2488,7 +2486,7 @@ namespace C64Studio
 
       dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
 
-      Core.Imaging.ImageToClipboard( projectToExport.Characters[m_CurrentChar].Image );
+      Clipboard.SetDataObject( dataObj );
     }
 
 

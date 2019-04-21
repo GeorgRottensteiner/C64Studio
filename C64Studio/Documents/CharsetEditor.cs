@@ -1952,7 +1952,7 @@ namespace C64Studio
 
       dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
 
-      Core.Imaging.ImageToClipboard( m_Charset.Characters[m_CurrentChar].Image );
+      Clipboard.SetDataObject( dataObj );
     }
 
 

@@ -1648,8 +1648,7 @@ namespace C64Studio
 
       dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
 
-      // TODO - compile image from selection, not only current sprite
-      Core.Imaging.ImageToClipboard( m_SpriteProject.Sprites[m_CurrentSprite].Image );
+      Clipboard.SetDataObject( dataObj );
     }
 
 
