@@ -7789,7 +7789,8 @@ namespace C64Studio.Parser
                 }
                 else
                 {
-                  m_CurrentZoneName = lineTokenInfos[1].Content;
+                  m_CurrentZoneName = DeQuote( lineTokenInfos[1].Content );
+
                   zoneToken = lineTokenInfos[1];
                 }
                 info.Zone = m_CurrentZoneName;
@@ -8622,6 +8623,19 @@ namespace C64Studio.Parser
       //Debug.Log( "PreProcess done" );
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private string DeQuote( string Content )
+    {
+      if ( ( Content.StartsWith( "\"" ) )
+      &&   ( Content.EndsWith( "\"" )
+      &&   ( Content.Length >=  2 ) ) )
+      {
+        return Content.Substring( 1, Content.Length - 2 );
+      }
+      return Content;
     }
 
 
