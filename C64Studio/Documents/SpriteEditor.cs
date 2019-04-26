@@ -897,6 +897,7 @@ namespace C64Studio
 
             tempBuffer.CopyTo( m_SpriteProject.Sprites[i].Data, 0, 63 );
             m_SpriteProject.Sprites[i].Color = ( tempBuffer.ByteAt( 63 ) & 0xf );
+            m_SpriteProject.Sprites[i].Multicolor = ( ( tempBuffer.ByteAt( 63 ) & 0x80 ) != 0 );
             RebuildSpriteImage( i );
           }
         }
@@ -1280,7 +1281,13 @@ namespace C64Studio
       for ( int i = 0; i < exportIndices.Count; ++i )
       {
         spriteData.Append( m_SpriteProject.Sprites[exportIndices[i]].Data );
-        spriteData.AppendU8( (byte)m_SpriteProject.Sprites[exportIndices[i]].Color );
+
+        byte  colorByte = (byte)m_SpriteProject.Sprites[exportIndices[i]].Color;
+        if ( m_SpriteProject.Sprites[exportIndices[i]].Multicolor )
+        {
+          colorByte |= 0x80;
+        }
+        spriteData.AppendU8( colorByte );
       }
       GR.IO.File.WriteAllBytes( m_SpriteProject.ExportFilename, spriteData );
     }
