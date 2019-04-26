@@ -2588,7 +2588,7 @@ namespace C64Studio
       {
         panelSprites.SelectedIndex = 0;
       }
-      //panelCharacters_SelectedIndexChanged( sender, e );
+      panelCharacters_SelectedIndexChanged( sender, e );
 
       SetModified();
     }
