@@ -692,6 +692,9 @@ namespace C64Studio
       if ( InsertMode == ImageInsertionMode.AT_SELECTED_LOCATION )
       {
         mappedImage.DrawTo( m_GraphicScreenProject.Image, m_SelectedChar.X * 8, m_SelectedChar.Y * 8 );
+
+        charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
+        charEditor.Invalidate();
       }
       else if ( InsertMode == ImageInsertionMode.AS_FLOATING_SELECTION )
       {
