@@ -1264,23 +1264,26 @@ namespace C64Studio
         ///replaceFound.GotoEnd();
         ///replaceFound.Select();
 
-        // store old selection
-        var oldSelectionStart = edit.Selection.Start;
-        var oldSelectionEnd = edit.Selection.End;
-        int oldEnd = edit.PlaceToPosition( oldSelectionEnd );
+        if ( replaceFound != null )
+        {
+          // store old selection
+          var oldSelectionStart = edit.Selection.Start;
+          var oldSelectionEnd = edit.Selection.End;
+          int oldEnd = edit.PlaceToPosition( oldSelectionEnd );
 
-        edit.Selection = replaceFound;
-        edit.SelectedText = comboReplaceWith.Text;
+          edit.Selection = replaceFound;
+          edit.SelectedText = comboReplaceWith.Text;
 
-        // set location to after replaced text to avoid recursion
-        LastReplaceFound.StartPosition += comboReplaceWith.Text.Length;
+          // set location to after replaced text to avoid recursion
+          LastReplaceFound.StartPosition += comboReplaceWith.Text.Length;
 
-        // restore old selection
-        int newEnd = oldEnd + comboReplaceWith.Text.Length - comboReplaceSearchText.Text.Length;
-        var newPlace = edit.PositionToPlace( newEnd );
+          // restore old selection
+          int newEnd = oldEnd + comboReplaceWith.Text.Length - comboReplaceSearchText.Text.Length;
+          var newPlace = edit.PositionToPlace( newEnd );
 
-        edit.Selection.Start = oldSelectionStart;
-        edit.Selection.End = newPlace;
+          edit.Selection.Start = oldSelectionStart;
+          edit.Selection.End = newPlace;
+        }
         return;
       }
     }
