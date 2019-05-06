@@ -169,6 +169,9 @@ namespace C64Studio
       m_ToolTip.Popup += new System.Windows.Forms.PopupEventHandler( m_ToolTip_Popup );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+
+      m_StartAddress = "2049";
+      editBASICStartAddress.Text = "2049";
     }
 
 
