@@ -1413,7 +1413,7 @@ namespace C64Studio
 
 
 
-    public override void ApplyFunction( C64Studio.Types.Function Function )
+    public override bool ApplyFunction( C64Studio.Types.Function Function )
     {
       switch ( Function )
       {
@@ -1425,11 +1425,12 @@ namespace C64Studio
           break;
         case C64Studio.Types.Function.PRINT:
           editSource.Print();
-          break;
+          return true;
         case Function.JUMP_TO_LINE:
           JumpToLine();
-          break;
+          return true;
       }
+      return false;
     }
 
 

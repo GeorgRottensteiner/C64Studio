@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using C64Studio.Formats;
 using GR.Memory;
+using C64Studio.Types;
 
 namespace C64Studio
 {
@@ -365,16 +366,6 @@ namespace C64Studio
         {
           System.Windows.Forms.MessageBox.Show( m_ImportError, "Error while converting" );
         }
-      }
-      else if ( e.KeyCode == Keys.H )
-      {
-        // mirror horizontally
-        MirrorX();
-      }
-      else if ( e.KeyCode == Keys.V )
-      {
-        // mirror vertically
-        MirrorY();
       }
     }
 
@@ -1959,6 +1950,13 @@ namespace C64Studio
 
     private void btnShiftLeft_Click( object sender, EventArgs e )
     {
+      ShiftLeft();
+    }
+
+
+
+    private void ShiftLeft()
+    {
       var selectedSprites = panelSprites.SelectedIndices;
 
       bool firstEntry = true;
@@ -2005,6 +2003,13 @@ namespace C64Studio
 
 
     private void btnShiftRight_Click( object sender, EventArgs e )
+    {
+      ShiftRight();
+    }
+
+
+
+    private void ShiftRight()
     {
       var selectedSprites = panelSprites.SelectedIndices;
 
@@ -2053,6 +2058,13 @@ namespace C64Studio
 
     private void btnShiftUp_Click( object sender, EventArgs e )
     {
+      ShiftUp();
+    }
+
+
+
+    private void ShiftUp()
+    {
       var selectedSprites = panelSprites.SelectedIndices;
 
       bool firstEntry = true;
@@ -2085,6 +2097,13 @@ namespace C64Studio
 
 
     private void btnShiftDown_Click( object sender, EventArgs e )
+    {
+      ShiftDown();
+    }
+
+
+
+    private void ShiftDown()
     {
       var selectedSprites = panelSprites.SelectedIndices;
 
@@ -2184,6 +2203,13 @@ namespace C64Studio
 
     private void btnInvert_Click( object sender, EventArgs e )
     {
+      Invert();
+    }
+
+
+
+    private void Invert()
+    {
       var selectedSprites = panelSprites.SelectedIndices;
 
       bool firstEntry = true;
@@ -2208,6 +2234,13 @@ namespace C64Studio
 
 
     private void btnRotateLeft_Click( object sender, EventArgs e )
+    {
+      RotateLeft();
+    }
+
+
+
+    private void RotateLeft()
     {
       var selectedSprites = panelSprites.SelectedIndices;
 
@@ -2272,6 +2305,13 @@ namespace C64Studio
 
 
     private void btnRotateRight_Click( object sender, EventArgs e )
+    {
+      RotateRight();
+    }
+
+
+
+    private void RotateRight()
     {
       var selectedSprites = panelSprites.SelectedIndices;
 
@@ -3475,6 +3515,95 @@ namespace C64Studio
       }
       ImportFromData( resultData );
     }
+
+
+
+    public override bool ApplyFunction( Function Function )
+    {
+      switch ( Function )
+      {
+        case Function.GRAPHIC_ELEMENT_MIRROR_H:
+          MirrorX();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MIRROR_V:
+          MirrorY();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_D:
+          ShiftDown();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_U:
+          ShiftUp();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_L:
+          ShiftLeft();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_R:
+          ShiftRight();
+          return true;
+        case Function.GRAPHIC_ELEMENT_ROTATE_L:
+          RotateLeft();
+          return true;
+        case Function.GRAPHIC_ELEMENT_ROTATE_R:
+          RotateRight();
+          return true;
+        case Function.GRAPHIC_ELEMENT_INVERT:
+          Invert();
+          return true;
+        case Function.GRAPHIC_ELEMENT_PREVIOUS:
+          Previous();
+          return true;
+        case Function.GRAPHIC_ELEMENT_NEXT:
+          Next();
+          return true;
+        case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
+          CustomColor();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
+          MultiColor1();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
+          MultiColor2();
+          return true;
+      }
+      return base.ApplyFunction( Function );
+    }
+
+
+
+    private void MultiColor2()
+    {
+      comboMulticolor2.SelectedIndex = ( comboMulticolor2.SelectedIndex + 1 ) % 16;
+    }
+
+
+
+    private void MultiColor1()
+    {
+      comboMulticolor1.SelectedIndex = ( comboMulticolor1.SelectedIndex + 1 ) % 16;
+    }
+
+
+
+    private void CustomColor()
+    {
+      comboSpriteColor.SelectedIndex = ( comboSpriteColor.SelectedIndex + 1 ) % 16;
+    }
+
+
+
+    private void Next()
+    {
+      panelSprites.SelectedIndex = ( panelSprites.SelectedIndex + 1 ) % 256;
+    }
+
+
+
+    private void Previous()
+    {
+      panelSprites.SelectedIndex = ( panelSprites.SelectedIndex + 256 - 1 ) % 256;
+    }
+
+
 
   }
 }

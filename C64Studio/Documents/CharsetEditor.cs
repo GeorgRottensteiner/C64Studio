@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
+using C64Studio.Types;
 using GR.Memory;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -215,16 +216,6 @@ namespace C64Studio
       {
         // paste
         PasteClipboardImageToChar();
-      }
-      else if ( e.KeyCode == Keys.H )
-      {
-        // mirror horizontally
-        MirrorX();
-      }
-      else if ( e.KeyCode == Keys.V )
-      {
-        // mirror vertically
-        MirrorY();
       }
     }
 
@@ -1796,6 +1787,13 @@ namespace C64Studio
 
     private void btnShiftUp_Click( object sender, EventArgs e )
     {
+      ShiftUp();
+    }
+
+
+
+    private void ShiftUp()
+    {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
       DocumentInfo.UndoManager.StartUndoGroup();
@@ -1819,6 +1817,13 @@ namespace C64Studio
 
 
     private void btnShiftDown_Click( object sender, EventArgs e )
+    {
+      ShiftDown();
+    }
+
+
+
+    private void ShiftDown()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -2243,6 +2248,13 @@ namespace C64Studio
 
     private void btnInvert_Click( object sender, EventArgs e )
     {
+      Invert();
+    }
+
+
+
+    private void Invert()
+    {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
       DocumentInfo.UndoManager.StartUndoGroup();
@@ -2265,6 +2277,13 @@ namespace C64Studio
 
 
     private void btnRotateLeft_Click( object sender, EventArgs e )
+    {
+      RotateLeft();
+    }
+
+
+
+    private void RotateLeft()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -2328,6 +2347,13 @@ namespace C64Studio
 
 
     private void btnRotateRight_Click( object sender, EventArgs e )
+    {
+      RotateRight();
+    }
+
+
+
+    private void RotateRight()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -2992,6 +3018,92 @@ namespace C64Studio
       editDataImport.Text = "";
     }
 
+
+
+    public override bool ApplyFunction( Function Function )
+    {
+      switch ( Function )
+      {
+        case Function.GRAPHIC_ELEMENT_MIRROR_H:
+          MirrorX();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MIRROR_V:
+          MirrorY();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_D:
+          ShiftDown();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_U:
+          ShiftUp();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_L:
+          ShiftLeft();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_R:
+          ShiftRight();
+          return true;
+        case Function.GRAPHIC_ELEMENT_ROTATE_L:
+          RotateLeft();
+          return true;
+        case Function.GRAPHIC_ELEMENT_ROTATE_R:
+          RotateRight();
+          return true;
+        case Function.GRAPHIC_ELEMENT_INVERT:
+          Invert();
+          return true;
+        case Function.GRAPHIC_ELEMENT_PREVIOUS:
+          Previous();
+          return true;
+        case Function.GRAPHIC_ELEMENT_NEXT:
+          Next();
+          return true;
+        case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
+          CustomColor();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
+          MultiColor1();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
+          MultiColor2();
+          return true;
+      }
+      return base.ApplyFunction( Function );
+    }
+
+
+
+    private void MultiColor2()
+    {
+      comboMulticolor2.SelectedIndex = ( comboMulticolor2.SelectedIndex + 1 ) % 16;
+    }
+
+
+
+    private void MultiColor1()
+    {
+      comboMulticolor1.SelectedIndex = ( comboMulticolor1.SelectedIndex + 1 ) % 16;
+    }
+
+
+
+    private void CustomColor()
+    {
+      comboCharColor.SelectedIndex = ( comboCharColor.SelectedIndex + 1 ) % 16;
+    }
+
+
+
+    private void Next()
+    {
+      panelCharacters.SelectedIndex = ( panelCharacters.SelectedIndex + 1 ) % 256;
+    }
+
+
+
+    private void Previous()
+    {
+      panelCharacters.SelectedIndex = ( panelCharacters.SelectedIndex + 256 - 1 ) % 256;
+    }
 
 
   }

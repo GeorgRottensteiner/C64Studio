@@ -836,8 +836,9 @@ namespace C64Studio
 
 
 
-    public virtual void ApplyFunction( Types.Function Function )
+    public virtual bool ApplyFunction( Types.Function Function )
     {
+      return false;
     }
 
 

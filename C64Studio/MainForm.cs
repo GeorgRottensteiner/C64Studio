@@ -4822,19 +4822,44 @@ namespace C64Studio
           m_FindReplace.tabFindReplace.SelectedIndex = 1;
           m_FindReplace.comboReplaceTarget.SelectedIndex = 3;
           break;
-        case C64Studio.Types.Function.PRINT:
-        case C64Studio.Types.Function.COMMENT_SELECTION:
-        case C64Studio.Types.Function.UNCOMMENT_SELECTION:
+        case Function.PRINT:
+        case Function.COMMENT_SELECTION:
+        case Function.UNCOMMENT_SELECTION:
         case Function.COLLAPSE_ALL_FOLDING_BLOCKS:
         case Function.EXPAND_ALL_FOLDING_BLOCKS:
         case Function.JUMP_TO_LINE:
+          // pass through to document
           {
             var curDoc = ActiveDocumentInfo;
             if ( ( curDoc != null )
             &&   ( curDoc.BaseDoc != null )
             &&   ( curDoc.ContainsCode ) )
             {
-              curDoc.BaseDoc.ApplyFunction( Function );
+              return curDoc.BaseDoc.ApplyFunction( Function );
+            }
+          }
+          break;
+        case Function.GRAPHIC_ELEMENT_MIRROR_H:
+        case Function.GRAPHIC_ELEMENT_MIRROR_V:
+        case Function.GRAPHIC_ELEMENT_SHIFT_D:
+        case Function.GRAPHIC_ELEMENT_SHIFT_U:
+        case Function.GRAPHIC_ELEMENT_SHIFT_L:
+        case Function.GRAPHIC_ELEMENT_SHIFT_R:
+        case Function.GRAPHIC_ELEMENT_ROTATE_L:
+        case Function.GRAPHIC_ELEMENT_ROTATE_R:
+        case Function.GRAPHIC_ELEMENT_NEXT:
+        case Function.GRAPHIC_ELEMENT_PREVIOUS:
+        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
+        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
+        case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
+        case Function.GRAPHIC_ELEMENT_INVERT:
+          // pass through to document
+          {
+            var curDoc = ActiveDocumentInfo;
+            if ( ( curDoc != null )
+            &&   ( curDoc.BaseDoc != null ) )
+            {
+              return curDoc.BaseDoc.ApplyFunction( Function );
             }
           }
           break;
@@ -5123,21 +5148,24 @@ namespace C64Studio
           // let control handle it
           return false;
         case Function.COPY:
-          if ( !ActiveContent.CopyPossible )
+          if ( ( ActiveContent == null )
+          ||   ( !ActiveContent.CopyPossible ) )
           {
             return false;
           }
           ActiveContent.Copy();
           break;
         case Function.PASTE:
-          if ( !ActiveContent.PastePossible )
+          if ( ( ActiveContent == null )
+          ||   ( !ActiveContent.PastePossible ) )
           {
             return false;
           }
           ActiveContent.Paste();
           break;
         case Function.CUT:
-          if ( !ActiveContent.CutPossible )
+          if ( ( ActiveContent == null )
+          ||   ( !ActiveContent.CutPossible ) )
           {
             return false;
           }
@@ -5166,7 +5194,10 @@ namespace C64Studio
       AcceleratorKey usedAccelerator = StudioCore.Settings.DetermineAccelerator(keyData, AppState);
       if ( usedAccelerator != null )
       {
-        return ApplyFunction( usedAccelerator.Function );
+        if ( ApplyFunction( usedAccelerator.Function ) )
+        {
+          return true;
+        }
       }
       return base.ProcessCmdKey( ref msg, keyData );
     }

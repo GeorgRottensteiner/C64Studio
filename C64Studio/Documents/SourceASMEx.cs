@@ -2511,7 +2511,7 @@ namespace C64Studio
 
 
 
-    public override void ApplyFunction( C64Studio.Types.Function Function )
+    public override bool ApplyFunction( C64Studio.Types.Function Function )
     {
       switch ( Function )
       {
@@ -2520,23 +2520,24 @@ namespace C64Studio
                                   {
                                     ShowPageSetupDialog = true, ShowPrintDialog = true, ShowPrintPreviewDialog = true 
                                   } );
-          break;
+          return true;
         case C64Studio.Types.Function.COMMENT_SELECTION:
           CommentSelection();
-          break;
+          return true;
         case C64Studio.Types.Function.UNCOMMENT_SELECTION:
           UncommentSelection();
-          break;
+          return true;
         case Function.COLLAPSE_ALL_FOLDING_BLOCKS:
           CollapseAllFoldingBlocks();
-          break;
+          return true;
         case Function.EXPAND_ALL_FOLDING_BLOCKS:
           ExpandAllFoldingBlocks();
-          break;
+          return true;
         case Function.JUMP_TO_LINE:
           JumpToLine();
-          break;
+          return true;
       }
+      return false;
     }
 
 

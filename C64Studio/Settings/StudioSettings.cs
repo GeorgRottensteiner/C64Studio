@@ -104,7 +104,6 @@ namespace C64Studio
 
     public List<ToolInfo>                       ToolInfos = new List<ToolInfo>();
 
-    //public List<string>                         MRU = new List<string>();
     public List<string>                         MRUProjects = new List<string>();
     public List<string>                         MRUFiles = new List<string>();
 
@@ -123,8 +122,8 @@ namespace C64Studio
     public bool                                 TabConvertToSpaces  = true;
     public bool                                 AllowTabs           = true;
     public bool                                 ASMHideLineNumbers  = false;
-    public bool                                 ASMShowBytes        = true;//false;
-    public bool                                 ASMShowCycles       = true;//false;
+    public bool                                 ASMShowBytes        = true;
+    public bool                                 ASMShowCycles       = true;
     public bool                                 ASMShowMiniView     = true;
     public bool                                 ASMAutoTruncateLiteralValues = false;
     public bool                                 ASMShowAutoComplete = true;
@@ -204,59 +203,81 @@ namespace C64Studio
       // known functions
 
       // functions from editing
-      Functions.Add( C64Studio.Types.Function.BUILD, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.BUILD, "Build", C64Studio.Types.FunctionStudioState.NORMAL ) );
-      Functions.Add( C64Studio.Types.Function.BUILD_AND_DEBUG, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.BUILD_AND_DEBUG, "Build and Debug", C64Studio.Types.FunctionStudioState.NORMAL ) );
-      Functions.Add( C64Studio.Types.Function.BUILD_AND_RUN, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.BUILD_AND_RUN, "Build and Run", C64Studio.Types.FunctionStudioState.NORMAL ) );
-      Functions.Add( C64Studio.Types.Function.COMPILE, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.COMPILE, "Compile", C64Studio.Types.FunctionStudioState.NORMAL ) );
-      Functions.Add( C64Studio.Types.Function.REBUILD, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.REBUILD, "Rebuild", C64Studio.Types.FunctionStudioState.NORMAL ) );
-      Functions.Add( C64Studio.Types.Function.BUILD_TO_PREPROCESSED_FILE, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.BUILD_TO_PREPROCESSED_FILE, "Build Preprocessed File", C64Studio.Types.FunctionStudioState.NORMAL ) );
+      RegisterFunction( Function.BUILD, "Build", FunctionStudioState.NORMAL );
+      RegisterFunction( Function.BUILD_AND_DEBUG, "Build and Debug", FunctionStudioState.NORMAL );
+      RegisterFunction( Function.BUILD_AND_RUN, "Build and Run", FunctionStudioState.NORMAL );
+      RegisterFunction( Function.COMPILE, "Compile", FunctionStudioState.NORMAL );
+      RegisterFunction( Function.REBUILD, "Rebuild", FunctionStudioState.NORMAL );
+      RegisterFunction( Function.BUILD_TO_PREPROCESSED_FILE, "Build Preprocessed File", FunctionStudioState.NORMAL );
 
       // functions for any state
-      Functions.Add( C64Studio.Types.Function.CENTER_ON_CURSOR, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.CENTER_ON_CURSOR, "Center on Cursor", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.DELETE_LINE, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DELETE_LINE, "Delete Line", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.FIND, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.FIND, "Find", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.FIND_IN_PROJECT, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.FIND_IN_PROJECT, "Find in Project", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.FIND_NEXT, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.FIND_NEXT, "Find Next", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.FIND_REPLACE, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.FIND_REPLACE, "Replace", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.GO_TO_DECLARATION, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.GO_TO_DECLARATION, "Go To Declaration", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.HELP, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.HELP, "Help", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.PRINT, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.PRINT, "Print", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.REPLACE_IN_PROJECT, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.REPLACE_IN_PROJECT, "Replace in Project", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.OPEN_FILES, new C64Studio.Types.FunctionInfo(C64Studio.Types.Function.OPEN_FILES, "Open Files", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.SAVE_ALL, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.SAVE_ALL, "Save All", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.SAVE_DOCUMENT, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.SAVE_DOCUMENT, "Save Document", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.SAVE_DOCUMENT_AS, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.SAVE_DOCUMENT_AS, "Save Document As", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.MOVE_LINE_UP, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.MOVE_LINE_UP, "Move Line Up", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.MOVE_LINE_DOWN, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.MOVE_LINE_DOWN, "Move Line Down", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.COPY_LINE_UP, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.COPY_LINE_UP, "Copy Line Up", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.COPY_LINE_DOWN, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.COPY_LINE_DOWN, "Copy Line Down", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.COMMENT_SELECTION, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.COMMENT_SELECTION, "Comment Selection", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.UNCOMMENT_SELECTION, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.UNCOMMENT_SELECTION, "Uncomment Selection", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.FIND_NEXT_MESSAGE, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.FIND_NEXT_MESSAGE, "Jump to next message", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.UNDO, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.UNDO, "Undo", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.REDO, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.REDO, "Redo", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.COLLAPSE_ALL_FOLDING_BLOCKS, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.COLLAPSE_ALL_FOLDING_BLOCKS, "Collapse all folding blocks", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( C64Studio.Types.Function.EXPAND_ALL_FOLDING_BLOCKS, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.EXPAND_ALL_FOLDING_BLOCKS, "Expand all folding blocks", C64Studio.Types.FunctionStudioState.ANY ) );
-      Functions.Add( Types.Function.COPY, new Types.FunctionInfo( Types.Function.COPY, "Copy", Types.FunctionStudioState.ANY ) );
-      Functions.Add( Types.Function.PASTE, new Types.FunctionInfo( Types.Function.PASTE, "Paste", Types.FunctionStudioState.ANY ) );
-      Functions.Add( Types.Function.CUT, new Types.FunctionInfo( Types.Function.CUT, "Cut", Types.FunctionStudioState.ANY ) );
-      Functions.Add( Function.JUMP_TO_LINE, new FunctionInfo( Function.JUMP_TO_LINE, "Jump to Line", FunctionStudioState.ANY ) );
+      RegisterFunction( Function.CENTER_ON_CURSOR, "Center on Cursor", FunctionStudioState.ANY );
+      RegisterFunction( Function.DELETE_LINE, "Delete Line", FunctionStudioState.ANY );
+      RegisterFunction( Function.FIND, "Find", FunctionStudioState.ANY );
+      RegisterFunction( Function.FIND_IN_PROJECT, "Find in Project", FunctionStudioState.ANY );
+      RegisterFunction( Function.FIND_NEXT, "Find Next", FunctionStudioState.ANY );
+      RegisterFunction( Function.FIND_REPLACE, "Replace", FunctionStudioState.ANY );
+      RegisterFunction( Function.GO_TO_DECLARATION, "Go To Declaration", FunctionStudioState.ANY );
+      RegisterFunction( Function.HELP, "Help", FunctionStudioState.ANY );
+      RegisterFunction( Function.PRINT, "Print", FunctionStudioState.ANY );
+      RegisterFunction( Function.REPLACE_IN_PROJECT, "Replace in Project", FunctionStudioState.ANY );
+      RegisterFunction( Function.OPEN_FILES, "Open Files", FunctionStudioState.ANY );
+      RegisterFunction( Function.SAVE_ALL, "Save All", FunctionStudioState.ANY );
+      RegisterFunction( Function.SAVE_DOCUMENT, "Save Document", FunctionStudioState.ANY );
+      RegisterFunction( Function.SAVE_DOCUMENT_AS, "Save Document As", FunctionStudioState.ANY );
+      RegisterFunction( Function.MOVE_LINE_UP, "Move Line Up", FunctionStudioState.ANY );
+      RegisterFunction( Function.MOVE_LINE_DOWN, "Move Line Down", FunctionStudioState.ANY );
+      RegisterFunction( Function.COPY_LINE_UP, "Copy Line Up", FunctionStudioState.ANY );
+      RegisterFunction( Function.COPY_LINE_DOWN, "Copy Line Down", FunctionStudioState.ANY );
+      RegisterFunction( Function.COMMENT_SELECTION, "Comment Selection", FunctionStudioState.ANY );
+      RegisterFunction( Function.UNCOMMENT_SELECTION, "Uncomment Selection", FunctionStudioState.ANY );
+      RegisterFunction( Function.FIND_NEXT_MESSAGE, "Jump to next message", FunctionStudioState.ANY );
+      RegisterFunction( Function.UNDO, "Undo", FunctionStudioState.ANY );
+      RegisterFunction( Function.REDO, "Redo", FunctionStudioState.ANY );
+      RegisterFunction( Function.COLLAPSE_ALL_FOLDING_BLOCKS, "Collapse all folding blocks", FunctionStudioState.ANY );
+      RegisterFunction( Function.EXPAND_ALL_FOLDING_BLOCKS, "Expand all folding blocks", FunctionStudioState.ANY );
+      RegisterFunction( Function.COPY, "Copy", Types.FunctionStudioState.ANY );
+      RegisterFunction( Function.PASTE, "Paste", Types.FunctionStudioState.ANY );
+      RegisterFunction( Function.CUT, "Cut", Types.FunctionStudioState.ANY );
+      RegisterFunction( Function.JUMP_TO_LINE, "Jump to Line", FunctionStudioState.ANY );
+
+      RegisterFunction( Function.GRAPHIC_ELEMENT_MIRROR_H, "Mirror Horizontal", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_MIRROR_V, "Mirror Vertical", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_SHIFT_L, "Shift Left", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_SHIFT_R, "Shift Right", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_SHIFT_U, "Shift Up", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_SHIFT_D, "Shift Down", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_ROTATE_L, "Rotate Left", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_ROTATE_R, "Rotate Right", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_INVERT, "Invert", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_CUSTOM_COLOR, "Custom Color", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_MULTI_COLOR_1, "Multi Color 1", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_MULTI_COLOR_2, "Multi Color 2", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_NEXT, "Next Element", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_PREVIOUS, "Previous Element", FunctionStudioState.ANY );
 
       // functions for running debugger
-      Functions.Add( C64Studio.Types.Function.DEBUG_BREAK, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_BREAK, "Break into Debugger", C64Studio.Types.FunctionStudioState.DEBUGGER_RUNNING ) );
+      RegisterFunction( Function.DEBUG_BREAK, "Break into Debugger", FunctionStudioState.DEBUGGER_RUNNING );
 
       // functions for broken debugger
-      Functions.Add( C64Studio.Types.Function.DEBUG_GO, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_GO, "Debug Go", C64Studio.Types.FunctionStudioState.DEBUGGER_BROKEN ) );
-      Functions.Add( C64Studio.Types.Function.DEBUG_STEP, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_STEP, "Debug Step", C64Studio.Types.FunctionStudioState.DEBUGGER_BROKEN ) );
-      Functions.Add( C64Studio.Types.Function.DEBUG_STEP_OUT, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_STEP_OUT, "Debug Step Out", C64Studio.Types.FunctionStudioState.DEBUGGER_BROKEN ) );
-      Functions.Add( C64Studio.Types.Function.DEBUG_STEP_OVER, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_STEP_OVER, "Debug Step Over", C64Studio.Types.FunctionStudioState.DEBUGGER_BROKEN ) );
+      RegisterFunction( Function.DEBUG_GO, "Debug Go", FunctionStudioState.DEBUGGER_BROKEN );
+      RegisterFunction( Function.DEBUG_STEP, "Debug Step", FunctionStudioState.DEBUGGER_BROKEN );
+      RegisterFunction( Function.DEBUG_STEP_OUT, "Debug Step Out", FunctionStudioState.DEBUGGER_BROKEN );
+      RegisterFunction( Function.DEBUG_STEP_OVER, "Debug Step Over", FunctionStudioState.DEBUGGER_BROKEN );
 
       // functions for running/broken debugger
-      Functions.Add( C64Studio.Types.Function.DEBUG_STOP, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_STOP, "Stop Debugging", C64Studio.Types.FunctionStudioState.DEBUGGER_BROKEN | C64Studio.Types.FunctionStudioState.DEBUGGER_RUNNING ) );
-      
+      RegisterFunction( Function.DEBUG_STOP, "Stop Debugging", FunctionStudioState.DEBUGGER_BROKEN | FunctionStudioState.DEBUGGER_RUNNING );
+
       // functions for broken debugger/editing
-      Functions.Add( C64Studio.Types.Function.DEBUG_RUN_TO, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.DEBUG_RUN_TO, "Run to Cursor", C64Studio.Types.FunctionStudioState.DEBUGGER_BROKEN | C64Studio.Types.FunctionStudioState.NORMAL ) );
-      Functions.Add( C64Studio.Types.Function.TOGGLE_BREAKPOINT, new C64Studio.Types.FunctionInfo( C64Studio.Types.Function.TOGGLE_BREAKPOINT, "Toggle Breakpoint", C64Studio.Types.FunctionStudioState.DEBUGGER_BROKEN | C64Studio.Types.FunctionStudioState.NORMAL ) );
+      RegisterFunction( Function.DEBUG_RUN_TO, "Run to Cursor", FunctionStudioState.DEBUGGER_BROKEN | FunctionStudioState.NORMAL );
+      RegisterFunction( Function.TOGGLE_BREAKPOINT, "Toggle Breakpoint", FunctionStudioState.DEBUGGER_BROKEN | FunctionStudioState.NORMAL );
+    }
+
+
+
+    private void RegisterFunction( Function StudioFunction, string Description, FunctionStudioState StudioState )
+    {
+      Functions.Add( StudioFunction, new FunctionInfo( StudioFunction, Description, StudioState ) );
     }
 
 
@@ -443,19 +464,19 @@ namespace C64Studio
       switch ( State )
       {
         case C64Studio.Types.StudioState.NORMAL:
-          functionMask |= C64Studio.Types.FunctionStudioState.NORMAL;
+          functionMask |= FunctionStudioState.NORMAL;
           break;
         case C64Studio.Types.StudioState.COMPILE:
         case C64Studio.Types.StudioState.BUILD:
         case C64Studio.Types.StudioState.BUILD_AND_DEBUG:
         case C64Studio.Types.StudioState.BUILD_AND_RUN:
-          functionMask |= C64Studio.Types.FunctionStudioState.BUILDING;
+          functionMask |= FunctionStudioState.BUILDING;
           break;
         case C64Studio.Types.StudioState.DEBUGGING_BROKEN:
-          functionMask |= C64Studio.Types.FunctionStudioState.DEBUGGER_BROKEN;
+          functionMask |= FunctionStudioState.DEBUGGER_BROKEN;
           break;
         case C64Studio.Types.StudioState.DEBUGGING_RUN:
-          functionMask |= C64Studio.Types.FunctionStudioState.DEBUGGER_RUNNING;
+          functionMask |= FunctionStudioState.DEBUGGER_RUNNING;
           break;
       }
       return functionMask;
