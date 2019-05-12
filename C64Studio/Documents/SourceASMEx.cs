@@ -9,6 +9,10 @@ using C64Studio.CustomRenderer;
 using C64Studio.Types;
 using FastColoredTextBoxNS;
 
+using System.Linq;
+
+
+
 namespace C64Studio
 {
   public partial class SourceASMEx : CompilableDocument
@@ -1257,12 +1261,19 @@ namespace C64Studio
 
       newList = new List<FastColoredTextBoxNS.AutocompleteItem>();
 
+      var uniqueKeys = new GR.Collections.Set<string>();
+
       //List<string>    newList = new List<string>();
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {
         if ( entry.Token.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
         {
           continue;
+        }
+
+        if ( entry.Symbol != null )
+        {
+          uniqueKeys.Add( entry.Symbol.Name );
         }
 
         string    toolTipText = entry.ToolTipText;
@@ -1296,6 +1307,12 @@ namespace C64Studio
       {
         if ( entry.Key.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
         {
+          continue;
+        }
+
+        if ( uniqueKeys.Contains( entry.Key ) )
+        {
+          // do not override entries!
           continue;
         }
 
@@ -1336,10 +1353,6 @@ namespace C64Studio
           }
         }
 
-        ///editSource.AutoComplete.DropRestOfWord = true;
-        ///editSource.AutoComplete.IsCaseSensitive = false;
-        //editSource.AutoComplete.Show( wordBelow.Length, newList );
-
         AutoComplete.MinFragmentLength = 1;
         AutoComplete.AutoSize = true;
         AutoComplete.Items.SetAutocompleteItems( newList );
@@ -1354,160 +1367,6 @@ namespace C64Studio
       {
         AutoComplete.Show( true );
       }
-      /*
-      return;
-
-      //Debug.Log( "ShowAutoComplete" );
-      string curLine = editSource.Lines[CurrentLineIndex].TrimEnd( new char[]{ '\r', '\n' } );
-      int position = editSource.PlaceToPosition( editSource.Selection.Start );
-      int posX = editSource.Selection.Start.iChar;
-
-      // ugly quick hack, allow x and y
-      int   errorPos = -1;
-      var tokens = Parser.PrepareLineTokens( curLine, out errorPos );
-      bool hadOpcodeFirst = false;
-      if ( tokens != null )
-      {
-        // check for opcode or special command
-        for ( int i = 0; i < tokens.Count; ++i )
-        {
-          if ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.COMMENT )
-          {
-            break;
-          }
-          if ( ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE )
-          ||   ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
-          ||   ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP ) )
-          {
-            // we've got an opcode
-            hadOpcodeFirst = true;
-            //Debug.Log( "opcode found" );
-            if ( ( tokens[tokens.Count - 1].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-            &&   ( tokens[tokens.Count - 1].Content == "," ) )
-            {
-              // comma is the last token
-              var   newList2 = new List<FastColoredTextBoxNS.AutocompleteItem>();
-
-              //List<string>    newList2 = new List<string>();
-
-              newList2.Add( new FastColoredTextBoxNS.AutocompleteItem( "x" ) { ToolTipTitle = tokens[i].Content + ",x", ToolTipText = tokens[i].Content + ",x" } );
-              newList2.Add( new FastColoredTextBoxNS.AutocompleteItem( "y" ) { ToolTipTitle = tokens[i].Content + ",y", ToolTipText = tokens[i].Content + ",y" } );
-
-
-              //newList2.Add( "x" );
-              //newList2.Add( "y" );
-
-              ///editSource.AutoComplete.DropRestOfWord = true;
-              ///editSource.AutoComplete.IsCaseSensitive = false;
-
-              AutoComplete.Items.SetAutocompleteItems( newList2 );
-              AutoComplete.Show( true );
-              return;
-            }
-          }
-          if ( ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-          &&   ( tokens[i].Content == "," ) )
-          {
-            if ( hadOpcodeFirst )
-            {
-              //editSource.AutoComplete.Cancel();
-              return;
-            }
-          }
-
-          if ( posX < tokens[i].StartPos + tokens[i].Length )
-          {
-            break;
-          }
-        }
-      }
-
-      /*
-      if ( editSource.PositionIsOnComment( editSource.CurrentPos - 1 ) )
-      {
-        return;
-      }*/
-
-
-      /*
-      int lineIndex = CurrentLineIndex;// editSource.Lines.FromPosition( editSource.CurrentPos - 1 ).Number;
-      string wordBelow = FindWordFromPosition( CurrentPosition() - 1, lineIndex );
-      string zone = FindZoneFromLine( lineIndex );
-      if ( wordBelow.Length <= 0 )
-      {
-        return;
-      }
-      var   newList = new List<FastColoredTextBoxNS.AutocompleteItem>();
-      //List<string>    newList = new List<string>();
-      foreach ( var entry in DocumentInfo.KnownKeywords )
-      {
-        if ( entry.Token.StartsWith( wordBelow, StringComparison.CurrentCultureIgnoreCase ) )
-        {
-          newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Token ) { ToolTipTitle = entry.ToolTipTitle, ToolTipText = entry.ToolTipText } );
-        }
-        if ( ( wordBelow.StartsWith( "." ) )
-        &&   ( entry.Token.StartsWith( zone + "." + wordBelow.Substring( 1 ), StringComparison.CurrentCultureIgnoreCase ) ) )
-        {
-          newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Token.Substring( zone.Length ) ) { ToolTipTitle = entry.ToolTipTitle, ToolTipText = entry.ToolTipText } );
-        }
-      }
-      GR.Collections.Set<string>    uniqueKeys = DocumentInfo.KnownTokens.GetUniqueKeys();
-      foreach ( string entry in uniqueKeys )
-      {
-        if ( entry.StartsWith( wordBelow, StringComparison.CurrentCultureIgnoreCase ) )
-        {
-          newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry ) { ToolTipTitle = entry, ToolTipText = "sowas" } );
-        }
-        if ( ( wordBelow.StartsWith( "." ) )
-        &&   ( entry.StartsWith( zone + "." + wordBelow.Substring( 1 ), StringComparison.CurrentCultureIgnoreCase ) ) )
-        {
-          newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Substring( zone.Length ) ) { ToolTipTitle = entry.Substring( zone.Length ), ToolTipText = "tool tip text" } );
-        }
-      }
-      if ( newList.Count > 0 )
-      {
-        newList.Sort( AutoCompleteItemComparison );
-
-        // remove duplicates
-        Int32 index = 0;
-        while ( index < newList.Count - 1 )
-        {
-          if ( newList[index].Text == newList[index + 1].Text )
-          {
-            newList.RemoveAt( index );
-          }
-          else
-          {
-            index++;
-          }
-        }
-        if ( newList.Count == 1 )
-        {
-          if ( ( String.Compare( newList[0].Text, wordBelow, StringComparison.CurrentCultureIgnoreCase ) == 0 )
-          ||   ( String.Compare( newList[0].Text, zone + "." + wordBelow.Substring( 1 ), StringComparison.CurrentCultureIgnoreCase ) == 0 ) )
-          {
-            // only have the correct entry
-            return;
-          }
-        }
-
-        ///editSource.AutoComplete.DropRestOfWord = true;
-        ///editSource.AutoComplete.IsCaseSensitive = false;
-        //editSource.AutoComplete.Show( wordBelow.Length, newList );
-
-        if ( wordBelow.StartsWith( "." ) )
-        {
-          AutoComplete.MinFragmentLength = 1;
-        }
-        else
-        {
-          AutoComplete.MinFragmentLength = 2;
-        }
-        AutoComplete.AutoSize = true;
-        AutoComplete.Items.SetAutocompleteItems( newList );
-        AutoComplete.Show( true );
-      }*/
-      //AutoComplete.Show( true );
     }
 
 
@@ -1540,6 +1399,7 @@ namespace C64Studio
           // skip internal labels in autocomplete
           continue;
         }
+
         newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry ) { ToolTipTitle = entry, ToolTipText = "sowas" } );
         //newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Substring( zone.Length ) ) { ToolTipTitle = entry.Substring( zone.Length ), ToolTipText = "tool tip text" } );
       }

@@ -1,6 +1,12 @@
 ﻿C64Studio
 o Die Sortierreihenfolge vom "autocomplete" führt bei mir häufig zu Eingabefehlern, weil die Vorschläge alphabetisch sortiert und nicht nach Relevanz dargestellt werden (siehe Bild).
   Ausserdem wäre es gut, wenn ein vollständig ausgeschriebener Begriff in der Liste (ganz oben) erthalten bleiben würde (siehe Bild), so könnte man wie gewohnt mit ENTER in die näschte Zeile wechseln.
+o Could a future version get some keybindings for the editors, for example the sprite editor would benefit from bindings for:
+  Select colour (background, Multicolor 1. 2 and sprite color)
+  Go to next and previous sprite
+  Shift sprites up/down/left/right
+  Mirror and flip
+  Similar for charset, text screen and other editors?
 o wie kann ich beim laufenden debuggen den Speicher ändern? (die Register sind ja änderbar - der Mem auch?)
 o wie kann ich dem Debugger beibringen, dass er das Mem-Fenster weiterhin mit der gew. Adresse anzeigt?
 o Still having problems with creating a new solution/project when another solution/project is loaded.
