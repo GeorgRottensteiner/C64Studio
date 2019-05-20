@@ -1475,7 +1475,8 @@ namespace C64Studio.Types
       MACRO_FUNCTION,
       PSEUDO_PC,
       ZONE,
-      ADDRESS
+      ADDRESS,
+      DO_UNTIL
     };
 
     public int                      StartIndex = 0;

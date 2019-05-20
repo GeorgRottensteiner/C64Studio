@@ -17,6 +17,8 @@ namespace C64Studio.Parser
     public bool                                                     GlobalLabelsAutoZone = false;
     public bool                                                     MacroIsZone = false;
     public bool                                                     MacrosHaveVariableNumberOfArguments = false;
+    public bool                                                     MacroKeywordAfterName = false;
+    public bool                                                     DoWithoutParameterIsUntil = false;
     public GR.Collections.Set<string>                               DefineSeparatorKeywords = new GR.Collections.Set<string>();
     public bool                                                     CaseSensitive = true;
     public bool                                                     IncludeExpectsStringLiteral = true;
@@ -228,6 +230,10 @@ namespace C64Studio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".!";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
 
+          // we misuse cheap labels as macro parameters
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "@";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "0123456789";
+
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
 
@@ -276,10 +282,11 @@ namespace C64Studio.Parser
           AddMacro( "!TO", Types.MacroInfo.MacroType.COMPILE_TARGET );
           AddMacro( "!ZONE", Types.MacroInfo.MacroType.ZONE );
           AddMacro( "!ZN", Types.MacroInfo.MacroType.ZONE );
-          AddMacro( "!ERROR", Types.MacroInfo.MacroType.ERROR );
+          AddMacro( "ERROR", Types.MacroInfo.MacroType.ERROR );
           AddMacro( "!IFDEF", Types.MacroInfo.MacroType.IFDEF );
           AddMacro( "!IFNDEF", Types.MacroInfo.MacroType.IFNDEF );
-          AddMacro( "!IF", Types.MacroInfo.MacroType.IF );
+          AddMacro( "IF", Types.MacroInfo.MacroType.IF );
+          AddMacro( "ENDIF", Types.MacroInfo.MacroType.END_IF );
           AddMacro( "!FILL", Types.MacroInfo.MacroType.FILL );
           AddMacro( "DS", Types.MacroInfo.MacroType.FILL );
           AddMacro( "!FI", Types.MacroInfo.MacroType.FILL );
@@ -287,6 +294,9 @@ namespace C64Studio.Parser
           AddMacro( "!ENDOFFILE", Types.MacroInfo.MacroType.END_OF_FILE );
           AddMacro( "DO", Types.MacroInfo.MacroType.LOOP_START );
           AddMacro( "LOOP", Types.MacroInfo.MacroType.LOOP_END );
+          AddMacro( "UNTIL", Types.MacroInfo.MacroType.LOOP_END );
+          AddMacro( "MACRO", Types.MacroInfo.MacroType.MACRO );
+          AddMacro( "ENDM", Types.MacroInfo.MacroType.END );
 
           AddMacro( "PROCESSOR", Types.MacroInfo.MacroType.IGNORE );
           AddMacro( "ORG", Types.MacroInfo.MacroType.ORG );
@@ -302,6 +312,8 @@ namespace C64Studio.Parser
           CaseSensitive = false;
           IncludeExpectsStringLiteral = true;
           StatementSeparatorChars.Add( ':' );
+          MacroKeywordAfterName = true;
+          DoWithoutParameterIsUntil = true;
           break;
         case Types.AssemblerType.C64ASM:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";

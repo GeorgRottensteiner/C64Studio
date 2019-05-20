@@ -2941,6 +2941,7 @@ namespace C64Studio.Parser
 
       if ( ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.MACRO_FUNCTION )
       &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.LOOP )
+      &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.DO_UNTIL )
       &&   ( lastOpenedScope.Type != Types.ScopeInfo.ScopeType.PSEUDO_PC ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1007_MISSING_LOOP_START, "Missing loop start" );
@@ -4671,7 +4672,25 @@ namespace C64Studio.Parser
       // DO <num>
       if ( lineTokenInfos.Count < 2 )
       {
-        AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expected DO <Expression>" );
+        if ( m_AssemblerSettings.DoWithoutParameterIsUntil )
+        {
+          // add dummy scope so !ends properly match
+          Types.LoopInfo loop = new Types.LoopInfo();
+
+          loop.LineIndex = lineIndex;
+
+          Types.ScopeInfo   scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.DO_UNTIL );
+
+          scope.Active = true;
+          scope.Loop = loop;
+          scope.StartIndex = lineIndex;
+          Scopes.Add( scope );
+          OnScopeAdded( scope );
+        }
+        else
+        {
+          AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed DO loop, expected DO <Expression>" );
+        }
       }
       else
       {
@@ -6061,7 +6080,6 @@ namespace C64Studio.Parser
     private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration )
     {
       List<Types.ScopeInfo>   stackScopes = new List<C64Studio.Types.ScopeInfo>();
-      //List<Types.LoopInfo>    loopList = new List<C64Studio.Types.LoopInfo>();
       GR.Collections.Map<string,Types.MacroFunctionInfo>     macroFunctions = new GR.Collections.Map<string,C64Studio.Types.MacroFunctionInfo>();
 
       ASMFileInfo.Labels.Clear();
@@ -6165,6 +6183,10 @@ namespace C64Studio.Parser
           }
         }
 
+        if ( lineIndex == 47 )
+        {
+          Debug.Log( "aah" );
+        }
         List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine );
         if ( lineTokenInfos == null )
         {
@@ -7588,7 +7610,7 @@ namespace C64Studio.Parser
               int localLineIndex = 0;
               ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
 
-              if ( POMacro( macroFunctions, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
+              if ( POMacro( labelInFront, macroFunctions, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
               {
                 if ( m_AssemblerSettings.MacroIsZone )
                 {
@@ -8343,7 +8365,7 @@ namespace C64Studio.Parser
             int localLineIndex = 0;
             ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
 
-            if ( POMacro( macroFunctions, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
+            if ( POMacro( labelInFront, macroFunctions, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
             {
               if ( m_AssemblerSettings.MacroIsZone )
               {
@@ -9348,7 +9370,7 @@ namespace C64Studio.Parser
 
 
 
-    private bool POMacro( GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions, 
+    private bool POMacro( string LabelInFront, GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions, 
                           string OuterFilename,
                           int lineIndex, 
                           List<Types.TokenInfo> lineTokenInfos, 
@@ -9364,6 +9386,40 @@ namespace C64Studio.Parser
       {
         hasBracket = true;
         lineTokenInfos.RemoveAt( lineTokenInfos.Count - 1 );
+      }
+
+      if ( m_AssemblerSettings.MacroKeywordAfterName )
+      {
+        // PDS style (<macroname> MACRO)
+        if ( lineTokenInfos.Count != 1 )
+        {
+          AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect <Macroname> MACRO" );
+          return false;
+        }
+        if ( macroFunctions.ContainsKey( LabelInFront ) )
+        {
+          AddError( lineIndex, C64Studio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Macro name is already in use" );
+          return false;
+        }
+        Types.MacroFunctionInfo macroFunction = new C64Studio.Types.MacroFunctionInfo();
+
+        macroFunction.Name            = LabelInFront;
+        macroFunction.LineIndex       = lineIndex;
+        macroFunction.ParentFileName  = OuterFilename;
+        macroFunction.UsesBracket     = hasBracket;
+
+        macroFunctions.Add( LabelInFront, macroFunction );
+
+        MacroFunctionName = LabelInFront;
+
+        // macro scope
+        Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.MACRO_FUNCTION );
+
+        scope.StartIndex  = lineIndex;
+        scope.Macro       = macroFunction;
+        scope.Active      = true;
+        Scopes.Add( scope );
+        return true;
       }
 
       if ( ( m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
