@@ -314,6 +314,7 @@ namespace C64Studio.Parser
           StatementSeparatorChars.Add( ':' );
           MacroKeywordAfterName = true;
           DoWithoutParameterIsUntil = true;
+          MacrosHaveVariableNumberOfArguments = true;
           break;
         case Types.AssemblerType.C64ASM:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";

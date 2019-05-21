@@ -5784,7 +5784,14 @@ namespace C64Studio.Parser
     {
       // +macro Macroname [param1[,param2]]
       lineSizeInBytes = 0;
-      string functionName = lineTokenInfos[0].Content.Substring( 1 );
+
+      if ( m_AssemblerSettings.MacroFunctionCallPrefix.Length >= lineTokenInfos[0].Content.Length )
+      {
+        AddError( lineIndex, C64Studio.Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unnamed macro function" );
+        return ParseLineResult.OK;
+      }
+
+      string functionName = lineTokenInfos[0].Content.Substring( m_AssemblerSettings.MacroFunctionCallPrefix.Length );
       if ( ( !macroFunctions.ContainsKey( functionName ) )
       ||   ( macroFunctions[functionName].LineEnd == -1 ) )
       {
@@ -5808,18 +5815,22 @@ namespace C64Studio.Parser
             param.Add( AssemblerSettings.INTERNAL_OPENING_BRACE + parseLine.Substring( lineTokenInfos[startIndex].StartPos, lineTokenInfos[i].StartPos - lineTokenInfos[startIndex].StartPos ) + AssemblerSettings.INTERNAL_CLOSING_BRACE );
 
             // is reference properly matched?
-            if ( param.Count > functionInfo.ParametersAreReferences.Count )
+            if ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
             {
-              AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-              hadError = true;
-            }
-            else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
-            {
-              AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-              hadError = true;
+              if ( param.Count > functionInfo.ParametersAreReferences.Count )
+              {
+                AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+                hadError = true;
+              }
+              else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
+              {
+                AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+                hadError = true;
+              }
             }
 
             if ( ( !hadError )
+            &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
             &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
             {
               param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
@@ -5854,17 +5865,21 @@ namespace C64Studio.Parser
           }
           //param.Add( lineTokenInfos[startIndex].Content );
           // is reference properly matched?
-          if ( param.Count > functionInfo.ParametersAreReferences.Count )
+          if ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
           {
-            AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-            hadError = true;
-          }
-          else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
-          {
-            AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
-            hadError = true;
+            if ( param.Count > functionInfo.ParametersAreReferences.Count )
+            {
+              AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+              hadError = true;
+            }
+            else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
+            {
+              AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+              hadError = true;
+            }
           }
           if ( ( !hadError )
+          &&   ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
           &&   ( functionInfo.ParametersAreReferences[param.Count - 1] ) )
           {
             param[param.Count - 1] = param[param.Count - 1].Substring( 1 );
@@ -5879,7 +5894,7 @@ namespace C64Studio.Parser
         if ( ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
         &&   ( param.Count != functionInfo.ParameterNames.Count ) )
         {
-          AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter count does not match" );
+          AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter count does not match for macro " + functionInfo.Name );
         }
         else if ( !hadError )
         {
@@ -6155,6 +6170,11 @@ namespace C64Studio.Parser
         info.CheapLabelZone = cheapLabelParent;
         info.AddressStart   = programStepPos;
 
+        if ( parseLine.Contains( "R6510" ) )
+        {
+          Debug.Log( "aha" );
+        }
+
         if ( ScopeInsideMacroDefinition( stackScopes ) )
         {
           // do not store code inside a macro definition
@@ -6183,10 +6203,6 @@ namespace C64Studio.Parser
           }
         }
 
-        if ( lineIndex == 47 )
-        {
-          Debug.Log( "aah" );
-        }
         List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine );
         if ( lineTokenInfos == null )
         {
@@ -6233,6 +6249,16 @@ namespace C64Studio.Parser
               token.Content = token.Content.ToUpper();
             }
           }
+        }
+
+
+        // PDS macro call?
+        if ( ( lineTokenInfos.Count > 1 )
+        &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Length == 0 )
+        &&   ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        &&   ( macroFunctions.ContainsKey( lineTokenInfos[0].Content ) ) )
+        {
+          lineTokenInfos[0].Type = TokenInfo.TokenType.CALL_MACRO;
         }
 
 
@@ -6665,8 +6691,17 @@ namespace C64Studio.Parser
             else
             {
               // label without value, like a define
-              AddLabel( labelInFront, -1, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-              //AddError( lineIndex, Types.ErrorCode.E0002_CODE_WITHOUT_START_ADDRESS, "Can't provide value if no start address is set", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+
+              if ( ( m_AssemblerSettings.MacroKeywordAfterName )
+              &&   ( lineTokenInfos.Count >= 2 )
+              &&   ( lineTokenInfos[1].Content == MacroByType(MacroInfo.MacroType.MACRO ) ) )
+              {
+                // a PDS style macro definition
+              }
+              else
+              {
+                AddLabel( labelInFront, -1, lineIndex, m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+              }
             }
           }
 
