@@ -664,7 +664,9 @@ namespace C64Studio.Parser
       NumGivenBytes = 0;
       Failed = false;
 
-      if ( Value.StartsWith( "$" ) )
+      // hex
+      if ( ( Value.StartsWith( "$" ) )
+      ||   ( Value.StartsWith( "&" ) ) )
       {
         if ( int.TryParse( Value.Substring( 1 ), System.Globalization.NumberStyles.HexNumber, null, out Result ) )
         {
@@ -6170,7 +6172,7 @@ namespace C64Studio.Parser
         info.CheapLabelZone = cheapLabelParent;
         info.AddressStart   = programStepPos;
 
-        if ( parseLine.Contains( "R6510" ) )
+        if ( parseLine.Contains( "INCBIN" ) )
         {
           Debug.Log( "aha" );
         }
@@ -6452,7 +6454,12 @@ namespace C64Studio.Parser
           }
           int   defineLength = lineTokenInfos[lineTokenInfos.Count - 1].StartPos + lineTokenInfos[lineTokenInfos.Count - 1].Length - ( equPos + lineTokenInfos[1].Content.Length );
           string defineValue = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 2 );
-            //parseLine.Substring( equPos + lineTokenInfos[1].Content.Length, defineLength ).Trim();
+          //parseLine.Substring( equPos + lineTokenInfos[1].Content.Length, defineLength ).Trim();
+
+          if ( defineName == "VIC" )
+          {
+            Debug.Log( "aha" );
+          }
 
           List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
           int address = -1;
@@ -9187,13 +9194,91 @@ namespace C64Studio.Parser
         {
           var token = tokens[tokenIndex];
           modifiedToken = false;
+
           // may look useless, but stores actual content in token
           token.Content = token.Content;
+
+          if ( ( m_AssemblerSettings.MacrosUseCheapLabelsAsParameters )
+          &&   ( token.Type == TokenInfo.TokenType.LABEL_CHEAP_LOCAL ) )
+          {
+            if ( token.Content.Length > 1 )
+            {
+              int     paramIndex = GR.Convert.ToI32( token.Content.Substring( 1 ) );
+              if ( ( paramIndex >= 1 )
+              &&   ( paramIndex <= param.Count ) )
+              {
+                // replace parameter
+                modifiedToken = true;
+
+                int     oldLength = token.Content.Length;
+                token.Content = param[paramIndex - 1];
+
+                if ( ( tokenIndex == 0 )
+                &&   ( token.Content.StartsWith( AssemblerSettings.INTERNAL_OPENING_BRACE ) )
+                &&   ( token.Content.EndsWith( AssemblerSettings.INTERNAL_CLOSING_BRACE ) ) )
+                {
+                  token.Content = token.Content.Substring( 1, token.Content.Length - 2 );
+                }
+
+                int     newLength = token.Content.Length;
+                token.Length = newLength;
+
+                // shift offsets
+                for ( int j = tokenIndex + 1; j < tokens.Count; ++j )
+                {
+                  tokens[j].Content = tokens[j].Content;
+                  tokens[j].Length = tokens[j].Content.Length;
+                  tokens[j].StartPos += newLength - oldLength;
+                }
+
+                /*
+                var tempTokens = ParseTokenInfo( token.Content, 0, token.Content.Length );
+                for ( int k = 0; k < tempTokens.Count; ++k )
+                {
+                  // may look useless, but actually fetches the substring and stores it in the content cache
+                  tempTokens[k].Content = tempTokens[k].Content;
+                  tempTokens[k].Length = tempTokens[k].Content.Length;
+                }
+                if ( ( !HasError() )
+                &&   ( tempTokens.Count >= 1 ) )
+                {
+                  if ( ( tempTokens[0].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+                  &&   ( tempTokens[0].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+                  {
+                  }
+                  else
+                  {
+                    // keep offsets intact!
+                    StringBuilder   sb = new StringBuilder();
+
+                    int     curOffset = 0;
+                    for ( int k = 0; k < originatingTokens.Count; ++k )
+                    {
+                      while ( originatingTokens[k].StartPos > sb.Length )
+                      {
+                        sb.Append( ' ' );
+                        ++curOffset;
+                      }
+                      sb.Append( originatingTokens[k].Content );
+                      originatingTokens[k].StartPos = curOffset;
+                      curOffset = sb.Length;
+                    }
+                    string    newLine = sb.ToString();
+                    for ( int k = 0; k < tokens.Count; ++k )
+                    {
+                      tokens[k].OriginatingString = newLine;
+                    }
+                  }
+                }*/
+                replacingTokens.Add( token );
+                replacedParam = true;
+              }
+            }
+          }
           if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
           ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
           ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
           {
-            bool                    tokenIsExpression = false;
             List<Types.TokenInfo>   tempTokens = new List<C64Studio.Types.TokenInfo>();
 
             for ( int j = 0; j < functionInfo.ParameterNames.Count; ++j )
@@ -9219,7 +9304,6 @@ namespace C64Studio.Parser
                   if ( ( tempTokens[0].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
                   &&   ( tempTokens[0].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
                   {
-                    tokenIsExpression = true;
                   }
                   else
                   {
@@ -9250,7 +9334,7 @@ namespace C64Studio.Parser
                       tokens[k].StartPos = curOffset;
                       curOffset = sb.Length;
                     }*/
-                   string    newLine = sb.ToString();
+                    string    newLine = sb.ToString();
                     for ( int k = 0; k < tokens.Count; ++k )
                     {
                       tokens[k].OriginatingString = newLine;
@@ -9266,64 +9350,33 @@ namespace C64Studio.Parser
             if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
             ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
             {
-              tokenIsExpression = true;
-              if ( tokenIsExpression )
+              if ( !modifiedToken )
               {
-                if ( !modifiedToken )
+                modifiedToken = true;
+                //tokens.RemoveAt( tokenIndex );
+                //tokens.InsertRange( tokenIndex, tempTokens );
+                if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
                 {
-                  modifiedToken = true;
-                  //tokens.RemoveAt( tokenIndex );
-                  //tokens.InsertRange( tokenIndex, tempTokens );
-                  if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
-                  {
-                    // TODO - take i in account, 
-                    //token.Content = "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + token.Content;
-                    token.Content += InternalLabelPrefix + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes );
-                    //token.Content = token.Content.Replace( "+", "_plus_" );
-                    //token.Content = token.Content.Replace( "-", "_minus_" );
-                    //Debug.Log( "Replaced internal label in line " + i + " with " + token.Content );
-                  }
-                  else if ( !ScopeInsideLoop( Scopes ) )
-                  {
-                    // uniquefy labels
-                    token.Content = "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
-                  }
-                  else
-                  {
-                    // need to take loop into account, force new local label!
-                    token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
-                                  + "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + "_" + token.Content;
-                  }
-                  replacingTokens.Add( token );
+                  // TODO - take i in account, 
+                  //token.Content = "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + token.Content;
+                  token.Content += InternalLabelPrefix + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes );
+                  //token.Content = token.Content.Replace( "+", "_plus_" );
+                  //token.Content = token.Content.Replace( "-", "_minus_" );
+                  //Debug.Log( "Replaced internal label in line " + i + " with " + token.Content );
                 }
-                /*
-                // re-position following tokens
-                int     curStartPos = 0;
-                if ( tokenIndex > 0 )
+                else if ( !ScopeInsideLoop( Scopes ) )
                 {
-                  curStartPos = tokens[tokenIndex - 1].StartPos + tokens[tokenIndex - 1].Length;
+                  // uniquefy labels
+                  token.Content = "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
                 }
-
-                // only reset startpos for newly inserted tokens (and rely on other tokens to have content correctly set)
-                for ( int j = tokenIndex; j < tokenIndex + tempTokens.Count; ++j )
+                else
                 {
-                  // +1 to put a space between tokens
-                  tokens[j].StartPos = curStartPos + 1;
-                  curStartPos = tokens[j].StartPos + tokens[j].Length;
-                }*/
+                  // need to take loop into account, force new local label!
+                  token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
+                                + "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + "_" + token.Content;
+                }
+                replacingTokens.Add( token );
               }
-                /*
-              else if ( !ScopeInsideLoop( Scopes ) )
-              {
-                //token.Content = functionName + "_" + i.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
-                token.Content = functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;
-              }
-              else
-              {
-                // need to take loop into account, force new local label!
-                token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
-                              + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + "_" + token.Content;
-              }*/
               replacedParam = true;
             }
           }
@@ -11362,6 +11415,28 @@ namespace C64Studio.Parser
           }
         }
       }*/
+
+      // collapse & if prefixed to literal number
+      if ( ( m_AssemblerSettings.AllowedTokenStartChars[TokenInfo.TokenType.LITERAL_NUMBER].Contains( "&" ) )
+      &&   ( result.Count >= 2 ) )
+      {
+        for ( int i = 0; i < result.Count - 1; ++i )
+        {
+          if ( ( result[i].Content == "&" )
+          &&   ( ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
+          ||     ( result[i + 1].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
+          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
+          {
+            // collapse
+            result[i].Content = "&" + result[i + 1].Content;
+            result[i].Length  = result[i].Content.Length;
+            result[i].Type    = Types.TokenInfo.TokenType.LITERAL_NUMBER;
+            result.RemoveAt( i + 1 );
+            --i;
+            continue;
+          }
+        }
+      }
 
       // collapse % if prefixed to literal number
       if ( result.Count >= 3 )
