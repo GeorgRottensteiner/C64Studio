@@ -3180,13 +3180,44 @@ namespace C64Studio.Parser
         return lineTokenInfos;
       }
 
+      if ( ( !m_AssemblerSettings.IncludeExpectsStringLiteral )
+      &&   ( m_AssemblerSettings.IncludeHasOnlyFilename ) )
+      {
+        // PDS style, everything after include is a file name
+        if ( lineTokenInfos.Count > 1 )
+        {
+          if ( lineTokenInfos[0].Content.ToUpper() == "INCLUDE" )
+          {
+            int   tokenPos = 0;
+
+            while ( ( tokenPos + 1 < lineTokenInfos.Count )
+            &&      ( lineTokenInfos[tokenPos + 1].Type != TokenInfo.TokenType.COMMENT ) )
+            {
+              ++tokenPos;
+            }
+            string    combinedFilename = TokensToExpression( lineTokenInfos, 1, tokenPos );
+
+            lineTokenInfos.RemoveRange( 1, lineTokenInfos.Count - 1 );
+
+            var filenameToken = new TokenInfo();
+            filenameToken.Content = combinedFilename;
+            filenameToken.Type = TokenInfo.TokenType.LITERAL_STRING;
+            filenameToken.StartPos = lineTokenInfos[0].EndPos + 1;
+            filenameToken.OriginatingString = lineTokenInfos[0].OriginatingString;
+
+            lineTokenInfos.Add( filenameToken );
+          }
+        }
+      }
+
+
       // evaluate, could be a label in front?
       // merge + with local token for possible macro functions
       if ( ( lineTokenInfos.Count >= 2 )
-      && ( lineTokenInfos[0].Content == m_AssemblerSettings.MacroFunctionCallPrefix )
-      && ( ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-      || ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
-      && ( lineTokenInfos[0].StartPos + lineTokenInfos[0].Length == lineTokenInfos[1].StartPos ) )
+      &&   ( lineTokenInfos[0].Content == m_AssemblerSettings.MacroFunctionCallPrefix )
+      &&   ( ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      ||     ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+      &&   ( lineTokenInfos[0].StartPos + lineTokenInfos[0].Length == lineTokenInfos[1].StartPos ) )
       {
         lineTokenInfos[1].Type = C64Studio.Types.TokenInfo.TokenType.CALL_MACRO;
         lineTokenInfos[1].Content = lineTokenInfos[0].Content + lineTokenInfos[1].Content;
@@ -5341,8 +5372,8 @@ namespace C64Studio.Parser
         {
           // direct value?
           if ( ( lineTokenInfos.Count > 2 )
-          && ( lineTokenInfos[2].Content != "#" )
-          && ( lineTokenInfos[2].Content != "." ) )
+          &&   ( lineTokenInfos[2].Content != "#" )
+          &&   ( lineTokenInfos[2].Content != "." ) )
           {
             // not a binary value
             continue;
@@ -8135,8 +8166,8 @@ namespace C64Studio.Parser
                   {
                     // direct value?
                     if ( ( lineTokenInfos.Count > 2 )
-                    && ( lineTokenInfos[2].Content != "#" )
-                    && ( lineTokenInfos[2].Content != "." ) )
+                    &&   ( lineTokenInfos[2].Content != "#" )
+                    &&   ( lineTokenInfos[2].Content != "." ) )
                     {
                       // not a binary value
                       continue;

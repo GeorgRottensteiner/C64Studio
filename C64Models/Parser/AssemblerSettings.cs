@@ -261,11 +261,11 @@ namespace C64Studio.Parser
           break;
         case Types.AssemblerType.PDS:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
-          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".!";
-          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "!";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß!";
 
           // we misuse cheap labels as macro parameters
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "@";
@@ -283,8 +283,8 @@ namespace C64Studio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
           AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR] = "*";
 
-          AllowedTokenChars[Types.TokenInfo.TokenType.SINGLE_CHAR] = "\\";
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.SINGLE_CHAR] = "\\";
+          AllowedTokenChars[Types.TokenInfo.TokenType.SINGLE_CHAR] = "\\.";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.SINGLE_CHAR] = "\\.";
 
           /*
           AllowedTokenStartChars[Types.TokenInfo.TokenType.MACRO] = "!";
