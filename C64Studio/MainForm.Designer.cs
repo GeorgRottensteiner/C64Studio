@@ -45,6 +45,7 @@
       this.fileNewMapEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.valueTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileNewBinaryEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.memoryViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mediaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.newTapeImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.newDiskImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -200,7 +201,6 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.memoryViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -247,8 +247,8 @@
             this.saveAllToolStripMenuItem,
             this.fileCloseToolStripMenuItem,
             this.toolStripSeparatorAboveMRU,
-            this.fileRecentlyOpenedProjectsToolStripMenuItem,
             this.fileRecentlyOpenedFilesToolStripMenuItem,
+            this.fileRecentlyOpenedProjectsToolStripMenuItem,
             this.toolStripSeparatorBelowMRU,
             this.filePreferencesToolStripMenuItem,
             this.fileSetupWizardToolStripMenuItem,
@@ -361,6 +361,13 @@
       this.fileNewBinaryEditorToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewBinaryEditorToolStripMenuItem.Text = "Binary Editor";
       this.fileNewBinaryEditorToolStripMenuItem.Click += new System.EventHandler(this.fileNewBinaryEditorToolStripMenuItem_Click);
+      // 
+      // memoryViewToolStripMenuItem
+      // 
+      this.memoryViewToolStripMenuItem.Name = "memoryViewToolStripMenuItem";
+      this.memoryViewToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+      this.memoryViewToolStripMenuItem.Text = "Memory View";
+      this.memoryViewToolStripMenuItem.Click += new System.EventHandler(this.memoryViewToolStripMenuItem_Click);
       // 
       // mediaToolStripMenuItem
       // 
@@ -1636,13 +1643,6 @@
       this.mainDebugStepOut.Size = new System.Drawing.Size(23, 22);
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
-      // 
-      // memoryViewToolStripMenuItem
-      // 
-      this.memoryViewToolStripMenuItem.Name = "memoryViewToolStripMenuItem";
-      this.memoryViewToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-      this.memoryViewToolStripMenuItem.Text = "Memory View";
-      this.memoryViewToolStripMenuItem.Click += new System.EventHandler(this.memoryViewToolStripMenuItem_Click);
       // 
       // MainForm
       // 

@@ -304,6 +304,7 @@ namespace C64Studio.Parser
           AddMacro( "HEX", Types.MacroInfo.MacroType.HEX );
           AddMacro( "CBM", Types.MacroInfo.MacroType.TEXT_SCREEN );
           AddMacro( "INCBIN", Types.MacroInfo.MacroType.INCLUDE_BINARY );
+          AddMacro( "INCLUDE", Types.MacroInfo.MacroType.INCLUDE_SOURCE );
           AddMacro( "ERROR", Types.MacroInfo.MacroType.ERROR );
           AddMacro( "IF", Types.MacroInfo.MacroType.IF );
           AddMacro( "ENDIF", Types.MacroInfo.MacroType.END_IF );

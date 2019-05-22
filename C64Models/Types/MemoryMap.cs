@@ -37,10 +37,11 @@ namespace C64Studio.Types
 
     public void InsertEntry( MemoryMapEntry Entry )
     {
+      /*
       if ( Entry.Length < 0 )
       {
         Debug.Log( "wss" );
-      }
+      }*/
 
       bool entryAdded = false;
 

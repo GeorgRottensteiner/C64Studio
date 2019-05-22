@@ -7237,8 +7237,13 @@ namespace C64Studio.Parser
               string  subFilename = "";
               bool    libraryFile = false;
 
-              if ( ( lineTokenInfos.Count == 2 )
-              &&   ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+              if ( m_AssemblerSettings.IncludeHasOnlyFilename )
+              {
+                // PDS style
+                subFilename = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
+              }
+              else if ( ( lineTokenInfos.Count == 2 )
+              &&        ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
               {
                 // regular include
                 subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
@@ -8436,8 +8441,13 @@ namespace C64Studio.Parser
             string  subFilename = "";
             bool    libraryFile = false;
 
-            if ( ( lineTokenInfos.Count == 2 )
-            &&   ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+            if ( m_AssemblerSettings.IncludeHasOnlyFilename )
+            {
+              // PDS style
+              subFilename = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
+            }
+            else if ( ( lineTokenInfos.Count == 2 )
+            &&        ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
             {
               // regular include
               subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
