@@ -1412,7 +1412,8 @@ namespace C64Studio.Types
       OPCODE_FIXED_NON_ZP,
       OPCODE_DIRECT_VALUE,
       LABEL_CHEAP_LOCAL,
-      LITERAL_REAL_NUMBER
+      LITERAL_REAL_NUMBER,
+      SINGLE_CHAR
     }
 
     public string     OriginatingString;

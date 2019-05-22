@@ -6,6 +6,7 @@ namespace C64Studio.Parser
 {
   public class AssemblerSettings
   {
+    public GR.Collections.Map<string,int>                           OperatorPrecedence = new GR.Collections.Map<string,int>();
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenStartChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenEndChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
@@ -23,6 +24,8 @@ namespace C64Studio.Parser
     public GR.Collections.Set<string>                               DefineSeparatorKeywords = new GR.Collections.Set<string>();
     public bool                                                     CaseSensitive = true;
     public bool                                                     IncludeExpectsStringLiteral = true;
+    public bool                                                     IncludeHasOnlyFilename = false;
+    public bool                                                     HasBinaryNot = true;
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
 
     public const string                 INTERNAL_OPENING_BRACE = "╚";
@@ -55,6 +58,40 @@ namespace C64Studio.Parser
       MacroIsZone = false;
       MacrosHaveVariableNumberOfArguments = false;
       CaseSensitive = true;
+      IncludeExpectsStringLiteral = true;
+      IncludeHasOnlyFilename = false;
+      HasBinaryNot = true;
+      MacroKeywordAfterName = false;
+      MacrosUseCheapLabelsAsParameters = false;
+
+      OperatorPrecedence.Clear();
+      OperatorPrecedence["-"] = 0;
+      OperatorPrecedence["+"] = 0;
+      OperatorPrecedence["/"] = 1;
+      OperatorPrecedence["*"] = 1;
+      OperatorPrecedence["%"] = 2;
+      OperatorPrecedence["EOR"] = 3;
+      OperatorPrecedence["eor"] = 3;
+      OperatorPrecedence["XOR"] = 3;
+      OperatorPrecedence["xor"] = 3;
+      OperatorPrecedence["^"] = 6;
+      OperatorPrecedence["OR"] = 4;
+      OperatorPrecedence["or"] = 4;
+      OperatorPrecedence["|"] = 4;
+      OperatorPrecedence["AND"] = 5;
+      OperatorPrecedence["and"] = 5;
+      OperatorPrecedence["&"] = 5;
+      OperatorPrecedence[">>"] = 6;
+      OperatorPrecedence["<<"] = 6;
+      OperatorPrecedence["<>"] = 6;
+      OperatorPrecedence[">="] = 6;
+      OperatorPrecedence["<="] = 6;
+      OperatorPrecedence["!="] = 6;
+      OperatorPrecedence["="] = 6;
+      OperatorPrecedence[">"] = 7;
+      OperatorPrecedence["<"] = 7;
+      OperatorPrecedence["!"] = 7;
+      OperatorPrecedence["~"] = 7;
 
       switch ( Type )
       {
@@ -246,6 +283,9 @@ namespace C64Studio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
           AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR] = "*";
 
+          AllowedTokenChars[Types.TokenInfo.TokenType.SINGLE_CHAR] = "\\";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.SINGLE_CHAR] = "\\";
+
           /*
           AllowedTokenStartChars[Types.TokenInfo.TokenType.MACRO] = "!";
           AllowedTokenChars[Types.TokenInfo.TokenType.MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -282,17 +322,21 @@ namespace C64Studio.Parser
           AddMacro( "SKIP", Types.MacroInfo.MacroType.IGNORE );
           AddMacro( "END", Types.MacroInfo.MacroType.END_OF_FILE );
 
+          OperatorPrecedence["!"] = 4;
+
           LabelPostfix = ":";
           GlobalLabelsAutoZone = true;
           DefineSeparatorKeywords.Add( "EQU" );
           DefineSeparatorKeywords.Add( "=" );
           CaseSensitive = false;
           IncludeExpectsStringLiteral = false;
+          IncludeHasOnlyFilename = true;
           StatementSeparatorChars.Add( ':' );
           MacroKeywordAfterName = true;
           DoWithoutParameterIsUntil = true;
           MacrosHaveVariableNumberOfArguments = true;
           MacrosUseCheapLabelsAsParameters = true;
+          HasBinaryNot = false;
           break;
         case Types.AssemblerType.C64ASM:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";

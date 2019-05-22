@@ -69,8 +69,6 @@ namespace C64Studio.Parser
 
     public Processor                    m_Processor = Processor.Create6510();
 
-    private GR.Collections.Map<string,int>                      m_OperatorPrecedence = new GR.Collections.Map<string,int>();
-
     private GR.Collections.Map<string, GR.Collections.Set<string>> m_LoadedFiles = new GR.Collections.Map<string, GR.Collections.Set<string>>();
 
     private int                         m_CompileCurrentAddress = -1;
@@ -105,33 +103,6 @@ namespace C64Studio.Parser
 
     public ASMFileParser()
     {
-      m_OperatorPrecedence["-"] = 0;
-      m_OperatorPrecedence["+"] = 0;
-      m_OperatorPrecedence["/"] = 1;
-      m_OperatorPrecedence["*"] = 1;
-      m_OperatorPrecedence["%"] = 2;
-      m_OperatorPrecedence["EOR"] = 3;
-      m_OperatorPrecedence["eor"] = 3;
-      m_OperatorPrecedence["XOR"] = 3;
-      m_OperatorPrecedence["xor"] = 3;
-      m_OperatorPrecedence["^"] = 6;
-      m_OperatorPrecedence["OR"] = 4;
-      m_OperatorPrecedence["or"] = 4;
-      m_OperatorPrecedence["|"] = 4;
-      m_OperatorPrecedence["AND"] = 5;
-      m_OperatorPrecedence["and"] = 5;
-      m_OperatorPrecedence["&"] = 5;
-      m_OperatorPrecedence[">>"] = 6;
-      m_OperatorPrecedence["<<"] = 6;
-      m_OperatorPrecedence["<>"] = 6;
-      m_OperatorPrecedence[">="] = 6;
-      m_OperatorPrecedence["<="] = 6;
-      m_OperatorPrecedence["!="] = 6;
-      m_OperatorPrecedence["="] = 6;
-      m_OperatorPrecedence[">"] = 7;
-      m_OperatorPrecedence["<"] = 7;
-      m_OperatorPrecedence["!"] = 7;
-      m_OperatorPrecedence["~"] = 7;
 
       for ( int i = 0; i < 256; ++i )
       {
@@ -1089,6 +1060,13 @@ namespace C64Studio.Parser
         Result = token1 | token2;
         return true;
       }
+      else if ( ( opText == "!" )
+      &&        ( !m_AssemblerSettings.HasBinaryNot ) )
+      {
+        // PDS style or
+        Result = token1 | token2;
+        return true;
+      }
       else if ( opText == ">>" )
       {
         Result = token1 >> token2;
@@ -1542,8 +1520,9 @@ namespace C64Studio.Parser
           // a binary expression
           return ParseValue( LineIndex, TokensToExpression( Tokens, StartIndex, 2 ), out Result, out NumBytesGiven );
         }
-        else if ( ( Tokens[StartIndex].Content == "!" )
-        ||        ( Tokens[StartIndex].Content == "~" ) )
+        else if ( ( m_AssemblerSettings.HasBinaryNot )
+        &&        ( ( Tokens[StartIndex].Content == "!" )
+        ||           ( Tokens[StartIndex].Content == "~" ) ) )
         {
           // binary not
           int     value = -1;
@@ -1666,7 +1645,7 @@ namespace C64Studio.Parser
           int numHighestPrecedenceEntries = 0;
           for ( int tokenIndex = 0; tokenIndex < Count - 1; ++tokenIndex )
           {
-            foreach ( KeyValuePair<string,int> oper in m_OperatorPrecedence )
+            foreach ( KeyValuePair<string,int> oper in m_AssemblerSettings.OperatorPrecedence )
             {
               if ( subTokenRange[tokenIndex].Content == oper.Key )
               {
@@ -1751,8 +1730,9 @@ namespace C64Studio.Parser
                   }
                   return false;
                 }
-                else if ( ( subTokenRange[highestPrecedenceTokenIndex].Content == "~" )
-                ||        ( subTokenRange[highestPrecedenceTokenIndex].Content == "!" ) )
+                else if ( ( m_AssemblerSettings.HasBinaryNot )
+                &&        ( ( subTokenRange[highestPrecedenceTokenIndex].Content == "~" )
+                ||          ( subTokenRange[highestPrecedenceTokenIndex].Content == "!" ) ) )
                 {
                   int     value = -1;
 
@@ -1781,7 +1761,9 @@ namespace C64Studio.Parser
                 }
               }
             }
-            if ( HandleOperator( LineIndex, subTokenRange[highestPrecedenceTokenIndex], subTokenRange[highestPrecedenceTokenIndex - 1], subTokenRange[highestPrecedenceTokenIndex + 1], out result ) )
+            if ( ( highestPrecedenceTokenIndex >= 1 )
+            &&   ( highestPrecedenceTokenIndex + 1 < subTokenRange.Count )
+            &&   ( HandleOperator( LineIndex, subTokenRange[highestPrecedenceTokenIndex], subTokenRange[highestPrecedenceTokenIndex - 1], subTokenRange[highestPrecedenceTokenIndex + 1], out result ) ) )
             {
               if ( ParseValue( LineIndex, subTokenRange[highestPrecedenceTokenIndex - 1].Content, out dummy, out numBytesGiven ) )
               {
@@ -1897,8 +1879,9 @@ namespace C64Studio.Parser
           Result = (double)dummy;
           return true;
         }
-        else if ( ( Tokens[StartIndex].Content == "!" )
-        ||        ( Tokens[StartIndex].Content == "~" ) )
+        else if ( ( m_AssemblerSettings.HasBinaryNot )
+        &&        ( ( Tokens[StartIndex].Content == "!" )
+        ||          ( Tokens[StartIndex].Content == "~" ) ) )
         {
           // binary not
           int     value = -1;
@@ -2015,7 +1998,7 @@ namespace C64Studio.Parser
           int numHighestPrecedenceEntries = 0;
           for ( int tokenIndex = 0; tokenIndex < Count - 1; ++tokenIndex )
           {
-            foreach ( KeyValuePair<string, int> oper in m_OperatorPrecedence )
+            foreach ( KeyValuePair<string, int> oper in m_AssemblerSettings.OperatorPrecedence )
             {
               if ( subTokenRange[tokenIndex].Content == oper.Key )
               {
@@ -2096,8 +2079,9 @@ namespace C64Studio.Parser
                   }
                   return false;
                 }
-                else if ( ( subTokenRange[highestPrecedenceTokenIndex].Content == "~" )
-                || ( subTokenRange[highestPrecedenceTokenIndex].Content == "!" ) )
+                else if ( ( m_AssemblerSettings.HasBinaryNot )
+                &&        ( ( subTokenRange[highestPrecedenceTokenIndex].Content == "~" )
+                ||          ( subTokenRange[highestPrecedenceTokenIndex].Content == "!" ) ) )
                 {
                   int     value = -1;
 
@@ -5615,38 +5599,49 @@ namespace C64Studio.Parser
       List<Types.TokenInfo> paramsFile = new List<Types.TokenInfo>();
       List<Types.TokenInfo> paramsSize = new List<Types.TokenInfo>();
       List<Types.TokenInfo> paramsSkip = new List<Types.TokenInfo>();
-      for ( int i = 1; i < lineTokenInfos.Count; ++i )
+
+      if ( !m_AssemblerSettings.IncludeHasOnlyFilename )
       {
-        if ( lineTokenInfos[i].Content == "," )
+        for ( int i = 1; i < lineTokenInfos.Count; ++i )
         {
-          ++paramPos;
-          if ( paramPos > 2 )
+          if ( lineTokenInfos[i].Content == "," )
           {
-            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !binary <Filename>,<Size>,<Skip>" );
-            return ParseLineResult.RETURN_NULL;
+            ++paramPos;
+            if ( paramPos > 2 )
+            {
+              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + MacroByType( MacroInfo.MacroType.INCLUDE_BINARY ) + " <Filename>,<Size>,<Skip>" );
+              return ParseLineResult.RETURN_NULL;
+            }
+          }
+          else
+          {
+            switch ( paramPos )
+            {
+              case 0:
+                paramsFile.Add( lineTokenInfos[i] );
+                break;
+              case 1:
+                paramsSize.Add( lineTokenInfos[i] );
+                break;
+              case 2:
+                paramsSkip.Add( lineTokenInfos[i] );
+                break;
+            }
           }
         }
-        else
+        if ( ( paramPos > 2 )
+        ||   ( paramsFile.Count != 1 ) )
         {
-          switch ( paramPos )
-          {
-            case 0:
-              paramsFile.Add( lineTokenInfos[i] );
-              break;
-            case 1:
-              paramsSize.Add( lineTokenInfos[i] );
-              break;
-            case 2:
-              paramsSkip.Add( lineTokenInfos[i] );
-              break;
-          }
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected " + MacroByType( MacroInfo.MacroType.INCLUDE_BINARY ) + " <Filename>,<Size>,<Skip>" );
+          return ParseLineResult.RETURN_NULL;
         }
       }
-      if ( ( paramPos > 2 )
-      ||   ( paramsFile.Count != 1 ) )
+      else
       {
-        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !binary <Filename>,<Size>,<Skip>" );
-        return ParseLineResult.RETURN_NULL;
+        for ( int i = 1; i < lineTokenInfos.Count; ++i )
+        {
+          paramsFile.Add( lineTokenInfos[i] );
+        }
       }
 
       string subFilename = "";
@@ -5663,7 +5658,7 @@ namespace C64Studio.Parser
       }
       else
       {
-        subFilename = paramsFile[0].Content;
+        subFilename = TokensToExpression( paramsFile );
       }
 
       int     fileSize = -1;
@@ -6172,11 +6167,6 @@ namespace C64Studio.Parser
         info.CheapLabelZone = cheapLabelParent;
         info.AddressStart   = programStepPos;
 
-        if ( parseLine.Contains( "INCBIN" ) )
-        {
-          Debug.Log( "aha" );
-        }
-
         if ( ScopeInsideMacroDefinition( stackScopes ) )
         {
           // do not store code inside a macro definition
@@ -6414,10 +6404,14 @@ namespace C64Studio.Parser
           }
           if ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_LOCAL )
           {
-            lineTokenInfos[i].Content = m_CurrentZoneName + lineTokenInfos[i].Content;
-            if ( i == 0 )
+            // ugly hack to avoid prefixing relative paths
+            if ( lineTokenInfos[i].Content != ".." )
             {
-              upToken = lineTokenInfos[i].Content.ToUpper();
+              lineTokenInfos[i].Content = m_CurrentZoneName + lineTokenInfos[i].Content;
+              if ( i == 0 )
+              {
+                upToken = lineTokenInfos[i].Content.ToUpper();
+              }
             }
           }
           if ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
@@ -6455,11 +6449,6 @@ namespace C64Studio.Parser
           int   defineLength = lineTokenInfos[lineTokenInfos.Count - 1].StartPos + lineTokenInfos[lineTokenInfos.Count - 1].Length - ( equPos + lineTokenInfos[1].Content.Length );
           string defineValue = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 2 );
           //parseLine.Substring( equPos + lineTokenInfos[1].Content.Length, defineLength ).Trim();
-
-          if ( defineName == "VIC" )
-          {
-            Debug.Log( "aha" );
-          }
 
           List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
           int address = -1;
@@ -10229,6 +10218,20 @@ namespace C64Studio.Parser
       bool    startBytesSet = false;
       int     fileStartAddress = -1;
       int     dataOffset = 0;
+
+      foreach ( Types.ASM.LineInfo line in ASMFileInfo.LineInfo.Values )
+      {
+        if ( line.AddressStart != -1 )
+        {
+          if ( ( fileStartAddress == -1 )
+          ||   ( fileStartAddress > line.AddressStart ) )
+          {
+            // file start must be lowest address
+            fileStartAddress = line.AddressStart;
+          }
+        }
+      }
+
       foreach ( Types.ASM.LineInfo line in ASMFileInfo.LineInfo.Values )
       {
         if ( currentAddress == -1 )
@@ -10240,7 +10243,7 @@ namespace C64Studio.Parser
             if ( !startBytesSet )
             {
               startBytesSet = true;
-              fileStartAddress = currentAddress;
+              //fileStartAddress = currentAddress;
 
               if ( TargetTypeRequiresLoadAddress( Config.TargetType ) )
               {
@@ -10251,7 +10254,7 @@ namespace C64Studio.Parser
             memoryBlockStartAddress = currentAddress;
 
 
-            //Debug.Log( "ASM - new block starts at " + line.AddressStart );
+            Debug.Log( "ASM - new block starts at " + line.AddressStart );
 
             var asmSegment = new Types.ASMSegment();
             asmSegment.StartAddress = line.AddressStart;
@@ -10267,7 +10270,7 @@ namespace C64Studio.Parser
         if ( ( line.AddressStart != -1 )
         &&   ( line.AddressStart != currentAddress ) )
         {
-          //Debug.Log( "ASM - new followup block starts at " + line.AddressStart );
+          Debug.Log( "ASM - new followup block starts at " + line.AddressStart );
 
           if ( line.PseudoPCOffset == -1 )
           {
@@ -10335,6 +10338,24 @@ namespace C64Studio.Parser
                   memoryBlockLength = 0;
                 }
                 //result.Append( new GR.Memory.ByteBuffer( (uint)( line.AddressStart - currentAddress ) ) );
+
+                // went forward in memory
+                var asmSegment = new Types.ASMSegment();
+                asmSegment.StartAddress     = line.AddressStart;
+                asmSegment.GlobalLineIndex  = line.LineIndex;
+                ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
+                builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
+                currentResultBlock = asmSegment.Data;
+              }
+              else if ( line.AddressStart < currentAddress )
+              {
+                // went backward in memory
+                var asmSegment = new Types.ASMSegment();
+                asmSegment.StartAddress     = line.AddressStart;
+                asmSegment.GlobalLineIndex  = line.LineIndex;
+                ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
+                builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
+                currentResultBlock = asmSegment.Data;
               }
               trueCurrentAddress = line.AddressStart;
             }
@@ -10429,7 +10450,7 @@ namespace C64Studio.Parser
       }
        */
 
-      //memoryMap.Dump();
+      memoryMap.Dump();
 
       // determine load address
       int lowestStart = 65536;
@@ -11020,7 +11041,7 @@ namespace C64Studio.Parser
           // operators are special
           int possibleOperators = 0;
           int completeOperators = 0;
-          foreach ( string op in m_OperatorPrecedence.Keys )
+          foreach ( string op in m_AssemblerSettings.OperatorPrecedence.Keys )
           {
             if ( op.Length >= charPos - tokenStartPos + 1 )
             {
@@ -11081,7 +11102,7 @@ namespace C64Studio.Parser
             }
           }*/
           // operator must be one of the shorter ones
-          foreach ( string op in m_OperatorPrecedence.Keys )
+          foreach ( string op in m_AssemblerSettings.OperatorPrecedence.Keys )
           {
             if ( op.Length == 1 )
             {
@@ -11259,7 +11280,7 @@ namespace C64Studio.Parser
             int completeOperators = 0;
             //if ( charPos > 0 )
             {
-              foreach ( string op in m_OperatorPrecedence.Keys )
+              foreach ( string op in m_AssemblerSettings.OperatorPrecedence.Keys )
               {
                 if ( curChar == op[0] )
                 {
