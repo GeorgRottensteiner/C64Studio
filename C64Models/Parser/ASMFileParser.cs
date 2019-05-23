@@ -6178,6 +6178,10 @@ namespace C64Studio.Parser
           parseLine = Lines[lineIndex].TrimEnd();
         }
 
+        if ( parseLine.Contains( "ERROR CLC" ) )
+        {
+          Debug.Log( "aha" );
+        }
         lineSizeInBytes = 0;
         hadCommentInLine = false;
         hadMacro = false;
@@ -6276,7 +6280,7 @@ namespace C64Studio.Parser
 
 
         // PDS macro call?
-        if ( ( lineTokenInfos.Count > 1 )
+        if ( ( lineTokenInfos.Count >= 1 )
         &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Length == 0 )
         &&   ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
         &&   ( macroFunctions.ContainsKey( lineTokenInfos[0].Content ) ) )
@@ -8569,7 +8573,7 @@ namespace C64Studio.Parser
               stackScopes.RemoveAt( stackScopes.Count - 1 );
             }
           }
-          else if ( macroInfo.Type == Types.MacroInfo.MacroType.ALIGN_DASM )
+          else if ( macroInfo.Type == MacroInfo.MacroType.ALIGN_DASM )
           {
             var parseResult = POAlignDASM( lineTokenInfos, lineIndex, info, ref programStepPos, out lineSizeInBytes );
             if ( parseResult == ParseLineResult.RETURN_NULL )
@@ -8577,7 +8581,8 @@ namespace C64Studio.Parser
               return null;
             }
           }
-          else if ( macroInfo.Type != C64Studio.Types.MacroInfo.MacroType.IGNORE )
+          else if ( ( macroInfo.Type != MacroInfo.MacroType.IGNORE )
+          &&        ( macroInfo.Type != MacroInfo.MacroType.ERROR ) )
           {
             AddError( lineIndex, C64Studio.Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unsupported macro " + macroInfo.Keyword + " encountered" );
             return null;
@@ -8921,7 +8926,7 @@ namespace C64Studio.Parser
           &&   ( m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR].IndexOf( aChar ) != -1 ) )
           {
             commentPos = 0;
-            break;
+            return true;
           }
           if ( m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.COMMENT].IndexOf( aChar ) != -1 )
           {
@@ -11062,8 +11067,8 @@ namespace C64Studio.Parser
       List<Types.TokenInfo> result = new List<Types.TokenInfo>();
 
       if ( ( String.IsNullOrEmpty( Source ) )
-      ||   ( Start >= Source.Length )
-      ||   ( Start + Length > Source.Length ) )
+      || ( Start >= Source.Length )
+      || ( Start + Length > Source.Length ) )
       {
         return result;
       }
@@ -11097,11 +11102,11 @@ namespace C64Studio.Parser
             }
           }
           if ( ( possibleOperators == 1 )
-          &&   ( completeOperators == 1 ) )
+          && ( completeOperators == 1 ) )
           {
             if ( ( charPos + 1 < Start + Length )
-            &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[tokenStartPos] ) != -1 )
-            &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[charPos + 1] ) != -1 ) )
+            && ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[tokenStartPos] ) != -1 )
+            && ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[charPos + 1] ) != -1 ) )
             {
               // we have a text token which is not separated
             }
@@ -11153,13 +11158,13 @@ namespace C64Studio.Parser
                 bool    foundPseudoOp = false;
 
                 if ( ( !string.IsNullOrEmpty( ASMFileInfo.AssemblerSettings.MacroPrefix ) )
-                &&   ( op[0] == ASMFileInfo.AssemblerSettings.MacroPrefix[0] ) )
+                && ( op[0] == ASMFileInfo.AssemblerSettings.MacroPrefix[0] ) )
                 {
                   // is there a pseudo op following?
                   foreach ( var pseudoOp in ASMFileInfo.AssemblerSettings.Macros )
                   {
                     if ( ( Source.Length - charPos + 1 >= pseudoOp.Key.Length )
-                    &&   ( string.Compare( Source, charPos - 1, pseudoOp.Key, 0, pseudoOp.Key.Length, true ) == 0 ) )
+                    && ( string.Compare( Source, charPos - 1, pseudoOp.Key, 0, pseudoOp.Key.Length, true ) == 0 ) )
                     {
                       foundPseudoOp = true;
                       break;
@@ -11217,7 +11222,7 @@ namespace C64Studio.Parser
 
               // special case, labels with :; : is not part of label
               if ( ( currentTokenType == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-              ||   ( currentTokenType == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
+              || ( currentTokenType == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
               {
                 if ( curChar == ':' )
                 {
@@ -11237,7 +11242,7 @@ namespace C64Studio.Parser
             if ( m_AssemblerSettings.AllowedTokenChars[currentTokenType].IndexOf( curChar ) != -1 )
             {
               // token continues
-              
+
             }
             else
             {
@@ -11334,7 +11339,7 @@ namespace C64Studio.Parser
                 }
               }
               if ( ( possibleOperators == 1 )
-              &&   ( completeOperators == 1 ) )
+              && ( completeOperators == 1 ) )
               {
                 if ( result.Count == 0 )
                 {
@@ -11342,15 +11347,15 @@ namespace C64Studio.Parser
                   {
                     // could also be an internal label!
                     currentTokenType = Types.TokenInfo.TokenType.LABEL_LOCAL;
-                    tokenStartPos    = charPos;
+                    tokenStartPos = charPos;
                     ++charPos;
                     continue;
                   }
                 }
 
                 if ( ( charPos < Start + Length )
-                &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[tokenStartPos] ) != -1 )
-                &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[charPos + 1] ) != -1 ) )
+                && ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[tokenStartPos] ) != -1 )
+                && ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[charPos + 1] ) != -1 ) )
                 {
                   // we have a text token which is not separated
                 }
@@ -11428,14 +11433,14 @@ namespace C64Studio.Parser
                   continue;
                 }
               }
-              
+
             }
           }
         }
         ++charPos;
       }
       if ( ( tokenStartPos < charPos )
-      &&   ( currentTokenType != Types.TokenInfo.TokenType.UNKNOWN ) )
+      && ( currentTokenType != Types.TokenInfo.TokenType.UNKNOWN ) )
       {
         // auto end token
         Types.TokenInfo token = new Types.TokenInfo();
@@ -11448,11 +11453,11 @@ namespace C64Studio.Parser
 
       // collapse # 
       if ( ( result.Count >= 3 )
-      &&   ( result[1].Type == Types.TokenInfo.TokenType.SEPARATOR )
-      &&   ( result[1].Length == 1 )
-      &&   ( Source[result[1].StartPos] == '#' )
-      &&   ( result[2].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
-      &&   ( result[2].StartPos == result[1].StartPos + 1 ) )
+      && ( result[1].Type == Types.TokenInfo.TokenType.SEPARATOR )
+      && ( result[1].Length == 1 )
+      && ( Source[result[1].StartPos] == '#' )
+      && ( result[2].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
+      && ( result[2].StartPos == result[1].StartPos + 1 ) )
       {
         --result[2].StartPos;
         ++result[2].Length;
@@ -11478,21 +11483,37 @@ namespace C64Studio.Parser
         }
       }*/
 
+      CollapsePDSLocalLabels( result );
+
+      // labels must be left?
+      if ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
+      {
+        if ( ( result.Count > 0 )
+        && ( result[0].StartPos > 0 )
+        && ( result[0].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+        && ( !m_AssemblerSettings.Macros.ContainsKey( result[0].Content.ToUpper() ) ) )
+        {
+          // PDS - labels must be at the very start, if not, they are NOT labels (but probably macros)
+          result[0].Type = TokenInfo.TokenType.CALL_MACRO;
+        }
+      }
+
+
       // collapse & if prefixed to literal number
       if ( ( m_AssemblerSettings.AllowedTokenStartChars[TokenInfo.TokenType.LITERAL_NUMBER].Contains( "&" ) )
-      &&   ( result.Count >= 2 ) )
+      && ( result.Count >= 2 ) )
       {
         for ( int i = 0; i < result.Count - 1; ++i )
         {
           if ( ( result[i].Content == "&" )
-          &&   ( ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
-          ||     ( result[i + 1].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
-          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
+          && ( ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
+          || ( result[i + 1].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
+          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
           {
             // collapse
             result[i].Content = "&" + result[i + 1].Content;
-            result[i].Length  = result[i].Content.Length;
-            result[i].Type    = Types.TokenInfo.TokenType.LITERAL_NUMBER;
+            result[i].Length = result[i].Content.Length;
+            result[i].Type = Types.TokenInfo.TokenType.LITERAL_NUMBER;
             result.RemoveAt( i + 1 );
             --i;
             continue;
@@ -11507,20 +11528,20 @@ namespace C64Studio.Parser
         {
           // collapse - with literal to negative number, this requires all kind of checks
           if ( ( i > 0 )
-          &&   ( result[i].Content == "-" )
-          &&   ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
-          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
-          &&   ( ( result[i - 1].EndPos + 1 < result[i].StartPos )
-          ||     ( ( result[i - 1].EndPos + 1 == result[i].StartPos )
-          &&       ( result[i - 1].Type != TokenInfo.TokenType.LITERAL_NUMBER ) ) )
-          &&   ( result[i - 1].Type != TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
-          &&   ( result[i - 1].Type != TokenInfo.TokenType.LABEL_GLOBAL )
-          &&   ( result[i - 1].Type != TokenInfo.TokenType.LABEL_INTERNAL )
-          &&   ( result[i - 1].Type != TokenInfo.TokenType.LABEL_LOCAL )
-          &&   ( ( result[i - 1].Type != TokenInfo.TokenType.SEPARATOR )
-          ||     ( ( result[i - 1].Content != AssemblerSettings.INTERNAL_CLOSING_BRACE )
-          &&       ( result[i - 1].Content != ")" ) ) )
-          &&   ( result[i - 1].Content != "*" ) )
+          && ( result[i].Content == "-" )
+          && ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
+          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
+          && ( ( result[i - 1].EndPos + 1 < result[i].StartPos )
+          || ( ( result[i - 1].EndPos + 1 == result[i].StartPos )
+          && ( result[i - 1].Type != TokenInfo.TokenType.LITERAL_NUMBER ) ) )
+          && ( result[i - 1].Type != TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+          && ( result[i - 1].Type != TokenInfo.TokenType.LABEL_GLOBAL )
+          && ( result[i - 1].Type != TokenInfo.TokenType.LABEL_INTERNAL )
+          && ( result[i - 1].Type != TokenInfo.TokenType.LABEL_LOCAL )
+          && ( ( result[i - 1].Type != TokenInfo.TokenType.SEPARATOR )
+          || ( ( result[i - 1].Content != AssemblerSettings.INTERNAL_CLOSING_BRACE )
+          && ( result[i - 1].Content != ")" ) ) )
+          && ( result[i - 1].Content != "*" ) )
           {
             // collapse 
             result[i].Content = "-" + result[i + 1].Content;
@@ -11532,8 +11553,8 @@ namespace C64Studio.Parser
           }
 
           if ( ( result[i].Content == "%" )
-          &&   ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
-          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
+          && ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
+          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
           {
             // collapse
             result[i].Content = "%" + result[i + 1].Content;
@@ -11546,9 +11567,9 @@ namespace C64Studio.Parser
 
           // collapse binary representations
           if ( ( result[i].Content[0] == '%' )
-          &&   ( result[i + 1].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
-          &&   ( result[i + 1].Content == "#" ) )
+          && ( result[i + 1].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
+          && ( result[i + 1].Content == "#" ) )
           {
             // collapse
             result[i].Content += result[i + 1].Content;
@@ -11560,14 +11581,14 @@ namespace C64Studio.Parser
           }
           // collapse binary representations
           if ( ( result[i].Content[0] == '%' )
-          &&   ( result[i + 1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
-          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
+          && ( result[i + 1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
           {
             // several dots are connected as local label, only use first .
             int   dotEnd = -1;
-            
+
             while ( ( dotEnd + 1 < result[i + 1].Content.Length )
-            &&      ( result[i + 1].Content[dotEnd + 1] == '.' ) )
+            && ( result[i + 1].Content[dotEnd + 1] == '.' ) )
             {
               ++dotEnd;
             }
@@ -11630,13 +11651,13 @@ namespace C64Studio.Parser
         for ( int i = 0; i < result.Count - 2; ++i )
         {
           if ( ( result[i].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE )
-          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
-          &&   ( result[i + 1].Type == C64Studio.Types.TokenInfo.TokenType.OPERATOR )
-          &&   ( result[i + 1].Content == "+" )
-          &&   ( result[i + 1].StartPos + result[i + 1].Length == result[i + 2].StartPos )
-          &&   ( result[i + 2].Type == C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER )
-          &&   ( ( result[i + 2].Content == "1" )
-          ||     ( result[i + 2].Content == "2" ) ) )
+          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
+          && ( result[i + 1].Type == C64Studio.Types.TokenInfo.TokenType.OPERATOR )
+          && ( result[i + 1].Content == "+" )
+          && ( result[i + 1].StartPos + result[i + 1].Length == result[i + 2].StartPos )
+          && ( result[i + 2].Type == C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER )
+          && ( ( result[i + 2].Content == "1" )
+          || ( result[i + 2].Content == "2" ) ) )
           {
             // combine!
             if ( result[i + 2].Content == "1" )
@@ -11657,16 +11678,16 @@ namespace C64Studio.Parser
       for ( int i = 0; i < result.Count; ++i )
       {
         if ( ( result[i].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        &&   ( result[i].Content == InternalLabelPrefix ) )
+        && ( result[i].Content == InternalLabelPrefix ) )
         {
           int     curPos = i + 1;
 
           while ( true )
           {
             if ( ( result[curPos].Type == C64Studio.Types.TokenInfo.TokenType.OPERATOR )
-            &&   ( result[curPos].StartPos == result[curPos - 1].StartPos + result[curPos - 1].Length )
-            &&   ( ( result[curPos].Content == "-" )
-            ||     ( result[curPos].Content == "+" ) ) )
+            && ( result[curPos].StartPos == result[curPos - 1].StartPos + result[curPos - 1].Length )
+            && ( ( result[curPos].Content == "-" )
+            || ( result[curPos].Content == "+" ) ) )
             {
               // continue
               result[i].Content += result[curPos].Content;
@@ -11674,9 +11695,9 @@ namespace C64Studio.Parser
               ++curPos;
             }
             else if ( ( curPos < result.Count )
-            &&        ( result[curPos].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-            &&        ( result[curPos].StartPos == result[curPos - 1].StartPos + result[curPos - 1].Length )
-            &&        ( result[curPos].Content.StartsWith( InternalLabelPostfix ) ) )
+            && ( result[curPos].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+            && ( result[curPos].StartPos == result[curPos - 1].StartPos + result[curPos - 1].Length )
+            && ( result[curPos].Content.StartsWith( InternalLabelPostfix ) ) )
             {
               // final label
               result[i].Type = C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL;
@@ -11700,13 +11721,13 @@ namespace C64Studio.Parser
         for ( int i = 0; i < result.Count - 1; ++i )
         {
           if ( ( ( ( result[i].Type == Types.TokenInfo.TokenType.OPERATOR )
-          &&       ( result[i].Length == 1 ) )
-          ||     ( result[i].Type == Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
-          &&   ( result[i + 1].Type == Types.TokenInfo.TokenType.OPERATOR )
-          &&   ( result[i + 1].Length == 1 )
-          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
-          &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL].IndexOf( result[i].Content[0] ) != -1 )
-          &&   ( result[i].Content[0] == result[i + 1].Content[0] ) )
+          && ( result[i].Length == 1 ) )
+          || ( result[i].Type == Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
+          && ( result[i + 1].Type == Types.TokenInfo.TokenType.OPERATOR )
+          && ( result[i + 1].Length == 1 )
+          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
+          && ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL].IndexOf( result[i].Content[0] ) != -1 )
+          && ( result[i].Content[0] == result[i + 1].Content[0] ) )
           {
             ++result[i].Length;
             result[i].Type = Types.TokenInfo.TokenType.LABEL_INTERNAL;
@@ -11716,14 +11737,14 @@ namespace C64Studio.Parser
           }
           // internal label in front
           if ( ( result[i].Type == TokenInfo.TokenType.OPERATOR )
-          &&   ( ( result[i].Content.StartsWith( "+" ) )
-          ||     ( result[i].Content.StartsWith( "-" ) ) ) )
+          && ( ( result[i].Content.StartsWith( "+" ) )
+          || ( result[i].Content.StartsWith( "-" ) ) ) )
           {
             // is directly connected to global label then the internal label is split
             if ( ( result.Count > 1 )
-            &&   ( result[i + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
-            &&   ( result[i + 1].StartPos == result[i].StartPos + result[i].Length )
-            &&   ( result[i + 1].Content.StartsWith( InternalLabelPrefix ) ) )
+            && ( result[i + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+            && ( result[i + 1].StartPos == result[i].StartPos + result[i].Length )
+            && ( result[i + 1].Content.StartsWith( InternalLabelPrefix ) ) )
             {
               result[i].Type = TokenInfo.TokenType.LABEL_INTERNAL;
               result[i].Content += result[i + 1].Content;
@@ -11736,13 +11757,13 @@ namespace C64Studio.Parser
         }
         // opcode followed by internal label?
         if ( ( result[0].Type == TokenInfo.TokenType.OPCODE )
-        ||   ( result[0].Type == TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
-        ||   ( result[0].Type == TokenInfo.TokenType.OPCODE_FIXED_ZP )
-        ||   ( result[0].Type == TokenInfo.TokenType.OPCODE_DIRECT_VALUE ) )
+        || ( result[0].Type == TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
+        || ( result[0].Type == TokenInfo.TokenType.OPCODE_FIXED_ZP )
+        || ( result[0].Type == TokenInfo.TokenType.OPCODE_DIRECT_VALUE ) )
         {
           if ( ( result[1].Type == TokenInfo.TokenType.OPERATOR )
-          &&   ( ( result[1].Content.StartsWith( "+" ) )
-          ||     ( result[1].Content.StartsWith( "-" ) ) ) )
+          && ( ( result[1].Content.StartsWith( "+" ) )
+          || ( result[1].Content.StartsWith( "-" ) ) ) )
           {
             result[1].Type = TokenInfo.TokenType.LABEL_INTERNAL;
           }
@@ -11752,13 +11773,13 @@ namespace C64Studio.Parser
       {
         // starting with internal label?
         if ( ( result[0].Type == TokenInfo.TokenType.OPERATOR )
-        &&   ( ( result[0].Content.StartsWith( "+" ) )
-        ||     ( result[0].Content.StartsWith( "-" ) ) ) )
+        && ( ( result[0].Content.StartsWith( "+" ) )
+        || ( result[0].Content.StartsWith( "-" ) ) ) )
         {
           if ( ( result.Count > 1 )
-          &&   ( result[1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
-          &&   ( result[1].StartPos == result[0].StartPos + result[0].Length )
-          &&   ( result[1].Content.StartsWith( InternalLabelPrefix ) ) )
+          && ( result[1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+          && ( result[1].StartPos == result[0].StartPos + result[0].Length )
+          && ( result[1].Content.StartsWith( InternalLabelPrefix ) ) )
           {
             result[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
           }
@@ -11771,7 +11792,30 @@ namespace C64Studio.Parser
       return result;
     }
 
-
+    private void CollapsePDSLocalLabels( List<TokenInfo> result )
+    {
+      // collapse PDS local label (! is interpreted as operator)
+      if ( ( m_AssemblerSettings.AllowedTokenStartChars[TokenInfo.TokenType.LABEL_LOCAL].Contains( "!" ) )
+      && ( result.Count >= 2 ) )
+      {
+        for ( int i = 0; i < result.Count - 1; ++i )
+        {
+          if ( ( result[i].Content == "!" )
+          && ( ( result[i + 1].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+          || ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER ) )
+          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
+          {
+            // collapse
+            result[i].Content = "!" + result[i + 1].Content;
+            result[i].Length = result[i].Content.Length;
+            result[i].Type = Types.TokenInfo.TokenType.LABEL_LOCAL;
+            result.RemoveAt( i + 1 );
+            --i;
+            continue;
+          }
+        }
+      }
+    }
 
     private bool IsBlankChar( char Character )
     {

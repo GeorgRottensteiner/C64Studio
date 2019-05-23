@@ -116,7 +116,7 @@ namespace TestProject
       C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.PDS;
+      config.Assembler = C64Studio.Types.AssemblerType.DASM;
 
       Assert.IsTrue( parser.Parse( source, null, config ) );
 

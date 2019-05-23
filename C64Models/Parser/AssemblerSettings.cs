@@ -21,6 +21,7 @@ namespace C64Studio.Parser
     public bool                                                     MacroKeywordAfterName = false;
     public bool                                                     MacrosUseCheapLabelsAsParameters = false;
     public bool                                                     DoWithoutParameterIsUntil = false;
+    public bool                                                     LabelsMustBeAtStartOfLine = false;
     public GR.Collections.Set<string>                               DefineSeparatorKeywords = new GR.Collections.Set<string>();
     public bool                                                     CaseSensitive = true;
     public bool                                                     IncludeExpectsStringLiteral = true;
@@ -45,6 +46,7 @@ namespace C64Studio.Parser
 
     public void SetAssemblerType( Types.AssemblerType Type )
     {
+      // set default settings
       AllowedSingleTokens = "";
       AllowedTokenChars.Clear();
       AllowedTokenEndChars.Clear();
@@ -63,6 +65,7 @@ namespace C64Studio.Parser
       HasBinaryNot = true;
       MacroKeywordAfterName = false;
       MacrosUseCheapLabelsAsParameters = false;
+      LabelsMustBeAtStartOfLine = false;
 
       OperatorPrecedence.Clear();
       OperatorPrecedence["-"] = 0;
@@ -338,6 +341,7 @@ namespace C64Studio.Parser
           MacrosHaveVariableNumberOfArguments = true;
           MacrosUseCheapLabelsAsParameters = true;
           HasBinaryNot = false;
+          LabelsMustBeAtStartOfLine = true;
           break;
         case Types.AssemblerType.C64ASM:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
