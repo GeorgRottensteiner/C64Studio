@@ -8222,6 +8222,10 @@ namespace C64Studio.Parser
             info.NumBytes = (int)info.LineData.Length;
             lineSizeInBytes = (int)info.LineData.Length;
           }
+          else if ( macroInfo.Type == Types.MacroInfo.MacroType.END_OF_FILE )
+          {
+            break;
+          }
           else if ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.BASIC )
           {
             var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, out lineSizeInBytes );
@@ -8604,7 +8608,11 @@ namespace C64Studio.Parser
       {
         foreach ( Types.ScopeInfo scope in stackScopes )
         {
-          if ( scope.Loop == null )
+          if ( scope.Type == ScopeInfo.ScopeType.REPEAT )
+          {
+            AddError( scope.StartIndex, Types.ErrorCode.E1005_MISSING_CLOSING_BRACKET, "REPEAT is not properly ended" );
+          }
+          else if ( scope.Loop == null )
           {
             AddError( scope.StartIndex, Types.ErrorCode.E1005_MISSING_CLOSING_BRACKET, "Missing closing bracket" );
           }
@@ -8784,6 +8792,8 @@ namespace C64Studio.Parser
       }
     }
 
+
+
     private ParseLineResult PORepeat( List<TokenInfo> lineTokenInfos, int lineIndex, LineInfo info, List<ScopeInfo> Scopes )
     {
       List<List<TokenInfo>>   lineParams;
@@ -8816,7 +8826,7 @@ namespace C64Studio.Parser
       }
       ScopeInfo   scope = new ScopeInfo( ScopeInfo.ScopeType.REPEAT );
       scope.Active = true;
-      scope.StartIndex = numRepeats;
+      scope.StartIndex = lineIndex;
 
       Scopes.Add( scope );
       OnScopeAdded( scope );
