@@ -5172,7 +5172,7 @@ namespace C64Studio
           ActiveContent.Cut();
           break;
       }
-      return true;
+      return false;
     }
 
 

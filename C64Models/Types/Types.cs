@@ -75,7 +75,8 @@ namespace C64Studio.Types
       SET,
       ALIGN_DASM,
       BASIC,
-      ADDRESS         // ACME: !ADDR with or without braces
+      ADDRESS,        // ACME: !ADDR with or without braces
+      REPEAT          // PDS: Repeat <x> times next line
     }
 
     public MacroType      Type = MacroType.UNKNOWN;
@@ -202,6 +203,7 @@ namespace C64Studio.Types
     E1104_BANK_SIZE_INVALID                 = 0x1104,
     E1105_INVALID_OPCODE                    = 0x1105,
     E1106_SEGMENT_OUT_OF_BOUNDS             = 0x1106,
+    E1107_ARGUMENT_OUT_OF_BOUNDS            = 0x1107,
 
     E1200_REDEFINITION_OF_LABEL             = 0x1200,
     E1201_REDEFINITION_OF_PREPROCESSOR_DEFINE = 0x1201,
@@ -1477,7 +1479,8 @@ namespace C64Studio.Types
       PSEUDO_PC,
       ZONE,
       ADDRESS,
-      DO_UNTIL
+      DO_UNTIL,
+      REPEAT
     };
 
     public int                      StartIndex = 0;

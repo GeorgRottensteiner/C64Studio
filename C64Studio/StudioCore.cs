@@ -115,8 +115,8 @@ namespace C64Studio
     public string DetermineTargetFilename( DocumentInfo Doc, Parser.ParserBase Parser )
     {
       if ( ( String.IsNullOrEmpty( Parser.CompileTargetFile ) )
-      && ( ( Doc.Element == null )
-      || ( String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) ) )
+      &&   ( ( Doc.Element == null )
+      ||     ( String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) ) )
       {
         // default to same name.prg and cbm
         if ( Doc.Project == null )

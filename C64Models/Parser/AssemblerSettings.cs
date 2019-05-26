@@ -261,6 +261,7 @@ namespace C64Studio.Parser
           MacroIsZone = true;
           MacrosHaveVariableNumberOfArguments = true;
           IncludeExpectsStringLiteral = false;
+          CaseSensitive = false;
           break;
         case Types.AssemblerType.PDS:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
@@ -325,6 +326,7 @@ namespace C64Studio.Parser
           AddMacro( "SEND", Types.MacroInfo.MacroType.IGNORE );
           AddMacro( "SKIP", Types.MacroInfo.MacroType.IGNORE );
           AddMacro( "END", Types.MacroInfo.MacroType.END_OF_FILE );
+          AddMacro( "REPEAT", Types.MacroInfo.MacroType.REPEAT );
 
           OperatorPrecedence["!"] = 4;
 

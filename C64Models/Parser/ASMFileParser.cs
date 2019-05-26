@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using C64Studio.Types;
+using C64Studio.Types.ASM;
 using GR.Collections;
 using GR.Memory;
 using Tiny64;
@@ -6178,10 +6179,6 @@ namespace C64Studio.Parser
           parseLine = Lines[lineIndex].TrimEnd();
         }
 
-        if ( parseLine.Contains( "ERROR CLC" ) )
-        {
-          Debug.Log( "aha" );
-        }
         lineSizeInBytes = 0;
         hadCommentInLine = false;
         hadMacro = false;
@@ -6192,15 +6189,15 @@ namespace C64Studio.Parser
         if ( FindStartOfComment( parseLine, out commentPos ) )
         {
           m_CurrentCommentSB.AppendLine( parseLine.Substring( commentPos + 1 ) );
-          parseLine         = parseLine.Substring( 0, commentPos );
-          hadCommentInLine  = true;
+          parseLine = parseLine.Substring( 0, commentPos );
+          hadCommentInLine = true;
         }
 
         Types.ASM.LineInfo info = new Types.ASM.LineInfo();
-        info.LineIndex      = lineIndex;
-        info.Zone           = m_CurrentZoneName;
+        info.LineIndex = lineIndex;
+        info.Zone = m_CurrentZoneName;
         info.CheapLabelZone = cheapLabelParent;
-        info.AddressStart   = programStepPos;
+        info.AddressStart = programStepPos;
 
         if ( ScopeInsideMacroDefinition( stackScopes ) )
         {
@@ -6237,6 +6234,12 @@ namespace C64Studio.Parser
           continue;
         }
 
+        if ( parseLine.Contains( "TABLELO MACRO" ) )
+        {
+          Debug.Log( "aha" );
+        }
+
+
         recheck_line:;
 
         // split lines by ':'
@@ -6263,30 +6266,11 @@ namespace C64Studio.Parser
           continue;
         }
 
-        if ( !m_AssemblerSettings.CaseSensitive )
-        {
-          // turn all labels/macros to upper case
-          foreach ( Types.TokenInfo token in lineTokenInfos )
-          {
-            if ( ( token.Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-            ||   ( token.Type == Types.TokenInfo.TokenType.LABEL_INTERNAL )
-            ||   ( token.Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
-            ||   ( token.Type == Types.TokenInfo.TokenType.LABEL_LOCAL ) )
-            {
-              token.Content = token.Content.ToUpper();
-            }
-          }
-        }
+        AdjustLabelCasing( lineTokenInfos );
 
 
         // PDS macro call?
-        if ( ( lineTokenInfos.Count >= 1 )
-        &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Length == 0 )
-        &&   ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        &&   ( macroFunctions.ContainsKey( lineTokenInfos[0].Content ) ) )
-        {
-          lineTokenInfos[0].Type = TokenInfo.TokenType.CALL_MACRO;
-        }
+        DetectPDSMacroCall( macroFunctions, lineTokenInfos );
 
 
         // do we have a DASM scope operator? (must skip scope check then)
@@ -6309,8 +6293,8 @@ namespace C64Studio.Parser
         {
           var macroInfo = m_AssemblerSettings.Macros[lineTokenInfos[tokenOffset].Content.ToUpper()];
           if ( ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.IF )
-          ||   ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.ELSE )
-          ||   ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.END_IF ) )
+          || ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.ELSE )
+          || ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.END_IF ) )
           {
             isDASMScopePseudoOP = true;
           }
@@ -6318,8 +6302,8 @@ namespace C64Studio.Parser
 
 
         if ( ( lineTokenInfos.Count > 0 )
-        &&   ( lineTokenInfos[0].Content != "}" )
-        &&   ( !isDASMScopePseudoOP ) )
+        && ( lineTokenInfos[0].Content != "}" )
+        && ( !isDASMScopePseudoOP ) )
         {
           bool isActive = true;
           for ( int i = 0; i < stackScopes.Count; ++i )
@@ -6389,93 +6373,177 @@ namespace C64Studio.Parser
             previousMinusLabel[lineTokenInfos[0].Content] = InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString();
           }
         }
+
         // identify internal labels as such
-        if ( ( lineTokenInfos[0].Type != C64Studio.Types.TokenInfo.TokenType.CALL_MACRO )
-        &&   ( ( lineTokenInfos[0].Content.StartsWith( "-" ) )
-        ||     ( lineTokenInfos[0].Content.StartsWith( "+" ) ) ) )
-        {
-          lineTokenInfos[0].Content = InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString();
-          lineTokenInfos[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
-        }
+        DetectInternalLabels( lineIndex, lineTokenInfos );
 
         string  upToken = lineTokenInfos[0].Content.ToUpper();
 
         // if PDS global labels automatically work as zone
-        if ( m_AssemblerSettings.GlobalLabelsAutoZone )
-        {
-          if ( ( lineTokenInfos[0].Type != C64Studio.Types.TokenInfo.TokenType.CALL_MACRO )
-          &&   ( ( !m_Processor.Opcodes.ContainsKey( upToken.ToLower() ) )
-          &&     ( ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
-          &&       ( !m_AssemblerSettings.Macros.ContainsKey( upToken ) ) )
-          ||     ( ( m_AssemblerSettings.MacroPrefix.Length > 0 )
-          &&       ( !upToken.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) ) )
-          {
-            if ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-            {
-              // auto-zone
-              m_CurrentZoneName = lineTokenInfos[0].Content;
-              info.Zone = m_CurrentZoneName;
-            }
-          }
-        }
+        StartNewZoneOnGlobalLabel( info, lineTokenInfos, upToken );
 
         //prefix zone to local labels
-        for ( int i = 0; i < lineTokenInfos.Count; ++i )
-        {
-          if ( ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-          &&   ( i == 0 ) )
-          {
-            cheapLabelParent = lineTokenInfos[i].Content;
-          }
-          if ( ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_LOCAL )
-          ||   ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
-          {
-            if ( ( m_AssemblerSettings.LabelPostfix.Length > 0 )
-            &&   ( lineTokenInfos[i].Content.EndsWith( m_AssemblerSettings.LabelPostfix ) ) )
-            {
-              lineTokenInfos[i].Length -= 1;
-              lineTokenInfos[i].Content = null;
-            }
-          }
-          if ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_LOCAL )
-          {
-            // ugly hack to avoid prefixing relative paths
-            if ( lineTokenInfos[i].Content != ".." )
-            {
-              lineTokenInfos[i].Content = m_CurrentZoneName + lineTokenInfos[i].Content;
-              if ( i == 0 )
-              {
-                upToken = lineTokenInfos[i].Content.ToUpper();
-              }
-            }
-          }
-          if ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
-          {
-            lineTokenInfos[i].Content = cheapLabelParent + lineTokenInfos[i].Content;
-            if ( i == 0 )
-            {
-              upToken = lineTokenInfos[i].Content.ToUpper();
-            }
-          }
-        }
+        PrefixZoneToLocalLabels( ref cheapLabelParent, lineTokenInfos, ref upToken );
 
         string labelInFront = "";
         Types.TokenInfo tokenInFront = null;
 
-        if ( ( lineTokenInfos.Count >= 3 )
-        &&   ( m_AssemblerSettings.DefineSeparatorKeywords.ContainsValue( lineTokenInfos[1].Content )
-        &&   ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
-        ||     ( !lineTokenInfos[0].Content.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) )
+        if ( upToken == "}" )
+        {
+          if ( stackScopes.Count == 0 )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1004_MISSING_OPENING_BRACKET, "Missing opening brace" );
+            continue;
+          }
+          Types.ScopeInfo   closingScope = stackScopes[stackScopes.Count - 1];
+
+          switch ( closingScope.Type )
+          {
+            case Types.ScopeInfo.ScopeType.MACRO_FUNCTION:
+              if ( closingScope.Macro != null )
+              {
+                if ( lineTokenInfos.Count != 1 )
+                {
+                  AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
+                  continue;
+                }
+                var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                if ( result == ParseLineResult.CALL_CONTINUE )
+                {
+                  --lineIndex;
+                  continue;
+                }
+                else if ( result == ParseLineResult.ERROR_ABORT )
+                {
+                  return null;
+                }
+              }
+              break;
+            case Types.ScopeInfo.ScopeType.LOOP:
+              if ( closingScope.Loop != null )
+              {
+                if ( lineTokenInfos.Count != 1 )
+                {
+                  AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
+                  continue;
+                }
+                OnScopeRemoved( lineIndex, stackScopes );
+                stackScopes.RemoveAt( stackScopes.Count - 1 );
+                var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                if ( result == ParseLineResult.CALL_CONTINUE )
+                {
+                  --lineIndex;
+                  continue;
+                }
+                else if ( result == ParseLineResult.ERROR_ABORT )
+                {
+                  return null;
+                }
+              }
+              break;
+            case Types.ScopeInfo.ScopeType.ZONE:
+              if ( lineTokenInfos.Count != 1 )
+              {
+                AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
+                continue;
+              }
+              OnScopeRemoved( lineIndex, stackScopes );
+              stackScopes.RemoveAt( stackScopes.Count - 1 );
+              m_CurrentZoneName = "";
+              break;
+            case Types.ScopeInfo.ScopeType.PSEUDO_PC:
+              PORealPC( info );
+              OnScopeRemoved( lineIndex, stackScopes );
+              stackScopes.RemoveAt( stackScopes.Count - 1 );
+              m_CompileCurrentAddress = trueCompileCurrentAddress;
+              info.AddressStart = trueCompileCurrentAddress;
+              programStepPos = m_CompileCurrentAddress;
+              break;
+            default:
+              // normal scope end
+              if ( ( lineTokenInfos.Count == 3 )
+              && ( lineTokenInfos[0].Content == "}" )
+              && ( lineTokenInfos[2].Content == "{" )
+              && ( lineTokenInfos[1].Content.ToUpper() == "ELSE" ) )
+              {
+                if ( !ScopeInsideMacroDefinition( stackScopes ) )
+                {
+                  stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].IfChainHadActiveEntry;
+                  //stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
+                  //Debug.Log( "toggle scope state " + lineIndex );
+                }
+              }
+              else if ( lineTokenInfos.Count == 1 )
+              {
+                OnScopeRemoved( lineIndex, stackScopes );
+                stackScopes.RemoveAt( stackScopes.Count - 1 );
+              }
+              else if ( ( lineTokenInfos.Count >= 4 )
+              && ( lineTokenInfos[0].Content == "}" )
+              && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
+              && ( lineTokenInfos[1].Content.ToUpper() == "ELSE" )
+              && ( lineTokenInfos[2].Content.ToUpper() == "IF" ) )
+              {
+                if ( !ScopeInsideMacroDefinition( stackScopes ) )
+                {
+                  // else if
+
+                  // end previous block
+                  var prevScope = stackScopes[stackScopes.Count - 1];
+                  stackScopes.RemoveAt( stackScopes.Count - 1 );
+
+                  // start new block
+                  int defineResult = -1;
+
+                  Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                  scope.StartIndex = lineIndex;
+                  if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, out defineResult ) )
+                  {
+                    AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
+                              + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
+                              lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
+                    scope.Active = true;
+                    scope.IfChainHadActiveEntry = true;
+                  }
+                  else if ( defineResult == 0 )
+                  {
+                    scope.Active = false;
+                  }
+                  else
+                  {
+                    scope.Active = true;
+                    scope.IfChainHadActiveEntry = true;
+                  }
+                  // if chain already had an active entry?
+                  if ( prevScope.IfChainHadActiveEntry )
+                  {
+                    scope.Active = false;
+                    scope.IfChainHadActiveEntry = true;
+                  }
+                  stackScopes.Add( scope );
+                }
+              }
+              else
+              {
+                AddError( lineIndex,
+                          Types.ErrorCode.E1006_MALFORMED_BLOCK_CLOSE_STATEMENT,
+                          "Malformed block close statement, expecting single \"}\", \"} else {\" or \"} else if <expression> {\"",
+                          lineTokenInfos[0].StartPos,
+                          lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
+              }
+              break;
+          }
+          //++lineIndex;
+          continue;
+        }
+        else if ( IsDefine( lineTokenInfos ) )
         {
           // a define
           if ( ScopeInsideMacroDefinition( stackScopes ) )
           {
             continue;
           }
-
-
           int equPos = lineTokenInfos[1].StartPos;
-          //string defineName = parseLine.Substring( 0, equPos ).Trim();
           string defineName = lineTokenInfos[0].Content;
           if ( !m_AssemblerSettings.CaseSensitive )
           {
@@ -6483,7 +6551,6 @@ namespace C64Studio.Parser
           }
           int   defineLength = lineTokenInfos[lineTokenInfos.Count - 1].StartPos + lineTokenInfos[lineTokenInfos.Count - 1].Length - ( equPos + lineTokenInfos[1].Content.Length );
           string defineValue = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 2 );
-          //parseLine.Substring( equPos + lineTokenInfos[1].Content.Length, defineLength ).Trim();
 
           List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
           int address = -1;
@@ -6528,13 +6595,13 @@ namespace C64Studio.Parser
                 AddUnparsedLabel( defineName, defineValue, lineIndex );
               }
             }
-            else 
+            else
             {
               AddConstant( defineName, address, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
               if ( defineName == "*" )
               {
                 if ( ( address >= 0 )
-                &&   ( address <= 0xffff ) )
+                && ( address <= 0xffff ) )
                 {
                   AddError( lineIndex, Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, "Evaluated constant out of bounds, " + address + " must be >= 0 and <= 65535", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
                 }
@@ -6553,162 +6620,13 @@ namespace C64Studio.Parser
         }
         else if ( ( lineTokenInfos[0].Type != C64Studio.Types.TokenInfo.TokenType.CALL_MACRO )
         &&        ( ( !m_Processor.Opcodes.ContainsKey( upToken.ToLower() ) )
-        &&           ( ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
-        &&               ( !m_AssemblerSettings.Macros.ContainsKey( upToken ) ) )
-        ||             ( ( m_AssemblerSettings.MacroPrefix.Length > 0 )
-        &&               ( !upToken.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) ) )
+        &&          ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
+        //&&            ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
+        &&            ( !m_AssemblerSettings.Macros.ContainsKey( upToken ) )
+        ||          ( ( m_AssemblerSettings.MacroPrefix.Length > 0 )
+        &&            ( !upToken.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) ) )
         {
           // not a token, not a macro, must be a label in front
-          if ( upToken == "}" )
-          {
-            if ( stackScopes.Count == 0 )
-            {
-              AddError( lineIndex, Types.ErrorCode.E1004_MISSING_OPENING_BRACKET, "Missing opening brace" );
-            }
-            else
-            {
-              Types.ScopeInfo   closingScope = stackScopes[stackScopes.Count - 1];
-
-              switch ( closingScope.Type )
-              {
-                case Types.ScopeInfo.ScopeType.MACRO_FUNCTION:
-                  if ( closingScope.Macro != null )
-                  {
-                    if ( lineTokenInfos.Count != 1 )
-                    {
-                      AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
-                      continue;
-                    }
-                    var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
-                    if ( result == ParseLineResult.CALL_CONTINUE )
-                    {
-                      --lineIndex;
-                      continue;
-                    }
-                    else if ( result == ParseLineResult.ERROR_ABORT )
-                    {
-                      return null;
-                    }
-                  }
-                  break;
-                case Types.ScopeInfo.ScopeType.LOOP:
-                  if ( closingScope.Loop != null )
-                  {
-                    if ( lineTokenInfos.Count != 1 )
-                    {
-                      AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
-                      continue;
-                    }
-                    OnScopeRemoved( lineIndex, stackScopes );
-                    stackScopes.RemoveAt( stackScopes.Count - 1 );
-                    var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
-                    if ( result == ParseLineResult.CALL_CONTINUE )
-                    {
-                      --lineIndex;
-                      continue;
-                    }
-                    else if ( result == ParseLineResult.ERROR_ABORT )
-                    {
-                      return null;
-                    }
-                  }
-                  break;
-                case Types.ScopeInfo.ScopeType.ZONE:
-                  if ( lineTokenInfos.Count != 1 )
-                  {
-                    AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
-                    continue;
-                  }
-                  OnScopeRemoved( lineIndex, stackScopes );
-                  stackScopes.RemoveAt( stackScopes.Count - 1 );
-                  m_CurrentZoneName = "";
-                  break;
-                case Types.ScopeInfo.ScopeType.PSEUDO_PC:
-                  PORealPC( info );
-                  OnScopeRemoved( lineIndex, stackScopes );
-                  stackScopes.RemoveAt( stackScopes.Count - 1 );
-                  m_CompileCurrentAddress = trueCompileCurrentAddress;
-                  info.AddressStart = trueCompileCurrentAddress;
-                  programStepPos = m_CompileCurrentAddress;
-                  break;
-                default:
-                  // normal scope end
-                  if ( ( lineTokenInfos.Count == 3 )
-                  &&   ( lineTokenInfos[0].Content == "}" )
-                  &&   ( lineTokenInfos[2].Content == "{" )
-                  &&   ( lineTokenInfos[1].Content.ToUpper() == "ELSE" ) )
-                  {
-                    if ( !ScopeInsideMacroDefinition( stackScopes ) )
-                    {
-                      stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].IfChainHadActiveEntry;
-                      //stackScopes[stackScopes.Count - 1].Active = !stackScopes[stackScopes.Count - 1].Active;
-                      //Debug.Log( "toggle scope state " + lineIndex );
-                    }
-                  }
-                  else if ( lineTokenInfos.Count == 1 )
-                  {
-                    OnScopeRemoved( lineIndex, stackScopes );
-                    stackScopes.RemoveAt( stackScopes.Count - 1 );
-                  }
-                  else if ( ( lineTokenInfos.Count >= 4 )
-                  &&        ( lineTokenInfos[0].Content == "}" )
-                  &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
-                  &&        ( lineTokenInfos[1].Content.ToUpper() == "ELSE" )
-                  &&        ( lineTokenInfos[2].Content.ToUpper() == "IF" ) )
-                  {
-                    if ( !ScopeInsideMacroDefinition( stackScopes ) )
-                    {
-                      // else if
-
-                      // end previous block
-                      var prevScope = stackScopes[stackScopes.Count - 1];
-                      stackScopes.RemoveAt( stackScopes.Count - 1 );
-
-                      // start new block
-                      int defineResult = -1;
-
-                      Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
-                      scope.StartIndex = lineIndex;
-                      if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, out defineResult ) )
-                      {
-                        AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
-                                  + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
-                                  lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
-                        scope.Active = true;
-                        scope.IfChainHadActiveEntry = true;
-                      }
-                      else if ( defineResult == 0 )
-                      {
-                        scope.Active = false;
-                      }
-                      else
-                      {
-                        scope.Active = true;
-                        scope.IfChainHadActiveEntry = true;
-                      }
-                      // if chain already had an active entry?
-                      if ( prevScope.IfChainHadActiveEntry )
-                      {
-                        scope.Active = false;
-                        scope.IfChainHadActiveEntry = true;
-                      }
-                      stackScopes.Add( scope );
-                    }
-                  }
-                  else
-                  {
-                    AddError( lineIndex, 
-                              Types.ErrorCode.E1006_MALFORMED_BLOCK_CLOSE_STATEMENT, 
-                              "Malformed block close statement, expecting single \"}\", \"} else {\" or \"} else if <expression> {\"",
-                              lineTokenInfos[0].StartPos, 
-                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
-                  }
-                  break;
-              }
-              //++lineIndex;
-              continue;
-            }
-          }
           labelInFront = lineTokenInfos[0].Content;
           tokenInFront = lineTokenInfos[0];
 
@@ -6725,7 +6643,7 @@ namespace C64Studio.Parser
 
               if ( ( m_AssemblerSettings.MacroKeywordAfterName )
               &&   ( lineTokenInfos.Count >= 2 )
-              &&   ( lineTokenInfos[1].Content == MacroByType(MacroInfo.MacroType.MACRO ) ) )
+              &&   ( lineTokenInfos[1].Content == MacroByType( MacroInfo.MacroType.MACRO ) ) )
               {
                 // a PDS style macro definition
               }
@@ -6777,10 +6695,7 @@ namespace C64Studio.Parser
           }
         }
         if ( ( lineTokenInfos.Count > 0 )
-        &&   ( ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE )
-        ||     ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_DIRECT_VALUE )
-        ||     ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
-        ||     ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP ) ) )
+        &&   ( IsOpcode( lineTokenInfos[0].Type ) ) )
         {
           List<Tiny64.Opcode> possibleOpcodes = new List<Tiny64.Opcode>( m_Processor.Opcodes[upToken.ToLower()] );
 
@@ -6838,8 +6753,8 @@ namespace C64Studio.Parser
 
           if ( possibleOpcodes.Count == 0 )
           {
-            AddError( lineIndex, 
-                      C64Studio.Types.ErrorCode.E1105_INVALID_OPCODE, 
+            AddError( lineIndex,
+                      C64Studio.Types.ErrorCode.E1105_INVALID_OPCODE,
                       "Cannot deduce matching opcode from zero page settings",
                       lineTokenInfos[0].StartPos,
                       lineTokenInfos[0].Length );
@@ -6852,7 +6767,7 @@ namespace C64Studio.Parser
           {
             //dh.Log( "Found Token " + opcode.Mnemonic + ", size " + info.NumBytes.ToString() + " in line " + parseLine );
             info.NumBytes = estimatedOpcode.NumOperands + 1;
-            info.Opcode   = estimatedOpcode;
+            info.Opcode = estimatedOpcode;
           }
 
           if ( info.Opcode != null )
@@ -6901,10 +6816,10 @@ namespace C64Studio.Parser
                 {
                   int delta = byteValue - info.AddressStart - 2;
                   if ( ( delta < -128 )
-                  ||   ( delta > 127 ) )
+                  || ( delta > 127 ) )
                   {
-                    AddError( lineIndex, 
-                              Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, 
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR,
                               "Relative jump too far, trying to jump " + delta + " bytes",
                               lineTokenInfos[1].StartPos,
                               lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
@@ -6978,7 +6893,7 @@ namespace C64Studio.Parser
 
                 if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
                 &&   ( ( byteValue < 0 )
-                ||     ( byteValue >= 65536 ) ) )
+                ||   ( byteValue >= 65536 ) ) )
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
@@ -7016,8 +6931,8 @@ namespace C64Studio.Parser
                   ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
                   ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "X" ) )
                   {
-                    AddError( lineIndex, 
-                              Types.ErrorCode.E1305_EXPECTED_TRAILING_SYMBOL, 
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1305_EXPECTED_TRAILING_SYMBOL,
                               "Expected trailing ,x",
                               info.NeededParsedExpression[0].StartPos,
                               info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].EndPos + 1 - info.NeededParsedExpression[0].StartPos );
@@ -7040,11 +6955,11 @@ namespace C64Studio.Parser
                     ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
                     ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "X" ) ) )
                     {
-                      AddError( lineIndex, 
-                                Types.ErrorCode.E1306_EXPECTED_BRACKETS_AND_TRAILING_SYMBOL, 
+                      AddError( lineIndex,
+                                Types.ErrorCode.E1306_EXPECTED_BRACKETS_AND_TRAILING_SYMBOL,
                                 "Expected round brackets and trailing ,x",
                                 info.NeededParsedExpression[0].StartPos,
-                                info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].EndPos + 1 - info.NeededParsedExpression[0].StartPos ); 
+                                info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].EndPos + 1 - info.NeededParsedExpression[0].StartPos );
                     }
                     else
                     {
@@ -7066,8 +6981,8 @@ namespace C64Studio.Parser
                   ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
                   ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "Y" ) )
                   {
-                    AddError( lineIndex, 
-                              Types.ErrorCode.E1305_EXPECTED_TRAILING_SYMBOL, 
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1305_EXPECTED_TRAILING_SYMBOL,
                               "Expected trailing ,y",
                               info.NeededParsedExpression[0].StartPos,
                               info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].EndPos + 1 - info.NeededParsedExpression[0].StartPos );
@@ -7117,11 +7032,11 @@ namespace C64Studio.Parser
           {
             string    tokenToDisplay = lineTokenInfos[0].Content;
             if ( ( lineTokenInfos.Count > 1 )
-            &&   ( lineTokenInfos[0].EndPos + 1 == lineTokenInfos[1].StartPos ) )
+            && ( lineTokenInfos[0].EndPos + 1 == lineTokenInfos[1].StartPos ) )
             {
               tokenToDisplay += lineTokenInfos[1].Content;
             }
-            AddWarning( lineIndex, 
+            AddWarning( lineIndex,
                         Types.ErrorCode.E1301_MACRO_UNKNOWN,
                         "Unsupported macro " + tokenToDisplay + ", this might result in a broken build",
                         lineTokenInfos[0].StartPos,
@@ -7162,9 +7077,9 @@ namespace C64Studio.Parser
             else if ( macro.Type == Types.MacroInfo.MacroType.SET )
             {
               if ( ( lineTokenInfos.Count >= 4 )
-              && ( m_AssemblerSettings.DefineSeparatorKeywords.ContainsValue( lineTokenInfos[2].Content )
-              && ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
-              || ( !lineTokenInfos[1].Content.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) )
+              &&   ( m_AssemblerSettings.DefineSeparatorKeywords.ContainsValue( lineTokenInfos[2].Content )
+              &&   ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
+              ||     ( !lineTokenInfos[1].Content.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) )
               {
                 if ( ScopeInsideMacroDefinition( stackScopes ) )
                 {
@@ -7421,7 +7336,7 @@ namespace C64Studio.Parser
                 lineTokenInfos.RemoveAt( 0 );
 
                 if ( ( lineTokenInfos.Count != 3 )
-                || ( lineTokenInfos[1].Content != "," ) )
+                ||   ( lineTokenInfos[1].Content != "," ) )
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -8050,7 +7965,7 @@ namespace C64Studio.Parser
               while ( tokenIndex < lineTokenInfos.Count );
 
               if ( ( tokenParams.Count < 2 )
-              ||   ( tokenParams.Count > 3 ) )
+              || ( tokenParams.Count > 3 ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !align <AndValue>,<EqualValue>[,<FillValue>]" );
                 return null;
@@ -8088,8 +8003,8 @@ namespace C64Studio.Parser
               }
             }
             else if ( ( macro.Type == Types.MacroInfo.MacroType.BYTE )
-            ||        ( macro.Type == Types.MacroInfo.MacroType.LOW_BYTE )
-            ||        ( macro.Type == Types.MacroInfo.MacroType.HIGH_BYTE ) )
+            || ( macro.Type == Types.MacroInfo.MacroType.LOW_BYTE )
+            || ( macro.Type == Types.MacroInfo.MacroType.HIGH_BYTE ) )
             {
               PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, macro.Type, textCodeMapping, true );
               info.Line = parseLine;
@@ -8170,8 +8085,8 @@ namespace C64Studio.Parser
                   {
                     // direct value?
                     if ( ( lineTokenInfos.Count > 2 )
-                    &&   ( lineTokenInfos[2].Content != "#" )
-                    &&   ( lineTokenInfos[2].Content != "." ) )
+                    && ( lineTokenInfos[2].Content != "#" )
+                    && ( lineTokenInfos[2].Content != "." ) )
                     {
                       // not a binary value
                       continue;
@@ -8275,7 +8190,7 @@ namespace C64Studio.Parser
 
         // PDS style macros look like labels!
         if ( ( !evaluatedContent )
-        &&   ( m_AssemblerSettings.Macros.ContainsKey( upToken ) ) )
+        && ( m_AssemblerSettings.Macros.ContainsKey( upToken ) ) )
         {
           // TODO - ugly, copied code!!
           hadMacro = true;
@@ -8381,8 +8296,8 @@ namespace C64Studio.Parser
             PORealPC( info );
           }
           else if ( ( macroInfo.Type == Types.MacroInfo.MacroType.BYTE )
-          ||        ( macroInfo.Type == Types.MacroInfo.MacroType.LOW_BYTE )
-          ||        ( macroInfo.Type == Types.MacroInfo.MacroType.HIGH_BYTE ) )
+          || ( macroInfo.Type == Types.MacroInfo.MacroType.LOW_BYTE )
+          || ( macroInfo.Type == Types.MacroInfo.MacroType.HIGH_BYTE ) )
           {
             PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, macroInfo.Type, textCodeMapping, true );
             info.Line = parseLine;
@@ -8446,7 +8361,7 @@ namespace C64Studio.Parser
             }
           }
           else if ( ( macroInfo.Type == Types.MacroInfo.MacroType.END )
-          ||        ( macroInfo.Type == Types.MacroInfo.MacroType.LOOP_END ) )
+          || ( macroInfo.Type == Types.MacroInfo.MacroType.LOOP_END ) )
           {
             var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
             if ( result == ParseLineResult.CALL_CONTINUE )
@@ -8482,23 +8397,23 @@ namespace C64Studio.Parser
               subFilename = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
             }
             else if ( ( lineTokenInfos.Count == 2 )
-            &&        ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+            && ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
             {
               // regular include
               subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
             }
             else if ( ( lineTokenInfos.Count > 3 )
-            &&        ( lineTokenInfos[1].Content == "<" )
-            &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
+            && ( lineTokenInfos[1].Content == "<" )
+            && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
             {
               // library include
               subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
               libraryFile = true;
             }
-            else 
+            else
             {
-              AddError( lineIndex, 
-                        Types.ErrorCode.E1302_MALFORMED_MACRO, 
+              AddError( lineIndex,
+                        Types.ErrorCode.E1302_MALFORMED_MACRO,
                         "Expecting file name, either \"filename\" or \"library filename\"",
                         lineTokenInfos[0].StartPos,
                         lineTokenInfos[0].Length );
@@ -8581,8 +8496,16 @@ namespace C64Studio.Parser
               return null;
             }
           }
+          else if ( macroInfo.Type == MacroInfo.MacroType.REPEAT )
+          {
+            var parseResult = PORepeat( lineTokenInfos, lineIndex, info, stackScopes );
+            if ( parseResult == ParseLineResult.RETURN_NULL )
+            {
+              return null;
+            }
+          }
           else if ( ( macroInfo.Type != MacroInfo.MacroType.IGNORE )
-          &&        ( macroInfo.Type != MacroInfo.MacroType.ERROR ) )
+          && ( macroInfo.Type != MacroInfo.MacroType.ERROR ) )
           {
             AddError( lineIndex, C64Studio.Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unsupported macro " + macroInfo.Keyword + " encountered" );
             return null;
@@ -8722,6 +8645,303 @@ namespace C64Studio.Parser
       //Debug.Log( "PreProcess done" );
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private bool IsOpcode( TokenInfo.TokenType TokenType )
+    {
+      if ( ( TokenType == C64Studio.Types.TokenInfo.TokenType.OPCODE )
+      ||   ( TokenType == C64Studio.Types.TokenInfo.TokenType.OPCODE_DIRECT_VALUE )
+      ||   ( TokenType == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
+      ||   ( TokenType == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    private void AdjustLabelCasing( List<TokenInfo> lineTokenInfos )
+    {
+      if ( !m_AssemblerSettings.CaseSensitive )
+      {
+        // turn all labels/macros to upper case
+        foreach ( Types.TokenInfo token in lineTokenInfos )
+        {
+          if ( ( token.Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+          || ( token.Type == Types.TokenInfo.TokenType.LABEL_INTERNAL )
+          || ( token.Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+          || ( token.Type == Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+          {
+            token.Content = token.Content.ToUpper();
+          }
+        }
+      }
+    }
+
+    private void DetectPDSMacroCall( Map<string, MacroFunctionInfo> macroFunctions, List<TokenInfo> lineTokenInfos )
+    {
+      if ( ( lineTokenInfos.Count >= 1 )
+      && ( m_AssemblerSettings.MacroFunctionCallPrefix.Length == 0 )
+      && ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      && ( macroFunctions.ContainsKey( lineTokenInfos[0].Content ) ) )
+      {
+        lineTokenInfos[0].Type = TokenInfo.TokenType.CALL_MACRO;
+      }
+    }
+
+    private static void DetectInternalLabels( int lineIndex, List<TokenInfo> lineTokenInfos )
+    {
+      if ( ( lineTokenInfos[0].Type != C64Studio.Types.TokenInfo.TokenType.CALL_MACRO )
+      &&   ( ( lineTokenInfos[0].Content.StartsWith( "-" ) )
+      ||     ( lineTokenInfos[0].Content.StartsWith( "+" ) ) ) )
+      {
+        lineTokenInfos[0].Content = InternalLabelPrefix + lineTokenInfos[0].Content + InternalLabelPostfix + lineIndex.ToString();
+        lineTokenInfos[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+      }
+    }
+
+
+
+    private void StartNewZoneOnGlobalLabel( LineInfo info, List<TokenInfo> lineTokenInfos, string upToken )
+    {
+      if ( m_AssemblerSettings.GlobalLabelsAutoZone )
+      {
+        if ( ( lineTokenInfos[0].Type != C64Studio.Types.TokenInfo.TokenType.CALL_MACRO )
+        &&   ( ( !m_Processor.Opcodes.ContainsKey( upToken.ToLower() ) )
+        &&   ( ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
+        &&       ( !m_AssemblerSettings.Macros.ContainsKey( upToken ) ) )
+        ||     ( ( m_AssemblerSettings.MacroPrefix.Length > 0 )
+        &&       ( !upToken.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) ) )
+        {
+          if ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+          {
+            // auto-zone
+            m_CurrentZoneName = lineTokenInfos[0].Content;
+            info.Zone = m_CurrentZoneName;
+          }
+        }
+      }
+    }
+
+
+
+    private bool IsDefine( List<TokenInfo> LineTokenInfos )
+    {
+      if ( ( LineTokenInfos.Count >= 3 )
+      &&   ( m_AssemblerSettings.DefineSeparatorKeywords.ContainsValue( LineTokenInfos[1].Content )
+      &&   ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
+      ||     ( !LineTokenInfos[0].Content.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    private void PrefixZoneToLocalLabels( ref string cheapLabelParent, List<TokenInfo> lineTokenInfos, ref string upToken )
+    {
+      for ( int i = 0; i < lineTokenInfos.Count; ++i )
+      {
+        if ( ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        && ( i == 0 ) )
+        {
+          cheapLabelParent = lineTokenInfos[i].Content;
+        }
+        if ( ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_LOCAL )
+        || ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
+        {
+          if ( ( m_AssemblerSettings.LabelPostfix.Length > 0 )
+          && ( lineTokenInfos[i].Content.EndsWith( m_AssemblerSettings.LabelPostfix ) ) )
+          {
+            lineTokenInfos[i].Length -= 1;
+            lineTokenInfos[i].Content = null;
+          }
+        }
+        if ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_LOCAL )
+        {
+          // ugly hack to avoid prefixing relative paths
+          if ( lineTokenInfos[i].Content != ".." )
+          {
+            lineTokenInfos[i].Content = m_CurrentZoneName + lineTokenInfos[i].Content;
+            if ( i == 0 )
+            {
+              upToken = lineTokenInfos[i].Content.ToUpper();
+            }
+          }
+        }
+        if ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+        {
+          lineTokenInfos[i].Content = cheapLabelParent + lineTokenInfos[i].Content;
+          if ( i == 0 )
+          {
+            upToken = lineTokenInfos[i].Content.ToUpper();
+          }
+        }
+      }
+    }
+
+    private ParseLineResult PORepeat( List<TokenInfo> lineTokenInfos, int lineIndex, LineInfo info, List<ScopeInfo> Scopes )
+    {
+      List<List<TokenInfo>>   lineParams;
+
+      var result = ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, out lineParams );
+      if ( result != ParseLineResult.OK )
+      {
+        return result;
+      }
+      if ( lineParams.Count != 1 )
+      {
+        AddError( lineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Expected one argument" );
+        return ParseLineResult.ERROR_ABORT;
+      }
+      int     numRepeats = 0;
+
+      if ( !EvaluateTokens( lineIndex, lineParams[0], out numRepeats ) )
+      {
+        return ParseLineResult.ERROR_ABORT;
+      }
+      if ( ( numRepeats < 0 )
+      ||   ( numRepeats > 99999 ) )
+      {
+        AddError( lineIndex,
+                  ErrorCode.E1107_ARGUMENT_OUT_OF_BOUNDS,
+                  "Number of repeats needs to be >= 0 and <= 99999",
+                  lineParams[0][0].StartPos,
+                  lineParams[0][lineParams[0].Count - 1].EndPos - lineParams[0][0].StartPos );
+        return ParseLineResult.ERROR_ABORT;
+      }
+      ScopeInfo   scope = new ScopeInfo( ScopeInfo.ScopeType.REPEAT );
+      scope.Active = true;
+      scope.StartIndex = numRepeats;
+
+      Scopes.Add( scope );
+      OnScopeAdded( scope );
+
+      /*
+
+      bool    doesContainSeparator = false;
+      int     numSeparators = 0;
+      for ( int tokenIndex = 0; tokenIndex < lineTokenInfos.Count; ++tokenIndex )
+      {
+        var token = lineTokenInfos[tokenIndex];
+
+        if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+        &&   ( token.Content == "," ) )
+        {
+          doesContainSeparator = true;
+          ++numSeparators;
+        }
+      }
+      if ( doesContainSeparator )
+      {
+        string[]      newLines = new string[numSeparators + 1];
+
+        int     partStartIndex = 0;
+        int     partIndex = 0;
+        for ( int tokenIndex = 0; tokenIndex < lineTokenInfos.Count; ++tokenIndex )
+        {
+          var token = lineTokenInfos[tokenIndex];
+
+          if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+          && ( token.Content == ":" ) )
+          {
+            newLines[partIndex] = TokensToExpression( lineTokenInfos, partStartIndex, tokenIndex - partStartIndex );
+            partStartIndex = tokenIndex + 1;
+            ++partIndex;
+          }
+        }
+        if ( partStartIndex < lineTokenInfos.Count )
+        {
+          newLines[partIndex] = TokensToExpression( lineTokenInfos, partStartIndex, lineTokenInfos.Count - partStartIndex );
+        }
+        // if any part was null, set to empty
+        for ( int i = 0; i < newLines.Length; ++i )
+        {
+          if ( newLines[i] == null )
+          {
+            newLines[i] = "";
+          }
+        }
+
+        Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
+        sourceInfo.Filename = ParentFilename;
+        sourceInfo.FullPath = ParentFilename;
+        sourceInfo.GlobalStartLine = lineIndex;
+        sourceInfo.LineCount = newLines.Length;
+        sourceInfo.FilenameParent = ParentFilename;
+
+        string  dummyFile = "";
+        int     localFileIndex = -1;
+        ASMFileInfo.FindTrueLineSource( lineIndex, out dummyFile, out localFileIndex );
+        sourceInfo.LocalStartLine = localFileIndex;
+
+        SourceInfoLog( "-include at global index " + lineIndex );
+        SourceInfoLog( "-has " + sourceInfo.LineCount + " lines" );
+
+        InsertSourceInfo( sourceInfo, true, true );
+
+        string[] result = new string[Lines.Length + sourceInfo.LineCount];
+
+        System.Array.Copy( Lines, 0, result, 0, lineIndex + 1 );
+        System.Array.Copy( newLines, 0, result, lineIndex + 1, newLines.Length );
+
+        // this keeps the !source line in the final code, makes working with source infos easier though
+        System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + newLines.Length + 1, Lines.Length - lineIndex - 1 );
+
+        // replace !source with empty line (otherwise source infos would have one line more!)
+        //result[lineIndex + newLines.Length] = "";
+        result[lineIndex] = "";
+
+        Lines = result;
+
+        ASMFileInfo.LineInfo.Remove( lineIndex );
+
+        --lineIndex;
+        return ParseLineResult.CALL_CONTINUE;
+      }*/
+      return ParseLineResult.OK;
+    }
+
+
+
+    private ParseLineResult ParseLineInParameters( List<TokenInfo> lineTokenInfos, int Offset, int Count, int LineIndex, out List<List<TokenInfo>> lineParams )
+    {
+      int     paramStartIndex = Offset;
+
+      lineParams = new List<List<TokenInfo>>();
+
+      for ( int i = 0; i < Count; ++i )
+      {
+        var token = lineTokenInfos[Offset + i];
+
+        if ( ( token.Type == TokenInfo.TokenType.SEPARATOR )
+        &&   ( token.Content == "," ) )
+        {
+          if ( i == paramStartIndex )
+          {
+            // empty?
+            AddError( LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Empty Parameter, expected a value or expression", token.StartPos, token.Length );
+            return ParseLineResult.ERROR_ABORT;
+          }
+          lineParams.Add( lineTokenInfos.GetRange( paramStartIndex, i - paramStartIndex ) );
+
+          paramStartIndex = i + 1;
+          continue;
+        }
+      }
+      if ( paramStartIndex >= Offset + Count )
+      {
+        // empty?
+        AddError( LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Empty Parameter, expected a value or expression", lineTokenInfos[lineTokenInfos.Count - 1].StartPos, 1 );
+        return ParseLineResult.ERROR_ABORT;
+      }
+      lineParams.Add( lineTokenInfos.GetRange( paramStartIndex, Offset + Count - paramStartIndex ) );
+
+      return ParseLineResult.OK;
     }
 
 

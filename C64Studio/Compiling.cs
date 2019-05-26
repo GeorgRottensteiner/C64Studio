@@ -85,6 +85,14 @@ namespace C64Studio
         }
         if ( DocInfo.DeducedDependency[ConfigSetting] != null )
         {
+          // custom build overrides output file -> always rebuild
+          if ( ( !string.IsNullOrEmpty( DocInfo.Element.Settings[ConfigSetting].CustomBuild ) )
+          &&   ( !string.IsNullOrEmpty( DocInfo.Element.TargetFilename ) ) )
+          {
+            Core.AddToOutput( "Custom build always requires a rebuild" + System.Environment.NewLine );
+            return true;
+          }
+          
           foreach ( var dependency in DocInfo.Element.ExternalDependencies.DependentOnFile )
           {
             string      fullPath = BuildFullPath( DocInfo.Project.Settings.BasePath, dependency.Filename );
@@ -93,7 +101,10 @@ namespace C64Studio
 
             try
             {
-              fileTime = System.IO.File.GetLastWriteTime( fullPath );
+              if ( System.IO.File.Exists( fullPath ) )
+              {
+                fileTime = System.IO.File.GetLastWriteTime( fullPath );
+              }
             }
             catch
             {
@@ -113,8 +124,7 @@ namespace C64Studio
           // no build time stored yet, needs rebuild
           DocInfo.DeducedDependency[ConfigSetting] = new DependencyBuildState();
           return true;
-        }
-      }
+        }}
       if ( DocInfo.Compilable )
       {
         if ( !DocInfo.HasBeenSuccessfullyBuilt )

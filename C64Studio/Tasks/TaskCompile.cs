@@ -322,6 +322,8 @@ namespace C64Studio.Tasks
           {
             return false;
           }
+          BuildInfo.TargetFile = Doc.Element.TargetFilename;
+          BuildInfo.TargetType = Doc.Element.TargetType;
         }
         else
         {
