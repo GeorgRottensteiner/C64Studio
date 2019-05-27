@@ -1213,7 +1213,7 @@ namespace C64Studio
 
     private void checkBASICStripSpaces_CheckedChanged( object sender, EventArgs e )
     {
-      Core.Settings.BASICStripSpaces        = checkBASICStripSpaces.Checked;
+      Core.Settings.BASICStripSpaces                  = checkBASICStripSpaces.Checked;
       Core.Compiling.ParserBasic.Settings.StripSpaces = Core.Settings.BASICStripSpaces;
     }
 

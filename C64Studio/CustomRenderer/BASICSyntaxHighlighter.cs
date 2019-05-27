@@ -8,7 +8,7 @@ namespace C64Studio.CustomRenderer
 {
   class BASICSyntaxHighlighter : FastColoredTextBoxNS.SyntaxHighlighter
   {
-    static Parser.BasicFileParser     _Parser = new Parser.BasicFileParser();
+    static Parser.BasicFileParser     _Parser = new Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
 
 
 

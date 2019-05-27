@@ -354,15 +354,17 @@ namespace C64Studio.Parser
 
 
 
-    public BasicFileParser()
+    public BasicFileParser( ParserSettings Settings )
     {
       LabelMode = false;
+      this.Settings = Settings;
     }
 
 
 
-    public BasicFileParser( string Filename )
+    public BasicFileParser( ParserSettings Settings, string Filename )
     {
+      this.Settings = Settings;
       LabelMode   = false;
       m_Filename  = Filename;
     }
@@ -1881,6 +1883,8 @@ namespace C64Studio.Parser
           sb.AppendLine();
           sb.Append( lineNumberReference[lineInfo.Value.LineNumber] + "\r\n" );
         }
+        bool  hadREM = false;
+
         for ( int i = 0; i < lineInfo.Value.Tokens.Count; ++i )
         {
           Token token = lineInfo.Value.Tokens[i];
@@ -1900,6 +1904,11 @@ namespace C64Studio.Parser
 
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
+            if ( token.ByteValue == m_Opcodes["REM"].ByteValue )
+            {
+              hadREM = true;
+            }
+
             if ( ( token.ByteValue == m_Opcodes["RUN"].ByteValue )
             ||   ( token.ByteValue == m_Opcodes["THEN"].ByteValue ) )
             {
@@ -1927,7 +1936,8 @@ namespace C64Studio.Parser
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number
-              sb.Append( token.Content + " " );
+              //sb.Append( token.Content + " " );
+              sb.Append( token.Content );
 
               int nextIndex = i + 1;
               bool mustBeComma = false;
@@ -1946,6 +1956,16 @@ namespace C64Studio.Parser
                       continue;
                     }
                     sb.Append( lineNumberReference[refNo].ToString() );
+                  }
+                  else if ( ( nextToken.TokenType == Token.Type.DIRECT_TOKEN )
+                  &&        ( nextToken.Content == " " ) )
+                  {
+                    if ( !Settings.StripSpaces )
+                    {
+                      sb.Append( nextToken.Content );
+                    }
+                    ++nextIndex;
+                    continue;
                   }
                   else
                   {
@@ -1978,7 +1998,8 @@ namespace C64Studio.Parser
           ||   ( token.TokenType == Token.Type.NUMERIC_LITERAL )
           ||   ( token.TokenType == Token.Type.EX_BASIC_TOKEN ) )
           {
-            if ( token.ByteValue != m_Opcodes["REM"].ByteValue )
+            if ( ( token.ByteValue != m_Opcodes["REM"].ByteValue )
+            &&   ( hadREM ) )
             {
               sb.Append( " " );
             }
@@ -1991,6 +2012,7 @@ namespace C64Studio.Parser
 
 
 
+    // finds next non-space token or returns -1
     private int FindNextToken( List<Token> Tokens, int StartIndex )
     {
       int curIndex = StartIndex + 1;
@@ -2030,7 +2052,7 @@ namespace C64Studio.Parser
             string labelToReplace = "LABEL" + lineInfo.Value.Tokens[1].Content;
 
             labelToNumber[labelToReplace] = lineNumber;
-            Debug.Log( "Replace label " + labelToReplace + " with line " + lineNumber );
+            //Debug.Log( "Replace label " + labelToReplace + " with line " + lineNumber );
           }
           else
           {
@@ -2043,6 +2065,8 @@ namespace C64Studio.Parser
       lineNumber = 10;
       foreach ( KeyValuePair<int, LineInfo> lineInfo in m_LineInfos )
       {
+        bool    hadREM = false;
+
         // is this a label definition?
         int nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, -1 );
         int nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
@@ -2067,11 +2091,21 @@ namespace C64Studio.Parser
           Token token = lineInfo.Value.Tokens[tokenIndex];
 
           if ( ( token.TokenType == Token.Type.DIRECT_TOKEN )
+          &&   ( Settings.StripSpaces )
+          &&   ( !hadREM )
           &&   ( token.Content.Trim().Length == 0 ) )
           {
             continue;
           }
           bool    tokenIsInserted = false;
+
+          if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
+          &&   ( token.ByteValue == m_Opcodes["REM"].ByteValue ) )
+          {
+            hadREM = true;
+          }
+
+
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
           &&   ( ( token.ByteValue == m_Opcodes["GOTO"].ByteValue )
           ||     ( token.ByteValue == m_Opcodes["GOSUB"].ByteValue )
@@ -2081,6 +2115,7 @@ namespace C64Studio.Parser
             bool    isGotoOrGosub = ( token.ByteValue == m_Opcodes["GOTO"].ByteValue ) | ( token.ByteValue == m_Opcodes["GOSUB"].ByteValue );
             nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, tokenIndex );
             nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
+
             while ( ( nextTokenIndex != -1 )
             &&      ( nextTokenIndex2 != -1 ) )
             {
@@ -2100,6 +2135,13 @@ namespace C64Studio.Parser
                   {
                     tokenIsInserted = true;
                     sb.Append( token.Content );
+
+                    while ( nextTokenIndex - 1 > tokenIndex )
+                    {
+                      // there were blanks in between
+                      sb.Append( lineInfo.Value.Tokens[tokenIndex + 1].Content );
+                      ++tokenIndex;
+                    }
                   }
                   sb.Append( labelToNumber[label].ToString() );
                 }
@@ -2397,9 +2439,18 @@ namespace C64Studio.Parser
               if ( i + 1 < lineInfo.Tokens.Count )
               {
                 int     refNo = -1;
-                if ( int.TryParse( lineInfo.Tokens[i + 1].Content, out refNo ) )
+                int     nextTokenIndex = FindNextToken( lineInfo.Tokens, i );
+                if ( ( nextTokenIndex != -1 )
+                &&   ( int.TryParse( lineInfo.Tokens[nextTokenIndex].Content, out refNo ) ) )
                 {
-                  sb.Append( token.Content + lineNumberReference[refNo].ToString() );
+                  sb.Append( token.Content );
+
+                  while ( i + 1 < nextTokenIndex )
+                  {
+                    sb.Append( lineInfo.Tokens[i + 1].Content );
+                    ++i;
+                  }
+                  sb.Append( lineNumberReference[refNo] );
                   ++i;
                   continue;
                 }

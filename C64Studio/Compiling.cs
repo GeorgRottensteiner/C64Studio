@@ -21,7 +21,7 @@ namespace C64Studio
 
 
     public Parser.ASMFileParser       ParserASM = new C64Studio.Parser.ASMFileParser();
-    public Parser.BasicFileParser     ParserBasic = new C64Studio.Parser.BasicFileParser();
+    public Parser.BasicFileParser     ParserBasic = new C64Studio.Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
 
 
 

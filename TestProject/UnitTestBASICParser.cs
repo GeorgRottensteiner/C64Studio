@@ -6,9 +6,16 @@ namespace TestProject
   [TestClass]
   public class UnitTestBASICParser
   {
+    private C64Studio.Parser.BasicFileParser CreateParser()
+    {
+      return new C64Studio.Parser.BasicFileParser( new C64Studio.Parser.BasicFileParser.ParserSettings() );
+    }
+
+
+
     private GR.Memory.ByteBuffer TestCompile( string Source )
     {
-      C64Studio.Parser.BasicFileParser    parser = new C64Studio.Parser.BasicFileParser();
+      var parser = CreateParser();
 
       C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
@@ -28,7 +35,7 @@ namespace TestProject
     {
       string      source = @"20 ifa=1then 20";
 
-      C64Studio.Parser.BasicFileParser    parser = new C64Studio.Parser.BasicFileParser();
+      var parser = CreateParser();
 
       C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
@@ -44,12 +51,33 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestRenumberWithSpacesNoStripSpaces()
+    {
+      string      source = @"20 ifa=1then 20";
+
+      var parser = CreateParser();
+      parser.Settings.StripSpaces = false;
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      Assert.IsTrue( parser.Parse( source, null, config ) );
+
+      string result = parser.Renumber( 10, 3 );
+
+      Assert.AreEqual( "10IFA=1THEN 10", result );
+    }
+
+
+
+    [TestMethod]
     public void TestRenumberOverLines()
     {
       string      source = @"10 goto 300
                           300 goto 10";
 
-      C64Studio.Parser.BasicFileParser    parser = new C64Studio.Parser.BasicFileParser();
+      var parser = CreateParser();
 
       C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
@@ -73,7 +101,7 @@ namespace TestProject
                           400 printb
                           700 printc";
 
-      C64Studio.Parser.BasicFileParser    parser = new C64Studio.Parser.BasicFileParser();
+      var parser = CreateParser();
 
       C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
@@ -100,7 +128,7 @@ namespace TestProject
                           700 printc
                           2000 printd";
 
-      C64Studio.Parser.BasicFileParser    parser = new C64Studio.Parser.BasicFileParser();
+      var parser = CreateParser();
 
       C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
@@ -115,6 +143,58 @@ namespace TestProject
 16PRINTB
 19PRINTC
 22PRINTD", result );
+    }
+
+
+
+    [TestMethod]
+    public void TestEncodeToLabels()
+    {
+      string      source = @"10 print ""Hallo""
+                          20 goto 10";
+
+      var parser = CreateParser();
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config ) );
+
+      string  encoded = parser.EncodeToLabels();
+      Assert.AreEqual( @"
+LABEL10
+PRINT""HALLO""
+GOTOLABEL10
+", encoded );
+    }
+
+
+
+    [TestMethod]
+    public void TestEncodeToLabelsNoStripSpaces()
+    {
+      string      source = @"10 print ""Hallo""
+                          20 goto 10";
+
+      var parser = CreateParser();
+
+      parser.Settings.StripSpaces = false;
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config ) );
+
+      string  encoded = parser.EncodeToLabels();
+      Assert.AreEqual( @"
+LABEL10
+PRINT ""HALLO""
+GOTO LABEL10
+", encoded );
     }
 
   }

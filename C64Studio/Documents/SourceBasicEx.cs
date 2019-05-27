@@ -1353,7 +1353,11 @@ namespace C64Studio
       bool labelMode = !m_LabelMode;
 
       Core.MainForm.m_CompileResult.ClearMessages();
-      Parser.BasicFileParser parser = new C64Studio.Parser.BasicFileParser( DocumentInfo.FullPath );
+
+      var settings = new Parser.BasicFileParser.ParserSettings();
+      settings.StripSpaces = Core.Settings.BASICStripSpaces;
+
+      Parser.BasicFileParser parser = new C64Studio.Parser.BasicFileParser( settings, DocumentInfo.FullPath );
       parser.LabelMode = m_LabelMode;
 
       var compilerConfig = new C64Studio.Parser.CompileConfig() { Assembler = C64Studio.Types.AssemblerType.AUTO };
