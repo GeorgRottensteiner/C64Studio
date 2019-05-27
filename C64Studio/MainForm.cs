@@ -5154,7 +5154,7 @@ namespace C64Studio
             return false;
           }
           ActiveContent.Copy();
-          break;
+          return true;
         case Function.PASTE:
           if ( ( ActiveContent == null )
           ||   ( !ActiveContent.PastePossible ) )
@@ -5162,7 +5162,7 @@ namespace C64Studio
             return false;
           }
           ActiveContent.Paste();
-          break;
+          return true;
         case Function.CUT:
           if ( ( ActiveContent == null )
           ||   ( !ActiveContent.CutPossible ) )
@@ -5170,7 +5170,7 @@ namespace C64Studio
             return false;
           }
           ActiveContent.Cut();
-          break;
+          return true;
       }
       return false;
     }
