@@ -1132,7 +1132,7 @@ namespace C64Studio
               }
             }
 
-            editSource.SelectedText = "" + char.ToUpper( (char)keyData );
+            InsertOrReplaceChar( char.ToUpper( (char)keyData ) );
             return true;
           }
         }
@@ -1144,13 +1144,13 @@ namespace C64Studio
         // hard coded mapping from ^ to arrow up (power)
         if ( mappedKey == "^" )
         {
-          editSource.SelectedText = "" + Types.ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].Normal.CharValue;
+          InsertOrReplaceChar( Types.ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].Normal.CharValue );
           return true;
         }
         // PI
         if ( mappedKey == "~" )
         {
-          editSource.SelectedText = "" + Types.ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].WithShift.CharValue;
+          InsertOrReplaceChar( Types.ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].WithShift.CharValue );
           return true;
         }
         /*
@@ -1265,11 +1265,11 @@ namespace C64Studio
             //Debug.Log( "Trying to map unknown token: " + key.ToString() );
             if ( m_LowerCaseMode )
             {
-              editSource.SelectedText = "" + c64Key.LowerCaseChar;
+              InsertOrReplaceChar( c64Key.LowerCaseChar );
             }
             else
             {
-              editSource.SelectedText = "" + c64Key.CharValue;
+              InsertOrReplaceChar( c64Key.CharValue );
             }
           }
           else
@@ -1286,6 +1286,18 @@ namespace C64Studio
       }
       // swallow unmapped keys that would produce text (or disallowed characters, e.g. small letters)
       return base.ProcessCmdKey( ref msg, keyData );
+    }
+
+
+
+    private void InsertOrReplaceChar( char Key )
+    {
+      if ( editSource.IsReplaceMode )
+      {
+        editSource.Selection.GoRight( true );
+        editSource.Selection.Inverse();
+      }
+      editSource.SelectedText = "" + Key;
     }
 
 

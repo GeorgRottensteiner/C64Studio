@@ -1,6 +1,5 @@
 ﻿C64Studio
 o Output bei Custom Build kann Info von anderer Datei anzeigen?
-o BASIC: Schalte ich Labelmode um und wieder zurück werden auch alle Spaces entfernt (sogar in REM Kommentaren?!). 
 o BASIC: Undo bei Label-Mode-Wechsel sollte Label-Mode mit wechseln!
 
 o Die Sortierreihenfolge vom "autocomplete" führt bei mir häufig zu Eingabefehlern, weil die Vorschläge alphabetisch sortiert und nicht nach Relevanz dargestellt werden (siehe Bild).
