@@ -266,6 +266,18 @@ namespace C64Studio.Parser
 
     public Types.ASM.TemporaryLabelInfo AddTempLabel( string Name, int LineIndex, int LineCount, int Value, string Info, int CharIndex, int Length )
     {
+      /*
+      if ( Name == "VALUE" )
+      {
+        Debug.Log( "Adding Temp Label VALUE to " + LineIndex + ", " + LineCount + ", with value " + Value );
+        foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
+        {
+          if ( oldTempInfo.Name == Name )
+          {
+            Debug.Log( "previously VALUE exists at " + oldTempInfo.LineIndex + ", " + oldTempInfo.LineCount );
+          }
+        }
+      }*/
       foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
       {
         if ( oldTempInfo.Name == Name )
@@ -319,8 +331,19 @@ namespace C64Studio.Parser
 
       ASMFileInfo.TempLabelInfo.Add( tempInfo );
 
-      //Debug.Log( "Add Temp Label " + Name + " at " + LineIndex );
+      /*
+      if ( Name == "VALUE" )
+      {
+        Debug.Log( "Add Temp Label " + Name + " at " + LineIndex );
 
+        foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
+        {
+          if ( oldTempInfo.Name == Name )
+          {
+            Debug.Log( "VALUE exists at " + oldTempInfo.LineIndex + ", " + oldTempInfo.LineCount );
+          }
+        }
+      }*/
       return tempInfo;
     }
 
@@ -1048,6 +1071,7 @@ namespace C64Studio.Parser
       }
       else if ( ( opText == "EOR" )
       ||        ( opText == "eor" )
+      ||        ( opText == "~" )
       ||        ( opText == "XOR" )
       ||        ( opText == "xor" ) )
       {
@@ -1218,9 +1242,10 @@ namespace C64Studio.Parser
         return true;
       }
       else if ( ( opText == "EOR" )
-      || ( opText == "eor" )
-      || ( opText == "XOR" )
-      || ( opText == "xor" ) )
+      ||        ( opText == "eor" )
+      ||        ( opText == "~" )
+      ||        ( opText == "XOR" )
+      ||        ( opText == "xor" ) )
       {
         Result = (int)token1 ^ (int)token2;
         return true;
@@ -1762,6 +1787,32 @@ namespace C64Studio.Parser
                 }
               }
             }
+
+            // is second token with minus in front?
+            if ( ( highestPrecedenceTokenIndex >= 1 )
+            &&   ( highestPrecedenceTokenIndex + 2 < subTokenRange.Count )
+            &&   ( subTokenRange[highestPrecedenceTokenIndex + 1].Type == TokenInfo.TokenType.OPERATOR )
+            &&   ( subTokenRange[highestPrecedenceTokenIndex + 1].Content == "-" ) )
+            {
+              int     value = 0;
+              if ( !EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 2, 1, out value, out NumBytesGiven ) )
+              {
+                return false;
+              }
+              int     negatedResult = -value;
+
+              int     startPos = subTokenRange[highestPrecedenceTokenIndex + 1].StartPos;
+              subTokenRange.RemoveRange( highestPrecedenceTokenIndex + 1, 2 );
+
+              Types.TokenInfo tokenResult = new Types.TokenInfo();
+              tokenResult.Content = negatedResult.ToString();
+              tokenResult.Type = Types.TokenInfo.TokenType.LITERAL_NUMBER;
+              tokenResult.StartPos = startPos;
+              subTokenRange.Insert( highestPrecedenceTokenIndex + 1, tokenResult );
+              evaluatedPart = true;
+              Count -= 1;
+            }
+
             if ( ( highestPrecedenceTokenIndex >= 1 )
             &&   ( highestPrecedenceTokenIndex + 1 < subTokenRange.Count )
             &&   ( HandleOperator( LineIndex, subTokenRange[highestPrecedenceTokenIndex], subTokenRange[highestPrecedenceTokenIndex - 1], subTokenRange[highestPrecedenceTokenIndex + 1], out result ) ) )
@@ -2406,6 +2457,11 @@ namespace C64Studio.Parser
             AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax Error" );
             return false;
           }
+
+          if ( lineInfo.NeededParsedExpression[0].Content == "RESTRICT" )
+          {
+            Debug.Log( "dha" );
+          }
           // strip prefixed #
           if ( lineInfo.NeededParsedExpression[0].Content.StartsWith( "#" ) )
           {
@@ -2858,6 +2914,8 @@ namespace C64Studio.Parser
         else if ( AllowNeededExpression )
         {
           info.NeededParsedExpression = lineTokenInfos.GetRange( StartIndex, Count );
+
+          AdjustLabelCasing( info.NeededParsedExpression );
         }
         else
         {
@@ -2874,6 +2932,20 @@ namespace C64Studio.Parser
         info.LineData = data;
       }
       info.NumBytes = commaCount + 1;
+    }
+
+
+
+    private bool TokenIsLabel( TokenInfo.TokenType Type )
+    {
+      if ( ( Type == TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
+      ||   ( Type == TokenInfo.TokenType.LABEL_GLOBAL )
+      ||   ( Type == TokenInfo.TokenType.LABEL_INTERNAL )
+      ||   ( Type == TokenInfo.TokenType.LABEL_LOCAL ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -2914,6 +2986,7 @@ namespace C64Studio.Parser
 
     private ParseLineResult HandleScopeEnd( GR.Collections.Map<string, Types.MacroFunctionInfo> macroFunctions,
                                  List<Types.ScopeInfo> ScopeList,
+                                 List<TokenInfo> lineTokenInfos,
                                  ref int lineIndex,
                                  ref int intermediateLineOffset,
                                  ref String[] Lines )
@@ -2957,17 +3030,169 @@ namespace C64Studio.Parser
             for ( int j = 0; j < lineTokens.Count; ++j )
             {
               if ( ( lineTokens[j].Type == TokenInfo.TokenType.OPERATOR )
-              &&   ( lineTokens[j].Content == "+" )
-              &&   ( j + 1 < lineTokens.Count )
-              &&   ( lineTokens[j].EndPos + 1 == lineTokens[j + 1].StartPos )
-              &&   ( lineTokens[j + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
-              &&   ( lineTokens[j + 1].Content == macroInfo.Name ) )
+              && ( lineTokens[j].Content == "+" )
+              && ( j + 1 < lineTokens.Count )
+              && ( lineTokens[j].EndPos + 1 == lineTokens[j + 1].StartPos )
+              && ( lineTokens[j + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+              && ( lineTokens[j + 1].Content == macroInfo.Name ) )
               {
                 AddError( macroInfo.LineIndex + 1 + i, ErrorCode.E1302_MALFORMED_MACRO, "Macro " + macroInfo.Name + " is calling itself" );
                 return ParseLineResult.ERROR_ABORT;
               }
             }
           }
+        }
+      }
+      else if ( lastOpenedScope.RepeatUntil != null )
+      {
+        var repeatUntil = lastOpenedScope.RepeatUntil;
+
+        // if inside macro definition do not evaluate now!
+        if ( ScopeInsideMacroDefinition( ScopeList ) )
+        {
+          //Debug.Log( "Loop end inside macro, do nothing, close scope" );
+
+          OnScopeRemoved( lineIndex, ScopeList );
+          ScopeList.RemoveAt( ScopeList.Count - 1 );
+          return ParseLineResult.OK;
+        }
+
+        // fetch line data in between
+        SourceInfoLog( "Insert repeat until block from " + Lines[repeatUntil.LineIndex] );
+
+        // loop body
+        int loopBlockLength = repeatUntil.LoopLength;
+        if ( loopBlockLength == -1 )
+        {
+          loopBlockLength = lineIndex - repeatUntil.LineIndex - 1;
+          repeatUntil.LoopLength = loopBlockLength;
+        }
+
+        // backup loop content
+        if ( repeatUntil.Content == null )
+        {
+          repeatUntil.Content = new string[repeatUntil.LoopLength];
+          System.Array.Copy( Lines, repeatUntil.LineIndex + 1, repeatUntil.Content, 0, repeatUntil.LoopLength );
+
+          // fix up internal labels for first loop
+          var lineReplacement = new string[repeatUntil.LoopLength];
+          System.Array.Copy( Lines, repeatUntil.LineIndex + 1, lineReplacement, 0, repeatUntil.LoopLength );
+          lineReplacement = RelabelLocalLabelsForLoop( lineReplacement, ScopeList, lineIndex );
+          System.Array.Copy( lineReplacement, 0, Lines, repeatUntil.LineIndex + 1, repeatUntil.LoopLength );
+
+          // fix up internal labels
+          repeatUntil.Content = RelabelLocalLabelsForLoop( repeatUntil.Content, ScopeList, lineIndex );
+        }
+
+        bool  endReached = false;
+
+        int   result = -1;
+        if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out result ) )
+        {
+          AddError( repeatUntil.LineIndex + 1, ErrorCode.E1000_SYNTAX_ERROR, "Could not evaluate " + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ) );
+          return ParseLineResult.ERROR_ABORT;
+        }
+
+        ++repeatUntil.NumRepeats;
+
+        if ( result != 0 )
+        {
+          endReached = true;
+        }
+        if ( repeatUntil.NumRepeats >= 1000 )
+        {
+          AddError( repeatUntil.LineIndex + 1, ErrorCode.E1108_SAFETY_BREAK, "Safety abort: REPEAT UNTIL had more than 999 loops: " + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ) );
+          return ParseLineResult.ERROR_ABORT;
+        }
+
+        if ( endReached )
+        {
+          // loop is done
+          intermediateLineOffset = 0;
+
+          OnScopeRemoved( lineIndex, ScopeList );
+          ScopeList.RemoveAt( ScopeList.Count - 1 );
+
+
+          // blank out !for and !end
+          Lines[repeatUntil.LineIndex] = ";ex repeat";
+          Lines[lineIndex] = ";ex until";
+
+          //Debug.Log( "Cloning last loop for " + lastLoop.Label );
+          CloneTempLabelsExcept( repeatUntil.LineIndex, repeatUntil.LoopLength, lineIndex - repeatUntil.LoopLength - 1, "" );
+        }
+        else
+        {
+          // copy loop content for next loop
+
+          int linesToCopy = loopBlockLength;
+          int lineLoopEndOffset = 0;
+
+          // end reached now?
+          if ( endReached )
+          {
+            //++linesToCopy;
+            lineLoopEndOffset = 0;
+          }
+
+          DumpLines( Lines, "a" );
+
+          string[] newLines = new string[Lines.Length + linesToCopy];
+
+          System.Array.Copy( Lines, 0, newLines, 0, lineIndex );
+          System.Array.Copy( repeatUntil.Content, 0, newLines, lineIndex, linesToCopy );
+          System.Array.Copy( Lines, lineIndex + lineLoopEndOffset, newLines, lineIndex + linesToCopy, Lines.Length - lineIndex - lineLoopEndOffset );
+
+          // fix up internal labels
+          repeatUntil.Content = RelabelLocalLabelsForLoop( repeatUntil.Content, ScopeList, lineIndex );
+
+          DumpLines( newLines, "b" );
+
+          // also copy scoped variables if overlapping!!!
+          if ( !endReached )
+          {
+            //Debug.Log( "Cloning loop " + lastLoop.CurrentValue + "/" + lastLoop.EndValue + " for " + lastLoop.Label );
+            CloneTempLabelsExcept( repeatUntil.LineIndex + repeatUntil.NumRepeats * repeatUntil.LoopLength, 
+                                   linesToCopy, 
+                                   lineIndex - 1, "" );
+          }
+
+          // adjust source infos to make lookup work correctly
+          string outerFilename = "";
+          int outerLineIndex = -1;
+          ASMFileInfo.FindTrueLineSource( repeatUntil.LineIndex, out outerFilename, out outerLineIndex );
+
+
+          Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
+          //sourceInfo.Filename = ParentFilename;
+          sourceInfo.Filename = outerFilename;
+          sourceInfo.FullPath = outerFilename;
+          sourceInfo.GlobalStartLine = lineIndex;
+          sourceInfo.LineCount = linesToCopy;
+          sourceInfo.LocalStartLine = outerLineIndex + 1 + intermediateLineOffset;
+
+          if ( endReached )
+          {
+            intermediateLineOffset -= lineIndex - repeatUntil.LineIndex - 1;
+          }
+
+          SourceInfoLog( "Add subfile section at " + sourceInfo.LocalStartLine + " (global " + sourceInfo.GlobalStartLine + ") for " + sourceInfo.FilenameParent + " with " + sourceInfo.LineCount + " lines" );
+
+          InsertSourceInfo( sourceInfo, true, false );
+
+          // scheint die Ursache zu sein!!
+          // clone all source infos inside the loop
+          CloneSourceInfos( sourceInfo.LocalStartLine, linesToCopy, lineIndex );
+
+          Lines = newLines;
+
+          DumpSourceInfos( OrigLines, Lines );
+
+          //Debug.Log( "New total " + Lines.Length + " lines" );
+
+          // TEST TEST TEST
+          //lineIndex += linesToCopy;
+          return ParseLineResult.CALL_CONTINUE;
         }
       }
       else if ( lastOpenedScope.Loop != null )
@@ -3060,10 +3285,10 @@ namespace C64Studio.Parser
 
           // end reached now?
           if ( ( lastLoop.CurrentValue == lastLoop.EndValue )
-          ||   ( ( lastLoop.StepValue > 0 )
-          &&     ( lastLoop.CurrentValue + lastLoop.StepValue > lastLoop.EndValue ) )
-          ||   ( ( lastLoop.StepValue < 0 )
-          &&     ( lastLoop.CurrentValue + lastLoop.StepValue < lastLoop.EndValue ) ) )
+          || ( ( lastLoop.StepValue > 0 )
+          && ( lastLoop.CurrentValue + lastLoop.StepValue > lastLoop.EndValue ) )
+          || ( ( lastLoop.StepValue < 0 )
+          && ( lastLoop.CurrentValue + lastLoop.StepValue < lastLoop.EndValue ) ) )
           {
             endReached = true;
           }
@@ -3132,6 +3357,11 @@ namespace C64Studio.Parser
           //lineIndex += linesToCopy;
           return ParseLineResult.CALL_CONTINUE;
         }
+      }
+      else
+      {
+        AddError( lineIndex, ErrorCode.E1401_INTERNAL_ERROR, "Unhandled scope/loop end" );
+        return ParseLineResult.ERROR_ABORT;
       }
       return ParseLineResult.OK;
     }
@@ -4693,15 +4923,15 @@ namespace C64Studio.Parser
         if ( m_AssemblerSettings.DoWithoutParameterIsUntil )
         {
           // add dummy scope so !ends properly match
-          Types.LoopInfo loop = new Types.LoopInfo();
+          var repeatUntil = new RepeatUntilInfo();
 
-          loop.LineIndex = lineIndex;
+          repeatUntil.LineIndex = lineIndex;
 
           Types.ScopeInfo   scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.DO_UNTIL );
 
-          scope.Active = true;
-          scope.Loop = loop;
-          scope.StartIndex = lineIndex;
+          scope.Active      = true;
+          scope.RepeatUntil = repeatUntil;
+          scope.StartIndex  = lineIndex;
           Scopes.Add( scope );
           OnScopeAdded( scope );
         }
@@ -5790,7 +6020,8 @@ namespace C64Studio.Parser
     {
       for ( int i = Scopes.Count - 1; i >= 0; --i )
       {
-        if ( Scopes[i].Loop != null )
+        if ( ( Scopes[i].Loop != null )
+        ||   ( Scopes[i].RepeatUntil != null ) )
         {
           return true;
         }
@@ -5821,6 +6052,12 @@ namespace C64Studio.Parser
       }
 
       string functionName = lineTokenInfos[0].Content.Substring( m_AssemblerSettings.MacroFunctionCallPrefix.Length );
+
+      if ( functionName == "TABLELO" )
+      {
+        Debug.Log( "call macro " + functionName );
+      }
+
       if ( ( !macroFunctions.ContainsKey( functionName ) )
       ||   ( macroFunctions[functionName].LineEnd == -1 ) )
       {
@@ -6234,12 +6471,6 @@ namespace C64Studio.Parser
           continue;
         }
 
-        if ( parseLine.Contains( "TABLELO MACRO" ) )
-        {
-          Debug.Log( "aha" );
-        }
-
-
         recheck_line:;
 
         // split lines by ':'
@@ -6278,23 +6509,17 @@ namespace C64Studio.Parser
         int   tokenOffset = 0;
         if ( ( lineTokenInfos.Count > 1 )
         &&   ( !m_AssemblerSettings.Macros.ContainsKey( lineTokenInfos[0].Content.ToUpper() ) )
-        &&   ( ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_INTERNAL )
-        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
-        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_LOCAL ) ) )
+        &&   ( TokenIsLabel( lineTokenInfos[0].Type ) ) )
         {
           ++tokenOffset;
         }
-        if ( ( ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_INTERNAL )
-        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
-        ||     ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+        if ( ( TokenIsLabel( lineTokenInfos[0].Type  ) )
         &&   ( m_AssemblerSettings.Macros.ContainsKey( lineTokenInfos[tokenOffset].Content.ToUpper() ) ) )
         {
           var macroInfo = m_AssemblerSettings.Macros[lineTokenInfos[tokenOffset].Content.ToUpper()];
           if ( ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.IF )
-          || ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.ELSE )
-          || ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.END_IF ) )
+          ||   ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.ELSE )
+          ||   ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.END_IF ) )
           {
             isDASMScopePseudoOP = true;
           }
@@ -6302,8 +6527,8 @@ namespace C64Studio.Parser
 
 
         if ( ( lineTokenInfos.Count > 0 )
-        && ( lineTokenInfos[0].Content != "}" )
-        && ( !isDASMScopePseudoOP ) )
+        &&   ( lineTokenInfos[0].Content != "}" )
+        &&   ( !isDASMScopePseudoOP ) )
         {
           bool isActive = true;
           for ( int i = 0; i < stackScopes.Count; ++i )
@@ -6388,6 +6613,11 @@ namespace C64Studio.Parser
         string labelInFront = "";
         Types.TokenInfo tokenInFront = null;
 
+        if ( parseLine.Contains( "do_arm" ) )
+        {
+          Debug.Log( "aha" );
+        }
+
         if ( upToken == "}" )
         {
           if ( stackScopes.Count == 0 )
@@ -6407,7 +6637,7 @@ namespace C64Studio.Parser
                   AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
                   continue;
                 }
-                var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                var result = HandleScopeEnd( macroFunctions, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
                 if ( result == ParseLineResult.CALL_CONTINUE )
                 {
                   --lineIndex;
@@ -6429,7 +6659,7 @@ namespace C64Studio.Parser
                 }
                 OnScopeRemoved( lineIndex, stackScopes );
                 stackScopes.RemoveAt( stackScopes.Count - 1 );
-                var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                var result = HandleScopeEnd( macroFunctions, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
                 if ( result == ParseLineResult.CALL_CONTINUE )
                 {
                   --lineIndex;
@@ -6618,13 +6848,7 @@ namespace C64Studio.Parser
           m_CurrentCommentSB = new StringBuilder();
           continue;
         }
-        else if ( ( lineTokenInfos[0].Type != C64Studio.Types.TokenInfo.TokenType.CALL_MACRO )
-        &&        ( ( !m_Processor.Opcodes.ContainsKey( upToken.ToLower() ) )
-        &&          ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
-        //&&            ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
-        &&            ( !m_AssemblerSettings.Macros.ContainsKey( upToken ) )
-        ||          ( ( m_AssemblerSettings.MacroPrefix.Length > 0 )
-        &&            ( !upToken.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) ) )
+        else if ( IsLabelInFront( lineTokenInfos, upToken ) )
         {
           // not a token, not a macro, must be a label in front
           labelInFront = lineTokenInfos[0].Content;
@@ -7612,7 +7836,7 @@ namespace C64Studio.Parser
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.END )
             {
-              var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
+              var result = HandleScopeEnd( macroFunctions, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
               if ( result == ParseLineResult.CALL_CONTINUE )
               {
                 --lineIndex;
@@ -8190,7 +8414,7 @@ namespace C64Studio.Parser
 
         // PDS style macros look like labels!
         if ( ( !evaluatedContent )
-        && ( m_AssemblerSettings.Macros.ContainsKey( upToken ) ) )
+        &&   ( m_AssemblerSettings.Macros.ContainsKey( upToken ) ) )
         {
           // TODO - ugly, copied code!!
           hadMacro = true;
@@ -8365,9 +8589,9 @@ namespace C64Studio.Parser
             }
           }
           else if ( ( macroInfo.Type == Types.MacroInfo.MacroType.END )
-          || ( macroInfo.Type == Types.MacroInfo.MacroType.LOOP_END ) )
+          ||        ( macroInfo.Type == Types.MacroInfo.MacroType.LOOP_END ) )
           {
-            var result = HandleScopeEnd( macroFunctions, stackScopes, ref lineIndex, ref intermediateLineOffset, ref Lines );
+            var result = HandleScopeEnd( macroFunctions, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
             if ( result == ParseLineResult.CALL_CONTINUE )
             {
               --lineIndex;
@@ -8502,7 +8726,7 @@ namespace C64Studio.Parser
           }
           else if ( macroInfo.Type == MacroInfo.MacroType.REPEAT )
           {
-            var parseResult = PORepeat( lineTokenInfos, lineIndex, info, stackScopes );
+            var parseResult = PORepeat( lineTokenInfos, lineIndex, ref Lines, info, stackScopes );
             if ( parseResult == ParseLineResult.RETURN_NULL )
             {
               return null;
@@ -8657,6 +8881,24 @@ namespace C64Studio.Parser
 
 
 
+    private bool IsLabelInFront( List<TokenInfo> lineTokenInfos, string UpToken )
+    {
+      if ( ( lineTokenInfos[0].Type != C64Studio.Types.TokenInfo.TokenType.CALL_MACRO )
+      &&   ( ( !m_Processor.Opcodes.ContainsKey( UpToken.ToLower() ) )
+      &&     ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
+      &&       ( ( ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
+      &&           ( lineTokenInfos[0].StartPos == 0 ) )
+      ||         ( !m_AssemblerSettings.Macros.ContainsKey( UpToken ) ) )
+      ||     ( ( m_AssemblerSettings.MacroPrefix.Length > 0 )
+      &&       ( !UpToken.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
     private bool IsOpcode( TokenInfo.TokenType TokenType )
     {
       if ( ( TokenType == C64Studio.Types.TokenInfo.TokenType.OPCODE )
@@ -8678,16 +8920,15 @@ namespace C64Studio.Parser
         // turn all labels/macros to upper case
         foreach ( Types.TokenInfo token in lineTokenInfos )
         {
-          if ( ( token.Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-          || ( token.Type == Types.TokenInfo.TokenType.LABEL_INTERNAL )
-          || ( token.Type == Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
-          || ( token.Type == Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+          if ( TokenIsLabel( token.Type ) )
           {
             token.Content = token.Content.ToUpper();
           }
         }
       }
     }
+
+
 
     private void DetectPDSMacroCall( Map<string, MacroFunctionInfo> macroFunctions, List<TokenInfo> lineTokenInfos )
     {
@@ -8794,7 +9035,7 @@ namespace C64Studio.Parser
 
 
 
-    private ParseLineResult PORepeat( List<TokenInfo> lineTokenInfos, int lineIndex, LineInfo info, List<ScopeInfo> Scopes )
+    private ParseLineResult PORepeat( List<TokenInfo> lineTokenInfos, int lineIndex, ref string[] Lines, LineInfo info, List<ScopeInfo> Scopes )
     {
       List<List<TokenInfo>>   lineParams;
 
@@ -8824,12 +9065,68 @@ namespace C64Studio.Parser
                   lineParams[0][lineParams[0].Count - 1].EndPos - lineParams[0][0].StartPos );
         return ParseLineResult.ERROR_ABORT;
       }
+
+      int nextLineIndex = lineIndex + 1;
+      if ( nextLineIndex >= Lines.Length )
+      {
+        AddError( lineIndex, C64Studio.Types.ErrorCode.E1008_MISSING_LOOP_END, "REPEAT at end of code encountered" );
+        return ParseLineResult.ERROR_ABORT;
+      }
+      int loopLength = 1;
+      string[] tempContent = new string[loopLength * ( numRepeats - 1 )];
+
+      for ( int i = 0; i < numRepeats - 1; ++i )
+      {
+        System.Array.Copy( Lines, lineIndex + 1, tempContent, i * loopLength, loopLength );
+      }
+
+      string[] replacementLines = RelabelLocalLabelsForLoop( tempContent, Scopes, lineIndex );
+
+      string[] newLines = new string[Lines.Length + replacementLines.Length];
+
+      System.Array.Copy( Lines, 0, newLines, 0, lineIndex + 1 + loopLength );
+      //System.Array.Copy( Lines, lineIndex - loopBlockLength, newLines, lineIndex, linesToCopy );
+      System.Array.Copy( replacementLines, 0, newLines, lineIndex + 1 + loopLength, replacementLines.Length );
+
+      // replaces the REPEND
+      //newLines[lineIndex + 1 + loopLength + replacementLines.Length] = "";
+      System.Array.Copy( Lines, nextLineIndex + 1, newLines, lineIndex + 1 + loopLength + replacementLines.Length, Lines.Length - nextLineIndex - 1 );
+
+      // adjust source infos to make lookup work correctly
+      string outerFilename = "";
+      int outerLineIndex = -1;
+      ASMFileInfo.FindTrueLineSource( lineIndex + 1, out outerFilename, out outerLineIndex );
+
+      //ASMFileInfo.LineInfo.Remove( lineIndex );
+
+      for ( int i = 0; i < numRepeats - 1; ++i )
+      {
+        Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
+        sourceInfo.Filename = outerFilename;
+        sourceInfo.FullPath = outerFilename;
+        sourceInfo.GlobalStartLine = lineIndex + 1 + ( 1 + i ) * loopLength;
+        sourceInfo.LineCount = loopLength;
+        sourceInfo.LocalStartLine = outerLineIndex;
+
+        InsertSourceInfo( sourceInfo );
+      }
+
+
+      Lines = newLines;
+
+      //Debug.Log( "New total " + Lines.Length + " lines" );
+      return ParseLineResult.CALL_CONTINUE;
+
+      /*
       ScopeInfo   scope = new ScopeInfo( ScopeInfo.ScopeType.REPEAT );
       scope.Active = true;
       scope.StartIndex = lineIndex;
 
       Scopes.Add( scope );
-      OnScopeAdded( scope );
+      OnScopeAdded( scope );*/
+
+      // repeat next line x times
+
 
       /*
 
@@ -8913,7 +9210,7 @@ namespace C64Studio.Parser
         --lineIndex;
         return ParseLineResult.CALL_CONTINUE;
       }*/
-      return ParseLineResult.OK;
+      //return ParseLineResult.OK;
     }
 
 
@@ -9423,6 +9720,13 @@ namespace C64Studio.Parser
         {
           var clonedToken = new Types.TokenInfo() { Content = tokens[j].Content, Length = tokens[j].Length, OriginatingString = tokens[j].OriginatingString, StartPos = tokens[j].StartPos, Type = tokens[j].Type };
           originatingTokens.Add( clonedToken );
+        }
+
+        // preserve indenting (PDS requires this to differ between labels and macros)
+        if ( ( tokens.Count > 0 )
+        &&   ( tokens[0].StartPos > 0 ) )
+        {
+          tokens.Insert( 0, new TokenInfo() { StartPos = 0, Content = new string( ' ', tokens[0].StartPos ), Length = tokens[0].StartPos } );
         }
 
         if ( tokens.Count > 1 )
@@ -10530,7 +10834,7 @@ namespace C64Studio.Parser
             memoryBlockStartAddress = currentAddress;
 
 
-            Debug.Log( "ASM - new block starts at " + line.AddressStart );
+            //Debug.Log( "ASM - new block starts at " + line.AddressStart );
 
             var asmSegment = new Types.ASMSegment();
             asmSegment.StartAddress = line.AddressStart;
@@ -10546,7 +10850,7 @@ namespace C64Studio.Parser
         if ( ( line.AddressStart != -1 )
         &&   ( line.AddressStart != currentAddress ) )
         {
-          Debug.Log( "ASM - new followup block starts at " + line.AddressStart );
+          //Debug.Log( "ASM - new followup block starts at " + line.AddressStart );
 
           if ( line.PseudoPCOffset == -1 )
           {
@@ -10726,7 +11030,7 @@ namespace C64Studio.Parser
       }
        */
 
-      memoryMap.Dump();
+      //memoryMap.Dump();
 
       // determine load address
       int lowestStart = 65536;
@@ -11764,10 +12068,7 @@ namespace C64Studio.Parser
           && ( ( result[i - 1].EndPos + 1 < result[i].StartPos )
           || ( ( result[i - 1].EndPos + 1 == result[i].StartPos )
           && ( result[i - 1].Type != TokenInfo.TokenType.LITERAL_NUMBER ) ) )
-          && ( result[i - 1].Type != TokenInfo.TokenType.LABEL_CHEAP_LOCAL )
-          && ( result[i - 1].Type != TokenInfo.TokenType.LABEL_GLOBAL )
-          && ( result[i - 1].Type != TokenInfo.TokenType.LABEL_INTERNAL )
-          && ( result[i - 1].Type != TokenInfo.TokenType.LABEL_LOCAL )
+          && ( !TokenIsLabel( result[i - 1].Type ) )
           && ( ( result[i - 1].Type != TokenInfo.TokenType.SEPARATOR )
           || ( ( result[i - 1].Content != AssemblerSettings.INTERNAL_CLOSING_BRACE )
           && ( result[i - 1].Content != ")" ) ) )
@@ -12181,6 +12482,9 @@ namespace C64Studio.Parser
           }
           else
           {
+            // guess opcode later
+            // have to assume the worst
+            //numBytesFirstParam = 2;
             // TODO!!!!
             //AddError( LineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Could not evaluate tokens" );
             //return null;

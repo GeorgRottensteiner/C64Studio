@@ -16,7 +16,18 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( Source, null, config ) );
+      bool parseResult = parser.Parse( Source, null, config );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in parser.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+
+      Assert.IsTrue( parseResult  );
       Assert.IsTrue( parser.Assemble( config ) );
 
       return parser.AssembledOutput.Assembly;

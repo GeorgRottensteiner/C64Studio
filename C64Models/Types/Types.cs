@@ -204,6 +204,7 @@ namespace C64Studio.Types
     E1105_INVALID_OPCODE                    = 0x1105,
     E1106_SEGMENT_OUT_OF_BOUNDS             = 0x1106,
     E1107_ARGUMENT_OUT_OF_BOUNDS            = 0x1107,
+    E1108_SAFETY_BREAK                      = 0x1108,
 
     E1200_REDEFINITION_OF_LABEL             = 0x1200,
     E1201_REDEFINITION_OF_PREPROCESSOR_DEFINE = 0x1201,
@@ -1468,6 +1469,16 @@ namespace C64Studio.Types
 
 
 
+  public class RepeatUntilInfo
+  {
+    public int                LineIndex = 0;
+    public int                LoopLength = -1;
+    public int                NumRepeats = 0;
+    public string[]           Content = null;
+  };
+
+
+
   public class ScopeInfo
   {
     public enum ScopeType
@@ -1488,6 +1499,7 @@ namespace C64Studio.Types
     public bool                     IfChainHadActiveEntry = false;    // used for if/ifelse/else..chains
     public Types.LoopInfo           Loop = null;
     public Types.MacroFunctionInfo  Macro = null;
+    public RepeatUntilInfo          RepeatUntil = null;
     public ScopeType                Type = ScopeType.LOOP;
 
     public ScopeInfo( ScopeType Type )

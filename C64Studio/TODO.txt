@@ -1,4 +1,5 @@
 ﻿C64Studio
+o Output bei Custom Build kann Info von anderer Datei anzeigen?
 o Die Sortierreihenfolge vom "autocomplete" führt bei mir häufig zu Eingabefehlern, weil die Vorschläge alphabetisch sortiert und nicht nach Relevanz dargestellt werden (siehe Bild).
   Ausserdem wäre es gut, wenn ein vollständig ausgeschriebener Begriff in der Liste (ganz oben) erthalten bleiben würde (siehe Bild), so könnte man wie gewohnt mit ENTER in die näschte Zeile wechseln.
 o Could a future version get some keybindings for the editors, for example the sprite editor would benefit from bindings for:
