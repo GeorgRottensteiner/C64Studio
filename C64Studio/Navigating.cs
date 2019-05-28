@@ -130,6 +130,18 @@ namespace C64Studio
         BaseDocument newDoc = Core.MainForm.OpenFile( DocumentFilename );
         if ( newDoc != null )
         {
+          bool setFromMainDoc = false;
+          if ( ( !setFromMainDoc )
+          &&   ( Core.Compiling.ParserASM.ASMFileInfo.ContainsFile( newDoc.DocumentInfo.FullPath ) ) )
+          {
+            if ( !Core.Compiling.IsCurrentlyBuilding() )
+            {
+              newDoc.DocumentInfo.SetASMFileInfo( Core.Compiling.ParserASM.ASMFileInfo, Core.Compiling.ParserASM.KnownTokens(), Core.Compiling.ParserASM.KnownTokenInfo() );
+            }
+          }
+          //Debug.Log( "m_Outline.RefreshFromDocument after showdoc" );
+          //Core.MainForm.m_Outline.RefreshFromDocument( newDoc.DocumentInfo.BaseDoc );
+
           newDoc.SetCursorToLine( Line, true );
         }
       }

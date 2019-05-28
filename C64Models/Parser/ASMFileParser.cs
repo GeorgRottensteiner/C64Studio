@@ -2452,14 +2452,6 @@ namespace C64Studio.Parser
         m_CompileCurrentAddress = lineInfo.AddressStart;
         if ( lineInfo.NeededParsedExpression != null )
         {
-          foreach ( var token in lineInfo.NeededParsedExpression )
-          {
-            if ( token.Content == "do_arm" )
-            {
-              Debug.Log( "aha" );
-            }
-          }
-
           if ( lineInfo.NeededParsedExpression.Count == 0 )
           {
             AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax Error" );
@@ -2469,6 +2461,7 @@ namespace C64Studio.Parser
           // strip prefixed #
           if ( lineInfo.NeededParsedExpression[0].Content.StartsWith( "#" ) )
           {
+
             if ( lineInfo.NeededParsedExpression[0].Length == 1 )
             {
               lineInfo.NeededParsedExpression.RemoveAt( 0 );
@@ -2676,6 +2669,17 @@ namespace C64Studio.Parser
                   lineInfo.NeededParsedExpression[0].Content = closestLabel;
                 }
              } 
+            }
+
+            if ( lineInfo.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE )
+            {
+              if ( ( lineInfo.NeededParsedExpression.Count >= 2 )
+                    && ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
+                    && ( ( lineInfo.NeededParsedExpression[0].Content == "<" )
+                    || ( lineInfo.NeededParsedExpression[0].Content == ">" ) ) )
+              {
+                Debug.Log( "neededparsedexpression Immediate: " + lineInfo.NeededParsedExpression[0].OriginatingString );
+              }
             }
             if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, out value ) )
             {
@@ -6501,7 +6505,7 @@ namespace C64Studio.Parser
           continue;
         }
 
-        if ( parseLine.Contains( "do_arm" ) )
+        if ( parseLine.Contains( "#<PSCREEN" ) )
         {
           Debug.Log( "aha" );
         }
@@ -6621,11 +6625,6 @@ namespace C64Studio.Parser
 
         string labelInFront = "";
         Types.TokenInfo tokenInFront = null;
-
-        if ( parseLine.Contains( "do_arm" ) )
-        {
-          Debug.Log( "aha" );
-        }
 
         if ( upToken == "}" )
         {
@@ -7030,6 +7029,13 @@ namespace C64Studio.Parser
               {
                 if ( lineTokenInfos[1].Content.StartsWith( "#" ) )
                 {
+                  if ( ( lineTokenInfos.Count >= 3 )
+                  &&   ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
+                  &&   ( ( lineTokenInfos[2].Content == "<" )
+                  ||     ( lineTokenInfos[2].Content == ">" ) ) )
+                  {
+                    Debug.Log( "Immediate: " + lineTokenInfos[0].OriginatingString );
+                  }
                   if ( lineTokenInfos[1].Length == 1 )
                   {
                     lineTokenInfos.RemoveAt( 1 );
@@ -12549,6 +12555,37 @@ namespace C64Studio.Parser
           if ( extraTokens.Count > 0 )
           {
             int     expressionResult = -1;
+            if ( ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
+            &&   ( ( extraTokens[0].Content == "<" )
+            ||     ( extraTokens[0].Content == ">" ) ) )
+            {
+              if ( EvaluateTokens( LineIndex, extraTokens, 1, extraTokens.Count - 1, out expressionResult ) )
+              {
+                if ( extraTokens[0].Content == "<" )
+                {
+                  expressionResult &= 0xff;
+                }
+                else
+                {
+                  expressionResult = ( expressionResult >> 8 ) & 0xff;
+                }
+
+                LineTokens.RemoveRange( 2, LineTokens.Count - 2 );
+                if ( LineTokens[1].Length > 1 )
+                {
+                  LineTokens[1].Length = 1;
+                  LineTokens[1].Content = LineTokens[1].Content.Substring( 0, 1 );
+                }
+                Types.TokenInfo token = new Types.TokenInfo();
+                token.Content = expressionResult.ToString();
+                token.Length = token.Content.Length;
+                LineTokens.Add( token );
+              }
+              else
+              {
+                info.NeededParsedExpression = extraTokens;
+              }
+            }
             if ( EvaluateTokens( LineIndex, extraTokens, out expressionResult ) )
             {
               LineTokens.RemoveRange( 2, LineTokens.Count - 2 );

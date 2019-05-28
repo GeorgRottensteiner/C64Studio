@@ -27,6 +27,7 @@ namespace C64Studio.Parser
     public bool                                                     IncludeExpectsStringLiteral = true;
     public bool                                                     IncludeHasOnlyFilename = false;
     public bool                                                     HasBinaryNot = true;
+    public bool                                                     GreaterOrLessThanAtBeginningAffectFullExpression = false;
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
 
     public const string                 INTERNAL_OPENING_BRACE = "╚";
@@ -66,6 +67,7 @@ namespace C64Studio.Parser
       MacroKeywordAfterName = false;
       MacrosUseCheapLabelsAsParameters = false;
       LabelsMustBeAtStartOfLine = false;
+      GreaterOrLessThanAtBeginningAffectFullExpression = false;
 
       OperatorPrecedence.Clear();
       OperatorPrecedence["-"] = 0;
@@ -344,6 +346,7 @@ namespace C64Studio.Parser
           MacrosUseCheapLabelsAsParameters = true;
           HasBinaryNot = false;
           LabelsMustBeAtStartOfLine = true;
+          GreaterOrLessThanAtBeginningAffectFullExpression = true;
           break;
         case Types.AssemblerType.C64ASM:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
