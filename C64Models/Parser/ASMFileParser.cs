@@ -2452,6 +2452,10 @@ namespace C64Studio.Parser
         m_CompileCurrentAddress = lineInfo.AddressStart;
         if ( lineInfo.NeededParsedExpression != null )
         {
+          if ( lineInfo.Line == "cmp #'0'-1" )
+          {
+            Debug.Log( "aha" );
+          }
           if ( lineInfo.NeededParsedExpression.Count == 0 )
           {
             AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax Error" );
@@ -9741,6 +9745,7 @@ namespace C64Studio.Parser
 
         // preserve indenting (PDS requires this to differ between labels and macros)
         if ( ( tokens.Count > 0 )
+        &&   ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
         &&   ( tokens[0].StartPos > 0 ) )
         {
           tokens.Insert( 0, new TokenInfo() { StartPos = 0, Content = new string( ' ', tokens[0].StartPos ), Length = tokens[0].StartPos } );
@@ -12078,18 +12083,7 @@ namespace C64Studio.Parser
         for ( int i = 0; i < result.Count - 1; ++i )
         {
           // collapse - with literal to negative number, this requires all kind of checks
-          if ( ( i > 0 )
-          && ( result[i].Content == "-" )
-          && ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
-          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
-          && ( ( result[i - 1].EndPos + 1 < result[i].StartPos )
-          || ( ( result[i - 1].EndPos + 1 == result[i].StartPos )
-          && ( result[i - 1].Type != TokenInfo.TokenType.LITERAL_NUMBER ) ) )
-          && ( !TokenIsLabel( result[i - 1].Type ) )
-          && ( ( result[i - 1].Type != TokenInfo.TokenType.SEPARATOR )
-          || ( ( result[i - 1].Content != AssemblerSettings.INTERNAL_CLOSING_BRACE )
-          && ( result[i - 1].Content != ")" ) ) )
-          && ( result[i - 1].Content != "*" ) )
+          if ( CanCollapseMinusInFrontOfLiteralToNegativeNumber( result, i ) )
           {
             // collapse 
             result[i].Content = "-" + result[i + 1].Content;
@@ -12339,6 +12333,38 @@ namespace C64Studio.Parser
       }
       return result;
     }
+
+
+
+    private bool CanCollapseMinusInFrontOfLiteralToNegativeNumber( List<TokenInfo> Tokens, int IndexOfMinusToken )
+    {
+      if ( ( IndexOfMinusToken > 0 )
+      &&   ( IndexOfMinusToken + 1 < Tokens.Count ) )
+      {
+        var minusToken = Tokens[IndexOfMinusToken];
+        var prevToken = Tokens[IndexOfMinusToken - 1];
+        var nextToken = Tokens[IndexOfMinusToken + 1];
+
+        if ( ( minusToken.Content == "-" )
+        &&   ( Tokens[IndexOfMinusToken + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
+        &&   ( Tokens[IndexOfMinusToken].StartPos + Tokens[IndexOfMinusToken].Length == Tokens[IndexOfMinusToken + 1].StartPos )
+        &&   ( ( prevToken.EndPos + 1 < Tokens[IndexOfMinusToken].StartPos )
+        ||     ( ( prevToken.EndPos + 1 == Tokens[IndexOfMinusToken].StartPos )
+        &&       ( prevToken.Type != TokenInfo.TokenType.LITERAL_NUMBER )
+        &&       ( prevToken.Type != TokenInfo.TokenType.LITERAL_CHAR ) ) )
+        &&   ( !TokenIsLabel( Tokens[IndexOfMinusToken - 1].Type ) )
+        &&   ( ( prevToken.Type != TokenInfo.TokenType.SEPARATOR )
+        ||     ( ( Tokens[IndexOfMinusToken - 1].Content != AssemblerSettings.INTERNAL_CLOSING_BRACE )
+        &&       ( Tokens[IndexOfMinusToken - 1].Content != ")" ) ) )
+        &&   ( Tokens[IndexOfMinusToken - 1].Content != "*" ) )
+        {
+          return true;
+        }
+      }
+      return false;
+    }
+
+
 
     private void CollapsePDSLocalLabels( List<TokenInfo> result )
     {
