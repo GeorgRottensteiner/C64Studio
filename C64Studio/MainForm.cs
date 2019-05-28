@@ -4678,10 +4678,8 @@ namespace C64Studio
       switch ( Function )
       {
         case Types.Function.FIND_NEXT_MESSAGE:
-          {
-            StudioCore.Navigating.OpenSourceOfNextMessage();
-          }
-          break;
+          StudioCore.Navigating.OpenSourceOfNextMessage();
+          return true;
         case C64Studio.Types.Function.OPEN_FILES:
           {
             System.Windows.Forms.OpenFileDialog openDlg = new System.Windows.Forms.OpenFileDialog();
@@ -4703,7 +4701,7 @@ namespace C64Studio
               OpenFile( fileName );
             }
           }
-          break;
+          return true;
         case C64Studio.Types.Function.TOGGLE_BREAKPOINT:
           if ( ( AppState != Types.StudioState.NORMAL )
           &&   ( AppState != C64Studio.Types.StudioState.DEBUGGING_BROKEN ) )
@@ -4715,6 +4713,7 @@ namespace C64Studio
             SourceASMEx asm = (SourceASMEx)ActiveDocument;
 
             asm.ToggleBreakpoint( asm.CurrentLineIndex );
+            return true;
           }
           break;
         case C64Studio.Types.Function.HELP:
@@ -4739,7 +4738,7 @@ namespace C64Studio
           return true;
         case C64Studio.Types.Function.FIND_NEXT:
           m_FindReplace.FindNext( ActiveDocument );
-          break;
+          return true;
         case C64Studio.Types.Function.FIND:
           {
             var compilableDoc = ActiveDocumentInfo.CompilableDocument;
@@ -4761,7 +4760,7 @@ namespace C64Studio
           m_FindReplace.tabFindReplace.SelectedIndex = 0;
           m_FindReplace.comboSearchTarget.SelectedIndex = 1;
           m_FindReplace.AcceptButton = m_FindReplace.btnFindNext;
-          break;
+          return true;
         case C64Studio.Types.Function.FIND_IN_PROJECT:
           {
             var compilableDoc = ActiveDocumentInfo.CompilableDocument;
@@ -4782,7 +4781,7 @@ namespace C64Studio
           m_FindReplace.tabFindReplace.SelectedIndex = 0;
           m_FindReplace.comboSearchTarget.SelectedIndex = 3;
           m_FindReplace.AcceptButton = m_FindReplace.btnFindAll;
-          break;
+          return true;
         case C64Studio.Types.Function.FIND_REPLACE:
           {
             var compilableDoc = ActiveDocumentInfo.CompilableDocument;
@@ -4801,7 +4800,7 @@ namespace C64Studio
           }
           StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
           m_FindReplace.tabFindReplace.SelectedIndex = 1;
-          break;
+          return true;
         case C64Studio.Types.Function.REPLACE_IN_PROJECT:
           {
             var compilableDoc = ActiveDocumentInfo.CompilableDocument;
@@ -4821,7 +4820,7 @@ namespace C64Studio
           StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
           m_FindReplace.tabFindReplace.SelectedIndex = 1;
           m_FindReplace.comboReplaceTarget.SelectedIndex = 3;
-          break;
+          return true;
         case Function.PRINT:
         case Function.COMMENT_SELECTION:
         case Function.UNCOMMENT_SELECTION:
@@ -4876,24 +4875,25 @@ namespace C64Studio
             {
               var compilableDoc = curDoc.DocumentInfo.CompilableDocument;
               compilableDoc?.CenterOnCaret();
+              return true;
             }
           }
           break;
         case C64Studio.Types.Function.DEBUG_STEP:
           StudioCore.Debugging.DebugStepInto();
-          break;
+          return true;
         case C64Studio.Types.Function.DEBUG_STEP_OVER:
           StudioCore.Debugging.DebugStepOver();
-          break;
+          return true;
         case C64Studio.Types.Function.DEBUG_STOP:
           StopDebugging();
-          break;
+          return true;
         case C64Studio.Types.Function.DEBUG_GO:
           DebugGo();
-          break;
+          return true;
         case C64Studio.Types.Function.DEBUG_BREAK:
           StudioCore.Debugging.DebugBreak();
-          break;
+          return true;
         case C64Studio.Types.Function.DEBUG_RUN_TO:
           if ( ( AppState != Types.StudioState.NORMAL )
           &&   ( AppState != C64Studio.Types.StudioState.DEBUGGING_BROKEN ) )
@@ -4916,9 +4916,8 @@ namespace C64Studio
 
             // so this should become one too!
             AddTask( new Tasks.TaskDebugRunTo( docToHandle, docToDebug, docActive ) );
-
           }
-          break;
+          return true;
         case C64Studio.Types.Function.SAVE_ALL:
           SaveSolution();
           if ( m_Solution != null )
@@ -4960,7 +4959,7 @@ namespace C64Studio
               docToSave.Save();
             }
           }
-          break;
+          return true;
         case C64Studio.Types.Function.SAVE_DOCUMENT:
           {
             // save current document
@@ -4998,7 +4997,7 @@ namespace C64Studio
               return true;
             }
           }
-          break;
+          return true;
         case C64Studio.Types.Function.SAVE_DOCUMENT_AS:
           {
             // save current document as
@@ -5036,13 +5035,14 @@ namespace C64Studio
               return true;
             }
           }
-          break;
+          return true;
         case C64Studio.Types.Function.COMPILE:
           {
             DocumentInfo docToCompile = DetermineDocumentToCompile();
             if ( docToCompile != null )
             {
               Compile( docToCompile );
+              return true;
             }
           }
           break;
@@ -5052,6 +5052,7 @@ namespace C64Studio
             if ( docToCompile != null )
             {
               Build( docToCompile );
+              return true;
             }
           }
           break;
@@ -5061,6 +5062,7 @@ namespace C64Studio
             if ( docToCompile != null )
             {
               Build( docToCompile, true );
+              return true;
             }
           }
           break;
@@ -5070,6 +5072,7 @@ namespace C64Studio
             if ( docToCompile != null )
             {
               Rebuild( docToCompile );
+              return true;
             }
           }
           break;
@@ -5079,6 +5082,7 @@ namespace C64Studio
             if ( docToCompile != null )
             {
               BuildAndRun( docToCompile, docToCompile );
+              return true;
             }
           }
           break;
@@ -5089,11 +5093,13 @@ namespace C64Studio
             if ( docToCompile != null )
             {
               BuildAndDebug( docToCompile, DetermineDocumentToHandle(), docToCompile );
+              return true;
             }
           }
           else if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
           {
             DebugGo();
+            return true;
           }
           break;
         case C64Studio.Types.Function.GO_TO_DECLARATION:
@@ -5121,6 +5127,7 @@ namespace C64Studio
 
               sourceEx.FindZoneAtCaretPosition( out zone, out cheapLabelParent );
               StudioCore.Navigating.GotoDeclaration( docToHandle, wordBelow, zone, cheapLabelParent );
+              return true;
             }
           }
           break;
@@ -5130,6 +5137,7 @@ namespace C64Studio
           &&   ( docUndo.UndoPossible ) )
           {
             docUndo.Undo();
+            return true;
           }
           break;
         case C64Studio.Types.Function.REDO:
@@ -5138,6 +5146,7 @@ namespace C64Studio
           &&   ( docRedo.RedoPossible ) )
           {
             docRedo.Redo();
+            return true;
           }
           break;
         case C64Studio.Types.Function.DELETE_LINE:

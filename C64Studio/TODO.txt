@@ -1,6 +1,7 @@
 ﻿C64Studio
 o Output bei Custom Build kann Info von anderer Datei anzeigen?
 o BASIC: Undo bei Label-Mode-Wechsel sollte Label-Mode mit wechseln!
+o PDS: lda #< should use lo/hi of the whole expression
 
 o Die Sortierreihenfolge vom "autocomplete" führt bei mir häufig zu Eingabefehlern, weil die Vorschläge alphabetisch sortiert und nicht nach Relevanz dargestellt werden (siehe Bild).
   Ausserdem wäre es gut, wenn ein vollständig ausgeschriebener Begriff in der Liste (ganz oben) erthalten bleiben würde (siehe Bild), so könnte man wie gewohnt mit ENTER in die näschte Zeile wechseln.

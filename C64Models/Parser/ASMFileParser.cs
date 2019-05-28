@@ -2452,16 +2452,20 @@ namespace C64Studio.Parser
         m_CompileCurrentAddress = lineInfo.AddressStart;
         if ( lineInfo.NeededParsedExpression != null )
         {
+          foreach ( var token in lineInfo.NeededParsedExpression )
+          {
+            if ( token.Content == "do_arm" )
+            {
+              Debug.Log( "aha" );
+            }
+          }
+
           if ( lineInfo.NeededParsedExpression.Count == 0 )
           {
             AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax Error" );
             return false;
           }
 
-          if ( lineInfo.NeededParsedExpression[0].Content == "RESTRICT" )
-          {
-            Debug.Log( "dha" );
-          }
           // strip prefixed #
           if ( lineInfo.NeededParsedExpression[0].Content.StartsWith( "#" ) )
           {
@@ -6497,6 +6501,11 @@ namespace C64Studio.Parser
           continue;
         }
 
+        if ( parseLine.Contains( "do_arm" ) )
+        {
+          Debug.Log( "aha" );
+        }
+
         AdjustLabelCasing( lineTokenInfos );
 
 
@@ -6886,6 +6895,8 @@ namespace C64Studio.Parser
 
             // shift all tokens back
             lineTokenInfos = ParseTokenInfo( parseLine, 0, parseLine.Length );
+
+            AdjustLabelCasing( lineTokenInfos );
             // insert dummy entry to be removed later
             lineTokenInfos.Insert( 0, new TokenInfo() );
           }
