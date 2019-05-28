@@ -1707,10 +1707,19 @@ namespace C64Studio.Parser
       result.AppendU16( 0 );
 
       int     originalSize = (int)result.Length - 2;
-      
+
 
       //Debug.Log( "Compiled: " + result.ToString() );
 
+      string    outputPureFilename = "HURZ";
+      try
+      {
+        outputPureFilename = System.IO.Path.GetFileNameWithoutExtension( Config.OutputFile );
+      }
+      catch ( Exception )
+      {
+        // arghh exceptions!
+      }
       int     fileStartAddress = -1;
 
       AssembledOutput = new AssemblyOutput();
@@ -1721,10 +1730,7 @@ namespace C64Studio.Parser
 
         Formats.T64.FileRecord  record = new C64Studio.Formats.T64.FileRecord();
 
-        record.Filename.AppendU8( (byte)'H' );
-        record.Filename.AppendU8( (byte)'U' );
-        record.Filename.AppendU8( (byte)'R' );
-        record.Filename.AppendU8( (byte)'Z' );
+        record.Filename = Util.ToFilename( outputPureFilename );
         record.StartAddress = (ushort)fileStartAddress;
 
         t64.TapeInfo.Description = "C64S tape file\r\nDemo tape";
@@ -1733,6 +1739,24 @@ namespace C64Studio.Parser
         t64.FileDatas.Add( result );
 
         AssembledOutput.Assembly = t64.Compile();
+      }
+      else if ( Config.TargetType == Types.CompileTargetType.D64 )
+      {
+        Formats.D64 d64 = new C64Studio.Formats.D64();
+
+        d64.CreateEmptyMedia();
+
+        GR.Memory.ByteBuffer    bufName = Util.ToFilename( outputPureFilename );
+        d64.WriteFile( bufName, AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
+
+        AssembledOutput.Assembly = d64.Compile();
+      }
+      else if ( Config.TargetType == Types.CompileTargetType.TAP )
+      {
+        Formats.Tap tap = new C64Studio.Formats.Tap();
+
+        tap.WriteFile( Util.ToFilename( outputPureFilename ), AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
+        AssembledOutput.Assembly = tap.Compile();
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_BIN )
       ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )

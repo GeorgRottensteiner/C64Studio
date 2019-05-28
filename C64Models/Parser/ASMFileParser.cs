@@ -2674,9 +2674,9 @@ namespace C64Studio.Parser
             if ( lineInfo.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE )
             {
               if ( ( lineInfo.NeededParsedExpression.Count >= 2 )
-                    && ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
-                    && ( ( lineInfo.NeededParsedExpression[0].Content == "<" )
-                    || ( lineInfo.NeededParsedExpression[0].Content == ">" ) ) )
+              &&   ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
+              &&   ( ( lineInfo.NeededParsedExpression[0].Content == "<" )
+              ||     ( lineInfo.NeededParsedExpression[0].Content == ">" ) ) )
               {
                 Debug.Log( "neededparsedexpression Immediate: " + lineInfo.NeededParsedExpression[0].OriginatingString );
               }
