@@ -314,6 +314,8 @@ namespace C64Studio.Tasks
           Doc.ASMFileInfo = combinedFileInfo;
         }
 
+        parser.AssembledOutput = null;
+
         if ( ( configSetting != null )
         &&   ( !string.IsNullOrEmpty( configSetting.CustomBuild ) ) )
         {
