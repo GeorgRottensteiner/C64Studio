@@ -6,6 +6,64 @@ namespace TestProject
   [TestClass]
   public class UnitTestAssembler
   {
+    private GR.Memory.ByteBuffer TestAssemblePDS( string Source )
+    {
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.PDS );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.PDS;
+
+      bool parseResult = parser.Parse( Source, null, config );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in parser.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+
+      Assert.IsTrue( parseResult );
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      return parser.AssembledOutput.Assembly;
+    }
+
+
+
+    private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source )
+    {
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      bool parseResult = parser.Parse( Source, null, config );
+      if ( !parseResult )
+      {
+        Debug.Log( "Testassemble failed:" );
+        foreach ( var msg in parser.Messages.Values )
+        {
+          Debug.Log( msg.Message );
+        }
+      }
+
+
+      Assert.IsTrue( parseResult );
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      return parser.AssembledOutput.Assembly;
+    }
+
+
+
     [TestMethod]
     public void TestOverlappingSegmentWarning()
     {
@@ -387,6 +445,65 @@ namespace TestProject
 
       Assert.AreEqual( "0040A914200040E800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A914200041E800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A914200042E800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A914200043E800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A914200044E800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A914200045E8", assembly.Assembly.ToString() );
     }
+
+
+
+    [TestMethod]
+    public void TestLoByteWithExpressionSettings1PDS()
+    {
+      string      source = @"  ORG $c000
+                             P_SCREEN = $b400
+                          lda #<P_SCREEN + ( 40 * 10 )";
+
+      var assembly = TestAssemblePDS( source );
+
+      Assert.AreEqual( "00C0A990", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestHiByteWithExpressionSettings1PDS()
+    {
+      string      source = @"  ORG $c000
+                             P_SCREEN = $b400
+                          lda #>P_SCREEN + ( 40 * 10 )";
+
+      var assembly = TestAssemblePDS( source );
+
+      Assert.AreEqual( "00C0A9B5", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestLoByteWithExpressionSettings1C64Studio()
+    {
+      string      source = @"  * = $c000
+                             P_SCREEN = $b400
+                          lda #<P_SCREEN + ( 4 * 10 )";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "00C0A928", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestHiByteWithExpressionSettings1C64Studio()
+    {
+      string      source = @"  * = $c000
+                             P_SCREEN = $b400
+                          lda #>P_SCREEN + ( 4 * 10 )";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "00C0A9DC", assembly.ToString() );
+    }
+
+
+
 
   }
 }

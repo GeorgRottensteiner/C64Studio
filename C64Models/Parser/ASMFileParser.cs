@@ -1714,7 +1714,7 @@ namespace C64Studio.Parser
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_CHAR )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER ) ) )
               {
-                // eval hi/lo byte
+                // eval hi/lo byte, only locally for next token!!
                 if ( subTokenRange[highestPrecedenceTokenIndex].Content == "<" )
                 {
                   int     value = -1;
@@ -2452,10 +2452,6 @@ namespace C64Studio.Parser
         m_CompileCurrentAddress = lineInfo.AddressStart;
         if ( lineInfo.NeededParsedExpression != null )
         {
-          if ( lineInfo.Line == "cmp #'0'-1" )
-          {
-            Debug.Log( "aha" );
-          }
           if ( lineInfo.NeededParsedExpression.Count == 0 )
           {
             AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax Error" );
@@ -2675,16 +2671,6 @@ namespace C64Studio.Parser
              } 
             }
 
-            if ( lineInfo.Opcode.Addressing == Opcode.AddressingType.IMMEDIATE )
-            {
-              if ( ( lineInfo.NeededParsedExpression.Count >= 2 )
-              &&   ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
-              &&   ( ( lineInfo.NeededParsedExpression[0].Content == "<" )
-              ||     ( lineInfo.NeededParsedExpression[0].Content == ">" ) ) )
-              {
-                Debug.Log( "neededparsedexpression Immediate: " + lineInfo.NeededParsedExpression[0].OriginatingString );
-              }
-            }
             if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, out value ) )
             {
               /*
@@ -6509,11 +6495,6 @@ namespace C64Studio.Parser
           continue;
         }
 
-        if ( parseLine.Contains( "#<PSCREEN" ) )
-        {
-          Debug.Log( "aha" );
-        }
-
         AdjustLabelCasing( lineTokenInfos );
 
 
@@ -6938,7 +6919,6 @@ namespace C64Studio.Parser
           List<Tiny64.Opcode> possibleOpcodes = new List<Tiny64.Opcode>( m_Processor.Opcodes[upToken.ToLower()] );
 
           //Debug.Log( "TODO - if either ZP option is active dismiss unfitting possible opcodes" );
-
           if ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
           {
             // dismiss any zp based opcodes
@@ -7033,13 +7013,6 @@ namespace C64Studio.Parser
               {
                 if ( lineTokenInfos[1].Content.StartsWith( "#" ) )
                 {
-                  if ( ( lineTokenInfos.Count >= 3 )
-                  &&   ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
-                  &&   ( ( lineTokenInfos[2].Content == "<" )
-                  ||     ( lineTokenInfos[2].Content == ">" ) ) )
-                  {
-                    Debug.Log( "Immediate: " + lineTokenInfos[0].OriginatingString );
-                  }
                   if ( lineTokenInfos[1].Length == 1 )
                   {
                     lineTokenInfos.RemoveAt( 1 );
@@ -12505,34 +12478,62 @@ namespace C64Studio.Parser
           int value = -1;
           int numGivenBytes = 0;
 
-          // determine addressing from parameter size
-          bool  couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex, expressionTokenCount, out value, out numGivenBytes );
-          if ( couldEvaluate )
-          //if ( ParseValue( LineIndex, LineTokens[1].Content, out value, out numGivenBytes ) )
+          if ( ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
+          &&   ( LineTokens.Count >= 2 )
+          &&   ( LineTokens[1].Content == "#" )
+          &&   ( ( LineTokens[2].Content == ">" )
+          ||     ( LineTokens[2].Content == "<" ) ) )
           {
-            if ( numGivenBytes > 0 )
+            // since it's hi/lo it's always 1
+            numBytesFirstParam = 1;
+            // still call evaluate tokens since it will collapse the result
+            bool couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex + 2, expressionTokenCount - 2, out value, out numGivenBytes );
+            if ( couldEvaluate )
             {
-              numBytesFirstParam = numGivenBytes;
-            }
-            else if ( ( value & 0xff00 ) != 0 )
-            {
-              numBytesFirstParam = 2;
-            }
-            else
-            {
-              numBytesFirstParam = 1;
+              if ( LineTokens[2].Content == ">" )
+              {
+                LineTokens.RemoveRange( expressionTokenStartIndex + 2, expressionTokenCount - 2 );
+                LineTokens[2].Content = ( ( value >> 8 ) & 0xff ).ToString();
+                LineTokens[2].Type    = TokenInfo.TokenType.LITERAL_NUMBER;
+              }
+              else
+              {
+                LineTokens.RemoveRange( expressionTokenStartIndex + 2, expressionTokenCount - 2 );
+                LineTokens[2].Content = ( value & 0xff ).ToString();
+                LineTokens[2].Type = TokenInfo.TokenType.LITERAL_NUMBER;
+              }
             }
           }
           else
           {
-            // guess opcode later
-            // have to assume the worst
-            //numBytesFirstParam = 2;
-            // TODO!!!!
-            //AddError( LineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Could not evaluate tokens" );
-            //return null;
+            // determine addressing from parameter size
+            bool  couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex, expressionTokenCount, out value, out numGivenBytes );
+            if ( couldEvaluate )
+            //if ( ParseValue( LineIndex, LineTokens[1].Content, out value, out numGivenBytes ) )
+            {
+              if ( numGivenBytes > 0 )
+              {
+                numBytesFirstParam = numGivenBytes;
+              }
+              else if ( ( value & 0xff00 ) != 0 )
+              {
+                numBytesFirstParam = 2;
+              }
+              else
+              {
+                numBytesFirstParam = 1;
+              }
+            }
+            else
+            {
+              // guess opcode later
+              // have to assume the worst
+              //numBytesFirstParam = 2;
+              // TODO!!!!
+              //AddError( LineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Could not evaluate tokens" );
+              //return null;
+            }
           }
-
           // force to 1 byte 
           if ( LineTokens[0].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP )
           {

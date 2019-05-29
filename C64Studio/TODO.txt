@@ -1,5 +1,5 @@
 ﻿C64Studio
-o Output bei Custom Build kann Info von anderer Datei anzeigen?
+o Custom Build: Show analysis of configured target file/type (load address, size?)
 o BASIC: Undo bei Label-Mode-Wechsel sollte Label-Mode mit wechseln!
 o PDS: lda #< should use lo/hi of the whole expression
 
