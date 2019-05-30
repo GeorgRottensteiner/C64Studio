@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
+using C64Studio.Types;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace C64Studio
@@ -3227,6 +3228,13 @@ namespace C64Studio
 
     private void btnMirrorX_Click( object sender, EventArgs e )
     {
+      MirrorH();
+    }
+
+
+
+    private void MirrorH()
+    {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
 
       for ( int j = 0; j < 8; ++j )
@@ -3252,6 +3260,13 @@ namespace C64Studio
 
     private void btnMirrorY_Click( object sender, EventArgs e )
     {
+      MirrorV();
+    }
+
+
+
+    private void MirrorV()
+    {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
 
       for ( int j = 0; j < 4; ++j )
@@ -3276,6 +3291,13 @@ namespace C64Studio
 
 
     private void btnShiftUp_Click( object sender, EventArgs e )
+    {
+      ShiftUp();
+    }
+
+
+
+    private void ShiftUp()
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
 
@@ -3303,6 +3325,13 @@ namespace C64Studio
 
     private void btnShiftDown_Click( object sender, EventArgs e )
     {
+      ShiftDown();
+    }
+
+
+
+    private void ShiftDown()
+    {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
 
       for ( int i = 0; i < 8; ++i )
@@ -3310,7 +3339,6 @@ namespace C64Studio
         uint  curColor = m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7 );
         for ( int j = 0; j < 7; ++j )
         {
-
           m_GraphicScreenProject.Image.SetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 7 - j,
             m_GraphicScreenProject.Image.GetPixel( m_SelectedChar.X * 8 + i, m_SelectedChar.Y * 8 + 6 - j ) );
         }
@@ -3328,6 +3356,13 @@ namespace C64Studio
 
 
     private void btnShiftRight_Click( object sender, EventArgs e )
+    {
+      ShiftRight();
+    }
+
+
+
+    private void ShiftRight()
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
 
@@ -3354,6 +3389,13 @@ namespace C64Studio
 
     private void btnShiftLeft_Click( object sender, EventArgs e )
     {
+      ShiftLeft();
+    }
+
+
+
+    private void ShiftLeft()
+    {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
 
       for ( int i = 0; i < 8; ++i )
@@ -3374,6 +3416,37 @@ namespace C64Studio
       pictureEditor.Invalidate();
       Modified = true;
     }
+
+
+
+    public override bool ApplyFunction( Function Function )
+    {
+      switch ( Function )
+      {
+        case Function.GRAPHIC_ELEMENT_MIRROR_H:
+          MirrorH();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MIRROR_V:
+          MirrorV();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_D:
+          ShiftDown();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_L:
+          ShiftLeft();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_R:
+          ShiftRight();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_U:
+          ShiftUp();
+          return true;
+      }
+      return base.ApplyFunction( Function );
+    }
+
+
+
   }
 }
 
