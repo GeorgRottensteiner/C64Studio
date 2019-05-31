@@ -936,6 +936,9 @@ namespace C64Studio
               color.BGColor = binIn.ReadUInt32();
               color.BGColorAuto = ( binIn.ReadUInt32() != 0 );
 
+              color.FGColor |= 0xff000000;
+              color.BGColor |= 0xff000000;
+
               SyntaxColoring.Add( element, color );
             }
             break;
