@@ -304,6 +304,9 @@ namespace C64Studio.Parser
           AddMacro( "DC.B", Types.MacroInfo.MacroType.TEXT );
           AddMacro( "DC.V", Types.MacroInfo.MacroType.TEXT );
           AddMacro( "DB", Types.MacroInfo.MacroType.TEXT );
+          AddMacro( "DEFM", Types.MacroInfo.MacroType.TEXT );
+          AddMacro( "DM", Types.MacroInfo.MacroType.TEXT );
+          AddMacro( "DFM", Types.MacroInfo.MacroType.TEXT );
           AddMacro( "DH", Types.MacroInfo.MacroType.HIGH_BYTE );
           AddMacro( "DL", Types.MacroInfo.MacroType.LOW_BYTE );
           AddMacro( "DW", Types.MacroInfo.MacroType.WORD );
@@ -327,6 +330,8 @@ namespace C64Studio.Parser
           AddMacro( "FREE", Types.MacroInfo.MacroType.IGNORE );
           AddMacro( "SEND", Types.MacroInfo.MacroType.IGNORE );
           AddMacro( "SKIP", Types.MacroInfo.MacroType.IGNORE );
+          AddMacro( "INFO", Types.MacroInfo.MacroType.IGNORE );
+          AddMacro( "RUN", Types.MacroInfo.MacroType.IGNORE );
           AddMacro( "END", Types.MacroInfo.MacroType.END_OF_FILE );
           AddMacro( "REPEAT", Types.MacroInfo.MacroType.REPEAT );
 

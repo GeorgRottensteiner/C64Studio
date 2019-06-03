@@ -2519,7 +2519,6 @@ namespace C64Studio.Parser
             {
               startToken = lineToCheck.Substring( 0, spacePos ).ToUpper();
             }
-            bool pseudoOpHandled = false;
             if ( m_AssemblerSettings.Macros.ContainsKey( startToken ) )
             {
               var pseudoOp = m_AssemblerSettings.Macros[startToken];
@@ -2534,108 +2533,80 @@ namespace C64Studio.Parser
                       AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
                         "Failed to evaluate expression: " + TokensToExpression( lineInfo.NeededParsedExpression ) );
                     }
-                    pseudoOpHandled = true;
+                  }
+                  break;
+                case MacroInfo.MacroType.BYTE:
+                  PODataByte( lineIndex, lineInfo.NeededParsedExpression, 0, lineInfo.NeededParsedExpression.Count, lineInfo, Types.MacroInfo.MacroType.BYTE, lineInfo.LineCodeMapping, false );
+                  break;
+                case MacroInfo.MacroType.WORD:
+                  {
+                    int     lineInBytes = 0;
+                    var result = PODataWord( lineInfo.NeededParsedExpression, lineInfo.LineIndex, 0, lineInfo.NeededParsedExpression.Count, lineInfo, lineToCheck, false, out lineInBytes );
+                    if ( result == ParseLineResult.RETURN_FALSE )
+                    {
+                      return false;
+                    }
+                  }
+                  break;
+                case MacroInfo.MacroType.TEXT:
+                case MacroInfo.MacroType.TEXT_PET:
+                case MacroInfo.MacroType.TEXT_RAW:
+                case MacroInfo.MacroType.TEXT_SCREEN:
+                  {
+                    var result = FinalParseData( lineInfo, lineIndex, true );
+                    if ( result == ParseLineResult.RETURN_FALSE )
+                    {
+                      return false;
+                    }
+                  }
+                  break;
+                case MacroInfo.MacroType.FILL:
+                  {
+                    int tokenCommaIndex = -1;
+
+                    for ( int i = 0; i < lineInfo.NeededParsedExpression.Count; ++i )
+                    {
+                      if ( lineInfo.NeededParsedExpression[i].Content == "," )
+                      {
+                        tokenCommaIndex = i;
+                        break;
+                      }
+                    }
+                    if ( tokenCommaIndex == -1 )
+                    {
+                      AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate !fill expression" );
+                      return false;
+                    }
+
+                    int     count = -1;
+                    int     value = -1;
+                    int     dummyBytesGiven;
+
+                    if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, 0, tokenCommaIndex, out count, out dummyBytesGiven ) )
+                    {
+                      AddError( lineIndex,
+                                Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
+                                "Could not evaluate " + TokensToExpression( lineInfo.NeededParsedExpression, 0, tokenCommaIndex ),
+                                lineInfo.NeededParsedExpression[0].StartPos,
+                                lineInfo.NeededParsedExpression[tokenCommaIndex - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );
+                    }
+                    if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, tokenCommaIndex + 1, lineInfo.NeededParsedExpression.Count - tokenCommaIndex - 1, out value ) )
+                    {
+                      AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineInfo.NeededParsedExpression, tokenCommaIndex + 1, lineInfo.NeededParsedExpression.Count - tokenCommaIndex - 1 ) );
+                    }
+                    GR.Memory.ByteBuffer lineData = new GR.Memory.ByteBuffer();
+                    for ( int i = 0; i < count; ++i )
+                    {
+                      lineData.AppendU8( (byte)value );
+                    }
+                    lineInfo.LineData = lineData;
                   }
                   break;
                 default:
                   //AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Unhandled pseudo op during DetermineUnparsedLabels" );
-                  break;
+                  AddError( lineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unsupported pseudo op " + startToken );
+                  return false;
               }
-            }
-
-            if ( pseudoOpHandled )
-            {
-            }
-            else if ( ( startToken == "!BYTE" )
-            ||        ( startToken == "DW" )
-            ||        ( startToken == ".BYTE" )
-            ||        ( startToken == ".WORD" )
-            ||        ( startToken == "DC.W" )
-            ||        ( startToken == "!BY" )
-            ||        ( startToken == "!8" )
-            ||        ( startToken == "!08" )
-            ||        ( startToken == "!16" )
-            ||        ( startToken == "!WO" )
-            ||        ( startToken == "!WORD" ) )
-            {
-              bool isByte = ( startToken == "!BYTE" ) || ( startToken == "!BY" ) || ( startToken == "!8" ) || ( startToken == "!08" ) || ( startToken == "DB" ) || ( startToken == "DC.B" ) || ( startToken == "DL" ) || ( startToken == "DH" ) || ( startToken == ".BYTE" );
-
-              if ( isByte )
-              {
-                PODataByte( lineIndex, lineInfo.NeededParsedExpression, 0, lineInfo.NeededParsedExpression.Count, lineInfo, Types.MacroInfo.MacroType.BYTE, lineInfo.LineCodeMapping, false );
-              }
-              else
-              {
-                int     lineInBytes = 0;
-                var result = PODataWord( lineInfo.NeededParsedExpression, lineInfo.LineIndex, 0, lineInfo.NeededParsedExpression.Count, lineInfo, lineToCheck, false, out lineInBytes );
-              }
-            }
-            else if ( ( startToken == "!TEXT" )
-            ||        ( startToken == "!TX" )
-            ||        ( startToken == "!SCR" )
-            ||        ( startToken == "!RAW" )
-            ||        ( startToken == "!PET" )
-            ||        ( startToken == "DC.B" )
-            ||        ( startToken == "DC.V" )
-            ||        ( startToken == "DB" )
-            ||        ( startToken == "DH" )
-            ||        ( startToken == "DL" ) )
-            {
-              var result = FinalParseData( lineInfo, lineIndex, true );
-              if ( result == ParseLineResult.RETURN_FALSE )
-              {
-                return false;
-              }
-            }
-            else if ( ( startToken == "!FILL" )
-            ||        ( startToken == "!FI" )
-            ||        ( startToken == ".BYTE" )
-            ||        ( startToken == "DS" )
-            ||        ( startToken == "DS.B" ) )
-            {
-              int tokenCommaIndex = -1;
-
-              for ( int i = 0; i < lineInfo.NeededParsedExpression.Count; ++i )
-              {
-                if ( lineInfo.NeededParsedExpression[i].Content == "," )
-                {
-                  tokenCommaIndex = i;
-                  break;
-                }
-              }
-              if ( tokenCommaIndex == -1 )
-              {
-                AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate !fill expression" );
-                return false;
-              }
-
-              int     count = -1;
-              int     value = -1;
-              int     dummyBytesGiven;
-
-              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, 0, tokenCommaIndex, out count, out dummyBytesGiven ) )
-              {
-                AddError( lineIndex, 
-                          Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
-                          "Could not evaluate " + TokensToExpression( lineInfo.NeededParsedExpression, 0, tokenCommaIndex ),
-                          lineInfo.NeededParsedExpression[0].StartPos,
-                          lineInfo.NeededParsedExpression[tokenCommaIndex - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );
-              }
-              if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, tokenCommaIndex + 1, lineInfo.NeededParsedExpression.Count - tokenCommaIndex - 1, out value ) )
-              {
-                AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineInfo.NeededParsedExpression, tokenCommaIndex + 1, lineInfo.NeededParsedExpression.Count - tokenCommaIndex - 1 ) );
-              }
-              GR.Memory.ByteBuffer lineData = new GR.Memory.ByteBuffer();
-              for ( int i = 0; i < count; ++i )
-              {
-                lineData.AppendU8( (byte)value );
-              }
-              lineInfo.LineData = lineData;
-            }
-            else
-            {
-              AddError( lineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unsupported pseudo op " + startToken );
-              return false;
             }
           }
           else
