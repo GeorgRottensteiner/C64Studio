@@ -2196,24 +2196,14 @@ namespace C64Studio.Parser
 
     private bool IsOpeningBraceChar( string Token )
     {
-      if ( ( Token == "(" )
-      ||   ( Token == AssemblerSettings.INTERNAL_OPENING_BRACE ) )
-      {
-        return true;
-      }
-      return false;
+      return m_AssemblerSettings.OpenBracketChars.Contains( Token );
     }
 
 
 
     private bool IsClosingBraceChar( string Token )
     {
-      if ( ( Token == ")" )
-      ||   ( Token == AssemblerSettings.INTERNAL_CLOSING_BRACE ) )
-      {
-        return true;
-      }
-      return false;
+      return m_AssemblerSettings.CloseBracketChars.Contains( Token );
     }
 
 
@@ -2574,7 +2564,7 @@ namespace C64Studio.Parser
                     }
                     if ( tokenCommaIndex == -1 )
                     {
-                      AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate !fill expression" );
+                      AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + startToken + " expression" );
                       return false;
                     }
 
@@ -3370,6 +3360,10 @@ namespace C64Studio.Parser
 
     public List<Types.TokenInfo> PrepareLineTokens( string Line )
     {
+      if ( Line.Contains( "(SCREEN)" ) )
+      {
+        Debug.Log( "aha" );
+      }
       List<Types.TokenInfo> lineTokenInfos = ParseTokenInfo( Line, 0, Line.Length );
       if ( HasError() )
       {
@@ -5045,7 +5039,7 @@ namespace C64Studio.Parser
 
       if ( info.NumBytes == 0 )
       {
-        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro malformed, expect !FILL <Count>,<Value>" );
+        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro malformed, expect " + lineTokenInfos[0].Content + " <Count>,<Value>" );
         return ParseLineResult.RETURN_NULL;
       }
       lineSizeInBytes = info.NumBytes;
@@ -11602,11 +11596,11 @@ namespace C64Studio.Parser
             }
           }
           if ( ( possibleOperators == 1 )
-          && ( completeOperators == 1 ) )
+          &&   ( completeOperators == 1 ) )
           {
             if ( ( charPos + 1 < Start + Length )
-            && ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[tokenStartPos] ) != -1 )
-            && ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[charPos + 1] ) != -1 ) )
+            &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[tokenStartPos] ) != -1 )
+            &&   ( m_AssemblerSettings.AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL].IndexOf( Source[charPos + 1] ) != -1 ) )
             {
               // we have a text token which is not separated
             }

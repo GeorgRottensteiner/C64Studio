@@ -11,6 +11,8 @@ namespace C64Studio.Parser
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenEndChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
     public string                                                   AllowedSingleTokens;
+    public string                                                   OpenBracketChars = "";
+    public string                                                   CloseBracketChars = "";
     public GR.Collections.Map<string, Types.MacroInfo>              Macros = new GR.Collections.Map<string, Types.MacroInfo>();
     public string                                                   MacroPrefix = "";
     public string                                                   LabelPostfix = "";
@@ -105,6 +107,9 @@ namespace C64Studio.Parser
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#";
 
+          OpenBracketChars = "(" + INTERNAL_OPENING_BRACE;
+          CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE;
+
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_CHEAP_LOCAL] = "@";
@@ -126,7 +131,7 @@ namespace C64Studio.Parser
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
-          AllowedSingleTokens = ",#(){}*" + INTERNAL_OPENING_BRACE + INTERNAL_CLOSING_BRACE;
+          AllowedSingleTokens = ",#{}*" + OpenBracketChars + CloseBracketChars;
 
           AddMacro( "!ADDR", Types.MacroInfo.MacroType.ADDRESS );
           AddMacro( "!ADDRESS", Types.MacroInfo.MacroType.ADDRESS );
@@ -198,6 +203,9 @@ namespace C64Studio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
 
+          OpenBracketChars = "(" + INTERNAL_OPENING_BRACE;
+          CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE;
+
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
 
@@ -217,7 +225,7 @@ namespace C64Studio.Parser
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
-          AllowedSingleTokens = ",#(){}*";
+          AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars;
 
           AddMacro( "DC.B", Types.MacroInfo.MacroType.TEXT );
           AddMacro( "DC.W", Types.MacroInfo.MacroType.WORD );
@@ -270,6 +278,9 @@ namespace C64Studio.Parser
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#";
 
+          OpenBracketChars = "([" + INTERNAL_OPENING_BRACE;
+          CloseBracketChars = ")]" + INTERNAL_CLOSING_BRACE;
+
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "!";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß!";
 
@@ -299,7 +310,7 @@ namespace C64Studio.Parser
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
-          AllowedSingleTokens = ",#(){}*" + INTERNAL_OPENING_BRACE + INTERNAL_CLOSING_BRACE; 
+          AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars;
 
           AddMacro( "DC.B", Types.MacroInfo.MacroType.TEXT );
           AddMacro( "DC.V", Types.MacroInfo.MacroType.TEXT );
@@ -361,6 +372,9 @@ namespace C64Studio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "_";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
 
+          OpenBracketChars = "(" + INTERNAL_OPENING_BRACE;
+          CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE;
+
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
 
@@ -378,7 +392,7 @@ namespace C64Studio.Parser
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
-          AllowedSingleTokens = ",#(){}*";
+          AllowedSingleTokens = ",#{}*" + OpenBracketChars + CloseBracketChars;
 
           MacroPrefix = ".";
 
@@ -394,6 +408,9 @@ namespace C64Studio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#:";
+
+          OpenBracketChars = "(" + INTERNAL_OPENING_BRACE;
+          CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE;
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
@@ -417,7 +434,7 @@ namespace C64Studio.Parser
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
-          AllowedSingleTokens = ",#(){}*";
+          AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars;
 
           AddMacro( "DC.B", Types.MacroInfo.MacroType.TEXT );
           AddMacro( "DC.W", Types.MacroInfo.MacroType.WORD );
