@@ -3360,10 +3360,6 @@ namespace C64Studio.Parser
 
     public List<Types.TokenInfo> PrepareLineTokens( string Line )
     {
-      if ( Line.Contains( "(SCREEN)" ) )
-      {
-        Debug.Log( "aha" );
-      }
       List<Types.TokenInfo> lineTokenInfos = ParseTokenInfo( Line, 0, Line.Length );
       if ( HasError() )
       {
@@ -9075,101 +9071,6 @@ namespace C64Studio.Parser
 
       //Debug.Log( "New total " + Lines.Length + " lines" );
       return ParseLineResult.CALL_CONTINUE;
-
-      /*
-      ScopeInfo   scope = new ScopeInfo( ScopeInfo.ScopeType.REPEAT );
-      scope.Active = true;
-      scope.StartIndex = lineIndex;
-
-      Scopes.Add( scope );
-      OnScopeAdded( scope );*/
-
-      // repeat next line x times
-
-
-      /*
-
-      bool    doesContainSeparator = false;
-      int     numSeparators = 0;
-      for ( int tokenIndex = 0; tokenIndex < lineTokenInfos.Count; ++tokenIndex )
-      {
-        var token = lineTokenInfos[tokenIndex];
-
-        if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-        &&   ( token.Content == "," ) )
-        {
-          doesContainSeparator = true;
-          ++numSeparators;
-        }
-      }
-      if ( doesContainSeparator )
-      {
-        string[]      newLines = new string[numSeparators + 1];
-
-        int     partStartIndex = 0;
-        int     partIndex = 0;
-        for ( int tokenIndex = 0; tokenIndex < lineTokenInfos.Count; ++tokenIndex )
-        {
-          var token = lineTokenInfos[tokenIndex];
-
-          if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-          && ( token.Content == ":" ) )
-          {
-            newLines[partIndex] = TokensToExpression( lineTokenInfos, partStartIndex, tokenIndex - partStartIndex );
-            partStartIndex = tokenIndex + 1;
-            ++partIndex;
-          }
-        }
-        if ( partStartIndex < lineTokenInfos.Count )
-        {
-          newLines[partIndex] = TokensToExpression( lineTokenInfos, partStartIndex, lineTokenInfos.Count - partStartIndex );
-        }
-        // if any part was null, set to empty
-        for ( int i = 0; i < newLines.Length; ++i )
-        {
-          if ( newLines[i] == null )
-          {
-            newLines[i] = "";
-          }
-        }
-
-        Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
-        sourceInfo.Filename = ParentFilename;
-        sourceInfo.FullPath = ParentFilename;
-        sourceInfo.GlobalStartLine = lineIndex;
-        sourceInfo.LineCount = newLines.Length;
-        sourceInfo.FilenameParent = ParentFilename;
-
-        string  dummyFile = "";
-        int     localFileIndex = -1;
-        ASMFileInfo.FindTrueLineSource( lineIndex, out dummyFile, out localFileIndex );
-        sourceInfo.LocalStartLine = localFileIndex;
-
-        SourceInfoLog( "-include at global index " + lineIndex );
-        SourceInfoLog( "-has " + sourceInfo.LineCount + " lines" );
-
-        InsertSourceInfo( sourceInfo, true, true );
-
-        string[] result = new string[Lines.Length + sourceInfo.LineCount];
-
-        System.Array.Copy( Lines, 0, result, 0, lineIndex + 1 );
-        System.Array.Copy( newLines, 0, result, lineIndex + 1, newLines.Length );
-
-        // this keeps the !source line in the final code, makes working with source infos easier though
-        System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + newLines.Length + 1, Lines.Length - lineIndex - 1 );
-
-        // replace !source with empty line (otherwise source infos would have one line more!)
-        //result[lineIndex + newLines.Length] = "";
-        result[lineIndex] = "";
-
-        Lines = result;
-
-        ASMFileInfo.LineInfo.Remove( lineIndex );
-
-        --lineIndex;
-        return ParseLineResult.CALL_CONTINUE;
-      }*/
-      //return ParseLineResult.OK;
     }
 
 
@@ -9272,7 +9173,7 @@ namespace C64Studio.Parser
         var token = lineTokenInfos[tokenIndex];
 
         if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-        &&   ( token.Content == ":" ) )
+        &&   ( m_AssemblerSettings.LineSeparatorChars.Contains( token.Content ) ) )
         {
           doesContainSeparator = true;
           ++numSeparators;
@@ -9289,7 +9190,7 @@ namespace C64Studio.Parser
           var token = lineTokenInfos[tokenIndex];
 
           if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-          &&   ( token.Content == ":" ) )
+          &&   ( m_AssemblerSettings.LineSeparatorChars.Contains( token.Content ) ) )
           {
             newLines[partIndex] = TokensToExpression( lineTokenInfos, partStartIndex, tokenIndex - partStartIndex );
             partStartIndex = tokenIndex + 1;

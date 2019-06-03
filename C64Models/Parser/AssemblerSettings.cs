@@ -13,6 +13,7 @@ namespace C64Studio.Parser
     public string                                                   AllowedSingleTokens;
     public string                                                   OpenBracketChars = "";
     public string                                                   CloseBracketChars = "";
+    public string                                                   LineSeparatorChars = "";
     public GR.Collections.Map<string, Types.MacroInfo>              Macros = new GR.Collections.Map<string, Types.MacroInfo>();
     public string                                                   MacroPrefix = "";
     public string                                                   LabelPostfix = "";
@@ -109,6 +110,8 @@ namespace C64Studio.Parser
 
           OpenBracketChars = "(" + INTERNAL_OPENING_BRACE;
           CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE;
+
+          LineSeparatorChars = ":";
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
@@ -281,7 +284,7 @@ namespace C64Studio.Parser
           OpenBracketChars = "([" + INTERNAL_OPENING_BRACE;
           CloseBracketChars = ")]" + INTERNAL_CLOSING_BRACE;
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "!";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "!:";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß!";
 
           // we misuse cheap labels as macro parameters
@@ -343,6 +346,15 @@ namespace C64Studio.Parser
           AddMacro( "SKIP", Types.MacroInfo.MacroType.IGNORE );
           AddMacro( "INFO", Types.MacroInfo.MacroType.IGNORE );
           AddMacro( "RUN", Types.MacroInfo.MacroType.IGNORE );
+
+          AddMacro( "EXEC", Types.MacroInfo.MacroType.IGNORE );
+          AddMacro( "START", Types.MacroInfo.MacroType.IGNORE );
+
+          AddMacro( "DSECT", Types.MacroInfo.MacroType.IGNORE );
+          AddMacro( "DEND", Types.MacroInfo.MacroType.IGNORE );
+
+          AddMacro( "MSW", Types.MacroInfo.MacroType.IGNORE );
+
           AddMacro( "END", Types.MacroInfo.MacroType.END_OF_FILE );
           AddMacro( "REPEAT", Types.MacroInfo.MacroType.REPEAT );
 
