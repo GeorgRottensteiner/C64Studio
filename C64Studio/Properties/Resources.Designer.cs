@@ -123,6 +123,26 @@ namespace C64Studio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap charscreen_autocenter {
+            get {
+                object obj = ResourceManager.GetObject("charscreen_autocenter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap charscreen_autocenter_off {
+            get {
+                object obj = ResourceManager.GetObject("charscreen_autocenter_off", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap charscreen_chars {
             get {
                 object obj = ResourceManager.GetObject("charscreen_chars", resourceCulture);

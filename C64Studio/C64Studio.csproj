@@ -686,6 +686,8 @@
     <None Include="Resources\toolbar_truedrive_disabled.ico" />
     <None Include="Resources\toolbar_truedrive_disabled.bmp" />
     <None Include="Resources\tool_validate.ico" />
+    <None Include="Resources\charscreen_autocenter.ico" />
+    <None Include="Resources\charscreen_autocenter_off.ico" />
     <Content Include="TODO.txt" />
     <None Include="Resources\charscreen_text1.ico" />
     <None Include="Resources\charscreen_text.ico" />

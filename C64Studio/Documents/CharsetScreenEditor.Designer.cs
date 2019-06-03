@@ -81,7 +81,9 @@
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.checkOverrideOriginalColorSettings = new System.Windows.Forms.CheckBox();
       this.checkShowGrid = new System.Windows.Forms.CheckBox();
+      this.checkAutoCenter = new System.Windows.Forms.CheckBox();
       this.checkApplyColors = new System.Windows.Forms.CheckBox();
       this.checkApplyCharacter = new System.Windows.Forms.CheckBox();
       this.label9 = new System.Windows.Forms.Label();
@@ -118,7 +120,6 @@
       this.label10 = new System.Windows.Forms.Label();
       this.panelCharsetDetails = new GR.Forms.ImageListbox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.checkOverrideOriginalColorSettings = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -642,6 +643,7 @@
       // 
       this.tabEditor.Controls.Add(this.checkOverrideOriginalColorSettings);
       this.tabEditor.Controls.Add(this.checkShowGrid);
+      this.tabEditor.Controls.Add(this.checkAutoCenter);
       this.tabEditor.Controls.Add(this.checkApplyColors);
       this.tabEditor.Controls.Add(this.checkApplyCharacter);
       this.tabEditor.Controls.Add(this.label9);
@@ -679,6 +681,17 @@
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // checkOverrideOriginalColorSettings
+      // 
+      this.checkOverrideOriginalColorSettings.AutoSize = true;
+      this.checkOverrideOriginalColorSettings.Location = new System.Drawing.Point(838, 59);
+      this.checkOverrideOriginalColorSettings.Name = "checkOverrideOriginalColorSettings";
+      this.checkOverrideOriginalColorSettings.Size = new System.Drawing.Size(96, 17);
+      this.checkOverrideOriginalColorSettings.TabIndex = 37;
+      this.checkOverrideOriginalColorSettings.Text = "Override Mode";
+      this.checkOverrideOriginalColorSettings.UseVisualStyleBackColor = true;
+      this.checkOverrideOriginalColorSettings.CheckedChanged += new System.EventHandler(this.checkOverrideMode_CheckedChanged);
+      // 
       // checkShowGrid
       // 
       this.checkShowGrid.AutoSize = true;
@@ -689,6 +702,18 @@
       this.checkShowGrid.Text = "Show Grid";
       this.checkShowGrid.UseVisualStyleBackColor = true;
       this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
+      // 
+      // checkAutoCenter
+      // 
+      this.checkAutoCenter.Appearance = System.Windows.Forms.Appearance.Button;
+      this.checkAutoCenter.Image = global::C64Studio.Properties.Resources.charscreen_autocenter_off;
+      this.checkAutoCenter.Location = new System.Drawing.Point(228, 432);
+      this.checkAutoCenter.Name = "checkAutoCenter";
+      this.checkAutoCenter.Size = new System.Drawing.Size(24, 24);
+      this.checkAutoCenter.TabIndex = 36;
+      this.toolTip1.SetToolTip(this.checkAutoCenter, "Automatically center text on entry");
+      this.checkAutoCenter.UseVisualStyleBackColor = true;
+      this.checkAutoCenter.CheckedChanged += new System.EventHandler(this.checkAutoCenterText_CheckedChanged);
       // 
       // checkApplyColors
       // 
@@ -1094,17 +1119,6 @@
       this.panelCharsetDetails.VisibleAutoScrollHorizontal = false;
       this.panelCharsetDetails.VisibleAutoScrollVertical = false;
       // 
-      // checkOverrideOriginalColorSettings
-      // 
-      this.checkOverrideOriginalColorSettings.AutoSize = true;
-      this.checkOverrideOriginalColorSettings.Location = new System.Drawing.Point(838, 59);
-      this.checkOverrideOriginalColorSettings.Name = "checkOverrideOriginalColorSettings";
-      this.checkOverrideOriginalColorSettings.Size = new System.Drawing.Size(96, 17);
-      this.checkOverrideOriginalColorSettings.TabIndex = 37;
-      this.checkOverrideOriginalColorSettings.Text = "Override Mode";
-      this.checkOverrideOriginalColorSettings.UseVisualStyleBackColor = true;
-      this.checkOverrideOriginalColorSettings.CheckedChanged += new System.EventHandler(this.checkOverrideMode_CheckedChanged);
-      // 
       // CharsetScreenEditor
       // 
       this.ClientSize = new System.Drawing.Size(964, 562);
@@ -1223,5 +1237,6 @@
     private System.Windows.Forms.Label label10;
     private GR.Forms.ImageListbox panelCharsetDetails;
     private System.Windows.Forms.CheckBox checkOverrideOriginalColorSettings;
+    private System.Windows.Forms.CheckBox checkAutoCenter;
   }
 }

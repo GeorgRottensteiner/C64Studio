@@ -56,6 +56,11 @@ namespace C64Studio
 
     private bool                        m_AffectChars = true;
     private bool                        m_AffectColors = true;
+    private bool                        m_AutoCenterText = false;
+
+    private int                         m_TextEntryStartedInLine = -1;
+    private List<ushort>                m_TextEntryCachedLine = new List<ushort>();
+    private List<ushort>                m_TextEntryEnteredText = new List<ushort>();
 
 
 
@@ -647,9 +652,9 @@ namespace C64Studio
       }
 
       if ( ( charX < 0 )
-      || ( charX >= m_CharsetScreen.ScreenWidth )
-      || ( charY < 0 )
-      || ( charY >= m_CharsetScreen.ScreenHeight ) )
+      ||   ( charX >= m_CharsetScreen.ScreenWidth )
+      ||   ( charY < 0 )
+      ||   ( charY >= m_CharsetScreen.ScreenHeight ) )
       {
         return;
       }
@@ -670,12 +675,22 @@ namespace C64Studio
         {
           case ToolMode.TEXT:
             if ( ( m_SelectedChar.X != charX )
-            || ( m_SelectedChar.Y != charY ) )
+            ||   ( m_SelectedChar.Y != charY ) )
             {
               m_SelectedChar.X = charX;
               m_SelectedChar.Y = charY;
+
               Redraw();
               pictureEditor.Invalidate();
+
+              if ( ( m_AutoCenterText )
+              &&   ( m_SelectedChar.Y != m_TextEntryStartedInLine ) )
+              {
+                // clicked on different line
+                m_TextEntryStartedInLine = m_SelectedChar.Y;
+                CacheScreenLine( m_TextEntryStartedInLine );
+                m_TextEntryEnteredText.Clear();
+              }
             }
             break;
           case ToolMode.SINGLE_CHAR:
@@ -861,7 +876,7 @@ namespace C64Studio
     private void SetCharacter( int X, int Y, byte Char, byte Color )
     {
       if ( ( m_AffectChars )
-      && ( m_AffectColors ) )
+      &&   ( m_AffectColors ) )
       {
         DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, Char, Color );
         m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( Char | ( Color << 8 ) );
@@ -2022,6 +2037,10 @@ namespace C64Studio
       m_Image.Create( Width * 8, Height * 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       CustomRenderer.PaletteManager.ApplyPalette( m_Image );
 
+      m_TextEntryCachedLine.Clear();
+      m_TextEntryEnteredText.Clear();
+      m_TextEntryStartedInLine = -1;
+
       AdjustScrollbars();
       RedrawFullScreen();
     }
@@ -2227,6 +2246,7 @@ namespace C64Studio
     private void btnToolText_CheckedChanged( object sender, EventArgs e )
     {
       m_ToolMode = ToolMode.TEXT;
+      m_TextEntryStartedInLine = -1;
     }
 
 
@@ -2425,31 +2445,123 @@ namespace C64Studio
             byte    charIndex = c64Key.ScreenCodeValue;
             int     charX = m_SelectedChar.X;
             int     charY = m_SelectedChar.Y;
-            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ) );
 
-            if ( m_SelectedChar.X >= 39 )
+            if ( m_TextEntryStartedInLine == -1 )
             {
-              m_SelectedChar.X = 0;
-              ++m_SelectedChar.Y;
-              if ( m_SelectedChar.Y >= 24 )
+              m_TextEntryStartedInLine = charY;
+              m_TextEntryEnteredText.Clear();
+              CacheScreenLine( m_TextEntryStartedInLine );
+            }
+
+            if ( m_AutoCenterText )
+            {
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, charY, m_CharsetScreen.ScreenWidth, 1 ) );
+
+              // restore old line
+              for ( int i = 0; i < m_TextEntryCachedLine.Count; ++i )
               {
-                m_SelectedChar.Y = 0;
+                byte  origChar = (byte)( m_TextEntryCachedLine[i] & 0xff );
+                byte  origColor = (byte)( m_TextEntryCachedLine[i] >> 8 );
+                SetCharacter( i, charY, origChar, origColor );
               }
+              pictureEditor.DisplayPage.DrawTo( m_Image,
+                                                0, m_SelectedChar.Y * 8,
+                                                ( 0 - m_CharsetScreen.ScreenOffsetY ) * 8, ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY ) * 8,
+                                                m_TextEntryCachedLine.Count * 8, 8 );
+            }
+
+            if ( bareKey == Keys.Back )
+            {
+              if ( m_AutoCenterText )
+              {
+                if ( m_TextEntryEnteredText.Count > 0 )
+                {
+                  m_TextEntryEnteredText.RemoveAt( m_TextEntryEnteredText.Count - 1 );
+                }
+              }
+              else
+              {
+                // blank out char to the left
+                if ( charX > 0 )
+                {
+                  --m_SelectedChar.X;
+                  // blank with space
+                  --charX;
+                }
+                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ) );
+                charIndex = 32;
+              }
+            }
+            else if ( m_AutoCenterText )
+            {
+              if ( m_TextEntryEnteredText.Count >= 40 )
+              {
+                ++m_SelectedChar.Y;
+                if ( m_SelectedChar.Y >= 24 )
+                {
+                  m_SelectedChar.Y = 0;
+                }
+                m_TextEntryStartedInLine = m_SelectedChar.Y;
+                m_TextEntryEnteredText.Clear();
+                CacheScreenLine( m_TextEntryStartedInLine );
+              }
+              m_TextEntryEnteredText.Add( (ushort)( charIndex | ( m_CurrentColor << 8 ) ) );
             }
             else
             {
-              ++m_SelectedChar.X;
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ) );
+              if ( m_SelectedChar.X >= 39 )
+              {
+                m_SelectedChar.X = 0;
+                ++m_SelectedChar.Y;
+                if ( m_SelectedChar.Y >= 24 )
+                {
+                  m_SelectedChar.Y = 0;
+                }
+                m_TextEntryStartedInLine = m_SelectedChar.Y;
+                m_TextEntryEnteredText.Clear();
+                CacheScreenLine( m_TextEntryStartedInLine );
+              }
+              else
+              {
+                ++m_SelectedChar.X;
+              }
             }
-            SetCharacter( charX, charY, charIndex, m_CurrentColor );
-            pictureEditor.DisplayPage.DrawTo( m_Image,
-                                              charX * 8, charY * 8,
-                                              ( charX - m_CharsetScreen.ScreenOffsetX ) * 8, ( charY - m_CharsetScreen.ScreenOffsetY ) * 8,
-                                              8, 8 );
 
+            if ( m_AutoCenterText )
+            {
+              int     newX = ( m_CharsetScreen.ScreenWidth - m_TextEntryEnteredText.Count ) / 2;
+              for ( int i = 0; i < m_TextEntryEnteredText.Count; ++i )
+              {
+                byte  origChar = (byte)( m_TextEntryEnteredText[i] & 0xff );
+                byte  origColor = (byte)( m_TextEntryEnteredText[i] >> 8 );
+                SetCharacter( newX + i, m_SelectedChar.Y, origChar, origColor );
+              }
+              pictureEditor.DisplayPage.DrawTo( m_Image,
+                                                newX * 8, m_SelectedChar.Y * 8,
+                                                ( newX - m_CharsetScreen.ScreenOffsetY ) * 8, ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY ) * 8,
+                                                m_TextEntryCachedLine.Count * 8, 8 );
+              /*
+              SetCharacter( charX, charY, charIndex, m_CurrentColor );
+              pictureEditor.DisplayPage.DrawTo( m_Image,
+                                                charX * 8, charY * 8,
+                                                ( charX - m_CharsetScreen.ScreenOffsetX ) * 8, ( charY - m_CharsetScreen.ScreenOffsetY ) * 8,
+                                                8, 8 );*/
+              pictureEditor.Invalidate( new System.Drawing.Rectangle( charX * 8, charY * 8, 8, 8 ) );
+              pictureEditor.Invalidate( new System.Drawing.Rectangle( 0, m_SelectedChar.Y * 8, m_CharsetScreen.ScreenWidth * 8, 8 ) );
+            }
+            else
+            {
+              SetCharacter( charX, charY, charIndex, m_CurrentColor );
+              pictureEditor.DisplayPage.DrawTo( m_Image,
+                                                charX * 8, charY * 8,
+                                                ( charX - m_CharsetScreen.ScreenOffsetX ) * 8, ( charY - m_CharsetScreen.ScreenOffsetY ) * 8,
+                                                8, 8 );
+              pictureEditor.Invalidate( new System.Drawing.Rectangle( charX * 8, charY * 8, 8, 8 ) );
+              pictureEditor.Invalidate( new System.Drawing.Rectangle( m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
+            }
             Redraw();
             Modified = true;
-            pictureEditor.Invalidate( new System.Drawing.Rectangle( charX * 8, charY * 8, 8, 8 ) );
-            pictureEditor.Invalidate( new System.Drawing.Rectangle( m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
           }
         }
       }
@@ -2474,6 +2586,17 @@ namespace C64Studio
       && ( e.KeyCode == Keys.V ) )
       {
         PasteFromClipboard();
+      }
+    }
+
+
+
+    private void CacheScreenLine( int LineIndex )
+    {
+      m_TextEntryCachedLine.Clear();
+      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      {
+        m_TextEntryCachedLine.Add( m_CharsetScreen.Chars[i + LineIndex * m_CharsetScreen.ScreenWidth] );
       }
     }
 
@@ -3036,6 +3159,24 @@ namespace C64Studio
       panelCharsetDetails.Invalidate();
     }
 
+
+
+    private void checkAutoCenterText_CheckedChanged( object sender, EventArgs e )
+    {
+      m_AutoCenterText = checkAutoCenter.Checked;
+      if ( m_AutoCenterText )
+      {
+        m_TextEntryCachedLine.Clear();
+        m_TextEntryEnteredText.Clear();
+        m_TextEntryStartedInLine = -1;
+
+        checkAutoCenter.Image = global::C64Studio.Properties.Resources.charscreen_autocenter;
+      }
+      else
+      {
+        checkAutoCenter.Image = global::C64Studio.Properties.Resources.charscreen_autocenter_off;
+      }
+    }
 
 
   } 
