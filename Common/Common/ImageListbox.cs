@@ -50,6 +50,15 @@ namespace GR.Forms
       }
 
 
+      public new int Add( ImageListItem Item )
+      {
+        base.Add( Item );
+        Container.ItemsModified();
+        return base.Count - 1;
+      }
+
+
+
       public int Add( object Object )
       {
         ImageListItem item = new ImageListItem( Container );
@@ -716,6 +725,7 @@ namespace GR.Forms
 
       int     itemIndex = m_Offset * m_ItemsPerLine;
       int     itemInLine = 0;
+      bool    hasNativeImages = false;
       System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle();
       while ( itemIndex < Items.Count )
       {
@@ -731,8 +741,9 @@ namespace GR.Forms
         }
         else if ( Items[itemIndex].Image != null )
         {
-          e.Graphics.FillRectangle( System.Drawing.SystemBrushes.Control, e.ClipRectangle );
+          e.Graphics.FillRectangle( System.Drawing.SystemBrushes.Control, itemRect );// e.ClipRectangle );
           e.Graphics.DrawImage( Items[itemIndex].Image, itemRect );
+          hasNativeImages = true;
         }
         else if ( Items[itemIndex].MemoryImage != null )
         {
@@ -748,9 +759,12 @@ namespace GR.Forms
       }
       m_DisplayPage.Box( 0, itemRect.Bottom, ClientSize.Width, ClientSize.Height - itemRect.Bottom, 0 );
 
-      IntPtr hdcPage = e.Graphics.GetHdc();
-      m_DisplayPage.DrawToHDC( hdcPage, ClientRectangle );
-      e.Graphics.ReleaseHdc( hdcPage );
+      if ( !hasNativeImages )
+      {
+        IntPtr hdcPage = e.Graphics.GetHdc();
+        m_DisplayPage.DrawToHDC( hdcPage, ClientRectangle );
+        e.Graphics.ReleaseHdc( hdcPage );
+      }
 
       if ( m_ItemUnderMouse != -1 )
       {
