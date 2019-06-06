@@ -57,10 +57,13 @@ namespace C64Studio
       var bitmap = new System.Drawing.Bitmap( 80, 40, System.Drawing.Imaging.PixelFormat.Format24bppRgb );
       var g = System.Drawing.Graphics.FromImage( bitmap );
 
-      g.FillRectangle( System.Drawing.SystemBrushes.Info, 0, 0, 80, 40 );
-      g.DrawRectangle( System.Drawing.SystemPens.InactiveBorder, 0, 0, 80, 40 );
+      System.Drawing.Brush  brushBackground = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) );
+      System.Drawing.Pen  penBorder = new System.Drawing.Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) );
 
-      System.Drawing.Brush  brush = System.Drawing.SystemBrushes.WindowText;
+      g.FillRectangle( brushBackground, 0, 0, 80, 40 );
+      g.DrawRectangle( penBorder, 0, 0, 80, 40 );
+
+      System.Drawing.Brush  brush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) );
 
       g.DrawString( "" + character.CharValue, listPETSCII.Font, brush, new System.Drawing.PointF( 2, 4 ) );
       g.DrawString( character.PetSCIIValue.ToString( "X02" ), _DefaultFont, brush, new System.Drawing.PointF( 40, 4 ) );

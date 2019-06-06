@@ -429,6 +429,16 @@ namespace GR.Forms
         m_ItemsPerLine = 1;
       }
 
+      while ( m_Offset * m_ItemsPerLine >= Items.Count )
+      {
+        m_Offset -= m_ItemsPerLine;
+        if ( m_Offset < 0 )
+        {
+          m_Offset = 0;
+          break;
+        }
+      }
+
       AdjustScrollbars();
     }
 
