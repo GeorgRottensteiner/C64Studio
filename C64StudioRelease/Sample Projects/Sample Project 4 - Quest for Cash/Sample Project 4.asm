@@ -62,23 +62,23 @@
 
 ; --- Constants
 
-!ct scr 		; C64 screencode
-levels = 15		; the amount of levels
+!ct scr     ; C64 screencode
+levels = 15   ; the amount of levels
 
-joystick = 0		; joystick: 0 = port 2, 1 = userport
-easymode = 0		; easier game (grid and eleb visible)
+joystick = 0    ; joystick: 0 = port 2, 1 = userport
+easymode = 0    ; easier game (grid and eleb visible)
 
 ; - hw addresses
 !if joystick = 0 {
-joyport = $dc00		; joystick port 2
-joypddr = $dc02		; joystick port 2 data direction register
+joyport = $dc00   ; joystick port 2
+joypddr = $dc02   ; joystick port 2 data direction register
 } else {
-joyport = $dd01		; userport
-joypddr = $dd03		; userport data direction register
+joyport = $dd01   ; userport
+joypddr = $dd03   ; userport data direction register
 }
-screen = $0400		; screen address
-color =  $d800		; color ram address
-scrtocol = $d4		; screen->color difference MSB
+screen = $0400    ; screen address
+color =  $d800    ; color ram address
+scrtocol = $d4    ; screen->color difference MSB
 vicborder = $d020       ; border color register
 vicbackgnd = $d021      ; background color register
 vicraster = $d012       ; raster compare register
@@ -160,10 +160,10 @@ electextcol = 6
 
 ; - zero page
 
-tmpptr = $39		; temporary zp pointer
-scrptr = $fb		; zp pointer to screen
-colptr = $fd		; zp pointer to color
-tmpvar = $ff		; temporary zp variable
+tmpptr = $39    ; temporary zp pointer
+scrptr = $fb    ; zp pointer to screen
+colptr = $fd    ; zp pointer to color
+tmpvar = $ff    ; temporary zp variable
 
 ; - reused chars
 
@@ -224,28 +224,28 @@ mlcodeentry:
 ; http://user.tninet.se/~uxm165t/demo_programming/demo_prog/demo_prog.html
 ; ... + modifications
 ;
-sei		; interrupts off
+sei   ; interrupts off
 lda #$7f
 ldx #$01
-sta $dc0d	; Turn off CIA 1 interrupts
-sta $dd0d	; Turn off CIA 2 interrupts
-stx $d01a	; Turn on raster interrupts
-lda #<int	; low part of address of interrupt handler code
-ldx #>int	; high part of address of interrupt handler code
-ldy #250	; line to trigger interrupt
-sta $0314	; store in interrupt vector
+sta $dc0d ; Turn off CIA 1 interrupts
+sta $dd0d ; Turn off CIA 2 interrupts
+stx $d01a ; Turn on raster interrupts
+lda #<int ; low part of address of interrupt handler code
+ldx #>int ; high part of address of interrupt handler code
+ldy #250  ; line to trigger interrupt
+sta $0314 ; store in interrupt vector
 stx $0315
 sty $d012
-lda #<nmi	; low part of address of NMI handler code
-ldx #>nmi	; high part of address of NMI handler code
-sta $0318	; store in NMI vector
+lda #<nmi ; low part of address of NMI handler code
+ldx #>nmi ; high part of address of NMI handler code
+sta $0318 ; store in NMI vector
 stx $0319
 lda #0
-sta intstate	; set interrupt state to 0
-lda $dc0d	; ACK CIA 1 interrupts
-lda $dd0d	; ACK CIA 2 interrupts
-asl $d019	; ACK VIC interrupts
-cli		; interrupts on
+sta intstate  ; set interrupt state to 0
+lda $dc0d ; ACK CIA 1 interrupts
+lda $dd0d ; ACK CIA 2 interrupts
+asl $d019 ; ACK VIC interrupts
+cli   ; interrupts on
 
 
 ; disable bcd-mode
@@ -257,26 +257,26 @@ sta joypddr
 
 ; copy character rom to $0800-$09ff
 ; copy custom chars to  $0a00-$0bff
-ldx #0		; 255 loops
-sei		; interrups off
+ldx #0    ; 255 loops
+sei   ; interrups off
 lda $1
 and #$fb
-sta $1		; character rom on
--	lda $d000,x	; load from char-rom
-	sta $0800,x	; store to ram
-	lda $d100,x	; load from char-rom
-	sta $0900,x	; store to ram
-	lda Chars,x	; load from custom chars
-	sta $0a00,x	; store to ram
-	lda Chars+$100,x; load from custom chars
-	sta $0b00,x	; store to ram
-	inx
-	bne -
+sta $1    ; character rom on
+- lda $d000,x ; load from char-rom
+  sta $0800,x ; store to ram
+  lda $d100,x ; load from char-rom
+  sta $0900,x ; store to ram
+  lda Chars,x ; load from custom chars
+  sta $0a00,x ; store to ram
+  lda Chars+$100,x; load from custom chars
+  sta $0b00,x ; store to ram
+  inx
+  bne -
 lda $1
 ora #$04
-sta $1		; character rom off
-asl $d019	; ACK VIC interrupts
-cli		; interrupts on
+sta $1    ; character rom off
+asl $d019 ; ACK VIC interrupts
+cli   ; interrupts on
 
 ; font = $0800
 lda $d018
@@ -287,9 +287,9 @@ sta $d018
 ; set colors
 ldx #tswall
 lda Colortable,x
-sta vicborder	; set border
+sta vicborder ; set border
 lda #0
-sta vicbackgnd	; set background black
+sta vicbackgnd  ; set background black
 
 ; print text
 lda #>gametitletext
@@ -313,9 +313,9 @@ lda #<screen+40
 sta scrptr
 jsr printstring
 
-lda #>screen+40*22
+lda #>(screen+40*22)
 sta scrptr+1
-lda #<screen+40*22
+lda #<(screen+40*22)
 sta scrptr
 jsr printstring
 
@@ -380,9 +380,9 @@ jsr printstring
 ; start menu input loop
 - jsr getinput
 sta tmp
-lda #%00000001	; up
-bit tmp		; test if up
-beq ++		; skip if not
+lda #%00000001  ; up
+bit tmp   ; test if up
+beq ++    ; skip if not
 ; up pressed
 lda storedptr
 sec
@@ -392,9 +392,9 @@ lda storedptr+1
 sbc #>helptextlen
 sta storedptr+1
 jmp startmenu_drawhelp
-++ lda #%00000010	; down
-bit tmp		; test if down
-beq ++		; skip if not
+++ lda #%00000010 ; down
+bit tmp   ; test if down
+beq ++    ; skip if not
 ; down pressed
 lda storedptr
 clc
@@ -404,9 +404,9 @@ lda storedptr+1
 adc #>helptextlen
 sta storedptr+1
 jmp startmenu_drawhelp
-++ lda #%00000100	; left
-bit tmp		; test if left
-beq ++		; skip if not
+++ lda #%00000100 ; left
+bit tmp   ; test if left
+beq ++    ; skip if not
 ; left pressed
 dec level
 bne +
@@ -418,9 +418,9 @@ lda #<bcdlevel
 sta tmpptr
 jsr bcddec
 jmp -
-++ lda #%00001000	; right
-bit tmp		; test if right
-beq ++		; skip if not
+++ lda #%00001000 ; right
+bit tmp   ; test if right
+beq ++    ; skip if not
 ; right pressed
 inc level
 lda #levels+1
@@ -434,10 +434,10 @@ lda #<bcdlevel
 sta tmpptr
 jsr bcdinc
 jmp -
-++ lda #%00010000	; fire
-bit tmp		; test if fire
-bne +		; jump if pressed
-jmp -		; back to input loop
+++ lda #%00010000 ; fire
+bit tmp   ; test if fire
+bne +   ; jump if pressed
+jmp -   ; back to input loop
 
 
 ; init game
@@ -469,55 +469,55 @@ gameloop:
 jsr getinput
 sta movedir
 jsr erasestatustext
-lda #%00000001	; up
-bit movedir	; test if up
-beq +		; skip if not
+lda #%00000001  ; up
+bit movedir ; test if up
+beq +   ; skip if not
 ; up pressed
-sta movedir	; eliminate possible diagonals
+sta movedir ; eliminate possible diagonals
 lda #>-40
 sta storedptrh
 lda #<-40
 sta storedptr
 jmp movement
-+ lda #%00000010	; down
-bit movedir	; test if down
-beq +		; skip if not
++ lda #%00000010  ; down
+bit movedir ; test if down
+beq +   ; skip if not
 ; down pressed
-sta movedir	; eliminate possible diagonals
+sta movedir ; eliminate possible diagonals
 lda #>40
 sta storedptrh
 lda #<40
 sta storedptr
 jmp movement
-+ lda #%00000100	; left
-bit movedir	; test if left
-beq +		; skip if not
++ lda #%00000100  ; left
+bit movedir ; test if left
+beq +   ; skip if not
 ; left pressed
-sta movedir	; eliminate possible diagonals
+sta movedir ; eliminate possible diagonals
 lda #>-1
 sta storedptrh
 lda #<-1
 sta storedptr
 jmp movement
-+ lda #%00001000	; right
-bit movedir	; test if right
-beq +		; skip if not
++ lda #%00001000  ; right
+bit movedir ; test if right
+beq +   ; skip if not
 ; right pressed
-sta movedir	; eliminate possible diagonals
+sta movedir ; eliminate possible diagonals
 lda #>1
 sta storedptrh
 lda #<1
 sta storedptr
 jmp movement
-+ lda #%00010000	; fire
-bit movedir	; test if fire
-beq gameloop	; jump back if not
++ lda #%00010000  ; fire
+bit movedir ; test if fire
+beq gameloop  ; jump back if not
 ; fire pressed
-lda lbomb	; check if live bomb
+lda lbomb ; check if live bomb
 beq +
 ; explode bomb
 jmp explodebomb
-+ lda ibomb	; check if any bombs
++ lda ibomb ; check if any bombs
 beq ++
 ; drop bomb
 jmp dropbomb
@@ -535,17 +535,17 @@ jsr printstring
 jsr getinput
 sta movedir
 jsr erasestatustext
-lda #%00010000	; fire
-bit movedir	; test if fire
-bne +		; skip if is
+lda #%00010000  ; fire
+bit movedir ; test if fire
+bne +   ; skip if is
 jmp gameloop
 + lda ccurlevel
 sta tmpptr
 lda ccurlevelh
-sta tmpptr+1	; tmpptr -> current level
+sta tmpptr+1  ; tmpptr -> current level
 lda #1
-sta tmp		; load 1 level
-jmp loadlevel	; restart level
+sta tmp   ; load 1 level
+jmp loadlevel ; restart level
 
 movement:
 ; calculate new location
@@ -557,173 +557,173 @@ sta tmpptr
 lda playerptrh
 adc storedptrh
 sta tmpptr+1
-sta newptrh	; tmpptr, newptr -> new location
+sta newptrh ; tmpptr, newptr -> new location
 
 ; check left<->right wrap
-lda #%00001100	; left or right
-bit movedir	; test if left or right
-beq movement_check	; skip if not
+lda #%00001100  ; left or right
+bit movedir ; test if left or right
+beq movement_check  ; skip if not
 ldx newptrh
 lda newptr
 jsr mod40
-sta tmp		; tmp = new location mod 40
-lda #%00000100	; left
-bit movedir	; test if left
-beq +		; skip if right
+sta tmp   ; tmp = new location mod 40
+lda #%00000100  ; left
+bit movedir ; test if left
+beq +   ; skip if right
 lda #39
-cmp tmp		; check if 39 (left->right)
-bne movement_check	; skip if not
-jmp gameloop	; left->right wrap, back to loop
-+ lda tmp	; check if 0 (right->left)
-bne movement_check	; skip if not
-jmp gameloop	; right->left wrap, back to loop
+cmp tmp   ; check if 39 (left->right)
+bne movement_check  ; skip if not
+jmp gameloop  ; left->right wrap, back to loop
++ lda tmp ; check if 0 (right->left)
+bne movement_check  ; skip if not
+jmp gameloop  ; right->left wrap, back to loop
 
 ; check if movement ok
 movement_check:
 ldy #0
 lda (tmpptr),y
-tax		; x = tile in new position
+tax   ; x = tile in new position
 
 ; items
 lda #tground
-cpx #tkey1	; check if key1
-bne +		; if not, skip
-sta (tmpptr),y	; erase item
+cpx #tkey1  ; check if key1
+bne +   ; if not, skip
+sta (tmpptr),y  ; erase item
 inc ikey1
 lda #>bcdkey1
 sta tmpptr+1
 lda #<bcdkey1
 sta tmpptr
-jsr bcdinc	; increase count
+jsr bcdinc  ; increase count
 jsr printpickup
 jmp movement_draw
-+ cpx #tkey2	; check if key2
-bne +		; if not, skip
-sta (tmpptr),y	; erase item
++ cpx #tkey2  ; check if key2
+bne +   ; if not, skip
+sta (tmpptr),y  ; erase item
 inc ikey2
 lda #>bcdkey2
 sta tmpptr+1
 lda #<bcdkey2
 sta tmpptr
-jsr bcdinc	; increase count
+jsr bcdinc  ; increase count
 jsr printpickup
 jmp movement_draw
-+ cpx #tskey	; check if skey
-bne +		; if not, skip
-sta (tmpptr),y	; erase item
++ cpx #tskey  ; check if skey
+bne +   ; if not, skip
+sta (tmpptr),y  ; erase item
 inc iskey
 lda #>bcdskey
 sta tmpptr+1
 lda #<bcdskey
 sta tmpptr
-jsr bcdinc	; increase count
+jsr bcdinc  ; increase count
 jsr printpickup
 jmp movement_draw
-+ cpx #tbomb	; check if bomb
-bne +		; if not, skip
-sta (tmpptr),y	; erase item
++ cpx #tbomb  ; check if bomb
+bne +   ; if not, skip
+sta (tmpptr),y  ; erase item
 inc ibomb
 lda #>bcdbomb
 sta tmpptr+1
 lda #<bcdbomb
 sta tmpptr
-jsr bcdinc	; increase count
+jsr bcdinc  ; increase count
 jsr printpickup
 jmp movement_draw
-+ cpx #tplank	; check if plank
-bne +		; if not, skip
-sta (tmpptr),y	; erase item
++ cpx #tplank ; check if plank
+bne +   ; if not, skip
+sta (tmpptr),y  ; erase item
 inc iplank
 lda #>bcdplank
 sta tmpptr+1
 lda #<bcdplank
 sta tmpptr
-jsr bcdinc	; increase count
+jsr bcdinc  ; increase count
 jsr printpickup
 jmp movement_draw
 
 ; item usage
-+ cpx #twater	; check if water
-bne ++		; if not, skip
-lda iplank	; check if any planks
-bne +		; skip if is
-jmp gameloop	; back to gameloop
++ cpx #twater ; check if water
+bne ++    ; if not, skip
+lda iplank  ; check if any planks
+bne +   ; skip if is
+jmp gameloop  ; back to gameloop
 + lda #tplankw
-sta (tmpptr),y	; water->plank on water
+sta (tmpptr),y  ; water->plank on water
 dec iplank
 lda #>bcdplank
 sta tmpptr+1
 lda #<bcdplank
 sta tmpptr
-jsr bcddec	; decrease count
+jsr bcddec  ; decrease count
 lda #tplank
 jsr printuseitem
 jmp movement_draw
-++ cpx #tdoor1	; check if door1
-bne ++		; if not, skip
-lda ikey1	; check if any key1's
-bne +		; skip if is
-jmp gameloop	; back to gameloop
+++ cpx #tdoor1  ; check if door1
+bne ++    ; if not, skip
+lda ikey1 ; check if any key1's
+bne +   ; skip if is
+jmp gameloop  ; back to gameloop
 + lda #tground
-sta (tmpptr),y	; door->ground
+sta (tmpptr),y  ; door->ground
 dec ikey1
 lda #>bcdkey1
 sta tmpptr+1
 lda #<bcdkey1
 sta tmpptr
-jsr bcddec	; decrease count
+jsr bcddec  ; decrease count
 lda #tkey1
 jsr printuseitem
 jmp movement_draw
-++ cpx #tdoor2	; check if door2
-bne ++		; if not, skip
-lda ikey2	; check if any key2's
-bne +		; skip if is
-jmp gameloop	; back to gameloop
+++ cpx #tdoor2  ; check if door2
+bne ++    ; if not, skip
+lda ikey2 ; check if any key2's
+bne +   ; skip if is
+jmp gameloop  ; back to gameloop
 + lda #tground
-sta (tmpptr),y	; door->ground
+sta (tmpptr),y  ; door->ground
 dec ikey2
 lda #>bcdkey2
 sta tmpptr+1
 lda #<bcdkey2
 sta tmpptr
-jsr bcddec	; decrease count
+jsr bcddec  ; decrease count
 lda #tkey2
 jsr printuseitem
 jmp movement_draw
-++ cpx #tsdoor	; check if sdoor
-bne ++		; if not, skip
-lda iskey	; check if any skeys
-bne +		; skip if is
-jmp gameloop	; back to gameloop
+++ cpx #tsdoor  ; check if sdoor
+bne ++    ; if not, skip
+lda iskey ; check if any skeys
+bne +   ; skip if is
+jmp gameloop  ; back to gameloop
 + lda #tground
-sta (tmpptr),y	; door->ground
+sta (tmpptr),y  ; door->ground
 dec iskey
 lda #>bcdskey
 sta tmpptr+1
 lda #<bcdskey
 sta tmpptr
-jsr bcddec	; decrease count
+jsr bcddec  ; decrease count
 lda #tskey
 jsr printuseitem
 jmp movement_draw
 
 ; special stuff
-++ cpx #teles	; check if elec. switch
-bne ++		; if not, skip
-jmp elecswitch	; switch elec.
-++ cpx #tcash	; check if cash
-bne ++		; if not, skip
+++ cpx #teles ; check if elec. switch
+bne ++    ; if not, skip
+jmp elecswitch  ; switch elec.
+++ cpx #tcash ; check if cash
+bne ++    ; if not, skip
 jmp nextlevel
-++ cpx #ttele	; check if teleport
-bne ++		; if not, skip
-jsr domovement	; move into teleport (erase curr. tele)
-lda #ttele	; a = ttele
-jsr findchar	; tmpptr -> other teleport
+++ cpx #ttele ; check if teleport
+bne ++    ; if not, skip
+jsr domovement  ; move into teleport (erase curr. tele)
+lda #ttele  ; a = ttele
+jsr findchar  ; tmpptr -> other teleport
 lda tmpptr
 sta newptr
 lda tmpptr+1
-sta newptrh	; newptr -> other teleport
+sta newptrh ; newptr -> other teleport
 lda #>teleporttext
 sta tmpptr+1
 lda #<teleporttext
@@ -735,28 +735,28 @@ sta scrptr
 lda #teleporttextcol
 jsr printstring
 
-jmp movement_draw	; teleport
+jmp movement_draw ; teleport
 
 ; rock
-++ cpx #trock	; check if rock
-bne ++		; if not, skip
+++ cpx #trock ; check if rock
+bne ++    ; if not, skip
 jmp rockmove
-++ cpx #trockw	; check if rock on plank
-bne ++		; if not, skip
+++ cpx #trockw  ; check if rock on plank
+bne ++    ; if not, skip
 jmp rockmove
 
 ; simple movement
-++ cpx #tground	; check if ground
-beq movement_draw	; if it is, move
-cpx #tplankw	; check if plank on water
-beq movement_draw	; if it is, move
-cpx #thole	; check if hole
-beq movement_draw	; if it is, move
-cpx #teleb	; check if inactive elec.
-beq movement_draw	; if it is, move
-cpx #tlbomb	; check if inactive elec.
-beq movement_draw	; if it is, move
-jmp gameloop	; no movement, back to loop
+++ cpx #tground ; check if ground
+beq movement_draw ; if it is, move
+cpx #tplankw  ; check if plank on water
+beq movement_draw ; if it is, move
+cpx #thole  ; check if hole
+beq movement_draw ; if it is, move
+cpx #teleb  ; check if inactive elec.
+beq movement_draw ; if it is, move
+cpx #tlbomb ; check if inactive elec.
+beq movement_draw ; if it is, move
+jmp gameloop  ; no movement, back to loop
 
 movement_draw:
 jsr domovement
@@ -799,7 +799,7 @@ lda #tzapl
 jsr zapsearch
 dex
 bne death
-jmp gameloop	; end of game loop
+jmp gameloop  ; end of game loop
 
 ; - death
 ;
@@ -822,16 +822,16 @@ lda #zaptextcol
 jsr printstring
 - jsr getinput
 sta movedir
-lda #%00010000	; fire
-bit movedir	; test if fire
+lda #%00010000  ; fire
+bit movedir ; test if fire
 beq -
 lda ccurlevel
 sta tmpptr
 lda ccurlevelh
-sta tmpptr+1	; tmpptr -> current level
+sta tmpptr+1  ; tmpptr -> current level
 lda #1
-sta tmp		; load 1 level
-jmp loadlevel	; restart level
+sta tmp   ; load 1 level
+jmp loadlevel ; restart level
 
 ; - dropbomb
 ;
@@ -853,7 +853,7 @@ sta lbombptr
 lda playerptrh
 sta lbombptrh
 bcs +
-dec lbombptrh	; lbombptr -> bomb_location - 40
+dec lbombptrh ; lbombptr -> bomb_location - 40
 + dec ibomb
 lda #>bcdbomb
 sta tmpptr+1
@@ -935,35 +935,35 @@ sta tmpptr
 adc storedptr
 sta scrptr
 lda newptrh
-sta tmpptr+1	; tmpptr -> old rock location
+sta tmpptr+1  ; tmpptr -> old rock location
 adc storedptrh
-sta scrptr+1	; scrptr -> new rock location
+sta scrptr+1  ; scrptr -> new rock location
 
 ; check for left & right edges
-lda #%00001100	; left or right
-bit movedir	; test if left or right
-beq ++		; skip if not
+lda #%00001100  ; left or right
+bit movedir ; test if left or right
+beq ++    ; skip if not
 ldx newptrh
 lda newptr
 jsr mod40
-sta tmp		; tmp = new location mod 40
-lda #%00000100	; left
-bit movedir	; test if left
-beq +		; skip if right
+sta tmp   ; tmp = new location mod 40
+lda #%00000100  ; left
+bit movedir ; test if left
+beq +   ; skip if right
 lda #39
-cmp tmp		; check if 39 (left->right)
-bne ++		; skip if not
-jmp gameloop	; left->right wrap, back to loop
-+ lda tmp	; check if 0 (right->left)
-bne ++		; skip if not
-jmp gameloop	; right->left wrap, back to loop
+cmp tmp   ; check if 39 (left->right)
+bne ++    ; skip if not
+jmp gameloop  ; left->right wrap, back to loop
++ lda tmp ; check if 0 (right->left)
+bne ++    ; skip if not
+jmp gameloop  ; right->left wrap, back to loop
 
 ; check if rock can be moved
 ++ ldy #0
 lda (scrptr),y
 tax
 lda Rocktable,x
-bne +		; 0 -> cannot move
+bne +   ; 0 -> cannot move
 jmp gameloop
 
 ; draw new rock
@@ -1023,39 +1023,39 @@ lda (tmpptr),y
 sta underlbombl
 
 ; ignite flames, transform tiles
-++ ldy #0	; up
+++ ldy #0 ; up
 lda #tfire
 jsr replacetile
 tax
-lda Bombtable,x	; transform old tile
+lda Bombtable,x ; transform old tile
 sta underlbombu
-ldy #80		; down
+ldy #80   ; down
 lda #tfire
 jsr replacetile
 tax
-lda Bombtable,x	; transform old tile
+lda Bombtable,x ; transform old tile
 sta underlbombd
-lda underlbombl	; left (if not on edge)
+lda underlbombl ; left (if not on edge)
 beq ++
-ldy #39		; left
+ldy #39   ; left
 lda #tfire
 jsr replacetile
 tax
-lda Bombtable,x	; transform old tile
+lda Bombtable,x ; transform old tile
 sta underlbombl
-++ lda underlbombr	; right (if not on edge)
+++ lda underlbombr  ; right (if not on edge)
 beq ++
-ldy #41		; right
+ldy #41   ; right
 lda #tfire
 jsr replacetile
 tax
-lda Bombtable,x	; transform old tile
+lda Bombtable,x ; transform old tile
 sta underlbombr
-++ ldy #40		; center
+++ ldy #40    ; center
 lda #tfire
 jsr replacetile
 ldx underlbomb
-lda Bombtable,x	; transform old tile
+lda Bombtable,x ; transform old tile
 sta underlbomb
 
 ; artistic delay
@@ -1063,21 +1063,21 @@ sta underlbomb
 jsr delay
 
 ; redraw tiles
-ldy #0		; up
+ldy #0    ; up
 lda underlbombu
 jsr replacetile
-ldy #80		; down
+ldy #80   ; down
 lda underlbombd
 jsr replacetile
-lda underlbombl	; left (if not on edge)
+lda underlbombl ; left (if not on edge)
 beq ++
-ldy #39		; left
+ldy #39   ; left
 jsr replacetile
-++ lda underlbombr	; right (if not on edge)
+++ lda underlbombr  ; right (if not on edge)
 beq ++
-ldy #41		; right
+ldy #41   ; right
 jsr replacetile
-++ ldy #40		; center
+++ ldy #40    ; center
 lda underlbomb
 jsr replacetile
 
@@ -1098,11 +1098,11 @@ jmp zapcheck
 ;
 nextlevel:
 jsr domovement
-lda level	; check if last level
+lda level ; check if last level
 cmp #levels
 bne +
-jmp gamewon	; game won
-+ inc level	; next level
+jmp gamewon ; game won
++ inc level ; next level
 lda #>nextleveltext
 sta tmpptr+1
 lda #<nextleveltext
@@ -1115,21 +1115,21 @@ lda #nextleveltextcol
 jsr printstring
 - jsr getinput
 sta movedir
-lda #%00010000	; fire
-bit movedir	; test if fire
+lda #%00010000  ; fire
+bit movedir ; test if fire
 beq -
 lda #>bcdlevel
 sta tmpptr+1
 lda #<bcdlevel
 sta tmpptr
-jsr bcdinc	; increase level
+jsr bcdinc  ; increase level
 lda cnextlevel
 sta tmpptr
 lda cnextlevelh
-sta tmpptr+1	; tmpptr -> next level
+sta tmpptr+1  ; tmpptr -> next level
 lda #1
-sta tmp		; load 1 level
-jmp loadlevel	; load next level
+sta tmp   ; load 1 level
+jmp loadlevel ; load next level
 
 ; - gamewon
 ;
@@ -1146,8 +1146,8 @@ lda #gamewontextcol
 jsr printstring
 - jsr getinput
 sta movedir
-lda #%00010000	; fire
-bit movedir	; test if fire
+lda #%00010000  ; fire
+bit movedir ; test if fire
 beq -
 jmp reloadstartmenu
 
@@ -1157,18 +1157,18 @@ jmp reloadstartmenu
 ; - IRQ
 ;
 int:
-asl $d019	; ACK interrupt (to re-enable it)
+asl $d019 ; ACK interrupt (to re-enable it)
 pla
 tay
 pla
 tax
-pla		; pop y,x and a from stack
-rti		; return
+pla   ; pop y,x and a from stack
+rti   ; return
 
 ; - NMI
 ;
 nmi:
-rti		; return
+rti   ; return
 
 
 ; --- Subroutines
@@ -1223,18 +1223,18 @@ rts
 ;
 zapsearch:
 ldy #0
-sta tmpvar	; tmpvar = fatal zapper tile
-cmp #tzapl	; check if left
+sta tmpvar  ; tmpvar = fatal zapper tile
+cmp #tzapl  ; check if left
 bne +
 ldy #2
-+ cmp #tzapr	; check if right
++ cmp #tzapr  ; check if right
 bne +
 ldy #1
-+ sty movedir	; movedir = 1 if left, 2 if right
++ sty movedir ; movedir = 1 if left, 2 if right
 lda playerptr
 sta scrptr
 ldx playerptrh
-stx scrptr+1	; scrptr -> player
+stx scrptr+1  ; scrptr -> player
 
 
 ; move to next location
@@ -1249,7 +1249,7 @@ sta scrptr+1
 ; check for left&right edges
 ldy movedir
 cpy #0
-beq ++		; skip if up or down
+beq ++    ; skip if up or down
 lda scrptr
 ldx scrptr+1
 jsr mod40
@@ -1257,28 +1257,28 @@ ldx #1
 cmp #0
 bne +
 cpy #2
-beq +++		; moving right, left edge reached (x=1)
+beq +++   ; moving right, left edge reached (x=1)
 + cmp #39
 bne ++
 cpy #1
-beq +++		; moving left, right edge reached (x=1)
+beq +++   ; moving left, right edge reached (x=1)
 
 ; check if fatal zapper
 ++ ldx #0
 ldy #0
 lda (scrptr),y
 cmp tmpvar
-beq +++		; jump if fatal zapper (x=0)
+beq +++   ; jump if fatal zapper (x=0)
 ldx #1
-cmp #tground	; check if ground
+cmp #tground  ; check if ground
 beq -
-cmp #twater	; check if water
+cmp #twater ; check if water
 beq -
-cmp #tplankw	; check if plank on water
+cmp #tplankw  ; check if plank on water
 beq -
-cmp #thole	; check if hole
+cmp #thole  ; check if hole
 beq -
-cmp #teleb	; check if inactive elec.
+cmp #teleb  ; check if inactive elec.
 beq -
 +++ rts
 
@@ -1291,20 +1291,20 @@ beq -
 ;
 replacetile:
 sta replacetilenew
-lda (tmpptr),y	; a = old tile
-pha		; to stack
+lda (tmpptr),y  ; a = old tile
+pha   ; to stack
 lda tmpptr+1
 sta scrptr+1
 clc
-tya		; a = offset
+tya   ; a = offset
 adc tmpptr
 sta scrptr
 bcc ++
-inc scrptr+1	; scrptr = tmpptr+y
+inc scrptr+1  ; scrptr = tmpptr+y
 replacetilenew=*+1
 ++ lda #123
 jsr printtile
-pla		; a = old tile
+pla   ; a = old tile
 rts
 
 ; - delay
@@ -1314,9 +1314,9 @@ rts
 delay:
 lda #rastercmp
 -- cmp vicraster
-bne --		; wait until raster = rastercmp
+bne --    ; wait until raster = rastercmp
 - cmp vicraster
-beq -		; wait until raster != rastercmp
+beq -   ; wait until raster != rastercmp
 dex
 bne --
 rts
@@ -1417,7 +1417,7 @@ sta $d011
 - lda tmpptr
 sta ccurlevel
 lda tmpptr+1
-sta ccurlevelh	; ccurlevel -> current level
+sta ccurlevelh  ; ccurlevel -> current level
 jsr unclevel
 dec tmp
 bne -
@@ -1425,7 +1425,7 @@ bne -
 lda tmpptr
 sta cnextlevel
 lda tmpptr+1
-sta cnextlevelh	; cnextlevel -> next level
+sta cnextlevelh ; cnextlevel -> next level
 
 ; reset items / status
 jsr erasestatustext
@@ -1468,10 +1468,10 @@ lda #<gamescreenloc
 sta tmpptr
 ldy #0
 - lda (tmpptr),y
-cmp tmp		; test if char
-beq +		; end if zero
+cmp tmp   ; test if char
+beq +   ; end if zero
 inc tmpptr
-bne -		; loop if not zero
+bne -   ; loop if not zero
 inc tmpptr+1
 bne -
 + rts
@@ -1486,17 +1486,17 @@ mod40:
 dex
 dex
 dex
-dex		; a:x -= screen_offset
-- cpx #0	; test MSB
-bne +		; jump if > 0
-cmp #40		; test LSB
-bcc ++		; jump if < 40
+dex   ; a:x -= screen_offset
+- cpx #0  ; test MSB
+bne +   ; jump if > 0
+cmp #40   ; test LSB
+bcc ++    ; jump if < 40
 + sec
-sbc #40		; a -= 40
-bcs -		; jump if no borrow
-dex		; borrow
+sbc #40   ; a -= 40
+bcs -   ; jump if no borrow
+dex   ; borrow
 jmp -
-++ rts		; return
+++ rts    ; return
 
 ; - printtile
 ; parameters:
@@ -1504,7 +1504,7 @@ jmp -
 ;  a = the tile to print
 ;
 printtile:
-tax		; put tile to x
+tax   ; put tile to x
 
 ; set colptr according to scrptr
 lda scrptr
@@ -1516,11 +1516,11 @@ sta colptr+1
 
 ; print tile
 ldy #0
-txa		; get tile from x
-sta (scrptr),y	; print tile
-lda Colortable,x	; get tile color
-sta (colptr),y	; set color
-rts		; return
+txa   ; get tile from x
+sta (scrptr),y  ; print tile
+lda Colortable,x  ; get tile color
+sta (colptr),y  ; set color
+rts   ; return
 
 ; - printstring
 ; parameters:
@@ -1542,24 +1542,24 @@ sta colptr+1
 ; string loop
 ldy #0
 - lda (tmpptr),y
-beq +++		; end if zero
-sta (scrptr),y	; print char
+beq +++   ; end if zero
+sta (scrptr),y  ; print char
 tax
 and #$40
-bne ++		; jump if tile
+bne ++    ; jump if tile
 textcolor=*+1
-lda #3		; was just text
+lda #3    ; was just text
 bne +
 ++ lda Colortable,x
-+ sta (colptr),y	; set color
++ sta (colptr),y  ; set color
 iny
-bne -		; loop if not zero
+bne -   ; loop if not zero
 inc tmpptr+1
 inc scrptr+1
 inc colptr+1
 bne -
 +++
-rts		; return
+rts   ; return
 
 ; - unclevel
 ; parameters:
@@ -1584,12 +1584,12 @@ sta colptr
 ldy #0
 -- 
 lda (tmpptr),y
-cmp #$ff		; code for "end of level"
+cmp #$ff    ; code for "end of level"
 beq +++
 and #$1f
 clc
 adc #$40
-tax			; x = char
+tax     ; x = char
 lda (tmpptr),y
 lsr
 lsr
@@ -1597,7 +1597,7 @@ lsr
 lsr
 lsr
 sta tmpvar
-inc tmpvar		; tmpvar = loops
+inc tmpvar    ; tmpvar = loops
 - txa
 sta (scrptr),y
 lda Colortable,x
@@ -1619,13 +1619,13 @@ bne --
 lda #<gamescreenendloc
 cmp scrptr
 bne --
-rts			; return
+rts     ; return
 
 ; $ff found, rest of level is ground
 +++
-ldx #tground		; x = ground char
+ldx #tground    ; x = ground char
 lda Colortable,x
-sta tmpvar 		; tmpvar = color
+sta tmpvar    ; tmpvar = color
 - txa
 sta (scrptr),y
 lda tmpvar
@@ -1645,7 +1645,7 @@ bne -
 inc tmpptr
 bne +
 inc tmpptr+1
-+ rts			; return
++ rts     ; return
 
 ; - getinput
 ; returns:
@@ -1653,27 +1653,27 @@ inc tmpptr+1
 ;
 getinput:
 lda #0
-sta joycount	; reset joyrepeat counter
+sta joycount  ; reset joyrepeat counter
 -- lda #rastercmp
 ldy joycount
 - cmp vicraster
 bne -           ; wait until raster = rastercmp
-iny 		; y++
+iny     ; y++
 cpy #joyrepeat  ; check if y >= joyrepeat
 bcc getinput_j  ; if not, skip
 ldy #0          ; reset joyrepeat counter
 lda #$ff        ; reset lastjoy for repeat
 sta lastjoy
-getinput_j:	; handle keyboard
-sty joycount	; store joycount
-lda joyport	; a = joy
-tax		; save to x
-eor lastjoy	; a = joy xor lastjoy
-and lastjoy	; a = a and lastjoy
-stx lastjoy	; update lastjoy
+getinput_j: ; handle keyboard
+sty joycount  ; store joycount
+lda joyport ; a = joy
+tax   ; save to x
+eor lastjoy ; a = joy xor lastjoy
+and lastjoy ; a = a and lastjoy
+stx lastjoy ; update lastjoy
 and #$1f        ; mask + test if anything is pressed
 beq --          ; if not, wait
-rts		; return (a = action)
+rts   ; return (a = action)
 
 
 ; --- Characters ($40-$5F)
@@ -1681,476 +1681,476 @@ rts		; return (a = action)
 ; ...reused as variables
 
 Chars
-	; ground
-	;    76543210
-	!by %........ ;0
-	!by %........ ;1
-	!by %........ ;2
-	!by %...##... ;3
-	!by %...##... ;4
-	!by %........ ;5
-	!by %........ ;6
-	!by %........ ;7
+  ; ground
+  ;    76543210
+  !by %........ ;0
+  !by %........ ;1
+  !by %........ ;2
+  !by %...##... ;3
+  !by %...##... ;4
+  !by %........ ;5
+  !by %........ ;6
+  !by %........ ;7
 
-	; wall
-	;    76543210
-	!by %###.###. ;0
-	!by %........ ;1
-	!by %.###.### ;2
-	!by %........ ;3
-	!by %###.###. ;4
-	!by %........ ;5
-	!by %.###.### ;6
-	!by %........ ;7
+  ; wall
+  ;    76543210
+  !by %###.###. ;0
+  !by %........ ;1
+  !by %.###.### ;2
+  !by %........ ;3
+  !by %###.###. ;4
+  !by %........ ;5
+  !by %.###.### ;6
+  !by %........ ;7
 
-	; super wall
-	;    76543210
-	!by %######## ;0
-	!by %######## ;1
-	!by %######## ;2
-	!by %######## ;3
-	!by %######## ;4
-	!by %######## ;5
-	!by %######## ;6
-	!by %######## ;7
+  ; super wall
+  ;    76543210
+  !by %######## ;0
+  !by %######## ;1
+  !by %######## ;2
+  !by %######## ;3
+  !by %######## ;4
+  !by %######## ;5
+  !by %######## ;6
+  !by %######## ;7
 
-	; door1
-	;    76543210
-	!by %...##... ;0
-	!by %..####.. ;1
-	!by %.######. ;2
-	!by %.######. ;3
-	!by %.####.#. ;4
-	!by %.######. ;5
-	!by %.######. ;6
-	!by %.######. ;7
+  ; door1
+  ;    76543210
+  !by %...##... ;0
+  !by %..####.. ;1
+  !by %.######. ;2
+  !by %.######. ;3
+  !by %.####.#. ;4
+  !by %.######. ;5
+  !by %.######. ;6
+  !by %.######. ;7
 
-	; door2
-	;    76543210
-	!by %...##... ;0
-	!by %..####.. ;1
-	!by %.######. ;2
-	!by %.######. ;3
-	!by %.####.#. ;4
-	!by %.######. ;5
-	!by %.######. ;6
-	!by %.######. ;7
+  ; door2
+  ;    76543210
+  !by %...##... ;0
+  !by %..####.. ;1
+  !by %.######. ;2
+  !by %.######. ;3
+  !by %.####.#. ;4
+  !by %.######. ;5
+  !by %.######. ;6
+  !by %.######. ;7
 
-	; super door
-	;    76543210
-	!by %...##... ;0
-	!by %..####.. ;1
-	!by %.######. ;2
-	!by %.######. ;3
-	!by %.####.#. ;4
-	!by %.######. ;5
-	!by %.######. ;6
-	!by %.######. ;7
+  ; super door
+  ;    76543210
+  !by %...##... ;0
+  !by %..####.. ;1
+  !by %.######. ;2
+  !by %.######. ;3
+  !by %.####.#. ;4
+  !by %.######. ;5
+  !by %.######. ;6
+  !by %.######. ;7
 
-	; key1
-	;    76543210
-	!by %........ ;0
-	!by %...##... ;1
-	!by %..#..#.. ;2
-	!by %...##... ;3
-	!by %...#.... ;4
-	!by %...#.... ;5
-	!by %...###.. ;6
-	!by %........ ;7
+  ; key1
+  ;    76543210
+  !by %........ ;0
+  !by %...##... ;1
+  !by %..#..#.. ;2
+  !by %...##... ;3
+  !by %...#.... ;4
+  !by %...#.... ;5
+  !by %...###.. ;6
+  !by %........ ;7
 
-	; key2
-	;    76543210
-	!by %........ ;0
-	!by %...##... ;1
-	!by %..#..#.. ;2
-	!by %...##... ;3
-	!by %...#.... ;4
-	!by %...#.... ;5
-	!by %...###.. ;6
-	!by %........ ;7
+  ; key2
+  ;    76543210
+  !by %........ ;0
+  !by %...##... ;1
+  !by %..#..#.. ;2
+  !by %...##... ;3
+  !by %...#.... ;4
+  !by %...#.... ;5
+  !by %...###.. ;6
+  !by %........ ;7
 
-	; super key
-	;    76543210
-	!by %........ ;0
-	!by %...##... ;1
-	!by %..#..#.. ;2
-	!by %...##... ;3
-	!by %...#.... ;4
-	!by %...#.... ;5
-	!by %...###.. ;6
-	!by %........ ;7
+  ; super key
+  ;    76543210
+  !by %........ ;0
+  !by %...##... ;1
+  !by %..#..#.. ;2
+  !by %...##... ;3
+  !by %...#.... ;4
+  !by %...#.... ;5
+  !by %...###.. ;6
+  !by %........ ;7
 
-	; bomb
-	;    76543210
-	!by %........ ;0
-	!by %....##.. ;1
-	!by %...#.... ;2
-	!by %..###... ;3
-	!by %.#####.. ;4
-	!by %.#####.. ;5
-	!by %..###... ;6
-	!by %........ ;7
+  ; bomb
+  ;    76543210
+  !by %........ ;0
+  !by %....##.. ;1
+  !by %...#.... ;2
+  !by %..###... ;3
+  !by %.#####.. ;4
+  !by %.#####.. ;5
+  !by %..###... ;6
+  !by %........ ;7
 
-	; live bomb
-	;    76543210
-	!by %........ ;0
-	!by %....##.. ;1
-	!by %...#.... ;2
-	!by %..###... ;3
-	!by %.#####.. ;4
-	!by %.#####.. ;5
-	!by %..###... ;6
-	!by %........ ;7
+  ; live bomb
+  ;    76543210
+  !by %........ ;0
+  !by %....##.. ;1
+  !by %...#.... ;2
+  !by %..###... ;3
+  !by %.#####.. ;4
+  !by %.#####.. ;5
+  !by %..###... ;6
+  !by %........ ;7
 
-	; unused1
-	;    76543210
-	!by %#....... ;0
-	!by %........ ;1
-	!by %........ ;2
-	!by %........ ;3
-	!by %........ ;4
-	!by %........ ;5
-	!by %........ ;6
-	!by %........ ;7
+  ; unused1
+  ;    76543210
+  !by %#....... ;0
+  !by %........ ;1
+  !by %........ ;2
+  !by %........ ;3
+  !by %........ ;4
+  !by %........ ;5
+  !by %........ ;6
+  !by %........ ;7
 
-	; unused2
-	;    76543210
-	!by %##...... ;0
-	!by %........ ;1
-	!by %........ ;2
-	!by %........ ;3
-	!by %........ ;4
-	!by %........ ;5
-	!by %........ ;6
-	!by %........ ;7
+  ; unused2
+  ;    76543210
+  !by %##...... ;0
+  !by %........ ;1
+  !by %........ ;2
+  !by %........ ;3
+  !by %........ ;4
+  !by %........ ;5
+  !by %........ ;6
+  !by %........ ;7
 
-	; rock
-	;    76543210
-	!by %........ ;0
-	!by %...##... ;1
-	!by %..####.. ;2
-	!by %.######. ;3
-	!by %.######. ;4
-	!by %.######. ;5
-	!by %..####.. ;6
-	!by %........ ;7
+  ; rock
+  ;    76543210
+  !by %........ ;0
+  !by %...##... ;1
+  !by %..####.. ;2
+  !by %.######. ;3
+  !by %.######. ;4
+  !by %.######. ;5
+  !by %..####.. ;6
+  !by %........ ;7
 
-	; rock+plank+water
-	;    76543210
-	!by %........ ;0
-	!by %...##... ;1
-	!by %..####.. ;2
-	!by %.######. ;3
-	!by %.######. ;4
-	!by %.######. ;5
-	!by %..####.. ;6
-	!by %........ ;7
+  ; rock+plank+water
+  ;    76543210
+  !by %........ ;0
+  !by %...##... ;1
+  !by %..####.. ;2
+  !by %.######. ;3
+  !by %.######. ;4
+  !by %.######. ;5
+  !by %..####.. ;6
+  !by %........ ;7
 
-	; rock in a hole
-	;    76543210
-	!by %........ ;0
-	!by %........ ;1
-	!by %........ ;2
-	!by %...##... ;3
-	!by %..####.. ;4
-	!by %.######. ;5
-	!by %.######. ;6
-	!by %........ ;7
+  ; rock in a hole
+  ;    76543210
+  !by %........ ;0
+  !by %........ ;1
+  !by %........ ;2
+  !by %...##... ;3
+  !by %..####.. ;4
+  !by %.######. ;5
+  !by %.######. ;6
+  !by %........ ;7
 
-	; hole
-	;    76543210
-	!by %........ ;0
-	!by %........ ;1
-	!by %........ ;2
-	!by %........ ;3
-	!by %........ ;4
-	!by %.######. ;5
-	!by %#......# ;6
-	!by %.######. ;7
+  ; hole
+  ;    76543210
+  !by %........ ;0
+  !by %........ ;1
+  !by %........ ;2
+  !by %........ ;3
+  !by %........ ;4
+  !by %.######. ;5
+  !by %#......# ;6
+  !by %.######. ;7
 
-	; water
-	;    76543210
-	!by %........ ;2
-	!by %...##..# ;0
-	!by %.##..##. ;1
-	!by %........ ;2
-	!by %........ ;2
-	!by %...##..# ;3
-	!by %.##..##. ;4
-	!by %........ ;5
+  ; water
+  ;    76543210
+  !by %........ ;2
+  !by %...##..# ;0
+  !by %.##..##. ;1
+  !by %........ ;2
+  !by %........ ;2
+  !by %...##..# ;3
+  !by %.##..##. ;4
+  !by %........ ;5
 
-	; plank
-	;    76543210
-	!by %........ ;0
-	!by %...##... ;1
-	!by %...##... ;2
-	!by %...##... ;3
-	!by %...##... ;4
-	!by %...##... ;5
-	!by %...##... ;6
-	!by %........ ;7
+  ; plank
+  ;    76543210
+  !by %........ ;0
+  !by %...##... ;1
+  !by %...##... ;2
+  !by %...##... ;3
+  !by %...##... ;4
+  !by %...##... ;5
+  !by %...##... ;6
+  !by %........ ;7
 
-	; plank on water
-	;    76543210
-	!by %........ ;0
-	!by %.##..... ;1
-	!by %..##.... ;2
-	!by %...##... ;3
-	!by %....##.. ;4
-	!by %.....##. ;5
-	!by %......## ;6
-	!by %........ ;7
+  ; plank on water
+  ;    76543210
+  !by %........ ;0
+  !by %.##..... ;1
+  !by %..##.... ;2
+  !by %...##... ;3
+  !by %....##.. ;4
+  !by %.....##. ;5
+  !by %......## ;6
+  !by %........ ;7
 
-	; electricity A
-	;    76543210
-	!by %........ ;0
-	!by %......#. ;1
-	!by %....##.. ;2
-	!by %..##.... ;3
-	!by %.######. ;4
-	!by %....##.. ;5
-	!by %..##.... ;6
-	!by %.#...... ;7
+  ; electricity A
+  ;    76543210
+  !by %........ ;0
+  !by %......#. ;1
+  !by %....##.. ;2
+  !by %..##.... ;3
+  !by %.######. ;4
+  !by %....##.. ;5
+  !by %..##.... ;6
+  !by %.#...... ;7
 
-	; electricity B
-	;    76543210
-	!by %........ ;0
-	!by %......#. ;1
-	!by %....##.. ;2
-	!by %..##.... ;3
-	!by %.######. ;4
-	!by %....##.. ;5
-	!by %..##.... ;6
-	!by %.#...... ;7
+  ; electricity B
+  ;    76543210
+  !by %........ ;0
+  !by %......#. ;1
+  !by %....##.. ;2
+  !by %..##.... ;3
+  !by %.######. ;4
+  !by %....##.. ;5
+  !by %..##.... ;6
+  !by %.#...... ;7
 
-	; electricity switch
-	;    76543210
-	!by %.#.....# ;0
-	!by %#.#...#. ;1
-	!by %###..#.. ;2
-	!by %#.#.#... ;3
-	!by %...#.#.. ;4
-	!by %..#..##. ;5
-	!by %.#...#.# ;6
-	!by %.....##. ;7
+  ; electricity switch
+  ;    76543210
+  !by %.#.....# ;0
+  !by %#.#...#. ;1
+  !by %###..#.. ;2
+  !by %#.#.#... ;3
+  !by %...#.#.. ;4
+  !by %..#..##. ;5
+  !by %.#...#.# ;6
+  !by %.....##. ;7
 
-	; teleport
-	;    76543210
-	!by %..####.. ;0
-	!by %.##..##. ;1
-	!by %#.#..#.# ;2
-	!by %#.#..#.# ;3
-	!by %#.#..#.# ;4
-	!by %#.####.# ;5
-	!by %##....## ;6
-	!by %.######. ;7
+  ; teleport
+  ;    76543210
+  !by %..####.. ;0
+  !by %.##..##. ;1
+  !by %#.#..#.# ;2
+  !by %#.#..#.# ;3
+  !by %#.#..#.# ;4
+  !by %#.####.# ;5
+  !by %##....## ;6
+  !by %.######. ;7
 
-	; zapper-down
-	;    76543210
-	!by %........ ;0
-	!by %.######. ;1
-	!by %..####.. ;2
-	!by %...##... ;3
-	!by %...##... ;4
-	!by %...##... ;5
-	!by %...##... ;6
-	!by %........ ;7
+  ; zapper-down
+  ;    76543210
+  !by %........ ;0
+  !by %.######. ;1
+  !by %..####.. ;2
+  !by %...##... ;3
+  !by %...##... ;4
+  !by %...##... ;5
+  !by %...##... ;6
+  !by %........ ;7
 
-	; zapper-up
-	;    76543210
-	!by %........ ;0
-	!by %...##... ;1
-	!by %...##... ;2
-	!by %...##... ;3
-	!by %...##... ;4
-	!by %..####.. ;5
-	!by %.######. ;6
-	!by %........ ;7
+  ; zapper-up
+  ;    76543210
+  !by %........ ;0
+  !by %...##... ;1
+  !by %...##... ;2
+  !by %...##... ;3
+  !by %...##... ;4
+  !by %..####.. ;5
+  !by %.######. ;6
+  !by %........ ;7
 
-	; zapper-right
-	;    76543210
-	!by %........ ;0
-	!by %.#...... ;1
-	!by %.##..... ;2
-	!by %.######. ;3
-	!by %.######. ;4
-	!by %.##..... ;5
-	!by %.#...... ;6
-	!by %........ ;7
+  ; zapper-right
+  ;    76543210
+  !by %........ ;0
+  !by %.#...... ;1
+  !by %.##..... ;2
+  !by %.######. ;3
+  !by %.######. ;4
+  !by %.##..... ;5
+  !by %.#...... ;6
+  !by %........ ;7
 
-	; zapper-left
-	;    76543210
-	!by %........ ;0
-	!by %......#. ;1
-	!by %.....##. ;2
-	!by %.######. ;3
-	!by %.######. ;4
-	!by %.....##. ;5
-	!by %......#. ;6
-	!by %........ ;7
+  ; zapper-left
+  ;    76543210
+  !by %........ ;0
+  !by %......#. ;1
+  !by %.....##. ;2
+  !by %.######. ;3
+  !by %.######. ;4
+  !by %.....##. ;5
+  !by %......#. ;6
+  !by %........ ;7
 
-	; cash
-	;    76543210
-	!by %..#..#.. ;0
-	!by %.######. ;1
-	!by %#.#..#.# ;2
-	!by %#.#..#.. ;3
-	!by %.######. ;4
-	!by %..#..#.# ;5
-	!by %#.#..#.# ;6
-	!by %.######. ;7
+  ; cash
+  ;    76543210
+  !by %..#..#.. ;0
+  !by %.######. ;1
+  !by %#.#..#.# ;2
+  !by %#.#..#.. ;3
+  !by %.######. ;4
+  !by %..#..#.# ;5
+  !by %#.#..#.# ;6
+  !by %.######. ;7
 
-	; player
-	;    76543210
-	!by %...##... ;0
-	!by %..####.. ;1
-	!by %...##... ;2
-	!by %.######. ;3
-	!by %...##... ;4
-	!by %...##... ;5
-	!by %..#..#.. ;6
-	!by %..#..#.. ;7
+  ; player
+  ;    76543210
+  !by %...##... ;0
+  !by %..####.. ;1
+  !by %...##... ;2
+  !by %.######. ;3
+  !by %...##... ;4
+  !by %...##... ;5
+  !by %..#..#.. ;6
+  !by %..#..#.. ;7
 
-	; death
-	;    76543210
-	!by %...##... ;0
-	!by %...##... ;1
-	!by %.######. ;2
-	!by %.######. ;3
-	!by %...##... ;4
-	!by %...##... ;5
-	!by %...##... ;6
-	!by %...##... ;7
+  ; death
+  ;    76543210
+  !by %...##... ;0
+  !by %...##... ;1
+  !by %.######. ;2
+  !by %.######. ;3
+  !by %...##... ;4
+  !by %...##... ;5
+  !by %...##... ;6
+  !by %...##... ;7
 
-	; fire
-	;    76543210
-	!by %........ ;0
-	!by %.#...#.. ;1
-	!by %..#.#... ;2
-	!by %.#..#.#. ;3
-	!by %..##.#.. ;4
-	!by %.##.###. ;5
-	!by %.#.#..#. ;6
-	!by %..####.. ;7
+  ; fire
+  ;    76543210
+  !by %........ ;0
+  !by %.#...#.. ;1
+  !by %..#.#... ;2
+  !by %.#..#.#. ;3
+  !by %..##.#.. ;4
+  !by %.##.###. ;5
+  !by %.#.#..#. ;6
+  !by %..####.. ;7
 
 
 ; --- Color lookup table (with $40 offset)
 
 Colortable = *-$40
 !if easymode = 0 {
-!by 0	; ground (black,0)
+!by 0 ; ground (black,0)
 } else {
-!by 5	; ground
+!by 5 ; ground
 }
-!by 2	; wall (red,2)
-!by 11	; super wall (dgray,11)
-!by 9	; door1 (brown,9)
-!by 7	; door2 (yellow,7)
-!by 15	; super door (lgray,15)
-!by 9	; key1 (brown,9)
-!by 7	; key2 (yellow,7)
-!by 15	; super key (lgray,15)
-!by 12	; bomb (gray,12)
-!by 1	; live bomb (white,1)
-!by 2	; unused1
-!by 3	; unused2
-!by 11	; rock (dgray,11)
-!by 11	; rock+plank+water (dgray,11)
-!by 11	; rock in a hole (dgray,11)
-!by 11	; hole (dgray,11)
-!by 6	; water (blue,6)
-!by 9	; plank (brown,9)
-!by 9	; plank on water (brown,9)
-!by 7	; electricity A (yellow,7)
+!by 2 ; wall (red,2)
+!by 11  ; super wall (dgray,11)
+!by 9 ; door1 (brown,9)
+!by 7 ; door2 (yellow,7)
+!by 15  ; super door (lgray,15)
+!by 9 ; key1 (brown,9)
+!by 7 ; key2 (yellow,7)
+!by 15  ; super key (lgray,15)
+!by 12  ; bomb (gray,12)
+!by 1 ; live bomb (white,1)
+!by 2 ; unused1
+!by 3 ; unused2
+!by 11  ; rock (dgray,11)
+!by 11  ; rock+plank+water (dgray,11)
+!by 11  ; rock in a hole (dgray,11)
+!by 11  ; hole (dgray,11)
+!by 6 ; water (blue,6)
+!by 9 ; plank (brown,9)
+!by 9 ; plank on water (brown,9)
+!by 7 ; electricity A (yellow,7)
 !if easymode = 0 {
-!by 0	; electricity B (black,0)
+!by 0 ; electricity B (black,0)
 } else {
-!by 6	; electricity B
+!by 6 ; electricity B
 }
-!by 5	; electricity switch (green,5)
-!by 4	; teleport (purple,4)
-!by 10	; zapper-down (pink,10)
-!by 10	; zapper-up (pink,10)
-!by 10	; zapper-right (pink,10)
-!by 10	; zapper-left (pink,10)
-!by 7	; cash (yellow,7)
-!by 12	; player (gray,12)
-!by 12	; death (gray,12)
-!by 2	; fire (red,2)
+!by 5 ; electricity switch (green,5)
+!by 4 ; teleport (purple,4)
+!by 10  ; zapper-down (pink,10)
+!by 10  ; zapper-up (pink,10)
+!by 10  ; zapper-right (pink,10)
+!by 10  ; zapper-left (pink,10)
+!by 7 ; cash (yellow,7)
+!by 12  ; player (gray,12)
+!by 12  ; death (gray,12)
+!by 2 ; fire (red,2)
 
 
 ; --- Bomb transform lookup table (with $40 offset)
 
 Bombtable = *-$40
-!by tground	; ground
-!by tground	; wall
-!by tswall	; super wall
-!by tground	; door1
-!by tground	; door2
-!by tsdoor	; super door
-!by tkey1	; key1
-!by tkey2	; key2
-!by tskey	; super key
-!by tbomb	; bomb
-!by 0		; live bomb
-!by 0		; unused1
-!by 0		; unused2
-!by tground	; rock
-!by tplankw	; rock+plank+water
-!by thole	; rock in a hole
-!by thole	; hole
-!by twater	; water
-!by tplank	; plank
-!by tplankw	; plank on water
-!by telea	; electricity A
-!by tground	; electricity B
-!by teles	; electricity switch
-!by ttele	; teleport
-!by tground	; zapper-down
-!by tground	; zapper-up
-!by tground	; zapper-right
-!by tground	; zapper-left
-!by tcash	; cash
-!by tplayer	; player
-!by 0		; death
-!by 0		; fire
+!by tground ; ground
+!by tground ; wall
+!by tswall  ; super wall
+!by tground ; door1
+!by tground ; door2
+!by tsdoor  ; super door
+!by tkey1 ; key1
+!by tkey2 ; key2
+!by tskey ; super key
+!by tbomb ; bomb
+!by 0   ; live bomb
+!by 0   ; unused1
+!by 0   ; unused2
+!by tground ; rock
+!by tplankw ; rock+plank+water
+!by thole ; rock in a hole
+!by thole ; hole
+!by twater  ; water
+!by tplank  ; plank
+!by tplankw ; plank on water
+!by telea ; electricity A
+!by tground ; electricity B
+!by teles ; electricity switch
+!by ttele ; teleport
+!by tground ; zapper-down
+!by tground ; zapper-up
+!by tground ; zapper-right
+!by tground ; zapper-left
+!by tcash ; cash
+!by tplayer ; player
+!by 0   ; death
+!by 0   ; fire
 
 
 ; --- Rock transform lookup table (with $40 offset)
 
 Rocktable = *-$40
-!by trock	; ground
-!by 0		; wall
-!by 0		; super wall
-!by 0		; door1
-!by 0		; door2
-!by 0		; super door
-!by 0		; key1
-!by 0		; key2
-!by 0		; super key
-!by 0		; bomb
-!by 0		; live bomb
-!by 0		; unused1
-!by 0		; unused2
-!by 0		; rock
-!by 0		; rock+plank+water
-!by 0		; rock in a hole
-!by trockh	; hole
-!by twater	; water
-!by 0		; plank
-!by trockw	; plank on water
-!by 0		; electricity A
-!by trock	; electricity B
-!by 0		; electricity switch
-!by 0		; teleport
-!by 0		; zapper-down
-!by 0		; zapper-up
-!by 0		; zapper-right
-!by 0		; zapper-left
-!by 0		; cash
-!by 0		; player
-!by 0		; death
-!by 0		; fire
+!by trock ; ground
+!by 0   ; wall
+!by 0   ; super wall
+!by 0   ; door1
+!by 0   ; door2
+!by 0   ; super door
+!by 0   ; key1
+!by 0   ; key2
+!by 0   ; super key
+!by 0   ; bomb
+!by 0   ; live bomb
+!by 0   ; unused1
+!by 0   ; unused2
+!by 0   ; rock
+!by 0   ; rock+plank+water
+!by 0   ; rock in a hole
+!by trockh  ; hole
+!by twater  ; water
+!by 0   ; plank
+!by trockw  ; plank on water
+!by 0   ; electricity A
+!by trock ; electricity B
+!by 0   ; electricity switch
+!by 0   ; teleport
+!by 0   ; zapper-down
+!by 0   ; zapper-up
+!by 0   ; zapper-right
+!by 0   ; zapper-left
+!by 0   ; cash
+!by 0   ; player
+!by 0   ; death
+!by 0   ; fire
 
 
 ; --- Strings
@@ -2510,5 +2510,5 @@ clevels
 
 ; check if I/O area is reached
 !if * > $cfff {
-	!error "Level data goes over $cfff!"
+  !error "Level data goes over $cfff!"
 }

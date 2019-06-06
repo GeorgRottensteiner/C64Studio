@@ -647,6 +647,9 @@ namespace C64Studio
           m_StartAddress = "2049";
           editBASICStartAddress.Text = "2049";
         }
+
+        m_LabelMode = IsInLabelMode( basicText );
+        btnToggleLabelMode.Checked = m_LabelMode;
       }
       catch ( System.IO.IOException ex )
       {
@@ -663,6 +666,30 @@ namespace C64Studio
       {
         SetupWatcher();
         EnableFileWatcher();
+      }
+      return true;
+    }
+
+
+
+    private bool IsInLabelMode( string basicText )
+    {
+      string[]  lines = basicText.Split( new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries );
+
+      foreach ( var line in lines )
+      {
+        if ( line.Length == 0 )
+        {
+          continue;
+        }
+        if ( char.IsDigit( line[0] ) )
+        {
+          return false;
+        }
+        if ( line.TrimStart().ToUpper().StartsWith( "LABEL" ) )
+        {
+          return true;
+        }
       }
       return true;
     }

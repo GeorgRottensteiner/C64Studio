@@ -17,6 +17,32 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+06.06.2019 - 6.1:         Fix: PETSCII dialog is now optimized (major speedup)
+                          Add: Auto-Center text in charscreen editor
+                          Fix/Add: Way better PDS support
+                          Fix: Auto correct alpha on syntax coloring settings (the dreaded everything's white problem)
+                          Add: Keyboard shortcuts for mirror/rotate/shift in charset, sprite and graphic screen editor
+                          Fix: BASIC insert/replace now properly inserts/replaces
+                          Fix: BASIC renumber now also renumbers line numbers directly after THEN
+                          Fix: Custom build step uses configured target file name/type
+                          Add: All kernal functions to kernal.asm
+                          Fix: Autocomplete filling would override detailled info
+                          Fix: Properly start empty BASIC file with start address 2049
+                          Fix: Crash in Find/Replace when RangeFromSearchLocation returned null
+                          Fix: Pasting in graphic screen editor now updates editor window
+                          Fix: Sprite editor export/import as .spr properly uses the multi color flag
+                          Fix: Sprite editor deleting also updates editor view
+                          Fix: Copy/Paste selection ranges work again for charset, graphic screen and sprite editor
+                          Fix: Disassembler, export to assembly now does not insert the assembled bytes in front
+                          Fix: Crash if cheap label in front of macro call
+                          Add: Function of graphic screen editor green buttons
+                          Add: WIP of multiple memory views
+                          Add: filewatcher to non-code documents
+                          Add: Toggle endianness in Debug Watch
+                          Add: File watcher messages now collected in one dialog to auto-reload all
+                          Add: External dependencies
+                          Fix: Crash if settings folder was not existing on startup
+
 11.03.2019 - 6.0:         Add: Graphic screen editor paint tools
                           Add: BASIC editor 80 char pos line
                           Add: Allow changing of start address for BASIC
