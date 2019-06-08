@@ -2673,6 +2673,7 @@ namespace C64Studio
         DateTime    current = DateTime.Now;
 
         // new GTK VICE opens up with console window (yuck) which nicely interferes with WaitForInputIdle -> give it 5 seconds to open main window
+        bool        waitForInputIdleFailed = false;
         try
         {
           StudioCore.Executing.RunProcess.WaitForInputIdle( 5000 );
@@ -2680,17 +2681,48 @@ namespace C64Studio
         catch ( Exception ex )
         {
           Debug.Log( "WaitForInputIdle failed: " + ex.ToString() );
+          waitForInputIdleFailed = true;
         }
 
         // only connect with debugger if VICE
+        int   numConnectionAttempts = 1;
+        if ( ( string.IsNullOrEmpty( StudioCore.Executing.RunProcess.MainWindowTitle ) )
+        &&   ( waitForInputIdleFailed ) )
+        {
+          // assume GTK VICE
+          //Debug.Log( "Module:" + StudioCore.Executing.RunProcess.MainModule );
+          numConnectionAttempts = 10;
+        }
+        //Debug.Log( "MainWindow: " + StudioCore.Executing.RunProcess.MainWindowTitle );
         if ( EmulatorSupportsDebugging( toolRun ) )
         {
-          if ( StudioCore.Debugging.Debugger.ConnectToEmulator() )
+          //Debug.Log( "Have " + numConnectionAttempts + " attempts" );
+          StudioCore.AddToOutput( "Connection attempt " );
+          for ( int i = 0; i < numConnectionAttempts; ++i )
           {
-            m_CurrentActiveTool = toolRun;
-            StudioCore.Debugging.DebuggedProject = DocumentToRun.Project;
-            AppState = Types.StudioState.DEBUGGING_RUN;
-            SetGUIForDebugging( true );
+            //Debug.Log( "attempt" + i );
+            StudioCore.AddToOutput( ( i + 1 ).ToString() );
+            if ( StudioCore.Debugging.Debugger.ConnectToEmulator() )
+            {
+              //Debug.Log( "-succeeded" );
+              StudioCore.AddToOutput( " succeeded" + System.Environment.NewLine );
+              m_CurrentActiveTool = toolRun;
+              StudioCore.Debugging.DebuggedProject = DocumentToRun.Project;
+              AppState = Types.StudioState.DEBUGGING_RUN;
+              SetGUIForDebugging( true );
+              break;
+            }
+            // wait a second
+            for ( int j = 0; j < 20; ++j )
+            {
+              System.Threading.Thread.Sleep( 50 );
+              Application.DoEvents();
+            }
+          }
+          if ( AppState != Types.StudioState.DEBUGGING_RUN )
+          {
+            StudioCore.AddToOutput( "failed " + numConnectionAttempts + " times, giving up" + System.Environment.NewLine );
+            return false;
           }
         }
         else
