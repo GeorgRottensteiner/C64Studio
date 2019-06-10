@@ -1,5 +1,12 @@
 ﻿C64Studio
 o Custom Build: Show analysis of configured target file/type (load address, size?)
+o Path editor: I have a suggestion for a feature which I think would be great for C64 studio.I think it might make game programmers quite happy. 
+  How about something like a tool in which generates path based movement for sprites. Basically, create some basic path trails for sprite movement. 
+  Then export a sequence of tables, which indicate: 
+    X Position start, X Position MSB, X Position end, X Position Speed, X Position Movement Duration 
+    Y Position start, Y Position end, Y Position Speed, Y Position Movement Duration
+o SID editor
+o KeyBindings to select Custom Color, Multi Color 1 and Multi Color 2 (ie: as if I clicked on their radio button) so I can draw with that colour?
 o BASIC: Undo bei Label-Mode-Wechsel sollte Label-Mode mit wechseln!
 o PDS: lda #< should use lo/hi of the whole expression
 

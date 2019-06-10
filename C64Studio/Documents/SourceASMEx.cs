@@ -2408,7 +2408,9 @@ namespace C64Studio
 
     public override void FillContent( string Text )
     {
+      m_InsertingText = true;
       editSource.Text = Text;
+      m_InsertingText = false;
       SetModified();
     }
 
