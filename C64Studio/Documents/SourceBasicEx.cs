@@ -1036,6 +1036,12 @@ namespace C64Studio
       StringBuilder result = new StringBuilder();
       ToUnicodeEx( virtualKeyCode, scanCode, keyboardState, result, (int)5, (uint)0, inputLocaleIdentifier );
 
+      // ^ are duplicated on every second press!
+      if ( ( result.Length > 1 )
+      &&   ( result.ToString().StartsWith( "^" ) ) )
+      {
+        return result.ToString().Substring( 1 );
+      }
       return result.ToString();
     }
 
@@ -1101,21 +1107,9 @@ namespace C64Studio
       }
 
 
-      /*
-      char    mykey = (char)keyData;
-
-      Debug.Log( "key " + mykey + "/" + (int)mykey );
-      if ( ( (char)keyData  != '\"' )
-      &&   ( !m_StringEnterMode ) )
-      {
-        // simply insert, no key mapping!
-        return base.ProcessCmdKey( ref msg, keyData );
-      }*/
-
       if ( !m_StringEnterMode )
       {
         // simply insert, no key mapping!
-
         // need uppercase when lowercase mode is not active!
         if ( ( !m_LowerCaseMode )
         &&   ( !commodorePushed )
@@ -1163,9 +1157,9 @@ namespace C64Studio
             return true;
           }
         }
-        // TODO - only allow valid keys!
-        //int mappedKey = MapVirtualKey( (uint)keyData, 2 );
+
         var mappedKey = KeyCodeToUnicode( keyData );
+
         //Debug.Log( "Barekey=" + bareKey + "/keyData = " + keyData + "/(char)keyData=" + (char)keyData + "/(int)bareKey=" + (int)bareKey + "/mappedKey=" + mappedKey );
 
         // hard coded mapping from ^ to arrow up (power)
@@ -1180,9 +1174,6 @@ namespace C64Studio
           InsertOrReplaceChar( Types.ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].WithShift.CharValue );
           return true;
         }
-        /*
-        if ( ( (int)bareKey >= 0x30 )
-        &&   ( !Core.Settings.BASICKeyMap.KeymapEntryExists( bareKey ) ) )*/
         if ( ( (int)bareKey >= 0x30 )
         &&   ( IsNotValidKey( mappedKey ) )
         &&   ( !Core.Settings.Accelerators.ContainsKey( keyData ) ) )
