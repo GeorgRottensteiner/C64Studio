@@ -1,6 +1,7 @@
 ﻿using C64Studio.Types;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -40,7 +41,7 @@ namespace C64Studio
 
       configDefault.Name = "Default";
 
-      Settings.Configs.Add( configDefault.Name, configDefault );
+      Settings.Configuration( configDefault.Name, configDefault );
       Settings.CurrentConfig = configDefault;
     }
 
@@ -214,7 +215,7 @@ namespace C64Studio
         bufferProject.Append( ElementToBuffer( element ) );
       }
 
-      foreach ( ProjectConfig config in Settings.Configs.Values )
+      foreach ( ProjectConfig config in Settings.GetConfigurations() )
       {
         bufferProject.Append( config.Save() );
       }
@@ -532,7 +533,7 @@ namespace C64Studio
                 config.DebugStartAddressLabel = origDebugStartAddress.ToString();
               }
 
-              Settings.Configs.Add( config.Name, config );
+              Settings.Configuration( config.Name, config );
             }
             break;
           case Types.FileChunk.PROJECT_WATCH_ENTRY:
@@ -546,38 +547,31 @@ namespace C64Studio
             break;
         }
       }
-      if ( Settings.Configs.Count == 0 )
+      if ( Settings.GetConfigurationCount() == 0 )
       {
         // there must be one config
         ProjectConfig   config = new ProjectConfig();
 
         config.Name = "Default";
-        Settings.Configs.Add( config.Name, config );
+        Settings.Configuration( config.Name, config );
         Settings.CurrentConfig = config;
       }
       else
       {
-        if ( Settings.Configs.ContainsKey( currentConfig ) )
+        Settings.CurrentConfig = Settings.Configuration( currentConfig );
+        if ( Settings.CurrentConfig == null )
         {
-          Settings.CurrentConfig = Settings.Configs[currentConfig];
-        }
-        else
-        {
-          foreach ( ProjectConfig config in Settings.Configs.Values )
-          {
-            Settings.CurrentConfig = config;
-            break;
-          }
+          Settings.CurrentConfig = Settings.GetConfigurations().First();
         }
       }
       foreach ( ProjectElement element in Elements )
       {
         if ( element.Settings.Count == 0 )
         {
-          foreach ( ProjectConfig config in Settings.Configs.Values )
+          foreach ( var configName in Settings.GetConfigurationNames() )
           {
             // needs a default setting!
-            element.Settings[config.Name] = new ProjectElement.PerConfigSettings();
+            element.Settings[configName] = new ProjectElement.PerConfigSettings();
           }
         }
         if ( ( !string.IsNullOrEmpty( element.Filename ) )
@@ -718,9 +712,9 @@ namespace C64Studio
       //MainForm.m_ProjectExplorer.NodeProject.Nodes.Add( element.Node );
       element.Node.Parent.Expand();
 
-      foreach ( string configSetting in Settings.Configs.Keys )
+      foreach ( var configName in Settings.GetConfigurationNames() )
       {
-        element.Settings[configSetting] = new ProjectElement.PerConfigSettings();
+        element.Settings[configName] = new ProjectElement.PerConfigSettings();
       }
 
       Elements.AddLast( element );

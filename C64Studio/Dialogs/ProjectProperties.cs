@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -26,19 +27,16 @@ namespace C64Studio
       m_Project   = MyProject;
       InitializeComponent();
 
-      editProjectName.Text        = m_Settings.Name;
+      editProjectName.Text      = m_Settings.Name;
+      labelProjectFile.Text     = MyProject.Settings.Filename;
 
-      foreach ( string configName in m_Settings.Configs.Keys )
+      foreach ( var configName in m_Settings.GetConfigurationNames() )
       {
         comboConfiguration.Items.Add( configName );
       }
       if ( m_Settings.CurrentConfig == null )
       {
-        foreach ( ProjectConfig config in m_Settings.Configs.Values )
-        {
-          m_Settings.CurrentConfig = config;
-          break;
-        }
+        m_Settings.CurrentConfig = m_Settings.GetConfigurations().First();
       }
       comboConfiguration.SelectedItem = m_Settings.CurrentConfig.Name;
     }
@@ -64,7 +62,16 @@ namespace C64Studio
 
     private void comboConfiguration_SelectedIndexChanged( object sender, EventArgs e )
     {
-      m_ProjectConfig = m_Settings.Configs[comboConfiguration.SelectedItem.ToString()];
+      m_ProjectConfig = m_Settings.Configuration( comboConfiguration.SelectedItem.ToString() );
+      if ( m_ProjectConfig == null )
+      {
+        groupConfigSettings.Enabled = false;
+        groupConfigSettings.Text = "Configuration: None selected";
+        return;
+      }
+
+      groupConfigSettings.Enabled = true;
+      groupConfigSettings.Text = "Configuration: " + m_ProjectConfig.Name;
 
       // cannot delete default config
       btnDeleteConfig.Enabled = ( m_ProjectConfig.Name != "Default" );
@@ -82,7 +89,8 @@ namespace C64Studio
     {
       string    newConfigName = editConfigName.Text;
 
-      if ( m_Settings.Configs.ContainsKey( newConfigName ) )
+      var existingConfig = m_Settings.Configuration( newConfigName );
+      if ( existingConfig != null )
       {
         return;
       }
@@ -104,7 +112,7 @@ namespace C64Studio
         element.DocumentInfo.DeducedDependency[newConfigName] = new DependencyBuildState();
       }
 
-      m_Settings.Configs.Add( config.Name, config );
+      m_Settings.Configuration( config.Name, config );
       comboConfiguration.Items.Add( config.Name );
       m_Core.MainForm.mainToolConfig.Items.Add( config.Name );
 
@@ -148,11 +156,12 @@ namespace C64Studio
     {
       string configName = comboConfiguration.SelectedItem.ToString();
 
-      if ( m_Settings.Configs.ContainsKey( configName ) )
+      var existingConfig = m_Settings.Configuration( configName );
+      if ( existingConfig != null )
       {
         if ( MessageBox.Show( "Are you sure you want to delete configuration '" + configName + "'?", "Delete configuration?", MessageBoxButtons.YesNo ) == DialogResult.Yes )
         {
-          m_Settings.Configs.Remove( configName );
+          m_Settings.DeleteConfiguration( configName );
 
           foreach ( ProjectElement element in m_Project.Elements )
           {
@@ -160,6 +169,16 @@ namespace C64Studio
           }
 
           comboConfiguration.Items.Remove( configName );
+          if ( comboConfiguration.Items.Count > 0 )
+          {
+            comboConfiguration.SelectedIndex = 0;
+          }
+
+          m_Core.MainForm.mainToolConfig.Items.Remove( configName );
+          if ( m_Core.MainForm.mainToolConfig.Items.Count > 0 )
+          {
+            m_Core.MainForm.mainToolConfig.SelectedIndex = 0;
+          }
           Modified = true;
         }
       }
@@ -170,9 +189,16 @@ namespace C64Studio
 
     private void btnApplyChanges_Click( object sender, EventArgs e )
     {
+      if ( comboConfiguration.SelectedItem == null )
+      {
+        return;
+      }
+
       string configName = comboConfiguration.SelectedItem.ToString();
 
-      if ( m_Settings.Configs.ContainsKey( configName ) )
+      var existingConfig = m_Settings.Configuration( configName );
+
+      if ( existingConfig != null )
       {
         m_ProjectConfig.Defines                 = editPreDefines.Text;
         m_ProjectConfig.DebugStartAddressLabel  = editDebugStartAddress.Text;

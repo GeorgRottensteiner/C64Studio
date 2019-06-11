@@ -174,6 +174,10 @@ namespace C64Studio
       {
         return true;
       }
+      if ( DocumentToBuild.Project.Settings.CurrentConfig == null )
+      {
+        return true;
+      }
       return NeedsRebuild( DocumentToBuild, DocumentToBuild.Project.Settings.CurrentConfig.Name );
     }
 

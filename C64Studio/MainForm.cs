@@ -3166,7 +3166,7 @@ namespace C64Studio
       //m_ProjectExplorer.NodeProject.Text  = newProject.Settings.Name;
       //m_ProjectExplorer.NodeProject.Tag   = newProject;
 
-      foreach ( string configName in newProject.Settings.Configs.Keys )
+      foreach ( var configName in newProject.Settings.GetConfigurationNames() )
       {
         mainToolConfig.Items.Add( configName );
         if ( ( newProject.Settings.CurrentConfig != null )
@@ -3356,7 +3356,7 @@ namespace C64Studio
           mainToolConfig.Items.Clear();
           if ( NewProject != null )
           {
-            foreach ( string configName in NewProject.Settings.Configs.Keys )
+            foreach ( var configName in NewProject.Settings.GetConfigurationNames() )
             {
               mainToolConfig.Items.Add( configName );
               if ( ( NewProject.Settings.CurrentConfig != null )
@@ -3462,7 +3462,7 @@ namespace C64Studio
               // do not reparse already parsed element
               continue;
             }
-            ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configs[SelectedConfig], false, false );
+            ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), false, false );
 
             //var knownTokens = ParserASM.KnownTokens();
             //var knownTokenInfos = ParserASM.KnownTokenInfo();
@@ -5569,7 +5569,7 @@ namespace C64Studio
         ProjectConfig config = null;
         if ( Document.Element != null )
         {
-          config = Document.Project.Settings.Configs[mainToolConfig.SelectedItem.ToString()];
+          config = Document.Project.Settings.Configuration( mainToolConfig.SelectedItem.ToString() );
         }
         ParseFile( StudioCore.DetermineParser( Document ), Document, config, false, false );
       }
@@ -6192,7 +6192,7 @@ namespace C64Studio
 
     private void mainToolConfig_SelectedIndexChanged( object sender, EventArgs e )
     {
-      m_CurrentProject.Settings.CurrentConfig = m_CurrentProject.Settings.Configs[mainToolConfig.SelectedItem.ToString()];
+      m_CurrentProject.Settings.CurrentConfig = m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() );
 
       ProjectConfigChanged();
     }

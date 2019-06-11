@@ -40,9 +40,9 @@ namespace C64Studio
       comboDebugFileType.Items.Add( "RGCD 64 KB Cartridge (bin)" );
       comboDebugFileType.Items.Add( "RGCD 64 KB Cartridge (crt)" );
 
-      foreach ( ProjectConfig config in Element.DocumentInfo.Project.Settings.Configs.Values )
+      foreach ( var configName in Element.DocumentInfo.Project.Settings.GetConfigurationNames() )
       {
-        comboConfig.Items.Add( config.Name );
+        comboConfig.Items.Add( configName );
       }
       comboConfig.SelectedItem = Element.DocumentInfo.Project.Settings.CurrentConfig.Name;
 

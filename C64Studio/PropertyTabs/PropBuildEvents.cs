@@ -33,9 +33,9 @@ namespace C64Studio
       comboBuildEvents.Items.Add( new GR.Generic.Tupel<string, C64Studio.ProjectElement.PerConfigSettings.BuildEvent>( "Post Build", C64Studio.ProjectElement.PerConfigSettings.BuildEvent.POST ) );
       comboBuildEvents.SelectedIndex = 4;
 
-      foreach ( ProjectConfig config in Element.DocumentInfo.Project.Settings.Configs.Values )
+      foreach ( var configName in Element.DocumentInfo.Project.Settings.GetConfigurationNames() )
       {
-        comboConfig.Items.Add( config.Name );
+        comboConfig.Items.Add( configName );
       }
       comboConfig.SelectedItem = Element.DocumentInfo.Project.Settings.CurrentConfig.Name;
     }

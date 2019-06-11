@@ -332,7 +332,7 @@ namespace C64Studio.Tasks
           ProjectConfig config = null;
           if ( Doc.Project != null )
           {
-            config = Doc.Project.Settings.Configs[ConfigSetting];
+            config = Doc.Project.Settings.Configuration( ConfigSetting );
           }
 
           int   startAddress = -1;

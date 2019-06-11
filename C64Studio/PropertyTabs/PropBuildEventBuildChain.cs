@@ -184,7 +184,7 @@ namespace C64Studio
 
       if ( project != null )
       {
-        foreach ( var config in project.Settings.Configs.Keys )
+        foreach ( var config in project.Settings.GetConfigurationNames() )
         {
           comboBuildChainConfig.Items.Add( config );
         }

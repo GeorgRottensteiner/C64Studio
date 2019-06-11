@@ -115,7 +115,7 @@ namespace C64Studio
       ProjectConfig config = null;
       if ( m_Basic.DocumentInfo.Project != null )
       {
-        config = m_Basic.DocumentInfo.Project.Settings.Configs[configName];
+        config = m_Basic.DocumentInfo.Project.Settings.Configuration( configName );
       }
       if ( !m_Core.MainForm.ParseFile( m_Core.Compiling.ParserBasic, m_Basic.DocumentInfo, config, true, false ) )
       {

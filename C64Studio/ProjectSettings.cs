@@ -14,7 +14,61 @@ namespace C64Studio
     public string       BuildTool = "";
     public string       RunTool = "";
     public string       MainDocument = "";
-    public GR.Collections.Map<string,ProjectConfig>         Configs = new GR.Collections.Map<string, ProjectConfig>();
+    private GR.Collections.Map<string,ProjectConfig>         Configs = new GR.Collections.Map<string, ProjectConfig>();
     public ProjectConfig    CurrentConfig = null;
+
+
+
+    public ProjectConfig Configuration( string ConfigName )
+    {
+      if ( Configs.ContainsKey( ConfigName ) )
+      {
+        return Configs[ConfigName];
+      }
+      return null;
+    }
+
+
+
+    public void Configuration( string ConfigName, ProjectConfig Config )
+    {
+      if ( Configs.ContainsKey( ConfigName ) )
+      {
+        Configs[ConfigName] = Config;
+        return;
+      }
+      Configs.Add( ConfigName, Config );
+    }
+
+
+
+    public IEnumerable<string> GetConfigurationNames()
+    {
+      return Configs.Keys;
+    }
+
+
+
+    internal IEnumerable<ProjectConfig> GetConfigurations()
+    {
+      return Configs.Values;
+    }
+
+
+
+    internal int GetConfigurationCount()
+    {
+      return Configs.Count;
+    }
+
+
+
+    internal void DeleteConfiguration( string ConfigName )
+    {
+      Configs.Remove( ConfigName );
+    }
+
+
+
   }
 }
