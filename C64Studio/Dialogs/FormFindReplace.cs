@@ -1417,77 +1417,6 @@ namespace C64Studio
         occurrences += docOccurrences;
       }
       Core.AddToOutput( "Replaced " + occurrences + " occurrences." + System.Environment.NewLine );
-
-
-      /*
-      // special case, we replace in the string and replace it
-      BaseDocument    docToReplaceIn = Core.MainForm.ActiveDocument;
-      if ( docToReplaceIn == null )
-      {
-        return;
-      }
-      var edit = EditFromDocumentEx( docToReplaceIn.DocumentInfo );
-      if ( edit == null )
-      {
-        return;
-      }
-
-      string replaceSource = edit.Selection.Text;
-      string replacement = replaceSource;
-      bool    hadSelection = true;
-
-      if ( edit.SelectionLength == 0 )
-      {
-        replacement = edit.Text;
-        hadSelection = false;
-      }
-
-      LastReplaceFound.Clear();
-      Core.Searching.ClearSearchResults();
-      while ( true )
-      {
-        SearchLocation newLocation = FindNextOccurrence( replacement,
-                                          comboReplaceSearchText.Text,
-                                          checkReplaceRegexp.Checked,
-                                          checkReplaceWholeWords.Checked,
-                                          checkReplaceIgnoreCase.Checked,
-                                          false,
-                                          LastReplaceFound.StartPosition );
-        if ( newLocation.StartPosition == -1 )
-        {
-          if ( hadSelection )
-          {
-            edit.SelectedText = replacement;
-          }
-          else
-          {
-            int     origFirstLine = edit.VisibleRange.Start.iLine;
-
-            edit.Text = replacement;
-
-            int firstLine = edit.VisibleRange.Start.iLine;
-            //edit.Scrolling.ScrollBy( origFirstLine - firstLine, 0 );
-          }
-          Core.MainForm.m_SearchResults.SearchComplete();
-          return;
-        }
-
-        // find line from pos
-        FindLineAndTextFromResult( docToReplaceIn, newLocation, LastReplaceFound, replacement );
-
-        LastReplaceFound.FoundInDocument  = docToReplaceIn.DocumentInfo;
-        LastReplaceFound.StartPosition    = newLocation.StartPosition;
-        LastReplaceFound.Length           = newLocation.Length;
-        LastReplaceFound.LineNumber       = newLocation.LineNumber;
-
-        replacement = replacement.Substring( 0, newLocation.StartPosition ) + comboReplaceWith.Text + replacement.Substring( newLocation.StartPosition + newLocation.Length );
-
-        // offset start pos to new string
-        LastReplaceFound.StartPosition += comboReplaceWith.Text.Length;
-
-        ++occurrences;
-        Core.Searching.AddSearchResult( LastReplaceFound );
-      }*/
     }
 
 
@@ -1525,6 +1454,8 @@ namespace C64Studio
     {
       NumOccurences = 0;
 
+      var searchResults = new List<SearchLocation>();
+
       SearchLocation      lookLocation = new SearchLocation();
       LastReplaceFound.Clear();
       while ( true )
@@ -1538,18 +1469,20 @@ namespace C64Studio
                                                          LastReplaceFound.StartPosition );
         if ( newLocation.StartPosition == -1 )
         {
+          Core.Searching.AddSearchResults( searchResults );
           return TextToSearchIn;
         }
 
         FindLineAndTextFromResult( DocInfo.BaseDoc, newLocation, LastReplaceFound, TextToSearchIn );
-        Core.Searching.AddSearchResult( new SearchLocation() 
-              { 
-                FoundInDocument = DocInfo,
-                LineNumber = LastReplaceFound.LineNumber,
-                StartPosition = LastReplaceFound.StartPosition,
-                Length = LastReplaceFound.Length,
-                FoundLine = LastReplaceFound.FoundLine
-              } );
+
+        searchResults.Add( new SearchLocation()
+          {
+            FoundInDocument = DocInfo,
+            LineNumber = LastReplaceFound.LineNumber,
+            StartPosition = LastReplaceFound.StartPosition,
+            Length = LastReplaceFound.Length,
+            FoundLine = LastReplaceFound.FoundLine
+          } );
                 
         TextToSearchIn = TextToSearchIn.Substring( 0, newLocation.StartPosition ) 
                         + StringToReplaceWith 
@@ -1561,7 +1494,6 @@ namespace C64Studio
 
         ++NumOccurences;
       }
-
     }
 
 
