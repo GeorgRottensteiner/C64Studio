@@ -203,6 +203,11 @@ namespace C64Studio
 
     private void AutoComplete_PrepareOpening( object sender, PrepareOpeningEventArgs e )
     {
+      if ( ( e == null )
+      ||   ( e.StartPos == null ) )
+      {
+        return;
+      }
       // check the 
       int     sourceLineIndex = e.StartPos.iLine;
       if ( ( sourceLineIndex < 0 )
@@ -211,6 +216,8 @@ namespace C64Studio
         return;
       }
 
+      /*
+      // this is just a attempt on context dependant info!
       // TODO - adjust the content depending on the content
       string    line = editSource.Lines[sourceLineIndex];
       var tokens = Parser.ParseTokenInfo( line, 0, line.Length );
@@ -218,6 +225,7 @@ namespace C64Studio
       if ( ( tokens != null )
       &&   ( tokens.Count > 0 )
       &&   ( tokens[0].Type == TokenInfo.TokenType.MACRO )
+      &&   ( 
       &&   ( tokens[0].Content.ToUpper() == "!BASIC" ) )
       {
         var   newList = new List<FastColoredTextBoxNS.AutocompleteItem>();
@@ -227,10 +235,10 @@ namespace C64Studio
 
         AutoComplete.Items.SetAutocompleteItems( newList );
         return;
-      }
+      }*/
 
       // common stuff
-      FilterAutoComplete();
+      FilterAutoComplete( sourceLineIndex );
     }
 
 
@@ -846,7 +854,7 @@ namespace C64Studio
       }
 
       // adjust auto complete if zone might have changed
-      FilterAutoComplete();
+      FilterAutoComplete( CurrentLineIndex );
 
       m_LastZoneUpdateLine = CurrentLineIndex;
 
@@ -1179,11 +1187,16 @@ namespace C64Studio
 
 
 
-    void FilterAutoComplete()
+    void FilterAutoComplete( int LineIndex )
     {
-      var newList = new List<FastColoredTextBoxNS.AutocompleteItem>();
+      if ( ( LineIndex < 0 )
+      ||   ( LineIndex >= editSource.LinesCount ) )
+      {
+        return;
+      }
 
-      string curLine = editSource.Lines[CurrentLineIndex].TrimEnd( new char[] { '\r', '\n' } );
+      var newList = new List<FastColoredTextBoxNS.AutocompleteItem>();
+      string curLine = editSource.Lines[LineIndex].TrimEnd( new char[] { '\r', '\n' } );
       int position = editSource.PlaceToPosition( editSource.Selection.Start );
       int posX = editSource.Selection.Start.iChar;
 
@@ -1247,7 +1260,7 @@ namespace C64Studio
 
       // common filter, filter by given zone, allow local symbols without zone prefix
 
-      int lineIndex = CurrentLineIndex;
+      int lineIndex = LineIndex;
       string wordBelow = FindWordFromPosition( CurrentPosition() - 1, lineIndex );
       string zone;
       string cheapLabelParent;
