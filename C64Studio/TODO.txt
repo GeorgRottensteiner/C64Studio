@@ -5,6 +5,7 @@ o Still sometimes crashing:
   button -> replace all
   löscht den gesamten code, studio stürzt ab und gibt beigefügte meldung aus.
   Stacktrace in Auflistung wurde geändert in Forms.Application.ExitInternal
+o Sprite-Editor - Automatic Animation?
 o Custom Build: Show analysis of configured target file/type (load address, size?)
 o Path editor: I have a suggestion for a feature which I think would be great for C64 studio.I think it might make game programmers quite happy. 
   How about something like a tool in which generates path based movement for sprites. Basically, create some basic path trails for sprite movement. 

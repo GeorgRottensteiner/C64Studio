@@ -698,13 +698,8 @@
     <None Include="Resources\valuetable.ico" />
     <None Include="Resources\charscreen_colors_off.ico" />
     <None Include="Resources\charscreen_chars_off.ico" />
-    <None Include="Resources\charscreen_colors2.ico" />
-    <None Include="Resources\charscreen_chars2.ico" />
     <None Include="Resources\charscreen_chars.ico" />
     <None Include="Resources\charscreen_colors.ico" />
-    <None Include="Resources\charscreen_colors1.ico" />
-    <None Include="Resources\charscreen_chars1.ico" />
-    <None Include="Resources\charscreen_colors.png" />
     <None Include="Resources\charscreen_chars.bmp" />
     <None Include="Resources\icon_memory_ram.ico" />
     <None Include="Resources\icon_memory_cpu.ico" />
