@@ -83,6 +83,7 @@
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.checkOverrideOriginalColorSettings = new System.Windows.Forms.CheckBox();
       this.checkShowGrid = new System.Windows.Forms.CheckBox();
+      this.checkReverse = new System.Windows.Forms.CheckBox();
       this.checkAutoCenter = new System.Windows.Forms.CheckBox();
       this.checkApplyColors = new System.Windows.Forms.CheckBox();
       this.checkApplyCharacter = new System.Windows.Forms.CheckBox();
@@ -643,6 +644,7 @@
       // 
       this.tabEditor.Controls.Add(this.checkOverrideOriginalColorSettings);
       this.tabEditor.Controls.Add(this.checkShowGrid);
+      this.tabEditor.Controls.Add(this.checkReverse);
       this.tabEditor.Controls.Add(this.checkAutoCenter);
       this.tabEditor.Controls.Add(this.checkApplyColors);
       this.tabEditor.Controls.Add(this.checkApplyCharacter);
@@ -703,11 +705,23 @@
       this.checkShowGrid.UseVisualStyleBackColor = true;
       this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
       // 
+      // checkReverse
+      // 
+      this.checkReverse.Appearance = System.Windows.Forms.Appearance.Button;
+      this.checkReverse.Image = global::C64Studio.Properties.Resources.charscreen_reverse_off;
+      this.checkReverse.Location = new System.Drawing.Point(228, 432);
+      this.checkReverse.Name = "checkReverse";
+      this.checkReverse.Size = new System.Drawing.Size(24, 24);
+      this.checkReverse.TabIndex = 36;
+      this.toolTip1.SetToolTip(this.checkReverse, "Reverse Characters");
+      this.checkReverse.UseVisualStyleBackColor = true;
+      this.checkReverse.CheckedChanged += new System.EventHandler(this.checkReverse_CheckedChanged);
+      // 
       // checkAutoCenter
       // 
       this.checkAutoCenter.Appearance = System.Windows.Forms.Appearance.Button;
       this.checkAutoCenter.Image = global::C64Studio.Properties.Resources.charscreen_autocenter_off;
-      this.checkAutoCenter.Location = new System.Drawing.Point(228, 432);
+      this.checkAutoCenter.Location = new System.Drawing.Point(258, 432);
       this.checkAutoCenter.Name = "checkAutoCenter";
       this.checkAutoCenter.Size = new System.Drawing.Size(24, 24);
       this.checkAutoCenter.TabIndex = 36;
@@ -1238,5 +1252,6 @@
     private GR.Forms.ImageListbox panelCharsetDetails;
     private System.Windows.Forms.CheckBox checkOverrideOriginalColorSettings;
     private System.Windows.Forms.CheckBox checkAutoCenter;
+    private System.Windows.Forms.CheckBox checkReverse;
   }
 }

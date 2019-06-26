@@ -6,23 +6,23 @@ namespace C64Studio.Formats
 {
   public class CharsetScreenProject
   {
-    public int                         BackgroundColor = 0;
-    public int                         MultiColor1 = 0;
-    public int                         MultiColor2 = 0;
-    public int                         BGColor4 = 0;
+    public int                          BackgroundColor = 0;
+    public int                          MultiColor1 = 0;
+    public int                          MultiColor2 = 0;
+    public int                          BGColor4 = 0;
 
-    public int                         ScreenWidth = 40;
-    public int                         ScreenHeight = 25;
+    public int                          ScreenWidth = 40;
+    public int                          ScreenHeight = 25;
 
-    public int                         ScreenOffsetX = 0;
-    public int                         ScreenOffsetY = 0;
+    public int                          ScreenOffsetX = 0;
+    public int                          ScreenOffsetY = 0;
 
-    public List<ushort>                Chars = new List<ushort>( 40 * 25 );
+    public List<ushort>                 Chars = new List<ushort>( 40 * 25 );
 
-    public string                      ExternalCharset = "";
-    public Types.CharsetMode           Mode = C64Studio.Types.CharsetMode.HIRES;
+    public string                       ExternalCharset = "";
+    public Types.CharsetMode            Mode = C64Studio.Types.CharsetMode.HIRES;
 
-    public Formats.CharsetProject      CharSet = new C64Studio.Formats.CharsetProject();
+    public Formats.CharsetProject       CharSet = new C64Studio.Formats.CharsetProject();
 
 
 

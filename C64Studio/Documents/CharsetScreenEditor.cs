@@ -34,6 +34,8 @@ namespace C64Studio
 
     private bool[,]                     m_ErrornousChars = new bool[40, 25];
     private bool[,]                     m_SelectedChars = new bool[40, 25];
+    private bool[,]                     m_ReverseCache = new bool[40, 25];
+
 
     private System.Drawing.Point        m_SelectedChar = new System.Drawing.Point( -1, -1 );
 
@@ -57,6 +59,7 @@ namespace C64Studio
     private bool                        m_AffectChars = true;
     private bool                        m_AffectColors = true;
     private bool                        m_AutoCenterText = false;
+    private bool                        m_ReverseChars = false;
 
     private int                         m_TextEntryStartedInLine = -1;
     private List<ushort>                m_TextEntryCachedLine = new List<ushort>();
@@ -694,7 +697,8 @@ namespace C64Studio
             }
             break;
           case ToolMode.SINGLE_CHAR:
-            if ( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] != (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) ) )
+            if ( ( m_ReverseChars )
+            ||   ( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] != (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) ) ) )
             {
               DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ) );
 
@@ -763,7 +767,7 @@ namespace C64Studio
                 for ( int y = p1.Y + 1; y <= p2.Y - 1; ++y )
                 {
                   DrawCharacter( p1.X, y );
-                  DrawCharacter( p1.Y, y );
+                  DrawCharacter( p2.X, y );
                 }
               }
               else
@@ -778,7 +782,6 @@ namespace C64Studio
               }
               pictureEditor.Invalidate( new System.Drawing.Rectangle( p1.X * 8, p1.Y * 8, ( p2.X - p1.X + 1 ) * 8, ( p2.Y - p1.Y + 1 ) * 8 ) );
             }
-
             break;
           case ToolMode.SELECT:
             if ( m_MouseButtonReleased )
@@ -849,8 +852,16 @@ namespace C64Studio
 
     private void DrawCharacter( int X, int Y )
     {
+      if ( m_ReverseChars )
+      {
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, 
+                       (byte)( ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff ) ^ 0x80 ), 
+                       (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 8 ) );
+        return;
+      }
+
       if ( ( m_AffectChars )
-      && ( m_AffectColors ) )
+      &&   ( m_AffectColors ) )
       {
         DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, m_CurrentChar, m_CurrentColor );
       }
@@ -875,6 +886,18 @@ namespace C64Studio
 
     private void SetCharacter( int X, int Y, byte Char, byte Color )
     {
+      if ( m_ReverseChars )
+      {
+        byte  origChar = (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff );
+
+        DrawCharImage( pictureEditor.DisplayPage, 
+                       ( X - m_CharsetScreen.ScreenOffsetX ) * 8, 
+                       ( Y - m_CharsetScreen.ScreenOffsetY ) * 8,
+                       (byte)( origChar ^ 0x80 ), Color );
+        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( ( origChar ^ 0x80 ) | ( Color << 8 ) );
+        return;
+      }
+
       if ( ( m_AffectChars )
       &&   ( m_AffectColors ) )
       {
@@ -2032,6 +2055,7 @@ namespace C64Studio
     {
       m_ErrornousChars = new bool[Width, Height];
       m_SelectedChars = new bool[Width, Height];
+      m_ReverseCache = new bool[Width, Height];
 
       m_CharsetScreen.SetScreenSize( Width, Height );
       m_Image.Create( Width * 8, Height * 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
@@ -3177,6 +3201,31 @@ namespace C64Studio
         checkAutoCenter.Image = global::C64Studio.Properties.Resources.charscreen_autocenter_off;
       }
     }
+
+
+
+    private void checkReverse_CheckedChanged( object sender, EventArgs e )
+    {
+      m_ReverseChars = checkReverse.Checked;
+      if ( m_ReverseChars )
+      {
+        for ( int x = 0; x < m_CharsetScreen.ScreenWidth; ++x )
+        {
+          for ( int y = 0; y < m_CharsetScreen.ScreenHeight; ++y )
+          {
+            m_ReverseCache[x, y] = false;
+          }
+        }
+        checkApplyCharacter.Checked = false;
+        checkApplyColors.Checked    = false;
+        checkReverse.Image = global::C64Studio.Properties.Resources.charscreen_reverse_on;
+      }
+      else
+      {
+        checkReverse.Image = global::C64Studio.Properties.Resources.charscreen_reverse_off;
+      }
+    }
+
 
 
   } 

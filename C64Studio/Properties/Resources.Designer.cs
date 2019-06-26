@@ -183,6 +183,26 @@ namespace C64Studio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap charscreen_reverse_off {
+            get {
+                object obj = ResourceManager.GetObject("charscreen_reverse_off", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap charscreen_reverse_on {
+            get {
+                object obj = ResourceManager.GetObject("charscreen_reverse_on", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap charscreen_text {
             get {
                 object obj = ResourceManager.GetObject("charscreen_text", resourceCulture);
