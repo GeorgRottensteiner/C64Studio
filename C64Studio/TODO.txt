@@ -1,4 +1,10 @@
 ﻿C64Studio
+o komme gerade mit dem Text Screen Editor nicht zurecht. Habe die Größe auf 40x200 gestellt und Text als ASM exportiert. 
+  Beim importieren wird aber nichts angezeigt. Auch skuril: Wenn ich beispielsweise die Hintergrundfarbe von Türkis (03) 
+  auf Grün (05) ändere, während der Schieberegler nicht oben ist, dann werden nicht alle 200 Zeilen grün, sondern oben und 
+  unten bleiben Teile türkis.
+  Das Problem scheint erst aufzutreten, wenn ich den x- oder den y-Wert der Screen-Größe hochschraube. Mit den Standard 40x25 
+  hab ich keine Probleme.
 o Still sometimes crashing:
   im editor -> alles markiert
   strg+h -> replace A with B
