@@ -7,9 +7,27 @@ namespace C64Studio.Parser
 {
   public class BasicFileParser : ParserBase
   {
+    public enum BasicVersion
+    {
+      V1_0,   // Version 1.0	Noch recht fehlerbehaftet, erste Versionen im PET 2001
+      V2_0,   // August  Version 2.0	Fehlerkorrekturen, eingebaut in weitere Versionen des PET
+      V3_0,   // Version 3.0	Leichte Fehlerkorrekturen und Integration des Maschinensprachemonitors TIM, schnelle Garbage Collection. CBM 3000 Serie (Standard) und PET 2001 (angezeigte Versionsnummer dort ist allerdings noch 2).
+      V4_0,   // Version 4.0	Neue Befehle für leichtere Handhabung für Diskettenlaufwerke für CBM 4000. Auch durch ROM-Austausch für CBM 3000 Serie und PET 2001 verfügbar.
+      V4_1,   // Version 4.1	Fehlerkorrigierte Fassung der Version 4.0 mit erweiterter Bildschirmeditor für CBM 8000. Auch durch ROM-Austausch für CBM 3000/4000 Serie verfügbar.
+      V4_2,   // Version 4.2	Geänderte und ergänzte Befehle für den CBM 8096.
+      VIC_BASIC_V2,   //  Funktionsumfang von V 2.0 mit Korrekturen aus der Version-4-Linie. Einsatz im VC20.
+      V4_PLUS,        // (intern bis 4.75)	Neue Befehle und RAM-Unterstützung bis 256 KByte für CBM-II-Serie (CBM 500, 6x0, 7x0). Fortsetzung und Ende der Version-4-Linie.
+      C64_BASIC_V2,   //  Anpassung des VIC BASIC V2 für VC10, C64, C128 (C64-Modus), SX64, PET 64.
+      V3_5,           // Version 3.5	Neue Befehle für die Heimcomputer C16/116 und Plus/4. Zusammenführung aus C64 BASIC V2 und Version-4-Linie.
+      V3_6,           // Version 3.6	Neue Befehle für LCD-Prototypen.
+      V7_0,           // Version 7.0	Neue Befehle für den C128/D/DCR. Weiterentwicklung des C16/116 BASIC 3.5 .
+      V10_0           // Version 10 Neue Befehle für C65, beinhaltet sehr viele Fehler, kam aus dem Entwicklungsstadium nicht heraus. Weiterentwicklung des BASIC 7.0.
+    }
+
     public class ParserSettings
     {
       public bool         StripSpaces = true;
+      public BasicVersion Version = BasicVersion.C64_BASIC_V2;
     };
 
     public enum TokenValue
@@ -133,86 +151,294 @@ namespace C64Studio.Parser
 
     static BasicFileParser()
     {
-      AddOpcode( "END", 0x80, "eN" );
-      AddOpcode( "FOR", 0x81, "fO" );
-      AddOpcode( "NEXT", 0x82, "nE" );
-      AddOpcode( "DATA", 0x83, "dA" );
-      AddOpcode( "INPUT#", 0x84, "iN" );
-      AddOpcode( "INPUT", 0x85 );
-      AddOpcode( "DIM", 0x86, "dI" );
-      AddOpcode( "READ", 0x87, "rE" );
-      AddOpcode( "LET", 0x88, "lE" );
-      AddOpcode( "GOTO", 0x89, "gO" );
-      AddOpcode( "RUN", 0x8A, "rU" );
-      AddOpcode( "IF", 0x8B );
-      AddOpcode( "RESTORE", 0x8C, "reS" );
-      AddOpcode( "GOSUB", 0x8D, "goS" );
-      AddOpcode( "RETURN", 0x8E, "reT" );
-      AddOpcode( "REM", 0x8F );
-      AddOpcode( "STOP", 0x90, "sT" );
-      AddOpcode( "ON", 0x91 );
-      AddOpcode( "WAIT", 0x92, "wA" );
-      AddOpcode( "LOAD", 0x93, "lO" );
-      AddOpcode( "SAVE", 0x94, "sA" );
-      AddOpcode( "VERIFY", 0x95, "vE" );
-      AddOpcode( "DEF", 0x96, "dE" );
-      AddOpcode( "POKE", 0x97, "pO" );
-      AddOpcode( "PRINT#", 0x98, "pR" );
-      AddOpcode( "?", 0x99 );
-      AddOpcode( "PRINT", 0x99 );
-      AddOpcode( "CONT", 0x9A, "cO" );
-      AddOpcode( "LIST", 0x9B, "lI" );
-      AddOpcode( "CLR", 0x9C, "cL" );
-      AddOpcode( "CMD", 0x9D, "cM" );
-      AddOpcode( "SYS", 0x9E, "sY" );
-      AddOpcode( "OPEN", 0x9F, "oP" );
-      AddOpcode( "CLOSE", 0xA0, "clO" );
-      AddOpcode( "GET", 0xA1, "gE" );
-      AddOpcode( "NEW", 0xA2 );
-      AddOpcode( "TAB(", 0xA3, "tA" );
-      AddOpcode( "TO", 0xA4 );
-      AddOpcode( "FN", 0xA5 );
-      AddOpcode( "SPC(", 0xA6, "sP" );
-      AddOpcode( "THEN", 0xA7, "tH" );
-      AddOpcode( "NOT", 0xA8, "nO" );
-      AddOpcode( "STEP", 0xA9, "stE" );
-      AddOpcode( "+", 0xAA );
-      AddOpcode( "-", 0xAB );
-      AddOpcode( "*", 0xAC );
-      AddOpcode( "/", 0xAD );
-      //AddOpcode( "" + (char)0xee1e, 0xAE );
-      AddOpcode( "" + (char)0x5e, 0xAE );
-      AddOpcode( "AND", 0xAF, "aN" );
-      AddOpcode( "OR", 0xB0 );
-      AddOpcode( ">", 0xB1 );
-      AddOpcode( "=", 0xB2 );
-      AddOpcode( "<", 0xB3 );
-      AddOpcode( "SGN", 0xB4, "sG" );
-      AddOpcode( "INT", 0xB5 );
-      AddOpcode( "ABS", 0xB6, "aB" );
-      AddOpcode( "USR", 0xB7, "uS" );
-      AddOpcode( "FRE", 0xB8, "fE" );
-      AddOpcode( "POS", 0xB9 );
-      AddOpcode( "SQR", 0xBA, "sQ" );
-      AddOpcode( "RND", 0xBB, "rN" );
-      AddOpcode( "LOG", 0xBC );
-      AddOpcode( "EXP", 0xBD, "eX" );
-      AddOpcode( "COS", 0xBE );
-      AddOpcode( "SIN", 0xBF, "sI" );
-      AddOpcode( "TAN", 0xC0 );
-      AddOpcode( "ATN", 0xC1, "aT" );
-      AddOpcode( "PEEK", 0xC2, "pE" );
-      AddOpcode( "LEN", 0xC3 );
-      AddOpcode( "STR$", 0xC4, "stR" );
-      AddOpcode( "VAL", 0xC5, "vA" );
-      AddOpcode( "ASC", 0xC6, "aS" );
-      AddOpcode( "CHR$", 0xC7, "cH" );
-      AddOpcode( "LEFT$", 0xC8, "leF" );
-      AddOpcode( "RIGHT$", 0xC9, "rI" );
-      AddOpcode( "MID$", 0xCA, "mI" );
-      //AddOpcode( "GO", 0xCB );
 
-      AddExOpcode( "LABEL", 0xF0 );
+      // TODO - wieso??
+      //  -> überschreibt echte Tokens!
+      /*
+      foreach ( ActionToken token in ActionTokens.Values )
+      {
+        AddOpcode( token.Replacement, token.ByteValue );
+      }
+       */
+    }
+
+
+
+    public BasicFileParser( ParserSettings Settings )
+    {
+      LabelMode = false;
+      this.Settings = Settings;
+      SetBasicVersion( Settings.Version );
+    }
+
+
+
+    public BasicFileParser( ParserSettings Settings, string Filename )
+    {
+      this.Settings = Settings;
+      SetBasicVersion( Settings.Version );
+      LabelMode   = false;
+      m_Filename  = Filename;
+    }
+
+
+
+    private static void AddOpcode( string Opcode, int ByteValue )
+    {
+      var opcode = new Opcode( Opcode, ByteValue );
+      m_Opcodes[Opcode] = opcode;
+      m_OpcodesFromByte[(byte)ByteValue] = opcode;
+    }
+
+
+
+    private static void AddOpcode( string Opcode, int ByteValue, string ShortCut )
+    {
+      var opcode = new Opcode( Opcode, ByteValue, ShortCut );
+      m_Opcodes[Opcode] = opcode;
+      m_OpcodesFromByte[(byte)ByteValue] = opcode;
+    }
+
+
+
+    private static void AddExOpcode( string Opcode, int ByteValue )
+    {
+      m_ExOpcodes[Opcode] = new Opcode( Opcode, ByteValue );
+    }
+
+
+
+    public bool LabelMode
+    {
+      get;
+      set;
+    }
+
+
+
+    private static void AddActionToken( TokenValue Value, string Token, byte ByteValue )
+    {
+      ActionToken token = new ActionToken();
+      token.Replacement = Token;
+      token.ByteValue = ByteValue;
+      token.TokenValue = Value;
+
+      ActionTokens[Token.ToUpper()] = token;
+      ActionTokenByByteValue[ByteValue] = token;
+      ActionTokenByValue[Value] = token;
+
+      /*
+      if ( PETSCII.ContainsKey( (char)ByteValue ) )
+      {
+        Debug.Log( "!!AddActionToken overrides entry for " + ByteValue );
+      }
+      PETSCII[(char)ByteValue] = ByteValue;*/
+    }
+
+
+
+    public void SetBasicVersion( BasicVersion Version )
+    {
+      ActionTokens.Clear();
+      ActionTokenByByteValue.Clear();
+      ActionTokenByValue.Clear();
+      m_ExOpcodes.Clear();
+      m_Opcodes.Clear();
+      m_OpcodesFromByte.Clear();
+
+      if ( ( Version == BasicVersion.V2_0 )
+      ||   ( Version == BasicVersion.V3_5 )
+      ||   ( Version == BasicVersion.V7_0 ) )
+      {
+        AddOpcode( "END", 0x80, "eN" );
+        AddOpcode( "FOR", 0x81, "fO" );
+        AddOpcode( "NEXT", 0x82, "nE" );
+        AddOpcode( "DATA", 0x83, "dA" );
+        AddOpcode( "INPUT#", 0x84, "iN" );
+        AddOpcode( "INPUT", 0x85 );
+        AddOpcode( "DIM", 0x86, "dI" );
+        AddOpcode( "READ", 0x87, "rE" );
+        AddOpcode( "LET", 0x88, "lE" );
+        AddOpcode( "GOTO", 0x89, "gO" );
+        AddOpcode( "RUN", 0x8A, "rU" );
+        AddOpcode( "IF", 0x8B );
+        AddOpcode( "RESTORE", 0x8C, "reS" );
+        AddOpcode( "GOSUB", 0x8D, "goS" );
+        AddOpcode( "RETURN", 0x8E, "reT" );
+        AddOpcode( "REM", 0x8F );
+        AddOpcode( "STOP", 0x90, "sT" );
+        AddOpcode( "ON", 0x91 );
+        AddOpcode( "WAIT", 0x92, "wA" );
+        AddOpcode( "LOAD", 0x93, "lO" );
+        AddOpcode( "SAVE", 0x94, "sA" );
+        AddOpcode( "VERIFY", 0x95, "vE" );
+        AddOpcode( "DEF", 0x96, "dE" );
+        AddOpcode( "POKE", 0x97, "pO" );
+        AddOpcode( "PRINT#", 0x98, "pR" );
+        AddOpcode( "?", 0x99 );
+        AddOpcode( "PRINT", 0x99 );
+        AddOpcode( "CONT", 0x9A, "cO" );
+        AddOpcode( "LIST", 0x9B, "lI" );
+        AddOpcode( "CLR", 0x9C, "cL" );
+        AddOpcode( "CMD", 0x9D, "cM" );
+        AddOpcode( "SYS", 0x9E, "sY" );
+        AddOpcode( "OPEN", 0x9F, "oP" );
+        AddOpcode( "CLOSE", 0xA0, "clO" );
+        AddOpcode( "GET", 0xA1, "gE" );
+        AddOpcode( "NEW", 0xA2 );
+        AddOpcode( "TAB(", 0xA3, "tA" );
+        AddOpcode( "TO", 0xA4 );
+        AddOpcode( "FN", 0xA5 );
+        AddOpcode( "SPC(", 0xA6, "sP" );
+        AddOpcode( "THEN", 0xA7, "tH" );
+        AddOpcode( "NOT", 0xA8, "nO" );
+        AddOpcode( "STEP", 0xA9, "stE" );
+        AddOpcode( "+", 0xAA );
+        AddOpcode( "-", 0xAB );
+        AddOpcode( "*", 0xAC );
+        AddOpcode( "/", 0xAD );
+        //AddOpcode( "" + (char)0xee1e, 0xAE );
+        AddOpcode( "" + (char)0x5e, 0xAE );
+        AddOpcode( "AND", 0xAF, "aN" );
+        AddOpcode( "OR", 0xB0 );
+        AddOpcode( ">", 0xB1 );
+        AddOpcode( "=", 0xB2 );
+        AddOpcode( "<", 0xB3 );
+        AddOpcode( "SGN", 0xB4, "sG" );
+        AddOpcode( "INT", 0xB5 );
+        AddOpcode( "ABS", 0xB6, "aB" );
+        AddOpcode( "USR", 0xB7, "uS" );
+        AddOpcode( "FRE", 0xB8, "fE" );
+        AddOpcode( "POS", 0xB9 );
+        AddOpcode( "SQR", 0xBA, "sQ" );
+        AddOpcode( "RND", 0xBB, "rN" );
+        AddOpcode( "LOG", 0xBC );
+        AddOpcode( "EXP", 0xBD, "eX" );
+        AddOpcode( "COS", 0xBE );
+        AddOpcode( "SIN", 0xBF, "sI" );
+        AddOpcode( "TAN", 0xC0 );
+        AddOpcode( "ATN", 0xC1, "aT" );
+        AddOpcode( "PEEK", 0xC2, "pE" );
+        AddOpcode( "LEN", 0xC3 );
+        AddOpcode( "STR$", 0xC4, "stR" );
+        AddOpcode( "VAL", 0xC5, "vA" );
+        AddOpcode( "ASC", 0xC6, "aS" );
+        AddOpcode( "CHR$", 0xC7, "cH" );
+        AddOpcode( "LEFT$", 0xC8, "leF" );
+        AddOpcode( "RIGHT$", 0xC9, "rI" );
+        AddOpcode( "MID$", 0xCA, "mI" );
+        //AddOpcode( "GO", 0xCB );
+
+        AddExOpcode( "LABEL", 0xF0 );
+      }
+
+      if ( ( Version == BasicVersion.V3_5 )
+      ||   ( Version == BasicVersion.V7_0 ) )
+      {
+        AddOpcode( "AUTO", 0xdc, "aU" );
+        AddOpcode( "BACKUP", 0xdc, "bA" );
+        AddOpcode( "BOX", 0xe1, "" );
+        AddOpcode( "CHAR", 0xe0, "chA" );
+        AddOpcode( "CIRCLE", 0xe0, "cI" );
+        AddOpcode( "COLLECT", 0xf3, "colL" );
+        AddOpcode( "COLOR", 0xe7, "coL" );
+        AddOpcode( "COPY", 0xf4, "coP" );
+        AddOpcode( "DEC", 0xd1, "" );
+        AddOpcode( "DELETE", 0xf7, "deL" );
+        AddOpcode( "DIRECTORY", 0xee, "diR" );
+        AddOpcode( "DLOAD", 0xf0, "dL" );
+        AddOpcode( "DO", 0xeb, "" );
+        AddOpcode( "DRAW", 0xe5, "dR" );
+        //AddOpcode( "DS",,"");
+        //AddOpcode( "DS$",,"");
+        AddOpcode( "DSAVE", 0xef, "dS" );
+        //AddOpcode( "EL",,"");
+        AddOpcode( "ELSE", 0xd5, "eL" );
+        //AddOpcode( "ER",,"");
+        AddOpcode( "ERR$", 0xd3, "eR" );
+        AddOpcode( "EXIT", 0xed, "exI" );
+        //AddOpcode("GETKEY",0x, "gEkE");
+        AddOpcode( "GRAPHIC", 0xde, "gR" );
+        AddOpcode( "GSHAPE", 0xe3, "gS" );
+        AddOpcode( "HEADER", 0xf1, "heA" );
+        AddOpcode( "HELP", 0xea, "heL" );
+        AddOpcode( "HEX$", 0xd2, "hE" );
+        AddOpcode( "INSTR", 0xd4, "" );
+        AddOpcode( "JOY", 0xcf, "jO" );
+        AddOpcode( "KEY", 0xf9, "kE" );
+        AddOpcode( "LOCATE", 0xe6, "loC" );
+        AddOpcode( "LOOP", 0xec, "loO" );
+        AddOpcode( "MONITOR", 0xfa, "moN" );
+        AddOpcode( "PAINT", 0xdf, "pA" );
+        //AddOpcode("PRINT USING",0x, "? usI");
+        AddOpcode( "PUDEF", 0xdd, "pU" );
+        AddOpcode( "RCLR", 0xcd, "rC" );
+        AddOpcode( "RDOT", 0xd0, "rD" );
+        AddOpcode( "RENAME", 0xf5, "reN" );
+        AddOpcode( "RENUMBER", 0xf8, "renU" );
+        AddOpcode( "RESUME", 0xd6, "resU" );
+        AddOpcode( "RGR", 0xcc, "rI" );
+        AddOpcode( "RLUM", 0xce, "rL" );
+        AddOpcode( "SCALE", 0xe9, "scA" );
+        AddOpcode( "SCNCLR", 0xe8, "sC" );
+        AddOpcode( "SCRATCH", 0xf2, "scR" );
+        AddOpcode( "SOUND", 0xda, "sO" );
+        AddOpcode( "SSHAPE", 0xe4, "sS" );
+        AddOpcode( "TRAP", 0xd7, "tR" );
+        AddOpcode( "TROFF", 0xd9, " 	troF" );
+        AddOpcode( "TRON", 0xd8, "trO" );
+        AddOpcode( "UNTIL", 0xfc, " 	uN" );
+        AddOpcode( "VOL", 0xdb, "vO" );
+        AddOpcode( "WHILE", 0xfd, "wH" );
+      }
+
+      if ( Version == BasicVersion.V7_0 )
+      {
+        AddOpcode( "APPEND", 0x0e, "aP" );
+        AddOpcode( "BANK", 0x02, "bA" );
+        AddOpcode( "BEGIN", 0x18, "bE" );
+        AddOpcode( "BEND", 0x19, "beN" );
+        AddOpcode( "BLOAD", 0x11, "bL" );
+        AddOpcode( "BOOT", 0x1b, "bO" );
+        AddOpcode( "BSAVE", 0x10, "	bS" );
+        AddOpcode( "BUMP", 0x03, "bU" );
+        AddOpcode( "CATALOG", 0x0c, "diR" );
+        AddOpcode( "COLLISION", 0x17, "coL" );
+        AddOpcode( "CONCAT", 0x13, "coN" );
+        AddOpcode( "DCLEAR", 0x15, "dclE" );
+        AddOpcode( "DCLOSE", 0x0f, "dcL" );
+        AddOpcode( "DOPEN", 0x0d, "dO" );
+        AddOpcode( "DVERIFY", 0x14, "dV" );
+        AddOpcode( "ENVELOPE", 0x0a, "eN" );
+        AddOpcode( "FAST", 0x25, "fA" );
+        AddOpcode( "FETCH", 0x21, "fE" );
+        AddOpcode( "FILTER", 0x03, "fI" );
+        AddOpcode( "GO64", 0xcb, "" );
+        AddOpcode( "MOVSPR", 0x06, "mO" );
+        AddOpcode( "PEN", 0x04, "pE" );
+        AddOpcode( "PLAY", 0x04, "pL" );
+        AddOpcode( "POINTER", 0x0a, "poI" );
+        AddOpcode( "POT", 0x02, "pE" );
+        AddOpcode( "RECORD", 0x12, "rE" );
+        AddOpcode( "RREG", 0x09, "rR" );
+        AddOpcode( "RSPCOLOR", 0x07, "bU" );
+        AddOpcode( "RSPPOS", 0x05, "rS" );
+        AddOpcode( "RSPRITE", 0x06, "rS" );
+        AddOpcode( "RWINDOW", 0x09, "rW" );
+        AddOpcode( "SLEEP", 0x0b, "sL" );
+        AddOpcode( "SLOW", 0x26, "slO" );
+        AddOpcode( "SOUND", 0xda, "sO" );
+        AddOpcode( "SPRCOLOR", 0x08, "sprC" );
+        AddOpcode( "SPRDEF", 0x1d, "sprD" );
+        AddOpcode( "SPRITE", 0x07, "sP" );
+        AddOpcode( "SPRSAV", 0x16, "sprS" );
+        AddOpcode( "STASH", 0x1f, "sT" );
+        AddOpcode( "SWAP", 0x23, "sW" );
+        AddOpcode( "TEMPO", 0x05, "teM" );
+        AddOpcode( "WIDTH", 0x1c, "wiD" );
+        AddOpcode( "WINDOW", 0x1a, "wI" );
+        AddOpcode( "XOR", 0x08, "xO " );
+      }
 
       AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-A}", 0xb0 );
       AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-B}", 0xbf );
@@ -341,86 +567,6 @@ namespace C64Studio.Parser
       AddActionToken( TokenValue.F4, "{F4}", 138 );
       AddActionToken( TokenValue.F6, "{F6}", 139 );
       AddActionToken( TokenValue.F8, "{F8}", 140 );
-
-      // TODO - wieso??
-      //  -> überschreibt echte Tokens!
-      /*
-      foreach ( ActionToken token in ActionTokens.Values )
-      {
-        AddOpcode( token.Replacement, token.ByteValue );
-      }
-       */
-    }
-
-
-
-    public BasicFileParser( ParserSettings Settings )
-    {
-      LabelMode = false;
-      this.Settings = Settings;
-    }
-
-
-
-    public BasicFileParser( ParserSettings Settings, string Filename )
-    {
-      this.Settings = Settings;
-      LabelMode   = false;
-      m_Filename  = Filename;
-    }
-
-
-
-    private static void AddOpcode( string Opcode, int ByteValue )
-    {
-      var opcode = new Opcode( Opcode, ByteValue );
-      m_Opcodes[Opcode] = opcode;
-      m_OpcodesFromByte[(byte)ByteValue] = opcode;
-    }
-
-
-
-    private static void AddOpcode( string Opcode, int ByteValue, string ShortCut )
-    {
-      var opcode = new Opcode( Opcode, ByteValue, ShortCut );
-      m_Opcodes[Opcode] = opcode;
-      m_OpcodesFromByte[(byte)ByteValue] = opcode;
-    }
-
-
-
-    private static void AddExOpcode( string Opcode, int ByteValue )
-    {
-      m_ExOpcodes[Opcode] = new Opcode( Opcode, ByteValue );
-    }
-
-
-
-    public bool LabelMode
-    {
-      get;
-      set;
-    }
-
-
-
-    private static void AddActionToken( TokenValue Value, string Token, byte ByteValue )
-    {
-      ActionToken token = new ActionToken();
-      token.Replacement = Token;
-      token.ByteValue = ByteValue;
-      token.TokenValue = Value;
-
-      ActionTokens[Token.ToUpper()] = token;
-      ActionTokenByByteValue[ByteValue] = token;
-      ActionTokenByValue[Value] = token;
-
-      /*
-      if ( PETSCII.ContainsKey( (char)ByteValue ) )
-      {
-        Debug.Log( "!!AddActionToken overrides entry for " + ByteValue );
-      }
-      PETSCII[(char)ByteValue] = ByteValue;*/
     }
 
 

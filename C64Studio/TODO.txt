@@ -1,4 +1,5 @@
 ﻿C64Studio
+o BASIC_Addons für V7 etc. (tuxer)
 o Still sometimes crashing:
   im editor -> alles markiert
   strg+h -> replace A with B
