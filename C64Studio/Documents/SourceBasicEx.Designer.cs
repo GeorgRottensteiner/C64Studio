@@ -41,6 +41,8 @@
       this.btnToggleUpperLowerCase = new System.Windows.Forms.CheckBox();
       this.editBASICStartAddress = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
+      this.label2 = new System.Windows.Forms.Label();
+      this.comboBASICVersion = new System.Windows.Forms.ComboBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.menuBASIC.SuspendLayout();
@@ -170,10 +172,31 @@
       this.label1.TabIndex = 5;
       this.label1.Text = "Start Address:";
       // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point(297, 33);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(79, 13);
+      this.label2.TabIndex = 5;
+      this.label2.Text = "BASIC Version:";
+      // 
+      // comboBASICVersion
+      // 
+      this.comboBASICVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboBASICVersion.FormattingEnabled = true;
+      this.comboBASICVersion.Location = new System.Drawing.Point(382, 29);
+      this.comboBASICVersion.Name = "comboBASICVersion";
+      this.comboBASICVersion.Size = new System.Drawing.Size(121, 21);
+      this.comboBASICVersion.TabIndex = 6;
+      this.comboBASICVersion.SelectedIndexChanged += new System.EventHandler(this.comboBASICVersion_SelectedIndexChanged);
+      // 
       // SourceBasicEx
       // 
       this.AllowDrop = true;
       this.ClientSize = new System.Drawing.Size(698, 588);
+      this.Controls.Add(this.comboBASICVersion);
+      this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.editBASICStartAddress);
       this.Controls.Add(this.menuBASIC);
@@ -207,5 +230,7 @@
     private System.Windows.Forms.CheckBox btnToggleUpperLowerCase;
     private System.Windows.Forms.TextBox editBASICStartAddress;
     private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.ComboBox comboBASICVersion;
   }
 }

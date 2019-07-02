@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using static C64Studio.Parser.BasicFileParser;
 
 namespace C64Studio
 {
@@ -29,6 +30,9 @@ namespace C64Studio
     private string                            m_CurrentHighlightText = null;
 
     private string                            m_StartAddress = "";
+
+    private Parser.BasicFileParser            m_Parser = null;
+
 
 
     public override int CursorLine
@@ -58,27 +62,6 @@ namespace C64Studio
       DocumentInfo.Type = ProjectElement.ElementType.BASIC_SOURCE;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
 
-      string opCodes = @"\b(";
-      
-      foreach ( var tokenInfo in Parser.BasicFileParser.m_Opcodes )
-      {
-        var token = tokenInfo.Key;
-
-        if ( token.Length == 1 )
-        {
-          continue;
-        }
-        if ( token.EndsWith( "(" ) )
-        {
-          opCodes += token.Substring( 0, token.Length - 1 );
-        }
-        else
-        {
-          opCodes += token;
-        }
-        opCodes += '|';
-      }
-      opCodes = opCodes.Substring( 0, opCodes.Length - 1 ) + ")\b";
       //lda|sta|ldy|sty|ldx|stx|rts|jmp|jsr|rti|sei|cli|asl|lsr|inc|dec|inx|dex|iny|dey|cpx|cpy|cmp|bit|bne|beq|bcc|bcs|bpl|bmi|adc|sec|clc|sbc|tax|tay|tya|txa|pha|pla|eor|and|ora|ror|rol|php|plp|clv|cld|bvc|bvs|brk|nop|txs|tsx|slo|rla|sre|rra|sax|lax|dcp|isc|anc|alr|arr|xaa|axs|ahx|shy|shx|tas|las|sed)\b";
       string pseudoOps = @"(!byte|!by|!basic|!8|!08|!word|!wo|!16|!text|!tx|!scr|!pet|!raw|!pseudopc|!realpc|!bank|!convtab|!ct|!binary|!bin|!bi|!source|!src|!to|!zone|!zn|!error|!serious|!warn|"
         + @"!message|!ifdef|!ifndef|!if|!fill|!fi|!align|!endoffile|!nowarn|!for|!end|!macro|!trace|!media|!mediasrc|!sl|!cpu|!set)\b";
@@ -86,7 +69,6 @@ namespace C64Studio
       m_TextRegExp[(int)Types.ColorableElement.LITERAL_NUMBER] = new System.Text.RegularExpressions.Regex( @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\B\$[a-fA-F\d]+\b|\b0x[a-fA-F\d]+\b" );
       m_TextRegExp[(int)Types.ColorableElement.LITERAL_STRING] = new System.Text.RegularExpressions.Regex( @"""""|''|"".*?[^\\]""|'.*?[^\\]'" );
 
-      m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( opCodes, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
       m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] = new System.Text.RegularExpressions.Regex( pseudoOps, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
 
       m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[+\-a-zA-Z]+[a-zA-Z_\d]*[:]*" );
@@ -96,6 +78,12 @@ namespace C64Studio
       m_IsSaveable = true;
 
       InitializeComponent();
+
+      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "BASIC V2", BasicVersion.C64_BASIC_V2 ) );
+      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "VIC BASIC V2", BasicVersion.VIC_BASIC_V2 ) );
+      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "BASIC 3.5", BasicVersion.V3_5 ) );
+      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "BASIC 7.0", BasicVersion.V7_0 ) );
+      comboBASICVersion.SelectedIndex = 0;
 
       btnToggleSymbolMode.Checked = Core.Settings.BASICShowControlCodesAsChars;
       AutoComplete = new FastColoredTextBoxNS.AutocompleteMenu( editSource );
@@ -113,19 +101,6 @@ namespace C64Studio
       else
       {
         editSource.Font = new System.Drawing.Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize );
-      }
-
-      string lexingKeywords = "";
-      foreach ( Parser.BasicFileParser.Opcode opcode in Parser.BasicFileParser.m_Opcodes.Values )
-      {
-        if ( lexingKeywords.Length == 0 )
-        {
-          lexingKeywords = opcode.Command;
-        }
-        else
-        {
-          lexingKeywords += " " + opcode.Command;
-        }
       }
 
       editSource.LeftBracket = '(';
@@ -1132,7 +1107,7 @@ namespace C64Studio
               &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
               {
                 leftText = leftText.ToLower() + (char)keyData;
-                foreach ( var opcode in Parser.BasicFileParser.m_Opcodes.Values )
+                foreach ( var opcode in m_Parser.m_Opcodes.Values )
                 {
                   if ( ( opcode.ShortCut != null )
                   &&   ( opcode.ShortCut.Length <= leftText.Length )
@@ -1229,7 +1204,7 @@ namespace C64Studio
               &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
               {
                 leftText = leftText.ToLower() + physKey.Normal.CharValue;
-                foreach ( var opcode in Parser.BasicFileParser.m_Opcodes.Values )
+                foreach ( var opcode in m_Parser.m_Opcodes.Values )
                 {
                   if ( ( opcode.ShortCut != null )
                   &&   ( opcode.ShortCut.Length <= leftText.Length )
@@ -1691,6 +1666,50 @@ namespace C64Studio
           UpdateStatusInfo();
           break;
       }
+    }
+
+
+
+    private void comboBASICVersion_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      BasicVersion version = BasicVersion.C64_BASIC_V2;
+
+      if ( ( DocumentInfo != null )
+      &&   ( DocumentInfo.Element != null ) )
+      {
+        DocumentInfo.Element.BasicVersion = ( (GR.Generic.Tupel<string, BasicVersion>)comboBASICVersion.SelectedItem ).second;
+        version = DocumentInfo.Element.BasicVersion;
+      }
+
+      var settings = new Parser.BasicFileParser.ParserSettings();
+      settings.StripSpaces = Core.Settings.BASICStripSpaces;
+
+      m_Parser = new Parser.BasicFileParser( settings, "" );
+      m_Parser.SetBasicVersion( version );
+
+      string opCodes = @"\b(";
+
+      foreach ( var tokenInfo in m_Parser.m_Opcodes )
+      {
+        var token = tokenInfo.Key;
+
+        if ( token.Length == 1 )
+        {
+          continue;
+        }
+        if ( token.EndsWith( "(" ) )
+        {
+          opCodes += token.Substring( 0, token.Length - 1 );
+        }
+        else
+        {
+          opCodes += token;
+        }
+        opCodes += '|';
+      }
+      opCodes = opCodes.Substring( 0, opCodes.Length - 1 ) + ")\b";
+
+      m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( opCodes, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
     }
 
 

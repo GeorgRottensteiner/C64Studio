@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
+using static C64Studio.Parser.BasicFileParser;
 
 namespace C64Studio
 {
@@ -153,6 +154,9 @@ namespace C64Studio
       {
         chunkElement.AppendString( dependency.Filename );
       }
+
+      // BASIC (that is sooo ugly)
+      chunkElement.AppendU32( (uint)Element.BasicVersion );
 
       buffer.Append( chunkElement.ToBuffer() );
 
@@ -490,6 +494,8 @@ namespace C64Studio
                 string dependency = memChunk.ReadString();
                 element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( dependency, true, false ) );
               }
+
+              element.BasicVersion = (BasicVersion)memChunk.ReadUInt32();
 
               // TODO - load other stuff
               if ( ( element != null )

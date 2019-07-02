@@ -1,5 +1,5 @@
 ﻿C64Studio
-o BASIC_Addons für V7 etc. (tuxer) -> Auswahl BASIC-Typ
+o BASIC_Addons für V7 etc. (tuxer) -> Auswahl BASIC-Typ, Extended Basic Tokens!
 o Search Bookmarks-> Functionality
 o komme gerade mit dem Text Screen Editor nicht zurecht. Habe die Größe auf 40x200 gestellt und Text als ASM exportiert. 
   Beim importieren wird aber nichts angezeigt. Auch skuril: Wenn ich beispielsweise die Hintergrundfarbe von Türkis (03) 

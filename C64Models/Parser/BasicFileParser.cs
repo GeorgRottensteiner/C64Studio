@@ -9,19 +9,19 @@ namespace C64Studio.Parser
   {
     public enum BasicVersion
     {
-      V1_0,   // Version 1.0	Noch recht fehlerbehaftet, erste Versionen im PET 2001
-      V2_0,   // August  Version 2.0	Fehlerkorrekturen, eingebaut in weitere Versionen des PET
-      V3_0,   // Version 3.0	Leichte Fehlerkorrekturen und Integration des Maschinensprachemonitors TIM, schnelle Garbage Collection. CBM 3000 Serie (Standard) und PET 2001 (angezeigte Versionsnummer dort ist allerdings noch 2).
-      V4_0,   // Version 4.0	Neue Befehle für leichtere Handhabung für Diskettenlaufwerke für CBM 4000. Auch durch ROM-Austausch für CBM 3000 Serie und PET 2001 verfügbar.
-      V4_1,   // Version 4.1	Fehlerkorrigierte Fassung der Version 4.0 mit erweiterter Bildschirmeditor für CBM 8000. Auch durch ROM-Austausch für CBM 3000/4000 Serie verfügbar.
-      V4_2,   // Version 4.2	Geänderte und ergänzte Befehle für den CBM 8096.
-      VIC_BASIC_V2,   //  Funktionsumfang von V 2.0 mit Korrekturen aus der Version-4-Linie. Einsatz im VC20.
-      V4_PLUS,        // (intern bis 4.75)	Neue Befehle und RAM-Unterstützung bis 256 KByte für CBM-II-Serie (CBM 500, 6x0, 7x0). Fortsetzung und Ende der Version-4-Linie.
-      C64_BASIC_V2,   //  Anpassung des VIC BASIC V2 für VC10, C64, C128 (C64-Modus), SX64, PET 64.
-      V3_5,           // Version 3.5	Neue Befehle für die Heimcomputer C16/116 und Plus/4. Zusammenführung aus C64 BASIC V2 und Version-4-Linie.
-      V3_6,           // Version 3.6	Neue Befehle für LCD-Prototypen.
-      V7_0,           // Version 7.0	Neue Befehle für den C128/D/DCR. Weiterentwicklung des C16/116 BASIC 3.5 .
-      V10_0           // Version 10 Neue Befehle für C65, beinhaltet sehr viele Fehler, kam aus dem Entwicklungsstadium nicht heraus. Weiterentwicklung des BASIC 7.0.
+      C64_BASIC_V2 = 0, //  Anpassung des VIC BASIC V2 für VC10, C64, C128 (C64-Modus), SX64, PET 64.
+      V1_0,             // Version 1.0	Noch recht fehlerbehaftet, erste Versionen im PET 2001
+      V2_0,             // August  Version 2.0	Fehlerkorrekturen, eingebaut in weitere Versionen des PET
+      V3_0,             // Version 3.0	Leichte Fehlerkorrekturen und Integration des Maschinensprachemonitors TIM, schnelle Garbage Collection. CBM 3000 Serie (Standard) und PET 2001 (angezeigte Versionsnummer dort ist allerdings noch 2).
+      V4_0,             // Version 4.0	Neue Befehle für leichtere Handhabung für Diskettenlaufwerke für CBM 4000. Auch durch ROM-Austausch für CBM 3000 Serie und PET 2001 verfügbar.
+      V4_1,             // Version 4.1	Fehlerkorrigierte Fassung der Version 4.0 mit erweiterter Bildschirmeditor für CBM 8000. Auch durch ROM-Austausch für CBM 3000/4000 Serie verfügbar.
+      V4_2,             // Version 4.2	Geänderte und ergänzte Befehle für den CBM 8096.
+      VIC_BASIC_V2,     //  Funktionsumfang von V 2.0 mit Korrekturen aus der Version-4-Linie. Einsatz im VC20.
+      V4_PLUS,          // (intern bis 4.75)	Neue Befehle und RAM-Unterstützung bis 256 KByte für CBM-II-Serie (CBM 500, 6x0, 7x0). Fortsetzung und Ende der Version-4-Linie.
+      V3_5,             // Version 3.5	Neue Befehle für die Heimcomputer C16/116 und Plus/4. Zusammenführung aus C64 BASIC V2 und Version-4-Linie.
+      V3_6,             // Version 3.6	Neue Befehle für LCD-Prototypen.
+      V7_0,             // Version 7.0	Neue Befehle für den C128/D/DCR. Weiterentwicklung des C16/116 BASIC 3.5 .
+      V10_0             // Version 10 Neue Befehle für C65, beinhaltet sehr viele Fehler, kam aus dem Entwicklungsstadium nicht heraus. Weiterentwicklung des BASIC 7.0.
     }
 
     public class ParserSettings
@@ -107,20 +107,20 @@ namespace C64Studio.Parser
     public class Opcode
     {
       public string         Command = "";
-      public int            ByteValue = -1;
+      public int            InsertionValue = -1;
       public string         ShortCut = null;
 
-      public Opcode( string Command, int ByteValue )
+      public Opcode( string Command, int InsertionValue )
       {
-        this.Command    = Command;
-        this.ByteValue  = ByteValue;
+        this.Command        = Command;
+        this.InsertionValue = InsertionValue;
       }
 
-      public Opcode( string Command, int ByteValue, string ShortCut )
+      public Opcode( string Command, int InsertionValue, string ShortCut )
       {
-        this.Command    = Command;
-        this.ByteValue  = ByteValue;
-        this.ShortCut   = ShortCut;
+        this.Command        = Command;
+        this.InsertionValue = InsertionValue;
+        this.ShortCut       = ShortCut;
       }
     };
 
@@ -134,33 +134,19 @@ namespace C64Studio.Parser
       public System.Collections.Generic.List<Token>   Tokens = new List<Token>();
     };
 
-    public static Dictionary<string, Opcode> m_Opcodes = new Dictionary<string, Opcode>();
-    public static SortedDictionary<byte, Opcode> m_OpcodesFromByte = new SortedDictionary<byte, Opcode>();
-    public static Dictionary<string, Opcode> m_ExOpcodes = new Dictionary<string, Opcode>();
+    public Dictionary<string, Opcode>     m_Opcodes = new Dictionary<string, Opcode>();
+    public SortedDictionary<byte, Opcode> m_OpcodesFromByte = new SortedDictionary<byte, Opcode>();
+    public Dictionary<string, Opcode>     m_ExOpcodes = new Dictionary<string, Opcode>();
 
     private GR.Collections.Map<int, LineInfo> m_LineInfos = new GR.Collections.Map<int, LineInfo>();
 
-    public static GR.Collections.Map<string, ActionToken>     ActionTokens = new GR.Collections.Map<string, ActionToken>();
-    public static GR.Collections.Map<TokenValue, ActionToken> ActionTokenByValue = new GR.Collections.Map<TokenValue, ActionToken>();
-    public static GR.Collections.Map<byte, ActionToken>       ActionTokenByByteValue = new GR.Collections.Map<byte,ActionToken>();
+    public GR.Collections.Map<string, ActionToken>     ActionTokens = new GR.Collections.Map<string, ActionToken>();
+    public GR.Collections.Map<TokenValue, ActionToken> ActionTokenByValue = new GR.Collections.Map<TokenValue, ActionToken>();
+    public GR.Collections.Map<byte, ActionToken>       ActionTokenByByteValue = new GR.Collections.Map<byte,ActionToken>();
     public ParserSettings       Settings = new ParserSettings();
 
     public Types.ASM.FileInfo           ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
     public Types.ASM.FileInfo           InitialFileInfo = null;
-
-
-    static BasicFileParser()
-    {
-
-      // TODO - wieso??
-      //  -> überschreibt echte Tokens!
-      /*
-      foreach ( ActionToken token in ActionTokens.Values )
-      {
-        AddOpcode( token.Replacement, token.ByteValue );
-      }
-       */
-    }
 
 
 
@@ -183,7 +169,7 @@ namespace C64Studio.Parser
 
 
 
-    private static void AddOpcode( string Opcode, int ByteValue )
+    private void AddOpcode( string Opcode, int ByteValue )
     {
       var opcode = new Opcode( Opcode, ByteValue );
       m_Opcodes[Opcode] = opcode;
@@ -192,7 +178,7 @@ namespace C64Studio.Parser
 
 
 
-    private static void AddOpcode( string Opcode, int ByteValue, string ShortCut )
+    private void AddOpcode( string Opcode, int ByteValue, string ShortCut )
     {
       var opcode = new Opcode( Opcode, ByteValue, ShortCut );
       m_Opcodes[Opcode] = opcode;
@@ -201,7 +187,7 @@ namespace C64Studio.Parser
 
 
 
-    private static void AddExOpcode( string Opcode, int ByteValue )
+    private void AddExOpcode( string Opcode, int ByteValue )
     {
       m_ExOpcodes[Opcode] = new Opcode( Opcode, ByteValue );
     }
@@ -216,7 +202,7 @@ namespace C64Studio.Parser
 
 
 
-    private static void AddActionToken( TokenValue Value, string Token, byte ByteValue )
+    private void AddActionToken( TokenValue Value, string Token, byte ByteValue )
     {
       ActionToken token = new ActionToken();
       token.Replacement = Token;
@@ -246,7 +232,8 @@ namespace C64Studio.Parser
       m_Opcodes.Clear();
       m_OpcodesFromByte.Clear();
 
-      if ( ( Version == BasicVersion.V2_0 )
+      if ( ( Version == BasicVersion.C64_BASIC_V2 )
+      ||   ( Version == BasicVersion.VIC_BASIC_V2 )
       ||   ( Version == BasicVersion.V3_5 )
       ||   ( Version == BasicVersion.V7_0 ) )
       {
@@ -641,6 +628,12 @@ namespace C64Studio.Parser
 
     public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config )
     {
+      if ( m_Opcodes.Count == 0 )
+      {
+        AddError( -1, Types.ErrorCode.E1401_INTERNAL_ERROR, "An unsupported BASIC version was chosen" );
+        return false;
+      }
+
       string[] lines = Content.Split( '\n' );
 
       CleanLines( lines );
@@ -705,11 +698,19 @@ namespace C64Studio.Parser
       {
         Opcode opCode = m_Opcodes[token2];
 
-        Info.LineData.AppendU8( (byte)opCode.ByteValue );
+        if ( opCode.InsertionValue > 255 )
+        {
+          // a two byte token
+          Info.LineData.AppendU16NetworkOrder( (ushort)opCode.InsertionValue );
+        }
+        else
+        {
+          Info.LineData.AppendU8( (byte)opCode.InsertionValue );
+        }
 
         Token opcodeToken = new Token();
         opcodeToken.TokenType = Token.Type.BASIC_TOKEN;
-        opcodeToken.ByteValue = (byte)opCode.ByteValue;
+        opcodeToken.ByteValue = (byte)opCode.InsertionValue;
         opcodeToken.Content = opCode.Command;
         Info.Tokens.Add( opcodeToken );
       }
@@ -717,11 +718,11 @@ namespace C64Studio.Parser
       {
         Opcode opCode = m_ExOpcodes[token2];
 
-        Info.LineData.AppendU8( (byte)opCode.ByteValue );
+        Info.LineData.AppendU8( (byte)opCode.InsertionValue );
 
         Token opcodeToken = new Token();
         opcodeToken.TokenType = Token.Type.EX_BASIC_TOKEN;
-        opcodeToken.ByteValue = (byte)opCode.ByteValue;
+        opcodeToken.ByteValue = (byte)opCode.InsertionValue;
         opcodeToken.Content = opCode.Command;
         Info.Tokens.Add( opcodeToken );
       }
@@ -1134,7 +1135,7 @@ namespace C64Studio.Parser
               {
                 Token basicToken4 = new Token();
                 basicToken4.TokenType  = Token.Type.BASIC_TOKEN;
-                basicToken4.ByteValue  = (byte)opcode.ByteValue;
+                basicToken4.ByteValue  = (byte)opcode.InsertionValue;
                 basicToken4.Content    = opcode.Command;
                 basicToken4.StartIndex = tempDataStartPos;
                 info.Tokens.Add( basicToken4 );
@@ -1193,7 +1194,7 @@ namespace C64Studio.Parser
               {
                 Token basicToken5 = new Token();
                 basicToken5.TokenType  = Token.Type.EX_BASIC_TOKEN;
-                basicToken5.ByteValue  = (byte)opcode.ByteValue;
+                basicToken5.ByteValue  = (byte)opcode.InsertionValue;
                 basicToken5.Content    = opcode.Command;
                 basicToken5.StartIndex = tempDataStartPos;
                 info.Tokens.Add( basicToken5 );
@@ -1668,12 +1669,12 @@ namespace C64Studio.Parser
             {
               Token basicToken = new Token();
               basicToken.TokenType = Token.Type.BASIC_TOKEN;
-              basicToken.ByteValue = (byte)opcode.ByteValue;
+              basicToken.ByteValue = (byte)opcode.InsertionValue;
               basicToken.Content = opcode.Command;
               basicToken.StartIndex = bytePos;
               info.Tokens.Add( basicToken );
 
-              info.LineData.AppendU8( (byte)opcode.ByteValue );
+              info.LineData.AppendU8( (byte)opcode.InsertionValue );
               bytePos += opcode.Command.Length;
 
               insideDataStatement = ( opcode.Command == "DATA" );
@@ -1713,12 +1714,12 @@ namespace C64Studio.Parser
             {
               Token basicToken = new Token();
               basicToken.TokenType = Token.Type.EX_BASIC_TOKEN;
-              basicToken.ByteValue = (byte)opcode.ByteValue;
+              basicToken.ByteValue = (byte)opcode.InsertionValue;
               basicToken.Content = opcode.Command;
               basicToken.StartIndex = bytePos;
               info.Tokens.Add( basicToken );
 
-              info.LineData.AppendU8( (byte)opcode.ByteValue );
+              info.LineData.AppendU8( (byte)opcode.InsertionValue );
               bytePos += opcode.Command.Length;
 
               insideDataStatement = false;
@@ -2088,13 +2089,13 @@ namespace C64Studio.Parser
 
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
-            if ( token.ByteValue == m_Opcodes["REM"].ByteValue )
+            if ( token.ByteValue == m_Opcodes["REM"].InsertionValue )
             {
               hadREM = true;
             }
 
-            if ( ( token.ByteValue == m_Opcodes["RUN"].ByteValue )
-            ||   ( token.ByteValue == m_Opcodes["THEN"].ByteValue ) )
+            if ( ( token.ByteValue == m_Opcodes["RUN"].InsertionValue )
+            ||   ( token.ByteValue == m_Opcodes["THEN"].InsertionValue ) )
             {
               // insert label instead of line number
               if ( i + 1 < lineInfo.Value.Tokens.Count )
@@ -2115,8 +2116,8 @@ namespace C64Studio.Parser
                 }
               }
             }
-            if ( ( token.ByteValue == m_Opcodes["GOTO"].ByteValue )
-            ||   ( token.ByteValue == m_Opcodes["GOSUB"].ByteValue ) )
+            if ( ( token.ByteValue == m_Opcodes["GOTO"].InsertionValue )
+            ||   ( token.ByteValue == m_Opcodes["GOSUB"].InsertionValue ) )
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number
@@ -2182,7 +2183,7 @@ namespace C64Studio.Parser
           ||   ( token.TokenType == Token.Type.NUMERIC_LITERAL )
           ||   ( token.TokenType == Token.Type.EX_BASIC_TOKEN ) )
           {
-            if ( ( token.ByteValue != m_Opcodes["REM"].ByteValue )
+            if ( ( token.ByteValue != m_Opcodes["REM"].InsertionValue )
             &&   ( hadREM ) )
             {
               sb.Append( " " );
@@ -2228,7 +2229,7 @@ namespace C64Studio.Parser
       {
         if ( ( lineInfo.Value.Tokens.Count > 0 )
         &&   ( lineInfo.Value.Tokens[0].TokenType == Token.Type.EX_BASIC_TOKEN )
-        &&   ( lineInfo.Value.Tokens[0].ByteValue == m_ExOpcodes["LABEL"].ByteValue ) )
+        &&   ( lineInfo.Value.Tokens[0].ByteValue == m_ExOpcodes["LABEL"].InsertionValue ) )
         {
           // skip label definitions
           if ( lineInfo.Value.Tokens.Count > 1 )
@@ -2260,7 +2261,7 @@ namespace C64Studio.Parser
         &&   ( nextTokenIndex3 == -1 ) )
         {
           if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
-          &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == m_ExOpcodes["LABEL"].ByteValue )
+          &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == m_ExOpcodes["LABEL"].InsertionValue )
           &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
           {
             // a label definition
@@ -2284,19 +2285,19 @@ namespace C64Studio.Parser
           bool    tokenIsInserted = false;
 
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-          &&   ( token.ByteValue == m_Opcodes["REM"].ByteValue ) )
+          &&   ( token.ByteValue == m_Opcodes["REM"].InsertionValue ) )
           {
             hadREM = true;
           }
 
 
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-          &&   ( ( token.ByteValue == m_Opcodes["GOTO"].ByteValue )
-          ||     ( token.ByteValue == m_Opcodes["GOSUB"].ByteValue )
-          ||     ( token.ByteValue == m_Opcodes["THEN"].ByteValue )
-          ||     ( token.ByteValue == m_Opcodes["RUN"].ByteValue ) ) )
+          &&   ( ( token.ByteValue == m_Opcodes["GOTO"].InsertionValue )
+          ||     ( token.ByteValue == m_Opcodes["GOSUB"].InsertionValue )
+          ||     ( token.ByteValue == m_Opcodes["THEN"].InsertionValue )
+          ||     ( token.ByteValue == m_Opcodes["RUN"].InsertionValue ) ) )
           {
-            bool    isGotoOrGosub = ( token.ByteValue == m_Opcodes["GOTO"].ByteValue ) | ( token.ByteValue == m_Opcodes["GOSUB"].ByteValue );
+            bool    isGotoOrGosub = ( token.ByteValue == m_Opcodes["GOTO"].InsertionValue ) | ( token.ByteValue == m_Opcodes["GOSUB"].InsertionValue );
             nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, tokenIndex );
             nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
 
@@ -2304,7 +2305,7 @@ namespace C64Studio.Parser
             &&      ( nextTokenIndex2 != -1 ) )
             {
               if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
-              &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == m_ExOpcodes["LABEL"].ByteValue )
+              &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == m_ExOpcodes["LABEL"].InsertionValue )
               &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
               {
                 string label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndex2].Content;
@@ -2389,7 +2390,7 @@ namespace C64Studio.Parser
 
 
 
-    public static bool Disassemble( GR.Memory.ByteBuffer Data, out List<string> Lines  )
+    public bool Disassemble( GR.Memory.ByteBuffer Data, out List<string> Lines  )
     {
       Lines = new List<string>();
       if ( ( Data == null )
@@ -2537,7 +2538,7 @@ namespace C64Studio.Parser
             }
             else
             {
-              if ( m_OpcodesFromByte[byteValue].ByteValue == 0x8F )
+              if ( m_OpcodesFromByte[byteValue].InsertionValue == 0x8F )
               {
                 encounteredREM = true;
               }
@@ -2616,8 +2617,8 @@ namespace C64Studio.Parser
           }
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
-            if ( ( token.ByteValue == m_Opcodes["RUN"].ByteValue )
-            ||   ( token.ByteValue == m_Opcodes["THEN"].ByteValue ) )
+            if ( ( token.ByteValue == m_Opcodes["RUN"].InsertionValue )
+            ||   ( token.ByteValue == m_Opcodes["THEN"].InsertionValue ) )
             {
               // insert label instead of line number
               if ( i + 1 < lineInfo.Tokens.Count )
@@ -2640,8 +2641,8 @@ namespace C64Studio.Parser
                 }
               }
             }
-            if ( ( token.ByteValue == m_Opcodes["GOTO"].ByteValue )
-            ||   ( token.ByteValue == m_Opcodes["GOSUB"].ByteValue ) )
+            if ( ( token.ByteValue == m_Opcodes["GOTO"].InsertionValue )
+            ||   ( token.ByteValue == m_Opcodes["GOSUB"].InsertionValue ) )
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number
@@ -2704,7 +2705,7 @@ namespace C64Studio.Parser
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
           ||   ( token.TokenType == Token.Type.EX_BASIC_TOKEN ) )
           {
-            if ( token.ByteValue != m_Opcodes["REM"].ByteValue )
+            if ( token.ByteValue != m_Opcodes["REM"].InsertionValue )
             {
               //sb.Append( " " );
             }

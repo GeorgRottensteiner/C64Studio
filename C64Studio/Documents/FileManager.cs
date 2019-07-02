@@ -729,7 +729,8 @@ namespace C64Studio
             List<string>    lines;
 
             // trunc load address
-            if ( C64Studio.Parser.BasicFileParser.Disassemble( fileInfo.Data.SubBuffer( 2 ), out lines ) )
+            var parser = new Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
+            if ( parser.Disassemble( fileInfo.Data.SubBuffer( 2 ), out lines ) )
             {
               BaseDocument document = new SourceBasicEx( Core );
               document.ShowHint = DockState.Document;

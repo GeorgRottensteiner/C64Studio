@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static C64Studio.Parser.BasicFileParser;
 
 namespace C64Studio
 {
@@ -70,7 +71,8 @@ namespace C64Studio
     // per setting
     public GR.Collections.Map<string,PerConfigSettings>     Settings = new GR.Collections.Map<string, PerConfigSettings>();
     public bool             IsShown = false;
-    public Types.AssemblerType    AssemblerType = C64Studio.Types.AssemblerType.AUTO;
+    public AssemblerType    AssemblerType = C64Studio.Types.AssemblerType.AUTO;
+    public BasicVersion     BasicVersion = BasicVersion.C64_BASIC_V2;
     public List<string>     ProjectHierarchy = new List<string>();
 
 
