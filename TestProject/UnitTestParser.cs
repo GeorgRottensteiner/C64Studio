@@ -1186,6 +1186,25 @@ GREEN=5
 
 
     [TestMethod]
+    public void TestCheapLocalsInFrontAndInside()
+    {
+      // added for bug where @copyloop was not recognized because label @done was in front
+      string      source = @"* = $2000
+                             SCREENCHAR = $0400
+                             @copyloop
+                              asl
+
+                              @done lda @copyloop
+                                jmp @copyloop";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00200AAD00204C0020", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestMacroBinaryCollapseHang()
     {
       string      source = @"

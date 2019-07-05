@@ -6836,10 +6836,15 @@ namespace C64Studio.Parser
           if ( lineTokenInfos.Count > 1 )
           {
             info.Line = parseLine.Substring( lineTokenInfos[1].StartPos );
-            parseLine = parseLine.Substring( lineTokenInfos[1].StartPos );
+            //TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
+            //parseLine.Substring( lineTokenInfos[1].StartPos );
+            //parseLine = parseLine.Substring( lineTokenInfos[1].StartPos );
+            parseLine = info.Line;
 
             // shift all tokens back
             lineTokenInfos = ParseTokenInfo( parseLine, 0, parseLine.Length );
+
+            PrefixZoneToLocalLabels( ref cheapLabelParent, lineTokenInfos, ref upToken );
 
             AdjustLabelCasing( lineTokenInfos );
             // insert dummy entry to be removed later
