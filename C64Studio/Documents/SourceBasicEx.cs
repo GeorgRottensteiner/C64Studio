@@ -1684,6 +1684,9 @@ namespace C64Studio
       var settings = new Parser.BasicFileParser.ParserSettings();
       settings.StripSpaces = Core.Settings.BASICStripSpaces;
 
+      Core.Compiling.ParserBasic.Settings.StripSpaces = Core.Settings.BASICStripSpaces;
+      Core.Compiling.ParserBasic.Settings.Version = version;
+
       m_Parser = new Parser.BasicFileParser( settings, "" );
       m_Parser.SetBasicVersion( version );
 

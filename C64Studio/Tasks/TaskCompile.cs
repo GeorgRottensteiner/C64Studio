@@ -307,6 +307,7 @@ namespace C64Studio.Tasks
         {
           // BASIC may receive symbols from assembly
           ( (Parser.BasicFileParser)parser ).InitialFileInfo = combinedFileInfo;
+          ( (Parser.BasicFileParser)parser ).SetBasicVersion( ( (Parser.BasicFileParser)parser ).Settings.Version );
           if ( combinedFileInfo != null )
           {
             //Debug.Log( "Doc " + Doc.Text + " receives " + combinedFileInfo.Labels.Count + " initial labels" );
