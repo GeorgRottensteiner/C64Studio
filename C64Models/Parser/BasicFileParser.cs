@@ -1669,12 +1669,19 @@ namespace C64Studio.Parser
             {
               Token basicToken = new Token();
               basicToken.TokenType = Token.Type.BASIC_TOKEN;
-              basicToken.ByteValue = (byte)opcode.InsertionValue;
+              basicToken.ByteValue = opcode.InsertionValue;
               basicToken.Content = opcode.Command;
               basicToken.StartIndex = bytePos;
               info.Tokens.Add( basicToken );
 
-              info.LineData.AppendU8( (byte)opcode.InsertionValue );
+              if ( opcode.InsertionValue > 255 )
+              {
+                info.LineData.AppendU16NetworkOrder( (ushort)opcode.InsertionValue );
+              }
+              else
+              {
+                info.LineData.AppendU8( (byte)opcode.InsertionValue );
+              }
               bytePos += opcode.Command.Length;
 
               insideDataStatement = ( opcode.Command == "DATA" );
@@ -1714,12 +1721,19 @@ namespace C64Studio.Parser
             {
               Token basicToken = new Token();
               basicToken.TokenType = Token.Type.EX_BASIC_TOKEN;
-              basicToken.ByteValue = (byte)opcode.InsertionValue;
+              basicToken.ByteValue = opcode.InsertionValue;
               basicToken.Content = opcode.Command;
               basicToken.StartIndex = bytePos;
               info.Tokens.Add( basicToken );
 
-              info.LineData.AppendU8( (byte)opcode.InsertionValue );
+              if ( opcode.InsertionValue > 255 )
+              {
+                info.LineData.AppendU16NetworkOrder( (ushort)opcode.InsertionValue );
+              }
+              else
+              {
+                info.LineData.AppendU8( (byte)opcode.InsertionValue );
+              }
               bytePos += opcode.Command.Length;
 
               insideDataStatement = false;
