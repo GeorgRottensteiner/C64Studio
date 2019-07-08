@@ -616,6 +616,15 @@ namespace C64Studio
         {
           editBASICStartAddress.Text = DocumentInfo.Element.StartAddress;
           m_StartAddress = DocumentInfo.Element.StartAddress;
+
+          foreach ( GR.Generic.Tupel<string, BasicVersion> entry in comboBASICVersion.Items )
+          {
+            if ( entry.second == DocumentInfo.Element.BasicVersion )
+            {
+              comboBASICVersion.SelectedItem = entry;
+              break;
+            }
+          }
         }
         if ( string.IsNullOrEmpty( m_StartAddress ) )
         {
@@ -1679,6 +1688,7 @@ namespace C64Studio
       {
         DocumentInfo.Element.BasicVersion = ( (GR.Generic.Tupel<string, BasicVersion>)comboBASICVersion.SelectedItem ).second;
         version = DocumentInfo.Element.BasicVersion;
+        SetModified();
       }
 
       var settings = new Parser.BasicFileParser.ParserSettings();
