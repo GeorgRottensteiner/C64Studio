@@ -1912,6 +1912,17 @@ namespace C64Studio.Parser
 
         AssembledOutput.Assembly = d64.Compile();
       }
+      else if ( Config.TargetType == Types.CompileTargetType.D81 )
+      {
+        Formats.D81 d81 = new C64Studio.Formats.D81();
+
+        d81.CreateEmptyMedia();
+
+        GR.Memory.ByteBuffer    bufName = Util.ToFilename( outputPureFilename );
+        d81.WriteFile( bufName, AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
+
+        AssembledOutput.Assembly = d81.Compile();
+      }
       else if ( Config.TargetType == Types.CompileTargetType.TAP )
       {
         Formats.Tap tap = new C64Studio.Formats.Tap();

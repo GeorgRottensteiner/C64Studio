@@ -52,6 +52,9 @@ namespace C64Studio
       comboTargetType.Items.Add( "Easyflash Cartridge (crt)" );
       comboTargetType.Items.Add( "RGCD 64 KB Cartridge (bin)" );
       comboTargetType.Items.Add( "RGCD 64 KB Cartridge (crt)" );
+      comboTargetType.Items.Add( "GMOD2 Cartridge (bin)" );
+      comboTargetType.Items.Add( "GMOD2 Cartridge (crt)" );
+      comboTargetType.Items.Add( "D81" );
 
       comboTargetType.SelectedIndex = (int)Element.TargetType;
 

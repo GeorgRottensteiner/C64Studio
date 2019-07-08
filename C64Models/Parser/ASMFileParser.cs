@@ -7592,6 +7592,10 @@ namespace C64Studio.Parser
                 {
                   m_CompileTarget = Types.CompileTargetType.D64;
                 }
+                else if ( targetType == "D81" )
+                {
+                  m_CompileTarget = Types.CompileTargetType.D81;
+                }
                 else if ( targetType == "CART8BIN" )
                 {
                   m_CompileTarget = Types.CompileTargetType.CARTRIDGE_8K_BIN;
@@ -11015,8 +11019,19 @@ namespace C64Studio.Parser
 
         AssembledOutput.Assembly = d64.Compile();
       }
+      else if ( Config.TargetType == Types.CompileTargetType.D81 )
+      {
+        Formats.D81 d81 = new C64Studio.Formats.D81();
+
+        d81.CreateEmptyMedia();
+
+        GR.Memory.ByteBuffer    bufName = Util.ToFilename( outputPureFilename );
+        d81.WriteFile( bufName, AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
+
+        AssembledOutput.Assembly = d81.Compile();
+      }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_BIN )
-      || ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
+      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
       {
         if ( AssembledOutput.Assembly.Length < 8192 )
         {
