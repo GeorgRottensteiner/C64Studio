@@ -694,7 +694,7 @@ namespace C64Studio
         LastFound.Clear();
         return false;
       }
-      BaseDocument activeDocument = Core.MainForm.ActiveDocument;
+      BaseDocument activeDocument = Core.MainForm.ActiveSearchDocument;
       if ( DirectlyFromSourceFile != null )
       {
         activeDocument = DirectlyFromSourceFile;

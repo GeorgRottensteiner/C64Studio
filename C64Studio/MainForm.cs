@@ -71,6 +71,9 @@ namespace C64Studio
     private static MainForm s_MainForm = null;
     private List<IdleRequest> IdleQueue = new List<IdleRequest>();
 
+    internal DocumentInfo         LastSearchableDocumentInfo = null;
+
+
 
     public delegate void ApplicationEventHandler( Types.ApplicationEvent Event );
 
@@ -1269,6 +1272,12 @@ namespace C64Studio
           m_DebugBreakpoints.DebuggedProject = m_CurrentProject;
           UpdateCaption();
           break;
+        case Types.ApplicationEvent.Type.DOCUMENT_CLOSED:
+          if ( LastSearchableDocumentInfo == Event.Doc )
+          {
+            LastSearchableDocumentInfo = null;
+          }
+          break;
       }
     }
 
@@ -1284,6 +1293,11 @@ namespace C64Studio
       mainToolCommentSelection.Enabled = ( docInfo != null ) ? docInfo.Compilable : false;
       mainToolUncommentSelection.Enabled = ( docInfo != null ) ? docInfo.Compilable : false;
 
+      if ( IsSearchableDocument( docInfo ) )
+      {
+        LastSearchableDocumentInfo = docInfo;
+      }
+
       if ( ActiveDocument == null )
       {
         saveToolStripMenuItem.Enabled = false;
@@ -1298,6 +1312,23 @@ namespace C64Studio
         mainToolSave.Enabled = ActiveDocument.Modified;
         fileCloseToolStripMenuItem.Enabled = true;
       }
+    }
+
+
+
+    private bool IsSearchableDocument( DocumentInfo DocInfo )
+    {
+      if ( DocInfo == null )
+      {
+        return false;
+      }
+      if ( ( DocInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+      ||   ( DocInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+      ||   ( DocInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -1695,6 +1726,20 @@ namespace C64Studio
         {
           value.BaseDoc.Select();
         }
+      }
+    }
+
+
+
+    public BaseDocument ActiveSearchDocument
+    {
+      get
+      {
+        if ( LastSearchableDocumentInfo == null )
+        {
+          return null;
+        }
+        return (BaseDocument)LastSearchableDocumentInfo.BaseDoc;
       }
     }
 
