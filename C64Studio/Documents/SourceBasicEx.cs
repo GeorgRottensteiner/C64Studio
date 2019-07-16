@@ -30,6 +30,7 @@ namespace C64Studio
     private string                            m_CurrentHighlightText = null;
 
     private string                            m_StartAddress = "";
+    private Parser.BasicFileParser.BasicVersion   m_BASICVersion = BasicVersion.C64_BASIC_V2;
 
     private Parser.BasicFileParser            m_Parser = null;
 
@@ -174,6 +175,20 @@ namespace C64Studio
           return GR.Convert.ToI32( DocumentInfo.Element.StartAddress );
         }
         return GR.Convert.ToI32( m_StartAddress );
+      }
+    }
+
+
+
+    public Parser.BasicFileParser.BasicVersion BASICVersion
+    {
+      get
+      {
+        if ( DocumentInfo.Element != null )
+        {
+          return DocumentInfo.Element.BasicVersion;
+        }
+        return m_BASICVersion;
       }
     }
 
@@ -1681,13 +1696,12 @@ namespace C64Studio
 
     private void comboBASICVersion_SelectedIndexChanged( object sender, EventArgs e )
     {
-      BasicVersion version = BasicVersion.C64_BASIC_V2;
+      BasicVersion version = ( (GR.Generic.Tupel<string, BasicVersion>)comboBASICVersion.SelectedItem ).second;
 
       if ( ( DocumentInfo != null )
       &&   ( DocumentInfo.Element != null ) )
       {
-        DocumentInfo.Element.BasicVersion = ( (GR.Generic.Tupel<string, BasicVersion>)comboBASICVersion.SelectedItem ).second;
-        version = DocumentInfo.Element.BasicVersion;
+        DocumentInfo.Element.BasicVersion = version;
         SetModified();
       }
 
@@ -1696,6 +1710,7 @@ namespace C64Studio
 
       Core.Compiling.ParserBasic.Settings.StripSpaces = Core.Settings.BASICStripSpaces;
       Core.Compiling.ParserBasic.Settings.Version = version;
+      m_BASICVersion = version;
 
       m_Parser = new Parser.BasicFileParser( settings, "" );
       m_Parser.SetBasicVersion( version );

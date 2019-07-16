@@ -342,6 +342,7 @@ namespace C64Studio.Tasks
           {
             // BASIC files bring a start address
             startAddress = ( (SourceBasicEx)Doc.BaseDoc ).StartAddress;
+            ( (Parser.BasicFileParser)parser ).SetBasicVersion( ( (SourceBasicEx)Doc.BaseDoc ).BASICVersion );
           }
           if ( ( !Core.MainForm.ParseFile( parser, Doc, config, OutputMessages, CreatePreProcessedFile ) )
           ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
