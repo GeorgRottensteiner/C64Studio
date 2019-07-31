@@ -491,6 +491,7 @@ namespace C64Studio
       if ( hexView.CustomHexViewer is HexBoxCharViewer )
       {
         ( (HexBoxCharViewer)hexView.CustomHexViewer ).ToggleViewMode();
+        Core.Settings.MemoryDisplayCharsetMode = ((HexBoxCharViewer)hexView.CustomHexViewer).Mode;
       }
       else
       {

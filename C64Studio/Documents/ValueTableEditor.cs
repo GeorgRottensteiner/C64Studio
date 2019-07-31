@@ -99,6 +99,7 @@ namespace C64Studio
     public void Clear()
     {
       m_Project.Clear();
+      listValues.Items.Clear();
     }
 
 
