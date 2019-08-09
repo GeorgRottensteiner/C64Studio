@@ -2172,9 +2172,9 @@ namespace C64Studio
 
 
 
-    private ListViewItem asmLibraryPathList_AddingItem( object sender )
+    private ArrangedItemEntry asmLibraryPathList_AddingItem( object sender )
     {
-      var newEntry = new ListViewItem( editASMLibraryPath.Text );
+      var newEntry = new ArrangedItemEntry( editASMLibraryPath.Text );
       return newEntry;
     }
 
@@ -2204,10 +2204,10 @@ namespace C64Studio
 
 
 
-    private void asmLibraryPathList_ItemAdded( object sender, ListViewItem Item )
+    private void asmLibraryPathList_ItemAdded( object sender, ArrangedItemEntry Item )
     {
       Core.Settings.ASMLibraryPaths.Clear();
-      foreach ( ListViewItem entry in asmLibraryPathList.Items )
+      foreach ( ArrangedItemEntry entry in asmLibraryPathList.Items )
       {
         Core.Settings.ASMLibraryPaths.Add( entry.Text );
       }
@@ -2215,10 +2215,10 @@ namespace C64Studio
 
 
 
-    private void asmLibraryPathList_ItemMoved( object sender, ListViewItem Item1, ListViewItem Item2 )
+    private void asmLibraryPathList_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
     {
       Core.Settings.ASMLibraryPaths.Clear();
-      foreach ( ListViewItem entry in asmLibraryPathList.Items )
+      foreach ( ArrangedItemEntry entry in asmLibraryPathList.Items )
       {
         Core.Settings.ASMLibraryPaths.Add( entry.Text );
       }
@@ -2226,10 +2226,10 @@ namespace C64Studio
 
 
 
-    private void asmLibraryPathList_ItemRemoved( object sender, ListViewItem Item )
+    private void asmLibraryPathList_ItemRemoved( object sender, ArrangedItemEntry Item )
     {
       Core.Settings.ASMLibraryPaths.Clear();
-      foreach ( ListViewItem entry in asmLibraryPathList.Items )
+      foreach ( ArrangedItemEntry entry in asmLibraryPathList.Items )
       {
         Core.Settings.ASMLibraryPaths.Add( entry.Text );
       }

@@ -358,30 +358,30 @@ namespace C64Studio
 
 
 
-    private ListViewItem listValues_AddingItem( object sender )
+    private ArrangedItemEntry listValues_AddingItem( object sender )
     {
-      var item = new ListViewItem( editValueEntry.Text );
+      var item = new ArrangedItemEntry( editValueEntry.Text );
 
       return item;
     }
 
 
 
-    private void listValues_ItemAdded( object sender, ListViewItem Item )
+    private void listValues_ItemAdded( object sender, ArrangedItemEntry Item )
     {
       ValuesChanged();
     }
 
 
 
-    private void listValues_ItemMoved( object sender, ListViewItem Item1, ListViewItem Item2 )
+    private void listValues_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
     {
       ValuesChanged();
     }
 
 
 
-    private void listValues_ItemRemoved( object sender, ListViewItem Item )
+    private void listValues_ItemRemoved( object sender, ArrangedItemEntry Item )
     {
       ValuesChanged();
     }
@@ -392,7 +392,7 @@ namespace C64Studio
     {
       m_Project.ValueTable.Values.Clear();
 
-      foreach ( ListViewItem item in listValues.Items )
+      foreach ( ArrangedItemEntry item in listValues.Items )
       {
         m_Project.ValueTable.Values.Add( item.Text );
       }
@@ -401,7 +401,7 @@ namespace C64Studio
 
 
 
-    private void listValues_SelectedIndexChanged( object sender, ListViewItem Item )
+    private void listValues_SelectedIndexChanged( object sender, ArrangedItemEntry Item )
     {
       if ( listValues.SelectedIndices.Count == 0 )
       {

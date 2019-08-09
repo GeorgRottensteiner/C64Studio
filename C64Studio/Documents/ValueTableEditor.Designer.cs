@@ -142,6 +142,7 @@
       this.listValues.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
       this.listValues.DeleteButtonEnabled = false;
+      this.listValues.HasOwnerDrawColumn = true;
       this.listValues.Location = new System.Drawing.Point(6, 19);
       this.listValues.MoveDownButtonEnabled = false;
       this.listValues.MoveUpButtonEnabled = false;

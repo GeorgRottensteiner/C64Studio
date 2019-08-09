@@ -42,7 +42,7 @@ namespace C64Studio
 
         foreach ( var entry in BuildChain.Entries )
         {
-          var item = new ListViewItem();
+          var item = new ArrangedItemEntry();
 
           item.Text = entry.ProjectName + " - " + entry.Config;
           item.Tag = entry;
@@ -82,7 +82,7 @@ namespace C64Studio
 
 
 
-    private ListViewItem listBuildChainProjects_AddingItem( object sender )
+    private ArrangedItemEntry listBuildChainProjects_AddingItem( object sender )
     {
       if ( ( comboBuildChainProject.SelectedIndex == -1 )
       ||   ( comboBuildChainConfig.SelectedIndex == -1 )
@@ -97,7 +97,7 @@ namespace C64Studio
       entry.PreDefines  = editBuildChainDefines.Text;
 
       
-      var item = new ListViewItem();
+      var item = new ArrangedItemEntry();
 
       item.Text = entry.ProjectName + " - " + entry.Config;
       item.Tag = entry;
@@ -107,7 +107,7 @@ namespace C64Studio
 
 
 
-    private void listBuildChainProjects_ItemAdded( object sender, ListViewItem Item )
+    private void listBuildChainProjects_ItemAdded( object sender, ArrangedItemEntry Item )
     {
       var entry = (BuildChainEntry)Item.Tag;
 
@@ -117,10 +117,10 @@ namespace C64Studio
 
 
 
-    private void listBuildChainProjects_ItemMoved( object sender, ListViewItem Item1, ListViewItem Item2 )
+    private void listBuildChainProjects_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
     {
       BuildChain.Entries.Clear();
-      foreach ( ListViewItem item in listBuildChainProjects.Items )
+      foreach ( ArrangedItemEntry item in listBuildChainProjects.Items )
       {
         var entry = (BuildChainEntry)item.Tag;
         BuildChain.Entries.Add( entry );
@@ -130,7 +130,7 @@ namespace C64Studio
 
 
 
-    private void listBuildChainProjects_ItemRemoved( object sender, ListViewItem Item )
+    private void listBuildChainProjects_ItemRemoved( object sender, ArrangedItemEntry Item )
     {
       var entry = (BuildChainEntry)Item.Tag;
       BuildChain.Entries.Remove( entry );
@@ -139,7 +139,7 @@ namespace C64Studio
 
 
 
-    private void listBuildChainProjects_SelectedIndexChanged( object sender, ListViewItem Item )
+    private void listBuildChainProjects_SelectedIndexChanged( object sender, ArrangedItemEntry Item )
     {
       if ( listBuildChainProjects.SelectedIndices.Count == 0 )
       {

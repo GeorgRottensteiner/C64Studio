@@ -31,7 +31,7 @@
       //this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 13F );
       //this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 
-      this.listItems = new System.Windows.Forms.ListView();
+      this.listItems = new System.Windows.Forms.ListBox();
       this.btnMoveDown = new System.Windows.Forms.Button();
       this.btnMoveUp = new System.Windows.Forms.Button();
       this.btnDelete = new System.Windows.Forms.Button();
@@ -44,16 +44,10 @@
       this.listItems.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
                   | System.Windows.Forms.AnchorStyles.Left )
                   | System.Windows.Forms.AnchorStyles.Right ) ) );
-      this.listItems.Columns.AddRange( new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1} );
-      this.listItems.FullRowSelect = true;
-      this.listItems.HideSelection = false;
       this.listItems.Location = new System.Drawing.Point( 3, 3 );
       this.listItems.Name = "listItems";
       this.listItems.Size = new System.Drawing.Size( 234, 205 );
       this.listItems.TabIndex = 0;
-      this.listItems.UseCompatibleStateImageBehavior = false;
-      this.listItems.View = System.Windows.Forms.View.Details;
       this.listItems.SelectedIndexChanged += new System.EventHandler( this.listItems_SelectedIndexChanged );
 
       // 
@@ -127,7 +121,7 @@
 
     #endregion
 
-    internal System.Windows.Forms.ListView listItems;
+    internal System.Windows.Forms.ListBox listItems;
     private System.Windows.Forms.Button btnAdd;
     private System.Windows.Forms.Button btnDelete;
     private System.Windows.Forms.Button btnMoveUp;

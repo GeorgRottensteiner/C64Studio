@@ -51,20 +51,6 @@ namespace C64Studio
       m_IsSaveable = true;
       InitializeComponent();
 
-      listLayerSprites.Columns.Clear();
-      var header = new ColumnHeader();
-      header.Width = 60;
-      header.Text = "Nr.";
-      listLayerSprites.Columns.Add( header );
-      header = new ColumnHeader();
-      header.Width = 30;
-      header.Text = "X";
-      listLayerSprites.Columns.Add( header );
-      header = new ColumnHeader();
-      header.Width = 30;
-      header.Text = "Y";
-      listLayerSprites.Columns.Add( header );
-
       listLayers.ItemAdded += new ArrangedItemList.ItemModifiedEventHandler( listLayers_ItemAdded );
 
       pictureEditor.DisplayPage.Create( 24, 21, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
@@ -125,7 +111,7 @@ namespace C64Studio
       m_SpriteProject.SpriteLayers.Add( m_CurrentLayer );
       foreach ( var layer in m_SpriteProject.SpriteLayers )
       {
-        ListViewItem item = new ListViewItem( layer.Name );
+        ArrangedItemEntry item = new ArrangedItemEntry( layer.Name );
         item.Tag = layer;
         listLayers.Items.Add( item );
       }
@@ -781,7 +767,7 @@ namespace C64Studio
 
       foreach ( var layer in m_SpriteProject.SpriteLayers )
       {
-        ListViewItem item = new ListViewItem( layer.Name );
+        ArrangedItemEntry item = new ArrangedItemEntry( layer.Name );
         item.Tag = layer;
         listLayers.Items.Add( item );
       }
@@ -1031,7 +1017,7 @@ namespace C64Studio
     {
       foreach ( var layer in m_SpriteProject.SpriteLayers )
       {
-        ListViewItem item = new ListViewItem( layer.Name );
+        ArrangedItemEntry item = new ArrangedItemEntry( layer.Name );
         item.Tag = layer;
         listLayers.Items.Add( item );
       }
@@ -1040,11 +1026,9 @@ namespace C64Studio
       int   spriteIndex = 0;
       foreach ( var sprite in m_CurrentLayer.Sprites )
       {
-        ListViewItem item = new ListViewItem();
+        ArrangedItemEntry item = new ArrangedItemEntry();
 
-        item.Text = sprite.Index.ToString();
-        item.SubItems.Add( sprite.X.ToString() );
-        item.SubItems.Add( sprite.Y.ToString() );
+        item.Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
         item.Tag = sprite;
         listLayerSprites.Items.Add( item );
 
@@ -2485,7 +2469,7 @@ namespace C64Studio
         m_CurrentLayer.Sprites.Remove( sprite1 );
         m_CurrentLayer.Sprites.Insert( insertIndex, sprite1 );
 
-        ListViewItem itemToSwap = listLayerSprites.SelectedItems[0];
+        ArrangedItemEntry itemToSwap = listLayerSprites.SelectedItems[0];
         listLayerSprites.Items.Remove( itemToSwap );
         listLayerSprites.Items.Insert( insertIndex, itemToSwap );
         itemToSwap.Selected = true;
@@ -2509,7 +2493,7 @@ namespace C64Studio
         m_CurrentLayer.Sprites.Remove( sprite1 );
         m_CurrentLayer.Sprites.Insert( insertIndex, sprite1 );
 
-        ListViewItem itemToSwap = listLayerSprites.SelectedItems[0];
+        ArrangedItemEntry itemToSwap = listLayerSprites.SelectedItems[0];
         listLayerSprites.Items.Remove( itemToSwap );
         listLayerSprites.Items.Insert( insertIndex, itemToSwap );
         itemToSwap.Selected = true;
@@ -2530,7 +2514,7 @@ namespace C64Studio
         if ( sprite.Index != comboSprite.SelectedIndex )
         {
           sprite.Index = comboSprite.SelectedIndex;
-          listLayerSprites.SelectedItems[0].Text = sprite.Index.ToString();
+          listLayerSprites.SelectedItems[0].Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
           RedrawLayer();
           SetModified();
         }
@@ -2549,7 +2533,7 @@ namespace C64Studio
         if ( sprite.X != newPos )
         {
           sprite.X = newPos;
-          listLayerSprites.SelectedItems[0].SubItems[1].Text = newPos.ToString();
+          listLayerSprites.SelectedItems[0].Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
           RedrawLayer();
           SetModified();
         }
@@ -2568,7 +2552,7 @@ namespace C64Studio
         if ( sprite.Y != newPos )
         {
           sprite.Y = newPos;
-          listLayerSprites.SelectedItems[0].SubItems[2].Text = newPos.ToString();
+          listLayerSprites.SelectedItems[0].Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
           RedrawLayer();
           SetModified();
         }
@@ -2654,7 +2638,7 @@ namespace C64Studio
 
 
 
-    private ListViewItem listLayerSprites_AddingItem( object sender )
+    private ArrangedItemEntry listLayerSprites_AddingItem( object sender )
     {
       Formats.SpriteProject.LayerSprite sprite = new Formats.SpriteProject.LayerSprite();
       sprite.X        = GR.Convert.ToI32( editLayerX.Text );
@@ -2666,10 +2650,8 @@ namespace C64Studio
 
       m_CurrentLayer.Sprites.Add( sprite );
 
-      ListViewItem item = new ListViewItem();
-      item.Text = sprite.Index.ToString();
-      item.SubItems.Add( sprite.X.ToString() );
-      item.SubItems.Add( sprite.Y.ToString() );
+      ArrangedItemEntry item = new ArrangedItemEntry();
+      item.Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
       item.Tag = sprite;
 
       return item;
@@ -2677,10 +2659,10 @@ namespace C64Studio
 
 
 
-    private void listLayerSprites_ItemMoved( object sender, ListViewItem Item, ListViewItem OtherItem )
+    private void listLayerSprites_ItemMoved( object sender, ArrangedItemEntry Item, ArrangedItemEntry OtherItem )
     {
       m_CurrentLayer.Sprites.Clear();
-      foreach ( ListViewItem item in listLayerSprites.Items )
+      foreach ( ArrangedItemEntry item in listLayerSprites.Items )
       {
         var sprite = (Formats.SpriteProject.LayerSprite)item.Tag;
 
@@ -2692,10 +2674,10 @@ namespace C64Studio
 
 
 
-    private void listLayerSprites_ItemRemoved( object sender, ListViewItem Item )
+    private void listLayerSprites_ItemRemoved( object sender, ArrangedItemEntry Item )
     {
       m_CurrentLayer.Sprites.Clear();
-      foreach ( ListViewItem item in listLayerSprites.Items )
+      foreach ( ArrangedItemEntry item in listLayerSprites.Items )
       {
         var sprite = (Formats.SpriteProject.LayerSprite)item.Tag;
 
@@ -2707,7 +2689,7 @@ namespace C64Studio
 
 
 
-    private void listLayerSprites_SelectedIndexChanged( object sender, ListViewItem Item )
+    private void listLayerSprites_SelectedIndexChanged( object sender, ArrangedItemEntry Item )
     {
       if ( Item != null )
       {
@@ -2723,7 +2705,7 @@ namespace C64Studio
 
 
 
-    private void listLayers_ItemAdded( object sender, ListViewItem Item )
+    private void listLayers_ItemAdded( object sender, ArrangedItemEntry Item )
     {
       m_CurrentLayer = (Formats.SpriteProject.Layer)Item.Tag;
       SetModified();
@@ -2732,7 +2714,7 @@ namespace C64Studio
 
 
 
-    private void listLayerSprites_ItemAdded( object sender, ListViewItem Item )
+    private void listLayerSprites_ItemAdded( object sender, ArrangedItemEntry Item )
     {
       var sprite = (Formats.SpriteProject.LayerSprite)Item.Tag;
       SetModified();
@@ -2741,7 +2723,7 @@ namespace C64Studio
 
 
 
-    private ListViewItem listLayers_AddingItem( object sender )
+    private ArrangedItemEntry listLayers_AddingItem( object sender )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetAddLayer( this, m_SpriteProject, m_SpriteProject.SpriteLayers.Count ) );
 
@@ -2749,7 +2731,7 @@ namespace C64Studio
 
       layer.Name = editLayerName.Text;
 
-      var item = new ListViewItem( editLayerName.Text );
+      var item = new ArrangedItemEntry( editLayerName.Text );
       item.Tag = layer;
 
       m_SpriteProject.SpriteLayers.Add( layer );
@@ -2759,7 +2741,7 @@ namespace C64Studio
 
 
 
-    private void listLayers_SelectedIndexChanged( object sender, ListViewItem Item )
+    private void listLayers_SelectedIndexChanged( object sender, ArrangedItemEntry Item )
     {
       listLayerSprites.Items.Clear();
       if ( Item == null )
@@ -2776,11 +2758,9 @@ namespace C64Studio
       int   spriteIndex = 0;
       foreach ( var sprite in m_CurrentLayer.Sprites )
       {
-        ListViewItem item = new ListViewItem();
+        var item = new ArrangedItemEntry();
 
-        item.Text = sprite.Index.ToString();
-        item.SubItems.Add( sprite.X.ToString() );
-        item.SubItems.Add( sprite.Y.ToString() );
+        item.Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
         item.Tag = sprite;
         listLayerSprites.Items.Add( item );
 
@@ -2791,10 +2771,10 @@ namespace C64Studio
 
 
 
-    private void listLayers_ItemRemoved( object sender, ListViewItem Item )
+    private void listLayers_ItemRemoved( object sender, ArrangedItemEntry Item )
     {
       m_SpriteProject.SpriteLayers.Clear();
-      foreach ( ListViewItem item in listLayers.Items )
+      foreach ( ArrangedItemEntry item in listLayers.Items )
       {
         var layer = (Formats.SpriteProject.Layer)item.Tag;
 
@@ -2821,10 +2801,10 @@ namespace C64Studio
 
 
 
-    private void listLayers_ItemMoved( object sender, ListViewItem Item, ListViewItem OtherItem )
+    private void listLayers_ItemMoved( object sender, ArrangedItemEntry Item, ArrangedItemEntry OtherItem )
     {
       m_SpriteProject.SpriteLayers.Clear();
-      foreach ( ListViewItem item in listLayers.Items )
+      foreach ( ArrangedItemEntry item in listLayers.Items )
       {
         var layer = (Formats.SpriteProject.Layer)item.Tag;
 
@@ -2924,14 +2904,14 @@ namespace C64Studio
 
 
 
-    private bool listLayerSprites_MovingItem( object sender, ListViewItem Item1, ListViewItem Item2 )
+    private bool listLayerSprites_MovingItem( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
     {
       return true;
     }
 
 
 
-    private bool listLayers_MovingItem( object sender, ListViewItem Item1, ListViewItem Item2 )
+    private bool listLayers_MovingItem( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetExchangeLayer( this, m_SpriteProject, Item1.Index, Item2.Index ) );
 

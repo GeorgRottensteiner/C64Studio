@@ -2837,7 +2837,7 @@ namespace C64Studio
 
 
 
-    private void listColorMappingTargets_SelectedIndexChanged( object sender, ListViewItem Item )
+    private void listColorMappingTargets_SelectedIndexChanged( object sender, ArrangedItemEntry Item )
     {
       UpdateColorMappingButtons();
     }
@@ -2923,7 +2923,7 @@ namespace C64Studio
 
 
 
-    private ListViewItem listColorMappingTargets_AddingItem( object sender )
+    private ArrangedItemEntry listColorMappingTargets_AddingItem( object sender )
     {
       C64Studio.Formats.GraphicScreenProject.ColorMappingTarget   targetIndex = (C64Studio.Formats.GraphicScreenProject.ColorMappingTarget)comboColorMappingTargets.SelectedIndex;
 
@@ -2939,7 +2939,7 @@ namespace C64Studio
       }
       m_GraphicScreenProject.ColorMapping[sourceColor].Insert( m_GraphicScreenProject.ColorMapping[sourceColor].Count - 1, targetIndex );
 
-      var newItem = new ListViewItem( GR.EnumHelper.GetDescription( targetIndex ) );
+      var newItem = new ArrangedItemEntry( GR.EnumHelper.GetDescription( targetIndex ) );
 
       Modified = true;
       UpdateColorMappingButtons();
@@ -2948,7 +2948,7 @@ namespace C64Studio
 
 
 
-    private void listColorMappingTargets_ItemRemoved( object sender, ListViewItem Item )
+    private void listColorMappingTargets_ItemRemoved( object sender, ArrangedItemEntry Item )
     {
       int     sourceColor = listColorMappingColors.SelectedIndex;
       if ( sourceColor == -1 )
@@ -2972,7 +2972,7 @@ namespace C64Studio
 
 
 
-    private void listColorMappingTargets_ItemMoved( object sender, ListViewItem Item1, ListViewItem Item2 )
+    private void listColorMappingTargets_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
     {
       int     sourceColor = listColorMappingColors.SelectedIndex;
       if ( sourceColor == -1 )
@@ -2982,7 +2982,7 @@ namespace C64Studio
 
       m_GraphicScreenProject.ColorMapping[sourceColor].Clear();
 
-      foreach ( ListViewItem item in listColorMappingTargets.Items )
+      foreach ( ArrangedItemEntry item in listColorMappingTargets.Items )
       {
         m_GraphicScreenProject.ColorMapping[sourceColor].Add( ColorMappingFromItem( item ) );
       }
@@ -2990,7 +2990,7 @@ namespace C64Studio
 
 
 
-    private C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ColorMappingFromItem( ListViewItem Item )
+    private C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ColorMappingFromItem( ArrangedItemEntry Item )
     {
       foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
       {
@@ -3004,7 +3004,7 @@ namespace C64Studio
 
 
 
-    private bool listColorMappingTargets_MovingItem( object sender, ListViewItem Item1, ListViewItem Item2 )
+    private bool listColorMappingTargets_MovingItem( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
     {
       var     colorMapping1 = ColorMappingFromItem( Item1 );
       var     colorMapping2 = ColorMappingFromItem( Item2 );
@@ -3019,7 +3019,7 @@ namespace C64Studio
 
 
 
-    private void listColorMappingTargets_ItemAdded( object sender, ListViewItem Item )
+    private void listColorMappingTargets_ItemAdded( object sender, ArrangedItemEntry Item )
     {
       listColorMappingTargets.Items.Remove( Item );
       listColorMappingTargets.Items.Insert( listColorMappingTargets.Items.Count - 1, Item );
