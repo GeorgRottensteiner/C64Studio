@@ -1,6 +1,7 @@
 ﻿C64Studio
 o BASIC_Addons für V7 etc. (tuxer) -> Auswahl BASIC-Typ, Extended Basic Tokens!
 o Search Bookmarks-> Functionality
+o Sprite-Import from file -> allow skipping a number of bytes (open binary editor view?)
 o komme gerade mit dem Text Screen Editor nicht zurecht. Habe die Größe auf 40x200 gestellt und Text als ASM exportiert. 
   Beim importieren wird aber nichts angezeigt. Auch skuril: Wenn ich beispielsweise die Hintergrundfarbe von Türkis (03) 
   auf Grün (05) ändere, während der Schieberegler nicht oben ist, dann werden nicht alle 200 Zeilen grün, sondern oben und 

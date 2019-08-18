@@ -57,7 +57,9 @@
     <Compile Include="AcceleratorKey.cs" />
     <Compile Include="BASICKeyMap.cs" />
     <Compile Include="CompileResultItemComparer.cs" />
-    <Compile Include="Controls\ArrangedItemList.cs" />
+    <Compile Include="Controls\ArrangedItemList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ArrangedItemList.Designer.cs">
       <DependentUpon>ArrangedItemList.cs</DependentUpon>
     </Compile>
