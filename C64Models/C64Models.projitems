@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\SpriteProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\T64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Lookup\Lookup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\AssemblerSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.cs" />

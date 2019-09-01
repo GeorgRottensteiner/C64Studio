@@ -7,6 +7,20 @@ using System.Windows.Forms;
 
 namespace C64Studio.Types
 {
+  public enum MachineType
+  {
+    UNKNOWN,
+    C64,
+    VC20
+  };
+
+  public class Machine
+  {
+    public MachineType    Type;
+    public int            InitialBreakpointAddress;           // common initial breakpoint address before jumping to program start (inside Kernal)
+    public int            InitialBreakpointAddressCartridge;  // initial breakpoint address before jumping to cartridge start
+  };
+
   public enum AssemblerType
   {
     AUTO,

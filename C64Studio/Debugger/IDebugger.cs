@@ -7,6 +7,7 @@ namespace C64Studio
 {
   public enum DebuggerFeature
   {
+    REMOTE_MONITOR,
     ADD_BREAKPOINTS_AFTER_STARTUP,
     REQUIRES_DOUBLE_ACTION_AFTER_BREAK
   };

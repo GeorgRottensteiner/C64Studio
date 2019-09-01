@@ -420,6 +420,52 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestFill1Param()
+    {
+      string      source = @"* = $2000
+                             !fill 5";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      Assert.AreEqual( 7, (int)parser.AssembledOutput.Assembly.Length );
+      Assert.AreEqual( "00200000000000", parser.AssembledOutput.Assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestFill2Params()
+    {
+      string      source = @"* = $2000
+                             !fill 5,$17";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      Assert.AreEqual( 7, (int)parser.AssembledOutput.Assembly.Length );
+      Assert.AreEqual( "00201717171717", parser.AssembledOutput.Assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestLocalLabelInLoop()
     {
       string      source = @"!for j = 0 to 5

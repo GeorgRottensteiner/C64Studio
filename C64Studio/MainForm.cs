@@ -2535,7 +2535,8 @@ namespace C64Studio
 
     internal bool EmulatorSupportsDebugging( ToolInfo Emulator )
     {
-      return System.IO.Path.GetFileNameWithoutExtension( Emulator.Filename ).ToUpper().StartsWith( "X64" );
+      return ( System.IO.Path.GetFileNameWithoutExtension( Emulator.Filename ).ToUpper().StartsWith( "X64" ) )
+        ||   ( System.IO.Path.GetFileNameWithoutExtension( Emulator.Filename ).ToUpper().StartsWith( "XVIC" ) );
     }
 
 
@@ -2664,7 +2665,6 @@ namespace C64Studio
         StudioCore.Debugging.LateBreakpointOverrideDebugStart = StudioCore.Debugging.OverrideDebugStart;
 
         // special start addresses for different run types
-
         if ( IsCartridge( targetType ) )
         {
           StudioCore.Debugging.OverrideDebugStart = 0x8000;

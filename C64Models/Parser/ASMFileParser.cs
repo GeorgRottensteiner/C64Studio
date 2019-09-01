@@ -4984,60 +4984,50 @@ namespace C64Studio.Parser
       lineSizeInBytes = 0;
       ClearErrorInfo();
 
-      string fillNumberToken = "";
-      bool firstToken = true;
-      int tokenIndex = 0;
-      bool  hadComma = false;
-      foreach ( Types.TokenInfo token in lineTokenInfos )
-      {
-        if ( token.Content == "," )
-        {
-          hadComma = true;
-          int numBytes = -1;
+      List<List<TokenInfo>>   lineParams;
 
-          List<Types.TokenInfo> tokens = ParseTokenInfo( fillNumberToken, 0, fillNumberToken.Length );
-          if ( !EvaluateTokens( lineIndex, tokens, out numBytes ) )
-          {
-            AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not determine fill parameter " + fillNumberToken );
-            return ParseLineResult.RETURN_NULL;
-          }
-          info.NumBytes = numBytes;
-          info.Line = parseLine;
-          info.NeededParsedExpression = lineTokenInfos.GetRange( 1, lineTokenInfos.Count - 1 );
-          break;
-        }
-        if ( firstToken )
-        {
-          firstToken = false;
-        }
-        else
-        {
-          fillNumberToken += token.Content;
-        }
-        ++tokenIndex;
+      var result = ParseLineInParameters( lineTokenInfos, 1, lineTokenInfos.Count - 1, lineIndex, out lineParams );
+      if ( result != ParseLineResult.OK )
+      {
+        return result;
+      }
+      if ( ( lineParams.Count < 1 )
+      ||   ( lineParams.Count > 2 ) )
+      {
+        AddError( lineIndex, ErrorCode.E1302_MALFORMED_MACRO, "Macro malformed, expect " + lineTokenInfos[0].Content + " <Count>[,<Value>]" );
+        return ParseLineResult.ERROR_ABORT;
       }
 
-      if ( !hadComma )
+      int numBytes = -1;
+      if ( !EvaluateTokens( lineIndex, lineParams[0], out numBytes ) )
       {
-        // only number of bytes, default 0
-        hadComma = true;
-        int numBytes = -1;
-        List<Types.TokenInfo> tokens = ParseTokenInfo( fillNumberToken, 0, fillNumberToken.Length );
-        if ( !EvaluateTokens( lineIndex, tokens, out numBytes ) )
-        {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill count parameter: " + fillNumberToken.Substring( m_LastErrorInfo.Pos, m_LastErrorInfo.Length ) );
-          return ParseLineResult.RETURN_NULL;
-        }
-        info.NumBytes = numBytes;
-        info.Line = parseLine;
-        info.LineData = new GR.Memory.ByteBuffer( (uint)numBytes );
-      }
-
-      if ( info.NumBytes == 0 )
-      {
-        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro malformed, expect " + lineTokenInfos[0].Content + " <Count>,<Value>" );
+        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not determine fill count parameter " + TokensToExpression( lineParams[0] ) );
         return ParseLineResult.RETURN_NULL;
       }
+      if ( numBytes < 0 )
+      {
+        AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro malformed, fill count must be positive or zero" );
+        return ParseLineResult.RETURN_NULL;
+      }
+
+      info.NumBytes               = numBytes;
+      info.Line                   = parseLine;
+
+      int    fillValue = 0;
+      if ( lineParams.Count == 2 )
+      {
+        if ( !EvaluateTokens( lineIndex, lineParams[1], out fillValue ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill value parameter: " + TokensToExpression( lineParams[1] ) );
+          return ParseLineResult.RETURN_NULL;
+        }
+      }
+      info.LineData = new GR.Memory.ByteBuffer( (uint)numBytes );
+      for ( int i = 0; i < numBytes; ++i )
+      {
+        info.LineData.SetU8At( i, (byte)fillValue );
+      }
+
       lineSizeInBytes = info.NumBytes;
       return ParseLineResult.OK;
     }
@@ -5708,7 +5698,7 @@ namespace C64Studio.Parser
         subFilenameFull = DetermineFullLibraryFilePath( subFilename );
         if ( string.IsNullOrEmpty( subFilenameFull ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching library file in line " + lineIndex );
+          AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching library file in line " + ( lineIndex + 1 ) );
           return ParseLineResult.RETURN_NULL;
         }
       }
@@ -9084,6 +9074,7 @@ namespace C64Studio.Parser
 
 
 
+    // TODO - add expression parsing (paranthesis)
     private ParseLineResult ParseLineInParameters( List<TokenInfo> lineTokenInfos, int Offset, int Count, int LineIndex, out List<List<TokenInfo>> lineParams )
     {
       int     paramStartIndex = Offset;
@@ -9097,15 +9088,15 @@ namespace C64Studio.Parser
         if ( ( token.Type == TokenInfo.TokenType.SEPARATOR )
         &&   ( token.Content == "," ) )
         {
-          if ( i == paramStartIndex )
+          if ( Offset + i == paramStartIndex )
           {
             // empty?
             AddError( LineIndex, ErrorCode.E1000_SYNTAX_ERROR, "Empty Parameter, expected a value or expression", token.StartPos, token.Length );
             return ParseLineResult.ERROR_ABORT;
           }
-          lineParams.Add( lineTokenInfos.GetRange( paramStartIndex, i - paramStartIndex ) );
+          lineParams.Add( lineTokenInfos.GetRange( paramStartIndex, Offset + i - paramStartIndex ) );
 
-          paramStartIndex = i + 1;
+          paramStartIndex = Offset + i + 1;
           continue;
         }
       }

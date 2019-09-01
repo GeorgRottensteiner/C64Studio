@@ -1,4 +1,13 @@
 ﻿C64Studio
+o *=$c000
+  jmp Init
+    !fill (10,0)
+  Init rts
+  2;E1010;C:\Users\Deufol\Desktop\C64\Test\Test\Test.asm;Could not evaluate Init
+  3;E1302;C:\Users\Deufol\Desktop\C64\Test\Test\Test.asm;Could not determine fill parameter (10
+  Die Fehlermeldung ist ein bisschen irreführend.
+
+Die am Ende der Meldung ist damit im Prinzip überflüssig geworden, aber trotzdem um 1 daneben.
 o BASIC_Addons für V7 etc. (tuxer) -> Auswahl BASIC-Typ, Extended Basic Tokens!
 o Search Bookmarks-> Functionality
 o Sprite-Import from file -> allow skipping a number of bytes (open binary editor view?)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C64Studio.Types;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -98,6 +99,7 @@ namespace C64Studio
     private int                       m_LastRequestedMemorySize = 32;
     private MemorySource              m_LastRequestedMemorySource = MemorySource.AS_CPU;
     private RegisterInfo              CurrentRegisterValues = new RegisterInfo();
+    public MachineType                ConnectedMachine = MachineType.UNKNOWN;
 
 
     GR.Collections.Map<int, byte>     m_MemoryValues = new GR.Collections.Map<int, byte>();
@@ -1430,9 +1432,12 @@ namespace C64Studio
       }
       else if ( Data.Type == Request.REFRESH_MEMORY_RAM )
       {
-        RequestData requRAM = new RequestData( Request.RAM_MODE );
-        requRAM.Info = "ram";
-        QueueRequest( requRAM );
+        if ( MachineSupportsBankCommand() )
+        {
+          RequestData requRAM = new RequestData( Request.RAM_MODE );
+          requRAM.Info = "ram";
+          QueueRequest( requRAM );
+        }
 
         RequestData requData  = new RequestData( Request.MEM_DUMP );
         requData.Parameter1 = Data.Parameter1;
@@ -1445,9 +1450,12 @@ namespace C64Studio
         }
         QueueRequest( requData );
 
-        requRAM = new RequestData( Request.RAM_MODE );
-        requRAM.Info = "cpu";
-        QueueRequest( requRAM );
+        if ( MachineSupportsBankCommand() )
+        {
+          var requRAM = new RequestData( Request.RAM_MODE );
+          requRAM.Info = "cpu";
+          QueueRequest( requRAM );
+        }
         return;
       }
 
@@ -1457,6 +1465,18 @@ namespace C64Studio
         return;
       }
       SendRequest( Data );
+    }
+
+
+
+    private bool MachineSupportsBankCommand()
+    {
+      switch ( ConnectedMachine )
+      {
+        case MachineType.VC20:
+          return false;
+      }
+      return true;
     }
 
 
@@ -1713,6 +1733,8 @@ namespace C64Studio
           return m_ViceVersion > VICERemoteDebugger.WinViceVersion.V_2_3;
         case DebuggerFeature.REQUIRES_DOUBLE_ACTION_AFTER_BREAK:
           return m_ViceVersion == VICERemoteDebugger.WinViceVersion.V_2_3;
+        case DebuggerFeature.REMOTE_MONITOR:
+          return true;
       }
       return false;
     }
@@ -1738,6 +1760,20 @@ namespace C64Studio
         Core.AddToOutput( "Could not check emulator version: " + io.Message );
         return false;
       }
+
+      // find machine type from executable
+      string    filename = System.IO.Path.GetFileNameWithoutExtension( ToolRun.Filename ).ToUpper();
+
+      ConnectedMachine = MachineType.UNKNOWN;
+      if ( filename.StartsWith( "X64" ) )
+      {
+        ConnectedMachine = MachineType.C64;
+      }
+      else if ( filename.StartsWith( "XVIC" ) )
+      {
+        ConnectedMachine = MachineType.VC20;
+      }
+
       if ( fileVersion == null )
       {
         //Core.AddToOutput( "Could not check emulator version, no fileversion was found, assume VICE > 3.2" );
@@ -1854,5 +1890,8 @@ namespace C64Studio
       m_LastRequestedMemorySize         = Size;
       m_LastRequestedMemorySource       = Source;
     }
+
+
+
   }
 }

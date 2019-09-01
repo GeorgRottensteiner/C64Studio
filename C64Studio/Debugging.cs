@@ -468,6 +468,12 @@ namespace C64Studio
 
     public void DebugStep()
     {
+      if ( Debugger == null )
+      {
+        Core.AddToOutput( "No debugger attached" );
+        return;
+      }
+
       if ( ( Core.MainForm.m_CurrentActiveTool != null )
       &&   ( !Core.MainForm.EmulatorSupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
       {
@@ -515,6 +521,12 @@ namespace C64Studio
 
     public void StepOver()
     {
+      if ( Debugger == null )
+      {
+        Core.AddToOutput( "No debugger attached" );
+        return;
+      }
+
       if ( ( Core.MainForm.m_CurrentActiveTool != null )
       &&   ( !Core.MainForm.EmulatorSupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
       {
@@ -560,6 +572,12 @@ namespace C64Studio
 
     internal void DebugBreak()
     {
+      if ( Debugger == null )
+      {
+        Core.AddToOutput( "No debugger attached" );
+        return;
+      }
+
       if ( ( Core.MainForm.m_CurrentActiveTool != null )
       &&   ( !Core.MainForm.EmulatorSupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
       {
@@ -583,8 +601,6 @@ namespace C64Studio
         Core.MainForm.AppState = Types.StudioState.DEBUGGING_BROKEN;
         FirstActionAfterBreak = true;
         Core.MainForm.SetGUIForDebugging( true );
-        //mainDebugGo.Enabled = true;
-        //mainDebugBreak.Enabled = false;
       }
     }
 
