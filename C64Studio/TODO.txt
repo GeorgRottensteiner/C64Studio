@@ -1,4 +1,5 @@
 ﻿C64Studio
+o C128-Unterstützung (BASIC mit Hex-Data, Debug-Start, etc..)
 o *=$c000
   jmp Init
     !fill (10,0)

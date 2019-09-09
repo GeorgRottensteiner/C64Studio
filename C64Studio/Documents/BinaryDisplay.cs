@@ -461,6 +461,66 @@ namespace C64Studio
       SetHexData( resultData );
     }
 
+
+
+    private void btnToBASICHex_Click( object sender, EventArgs e )
+    {
+      GR.Memory.ByteBuffer data = DataFromHex();
+
+      int         lineDelta = GR.Convert.ToI32( editToBASICLineDelta.Text );
+      if ( lineDelta <= 0 )
+      {
+        lineDelta = 1;
+      }
+
+      int         curLineNumber = GR.Convert.ToI32( editToBASICStartLine.Text );
+      if ( curLineNumber < 0 )
+      {
+        curLineNumber = 0;
+      }
+
+      textBinaryData.Text = Util.ToBASICHexData( data, curLineNumber, lineDelta );
+    }
+
+
+
+    private void btnFromBASICHex_Click( object sender, EventArgs e )
+    {
+      string[]  lines = textBinaryData.Text.Split( new char[] { '\n' } );
+
+      GR.Memory.ByteBuffer    resultData = new GR.Memory.ByteBuffer();
+
+      for ( int i = 0; i < lines.Length; ++i )
+      {
+        string    cleanLine = lines[i].Trim().ToUpper();
+
+        int   dataPos = cleanLine.IndexOf( "DATA" );
+        if ( dataPos != -1 )
+        {
+          int     commaPos = -1;
+          int     byteStartPos = dataPos + 4;
+
+          do
+          {
+            commaPos = cleanLine.IndexOf( ',', byteStartPos );
+            if ( commaPos == -1 )
+            {
+              commaPos = cleanLine.Length;
+            }
+            int     value = GR.Convert.ToI32( cleanLine.Substring( byteStartPos, commaPos - byteStartPos ).Trim(), 16 );
+            resultData.AppendU8( (byte)value );
+
+            byteStartPos = commaPos + 1;
+          }
+          while ( commaPos < cleanLine.Length );
+        }
+      }
+
+      SetHexData( resultData );
+    }
+
+
+
   }
 }
 
