@@ -106,6 +106,7 @@
       this.comboColorMappingTargets = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
+      this.btnExportToBASICHexData = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -216,6 +217,7 @@
       this.groupExport.Controls.Add(this.editExportBASICLineNo);
       this.groupExport.Controls.Add(this.label3);
       this.groupExport.Controls.Add(this.label4);
+      this.groupExport.Controls.Add(this.btnExportToBASICHexData);
       this.groupExport.Controls.Add(this.btnExportToBASICData);
       this.groupExport.Controls.Add(this.comboCharScreens);
       this.groupExport.Controls.Add(this.comboExportData);
@@ -410,11 +412,11 @@
       this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(6, 239);
+      this.editDataExport.Location = new System.Drawing.Point(6, 263);
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 243);
+      this.editDataExport.Size = new System.Drawing.Size(429, 219);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
@@ -891,11 +893,16 @@
       // 
       this.listColorMappingTargets.AddButtonEnabled = true;
       this.listColorMappingTargets.DeleteButtonEnabled = false;
+      this.listColorMappingTargets.HasOwnerDrawColumn = false;
+      this.listColorMappingTargets.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      this.listColorMappingTargets.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
       this.listColorMappingTargets.Location = new System.Drawing.Point(206, 16);
       this.listColorMappingTargets.MoveDownButtonEnabled = false;
       this.listColorMappingTargets.MoveUpButtonEnabled = false;
       this.listColorMappingTargets.MustHaveOneElement = true;
       this.listColorMappingTargets.Name = "listColorMappingTargets";
+      this.listColorMappingTargets.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      this.listColorMappingTargets.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listColorMappingTargets.Size = new System.Drawing.Size(207, 247);
       this.listColorMappingTargets.TabIndex = 5;
       this.listColorMappingTargets.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listColorMappingTargets_AddingItem);
@@ -935,6 +942,16 @@
       this.listColorMappingColors.TabIndex = 0;
       this.listColorMappingColors.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listColorMappingColors_DrawItem);
       this.listColorMappingColors.SelectedIndexChanged += new System.EventHandler(this.listColorMappingColors_SelectedIndexChanged);
+      // 
+      // btnExportToBASICHexData
+      // 
+      this.btnExportToBASICHexData.Location = new System.Drawing.Point(6, 219);
+      this.btnExportToBASICHexData.Name = "btnExportToBASICHexData";
+      this.btnExportToBASICHexData.Size = new System.Drawing.Size(120, 23);
+      this.btnExportToBASICHexData.TabIndex = 25;
+      this.btnExportToBASICHexData.Text = "Export to BASIC data hex";
+      this.btnExportToBASICHexData.UseVisualStyleBackColor = true;
+      this.btnExportToBASICHexData.Click += new System.EventHandler(this.btnExportToBASICDataHex_Click);
       // 
       // GraphicScreenEditor
       // 
@@ -1041,5 +1058,6 @@
     private System.Windows.Forms.RadioButton btnToolQuad;
     private System.Windows.Forms.RadioButton btnToolRect;
     private System.Windows.Forms.RadioButton btnToolPaint;
+    private System.Windows.Forms.Button btnExportToBASICHexData;
   }
 }

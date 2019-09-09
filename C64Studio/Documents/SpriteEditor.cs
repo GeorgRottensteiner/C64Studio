@@ -3022,7 +3022,7 @@ namespace C64Studio
 
       panelSprites.Invalidate();
       pictureEditor.Invalidate();
-      Modified = false;
+      Modified = true;
     }
 
 
@@ -3494,12 +3494,17 @@ namespace C64Studio
         }
       }
       ImportFromData( resultData );
+      Modified = true;
     }
 
 
 
     public override bool ApplyFunction( Function Function )
     {
+      if ( !pictureEditor.Focused )
+      {
+        return false;
+      }
       switch ( Function )
       {
         case Function.GRAPHIC_ELEMENT_MIRROR_H:
@@ -3581,6 +3586,54 @@ namespace C64Studio
     private void Previous()
     {
       panelSprites.SelectedIndex = ( panelSprites.SelectedIndex + 256 - 1 ) % 256;
+    }
+
+
+
+    private void btnExportToBASICHexData_Click( object sender, EventArgs e )
+    {
+      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
+      if ( ( startLine < 0 )
+      || ( startLine > 63999 ) )
+      {
+        startLine = 10;
+      }
+      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
+      if ( ( lineOffset < 0 )
+      || ( lineOffset > 63999 ) )
+      {
+        startLine = 10;
+      }
+
+      var exportIndices = GetExportIndices();
+      if ( exportIndices.Count == 0 )
+      {
+        return;
+      }
+
+
+      GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
+      for ( int i = 0; i < exportIndices.Count; ++i )
+      {
+        exportData.Append( m_SpriteProject.Sprites[exportIndices[i]].Data );
+
+        byte color = (byte)m_SpriteProject.Sprites[exportIndices[i]].Color;
+        if ( m_SpriteProject.Sprites[exportIndices[i]].Multicolor )
+        {
+          color |= 0x80;
+        }
+        exportData.AppendU8( color );
+      }
+
+      editDataExport.Text = Util.ToBASICHexData( exportData, startLine, lineOffset );
+    }
+
+
+
+    private void btnImportFromBASICHex_Click( object sender, EventArgs e )
+    {
+      ImportFromData( Util.FromBASICHex( editDataImport.Text ) );
+      Modified = true;
     }
 
 

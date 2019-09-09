@@ -130,6 +130,8 @@
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnToBASICHex = new System.Windows.Forms.Button();
+      this.btnImportFromBASICHex = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabSpriteEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -210,26 +212,26 @@
             this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem,
             this.forSelectedSpritesToolStripMenuItem});
       this.contextMenuExchangeColors.Name = "contextMenuExchangeColors";
-      this.contextMenuExchangeColors.Size = new System.Drawing.Size(295, 92);
+      this.contextMenuExchangeColors.Size = new System.Drawing.Size(296, 92);
       // 
       // exchangeMultiColor1WithBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Name = "exchangeMultiColor1WithBGColorToolStripMenuItem";
-      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 1 with BG Color";
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1WithBGColorToolStripMenuItem_Click);
       // 
       // exchangeMultiColor2WithBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Name = "exchangeMultiColor2WithBGColorToolStripMenuItem";
-      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 2 with BG Color";
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor2WithBGColorToolStripMenuItem_Click);
       // 
       // exchangeMultiColor1WithMultiColor2ToolStripMenuItem
       // 
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Name = "exchangeMultiColor1WithMultiColor2ToolStripMenuItem";
-      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Text = "Exchange Multi Color 1 with Multi Color 2";
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem_Click);
       // 
@@ -243,48 +245,48 @@
             this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem,
             this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1});
       this.forSelectedSpritesToolStripMenuItem.Name = "forSelectedSpritesToolStripMenuItem";
-      this.forSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+      this.forSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
       this.forSelectedSpritesToolStripMenuItem.Text = "For selected Sprites";
       // 
       // exchangeMulticolor1WithSpriteColorToolStripMenuItem1
       // 
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Name = "exchangeMulticolor1WithSpriteColorToolStripMenuItem1";
-      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Text = "Exchange Multicolor 1 with sprite color";
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1_Click);
       // 
       // exchangeMulticolor2WithSpriteColorToolStripMenuItem1
       // 
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Name = "exchangeMulticolor2WithSpriteColorToolStripMenuItem1";
-      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Text = "Exchange Multicolor 2 with sprite color";
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1_Click);
       // 
       // exchangeBGColorWithSpriteColorToolStripMenuItem
       // 
       this.exchangeBGColorWithSpriteColorToolStripMenuItem.Name = "exchangeBGColorWithSpriteColorToolStripMenuItem";
-      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
       this.exchangeBGColorWithSpriteColorToolStripMenuItem.Text = "Exchange BG color with sprite color";
       this.exchangeBGColorWithSpriteColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeBGColorWithSpriteColorToolStripMenuItem_Click);
       // 
       // exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem
       // 
       this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Name = "exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem";
-      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
       this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Text = "Exchange Multicolor 1 with BG color";
       this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Click += new System.EventHandler(this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem_Click);
       // 
       // exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem
       // 
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Name = "exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem";
-      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Text = "Exchange Multicolor 2 with BG color";
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Click += new System.EventHandler(this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem_Click);
       // 
       // exchangeMulticolor1WithMulticolor2ToolStripMenuItem1
       // 
       this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Name = "exchangeMulticolor1WithMulticolor2ToolStripMenuItem1";
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
       this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Text = "Exchange Multicolor 1 with Multicolor 2";
       this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1_Click);
       // 
@@ -392,11 +394,16 @@
       // 
       this.listLayerSprites.AddButtonEnabled = true;
       this.listLayerSprites.DeleteButtonEnabled = false;
+      this.listLayerSprites.HasOwnerDrawColumn = false;
+      this.listLayerSprites.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      this.listLayerSprites.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
       this.listLayerSprites.Location = new System.Drawing.Point(0, 0);
       this.listLayerSprites.MoveDownButtonEnabled = false;
       this.listLayerSprites.MoveUpButtonEnabled = false;
       this.listLayerSprites.MustHaveOneElement = false;
       this.listLayerSprites.Name = "listLayerSprites";
+      this.listLayerSprites.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      this.listLayerSprites.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listLayerSprites.Size = new System.Drawing.Size(133, 148);
       this.listLayerSprites.TabIndex = 22;
       this.listLayerSprites.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listLayerSprites_AddingItem);
@@ -412,11 +419,16 @@
       this.listLayers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
       this.listLayers.DeleteButtonEnabled = false;
+      this.listLayers.HasOwnerDrawColumn = false;
+      this.listLayers.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      this.listLayers.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
       this.listLayers.Location = new System.Drawing.Point(0, 290);
       this.listLayers.MoveDownButtonEnabled = false;
       this.listLayers.MoveUpButtonEnabled = false;
       this.listLayers.MustHaveOneElement = true;
       this.listLayers.Name = "listLayers";
+      this.listLayers.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      this.listLayers.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listLayers.Size = new System.Drawing.Size(133, 93);
       this.listLayers.TabIndex = 22;
       this.listLayers.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listLayers_AddingItem);
@@ -836,6 +848,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
       this.groupBox1.Controls.Add(this.btnImportFromFile);
       this.groupBox1.Controls.Add(this.btnImportFromASM);
+      this.groupBox1.Controls.Add(this.btnImportFromBASICHex);
       this.groupBox1.Controls.Add(this.btnImportFromBASIC);
       this.groupBox1.Controls.Add(this.btnImportFromHex);
       this.groupBox1.Controls.Add(this.button2);
@@ -859,7 +872,7 @@
       // 
       // btnImportFromASM
       // 
-      this.btnImportFromASM.Location = new System.Drawing.Point(132, 77);
+      this.btnImportFromASM.Location = new System.Drawing.Point(9, 50);
       this.btnImportFromASM.Name = "btnImportFromASM";
       this.btnImportFromASM.Size = new System.Drawing.Size(117, 23);
       this.btnImportFromASM.TabIndex = 2;
@@ -869,7 +882,7 @@
       // 
       // btnImportFromBASIC
       // 
-      this.btnImportFromBASIC.Location = new System.Drawing.Point(255, 77);
+      this.btnImportFromBASIC.Location = new System.Drawing.Point(132, 50);
       this.btnImportFromBASIC.Name = "btnImportFromBASIC";
       this.btnImportFromBASIC.Size = new System.Drawing.Size(117, 23);
       this.btnImportFromBASIC.TabIndex = 2;
@@ -879,7 +892,7 @@
       // 
       // btnImportFromHex
       // 
-      this.btnImportFromHex.Location = new System.Drawing.Point(9, 77);
+      this.btnImportFromHex.Location = new System.Drawing.Point(255, 18);
       this.btnImportFromHex.Name = "btnImportFromHex";
       this.btnImportFromHex.Size = new System.Drawing.Size(117, 23);
       this.btnImportFromHex.TabIndex = 2;
@@ -889,7 +902,7 @@
       // 
       // button2
       // 
-      this.button2.Location = new System.Drawing.Point(9, 48);
+      this.button2.Location = new System.Drawing.Point(132, 18);
       this.button2.Name = "button2";
       this.button2.Size = new System.Drawing.Size(117, 23);
       this.button2.TabIndex = 2;
@@ -923,6 +936,7 @@
       this.groupExport.Controls.Add(this.editSpriteFrom);
       this.groupExport.Controls.Add(this.label8);
       this.groupExport.Controls.Add(this.labelCharactersTo);
+      this.groupExport.Controls.Add(this.btnToBASICHex);
       this.groupExport.Controls.Add(this.btnExportToBASICData);
       this.groupExport.Controls.Add(this.labelCharactersFrom);
       this.groupExport.Controls.Add(this.editPrefix);
@@ -1082,11 +1096,11 @@
       this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(6, 148);
+      this.editDataExport.Location = new System.Drawing.Point(6, 166);
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 309);
+      this.editDataExport.Size = new System.Drawing.Size(429, 291);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
@@ -1176,6 +1190,26 @@
       // 
       this.columnHeader6.Text = "Y";
       this.columnHeader6.Width = 30;
+      // 
+      // btnToBASICHex
+      // 
+      this.btnToBASICHex.Location = new System.Drawing.Point(6, 135);
+      this.btnToBASICHex.Name = "btnToBASICHex";
+      this.btnToBASICHex.Size = new System.Drawing.Size(117, 23);
+      this.btnToBASICHex.TabIndex = 25;
+      this.btnToBASICHex.Text = "To BASIC hex data";
+      this.btnToBASICHex.UseVisualStyleBackColor = true;
+      this.btnToBASICHex.Click += new System.EventHandler(this.btnExportToBASICHexData_Click);
+      // 
+      // btnImportFromBASICHex
+      // 
+      this.btnImportFromBASICHex.Location = new System.Drawing.Point(255, 50);
+      this.btnImportFromBASICHex.Name = "btnImportFromBASICHex";
+      this.btnImportFromBASICHex.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromBASICHex.TabIndex = 2;
+      this.btnImportFromBASICHex.Text = "From BASIC hex";
+      this.btnImportFromBASICHex.UseVisualStyleBackColor = true;
+      this.btnImportFromBASICHex.Click += new System.EventHandler(this.btnImportFromBASICHex_Click);
       // 
       // SpriteEditor
       // 
@@ -1308,5 +1342,7 @@
     private System.Windows.Forms.TextBox editDataImport;
     private System.Windows.Forms.Button btnImportFromASM;
     private System.Windows.Forms.Button btnImportFromBASIC;
+    private System.Windows.Forms.Button btnToBASICHex;
+    private System.Windows.Forms.Button btnImportFromBASICHex;
   }
 }

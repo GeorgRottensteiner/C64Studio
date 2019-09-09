@@ -934,5 +934,16 @@ namespace C64Studio
 
 
 
+    private void btnExportToBASICDataHex_Click( object sender, EventArgs e )
+    {
+      GR.Memory.ByteBuffer      exportData = GetValueData();
+
+      int         lineDelta = GR.Convert.ToI32( editExportBASICLineOffset.Text );
+      int         curLineNumber = GR.Convert.ToI32( editExportBASICLineNo.Text );
+      editDataExport.Text = Util.ToBASICHexData( exportData, curLineNumber, lineDelta );
+    }
+
+
+
   }
 }

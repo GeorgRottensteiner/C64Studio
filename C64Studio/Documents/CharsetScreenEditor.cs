@@ -3228,5 +3228,49 @@ namespace C64Studio
 
 
 
+    private void btnExportToBASICDataHex_Click( object sender, EventArgs e )
+    {
+      // prepare data
+      GR.Memory.ByteBuffer screenCharData;
+      GR.Memory.ByteBuffer screenColorData;
+      GR.Memory.ByteBuffer charsetData;
+
+      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
+      if ( ( startLine < 0 )
+      ||   ( startLine > 63999 ) )
+      {
+        startLine = 10;
+      }
+      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
+      if ( ( lineOffset < 0 )
+      ||   ( lineOffset > 63999 ) )
+      {
+        startLine = 10;
+      }
+
+
+      var exportRect = DetermineExportRectangle();
+
+      m_CharsetScreen.ExportToBuffer( out screenCharData, out screenColorData, out charsetData, exportRect.Left, exportRect.Top, exportRect.Width, exportRect.Height, ( comboExportOrientation.SelectedIndex == 0 ) );
+
+      switch ( comboExportData.SelectedIndex )
+      {
+        case 0:
+          editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, startLine, lineOffset );
+          break;
+        case 1:
+          editDataExport.Text = Util.ToBASICHexData( screenCharData, startLine, lineOffset );
+          break;
+        case 2:
+          editDataExport.Text = Util.ToBASICHexData( screenColorData, startLine, lineOffset );
+          break;
+        case 3:
+          editDataExport.Text = Util.ToBASICHexData( screenColorData + screenCharData, startLine, lineOffset );
+          break;
+      }
+    }
+
+
+
   } 
 }

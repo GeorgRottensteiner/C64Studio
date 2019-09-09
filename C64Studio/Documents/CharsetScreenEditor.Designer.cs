@@ -121,6 +121,7 @@
       this.label10 = new System.Windows.Forms.Label();
       this.panelCharsetDetails = new GR.Forms.ImageListbox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnExportToBASICHexData = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -315,6 +316,7 @@
       this.groupExport.Controls.Add(this.checkExportToDataIncludeRes);
       this.groupExport.Controls.Add(this.btnExportCharset);
       this.groupExport.Controls.Add(this.editDataExport);
+      this.groupExport.Controls.Add(this.btnExportToBASICHexData);
       this.groupExport.Controls.Add(this.btnExportToBASICData);
       this.groupExport.Controls.Add(this.btnExportToBasic);
       this.groupExport.Controls.Add(this.btnExportToFile);
@@ -590,11 +592,11 @@
       this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(6, 301);
+      this.editDataExport.Location = new System.Drawing.Point(6, 335);
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 191);
+      this.editDataExport.Size = new System.Drawing.Size(429, 157);
       this.editDataExport.TabIndex = 20;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
@@ -1133,6 +1135,16 @@
       this.panelCharsetDetails.VisibleAutoScrollHorizontal = false;
       this.panelCharsetDetails.VisibleAutoScrollVertical = false;
       // 
+      // btnExportToBASICHexData
+      // 
+      this.btnExportToBASICHexData.Location = new System.Drawing.Point(6, 301);
+      this.btnExportToBASICHexData.Name = "btnExportToBASICHexData";
+      this.btnExportToBASICHexData.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToBASICHexData.TabIndex = 6;
+      this.btnExportToBASICHexData.Text = "to BASIC data hex";
+      this.btnExportToBASICHexData.UseVisualStyleBackColor = true;
+      this.btnExportToBASICHexData.Click += new System.EventHandler(this.btnExportToBASICDataHex_Click);
+      // 
       // CharsetScreenEditor
       // 
       this.ClientSize = new System.Drawing.Size(964, 562);
@@ -1253,5 +1265,6 @@
     private System.Windows.Forms.CheckBox checkOverrideOriginalColorSettings;
     private System.Windows.Forms.CheckBox checkAutoCenter;
     private System.Windows.Forms.CheckBox checkReverse;
+    private System.Windows.Forms.Button btnExportToBASICHexData;
   }
 }

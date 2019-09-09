@@ -86,6 +86,7 @@
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnExportToBASICHex = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabValueTableEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -143,11 +144,15 @@
             | System.Windows.Forms.AnchorStyles.Left)));
       this.listValues.DeleteButtonEnabled = false;
       this.listValues.HasOwnerDrawColumn = true;
+      this.listValues.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      this.listValues.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
       this.listValues.Location = new System.Drawing.Point(6, 19);
       this.listValues.MoveDownButtonEnabled = false;
       this.listValues.MoveUpButtonEnabled = false;
       this.listValues.MustHaveOneElement = false;
       this.listValues.Name = "listValues";
+      this.listValues.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      this.listValues.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listValues.Size = new System.Drawing.Size(317, 379);
       this.listValues.TabIndex = 0;
       this.listValues.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listValues_AddingItem);
@@ -408,6 +413,7 @@
       this.groupExport.Controls.Add(this.editExportBASICLineNo);
       this.groupExport.Controls.Add(this.label1);
       this.groupExport.Controls.Add(this.label8);
+      this.groupExport.Controls.Add(this.btnExportToBASICHex);
       this.groupExport.Controls.Add(this.btnExportToBASICData);
       this.groupExport.Controls.Add(this.editPrefix);
       this.groupExport.Controls.Add(this.label2);
@@ -418,7 +424,7 @@
       this.groupExport.Controls.Add(this.btnExportToFile);
       this.groupExport.Location = new System.Drawing.Point(8, 6);
       this.groupExport.Name = "groupExport";
-      this.groupExport.Size = new System.Drawing.Size(441, 149);
+      this.groupExport.Size = new System.Drawing.Size(441, 172);
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
@@ -540,11 +546,11 @@
       this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(8, 168);
+      this.editDataExport.Location = new System.Drawing.Point(8, 195);
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(970, 301);
+      this.editDataExport.Size = new System.Drawing.Size(970, 274);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
@@ -585,20 +591,20 @@
             this.saveValueTableProjectToolStripMenuItem,
             this.closeValueTableProjectToolStripMenuItem});
       this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-      this.fileToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
+      this.fileToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
       this.fileToolStripMenuItem.Text = "&Value Table";
       // 
       // openValueTableProjectToolStripMenuItem
       // 
       this.openValueTableProjectToolStripMenuItem.Name = "openValueTableProjectToolStripMenuItem";
-      this.openValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+      this.openValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
       this.openValueTableProjectToolStripMenuItem.Text = "&Open Value Table Project...";
       this.openValueTableProjectToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
       // 
       // saveValueTableProjectToolStripMenuItem
       // 
       this.saveValueTableProjectToolStripMenuItem.Name = "saveValueTableProjectToolStripMenuItem";
-      this.saveValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+      this.saveValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
       this.saveValueTableProjectToolStripMenuItem.Text = "&Save Project";
       this.saveValueTableProjectToolStripMenuItem.Click += new System.EventHandler(this.saveCharsetProjectToolStripMenuItem_Click);
       // 
@@ -606,7 +612,7 @@
       // 
       this.closeValueTableProjectToolStripMenuItem.Enabled = false;
       this.closeValueTableProjectToolStripMenuItem.Name = "closeValueTableProjectToolStripMenuItem";
-      this.closeValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+      this.closeValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
       this.closeValueTableProjectToolStripMenuItem.Text = "&Close Value Table Project";
       this.closeValueTableProjectToolStripMenuItem.Click += new System.EventHandler(this.closeCharsetProjectToolStripMenuItem_Click);
       // 
@@ -623,6 +629,16 @@
       // 
       this.columnHeader6.Text = "Y";
       this.columnHeader6.Width = 30;
+      // 
+      // btnExportToBASICHex
+      // 
+      this.btnExportToBASICHex.Location = new System.Drawing.Point(6, 135);
+      this.btnExportToBASICHex.Name = "btnExportToBASICHex";
+      this.btnExportToBASICHex.Size = new System.Drawing.Size(117, 23);
+      this.btnExportToBASICHex.TabIndex = 25;
+      this.btnExportToBASICHex.Text = "To BASIC data hex";
+      this.btnExportToBASICHex.UseVisualStyleBackColor = true;
+      this.btnExportToBASICHex.Click += new System.EventHandler(this.btnExportToBASICDataHex_Click);
       // 
       // ValueTableEditor
       // 
@@ -711,5 +727,6 @@
     private System.Windows.Forms.Label labelGenerationResult;
     private System.Windows.Forms.Button btnImportFromASM;
     private System.Windows.Forms.CheckBox checkGenerateDeltas;
+    private System.Windows.Forms.Button btnExportToBASICHex;
   }
 }
