@@ -2764,10 +2764,25 @@ namespace C64Studio.Parser
           {
             if ( c64Key.Replacements.Count > 0 )
             {
-              string    replacement = c64Key.Replacements[0];
+              int     numCharsToReplace = 1;
+              int     testPos = i;
+              while ( ( testPos + 1 < BasicText.Length )
+              &&      ( BasicText[testPos + 1] == chartoCheck ) )
+              {
+                ++testPos;
+              }
+              numCharsToReplace = testPos - i + 1;
 
-              BasicText = BasicText.Substring( 0, i ) + "{" + replacement + "}" + BasicText.Substring( i + 1 );
-              i += replacement.Length - 1;
+              string    replacement = c64Key.Replacements[0];
+              if ( numCharsToReplace > 1 )
+              {
+                // numeric representation is "<count><Macro>"
+                replacement = numCharsToReplace.ToString() + replacement;
+              }
+
+
+              BasicText = BasicText.Substring( 0, i ) + "{" + replacement + "}" + BasicText.Substring( i + numCharsToReplace );
+              i += replacement.Length - numCharsToReplace;
             }
           }
         }

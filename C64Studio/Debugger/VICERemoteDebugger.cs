@@ -1773,6 +1773,10 @@ namespace C64Studio
       {
         ConnectedMachine = MachineType.VC20;
       }
+      else if ( filename.StartsWith( "X128" ) )
+      {
+        ConnectedMachine = MachineType.C128;
+      }
 
       if ( fileVersion == null )
       {

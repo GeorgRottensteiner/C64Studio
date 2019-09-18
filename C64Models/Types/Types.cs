@@ -11,7 +11,8 @@ namespace C64Studio.Types
   {
     UNKNOWN,
     C64,
-    VC20
+    VC20,
+    C128
   };
 
   public class Machine
