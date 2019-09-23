@@ -1568,6 +1568,7 @@ namespace C64Studio
       {
         return false;
       }
+
       try
       {
         m_InsertingText = true;

@@ -6002,11 +6002,6 @@ namespace C64Studio.Parser
 
       string functionName = lineTokenInfos[0].Content.Substring( m_AssemblerSettings.MacroFunctionCallPrefix.Length );
 
-      if ( functionName == "TABLELO" )
-      {
-        Debug.Log( "call macro " + functionName );
-      }
-
       if ( ( !macroFunctions.ContainsKey( functionName ) )
       ||   ( macroFunctions[functionName].LineEnd == -1 ) )
       {
@@ -6307,13 +6302,14 @@ namespace C64Studio.Parser
 
 
 
-    private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration )
+    private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration, out bool HadFatalError )
     {
       List<Types.ScopeInfo>   stackScopes = new List<C64Studio.Types.ScopeInfo>();
       GR.Collections.Map<string,Types.MacroFunctionInfo>     macroFunctions = new GR.Collections.Map<string,C64Studio.Types.MacroFunctionInfo>();
 
       ASMFileInfo.Labels.Clear();
       m_CurrentCommentSB = new StringBuilder();
+      HadFatalError = false;
 
       if ( DoLogSourceInfo )
       {
@@ -6331,7 +6327,7 @@ namespace C64Studio.Parser
 
       stackScopes.Clear();
       Messages.Clear();
-      
+
       m_WarningMessages = 0;
       m_ErrorMessages = 0;
       if ( Configuration != null )
@@ -6429,7 +6425,9 @@ namespace C64Studio.Parser
         {
           DumpSourceInfos( OrigLines, Lines );
           AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Can't determine filename from line" );
-          return null;
+
+          HadFatalError = true;
+          return Lines;
         }
         var handleSeparatorsResult = HandleLineSeparators( ref lineIndex, lineTokenInfos, ref Lines, filename );
         if ( handleSeparatorsResult == ParseLineResult.CALL_CONTINUE )
@@ -6451,7 +6449,6 @@ namespace C64Studio.Parser
 
         // PDS macro call?
         DetectPDSMacroCall( macroFunctions, lineTokenInfos );
-
 
         // do we have a DASM scope operator? (must skip scope check then)
         bool  isDASMScopePseudoOP = false;
@@ -6589,7 +6586,8 @@ namespace C64Studio.Parser
                 }
                 else if ( result == ParseLineResult.ERROR_ABORT )
                 {
-                  return null;
+                  HadFatalError = true;
+                  return Lines;
                 }
               }
               break;
@@ -6611,7 +6609,8 @@ namespace C64Studio.Parser
                 }
                 else if ( result == ParseLineResult.ERROR_ABORT )
                 {
-                  return null;
+                  HadFatalError = true;
+                  return Lines;
                 }
               }
               break;
@@ -6744,7 +6743,8 @@ namespace C64Studio.Parser
             if ( !EvaluateTokens( lineIndex, tokens, out newStepPos ) )
             {
               AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate * position value", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
             programStepPos = newStepPos;
             m_CompileCurrentAddress = programStepPos;
@@ -7288,7 +7288,8 @@ namespace C64Studio.Parser
                               "Could not evaluate * position value",
                               lineTokenInfos[3].StartPos,
                               lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
-                    return null;
+                    HadFatalError = true;
+                    return Lines;
                   }
                   programStepPos = newStepPos;
                   m_CompileCurrentAddress = programStepPos;
@@ -7349,7 +7350,8 @@ namespace C64Studio.Parser
               var result = POPseudoPC( info, stackScopes, lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1 );
               if ( result == ParseLineResult.RETURN_NULL )
               {
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.REAL_PC )
@@ -7387,7 +7389,8 @@ namespace C64Studio.Parser
                           "Expecting file name, either \"filename\" or \"library filename\"",
                           lineTokenInfos[0].StartPos,
                           lineTokenInfos[0].Length );
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
 
               localIndex = 0;
@@ -7396,13 +7399,15 @@ namespace C64Studio.Parser
               {
                 DumpSourceInfos( OrigLines, Lines );
                 AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
 
               ParseLineResult   plResult = POIncludeSource( libraryFile, subFilename, filename, ref lineIndex, ref Lines );
               if ( plResult == ParseLineResult.RETURN_NULL )
               {
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
               else if ( plResult == ParseLineResult.CALL_CONTINUE )
               {
@@ -7418,7 +7423,8 @@ namespace C64Studio.Parser
               }
               else if ( result == ParseLineResult.RETURN_NULL )
               {
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.INCLUDE_BINARY )
@@ -7430,7 +7436,8 @@ namespace C64Studio.Parser
               }
               else if ( result == ParseLineResult.RETURN_NULL )
               {
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.INCLUDE_MEDIA )
@@ -7441,7 +7448,8 @@ namespace C64Studio.Parser
 
               if ( !POIncludeMedia( lineTokenInfos, lineIndex, true, info, filename, out lineSizeInBytes, out replacementLines ) )
               {
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.INCLUDE_MEDIA_SOURCE )
@@ -7451,7 +7459,8 @@ namespace C64Studio.Parser
               ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out dummy );
               if ( !POIncludeMedia( lineTokenInfos, lineIndex, false, info, filename, out lineSizeInBytes, out replacementLines ) )
               {
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
               if ( replacementLines.Length == 0 )
               {
@@ -7515,7 +7524,8 @@ namespace C64Studio.Parser
                   AddError( lineIndex,
                             Types.ErrorCode.E1302_MALFORMED_MACRO,
                             "Expected !to <Filename>,<Type = cbm, plain, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, t64, tap or d64>" );
-                  return null;
+                  HadFatalError = true;
+                  return Lines;
                 }
                 if ( lineTokenInfos[0].Type != Types.TokenInfo.TokenType.LITERAL_STRING )
                 {
@@ -7524,7 +7534,8 @@ namespace C64Studio.Parser
                             "String as file name expected",
                             lineTokenInfos[0].StartPos,
                             lineTokenInfos[0].Length );
-                  return null;
+                  HadFatalError = true;
+                  return Lines;
                 }
                 string    targetType = lineTokenInfos[2].Content.ToUpper();
                 if ( ( targetType != "CBM" )
@@ -7550,7 +7561,8 @@ namespace C64Studio.Parser
                             "Unsupported target type " + lineTokenInfos[2].Content + ", only cbm, plain, t64, tap, d64, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, gmod2bin or gmod2crt supported",
                             lineTokenInfos[2].StartPos,
                             lineTokenInfos[2].Length );
-                  return null;
+                  HadFatalError = true;
+                  return Lines;
                 }
                 filename = lineTokenInfos[0].Content.Substring( 1, lineTokenInfos[0].Length - 2 );
                 // do not append to absolute path!
@@ -7710,7 +7722,8 @@ namespace C64Studio.Parser
                   if ( !hadElse )
                   {
                     AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error, expected no tokens after bracket" );
-                    return null;
+                    HadFatalError = true;
+                    return Lines;
                   }
                 }
                 {
@@ -7744,7 +7757,8 @@ namespace C64Studio.Parser
               if ( lineTokenInfos.Count != 1 )
               {
                 AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Expected !sl <Filename>" );
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
               if ( lineTokenInfos[0].Type != Types.TokenInfo.TokenType.LITERAL_STRING )
               {
@@ -7753,7 +7767,8 @@ namespace C64Studio.Parser
                           "String as file name expected",
                           lineTokenInfos[0].StartPos,
                           lineTokenInfos[0].Length );
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
               if ( !string.IsNullOrEmpty( ASMFileInfo.LabelDumpFile ) )
               {
@@ -7798,7 +7813,8 @@ namespace C64Studio.Parser
               }
               else if ( result == ParseLineResult.ERROR_ABORT )
               {
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.IFNDEF )
@@ -7888,6 +7904,8 @@ namespace C64Studio.Parser
                   AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + expressionCheck );
                   scope.Active = true;
                   scope.IfChainHadActiveEntry = true;
+                  HadFatalError = true;
+                  return Lines;
                 }
                 else if ( defineResult == 0 )
                 {
@@ -8106,7 +8124,8 @@ namespace C64Studio.Parser
               if ( lineTokenInfos.Count < 2 )
               {
                 AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !align <AndValue>,<EqualValue>[,<FillValue>]" );
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
 
               do
@@ -8119,7 +8138,8 @@ namespace C64Studio.Parser
                   if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
                   {
                     AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
-                    return null;
+                    HadFatalError = true;
+                    return Lines;
                   }
                   tokenParams.Add( value );
                   expressionStartIndex = tokenIndex + 1;
@@ -8134,7 +8154,8 @@ namespace C64Studio.Parser
                     if ( !EvaluateTokens( lineIndex, lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex, out value ) )
                     {
                       AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
-                      return null;
+                      HadFatalError = true;
+                      return Lines;
                     }
                     tokenParams.Add( value );
                   }
@@ -8143,10 +8164,11 @@ namespace C64Studio.Parser
               while ( tokenIndex < lineTokenInfos.Count );
 
               if ( ( tokenParams.Count < 2 )
-              || ( tokenParams.Count > 3 ) )
+              ||   ( tokenParams.Count > 3 ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !align <AndValue>,<EqualValue>[,<FillValue>]" );
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
               byte fillValue = 0;
               if ( tokenParams.Count == 3 )
@@ -8154,7 +8176,8 @@ namespace C64Studio.Parser
                 if ( !ValidByteValue( tokenParams[2] ) )
                 {
                   AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "FillValue out of bounds" );
-                  return null;
+                  HadFatalError = true;
+                  return Lines;
                 }
                 fillValue = (byte)tokenParams[2];
               }
@@ -8167,7 +8190,8 @@ namespace C64Studio.Parser
                 if ( programStepPos == 65536 )
                 {
                   AddError( lineIndex, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Program step pos out of bounds, check !align condition" );
-                  return null;
+                  HadFatalError = true;
+                  return Lines;
                 }
               }
               lineSizeInBytes = info.NumBytes;
@@ -8177,7 +8201,8 @@ namespace C64Studio.Parser
               var parseResult = POAlignDASM( lineTokenInfos, lineIndex, info, ref programStepPos, out lineSizeInBytes );
               if ( parseResult == ParseLineResult.RETURN_NULL )
               {
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
             }
             else if ( ( macro.Type == Types.MacroInfo.MacroType.BYTE )
@@ -8193,7 +8218,8 @@ namespace C64Studio.Parser
               var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
               else if ( result == ParseLineResult.CALL_CONTINUE )
               {
@@ -8355,7 +8381,8 @@ namespace C64Studio.Parser
               var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, out lineSizeInBytes );
               if ( parseResult == ParseLineResult.RETURN_NULL )
               {
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
             }
             else
@@ -8385,7 +8412,8 @@ namespace C64Studio.Parser
                 if ( !info.LineData.AppendHex( "0" + tokenHex.Content ) )
                 {
                   AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
-                  return null;
+                  HadFatalError = true;
+                  return Lines;
                 }
               }
               else
@@ -8393,7 +8421,8 @@ namespace C64Studio.Parser
                 if ( !info.LineData.AppendHex( tokenHex.Content ) )
                 {
                   AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
-                  return null;
+                  HadFatalError = true;
+                  return Lines;
                 }
               }
             }
@@ -8409,7 +8438,8 @@ namespace C64Studio.Parser
             var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, out lineSizeInBytes );
             if ( parseResult == ParseLineResult.RETURN_NULL )
             {
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
           }
           else if ( macroInfo.Type == C64Studio.Types.MacroInfo.MacroType.ORG )
@@ -8435,19 +8465,22 @@ namespace C64Studio.Parser
             if ( commaCount > 1 )
             {
               AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed ORG directive, expected ORG Position[,PseudoPosition]" );
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
             if ( commaCount == 1 )
             {
               if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, commaPos - 1, out newStepPos ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate ORG position value" );
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
               if ( !EvaluateTokens( lineIndex, lineTokenInfos, commaPos + 1, lineTokenInfos.Count - commaPos - 1, out newPseudoPos ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate ORG pseudo position value" );
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
             }
             else
@@ -8455,7 +8488,8 @@ namespace C64Studio.Parser
               if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out newStepPos ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate ORG position value" );
-                return null;
+                HadFatalError = true;
+                return Lines;
               }
             }
             programStepPos = newStepPos;
@@ -8470,7 +8504,8 @@ namespace C64Studio.Parser
             var result = POPseudoPC( info, stackScopes, lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1 );
             if ( result == ParseLineResult.RETURN_NULL )
             {
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
           }
           else if ( macroInfo.Type == Types.MacroInfo.MacroType.REAL_PC )
@@ -8490,7 +8525,8 @@ namespace C64Studio.Parser
             var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, out lineSizeInBytes );
             if ( result == ParseLineResult.RETURN_NULL )
             {
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
             else if ( result == ParseLineResult.CALL_CONTINUE )
             {
@@ -8506,7 +8542,8 @@ namespace C64Studio.Parser
             }
             else if ( result == ParseLineResult.RETURN_NULL )
             {
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
           }
           else if ( macroInfo.Type == Types.MacroInfo.MacroType.LOOP_START )
@@ -8514,7 +8551,8 @@ namespace C64Studio.Parser
             var result = POLoopStart( lineTokenInfos, lineIndex, info, ref Lines, stackScopes, out lineSizeInBytes );
             if ( result == ParseLineResult.RETURN_NULL )
             {
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
             else if ( result == ParseLineResult.CALL_CONTINUE )
             {
@@ -8553,7 +8591,8 @@ namespace C64Studio.Parser
             }
             else if ( result == ParseLineResult.ERROR_ABORT )
             {
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
           }
           else if ( macroInfo.Type == Types.MacroInfo.MacroType.INCLUDE_BINARY )
@@ -8565,7 +8604,8 @@ namespace C64Studio.Parser
             }
             else if ( result == ParseLineResult.RETURN_NULL )
             {
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
           }
           else if ( macroInfo.Type == Types.MacroInfo.MacroType.INCLUDE_SOURCE )
@@ -8599,7 +8639,8 @@ namespace C64Studio.Parser
                         "Expecting file name, either \"filename\" or \"library filename\"",
                         lineTokenInfos[0].StartPos,
                         lineTokenInfos[0].Length );
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
 
             localIndex = 0;
@@ -8608,12 +8649,14 @@ namespace C64Studio.Parser
             {
               DumpSourceInfos( OrigLines, Lines );
               AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
             ParseLineResult   plResult = POIncludeSource( libraryFile, subFilename, ParentFilename, ref lineIndex, ref Lines );
             if ( plResult == ParseLineResult.RETURN_NULL )
             {
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
             else if ( plResult == ParseLineResult.CALL_CONTINUE )
             {
@@ -8675,7 +8718,8 @@ namespace C64Studio.Parser
             var parseResult = POAlignDASM( lineTokenInfos, lineIndex, info, ref programStepPos, out lineSizeInBytes );
             if ( parseResult == ParseLineResult.RETURN_NULL )
             {
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
           }
           else if ( macroInfo.Type == MacroInfo.MacroType.REPEAT )
@@ -8683,14 +8727,16 @@ namespace C64Studio.Parser
             var parseResult = PORepeat( lineTokenInfos, lineIndex, ref Lines, info, stackScopes );
             if ( parseResult == ParseLineResult.RETURN_NULL )
             {
-              return null;
+              HadFatalError = true;
+              return Lines;
             }
           }
           else if ( ( macroInfo.Type != MacroInfo.MacroType.IGNORE )
           && ( macroInfo.Type != MacroInfo.MacroType.ERROR ) )
           {
             AddError( lineIndex, C64Studio.Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unsupported macro " + macroInfo.Keyword + " encountered" );
-            return null;
+            HadFatalError = true;
+            return Lines;
           }
           labelInFront = "";
           evaluatedContent = true;
@@ -8947,15 +8993,20 @@ namespace C64Studio.Parser
 
     private void PrefixZoneToLocalLabels( ref string cheapLabelParent, List<TokenInfo> lineTokenInfos, ref string upToken )
     {
+      if ( lineTokenInfos[0].Type == TokenInfo.TokenType.MACRO )
+      {
+        // no prefixing for macro arguments!
+        return;
+      }
       for ( int i = 0; i < lineTokenInfos.Count; ++i )
       {
         if ( ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        && ( i == 0 ) )
+        &&   ( i == 0 ) )
         {
           cheapLabelParent = lineTokenInfos[i].Content;
         }
         if ( ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_LOCAL )
-        || ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
+        ||   ( lineTokenInfos[i].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
         {
           if ( ( m_AssemblerSettings.LabelPostfix.Length > 0 )
           && ( lineTokenInfos[i].Content.EndsWith( m_AssemblerSettings.LabelPostfix ) ) )
@@ -10476,26 +10527,28 @@ namespace C64Studio.Parser
 
       m_WarningsToIgnore.Clear();
 
-      lines = PreProcess( lines, m_Filename, Configuration );
+      bool    hadFatalError = false;
+      lines = PreProcess( lines, m_Filename, Configuration, out hadFatalError );
 
       DumpSourceInfos( OrigLines, lines );
 
-      DetermineUnparsedLabels();
-
-      ASMFileInfo.PopulateAddressToLine();
-
-      foreach ( Types.SymbolInfo token in ASMFileInfo.Labels.Values )
+      if ( !hadFatalError )
       {
-        if ( ( !token.Used )
-        &&   ( token.Name != "*" )
-        &&   ( !token.Name.Contains( AssemblerSettings.INTERNAL_LOCAL_LOOP_LABEL_PREFIX ) )
-        &&   ( token.Type != C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_LABEL ) )
+        DetermineUnparsedLabels();
+        ASMFileInfo.PopulateAddressToLine();
+        foreach ( Types.SymbolInfo token in ASMFileInfo.Labels.Values )
         {
-          AddWarning( token.LineIndex, 
-                      Types.ErrorCode.W1000_UNUSED_LABEL, 
-                      "Unused label " + token.Name,
-                      token.CharIndex,
-                      token.Length );
+          if ( ( !token.Used )
+          &&   ( token.Name != "*" )
+          &&   ( !token.Name.Contains( AssemblerSettings.INTERNAL_LOCAL_LOOP_LABEL_PREFIX ) )
+          &&   ( token.Type != C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_LABEL ) )
+          {
+            AddWarning( token.LineIndex, 
+                        Types.ErrorCode.W1000_UNUSED_LABEL, 
+                        "Unused label " + token.Name,
+                        token.CharIndex,
+                        token.Length );
+          }
         }
       }
 
