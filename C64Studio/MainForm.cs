@@ -5942,8 +5942,10 @@ namespace C64Studio
       document.Text = System.IO.Path.GetFileName( Filename );
       if ( !document.Load() )
       {
+        document.ToolTipText = "";
         return null;
       }
+      document.ToolTipText = document.DocumentInfo.FullPath;
 
       document.Show( panelMain );
       document.Icon = IconFromType( document.DocumentInfo );

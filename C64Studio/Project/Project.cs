@@ -633,6 +633,7 @@ namespace C64Studio
           // icon for non project documents
           document.Icon = System.Drawing.SystemIcons.Asterisk;
         }
+        document.ToolTipText = "";
         if ( document.DocumentFilename == null )
         {
           // a new file
@@ -641,6 +642,7 @@ namespace C64Studio
         }
         else if ( document.Load() )
         {
+          document.ToolTipText = document.DocumentInfo.FullPath;
           Element.Name = document.Text;
             //Element.Name;
           Element.Document.Show( Core.MainForm.panelMain );
