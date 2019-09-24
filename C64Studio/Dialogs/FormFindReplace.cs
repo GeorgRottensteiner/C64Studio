@@ -102,6 +102,8 @@ namespace C64Studio
 
     private SearchLocation    PreviousSearchSelection = new SearchLocation();
 
+    private string            _LastErrorMessage = "";
+
 
 
     public FormFindReplace( StudioCore Core )
@@ -266,7 +268,14 @@ namespace C64Studio
       }
       else
       {
-        Core.SetStatus( "Searched text not found:" + comboSearchText.Text );
+        if ( !string.IsNullOrEmpty( _LastErrorMessage ) )
+        {
+          Core.SetStatus( "A problem occurred: " + _LastErrorMessage );
+        }
+        else
+        {
+          Core.SetStatus( "Searched text not found:" + comboSearchText.Text );
+        }
         if ( Core.Settings.PlaySoundOnSearchFoundNoItem )
         {
           System.Media.SystemSounds.Asterisk.Play();
@@ -318,6 +327,7 @@ namespace C64Studio
 
     private SearchLocation FindNextOccurrence( string SearchSource, string SearchString, bool RegularExpression, bool WholeWords, bool IgnoreCase, bool Upwards, int LastPosition )
     {
+      _LastErrorMessage = "";
       if ( string.IsNullOrEmpty( SearchString ) )
       {
         return new SearchLocation();
@@ -341,7 +351,17 @@ namespace C64Studio
         {
           regexOptions |= System.Text.RegularExpressions.RegexOptions.IgnoreCase;
         }
-        System.Text.RegularExpressions.Regex regEx = new System.Text.RegularExpressions.Regex( SearchString, regexOptions );
+        System.Text.RegularExpressions.Regex regEx = null;
+
+        try
+        {
+          regEx = new System.Text.RegularExpressions.Regex( SearchString, regexOptions );
+        }
+        catch ( Exception ex )
+        {
+          _LastErrorMessage = "Invalid Regular Expression: " + ex.Message;
+          return new SearchLocation();
+        }
 
         System.Text.RegularExpressions.Match match = null;
         if ( Upwards )
@@ -1522,6 +1542,10 @@ namespace C64Studio
                            null,
                            LastSearchFound ) )
         {
+          if ( !string.IsNullOrEmpty( _LastErrorMessage ) )
+          {
+            Core.AddToOutput( "A problem occurred: " + _LastErrorMessage + System.Environment.NewLine );
+          }
           Core.AddToOutput( "Found " + occurrences + " occurrences" + System.Environment.NewLine );
           if ( occurrences > 0 )
           {
