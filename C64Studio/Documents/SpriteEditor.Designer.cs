@@ -94,6 +94,7 @@
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnImportFromFile = new System.Windows.Forms.Button();
       this.btnImportFromASM = new System.Windows.Forms.Button();
+      this.btnImportFromBASICHex = new System.Windows.Forms.Button();
       this.btnImportFromBASIC = new System.Windows.Forms.Button();
       this.btnImportFromHex = new System.Windows.Forms.Button();
       this.button2 = new System.Windows.Forms.Button();
@@ -107,6 +108,7 @@
       this.editSpriteFrom = new System.Windows.Forms.TextBox();
       this.label8 = new System.Windows.Forms.Label();
       this.labelCharactersTo = new System.Windows.Forms.Label();
+      this.btnToBASICHex = new System.Windows.Forms.Button();
       this.btnExportToBASICData = new System.Windows.Forms.Button();
       this.labelCharactersFrom = new System.Windows.Forms.Label();
       this.editPrefix = new System.Windows.Forms.TextBox();
@@ -130,8 +132,6 @@
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnToBASICHex = new System.Windows.Forms.Button();
-      this.btnImportFromBASICHex = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabSpriteEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -394,7 +394,7 @@
       // 
       this.listLayerSprites.AddButtonEnabled = true;
       this.listLayerSprites.DeleteButtonEnabled = false;
-      this.listLayerSprites.HasOwnerDrawColumn = false;
+      this.listLayerSprites.HasOwnerDrawColumn = true;
       this.listLayerSprites.HighlightColor = System.Drawing.SystemColors.HotTrack;
       this.listLayerSprites.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
       this.listLayerSprites.Location = new System.Drawing.Point(0, 0);
@@ -419,7 +419,7 @@
       this.listLayers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
       this.listLayers.DeleteButtonEnabled = false;
-      this.listLayers.HasOwnerDrawColumn = false;
+      this.listLayers.HasOwnerDrawColumn = true;
       this.listLayers.HighlightColor = System.Drawing.SystemColors.HotTrack;
       this.listLayers.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
       this.listLayers.Location = new System.Drawing.Point(0, 290);
@@ -880,6 +880,16 @@
       this.btnImportFromASM.UseVisualStyleBackColor = true;
       this.btnImportFromASM.Click += new System.EventHandler(this.btnImportFromASM_Click);
       // 
+      // btnImportFromBASICHex
+      // 
+      this.btnImportFromBASICHex.Location = new System.Drawing.Point(255, 50);
+      this.btnImportFromBASICHex.Name = "btnImportFromBASICHex";
+      this.btnImportFromBASICHex.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromBASICHex.TabIndex = 2;
+      this.btnImportFromBASICHex.Text = "From BASIC hex";
+      this.btnImportFromBASICHex.UseVisualStyleBackColor = true;
+      this.btnImportFromBASICHex.Click += new System.EventHandler(this.btnImportFromBASICHex_Click);
+      // 
       // btnImportFromBASIC
       // 
       this.btnImportFromBASIC.Location = new System.Drawing.Point(132, 50);
@@ -1023,6 +1033,16 @@
       this.labelCharactersTo.Size = new System.Drawing.Size(37, 13);
       this.labelCharactersTo.TabIndex = 10;
       this.labelCharactersTo.Text = "count:";
+      // 
+      // btnToBASICHex
+      // 
+      this.btnToBASICHex.Location = new System.Drawing.Point(6, 135);
+      this.btnToBASICHex.Name = "btnToBASICHex";
+      this.btnToBASICHex.Size = new System.Drawing.Size(117, 23);
+      this.btnToBASICHex.TabIndex = 25;
+      this.btnToBASICHex.Text = "To BASIC hex data";
+      this.btnToBASICHex.UseVisualStyleBackColor = true;
+      this.btnToBASICHex.Click += new System.EventHandler(this.btnExportToBASICHexData_Click);
       // 
       // btnExportToBASICData
       // 
@@ -1190,26 +1210,6 @@
       // 
       this.columnHeader6.Text = "Y";
       this.columnHeader6.Width = 30;
-      // 
-      // btnToBASICHex
-      // 
-      this.btnToBASICHex.Location = new System.Drawing.Point(6, 135);
-      this.btnToBASICHex.Name = "btnToBASICHex";
-      this.btnToBASICHex.Size = new System.Drawing.Size(117, 23);
-      this.btnToBASICHex.TabIndex = 25;
-      this.btnToBASICHex.Text = "To BASIC hex data";
-      this.btnToBASICHex.UseVisualStyleBackColor = true;
-      this.btnToBASICHex.Click += new System.EventHandler(this.btnExportToBASICHexData_Click);
-      // 
-      // btnImportFromBASICHex
-      // 
-      this.btnImportFromBASICHex.Location = new System.Drawing.Point(255, 50);
-      this.btnImportFromBASICHex.Name = "btnImportFromBASICHex";
-      this.btnImportFromBASICHex.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromBASICHex.TabIndex = 2;
-      this.btnImportFromBASICHex.Text = "From BASIC hex";
-      this.btnImportFromBASICHex.UseVisualStyleBackColor = true;
-      this.btnImportFromBASICHex.Click += new System.EventHandler(this.btnImportFromBASICHex_Click);
       // 
       // SpriteEditor
       // 

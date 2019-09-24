@@ -54,6 +54,8 @@
       this.label13 = new System.Windows.Forms.Label();
       this.label11 = new System.Windows.Forms.Label();
       this.tabTools = new System.Windows.Forms.TabPage();
+      this.btnToolDown = new System.Windows.Forms.Button();
+      this.btnToolUp = new System.Windows.Forms.Button();
       this.checkPassLabelsToEmulator = new System.Windows.Forms.CheckBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.button1 = new System.Windows.Forms.Button();
@@ -143,8 +145,6 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.btnToolUp = new System.Windows.Forms.Button();
-      this.btnToolDown = new System.Windows.Forms.Button();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -460,6 +460,28 @@
       this.tabTools.TabIndex = 0;
       this.tabTools.Text = "Tools";
       this.tabTools.UseVisualStyleBackColor = true;
+      // 
+      // btnToolDown
+      // 
+      this.btnToolDown.Enabled = false;
+      this.btnToolDown.Image = global::C64Studio.Properties.Resources.arrow_down;
+      this.btnToolDown.Location = new System.Drawing.Point(133, 368);
+      this.btnToolDown.Name = "btnToolDown";
+      this.btnToolDown.Size = new System.Drawing.Size(22, 23);
+      this.btnToolDown.TabIndex = 4;
+      this.btnToolDown.UseVisualStyleBackColor = true;
+      this.btnToolDown.Click += new System.EventHandler(this.btnToolDown_Click);
+      // 
+      // btnToolUp
+      // 
+      this.btnToolUp.Enabled = false;
+      this.btnToolUp.Image = global::C64Studio.Properties.Resources.arrow_up;
+      this.btnToolUp.Location = new System.Drawing.Point(105, 368);
+      this.btnToolUp.Name = "btnToolUp";
+      this.btnToolUp.Size = new System.Drawing.Size(22, 23);
+      this.btnToolUp.TabIndex = 3;
+      this.btnToolUp.UseVisualStyleBackColor = true;
+      this.btnToolUp.Click += new System.EventHandler(this.btnToolUp_Click);
       // 
       // checkPassLabelsToEmulator
       // 
@@ -895,12 +917,17 @@
       this.asmLibraryPathList.AddButtonEnabled = true;
       this.asmLibraryPathList.Anchor = System.Windows.Forms.AnchorStyles.None;
       this.asmLibraryPathList.DeleteButtonEnabled = false;
+      this.asmLibraryPathList.HasOwnerDrawColumn = true;
+      this.asmLibraryPathList.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      this.asmLibraryPathList.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
       this.asmLibraryPathList.Location = new System.Drawing.Point(21, 240);
       this.asmLibraryPathList.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
       this.asmLibraryPathList.MoveDownButtonEnabled = false;
       this.asmLibraryPathList.MoveUpButtonEnabled = false;
       this.asmLibraryPathList.MustHaveOneElement = false;
       this.asmLibraryPathList.Name = "asmLibraryPathList";
+      this.asmLibraryPathList.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      this.asmLibraryPathList.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.asmLibraryPathList.Size = new System.Drawing.Size(563, 154);
       this.asmLibraryPathList.TabIndex = 20;
       this.asmLibraryPathList.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.asmLibraryPathList_AddingItem);
@@ -1373,28 +1400,6 @@
       this.btnExportCurrentPageSettings.Text = "Export here";
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
-      // 
-      // btnToolUp
-      // 
-      this.btnToolUp.Enabled = false;
-      this.btnToolUp.Image = global::C64Studio.Properties.Resources.arrow_up;
-      this.btnToolUp.Location = new System.Drawing.Point(105, 368);
-      this.btnToolUp.Name = "btnToolUp";
-      this.btnToolUp.Size = new System.Drawing.Size(22, 23);
-      this.btnToolUp.TabIndex = 3;
-      this.btnToolUp.UseVisualStyleBackColor = true;
-      this.btnToolUp.Click += new System.EventHandler(this.btnToolUp_Click);
-      // 
-      // btnToolDown
-      // 
-      this.btnToolDown.Enabled = false;
-      this.btnToolDown.Image = global::C64Studio.Properties.Resources.arrow_down;
-      this.btnToolDown.Location = new System.Drawing.Point(133, 368);
-      this.btnToolDown.Name = "btnToolDown";
-      this.btnToolDown.Size = new System.Drawing.Size(22, 23);
-      this.btnToolDown.TabIndex = 4;
-      this.btnToolDown.UseVisualStyleBackColor = true;
-      this.btnToolDown.Click += new System.EventHandler(this.btnToolDown_Click);
       // 
       // Settings
       // 

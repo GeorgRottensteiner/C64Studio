@@ -76,10 +76,18 @@
       // listBuildChainProjects
       // 
       this.listBuildChainProjects.AddButtonEnabled = false;
+      this.listBuildChainProjects.DeleteButtonEnabled = false;
       this.listBuildChainProjects.Enabled = false;
+      this.listBuildChainProjects.HasOwnerDrawColumn = true;
+      this.listBuildChainProjects.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      this.listBuildChainProjects.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
       this.listBuildChainProjects.Location = new System.Drawing.Point(5, 38);
+      this.listBuildChainProjects.MoveDownButtonEnabled = false;
+      this.listBuildChainProjects.MoveUpButtonEnabled = false;
       this.listBuildChainProjects.MustHaveOneElement = false;
       this.listBuildChainProjects.Name = "listBuildChainProjects";
+      this.listBuildChainProjects.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      this.listBuildChainProjects.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listBuildChainProjects.Size = new System.Drawing.Size(221, 244);
       this.listBuildChainProjects.TabIndex = 11;
       this.listBuildChainProjects.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listBuildChainProjects_AddingItem);

@@ -46,6 +46,7 @@
       this.editExportBASICLineNo = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
       this.label4 = new System.Windows.Forms.Label();
+      this.btnExportToBASICHexData = new System.Windows.Forms.Button();
       this.btnExportToBASICData = new System.Windows.Forms.Button();
       this.comboCharScreens = new System.Windows.Forms.ComboBox();
       this.comboExportData = new System.Windows.Forms.ComboBox();
@@ -106,7 +107,6 @@
       this.comboColorMappingTargets = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
-      this.btnExportToBASICHexData = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -273,6 +273,16 @@
       this.label4.Size = new System.Drawing.Size(47, 13);
       this.label4.TabIndex = 27;
       this.label4.Text = "Line No:";
+      // 
+      // btnExportToBASICHexData
+      // 
+      this.btnExportToBASICHexData.Location = new System.Drawing.Point(6, 219);
+      this.btnExportToBASICHexData.Name = "btnExportToBASICHexData";
+      this.btnExportToBASICHexData.Size = new System.Drawing.Size(120, 23);
+      this.btnExportToBASICHexData.TabIndex = 25;
+      this.btnExportToBASICHexData.Text = "Export to BASIC data hex";
+      this.btnExportToBASICHexData.UseVisualStyleBackColor = true;
+      this.btnExportToBASICHexData.Click += new System.EventHandler(this.btnExportToBASICDataHex_Click);
       // 
       // btnExportToBASICData
       // 
@@ -893,7 +903,7 @@
       // 
       this.listColorMappingTargets.AddButtonEnabled = true;
       this.listColorMappingTargets.DeleteButtonEnabled = false;
-      this.listColorMappingTargets.HasOwnerDrawColumn = false;
+      this.listColorMappingTargets.HasOwnerDrawColumn = true;
       this.listColorMappingTargets.HighlightColor = System.Drawing.SystemColors.HotTrack;
       this.listColorMappingTargets.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
       this.listColorMappingTargets.Location = new System.Drawing.Point(206, 16);
@@ -942,16 +952,6 @@
       this.listColorMappingColors.TabIndex = 0;
       this.listColorMappingColors.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listColorMappingColors_DrawItem);
       this.listColorMappingColors.SelectedIndexChanged += new System.EventHandler(this.listColorMappingColors_SelectedIndexChanged);
-      // 
-      // btnExportToBASICHexData
-      // 
-      this.btnExportToBASICHexData.Location = new System.Drawing.Point(6, 219);
-      this.btnExportToBASICHexData.Name = "btnExportToBASICHexData";
-      this.btnExportToBASICHexData.Size = new System.Drawing.Size(120, 23);
-      this.btnExportToBASICHexData.TabIndex = 25;
-      this.btnExportToBASICHexData.Text = "Export to BASIC data hex";
-      this.btnExportToBASICHexData.UseVisualStyleBackColor = true;
-      this.btnExportToBASICHexData.Click += new System.EventHandler(this.btnExportToBASICDataHex_Click);
       // 
       // GraphicScreenEditor
       // 
