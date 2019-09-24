@@ -2505,6 +2505,8 @@ namespace C64Studio
       UpdateKeyBinding( C64Studio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
       UpdateKeyBinding( C64Studio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
 
+      UpdateKeyBinding( C64Studio.Types.Function.FIND_NEXT, FastColoredTextBoxNS.FCTBAction.FindNext ); 
+
       AutoComplete.Enabled = Core.Settings.ASMShowAutoComplete;
 
       miniMap.ForeColor = GR.Color.Helper.FromARGB( 0xffff0000 );
