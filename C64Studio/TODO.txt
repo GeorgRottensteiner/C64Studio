@@ -1,5 +1,6 @@
 ﻿C64Studio
 o File-Manager-Import von BASIC-Dateien, Version!! (V7, etc.)
+o BASIC-Extensions ( Laser-Basic, Simons Basic?)
 o C128-Unterstützung (BASIC mit Hex-Data, Debug-Start, etc..)
 o *=$c000
   jmp Init

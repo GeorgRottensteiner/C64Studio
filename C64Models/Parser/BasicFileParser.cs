@@ -21,7 +21,8 @@ namespace C64Studio.Parser
       V3_5,             // Version 3.5	Neue Befehle für die Heimcomputer C16/116 und Plus/4. Zusammenführung aus C64 BASIC V2 und Version-4-Linie.
       V3_6,             // Version 3.6	Neue Befehle für LCD-Prototypen.
       V7_0,             // Version 7.0	Neue Befehle für den C128/D/DCR. Weiterentwicklung des C16/116 BASIC 3.5 .
-      V10_0             // Version 10 Neue Befehle für C65, beinhaltet sehr viele Fehler, kam aus dem Entwicklungsstadium nicht heraus. Weiterentwicklung des BASIC 7.0.
+      V10_0,            // Version 10 Neue Befehle für C65, beinhaltet sehr viele Fehler, kam aus dem Entwicklungsstadium nicht heraus. Weiterentwicklung des BASIC 7.0.
+      LASER_BASIC       // BASIC extension
     }
 
     public class ParserSettings
@@ -234,6 +235,7 @@ namespace C64Studio.Parser
 
       if ( ( Version == BasicVersion.C64_BASIC_V2 )
       ||   ( Version == BasicVersion.VIC_BASIC_V2 )
+      ||   ( Version == BasicVersion.LASER_BASIC )
       ||   ( Version == BasicVersion.V3_5 )
       ||   ( Version == BasicVersion.V7_0 ) )
       {
@@ -439,6 +441,264 @@ namespace C64Studio.Parser
         AddOpcode( "OFF", 0xfe24 );
         AddOpcode( "FAST", 0xfe25 );
         AddOpcode( "SLOW", 0xfe26 );
+      }
+
+      if ( Version == BasicVersion.LASER_BASIC )
+      {
+        // override without or different short cuts
+        AddOpcode( "ELSE", 0xcc, "elS" );
+        AddOpcode( "HEX$", 0xcd, "hE" );
+        AddOpcode( "DEEK", 0xce, "deeK" );
+        AddOpcode( "TRUE", 0xcf, "trU" );
+        AddOpcode( "IMPORT", 0xd0, "tmI" );
+        AddOpcode( "CFN", 0xd1, "cfN" );
+        AddOpcode( "SIZE", 0xd2, "sizE" );
+        AddOpcode( "FALSE", 0xd3, "faL" );
+        AddOpcode( "SFRE", 0xd4, "sfR" );
+        AddOpcode( "LPX", 0xd5, "lpX" );
+        AddOpcode( "LPY", 0xd6 );
+        AddOpcode( "COMMON%", 0xd7, "comM" );
+        AddOpcode( "CROW", 0xd8, "crO" );
+        AddOpcode( "CCOL", 0xd9, "ccO" );
+        AddOpcode( "ATR", 0xda );
+        AddOpcode( "INC", 0xdb );
+        AddOpcode( "NUM", 0xdc, "nuM" );
+        AddOpcode( "ROW2", 0xdd, "roW" );
+        AddOpcode( "COL2", 0xde );
+        AddOpcode( "SPN2", 0xdf );
+        AddOpcode( "HGT", 0xe0, "hgT" );
+        AddOpcode( "WID", 0xe1, "wiD" );
+        AddOpcode( "ROW", 0xe2 );
+        AddOpcode( "COL", 0xe3 );
+        AddOpcode( "SPN", 0xe4 );
+        AddOpcode( "TASK", 0xe5, "tasK" );
+        AddOpcode( "HALT", 0xe6, "haL" );
+        AddOpcode( "REPEAT", 0xe7, "repE" );
+        AddOpcode( "UNTIL", 0xe8, "unT" );
+        AddOpcode( "WHILE", 0xe9, "whI" );
+        AddOpcode( "WEND", 0xea, "weN" );
+        AddOpcode( "CIF", 0xeb, "ciF" );
+        AddOpcode( "CELSE", 0xec, "ceL" );
+        AddOpcode( "CEND", 0xed, "cenD" );
+        AddOpcode( "LABEL", 0xee, "laB" );
+        AddOpcode( "DOKE", 0xef, "doK" );
+        AddOpcode( "EXIT", 0xf0, "exI" );
+        AddOpcode( "ALLOCATE", 0xf1, "alL" );
+        AddOpcode( "DISABLE", 0xf2, "disA" );
+        AddOpcode( "PULL", 0xf3, "puL" );
+        AddOpcode( "DLOAD", 0xf4, "dlO" );
+        AddOpcode( "DSAVE", 0xf5, "dsA" );
+        AddOpcode( "VAR", 0xf6 );
+        AddOpcode( "LOCAL", 0xf7, "locA" );
+        AddOpcode( "PROCEND", 0xf8, "proC" );
+        AddOpcode( "PRCC", 0xf9 );
+        AddOpcode( "CASEND", 0xfa, "caS" );
+        AddOpcode( "OF", 0xfb );
+        AddOpcode( "CASE", 0xfc );
+        AddOpcode( "RPT", 0xfd, "rpT" );
+        AddOpcode( "SETATR", 0xfe, "seT" );
+        AddOpcode( "PI", 0xff );
+
+        AddOpcode( "SCLR", 0x0101, "scL" );
+        AddOpcode( "SPRITE", 0x0102, "sprI" );
+        AddOpcode( "WIPE", 0x0103, "wipE" );
+        AddOpcode( "RESET", 0x0104, "reseT" );
+        AddOpcode( "H3COL", 0x0105, "h3cO" );
+        AddOpcode( "LORES", 0x0106, "lorE" );
+        AddOpcode( "HIRES", 0x0107, "hiR" );
+        AddOpcode( "PLOT", 0x0108, "plO" );
+        AddOpcode( "BOX", 0x0109, "boX" );
+        AddOpcode( "POLY", 0x010a, "polY" );
+        AddOpcode( "DRAW", 0x010b, "drA" );
+        AddOpcode( "MODE", 0x010c, "moD" );
+        AddOpcode( "S2COL", 0x010d, "s2C" );
+        AddOpcode( "S4COL", 0x010e, "s4C" );
+        AddOpcode( "H40COL", 0x010f, "h4C" );
+        AddOpcode( "SCRX", 0x0110, "scrX" );
+        AddOpcode( "WRR1", 0x0111, "wrR" );
+        AddOpcode( "WRL1", 0x0112, "wrl!" );
+        AddOpcode( "SCR1", 0x0113 );
+        AddOpcode( "SCL1", 0x0114 );
+        AddOpcode( "WRR2", 0x0115 );
+        AddOpcode( "WRL2", 0x0116 );
+        AddOpcode( "SCR2", 0x0117 );
+        AddOpcode( "SCL2", 0x0118 );
+        AddOpcode( "WRR8", 0x0119 );
+        AddOpcode( "WRL8", 0x011a );
+        AddOpcode( "SCR8", 0x011b );
+        AddOpcode( "SCL8", 0x011c );
+        AddOpcode( "ATTR", 0x011d, "attR" );
+        AddOpcode( "ATTL", 0x011e );
+        AddOpcode( "ATTUP", 0x011f, "attuP" );
+        AddOpcode( "ATTDN", 0x0120, "attdN" );
+        AddOpcode( "CHAR", 0x0121, "chaR" );
+        AddOpcode( "WINDOW", 0x0122, "winD" );
+        AddOpcode( "MULTI", 0x0123, "muL" );
+        AddOpcode( "MONO", 0x0124, "monO" );
+        AddOpcode( "TBORDER", 0x0125, "tbO" );
+        AddOpcode( "HBORDER", 0x0126, "hbO" );
+        AddOpcode( "TPAPER", 0x0127, "tpA" );
+        AddOpcode( "HPAPER", 0x0128, "hpA" );
+        AddOpcode( "WRAP", 0x0129, "wraP" );
+        AddOpcode( "SCROLL", 0x012a, "scroL" );
+        AddOpcode( "INK", 0x012b );
+        AddOpcode( "SETA", 0x012c );
+        AddOpcode( "ATTGET", 0x012d, "attgE" );
+        AddOpcode( "ATT20N", 0x012e, "att2N" );
+        AddOpcode( "ATTON", 0x012f, "attoN" );
+        AddOpcode( "ATTOFF", 0x0130, "attofF" );
+        AddOpcode( "MIR", 0x0131 );
+        AddOpcode( "MAR", 0x0132, "maR" );
+        AddOpcode( "WCLR", 0x0133, "wcL" );
+        AddOpcode( "INV", 0x0134 );
+        AddOpcode( "SPIN", 0x0135, "spiN" );
+        AddOpcode( "MOVBLK", 0x0136, "movB" );
+        AddOpcode( "MOVXOR", 0x0137, "movxO" );
+        AddOpcode( "MOVAND", 0x0138, "movaN" );
+        AddOpcode( "MOVOR", 0x0139, "movoR" );
+        AddOpcode( "MOVATT", 0x013a, "movatT" );
+        AddOpcode( "EXX", 0x013b );
+        AddOpcode( "EXY", 0x013c );
+        AddOpcode( "GETBLK", 0x013d, "getB" );
+        AddOpcode( "PUTBLK", 0x013e, "putB" );
+        AddOpcode( "CPYBLK", 0x013f, "cpY" );
+        AddOpcode( "GETXOR", 0x0140, "getxO" );
+        AddOpcode( "PUTXOR", 0x0141, "putxO" );
+        AddOpcode( "CPYXOR", 0x0142, "cpyxO" );
+        AddOpcode( "GETOR", 0x0143, "getoR" );
+        AddOpcode( "PUTOR", 0x0144, "putoR" );
+        AddOpcode( "CPYOR", 0x0145, "cpyoR" );
+        AddOpcode( "GETAND", 0x0146, "getaN" );
+        AddOpcode( "PUTAND", 0x0147, "putaN" );
+        AddOpcode( "CPYAND", 0x0148, "cpyaN" );
+        AddOpcode( "DBLANK", 0x0149, "dbL" );
+        AddOpcode( "DSHOW", 0x014a, "dshO" );
+        AddOpcode( "PUTCHR", 0x014b, "putcH" );
+        AddOpcode( "LCASE", 0x014c, "lcA" );
+        AddOpcode( "UCASE", 0x014d, "ucA" );
+        AddOpcode( "CONV", 0x014e );
+        AddOpcode( "HON", 0x014f, "hoN" );
+        AddOpcode( "HOFF", 0x0150, "hofF" );
+        AddOpcode( "HSET", 0x0151, "hsE" );
+        AddOpcode( "FLIPA", 0x0152, "flI" );
+        AddOpcode( "H4COL", 0x0153, "h4C" );
+        AddOpcode( "H2COL", 0x0154, "h2C" );
+        AddOpcode( "H1COL", 0x0155, "h1C" );
+        AddOpcode( "H3COL", 0x0156, "h3cO" );
+        AddOpcode( "HEXX", 0x0157 );
+        AddOpcode( "HSHX", 0x0158, "hshX" );
+        AddOpcode( "HEXY", 0x0159 );
+        AddOpcode( "HSHX", 0x015a );
+        AddOpcode( "HX", 0x015b );
+        AddOpcode( "HY", 0x015c );
+        AddOpcode( "HCOL", 0x015d, "hcO" );
+        AddOpcode( "OVER", 0x015e, "ovE" );
+        AddOpcode( "UNDER", 0x015f, "undE" );
+        AddOpcode( "SWAPATT", 0x0160, "swA" );
+        AddOpcode( "DTCTON", 0x0161, "dtC" );
+        AddOpcode( "DTCTOFF", 0x0162, "dtctofF" );
+        AddOpcode( "BLK%BLK", 0x0163 );
+        AddOpcode( "OR%BLK", 0x0164 );
+        AddOpcode( "AND%BLK", 0x0165 );
+        AddOpcode( "XOR%BLK", 0x0166 );
+        AddOpcode( "BLK%OR", 0x0167 );
+        AddOpcode( "OR%OR", 0x0168 );
+        AddOpcode( "AND%OR", 0x0169 );
+        AddOpcode( "XOR%OR", 0x016a );
+        AddOpcode( "BLK%AND", 0x016b );
+        AddOpcode( "OR%AND", 0x016c );
+        AddOpcode( "AND%AND", 0x016d );
+        AddOpcode( "XOR%AND", 0x016e );
+        AddOpcode( "BLK%XOR", 0x016f );
+        AddOpcode( "OR%XOR", 0x0170 );
+        AddOpcode( "AND%XOR", 0x0171 );
+        AddOpcode( "XOR%XOR", 0x0172 );
+        AddOpcode( "TEXT", 0x0173, "teX" );
+        AddOpcode( "FLIP", 0x0174 );
+        AddOpcode( "HIT", 0x0175 );
+        AddOpcode( "SCAN", 0x0176, "scaN" );
+        AddOpcode( "POINT", 0x0177, "poiN" );
+        AddOpcode( "DFA", 0x0178, "dfA" );
+        AddOpcode( "AFA2", 0x0179, "afA" );
+        AddOpcode( "AFA", 0x017a );
+        AddOpcode( "KB", 0x017b );
+        AddOpcode( "FIRE1", 0x017c, "fiR" );
+        AddOpcode( "FIRE2", 0x017d );
+        AddOpcode( "JS1", 0x017e );
+        AddOpcode( "JS2", 0x017f, "jS" );
+
+        AddOpcode( "BLACK", 0x0201, "blaC" );
+        AddOpcode( "WHITE", 0x0202, "whitE" );
+        AddOpcode( "RED", 0x0203 );
+        AddOpcode( "CYAN", 0x0204, "cyA" );
+        AddOpcode( "PURPLE", 0x0205, "purP" );
+        AddOpcode( "GREEN", 0x0206, "grE" );
+        AddOpcode( "BLUE", 0x0207, "bluE" );
+        AddOpcode( "YELLOW", 0x0208, "yE" );
+        AddOpcode( "ORANGE", 0x0209, "oraN" );
+        AddOpcode( "BROWN", 0x020a, "brO" );
+        AddOpcode( ".RED", 0x020b, ".rE" );
+        AddOpcode( "GRAY1", 0x020c, "graY" );
+        AddOpcode( "GRAY2", 0x020d );
+        AddOpcode( ".GREEN", 0x020e, ".gR" );
+        AddOpcode( ".BLUE", 0x020f, ".bL" );
+        AddOpcode( "GRAY3", 0x0210 );
+        AddOpcode( "OSC", 0x0211, "osC" );
+        AddOpcode( "ENV", 0x0212 );
+        AddOpcode( "FRQ", 0x0213 );
+        AddOpcode( "NOISE", 0x0214, "noiS" );
+        AddOpcode( "PULSE", 0x0215, "pulsE" );
+        AddOpcode( "SAW", 0x0216 );
+        AddOpcode( "TRI", 0x0217 );
+        AddOpcode( "RING", 0x0218, "rinG" );
+        AddOpcode( "SYNC", 0x0219, "synC" );
+        AddOpcode( "MUSIC", 0x021a, "musI" );
+        AddOpcode( "ADSR", 0x021b, "adS" );
+        AddOpcode( "FILTER", 0x021c, "filT" );
+        AddOpcode( "MUTE", 0x021d, "filT" );
+        AddOpcode( "VOLUME", 0x021e, "voL" );
+        AddOpcode( "CUTOFF", 0x021f, "cuT" );
+        AddOpcode( "RESONANCE", 0x0220, "resoN" );
+        AddOpcode( "PASS", 0x0221, "pasS" );
+        AddOpcode( "SCRY", 0x0222, "scrY" );
+        AddOpcode( "RECALL", 0x0223, "recA" );
+        AddOpcode( "STORE", 0x0224, "storE" );
+        AddOpcode( "SIDCLR", 0x0225, "sidC" );
+        AddOpcode( "MERGE", 0x0226, "meR" );
+        AddOpcode( "RESEQ", 0x0227 );
+        AddOpcode( "MEM", 0x0228 );
+        AddOpcode( "OLD", 0x0229 );
+        AddOpcode( "DIR", 0x022a );
+        AddOpcode( "DSTORE", 0x022b, "dstO" );
+        AddOpcode( "DRECALL", 0x022c, "dreC" );
+        AddOpcode( "DMERGE", 0x022d, "dmE" );
+        AddOpcode( "AUTO", 0x0232, "auT" );
+        AddOpcode( "RENUM", 0x0233, "renU" );
+        AddOpcode( "CSPRITE", 0x0235, "csP" );
+        AddOpcode( "CPUT", 0x0236, "cpuT" );
+        AddOpcode( "CGET", 0x0237, "cgE" );
+        AddOpcode( "CSWAP", 0x0238, "cswA" );
+        AddOpcode( "FILL", 0x0239 );
+        AddOpcode( "RASTER", 0x023a, "raS" );
+        AddOpcode( "EBACK", 0x023b, "ebA" );
+        AddOpcode( "BG0", 0x023c );
+        AddOpcode( "BG1", 0x023d );
+        AddOpcode( "BG2", 0x023e );
+        AddOpcode( "BG3", 0x023f );
+        AddOpcode( "SWITCH", 0x0240, "swiT" );
+        AddOpcode( "NORM", 0x0241, "norM" );
+        AddOpcode( "KEYOFF", 0x0242, "keyofF" );
+        AddOpcode( "KEYON", 0x0243, "keY" );
+        AddOpcode( "MCOL1", 0x0244, "mc!" );
+        AddOpcode( "MCOL2", 0x0245 );
+        AddOpcode( "MCOL3", 0x0246 );
+        AddOpcode( "FGND", 0x0247, "fgN" );
+        AddOpcode( "BGND", 0x0248, "bgnD" );
+        AddOpcode( "EI", 0x0249 );
+        AddOpcode( "DI", 0x024a );
+        AddOpcode( "UNSYNC", 0x024b, "unsY" );
+        AddOpcode( "RSYNC", 0x024c, "rsY" );
+        AddOpcode( "INIT", 0x024d, "iniT" );
       }
 
       AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-A}", 0xb0 );

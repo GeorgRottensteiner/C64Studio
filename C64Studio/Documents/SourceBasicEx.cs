@@ -84,6 +84,7 @@ namespace C64Studio
       comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "VIC BASIC V2", BasicVersion.VIC_BASIC_V2 ) );
       comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "BASIC 3.5", BasicVersion.V3_5 ) );
       comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "BASIC 7.0", BasicVersion.V7_0 ) );
+      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "Laser BASIC", BasicVersion.LASER_BASIC ) );
       comboBASICVersion.SelectedIndex = 0;
 
       btnToggleSymbolMode.Checked = Core.Settings.BASICShowControlCodesAsChars;
