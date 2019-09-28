@@ -2345,7 +2345,7 @@ namespace C64Studio
     {
       get
       {
-        return true;
+        return editSource.Focused;
       }
     }
 

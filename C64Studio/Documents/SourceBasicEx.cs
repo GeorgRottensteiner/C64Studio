@@ -973,8 +973,7 @@ namespace C64Studio
     {
       get
       {
-        //return editSource.Clipboard.CanPaste;
-        return true;
+        return editSource.Focused;
       }
     }
 
@@ -1458,6 +1457,12 @@ namespace C64Studio
     {
       switch ( Function )
       {
+        case Function.PASTE:
+          if ( editBASICStartAddress.Focused )
+          {
+            return false;
+          }
+          break;
         case C64Studio.Types.Function.FIND:
           ///editSource.FindReplace.ShowFind();
           break;

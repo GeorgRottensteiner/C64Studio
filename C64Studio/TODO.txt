@@ -1,6 +1,5 @@
 ﻿C64Studio
 o File-Manager-Import von BASIC-Dateien, Version!! (V7, etc.)
-o Copy/Paste in BASIC_Editor wenn Focus auf Adress-Edit!
 o FileManager -> Rename, Start in Emulator directly?
 o BASIC/ASM -> Run Configuration
 o BASIC-Extensions ( Laser-Basic, Simons Basic?)
