@@ -2325,7 +2325,8 @@ namespace C64Studio
     {
       get
       {
-        return !editSource.Selection.IsEmpty;
+        return ( !editSource.Selection.IsEmpty )
+            && ( editSource.Focused );
       }
     }
 
@@ -2335,7 +2336,8 @@ namespace C64Studio
     {
       get
       {
-        return !editSource.Selection.IsEmpty;
+        return ( !editSource.Selection.IsEmpty )
+            && ( editSource.Focused );
       }
     }
 
