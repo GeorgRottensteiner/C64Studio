@@ -22,6 +22,7 @@ namespace C64Studio.Parser
       V3_6,             // Version 3.6	Neue Befehle für LCD-Prototypen.
       V7_0,             // Version 7.0	Neue Befehle für den C128/D/DCR. Weiterentwicklung des C16/116 BASIC 3.5 .
       V10_0,            // Version 10 Neue Befehle für C65, beinhaltet sehr viele Fehler, kam aus dem Entwicklungsstadium nicht heraus. Weiterentwicklung des BASIC 7.0.
+      BASIC_LIGHTNING,  // BASIC extension
       LASER_BASIC       // BASIC extension
     }
 
@@ -136,7 +137,7 @@ namespace C64Studio.Parser
     };
 
     public Dictionary<string, Opcode>     m_Opcodes = new Dictionary<string, Opcode>();
-    public SortedDictionary<byte, Opcode> m_OpcodesFromByte = new SortedDictionary<byte, Opcode>();
+    public SortedDictionary<ushort, Opcode> m_OpcodesFromByte = new SortedDictionary<ushort, Opcode>();
     public Dictionary<string, Opcode>     m_ExOpcodes = new Dictionary<string, Opcode>();
 
     private GR.Collections.Map<int, LineInfo> m_LineInfos = new GR.Collections.Map<int, LineInfo>();
@@ -174,7 +175,7 @@ namespace C64Studio.Parser
     {
       var opcode = new Opcode( Opcode, ByteValue );
       m_Opcodes[Opcode] = opcode;
-      m_OpcodesFromByte[(byte)ByteValue] = opcode;
+      m_OpcodesFromByte[(ushort)ByteValue] = opcode;
     }
 
 
@@ -183,7 +184,7 @@ namespace C64Studio.Parser
     {
       var opcode = new Opcode( Opcode, ByteValue, ShortCut );
       m_Opcodes[Opcode] = opcode;
-      m_OpcodesFromByte[(byte)ByteValue] = opcode;
+      m_OpcodesFromByte[(ushort)ByteValue] = opcode;
     }
 
 
@@ -235,10 +236,12 @@ namespace C64Studio.Parser
 
       if ( ( Version == BasicVersion.C64_BASIC_V2 )
       ||   ( Version == BasicVersion.VIC_BASIC_V2 )
+      ||   ( Version == BasicVersion.BASIC_LIGHTNING )
       ||   ( Version == BasicVersion.LASER_BASIC )
       ||   ( Version == BasicVersion.V3_5 )
       ||   ( Version == BasicVersion.V7_0 ) )
       {
+        // default BASIC V2 tokens
         AddOpcode( "END", 0x80, "eN" );
         AddOpcode( "FOR", 0x81, "fO" );
         AddOpcode( "NEXT", 0x82, "nE" );
@@ -443,7 +446,8 @@ namespace C64Studio.Parser
         AddOpcode( "SLOW", 0xfe26 );
       }
 
-      if ( Version == BasicVersion.LASER_BASIC )
+      if ( ( Version == BasicVersion.LASER_BASIC )
+      ||   ( Version == BasicVersion.BASIC_LIGHTNING ) )
       {
         // override without or different short cuts
         AddOpcode( "ELSE", 0xcc, "elS" );
@@ -491,7 +495,7 @@ namespace C64Studio.Parser
         AddOpcode( "VAR", 0xf6 );
         AddOpcode( "LOCAL", 0xf7, "locA" );
         AddOpcode( "PROCEND", 0xf8, "proC" );
-        AddOpcode( "PRCC", 0xf9 );
+        AddOpcode( "PROC", 0xf9 );
         AddOpcode( "CASEND", 0xfa, "caS" );
         AddOpcode( "OF", 0xfb );
         AddOpcode( "CASE", 0xfc );
@@ -503,7 +507,7 @@ namespace C64Studio.Parser
         AddOpcode( "SPRITE", 0x0102, "sprI" );
         AddOpcode( "WIPE", 0x0103, "wipE" );
         AddOpcode( "RESET", 0x0104, "reseT" );
-        AddOpcode( "H3COL", 0x0105, "h3cO" );
+        AddOpcode( "H38COL", 0x0105, "h3cO" );
         AddOpcode( "LORES", 0x0106, "lorE" );
         AddOpcode( "HIRES", 0x0107, "hiR" );
         AddOpcode( "PLOT", 0x0108, "plO" );
@@ -544,7 +548,7 @@ namespace C64Studio.Parser
         AddOpcode( "INK", 0x012b );
         AddOpcode( "SETA", 0x012c );
         AddOpcode( "ATTGET", 0x012d, "attgE" );
-        AddOpcode( "ATT20N", 0x012e, "att2N" );
+        AddOpcode( "ATT2ON", 0x012e, "att2N" );
         AddOpcode( "ATTON", 0x012f, "attoN" );
         AddOpcode( "ATTOFF", 0x0130, "attofF" );
         AddOpcode( "MIR", 0x0131 );
@@ -672,6 +676,10 @@ namespace C64Studio.Parser
         AddOpcode( "DSTORE", 0x022b, "dstO" );
         AddOpcode( "DRECALL", 0x022c, "dreC" );
         AddOpcode( "DMERGE", 0x022d, "dmE" );
+      }
+
+      if ( Version == BasicVersion.LASER_BASIC )
+      {
         AddOpcode( "AUTO", 0x0232, "auT" );
         AddOpcode( "RENUM", 0x0233, "renU" );
         AddOpcode( "CSPRITE", 0x0235, "csP" );
@@ -1368,7 +1376,7 @@ namespace C64Studio.Parser
             // is there a token now?
             bool entryFound = true;
             bool potentialToken = false;
-            foreach ( KeyValuePair<byte, Opcode> opcodeEntry in m_OpcodesFromByte )
+            foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in m_OpcodesFromByte )
             {
               Opcode  opcode = opcodeEntry.Value;
 
@@ -1906,7 +1914,7 @@ namespace C64Studio.Parser
           }
           // is there a token now?
           bool entryFound = true;
-          foreach ( KeyValuePair<byte, Opcode> opcodeEntry in m_OpcodesFromByte )
+          foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in m_OpcodesFromByte )
           {
             Opcode  opcode = opcodeEntry.Value;
 

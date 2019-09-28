@@ -1,5 +1,8 @@
 ﻿C64Studio
 o File-Manager-Import von BASIC-Dateien, Version!! (V7, etc.)
+o Copy/Paste in BASIC_Editor wenn Focus auf Adress-Edit!
+o FileManager -> Rename, Start in Emulator directly?
+o BASIC/ASM -> Run Configuration
 o BASIC-Extensions ( Laser-Basic, Simons Basic?)
 o C128-Unterstützung (BASIC mit Hex-Data, Debug-Start, etc..)
 o *=$c000
@@ -11,7 +14,6 @@ o *=$c000
   Die Fehlermeldung ist ein bisschen irreführend.
 
 Die am Ende der Meldung ist damit im Prinzip überflüssig geworden, aber trotzdem um 1 daneben.
-o BASIC_Addons für V7 etc. (tuxer) -> Auswahl BASIC-Typ, Extended Basic Tokens!
 o Search Bookmarks-> Functionality
 o Sprite-Import from file -> allow skipping a number of bytes (open binary editor view?)
 o komme gerade mit dem Text Screen Editor nicht zurecht. Habe die Größe auf 40x200 gestellt und Text als ASM exportiert. 

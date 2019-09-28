@@ -1,0 +1,77 @@
+Information regarding Laser BASIC memory options, basic file format and tokens...
+
+
+Laser Basic Memory options...
+
+$5800 to $9FFF * BASIC program and variables
+
+The simplest single line program possible...
+
+10 VERIFY
+
+was loaded into each of the four memory configuration options offered by Laser BASIC...
+
+Option
+[1] Turbo tape, multi tasking.
+    17611 bytes free.
+
+    veri1.bas.prg - When saved to prg file, the first bytes in the file are $5B01 / Dec 23297
+
+[2] No Turbo tape, multi tasking.
+    18429 bytes free.
+
+    veri2.bas.prg - When saved to prg file, the first bytes in the file are $5801 / Dec 22529
+
+[3] Turbo tape, no multi tasking.
+    20221 bytes free.
+
+    veri3.bas.prg - When saved to prg file, the first bytes in the file are $5101 / Dec 20737 
+
+[4] No Turbo tape, no multi tasking.
+    20989 bytes free.
+    Basic prg file starts with $
+
+    veri4.bas.prg - When saved to prg file, the first bytes in the file are $4E01 / Dec 19969
+
+
+~~~
+
+Laser BASIC prg file format Info...
+
+z1_laser_basic_veri2.bas.prg - file loaded into Laser BASIC option [2] No Turbo tape, multi tasking.
+
+REM START ADDRESS: $5801
+REM END ADDRESS+1: $5809
+REM SIZE (BYTES):   8
+
+10 VERIFY
+
+
+    Memory location the file was saved from
+    in low-byte/high-byte order
+   $5801
+(Dec 22529)
+     |
+     |                Pointer to beginning of "next" BASIC line,
+     |                in low-byte/high-byte order
+     |                $5807
+     |                  |
+     |                  |
+     |                  |               BASIC line number "10", in low-byte/high-byte order
+     |                  |               0x0A (hexadecimal) which is 0*16+10=10 (decimal) and 0.
+     |                  |               In general the line number is equal to
+     |                  |               (second byte)*256 + (first byte) in decimal.
+     +-------+          |               |
+     |       |          |           Line No.      Keyword  Null Byte       Two Null Bytes
+     low   high         |               |          Token   End of Current  End of File  
+     byte  byte         |               |            |     Basic Line      Characters
+     |       |          |               |            |     Character         |
+     |       |          |               |            |     (EOL)            (EOF)
+     |       |          |               |            |       |               |
+     |       |      +-------+       10--+----+    VERIFY     |           +---+---+
+     |       |      |       |       |        |       |       |           |       |
+Hex 01      58      07      58      0A      00      95      00           00      00
+                                                                                   
+Dec  1      88       7      88      10       0     149       0            0       0
+
+
