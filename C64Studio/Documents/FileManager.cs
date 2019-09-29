@@ -383,6 +383,10 @@ namespace C64Studio
       {
         DeleteSelectedItems();
       }
+      else if ( e.KeyCode == Keys.F2 )
+      {
+        RenameFile();
+      }
     }
 
 
@@ -767,6 +771,13 @@ namespace C64Studio
 
 
     void itemRename_Click( object sender, EventArgs e )
+    {
+      RenameFile();
+    }
+
+
+
+    void RenameFile()
     {
       bool renamedFile = false;
       foreach ( ListViewItem item in listFiles.SelectedItems )

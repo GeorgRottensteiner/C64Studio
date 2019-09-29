@@ -204,6 +204,13 @@ namespace C64Studio
         LastReplaceCursorPos = -1;
       }*/
 
+      Core.MainForm.WriteToLog( "FindNext " + SearchText + " with " + (FindTarget)comboSearchTarget.SelectedIndex );
+      if ( ( LastSearchFound != null )
+      &&   ( LastSearchFound.FoundInDocument != null ) )
+      {
+        Core.MainForm.WriteToLog( "-continue from " + LastSearchFound.FoundInDocument.DocumentFilename + " at " + LastSearchFound.StartPosition );
+      }
+
       if ( FindNextNew( SearchText,
                         radioSearchDirDown.Checked,
                         checkSearchRegExp.Checked,
@@ -214,6 +221,8 @@ namespace C64Studio
                         DirectlyFromSourceFile,
                         LastSearchFound ) )
       {
+        Core.MainForm.WriteToLog( "-found in " + LastSearchFound.FoundInDocument.DocumentFilename + " at " + LastSearchFound.StartPosition );
+
         bool keepFindActive = ( Core.MainForm.ActiveContent == Core.MainForm.m_FindReplace );
         if ( LastSearchFound.FoundInDocument == null )
         {
@@ -268,6 +277,8 @@ namespace C64Studio
       }
       else
       {
+        Core.MainForm.WriteToLog( "-not found" );
+
         if ( !string.IsNullOrEmpty( _LastErrorMessage ) )
         {
           Core.SetStatus( "A problem occurred: " + _LastErrorMessage );

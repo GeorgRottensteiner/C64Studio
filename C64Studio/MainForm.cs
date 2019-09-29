@@ -3947,8 +3947,11 @@ namespace C64Studio
     private string SettingsPath()
     {
       // prefix hard coded version number so we can use our proper version number
-      string    userAppDataPath = GR.Path.ParentDirectory( Application.UserAppDataPath );
-
+      // we do NOT use Application.UserAppDataPath as that creates a folder with the real version number which is not what we want
+      // for backwards compatiblity reasons we're stuck with 1.0.0.0 here
+      string    userAppDataPath = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
+      userAppDataPath = System.IO.Path.Combine( userAppDataPath, "GR Games" );
+      userAppDataPath = System.IO.Path.Combine( userAppDataPath, "C64Studio" );
       userAppDataPath = System.IO.Path.Combine( userAppDataPath, "1.0.0.0" );
 
       try
@@ -7281,6 +7284,12 @@ namespace C64Studio
       document.Show( panelMain );
     }
 
+
+
+    public void WriteToLog( string Info )
+    {
+      System.IO.File.AppendAllText( "testlog.txt", Info + System.Environment.NewLine );
+    }
 
 
   }
