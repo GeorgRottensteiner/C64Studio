@@ -166,6 +166,7 @@ namespace C64Studio
       {
         buildChainEntry.PreDefines = editBuildChainDefines.Text;
         Element.DocumentInfo.Project.SetModified();
+        Core.MainForm.MarkAsDirty( Element.DocumentInfo );
       }
     }
 
@@ -195,6 +196,7 @@ namespace C64Studio
             comboBuildChainFile.Items.Add( element.DocumentInfo.DocumentFilename );
           }
         }
+        Core.MainForm.MarkAsDirty( Element.DocumentInfo );
       }
     }
 
@@ -217,6 +219,7 @@ namespace C64Studio
         listBuildChainProjects.SelectedItems[0].Text = buildChainEntry.ProjectName + " - " + buildChainEntry.Config;
 
         Element.DocumentInfo.Project.SetModified();
+        Core.MainForm.MarkAsDirty( Element.DocumentInfo );
       }
     }
 
@@ -261,6 +264,7 @@ namespace C64Studio
       {
         buildChainEntry.DocumentFilename = newFile;
         Element.DocumentInfo.Project.SetModified();
+        Core.MainForm.MarkAsDirty( Element.DocumentInfo );
       }
     }
 

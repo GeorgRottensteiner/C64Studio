@@ -69,18 +69,21 @@ namespace C64Studio
           if ( Settings.PreBuild != command )
           {
             Settings.PreBuild = command;
+            Core.MainForm.MarkAsDirty( Element.DocumentInfo );
           }
           break;
         case ProjectElement.PerConfigSettings.BuildEvent.CUSTOM:
           if ( Settings.CustomBuild != command )
           {
             Settings.CustomBuild = command;
+            Core.MainForm.MarkAsDirty( Element.DocumentInfo );
           }
           break;
         case ProjectElement.PerConfigSettings.BuildEvent.POST:
           if ( Settings.PostBuild != command )
           {
             Settings.PostBuild = command;
+            Core.MainForm.MarkAsDirty( Element.DocumentInfo );
           }
           break;
       }
