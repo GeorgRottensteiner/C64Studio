@@ -1,6 +1,7 @@
 ﻿using C64Studio.Types;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using static C64Studio.Parser.BasicFileParser;
 

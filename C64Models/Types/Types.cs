@@ -282,24 +282,43 @@ namespace C64Studio.Types
 
   public enum CompileTargetType
   {
+    [Description( "None" )]
     NONE,
+    [Description( "Plain" )]
     PLAIN,
+    [Description( "PRG (CBM)" )]
     PRG,
+    [Description( "T64 Tape Image" )]
     T64,
+    [Description( "8k Cartridge Binary" )]
     CARTRIDGE_8K_BIN,
+    [Description( "8k Cartridge CRT" )]
     CARTRIDGE_8K_CRT,
+    [Description( "16k Cartridge Binary" )]
     CARTRIDGE_16K_BIN,
+    [Description( "16k Cartridge CRT" )]
     CARTRIDGE_16K_CRT,
+    [Description( "D64 Disk Image" )]
     D64,
+    [Description( "Magic Desk Cartridge Binary" )]
     CARTRIDGE_MAGICDESK_BIN,
+    [Description( "Magic Desk Cartridge CRT" )]
     CARTRIDGE_MAGICDESK_CRT,
+    [Description( "TAP Tape Image" )]
     TAP,
+    [Description( "Easyflash Cartridge Binary" )]
     CARTRIDGE_EASYFLASH_BIN,
+    [Description( "Easyflash Cartridge CRT" )]
     CARTRIDGE_EASYFLASH_CRT,
+    [Description( "RGCD Cartridge Binary" )]
     CARTRIDGE_RGCD_BIN,
+    [Description( "RGCD Cartridge CRT" )]
     CARTRIDGE_RGCD_CRT,
+    [Description( "GMOD2 Cartridge Binary" )]
     CARTRIDGE_GMOD2_BIN,
+    [Description( "GMOD2 Cartridge CRT" )]
     CARTRIDGE_GMOD2_CRT,
+    [Description( "D81 Disk Image" )]
     D81
   };
 

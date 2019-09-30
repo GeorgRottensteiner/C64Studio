@@ -52,6 +52,7 @@ namespace C64Studio
           break;
         case ProjectElement.ElementType.BASIC_SOURCE:
           AddTab( new PropCompileTarget( m_Element, m_Core ) );
+          AddTab( new PropDebugging( m_Element, m_Core ) );
           break;
       }
       AddTab( new PropBuildEvents( m_Element, m_Core ) );

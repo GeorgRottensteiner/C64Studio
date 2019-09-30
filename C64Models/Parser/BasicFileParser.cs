@@ -1836,6 +1836,7 @@ namespace C64Studio.Parser
 
       // now the real token crunching
       int bytePos = 0;
+      bool hadDirectTokenBefore = false;
 
       while ( bytePos < tempData.Length )
       {
@@ -1985,6 +1986,7 @@ namespace C64Studio.Parser
           }
           if ( entryFound )
           {
+            hadDirectTokenBefore = false;
             continue;
           }
           // is it an extended token?
@@ -2033,10 +2035,30 @@ namespace C64Studio.Parser
           }
           if ( entryFound )
           {
+            hadDirectTokenBefore = false;
             continue;
           }
           // not a token, add directly
           AddDirectToken( info, nextByte, bytePos );
+
+          // random hack -> avoid letters following letters forming tokens (e.g. s-or-t)
+          if ( ( nextByte >= 'A' )
+          &&   ( nextByte <= 'Z' ) )
+          {
+            hadDirectTokenBefore = true;
+          }
+          else
+          {
+            hadDirectTokenBefore = false;
+          }
+
+          if ( ( nextByte == 39 )
+          &&   ( ( Settings.Version == BasicVersion.BASIC_LIGHTNING )
+          ||     ( Settings.Version == BasicVersion.LASER_BASIC ) ) )
+          {
+            insideREMStatement = true;
+          }
+
           ++bytePos;
           continue;
         }

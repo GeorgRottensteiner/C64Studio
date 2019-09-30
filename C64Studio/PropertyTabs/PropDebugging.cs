@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C64Studio.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,22 +24,27 @@ namespace C64Studio
       Text = "Debug";
       InitializeComponent();
 
-      comboDebugFileType.Items.Add( "None" );
-      comboDebugFileType.Items.Add( "Plain" );
-      comboDebugFileType.Items.Add( "PRG (cbm)" );
-      comboDebugFileType.Items.Add( "T64" );
-      comboDebugFileType.Items.Add( "8 KB Cartridge (bin)" );
-      comboDebugFileType.Items.Add( "8 KB Cartridge (crt)" );
-      comboDebugFileType.Items.Add( "16 KB Cartridge (bin)" );
-      comboDebugFileType.Items.Add( "16 KB Cartridge (crt)" );
-      comboDebugFileType.Items.Add( "D64" );
-      comboDebugFileType.Items.Add( "Magic Desk 64 KB Cartridge (bin)" );
-      comboDebugFileType.Items.Add( "Magic Desk 64 KB Cartridge (crt)" );
-      comboDebugFileType.Items.Add( "TAP" );
-      comboDebugFileType.Items.Add( "Easyflash Cartridge (bin)" );
-      comboDebugFileType.Items.Add( "Easyflash Cartridge (crt)" );
-      comboDebugFileType.Items.Add( "RGCD 64 KB Cartridge (bin)" );
-      comboDebugFileType.Items.Add( "RGCD 64 KB Cartridge (crt)" );
+      AddType( CompileTargetType.NONE );
+      AddType( CompileTargetType.PLAIN );
+      AddType( CompileTargetType.PRG );
+      AddType( CompileTargetType.T64 );
+      AddType( CompileTargetType.TAP );
+      AddType( CompileTargetType.D64 );
+      AddType( CompileTargetType.D81 );
+
+      if ( Element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+      {
+        AddType( CompileTargetType.CARTRIDGE_8K_BIN );
+        AddType( CompileTargetType.CARTRIDGE_8K_CRT );
+        AddType( CompileTargetType.CARTRIDGE_16K_BIN );
+        AddType( CompileTargetType.CARTRIDGE_16K_CRT );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_BIN );
+        AddType( CompileTargetType.CARTRIDGE_MAGICDESK_CRT );
+        AddType( CompileTargetType.CARTRIDGE_EASYFLASH_BIN );
+        AddType( CompileTargetType.CARTRIDGE_EASYFLASH_CRT );
+        AddType( CompileTargetType.CARTRIDGE_RGCD_BIN );
+        AddType( CompileTargetType.CARTRIDGE_RGCD_CRT );
+      }
 
       foreach ( var configName in Element.DocumentInfo.Project.Settings.GetConfigurationNames() )
       {
@@ -48,8 +54,31 @@ namespace C64Studio
 
       ProjectElement.PerConfigSettings    configSettings = Element.Settings[Element.DocumentInfo.Project.Settings.CurrentConfig.Name];
 
-      comboDebugFileType.SelectedIndex  = (int)configSettings.DebugFileType;
+      SelectDebugType( configSettings.DebugFileType );
       editDebugCommand.Text             = configSettings.DebugFile;
+    }
+
+
+
+    private void SelectDebugType( CompileTargetType Type )
+    {
+      int     itemIndex = 0;
+      foreach ( GR.Generic.Tupel<string, CompileTargetType> item in comboDebugFileType.Items )
+      {
+        if ( item.second == Type )
+        {
+          comboDebugFileType.SelectedIndex = itemIndex;
+          return;
+        }
+        ++itemIndex;
+      }
+    }
+
+
+
+    private void AddType( CompileTargetType Type )
+    {
+      comboDebugFileType.Items.Add( new GR.Generic.Tupel<string, CompileTargetType>( GR.EnumHelper.GetDescription( Type ), Type ) );
     }
 
 
@@ -69,7 +98,7 @@ namespace C64Studio
 
       ProjectElement.PerConfigSettings    configSettings = Element.Settings[selectedConfig];
 
-      comboDebugFileType.SelectedIndex = (int)configSettings.DebugFileType;
+      SelectDebugType( configSettings.DebugFileType );
       editDebugCommand.Text = configSettings.DebugFile;
     }
 
@@ -96,9 +125,11 @@ namespace C64Studio
 
       ProjectElement.PerConfigSettings    configSettings = Element.Settings[selectedConfig];
 
-      if ( (int)configSettings.DebugFileType != comboDebugFileType.SelectedIndex )
+      var debugType = ( (GR.Generic.Tupel<string, CompileTargetType>)comboDebugFileType.SelectedItem ).second;
+
+      if ( configSettings.DebugFileType != debugType )
       {
-        configSettings.DebugFileType = (C64Studio.Types.CompileTargetType)comboDebugFileType.SelectedIndex;
+        configSettings.DebugFileType = debugType;
         Element.DocumentInfo.Project.SetModified();
       }
     }
