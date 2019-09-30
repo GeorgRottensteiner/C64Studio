@@ -678,7 +678,7 @@ namespace C64Studio.Parser
         AddOpcode( "DMERGE", 0x022d, "dmE" );
 
         AddOpcode( "MOVE", 0x022f );
-        AddOpcode( "PLAY", 0x0240, "plaY" ); // clashes with switch?
+        AddOpcode( "PLAY", 0x0230, "plaY" );
         AddOpcode( "RPLAY", 0x231, "rplA" );
         AddOpcode( "TRACK", 0x022e, "traC" );
       }
