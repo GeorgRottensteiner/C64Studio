@@ -335,6 +335,55 @@ namespace MediaTool
 
 
 
+    private int HandleBinaryFile( GR.Text.ArgumentParser ArgParser )
+    {
+      GR.Memory.ByteBuffer    data = GR.IO.File.ReadAllBytes( ArgParser.Parameter( "BINARY" ) );
+      if ( data == null )
+      {
+        System.Console.WriteLine( "Couldn't read binary file " + ArgParser.Parameter( "BINARY" ) );
+        return 1;
+      }
+      int     firstUnit = 0;
+      int     count = -1;
+      if ( ArgParser.IsParameterSet( "OFFSET" ) )
+      {
+        firstUnit = GR.Convert.ToI32( ArgParser.Parameter( "OFFSET" ) );
+      }
+      if ( ArgParser.IsParameterSet( "COUNT" ) )
+      {
+        count = GR.Convert.ToI32( ArgParser.Parameter( "COUNT" ) );
+      }
+      if ( count == -1 )
+      {
+        count = (int)data.Length;
+      }
+
+      if ( ( firstUnit < 0 )
+      ||   ( firstUnit >= (int)data.Length ) )
+      {
+        System.Console.WriteLine( "OFFSET is invalid" );
+        return 1;
+      }
+      if ( ( count <= 0 )
+      ||   ( firstUnit + count > (int)data.Length ) )
+      {
+        System.Console.WriteLine( "COUNT is invalid" );
+        return 1;
+      }
+
+      GR.Memory.ByteBuffer    resultData = new GR.Memory.ByteBuffer( (uint)count );
+      data.CopyTo( resultData, firstUnit, count );
+
+      if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), resultData ) )
+      {
+        Console.WriteLine( "Could not write to file " + ArgParser.Parameter( "EXPORT" ) );
+        return 1;
+      }
+      return 0;
+    }
+
+
+
     public int Handle( string[] args )
     {
       var argParser = new GR.Text.ArgumentParser();
@@ -347,6 +396,7 @@ namespace MediaTool
       argParser.AddOptionalParameter( "OFFSET" );
       argParser.AddOptionalParameter( "COUNT" );
       argParser.AddOptionalParameter( "AREA" );
+      argParser.AddOptionalParameter( "BINARY" );
       argParser.AddParameter( "EXPORT" );
       argParser.AddSwitch( "TYPE", false );
       argParser.AddSwitchValue( "TYPE", "SPRITES" );
@@ -368,6 +418,7 @@ namespace MediaTool
         System.Console.WriteLine( "  [-charsetproject <charset project file>]" );
         System.Console.WriteLine( "  [-chars <binary charset file>]" );
         System.Console.WriteLine( "  [-charscreen <charscreen project file>]" );
+        System.Console.WriteLine( "  [-binary <file>]" );
         System.Console.WriteLine( "  [-type <export format>]" );
         System.Console.WriteLine( "  [-export <file name>]" );
         System.Console.WriteLine( "  [-area <x,y,width,height>]" );
@@ -397,6 +448,10 @@ namespace MediaTool
       else if ( argParser.IsParameterSet( "CHARSCREEN" ) )
       {
         return HandleCharscreenFile( argParser );
+      }
+      else if ( argParser.IsParameterSet( "BINARY" ) )
+      {
+        return HandleBinaryFile( argParser );
       }
       System.Console.Error.WriteLine( "Missing medium" );
       return 1;

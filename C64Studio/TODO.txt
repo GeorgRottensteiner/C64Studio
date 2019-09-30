@@ -4,6 +4,7 @@ o FileManager -> Rename, Start in Emulator directly?
 o BASIC -> Run/Debug Configuration
 o BASIC -> Debug?
 o BASIC-Extensions ( Laser-Basic, Simons Basic?)
+o Solution Explorer - only one active element is shown bold
 o C128-Unterstützung (BASIC mit Hex-Data, Debug-Start, etc..)
 o *=$c000
   jmp Init
