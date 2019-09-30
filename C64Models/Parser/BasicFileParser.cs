@@ -676,6 +676,11 @@ namespace C64Studio.Parser
         AddOpcode( "DSTORE", 0x022b, "dstO" );
         AddOpcode( "DRECALL", 0x022c, "dreC" );
         AddOpcode( "DMERGE", 0x022d, "dmE" );
+
+        AddOpcode( "MOVE", 0x022f );
+        AddOpcode( "PLAY", 0x0240, "plaY" ); // clashes with switch?
+        AddOpcode( "RPLAY", 0x231, "rplA" );
+        AddOpcode( "TRACK", 0x022e, "traC" );
       }
 
       if ( Version == BasicVersion.LASER_BASIC )
@@ -1411,7 +1416,8 @@ namespace C64Studio.Parser
                 tempData.Clear();
                 tempDataStartPos = -1;
                 insideDataStatement = ( opcode.Command == "DATA" );
-                if ( opcode.Command == "REM" )
+
+                if ( IsComment( opcode ) )
                 {
                   if ( basicToken4.StartIndex + 3 < Line.Length )
                   {
@@ -1501,6 +1507,23 @@ namespace C64Studio.Parser
       }
 
       return info;
+    }
+
+
+
+    private bool IsComment( Opcode Opcode )
+    {
+      if ( Opcode.Command == "REM" )
+      {
+        return true;
+      }
+      if ( ( Opcode.Command == "'" )
+      &&   ( ( Settings.Version == BasicVersion.LASER_BASIC )
+      ||     ( Settings.Version == BasicVersion.BASIC_LIGHTNING ) ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -1953,7 +1976,7 @@ namespace C64Studio.Parser
               bytePos += opcode.Command.Length;
 
               insideDataStatement = ( opcode.Command == "DATA" );
-              if ( opcode.Command == "REM" )
+              if ( IsComment( opcode ) )
               {
                 insideREMStatement = true;
               }
@@ -2382,7 +2405,7 @@ namespace C64Studio.Parser
 
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
-            if ( token.ByteValue == m_Opcodes["REM"].InsertionValue )
+            if ( IsComment( token ) )
             {
               hadREM = true;
             }
@@ -2476,7 +2499,7 @@ namespace C64Studio.Parser
           ||   ( token.TokenType == Token.Type.NUMERIC_LITERAL )
           ||   ( token.TokenType == Token.Type.EX_BASIC_TOKEN ) )
           {
-            if ( ( token.ByteValue != m_Opcodes["REM"].InsertionValue )
+            if ( ( !IsComment( token ) )
             &&   ( hadREM ) )
             {
               sb.Append( " " );
@@ -2486,6 +2509,25 @@ namespace C64Studio.Parser
         sb.AppendLine();
       }
       return sb.ToString();
+    }
+
+
+
+    private bool IsComment( Token token )
+    {
+      if ( token.ByteValue == m_Opcodes["REM"].InsertionValue )
+      {
+        return true;
+      }
+      if ( ( Settings.Version == BasicVersion.BASIC_LIGHTNING )
+      ||   ( Settings.Version == BasicVersion.LASER_BASIC ) )
+      {
+        if ( token.Content == "'" )
+        {
+          return true;
+        }
+      }
+      return false;
     }
 
 
@@ -2577,8 +2619,7 @@ namespace C64Studio.Parser
           }
           bool    tokenIsInserted = false;
 
-          if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-          &&   ( token.ByteValue == m_Opcodes["REM"].InsertionValue ) )
+          if ( IsComment( token ) )
           {
             hadREM = true;
           }
@@ -2998,7 +3039,7 @@ namespace C64Studio.Parser
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
           ||   ( token.TokenType == Token.Type.EX_BASIC_TOKEN ) )
           {
-            if ( token.ByteValue != m_Opcodes["REM"].InsertionValue )
+            if ( !IsComment( token ) )
             {
               //sb.Append( " " );
             }
