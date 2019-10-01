@@ -337,6 +337,11 @@ namespace MediaTool
 
     private int HandleBinaryFile( GR.Text.ArgumentParser ArgParser )
     {
+      if ( !ValidateExportType( "Binary file", ArgParser.Parameter( "TYPE" ), new string[] { "BYTES" } ) )
+      {
+        return 1;
+      }
+
       GR.Memory.ByteBuffer    data = GR.IO.File.ReadAllBytes( ArgParser.Parameter( "BINARY" ) );
       if ( data == null )
       {
@@ -403,6 +408,7 @@ namespace MediaTool
       argParser.AddSwitchValue( "TYPE", "CHARS" );
       argParser.AddSwitchValue( "TYPE", "CHARSCOLORS" );
       argParser.AddSwitchValue( "TYPE", "COLORS" );
+      argParser.AddSwitchValue( "TYPE", "BYTES" );
 
       if ( !argParser.CheckParameters( args ) )
       {

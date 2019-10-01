@@ -52,14 +52,11 @@ namespace C64Studio
     public Perspective            m_ActivePerspective = Perspective.DEBUG;
 
     public System.Diagnostics.Process CompilerProcess = null;
-    private System.Diagnostics.Process m_ExternalProcess = null;
 
     public StudioCore             StudioCore = new StudioCore();
 
     private List<Tasks.Task>      m_Tasks = new List<C64Studio.Tasks.Task>();
     private Tasks.Task            m_CurrentTask = null;
-
-    private System.DateTime       m_LastReceivedOutputTime;
 
     private bool                  m_ChangingToolWindows = false;
     private bool                  m_LoadingProject = false;
@@ -1997,19 +1994,6 @@ namespace C64Studio
 
 
 
-    public bool RunCommand( DocumentInfo Doc, string StepDesc, string Command )
-    {
-      if ( !RunExternalCommand( Doc, Command ) )
-      {
-        StudioCore.AddToOutput( "-" + StepDesc + " step failed" + System.Environment.NewLine );
-        return false;
-      }
-      StudioCore.AddToOutput( "-" + StepDesc + " step successful" + System.Environment.NewLine );
-      return true;
-    }
-
-
-
     public void DumpLabelFile( Types.ASM.FileInfo FileInfo )
     {
       StringBuilder sb = new StringBuilder();
@@ -2095,178 +2079,6 @@ namespace C64Studio
 
     public void OnBuildFinished( DocumentInfo baseDoc, DocumentInfo ActiveDocumentInfo )
     {
-    }
-
-
-
-    private bool RunExternalCommand( string Command, DocumentInfo CommandDocument )
-    {
-      m_LastReceivedOutputTime = System.DateTime.Now;
-
-      string fullCommand = Command;
-      string args = "";
-      if ( Command.StartsWith( "\"" ) )
-      {
-        int nextQuote = Command.IndexOf('"', 1);
-        if ( nextQuote == -1 )
-        {
-          // invalid file
-          StudioCore.AddToOutput( "Invalid command specified (" + Command + ")" );
-          return false;
-        }
-        fullCommand = Command.Substring( 1, nextQuote - 1 );
-        args = Command.Substring( nextQuote + 1 ).Trim();
-      }
-      else if ( Command.IndexOf( ' ' ) != -1 )
-      {
-        int spacePos = Command.IndexOf(' ');
-        fullCommand = Command.Substring( 0, spacePos );
-        args = Command.Substring( spacePos + 1 ).Trim();
-      }
-
-      fullCommand = "cmd.exe";
-
-      bool error = false;
-      bool errorAtArgs = false;
-
-      string command = FillParameters( Command, CommandDocument, false, out error );
-      if ( error )
-      {
-        return false;
-      }
-      args = "/C \"" + command + "\"";
-      args = FillParameters( args, CommandDocument, false, out errorAtArgs );
-      if ( ( error )
-      ||   ( errorAtArgs ) )
-      {
-        return false;
-      }
-
-
-      //Debug.Log( "Args:" + args );
-      //string command = fullCommand + " " + args;
-
-      StudioCore.AddToOutput( command + System.Environment.NewLine );
-
-      m_ExternalProcess = new System.Diagnostics.Process();
-      m_ExternalProcess.StartInfo.FileName = fullCommand;
-      m_ExternalProcess.StartInfo.WorkingDirectory = FillParameters( "$(BuildTargetPath)", CommandDocument, false, out error );
-
-      if ( error )
-      {
-        return false;
-      }
-      if ( !System.IO.Directory.Exists( m_ExternalProcess.StartInfo.WorkingDirectory + "/" ) )
-      {
-        StudioCore.AddToOutput( "The determined working directory \"" + m_ExternalProcess.StartInfo.WorkingDirectory + "\" does not exist" + System.Environment.NewLine );
-        return false;
-      }
-
-      m_ExternalProcess.StartInfo.CreateNoWindow = true;
-      m_ExternalProcess.EnableRaisingEvents = true;
-      m_ExternalProcess.StartInfo.Arguments = args;
-      m_ExternalProcess.StartInfo.UseShellExecute = false;
-      m_ExternalProcess.Exited += new EventHandler( m_ExternalProcess_Exited );
-
-      m_ExternalProcess.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler( compilerProcess_OutputDataReceived );
-      m_ExternalProcess.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler( compilerProcess_OutputDataReceived );
-      m_ExternalProcess.StartInfo.RedirectStandardError = true;
-      m_ExternalProcess.StartInfo.RedirectStandardOutput = true;
-
-      try
-      {
-        if ( !m_ExternalProcess.Start() )
-        {
-          m_ExternalProcess.Close();
-          return false;
-        }
-        m_ExternalProcess.BeginOutputReadLine();
-        m_ExternalProcess.BeginErrorReadLine();
-      }
-      catch ( Win32Exception ex )
-      {
-        m_ExternalProcess.Close();
-        StudioCore.AddToOutput( ex.Message + System.Environment.NewLine );
-        return false;
-      }
-
-      //Debug.Log( "=============Start" );
-      while ( !m_ExternalProcess.WaitForExit( 50 ) )
-      {
-        Application.DoEvents();
-      }
-      // DO NOT REMOVE: final DoEvents to let the app clear its invoke queue to the output display 
-      Application.DoEvents();
-      //Debug.Log( "=============Done" );
-
-      /*
-      // working wait
-      while ( ( System.DateTime.Now - m_LastReceivedOutputTime ).TotalMilliseconds < 500  )
-      {
-        Application.DoEvents();
-        System.Threading.Thread.Sleep( 20 );
-      }
-       */
-
-      bool success = (m_ExternalProcess.ExitCode == 0);
-      if ( !success )
-      {
-        StudioCore.AddToOutput( "External Command " + command + " exited with result code " + m_ExternalProcess.ExitCode.ToString() + System.Environment.NewLine );
-      }
-      m_ExternalProcess.Close();
-      return success;
-    }
-
-
-
-    private bool RunExternalCommand( DocumentInfo Doc, string Command )
-    {
-      string[] commands = System.Text.RegularExpressions.Regex.Split(Command, System.Environment.NewLine);
-      //Debug.Log( "Runexternalcommand " + Command );
-
-      SetGUIForWaitOnExternalTool( true );
-      foreach ( string command in commands )
-      {
-        if ( string.IsNullOrEmpty( command.Trim() ) )
-        {
-          continue;
-        }
-        if ( !RunExternalCommand( command, Doc ) )
-        {
-          SetGUIForWaitOnExternalTool( false );
-          return false;
-        }
-      }
-      SetGUIForWaitOnExternalTool( false );
-      return true;
-    }
-
-
-
-    void m_ExternalProcess_Exited( object sender, EventArgs e )
-    {
-      /*
-      System.Diagnostics.Process    process = (System.Diagnostics.Process)sender;
-      string    output = process.StandardOutput.ReadToEnd();
-      string    error = process.StandardError.ReadToEnd();
-
-      AddToOutput( output );
-      AddToOutput( error );*/
-      /*
-      System.Diagnostics.Process    process = (System.Diagnostics.Process)sender;
-      int     exitCode = process.ExitCode;
-      AddToOutput( "Tool Exited with result code " + exitCode.ToString() + System.Environment.NewLine );
-      process.Close();
-      SetGUIForWaitOnExternalTool( false );
-
-      if ( exitCode != 0 )
-      {
-        // update errors/warnings
-        AppState = State.NORMAL;
-        return;
-      }
-      AppState = State.NORMAL;
-       * */
     }
 
 
@@ -2375,17 +2187,6 @@ namespace C64Studio
         {
           StudioCore.AddToOutput( message.Message + System.Environment.NewLine );
         }
-      }
-    }
-
-
-
-    void compilerProcess_OutputDataReceived( object sender, System.Diagnostics.DataReceivedEventArgs e )
-    {
-      m_LastReceivedOutputTime = System.DateTime.Now;
-      if ( !String.IsNullOrEmpty( e.Data ) )
-      {
-        StudioCore.AddToOutput( e.Data + System.Environment.NewLine );
       }
     }
 
@@ -3809,7 +3610,7 @@ namespace C64Studio
 
 
 
-    private void SetGUIForWaitOnExternalTool( bool Wait )
+    public void SetGUIForWaitOnExternalTool( bool Wait )
     {
       if ( InvokeRequired )
       {

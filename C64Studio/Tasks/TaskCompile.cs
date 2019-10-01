@@ -271,7 +271,7 @@ namespace C64Studio.Tasks
           if ( !string.IsNullOrEmpty( configSetting.PreBuild ) )
           {
             Core.AddToOutput( "Running pre build step on " + Doc.Element.Name + System.Environment.NewLine );
-            if ( !Core.MainForm.RunCommand( Doc, "pre build", configSetting.PreBuild ) )
+            if ( !Core.Executing.RunCommand( Doc, "pre build", configSetting.PreBuild ) )
             {
               return false;
             }
@@ -321,7 +321,7 @@ namespace C64Studio.Tasks
         &&   ( !string.IsNullOrEmpty( configSetting.CustomBuild ) ) )
         {
           Core.AddToOutput( "Running custom build step on " + Doc.Element.Name + " with configuration " + ConfigSetting + System.Environment.NewLine );
-          if ( !Core.MainForm.RunCommand( Doc, "custom build", configSetting.CustomBuild ) )
+          if ( !Core.Executing.RunCommand( Doc, "custom build", configSetting.CustomBuild ) )
           {
             return false;
           }
@@ -481,7 +481,7 @@ namespace C64Studio.Tasks
         {
           Core.ShowDocument( Core.MainForm.m_Output );
           Core.AddToOutput( "Running post build step on " + Doc.Element.Name + System.Environment.NewLine );
-          if ( !Core.MainForm.RunCommand( Doc, "post build", configSetting.PostBuild ) )
+          if ( !Core.Executing.RunCommand( Doc, "post build", configSetting.PostBuild ) )
           {
             return false;
           }
@@ -579,6 +579,9 @@ namespace C64Studio.Tasks
     {
       return base.ToString() + " - " + m_DocumentToBuild.DocumentFilename;
     }
+
+
+
 
   }
 }
