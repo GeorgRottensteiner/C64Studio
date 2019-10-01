@@ -1222,8 +1222,10 @@ namespace C64Studio
           if ( !m_StringEnterMode )
           {
             // BASIC short cut?
+            if ( CanKeyTriggerShortCut( physKey.Normal.CharValue, shiftPushed ) )
+              /*
             if ( ( physKey.Normal.CharValue >= 'A' )
-            &&   ( physKey.Normal.CharValue <= 'Z' ) )
+            &&   ( physKey.Normal.CharValue <= 'Z' ) )*/
             {
               // could be a token
               string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
@@ -1314,6 +1316,23 @@ namespace C64Studio
       return base.ProcessCmdKey( ref msg, keyData );
     }
 
+
+
+    private bool CanKeyTriggerShortCut( char keyData, bool ShiftPushed )
+    {
+      if ( ( BASICVersion == BasicVersion.BASIC_LIGHTNING )
+      ||   ( BASICVersion == BasicVersion.LASER_BASIC ) )
+      {
+        return keyData == '.';
+      }
+      if ( ( ShiftPushed )
+      &&   ( (char)keyData >= 'A' )
+      &&   ( (char)keyData <= 'Z' ) )
+      {
+        return true;
+      }
+      return false;
+    }
 
 
     private void InsertOrReplaceChar( char Key )
