@@ -1836,7 +1836,6 @@ namespace C64Studio.Parser
 
       // now the real token crunching
       int bytePos = 0;
-      bool hadDirectTokenBefore = false;
 
       while ( bytePos < tempData.Length )
       {
@@ -1937,107 +1936,11 @@ namespace C64Studio.Parser
             continue;
           }
           // is there a token now?
-          bool entryFound = true;
-          foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in m_OpcodesFromByte )
+          if ( FindOpcode( tempData, ref bytePos, info, ref insideDataStatement, ref insideREMStatement ) )
           {
-            Opcode  opcode = opcodeEntry.Value;
-
-            entryFound = true;
-            for ( int i = 0; i < opcode.Command.Length; ++i )
-            {
-              if ( bytePos + i >= tempData.Length )
-              {
-                // can't be this token
-                entryFound = false;
-                break;
-              }
-              if ( tempData.ByteAt( bytePos + i ) != (byte)opcode.Command[i] )
-              {
-                entryFound = false;
-                break;
-              }
-            }
-            if ( entryFound )
-            {
-              Token basicToken = new Token();
-              basicToken.TokenType = Token.Type.BASIC_TOKEN;
-              basicToken.ByteValue = opcode.InsertionValue;
-              basicToken.Content = opcode.Command;
-              basicToken.StartIndex = bytePos;
-              info.Tokens.Add( basicToken );
-
-              if ( opcode.InsertionValue > 255 )
-              {
-                info.LineData.AppendU16NetworkOrder( (ushort)opcode.InsertionValue );
-              }
-              else
-              {
-                info.LineData.AppendU8( (byte)opcode.InsertionValue );
-              }
-              bytePos += opcode.Command.Length;
-
-              insideDataStatement = ( opcode.Command == "DATA" );
-              if ( IsComment( opcode ) )
-              {
-                insideREMStatement = true;
-              }
-              break;
-            }
-          }
-          if ( entryFound )
-          {
-            hadDirectTokenBefore = false;
             continue;
           }
-          // is it an extended token?
-          entryFound = true;
-          foreach ( KeyValuePair<string, Opcode> opcodeEntry in m_ExOpcodes )
-          {
-            Opcode opcode = opcodeEntry.Value;
 
-            entryFound = true;
-            for ( int i = 0; i < opcode.Command.Length; ++i )
-            {
-              if ( bytePos + i >= tempData.Length )
-              {
-                // can't be this token
-                entryFound = false;
-                break;
-              }
-              if ( tempData.ByteAt( bytePos + i ) != (byte)opcode.Command[i] )
-              {
-                entryFound = false;
-                break;
-              }
-            }
-            if ( entryFound )
-            {
-              Token basicToken = new Token();
-              basicToken.TokenType = Token.Type.EX_BASIC_TOKEN;
-              basicToken.ByteValue = opcode.InsertionValue;
-              basicToken.Content = opcode.Command;
-              basicToken.StartIndex = bytePos;
-              info.Tokens.Add( basicToken );
-
-              if ( opcode.InsertionValue > 255 )
-              {
-                info.LineData.AppendU16NetworkOrder( (ushort)opcode.InsertionValue );
-              }
-              else
-              {
-                info.LineData.AppendU8( (byte)opcode.InsertionValue );
-              }
-              bytePos += opcode.Command.Length;
-
-              insideDataStatement = false;
-              break;
-            }
-          }
-          if ( entryFound )
-          {
-            hadDirectTokenBefore = false;
-            continue;
-          }
           // not a token, add directly
           AddDirectToken( info, nextByte, bytePos );
 
@@ -2045,11 +1948,64 @@ namespace C64Studio.Parser
           if ( ( nextByte >= 'A' )
           &&   ( nextByte <= 'Z' ) )
           {
-            hadDirectTokenBefore = true;
-          }
-          else
-          {
-            hadDirectTokenBefore = false;
+            // try to scan forward to deal with something like ONxGOSUB or PROCsort (not sORt)
+            int     forwardPos = bytePos;
+            while ( ( forwardPos + 1 < (int)tempData.Length )
+            &&      ( tempData.ByteAt( forwardPos + 1 ) >= 'A' )
+            &&      ( tempData.ByteAt( forwardPos + 1 ) <= 'Z' ) )
+            {
+              ++forwardPos;
+            }
+            ++bytePos;
+
+            Token  foundToken;
+            Opcode foundOpcode;
+            if ( FindOpcodeRightAligned( tempData, ref bytePos, forwardPos, info, ref insideDataStatement, ref insideREMStatement, out foundToken, out foundOpcode ) )
+            {
+              // inserted a new opcode, but maybe we need direct tokens in between?
+              // TODO
+              if ( info.Tokens[info.Tokens.Count - 1].StartIndex > bytePos )
+              {
+                // yes, direct tokens!
+                for ( int i = bytePos; i < info.Tokens[info.Tokens.Count - 1].StartIndex; ++i )
+                {
+                  Token basicToken = new Token();
+                  basicToken.TokenType = Token.Type.DIRECT_TOKEN;
+                  basicToken.ByteValue = tempData.ByteAt( i );
+                  basicToken.Content = "" + Types.ConstantData.PetSCIIToChar[(byte)basicToken.ByteValue].CharValue;
+                  basicToken.StartIndex = i;
+
+                  info.Tokens.Add( basicToken );
+
+                  info.LineData.AppendU8( (byte)basicToken.ByteValue );
+                }
+              }
+
+              info.Tokens.Add( foundToken );
+              if ( foundOpcode.InsertionValue > 255 )
+              {
+                info.LineData.AppendU16NetworkOrder( (ushort)foundOpcode.InsertionValue );
+              }
+              else
+              {
+                info.LineData.AppendU8( (byte)foundOpcode.InsertionValue );
+              }
+              //BytePos += opcode.Command.Length;
+              insideDataStatement = ( foundOpcode.Command == "DATA" );
+              if ( IsComment( foundOpcode ) )
+              {
+                insideREMStatement = true;
+              }
+            }
+            else
+            {
+              for ( int i = bytePos; i <= forwardPos; ++i )
+              {
+                AddDirectToken( info, tempData.ByteAt( i ), i );
+              }
+            }
+            bytePos = forwardPos + 1;
+            continue;
           }
 
           if ( ( nextByte == 39 )
@@ -2137,6 +2093,220 @@ namespace C64Studio.Parser
         }
       }
       return info;
+    }
+
+
+
+    private bool FindOpcode( ByteBuffer TempData, ref int BytePos, LineInfo Info, ref bool InsideDataStatement, ref bool InsideREMStatement )
+    {
+      bool entryFound = true;
+      foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in m_OpcodesFromByte )
+      {
+        Opcode  opcode = opcodeEntry.Value;
+
+        entryFound = true;
+        for ( int i = 0; i < opcode.Command.Length; ++i )
+        {
+          if ( BytePos + i >= TempData.Length )
+          {
+            // can't be this token
+            entryFound = false;
+            break;
+          }
+          if ( TempData.ByteAt( BytePos + i ) != (byte)opcode.Command[i] )
+          {
+            entryFound = false;
+            break;
+          }
+        }
+        if ( entryFound )
+        {
+          Token basicToken = new Token();
+          basicToken.TokenType = Token.Type.BASIC_TOKEN;
+          basicToken.ByteValue = opcode.InsertionValue;
+          basicToken.Content = opcode.Command;
+          basicToken.StartIndex = BytePos;
+          Info.Tokens.Add( basicToken );
+
+          if ( opcode.InsertionValue > 255 )
+          {
+            Info.LineData.AppendU16NetworkOrder( (ushort)opcode.InsertionValue );
+          }
+          else
+          {
+            Info.LineData.AppendU8( (byte)opcode.InsertionValue );
+          }
+          BytePos += opcode.Command.Length;
+
+          InsideDataStatement = ( opcode.Command == "DATA" );
+          if ( IsComment( opcode ) )
+          {
+            InsideREMStatement = true;
+          }
+          break;
+        }
+      }
+      if ( entryFound )
+      {
+        return true;
+      }
+
+      // is it an extended token?
+      entryFound = true;
+      foreach ( KeyValuePair<string, Opcode> opcodeEntry in m_ExOpcodes )
+      {
+        Opcode opcode = opcodeEntry.Value;
+
+        entryFound = true;
+        for ( int i = 0; i < opcode.Command.Length; ++i )
+        {
+          if ( BytePos + i >= TempData.Length )
+          {
+            // can't be this token
+            entryFound = false;
+            break;
+          }
+          if ( TempData.ByteAt( BytePos + i ) != (byte)opcode.Command[i] )
+          {
+            entryFound = false;
+            break;
+          }
+        }
+        if ( entryFound )
+        {
+          Token basicToken = new Token();
+          basicToken.TokenType = Token.Type.EX_BASIC_TOKEN;
+          basicToken.ByteValue = opcode.InsertionValue;
+          basicToken.Content = opcode.Command;
+          basicToken.StartIndex = BytePos;
+          Info.Tokens.Add( basicToken );
+
+          if ( opcode.InsertionValue > 255 )
+          {
+            Info.LineData.AppendU16NetworkOrder( (ushort)opcode.InsertionValue );
+          }
+          else
+          {
+            Info.LineData.AppendU8( (byte)opcode.InsertionValue );
+          }
+          BytePos += opcode.Command.Length;
+
+          InsideDataStatement = false;
+          break;
+        }
+      }
+      return entryFound;
+    }
+
+
+
+    private bool FindOpcodeRightAligned( ByteBuffer TempData, ref int BytePos, int LastBytePos, LineInfo Info, ref bool InsideDataStatement, ref bool InsideREMStatement, out Token FoundToken, out Opcode FoundOpcode )
+    {
+      FoundToken = null;
+      FoundOpcode = null;
+      bool entryFound = true;
+      foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in m_OpcodesFromByte )
+      {
+        Opcode  opcode = opcodeEntry.Value;
+
+        entryFound = true;
+        if ( opcode.Command.Length > LastBytePos - BytePos + 1 )
+        {
+          entryFound = false;
+        }
+        else
+        {
+          for ( int i = 0; i < opcode.Command.Length; ++i )
+          {
+            if ( TempData.ByteAt( LastBytePos - opcode.Command.Length + i + 1 ) != (byte)opcode.Command[i] )
+            {
+              entryFound = false;
+              break;
+            }
+          }
+        }
+        if ( entryFound )
+        {
+          FoundToken = new Token();
+          FoundToken.TokenType = Token.Type.BASIC_TOKEN;
+          FoundToken.ByteValue = opcode.InsertionValue;
+          FoundToken.Content = opcode.Command;
+          FoundToken.StartIndex = LastBytePos - opcode.Command.Length;
+
+          FoundOpcode = opcode;
+          /*
+          Info.Tokens.Add( basicToken );
+
+          if ( opcode.InsertionValue > 255 )
+          {
+            Info.LineData.AppendU16NetworkOrder( (ushort)opcode.InsertionValue );
+          }
+          else
+          {
+            Info.LineData.AppendU8( (byte)opcode.InsertionValue );
+          }
+          BytePos += opcode.Command.Length;
+          InsideDataStatement = ( opcode.Command == "DATA" );
+          if ( IsComment( opcode ) )
+          {
+            InsideREMStatement = true;
+          }*/
+          return true;
+        }
+      }
+      if ( entryFound )
+      {
+        return true;
+      }
+
+      // is it an extended token?
+      entryFound = true;
+      foreach ( KeyValuePair<string, Opcode> opcodeEntry in m_ExOpcodes )
+      {
+        Opcode opcode = opcodeEntry.Value;
+
+        entryFound = true;
+        for ( int i = 0; i < opcode.Command.Length; ++i )
+        {
+          if ( BytePos + i >= TempData.Length )
+          {
+            // can't be this token
+            entryFound = false;
+            break;
+          }
+          if ( TempData.ByteAt( BytePos + i ) != (byte)opcode.Command[i] )
+          {
+            entryFound = false;
+            break;
+          }
+        }
+        if ( entryFound )
+        {
+          FoundToken = new Token();
+          FoundToken.TokenType = Token.Type.EX_BASIC_TOKEN;
+          FoundToken.ByteValue = opcode.InsertionValue;
+          FoundToken.Content = opcode.Command;
+          FoundToken.StartIndex = BytePos;
+
+          FoundOpcode = opcode;
+          /*
+          Info.Tokens.Add( basicToken );
+
+          if ( opcode.InsertionValue > 255 )
+          {
+            Info.LineData.AppendU16NetworkOrder( (ushort)opcode.InsertionValue );
+          }
+          else
+          {
+            Info.LineData.AppendU8( (byte)opcode.InsertionValue );
+          }
+          BytePos += opcode.Command.Length;
+
+          InsideDataStatement = false;*/
+          return true;
+        }
+      }
+      return entryFound;
     }
 
 
