@@ -54,6 +54,7 @@
       this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.removeEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.removeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.contextDebugItem.SuspendLayout();
       this.SuspendLayout();
@@ -102,9 +103,10 @@
             this.moveUpToolStripMenuItem,
             this.moveDownToolStripMenuItem,
             this.toolStripSeparator2,
-            this.removeEntryToolStripMenuItem});
+            this.removeEntryToolStripMenuItem,
+            this.removeAllToolStripMenuItem});
       this.contextDebugItem.Name = "contextDebugItem";
-      this.contextDebugItem.Size = new System.Drawing.Size(178, 170);
+      this.contextDebugItem.Size = new System.Drawing.Size(178, 214);
       this.contextDebugItem.Opening += new System.ComponentModel.CancelEventHandler(this.contextDebugItem_Opening);
       // 
       // displayAsToolStripMenuItem
@@ -246,6 +248,13 @@
       this.removeEntryToolStripMenuItem.Text = "&Remove entry";
       this.removeEntryToolStripMenuItem.Click += new System.EventHandler(this.removeEntryToolStripMenuItem_Click);
       // 
+      // removeAllToolStripMenuItem
+      // 
+      this.removeAllToolStripMenuItem.Name = "removeAllToolStripMenuItem";
+      this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+      this.removeAllToolStripMenuItem.Text = "Remove all";
+      this.removeAllToolStripMenuItem.Click += new System.EventHandler(this.removeAllToolStripMenuItem_Click);
+      // 
       // DebugWatch
       // 
       this.ClientSize = new System.Drawing.Size(608, 195);
@@ -285,5 +294,6 @@
     private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     private System.Windows.Forms.ToolStripMenuItem toggleEndiannessToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem removeAllToolStripMenuItem;
   }
 }

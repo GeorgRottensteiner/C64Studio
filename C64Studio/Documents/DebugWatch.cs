@@ -732,5 +732,17 @@ namespace C64Studio
 
 
 
+    private void removeAllToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      listWatch.Items.Clear();
+      foreach ( var entry in m_WatchEntries )
+      {
+        Core.Debugging.Debugger.RemoveWatchEntry( entry );
+      }
+      m_WatchEntries.Clear();
+    }
+
+
+
   }
 }
