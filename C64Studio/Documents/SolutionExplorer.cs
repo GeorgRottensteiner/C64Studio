@@ -15,7 +15,7 @@ namespace C64Studio
 
     private System.Drawing.Font               m_BoldFont = null;
 
-    private System.Windows.Forms.TreeNode     m_HighlightedNode = null;
+    private Dictionary<Project,System.Windows.Forms.TreeNode>   m_HighlightedNodes = new Dictionary<Project, TreeNode>();
 
     private System.Windows.Forms.TreeNode     m_MouseOverNode = null;
     private int                               m_MouseOverNodeTicks = 0;
@@ -444,11 +444,14 @@ namespace C64Studio
       if ( GR.Path.IsPathEqual( element.Filename, project.Settings.MainDocument ) )
       {
         // unmark
-        if ( m_HighlightedNode != null )
+        if ( m_HighlightedNodes.ContainsKey( project ) )
         {
-          m_HighlightedNode.NodeFont = treeProject.Font;// NodeProject.NodeFont;
-          m_HighlightedNode.Text = m_HighlightedNode.Text;
-          m_HighlightedNode = null;
+          var node = m_HighlightedNodes[project];
+
+          node.NodeFont = treeProject.Font;
+          node.Text = node.Text;
+
+          m_HighlightedNodes.Remove( project );
         }
         project.Settings.MainDocument = "";
         project.SetModified();
@@ -857,14 +860,20 @@ namespace C64Studio
 
     public void HighlightNode( System.Windows.Forms.TreeNode Node )
     {
-      if ( m_HighlightedNode != null )
+      var project = ProjectFromNode( Node );
+      if ( m_HighlightedNodes.ContainsKey( project ) )
       {
-        m_HighlightedNode.NodeFont = treeProject.Font;// NodeProject.NodeFont;
-        m_HighlightedNode.Text = m_HighlightedNode.Text;
+        var node = m_HighlightedNodes[project];
+
+        node.NodeFont = treeProject.Font;
+        node.Text = node.Text;
+
+        m_HighlightedNodes.Remove( project );
       }
-      m_HighlightedNode = Node;
+
+      m_HighlightedNodes.Add( project, Node );
       Node.NodeFont = m_BoldFont;
-      m_HighlightedNode.Text = m_HighlightedNode.Text;
+      Node.Text     = Node.Text;
     }
 
 
