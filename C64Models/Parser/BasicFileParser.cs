@@ -833,7 +833,7 @@ namespace C64Studio.Parser
         AddOpcode( "HSHX", 0x0158 );
         AddOpcode( "HSH.", 0x0158 );
         AddOpcode( "HEXY", 0x0159 );
-        AddOpcode( "HSHX", 0x015a );
+        AddOpcode( "HSHY", 0x015a );
         AddOpcode( "HX", 0x015b );
         AddOpcode( "HY", 0x015c );
         AddOpcode( "HCOL", 0x015d );
@@ -2073,7 +2073,7 @@ namespace C64Studio.Parser
               }
             }
             while ( ( bytePos < tempData.Length )
-            && ( nextByte != 34 ) );
+            &&      ( nextByte != 34 ) );
             if ( nextByte == 34 )
             {
               stringLiteral += Types.ConstantData.PetSCIIToChar[nextByte].CharValue;
@@ -2116,7 +2116,7 @@ namespace C64Studio.Parser
             continue;
           }
           if ( ( nextByte >= 0x30 )
-          && ( nextByte < 0x3c ) )
+          &&   ( nextByte < 0x3c ) )
           {
             // numerisch bzw. Klammern?, direkt einsetzen
             AddDirectToken( info, nextByte, bytePos );
@@ -2134,14 +2134,14 @@ namespace C64Studio.Parser
 
           // random hack -> avoid letters following letters forming tokens (e.g. s-or-t)
           if ( ( nextByte >= 'A' )
-          && ( nextByte <= 'Z' ) )
+          &&   ( nextByte <= 'Z' ) )
           {
             // try to scan forward to deal with something like ONxGOSUB or PROCsort (not sORt)
             int     forwardPos = bytePos;
             while ( ( forwardPos + 1 < (int)tempData.Length )
-            && ( ( ( tempData.ByteAt( forwardPos + 1 ) >= 'A' )
-            && ( tempData.ByteAt( forwardPos + 1 ) <= 'Z' ) )
-            || ( tempData.ByteAt( forwardPos + 1 ) == '%' ) ) )
+            &&      ( ( ( tempData.ByteAt( forwardPos + 1 ) >= 'A' )
+            &&          ( tempData.ByteAt( forwardPos + 1 ) <= 'Z' ) )
+            ||        ( tempData.ByteAt( forwardPos + 1 ) == '%' ) ) )
 
             {
               ++forwardPos;
@@ -2451,9 +2451,21 @@ namespace C64Studio.Parser
 
     private bool FindOpcode( ByteBuffer TempData, ref int BytePos, LineInfo Info, ref bool InsideDataStatement, ref bool InsideREMStatement )
     {
+      // special behavior - no token after PROC and LABEL
+      if ( ( Settings.Version == BasicVersion.LASER_BASIC )
+      ||   ( Settings.Version == BasicVersion.BASIC_LIGHTNING ) )
+      {
+        if ( ( Info.Tokens.Count > 0 )
+        &&   ( ( Info.Tokens[Info.Tokens.Count - 1].ByteValue == m_Opcodes["PROC"].InsertionValue )
+        ||     ( Info.Tokens[Info.Tokens.Count - 1].ByteValue == m_Opcodes["LABEL"].InsertionValue ) ) )
+        {
+          // previous token was PROC or LABEL
+          return false;
+        }
+      }
+
       bool entryFound = true;
       foreach ( var opcodeEntry in m_Opcodes )
-      //foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in m_OpcodesFromByte )
       {
         Opcode  opcode = opcodeEntry.Value;
 
@@ -2558,7 +2570,7 @@ namespace C64Studio.Parser
       FoundToken = null;
       FoundOpcode = null;
       bool entryFound = true;
-      foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in m_OpcodesFromByte )
+      foreach ( var opcodeEntry in m_Opcodes )
       {
         Opcode  opcode = opcodeEntry.Value;
 
@@ -2587,23 +2599,6 @@ namespace C64Studio.Parser
           FoundToken.StartIndex = LastBytePos - opcode.Command.Length;
 
           FoundOpcode = opcode;
-          /*
-          Info.Tokens.Add( basicToken );
-
-          if ( opcode.InsertionValue > 255 )
-          {
-            Info.LineData.AppendU16NetworkOrder( (ushort)opcode.InsertionValue );
-          }
-          else
-          {
-            Info.LineData.AppendU8( (byte)opcode.InsertionValue );
-          }
-          BytePos += opcode.Command.Length;
-          InsideDataStatement = ( opcode.Command == "DATA" );
-          if ( IsComment( opcode ) )
-          {
-            InsideREMStatement = true;
-          }*/
           return true;
         }
       }
@@ -2642,20 +2637,6 @@ namespace C64Studio.Parser
           FoundToken.StartIndex = BytePos;
 
           FoundOpcode = opcode;
-          /*
-          Info.Tokens.Add( basicToken );
-
-          if ( opcode.InsertionValue > 255 )
-          {
-            Info.LineData.AppendU16NetworkOrder( (ushort)opcode.InsertionValue );
-          }
-          else
-          {
-            Info.LineData.AppendU8( (byte)opcode.InsertionValue );
-          }
-          BytePos += opcode.Command.Length;
-
-          InsideDataStatement = false;*/
           return true;
         }
       }
