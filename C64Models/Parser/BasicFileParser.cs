@@ -971,7 +971,16 @@ namespace C64Studio.Parser
         AddOpcode( "MERGE", 0x0226 );
         AddOpcode( "ME.", 0x0226 );
         AddOpcode( "RESEQ", 0x0227 );
-        AddOpcode( "MEM", 0x0228 );
+
+        if ( Version == BasicVersion.LASER_BASIC )
+        {
+          AddOpcode( "RESERVE", 0x0228 );
+        }
+        else if ( Version == BasicVersion.BASIC_LIGHTNING )
+        {
+          AddOpcode( "MEM", 0x0228 );
+        }
+        
         AddOpcode( "OLD", 0x0229 );
         AddOpcode( "OL.", 0x0229 );
         AddOpcode( "DIR", 0x022a );
@@ -1990,41 +1999,18 @@ namespace C64Studio.Parser
       for ( int i = 0; i < Line.Length; ++i )
       {
         if ( ( Line[i] < '0' )
-        ||   ( Line[i] > '9' ) )
+        || ( Line[i] > '9' ) )
         {
           break;
         }
         ++endOfDigitPos;
       }
       LineInfo info = new LineInfo();
-      info.LineIndex  = LineIndex;
-      info.Line       = Line;
+      info.LineIndex = LineIndex;
+      info.Line = Line;
       if ( !LabelMode )
       {
-        if ( endOfDigitPos == -1 )
-        {
-          AddError( LineIndex, Types.ErrorCode.E3000_BASIC_MISSING_LINE_NUMBER, "Missing line number" );
-        }
-        else
-        {
-          Token lineNumberToken = new Token();
-          lineNumberToken.TokenType = Token.Type.LINE_NUMBER;
-          lineNumberToken.ByteValue = GR.Convert.ToI32( Line.Substring( 0, endOfDigitPos + 1 ) );
-          lineNumberToken.Content = Line.Substring( 0, endOfDigitPos + 1 ).Trim();
-          lineNumberToken.StartIndex = 0;
-          info.Tokens.Add( lineNumberToken );
-          info.LineNumber = lineNumberToken.ByteValue;
-          if ( ( info.LineNumber < 0 )
-          ||   ( info.LineNumber > 63999 ) )
-          {
-            AddError( LineIndex, Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER, "Unsupported line number, must be in the range 0 to 63999" );
-          }
-          else if ( info.LineNumber <= LastLineNumber )
-          {
-            AddError( LineIndex, Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER, "Line number not increasing, must be higher than the previous line number" );
-          }
-          LastLineNumber = info.LineNumber;
-        }
+        LastLineNumber = TokenizeLineNumber( Line, LineIndex, LastLineNumber, endOfDigitPos, info );
       }
 
       int       posInLine = endOfDigitPos + 1;
@@ -2034,7 +2020,275 @@ namespace C64Studio.Parser
       int       macroStartPos = -1;
       GR.Memory.ByteBuffer tempData = new GR.Memory.ByteBuffer();
 
-      // translate line to actual PETSCII codes
+      TranslateCharactersToPETSCII( Line, LineIndex, endOfDigitPos, ref posInLine, ref insideMacro, ref macroStartPos, tempData );
+
+      // now the real token crunching
+      int bytePos = 0;
+
+      while ( bytePos < tempData.Length )
+      {
+        byte    nextByte = tempData.ByteAt( bytePos );
+        if ( insideREMStatement )
+        {
+          AddDirectToken( info, nextByte, bytePos );
+          ++bytePos;
+          continue;
+        }
+        if ( nextByte < 128 )
+        {
+          // kein Token
+          if ( nextByte == 32 )
+          {
+            // Space, direkt einfügen
+            if ( !Settings.StripSpaces )
+            {
+              AddDirectToken( info, nextByte, bytePos );
+            }
+            ++bytePos;
+            continue;
+          }
+          if ( nextByte == 34 )
+          {
+            // Anführungszeichen, abschliessendes Anführungszeichen suchen
+            string stringLiteral = "";
+            int     startIndex = bytePos;
+            do
+            {
+              var c64Key = Types.ConstantData.FindC64KeyByPETSCII( nextByte );
+              if ( ( c64Key != null )
+              && ( nextByte != 32 )   // do not replace for Space
+              && ( c64Key.Replacements.Count > 0 ) )
+              {
+                stringLiteral += "{" + c64Key.Replacements[0] + "}";
+              }
+              else
+              {
+                stringLiteral += Types.ConstantData.PetSCIIToChar[nextByte].CharValue;
+              }
+              info.LineData.AppendU8( nextByte );
+              ++bytePos;
+              if ( bytePos < tempData.Length )
+              {
+                nextByte = tempData.ByteAt( bytePos );
+              }
+            }
+            while ( ( bytePos < tempData.Length )
+            && ( nextByte != 34 ) );
+            if ( nextByte == 34 )
+            {
+              stringLiteral += Types.ConstantData.PetSCIIToChar[nextByte].CharValue;
+              info.LineData.AppendU8( nextByte );
+            }
+            Token basicToken = new Token();
+            basicToken.TokenType = Token.Type.STRING_LITERAL;
+            basicToken.Content = stringLiteral;
+            basicToken.StartIndex = startIndex;
+            info.Tokens.Add( basicToken );
+
+            ++bytePos;
+            continue;
+          }
+          if ( insideDataStatement )
+          {
+            // innerhalb von Data keine Token-Aufschlüsselung
+            if ( nextByte == ':' )
+            {
+              insideDataStatement = false;
+            }
+
+            AddDirectToken( info, nextByte, bytePos );
+            ++bytePos;
+            continue;
+          }
+          if ( nextByte == 0x3f )
+          {
+            // ? durch PRINT ersetzen
+            nextByte = 0x99;
+            info.LineData.AppendU8( nextByte );
+
+            Token basicToken = new Token();
+            basicToken.TokenType = Token.Type.BASIC_TOKEN;
+            basicToken.ByteValue = nextByte;
+            basicToken.Content = "" + Types.ConstantData.PetSCIIToChar[0x3f].CharValue;
+            basicToken.StartIndex = bytePos;
+            info.Tokens.Add( basicToken );
+            ++bytePos;
+            continue;
+          }
+          if ( ( nextByte >= 0x30 )
+          && ( nextByte < 0x3c ) )
+          {
+            // numerisch bzw. Klammern?, direkt einsetzen
+            AddDirectToken( info, nextByte, bytePos );
+            ++bytePos;
+            continue;
+          }
+          // is there a token now?
+          if ( FindOpcode( tempData, ref bytePos, info, ref insideDataStatement, ref insideREMStatement ) )
+          {
+            continue;
+          }
+
+          // not a token, add directly
+          AddDirectToken( info, nextByte, bytePos );
+
+          // random hack -> avoid letters following letters forming tokens (e.g. s-or-t)
+          if ( ( nextByte >= 'A' )
+          && ( nextByte <= 'Z' ) )
+          {
+            // try to scan forward to deal with something like ONxGOSUB or PROCsort (not sORt)
+            int     forwardPos = bytePos;
+            while ( ( forwardPos + 1 < (int)tempData.Length )
+            && ( ( ( tempData.ByteAt( forwardPos + 1 ) >= 'A' )
+            && ( tempData.ByteAt( forwardPos + 1 ) <= 'Z' ) )
+            || ( tempData.ByteAt( forwardPos + 1 ) == '%' ) ) )
+
+            {
+              ++forwardPos;
+            }
+            ++bytePos;
+
+            Token  foundToken;
+            Opcode foundOpcode;
+            if ( FindOpcodeRightAligned( tempData, ref bytePos, forwardPos, info, ref insideDataStatement, ref insideREMStatement, out foundToken, out foundOpcode ) )
+            {
+              // inserted a new opcode, but maybe we need direct tokens in between?
+              // TODO
+              if ( info.Tokens[info.Tokens.Count - 1].StartIndex > bytePos )
+              {
+                // yes, direct tokens!
+                for ( int i = bytePos; i < info.Tokens[info.Tokens.Count - 1].StartIndex; ++i )
+                {
+                  Token basicToken = new Token();
+                  basicToken.TokenType = Token.Type.DIRECT_TOKEN;
+                  basicToken.ByteValue = tempData.ByteAt( i );
+                  basicToken.Content = "" + Types.ConstantData.PetSCIIToChar[(byte)basicToken.ByteValue].CharValue;
+                  basicToken.StartIndex = i;
+
+                  info.Tokens.Add( basicToken );
+
+                  info.LineData.AppendU8( (byte)basicToken.ByteValue );
+                }
+              }
+
+              info.Tokens.Add( foundToken );
+              if ( foundOpcode.InsertionValue > 255 )
+              {
+                info.LineData.AppendU16NetworkOrder( (ushort)foundOpcode.InsertionValue );
+              }
+              else
+              {
+                info.LineData.AppendU8( (byte)foundOpcode.InsertionValue );
+              }
+              //BytePos += opcode.Command.Length;
+              insideDataStatement = ( foundOpcode.Command == "DATA" );
+              if ( IsComment( foundOpcode ) )
+              {
+                insideREMStatement = true;
+              }
+            }
+            else
+            {
+              for ( int i = bytePos; i <= forwardPos; ++i )
+              {
+                AddDirectToken( info, tempData.ByteAt( i ), i );
+              }
+            }
+            bytePos = forwardPos + 1;
+            continue;
+          }
+
+          if ( ( nextByte == 39 )
+          && ( ( Settings.Version == BasicVersion.BASIC_LIGHTNING )
+          || ( Settings.Version == BasicVersion.LASER_BASIC ) ) )
+          {
+            insideREMStatement = true;
+          }
+
+          ++bytePos;
+          continue;
+        }
+        else if ( nextByte == 0xff )
+        {
+          // PI
+          AddDirectToken( info, nextByte, bytePos );
+          ++bytePos;
+          continue;
+        }
+        else
+        {
+          ++bytePos;
+          continue;
+        }
+      }
+
+      if ( info.LineData.Length > 250 )
+      {
+        AddError( LineIndex, Types.ErrorCode.E3006_BASIC_LINE_TOO_LONG, "Line is too long, max. 250 bytes possible" );
+      }
+      else if ( info.LineData.Length > 80 )
+      {
+        AddWarning( LineIndex, Types.ErrorCode.W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY, "Line is too long for manual entry", 0, info.Line.Length );
+      }
+
+      // update line number references
+      for ( int i = 0; i < info.Tokens.Count; ++i )
+      {
+        Token token = info.Tokens[i];
+
+        if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
+        && ( ( token.ByteValue == 0x89 )      // GOTO
+        || ( token.ByteValue == 0x8d ) ) )  // GOSUB
+        {
+          // look up next token, is it a line number? (spaces are ignored)
+          int nextTokenIndex = FindNextToken( info.Tokens, i );
+          while ( ( nextTokenIndex != -1 )
+          && ( nextTokenIndex < info.Tokens.Count ) )
+          {
+            if ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
+            {
+              int referencedLineNumber = GR.Convert.ToI32( info.Tokens[nextTokenIndex].Content );
+
+              info.ReferencedLineNumbers.Add( referencedLineNumber );
+              ++nextTokenIndex;
+              if ( nextTokenIndex >= info.Tokens.Count )
+              {
+                break;
+              }
+              if ( info.Tokens[nextTokenIndex].Content != "," )
+              {
+                break;
+              }
+            }
+            ++nextTokenIndex;
+          }
+        }
+        if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
+        && ( ( token.ByteValue == 0xa7 )        // THEN
+        || ( token.ByteValue == 0x8a ) ) )  // RUN
+        {
+          // only one line number
+          // look up next token, is it a line number? (spaces are ignored)
+          int nextTokenIndex = FindNextToken( info.Tokens, i );
+          if ( ( nextTokenIndex != -1 )
+          && ( nextTokenIndex < info.Tokens.Count ) )
+          {
+            if ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
+            {
+              int referencedLineNumber = GR.Convert.ToI32( info.Tokens[nextTokenIndex].Content );
+
+              info.ReferencedLineNumbers.Add( referencedLineNumber );
+            }
+          }
+        }
+      }
+      return info;
+    }
+
+
+
+    private void TranslateCharactersToPETSCII( string Line, int LineIndex, int endOfDigitPos, ref int posInLine, ref bool insideMacro, ref int macroStartPos, ByteBuffer tempData )
+    {
       while ( posInLine < Line.Length )
       {
         char    curChar = Line[posInLine];
@@ -2150,7 +2404,7 @@ namespace C64Studio.Parser
         else
         {
           if ( ( curChar != 32 )
-          ||   ( posInLine > endOfDigitPos + 1 ) )
+          || ( posInLine > endOfDigitPos + 1 ) )
           {
             // strip spaces after line numbers
             tempData.AppendU8( Types.ConstantData.CharToC64Char[curChar].PetSCIIValue );
@@ -2159,269 +2413,38 @@ namespace C64Studio.Parser
 
         ++posInLine;
       }
-      //Debug.Log( "translated line to " + tempData.ToString() );
+    }
 
-      // now the real token crunching
-      int bytePos = 0;
 
-      while ( bytePos < tempData.Length )
+
+    private int TokenizeLineNumber( string Line, int LineIndex, int LastLineNumber, int endOfDigitPos, LineInfo info )
+    {
+      if ( endOfDigitPos == -1 )
       {
-        byte    nextByte = tempData.ByteAt( bytePos );
-        if ( insideREMStatement )
+        AddError( LineIndex, Types.ErrorCode.E3000_BASIC_MISSING_LINE_NUMBER, "Missing line number" );
+      }
+      else
+      {
+        Token lineNumberToken = new Token();
+        lineNumberToken.TokenType = Token.Type.LINE_NUMBER;
+        lineNumberToken.ByteValue = GR.Convert.ToI32( Line.Substring( 0, endOfDigitPos + 1 ) );
+        lineNumberToken.Content = Line.Substring( 0, endOfDigitPos + 1 ).Trim();
+        lineNumberToken.StartIndex = 0;
+        info.Tokens.Add( lineNumberToken );
+        info.LineNumber = lineNumberToken.ByteValue;
+        if ( ( info.LineNumber < 0 )
+        ||   ( info.LineNumber > 63999 ) )
         {
-          AddDirectToken( info, nextByte, bytePos );
-          ++bytePos;
-          continue;
+          AddError( LineIndex, Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER, "Unsupported line number, must be in the range 0 to 63999" );
         }
-        if ( nextByte < 128 )
+        else if ( info.LineNumber <= LastLineNumber )
         {
-          // kein Token
-          if ( nextByte == 32 )
-          {
-            // Space, direkt einfügen
-            if ( !Settings.StripSpaces )
-            {
-              AddDirectToken( info, nextByte, bytePos );
-            }
-            ++bytePos;
-            continue;
-          }
-          if ( nextByte == 34 )
-          {
-            // Anführungszeichen, abschliessendes Anführungszeichen suchen
-            string stringLiteral = "";
-            int     startIndex = bytePos;
-            do
-            {
-              var c64Key = Types.ConstantData.FindC64KeyByPETSCII( nextByte );
-              if ( ( c64Key != null )
-              &&   ( nextByte != 32 )   // do not replace for Space
-              &&   ( c64Key.Replacements.Count > 0 ) )
-              {
-                stringLiteral += "{" + c64Key.Replacements[0] + "}";
-              }
-              else
-              {
-                stringLiteral += Types.ConstantData.PetSCIIToChar[nextByte].CharValue;
-              }
-              info.LineData.AppendU8( nextByte );
-              ++bytePos;
-              if ( bytePos < tempData.Length )
-              {
-                nextByte = tempData.ByteAt( bytePos );
-              }
-            }
-            while ( ( bytePos < tempData.Length )
-            &&      ( nextByte != 34 ) );
-            if ( nextByte == 34 )
-            {
-              stringLiteral += Types.ConstantData.PetSCIIToChar[nextByte].CharValue;
-              info.LineData.AppendU8( nextByte );
-            }
-            Token basicToken = new Token();
-            basicToken.TokenType  = Token.Type.STRING_LITERAL;
-            basicToken.Content    = stringLiteral;
-            basicToken.StartIndex = startIndex;
-            info.Tokens.Add( basicToken );
-
-            ++bytePos;
-            continue;
-          }
-          if ( insideDataStatement )
-          {
-            // innerhalb von Data keine Token-Aufschlüsselung
-            if ( nextByte == ':' )
-            {
-              insideDataStatement = false;
-            }
-
-            AddDirectToken( info, nextByte, bytePos );
-            ++bytePos;
-            continue;
-          }
-          if ( nextByte == 0x3f )
-          {
-            // ? durch PRINT ersetzen
-            nextByte = 0x99;
-            info.LineData.AppendU8( nextByte );
-
-            Token basicToken = new Token();
-            basicToken.TokenType = Token.Type.BASIC_TOKEN;
-            basicToken.ByteValue = nextByte;
-            basicToken.Content = "" + Types.ConstantData.PetSCIIToChar[0x3f].CharValue;
-            basicToken.StartIndex = bytePos;
-            info.Tokens.Add( basicToken );
-            ++bytePos;
-            continue;
-          }
-          if ( ( nextByte >= 0x30 )
-          &&   ( nextByte < 0x3c ) )
-          {
-            // numerisch bzw. Klammern?, direkt einsetzen
-            AddDirectToken( info, nextByte, bytePos );
-            ++bytePos;
-            continue;
-          }
-          // is there a token now?
-          if ( FindOpcode( tempData, ref bytePos, info, ref insideDataStatement, ref insideREMStatement ) )
-          {
-            continue;
-          }
-
-          // not a token, add directly
-          AddDirectToken( info, nextByte, bytePos );
-
-          // random hack -> avoid letters following letters forming tokens (e.g. s-or-t)
-          if ( ( nextByte >= 'A' )
-          &&   ( nextByte <= 'Z' ) )
-          {
-            // try to scan forward to deal with something like ONxGOSUB or PROCsort (not sORt)
-            int     forwardPos = bytePos;
-            while ( ( forwardPos + 1 < (int)tempData.Length )
-            &&      ( ( ( tempData.ByteAt( forwardPos + 1 ) >= 'A' )
-            &&          ( tempData.ByteAt( forwardPos + 1 ) <= 'Z' ) )
-            ||        ( tempData.ByteAt( forwardPos + 1 ) == '%' ) ) )
-
-            {
-              ++forwardPos;
-            }
-            ++bytePos;
-
-            Token  foundToken;
-            Opcode foundOpcode;
-            if ( FindOpcodeRightAligned( tempData, ref bytePos, forwardPos, info, ref insideDataStatement, ref insideREMStatement, out foundToken, out foundOpcode ) )
-            {
-              // inserted a new opcode, but maybe we need direct tokens in between?
-              // TODO
-              if ( info.Tokens[info.Tokens.Count - 1].StartIndex > bytePos )
-              {
-                // yes, direct tokens!
-                for ( int i = bytePos; i < info.Tokens[info.Tokens.Count - 1].StartIndex; ++i )
-                {
-                  Token basicToken = new Token();
-                  basicToken.TokenType = Token.Type.DIRECT_TOKEN;
-                  basicToken.ByteValue = tempData.ByteAt( i );
-                  basicToken.Content = "" + Types.ConstantData.PetSCIIToChar[(byte)basicToken.ByteValue].CharValue;
-                  basicToken.StartIndex = i;
-
-                  info.Tokens.Add( basicToken );
-
-                  info.LineData.AppendU8( (byte)basicToken.ByteValue );
-                }
-              }
-
-              info.Tokens.Add( foundToken );
-              if ( foundOpcode.InsertionValue > 255 )
-              {
-                info.LineData.AppendU16NetworkOrder( (ushort)foundOpcode.InsertionValue );
-              }
-              else
-              {
-                info.LineData.AppendU8( (byte)foundOpcode.InsertionValue );
-              }
-              //BytePos += opcode.Command.Length;
-              insideDataStatement = ( foundOpcode.Command == "DATA" );
-              if ( IsComment( foundOpcode ) )
-              {
-                insideREMStatement = true;
-              }
-            }
-            else
-            {
-              for ( int i = bytePos; i <= forwardPos; ++i )
-              {
-                AddDirectToken( info, tempData.ByteAt( i ), i );
-              }
-            }
-            bytePos = forwardPos + 1;
-            continue;
-          }
-
-          if ( ( nextByte == 39 )
-          &&   ( ( Settings.Version == BasicVersion.BASIC_LIGHTNING )
-          ||     ( Settings.Version == BasicVersion.LASER_BASIC ) ) )
-          {
-            insideREMStatement = true;
-          }
-
-          ++bytePos;
-          continue;
+          AddError( LineIndex, Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER, "Line number not increasing, must be higher than the previous line number" );
         }
-        else if ( nextByte == 0xff )
-        {
-          // PI
-          AddDirectToken( info, nextByte, bytePos );
-          ++bytePos;
-          continue;
-        }
-        else
-        {
-          ++bytePos;
-          continue;
-        }
+        LastLineNumber = info.LineNumber;
       }
 
-      if ( info.LineData.Length > 250 )
-      {
-        AddError( LineIndex, Types.ErrorCode.E3006_BASIC_LINE_TOO_LONG, "Line is too long, max. 250 bytes possible" );
-      }
-      else if ( info.LineData.Length > 80 )
-      {
-        AddWarning( LineIndex, Types.ErrorCode.W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY, "Line is too long for manual entry", 0, info.Line.Length );
-      }
-
-      // update line number references
-      for ( int i = 0; i < info.Tokens.Count; ++i )
-      {
-        Token token = info.Tokens[i];
-
-        if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-        &&   ( ( token.ByteValue == 0x89 )      // GOTO
-        ||     ( token.ByteValue == 0x8d ) ) )  // GOSUB
-        {
-          // look up next token, is it a line number? (spaces are ignored)
-          int nextTokenIndex = FindNextToken( info.Tokens, i );
-          while ( ( nextTokenIndex != -1 )
-          && ( nextTokenIndex < info.Tokens.Count ) )
-          {
-            if ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
-            {
-              int referencedLineNumber = GR.Convert.ToI32( info.Tokens[nextTokenIndex].Content );
-
-              info.ReferencedLineNumbers.Add( referencedLineNumber );
-              ++nextTokenIndex;
-              if ( nextTokenIndex >= info.Tokens.Count )
-              {
-                break;
-              }
-              if ( info.Tokens[nextTokenIndex].Content != "," )
-              {
-                break;
-              }
-            }
-            ++nextTokenIndex;
-          }
-        }
-        if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-        &&   ( ( token.ByteValue == 0xa7 )        // THEN
-        ||     ( token.ByteValue == 0x8a ) ) )  // RUN
-        {
-          // only one line number
-          // look up next token, is it a line number? (spaces are ignored)
-          int nextTokenIndex = FindNextToken( info.Tokens, i );
-          if ( ( nextTokenIndex != -1 )
-          && ( nextTokenIndex < info.Tokens.Count ) )
-          {
-            if ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
-            {
-              int referencedLineNumber = GR.Convert.ToI32( info.Tokens[nextTokenIndex].Content );
-
-              info.ReferencedLineNumbers.Add( referencedLineNumber );
-            }
-          }
-        }
-      }
-      return info;
+      return LastLineNumber;
     }
 
 
@@ -2429,7 +2452,8 @@ namespace C64Studio.Parser
     private bool FindOpcode( ByteBuffer TempData, ref int BytePos, LineInfo Info, ref bool InsideDataStatement, ref bool InsideREMStatement )
     {
       bool entryFound = true;
-      foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in m_OpcodesFromByte )
+      foreach ( var opcodeEntry in m_Opcodes )
+      //foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in m_OpcodesFromByte )
       {
         Opcode  opcode = opcodeEntry.Value;
 
