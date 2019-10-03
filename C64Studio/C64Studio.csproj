@@ -77,6 +77,12 @@
     <Compile Include="Compiling.cs" />
     <Compile Include="CustomRenderer\StudioTheme.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
+    <Compile Include="Dialogs\FormSetOffset.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\FormSetOffset.Designer.cs">
+      <DependentUpon>FormSetOffset.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\FormGotoLine.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -457,6 +463,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgInterleaveData.resx">
       <DependentUpon>DlgInterleaveData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FormSetOffset.resx">
+      <DependentUpon>FormSetOffset.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\FormGotoLine.resx">
       <DependentUpon>FormGotoLine.cs</DependentUpon>

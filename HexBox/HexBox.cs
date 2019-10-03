@@ -1443,7 +1443,11 @@ namespace Be.Windows.Forms
 
 			_thumbTrackTimer.Interval = 50;
 			_thumbTrackTimer.Tick += new EventHandler(PerformScrollThumbTrack);
-		}
+
+      DisplayedAddressOffset = 0;
+    }
+
+
 
 		#endregion
 
@@ -2451,7 +2455,7 @@ namespace Be.Windows.Forms
 				long firstLineByte = (startByte + (_iHexMaxHBytes) * i) + _lineInfoOffset;
 
 				PointF bytePointF = GetBytePointF(new Point(0, 0 + i));
-				string info = firstLineByte.ToString(_hexStringFormat, System.Threading.Thread.CurrentThread.CurrentCulture);
+				string info = ( firstLineByte + DisplayedAddressOffset ).ToString(_hexStringFormat, System.Threading.Thread.CurrentThread.CurrentCulture);
 
 				int nulls = _NumDigitsMemorySize - info.Length;
 				string formattedInfo;
@@ -3234,6 +3238,16 @@ namespace Be.Windows.Forms
         Invalidate();
       }
     }
+
+
+
+    public long DisplayedAddressOffset
+    {
+      get; set;
+    }
+
+
+
 		/// <summary>
 		/// Gets or sets the ByteProvider.
 		/// </summary>

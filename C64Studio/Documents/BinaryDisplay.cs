@@ -11,6 +11,8 @@ namespace C64Studio
 {
   public partial class BinaryDisplay : BaseDocument
   {
+    private ToolStripMenuItem m_MenuItemChangeOffset;
+
     public BinaryDisplay( StudioCore Core, GR.Memory.ByteBuffer WorkData, bool AllowEditing, bool FixedWidth )
     {
       this.Core = Core;
@@ -29,6 +31,25 @@ namespace C64Studio
 
       hexView.ByteProvider.Changed += new EventHandler( ByteProvider_Changed );
 
+      // modify context menu
+      hexView.ContextMenuStrip.Items.Add( "-" );
+
+      m_MenuItemChangeOffset = new ToolStripMenuItem( "Offset Displayed Address" );
+      m_MenuItemChangeOffset.Click += OnMenuItemChangeOffsetClick;
+      hexView.ContextMenuStrip.Items.Add( m_MenuItemChangeOffset );
+    }
+
+
+
+    private void OnMenuItemChangeOffsetClick( object sender, EventArgs e )
+    {
+      var formDisplayOffset = new FormSetOffset();
+      formDisplayOffset.DisplayOffset = hexView.DisplayedAddressOffset;
+      if ( formDisplayOffset.ShowDialog() == DialogResult.OK )
+      {
+        hexView.DisplayedAddressOffset = formDisplayOffset.DisplayOffset;
+        hexView.Invalidate();
+      }
     }
 
 
