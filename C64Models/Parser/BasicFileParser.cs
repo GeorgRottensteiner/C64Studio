@@ -2451,15 +2451,24 @@ namespace C64Studio.Parser
 
     private bool FindOpcode( ByteBuffer TempData, ref int BytePos, LineInfo Info, ref bool InsideDataStatement, ref bool InsideREMStatement )
     {
-      // special behavior - no token after PROC and LABEL
       if ( ( Settings.Version == BasicVersion.LASER_BASIC )
       ||   ( Settings.Version == BasicVersion.BASIC_LIGHTNING ) )
       {
+        // special behavior - no token after PROC and LABEL
         if ( ( Info.Tokens.Count > 0 )
         &&   ( ( Info.Tokens[Info.Tokens.Count - 1].ByteValue == m_Opcodes["PROC"].InsertionValue )
         ||     ( Info.Tokens[Info.Tokens.Count - 1].ByteValue == m_Opcodes["LABEL"].InsertionValue ) ) )
         {
           // previous token was PROC or LABEL
+          return false;
+        }
+        // special behavior - no token after TASK<number>,
+        if ( ( Info.Tokens.Count > 3 )
+        &&   ( Info.Tokens[Info.Tokens.Count - 3].ByteValue == m_Opcodes["TASK"].InsertionValue )
+        &&   ( Info.Tokens[Info.Tokens.Count - 2].TokenType == Token.Type.NUMERIC_LITERAL )
+        &&   ( Info.Tokens[Info.Tokens.Count - 1].ByteValue == ',' ) )
+        {
+          // previous token was TASK<number>,
           return false;
         }
       }
@@ -3230,21 +3239,6 @@ namespace C64Studio.Parser
         sb.Append( "\r\n" );
         lineNumber += 10;
       }
-      /*
-      foreach ( KeyValuePair<int,LineInfo> lineInfo in m_LineInfos )
-      {
-        if ( lineInfo.Value.ReferencedLineNumbers.Count > 0 )
-        {
-          foreach ( int number in lineInfo.Value.ReferencedLineNumbers )
-          {
-            if ( !lineNumberReference.ContainsKey( number ) )
-            {
-              string    newLabel = "label_" + number.ToString();
-              lineNumberReference[number] = newLabel;
-            }
-          }
-        }
-      }*/
       return sb.ToString();
     }
 
