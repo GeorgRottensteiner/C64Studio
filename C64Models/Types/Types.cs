@@ -1368,6 +1368,10 @@ namespace C64Studio.Types
         {
           CharToC64Char[CharValue] = c64Char;
         }
+        if ( char.ToUpper( CharValue ) != CharValue )
+        {
+          CharToC64Char[char.ToUpper( CharValue )] = c64Char;
+        }
       }
       if ( ( HasPetSCII )
       &&   ( HasChar ) )

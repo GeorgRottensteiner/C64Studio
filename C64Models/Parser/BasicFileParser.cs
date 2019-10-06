@@ -2384,17 +2384,23 @@ namespace C64Studio.Parser
         // find actual byte value of char
         if ( !Types.ConstantData.CharToC64Char.ContainsKey( curChar ) )
         {
-          if ( !Types.ConstantData.CharToC64Char.ContainsKey( char.ToUpper( curChar ) ) )
+          char    charToUse = curChar;
+          if ( VersionOnlyUsesUpperCase() )
+          {
+            charToUse = char.ToUpper( charToUse );
+          }
+
+          if ( !Types.ConstantData.CharToC64Char.ContainsKey( charToUse ) )
           {
             AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
           }
-          else if ( !Types.ConstantData.CharToC64Char[char.ToUpper( curChar )].HasPetSCII )
+          else if ( !Types.ConstantData.CharToC64Char[charToUse].HasPetSCII )
           {
             AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
           }
           else
           {
-            tempData.AppendU8( Types.ConstantData.CharToC64Char[char.ToUpper( curChar )].PetSCIIValue );
+            tempData.AppendU8( Types.ConstantData.CharToC64Char[charToUse].PetSCIIValue );
           }
         }
         else if ( !Types.ConstantData.CharToC64Char[curChar].HasPetSCII )
@@ -2404,7 +2410,7 @@ namespace C64Studio.Parser
         else
         {
           if ( ( curChar != 32 )
-          || ( posInLine > endOfDigitPos + 1 ) )
+          ||   ( posInLine > endOfDigitPos + 1 ) )
           {
             // strip spaces after line numbers
             tempData.AppendU8( Types.ConstantData.CharToC64Char[curChar].PetSCIIValue );
@@ -2413,6 +2419,19 @@ namespace C64Studio.Parser
 
         ++posInLine;
       }
+    }
+
+
+
+    private bool VersionOnlyUsesUpperCase()
+    {
+      /*
+      if ( ( Settings.Version != BasicVersion.LASER_BASIC )
+      &&   ( Settings.Version != BasicVersion.BASIC_LIGHTNING ) )
+      {
+        return true;
+      }*/
+      return true;
     }
 
 
@@ -2455,13 +2474,24 @@ namespace C64Studio.Parser
       ||   ( Settings.Version == BasicVersion.BASIC_LIGHTNING ) )
       {
         // special behavior - no token after PROC and LABEL
-        if ( ( Info.Tokens.Count > 0 )
-        &&   ( ( Info.Tokens[Info.Tokens.Count - 1].ByteValue == m_Opcodes["PROC"].InsertionValue )
-        ||     ( Info.Tokens[Info.Tokens.Count - 1].ByteValue == m_Opcodes["LABEL"].InsertionValue ) ) )
+        int   prevTokenIndex = Info.Tokens.Count - 1;
+
+        while ( prevTokenIndex >= 0 )
         {
-          // previous token was PROC or LABEL
-          return false;
+          if ( Info.Tokens[prevTokenIndex].Content == " " )
+          {
+            --prevTokenIndex;
+            continue;
+          }
+          if ( ( Info.Tokens[prevTokenIndex].ByteValue == m_Opcodes["PROC"].InsertionValue )
+          ||   ( Info.Tokens[prevTokenIndex].ByteValue == m_Opcodes["LABEL"].InsertionValue ) )
+          {
+            // previous token was PROC or LABEL
+            return false;
+          }
+          break;
         }
+
         // special behavior - no token after TASK<number>,
         if ( ( Info.Tokens.Count > 3 )
         &&   ( Info.Tokens[Info.Tokens.Count - 3].ByteValue == m_Opcodes["TASK"].InsertionValue )
