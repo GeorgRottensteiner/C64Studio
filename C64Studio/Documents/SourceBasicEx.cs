@@ -19,7 +19,7 @@ namespace C64Studio
     bool                                      m_StringEnterMode = false;
     bool                                      m_LabelMode = false;
     bool                                      m_SymbolMode = false;
-    bool                                      m_LowerCaseMode = false;
+    public bool                               m_LowerCaseMode = false;
     System.Windows.Forms.Keys m_ControlKeyReplacement = System.Windows.Forms.Keys.Tab;
     System.Windows.Forms.Keys m_CommodoreKeyReplacement = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.ControlKey;
     private FastColoredTextBoxNS.AutocompleteMenu   AutoComplete = null;
@@ -1354,7 +1354,7 @@ namespace C64Studio
         return true;
       }
       // check all keys!
-      return !Types.ConstantData.CharToC64Char.ContainsKey( MappedKey[0] );
+      return !Types.ConstantData.CharToC64Char.ContainsKey( MappedKey.ToUpper()[0] );
     }
 
 
@@ -1636,69 +1636,6 @@ namespace C64Studio
 
 
 
-    private string MakeUpperCase( string BASICText )
-    {
-      StringBuilder   sb = new StringBuilder( BASICText.Length );
-
-      foreach ( var singleChar in BASICText )
-      {
-        if ( ( singleChar & 0xff00 ) == 0xef00 )
-        {
-          char    newChar = (char)( ( singleChar & 0x00ff ) | 0xee00 );
-          if ( ( newChar >= 0xee01 )
-          &&   ( newChar <= 0xee01 + 25 ) )
-          {
-            sb.Append( (char)( newChar - 0xee01 + 'A' ) );
-          }
-          else
-          {
-            sb.Append( newChar );
-          }
-        }
-        else
-        {
-          sb.Append( singleChar );
-        }
-      }
-      return sb.ToString();
-    }
-
-
-
-    private string MakeLowerCase( string BASICText )
-    {
-      StringBuilder   sb = new StringBuilder( BASICText.Length );
-
-      foreach ( var singleChar in BASICText )
-      {
-        if ( ( singleChar & 0xff00 ) == 0xee00 )
-        {
-          char    newChar = (char)( ( singleChar & 0x00ff ) | 0xef00 );
-          if ( ( newChar >= 'A' )
-          &&   ( newChar <= 'Z' ) )
-          {
-            sb.Append( (char)( newChar + 0xef01 - 'A' ) );
-          }
-          else
-          {
-            sb.Append( newChar );
-          }
-        }
-        else if ( ( singleChar >= 'A' )
-        &&        ( singleChar <= 'Z' ) )
-        {
-          sb.Append( (char)( singleChar + 0xef01 - 'A' ) );
-        }
-        else
-        {
-          sb.Append( singleChar );
-        }
-      }
-      return sb.ToString();
-    }
-
-
-
     private void editBASICStartAddress_TextChanged( object sender, EventArgs e )
     {
       if ( DocumentInfo.Element != null )
@@ -1744,6 +1681,7 @@ namespace C64Studio
 
       Core.Compiling.ParserBasic.Settings.StripSpaces = Core.Settings.BASICStripSpaces;
       Core.Compiling.ParserBasic.Settings.Version = version;
+      Core.Compiling.ParserBasic.Settings.UpperCaseMode = !m_LowerCaseMode;
       m_BASICVersion = version;
 
       m_Parser = new Parser.BasicFileParser( settings, "" );

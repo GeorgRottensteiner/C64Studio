@@ -30,6 +30,7 @@ namespace C64Studio.Parser
     {
       public bool         StripSpaces = true;
       public BasicVersion Version = BasicVersion.C64_BASIC_V2;
+      public bool         UpperCaseMode = true;
     };
 
     public enum TokenValue
@@ -2385,11 +2386,6 @@ namespace C64Studio.Parser
         if ( !Types.ConstantData.CharToC64Char.ContainsKey( curChar ) )
         {
           char    charToUse = curChar;
-          if ( VersionOnlyUsesUpperCase() )
-          {
-            charToUse = char.ToUpper( charToUse );
-          }
-
           if ( !Types.ConstantData.CharToC64Char.ContainsKey( charToUse ) )
           {
             AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
@@ -3711,6 +3707,70 @@ namespace C64Studio.Parser
       }
       return sb.ToString();
     }
+
+
+
+    public static string MakeUpperCase( string BASICText )
+    {
+      StringBuilder   sb = new StringBuilder( BASICText.Length );
+
+      foreach ( var singleChar in BASICText )
+      {
+        if ( ( singleChar & 0xff00 ) == 0xef00 )
+        {
+          char    newChar = (char)( ( singleChar & 0x00ff ) | 0xee00 );
+          if ( ( newChar >= 0xee01 )
+          &&   ( newChar <= 0xee01 + 25 ) )
+          {
+            sb.Append( (char)( newChar - 0xee01 + 'A' ) );
+          }
+          else
+          {
+            sb.Append( newChar );
+          }
+        }
+        else
+        {
+          sb.Append( singleChar );
+        }
+      }
+      return sb.ToString();
+    }
+
+
+
+    public static string MakeLowerCase( string BASICText )
+    {
+      StringBuilder   sb = new StringBuilder( BASICText.Length );
+
+      foreach ( var singleChar in BASICText )
+      {
+        if ( ( singleChar & 0xff00 ) == 0xee00 )
+        {
+          char    newChar = (char)( ( singleChar & 0x00ff ) | 0xef00 );
+          if ( ( newChar >= 'A' )
+          &&   ( newChar <= 'Z' ) )
+          {
+            sb.Append( (char)( newChar + 0xef01 - 'A' ) );
+          }
+          else
+          {
+            sb.Append( newChar );
+          }
+        }
+        else if ( ( singleChar >= 'A' )
+        && ( singleChar <= 'Z' ) )
+        {
+          sb.Append( (char)( singleChar + 0xef01 - 'A' ) );
+        }
+        else
+        {
+          sb.Append( singleChar );
+        }
+      }
+      return sb.ToString();
+    }
+
 
   }
 }

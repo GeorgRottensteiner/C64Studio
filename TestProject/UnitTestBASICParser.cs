@@ -36,7 +36,7 @@ namespace TestProject
     [TestMethod]
     public void TestRenumberWithSpaces()
     {
-      string      source = @"20 ifa=1then 20";
+      string      source = @"20 IFA=1THEN 20";
 
       var parser = CreateParser( C64Studio.Parser.BasicFileParser.BasicVersion.C64_BASIC_V2 );
 
@@ -56,7 +56,7 @@ namespace TestProject
     [TestMethod]
     public void TestRenumberWithSpacesNoStripSpaces()
     {
-      string      source = @"20 ifa=1then 20";
+      string      source = @"20 IFA=1THEN 20";
 
       var parser = CreateParser( C64Studio.Parser.BasicFileParser.BasicVersion.C64_BASIC_V2 );
       parser.Settings.StripSpaces = false;
@@ -77,8 +77,8 @@ namespace TestProject
     [TestMethod]
     public void TestRenumberOverLines()
     {
-      string      source = @"10 goto 300
-                          300 goto 10";
+      string      source = @"10 GOTO 300
+                          300 GOTO 10";
 
       var parser = CreateParser( C64Studio.Parser.BasicFileParser.BasicVersion.C64_BASIC_V2 );
 
@@ -99,10 +99,10 @@ namespace TestProject
     [TestMethod]
     public void TestRenumberOnGosub()
     {
-      string      source = @"10 onxgosub100,400,700
-                          100printa
-                          400 printb
-                          700 printc";
+      string      source = @"10 ONXGOSUB100,400,700
+                          100PRINTA
+                          400 PRINTB
+                          700 PRINTC";
 
       var parser = CreateParser( C64Studio.Parser.BasicFileParser.BasicVersion.C64_BASIC_V2 );
 
@@ -125,11 +125,11 @@ namespace TestProject
     [TestMethod]
     public void TestRenumberWithStatementAfterGotoGosub()
     {
-      string      source = @"10 onxgosub100,400,700:goto2000
-                          100printa
-                          400 printb
-                          700 printc
-                          2000 printd";
+      string      source = @"10 ONXGOSUB100,400,700:GOTO2000
+                          100PRINTA
+                          400 PRINTB
+                          700 PRINTC
+                          2000 PRINTD";
 
       var parser = CreateParser( C64Studio.Parser.BasicFileParser.BasicVersion.C64_BASIC_V2 );
 
@@ -153,8 +153,8 @@ namespace TestProject
     [TestMethod]
     public void TestEncodeToLabels()
     {
-      string      source = @"10 print ""Hallo""
-                          20 goto 10";
+      string      source = @"10 PRINT ""HALLO""
+                          20 GOTO 10";
 
       var parser = CreateParser( C64Studio.Parser.BasicFileParser.BasicVersion.C64_BASIC_V2 );
 
@@ -178,8 +178,8 @@ GOTOLABEL10
     [TestMethod]
     public void TestEncodeToLabelsNoStripSpaces()
     {
-      string      source = @"10 print ""Hallo""
-                          20 goto 10";
+      string      source = @"10 PRINT ""HALLO""
+                          20 GOTO 10";
 
       var parser = CreateParser( C64Studio.Parser.BasicFileParser.BasicVersion.C64_BASIC_V2 );
 

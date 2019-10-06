@@ -308,6 +308,7 @@ namespace C64Studio.Tasks
           // BASIC may receive symbols from assembly
           ( (Parser.BasicFileParser)parser ).InitialFileInfo = combinedFileInfo;
           ( (Parser.BasicFileParser)parser ).SetBasicVersion( ( (Parser.BasicFileParser)parser ).Settings.Version );
+          ( (Parser.BasicFileParser)parser ).Settings.UpperCaseMode = !( (SourceBasicEx)Doc.BaseDoc ).m_LowerCaseMode;
           if ( combinedFileInfo != null )
           {
             //Debug.Log( "Doc " + Doc.Text + " receives " + combinedFileInfo.Labels.Count + " initial labels" );
