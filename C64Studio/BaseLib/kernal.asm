@@ -63,6 +63,15 @@
 ;| Bit 0 |   Timer A Interrupt (Kernal-IRQ, Tape)
 .IRQ_CONTROL         = $dc0d
 
+;| Bit 7 |   On Read:  1 = Interrupt occured
+;|       |   On Write: 1 = Set Int.-Flags, 0 = Clear Int.-Flags
+;| Bit 4 |   FLAG1 NMI (User/RS232 Received Data Input)
+;| Bit 3 |   Serial Port Interrupt ($DD0C full/empty)
+;| Bit 2 |   Time-of-Day Clock Alarm Interrupt
+;| Bit 1 |   Timer B Interrupt (RS232)
+;| Bit 0 |   Timer A Interrupt (RS232)
+.NMI_CONTROL            = $dd0d
+
 
 IRQ_RETURN_KERNAL       = $ea81
 IRQ_RETURN_KERNAL_KEYBOARD  = $ea31 
