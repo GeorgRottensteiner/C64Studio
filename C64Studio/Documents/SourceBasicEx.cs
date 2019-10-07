@@ -1632,6 +1632,17 @@ namespace C64Studio
 
       editSource.VerticalScroll.Value = topLine;
       editSource.UpdateScrollbars();
+
+      if ( m_LowerCaseMode )
+      {
+        btnToggleUpperLowerCase.Image = Properties.Resources.toolbar_basic_toggle_upperlowercase_up;
+        toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle Upper/Lower Case( Currently Lower Case )" );
+      }
+      else
+      {
+        btnToggleUpperLowerCase.Image = Properties.Resources.toolbar_basic_toggle_upperlowercase_down;
+        toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle Upper/Lower Case( Currently Upper Case )" );
+      }
     }
 
 

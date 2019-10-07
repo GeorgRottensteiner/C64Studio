@@ -703,6 +703,8 @@
     <None Include="Resources\charscreen_reverse_on.ico" />
     <None Include="Resources\charscreen_reverse_off1.ico" />
     <None Include="Resources\charscreen_reverse_on1.ico" />
+    <None Include="Resources\toolbar_basic_toggle_upperlowercase_down.png" />
+    <None Include="Resources\toolbar_basic_toggle_upperlowercase_up.png" />
     <Content Include="TODO.txt" />
     <None Include="Resources\charscreen_text1.ico" />
     <None Include="Resources\charscreen_text.ico" />

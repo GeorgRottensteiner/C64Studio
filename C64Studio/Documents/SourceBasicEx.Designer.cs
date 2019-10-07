@@ -144,12 +144,12 @@
       // 
       this.btnToggleUpperLowerCase.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleUpperLowerCase.AutoSize = true;
-      this.btnToggleUpperLowerCase.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleUpperLowerCase.Image")));
+      this.btnToggleUpperLowerCase.Image = global::C64Studio.Properties.Resources.toolbar_basic_toggle_upperlowercase_down;
       this.btnToggleUpperLowerCase.Location = new System.Drawing.Point(107, 27);
       this.btnToggleUpperLowerCase.Name = "btnToggleUpperLowerCase";
       this.btnToggleUpperLowerCase.Size = new System.Drawing.Size(22, 22);
       this.btnToggleUpperLowerCase.TabIndex = 2;
-      this.toolTip1.SetToolTip(this.btnToggleUpperLowerCase, "Toggle Upper/Lower Case");
+      this.toolTip1.SetToolTip(this.btnToggleUpperLowerCase, "Toggle Upper/Lower Case (Currently Upper Case)");
       this.btnToggleUpperLowerCase.UseVisualStyleBackColor = true;
       this.btnToggleUpperLowerCase.CheckedChanged += new System.EventHandler(this.btnToggleUpperLowerCase_CheckedChanged);
       // 

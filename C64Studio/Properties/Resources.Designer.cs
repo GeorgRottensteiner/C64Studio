@@ -543,6 +543,26 @@ namespace C64Studio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap toolbar_basic_toggle_upperlowercase_down {
+            get {
+                object obj = ResourceManager.GetObject("toolbar_basic_toggle_upperlowercase_down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap toolbar_basic_toggle_upperlowercase_up {
+            get {
+                object obj = ResourceManager.GetObject("toolbar_basic_toggle_upperlowercase_up", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap toolbar_truedrive_disabled {
             get {
                 object obj = ResourceManager.GetObject("toolbar_truedrive_disabled", resourceCulture);
