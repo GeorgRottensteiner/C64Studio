@@ -25,7 +25,7 @@ namespace TestProject
       config.OutputFile = "test.prg";
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
 
-      Assert.IsTrue( parser.Parse( Source, null, config ) );
+      Assert.IsTrue( parser.Parse( Source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       return parser.AssembledOutput.Assembly;
@@ -44,7 +44,7 @@ namespace TestProject
       config.OutputFile = "test.prg";
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string result = parser.Renumber( 10, 3 );
 
@@ -65,7 +65,7 @@ namespace TestProject
       config.OutputFile = "test.prg";
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string result = parser.Renumber( 10, 3 );
 
@@ -86,7 +86,7 @@ namespace TestProject
       config.OutputFile = "test.prg";
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string result = parser.Renumber( 10, 3 );
 
@@ -110,7 +110,7 @@ namespace TestProject
       config.OutputFile = "test.prg";
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string result = parser.Renumber( 10, 3 );
 
@@ -137,7 +137,7 @@ namespace TestProject
       config.OutputFile = "test.prg";
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string result = parser.Renumber( 10, 3 );
 
@@ -163,7 +163,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string  encoded = parser.EncodeToLabels();
       Assert.AreEqual( @"
@@ -190,7 +190,7 @@ GOTOLABEL10
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string  encoded = parser.EncodeToLabels();
       Assert.AreEqual( @"

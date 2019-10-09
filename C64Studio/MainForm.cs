@@ -3308,7 +3308,7 @@ namespace C64Studio
               // do not reparse already parsed element
               continue;
             }
-            ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), false, false );
+            ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false );
 
             //var knownTokens = ParserASM.KnownTokens();
             //var knownTokenInfos = ParserASM.KnownTokenInfo();
@@ -5210,7 +5210,7 @@ namespace C64Studio
 
 
 
-    public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, bool OutputMessages, bool CreatePreProcessedFile )
+    public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, string AdditionalPredefines, bool OutputMessages, bool CreatePreProcessedFile )
     {
       //Debug.Log( "Parsefile called for " + Document.DocumentFilename );
       C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
@@ -5235,7 +5235,7 @@ namespace C64Studio
         }
       }
 
-      bool result = Parser.ParseFile(Document.FullPath, sourceCode, Configuration, config);
+      bool result = Parser.ParseFile(Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines );
 
       if ( ( config.Assembler != C64Studio.Types.AssemblerType.AUTO )
       &&   ( Document.BaseDoc != null )
@@ -5420,7 +5420,7 @@ namespace C64Studio
         {
           config = Document.Project.Settings.Configuration( mainToolConfig.SelectedItem.ToString() );
         }
-        ParseFile( StudioCore.DetermineParser( Document ), Document, config, false, false );
+        ParseFile( StudioCore.DetermineParser( Document ), Document, config, null, false, false );
       }
     }
 

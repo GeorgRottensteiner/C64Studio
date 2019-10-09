@@ -218,7 +218,7 @@ namespace C64Studio.Parser
 
     public abstract void Clear();
     public abstract bool Assemble( CompileConfig Config );
-    public abstract bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config );
+    public abstract bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines );
 
 
 
@@ -260,7 +260,7 @@ namespace C64Studio.Parser
 
 
 
-    public bool ParseFile( string Filename, string SourceCode, ProjectConfig Configuration, CompileConfig Config )
+    public bool ParseFile( string Filename, string SourceCode, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines )
     {
       Clear();
 
@@ -301,7 +301,7 @@ namespace C64Studio.Parser
         // safety fallback to avoid crashes
         Config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
       }
-      return Parse( text, Configuration, Config );
+      return Parse( text, Configuration, Config, AdditionalPredefines );
     }
 
 

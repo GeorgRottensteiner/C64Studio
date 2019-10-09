@@ -291,6 +291,7 @@ namespace C64Studio.Tasks
         }
 
         // include previous symbols
+        string    additionalPredefines = null;
         if ( parser is Parser.ASMFileParser )
         {
           ( (Parser.ASMFileParser)parser ).InitialFileInfo = combinedFileInfo;
@@ -298,10 +299,7 @@ namespace C64Studio.Tasks
           {
             //Debug.Log( "Doc " + Doc.Text + " receives " + combinedFileInfo.Labels.Count + " initial labels" );
           }
-          if ( !string.IsNullOrEmpty( AdditionalPredefines ) )
-          {
-            ( (Parser.ASMFileParser)parser ).ParseAndAddPreDefines( AdditionalPredefines );
-          }
+          additionalPredefines = AdditionalPredefines;
         }
         else if ( parser is Parser.BasicFileParser )
         {
@@ -345,7 +343,7 @@ namespace C64Studio.Tasks
             startAddress = ( (SourceBasicEx)Doc.BaseDoc ).StartAddress;
             ( (Parser.BasicFileParser)parser ).SetBasicVersion( ( (SourceBasicEx)Doc.BaseDoc ).BASICVersion );
           }
-          if ( ( !Core.MainForm.ParseFile( parser, Doc, config, OutputMessages, CreatePreProcessedFile ) )
+          if ( ( !Core.MainForm.ParseFile( parser, Doc, config, additionalPredefines, OutputMessages, CreatePreProcessedFile ) )
           ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
                                         {
                                           TargetType = Core.DetermineTargetType( Doc, parser ),

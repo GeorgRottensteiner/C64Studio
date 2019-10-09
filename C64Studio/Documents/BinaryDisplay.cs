@@ -196,7 +196,7 @@ namespace C64Studio
       config.Assembler  = Types.AssemblerType.C64_STUDIO;
 
       string    temp = "* = $0801\n" + textBinaryData.Text;
-      if ( ( asmParser.Parse( temp, null, config ) )
+      if ( ( asmParser.Parse( temp, null, config, null ) )
       &&   ( asmParser.Assemble( config ) ) )
       {
         SetHexData( asmParser.AssembledOutput.Assembly );

@@ -20,7 +20,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_16K_BIN;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -45,7 +45,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_16K_CRT;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -70,7 +70,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_8K_BIN;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -95,7 +95,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_8K_CRT;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -120,7 +120,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -145,7 +145,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -170,7 +170,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -195,7 +195,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -220,7 +220,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_RGCD_BIN;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -245,7 +245,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_RGCD_CRT;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 

@@ -1418,7 +1418,7 @@ namespace C64Studio
       parser.LabelMode = m_LabelMode;
 
       var compilerConfig = new C64Studio.Parser.CompileConfig() { Assembler = C64Studio.Types.AssemblerType.AUTO };
-      if ( !parser.Parse( editSource.Text, null, compilerConfig ) )
+      if ( !parser.Parse( editSource.Text, null, compilerConfig, null ) )
       {
         Core.MainForm.m_CompileResult.UpdateFromMessages( parser, DocumentInfo.Project );
         Core.Navigating.UpdateFromMessages( parser.Messages,

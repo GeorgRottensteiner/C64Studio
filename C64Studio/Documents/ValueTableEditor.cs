@@ -766,7 +766,7 @@ namespace C64Studio
       string    temp = "* = $0801\n" + editDataExport.Text;
 
 
-      if ( ( !parser.Parse( temp, new ProjectConfig(), config ) )
+      if ( ( !parser.Parse( temp, new ProjectConfig(), config, null ) )
       ||   ( !parser.Assemble( config ) ) )
       {
         return;

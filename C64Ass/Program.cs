@@ -36,7 +36,7 @@ namespace C64Ass
         config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       }
 
-      bool result = parser.ParseFile( fullPath, "", projectConfig, config );
+      bool result = parser.ParseFile( fullPath, "", projectConfig, config, null );
       if ( !result )
       {
         System.Console.WriteLine( "Parsing the file failed:" );

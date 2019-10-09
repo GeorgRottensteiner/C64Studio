@@ -51,7 +51,7 @@ namespace C64Studio.Tasks
         }
       }
 
-      parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig );
+      parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig, null );
 
       if ( ( compileConfig.Assembler != C64Studio.Types.AssemblerType.AUTO )
       &&   ( m_Document.BaseDoc != null )

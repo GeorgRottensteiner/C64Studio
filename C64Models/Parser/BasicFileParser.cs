@@ -1236,7 +1236,7 @@ namespace C64Studio.Parser
 
 
 
-    public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config )
+    public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines )
     {
       if ( m_Opcodes.Count == 0 )
       {

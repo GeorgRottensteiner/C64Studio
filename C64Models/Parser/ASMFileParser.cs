@@ -6302,7 +6302,7 @@ namespace C64Studio.Parser
 
 
 
-    private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration, out bool HadFatalError )
+    private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration, string AdditionalPredefines, out bool HadFatalError )
     {
       List<Types.ScopeInfo>   stackScopes = new List<C64Studio.Types.ScopeInfo>();
       GR.Collections.Map<string,Types.MacroFunctionInfo>     macroFunctions = new GR.Collections.Map<string,C64Studio.Types.MacroFunctionInfo>();
@@ -6330,6 +6330,10 @@ namespace C64Studio.Parser
 
       m_WarningMessages = 0;
       m_ErrorMessages = 0;
+      if ( !string.IsNullOrEmpty( AdditionalPredefines ) )
+      {
+        ParseAndAddPreDefines( AdditionalPredefines );
+      }
       if ( Configuration != null )
       {
         ParseAndAddPreDefines( Configuration.Defines );
@@ -10503,7 +10507,7 @@ namespace C64Studio.Parser
 
 
 
-    public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config )
+    public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines )
     {
       m_CompileConfig = Config;
 
@@ -10528,7 +10532,7 @@ namespace C64Studio.Parser
       m_WarningsToIgnore.Clear();
 
       bool    hadFatalError = false;
-      lines = PreProcess( lines, m_Filename, Configuration, out hadFatalError );
+      lines = PreProcess( lines, m_Filename, Configuration, AdditionalPredefines, out hadFatalError );
 
       DumpSourceInfos( OrigLines, lines );
 

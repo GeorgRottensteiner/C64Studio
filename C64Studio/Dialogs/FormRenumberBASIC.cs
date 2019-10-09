@@ -117,7 +117,7 @@ namespace C64Studio
       {
         config = m_Basic.DocumentInfo.Project.Settings.Configuration( configName );
       }
-      if ( !m_Core.MainForm.ParseFile( m_Core.Compiling.ParserBasic, m_Basic.DocumentInfo, config, true, false ) )
+      if ( !m_Core.MainForm.ParseFile( m_Core.Compiling.ParserBasic, m_Basic.DocumentInfo, config, null, true, false ) )
       {
         System.Windows.Forms.MessageBox.Show( "Renumber is only possible on compilable code", "Cannot renumber" );
         Close();

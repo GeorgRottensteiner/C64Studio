@@ -16,7 +16,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.PDS;
 
-      bool parseResult = parser.Parse( Source, null, config );
+      bool parseResult = parser.Parse( Source, null, config, null );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
@@ -45,7 +45,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      bool parseResult = parser.Parse( Source, null, config );
+      bool parseResult = parser.Parse( Source, null, config, null );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
@@ -81,7 +81,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -113,7 +113,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -145,7 +145,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -176,7 +176,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.DASM;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -239,7 +239,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
@@ -307,7 +307,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       var assembly = parser.AssembledOutput;
@@ -363,7 +363,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsFalse( parser.Parse( source, null, config ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null ) );
 
       Assert.AreEqual( 1, parser.Errors );
       Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
@@ -388,7 +388,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsFalse( parser.Parse( source, null, config ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null ) );
 
       Assert.AreEqual( 1, parser.Errors );
       Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
@@ -411,7 +411,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       Assert.AreEqual( 0x80002, (int)parser.AssembledOutput.Assembly.Length );
@@ -433,7 +433,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       Assert.AreEqual( 7, (int)parser.AssembledOutput.Assembly.Length );
@@ -456,7 +456,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       Assert.AreEqual( 7, (int)parser.AssembledOutput.Assembly.Length );
@@ -484,7 +484,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
 
       var assembly = parser.AssembledOutput;

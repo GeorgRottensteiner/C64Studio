@@ -16,7 +16,7 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      bool parseResult = parser.Parse( Source, null, config );
+      bool parseResult = parser.Parse( Source, null, config, null );
       if ( !parseResult )
       {
         Debug.Log( "Testassemble failed:" );
@@ -51,7 +51,7 @@ namespace TestProject
 
       C64Studio.Types.ErrorCode  code = C64Studio.Types.ErrorCode.OK;
 
-      Assert.IsFalse( parser.Parse( source, null, config ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null ) );
 
       foreach ( var entry in parser.Messages.Values )
       {
@@ -722,7 +722,7 @@ namespace TestProject
 
       C64Studio.Types.ErrorCode  code = C64Studio.Types.ErrorCode.OK;
 
-      Assert.IsFalse( parser.Parse( source, null, config ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null ) );
 
       foreach ( var entry in parser.Messages.Values )
       {
@@ -780,7 +780,7 @@ namespace TestProject
 
       C64Studio.Types.ErrorCode  code = C64Studio.Types.ErrorCode.OK;
 
-      Assert.IsFalse( parser.Parse( source, null, config ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null ) );
 
       foreach ( var entry in parser.Messages.Values )
       {
@@ -810,7 +810,7 @@ namespace TestProject
 
       C64Studio.Types.ErrorCode  code = C64Studio.Types.ErrorCode.OK;
 
-      Assert.IsFalse( parser.Parse( source, null, config ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null ) );
 
       foreach ( var entry in parser.Messages.Values )
       {
@@ -1150,7 +1150,7 @@ GREEN=5
 
       C64Studio.Types.ErrorCode  code = C64Studio.Types.ErrorCode.OK;
 
-      Assert.IsFalse( parser.Parse( source, null, config ) );
+      Assert.IsFalse( parser.Parse( source, null, config, null ) );
 
       foreach ( var entry in parser.Messages.Values )
       {
@@ -1887,7 +1887,7 @@ ContrivedTest:
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config ) );
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       Assert.IsTrue( parser.Assemble( config ) );
 
