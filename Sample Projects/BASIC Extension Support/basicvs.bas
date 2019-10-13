@@ -1,2 +1,2 @@
-5rem Hallo Welt
+5REM Hallo Welt
 10?"ALLO ELT"

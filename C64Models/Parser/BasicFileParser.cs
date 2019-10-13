@@ -2383,37 +2383,52 @@ namespace C64Studio.Parser
           continue;
         }
         // find actual byte value of char
-        if ( !Types.ConstantData.CharToC64Char.ContainsKey( curChar ) )
+        MapCharacterToActualKey( LineIndex, curChar, posInLine, endOfDigitPos, tempData );
+        ++posInLine;
+      }
+    }
+
+
+
+    private void MapCharacterToActualKey( int LineIndex, char curChar, int posInLine, int endOfDigitPos, ByteBuffer tempData )
+    {
+      if ( !Settings.UpperCaseMode )
+      {
+        // lower case mode
+        if ( Types.ConstantData.LowerCaseCharTo64Char.ContainsKey( curChar ) )
         {
-          char    charToUse = curChar;
-          if ( !Types.ConstantData.CharToC64Char.ContainsKey( charToUse ) )
-          {
-            AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
-          }
-          else if ( !Types.ConstantData.CharToC64Char[charToUse].HasPetSCII )
+          var foundKey = Types.ConstantData.LowerCaseCharTo64Char[curChar];
+          if ( !foundKey.HasPetSCII )
           {
             AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
           }
           else
           {
-            tempData.AppendU8( Types.ConstantData.CharToC64Char[charToUse].PetSCIIValue );
-          }
-        }
-        else if ( !Types.ConstantData.CharToC64Char[curChar].HasPetSCII )
-        {
-          AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
-        }
-        else
-        {
-          if ( ( curChar != 32 )
-          ||   ( posInLine > endOfDigitPos + 1 ) )
-          {
-            // strip spaces after line numbers
-            tempData.AppendU8( Types.ConstantData.CharToC64Char[curChar].PetSCIIValue );
-          }
-        }
+            if ( ( curChar != 32 )
+            ||   ( posInLine > endOfDigitPos + 1 ) )
+            {
+              // strip spaces after line numbers
 
-        ++posInLine;
+              // TODO - lower case petscii!
+              tempData.AppendU8( foundKey.LowerCasePETSCII );
+            }
+          }
+          return;
+        }
+      }
+      if ( ( !Types.ConstantData.CharToC64Char.ContainsKey( curChar ) )
+      ||   ( !Types.ConstantData.CharToC64Char[curChar].HasPetSCII ) )
+      {
+        AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
+      }
+      else
+      {
+        // strip spaces after line numbers - TODO here???
+        if ( ( curChar != 32 )
+        ||   ( posInLine > endOfDigitPos + 1 ) )
+        {
+          tempData.AppendU8( Types.ConstantData.CharToC64Char[curChar].PetSCIIValue );
+        }
       }
     }
 

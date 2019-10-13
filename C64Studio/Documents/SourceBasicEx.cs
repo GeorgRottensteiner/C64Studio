@@ -1293,7 +1293,7 @@ namespace C64Studio
             //Debug.Log( "Trying to map unknown token: " + key.ToString() );
             if ( m_LowerCaseMode )
             {
-              InsertOrReplaceChar( c64Key.LowerCaseChar );
+              InsertOrReplaceChar( c64Key.LowerCaseDisplayChar );
             }
             else
             {
