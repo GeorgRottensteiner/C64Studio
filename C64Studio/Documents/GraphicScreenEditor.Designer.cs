@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -242,7 +242,7 @@
       // 
       // editExportBASICLineOffset
       // 
-      this.editExportBASICLineOffset.Location = new System.Drawing.Point(355, 192);
+      this.editExportBASICLineOffset.Location = new System.Drawing.Point(343, 221);
       this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
       this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
       this.editExportBASICLineOffset.TabIndex = 28;
@@ -250,16 +250,16 @@
       // 
       // editExportBASICLineNo
       // 
-      this.editExportBASICLineNo.Location = new System.Drawing.Point(184, 192);
+      this.editExportBASICLineNo.Location = new System.Drawing.Point(209, 221);
       this.editExportBASICLineNo.Name = "editExportBASICLineNo";
-      this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
+      this.editExportBASICLineNo.Size = new System.Drawing.Size(61, 20);
       this.editExportBASICLineNo.TabIndex = 29;
       this.editExportBASICLineNo.Text = "10";
       // 
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(288, 195);
+      this.label3.Location = new System.Drawing.Point(276, 224);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(61, 13);
       this.label3.TabIndex = 26;
@@ -268,7 +268,7 @@
       // label4
       // 
       this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(131, 195);
+      this.label4.Location = new System.Drawing.Point(155, 224);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(47, 13);
       this.label4.TabIndex = 27;
@@ -276,9 +276,9 @@
       // 
       // btnExportToBASICHexData
       // 
-      this.btnExportToBASICHexData.Location = new System.Drawing.Point(6, 219);
+      this.btnExportToBASICHexData.Location = new System.Drawing.Point(6, 191);
       this.btnExportToBASICHexData.Name = "btnExportToBASICHexData";
-      this.btnExportToBASICHexData.Size = new System.Drawing.Size(120, 23);
+      this.btnExportToBASICHexData.Size = new System.Drawing.Size(143, 23);
       this.btnExportToBASICHexData.TabIndex = 25;
       this.btnExportToBASICHexData.Text = "Export to BASIC data hex";
       this.btnExportToBASICHexData.UseVisualStyleBackColor = true;
@@ -286,9 +286,9 @@
       // 
       // btnExportToBASICData
       // 
-      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 190);
+      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 162);
       this.btnExportToBASICData.Name = "btnExportToBASICData";
-      this.btnExportToBASICData.Size = new System.Drawing.Size(120, 23);
+      this.btnExportToBASICData.Size = new System.Drawing.Size(143, 23);
       this.btnExportToBASICData.TabIndex = 25;
       this.btnExportToBASICData.Text = "Export to BASIC data";
       this.btnExportToBASICData.UseVisualStyleBackColor = true;
@@ -371,7 +371,7 @@
       // 
       // editPrefix
       // 
-      this.editPrefix.Location = new System.Drawing.Point(209, 164);
+      this.editPrefix.Location = new System.Drawing.Point(238, 164);
       this.editPrefix.Name = "editPrefix";
       this.editPrefix.Size = new System.Drawing.Size(43, 20);
       this.editPrefix.TabIndex = 7;
@@ -380,7 +380,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(403, 167);
+      this.label2.Location = new System.Drawing.Point(298, 196);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(32, 13);
       this.label2.TabIndex = 6;
@@ -389,7 +389,7 @@
       // editWrapByteCount
       // 
       this.editWrapByteCount.Enabled = false;
-      this.editWrapByteCount.Location = new System.Drawing.Point(343, 164);
+      this.editWrapByteCount.Location = new System.Drawing.Point(238, 193);
       this.editWrapByteCount.Name = "editWrapByteCount";
       this.editWrapByteCount.Size = new System.Drawing.Size(54, 20);
       this.editWrapByteCount.TabIndex = 5;
@@ -398,7 +398,7 @@
       // checkExportToDataWrap
       // 
       this.checkExportToDataWrap.AutoSize = true;
-      this.checkExportToDataWrap.Location = new System.Drawing.Point(273, 166);
+      this.checkExportToDataWrap.Location = new System.Drawing.Point(158, 195);
       this.checkExportToDataWrap.Name = "checkExportToDataWrap";
       this.checkExportToDataWrap.Size = new System.Drawing.Size(64, 17);
       this.checkExportToDataWrap.TabIndex = 4;
@@ -409,7 +409,7 @@
       // checkExportToDataIncludeRes
       // 
       this.checkExportToDataIncludeRes.AutoSize = true;
-      this.checkExportToDataIncludeRes.Location = new System.Drawing.Point(138, 166);
+      this.checkExportToDataIncludeRes.Location = new System.Drawing.Point(158, 166);
       this.checkExportToDataIncludeRes.Name = "checkExportToDataIncludeRes";
       this.checkExportToDataIncludeRes.Size = new System.Drawing.Size(74, 17);
       this.checkExportToDataIncludeRes.TabIndex = 4;
@@ -706,7 +706,7 @@
       // colorSelector
       // 
       this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage1;
+      this.colorSelector.DisplayPage = fastImage4;
       this.colorSelector.Image = null;
       this.colorSelector.Location = new System.Drawing.Point(683, 413);
       this.colorSelector.Name = "colorSelector";
@@ -718,7 +718,7 @@
       // charEditor
       // 
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage2;
+      this.charEditor.DisplayPage = fastImage5;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(683, 148);
       this.charEditor.Name = "charEditor";
@@ -848,7 +848,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage3;
+      this.pictureEditor.DisplayPage = fastImage6;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
