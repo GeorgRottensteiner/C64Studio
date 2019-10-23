@@ -976,6 +976,7 @@ namespace C64Studio.Parser
         if ( Version == BasicVersion.LASER_BASIC )
         {
           AddOpcode( "RESERVE", 0x0228 );
+          AddOpcode( "RESER.", 0x0228 );
         }
         else if ( Version == BasicVersion.BASIC_LIGHTNING )
         {
@@ -2133,72 +2134,74 @@ namespace C64Studio.Parser
           // not a token, add directly
           AddDirectToken( info, nextByte, bytePos );
 
-          // random hack -> avoid letters following letters forming tokens (e.g. s-or-t)
-          if ( ( nextByte >= 'A' )
-          &&   ( nextByte <= 'Z' ) )
+          if ( ( Settings.Version == BasicVersion.BASIC_LIGHTNING )
+          ||   ( Settings.Version == BasicVersion.LASER_BASIC ) )
           {
-            // try to scan forward to deal with something like ONxGOSUB or PROCsort (not sORt)
-            int     forwardPos = bytePos;
-            while ( ( forwardPos + 1 < (int)tempData.Length )
-            &&      ( ( ( tempData.ByteAt( forwardPos + 1 ) >= 'A' )
-            &&          ( tempData.ByteAt( forwardPos + 1 ) <= 'Z' ) )
-            ||        ( tempData.ByteAt( forwardPos + 1 ) == '%' ) ) )
-
+            // random hack -> avoid letters following letters forming tokens (e.g. s-or-t)
+            if ( ( nextByte >= 'A' )
+            &&   ( nextByte <= 'Z' ) )
             {
-              ++forwardPos;
-            }
-            ++bytePos;
-
-            Token  foundToken;
-            Opcode foundOpcode;
-            if ( FindOpcodeRightAligned( tempData, ref bytePos, forwardPos, info, ref insideDataStatement, ref insideREMStatement, out foundToken, out foundOpcode ) )
-            {
-              // inserted a new opcode, but maybe we need direct tokens in between?
-              // TODO
-              if ( info.Tokens[info.Tokens.Count - 1].StartIndex > bytePos )
+              // try to scan forward to deal with something like ONxGOSUB or PROCsort (not sORt)
+              int     forwardPos = bytePos;
+              while ( ( forwardPos + 1 < (int)tempData.Length )
+              &&      ( ( ( tempData.ByteAt( forwardPos + 1 ) >= 'A' )
+              &&          ( tempData.ByteAt( forwardPos + 1 ) <= 'Z' ) )
+              ||        ( tempData.ByteAt( forwardPos + 1 ) == '%' ) ) )
               {
-                // yes, direct tokens!
-                for ( int i = bytePos; i < info.Tokens[info.Tokens.Count - 1].StartIndex; ++i )
-                {
-                  Token basicToken = new Token();
-                  basicToken.TokenType = Token.Type.DIRECT_TOKEN;
-                  basicToken.ByteValue = tempData.ByteAt( i );
-                  basicToken.Content = "" + Types.ConstantData.PetSCIIToChar[(byte)basicToken.ByteValue].CharValue;
-                  basicToken.StartIndex = i;
-
-                  info.Tokens.Add( basicToken );
-
-                  info.LineData.AppendU8( (byte)basicToken.ByteValue );
-                }
+                ++forwardPos;
               }
+              ++bytePos;
 
-              info.Tokens.Add( foundToken );
-              if ( foundOpcode.InsertionValue > 255 )
+              Token  foundToken;
+              Opcode foundOpcode;
+              if ( FindOpcodeRightAligned( tempData, ref bytePos, forwardPos, info, ref insideDataStatement, ref insideREMStatement, out foundToken, out foundOpcode ) )
               {
-                info.LineData.AppendU16NetworkOrder( (ushort)foundOpcode.InsertionValue );
+                // inserted a new opcode, but maybe we need direct tokens in between?
+                // TODO
+                if ( info.Tokens[info.Tokens.Count - 1].StartIndex > bytePos )
+                {
+                  // yes, direct tokens!
+                  for ( int i = bytePos; i < info.Tokens[info.Tokens.Count - 1].StartIndex; ++i )
+                  {
+                    Token basicToken = new Token();
+                    basicToken.TokenType = Token.Type.DIRECT_TOKEN;
+                    basicToken.ByteValue = tempData.ByteAt( i );
+                    basicToken.Content = "" + Types.ConstantData.PetSCIIToChar[(byte)basicToken.ByteValue].CharValue;
+                    basicToken.StartIndex = i;
+
+                    info.Tokens.Add( basicToken );
+
+                    info.LineData.AppendU8( (byte)basicToken.ByteValue );
+                  }
+                }
+
+                info.Tokens.Add( foundToken );
+                if ( foundOpcode.InsertionValue > 255 )
+                {
+                  info.LineData.AppendU16NetworkOrder( (ushort)foundOpcode.InsertionValue );
+                }
+                else
+                {
+                  info.LineData.AppendU8( (byte)foundOpcode.InsertionValue );
+                }
+                //BytePos += opcode.Command.Length;
+                insideDataStatement = ( foundOpcode.Command == "DATA" );
+                if ( IsComment( foundOpcode ) )
+                {
+                  insideREMStatement = true;
+                }
               }
               else
               {
-                info.LineData.AppendU8( (byte)foundOpcode.InsertionValue );
+                for ( int i = bytePos; i <= forwardPos; ++i )
+                {
+                  AddDirectToken( info, tempData.ByteAt( i ), i );
+                }
               }
-              //BytePos += opcode.Command.Length;
-              insideDataStatement = ( foundOpcode.Command == "DATA" );
-              if ( IsComment( foundOpcode ) )
-              {
-                insideREMStatement = true;
-              }
+              bytePos = forwardPos + 1;
+              continue;
             }
-            else
-            {
-              for ( int i = bytePos; i <= forwardPos; ++i )
-              {
-                AddDirectToken( info, tempData.ByteAt( i ), i );
-              }
-            }
-            bytePos = forwardPos + 1;
-            continue;
           }
-
           if ( ( nextByte == 39 )
           && ( ( Settings.Version == BasicVersion.BASIC_LIGHTNING )
           || ( Settings.Version == BasicVersion.LASER_BASIC ) ) )
