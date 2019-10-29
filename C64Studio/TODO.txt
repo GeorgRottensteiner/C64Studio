@@ -1,6 +1,7 @@
 ﻿C64Studio
 o File-Manager-Import von BASIC-Dateien, Version!! (V7, etc.)
 o FileManager -> Rename, Start in Emulator directly?
+o Binary Editor -> To BASIC, ASM, Längenbegrenzung!
 o BASIC -> Run/Debug Configuration
 o BASIC -> Debug?
 o BASIC-Extensions ( Laser-Basic, Simons Basic?)
