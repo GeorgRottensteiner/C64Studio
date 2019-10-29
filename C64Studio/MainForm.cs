@@ -4739,6 +4739,7 @@ namespace C64Studio
             if ( ( curDoc != null )
             &&   ( curDoc.BaseDoc != null ) )
             {
+              //Debug.Log( "ActiveCOntrol " + ActiveControl );
               return curDoc.BaseDoc.ApplyFunction( Function );
             }
           }
