@@ -1,27 +1,4 @@
 ﻿C64Studio
-o Gelegentlich Redefined label:
-Bis zur C64 Studio Version 5.8 (und mit dem aktuellen ACME) lässt sich das folgende Programm problemlos übersetzen, 
-ab C64 Studio 5.9 kommt es beim Erstellen zum Fehler „Redefinition of label nurEinTest.loop“.
-Etwas irritierend ist, dass es sein kann, dass es sich zunächst problemlos übersetzen lässt, sobald aber z. B. eine 
-Leerzeile eingefügt wird, klappt es nicht mehr.
-Wenn man hinter „*=$0801“ eine weitere Zone einfüge, geht es übrigens wieder.
-Bei 5.9 hast du ja die Zonen überarbeitet, kannst du das bei Gelegenheit evtl. mal überprüfen?
-
-*=$0801
- ldx #0
-.loop
- dex
- bne .loop
- jsr nurEinTest
- rts 
-!zone nurEinTest
-nurEinTest
- ldx #0
-.loop
- dex
- bne .loop
- rts
-
 o BASIC -> Anzeige Zeichenmodus
 o File-Manager-Import von BASIC-Dateien, Version!! (V7, etc.)
 o FileManager -> Rename, Start in Emulator directly?
