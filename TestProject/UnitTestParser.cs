@@ -1955,5 +1955,34 @@ ContrivedTest:
 
 
 
+    [TestMethod]
+    public void TestVerifyRepeatedAssemblyStartsWithEmptyZone()
+    {
+      string source = @"*=$0801
+                       ldx #0
+                      .loop
+                       dex
+                       bne .loop
+                       jsr nurEinTest
+                       rts 
+
+ 
+                       !zone nurEinTest
+                      nurEinTest
+                       ldx #0
+                      .loop
+                       dex
+                       bne .loop
+                       rts";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0108A200CAD0FD200A0860A200CAD0FD60", assembly.ToString() );
+
+      var assembly2 = TestAssemble( source );
+      Assert.AreEqual( "0108A200CAD0FD200A0860A200CAD0FD60", assembly2.ToString() );
+    }
+
+
   }
 }

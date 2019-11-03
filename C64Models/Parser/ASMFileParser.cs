@@ -6352,6 +6352,7 @@ namespace C64Studio.Parser
       int   intermediateLineOffset = 0;
       bool  hadCommentInLine = false;
       bool hadMacro = false;
+      m_CurrentZoneName = "";
 
       //int lineIndex = 0;
       //foreach ( string line in Lines )
