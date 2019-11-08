@@ -710,5 +710,37 @@ namespace C64Studio
 
 
 
+    internal void DebugStepOut()
+    {
+      if ( Debugger == null )
+      {
+        Core.AddToOutput( "No debugger attached" );
+        return;
+      }
+      if ( ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_BROKEN )
+      ||   ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN ) )
+      {
+        Core.MainForm.m_DebugMemory.InvalidateAllMemory();
+        Debugger.StepOut();
+        Debugger.RefreshRegistersAndWatches();
+        Debugger.SetAutoRefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
+                                       Core.MainForm.m_DebugMemory.MemorySize,
+                                       Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+        Debugger.RefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
+                                Core.MainForm.m_DebugMemory.MemorySize,
+                                Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+
+        if ( Core.MainForm.AppState == Types.StudioState.DEBUGGING_RUN )
+        {
+          FirstActionAfterBreak = true;
+        }
+        Core.Executing.BringStudioToForeground();
+        Core.MainForm.AppState = Types.StudioState.DEBUGGING_BROKEN;
+        Core.MainForm.SetGUIForDebugging( true );
+      }
+    }
+
+
+
   }
 }

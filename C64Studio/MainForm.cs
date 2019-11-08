@@ -4034,28 +4034,7 @@ namespace C64Studio
 
     private void mainDebugStepOut_Click( object sender, EventArgs e )
     {
-      if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      || ( AppState == Types.StudioState.DEBUGGING_RUN ) )
-      {
-        m_DebugMemory.InvalidateAllMemory();
-        StudioCore.Debugging.Debugger.StepOut();
-        StudioCore.Debugging.Debugger.RefreshRegistersAndWatches();
-        StudioCore.Debugging.Debugger.SetAutoRefreshMemory( m_DebugMemory.MemoryStart,
-                                                            m_DebugMemory.MemorySize,
-                                                            m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
-        StudioCore.Debugging.Debugger.RefreshMemory( m_DebugMemory.MemoryStart,
-                                                     m_DebugMemory.MemorySize,
-                                                     m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
-
-        if ( AppState == Types.StudioState.DEBUGGING_RUN )
-        {
-          StudioCore.Debugging.FirstActionAfterBreak = true;
-        }
-        StudioCore.Executing.BringStudioToForeground();
-        AppState = Types.StudioState.DEBUGGING_BROKEN;
-        mainDebugGo.Enabled = true;
-        mainDebugBreak.Enabled = false;
-      }
+      StudioCore.Debugging.DebugStepOut();
     }
 
 
@@ -4766,6 +4745,9 @@ namespace C64Studio
           return true;
         case C64Studio.Types.Function.DEBUG_STEP_OVER:
           StudioCore.Debugging.DebugStepOver();
+          return true;
+        case Function.DEBUG_STEP_OUT:
+          StudioCore.Debugging.DebugStepOut();
           return true;
         case C64Studio.Types.Function.DEBUG_STOP:
           StopDebugging();
