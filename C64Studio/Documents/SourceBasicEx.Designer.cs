@@ -43,6 +43,7 @@
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.comboBASICVersion = new System.Windows.Forms.ComboBox();
+      this.btnToggleStringEntryMode = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.menuBASIC.SuspendLayout();
@@ -155,7 +156,7 @@
       // 
       // editBASICStartAddress
       // 
-      this.editBASICStartAddress.Location = new System.Drawing.Point(214, 30);
+      this.editBASICStartAddress.Location = new System.Drawing.Point(250, 29);
       this.editBASICStartAddress.MaxLength = 7;
       this.editBASICStartAddress.Name = "editBASICStartAddress";
       this.editBASICStartAddress.Size = new System.Drawing.Size(65, 20);
@@ -166,7 +167,7 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(135, 33);
+      this.label1.Location = new System.Drawing.Point(171, 32);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(73, 13);
       this.label1.TabIndex = 5;
@@ -175,7 +176,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(297, 33);
+      this.label2.Location = new System.Drawing.Point(333, 32);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(79, 13);
       this.label2.TabIndex = 5;
@@ -185,11 +186,24 @@
       // 
       this.comboBASICVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBASICVersion.FormattingEnabled = true;
-      this.comboBASICVersion.Location = new System.Drawing.Point(382, 29);
+      this.comboBASICVersion.Location = new System.Drawing.Point(418, 28);
       this.comboBASICVersion.Name = "comboBASICVersion";
       this.comboBASICVersion.Size = new System.Drawing.Size(121, 21);
       this.comboBASICVersion.TabIndex = 6;
       this.comboBASICVersion.SelectedIndexChanged += new System.EventHandler(this.comboBASICVersion_SelectedIndexChanged);
+      // 
+      // btnToggleStringEntryMode
+      // 
+      this.btnToggleStringEntryMode.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToggleStringEntryMode.AutoSize = true;
+      this.btnToggleStringEntryMode.Image = global::C64Studio.Properties.Resources.toolbar_basic_string_mode_inactive;
+      this.btnToggleStringEntryMode.Location = new System.Drawing.Point(135, 27);
+      this.btnToggleStringEntryMode.Name = "btnToggleStringEntryMode";
+      this.btnToggleStringEntryMode.Size = new System.Drawing.Size(22, 22);
+      this.btnToggleStringEntryMode.TabIndex = 2;
+      this.toolTip1.SetToolTip(this.btnToggleStringEntryMode, "Toggle String Entry Mode (currently inactive)");
+      this.btnToggleStringEntryMode.UseVisualStyleBackColor = true;
+      this.btnToggleStringEntryMode.CheckedChanged += new System.EventHandler(this.btnToggleStringEntryMode_CheckedChanged);
       // 
       // SourceBasicEx
       // 
@@ -201,6 +215,7 @@
       this.Controls.Add(this.editBASICStartAddress);
       this.Controls.Add(this.menuBASIC);
       this.Controls.Add(this.editSource);
+      this.Controls.Add(this.btnToggleStringEntryMode);
       this.Controls.Add(this.btnToggleUpperLowerCase);
       this.Controls.Add(this.btnToggleSymbolMode);
       this.Controls.Add(this.btnToggleLabelMode);
@@ -232,5 +247,6 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.ComboBox comboBASICVersion;
+    private System.Windows.Forms.CheckBox btnToggleStringEntryMode;
   }
 }

@@ -523,6 +523,26 @@ namespace C64Studio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap toolbar_basic_string_mode_active {
+            get {
+                object obj = ResourceManager.GetObject("toolbar_basic_string_mode_active", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap toolbar_basic_string_mode_inactive {
+            get {
+                object obj = ResourceManager.GetObject("toolbar_basic_string_mode_inactive", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap toolbar_basic_symbols_disabled {
             get {
                 object obj = ResourceManager.GetObject("toolbar_basic_symbols_disabled", resourceCulture);

@@ -200,7 +200,7 @@ namespace C64Studio
     {
       if ( e.KeyChar == '"' )
       {
-        m_StringEnterMode = !m_StringEnterMode;
+        ToggleStringEntryMode();
       }
     }
 
@@ -510,42 +510,12 @@ namespace C64Studio
     void m_ToolTip_Popup( object sender, System.Windows.Forms.PopupEventArgs e )
     {
       m_LastTooltipPos = editSource.PointToClient( System.Windows.Forms.Cursor.Position );
-      int position = editSource.PointToPosition( m_LastTooltipPos );
-
-      int lineNumber = editSource.PositionToPlace( position ).iLine;
-      string wordBelow = FindWordFromPosition( position, lineNumber );
-      string zone = FindZoneFromLine( lineNumber );
-
-      /*
-      //MainForm.EnsureFileIsParsed();
-      Types.SymbolInfo tokenInfo = MainForm.ParserASM.TokenInfoFromName( wordBelow, zone );
-      string toolTipText = "";
-      if ( ( tokenInfo != null )
-      &&   ( tokenInfo.Type != Types.SymbolInfo.Types.UNKNOWN ) )
-      {
-        toolTipText = "$" + tokenInfo.AddressOrValue.ToString( "x4" ) + ", " + tokenInfo.AddressOrValue.ToString();
-
-        //m_ToolTip.Hide( editSource );
-        //m_ToolTip.Show( toolTipText, editSource, editSource.PointToClient( System.Windows.Forms.Cursor.Position ) );
-        m_ToolTip.SetToolTip( editSource, toolTipText );
-      }
-      else
-      {
-        m_ToolTip.Hide( editSource );
-      }
-       */
     }
 
 
 
     private void OpenAutoComplete()
     {
-      /*
-      if ( e.Ch == '"' )
-      {
-        m_StringEnterMode = !m_StringEnterMode;
-      }*/
-
       // and in this Method you could check, if your Autocompletelist contains the last insterted Characters. If so you call the this.sciDocument.AutoComplete.Show(); Method of the Control
       // and it shows the AutocompleteList with the value that machtes the inserted Characters.
       int lineIndex = CursorLine;
@@ -1217,7 +1187,7 @@ namespace C64Studio
 
           if ( c64Key.CharValue == '\"' )
           {
-            m_StringEnterMode = !m_StringEnterMode;
+            ToggleStringEntryMode();
           }
           if ( !m_StringEnterMode )
           {
@@ -1721,6 +1691,29 @@ namespace C64Studio
       opCodes = opCodes.Substring( 0, opCodes.Length - 1 ) + ")\b";
 
       m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( opCodes, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
+    }
+
+
+
+    private void btnToggleStringEntryMode_CheckedChanged( object sender, EventArgs e )
+    {
+      ToggleStringEntryMode();
+    }
+
+
+
+    private void ToggleStringEntryMode()
+    {
+      m_StringEnterMode = !m_StringEnterMode;
+      if ( m_StringEnterMode )
+      {
+        toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle String Entry Mode (currently active)" );
+      }
+      else
+      {
+        toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle String Entry Mode (currently inactive)" );
+      }
+      btnToggleStringEntryMode.Image = m_StringEnterMode ? global::C64Studio.Properties.Resources.toolbar_basic_string_mode_active : global::C64Studio.Properties.Resources.toolbar_basic_string_mode_inactive;
     }
 
 
