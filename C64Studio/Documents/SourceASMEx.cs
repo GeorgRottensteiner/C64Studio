@@ -616,6 +616,7 @@ namespace C64Studio
 
       // empty space
       editSource.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( Types.ColorableElement.EMPTY_SPACE ) );
+      editSource.IndentBackColor = Core.Theming.DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( Types.ColorableElement.BACKGROUND_CONTROL ) ) );
 
       editSource.SelectionColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( Types.ColorableElement.SELECTED_TEXT ) );
     }

@@ -53,6 +53,7 @@
       this.uncommentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       this.showMemoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.showMiniOverviewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.separatorCommenting = new System.Windows.Forms.ToolStripSeparator();
       this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.comboZoneSelector = new System.Windows.Forms.ComboBox();
@@ -60,7 +61,6 @@
       this.miniMap = new FastColoredTextBoxNS.DocumentMap();
       this.contextMenuMiniMap = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.showMiniOverviewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -134,7 +134,7 @@
             this.separatorCommenting,
             this.openFileToolStripMenuItem});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(193, 392);
+      this.contextSource.Size = new System.Drawing.Size(193, 370);
       // 
       // copyToolStripMenuItem
       // 
@@ -276,6 +276,13 @@
       this.showMemoryToolStripMenuItem.Text = "Show Memory";
       this.showMemoryToolStripMenuItem.Click += new System.EventHandler(this.addShowMemoryToolStripMenuItem_Click);
       // 
+      // showMiniOverviewToolStripMenuItem
+      // 
+      this.showMiniOverviewToolStripMenuItem.Name = "showMiniOverviewToolStripMenuItem";
+      this.showMiniOverviewToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+      this.showMiniOverviewToolStripMenuItem.Text = "Show Mini Overview";
+      this.showMiniOverviewToolStripMenuItem.Click += new System.EventHandler(this.showMiniOverviewToolStripMenuItem_Click);
+      // 
       // separatorCommenting
       // 
       this.separatorCommenting.Name = "separatorCommenting";
@@ -338,13 +345,6 @@
       this.hideToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
       this.hideToolStripMenuItem.Text = "Hide";
       this.hideToolStripMenuItem.Click += new System.EventHandler(this.hideToolStripMenuItem_Click);
-      // 
-      // showMiniOverviewToolStripMenuItem
-      // 
-      this.showMiniOverviewToolStripMenuItem.Name = "showMiniOverviewToolStripMenuItem";
-      this.showMiniOverviewToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
-      this.showMiniOverviewToolStripMenuItem.Text = "Show Mini Overview";
-      this.showMiniOverviewToolStripMenuItem.Click += new System.EventHandler(this.showMiniOverviewToolStripMenuItem_Click);
       // 
       // SourceASMEx
       // 

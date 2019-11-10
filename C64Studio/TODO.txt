@@ -1,4 +1,5 @@
 ﻿C64Studio
+o Theming -> Disabled Controls
 o BASIC -> Anzeige Zeichenmodus
 o ASM - alternatives Output-Verzeichnis
 o File-Manager-Import von BASIC-Dateien, Version!! (V7, etc.)
