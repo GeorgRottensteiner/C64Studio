@@ -1,5 +1,6 @@
 ﻿C64Studio
 o BASIC -> Anzeige Zeichenmodus
+o ASM - alternatives Output-Verzeichnis
 o File-Manager-Import von BASIC-Dateien, Version!! (V7, etc.)
 o FileManager -> Rename, Start in Emulator directly?
 o Binary Editor -> To BASIC, ASM, Längenbegrenzung!
