@@ -11,9 +11,7 @@ namespace C64Studio.CustomRenderer
 {
   public class ToolStripSeparatorRenderer : ToolStripProfessionalRenderer
   {
-    private StudioCore    Core;
-
-
+    private StudioCore      Core;
 
     public ToolStripSeparatorRenderer( StudioCore Core )
     {
@@ -43,6 +41,9 @@ namespace C64Studio.CustomRenderer
   {
     private StudioCore        Core;
 
+
+    public SolidBrush       BrushBackgroundControl = null;
+    public Pen              PenBackgroundControl = null;
 
 
     public StudioTheme( StudioCore Core )
