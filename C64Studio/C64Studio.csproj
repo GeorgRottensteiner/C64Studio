@@ -65,6 +65,9 @@
     </Compile>
     <Compile Include="Controls\HexBoxCharPETSCIIViewer.cs" />
     <Compile Include="Controls\HexBoxSpriteViewer.cs" />
+    <Compile Include="Controls\ThemedButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\MenuButton.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -10,8 +10,7 @@ using C64Studio.Types;
 using FastColoredTextBoxNS;
 
 using System.Linq;
-
-
+using System.Drawing;
 
 namespace C64Studio
 {
@@ -2747,6 +2746,8 @@ namespace C64Studio
     private void editSource_PaintLine( object sender, FastColoredTextBoxNS.PaintLineEventArgs e )
     {
       // display breakpoints
+      var textBrush = new SolidBrush( editSource.ForeColor );
+
       if ( m_BreakPoints.ContainsKey( e.LineIndex ) )
       {
         e.Graphics.DrawImage( C64Studio.Properties.Resources.breakpoint, m_BreakpointOffset, e.LineRect.Top );
@@ -2761,27 +2762,27 @@ namespace C64Studio
           {
             if ( lineInfo.Opcode.NumPenaltyCycles > 0 )
             {
-              e.Graphics.DrawString( lineInfo.Opcode.NumCycles.ToString() + "+" + lineInfo.Opcode.NumPenaltyCycles.ToString(), editSource.Font, System.Drawing.SystemBrushes.WindowText, m_CycleOffset, e.LineRect.Top );
+              e.Graphics.DrawString( lineInfo.Opcode.NumCycles.ToString() + "+" + lineInfo.Opcode.NumPenaltyCycles.ToString(), editSource.Font, textBrush, m_CycleOffset, e.LineRect.Top );
             }
             else
             {
-              e.Graphics.DrawString( lineInfo.Opcode.NumCycles.ToString(), editSource.Font, System.Drawing.SystemBrushes.WindowText, m_CycleOffset, e.LineRect.Top );
+              e.Graphics.DrawString( lineInfo.Opcode.NumCycles.ToString(), editSource.Font, textBrush, m_CycleOffset, e.LineRect.Top );
             }
           }
         }
         if ( m_ByteSizeOffset != -1 )
         {
-          e.Graphics.DrawString( lineInfo.NumBytes.ToString(), editSource.Font, System.Drawing.SystemBrushes.WindowText, m_ByteSizeOffset, e.LineRect.Top );
+          e.Graphics.DrawString( lineInfo.NumBytes.ToString(), editSource.Font, textBrush, m_ByteSizeOffset, e.LineRect.Top );
         }
         if ( m_AddressOffset != -1 )
         {
           if ( lineInfo.AddressStart != -1 )
           {
-            e.Graphics.DrawString( "$" + lineInfo.AddressStart.ToString( "X4" ), editSource.Font, System.Drawing.SystemBrushes.WindowText, m_AddressOffset, e.LineRect.Top );
+            e.Graphics.DrawString( "$" + lineInfo.AddressStart.ToString( "X4" ), editSource.Font, textBrush, m_AddressOffset, e.LineRect.Top );
           }
           else
           {
-            e.Graphics.DrawString( "????", editSource.Font, System.Drawing.SystemBrushes.WindowText, m_AddressOffset, e.LineRect.Top );
+            e.Graphics.DrawString( "????", editSource.Font, textBrush, m_AddressOffset, e.LineRect.Top );
           }
         }
       }

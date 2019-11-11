@@ -1,4 +1,5 @@
-﻿using C64Studio.Types;
+﻿using C64Studio.Controls;
+using C64Studio.Types;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -56,13 +57,13 @@ namespace C64Studio.CustomRenderer
       foreach ( ToolStripItem item in Items )
       {
         item.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
-        item.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
+        item.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) );
         if ( item is ToolStripSeparator )
         {
           var tsItem = item as ToolStripSeparator;
 
           tsItem.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
-          tsItem.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
+          tsItem.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) );
         }
         if ( item is ToolStripDropDownItem )
         {
@@ -88,7 +89,15 @@ namespace C64Studio.CustomRenderer
       foreach ( Control control in Controls )
       {
         control.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
-        control.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
+
+        if ( control is ThemedButton )
+        {
+          var button = control as ThemedButton;
+
+          button.DisabledTextColor = DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.CONTROL_TEXT ) ) );
+        }
+
+        control.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) );
 
         if ( control is ComboBox )
         {
