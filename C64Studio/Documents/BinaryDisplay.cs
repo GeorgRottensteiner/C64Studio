@@ -512,6 +512,21 @@ namespace C64Studio
 
 
 
+    private void btnUpsize_Click( object sender, EventArgs e )
+    {
+      var data = DataFromHex();
+
+      GR.Memory.ByteBuffer    newData = new GR.Memory.ByteBuffer( data.Length * 2 );
+
+      for ( int i = 0; i < data.Length; ++i )
+      {
+        byte    value = data.ByteAt( i );
+
+        newData.SetU16At( i * 2, value );
+      }
+      SetHexData( newData );
+    }
+
   }
 }
 

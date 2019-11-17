@@ -59,6 +59,7 @@
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.modifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.interleaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.btnUpsize = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabMain.SuspendLayout();
       this.tabData.SuspendLayout();
@@ -94,6 +95,7 @@
       // 
       this.hexView.ColumnInfoVisible = true;
       this.hexView.CustomHexViewer = null;
+      this.hexView.DisplayedAddressOffset = ((long)(0));
       this.hexView.Dock = System.Windows.Forms.DockStyle.Fill;
       this.hexView.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.hexView.InfoForeColor = System.Drawing.SystemColors.AppWorkspace;
@@ -128,6 +130,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox2.Controls.Add(this.btnExport);
       this.groupBox2.Controls.Add(this.btnImport);
+      this.groupBox2.Controls.Add(this.btnUpsize);
       this.groupBox2.Controls.Add(this.btnInterleave);
       this.groupBox2.Location = new System.Drawing.Point(464, 6);
       this.groupBox2.Name = "groupBox2";
@@ -393,6 +396,16 @@
       this.interleaveToolStripMenuItem.Text = "Interleave...";
       this.interleaveToolStripMenuItem.Click += new System.EventHandler(this.interleaveToolStripMenuItem_Click);
       // 
+      // btnUpsize
+      // 
+      this.btnUpsize.Location = new System.Drawing.Point(6, 77);
+      this.btnUpsize.Name = "btnUpsize";
+      this.btnUpsize.Size = new System.Drawing.Size(75, 23);
+      this.btnUpsize.TabIndex = 0;
+      this.btnUpsize.Text = "Upsize";
+      this.btnUpsize.UseVisualStyleBackColor = true;
+      this.btnUpsize.Click += new System.EventHandler(this.btnUpsize_Click);
+      // 
       // BinaryDisplay
       // 
       this.ClientSize = new System.Drawing.Size(669, 450);
@@ -448,5 +461,6 @@
     private System.Windows.Forms.TextBox editToBASICLineDelta;
     private System.Windows.Forms.Button btnToBASICHex;
     private System.Windows.Forms.Button btnFromBASICHex;
+    private System.Windows.Forms.Button btnUpsize;
   }
 }
