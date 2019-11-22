@@ -936,13 +936,15 @@ namespace C64Studio.Parser
       if ( !ASMFileInfo.Labels.ContainsKey( Value ) )
       {
         if ( ( IsLocalLabel( Value ) )
-        &&   ( !string.IsNullOrEmpty( m_CurrentZoneName ) ) )
+        &&   ( ASMFileInfo.LineInfo.ContainsKey( LineIndex ) )
+        &&   ( !string.IsNullOrEmpty( ASMFileInfo.LineInfo[LineIndex].Zone ) ) )
         {
           // a local label inside a zone has the actual zone name in front!
-          if ( ASMFileInfo.Labels.ContainsKey( m_CurrentZoneName + Value ) )
+          string    localZone = ASMFileInfo.LineInfo[LineIndex].Zone;
+          if ( ASMFileInfo.Labels.ContainsKey( localZone + Value ) )
           {
-            Result = ASMFileInfo.Labels[m_CurrentZoneName + Value].AddressOrValue;
-            ASMFileInfo.Labels[m_CurrentZoneName + Value].Used = true;
+            Result = ASMFileInfo.Labels[localZone + Value].AddressOrValue;
+            ASMFileInfo.Labels[localZone + Value].Used = true;
             return true;
           }
         }
