@@ -936,13 +936,15 @@ namespace C64Studio.Parser
       if ( !ASMFileInfo.Labels.ContainsKey( Value ) )
       {
         if ( ( IsLocalLabel( Value ) )
-        &&   ( !string.IsNullOrEmpty( m_CurrentZoneName ) ) )
+        &&   ( ASMFileInfo.LineInfo.ContainsKey( LineIndex ) )
+        &&   ( !string.IsNullOrEmpty( ASMFileInfo.LineInfo[LineIndex].Zone ) ) )
         {
           // a local label inside a zone has the actual zone name in front!
-          if ( ASMFileInfo.Labels.ContainsKey( m_CurrentZoneName + Value ) )
+          string    zoneName = ASMFileInfo.LineInfo[LineIndex].Zone;
+          if ( ASMFileInfo.Labels.ContainsKey( zoneName + Value ) )
           {
-            Result = ASMFileInfo.Labels[m_CurrentZoneName + Value].AddressOrValue;
-            ASMFileInfo.Labels[m_CurrentZoneName + Value].Used = true;
+            Result = ASMFileInfo.Labels[zoneName + Value].AddressOrValue;
+            ASMFileInfo.Labels[zoneName + Value].Used = true;
             return true;
           }
         }
@@ -2848,6 +2850,10 @@ namespace C64Studio.Parser
          
       if ( firstTokenIndex + 1 <= lineTokenInfos.Count )
       {
+        if ( info.LineIndex == 3423 )
+        {
+          Debug.Log( "aha" );
+        }
         int byteValue = -1;
         int numBytesGiven = 0;
         if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, out byteValue, out numBytesGiven ) )
