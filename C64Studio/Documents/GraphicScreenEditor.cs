@@ -2180,7 +2180,7 @@ namespace C64Studio
       GR.Memory.ByteBuffer screenColor;
       GR.Memory.ByteBuffer bitmapData;
 
-      m_GraphicScreenProject.ImageToHiresBitmapData( m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+      m_GraphicScreenProject.ImageToHiresBitmapData( m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
 
       // export data
       string result = ";bitmap data" + System.Environment.NewLine + ToASMData( bitmapData );
@@ -2199,7 +2199,7 @@ namespace C64Studio
       GR.Memory.ByteBuffer screenColor;
       GR.Memory.ByteBuffer bitmapData;
 
-      m_GraphicScreenProject.ImageToHiresBitmapData( m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+      m_GraphicScreenProject.ImageToHiresBitmapData( m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
 
       if ( Hex )
       {
@@ -2220,7 +2220,7 @@ namespace C64Studio
       GR.Memory.ByteBuffer              bitmapData;
       //Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
 
-      m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+      m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
 
       // export data
       string    result = ";bitmap data" + System.Environment.NewLine + ToASMData( bitmapData );
@@ -2240,7 +2240,7 @@ namespace C64Studio
       GR.Memory.ByteBuffer              bitmapData;
       //Dictionary<int,byte>              forcedPattern = new Dictionary<int, byte>();
 
-      m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+      m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
 
       if ( Hex )
       {
@@ -2581,11 +2581,11 @@ namespace C64Studio
       {
         case 0:
           // hires bitmap
-          m_GraphicScreenProject.ImageToHiresBitmapData( m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+          m_GraphicScreenProject.ImageToHiresBitmapData( m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
           break;
         case 1:
           // MC bitmap
-          m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+          m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
           break;
         case 2:
           // hires charset
@@ -2627,7 +2627,10 @@ namespace C64Studio
           exportData.Append( screenChar );
           break;
       }
-      GR.IO.File.WriteAllBytes( saveDlg.FileName, exportData );
+      if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, exportData ) )
+      {
+        MessageBox.Show( "Could not write data to file" );
+      }
     }
 
 
@@ -3134,7 +3137,7 @@ namespace C64Studio
       GR.Memory.ByteBuffer              screenColor;
       GR.Memory.ByteBuffer              bitmapData;
 
-      m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, out bitmapData, out screenChar, out screenColor );
+      m_GraphicScreenProject.ImageToMCBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
 
       System.Drawing.Imaging.ImageFormat formatToSave = System.Drawing.Imaging.ImageFormat.Png;
 

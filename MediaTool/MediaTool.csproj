@@ -42,6 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ManageBinaryFile.cs" />
+    <Compile Include="ManageCharFile.cs" />
+    <Compile Include="ManageCharsetProject.cs" />
+    <Compile Include="ManageSpriteFile.cs" />
+    <Compile Include="ManageSpriteProject.cs" />
+    <Compile Include="ManageCharscreenProject.cs" />
+    <Compile Include="ManageGraphicScreenProject.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -56,7 +63,7 @@
   <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">copy "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
 copy "$(TargetPath)" "$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFileName)"</PostBuildEvent>
-        <PostBuildEvent Condition="'$(OS)' == 'Unix' ">cp "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
+    <PostBuildEvent Condition="'$(OS)' == 'Unix' ">cp "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
 cp "$(TargetPath)" "$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

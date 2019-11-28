@@ -20,6 +20,7 @@
                   [-charsetproject &lt;charset project file&gt;]
                   [-chars &lt;raw/binary charset file&gt;]
                   [-charscreen &lt;charscreen project file&gt;]
+                  [-graphicscreen &lt;graphicscreen project file&gt;]
                   [-binary &lt;binaryfile&gt;]
                   [-type &lt;export format&gt;]
                   [-export &lt;file name&gt;]
@@ -57,6 +58,20 @@
   <div id="mybody">
     Opens a raw/binary file for its operations.<br>
     Charset data is expected to be a multiple of 8 bytes per character.<br>
+    <br>
+    <br>
+  </div>
+  <a name="-charscreen"></a>
+  <H2>-charscreen &lt;charscreen project file&gt;</H2>
+  <div id="mybody">
+    Opens a C64 Studio character screen project file for its operations.<br>
+    <br>
+    <br>
+  </div>
+  <a name="-graphicscreen"></a>
+  <H2>-graphicscreen &lt;graphicscreen project file&gt;</H2>
+  <div id="mybody">
+    Opens a C64 Studio graphic screen project file for its operations.<br>
     <br>
     <br>
   </div>
@@ -145,6 +160,116 @@
         </td>
         <td>
           A number of chars, followed by number of colors, 2 bytes each
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -GRAPHICSCREEN
+        </td>
+        <td>
+          MULTICOLORBITMAPCOLORSSCREEN
+        </td>
+        <td>
+          A number of 8x8 blocks, first multicolor bitmap, followed by color and screen data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -GRAPHICSCREEN
+        </td>
+        <td>
+          MULTICOLORBITMAPSCREENCOLORS
+        </td>
+        <td>
+          A number of 8x8 blocks, first multicolor bitmap, followed by screen and color data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -GRAPHICSCREEN
+        </td>
+        <td>
+          MULTICOLORBITMAPCOLORS
+        </td>
+        <td>
+          A number of 8x8 blocks, first multicolor bitmap, followed by color data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -GRAPHICSCREEN
+        </td>
+        <td>
+          MULTICOLORBITMAPSCREEN
+        </td>
+        <td>
+          A number of 8x8 blocks, first multicolor bitmap, followed by screen data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -GRAPHICSCREEN
+        </td>
+        <td>
+          MULTICOLORBITMAP
+        </td>
+        <td>
+          A number of 8x8 blocks, first multicolor bitmap
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -GRAPHICSCREEN
+        </td>
+        <td>
+          HIRESBITMAPCOLORSSCREEN
+        </td>
+        <td>
+          A number of 8x8 blocks, first hires bitmap, followed by color and screen data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -GRAPHICSCREEN
+        </td>
+        <td>
+          HIRESBITMAPSCREENCOLORS
+        </td>
+        <td>
+          A number of 8x8 blocks, first hires bitmap, followed by screen and color data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -GRAPHICSCREEN
+        </td>
+        <td>
+          HIRESBITMAPCOLORS
+        </td>
+        <td>
+          A number of 8x8 blocks, first hires bitmap, followed by color data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -GRAPHICSCREEN
+        </td>
+        <td>
+          HIRESBITMAPSCREEN
+        </td>
+        <td>
+          A number of 8x8 blocks, first hires bitmap, followed by screen data
+        </td>
+      </tr>
+      <tr>
+        <td>
+          -GRAPHICSCREEN
+        </td>
+        <td>
+          HIRESBITMAP
+        </td>
+        <td>
+          A number of 8x8 blocks, first hires bitmap
         </td>
       </tr>
     </table>
