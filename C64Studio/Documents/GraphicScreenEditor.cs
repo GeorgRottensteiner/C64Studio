@@ -2627,7 +2627,10 @@ namespace C64Studio
           exportData.Append( screenChar );
           break;
       }
-      GR.IO.File.WriteAllBytes( saveDlg.FileName, exportData );
+      if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, exportData ) )
+      {
+        MessageBox.Show( "Could not write data to file" );
+      }
     }
 
 
