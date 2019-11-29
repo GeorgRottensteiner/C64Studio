@@ -543,11 +543,12 @@ namespace C64Studio.Formats
               }
             }
             // write out bits
+            /*
             Debug.Log( "For Char " + x + "," + y );
             foreach ( var usedColor in usedColors )
             {
               Debug.Log( " Color " + usedColor.Key + " = " + usedColor.Value );
-            }
+            }*/
             for ( int charY = 0; charY < 8; ++charY )
             {
               for ( int charX = 0; charX < 4; ++charX )
