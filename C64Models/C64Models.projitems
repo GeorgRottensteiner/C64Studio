@@ -9,6 +9,7 @@
     <Import_RootNamespace>C64Models</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Converter\KoalaToBitmap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Debugger\MemoryView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Breakpoint.cs" />

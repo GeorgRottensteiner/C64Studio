@@ -241,18 +241,34 @@ namespace C64Studio.Formats
 
 
 
-    public int ImageToHiresBitmapData( List<Formats.CharData> Chars, bool[,] ErrornousBlocks, out GR.Memory.ByteBuffer bitmapData, out GR.Memory.ByteBuffer screenChar, out GR.Memory.ByteBuffer screenColor )
+    public int ImageToHiresBitmapData( List<Formats.CharData> Chars, bool[,] ErrornousBlocks, int CharX, int CharY, int WidthChars, int HeightChars, out GR.Memory.ByteBuffer bitmapData, out GR.Memory.ByteBuffer screenChar, out GR.Memory.ByteBuffer screenColor )
     {
+      screenChar  = null;
+      screenColor = null;
+      bitmapData  = null;
+
+      if ( ( CharX < 0 )
+      ||   ( CharX >= BlockWidth )
+      ||   ( CharY < 0 )
+      ||   ( CharY >= BlockHeight )
+      ||   ( WidthChars < 0 )
+      ||   ( HeightChars < 0 )
+      ||   ( CharX + WidthChars > BlockWidth )
+      ||   ( CharY + HeightChars > BlockHeight ) )
+      {
+        return 1;
+      }
+
       int numErrors = 0;
-      screenChar = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
-      screenColor = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
-      bitmapData = new GR.Memory.ByteBuffer( (uint)( 8 * BlockWidth * BlockHeight ) );
+      screenChar  = new GR.Memory.ByteBuffer( (uint)( WidthChars * HeightChars ) );
+      screenColor = new GR.Memory.ByteBuffer( (uint)( WidthChars * HeightChars ) );
+      bitmapData  = new GR.Memory.ByteBuffer( (uint)( 8 * WidthChars * HeightChars ) );
 
       GR.Collections.Map<byte, byte> usedColors = new GR.Collections.Map<byte, byte>();
 
-      for ( int y = 0; y < BlockHeight; ++y )
+      for ( int y = CharY; y < HeightChars; ++y )
       {
-        for ( int x = 0; x < BlockWidth; ++x )
+        for ( int x = CharX; x < WidthChars; ++x )
         {
           // ein zeichen-block
           usedColors.Clear();
@@ -309,22 +325,22 @@ namespace C64Studio.Formats
                 if ( colorTarget == 0 )
                 {
                   // upper screen char nibble
-                  byte value = screenChar.ByteAt( x + y * BlockWidth );
+                  byte value = screenChar.ByteAt( x + y * WidthChars );
                   value &= 0x0f;
                   value |= (byte)( colorIndex << 4 );
 
-                  screenChar.SetU8At( x + y * BlockWidth, value );
+                  screenChar.SetU8At( x + y * WidthChars, value );
                   usedColors[colorIndex] = 1;
                   firstColorIndex = colorIndex;
                 }
                 else if ( colorTarget == 1 )
                 {
                   // lower nibble in screen char
-                  byte value = screenChar.ByteAt( x + y * BlockWidth );
+                  byte value = screenChar.ByteAt( x + y * WidthChars );
                   value &= 0xf0;
                   value |= (byte)( colorIndex );
 
-                  screenChar.SetU8At( x + y * BlockWidth, value );
+                  screenChar.SetU8At( x + y * WidthChars, value );
                   usedColors[colorIndex] = 2;
                 }
                 ++colorTarget;
@@ -340,7 +356,7 @@ namespace C64Studio.Formats
                 {
                   // other color
                   byte colorValue = usedColors[colorIndex];
-                  int bitmapIndex = x * 8 + y * BlockWidth * 8 + charY;
+                  int bitmapIndex = x * 8 + y * WidthChars * 8 + charY;
 
                   byte value = bitmapData.ByteAt( bitmapIndex );
                   int mask = ( 1 << ( 7 - charX ) );
@@ -359,15 +375,18 @@ namespace C64Studio.Formats
 
 
 
-    public int ImageToMCBitmapData( Dictionary<int, List<ColorMappingTarget>> ForceBitPattern, List<Formats.CharData> Chars, bool[,] ErrornousBlocks, out GR.Memory.ByteBuffer bitmapData, out GR.Memory.ByteBuffer screenChar, out GR.Memory.ByteBuffer screenColor )
+    public int ImageToMCBitmapData( Dictionary<int, List<ColorMappingTarget>> ForceBitPattern, List<Formats.CharData> Chars, bool[,] ErrornousBlocks, int CharX, int CharY, int WidthChars, int HeightChars, out GR.Memory.ByteBuffer bitmapData, out GR.Memory.ByteBuffer screenChar, out GR.Memory.ByteBuffer screenColor )
     {
       int numErrors = 0;
 
+      ColorMappingTarget[] bitPattern = new ColorMappingTarget[3] { ColorMappingTarget.BITS_01, ColorMappingTarget.BITS_10, ColorMappingTarget.BITS_11 };
+      var  usedBitPattern = new GR.Collections.Set<ColorMappingTarget>();
+
       Dictionary<int,GR.Collections.Set<ColorMappingTarget>>    usedPatterns = new Dictionary<int, GR.Collections.Set<ColorMappingTarget>>();
 
-      screenChar = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
-      screenColor = new GR.Memory.ByteBuffer( (uint)( BlockWidth * BlockHeight ) );
-      bitmapData = new GR.Memory.ByteBuffer( (uint)( 8 * BlockWidth * BlockHeight ) );
+      screenChar = new GR.Memory.ByteBuffer( (uint)( WidthChars * HeightChars ) );
+      screenColor = new GR.Memory.ByteBuffer( (uint)( WidthChars * HeightChars ) );
+      bitmapData = new GR.Memory.ByteBuffer( (uint)( 8 * WidthChars * HeightChars ) );
 
       GR.Collections.Map<byte, ColorMappingTarget> usedColors = new GR.Collections.Map<byte, ColorMappingTarget>();
 
@@ -377,12 +396,13 @@ namespace C64Studio.Formats
       ForceBitPattern.Add( 1, 2 );
       ForceBitPattern.Add( 3, 3 );*/
 
-      for ( int y = 0; y < BlockHeight; ++y )
+      for ( int y = 0; y < HeightChars; ++y )
       {
-        for ( int x = 0; x < BlockWidth; ++x )
+        for ( int x = 0; x < WidthChars; ++x )
         {
           // ein zeichen-block
           usedColors.Clear();
+          usedBitPattern.Clear();
           if ( ErrornousBlocks != null )
           {
             ErrornousBlocks[x, y] = false;
@@ -447,32 +467,33 @@ namespace C64Studio.Formats
                     usedPatterns.Add( colorIndex, new GR.Collections.Set<ColorMappingTarget>() );
                   }
                   usedPatterns[colorIndex].Add( recommendedPattern[colorIndex] );
+                  usedBitPattern.Add( recommendedPattern[colorIndex] );
 
                   switch ( recommendedPattern[colorIndex] )
                   {
                     case ColorMappingTarget.BITS_01:
                       {
                         // upper screen char nibble
-                        byte value = screenChar.ByteAt( x + y * BlockWidth );
+                        byte value = screenChar.ByteAt( x + y * WidthChars );
                         value &= 0x0f;
                         value |= (byte)( colorIndex << 4 );
 
-                        screenChar.SetU8At( x + y * BlockWidth, value );
+                        screenChar.SetU8At( x + y * WidthChars, value );
                       }
                       break;
                     case ColorMappingTarget.BITS_10:
                       {
                         // lower nibble in screen char
-                        byte value = screenChar.ByteAt( x + y * BlockWidth );
+                        byte value = screenChar.ByteAt( x + y * WidthChars );
                         value &= 0xf0;
                         value |= (byte)( colorIndex );
 
-                        screenChar.SetU8At( x + y * BlockWidth, value );
+                        screenChar.SetU8At( x + y * WidthChars, value );
                       }
                       break;
                     case ColorMappingTarget.BITS_11:
                       // color ram
-                      screenColor.SetU8At( x + y * BlockWidth, colorIndex );
+                      screenColor.SetU8At( x + y * WidthChars, colorIndex );
                       break;
                   }
                   continue;
@@ -482,49 +503,52 @@ namespace C64Studio.Formats
                 {
                   usedPatterns.Add( colorIndex, new GR.Collections.Set<ColorMappingTarget>() );
                 }
-                switch ( colorTarget )
+                usedPatterns[colorIndex].Add( bitPattern[colorTarget] );
+
+                colorTarget = 0;
+                while ( ( colorTarget < 3 )
+                &&      ( usedBitPattern.ContainsValue( bitPattern[colorTarget] ) ) )
                 {
-                  case 0:
-                    usedPatterns[colorIndex].Add( ColorMappingTarget.BITS_01 );
-                    break;
-                  case 1:
-                    usedPatterns[colorIndex].Add( ColorMappingTarget.BITS_10 );
-                    break;
-                  case 2:
-                    usedPatterns[colorIndex].Add( ColorMappingTarget.BITS_11 );
-                    break;
+                  ++colorTarget;
                 }
+                usedBitPattern.Add( bitPattern[colorTarget] );
 
                 if ( colorTarget == 0 )
                 {
                   // upper screen char nibble
-                  byte value = screenChar.ByteAt( x + y * BlockWidth );
+                  byte value = screenChar.ByteAt( x + y * WidthChars );
                   value &= 0x0f;
                   value |= (byte)( colorIndex << 4 );
 
-                  screenChar.SetU8At( x + y * BlockWidth, value );
+                  screenChar.SetU8At( x + y * WidthChars, value );
                   usedColors[colorIndex] = ColorMappingTarget.BITS_01;
                 }
                 else if ( colorTarget == 1 )
                 {
                   // lower nibble in screen char
-                  byte value = screenChar.ByteAt( x + y * BlockWidth );
+                  byte value = screenChar.ByteAt( x + y * WidthChars );
                   value &= 0xf0;
                   value |= (byte)( colorIndex );
 
-                  screenChar.SetU8At( x + y * BlockWidth, value );
+                  screenChar.SetU8At( x + y * WidthChars, value );
                   usedColors[colorIndex] = ColorMappingTarget.BITS_10;
                 }
                 else if ( colorTarget == 2 )
                 {
                   // color ram
-                  screenColor.SetU8At( x + y * BlockWidth, colorIndex );
+                  screenColor.SetU8At( x + y * WidthChars, colorIndex );
                   usedColors[colorIndex] = ColorMappingTarget.BITS_11;
                 }
                 ++colorTarget;
               }
             }
             // write out bits
+            /*
+            Debug.Log( "For Char " + x + "," + y );
+            foreach ( var usedColor in usedColors )
+            {
+              Debug.Log( " Color " + usedColor.Key + " = " + usedColor.Value );
+            }*/
             for ( int charY = 0; charY < 8; ++charY )
             {
               for ( int charX = 0; charX < 4; ++charX )
@@ -547,7 +571,7 @@ namespace C64Studio.Formats
                       colorValue = 0x03;
                       break;
                   }
-                  int bitmapIndex = x * 8 + y * 8 * BlockWidth + charY;
+                  int bitmapIndex = x * 8 + y * 8 * WidthChars + charY;
 
                   byte value = bitmapData.ByteAt( bitmapIndex );
                   if ( charX == 0 )

@@ -4691,11 +4691,11 @@ namespace C64Studio.Parser
 
         if ( importAsMC )
         {
-          screenProject.ImageToMCBitmapData( screenProject.ColorMapping, null, null, out bitmapData, out screenChar, out screenColor );
+          screenProject.ImageToMCBitmapData( screenProject.ColorMapping, null, null, x, y, w / 8, h / 8, out bitmapData, out screenChar, out screenColor );
         }
         else
         {
-          screenProject.ImageToHiresBitmapData( null, null, out bitmapData, out screenChar, out screenColor );
+          screenProject.ImageToHiresBitmapData( null, null, x, y, w / 8, h / 8, out bitmapData, out screenChar, out screenColor );
         }
 
         GR.Memory.ByteBuffer    bitmapClipped = new GR.Memory.ByteBuffer( (uint)( w / 8 * h / 8 * 8 ) );
