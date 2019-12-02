@@ -7657,6 +7657,30 @@ namespace C64Studio.Parser
                 {
                   m_CompileTarget = Types.CompileTargetType.CARTRIDGE_GMOD2_CRT;
                 }
+                else if ( targetType == "ULTIMAX4BIN" )
+                {
+                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_BIN;
+                }
+                else if ( targetType == "ULTIMAX4CRT" )
+                {
+                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT;
+                }
+                else if ( targetType == "ULTIMAX8BIN" )
+                {
+                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_BIN;
+                }
+                else if ( targetType == "ULTIMAX8CRT" )
+                {
+                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_CRT;
+                }
+                else if ( targetType == "ULTIMAX16BIN" )
+                {
+                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_BIN;
+                }
+                else if ( targetType == "ULTIMAX16CRT" )
+                {
+                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT;
+                }
               }
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.ADDRESS )
@@ -10674,21 +10698,38 @@ namespace C64Studio.Parser
 
 
 
+    public static bool IsCartridge( CompileTargetType Type )
+    {
+      if ( ( Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_RGCD_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_GMOD2_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_GMOD2_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_16K_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_16K_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_8K_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_8K_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_BIN )
+      ||   ( Type == Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_CRT ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
     private bool TargetTypeRequiresLoadAddress( Types.CompileTargetType Type )
     {
       if ( ( Type != Types.CompileTargetType.PLAIN )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_16K_BIN )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_16K_CRT )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_8K_BIN )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_8K_CRT )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_GMOD2_BIN )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_GMOD2_CRT )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_RGCD_CRT )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN )
-      &&   ( Type != C64Studio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT ) )
+      &&   ( !IsCartridge( Type ) ) )
       {
         return true;
       }
@@ -11150,7 +11191,7 @@ namespace C64Studio.Parser
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_16K_BIN )
-      || ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_16K_CRT ) )
+      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_16K_CRT ) )
       {
         if ( AssembledOutput.Assembly.Length < 16384 )
         {
@@ -11213,8 +11254,206 @@ namespace C64Studio.Parser
           AssembledOutput.Assembly = header + chip;
         }
       }
+      else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_BIN )
+      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT ) )
+      {
+        if ( AssembledOutput.Assembly.Length < 4096 )
+        {
+          // fill up
+          AssembledOutput.Assembly = AssembledOutput.Assembly + new GR.Memory.ByteBuffer( 4096 - AssembledOutput.Assembly.Length );
+        }
+        else if ( AssembledOutput.Assembly.Length > 4096 )
+        {
+          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + AssembledOutput.Assembly.Length.ToString() + " > 4096" );
+          return false;
+        }
+        if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT )
+        {
+          // build cartridge header
+          GR.Memory.ByteBuffer    header = new GR.Memory.ByteBuffer();
+
+          header.AppendHex( "43363420434152545249444745202020" ); // "C64 CARTRIDGE   "
+          header.AppendU32NetworkOrder( 0x40 );     // file header length
+          header.AppendU16NetworkOrder( 0x0100 );   // version (currently only 1.00)
+          header.AppendU16( 0 );                    // cartridge type
+          header.AppendU8( 0 );  // exrom
+          header.AppendU8( 1 );  // game
+
+          // reserved
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+
+          // cartridge name
+          string name = System.IO.Path.GetFileNameWithoutExtension( m_CompileTargetFile ).ToUpper();
+
+          if ( name.Length > 32 )
+          {
+            name = name.Substring( 0, 32 );
+          }
+          while ( name.Length < 32 )
+          {
+            name += (char)0;
+          }
+          foreach ( char aChar in name )
+          {
+            header.AppendU8( (byte)aChar );
+          }
+
+          GR.Memory.ByteBuffer chip = new GR.Memory.ByteBuffer();
+
+          chip.AppendHex( "43484950" );   // chip
+          uint length = 16 + AssembledOutput.Assembly.Length;
+          chip.AppendU32NetworkOrder( length );
+          chip.AppendU16( 0 );  // ROM
+          chip.AppendU16( 0 );  // Bank number
+          chip.AppendU16NetworkOrder( 0xF000 ); // loading start address
+          chip.AppendU16NetworkOrder( 0x1000 ); // rom size
+
+          chip.Append( AssembledOutput.Assembly );
+
+          AssembledOutput.Assembly = header + chip;
+        }
+      }
+      else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_BIN )
+      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_CRT ) )
+      {
+        if ( AssembledOutput.Assembly.Length < 8192 )
+        {
+          // fill up
+          AssembledOutput.Assembly = AssembledOutput.Assembly + new GR.Memory.ByteBuffer( 8192 - AssembledOutput.Assembly.Length );
+        }
+        else if ( AssembledOutput.Assembly.Length > 8192 )
+        {
+          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + AssembledOutput.Assembly.Length.ToString() + " > 8192" );
+          return false;
+        }
+        if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT )
+        {
+          // build cartridge header
+          GR.Memory.ByteBuffer    header = new GR.Memory.ByteBuffer();
+
+          header.AppendHex( "43363420434152545249444745202020" ); // "C64 CARTRIDGE   "
+          header.AppendU32NetworkOrder( 0x40 );     // file header length
+          header.AppendU16NetworkOrder( 0x0100 );   // version (currently only 1.00)
+          header.AppendU16( 0 );                    // cartridge type
+          header.AppendU8( 0 );  // exrom
+          header.AppendU8( 1 );  // game
+
+          // reserved
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+
+          // cartridge name
+          string name = System.IO.Path.GetFileNameWithoutExtension( m_CompileTargetFile ).ToUpper();
+
+          if ( name.Length > 32 )
+          {
+            name = name.Substring( 0, 32 );
+          }
+          while ( name.Length < 32 )
+          {
+            name += (char)0;
+          }
+          foreach ( char aChar in name )
+          {
+            header.AppendU8( (byte)aChar );
+          }
+
+          GR.Memory.ByteBuffer chip = new GR.Memory.ByteBuffer();
+
+          chip.AppendHex( "43484950" );   // chip
+          uint length = 16 + AssembledOutput.Assembly.Length;
+          chip.AppendU32NetworkOrder( length );
+          chip.AppendU16( 0 );  // ROM
+          chip.AppendU16( 0 );  // Bank number
+          chip.AppendU16NetworkOrder( 0xE000 ); // loading start address
+          chip.AppendU16NetworkOrder( 0x2000 ); // rom size
+
+          chip.Append( AssembledOutput.Assembly );
+
+          AssembledOutput.Assembly = header + chip;
+        }
+      }
+      else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_BIN )
+      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT ) )
+      {
+        if ( AssembledOutput.Assembly.Length < 16384 )
+        {
+          // fill up
+          AssembledOutput.Assembly = AssembledOutput.Assembly + new GR.Memory.ByteBuffer( 16384 - AssembledOutput.Assembly.Length );
+        }
+        else if ( AssembledOutput.Assembly.Length > 16384 )
+        {
+          AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + AssembledOutput.Assembly.Length.ToString() + " > 16384" );
+          return false;
+        }
+        if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT )
+        {
+          // build cartridge header
+          GR.Memory.ByteBuffer    header = new GR.Memory.ByteBuffer();
+
+          header.AppendHex( "43363420434152545249444745202020" ); // "C64 CARTRIDGE   "
+          header.AppendU32NetworkOrder( 0x40 );
+          header.AppendU16NetworkOrder( 0x0100 );
+          header.AppendU16( 0 );
+          header.AppendU8( 1 );  // exrom
+          header.AppendU8( 0 );  // game
+
+          // reserved
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+          header.AppendU8( 0 );
+
+          // cartridge name
+          string name = System.IO.Path.GetFileNameWithoutExtension( m_CompileTargetFile ).ToUpper();
+
+          if ( name.Length > 32 )
+          {
+            name = name.Substring( 0, 32 );
+          }
+          while ( name.Length < 32 )
+          {
+            name += (char)0;
+          }
+          foreach ( char aChar in name )
+          {
+            header.AppendU8( (byte)aChar );
+          }
+
+          // 2 x 8kb
+          var   assembledCode = AssembledOutput.Assembly;
+          AssembledOutput.Assembly = header;
+          for ( int i = 0; i < 2; ++i )
+          {
+            GR.Memory.ByteBuffer chip = new GR.Memory.ByteBuffer();
+
+            chip.AppendHex( "43484950" );   // chip
+            uint length = 16 + 8192;
+            chip.AppendU32NetworkOrder( length );
+            chip.AppendU16NetworkOrder( 0 );  // ROM
+            chip.AppendU16NetworkOrder( (ushort)i );  // Bank number
+            chip.AppendU16NetworkOrder( (ushort)( 0x8000 + i * 0x6000 ) ); // loading start address
+            chip.AppendU16NetworkOrder( 0x2000 ); // rom size
+
+            chip.Append( assembledCode.SubBuffer( i * 0x2000, 0x2000 ) );
+
+            AssembledOutput.Assembly += chip;
+          }
+        }
+      }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN )
-      || ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT ) )
+      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT ) )
       {
         if ( AssembledOutput.Assembly.Length < 65536 )
         {
@@ -11284,7 +11523,7 @@ namespace C64Studio.Parser
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
-      || ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_CRT ) )
+      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_RGCD_CRT ) )
       {
         if ( AssembledOutput.Assembly.Length < 65536 )
         {
@@ -11354,7 +11593,7 @@ namespace C64Studio.Parser
         }
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
-      || ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT ) )
+      ||        ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT ) )
       {
         GR.Memory.ByteBuffer    resultingAssembly = AssembledOutput.Assembly;
         if ( resultingAssembly.Length < 524288 )

@@ -319,7 +319,19 @@ namespace C64Studio.Types
     [Description( "GMOD2 Cartridge CRT" )]
     CARTRIDGE_GMOD2_CRT,
     [Description( "D81 Disk Image" )]
-    D81
+    D81,
+    [Description( "Ultimax Cartridge 4k Binary" )]
+    CARTRIDGE_ULTIMAX_4K_BIN,
+    [Description( "Ultimax Cartridge 4k CRT" )]
+    CARTRIDGE_ULTIMAX_4K_CRT,
+    [Description( "Ultimax Cartridge 8k Binary" )]
+    CARTRIDGE_ULTIMAX_8K_BIN,
+    [Description( "Ultimax Cartridge 8k CRT" )]
+    CARTRIDGE_ULTIMAX_8K_CRT,
+    [Description( "Ultimax Cartridge 16k Binary" )]
+    CARTRIDGE_ULTIMAX_16K_BIN,
+    [Description( "Ultimax Cartridge 16k CRT" )]
+    CARTRIDGE_ULTIMAX_16K_CRT
   };
 
 

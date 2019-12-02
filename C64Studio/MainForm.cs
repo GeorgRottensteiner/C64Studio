@@ -2276,7 +2276,7 @@ namespace C64Studio
         }
 
         string runArguments = toolRun.PRGArguments;
-        if ( IsCartridge( TargetType ) )
+        if ( Parser.ASMFileParser.IsCartridge( TargetType ) )
         {
           runArguments = toolRun.CartArguments;
         }
@@ -2466,7 +2466,7 @@ namespace C64Studio
         StudioCore.Debugging.LateBreakpointOverrideDebugStart = StudioCore.Debugging.OverrideDebugStart;
 
         // special start addresses for different run types
-        if ( IsCartridge( targetType ) )
+        if ( Parser.ASMFileParser.IsCartridge( targetType ) )
         {
           StudioCore.Debugging.OverrideDebugStart = 0x8000;
         }
@@ -2495,7 +2495,7 @@ namespace C64Studio
         return false;
       }
 
-      if ( IsCartridge( targetType ) )
+      if ( Parser.ASMFileParser.IsCartridge( targetType ) )
       {
         StudioCore.Executing.RunProcess.StartInfo.Arguments += " " + FillParameters( toolRun.CartArguments, DocumentToRun, true, out error );
       }
@@ -2581,67 +2581,6 @@ namespace C64Studio
       }
       return true;
     }
-
-
-
-    private bool IsCartridge( CompileTargetType Type )
-    {
-      if ( ( Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN )
-      ||   ( Type == Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT )
-      ||   ( Type == Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN )
-      ||   ( Type == Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT )
-      ||   ( Type == Types.CompileTargetType.CARTRIDGE_RGCD_BIN )
-      ||   ( Type == Types.CompileTargetType.CARTRIDGE_RGCD_CRT )
-      ||   ( Type == Types.CompileTargetType.CARTRIDGE_GMOD2_BIN )
-      ||   ( Type == Types.CompileTargetType.CARTRIDGE_GMOD2_CRT )
-      ||   ( Type == Types.CompileTargetType.CARTRIDGE_16K_BIN )
-      ||   ( Type == Types.CompileTargetType.CARTRIDGE_16K_CRT )
-      ||   ( Type == Types.CompileTargetType.CARTRIDGE_8K_BIN )
-      ||   ( Type == Types.CompileTargetType.CARTRIDGE_8K_CRT ) )
-      {
-        return true;
-      }
-      return false;
-    }
-
-    /*
-    void compilerProcess_Exited( object sender, EventArgs e )
-    {
-      int     exitCode = CompilerProcess.ExitCode;
-      AddToOutput( "Tool Exited with result code " + exitCode.ToString() + System.Environment.NewLine );
-      CompilerProcess.Close();
-      SetGUIForWaitOnExternalTool( false );
-
-      ProjectConfig   config = m_Project.Settings.Configs[mainToolConfig.SelectedItem.ToString()];
-
-      if ( exitCode != 0 )
-      {
-        // update errors/warnings
-        ParseFile( ParserASM, ActiveDocument, config );
-        AppState = State.NORMAL;
-        return;
-      }
-
-      switch ( AppState )
-      {
-        case State.BUILD:
-          ParseFile( ParserASM, ActiveDocument, config );
-          AppState = State.NORMAL;
-          break;
-        case State.BUILD_AND_RUN:
-          // run program
-          RunCompiledFile( ActiveDocument, Types.CompileTargetType.NONE );
-          break;
-        case State.BUILD_AND_DEBUG:
-          // run program
-          DebugCompiledFile( ActiveDocument );
-          break;
-        default:
-          AppState = State.NORMAL;
-          break;
-      }
-    }
-    */
 
 
 
