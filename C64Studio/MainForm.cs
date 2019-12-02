@@ -2468,13 +2468,13 @@ namespace C64Studio
         // special start addresses for different run types
         if ( Parser.ASMFileParser.IsCartridge( targetType ) )
         {
-          StudioCore.Debugging.OverrideDebugStart = 0x8000;
+          StudioCore.Debugging.OverrideDebugStart = StudioCore.Debugging.Debugger.ConnectedMachine.InitialBreakpointAddressCartridge;
         }
         else
         {
           // directly after calling load from ram (as VICE does when autostarting a .prg file)
           // TODO - check with .t64, .tap, .d64
-          StudioCore.Debugging.OverrideDebugStart = 0xe178;
+          StudioCore.Debugging.OverrideDebugStart = StudioCore.Debugging.Debugger.ConnectedMachine.InitialBreakpointAddress;
         }
       }
 

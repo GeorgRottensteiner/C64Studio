@@ -99,7 +99,9 @@ namespace C64Studio
     private int                       m_LastRequestedMemorySize = 32;
     private MemorySource              m_LastRequestedMemorySource = MemorySource.AS_CPU;
     private RegisterInfo              CurrentRegisterValues = new RegisterInfo();
-    public MachineType                ConnectedMachine = MachineType.UNKNOWN;
+
+    private MachineType               m_ConnectedMachine = MachineType.UNKNOWN;
+
 
 
     GR.Collections.Map<int, byte>     m_MemoryValues = new GR.Collections.Map<int, byte>();
@@ -1471,7 +1473,7 @@ namespace C64Studio
 
     private bool MachineSupportsBankCommand()
     {
-      switch ( ConnectedMachine )
+      switch ( m_ConnectedMachine )
       {
         case MachineType.VC20:
           return false;
@@ -1764,18 +1766,18 @@ namespace C64Studio
       // find machine type from executable
       string    filename = System.IO.Path.GetFileNameWithoutExtension( ToolRun.Filename ).ToUpper();
 
-      ConnectedMachine = MachineType.UNKNOWN;
+      m_ConnectedMachine = MachineType.UNKNOWN;
       if ( filename.StartsWith( "X64" ) )
       {
-        ConnectedMachine = MachineType.C64;
+        m_ConnectedMachine = MachineType.C64;
       }
       else if ( filename.StartsWith( "XVIC" ) )
       {
-        ConnectedMachine = MachineType.VC20;
+        m_ConnectedMachine = MachineType.VC20;
       }
       else if ( filename.StartsWith( "X128" ) )
       {
-        ConnectedMachine = MachineType.C128;
+        m_ConnectedMachine = MachineType.C128;
       }
 
       if ( fileVersion == null )
@@ -1883,6 +1885,16 @@ namespace C64Studio
       get
       {
         return m_State;
+      }
+    }
+
+
+
+    public Machine ConnectedMachine
+    {
+      get
+      {
+        return Machine.FromType( m_ConnectedMachine );
       }
     }
 

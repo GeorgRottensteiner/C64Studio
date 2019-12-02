@@ -1,6 +1,8 @@
-﻿using GR.Memory;
+﻿using C64Studio.Types;
+using GR.Memory;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace C64Studio
@@ -76,6 +78,12 @@ namespace C64Studio
     bool SupportsFeature( DebuggerFeature Feature );
 
     bool CheckEmulatorVersion( ToolInfo ToolRun );
+
+
+    Machine ConnectedMachine
+    {
+      get;
+    }
 
 
     bool Start( ToolInfo toolRun );
