@@ -416,14 +416,27 @@ namespace C64Studio
 
     public AcceleratorKey DetermineAccelerator( Keys Key, Types.StudioState State )
     {
-      if ( !Accelerators.ContainsKey( Key ) )
+      List<AcceleratorKey> possibleKeys = null;
+
+      if ( Accelerators.ContainsKey( Key ) )
       {
-        return null;
+        possibleKeys = Accelerators.GetValues( Key, true );
+      }
+      else
+      {
+        // secondary key?
+        possibleKeys = new List<AcceleratorKey>();
+        foreach ( var acc in Accelerators )
+        {
+          if ( acc.Value.SecondaryKey == Key )
+          {
+            possibleKeys.Add( acc.Value );
+          }
+        }
       }
 
       Types.FunctionStudioState functionMask = FunctionMaskFromAppState( State );
 
-      List<AcceleratorKey> possibleKeys = Accelerators.GetValues( Key, true );
       if ( possibleKeys == null )
       {
         return null;

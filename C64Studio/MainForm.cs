@@ -4991,7 +4991,7 @@ namespace C64Studio
 
     public bool HandleCmdKey( ref Message msg, Keys keyData )
     {
-      AcceleratorKey usedAccelerator = StudioCore.Settings.DetermineAccelerator(keyData, AppState);
+      AcceleratorKey usedAccelerator = StudioCore.Settings.DetermineAccelerator( keyData, AppState);
       if ( usedAccelerator != null )
       {
         return ApplyFunction( usedAccelerator.Function );
@@ -5003,7 +5003,7 @@ namespace C64Studio
 
     protected override bool ProcessCmdKey( ref Message msg, Keys keyData )
     {
-      AcceleratorKey usedAccelerator = StudioCore.Settings.DetermineAccelerator(keyData, AppState);
+      AcceleratorKey usedAccelerator = StudioCore.Settings.DetermineAccelerator( keyData, AppState);
       if ( usedAccelerator != null )
       {
         if ( ApplyFunction( usedAccelerator.Function ) )
