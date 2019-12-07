@@ -8420,6 +8420,16 @@ namespace C64Studio.Parser
                 return Lines;
               }
             }
+            else if ( macro.Type == Types.MacroInfo.MacroType.HEX )
+            {
+              // HEX - special macro
+              var parseResult = POACMEHex( info, lineTokenInfos, lineIndex, out lineSizeInBytes );
+              if ( parseResult == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+            }
             else
             {
               AddError( lineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Macro " + macro.Type + " currently has no effect!" );
@@ -8912,6 +8922,35 @@ namespace C64Studio.Parser
       //Debug.Log( "PreProcess done" );
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private ParseLineResult POACMEHex( LineInfo info, List<TokenInfo> lineTokenInfos, int lineIndex, out int lineSizeInBytes )
+    {
+      lineSizeInBytes = 0;
+      info.LineData = new GR.Memory.ByteBuffer();
+      for ( int i = 1; i < lineTokenInfos.Count; ++i )
+      {
+        Types.TokenInfo tokenHex = lineTokenInfos[i];
+
+        if ( ( tokenHex.Length % 2 ) != 0 )
+        {
+          AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
+
+          return ParseLineResult.RETURN_NULL;
+        }
+        if ( !info.LineData.AppendHex( tokenHex.Content ) )
+        {
+          AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
+
+          return ParseLineResult.RETURN_NULL;
+        }
+      }
+      info.NumBytes   = (int)info.LineData.Length;
+      lineSizeInBytes = (int)info.LineData.Length;
+
+      return ParseLineResult.OK;
     }
 
 

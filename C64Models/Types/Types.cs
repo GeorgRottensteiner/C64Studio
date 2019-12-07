@@ -91,7 +91,7 @@ namespace C64Studio.Types
       END,
       MACRO,
       MESSAGE,
-      HEX,
+      HEX,            // ACME: !HEX, !H  f0f1f2 or !hex f0 f1 f2
       TEXT_SCREEN,
       LOW_BYTE,
       HIGH_BYTE,

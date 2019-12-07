@@ -738,7 +738,7 @@ namespace C64Studio
       FastColoredTextBoxNS.FastColoredTextBox  edit = null;
 
       if ( ( Target == FindTarget.FULL_SOLUTION )
-      &&   ( Core.MainForm.CurrentProject == null ) )
+      &&   ( Core.MainForm.m_Solution == null ) )
       {
         // fall back - full solution without solution
         Target = FindTarget.ALL_OPEN_DOCUMENTS;

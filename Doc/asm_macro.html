@@ -24,6 +24,7 @@
       <li><a href="#error">!ERROR</a></li>
       <li><a href="#for">!FOR</a></li>
       <li><a href="#fill">!FILL, !FI</a></li>
+      <li><a href="#hex">!HEX</a></li>
       <li><a href="#ifdef">!IFDEF, !IF</a></li>
       <li><a href="#ifndef">!IFNDEF</a></li>
       <li><a href="#macro">!MACRO</a></li>
@@ -203,6 +204,18 @@
     <br>
     <div id="code"><br>      !fill 8,$ff
       !fill ITEM_COUNT,0
+      <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="hex"></a><a name="h"></a>
+  <H2>!HEX, !H &lt;hex data&gt;</H2>
+  <div id="mybody">
+    This pseudo op interprets the rest of the line as hex data, no commas or prefixes like $ or 0x. Data may be separated by spaces, but pairs need to be intact.<br>
+    <br>
+    <br>
+    <div id="code"><br>      !hex f0 f1 f2 f3
+      !h f0f1f2f3
       <br></div>
     <br>
     <br>

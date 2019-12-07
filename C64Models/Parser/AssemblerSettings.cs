@@ -183,6 +183,8 @@ namespace C64Studio.Parser
           AddMacro( "!TRACE", Types.MacroInfo.MacroType.TRACE );
           AddMacro( "!MEDIA", Types.MacroInfo.MacroType.INCLUDE_MEDIA );
           AddMacro( "!MEDIASRC", Types.MacroInfo.MacroType.INCLUDE_MEDIA_SOURCE );
+          AddMacro( "!HEX", Types.MacroInfo.MacroType.HEX );
+          AddMacro( "!H", Types.MacroInfo.MacroType.HEX );
           AddMacro( "!SL", Types.MacroInfo.MacroType.LABEL_FILE );
           AddMacro( "!CPU", Types.MacroInfo.MacroType.IGNORE );
           AddMacro( "!SET", Types.MacroInfo.MacroType.SET );

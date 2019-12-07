@@ -4562,10 +4562,13 @@ namespace C64Studio
           return true;
         case C64Studio.Types.Function.FIND_IN_PROJECT:
           {
-            var compilableDoc = ActiveDocumentInfo.CompilableDocument;
-            if ( compilableDoc != null )
+            if ( ActiveDocumentInfo != null )
             {
-              m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+              var compilableDoc = ActiveDocumentInfo.CompilableDocument;
+              if ( compilableDoc != null )
+              {
+                m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
+              }
             }
           }
           if ( m_FindReplace.Visible )
