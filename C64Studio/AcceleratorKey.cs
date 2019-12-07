@@ -9,8 +9,9 @@ namespace C64Studio
   {
     public AcceleratorKey()
     {
-      Key       = Keys.None;
-      Function  = C64Studio.Types.Function.NONE;
+      Key           = Keys.None;
+      SecondaryKey  = Keys.None;
+      Function      = C64Studio.Types.Function.NONE;
     }
 
     public AcceleratorKey( Keys Key, Types.Function Function )
@@ -19,9 +20,22 @@ namespace C64Studio
       this.Function = Function;
     }
 
+    public AcceleratorKey( Keys Key, Keys Key2, Types.Function Function )
+    {
+      this.Key          = Key;
+      this.SecondaryKey = Key2;
+      this.Function     = Function;
+    }
+
     public Keys Key
     {
       get; 
+      set;
+    }
+
+    public Keys SecondaryKey
+    {
+      get;
       set;
     }
 
@@ -31,15 +45,20 @@ namespace C64Studio
       set;
     }
 
+
+
     public GR.IO.FileChunk ToChunk()
     {
       GR.IO.FileChunk chunk = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_ACCELERATOR );
 
       chunk.AppendU32( (uint)Key );
       chunk.AppendU32( (uint)Function );
+      chunk.AppendU32( (uint)SecondaryKey );
 
       return chunk;
     }
+
+
 
     public bool FromChunk( GR.IO.FileChunk Chunk )
     {
@@ -50,8 +69,9 @@ namespace C64Studio
 
       GR.IO.IReader reader = Chunk.MemoryReader();
 
-      Key = (Keys)reader.ReadUInt32();
-      Function = (C64Studio.Types.Function)reader.ReadUInt32();
+      Key           = (Keys)reader.ReadUInt32();
+      Function      = (C64Studio.Types.Function)reader.ReadUInt32();
+      SecondaryKey  = (Keys)reader.ReadUInt32();
       return true;
     }
 

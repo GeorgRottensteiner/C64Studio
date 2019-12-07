@@ -2527,6 +2527,11 @@ namespace C64Studio
       {
         editSource.HotkeysMapping.Remove( accelerator.Key );
         editSource.HotkeysMapping.Add( accelerator.Key, Action );
+        if ( accelerator.SecondaryKey != Keys.None )
+        {
+          editSource.HotkeysMapping.Remove( accelerator.SecondaryKey );
+          editSource.HotkeysMapping.Add( accelerator.SecondaryKey, Action );
+        }
       }
     }
 

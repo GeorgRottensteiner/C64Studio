@@ -155,9 +155,11 @@ namespace C64Studio
         if ( key != null )
         {
           itemF.SubItems.Add( key.Key.ToString() );
+          itemF.SubItems.Add( key.SecondaryKey.ToString() );
         }
         else
         {
+          itemF.SubItems.Add( "" );
           itemF.SubItems.Add( "" );
         }
         itemF.Tag = function;
@@ -521,13 +523,15 @@ namespace C64Studio
         editKeyBinding.Enabled = false;
         btnUnbindKey.Enabled = false;
         btnBindKey.Enabled = false;
+        btnBindKeySecondary.Enabled = false;
         return;
       }
       Types.Function function = (Types.Function)listFunctions.SelectedItems[0].Tag;
 
       editKeyBinding.Enabled = true;
       btnUnbindKey.Enabled = ( Core.Settings.DetermineAccelerator( function ) != null );
-      btnBindKey.Enabled = true;      
+      btnBindKey.Enabled = true;
+      btnBindKeySecondary.Enabled = true;
     }
 
 
@@ -537,8 +541,6 @@ namespace C64Studio
       m_PressedKey        = e.KeyData;
       editKeyBinding.Text = e.KeyData.ToString();
       e.IsInputKey        = true;
-
-      //btnBindKey.Enabled = !Core.Settings.Accelerators.ContainsKey( m_PressedKey );
     }
 
 
@@ -970,6 +972,7 @@ namespace C64Studio
       }
 
       listFunctions.SelectedItems[0].SubItems[2].Text = "";
+      listFunctions.SelectedItems[0].SubItems[3].Text = "";
       btnUnbindKey.Enabled = false;
     }
 
@@ -2309,6 +2312,48 @@ namespace C64Studio
       int     index1 = listTools.SelectedIndex + 1;
       int     index2 = listTools.SelectedIndex;
       SwapTools( index1, index2 );
+    }
+
+
+
+    private void btnBindKey2_Click( object sender, EventArgs e )
+    {
+      if ( listFunctions.SelectedItems.Count == 0 )
+      {
+        return;
+      }
+      Types.Function function = (Types.Function)listFunctions.SelectedItems[0].Tag;
+
+      bool hadAccelerator = false;
+      foreach ( var accPair in Core.Settings.Accelerators )
+      {
+        if ( accPair.Value.Function == function )
+        {
+          if ( m_PressedKey != Keys.None )
+          {
+            accPair.Value.SecondaryKey = m_PressedKey;
+            hadAccelerator = true;
+            listFunctions.SelectedItems[0].SubItems[3].Text = m_PressedKey.ToString();
+          }
+          break;
+        }
+      }
+      if ( !hadAccelerator )
+      {
+        // no entry yet, add as primary key
+        if ( m_PressedKey != Keys.None )
+        {
+          AcceleratorKey key = new AcceleratorKey( m_PressedKey, function );
+          key.Key = m_PressedKey;
+          Core.Settings.Accelerators.Add( key.Key, key );
+          listFunctions.SelectedItems[0].SubItems[2].Text = m_PressedKey.ToString();
+        }
+      }
+
+      btnUnbindKey.Enabled = ( Core.Settings.DetermineAccelerator( function ) != null );
+
+      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
+      RefreshDisplayOnDocuments();
     }
 
 

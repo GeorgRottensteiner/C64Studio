@@ -7534,7 +7534,7 @@ namespace C64Studio.Parser
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1302_MALFORMED_MACRO,
-                            "Expected !to <Filename>,<Type = cbm, plain, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, t64, tap or d64>" );
+                            "Expected !to <Filename>,<Type = cbm, plain, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, ultimax4bin, ultimax4crt, ultimax8bin, ultimax8crt, ultimax16bin, ultimax16crt, t64, tap or d64>" );
                   HadFatalError = true;
                   return Lines;
                 }
@@ -7555,6 +7555,12 @@ namespace C64Studio.Parser
                 &&   ( targetType != "CART8CRT" )
                 &&   ( targetType != "CART16BIN" )
                 &&   ( targetType != "CART16CRT" )
+				        &&   ( targetType != "ULTIMAX4BIN" )
+				        &&   ( targetType != "ULTIMAX4CRT" )
+				        &&   ( targetType != "ULTIMAX8BIN" )
+				        &&   ( targetType != "ULTIMAX8CRT" )
+				        &&   ( targetType != "ULTIMAX16BIN" )
+				        &&   ( targetType != "ULTIMAX16CRT" )
                 &&   ( targetType != "MAGICDESKBIN" )
                 &&   ( targetType != "MAGICDESKCRT" )
                 &&   ( targetType != "RGCDBIN" )
@@ -7569,7 +7575,7 @@ namespace C64Studio.Parser
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1304_UNSUPPORTED_TARGET_TYPE,
-                            "Unsupported target type " + lineTokenInfos[2].Content + ", only cbm, plain, t64, tap, d64, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, gmod2bin or gmod2crt supported",
+                            "Unsupported target type " + lineTokenInfos[2].Content + ", only cbm, plain, t64, tap, d64, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, ultimax4bin, ultimax4crt, ultimax8bin, ultimax8crt, ultimax16bin, ultimax16crt, gmod2bin or gmod2crt supported",
                             lineTokenInfos[2].StartPos,
                             lineTokenInfos[2].Length );
                   HadFatalError = true;
@@ -11306,7 +11312,7 @@ namespace C64Studio.Parser
           AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + AssembledOutput.Assembly.Length.ToString() + " > 4096" );
           return false;
         }
-        if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT )
+        if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT )
         {
           // build cartridge header
           GR.Memory.ByteBuffer    header = new GR.Memory.ByteBuffer();
@@ -11315,8 +11321,8 @@ namespace C64Studio.Parser
           header.AppendU32NetworkOrder( 0x40 );     // file header length
           header.AppendU16NetworkOrder( 0x0100 );   // version (currently only 1.00)
           header.AppendU16( 0 );                    // cartridge type
-          header.AppendU8( 0 );  // exrom
-          header.AppendU8( 1 );  // game
+          header.AppendU8( 1 );  // exrom
+          header.AppendU8( 0 );  // game
 
           // reserved
           header.AppendU8( 0 );
@@ -11370,7 +11376,7 @@ namespace C64Studio.Parser
           AddError( 0, Types.ErrorCode.E1102_PROGRAM_TOO_LARGE, "Assembly too large, " + AssembledOutput.Assembly.Length.ToString() + " > 8192" );
           return false;
         }
-        if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_CRT )
+        if ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_CRT )
         {
           // build cartridge header
           GR.Memory.ByteBuffer    header = new GR.Memory.ByteBuffer();
@@ -11379,8 +11385,8 @@ namespace C64Studio.Parser
           header.AppendU32NetworkOrder( 0x40 );     // file header length
           header.AppendU16NetworkOrder( 0x0100 );   // version (currently only 1.00)
           header.AppendU16( 0 );                    // cartridge type
-          header.AppendU8( 0 );  // exrom
-          header.AppendU8( 1 );  // game
+          header.AppendU8( 1 );  // exrom
+          header.AppendU8( 0 );  // game
 
           // reserved
           header.AppendU8( 0 );
