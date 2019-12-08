@@ -24,6 +24,7 @@
       <li><a href="#error">!ERROR</a></li>
       <li><a href="#for">!FOR</a></li>
       <li><a href="#fill">!FILL, !FI</a></li>
+      <li><a href="#hex">!HEX</a></li>
       <li><a href="#ifdef">!IFDEF, !IF</a></li>
       <li><a href="#ifndef">!IFNDEF</a></li>
       <li><a href="#macro">!MACRO</a></li>
@@ -203,6 +204,18 @@
     <br>
     <div id="code"><br>      !fill 8,$ff
       !fill ITEM_COUNT,0
+      <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="hex"></a><a name="h"></a>
+  <H2>!HEX, !H &lt;hex data&gt;</H2>
+  <div id="mybody">
+    This pseudo op interprets the rest of the line as hex data, no commas or prefixes like $ or 0x. Data may be separated by spaces, but pairs need to be intact.<br>
+    <br>
+    <br>
+    <div id="code"><br>      !hex f0 f1 f2 f3
+      !h f0f1f2f3
       <br></div>
     <br>
     <br>
@@ -1181,6 +1194,23 @@
           Exports all values as single bytes. Values are capped to the range 0 to 255
         </td>
       </tr>
+      <tr>
+        <td>
+          Value Table Project File
+        </td>
+        <td>
+          *.valuetableproject
+        </td>
+        <td>
+          data
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports Count values starting with Index as single bytes. Values are capped to the range 0 to 255
+        </td>
+      </tr>
     </table>
     <br>
     <br>
@@ -1834,10 +1864,13 @@
   <a name="source"></a>
   <H2>!SOURCE &lt;file name&gt;</H2>
   <div id="mybody">
-    This pseudo op includes another source file at the current location.<br>
+    This pseudo op includes another source file at the current location. File names are used relative to the file containing the directive.<br>
+    <br>
+    If the file name is given in &lt;,&gt; the file is searched for in the configured library paths.<br>
     <br>
     <br>
     <div id="code"><br>      !source "tiles.asm"
+      !source &lt;kernal.asm&gt;
     <br></div>
     <br>
     <br>
@@ -1869,7 +1902,7 @@
     This pseudo op sets the output file name and type. This pseudo op will be overridden by any valid output settings in the element properties.<br>
     <br>
     <br>
-    Valid output types are CBM, PLAIN, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, D64, T64, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT<br>
+    Valid output types are CBM, PLAIN, D64, T64, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4KBIN, ULTIMAX4KCRT, ULTIMAX8KBIN, ULTIMAX8KCRT, ULTIMAX16KBIN, ULTIMAX16KCRT <br>
     <br>
     For cartridge and tape/disk formats a dummy name is currently inserted in the final file.<br>
     <br>
