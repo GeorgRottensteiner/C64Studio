@@ -2432,18 +2432,12 @@ namespace C64Studio
       }
       StudioCore.Debugging.DebugType = targetType;
 
-      /*
-      bool dummyError;
-      string breakPointFile = FillParameters( "break $(DebugStartAddressHex) \r\n", DocumentToRun, true, out dummyError )
-        + StudioCore.Debugging.PrepareAfterStartBreakPoints();*/
-
       string breakPointFile = StudioCore.Debugging.PrepareAfterStartBreakPoints();
-
       string command = toolRun.DebugArguments;
 
-      if ( !Parser.ASMFileParser.IsCartridge( targetType ) )
+      if ( Parser.ASMFileParser.IsCartridge( targetType ) )
       {
-        command += " -initbreak 0x$(DebugStartAddressHex)";
+        command = command.Replace( "-initbreak 0x$(DebugStartAddressHex) ", "" );
       }
 
       if ( ( toolRun.PassLabelsToEmulator )
