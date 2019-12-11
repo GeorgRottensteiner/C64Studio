@@ -2850,10 +2850,6 @@ namespace C64Studio.Parser
          
       if ( firstTokenIndex + 1 <= lineTokenInfos.Count )
       {
-        if ( info.LineIndex == 3423 )
-        {
-          Debug.Log( "aha" );
-        }
         int byteValue = -1;
         int numBytesGiven = 0;
         if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, out byteValue, out numBytesGiven ) )

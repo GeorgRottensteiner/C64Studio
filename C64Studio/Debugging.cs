@@ -185,31 +185,17 @@ namespace C64Studio
 
 
 
-    public bool OnInitialBreakpointReached( int Address, int BreakpointIndex )
+    public bool OnInitialBreakpointReached( int Address )
     {
-      if ( BreakpointsToAddAfterStartup.Count == 0 )
+      if ( ( BreakpointsToAddAfterStartup.Count == 0 )
+      &&   ( Core.Debugging.OverrideDebugStart == -1 ) )
       {
         return false;
       }
       // now add all later breakpoints
       foreach ( Types.Breakpoint bp in BreakpointsToAddAfterStartup )
       {
-        if ( ( bp.TriggerOnLoad )
-        ||   ( bp.TriggerOnStore ) )
-        {
-          if ( bp.TriggerOnExec )
-          {
-            // this was already added, remove
-            Debugger.DeleteBreakpoint( bp.RemoteIndex, bp );
-            bp.RemoteIndex = -1;
-          }
-          /*
-          VICERemoteDebugger.RequestData delData = new VICERemoteDebugger.RequestData( VICERemoteDebugger.Request.ADD_BREAKPOINT, bp.Address );
-          delData.Breakpoint = bp;
-          Debugger.QueueRequest( delData );
-          */
-          Debugger.AddBreakpoint( bp );
-        }
+        Debugger.AddBreakpoint( bp );
       }
       // only auto-go on if the initial break point was not the fake first breakpoint
       if ( Address != LateBreakpointOverrideDebugStart )
@@ -217,18 +203,12 @@ namespace C64Studio
         // need to add new intermediate break point
         Types.Breakpoint bpTemp = new C64Studio.Types.Breakpoint();
 
-        bpTemp.Address = LateBreakpointOverrideDebugStart;
-        bpTemp.TriggerOnExec = true;
-        bpTemp.Temporary = true;
+        bpTemp.Address        = LateBreakpointOverrideDebugStart;
+        bpTemp.TriggerOnExec  = true;
+        bpTemp.Temporary      = true;
 
         Debugger.AddBreakpoint( bpTemp );
-        /*
-        RemoteDebugger.RequestData addNewBP = new RemoteDebugger.RequestData( RemoteDebugger.Request.ADD_BREAKPOINT, m_LateBreakpointOverrideDebugStart );
-        addNewBP.Breakpoint = bpTemp;
-        Debugger.QueueRequest( addNewBP );*/
       }
-      // and auto-go on with debugging
-      Debugger.Run();
 
       if ( MarkedDocument != null )
       {
@@ -240,6 +220,8 @@ namespace C64Studio
 
       FirstActionAfterBreak = false;
       Core.MainForm.SetGUIForDebugging( true );
+
+      Debugger.Reset();
       return true;
     }
 
@@ -400,12 +382,14 @@ namespace C64Studio
 
               if ( !mustBeAddedLater )
               {
+                BreakpointsToAddAfterStartup.Add( breakPoint );
+                /*
                 //Debug.Log( "Found breakpoint at address " + breakPoint.Address.ToString( "x4" ) );
                 breakPointFile += "break $" + breakPoint.Address.ToString( "x4" ) + "\r\n";
                 breakPoint.RemoteIndex = remoteIndex;
                 ++remoteIndex;
 
-                Core.MainForm.Document_DocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, breakPoint ) );
+                Core.MainForm.Document_DocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, breakPoint ) );*/
               }
             }
             else

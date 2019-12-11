@@ -2408,6 +2408,11 @@ namespace C64Studio
         return false;
       }
 
+      /*
+      bool dummyError;
+      string breakPointFile = FillParameters( "break $(DebugStartAddressHex) \r\n", DocumentToRun, true, out dummyError )
+        + StudioCore.Debugging.PrepareAfterStartBreakPoints();*/
+
       string breakPointFile = StudioCore.Debugging.PrepareAfterStartBreakPoints();
 
       string command = toolRun.DebugArguments;
@@ -2460,7 +2465,7 @@ namespace C64Studio
       //ParserASM.CompileTarget != Types.CompileTargetType.NONE ) ? ParserASM.CompileTarget : DocumentToRun.Element.TargetType;
 
       // need to adjust initial breakpoint address for late added store/load breakpoints?
-      if ( StudioCore.Debugging.BreakpointsToAddAfterStartup.Count > 0 )
+      //if ( StudioCore.Debugging.BreakpointsToAddAfterStartup.Count > 0 )
       {
         // yes
         StudioCore.Debugging.LateBreakpointOverrideDebugStart = StudioCore.Debugging.OverrideDebugStart;

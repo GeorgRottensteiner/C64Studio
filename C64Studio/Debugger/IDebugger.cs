@@ -119,6 +119,7 @@ namespace C64Studio
     void DeleteBreakpoint( int RemoteIndex, Types.Breakpoint BP );
     void RemoveBreakpoint( int BreakPointIndex, Types.Breakpoint BP );
     void ClearAllBreakpoints();
+    void Reset();
 
 
 

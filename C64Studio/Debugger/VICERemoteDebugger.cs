@@ -31,7 +31,8 @@ namespace C64Studio
       MEM_DUMP,
       ADD_BREAKPOINT,
       TRACE_MEM_DUMP,
-      RAM_MODE
+      RAM_MODE,
+      RESET
     };
 
     public enum RequestReason
@@ -90,7 +91,7 @@ namespace C64Studio
     private LinkedList<WatchEntry>    m_WatchEntries = new LinkedList<WatchEntry>();
     private int                       m_BytesToSend = 0;
     private int                       m_BrokenAtBreakPoint = -1;
-    private bool                      m_InitialBreakpointRemoved = false;
+    private bool                      m_InitialBreakCompleted = false;
     public WinViceVersion             m_ViceVersion = WinViceVersion.V_2_3;
     public bool                       m_BinaryMemDump = true;
     private DebuggerState             m_State = DebuggerState.NOT_CONNECTED;
@@ -141,9 +142,9 @@ namespace C64Studio
       }
       try
       {
+        m_InitialBreakCompleted = false;
         connectResultReceived = false;
         m_ReceivedDataBin.Clear();
-        m_InitialBreakpointRemoved = false;
         m_ResponseLines.Clear();
         m_RequestQueue.Clear();
         if ( client != null )
@@ -166,6 +167,10 @@ namespace C64Studio
       if ( client.Connected )
       {
         m_State = DebuggerState.RUNNING;
+
+        // connected, force reset plus add break points now
+        Debug.Log( "Connected - force break" );
+        QueueRequest( Request.STEP );
       }
       return client.Connected;
     }
@@ -846,6 +851,24 @@ namespace C64Studio
           }
           break;
         case Request.STEP:
+          if ( ( !m_InitialBreakCompleted )
+          &&   ( m_ResponseLines.Count > 0 ) )
+          {
+            Debug.Log( "Initial break encountered" );
+            // our first break
+            m_InitialBreakCompleted = true;
+            m_ResponseLines.Clear();
+            m_State = DebuggerState.PAUSED;
+            m_Request = new RequestData( Request.NONE );
+
+            // add break points now
+            if ( Core.Debugging.OnInitialBreakpointReached( -1 ) )
+            {
+              //QueueRequest( Request.RESET );
+            }
+            break;
+          }
+
           if ( ( ( m_ViceVersion == WinViceVersion.V_2_3 )
           &&     ( m_ResponseLines.Count == 3 ) )
           ||   ( ( m_ViceVersion >= WinViceVersion.V_2_4 )
@@ -903,7 +926,7 @@ namespace C64Studio
                 breakAddress = breakPoint.Address;
                 if ( breakPoint.Temporary )
                 {
-                  //Debug.Log( "Remove auto startup breakpoint " + breakPoint.RemoteIndex );
+                  Debug.Log( "Remove auto startup breakpoint " + breakPoint.RemoteIndex );
                   QueueRequest( Request.DELETE_BREAKPOINT, m_BrokenAtBreakPoint ).Breakpoint = breakPoint;
                   brokenBP = null;
                   break;
@@ -912,6 +935,7 @@ namespace C64Studio
             }
 
             bool skipRefresh = false;
+            /*
             if ( m_BrokenAtBreakPoint == 1 )
             {
               if ( !m_InitialBreakpointRemoved )
@@ -924,10 +948,10 @@ namespace C64Studio
                 //Debug.Log( "Remove initial breakpoint " + m_BrokenAtBreakPoint );
                 QueueRequest( Request.DELETE_BREAKPOINT, m_BrokenAtBreakPoint );
 
-                skipRefresh = Core.Debugging.OnInitialBreakpointReached( breakAddress, m_BrokenAtBreakPoint );
+                skipRefresh = Core.Debugging.OnInitialBreakpointReached( breakAddress );
               }
             }
-            else
+            else*/
             {
               if ( ( brokenBP != null )
               &&   ( brokenBP.HasVirtual() ) )
@@ -956,6 +980,10 @@ namespace C64Studio
             // a unexpected break!
             HandleBreakpoint();
           }
+          break;
+        case Request.RESET:
+          m_ResponseLines.Clear();
+          m_Request = new RequestData( Request.NONE );
           break;
         case Request.DELETE_BREAKPOINT:
           if ( m_ResponseLines.Count == 0 )
@@ -1089,7 +1117,7 @@ namespace C64Studio
           }
           break;
         default:
-          Debug.Log( "Unknown request state! " + m_Request.ToString() );
+          Debug.Log( "Unknown request state! " + m_Request.Type.ToString() );
           m_ResponseLines.Clear();
           break;
       }
@@ -1214,6 +1242,9 @@ namespace C64Studio
           m_RequestedMemoryValues.Clear();
           m_State = DebuggerState.RUNNING;
           return SendCommand( "return" );
+        case Request.RESET:
+          // hard reset
+          return SendCommand( "reset 1" );
         case Request.ADD_BREAKPOINT:
           {
             string request = "break ";
@@ -1905,6 +1936,13 @@ namespace C64Studio
       m_LastRequestedMemoryStartAddress = StartAddress;
       m_LastRequestedMemorySize         = Size;
       m_LastRequestedMemorySource       = Source;
+    }
+
+
+
+    public void Reset()
+    {
+      QueueRequest( Request.RESET );
     }
 
 
