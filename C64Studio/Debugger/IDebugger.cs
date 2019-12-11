@@ -91,7 +91,7 @@ namespace C64Studio
 
     void ClearCaches();
 
-    bool ConnectToEmulator();
+    bool ConnectToEmulator( bool IsCartridge );
     void DisconnectFromEmulator();
 
 

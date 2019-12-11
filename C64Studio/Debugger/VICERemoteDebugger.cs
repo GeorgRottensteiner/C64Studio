@@ -91,7 +91,9 @@ namespace C64Studio
     private LinkedList<WatchEntry>    m_WatchEntries = new LinkedList<WatchEntry>();
     private int                       m_BytesToSend = 0;
     private int                       m_BrokenAtBreakPoint = -1;
+    private bool                      m_InitialBreakpointRemoved = false;
     private bool                      m_InitialBreakCompleted = false;
+    private bool                      m_IsCartridge = false;
     public WinViceVersion             m_ViceVersion = WinViceVersion.V_2_3;
     public bool                       m_BinaryMemDump = true;
     private DebuggerState             m_State = DebuggerState.NOT_CONNECTED;
@@ -120,7 +122,7 @@ namespace C64Studio
 
 
 
-    public bool ConnectToEmulator()
+    public bool ConnectToEmulator( bool IsCartridge )
     {
       /*
       Register
@@ -140,9 +142,11 @@ namespace C64Studio
       {
         return false;
       }
+      m_IsCartridge = IsCartridge;
       try
       {
         m_InitialBreakCompleted = false;
+        m_InitialBreakpointRemoved = false;
         connectResultReceived = false;
         m_ReceivedDataBin.Clear();
         m_ResponseLines.Clear();
@@ -169,8 +173,11 @@ namespace C64Studio
         m_State = DebuggerState.RUNNING;
 
         // connected, force reset plus add break points now
-        Debug.Log( "Connected - force break" );
-        QueueRequest( Request.STEP );
+        if ( m_IsCartridge )
+        {
+          Debug.Log( "Connected - force break" );
+          QueueRequest( Request.STEP );
+        }
       }
       return client.Connected;
     }
@@ -439,7 +446,7 @@ namespace C64Studio
         DisconnectFromEmulator();
 
         Core.AddToOutput( "Attempt reconnect" );
-        if ( !ConnectToEmulator() )
+        if ( !ConnectToEmulator( m_IsCartridge ) )
         {
           Core.AddToOutput( "Reconnect failed, stopping debug session" );
           DebugEvent( new DebugEventData()
@@ -537,7 +544,7 @@ namespace C64Studio
       }
       if ( !client.Connected )
       {
-        if ( !ConnectToEmulator() )
+        if ( !ConnectToEmulator( Parser.ASMFileParser.IsCartridge( Core.Debugging.DebugType ) ) )
         {
           return false;
         }
@@ -597,7 +604,7 @@ namespace C64Studio
       }
       if ( !client.Connected )
       {
-        if ( !ConnectToEmulator() )
+        if ( !ConnectToEmulator( Parser.ASMFileParser.IsCartridge( Core.Debugging.DebugType ) ) )
         {
           return false;
         }
@@ -935,8 +942,9 @@ namespace C64Studio
             }
 
             bool skipRefresh = false;
-            /*
-            if ( m_BrokenAtBreakPoint == 1 )
+
+            if ( ( !m_IsCartridge )
+            &&   ( m_BrokenAtBreakPoint == 1 ) )
             {
               if ( !m_InitialBreakpointRemoved )
               {
@@ -951,7 +959,7 @@ namespace C64Studio
                 skipRefresh = Core.Debugging.OnInitialBreakpointReached( breakAddress );
               }
             }
-            else*/
+            else
             {
               if ( ( brokenBP != null )
               &&   ( brokenBP.HasVirtual() ) )

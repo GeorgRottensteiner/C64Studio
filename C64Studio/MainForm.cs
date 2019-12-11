@@ -2408,6 +2408,30 @@ namespace C64Studio
         return false;
       }
 
+      // determine debug target type
+      Types.CompileTargetType targetType = C64Studio.Types.CompileTargetType.NONE;
+      if ( DocumentToRun.Element != null )
+      {
+        targetType = DocumentToRun.Element.TargetType;
+      }
+
+      string fileToRun = "";
+      if ( DocumentToRun.Element != null )
+      {
+        fileToRun = DocumentToRun.Element.TargetFilename;
+        ProjectElement.PerConfigSettings configSetting = DocumentToRun.Element.Settings[DocumentToRun.Project.Settings.CurrentConfig.Name];
+        if ( !string.IsNullOrEmpty( configSetting.DebugFile ) )
+        {
+          targetType = configSetting.DebugFileType;
+        }
+      }
+
+      if ( targetType == C64Studio.Types.CompileTargetType.NONE )
+      {
+        targetType = StudioCore.Compiling.m_LastBuildInfo.TargetType;
+      }
+      StudioCore.Debugging.DebugType = targetType;
+
       /*
       bool dummyError;
       string breakPointFile = FillParameters( "break $(DebugStartAddressHex) \r\n", DocumentToRun, true, out dummyError )
@@ -2416,6 +2440,11 @@ namespace C64Studio
       string breakPointFile = StudioCore.Debugging.PrepareAfterStartBreakPoints();
 
       string command = toolRun.DebugArguments;
+
+      if ( !Parser.ASMFileParser.IsCartridge( targetType ) )
+      {
+        command += " -initbreak 0x$(DebugStartAddressHex)";
+      }
 
       if ( ( toolRun.PassLabelsToEmulator )
       &&   ( StudioCore.Debugging.DebuggedASMBase.ASMFileInfo != null ) )
@@ -2438,28 +2467,6 @@ namespace C64Studio
           StudioCore.Debugging.TempDebuggerStartupFilename = "";
           return false;
         }
-      }
-
-      Types.CompileTargetType targetType = C64Studio.Types.CompileTargetType.NONE;
-      if ( DocumentToRun.Element != null )
-      {
-        targetType = DocumentToRun.Element.TargetType;
-      }
-
-      string fileToRun = "";
-      if ( DocumentToRun.Element != null )
-      {
-        fileToRun = DocumentToRun.Element.TargetFilename;
-        ProjectElement.PerConfigSettings configSetting = DocumentToRun.Element.Settings[DocumentToRun.Project.Settings.CurrentConfig.Name];
-        if ( !string.IsNullOrEmpty( configSetting.DebugFile ) )
-        {
-          targetType = configSetting.DebugFileType;
-        }
-      }
-
-      if ( targetType == C64Studio.Types.CompileTargetType.NONE )
-      {
-        targetType = StudioCore.Compiling.m_LastBuildInfo.TargetType;
       }
 
       //ParserASM.CompileTarget != Types.CompileTargetType.NONE ) ? ParserASM.CompileTarget : DocumentToRun.Element.TargetType;
@@ -2553,7 +2560,7 @@ namespace C64Studio
           {
             //Debug.Log( "attempt" + i );
             StudioCore.AddToOutput( ( i + 1 ).ToString() );
-            if ( StudioCore.Debugging.Debugger.ConnectToEmulator() )
+            if ( StudioCore.Debugging.Debugger.ConnectToEmulator( Parser.ASMFileParser.IsCartridge( targetType ) ) )
             {
               //Debug.Log( "-succeeded" );
               StudioCore.AddToOutput( " succeeded" + System.Environment.NewLine );
@@ -3625,7 +3632,7 @@ namespace C64Studio
 
     private void debugConnectToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      if ( !StudioCore.Debugging.Debugger.ConnectToEmulator() )
+      if ( !StudioCore.Debugging.Debugger.ConnectToEmulator( Parser.ASMFileParser.IsCartridge( StudioCore.Debugging.DebugType ) ) )
       {
         Debug.Log( "Connect failed" );
       }

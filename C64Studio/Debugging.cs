@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
 using GR.Memory;
+using C64Studio.Types;
 
 namespace C64Studio
 {
@@ -38,6 +39,9 @@ namespace C64Studio
 
     public GR.Collections.Map<string, List<Types.Breakpoint>> BreakPoints = new GR.Collections.Map<string, List<C64Studio.Types.Breakpoint>>();
     public List<Types.Breakpoint>                             BreakpointsToAddAfterStartup = new List<C64Studio.Types.Breakpoint>();
+
+    public CompileTargetType DebugType = CompileTargetType.NONE;
+
 
 
     public Debugging( StudioCore Core )
@@ -216,12 +220,23 @@ namespace C64Studio
         MarkedDocument = null;
       }
 
+      // keep running for non cart
+      if ( !Parser.ASMFileParser.IsCartridge( DebugType ) )
+      {
+        Debugger.Run();
+      }
+
       Core.Executing.BringToForeground();
 
       FirstActionAfterBreak = false;
       Core.MainForm.SetGUIForDebugging( true );
 
-      Debugger.Reset();
+      // force a reset for cartridges, so the debugger starts at the init
+      // can't reset on a normal file, just hope our break point is not hit too early
+      if ( Parser.ASMFileParser.IsCartridge( DebugType ) )
+      {
+        Debugger.Reset();
+      }
       return true;
     }
 
