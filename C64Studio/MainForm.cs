@@ -2484,6 +2484,7 @@ namespace C64Studio
         }
       }
       if ( ( DocumentToDebug.Project != null )
+      &&   ( StudioCore.Debugging.LateBreakpointOverrideDebugStart == -1 )
       &&   ( !string.IsNullOrEmpty( DocumentToDebug.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
       {
         int debugStartAddress = -1;
