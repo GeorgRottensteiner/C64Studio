@@ -1898,7 +1898,7 @@ namespace C64Studio
       result = result.Replace( "$(MediaTool)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediatool.exe" ) + "\"" );
 
       int debugStartAddress = StudioCore.Debugging.OverrideDebugStart;
-      if ( debugStartAddress == -1 )
+      //if ( debugStartAddress == -1 )
       {
         if ( Document.Project != null )
         {
@@ -2482,6 +2482,18 @@ namespace C64Studio
           // TODO - check with .t64, .tap, .d64
           StudioCore.Debugging.OverrideDebugStart = StudioCore.Debugging.Debugger.ConnectedMachine.InitialBreakpointAddress;
         }
+      }
+      if ( ( DocumentToDebug.Project != null )
+      &&   ( !string.IsNullOrEmpty( DocumentToDebug.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
+      {
+        int debugStartAddress = -1;
+        if ( !DetermineDebugStartAddress( DocumentToDebug, DocumentToDebug.Project.Settings.CurrentConfig.DebugStartAddressLabel, out debugStartAddress ) )
+        {
+          StudioCore.AddToOutput( "Cannot determine value for debug start address from '" + DocumentToDebug.Project.Settings.CurrentConfig.DebugStartAddressLabel + "'" + System.Environment.NewLine );
+          return false;
+        }
+        StudioCore.Debugging.OverrideDebugStart = debugStartAddress;
+        StudioCore.Debugging.LateBreakpointOverrideDebugStart = debugStartAddress;
       }
 
       if ( StudioCore.Settings.TrueDriveEnabled )
