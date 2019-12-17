@@ -1898,15 +1898,20 @@ namespace C64Studio
       result = result.Replace( "$(MediaTool)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediatool.exe" ) + "\"" );
 
       int debugStartAddress = StudioCore.Debugging.OverrideDebugStart;
-      //if ( debugStartAddress == -1 )
       {
-        if ( Document.Project != null )
+        if ( ( Document.Project != null )
+        &&   ( !string.IsNullOrEmpty( Document.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
         {
-          if ( !DetermineDebugStartAddress( Document, Document.Project.Settings.CurrentConfig.DebugStartAddressLabel, out debugStartAddress ) )
+          int   dummy = -1;
+          if ( !DetermineDebugStartAddress( Document, Document.Project.Settings.CurrentConfig.DebugStartAddressLabel, out dummy ) )
           {
             Error = true;
             StudioCore.AddToOutput( "Cannot determine value for debug start address from '" + Document.Project.Settings.CurrentConfig.DebugStartAddressLabel + "'" + System.Environment.NewLine );
             return "";
+          }
+          if ( dummy != 0 )
+          {
+            debugStartAddress = dummy;
           }
         }
       }
