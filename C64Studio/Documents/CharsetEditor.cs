@@ -3022,6 +3022,10 @@ namespace C64Studio
 
     public override bool ApplyFunction( Function Function )
     {
+      if ( !pictureEditor.Focused )
+      {
+        return false;
+      }
       switch ( Function )
       {
         case Function.GRAPHIC_ELEMENT_MIRROR_H:

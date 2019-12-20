@@ -2498,8 +2498,11 @@ namespace C64Studio
           StudioCore.AddToOutput( "Cannot determine value for debug start address from '" + DocumentToDebug.Project.Settings.CurrentConfig.DebugStartAddressLabel + "'" + System.Environment.NewLine );
           return false;
         }
-        StudioCore.Debugging.OverrideDebugStart = debugStartAddress;
-        StudioCore.Debugging.LateBreakpointOverrideDebugStart = debugStartAddress;
+        if ( debugStartAddress != 0 )
+        {
+          StudioCore.Debugging.OverrideDebugStart = debugStartAddress;
+          StudioCore.Debugging.LateBreakpointOverrideDebugStart = debugStartAddress;
+        }
       }
 
       if ( StudioCore.Settings.TrueDriveEnabled )
