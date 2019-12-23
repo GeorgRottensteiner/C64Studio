@@ -19,7 +19,7 @@ namespace C64Studio
     public Executing          Executing;
     public Tasks.TaskManager  TaskManager;
     public bool               ShuttingDown = false;
-    public const string       StudioVersion = "6.2.4";
+    public const string       StudioVersion = "6.3";
     public StudioTheme        Theming;
 
     public static StudioCore  StaticCore = null;
