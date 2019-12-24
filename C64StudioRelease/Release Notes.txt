@@ -17,6 +17,46 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+23.12.2019 - 6.3:         Fix: Shortcut keys in charset and graphic editor only apply on focused editor
+                          Fix: Debugging start address properly used now
+                          Add: Ultimax cartridge support plus special debug behaviour for cart startup racing condition
+                          Add: !hex pseudo op to line up with ACME
+                          Add: Secondary key bindings
+                          Fix: Crash on find all with no open file or selected project
+                          Add: Mediatool support for graphic screen and binary files
+                          Fix: Bitmap export color clashes
+                          Fix: Bug in zone detection (stored zone was used instead of local one)
+                          Add: Binary editor gets upsize (8 to 16 bit)
+                          Add: Display and toggle button for string entry mode
+                          Fix: Hotkey for debug step out was not working
+                          Fix: Token scan for BASIC V2
+                          Fix: Predefines from build chains now really work
+                          Add: BASIC casing button shows current setting
+                          Add: Support for Laser BASIC
+                          Add: Display offset for binary display to help align memory views
+                          Add: Remove all watches
+                          Add: Solution Explorer: highlight one node per project, not one globally
+                          Add: Mark build as dirty if build events are modified
+                          Fix: Unwanted userappdata path usage
+                          Add: File Manager rename file via F2
+                          Fix: BASIC tokens with two byte opcodes
+                          Fix: Exception with invalid regular expression in Find/Replace
+
+23.09.2019 - 6.2:         Add: WIP support of XVIC and X128 emulators (debugging works)
+                          Fix: Allow fatal errors to still write preprocessed file
+                          Fix: Fatal errors abort error message collecting so no followup errors are shown
+                          Fix: macro with local arguments now work when called from different zones
+                          Add: Tooltip with full file path on tab
+                          Add: BASIC symbol mode replaces with multipliers
+                          Fix: Keyboard shortcut in sprite editor only if focused
+                          Add: BASIC Hex import/export (C128)
+                          Fix: Charset mode toggling in Debug Memory view
+                          Add: BASIC version selection
+                          Add: D84 choice in element properties
+                          Add: Reverse mode to char screen editor
+                          Fix: Major speedup in replace all
+                          Add: GTK Vice detection and repeated debugger connection attempt
+
 06.06.2019 - 6.1:         Fix: PETSCII dialog is now optimized (major speedup)
                           Add: Auto-Center text in charscreen editor
                           Fix/Add: Way better PDS support

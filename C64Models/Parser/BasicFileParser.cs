@@ -1449,6 +1449,21 @@ namespace C64Studio.Parser
 
       if ( !char.IsDigit( Macro[0] ) )
       {
+        int     starPos = Macro.IndexOf( '*' );
+        if ( starPos != -1 )
+        {
+          int     dummyCount = 0;
+          if ( int.TryParse( Macro.Substring( starPos + 1 ), out dummyCount ) )
+          {
+            MacroCount = dummyCount;
+            if ( ( MacroCount < 0 )
+            ||   ( MacroCount > 999 ) )
+            {
+              MacroCount = 1;
+            }
+            return Macro.Substring( 0, starPos );
+          }
+        }
         return Macro;
       }
 
