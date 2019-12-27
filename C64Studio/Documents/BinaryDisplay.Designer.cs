@@ -36,6 +36,7 @@
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.btnExport = new System.Windows.Forms.Button();
       this.btnImport = new System.Windows.Forms.Button();
+      this.btnUpsize = new System.Windows.Forms.Button();
       this.btnInterleave = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.label2 = new System.Windows.Forms.Label();
@@ -59,7 +60,6 @@
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.modifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.interleaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.btnUpsize = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabMain.SuspendLayout();
       this.tabData.SuspendLayout();
@@ -158,6 +158,16 @@
       this.btnImport.Text = "Import";
       this.btnImport.UseVisualStyleBackColor = true;
       this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+      // 
+      // btnUpsize
+      // 
+      this.btnUpsize.Location = new System.Drawing.Point(6, 77);
+      this.btnUpsize.Name = "btnUpsize";
+      this.btnUpsize.Size = new System.Drawing.Size(75, 23);
+      this.btnUpsize.TabIndex = 0;
+      this.btnUpsize.Text = "Upsize";
+      this.btnUpsize.UseVisualStyleBackColor = true;
+      this.btnUpsize.Click += new System.EventHandler(this.btnUpsize_Click);
       // 
       // btnInterleave
       // 
@@ -326,6 +336,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.textBinaryData.Location = new System.Drawing.Point(6, 19);
+      this.textBinaryData.MaxLength = 1000000;
       this.textBinaryData.Multiline = true;
       this.textBinaryData.Name = "textBinaryData";
       this.textBinaryData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -395,16 +406,6 @@
       this.interleaveToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
       this.interleaveToolStripMenuItem.Text = "Interleave...";
       this.interleaveToolStripMenuItem.Click += new System.EventHandler(this.interleaveToolStripMenuItem_Click);
-      // 
-      // btnUpsize
-      // 
-      this.btnUpsize.Location = new System.Drawing.Point(6, 77);
-      this.btnUpsize.Name = "btnUpsize";
-      this.btnUpsize.Size = new System.Drawing.Size(75, 23);
-      this.btnUpsize.TabIndex = 0;
-      this.btnUpsize.Text = "Upsize";
-      this.btnUpsize.UseVisualStyleBackColor = true;
-      this.btnUpsize.Click += new System.EventHandler(this.btnUpsize_Click);
       // 
       // BinaryDisplay
       // 
