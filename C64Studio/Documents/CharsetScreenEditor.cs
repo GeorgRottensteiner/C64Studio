@@ -407,32 +407,51 @@ namespace C64Studio
         return;
       }
 
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, m_MousePos.X, m_MousePos.Y, m_FloatingSelectionSize.Width, m_FloatingSelectionSize.Height ) );
-
-      for ( int j = 0; j < m_FloatingSelectionSize.Height; ++j )
+      int     undoX = Math.Max( m_MousePos.X, 0 );
+      int     undoY = Math.Max( m_MousePos.Y, 0 );
+      int     offsetX = undoX - m_MousePos.X;
+      int     offsetY = undoY - m_MousePos.Y;
+      int     undoWidth = m_FloatingSelectionSize.Width - ( undoX - m_MousePos.X );
+      int     undoHeight = m_FloatingSelectionSize.Height - ( undoY - m_MousePos.Y );
+      if ( undoX + undoWidth > m_CharsetScreen.ScreenWidth )
       {
-        for ( int i = 0; i < m_FloatingSelectionSize.Width; ++i )
+        undoWidth = m_CharsetScreen.ScreenWidth - undoX;
+      }
+      if ( undoY + undoHeight > m_CharsetScreen.ScreenHeight )
+      {
+        undoHeight = m_CharsetScreen.ScreenHeight - undoY;
+      }
+      if ( ( undoWidth <= 0 )
+      ||   ( undoHeight <= 0 ) )
+      {
+        m_FloatingSelection = null;
+        return;
+      }
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, undoX, undoY, undoWidth, undoHeight ) );
+
+      for ( int j = 0; j < undoHeight; ++j )
+      {
+        for ( int i = 0; i < undoWidth; ++i )
         {
-          var selectionChar = m_FloatingSelection[i + j * m_FloatingSelectionSize.Width];
+          var selectionChar = m_FloatingSelection[( offsetX + i ) + ( offsetY + j ) * m_FloatingSelectionSize.Width];
           if ( selectionChar.first )
           {
-            m_CharsetScreen.Chars[m_MousePos.X + i + m_CharsetScreen.ScreenOffsetX + ( m_MousePos.Y + j + m_CharsetScreen.ScreenOffsetY ) * m_CharsetScreen.ScreenWidth] =
-                    selectionChar.second;
+            m_CharsetScreen.Chars[undoX + i + m_CharsetScreen.ScreenOffsetX + ( undoY + j + m_CharsetScreen.ScreenOffsetY ) * m_CharsetScreen.ScreenWidth] = selectionChar.second;
 
             DrawCharImage( pictureEditor.DisplayPage,
-               ( m_MousePos.X + i ) * 8,
-               ( m_MousePos.Y + j ) * 8,
+               ( undoX + i ) * 8,
+               ( undoY + j ) * 8,
                (byte)( selectionChar.second & 0xff ),
                (byte)( selectionChar.second >> 8 ) );
 
             pictureEditor.DisplayPage.DrawTo( m_Image,
-                                              ( m_CharsetScreen.ScreenOffsetX + m_MousePos.X + i ) * 8,
-                                              ( m_CharsetScreen.ScreenOffsetY + m_MousePos.Y + j ) * 8,
-                                              ( m_MousePos.X + i ) * 8,
-                                              ( m_MousePos.Y + j ) * 8,
+                                              ( m_CharsetScreen.ScreenOffsetX + undoX + i ) * 8,
+                                              ( m_CharsetScreen.ScreenOffsetY + undoY + j ) * 8,
+                                              ( undoX + i ) * 8,
+                                              ( undoY + j ) * 8,
                                               8, 8 );
-            pictureEditor.Invalidate( new System.Drawing.Rectangle( ( m_MousePos.X + i ) * 8,
-                                                                    ( m_MousePos.Y + j ) * 8,
+            pictureEditor.Invalidate( new System.Drawing.Rectangle( ( undoX + i ) * 8,
+                                                                    ( undoY + j ) * 8,
                                                                     8, 8 ) );
           }
         }
