@@ -2016,7 +2016,7 @@ namespace C64Studio.Parser
       for ( int i = 0; i < Line.Length; ++i )
       {
         if ( ( Line[i] < '0' )
-        || ( Line[i] > '9' ) )
+        ||   ( Line[i] > '9' ) )
         {
           break;
         }
@@ -2441,11 +2441,24 @@ namespace C64Studio.Parser
       }
       else
       {
+        byte    petsciiValue = Types.ConstantData.CharToC64Char[curChar].PetSCIIValue;
+
+        if ( ( petsciiValue >= 224 )
+        &&   ( petsciiValue <= 254 ) )
+        {
+          petsciiValue -= 224 - 160;
+        }
+        else if ( ( petsciiValue >= 96 )
+        &&        ( petsciiValue <= 127 ) )
+        {
+          petsciiValue += 192 - 96;
+        }
+
         // strip spaces after line numbers - TODO here???
         if ( ( curChar != 32 )
         ||   ( posInLine > endOfDigitPos + 1 ) )
         {
-          tempData.AppendU8( Types.ConstantData.CharToC64Char[curChar].PetSCIIValue );
+          tempData.AppendU8( petsciiValue );
         }
       }
     }
@@ -2759,6 +2772,7 @@ namespace C64Studio.Parser
         result.AppendU16( (ushort)( curAddress + info.LineData.Length + 5 ) );
         result.AppendU16( (ushort)info.LineNumber );
         result.Append( info.LineData );
+
         // end of line
         result.AppendU8( 0 );
 
@@ -2900,6 +2914,30 @@ namespace C64Studio.Parser
       AssembledOutput.OriginalAssemblyStartAddress  = startAddress;
       AssembledOutput.OriginalAssemblySize          = originalSize;
       return true;
+    }
+
+
+
+    private ByteBuffer PETSCIIify( ByteBuffer LineData )
+    {
+      ByteBuffer    result = new ByteBuffer( LineData );
+
+      for ( int i = 0; i < result.Length; ++i )
+      {
+        byte    basicByte = result.ByteAt( i );
+
+        if ( ( basicByte >= 0x60 )
+        &&   ( basicByte <= 0x7f ) )
+        {
+          result.SetU8At( i, (byte)( basicByte + 192 - 96 ) );
+        }
+        else if ( ( basicByte >= 0xe0 )
+        &&        ( basicByte <= 0xfe ) )
+        {
+          result.SetU8At( i, (byte)( basicByte + 160 - 224 ) );
+        }
+      }
+      return result;
     }
 
 
@@ -3762,6 +3800,11 @@ namespace C64Studio.Parser
             sb.Append( newChar );
           }
         }
+        else if ( ( singleChar >= 0x61 )
+        &&        ( singleChar <= 0x7a ) )
+        {
+          sb.Append( singleChar - 0x20 + 0xe000 );
+        }
         else
         {
           sb.Append( singleChar );
@@ -3792,7 +3835,7 @@ namespace C64Studio.Parser
           }
         }
         else if ( ( singleChar >= 'A' )
-        && ( singleChar <= 'Z' ) )
+        &&        ( singleChar <= 'Z' ) )
         {
           sb.Append( (char)( singleChar + 0xef01 - 'A' ) );
         }

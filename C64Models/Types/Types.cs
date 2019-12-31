@@ -1037,6 +1037,7 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_SLASH, KeyModifier.SHIFT, KeyType.NORMAL, 63, true, 63, true, '?', true );
       //  64- 95 $40-$5F     -64 $C0          0- 31 $00-$1F  
       AddC64Key( KeyboardKey.KEY_AT, KeyModifier.NORMAL, KeyType.NORMAL, 64 - 64, true, 64, true, '@', true );
+
       AddC64KeyLC( KeyboardKey.KEY_A, KeyModifier.NORMAL, KeyType.NORMAL, 65 - 64, true, 65, true, 'A', 'a', 0x41 );
       AddC64KeyLC( KeyboardKey.KEY_B, KeyModifier.NORMAL, KeyType.NORMAL, 66 - 64, true, 66, true, 'B', 'b', 0x42 );
       AddC64KeyLC( KeyboardKey.KEY_C, KeyModifier.NORMAL, KeyType.NORMAL, 67 - 64, true, 67, true, 'C', 'c', 0x43 );
@@ -1063,6 +1064,34 @@ namespace C64Studio.Types
       AddC64KeyLC( KeyboardKey.KEY_X, KeyModifier.NORMAL, KeyType.NORMAL, 88 - 64, true, 88, true, 'X', 'x', 0x58  );
       AddC64KeyLC( KeyboardKey.KEY_Y, KeyModifier.NORMAL, KeyType.NORMAL, 89 - 64, true, 89, true, 'Y', 'y', 0x59  );
       AddC64KeyLC( KeyboardKey.KEY_Z, KeyModifier.NORMAL, KeyType.NORMAL, 90 - 64, true, 90, true, 'Z', 'z', 0x5a );
+
+      AddC64KeyLC( KeyboardKey.KEY_A, KeyModifier.NORMAL, KeyType.NORMAL, 65 - 64, true, 65, true, (char)0xe041, (char)0xe141, 0x41 );
+      AddC64KeyLC( KeyboardKey.KEY_B, KeyModifier.NORMAL, KeyType.NORMAL, 66 - 64, true, 66, true, (char)0xe042, (char)0xe142, 0x42 );
+      AddC64KeyLC( KeyboardKey.KEY_C, KeyModifier.NORMAL, KeyType.NORMAL, 67 - 64, true, 67, true, (char)0xe043, (char)0xe143, 0x43 );
+      AddC64KeyLC( KeyboardKey.KEY_D, KeyModifier.NORMAL, KeyType.NORMAL, 68 - 64, true, 68, true, (char)0xe044, (char)0xe144, 0x44 );
+      AddC64KeyLC( KeyboardKey.KEY_E, KeyModifier.NORMAL, KeyType.NORMAL, 69 - 64, true, 69, true, (char)0xe045, (char)0xe145, 0x45 );
+      AddC64KeyLC( KeyboardKey.KEY_F, KeyModifier.NORMAL, KeyType.NORMAL, 70 - 64, true, 70, true, (char)0xe046, (char)0xe146, 0x46 );
+      AddC64KeyLC( KeyboardKey.KEY_G, KeyModifier.NORMAL, KeyType.NORMAL, 71 - 64, true, 71, true, (char)0xe047, (char)0xe147, 0x47 );
+      AddC64KeyLC( KeyboardKey.KEY_H, KeyModifier.NORMAL, KeyType.NORMAL, 72 - 64, true, 72, true, (char)0xe048, (char)0xe148, 0x48 );
+      AddC64KeyLC( KeyboardKey.KEY_I, KeyModifier.NORMAL, KeyType.NORMAL, 73 - 64, true, 73, true, (char)0xe049, (char)0xe149, 0x49 );
+      AddC64KeyLC( KeyboardKey.KEY_J, KeyModifier.NORMAL, KeyType.NORMAL, 74 - 64, true, 74, true, (char)0xe04a, (char)0xe14a, 0x4a );
+      AddC64KeyLC( KeyboardKey.KEY_K, KeyModifier.NORMAL, KeyType.NORMAL, 75 - 64, true, 75, true, (char)0xe04b, (char)0xe14b, 0x4b );
+      AddC64KeyLC( KeyboardKey.KEY_L, KeyModifier.NORMAL, KeyType.NORMAL, 76 - 64, true, 76, true, (char)0xe04c, (char)0xe14c, 0x4c );
+      AddC64KeyLC( KeyboardKey.KEY_M, KeyModifier.NORMAL, KeyType.NORMAL, 77 - 64, true, 77, true, (char)0xe04d, (char)0xe14d, 0x4d );
+      AddC64KeyLC( KeyboardKey.KEY_N, KeyModifier.NORMAL, KeyType.NORMAL, 78 - 64, true, 78, true, (char)0xe04e, (char)0xe14e, 0x4e );
+      AddC64KeyLC( KeyboardKey.KEY_O, KeyModifier.NORMAL, KeyType.NORMAL, 79 - 64, true, 79, true, (char)0xe04f, (char)0xe14f, 0x4f );
+      AddC64KeyLC( KeyboardKey.KEY_P, KeyModifier.NORMAL, KeyType.NORMAL, 80 - 64, true, 80, true, (char)0xe050, (char)0xe150, 0x50 );
+      AddC64KeyLC( KeyboardKey.KEY_Q, KeyModifier.NORMAL, KeyType.NORMAL, 81 - 64, true, 81, true, (char)0xe051, (char)0xe151, 0x51 );
+      AddC64KeyLC( KeyboardKey.KEY_R, KeyModifier.NORMAL, KeyType.NORMAL, 82 - 64, true, 82, true, (char)0xe052, (char)0xe152, 0x52 );
+      AddC64KeyLC( KeyboardKey.KEY_S, KeyModifier.NORMAL, KeyType.NORMAL, 83 - 64, true, 83, true, (char)0xe053, (char)0xe153, 0x53 );
+      AddC64KeyLC( KeyboardKey.KEY_T, KeyModifier.NORMAL, KeyType.NORMAL, 84 - 64, true, 84, true, (char)0xe054, (char)0xe154, 0x54 );
+      AddC64KeyLC( KeyboardKey.KEY_U, KeyModifier.NORMAL, KeyType.NORMAL, 85 - 64, true, 85, true, (char)0xe055, (char)0xe155, 0x55 );
+      AddC64KeyLC( KeyboardKey.KEY_V, KeyModifier.NORMAL, KeyType.NORMAL, 86 - 64, true, 86, true, (char)0xe056, (char)0xe156, 0x56 );
+      AddC64KeyLC( KeyboardKey.KEY_W, KeyModifier.NORMAL, KeyType.NORMAL, 87 - 64, true, 87, true, (char)0xe057, (char)0xe157, 0x57 );
+      AddC64KeyLC( KeyboardKey.KEY_X, KeyModifier.NORMAL, KeyType.NORMAL, 88 - 64, true, 88, true, (char)0xe058, (char)0xe158, 0x58 );
+      AddC64KeyLC( KeyboardKey.KEY_Y, KeyModifier.NORMAL, KeyType.NORMAL, 89 - 64, true, 89, true, (char)0xe059, (char)0xe159, 0x59 );
+      AddC64KeyLC( KeyboardKey.KEY_Z, KeyModifier.NORMAL, KeyType.NORMAL, 90 - 64, true, 90, true, (char)0xe05a, (char)0xe15a, 0x5a );
+
       AddC64Key( KeyboardKey.KEY_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 91 - 64, true, 91, true, '[', true );//(char)0xee1b, true );//'[', true );
       AddC64Key( KeyboardKey.KEY_POUND, KeyModifier.NORMAL, KeyType.NORMAL, 92 - 64, true, 92, true, '£', true ).Replacements.Add( "POUND" );
       AddC64Key( KeyboardKey.KEY_SEMI_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 93 - 64, true, 93, true, ']', true );//(char)0xee1d, true );// ']', true );
