@@ -70,5 +70,13 @@ namespace C64Studio
 
 
 
+    internal ProjectConfig GetConfigurationByName( string ConfigName )
+    {
+      if ( !Configs.ContainsKey( ConfigName ) )
+      {
+        return null;
+      }
+      return Configs[ConfigName];
+    }
   }
 }

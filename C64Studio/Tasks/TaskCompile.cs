@@ -560,7 +560,16 @@ namespace C64Studio.Tasks
         // ugly hack to force rebuild -> problem: we do not check output file timestamps if we need to recompile -> can't have build chain with same file in different configs!
         Core.MainForm.MarkAsDirty( element.DocumentInfo );
 
-        if ( !BuildElement( element.DocumentInfo, entry.Config, entry.PreDefines, OutputMessages, out buildInfo, out fileInfo ) )
+        // consolidate build chain and project config pre defines
+        //var config = project.Settings.GetConfigurationByName( entry.Config );
+        string preDefines = entry.PreDefines;
+        /*
+        if ( config != null )
+        {
+          preDefines += config.Defines;
+        }*/
+
+        if ( !BuildElement( element.DocumentInfo, entry.Config, preDefines, OutputMessages, out buildInfo, out fileInfo ) )
         {
           Core.Compiling.m_BuildChainStack.Pop();
           return false;

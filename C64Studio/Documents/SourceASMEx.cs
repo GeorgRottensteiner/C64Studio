@@ -1066,6 +1066,7 @@ namespace C64Studio
         currentZone = symbol.Name;
       }
 
+      comboZoneSelector.BeginUpdate();
       comboZoneSelector.Items.Clear();
 
       C64Studio.Types.SymbolInfo    globalSymbol = new C64Studio.Types.SymbolInfo();
@@ -1108,6 +1109,7 @@ namespace C64Studio
       {
         comboZoneSelector.SelectedIndex = 0;
       }
+      comboZoneSelector.EndUpdate();
       //RefreshLocalSymbols();
       //RefreshAutoComplete();
     }

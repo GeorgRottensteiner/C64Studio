@@ -1269,11 +1269,27 @@ namespace C64Studio
             //Debug.Log( "Trying to map unknown token: " + key.ToString() );
             if ( m_LowerCaseMode )
             {
-              InsertOrReplaceChar( c64Key.LowerCaseDisplayChar );
+              if ( ( c64Key.LowerCaseDisplayChar >= 0xe041 )
+              &&   ( c64Key.LowerCaseDisplayChar <= 0xe05a ) )
+              {
+                InsertOrReplaceChar( (char)( ( c64Key.LowerCaseDisplayChar & 0xff ) + 0x20 ) );
+              }
+              else
+              {
+                InsertOrReplaceChar( c64Key.LowerCaseDisplayChar );
+              }
             }
             else
             {
-              InsertOrReplaceChar( c64Key.CharValue );
+              if ( ( c64Key.CharValue >= 0xe041 )
+              &&   ( c64Key.CharValue <= 0xe05a ) )
+              {
+                InsertOrReplaceChar( (char)( c64Key.CharValue & 0xff ) );
+              }
+              else
+              {
+                InsertOrReplaceChar( c64Key.CharValue );
+              }
             }
           }
           else
