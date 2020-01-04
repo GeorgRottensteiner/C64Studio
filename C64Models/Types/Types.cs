@@ -756,6 +756,7 @@ namespace C64Studio.Types
     public string     Info = "";
     public int        CharIndex = -1;
     public int        Length = 0;
+    public ASM.SourceInfo SourceInfo = null;
 
 
 

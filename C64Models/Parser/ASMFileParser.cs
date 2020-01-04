@@ -405,10 +405,11 @@ namespace C64Studio.Parser
 
     public Types.SymbolInfo AddLabel( string Name, int Value, int SourceLine, string Zone, int CharIndex, int Length )
     {
-      string    filename;
-      int       localIndex = 0;
+      string          filename;
+      int             localIndex = 0;
+      SourceInfo      sourceInfo = null;
 
-      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex );
+      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out sourceInfo );
 
       if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
       {
@@ -419,9 +420,11 @@ namespace C64Studio.Parser
         token.LineIndex       = SourceLine;
         token.Zone            = Zone;
         token.DocumentFilename = filename;
-        token.LocalLineIndex = localIndex;
+        token.LocalLineIndex  = localIndex;
         token.CharIndex       = CharIndex;
         token.Length          = Length;
+        token.SourceInfo      = sourceInfo;
+
         ASMFileInfo.Labels.Add( Name, token );
         return token;
       }
@@ -477,9 +480,10 @@ namespace C64Studio.Parser
 
     public void AddZone( string Name, int SourceLine, int CharIndex, int Length )
     {
-      string  zoneFile;
-      int     localLine;
-      ASMFileInfo.FindTrueLineSource( SourceLine, out zoneFile, out localLine );
+      string        zoneFile;
+      int           localLine;
+      SourceInfo    srcInfo;
+      ASMFileInfo.FindTrueLineSource( SourceLine, out zoneFile, out localLine, out srcInfo );
 
       if ( !ASMFileInfo.Zones.ContainsKey( Name ) )
       {
@@ -491,6 +495,7 @@ namespace C64Studio.Parser
         token.CharIndex = CharIndex;
         token.Length    = Length;
         token.DocumentFilename = zoneFile;
+        token.SourceInfo = srcInfo;
         ASMFileInfo.Zones.Add( Name, token );
       }
       else
@@ -508,9 +513,10 @@ namespace C64Studio.Parser
 
     public void AddConstantF( string Name, double Value, int SourceLine, string Info, int CharIndex, int Length )
     {
-      string    filename = "";
-      int       localIndex = -1;
-      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex );
+      string      filename = "";
+      int         localIndex = -1;
+      SourceInfo  srcInfo;
+      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
 
       if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
       {
@@ -521,8 +527,9 @@ namespace C64Studio.Parser
         token.LineIndex = SourceLine;
         token.Used = true;
         token.Info = Info;
-        token.DocumentFilename = filename;
-        token.LocalLineIndex = localIndex;
+        token.DocumentFilename  = filename;
+        token.LocalLineIndex    = localIndex;
+        token.SourceInfo        = srcInfo;
 
         ASMFileInfo.Labels.Add( Name, token );
       }
@@ -537,9 +544,10 @@ namespace C64Studio.Parser
 
     public void AddConstant( string Name, int Value, int SourceLine, string Info, string Zone, int CharIndex, int Length )
     {
-      string    filename = "";
-      int       localIndex = -1;
-      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex );
+      string      filename = "";
+      int         localIndex = -1;
+      SourceInfo  srcInfo;
+      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
 
       // check if temp label exists
       foreach ( C64Studio.Types.ASM.TemporaryLabelInfo tempLabel in ASMFileInfo.TempLabelInfo )
@@ -562,6 +570,7 @@ namespace C64Studio.Parser
         token.Info            = Info;
         token.DocumentFilename = filename;
         token.LocalLineIndex  = localIndex;
+        token.SourceInfo      = srcInfo;
 
         if ( Value < 256 )
         {
@@ -6293,7 +6302,8 @@ namespace C64Studio.Parser
             symbol.Used = true;
             symbol.Zone = entry.Value.Zone;
             symbol.FromDependency = true;
-            symbol.Info = entry.Value.Info;
+            symbol.Info           = entry.Value.Info;
+            symbol.SourceInfo     = entry.Value.SourceInfo;
 
             ASMFileInfo.Labels.Add( entry.Key, symbol );
           }
@@ -10436,14 +10446,14 @@ namespace C64Studio.Parser
 
       foreach ( KeyValuePair<string, Types.SymbolInfo> zone in ASMFileInfo.Zones )
       {
-        DocumentAndLineFromGlobalLine( zone.Value.LineIndex, out zone.Value.DocumentFilename, out zone.Value.LocalLineIndex );
+        DocumentAndLineFromGlobalLine( zone.Value.LineIndex, out zone.Value.DocumentFilename, out zone.Value.LocalLineIndex, out zone.Value.SourceInfo );
         knownTokens.Add( zone.Key, zone.Value );
       }
       foreach ( KeyValuePair<string, Types.SymbolInfo> label in ASMFileInfo.Labels )
       {
         if ( !label.Value.FromDependency )
         {
-          DocumentAndLineFromGlobalLine( label.Value.LineIndex, out label.Value.DocumentFilename, out label.Value.LocalLineIndex );
+          DocumentAndLineFromGlobalLine( label.Value.LineIndex, out label.Value.DocumentFilename, out label.Value.LocalLineIndex, out label.Value.SourceInfo );
         }
         knownTokens.Add( label.Key, label.Value );
       }
@@ -10452,7 +10462,7 @@ namespace C64Studio.Parser
         Types.SymbolInfo token = new C64Studio.Types.SymbolInfo();
 
         token.Name = label.Key;
-        DocumentAndLineFromGlobalLine( label.Value.LineIndex, out token.DocumentFilename, out token.LineIndex );
+        DocumentAndLineFromGlobalLine( label.Value.LineIndex, out token.DocumentFilename, out token.LineIndex, out token.SourceInfo );
         knownTokens.Add( token.Name, token );
       }
       return knownTokens;
@@ -13119,6 +13129,13 @@ namespace C64Studio.Parser
     public override bool DocumentAndLineFromGlobalLine( int GlobalLine, out string DocumentFile, out int DocumentLine )
     {
       return ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine );
+    }
+
+
+
+    public bool DocumentAndLineFromGlobalLine( int GlobalLine, out string DocumentFile, out int DocumentLine, out SourceInfo SrcInfo )
+    {
+      return ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine, out SrcInfo );
     }
 
 

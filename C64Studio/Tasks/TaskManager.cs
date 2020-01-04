@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
+using System.Linq;
+
+
 
 namespace C64Studio.Tasks
 {
@@ -48,6 +50,28 @@ namespace C64Studio.Tasks
       Task.Core = Core;
       lock ( m_TaskQueue )
       {
+        var tasksToRemove = new List<Task>();
+
+        // remove duplicate update keyword tasks!
+        foreach ( var task in m_TaskQueue )
+        {
+          if ( ( task is TaskUpdateKeywords )
+          &&   ( Task is TaskUpdateKeywords ) )
+          {
+            var  oldTask  = task as TaskUpdateKeywords;
+            var  newTask  = task as TaskUpdateKeywords;
+
+            if ( oldTask.Doc == newTask.Doc )
+            {
+              tasksToRemove.Add( oldTask );
+            }
+          }
+        }
+        foreach ( var taskToRemove in tasksToRemove )
+        {
+          m_TaskQueue.Remove( taskToRemove );
+        }
+
         m_TaskQueue.Add( Task );
       }
       if ( !m_BackgroundWorker.IsBusy )

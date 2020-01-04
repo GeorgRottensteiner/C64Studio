@@ -7,12 +7,12 @@ namespace C64Studio.Types.ASM
 {
   public class SourceInfo
   {
-    public string Filename = "";
-    public string FilenameParent = "";
-    public string FullPath = "";
-    public int    GlobalStartLine = 0;
-    public int    LocalStartLine = 0;
-    public int    LineCount = 0;
+    public string         Filename = "";
+    public string         FilenameParent = "";
+    public string         FullPath = "";
+    public int            GlobalStartLine = 0;
+    public int            LocalStartLine = 0;
+    public int            LineCount = 0;
   };
 
 
@@ -149,8 +149,17 @@ namespace C64Studio.Types.ASM
 
     public bool FindTrueLineSource( int LineIndex, out string Filename, out int LocalLineIndex )
     {
+      SourceInfo dummy;
+      return FindTrueLineSource( LineIndex, out Filename, out LocalLineIndex, out dummy );
+    }
+
+
+
+    public bool FindTrueLineSource( int LineIndex, out string Filename, out int LocalLineIndex, out SourceInfo SrcInfo )
+    {
       Filename = "";
       LocalLineIndex = -1;
+      SrcInfo = null;
 
       //dh.Log( "FindTrueLineSource for " + LineIndex );
       foreach ( Types.ASM.SourceInfo sourceInfo in SourceInfo.Values )
@@ -161,6 +170,8 @@ namespace C64Studio.Types.ASM
           Filename = sourceInfo.Filename;
           //LocalLineIndex = LineIndex + sourceInfo.LocalStartLine - sourceInfo.GlobalStartLine;
           LocalLineIndex = LineIndex + sourceInfo.LocalStartLine - sourceInfo.GlobalStartLine;
+
+          SrcInfo = sourceInfo;
           return true;
         }
       }

@@ -1084,7 +1084,9 @@ namespace C64Studio
 
         foreach ( C64Studio.Types.SymbolInfo symbol in listValues )
         {
-          if ( ( GR.Path.IsPathEqual( symbol.DocumentFilename, DocumentInfo.FullPath ) )
+          if ( ( ( ( symbol.SourceInfo != null )
+          &&       ( symbol.SourceInfo.FullPath == DocumentInfo.FullPath ) )
+          ||     ( GR.Path.IsPathEqual( symbol.DocumentFilename, DocumentInfo.FullPath ) ) )
           &&   ( symbol.Type == C64Studio.Types.SymbolInfo.Types.ZONE ) )
           /*
           &&   ( !string.IsNullOrEmpty( symbol.Zone ) )
@@ -1160,6 +1162,7 @@ namespace C64Studio
         currentLabel = symbol.Name;
       }
 
+      comboLocalLabelSelector.BeginUpdate();
       comboLocalLabelSelector.Items.Clear();
 
       GR.Collections.Set<string> keySet = DocumentInfo.KnownTokens.GetUniqueKeys();
@@ -1173,7 +1176,9 @@ namespace C64Studio
           ||   ( symbol.Type == C64Studio.Types.SymbolInfo.Types.CONSTANT_2 )
           ||   ( symbol.Type == C64Studio.Types.SymbolInfo.Types.LABEL ) )
           {
-            if ( ( GR.Path.IsPathEqual( symbol.DocumentFilename, fullPath ) )
+            if ( ( ( ( symbol.SourceInfo != null )
+            &&       ( symbol.SourceInfo.FullPath == DocumentInfo.FullPath ) )
+            ||     ( GR.Path.IsPathEqual( symbol.DocumentFilename, fullPath ) ) )
             &&   ( symbol.Zone == currentZone ) )
             {
               int itemIndex = comboLocalLabelSelector.Items.Add( symbol );
@@ -1185,6 +1190,7 @@ namespace C64Studio
           }
         }
       }
+      comboLocalLabelSelector.EndUpdate();
       UpdateStatusInfo();
     }
 

@@ -122,11 +122,13 @@ namespace C64Studio
       {
         if ( doc.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
         {
-          comboBasicFiles.Items.Add( new Types.ComboItem( doc.Name, doc ) );
+          string    nameToUse = doc.DocumentFilename ?? "New File";
+          comboBasicFiles.Items.Add( new Types.ComboItem( nameToUse, doc.DocumentInfo ) );
         }
         else if ( doc.DocumentInfo.Type == ProjectElement.ElementType.CHARACTER_SET )
         {
-          comboCharsetFiles.Items.Add( new Types.ComboItem( doc.Name, doc ) );
+          string    nameToUse = doc.DocumentFilename ?? "New File";
+          comboCharsetFiles.Items.Add( new Types.ComboItem( nameToUse, doc.DocumentInfo ) );
         }
       }
       comboBasicFiles.SelectedIndex = 0;
@@ -190,11 +192,27 @@ namespace C64Studio
       {
         if ( Event.Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
         {
+          foreach ( ComboItem item in comboBasicFiles.Items )
+          {
+            if ( (DocumentInfo)item.Tag == Event.Doc )
+            {
+              return;
+            }
+          }
+
           string    nameToUse = Event.Doc.DocumentFilename ?? "New File";
           comboBasicFiles.Items.Add( new Types.ComboItem( nameToUse, Event.Doc ) );
         }
         else if ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SET )
         {
+          foreach ( ComboItem item in comboCharsetFiles.Items )
+          {
+            if ( (DocumentInfo)item.Tag == Event.Doc )
+            {
+              return;
+            }
+          }
+
           string    nameToUse = Event.Doc.DocumentFilename ?? "New File";
           comboCharsetFiles.Items.Add( new Types.ComboItem( nameToUse, Event.Doc ) );
         }
@@ -1678,14 +1696,23 @@ namespace C64Studio
       int     curColor = -1;
       bool isReverse = false;
 
-      sb.Append( "10 PRINT\"" + Types.ConstantData.PetSCIIToChar[147].CharValue + "\";\n" );
-      sb.Append( "11 POKE53280," + m_CharsetScreen.BackgroundColor.ToString() + ":POKE53281," + m_CharsetScreen.BackgroundColor.ToString() + "\n" );
+      int   startLineNo = GR.Convert.ToI32( editExportBASICLineNo.Text );
+      int   lineStep = GR.Convert.ToI32( editExportBASICLineOffset.Text );
+
+      sb.Append( startLineNo );
+      sb.Append( " PRINT\"" + Types.ConstantData.PetSCIIToChar[147].CharValue + "\";\n" );
+      startLineNo += lineStep;
+
+      sb.Append( startLineNo );
+      startLineNo += lineStep;
+      sb.Append( " POKE53280," + m_CharsetScreen.BackgroundColor.ToString() + ":POKE53281," + m_CharsetScreen.BackgroundColor.ToString() + "\n" );
 
       System.Drawing.Rectangle    exportRect = DetermineExportRectangle();
 
       for ( int i = exportRect.Top; i < exportRect.Bottom; ++i )
       {
-        sb.Append( 20 + i );
+        sb.Append( startLineNo );
+        startLineNo += lineStep;
         sb.Append( " PRINT\"" );
         for ( int x = exportRect.Left; x < exportRect.Right; ++x )
         {
@@ -1759,9 +1786,17 @@ namespace C64Studio
       }
       else
       {
-        BaseDocument document = (BaseDocument)comboItem.Tag;
-        document.InsertText( sb.ToString() );
-        document.SetModified();
+        var document = (DocumentInfo)comboItem.Tag;
+        if ( document.BaseDoc == null )
+        {
+          if ( document.Project == null )
+          {
+            return;
+          }
+          document.Project.ShowDocument( document.Element );
+        }
+        document.BaseDoc.InsertText( sb.ToString() );
+        document.BaseDoc.SetModified();
       }
     }
 
@@ -2253,6 +2288,7 @@ namespace C64Studio
 
     private void btnToolEdit_CheckedChanged( object sender, EventArgs e )
     {
+      HideSelection();
       m_ToolMode = ToolMode.SINGLE_CHAR;
     }
 
@@ -2260,6 +2296,7 @@ namespace C64Studio
 
     private void btnToolRect_CheckedChanged( object sender, EventArgs e )
     {
+      HideSelection();
       m_ToolMode = ToolMode.RECTANGLE;
     }
 
@@ -2267,6 +2304,7 @@ namespace C64Studio
 
     private void btnToolFill_CheckedChanged( object sender, EventArgs e )
     {
+      HideSelection();
       m_ToolMode = ToolMode.FILL;
     }
 
@@ -2281,6 +2319,7 @@ namespace C64Studio
 
     private void btnToolQuad_CheckedChanged( object sender, EventArgs e )
     {
+      HideSelection();
       m_ToolMode = ToolMode.FILLED_RECTANGLE;
     }
 
@@ -2288,8 +2327,23 @@ namespace C64Studio
 
     private void btnToolText_CheckedChanged( object sender, EventArgs e )
     {
+      HideSelection();
       m_ToolMode = ToolMode.TEXT;
       m_TextEntryStartedInLine = -1;
+    }
+
+
+
+    private void HideSelection()
+    {
+      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      {
+        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        {
+          m_SelectedChars[i, j] = false;
+        }
+      }
+      Redraw();
     }
 
 

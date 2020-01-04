@@ -170,7 +170,7 @@ namespace C64Studio
       }
 
       //Debug.Log( "=============Start" );
-      while ( !m_ExternalProcess.WaitForExit( 50 ) )
+      while ( !m_ExternalProcess.WaitForExit( 5 ) )
       {
         Application.DoEvents();
       }

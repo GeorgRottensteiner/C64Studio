@@ -230,13 +230,14 @@ namespace C64Studio
 
       while ( dataPos < Data.Length )
       {
-        sb.Append( StartLine );
-        sb.Append( " DATA " );
-
-        bool    firstByte = true;
         int     startLength = sb.Length;
 
-        while ( ( sb.Length - startLength < 76 )
+        sb.Append( StartLine );
+        sb.Append( "DATA" );
+
+        bool    firstByte = true;
+
+        while ( ( sb.Length - startLength < 80 )
         &&      ( dataPos < Data.Length ) )
         {
           if ( !firstByte )
@@ -272,14 +273,14 @@ namespace C64Studio
 
       while ( dataPos < Data.Length )
       {
+        int     startLength = sb.Length;
         sb.Append( StartLine );
-        sb.Append( " DATA " );
+        sb.Append( "DATA" );
 
         bool    firstByte = true;
-        int     startLength = sb.Length;
 
         while ( ( sb.Length - startLength < 76 )
-        && ( dataPos < Data.Length ) )
+        &&      ( dataPos < Data.Length ) )
         {
           if ( !firstByte )
           {
