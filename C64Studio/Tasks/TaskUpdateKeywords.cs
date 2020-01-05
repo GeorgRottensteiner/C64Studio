@@ -27,10 +27,8 @@ namespace C64Studio.Tasks
       {
         return (bool)Doc.Invoke( new ProcessTaskCallback( ProcessTask ) );
       }
-      Debug.Log( "ProcessTask TaskUpdateKeywords for " + Doc.DocumentInfo.FullPath );
       Doc.OnKnownKeywordsChanged();
       Doc.OnKnownTokensChanged();
-      Debug.Log( "ProcessTask TaskUpdateKeywords for " + Doc.DocumentInfo.FullPath + " done" );
       return true;
     }
 

@@ -2471,6 +2471,8 @@ namespace C64Studio
       //ParserASM.CompileTarget != Types.CompileTargetType.NONE ) ? ParserASM.CompileTarget : DocumentToRun.Element.TargetType;
 
       // need to adjust initial breakpoint address for late added store/load breakpoints?
+
+      StudioCore.Debugging.InitialBreakpointIsTemporary = true;
       //if ( StudioCore.Debugging.BreakpointsToAddAfterStartup.Count > 0 )
       {
         // yes
@@ -2500,6 +2502,7 @@ namespace C64Studio
         }
         if ( debugStartAddress != 0 )
         {
+          StudioCore.Debugging.InitialBreakpointIsTemporary = false;
           StudioCore.Debugging.OverrideDebugStart = debugStartAddress;
           StudioCore.Debugging.LateBreakpointOverrideDebugStart = debugStartAddress;
         }

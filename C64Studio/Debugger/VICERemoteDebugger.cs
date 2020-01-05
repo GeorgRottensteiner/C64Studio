@@ -946,7 +946,8 @@ namespace C64Studio
             if ( ( !m_IsCartridge )
             &&   ( m_BrokenAtBreakPoint == 1 ) )
             {
-              if ( !m_InitialBreakpointRemoved )
+              if ( ( Core.Debugging.InitialBreakpointIsTemporary )
+              &&   ( !m_InitialBreakpointRemoved ) )
               {
                 // auto break point
                 m_InitialBreakpointRemoved = true;

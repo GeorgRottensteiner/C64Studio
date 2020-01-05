@@ -41,8 +41,7 @@ namespace C64Studio
     public List<Types.Breakpoint>                             BreakpointsToAddAfterStartup = new List<C64Studio.Types.Breakpoint>();
 
     public CompileTargetType DebugType = CompileTargetType.NONE;
-
-
+    internal bool               InitialBreakpointIsTemporary;
 
     public Debugging( StudioCore Core )
     {

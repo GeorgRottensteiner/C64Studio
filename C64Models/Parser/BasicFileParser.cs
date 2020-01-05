@@ -2039,6 +2039,11 @@ namespace C64Studio.Parser
 
       TranslateCharactersToPETSCII( Line, LineIndex, endOfDigitPos, ref posInLine, ref insideMacro, ref macroStartPos, tempData );
 
+      if ( tempData.Length + endOfDigitPos > 80 )
+      {
+        AddWarning( LineIndex, Types.ErrorCode.W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY, "Line " + LastLineNumber + " is too long for manual entry", 0, info.Line.Length );
+      }
+
       // now the real token crunching
       int bytePos = 0;
 
@@ -2245,10 +2250,7 @@ namespace C64Studio.Parser
       {
         AddError( LineIndex, Types.ErrorCode.E3006_BASIC_LINE_TOO_LONG, "Line is too long, max. 250 bytes possible" );
       }
-      else if ( info.LineData.Length > 80 )
-      {
-        AddWarning( LineIndex, Types.ErrorCode.W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY, "Line is too long for manual entry", 0, info.Line.Length );
-      }
+      
 
       // update line number references
       for ( int i = 0; i < info.Tokens.Count; ++i )
