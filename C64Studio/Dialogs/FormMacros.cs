@@ -25,13 +25,17 @@ namespace C64Studio
       this.Core = Core;
 
       InsertMacro( "$(Filename)" );
+      InsertMacro( "$(File)" );
       InsertMacro( "$(FilenameWithoutExtension)" );
       InsertMacro( "$(FilePath)" );
       InsertMacro( "$(BuildTargetPath)" );
       InsertMacro( "$(BuildTargetFilename)" );
       InsertMacro( "$(BuildTargetFilenameWithoutExtension)" );
+      InsertMacro( "$(BuildTargetFile)" );
+      InsertMacro( "$(BuildTargetFileWithoutExtension)" );
       InsertMacro( "$(RunPath)" );
       InsertMacro( "$(RunFilename)" );
+      InsertMacro( "$(RunFile)" );
       InsertMacro( "$(RunFilenameWithoutExtension)" );
       InsertMacro( "$(DebugStartAddress)" );
       InsertMacro( "$(DebugStartAddressHex)" );
@@ -53,15 +57,19 @@ namespace C64Studio
       this.Core = Core;
 
       InsertMacro( "$(Filename)" );
+      InsertMacro( "$(File)" );
       InsertMacro( "$(FilenameWithoutExtension)" );
       InsertMacro( "$(FilePath)" );
       InsertMacro( "$(BuildTargetPath)" );
       InsertMacro( "$(BuildTargetFilename)" );
       InsertMacro( "$(BuildTargetFilenameWithoutExtension)" );
+      InsertMacro( "$(BuildTargetFile)" );
+      InsertMacro( "$(BuildTargetFileWithoutExtension)" );
       if ( ShowRunCommands )
       {
         InsertMacro( "$(RunPath)" );
         InsertMacro( "$(RunFilename)" );
+        InsertMacro( "$(RunFile)" );
         InsertMacro( "$(RunFilenameWithoutExtension)" );
       }
       InsertMacro( "$(DebugStartAddress)" );

@@ -1804,6 +1804,7 @@ namespace C64Studio
         return Mask;
       }
       string result = Mask.Replace( "$(Filename)", fullDocPath );
+      result = result.Replace( "$(File)", System.IO.Path.GetFileName( fullDocPath ) );
       result = result.Replace( "$(FilenameWithoutExtension)", System.IO.Path.GetFileNameWithoutExtension( fullDocPath ) );
       result = result.Replace( "$(FilePath)", GR.Path.RemoveFileSpec( fullDocPath ) );
 
@@ -1819,6 +1820,11 @@ namespace C64Studio
         {
           targetFilename = Document.Element.CompileTargetFile;
         }
+        if ( ( string.IsNullOrEmpty( targetFilename ) )
+        &&   ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+        {
+          targetFilename = GR.Path.RenameExtension( fullDocPath, ".prg" );
+        }
       }
       string targetPath = "";
       if ( !string.IsNullOrEmpty( targetFilename ) )
@@ -1830,9 +1836,11 @@ namespace C64Studio
         targetPath = Document.Project.Settings.BasePath;
       }
       targetFilename = System.IO.Path.GetFileName( targetFilename );
+      string targetFilenameWithoutPath = System.IO.Path.GetFileName( targetFilename );
       string targetFilenameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(targetFilename);
       string fullTargetFilename = GR.Path.Append(targetPath, targetFilename);
-      string fullTargetFilenameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fullTargetFilename);
+      string fullTargetFilenameWithoutPath = System.IO.Path.GetFileName(fullTargetFilename);
+      string fullTargetFilenameWithoutExtension = System.IO.Path.Combine( targetPath, System.IO.Path.GetFileNameWithoutExtension(fullTargetFilename) );
 
       string runFilename = System.IO.Path.GetFileName(fullTargetFilename);
       string fullRunFilename = fullTargetFilename;
@@ -1865,8 +1873,9 @@ namespace C64Studio
           runFilename = System.IO.Path.GetFileName( fullRunFilename );
         }
       }
-      string runFilenameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(runFilename);
-      string fullRunFilenameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fullRunFilename);
+      string runFilenameWithoutExtension      = System.IO.Path.GetFileNameWithoutExtension(runFilename);
+      string runFilenameWithoutPath           = System.IO.Path.GetFileName(runFilename);
+      string fullRunFilenameWithoutExtension  = System.IO.Path.GetFileNameWithoutExtension(fullRunFilename);
 
 
 
@@ -1877,23 +1886,14 @@ namespace C64Studio
       result = result.Replace( "$(BuildTargetFileWithoutExtension)", targetFilenameWithoutExtension );
       result = result.Replace( "$(RunPath)", runPath );
       result = result.Replace( "$(RunFilename)", fullRunFilename );
+      result = result.Replace( "$(RunFile)", runFilenameWithoutPath );
       result = result.Replace( "$(RunFilenameWithoutExtension)", fullRunFilenameWithoutExtension );
 
       if ( Document.Project != null )
       {
         result = result.Replace( "$(ConfigName)", Document.Project.Settings.CurrentConfig.Name );
+        result = result.Replace( "$(ProjectPath)", Document.Project.Settings.BasePath );
       }
-
-      //m_DocumentToRun.Project.Settings.CurrentConfig.Name
-      /*
-    if ( mainToolConfig.SelectedItem != null )
-    {
-      result = result.Replace( "$(ConfigName)", mainToolConfig.SelectedItem.ToString() );
-    }
-    if ( Document.Project != null )
-    {
-      result = result.Replace( "$(ProjectPath)", Document.Project.Settings.BasePath );
-    }*/
       result = result.Replace( "$(MediaManager)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediamanager.exe" ) + "\"" );
       result = result.Replace( "$(MediaTool)", "\"" + System.IO.Path.Combine( Application.StartupPath, "mediatool.exe" ) + "\"" );
 

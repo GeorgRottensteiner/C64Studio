@@ -1,6 +1,9 @@
 ﻿C64Studio
 o Theming -> Disabled Controls
-o BASIC -> Anzeige Zeichenmodus
+o Abspeichern von .BAS-Dateien mit "richtigem" PETSCII-Wert (falls das nicht mit irgend etwas anderem kollidiert)
+o alternative BASIC-Macro-Darstellung (xxx * Anzahl)
+o Macro Filename ohne Pfad
+o Kontext-Menü im BASIC-Editor
 o ASM - alternatives Output-Verzeichnis
 o File-Manager-Import von BASIC-Dateien, Version!! (V7, etc.)
 o FileManager -> Rename, Start in Emulator directly?
