@@ -31,9 +31,6 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common", "Common\Common.shproj", "{8B180733-2DFD-4E66-9351-965518AC3DF5}"
 EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		C64Models\C64Models.projitems*{060ec631-0065-45f1-ae91-5e39fe260337}*SharedItemsImports = 4
 		Common\Common.projitems*{060ec631-0065-45f1-ae91-5e39fe260337}*SharedItemsImports = 4
