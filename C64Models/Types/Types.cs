@@ -495,6 +495,7 @@ namespace C64Studio.Types
     public static string FILEFILTER_CHARSET_PROJECT = "Charset Project|*.charsetproject|";
     public static string FILEFILTER_CHARSET = "Charset Project or File|*.charsetproject;*.chr|";
     public static string FILEFILTER_CHARSET_CHARPAD = "Charpad Project|*.ctm|";
+    public static string FILEFILTER_MARCS_PETSCII = "Marc's PETSCII Editor File|*.c|";
     public static string FILEFILTER_CHARSET_SCREEN = "Charset Screen Project|*.charscreen|";
     public static string FILEFILTER_SPRITE_PROJECT = "Sprite Project|*.spriteproject|";
     public static string FILEFILTER_SPRITE_FILE = "Sprite File|*.spr|";

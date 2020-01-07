@@ -1026,18 +1026,25 @@ namespace C64Studio
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
 
-        m_CharsetScreen.BackgroundColor = comboBackground.SelectedIndex;
-        m_CharsetScreen.CharSet.BackgroundColor = m_CharsetScreen.BackgroundColor;
-        for ( int i = 0; i < 256; ++i )
-        {
-          RebuildCharImage( i );
-        }
-        Modified = true;
-        RedrawFullScreen();
-        pictureEditor.Invalidate();
-        panelCharacters.Invalidate();
-        panelCharsetDetails.Invalidate();
+        SetBackgroundColor( comboBackground.SelectedIndex );
       }
+    }
+
+
+
+    private void SetBackgroundColor( int ColorIndex )
+    {
+      m_CharsetScreen.BackgroundColor = ColorIndex;
+      m_CharsetScreen.CharSet.BackgroundColor = m_CharsetScreen.BackgroundColor;
+      for ( int i = 0; i < 256; ++i )
+      {
+        RebuildCharImage( i );
+      }
+      Modified = true;
+      RedrawFullScreen();
+      pictureEditor.Invalidate();
+      panelCharacters.Invalidate();
+      panelCharsetDetails.Invalidate();
     }
 
 
@@ -1957,7 +1964,7 @@ namespace C64Studio
     {
       string filename;
 
-      if ( OpenFile( "Open Charpad project or binary data", C64Studio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Open Charpad project, Marc's PETSCII editor files or binary data", C64Studio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + C64Studio.Types.Constants.FILEFILTER_MARCS_PETSCII + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
         {
@@ -2058,6 +2065,66 @@ namespace C64Studio
           ImportFromData( map.TileSpacingX * map.Tiles.Width,
                           map.TileSpacingY * map.Tiles.Height,
                           charData, colorData, m_CharsetScreen.CharSet );
+        }
+        else if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".C" )
+        {
+          string cData = GR.IO.File.ReadAllText( filename );
+          if ( !string.IsNullOrEmpty( cData ) )
+          {
+            int     dataStart = cData.IndexOf( '{' );
+            if ( dataStart == -1 )
+            {
+              return;
+            }
+            int     dataEnd = cData.IndexOf( '}', dataStart );
+            if ( dataEnd == -1 )
+            {
+              return;
+            }
+            string  actualData = cData.Substring( dataStart + 1, dataEnd - dataStart - 2 );
+
+            var screenData = new ByteBuffer();
+
+            var dataLines = actualData.Split( '\n' );
+            for ( int i = 0; i < dataLines.Length; ++i )
+            {
+              var dataLine = dataLines[i].Trim();
+              if ( dataLine.StartsWith( "//" ) )
+              {
+                continue;
+              }
+              int     pos = 0;
+              int     commaPos = -1;
+
+              while ( pos < dataLine.Length )
+              {
+                commaPos = dataLine.IndexOf( ',', pos );
+                if ( commaPos == -1 )
+                {
+                  // end of line
+                  byte    byteValue = GR.Convert.ToU8( dataLine.Substring( pos ) );
+
+                  screenData.AppendU8( byteValue );
+                  break;
+                }
+                else
+                {
+                  byte    byteValue = GR.Convert.ToU8( dataLine.Substring( pos, commaPos - pos ) );
+
+                  screenData.AppendU8( byteValue );
+                  pos = commaPos + 1;
+                }
+              }
+
+              if ( screenData.Length == 2002 )
+              {
+                // border and BG first
+                m_CharsetScreen.BackgroundColor = screenData.ByteAt( 1 );
+                screenData = screenData.SubBuffer( 2 );
+              }
+              ImportFromData( screenData );
+            }
+          }
         }
         else
         {
