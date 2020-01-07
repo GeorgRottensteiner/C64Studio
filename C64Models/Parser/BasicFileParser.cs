@@ -76,7 +76,8 @@ namespace C64Studio.Parser
     {
       OK = 0,
       TOO_MANY_LINES,
-      NOTHING_TO_DO
+      NOTHING_TO_DO,
+      INVALID_VALUES
     };
 
     public class ActionToken
@@ -3517,7 +3518,7 @@ namespace C64Studio.Parser
 
 
 
-    public RenumberResult CanRenumber( int LineStart, int LineStep )
+    public RenumberResult CanRenumber( int LineStart, int LineStep, int FirstLineNumber, int LastLineNumber )
     {
       if ( m_LineInfos.Count == 0 )
       {
@@ -3527,12 +3528,21 @@ namespace C64Studio.Parser
       {
         return RenumberResult.TOO_MANY_LINES;
       }
+      if ( ( LineStart < 0 )
+      ||   ( LineStart >= 64000 )
+      ||   ( FirstLineNumber < 0 )
+      ||   ( FirstLineNumber >= 64000 )
+      ||   ( LastLineNumber < 0 )
+      ||   ( LastLineNumber >= 64000 ) )
+      {
+        return RenumberResult.INVALID_VALUES;
+      }
       return RenumberResult.OK;
     }
 
 
 
-    public string Renumber( int LineStart, int LineStep )
+    public string Renumber( int LineStart, int LineStep, int FirstLineNumber, int LastLineNumber )
     {
       StringBuilder sb = new StringBuilder();
 
@@ -3541,9 +3551,12 @@ namespace C64Studio.Parser
       int curLine = LineStart;
       foreach ( KeyValuePair<int, LineInfo> lineInfo in m_LineInfos )
       {
-        lineNumberReference[lineInfo.Value.LineNumber] = curLine;
-
-        curLine += LineStep;
+        if ( ( lineInfo.Value.LineNumber >= FirstLineNumber )
+        &&   ( lineInfo.Value.LineNumber <= LastLineNumber ) )
+        {
+          lineNumberReference[lineInfo.Value.LineNumber] = curLine;
+          curLine += LineStep;
+        }
       }
 
       curLine = LineStart;
@@ -3565,7 +3578,16 @@ namespace C64Studio.Parser
           Token token = lineInfo.Tokens[i];
           if ( token.TokenType == Token.Type.LINE_NUMBER )
           {
-            sb.Append( lineNumberReference[lineInfo.LineNumber] );
+            // replace starting line number
+            if ( ( lineInfo.LineNumber >= FirstLineNumber )
+            &&   ( lineInfo.LineNumber <= LastLineNumber ) )
+            {
+              sb.Append( lineNumberReference[lineInfo.LineNumber] );
+            }
+            else
+            {
+              sb.Append( lineInfo.LineNumber );
+            }
             continue;
           }
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
@@ -3588,7 +3610,15 @@ namespace C64Studio.Parser
                     sb.Append( lineInfo.Tokens[i + 1].Content );
                     ++i;
                   }
-                  sb.Append( lineNumberReference[refNo] );
+                  if ( ( refNo >= FirstLineNumber )
+                  &&   ( refNo <= LastLineNumber ) )
+                  {
+                    sb.Append( lineNumberReference[refNo] );
+                  }
+                  else
+                  {
+                    sb.Append( refNo );
+                  }
                   ++i;
                   continue;
                 }
@@ -3611,7 +3641,9 @@ namespace C64Studio.Parser
                   {
                     // numeric!
                     int refNo = GR.Convert.ToI32( nextToken.Content );
-                    if ( lineNumberReference.ContainsKey( refNo ) )
+                    if ( ( refNo >= FirstLineNumber )
+                    &&   ( refNo <= LastLineNumber )
+                    &&   ( lineNumberReference.ContainsKey( refNo ) ) )
                     {
                       sb.Append( lineNumberReference[refNo].ToString() );
                     }

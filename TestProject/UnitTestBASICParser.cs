@@ -54,7 +54,7 @@ namespace TestProject
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
-      string result = parser.Renumber( 10, 3 );
+      string result = parser.Renumber( 10, 3, 0, 64000 );
 
       Assert.AreEqual( "10IFA=1THEN10", result );
     }
@@ -75,7 +75,7 @@ namespace TestProject
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
-      string result = parser.Renumber( 10, 3 );
+      string result = parser.Renumber( 10, 3, 0, 64000 );
 
       Assert.AreEqual( "10IFA=1THEN 10", result );
     }
@@ -96,7 +96,7 @@ namespace TestProject
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
-      string result = parser.Renumber( 10, 3 );
+      string result = parser.Renumber( 10, 3, 0, 64000 );
 
       Assert.AreEqual( @"10GOTO13
 13GOTO10", result );
@@ -120,7 +120,7 @@ namespace TestProject
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
-      string result = parser.Renumber( 10, 3 );
+      string result = parser.Renumber( 10, 3, 0, 64000 );
 
       Assert.AreEqual( @"10ONXGOSUB13,16,19
 13PRINTA
@@ -147,7 +147,7 @@ namespace TestProject
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
-      string result = parser.Renumber( 10, 3 );
+      string result = parser.Renumber( 10, 3, 0, 64000 );
 
       Assert.AreEqual( @"10ONXGOSUB13,16,19:GOTO22
 13PRINTA

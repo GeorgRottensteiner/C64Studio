@@ -16,7 +16,7 @@ namespace C64Studio
 
 
 
-    public FormRenumberBASIC( StudioCore Core, SourceBasicEx Basic, bool SymbolMode )
+    public FormRenumberBASIC( StudioCore Core, SourceBasicEx Basic, bool SymbolMode, int FirstLineNumber, int LastLineNumber )
     {
       m_Basic = Basic;
       m_Core  = Core;
@@ -26,6 +26,8 @@ namespace C64Studio
 
       editStartLine.Text = "10";
       editLineStep.Text = "10";
+      editFirstLineNumber.Text = FirstLineNumber.ToString();
+      editLastLineNumber.Text = LastLineNumber.ToString();
     }
 
 
@@ -46,8 +48,10 @@ namespace C64Studio
 
     private void CheckRenumbering()
     {
-      int     lineStart = GR.Convert.ToI32( editStartLine.Text );
-      int     lineStep = GR.Convert.ToI32( editLineStep.Text );
+      int     lineStart       = GR.Convert.ToI32( editStartLine.Text );
+      int     lineStep        = GR.Convert.ToI32( editLineStep.Text );
+      int     firstLineNumber = GR.Convert.ToI32( editFirstLineNumber.Text );
+      int     lastLineNumber  = GR.Convert.ToI32( editLastLineNumber.Text );
 
       if ( ( lineStart < 0 )
       ||   ( lineStart >= 64000 ))
@@ -62,7 +66,14 @@ namespace C64Studio
         btnOK.Enabled = false;
         return;
       }
-      Parser.BasicFileParser.RenumberResult res = m_Core.Compiling.ParserBasic.CanRenumber( lineStart, lineStep );
+      if ( firstLineNumber > lastLineNumber )
+      {
+        labelRenumberInfo.Text = "First line number must be smaller than the last line number";
+        btnOK.Enabled = false;
+        return;
+      }
+
+      Parser.BasicFileParser.RenumberResult res = m_Core.Compiling.ParserBasic.CanRenumber( lineStart, lineStep, firstLineNumber, lastLineNumber );
       switch ( res )
       {
         case C64Studio.Parser.BasicFileParser.RenumberResult.OK:
@@ -74,7 +85,7 @@ namespace C64Studio
           btnOK.Enabled = false;
           break;
         case C64Studio.Parser.BasicFileParser.RenumberResult.NOTHING_TO_DO:
-          labelRenumberInfo.Text = "Nothing to do";
+          labelRenumberInfo.Text = "Nothing to do (Maybe parsing was not completed yet)";
           btnOK.Enabled = false;
           break;
       }
@@ -86,8 +97,10 @@ namespace C64Studio
     {
       int lineStart = GR.Convert.ToI32( editStartLine.Text );
       int lineStep = GR.Convert.ToI32( editLineStep.Text );
+      int     firstLineNumber = GR.Convert.ToI32( editFirstLineNumber.Text );
+      int     lastLineNumber  = GR.Convert.ToI32( editLastLineNumber.Text );
 
-      string newText = m_Core.Compiling.ParserBasic.Renumber( lineStart, lineStep );
+      string newText = m_Core.Compiling.ParserBasic.Renumber( lineStart, lineStep, firstLineNumber, lastLineNumber );
 
       if ( m_SymbolMode )
       {
@@ -125,6 +138,22 @@ namespace C64Studio
       }
       CheckRenumbering();
     }
+
+
+
+    private void editLastLineNumber_TextChanged( object sender, EventArgs e )
+    {
+      CheckRenumbering();
+    }
+
+
+
+    private void editFirstLineNumber_TextChanged( object sender, EventArgs e )
+    {
+      CheckRenumbering();
+    }
+
+
 
   }
 }

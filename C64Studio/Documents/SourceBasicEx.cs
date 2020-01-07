@@ -1508,7 +1508,38 @@ namespace C64Studio
 
     private void renumberToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      FormRenumberBASIC     formRenum = new FormRenumberBASIC( Core, this, m_SymbolMode );
+      int     firstLineNumber = 0;
+      int     lastLineNumber  = 64000;
+      if ( editSource.Selection.Start != editSource.Selection.End )
+      {
+        int     firstLine = editSource.Selection.Start.iLine;
+        int     lastLine  = editSource.Selection.End.iLine;
+
+        int prevLine = -1;
+
+        var lineInfo = Core.Compiling.ParserBasic.TokenizeLine( editSource.Lines[firstLine], 0, ref prevLine );
+        if ( ( lineInfo != null )
+        &&   ( lineInfo.Tokens.Count > 0 )
+        &&   ( lineInfo.Tokens[0].TokenType == Token.Type.LINE_NUMBER ) )
+        {
+          firstLineNumber = GR.Convert.ToI32( lineInfo.Tokens[0].Content );
+        }
+        lineInfo = Core.Compiling.ParserBasic.TokenizeLine( editSource.Lines[lastLine], 0, ref prevLine );
+        if ( ( lineInfo != null )
+        &&   ( lineInfo.Tokens.Count > 0 )
+        &&   ( lineInfo.Tokens[0].TokenType == Token.Type.LINE_NUMBER ) )
+        {
+          lastLineNumber = GR.Convert.ToI32( lineInfo.Tokens[0].Content );
+        }
+        if ( firstLineNumber > lastLineNumber )
+        {
+          int dummy       = firstLineNumber;
+          firstLineNumber = lastLineNumber;
+          lastLineNumber  = dummy;
+        }
+      }
+
+      FormRenumberBASIC     formRenum = new FormRenumberBASIC( Core, this, m_SymbolMode, firstLineNumber, lastLineNumber );
 
       formRenum.ShowDialog();
     }
