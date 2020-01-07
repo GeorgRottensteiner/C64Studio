@@ -32,6 +32,11 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SourceBasicEx));
       this.editSource = new FastColoredTextBoxNS.FastColoredTextBox();
       this.contextSource = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+      this.renumberToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.btnToggleLabelMode = new System.Windows.Forms.CheckBox();
       this.menuBASIC = new System.Windows.Forms.MenuStrip();
       this.bASICToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,13 +44,14 @@
       this.btnToggleSymbolMode = new System.Windows.Forms.CheckBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.btnToggleUpperLowerCase = new System.Windows.Forms.CheckBox();
+      this.btnToggleStringEntryMode = new System.Windows.Forms.CheckBox();
       this.editBASICStartAddress = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.comboBASICVersion = new System.Windows.Forms.ComboBox();
-      this.btnToggleStringEntryMode = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
+      this.contextSource.SuspendLayout();
       this.menuBASIC.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -88,8 +94,47 @@
       // 
       // contextSource
       // 
+      this.contextSource.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem,
+            this.cutToolStripMenuItem,
+            this.pasteToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.renumberToolStripMenuItem1});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(61, 4);
+      this.contextSource.Size = new System.Drawing.Size(153, 120);
+      // 
+      // copyToolStripMenuItem
+      // 
+      this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+      this.copyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.copyToolStripMenuItem.Text = "&Copy";
+      this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+      // 
+      // pasteToolStripMenuItem
+      // 
+      this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+      this.pasteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.pasteToolStripMenuItem.Text = "&Paste";
+      this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
+      // 
+      // cutToolStripMenuItem
+      // 
+      this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
+      this.cutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.cutToolStripMenuItem.Text = "C&ut";
+      this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator1
+      // 
+      this.toolStripSeparator1.Name = "toolStripSeparator1";
+      this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+      // 
+      // renumberToolStripMenuItem1
+      // 
+      this.renumberToolStripMenuItem1.Name = "renumberToolStripMenuItem1";
+      this.renumberToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+      this.renumberToolStripMenuItem1.Text = "Renumber...";
+      this.renumberToolStripMenuItem1.Click += new System.EventHandler(this.renumberToolStripMenuItem_Click);
       // 
       // btnToggleLabelMode
       // 
@@ -154,6 +199,19 @@
       this.btnToggleUpperLowerCase.UseVisualStyleBackColor = true;
       this.btnToggleUpperLowerCase.CheckedChanged += new System.EventHandler(this.btnToggleUpperLowerCase_CheckedChanged);
       // 
+      // btnToggleStringEntryMode
+      // 
+      this.btnToggleStringEntryMode.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToggleStringEntryMode.AutoSize = true;
+      this.btnToggleStringEntryMode.Image = global::C64Studio.Properties.Resources.toolbar_basic_string_mode_inactive;
+      this.btnToggleStringEntryMode.Location = new System.Drawing.Point(135, 27);
+      this.btnToggleStringEntryMode.Name = "btnToggleStringEntryMode";
+      this.btnToggleStringEntryMode.Size = new System.Drawing.Size(22, 22);
+      this.btnToggleStringEntryMode.TabIndex = 2;
+      this.toolTip1.SetToolTip(this.btnToggleStringEntryMode, "Toggle String Entry Mode (currently inactive)");
+      this.btnToggleStringEntryMode.UseVisualStyleBackColor = true;
+      this.btnToggleStringEntryMode.CheckedChanged += new System.EventHandler(this.btnToggleStringEntryMode_CheckedChanged);
+      // 
       // editBASICStartAddress
       // 
       this.editBASICStartAddress.Location = new System.Drawing.Point(250, 29);
@@ -192,19 +250,6 @@
       this.comboBASICVersion.TabIndex = 6;
       this.comboBASICVersion.SelectedIndexChanged += new System.EventHandler(this.comboBASICVersion_SelectedIndexChanged);
       // 
-      // btnToggleStringEntryMode
-      // 
-      this.btnToggleStringEntryMode.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToggleStringEntryMode.AutoSize = true;
-      this.btnToggleStringEntryMode.Image = global::C64Studio.Properties.Resources.toolbar_basic_string_mode_inactive;
-      this.btnToggleStringEntryMode.Location = new System.Drawing.Point(135, 27);
-      this.btnToggleStringEntryMode.Name = "btnToggleStringEntryMode";
-      this.btnToggleStringEntryMode.Size = new System.Drawing.Size(22, 22);
-      this.btnToggleStringEntryMode.TabIndex = 2;
-      this.toolTip1.SetToolTip(this.btnToggleStringEntryMode, "Toggle String Entry Mode (currently inactive)");
-      this.btnToggleStringEntryMode.UseVisualStyleBackColor = true;
-      this.btnToggleStringEntryMode.CheckedChanged += new System.EventHandler(this.btnToggleStringEntryMode_CheckedChanged);
-      // 
       // SourceBasicEx
       // 
       this.AllowDrop = true;
@@ -225,6 +270,7 @@
       this.DragEnter += new System.Windows.Forms.DragEventHandler(this.SourceBasicEx_DragEnter);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).EndInit();
+      this.contextSource.ResumeLayout(false);
       this.menuBASIC.ResumeLayout(false);
       this.menuBASIC.PerformLayout();
       this.ResumeLayout(false);
@@ -248,5 +294,10 @@
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.ComboBox comboBASICVersion;
     private System.Windows.Forms.CheckBox btnToggleStringEntryMode;
+    private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+    private System.Windows.Forms.ToolStripMenuItem renumberToolStripMenuItem1;
   }
 }

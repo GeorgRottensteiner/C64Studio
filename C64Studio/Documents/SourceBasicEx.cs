@@ -63,7 +63,7 @@ namespace C64Studio
       DocumentInfo.Type = ProjectElement.ElementType.BASIC_SOURCE;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
 
-      //lda|sta|ldy|sty|ldx|stx|rts|jmp|jsr|rti|sei|cli|asl|lsr|inc|dec|inx|dex|iny|dey|cpx|cpy|cmp|bit|bne|beq|bcc|bcs|bpl|bmi|adc|sec|clc|sbc|tax|tay|tya|txa|pha|pla|eor|and|ora|ror|rol|php|plp|clv|cld|bvc|bvs|brk|nop|txs|tsx|slo|rla|sre|rra|sax|lax|dcp|isc|anc|alr|arr|xaa|axs|ahx|shy|shx|tas|las|sed)\b";
+      /*
       string pseudoOps = @"(!byte|!by|!basic|!8|!08|!word|!wo|!16|!text|!tx|!scr|!pet|!raw|!pseudopc|!realpc|!bank|!convtab|!ct|!binary|!bin|!bi|!source|!src|!to|!zone|!zn|!error|!serious|!warn|"
         + @"!message|!ifdef|!ifndef|!if|!fill|!fi|!align|!endoffile|!nowarn|!for|!end|!macro|!trace|!media|!mediasrc|!sl|!cpu|!set)\b";
 
@@ -75,6 +75,7 @@ namespace C64Studio
       m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[+\-a-zA-Z]+[a-zA-Z_\d]*[:]*" );
       //m_TextRegExp[(int)Types.SyntaxElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";.*" );
       m_TextRegExp[(int)Types.ColorableElement.NONE] = new System.Text.RegularExpressions.Regex( @"\S" );
+      */
 
       m_IsSaveable = true;
 
@@ -114,7 +115,6 @@ namespace C64Studio
 
       RefreshDisplayOptions();
 
-      editSource.ContextMenu = null;
       editSource.LeftPadding = 40;   // space for marker symbol on left side
       editSource.AllowDrop = true;
 
@@ -1736,6 +1736,27 @@ namespace C64Studio
         toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle String Entry Mode (currently inactive)" );
       }
       btnToggleStringEntryMode.Image = m_StringEnterMode ? global::C64Studio.Properties.Resources.toolbar_basic_string_mode_active : global::C64Studio.Properties.Resources.toolbar_basic_string_mode_inactive;
+    }
+
+
+
+    private void copyToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      Copy();
+    }
+
+
+
+    private void pasteToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      Paste();
+    }
+
+
+
+    private void cutToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      Cut();
     }
 
 
