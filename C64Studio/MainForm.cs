@@ -1988,7 +1988,7 @@ namespace C64Studio
           return true;
         }
       }
-      ushort     debugStartAddressValue = 2049;
+      ushort     debugStartAddressValue = 0;
       if ( ushort.TryParse( Label, out debugStartAddressValue ) )
       {
         Address = debugStartAddressValue;

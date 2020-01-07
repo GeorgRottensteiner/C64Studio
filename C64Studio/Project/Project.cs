@@ -196,7 +196,7 @@ namespace C64Studio
       chunkProject.AppendString( Settings.Name );
       chunkProject.AppendString( Settings.Filename );
       chunkProject.AppendU16( Settings.DebugPort );
-      chunkProject.AppendU16( 2049 );// obsolete Settings.DebugStartAddress
+      chunkProject.AppendU16( 0 );// obsolete Settings.DebugStartAddress
       chunkProject.AppendString( Settings.BuildTool );
       chunkProject.AppendString( Settings.RunTool );
       chunkProject.AppendString( Settings.MainDocument );
@@ -315,7 +315,7 @@ namespace C64Studio
       GR.IO.MemoryReader memIn = new GR.IO.MemoryReader( ProjectData );
 
       GR.IO.FileChunk           chunk = new GR.IO.FileChunk();
-      ushort                    origDebugStartAddress = 2049;
+      ushort                    origDebugStartAddress = 0;
 
       while ( chunk.ReadFromStream( memIn ) )
       {

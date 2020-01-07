@@ -148,8 +148,8 @@ namespace C64Studio
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
 
-      m_StartAddress = "2049";
-      editBASICStartAddress.Text = "2049";
+      m_StartAddress = "";
+      editBASICStartAddress.Text = "";
     }
 
 
@@ -627,8 +627,8 @@ namespace C64Studio
         }
         if ( string.IsNullOrEmpty( m_StartAddress ) )
         {
-          m_StartAddress = "2049";
-          editBASICStartAddress.Text = "2049";
+          m_StartAddress = "";
+          editBASICStartAddress.Text = "";
         }
 
         m_LabelMode = IsInLabelMode( basicText );

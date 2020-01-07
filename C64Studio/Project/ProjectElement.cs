@@ -64,7 +64,7 @@ namespace C64Studio
     private string          m_Filename = null;
     public string           TargetFilename = null;
     public string           CompileTargetFile = null;
-    public string           StartAddress = "2049";
+    public string           StartAddress = "";
     public Types.CompileTargetType TargetType = Types.CompileTargetType.NONE;
     public Types.CompileTargetType CompileTarget = Types.CompileTargetType.NONE;
     public FileDependency   ForcedDependency = new FileDependency();

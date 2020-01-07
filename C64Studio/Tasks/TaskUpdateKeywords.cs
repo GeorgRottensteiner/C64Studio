@@ -27,8 +27,10 @@ namespace C64Studio.Tasks
       {
         return (bool)Doc.Invoke( new ProcessTaskCallback( ProcessTask ) );
       }
+      //Debug.Log( "Update keywords for " + Doc.DocumentFilename );
       Doc.OnKnownKeywordsChanged();
       Doc.OnKnownTokensChanged();
+      //Debug.Log( "Update keywords done for " + Doc.DocumentFilename );
       return true;
     }
 

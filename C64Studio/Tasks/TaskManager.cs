@@ -52,6 +52,12 @@ namespace C64Studio.Tasks
       {
         var tasksToRemove = new List<Task>();
 
+        /*
+        if ( Task is TaskUpdateKeywords )
+        {
+          Debug.Log( "Add TaskUpdateKeywords for " + ( (TaskUpdateKeywords)Task ).Doc.DocumentFilename );
+        }*/
+
         // remove duplicate update keyword tasks!
         foreach ( var task in m_TaskQueue )
         {
@@ -59,10 +65,11 @@ namespace C64Studio.Tasks
           &&   ( Task is TaskUpdateKeywords ) )
           {
             var  oldTask  = task as TaskUpdateKeywords;
-            var  newTask  = task as TaskUpdateKeywords;
+            var  newTask  = Task as TaskUpdateKeywords;
 
             if ( oldTask.Doc == newTask.Doc )
             {
+              //Debug.Log( "remove previous TaskUpdateKeywords as duplicate" );
               tasksToRemove.Add( oldTask );
             }
           }

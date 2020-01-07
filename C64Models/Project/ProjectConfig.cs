@@ -8,7 +8,7 @@ namespace C64Studio
   {
     public string               Name = "";
     public string               Defines = "";
-    public string               DebugStartAddressLabel = "2049";
+    public string               DebugStartAddressLabel = "";
 
 
     public void Load( GR.IO.IReader Reader )
