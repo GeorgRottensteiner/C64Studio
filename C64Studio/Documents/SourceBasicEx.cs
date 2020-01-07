@@ -29,7 +29,7 @@ namespace C64Studio
 
     private string                            m_CurrentHighlightText = null;
 
-    private string                            m_StartAddress = "";
+    private string                            m_StartAddress = "2049";
     private Parser.BasicFileParser.BasicVersion   m_BASICVersion = BasicVersion.C64_BASIC_V2;
 
     private Parser.BasicFileParser            m_Parser = null;
@@ -148,8 +148,8 @@ namespace C64Studio
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
 
-      m_StartAddress = "";
-      editBASICStartAddress.Text = "";
+      m_StartAddress = "2049";
+      editBASICStartAddress.Text = "2049";
     }
 
 
