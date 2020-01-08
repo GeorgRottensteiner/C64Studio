@@ -192,7 +192,8 @@ namespace C64Studio
 
       GR.IO.FileChunk chunkProject = new GR.IO.FileChunk( Types.FileChunk.PROJECT );
 
-      chunkProject.AppendU32( 1 );
+      // version 2 -> has adjusted debug start address (to get rid of 2049)
+      chunkProject.AppendU32( 2 );
       chunkProject.AppendString( Settings.Name );
       chunkProject.AppendString( Settings.Filename );
       chunkProject.AppendU16( Settings.DebugPort );
@@ -326,23 +327,32 @@ namespace C64Studio
             // Project Info
 
             // Version
-            memChunk.ReadUInt32();
-            Settings.Name = memChunk.ReadString();
-            Settings.Filename = memChunk.ReadString();
-            Settings.DebugPort = memChunk.ReadUInt16();
+            uint projectVersion          = memChunk.ReadUInt32();
+            Settings.Name         = memChunk.ReadString();
+            Settings.Filename     = memChunk.ReadString();
+            Settings.DebugPort    = memChunk.ReadUInt16();
             origDebugStartAddress = memChunk.ReadUInt16();
-            Settings.BuildTool = memChunk.ReadString();
-            Settings.RunTool = memChunk.ReadString();
+            Settings.BuildTool    = memChunk.ReadString();
+            Settings.RunTool      = memChunk.ReadString();
             Settings.MainDocument = memChunk.ReadString();
-            currentConfig = memChunk.ReadString();
-            activeElement = memChunk.ReadString();
-            Node.Text = Settings.Name;
+            currentConfig         = memChunk.ReadString();
+            activeElement         = memChunk.ReadString();
+
+            if ( projectVersion == 1 )
+            {
+              if ( origDebugStartAddress == 2049 )
+              {
+                origDebugStartAddress = 0;
+              }
+            }
+
+            Node.Text             = Settings.Name;
             break;
           case Types.FileChunk.PROJECT_ELEMENT:
             // Element Info
             {
               // Version
-              int version = (int)memChunk.ReadUInt32();
+              int elementVersion = (int)memChunk.ReadUInt32();
 
               ProjectElement.ElementType type = (ProjectElement.ElementType)memChunk.ReadUInt32();
 
