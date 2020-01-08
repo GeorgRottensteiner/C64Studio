@@ -52,8 +52,8 @@
 .CLOCK_SWITCH        = $d030
 
 
-!zone CIA
-.DATA_PORT_A         = $dd00
+!zone CIA1
+.DATA_PORT_A         = $dc00
 ;| Bit 7 |   On Read:  1 = Interrupt occured
 ;|       |   On Write: 1 = Set Int.-Flags, 0 = Clear Int-.Flags
 ;| Bit 4 |   FLAG1 IRQ (Cassette Read / Serial Bus SRQ Input)
@@ -62,6 +62,10 @@
 ;| Bit 1 |   Timer B Interrupt (Tape, Serial Port)
 ;| Bit 0 |   Timer A Interrupt (Kernal-IRQ, Tape)
 .IRQ_CONTROL         = $dc0d
+
+
+!zone CIA2
+.DATA_PORT_A         = $dd00
 
 ;| Bit 7 |   On Read:  1 = Interrupt occured
 ;|       |   On Write: 1 = Set Int.-Flags, 0 = Clear Int.-Flags

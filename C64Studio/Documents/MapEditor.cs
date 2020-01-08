@@ -2097,6 +2097,7 @@ namespace C64Studio
 
       btnTileApply.Enabled = ( listTileInfo.SelectedIndices.Count != 0 );
       btnTileDelete.Enabled = ( listTileInfo.SelectedIndices.Count != 0 );
+      btnTileClone.Enabled = ( listTileInfo.SelectedIndices.Count != 0 );
 
       btnMoveTileUp.Enabled = ( ( listTileInfo.Items.Count > 1 ) && ( listTileInfo.SelectedIndices.Count > 0 ) && ( listTileInfo.SelectedIndices[0] > 0 ) );
       btnMoveTileDown.Enabled = ( ( listTileInfo.Items.Count > 1 ) && ( listTileInfo.SelectedIndices.Count > 0 ) && ( listTileInfo.SelectedIndices[0] + 1 < listTileInfo.Items.Count ) );
@@ -3349,6 +3350,34 @@ namespace C64Studio
     {
       m_MapProject.ShowGrid = checkShowGrid.Checked;
       Redraw();
+    }
+
+
+
+    private void btnCloneTile_Click( object sender, EventArgs e )
+    {
+      if ( m_CurrentEditedTile == null )
+      {
+        return;
+      }
+      var     clonedTile = new Formats.MapProject.Tile();
+      clonedTile.Name = m_CurrentEditedTile.Name + " cloned";
+
+      clonedTile.Chars.Resize( m_CurrentEditedTile.Chars.Width, m_CurrentEditedTile.Chars.Height );
+
+      for ( int i = 0; i < m_CurrentEditedTile.Chars.Width; ++i )
+      {
+        for ( int j = 0; j < m_CurrentEditedTile.Chars.Height; ++j )
+        {
+          var origChar = m_CurrentEditedTile.Chars[i,j];
+          clonedTile.Chars[i, j].Character  = origChar.Character;
+          clonedTile.Chars[i,j].Color       = origChar.Color;
+        }
+      }
+
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileAdd( this, m_MapProject, m_MapProject.Tiles.Count ) );
+
+      AddTile( m_MapProject.Tiles.Count, clonedTile );
     }
 
   }

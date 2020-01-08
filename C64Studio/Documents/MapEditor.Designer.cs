@@ -72,6 +72,7 @@
       this.comboTiles = new System.Windows.Forms.ComboBox();
       this.comboMaps = new System.Windows.Forms.ComboBox();
       this.groupSize = new System.Windows.Forms.GroupBox();
+      this.checkShowGrid = new System.Windows.Forms.CheckBox();
       this.comboMapAlternativeMode = new System.Windows.Forms.ComboBox();
       this.comboMapAlternativeBGColor4 = new System.Windows.Forms.ComboBox();
       this.comboMapMultiColor2 = new System.Windows.Forms.ComboBox();
@@ -166,7 +167,7 @@
       this.button4 = new System.Windows.Forms.Button();
       this.button5 = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.checkShowGrid = new System.Windows.Forms.CheckBox();
+      this.btnTileClone = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -617,6 +618,17 @@
       this.groupSize.TabStop = false;
       this.groupSize.Text = "Map Details";
       // 
+      // checkShowGrid
+      // 
+      this.checkShowGrid.AutoSize = true;
+      this.checkShowGrid.Location = new System.Drawing.Point(191, 99);
+      this.checkShowGrid.Name = "checkShowGrid";
+      this.checkShowGrid.Size = new System.Drawing.Size(45, 17);
+      this.checkShowGrid.TabIndex = 30;
+      this.checkShowGrid.Text = "Grid";
+      this.checkShowGrid.UseVisualStyleBackColor = true;
+      this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
+      // 
       // comboMapAlternativeMode
       // 
       this.comboMapAlternativeMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -882,13 +894,14 @@
       // 
       // tabTiles
       // 
+      this.tabTiles.Controls.Add(this.btnTileApply);
       this.tabTiles.Controls.Add(this.btnCopyTileCharToNextIncreased);
       this.tabTiles.Controls.Add(this.btnSetNextTileChar);
       this.tabTiles.Controls.Add(this.comboTileMode);
       this.tabTiles.Controls.Add(this.btnMoveTileDown);
       this.tabTiles.Controls.Add(this.btnMoveTileUp);
       this.tabTiles.Controls.Add(this.btnTileDelete);
-      this.tabTiles.Controls.Add(this.btnTileApply);
+      this.tabTiles.Controls.Add(this.btnTileClone);
       this.tabTiles.Controls.Add(this.btnTileAdd);
       this.tabTiles.Controls.Add(this.listTileChars);
       this.tabTiles.Controls.Add(this.listTileInfo);
@@ -977,9 +990,9 @@
       // btnTileDelete
       // 
       this.btnTileDelete.Enabled = false;
-      this.btnTileDelete.Location = new System.Drawing.Point(530, 90);
+      this.btnTileDelete.Location = new System.Drawing.Point(572, 90);
       this.btnTileDelete.Name = "btnTileDelete";
-      this.btnTileDelete.Size = new System.Drawing.Size(75, 23);
+      this.btnTileDelete.Size = new System.Drawing.Size(58, 23);
       this.btnTileDelete.TabIndex = 25;
       this.btnTileDelete.Text = "Delete";
       this.btnTileDelete.UseVisualStyleBackColor = true;
@@ -988,9 +1001,9 @@
       // btnTileApply
       // 
       this.btnTileApply.Enabled = false;
-      this.btnTileApply.Location = new System.Drawing.Point(449, 90);
+      this.btnTileApply.Location = new System.Drawing.Point(504, 90);
       this.btnTileApply.Name = "btnTileApply";
-      this.btnTileApply.Size = new System.Drawing.Size(75, 23);
+      this.btnTileApply.Size = new System.Drawing.Size(58, 23);
       this.btnTileApply.TabIndex = 25;
       this.btnTileApply.Text = "Apply";
       this.btnTileApply.UseVisualStyleBackColor = true;
@@ -1000,7 +1013,7 @@
       // 
       this.btnTileAdd.Location = new System.Drawing.Point(368, 90);
       this.btnTileAdd.Name = "btnTileAdd";
-      this.btnTileAdd.Size = new System.Drawing.Size(75, 23);
+      this.btnTileAdd.Size = new System.Drawing.Size(58, 23);
       this.btnTileAdd.TabIndex = 25;
       this.btnTileAdd.Text = "Add";
       this.btnTileAdd.UseVisualStyleBackColor = true;
@@ -1601,16 +1614,16 @@
       this.button5.Text = "as assembly source";
       this.button5.UseVisualStyleBackColor = true;
       // 
-      // checkShowGrid
+      // btnTileClone
       // 
-      this.checkShowGrid.AutoSize = true;
-      this.checkShowGrid.Location = new System.Drawing.Point(191, 99);
-      this.checkShowGrid.Name = "checkShowGrid";
-      this.checkShowGrid.Size = new System.Drawing.Size(45, 17);
-      this.checkShowGrid.TabIndex = 30;
-      this.checkShowGrid.Text = "Grid";
-      this.checkShowGrid.UseVisualStyleBackColor = true;
-      this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
+      this.btnTileClone.Enabled = false;
+      this.btnTileClone.Location = new System.Drawing.Point(436, 90);
+      this.btnTileClone.Name = "btnTileClone";
+      this.btnTileClone.Size = new System.Drawing.Size(58, 23);
+      this.btnTileClone.TabIndex = 25;
+      this.btnTileClone.Text = "Clone";
+      this.btnTileClone.UseVisualStyleBackColor = true;
+      this.btnTileClone.Click += new System.EventHandler(this.btnCloneTile_Click);
       // 
       // MapEditor
       // 
@@ -1786,5 +1799,6 @@
     private System.Windows.Forms.ComboBox comboCharScreens;
     private System.Windows.Forms.Button btnExportToCharScreen;
     private System.Windows.Forms.CheckBox checkShowGrid;
+    private System.Windows.Forms.Button btnTileClone;
   }
 }
