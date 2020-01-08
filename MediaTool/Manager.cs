@@ -31,6 +31,7 @@ namespace MediaTool
       argParser.AddOptionalParameter( "CHARS" );
       argParser.AddOptionalParameter( "CHARSCREEN" );
       argParser.AddOptionalParameter( "GRAPHICSCREEN" );
+      argParser.AddOptionalParameter( "MAPPROJECT" );
       argParser.AddOptionalParameter( "OFFSET" );
       argParser.AddOptionalParameter( "COUNT" );
       argParser.AddOptionalParameter( "AREA" );
@@ -53,6 +54,7 @@ namespace MediaTool
       argParser.AddSwitchValue( "TYPE", "HIRESBITMAPSCREEN" );
       argParser.AddSwitchValue( "TYPE", "HIRESBITMAPSCREENCOLORS" );
       argParser.AddSwitchValue( "TYPE", "HIRESBITMAPCOLORSSCREEN" );
+      argParser.AddSwitchValue( "TYPE", "MAPDATA" );
 
       if ( !argParser.CheckParameters( args ) )
       {
@@ -69,6 +71,7 @@ namespace MediaTool
         System.Console.WriteLine( "  [-chars <binary charset file>]" );
         System.Console.WriteLine( "  [-charscreen <charscreen project file>]" );
         System.Console.WriteLine( "  [-graphicscreen <graphicscreen project file>]" );
+        System.Console.WriteLine( "  [-mapproject <map project file>]" );
         System.Console.WriteLine( "  [-binary <file>]" );
         System.Console.WriteLine( "  [-type <export format>]" );
         System.Console.WriteLine( "  [-export <file name>]" );
@@ -104,6 +107,10 @@ namespace MediaTool
       else if ( argParser.IsParameterSet( "GRAPHICSCREEN" ) )
       {
         return HandleGraphicscreenFile( argParser );
+      }
+      else if ( argParser.IsParameterSet( "MAPPROJECT" ) )
+      {
+        return HandleMapProject( argParser );
       }
       else if ( argParser.IsParameterSet( "BINARY" ) )
       {

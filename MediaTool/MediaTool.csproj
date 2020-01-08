@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="ManageBinaryFile.cs" />
     <Compile Include="ManageCharFile.cs" />
+    <Compile Include="ManageMapProject.cs" />
     <Compile Include="ManageCharsetProject.cs" />
     <Compile Include="ManageSpriteFile.cs" />
     <Compile Include="ManageSpriteProject.cs" />
