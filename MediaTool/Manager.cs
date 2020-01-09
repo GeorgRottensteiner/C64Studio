@@ -55,6 +55,7 @@ namespace MediaTool
       argParser.AddSwitchValue( "TYPE", "HIRESBITMAPSCREENCOLORS" );
       argParser.AddSwitchValue( "TYPE", "HIRESBITMAPCOLORSSCREEN" );
       argParser.AddSwitchValue( "TYPE", "MAPDATA" );
+      argParser.AddSwitchValue( "TYPE", "MAPDATAASM" );
 
       if ( !argParser.CheckParameters( args ) )
       {

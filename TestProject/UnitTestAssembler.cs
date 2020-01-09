@@ -550,6 +550,16 @@ namespace TestProject
 
 
 
+    [TestMethod]
+    public void TestHex()
+    {
+      string      source = @"  * = $c000
+                             !hex ""0123456789ABCDEF""";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "00C00123456789ABCDEF", assembly.ToString() );
+    }
 
   }
 }

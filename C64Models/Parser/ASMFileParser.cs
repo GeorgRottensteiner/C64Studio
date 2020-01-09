@@ -8946,13 +8946,15 @@ namespace C64Studio.Parser
       {
         Types.TokenInfo tokenHex = lineTokenInfos[i];
 
-        if ( ( tokenHex.Length % 2 ) != 0 )
+        string    hexData = DeQuote( tokenHex.Content );
+
+        if ( ( hexData.Length % 2 ) != 0 )
         {
           AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
 
           return ParseLineResult.RETURN_NULL;
         }
-        if ( !info.LineData.AppendHex( tokenHex.Content ) )
+        if ( !info.LineData.AppendHex( hexData ) )
         {
           AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
 
