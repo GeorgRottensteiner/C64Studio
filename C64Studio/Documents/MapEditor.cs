@@ -90,7 +90,7 @@ namespace C64Studio
       {
         if ( doc.DocumentInfo.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
         {
-          comboCharScreens.Items.Add( new Types.ComboItem( doc.Name, doc ) );
+          comboCharScreens.Items.Add( new Types.ComboItem( doc.Name, doc.DocumentInfo ) );
         }
       }
       comboCharScreens.SelectedIndex = 0;
