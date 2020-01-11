@@ -5633,7 +5633,7 @@ namespace C64Studio
     {
       BaseDocument document = null;
 
-      string extension = System.IO.Path.GetExtension(Filename).ToUpper();
+      string extension = System.IO.Path.GetExtension( Filename ).ToUpper();
       if ( extension == ".C64" )
       {
         OpenProject( Filename );
@@ -5644,11 +5644,19 @@ namespace C64Studio
         OpenSolution( Filename );
         return null;
       }
-      else if ( ( extension == ".D64" )
-      ||        ( extension == ".D71" )
-      ||        ( extension == ".D81" )
-      ||        ( extension == ".T64" )
-      ||        ( extension == ".PRG" ) )
+
+      Project  project;
+      if ( m_Solution.FilenameUsed( Filename, out project ) )
+      {
+        // file is part of a project!
+        return project.ShowDocument( project.GetElementByFilename( Filename ) );
+      }
+
+      if ( ( extension == ".D64" )
+      ||   ( extension == ".D71" )
+      ||   ( extension == ".D81" )
+      ||   ( extension == ".T64" )
+      ||   ( extension == ".PRG" ) )
       {
         document = new FileManager( StudioCore, Filename );
         document.ShowHint = DockState.Float;
