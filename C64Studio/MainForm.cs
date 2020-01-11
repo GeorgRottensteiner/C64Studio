@@ -6150,7 +6150,7 @@ namespace C64Studio
             {
               int cursorLine = changedDoc.BaseDoc.CursorLine;
               changedDoc.BaseDoc.Load();
-              changedDoc.BaseDoc.SetModified();
+              //changedDoc.BaseDoc.SetModified();
               changedDoc.BaseDoc.SetCursorToLine( cursorLine, true );
             }
           }
