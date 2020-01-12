@@ -222,7 +222,7 @@ namespace C64Studio
 
 
 
-    public void UpdateValue( VICERemoteDebugger.RequestData WatchData, GR.Memory.ByteBuffer Data )
+    public void UpdateValue( RequestData WatchData, GR.Memory.ByteBuffer Data )
     {
       int     delta = WatchData.AdjustedStartAddress - WatchData.Parameter1;
       int     expectedSize = (int)Data.Length;

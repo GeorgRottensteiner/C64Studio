@@ -79,6 +79,7 @@
     <Compile Include="Compiling.cs" />
     <Compile Include="CustomRenderer\StudioTheme.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
+    <Compile Include="Debugger\Tiny64Debugger.cs" />
     <Compile Include="Dialogs\FormSetOffset.cs">
       <SubType>Form</SubType>
     </Compile>

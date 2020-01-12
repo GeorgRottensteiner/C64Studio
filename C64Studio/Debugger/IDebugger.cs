@@ -50,13 +50,76 @@ namespace C64Studio
     public byte     ProcessorPort01 = 0;
   };
 
+  public enum DebugRequestType
+  {
+    NONE = 0,
+    BREAK_INFO,
+    DELETE_BREAKPOINT,
+    REFRESH_VALUES,
+    REFRESH_MEMORY,
+    REFRESH_MEMORY_RAM,
+    READ_REGISTERS,
+    RETURN,
+    NEXT,
+    STEP,
+    EXIT,
+    QUIT,
+    MEM_DUMP,
+    ADD_BREAKPOINT,
+    TRACE_MEM_DUMP,
+    RAM_MODE,
+    RESET
+  };
+
+  public enum RequestReason
+  {
+    UNKNOWN = 0,
+    MEMORY_FETCH
+  };
+
+  public class RequestData
+  {
+    public DebugRequestType            Type;
+    public int                Parameter1 = -1;
+    public int                Parameter2 = -1;
+    public string             Info = "";
+    public Types.Breakpoint   Breakpoint = null;
+    public bool               MemDumpOffsetX = false;
+    public bool               MemDumpOffsetY = false;
+    public byte               AppliedOffset = 0;    // offset resulting from ,x or ,y
+    public bool               LastInGroup = true;
+    public int                AdjustedStartAddress = -1;
+    public RequestReason      Reason = RequestReason.UNKNOWN;
+
+
+
+    public RequestData( DebugRequestType Type )
+    {
+      this.Type = Type;
+    }
+
+    public RequestData( DebugRequestType Type, int Parameter1 )
+    {
+      this.Type = Type;
+      this.Parameter1 = Parameter1;
+    }
+
+    public RequestData( DebugRequestType Type, int Parameter1, int Parameter2 )
+    {
+      this.Type = Type;
+      this.Parameter1 = Parameter1;
+      this.Parameter2 = Parameter2;
+    }
+  };
+
+
   public class DebugEventData
   {
     public MemorySource       Source  = MemorySource.AS_CPU;
     public DebugEvent         Type    = DebugEvent.UPDATE_MEMORY;
     public RegisterInfo       Registers = null;
     public Types.Breakpoint   VirtualBP = null;
-    public C64Studio.VICERemoteDebugger.RequestData    Request = null;
+    public RequestData        Request = null;
     public ByteBuffer         Data = null;
     public string             Text = null;
   };
@@ -129,7 +192,7 @@ namespace C64Studio
     void RefreshRegistersAndWatches();
     void RefreshMemory( int StartAddress, int Size, MemorySource Source );
     void SetAutoRefreshMemory( int StartAddress, int Size, MemorySource Source );
-    VICERemoteDebugger.RequestData RefreshTraceMemory( int StartAddress, int Size, string Info, Types.Breakpoint VirtualBP, Types.Breakpoint TraceBP );
+    RequestData RefreshTraceMemory( int StartAddress, int Size, string Info, Types.Breakpoint VirtualBP, Types.Breakpoint TraceBP );
 
     // keep running until breakpoint hit or user pauses
     void Run();

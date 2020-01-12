@@ -14,68 +14,6 @@ namespace C64Studio
       V_3_0 = 2
     };
 
-    public enum Request
-    {
-      NONE = 0,
-      BREAK_INFO,
-      DELETE_BREAKPOINT,
-      REFRESH_VALUES,
-      REFRESH_MEMORY,
-      REFRESH_MEMORY_RAM,
-      READ_REGISTERS,
-      RETURN,
-      NEXT,
-      STEP,
-      EXIT,
-      QUIT,
-      MEM_DUMP,
-      ADD_BREAKPOINT,
-      TRACE_MEM_DUMP,
-      RAM_MODE,
-      RESET
-    };
-
-    public enum RequestReason
-    {
-      UNKNOWN = 0,
-      MEMORY_FETCH
-    };
-
-    public class RequestData
-    {
-      public Request            Type;
-      public int                Parameter1 = -1;
-      public int                Parameter2 = -1;
-      public string             Info = "";
-      public Types.Breakpoint   Breakpoint = null;
-      public bool               MemDumpOffsetX = false;
-      public bool               MemDumpOffsetY = false;
-      public byte               AppliedOffset = 0;    // offset resulting from ,x or ,y
-      public bool               LastInGroup = true;
-      public int                AdjustedStartAddress = -1;
-      public RequestReason      Reason = RequestReason.UNKNOWN;
-
-
-
-      public RequestData( Request Type )
-      {
-        this.Type = Type;
-      }
-
-      public RequestData( Request Type, int Parameter1 )
-      {
-        this.Type       = Type;
-        this.Parameter1 = Parameter1;
-      }
-
-      public RequestData( Request Type, int Parameter1, int Parameter2 )
-      {
-        this.Type = Type;
-        this.Parameter1 = Parameter1;
-        this.Parameter2 = Parameter2;
-      }
-    };
-
     System.Net.Sockets.Socket         client = null;
 
     private byte[]                    data = new byte[1024];
@@ -84,7 +22,7 @@ namespace C64Studio
     private bool                      connectResultReceived = false;
     Dictionary<int,LinkedList<string>> m_Labels = new Dictionary<int, LinkedList<string>>();
     private GR.Memory.ByteBuffer      m_ReceivedDataBin = new GR.Memory.ByteBuffer();
-    private RequestData               m_Request = new RequestData( Request.NONE );
+    private RequestData               m_Request = new RequestData( DebugRequestType.NONE );
     private LinkedList<string>        m_ResponseLines = new LinkedList<string>();
     private LinkedList<RequestData>   m_RequestQueue = new LinkedList<RequestData>();
     private StudioCore                Core = null;
@@ -176,7 +114,7 @@ namespace C64Studio
         if ( m_IsCartridge )
         {
           Debug.Log( "Connected - force break" );
-          QueueRequest( Request.STEP );
+          QueueRequest( DebugRequestType.STEP );
         }
       }
       return client.Connected;
@@ -277,7 +215,7 @@ namespace C64Studio
                   m_ReceivedData = stringData;
                 }*/
               }
-              m_Request = new RequestData( Request.NONE );
+              m_Request = new RequestData( DebugRequestType.NONE );
               StartNextRequestIfAvailable();
             }
             else
@@ -417,7 +355,7 @@ namespace C64Studio
           {
             Type = C64Studio.DebugEvent.EMULATOR_CLOSED
           }  );
-          m_Request.Type = Request.NONE;
+          m_Request.Type = DebugRequestType.NONE;
           DisconnectFromEmulator();
           return;
         }
@@ -442,7 +380,7 @@ namespace C64Studio
         {
           Type = C64Studio.DebugEvent.EMULATOR_CLOSED
         } );*/
-        m_Request.Type = Request.NONE;
+        m_Request.Type = DebugRequestType.NONE;
         DisconnectFromEmulator();
 
         Core.AddToOutput( "Attempt reconnect" );
@@ -489,8 +427,8 @@ namespace C64Studio
 
         if ( ( m_BinaryMemDump )
         &&   ( m_ViceVersion >= WinViceVersion.V_2_4 )
-        &&   ( ( m_Request.Type == Request.MEM_DUMP )
-        ||     ( m_Request.Type == Request.TRACE_MEM_DUMP ) ) )
+        &&   ( ( m_Request.Type == DebugRequestType.MEM_DUMP )
+        ||     ( m_Request.Type == DebugRequestType.TRACE_MEM_DUMP ) ) )
         {
           // skip processresponse
         }
@@ -523,7 +461,7 @@ namespace C64Studio
         m_State = DebuggerState.NOT_CONNECTED;
         client = null;
         m_ResponseLines.Clear();
-        m_Request = new RequestData( Request.NONE );
+        m_Request = new RequestData( DebugRequestType.NONE );
       }
     }
 
@@ -640,8 +578,8 @@ namespace C64Studio
 
       if ( ( m_BinaryMemDump )
       &&   ( m_ViceVersion >= WinViceVersion.V_2_4 )
-      &&   ( ( m_Request.Type == Request.MEM_DUMP )
-      ||     ( m_Request.Type == Request.TRACE_MEM_DUMP ) ) )
+      &&   ( ( m_Request.Type == DebugRequestType.MEM_DUMP )
+      ||     ( m_Request.Type == DebugRequestType.TRACE_MEM_DUMP ) ) )
       {
         // skip processresponse
       }
@@ -693,7 +631,7 @@ namespace C64Studio
 
     public RequestData RefreshTraceMemory( int StartAddress, int Size, string Info, Types.Breakpoint VirtualBP, Types.Breakpoint TraceBP )
     {
-      VICERemoteDebugger.RequestData requData    = new VICERemoteDebugger.RequestData( VICERemoteDebugger.Request.TRACE_MEM_DUMP );
+      RequestData requData    = new RequestData( DebugRequestType.TRACE_MEM_DUMP );
       requData.Parameter1 = StartAddress;
       requData.Parameter2 = StartAddress + Size - 1;
       requData.MemDumpOffsetX = false; //watchEntry.IndexedX;
@@ -738,11 +676,11 @@ namespace C64Studio
         }
         //m_ResponseLines.Clear();
         //m_Request = new RequestData( Request.NONE );
-        m_Request = new RequestData( Request.BREAK_INFO );
+        m_Request = new RequestData( DebugRequestType.BREAK_INFO );
         ProcessResponse();
         return;
       }
-      m_Request = new RequestData( Request.BREAK_INFO );
+      m_Request = new RequestData( DebugRequestType.BREAK_INFO );
     }
 
 
@@ -767,7 +705,7 @@ namespace C64Studio
 
       switch ( m_Request.Type )
       {
-        case Request.READ_REGISTERS:
+        case DebugRequestType.READ_REGISTERS:
           if ( m_ResponseLines.Count >= 2 )
           {
             // ReadRegisters:(C:$0810)   ADDR AC XR YR SP 00 01 NV-BDIZC LIN CYC
@@ -802,10 +740,10 @@ namespace C64Studio
               DebugEvent( ded );
             }
             m_ResponseLines.Clear();
-            m_Request = new RequestData( Request.NONE );
+            m_Request = new RequestData( DebugRequestType.NONE );
           }
           break;
-        case Request.NEXT:
+        case DebugRequestType.NEXT:
           if ( ( m_ResponseLines.Count > 0 )
           && ( ( m_ResponseLines.First.Value.IndexOf( "(Break)" ) != -1 )
           ||   ( m_ResponseLines.First.Value.IndexOf( "(Stop on  exec" ) != -1 )
@@ -822,7 +760,7 @@ namespace C64Studio
           &&     ( m_ResponseLines.Count == 1 ) ) )
           {
             m_ResponseLines.Clear();
-            m_Request = new RequestData( Request.NONE );
+            m_Request = new RequestData( DebugRequestType.NONE );
             m_State = DebuggerState.PAUSED;
 
             if ( m_ViceVersion >= WinViceVersion.V_3_0 )
@@ -834,7 +772,7 @@ namespace C64Studio
             }
           }
           break;
-        case Request.RETURN:
+        case DebugRequestType.RETURN:
           if ( ( ( m_ViceVersion == WinViceVersion.V_2_3 )
           &&     ( m_ResponseLines.Count == 3 ) )
           ||   ( ( m_ViceVersion >= WinViceVersion.V_2_4 )
@@ -842,22 +780,22 @@ namespace C64Studio
           {
             m_ResponseLines.Clear();
             m_State = DebuggerState.PAUSED;
-            m_Request = new RequestData( Request.NONE );
+            m_Request = new RequestData( DebugRequestType.NONE );
           }
           break;
-        case Request.EXIT:
+        case DebugRequestType.EXIT:
           m_State = DebuggerState.RUNNING;
           m_ResponseLines.Clear();
-          m_Request = new RequestData( Request.NONE );
+          m_Request = new RequestData( DebugRequestType.NONE );
           break;
-        case Request.QUIT:
+        case DebugRequestType.QUIT:
           if ( m_ResponseLines.Count == 1 )
           {
             m_ResponseLines.Clear();
-            m_Request = new RequestData( Request.NONE );
+            m_Request = new RequestData( DebugRequestType.NONE );
           }
           break;
-        case Request.STEP:
+        case DebugRequestType.STEP:
           if ( ( !m_InitialBreakCompleted )
           &&   ( m_ResponseLines.Count > 0 ) )
           {
@@ -866,7 +804,7 @@ namespace C64Studio
             m_InitialBreakCompleted = true;
             m_ResponseLines.Clear();
             m_State = DebuggerState.PAUSED;
-            m_Request = new RequestData( Request.NONE );
+            m_Request = new RequestData( DebugRequestType.NONE );
 
             // add break points now
             if ( Core.Debugging.OnInitialBreakpointReached( -1 ) )
@@ -883,10 +821,10 @@ namespace C64Studio
           {
             m_ResponseLines.Clear();
             m_State = DebuggerState.PAUSED;
-            m_Request = new RequestData( Request.NONE );
+            m_Request = new RequestData( DebugRequestType.NONE );
           }
           break;
-        case Request.BREAK_INFO:
+        case DebugRequestType.BREAK_INFO:
           if ( ( ( m_ViceVersion == WinViceVersion.V_2_3 )
           &&     ( m_ResponseLines.Count >= 3 ) )
           ||   ( ( m_ViceVersion >= WinViceVersion.V_2_4 )
@@ -934,7 +872,7 @@ namespace C64Studio
                 if ( breakPoint.Temporary )
                 {
                   Debug.Log( "Remove auto startup breakpoint " + breakPoint.RemoteIndex );
-                  QueueRequest( Request.DELETE_BREAKPOINT, m_BrokenAtBreakPoint ).Breakpoint = breakPoint;
+                  QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint ).Breakpoint = breakPoint;
                   brokenBP = null;
                   break;
                 }
@@ -955,7 +893,7 @@ namespace C64Studio
                 // DEBUGHACK
                 //QueueRequest( Request.MEM_DUMP, 0, 0xffff );
                 //Debug.Log( "Remove initial breakpoint " + m_BrokenAtBreakPoint );
-                QueueRequest( Request.DELETE_BREAKPOINT, m_BrokenAtBreakPoint );
+                QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint );
 
                 skipRefresh = Core.Debugging.OnInitialBreakpointReached( breakAddress );
               }
@@ -973,13 +911,13 @@ namespace C64Studio
 
             if ( !skipRefresh )
             {
-              QueueRequest( Request.REFRESH_VALUES );
+              QueueRequest( DebugRequestType.REFRESH_VALUES );
               RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
             }
-            m_Request = new RequestData( Request.NONE );
+            m_Request = new RequestData( DebugRequestType.NONE );
           }
           break;
-        case Request.NONE:
+        case DebugRequestType.NONE:
           if ( ( m_ResponseLines.Count > 0 )
           &&   ( ( m_ResponseLines.First.Value.IndexOf( "(Break)" ) != -1 )
           ||     ( m_ResponseLines.First.Value.IndexOf( "(Stop on  exec" ) != -1 )
@@ -990,11 +928,11 @@ namespace C64Studio
             HandleBreakpoint();
           }
           break;
-        case Request.RESET:
+        case DebugRequestType.RESET:
           m_ResponseLines.Clear();
-          m_Request = new RequestData( Request.NONE );
+          m_Request = new RequestData( DebugRequestType.NONE );
           break;
-        case Request.DELETE_BREAKPOINT:
+        case DebugRequestType.DELETE_BREAKPOINT:
           if ( m_ResponseLines.Count == 0 )
           {
             m_ResponseLines.Clear();
@@ -1010,10 +948,10 @@ namespace C64Studio
                 }
               }
             }
-            m_Request = new RequestData( Request.NONE );
+            m_Request = new RequestData( DebugRequestType.NONE );
           }
           break;
-        case Request.ADD_BREAKPOINT:
+        case DebugRequestType.ADD_BREAKPOINT:
           if ( m_ResponseLines.Count == 1 )
           {
             // [0] = "(C:$01f8) BREAK: 3 C:$0855   enabled"
@@ -1044,11 +982,11 @@ namespace C64Studio
               RaiseDocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, m_Request.Breakpoint ) );
             }
             m_ResponseLines.Clear();
-            m_Request = new RequestData( Request.NONE );
+            m_Request = new RequestData( DebugRequestType.NONE );
           }
           break;
-        case Request.MEM_DUMP:
-        case Request.TRACE_MEM_DUMP:
+        case DebugRequestType.MEM_DUMP:
+        case DebugRequestType.TRACE_MEM_DUMP:
           {
             int expectedLines = 1 + ( m_Request.Parameter2 - m_Request.Parameter1 ) / 16;
             Debug.Log( "Expected lines:" + expectedLines );
@@ -1074,7 +1012,7 @@ namespace C64Studio
                 }
               }
               //dh.Log( "Got MemDump data as " + dumpData.ToString() );
-              if ( m_Request.Type == Request.TRACE_MEM_DUMP )
+              if ( m_Request.Type == DebugRequestType.TRACE_MEM_DUMP )
               {
                 string    traceText = "Trace " + m_Request.Info + " from $" + m_Request.Parameter1.ToString( "X4" ) + " as $" + dumpData.ToString() + "/" + dumpData.ByteAt( 0 ) + System.Environment.NewLine;
                 DebugEvent( new DebugEventData()
@@ -1090,12 +1028,12 @@ namespace C64Studio
                   {
                     // and auto-go on with debugging
                     Debug.Log( "Virtual only, go on" );
-                    QueueRequest( VICERemoteDebugger.Request.EXIT );
+                    QueueRequest( DebugRequestType.EXIT );
                   }
                   else
                   {
                     Debug.Log( "Has non virtual bp" );
-                    QueueRequest( Request.REFRESH_VALUES );
+                    QueueRequest( DebugRequestType.REFRESH_VALUES );
                     RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
                   }
                 }
@@ -1114,15 +1052,15 @@ namespace C64Studio
                 } );
               }
               m_ResponseLines.Clear();
-              m_Request = new RequestData( Request.NONE );
+              m_Request = new RequestData( DebugRequestType.NONE );
             }
           }
           break;
-        case Request.RAM_MODE:
+        case DebugRequestType.RAM_MODE:
           if ( m_ResponseLines.Count == 0 )
           {
             m_ResponseLines.Clear();
-            m_Request = new RequestData( Request.NONE );
+            m_Request = new RequestData( DebugRequestType.NONE );
           }
           break;
         default:
@@ -1130,7 +1068,7 @@ namespace C64Studio
           m_ResponseLines.Clear();
           break;
       }
-      if ( m_Request.Type == Request.NONE )
+      if ( m_Request.Type == DebugRequestType.NONE )
       {
         StartNextRequestIfAvailable();
       }
@@ -1186,16 +1124,13 @@ namespace C64Studio
     
     void RefreshMemory( int MemoryStartAddress, int MemorySize, bool AsCPU )
     {
-
-      
-
       if ( AsCPU )
       {
-        QueueRequest( VICERemoteDebugger.Request.REFRESH_MEMORY, MemoryStartAddress, MemorySize );
+        QueueRequest( DebugRequestType.REFRESH_MEMORY, MemoryStartAddress, MemorySize );
       }
       else
       {
-        QueueRequest( VICERemoteDebugger.Request.REFRESH_MEMORY_RAM, MemoryStartAddress, MemorySize );
+        QueueRequest( DebugRequestType.REFRESH_MEMORY_RAM, MemoryStartAddress, MemorySize );
       }
     }
 
@@ -1216,7 +1151,7 @@ namespace C64Studio
 
     private bool SendRequest( RequestData Data )
     {
-      if ( m_Request.Type != Request.NONE )
+      if ( m_Request.Type != DebugRequestType.NONE )
       {
         Debug.Log( "====> Trying to send request while processing another!" );
         return false;
@@ -1227,34 +1162,34 @@ namespace C64Studio
 
       switch ( m_Request.Type )
       {
-        case Request.READ_REGISTERS:
+        case DebugRequestType.READ_REGISTERS:
           return SendCommand( "registers" );
-        case Request.NEXT:
+        case DebugRequestType.NEXT:
           m_MemoryValues.Clear();
           m_RequestedMemoryValues.Clear();
           m_State = DebuggerState.RUNNING;
           return SendCommand( "next" );
-        case Request.STEP:
+        case DebugRequestType.STEP:
           m_MemoryValues.Clear();
           m_RequestedMemoryValues.Clear();
           m_State = DebuggerState.RUNNING;
           return SendCommand( "step" );
-        case Request.EXIT:
-          m_Request.Type = Request.NONE;
+        case DebugRequestType.EXIT:
+          m_Request.Type = DebugRequestType.NONE;
           m_State = DebuggerState.RUNNING;
           m_RequestedMemoryValues.Clear();
           return SendCommand( "exit" );
-        case Request.QUIT:
+        case DebugRequestType.QUIT:
           return SendCommand( "quit" );
-        case Request.RETURN:
+        case DebugRequestType.RETURN:
           m_MemoryValues.Clear();
           m_RequestedMemoryValues.Clear();
           m_State = DebuggerState.RUNNING;
           return SendCommand( "return" );
-        case Request.RESET:
+        case DebugRequestType.RESET:
           // hard reset
           return SendCommand( "reset 1" );
-        case Request.ADD_BREAKPOINT:
+        case DebugRequestType.ADD_BREAKPOINT:
           {
             string request = "break ";
 
@@ -1283,12 +1218,12 @@ namespace C64Studio
 
             return SendCommand( request );
           }
-        case Request.DELETE_BREAKPOINT:
+        case DebugRequestType.DELETE_BREAKPOINT:
           return SendCommand( "delete " + m_Request.Parameter1.ToString() );
-        case Request.RAM_MODE:
+        case DebugRequestType.RAM_MODE:
           return SendCommand( "bank " + m_Request.Info );
-        case Request.MEM_DUMP:
-        case Request.TRACE_MEM_DUMP:
+        case DebugRequestType.MEM_DUMP:
+        case DebugRequestType.TRACE_MEM_DUMP:
           {
             int offset = 0;
             if ( m_Request.MemDumpOffsetX )
@@ -1404,21 +1339,21 @@ namespace C64Studio
 
 
 
-    public RequestData QueueRequest( Request Request )
+    public RequestData QueueRequest( DebugRequestType Request )
     {
       return QueueRequest( Request, -1, -1 );
     }
 
 
 
-    public RequestData QueueRequest( Request Request, int Param1 )
+    public RequestData QueueRequest( DebugRequestType Request, int Param1 )
     {
       return QueueRequest( Request, Param1, -1 );
     }
 
 
 
-    public RequestData QueueRequest( Request Request, int Param1, int Param2 )
+    public RequestData QueueRequest( DebugRequestType Request, int Param1, int Param2 )
     {
       RequestData data = new RequestData( Request, Param1, Param2 );
       QueueRequest( data );
@@ -1429,9 +1364,9 @@ namespace C64Studio
 
     public void QueueRequest( RequestData Data )
     {
-      if ( Data.Type == Request.REFRESH_VALUES )
+      if ( Data.Type == DebugRequestType.REFRESH_VALUES )
       {
-        QueueRequest( Request.READ_REGISTERS );
+        QueueRequest( DebugRequestType.READ_REGISTERS );
 
         int gnu = 0;
         foreach ( WatchEntry watchEntry in m_WatchEntries )
@@ -1439,7 +1374,7 @@ namespace C64Studio
           if ( watchEntry.DisplayMemory )
           {
             ++gnu;
-            RequestData requData = new RequestData( Request.MEM_DUMP );
+            RequestData requData = new RequestData( DebugRequestType.MEM_DUMP );
             requData.Parameter1 = watchEntry.Address;
             requData.Parameter2 = watchEntry.Address + watchEntry.SizeInBytes - 1;
             requData.MemDumpOffsetX = watchEntry.IndexedX;
@@ -1456,9 +1391,9 @@ namespace C64Studio
         Debug.Log( "Request " + gnu + " watch values" );
         return;
       }
-      else if ( Data.Type == Request.REFRESH_MEMORY )
+      else if ( Data.Type == DebugRequestType.REFRESH_MEMORY )
       {
-        RequestData requData  = new RequestData( Request.MEM_DUMP );
+        RequestData requData  = new RequestData( DebugRequestType.MEM_DUMP );
         requData.Parameter1   = Data.Parameter1;
         requData.Parameter2   = Data.Parameter1 + Data.Parameter2 - 1;
         requData.Info         = "C64Studio.MemDump";
@@ -1472,16 +1407,16 @@ namespace C64Studio
         QueueRequest( requData );
         return;
       }
-      else if ( Data.Type == Request.REFRESH_MEMORY_RAM )
+      else if ( Data.Type == DebugRequestType.REFRESH_MEMORY_RAM )
       {
         if ( MachineSupportsBankCommand() )
         {
-          RequestData requRAM = new RequestData( Request.RAM_MODE );
+          RequestData requRAM = new RequestData( DebugRequestType.RAM_MODE );
           requRAM.Info = "ram";
           QueueRequest( requRAM );
         }
 
-        RequestData requData  = new RequestData( Request.MEM_DUMP );
+        RequestData requData  = new RequestData( DebugRequestType.MEM_DUMP );
         requData.Parameter1 = Data.Parameter1;
         requData.Parameter2 = Data.Parameter1 + Data.Parameter2 - 1;
         requData.Info = "C64Studio.MemDump";
@@ -1494,14 +1429,14 @@ namespace C64Studio
 
         if ( MachineSupportsBankCommand() )
         {
-          var requRAM = new RequestData( Request.RAM_MODE );
+          var requRAM = new RequestData( DebugRequestType.RAM_MODE );
           requRAM.Info = "cpu";
           QueueRequest( requRAM );
         }
         return;
       }
 
-      if ( m_Request.Type != Request.NONE )
+      if ( m_Request.Type != DebugRequestType.NONE )
       {
         m_RequestQueue.AddLast( Data );
         return;
@@ -1556,7 +1491,7 @@ namespace C64Studio
         m_RequestedMemoryValues[Address] = true;
         m_MemoryValues.Remove( Address );
 
-        RequestData requData = new RequestData( Request.MEM_DUMP );
+        RequestData requData = new RequestData( DebugRequestType.MEM_DUMP );
         requData.Parameter1 = Address;
         requData.Parameter2 = Address + 1 - 1;
         requData.Info = "";
@@ -1615,7 +1550,7 @@ namespace C64Studio
         if ( ( client != null )
         &&   ( client.Connected ) )
         {
-          RequestData requData = new RequestData( Request.ADD_BREAKPOINT, BreakPoint.Address );
+          RequestData requData = new RequestData( DebugRequestType.ADD_BREAKPOINT, BreakPoint.Address );
           requData.Breakpoint = BreakPoint;
           QueueRequest( requData );
         }
@@ -1636,7 +1571,7 @@ namespace C64Studio
           &&   ( client.Connected ) )
           {
             Debug.Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
-            RequestData requData = new RequestData( Request.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
+            RequestData requData = new RequestData( DebugRequestType.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
             QueueRequest( requData );
           }
           break;
@@ -1654,7 +1589,7 @@ namespace C64Studio
         &&   ( client.Connected ) )
         {
           Debug.Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
-          RequestData requData = new RequestData( Request.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
+          RequestData requData = new RequestData( DebugRequestType.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
           QueueRequest( requData );
         }
       }
@@ -1677,7 +1612,7 @@ namespace C64Studio
             && ( client.Connected ) )
             {
               Debug.Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
-              RequestData requData = new RequestData( Request.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
+              RequestData requData = new RequestData( DebugRequestType.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
               QueueRequest( requData );
             }
             break;
@@ -1703,42 +1638,42 @@ namespace C64Studio
 
     public void StepInto()
     {
-      QueueRequest( VICERemoteDebugger.Request.STEP );
+      QueueRequest( DebugRequestType.STEP );
     }
 
 
 
     public void StepOver()
     {
-      QueueRequest( VICERemoteDebugger.Request.NEXT );
+      QueueRequest( DebugRequestType.NEXT );
     }
 
 
 
     public void StepOut()
     {
-      QueueRequest( VICERemoteDebugger.Request.RETURN );
+      QueueRequest( DebugRequestType.RETURN );
     }
 
 
 
     public void RefreshRegistersAndWatches()
     {
-      QueueRequest( VICERemoteDebugger.Request.REFRESH_VALUES );
+      QueueRequest( DebugRequestType.REFRESH_VALUES );
     }
 
 
 
     public void RefreshMemory( int StartAddress, int Size )
     {
-      QueueRequest( VICERemoteDebugger.Request.REFRESH_MEMORY, StartAddress, Size );
+      QueueRequest( DebugRequestType.REFRESH_MEMORY, StartAddress, Size );
     }
 
 
 
     public void Run()
     {
-      QueueRequest( VICERemoteDebugger.Request.EXIT );
+      QueueRequest( DebugRequestType.EXIT );
     }
 
 
@@ -1760,7 +1695,7 @@ namespace C64Studio
 
     public void DeleteBreakpoint( int RemoteIndex, Types.Breakpoint bp )
     {
-      VICERemoteDebugger.RequestData requData = new VICERemoteDebugger.RequestData( VICERemoteDebugger.Request.DELETE_BREAKPOINT, bp.RemoteIndex );
+      RequestData requData = new RequestData( DebugRequestType.DELETE_BREAKPOINT, bp.RemoteIndex );
       requData.Breakpoint = bp;
       QueueRequest( requData );
     }
@@ -1902,7 +1837,7 @@ namespace C64Studio
           break;
         case MemorySource.RAM:
           {
-            RequestData data = new RequestData( VICERemoteDebugger.Request.REFRESH_MEMORY_RAM, StartAddress, Size );
+            RequestData data = new RequestData( DebugRequestType.REFRESH_MEMORY_RAM, StartAddress, Size );
             QueueRequest( data );
           }
           break;
@@ -1913,7 +1848,7 @@ namespace C64Studio
 
     public void Quit()
     {
-      QueueRequest( VICERemoteDebugger.Request.QUIT );
+      QueueRequest( DebugRequestType.QUIT );
     }
 
 
@@ -1951,7 +1886,7 @@ namespace C64Studio
 
     public void Reset()
     {
-      QueueRequest( Request.RESET );
+      QueueRequest( DebugRequestType.RESET );
     }
 
 
