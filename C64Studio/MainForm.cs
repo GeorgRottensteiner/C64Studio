@@ -2298,14 +2298,23 @@ namespace C64Studio
         &&   ( Document.ASMFileInfo != null )
         &&   ( toolRun.PassLabelsToEmulator ) )
         {
-          string labelInfo = Document.ASMFileInfo.LabelsAsFile();
+          string labelInfo = Document.ASMFileInfo.LabelsAsFile( toolRun.LabelFormat() );
           if ( labelInfo.Length > 0 )
           {
             try
             {
               StudioCore.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
               System.IO.File.WriteAllText( StudioCore.Debugging.TempDebuggerStartupFilename, labelInfo );
-              runArguments = "-moncommands \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+
+              if ( System.IO.Path.GetFileNameWithoutExtension( toolRun.Filename ).ToUpper().StartsWith( "C64DEBUGGER" ) )
+              {
+                runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+              }
+              else
+              {
+                // VICE format
+                runArguments = "-moncommands \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+              }
             }
             catch ( System.IO.IOException ioe )
             {
@@ -2448,7 +2457,7 @@ namespace C64Studio
       if ( ( toolRun.PassLabelsToEmulator )
       &&   ( StudioCore.Debugging.DebuggedASMBase.ASMFileInfo != null ) )
       {
-        breakPointFile += StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.LabelsAsFile();
+        breakPointFile += StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.LabelsAsFile( toolRun.LabelFormat() );
       }
 
       if ( breakPointFile.Length > 0 )
