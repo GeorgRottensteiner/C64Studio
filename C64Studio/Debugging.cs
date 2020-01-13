@@ -307,7 +307,7 @@ namespace C64Studio
     {
       Debug.Log( "OnVirtualBreakpointReached" );
       bool    addedRequest = false;
-      VICERemoteDebugger.RequestData prevRequest = null;
+      RequestData prevRequest = null;
       foreach ( var virtualBP in Breakpoint.Virtual )
       {
         if ( !virtualBP.IsVirtual )
@@ -677,7 +677,7 @@ namespace C64Studio
 
 
 
-    internal void UpdateMemory( VICERemoteDebugger.RequestData Request, ByteBuffer Data )
+    internal void UpdateMemory( RequestData Request, ByteBuffer Data )
     {
       int Offset = Request.Parameter1;
 
@@ -685,7 +685,7 @@ namespace C64Studio
       {
         byte    ramByte = Data.ByteAt( i );
 
-        if ( Request.Reason != VICERemoteDebugger.RequestReason.MEMORY_FETCH )
+        if ( Request.Reason != RequestReason.MEMORY_FETCH )
         {
           if ( ramByte != Core.Debugging.ActiveMemory.RAM.ByteAt( Offset + i ) )
           {

@@ -87,7 +87,7 @@ namespace C64Studio
     delegate void SetDebuggerValuesCallback( RegisterInfo RegisterValues );
     delegate void StartDebugAtCallback( DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, int DebugAddress );
     public delegate void ParameterLessCallback();
-    delegate void UpdateWatchInfoCallback( VICERemoteDebugger.RequestData Request, GR.Memory.ByteBuffer Data );
+    delegate void UpdateWatchInfoCallback( RequestData Request, GR.Memory.ByteBuffer Data );
     delegate bool ParseFileCallback( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration );
     public delegate void DocCallback( BaseDocument Document );
     delegate void DocumentEventHandlerCallback( BaseDocument.DocEvent Event );
@@ -565,8 +565,7 @@ namespace C64Studio
 
       Palettes.Add( defaultPalette.Name, defaultPalette );
 
-      StudioCore.Debugging.Debugger = new VICERemoteDebugger( StudioCore );
-      StudioCore.Debugging.Debugger.DebugEvent += Debugger_DebugEvent;
+      SetupDebugger();
 
       m_BinaryEditor        = new BinaryDisplay( StudioCore, new GR.Memory.ByteBuffer( 2 ), true, false );
       m_CharsetEditor       = new CharsetEditor( StudioCore );
@@ -613,9 +612,6 @@ namespace C64Studio
       AddToolWindow( ToolWindowType.FIND_REPLACE, m_FindReplace, DockState.Float, searchReplaceToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.SEARCH_RESULTS, m_SearchResults, DockState.DockBottom, searchResultsToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.VALUE_TABLE_EDITOR, m_ValueTableEditor, DockState.Document, valueTableEditorToolStripMenuItem, false, false );
-
-      var viceDebugger = StudioCore.Debugging.Debugger as VICERemoteDebugger;
-      viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );
 
       StudioCore.Settings.GenericTools["Outline"]             = m_Outline;
       StudioCore.Settings.GenericTools["SolutionExplorer"]    = m_SolutionExplorer;
@@ -838,6 +834,17 @@ namespace C64Studio
           IdleQueue.Add( idleRequest );
         }
       }
+    }
+
+
+
+    private void SetupDebugger()
+    {
+      StudioCore.Debugging.Debugger = new VICERemoteDebugger( StudioCore );
+      StudioCore.Debugging.Debugger.DebugEvent += Debugger_DebugEvent;
+
+      var viceDebugger = StudioCore.Debugging.Debugger as VICERemoteDebugger;
+      viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );
     }
 
 
@@ -1065,11 +1072,11 @@ namespace C64Studio
         {
           StudioCore.Debugging.Debugger.SetAutoRefreshMemory( request.DebugRequest.Parameter1,
                                                        request.DebugRequest.Parameter2,
-                                                       ( request.DebugRequest.Type == VICERemoteDebugger.Request.REFRESH_MEMORY_RAM ) ? MemorySource.RAM : MemorySource.AS_CPU );
+                                                       ( request.DebugRequest.Type == DebugRequestType.REFRESH_MEMORY_RAM ) ? MemorySource.RAM : MemorySource.AS_CPU );
 
           StudioCore.Debugging.Debugger.RefreshMemory( request.DebugRequest.Parameter1,
                                                        request.DebugRequest.Parameter2,
-                                                       ( request.DebugRequest.Type == VICERemoteDebugger.Request.REFRESH_MEMORY_RAM ) ? MemorySource.RAM : MemorySource.AS_CPU );
+                                                       ( request.DebugRequest.Type == DebugRequestType.REFRESH_MEMORY_RAM ) ? MemorySource.RAM : MemorySource.AS_CPU );
         }
         else if ( request.OpenLastSolution != null )
         {
@@ -1549,12 +1556,12 @@ namespace C64Studio
       if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
       {
         // request new memory
-        VICERemoteDebugger.RequestData requestRefresh = new VICERemoteDebugger.RequestData(VICERemoteDebugger.Request.REFRESH_MEMORY, Event.Viewer.MemoryStart, Event.Viewer.MemorySize );
-        requestRefresh.Reason = VICERemoteDebugger.RequestReason.MEMORY_FETCH;
+        RequestData requestRefresh = new RequestData( DebugRequestType.REFRESH_MEMORY, Event.Viewer.MemoryStart, Event.Viewer.MemorySize );
+        requestRefresh.Reason = RequestReason.MEMORY_FETCH;
 
         if ( !Event.Viewer.MemoryAsCPU )
         {
-          requestRefresh.Type = VICERemoteDebugger.Request.REFRESH_MEMORY_RAM;
+          requestRefresh.Type = DebugRequestType.REFRESH_MEMORY_RAM;
         }
 
 
@@ -2298,14 +2305,23 @@ namespace C64Studio
         &&   ( Document.ASMFileInfo != null )
         &&   ( toolRun.PassLabelsToEmulator ) )
         {
-          string labelInfo = Document.ASMFileInfo.LabelsAsFile();
+          string labelInfo = Document.ASMFileInfo.LabelsAsFile( toolRun.LabelFormat() );
           if ( labelInfo.Length > 0 )
           {
             try
             {
               StudioCore.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
               System.IO.File.WriteAllText( StudioCore.Debugging.TempDebuggerStartupFilename, labelInfo );
-              runArguments = "-moncommands \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+
+              if ( System.IO.Path.GetFileNameWithoutExtension( toolRun.Filename ).ToUpper().StartsWith( "C64DEBUGGER" ) )
+              {
+                runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+              }
+              else
+              {
+                // VICE format
+                runArguments = "-moncommands \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+              }
             }
             catch ( System.IO.IOException ioe )
             {
@@ -2448,7 +2464,7 @@ namespace C64Studio
       if ( ( toolRun.PassLabelsToEmulator )
       &&   ( StudioCore.Debugging.DebuggedASMBase.ASMFileInfo != null ) )
       {
-        breakPointFile += StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.LabelsAsFile();
+        breakPointFile += StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.LabelsAsFile( toolRun.LabelFormat() );
       }
 
       if ( breakPointFile.Length > 0 )
@@ -5085,7 +5101,7 @@ namespace C64Studio
 
 
 
-    private void UpdateWatchInfo( VICERemoteDebugger.RequestData Request, GR.Memory.ByteBuffer Data )
+    private void UpdateWatchInfo( RequestData Request, GR.Memory.ByteBuffer Data )
     {
       if ( InvokeRequired )
       {
@@ -5100,7 +5116,7 @@ namespace C64Studio
       }
       else
       {
-        if ( Request.Type == VICERemoteDebugger.Request.MEM_DUMP )
+        if ( Request.Type == DebugRequestType.MEM_DUMP )
         {
           // display disassembly?
           if ( Request.Parameter1 == StudioCore.Debugging.CurrentCodePosition )
@@ -5633,7 +5649,7 @@ namespace C64Studio
     {
       BaseDocument document = null;
 
-      string extension = System.IO.Path.GetExtension(Filename).ToUpper();
+      string extension = System.IO.Path.GetExtension( Filename ).ToUpper();
       if ( extension == ".C64" )
       {
         OpenProject( Filename );
@@ -5644,11 +5660,19 @@ namespace C64Studio
         OpenSolution( Filename );
         return null;
       }
-      else if ( ( extension == ".D64" )
-      ||        ( extension == ".D71" )
-      ||        ( extension == ".D81" )
-      ||        ( extension == ".T64" )
-      ||        ( extension == ".PRG" ) )
+
+      Project  project;
+      if ( m_Solution.FilenameUsed( Filename, out project ) )
+      {
+        // file is part of a project!
+        return project.ShowDocument( project.GetElementByFilename( Filename ) );
+      }
+
+      if ( ( extension == ".D64" )
+      ||   ( extension == ".D71" )
+      ||   ( extension == ".D81" )
+      ||   ( extension == ".T64" )
+      ||   ( extension == ".PRG" ) )
       {
         document = new FileManager( StudioCore, Filename );
         document.ShowHint = DockState.Float;
@@ -6150,7 +6174,7 @@ namespace C64Studio
             {
               int cursorLine = changedDoc.BaseDoc.CursorLine;
               changedDoc.BaseDoc.Load();
-              changedDoc.BaseDoc.SetModified();
+              //changedDoc.BaseDoc.SetModified();
               changedDoc.BaseDoc.SetCursorToLine( cursorLine, true );
             }
           }

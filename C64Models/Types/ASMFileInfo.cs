@@ -5,6 +5,12 @@ using System.Text;
 
 namespace C64Studio.Types.ASM
 {
+  public enum LabelFileFormat
+  {
+    VICE          = 0,
+    C64DEBUGGER   = 1
+  };
+
   public class SourceInfo
   {
     public string         Filename = "";
@@ -630,7 +636,7 @@ namespace C64Studio.Types.ASM
 
 
 
-    public string LabelsAsFile()
+    public string LabelsAsFile( LabelFileFormat Format )
     {
       StringBuilder   sb = new StringBuilder();
 
@@ -638,10 +644,21 @@ namespace C64Studio.Types.ASM
       {
         if ( token.Value.Type == Types.SymbolInfo.Types.LABEL )
         {
-          sb.Append( "add_label $" );
-          sb.Append( token.Value.AddressOrValue.ToString( "X4" ) );
-          sb.Append( " ." );
-          sb.AppendLine( token.Key.Replace( '.', '_' ).Replace( '-', '_' ).Replace( "+", "plus" ) );
+          switch ( Format )
+          {
+            case LabelFileFormat.VICE:
+              sb.Append( "add_label $" );
+              sb.Append( token.Value.AddressOrValue.ToString( "X4" ) );
+              sb.Append( " ." );
+              sb.AppendLine( token.Key.Replace( '.', '_' ).Replace( '-', '_' ).Replace( "+", "plus" ) );
+              break;
+            case LabelFileFormat.C64DEBUGGER:
+              sb.Append( "al C:" );
+              sb.Append( token.Value.AddressOrValue.ToString( "X4" ) );
+              sb.Append( " ." );
+              sb.AppendLine( token.Key.Replace( '.', '_' ).Replace( '-', '_' ).Replace( "+", "plus" ) );
+              break;
+          }
         }
       }
       return sb.ToString();

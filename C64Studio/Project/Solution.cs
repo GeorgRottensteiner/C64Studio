@@ -36,6 +36,21 @@ namespace C64Studio
 
 
 
+    public bool FilenameUsed( string Filename, out Project Project )
+    {
+      Project = null;
+      foreach ( var project in Projects )
+      {
+        if ( project.GetElementByFilename( Filename ) != null )
+        {
+          Project = project;
+          return true;
+        }
+      }
+      return false;
+    }
+
+
     public GR.Memory.ByteBuffer ToBuffer( string Filename )
     {
       this.Filename = Filename;

@@ -371,7 +371,7 @@ namespace C64Studio
 
 
 
-    public void UpdateMemory( VICERemoteDebugger.RequestData Request, GR.Memory.ByteBuffer Data )
+    public void UpdateMemory( RequestData Request, GR.Memory.ByteBuffer Data )
     {
       int Offset = Request.Parameter1;
 
@@ -379,7 +379,7 @@ namespace C64Studio
       {
         byte    ramByte = Data.ByteAt( i );
 
-        if ( Request.Reason != VICERemoteDebugger.RequestReason.MEMORY_FETCH )
+        if ( Request.Reason != RequestReason.MEMORY_FETCH )
         {
           /*
           if ( ramByte != Core.Debugging.ActiveMemory.RAM.ByteAt( Offset + i ) )

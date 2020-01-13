@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using C64Studio.Types.ASM;
 
 namespace C64Studio
 {
@@ -70,6 +71,20 @@ namespace C64Studio
     {
       return Name;
     }
+
+
+
+    internal LabelFileFormat LabelFormat()
+    {
+      string    filename = System.IO.Path.GetFileNameWithoutExtension( Filename ).ToUpper();
+      if ( filename.StartsWith( "C64DEBUGGER" ) )
+      {
+        return LabelFileFormat.C64DEBUGGER;
+      }
+      return LabelFileFormat.VICE;
+    }
+
+
 
   }
 }

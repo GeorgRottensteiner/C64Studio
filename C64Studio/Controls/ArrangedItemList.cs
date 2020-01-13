@@ -72,22 +72,25 @@ namespace C64Studio
       }
       e.DrawBackground();
 
-      var rect = listItems.GetItemRectangle( e.Index );
+      if ( e.Index != -1 )
+      {
+        var rect = listItems.GetItemRectangle( e.Index );
 
-      var textColor = ForeColor;
-      if ( ( e.State & DrawItemState.Selected ) == DrawItemState.Selected )
-      {
-        Rectangle r = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top, TextRenderer.MeasureText( Items[e.Index].Text, Font ).Width, e.Bounds.Height);
-        e.Graphics.FillRectangle( new SolidBrush( SelectionBackColor ), r );
-        textColor = SelectionTextColor;
+        var textColor = ForeColor;
+        if ( ( e.State & DrawItemState.Selected ) == DrawItemState.Selected )
+        {
+          Rectangle r = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top, TextRenderer.MeasureText( Items[e.Index].Text, Font ).Width, e.Bounds.Height);
+          e.Graphics.FillRectangle( new SolidBrush( SelectionBackColor ), r );
+          textColor = SelectionTextColor;
+        }
+        else if ( ( e.State & DrawItemState.HotLight ) == DrawItemState.HotLight )
+        {
+          Rectangle r = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top, TextRenderer.MeasureText( Items[e.Index].Text, Font ).Width, e.Bounds.Height);
+          e.Graphics.FillRectangle( new SolidBrush( HighlightColor ), r );
+          textColor = HighlightTextColor;
+        }
+        e.Graphics.DrawString( Items[e.Index].Text, Font, new SolidBrush( textColor ), rect );
       }
-      else if ( ( e.State & DrawItemState.HotLight ) == DrawItemState.HotLight )
-      {
-        Rectangle r = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top, TextRenderer.MeasureText( Items[e.Index].Text, Font ).Width, e.Bounds.Height);
-        e.Graphics.FillRectangle( new SolidBrush( HighlightColor ), r );
-        textColor = HighlightTextColor;
-      }
-      e.Graphics.DrawString( Items[e.Index].Text, Font, new SolidBrush( textColor ), rect );
       e.DrawFocusRectangle();
       //e.Graphics.FillRectangle( Brushes.Aqua, e.Bounds );
     }
