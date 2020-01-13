@@ -734,7 +734,7 @@ namespace C64Studio
       }
       else
       {
-        //mainToolToggleTrueDrive.Image = Properties.Resources.toolbar_truedrive_disabled;
+        mainToolToggleTrueDrive.Image = Properties.Resources.toolbar_truedrive_disabled;
       }
 
       // place all toolbars
