@@ -2471,15 +2471,26 @@ namespace C64Studio
 
     private void btnTileDelete_Click( object sender, EventArgs e )
     {
-      if ( m_CurrentEditedTile == null )
+      if ( listTileInfo.SelectedIndices.Count == 0 )
       {
         return;
       }
-      int indexToRemove = m_CurrentEditedTile.Index;
+      var selectedIndices = listTileInfo.SelectedIndices;
+      var indicesToRemove = new List<int>();
+      for ( int i = 0; i < selectedIndices.Count; ++i )
+      {
+        indicesToRemove.Add( selectedIndices[i] );
+      }
+      if ( indicesToRemove.Count > 0 )
+      {
+        for ( int i = 0; i < indicesToRemove.Count; ++i )
+        {
+          int   indexToRemove = indicesToRemove[indicesToRemove.Count - 1 - i];
 
-      // add group since RemoveTile may add additional undos
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileRemove( this, m_MapProject, indexToRemove ) );
-      RemoveTile( indexToRemove );
+          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileRemove( this, m_MapProject, indexToRemove ), i == 0 );
+          RemoveTile( indexToRemove );
+        }
+      }
     }
 
 
