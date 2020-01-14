@@ -5662,7 +5662,8 @@ namespace C64Studio
       }
 
       Project  project;
-      if ( m_Solution.FilenameUsed( Filename, out project ) )
+      if ( ( m_Solution != null )
+      &&   ( m_Solution.FilenameUsed( Filename, out project ) ) )
       {
         // file is part of a project!
         return project.ShowDocument( project.GetElementByFilename( Filename ) );
