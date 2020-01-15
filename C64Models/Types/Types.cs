@@ -523,6 +523,10 @@ namespace C64Studio.Types
 
   public class FileChunk
   {
+    public const System.UInt16    RESTART_INFO          = 0x0100;
+    public const System.UInt16    RESTART_DATA          = 0x0101;
+    public const System.UInt16    RESTART_DOC_INFO      = 0x0102;
+
     public const System.UInt16    SOLUTION              = 0x0400;
     public const System.UInt16    SOLUTION_INFO         = 0x0401;
     public const System.UInt16    SOLUTION_PROJECT      = 0x0402;
@@ -541,7 +545,7 @@ namespace C64Studio.Types
     public const System.UInt16    SCREEN_COLOR_DATA     = 0x1301;
     public const System.UInt16    GRAPHIC_SCREEN_INFO   = 0x1310;
     public const System.UInt16    GRAPHIC_DATA          = 0x1311;   // uint width, uint height, uint image type, uint palette entry count, byte r,g,b, uint data size, data
-    public const System.UInt16    GRAPHIC_COLOR_MAPPING = 0x1312;   // Dictionar<int,List<byte>>
+    public const System.UInt16    GRAPHIC_COLOR_MAPPING = 0x1312;   // Dictionary<int,List<byte>>
 
     public const System.UInt16    MAP_PROJECT_INFO      = 0x1320;
     public const System.UInt16    MAP_PROJECT_DATA      = 0x1321;
@@ -552,6 +556,9 @@ namespace C64Studio.Types
     public const System.UInt16    MAP_EXTRA_DATA        = 0x1327;
     public const System.UInt16    MAP_CHARSET           = 0x1328;
     public const System.UInt16    MAP_EXTRA_DATA_TEXT   = 0x1329;   // replaces MAP_EXTRA_DATA
+
+    public const System.UInt16    SOURCE_ASM            = 0x1330;
+    public const System.UInt16    SOURCE_BASIC          = 0x1331;
 
     public const System.UInt16    SPRITESET_LAYER       = 0x1400;
     public const System.UInt16    SPRITESET_LAYER_ENTRY = 0x1401;

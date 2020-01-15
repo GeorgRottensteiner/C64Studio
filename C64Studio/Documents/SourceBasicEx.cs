@@ -1792,5 +1792,22 @@ namespace C64Studio
 
 
 
+    public override GR.Memory.ByteBuffer SaveToBuffer()
+    {
+      var sourceData = new GR.IO.FileChunk( Types.FileChunk.SOURCE_BASIC );
+
+      // version
+      sourceData.AppendI32( 1 );
+      sourceData.AppendString( editSource.Text );
+      sourceData.AppendI32( CursorLine );
+      sourceData.AppendU8( (byte)( m_LabelMode ? 1 : 0 ) );
+      sourceData.AppendU8( (byte)( m_SymbolMode ? 1 : 0 ) );
+      sourceData.AppendU8( (byte)( m_LowerCaseMode ? 1 : 0 ) );
+
+      return sourceData.ToBuffer();
+    }
+
+
+
   }
 }

@@ -11,6 +11,8 @@ using FastColoredTextBoxNS;
 
 using System.Linq;
 using System.Drawing;
+using GR.Memory;
+using GR.IO;
 
 namespace C64Studio
 {
@@ -2979,6 +2981,47 @@ namespace C64Studio
     {
       Core.Settings.ASMShowMiniView = !Core.Settings.ASMShowMiniView;
       Core.Settings.RefreshDisplayOnAllDocuments( Core );
+    }
+
+
+
+    public override ByteBuffer SaveToBuffer()
+    {
+      var sourceData = new GR.IO.FileChunk( Types.FileChunk.SOURCE_ASM );
+
+      // version
+      sourceData.AppendI32( 1 );
+      sourceData.AppendString( editSource.Text );
+      sourceData.AppendI32( CursorLine );
+
+      return sourceData.ToBuffer();
+    }
+
+
+
+    public override bool ReadFromReader( IReader Reader )
+    {
+      var chunk = new GR.IO.FileChunk();
+
+      if ( ( !chunk.ReadFromStream( Reader ) )
+      ||   ( chunk.Type != Types.FileChunk.SOURCE_ASM ) )
+      {
+        return false;
+      }
+
+      var reader = chunk.BinaryReader();
+
+      int version = reader.ReadInt32();
+      if ( version != 1 )
+      {
+        return false;
+      }
+
+      editSource.Text = reader.ReadString();
+
+      SetCursorToLine( reader.ReadInt32(), false );
+
+      return true;
     }
 
 

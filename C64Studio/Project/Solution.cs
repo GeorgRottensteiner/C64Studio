@@ -51,9 +51,9 @@ namespace C64Studio
     }
 
 
-    public GR.Memory.ByteBuffer ToBuffer( string Filename )
+
+    public GR.Memory.ByteBuffer ToBuffer()
     {
-      this.Filename = Filename;
       GR.IO.FileChunk   chunkSolution = new GR.IO.FileChunk( Types.FileChunk.SOLUTION );
 
       GR.IO.FileChunk   chunkSolutionInfo = new GR.IO.FileChunk( Types.FileChunk.SOLUTION_INFO );

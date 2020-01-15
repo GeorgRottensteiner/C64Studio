@@ -65,7 +65,8 @@ namespace C64Studio
     internal ToolInfo             m_CurrentActiveTool = null;
     public SortedDictionary<string, Types.Palette> Palettes = new SortedDictionary<string, C64Studio.Types.Palette>();
 
-    private static MainForm s_MainForm = null;
+    private static MainForm       s_MainForm = null;
+    private static bool           s_SystemShutdown = false;
     private List<IdleRequest> IdleQueue = new List<IdleRequest>();
 
     internal DocumentInfo         LastSearchableDocumentInfo = null;
@@ -740,50 +741,6 @@ namespace C64Studio
       {
         GR.Forms.WindowStateManager.GeometryFromString( StudioCore.Settings.MainWindowPlacement, this );
       }
-
-      /*
-      foreach ( Types.ColorableElement syntax in Enum.GetValues( typeof( Types.ColorableElement ) ) )
-      {
-        if ( StudioCore.Settings.SyntaxColoring[syntax] == null )
-        {
-          switch ( syntax )
-          {
-            case C64Studio.Types.ColorableElement.NONE:
-            case C64Studio.Types.ColorableElement.LABEL:
-              // dark red
-              StudioCore.Settings.SyntaxColoring[syntax] = new C64Studio.Types.ColorSetting( GR.EnumHelper.GetDescription( syntax ) );
-              StudioCore.Settings.SyntaxColoring[syntax].FGColor = 0xff800000;
-              break;
-            case C64Studio.Types.ColorableElement.CURRENT_DEBUG_LINE:
-              // yellow background
-              StudioCore.Settings.SyntaxColoring[syntax] = new C64Studio.Types.ColorSetting( GR.EnumHelper.GetDescription( syntax ) );
-              StudioCore.Settings.SyntaxColoring[syntax].BGColor = 0xffffff00;
-              StudioCore.Settings.SyntaxColoring[syntax].BGColorAuto = false;
-              break;
-            case C64Studio.Types.ColorableElement.LITERAL_NUMBER:
-            case C64Studio.Types.ColorableElement.OPERATOR:
-            case C64Studio.Types.ColorableElement.LITERAL_STRING:
-              // blue on background
-              StudioCore.Settings.SyntaxColoring[syntax] = new C64Studio.Types.ColorSetting( GR.EnumHelper.GetDescription( syntax ) );
-              StudioCore.Settings.SyntaxColoring[syntax].FGColor = 0xff0000ff;
-              break;
-            case C64Studio.Types.ColorableElement.COMMENT:
-              // dark green on background
-              StudioCore.Settings.SyntaxColoring[syntax] = new C64Studio.Types.ColorSetting( GR.EnumHelper.GetDescription( syntax ) );
-              StudioCore.Settings.SyntaxColoring[syntax].FGColor = 0xff008000;
-              break;
-            case Types.ColorableElement.ERROR_UNDERLINE:
-              // only forecolor needed, red
-              StudioCore.Settings.SyntaxColoring[syntax] = new Types.ColorSetting( GR.EnumHelper.GetDescription( syntax ) );
-              StudioCore.Settings.SyntaxColoring[syntax].FGColor = 0xffff0000;
-              break;
-          }
-        }
-        if ( StudioCore.Settings.SyntaxColoring[syntax] == null )
-        {
-          StudioCore.Settings.SyntaxColoring[syntax] = new C64Studio.Types.ColorSetting( GR.EnumHelper.GetDescription( syntax ) );
-        }
-      }*/
       m_FindReplace.Fill( StudioCore.Settings );
 
       panelMain.ActiveContentChanged += new EventHandler( panelMain_ActiveContentChanged );
@@ -822,6 +779,9 @@ namespace C64Studio
       if ( args.Length > 0 )
       {
         OpenFile( args[0] );
+      }
+      else if ( HandleRestart() )
+      {
       }
       else if ( StudioCore.Settings.AutoOpenLastSolution )
       {
@@ -3024,13 +2984,19 @@ namespace C64Studio
 
     public bool CloseProject( Project ProjectToClose )
     {
+      if ( s_SystemShutdown )
+      {
+        // changes are saved as restart data
+        return true;
+      }
+
       if ( ProjectToClose == null )
       {
         return true;
       }
       if ( ProjectToClose.Modified )
       {
-        System.Windows.Forms.DialogResult saveResult = System.Windows.Forms.MessageBox.Show("The project " + ProjectToClose.Settings.Name + " has been modified. Do you want to save the changes now?", "Save Changes?", MessageBoxButtons.YesNoCancel);
+        System.Windows.Forms.DialogResult saveResult = System.Windows.Forms.MessageBox.Show( "The project " + ProjectToClose.Settings.Name + " has been modified. Do you want to save the changes now?", "Save Changes?", MessageBoxButtons.YesNoCancel );
 
         if ( saveResult == DialogResult.Yes )
         {
@@ -5403,6 +5369,13 @@ namespace C64Studio
       {
         return;
       }
+
+      if ( s_SystemShutdown )
+      {
+        // changes are saved as restart data
+        return;
+      }
+
       if ( m_CurrentProject == null )
       {
         try
@@ -5438,7 +5411,7 @@ namespace C64Studio
           if ( ( project != null )
           && ( project.Modified ) )
           {
-            DialogResult result = System.Windows.Forms.MessageBox.Show("The project " + project.Settings.Name + " has unsaved changes, save now?", "Save Project?", MessageBoxButtons.YesNoCancel);
+            DialogResult result = System.Windows.Forms.MessageBox.Show( "The project " + project.Settings.Name + " has unsaved changes, save now?", "Save Project?", MessageBoxButtons.YesNoCancel );
             if ( result == DialogResult.Cancel )
             {
               e.Cancel = true;
@@ -5638,7 +5611,7 @@ namespace C64Studio
         }
         m_Solution.Filename = saveDlg.FileName;
       }
-      GR.IO.File.WriteAllBytes( m_Solution.Filename, m_Solution.ToBuffer( m_Solution.Filename ) );
+      GR.IO.File.WriteAllBytes( m_Solution.Filename, m_Solution.ToBuffer() );
       m_Solution.Modified = false;
       StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, m_Solution.Filename, this );
     }
@@ -7071,6 +7044,202 @@ namespace C64Studio
     {
       System.IO.File.AppendAllText( "testlog.txt", Info + System.Environment.NewLine );
     }
+
+
+
+
+    private static int WM_QUERYENDSESSION = 0x11;
+    private static int WM_ENDSESSION = 0x16;
+
+
+
+    protected override void WndProc( ref System.Windows.Forms.Message m )
+    {
+      if ( m.Msg == WM_QUERYENDSESSION )
+      {
+        s_SystemShutdown = true;
+      }
+      else if ( m.Msg == WM_ENDSESSION )
+      {
+        if ( m.WParam != IntPtr.Zero )
+        {
+          // system shut down
+          OnSystemShutDown();
+        }
+        s_SystemShutdown = false;
+      }
+
+      // If this is WM_QUERYENDSESSION, the closing event should be  
+      // raised in the base WndProc.  
+      base.WndProc( ref m );
+    }
+
+
+
+    private void OnSystemShutDown()
+    {
+      var chunkRestartData = new GR.IO.FileChunk( Types.FileChunk.RESTART_INFO );
+
+      var chunkRestartInfo = new GR.IO.FileChunk( Types.FileChunk.RESTART_DATA );
+      // version
+      chunkRestartInfo.AppendI32( 1 );
+      if ( m_Solution != null )
+      {
+        chunkRestartInfo.AppendString( m_Solution.Filename );
+        if ( m_Solution.Modified )
+        {
+          var solutionData = m_Solution.ToBuffer();
+          chunkRestartInfo.AppendU32( solutionData.Length );
+          chunkRestartInfo.Append( solutionData );
+        }
+      }
+      else
+      {
+        chunkRestartInfo.AppendString( "" );
+        chunkRestartInfo.AppendU32( 0 );
+      }
+
+      chunkRestartData.Append( chunkRestartInfo.ToBuffer() );
+
+      foreach ( BaseDocument doc in panelMain.Documents )
+      {
+        if ( doc.Modified )
+        {
+          var chunkDocInfo = new GR.IO.FileChunk( Types.FileChunk.RESTART_DOC_INFO );
+
+          chunkDocInfo.AppendString( doc.DocumentInfo.FullPath );
+          chunkDocInfo.AppendString( doc.DocumentInfo.Project.Settings.Name );
+
+          var docData = doc.SaveToBuffer();
+          chunkDocInfo.AppendU32( docData.Length );
+          chunkDocInfo.Append( docData );
+
+          chunkRestartData.Append( chunkDocInfo.ToBuffer() );
+        }
+      }
+
+      string    restartDataPath = GR.Path.RenameFile( SettingsPath(), "restart.dat" );
+      GR.IO.File.WriteAllBytes( restartDataPath, chunkRestartData.ToBuffer() );
+    }
+
+
+
+    private void systemShutdownToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      s_SystemShutdown = true;
+      OnSystemShutDown();
+      Close();
+    }
+
+
+
+    private bool HandleRestart()
+    {
+      string    restartDataPath = GR.Path.RenameFile( SettingsPath(), "restart.dat" );
+
+      if ( !System.IO.File.Exists( restartDataPath ) )
+      {
+        return false;
+      }
+
+      var restartData = GR.IO.File.ReadAllBytes( restartDataPath );
+      if ( restartData == null )
+      {
+        return false;
+      }
+
+      try
+      {
+        System.IO.File.Delete( restartDataPath );
+      }
+      catch ( Exception )
+      {
+        // so what?
+      }
+
+      var chunk = new GR.IO.FileChunk();
+      var memIn = restartData.MemoryReader();
+
+      if ( !chunk.ReadFromStream( memIn ) )
+      {
+        return false;
+      }
+      if ( chunk.Type != Types.FileChunk.RESTART_INFO )
+      {
+        return false;
+      }
+
+      var chunkReader = chunk.MemoryReader();
+      var subChunk = new GR.IO.FileChunk();
+
+      while ( subChunk.ReadFromStream( chunkReader ) )
+      {
+        var subChunkReader = subChunk.MemoryReader();
+        switch ( subChunk.Type )
+        {
+          case Types.FileChunk.RESTART_DATA:
+            {
+              uint      version = subChunkReader.ReadUInt32();
+              if ( version != 1 )
+              {
+                return false;
+              }
+              string    solutionFile = subChunkReader.ReadString();
+              if ( !string.IsNullOrEmpty( solutionFile ) )
+              {
+                if ( !OpenSolution( solutionFile ) )
+                {
+                  return false;
+                }
+                uint  dataSize = subChunkReader.ReadUInt32();
+                var   solutionData = new GR.Memory.ByteBuffer( dataSize );
+
+                if ( subChunkReader.ReadBlock( solutionData, dataSize ) != dataSize )
+                {
+                  return false;
+                }
+                if ( !m_Solution.FromBuffer( solutionData, solutionFile ) )
+                {
+                  return false;
+                }
+                m_Solution.Modified = true;
+              }
+            }
+            break;
+          case Types.FileChunk.RESTART_DOC_INFO:
+            {
+              string    docPath = subChunkReader.ReadString();
+              string    docProjectName = subChunkReader.ReadString();
+              uint      docDataSize = subChunkReader.ReadUInt32();
+              var       docData = new GR.Memory.ByteBuffer();
+
+              if ( subChunkReader.ReadBlock( docData, docDataSize ) != docDataSize )
+              {
+                return false;
+              }
+
+              var project = m_Solution.GetProjectByName( docProjectName );
+              if ( project == null )
+              {
+                return false;
+              }
+              var doc = project.ShowDocument( project.GetElementByFilename( docPath ) );
+              if ( doc != null )
+              {
+                if ( !doc.ReadFromReader( docData.MemoryReader() ) )
+                {
+                  return false;
+                }
+                doc.SetModified();
+              }
+            }
+            break;
+        }
+      }
+
+      return true;
+    }
+
 
 
   }
