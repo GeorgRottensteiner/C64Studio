@@ -636,6 +636,11 @@ namespace C64Studio
 
     protected override void OnClosing( System.ComponentModel.CancelEventArgs e )
     {
+      if ( MainForm.s_SystemShutdown )
+      {
+        return;
+      }
+
       if ( ( Modified )
       &&   ( !m_ForceClose ) )
       {

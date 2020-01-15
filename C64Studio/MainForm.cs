@@ -66,7 +66,7 @@ namespace C64Studio
     public SortedDictionary<string, Types.Palette> Palettes = new SortedDictionary<string, C64Studio.Types.Palette>();
 
     private static MainForm       s_MainForm = null;
-    private static bool           s_SystemShutdown = false;
+    public static bool            s_SystemShutdown = false;
     private List<IdleRequest> IdleQueue = new List<IdleRequest>();
 
     internal DocumentInfo         LastSearchableDocumentInfo = null;
@@ -5373,6 +5373,8 @@ namespace C64Studio
       if ( s_SystemShutdown )
       {
         // changes are saved as restart data
+        SaveSettings();
+        StudioCore.ShuttingDown = true;
         return;
       }
 
@@ -7108,7 +7110,14 @@ namespace C64Studio
           var chunkDocInfo = new GR.IO.FileChunk( Types.FileChunk.RESTART_DOC_INFO );
 
           chunkDocInfo.AppendString( doc.DocumentInfo.FullPath );
-          chunkDocInfo.AppendString( doc.DocumentInfo.Project.Settings.Name );
+          if ( doc.DocumentInfo.Project != null )
+          {
+            chunkDocInfo.AppendString( doc.DocumentInfo.Project.Settings.Name );
+          }
+          else
+          {
+            chunkDocInfo.AppendString( "" );
+          }
 
           var docData = doc.SaveToBuffer();
           chunkDocInfo.AppendU32( docData.Length );
@@ -7218,12 +7227,20 @@ namespace C64Studio
                 return false;
               }
 
-              var project = m_Solution.GetProjectByName( docProjectName );
+              BaseDocument    doc = null;
+              Project         project = null;
+              if ( m_Solution != null )
+              {
+                project = m_Solution.GetProjectByName( docProjectName );
+              }
               if ( project == null )
               {
-                return false;
+                doc = OpenFile( docPath );
               }
-              var doc = project.ShowDocument( project.GetElementByFilename( docPath ) );
+              else
+              {
+                doc = project.ShowDocument( project.GetElementByFilename( docPath ) );
+              }
               if ( doc != null )
               {
                 if ( !doc.ReadFromReader( docData.MemoryReader() ) )
