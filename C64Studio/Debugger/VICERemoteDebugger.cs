@@ -695,7 +695,8 @@ namespace C64Studio
       }
       Debug.Log( "Responselines are:" + total );
 
-      if ( total.ToUpper().Contains( "AN ERROR OCCURRED: MAIN CPU: JAM" ) )
+      if ( ( total.ToUpper().Contains( "AN ERROR OCCURRED" ) )
+      &&   ( total.ToUpper().Contains( "JAM" ) ) )
       {
         InterfaceLog( "CPU JAM encountered: " + total );
         InterfaceLog( "Disconnecting from VICE" );
@@ -878,6 +879,9 @@ namespace C64Studio
                 }
               }
             }
+
+            // newly set to we don't add new breakpoints or do the double command thing
+            m_InitialBreakCompleted = true;
 
             bool skipRefresh = false;
 

@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using static C64Studio.Parser.BasicFileParser;
+using GR.IO;
 
 namespace C64Studio
 {
@@ -1808,6 +1809,42 @@ namespace C64Studio
     }
 
 
+
+    public override bool ReadFromReader( IReader Reader )
+    {
+      var chunk = new GR.IO.FileChunk();
+
+      if ( ( !chunk.ReadFromStream( Reader ) )
+      ||   ( chunk.Type != Types.FileChunk.SOURCE_BASIC ) )
+      {
+        return false;
+      }
+
+      var reader = chunk.BinaryReader();
+
+      int version = reader.ReadInt32();
+      if ( version != 1 )
+      {
+        return false;
+      }
+
+      editSource.Text = reader.ReadString();
+
+      SetCursorToLine( reader.ReadInt32(), false );
+
+      m_LabelMode     = ( reader.ReadUInt8() == 1 );
+      btnToggleLabelMode.Checked = m_LabelMode;
+
+      btnToggleSymbolMode.Checked = ( reader.ReadUInt8() == 1 );
+      btnToggleSymbolMode_CheckedChanged( this, new EventArgs() );
+
+      bool lowerCaseMode = ( reader.ReadUInt8() == 1 );
+      if ( lowerCaseMode != m_LowerCaseMode )
+      {
+        ToggleCase();
+      }
+      return true;
+    }
 
   }
 }

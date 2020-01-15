@@ -740,5 +740,26 @@ namespace C64Studio
 
 
 
+    internal void RemoveAllBreakpoints()
+    {
+      /*
+      var allBPs = BreakPoints.C
+      foreach ( var bp in 
+      RemoveBreakpoint
+
+      Core.MainForm.m_DebugBreakpoints.Re*/
+
+      foreach ( var bps in BreakPoints )
+      {
+        foreach ( var bp in bps.Value )
+        {
+          Core.MainForm.m_DebugBreakpoints.RemoveBreakpoint( bp );
+        }
+      }
+      BreakPoints.Clear();
+    }
+
+
+
   }
 }

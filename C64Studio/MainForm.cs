@@ -2808,7 +2808,7 @@ namespace C64Studio
           break;
         case BaseDocument.DocEvent.Type.BREAKPOINT_REMOVED:
           if ( ( AppState == Types.StudioState.NORMAL )
-          || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+          ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             RemoveBreakpoint( Event.Breakpoint );
           }
@@ -3075,7 +3075,7 @@ namespace C64Studio
       }
 
       projectToolStripMenuItem.Visible = false;
-      StudioCore.Debugging.BreakPoints.Clear();
+      StudioCore.Debugging.RemoveAllBreakpoints();
       return true;
     }
 
