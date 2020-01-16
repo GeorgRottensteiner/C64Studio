@@ -3205,7 +3205,6 @@ namespace C64Studio
         m_Solution.Projects.Add( newProject );
         m_SolutionExplorer.treeProject.Nodes.Add( newProject.Node );
         projectToolStripMenuItem.Visible = true;
-        //Settings.UpdateInMRU( newProject.Settings.Filename, this );
 
         if ( createdNewSolution )
         {
@@ -3215,7 +3214,6 @@ namespace C64Studio
         SetActiveProject( newProject );
 
         AddTask( new Tasks.TaskPreparseFilesInProject( newProject, mainToolConfig.SelectedItem.ToString() ) );
-        //PreparseFilesInProject( newProject );
 
         return newProject;
       }

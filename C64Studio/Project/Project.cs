@@ -644,6 +644,7 @@ namespace C64Studio
           document.Icon = System.Drawing.SystemIcons.Asterisk;
         }
         document.ToolTipText = "";
+
         if ( document.DocumentFilename == null )
         {
           // a new file
@@ -662,7 +663,6 @@ namespace C64Studio
           Element.Document = null;
           return null;
         }
-
         if ( Element.Document != null )
         {
           Element.Document.DocumentInfo = Element.DocumentInfo;
@@ -702,13 +702,13 @@ namespace C64Studio
             Element.DocumentInfo.SetASMFileInfo( Core.Compiling.ParserASM.ASMFileInfo, Core.Compiling.ParserASM.KnownTokens(), Core.Compiling.ParserASM.KnownTokenInfo() );
           }
         }
-        //Debug.Log( "m_Outline.RefreshFromDocument after showdoc" );
         Core.MainForm.m_Outline.RefreshFromDocument( Element.DocumentInfo.BaseDoc );
       }
       Element.Document.Select();
       Element.IsShown = true;
       Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_OPENED, Element.DocumentInfo ) );
       Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_OPENED, Element ) );
+
       return Element.Document;
     }
 
