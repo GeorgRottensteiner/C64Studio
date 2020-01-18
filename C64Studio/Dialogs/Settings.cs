@@ -81,6 +81,7 @@ namespace C64Studio
       checkBASICUseC64Font.Checked            = !Core.Settings.BASICUseNonC64Font;
       checkBASICStripSpaces.Checked           = Core.Settings.BASICStripSpaces;
       checkBASICShowControlCodes.Checked      = Core.Settings.BASICShowControlCodesAsChars;
+      checkBASICAutoToggleEntryMode.Checked   = Core.Settings.BASICAutoToggleEntryMode;
       checkASMShowLineNumbers.Checked         = !Core.Settings.ASMHideLineNumbers;
       checkAutoOpenLastSolution.Checked       = Core.Settings.AutoOpenLastSolution;
       checkASMShowCycles.Checked              = Core.Settings.ASMShowCycles;
@@ -1749,12 +1750,15 @@ namespace C64Studio
         {
           Core.Settings.BASICStripSpaces = GetBooleanFromString( xmlKey.Content );
         }
+        else if ( xmlKey.Type == "AutoToggleEntryMode" )
+        {
+          Core.Settings.BASICAutoToggleEntryMode = GetBooleanFromString( xmlKey.Content );
+        }
         else if ( xmlKey.Type == "ShowControlCodesAsChars" )
         {
           Core.Settings.BASICShowControlCodesAsChars = GetBooleanFromString( xmlKey.Content );
         }
       }
-
       checkBASICStripSpaces.Checked = Core.Settings.BASICStripSpaces;
     }
 
@@ -1923,6 +1927,7 @@ namespace C64Studio
 
       xmlSettingRoot.AddChild( "StripSpaces", Core.Settings.BASICStripSpaces ? "yes" : "no" );
       xmlSettingRoot.AddChild( "ShowControlCodesAsChars", Core.Settings.BASICShowControlCodesAsChars ? "yes" : "no" );
+      xmlSettingRoot.AddChild( "AutoToggleEntryMode", Core.Settings.BASICAutoToggleEntryMode ? "yes" : "no" );
     }
 
 
@@ -2354,6 +2359,13 @@ namespace C64Studio
 
       Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
       RefreshDisplayOnDocuments();
+    }
+
+
+
+    private void checkBASICAutoToggleEntryMode_CheckedChanged( object sender, EventArgs e )
+    {
+      Core.Settings.BASICAutoToggleEntryMode = checkBASICAutoToggleEntryMode.Checked;
     }
 
 
