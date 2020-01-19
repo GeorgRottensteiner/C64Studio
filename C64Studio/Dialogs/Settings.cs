@@ -2379,6 +2379,7 @@ namespace C64Studio
     private void checkBASICStripREM_CheckedChanged( object sender, EventArgs e )
     {
       Core.Settings.BASICStripREM = checkBASICStripREM.Checked;
+      Core.Compiling.ParserBasic.Settings.StripREM = Core.Settings.BASICStripREM;
     }
   }
 }
