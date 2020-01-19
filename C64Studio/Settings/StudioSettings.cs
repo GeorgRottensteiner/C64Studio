@@ -157,6 +157,7 @@ namespace C64Studio
     public bool                                 BASICStripSpaces = true;
     public bool                                 BASICShowControlCodesAsChars = true;
     public bool                                 BASICAutoToggleEntryMode = true;
+    public bool                                 BASICStripREM = false;
 
     public MemoryDisplayType                    MemoryDisplay = MemoryDisplayType.ASCII;
     public MemorySourceType                     MemorySource = MemorySourceType.CPU;
@@ -717,6 +718,7 @@ namespace C64Studio
       chunkBASICParser.AppendU8( (byte)( BASICStripSpaces ? 1 : 0 ) );
       chunkBASICParser.AppendU8( (byte)( BASICShowControlCodesAsChars ? 1 : 0 ) );
       chunkBASICParser.AppendU8( (byte)( !BASICAutoToggleEntryMode ? 1 : 0 ) );
+      chunkBASICParser.AppendU8( (byte)( BASICStripREM ? 1 : 0 ) );
       SettingsData.Append( chunkBASICParser.ToBuffer() );
 
       // BASIC key map
@@ -1102,6 +1104,7 @@ namespace C64Studio
               BASICStripSpaces              = ( binIn.ReadUInt8() != 0 );
               BASICShowControlCodesAsChars  = ( binIn.ReadUInt8() != 0 );
               BASICAutoToggleEntryMode      = ( binIn.ReadUInt8() == 0 );
+              BASICStripREM                 = ( binIn.ReadUInt8() != 0 );
             }
             break;
           case Types.FileChunk.SETTINGS_ENVIRONMENT:

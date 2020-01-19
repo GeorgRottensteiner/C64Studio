@@ -82,6 +82,7 @@ namespace C64Studio
       checkBASICStripSpaces.Checked           = Core.Settings.BASICStripSpaces;
       checkBASICShowControlCodes.Checked      = Core.Settings.BASICShowControlCodesAsChars;
       checkBASICAutoToggleEntryMode.Checked   = Core.Settings.BASICAutoToggleEntryMode;
+      checkBASICStripREM.Checked              = Core.Settings.BASICStripREM;
       checkASMShowLineNumbers.Checked         = !Core.Settings.ASMHideLineNumbers;
       checkAutoOpenLastSolution.Checked       = Core.Settings.AutoOpenLastSolution;
       checkASMShowCycles.Checked              = Core.Settings.ASMShowCycles;
@@ -1750,6 +1751,10 @@ namespace C64Studio
         {
           Core.Settings.BASICStripSpaces = GetBooleanFromString( xmlKey.Content );
         }
+        else if ( xmlKey.Type == "StripREM " )
+        {
+          Core.Settings.BASICStripREM = GetBooleanFromString( xmlKey.Content );
+        }
         else if ( xmlKey.Type == "AutoToggleEntryMode" )
         {
           Core.Settings.BASICAutoToggleEntryMode = GetBooleanFromString( xmlKey.Content );
@@ -1928,6 +1933,7 @@ namespace C64Studio
       xmlSettingRoot.AddChild( "StripSpaces", Core.Settings.BASICStripSpaces ? "yes" : "no" );
       xmlSettingRoot.AddChild( "ShowControlCodesAsChars", Core.Settings.BASICShowControlCodesAsChars ? "yes" : "no" );
       xmlSettingRoot.AddChild( "AutoToggleEntryMode", Core.Settings.BASICAutoToggleEntryMode ? "yes" : "no" );
+      xmlSettingRoot.AddChild( "StripREM", Core.Settings.BASICStripREM ? "yes" : "no" );
     }
 
 
@@ -2370,6 +2376,10 @@ namespace C64Studio
 
 
 
+    private void checkBASICStripREM_CheckedChanged( object sender, EventArgs e )
+    {
+      Core.Settings.BASICStripREM = checkBASICStripREM.Checked;
+    }
   }
 }
 

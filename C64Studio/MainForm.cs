@@ -720,6 +720,7 @@ namespace C64Studio
       ApplyMenuShortCuts();
 
       StudioCore.Compiling.ParserBasic.Settings.StripSpaces = StudioCore.Settings.BASICStripSpaces;
+      StudioCore.Compiling.ParserBasic.Settings.StripREM    = StudioCore.Settings.BASICStripREM;
       m_Outline.checkShowLocalLabels.Image = StudioCore.Settings.OutlineShowLocalLabels ? C64Studio.Properties.Resources.flag_green_on.ToBitmap() : C64Studio.Properties.Resources.flag_green_off.ToBitmap();
       m_Outline.checkShowShortCutLabels.Image = StudioCore.Settings.OutlineShowShortCutLabels ? C64Studio.Properties.Resources.flag_blue_on.ToBitmap() : C64Studio.Properties.Resources.flag_blue_off.ToBitmap();
 
