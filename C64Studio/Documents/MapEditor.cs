@@ -3334,7 +3334,7 @@ namespace C64Studio
         }
         if ( document.DocumentInfo.Element != null )
         {
-          document.SetDocumentFilename( "New Charset Screen.bas" );
+          document.SetDocumentFilename( "New Charset Screen.charscreen" );
           document.DocumentInfo.Element.Filename = document.DocumentInfo.DocumentFilename;
         }
         CharsetScreenEditor   charEditor = (CharsetScreenEditor)document;
