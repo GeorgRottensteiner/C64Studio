@@ -2194,6 +2194,13 @@ namespace C64Studio
 
     private void gotoDeclarationToolStripMenuItem_Click( object sender, EventArgs e )
     {
+      GoToDeclaration();
+    }
+
+
+
+    private void GoToDeclaration()
+    {
       string wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
       string zone;
       string cheapLabelParent;
