@@ -3706,7 +3706,7 @@ namespace C64Studio.Parser
         }
         if ( method != "CHAR" )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are CHAR" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR" );
           return false;
         }
         int   startIndex = 0;
@@ -3768,7 +3768,7 @@ namespace C64Studio.Parser
         if ( ( method != "CHAR" )
         &&   ( method != "CHARCOLOR" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are CHAR or CHARCOLOR" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR or CHARCOLOR" );
           return false;
         }
         int   startIndex = 0;
@@ -3849,7 +3849,7 @@ namespace C64Studio.Parser
         }
         if ( method != "DATA" )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are DATA" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are DATA" );
           return false;
         }
         int     numBytes = -1;
@@ -3915,7 +3915,7 @@ namespace C64Studio.Parser
         if ( ( method != "SPRITE" )
         &&   ( method != "SPRITEDATA" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are SPRITE or SPRITEDATA" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are SPRITE or SPRITEDATA" );
           return false;
         }
 
@@ -4060,7 +4060,7 @@ namespace C64Studio.Parser
         if ( ( method != "SPRITE" )
         &&   ( method != "SPRITEDATA" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are SPRITE and SPRITEDATA" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are SPRITE and SPRITEDATA" );
           return false;
         }
 
@@ -4232,7 +4232,7 @@ namespace C64Studio.Parser
         if ( ( method != "SPRITE" )
         &&   ( method != "SPRITEDATA" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are SPRITE and SPRITEDATA" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are SPRITE and SPRITEDATA" );
           return false;
         }
 
@@ -4415,7 +4415,7 @@ namespace C64Studio.Parser
         &&   ( method != "CHARCOLORVERT" )
         &&   ( method != "COLORCHARVERT" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are CHAR, COLOR, CHARCOLOR, COLORCHAR, CHARVERT, COLORVERT, CHARCOLORVERT, COLORCHARVERT and CHARSET" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR, COLOR, CHARCOLOR, COLORCHAR, CHARVERT, COLORVERT, CHARCOLORVERT, COLORCHARVERT and CHARSET" );
           return false;
         }
 
@@ -4619,7 +4619,7 @@ namespace C64Studio.Parser
         &&   ( method != "SCREEN" )
         &&   ( method != "COLOR" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are BITMAP, BITMAPSCREEN, BITMAPSCREENCOLOR, BITMAPHIRES, BITMAPHIRESSCREEN, BITMAPHIRESSCREENCOLOR, SCREEN and COLOR" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are BITMAP, BITMAPSCREEN, BITMAPSCREENCOLOR, BITMAPHIRES, BITMAPHIRESSCREEN, BITMAPHIRESSCREENCOLOR, SCREEN and COLOR" );
           return false;
         }
         Formats.GraphicScreenProject screenProject = new C64Studio.Formats.GraphicScreenProject();
@@ -4788,7 +4788,7 @@ namespace C64Studio.Parser
         &&   ( method != "MAPTILE" )
         &&   ( method != "MAPVERTICALTILE" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method, supported values for this file name are MAP, MAPVERTICAL, TILE, TILEDATA, TILEELEMENTS, MAPTILE, MAPVERTICALTILE" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are MAP, MAPVERTICAL, TILE, TILEDATA, TILEELEMENTS, MAPTILE, MAPVERTICALTILE" );
           return false;
         }
 
