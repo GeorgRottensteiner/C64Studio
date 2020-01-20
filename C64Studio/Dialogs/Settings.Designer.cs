@@ -88,6 +88,7 @@
       this.tabKeyBindings = new System.Windows.Forms.TabPage();
       this.btnSetDefaultsKeyBinding = new System.Windows.Forms.Button();
       this.btnUnbindKey = new System.Windows.Forms.Button();
+      this.btnBindKeySecondary = new System.Windows.Forms.Button();
       this.btnBindKey = new System.Windows.Forms.Button();
       this.editKeyBinding = new System.Windows.Forms.TextBox();
       this.label10 = new System.Windows.Forms.Label();
@@ -95,6 +96,7 @@
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.label9 = new System.Windows.Forms.Label();
       this.tabErrorsWarnings = new System.Windows.Forms.TabPage();
       this.btmASMLibraryPathBrowse = new System.Windows.Forms.Button();
@@ -139,14 +141,14 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.btnBindKeySecondary = new System.Windows.Forms.Button();
-      this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.checkBASICAutoToggleEntryMode = new System.Windows.Forms.CheckBox();
       this.asmLibraryPathList = new C64Studio.ArrangedItemList();
       this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
       this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.checkBASICStripREM = new System.Windows.Forms.CheckBox();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -801,6 +803,16 @@
       this.btnUnbindKey.UseVisualStyleBackColor = true;
       this.btnUnbindKey.Click += new System.EventHandler(this.btnUnbindKey_Click);
       // 
+      // btnBindKeySecondary
+      // 
+      this.btnBindKeySecondary.Location = new System.Drawing.Point(370, 409);
+      this.btnBindKeySecondary.Name = "btnBindKeySecondary";
+      this.btnBindKeySecondary.Size = new System.Drawing.Size(75, 23);
+      this.btnBindKeySecondary.TabIndex = 4;
+      this.btnBindKeySecondary.Text = "Bind 2nd";
+      this.btnBindKeySecondary.UseVisualStyleBackColor = true;
+      this.btnBindKeySecondary.Click += new System.EventHandler(this.btnBindKey2_Click);
+      // 
       // btnBindKey
       // 
       this.btnBindKey.Location = new System.Drawing.Point(289, 409);
@@ -866,6 +878,11 @@
       // 
       this.columnHeader2.Text = "Binding";
       this.columnHeader2.Width = 113;
+      // 
+      // columnHeader8
+      // 
+      this.columnHeader8.Text = "2nd Binding";
+      this.columnHeader8.Width = 113;
       // 
       // label9
       // 
@@ -1246,7 +1263,9 @@
       // 
       // tabBASIC
       // 
+      this.tabBASIC.Controls.Add(this.checkBASICAutoToggleEntryMode);
       this.tabBASIC.Controls.Add(this.checkBASICShowControlCodes);
+      this.tabBASIC.Controls.Add(this.checkBASICStripREM);
       this.tabBASIC.Controls.Add(this.checkBASICStripSpaces);
       this.tabBASIC.Controls.Add(this.label22);
       this.tabBASIC.Location = new System.Drawing.Point(4, 22);
@@ -1260,7 +1279,7 @@
       // checkBASICShowControlCodes
       // 
       this.checkBASICShowControlCodes.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkBASICShowControlCodes.Location = new System.Drawing.Point(23, 55);
+      this.checkBASICShowControlCodes.Location = new System.Drawing.Point(23, 85);
       this.checkBASICShowControlCodes.Name = "checkBASICShowControlCodes";
       this.checkBASICShowControlCodes.Size = new System.Drawing.Size(266, 24);
       this.checkBASICShowControlCodes.TabIndex = 3;
@@ -1339,20 +1358,16 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
-      // btnBindKeySecondary
+      // checkBASICAutoToggleEntryMode
       // 
-      this.btnBindKeySecondary.Location = new System.Drawing.Point(370, 409);
-      this.btnBindKeySecondary.Name = "btnBindKeySecondary";
-      this.btnBindKeySecondary.Size = new System.Drawing.Size(75, 23);
-      this.btnBindKeySecondary.TabIndex = 4;
-      this.btnBindKeySecondary.Text = "Bind 2nd";
-      this.btnBindKeySecondary.UseVisualStyleBackColor = true;
-      this.btnBindKeySecondary.Click += new System.EventHandler(this.btnBindKey2_Click);
-      // 
-      // columnHeader8
-      // 
-      this.columnHeader8.Text = "2nd Binding";
-      this.columnHeader8.Width = 113;
+      this.checkBASICAutoToggleEntryMode.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkBASICAutoToggleEntryMode.Location = new System.Drawing.Point(23, 115);
+      this.checkBASICAutoToggleEntryMode.Name = "checkBASICAutoToggleEntryMode";
+      this.checkBASICAutoToggleEntryMode.Size = new System.Drawing.Size(266, 24);
+      this.checkBASICAutoToggleEntryMode.TabIndex = 3;
+      this.checkBASICAutoToggleEntryMode.Text = "Auto toggle entry mode on quotes (\")";
+      this.checkBASICAutoToggleEntryMode.UseVisualStyleBackColor = true;
+      this.checkBASICAutoToggleEntryMode.CheckedChanged += new System.EventHandler(this.checkBASICAutoToggleEntryMode_CheckedChanged);
       // 
       // asmLibraryPathList
       // 
@@ -1419,6 +1434,17 @@
       // 
       this.columnHeader10.Text = "Display";
       this.columnHeader10.Width = 108;
+      // 
+      // checkBASICStripREM
+      // 
+      this.checkBASICStripREM.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkBASICStripREM.Location = new System.Drawing.Point(23, 55);
+      this.checkBASICStripREM.Name = "checkBASICStripREM";
+      this.checkBASICStripREM.Size = new System.Drawing.Size(266, 24);
+      this.checkBASICStripREM.TabIndex = 3;
+      this.checkBASICStripREM.Text = "Strip REM statements";
+      this.checkBASICStripREM.UseVisualStyleBackColor = true;
+      this.checkBASICStripREM.CheckedChanged += new System.EventHandler(this.checkBASICStripREM_CheckedChanged);
       // 
       // Settings
       // 
@@ -1583,5 +1609,7 @@
     private System.Windows.Forms.Button btnToolUp;
     private System.Windows.Forms.Button btnBindKeySecondary;
     private System.Windows.Forms.ColumnHeader columnHeader8;
+    private System.Windows.Forms.CheckBox checkBASICAutoToggleEntryMode;
+    private System.Windows.Forms.CheckBox checkBASICStripREM;
   }
 }

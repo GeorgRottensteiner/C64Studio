@@ -29,6 +29,7 @@ namespace C64Studio.Parser
     public class ParserSettings
     {
       public bool         StripSpaces = true;
+      public bool         StripREM = false;
       public BasicVersion Version = BasicVersion.C64_BASIC_V2;
       public bool         UpperCaseMode = true;
     };
@@ -2224,8 +2225,8 @@ namespace C64Studio.Parser
             }
           }
           if ( ( nextByte == 39 )
-          && ( ( Settings.Version == BasicVersion.BASIC_LIGHTNING )
-          || ( Settings.Version == BasicVersion.LASER_BASIC ) ) )
+          &&   ( ( Settings.Version == BasicVersion.BASIC_LIGHTNING )
+          ||     ( Settings.Version == BasicVersion.LASER_BASIC ) ) )
           {
             insideREMStatement = true;
           }
@@ -2747,6 +2748,26 @@ namespace C64Studio.Parser
         }
 
         var info = TokenizeLine( line, lineIndex, ref lastLineNumber );
+
+        // strip effects
+        if ( Settings.StripREM )
+        {
+          for ( int i = 0; i < info.Tokens.Count; ++i )
+          {
+            var token = info.Tokens[i];
+
+            if ( token.TokenType == Token.Type.COMMENT )
+            {
+              if ( ( i > 0 )
+              &&   ( info.Tokens[i - 1].Content == ":" ) )
+              {
+                info.Tokens.RemoveRange( i - 1, info.Tokens.Count - i - 1 );
+                break;
+              }
+              info.Tokens.RemoveRange( i, info.Tokens.Count - i );
+            }
+          }
+        }
 
 
 

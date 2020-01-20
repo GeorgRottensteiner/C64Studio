@@ -201,7 +201,10 @@ namespace C64Studio
     {
       if ( e.KeyChar == '"' )
       {
-        ToggleStringEntryMode();
+        if ( Core.Settings.BASICAutoToggleEntryMode )
+        {
+          ToggleStringEntryMode();
+        }
       }
     }
 
