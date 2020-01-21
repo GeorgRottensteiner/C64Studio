@@ -79,14 +79,13 @@ namespace C64Studio
 
         if ( message.CharIndex != -1 )
         {
+          CompilableDocument    compilableDoc = null;
           if ( ParsedProject == null )
           {
             var sourceDocInfo = Core.MainForm.DetermineDocumentByFileName( documentFile );
             if ( sourceDocInfo != null )
             {
-              var compilableDoc = sourceDocInfo.CompilableDocument;
-
-              compilableDoc?.MarkTextAsError( documentLine, message.CharIndex, message.Length );
+              compilableDoc = sourceDocInfo.CompilableDocument;
             }
           }
           else
@@ -96,11 +95,11 @@ namespace C64Studio
             {
               if ( sourceElement.Document != null )
               {
-                var compilableDoc = sourceElement.DocumentInfo.CompilableDocument;
-                compilableDoc?.MarkTextAsError( documentLine, message.CharIndex, message.Length );
+                compilableDoc = sourceElement.DocumentInfo.CompilableDocument;
               }
             }
           }
+          compilableDoc?.MarkTextAsError( documentLine, message.CharIndex, message.Length );
         }
 
         ++documentLine;

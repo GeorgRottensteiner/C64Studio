@@ -2834,6 +2834,7 @@ namespace C64Studio
                 curInfo.NumBytes += newInfo.NumBytes;
 
                 // TODO - cycles!
+                curInfo.HasCollapsedContent = true;
               }
             }
           }

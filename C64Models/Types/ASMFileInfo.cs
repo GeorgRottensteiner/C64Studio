@@ -25,18 +25,19 @@ namespace C64Studio.Types.ASM
 
   public class LineInfo
   {
-    public string AddressSource = "";
-    public int AddressStart = -1;
-    public int PseudoPCOffset = -1;    // -1 = not set, -2 at !REALPC, otherwise !PSEUDOPC pos
-    public int NumBytes = 0;
-    public int LineIndex = -1;
-    public string Line = "";
-    public string Zone = "";
-    public string CheapLabelZone = "";
-    public List<Types.TokenInfo> NeededParsedExpression = null;
+    public string                 AddressSource = "";
+    public int                    AddressStart = -1;
+    public int                    PseudoPCOffset = -1;    // -1 = not set, -2 at !REALPC, otherwise !PSEUDOPC pos
+    public int                    NumBytes = 0;
+    public int                    LineIndex = -1;
+    public string                 Line = "";
+    public string                 Zone = "";
+    public string                 CheapLabelZone = "";
+    public List<Types.TokenInfo>  NeededParsedExpression = null;
     public GR.Collections.Map<byte, byte> LineCodeMapping = null;
-    public Tiny64.Opcode Opcode = null;
-    public GR.Memory.ByteBuffer LineData = null;
+    public Tiny64.Opcode          Opcode = null;
+    public GR.Memory.ByteBuffer   LineData = null;
+    public bool                   HasCollapsedContent = false;
   };
 
 

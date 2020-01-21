@@ -76,6 +76,7 @@
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.btnExportCharset = new System.Windows.Forms.Button();
       this.editDataExport = new System.Windows.Forms.TextBox();
+      this.btnExportToBASICHexData = new System.Windows.Forms.Button();
       this.btnExportToBASICData = new System.Windows.Forms.Button();
       this.btnExportToBasic = new System.Windows.Forms.Button();
       this.btnExportToFile = new System.Windows.Forms.Button();
@@ -121,7 +122,7 @@
       this.label10 = new System.Windows.Forms.Label();
       this.panelCharsetDetails = new GR.Forms.ImageListbox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnExportToBASICHexData = new System.Windows.Forms.Button();
+      this.btnExportToImage = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -319,6 +320,7 @@
       this.groupExport.Controls.Add(this.btnExportToBASICHexData);
       this.groupExport.Controls.Add(this.btnExportToBASICData);
       this.groupExport.Controls.Add(this.btnExportToBasic);
+      this.groupExport.Controls.Add(this.btnExportToImage);
       this.groupExport.Controls.Add(this.btnExportToFile);
       this.groupExport.Controls.Add(this.btnExportToData);
       this.groupExport.Location = new System.Drawing.Point(11, 6);
@@ -340,7 +342,7 @@
       // 
       // editExportBASICLineOffset
       // 
-      this.editExportBASICLineOffset.Location = new System.Drawing.Point(341, 274);
+      this.editExportBASICLineOffset.Location = new System.Drawing.Point(341, 303);
       this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
       this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
       this.editExportBASICLineOffset.TabIndex = 23;
@@ -348,7 +350,7 @@
       // 
       // editExportBASICLineNo
       // 
-      this.editExportBASICLineNo.Location = new System.Drawing.Point(170, 274);
+      this.editExportBASICLineNo.Location = new System.Drawing.Point(170, 303);
       this.editExportBASICLineNo.Name = "editExportBASICLineNo";
       this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
       this.editExportBASICLineNo.TabIndex = 24;
@@ -357,7 +359,7 @@
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(274, 277);
+      this.label3.Location = new System.Drawing.Point(274, 306);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(61, 13);
       this.label3.TabIndex = 21;
@@ -366,7 +368,7 @@
       // label4
       // 
       this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(117, 277);
+      this.label4.Location = new System.Drawing.Point(117, 306);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(47, 13);
       this.label4.TabIndex = 22;
@@ -592,19 +594,29 @@
       this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(6, 335);
+      this.editDataExport.Location = new System.Drawing.Point(6, 378);
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 157);
+      this.editDataExport.Size = new System.Drawing.Size(429, 114);
       this.editDataExport.TabIndex = 20;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
       this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
       // 
+      // btnExportToBASICHexData
+      // 
+      this.btnExportToBASICHexData.Location = new System.Drawing.Point(6, 330);
+      this.btnExportToBASICHexData.Name = "btnExportToBASICHexData";
+      this.btnExportToBASICHexData.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToBASICHexData.TabIndex = 6;
+      this.btnExportToBASICHexData.Text = "to BASIC data hex";
+      this.btnExportToBASICHexData.UseVisualStyleBackColor = true;
+      this.btnExportToBASICHexData.Click += new System.EventHandler(this.btnExportToBASICDataHex_Click);
+      // 
       // btnExportToBASICData
       // 
-      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 272);
+      this.btnExportToBASICData.Location = new System.Drawing.Point(6, 301);
       this.btnExportToBASICData.Name = "btnExportToBASICData";
       this.btnExportToBASICData.Size = new System.Drawing.Size(106, 23);
       this.btnExportToBASICData.TabIndex = 6;
@@ -1135,15 +1147,15 @@
       this.panelCharsetDetails.VisibleAutoScrollHorizontal = false;
       this.panelCharsetDetails.VisibleAutoScrollVertical = false;
       // 
-      // btnExportToBASICHexData
+      // btnExportToImage
       // 
-      this.btnExportToBASICHexData.Location = new System.Drawing.Point(6, 301);
-      this.btnExportToBASICHexData.Name = "btnExportToBASICHexData";
-      this.btnExportToBASICHexData.Size = new System.Drawing.Size(106, 23);
-      this.btnExportToBASICHexData.TabIndex = 6;
-      this.btnExportToBASICHexData.Text = "to BASIC data hex";
-      this.btnExportToBASICHexData.UseVisualStyleBackColor = true;
-      this.btnExportToBASICHexData.Click += new System.EventHandler(this.btnExportToBASICDataHex_Click);
+      this.btnExportToImage.Location = new System.Drawing.Point(6, 272);
+      this.btnExportToImage.Name = "btnExportToImage";
+      this.btnExportToImage.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToImage.TabIndex = 17;
+      this.btnExportToImage.Text = "to image";
+      this.btnExportToImage.UseVisualStyleBackColor = true;
+      this.btnExportToImage.Click += new System.EventHandler(this.btnExportToImage_Click);
       // 
       // CharsetScreenEditor
       // 
@@ -1266,5 +1278,6 @@
     private System.Windows.Forms.CheckBox checkAutoCenter;
     private System.Windows.Forms.CheckBox checkReverse;
     private System.Windows.Forms.Button btnExportToBASICHexData;
+    private System.Windows.Forms.Button btnExportToImage;
   }
 }

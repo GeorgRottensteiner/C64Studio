@@ -51,6 +51,44 @@
 .KEYBOARD_LINES      = $d02f
 .CLOCK_SWITCH        = $d030
 
+!zone SID
+.BASE                           = $d400
+.FREQUENCY_LO_1                 = .BASE + 0
+.FREQUENCY_HI_1                 = .BASE + 1
+.PULSE_WIDTH_LO_1               = .BASE + 2
+.PULSE_WIDTH_HI_1               = .BASE + 3
+.CONTROL_WAVE_FORM_1            = .BASE + 4
+.ATTACK_DECAY_1                 = .BASE + 5
+.SUSTAIN_RELEASE_1              = .BASE + 6
+
+.FREQUENCY_LO_2                 = .BASE + 7
+.FREQUENCY_HI_2                 = .BASE + 8
+.PULSE_WIDTH_LO_2               = .BASE + 9
+.PULSE_WIDTH_HI_2               = .BASE + 10
+.CONTROL_WAVE_FORM_2            = .BASE + 11
+.ATTACK_DECAY_2                 = .BASE + 12
+.SUSTAIN_RELEASE_2              = .BASE + 13
+
+.FREQUENCY_LO_3                 = .BASE + 14
+.FREQUENCY_HI_3                 = .BASE + 15
+.PULSE_WIDTH_LO_3               = .BASE + 16
+.PULSE_WIDTH_HI_3               = .BASE + 17
+.CONTROL_WAVE_FORM_3            = .BASE + 18
+.ATTACK_DECAY_3                 = .BASE + 19
+.SUSTAIN_RELEASE_3              = .BASE + 20
+
+.FILTER_CUTOFF_LO               = .BASE + 21
+.FILTER_CUTOFF_HI               = .BASE + 22
+
+.FILTER_RESONANCE_VOICE_INPUT   = .BASE + 23
+.FILTER_MODE_VOLUME             = .BASE + 24
+
+.AD_CONVERTER_PADDLE_1          = .BASE + 25
+.AD_CONVERTER_PADDLE_2          = .BASE + 26
+
+.OSCILLATOR_3_OUTPUT            = .BASE + 27
+.ENV_GENERATOR_3_OUTPUT         = .BASE + 28
+
 
 !zone CIA1
 .DATA_PORT_A         = $dc00
