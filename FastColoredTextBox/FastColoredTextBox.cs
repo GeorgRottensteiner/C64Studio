@@ -2283,6 +2283,19 @@ namespace FastColoredTextBoxNS
       return hint;
     }
 
+
+
+    public void StripTrailingSpaces()
+    {
+      foreach ( var line in lines )
+      {
+        line.StripTrailingSpaces();
+      }
+      ClearUndo();
+    }
+
+
+
     /// <summary>
     /// Add and shows simple text hint
     /// </summary>

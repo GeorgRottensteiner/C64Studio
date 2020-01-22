@@ -59,8 +59,6 @@ namespace C64Studio
 
     DateTime                                  m_LastChange = DateTime.Now;
 
-    List<Types.ASM.LineInfo>                  m_LineInfos = new List<Types.ASM.LineInfo>();
-
     Timer                                     m_DelayedEventTimer = new Timer();
 
     private string                            m_CurrentHighlightText = null;
@@ -1734,10 +1732,19 @@ namespace C64Studio
         // trim trailing spaces
         if ( editSource.Lines.Count > 0 )
         {
-          /*
-          // TODO - das verhunzt UNDO!
-          fullRange.StripTrailingSpaces();
-           * */
+          int caretLine = editSource.Selection.Start.iLine;
+          int caretPos = editSource.Selection.Start.iChar;
+
+          if ( Core.Settings.StripTrailingSpaces )
+          {
+            editSource.StripTrailingSpaces();
+            /*
+            var lines = editSource.Lines.ToArray();
+
+            editSource.Text = string.Join( "\r\n", lines );
+
+            editSource.Selection.Start = new Place( caretPos, caretLine );*/
+          }
         }
         System.IO.File.WriteAllText( Filename, GetContent() );
 

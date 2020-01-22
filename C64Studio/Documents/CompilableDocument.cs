@@ -9,6 +9,10 @@ namespace C64Studio
 {
   public class CompilableDocument : BaseDocument
   {
+    protected List<Types.ASM.LineInfo>                  m_LineInfos = new List<Types.ASM.LineInfo>();
+
+
+
     public virtual FastColoredTextBoxNS.FastColoredTextBox SourceControl
     {
       get;
@@ -31,6 +35,22 @@ namespace C64Studio
         Debug.Log( "MarkTextAsError lineindex out of bounds!" );
         return;
       }
+      // several warnings/errors in one line, mark the full line
+      if ( m_LineInfos[LineIndex].HasCollapsedContent )
+      {
+        string    lineText = SourceControl[LineIndex].Text;
+
+        // find first non white space
+        CharPosStart = 0;
+        while ( ( CharPosStart < lineText.Length )
+        &&      ( ( lineText[CharPosStart] == ' ' )
+        ||        ( lineText[CharPosStart] == '\t' ) ) )
+        {
+          ++CharPosStart;
+        }
+        CharLength = lineText.TrimEnd().Length - CharPosStart;
+      }
+
       int     startPos = CharPosStart;
       if ( SourceControl.AllowTabs )
       {

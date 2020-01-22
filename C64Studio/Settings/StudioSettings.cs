@@ -130,6 +130,8 @@ namespace C64Studio
     public bool                                 ASMShowAddress      = true;
     public List<string>                         ASMLibraryPaths     = new List<string>();
 
+    public bool                                 StripTrailingSpaces = false;
+
     public bool                                 OutlineShowLocalLabels = true;
     public bool                                 OutlineShowShortCutLabels = true;
     public bool                                 OutlineSortByIndex = true;
@@ -579,10 +581,11 @@ namespace C64Studio
       chunkMainWindowPlacement.AppendString( MainWindowPlacement );
       SettingsData.Append( chunkMainWindowPlacement.ToBuffer() );
 
-      GR.IO.FileChunk chunkTabs = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_TABS );
+      GR.IO.FileChunk chunkTabs = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_TEXT_EDITOR );
       chunkTabs.AppendI32( TabSize );
       chunkTabs.AppendU8( (byte)( AllowTabs ? 1 : 0 ) );
       chunkTabs.AppendU8( (byte)( TabConvertToSpaces ? 1 : 0 ) );
+      chunkTabs.AppendU8( (byte)( StripTrailingSpaces ? 1 : 0 ) );
       SettingsData.Append( chunkTabs.ToBuffer() );
 
       GR.IO.FileChunk chunkFont = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_FONT );
@@ -912,7 +915,7 @@ namespace C64Studio
               MainWindowPlacement = binIn.ReadString();
             }
             break;
-          case Types.FileChunk.SETTINGS_TABS:
+          case Types.FileChunk.SETTINGS_TEXT_EDITOR:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -924,6 +927,7 @@ namespace C64Studio
               }
               AllowTabs           = ( binIn.ReadUInt8() != 0 );
               TabConvertToSpaces  = ( binIn.ReadUInt8() != 0 );
+              StripTrailingSpaces = ( binIn.ReadUInt8() != 0 );
             }
             break;
           case Types.FileChunk.SETTINGS_FONT:

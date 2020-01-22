@@ -78,6 +78,7 @@ namespace C64Studio
       checkConvertTabsToSpaces.Checked        = Core.Settings.TabConvertToSpaces;
       checkAllowTabs.Checked                  = Core.Settings.AllowTabs;
       editTabSize.Text                        = Core.Settings.TabSize.ToString();
+      checkStripTrailingSpaces.Checked        = Core.Settings.StripTrailingSpaces;
       checkBASICUseC64Font.Checked            = !Core.Settings.BASICUseNonC64Font;
       checkBASICStripSpaces.Checked           = Core.Settings.BASICStripSpaces;
       checkBASICShowControlCodes.Checked      = Core.Settings.BASICShowControlCodesAsChars;
@@ -2381,6 +2382,16 @@ namespace C64Studio
       Core.Settings.BASICStripREM = checkBASICStripREM.Checked;
       Core.Compiling.ParserBasic.Settings.StripREM = Core.Settings.BASICStripREM;
     }
+
+
+
+    private void checkStripTrailingSpaces_CheckedChanged( object sender, EventArgs e )
+    {
+      Core.Settings.StripTrailingSpaces = checkStripTrailingSpaces.Checked;
+    }
+
+
+
   }
 }
 

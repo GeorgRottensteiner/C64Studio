@@ -576,7 +576,7 @@ namespace C64Studio.Types
     public const System.UInt16    SETTINGS_ACCELERATOR  = 0x2001;
     public const System.UInt16    SETTINGS_SOUND        = 0x2002;
     public const System.UInt16    SETTINGS_WINDOW       = 0x2003;
-    public const System.UInt16    SETTINGS_TABS         = 0x2004;
+    public const System.UInt16    SETTINGS_TEXT_EDITOR  = 0x2004;
     public const System.UInt16    SETTINGS_FONT         = 0x2005;
     public const System.UInt16    SETTINGS_SYNTAX_COLORING = 0x2006;
     public const System.UInt16    SETTINGS_UI           = 0x2007;
