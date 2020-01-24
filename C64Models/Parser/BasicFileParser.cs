@@ -2056,7 +2056,10 @@ namespace C64Studio.Parser
         byte    nextByte = tempData.ByteAt( bytePos );
         if ( insideREMStatement )
         {
-          AddDirectToken( info, nextByte, bytePos );
+          if ( !Settings.StripREM )
+          {
+            AddDirectToken( info, nextByte, bytePos );
+          }
           ++bytePos;
           continue;
         }
@@ -2210,10 +2213,6 @@ namespace C64Studio.Parser
                 }
                 //BytePos += opcode.Command.Length;
                 insideDataStatement = ( foundOpcode.Command == "DATA" );
-                if ( IsComment( foundOpcode ) )
-                {
-                  insideREMStatement = true;
-                }
               }
               else
               {
@@ -2262,13 +2261,13 @@ namespace C64Studio.Parser
         Token token = info.Tokens[i];
 
         if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-        && ( ( token.ByteValue == 0x89 )      // GOTO
-        || ( token.ByteValue == 0x8d ) ) )  // GOSUB
+        &&   ( ( token.ByteValue == 0x89 )      // GOTO
+        ||     ( token.ByteValue == 0x8d ) ) )  // GOSUB
         {
           // look up next token, is it a line number? (spaces are ignored)
           int nextTokenIndex = FindNextToken( info.Tokens, i );
           while ( ( nextTokenIndex != -1 )
-          && ( nextTokenIndex < info.Tokens.Count ) )
+          &&      ( nextTokenIndex < info.Tokens.Count ) )
           {
             if ( info.Tokens[nextTokenIndex].TokenType == Token.Type.NUMERIC_LITERAL )
             {
@@ -2289,8 +2288,8 @@ namespace C64Studio.Parser
           }
         }
         if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-        && ( ( token.ByteValue == 0xa7 )        // THEN
-        || ( token.ByteValue == 0x8a ) ) )  // RUN
+        &&   ( ( token.ByteValue == 0xa7 )        // THEN
+        ||     ( token.ByteValue == 0x8a ) ) )  // RUN
         {
           // only one line number
           // look up next token, is it a line number? (spaces are ignored)
@@ -2598,6 +2597,21 @@ namespace C64Studio.Parser
           if ( IsComment( opcode ) )
           {
             InsideREMStatement = true;
+
+            if ( Settings.StripREM )
+            {
+              Info.LineData.Truncate( 1 );
+              if ( opcode.InsertionValue > 255 )
+              {
+                Info.LineData.Truncate( 1 );
+              }
+              if ( ( Info.LineData.Length > 0 )
+              &&   ( Info.LineData.ByteAt( (int)Info.LineData.Length - 1 ) == ':' ) )
+              {
+                // remove optional separator before REM
+                Info.LineData.Truncate( 1 );
+              }
+            }
           }
           break;
         }
@@ -2755,28 +2769,6 @@ namespace C64Studio.Parser
 
         var info = TokenizeLine( line, lineIndex, ref lastLineNumber );
 
-        // strip effects
-        if ( Settings.StripREM )
-        {
-          for ( int i = 0; i < info.Tokens.Count; ++i )
-          {
-            var token = info.Tokens[i];
-
-            if ( token.TokenType == Token.Type.COMMENT )
-            {
-              if ( ( i > 0 )
-              &&   ( info.Tokens[i - 1].Content == ":" ) )
-              {
-                info.Tokens.RemoveRange( i - 1, info.Tokens.Count - i - 1 );
-                break;
-              }
-              info.Tokens.RemoveRange( i, info.Tokens.Count - i );
-            }
-          }
-        }
-
-
-
         m_LineInfos[info.LineIndex] = info;
       }
     }
@@ -2790,6 +2782,7 @@ namespace C64Studio.Parser
       int     startAddress = Config.StartAddress;
       if ( startAddress == -1 )
       {
+        // TODO - C64 specific!
         startAddress = 0x0801;
       }
 
@@ -2798,15 +2791,32 @@ namespace C64Studio.Parser
       int     curAddress = startAddress;
       foreach ( LineInfo info in m_LineInfos.Values )
       {
-        // pointer to next line
-        result.AppendU16( (ushort)( curAddress + info.LineData.Length + 5 ) );
-        result.AppendU16( (ushort)info.LineNumber );
-        result.Append( info.LineData );
+        if ( info.LineData.Length == 0 )
+        {
+          // could be a line with stripped REM, so only the line number is left
+          //  -> check whether the line is referenced, so either skip it or add a :
+          if ( !IsLineNumberReferenced( info.LineNumber ) )
+          {
+            // skip this line
+            continue;
+          }
+          // we need to keep the line, add a :
+          info.LineData.AppendU8( (byte)':' );
+        }
 
-        // end of line
-        result.AppendU8( 0 );
 
-        curAddress += (int)info.LineData.Length + 5;
+        if ( info.LineData.Length > 0 )
+        {
+          // pointer to next line
+          result.AppendU16( (ushort)( curAddress + info.LineData.Length + 5 ) );
+          result.AppendU16( (ushort)info.LineNumber );
+          result.Append( info.LineData );
+
+          // end of line
+          result.AppendU8( 0 );
+
+          curAddress += (int)info.LineData.Length + 5;
+        }
       }
       result.AppendU16( 0 );
 
@@ -2944,6 +2954,20 @@ namespace C64Studio.Parser
       AssembledOutput.OriginalAssemblyStartAddress  = startAddress;
       AssembledOutput.OriginalAssemblySize          = originalSize;
       return true;
+    }
+
+
+
+    private bool IsLineNumberReferenced( int LineNumber )
+    {
+      foreach ( var otherLines in m_LineInfos.Values )
+      {
+        if ( otherLines.ReferencedLineNumbers.ContainsValue( LineNumber ) )
+        {
+          return true;
+        }
+      }
+      return false;
     }
 
 
