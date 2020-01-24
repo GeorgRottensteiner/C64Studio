@@ -2027,6 +2027,7 @@ namespace C64Studio.Parser
       LineInfo info = new LineInfo();
       info.LineIndex = LineIndex;
       info.Line = Line;
+
       if ( !LabelMode )
       {
         LastLineNumber = TokenizeLineNumber( Line, LineIndex, LastLineNumber, endOfDigitPos, info );
@@ -2041,7 +2042,8 @@ namespace C64Studio.Parser
 
       TranslateCharactersToPETSCII( Line, LineIndex, endOfDigitPos, ref posInLine, ref insideMacro, ref macroStartPos, tempData );
 
-      if ( tempData.Length + endOfDigitPos > 80 )
+      
+      if ( tempData.Length + endOfDigitPos + 1 > 80 )
       {
         AddWarning( LineIndex, Types.ErrorCode.W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY, "Line " + LastLineNumber + " is too long for manual entry", 0, info.Line.Length );
       }

@@ -36,7 +36,8 @@ namespace C64Studio
         return;
       }
       // several warnings/errors in one line, mark the full line
-      if ( m_LineInfos[LineIndex].HasCollapsedContent )
+      if ( ( LineIndex < m_LineInfos.Count )
+      &&   ( m_LineInfos[LineIndex].HasCollapsedContent ) )
       {
         string    lineText = SourceControl[LineIndex].Text;
 
