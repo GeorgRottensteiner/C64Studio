@@ -24,8 +24,7 @@ namespace C64Studio
     System.Windows.Forms.Keys m_ControlKeyReplacement = System.Windows.Forms.Keys.Tab;
     System.Windows.Forms.Keys m_CommodoreKeyReplacement = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.ControlKey;
     private FastColoredTextBoxNS.AutocompleteMenu   AutoComplete = null;
-
-    private FastColoredTextBoxNS.TextStyle[]  m_TextStyles = new FastColoredTextBoxNS.TextStyle[(int)Types.ColorableElement.LAST_ENTRY];
+    private FastColoredTextBoxNS.Style[]      m_TextStyles = new FastColoredTextBoxNS.Style[(int)Types.ColorableElement.LAST_ENTRY];
     private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
 
     private string                            m_CurrentHighlightText = null;
@@ -432,6 +431,13 @@ namespace C64Studio
 
     void ApplySyntaxColoring( Types.ColorableElement Element )
     {
+      if ( Element == Types.ColorableElement.ERROR_UNDERLINE )
+      {
+        m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.WavyLineStyle( 255, GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
+        editSource.Styles[SyntaxElementStylePrio( Element )] = m_TextStyles[SyntaxElementStylePrio( Element )];
+        return;
+      }
+
       System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
       System.Drawing.Brush      backBrush = null;
       System.Drawing.FontStyle  fontStyle = System.Drawing.FontStyle.Regular;

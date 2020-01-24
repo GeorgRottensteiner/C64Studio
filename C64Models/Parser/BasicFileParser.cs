@@ -2502,11 +2502,15 @@ namespace C64Studio.Parser
         if ( ( info.LineNumber < 0 )
         ||   ( info.LineNumber > 63999 ) )
         {
-          AddError( LineIndex, Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER, "Unsupported line number, must be in the range 0 to 63999" );
+          AddError( LineIndex, Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER, "Unsupported line number, must be in the range 0 to 63999",
+                    lineNumberToken.StartIndex, lineNumberToken.Content.Length );
         }
         else if ( info.LineNumber <= LastLineNumber )
         {
-          AddError( LineIndex, Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER, "Line number not increasing, must be higher than the previous line number" );
+          AddError( LineIndex,
+                    Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER,
+                    "Line number not increasing, must be higher than the previous line number",
+                    lineNumberToken.StartIndex, lineNumberToken.Content.Length );
         }
         LastLineNumber = info.LineNumber;
       }

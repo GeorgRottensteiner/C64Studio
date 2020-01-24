@@ -67,7 +67,7 @@ namespace C64Studio
         startPos = origText.Length;
 
         if ( ( startPos >= origText.Length )
-        || ( startPos + CharLength > origText.Length ) )
+        ||   ( startPos + CharLength > origText.Length ) )
         {
           startPos = 0;
           CharLength = origText.Length;
