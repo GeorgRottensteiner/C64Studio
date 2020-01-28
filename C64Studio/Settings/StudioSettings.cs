@@ -33,15 +33,15 @@ namespace C64Studio
     OUTPUT,
     [Description( "CompileResult" )]
     COMPILE_RESULT,
-    [Description( "DebugRegisters" )]
+    [Description( "Breakpoints" )]
     DEBUG_BREAKPOINTS,
     [Description( "Charset Editor" )]
     DEBUG_WATCH,
-    [Description( "DebugMemory" )]
+    [Description( "Memory" )]
     DEBUG_MEMORY,
-    [Description( "DebugBreakpoints" )]
+    [Description( "Registers" )]
     DEBUG_REGISTERS,
-    [Description( "DebugWatch" )]
+    [Description( "Watch" )]
     CHARSET_EDITOR,
     [Description( "Sprite Editor" )]
     SPRITE_EDITOR,
@@ -51,15 +51,15 @@ namespace C64Studio
     GRAPHIC_SCREEN_EDITOR,
     [Description( "Map Editor" )]
     MAP_EDITOR,
-    [Description( "PetSCIITable" )]
+    [Description( "PetSCII" )]
     PETSCII_TABLE,
     [Description( "Calculator" )]
     CALCULATOR,
     [Description( "Help" )]
     HELP,
-    [Description( "FindReplace" )]
+    [Description( "Find/Replace" )]
     FIND_REPLACE,
-    [Description( "SearchResults" )]
+    [Description( "Search Results" )]
     SEARCH_RESULTS,
     [Description( "Disassembler" )]
     DISASSEMBLER,
@@ -290,6 +290,7 @@ namespace C64Studio
     {
       //Debug.Log( "persist " + persistString );
 
+      /*
       // ignore built in windows (map editor, etc.), for some reason restoring those breaks
       if ( ( persistString == "Map Editor" )
       ||   ( persistString == "Sprite Editor" )
@@ -300,7 +301,7 @@ namespace C64Studio
       {
         // Ouch!
         return null;
-      }
+      }*/
       foreach ( var toolEntry in Tools )
       {
         if ( persistString == toolEntry.Value.ToolDescription )
@@ -626,10 +627,13 @@ namespace C64Studio
       // dockpanel layout
       GR.IO.FileChunk chunkLayout = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_DPS_LAYOUT );
       System.IO.MemoryStream    memOut = new System.IO.MemoryStream();
+      //Debug.Log( "Save with state " + Main.m_DebugRegisters.DockState );
+
       PanelMain.SaveAsXml( memOut, Encoding.UTF8 );
       byte[] layoutData = memOut.ToArray();
       string xmlOutText = System.Text.Encoding.UTF8.GetString( layoutData );
 
+      //Debug.Log( xmlOutText );
       // remove dummy elements (layout of non-tool windows)
       GR.Strings.XMLParser    parser = new GR.Strings.XMLParser();
       if ( !parser.Parse( xmlOutText ) )
@@ -836,7 +840,7 @@ namespace C64Studio
 
       memIn.Close();
       memIn.Dispose();
-      PanelMain.ResumeLayout( true, true );
+      PanelMain.ResumeLayout( false, true );
     }
 
 

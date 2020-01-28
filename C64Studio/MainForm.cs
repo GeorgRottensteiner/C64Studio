@@ -614,25 +614,25 @@ namespace C64Studio
       AddToolWindow( ToolWindowType.SEARCH_RESULTS, m_SearchResults, DockState.DockBottom, searchResultsToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.VALUE_TABLE_EDITOR, m_ValueTableEditor, DockState.Document, valueTableEditorToolStripMenuItem, false, false );
 
-      StudioCore.Settings.GenericTools["Outline"]             = m_Outline;
-      StudioCore.Settings.GenericTools["SolutionExplorer"]    = m_SolutionExplorer;
-      StudioCore.Settings.GenericTools["Output"]              = m_Output;
-      StudioCore.Settings.GenericTools["CompileResult"]       = m_CompileResult;
-      StudioCore.Settings.GenericTools["DebugRegisters"]      = m_DebugRegisters;
-      StudioCore.Settings.GenericTools["DebugWatch"]          = m_DebugWatch;
-      StudioCore.Settings.GenericTools["DebugMemory"]         = m_DebugMemory;
-      StudioCore.Settings.GenericTools["DebugBreakpoints"]    = m_DebugBreakpoints;
-      StudioCore.Settings.GenericTools["Disassembler"]        = m_Disassembler;
-      StudioCore.Settings.GenericTools["CharsetEditor"]       = m_CharsetEditor;
-      StudioCore.Settings.GenericTools["SpriteEditor"]        = m_SpriteEditor;
-      StudioCore.Settings.GenericTools["CharScreenEditor"]    = m_CharScreenEditor;
-      StudioCore.Settings.GenericTools["GraphicScreenEditor"] = m_GraphicScreenEditor;
-      StudioCore.Settings.GenericTools["MapEditor"]           = m_MapEditor;
-      StudioCore.Settings.GenericTools["PetSCIITable"]        = m_PetSCIITable;
-      StudioCore.Settings.GenericTools["Calculator"]          = m_Calculator;
-      StudioCore.Settings.GenericTools["Help"]                = m_Help;
-      StudioCore.Settings.GenericTools["FindReplace"]         = m_FindReplace;
-      StudioCore.Settings.GenericTools["SearchResults"]       = m_SearchResults;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.OUTLINE )]            = m_Outline;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SOLUTION_EXPLORER )]  = m_SolutionExplorer;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.OUTPUT )]              = m_Output;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.COMPILE_RESULT )]       = m_CompileResult;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_REGISTERS )]           = m_DebugRegisters;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_WATCH )]          = m_DebugWatch;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_MEMORY )]         = m_DebugMemory;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DEBUG_BREAKPOINTS )]    = m_DebugBreakpoints;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.DISASSEMBLER )]        = m_Disassembler;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.CHARSET_EDITOR )]       = m_CharsetEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SPRITE_EDITOR )]        = m_SpriteEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.CHAR_SCREEN_EDITOR )]    = m_CharScreenEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.GRAPHIC_SCREEN_EDITOR )] = m_GraphicScreenEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.MAP_EDITOR )]           = m_MapEditor;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.PETSCII_TABLE )]        = m_PetSCIITable;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.CALCULATOR )]          = m_Calculator;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.HELP )]                = m_Help;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.FIND_REPLACE )]         = m_FindReplace;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SEARCH_RESULTS )]       = m_SearchResults;
 
 
       StudioCore.Settings.Functions[Function.COMPILE].MenuItem = compileToolStripMenuItem;
@@ -6667,7 +6667,7 @@ namespace C64Studio
 
       GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer(memOut.ToArray());
 
-      //Debug.Log( data.ToString() );
+      Debug.Log( data.ToString() );
       DumpPanel( "", panelMain );
 
       /*

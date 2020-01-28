@@ -293,7 +293,5 @@ namespace C64Studio
       }
     }
 
-
-
   }
 }
