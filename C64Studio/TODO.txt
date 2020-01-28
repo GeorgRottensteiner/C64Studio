@@ -1,4 +1,21 @@
 ﻿C64Studio
+o *=$0801 "Basic"
+          rts
+
+  *=$080d "Basic End"
+
+  *=$8000 "Map data"
+
+  *=$f000 "Charset"
+
+
+  And have a compile/build summary in the output console:
+
+  $0801 - $080c Basic
+  $080d - $0816 Basic end
+  $8000 - $84fb Map Data
+  etc
+o When you are creating a new project/solution with the same name, you are not warned that you are about to overwrite the existing project.
 o Theming -> Disabled Controls
 o Abspeichern von .BAS-Dateien mit "richtigem" PETSCII-Wert (falls das nicht mit irgend etwas anderem kollidiert)
 o alternative BASIC-Macro-Darstellung (xxx * Anzahl)
