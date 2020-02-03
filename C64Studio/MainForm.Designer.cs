@@ -119,6 +119,7 @@
       this.runTestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.disassembleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.throwExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.systemShutdownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.disassembleToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -201,7 +202,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.systemShutdownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.closeSolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -247,6 +248,7 @@
             this.saveAsToolStripMenuItem,
             this.saveAllToolStripMenuItem,
             this.fileCloseToolStripMenuItem,
+            this.closeSolutionToolStripMenuItem,
             this.toolStripSeparatorAboveMRU,
             this.fileRecentlyOpenedFilesToolStripMenuItem,
             this.fileRecentlyOpenedProjectsToolStripMenuItem,
@@ -939,6 +941,13 @@
       this.throwExceptionToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
       this.throwExceptionToolStripMenuItem.Text = "Throw Exception";
       this.throwExceptionToolStripMenuItem.Click += new System.EventHandler(this.throwExceptionToolStripMenuItem_Click);
+      // 
+      // systemShutdownToolStripMenuItem
+      // 
+      this.systemShutdownToolStripMenuItem.Name = "systemShutdownToolStripMenuItem";
+      this.systemShutdownToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+      this.systemShutdownToolStripMenuItem.Text = "System Shutdown";
+      this.systemShutdownToolStripMenuItem.Click += new System.EventHandler(this.systemShutdownToolStripMenuItem_Click);
       // 
       // toolsToolStripMenuItem
       // 
@@ -1646,12 +1655,13 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
-      // systemShutdownToolStripMenuItem
+      // closeSolutionToolStripMenuItem
       // 
-      this.systemShutdownToolStripMenuItem.Name = "systemShutdownToolStripMenuItem";
-      this.systemShutdownToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-      this.systemShutdownToolStripMenuItem.Text = "System Shutdown";
-      this.systemShutdownToolStripMenuItem.Click += new System.EventHandler(this.systemShutdownToolStripMenuItem_Click);
+      this.closeSolutionToolStripMenuItem.Enabled = false;
+      this.closeSolutionToolStripMenuItem.Name = "closeSolutionToolStripMenuItem";
+      this.closeSolutionToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+      this.closeSolutionToolStripMenuItem.Text = "Close Solution";
+      this.closeSolutionToolStripMenuItem.Click += new System.EventHandler(this.solutionCloseToolStripMenuItem_Click);
       // 
       // MainForm
       // 
@@ -1862,6 +1872,7 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
     private System.Windows.Forms.ToolStripMenuItem memoryViewToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem systemShutdownToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem closeSolutionToolStripMenuItem;
   }
 }
 

@@ -1219,12 +1219,14 @@ namespace C64Studio
           solutionToolStripMenuItem.Visible = true;
           solutionCloseToolStripMenuItem.Enabled = true;
           solutionSaveToolStripMenuItem1.Enabled = true;
+          closeSolutionToolStripMenuItem.Enabled = true;
           UpdateCaption();
           break;
         case C64Studio.Types.ApplicationEvent.Type.SOLUTION_CLOSED:
           solutionToolStripMenuItem.Visible = false;
           solutionCloseToolStripMenuItem.Enabled = false;
           solutionSaveToolStripMenuItem1.Enabled = false;
+          closeSolutionToolStripMenuItem.Enabled = false;
 
           m_Output.SetText( "" );
           m_CompileResult.ClearMessages();
