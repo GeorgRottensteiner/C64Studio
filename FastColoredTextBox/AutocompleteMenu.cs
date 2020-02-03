@@ -34,6 +34,20 @@ namespace FastColoredTextBoxNS
 
 
 
+  public class PrepareSortingEventArgs : EventArgs
+  {
+    public PrepareSortingEventArgs( List<AutocompleteItem> Items, string FilterText )
+    {
+      FilteredItems = Items;
+      this.FilterText = FilterText;
+    }
+
+    public List<AutocompleteItem>   FilteredItems { get; set; }
+    public string                   FilterText { get; set; }
+  }
+
+
+
   /// <summary>
   /// Popup menu for autocomplete
   /// </summary>
@@ -80,6 +94,10 @@ namespace FastColoredTextBoxNS
     /// Occurs before popup menu is filtered pre opening
     /// </summary>
     public event EventHandler<PrepareOpeningEventArgs> PrepareOpening;
+    /// <summary>
+    /// Occurs after popup menu is filtered pre opening (for sorting)
+    /// </summary>
+    public event EventHandler<PrepareSortingEventArgs> PrepareSorting;
     /// <summary>
     /// Allow TAB for select menu item
     /// </summary>
@@ -305,7 +323,16 @@ namespace FastColoredTextBoxNS
 
 
 
+    internal void OnPrepareSorting( PrepareSortingEventArgs args )
+    {
+      if ( PrepareSorting != null )
+      {
+        PrepareSorting( this, args );
+      }
+    }
   }
+
+
 
   [System.ComponentModel.ToolboxItem( false )]
   public class AutocompleteListView : UserControl
@@ -508,8 +535,8 @@ namespace FastColoredTextBoxNS
       }
 
 
-        //calc screen point for popup menu
-        Point point = tb.PlaceToPoint( fragment.End );
+      //calc screen point for popup menu
+      Point point = tb.PlaceToPoint( fragment.End );
       point.Offset( 2, tb.CharHeight );
       //
       if ( forced || ( text.Length >= Menu.MinFragmentLength
@@ -537,6 +564,9 @@ namespace FastColoredTextBoxNS
           AdjustScroll();
           DoSelectedVisible();
         }
+        var sortingArgs = new PrepareSortingEventArgs( visibleItems, text );
+        Menu.OnPrepareSorting( sortingArgs );
+        visibleItems = sortingArgs.FilteredItems;
       }
 
       //show popup menu
@@ -547,14 +577,22 @@ namespace FastColoredTextBoxNS
           CancelEventArgs args2 = new CancelEventArgs();
           Menu.OnOpening( args2 );
           if ( !args.Cancel )
+          {
             Menu.Show( tb, point );
+          }
         }
         else
+        {
           Invalidate();
+        }
       }
       else
+      {
         Menu.Close();
+      }
     }
+
+
 
     void tb_SelectionChanged( object sender, EventArgs e )
     {
@@ -573,17 +611,17 @@ namespace FastColoredTextBoxNS
           needClose = true;
         else
           if ( !Menu.Fragment.Contains( tb.Selection.Start ) )
+        {
+          if ( tb.Selection.Start.iLine == Menu.Fragment.End.iLine && tb.Selection.Start.iChar == Menu.Fragment.End.iChar + 1 )
           {
-            if ( tb.Selection.Start.iLine == Menu.Fragment.End.iLine && tb.Selection.Start.iChar == Menu.Fragment.End.iChar + 1 )
-            {
-              //user press key at end of fragment
-              char c = tb.Selection.CharBeforeStart;
-              if ( !Regex.IsMatch( c.ToString(), Menu.SearchPattern ) )//check char
-                needClose = true;
-            }
-            else
+            //user press key at end of fragment
+            char c = tb.Selection.CharBeforeStart;
+            if ( !Regex.IsMatch( c.ToString(), Menu.SearchPattern ) )//check char
               needClose = true;
           }
+          else
+            needClose = true;
+        }
 
         if ( needClose )
           Menu.Close();

@@ -13,6 +13,7 @@ using System.Linq;
 using System.Drawing;
 using GR.Memory;
 using GR.IO;
+using System.Globalization;
 
 namespace C64Studio
 {
@@ -134,6 +135,7 @@ namespace C64Studio
       //AutoComplete.SearchPattern = @"([A-Za-z_.]|(?<=[A-Za-z_.][\w]))";
       AutoComplete.SearchPattern = @"[A-Za-z_.][\w.]*";
       AutoComplete.PrepareOpening += AutoComplete_PrepareOpening;
+      AutoComplete.PrepareSorting += AutoComplete_PrepareSorting;
 
       editSource.AutoIndentExistingLines = false;
       editSource.AutoIndentChars = false;
@@ -197,6 +199,53 @@ namespace C64Studio
       m_LineInfos.Add( new Types.ASM.LineInfo() );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+    }
+
+
+
+    private void AutoComplete_PrepareSorting( object sender, PrepareSortingEventArgs e )
+    {
+      GR.Collections.MultiMap<int,AutocompleteItem>     sortedItems = new GR.Collections.MultiMap<int, AutocompleteItem>();
+
+      foreach ( var item in e.FilteredItems )
+      {
+        int     relevance = 100000;
+
+        if ( item.Text == e.FilterText )
+        {
+          // full match
+          relevance = 0;
+        }
+        else if ( string.Compare( item.Text, e.FilterText, true ) == 0 )
+        {
+          // full match but case mismatch
+          relevance = 1;
+        }
+        else if ( item.Text.StartsWith( e.FilterText ) )
+        {
+          // starting with exact match -> TODO - number of chars appended?
+          relevance = 2;
+        }
+        else if ( string.Compare( item.Text, 0, e.FilterText, 0, e.FilterText.Length, true ) == 0 )
+        {
+          // starting with exact match but mismatching case -> TODO - number of chars appended?
+          relevance = 3;
+        }
+        else if ( item.Text.Contains( e.FilterText ) )
+        {
+          // containing exact match -> TODO - number of chars appended?
+          relevance = 5;
+        }
+        else if ( CultureInfo.InvariantCulture.CompareInfo.IndexOf( item.Text, e.FilterText, CompareOptions.IgnoreCase ) > 0 )
+        {
+          // containing case mismatch -> TODO - number of chars appended?
+          relevance = 6;
+        }
+        //Debug.Log( "Item " + item.Text + ", relevance " + relevance );
+        sortedItems.Add( relevance, item );
+      }
+
+      e.FilteredItems = sortedItems.Values;
     }
 
 
