@@ -569,8 +569,10 @@ namespace FastColoredTextBoxNS
         visibleItems = sortingArgs.FilteredItems;
       }
 
-      //show popup menu
-      if ( Count > 0 )
+      //show popup menu (only if at least one item that is not the already existing text)
+      if ( ( Count > 1 )
+      ||   ( ( Count == 1 )
+      &&     ( visibleItems[0].Text.Length > text.Length ) ) )
       {
         if ( !Menu.Visible )
         {

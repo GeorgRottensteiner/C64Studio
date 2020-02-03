@@ -1,16 +1,9 @@
 ﻿C64Studio
-o AutoComplete: das Autocomplete nach einem Komma komplett unterdrücken?
-
 o *=$0801 "Basic"
           rts
-
   *=$080d "Basic End"
-
   *=$8000 "Map data"
-
   *=$f000 "Charset"
-
-
   And have a compile/build summary in the output console:
 
   $0801 - $080c Basic

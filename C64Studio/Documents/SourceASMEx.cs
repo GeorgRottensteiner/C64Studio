@@ -207,6 +207,8 @@ namespace C64Studio
     {
       GR.Collections.MultiMap<int,AutocompleteItem>     sortedItems = new GR.Collections.MultiMap<int, AutocompleteItem>();
 
+      Debug.Log( "Sort for " + e.FilterText );
+
       foreach ( var item in e.FilteredItems )
       {
         int     relevance = 100000;
@@ -1276,27 +1278,23 @@ namespace C64Studio
           {
             // we've got an opcode
             hadOpcodeFirst = true;
-            //Debug.Log( "opcode found" );
-            if ( ( tokens[tokens.Count - 1].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-            &&   ( tokens[tokens.Count - 1].Content == "," ) )
+
+            for ( int j = i + 1; j < tokens.Count; ++j )
             {
-              // comma is the last token
-              var   newList2 = new List<FastColoredTextBoxNS.AutocompleteItem>();
+              if ( ( tokens[j].StartPos < posX )
+              &&   ( tokens[j].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+              &&   ( tokens[j].Content == "," ) )
 
-              //List<string>    newList2 = new List<string>();
+              {
+                // comma is in the list, assume lda/sta with ,x or ,y
+                var   newList2 = new List<FastColoredTextBoxNS.AutocompleteItem>();
 
-              newList2.Add( new FastColoredTextBoxNS.AutocompleteItem( "x" ) { ToolTipTitle = tokens[i].Content + ",x", ToolTipText = tokens[i].Content + ",x" } );
-              newList2.Add( new FastColoredTextBoxNS.AutocompleteItem( "y" ) { ToolTipTitle = tokens[i].Content + ",y", ToolTipText = tokens[i].Content + ",y" } );
+                newList2.Add( new FastColoredTextBoxNS.AutocompleteItem( "x" ) { ToolTipTitle = tokens[i].Content + ",x", ToolTipText = tokens[i].Content + ",x" } );
+                newList2.Add( new FastColoredTextBoxNS.AutocompleteItem( "y" ) { ToolTipTitle = tokens[i].Content + ",y", ToolTipText = tokens[i].Content + ",y" } );
 
-
-              //newList2.Add( "x" );
-              //newList2.Add( "y" );
-
-              ///editSource.AutoComplete.DropRestOfWord = true;
-              ///editSource.AutoComplete.IsCaseSensitive = false;
-
-              AutoComplete.Items.SetAutocompleteItems( newList2 );
-              return;
+                AutoComplete.Items.SetAutocompleteItems( newList2 );
+                return;
+              }
             }
           }
           if ( ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
