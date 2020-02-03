@@ -1,4 +1,10 @@
 ﻿C64Studio
+o AutoComplete (sort by relevance)
+  * Alle Worte mit exakt gleichen Anfangsbuchstaben zuerst
+  * Dann alle Worte mit gleichen Anfangsbuchstaben aber anderem Case
+  * Dann alle Worte in denen die Folge nicht am Anfang sondern anderswo vorkommt
+o AutoComplete: das Autocomplete nach einem Komma komplett unterdrücken?
+
 o *=$0801 "Basic"
           rts
 

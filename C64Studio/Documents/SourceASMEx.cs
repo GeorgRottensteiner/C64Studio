@@ -1374,6 +1374,8 @@ namespace C64Studio
             return;
           }
         }
+        // TODO - sort newList by relevance
+
 
         AutoComplete.MinFragmentLength = 1;
         AutoComplete.AutoSize = true;
