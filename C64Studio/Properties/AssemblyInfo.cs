@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "GR Games" )]
 [assembly: AssemblyProduct( "C64Studio" )]
-[assembly: AssemblyCopyright( "Copyright © GR Games 2011–2019" )]
+[assembly: AssemblyCopyright( "Copyright © GR Games 2011–2020" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 

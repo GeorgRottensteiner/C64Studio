@@ -1902,12 +1902,26 @@ namespace C64Studio
         }
         string macroName = result.Substring(dollarPos + 2, macroEndPos - dollarPos - 2);
 
+        bool asHex = false;
+        if ( macroName.StartsWith( "0x" ) )
+        {
+          asHex = true;
+          macroName = macroName.Substring( 2 );
+        }
+
         if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
         {
           string valueToInsert = "";
           if ( Document.ASMFileInfo.Labels.ContainsKey( macroName ) )
           {
-            valueToInsert = Document.ASMFileInfo.Labels[macroName].AddressOrValue.ToString();
+            if ( asHex )
+            {
+              valueToInsert = Document.ASMFileInfo.Labels[macroName].AddressOrValue.ToString( "X" );
+            }
+            else
+            {
+              valueToInsert = Document.ASMFileInfo.Labels[macroName].AddressOrValue.ToString();
+            }
           }
           else
           {
@@ -1924,7 +1938,7 @@ namespace C64Studio
           StudioCore.AddToOutput( "Unknown macro " + macroName + " encountered at command " + Mask + System.Environment.NewLine );
           return "";
         }
-        dollarPos = result.IndexOf( "$(", macroEndPos + 1 );
+        dollarPos = result.IndexOf( "$(", dollarPos );
       }
       return result;
     }
