@@ -1581,11 +1581,14 @@ namespace C64Studio
           return false;
         }
       }
-      while ( m_Solution.Projects.Count > 0 )
+      if ( !s_SystemShutdown )
       {
-        if ( !CloseProject( m_Solution.Projects[0] ) )
+        while ( m_Solution.Projects.Count > 0 )
         {
-          return false;
+          if ( !CloseProject( m_Solution.Projects[0] ) )
+          {
+            return false;
+          }
         }
       }
       m_SolutionExplorer.treeProject.Nodes.Clear();
