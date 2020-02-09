@@ -24,17 +24,7 @@ o BASIC -> Optimierung beim "Compile", REM entfernen, 0 durch ., usw.
 o BASIC -> Run/Debug Configuration
 o BASIC -> Debug?
 o BASIC-Extensions ( Laser-Basic, Simons Basic?)
-o Solution Explorer - only one active element is shown bold
 o C128-Unterstützung (BASIC mit Hex-Data, Debug-Start, etc..)
-o *=$c000
-  jmp Init
-    !fill (10,0)
-  Init rts
-  2;E1010;C:\Users\Deufol\Desktop\C64\Test\Test\Test.asm;Could not evaluate Init
-  3;E1302;C:\Users\Deufol\Desktop\C64\Test\Test\Test.asm;Could not determine fill parameter (10
-  Die Fehlermeldung ist ein bisschen irreführend.
-
-Die am Ende der Meldung ist damit im Prinzip überflüssig geworden, aber trotzdem um 1 daneben.
 o Search Bookmarks-> Functionality
 o Sprite-Import from file -> allow skipping a number of bytes (open binary editor view?)
 o komme gerade mit dem Text Screen Editor nicht zurecht. Habe die Größe auf 40x200 gestellt und Text als ASM exportiert. 
@@ -57,18 +47,8 @@ o Path editor: I have a suggestion for a feature which I think would be great fo
     X Position start, X Position MSB, X Position end, X Position Speed, X Position Movement Duration 
     Y Position start, Y Position end, Y Position Speed, Y Position Movement Duration
 o SID editor
-o KeyBindings to select Custom Color, Multi Color 1 and Multi Color 2 (ie: as if I clicked on their radio button) so I can draw with that colour?
 o BASIC: Undo bei Label-Mode-Wechsel sollte Label-Mode mit wechseln!
 o PDS: lda #< should use lo/hi of the whole expression
-
-o Die Sortierreihenfolge vom "autocomplete" führt bei mir häufig zu Eingabefehlern, weil die Vorschläge alphabetisch sortiert und nicht nach Relevanz dargestellt werden (siehe Bild).
-  Ausserdem wäre es gut, wenn ein vollständig ausgeschriebener Begriff in der Liste (ganz oben) erthalten bleiben würde (siehe Bild), so könnte man wie gewohnt mit ENTER in die näschte Zeile wechseln.
-o Could a future version get some keybindings for the editors, for example the sprite editor would benefit from bindings for:
-  Select colour (background, Multicolor 1. 2 and sprite color)
-  Go to next and previous sprite
-  Shift sprites up/down/left/right
-  Mirror and flip
-  Similar for charset, text screen and other editors?
 o wie kann ich beim laufenden debuggen den Speicher ändern? (die Register sind ja änderbar - der Mem auch?)
 o wie kann ich dem Debugger beibringen, dass er das Mem-Fenster weiterhin mit der gew. Adresse anzeigt?
 o Still having problems with creating a new solution/project when another solution/project is loaded.
@@ -76,7 +56,7 @@ o Still having problems with creating a new solution/project when another soluti
 o Start without existing settings, code colors blank!! Crash on exit?
 o Basic-Loader (ASM to BASIC-Loader)
 o Zeilenabstand nicht fixiert, einstellbar
-o  when creating a new project, shouldn't you clear the breakpoint list ?
+o when creating a new project, shouldn't you clear the breakpoint list ?
 o Char screen editor, move chars, optionally do not move other chars around
 o Version control support, GIT/SVN (how?)
 o Comparison of file (as addon to version control)

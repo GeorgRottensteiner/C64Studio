@@ -207,8 +207,6 @@ namespace C64Studio
     {
       GR.Collections.MultiMap<int,AutocompleteItem>     sortedItems = new GR.Collections.MultiMap<int, AutocompleteItem>();
 
-      Debug.Log( "Sort for " + e.FilterText );
-
       foreach ( var item in e.FilteredItems )
       {
         int     relevance = 100000;
