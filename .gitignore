@@ -60,3 +60,4 @@
 *.dump
 /Sample Projects/MacroTest/zones_with_quotes.prg
 /C64StudioRelease/C64Ass/C64Ass.exe
+/.vs

@@ -3482,12 +3482,12 @@ namespace C64Studio
         string newFileExtension = System.IO.Path.GetExtension(GR.Path.RelativePathTo(importFile, false, System.IO.Path.GetFullPath(projectToAddTo.Settings.BasePath), true).ToUpper());
 
         if ( ( newFileExtension == ".CHARSETPROJECT" )
-        || ( newFileExtension == ".CHR" ) )
+        ||   ( newFileExtension == ".CHR" ) )
         {
           type = ProjectElement.ElementType.CHARACTER_SET;
         }
         else if ( ( newFileExtension == ".SPRITEPROJECT" )
-        || ( newFileExtension == ".SPR" ) )
+        ||        ( newFileExtension == ".SPR" ) )
         {
           type = ProjectElement.ElementType.SPRITE_SET;
         }
@@ -5662,6 +5662,8 @@ namespace C64Studio
         return project.ShowDocument( project.GetElementByFilename( Filename ) );
       }
 
+      bool    openDirectFile = true;
+
       if ( ( extension == ".D64" )
       ||   ( extension == ".D71" )
       ||   ( extension == ".D81" )
@@ -5708,6 +5710,14 @@ namespace C64Studio
         document = new MapEditor( StudioCore );
         document.ShowHint = DockState.Document;
       }
+      else if ( extension == ".CTM" )
+      {
+        // a charpad file
+        openDirectFile = false;
+        document = new MapEditor( StudioCore );
+        document.ShowHint = DockState.Document;
+        ( (MapEditor)document ).OpenCharpadFile( Filename );
+      }
       else
       {
         document = new SourceASMEx( StudioCore );
@@ -5715,15 +5725,17 @@ namespace C64Studio
       }
 
       document.Core = StudioCore;
-      document.SetDocumentFilename( Filename );
-      document.Text = System.IO.Path.GetFileName( Filename );
-      if ( !document.Load() )
+      if ( openDirectFile )
       {
-        document.ToolTipText = "";
-        return null;
+        document.SetDocumentFilename( Filename );
+        document.Text = System.IO.Path.GetFileName( Filename );
+        if ( !document.Load() )
+        {
+          document.ToolTipText = "";
+          return null;
+        }
+        document.ToolTipText = document.DocumentInfo.FullPath;
       }
-      document.ToolTipText = document.DocumentInfo.FullPath;
-
       document.Show( panelMain );
       document.Icon = IconFromType( document.DocumentInfo );
       document.DocumentInfo.UndoManager.MainForm = this;

@@ -2711,98 +2711,109 @@ namespace C64Studio
         else if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
         {
           // a charpad project file
-          GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
-
-          Formats.CharpadProject    cpProject = new C64Studio.Formats.CharpadProject();
-          if ( !cpProject.LoadFromFile( projectFile ) )
+          if ( !OpenCharpadFile( filename ) )
           {
             return;
           }
-
-          m_MapProject.Charset.BackgroundColor = cpProject.BackgroundColor;
-          m_MapProject.Charset.MultiColor1 = cpProject.MultiColor1;
-          m_MapProject.Charset.MultiColor2 = cpProject.MultiColor2;
-
-          int maxChars = cpProject.NumChars;
-          if ( maxChars > 256 )
-          {
-            maxChars = 256;
-          }
-
-          m_MapProject.Charset.NumCharacters = maxChars;
-          for ( int charIndex = 0; charIndex < m_MapProject.Charset.NumCharacters; ++charIndex )
-          {
-            m_MapProject.Charset.Characters[charIndex].Data = cpProject.Characters[charIndex].Data;
-            m_MapProject.Charset.Characters[charIndex].Color = cpProject.Characters[charIndex].Color;
-            m_MapProject.Charset.Characters[charIndex].Mode = cpProject.MultiColor ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
-
-            RebuildCharImage( charIndex );
-          }
-
-          // import tiles
-          m_MapProject.Maps.Clear();
-          comboMaps.Items.Clear();
-
-          m_MapProject.Tiles.Clear();
-          comboTiles.Items.Clear();
-          listTileInfo.Items.Clear();
-
-          for ( int i = 0; i < cpProject.NumTiles; ++i )
-          {
-            Formats.MapProject.Tile tile = new Formats.MapProject.Tile();
-
-            tile.Name = "Tile " + ( i + 1 ).ToString();
-            tile.Chars.Resize( cpProject.TileWidth, cpProject.TileHeight );
-            tile.Index = i;
-
-            for ( int y = 0; y < tile.Chars.Height; ++y )
-            {
-              for ( int x = 0; x < tile.Chars.Width; ++x )
-              {
-                tile.Chars[x, y].Character = (byte)cpProject.Tiles[i].CharData.UInt16At( 2 * ( x + y * tile.Chars.Width ) );
-                tile.Chars[x, y].Color = cpProject.Tiles[i].ColorData.ByteAt( x + y * tile.Chars.Width );
-              }
-            }
-            m_MapProject.Tiles.Add( tile );
-            comboTiles.Items.Add( new GR.Generic.Tupel<string, Formats.MapProject.Tile>( tile.Name, tile ) );
-
-            ListViewItem item = new ListViewItem();
-
-            item.Text = tile.Index.ToString();
-            item.SubItems.Add( tile.Name );
-            item.SubItems.Add( tile.Chars.Width.ToString() + "x" + tile.Chars.Height.ToString() );
-            item.SubItems.Add( "0" );
-            item.Tag = tile;
-
-            listTileInfo.Items.Add( item );
-          }
-
-          var map = new Formats.MapProject.Map();
-          map.Tiles.Resize( cpProject.MapWidth, cpProject.MapHeight );
-          for ( int j = 0; j < cpProject.MapHeight; ++j )
-          {
-            for ( int i = 0; i < cpProject.MapWidth; ++i )
-            {
-              map.Tiles[i, j] = cpProject.MapData.ByteAt( i + j * cpProject.MapWidth );
-            }
-          }
-          map.TileSpacingX = cpProject.TileWidth;
-          map.TileSpacingY = cpProject.TileHeight;
-          map.Name = "Imported Map";
-          m_MapProject.Maps.Add( map );
-          comboMaps.Items.Add( new GR.Generic.Tupel<string, Formats.MapProject.Map>( map.Name, map ) );
-          comboMaps.Enabled = true;
-
-          comboTileBackground.SelectedIndex = m_MapProject.Charset.BackgroundColor;
-          comboTileMulticolor1.SelectedIndex = m_MapProject.Charset.MultiColor1;
-          comboTileMulticolor2.SelectedIndex = m_MapProject.Charset.MultiColor2;
-          comboTileMode.SelectedIndex = (int)( cpProject.MultiColor ? Types.CharsetMode.MULTICOLOR : Types.CharsetMode.HIRES );
-
-          RedrawMap();
-          SetModified();
           return;
         }
       }
+    }
+
+
+
+    public bool OpenCharpadFile( string filename )
+    {
+      GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
+
+      Formats.CharpadProject    cpProject = new C64Studio.Formats.CharpadProject();
+      if ( !cpProject.LoadFromFile( projectFile ) )
+      {
+        return false;
+      }
+
+      m_MapProject.Charset.BackgroundColor = cpProject.BackgroundColor;
+      m_MapProject.Charset.MultiColor1 = cpProject.MultiColor1;
+      m_MapProject.Charset.MultiColor2 = cpProject.MultiColor2;
+
+      int maxChars = cpProject.NumChars;
+      if ( maxChars > 256 )
+      {
+        maxChars = 256;
+      }
+
+      m_MapProject.Charset.NumCharacters = maxChars;
+      for ( int charIndex = 0; charIndex < m_MapProject.Charset.NumCharacters; ++charIndex )
+      {
+        m_MapProject.Charset.Characters[charIndex].Data = cpProject.Characters[charIndex].Data;
+        m_MapProject.Charset.Characters[charIndex].Color = cpProject.Characters[charIndex].Color;
+        m_MapProject.Charset.Characters[charIndex].Mode = cpProject.MultiColor ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
+
+        RebuildCharImage( charIndex );
+      }
+
+      // import tiles
+      m_MapProject.Maps.Clear();
+      comboMaps.Items.Clear();
+
+      m_MapProject.Tiles.Clear();
+      comboTiles.Items.Clear();
+      listTileInfo.Items.Clear();
+
+      for ( int i = 0; i < cpProject.NumTiles; ++i )
+      {
+        Formats.MapProject.Tile tile = new Formats.MapProject.Tile();
+
+        tile.Name = "Tile " + ( i + 1 ).ToString();
+        tile.Chars.Resize( cpProject.TileWidth, cpProject.TileHeight );
+        tile.Index = i;
+
+        for ( int y = 0; y < tile.Chars.Height; ++y )
+        {
+          for ( int x = 0; x < tile.Chars.Width; ++x )
+          {
+            tile.Chars[x, y].Character = (byte)cpProject.Tiles[i].CharData.UInt16At( 2 * ( x + y * tile.Chars.Width ) );
+            tile.Chars[x, y].Color = cpProject.Tiles[i].ColorData.ByteAt( x + y * tile.Chars.Width );
+          }
+        }
+        m_MapProject.Tiles.Add( tile );
+        comboTiles.Items.Add( new GR.Generic.Tupel<string, Formats.MapProject.Tile>( tile.Name, tile ) );
+
+        ListViewItem item = new ListViewItem();
+
+        item.Text = tile.Index.ToString();
+        item.SubItems.Add( tile.Name );
+        item.SubItems.Add( tile.Chars.Width.ToString() + "x" + tile.Chars.Height.ToString() );
+        item.SubItems.Add( "0" );
+        item.Tag = tile;
+
+        listTileInfo.Items.Add( item );
+      }
+
+      var map = new Formats.MapProject.Map();
+      map.Tiles.Resize( cpProject.MapWidth, cpProject.MapHeight );
+      for ( int j = 0; j < cpProject.MapHeight; ++j )
+      {
+        for ( int i = 0; i < cpProject.MapWidth; ++i )
+        {
+          map.Tiles[i, j] = cpProject.MapData.ByteAt( i + j * cpProject.MapWidth );
+        }
+      }
+      map.TileSpacingX = cpProject.TileWidth;
+      map.TileSpacingY = cpProject.TileHeight;
+      map.Name = "Imported Map";
+      m_MapProject.Maps.Add( map );
+      comboMaps.Items.Add( new GR.Generic.Tupel<string, Formats.MapProject.Map>( map.Name, map ) );
+      comboMaps.Enabled = true;
+
+      comboTileBackground.SelectedIndex = m_MapProject.Charset.BackgroundColor;
+      comboTileMulticolor1.SelectedIndex = m_MapProject.Charset.MultiColor1;
+      comboTileMulticolor2.SelectedIndex = m_MapProject.Charset.MultiColor2;
+      comboTileMode.SelectedIndex = (int)( cpProject.MultiColor ? Types.CharsetMode.MULTICOLOR : Types.CharsetMode.HIRES );
+
+      RedrawMap();
+      SetModified();
+      return true;
     }
 
 
