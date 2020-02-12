@@ -103,6 +103,7 @@ namespace C64Studio
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.button1 = new System.Windows.Forms.Button();
+      this.btnExportToBASICHex = new System.Windows.Forms.Button();
       this.btnExportToBASIC = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.btnExportCharset = new System.Windows.Forms.Button();
@@ -121,6 +122,7 @@ namespace C64Studio
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.editCategoryName = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
+      this.tabCharEditor = new System.Windows.Forms.TabPage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.openCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -131,7 +133,7 @@ namespace C64Studio
       this.exchangeMultiColor1AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMultiColor2AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnExportToBASICHex = new System.Windows.Forms.Button();
+      this.characterEditor1 = new C64Studio.Controls.CharacterEditor();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabCharsetEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -146,6 +148,7 @@ namespace C64Studio
       this.tabCategories.SuspendLayout();
       this.groupAllCategories.SuspendLayout();
       this.groupCategorySpecific.SuspendLayout();
+      this.tabCharEditor.SuspendLayout();
       this.menuStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -154,6 +157,7 @@ namespace C64Studio
       this.tabCharsetEditor.Controls.Add(this.tabEditor);
       this.tabCharsetEditor.Controls.Add(this.tabProject);
       this.tabCharsetEditor.Controls.Add(this.tabCategories);
+      this.tabCharsetEditor.Controls.Add(this.tabCharEditor);
       this.tabCharsetEditor.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tabCharsetEditor.Location = new System.Drawing.Point(0, 24);
       this.tabCharsetEditor.Name = "tabCharsetEditor";
@@ -946,6 +950,16 @@ namespace C64Studio
       this.button1.UseVisualStyleBackColor = true;
       this.button1.Click += new System.EventHandler(this.btnExportCharsetToImage_Click);
       // 
+      // btnExportToBASICHex
+      // 
+      this.btnExportToBASICHex.Location = new System.Drawing.Point(6, 135);
+      this.btnExportToBASICHex.Name = "btnExportToBASICHex";
+      this.btnExportToBASICHex.Size = new System.Drawing.Size(117, 23);
+      this.btnExportToBASICHex.TabIndex = 2;
+      this.btnExportToBASICHex.Text = "To BASIC hex";
+      this.btnExportToBASICHex.UseVisualStyleBackColor = true;
+      this.btnExportToBASICHex.Click += new System.EventHandler(this.btnExportCharsetToBASICHex_Click);
+      // 
       // btnExportToBASIC
       // 
       this.btnExportToBASIC.Location = new System.Drawing.Point(6, 106);
@@ -1091,6 +1105,7 @@ namespace C64Studio
             this.columnHeader1,
             this.columnHeader2});
       this.listCategories.FullRowSelect = true;
+      this.listCategories.HideSelection = false;
       this.listCategories.Location = new System.Drawing.Point(11, 29);
       this.listCategories.Name = "listCategories";
       this.listCategories.ShowGroups = false;
@@ -1126,6 +1141,16 @@ namespace C64Studio
       this.label3.Size = new System.Drawing.Size(52, 13);
       this.label3.TabIndex = 0;
       this.label3.Text = "Category:";
+      // 
+      // tabCharEditor
+      // 
+      this.tabCharEditor.Controls.Add(this.characterEditor1);
+      this.tabCharEditor.Location = new System.Drawing.Point(4, 22);
+      this.tabCharEditor.Name = "tabCharEditor";
+      this.tabCharEditor.Size = new System.Drawing.Size(1056, 477);
+      this.tabCharEditor.TabIndex = 3;
+      this.tabCharEditor.Text = "Editor";
+      this.tabCharEditor.UseVisualStyleBackColor = true;
       // 
       // menuStrip1
       // 
@@ -1200,15 +1225,13 @@ namespace C64Studio
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Text = "Exchange Multi color 2 and BG color";
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor2AndBGColorToolStripMenuItem_Click);
       // 
-      // btnExportToBASICHex
+      // characterEditor1
       // 
-      this.btnExportToBASICHex.Location = new System.Drawing.Point(6, 135);
-      this.btnExportToBASICHex.Name = "btnExportToBASICHex";
-      this.btnExportToBASICHex.Size = new System.Drawing.Size(117, 23);
-      this.btnExportToBASICHex.TabIndex = 2;
-      this.btnExportToBASICHex.Text = "To BASIC hex";
-      this.btnExportToBASICHex.UseVisualStyleBackColor = true;
-      this.btnExportToBASICHex.Click += new System.EventHandler(this.btnExportCharsetToBASICHex_Click);
+      this.characterEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.characterEditor1.Location = new System.Drawing.Point(0, 0);
+      this.characterEditor1.Name = "characterEditor1";
+      this.characterEditor1.Size = new System.Drawing.Size(1056, 477);
+      this.characterEditor1.TabIndex = 0;
       // 
       // CharsetEditor
       // 
@@ -1238,6 +1261,7 @@ namespace C64Studio
       this.groupAllCategories.ResumeLayout(false);
       this.groupCategorySpecific.ResumeLayout(false);
       this.groupCategorySpecific.PerformLayout();
+      this.tabCharEditor.ResumeLayout(false);
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();
       this.ResumeLayout(false);
@@ -1345,5 +1369,7 @@ namespace C64Studio
     private System.Windows.Forms.TextBox editDataImport;
     private System.Windows.Forms.Button btnClearImportData;
     private System.Windows.Forms.Button btnExportToBASICHex;
-  }
+        private System.Windows.Forms.TabPage tabCharEditor;
+        private CharacterEditor characterEditor1;
+    }
 }

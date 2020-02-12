@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using C64Studio.Formats;
+﻿using C64Studio.Formats;
 
 
 
@@ -31,7 +28,6 @@ namespace C64Studio.Undo
       Char.Index      = CharIndex;
       Char.Mode       = Project.Characters[CharIndex].Mode;
     }
-
 
 
 

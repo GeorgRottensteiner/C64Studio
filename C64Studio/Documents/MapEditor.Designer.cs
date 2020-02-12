@@ -101,13 +101,14 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabMapEditor = new System.Windows.Forms.TabControl();
       this.tabTiles = new System.Windows.Forms.TabPage();
+      this.btnTileApply = new System.Windows.Forms.Button();
       this.btnCopyTileCharToNextIncreased = new System.Windows.Forms.Button();
       this.btnSetNextTileChar = new System.Windows.Forms.Button();
       this.comboTileMode = new System.Windows.Forms.ComboBox();
       this.btnMoveTileDown = new System.Windows.Forms.Button();
       this.btnMoveTileUp = new System.Windows.Forms.Button();
       this.btnTileDelete = new System.Windows.Forms.Button();
-      this.btnTileApply = new System.Windows.Forms.Button();
+      this.btnTileClone = new System.Windows.Forms.Button();
       this.btnTileAdd = new System.Windows.Forms.Button();
       this.listTileChars = new System.Windows.Forms.ListView();
       this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -136,6 +137,7 @@
       this.comboTileBackground = new System.Windows.Forms.ComboBox();
       this.panelCharColors = new GR.Forms.FastPictureBox();
       this.pictureTileDisplay = new GR.Forms.FastPictureBox();
+      this.tabCharset = new System.Windows.Forms.TabPage();
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.label7 = new System.Windows.Forms.Label();
       this.label8 = new System.Windows.Forms.Label();
@@ -167,7 +169,7 @@
       this.button4 = new System.Windows.Forms.Button();
       this.button5 = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnTileClone = new System.Windows.Forms.Button();
+      this.characterEditor = new C64Studio.Controls.CharacterEditor();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -181,6 +183,7 @@
       this.tabTiles.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureTileDisplay)).BeginInit();
+      this.tabCharset.SuspendLayout();
       this.tabPage1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.fastPictureBox1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.fastPictureBox2)).BeginInit();
@@ -195,7 +198,7 @@
             this.fileToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(964, 24);
+      this.menuStrip1.Size = new System.Drawing.Size(1064, 24);
       this.menuStrip1.TabIndex = 1;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -885,11 +888,12 @@
       this.tabMapEditor.Controls.Add(this.tabEditor);
       this.tabMapEditor.Controls.Add(this.tabTiles);
       this.tabMapEditor.Controls.Add(this.tabProject);
+      this.tabMapEditor.Controls.Add(this.tabCharset);
       this.tabMapEditor.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tabMapEditor.Location = new System.Drawing.Point(0, 24);
       this.tabMapEditor.Name = "tabMapEditor";
       this.tabMapEditor.SelectedIndex = 0;
-      this.tabMapEditor.Size = new System.Drawing.Size(964, 501);
+      this.tabMapEditor.Size = new System.Drawing.Size(1064, 501);
       this.tabMapEditor.TabIndex = 0;
       // 
       // tabTiles
@@ -930,6 +934,17 @@
       this.tabTiles.TabIndex = 2;
       this.tabTiles.Text = "Tiles";
       this.tabTiles.UseVisualStyleBackColor = true;
+      // 
+      // btnTileApply
+      // 
+      this.btnTileApply.Enabled = false;
+      this.btnTileApply.Location = new System.Drawing.Point(504, 90);
+      this.btnTileApply.Name = "btnTileApply";
+      this.btnTileApply.Size = new System.Drawing.Size(58, 23);
+      this.btnTileApply.TabIndex = 25;
+      this.btnTileApply.Text = "Apply";
+      this.btnTileApply.UseVisualStyleBackColor = true;
+      this.btnTileApply.Click += new System.EventHandler(this.btnTileApply_Click);
       // 
       // btnCopyTileCharToNextIncreased
       // 
@@ -998,16 +1013,16 @@
       this.btnTileDelete.UseVisualStyleBackColor = true;
       this.btnTileDelete.Click += new System.EventHandler(this.btnTileDelete_Click);
       // 
-      // btnTileApply
+      // btnTileClone
       // 
-      this.btnTileApply.Enabled = false;
-      this.btnTileApply.Location = new System.Drawing.Point(504, 90);
-      this.btnTileApply.Name = "btnTileApply";
-      this.btnTileApply.Size = new System.Drawing.Size(58, 23);
-      this.btnTileApply.TabIndex = 25;
-      this.btnTileApply.Text = "Apply";
-      this.btnTileApply.UseVisualStyleBackColor = true;
-      this.btnTileApply.Click += new System.EventHandler(this.btnTileApply_Click);
+      this.btnTileClone.Enabled = false;
+      this.btnTileClone.Location = new System.Drawing.Point(436, 90);
+      this.btnTileClone.Name = "btnTileClone";
+      this.btnTileClone.Size = new System.Drawing.Size(58, 23);
+      this.btnTileClone.TabIndex = 25;
+      this.btnTileClone.Text = "Clone";
+      this.btnTileClone.UseVisualStyleBackColor = true;
+      this.btnTileClone.Click += new System.EventHandler(this.btnCloneTile_Click);
       // 
       // btnTileAdd
       // 
@@ -1277,6 +1292,16 @@
       this.pictureTileDisplay.TabStop = false;
       this.pictureTileDisplay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureTileDisplay_MouseDown);
       this.pictureTileDisplay.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureTileDisplay_MouseMove);
+      // 
+      // tabCharset
+      // 
+      this.tabCharset.Controls.Add(this.characterEditor);
+      this.tabCharset.Location = new System.Drawing.Point(4, 22);
+      this.tabCharset.Name = "tabCharset";
+      this.tabCharset.Size = new System.Drawing.Size(1056, 475);
+      this.tabCharset.TabIndex = 3;
+      this.tabCharset.Text = "Character Set";
+      this.tabCharset.UseVisualStyleBackColor = true;
       // 
       // tabPage1
       // 
@@ -1614,20 +1639,17 @@
       this.button5.Text = "as assembly source";
       this.button5.UseVisualStyleBackColor = true;
       // 
-      // btnTileClone
+      // characterEditor
       // 
-      this.btnTileClone.Enabled = false;
-      this.btnTileClone.Location = new System.Drawing.Point(436, 90);
-      this.btnTileClone.Name = "btnTileClone";
-      this.btnTileClone.Size = new System.Drawing.Size(58, 23);
-      this.btnTileClone.TabIndex = 25;
-      this.btnTileClone.Text = "Clone";
-      this.btnTileClone.UseVisualStyleBackColor = true;
-      this.btnTileClone.Click += new System.EventHandler(this.btnCloneTile_Click);
+      this.characterEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.characterEditor.Location = new System.Drawing.Point(0, 0);
+      this.characterEditor.Name = "characterEditor";
+      this.characterEditor.Size = new System.Drawing.Size(1056, 475);
+      this.characterEditor.TabIndex = 0;
       // 
       // MapEditor
       // 
-      this.ClientSize = new System.Drawing.Size(964, 525);
+      this.ClientSize = new System.Drawing.Size(1064, 525);
       this.Controls.Add(this.tabMapEditor);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1652,6 +1674,7 @@
       this.tabTiles.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureTileDisplay)).EndInit();
+      this.tabCharset.ResumeLayout(false);
       this.tabPage1.ResumeLayout(false);
       this.tabPage1.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.fastPictureBox1)).EndInit();
@@ -1800,5 +1823,7 @@
     private System.Windows.Forms.Button btnExportToCharScreen;
     private System.Windows.Forms.CheckBox checkShowGrid;
     private System.Windows.Forms.Button btnTileClone;
-  }
+        private System.Windows.Forms.TabPage tabCharset;
+        private Controls.CharacterEditor characterEditor;
+    }
 }

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
+using C64Studio.Formats;
 using C64Studio.Types;
 using GR.Memory;
 using WeifenLuo.WinFormsUI.Docking;
@@ -26,7 +27,7 @@ namespace C64Studio
     private bool                        m_ButtonReleased = false;
     private bool                        m_RButtonReleased = false;
 
-    private Formats.CharsetProject      m_Charset = new C64Studio.Formats.CharsetProject();
+    public Formats.CharsetProject       m_Charset = new C64Studio.Formats.CharsetProject();
 
     private GR.Image.MemoryImage        m_ImagePlayground = new GR.Image.MemoryImage( 256, 256, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
@@ -101,6 +102,14 @@ namespace C64Studio
       panelCharacters.KeyDown += new KeyEventHandler( HandleKeyDown );
       pictureEditor.PreviewKeyDown += new PreviewKeyDownEventHandler( pictureEditor_PreviewKeyDown );
       Modified = false;
+    }
+
+
+
+    internal void SetCharsetProject( CharsetProject Charset )
+    {
+      m_Charset = Charset;
+      CharsetWasImported();
     }
 
 
@@ -719,6 +728,13 @@ namespace C64Studio
       {
         return;
       }
+      CharsetWasImported();
+    }
+
+
+
+    public void CharsetWasImported()
+    {
       comboBackground.SelectedIndex   = m_Charset.BackgroundColor;
       comboMulticolor1.SelectedIndex  = m_Charset.MultiColor1;
       comboMulticolor2.SelectedIndex  = m_Charset.MultiColor2;

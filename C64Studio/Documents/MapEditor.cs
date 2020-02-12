@@ -79,7 +79,6 @@ namespace C64Studio
       m_IsSaveable = true;
       InitializeComponent();
 
-
       foreach ( ExportType exportType in Enum.GetValues( typeof( ExportType ) ) )
       {
         comboExportData.Items.Add( new GR.Generic.Tupel<string,ExportType>( GR.EnumHelper.GetDescription( exportType ), exportType ) );
@@ -1101,6 +1100,7 @@ namespace C64Studio
       RedrawColorChooser();
       Modified = false;
       DocumentInfo.DocumentFilename = File;
+
       EnableFileWatcher();
       return true;
     }
