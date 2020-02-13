@@ -20,12 +20,6 @@ namespace C64Studio.Controls
       CHAR_COLOR
     }
 
-
-    public CharsetProject Project
-    {
-      get; set;
-    }
-
     public bool Modified
     {
       get; set;
@@ -39,7 +33,10 @@ namespace C64Studio.Controls
     private bool                        m_ButtonReleased = false;
     private bool                        m_RButtonReleased = false;
     private StudioCore                  Core = null;
+    public Undo.UndoManager             UndoManager = null;
     private bool                        DoNotUpdateFromControls = false;
+
+    private CharsetProject              m_Project = new CharsetProject();
 
     private GR.Image.MemoryImage        m_ImagePlayground = new GR.Image.MemoryImage( 256, 256, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
@@ -64,7 +61,6 @@ namespace C64Studio.Controls
     private void Setup()
     {
       Modified = false;
-      Project = new CharsetProject();
 
       InitializeComponent();
 
@@ -83,8 +79,8 @@ namespace C64Studio.Controls
       CustomRenderer.PaletteManager.ApplyPalette( panelCharColors.DisplayPage );
       for ( int i = 0; i < 256; ++i )
       {
-        CustomRenderer.PaletteManager.ApplyPalette( Project.Characters[i].Image );
-        panelCharacters.Items.Add( i.ToString(), Project.Characters[i].Image );
+        CustomRenderer.PaletteManager.ApplyPalette( m_Project.Characters[i].Image );
+        panelCharacters.Items.Add( i.ToString(), m_Project.Characters[i].Image );
       }
 
       for ( int i = 0; i < 16; ++i )
@@ -124,10 +120,10 @@ namespace C64Studio.Controls
 
     void pictureEditor_PostPaint( GR.Image.FastImage TargetBuffer )
     {
-      if ( Project.ShowGrid )
+      if ( m_Project.ShowGrid )
       {
-        if ( ( Project.Characters[m_CurrentChar].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
-        &&   ( Project.Characters[m_CurrentChar].Color >= 8 ) )
+        if ( ( m_Project.Characters[m_CurrentChar].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        &&   ( m_Project.Characters[m_CurrentChar].Color >= 8 ) )
         {
           for ( int i = 0; i < 4; ++i )
           {
@@ -175,7 +171,7 @@ namespace C64Studio.Controls
     {
       for ( byte i = 0; i < 16; ++i )
       {
-        Displayer.CharacterDisplayer.DisplayChar( Project, m_CurrentChar, panelCharColors.DisplayPage, i * 8, 0, i );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_CurrentChar, panelCharColors.DisplayPage, i * 8, 0, i );
       }
       for ( int i = 0; i < 8; ++i )
       {
@@ -233,12 +229,12 @@ namespace C64Studio.Controls
         dataSelection.AppendI32( index - prevIndex );
         prevIndex = index;
 
-        dataSelection.AppendI32( (int)Project.Characters[index].Mode );
-        dataSelection.AppendI32( Project.Characters[index].Color );
+        dataSelection.AppendI32( (int)m_Project.Characters[index].Mode );
+        dataSelection.AppendI32( m_Project.Characters[index].Color );
         dataSelection.AppendU32( 8 );
         dataSelection.AppendU32( 8 );
-        dataSelection.AppendU32( Project.Characters[index].Data.Length );
-        dataSelection.Append( Project.Characters[index].Data );
+        dataSelection.AppendU32( m_Project.Characters[index].Data.Length );
+        dataSelection.Append( m_Project.Characters[index].Data );
         dataSelection.AppendI32( index );
       }
 
@@ -283,16 +279,15 @@ namespace C64Studio.Controls
           int indexGap = memIn.ReadInt32();
           pastePos += indexGap;
 
-          if ( pastePos >= Project.Characters.Count )
+          if ( pastePos >= m_Project.Characters.Count )
           {
             break;
           }
 
-          // TODO!!
-          //DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, Project, pastePos ), i == 0 );
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos ), i == 0 );
 
-          Project.Characters[pastePos].Mode = (C64Studio.Types.CharsetMode)memIn.ReadInt32();
-          Project.Characters[pastePos].Color = memIn.ReadInt32();
+          m_Project.Characters[pastePos].Mode = (C64Studio.Types.CharsetMode)memIn.ReadInt32();
+          m_Project.Characters[pastePos].Color = memIn.ReadInt32();
 
           uint width   = memIn.ReadUInt32();
           uint height  = memIn.ReadUInt32();
@@ -303,24 +298,24 @@ namespace C64Studio.Controls
           tempBuffer.Reserve( (int)dataLength );
           memIn.ReadBlock( tempBuffer, dataLength );
 
-          Project.Characters[pastePos].Data = new GR.Memory.ByteBuffer( 8 );
+          m_Project.Characters[pastePos].Data = new GR.Memory.ByteBuffer( 8 );
 
           if ( ( width == 8 )
           && ( height == 8 ) )
           {
-            tempBuffer.CopyTo( Project.Characters[pastePos].Data, 0, 8 );
+            tempBuffer.CopyTo( m_Project.Characters[pastePos].Data, 0, 8 );
           }
           else if ( ( width == 24 )
           && ( height == 21 ) )
           {
             for ( int j = 0; j < 8; ++j )
             {
-              Project.Characters[pastePos].Data.SetU8At( j, tempBuffer.ByteAt( j * 3 ) );
+              m_Project.Characters[pastePos].Data.SetU8At( j, tempBuffer.ByteAt( j * 3 ) );
             }
           }
           else
           {
-            tempBuffer.CopyTo( Project.Characters[pastePos].Data, 0, Math.Min( 8, (int)dataLength ) );
+            tempBuffer.CopyTo( m_Project.Characters[pastePos].Data, 0, Math.Min( 8, (int)dataLength ) );
           }
 
 
@@ -331,7 +326,7 @@ namespace C64Studio.Controls
 
           if ( pastePos == m_CurrentChar )
           {
-            comboCharColor.SelectedIndex = Project.Characters[pastePos].Color;
+            comboCharColor.SelectedIndex = m_Project.Characters[pastePos].Color;
           }
         }
         pictureEditor.Invalidate();
@@ -383,7 +378,7 @@ namespace C64Studio.Controls
 
       bool currentCharChanged = false;
 
-      if ( Project.Characters[CharIndex].Mode == C64Studio.Types.CharsetMode.ECM )
+      if ( m_Project.Characters[CharIndex].Mode == C64Studio.Types.CharsetMode.ECM )
       {
         for ( int i = 0; i < 4; ++i )
         {
@@ -406,9 +401,9 @@ namespace C64Studio.Controls
       if ( currentCharChanged )
       {
         panelCharacters_SelectionChanged( null, null );
-        comboCharColor.SelectedIndex = Project.Characters[CharIndex].Color;
+        comboCharColor.SelectedIndex = m_Project.Characters[CharIndex].Color;
 
-        comboCharsetMode.SelectedIndex = (int)Project.Characters[CharIndex].Mode;
+        comboCharsetMode.SelectedIndex = (int)m_Project.Characters[CharIndex].Mode;
       }
 
       DoNotUpdateFromControls = false;
@@ -418,17 +413,17 @@ namespace C64Studio.Controls
 
     void RebuildCharImage( int CharIndex )
     {
-      Displayer.CharacterDisplayer.DisplayChar( Project, CharIndex, Project.Characters[CharIndex].Image, 0, 0 );
+      Displayer.CharacterDisplayer.DisplayChar( m_Project, CharIndex, m_Project.Characters[CharIndex].Image, 0, 0 );
 
       bool playgroundChanged = false;
       for ( int i = 0; i < 16; ++i )
       {
         for ( int j = 0; j < 16; ++j )
         {
-          if ( ( Project.PlaygroundChars[i + j * 16] & 0xff ) == CharIndex )
+          if ( ( m_Project.PlaygroundChars[i + j * 16] & 0xff ) == CharIndex )
           {
             playgroundChanged = true;
-            Displayer.CharacterDisplayer.DisplayChar( Project, CharIndex, m_ImagePlayground, i * 8, j * 8, Project.PlaygroundChars[i + j * 16] >> 8 );
+            Displayer.CharacterDisplayer.DisplayChar( m_Project, CharIndex, m_ImagePlayground, i * 8, j * 8, m_Project.PlaygroundChars[i + j * 16] >> 8 );
           }
         }
       }
@@ -449,9 +444,9 @@ namespace C64Studio.Controls
       GR.Image.FastImage mappedImage = null;
 
       Types.MulticolorSettings   mcSettings = new Types.MulticolorSettings();
-      mcSettings.BackgroundColor  = Project.BackgroundColor;
-      mcSettings.MultiColor1      = Project.MultiColor1;
-      mcSettings.MultiColor2      = Project.MultiColor2;
+      mcSettings.BackgroundColor  = m_Project.BackgroundColor;
+      mcSettings.MultiColor1      = m_Project.MultiColor1;
+      mcSettings.MultiColor2      = m_Project.MultiColor2;
 
       bool pasteAsBlock = false;
       if ( !Core.MainForm.ImportImage( FromFile, Image, Types.GraphicType.CHARACTERS, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
@@ -518,7 +513,7 @@ namespace C64Studio.Controls
 
           if ( currentTargetChar == m_CurrentChar )
           {
-            comboCharColor.SelectedIndex = Project.Characters[m_CurrentChar].Color;
+            comboCharColor.SelectedIndex = m_Project.Characters[m_CurrentChar].Color;
           }
           if ( !pasteAsBlock )
           {
@@ -541,15 +536,15 @@ namespace C64Studio.Controls
       {
         labelCharNo.Text = "Character: " + newChar.ToString();
         m_CurrentChar = newChar;
-        if ( comboCharColor.SelectedIndex != Project.Characters[m_CurrentChar].Color )
+        if ( comboCharColor.SelectedIndex != m_Project.Characters[m_CurrentChar].Color )
         {
-          comboCharColor.SelectedIndex = Project.Characters[m_CurrentChar].Color;
+          comboCharColor.SelectedIndex = m_Project.Characters[m_CurrentChar].Color;
         }
-        if ( comboCharsetMode.SelectedIndex != (int)Project.Characters[m_CurrentChar].Mode )
+        if ( comboCharsetMode.SelectedIndex != (int)m_Project.Characters[m_CurrentChar].Mode )
         {
-          comboCharsetMode.SelectedIndex = (int)Project.Characters[m_CurrentChar].Mode;
+          comboCharsetMode.SelectedIndex = (int)m_Project.Characters[m_CurrentChar].Mode;
         }
-        pictureEditor.Image = Project.Characters[m_CurrentChar].Image;
+        pictureEditor.Image = m_Project.Characters[m_CurrentChar].Image;
         pictureEditor.Invalidate();
 
         RedrawColorChooser();
@@ -566,7 +561,7 @@ namespace C64Studio.Controls
         return false;
       }
       // Match image data
-      GR.Memory.ByteBuffer Buffer = new GR.Memory.ByteBuffer( Project.Characters[CharIndex].Data );
+      GR.Memory.ByteBuffer Buffer = new GR.Memory.ByteBuffer( m_Project.Characters[CharIndex].Data );
 
       int   chosenCharColor = -1;
 
@@ -600,7 +595,7 @@ namespace C64Studio.Controls
 
             if ( !usedColor[colorIndex] )
             {
-              if ( colorIndex == Project.BackgroundColor )
+              if ( colorIndex == m_Project.BackgroundColor )
               {
                 usedBackgroundColor = true;
               }
@@ -640,7 +635,7 @@ namespace C64Studio.Controls
           for ( int i = 0; i < 16; ++i )
           {
             if ( ( usedColor[i] )
-            && ( i != Project.BackgroundColor ) )
+            && ( i != m_Project.BackgroundColor ) )
             {
               otherColorIndex = i;
               break;
@@ -660,7 +655,7 @@ namespace C64Studio.Controls
           {
             if ( usedColor[i] )
             {
-              if ( i != Project.BackgroundColor )
+              if ( i != m_Project.BackgroundColor )
               {
                 if ( usedFreeColor != -1 )
                 {
@@ -679,7 +674,7 @@ namespace C64Studio.Controls
 
               int BitPattern = 0;
 
-              if ( ColorIndex != Project.BackgroundColor )
+              if ( ColorIndex != m_Project.BackgroundColor )
               {
                 BitPattern = 1;
               }
@@ -704,9 +699,9 @@ namespace C64Studio.Controls
           {
             if ( usedColor[i] )
             {
-              if ( ( i == Project.MultiColor1 )
-              || ( i == Project.MultiColor2 )
-              || ( i == Project.BackgroundColor ) )
+              if ( ( i == m_Project.MultiColor1 )
+              || ( i == m_Project.MultiColor2 )
+              || ( i == m_Project.BackgroundColor ) )
               {
                 ++usedMultiColors;
               }
@@ -729,15 +724,15 @@ namespace C64Studio.Controls
 
               byte BitPattern = 0;
 
-              if ( ColorIndex == Project.BackgroundColor )
+              if ( ColorIndex == m_Project.BackgroundColor )
               {
                 BitPattern = 0x00;
               }
-              else if ( ColorIndex == Project.MultiColor1 )
+              else if ( ColorIndex == m_Project.MultiColor1 )
               {
                 BitPattern = 0x01;
               }
-              else if ( ColorIndex == Project.MultiColor2 )
+              else if ( ColorIndex == m_Project.MultiColor2 )
               {
                 BitPattern = 0x02;
               }
@@ -755,21 +750,37 @@ namespace C64Studio.Controls
       }
       for ( int i = 0; i < 8; ++i )
       {
-        Project.Characters[CharIndex].Data.SetU8At( i, Buffer.ByteAt( i ) );
+        m_Project.Characters[CharIndex].Data.SetU8At( i, Buffer.ByteAt( i ) );
       }
       if ( chosenCharColor == -1 )
       {
         chosenCharColor = 0;
       }
-      Project.Characters[CharIndex].Color = chosenCharColor;
+      m_Project.Characters[CharIndex].Color = chosenCharColor;
       if ( ( isMultiColor )
       && ( chosenCharColor < 8 ) )
       {
-        Project.Characters[CharIndex].Color = chosenCharColor + 8;
+        m_Project.Characters[CharIndex].Color = chosenCharColor + 8;
       }
-      Project.Characters[CharIndex].Mode = isMultiColor ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
+      m_Project.Characters[CharIndex].Mode = isMultiColor ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
       RebuildCharImage( CharIndex );
       return true;
+    }
+
+
+
+    internal void CharsetUpdated( CharsetProject Project )
+    {
+      m_Project = Project;
+      for ( int i = 0; i < 256; ++i )
+      {
+        RebuildCharImage( i );
+
+        panelCharacters.Items[i].MemoryImage = m_Project.Characters[i].Image;
+      }
+      panelCharacters.Invalidate();
+      pictureEditor.Invalidate();
+      RedrawColorChooser();
     }
 
 
@@ -799,12 +810,12 @@ namespace C64Studio.Controls
       int     charX = X / ( pictureEditor.ClientRectangle.Width / 8 );
       int     charY = Y / ( pictureEditor.ClientRectangle.Height / 8 );
       int     affectedCharIndex = m_CurrentChar;
-      var     origAffectedChar = Project.Characters[m_CurrentChar];
-      var     affectedChar = Project.Characters[m_CurrentChar];
+      var     origAffectedChar = m_Project.Characters[m_CurrentChar];
+      var     affectedChar = m_Project.Characters[m_CurrentChar];
       if ( affectedChar.Mode == C64Studio.Types.CharsetMode.ECM )
       {
         affectedCharIndex %= 64;
-        affectedChar = Project.Characters[affectedCharIndex];
+        affectedChar = m_Project.Characters[affectedCharIndex];
       }
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
@@ -825,7 +836,7 @@ namespace C64Studio.Controls
           else
           {
             newByte &= (byte)~( 1 << charX );
-            colorIndex = Project.BackgroundColor;
+            colorIndex = m_Project.BackgroundColor;
           }
         }
         else
@@ -841,7 +852,7 @@ namespace C64Studio.Controls
           switch ( m_CurrentColorType )
           {
             case ColorType.BACKGROUND:
-              colorIndex = Project.BackgroundColor;
+              colorIndex = m_Project.BackgroundColor;
               break;
             case ColorType.CHAR_COLOR:
               replacementBytes = 3;
@@ -849,11 +860,11 @@ namespace C64Studio.Controls
               break;
             case ColorType.MULTICOLOR_1:
               replacementBytes = 1;
-              colorIndex = Project.MultiColor1;
+              colorIndex = m_Project.MultiColor1;
               break;
             case ColorType.MULTICOLOR_2:
               replacementBytes = 2;
-              colorIndex = Project.MultiColor2;
+              colorIndex = m_Project.MultiColor2;
               break;
           }
           newByte |= (byte)( replacementBytes << ( 2 * charX ) );
@@ -864,8 +875,7 @@ namespace C64Studio.Controls
 
           if ( m_ButtonReleased )
           {
-            // TODO!
-            //DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetCharChange( this, Project, affectedCharIndex ) );
+            UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedCharIndex ) );
             m_ButtonReleased = false;
           }
 
@@ -916,8 +926,7 @@ namespace C64Studio.Controls
           if ( m_RButtonReleased )
           {
             m_RButtonReleased = false;
-            // TODO
-            //DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetCharChange( this, Project, affectedCharIndex ) );
+            UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedCharIndex ) );
           }
 
           Modified = true;
@@ -977,7 +986,7 @@ namespace C64Studio.Controls
 
     private void checkShowGrid_CheckedChanged( object sender, EventArgs e )
     {
-      Project.ShowGrid = checkShowGrid.Checked;
+      m_Project.ShowGrid = checkShowGrid.Checked;
       pictureEditor.Invalidate();
     }
 
@@ -994,17 +1003,15 @@ namespace C64Studio.Controls
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
-      // TODO
-      //DocumentInfo.UndoManager.StartUndoGroup();
+      UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        // TODO
-        //DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoCharsetCharChange( this, Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
 
         for ( int y = 0; y < 8; ++y )
         {
-          byte result = (byte)( ~Project.Characters[index].Data.ByteAt( y ) );
-          Project.Characters[index].Data.SetU8At( y, result );
+          byte result = (byte)( ~m_Project.Characters[index].Data.ByteAt( y ) );
+          m_Project.Characters[index].Data.SetU8At( y, result );
         }
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
@@ -1055,22 +1062,21 @@ namespace C64Studio.Controls
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
-        if ( Project.PlaygroundChars[charX + charY * 16] != (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) ) )
+        if ( m_Project.PlaygroundChars[charX + charY * 16] != (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) ) )
         {
-          // TODO
-          //DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetPlaygroundCharChange( this, Project, charX, charY ) );
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorPlaygroundCharChange( this, m_Project, charX, charY ) );
 
-          Displayer.CharacterDisplayer.DisplayChar( Project, m_CurrentChar, m_ImagePlayground, charX * 8, charY * 8, m_CurrentColor );
+          Displayer.CharacterDisplayer.DisplayChar( m_Project, m_CurrentChar, m_ImagePlayground, charX * 8, charY * 8, m_CurrentColor );
           RedrawPlayground();
 
-          Project.PlaygroundChars[charX + charY * 16] = (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) );
+          m_Project.PlaygroundChars[charX + charY * 16] = (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) );
           Modified = true;
         }
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
-        m_CurrentChar = (byte)( Project.PlaygroundChars[charX + charY * 16] & 0x00ff );
-        m_CurrentColor = (byte)( Project.PlaygroundChars[charX + charY * 16] >> 8 );
+        m_CurrentChar = (byte)( m_Project.PlaygroundChars[charX + charY * 16] & 0x00ff );
+        m_CurrentColor = (byte)( m_Project.PlaygroundChars[charX + charY * 16] >> 8 );
         panelCharacters.SelectedIndex = m_CurrentChar;
         RedrawColorChooser();
       }
@@ -1127,14 +1133,12 @@ namespace C64Studio.Controls
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
-      // TODO
-      // DocumentInfo.UndoManager.StartUndoGroup();
+      UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        // TODO
-        // DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoCharsetCharChange( this, Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
 
-        var processedChar = Project.Characters[index];
+        var processedChar = m_Project.Characters[index];
 
         for ( int y = 0; y < 8; ++y )
         {
@@ -1173,18 +1177,16 @@ namespace C64Studio.Controls
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
-      // TODO
-      //DocumentInfo.UndoManager.StartUndoGroup();
+      UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        // TODO
-        //DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoCharsetCharChange( this, Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
 
         for ( int y = 0; y < 4; ++y )
         {
-          byte oldValue = Project.Characters[index].Data.ByteAt( y );
-          Project.Characters[index].Data.SetU8At( y, Project.Characters[index].Data.ByteAt( 7 - y ) );
-          Project.Characters[index].Data.SetU8At( 7 - y, oldValue );
+          byte oldValue = m_Project.Characters[index].Data.ByteAt( y );
+          m_Project.Characters[index].Data.SetU8At( y, m_Project.Characters[index].Data.ByteAt( 7 - y ) );
+          m_Project.Characters[index].Data.SetU8At( 7 - y, oldValue );
         }
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
@@ -1206,17 +1208,15 @@ namespace C64Studio.Controls
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
-      // TODO
-      // DocumentInfo.UndoManager.StartUndoGroup();
+      UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        // TODO
-        // DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoCharsetCharChange( this, Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
 
         GR.Memory.ByteBuffer resultData = new GR.Memory.ByteBuffer( 8 );
 
-        if ( ( Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
-        ||   ( Project.Characters[index].Color >= 8 ) )
+        if ( ( m_Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        ||   ( m_Project.Characters[index].Color >= 8 ) )
         {
           for ( int i = 0; i < 8; i += 2 )
           {
@@ -1233,7 +1233,7 @@ namespace C64Studio.Controls
                 continue;
               }
               int maskOffset = 6 - ( ( sourceX % 8 ) / 2 ) * 2;
-              byte sourceColor = (byte)( ( Project.Characters[index].Data.ByteAt( sourceY ) & ( 3 << maskOffset ) ) >> maskOffset );
+              byte sourceColor = (byte)( ( m_Project.Characters[index].Data.ByteAt( sourceY ) & ( 3 << maskOffset ) ) >> maskOffset );
 
               maskOffset = 6 - ( ( i % 8 ) / 2 ) * 2;
               resultData.SetU8At( j, (byte)( resultData.ByteAt( j ) | ( sourceColor << maskOffset ) ) );
@@ -1250,14 +1250,14 @@ namespace C64Studio.Controls
               int sourceY = j;
               int targetX = j;
               int targetY = 7 - i;
-              if ( ( Project.Characters[index].Data.ByteAt( sourceY ) & ( 1 << ( 7 - ( sourceX % 8 ) ) ) ) != 0 )
+              if ( ( m_Project.Characters[index].Data.ByteAt( sourceY ) & ( 1 << ( 7 - ( sourceX % 8 ) ) ) ) != 0 )
               {
                 resultData.SetU8At( targetY, (byte)( resultData.ByteAt( targetY ) | ( 1 << ( 7 - targetX % 8 ) ) ) );
               }
             }
           }
         }
-        Project.Characters[index].Data = resultData;
+        m_Project.Characters[index].Data = resultData;
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
@@ -1278,17 +1278,15 @@ namespace C64Studio.Controls
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
-      // TODO
-      // DocumentInfo.UndoManager.StartUndoGroup();
+      UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        // TODO
-        // DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoCharsetCharChange( this, Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
 
         GR.Memory.ByteBuffer resultData = new GR.Memory.ByteBuffer( 8 );
 
-        if ( ( Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
-        ||   ( Project.Characters[index].Color >= 8 ) )
+        if ( ( m_Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        ||   ( m_Project.Characters[index].Color >= 8 ) )
         {
           for ( int i = 0; i < 8; i += 2 )
           {
@@ -1305,7 +1303,7 @@ namespace C64Studio.Controls
                 continue;
               }
               int maskOffset = 6 - ( ( sourceX % 8 ) / 2 ) * 2;
-              byte sourceColor = (byte)( ( Project.Characters[index].Data.ByteAt( sourceY ) & ( 3 << maskOffset ) ) >> maskOffset );
+              byte sourceColor = (byte)( ( m_Project.Characters[index].Data.ByteAt( sourceY ) & ( 3 << maskOffset ) ) >> maskOffset );
 
               maskOffset = 6 - ( ( i % 8 ) / 2 ) * 2;
               resultData.SetU8At( j, (byte)( resultData.ByteAt( j ) | ( sourceColor << maskOffset ) ) );
@@ -1322,14 +1320,14 @@ namespace C64Studio.Controls
               int sourceY = j;
               int targetX = 7 - j;
               int targetY = i;
-              if ( ( Project.Characters[index].Data.ByteAt( sourceY ) & ( 1 << ( 7 - ( sourceX % 8 ) ) ) ) != 0 )
+              if ( ( m_Project.Characters[index].Data.ByteAt( sourceY ) & ( 1 << ( 7 - ( sourceX % 8 ) ) ) ) != 0 )
               {
                 resultData.SetU8At( targetY, (byte)( resultData.ByteAt( targetY ) | ( 1 << ( 7 - targetX % 8 ) ) ) );
               }
             }
           }
         }
-        Project.Characters[index].Data = resultData;
+        m_Project.Characters[index].Data = resultData;
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
@@ -1350,19 +1348,17 @@ namespace C64Studio.Controls
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
-      // TODO
-      // DocumentInfo.UndoManager.StartUndoGroup();
+      UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        // TODO
-        // DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoCharsetCharChange( this, Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
 
-        byte  temp = Project.Characters[index].Data.ByteAt( 7 );
+        byte  temp = m_Project.Characters[index].Data.ByteAt( 7 );
         for ( int y = 0; y < 7; ++y )
         {
-          Project.Characters[index].Data.SetU8At( 7 - y, Project.Characters[index].Data.ByteAt( 7 - y - 1 ) );
+          m_Project.Characters[index].Data.SetU8At( 7 - y, m_Project.Characters[index].Data.ByteAt( 7 - y - 1 ) );
         }
-        Project.Characters[index].Data.SetU8At( 0, temp );
+        m_Project.Characters[index].Data.SetU8At( 0, temp );
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
@@ -1397,19 +1393,17 @@ namespace C64Studio.Controls
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
-      // TODO
-      // DocumentInfo.UndoManager.StartUndoGroup();
+      UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        // TODO
-        // DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoCharsetCharChange( this, Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
 
-        byte  temp = Project.Characters[index].Data.ByteAt( 0 );
+        byte  temp = m_Project.Characters[index].Data.ByteAt( 0 );
         for ( int y = 0; y < 7; ++y )
         {
-          Project.Characters[index].Data.SetU8At( y, Project.Characters[index].Data.ByteAt( y + 1 ) );
+          m_Project.Characters[index].Data.SetU8At( y, m_Project.Characters[index].Data.ByteAt( y + 1 ) );
         }
-        Project.Characters[index].Data.SetU8At( 7, temp );
+        m_Project.Characters[index].Data.SetU8At( 7, temp );
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
@@ -1422,27 +1416,25 @@ namespace C64Studio.Controls
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
-      // TODO
-      // DocumentInfo.UndoManager.StartUndoGroup();
+      UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        // TODO
-        // DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoCharsetCharChange( this, Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
 
         for ( int y = 0; y < 8; ++y )
         {
-          if ( ( Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
-          && ( Project.Characters[index].Color >= 8 ) )
+          if ( ( m_Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+          && ( m_Project.Characters[index].Color >= 8 ) )
           {
-            byte result = (byte)( (byte)( ( Project.Characters[m_CurrentChar].Data.ByteAt( y ) & 0xc0 ) >> 6 )
-                                | (byte)( ( Project.Characters[index].Data.ByteAt( y ) & 0x3f ) << 2 ) );
-            Project.Characters[index].Data.SetU8At( y, result );
+            byte result = (byte)( (byte)( ( m_Project.Characters[m_CurrentChar].Data.ByteAt( y ) & 0xc0 ) >> 6 )
+                                | (byte)( ( m_Project.Characters[index].Data.ByteAt( y ) & 0x3f ) << 2 ) );
+            m_Project.Characters[index].Data.SetU8At( y, result );
           }
           else
           {
-            byte result = (byte)( (byte)( ( Project.Characters[index].Data.ByteAt( y ) & 0x80 ) >> 7 )
-                                | (byte)( ( Project.Characters[index].Data.ByteAt( y ) & 0x7f ) << 1 ) );
-            Project.Characters[index].Data.SetU8At( y, result );
+            byte result = (byte)( (byte)( ( m_Project.Characters[index].Data.ByteAt( y ) & 0x80 ) >> 7 )
+                                | (byte)( ( m_Project.Characters[index].Data.ByteAt( y ) & 0x7f ) << 1 ) );
+            m_Project.Characters[index].Data.SetU8At( y, result );
           }
         }
         RebuildCharImage( index );
@@ -1458,27 +1450,25 @@ namespace C64Studio.Controls
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
-      // TODO
-      // DocumentInfo.UndoManager.StartUndoGroup();
+      UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        // TODO
-        // DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoCharsetCharChange( this, Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
 
         for ( int y = 0; y < 8; ++y )
         {
-          if ( ( Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
-          && ( Project.Characters[index].Color >= 8 ) )
+          if ( ( m_Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+          && ( m_Project.Characters[index].Color >= 8 ) )
           {
-            byte result = (byte)( (byte)( ( Project.Characters[index].Data.ByteAt( y ) & 0xfc ) >> 2 )
-                                | (byte)( ( Project.Characters[index].Data.ByteAt( y ) & 0x03 ) << 6 ) );
-            Project.Characters[index].Data.SetU8At( y, result );
+            byte result = (byte)( (byte)( ( m_Project.Characters[index].Data.ByteAt( y ) & 0xfc ) >> 2 )
+                                | (byte)( ( m_Project.Characters[index].Data.ByteAt( y ) & 0x03 ) << 6 ) );
+            m_Project.Characters[index].Data.SetU8At( y, result );
           }
           else
           {
-            byte result = (byte)( (byte)( ( Project.Characters[index].Data.ByteAt( y ) & 0x01 ) << 7 )
-                                | (byte)( ( Project.Characters[index].Data.ByteAt( y ) & 0xfe ) >> 1 ) );
-            Project.Characters[index].Data.SetU8At( y, result );
+            byte result = (byte)( (byte)( ( m_Project.Characters[index].Data.ByteAt( y ) & 0x01 ) << 7 )
+                                | (byte)( ( m_Project.Characters[index].Data.ByteAt( y ) & 0xfe ) >> 1 ) );
+            m_Project.Characters[index].Data.SetU8At( y, result );
           }
         }
         RebuildCharImage( index );
@@ -1550,8 +1540,11 @@ namespace C64Studio.Controls
 
 
 
-
-
+    public void PlaygroundCharacterChanged( int X, int Y )
+    {
+      Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.PlaygroundChars[X + Y * 16] & 0xff, m_ImagePlayground, X * 8, Y * 8, m_Project.PlaygroundChars[X + Y * 16] >> 8 );
+      RedrawPlayground();
+    }
 
   }
 }

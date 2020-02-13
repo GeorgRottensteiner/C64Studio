@@ -11,6 +11,17 @@ namespace C64Studio.Undo
     private int                 CurrentUndoGroup = 0;
     public MainForm             MainForm = null;
 
+    private static int          _ID = 0;
+
+    public int                  ID = 0;
+
+
+
+    public UndoManager()
+    {
+      ID = _ID++;
+    }
+
 
 
     public bool CanUndo

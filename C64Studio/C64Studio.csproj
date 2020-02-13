@@ -669,6 +669,7 @@
     <Compile Include="Types\BuildChainEntry.cs" />
     <Compile Include="Undo\UndoCharscreenCharsetChange.cs" />
     <Compile Include="Undo\UndoCharacterEditorCharChange.cs" />
+    <Compile Include="Undo\UndoCharacterEditorPlaygroundCharChange.cs" />
     <Compile Include="Undo\UndoSpritesetExchangeMultiColors.cs" />
     <Compile Include="Undo\UndoCharsetPlaygroundCharChange.cs" />
     <Compile Include="Undo\UndoGraphicScreenSizeChange.cs" />

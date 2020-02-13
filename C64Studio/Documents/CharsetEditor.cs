@@ -41,6 +41,8 @@ namespace C64Studio
       m_IsSaveable = true;
       InitializeComponent();
 
+      characterEditor.UndoManager = DocumentInfo.UndoManager;
+
       pictureEditor.DisplayPage.Create( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       pictureEditor.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback( pictureEditor_PostPaint );
       picturePlayground.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
@@ -735,6 +737,8 @@ namespace C64Studio
 
     public void CharsetWasImported()
     {
+      characterEditor.CharsetUpdated( m_Charset );
+
       comboBackground.SelectedIndex   = m_Charset.BackgroundColor;
       comboMulticolor1.SelectedIndex  = m_Charset.MultiColor1;
       comboMulticolor2.SelectedIndex  = m_Charset.MultiColor2;
