@@ -746,7 +746,6 @@ namespace C64Studio
 
       panelMain.ActiveContentChanged += new EventHandler( panelMain_ActiveContentChanged );
       panelMain.ActiveDocumentChanged += new EventHandler( panelMain_ActiveDocumentChanged );
-      StudioCore.Settings.ReadMRUFromRegistry();
       UpdateMenuMRU();
       UpdateUndoSettings();
 
@@ -1539,16 +1538,6 @@ namespace C64Studio
 
     public void UpdateMenuMRU()
     {
-      /*
-      int indexTop = fileToolStripMenuItem.DropDownItems.IndexOf(toolStripSeparatorAboveMRU);
-      int index = fileToolStripMenuItem.DropDownItems.IndexOf(toolStripSeparatorBelowMRU);
-      while ( indexTop + 1 < index )
-      {
-        fileToolStripMenuItem.DropDownItems[index - 1].Click -= menuMRUItem_Click;
-        fileToolStripMenuItem.DropDownItems.RemoveAt( index - 1 );
-        index = fileToolStripMenuItem.DropDownItems.IndexOf( toolStripSeparatorBelowMRU );
-      }*/
-
       fileRecentlyOpenedProjectsToolStripMenuItem.DropDownItems.Clear();
       fileRecentlyOpenedFilesToolStripMenuItem.DropDownItems.Clear();
       foreach ( string entry in StudioCore.Settings.MRUProjects )
@@ -1596,7 +1585,6 @@ namespace C64Studio
       m_CurrentProject = null;
       projectToolStripMenuItem.Visible = false;
       StudioCore.Debugging.BreakPoints.Clear();
-      //CloseAllDocuments();
       return true;
     }
 
@@ -5659,6 +5647,7 @@ namespace C64Studio
       &&   ( m_Solution.FilenameUsed( Filename, out project ) ) )
       {
         // file is part of a project!
+        StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
         return project.ShowDocument( project.GetElementByFilename( Filename ) );
       }
 

@@ -94,6 +94,7 @@ namespace C64Studio
       checkASMShowAddress.Checked             = Core.Settings.ASMShowAddress;
 
       editDefaultOpenSolutionPath.Text        = Core.Settings.DefaultProjectBasePath;
+      editMaxMRUEntries.Text                  = Core.Settings.MRUMaxCount.ToString();
 
       comboAppMode.SelectedIndex = (int)Core.Settings.StudioAppMode;
 
@@ -1498,6 +1499,12 @@ namespace C64Studio
         else if ( xmlKey.Type == "Environment" )
         {
           Core.Settings.AutoOpenLastSolution = GetBooleanFromString( xmlKey.Attribute( "OpenLastSolutionOnStartup" ) );
+          Core.Settings.MRUMaxCount = GR.Convert.ToI32( xmlKey.Attribute( "MaxMRUCount" ) );
+          if ( ( Core.Settings.MRUMaxCount < 1 )
+          ||   ( Core.Settings.MRUMaxCount > 99 ) )
+          {
+            Core.Settings.MRUMaxCount = 4;
+          }
         }
         else if ( xmlKey.Type == "Fonts" )
         {
@@ -1810,6 +1817,7 @@ namespace C64Studio
       GR.Strings.XMLElement     xmlEnvironment = new GR.Strings.XMLElement( "Environment" );
       xmlSettingRoot.AddChild( xmlEnvironment );
       xmlEnvironment.AddAttribute( "OpenLastSolutionOnStartup", Core.Settings.AutoOpenLastSolution ? "yes" : "no" );
+      xmlEnvironment.AddAttribute( "MaxMRUCount", Core.Settings.MRUMaxCount.ToString() );
 
       GR.Strings.XMLElement     xmlFonts = new GR.Strings.XMLElement( "Fonts" );
       xmlSettingRoot.AddChild( xmlFonts );
@@ -2390,6 +2398,19 @@ namespace C64Studio
       Core.Settings.StripTrailingSpaces = checkStripTrailingSpaces.Checked;
     }
 
+
+
+    private void editMaxMRUEntries_TextChanged( object sender, EventArgs e )
+    {
+      int     mruCount = GR.Convert.ToI32( editMaxMRUEntries.Text );
+      if ( ( mruCount < 1 )
+      ||   ( mruCount > 99 ) )
+      {
+        editMaxMRUEntries.Text = "4";
+        mruCount = 4;
+      }
+      Core.Settings.MRUMaxCount = mruCount;
+    }
 
 
   }

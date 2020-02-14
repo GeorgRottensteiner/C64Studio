@@ -47,6 +47,8 @@ namespace C64Studio
       {
         element.Document = project.ShowDocument( element );
       }
+      Core.Settings.UpdateInMRU( Core.Settings.MRUFiles, element.DocumentInfo.FullPath, Core.MainForm );
+
       if ( ( element.Document != Core.MainForm.ActiveDocument )
       &&   ( element.Document != null ) )
       {

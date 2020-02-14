@@ -43,6 +43,7 @@
       this.label31 = new System.Windows.Forms.Label();
       this.label14 = new System.Windows.Forms.Label();
       this.checkAutoOpenLastSolution = new System.Windows.Forms.CheckBox();
+      this.checkStripTrailingSpaces = new System.Windows.Forms.CheckBox();
       this.checkAllowTabs = new System.Windows.Forms.CheckBox();
       this.checkConvertTabsToSpaces = new System.Windows.Forms.CheckBox();
       this.checkPlaySoundSearchTextNotFound = new System.Windows.Forms.CheckBox();
@@ -149,7 +150,8 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.checkStripTrailingSpaces = new System.Windows.Forms.CheckBox();
+      this.label32 = new System.Windows.Forms.Label();
+      this.editMaxMRUEntries = new System.Windows.Forms.TextBox();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -191,7 +193,9 @@
       this.tabGeneral.Controls.Add(this.labelBASICFontPreview);
       this.tabGeneral.Controls.Add(this.btnChooseFont);
       this.tabGeneral.Controls.Add(this.labelFontPreview);
+      this.tabGeneral.Controls.Add(this.editMaxMRUEntries);
       this.tabGeneral.Controls.Add(this.editTabSize);
+      this.tabGeneral.Controls.Add(this.label32);
       this.tabGeneral.Controls.Add(this.label31);
       this.tabGeneral.Controls.Add(this.label14);
       this.tabGeneral.Controls.Add(this.checkAutoOpenLastSolution);
@@ -339,6 +343,17 @@
       this.checkAutoOpenLastSolution.Text = "Open last solution on startup";
       this.checkAutoOpenLastSolution.UseVisualStyleBackColor = true;
       this.checkAutoOpenLastSolution.CheckedChanged += new System.EventHandler(this.checkOpenLastSolution_CheckedChanged);
+      // 
+      // checkStripTrailingSpaces
+      // 
+      this.checkStripTrailingSpaces.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkStripTrailingSpaces.Location = new System.Drawing.Point(262, 125);
+      this.checkStripTrailingSpaces.Name = "checkStripTrailingSpaces";
+      this.checkStripTrailingSpaces.Size = new System.Drawing.Size(214, 24);
+      this.checkStripTrailingSpaces.TabIndex = 3;
+      this.checkStripTrailingSpaces.Text = "Strip Trailing Spaces";
+      this.checkStripTrailingSpaces.UseVisualStyleBackColor = true;
+      this.checkStripTrailingSpaces.CheckedChanged += new System.EventHandler(this.checkStripTrailingSpaces_CheckedChanged);
       // 
       // checkAllowTabs
       // 
@@ -1200,6 +1215,7 @@
       this.listColoring.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader3});
       this.listColoring.FullRowSelect = true;
+      this.listColoring.HideSelection = false;
       this.listColoring.Location = new System.Drawing.Point(12, 23);
       this.listColoring.Name = "listColoring";
       this.listColoring.Size = new System.Drawing.Size(252, 270);
@@ -1290,6 +1306,7 @@
             this.columnHeader10});
       this.listBASICKeyMap.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.listBASICKeyMap.FullRowSelect = true;
+      this.listBASICKeyMap.HideSelection = false;
       this.listBASICKeyMap.ItemHeight = 14;
       this.listBASICKeyMap.Location = new System.Drawing.Point(11, 25);
       this.listBASICKeyMap.MultiSelect = false;
@@ -1448,16 +1465,23 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
-      // checkStripTrailingSpaces
+      // label32
       // 
-      this.checkStripTrailingSpaces.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkStripTrailingSpaces.Location = new System.Drawing.Point(262, 125);
-      this.checkStripTrailingSpaces.Name = "checkStripTrailingSpaces";
-      this.checkStripTrailingSpaces.Size = new System.Drawing.Size(214, 24);
-      this.checkStripTrailingSpaces.TabIndex = 3;
-      this.checkStripTrailingSpaces.Text = "Strip Trailing Spaces";
-      this.checkStripTrailingSpaces.UseVisualStyleBackColor = true;
-      this.checkStripTrailingSpaces.CheckedChanged += new System.EventHandler(this.checkStripTrailingSpaces_CheckedChanged);
+      this.label32.AutoSize = true;
+      this.label32.Location = new System.Drawing.Point(337, 75);
+      this.label32.Name = "label32";
+      this.label32.Size = new System.Drawing.Size(95, 13);
+      this.label32.TabIndex = 5;
+      this.label32.Text = "Max. MRU entries:";
+      // 
+      // editMaxMRUEntries
+      // 
+      this.editMaxMRUEntries.Location = new System.Drawing.Point(478, 69);
+      this.editMaxMRUEntries.MaxLength = 2;
+      this.editMaxMRUEntries.Name = "editMaxMRUEntries";
+      this.editMaxMRUEntries.Size = new System.Drawing.Size(140, 20);
+      this.editMaxMRUEntries.TabIndex = 5;
+      this.editMaxMRUEntries.TextChanged += new System.EventHandler(this.editMaxMRUEntries_TextChanged);
       // 
       // Settings
       // 
@@ -1625,5 +1649,7 @@
     private System.Windows.Forms.CheckBox checkBASICAutoToggleEntryMode;
     private System.Windows.Forms.CheckBox checkBASICStripREM;
     private System.Windows.Forms.CheckBox checkStripTrailingSpaces;
-  }
+        private System.Windows.Forms.TextBox editMaxMRUEntries;
+        private System.Windows.Forms.Label label32;
+    }
 }

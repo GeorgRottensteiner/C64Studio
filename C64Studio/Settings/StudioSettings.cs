@@ -141,6 +141,8 @@ namespace C64Studio
     public bool                                 ToolbarActiveMain = true;
     public bool                                 ToolbarActiveDebugger = true;
 
+    public int                                  MRUMaxCount = 4;
+
     public string                               SourceFontFamily = "Consolas";
     public float                                SourceFontSize = 9.0f;
     public string                               BASICSourceFontFamily = "Consolas";
@@ -316,45 +318,6 @@ namespace C64Studio
 
 
 
-    public void ReadMRUFromRegistry()
-    {
-      // only for legacy reasons, can be removed later
-      if ( ( MRUProjects.Count > 0 )
-      ||   ( MRUFiles.Count > 0 ) )
-      {
-        return;
-      }
-      Microsoft.Win32.RegistryKey Key = Application.UserAppDataRegistry.OpenSubKey( "MRU.File" );
-      if ( Key != null )
-      {
-        for ( int i = 1; i <= 4; ++i )
-        {
-          if ( Key != null )
-          {
-            object value = Key.GetValue( i.ToString() );
-            if ( value != null )
-            {
-              string normalizedPath = GR.Path.Normalize( value.ToString(), false );
-
-              if ( ( System.IO.Path.GetExtension( normalizedPath ).ToUpper() == ".C64" )
-              ||   ( System.IO.Path.GetExtension( normalizedPath ).ToUpper() == ".S64" ) )
-              {
-                MRUProjects.Add( normalizedPath );
-              }
-              else
-              {
-                MRUFiles.Add( normalizedPath );
-              }
-            }
-          }
-        }
-        Key.Close();
-        Application.UserAppDataRegistry.DeleteSubKey( "MRU.File" );
-      }
-    }
-
-
-
     public void UpdateInMRU( List<string> MRU, string Filename, MainForm MainForm )
     {
       for ( int i = 0; i < MRU.Count; ++i )
@@ -371,9 +334,9 @@ namespace C64Studio
         }
       }
       MRU.Insert( 0, Filename );
-      if ( MRU.Count > 4 )
+      if ( MRU.Count > MRUMaxCount )
       {
-        MRU.RemoveAt( 4 );
+        MRU.RemoveAt( MRUMaxCount );
       }
       MainForm.UpdateMenuMRU();
     }
@@ -613,6 +576,7 @@ namespace C64Studio
       GR.IO.FileChunk chunkUI = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_UI );
       chunkUI.AppendU8( (byte)( ToolbarActiveMain ? 1 : 0 ) );
       chunkUI.AppendU8( (byte)( ToolbarActiveDebugger ? 1 : 0 ) );
+      chunkUI.AppendI32( MRUMaxCount );
       SettingsData.Append( chunkUI.ToBuffer() );
 
       GR.IO.FileChunk chunkRunEmu = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_RUN_EMULATOR );
@@ -973,6 +937,12 @@ namespace C64Studio
 
               ToolbarActiveMain     = ( binIn.ReadUInt8() == 1 );
               ToolbarActiveDebugger = ( binIn.ReadUInt8() == 1 );
+              MRUMaxCount           = binIn.ReadInt32();
+
+              if ( MRUMaxCount == 0 )
+              {
+                MRUMaxCount = 4;
+              }
             }
             break;
           case Types.FileChunk.SETTINGS_RUN_EMULATOR:
