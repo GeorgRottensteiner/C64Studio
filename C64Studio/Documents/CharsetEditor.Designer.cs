@@ -105,8 +105,8 @@ namespace C64Studio
       // tabCharsetEditor
       // 
       this.tabCharsetEditor.Controls.Add(this.tabCharEditor);
-      this.tabCharsetEditor.Controls.Add(this.tabProject);
       this.tabCharsetEditor.Controls.Add(this.tabCategories);
+      this.tabCharsetEditor.Controls.Add(this.tabProject);
       this.tabCharsetEditor.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tabCharsetEditor.Location = new System.Drawing.Point(0, 24);
       this.tabCharsetEditor.Name = "tabCharsetEditor";
@@ -143,7 +143,7 @@ namespace C64Studio
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
       this.tabProject.Size = new System.Drawing.Size(1056, 477);
       this.tabProject.TabIndex = 1;
-      this.tabProject.Text = "Project";
+      this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
       // 
       // groupBox1
