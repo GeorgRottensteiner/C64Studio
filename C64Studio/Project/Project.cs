@@ -631,7 +631,6 @@ namespace C64Studio
           System.Windows.Forms.MessageBox.Show( "Could not create document for " + Element.DocumentInfo.Type.ToString(), "Error creating document" );
           return null;
         }
-
         Element.Document = document;
         Element.Document.ShowHint = DockState.Document;
         Element.Document.Icon = Core.MainForm.IconFromType( Element.DocumentInfo );

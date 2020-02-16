@@ -19,7 +19,9 @@ namespace C64Studio
 
     public Types.ASM.FileInfo             ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
 
-    public Undo.UndoManager               UndoManager = new C64Studio.Undo.UndoManager();
+    public Undo.UndoManager UndoManager { get; set; } = new Undo.UndoManager();
+
+
 
     private List<Types.AutoCompleteItemInfo>    m_KnownKeywords = new List<Types.AutoCompleteItemInfo>();
     private GR.Collections.MultiMap<string, Types.SymbolInfo> m_KnownTokens = new GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo>();

@@ -28,10 +28,11 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterEditor));
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.btnClearChars = new System.Windows.Forms.Button();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
@@ -63,12 +64,17 @@
       this.button3 = new System.Windows.Forms.Button();
       this.btnRotateLeft = new System.Windows.Forms.Button();
       this.btnShiftLeft = new System.Windows.Forms.Button();
+      this.contextMenuExchangeColors = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.exchangeMultiColor1WithBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.exchangeMultiColor2WithBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.panelCharColors = new GR.Forms.FastPictureBox();
       this.picturePlayground = new GR.Forms.FastPictureBox();
       this.btnExchangeColors = new C64Studio.Controls.MenuButton();
       this.panelCharacters = new GR.Forms.ImageListbox();
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.groupBox2.SuspendLayout();
+      this.contextMenuExchangeColors.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).BeginInit();
@@ -94,6 +100,7 @@
       this.btnClearChars.TabIndex = 6;
       this.btnClearChars.Text = "Clear";
       this.btnClearChars.UseVisualStyleBackColor = true;
+      this.btnClearChars.Click += new System.EventHandler(this.btnClear_Click);
       // 
       // comboCharsetMode
       // 
@@ -103,6 +110,7 @@
       this.comboCharsetMode.Name = "comboCharsetMode";
       this.comboCharsetMode.Size = new System.Drawing.Size(109, 21);
       this.comboCharsetMode.TabIndex = 16;
+      this.comboCharsetMode.SelectedIndexChanged += new System.EventHandler(this.comboCharsetMode_SelectedIndexChanged);
       // 
       // label1
       // 
@@ -121,6 +129,7 @@
       this.comboCategories.Name = "comboCategories";
       this.comboCategories.Size = new System.Drawing.Size(121, 21);
       this.comboCategories.TabIndex = 37;
+      this.comboCategories.SelectedIndexChanged += new System.EventHandler(this.comboCategories_SelectedIndexChanged);
       // 
       // btnPasteFromClipboard
       // 
@@ -130,6 +139,7 @@
       this.btnPasteFromClipboard.TabIndex = 36;
       this.btnPasteFromClipboard.Text = "Big Paste";
       this.btnPasteFromClipboard.UseVisualStyleBackColor = true;
+      this.btnPasteFromClipboard.Click += new System.EventHandler(this.btnPasteFromClipboard_Click);
       // 
       // label4
       // 
@@ -146,6 +156,7 @@
       this.labelCharNo.Size = new System.Drawing.Size(231, 23);
       this.labelCharNo.TabIndex = 34;
       this.labelCharNo.Text = "label1";
+      this.labelCharNo.Paint += new System.Windows.Forms.PaintEventHandler(this.labelCharNo_Paint);
       // 
       // checkShowGrid
       // 
@@ -238,6 +249,7 @@
       this.comboCharColor.Size = new System.Drawing.Size(71, 21);
       this.comboCharColor.TabIndex = 24;
       this.comboCharColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboMulticolor_DrawItem);
+      this.comboCharColor.SelectedIndexChanged += new System.EventHandler(this.comboCharColor_SelectedIndexChanged);
       // 
       // comboBGColor4
       // 
@@ -249,6 +261,7 @@
       this.comboBGColor4.Size = new System.Drawing.Size(71, 21);
       this.comboBGColor4.TabIndex = 23;
       this.comboBGColor4.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
+      this.comboBGColor4.SelectedIndexChanged += new System.EventHandler(this.comboBGColor4_SelectedIndexChanged);
       // 
       // comboMulticolor2
       // 
@@ -260,6 +273,7 @@
       this.comboMulticolor2.Size = new System.Drawing.Size(71, 21);
       this.comboMulticolor2.TabIndex = 22;
       this.comboMulticolor2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
+      this.comboMulticolor2.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor2_SelectedIndexChanged);
       // 
       // comboMulticolor1
       // 
@@ -271,6 +285,7 @@
       this.comboMulticolor1.Size = new System.Drawing.Size(71, 21);
       this.comboMulticolor1.TabIndex = 21;
       this.comboMulticolor1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
+      this.comboMulticolor1.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor1_SelectedIndexChanged);
       // 
       // comboBackground
       // 
@@ -282,6 +297,7 @@
       this.comboBackground.Size = new System.Drawing.Size(71, 21);
       this.comboBackground.TabIndex = 25;
       this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
+      this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
       // 
       // btnPaste
       // 
@@ -393,10 +409,40 @@
       this.btnShiftLeft.UseVisualStyleBackColor = true;
       this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
       // 
+      // contextMenuExchangeColors
+      // 
+      this.contextMenuExchangeColors.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem,
+            this.exchangeMultiColor1WithBGColorToolStripMenuItem,
+            this.exchangeMultiColor2WithBGColorToolStripMenuItem});
+      this.contextMenuExchangeColors.Name = "contextMenuExchangeColors";
+      this.contextMenuExchangeColors.Size = new System.Drawing.Size(296, 70);
+      // 
+      // exchangeMultiColor1WithMultiColor2ToolStripMenuItem
+      // 
+      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Name = "exchangeMultiColor1WithMultiColor2ToolStripMenuItem";
+      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Text = "Exchange Multi Color 1 with Multi Color 2";
+      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColors1And2ToolStripMenuItem_Click);
+      // 
+      // exchangeMultiColor1WithBGColorToolStripMenuItem
+      // 
+      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Name = "exchangeMultiColor1WithBGColorToolStripMenuItem";
+      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 1 with BG Color";
+      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1AndBGColorToolStripMenuItem_Click);
+      // 
+      // exchangeMultiColor2WithBGColorToolStripMenuItem
+      // 
+      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Name = "exchangeMultiColor2WithBGColorToolStripMenuItem";
+      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 2 with BG Color";
+      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor2AndBGColorToolStripMenuItem_Click);
+      // 
       // panelCharColors
       // 
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage4;
+      this.panelCharColors.DisplayPage = fastImage1;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(782, 271);
       this.panelCharColors.Name = "panelCharColors";
@@ -409,7 +455,7 @@
       // picturePlayground
       // 
       this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picturePlayground.DisplayPage = fastImage5;
+      this.picturePlayground.DisplayPage = fastImage2;
       this.picturePlayground.Image = null;
       this.picturePlayground.Location = new System.Drawing.Point(782, 3);
       this.picturePlayground.Name = "picturePlayground";
@@ -427,6 +473,7 @@
       this.btnExchangeColors.TabIndex = 49;
       this.btnExchangeColors.Text = "Exchange Colors";
       this.btnExchangeColors.UseVisualStyleBackColor = true;
+      this.btnExchangeColors.Click += new System.EventHandler(this.btnExchangeColors_Click);
       // 
       // panelCharacters
       // 
@@ -457,7 +504,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage6;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 3);
       this.pictureEditor.Name = "pictureEditor";
@@ -510,6 +557,7 @@
       this.Size = new System.Drawing.Size(1057, 490);
       this.groupBox2.ResumeLayout(false);
       this.groupBox2.PerformLayout();
+      this.contextMenuExchangeColors.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).EndInit();
@@ -556,5 +604,9 @@
         private System.Windows.Forms.ComboBox comboMulticolor1;
         private System.Windows.Forms.ComboBox comboBackground;
         private GR.Forms.FastPictureBox pictureEditor;
+        private System.Windows.Forms.ContextMenuStrip contextMenuExchangeColors;
+        private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithMultiColor2ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithBGColorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor2WithBGColorToolStripMenuItem;
     }
 }

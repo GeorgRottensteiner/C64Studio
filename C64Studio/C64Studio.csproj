@@ -670,6 +670,7 @@
     <Compile Include="Undo\UndoCharscreenCharsetChange.cs" />
     <Compile Include="Undo\UndoCharacterEditorCharChange.cs" />
     <Compile Include="Undo\UndoCharacterEditorPlaygroundCharChange.cs" />
+    <Compile Include="Undo\UndoCharacterEditorValuesChange.cs" />
     <Compile Include="Undo\UndoSpritesetExchangeMultiColors.cs" />
     <Compile Include="Undo\UndoCharsetPlaygroundCharChange.cs" />
     <Compile Include="Undo\UndoGraphicScreenSizeChange.cs" />
@@ -684,8 +685,7 @@
     <Compile Include="Undo\UndoSpritesetSpriteChange.cs" />
     <Compile Include="Undo\UndoCharsetRemoveCategory.cs" />
     <Compile Include="Undo\UndoCharsetAddCategory.cs" />
-    <Compile Include="Undo\UndoCharsetExchangeMultiColors.cs" />
-    <Compile Include="Undo\UndoCharsetValuesChange.cs" />
+    <Compile Include="Undo\UndoCharacterEditorExchangeMultiColors.cs" />
     <Compile Include="Undo\UndoCharsetCharChange.cs" />
     <Compile Include="Undo\UndoMapTileExchange.cs" />
     <Compile Include="Undo\UndoMapTileRemove.cs" />

@@ -20,19 +20,16 @@ namespace C64Studio.Controls
       CHAR_COLOR
     }
 
-    public bool Modified
-    {
-      get; set;
-    }
-
-
+    public delegate void ModifiedHandler( object sender );
+    public event ModifiedHandler        Modified;
+    public event ModifiedHandler        CategoryModified;
 
     private int                         m_CurrentChar = 0;
     private int                         m_CurrentColor = 1;
     private ColorType                   m_CurrentColorType = ColorType.CHAR_COLOR;
     private bool                        m_ButtonReleased = false;
     private bool                        m_RButtonReleased = false;
-    private StudioCore                  Core = null;
+    public StudioCore                   Core = null;
     public Undo.UndoManager             UndoManager = null;
     private bool                        DoNotUpdateFromControls = false;
 
@@ -60,8 +57,6 @@ namespace C64Studio.Controls
 
     private void Setup()
     {
-      Modified = false;
-
       InitializeComponent();
 
       pictureEditor.DisplayPage.Create( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
@@ -114,6 +109,20 @@ namespace C64Studio.Controls
 
       panelCharacters.KeyDown += new KeyEventHandler( HandleKeyDown );
       pictureEditor.PreviewKeyDown += new PreviewKeyDownEventHandler( pictureEditor_PreviewKeyDown );
+    }
+
+
+
+    protected void RaiseModifiedEvent()
+    {
+      Modified?.Invoke( this );
+    }
+
+
+
+    protected void RaiseCategoryModifiedEvent()
+    {
+      CategoryModified?.Invoke( this );
     }
 
 
@@ -208,6 +217,17 @@ namespace C64Studio.Controls
         PasteClipboardImageToChar();
       }
     }
+
+
+
+    public List<int> SelectedIndices
+    {
+      get
+      {
+        return panelCharacters.SelectedIndices;
+      }
+    }
+
 
 
     private void CopyToClipboard()
@@ -330,7 +350,7 @@ namespace C64Studio.Controls
           }
         }
         pictureEditor.Invalidate();
-        Modified = true;
+        RaiseModifiedEvent();
         return;
       }
       else if ( !Clipboard.ContainsImage() )
@@ -439,7 +459,7 @@ namespace C64Studio.Controls
 
 
 
-    private void PasteImage( string FromFile, GR.Image.FastImage Image, bool ForceMulticolor )
+    public void PasteImage( string FromFile, GR.Image.FastImage Image, bool ForceMulticolor )
     {
       GR.Image.FastImage mappedImage = null;
 
@@ -523,7 +543,7 @@ namespace C64Studio.Controls
       }
 
       pictureEditor.Invalidate();
-      Modified = true;
+      RaiseModifiedEvent();
     }
 
 
@@ -547,6 +567,7 @@ namespace C64Studio.Controls
         pictureEditor.Image = m_Project.Characters[m_CurrentChar].Image;
         pictureEditor.Invalidate();
 
+        SelectCategory( m_Project.Characters[m_CurrentChar].Category );
         RedrawColorChooser();
       }
     }
@@ -778,9 +799,59 @@ namespace C64Studio.Controls
 
         panelCharacters.Items[i].MemoryImage = m_Project.Characters[i].Image;
       }
+
+      comboBackground.SelectedIndex   = m_Project.BackgroundColor;
+      comboMulticolor1.SelectedIndex  = m_Project.MultiColor1;
+      comboMulticolor2.SelectedIndex  = m_Project.MultiColor2;
+
+      comboCategories.Items.Clear();
+      foreach ( var category in m_Project.Categories )
+      {
+        comboCategories.Items.Add( category );
+      }
+      SelectCategory( m_Project.Characters[m_CurrentChar].Category );
+
+      panelCharacters_SelectionChanged( null, null );
+
       panelCharacters.Invalidate();
       pictureEditor.Invalidate();
       RedrawColorChooser();
+    }
+
+
+
+    private void labelCharNo_Paint( object sender, PaintEventArgs e )
+    {
+      if ( Core == null )
+      {
+        return;
+      }
+
+      e.Graphics.FillRectangle( System.Drawing.SystemBrushes.Window, labelCharNo.ClientRectangle );
+      e.Graphics.DrawString( labelCharNo.Text, labelCharNo.Font, System.Drawing.SystemBrushes.WindowText, labelCharNo.ClientRectangle );
+
+      if ( !Types.ConstantData.ScreenCodeToChar.ContainsKey( (byte)m_CurrentChar ) )
+      {
+        Debug.Log( "Missing char for " + m_CurrentChar );
+      }
+      else
+      {
+        e.Graphics.DrawString( "" + Types.ConstantData.ScreenCodeToChar[(byte)m_CurrentChar].CharValue, new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel ), System.Drawing.SystemBrushes.WindowText, 100, 0 );
+      }
+    }
+
+
+
+    private void SelectCategory( int Category )
+    {
+      comboCategories.SelectedItem = m_Project.Categories[Category];
+    }
+
+
+
+    internal void AddCategory( int Index, string Name )
+    {
+      comboCategories.Items.Insert( Index, Name );
     }
 
 
@@ -871,7 +942,7 @@ namespace C64Studio.Controls
         }
         if ( newByte != charByte )
         {
-          Modified = true;
+          RaiseModifiedEvent();
 
           if ( m_ButtonReleased )
           {
@@ -929,7 +1000,7 @@ namespace C64Studio.Controls
             UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedCharIndex ) );
           }
 
-          Modified = true;
+          RaiseModifiedEvent();
           affectedChar.Data.SetU8At( charY, newByte );
 
           if ( origAffectedChar.Mode == C64Studio.Types.CharsetMode.ECM )
@@ -951,6 +1022,39 @@ namespace C64Studio.Controls
       else
       {
         m_RButtonReleased = true;
+      }
+    }
+
+
+
+    internal void RemoveCategory( int CategoryIndex )
+    {
+      comboCategories.Items.RemoveAt( CategoryIndex );
+    }
+
+
+
+    private void comboCategories_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      string    category = comboCategories.SelectedItem.ToString();
+
+      int       categoryIndex = 0;
+      foreach ( var categoryInfo in m_Project.Categories )
+      {
+        if ( categoryInfo == category )
+        {
+          break;
+        }
+        ++categoryIndex;
+      }
+      if ( ( categoryIndex != -1 )
+      && ( m_Project.Characters[m_CurrentChar].Category != categoryIndex ) )
+      {
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, m_CurrentChar ) );
+
+        m_Project.Characters[m_CurrentChar].Category = categoryIndex;
+        RaiseCategoryModifiedEvent();
+        RaiseModifiedEvent();
       }
     }
 
@@ -999,7 +1103,7 @@ namespace C64Studio.Controls
 
 
 
-    private void Invert()
+    public void Invert()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -1017,7 +1121,7 @@ namespace C64Studio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       pictureEditor.Invalidate();
-      Modified = true;
+      RaiseModifiedEvent();
     }
 
 
@@ -1070,7 +1174,7 @@ namespace C64Studio.Controls
           RedrawPlayground();
 
           m_Project.PlaygroundChars[charX + charY * 16] = (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) );
-          Modified = true;
+          RaiseModifiedEvent();
         }
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
@@ -1129,7 +1233,7 @@ namespace C64Studio.Controls
 
 
 
-    void MirrorX()
+    public void MirrorX()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -1168,12 +1272,12 @@ namespace C64Studio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       pictureEditor.Invalidate();
-      Modified = true;
+      RaiseModifiedEvent();
     }
 
 
 
-    void MirrorY()
+    public void MirrorY()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -1192,7 +1296,7 @@ namespace C64Studio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       pictureEditor.Invalidate();
-      Modified = true;
+      RaiseModifiedEvent();
     }
 
 
@@ -1204,7 +1308,7 @@ namespace C64Studio.Controls
 
 
 
-    private void RotateLeft()
+    public void RotateLeft()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -1262,7 +1366,7 @@ namespace C64Studio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       pictureEditor.Invalidate();
-      Modified = true;
+      RaiseModifiedEvent();
     }
 
 
@@ -1274,7 +1378,7 @@ namespace C64Studio.Controls
 
 
 
-    private void RotateRight()
+    public void RotateRight()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -1332,7 +1436,7 @@ namespace C64Studio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       pictureEditor.Invalidate();
-      Modified = true;
+      RaiseModifiedEvent();
     }
 
 
@@ -1344,7 +1448,7 @@ namespace C64Studio.Controls
 
 
 
-    private void ShiftDown()
+    public void ShiftDown()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -1363,7 +1467,7 @@ namespace C64Studio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       pictureEditor.Invalidate();
-      Modified = true;
+      RaiseModifiedEvent();
     }
 
 
@@ -1389,7 +1493,7 @@ namespace C64Studio.Controls
 
 
 
-    private void ShiftUp()
+    public void ShiftUp()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -1408,11 +1512,11 @@ namespace C64Studio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       pictureEditor.Invalidate();
-      Modified = true;
+      RaiseModifiedEvent();
     }
 
 
-    void ShiftLeft()
+    public void ShiftLeft()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -1441,12 +1545,12 @@ namespace C64Studio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       pictureEditor.Invalidate();
-      Modified = true;
+      RaiseModifiedEvent();
     }
 
 
 
-    void ShiftRight()
+    public void ShiftRight()
     {
       List<int>     selectedChars = panelCharacters.SelectedIndices;
 
@@ -1475,7 +1579,7 @@ namespace C64Studio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       pictureEditor.Invalidate();
-      Modified = true;
+      RaiseModifiedEvent();
     }
 
 
@@ -1546,5 +1650,465 @@ namespace C64Studio.Controls
       RedrawPlayground();
     }
 
+
+
+    private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( m_Project.BackgroundColor != comboBackground.SelectedIndex )
+      {
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
+
+        m_Project.BackgroundColor = comboBackground.SelectedIndex;
+        for ( int i = 0; i < 256; ++i )
+        {
+          RebuildCharImage( i );
+        }
+        RaiseModifiedEvent();
+        pictureEditor.Invalidate();
+        panelCharacters.Invalidate();
+      }
+    }
+
+
+
+    private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( m_Project.MultiColor1 != comboMulticolor1.SelectedIndex )
+      {
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
+
+        m_Project.MultiColor1 = comboMulticolor1.SelectedIndex;
+        for ( int i = 0; i < 256; ++i )
+        {
+          RebuildCharImage( i );
+        }
+        RaiseModifiedEvent();
+        pictureEditor.Invalidate();
+        panelCharacters.Invalidate();
+      }
+    }
+
+
+
+    private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( m_Project.MultiColor2 != comboMulticolor2.SelectedIndex )
+      {
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
+
+        m_Project.MultiColor2 = comboMulticolor2.SelectedIndex;
+        for ( int i = 0; i < 256; ++i )
+        {
+          RebuildCharImage( i );
+        }
+        RaiseModifiedEvent();
+        pictureEditor.Invalidate();
+        panelCharacters.Invalidate();
+      }
+    }
+
+
+
+    private void comboBGColor4_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( m_Project.BGColor4 != comboBGColor4.SelectedIndex )
+      {
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
+
+        m_Project.BGColor4 = comboBGColor4.SelectedIndex;
+        for ( int i = 0; i < 256; ++i )
+        {
+          RebuildCharImage( i );
+        }
+        RaiseModifiedEvent();
+        pictureEditor.Invalidate();
+        panelCharacters.Invalidate();
+      }
+    }
+
+
+
+    private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( DoNotUpdateFromControls )
+      {
+        return;
+      }
+
+      List<int>   selectedChars = panelCharacters.SelectedIndices;
+      if ( selectedChars.Count == 0 )
+      {
+        selectedChars.Add( m_CurrentChar );
+      }
+
+      bool    modified = false;
+      foreach ( int selChar in selectedChars )
+      {
+        if ( m_Project.Characters[selChar].Color != comboCharColor.SelectedIndex )
+        {
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar ), modified == false );
+
+          m_Project.Characters[selChar].Color = comboCharColor.SelectedIndex;
+          RebuildCharImage( selChar );
+          modified = true;
+          panelCharacters.InvalidateItemRect( selChar );
+        }
+      }
+      if ( modified )
+      {
+        RaiseModifiedEvent();
+        pictureEditor.Invalidate();
+      }
+    }
+
+
+
+    public void ColorsChanged()
+    {
+      comboMulticolor1.SelectedIndex = m_Project.MultiColor1;
+      comboMulticolor2.SelectedIndex = m_Project.MultiColor2;
+      comboBGColor4.SelectedIndex = m_Project.BGColor4;
+      comboBackground.SelectedIndex = m_Project.BackgroundColor;
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        RebuildCharImage( i );
+      }
+      pictureEditor.Invalidate();
+      panelCharacters.Invalidate();
+    }
+
+
+
+    private void comboCharsetMode_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( DoNotUpdateFromControls )
+      {
+        return;
+      }
+
+      List<int>   selectedChars = panelCharacters.SelectedIndices;
+      if ( selectedChars.Count == 0 )
+      {
+        selectedChars.Add( m_CurrentChar );
+      }
+
+      bool modified = false;
+      foreach ( int selChar in selectedChars )
+      {
+        if ( m_Project.Characters[selChar].Mode != (C64Studio.Types.CharsetMode)comboCharsetMode.SelectedIndex )
+        {
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar ), !modified );
+          m_Project.Characters[selChar].Mode = (C64Studio.Types.CharsetMode)comboCharsetMode.SelectedIndex;
+          RebuildCharImage( selChar );
+          panelCharacters.InvalidateItemRect( selChar );
+          modified = true;
+        }
+      }
+
+      comboBGColor4.Enabled = ( m_Project.Characters[m_CurrentChar].Mode == C64Studio.Types.CharsetMode.ECM );
+      radioBGColor4.Enabled = ( m_Project.Characters[m_CurrentChar].Mode == C64Studio.Types.CharsetMode.ECM );
+      comboMulticolor1.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != C64Studio.Types.CharsetMode.HIRES );
+      radioMultiColor1.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != C64Studio.Types.CharsetMode.HIRES );
+      comboMulticolor2.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != C64Studio.Types.CharsetMode.HIRES );
+      radioMulticolor2.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != C64Studio.Types.CharsetMode.HIRES );
+
+      if ( m_Project.Characters[m_CurrentChar].Mode == C64Studio.Types.CharsetMode.ECM )
+      {
+        radioMultiColor1.Text = "BGColor 2";
+        radioMulticolor2.Text = "BGColor 3";
+      }
+      else
+      {
+        radioMultiColor1.Text = "Multicolor 1";
+        radioMulticolor2.Text = "Multicolor 2";
+      }
+
+      if ( modified )
+      {
+        RaiseModifiedEvent();
+        pictureEditor.Invalidate();
+      }
+    }
+
+
+
+    private void btnPasteFromClipboard_Click( object sender, EventArgs e )
+    {
+      if ( !Clipboard.ContainsImage() )
+      {
+        return;
+      }
+      IDataObject dataObj = Clipboard.GetDataObject();
+
+      GR.Image.FastImage    imgClip = null;
+      foreach ( string format in dataObj.GetFormats() )
+      {
+        if ( format == "DeviceIndependentBitmap" )
+        {
+          object dibData = dataObj.GetData( format );
+          imgClip = GR.Image.FastImage.CreateImageFromHDIB( dibData );
+          break;
+        }
+      }
+      if ( imgClip == null )
+      {
+        return;
+      }
+
+      PasteImage( "", imgClip, checkPasteMultiColor.Checked );
+    }
+
+
+
+    private void exchangeMultiColors1And2ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorExchangeMultiColors( this, C64Studio.Undo.UndoCharacterEditorExchangeMultiColors.ExchangeMode.MULTICOLOR_1_WITH_MULTICOLOR_2 ) );
+
+      ExchangeMultiColors();
+    }
+
+
+
+    public void ExchangeMultiColors()
+    {
+      int   temp = m_Project.MultiColor1;
+      m_Project.MultiColor1 = m_Project.MultiColor2;
+      m_Project.MultiColor2 = temp;
+
+      int   charIndex = 0;
+      foreach ( var charInfo in m_Project.Characters )
+      {
+        if ( ( charInfo.Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        &&   ( charInfo.Color >= 8 ) )
+        {
+          for ( int y = 0; y < 8; ++y )
+          {
+            for ( int x = 0; x < 4; ++x )
+            {
+              int pixelValue = ( charInfo.Data.ByteAt( y ) & ( 3 << ( ( 3 - x ) * 2 ) ) ) >> ( ( 3 - x ) * 2 );
+
+              if ( pixelValue == 1 )
+              {
+                byte  newValue = (byte)( charInfo.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
+
+                newValue |= (byte)( 2 << ( ( 3 - x ) * 2 ) );
+
+                charInfo.Data.SetU8At( y, newValue );
+              }
+              else if ( pixelValue == 2 )
+              {
+                byte  newValue = (byte)( charInfo.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
+
+                newValue |= (byte)( 1 << ( ( 3 - x ) * 2 ) );
+
+                charInfo.Data.SetU8At( y, newValue );
+              }
+            }
+          }
+          RebuildCharImage( charIndex );
+          panelCharacters.Invalidate();
+        }
+        ++charIndex;
+      }
+      comboMulticolor1.SelectedIndex = m_Project.MultiColor1;
+      comboMulticolor2.SelectedIndex = m_Project.MultiColor2;
+
+      RaiseModifiedEvent();
+    }
+
+
+
+    private void exchangeMultiColor1AndBGColorToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorExchangeMultiColors( this, C64Studio.Undo.UndoCharacterEditorExchangeMultiColors.ExchangeMode.MULTICOLOR_1_WITH_BACKGROUND ) );
+
+      ExchangeMultiColor1WithBackground();
+    }
+
+
+
+    public void ExchangeMultiColor1WithBackground()
+    {
+      int   temp = m_Project.BackgroundColor;
+      m_Project.BackgroundColor = m_Project.MultiColor1;
+      m_Project.MultiColor1 = temp;
+
+      int   charIndex = 0;
+      foreach ( var charInfo in m_Project.Characters )
+      {
+        if ( ( charInfo.Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        &&   ( charInfo.Color >= 8 ) )
+        {
+          for ( int y = 0; y < 8; ++y )
+          {
+            for ( int x = 0; x < 4; ++x )
+            {
+              int pixelValue = ( charInfo.Data.ByteAt( y ) & ( 3 << ( ( 3 - x ) * 2 ) ) ) >> ( ( 3 - x ) * 2 );
+
+              if ( pixelValue == 1 )
+              {
+                byte  newValue = (byte)( charInfo.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
+
+                charInfo.Data.SetU8At( y, newValue );
+              }
+              else if ( pixelValue == 0 )
+              {
+                byte  newValue = (byte)( charInfo.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
+
+                newValue |= (byte)( 1 << ( ( 3 - x ) * 2 ) );
+
+                charInfo.Data.SetU8At( y, newValue );
+              }
+            }
+          }
+        }
+        RebuildCharImage( charIndex );
+        panelCharacters.Invalidate();
+        ++charIndex;
+      }
+      comboMulticolor1.SelectedIndex  = m_Project.MultiColor1;
+      comboBackground.SelectedIndex   = m_Project.BackgroundColor;
+
+      RaiseModifiedEvent();
+    }
+
+
+
+    private void exchangeMultiColor2AndBGColorToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorExchangeMultiColors( this, C64Studio.Undo.UndoCharacterEditorExchangeMultiColors.ExchangeMode.MULTICOLOR_2_WITH_BACKGROUND ) );
+
+      ExchangeMultiColor2WithBackground();
+    }
+
+
+
+    public void ExchangeMultiColor2WithBackground()
+    {
+      int   temp = m_Project.BackgroundColor;
+      m_Project.BackgroundColor = m_Project.MultiColor2;
+      m_Project.MultiColor2 = temp;
+
+      int   charIndex = 0;
+      foreach ( var charInfo in m_Project.Characters )
+      {
+        if ( ( charInfo.Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        &&   ( charInfo.Color >= 8 ) )
+        {
+          for ( int y = 0; y < 8; ++y )
+          {
+            for ( int x = 0; x < 4; ++x )
+            {
+              int pixelValue = ( charInfo.Data.ByteAt( y ) & ( 3 << ( ( 3 - x ) * 2 ) ) ) >> ( ( 3 - x ) * 2 );
+
+              if ( pixelValue == 2 )
+              {
+                byte  newValue = (byte)( charInfo.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
+
+                //newValue |= (byte)( 2 << ( ( 3 - x ) * 2 ) );
+
+                charInfo.Data.SetU8At( y, newValue );
+              }
+              else if ( pixelValue == 0 )
+              {
+                byte  newValue = (byte)( charInfo.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
+
+                newValue |= (byte)( 2 << ( ( 3 - x ) * 2 ) );
+
+                charInfo.Data.SetU8At( y, newValue );
+              }
+            }
+          }
+        }
+        RebuildCharImage( charIndex );
+        panelCharacters.Invalidate();
+        ++charIndex;
+      }
+      comboMulticolor2.SelectedIndex = m_Project.MultiColor2;
+      comboBackground.SelectedIndex = m_Project.BackgroundColor;
+
+      RaiseModifiedEvent();
+    }
+
+
+
+    public void MultiColor2()
+    {
+      comboMulticolor2.SelectedIndex = ( comboMulticolor2.SelectedIndex + 1 ) % 16;
+    }
+
+
+
+    public void MultiColor1()
+    {
+      comboMulticolor1.SelectedIndex = ( comboMulticolor1.SelectedIndex + 1 ) % 16;
+    }
+
+
+
+    public void CustomColor()
+    {
+      comboCharColor.SelectedIndex = ( comboCharColor.SelectedIndex + 1 ) % 16;
+    }
+
+
+
+    public void Next()
+    {
+      panelCharacters.SelectedIndex = ( panelCharacters.SelectedIndex + 1 ) % 256;
+    }
+
+
+
+    public void Previous()
+    {
+      panelCharacters.SelectedIndex = ( panelCharacters.SelectedIndex + 256 - 1 ) % 256;
+    }
+
+
+
+    private void btnClear_Click( object sender, EventArgs e )
+    {
+      bool  wasModified = false;
+      var   selectedChars = panelCharacters.SelectedIndices;
+      bool  firstUndoStep = true;
+
+      DoNotUpdateFromControls = true;
+
+      foreach ( int i in selectedChars )
+      {
+        wasModified = true;
+
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), firstUndoStep );
+        firstUndoStep = false;
+
+        for ( int j = 0; j < 8; ++j )
+        {
+          m_Project.Characters[i].Data.SetU8At( j, 0 );
+        }
+        RebuildCharImage( i );
+        panelCharacters.InvalidateItemRect( i );
+
+        if ( i == m_CurrentChar )
+        {
+          comboCharsetMode.SelectedIndex = (int)Types.CharsetMode.HIRES;
+          comboCharColor.SelectedIndex = m_Project.Characters[i].Color;
+        }
+      }
+      if ( wasModified )
+      {
+        pictureEditor.Invalidate();
+        RaiseModifiedEvent();
+      }
+      DoNotUpdateFromControls = false;
+    }
+
+
+
+    private void btnExchangeColors_Click( object sender, EventArgs e )
+    {
+      contextMenuExchangeColors.Show( btnExchangeColors, new Point( 0, btnExchangeColors.Height ) );
+    }
   }
 }

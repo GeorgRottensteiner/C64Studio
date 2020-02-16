@@ -53,15 +53,19 @@ namespace C64Studio
 
       public DocEvent( Type EventType, int LineIndex, int OtherLineIndex )
       {
-        this.EventType      = EventType;
-        this.LineIndex      = LineIndex;
+        this.EventType = EventType;
+        this.LineIndex = LineIndex;
         this.OtherLineIndex = OtherLineIndex;
       }
 
     };
 
 
-    public DocumentInfo       DocumentInfo = new DocumentInfo();
+    public virtual DocumentInfo DocumentInfo
+    {
+      get;
+      set;
+    } = new DocumentInfo();
 
     private bool              m_Modified = false;
 

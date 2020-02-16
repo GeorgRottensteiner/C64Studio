@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using C64Studio.Controls;
 using C64Studio.Formats;
 
 
@@ -9,7 +10,7 @@ namespace C64Studio.Undo
 {
   public class UndoCharsetPlaygroundCharChange : UndoTask
   {
-    public CharsetEditor          Editor = null;
+    public CharacterEditor        Editor = null;
     public CharsetProject         Project = null;
     public int                    X = 0;
     public int                    Y = 0;
@@ -17,7 +18,7 @@ namespace C64Studio.Undo
 
 
 
-    public UndoCharsetPlaygroundCharChange( CharsetEditor Editor, CharsetProject Project, int X, int Y )
+    public UndoCharsetPlaygroundCharChange( CharacterEditor Editor, CharsetProject Project, int X, int Y )
     {
       this.Editor = Editor;
       this.Project = Project;
