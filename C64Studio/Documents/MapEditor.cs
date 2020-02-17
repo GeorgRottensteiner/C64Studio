@@ -3441,6 +3441,13 @@ namespace C64Studio
 
 
 
+    private void btnCopyImage_Click( object sender, EventArgs e )
+    {
+      Clipboard.SetImage( m_Image.GetAsBitmap() );
+    }
+
+
+
   }
 }
 

@@ -29,12 +29,12 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
       GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,6 +60,7 @@
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnCopyImage = new System.Windows.Forms.Button();
       this.btnToolSelect = new System.Windows.Forms.RadioButton();
       this.btnToolFill = new System.Windows.Forms.RadioButton();
       this.btnToolQuad = new System.Windows.Forms.RadioButton();
@@ -448,6 +449,7 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnCopyImage);
       this.tabEditor.Controls.Add(this.btnToolSelect);
       this.tabEditor.Controls.Add(this.btnToolFill);
       this.tabEditor.Controls.Add(this.btnToolQuad);
@@ -469,6 +471,17 @@
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Map";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // btnCopyImage
+      // 
+      this.btnCopyImage.Image = ((System.Drawing.Image)(resources.GetObject("btnCopyImage.Image")));
+      this.btnCopyImage.ImageKey = "(none)";
+      this.btnCopyImage.Location = new System.Drawing.Point(628, 432);
+      this.btnCopyImage.Name = "btnCopyImage";
+      this.btnCopyImage.Size = new System.Drawing.Size(24, 24);
+      this.btnCopyImage.TabIndex = 38;
+      this.btnCopyImage.UseVisualStyleBackColor = true;
+      this.btnCopyImage.Click += new System.EventHandler(this.btnCopyImage_Click);
       // 
       // btnToolSelect
       // 
@@ -1827,5 +1840,6 @@
     private System.Windows.Forms.Button btnTileClone;
         private System.Windows.Forms.TabPage tabCharset;
         private Controls.CharacterEditor characterEditor;
+        private System.Windows.Forms.Button btnCopyImage;
     }
 }
