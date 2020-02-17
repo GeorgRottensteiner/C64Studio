@@ -138,6 +138,7 @@
       this.panelCharColors = new GR.Forms.FastPictureBox();
       this.pictureTileDisplay = new GR.Forms.FastPictureBox();
       this.tabCharset = new System.Windows.Forms.TabPage();
+      this.characterEditor = new C64Studio.Controls.CharacterEditor();
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.label7 = new System.Windows.Forms.Label();
       this.label8 = new System.Windows.Forms.Label();
@@ -169,7 +170,6 @@
       this.button4 = new System.Windows.Forms.Button();
       this.button5 = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.characterEditor = new C64Studio.Controls.CharacterEditor();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -242,9 +242,9 @@
       this.tabProject.Location = new System.Drawing.Point(4, 22);
       this.tabProject.Name = "tabProject";
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
-      this.tabProject.Size = new System.Drawing.Size(956, 475);
+      this.tabProject.Size = new System.Drawing.Size(1056, 475);
       this.tabProject.TabIndex = 1;
-      this.tabProject.Text = "Project";
+      this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
       // 
       // groupBox1
@@ -256,7 +256,7 @@
       this.groupBox1.Controls.Add(this.btnImportFromFile);
       this.groupBox1.Location = new System.Drawing.Point(458, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(490, 461);
+      this.groupBox1.Size = new System.Drawing.Size(590, 461);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -465,7 +465,7 @@
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(956, 475);
+      this.tabEditor.Size = new System.Drawing.Size(1056, 475);
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Map";
       this.tabEditor.UseVisualStyleBackColor = true;
@@ -887,8 +887,8 @@
       // 
       this.tabMapEditor.Controls.Add(this.tabEditor);
       this.tabMapEditor.Controls.Add(this.tabTiles);
-      this.tabMapEditor.Controls.Add(this.tabProject);
       this.tabMapEditor.Controls.Add(this.tabCharset);
+      this.tabMapEditor.Controls.Add(this.tabProject);
       this.tabMapEditor.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tabMapEditor.Location = new System.Drawing.Point(0, 24);
       this.tabMapEditor.Name = "tabMapEditor";
@@ -930,7 +930,7 @@
       this.tabTiles.Location = new System.Drawing.Point(4, 22);
       this.tabTiles.Name = "tabTiles";
       this.tabTiles.Padding = new System.Windows.Forms.Padding(3);
-      this.tabTiles.Size = new System.Drawing.Size(956, 475);
+      this.tabTiles.Size = new System.Drawing.Size(1056, 475);
       this.tabTiles.TabIndex = 2;
       this.tabTiles.Text = "Tiles";
       this.tabTiles.UseVisualStyleBackColor = true;
@@ -1303,6 +1303,16 @@
       this.tabCharset.Text = "Character Set";
       this.tabCharset.UseVisualStyleBackColor = true;
       // 
+      // characterEditor
+      // 
+      this.characterEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.characterEditor.Location = new System.Drawing.Point(0, 0);
+      this.characterEditor.Name = "characterEditor";
+      this.characterEditor.Size = new System.Drawing.Size(1056, 475);
+      this.characterEditor.TabIndex = 0;
+      this.characterEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.characterEditor_Modified);
+      this.characterEditor.CategoryModified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.characterEditor_CategoryModified);
+      // 
       // tabPage1
       // 
       this.tabPage1.Controls.Add(this.label7);
@@ -1638,14 +1648,6 @@
       this.button5.TabIndex = 2;
       this.button5.Text = "as assembly source";
       this.button5.UseVisualStyleBackColor = true;
-      // 
-      // characterEditor
-      // 
-      this.characterEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.characterEditor.Location = new System.Drawing.Point(0, 0);
-      this.characterEditor.Name = "characterEditor";
-      this.characterEditor.Size = new System.Drawing.Size(1056, 475);
-      this.characterEditor.TabIndex = 0;
       // 
       // MapEditor
       // 

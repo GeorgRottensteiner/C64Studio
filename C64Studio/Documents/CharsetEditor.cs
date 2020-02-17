@@ -1340,7 +1340,6 @@ namespace C64Studio
       string    resultText = Util.ToBASICHexData( charSet, startLine, lineOffset );
 
       editDataExport.Text = resultText;
-
     }
 
 

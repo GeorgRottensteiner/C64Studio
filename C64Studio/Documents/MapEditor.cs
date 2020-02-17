@@ -69,6 +69,18 @@ namespace C64Studio
 
 
 
+    public override DocumentInfo DocumentInfo
+    {
+      get => base.DocumentInfo;
+      set
+      {
+        base.DocumentInfo = value;
+        characterEditor.UndoManager = DocumentInfo.UndoManager;
+      }
+    }
+
+
+
     public MapEditor( StudioCore Core )
     {
       this.Core = Core;
@@ -78,6 +90,9 @@ namespace C64Studio
 
       m_IsSaveable = true;
       InitializeComponent();
+
+      characterEditor.UndoManager = DocumentInfo.UndoManager;
+      characterEditor.Core = Core;
 
       foreach ( ExportType exportType in Enum.GetValues( typeof( ExportType ) ) )
       {
@@ -163,6 +178,8 @@ namespace C64Studio
         RebuildCharImage( i );
         panelCharacters.Items.Add( i.ToString(), m_MapProject.Charset.Characters[i].Image );
       }
+
+      characterEditor.CharsetUpdated( m_MapProject.Charset );
       Modified = false;
     }
 
@@ -1098,6 +1115,7 @@ namespace C64Studio
       }
       RedrawMap();
       RedrawColorChooser();
+      characterEditor.CharsetUpdated( m_MapProject.Charset );
       Modified = false;
       DocumentInfo.DocumentFilename = File;
 
@@ -1272,6 +1290,7 @@ namespace C64Studio
         }
         RebuildCharImage( i );
       }
+      characterEditor.CharsetUpdated( m_MapProject.Charset );
       return true;
     }
 
@@ -1635,6 +1654,7 @@ namespace C64Studio
         {
           RebuildCharImage( i );
         }
+        characterEditor.CharsetUpdated( m_MapProject.Charset );
         RedrawMap();
         Modified = true;
         return true;
@@ -3401,6 +3421,25 @@ namespace C64Studio
 
       AddTile( m_MapProject.Tiles.Count, clonedTile );
     }
+
+
+
+    private void characterEditor_CategoryModified( object sender )
+    {
+
+    }
+
+
+
+    private void characterEditor_Modified( object sender )
+    {
+      RedrawMap();
+      RedrawColorChooser();
+      RedrawTile();
+      SetModified();
+    }
+
+
 
   }
 }

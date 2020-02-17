@@ -427,6 +427,7 @@ namespace C64Studio.Controls
       }
 
       DoNotUpdateFromControls = false;
+      RaiseModifiedEvent();
     }
 
 
