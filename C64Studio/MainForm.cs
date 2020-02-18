@@ -884,7 +884,6 @@ namespace C64Studio
       {
         AddTask( new Tasks.TaskCheckForUpdate() );
       }
-
     }
 
 
@@ -7274,6 +7273,13 @@ namespace C64Studio
       }
 
       return true;
+    }
+
+
+
+    private void checkForUpdateToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      AddTask( new Tasks.TaskCheckForUpdate() );
     }
 
 

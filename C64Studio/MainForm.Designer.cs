@@ -60,6 +60,7 @@
       this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileCloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.closeSolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparatorAboveMRU = new System.Windows.Forms.ToolStripSeparator();
       this.fileRecentlyOpenedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileRecentlyOpenedProjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -202,7 +203,8 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.closeSolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -481,6 +483,14 @@
       this.fileCloseToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
       this.fileCloseToolStripMenuItem.Text = "&Close";
       this.fileCloseToolStripMenuItem.Click += new System.EventHandler(this.fileCloseToolStripMenuItem_Click);
+      // 
+      // closeSolutionToolStripMenuItem
+      // 
+      this.closeSolutionToolStripMenuItem.Enabled = false;
+      this.closeSolutionToolStripMenuItem.Name = "closeSolutionToolStripMenuItem";
+      this.closeSolutionToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+      this.closeSolutionToolStripMenuItem.Text = "Close Solution";
+      this.closeSolutionToolStripMenuItem.Click += new System.EventHandler(this.solutionCloseToolStripMenuItem_Click);
       // 
       // toolStripSeparatorAboveMRU
       // 
@@ -1177,6 +1187,8 @@
       this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpToolStripMenuItem1,
             this.toolStripSeparator5,
+            this.checkForUpdateToolStripMenuItem,
+            this.toolStripSeparator15,
             this.licenseToolStripMenuItem,
             this.aboutToolStripMenuItem1});
       this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
@@ -1186,7 +1198,7 @@
       // helpToolStripMenuItem1
       // 
       this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
-      this.helpToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
+      this.helpToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
       this.helpToolStripMenuItem1.Tag = "HELP";
       this.helpToolStripMenuItem1.Text = "&Help";
       this.helpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
@@ -1194,19 +1206,19 @@
       // toolStripSeparator5
       // 
       this.toolStripSeparator5.Name = "toolStripSeparator5";
-      this.toolStripSeparator5.Size = new System.Drawing.Size(110, 6);
+      this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
       // 
       // licenseToolStripMenuItem
       // 
       this.licenseToolStripMenuItem.Name = "licenseToolStripMenuItem";
-      this.licenseToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+      this.licenseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.licenseToolStripMenuItem.Text = "License";
       this.licenseToolStripMenuItem.Click += new System.EventHandler(this.licenseToolStripMenuItem_Click_1);
       // 
       // aboutToolStripMenuItem1
       // 
       this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-      this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
+      this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
       this.aboutToolStripMenuItem1.Text = "&About";
       this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
       // 
@@ -1655,13 +1667,17 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
-      // closeSolutionToolStripMenuItem
+      // checkForUpdateToolStripMenuItem
       // 
-      this.closeSolutionToolStripMenuItem.Enabled = false;
-      this.closeSolutionToolStripMenuItem.Name = "closeSolutionToolStripMenuItem";
-      this.closeSolutionToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-      this.closeSolutionToolStripMenuItem.Text = "Close Solution";
-      this.closeSolutionToolStripMenuItem.Click += new System.EventHandler(this.solutionCloseToolStripMenuItem_Click);
+      this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
+      this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.checkForUpdateToolStripMenuItem.Text = "Check for update";
+      this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator15
+      // 
+      this.toolStripSeparator15.Name = "toolStripSeparator15";
+      this.toolStripSeparator15.Size = new System.Drawing.Size(177, 6);
       // 
       // MainForm
       // 
@@ -1873,6 +1889,8 @@
     private System.Windows.Forms.ToolStripMenuItem memoryViewToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem systemShutdownToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem closeSolutionToolStripMenuItem;
-  }
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
+    }
 }
 
