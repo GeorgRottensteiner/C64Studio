@@ -1,12 +1,13 @@
 ﻿C64Studio
 o !fill 3, [expression,,...several values]
+o charscreen layout change from Docster!
 o Expressions with sin/cos/tan?
 o *=$0801 "Basic"
           rts
   *=$080d "Basic End"
   *=$8000 "Map data"
   *=$f000 "Charset"
-  And have a compile/build summary in the output console:
+  And have a compile/build summary in the output console://
 
   $0801 - $080c Basic
   $080d - $0816 Basic end
