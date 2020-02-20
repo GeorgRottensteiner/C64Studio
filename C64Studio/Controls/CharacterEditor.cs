@@ -20,9 +20,12 @@ namespace C64Studio.Controls
       CHAR_COLOR
     }
 
-    public delegate void ModifiedHandler( object sender );
+    public delegate void ModifiedHandler();
+    public delegate void CharsetShiftedHandler( int[] ReplacementMap );
+
     public event ModifiedHandler        Modified;
     public event ModifiedHandler        CategoryModified;
+    public event CharsetShiftedHandler  CharactersShifted;
 
     private int                         m_CurrentChar = 0;
     private int                         m_CurrentColor = 1;
@@ -115,14 +118,21 @@ namespace C64Studio.Controls
 
     protected void RaiseModifiedEvent()
     {
-      Modified?.Invoke( this );
+      Modified?.Invoke();
     }
 
 
 
     protected void RaiseCategoryModifiedEvent()
     {
-      CategoryModified?.Invoke( this );
+      CategoryModified?.Invoke();
+    }
+
+
+
+    protected void RaiseCharactersShiftedEvent( int[] ShiftedCharacters )
+    {
+      CharactersShifted?.Invoke( ShiftedCharacters );
     }
 
 
@@ -2111,5 +2121,107 @@ namespace C64Studio.Controls
     {
       contextMenuExchangeColors.Show( btnExchangeColors, new Point( 0, btnExchangeColors.Height ) );
     }
+
+
+
+    private void btnMoveSelectionToTarget_Click( object sender, EventArgs e )
+    {
+      int targetIndex = GR.Convert.ToI32( editMoveTargetIndex.Text );
+
+      var selection = panelCharacters.SelectedIndices;
+      if ( selection.Count == 0 )
+      {
+        return;
+      }
+      if ( targetIndex + selection.Count > 256 )
+      {
+        MessageBox.Show( "Not enough chars for selection starting at the given index!", "Can't move selection" );
+        return;
+      }
+
+      int[]   charMapNewToOld = new int[256];
+      int[]   charMapOldToNew = new int[256];
+      for ( int i = 0; i < 256; ++i )
+      {
+        charMapNewToOld[i] = -1;
+        charMapOldToNew[i] = -1;
+      }
+
+      int     insertIndex = targetIndex;
+      foreach ( var entry in selection )
+      {
+        charMapNewToOld[insertIndex] = entry;
+        charMapOldToNew[entry] = insertIndex;
+        ++insertIndex;
+      }
+
+      // now fill all other entries
+      byte    insertCharIndex = 0;
+      int     charPos = 0;
+      while ( charPos < 256 )
+      {
+        // already inserted, skip
+        if ( charMapNewToOld[charPos] != -1 )
+        {
+          ++charPos;
+          continue;
+        }
+        while ( selection.Contains( insertCharIndex ) )
+        {
+          ++insertCharIndex;
+        }
+        charMapNewToOld[charPos] = insertCharIndex;
+        charMapOldToNew[insertCharIndex] = charPos;
+        ++charPos;
+        ++insertCharIndex;
+      }
+
+      // TODO - undo!
+      //UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+      //UndoManager.AddUndoTask( new Undo.UndoCharscreenCharsetChange( m_CharsetScreen, this ), false );
+
+      /*
+      // now shift all characters
+      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      {
+        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+        {
+          ushort    origChar = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth];
+          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( charMapOldToNew[origChar & 0xff] | ( origChar & 0xff00 ) );
+        }
+      }*/
+
+      // ..and charset
+      List<CharData>    origCharData = new List<CharData>();
+      List<GR.Forms.ImageListbox.ImageListItem>    origListItems = new List<GR.Forms.ImageListbox.ImageListItem>();
+      List<GR.Forms.ImageListbox.ImageListItem>    origListItems2 = new List<GR.Forms.ImageListbox.ImageListItem>();
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        origCharData.Add( m_Project.Characters[i] );
+        origListItems.Add( panelCharacters.Items[i] );
+        //origListItems2.Add( panelCharsetDetails.Items[i] );
+      }
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        m_Project.Characters[i] = origCharData[charMapNewToOld[i]];
+        panelCharacters.Items[i] = origListItems[charMapNewToOld[i]];
+        //panelCharsetDetails.Items[i] = origListItems2[charMapNewToOld[i]];
+      }
+      panelCharacters.Invalidate();
+      //panelCharsetDetails.Invalidate();
+
+      //RedrawFullScreen();
+      RedrawPlayground();
+      pictureEditor.Invalidate();
+      RedrawColorChooser();
+
+      RaiseCharactersShiftedEvent( charMapOldToNew );
+      RaiseModifiedEvent();
+    }
+
+
+
   }
 }

@@ -1344,14 +1344,14 @@ namespace C64Studio
 
 
 
-    private void characterEditor_Modified( object sender )
+    private void characterEditor_Modified()
     {
       SetModified();
     }
 
 
 
-    private void characterEditor_CategoryModified( object sender )
+    private void characterEditor_CategoryModified()
     {
       RefreshCategoryCounts();
     }

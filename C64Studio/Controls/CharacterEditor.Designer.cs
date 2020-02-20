@@ -30,9 +30,9 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.btnClearChars = new System.Windows.Forms.Button();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
@@ -73,11 +73,16 @@
       this.btnExchangeColors = new C64Studio.Controls.MenuButton();
       this.panelCharacters = new GR.Forms.ImageListbox();
       this.pictureEditor = new GR.Forms.FastPictureBox();
+      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.btnMoveSelectionToTarget = new System.Windows.Forms.Button();
+      this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
+      this.label10 = new System.Windows.Forms.Label();
       this.groupBox2.SuspendLayout();
       this.contextMenuExchangeColors.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).BeginInit();
+      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
       // groupBox2
@@ -87,16 +92,16 @@
       this.groupBox2.Controls.Add(this.label1);
       this.groupBox2.Location = new System.Drawing.Point(282, 301);
       this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(494, 56);
+      this.groupBox2.Size = new System.Drawing.Size(292, 56);
       this.groupBox2.TabIndex = 50;
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "with selected characters";
       // 
       // btnClearChars
       // 
-      this.btnClearChars.Location = new System.Drawing.Point(177, 19);
+      this.btnClearChars.Location = new System.Drawing.Point(177, 23);
       this.btnClearChars.Name = "btnClearChars";
-      this.btnClearChars.Size = new System.Drawing.Size(98, 26);
+      this.btnClearChars.Size = new System.Drawing.Size(98, 22);
       this.btnClearChars.TabIndex = 6;
       this.btnClearChars.Text = "Clear";
       this.btnClearChars.UseVisualStyleBackColor = true;
@@ -442,7 +447,7 @@
       // panelCharColors
       // 
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage1;
+      this.panelCharColors.DisplayPage = fastImage4;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(782, 271);
       this.panelCharColors.Name = "panelCharColors";
@@ -455,7 +460,7 @@
       // picturePlayground
       // 
       this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picturePlayground.DisplayPage = fastImage2;
+      this.picturePlayground.DisplayPage = fastImage5;
       this.picturePlayground.Image = null;
       this.picturePlayground.Location = new System.Drawing.Point(782, 3);
       this.picturePlayground.Name = "picturePlayground";
@@ -504,7 +509,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage3;
+      this.pictureEditor.DisplayPage = fastImage6;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 3);
       this.pictureEditor.Name = "pictureEditor";
@@ -516,10 +521,49 @@
       this.pictureEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseMove);
       this.pictureEditor.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.pictureEditor_PreviewKeyDown);
       // 
+      // groupBox1
+      // 
+      this.groupBox1.Controls.Add(this.btnMoveSelectionToTarget);
+      this.groupBox1.Controls.Add(this.editMoveTargetIndex);
+      this.groupBox1.Controls.Add(this.label10);
+      this.groupBox1.Location = new System.Drawing.Point(580, 301);
+      this.groupBox1.Name = "groupBox1";
+      this.groupBox1.Size = new System.Drawing.Size(249, 56);
+      this.groupBox1.TabIndex = 53;
+      this.groupBox1.TabStop = false;
+      this.groupBox1.Text = "Move Selection To";
+      // 
+      // btnMoveSelectionToTarget
+      // 
+      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 23);
+      this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
+      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 21);
+      this.btnMoveSelectionToTarget.TabIndex = 2;
+      this.btnMoveSelectionToTarget.Text = "Move";
+      this.btnMoveSelectionToTarget.UseVisualStyleBackColor = true;
+      this.btnMoveSelectionToTarget.Click += new System.EventHandler(this.btnMoveSelectionToTarget_Click);
+      // 
+      // editMoveTargetIndex
+      // 
+      this.editMoveTargetIndex.Location = new System.Drawing.Point(82, 23);
+      this.editMoveTargetIndex.Name = "editMoveTargetIndex";
+      this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
+      this.editMoveTargetIndex.TabIndex = 1;
+      // 
+      // label10
+      // 
+      this.label10.AutoSize = true;
+      this.label10.Location = new System.Drawing.Point(6, 26);
+      this.label10.Name = "label10";
+      this.label10.Size = new System.Drawing.Size(70, 13);
+      this.label10.TabIndex = 0;
+      this.label10.Text = "Target Index:";
+      // 
       // CharacterEditor
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.panelCharColors);
       this.Controls.Add(this.picturePlayground);
       this.Controls.Add(this.groupBox2);
@@ -561,6 +605,8 @@
       ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).EndInit();
+      this.groupBox1.ResumeLayout(false);
+      this.groupBox1.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -608,5 +654,9 @@
         private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithMultiColor2ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithBGColorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor2WithBGColorToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btnMoveSelectionToTarget;
+        private System.Windows.Forms.TextBox editMoveTargetIndex;
+        private System.Windows.Forms.Label label10;
     }
 }
