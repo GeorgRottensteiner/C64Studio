@@ -410,6 +410,11 @@ namespace C64Studio
 
     public MainForm( string[] args )
     {
+      var splash = new FormSplashScreen();
+      splash.Show();
+      splash.Invalidate();
+      splash.Refresh();
+
       /*
       Tiny64.Machine    machine = new Tiny64.Machine();
 
@@ -794,6 +799,8 @@ namespace C64Studio
           IdleQueue.Add( idleRequest );
         }
       }
+
+      IdleQueue.Add( new IdleRequest() { CloseSplashScreen = splash } );
     }
 
 
@@ -1040,6 +1047,10 @@ namespace C64Studio
         else if ( request.OpenLastSolution != null )
         {
           OpenFile( request.OpenLastSolution );
+        }
+        else if ( request.CloseSplashScreen != null )
+        {
+          request.CloseSplashScreen.Close();
         }
       }
     }

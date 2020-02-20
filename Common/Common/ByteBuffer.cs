@@ -407,6 +407,15 @@ namespace GR
           }
           else
           {
+            int     newSize = m_Data.Length * 2;
+            if ( newSize < m_UsedBytes + Array.Length )
+            {
+              newSize = (int)( m_UsedBytes + Array.Length );
+            }
+
+            Reserve( newSize );
+            Append( Array );
+            /*
             byte[] bTemp = new byte[m_UsedBytes + Array.Length];
 
             System.Array.Copy( m_Data, 0, bTemp, 0, m_UsedBytes );
@@ -414,7 +423,7 @@ namespace GR
             Array.CopyTo( bTemp, m_UsedBytes );
 
             m_Data = bTemp;
-            m_UsedBytes = (UInt32)m_Data.Length;
+            m_UsedBytes = (UInt32)m_Data.Length;*/
           }
         }
       }
