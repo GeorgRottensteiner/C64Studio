@@ -190,6 +190,8 @@ namespace C64Studio
     {
       GR.Memory.ByteBuffer bufferProject = new GR.Memory.ByteBuffer();
 
+      bufferProject.Reserve( 1000000 );
+
       GR.IO.FileChunk chunkProject = new GR.IO.FileChunk( Types.FileChunk.PROJECT );
 
       // version 2 -> has adjusted debug start address (to get rid of 2049)

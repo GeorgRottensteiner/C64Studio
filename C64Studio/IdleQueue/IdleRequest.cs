@@ -6,7 +6,8 @@ namespace C64Studio.IdleQueue
 {
   public class IdleRequest
   {
-    public RequestData   DebugRequest = null;
-    public string        OpenLastSolution = null;
+    public RequestData          DebugRequest = null;
+    public string               OpenLastSolution = null;
+    public FormSplashScreen     CloseSplashScreen = null;
   }
 }
