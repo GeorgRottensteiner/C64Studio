@@ -1,4 +1,4 @@
-5 REM Laser BASIC Manual Example Page 7
+5 REM L BASIC M E P 7
 10 INPUT "SKILL LEVEL (1,2 OR 3)";I
 20 ON I RESTORE EL,ML,HL
 30 READ A$
