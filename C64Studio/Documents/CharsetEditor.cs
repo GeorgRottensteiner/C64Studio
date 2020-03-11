@@ -27,7 +27,10 @@ namespace C64Studio
 
     public override DocumentInfo DocumentInfo
     {
-      get => base.DocumentInfo;
+      get
+      {
+        return base.DocumentInfo;
+      }
       set
       {
         base.DocumentInfo = value;
@@ -118,7 +121,8 @@ namespace C64Studio
 
     private void openToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      if ( OpenFile( "Open Charset Project", C64Studio.Types.Constants.FILEFILTER_CHARSET_PROJECT + C64Studio.Types.Constants.FILEFILTER_ALL, out string filename ) )
+      string filename;
+      if ( OpenFile( "Open Charset Project", C64Studio.Types.Constants.FILEFILTER_CHARSET_PROJECT + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         OpenProject( filename );
       }
