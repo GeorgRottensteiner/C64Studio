@@ -71,7 +71,11 @@ namespace C64Studio
 
     public override DocumentInfo DocumentInfo
     {
-      get => base.DocumentInfo;
+      get
+      {
+        return base.DocumentInfo;
+      }
+
       set
       {
         base.DocumentInfo = value;
