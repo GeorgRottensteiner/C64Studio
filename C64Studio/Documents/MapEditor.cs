@@ -75,7 +75,6 @@ namespace C64Studio
       {
         return base.DocumentInfo;
       }
-
       set
       {
         base.DocumentInfo = value;
