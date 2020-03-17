@@ -1,0 +1,911 @@
+*********
+
+Welcome to Project 64!
+
+The goal of Project 64 is to preserve Commodore 64 related documents
+in electronic text format that might otherwise cease to exist with the
+rapid advancement of computer technology and declining interest in 8-
+bit computers on the part of the general population. If you would like
+to help by converting C64 related hardcopy documents to electronic
+texts please contact the manager of Project 64, Cris Berneburg, at
+74171.2136@compuserve.com.
+
+Extensive efforts were made to preserve the contents of the original
+document.  However, certain portions, such as diagrams, program
+listings, and indexes may have been either altered or sacrificed due
+to the limitations of plain vanilla text.  Diagrams may have been
+eliminated where ASCII-art was not feasible.  Program listings may be
+missing display codes where substitutions were not possible.  Tables
+of contents and indexes may have been changed from page number
+references to section number references. Please accept our apologies
+for these limitations, alterations, and possible omissions.
+
+Document names are limited to the 8.3 file convention of DOS. The
+first characters of the file name are an abbreviation of the original
+document name. The version number of the etext follows next. After
+that a letter may appear to indicate the particular source of the
+document. Finally, the document is given a .TXT extension.
+
+The author(s) of the original document and members of Project 64 make
+no representations about the accuracy or suitability of this material
+for any purpose.  This etext is provided "as-is".  Please refer to the
+warantee of the original document, if any, that may included in this
+etext.  No other warantees, express or implied, are made to you as to
+the etext or any medium it may be on.  Neither the author(s) nor the
+members of Project 64 will assume liability for damages either from
+the direct or indirect use of this etext or from the distribution of
+or modification to this etext.
+
+*********
+
+The Project 64 etext of the Simon's Basic Quick Reference
+Card. Converted to etext by by "Frank" Jeno E. Kontros
+<jeno@kontr.uzhgorod.ua>, the Non Stop Cracker.
+
+SIMBQR10.TXT, September 1996, etext #77.
+
+*********
+
+SIMON'S BASIC QUICK REFERENCE CARD
+==================================
+
+KEY
+format:  KEY number,"code"
+purpose: to assign a command to function key
+example: KEY 8,"RUN"<RETURN>
+
+DISPLAY
+format:  DISPLAY
+purpose: to list the command assigned to the function keys
+example: DISPLAY<RETURN>
+
+AUTO
+format:  AUTO start-line-number,increment
+purpose: to automatically generate program line numbers
+example: AUTO 10,5<RETURN>
+
+RENUMBER
+format:  RENUMBER start-line-number,increment
+purpose: to automatically renumber all program lines
+example: RENUMBER 100,10<RETURN>
+
+PAUSE
+format:  PAUSE"message",number-of-seconds
+    or:  PAUSE number of seconds
+purpose: to stop program execution for a specific interval
+example: PAUSE 10
+
+CGOTO
+format:  CGOTO expression
+    or:  CGOTO operand-operator-variable
+purpose: to compute the line number to which the program should go
+example: CGOTO I*10+40
+
+RESET
+format:  RESET line number
+purpose: to move data pointers to a specific line of data
+example: RESET 100
+
+MERGE
+format:  MERGE"program name",devicenumber
+purpose: to load the program and incorporate it to current program
+example: MERGE"ADDITIONAL",8
+
+PAGE
+format:  PAGE n
+purpose: to divide a program listing into 'pages' of n lines
+example: PAGE 5<RETURN>
+
+OPTION
+format:  OPTION n
+purpose: to highlight in listing all SIMON'S commands
+example: OPTION 10 (to start)
+         OPTION 0  (to return to normal listing)
+
+DELAY
+format:  DELAY n
+purpose: to vary the rate of scrolling of a program listing
+example: DELAY 10<RETURN> (a large value of 'n' cause a slower scrolling)
+     or: DELAY 0<RETURN> (to return to normal listing)
+
+FIND
+format:  FINDcode
+    or:  FINDstring
+purpose: to search a BASIC program for a given code or string and display
+         the numbers of program lines where it appears
+example: FINDABCD<RETURN>
+
+TRACE
+format:  TRACE n
+purpose: to display the number of program line being executed
+example: TRACE 10<RETURN>(to turn on trace mode)
+         TRACE 0<RETURN>(to turn off trace mode)
+
+RETRACE
+format:  RETRACE
+purpose: to recall the last trace window on screen
+example: RETRACE<RETURN>
+
+DUMP
+format:  DUMP
+purpose: to display the values of all non-array variables
+example: DUMP<RETURN>
+
+COLD
+format:  COLD
+purpose: to reset C-64 to the start of SIMON'S BASIC
+example: COLD<RETURN>
+
+DISAPA
+format:  DISAPA:
+purpose: to indicate that the code in a program line is to be hidden
+example: 10 DISAPA: PRINT"program example"
+
+SECURE
+format:  SECURE 0
+purpose: to hide all program lines, beginning with the DISAPA command
+example: SECURE 0<RETURN>
+
+OLD
+format:  OLD
+purpose: to reverse the NEW command
+example: OLD<RETURN>
+
+
+INSERT
+format:  INSERT("substring","mainstring",p)
+purpose: to insert one character string to another
+         p  indicate the position in mainstring AFTER which the substring
+         is inserted.  The INSERT command may also be used to compare two
+         character  string  using 'true/false' logic (-1 if true and 0 if
+         false).
+example: A$=INSERT("BYE","GOOD HE SAID",5)
+     or: A=(INSERT("BYE","GOOD HE SAID",5)=GOOD BYE)
+
+INST
+format:  INST("substring","mainstring",p)
+purpose: to overwrite a string beginning at a specific position
+         (specified by p). See also INSERT command
+example: A$=INST("BETTER",B$,7)
+
+PLACE
+format:  PLACE("substring","mainstring")
+purpose: to determine the position of a substring within a mainstring. If
+         the group specified by sub string is found,  the position of the
+         first  character  of  the  group is returned.  If a match is not
+         found a value of zero is returned.
+example: B=PLACE(A$,B$)
+
+DUP
+format:  DUP("string",n)
+purpose: to duplicate a character string n times
+example: A$=DUP("HELLO",3)
+
+CENTER
+format:  CENTER"character string"
+purpose: to center a character string on a screen line
+example: CENTER"COMMODORE 64"<RETURN>
+
+AT
+format:  PRINT AT(c,r)"character string"
+purpose: to print a string at a specified screen location.
+         The  parameters c and r define the column and row coordinates of
+         the location on the screen where the string begin.
+example: PRINT AT(13,8)A$
+
+LIN
+format:  LIN
+purpose: to determine the cursor position in a line
+example: A=LIN
+
+USE
+format:  USE"####.###",A$
+    or:  USE"##text.###text",A$
+purpose: to format numeric data.
+         The  amount  of  hash signs (#) either side of the decimal point
+         instruct the C-64 to display the corresponding number of figures
+         from the STRING relative to this position.
+         USE command do not force carriage return.
+example: USE"$###.##C",D$:PRINT
+
+FETCH
+format:  FETCH"control character",I,designated-string
+purpose: to limit the type and number of character for user input.
+         The  control  character  within  quotation  marks determines the
+         types of characters allowed.
+             CONTROL CHARACTER          VALID CHARACTERS
+                clr/home            un-shifted alphabetic character
+                crsr down                numeric character only
+                crsr right       alphanumeric and shifted character
+         Parameter  I is the number which specifies the maximum amount of
+         characters that the user may enter.
+example: FETCH"<CLR/HOME>",9,A$
+
+INKEY
+format:  INKEY
+purpose: to test for a function key input
+example: A=INKEY
+
+ON KEY
+format:  ON KEY"character(s)":GOTO linenumber
+purpose: to branch to a specific point in a program.
+         The ON KEY command cause the C-64 to scan the keyboard for input
+         of one of character defined in the command.  When ON KEY command
+         is executed, the DISABLE command must be used.
+example: ON KEY"ASDFGHJK":GOTO 20
+
+DISABLE
+format:  DISABLE
+purpose: to terminate the ON KEY command
+example: 50 DISABLE
+
+RESUME
+format:  RESUME
+purpose: to reinstate the previous ON KEY command
+example: 20 RESUME
+
+
+MOD
+format:  MOD(x,y)
+purpose: to return the remainder when one integer is divided by another
+example: G=MOD(15,4)
+
+DIV
+format:  DIV(x,y)
+purpose: to return the largest integer  which,  when multiplied by  y  is
+         equal to or less than x
+example: A=DIV(10,3)
+
+FRAC
+format:  FRAC(n)
+purpose: to return the fractional part of a number
+example: A=FRAC(12.456)
+
+%
+format:  %binary-number
+purpose: to convert from 8-bit binary to decimal
+example: T=%11000111
+
+$
+format:  $hexadecimal-number
+purpose: to convert from 16-bit hexadecimal into decimal
+example:K=$F3EA
+
+EXOR
+format:  EXOR(n,n1)
+purpose: to perform an exclusive 'or' between two number
+example: L=EXOR(87,45)
+
+DISK
+format:  DISK"operation"
+purpose: to  open  a  diskette channel and close it then the operation is
+         executed
+example: DISK"I"<RETURN>
+
+DIR
+format:  DIR"$
+    or:  DIR"$:pattern
+purpose: to list some or all of diskette directory
+example: DIR"$<RETURN>
+
+PLOT TYPES:
+HIRES mode:
+    0      clear the dot
+    1      plot a dot on the screen
+    2      inverse a dot
+
+MULTI-COLOR mode:
+    0      clear the dot
+    1      plot a dot in colour 1
+    2      plot a dot in colour 2
+    3      plot a dot in colour 3
+    4      inverses the dot colour
+
+Size of HIRES screen is 320 x 200 pixels
+Size of MULTI-COLOR screen is 160 x 200 pixels
+
+COLOUR
+format:  COLOUR bo,sc
+purpose: to set up the screen background and border colours.
+         The  parameter  sc  refers  to  the screen background colour and
+         the parameter bo to the border colour.
+example: 10 COLOUR 1,6
+
+HIRES
+format:  HIRES pc,sb
+purpose: to  initialize  the  high-resolution  graphics mode and select a
+         plotting colour and screen background colour
+example: 30 HIRES 0,1
+
+REC
+format:  REC x,y,A,B,plot-type
+purpose: to draw a rectangle.
+         The  x  and  y  specify  the  coordinates  of top left corner of
+         the  rectangle.  The  parameter A indicate the distance from the
+         top  left  to  the  top  right corner and B from the top left to
+         the bottom left corner.
+example: 40 REC 0,0,40,20,1
+
+MULTI
+format:  MULTI c1,c2,c3
+purpose: to  initialize  the  multicolor  graphics  mode and select three
+         plotting colours.
+         The MULTI command must follow the HIRES command.
+example: 50 MULTI 0,2,6
+
+CSET 2
+format:  CSET 2
+purpose: to view the graphics screen without clear
+example: CSET 2
+
+
+NRM
+format:  NRM
+purpose: to clear a high-resolution screen and return to a low-resolution
+         screen
+example: 60 NRM
+
+LOW COL
+format:  LOW COL c1,c2,c3
+purpose: to change plotting colours
+example: 70 LOW COL 3,4,5
+
+HI COL
+format:  HI COL
+purpose: to revert to the originally plotting colour
+example: 70 HI COL
+
+PLOT
+format:  PLOT x,y,plot type
+purpose: to plot one dot
+example: 80 PLOT 34,56,1
+
+TEST
+format:  TEST(x,y)
+purpose: to determine if something has been drawn at a screen location
+example: 90 IF TEST(R,I)=1 THEN GOTO 10
+
+LINE
+format:  LINE x,y,x1,y1,plot-type
+purpose: to plot a line.
+         The  parameters  x  and  y  are  screen coordinates of the start
+         of  the  line,  the  x1 and y1 are the coordinates of the end of
+         the line.
+example: 100 LINE 0,0,320,200,1
+
+CIRCLE
+format:  CIRCLE x,y,xr,yr,plot-type
+purpose: to plot a circular shape.
+         The  parameters  x  and  y specify the screen coordinates of the
+         center  of  the  circle.  The  parameters xr and yr indicate the
+         horizontal and vertical radius of the shape respectively.
+example: 110 CIRCLE 20,20,10,10,1
+
+ARC
+format:  ARC x,y,sa,ea,i,xr,yr,plot-type
+purpose: to draw an arc of a circular shape.
+         The  x  and  y  are  the  screen  coordinates  of  the center of
+         shape  from  which  the  arc is draw, sa and ea define the start
+         and  end  angles  of  the  arc,  the  parameter  i specifies the
+         plotting  increment,  i.e.  the interval in degrees between each
+         point.  To  obtain  a  solid  arc,  this  value  is 1, xr and yr
+         indicate the horizontal and vertical radius of circular shape.
+example: 120 ARC 160,100,X,40*1.4,1,4,40,1
+
+ANGL
+format:  ANGL x,y,angle,xr,yr,plot-type
+purpose: to draw  the radius of a circle.
+         The  parameters  x  and  y  are  the  screen  coordinates of the
+         center  of  the  circle.  'Angle'  is  the  angle in degrees, at
+         which the radius is draw relative to the perpendicular.
+         Also see CIRCLE command.
+example: 130 ANGLE 20,30,2,A,D,1
+
+PAINT
+format:  PAINT x,y,plot-type  (0,1,2,3 only)
+purpose: to fill an enclosed area with colour.
+         The area to be painted MUST be completely enclosed.
+         The  area  to  be  painted is specified by x and y coordinate of
+         ANY point within the boundaries.
+example: 140 PAINT 130,70,1
+
+BLOCK
+format:  BLOCK x,y,x1,y1,plot-type
+purpose: to draw a fully shaded block of colour.
+         The parameters  x and y  specify the top left-hand corner of the
+         block of colour. Parameters x1 and y1 are the coordinates of the
+         bottom right-hand corner of the block.
+example: 150 BLOCK 10,50,50,90,1
+
+DRAW
+format:  BLOCK "graphic string",x,y,plot-type
+purpose: to draw complex objects.
+         The parameters  x and y  specify the starting point of draw. The
+         graphic string specifies to which direction draw:
+              CODE         FUNCTION          PLOT
+               0            right             no
+               1            up                no
+               2            down              no
+               3            left              no
+               4            down              no
+               5            right             yes
+               6            up                yes
+               7            down              yes
+               8            left              yes
+               9            stop draw
+         Graphic string stops executing by end or 9.
+         The scale and rotation specified by ROT command.
+example: DRAW "5678",160,100,1  or  DRAW A$,160,100,1
+
+ROT
+format:  ROT f,n
+purpose: to set rotatation angle and scale factor for DRAW command.
+         The parameter f specify the rotation angle (default 0):
+               f           Angle
+               0              0
+               1             45
+               2             90
+               3            135
+               4            180
+               5            225
+               6            270
+               7            315
+         The parameter n specifies the scaling factor (default 1).
+example: ROT 0,20
+
+CHAR
+format:  CHAR x,y,c,plot-type,s
+purpose: to print a single character on a graphics screen.
+         The parameters x and y specify the coordinates of character. The
+         parameter s specifies the character in the range 1 thru 8.
+example: CHAR 160,100,2,1,3
+
+TEXT
+format:  TEXT x,y,"<CTRLa>character string",plot-type,s,i
+    or:  TEXT x,y,"<CTRLb>character string",plot-type,s,i
+purpose: to print a character string on a graphics screen.
+         The  parameters  x  and  y  specify the coordinates of the first
+         letter  of  the  string.  The  control  character  preceding the
+         string  indicates  whether  the text is to be displayed in upper
+         (a)  or  lower  (b)  case letters. The parameter s specifies the
+         height  of  each  character in the range 1 thru 8. The parameter
+         i defines the number of pixels between each character.
+example: TEXT 60,20,"<CTRLa>TEXT ON HIRES",1,2,10
+
+GRAPHICS
+format:  GRAPHICS
+purpose: to return the base address of VIC (53248 dec or $D000 hex)
+example: G=GRAPHICS  or  POKE GRAPHICS+32,4
+
+BCKGNDS
+format:  BCKGNDS sc,c1,c2,c3
+purpose: to change the background colour of a character.
+         The  parameter  sc  defines  the  colour of the screen. The next
+         three  parameters  specify  the  background  colour of a shifted
+         character,  a  reverse-field  unshifted  character and a reverse
+         field shifted character respectively.
+example: BCKGNDS 1,3,5,6
+
+FLASH
+format:  FLASH col,speed
+purpose: to flash a defined by 'col' a screen colour
+example: FLASH 2,10
+
+OFF
+format:  OFF
+purpose: to turn the FLASH command off
+example: OFF<RETURN>
+
+BFLASH
+format:  BFLASH speed,c1,c2
+    or:  BFLASH 0
+purpose: to flash or turn off flashing the screen border.
+         The  parameters  c1  and  c2 are the numbers of the colours with
+         which the border will be flashed.
+example: BFLASH 25,2,110
+
+FCHR
+format:  FCHR r,c,w,d,code
+purpose: to fill an area of the screen with a character.
+         The parameters  r  and  c  are the row and column coordinates of
+         the start. The parameters  w  and  d  define the width and depth
+         of the screen area. 'code' is the 'poke' code of the character.
+example: FCHR 0,0,10,30,1
+
+FCOL
+format:  FCOL r,c,w,d,colour
+purpose: to change a character colour.
+         See also previous section.
+example: FCOL 12,15,5,5,2
+
+FILL
+format:  FILL r,c,w,d,code,colour
+purpose: to fill a defined area of the screen with a specific character
+         in a particular colour.
+example: FILL 12,15,5,5,2,4
+
+MOVE
+format:  MOVE r,c,w,d,dr,dc
+purpose: to duplicate a section of the screen.
+         The   first   four   parameters   define   the  screen  area  to
+         reproduce  (see  the  FCHR  command).  The  last  two parameters
+         specify  the  row  and column coordinates of the top left corner
+         of the area into which the information will be reproduced.
+example: MOVE 0,0,17,5,15,20
+
+INV
+format:  INV r,c,w,d
+purpose: to display in reverse field a specified screen area.
+example: INV 1,2,19,4
+
+'SCROLLING'
+format:  direction W,sr,sc,ec,er
+    or:  direction B,sr,sc,ec,er
+purpose: to scroll an area of the screen.
+         The  first  parameter  in  a  scrolling  command  specifies  the
+         direction  of  scrolling  -  LEFT, RIGHT, UP or DOWN. The second
+         command  parameter  (W  or  B)  indicate  scrolling  with  'wrap
+         round' or 'blanking' respectively.
+         The   parameters:   sr   and   sc  define  the  row  and  column
+         coordinates  of  the  start  of  the  area  to scroll. ec and er
+         specify height and width of area.
+
+SCRSV
+format:  SCRSV 2,8,2,"name,S,W"
+    or:  SCRSV 1,1,1,"name"
+purpose: to store data from a low-resolution screen.
+         The format of SCRSV is the same as SAVE command.
+example: SCRVS 2,8,2,"TRICOLOR,S,W"
+
+SCRLD
+format:  SCRLD 2,8,2,"name"
+    or:  SCRLD 1,1,0,"name"
+purpose: to recall stored screen data
+example: SCRLD 2,8,2,"TRICOLOR"<RETURN>
+
+COPY
+format:  COPY
+purpose: to produce a hard copy of a graphics screen
+example: COPY<RETURN>
+
+HRDCPY
+format:  HRDCPY
+purpose to print a hard copy of a low-resolution screen.
+example: HRDCPY<RETURN>
+
+DESIGN
+format:  DESIGN c,ad
+    or:  DESIGN c,ad+gc
+purpose: to allocate memory space for a MOB.
+         c=0  specifies  a  high-resolution  MOB,  c=1  specifies a multi
+         colour MOB. The second parameter ad defines the start address of
+         the first byte of MOB data. This number MUST be a multiple of 64
+         within the range 2048 to 16319  and can be entered in decimal or
+         hexadecimal  form.  If  a MOB is to be used on a high-resolution
+         screen,  the graphics constant value of  49152 decimal or  $C000
+         (gc)  must  be added.  Each 64-byte area is called a Block.  The
+         block numbers, available for MOB are: 32 -  63  or  128  -  255.
+         The gc value MUST NOT be added to start address when calculating
+         a block number.
+example: 10 DESIGN 1,$0800  (note: block number is 32)
+
+@
+format:  @........................
+    or:  @............
+purpose: to set up the design grid for a MOD.
+         The  grid  is  24  dot  wide  for hires MOBs and 12 dot wide for
+         multicolour MOBs, the grid is 21 lines deep.
+         The  colour  for each point of the MOB are assigned by using one
+         of the characters:
+         hires MOBs    B    the colour assigned in the MOB SET
+                            command.
+         multicolour
+                MOBs   B    colour 1 in the CMOB command
+                       C    the colour assigned in the MOB SET
+                            command
+                       D    colour 2 in the CMOB command.
+example of one of 21 lines:100 @.......BBBB....BBBB.....
+
+CMOB
+format:  CMOB c1,c2
+purpose: to set up colours for a multicolour MOB
+example: 600 CMOB 0,5
+
+MOB SET
+format:  MOB SET mn,blk,col,pr,res
+purpose: to set up a MOB.
+         The  parameter  mn  specifies  the  number  of  the MOB. The blk
+         defines  the  memory  block  from  which  the  MOB  data will be
+         taken.  The  next  parameter,  col, defines the main MOB colour.
+         The  pr  specifies  the  priority of the MOB over screen data. A
+         '0'  give  the  MOB  priority,  a  '1' give screen priority. The
+         res  indicates  whether  the  MOB was created in multicolour (1)
+         or hires mode (0).
+example: 700 MOB SET 0,32,0,1,0
+
+MMOB
+format:  MMOB mn,x1,y1,x2,y2,expansion,speed
+purpose: to display and/or move a MOB
+         The  parameters x1 and y1 are the coordinates of the point where
+         the MOB will be displayed before it is moved.
+         x2 and y2 indicate the MOB destination point.
+             expansion              result
+                 0          The MOB is displayed in normal size
+                 1          The MOB is expanded in the x axis.
+                 2          The MOB is expanded in the y axis.
+                 3          The MOB is expanded in both axes.
+         The speed is the number in the range 1 thru 255. 1 is the
+         fastest speed.
+example: 800 MMOB 1,0,0,200,200,2,20
+
+RLOCMOB
+format:  RLOCMOB mn,x,y,expantion,speed
+purpose: to move the MOB between two screen location.
+         The parameters x and y are the coordinates of the point to which
+         the MOB will be moved.
+example: 830 RLOCMOB 1,X,200,2,10
+
+DETECT
+format:  DETECT n
+purpose: to initialize MOB collision detection
+         n=0  cause  to detect collision between one MOB and another.  If
+         n=1   collision  detection  between  MOBs  and  screen  data  is
+         initialized. The DETECT command MUST always be used TWICE.
+example: 825 DETECT 0
+
+CHECK
+format:  IF CHECK(mn1,mn2)=0 THEN action
+    or:  IF CHECK(0)=0 THEN action
+purpose: to check for MOB collision.
+         A  parameter  of  zero within brackets cause to check collisions
+         between any sprite and screen data.
+example: 859 DETECT 0: IF CHECK(0,1)=0  THEN 865
+
+MOB OFF
+format:  MOB OFF mn
+purpose: to clear a MOB from the screen
+example: MOB OFF 1
+
+MEM
+format:  MEM
+purpose: to move the character ROM to RAM
+example: 10 MEM
+
+DESIGN
+format:  DESIGN 2,$E000+ch*8
+purpose: to specify the character which a user-defined graphics character
+         is  to  replace.  The  parameter  ch  is  the  poke  code of the
+         character to be changed.
+example: 20 DESIGN 2,$E000+26*8
+
+@
+format:  @........
+purpose: to set up a grid for the design of a user-defined character.
+         The  grid  is 8 dots wide and 8 lines deep. The new character is
+         designed by placing a letter 'B' over the appropriate dot on the
+         grid.
+
+CSET 0/1
+format:  CSET 0  or  CSET 1
+purpose: to switch between character sets
+example: CSET 0
+
+IF...THEN...ELSE
+format:  IF condition THEN true:ELSE:false
+purpose: to  test  for  a  condition and branch to one instruction if the
+         condition  is  true  or  to another instruction if the condition
+         is false.
+example: 10 IF A$=N THEN 70:ELSE:GOTO 30
+
+REPEAT...UNTIL
+format:  REPEAT loop UNTIL condition is met
+purpose: to perform a program loop until a specified condition is met
+example: 10 REPEAT:PRINT CHR$(A):A=A+1:UNTIL A>70
+
+RCOMP
+format:  RCOMP:true:ELSE:false
+purpose: to re-execute the last IF...THEN...ELSE condition test
+example: RCOMP:PRINT A$:ELSE:A=A+1
+
+LOOP...EXIT IF...END LOOP
+format:  LOOP program loop EXIT IF condition true END LOOP
+purpose: to perform a continuos loop until a specified condition is met
+example: 20 LOOP:A=A+1
+         ....
+         ....
+         80 EXIT IF ASC(A$)>70
+         ....
+         ....
+         200 END LOOP
+
+PROC
+format:  PROC name
+purpose: to label a program routine.
+         Note(*). PROC and the procedure name MUST NOT be followed by any
+         other code on the same program line.
+example: 100 PROC INPUT NAME
+
+END PROC
+format:  END PROC
+purpose: to indicate the end of procedure.
+         This command acts in the same way as RETURN in standard BASIC.
+example: 130 END PROC:A=23
+
+CALL
+format:  CALL procedure name
+purpose: to transfer program execution to a specific line of code.
+         The CALL command acts in the same way as GOTO in standard BASIC.
+         See also the note '*'.
+example: CALL INPUT NAME
+
+EXEC
+format:  EXEC procedure name
+purpose: to call a program routine  and return to the line  following the
+         call when the procedure has been completed.
+         EXEC perform the same function as GOSUB in standard BASIC.
+         See also the note '*'.
+example: EXEC SORT
+
+LOCAL
+format:  LOCAL variable1,variable2,......
+purpose: to  clear  the  value  of  previously  defined  variables  on  a
+         temporary  basis  and  then  use  these variables locally within
+         a specific program routine.
+         WARNING: The variables defined with LOCAL command MUST have
+                  previously been declared to avoid program 'hanging'.
+example: LOCAL A$,S,G%
+
+GLOBAL
+format:  GLOBAL
+purpose: to restore original values to local variables
+example: GLOBAL
+
+ON ERROR
+format:  ON ERROR:GOTO line number
+purpose: to trap program error.
+         When   an  error  is  found,  the  program  jumps  to  the  line
+         specified  with  the  GOTO.  The  error  number  is  held in the
+         variable  ERRN.  The  line  in  which  the  error has occured is
+         held  in  the variable ERRLN. After testing for a specific error
+         the OUT command always MUST be used.
+                 ERROR NUMBER      ERROR
+                       1         To many files
+                       2         File open
+                       3         File not open
+                       4         File not found
+                       5         Device not present
+                      10         Next without for
+                      11         Syntax
+                      12         Return without gosub
+                      13         Out of data
+                      14         Illegal quantity
+                      15         Overflow
+                      16         Out of memory
+                      17         Undefined statement
+                      18         Bad subscript
+                      19         Re-dimensioned array
+                      20         Division by zero
+                      21         Illegal direct
+                      22         Type mismatch
+                      23         String too long
+example: 100 ON ERROR:GOTO 100
+
+OUT
+format:  OUT
+purpose: to disable the last ON ERROR command
+example: OUT<RETURN>
+
+NO ERROR
+format:  NO ERROR
+purpose: to re-enable the normal error-handling routines
+example: 100 NO ERROR
+
+PENX
+format:  variable=PENX
+purpose: to return the x coordinate of the light pen (on the range 0-320)
+         The PENX value MUST always be read BEFORE that of PENY.
+
+PENY
+format:  variable=PENY
+purpose: to return the y coordinate of the light pen (on the range 0-200)
+example: 100 X=PENX:Y=PENY
+
+POT
+format:  variable=POT(n)
+purpose: to return the resistance of a paddle.
+         The number returned is in range 0 thru 255. n define the paddle.
+example: 100 PA=POT(0)
+
+JOY
+format:  variable=JOY
+purpose: to return the value associated with the position of a joystick.
+         If the 'fire button' is pressed, the returned value is 128.
+                        1
+                      8 ^ 2
+                        |
+                    7 <-+-> 3
+                        |
+                      6 | 4
+                        5
+example: IF JOY=3 THEN 100
+
+VOL
+format:  VOL n
+purpose: to select music volume.
+         Volume levels range from 0 thru 15.  0 turn the sound off.
+example: 100 VOL 10
+
+WAVE
+format:  WAVE voice number,binary-number
+purpose: to set the music voice type
+         bit 0 - the gate bit
+         bit 1 - synchronization
+         bit 2 - ring modulation
+         bit 3 - the test bit
+         bit 4 - triangular waveform
+         bit 5 - sawtooth waveform
+         bit 6 - pulse/square waveform
+         bit 7 - noise
+         Refer to the Commodore 64 Programmer's Reference Guide
+example: 100 WAVE 1,00010000
+
+ENVELOPE
+format:  ENVELOPE vn,a,d,s,r
+purpose: to define the 'shape' of a sound
+         The  parameter  vn  is  the  number of the voice. The parameters
+         a,  d  and  r specify, respectively, the duration of the ATTACK,
+         DECAY  and  RELEASE  cycles.  The  duration  of these cycles are
+         measured  in  units  of  one  thousandth  of  a second. Refer to
+         Commodore 64 Reference Guide for more details.
+
+MUSIC
+format:  MUSIC n,"music string"
+    or:  MUSIC n,variable+variable+.....
+purpose: to write music or create sound effects.
+         The  parameter  n  specifies  the  duration  of  one music beat.
+         This  number  must  be  in  range  1  thru 255. 1 is the longest
+         duration.  The  voice  through  which  the  note is specified by
+         pressing  SHIFT  key,  CLR/HOME  key  and relevant voice number.
+         Only ONE voice can be used in an string.
+         Music  note  are  in  the range A thru G. C is the first note in
+         each  octave.  A  music  sharp  is  defined  by holding down the
+         SHIFT  key  and  pressing  the  letter  of  relevant note. Music
+         rest  are  indicated  by  letter Z. The octave in which the note
+         will  be  played  is  defined  AFTER the note by a number from 0
+         thru  8.  The  duration  of  each note is specified by a control
+         character following the octave number.
+              CONTROL CHARACTER       NOTE DURATION
+                F1      One sixteen of a beat
+                F3      One eighth of a beat
+                F5      One quarter of a beat
+                F7      Half a beat
+                F2      One beat
+                F4      Two beats
+                F6      Four beats
+                F8      Eight beats
+         The  last  letters  in  music  string MUST be the SHIFT CLR/HOME
+         and the letter G.
+example: 30 A$="<SHIFT CLR/HOME>1Z<F1>C5<F1>E5<SHIFT CLR/HOME>G"
+         40 MUSIC 8,A$
+
+PLAY
+format:  PLAY n
+purpose: to play composed music.
+         The  parameter  n  indicate  how  the  music  will  be played in
+         relation  the rest of the program.  A '0' in this position turns
+         music off. A '1' plays  the music and waits for it to end before
+         proceeding with the program. A '2' plays the music and continues
+         executing the program.
+         NOTE:  PLAY 2  cannot be used in conduction with high-resolution
+         or multi-colour graphics.
+
+SOUND
+format:  SOUND
+purpose: to return the base address of SID (54272 dec or $D400 hex)
+example: S=SOUND  or  POKE SOUND+24,0
+
+*********
+
+End of the Project 64 etext of the Simon's Basic Quick Reference Card.
+
+*********
