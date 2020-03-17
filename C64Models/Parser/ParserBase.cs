@@ -100,9 +100,11 @@ namespace C64Studio.Parser
 
     public GR.Collections.MultiMap<int, ParseMessage> Messages = new GR.Collections.MultiMap<int, ParseMessage>();
 
-    protected int m_ErrorMessages = 0;
-    protected int m_WarningMessages = 0;
-    protected int m_Messages = 0;
+    protected int               m_ErrorMessages = 0;
+    protected int               m_WarningMessages = 0;
+    protected int               m_Messages = 0;
+
+    protected CompileConfig     m_CompileConfig = null;
 
     protected Types.CompileTargetType m_CompileTarget = Types.CompileTargetType.PRG;
 
@@ -189,6 +191,11 @@ namespace C64Studio.Parser
 
     public ParseMessage AddWarning( int Line, Types.ErrorCode Code, string Text, int CharIndex, int Length )
     {
+      if ( m_CompileConfig.WarningsToTreatAsError.ContainsValue( Code ) )
+      {
+        return AddError( Line, Code, Text, CharIndex, Length );
+      }
+
       ParseMessage warningMessage = new ParseMessage( ParseMessage.LineType.WARNING, Code, Text, CharIndex, Length );
       Messages.Add( Line, warningMessage );
       ++m_WarningMessages;
@@ -199,6 +206,11 @@ namespace C64Studio.Parser
 
     public ParseMessage AddSevereWarning( int Line, Types.ErrorCode Code, string Text )
     {
+      if ( m_CompileConfig.WarningsToTreatAsError.ContainsValue( Code ) )
+      {
+        return AddError( Line, Code, Text );
+      }
+
       ParseMessage warningMessage = new ParseMessage( ParseMessage.LineType.SEVERE_WARNING, Code, Text );
       Messages.Add( Line, warningMessage );
       ++m_WarningMessages;
@@ -301,6 +313,8 @@ namespace C64Studio.Parser
         // safety fallback to avoid crashes
         Config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
       }
+
+      m_CompileConfig = Config;
       return Parse( text, Configuration, Config, AdditionalPredefines );
     }
 

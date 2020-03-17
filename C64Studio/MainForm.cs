@@ -5176,6 +5176,7 @@ namespace C64Studio
       config.CreatePreProcesseFile      = CreatePreProcessedFile;
       config.LibraryFiles               = StudioCore.Settings.ASMLibraryPaths;
       config.InputFile                  = Document.FullPath;
+      config.WarningsToTreatAsError     = StudioCore.Settings.TreatWarningsAsErrors;
 
       string sourceCode = "";
 

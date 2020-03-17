@@ -47,6 +47,7 @@ namespace C64Studio
       }
 
       RefillIgnoredMessageList();
+      RefillWarningsAsErrorList();
 
       comboToolType.Items.Add( "<Choose one>" );
       comboToolType.Items.Add( "Assembler" );
@@ -191,6 +192,27 @@ namespace C64Studio
         }
       }
       listIgnoredWarnings.EndUpdate();
+    }
+
+
+
+    private void RefillWarningsAsErrorList()
+    {
+      listWarningsAsErrors.Items.Clear();
+      listWarningsAsErrors.BeginUpdate();
+      foreach ( Types.ErrorCode code in Enum.GetValues( typeof( Types.ErrorCode ) ) )
+      {
+        if ( ( code > Types.ErrorCode.WARNING_START )
+        &&   ( code < Types.ErrorCode.WARNING_LAST_PLUS_ONE ) )
+        {
+          int itemIndex = listWarningsAsErrors.Items.Add( new GR.Generic.Tupel<string, Types.ErrorCode>( GR.EnumHelper.GetDescription( code ), code ) );
+          if ( Core.Settings.TreatWarningsAsErrors.ContainsValue( code ) )
+          {
+            listWarningsAsErrors.SetItemChecked( itemIndex, true );
+          }
+        }
+      }
+      listWarningsAsErrors.EndUpdate();
     }
 
 
@@ -1674,6 +1696,35 @@ namespace C64Studio
 
 
 
+    private void ImportWarningsAsErrors( GR.Strings.XMLElement XMLRoot )
+    {
+      GR.Strings.XMLElement     xmlSettingRoot = XMLRoot.FindByTypeRecursive( "WarningsAsErrors" );
+      if ( xmlSettingRoot == null )
+      {
+        return;
+      }
+
+      Core.Settings.TreatWarningsAsErrors.Clear();
+      foreach ( var xmlKey in xmlSettingRoot.ChildElements )
+      {
+        if ( xmlKey.Type == "Message" )
+        {
+          try
+          {
+            Types.ErrorCode   message = (Types.ErrorCode)GR.Convert.ToI32( xmlKey.Attribute( "Index" ) );
+            Core.Settings.TreatWarningsAsErrors.Add( message );
+          }
+          catch ( Exception ex )
+          {
+            Core.AddToOutput( "Could not parse element: " + ex.Message + System.Environment.NewLine );
+          }
+        }
+      }
+      RefillWarningsAsErrorList();
+    }
+
+
+
     private void ImportEditorColors( GR.Strings.XMLElement XMLRoot )
     {
       GR.Strings.XMLElement     xmlSettingRoot = XMLRoot.FindByTypeRecursive( "EditorColors" );
@@ -1905,6 +1956,22 @@ namespace C64Studio
 
 
 
+    private void ExportWarningsAsErrors( GR.Strings.XMLElement XMLRoot )
+    {
+      GR.Strings.XMLElement     xmlSettingRoot = new GR.Strings.XMLElement( "WarningsAsErrors" );
+      XMLRoot.AddChild( xmlSettingRoot );
+
+      foreach ( Types.ErrorCode element in Core.Settings.TreatWarningsAsErrors )
+      {
+        var xmlColor = new GR.Strings.XMLElement( "Message" );
+        xmlColor.AddAttribute( "Index", ( (int)element ).ToString() );
+
+        xmlSettingRoot.AddChild( xmlColor );
+      }
+    }
+
+
+
     private void ExportColorSettings( GR.Strings.XMLElement XMLRoot )
     {
       GR.Strings.XMLElement     xmlSettingRoot = new GR.Strings.XMLElement( "EditorColors" );
@@ -2007,6 +2074,7 @@ namespace C64Studio
           break;
         case 3:
           ImportIgnoredMessages( xmlSettings );
+          ImportWarningsAsErrors( xmlSettings );
           break;
         case 4:
           ImportEditorColors( xmlSettings );
@@ -2052,6 +2120,7 @@ namespace C64Studio
           break;
         case 3:
           ExportIgnoredWarnings( xmlRoot );
+          ExportWarningsAsErrors( xmlRoot );
           break;
         case 4:
           ExportColorSettings( xmlRoot );
@@ -2090,6 +2159,7 @@ namespace C64Studio
       ExportTools( xmlRoot );
       ExportAccelerators( xmlRoot );
       ExportIgnoredWarnings( xmlRoot );
+      ExportWarningsAsErrors( xmlRoot );
       ExportColorSettings( xmlRoot );
       ExportBASICKeyMap( xmlRoot );
       ExportBASICEditorSettings( xmlRoot );
@@ -2132,6 +2202,7 @@ namespace C64Studio
       ImportTools( xmlSettings );
       ImportAccelerators( xmlSettings );
       ImportIgnoredMessages( xmlSettings );
+      ImportWarningsAsErrors( xmlSettings );
       ImportEditorColors( xmlSettings );
       ImportBASICEditorSettings( xmlSettings );
       ImportBASICKeyMapping( xmlSettings );
@@ -2412,6 +2483,21 @@ namespace C64Studio
       Core.Settings.MRUMaxCount = mruCount;
     }
 
+
+
+    private void listWarningsAsErrors_ItemCheck( object sender, ItemCheckEventArgs e )
+    {
+      GR.Generic.Tupel<string, Types.ErrorCode> item = (GR.Generic.Tupel<string, Types.ErrorCode>)listWarningsAsErrors.Items[e.Index];
+
+      if ( e.NewValue != CheckState.Checked )
+      {
+        Core.Settings.TreatWarningsAsErrors.Remove( item.second );
+      }
+      else
+      {
+        Core.Settings.TreatWarningsAsErrors.Add( item.second );
+      }
+    }
 
   }
 }

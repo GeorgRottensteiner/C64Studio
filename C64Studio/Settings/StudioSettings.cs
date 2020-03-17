@@ -186,6 +186,7 @@ namespace C64Studio
     public GR.Collections.Map<string, LayoutInfo> ToolLayout = new GR.Collections.Map<string,LayoutInfo>();
 
     public GR.Collections.Set<Types.ErrorCode>  IgnoredWarnings = new GR.Collections.Set<C64Studio.Types.ErrorCode>();
+    public GR.Collections.Set<Types.ErrorCode>  TreatWarningsAsErrors = new GR.Collections.Set<C64Studio.Types.ErrorCode>();
 
     public string                               DefaultProjectBasePath = "";
     public WeifenLuo.WinFormsUI.Docking.DockPanel   PanelMain = null;
@@ -637,13 +638,20 @@ namespace C64Studio
       SettingsData.Append( chunkFindReplace.ToBuffer() );
 
       GR.IO.FileChunk chunkIgnoredWarnings = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_IGNORED_WARNINGS );
-
       chunkIgnoredWarnings.AppendI32( IgnoredWarnings.Count );
       foreach ( Types.ErrorCode ignoredWarning in IgnoredWarnings )
       {
         chunkIgnoredWarnings.AppendI32( (int)ignoredWarning );
       }
       SettingsData.Append( chunkIgnoredWarnings.ToBuffer() );
+
+      GR.IO.FileChunk chunkWarningsAsErrors = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_WARNINGS_AS_ERRORS );
+      chunkWarningsAsErrors.AppendI32( TreatWarningsAsErrors.Count );
+      foreach ( Types.ErrorCode warningAsError in TreatWarningsAsErrors )
+      {
+        chunkWarningsAsErrors.AppendI32( (int)warningAsError );
+      }
+      SettingsData.Append( chunkWarningsAsErrors.ToBuffer() );
 
       foreach ( var pair in GenericTools )
       {
@@ -1001,6 +1009,18 @@ namespace C64Studio
               for ( int i = 0; i < numIgnoredWarnings; ++i )
               {
                 IgnoredWarnings.Add( (C64Studio.Types.ErrorCode)binIn.ReadInt32() );
+              }
+            }
+            break;
+          case Types.FileChunk.SETTINGS_WARNINGS_AS_ERRORS:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              int numWarnignsAsErrors = binIn.ReadInt32();
+
+              for ( int i = 0; i < numWarnignsAsErrors; ++i )
+              {
+                TreatWarningsAsErrors.Add( (C64Studio.Types.ErrorCode)binIn.ReadInt32() );
               }
             }
             break;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Collections;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,5 +18,6 @@ namespace C64Studio.Parser
     public bool                                 AutoTruncateLiteralValues = false;
     public bool                                 CreatePreProcesseFile = false;
     public List<string>                         LibraryFiles = new List<string>();
+    public Set<Types.ErrorCode>                 WarningsToTreatAsError = new Set<Types.ErrorCode>();
   }
 }

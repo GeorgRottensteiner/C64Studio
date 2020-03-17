@@ -35,6 +35,8 @@ namespace C64Studio
 
     delegate void UpdateFromMessagesCallback( Parser.ParserBase Parser, Project ParsedProject );
 
+
+
     public void UpdateFromMessages( Parser.ParserBase Parser, Project ParsedProject )
     {
       if ( InvokeRequired )
@@ -61,6 +63,8 @@ namespace C64Studio
       {
         int lineIndex = msg.Key;
         Parser.ParserBase.ParseMessage message = msg.Value;
+
+        var msgType = message.Type;
 
         if ( Core.Settings.IgnoredWarnings.ContainsValue( message.Code ) )
         {
@@ -106,17 +110,17 @@ namespace C64Studio
 
         ListViewItem item = new ListViewItem();
 
-        if ( message.Type == C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR )
+        if ( msgType == C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR )
         {
           item.ImageIndex = 0;
           item.Text = "0";
         }
-        else if ( message.Type == C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING )
+        else if ( msgType == C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING )
         {
           item.ImageIndex = 1;
           item.Text = "2";
         }
-        else if ( message.Type == C64Studio.Parser.ParserBase.ParseMessage.LineType.SEVERE_WARNING )
+        else if ( msgType == C64Studio.Parser.ParserBase.ParseMessage.LineType.SEVERE_WARNING )
         {
           item.ImageIndex = 2;
           item.Text = "1";

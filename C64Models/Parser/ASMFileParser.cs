@@ -88,8 +88,6 @@ namespace C64Studio.Parser
 
     private GR.Collections.Map<string,ExtFunctionInfo>    m_ExtFunctions = new GR.Collections.Map<string, ExtFunctionInfo>();
 
-    private CompileConfig               m_CompileConfig = null;
-
     public Types.ASM.FileInfo           ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
 
     public Types.ASM.FileInfo           InitialFileInfo = null;

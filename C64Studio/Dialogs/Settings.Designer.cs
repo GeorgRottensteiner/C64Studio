@@ -39,7 +39,9 @@
       this.labelBASICFontPreview = new System.Windows.Forms.Label();
       this.btnChooseFont = new System.Windows.Forms.Button();
       this.labelFontPreview = new System.Windows.Forms.Label();
+      this.editMaxMRUEntries = new System.Windows.Forms.TextBox();
       this.editTabSize = new System.Windows.Forms.TextBox();
+      this.label32 = new System.Windows.Forms.Label();
       this.label31 = new System.Windows.Forms.Label();
       this.label14 = new System.Windows.Forms.Label();
       this.checkAutoOpenLastSolution = new System.Windows.Forms.CheckBox();
@@ -150,8 +152,8 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.label32 = new System.Windows.Forms.Label();
-      this.editMaxMRUEntries = new System.Windows.Forms.TextBox();
+      this.label33 = new System.Windows.Forms.Label();
+      this.listWarningsAsErrors = new System.Windows.Forms.CheckedListBox();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -306,6 +308,15 @@
       this.labelFontPreview.TabIndex = 7;
       this.labelFontPreview.Text = "Font Preview";
       // 
+      // editMaxMRUEntries
+      // 
+      this.editMaxMRUEntries.Location = new System.Drawing.Point(478, 69);
+      this.editMaxMRUEntries.MaxLength = 2;
+      this.editMaxMRUEntries.Name = "editMaxMRUEntries";
+      this.editMaxMRUEntries.Size = new System.Drawing.Size(140, 20);
+      this.editMaxMRUEntries.TabIndex = 5;
+      this.editMaxMRUEntries.TextChanged += new System.EventHandler(this.editMaxMRUEntries_TextChanged);
+      // 
       // editTabSize
       // 
       this.editTabSize.Location = new System.Drawing.Point(149, 170);
@@ -314,6 +325,15 @@
       this.editTabSize.Size = new System.Drawing.Size(88, 20);
       this.editTabSize.TabIndex = 5;
       this.editTabSize.TextChanged += new System.EventHandler(this.editTabSize_TextChanged);
+      // 
+      // label32
+      // 
+      this.label32.AutoSize = true;
+      this.label32.Location = new System.Drawing.Point(337, 75);
+      this.label32.Name = "label32";
+      this.label32.Size = new System.Drawing.Size(95, 13);
+      this.label32.TabIndex = 5;
+      this.label32.Text = "Max. MRU entries:";
       // 
       // label31
       // 
@@ -924,6 +944,8 @@
       this.tabErrorsWarnings.Controls.Add(this.label30);
       this.tabErrorsWarnings.Controls.Add(this.label26);
       this.tabErrorsWarnings.Controls.Add(this.asmLibraryPathList);
+      this.tabErrorsWarnings.Controls.Add(this.listWarningsAsErrors);
+      this.tabErrorsWarnings.Controls.Add(this.label33);
       this.tabErrorsWarnings.Controls.Add(this.listIgnoredWarnings);
       this.tabErrorsWarnings.Controls.Add(this.label20);
       this.tabErrorsWarnings.Location = new System.Drawing.Point(4, 22);
@@ -1074,7 +1096,7 @@
       this.listIgnoredWarnings.FormattingEnabled = true;
       this.listIgnoredWarnings.Location = new System.Drawing.Point(323, 23);
       this.listIgnoredWarnings.Name = "listIgnoredWarnings";
-      this.listIgnoredWarnings.Size = new System.Drawing.Size(261, 169);
+      this.listIgnoredWarnings.Size = new System.Drawing.Size(261, 79);
       this.listIgnoredWarnings.TabIndex = 3;
       this.listIgnoredWarnings.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listIgnoredWarnings_ItemCheck);
       // 
@@ -1465,23 +1487,24 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
-      // label32
+      // label33
       // 
-      this.label32.AutoSize = true;
-      this.label32.Location = new System.Drawing.Point(337, 75);
-      this.label32.Name = "label32";
-      this.label32.Size = new System.Drawing.Size(95, 13);
-      this.label32.TabIndex = 5;
-      this.label32.Text = "Max. MRU entries:";
+      this.label33.AutoSize = true;
+      this.label33.Location = new System.Drawing.Point(320, 111);
+      this.label33.Name = "label33";
+      this.label33.Size = new System.Drawing.Size(127, 13);
+      this.label33.TabIndex = 2;
+      this.label33.Text = "Treat Warnings as Errors:";
       // 
-      // editMaxMRUEntries
+      // listWarningsAsErrors
       // 
-      this.editMaxMRUEntries.Location = new System.Drawing.Point(478, 69);
-      this.editMaxMRUEntries.MaxLength = 2;
-      this.editMaxMRUEntries.Name = "editMaxMRUEntries";
-      this.editMaxMRUEntries.Size = new System.Drawing.Size(140, 20);
-      this.editMaxMRUEntries.TabIndex = 5;
-      this.editMaxMRUEntries.TextChanged += new System.EventHandler(this.editMaxMRUEntries_TextChanged);
+      this.listWarningsAsErrors.CheckOnClick = true;
+      this.listWarningsAsErrors.FormattingEnabled = true;
+      this.listWarningsAsErrors.Location = new System.Drawing.Point(323, 127);
+      this.listWarningsAsErrors.Name = "listWarningsAsErrors";
+      this.listWarningsAsErrors.Size = new System.Drawing.Size(261, 79);
+      this.listWarningsAsErrors.TabIndex = 3;
+      this.listWarningsAsErrors.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listWarningsAsErrors_ItemCheck);
       // 
       // Settings
       // 
@@ -1651,5 +1674,7 @@
     private System.Windows.Forms.CheckBox checkStripTrailingSpaces;
         private System.Windows.Forms.TextBox editMaxMRUEntries;
         private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.CheckedListBox listWarningsAsErrors;
+        private System.Windows.Forms.Label label33;
     }
 }
