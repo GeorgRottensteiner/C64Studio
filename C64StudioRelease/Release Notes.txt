@@ -17,6 +17,60 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+20.03.2020 - 6.4:         Fix: Let Black Jack for CBM Prg Studio compile (allow * counter for macros)
+                          Fix: Up text length for binary editor import
+                          Fix: Crash in Charset screen editor when floating selection was placed outside the screen
+                          Fix: Add missing extension to C64Ass.exe (ouch!)
+                          Fix: BASIC shifted characters A-Z, properly place in PETSCII range
+                          Fix: Speedup of symbol transfer after full assembly
+                          Fix: Remove selection borders in char screen after changing mode
+                          Fix BASIC line length check warning
+                          Fix: initial break point set via project properties is not temporary
+                          Add: Macro File, RunFile
+                          Fix: Remove 2049 default setting from new projects
+                          Add: Charscreen import from Marc's PETSCII editor
+                          Add: BASIC source context menu
+                          Add: Partial renumbering of BASIC code
+                          Add: Clone tile for map editor
+                          Add: MediaTool support for map project (currently MAPDATA only)
+                          Fix: !hex pseudo op
+                          Add: media tool map project mapdataasm
+                          Fix: Wrong type inserted in map editor
+                          Fix: true drive icon was showing in wrong state
+                          Fix: Crash in Preferences when no baselib path was added
+                          Fix: Reloaded-documents not set as modified
+                          Add/Fix: Files opened are opened as project members if they're added in there
+                          Add: Support for C64Debugger (passing labels and program)
+                          Add: Map Editor: Delete all selected tiles at once
+                          Fix: Crash when opening file without solution.
+                          Add: Auto-save and -restart with any changes (non blocking shutdown)
+                          Fix: Step into after run to cursor after first auto break point might trigger additional break point adding
+                          Fix: use 0xa871 as intermediate break point (RUN command), so it also works with Inject to RAM
+                          Fix: Default extension for map export as new charscreen
+                          Add: Option for auto toggling BASIC entry mode
+                          Fix: Better error message on wrong method for !mediasrc pseudo op
+                          Add: Export to image for charscreens
+                          Add: option to strip trailing spaces
+                          Fix: exception for marking check in BASIC files
+                          Fix: Length check for BASIC file was off by one
+                          Add: Error marking in BASIC
+                          Add: BASIC strip REM, skip line if empty, but only if not referenced
+                          Fix: Layout restore now works for all dialogs
+                          Add: Close Solution to main menu
+                          Add: Show the exact match in AutoComplete as well (not on top yet)
+                          Add: AutoComplete sorted by relevance
+                          Fix: No popup for completion if a comma is to the left
+                          Fix: No popup if only match is exact search fragment
+                          Fix: Crash on macro insertion by label
+                          Add: label insertion as macro in hex mode (prefix with 0x)
+                          Add: Directly open .ctm files as map projects
+                          Add: Setting for max MRU entry count
+                          Add: character editing in map project
+                          Add: Copy map to image in clipboard
+                          Add: manual "check for update" menu item
+                          Add: Charset shifting to Character Editor
+                          Add: Option to treat warnings as errors
+
 23.12.2019 - 6.3:         Fix: Shortcut keys in charset and graphic editor only apply on focused editor
                           Fix: Debugging start address properly used now
                           Add: Ultimax cartridge support plus special debug behaviour for cart startup racing condition
