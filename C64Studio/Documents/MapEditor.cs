@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C64Studio.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -3380,12 +3381,12 @@ namespace C64Studio
       }
       else
       {
-        BaseDocument document = (BaseDocument)comboItem.Tag;
-        CharsetScreenEditor   charEditor = (CharsetScreenEditor)document;
+        var docInfo = (DocumentInfo)comboItem.Tag;
+        CharsetScreenEditor   charEditor = (CharsetScreenEditor)docInfo.BaseDoc;
         charEditor.ImportFromData( m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width,
                                    m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height,
                                    charData, colorData, m_MapProject.Charset );
-        document.SetModified();
+        charEditor.SetModified();
       }
     }
 
@@ -3447,6 +3448,38 @@ namespace C64Studio
     private void btnCopyImage_Click( object sender, EventArgs e )
     {
       Clipboard.SetImage( m_Image.GetAsBitmap() );
+    }
+
+
+
+    private void btnExportCharset_Click( object sender, EventArgs e )
+    {
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Save Charset Project as";
+      saveDlg.Filter = FilterString( Constants.FILEFILTER_CHARSET );
+
+      if ( saveDlg.ShowDialog() != DialogResult.OK )
+      {
+        return;
+      }
+      string    extension = System.IO.Path.GetExtension( saveDlg.FileName );
+
+      if ( extension.ToUpper() == ".CHARSETPROJECT" )
+      {
+        GR.IO.File.WriteAllBytes( saveDlg.FileName, m_MapProject.Charset.SaveToBuffer() );
+      }
+      else
+      {
+        GR.IO.File.WriteAllBytes( saveDlg.FileName, m_MapProject.Charset.SaveCharsetToBuffer() );
+      }
+    }
+
+
+
+    private string FilterString( string Source )
+    {
+      return Source.Substring( 0, Source.Length - 1 );
     }
 
 

@@ -29,12 +29,12 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
       GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -171,6 +171,7 @@
       this.button4 = new System.Windows.Forms.Button();
       this.button5 = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnExportCharset = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -299,6 +300,7 @@
       this.groupExport.Controls.Add(this.checkExportToDataIncludeRes);
       this.groupExport.Controls.Add(this.editDataExport);
       this.groupExport.Controls.Add(this.btnExportToFile);
+      this.groupExport.Controls.Add(this.btnExportCharset);
       this.groupExport.Controls.Add(this.btnExportToData);
       this.groupExport.Location = new System.Drawing.Point(11, 6);
       this.groupExport.Name = "groupExport";
@@ -418,11 +420,11 @@
       this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataExport.Location = new System.Drawing.Point(6, 139);
+      this.editDataExport.Location = new System.Drawing.Point(6, 181);
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 316);
+      this.editDataExport.Size = new System.Drawing.Size(429, 274);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
@@ -474,7 +476,6 @@
       // 
       // btnCopyImage
       // 
-      this.btnCopyImage.Image = ((System.Drawing.Image)(resources.GetObject("btnCopyImage.Image")));
       this.btnCopyImage.ImageKey = "(none)";
       this.btnCopyImage.Location = new System.Drawing.Point(628, 432);
       this.btnCopyImage.Name = "btnCopyImage";
@@ -1662,6 +1663,16 @@
       this.button5.Text = "as assembly source";
       this.button5.UseVisualStyleBackColor = true;
       // 
+      // btnExportCharset
+      // 
+      this.btnExportCharset.Location = new System.Drawing.Point(6, 139);
+      this.btnExportCharset.Name = "btnExportCharset";
+      this.btnExportCharset.Size = new System.Drawing.Size(106, 23);
+      this.btnExportCharset.TabIndex = 2;
+      this.btnExportCharset.Text = "Charset...";
+      this.btnExportCharset.UseVisualStyleBackColor = true;
+      this.btnExportCharset.Click += new System.EventHandler(this.btnExportCharset_Click);
+      // 
       // MapEditor
       // 
       this.ClientSize = new System.Drawing.Size(1064, 525);
@@ -1841,5 +1852,6 @@
         private System.Windows.Forms.TabPage tabCharset;
         private Controls.CharacterEditor characterEditor;
         private System.Windows.Forms.Button btnCopyImage;
+        private System.Windows.Forms.Button btnExportCharset;
     }
 }

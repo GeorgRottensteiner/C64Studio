@@ -90,6 +90,18 @@ namespace C64Studio.Formats
 
 
 
+    public GR.Memory.ByteBuffer SaveCharsetToBuffer()
+    {
+      var charData = new GR.Memory.ByteBuffer( 2048 );
+      for ( int i = 0; i < 256; ++i )
+      {
+        charData.Append( Characters[i].Data );
+      }
+      return charData;
+    }
+
+
+
     public GR.Memory.ByteBuffer SaveToBuffer()
     {
       GR.Memory.ByteBuffer projectFile = new GR.Memory.ByteBuffer();
