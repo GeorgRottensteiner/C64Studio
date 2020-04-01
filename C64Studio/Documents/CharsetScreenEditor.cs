@@ -2303,9 +2303,18 @@ namespace C64Studio
       int     newWidth = GR.Convert.ToI32( editScreenWidth.Text );
       int     newHeight = GR.Convert.ToI32( editScreenHeight.Text );
 
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenSizeChange( m_CharsetScreen, this, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+      if ( ( ( newWidth != m_CharsetScreen.ScreenWidth )
+      ||     ( newHeight !=  m_CharsetScreen.ScreenHeight ) )
+      &&   ( newWidth > 0 )
+      &&   ( newWidth <= 65535 )
+      &&   ( newHeight > 0 )
+      &&   ( newHeight <= 65535 ) )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenSizeChange( m_CharsetScreen, this, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
 
-      SetScreenSize( newWidth, newHeight );
+        SetScreenSize( newWidth, newHeight );
+        SetModified();
+      }
     }
 
 
