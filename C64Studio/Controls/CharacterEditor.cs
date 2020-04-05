@@ -21,7 +21,7 @@ namespace C64Studio.Controls
     }
 
     public delegate void ModifiedHandler();
-    public delegate void CharsetShiftedHandler( int[] ReplacementMap );
+    public delegate void CharsetShiftedHandler( int[] OldToNew, int[] NewToOld );
 
     public event ModifiedHandler        Modified;
     public event ModifiedHandler        CategoryModified;
@@ -130,9 +130,9 @@ namespace C64Studio.Controls
 
 
 
-    protected void RaiseCharactersShiftedEvent( int[] ShiftedCharacters )
+    protected void RaiseCharactersShiftedEvent( int[] OldToNew, int[] NewToOld )
     {
-      CharactersShifted?.Invoke( ShiftedCharacters );
+      CharactersShifted?.Invoke( OldToNew, NewToOld );
     }
 
 
@@ -2176,20 +2176,10 @@ namespace C64Studio.Controls
         ++insertCharIndex;
       }
 
-      // TODO - undo!
-      //UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
-      //UndoManager.AddUndoTask( new Undo.UndoCharscreenCharsetChange( m_CharsetScreen, this ), false );
-
-      /*
-      // now shift all characters
-      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      for ( int i = 0; i < 256; ++i )
       {
-        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
-        {
-          ushort    origChar = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth];
-          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( charMapOldToNew[origChar & 0xff] | ( origChar & 0xff00 ) );
-        }
-      }*/
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), i == 0 );
+      }
 
       // ..and charset
       List<CharData>    origCharData = new List<CharData>();
@@ -2200,24 +2190,20 @@ namespace C64Studio.Controls
       {
         origCharData.Add( m_Project.Characters[i] );
         origListItems.Add( panelCharacters.Items[i] );
-        //origListItems2.Add( panelCharsetDetails.Items[i] );
       }
 
       for ( int i = 0; i < 256; ++i )
       {
         m_Project.Characters[i] = origCharData[charMapNewToOld[i]];
         panelCharacters.Items[i] = origListItems[charMapNewToOld[i]];
-        //panelCharsetDetails.Items[i] = origListItems2[charMapNewToOld[i]];
       }
       panelCharacters.Invalidate();
-      //panelCharsetDetails.Invalidate();
 
-      //RedrawFullScreen();
       RedrawPlayground();
       pictureEditor.Invalidate();
       RedrawColorChooser();
 
-      RaiseCharactersShiftedEvent( charMapOldToNew );
+      RaiseCharactersShiftedEvent( charMapOldToNew, charMapNewToOld );
       RaiseModifiedEvent();
     }
 

@@ -76,19 +76,18 @@ namespace C64Studio
       m_IsSaveable = true;
       InitializeComponent();
 
+      charEditor.UndoManager = DocumentInfo.UndoManager;
+
       pictureEditor.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback( pictureEditor_PostPaint );
 
       pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
       panelCharacters.SetDisplaySize( 128, 128 );
       panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      panelCharsetDetails.PixelFormat = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
-      panelCharsetDetails.SetDisplaySize( 128, 128 );
       m_Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
       CustomRenderer.PaletteManager.ApplyPalette( pictureEditor.DisplayPage );
       CustomRenderer.PaletteManager.ApplyPalette( panelCharacters.DisplayPage );
-      CustomRenderer.PaletteManager.ApplyPalette( panelCharsetDetails.DisplayPage );
       CustomRenderer.PaletteManager.ApplyPalette( m_Image );
       CustomRenderer.PaletteManager.ApplyPalette( panelCharColors.DisplayPage );
       for ( int i = 0; i < 16; ++i )
@@ -157,7 +156,22 @@ namespace C64Studio
       {
         RebuildCharImage( i );
         panelCharacters.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Image );
-        panelCharsetDetails.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Image );
+      }
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
+    }
+
+
+
+    public override DocumentInfo DocumentInfo
+    {
+      get
+      {
+        return base.DocumentInfo;
+      }
+      set
+      {
+        base.DocumentInfo = value;
+        charEditor.UndoManager = DocumentInfo.UndoManager;
       }
     }
 
@@ -1044,7 +1058,7 @@ namespace C64Studio
       RedrawFullScreen();
       pictureEditor.Invalidate();
       panelCharacters.Invalidate();
-      panelCharsetDetails.Invalidate();
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
     }
 
 
@@ -1064,7 +1078,7 @@ namespace C64Studio
         Modified = true;
         RedrawFullScreen();
         panelCharacters.Invalidate();
-        panelCharsetDetails.Invalidate();
+        charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
         RedrawColorChooser();
       }
     }
@@ -1086,7 +1100,7 @@ namespace C64Studio
         Modified = true;
         RedrawFullScreen();
         panelCharacters.Invalidate();
-        panelCharsetDetails.Invalidate();
+        charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
         RedrawColorChooser();
       }
     }
@@ -2335,8 +2349,8 @@ namespace C64Studio
         RebuildCharImage( i );
 
         panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Image;
-        panelCharsetDetails.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Image;
       }
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
       Modified = false;
       editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
@@ -2817,7 +2831,7 @@ namespace C64Studio
       Modified = true;
       RedrawFullScreen();
       panelCharacters.Invalidate();
-      panelCharsetDetails.Invalidate();
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
       RedrawColorChooser();
     }
 
@@ -2865,7 +2879,7 @@ namespace C64Studio
         }
         Modified = true;
         panelCharacters.Invalidate();
-        panelCharsetDetails.Invalidate();
+        charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
         RedrawColorChooser();
         RedrawFullScreen();
       }
@@ -2925,7 +2939,7 @@ namespace C64Studio
         Modified = true;
         RedrawFullScreen();
         panelCharacters.Invalidate();
-        panelCharsetDetails.Invalidate();
+        charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
         RedrawColorChooser();
       }
     }
@@ -3037,7 +3051,7 @@ namespace C64Studio
         RebuildCharImage( i );
       }
       panelCharacters.Invalidate();
-      panelCharsetDetails.Invalidate();
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
       pictureEditor.Invalidate();
       RedrawFullScreen();
     }
@@ -3215,6 +3229,7 @@ namespace C64Studio
 
 
 
+    /*
     private void btnMoveSelectionToTarget_Click( object sender, EventArgs e )
     {
       int targetIndex = GR.Convert.ToI32( editMoveTargetIndex.Text );
@@ -3307,6 +3322,7 @@ namespace C64Studio
       RedrawColorChooser();
       Modified = true;
     }
+    */
 
 
 
@@ -3326,10 +3342,9 @@ namespace C64Studio
         RebuildCharImage( i );
 
         panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Image;
-        panelCharsetDetails.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Image;
       }
       panelCharacters.Invalidate();
-      panelCharsetDetails.Invalidate();
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
     }
 
 
@@ -3445,5 +3460,43 @@ namespace C64Studio
       bmpTarget.Save( saveDlg.FileName, System.Drawing.Imaging.ImageFormat.Png );
 
     }
+
+
+
+    private void charEditor_CharactersShifted( int[] OldToNew, int[] NewToOld )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ), false );
+
+      // now shift all characters
+      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      {
+        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+        {
+          ushort    origChar = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth];
+          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( OldToNew[origChar & 0xff] | ( origChar & 0xff00 ) );
+        }
+      }
+
+      // ..and charset
+      List<GR.Forms.ImageListbox.ImageListItem>    origListItems = new List<GR.Forms.ImageListbox.ImageListItem>();
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        origListItems.Add( panelCharacters.Items[i] );
+      }
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        panelCharacters.Items[i]              = origListItems[NewToOld[i]];
+      }
+      panelCharacters.Invalidate();
+
+      RedrawFullScreen();
+      RedrawColorChooser();
+      Modified = true;
+    }
+
+
+
   } 
 }

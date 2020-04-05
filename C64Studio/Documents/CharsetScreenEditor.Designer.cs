@@ -79,6 +79,7 @@
       this.btnExportToBASICHexData = new System.Windows.Forms.Button();
       this.btnExportToBASICData = new System.Windows.Forms.Button();
       this.btnExportToBasic = new System.Windows.Forms.Button();
+      this.btnExportToImage = new System.Windows.Forms.Button();
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
@@ -116,13 +117,8 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.tabCharset = new System.Windows.Forms.TabPage();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.btnMoveSelectionToTarget = new System.Windows.Forms.Button();
-      this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
-      this.label10 = new System.Windows.Forms.Label();
-      this.panelCharsetDetails = new GR.Forms.ImageListbox();
+      this.charEditor = new C64Studio.Controls.CharacterEditor();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnExportToImage = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -133,7 +129,6 @@
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).BeginInit();
       this.tabCharsetEditor.SuspendLayout();
       this.tabCharset.SuspendLayout();
-      this.groupBox2.SuspendLayout();
       this.SuspendLayout();
       // 
       // menuStrip1
@@ -142,7 +137,7 @@
             this.fileToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(964, 24);
+      this.menuStrip1.Size = new System.Drawing.Size(1069, 24);
       this.menuStrip1.TabIndex = 1;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -186,7 +181,7 @@
       this.tabProject.Location = new System.Drawing.Point(4, 22);
       this.tabProject.Name = "tabProject";
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
-      this.tabProject.Size = new System.Drawing.Size(956, 512);
+      this.tabProject.Size = new System.Drawing.Size(1061, 546);
       this.tabProject.TabIndex = 1;
       this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
@@ -205,7 +200,7 @@
       this.groupBox1.Controls.Add(this.editDataImport);
       this.groupBox1.Location = new System.Drawing.Point(458, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(490, 498);
+      this.groupBox1.Size = new System.Drawing.Size(595, 532);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -279,7 +274,7 @@
       this.editDataImport.Multiline = true;
       this.editDataImport.Name = "editDataImport";
       this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataImport.Size = new System.Drawing.Size(478, 349);
+      this.editDataImport.Size = new System.Drawing.Size(583, 383);
       this.editDataImport.TabIndex = 20;
       this.editDataImport.WordWrap = false;
       this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataImport_KeyPress);
@@ -325,7 +320,7 @@
       this.groupExport.Controls.Add(this.btnExportToData);
       this.groupExport.Location = new System.Drawing.Point(11, 6);
       this.groupExport.Name = "groupExport";
-      this.groupExport.Size = new System.Drawing.Size(441, 498);
+      this.groupExport.Size = new System.Drawing.Size(441, 532);
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
@@ -598,7 +593,7 @@
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 114);
+      this.editDataExport.Size = new System.Drawing.Size(429, 148);
       this.editDataExport.TabIndex = 20;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
@@ -633,6 +628,16 @@
       this.btnExportToBasic.Text = "to Basic...";
       this.btnExportToBasic.UseVisualStyleBackColor = true;
       this.btnExportToBasic.Click += new System.EventHandler(this.btnExportToBasic_Click);
+      // 
+      // btnExportToImage
+      // 
+      this.btnExportToImage.Location = new System.Drawing.Point(6, 272);
+      this.btnExportToImage.Name = "btnExportToImage";
+      this.btnExportToImage.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToImage.TabIndex = 17;
+      this.btnExportToImage.Text = "to image";
+      this.btnExportToImage.UseVisualStyleBackColor = true;
+      this.btnExportToImage.Click += new System.EventHandler(this.btnExportToImage_Click);
       // 
       // btnExportToFile
       // 
@@ -692,7 +697,7 @@
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(956, 512);
+      this.tabEditor.Size = new System.Drawing.Size(1061, 546);
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
@@ -1070,96 +1075,31 @@
       this.tabCharsetEditor.Location = new System.Drawing.Point(0, 24);
       this.tabCharsetEditor.Name = "tabCharsetEditor";
       this.tabCharsetEditor.SelectedIndex = 0;
-      this.tabCharsetEditor.Size = new System.Drawing.Size(964, 538);
+      this.tabCharsetEditor.Size = new System.Drawing.Size(1069, 572);
       this.tabCharsetEditor.TabIndex = 0;
       // 
       // tabCharset
       // 
-      this.tabCharset.Controls.Add(this.groupBox2);
-      this.tabCharset.Controls.Add(this.panelCharsetDetails);
+      this.tabCharset.Controls.Add(this.charEditor);
       this.tabCharset.Location = new System.Drawing.Point(4, 22);
       this.tabCharset.Name = "tabCharset";
-      this.tabCharset.Size = new System.Drawing.Size(956, 512);
+      this.tabCharset.Size = new System.Drawing.Size(1061, 546);
       this.tabCharset.TabIndex = 2;
       this.tabCharset.Text = "Charset";
       this.tabCharset.UseVisualStyleBackColor = true;
       // 
-      // groupBox2
+      // charEditor
       // 
-      this.groupBox2.Controls.Add(this.btnMoveSelectionToTarget);
-      this.groupBox2.Controls.Add(this.editMoveTargetIndex);
-      this.groupBox2.Controls.Add(this.label10);
-      this.groupBox2.Location = new System.Drawing.Point(274, 3);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(249, 45);
-      this.groupBox2.TabIndex = 23;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Move Selection To";
-      // 
-      // btnMoveSelectionToTarget
-      // 
-      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 11);
-      this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
-      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 23);
-      this.btnMoveSelectionToTarget.TabIndex = 2;
-      this.btnMoveSelectionToTarget.Text = "Move";
-      this.btnMoveSelectionToTarget.UseVisualStyleBackColor = true;
-      this.btnMoveSelectionToTarget.Click += new System.EventHandler(this.btnMoveSelectionToTarget_Click);
-      // 
-      // editMoveTargetIndex
-      // 
-      this.editMoveTargetIndex.Location = new System.Drawing.Point(82, 13);
-      this.editMoveTargetIndex.Name = "editMoveTargetIndex";
-      this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
-      this.editMoveTargetIndex.TabIndex = 1;
-      // 
-      // label10
-      // 
-      this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(6, 16);
-      this.label10.Name = "label10";
-      this.label10.Size = new System.Drawing.Size(70, 13);
-      this.label10.TabIndex = 0;
-      this.label10.Text = "Target Index:";
-      // 
-      // panelCharsetDetails
-      // 
-      this.panelCharsetDetails.AutoScroll = true;
-      this.panelCharsetDetails.AutoScrollHorizontalMaximum = 100;
-      this.panelCharsetDetails.AutoScrollHorizontalMinimum = 0;
-      this.panelCharsetDetails.AutoScrollHPos = 0;
-      this.panelCharsetDetails.AutoScrollVerticalMaximum = -23;
-      this.panelCharsetDetails.AutoScrollVerticalMinimum = 0;
-      this.panelCharsetDetails.AutoScrollVPos = 0;
-      this.panelCharsetDetails.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharsetDetails.EnableAutoScrollHorizontal = true;
-      this.panelCharsetDetails.EnableAutoScrollVertical = true;
-      this.panelCharsetDetails.HottrackColor = ((uint)(2151694591u));
-      this.panelCharsetDetails.ItemHeight = 8;
-      this.panelCharsetDetails.ItemWidth = 8;
-      this.panelCharsetDetails.Location = new System.Drawing.Point(8, 3);
-      this.panelCharsetDetails.Name = "panelCharsetDetails";
-      this.panelCharsetDetails.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
-      this.panelCharsetDetails.SelectedIndex = -1;
-      this.panelCharsetDetails.Size = new System.Drawing.Size(260, 260);
-      this.panelCharsetDetails.TabIndex = 22;
-      this.panelCharsetDetails.TabStop = true;
-      this.panelCharsetDetails.VisibleAutoScrollHorizontal = false;
-      this.panelCharsetDetails.VisibleAutoScrollVertical = false;
-      // 
-      // btnExportToImage
-      // 
-      this.btnExportToImage.Location = new System.Drawing.Point(6, 272);
-      this.btnExportToImage.Name = "btnExportToImage";
-      this.btnExportToImage.Size = new System.Drawing.Size(106, 23);
-      this.btnExportToImage.TabIndex = 17;
-      this.btnExportToImage.Text = "to image";
-      this.btnExportToImage.UseVisualStyleBackColor = true;
-      this.btnExportToImage.Click += new System.EventHandler(this.btnExportToImage_Click);
+      this.charEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.charEditor.Location = new System.Drawing.Point(0, 0);
+      this.charEditor.Name = "charEditor";
+      this.charEditor.Size = new System.Drawing.Size(1061, 546);
+      this.charEditor.TabIndex = 24;
+      this.charEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.charEditor_CharactersShifted);
       // 
       // CharsetScreenEditor
       // 
-      this.ClientSize = new System.Drawing.Size(964, 562);
+      this.ClientSize = new System.Drawing.Size(1069, 596);
       this.Controls.Add(this.tabCharsetEditor);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1179,8 +1119,6 @@
       ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).EndInit();
       this.tabCharsetEditor.ResumeLayout(false);
       this.tabCharset.ResumeLayout(false);
-      this.groupBox2.ResumeLayout(false);
-      this.groupBox2.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1269,15 +1207,11 @@
     private System.Windows.Forms.Button btnClearImportData;
     private System.Windows.Forms.CheckBox checkExportASMAsPetSCII;
     private System.Windows.Forms.TabPage tabCharset;
-    private System.Windows.Forms.GroupBox groupBox2;
-    private System.Windows.Forms.Button btnMoveSelectionToTarget;
-    private System.Windows.Forms.TextBox editMoveTargetIndex;
-    private System.Windows.Forms.Label label10;
-    private GR.Forms.ImageListbox panelCharsetDetails;
     private System.Windows.Forms.CheckBox checkOverrideOriginalColorSettings;
     private System.Windows.Forms.CheckBox checkAutoCenter;
     private System.Windows.Forms.CheckBox checkReverse;
     private System.Windows.Forms.Button btnExportToBASICHexData;
     private System.Windows.Forms.Button btnExportToImage;
-  }
+        private Controls.CharacterEditor charEditor;
+    }
 }
