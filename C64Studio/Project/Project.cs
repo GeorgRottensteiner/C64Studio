@@ -158,6 +158,13 @@ namespace C64Studio
       // BASIC (that is sooo ugly)
       chunkElement.AppendU32( (uint)Element.BasicVersion );
 
+      // dependency - project
+      chunkElement.AppendI32( Element.ForcedDependency.DependentOnFile.Count );
+      foreach ( var dependency in Element.ForcedDependency.DependentOnFile )
+      {
+        chunkElement.AppendString( dependency.Project );
+      }
+
       buffer.Append( chunkElement.ToBuffer() );
 
       if ( Element.Document != null )
@@ -404,7 +411,7 @@ namespace C64Studio
               for ( int i = 0; i < dependencyCount; ++i )
               {
                 string dependency = memChunk.ReadString();
-                element.ForcedDependency.DependentOnFile.Add( new FileDependency.DependencyInfo( dependency, true, false ) );
+                element.ForcedDependency.DependentOnFile.Add( new FileDependency.DependencyInfo( Settings.Name, dependency, true, false ) );
               }
               element.StartAddress = memChunk.ReadString();
               // 2 free strings
@@ -504,10 +511,17 @@ namespace C64Studio
               for ( int i = 0; i < externalDependencyCount; ++i )
               {
                 string dependency = memChunk.ReadString();
-                element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( dependency, true, false ) );
+                element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( "", dependency, true, false ) );
               }
 
               element.BasicVersion = (BasicVersion)memChunk.ReadUInt32();
+
+              // dependency - project
+              dependencyCount = memChunk.ReadInt32();
+              for ( int i = 0; i < dependencyCount; ++i )
+              {
+                element.ForcedDependency.DependentOnFile[i].Project = memChunk.ReadString();
+              }
 
               // TODO - load other stuff
               if ( ( element != null )
@@ -749,9 +763,9 @@ namespace C64Studio
       // remove from other elements dependency
       foreach ( ProjectElement element in Elements )
       {
-        if ( element.ForcedDependency.DependsOn( Element.Filename ) )
+        if ( element.ForcedDependency.DependsOn( Element.DocumentInfo.Project.Settings.Name, Element.Filename ) )
         {
-          element.ForcedDependency.RemoveDependency( Element.Filename );
+          element.ForcedDependency.RemoveDependency( Element.DocumentInfo.Project.Settings.Name, Element.Filename );
         }
       }
 

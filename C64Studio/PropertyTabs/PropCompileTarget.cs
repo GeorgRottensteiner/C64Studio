@@ -12,7 +12,7 @@ namespace C64Studio
   {
     public class DependencyItem
     {
-      public FileDependency.DependencyInfo    DependencyInfo = new FileDependency.DependencyInfo( "", false, false );
+      public FileDependency.DependencyInfo    DependencyInfo = new FileDependency.DependencyInfo( "", "", false, false );
       public bool                             CanIncludeSymbols = false;
 
 
@@ -60,54 +60,18 @@ namespace C64Studio
 
       editTargetFilename.Text = Element.TargetFilename;
 
+      // own project first
       foreach ( ProjectElement element in Element.DocumentInfo.Project.Elements )
       {
-        if ( ( element != Element )
-        && ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
+        VerifyElement( element );
+      }
+      foreach ( var project in Core.MainForm.m_Solution.Projects )
+      {
+        if ( project != Element.DocumentInfo.Project )
         {
-          var dependencies = Element.DocumentInfo.Project.GetDependencies( element );
-
-          FileDependency.DependencyInfo   depInfo = Element.ForcedDependency.FindDependency( element.Filename );
-          if ( depInfo == null )
+          foreach ( ProjectElement element in project.Elements )
           {
-            depInfo = new FileDependency.DependencyInfo( element.Filename, false, false );
-          }
-
-          bool isDependent = false;
-          foreach ( var dependency in dependencies )
-          {
-            if ( dependency.Filename == Element.Filename )
-            {
-              isDependent = true;
-              break;
-            }
-          }
-          if ( !isDependent )
-          {
-            // not itself!
-            DependencyItem depItem = new DependencyItem( depInfo, element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE );
-
-
-            ListViewItem    item = new ListViewItem( element.Filename );
-
-            if ( Element.ForcedDependency.DependsOn( element.Filename ) )
-            {
-              item.SubItems.Add( "1" );
-            }
-            else
-            {
-              item.SubItems.Add( "0" );
-            }
-            if ( depInfo.IncludeSymbols )
-            {
-              item.SubItems.Add( "1" );
-            }
-            else
-            {
-              item.SubItems.Add( "0" );
-            }
-            item.Tag = depItem;
-            listDependencies.Items.Add( item );
+            VerifyElement( element );
           }
         }
       }
@@ -118,6 +82,60 @@ namespace C64Studio
       }
     }
 
+
+
+    private void VerifyElement( ProjectElement element )
+    {
+      if ( ( element != Element )
+      &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER ) )
+      {
+        var dependencies = Element.DocumentInfo.Project.GetDependencies( element );
+
+        FileDependency.DependencyInfo   depInfo = Element.ForcedDependency.FindDependency( element.DocumentInfo.Project.Settings.Name, element.Filename );
+        if ( depInfo == null )
+        {
+          depInfo = new FileDependency.DependencyInfo( element.DocumentInfo.Project.Settings.Name, element.Filename, false, false );
+        }
+
+        bool isDependent = false;
+        foreach ( var dependency in dependencies )
+        {
+          if ( dependency.Filename == Element.Filename )
+          {
+            isDependent = true;
+            break;
+          }
+        }
+        if ( !isDependent )
+        {
+          // not itself!
+          DependencyItem depItem = new DependencyItem( depInfo, element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE );
+
+
+          ListViewItem    item = new ListViewItem( element.DocumentInfo.Project.Settings.Name );
+          item.SubItems.Add( element.Filename );
+
+          if ( Element.ForcedDependency.DependsOn( element.DocumentInfo.Project.Settings.Name, element.Filename ) )
+          {
+            item.SubItems.Add( "1" );
+          }
+          else
+          {
+            item.SubItems.Add( "0" );
+          }
+          if ( depInfo.IncludeSymbols )
+          {
+            item.SubItems.Add( "1" );
+          }
+          else
+          {
+            item.SubItems.Add( "0" );
+          }
+          item.Tag = depItem;
+          listDependencies.Items.Add( item );
+        }
+      }
+    }
 
     private void btnParseTarget_Click( object sender, EventArgs e )
     {
@@ -160,18 +178,18 @@ namespace C64Studio
     private void listDependencies_DrawSubItem( object sender, DrawListViewSubItemEventArgs e )
     {
       if ( ( e.Item == null )
-      ||   ( e.ColumnIndex == 0 ) )
+      ||   ( e.ColumnIndex <= 1 ) )
       {
         e.DrawDefault = true;
         return;
       }
       e.DrawBackground();
       DependencyItem    depItem = (DependencyItem)e.Item.Tag;
-      if ( e.ColumnIndex == 1 )
+      if ( e.ColumnIndex == 2 )
       {
         System.Windows.Forms.ControlPaint.DrawCheckBox( e.Graphics, e.SubItem.Bounds, depItem.DependencyInfo.Dependent ? ButtonState.Checked : ButtonState.Normal );
       }
-      else if ( e.ColumnIndex == 2 )
+      else if ( e.ColumnIndex == 3 )
       {
         if ( depItem.CanIncludeSymbols )
         {
@@ -205,7 +223,7 @@ namespace C64Studio
       {
         DependencyItem    depItem = (DependencyItem)hitInfo.Item.Tag;
 
-        if ( hitInfo.SubItem == hitInfo.Item.SubItems[1] )
+        if ( hitInfo.SubItem == hitInfo.Item.SubItems[2] )
         {
           // dependent
           depItem.DependencyInfo.Dependent = !depItem.DependencyInfo.Dependent;
@@ -216,7 +234,7 @@ namespace C64Studio
           Element.DocumentInfo.Project.SetModified();
           listDependencies.Invalidate( hitInfo.Item.Bounds );
         }
-        else if ( hitInfo.SubItem == hitInfo.Item.SubItems[2] )
+        else if ( hitInfo.SubItem == hitInfo.Item.SubItems[3] )
         {
           // include symbols
           if ( ( depItem.DependencyInfo.Dependent )
@@ -291,7 +309,7 @@ namespace C64Studio
         }
       }
       string  relativeFilename = GR.Path.RelativePathTo( dlg.FileName, false, Element.DocumentInfo.Project.Settings.BasePath, true );
-      Element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( relativeFilename, true, false ) );
+      Element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( "", relativeFilename, true, false ) );
       listExternalDependencies.Items.Add( relativeFilename );
       Element.DocumentInfo.Project.SetModified();
     }

@@ -194,10 +194,24 @@ namespace C64Studio.Tasks
           // check dependencies
           foreach ( var dependency in Doc.Element.ForcedDependency.DependentOnFile )
           {
-            ProjectElement elementDependency = Doc.Project.GetElementByFilename( dependency.Filename );
+            var project = Core.MainForm.m_Solution.GetProjectByName( dependency.Project );
+            if ( project == null )
+            {
+              Core.AddToOutput( "Could not find project \"" + dependency.Project + "\" for dependency \"" + dependency.Filename + "\" for \"" + Doc.DocumentFilename + "\"" + System.Environment.NewLine );
+              if ( Core.Settings.PlaySoundOnBuildFailure )
+              {
+                System.Media.SystemSounds.Exclamation.Play();
+              }
+            }
+
+            ProjectElement elementDependency = project.GetElementByFilename( dependency.Filename );
             if ( elementDependency == null )
             {
-              Core.AddToOutput( "Could not find dependency for " + dependency.Filename + System.Environment.NewLine );
+              Core.AddToOutput( "Could not find dependency \"" + dependency.Filename + "\" in project \"" + dependency.Project + "\" for \"" + Doc.DocumentFilename + "\"" + System.Environment.NewLine );
+              if ( Core.Settings.PlaySoundOnBuildFailure )
+              {
+                System.Media.SystemSounds.Exclamation.Play();
+              }
               return false;
             }
 

@@ -39,6 +39,7 @@
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.label5 = new System.Windows.Forms.Label();
       this.btnAddExternalDependency = new System.Windows.Forms.Button();
       this.btnRemoveExternalDependency = new System.Windows.Forms.Button();
@@ -115,9 +116,11 @@
       this.listDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.listDependencies.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader4,
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
+      this.listDependencies.HideSelection = false;
       this.listDependencies.Location = new System.Drawing.Point(100, 107);
       this.listDependencies.Name = "listDependencies";
       this.listDependencies.OwnerDraw = true;
@@ -142,6 +145,11 @@
       // columnHeader3
       // 
       this.columnHeader3.Text = "Symbols";
+      // 
+      // columnHeader4
+      // 
+      this.columnHeader4.Text = "Project";
+      this.columnHeader4.Width = 100;
       // 
       // label5
       // 
@@ -224,5 +232,6 @@
     private System.Windows.Forms.Button btnAddExternalDependency;
     private System.Windows.Forms.Button btnRemoveExternalDependency;
     private System.Windows.Forms.ListBox listExternalDependencies;
-  }
+        private System.Windows.Forms.ColumnHeader columnHeader4;
+    }
 }

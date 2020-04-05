@@ -64,10 +64,17 @@ namespace C64Studio
       {
         foreach ( var dependency in DocInfo.Element.ForcedDependency.DependentOnFile )
         {
-          ProjectElement elementDependency = DocInfo.Project.GetElementByFilename( dependency.Filename );
+          var project = Core.MainForm.m_Solution.GetProjectByName( dependency.Project );
+          if ( project == null )
+          {
+            Core.AddToOutput( "Could not find dependency project " + dependency.Project + " for " + dependency + System.Environment.NewLine );
+            return true;
+          }
+
+          ProjectElement elementDependency = project.GetElementByFilename( dependency.Filename );
           if ( elementDependency == null )
           {
-            Core.AddToOutput( "Could not find dependency for " + dependency + System.Environment.NewLine );
+            Core.AddToOutput( "Could not find dependency " + dependency.Filename + " in project " + dependency.Project + " for " + dependency + System.Environment.NewLine );
             return true;
           }
           if ( NeedsRebuild( elementDependency.DocumentInfo, ConfigSetting ) )

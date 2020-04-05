@@ -1,6 +1,5 @@
 ﻿C64Studio
 o !fill 3, [expression,,...several values]
-o Include symbols from other project
 o charscreen layout change from Docster!
 o Expressions with sin/cos/tan?
 o *=$0801 "Basic"
