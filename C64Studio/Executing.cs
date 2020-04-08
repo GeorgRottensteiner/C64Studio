@@ -121,10 +121,6 @@ namespace C64Studio
         return false;
       }
 
-
-      //Debug.Log( "Args:" + args );
-      //string command = fullCommand + " " + args;
-
       Core.AddToOutput( command + System.Environment.NewLine );
 
       m_ExternalProcess = new System.Diagnostics.Process();
@@ -145,7 +141,6 @@ namespace C64Studio
       m_ExternalProcess.EnableRaisingEvents = true;
       m_ExternalProcess.StartInfo.Arguments = args;
       m_ExternalProcess.StartInfo.UseShellExecute = false;
-      //m_ExternalProcess.Exited += new EventHandler( Core.MainForm.m_ExternalProcess_Exited );
 
       m_ExternalProcess.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler( ExternalProcessOutputReceived );
       m_ExternalProcess.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler( ExternalProcessOutputReceived );
@@ -169,23 +164,13 @@ namespace C64Studio
         return false;
       }
 
-      //Debug.Log( "=============Start" );
       while ( !m_ExternalProcess.WaitForExit( 5 ) )
       {
         Application.DoEvents();
       }
-      // DO NOT REMOVE: final DoEvents to let the app clear its invoke queue to the output display 
+      // DO NOT REMOVE: final DoEvents to let the app clear its invoke queue to the output display, plus WaitForExit is required so all output is received
       Application.DoEvents();
-      //Debug.Log( "=============Done" );
-
-      /*
-      // working wait
-      while ( ( System.DateTime.Now - m_LastReceivedOutputTime ).TotalMilliseconds < 500  )
-      {
-        Application.DoEvents();
-        System.Threading.Thread.Sleep( 20 );
-      }
-       */
+      m_ExternalProcess.WaitForExit();
 
       bool success = (m_ExternalProcess.ExitCode == 0);
       if ( !success )
@@ -201,7 +186,6 @@ namespace C64Studio
     private bool RunExternalCommand( DocumentInfo Doc, string Command )
     {
       string[] commands = System.Text.RegularExpressions.Regex.Split(Command, System.Environment.NewLine);
-      //Debug.Log( "Runexternalcommand " + Command );
 
       Core.MainForm.SetGUIForWaitOnExternalTool( true );
       foreach ( string command in commands )
