@@ -21,11 +21,18 @@ namespace C64Studio
 
       InitializeComponent();
 
+      try
+      {
 #if DEBUG
-      webBrowser.Navigate( System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Application.ExecutablePath ), "../../../Doc/main.html" ) );
+        webBrowser.Navigate( System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Application.ExecutablePath ), "../../../Doc/main.html" ) );
 #else
-      webBrowser.Navigate( System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Application.ExecutablePath ), "Doc/main.html" ) );
+        webBrowser.Navigate( System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Application.ExecutablePath ), "Doc/main.html" ) );
 #endif
+      }
+      catch ( Exception ex )
+      {
+        Debug.Log( "Got exception: " + ex.ToString() );
+      }
       webBrowser.CanGoBackChanged += new EventHandler( webBrowser_CanGoBackChanged );
       webBrowser.CanGoForwardChanged += new EventHandler( webBrowser_CanGoForwardChanged );
       toolStripBtnForward.Enabled = webBrowser.CanGoForward;
