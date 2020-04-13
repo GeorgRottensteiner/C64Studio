@@ -41,6 +41,7 @@ namespace C64Studio.Converter
       result.Append( BitmapData );
       result.Append( ScreenRAM );
       result.Append( ColorRAM );
+      result.AppendU8( BackgroundColor );
 
       return result;
     }
