@@ -5722,6 +5722,7 @@ namespace C64Studio
       {
         document = new SourceASMEx( StudioCore );
         document.ShowHint = DockState.Document;
+        document.DocumentEvent += new BaseDocument.DocumentEventHandler( StudioCore.MainForm.Document_DocumentEvent );
       }
 
       document.Core = StudioCore;
