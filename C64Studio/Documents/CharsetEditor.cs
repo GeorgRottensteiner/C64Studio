@@ -160,7 +160,16 @@ namespace C64Studio
       }
       try
       {
-        OpenProject( DocumentInfo.FullPath );
+        if ( IsBinaryFile() )
+        {
+          GR.Memory.ByteBuffer charData = GR.IO.File.ReadAllBytes( DocumentInfo.FullPath );
+
+          ImportFromData( charData );
+        }
+        else
+        {
+          OpenProject( DocumentInfo.FullPath );
+        }
       }
       catch ( System.IO.IOException ex )
       {
@@ -169,6 +178,15 @@ namespace C64Studio
       }
       SetUnmodified();
       return true;
+    }
+
+
+
+    private bool IsBinaryFile()
+    {
+      string extension = System.IO.Path.GetExtension( DocumentInfo.FullPath.ToString() ).ToUpper();
+
+      return ( extension == ".CHR" );
     }
 
 
@@ -284,6 +302,27 @@ namespace C64Studio
       {
         m_Charset.Name = DocumentInfo.DocumentFilename;
         m_Charset.UsedTiles = GR.Convert.ToU32( editCharactersFrom.Text );
+      }
+
+      if ( IsBinaryFile() )
+      {
+        // save binary only!
+        GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
+        charSet.Reserve( 256 * 8 );
+
+        for ( int i = 0; i < 256; ++i )
+        {
+          charSet.Append( m_Charset.Characters[i].Data );
+        }
+        DisableFileWatcher();
+        if ( !GR.IO.File.WriteAllBytes( saveFilename, charSet ) )
+        {
+          EnableFileWatcher();
+          return false;
+        }
+        SetUnmodified();
+        EnableFileWatcher();
+        return true;
       }
       GR.Memory.ByteBuffer projectFile = SaveToBuffer();
 
