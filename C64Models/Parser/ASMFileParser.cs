@@ -767,7 +767,7 @@ namespace C64Studio.Parser
       if ( int.TryParse( Value, out resultValue ) )
       {
         Result = resultValue;
-        if ( Result >= 255 )
+        if ( Result > 255 )
         {
           NumGivenBytes = 2;
         }
