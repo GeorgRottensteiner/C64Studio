@@ -52,7 +52,7 @@ namespace C64Studio
     public override void RefreshDisplayOptions()
     {
       // Font
-      editText.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
+      editText.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
       // Colors
       ApplySyntaxColoring( Types.ColorableElement.COMMENT );

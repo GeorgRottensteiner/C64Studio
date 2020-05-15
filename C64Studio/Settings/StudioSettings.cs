@@ -6,6 +6,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using System.ComponentModel;
 using GR.Memory;
 using C64Studio.Types;
+using System.Drawing;
 
 namespace C64Studio
 {
@@ -145,8 +146,10 @@ namespace C64Studio
 
     public string                               SourceFontFamily = "Consolas";
     public float                                SourceFontSize = 9.0f;
+    public FontStyle                            SourceFontStyle = FontStyle.Regular;
     public string                               BASICSourceFontFamily = "Consolas";
     public float                                BASICSourceFontSize = 9.0f;
+    public FontStyle                            BASICSourceFontStyle = FontStyle.Regular;
     public bool                                 BASICUseNonC64Font = false;
 
     public List<string>                         FindArguments = new List<string>();
@@ -200,8 +203,6 @@ namespace C64Studio
     public MainForm                             Main = null;
 
     private DeserializeDockContent m_deserializeDockContent;
-
-
 
     public StudioSettings()
     {
@@ -562,6 +563,8 @@ namespace C64Studio
       chunkFont.AppendU8( (byte)( BASICUseNonC64Font ? 1 : 0 ) );
       chunkFont.AppendString( BASICSourceFontFamily );
       chunkFont.AppendI32( (int)BASICSourceFontSize );
+      chunkFont.AppendI32( (int)SourceFontStyle );
+      chunkFont.AppendI32( (int)BASICSourceFontStyle );
 
       SettingsData.Append( chunkFont.ToBuffer() );
 
@@ -923,6 +926,9 @@ namespace C64Studio
               {
                 BASICSourceFontSize = 9.0f;
               }
+
+              SourceFontStyle         = (FontStyle)binIn.ReadInt32();
+              BASICSourceFontStyle    = (FontStyle)binIn.ReadInt32();
             }
             break;
           case Types.FileChunk.SETTINGS_SYNTAX_COLORING:

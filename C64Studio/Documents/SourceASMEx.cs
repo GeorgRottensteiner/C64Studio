@@ -151,7 +151,7 @@ namespace C64Studio
 
       contextSource.Opening += new CancelEventHandler( contextSource_Opening );
 
-      editSource.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
+      editSource.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
       //string wordChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_äöüÄÖÜß!1234567890";
       //editSource.Lexing.Keywords[0] = "lda sta ldy sty ldx stx rts jmp jsr rti sei cli asl lsr inc dec inx dex iny dey cpx cpy cmp bit bne beq bcc bcs bpl bmi adc sec clc sbc tax tay tya txa pha pla eor and ora ror rol php plp clv cld bvc bvs brk nop txs tsx !byte !by !08 !8 !word !wo !16 !zone !zn !text !tx !source !binary !bi !ct !convtab !align slo rla sre rra sax lax dcp isc anc alr arr xaa axs ahx shy shx tas las sed";
       editSource.KeyDown += new System.Windows.Forms.KeyEventHandler( editSource_KeyDown );
@@ -651,12 +651,13 @@ namespace C64Studio
       if ( Element == Types.ColorableElement.ERROR_UNDERLINE )
       {
         m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.WavyLineStyle( 255, GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
+
         editSource.Styles[SyntaxElementStylePrio( Element )] = m_TextStyles[SyntaxElementStylePrio( Element )];
         return;
       }
       System.Drawing.Brush      foreBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( Element ) ) );
       System.Drawing.Brush      backBrush = null;
-      System.Drawing.FontStyle  fontStyle = System.Drawing.FontStyle.Regular;
+      System.Drawing.FontStyle  fontStyle = editSource.Font.Style;
 
       backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( Element ) ) );
       m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.TextStyle( foreBrush, backBrush, fontStyle );
@@ -2511,7 +2512,7 @@ namespace C64Studio
       BackColor = Core.Theming.DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) );
 
       // Font
-      editSource.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
+      editSource.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
       // Colors
       editSource.Language = FastColoredTextBoxNS.Language.Custom;//.VB;//FastColoredTextBoxNS.Language.Custom;

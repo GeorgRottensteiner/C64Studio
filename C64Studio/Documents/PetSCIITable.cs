@@ -27,7 +27,7 @@ namespace C64Studio
       listPETSCII.SetDisplaySize( listPETSCII.ClientSize.Width, listPETSCII.ClientSize.Height );
       listPETSCII.DisplayPage.Create( 120, 120, System.Drawing.Imaging.PixelFormat.Format24bppRgb );
       listPETSCII.PixelFormat = System.Drawing.Imaging.PixelFormat.Format24bppRgb;
-      listPETSCII.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize );
+      listPETSCII.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
       foreach ( Types.C64Character character in Types.ConstantData.PetSCIIToChar.Values )
       {

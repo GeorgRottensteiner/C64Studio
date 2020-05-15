@@ -35,7 +35,7 @@ namespace C64Studio
       this.Core = Core;
       InitializeComponent();
 
-      labelFontPreview.Font = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
+      labelFontPreview.Font = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
       if ( !Core.Settings.BASICUseNonC64Font )
       {
@@ -43,7 +43,7 @@ namespace C64Studio
       }
       else
       {
-        labelBASICFontPreview.Font = new Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize );
+        labelBASICFontPreview.Font = new Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
       }
 
       RefillIgnoredMessageList();
@@ -666,9 +666,10 @@ namespace C64Studio
 
       if ( fontDialog.ShowDialog() == DialogResult.OK )
       {
-        Core.Settings.SourceFontFamily = fontDialog.Font.FontFamily.Name;
-        Core.Settings.SourceFontSize = fontDialog.Font.SizeInPoints;
-        labelFontPreview.Font = fontDialog.Font;
+        Core.Settings.SourceFontFamily  = fontDialog.Font.FontFamily.Name;
+        Core.Settings.SourceFontSize    = fontDialog.Font.SizeInPoints;
+        Core.Settings.SourceFontStyle   = fontDialog.Font.Style;
+        labelFontPreview.Font           = fontDialog.Font;
 
         RefreshDisplayOnDocuments();
       }
@@ -1362,10 +1363,10 @@ namespace C64Studio
       Core.Settings.BASICSourceFontSize   = 9.0f;
       Core.Settings.BASICUseNonC64Font    = true;
 
-      labelFontPreview.Font = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
+      labelFontPreview.Font = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
       if ( !Core.Settings.BASICUseNonC64Font )
       {
-        labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+        labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle, System.Drawing.GraphicsUnit.Pixel );
       }
       else
       {
@@ -1539,10 +1540,12 @@ namespace C64Studio
                 case "ASM":
                   Core.Settings.SourceFontFamily  = xmlValue.Attribute( "Family" );
                   Core.Settings.SourceFontSize    = GR.Convert.ToF32( xmlValue.Attribute( "Size" ) );
+                  Core.Settings.SourceFontStyle   = (FontStyle)GR.Convert.ToI32( xmlValue.Attribute( "FontStyle" ) );
                   break;
                 case "BASIC":
                   Core.Settings.BASICSourceFontFamily = xmlValue.Attribute( "Family" );
                   Core.Settings.BASICSourceFontSize   = GR.Convert.ToF32( xmlValue.Attribute( "Size" ) );
+                  Core.Settings.BASICSourceFontStyle  = (FontStyle)GR.Convert.ToI32( xmlValue.Attribute( "FontStyle" ) );
                   Core.Settings.BASICUseNonC64Font    = !GetBooleanFromString( xmlValue.Attribute( "UseC64Font" ) );
                   break;
               }
@@ -1568,15 +1571,15 @@ namespace C64Studio
       checkASMShowSizes.Checked = Core.Settings.ASMShowBytes;
       checkASMShowMiniMap.Checked = Core.Settings.ASMShowMiniView;
 
-      labelFontPreview.Font = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
+      labelFontPreview.Font = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
       if ( !Core.Settings.BASICUseNonC64Font )
       {
-        labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+        labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle, System.Drawing.GraphicsUnit.Pixel );
       }
       else
       {
-        labelBASICFontPreview.Font = new Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize );
+        labelBASICFontPreview.Font = new Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
       }
       checkBASICUseC64Font.Checked = !Core.Settings.BASICUseNonC64Font;
       btnChangeBASICFont.Enabled = !checkBASICUseC64Font.Checked;
@@ -1877,12 +1880,14 @@ namespace C64Studio
       xmlFont.AddAttribute( "Type", "ASM" );
       xmlFont.AddAttribute( "Family", Core.Settings.SourceFontFamily );
       xmlFont.AddAttribute( "Size", Core.Settings.SourceFontSize.ToString() );
+      xmlFont.AddAttribute( "Style", ( (int)Core.Settings.SourceFontStyle ).ToString() );
       xmlFonts.AddChild( xmlFont );
 
       xmlFont = new GR.Strings.XMLElement( "Font" );
       xmlFont.AddAttribute( "Type", "BASIC" );
       xmlFont.AddAttribute( "Family", Core.Settings.BASICSourceFontFamily );
       xmlFont.AddAttribute( "Size", Core.Settings.BASICSourceFontSize.ToString() );
+      xmlFont.AddAttribute( "Style", ( (int)Core.Settings.BASICSourceFontStyle ).ToString() );
       xmlFont.AddAttribute( "UseC64Font", Core.Settings.BASICUseNonC64Font ? "no" : "yes" );
       xmlFonts.AddChild( xmlFont );
     }

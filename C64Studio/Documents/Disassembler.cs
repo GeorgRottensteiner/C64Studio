@@ -180,7 +180,7 @@ namespace C64Studio
       base.RefreshDisplayOptions();
 
       // Font
-      editDisassembly.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize );
+      editDisassembly.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
       // Colors
       ApplySyntaxColoring( Types.ColorableElement.COMMENT );
