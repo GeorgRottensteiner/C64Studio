@@ -123,29 +123,36 @@ namespace C64Studio
 
     public bool IsDependentOn( string OtherDocumentFile )
     {
-      foreach ( var deducedDependency in DocumentInfo.DeducedDependency.Values )
+      // UGLY HACK to avoid racing condition when accessing the collection while it might be modified by pre parsing tasks
+      lock ( DocumentInfo.DeducedDependency )
       {
-        foreach ( var dependencyFile in deducedDependency.BuildState.Keys )
+        foreach ( var deducedDependency in DocumentInfo.DeducedDependency.Values )
         {
-          if ( GR.Path.IsPathEqual( dependencyFile, OtherDocumentFile ) )
+          foreach ( var dependencyFile in deducedDependency.BuildState.Keys )
           {
-            return true;
+            if ( GR.Path.IsPathEqual( dependencyFile, OtherDocumentFile ) )
+            {
+              return true;
+            }
           }
         }
       }
 
-      foreach ( var dependency in ForcedDependency.DependentOnFile )
+      lock ( ForcedDependency.DependentOnFile )
       {
-        if ( string.Compare( dependency.Filename, System.IO.Path.GetFileName( OtherDocumentFile ), true ) == 0 )
+        foreach ( var dependency in ForcedDependency.DependentOnFile )
         {
-          return true;
-        }
+          if ( string.Compare( dependency.Filename, System.IO.Path.GetFileName( OtherDocumentFile ), true ) == 0 )
+          {
+            return true;
+          }
 
-        // check indirect dependency
-        ProjectElement  elementDependency = DocumentInfo.Project.GetElementByFilename( dependency.Filename );
-        if ( elementDependency.IsDependentOn( OtherDocumentFile ) )
-        {
-          return true;
+          // check indirect dependency
+          ProjectElement  elementDependency = DocumentInfo.Project.GetElementByFilename( dependency.Filename );
+          if ( elementDependency.IsDependentOn( OtherDocumentFile ) )
+          {
+            return true;
+          }
         }
       }
       return false;

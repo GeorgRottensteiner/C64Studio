@@ -420,8 +420,8 @@ namespace C64Studio
         return;
       }
 
-      int     charX = X / ( pictureEditor.ClientRectangle.Width / 24 );
-      int     charY = Y / ( pictureEditor.ClientRectangle.Height / 21 );
+      int     charX = ( X * 24 ) / pictureEditor.ClientRectangle.Width;
+      int     charY = ( Y * 21 ) / pictureEditor.ClientRectangle.Height;
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
@@ -450,7 +450,7 @@ namespace C64Studio
         else
         {
           // multi color
-          charX = ( X / ( pictureEditor.ClientRectangle.Width / 12 ) ) % 4;
+          charX = ( ( X * 12 ) / pictureEditor.ClientRectangle.Width ) % 4;
           charX = 3 - charX;
 
           newByte &= (byte)~( 3 << ( 2 * charX ) );
@@ -521,7 +521,7 @@ namespace C64Studio
         else
         {
           // multi color
-          charX = ( X / ( pictureEditor.ClientRectangle.Width / 12 ) ) % 4;
+          charX = ( ( X * 12 ) / pictureEditor.ClientRectangle.Width ) % 4;
           charX = 3 - charX;
 
           newByte &= (byte)~( 3 << ( 2 * charX ) );
@@ -2144,14 +2144,14 @@ namespace C64Studio
           {
             for ( int j = 0; j < TargetBuffer.Height; ++j )
             {
-              TargetBuffer.SetPixel( i * ( pictureEditor.ClientRectangle.Width / 12 ), j, 0xffffffff );
+              TargetBuffer.SetPixel( ( i * pictureEditor.ClientRectangle.Width / 12 ), j, 0xffffffff );
             }
           }
           for ( int i = 0; i < 21; ++i )
           {
             for ( int j = 0; j < TargetBuffer.Width; ++j )
             {
-              TargetBuffer.SetPixel( j, i * ( pictureEditor.ClientRectangle.Height / 21 ), 0xffffffff );
+              TargetBuffer.SetPixel( j, ( i * pictureEditor.ClientRectangle.Height / 21 ), 0xffffffff );
             }
           }
         }
@@ -2161,14 +2161,14 @@ namespace C64Studio
           {
             for ( int j = 0; j < TargetBuffer.Height; ++j )
             {
-              TargetBuffer.SetPixel( i * ( pictureEditor.ClientRectangle.Width / 24 ), j, 0xffffffff );
+              TargetBuffer.SetPixel( i * pictureEditor.ClientRectangle.Width / 24, j, 0xffffffff );
             }
           }
           for ( int i = 0; i < 21; ++i )
           {
             for ( int j = 0; j < TargetBuffer.Width; ++j )
             {
-              TargetBuffer.SetPixel( j, i * ( pictureEditor.ClientRectangle.Height / 21 ), 0xffffffff );
+              TargetBuffer.SetPixel( j, ( i * pictureEditor.ClientRectangle.Height / 21 ), 0xffffffff );
             }
           }
         }
@@ -3634,6 +3634,25 @@ namespace C64Studio
     {
       ImportFromData( Util.FromBASICHex( editDataImport.Text ) );
       Modified = true;
+    }
+
+
+
+    private void editDataImport_KeyPress( object sender, KeyPressEventArgs e )
+    {
+      if ( ( System.Windows.Forms.Control.ModifierKeys == Keys.Control )
+      &&   ( e.KeyChar == 1 ) )
+      {
+        editDataImport.SelectAll();
+        e.Handled = true;
+      }
+    }
+
+
+
+    private void btnClear_Click( object sender, EventArgs e )
+    {
+      editDataImport.Clear();
     }
 
 

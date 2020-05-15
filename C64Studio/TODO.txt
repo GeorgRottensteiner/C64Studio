@@ -1,6 +1,7 @@
 ﻿C64Studio
 o !fill 3, [expression,,...several values]
 o charscreen layout change from Docster!
+o charscreen editor - Clear screen option
 o Charset Editor - Selection Picture with toggleable PETSCII sorting (Forum64 thread)
 o Expressions with sin/cos/tan?
 o *=$0801 "Basic"

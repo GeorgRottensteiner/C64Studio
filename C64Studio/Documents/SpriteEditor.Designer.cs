@@ -132,6 +132,7 @@
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnClearImport = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabSpriteEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -196,7 +197,7 @@
       // 
       // btnExchangeColors
       // 
-      this.btnExchangeColors.Location = new System.Drawing.Point(258, 207);
+      this.btnExchangeColors.Location = new System.Drawing.Point(227, 438);
       this.btnExchangeColors.Menu = this.contextMenuExchangeColors;
       this.btnExchangeColors.Name = "btnExchangeColors";
       this.btnExchangeColors.Size = new System.Drawing.Size(121, 26);
@@ -212,26 +213,26 @@
             this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem,
             this.forSelectedSpritesToolStripMenuItem});
       this.contextMenuExchangeColors.Name = "contextMenuExchangeColors";
-      this.contextMenuExchangeColors.Size = new System.Drawing.Size(296, 92);
+      this.contextMenuExchangeColors.Size = new System.Drawing.Size(295, 92);
       // 
       // exchangeMultiColor1WithBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Name = "exchangeMultiColor1WithBGColorToolStripMenuItem";
-      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 1 with BG Color";
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1WithBGColorToolStripMenuItem_Click);
       // 
       // exchangeMultiColor2WithBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Name = "exchangeMultiColor2WithBGColorToolStripMenuItem";
-      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 2 with BG Color";
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor2WithBGColorToolStripMenuItem_Click);
       // 
       // exchangeMultiColor1WithMultiColor2ToolStripMenuItem
       // 
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Name = "exchangeMultiColor1WithMultiColor2ToolStripMenuItem";
-      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Text = "Exchange Multi Color 1 with Multi Color 2";
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem_Click);
       // 
@@ -245,48 +246,48 @@
             this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem,
             this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1});
       this.forSelectedSpritesToolStripMenuItem.Name = "forSelectedSpritesToolStripMenuItem";
-      this.forSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+      this.forSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
       this.forSelectedSpritesToolStripMenuItem.Text = "For selected Sprites";
       // 
       // exchangeMulticolor1WithSpriteColorToolStripMenuItem1
       // 
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Name = "exchangeMulticolor1WithSpriteColorToolStripMenuItem1";
-      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
+      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Text = "Exchange Multicolor 1 with sprite color";
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1_Click);
       // 
       // exchangeMulticolor2WithSpriteColorToolStripMenuItem1
       // 
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Name = "exchangeMulticolor2WithSpriteColorToolStripMenuItem1";
-      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
+      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Text = "Exchange Multicolor 2 with sprite color";
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1_Click);
       // 
       // exchangeBGColorWithSpriteColorToolStripMenuItem
       // 
       this.exchangeBGColorWithSpriteColorToolStripMenuItem.Name = "exchangeBGColorWithSpriteColorToolStripMenuItem";
-      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
       this.exchangeBGColorWithSpriteColorToolStripMenuItem.Text = "Exchange BG color with sprite color";
       this.exchangeBGColorWithSpriteColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeBGColorWithSpriteColorToolStripMenuItem_Click);
       // 
       // exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem
       // 
       this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Name = "exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem";
-      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
       this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Text = "Exchange Multicolor 1 with BG color";
       this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Click += new System.EventHandler(this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem_Click);
       // 
       // exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem
       // 
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Name = "exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem";
-      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
+      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Text = "Exchange Multicolor 2 with BG color";
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Click += new System.EventHandler(this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem_Click);
       // 
       // exchangeMulticolor1WithMulticolor2ToolStripMenuItem1
       // 
       this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Name = "exchangeMulticolor1WithMulticolor2ToolStripMenuItem1";
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
       this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Text = "Exchange Multicolor 1 with Multicolor 2";
       this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1_Click);
       // 
@@ -564,7 +565,7 @@
       // btnDeleteSprite
       // 
       this.btnDeleteSprite.Enabled = false;
-      this.btnDeleteSprite.Location = new System.Drawing.Point(258, 281);
+      this.btnDeleteSprite.Location = new System.Drawing.Point(365, 439);
       this.btnDeleteSprite.Name = "btnDeleteSprite";
       this.btnDeleteSprite.Size = new System.Drawing.Size(75, 23);
       this.btnDeleteSprite.TabIndex = 8;
@@ -575,7 +576,7 @@
       // btnInvert
       // 
       this.btnInvert.Image = ((System.Drawing.Image)(resources.GetObject("btnInvert.Image")));
-      this.btnInvert.Location = new System.Drawing.Point(200, 226);
+      this.btnInvert.Location = new System.Drawing.Point(8, 198);
       this.btnInvert.Name = "btnInvert";
       this.btnInvert.Size = new System.Drawing.Size(26, 26);
       this.btnInvert.TabIndex = 7;
@@ -586,7 +587,7 @@
       // btnMirrorY
       // 
       this.btnMirrorY.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorY.Image")));
-      this.btnMirrorY.Location = new System.Drawing.Point(168, 226);
+      this.btnMirrorY.Location = new System.Drawing.Point(8, 166);
       this.btnMirrorY.Name = "btnMirrorY";
       this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorY.TabIndex = 7;
@@ -597,7 +598,7 @@
       // btnMirrorX
       // 
       this.btnMirrorX.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorX.Image")));
-      this.btnMirrorX.Location = new System.Drawing.Point(136, 226);
+      this.btnMirrorX.Location = new System.Drawing.Point(8, 134);
       this.btnMirrorX.Name = "btnMirrorX";
       this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorX.TabIndex = 7;
@@ -608,7 +609,7 @@
       // btnShiftDown
       // 
       this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
-      this.btnShiftDown.Location = new System.Drawing.Point(104, 226);
+      this.btnShiftDown.Location = new System.Drawing.Point(8, 102);
       this.btnShiftDown.Name = "btnShiftDown";
       this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
       this.btnShiftDown.TabIndex = 7;
@@ -619,7 +620,7 @@
       // btnShiftUp
       // 
       this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
-      this.btnShiftUp.Location = new System.Drawing.Point(72, 226);
+      this.btnShiftUp.Location = new System.Drawing.Point(8, 70);
       this.btnShiftUp.Name = "btnShiftUp";
       this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
       this.btnShiftUp.TabIndex = 7;
@@ -630,7 +631,7 @@
       // btnShiftRight
       // 
       this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
-      this.btnShiftRight.Location = new System.Drawing.Point(40, 226);
+      this.btnShiftRight.Location = new System.Drawing.Point(8, 38);
       this.btnShiftRight.Name = "btnShiftRight";
       this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
       this.btnShiftRight.TabIndex = 7;
@@ -641,7 +642,7 @@
       // btnRotateRight
       // 
       this.btnRotateRight.Image = ((System.Drawing.Image)(resources.GetObject("btnRotateRight.Image")));
-      this.btnRotateRight.Location = new System.Drawing.Point(40, 258);
+      this.btnRotateRight.Location = new System.Drawing.Point(8, 262);
       this.btnRotateRight.Name = "btnRotateRight";
       this.btnRotateRight.Size = new System.Drawing.Size(26, 26);
       this.btnRotateRight.TabIndex = 7;
@@ -652,7 +653,7 @@
       // btnRotateLeft
       // 
       this.btnRotateLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnRotateLeft.Image")));
-      this.btnRotateLeft.Location = new System.Drawing.Point(8, 258);
+      this.btnRotateLeft.Location = new System.Drawing.Point(8, 230);
       this.btnRotateLeft.Name = "btnRotateLeft";
       this.btnRotateLeft.Size = new System.Drawing.Size(26, 26);
       this.btnRotateLeft.TabIndex = 7;
@@ -663,7 +664,7 @@
       // btnShiftLeft
       // 
       this.btnShiftLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftLeft.Image")));
-      this.btnShiftLeft.Location = new System.Drawing.Point(8, 226);
+      this.btnShiftLeft.Location = new System.Drawing.Point(8, 6);
       this.btnShiftLeft.Name = "btnShiftLeft";
       this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
       this.btnShiftLeft.TabIndex = 7;
@@ -673,7 +674,7 @@
       // 
       // btnCopyToClipboard
       // 
-      this.btnCopyToClipboard.Location = new System.Drawing.Point(258, 178);
+      this.btnCopyToClipboard.Location = new System.Drawing.Point(227, 413);
       this.btnCopyToClipboard.Name = "btnCopyToClipboard";
       this.btnCopyToClipboard.Size = new System.Drawing.Size(121, 23);
       this.btnCopyToClipboard.TabIndex = 6;
@@ -683,7 +684,7 @@
       // 
       // btnPasteFromClipboard
       // 
-      this.btnPasteFromClipboard.Location = new System.Drawing.Point(258, 149);
+      this.btnPasteFromClipboard.Location = new System.Drawing.Point(227, 385);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
       this.btnPasteFromClipboard.Size = new System.Drawing.Size(121, 23);
       this.btnPasteFromClipboard.TabIndex = 6;
@@ -693,7 +694,7 @@
       // 
       // labelCharNo
       // 
-      this.labelCharNo.Location = new System.Drawing.Point(344, 123);
+      this.labelCharNo.Location = new System.Drawing.Point(304, 363);
       this.labelCharNo.Name = "labelCharNo";
       this.labelCharNo.Size = new System.Drawing.Size(82, 23);
       this.labelCharNo.TabIndex = 5;
@@ -702,7 +703,7 @@
       // checkShowGrid
       // 
       this.checkShowGrid.AutoSize = true;
-      this.checkShowGrid.Location = new System.Drawing.Point(258, 251);
+      this.checkShowGrid.Location = new System.Drawing.Point(365, 415);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
       this.checkShowGrid.TabIndex = 3;
@@ -713,7 +714,7 @@
       // checkMulticolor
       // 
       this.checkMulticolor.AutoSize = true;
-      this.checkMulticolor.Location = new System.Drawing.Point(258, 122);
+      this.checkMulticolor.Location = new System.Drawing.Point(227, 362);
       this.checkMulticolor.Name = "checkMulticolor";
       this.checkMulticolor.Size = new System.Drawing.Size(71, 17);
       this.checkMulticolor.TabIndex = 3;
@@ -724,7 +725,7 @@
       // radioSpriteColor
       // 
       this.radioSpriteColor.AutoSize = true;
-      this.radioSpriteColor.Location = new System.Drawing.Point(258, 84);
+      this.radioSpriteColor.Location = new System.Drawing.Point(13, 442);
       this.radioSpriteColor.Name = "radioSpriteColor";
       this.radioSpriteColor.Size = new System.Drawing.Size(79, 17);
       this.radioSpriteColor.TabIndex = 2;
@@ -736,7 +737,7 @@
       // radioMulticolor2
       // 
       this.radioMulticolor2.AutoSize = true;
-      this.radioMulticolor2.Location = new System.Drawing.Point(258, 57);
+      this.radioMulticolor2.Location = new System.Drawing.Point(13, 415);
       this.radioMulticolor2.Name = "radioMulticolor2";
       this.radioMulticolor2.Size = new System.Drawing.Size(79, 17);
       this.radioMulticolor2.TabIndex = 2;
@@ -748,7 +749,7 @@
       // radioMultiColor1
       // 
       this.radioMultiColor1.AutoSize = true;
-      this.radioMultiColor1.Location = new System.Drawing.Point(258, 30);
+      this.radioMultiColor1.Location = new System.Drawing.Point(13, 388);
       this.radioMultiColor1.Name = "radioMultiColor1";
       this.radioMultiColor1.Size = new System.Drawing.Size(79, 17);
       this.radioMultiColor1.TabIndex = 2;
@@ -760,7 +761,7 @@
       // radioBackground
       // 
       this.radioBackground.AutoSize = true;
-      this.radioBackground.Location = new System.Drawing.Point(258, 3);
+      this.radioBackground.Location = new System.Drawing.Point(13, 361);
       this.radioBackground.Name = "radioBackground";
       this.radioBackground.Size = new System.Drawing.Size(83, 17);
       this.radioBackground.TabIndex = 2;
@@ -774,7 +775,7 @@
       this.comboSpriteColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboSpriteColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboSpriteColor.FormattingEnabled = true;
-      this.comboSpriteColor.Location = new System.Drawing.Point(347, 84);
+      this.comboSpriteColor.Location = new System.Drawing.Point(102, 442);
       this.comboSpriteColor.Name = "comboSpriteColor";
       this.comboSpriteColor.Size = new System.Drawing.Size(79, 21);
       this.comboSpriteColor.TabIndex = 1;
@@ -786,7 +787,7 @@
       this.comboMulticolor2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboMulticolor2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboMulticolor2.FormattingEnabled = true;
-      this.comboMulticolor2.Location = new System.Drawing.Point(347, 57);
+      this.comboMulticolor2.Location = new System.Drawing.Point(102, 415);
       this.comboMulticolor2.Name = "comboMulticolor2";
       this.comboMulticolor2.Size = new System.Drawing.Size(79, 21);
       this.comboMulticolor2.TabIndex = 1;
@@ -798,7 +799,7 @@
       this.comboMulticolor1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboMulticolor1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboMulticolor1.FormattingEnabled = true;
-      this.comboMulticolor1.Location = new System.Drawing.Point(347, 30);
+      this.comboMulticolor1.Location = new System.Drawing.Point(102, 388);
       this.comboMulticolor1.Name = "comboMulticolor1";
       this.comboMulticolor1.Size = new System.Drawing.Size(79, 21);
       this.comboMulticolor1.TabIndex = 1;
@@ -810,7 +811,7 @@
       this.comboBackground.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBackground.FormattingEnabled = true;
-      this.comboBackground.Location = new System.Drawing.Point(347, 2);
+      this.comboBackground.Location = new System.Drawing.Point(102, 360);
       this.comboBackground.Name = "comboBackground";
       this.comboBackground.Size = new System.Drawing.Size(79, 21);
       this.comboBackground.TabIndex = 1;
@@ -822,9 +823,9 @@
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.pictureEditor.DisplayPage = fastImage2;
       this.pictureEditor.Image = null;
-      this.pictureEditor.Location = new System.Drawing.Point(8, 6);
+      this.pictureEditor.Location = new System.Drawing.Point(40, 6);
       this.pictureEditor.Name = "pictureEditor";
-      this.pictureEditor.Size = new System.Drawing.Size(244, 214);
+      this.pictureEditor.Size = new System.Drawing.Size(400, 333);
       this.pictureEditor.TabIndex = 0;
       this.pictureEditor.TabStop = false;
       this.pictureEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseDown);
@@ -847,6 +848,7 @@
       this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
       this.groupBox1.Controls.Add(this.btnImportFromFile);
+      this.groupBox1.Controls.Add(this.btnClearImport);
       this.groupBox1.Controls.Add(this.btnImportFromASM);
       this.groupBox1.Controls.Add(this.btnImportFromBASICHex);
       this.groupBox1.Controls.Add(this.btnImportFromBASIC);
@@ -929,10 +931,10 @@
       this.editDataImport.Multiline = true;
       this.editDataImport.Name = "editDataImport";
       this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataImport.Size = new System.Drawing.Size(429, 309);
+      this.editDataImport.Size = new System.Drawing.Size(415, 309);
       this.editDataImport.TabIndex = 3;
       this.editDataImport.WordWrap = false;
-      this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
+      this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataImport_KeyPress);
       // 
       // groupExport
       // 
@@ -1211,6 +1213,16 @@
       this.columnHeader6.Text = "Y";
       this.columnHeader6.Width = 30;
       // 
+      // btnClearImport
+      // 
+      this.btnClearImport.Location = new System.Drawing.Point(9, 80);
+      this.btnClearImport.Name = "btnClearImport";
+      this.btnClearImport.Size = new System.Drawing.Size(117, 23);
+      this.btnClearImport.TabIndex = 2;
+      this.btnClearImport.Text = "Clear";
+      this.btnClearImport.UseVisualStyleBackColor = true;
+      this.btnClearImport.Click += new System.EventHandler(this.btnClear_Click);
+      // 
       // SpriteEditor
       // 
       this.ClientSize = new System.Drawing.Size(994, 527);
@@ -1344,5 +1356,6 @@
     private System.Windows.Forms.Button btnImportFromBASIC;
     private System.Windows.Forms.Button btnToBASICHex;
     private System.Windows.Forms.Button btnImportFromBASICHex;
-  }
+        private System.Windows.Forms.Button btnClearImport;
+    }
 }
