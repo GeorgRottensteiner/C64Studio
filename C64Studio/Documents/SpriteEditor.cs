@@ -490,12 +490,12 @@ namespace C64Studio
           m_SpriteProject.Sprites[m_CurrentSprite].Data.SetU8At( charY * 3 + byteX, newByte );
           if ( m_SpriteProject.Sprites[m_CurrentSprite].Multicolor )
           {
-            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( X / ( pictureEditor.ClientRectangle.Width / 12 ) * 2, charY, (uint)newColor );
-            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( X / ( pictureEditor.ClientRectangle.Width / 12 ) * 2 + 1, charY, (uint)newColor );
+            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( charX * 2, charY, (uint)newColor );
+            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( charX * 2 + 1, charY, (uint)newColor );
           }
           else
           {
-            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( X / ( pictureEditor.ClientRectangle.Width / 24 ), charY, (uint)newColor );
+            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( charX, charY, (uint)newColor );
           }
 
           SpriteChanged( m_CurrentSprite );
@@ -507,6 +507,8 @@ namespace C64Studio
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
+        int xPos = charX;
+
         int byteX = charX / 8;
         charX %= 8;
         byte charByte = m_SpriteProject.Sprites[m_CurrentSprite].Data.ByteAt( charY * 3 + byteX );
@@ -540,12 +542,12 @@ namespace C64Studio
 
           if ( m_SpriteProject.Sprites[m_CurrentSprite].Multicolor )
           {
-            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( X / ( pictureEditor.ClientRectangle.Width / 12 ) * 2, charY, (uint)m_SpriteProject.BackgroundColor );
-            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( X / ( pictureEditor.ClientRectangle.Width / 12 ) * 2 + 1, charY, (uint)m_SpriteProject.BackgroundColor );
+            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( xPos, charY, (uint)m_SpriteProject.BackgroundColor );
+            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( xPos + 1, charY, (uint)m_SpriteProject.BackgroundColor );
           }
           else
           {
-            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( X / ( pictureEditor.ClientRectangle.Width / 24 ), charY, (uint)m_SpriteProject.BackgroundColor );
+            m_SpriteProject.Sprites[m_CurrentSprite].Image.SetPixel( xPos, charY, (uint)m_SpriteProject.BackgroundColor );
           }
           CurrentSpriteModified();
           pictureEditor.Invalidate();
