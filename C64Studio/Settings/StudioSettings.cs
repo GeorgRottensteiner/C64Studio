@@ -264,6 +264,12 @@ namespace C64Studio
       RegisterFunction( Function.GRAPHIC_ELEMENT_NEXT, "Next Element", FunctionStudioState.ANY );
       RegisterFunction( Function.GRAPHIC_ELEMENT_PREVIOUS, "Previous Element", FunctionStudioState.ANY );
 
+      RegisterFunction( Function.BOOKMARK_ADD, "Add Bookmark", FunctionStudioState.ANY );
+      RegisterFunction( Function.BOOKMARK_DELETE, "Delete Bookmark", FunctionStudioState.ANY );
+      RegisterFunction( Function.BOOKMARK_DELETE_ALL, "Delete All Bookmarks", FunctionStudioState.ANY );
+      RegisterFunction( Function.BOOKMARK_NEXT, "Next Bookmark", FunctionStudioState.ANY );
+      RegisterFunction( Function.BOOKMARK_PREVIOUS, "Previous Bookmark", FunctionStudioState.ANY );
+
       // functions for running debugger
       RegisterFunction( Function.DEBUG_BREAK, "Break into Debugger", FunctionStudioState.DEBUGGER_RUNNING );
 

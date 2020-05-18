@@ -2580,7 +2580,12 @@ namespace C64Studio
       UpdateKeyBinding( C64Studio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
       UpdateKeyBinding( C64Studio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
 
-      UpdateKeyBinding( C64Studio.Types.Function.FIND_NEXT, FastColoredTextBoxNS.FCTBAction.FindNext ); 
+      UpdateKeyBinding( C64Studio.Types.Function.FIND_NEXT, FastColoredTextBoxNS.FCTBAction.FindNext );
+
+      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_ADD, FastColoredTextBoxNS.FCTBAction.BookmarkLine );
+      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_DELETE, FastColoredTextBoxNS.FCTBAction.UnbookmarkLine );
+      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_PREVIOUS, FastColoredTextBoxNS.FCTBAction.GoPrevBookmark );
+      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_NEXT, FastColoredTextBoxNS.FCTBAction.GoNextBookmark );
 
       AutoComplete.Enabled = Core.Settings.ASMShowAutoComplete;
 
@@ -2633,6 +2638,10 @@ namespace C64Studio
           return true;
         case Function.JUMP_TO_LINE:
           JumpToLine();
+          return true;
+        case Function.BOOKMARK_DELETE_ALL:
+          editSource.Bookmarks.Clear();
+          editSource.Invalidate();
           return true;
       }
       return false;

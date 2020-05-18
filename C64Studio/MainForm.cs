@@ -4504,6 +4504,12 @@ namespace C64Studio
     {
       switch ( Function )
       {
+        case Function.BOOKMARK_DELETE_ALL:
+          if ( ActiveContent != null )
+          {
+            return ActiveContent.ApplyFunction( Function );
+          }
+          return false;
         case Types.Function.FIND_NEXT_MESSAGE:
           StudioCore.Navigating.OpenSourceOfNextMessage();
           return true;
