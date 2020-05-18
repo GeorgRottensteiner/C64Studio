@@ -74,7 +74,7 @@
     <br>
   </div>
   <a name="basic"></a>
-  <H2>!BASIC [,&lt;jump address&gt;], !BASIC &lt;line number&gt;,&lt;label&gt; !BASIC &lt;line number&gt;,&lt;text comment,&gt;,&lt;label&gt;</H2>
+  <H2>!BASIC [,&lt;jump address&gt;]<br>!BASIC &lt;line number&gt;,&lt;label&gt;<br>!BASIC &lt;line number&gt;,&lt;text comment,&gt;,&lt;label&gt;</H2>
   <div id="mybody">
     This pseudo op adds a BASIC start line with a sys call to either the given jump address or the first statement after the pseudo op. If not provided otherwise the added BASIC line always has line number 10 and a 4 digit target address. This way the BASIC line will always require 12 bytes.<br>
     <br>
@@ -197,13 +197,16 @@
     <br>
   </div>
   <a name="fill"></a><a name="fi"></a>
-  <H2>!FILL, !FI &lt;count&gt;,&lt;value&gt;</H2>
+  <H2>!FILL, !FI &lt;count&gt;,&lt;value&gt;<br>
+  !FILL, !FI &lt;count&gt;,[expression]</H2>
   <div id="mybody">
     This pseudo op fills the given value count times at the current location.<br>
+    For the expression form the expression is evaluated for every byte. The expression inside the brackets uses the label "i" as index, ranging from 0 to count - 1. Any global "i" label is suspended inside the brackets and restored afterwards.<br>
     <br>
     <br>
     <div id="code"><br>      !fill 8,$ff
       !fill ITEM_COUNT,0
+      !fill 5, [i * 3]
       <br></div>
     <br>
     <br>
@@ -1902,7 +1905,7 @@
     This pseudo op sets the output file name and type. This pseudo op will be overridden by any valid output settings in the element properties.<br>
     <br>
     <br>
-    Valid output types are CBM, PLAIN, D64, T64, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4KBIN, ULTIMAX4KCRT, ULTIMAX8KBIN, ULTIMAX8KCRT, ULTIMAX16KBIN, ULTIMAX16KCRT <br>
+    Valid output types are CBM, PLAIN, D64, T64, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4BIN, ULTIMAX4CRT, ULTIMAX8BIN, ULTIMAX8CRT, ULTIMAX16BIN, ULTIMAX16CRT <br>
     <br>
     For cartridge and tape/disk formats a dummy name is currently inserted in the final file.<br>
     <br>

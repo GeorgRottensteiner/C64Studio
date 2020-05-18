@@ -1,14 +1,8 @@
 ﻿C64Studio
-o Key bindings for bookmarks!
 o charscreen layout change from Docster!
 o charscreen editor - Clear screen option
 o Charset Editor - Selection Picture with toggleable PETSCII sorting (Forum64 thread)
-o !fill 3, [expression,,...several values]
 o Expressions with sin/cos/tan?
-  lsb:
-    !fill 25,<[i * $28]
-  msb:
-    !fill 25,>[i * $28]
 o *=$0801 "Basic"
           rts
   *=$080d "Basic End"

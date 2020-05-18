@@ -98,6 +98,8 @@ namespace C64Studio.Parser
 
     private string                      m_CurrentZoneName = "";
 
+    private int                         m_TemporaryFillLoopPos = -1;
+
 
 
     public ASMFileParser()
@@ -1654,7 +1656,42 @@ namespace C64Studio.Parser
             }
           }
 
-          if ( !EvaluateTokens( LineIndex, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, out resultValue, out numBytesGiven ) )
+          if ( subTokenRange[bracketStartPos].Content == AssemblerSettings.SQUARE_BRACKETS_OPEN )
+          {
+            // a temporary expression! -> we inject "i" as counting label
+            SymbolInfo    oldValue = null;
+            var countSymbol = new SymbolInfo() { Name = "i" };
+            countSymbol.AddressOrValue = m_TemporaryFillLoopPos;
+
+            if ( ASMFileInfo.Labels.ContainsKey( "i" ) )
+            {
+              oldValue = ASMFileInfo.Labels["i"];
+              ASMFileInfo.Labels["i"] = countSymbol;
+            }
+            else
+            {
+              // add temporary label inside expression
+              ASMFileInfo.Labels.Add( "i", countSymbol );
+            }
+
+            bool evaluationResult = EvaluateTokens( LineIndex, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, out resultValue, out numBytesGiven );
+
+            // restore temp symbol
+            if ( oldValue == null )
+            {
+              ASMFileInfo.Labels.Remove( "i" );
+            }
+            else
+            {
+              ASMFileInfo.Labels["i"] = oldValue;
+            }
+
+            if ( !evaluationResult )
+            {
+              return false;
+            }
+          }
+          else if ( !EvaluateTokens( LineIndex, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, out resultValue, out numBytesGiven ) )
           {
             return false;
           }
@@ -5022,23 +5059,80 @@ namespace C64Studio.Parser
       info.NumBytes               = numBytes;
       info.Line                   = parseLine;
 
-      int    fillValue = 0;
+      int fillValue = 0;
+      GR.Memory.ByteBuffer lineData = null;
+
       if ( lineParams.Count == 2 )
       {
-        if ( !EvaluateTokens( lineIndex, lineParams[1], out fillValue ) )
+        if ( ContainsExpression( lineParams[1] ) )
+        {
+          lineData = new GR.Memory.ByteBuffer( (uint)numBytes );
+          
+          for ( int i = 0; i < numBytes; ++i )
+          {
+            m_TemporaryFillLoopPos = i;
+
+            int expressionResult = 0;
+            if ( !EvaluateTokens( lineIndex, lineParams[1], out expressionResult ) )
+            {
+              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + TokensToExpression( lineParams[1] ) );
+              return ParseLineResult.RETURN_NULL;
+            }
+            if ( !ValidByteValue( expressionResult ) )
+            {
+              AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Fill expression for byte " + i.ToString() + " out of bounds, resulting in value " + expressionResult );
+              return ParseLineResult.RETURN_NULL;
+            }
+            lineData.SetU8At( i, (byte)expressionResult );
+          }
+        }
+        else if ( !EvaluateTokens( lineIndex, lineParams[1], out fillValue ) )
         {
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill value parameter: " + TokensToExpression( lineParams[1] ) );
           return ParseLineResult.RETURN_NULL;
         }
       }
-      info.LineData = new GR.Memory.ByteBuffer( (uint)numBytes );
-      for ( int i = 0; i < numBytes; ++i )
+      if ( lineData != null )
       {
-        info.LineData.SetU8At( i, (byte)fillValue );
+        info.LineData = lineData;
       }
-
+      else
+      {
+        info.LineData = new GR.Memory.ByteBuffer( (uint)numBytes );
+        for ( int i = 0; i < numBytes; ++i )
+        {
+          info.LineData.SetU8At( i, (byte)fillValue );
+        }
+      }
       lineSizeInBytes = info.NumBytes;
       return ParseLineResult.OK;
+    }
+
+
+
+    private bool ContainsExpression( List<TokenInfo> Tokens )
+    {
+      if ( Tokens.Count < 2 )
+      {
+        return false;
+      }
+
+      bool  hasOpen = false;
+      for ( int i = 0; i < Tokens.Count; ++i )
+      {
+        if ( Tokens[i].Content == "[" )
+        {
+          hasOpen = true;
+        }
+        else if ( Tokens[i].Content == "]" )
+        {
+          if ( hasOpen )
+          {
+            return true;
+          }
+        }
+      }
+      return false;
     }
 
 
@@ -6431,7 +6525,7 @@ namespace C64Studio.Parser
           continue;
         }
 
-        recheck_line:;
+      recheck_line:;
 
         // split lines by ':'
         int   localIndex = 0;
@@ -11800,23 +11894,6 @@ namespace C64Studio.Parser
       }
       return true;
     }
-
-
-
-    /*
-    public List<Types.TokenInfo> ParseTokenInfo( string Source, int Start, int Length, out int ErrorPos )
-    {
-      ErrorPos = -1;
-
-      ErrorInfo   errInfo = null;
-
-      var result = ParseTokenInfo( Source, Start, Length, out errInfo );
-      if ( errInfo != null )
-      {
-        ErrorPos = errInfo.Pos;
-      }
-      return result;
-    }*/
 
 
 

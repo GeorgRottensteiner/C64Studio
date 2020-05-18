@@ -36,6 +36,8 @@ namespace C64Studio.Parser
     public const string                 INTERNAL_OPENING_BRACE = "╚";
     public const string                 INTERNAL_CLOSING_BRACE = "╝";
     public const string                 INTERNAL_LOCAL_LOOP_LABEL_PREFIX = "_C64STUDIO_LL_";
+    public const string                 SQUARE_BRACKETS_OPEN = "[";
+    public const string                 SQUARE_BRACKETS_CLOSE = "]";
 
 
 
@@ -108,8 +110,8 @@ namespace C64Studio.Parser
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#";
 
-          OpenBracketChars = "(" + INTERNAL_OPENING_BRACE;
-          CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE;
+          OpenBracketChars = "(" + INTERNAL_OPENING_BRACE + SQUARE_BRACKETS_OPEN;
+          CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE + SQUARE_BRACKETS_CLOSE;
 
           LineSeparatorChars = ":";
 

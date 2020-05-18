@@ -229,6 +229,47 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestFillWithExpression()
+    {
+      string      source = @"* = $2000
+                           !fill 5,[i * 8]";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00200008101820", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestFillWithExpressionCascade()
+    {
+      string      source = @"* = $2000
+                           !fill 5,[i * 3] * [i * 3]";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00200009245190", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestFillWithExpressionReusedLabel()
+    {
+      string      source = @"* = $2000
+                           i = 17
+                           !fill 5,[i * 3] + i
+                           !byte i";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "00201114171A1D11", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestTextModeText()
     {
       string      source = @"!to ""text-modes.prg"",cbm
