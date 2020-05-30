@@ -1,4 +1,19 @@
 ﻿C64Studio
+o Charset editor - scaling bug (editor all in one small spot top left!) <- in HUUUUUUGE resolutions?
+o Charset editor:
+    Ctrl-Clicking for single character toggling
+    Category selection should affect the whole selection
+    Open standalone charset editor (and other editors), not only or even instead of the built in one
+    Clear option
+    Move selection, option to move without colors/Properties?
+o GUI Language in resource
+o Please implement multi language, I can do Spanish for controls and help
+o Kategorien, Ich denke, Sie sollten mehrere auswählen, z. B. mehrfarbig, und sie dann mit der Kategorie markieren.
+     Die Auswahlmethode kann auch durch Ziehen und Ablegen am Ende der Auswahl sein.
+     Sie können auch mehrere in übersprungener Form auswählen.
+     Es sollte ein Hinweis darauf vorhanden sein, dass das ausgewählte Zeichen zu einer Kategorie gehört.
+     Wenn mehrere Farben ausgewählt sind, ändert sich das Lineal nicht (?), um diese neuen Zeichen aufzunehmen.
+
 o charscreen layout change from Docster!
 o charscreen editor - Clear screen option
 o Charset Editor - Selection Picture with toggleable PETSCII sorting (Forum64 thread)

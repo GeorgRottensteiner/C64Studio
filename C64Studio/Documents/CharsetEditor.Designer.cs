@@ -34,6 +34,21 @@ namespace C64Studio
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.tabCharEditor = new System.Windows.Forms.TabPage();
       this.characterEditor = new C64Studio.Controls.CharacterEditor();
+      this.tabCategories = new System.Windows.Forms.TabPage();
+      this.groupAllCategories = new System.Windows.Forms.GroupBox();
+      this.btnSortCategories = new System.Windows.Forms.Button();
+      this.groupCategorySpecific = new System.Windows.Forms.GroupBox();
+      this.label5 = new System.Windows.Forms.Label();
+      this.editCollapseIndex = new System.Windows.Forms.TextBox();
+      this.btnCollapseCategory = new System.Windows.Forms.Button();
+      this.btnReseatCategory = new System.Windows.Forms.Button();
+      this.btnDelete = new System.Windows.Forms.Button();
+      this.btnAddCategory = new System.Windows.Forms.Button();
+      this.listCategories = new System.Windows.Forms.ListView();
+      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.editCategoryName = new System.Windows.Forms.TextBox();
+      this.label3 = new System.Windows.Forms.Label();
       this.tabProject = new System.Windows.Forms.TabPage();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnDefaultLowerCase = new System.Windows.Forms.Button();
@@ -65,21 +80,6 @@ namespace C64Studio
       this.btnExportToBASIC = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.btnExportCharset = new System.Windows.Forms.Button();
-      this.tabCategories = new System.Windows.Forms.TabPage();
-      this.groupAllCategories = new System.Windows.Forms.GroupBox();
-      this.btnSortCategories = new System.Windows.Forms.Button();
-      this.groupCategorySpecific = new System.Windows.Forms.GroupBox();
-      this.label5 = new System.Windows.Forms.Label();
-      this.editCollapseIndex = new System.Windows.Forms.TextBox();
-      this.btnCollapseCategory = new System.Windows.Forms.Button();
-      this.btnReseatCategory = new System.Windows.Forms.Button();
-      this.btnDelete = new System.Windows.Forms.Button();
-      this.btnAddCategory = new System.Windows.Forms.Button();
-      this.listCategories = new System.Windows.Forms.ListView();
-      this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.editCategoryName = new System.Windows.Forms.TextBox();
-      this.label3 = new System.Windows.Forms.Label();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.openCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,12 +93,12 @@ namespace C64Studio
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabCharsetEditor.SuspendLayout();
       this.tabCharEditor.SuspendLayout();
-      this.tabProject.SuspendLayout();
-      this.groupBox1.SuspendLayout();
-      this.groupExport.SuspendLayout();
       this.tabCategories.SuspendLayout();
       this.groupAllCategories.SuspendLayout();
       this.groupCategorySpecific.SuspendLayout();
+      this.tabProject.SuspendLayout();
+      this.groupBox1.SuspendLayout();
+      this.groupExport.SuspendLayout();
       this.menuStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -133,6 +133,158 @@ namespace C64Studio
       this.characterEditor.TabIndex = 0;
       this.characterEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.characterEditor_Modified);
       this.characterEditor.CategoryModified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.characterEditor_CategoryModified);
+      // 
+      // tabCategories
+      // 
+      this.tabCategories.Controls.Add(this.groupAllCategories);
+      this.tabCategories.Controls.Add(this.groupCategorySpecific);
+      this.tabCategories.Controls.Add(this.btnDelete);
+      this.tabCategories.Controls.Add(this.btnAddCategory);
+      this.tabCategories.Controls.Add(this.listCategories);
+      this.tabCategories.Controls.Add(this.editCategoryName);
+      this.tabCategories.Controls.Add(this.label3);
+      this.tabCategories.Location = new System.Drawing.Point(4, 22);
+      this.tabCategories.Name = "tabCategories";
+      this.tabCategories.Size = new System.Drawing.Size(1056, 477);
+      this.tabCategories.TabIndex = 2;
+      this.tabCategories.Text = "Categories";
+      this.tabCategories.UseVisualStyleBackColor = true;
+      // 
+      // groupAllCategories
+      // 
+      this.groupAllCategories.Controls.Add(this.btnSortCategories);
+      this.groupAllCategories.Location = new System.Drawing.Point(263, 112);
+      this.groupAllCategories.Name = "groupAllCategories";
+      this.groupAllCategories.Size = new System.Drawing.Size(255, 76);
+      this.groupAllCategories.TabIndex = 4;
+      this.groupAllCategories.TabStop = false;
+      this.groupAllCategories.Text = "All Categories";
+      // 
+      // btnSortCategories
+      // 
+      this.btnSortCategories.Location = new System.Drawing.Point(6, 19);
+      this.btnSortCategories.Name = "btnSortCategories";
+      this.btnSortCategories.Size = new System.Drawing.Size(105, 23);
+      this.btnSortCategories.TabIndex = 3;
+      this.btnSortCategories.Text = "Sort by Categories";
+      this.btnSortCategories.UseVisualStyleBackColor = true;
+      this.btnSortCategories.Click += new System.EventHandler(this.btnSortByCategory_Click);
+      // 
+      // groupCategorySpecific
+      // 
+      this.groupCategorySpecific.Controls.Add(this.label5);
+      this.groupCategorySpecific.Controls.Add(this.editCollapseIndex);
+      this.groupCategorySpecific.Controls.Add(this.btnCollapseCategory);
+      this.groupCategorySpecific.Controls.Add(this.btnReseatCategory);
+      this.groupCategorySpecific.Location = new System.Drawing.Point(263, 30);
+      this.groupCategorySpecific.Name = "groupCategorySpecific";
+      this.groupCategorySpecific.Size = new System.Drawing.Size(255, 76);
+      this.groupCategorySpecific.TabIndex = 4;
+      this.groupCategorySpecific.TabStop = false;
+      this.groupCategorySpecific.Text = "Selected Category";
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(117, 52);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(47, 13);
+      this.label5.TabIndex = 6;
+      this.label5.Text = "at index:";
+      // 
+      // editCollapseIndex
+      // 
+      this.editCollapseIndex.Location = new System.Drawing.Point(180, 49);
+      this.editCollapseIndex.Name = "editCollapseIndex";
+      this.editCollapseIndex.Size = new System.Drawing.Size(69, 20);
+      this.editCollapseIndex.TabIndex = 5;
+      // 
+      // btnCollapseCategory
+      // 
+      this.btnCollapseCategory.Enabled = false;
+      this.btnCollapseCategory.Location = new System.Drawing.Point(6, 19);
+      this.btnCollapseCategory.Name = "btnCollapseCategory";
+      this.btnCollapseCategory.Size = new System.Drawing.Size(140, 23);
+      this.btnCollapseCategory.TabIndex = 3;
+      this.btnCollapseCategory.Text = "Collapse Unique Chars";
+      this.btnCollapseCategory.UseVisualStyleBackColor = true;
+      this.btnCollapseCategory.Click += new System.EventHandler(this.btnCollapseCategory_Click);
+      // 
+      // btnReseatCategory
+      // 
+      this.btnReseatCategory.Enabled = false;
+      this.btnReseatCategory.Location = new System.Drawing.Point(6, 47);
+      this.btnReseatCategory.Name = "btnReseatCategory";
+      this.btnReseatCategory.Size = new System.Drawing.Size(105, 23);
+      this.btnReseatCategory.TabIndex = 3;
+      this.btnReseatCategory.Text = "Reseat Category";
+      this.btnReseatCategory.UseVisualStyleBackColor = true;
+      this.btnReseatCategory.Click += new System.EventHandler(this.btnReseatCategory_Click);
+      // 
+      // btnDelete
+      // 
+      this.btnDelete.Enabled = false;
+      this.btnDelete.Location = new System.Drawing.Point(344, 1);
+      this.btnDelete.Name = "btnDelete";
+      this.btnDelete.Size = new System.Drawing.Size(96, 23);
+      this.btnDelete.TabIndex = 3;
+      this.btnDelete.Text = "Delete Category";
+      this.btnDelete.UseVisualStyleBackColor = true;
+      this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+      // 
+      // btnAddCategory
+      // 
+      this.btnAddCategory.Enabled = false;
+      this.btnAddCategory.Location = new System.Drawing.Point(263, 1);
+      this.btnAddCategory.Name = "btnAddCategory";
+      this.btnAddCategory.Size = new System.Drawing.Size(75, 23);
+      this.btnAddCategory.TabIndex = 3;
+      this.btnAddCategory.Text = "Add";
+      this.btnAddCategory.UseVisualStyleBackColor = true;
+      this.btnAddCategory.Click += new System.EventHandler(this.btnAddCategory_Click);
+      // 
+      // listCategories
+      // 
+      this.listCategories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+      this.listCategories.FullRowSelect = true;
+      this.listCategories.HideSelection = false;
+      this.listCategories.Location = new System.Drawing.Point(11, 29);
+      this.listCategories.Name = "listCategories";
+      this.listCategories.ShowGroups = false;
+      this.listCategories.Size = new System.Drawing.Size(246, 155);
+      this.listCategories.TabIndex = 2;
+      this.listCategories.UseCompatibleStateImageBehavior = false;
+      this.listCategories.View = System.Windows.Forms.View.Details;
+      this.listCategories.SelectedIndexChanged += new System.EventHandler(this.listCategories_SelectedIndexChanged);
+      // 
+      // columnHeader1
+      // 
+      this.columnHeader1.Text = "Name";
+      this.columnHeader1.Width = 150;
+      // 
+      // columnHeader2
+      // 
+      this.columnHeader2.Text = "No. Chars";
+      this.columnHeader2.Width = 67;
+      // 
+      // editCategoryName
+      // 
+      this.editCategoryName.Location = new System.Drawing.Point(83, 3);
+      this.editCategoryName.Name = "editCategoryName";
+      this.editCategoryName.Size = new System.Drawing.Size(174, 20);
+      this.editCategoryName.TabIndex = 1;
+      this.editCategoryName.TextChanged += new System.EventHandler(this.editCategoryName_TextChanged);
+      // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(8, 6);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(52, 13);
+      this.label3.TabIndex = 0;
+      this.label3.Text = "Category:";
       // 
       // tabProject
       // 
@@ -292,18 +444,18 @@ namespace C64Studio
       this.label7.AutoSize = true;
       this.label7.Location = new System.Drawing.Point(292, 111);
       this.label7.Name = "label7";
-      this.label7.Size = new System.Drawing.Size(61, 13);
+      this.label7.Size = new System.Drawing.Size(55, 13);
       this.label7.TabIndex = 9;
-      this.label7.Text = "Line Offset:";
+      this.label7.Text = "Line Step:";
       // 
       // label6
       // 
       this.label6.AutoSize = true;
       this.label6.Location = new System.Drawing.Point(135, 111);
       this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(47, 13);
+      this.label6.Size = new System.Drawing.Size(55, 13);
       this.label6.TabIndex = 9;
-      this.label6.Text = "Line No:";
+      this.label6.Text = "Start Line:";
       // 
       // comboExportRange
       // 
@@ -471,158 +623,6 @@ namespace C64Studio
       this.btnExportCharset.UseVisualStyleBackColor = true;
       this.btnExportCharset.Click += new System.EventHandler(this.btnExportCharset_Click);
       // 
-      // tabCategories
-      // 
-      this.tabCategories.Controls.Add(this.groupAllCategories);
-      this.tabCategories.Controls.Add(this.groupCategorySpecific);
-      this.tabCategories.Controls.Add(this.btnDelete);
-      this.tabCategories.Controls.Add(this.btnAddCategory);
-      this.tabCategories.Controls.Add(this.listCategories);
-      this.tabCategories.Controls.Add(this.editCategoryName);
-      this.tabCategories.Controls.Add(this.label3);
-      this.tabCategories.Location = new System.Drawing.Point(4, 22);
-      this.tabCategories.Name = "tabCategories";
-      this.tabCategories.Size = new System.Drawing.Size(1056, 477);
-      this.tabCategories.TabIndex = 2;
-      this.tabCategories.Text = "Categories";
-      this.tabCategories.UseVisualStyleBackColor = true;
-      // 
-      // groupAllCategories
-      // 
-      this.groupAllCategories.Controls.Add(this.btnSortCategories);
-      this.groupAllCategories.Location = new System.Drawing.Point(263, 112);
-      this.groupAllCategories.Name = "groupAllCategories";
-      this.groupAllCategories.Size = new System.Drawing.Size(255, 76);
-      this.groupAllCategories.TabIndex = 4;
-      this.groupAllCategories.TabStop = false;
-      this.groupAllCategories.Text = "All Categories";
-      // 
-      // btnSortCategories
-      // 
-      this.btnSortCategories.Location = new System.Drawing.Point(6, 19);
-      this.btnSortCategories.Name = "btnSortCategories";
-      this.btnSortCategories.Size = new System.Drawing.Size(105, 23);
-      this.btnSortCategories.TabIndex = 3;
-      this.btnSortCategories.Text = "Sort by Categories";
-      this.btnSortCategories.UseVisualStyleBackColor = true;
-      this.btnSortCategories.Click += new System.EventHandler(this.btnSortByCategory_Click);
-      // 
-      // groupCategorySpecific
-      // 
-      this.groupCategorySpecific.Controls.Add(this.label5);
-      this.groupCategorySpecific.Controls.Add(this.editCollapseIndex);
-      this.groupCategorySpecific.Controls.Add(this.btnCollapseCategory);
-      this.groupCategorySpecific.Controls.Add(this.btnReseatCategory);
-      this.groupCategorySpecific.Location = new System.Drawing.Point(263, 30);
-      this.groupCategorySpecific.Name = "groupCategorySpecific";
-      this.groupCategorySpecific.Size = new System.Drawing.Size(255, 76);
-      this.groupCategorySpecific.TabIndex = 4;
-      this.groupCategorySpecific.TabStop = false;
-      this.groupCategorySpecific.Text = "Selected Category";
-      // 
-      // label5
-      // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(117, 52);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(47, 13);
-      this.label5.TabIndex = 6;
-      this.label5.Text = "at index:";
-      // 
-      // editCollapseIndex
-      // 
-      this.editCollapseIndex.Location = new System.Drawing.Point(180, 49);
-      this.editCollapseIndex.Name = "editCollapseIndex";
-      this.editCollapseIndex.Size = new System.Drawing.Size(69, 20);
-      this.editCollapseIndex.TabIndex = 5;
-      // 
-      // btnCollapseCategory
-      // 
-      this.btnCollapseCategory.Enabled = false;
-      this.btnCollapseCategory.Location = new System.Drawing.Point(6, 19);
-      this.btnCollapseCategory.Name = "btnCollapseCategory";
-      this.btnCollapseCategory.Size = new System.Drawing.Size(140, 23);
-      this.btnCollapseCategory.TabIndex = 3;
-      this.btnCollapseCategory.Text = "Collapse Unique Chars";
-      this.btnCollapseCategory.UseVisualStyleBackColor = true;
-      this.btnCollapseCategory.Click += new System.EventHandler(this.btnCollapseCategory_Click);
-      // 
-      // btnReseatCategory
-      // 
-      this.btnReseatCategory.Enabled = false;
-      this.btnReseatCategory.Location = new System.Drawing.Point(6, 47);
-      this.btnReseatCategory.Name = "btnReseatCategory";
-      this.btnReseatCategory.Size = new System.Drawing.Size(105, 23);
-      this.btnReseatCategory.TabIndex = 3;
-      this.btnReseatCategory.Text = "Reseat Category";
-      this.btnReseatCategory.UseVisualStyleBackColor = true;
-      this.btnReseatCategory.Click += new System.EventHandler(this.btnReseatCategory_Click);
-      // 
-      // btnDelete
-      // 
-      this.btnDelete.Enabled = false;
-      this.btnDelete.Location = new System.Drawing.Point(344, 1);
-      this.btnDelete.Name = "btnDelete";
-      this.btnDelete.Size = new System.Drawing.Size(96, 23);
-      this.btnDelete.TabIndex = 3;
-      this.btnDelete.Text = "Delete Category";
-      this.btnDelete.UseVisualStyleBackColor = true;
-      this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-      // 
-      // btnAddCategory
-      // 
-      this.btnAddCategory.Enabled = false;
-      this.btnAddCategory.Location = new System.Drawing.Point(263, 1);
-      this.btnAddCategory.Name = "btnAddCategory";
-      this.btnAddCategory.Size = new System.Drawing.Size(75, 23);
-      this.btnAddCategory.TabIndex = 3;
-      this.btnAddCategory.Text = "Add";
-      this.btnAddCategory.UseVisualStyleBackColor = true;
-      this.btnAddCategory.Click += new System.EventHandler(this.btnAddCategory_Click);
-      // 
-      // listCategories
-      // 
-      this.listCategories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-      this.listCategories.FullRowSelect = true;
-      this.listCategories.HideSelection = false;
-      this.listCategories.Location = new System.Drawing.Point(11, 29);
-      this.listCategories.Name = "listCategories";
-      this.listCategories.ShowGroups = false;
-      this.listCategories.Size = new System.Drawing.Size(246, 155);
-      this.listCategories.TabIndex = 2;
-      this.listCategories.UseCompatibleStateImageBehavior = false;
-      this.listCategories.View = System.Windows.Forms.View.Details;
-      this.listCategories.SelectedIndexChanged += new System.EventHandler(this.listCategories_SelectedIndexChanged);
-      // 
-      // columnHeader1
-      // 
-      this.columnHeader1.Text = "Name";
-      this.columnHeader1.Width = 150;
-      // 
-      // columnHeader2
-      // 
-      this.columnHeader2.Text = "No. Chars";
-      this.columnHeader2.Width = 67;
-      // 
-      // editCategoryName
-      // 
-      this.editCategoryName.Location = new System.Drawing.Point(83, 3);
-      this.editCategoryName.Name = "editCategoryName";
-      this.editCategoryName.Size = new System.Drawing.Size(174, 20);
-      this.editCategoryName.TabIndex = 1;
-      this.editCategoryName.TextChanged += new System.EventHandler(this.editCategoryName_TextChanged);
-      // 
-      // label3
-      // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(8, 6);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(52, 13);
-      this.label3.TabIndex = 0;
-      this.label3.Text = "Category:";
-      // 
       // menuStrip1
       // 
       this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -650,7 +650,7 @@ namespace C64Studio
       // openCharsetProjectToolStripMenuItem
       // 
       this.openCharsetProjectToolStripMenuItem.Name = "openCharsetProjectToolStripMenuItem";
-      this.openCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+      this.openCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
       this.openCharsetProjectToolStripMenuItem.Text = "&Open Charset Project...";
       this.openCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
       // 
@@ -658,7 +658,7 @@ namespace C64Studio
       // 
       this.saveCharsetProjectToolStripMenuItem.Enabled = false;
       this.saveCharsetProjectToolStripMenuItem.Name = "saveCharsetProjectToolStripMenuItem";
-      this.saveCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+      this.saveCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
       this.saveCharsetProjectToolStripMenuItem.Text = "&Save Project";
       this.saveCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.saveCharsetProjectToolStripMenuItem_Click);
       // 
@@ -666,31 +666,31 @@ namespace C64Studio
       // 
       this.closeCharsetProjectToolStripMenuItem.Enabled = false;
       this.closeCharsetProjectToolStripMenuItem.Name = "closeCharsetProjectToolStripMenuItem";
-      this.closeCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+      this.closeCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
       this.closeCharsetProjectToolStripMenuItem.Text = "&Close Charset Project";
       this.closeCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.closeCharsetProjectToolStripMenuItem_Click);
       // 
       // toolStripSeparator1
       // 
       this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(263, 6);
+      this.toolStripSeparator1.Size = new System.Drawing.Size(262, 6);
       // 
       // exchangeMultiColors1And2ToolStripMenuItem
       // 
       this.exchangeMultiColors1And2ToolStripMenuItem.Name = "exchangeMultiColors1And2ToolStripMenuItem";
-      this.exchangeMultiColors1And2ToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+      this.exchangeMultiColors1And2ToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
       this.exchangeMultiColors1And2ToolStripMenuItem.Text = "Exchange Multi colors 1 and 2";
       // 
       // exchangeMultiColor1AndBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor1AndBGColorToolStripMenuItem.Name = "exchangeMultiColor1AndBGColorToolStripMenuItem";
-      this.exchangeMultiColor1AndBGColorToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+      this.exchangeMultiColor1AndBGColorToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
       this.exchangeMultiColor1AndBGColorToolStripMenuItem.Text = "Exchange Multi color 1 and BG color";
       // 
       // exchangeMultiColor2AndBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Name = "exchangeMultiColor2AndBGColorToolStripMenuItem";
-      this.exchangeMultiColor2AndBGColorToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+      this.exchangeMultiColor2AndBGColorToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Text = "Exchange Multi color 2 and BG color";
       // 
       // CharsetEditor
@@ -704,16 +704,16 @@ namespace C64Studio
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
       this.tabCharsetEditor.ResumeLayout(false);
       this.tabCharEditor.ResumeLayout(false);
-      this.tabProject.ResumeLayout(false);
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
-      this.groupExport.ResumeLayout(false);
-      this.groupExport.PerformLayout();
       this.tabCategories.ResumeLayout(false);
       this.tabCategories.PerformLayout();
       this.groupAllCategories.ResumeLayout(false);
       this.groupCategorySpecific.ResumeLayout(false);
       this.groupCategorySpecific.PerformLayout();
+      this.tabProject.ResumeLayout(false);
+      this.groupBox1.ResumeLayout(false);
+      this.groupBox1.PerformLayout();
+      this.groupExport.ResumeLayout(false);
+      this.groupExport.PerformLayout();
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();
       this.ResumeLayout(false);

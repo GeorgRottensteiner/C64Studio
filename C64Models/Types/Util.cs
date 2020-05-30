@@ -335,5 +335,9 @@ namespace C64Studio
 
 
 
+    internal static string DoubleToString( double Value )
+    {
+      return Value.ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture );
+    }
   }
 }

@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.btnExchangeColors = new C64Studio.Controls.MenuButton();
@@ -93,6 +93,7 @@
       this.tabProject = new System.Windows.Forms.TabPage();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnImportFromFile = new System.Windows.Forms.Button();
+      this.btnClearImport = new System.Windows.Forms.Button();
       this.btnImportFromASM = new System.Windows.Forms.Button();
       this.btnImportFromBASICHex = new System.Windows.Forms.Button();
       this.btnImportFromBASIC = new System.Windows.Forms.Button();
@@ -132,7 +133,6 @@
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnClearImport = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabSpriteEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -554,7 +554,7 @@
       // layerPreview
       // 
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.layerPreview.DisplayPage = fastImage1;
+      this.layerPreview.DisplayPage = fastImage3;
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(136, 3);
       this.layerPreview.Name = "layerPreview";
@@ -821,7 +821,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage4;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(40, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -840,7 +840,7 @@
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
       this.tabProject.Size = new System.Drawing.Size(986, 477);
       this.tabProject.TabIndex = 1;
-      this.tabProject.Text = "Project";
+      this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
       // 
       // groupBox1
@@ -871,6 +871,16 @@
       this.btnImportFromFile.Text = "From File...";
       this.btnImportFromFile.UseVisualStyleBackColor = true;
       this.btnImportFromFile.Click += new System.EventHandler(this.btnImportSprite_Click);
+      // 
+      // btnClearImport
+      // 
+      this.btnClearImport.Location = new System.Drawing.Point(9, 80);
+      this.btnClearImport.Name = "btnClearImport";
+      this.btnClearImport.Size = new System.Drawing.Size(117, 23);
+      this.btnClearImport.TabIndex = 2;
+      this.btnClearImport.Text = "Clear";
+      this.btnClearImport.UseVisualStyleBackColor = true;
+      this.btnClearImport.Click += new System.EventHandler(this.btnClear_Click);
       // 
       // btnImportFromASM
       // 
@@ -1006,9 +1016,9 @@
       this.label1.AutoSize = true;
       this.label1.Location = new System.Drawing.Point(285, 111);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(61, 13);
+      this.label1.Size = new System.Drawing.Size(55, 13);
       this.label1.TabIndex = 26;
-      this.label1.Text = "Line Offset:";
+      this.label1.Text = "Line Step:";
       // 
       // editSpriteFrom
       // 
@@ -1023,9 +1033,9 @@
       this.label8.AutoSize = true;
       this.label8.Location = new System.Drawing.Point(128, 111);
       this.label8.Name = "label8";
-      this.label8.Size = new System.Drawing.Size(47, 13);
+      this.label8.Size = new System.Drawing.Size(55, 13);
       this.label8.TabIndex = 27;
-      this.label8.Text = "Line No:";
+      this.label8.Text = "Start Line:";
       // 
       // labelCharactersTo
       // 
@@ -1212,16 +1222,6 @@
       // 
       this.columnHeader6.Text = "Y";
       this.columnHeader6.Width = 30;
-      // 
-      // btnClearImport
-      // 
-      this.btnClearImport.Location = new System.Drawing.Point(9, 80);
-      this.btnClearImport.Name = "btnClearImport";
-      this.btnClearImport.Size = new System.Drawing.Size(117, 23);
-      this.btnClearImport.TabIndex = 2;
-      this.btnClearImport.Text = "Clear";
-      this.btnClearImport.UseVisualStyleBackColor = true;
-      this.btnClearImport.Click += new System.EventHandler(this.btnClear_Click);
       // 
       // SpriteEditor
       // 

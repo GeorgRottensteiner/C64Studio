@@ -173,7 +173,7 @@
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
       this.tabProject.Size = new System.Drawing.Size(956, 502);
       this.tabProject.TabIndex = 1;
-      this.tabProject.Text = "Project";
+      this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
       // 
       // groupBox1
@@ -261,18 +261,18 @@
       this.label3.AutoSize = true;
       this.label3.Location = new System.Drawing.Point(276, 224);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(61, 13);
+      this.label3.Size = new System.Drawing.Size(55, 13);
       this.label3.TabIndex = 26;
-      this.label3.Text = "Line Offset:";
+      this.label3.Text = "Line Step:";
       // 
       // label4
       // 
       this.label4.AutoSize = true;
       this.label4.Location = new System.Drawing.Point(155, 224);
       this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(47, 13);
+      this.label4.Size = new System.Drawing.Size(55, 13);
       this.label4.TabIndex = 27;
-      this.label4.Text = "Line No:";
+      this.label4.Text = "Start Line:";
       // 
       // btnExportToBASICHexData
       // 

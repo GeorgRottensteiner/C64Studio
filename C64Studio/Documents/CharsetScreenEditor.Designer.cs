@@ -356,18 +356,18 @@
       this.label3.AutoSize = true;
       this.label3.Location = new System.Drawing.Point(274, 306);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(61, 13);
+      this.label3.Size = new System.Drawing.Size(55, 13);
       this.label3.TabIndex = 21;
-      this.label3.Text = "Line Offset:";
+      this.label3.Text = "Line Step:";
       // 
       // label4
       // 
       this.label4.AutoSize = true;
       this.label4.Location = new System.Drawing.Point(117, 306);
       this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(47, 13);
+      this.label4.Size = new System.Drawing.Size(55, 13);
       this.label4.TabIndex = 22;
-      this.label4.Text = "Line No:";
+      this.label4.Text = "Start Line:";
       // 
       // checkExportHex
       // 
