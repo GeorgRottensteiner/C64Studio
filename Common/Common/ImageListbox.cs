@@ -238,7 +238,7 @@ namespace GR.Forms
       }
       set
       {
-        SetSelection( value, false, -1 );
+        SetSelection( value, false, -1, false );
       }
     }
 
@@ -568,7 +568,7 @@ namespace GR.Forms
 
 
 
-    protected void SetSelection( int SelectedIndex, bool SelectionIsRange, int AnchorIndex )
+    protected void SetSelection( int SelectedIndex, bool SelectionIsRange, int AnchorIndex, bool ToggleSelectionState )
     {
       bool  selectedIndexChanged = ( m_SelectedItem != SelectedIndex );
       bool  selectionIsRangeChanged = ( m_SelectionIsRange != SelectionIsRange );
@@ -647,26 +647,29 @@ namespace GR.Forms
       base.OnMouseDown( e );
       int oldIndex = SelectedIndex;
       int newIndex = ItemAtLocation( e.X, e.Y );
+
+      bool toggleSelection = ( ( System.Windows.Forms.Control.ModifierKeys & Keys.Control ) != 0 );
+
       if ( ( System.Windows.Forms.Control.ModifierKeys & Keys.Shift ) != 0 )
       {
         // range-selection
-        SetSelection( newIndex, true, oldIndex );
+        SetSelection( newIndex, true, oldIndex, toggleSelection );
       }
       else if ( ( System.Windows.Forms.Control.ModifierKeys & Keys.Alt ) != 0 )
       {
         if ( m_SelectionAnchor == -1 )
         {
-          SetSelection( newIndex, false, oldIndex );
+          SetSelection( newIndex, false, oldIndex, toggleSelection );
         }
         else
         {
-          SetSelection( newIndex, false, m_SelectionAnchor );
+          SetSelection( newIndex, false, m_SelectionAnchor, toggleSelection );
         }
       }
       else
       {
         // single item selected
-        SetSelection( newIndex, false, -1 );
+        SetSelection( newIndex, false, -1, toggleSelection );
       }
       Focus();
     }
@@ -922,17 +925,17 @@ namespace GR.Forms
         if ( ( SelectedIndex == -1 )
         &&   ( Items.Count > 0 ) )
         {
-          SetSelection( 0, false, 0 );
+          SetSelection( 0, false, 0, false );
         }
         if ( SelectedIndex >= m_ItemsPerLine )
         {
           if ( m_SelectionAnchor != -1 )
           {
-            SetSelection( SelectedIndex - m_ItemsPerLine, true, m_SelectionAnchor );
+            SetSelection( SelectedIndex - m_ItemsPerLine, true, m_SelectionAnchor, false );
           }
           else
           {
-            SetSelection( SelectedIndex - m_ItemsPerLine, true, SelectedIndex );
+            SetSelection( SelectedIndex - m_ItemsPerLine, true, SelectedIndex, false );
           }
         }
         return true;
@@ -942,11 +945,11 @@ namespace GR.Forms
         if ( ( SelectedIndex == -1 )
         &&   ( Items.Count > 0 ) )
         {
-          SetSelection( 0, false, -1 );
+          SetSelection( 0, false, -1, false );
         }
         if ( SelectedIndex >= m_ItemsPerLine )
         {
-          SetSelection( SelectedIndex - m_ItemsPerLine, false, -1 );
+          SetSelection( SelectedIndex - m_ItemsPerLine, false, -1, false );
         }
         return true;
       }
@@ -955,17 +958,17 @@ namespace GR.Forms
         if ( ( SelectedIndex == -1 )
         &&   ( Items.Count > 0 ) )
         {
-          SetSelection( 0, false, 0 );
+          SetSelection( 0, false, 0, false );
         }
         if ( SelectedIndex > 0 )
         {
           if ( m_SelectionAnchor != -1 )
           {
-            SetSelection( SelectedIndex - 1, true, m_SelectionAnchor );
+            SetSelection( SelectedIndex - 1, true, m_SelectionAnchor, false );
           }
           else
           {
-            SetSelection( SelectedIndex - 1, true, SelectedIndex );
+            SetSelection( SelectedIndex - 1, true, SelectedIndex, false );
           }
         }
         return true;
@@ -975,11 +978,11 @@ namespace GR.Forms
         if ( ( SelectedIndex == -1 )
         &&   ( Items.Count > 0 ) )
         {
-          SetSelection( 0, false, -1 );
+          SetSelection( 0, false, -1, false );
         }
         if ( SelectedIndex > 0 )
         {
-          SetSelection( SelectedIndex - 1, false, -1 );
+          SetSelection( SelectedIndex - 1, false, -1, false );
         }
         return true;
       }
@@ -988,18 +991,18 @@ namespace GR.Forms
         if ( ( SelectedIndex == -1 )
         &&   ( Items.Count > 0 ) )
         {
-          SetSelection( Items.Count - 1, true, -1 );
+          SetSelection( Items.Count - 1, true, -1, false );
           return true;
         }
         if ( SelectedIndex + 1 < Items.Count )
         {
           if ( m_SelectionAnchor != -1 )
           {
-            SetSelection( SelectedIndex + 1, true, m_SelectionAnchor );
+            SetSelection( SelectedIndex + 1, true, m_SelectionAnchor, false );
           }
           else
           {
-            SetSelection( SelectedIndex + 1, true, SelectedIndex );
+            SetSelection( SelectedIndex + 1, true, SelectedIndex, false );
           }
         }
         return true;
@@ -1009,11 +1012,11 @@ namespace GR.Forms
         if ( ( SelectedIndex == -1 )
         &&   ( Items.Count > 0 ) )
         {
-          SetSelection( Items.Count - 1, false, -1 );
+          SetSelection( Items.Count - 1, false, -1, false );
         }
         if ( SelectedIndex + 1 < Items.Count )
         {
-          SetSelection( SelectedIndex + 1, false, -1 );
+          SetSelection( SelectedIndex + 1, false, -1, false );
         }
         return true;
       }
@@ -1022,17 +1025,17 @@ namespace GR.Forms
         if ( ( SelectedIndex == -1 )
         &&   ( Items.Count > 0 ) )
         {
-          SetSelection( Items.Count - 1, false, -1 );
+          SetSelection( Items.Count - 1, false, -1, false );
         }
         if ( SelectedIndex + m_ItemsPerLine < Items.Count )
         {
           if ( m_SelectionAnchor == -1 )
           {
-            SetSelection( SelectedIndex + m_ItemsPerLine, true, SelectedIndex );
+            SetSelection( SelectedIndex + m_ItemsPerLine, true, SelectedIndex, false );
           }
           else
           {
-            SetSelection( SelectedIndex + m_ItemsPerLine, true, m_SelectionAnchor );
+            SetSelection( SelectedIndex + m_ItemsPerLine, true, m_SelectionAnchor, false );
           }
         }
         return true;
@@ -1042,11 +1045,11 @@ namespace GR.Forms
         if ( ( SelectedIndex == -1 )
         &&   ( Items.Count > 0 ) )
         {
-          SetSelection( Items.Count - 1, false, -1 );
+          SetSelection( Items.Count - 1, false, -1, false );
         }
         if ( SelectedIndex + m_ItemsPerLine < Items.Count )
         {
-          SetSelection( SelectedIndex + m_ItemsPerLine, false, -1 );
+          SetSelection( SelectedIndex + m_ItemsPerLine, false, -1, false );
         }
         return true;
       }

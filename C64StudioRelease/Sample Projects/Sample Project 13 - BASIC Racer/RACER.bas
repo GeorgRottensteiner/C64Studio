@@ -1,4 +1,4 @@
-10 POKE53280,0:POKE53281,11:SC=0:C$=" {blk}{CBM-D}{lblu}{CBM P}{blk}{CBM-F} {down}{left}{left}{left}{left}{left} {lblu}{CBM-R}{rvon}{Shift-C}{rvof}{CBM-R} {down}{left}{left}{left}{left}{left} {blk}{rvon} {rvof}{lblu}{CBM-U}{blk}{rvon} {rvof} {up}{up}{left}{left}{left}{left}{left}"
+10 POKE53280,0:POKE53281,11:SC=0:C$=" {blk}{CBM-D}{lblu}{CBM-P}{blk}{CBM-F} {down}{left}{left}{left}{left}{left} {lblu}{CBM-R}{rvon}{Shift-C}{rvof}{CBM-R} {down}{left}{left}{left}{left}{left} {blk}{rvon} {rvof}{lblu}{CBM-U}{blk}{rvon} {rvof} {up}{up}{left}{left}{left}{left}{left}"
 20 X=18:FORI=0TO62STEP3:POKE832+I,0:POKE833+I,255:POKE834+I,0:NEXT:V=53248:POKE2040,13
 30 POKEV,172:POKEV+1,0:POKEV+21,1:POKEV+28,0:POKEV+39,7:POKEV+27,1:C=172:D=0:PRINT"{blk}{clr}";
 40 FORI=0TO960STEP40:POKE1024+I,66:POKE1054+I,66:NEXT

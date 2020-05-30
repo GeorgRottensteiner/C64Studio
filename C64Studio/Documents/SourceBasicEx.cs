@@ -1704,6 +1704,17 @@ namespace C64Studio
         case ApplicationEvent.Type.DOCUMENT_ACTIVATED:
           UpdateStatusInfo();
           break;
+        case ApplicationEvent.Type.ELEMENT_CREATED:
+          // sanitize settings
+          if ( Event.Doc == DocumentInfo )
+          {
+            if ( string.IsNullOrEmpty( m_StartAddress ) )
+            {
+              m_StartAddress = "2049";
+              editBASICStartAddress.Text = m_StartAddress;
+            }
+          }
+          break;
       }
     }
 
