@@ -1,4 +1,5 @@
 ﻿C64Studio
+o BASIC - Auto-fix casing on opening a file
 o Charset editor - scaling bug (editor all in one small spot top left!) <- in HUUUUUUGE resolutions?
 o Charset editor:
     Ctrl-Clicking for single character toggling

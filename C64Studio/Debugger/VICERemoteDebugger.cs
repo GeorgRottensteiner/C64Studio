@@ -29,6 +29,7 @@ namespace C64Studio
       MON_CMD_REGISTERS_SET             = 0x32,
       MON_CMD_ADVANCE_INSTRUCTION       = 0x71,
       MON_CMD_KEYBOARD_FEED             = 0x72,
+      MON_CMD_STEP_OUT                  = 0x73,
       MON_CMD_PING                      = 0x81,
       MON_CMD_BANKS_AVAILABLE           = 0x82,
       MON_CMD_REGISTERS_AVAILABLE       = 0x83,
@@ -1550,8 +1551,7 @@ namespace C64Studio
 
           if ( m_FullBinaryInterface )
           {
-            Debug.Log( "FullBinaryInterface - Command RETURN not supported yet!" );
-            return false;
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_STEP_OUT, new ByteBuffer( "000100" ) );
           }
 
           return SendCommand( "return" );

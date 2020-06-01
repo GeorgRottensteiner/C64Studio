@@ -525,6 +525,7 @@ namespace C64Studio
           // multi color
           charX = ( ( X * 12 ) / pictureEditor.ClientRectangle.Width ) % 4;
           charX = 3 - charX;
+          xPos &= 0xfe;
 
           newByte &= (byte)~( 3 << ( 2 * charX ) );
         }

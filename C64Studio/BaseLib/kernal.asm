@@ -27,6 +27,7 @@
 ;| Bit  3   |   Bitmap-Mode: Select Base Address (inside VIC)
 ;| Bits 3-1 |   Character Dot-Data Base Address (inside VIC)
 ;| Bit  0   |   Unused
+;Default Value: $14/20 (%00010100).
 .MEMORY_CONTROL      = $d018
 .IRQ_REQUEST         = $d019 
 ;| Bit 7-4  |   Always 1
