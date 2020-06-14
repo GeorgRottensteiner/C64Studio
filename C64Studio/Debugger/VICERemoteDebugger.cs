@@ -2298,18 +2298,13 @@ namespace C64Studio
       // what an ugly hack check (there's no version resource anymore :( )
       m_FullBinaryInterface = ToolRun.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" );
 
-      if ( fileVersion == null )
-      {
-        //Core.AddToOutput( "Could not check emulator version, no fileversion was found, assume VICE > 3.2" );
-        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
-        m_BinaryMemDump = true;
-        return true;
-      }
-
-      if ( string.IsNullOrEmpty( fileVersion.ProductVersion ) )
+      if ( ( fileVersion == null )
+      ||   ( string.IsNullOrEmpty( fileVersion.ProductVersion ) ) )
       {
         //Core.AddToOutput( "Could not check emulator version, no ProductVersion tag was found, assume VICE > 3.2" );
         m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
+
+        // TODO - borked with GTK 3.4 (introduction of new binary interface)
         m_BinaryMemDump = true;
         return true;
       }

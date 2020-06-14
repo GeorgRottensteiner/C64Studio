@@ -1459,6 +1459,12 @@ namespace C64Studio
       ValidateOrSetKeyBindingKey( C64Studio.Types.Function.COPY, Keys.Control | Keys.C );
       ValidateOrSetKeyBindingKey( C64Studio.Types.Function.PASTE, Keys.Control | Keys.V );
       ValidateOrSetKeyBindingKey( C64Studio.Types.Function.CUT, Keys.Control | Keys.X );
+
+      // auto-add baselib path
+      if ( ASMLibraryPaths.Count == 0 )
+      {
+        ASMLibraryPaths.Add( System.IO.Path.Combine( Application.StartupPath, "baselib" ) );
+      }
     }
 
 
