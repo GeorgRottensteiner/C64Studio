@@ -7264,27 +7264,31 @@ namespace C64Studio
                 return false;
               }
 
-              BaseDocument    doc = null;
-              Project         project = null;
-              if ( m_Solution != null )
+              // quick hack, do not restore in built editors
+              if ( !string.IsNullOrEmpty( docPath ) )
               {
-                project = m_Solution.GetProjectByName( docProjectName );
-              }
-              if ( project == null )
-              {
-                doc = OpenFile( docPath );
-              }
-              else
-              {
-                doc = project.ShowDocument( project.GetElementByFilename( docPath ) );
-              }
-              if ( doc != null )
-              {
-                if ( !doc.ReadFromReader( docData.MemoryReader() ) )
+                BaseDocument    doc = null;
+                Project         project = null;
+                if ( m_Solution != null )
                 {
-                  return false;
+                  project = m_Solution.GetProjectByName( docProjectName );
                 }
-                doc.SetModified();
+                if ( project == null )
+                {
+                  doc = OpenFile( docPath );
+                }
+                else
+                {
+                  doc = project.ShowDocument( project.GetElementByFilename( docPath ) );
+                }
+                if ( doc != null )
+                {
+                  if ( !doc.ReadFromReader( docData.MemoryReader() ) )
+                  {
+                    return false;
+                  }
+                  doc.SetModified();
+                }
               }
             }
             break;

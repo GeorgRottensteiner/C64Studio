@@ -838,8 +838,9 @@ namespace C64Studio.Controls
         return;
       }
 
-      e.Graphics.FillRectangle( System.Drawing.SystemBrushes.Window, labelCharNo.ClientRectangle );
-      e.Graphics.DrawString( labelCharNo.Text, labelCharNo.Font, System.Drawing.SystemBrushes.WindowText, labelCharNo.ClientRectangle );
+      e.Graphics.FillRectangle( new System.Drawing.SolidBrush( labelCharNo.BackColor ), labelCharNo.ClientRectangle );
+      // the text is drawn automatically?
+      //e.Graphics.DrawString( labelCharNo.Text, labelCharNo.Font, new System.Drawing.SolidBrush( labelCharNo.ForeColor ), labelCharNo.ClientRectangle );
 
       if ( !Types.ConstantData.ScreenCodeToChar.ContainsKey( (byte)m_CurrentChar ) )
       {
@@ -1614,12 +1615,12 @@ namespace C64Studio.Controls
       else if ( ( e.State & DrawItemState.Selected ) != 0 )
       {
         e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
-        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + 1.0f );
+        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
       }
       else
       {
         e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
-        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Black ), 3.0f, e.Bounds.Top + 1.0f );
+        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
       }
     }
 
@@ -1644,11 +1645,11 @@ namespace C64Studio.Controls
       }
       if ( ( e.State & DrawItemState.Selected ) != 0 )
       {
-        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + 1.0f );
+        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
       }
       else
       {
-        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Black ), 3.0f, e.Bounds.Top + 1.0f );
+        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
       }
 
     }

@@ -105,6 +105,7 @@ namespace C64Studio.CustomRenderer
           var combo = control as ComboBox;
 
           combo.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
+          combo.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) );
         }
         if ( control is ToolStrip )
         {

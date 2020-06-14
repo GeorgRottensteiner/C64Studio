@@ -102,6 +102,8 @@ namespace C64Studio
 
     private int                       m_LastRequestID = 0;
 
+    private Dictionary<uint,RequestData>   m_UnansweredBinaryRequests = new Dictionary<uint, RequestData>();
+
 
 
     GR.Collections.Map<int, byte>     m_MemoryValues = new GR.Collections.Map<int, byte>();
@@ -148,6 +150,7 @@ namespace C64Studio
         m_ReceivedDataBin.Clear();
         m_ResponseLines.Clear();
         m_RequestQueue.Clear();
+        m_UnansweredBinaryRequests.Clear();
         m_LastRequestID = 0;
         m_FullBinaryInterfaceBank = BinaryMonitorBankID.CPU;
         if ( client != null )
@@ -631,6 +634,15 @@ namespace C64Studio
               ushort      memLength  = m_ReceivedDataBin.UInt16At( packagePos );
               ByteBuffer  memContent = m_ReceivedDataBin.SubBuffer( packagePos + 2, memLength );
 
+              if ( m_UnansweredBinaryRequests.ContainsKey( requestID ) )
+              {
+                // fetch remembered mem get params
+                m_Request = m_UnansweredBinaryRequests[requestID];
+                m_UnansweredBinaryRequests.Remove( requestID );
+
+                Debug.Log( "MON_RESPONSE_MEM_GET from $" + m_Request.Parameter1.ToString( "X" ) + " to $" + m_Request.Parameter2.ToString( "X" ) );
+              }
+
               OnMemoryDumpReceived( memContent );
 
               m_Request = new RequestData( DebugRequestType.NONE );
@@ -774,6 +786,7 @@ namespace C64Studio
         client = null;
         m_ResponseLines.Clear();
         m_Request = new RequestData( DebugRequestType.NONE );
+        m_UnansweredBinaryRequests.Clear();
       }
     }
 
@@ -847,7 +860,7 @@ namespace C64Studio
 
     private void InterfaceLog( string Text )
     {
-      //Debug.Log( Text );
+      Debug.Log( Text );
     }
 
 
@@ -1831,6 +1844,21 @@ namespace C64Studio
       if ( RequestData != null )
       {
         RequestData.CopyTo( fullRequest, 0, bodyLength, 11 );
+      }
+
+      if ( Command == BinaryMonitorCommand.MON_CMD_MEMORY_GET )
+      {
+        // byte 0: side effects?
+        // Should the read cause side effects?
+        // byte 1 - 2: start address
+        // byte 3 - 4: end address
+        m_UnansweredBinaryRequests.Add( requestID, new RequestData( DebugRequestType.MEM_DUMP ) { Parameter1 = RequestData.UInt16At( 1 ), Parameter2 = RequestData.UInt16At( 3 ), Info = "C64Studio.MemDump" } );
+      }
+
+      InterfaceLog( ">>>>>>>>>>>>>>> Send Request " + Command.ToString() + ", request ID " + requestID );
+      if ( RequestData != null )
+      {
+        InterfaceLog( "                     Command Body " + RequestData.ToString() );
       }
 
       // byte 0: 0x02( STX )
