@@ -350,6 +350,8 @@ namespace C64Studio
         editSource.CaretColor = System.Drawing.Color.Black;
       }
 
+      editSource.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CODE ) );
+
       ApplySyntaxColoring( Types.ColorableElement.EMPTY_SPACE );
       ApplySyntaxColoring( Types.ColorableElement.COMMENT );
       ApplySyntaxColoring( Types.ColorableElement.LITERAL_NUMBER );
