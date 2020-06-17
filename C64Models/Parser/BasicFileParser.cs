@@ -322,7 +322,7 @@ namespace C64Studio.Parser
         AddOpcode( "LEFT$", 0xC8, "leF" );
         AddOpcode( "RIGHT$", 0xC9, "rI" );
         AddOpcode( "MID$", 0xCA, "mI" );
-        AddOpcode( "GO", 0xCB );
+        //AddOpcode( "GO", 0xCB );
 
         // C64Studio extension
         AddExOpcode( "LABEL", 0xF0 );
@@ -582,7 +582,7 @@ namespace C64Studio.Parser
         AddOpcode( "RI.", 0xC9 );
         AddOpcode( "MID$", 0xCA );
         AddOpcode( "M.", 0xCA );
-        AddOpcode( "GO", 0xCB );
+        //AddOpcode( "GO", 0xCB );
 
         // override without or different short cuts
         AddOpcode( "ELSE", 0xcc );
