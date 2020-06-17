@@ -1,5 +1,7 @@
 ﻿C64Studio
 o Watch - Display characters hex, dec. and binary
+o MemViewer: Speicheradresse und nur ein Byte, alles untereinander? 
+             Disassembly
 o BASIC - Auto-fix casing on opening a file
 o Charset editor - scaling bug (editor all in one small spot top left!) <- in HUUUUUUGE resolutions?
 o Charset editor:
