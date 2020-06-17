@@ -86,5 +86,20 @@ namespace C64Studio
 
 
 
+    internal bool IsVICE()
+    {
+      // hackish way
+      string    filename = System.IO.Path.GetFileNameWithoutExtension( Filename ).ToUpper();
+
+      if ( ( filename.StartsWith( "X64" ) )
+      ||   ( filename.StartsWith( "XVIC" ) )
+      ||   ( filename.StartsWith( "X128" ) ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
   }
 }

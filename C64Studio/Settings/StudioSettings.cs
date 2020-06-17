@@ -852,18 +852,22 @@ namespace C64Studio
               tool.PRGArguments = tool.PRGArguments.Replace( "$(BuildTargetFilename)", "$(RunFilename)" );
               tool.WorkPath = tool.WorkPath.Replace( "$(FilePath)", "$(RunPath)" );
 
-              if ( string.IsNullOrEmpty( tool.TrueDriveOnArguments ) )
+              // auto-add true drive arguments only for VICE
+              if ( tool.IsVICE() )
               {
-                tool.TrueDriveOnArguments = "-truedrive +virtualdev";
-                tool.TrueDriveOffArguments = "+truedrive -virtualdev";
-              }
-              if ( tool.PRGArguments.Contains( "-truedrive " ) )
-              {
-                tool.PRGArguments = tool.PRGArguments.Replace( "-truedrive ", "" );
-              }
-              if ( tool.PRGArguments.Contains( " -truedrive" ) )
-              {
-                tool.PRGArguments = tool.PRGArguments.Replace( " -truedrive", "" );
+                if ( string.IsNullOrEmpty( tool.TrueDriveOnArguments ) )
+                {
+                  tool.TrueDriveOnArguments = "-truedrive +virtualdev";
+                  tool.TrueDriveOffArguments = "+truedrive -virtualdev";
+                }
+                if ( tool.PRGArguments.Contains( "-truedrive " ) )
+                {
+                  tool.PRGArguments = tool.PRGArguments.Replace( "-truedrive ", "" );
+                }
+                if ( tool.PRGArguments.Contains( " -truedrive" ) )
+                {
+                  tool.PRGArguments = tool.PRGArguments.Replace( " -truedrive", "" );
+                }
               }
               ToolInfos.Add( tool );
             }
