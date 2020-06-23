@@ -33,14 +33,16 @@
       this.pictureLogo = new System.Windows.Forms.PictureBox();
       this.labelInfo = new System.Windows.Forms.Label();
       this.pictureBox1 = new System.Windows.Forms.PictureBox();
+      this.pictureBox2 = new System.Windows.Forms.PictureBox();
       ((System.ComponentModel.ISupportInitialize)(this.pictureLogo)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
       this.SuspendLayout();
       // 
       // btnOK
       // 
       this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnOK.Location = new System.Drawing.Point(308, 345);
+      this.btnOK.Location = new System.Drawing.Point(248, 351);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 0;
@@ -51,7 +53,7 @@
       // pictureLogo
       // 
       this.pictureLogo.Image = ((System.Drawing.Image)(resources.GetObject("pictureLogo.Image")));
-      this.pictureLogo.Location = new System.Drawing.Point(112, 23);
+      this.pictureLogo.Location = new System.Drawing.Point(199, 12);
       this.pictureLogo.Name = "pictureLogo";
       this.pictureLogo.Size = new System.Drawing.Size(170, 64);
       this.pictureLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -60,7 +62,7 @@
       // 
       // labelInfo
       // 
-      this.labelInfo.Location = new System.Drawing.Point(22, 246);
+      this.labelInfo.Location = new System.Drawing.Point(109, 252);
       this.labelInfo.Name = "labelInfo";
       this.labelInfo.Size = new System.Drawing.Size(351, 96);
       this.labelInfo.TabIndex = 2;
@@ -71,12 +73,23 @@
       // 
       this.pictureBox1.BackColor = System.Drawing.SystemColors.ButtonFace;
       this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-      this.pictureBox1.Location = new System.Drawing.Point(78, 127);
+      this.pictureBox1.Location = new System.Drawing.Point(70, 110);
       this.pictureBox1.Name = "pictureBox1";
       this.pictureBox1.Size = new System.Drawing.Size(239, 97);
       this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
       this.pictureBox1.TabIndex = 3;
       this.pictureBox1.TabStop = false;
+      // 
+      // pictureBox2
+      // 
+      this.pictureBox2.BackColor = System.Drawing.SystemColors.ButtonFace;
+      this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+      this.pictureBox2.Location = new System.Drawing.Point(343, 94);
+      this.pictureBox2.Name = "pictureBox2";
+      this.pictureBox2.Size = new System.Drawing.Size(130, 128);
+      this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+      this.pictureBox2.TabIndex = 3;
+      this.pictureBox2.TabStop = false;
       // 
       // FormAbout
       // 
@@ -84,7 +97,8 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnOK;
-      this.ClientSize = new System.Drawing.Size(395, 380);
+      this.ClientSize = new System.Drawing.Size(567, 396);
+      this.Controls.Add(this.pictureBox2);
       this.Controls.Add(this.pictureBox1);
       this.Controls.Add(this.labelInfo);
       this.Controls.Add(this.pictureLogo);
@@ -99,6 +113,7 @@
       this.Text = "C64 Studio";
       ((System.ComponentModel.ISupportInitialize)(this.pictureLogo)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -110,5 +125,6 @@
     private System.Windows.Forms.PictureBox pictureLogo;
     private System.Windows.Forms.Label labelInfo;
     private System.Windows.Forms.PictureBox pictureBox1;
+    private System.Windows.Forms.PictureBox pictureBox2;
   }
 }

@@ -605,6 +605,16 @@ namespace C64Studio
                 m_BrokenAtBreakPoint = (int)checkPointNumber;
                 OnBreakpointHit();
               }
+              if ( m_Request.Type == DebugRequestType.ADD_BREAKPOINT )
+              {
+                if ( ( (int)checkPointNumber != 0 )
+                &&   ( m_Request.Breakpoint != null ) )
+                {
+                  m_Request.Breakpoint.RemoteIndex = (int)checkPointNumber;
+
+                  RaiseDocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, m_Request.Breakpoint ) );
+                }
+              }
               m_Request = new RequestData( DebugRequestType.NONE );
             }
             break;

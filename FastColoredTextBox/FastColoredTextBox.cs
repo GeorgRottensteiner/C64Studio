@@ -3004,14 +3004,17 @@ namespace FastColoredTextBoxNS
     /// <summary>
     /// Gets length of given line
     /// </summary>
-    /// <param name="iLine">Line index</param>
+    /// <param name="LineIndex">Line index</param>
     /// <returns>Length of line</returns>
-    public int GetLineLength( int iLine )
+    public int GetLineLength( int LineIndex )
     {
-      if ( iLine < 0 || iLine >= lines.Count )
+      if ( ( LineIndex < 0 )
+      ||   ( LineIndex >= lines.Count ) )
+      {
         throw new ArgumentOutOfRangeException( "Line index out of range" );
+      }
 
-      return lines[iLine].Count;
+      return lines[LineIndex].Count;
     }
 
     /// <summary>
@@ -4733,8 +4736,21 @@ namespace FastColoredTextBoxNS
         string text = SelectedText;
         var temp = new List<int>();
         for ( int i = Selection.Start.iLine; i <= Selection.End.iLine; i++ )
+        {
           temp.Add( i );
-        Selection.Start = new Place( 0, Selection.End.iLine + 1 );
+        }
+        int   startLine = Selection.End.iLine + 1;
+        if ( startLine >= lines.Count )
+        {
+          --startLine;
+          Selection.Start = new Place( lines[startLine].Count, startLine );
+          text = "\n" + text;
+        }
+        else
+        {
+          Selection.Start = new Place( 0, startLine );
+        }
+
         SelectedText = text + "\n";
         Selection.Start = new Place( prevSelection.Start.iChar, prevSelection.Start.iLine );
         Selection.End = new Place( prevSelection.End.iChar, prevSelection.End.iLine );

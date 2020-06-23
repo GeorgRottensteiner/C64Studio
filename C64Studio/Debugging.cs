@@ -241,6 +241,17 @@ namespace C64Studio
 
 
 
+    public void UnmarkLine()
+    {
+      if ( MarkedDocument != null )
+      {
+        MarkedDocument.SetLineMarked( MarkedDocumentLine, false );
+        MarkedDocument = null;
+      }
+    }
+
+
+
     public void MarkLine( Project MarkProject, string DocumentFilename, int Line )
     {
       if ( MarkedDocument != null )
@@ -250,8 +261,9 @@ namespace C64Studio
           MarkedDocument.Invoke( new Navigating.OpenDocumentAndGotoLineCallback( MarkLine ), new object[] { MarkProject, DocumentFilename, Line } );
           return;
         }
-        MarkedDocument.SetLineMarked( MarkedDocumentLine, false );
       }
+      UnmarkLine();
+
       string  inPath = DocumentFilename.Replace( "\\", "/" );
       if ( MarkProject != null )
       {
