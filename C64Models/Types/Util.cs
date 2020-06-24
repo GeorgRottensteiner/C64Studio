@@ -257,6 +257,55 @@ namespace C64Studio
 
 
 
+    internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount )
+    {
+      StringBuilder   sb = new StringBuilder();
+
+      if ( WrapByteCount < 1 )
+      {
+        return ToBASICData( Data, StartLine, LineOffset, WrapByteCount );
+      }
+      if ( LineOffset <= 0 )
+      {
+        LineOffset = 1;
+      }
+      if ( StartLine < 0 )
+      {
+        StartLine = 0;
+      }
+      int     dataPos = 0;
+
+      while ( dataPos < Data.Length )
+      {
+        int     startLength = sb.Length;
+
+        sb.Append( StartLine );
+        sb.Append( "DATA" );
+
+        bool    firstByte = true;
+        int     numBytesInLine = 0;
+
+        while ( ( numBytesInLine < WrapByteCount )
+        &&      ( dataPos < Data.Length ) )
+        {
+          if ( !firstByte )
+          {
+            sb.Append( ',' );
+          }
+          firstByte = false;
+          sb.Append( Data.ByteAt( dataPos ) );
+          ++dataPos;
+          ++numBytesInLine;
+        }
+        sb.AppendLine();
+
+        StartLine += LineOffset;
+      }
+      return sb.ToString();
+    }
+
+
+
     internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset )
     {
       StringBuilder   sb = new StringBuilder();
@@ -280,6 +329,54 @@ namespace C64Studio
         bool    firstByte = true;
 
         while ( ( sb.Length - startLength < 76 )
+        && ( dataPos < Data.Length ) )
+        {
+          if ( !firstByte )
+          {
+            sb.Append( ',' );
+          }
+          firstByte = false;
+          sb.Append( Data.ByteAt( dataPos ).ToString( "X2" ) );
+          ++dataPos;
+        }
+        sb.AppendLine();
+
+        StartLine += LineOffset;
+      }
+      return sb.ToString();
+    }
+
+
+
+    internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount )
+    {
+      if ( WrapByteCount < 1 )
+      {
+        return ToBASICHexData( Data, StartLine, LineOffset );
+      }
+
+      StringBuilder   sb = new StringBuilder();
+
+      if ( LineOffset <= 0 )
+      {
+        LineOffset = 1;
+      }
+      if ( StartLine < 0 )
+      {
+        StartLine = 0;
+      }
+      int     dataPos = 0;
+
+      while ( dataPos < Data.Length )
+      {
+        int     startLength = sb.Length;
+        sb.Append( StartLine );
+        sb.Append( "DATA" );
+
+        bool    firstByte = true;
+        int     numBytesInLine = 0;
+
+        while ( ( numBytesInLine < WrapByteCount )
         &&      ( dataPos < Data.Length ) )
         {
           if ( !firstByte )
@@ -289,6 +386,7 @@ namespace C64Studio
           firstByte = false;
           sb.Append( Data.ByteAt( dataPos ).ToString( "X2" ) );
           ++dataPos;
+          ++numBytesInLine;
         }
         sb.AppendLine();
 

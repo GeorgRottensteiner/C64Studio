@@ -1255,31 +1255,14 @@ namespace C64Studio
         Modified = true;
       }
 
-      GR.Memory.ByteBuffer spriteData = new GR.Memory.ByteBuffer();
-      for ( int i = 0; i < exportIndices.Count; ++i )
-      {
-        spriteData.Append( m_SpriteProject.Sprites[exportIndices[i]].Data );
-
-        byte  colorByte = (byte)m_SpriteProject.Sprites[exportIndices[i]].Color;
-        if ( m_SpriteProject.Sprites[exportIndices[i]].Multicolor )
-        {
-          colorByte |= 0x80;
-        }
-        spriteData.AppendU8( colorByte );
-      }
-      GR.IO.File.WriteAllBytes( m_SpriteProject.ExportFilename, spriteData );
+      GR.Memory.ByteBuffer exportData = GatherExportData();
+      GR.IO.File.WriteAllBytes( m_SpriteProject.ExportFilename, exportData );
     }
 
 
 
     private void btnExportSpriteToData_Click( object sender, EventArgs e )
     {
-      var exportIndices = GetExportIndices();
-      if ( exportIndices.Count == 0 )
-      {
-        return;
-      }
-
       int wrapByteCount = GR.Convert.ToI32( editWrapByteCount.Text );
       if ( wrapByteCount <= 0 )
       {
@@ -1287,18 +1270,7 @@ namespace C64Studio
       }
       string prefix = editPrefix.Text;
 
-      GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
-      for ( int i = 0; i < exportIndices.Count; ++i )
-      {
-        exportData.Append( m_SpriteProject.Sprites[exportIndices[i]].Data );
-
-        byte color = (byte)m_SpriteProject.Sprites[exportIndices[i]].Color;
-        if ( m_SpriteProject.Sprites[exportIndices[i]].Multicolor )
-        {
-          color |= 0x80;
-        }
-        exportData.AppendU8( color );
-      }
+      GR.Memory.ByteBuffer exportData = GatherExportData();
 
       bool wrapData = checkExportToDataWrap.Checked;
       bool prefixRes = checkExportToDataIncludeRes.Checked;
@@ -1308,52 +1280,6 @@ namespace C64Studio
       }
 
       string line = Util.ToASMData( exportData, wrapData, wrapByteCount, prefix );
-
-      /*
-      string line = "";
-      if ( wrapData )
-      {
-        if ( prefixRes )
-        {
-          line += prefix;
-        }
-        int byteCount = 0;
-        for ( int i = 0; i < exportData.Length; ++i )
-        {
-          line += "$" + exportData.ByteAt( i ).ToString( "x2" );
-          ++byteCount;
-          if ( ( byteCount < wrapByteCount )
-          &&   ( i < exportData.Length - 1 ) )
-          {
-            line += ",";
-          }
-          if ( byteCount == wrapByteCount )
-          {
-            byteCount = 0;
-            line += System.Environment.NewLine;
-            if ( ( i < exportData.Length - 1 )
-            &&   ( prefixRes ) )
-            {
-              line += prefix;
-            }
-          }
-        }
-      }
-      else
-      {
-        if ( prefixRes )
-        {
-          line += prefix;
-        }
-        for ( int i = 0; i < exportData.Length; ++i )
-        {
-          line += "$" + exportData.ByteAt( i ).ToString( "x2" );
-          if ( i < exportData.Length - 1 )
-          {
-            line += ",";
-          }
-        }
-      }*/
       editDataExport.Text = line;
     }
 
@@ -3350,27 +3276,15 @@ namespace C64Studio
         startLine = 10;
       }
 
-      var exportIndices = GetExportIndices();
-      if ( exportIndices.Count == 0 )
+      GR.Memory.ByteBuffer exportData = GatherExportData();
+      if ( checkExportToDataWrap.Checked )
       {
-        return;
+        editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset, GR.Convert.ToI32( editWrapByteCount.Text ) );
       }
-
-
-      GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
-      for ( int i = 0; i < exportIndices.Count; ++i )
+      else
       {
-        exportData.Append( m_SpriteProject.Sprites[exportIndices[i]].Data );
-
-        byte color = (byte)m_SpriteProject.Sprites[exportIndices[i]].Color;
-        if ( m_SpriteProject.Sprites[exportIndices[i]].Multicolor )
-        {
-          color |= 0x80;
-        }
-        exportData.AppendU8( color );
+        editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset );
       }
-
-      editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset );
     }
 
 
@@ -3595,27 +3509,38 @@ namespace C64Studio
 
     private void btnExportToBASICHexData_Click( object sender, EventArgs e )
     {
+      GR.Memory.ByteBuffer exportData = GatherExportData();
+
       int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
+
       if ( ( startLine < 0 )
-      || ( startLine > 63999 ) )
+      ||   ( startLine > 63999 ) )
       {
         startLine = 10;
       }
       int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
       if ( ( lineOffset < 0 )
-      || ( lineOffset > 63999 ) )
+      ||   ( lineOffset > 63999 ) )
       {
         startLine = 10;
       }
+      if ( checkExportToDataWrap.Checked )
+      {
+        editDataExport.Text = Util.ToBASICHexData( exportData, startLine, lineOffset, GR.Convert.ToI32( editWrapByteCount.Text ) );
+      }
+      else
+      {
+        editDataExport.Text = Util.ToBASICHexData( exportData, startLine, lineOffset );
+      }
+    }
+
+
+
+    private ByteBuffer GatherExportData()
+    {
+      GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
 
       var exportIndices = GetExportIndices();
-      if ( exportIndices.Count == 0 )
-      {
-        return;
-      }
-
-
-      GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
       for ( int i = 0; i < exportIndices.Count; ++i )
       {
         exportData.Append( m_SpriteProject.Sprites[exportIndices[i]].Data );
@@ -3627,8 +3552,7 @@ namespace C64Studio
         }
         exportData.AppendU8( color );
       }
-
-      editDataExport.Text = Util.ToBASICHexData( exportData, startLine, lineOffset );
+      return exportData;
     }
 
 
