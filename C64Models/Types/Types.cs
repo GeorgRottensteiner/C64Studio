@@ -995,7 +995,7 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_L, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 140, true, 12, false, (char)0xee8c, true, "REVERSE L" ).Replacements.Add( "CTRL-L" );
 
       AddC64Key( KeyboardKey.KEY_RETURN, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 13, true, 13, true, (char)0xee8d, -1, 0, false, "RETURN", "RET" ).Replacements.Add( "CTRL-M" );  // return
-      AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 14, true, 14, true, (char)0xee8e, -1, 0, true, "SHIFT C=", "SH C=" ).Replacements.AddRange( new string[] { "CTRL-N", "SWLC" } );  // toggle upper/lower
+      AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 14, true, 14, true, (char)0xee8e, -1, 0, true, "SHIFT C=", "SH C=" ).Replacements.AddRange( new string[] { "SWLC" } );  // toggle upper/lower
 
       AddC64Key( KeyboardKey.KEY_O, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 143, true, 15, false, (char)0xee8f, true, "REVERSE O" ).Replacements.Add( "CTRL-O" );
       AddC64Key( KeyboardKey.KEY_P, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 144, true, 16, false, (char)0xee90, true, "REVERSE P" ).Replacements.Add( "CTRL-P" );
