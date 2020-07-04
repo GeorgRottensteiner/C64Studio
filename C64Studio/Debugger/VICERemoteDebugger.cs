@@ -2,6 +2,7 @@
 using GR.Memory;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 namespace C64Studio
@@ -99,6 +100,8 @@ namespace C64Studio
     private RegisterInfo              CurrentRegisterValues = new RegisterInfo();
 
     private MachineType               m_ConnectedMachine = MachineType.UNKNOWN;
+
+    private bool                      m_HandlingInitialBreakpoint = false;
 
     private int                       m_LastRequestID = 0;
 
@@ -576,12 +579,14 @@ namespace C64Studio
                 e_Cycle = 0x36  */
               }
 
-              var ded = new DebugEventData();
-              ded.Registers = info;
-              ded.Type      = C64Studio.DebugEvent.REGISTER_INFO;
+              if ( !m_HandlingInitialBreakpoint )
+              {
+                var ded       = new DebugEventData();
+                ded.Registers = info;
+                ded.Type      = C64Studio.DebugEvent.REGISTER_INFO;
 
-              DebugEvent( ded );
-
+                DebugEvent( ded );
+              }
               m_Request = new RequestData( DebugRequestType.NONE );
             }
             break;
@@ -605,17 +610,21 @@ namespace C64Studio
                 m_BrokenAtBreakPoint = (int)checkPointNumber;
                 OnBreakpointHit();
               }
-              if ( m_Request.Type == DebugRequestType.ADD_BREAKPOINT )
+              RequestData   origRequest= null;
+              if ( m_UnansweredBinaryRequests.ContainsKey( requestID ) )
               {
-                if ( ( (int)checkPointNumber != 0 )
-                &&   ( m_Request.Breakpoint != null ) )
+                origRequest = m_UnansweredBinaryRequests[requestID];
+                if ( origRequest.Type == DebugRequestType.ADD_BREAKPOINT )
                 {
-                  m_Request.Breakpoint.RemoteIndex = (int)checkPointNumber;
+                  if ( ( (int)checkPointNumber != 0 )
+                  &&   ( origRequest.Breakpoint != null ) )
+                  {
+                    origRequest.Breakpoint.RemoteIndex = (int)checkPointNumber;
 
-                  RaiseDocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, m_Request.Breakpoint ) );
+                    RaiseDocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, origRequest.Breakpoint ) );
+                  }
                 }
               }
-              m_Request = new RequestData( DebugRequestType.NONE );
             }
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_JAM:
@@ -626,9 +635,25 @@ namespace C64Studio
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_RESUMED:
             m_Request = new RequestData( DebugRequestType.NONE );
+            m_HandlingInitialBreakpoint = false;
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_CHECKPOINT_DELETE:
-            m_Request = new RequestData( DebugRequestType.NONE );
+            if ( m_UnansweredBinaryRequests.ContainsKey( requestID ) )
+            {
+              var origRequest = m_UnansweredBinaryRequests[requestID];
+              if ( origRequest.Type == DebugRequestType.DELETE_BREAKPOINT )
+              {
+                // remove from list
+                foreach ( Types.Breakpoint breakPoint in m_BreakPoints )
+                {
+                  if ( breakPoint == m_Request.Breakpoint )
+                  {
+                    m_BreakPoints.Remove( breakPoint );
+                    break;
+                  }
+                }
+              }
+            }
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_ADVANCE_INSTRUCTION:
           case BinaryMonitorCommandResponse.MON_RESPONSE_EXIT:
@@ -1376,6 +1401,7 @@ namespace C64Studio
     {
       m_State = DebuggerState.PAUSED;
 
+      Debug.Log( "Breakpoint " + m_BrokenAtBreakPoint + " hit" );
       // TODO - only remove if auto startup breakpoint
       int breakAddress = -1;
       Types.Breakpoint  brokenBP = null;
@@ -1408,6 +1434,7 @@ namespace C64Studio
         {
           // auto break point
           m_InitialBreakpointRemoved = true;
+          m_HandlingInitialBreakpoint = true;
 
           // DEBUGHACK
           //QueueRequest( Request.MEM_DUMP, 0, 0xffff );
@@ -1420,7 +1447,7 @@ namespace C64Studio
       else
       {
         if ( ( brokenBP != null )
-        && ( brokenBP.HasVirtual() ) )
+        &&   ( brokenBP.HasVirtual() ) )
         {
           // a trace breakpoint, only fetch trace info and continue
           skipRefresh = Core.Debugging.OnVirtualBreakpointReached( brokenBP );
@@ -1500,7 +1527,8 @@ namespace C64Studio
 
     private void StartNextRequestIfAvailable()
     {
- 	    if ( m_RequestQueue.Count != 0 )
+ 	    if ( ( m_RequestQueue.Count != 0 )
+      &&   ( m_ReceivedDataBin.Length == 0 ) )
       {
         Debug.Log( "------> StartNextRequest" );
         RequestData nextRequest = m_RequestQueue.First.Value;
@@ -1529,7 +1557,7 @@ namespace C64Studio
           if ( m_FullBinaryInterface )
           {
             // step over
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_REGISTERS_GET, null );
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_REGISTERS_GET, null, Data );
           }
           return SendCommand( "registers" );
         case DebugRequestType.NEXT:
@@ -1539,7 +1567,7 @@ namespace C64Studio
           if ( m_FullBinaryInterface )
           {
             // step over
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_INSTRUCTION, new ByteBuffer( "010100" ) );
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_INSTRUCTION, new ByteBuffer( "010100" ), Data );
           }
           return SendCommand( "next" );
         case DebugRequestType.STEP:
@@ -1549,13 +1577,13 @@ namespace C64Studio
           if ( m_FullBinaryInterface )
           {
             // step into
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_INSTRUCTION, new ByteBuffer( "000100" ) );
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_INSTRUCTION, new ByteBuffer( "000100" ), Data );
           }
           return SendCommand( "step" );
         case DebugRequestType.EXIT:
           if ( m_FullBinaryInterface )
           {
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_EXIT, null );
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_EXIT, null, Data );
           }
           m_Request.Type = DebugRequestType.NONE;
           m_State = DebuggerState.RUNNING;
@@ -1564,7 +1592,7 @@ namespace C64Studio
         case DebugRequestType.QUIT:
           if ( m_FullBinaryInterface )
           {
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_QUIT, null );
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_QUIT, null, Data );
           }
           return SendCommand( "quit" );
         case DebugRequestType.RETURN:
@@ -1574,7 +1602,7 @@ namespace C64Studio
 
           if ( m_FullBinaryInterface )
           {
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_STEP_OUT, new ByteBuffer( "000100" ) );
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_STEP_OUT, new ByteBuffer( "000100" ), Data );
           }
 
           return SendCommand( "return" );
@@ -1582,7 +1610,7 @@ namespace C64Studio
           // hard reset
           if ( m_FullBinaryInterface )
           {
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_RESET, new ByteBuffer( "01" ) );
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_RESET, new ByteBuffer( "01" ), Data );
           }
           return SendCommand( "reset 1" );
         case DebugRequestType.ADD_BREAKPOINT:
@@ -1620,7 +1648,7 @@ namespace C64Studio
             requestData.AppendU8( cpuOperation );
             requestData.AppendU8( 0 );    // temporary
 
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_CHECKPOINT_SET, requestData );
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_CHECKPOINT_SET, requestData, Data );
           }
           else
           {
@@ -1657,7 +1685,7 @@ namespace C64Studio
             var requestBody = new GR.Memory.ByteBuffer();
             requestBody.AppendU32( (uint)m_Request.Parameter1 );
 
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_CHECKPOINT_DELETE, requestBody );
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_CHECKPOINT_DELETE, requestBody, Data );
           }
           return SendCommand( "delete " + m_Request.Parameter1.ToString() );
         case DebugRequestType.RAM_MODE:
@@ -1675,6 +1703,7 @@ namespace C64Studio
                 Debug.Log( "Invalid Bank '" + m_Request.Info + "' requested!" );
                 return false;
             }
+            m_Request.Type = DebugRequestType.NONE;
             return true;
           }
           return SendCommand( "bank " + m_Request.Info );
@@ -1728,7 +1757,7 @@ namespace C64Studio
               requestBody.AppendU16( (ushort)m_FullBinaryInterfaceBank );    // CPU -> TODO, we also have RAM option!
 
 
-              return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_MEMORY_GET, requestBody );
+              return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_MEMORY_GET, requestBody, Data );
             }
 
             if ( !m_BinaryMemDump )
@@ -1834,8 +1863,11 @@ namespace C64Studio
 
 
 
-    private bool SendBinaryCommand( BinaryMonitorCommand Command, ByteBuffer RequestData )
+    private bool SendBinaryCommand( BinaryMonitorCommand Command, ByteBuffer RequestData, RequestData OriginatingRequest )
     {
+      // UGLY HACK
+      m_Request = new C64Studio.RequestData( DebugRequestType.NONE );
+
       int   bodyLength = 0;
       if ( RequestData != null )
       {
@@ -1856,6 +1888,8 @@ namespace C64Studio
         RequestData.CopyTo( fullRequest, 0, bodyLength, 11 );
       }
 
+      m_UnansweredBinaryRequests.Add( requestID, OriginatingRequest );
+      /*
       if ( Command == BinaryMonitorCommand.MON_CMD_MEMORY_GET )
       {
         // byte 0: side effects?
@@ -1863,7 +1897,7 @@ namespace C64Studio
         // byte 1 - 2: start address
         // byte 3 - 4: end address
         m_UnansweredBinaryRequests.Add( requestID, new RequestData( DebugRequestType.MEM_DUMP ) { Parameter1 = RequestData.UInt16At( 1 ), Parameter2 = RequestData.UInt16At( 3 ), Info = "C64Studio.MemDump" } );
-      }
+      }*/
 
       InterfaceLog( ">>>>>>>>>>>>>>> Send Request " + Command.ToString() + ", request ID " + requestID );
       if ( RequestData != null )
@@ -1986,11 +2020,17 @@ namespace C64Studio
         return;
       }
 
-      if ( m_Request.Type != DebugRequestType.NONE )
+      // queue if there is an active request or queued incoming data
+      Debug.Log( "QueueRequest - sending data directly? Request is " + Data.Type + ", current request type is " + m_Request.Type + ", current incoming data is " + m_ReceivedDataBin.ToString() );
+      if ( ( m_Request.Type != DebugRequestType.NONE )
+      ||   ( ( m_FullBinaryInterface )
+      &&     ( m_ReceivedDataBin.Length > 0 ) ) )
       {
+        Debug.Log( "-no" );
         m_RequestQueue.AddLast( Data );
         return;
       }
+      Debug.Log( "-yes" );
       SendRequest( Data );
     }
 

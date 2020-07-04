@@ -4250,8 +4250,8 @@ namespace C64Studio
       StudioCore.Debugging.DebugDisassembly.SetCursorToLine( 1, true );
 
       if ( ( StudioCore.Debugging.MarkedDocument == null )
-      || ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, "C64Studio-intermediatedisassembly" ) )
-      || ( StudioCore.Debugging.MarkedDocumentLine != 1 ) )
+      ||   ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, "C64Studio-intermediatedisassembly" ) )
+      ||   ( StudioCore.Debugging.MarkedDocumentLine != 1 ) )
       {
         if ( StudioCore.Debugging.MarkedDocument != null )
         {
