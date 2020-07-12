@@ -39,8 +39,10 @@
       this.btnUpsize = new System.Windows.Forms.Button();
       this.btnInterleave = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.label3 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
+      this.editWrapCount = new System.Windows.Forms.TextBox();
       this.editToBASICLineDelta = new System.Windows.Forms.TextBox();
       this.btnFromBASICHex = new System.Windows.Forms.Button();
       this.btnFromBASIC = new System.Windows.Forms.Button();
@@ -77,7 +79,7 @@
       this.tabMain.Location = new System.Drawing.Point(0, 24);
       this.tabMain.Name = "tabMain";
       this.tabMain.SelectedIndex = 0;
-      this.tabMain.Size = new System.Drawing.Size(669, 426);
+      this.tabMain.Size = new System.Drawing.Size(733, 514);
       this.tabMain.TabIndex = 0;
       // 
       // tabData
@@ -86,7 +88,7 @@
       this.tabData.Location = new System.Drawing.Point(4, 22);
       this.tabData.Name = "tabData";
       this.tabData.Padding = new System.Windows.Forms.Padding(3);
-      this.tabData.Size = new System.Drawing.Size(661, 400);
+      this.tabData.Size = new System.Drawing.Size(725, 488);
       this.tabData.TabIndex = 0;
       this.tabData.Text = "Data";
       this.tabData.UseVisualStyleBackColor = true;
@@ -106,7 +108,7 @@
       this.hexView.NumDigitsMemorySize = 8;
       this.hexView.SelectedByteProvider = null;
       this.hexView.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
-      this.hexView.Size = new System.Drawing.Size(655, 394);
+      this.hexView.Size = new System.Drawing.Size(719, 482);
       this.hexView.StringViewVisible = true;
       this.hexView.TabIndex = 0;
       this.hexView.TextFont = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -119,7 +121,7 @@
       this.tabModify.Location = new System.Drawing.Point(4, 22);
       this.tabModify.Name = "tabModify";
       this.tabModify.Padding = new System.Windows.Forms.Padding(3);
-      this.tabModify.Size = new System.Drawing.Size(661, 400);
+      this.tabModify.Size = new System.Drawing.Size(725, 488);
       this.tabModify.TabIndex = 1;
       this.tabModify.Text = "Modify";
       this.tabModify.UseVisualStyleBackColor = true;
@@ -132,9 +134,9 @@
       this.groupBox2.Controls.Add(this.btnImport);
       this.groupBox2.Controls.Add(this.btnUpsize);
       this.groupBox2.Controls.Add(this.btnInterleave);
-      this.groupBox2.Location = new System.Drawing.Point(464, 6);
+      this.groupBox2.Location = new System.Drawing.Point(528, 6);
       this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(189, 361);
+      this.groupBox2.Size = new System.Drawing.Size(189, 449);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Actions";
@@ -184,8 +186,10 @@
       this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.groupBox1.Controls.Add(this.label3);
       this.groupBox1.Controls.Add(this.label2);
       this.groupBox1.Controls.Add(this.label1);
+      this.groupBox1.Controls.Add(this.editWrapCount);
       this.groupBox1.Controls.Add(this.editToBASICLineDelta);
       this.groupBox1.Controls.Add(this.btnFromBASICHex);
       this.groupBox1.Controls.Add(this.btnFromBASIC);
@@ -199,16 +203,26 @@
       this.groupBox1.Controls.Add(this.textBinaryData);
       this.groupBox1.Location = new System.Drawing.Point(6, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(452, 361);
+      this.groupBox1.Size = new System.Drawing.Size(516, 449);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Text Data";
+      // 
+      // label3
+      // 
+      this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(402, 215);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(67, 13);
+      this.label3.TabIndex = 3;
+      this.label3.Text = "Wrap Count:";
       // 
       // label2
       // 
       this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(338, 176);
+      this.label2.Location = new System.Drawing.Point(402, 176);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(55, 13);
       this.label2.TabIndex = 3;
@@ -218,16 +232,25 @@
       // 
       this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(338, 134);
+      this.label1.Location = new System.Drawing.Point(402, 134);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(55, 13);
       this.label1.TabIndex = 3;
       this.label1.Text = "Start Line:";
       // 
+      // editWrapCount
+      // 
+      this.editWrapCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.editWrapCount.Location = new System.Drawing.Point(401, 231);
+      this.editWrapCount.Name = "editWrapCount";
+      this.editWrapCount.Size = new System.Drawing.Size(75, 20);
+      this.editWrapCount.TabIndex = 2;
+      this.editWrapCount.Text = "40";
+      // 
       // editToBASICLineDelta
       // 
       this.editToBASICLineDelta.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.editToBASICLineDelta.Location = new System.Drawing.Point(337, 192);
+      this.editToBASICLineDelta.Location = new System.Drawing.Point(401, 192);
       this.editToBASICLineDelta.Name = "editToBASICLineDelta";
       this.editToBASICLineDelta.Size = new System.Drawing.Size(75, 20);
       this.editToBASICLineDelta.TabIndex = 2;
@@ -236,7 +259,7 @@
       // btnFromBASICHex
       // 
       this.btnFromBASICHex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnFromBASICHex.Location = new System.Drawing.Point(337, 318);
+      this.btnFromBASICHex.Location = new System.Drawing.Point(401, 364);
       this.btnFromBASICHex.Name = "btnFromBASICHex";
       this.btnFromBASICHex.Size = new System.Drawing.Size(109, 23);
       this.btnFromBASICHex.TabIndex = 1;
@@ -247,7 +270,7 @@
       // btnFromBASIC
       // 
       this.btnFromBASIC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnFromBASIC.Location = new System.Drawing.Point(337, 289);
+      this.btnFromBASIC.Location = new System.Drawing.Point(401, 335);
       this.btnFromBASIC.Name = "btnFromBASIC";
       this.btnFromBASIC.Size = new System.Drawing.Size(109, 23);
       this.btnFromBASIC.TabIndex = 1;
@@ -258,7 +281,7 @@
       // editToBASICStartLine
       // 
       this.editToBASICStartLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.editToBASICStartLine.Location = new System.Drawing.Point(337, 153);
+      this.editToBASICStartLine.Location = new System.Drawing.Point(401, 153);
       this.editToBASICStartLine.Name = "editToBASICStartLine";
       this.editToBASICStartLine.Size = new System.Drawing.Size(75, 20);
       this.editToBASICStartLine.TabIndex = 2;
@@ -267,7 +290,7 @@
       // button2
       // 
       this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.button2.Location = new System.Drawing.Point(337, 260);
+      this.button2.Location = new System.Drawing.Point(401, 306);
       this.button2.Name = "button2";
       this.button2.Size = new System.Drawing.Size(109, 23);
       this.button2.TabIndex = 1;
@@ -278,7 +301,7 @@
       // btnFromASM
       // 
       this.btnFromASM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnFromASM.Location = new System.Drawing.Point(337, 231);
+      this.btnFromASM.Location = new System.Drawing.Point(401, 277);
       this.btnFromASM.Name = "btnFromASM";
       this.btnFromASM.Size = new System.Drawing.Size(109, 23);
       this.btnFromASM.TabIndex = 1;
@@ -289,7 +312,7 @@
       // button1
       // 
       this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.button1.Location = new System.Drawing.Point(337, 48);
+      this.button1.Location = new System.Drawing.Point(401, 48);
       this.button1.Name = "button1";
       this.button1.Size = new System.Drawing.Size(109, 23);
       this.button1.TabIndex = 1;
@@ -300,7 +323,7 @@
       // btnToBASICHex
       // 
       this.btnToBASICHex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnToBASICHex.Location = new System.Drawing.Point(337, 106);
+      this.btnToBASICHex.Location = new System.Drawing.Point(401, 106);
       this.btnToBASICHex.Name = "btnToBASICHex";
       this.btnToBASICHex.Size = new System.Drawing.Size(109, 23);
       this.btnToBASICHex.TabIndex = 1;
@@ -311,7 +334,7 @@
       // btnToBASIC
       // 
       this.btnToBASIC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnToBASIC.Location = new System.Drawing.Point(337, 77);
+      this.btnToBASIC.Location = new System.Drawing.Point(401, 77);
       this.btnToBASIC.Name = "btnToBASIC";
       this.btnToBASIC.Size = new System.Drawing.Size(109, 23);
       this.btnToBASIC.TabIndex = 1;
@@ -322,7 +345,7 @@
       // btnToText
       // 
       this.btnToText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnToText.Location = new System.Drawing.Point(337, 19);
+      this.btnToText.Location = new System.Drawing.Point(401, 19);
       this.btnToText.Name = "btnToText";
       this.btnToText.Size = new System.Drawing.Size(109, 23);
       this.btnToText.TabIndex = 1;
@@ -340,9 +363,10 @@
       this.textBinaryData.Multiline = true;
       this.textBinaryData.Name = "textBinaryData";
       this.textBinaryData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.textBinaryData.Size = new System.Drawing.Size(325, 336);
+      this.textBinaryData.Size = new System.Drawing.Size(389, 424);
       this.textBinaryData.TabIndex = 0;
       this.textBinaryData.WordWrap = false;
+      this.textBinaryData.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBinaryData_PreviewKeyDown);
       // 
       // menuStrip1
       // 
@@ -350,7 +374,7 @@
             this.dataToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(669, 24);
+      this.menuStrip1.Size = new System.Drawing.Size(733, 24);
       this.menuStrip1.TabIndex = 1;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -409,7 +433,7 @@
       // 
       // BinaryDisplay
       // 
-      this.ClientSize = new System.Drawing.Size(669, 450);
+      this.ClientSize = new System.Drawing.Size(733, 538);
       this.Controls.Add(this.tabMain);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -463,5 +487,7 @@
     private System.Windows.Forms.Button btnToBASICHex;
     private System.Windows.Forms.Button btnFromBASICHex;
     private System.Windows.Forms.Button btnUpsize;
+    private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.TextBox editWrapCount;
   }
 }

@@ -181,7 +181,13 @@ namespace C64Studio
     {
       GR.Memory.ByteBuffer data = DataFromHex();
 
-      textBinaryData.Text = Util.ToASMData( data, true, 40, "!byte " );
+      int     wrapCount = GR.Convert.ToI32( editWrapCount.Text );
+      if ( wrapCount <= 0 )
+      {
+        wrapCount = 40;
+      }
+
+      textBinaryData.Text = Util.ToASMData( data, wrapCount > 0, wrapCount, "!byte " );
     }
 
 
@@ -526,6 +532,18 @@ namespace C64Studio
       }
       SetHexData( newData );
     }
+
+
+
+    private void textBinaryData_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    {
+      if ( e.KeyData == ( Keys.A | Keys.Control ) )
+      {
+        textBinaryData.SelectAll();
+      }
+    }
+
+
 
   }
 }

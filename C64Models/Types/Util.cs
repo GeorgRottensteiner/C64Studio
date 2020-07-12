@@ -154,7 +154,10 @@ namespace C64Studio
       if ( WrapData )
       {
         sb.Append( DataByteDirective );
-        sb.Append( ' ' );
+        if ( !DataByteDirective.EndsWith( " " ) )
+        {
+          sb.Append( ' ' );
+        }
 
         int byteCount = 0;
         for ( int i = 0; i < Data.Length; ++i )
@@ -183,7 +186,10 @@ namespace C64Studio
             if ( i < Data.Length - 1 )
             {
               sb.Append( DataByteDirective );
-              sb.Append( ' ' );
+              if ( !DataByteDirective.EndsWith( " " ) )
+              {
+                sb.Append( ' ' );
+              }
             }
           }
         }
