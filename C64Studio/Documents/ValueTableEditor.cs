@@ -945,5 +945,14 @@ namespace C64Studio
 
 
 
+    private ArrangedItemEntry listValues_CloningItem( object sender, ArrangedItemEntry Item )
+    {
+      var item = new ArrangedItemEntry( Item.Text );
+
+      return item;
+    }
+
+
+
   }
 }

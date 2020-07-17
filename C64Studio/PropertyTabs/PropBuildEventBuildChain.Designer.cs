@@ -91,6 +91,7 @@
       this.listBuildChainProjects.Size = new System.Drawing.Size(221, 244);
       this.listBuildChainProjects.TabIndex = 11;
       this.listBuildChainProjects.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listBuildChainProjects_AddingItem);
+      this.listBuildChainProjects.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.listBuildChainProjects_CloningItem);
       this.listBuildChainProjects.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemAdded);
       this.listBuildChainProjects.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemRemoved);
       this.listBuildChainProjects.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.listBuildChainProjects_ItemMoved);

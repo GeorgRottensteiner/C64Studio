@@ -2305,6 +2305,13 @@ namespace C64Studio
 
     private void asmLibraryPathList_ItemAdded( object sender, ArrangedItemEntry Item )
     {
+      ApplyLibraryPathsFromList();
+    }
+
+
+
+    private void ApplyLibraryPathsFromList()
+    {
       Core.Settings.ASMLibraryPaths.Clear();
       foreach ( ArrangedItemEntry entry in asmLibraryPathList.Items )
       {
@@ -2316,22 +2323,14 @@ namespace C64Studio
 
     private void asmLibraryPathList_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
     {
-      Core.Settings.ASMLibraryPaths.Clear();
-      foreach ( ArrangedItemEntry entry in asmLibraryPathList.Items )
-      {
-        Core.Settings.ASMLibraryPaths.Add( entry.Text );
-      }
+      ApplyLibraryPathsFromList();
     }
 
 
 
     private void asmLibraryPathList_ItemRemoved( object sender, ArrangedItemEntry Item )
     {
-      Core.Settings.ASMLibraryPaths.Clear();
-      foreach ( ArrangedItemEntry entry in asmLibraryPathList.Items )
-      {
-        Core.Settings.ASMLibraryPaths.Add( entry.Text );
-      }
+      ApplyLibraryPathsFromList();
     }
 
 
@@ -2365,7 +2364,7 @@ namespace C64Studio
     private void btnToolUp_Click( object sender, EventArgs e )
     {
       if ( ( listTools.SelectedItem == null )
-      || ( listTools.SelectedIndex < 1 ) )
+      ||   ( listTools.SelectedIndex < 1 ) )
       {
         return;
       }
@@ -2390,7 +2389,7 @@ namespace C64Studio
 
       listTools.SelectedIndex = index1;
       if ( ( tool1.second.Type == ToolInfo.ToolType.EMULATOR )
-      || ( tool2.second.Type == ToolInfo.ToolType.EMULATOR ) )
+      ||   ( tool2.second.Type == ToolInfo.ToolType.EMULATOR ) )
       {
         Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
       }

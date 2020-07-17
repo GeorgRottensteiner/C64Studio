@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.btnExchangeColors = new C64Studio.Controls.MenuButton();
@@ -408,6 +408,7 @@
       this.listLayerSprites.Size = new System.Drawing.Size(133, 148);
       this.listLayerSprites.TabIndex = 22;
       this.listLayerSprites.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listLayerSprites_AddingItem);
+      this.listLayerSprites.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.listLayerSprites_CloningItem);
       this.listLayerSprites.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_ItemAdded);
       this.listLayerSprites.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_ItemRemoved);
       this.listLayerSprites.MovingItem += new C64Studio.ArrangedItemList.ItemExchangingEventHandler(this.listLayerSprites_MovingItem);
@@ -433,6 +434,7 @@
       this.listLayers.Size = new System.Drawing.Size(133, 93);
       this.listLayers.TabIndex = 22;
       this.listLayers.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listLayers_AddingItem);
+      this.listLayers.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.listLayers_CloningItem);
       this.listLayers.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_ItemAdded);
       this.listLayers.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_ItemRemoved);
       this.listLayers.MovingItem += new C64Studio.ArrangedItemList.ItemExchangingEventHandler(this.listLayers_MovingItem);
@@ -554,7 +556,7 @@
       // layerPreview
       // 
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.layerPreview.DisplayPage = fastImage3;
+      this.layerPreview.DisplayPage = fastImage1;
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(136, 3);
       this.layerPreview.Name = "layerPreview";
@@ -821,7 +823,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage4;
+      this.pictureEditor.DisplayPage = fastImage2;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(40, 6);
       this.pictureEditor.Name = "pictureEditor";

@@ -13,6 +13,7 @@ namespace C64Studio
   {
     // Declare the delegate (if using non-generic pattern).
     public delegate ArrangedItemEntry AddingItemEventHandler( object sender );
+    public delegate ArrangedItemEntry CloningItemEventHandler( object sender, ArrangedItemEntry Item );
     public delegate void RemovingItemEventHandler( object sender, ArrangedItemEntry Item );
     public delegate void ItemModifiedEventHandler( object sender, ArrangedItemEntry Item );
     public delegate bool ItemExchangingEventHandler( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 );
@@ -20,6 +21,7 @@ namespace C64Studio
 
 
     public event AddingItemEventHandler AddingItem;
+    public event CloningItemEventHandler CloningItem;
     public event RemovingItemEventHandler RemovingItem;
     public event ItemModifiedEventHandler ItemAdded;
     public event ItemModifiedEventHandler ItemRemoved;
@@ -30,6 +32,7 @@ namespace C64Studio
 
     private ArrangedItemListCollection _Items;
     private bool      _HasOwnerDrawColumn = false;
+    private bool      _AllowClone = true;
 
     public bool MustHaveOneElement { get; set; }
 
@@ -144,6 +147,21 @@ namespace C64Studio
       set
       {
         btnAdd.Enabled = value;
+      }
+    }
+
+
+
+    public bool AllowClone
+    {
+      get
+      {
+        return _AllowClone;
+      }
+      set
+      {
+        _AllowClone = value;
+        UpdateUI();
       }
     }
 
@@ -322,7 +340,8 @@ namespace C64Studio
 
     public void UpdateUI()
     {
-      btnMoveUp.Enabled = ( ( listItems.SelectedIndices.Count > 0 ) && ( listItems.SelectedIndices[0] > 0 ) );
+      btnClone.Enabled    = ( listItems.SelectedIndices.Count > 0 ) && ( AllowClone );
+      btnMoveUp.Enabled   = ( ( listItems.SelectedIndices.Count > 0 ) && ( listItems.SelectedIndices[0] > 0 ) );
       btnMoveDown.Enabled = ( ( listItems.SelectedIndices.Count > 0 ) && ( listItems.SelectedIndices[0] + 1 < listItems.Items.Count ) );
 
       if ( MustHaveOneElement )
@@ -406,27 +425,87 @@ namespace C64Studio
     private void ArrangedItemList_SizeChanged( object sender, EventArgs e )
     {
       // TODO - rearrange buttons
-      //186+50-3
-      //233 all
-      //50 buttons
-      //11 abstand
-      int     buttonWidth = ( ClientSize.Width * 50 ) / 233;
-      int     buttonOffset = ( ClientSize.Width * 11 ) / 233;
+      //186+40-3
+      //240 all
+      //40 buttons
+      //10 abstand
+      int     buttonWidth = ( ClientSize.Width * 40 ) / 240;
+      int     buttonDistance = 10;
 
       btnAdd.Size = new Size( buttonWidth, btnAdd.Height );
 
-      int     offset = ( 1 * ( 50 + 11 ) * ClientSize.Width ) / 233;
-      btnDelete.Location = new Point( offset, btnDelete.Location.Y );
-      btnDelete.Size = new Size( buttonWidth, btnAdd.Height );
+      int     offset = ( 1 * ( 40 + buttonDistance ) * ClientSize.Width ) / 240;
+      btnClone.Location = new Point( offset, btnClone.Location.Y );
+      btnClone.Size = new Size( buttonWidth, btnAdd.Height );
 
-      offset = ( 2 * ( 50 + 11 ) * ClientSize.Width ) / 233;
+      offset = ( 2 * ( 40 + buttonDistance ) * ClientSize.Width ) / 240;
+      btnDelete.Location = new Point( offset, btnDelete.Location.Y );
+      btnDelete.Size = new Size( buttonWidth, btnClone.Height );
+
+      offset = ( 3 * ( 40 + buttonDistance ) * ClientSize.Width ) / 240;
       btnMoveUp.Location = new Point( offset, btnDelete.Location.Y );
       btnMoveUp.Size = new Size( buttonWidth, btnAdd.Height );
 
-      offset = ( 3 * ( 50 + 11 ) * ClientSize.Width ) / 233;
+      offset = ( 4 * ( 40 + buttonDistance ) * ClientSize.Width ) / 240;
       btnMoveDown.Location = new Point( offset, btnDelete.Location.Y );
       btnMoveDown.Size = new Size( buttonWidth, btnAdd.Height );
     }
+
+
+
+    internal void InvalidateItem( int Index )
+    {
+      if ( ( Index < 0 )
+      ||   ( Index >= listItems.Items.Count ) )
+      {
+        return;
+      }
+      // force redraw of listbox
+      var origSelectedItem = listItems.SelectedItem;
+      var tempItem = listItems.Items[Index];
+      listItems.Items.RemoveAt( Index );
+      listItems.Items.Insert( Index, tempItem );
+
+      if ( origSelectedItem == tempItem )
+      {
+        listItems.SelectedItem = origSelectedItem;
+      }
+    }
+
+
+
+    private void btnClone_Click( object sender, EventArgs e )
+    {
+      if ( listItems.SelectedIndices.Count == 0 )
+      {
+        return;
+      }
+      int     indexToClone = listItems.SelectedIndices[0];
+      var     itemToClone = (ArrangedItemEntry)SelectedItems[0];
+
+      ArrangedItemEntry   newItem = null;
+
+      if ( CloningItem != null )
+      {
+        newItem = CloningItem( this, itemToClone );
+        if ( newItem == null )
+        {
+          return;
+        }
+      }
+      if ( newItem == null )
+      {
+        newItem = new ArrangedItemEntry( this );
+      }
+      newItem.Text = itemToClone.Text;
+      newItem = _Items.Add( newItem );
+      if ( ItemAdded != null )
+      {
+        ItemAdded( this, newItem );
+      }
+      UpdateUI();
+    }
+
 
   }
 
@@ -454,7 +533,30 @@ namespace C64Studio
       _Owner = Owner;
     }
 
-    public string Text { get; set; }
+
+
+    public string Text 
+    {
+      get
+      {
+        return _Text;
+      }
+
+      set
+      {
+        if ( _Text != value )
+        {
+          _Text = value;
+          if ( _Owner != null )
+          {
+            _Owner.InvalidateItem( Index );
+          }
+        }
+      }
+    }
+
+
+
     public object Tag { get; set; } = null;
     public int Index { get; set; } = -1;
     public bool Selected
@@ -491,6 +593,8 @@ namespace C64Studio
         }
       }
     }
+
+    private string    _Text;
 
   };
 
@@ -685,6 +789,7 @@ namespace C64Studio
       {
         var item = (ArrangedItemEntry)_Owner.listItems.SelectedItems[Index];
         item.Index = Index;
+        item._Owner = _Owner;
         return item;
       }
     }

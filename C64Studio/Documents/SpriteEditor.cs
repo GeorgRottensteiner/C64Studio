@@ -3584,5 +3584,48 @@ namespace C64Studio
 
 
 
+    private ArrangedItemEntry listLayers_CloningItem( object sender, ArrangedItemEntry Item )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetAddLayer( this, m_SpriteProject, m_SpriteProject.SpriteLayers.Count ) );
+
+      var layer = new SpriteProject.Layer();
+      var origLayer = (SpriteProject.Layer)Item.Tag;
+
+      layer.Name = origLayer.Name;
+      layer.BackgroundColor = origLayer.BackgroundColor;
+      foreach ( var sprite in origLayer.Sprites )
+      {
+        layer.Sprites.Add( new SpriteProject.LayerSprite() { Color = sprite.Color, ExpandX = sprite.ExpandX, ExpandY = sprite.ExpandY, Index = sprite.Index, X = sprite.X, Y = sprite.Y } );
+      }
+      var item = new ArrangedItemEntry( layer.Name );
+      item.Tag = layer;
+
+      m_SpriteProject.SpriteLayers.Add( layer );
+
+      return item;
+    }
+
+
+
+    private ArrangedItemEntry listLayerSprites_CloningItem( object sender, ArrangedItemEntry Item )
+    {
+      var origSprite = (SpriteProject.LayerSprite)Item.Tag;
+
+      Formats.SpriteProject.LayerSprite sprite = new Formats.SpriteProject.LayerSprite();
+      sprite.X = origSprite.X;
+      sprite.Y = origSprite.Y;
+      sprite.Index = origSprite.Index;
+      sprite.Color = origSprite.Color;
+      sprite.ExpandX = origSprite.ExpandX;
+      sprite.ExpandY = origSprite.ExpandY;
+
+      m_CurrentLayer.Sprites.Add( sprite );
+
+      ArrangedItemEntry item = new ArrangedItemEntry();
+      item.Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
+      item.Tag = sprite;
+
+      return item;
+    }
   }
 }

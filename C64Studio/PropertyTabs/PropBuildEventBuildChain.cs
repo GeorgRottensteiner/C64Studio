@@ -220,6 +220,8 @@ namespace C64Studio
 
         Element.DocumentInfo.Project.SetModified();
         Core.MainForm.MarkAsDirty( Element.DocumentInfo );
+
+        listBuildChainProjects.Update();
       }
     }
 
@@ -265,8 +267,29 @@ namespace C64Studio
         buildChainEntry.DocumentFilename = newFile;
         Element.DocumentInfo.Project.SetModified();
         Core.MainForm.MarkAsDirty( Element.DocumentInfo );
+
+        listBuildChainProjects.Invalidate();
       }
     }
 
+
+
+    private ArrangedItemEntry listBuildChainProjects_CloningItem( object sender, ArrangedItemEntry Item )
+    {
+      var origItem = (BuildChainEntry)Item.Tag;
+
+      var entry = new BuildChainEntry();
+      entry.ProjectName = origItem.ProjectName;
+      entry.Config      = origItem.Config;
+      entry.DocumentFilename = origItem.DocumentFilename;
+      entry.PreDefines  = origItem.PreDefines;
+
+      var item = new ArrangedItemEntry();
+
+      item.Text = entry.ProjectName + " - " + entry.Config;
+      item.Tag = entry;
+
+      return item;
+    }
   }
 }

@@ -156,6 +156,7 @@
       this.listValues.Size = new System.Drawing.Size(317, 379);
       this.listValues.TabIndex = 0;
       this.listValues.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listValues_AddingItem);
+      this.listValues.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.listValues_CloningItem);
       this.listValues.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listValues_ItemAdded);
       this.listValues.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listValues_ItemRemoved);
       this.listValues.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.listValues_ItemMoved);

@@ -3518,8 +3518,10 @@ namespace C64Studio
           UsedCharsToClipboard();
           break;
       }
-
     }
+
+
+
   }
 }
 

@@ -729,6 +729,10 @@
     <None Include="Resources\toolbar_basic_toggle_upperlowercase_up.png" />
     <None Include="Resources\toolbar_basic_string_mode_active.png" />
     <None Include="Resources\toolbar_basic_string_mode_inactive.png" />
+    <None Include="Resources\add1.png" />
+    <None Include="Resources\clone.png" />
+    <None Include="Resources\clone1.png" />
+    <None Include="Resources\clone2.png" />
     <Content Include="TODO.txt" />
     <None Include="Resources\charscreen_text1.ico" />
     <None Include="Resources\charscreen_text.ico" />

@@ -482,13 +482,20 @@ namespace C64Studio
         // magic number
         fileData.AppendU32( 0x12345678 );
 
-        byte[]    fileName = Encoding.Unicode.GetBytes( element.DocumentInfo.FullPath );
+        string  filenameToCopy = element.DocumentInfo.FullPath;
+        string  clipboardDataName = "C64Studio.SolutionFile";
+        if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
+        {
+          filenameToCopy = element.Name;
+          clipboardDataName = "C64Studio.Folder";
+        }
+        byte[]    fileName = Encoding.Unicode.GetBytes( filenameToCopy );
         fileData.AppendI32( fileName.Length );
         fileData.Append( fileName );
 
         DataObject dataObj = new DataObject();
 
-        dataObj.SetData( "C64Studio.SolutionFile", false, fileData.MemoryStream() );
+        dataObj.SetData( clipboardDataName, false, fileData.MemoryStream() );
 
         Clipboard.SetDataObject( dataObj, true );
       }
@@ -517,6 +524,44 @@ namespace C64Studio
         TreeNode  parentNodeToInsertTo = Node.Parent;
 
         IDataObject dataObj = Clipboard.GetDataObject();
+        if ( ( dataObj != null )
+        &&   ( dataObj.GetDataPresent( "C64Studio.Folder" ) ) )
+        {
+          System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "C64Studio.Folder" );
+
+          GR.Memory.ByteBuffer clipData = new GR.Memory.ByteBuffer( (uint)ms.Length );
+
+          ms.Read( clipData.Data(), 0, (int)ms.Length );
+
+          GR.IO.MemoryReader memIn = clipData.MemoryReader();
+
+          if ( memIn.ReadUInt32() != 0x12345678 )
+          {
+            return;
+          }
+          int   fileLength = memIn.ReadInt32();
+
+          string  fileName = Encoding.Unicode.GetString( clipData.Data(), 8, fileLength );
+
+          ProjectElement element = project.CreateElement( ProjectElement.ElementType.FOLDER, parentNodeToInsertTo );
+
+          string relativeFilename = fileName;
+          element.Name            = relativeFilename;
+          element.Filename        = relativeFilename;
+
+          while ( parentNodeToInsertTo.Level >= 1 )
+          {
+            element.ProjectHierarchy.Insert( 0, parentNodeToInsertTo.Text );
+            parentNodeToInsertTo = parentNodeToInsertTo.Parent;
+          }
+          element.DocumentInfo.DocumentFilename = relativeFilename;
+          if ( element.Document != null )
+          {
+            element.Document.SetDocumentFilename( relativeFilename );
+          }
+          project.SetModified();
+        }
+
         if ( ( dataObj != null )
         &&   ( dataObj.GetDataPresent( "C64Studio.SolutionFile" ) ) )
         {

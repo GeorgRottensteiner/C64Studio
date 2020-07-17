@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -706,7 +706,7 @@
       // colorSelector
       // 
       this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage4;
+      this.colorSelector.DisplayPage = fastImage1;
       this.colorSelector.Image = null;
       this.colorSelector.Location = new System.Drawing.Point(683, 413);
       this.colorSelector.Name = "colorSelector";
@@ -718,7 +718,7 @@
       // charEditor
       // 
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage5;
+      this.charEditor.DisplayPage = fastImage2;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(683, 148);
       this.charEditor.Name = "charEditor";
@@ -848,7 +848,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage6;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -902,6 +902,7 @@
       // listColorMappingTargets
       // 
       this.listColorMappingTargets.AddButtonEnabled = true;
+      this.listColorMappingTargets.AllowClone = false;
       this.listColorMappingTargets.DeleteButtonEnabled = false;
       this.listColorMappingTargets.HasOwnerDrawColumn = true;
       this.listColorMappingTargets.HighlightColor = System.Drawing.SystemColors.HotTrack;
