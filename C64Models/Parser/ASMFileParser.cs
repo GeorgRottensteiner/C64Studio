@@ -6824,13 +6824,20 @@ namespace C64Studio.Parser
               stackScopes.Add( scope );
               OnScopeAdded( scope );
             }
-            else if ( ( TokenStartsScope( lineTokenInfos[0], out detectedScopeType ) )
+            else if ( ( TokenStartsScope( lineTokenInfos, out detectedScopeType ) )
             &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" ) )
             {
               // ACME style other scopes with bracket
               Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( detectedScopeType );
               scope.StartIndex = lineIndex;
               scope.Active = false;
+
+              if ( detectedScopeType == ScopeInfo.ScopeType.MACRO_FUNCTION )
+              {
+                scope.Macro = new MacroFunctionInfo();
+                scope.Macro.UsesBracket = true;
+              }
+
               stackScopes.Add( scope );
               OnScopeAdded( scope );
             }
@@ -6901,6 +6908,11 @@ namespace C64Studio.Parser
                   HadFatalError = true;
                   return Lines;
                 }
+              }
+              else
+              {
+                AddError( lineIndex, C64Studio.Types.ErrorCode.E1401_INTERNAL_ERROR, "Macro function scope encountered, but no macro function set" );
+                continue;
               }
               break;
             case Types.ScopeInfo.ScopeType.LOOP:
@@ -9577,19 +9589,26 @@ namespace C64Studio.Parser
 
 
 
-    private bool TokenStartsScope( TokenInfo Token, out Types.ScopeInfo.ScopeType Type )
+    private bool TokenStartsScope( List<TokenInfo> Tokens, out Types.ScopeInfo.ScopeType Type )
     {
       Type = ScopeInfo.ScopeType.UNKNOWN;
-      if ( Token.Type == TokenInfo.TokenType.MACRO )
+      if ( Tokens[0].Type == TokenInfo.TokenType.MACRO )
       {
-        if ( MatchesMacroByType( Token.Content, MacroInfo.MacroType.ADDRESS ) )
+        if ( MatchesMacroByType( Tokens[0].Content, MacroInfo.MacroType.ADDRESS ) )
         {
           Type = ScopeInfo.ScopeType.ADDRESS;
           return true;
         }
-        if ( MatchesMacroByType( Token.Content, MacroInfo.MacroType.ZONE ) )
+        if ( MatchesMacroByType( Tokens[0].Content, MacroInfo.MacroType.ZONE ) )
         {
           Type = ScopeInfo.ScopeType.ZONE;
+          return true;
+        }
+        // a ACME style !macro with opening bracket
+        if ( ( MatchesMacroByType( Tokens[0].Content, MacroInfo.MacroType.MACRO ) )
+        &&   ( Tokens[Tokens.Count - 1].Content == "{" ) )
+        {
+          Type = ScopeInfo.ScopeType.MACRO_FUNCTION;
           return true;
         }
       }

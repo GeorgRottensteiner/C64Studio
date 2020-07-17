@@ -582,7 +582,7 @@ namespace C64Studio.Parser
         AddOpcode( "RI.", 0xC9 );
         AddOpcode( "MID$", 0xCA );
         AddOpcode( "M.", 0xCA );
-        //AddOpcode( "GO", 0xCB );
+        AddOpcode( "GO", 0xCB );
 
         // override without or different short cuts
         AddOpcode( "ELSE", 0xcc );

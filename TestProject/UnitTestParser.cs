@@ -27,7 +27,7 @@ namespace TestProject
       }
 
 
-      Assert.IsTrue( parseResult  );
+      Assert.IsTrue( parseResult );
       Assert.IsTrue( parser.Assemble( config ) );
 
       return parser.AssembledOutput.Assembly;
@@ -919,6 +919,32 @@ namespace TestProject
       var assembly = TestAssemble( source );
 
       Assert.AreEqual( "0020A200BD00309DA2046000000000000000000000000000000000000000000000006C736D66", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestMacroInsideInactiveScope()
+    {
+      string      source = @"!IFDEF TEST {
+                              !MACRO d020_mach {
+                                inc $d020
+                              }
+                            } else {
+                              !MACRO d020_mach {
+                                dec $d020
+                              }
+                            }
+  
+                          *=$0801
+                          !basic loop
+                          loop:
+                            +d020_mach
+                            jmp loop";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "01080B080A009E32303631000000CE20D04C0D08", assembly.ToString() );
     }
 
 
