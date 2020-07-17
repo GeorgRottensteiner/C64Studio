@@ -225,15 +225,19 @@ namespace C64Studio
       {
         return listItems.SelectedIndex;
       }
+      set
+      {
+        listItems.SelectedIndex = value;
+      }
     }
 
 
 
-    public object SelectedItem
+    public ArrangedItemEntry SelectedItem
     {
       get
       {
-        return listItems.SelectedItem;
+        return (ArrangedItemEntry)listItems.SelectedItem;
       }
     }
 
@@ -461,6 +465,7 @@ namespace C64Studio
         return;
       }
       // force redraw of listbox
+      var offset = listItems.AutoScrollOffset;
       var origSelectedItem = listItems.SelectedItem;
       var tempItem = listItems.Items[Index];
       listItems.Items.RemoveAt( Index );
@@ -470,6 +475,7 @@ namespace C64Studio
       {
         listItems.SelectedItem = origSelectedItem;
       }
+      listItems.AutoScrollOffset = offset;
     }
 
 
@@ -531,6 +537,13 @@ namespace C64Studio
     internal ArrangedItemEntry( ArrangedItemList Owner )
     {
       _Owner = Owner;
+    }
+
+
+
+    public override string ToString()
+    {
+      return Text;
     }
 
 
@@ -643,6 +656,7 @@ namespace C64Studio
     public ArrangedItemEntry Add( ArrangedItemEntry Item )
     {
       Item.Index = _Owner.listItems.Items.Add( Item );
+      Item._Owner = _Owner;
       /*
       if ( _Owner.ItemAdded != null )
       {
