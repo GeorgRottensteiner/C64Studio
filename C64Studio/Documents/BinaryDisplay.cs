@@ -545,6 +545,24 @@ namespace C64Studio
 
 
 
+    private void btnDeleteNthByte_Click( object sender, EventArgs e )
+    {
+      int nthByte = GR.Convert.ToI32( editDeleteNthByte.Text );
+      if ( nthByte <= 0 )
+      {
+        return;
+      }
+      var data = DataFromHex();
+
+      int   curPos = 0;
+
+      while ( curPos + nthByte < data.Length )
+      {
+        data = data.SubBuffer( 0, curPos + nthByte - 1 ) + data.SubBuffer( curPos + nthByte );
+        curPos += nthByte - 1;
+      }
+      SetHexData( data );
+    }
   }
 }
 

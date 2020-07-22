@@ -62,6 +62,8 @@
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.modifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.interleaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.btnDeleteNthByte = new System.Windows.Forms.Button();
+      this.editDeleteNthByte = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabMain.SuspendLayout();
       this.tabData.SuspendLayout();
@@ -130,8 +132,10 @@
       // 
       this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.groupBox2.Controls.Add(this.editDeleteNthByte);
       this.groupBox2.Controls.Add(this.btnExport);
       this.groupBox2.Controls.Add(this.btnImport);
+      this.groupBox2.Controls.Add(this.btnDeleteNthByte);
       this.groupBox2.Controls.Add(this.btnUpsize);
       this.groupBox2.Controls.Add(this.btnInterleave);
       this.groupBox2.Location = new System.Drawing.Point(528, 6);
@@ -431,6 +435,24 @@
       this.interleaveToolStripMenuItem.Text = "Interleave...";
       this.interleaveToolStripMenuItem.Click += new System.EventHandler(this.interleaveToolStripMenuItem_Click);
       // 
+      // btnDeleteNthByte
+      // 
+      this.btnDeleteNthByte.Location = new System.Drawing.Point(6, 106);
+      this.btnDeleteNthByte.Name = "btnDeleteNthByte";
+      this.btnDeleteNthByte.Size = new System.Drawing.Size(75, 23);
+      this.btnDeleteNthByte.TabIndex = 0;
+      this.btnDeleteNthByte.Text = "Delete nth";
+      this.btnDeleteNthByte.UseVisualStyleBackColor = true;
+      this.btnDeleteNthByte.Click += new System.EventHandler(this.btnDeleteNthByte_Click);
+      // 
+      // editDeleteNthByte
+      // 
+      this.editDeleteNthByte.Location = new System.Drawing.Point(87, 108);
+      this.editDeleteNthByte.Name = "editDeleteNthByte";
+      this.editDeleteNthByte.Size = new System.Drawing.Size(75, 20);
+      this.editDeleteNthByte.TabIndex = 2;
+      this.editDeleteNthByte.Text = "2";
+      // 
       // BinaryDisplay
       // 
       this.ClientSize = new System.Drawing.Size(733, 538);
@@ -445,6 +467,7 @@
       this.tabData.ResumeLayout(false);
       this.tabModify.ResumeLayout(false);
       this.groupBox2.ResumeLayout(false);
+      this.groupBox2.PerformLayout();
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       this.menuStrip1.ResumeLayout(false);
@@ -489,5 +512,7 @@
     private System.Windows.Forms.Button btnUpsize;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.TextBox editWrapCount;
+    private System.Windows.Forms.TextBox editDeleteNthByte;
+    private System.Windows.Forms.Button btnDeleteNthByte;
   }
 }
