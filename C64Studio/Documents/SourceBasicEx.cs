@@ -1102,7 +1102,6 @@ namespace C64Studio
         }
       }
 
-
       if ( !m_StringEnterMode )
       {
         // simply insert, no key mapping!
@@ -1157,7 +1156,6 @@ namespace C64Studio
         var mappedKey = KeyCodeToUnicode( keyData );
 
         //Debug.Log( "Barekey=" + bareKey + "/keyData = " + keyData + "/(char)keyData=" + (char)keyData + "/(int)bareKey=" + (int)bareKey + "/mappedKey=" + mappedKey );
-
         // hard coded mapping from ^ to arrow up (power)
         if ( mappedKey == "^" )
         {
@@ -1171,7 +1169,7 @@ namespace C64Studio
           return true;
         }
         if ( ( (int)bareKey >= 0x30 )
-        &&   ( IsNotValidKey( mappedKey ) )
+        &&   ( !IsValidKey( mappedKey ) )
         &&   ( !Core.Settings.Accelerators.ContainsKey( keyData ) ) )
         {
           // swallow invalid keys
@@ -1351,14 +1349,26 @@ namespace C64Studio
 
 
 
-    private bool IsNotValidKey( string MappedKey )
+    private bool IsValidKey( string MappedKey )
     {
       if ( string.IsNullOrEmpty( MappedKey ) )
       {
-        return true;
+        return false;
       }
       // check all keys!
-      return !Types.ConstantData.CharToC64Char.ContainsKey( MappedKey.ToUpper()[0] );
+      if ( !Types.ConstantData.CharToC64Char.ContainsKey( MappedKey.ToUpper()[0] ) )
+      {
+        // the macro key?
+        if ( ( MappedKey == "{" )
+        ||   ( MappedKey == "_" )
+        ||   ( MappedKey == "}" ) )
+        {
+          return true;
+        }
+        return false;
+      }
+
+      return true;
     }
 
 
