@@ -28,7 +28,7 @@ namespace C64Studio.Tasks
 
       try
       {
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create( "http://www.georg-rottensteiner.de/scripts/checkversion.php?checkversion=AppVersion&name=3" );
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create( "https://www.georg-rottensteiner.de/scripts/checkversion.php?checkversion=AppVersion&name=3" );
 
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
