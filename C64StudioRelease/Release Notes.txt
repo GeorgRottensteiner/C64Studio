@@ -17,7 +17,39 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
-01.08.2020 - 6.5:
+01.08.2020 - 6.5:         Fix: Update URL for version check
+                          Fix: Allow {, }, _ as valid keys for BASIC (to access assembly symbols)
+                          Add: Binary Editor - remove nth byte option
+                          Fix: Macro with squiggly braces inside inactive scope would not be properly parsed
+                          Fix: Replace tool list with arrangeditemlist
+                          Add: Allow clone for arranged item lists (sprite editor, grapic screen editor, value table editor, library paths, build chains)
+                          Add: Binary editor, wrap data output (ASM)
+                          Fix: BASIC Renumber modified Ctrl-N in string literals
+                          Add/Fix: Export sprite to BASIC now obeys the wrap-at-x-bytes setting
+                          Fix: Crash when copylinedown is used in bottom most line
+                          Fix: Theming, set BASIC editor fore color to CODE, not CONTROL_TEXT
+                          Fix: Remove "GO" BASIC token once again, messes up syntax coloring for GOSUB and GOTO
+                          Fix: Only auto-add truedrive options for VICE
+                          Add: Auto-Add local baselib path for Kernal.asm
+                          Fix: Tiny theming issue with labels
+                          WIP: Decent sample projects
+                                 Tiny cleanup of sample projects, needs major overhaul!
+                          Fix: Rename BASIC line number for exports consistently
+                          Add: !fill expression method
+                          Add: Keybindings for bookmarks
+                          Fix: Scaling bug in sprite editor
+                          Add: Allow font styles
+                          WIP: New binary monitor interface to GTK Vice
+                          Fix: typo in doc
+                          Fix: autodetection for zeropage addressing failed for value $ff (facepalm)
+                          Fix/Add: Allow adding of .chr binary to solution
+                          Fix: Allow breakpoints working with non-project files
+                          Fix: Export to Koala, added missing BG color byte
+                          Fix: Proper wait for executed output during build
+                          Add: Dependencies and symbols from other projects
+                          Add: Charset control in charset screen
+                          Add: Export to binary charset from map project
+                          Fix: charset screen size change only sets modified if it really changes
 
 20.03.2020 - 6.4:         Fix: Let Black Jack for CBM Prg Studio compile (allow * counter for macros)
                           Fix: Up text length for binary editor import

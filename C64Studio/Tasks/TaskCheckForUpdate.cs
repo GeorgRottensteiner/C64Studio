@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Authentication;
 using System.Text;
 
 namespace C64Studio.Tasks
@@ -20,6 +21,9 @@ namespace C64Studio.Tasks
     }
 
 
+    // hack to allow TLS1.2 with .NET 3.5
+    public const SslProtocols _Tls12 = (SslProtocols)0x00000C00;
+    public const SecurityProtocolType Tls12 = (SecurityProtocolType)_Tls12;
 
     protected override bool ProcessTask()
     {
@@ -28,6 +32,7 @@ namespace C64Studio.Tasks
 
       try
       {
+        ServicePointManager.SecurityProtocol = Tls12;
         HttpWebRequest request = (HttpWebRequest)WebRequest.Create( "https://www.georg-rottensteiner.de/scripts/checkversion.php?checkversion=AppVersion&name=3" );
 
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
