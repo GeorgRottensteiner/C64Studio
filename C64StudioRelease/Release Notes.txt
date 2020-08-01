@@ -17,6 +17,8 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+01.08.2020 - 6.5:
+
 20.03.2020 - 6.4:         Fix: Let Black Jack for CBM Prg Studio compile (allow * counter for macros)
                           Fix: Up text length for binary editor import
                           Fix: Crash in Charset screen editor when floating selection was placed outside the screen

@@ -1,5 +1,7 @@
 ﻿C64Studio
 o Watch - Display characters hex, dec. and binary
+o Label with : are warning-marked on the wrong line
+o Charpad format version 6
 o MemViewer: Speicheradresse und nur ein Byte, alles untereinander? 
              Disassembly
 o BASIC - Auto-fix casing on opening a file
