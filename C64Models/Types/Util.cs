@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using GR.Memory;
 
@@ -33,9 +34,15 @@ namespace C64Studio
       {
         if ( i < Name.Length )
         {
+          /*
           if ( Types.ConstantData.PETSCII.ContainsKey( Name[i] ) )
           {
             bufName.AppendU8( Types.ConstantData.PETSCII[Name[i]] );
+          }*/
+          var potChar = Types.ConstantData.PetSCIIToChar.Values.FirstOrDefault( v => v.CharValue == Name[i] );
+          if ( potChar != null )
+          {
+            bufName.AppendU8( potChar.PetSCIIValue );
           }
           else
           {

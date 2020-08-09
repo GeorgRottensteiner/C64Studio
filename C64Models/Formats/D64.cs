@@ -383,7 +383,8 @@ namespace C64Studio.Formats
         {
           int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
           int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+          if ( ( fileTrack != 0 )
+          &&   ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED ) )
           {
             // valid entry?
             C64Studio.Types.FileInfo info = new C64Studio.Types.FileInfo();

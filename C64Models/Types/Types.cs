@@ -948,9 +948,9 @@ namespace C64Studio.Types
       PETSCII[']'] = 93;
       //PETSCII['_'] = 127;
       //PETSCII['\''] = 95;
-      PETSCII['{'] = 123;
+      //PETSCII['{'] = 123;
       PETSCII['|'] = 166;
-      PETSCII['}'] = 125;
+      //PETSCII['}'] = 125;
       PETSCII[''] = 127;
 
       foreach ( KeyValuePair<char,byte> unicode in PETSCII )

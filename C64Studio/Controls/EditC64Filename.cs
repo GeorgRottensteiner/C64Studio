@@ -74,6 +74,43 @@ namespace C64Studio
 
 
 
+    public int CursorPos
+    {
+      get
+      {
+        return m_CursorPos;
+      }
+      set
+      {
+        int   cursorPos = value;
+        if ( cursorPos >= Text.Length )
+        {
+          cursorPos = Text.Length;
+        }
+        m_CursorPos = cursorPos;
+        SetCaretPos( m_CursorPos * letterWidth, 0 );
+        ClearSelection();
+      }
+    }
+
+
+
+    public char CurrentChar
+    {
+      get
+      {
+        return Text[m_CursorPos];
+      }
+      set
+      {
+        string NewText = Text.Substring( 0, m_CursorPos ) + value + Text.Substring( m_CursorPos + 1 );
+        base.Text = NewText;
+        Invalidate();
+      }
+    }
+
+
+
     public bool HasSelection
     {
       get
@@ -110,6 +147,8 @@ namespace C64Studio
         ReplaceSelection( value );
       }
     }
+
+
 
     public override string Text
     {

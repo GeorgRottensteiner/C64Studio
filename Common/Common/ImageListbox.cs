@@ -418,10 +418,18 @@ namespace GR.Forms
       {
         m_ItemWidth = ClientRectangle.Width;
       }
+      if ( m_ItemWidth <= 0 )
+      {
+        m_ItemWidth = 20;
+      }
       int   itemWidth = m_ItemWidth;
       if ( m_DisplayPage.Width != ClientRectangle.Width )
       {
-        itemWidth *= ( ClientRectangle.Width / m_DisplayPage.Width );
+        itemWidth = ( itemWidth * ClientRectangle.Width / m_DisplayPage.Width );
+      }
+      if ( itemWidth <= 0 )
+      {
+        itemWidth = 20;
       }
       m_ItemsPerLine = ClientRectangle.Width / itemWidth;
       if ( m_ItemsPerLine == 0 )
