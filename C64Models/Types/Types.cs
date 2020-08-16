@@ -739,6 +739,8 @@ namespace C64Studio.Types
                   files)
      */
     public FileType Type = FileType.SCRATCHED;
+
+    public int DirEntryIndex = -1;
   }
 
   public class SymbolInfo

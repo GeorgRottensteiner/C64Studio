@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C64Studio.Types;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,6 +18,9 @@ namespace C64Studio.Formats
     public abstract bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, C64Studio.Types.FileType Type );
     public abstract bool DeleteFile( GR.Memory.ByteBuffer Filename );
     public abstract bool RenameFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer NewFilename );
+
+
+
     public virtual void Validate()
     {
     }
@@ -66,6 +70,13 @@ namespace C64Studio.Formats
       {
         return new GR.Memory.ByteBuffer();
       }
+    }
+
+
+
+    public virtual void ChangeFileType( FileInfo FileToChange, FileType NewFileType )
+    {
+      FileToChange.Type = NewFileType;
     }
 
   }

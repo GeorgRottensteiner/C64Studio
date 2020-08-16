@@ -52,6 +52,7 @@ namespace C64Studio.Formats
       info.Filename = Filename;
       info.Blocks   = (int)Data.Length / 254;
       info.Type     = C64Studio.Types.FileType.PRG;
+      info.DirEntryIndex = 0;
 
       fileList.Add( info );
       return fileList;

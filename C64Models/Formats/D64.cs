@@ -360,58 +360,6 @@ namespace C64Studio.Formats
 
 
 
-    public override List<C64Studio.Types.FileInfo> Files()
-    {
-      _LastError = "";
-
-      List<C64Studio.Types.FileInfo> files = new List<C64Studio.Types.FileInfo>();
-
-      int   curTrack = TRACK_DIRECTORY;
-      int   curSector = SECTOR_DIRECTORY;
-      bool  endFound = false;
-
-      if ( Tracks.Count < curTrack - 1 )
-      {
-        return files;
-      }
-
-      while ( !endFound )
-      {
-        Sector sec = Tracks[curTrack - 1].Sectors[curSector];
-
-        for ( int i = 0; i < 8; ++i )
-        {
-          int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
-          int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( ( fileTrack != 0 )
-          &&   ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED ) )
-          {
-            // valid entry?
-            C64Studio.Types.FileInfo info = new C64Studio.Types.FileInfo();
-
-            info.Filename = sec.Data.SubBuffer( 0x20 * i + 5, 16 );
-            info.StartSector = fileSector;
-            info.StartTrack = fileTrack;
-            info.Type = (C64Studio.Types.FileType)sec.Data.ByteAt( 0x20 * i + 2 );
-            info.Blocks = sec.Data.ByteAt( 0x20 * i + 30 ) + 256 * sec.Data.ByteAt( 0x20 * i + 31 );
-            files.Add( info );
-          }
-        }
-
-        curTrack = sec.Data.ByteAt( 0 );
-        curSector = sec.Data.ByteAt( 1 );
-
-        if ( curTrack == 0 )
-        {
-          // track = 0 marks last directory entry
-          endFound = true;
-        }
-      }
-      return files;
-    }
-
-
-
     private bool IsSectorMarkedAsUsedInBAM( int Track, int Sector )
     {
       _LastError = "";

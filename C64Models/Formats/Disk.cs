@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C64Studio.Types;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -494,57 +495,6 @@ namespace C64Studio.Formats
       }
       fileInfo.Data = result;
       return fileInfo;
-    }
-
-
-
-    public override List<C64Studio.Types.FileInfo> Files()
-    {
-      _LastError = "";
-
-      List<C64Studio.Types.FileInfo> files = new List<C64Studio.Types.FileInfo>();
-
-      int   curTrack = TRACK_DIRECTORY;
-      int   curSector = SECTOR_DIRECTORY;
-      bool  endFound = false;
-
-      if ( Tracks.Count < curTrack - 1 )
-      {
-        return files;
-      }
-
-      while ( !endFound )
-      {
-        Sector sec = Tracks[curTrack - 1].Sectors[curSector];
-
-        for ( int i = 0; i < 8; ++i )
-        {
-          int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
-          int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
-          {
-            // valid entry?
-            C64Studio.Types.FileInfo info = new C64Studio.Types.FileInfo();
-
-            info.Filename = sec.Data.SubBuffer( 0x20 * i + 5, 16 );
-            info.StartSector = fileSector;
-            info.StartTrack = fileTrack;
-            info.Type = (C64Studio.Types.FileType)sec.Data.ByteAt( 0x20 * i + 2 );
-            info.Blocks = sec.Data.ByteAt( 0x20 * i + 30 ) + 256 * sec.Data.ByteAt( 0x20 * i + 31 );
-            files.Add( info );
-          }
-        }
-
-        curTrack = sec.Data.ByteAt( 0 );
-        curSector = sec.Data.ByteAt( 1 );
-
-        if ( curTrack == 0 )
-        {
-          // track = 0 marks last directory entry
-          endFound = true;
-        }
-      }
-      return files;
     }
 
 
@@ -1168,6 +1118,42 @@ namespace C64Studio.Formats
 
 
 
+    private DirEntryLocation LocateDirEntry( int DirEntryIndex )
+    {
+      Location  curLoc = new Location( TRACK_DIRECTORY, SECTOR_DIRECTORY );
+
+      int     entryIndex = 0;
+
+      while ( true )
+      {
+        Sector sec = Tracks[curLoc.Track - 1].Sectors[curLoc.Sector];
+
+        for ( int i = 0; i < 8; ++i )
+        {
+          int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
+          int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+          {
+            // valid entry?
+            if ( DirEntryIndex == entryIndex )
+            {
+              return new DirEntryLocation( curLoc.Track, curLoc.Sector, i );
+            }
+            ++entryIndex;
+          }
+        }
+        curLoc = sec.NextLocation;
+        if ( curLoc == null )
+        {
+          // track = 0 marks last directory entry
+          break;
+        }
+      }
+      return null;
+    }
+
+
+
     private bool FindPreviousDirEntry( DirEntryLocation DirEntry, out DirEntryLocation ResultDirEntry )
     {
       ResultDirEntry = null;
@@ -1221,17 +1207,16 @@ namespace C64Studio.Formats
     public bool MoveFileUp( C64Studio.Types.FileInfo File )
     {
       _LastError = "";
-      DirEntryLocation dirLocOrig = LocateDirEntry( File.StartTrack, File.StartSector );
+      if ( File.DirEntryIndex == 0 )
+      {
+        return false;
+      }
+      DirEntryLocation dirLocOrig = LocateDirEntry( File.DirEntryIndex );
       if ( dirLocOrig == null )
       {
         return false;
       }
-      DirEntryLocation dirLocPrev = null;
-      if ( !FindPreviousDirEntry( dirLocOrig, out dirLocPrev ) )
-      {
-        _LastError = "Could not find previous directory entry";
-        return false;
-      }
+      DirEntryLocation dirLocPrev = LocateDirEntry( File.DirEntryIndex - 1 );
       Sector secOrig = Tracks[dirLocOrig.Track - 1].Sectors[dirLocOrig.Sector];
       Sector secPrev = Tracks[dirLocPrev.Track - 1].Sectors[dirLocPrev.Sector];
 
@@ -1247,13 +1232,13 @@ namespace C64Studio.Formats
     public bool MoveFileDown( C64Studio.Types.FileInfo File )
     {
       _LastError = "";
-      DirEntryLocation dirLocOrig = LocateDirEntry( File.StartTrack, File.StartSector );
+      DirEntryLocation dirLocOrig = LocateDirEntry( File.DirEntryIndex );
       if ( dirLocOrig == null )
       {
         return false;
       }
-      DirEntryLocation dirLocNext = null;
-      if ( !FindNextDirEntry( dirLocOrig, out dirLocNext ) )
+      DirEntryLocation dirLocNext = LocateDirEntry( File.DirEntryIndex + 1 );
+      if ( dirLocNext == null )
       {
         _LastError = "could not find next directory entry";
         return false;
@@ -1296,6 +1281,23 @@ namespace C64Studio.Formats
 
 
 
+    public override void ChangeFileType( FileInfo FileToChange, FileType NewFileType )
+    {
+      base.ChangeFileType( FileToChange, NewFileType );
+
+      var dirEntry = LocateDirEntry( FileToChange.DirEntryIndex );
+      if ( dirEntry == null )
+      {
+        return; 
+      }
+
+      Sector secOrig = Tracks[dirEntry.Track - 1].Sectors[dirEntry.Sector];
+
+      secOrig.Data.SetU8At( 0x20 * dirEntry.DirEntry + 2, (byte)NewFileType );
+    }
+
+
+
     public override string LastError
     {
       get 
@@ -1303,6 +1305,63 @@ namespace C64Studio.Formats
         return _LastError;
       }
     }
+
+
+
+    public override List<C64Studio.Types.FileInfo> Files()
+    {
+      _LastError = "";
+
+      List<C64Studio.Types.FileInfo> files = new List<C64Studio.Types.FileInfo>();
+
+      int   curTrack = TRACK_DIRECTORY;
+      int   curSector = SECTOR_DIRECTORY;
+      bool  endFound = false;
+      int   dirEntryIndex = 0;
+
+      if ( Tracks.Count < curTrack - 1 )
+      {
+        return files;
+      }
+
+      while ( !endFound )
+      {
+        Sector sec = Tracks[curTrack - 1].Sectors[curSector];
+
+        for ( int i = 0; i < 8; ++i )
+        {
+          int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
+          int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+          {
+            // valid entry?
+            C64Studio.Types.FileInfo info = new C64Studio.Types.FileInfo();
+
+            info.Filename = sec.Data.SubBuffer( 0x20 * i + 5, 16 );
+            info.StartSector = fileSector;
+            info.StartTrack = fileTrack;
+            info.Type = (C64Studio.Types.FileType)sec.Data.ByteAt( 0x20 * i + 2 );
+            info.Blocks = sec.Data.ByteAt( 0x20 * i + 30 ) + 256 * sec.Data.ByteAt( 0x20 * i + 31 );
+            info.DirEntryIndex = dirEntryIndex;
+            ++dirEntryIndex;
+            files.Add( info );
+          }
+        }
+
+        curTrack = sec.Data.ByteAt( 0 );
+        curSector = sec.Data.ByteAt( 1 );
+
+        if ( curTrack == 0 )
+        {
+          // track = 0 marks last directory entry
+          endFound = true;
+        }
+      }
+      return files;
+    }
+
+
+
 
   }
 }

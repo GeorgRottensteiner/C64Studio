@@ -332,6 +332,7 @@ namespace C64Studio.Formats
     {
       _LastError = "";
       List<C64Studio.Types.FileInfo>  files = new List<C64Studio.Types.FileInfo>();
+      int dirEntryIndex = 0;
 
       foreach ( FileEntry file in TapFiles )
       {
@@ -340,6 +341,8 @@ namespace C64Studio.Formats
         info.Filename = new GR.Memory.ByteBuffer( file.Filename );
         info.Blocks = (int)( file.Data.Length + 253 ) / 254;
         info.Type = C64Studio.Types.FileType.PRG;
+        info.DirEntryIndex = dirEntryIndex;
+        ++dirEntryIndex;
 
         files.Add( info );
       }

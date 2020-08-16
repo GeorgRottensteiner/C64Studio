@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Reflection.Emit;
 using System.Text;
 using System.Windows.Forms;
 using C64Studio.Types;
@@ -221,6 +222,18 @@ namespace C64Studio
 
     public void RefreshFileView()
     {
+      int offset = 0;
+      if ( listFiles.TopItem != null )
+      {
+        offset = listFiles.TopItem.Index;
+      }
+      var origSelections = new List<int>();
+      foreach ( int entry in listFiles.SelectedIndices )
+      {
+        origSelections.Add( entry );
+      }
+
+      listFiles.BeginUpdate();
       listFiles.Items.Clear();
 
       List<C64Studio.Types.FileInfo> files = null;
@@ -282,6 +295,16 @@ namespace C64Studio
 
           listFiles.Items.Add( item );
         }
+
+        foreach ( int entry in origSelections )
+        {
+          listFiles.SelectedIndices.Add( entry );
+        }
+      }
+      listFiles.EndUpdate();
+      if ( offset < listFiles.Items.Count )
+      {
+        listFiles.TopItem = listFiles.Items[offset];
       }
     }
 
@@ -637,6 +660,36 @@ namespace C64Studio
       item.Click += new EventHandler( itemViewInHexEditor_Click );
       contextMenu.Items.Add( item );
 
+      item = new System.Windows.Forms.ToolStripMenuItem( "Change File Type" );
+      item.Tag = 2;
+      //item.Click += new EventHandler( itemChangeType_Click );
+      contextMenu.Items.Add( item );
+
+      subItem = new ToolStripMenuItem( "PRG" );
+      subItem.Tag = FileType.PRG;
+      subItem.Click += new EventHandler( itemChangeType_Click );
+      item.DropDownItems.Add( subItem );
+
+      subItem = new ToolStripMenuItem( "DEL" );
+      subItem.Tag = FileType.DEL;
+      subItem.Click += new EventHandler( itemChangeType_Click );
+      item.DropDownItems.Add( subItem );
+
+      subItem = new ToolStripMenuItem( "USR" );
+      subItem.Tag = FileType.USR;
+      subItem.Click += new EventHandler( itemChangeType_Click );
+      item.DropDownItems.Add( subItem );
+
+      subItem = new ToolStripMenuItem( "REL" );
+      subItem.Tag = FileType.REL;
+      subItem.Click += new EventHandler( itemChangeType_Click );
+      item.DropDownItems.Add( subItem );
+
+      subItem = new ToolStripMenuItem( "SEQ" );
+      subItem.Tag = FileType.SEQ;
+      subItem.Click += new EventHandler( itemChangeType_Click );
+      item.DropDownItems.Add( subItem );
+
       item = new System.Windows.Forms.ToolStripMenuItem( "Rename" );
       item.Tag = 2;
       item.Click += new EventHandler( itemRename_Click );
@@ -648,6 +701,37 @@ namespace C64Studio
       contextMenu.Items.Add( item );
 
       contextMenu.Show( listFiles.PointToScreen( e.Location ) );
+    }
+
+
+
+    private void itemChangeType_Click( object sender, EventArgs e )
+    {
+      var fileType = (FileType)( (ToolStripMenuItem)sender ).Tag;
+      ChangeFileType( fileType );
+    }
+
+
+
+    private void ChangeFileType( FileType NewFileType )
+    {
+      bool changedType = false;
+      foreach ( ListViewItem item in listFiles.SelectedItems )
+      {
+        C64Studio.Types.FileInfo fileToChange = (C64Studio.Types.FileInfo)item.Tag;
+        if ( fileToChange.Type != NewFileType )
+        {
+          m_Media.ChangeFileType( fileToChange, NewFileType );
+          changedType = true;
+        }
+      }
+
+      if ( changedType )
+      {
+        RefreshFileView();
+        SetModified();
+        UpdateStatusInfo();
+      }
     }
 
 

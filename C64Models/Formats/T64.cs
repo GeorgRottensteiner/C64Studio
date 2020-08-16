@@ -242,6 +242,7 @@ namespace C64Studio.Formats
       _LastError = "";
 
       List<C64Studio.Types.FileInfo> files = new List<C64Studio.Types.FileInfo>();
+      int dirEntryIndex = 0;
 
       foreach ( FileRecord file in FileRecords )
       {
@@ -252,6 +253,8 @@ namespace C64Studio.Formats
           info.Filename = file.Filename;
           info.Blocks   = ( file.EndAddress - file.StartAddress ) / 254 + 1;
           info.Type     = file.C64FileType;
+          info.DirEntryIndex = dirEntryIndex;
+          ++dirEntryIndex;
 
           files.Add( info );
         }
