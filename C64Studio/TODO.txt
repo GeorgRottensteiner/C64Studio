@@ -1,4 +1,6 @@
 ﻿C64Studio
+o Auto-Save Documents
+o Charset conversion -> force number of chars (lossy conversion)
 o Watch - Display characters hex, dec. and binary
 o Label with : are warning-marked on the wrong line
 o Charpad format version 6

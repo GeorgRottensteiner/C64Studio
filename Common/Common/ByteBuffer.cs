@@ -616,6 +616,13 @@ namespace GR
         {
           return string.Empty;
         }
+        if ( ( StartIndex < 0 )
+        ||   ( StartIndex >= Array.Length )
+        ||   ( NumBytes < 0 )
+        ||   ( StartIndex + NumBytes > Array.Length ) )
+        {
+          return string.Empty;
+        }
 
         var sb = new System.Text.StringBuilder( NumBytes * 2 );
 
