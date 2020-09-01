@@ -48,6 +48,7 @@ namespace C64Studio
 
     private bool                        m_ShowGrid = false;
 
+    private bool                        m_IsDragging = false;
     private System.Drawing.Point        m_DragStartPos = new System.Drawing.Point();
     private System.Drawing.Point        m_DragEndPos = new System.Drawing.Point();
     private System.Drawing.Point        m_LastDragEndPos = new System.Drawing.Point( -1, -1 );
@@ -617,6 +618,11 @@ namespace C64Studio
         {
           case ToolMode.RECTANGLE:
           case ToolMode.FILLED_RECTANGLE:
+            if ( !m_IsDragging )
+            {
+              return;
+            }
+            m_IsDragging = false;
             if ( m_LastDragEndPos.X != -1 )
             {
               m_LastDragEndPos.X = -1;
@@ -660,6 +666,11 @@ namespace C64Studio
             }
             break;
           case ToolMode.SELECT:
+            if ( !m_IsDragging )
+            {
+              return;
+            }
+            m_IsDragging = false;
             if ( m_LastDragEndPos.X != -1 )
             {
               m_LastDragEndPos.X = -1;
@@ -776,12 +787,18 @@ namespace C64Studio
             if ( m_MouseButtonReleased )
             {
               m_MouseButtonReleased = false;
+              m_IsDragging = true;
 
               // first point
               m_DragStartPos.X = charX;
               m_DragStartPos.Y = charY;
               m_LastDragEndPos = new System.Drawing.Point( -1, -1 );
             }
+            if ( !m_IsDragging )
+            {
+              return;
+            }
+
             // draw other point
             m_DragEndPos.X = charX;
             m_DragEndPos.Y = charY;
@@ -838,11 +855,16 @@ namespace C64Studio
             if ( m_MouseButtonReleased )
             {
               m_MouseButtonReleased = false;
+              m_IsDragging = true;
 
               // first point
               m_DragStartPos.X = charX;
               m_DragStartPos.Y = charY;
               m_LastDragEndPos = new System.Drawing.Point( -1, -1 );
+            }
+            if ( !m_IsDragging )
+            {
+              return;
             }
             // draw other point
             m_DragEndPos.X = charX;
