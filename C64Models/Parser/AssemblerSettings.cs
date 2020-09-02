@@ -176,6 +176,7 @@ namespace C64Studio.Parser
           AddMacro( "!FILL", Types.MacroInfo.MacroType.FILL );
           AddMacro( "!FI", Types.MacroInfo.MacroType.FILL );
           AddMacro( "!ALIGN", Types.MacroInfo.MacroType.ALIGN );
+          AddMacro( "!REALIGN", Types.MacroInfo.MacroType.ALIGN_DASM );
           AddMacro( "!ENDOFFILE", Types.MacroInfo.MacroType.END_OF_FILE );
           AddMacro( "!EOF", Types.MacroInfo.MacroType.END_OF_FILE );
           AddMacro( "!NOWARN", Types.MacroInfo.MacroType.NO_WARNING );

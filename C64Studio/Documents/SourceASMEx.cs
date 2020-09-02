@@ -14,6 +14,7 @@ using System.Drawing;
 using GR.Memory;
 using GR.IO;
 using System.Globalization;
+using C64Studio.Parser;
 
 namespace C64Studio
 {
@@ -110,7 +111,7 @@ namespace C64Studio
       string opCodes = @"\b(lda|sta|ldy|sty|ldx|stx|rts|jmp|jsr|rti|sei|cli|asl|lsr|inc|dec|inx|dex|iny|dey|cpx|cpy|cmp|bit|bne|beq|bcc|bcs|bpl|bmi|adc|sec|clc|sbc|tax|tay|tya|txa|pha|pla|eor|and|ora|ror|rol|php|plp|clv|cld|bvc|bvs|brk|nop|txs|tsx|slo|rla|sre|rra|sax|lax|dcp|isc|anc|alr|arr|xaa|axs|ahx|shy|shx|tas|las|sed)\b";
       // TODO - dynamically build from known macros! -> depending on assembler source!
       string pseudoOps = @"(!byte|!by|!basic|!8|!08|!word|!wo|!16|!text|!tx|!scr|!pet|!raw|!pseudopc|!realpc|!bank|!convtab|!ct|!binary|!bin|!bi|!source|!src|!to|!zone|!zn|!error|!serious|!warn|"
-        + @"!message|!ifdef|!ifndef|!if|!fill|!fi|!align|!endoffile|!nowarn|!for|!end|!macro|!trace|!media|!mediasrc|!sl|!cpu|!set|!hex|!h)\b";
+        + @"!message|!ifdef|!ifndef|!if|!fill|!fi|!align|!endoffile|!nowarn|!for|!end|!macro|!trace|!media|!mediasrc|!sl|!cpu|!set|!hex|!h|!realign)\b";
 
       m_TextRegExp[(int)Types.ColorableElement.LITERAL_NUMBER] = new System.Text.RegularExpressions.Regex( @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\B\$[a-fA-F\d]+\b|\b0x[a-fA-F\d]+\b" );
       m_TextRegExp[(int)Types.ColorableElement.LITERAL_STRING] = new System.Text.RegularExpressions.Regex( @"""""|''|"".*?[^\\]""|'.*?[^\\]'" );
@@ -152,8 +153,6 @@ namespace C64Studio
       contextSource.Opening += new CancelEventHandler( contextSource_Opening );
 
       editSource.Font = new System.Drawing.Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
-      //string wordChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_äöüÄÖÜß!1234567890";
-      //editSource.Lexing.Keywords[0] = "lda sta ldy sty ldx stx rts jmp jsr rti sei cli asl lsr inc dec inx dex iny dey cpx cpy cmp bit bne beq bcc bcs bpl bmi adc sec clc sbc tax tay tya txa pha pla eor and ora ror rol php plp clv cld bvc bvs brk nop txs tsx !byte !by !08 !8 !word !wo !16 !zone !zn !text !tx !source !binary !bi !ct !convtab !align slo rla sre rra sax lax dcp isc anc alr arr xaa axs ahx shy shx tas las sed";
       editSource.KeyDown += new System.Windows.Forms.KeyEventHandler( editSource_KeyDown );
       editSource.KeyPress += new System.Windows.Forms.KeyPressEventHandler( editSource_KeyPress );
       editSource.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler( editSource_PreviewKeyDown );
@@ -1055,13 +1054,11 @@ namespace C64Studio
         }
       }
 
-      //string zone = FindZoneFromLine( lineNumber );
       string zone;
       string cheapLabelParent;
 
       debugFileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineNumber, out zone, out cheapLabelParent );
 
-      //MainForm.EnsureFileIsParsed();
       Types.SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
       if ( ( tokenInfo != null )
       &&   ( tokenInfo.Type != Types.SymbolInfo.Types.UNKNOWN ) )
@@ -1075,8 +1072,6 @@ namespace C64Studio
         {
           toolTipText += " ($" + valueBelow.ToString( "x2" ) + "/" + valueBelow.ToString() + ")";
         }
-        //m_ToolTip.Hide( editSource );
-        //m_ToolTip.Show( toolTipText, editSource, editSource.PointToClient( System.Windows.Forms.Cursor.Position ) );
         if ( m_LastTooltipText != toolTipText )
         {
           m_LastTooltipText = toolTipText;
@@ -1085,6 +1080,11 @@ namespace C64Studio
       }
       else
       {
+        string  upperWord = wordBelow.ToUpper();
+        if ( Parser.ASMFileInfo.AssemblerSettings.Macros.ContainsKey( upperWord ) )
+        {
+          return;
+        }
         m_ToolTip.Hide( editSource );
       }
     }
@@ -1450,6 +1450,15 @@ namespace C64Studio
       }
 
       var   newList = new List<FastColoredTextBoxNS.AutocompleteItem>();
+
+      if ( Parser.ASMFileInfo.AssemblerSettings != null )
+      {
+        // add pseudo ops
+        foreach ( var pseudoOp in Parser.ASMFileInfo.AssemblerSettings.Macros )
+        {
+          newList.Add( new AutocompleteItem( pseudoOp.Key ) { ToolTipTitle = pseudoOp.Key, ToolTipText = "Pseudo OP" } );
+        }
+      }
 
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {

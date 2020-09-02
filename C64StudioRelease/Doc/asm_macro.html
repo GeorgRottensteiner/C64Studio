@@ -32,6 +32,7 @@
       <li><a href="#mediasrc">!MEDIASRC</a></li>
       <li><a href="#message">!MESSAGE</a></li>
       <li><a href="#pseudopc">!PSEUDOPC</a></li>
+      <li><a href="#realign">!REALIGN</a></li>
       <li><a href="#realpc">!REALPC</a></li>
       <li><a href="#source">!SOURCE</a></li>
       <li><a href="#text">!TEXT, !TX, !SCR, !PET, !RAW</a></li>
@@ -1845,6 +1846,19 @@
     <div id="code"><br>      !PSEUDOPC $0400
       ...
       !REALPC
+      <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="realign"></a>
+  <H2>!REALIGN &lt;alignaddress&gt;[,&lt;fillvalue&gt;]</H2>
+  <div id="mybody">
+    This pseudo op fills memory until a full multiple of alignaddress is reached.<br>
+    If [fillvalue] is omitted 0 is used.<br>
+    <br>
+    <br>
+    <div id="code"><br>      !realign $2       ;wait for even address
+      !realign 256      ;align code to page border
       <br></div>
     <br>
     <br>
