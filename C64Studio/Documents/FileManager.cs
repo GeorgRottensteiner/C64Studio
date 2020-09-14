@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Windows.Forms;
 using C64Studio.Types;
+using GR.Memory;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace C64Studio
@@ -1219,5 +1220,18 @@ namespace C64Studio
 
 
 
+    private void btnAddNew_Click( object sender, EventArgs e )
+    {
+      if ( m_Media != null )
+      {
+        var emptyFile = new ByteBuffer();
+        var fileName = Util.ToFilename( "NEW FILE" );
+        if ( m_Media.WriteFile( fileName, emptyFile, C64Studio.Types.FileType.PRG ) )
+        {
+          RefreshFileView();
+          UpdateStatusInfo();
+        }
+      }
+    }
   }
 }

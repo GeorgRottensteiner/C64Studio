@@ -109,8 +109,9 @@ namespace C64Studio.Types
       SET,
       ALIGN_DASM,
       BASIC,
-      ADDRESS,        // ACME: !ADDR with or without braces
-      REPEAT          // PDS: Repeat <x> times next line
+      ADDRESS,              // ACME: !ADDR with or without braces
+      REPEAT,               // PDS: Repeat <x> times next line
+      ADD_INCLUDE_SOURCE    // DASM: Add directory to source code paths (custom library paths)
     }
 
     public MacroType      Type = MacroType.UNKNOWN;

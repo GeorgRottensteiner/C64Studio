@@ -11,6 +11,7 @@ namespace C64Studio.Parser
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenEndChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
     public string                                                   AllowedSingleTokens;
+    public GR.Collections.Set<Types.MacroInfo.MacroType>            RestOfLineAsSingleToken = new GR.Collections.Set<Types.MacroInfo.MacroType>();
     public string                                                   OpenBracketChars = "";
     public string                                                   CloseBracketChars = "";
     public string                                                   LineSeparatorChars = "";
@@ -29,6 +30,7 @@ namespace C64Studio.Parser
     public bool                                                     CaseSensitive = true;
     public bool                                                     IncludeExpectsStringLiteral = true;
     public bool                                                     IncludeHasOnlyFilename = false;
+    public bool                                                     IncludeSourceIsAlwaysUsingLibraryPathAndFile = false;
     public bool                                                     HasBinaryNot = true;
     public bool                                                     GreaterOrLessThanAtBeginningAffectFullExpression = false;
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
@@ -233,7 +235,7 @@ namespace C64Studio.Parser
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
-          AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars;
+          AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars + "\\";
 
           AddMacro( "DC.B", Types.MacroInfo.MacroType.TEXT );
           AddMacro( "DC.W", Types.MacroInfo.MacroType.WORD );
@@ -270,15 +272,21 @@ namespace C64Studio.Parser
           AddMacro( "ORG", Types.MacroInfo.MacroType.ORG );
           AddMacro( "SEG", Types.MacroInfo.MacroType.SEG );
           AddMacro( "SEG.U", Types.MacroInfo.MacroType.SEG );
+          AddMacro( "INCDIR", Types.MacroInfo.MacroType.ADD_INCLUDE_SOURCE );
+
+          RestOfLineAsSingleToken.Add( Types.MacroInfo.MacroType.ADD_INCLUDE_SOURCE );
 
           LabelPostfix = ":";
           MacroFunctionCallPrefix = ":";
           GlobalLabelsAutoZone = false;
           DefineSeparatorKeywords.Add( "SET" );
+          DefineSeparatorKeywords.Add( "EQU" );
           DefineSeparatorKeywords.Add( "=" );
           MacroIsZone = true;
           MacrosHaveVariableNumberOfArguments = true;
           IncludeExpectsStringLiteral = false;
+          IncludeHasOnlyFilename = true;
+          IncludeSourceIsAlwaysUsingLibraryPathAndFile = true;
           CaseSensitive = false;
           break;
         case Types.AssemblerType.PDS:

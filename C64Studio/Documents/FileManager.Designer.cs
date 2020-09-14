@@ -57,6 +57,7 @@
       this.statusFileManager = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
       this.toolStripBtnImportFile = new System.Windows.Forms.ToolStripButton();
+      this.toolStripBtnSave = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
       this.toolStripBtnMoveFileUp = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnMoveFileDown = new System.Windows.Forms.ToolStripButton();
@@ -65,7 +66,7 @@
       this.toolStripBtnOpenHex = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnOpenBASIC = new System.Windows.Forms.ToolStripButton();
       this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
-      this.toolStripBtnSave = new System.Windows.Forms.ToolStripButton();
+      this.btnAddNew = new System.Windows.Forms.ToolStripButton();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuFileManager.SuspendLayout();
       this.statusMedia.SuspendLayout();
@@ -104,14 +105,14 @@
       // openToolStripMenuItem
       // 
       this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-      this.openToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.openToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
       this.openToolStripMenuItem.Text = "&Open...";
       this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
       // 
       // saveToolStripMenuItem
       // 
       this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-      this.saveToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.saveToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
       this.saveToolStripMenuItem.Text = "&Save...";
       this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
       // 
@@ -119,19 +120,19 @@
       // 
       this.saveasToolStripMenuItem.Enabled = false;
       this.saveasToolStripMenuItem.Name = "saveasToolStripMenuItem";
-      this.saveasToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.saveasToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
       this.saveasToolStripMenuItem.Text = "Save &as...";
       this.saveasToolStripMenuItem.Click += new System.EventHandler(this.saveasToolStripMenuItem_Click);
       // 
       // toolStripSeparator1
       // 
       this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(170, 6);
+      this.toolStripSeparator1.Size = new System.Drawing.Size(169, 6);
       // 
       // createEmptyTapeToolStripMenuItem
       // 
       this.createEmptyTapeToolStripMenuItem.Name = "createEmptyTapeToolStripMenuItem";
-      this.createEmptyTapeToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.createEmptyTapeToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
       this.createEmptyTapeToolStripMenuItem.Text = "Create empty &Tape";
       this.createEmptyTapeToolStripMenuItem.Click += new System.EventHandler(this.createEmptyTapeToolStripMenuItem_Click);
       // 
@@ -143,7 +144,7 @@
             this.d71ToolStripMenuItem,
             this.d81ToolStripMenuItem});
       this.newDiskToolStripMenuItem.Name = "newDiskToolStripMenuItem";
-      this.newDiskToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.newDiskToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
       this.newDiskToolStripMenuItem.Text = "Create empty &Disk";
       // 
       // d64ToolStripMenuItem
@@ -177,38 +178,38 @@
       // toolStripSeparator2
       // 
       this.toolStripSeparator2.Name = "toolStripSeparator2";
-      this.toolStripSeparator2.Size = new System.Drawing.Size(170, 6);
+      this.toolStripSeparator2.Size = new System.Drawing.Size(169, 6);
       // 
       // validateMediumToolStripMenuItem
       // 
       this.validateMediumToolStripMenuItem.Enabled = false;
       this.validateMediumToolStripMenuItem.Name = "validateMediumToolStripMenuItem";
-      this.validateMediumToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.validateMediumToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
       this.validateMediumToolStripMenuItem.Text = "&Validate medium";
       this.validateMediumToolStripMenuItem.Click += new System.EventHandler(this.validateMediumToolStripMenuItem_Click);
       // 
       // toolStripSeparator3
       // 
       this.toolStripSeparator3.Name = "toolStripSeparator3";
-      this.toolStripSeparator3.Size = new System.Drawing.Size(170, 6);
+      this.toolStripSeparator3.Size = new System.Drawing.Size(169, 6);
       // 
       // importFileToolStripMenuItem
       // 
       this.importFileToolStripMenuItem.Name = "importFileToolStripMenuItem";
-      this.importFileToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.importFileToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
       this.importFileToolStripMenuItem.Text = "Import File...";
       this.importFileToolStripMenuItem.Click += new System.EventHandler(this.importFileToolStripMenuItem_Click);
       // 
       // toolStripSeparator4
       // 
       this.toolStripSeparator4.Name = "toolStripSeparator4";
-      this.toolStripSeparator4.Size = new System.Drawing.Size(170, 6);
+      this.toolStripSeparator4.Size = new System.Drawing.Size(169, 6);
       // 
       // closeToolStripMenuItem
       // 
       this.closeToolStripMenuItem.Enabled = false;
       this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-      this.closeToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.closeToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
       this.closeToolStripMenuItem.Text = "&Close";
       // 
       // listFiles
@@ -225,6 +226,7 @@
             this.columnHeader5});
       this.listFiles.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.listFiles.FullRowSelect = true;
+      this.listFiles.HideSelection = false;
       this.listFiles.ItemHeight = 16;
       this.listFiles.Location = new System.Drawing.Point(0, 52);
       this.listFiles.Name = "listFiles";
@@ -285,6 +287,7 @@
       // toolStrip1
       // 
       this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnAddNew,
             this.toolStripBtnImportFile,
             this.toolStripBtnSave,
             this.toolStripSeparator6,
@@ -311,6 +314,16 @@
       this.toolStripBtnImportFile.Text = "toolStripButton1";
       this.toolStripBtnImportFile.ToolTipText = "Import File";
       this.toolStripBtnImportFile.Click += new System.EventHandler(this.toolStripBtnImportFile_Click);
+      // 
+      // toolStripBtnSave
+      // 
+      this.toolStripBtnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripBtnSave.Image = global::C64Studio.Properties.Resources.ToolSave;
+      this.toolStripBtnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripBtnSave.Name = "toolStripBtnSave";
+      this.toolStripBtnSave.Size = new System.Drawing.Size(23, 22);
+      this.toolStripBtnSave.Text = "Save";
+      this.toolStripBtnSave.Click += new System.EventHandler(this.toolStripBtnSave_Click);
       // 
       // toolStripSeparator6
       // 
@@ -389,15 +402,15 @@
       this.labelMediaTitle.Text = "toolStripLabel1";
       this.labelMediaTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
-      // toolStripBtnSave
+      // btnAddNew
       // 
-      this.toolStripBtnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.toolStripBtnSave.Image = global::C64Studio.Properties.Resources.ToolSave;
-      this.toolStripBtnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.toolStripBtnSave.Name = "toolStripBtnSave";
-      this.toolStripBtnSave.Size = new System.Drawing.Size(23, 22);
-      this.toolStripBtnSave.Text = "Save";
-      this.toolStripBtnSave.Click += new System.EventHandler(this.toolStripBtnSave_Click);
+      this.btnAddNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.btnAddNew.Image = ((System.Drawing.Image)(resources.GetObject("btnAddNew.Image")));
+      this.btnAddNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.btnAddNew.Name = "btnAddNew";
+      this.btnAddNew.Size = new System.Drawing.Size(23, 22);
+      this.btnAddNew.Text = "toolStripButton1";
+      this.btnAddNew.Click += new System.EventHandler(this.btnAddNew_Click);
       // 
       // FileManager
       // 
@@ -461,5 +474,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
     private System.Windows.Forms.ToolStripMenuItem d71ToolStripMenuItem;
     private System.Windows.Forms.ToolStripButton toolStripBtnSave;
+    private System.Windows.Forms.ToolStripButton btnAddNew;
   }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using C64Studio.Types;
 using C64Studio.Types.ASM;
 using GR.Collections;
@@ -14,6 +15,13 @@ namespace C64Studio.Parser
 {
   public class ASMFileParser : ParserBase
   {
+    private enum PathResolving
+    { 
+      FROM_FILE,
+      FROM_LIBRARIES_PATH,
+      FROM_FILE_AND_LIBRARIES_PATH
+    }
+
     private enum ParseLineResult
     {
       OK,
@@ -5970,9 +5978,14 @@ namespace C64Studio.Parser
 
 
 
-    private ParseLineResult POIncludeSource( bool LibraryFile, string subFilename, string ParentFilename, ref int lineIndex, ref string[] Lines )
+    private ParseLineResult POIncludeSource( PathResolving Resolving, string subFilename, string ParentFilename, ref int lineIndex, ref string[] Lines )
     {
-      SourceInfoLog( "Include file " + subFilename + ", lib file " + LibraryFile );
+      if ( m_AssemblerSettings.IncludeSourceIsAlwaysUsingLibraryPathAndFile )
+      {
+        Resolving = PathResolving.FROM_FILE_AND_LIBRARIES_PATH;
+      }
+
+      SourceInfoLog( "Include file " + subFilename + ", resolving " + Resolving );
       if ( m_LoadedFiles[ParentFilename] == null )
       {
         m_LoadedFiles[ParentFilename] = new GR.Collections.Set<string>();
@@ -5997,20 +6010,38 @@ namespace C64Studio.Parser
       m_LoadedFiles[ParentFilename].Add( subFilename );
 
       string[]  subFile = null;
-      string subFilenameFull = subFilename;
+      string    subFilenameFull = subFilename;
+      bool      foundAFile = false;
 
-      if ( LibraryFile )
+      if ( ( Resolving == PathResolving.FROM_FILE )
+      ||   ( Resolving == PathResolving.FROM_FILE_AND_LIBRARIES_PATH ) )
+      {
+        subFilenameFull = BuildFullPath( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
+        foundAFile = System.IO.File.Exists( subFilenameFull );
+      }
+
+      if ( ( !foundAFile )
+      &&   ( ( Resolving == PathResolving.FROM_LIBRARIES_PATH )
+      ||     ( Resolving == PathResolving.FROM_FILE_AND_LIBRARIES_PATH ) ) )
       {
         subFilenameFull = DetermineFullLibraryFilePath( subFilename );
         if ( string.IsNullOrEmpty( subFilenameFull ) )
         {
+          if ( ( Resolving == PathResolving.FROM_FILE )
+          ||   ( Resolving == PathResolving.FROM_FILE_AND_LIBRARIES_PATH ) )
+          {
+            var msg = AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching file to include in line " + ( lineIndex + 1 ) );
+
+            foreach ( var lib in m_CompileConfig.LibraryFiles )
+            {
+              msg.AddMessage( "Tried with " + lib, null, -1 );
+            }
+            return ParseLineResult.RETURN_NULL;
+          }
+
           AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching library file in line " + ( lineIndex + 1 ) );
           return ParseLineResult.RETURN_NULL;
         }
-      }
-      else
-      {
-        subFilenameFull = BuildFullPath( System.IO.Path.GetDirectoryName( ParentFilename ), subFilename );
       }
 
       if ( GR.Path.IsPathEqual( ParentFilename, subFilenameFull ) )
@@ -7684,8 +7715,8 @@ namespace C64Studio.Parser
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.INCLUDE_SOURCE )
             {
-              string  subFilename = "";
-              bool    libraryFile = false;
+              string          subFilename = "";
+              PathResolving   resolving = PathResolving.FROM_FILE;
 
               if ( m_AssemblerSettings.IncludeHasOnlyFilename )
               {
@@ -7704,7 +7735,7 @@ namespace C64Studio.Parser
               {
                 // library include
                 subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
-                libraryFile = true;
+                resolving = PathResolving.FROM_LIBRARIES_PATH;
               }
               else
               {
@@ -7727,7 +7758,48 @@ namespace C64Studio.Parser
                 return Lines;
               }
 
-              ParseLineResult   plResult = POIncludeSource( libraryFile, subFilename, filename, ref lineIndex, ref Lines );
+              ParseLineResult   plResult = POIncludeSource( resolving, subFilename, filename, ref lineIndex, ref Lines );
+              if ( plResult == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+              else if ( plResult == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
+            }
+            else if ( macro.Type == Types.MacroInfo.MacroType.ADD_INCLUDE_SOURCE )
+            {
+              string  folderPath = "";
+
+              if ( m_AssemblerSettings.IncludeHasOnlyFilename )
+              {
+                // PDS style
+                folderPath = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
+              }
+              else
+              {
+                AddError( lineIndex,
+                          Types.ErrorCode.E1302_MALFORMED_MACRO,
+                          "Expecting directory name",
+                          lineTokenInfos[0].StartPos,
+                          lineTokenInfos[0].Length );
+                HadFatalError = true;
+                return Lines;
+              }
+
+              localIndex = 0;
+              filename = "";
+              if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
+              {
+                DumpSourceInfos( OrigLines, Lines );
+                AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
+                HadFatalError = true;
+                return Lines;
+              }
+
+              ParseLineResult   plResult = POAddLibraryPath( folderPath, filename, ref lineIndex );
               if ( plResult == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -8321,40 +8393,7 @@ namespace C64Studio.Parser
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.ZONE )
             {
-              if ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
-              {
-                lineTokenInfos.RemoveAt( lineTokenInfos.Count - 1 );
-
-                // TODO - check of zonescope exists, no nestes zone scopes!
-
-                Types.ScopeInfo   zoneScope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
-                zoneScope.StartIndex = lineIndex;
-
-                stackScopes.Add( zoneScope );
-                OnScopeAdded( zoneScope );
-              }
-              if ( lineTokenInfos.Count > 2 )
-              {
-                AddError( lineIndex, Types.ErrorCode.E1303_MALFORMED_ZONE_DESCRIPTOR, "Expected single zone descriptor" );
-              }
-              else
-              {
-                var   zoneToken = lineTokenInfos[0];
-                if ( lineTokenInfos.Count == 1 )
-                {
-                  // anonymous zone
-                  m_CurrentZoneName = "anon_scope_" + lineIndex.ToString();
-                }
-                else
-                {
-                  m_CurrentZoneName = DeQuote( lineTokenInfos[1].Content );
-
-                  zoneToken = lineTokenInfos[1];
-                }
-                info.Zone = m_CurrentZoneName;
-
-                AddZone( m_CurrentZoneName, lineIndex, zoneToken.StartPos, zoneToken.Length );
-              }
+              POZone( stackScopes, lineIndex, info, lineTokenInfos );
             }
             else if ( macro.Type == Types.MacroInfo.MacroType.BANK )
             {
@@ -8974,8 +9013,8 @@ namespace C64Studio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.MacroType.INCLUDE_SOURCE )
           {
-            string  subFilename = "";
-            bool    libraryFile = false;
+            string          subFilename = "";
+            PathResolving   resolving = PathResolving.FROM_FILE;
 
             if ( m_AssemblerSettings.IncludeHasOnlyFilename )
             {
@@ -8994,7 +9033,7 @@ namespace C64Studio.Parser
             {
               // library include
               subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
-              libraryFile = true;
+              resolving = PathResolving.FROM_LIBRARIES_PATH;
             }
             else
             {
@@ -9016,7 +9055,7 @@ namespace C64Studio.Parser
               HadFatalError = true;
               return Lines;
             }
-            ParseLineResult   plResult = POIncludeSource( libraryFile, subFilename, ParentFilename, ref lineIndex, ref Lines );
+            ParseLineResult   plResult = POIncludeSource( resolving, subFilename, ParentFilename, ref lineIndex, ref Lines );
             if ( plResult == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -9095,8 +9134,53 @@ namespace C64Studio.Parser
               return Lines;
             }
           }
+          else if ( macroInfo.Type == Types.MacroInfo.MacroType.ADD_INCLUDE_SOURCE )
+          {
+            string  folderPath = "";
+
+            if ( m_AssemblerSettings.IncludeHasOnlyFilename )
+            {
+              // PDS style
+              folderPath = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
+            }
+            else
+            {
+              AddError( lineIndex,
+                        Types.ErrorCode.E1302_MALFORMED_MACRO,
+                        "Expecting directory name",
+                        lineTokenInfos[0].StartPos,
+                        lineTokenInfos[0].Length );
+              HadFatalError = true;
+              return Lines;
+            }
+
+            localIndex = 0;
+            filename = "";
+            if ( !ASMFileInfo.FindTrueLineSource( lineIndex, out filename, out localIndex ) )
+            {
+              DumpSourceInfos( OrigLines, Lines );
+              AddError( lineIndex, Types.ErrorCode.E1401_INTERNAL_ERROR, "Includes caused a problem" );
+              HadFatalError = true;
+              return Lines;
+            }
+
+            ParseLineResult   plResult = POAddLibraryPath( folderPath, filename, ref lineIndex );
+            if ( plResult == ParseLineResult.RETURN_NULL )
+            {
+              HadFatalError = true;
+              return Lines;
+            }
+            else if ( plResult == ParseLineResult.CALL_CONTINUE )
+            {
+              continue;
+            }
+          }
+          else if ( macroInfo.Type == Types.MacroInfo.MacroType.ZONE )
+          {
+            POZone( stackScopes, lineIndex, info, lineTokenInfos );
+          }
           else if ( ( macroInfo.Type != MacroInfo.MacroType.IGNORE )
-          && ( macroInfo.Type != MacroInfo.MacroType.ERROR ) )
+          &&        ( macroInfo.Type != MacroInfo.MacroType.ERROR ) )
           {
             AddError( lineIndex, C64Studio.Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unsupported macro " + macroInfo.Keyword + " encountered" );
             HadFatalError = true;
@@ -9241,6 +9325,69 @@ namespace C64Studio.Parser
       //Debug.Log( "PreProcess done" );
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+    private void POZone( List<ScopeInfo> stackScopes, int lineIndex, LineInfo info, List<TokenInfo> lineTokenInfos )
+    {
+      if ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
+      {
+        lineTokenInfos.RemoveAt( lineTokenInfos.Count - 1 );
+
+        // TODO - check of zonescope exists, no nestes zone scopes!
+
+        Types.ScopeInfo   zoneScope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
+        zoneScope.StartIndex = lineIndex;
+
+        stackScopes.Add( zoneScope );
+        OnScopeAdded( zoneScope );
+      }
+      if ( lineTokenInfos.Count > 2 )
+      {
+        AddError( lineIndex, Types.ErrorCode.E1303_MALFORMED_ZONE_DESCRIPTOR, "Expected single zone descriptor" );
+      }
+      else
+      {
+        var   zoneToken = lineTokenInfos[0];
+        if ( lineTokenInfos.Count == 1 )
+        {
+          // anonymous zone
+          m_CurrentZoneName = "anon_scope_" + lineIndex.ToString();
+        }
+        else
+        {
+          m_CurrentZoneName = DeQuote( lineTokenInfos[1].Content );
+
+          zoneToken = lineTokenInfos[1];
+        }
+        info.Zone = m_CurrentZoneName;
+
+        AddZone( m_CurrentZoneName, lineIndex, zoneToken.StartPos, zoneToken.Length );
+      }
+    }
+
+    private ParseLineResult POAddLibraryPath( string FolderPath, string ParentFilename, ref int LineIndex )
+    {
+      try
+      {
+        string fullPath = GR.Path.Append( System.IO.Path.GetDirectoryName( ParentFilename ), FolderPath );
+        fullPath = GR.Path.Normalize( fullPath, true );
+
+        // don't add duplicates
+        foreach ( var libFile in m_CompileConfig.LibraryFiles )
+        {
+          if ( GR.Path.IsPathEqual( fullPath, libFile ) )
+          {
+            return ParseLineResult.OK;
+          }
+        }
+        m_CompileConfig.LibraryFiles.Add( fullPath );
+        return ParseLineResult.OK;
+      }
+      catch ( Exception ex )
+      {
+        AddError( LineIndex, ErrorCode.E1401_INTERNAL_ERROR, ex.ToString() );
+      }
+      return ParseLineResult.ERROR_ABORT;
     }
 
 
@@ -9520,7 +9667,7 @@ namespace C64Studio.Parser
 
 
 
-    // TODO - add expression parsing (paranthesis)
+    // TODO - add expression parsing (parenthesis)
     private ParseLineResult ParseLineInParameters( List<TokenInfo> lineTokenInfos, int Offset, int Count, int LineIndex, out List<List<TokenInfo>> lineParams )
     {
       int     paramStartIndex = Offset;
@@ -10908,6 +11055,8 @@ namespace C64Studio.Parser
     public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines )
     {
       m_CompileConfig = Config;
+      // clone list - don't modify original!
+      m_CompileConfig.LibraryFiles = new List<string>( Config.LibraryFiles );
 
       m_AssemblerSettings.SetAssemblerType( Config.Assembler );
 
@@ -12126,8 +12275,8 @@ namespace C64Studio.Parser
       List<Types.TokenInfo> result = new List<Types.TokenInfo>();
 
       if ( ( String.IsNullOrEmpty( Source ) )
-      || ( Start >= Source.Length )
-      || ( Start + Length > Source.Length ) )
+      ||   ( Start >= Source.Length )
+      ||   ( Start + Length > Source.Length ) )
       {
         return result;
       }
