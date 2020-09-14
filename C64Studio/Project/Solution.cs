@@ -315,11 +315,14 @@ namespace C64Studio
 
       // set new values
       Element.Name = System.IO.Path.GetFileNameWithoutExtension( NewFilename );
-      Element.DocumentInfo.DocumentFilename = System.IO.Path.GetFileName( NewFilename );
+
+      string    newPath = GR.Path.RenameFile( Element.DocumentInfo.DocumentFilename, System.IO.Path.GetFileName( NewFilename ) );
+
+      Element.DocumentInfo.DocumentFilename = newPath;
       if ( Element.Document != null )
       {
-        Element.Document.SetDocumentFilename( System.IO.Path.GetFileName( NewFilename ) );
-        Element.Filename = System.IO.Path.GetFileName( NewFilename );
+        Element.Document.SetDocumentFilename( newPath );
+        Element.Filename = newPath;
         Element.Document.SetModified();
       }
       else

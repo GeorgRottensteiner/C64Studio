@@ -6030,7 +6030,7 @@ namespace C64Studio.Parser
           if ( ( Resolving == PathResolving.FROM_FILE )
           ||   ( Resolving == PathResolving.FROM_FILE_AND_LIBRARIES_PATH ) )
           {
-            var msg = AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching file to include in line " + ( lineIndex + 1 ) );
+            var msg = AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching file for '" + subFilename + "' to include in line " + ( lineIndex + 1 ) );
 
             foreach ( var lib in m_CompileConfig.LibraryFiles )
             {
@@ -6039,7 +6039,7 @@ namespace C64Studio.Parser
             return ParseLineResult.RETURN_NULL;
           }
 
-          AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching library file in line " + ( lineIndex + 1 ) );
+          AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Can't find matching library file for '" + subFilename + "' in line " + ( lineIndex + 1 ) );
           return ParseLineResult.RETURN_NULL;
         }
       }

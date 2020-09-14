@@ -365,7 +365,7 @@ namespace C64Studio
     public void SetDocumentFilename( string DocumentFilename )
     {
       DocumentInfo.DocumentFilename = DocumentFilename;
-      Text = DocumentFilename;
+      Text = System.IO.Path.GetFileName( DocumentFilename );
       TabText = System.IO.Path.GetFileName( DocumentFilename );
       if ( FloatPane != null )
       {
