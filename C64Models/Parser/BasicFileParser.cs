@@ -23,7 +23,9 @@ namespace C64Studio.Parser
       V7_0,             // Version 7.0	Neue Befehle für den C128/D/DCR. Weiterentwicklung des C16/116 BASIC 3.5 .
       V10_0,            // Version 10 Neue Befehle für C65, beinhaltet sehr viele Fehler, kam aus dem Entwicklungsstadium nicht heraus. Weiterentwicklung des BASIC 7.0.
       BASIC_LIGHTNING,  // BASIC extension
-      LASER_BASIC       // BASIC extension
+      LASER_BASIC,      // BASIC extension
+      SIMONS_BASIC,     // Simons Basic
+      SIMONS_BASIC_2    // Simons Basic Extended (SBX)
     }
 
     public class ParserSettings
@@ -239,6 +241,8 @@ namespace C64Studio.Parser
 
       if ( ( Version == BasicVersion.C64_BASIC_V2 )
       ||   ( Version == BasicVersion.VIC_BASIC_V2 )
+      ||   ( Version == BasicVersion.SIMONS_BASIC )
+      ||   ( Version == BasicVersion.SIMONS_BASIC_2 )
       ||   ( Version == BasicVersion.BASIC_LIGHTNING )
       ||   ( Version == BasicVersion.LASER_BASIC )
       ||   ( Version == BasicVersion.V3_5 )
@@ -1052,6 +1056,136 @@ namespace C64Studio.Parser
         AddOpcode( "RS.", 0x024c );
         AddOpcode( "INIT", 0x024d );
         AddOpcode( "INI.", 0x024d );
+      }
+
+      if ( Version == BasicVersion.SIMONS_BASIC )
+      {
+        // new commands
+        AddOpcode( "HIRES", 0x6401 );
+        AddOpcode( "PLOT", 0x6402 );
+        AddOpcode( "LINE", 0x6403 );
+        AddOpcode( "BLOCK", 0x6404 );
+        AddOpcode( "FCHR", 0x6405 );
+        AddOpcode( "FCOL", 0x6406 );
+        AddOpcode( "FILL", 0x6407 );
+        AddOpcode( "REC", 0x6408 );
+        AddOpcode( "ROT", 0x6409 );
+        AddOpcode( "DRAW", 0x640a );
+        AddOpcode( "CHAR", 0x640b );
+        AddOpcode( "HI COL", 0x640c );
+        AddOpcode( "HICOL", 0x640c );
+        AddOpcode( "INV", 0x640d );
+        AddOpcode( "FRAC", 0x640e );
+        AddOpcode( "MOVE", 0x640f );
+        AddOpcode( "PLACE", 0x6410 );
+        AddOpcode( "UPB", 0x6411 );
+        AddOpcode( "UPW", 0x6412 );
+        AddOpcode( "LEFTW", 0x6413 );
+        AddOpcode( "LEFTB", 0x6414 );
+        AddOpcode( "DOWNB", 0x6415 );
+        AddOpcode( "DOWNW", 0x6416 );
+        AddOpcode( "RIGHTB", 0x6417 );
+        AddOpcode( "RIGHTW", 0x6418 );
+        AddOpcode( "MULTI", 0x6419 );
+        AddOpcode( "COLOUR", 0x641a );
+        AddOpcode( "MMOB", 0x641b );
+        AddOpcode( "BFLASH", 0x641c );
+        AddOpcode( "MOB SET", 0x641d );
+        AddOpcode( "MOBSET", 0x641d );
+        AddOpcode( "MUSIC", 0x641e );
+        AddOpcode( "FLASH", 0x641f );
+        AddOpcode( "REPEAT", 0x6420 );
+        AddOpcode( "PLAY", 0x6421 );
+        AddOpcode( "CENTRE", 0x6423 );
+        AddOpcode( "ENVELOPE", 0x6424 );
+        AddOpcode( "CGOTO", 0x6425 );
+        AddOpcode( "WAVE", 0x6426 );
+        AddOpcode( "FETCH", 0x6427 );
+        AddOpcode( "AT(", 0x6428 );
+        AddOpcode( "UNTIL", 0x6429 );
+        AddOpcode( "USE", 0x642c );
+        AddOpcode( "GLOBAL", 0x642e );
+
+        AddOpcode( "RESET", 0x6430 );
+        AddOpcode( "PROC", 0x6431 );
+        AddOpcode( "CALL", 0x6432 );
+        AddOpcode( "EXEC", 0x6433 );
+        AddOpcode( "END PROC", 0x6434 );
+        AddOpcode( "EXIT", 0x6435 );
+        AddOpcode( "END LOOP", 0x6436 );
+        AddOpcode( "ON KEY", 0x6437 );
+        AddOpcode( "DISABLE", 0x6438 );
+        AddOpcode( "RESUME", 0x6439 );
+        AddOpcode( "LOOP", 0x643a );
+        AddOpcode( "DELAY", 0x643b );
+
+        AddOpcode( "SECURE", 0x6440 );
+        AddOpcode( "DISAPA", 0x6441 );
+        AddOpcode( "CIRCLE", 0x6442 );
+        AddOpcode( "ON ERROR", 0x6443 );
+        AddOpcode( "NO ERROR", 0x6444 );
+        AddOpcode( "LOCAL", 0x6445 );
+        AddOpcode( "RCOMP", 0x6446 );
+        AddOpcode( "ELSE", 0x6447 );
+        AddOpcode( "RETRACE", 0x6448 );
+        AddOpcode( "TRACE", 0x6449 );
+        AddOpcode( "DIR", 0x644a );
+        AddOpcode( "PAGE", 0x644b );
+        AddOpcode( "DUMP", 0x644c );
+        AddOpcode( "FIND", 0x644d );
+        AddOpcode( "OPTION", 0x644e );
+        AddOpcode( "AUTO", 0x644f );
+
+        AddOpcode( "OLD", 0x6450 );
+        AddOpcode( "JOY", 0x6451 );
+        AddOpcode( "MOD", 0x6452 );
+        AddOpcode( "DIV", 0x6453 );
+        AddOpcode( "DUP", 0x6455 );
+        AddOpcode( "INKEY", 0x6456 );
+        AddOpcode( "INST", 0x6457 );
+        AddOpcode( "TEST", 0x6458 );
+        AddOpcode( "LIN", 0x6459 );
+        AddOpcode( "EXOR", 0x645a );
+        AddOpcode( "INSERT", 0x645b );
+        AddOpcode( "POT", 0x645c );
+        AddOpcode( "PENX", 0x645d );
+        AddOpcode( "PENY", 0x645f );
+
+        AddOpcode( "SOUND", 0x6460 );
+        AddOpcode( "GRAPHICS", 0x6461 );
+        AddOpcode( "DESIGN", 0x6462 );
+        AddOpcode( "RLOCMOB", 0x6463 );
+        AddOpcode( "CMOB", 0x6464 );
+        AddOpcode( "BCKGNDS", 0x6465 );
+        AddOpcode( "PAUSE", 0x6466 );
+        AddOpcode( "NRM", 0x6467 );
+        AddOpcode( "MOB OFF", 0x6468 );
+        AddOpcode( "OFF", 0x6469 );
+        AddOpcode( "ANGL", 0x646a );
+        AddOpcode( "ARC", 0x646b );
+        AddOpcode( "COLD", 0x646c );
+        AddOpcode( "SCRSV", 0x646d );
+        AddOpcode( "SCRLD", 0x646e );
+        AddOpcode( "TEXT", 0x646f );
+
+        AddOpcode( "CSET", 0x6470 );
+        AddOpcode( "VOL", 0x6471 );
+        AddOpcode( "DISK", 0x6472 );
+        AddOpcode( "HRDCPY", 0x6473 );
+        AddOpcode( "KEY", 0x6474 );
+        AddOpcode( "PAINT", 0x6475 );
+        AddOpcode( "LOW COL", 0x6476 );
+        AddOpcode( "COPY", 0x6477 );
+        AddOpcode( "MERGE", 0x6478 );
+        AddOpcode( "RENUMBER", 0x6479 );
+        AddOpcode( "MEM", 0x647a );
+        AddOpcode( "DETECT", 0x647b );
+        AddOpcode( "CHECK", 0x647c );
+        AddOpcode( "DISPLAY", 0x647d );
+        AddOpcode( "ERR", 0x647e );
+        AddOpcode( "ERRLN", 0x647e );
+        AddOpcode( "ERRN", 0x647e );
+        AddOpcode( "OUT", 0x647f );
       }
 
       AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-A}", 0xb0 );
