@@ -9350,8 +9350,8 @@ namespace C64Studio.Parser
         var   zoneToken = lineTokenInfos[0];
         if ( lineTokenInfos.Count == 1 )
         {
-          // anonymous zone
-          m_CurrentZoneName = "anon_scope_" + lineIndex.ToString();
+          // anonymous zone -> all upper case 
+          m_CurrentZoneName = "ANON_SCOPE_" + lineIndex.ToString();
         }
         else
         {

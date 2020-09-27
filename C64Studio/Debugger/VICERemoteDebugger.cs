@@ -53,6 +53,7 @@ namespace C64Studio
       // mirrored request types
       MON_RESPONSE_CHECKPOINT_DELETE    = 0x13,
       MON_RESPONSE_ADVANCE_INSTRUCTION  = 0x71,
+      MON_RESPONSE_STEP_OUT             = 0x73,
       MON_RESPONSE_EXIT                 = 0xaa,
       MON_RESPONSE_QUIT                 = 0xbb,
       MON_RESPONSE_RESET                = 0xcc,
@@ -656,6 +657,7 @@ namespace C64Studio
             }
             break;
           case BinaryMonitorCommandResponse.MON_RESPONSE_ADVANCE_INSTRUCTION:
+          case BinaryMonitorCommandResponse.MON_RESPONSE_STEP_OUT:
           case BinaryMonitorCommandResponse.MON_RESPONSE_EXIT:
           case BinaryMonitorCommandResponse.MON_RESPONSE_QUIT:
             // no action required
@@ -2263,6 +2265,8 @@ namespace C64Studio
 
     public void Run()
     {
+      // technically not correct to set paused here (only good for binary interface?
+      //m_State = DebuggerState.PAUSED;
       QueueRequest( DebugRequestType.EXIT );
     }
 

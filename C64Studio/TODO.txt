@@ -1,8 +1,13 @@
 ﻿C64Studio
 o Auto-Save Documents
 o Charset conversion -> force number of chars (lossy conversion)
+o In Version 6.5 fehlt der PETSCII code "Character: 42" links neben dem C64 Char
+o Feature request: kannst du beim Font Export "To File..." noch eine Angabe für die 2 Bytes der Startadresse optional mit einbauen? 
+o und lässt sich der Bereich zum Austesten der Zeichen auf 40x25 vergrößern, bzw. skalierbar machen? 
 o Watch - Display characters hex, dec. and binary
 o Label with : are warning-marked on the wrong line
+  line separation by ':' messes up cycle/byte count (see above) but also label locationing!
+
 o Charpad format version 6
 o MemViewer: Speicheradresse und nur ein Byte, alles untereinander? 
              Disassembly
@@ -92,7 +97,6 @@ o beim exportieren von Map-Daten, funktioniert der wrap m.E. nicht richtig. Zumi
 o Bessere Anzeige der optionalen Zyklen
 o Mehrere Memory-Fenster, machbar?
 o Combined line cycle and byte count info (currently only info of first line is shown in border!)
-o line separation by ':' messes up cycle/byte count (see above) but also label locationing!
 
 o DPI-Skalierung wirkt sich komisch aus (Windows Skalierung der GUI/Oberfläche auf 125%)
 
@@ -134,7 +138,6 @@ o Map Editor:
 o 176 Zeichen Zeile mit TAB-Support langsam? (TAB-Support generell langsam?)
 o export "to petscii" in the text screen editor <- test mit vollem charscreen mit allen Werten
 o generic file import, if size is not the optimum, allow custom skip bytes range (e.g. 2 load bytes)
-o Docking: DockPanelSuite Restored nicht sauber
 o Syntax-Coloring -> Preview im Setting Editor mit FastColoredTextBox
 o Code-Ergänzungvorschlag nicht nur für Labels/Variablen, sondern auch für Macros.
 o Beim suchen und ersetzen scheint er seltsam die Suchergebnisse zu ersetzen. Alle ersetzen funzt, wenn ich aber zuerst auf Suchen klicke 
@@ -154,8 +157,6 @@ o Optionale Parameter und eine Assemblervariable, die anzeigt, wieviele Paramete
 o MediaManager: * Dateien mit gleichem Namen unterbinden (bzw. nachfragen!)
                 * Titel und ID ändern bzw. angeben beim neu erstellen
 o BASIC: Renumber bei THEN <zeile> tut nicht ?? Seems to work fine
-o BASIC: Renumber nur von Ausschnitten
-o BASIC: Einzelne Zeilennummer ändern (mit Referenzen die angepasst werden)
 o BASIC: Snippet-Wizard
 o BASIC: falls ich da bisher etwas übersehen haben sollte, habe ich eine Anregung für einen neuen Editor: 
   Memorymap in Basic erstellen, d.h.:
