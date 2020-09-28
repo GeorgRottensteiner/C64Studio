@@ -554,7 +554,7 @@ namespace C64Studio
           }
           else
           {
-            fileName.SetU8At( i, 0x20 );
+            fileName.SetU8At( i, 0xA0 );
           }
         }
         if ( m_Media != null )
