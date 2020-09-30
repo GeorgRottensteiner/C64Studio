@@ -991,7 +991,7 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_G, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 135, true, 7, true, (char)0xee87, true, "REVERSE G" ).Replacements.Add( "CTRL-G" );
 
       AddC64Key( KeyboardKey.KEY_H, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 8, true, 8, true, (char)0xee88, -1, 0, true, "SHIFT C= OFF", "SH C= OFF" ).Replacements.AddRange( new string[] { "CTRL-H", "DISH" } );   // Shift-C= aus
-      AddC64Key( KeyboardKey.KEY_I, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 9, true, 9, true, (char)0xee89, -1, 0, false, "SHIFT C= ON", "SH C= ON" ).Replacements.AddRange( new string[] { "CTRL-I", "ENSH" } );   // Shift-C= an
+      AddC64Key( KeyboardKey.KEY_I, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 9, true, 9, true, (char)0xee89, -1, 0, true, "SHIFT C= ON", "SH C= ON" ).Replacements.AddRange( new string[] { "CTRL-I", "ENSH" } );   // Shift-C= an
 
       AddC64Key( KeyboardKey.KEY_J, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 138, true, 10, true, (char)0xee8a, true, "REVERSE J" ).Replacements.Add( "CTRL-J" );
       AddC64Key( KeyboardKey.KEY_K, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 139, true, 11, true, (char)0xee8b, true, "REVERSE K" ).Replacements.Add( "CTRL-K" );
