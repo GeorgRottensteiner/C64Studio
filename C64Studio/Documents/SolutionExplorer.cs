@@ -664,7 +664,10 @@ namespace C64Studio
       foreach ( TreeNode childNode in Element.Node.Nodes )
       {
         ProjectElement childElement = ElementFromNode( childNode );
-        RemoveElement( childElement );
+        if ( childElement != null )
+        {
+          RemoveElement( childElement );
+        }
       }
       if ( Element.Document != null )
       {
