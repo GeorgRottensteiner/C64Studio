@@ -56,6 +56,7 @@
       this.statusMedia = new System.Windows.Forms.StatusStrip();
       this.statusFileManager = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+      this.btnAddNew = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnImportFile = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnSave = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -66,7 +67,6 @@
       this.toolStripBtnOpenHex = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnOpenBASIC = new System.Windows.Forms.ToolStripButton();
       this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
-      this.btnAddNew = new System.Windows.Forms.ToolStripButton();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuFileManager.SuspendLayout();
       this.statusMedia.SuspendLayout();
@@ -304,6 +304,16 @@
       this.toolStrip1.TabIndex = 3;
       this.toolStrip1.Text = "toolStrip1";
       // 
+      // btnAddNew
+      // 
+      this.btnAddNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.btnAddNew.Image = ((System.Drawing.Image)(resources.GetObject("btnAddNew.Image")));
+      this.btnAddNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.btnAddNew.Name = "btnAddNew";
+      this.btnAddNew.Size = new System.Drawing.Size(23, 22);
+      this.btnAddNew.Text = "Add New File";
+      this.btnAddNew.Click += new System.EventHandler(this.btnAddNew_Click);
+      // 
       // toolStripBtnImportFile
       // 
       this.toolStripBtnImportFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -311,7 +321,7 @@
       this.toolStripBtnImportFile.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnImportFile.Name = "toolStripBtnImportFile";
       this.toolStripBtnImportFile.Size = new System.Drawing.Size(23, 22);
-      this.toolStripBtnImportFile.Text = "toolStripButton1";
+      this.toolStripBtnImportFile.Text = "Import File";
       this.toolStripBtnImportFile.ToolTipText = "Import File";
       this.toolStripBtnImportFile.Click += new System.EventHandler(this.toolStripBtnImportFile_Click);
       // 
@@ -401,16 +411,6 @@
       this.labelMediaTitle.Size = new System.Drawing.Size(300, 22);
       this.labelMediaTitle.Text = "toolStripLabel1";
       this.labelMediaTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      // 
-      // btnAddNew
-      // 
-      this.btnAddNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.btnAddNew.Image = ((System.Drawing.Image)(resources.GetObject("btnAddNew.Image")));
-      this.btnAddNew.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.btnAddNew.Name = "btnAddNew";
-      this.btnAddNew.Size = new System.Drawing.Size(23, 22);
-      this.btnAddNew.Text = "toolStripButton1";
-      this.btnAddNew.Click += new System.EventHandler(this.btnAddNew_Click);
       // 
       // FileManager
       // 
