@@ -488,7 +488,34 @@ namespace C64Studio
 
     void UpdateStatusInfo()
     {
-      Core.MainForm.statusEditorDetails.Text = "Line " + ( CursorLine + 1 ).ToString() + ", Row " + editSource.Selection.Start.iChar.ToString();
+      string    details = "Line " + ( CursorLine + 1 ).ToString() + ", Row " + editSource.Selection.Start.iChar.ToString();
+
+      if ( !editSource.Selection.IsEmpty )
+      {
+        if ( editSource.Selection.End.iLine != editSource.Selection.Start.iLine )
+        {
+          var selRange = new FastColoredTextBoxNS.Range( editSource, editSource.Selection.Start, editSource.Selection.End );
+          selRange.Normalize();
+
+          int   numLines = selRange.End.iLine - selRange.Start.iLine + 1;
+          if ( ( selRange.Start.iLine >= 0 )
+          && ( selRange.End.iLine < editSource.LinesCount ) )
+          {
+            string    selText = selRange.Text;
+            if ( selText.EndsWith( System.Environment.NewLine ) )
+            {
+              --numLines;
+            }
+          }
+          details += ", " + editSource.SelectionLength.ToString() + " characters, " + numLines.ToString() + " lines selected";
+
+        }
+        else
+        {
+          details += ", " + editSource.SelectionLength.ToString() + " characters selected";
+        }
+      }
+      Core.MainForm.statusEditorDetails.Text = details;
     }
 
     
