@@ -1138,11 +1138,25 @@ namespace C64Studio
         &&   ( !commodorePushed )
         &&   ( !altPushed ) )
         {
-          if ( ( (char)keyData >= 'A' )
-          &&   ( (char)keyData <= 'Z' ) )
+          string  actualChar = KeyCodeToUnicode( keyData );
+          if ( ( ( (char)keyData >= 'A' )
+          &&     ( (char)keyData <= 'Z' ) )
+          ||   ( actualChar == "?" ) )
           {
             if ( shiftPushed )
             {
+              if ( actualChar == "?" )
+              {
+                if ( m_LowerCaseMode )
+                {
+                  editSource.SelectedText = MakeLowerCase( "PRINT" );
+                }
+                else
+                {
+                  editSource.SelectedText = "PRINT";
+                }
+                return true;
+              }
               // could be a token
               string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
               if ( m_LowerCaseMode )
