@@ -351,6 +351,7 @@ namespace C64Studio
           }
           if ( deletedFile )
           {
+            listFiles.SelectedIndices.Clear();
             RefreshFileView();
             SetModified();
             UpdateStatusInfo();
