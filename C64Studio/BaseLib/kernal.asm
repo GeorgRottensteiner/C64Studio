@@ -104,6 +104,17 @@
 
 
 !zone CIA2
+;| Bit  7   |  Serial Bus Data Input
+;| Bit  6   |  Serial Bus Clock Pulse Input
+;| Bit  5   |  Serial Bus Data Output
+;| Bit  4   |  Serial Bus Clock Pulse Output
+;| Bit  3   |  Serial Bus ATN Signal Output
+;| Bit  2   |  RS232 Data Output (User Port)
+;| Bit  1-0 |  VIC Chip System Memory Bank Select (low active!)
+;|          |  %00, 0: Bank 3: $C000-$FFFF, 49152-65535
+;|          |  %01, 1: Bank 2: $8000-$BFFF, 32768-49151
+;|          |  %10, 2: Bank 1: $4000-$7FFF, 16384-32767
+;|          |  %11, 3: Bank 0: $0000-$3FFF, 0-16383 (Standard)
 .DATA_PORT_A         = $dd00
 
 ;| Bit 7 |   On Read:  1 = Interrupt occured
