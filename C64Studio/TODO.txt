@@ -1,6 +1,7 @@
 ﻿C64Studio
-o Auto-Save Documents
+o Auto-Save Documents -> Crash safety-check on Find/Replace!
 o Charset conversion -> force number of chars (lossy conversion)
+o CharScreen -> Copy Selection/Ranges to preview window
 o In Version 6.5 fehlt der PETSCII code "Character: 42" links neben dem C64 Char
 o Feature request: kannst du beim Font Export "To File..." noch eine Angabe für die 2 Bytes der Startadresse optional mit einbauen? 
 o und lässt sich der Bereich zum Austesten der Zeichen auf 40x25 vergrößern, bzw. skalierbar machen? 

@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
@@ -7380,6 +7381,11 @@ namespace FastColoredTextBoxNS
     /// <param name="iLine">Any line inside collapsed block</param>
     public void ExpandBlock( int iLine )
     {
+      if ( ( iLine < 0 )
+      ||   ( iLine >= LineInfos.Count ) )
+      {
+        return;
+      }
       if ( LineInfos[iLine].VisibleState == VisibleState.Visible )
         return;
 
@@ -8664,6 +8670,12 @@ window.status = ""#print"";
     /// </summary>
     public void SetVisibleState( int iLine, VisibleState state )
     {
+      if ( ( iLine < 0 )
+      ||   ( iLine >= LineInfos.Count ) )
+      {
+        return;
+      }
+
       LineInfo li = LineInfos[iLine];
       li.VisibleState = state;
       LineInfos[iLine] = li;

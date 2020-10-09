@@ -1363,7 +1363,14 @@ namespace C64Studio
                                                         checkReplaceWholeWords.Checked,
                                                         checkReplaceIgnoreCase.Checked,
                                                         out occurrences );
-          edit.SelectedText = replacedText;
+          if ( !string.IsNullOrEmpty( replacedText ) )
+          {
+            edit.SelectedText = replacedText;
+          }
+          else
+          {
+            Debug.Log( "Replaced text was empty!!!!!" );
+          }
 
           // restore old selection
           int newEnd = oldEnd + ( comboReplaceWith.Text.Length - comboReplaceSearchText.Text.Length ) * occurrences;
