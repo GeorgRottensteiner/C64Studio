@@ -53,13 +53,16 @@
       this.label9 = new System.Windows.Forms.Label();
       this.label10 = new System.Windows.Forms.Label();
       this.edit01 = new System.Windows.Forms.TextBox();
+      this.editXBin = new System.Windows.Forms.TextBox();
+      this.editYBin = new System.Windows.Forms.TextBox();
+      this.editABin = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.SuspendLayout();
       // 
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(12, 9);
+      this.label1.Location = new System.Drawing.Point(12, 10);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(14, 13);
       this.label1.TabIndex = 0;
@@ -77,7 +80,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(12, 35);
+      this.label2.Location = new System.Drawing.Point(12, 36);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(14, 13);
       this.label2.TabIndex = 0;
@@ -95,7 +98,7 @@
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(12, 61);
+      this.label3.Location = new System.Drawing.Point(12, 62);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(14, 13);
       this.label3.TabIndex = 0;
@@ -167,7 +170,7 @@
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(126, 9);
+      this.label7.Location = new System.Drawing.Point(199, 8);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(24, 13);
       this.label7.TabIndex = 0;
@@ -176,7 +179,7 @@
       // editLIN
       // 
       this.editLIN.Font = new System.Drawing.Font("Courier New", 9F);
-      this.editLIN.Location = new System.Drawing.Point(156, 6);
+      this.editLIN.Location = new System.Drawing.Point(229, 6);
       this.editLIN.Name = "editLIN";
       this.editLIN.ReadOnly = true;
       this.editLIN.Size = new System.Drawing.Size(46, 21);
@@ -185,7 +188,7 @@
       // label8
       // 
       this.label8.AutoSize = true;
-      this.label8.Location = new System.Drawing.Point(126, 34);
+      this.label8.Location = new System.Drawing.Point(199, 36);
       this.label8.Name = "label8";
       this.label8.Size = new System.Drawing.Size(28, 13);
       this.label8.TabIndex = 0;
@@ -194,7 +197,7 @@
       // editCycle
       // 
       this.editCycle.Font = new System.Drawing.Font("Courier New", 9F);
-      this.editCycle.Location = new System.Drawing.Point(156, 31);
+      this.editCycle.Location = new System.Drawing.Point(229, 32);
       this.editCycle.Name = "editCycle";
       this.editCycle.ReadOnly = true;
       this.editCycle.Size = new System.Drawing.Size(46, 21);
@@ -258,7 +261,7 @@
       // label10
       // 
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(126, 61);
+      this.label10.Location = new System.Drawing.Point(199, 62);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(25, 13);
       this.label10.TabIndex = 0;
@@ -267,11 +270,38 @@
       // edit01
       // 
       this.edit01.Font = new System.Drawing.Font("Courier New", 9F);
-      this.edit01.Location = new System.Drawing.Point(156, 57);
+      this.edit01.Location = new System.Drawing.Point(229, 58);
       this.edit01.Name = "edit01";
       this.edit01.ReadOnly = true;
       this.edit01.Size = new System.Drawing.Size(46, 21);
       this.edit01.TabIndex = 1;
+      // 
+      // editXBin
+      // 
+      this.editXBin.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.editXBin.Location = new System.Drawing.Point(126, 6);
+      this.editXBin.Name = "editXBin";
+      this.editXBin.ReadOnly = true;
+      this.editXBin.Size = new System.Drawing.Size(64, 21);
+      this.editXBin.TabIndex = 1;
+      // 
+      // editYBin
+      // 
+      this.editYBin.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.editYBin.Location = new System.Drawing.Point(126, 32);
+      this.editYBin.Name = "editYBin";
+      this.editYBin.ReadOnly = true;
+      this.editYBin.Size = new System.Drawing.Size(64, 21);
+      this.editYBin.TabIndex = 1;
+      // 
+      // editABin
+      // 
+      this.editABin.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.editABin.Location = new System.Drawing.Point(126, 58);
+      this.editABin.Name = "editABin";
+      this.editABin.ReadOnly = true;
+      this.editABin.Size = new System.Drawing.Size(64, 21);
+      this.editABin.TabIndex = 1;
       // 
       // DebugRegisters
       // 
@@ -296,6 +326,9 @@
       this.Controls.Add(this.editYDec);
       this.Controls.Add(this.label3);
       this.Controls.Add(this.editY);
+      this.Controls.Add(this.editABin);
+      this.Controls.Add(this.editYBin);
+      this.Controls.Add(this.editXBin);
       this.Controls.Add(this.editXDec);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.editX);
@@ -335,7 +368,8 @@
     private System.Windows.Forms.Label label9;
     private System.Windows.Forms.Label label10;
     public System.Windows.Forms.TextBox edit01;
-
-
+    public System.Windows.Forms.TextBox editXBin;
+    public System.Windows.Forms.TextBox editYBin;
+    public System.Windows.Forms.TextBox editABin;
   }
 }

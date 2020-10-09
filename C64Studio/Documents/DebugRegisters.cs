@@ -35,7 +35,7 @@ namespace C64Studio
 
 
 
-    private void SetRegister( byte Content, TextBox Edit, TextBox EditDec, ref bool Changed )
+    private void SetRegister( byte Content, TextBox Edit, TextBox EditDec, TextBox EditBinary, ref bool Changed )
     {
       string content = Content.ToString( "X2" );
       if ( Edit.Text != content )
@@ -44,12 +44,23 @@ namespace C64Studio
         EditDec.Text      = Content.ToString();
         Edit.ForeColor    = ChangedColor;
         EditDec.ForeColor = ChangedColor;
+
+        if ( EditBinary != null )
+        {
+          EditBinary.Text       = Convert.ToString( Content, 2 ).PadLeft( 8, '0' );
+          EditBinary.ForeColor  = ChangedColor;
+        }
         Changed           = true;
       }
       else
       {
         Edit.ForeColor    = UnchangedColor;
         EditDec.ForeColor = UnchangedColor;
+
+        if ( EditBinary != null )
+        {
+          EditBinary.ForeColor = UnchangedColor;
+        }
         Changed           = false;
       }
     }
@@ -61,8 +72,8 @@ namespace C64Studio
       string content = Content.ToString( "X4" );
       if ( Edit.Text != content )
       {
-        Edit.Text = content;
-        EditDec.Text = Content.ToString();
+        Edit.Text     = content;
+        EditDec.Text  = Content.ToString();
         Edit.ForeColor = ChangedColor;
         EditDec.ForeColor = ChangedColor;
         Changed = true;
@@ -77,21 +88,31 @@ namespace C64Studio
 
 
 
-    private void SetRegister( string Content, TextBox Edit, TextBox EditDec, ref bool Changed )
+    private void SetRegister( string Content, TextBox Edit, TextBox EditDec, TextBox EditBinary, ref bool Changed )
     {
       Content = Content.ToUpper();
       if ( Edit.Text != Content )
       {
-        Edit.Text         = Content;
-        EditDec.Text      = GR.Convert.ToI32( Content, 16 ).ToString();
-        Edit.ForeColor    = ChangedColor;
-        EditDec.ForeColor = ChangedColor;
+        Edit.Text             = Content;
+        EditDec.Text          = GR.Convert.ToI32( Content, 16 ).ToString();
+        Edit.ForeColor        = ChangedColor;
+        EditDec.ForeColor     = ChangedColor;
+
+        if ( EditBinary != null )
+        {
+          EditBinary.Text       = Convert.ToString( GR.Convert.ToI32( Content, 16 ), 2 ).PadLeft( 8, '0' );
+          EditBinary.ForeColor  = ChangedColor;
+        }
         Changed = true;
       }
       else
       {
-        Edit.ForeColor    = UnchangedColor;
-        EditDec.ForeColor = UnchangedColor;
+        Edit.ForeColor        = UnchangedColor;
+        EditDec.ForeColor     = UnchangedColor;
+        if ( EditBinary != null )
+        {
+          EditBinary.ForeColor = UnchangedColor;
+        }
         Changed = false;
       }
     }
@@ -153,11 +174,11 @@ namespace C64Studio
 
     public void SetRegisters( string A, string X, string Y, string Stack, string Status, string PC, string LIN, string Cycle, string ProcessorPort )
     {
-      SetRegister( A, editA, editADec, ref RegisterAChanged );
-      SetRegister( X, editX, editXDec, ref RegisterXChanged );
-      SetRegister( Y, editY, editYDec, ref RegisterYChanged );
-      SetRegister( Stack, editStack, editStackDec, ref RegisterSPChanged );
-      SetRegister( PC, editPC, editPCDec, ref RegisterPCChanged );
+      SetRegister( A, editA, editADec, editABin, ref RegisterAChanged );
+      SetRegister( X, editX, editXDec, editXBin, ref RegisterXChanged );
+      SetRegister( Y, editY, editYDec, editYBin, ref RegisterYChanged );
+      SetRegister( Stack, editStack, editStackDec, null, ref RegisterSPChanged );
+      SetRegister( PC, editPC, editPCDec, null, ref RegisterPCChanged );
 
       SetRegister( LIN, editLIN, ref RegisterRasterLineChanged );
       SetRegister( Cycle, editCycle, ref RegisterCyclesChanged );
@@ -171,9 +192,9 @@ namespace C64Studio
 
     public void SetRegisters( RegisterInfo Registers )
     {
-      SetRegister( Registers.A, editA, editADec, ref RegisterAChanged );
-      SetRegister( Registers.X, editX, editXDec, ref RegisterXChanged );
-      SetRegister( Registers.Y, editY, editYDec, ref RegisterYChanged );
+      SetRegister( Registers.A, editA, editADec, editABin, ref RegisterAChanged );
+      SetRegister( Registers.X, editX, editXDec, editXBin, ref RegisterXChanged );
+      SetRegister( Registers.Y, editY, editYDec, editYBin, ref RegisterYChanged );
       SetRegister( Registers.StackPointer, editStack, editStackDec, ref RegisterSPChanged );
       SetRegister( Registers.PC, editPC, editPCDec, ref RegisterPCChanged );
 
