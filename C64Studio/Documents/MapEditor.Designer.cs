@@ -58,6 +58,7 @@
       this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.btnExportToFile = new System.Windows.Forms.Button();
+      this.btnExportCharset = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.btnCopyImage = new System.Windows.Forms.Button();
@@ -171,7 +172,8 @@
       this.button4 = new System.Windows.Forms.Button();
       this.button5 = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnExportCharset = new System.Windows.Forms.Button();
+      this.btnMoveMapUp = new System.Windows.Forms.Button();
+      this.btnMoveMapDown = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -439,6 +441,16 @@
       this.btnExportToFile.UseVisualStyleBackColor = true;
       this.btnExportToFile.Click += new System.EventHandler(this.btnExportToFile_Click);
       // 
+      // btnExportCharset
+      // 
+      this.btnExportCharset.Location = new System.Drawing.Point(6, 139);
+      this.btnExportCharset.Name = "btnExportCharset";
+      this.btnExportCharset.Size = new System.Drawing.Size(106, 23);
+      this.btnExportCharset.TabIndex = 2;
+      this.btnExportCharset.Text = "Charset...";
+      this.btnExportCharset.UseVisualStyleBackColor = true;
+      this.btnExportCharset.Click += new System.EventHandler(this.btnExportCharset_Click);
+      // 
       // btnExportToData
       // 
       this.btnExportToData.Location = new System.Drawing.Point(6, 52);
@@ -599,7 +611,7 @@
       this.comboMaps.FormattingEnabled = true;
       this.comboMaps.Location = new System.Drawing.Point(752, 6);
       this.comboMaps.Name = "comboMaps";
-      this.comboMaps.Size = new System.Drawing.Size(201, 21);
+      this.comboMaps.Size = new System.Drawing.Size(254, 21);
       this.comboMaps.TabIndex = 29;
       this.comboMaps.SelectedIndexChanged += new System.EventHandler(this.comboMaps_SelectedIndexChanged);
       // 
@@ -612,6 +624,8 @@
       this.groupSize.Controls.Add(this.comboMapBGColor);
       this.groupSize.Controls.Add(this.comboMapMultiColor1);
       this.groupSize.Controls.Add(this.btnCopy);
+      this.groupSize.Controls.Add(this.btnMoveMapDown);
+      this.groupSize.Controls.Add(this.btnMoveMapUp);
       this.groupSize.Controls.Add(this.btnMapAdd);
       this.groupSize.Controls.Add(this.btnMapDelete);
       this.groupSize.Controls.Add(this.btnMapApply);
@@ -630,7 +644,7 @@
       this.groupSize.Controls.Add(this.editMapWidth);
       this.groupSize.Location = new System.Drawing.Point(681, 33);
       this.groupSize.Name = "groupSize";
-      this.groupSize.Size = new System.Drawing.Size(272, 183);
+      this.groupSize.Size = new System.Drawing.Size(325, 183);
       this.groupSize.TabIndex = 28;
       this.groupSize.TabStop = false;
       this.groupSize.Text = "Map Details";
@@ -727,9 +741,9 @@
       // btnMapDelete
       // 
       this.btnMapDelete.Enabled = false;
-      this.btnMapDelete.Location = new System.Drawing.Point(191, 69);
+      this.btnMapDelete.Location = new System.Drawing.Point(251, 69);
       this.btnMapDelete.Name = "btnMapDelete";
-      this.btnMapDelete.Size = new System.Drawing.Size(75, 23);
+      this.btnMapDelete.Size = new System.Drawing.Size(56, 23);
       this.btnMapDelete.TabIndex = 27;
       this.btnMapDelete.Text = "Delete";
       this.btnMapDelete.UseVisualStyleBackColor = true;
@@ -738,9 +752,9 @@
       // btnMapApply
       // 
       this.btnMapApply.Enabled = false;
-      this.btnMapApply.Location = new System.Drawing.Point(191, 43);
+      this.btnMapApply.Location = new System.Drawing.Point(192, 69);
       this.btnMapApply.Name = "btnMapApply";
-      this.btnMapApply.Size = new System.Drawing.Size(75, 23);
+      this.btnMapApply.Size = new System.Drawing.Size(53, 23);
       this.btnMapApply.TabIndex = 27;
       this.btnMapApply.Text = "Apply";
       this.btnMapApply.UseVisualStyleBackColor = true;
@@ -1663,15 +1677,29 @@
       this.button5.Text = "as assembly source";
       this.button5.UseVisualStyleBackColor = true;
       // 
-      // btnExportCharset
+      // btnMoveMapUp
       // 
-      this.btnExportCharset.Location = new System.Drawing.Point(6, 139);
-      this.btnExportCharset.Name = "btnExportCharset";
-      this.btnExportCharset.Size = new System.Drawing.Size(106, 23);
-      this.btnExportCharset.TabIndex = 2;
-      this.btnExportCharset.Text = "Charset...";
-      this.btnExportCharset.UseVisualStyleBackColor = true;
-      this.btnExportCharset.Click += new System.EventHandler(this.btnExportCharset_Click);
+      this.btnMoveMapUp.Enabled = false;
+      this.btnMoveMapUp.Location = new System.Drawing.Point(192, 43);
+      this.btnMoveMapUp.Name = "btnMoveMapUp";
+      this.btnMoveMapUp.Size = new System.Drawing.Size(35, 23);
+      this.btnMoveMapUp.TabIndex = 27;
+      this.btnMoveMapUp.Text = "▲";
+      this.toolTip1.SetToolTip(this.btnMoveMapUp, "Move Map Up");
+      this.btnMoveMapUp.UseVisualStyleBackColor = true;
+      this.btnMoveMapUp.Click += new System.EventHandler(this.btnMoveMapUp_Click);
+      // 
+      // btnMoveMapDown
+      // 
+      this.btnMoveMapDown.Enabled = false;
+      this.btnMoveMapDown.Location = new System.Drawing.Point(231, 43);
+      this.btnMoveMapDown.Name = "btnMoveMapDown";
+      this.btnMoveMapDown.Size = new System.Drawing.Size(35, 23);
+      this.btnMoveMapDown.TabIndex = 27;
+      this.btnMoveMapDown.Text = "▼";
+      this.toolTip1.SetToolTip(this.btnMoveMapDown, "Move Map Down");
+      this.btnMoveMapDown.UseVisualStyleBackColor = true;
+      this.btnMoveMapDown.Click += new System.EventHandler(this.btnMoveMapDown_Click);
       // 
       // MapEditor
       // 
@@ -1853,5 +1881,7 @@
         private Controls.CharacterEditor characterEditor;
         private System.Windows.Forms.Button btnCopyImage;
         private System.Windows.Forms.Button btnExportCharset;
-    }
+    private System.Windows.Forms.Button btnMoveMapDown;
+    private System.Windows.Forms.Button btnMoveMapUp;
+  }
 }

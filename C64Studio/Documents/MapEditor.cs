@@ -2035,10 +2035,15 @@ namespace C64Studio
       {
         comboTiles.Items.Clear();
         btnCopy.Enabled = false;
+        btnMoveMapDown.Enabled = false;
+        btnMoveMapUp.Enabled = false;
         return;
       }
       m_CurrentMap = ( (GR.Generic.Tupel<string, Formats.MapProject.Map>)comboMaps.SelectedItem ).second;
       btnCopy.Enabled = true;
+
+      btnMoveMapDown.Enabled  = ( ( comboMaps.Items.Count >= 2 ) && ( comboMaps.SelectedIndex + 1 < comboMaps.Items.Count ) );
+      btnMoveMapUp.Enabled    = ( ( comboMaps.Items.Count >= 2 ) && ( comboMaps.SelectedIndex > 0 ) );
 
       m_SelectedTiles = new bool[m_CurrentMap.Tiles.Width, m_CurrentMap.Tiles.Height];
 
@@ -3482,6 +3487,85 @@ namespace C64Studio
       return Source.Substring( 0, Source.Length - 1 );
     }
 
+
+
+    private void btnMoveMapDown_Click( object sender, EventArgs e )
+    {
+      if ( ( comboMaps.SelectedIndex == -1 )
+      ||   ( comboMaps.Items.Count < 2 )
+      ||   ( comboMaps.SelectedIndex + 1 >= comboMaps.Items.Count ) )
+      {
+        return;
+      }
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapSwap( this, m_MapProject, comboMaps.SelectedIndex, comboMaps.SelectedIndex + 1 ) );
+
+      int   curIndex = comboMaps.SelectedIndex;
+      SwapMap( comboMaps.SelectedIndex, comboMaps.SelectedIndex + 1 );
+      comboMaps.SelectedIndex = curIndex + 1;
+      SetModified();
+    }
+
+    
+
+    private void btnMoveMapUp_Click( object sender, EventArgs e )
+    {
+      if ( ( comboMaps.SelectedIndex <= 0 )
+      ||   ( comboMaps.Items.Count < 2 ) )
+      {
+        return;
+      }
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapSwap( this, m_MapProject, comboMaps.SelectedIndex - 1, comboMaps.SelectedIndex ) );
+
+      int   curIndex = comboMaps.SelectedIndex;
+      SwapMap( comboMaps.SelectedIndex - 1, comboMaps.SelectedIndex );
+      comboMaps.SelectedIndex = curIndex - 1;
+      SetModified();
+    }
+
+
+
+    public void SwapMap( int MapIndex1, int MapIndex2 )
+    {
+      if ( ( MapIndex1 < 0 )
+      ||   ( MapIndex1 >= m_MapProject.Maps.Count )
+      ||   ( MapIndex2 < 0 )
+      ||   ( MapIndex2 >= m_MapProject.Maps.Count ) )
+      {
+        return;
+      }
+      if ( MapIndex1 > MapIndex2 )
+      {
+        var map1 = m_MapProject.Maps[MapIndex1];
+        m_MapProject.Maps.RemoveAt( MapIndex1 );
+        m_MapProject.Maps.Insert( MapIndex2, map1 );
+
+        var old1 = comboMaps.Items[MapIndex1];
+        comboMaps.Items.RemoveAt( MapIndex1 );
+        comboMaps.Items.Insert( MapIndex2, old1 );
+      }
+      else
+      {
+        var map2 = m_MapProject.Maps[MapIndex2];
+        m_MapProject.Maps.RemoveAt( MapIndex2 );
+        m_MapProject.Maps.Insert( MapIndex1, map2 );
+
+        var old2 = comboMaps.Items[MapIndex2];
+        comboMaps.Items.RemoveAt( MapIndex2 );
+        comboMaps.Items.Insert( MapIndex1, old2 );
+      }
+
+
+      var item1 = (GR.Generic.Tupel<string, Formats.MapProject.Map>)comboMaps.Items[MapIndex1];
+      var item2 = (GR.Generic.Tupel<string, Formats.MapProject.Map>)comboMaps.Items[MapIndex2];
+
+      item1.first = MapIndex1.ToString() + ": " + item1.second.Name;
+      item2.first = MapIndex2.ToString() + ": " + item2.second.Name;
+
+      comboMaps.Items.RemoveAt( MapIndex2 );
+      comboMaps.Items.Insert( MapIndex2, item2 );
+      comboMaps.Items.RemoveAt( MapIndex1 );
+      comboMaps.Items.Insert( MapIndex1, item1 );
+    }
 
 
   }

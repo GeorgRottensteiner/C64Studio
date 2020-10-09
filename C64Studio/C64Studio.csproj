@@ -680,6 +680,7 @@
     <Compile Include="Undo\UndoCharacterEditorCharChange.cs" />
     <Compile Include="Undo\UndoCharacterEditorPlaygroundCharChange.cs" />
     <Compile Include="Undo\UndoCharacterEditorValuesChange.cs" />
+    <Compile Include="Undo\UndoMapSwap.cs" />
     <Compile Include="Undo\UndoSpritesetExchangeMultiColors.cs" />
     <Compile Include="Undo\UndoGraphicScreenSizeChange.cs" />
     <Compile Include="Undo\UndoGraphicScreenImageChange.cs" />
