@@ -7944,6 +7944,30 @@ namespace FastColoredTextBoxNS
       EndUpdate();
     }
 
+
+
+    /// <summary>
+    /// Set text of line (replaces previous content)
+    /// </summary>
+    public virtual void SetLineText( int LineIndex, string Content )
+    {
+      BeginUpdate();
+      Selection.BeginUpdate();
+
+      lines.Manager.BeginAutoUndoCommands();
+
+      var range = new Range( this, LineIndex );
+
+      lines.Manager.ExecuteCommand( new ReplaceTextCommand( TextSource, new List<Range>() { range }, Content ) );
+      needRecalc = true;
+      lines.Manager.EndAutoUndoCommands();
+      Selection.EndUpdate();
+      EndUpdate();
+      Invalidate();
+    }
+
+
+
     /// <summary>
     /// Insert prefix into front of selected lines
     /// </summary>

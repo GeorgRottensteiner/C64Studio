@@ -3106,5 +3106,100 @@ namespace C64Studio
     }
 
 
+
+    private void addSubtractDataValuesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      var formDelta = new FormDeltaValue();
+
+      if ( formDelta.ShowDialog() != DialogResult.OK )
+      {
+        return;
+      }
+
+      int     firstLine = editSource.Selection.Start.iLine;
+      int     endLine = editSource.Selection.End.iLine;
+
+      if ( firstLine > endLine )
+      {
+        int   temp = firstLine;
+        firstLine = endLine;
+        endLine = temp;
+      }
+
+      if ( editSource.SelectionLength == 0 )
+      {
+        firstLine = m_ContextMenuLineIndex;
+        endLine = firstLine;
+      }
+
+
+      editSource.BeginAutoUndo();
+
+      for ( int lineIndex = firstLine; lineIndex <= endLine; ++lineIndex )
+      {
+        string    text = editSource.Lines[lineIndex];
+
+        var tokens = Parser.ParseTokenInfo( text, 0, text.Length );
+
+        if ( ( tokens.Count > 0 )
+        &&   ( tokens[0].Type == TokenInfo.TokenType.MACRO ) )
+        {
+          string  upperToken = tokens[0].Content.ToUpper();
+          if ( Parser.ASMFileInfo.AssemblerSettings.Macros.ContainsKey( upperToken ) )
+          {
+            var pseudoOp = Parser.ASMFileInfo.AssemblerSettings.Macros[upperToken];
+
+            if ( ( pseudoOp.Type == MacroInfo.MacroType.BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.MacroType.WORD )
+            ||   ( pseudoOp.Type == MacroInfo.MacroType.LOW_BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.MacroType.HIGH_BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.MacroType.TEXT )
+            ||   ( pseudoOp.Type == MacroInfo.MacroType.TEXT_PET )
+            ||   ( pseudoOp.Type == MacroInfo.MacroType.TEXT_RAW )
+            ||   ( pseudoOp.Type == MacroInfo.MacroType.TEXT_SCREEN ) )
+            {
+              // we only touch literal values!
+              for ( int i = 1; i < tokens.Count; ++i )
+              {
+                if ( ( tokens[i].Type == TokenInfo.TokenType.LITERAL_NUMBER )
+                &&   ( ( ( ( i >= 1 )
+                &&         ( tokens[i - 1].Content == "," ) )
+                ||       ( i == 1 ) ) )
+                ||     ( ( ( ( i + 1 < tokens.Count )
+                &&         ( tokens[i + 1].Content == "," ) )
+                ||       ( i + 1 == tokens.Count ) ) ) )
+                {
+                  if ( Parser.EvaluateTokens( i, tokens, i, 1, out int resultValue ) )
+                  {
+                    resultValue += formDelta.Delta;
+
+                    if ( formDelta.InsertAsHex )
+                    {
+                      tokens[i].Content = "$" + resultValue.ToString( "X2" );
+                    }
+                    else
+                    {
+                      tokens[i].Content = resultValue.ToString();
+                    }
+                  }
+                }
+              }
+              string    newLine = Parser.TokensToExpression( tokens );
+              if ( tokens[0].StartPos > 0 )
+              {
+                newLine = new string( ' ', tokens[0].StartPos ) + newLine;
+              }
+              editSource.SetLineText( lineIndex, newLine ); 
+            }
+          }
+        }
+      }
+      editSource.EndAutoUndo();
+
+      SetModified();
+    }
+
+
+
   }
 }

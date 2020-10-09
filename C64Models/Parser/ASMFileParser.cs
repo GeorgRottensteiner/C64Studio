@@ -22,7 +22,7 @@ namespace C64Studio.Parser
       FROM_FILE_AND_LIBRARIES_PATH
     }
 
-    private enum ParseLineResult
+    public enum ParseLineResult
     {
       OK,
       OK_PARSE_EXPRESSION_LATER,
@@ -1600,7 +1600,7 @@ namespace C64Studio.Parser
 
 
 
-    private bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, int StartIndex, int Count, out int Result )
+    public bool EvaluateTokens( int LineIndex, List<Types.TokenInfo> Tokens, int StartIndex, int Count, out int Result )
     {
       int dummy = 0;
       ClearErrorInfo();
@@ -9668,7 +9668,7 @@ namespace C64Studio.Parser
 
 
     // TODO - add expression parsing (parenthesis)
-    private ParseLineResult ParseLineInParameters( List<TokenInfo> lineTokenInfos, int Offset, int Count, int LineIndex, out List<List<TokenInfo>> lineParams )
+    public ParseLineResult ParseLineInParameters( List<TokenInfo> lineTokenInfos, int Offset, int Count, int LineIndex, out List<List<TokenInfo>> lineParams )
     {
       int     paramStartIndex = Offset;
 
@@ -13486,7 +13486,7 @@ namespace C64Studio.Parser
 
 
 
-    private string TokensToExpression( List<Types.TokenInfo> Tokens )
+    internal string TokensToExpression( List<Types.TokenInfo> Tokens )
     {
       return TokensToExpression( Tokens, 0, Tokens.Count );
     }

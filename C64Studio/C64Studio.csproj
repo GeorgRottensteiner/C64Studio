@@ -86,6 +86,12 @@
     <Compile Include="CustomRenderer\StudioTheme.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
     <Compile Include="Debugger\Tiny64Debugger.cs" />
+    <Compile Include="Dialogs\FormDeltaValue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\FormDeltaValue.Designer.cs">
+      <DependentUpon>FormDeltaValue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\FormSplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -481,6 +487,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgInterleaveData.resx">
       <DependentUpon>DlgInterleaveData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FormDeltaValue.resx">
+      <DependentUpon>FormDeltaValue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\FormSplashScreen.resx">
       <DependentUpon>FormSplashScreen.cs</DependentUpon>

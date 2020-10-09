@@ -1363,14 +1363,8 @@ namespace C64Studio
                                                         checkReplaceWholeWords.Checked,
                                                         checkReplaceIgnoreCase.Checked,
                                                         out occurrences );
-          if ( !string.IsNullOrEmpty( replacedText ) )
-          {
-            edit.SelectedText = replacedText;
-          }
-          else
-          {
-            Debug.Log( "Replaced text was empty!!!!!" );
-          }
+
+          edit.SelectedText = replacedText;
 
           // restore old selection
           int newEnd = oldEnd + ( comboReplaceWith.Text.Length - comboReplaceSearchText.Text.Length ) * occurrences;
@@ -1449,6 +1443,16 @@ namespace C64Studio
 
         if ( docOccurrences > 0 )
         {
+          if ( string.IsNullOrEmpty( replacedText ) )
+          {
+            Core.AddToOutput( "Replaced text was empty!!!!" );
+            Core.AddToOutput( "  Replacing '" + comboReplaceSearchText.Text + "'" );
+            Core.AddToOutput( "  with '" + comboReplaceWith.Text + "'" );
+            Core.AddToOutput( "  RegEx " + checkReplaceRegexp.Checked + ", checkReplaceWholeWords.Checked " + checkReplaceWholeWords.Checked + ", checkReplaceIgnoreCase.Checked " + checkReplaceIgnoreCase.Checked );
+            Core.AddToOutput( "Original Text was '" + replacement + "'" );
+            Core.AddToOutput( "Replaced text was empty!!!!" );
+          }
+
           SetDocumentText( doc.Key, replacedText );
         }
 
