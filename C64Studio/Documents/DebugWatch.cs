@@ -744,5 +744,39 @@ namespace C64Studio
 
 
 
+    private void copyToClipboardToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      var sb = new StringBuilder();
+      foreach ( ListViewItem item in listWatch.SelectedItems )
+      {
+        WatchEntry entry = (WatchEntry)item.Tag;
+
+        sb.Append( item.SubItems[0].Text );
+        sb.Append( " (" );
+        sb.Append( item.SubItems[1].Text );
+        sb.Append( ") " );
+        sb.AppendLine( item.SubItems[2].Text );
+      }
+
+      Clipboard.SetText( sb.ToString() );
+    }
+
+
+
+    private void copySelectedValuesToClipboardToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      var sb = new StringBuilder();
+      foreach ( ListViewItem item in listWatch.SelectedItems )
+      {
+        WatchEntry entry = (WatchEntry)item.Tag;
+
+        sb.AppendLine( item.SubItems[2].Text );
+      }
+
+      Clipboard.SetText( sb.ToString() );
+    }
+
+
+
   }
 }
