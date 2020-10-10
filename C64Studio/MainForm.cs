@@ -1242,10 +1242,10 @@ namespace C64Studio
           UpdateCaption();
           break;
         case C64Studio.Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED:
-          m_DebugWatch.DebuggedProject = m_CurrentProject;
-          m_DebugRegisters.DebuggedProject = m_CurrentProject;
-          m_DebugMemory.DebuggedProject = m_CurrentProject;
-          m_DebugBreakpoints.DebuggedProject = m_CurrentProject;
+          m_DebugWatch.DebuggedProject        = m_CurrentProject;
+          m_DebugRegisters.DebuggedProject    = m_CurrentProject;
+          m_DebugMemory.DebuggedProject       = m_CurrentProject;
+          m_DebugBreakpoints.DebuggedProject  = m_CurrentProject;
           UpdateCaption();
           break;
         case Types.ApplicationEvent.Type.DOCUMENT_CLOSED:

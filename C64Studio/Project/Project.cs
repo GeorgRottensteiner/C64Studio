@@ -234,9 +234,13 @@ namespace C64Studio
         bufferProject.Append( config.Save() );
       }
 
-      foreach ( var watch in Core.MainForm.m_DebugWatch.m_WatchEntries )
+      // only save watches once, for the active project
+      if ( Core.MainForm.m_DebugWatch.DebuggedProject == this )
       {
-        bufferProject.Append( watch.Save() );
+        foreach ( var watch in Core.MainForm.m_DebugWatch.m_WatchEntries )
+        {
+          bufferProject.Append( watch.Save() );
+        }
       }
 
       return bufferProject;
