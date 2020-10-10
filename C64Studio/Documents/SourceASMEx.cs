@@ -2113,7 +2113,7 @@ namespace C64Studio
       {
         WatchEntry entry    = new WatchEntry();
         entry.Name          = wordBelow;
-        entry.SizeInBytes   = bytesGiven;
+        entry.SizeInBytes   = 1;
         entry.Type          = WatchEntry.DisplayType.HEX;
         entry.Address       = result;
         entry.IndexedX      = indexedX;
