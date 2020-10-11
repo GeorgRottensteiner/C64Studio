@@ -981,24 +981,24 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_A, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 129, true, 1, true, (char)0xee81, true, "REVERSE A" ).Replacements.Add( "CTRL-A" );
       AddC64Key( KeyboardKey.KEY_B, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 130, true, 2, true, (char)0xee82, true, "REVERSE B" ).Replacements.Add( "CTRL-B" );
 
-      AddC64Key( KeyboardKey.KEY_RUN_STOP, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 3, true, 3, true, (char)0xee83, true, "RUN STOP" ).Replacements.Add( "CTRL-C" ); ;   // run stop
+      AddC64Key( KeyboardKey.KEY_RUN_STOP, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 131, true, 3, true, (char)0xee83, true, "RUN STOP" ).Replacements.Add( "CTRL-C" ); ;   // run stop
 
       AddC64Key( KeyboardKey.KEY_D, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 132, true, 4, true, (char)0xee84, true, "REVERSE D" ).Replacements.Add( "CTRL-D" );
 
-      AddC64Key( KeyboardKey .KEY_2, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 5, true, 5, true, (char)0xee85, -1, 0, true, "WHITE", "WHI" ).Replacements.AddRange( new string[] { "WHITE", "WHT" } );
+      AddC64Key( KeyboardKey .KEY_2, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 133, true, 5, true, (char)0xee85, -1, 0, true, "WHITE", "WHI" ).Replacements.AddRange( new string[] { "WHITE", "WHT" } );
 
       AddC64Key( KeyboardKey.KEY_F, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 134, true, 6, true, (char)0xee86, true, "REVERSE F" ).Replacements.Add( "CTRL-F" );
       AddC64Key( KeyboardKey.KEY_G, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 135, true, 7, true, (char)0xee87, true, "REVERSE G" ).Replacements.Add( "CTRL-G" );
 
-      AddC64Key( KeyboardKey.KEY_H, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 8, true, 8, true, (char)0xee88, -1, 0, true, "SHIFT C= OFF", "SH C= OFF" ).Replacements.AddRange( new string[] { "CTRL-H", "DISH" } );   // Shift-C= aus
-      AddC64Key( KeyboardKey.KEY_I, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 9, true, 9, true, (char)0xee89, -1, 0, true, "SHIFT C= ON", "SH C= ON" ).Replacements.AddRange( new string[] { "CTRL-I", "ENSH" } );   // Shift-C= an
+      AddC64Key( KeyboardKey.KEY_H, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 136, true, 8, true, (char)0xee88, -1, 0, true, "SHIFT C= OFF", "SH C= OFF" ).Replacements.AddRange( new string[] { "CTRL-H", "DISH" } );   // Shift-C= aus
+      AddC64Key( KeyboardKey.KEY_I, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 137, true, 9, true, (char)0xee89, -1, 0, true, "SHIFT C= ON", "SH C= ON" ).Replacements.AddRange( new string[] { "CTRL-I", "ENSH" } );   // Shift-C= an
 
       AddC64Key( KeyboardKey.KEY_J, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 138, true, 10, true, (char)0xee8a, true, "REVERSE J" ).Replacements.Add( "CTRL-J" );
       AddC64Key( KeyboardKey.KEY_K, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 139, true, 11, true, (char)0xee8b, true, "REVERSE K" ).Replacements.Add( "CTRL-K" );
       AddC64Key( KeyboardKey.KEY_L, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 140, true, 12, true, (char)0xee8c, true, "REVERSE L" ).Replacements.Add( "CTRL-L" );
 
-      AddC64Key( KeyboardKey.KEY_RETURN, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 13, true, 13, true, (char)0xee8d, -1, 0, false, "RETURN", "RET" ).Replacements.Add( "CTRL-M" );  // return
-      AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 14, true, 14, true, (char)0xee8e, -1, 0, true, "SHIFT C=", "SH C=" ).Replacements.AddRange( new string[] { "SWLC" } );  // toggle upper/lower
+      AddC64Key( KeyboardKey.KEY_RETURN, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 141, true, 13, true, (char)0xee8d, -1, 0, true, "RETURN", "RET" ).Replacements.Add( "CTRL-M" );  // return
+      AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 142, true, 14, true, (char)0xee8e, -1, 0, true, "SHIFT C=", "SH C=" ).Replacements.AddRange( new string[] { "SWLC" } );  // toggle upper/lower
 
       AddC64Key( KeyboardKey.KEY_O, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 143, true, 15, true, (char)0xee8f, true, "REVERSE O" ).Replacements.Add( "CTRL-O" );
       AddC64Key( KeyboardKey.KEY_P, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 144, true, 16, true, (char)0xee90, true, "REVERSE P" ).Replacements.Add( "CTRL-P" );
@@ -1014,7 +1014,7 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_X, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 152, true, 24, true, (char)0xee98, true, "REVERSE X" ).Replacements.Add( "CTRL-X" );
       AddC64Key( KeyboardKey.KEY_Y, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 153, true, 25, true, (char)0xee99, true, "REVERSE Y" ).Replacements.Add( "CTRL-Y" );
       AddC64Key( KeyboardKey.KEY_Z, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 154, true, 26, true, (char)0xee9a, true, "REVERSE Z" ).Replacements.Add( "CTRL-Z" );
-      AddC64Key( KeyboardKey.KEY_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 155, true, 27, false, (char)0xee9b, true, "[" );
+      AddC64Key( KeyboardKey.KEY_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 155, true, 27, true, (char)0xee9b, true, "REVERSE [" );
 
       AddC64Key( KeyboardKey.KEY_3, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 28, true, 28, true, (char)0xee9c, true, "RED" ).Replacements.Add( "RED" );
       AddC64Key( KeyboardKey.KEY_CURSOR_LEFT_RIGHT, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 29, true, 29, true, (char)0xee9d, -1, 0, true, "CURSOR RIGHT", "CUR RIGHT" ).Replacements.Add( "RIGHT" );
@@ -1369,7 +1369,7 @@ namespace C64Studio.Types
 
     static C64Character AddC64KeyLC( KeyboardKey Key, KeyModifier Modifier, KeyType Type, byte ScreenCodeValue, bool HasScreenCode, byte PetSCIIValue, bool HasPetSCII, char CharValue, char LowerCaseCharValue, byte LowerCasePETSCII )
     {
-      return AddC64Key( Key, Modifier, Type, ScreenCodeValue, HasScreenCode, PetSCIIValue, HasPetSCII, CharValue, LowerCaseCharValue, LowerCasePETSCII, true, "" + CharValue, "" );
+      return AddC64Key( Key, Modifier, Type, ScreenCodeValue, HasScreenCode, PetSCIIValue, HasPetSCII, CharValue, LowerCaseCharValue, LowerCasePETSCII, true, "" + (char)PetSCIIValue, "" );
     }
 
 
