@@ -69,6 +69,7 @@ namespace C64Studio
       itemUn.SubItems.Add( "0" );
       listCategories.Items.Add( itemUn );
       RefreshCategoryCounts();
+      CreateDefaultUppercaseCharset();
 
       Modified = false;
     }
@@ -601,6 +602,13 @@ namespace C64Studio
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetCharChange( this, m_Charset, i ), i == 0 );
       }
+      CreateDefaultUppercaseCharset();
+    }
+
+
+
+    private void CreateDefaultUppercaseCharset()
+    {
       for ( int i = 0; i < 256; ++i )
       {
         for ( int j = 0; j < 8; ++j )
