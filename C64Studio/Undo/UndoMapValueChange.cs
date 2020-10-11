@@ -45,7 +45,7 @@ namespace C64Studio.Undo
 
 
 
-    public string Description
+    public override string Description
     {
       get
       {

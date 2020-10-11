@@ -736,6 +736,26 @@ namespace C64Studio
 
 
 
+    public virtual string UndoInfo
+    {
+      get
+      {
+        return DocumentInfo.UndoManager.UndoInfo;
+      }
+    }
+
+
+
+    public virtual string RedoInfo
+    {
+      get
+      {
+        return DocumentInfo.UndoManager.RedoInfo;
+      }
+    }
+
+
+
     public virtual void Undo()
     {
       DocumentInfo.UndoManager.Undo();

@@ -21,6 +21,13 @@ namespace C64Studio.Undo
 
 
 
+    public virtual string Description
+    {
+      get;
+    }
+
+
+
     public abstract UndoTask CreateComplementaryTask();
     public abstract void Apply();
   }

@@ -1381,6 +1381,9 @@ namespace C64Studio
         undoToolStripMenuItem.Enabled = baseDoc.UndoPossible;
         redoToolStripMenuItem.Enabled = baseDoc.RedoPossible;
 
+        mainToolUndo.ToolTipText = baseDoc.UndoInfo;
+        mainToolRedo.ToolTipText = baseDoc.RedoInfo;
+
         if ( baseDoc.DocumentInfo.ContainsCode )
         {
           if ( m_ActiveSource != baseDoc )
@@ -6122,6 +6125,9 @@ namespace C64Studio
         cutToolStripMenuItem.Enabled = ActiveDocument.CutPossible;
         pasteToolStripMenuItem.Enabled = ActiveDocument.PastePossible;
         deleteToolStripMenuItem.Enabled = ActiveDocument.DeletePossible;
+
+        mainToolUndo.ToolTipText = ActiveDocument.UndoInfo;
+        mainToolRedo.ToolTipText = ActiveDocument.RedoInfo;
 
 
         bool modifications = false;

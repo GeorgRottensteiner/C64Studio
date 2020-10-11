@@ -27,7 +27,6 @@ o Kategorien, Ich denke, Sie sollten mehrere auswählen, z. B. mehrfarbig, und s
      Wenn mehrere Farben ausgewählt sind, ändert sich das Lineal nicht (?), um diese neuen Zeichen aufzunehmen.
 
 o charscreen layout change from Docster!
-o charscreen editor - Clear screen option
 o Charset Editor - Selection Picture with toggleable PETSCII sorting (Forum64 thread)
 o Expressions with sin/cos/tan?
 o *=$0801 "Basic"

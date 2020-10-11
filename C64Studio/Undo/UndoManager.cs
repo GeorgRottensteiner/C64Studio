@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace C64Studio.Undo
@@ -27,6 +28,34 @@ namespace C64Studio.Undo
       get
       {
         return RedoTasks.Count > 0;
+      }
+    }
+
+
+
+    public string UndoInfo
+    {
+      get
+      {
+        if ( UndoTasks.Count == 0 )
+        {
+          return "Undo";
+        }
+        return "Undo " + UndoTasks[UndoTasks.Count - 1].Description;
+      }
+    }
+
+
+
+    public string RedoInfo
+    {
+      get
+      {
+        if ( RedoTasks.Count == 0 )
+        {
+          return "Redo";
+        }
+        return "Redo " + RedoTasks[RedoTasks.Count - 1].Description;
       }
     }
 
