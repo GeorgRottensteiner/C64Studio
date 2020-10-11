@@ -54,7 +54,7 @@ o Binary Editor -> To BASIC, ASM, Längenbegrenzung!
 o BASIC -> Optimierung beim "Compile", REM entfernen, 0 durch ., usw.
 o BASIC -> Run/Debug Configuration
 o BASIC -> Debug?
-o BASIC-Extensions ( Laser-Basic, Simons Basic?)
+o BASIC-Extensions external config instead of hard-coded?
 o C128-Unterstützung (BASIC mit Hex-Data, Debug-Start, etc..)
 o Search Bookmarks-> Functionality
 o Sprite-Import from file -> allow skipping a number of bytes (open binary editor view?)

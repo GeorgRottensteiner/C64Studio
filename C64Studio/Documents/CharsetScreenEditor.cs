@@ -3520,5 +3520,24 @@ namespace C64Studio
 
 
 
+    private void btnClearScreen_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ), false );
+
+      // now shift all characters
+      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      {
+        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+        {
+          SetCharacter( i, j, 32, 1 );
+        }
+      }
+
+      RedrawFullScreen();
+      Modified = true;
+    }
+
+
+
   } 
 }

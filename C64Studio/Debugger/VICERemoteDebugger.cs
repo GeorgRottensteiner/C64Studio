@@ -1950,6 +1950,11 @@ namespace C64Studio
 
     public void QueueRequest( RequestData Data )
     {
+      if ( State == DebuggerState.NOT_CONNECTED )
+      {
+        return;
+      }
+
       if ( Data.Type == DebugRequestType.REFRESH_VALUES )
       {
         QueueRequest( DebugRequestType.READ_REGISTERS );
