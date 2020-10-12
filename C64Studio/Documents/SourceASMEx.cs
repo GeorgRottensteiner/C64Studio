@@ -3141,10 +3141,23 @@ namespace C64Studio
 
         var tokens = Parser.ParseTokenInfo( text, 0, text.Length );
 
+        bool    firstTokenIsLabel = false;
+        int     firstLiteralTokenIndex = 1;
+
         if ( ( tokens.Count > 0 )
-        &&   ( tokens[0].Type == TokenInfo.TokenType.MACRO ) )
+        &&   ( ( tokens[0].Type == TokenInfo.TokenType.LABEL_LOCAL )
+        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_INTERNAL )
+        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_CHEAP_LOCAL ) ) )
         {
-          string  upperToken = tokens[0].Content.ToUpper();
+          firstTokenIsLabel = true;
+          firstLiteralTokenIndex = 2;
+        }
+
+        if ( ( tokens.Count > firstLiteralTokenIndex )
+        &&   ( tokens[firstLiteralTokenIndex - 1].Type == TokenInfo.TokenType.MACRO ) )
+        {
+          string  upperToken = tokens[firstLiteralTokenIndex - 1].Content.ToUpper();
           if ( Parser.ASMFileInfo.AssemblerSettings.Macros.ContainsKey( upperToken ) )
           {
             var pseudoOp = Parser.ASMFileInfo.AssemblerSettings.Macros[upperToken];
@@ -3159,12 +3172,12 @@ namespace C64Studio
             ||   ( pseudoOp.Type == MacroInfo.MacroType.TEXT_SCREEN ) )
             {
               // we only touch literal values!
-              for ( int i = 1; i < tokens.Count; ++i )
+              for ( int i = firstLiteralTokenIndex; i < tokens.Count; ++i )
               {
                 if ( ( tokens[i].Type == TokenInfo.TokenType.LITERAL_NUMBER )
-                &&   ( ( ( ( i >= 1 )
+                &&   ( ( ( ( i >= firstLiteralTokenIndex )
                 &&         ( tokens[i - 1].Content == "," ) )
-                ||       ( i == 1 ) ) )
+                ||       ( i == firstLiteralTokenIndex ) ) )
                 ||     ( ( ( ( i + 1 < tokens.Count )
                 &&         ( tokens[i + 1].Content == "," ) )
                 ||       ( i + 1 == tokens.Count ) ) ) )

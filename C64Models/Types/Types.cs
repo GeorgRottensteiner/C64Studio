@@ -34,7 +34,8 @@ namespace C64Studio.Types
         case MachineType.C128:
           return C64Studio.Lookup.Machines.C128;
         default:
-          throw new NotImplementedException();
+          // fallback to C64
+          return C64Studio.Lookup.Machines.C64;
       }
     }
   }
