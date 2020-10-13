@@ -1120,6 +1120,9 @@ namespace C64Studio
         return;
       }
 
+      ImportImage( null, imgClip, ImageInsertionMode.AS_FULL_SCREEN );
+      /*
+
       GR.Image.FastImage mappedImage = null;
 
       Types.MulticolorSettings   mcSettings = new Types.MulticolorSettings();
@@ -1148,7 +1151,7 @@ namespace C64Studio
       mappedImage.DrawTo( m_GraphicScreenProject.Image, 0, 0 );
       Redraw();
       pictureEditor.Invalidate();
-      Modified = true;
+      Modified = true;*/
     }
 
 

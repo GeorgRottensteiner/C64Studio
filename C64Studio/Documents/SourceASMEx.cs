@@ -3141,7 +3141,6 @@ namespace C64Studio
 
         var tokens = Parser.ParseTokenInfo( text, 0, text.Length );
 
-        bool    firstTokenIsLabel = false;
         int     firstLiteralTokenIndex = 1;
 
         if ( ( tokens.Count > 0 )
@@ -3150,7 +3149,6 @@ namespace C64Studio
         ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_GLOBAL )
         ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_CHEAP_LOCAL ) ) )
         {
-          firstTokenIsLabel = true;
           firstLiteralTokenIndex = 2;
         }
 

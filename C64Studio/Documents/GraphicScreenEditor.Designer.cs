@@ -28,10 +28,11 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphicScreenEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -107,6 +108,7 @@
       this.comboColorMappingTargets = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
+      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -488,6 +490,7 @@
       this.btnToolValidate.Size = new System.Drawing.Size(24, 24);
       this.btnToolValidate.TabIndex = 36;
       this.btnToolValidate.TabStop = true;
+      this.toolTip1.SetToolTip(this.btnToolValidate, "Check Validation");
       this.btnToolValidate.UseVisualStyleBackColor = true;
       this.btnToolValidate.CheckedChanged += new System.EventHandler(this.btnToolValidate_CheckedChanged);
       // 
@@ -499,6 +502,7 @@
       this.btnToolSelect.Name = "btnToolSelect";
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
       this.btnToolSelect.TabIndex = 36;
+      this.toolTip1.SetToolTip(this.btnToolSelect, "Selection");
       this.btnToolSelect.UseVisualStyleBackColor = true;
       this.btnToolSelect.CheckedChanged += new System.EventHandler(this.btnToolSelect_CheckedChanged);
       // 
@@ -510,6 +514,7 @@
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
       this.btnToolFill.TabIndex = 37;
+      this.toolTip1.SetToolTip(this.btnToolFill, "Fill");
       this.btnToolFill.UseVisualStyleBackColor = true;
       this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
       // 
@@ -521,6 +526,7 @@
       this.btnToolQuad.Name = "btnToolQuad";
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
       this.btnToolQuad.TabIndex = 38;
+      this.toolTip1.SetToolTip(this.btnToolQuad, "Filled Box");
       this.btnToolQuad.UseVisualStyleBackColor = true;
       this.btnToolQuad.CheckedChanged += new System.EventHandler(this.btnToolQuad_CheckedChanged);
       // 
@@ -532,6 +538,7 @@
       this.btnToolRect.Name = "btnToolRect";
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
       this.btnToolRect.TabIndex = 39;
+      this.toolTip1.SetToolTip(this.btnToolRect, "Rectangle");
       this.btnToolRect.UseVisualStyleBackColor = true;
       this.btnToolRect.CheckedChanged += new System.EventHandler(this.btnToolRect_CheckedChanged);
       // 
@@ -543,6 +550,7 @@
       this.btnToolPaint.Name = "btnToolPaint";
       this.btnToolPaint.Size = new System.Drawing.Size(24, 24);
       this.btnToolPaint.TabIndex = 40;
+      this.toolTip1.SetToolTip(this.btnToolPaint, "Single Pixel");
       this.btnToolPaint.UseVisualStyleBackColor = true;
       this.btnToolPaint.CheckedChanged += new System.EventHandler(this.btnToolPaint_CheckedChanged);
       // 
@@ -589,6 +597,7 @@
       this.btnApplyScreenSize.Size = new System.Drawing.Size(50, 20);
       this.btnApplyScreenSize.TabIndex = 34;
       this.btnApplyScreenSize.Text = "Apply";
+      this.toolTip1.SetToolTip(this.btnApplyScreenSize, "Apply new size");
       this.btnApplyScreenSize.UseVisualStyleBackColor = true;
       this.btnApplyScreenSize.Click += new System.EventHandler(this.btnApplyScreenSize_Click);
       // 
@@ -650,6 +659,7 @@
       this.btnMirrorY.Name = "btnMirrorY";
       this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorY.TabIndex = 18;
+      this.toolTip1.SetToolTip(this.btnMirrorY, "Mirror Vertically");
       this.btnMirrorY.UseVisualStyleBackColor = true;
       this.btnMirrorY.Click += new System.EventHandler(this.btnMirrorY_Click);
       // 
@@ -660,6 +670,7 @@
       this.btnMirrorX.Name = "btnMirrorX";
       this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorX.TabIndex = 19;
+      this.toolTip1.SetToolTip(this.btnMirrorX, "Mirror Horizontally");
       this.btnMirrorX.UseVisualStyleBackColor = true;
       this.btnMirrorX.Click += new System.EventHandler(this.btnMirrorX_Click);
       // 
@@ -670,6 +681,7 @@
       this.btnShiftDown.Name = "btnShiftDown";
       this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
       this.btnShiftDown.TabIndex = 20;
+      this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
       this.btnShiftDown.UseVisualStyleBackColor = true;
       this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
       // 
@@ -680,6 +692,7 @@
       this.btnShiftUp.Name = "btnShiftUp";
       this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
       this.btnShiftUp.TabIndex = 15;
+      this.toolTip1.SetToolTip(this.btnShiftUp, "Shift up");
       this.btnShiftUp.UseVisualStyleBackColor = true;
       this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
       // 
@@ -690,6 +703,7 @@
       this.btnShiftRight.Name = "btnShiftRight";
       this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
       this.btnShiftRight.TabIndex = 16;
+      this.toolTip1.SetToolTip(this.btnShiftRight, "Shift right");
       this.btnShiftRight.UseVisualStyleBackColor = true;
       this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
       // 
@@ -700,13 +714,14 @@
       this.btnShiftLeft.Name = "btnShiftLeft";
       this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
       this.btnShiftLeft.TabIndex = 17;
+      this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift left");
       this.btnShiftLeft.UseVisualStyleBackColor = true;
       this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
       // 
       // colorSelector
       // 
       this.colorSelector.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.colorSelector.DisplayPage = fastImage1;
+      this.colorSelector.DisplayPage = fastImage4;
       this.colorSelector.Image = null;
       this.colorSelector.Location = new System.Drawing.Point(683, 413);
       this.colorSelector.Name = "colorSelector";
@@ -718,7 +733,7 @@
       // charEditor
       // 
       this.charEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.charEditor.DisplayPage = fastImage2;
+      this.charEditor.DisplayPage = fastImage5;
       this.charEditor.Image = null;
       this.charEditor.Location = new System.Drawing.Point(683, 148);
       this.charEditor.Name = "charEditor";
@@ -735,6 +750,7 @@
       this.btnPaste.Name = "btnPaste";
       this.btnPaste.Size = new System.Drawing.Size(26, 26);
       this.btnPaste.TabIndex = 11;
+      this.toolTip1.SetToolTip(this.btnPaste, "Paste at selected location");
       this.btnPaste.UseVisualStyleBackColor = true;
       this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
       // 
@@ -745,6 +761,7 @@
       this.btnCopy.Name = "btnCopy";
       this.btnCopy.Size = new System.Drawing.Size(26, 26);
       this.btnCopy.TabIndex = 11;
+      this.toolTip1.SetToolTip(this.btnCopy, "Copy selected 8x8 block");
       this.btnCopy.UseVisualStyleBackColor = true;
       this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
       // 
@@ -765,6 +782,7 @@
       this.btnFullCopy.Size = new System.Drawing.Size(80, 23);
       this.btnFullCopy.TabIndex = 6;
       this.btnFullCopy.Text = "Full Copy";
+      this.toolTip1.SetToolTip(this.btnFullCopy, "Copy Full Screen");
       this.btnFullCopy.UseVisualStyleBackColor = true;
       this.btnFullCopy.Click += new System.EventHandler(this.btnFullCopyToClipboard_Click);
       // 
@@ -775,6 +793,7 @@
       this.btnPasteFromClipboard.Size = new System.Drawing.Size(84, 23);
       this.btnPasteFromClipboard.TabIndex = 6;
       this.btnPasteFromClipboard.Text = "Full Paste";
+      this.toolTip1.SetToolTip(this.btnPasteFromClipboard, "Paste Full Screen");
       this.btnPasteFromClipboard.UseVisualStyleBackColor = true;
       this.btnPasteFromClipboard.Click += new System.EventHandler(this.btnPasteFromClipboard_Click);
       // 
@@ -848,7 +867,7 @@
       // pictureEditor
       // 
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage3;
+      this.pictureEditor.DisplayPage = fastImage6;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -912,6 +931,7 @@
       this.listColorMappingTargets.MoveUpButtonEnabled = false;
       this.listColorMappingTargets.MustHaveOneElement = true;
       this.listColorMappingTargets.Name = "listColorMappingTargets";
+      this.listColorMappingTargets.SelectedIndex = -1;
       this.listColorMappingTargets.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       this.listColorMappingTargets.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listColorMappingTargets.Size = new System.Drawing.Size(207, 247);
@@ -1060,5 +1080,6 @@
     private System.Windows.Forms.RadioButton btnToolRect;
     private System.Windows.Forms.RadioButton btnToolPaint;
     private System.Windows.Forms.Button btnExportToBASICHexData;
+    private System.Windows.Forms.ToolTip toolTip1;
   }
 }
