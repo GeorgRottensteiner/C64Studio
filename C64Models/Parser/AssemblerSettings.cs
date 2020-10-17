@@ -138,7 +138,7 @@ namespace C64Studio.Parser
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
-          AllowedSingleTokens = ",#{}*" + OpenBracketChars + CloseBracketChars;
+          AllowedSingleTokens = ",#{}*?" + OpenBracketChars + CloseBracketChars;
 
           AddMacro( "!ADDR", Types.MacroInfo.MacroType.ADDRESS );
           AddMacro( "!ADDRESS", Types.MacroInfo.MacroType.ADDRESS );

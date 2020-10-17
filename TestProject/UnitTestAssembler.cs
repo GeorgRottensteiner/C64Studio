@@ -35,7 +35,7 @@ namespace TestProject
 
 
 
-    private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source )
+    private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source, out C64Studio.Types.ASM.FileInfo Info )
     {
       C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
       parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
@@ -59,7 +59,16 @@ namespace TestProject
       Assert.IsTrue( parseResult );
       Assert.IsTrue( parser.Assemble( config ) );
 
+      Info = parser.ASMFileInfo;
+
       return parser.AssembledOutput.Assembly;
+    }
+
+
+
+    private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source )
+    {
+      return TestAssembleC64Studio( Source, out C64Studio.Types.ASM.FileInfo Info );
     }
 
 
@@ -92,6 +101,31 @@ namespace TestProject
       Assert.AreEqual( C64Studio.Types.ErrorCode.W0001_SEGMENT_OVERLAP, parser.Messages.Values[0].Code );
 
       Assert.AreEqual( "002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000", assembly.Assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestVirtualSegment()
+    {
+      // assembly starts at $2000 since all before is virtual
+      string      source = @"* = $2
+
+          VALUE_1   
+            !byte ?
+          VALUE_2   
+            !word ?
+
+        * = $0801
+              lda VALUE_1
+              sta VALUE_2
+              rts";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0108A502850360", assembly.ToString() );
+      Assert.AreEqual( 0x0002, info.Labels["VALUE_1"].AddressOrValue );
+      Assert.AreEqual( 0x0003, info.Labels["VALUE_2"].AddressOrValue );
     }
 
 

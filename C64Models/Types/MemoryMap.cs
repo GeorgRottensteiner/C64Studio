@@ -31,7 +31,7 @@ namespace C64Studio.Types
 
   public class MemoryMap
   {
-    List<MemoryMapEntry>      Entries = new List<MemoryMapEntry>();
+    public List<MemoryMapEntry>      Entries = new List<MemoryMapEntry>();
 
 
 

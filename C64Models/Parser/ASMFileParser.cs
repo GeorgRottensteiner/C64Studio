@@ -3057,6 +3057,15 @@ namespace C64Studio.Parser
             int     byteValue = -1;
             int     numBytesGiven = 0;
 
+            if ( ( tokenIndex - firstTokenIndex == 1 )
+            &&   ( lineTokenInfos[firstTokenIndex].Content == "?" ) )
+            {
+              AddError( info.LineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Virtual value only allowed as single value. Expression:"
+                           + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
+                           lineTokenInfos[firstTokenIndex].StartPos,
+                           lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
+            }
+
             if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, out byteValue, out numBytesGiven ) )
             {
               switch ( Type )
@@ -3107,6 +3116,14 @@ namespace C64Studio.Parser
       {
         int byteValue = -1;
         int numBytesGiven = 0;
+
+        if ( ( lineTokenInfos.Count - firstTokenIndex == 1 )
+        &&   ( lineTokenInfos[firstTokenIndex].Content == "?" ) )
+        {
+          info.NumBytes = 1;
+          return;
+        }
+
         if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, out byteValue, out numBytesGiven ) )
         {
           switch ( Type )
@@ -5883,6 +5900,15 @@ namespace C64Studio.Parser
             int     wordValue = -1;
             int     numBytesGiven = 0;
 
+            if ( ( tokenIndex - firstTokenIndex == 1 )
+            &&   ( lineTokenInfos[firstTokenIndex].Content == "?" ) )
+            {
+              AddError( info.LineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Virtual value only allowed as single value. Expression:"
+                           + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
+                           lineTokenInfos[firstTokenIndex].StartPos,
+                           lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
+            }
+
             if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, out wordValue, out numBytesGiven ) )
             {
               if ( !ValidWordValue( wordValue ) )
@@ -5925,6 +5951,15 @@ namespace C64Studio.Parser
       {
         int wordValue = -1;
         int numBytesGiven = 0;
+
+        if ( ( lineTokenInfos.Count - firstTokenIndex == 1 )
+        &&   ( lineTokenInfos[firstTokenIndex].Content == "?" ) )
+        {
+          info.NumBytes = 2;
+          lineSizeInBytes = 2;
+          return ParseLineResult.ERROR_ABORT;
+        }
+
         if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, out wordValue, out numBytesGiven ) )
         {
           if ( !ValidWordValue( wordValue ) )
@@ -8599,8 +8634,8 @@ namespace C64Studio.Parser
               }
             }
             else if ( ( macro.Type == Types.MacroInfo.MacroType.BYTE )
-            || ( macro.Type == Types.MacroInfo.MacroType.LOW_BYTE )
-            || ( macro.Type == Types.MacroInfo.MacroType.HIGH_BYTE ) )
+            ||        ( macro.Type == Types.MacroInfo.MacroType.LOW_BYTE )
+            ||        ( macro.Type == Types.MacroInfo.MacroType.HIGH_BYTE ) )
             {
               PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, macro.Type, textCodeMapping, true );
               info.Line = parseLine;
@@ -8657,8 +8692,8 @@ namespace C64Studio.Parser
               {
                 // expecting mapping table
                 if ( ( textCodeMapping == m_TextCodeMappingPet )
-                || ( textCodeMapping == m_TextCodeMappingRaw )
-                || ( textCodeMapping == m_TextCodeMappingScr ) )
+                ||   ( textCodeMapping == m_TextCodeMappingRaw )
+                ||   ( textCodeMapping == m_TextCodeMappingScr ) )
                 {
                   // only reset mapping if previously mapping was a predefined one
                   textCodeMapping = new GR.Collections.Map<byte, byte>();
@@ -8678,7 +8713,7 @@ namespace C64Studio.Parser
                   string token = lineTokenInfos[tokenIndex].Content;
 
                   if ( ( tokenIndex == 1 )
-                  && ( token == "#" ) )
+                  &&   ( token == "#" ) )
                   {
                     // direct value?
                     if ( ( lineTokenInfos.Count > 2 )
@@ -8703,7 +8738,6 @@ namespace C64Studio.Parser
                       else
                       {
                         // could not fully parse
-                        //dh.Log( "Could not fully parse !byte line: " + parseLine );
                         AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Could not parse " + TokensToExpression( lineTokenInfos, startTokenIndex, lineTokenInfos.Count - startTokenIndex ) );
                       }
                     }
@@ -8748,7 +8782,6 @@ namespace C64Studio.Parser
                   else
                   {
                     // could not fully parse
-                    //dh.Log( "Could not fully parse !byte line: " + parseLine );
                     AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Could not parse " + TokensToExpression( lineTokenInfos, startTokenIndex, lineTokenInfos.Count - startTokenIndex ) );
                   }
                 }
@@ -11273,6 +11306,7 @@ namespace C64Studio.Parser
 
       int     memoryBlockStartAddress = -1;
       int     memoryBlockLength = 0;
+      int     memoryBlockActualDataLength = 0;
 
 
       int     currentAddress = -1;
@@ -11314,6 +11348,7 @@ namespace C64Studio.Parser
               }
             }
             memoryBlockStartAddress = currentAddress;
+            memoryBlockActualDataLength = 0;
 
 
             //Debug.Log( "ASM - new block starts at " + line.AddressStart );
@@ -11348,6 +11383,7 @@ namespace C64Studio.Parser
           if ( line.LineData != null )
           {
             //Debug.Log( "-at line index " + line.LineData.ToString() );
+            memoryBlockActualDataLength += (int)line.LineData.Length;
           }
 
           /*
@@ -11392,12 +11428,16 @@ namespace C64Studio.Parser
 
                 if ( currentAddress - fileStartAddress + newBytes > result.Length )
                 {
-                  memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, currentAddress - memoryBlockStartAddress ) );
+                  if ( memoryBlockActualDataLength > 0 )
+                  {
+                    memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, currentAddress - memoryBlockStartAddress ) );
+                  }
 
                   result.Append( new GR.Memory.ByteBuffer( (uint)( currentAddress - fileStartAddress + newBytes - result.Length ) ) );
 
                   memoryBlockStartAddress = line.AddressStart;
                   memoryBlockLength = 0;
+                  memoryBlockActualDataLength = 0;
                 }
                 //result.Append( new GR.Memory.ByteBuffer( (uint)( line.AddressStart - currentAddress ) ) );
 
@@ -11418,6 +11458,14 @@ namespace C64Studio.Parser
                 ASMFileInfo.FindTrueLineSource( line.LineIndex, out asmSegment.Filename, out asmSegment.LocalLineIndex );
                 builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
                 currentResultBlock = asmSegment.Data;
+
+                if ( memoryBlockActualDataLength > 0 )
+                {
+                  //memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, currentAddress - memoryBlockStartAddress ) );
+                  memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength ) );
+                }
+                memoryBlockStartAddress = line.AddressStart;
+                memoryBlockLength = 0;
               }
               trueCurrentAddress = line.AddressStart;
             }
@@ -11433,7 +11481,12 @@ namespace C64Studio.Parser
             {
               if ( line.AddressStart > currentAddress )
               {
-                memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, currentAddress - memoryBlockStartAddress ) );
+                // only add to memory map when it has actual data (e.g. not virtual)
+                if ( memoryBlockActualDataLength > 0 )
+                {
+                  //memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, currentAddress - memoryBlockStartAddress ) );
+                  memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength ) );
+                }
 
                 result.Append( new GR.Memory.ByteBuffer( (uint)( line.AddressStart - currentAddress ) ) );
 
@@ -11450,6 +11503,8 @@ namespace C64Studio.Parser
         }
         if ( line.LineData != null )
         {
+          memoryBlockActualDataLength += (int)line.LineData.Length;
+
           // insert data (append or overwrite)
           if ( ( fileStartAddress + result.Length - dataOffset <= trueCurrentAddress )
           ||   ( line.PseudoPCOffset >= 0 ) )
@@ -11484,11 +11539,15 @@ namespace C64Studio.Parser
       }
 
       memoryBlockLength = currentAddress - memoryBlockStartAddress;
-      if ( memoryBlockLength > 0 )
+      if ( ( memoryBlockLength > 0 )
+      &&   ( memoryBlockActualDataLength > 0 ) )
       {
-        memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockLength ) );
+        //memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockLength ) );
+        memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength ) );
       }
 
+      // Why did I do that? why add a memory block if it could re-add a virtual block?
+      /*
       int     previousLabelStart = -1;
       string  previousLabelName = "";
       foreach ( var label in ASMFileInfo.Labels )
@@ -11504,7 +11563,7 @@ namespace C64Studio.Parser
           previousLabelStart = label.Value.AddressOrValue;
           previousLabelName = label.Key;
         }
-      }
+      }*/
       /*
       foreach ( string label in m_Labels.Keys )
       {
@@ -11517,21 +11576,47 @@ namespace C64Studio.Parser
       // determine load address
       int lowestStart = 65536;
       int highestEnd = -1;
-      foreach ( var segment in builtSegments )
+      foreach ( var mapSegment in memoryMap.Entries )
       {
-        lowestStart = Math.Min( segment.first, lowestStart );
-        highestEnd = Math.Max( segment.second.StartAddress + segment.second.Length, highestEnd );
+        lowestStart = Math.Min( mapSegment.StartAddress, lowestStart );
+        highestEnd = Math.Max( mapSegment.StartAddress + mapSegment.Length, highestEnd );
 
-        // check, whether segments bigger than $ffff are possible!
-        if ( segment.first < 0 )
+        if ( mapSegment.StartAddress < 0 )
         // ( segment.second.StartAddress + segment.second.Length >= 65535 ) )
         {
-          AddError( segment.second.GlobalLineIndex, 
-                    Types.ErrorCode.E1106_SEGMENT_OUT_OF_BOUNDS, 
-                    "Segment from $" 
-                      + segment.second.StartAddress.ToString( "X" ) 
-                      + " to $" + ( segment.second.StartAddress + segment.second.Length - 1 ).ToString( "X" )
+          int     globalLineIndex = -1;
+          if ( ASMFileInfo.AddressToLine.ContainsKey( mapSegment.StartAddress ) )
+          {
+            globalLineIndex = ASMFileInfo.AddressToLine[mapSegment.StartAddress];
+          }
+          AddError( globalLineIndex,
+                    Types.ErrorCode.E1106_SEGMENT_OUT_OF_BOUNDS,
+                    "Segment from $"
+                      + mapSegment.StartAddress.ToString( "X" )
+                      + " to $" + ( mapSegment.StartAddress + mapSegment.Length - 1 ).ToString( "X" )
                       + " is out of bounds" );
+        }
+      }
+
+      if ( memoryMap.Entries.Count == 0 )
+      {
+        // count from segments?
+        foreach ( var segment in builtSegments )
+        {
+          lowestStart = Math.Min( segment.first, lowestStart );
+          highestEnd = Math.Max( segment.second.StartAddress + segment.second.Length, highestEnd );
+
+          // check, whether segments bigger than $ffff are possible!
+          if ( segment.first < 0 )
+          // ( segment.second.StartAddress + segment.second.Length >= 65535 ) )
+          {
+            AddError( segment.second.GlobalLineIndex,
+                      Types.ErrorCode.E1106_SEGMENT_OUT_OF_BOUNDS,
+                      "Segment from $"
+                        + segment.second.StartAddress.ToString( "X" )
+                        + " to $" + ( segment.second.StartAddress + segment.second.Length - 1 ).ToString( "X" )
+                        + " is out of bounds" );
+          }
         }
       }
 
@@ -11565,10 +11650,17 @@ namespace C64Studio.Parser
 
       if ( builtSegments.Count > 0 )
       {
-        assembledData = new GR.Memory.ByteBuffer( (uint)( highestEnd - lowestStart ) );
-        foreach ( var segment in builtSegments )
+        if ( highestEnd == -1 )
         {
-          segment.second.Data.CopyTo( assembledData, 0, segment.second.Length, segment.first - lowestStart );
+          assembledData = new GR.Memory.ByteBuffer();
+        }
+        else
+        {
+          assembledData = new GR.Memory.ByteBuffer( (uint)( highestEnd - lowestStart ) );
+          foreach ( var segment in builtSegments )
+          {
+            segment.second.Data.CopyTo( assembledData, 0, segment.second.Length, segment.first - lowestStart );
+          }
         }
       }
       
