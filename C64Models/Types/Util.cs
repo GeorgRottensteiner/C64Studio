@@ -412,6 +412,42 @@ namespace C64Studio
 
 
 
+    internal static ByteBuffer FromBASIC( string Text )
+    {
+      string[]  lines = Text.Split( new char[] { '\n' } );
+
+      GR.Memory.ByteBuffer    resultData = new GR.Memory.ByteBuffer();
+
+      for ( int i = 0; i < lines.Length; ++i )
+      {
+        string    cleanLine = lines[i].Trim().ToUpper();
+
+        int   dataPos = cleanLine.IndexOf( "DATA" );
+        if ( dataPos != -1 )
+        {
+          int     commaPos = -1;
+          int     byteStartPos = dataPos + 4;
+
+          do
+          {
+            commaPos = cleanLine.IndexOf( ',', byteStartPos );
+            if ( commaPos == -1 )
+            {
+              commaPos = cleanLine.Length;
+            }
+            int     value = GR.Convert.ToI32( cleanLine.Substring( byteStartPos, commaPos - byteStartPos ).Trim() );
+            resultData.AppendU8( (byte)value );
+
+            byteStartPos = commaPos + 1;
+          }
+          while ( commaPos < cleanLine.Length );
+        }
+      }
+      return resultData;
+    }
+
+
+
     internal static ByteBuffer FromBASICHex( string Text )
     {
       string[]  lines = Text.Split( new char[] { '\n' } );

@@ -90,6 +90,8 @@ namespace C64Studio
       this.exchangeMultiColor1AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMultiColor2AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnImportFromBASIC = new System.Windows.Forms.Button();
+      this.btnImportFromBASICHex = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabCharsetEditor.SuspendLayout();
       this.tabCharEditor.SuspendLayout();
@@ -306,6 +308,8 @@ namespace C64Studio
       this.groupBox1.Controls.Add(this.btnDefaultLowerCase);
       this.groupBox1.Controls.Add(this.btnDefaultUppercase);
       this.groupBox1.Controls.Add(this.btnClearImportData);
+      this.groupBox1.Controls.Add(this.btnImportFromBASICHex);
+      this.groupBox1.Controls.Add(this.btnImportFromBASIC);
       this.groupBox1.Controls.Add(this.btnImportFromAssembly);
       this.groupBox1.Controls.Add(this.btnImportCharsetFromImage);
       this.groupBox1.Controls.Add(this.btnImportFromFile);
@@ -319,7 +323,7 @@ namespace C64Studio
       // 
       // btnDefaultLowerCase
       // 
-      this.btnDefaultLowerCase.Location = new System.Drawing.Point(129, 48);
+      this.btnDefaultLowerCase.Location = new System.Drawing.Point(129, 77);
       this.btnDefaultLowerCase.Name = "btnDefaultLowerCase";
       this.btnDefaultLowerCase.Size = new System.Drawing.Size(117, 23);
       this.btnDefaultLowerCase.TabIndex = 2;
@@ -329,7 +333,7 @@ namespace C64Studio
       // 
       // btnDefaultUppercase
       // 
-      this.btnDefaultUppercase.Location = new System.Drawing.Point(6, 48);
+      this.btnDefaultUppercase.Location = new System.Drawing.Point(6, 77);
       this.btnDefaultUppercase.Name = "btnDefaultUppercase";
       this.btnDefaultUppercase.Size = new System.Drawing.Size(117, 23);
       this.btnDefaultUppercase.TabIndex = 2;
@@ -349,7 +353,7 @@ namespace C64Studio
       // 
       // btnImportFromAssembly
       // 
-      this.btnImportFromAssembly.Location = new System.Drawing.Point(6, 106);
+      this.btnImportFromAssembly.Location = new System.Drawing.Point(6, 48);
       this.btnImportFromAssembly.Name = "btnImportFromAssembly";
       this.btnImportFromAssembly.Size = new System.Drawing.Size(117, 23);
       this.btnImportFromAssembly.TabIndex = 2;
@@ -359,7 +363,7 @@ namespace C64Studio
       // 
       // btnImportCharsetFromImage
       // 
-      this.btnImportCharsetFromImage.Location = new System.Drawing.Point(6, 77);
+      this.btnImportCharsetFromImage.Location = new System.Drawing.Point(129, 19);
       this.btnImportCharsetFromImage.Name = "btnImportCharsetFromImage";
       this.btnImportCharsetFromImage.Size = new System.Drawing.Size(117, 23);
       this.btnImportCharsetFromImage.TabIndex = 2;
@@ -650,7 +654,7 @@ namespace C64Studio
       // openCharsetProjectToolStripMenuItem
       // 
       this.openCharsetProjectToolStripMenuItem.Name = "openCharsetProjectToolStripMenuItem";
-      this.openCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+      this.openCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
       this.openCharsetProjectToolStripMenuItem.Text = "&Open Charset Project...";
       this.openCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
       // 
@@ -658,7 +662,7 @@ namespace C64Studio
       // 
       this.saveCharsetProjectToolStripMenuItem.Enabled = false;
       this.saveCharsetProjectToolStripMenuItem.Name = "saveCharsetProjectToolStripMenuItem";
-      this.saveCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+      this.saveCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
       this.saveCharsetProjectToolStripMenuItem.Text = "&Save Project";
       this.saveCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.saveCharsetProjectToolStripMenuItem_Click);
       // 
@@ -666,32 +670,52 @@ namespace C64Studio
       // 
       this.closeCharsetProjectToolStripMenuItem.Enabled = false;
       this.closeCharsetProjectToolStripMenuItem.Name = "closeCharsetProjectToolStripMenuItem";
-      this.closeCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+      this.closeCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
       this.closeCharsetProjectToolStripMenuItem.Text = "&Close Charset Project";
       this.closeCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.closeCharsetProjectToolStripMenuItem_Click);
       // 
       // toolStripSeparator1
       // 
       this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(262, 6);
+      this.toolStripSeparator1.Size = new System.Drawing.Size(263, 6);
       // 
       // exchangeMultiColors1And2ToolStripMenuItem
       // 
       this.exchangeMultiColors1And2ToolStripMenuItem.Name = "exchangeMultiColors1And2ToolStripMenuItem";
-      this.exchangeMultiColors1And2ToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+      this.exchangeMultiColors1And2ToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
       this.exchangeMultiColors1And2ToolStripMenuItem.Text = "Exchange Multi colors 1 and 2";
       // 
       // exchangeMultiColor1AndBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor1AndBGColorToolStripMenuItem.Name = "exchangeMultiColor1AndBGColorToolStripMenuItem";
-      this.exchangeMultiColor1AndBGColorToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+      this.exchangeMultiColor1AndBGColorToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
       this.exchangeMultiColor1AndBGColorToolStripMenuItem.Text = "Exchange Multi color 1 and BG color";
       // 
       // exchangeMultiColor2AndBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Name = "exchangeMultiColor2AndBGColorToolStripMenuItem";
-      this.exchangeMultiColor2AndBGColorToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+      this.exchangeMultiColor2AndBGColorToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Text = "Exchange Multi color 2 and BG color";
+      // 
+      // btnImportFromBASIC
+      // 
+      this.btnImportFromBASIC.Location = new System.Drawing.Point(129, 48);
+      this.btnImportFromBASIC.Name = "btnImportFromBASIC";
+      this.btnImportFromBASIC.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromBASIC.TabIndex = 2;
+      this.btnImportFromBASIC.Text = "From BASIC";
+      this.btnImportFromBASIC.UseVisualStyleBackColor = true;
+      this.btnImportFromBASIC.Click += new System.EventHandler(this.btnImportCharsetFromBASIC_Click);
+      // 
+      // btnImportFromBASICHex
+      // 
+      this.btnImportFromBASICHex.Location = new System.Drawing.Point(252, 48);
+      this.btnImportFromBASICHex.Name = "btnImportFromBASICHex";
+      this.btnImportFromBASICHex.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromBASICHex.TabIndex = 2;
+      this.btnImportFromBASICHex.Text = "From BASIC Hex";
+      this.btnImportFromBASICHex.UseVisualStyleBackColor = true;
+      this.btnImportFromBASICHex.Click += new System.EventHandler(this.btnImportCharsetFromBASICHex_Click);
       // 
       // CharsetEditor
       // 
@@ -782,5 +806,7 @@ namespace C64Studio
     private System.Windows.Forms.Button btnExportToBASICHex;
         private System.Windows.Forms.TabPage tabCharEditor;
         private CharacterEditor characterEditor;
-    }
+    private System.Windows.Forms.Button btnImportFromBASICHex;
+    private System.Windows.Forms.Button btnImportFromBASIC;
+  }
 }

@@ -1410,6 +1410,22 @@ namespace C64Studio
 
 
 
+    private void btnImportCharsetFromBASIC_Click( object sender, EventArgs e )
+    {
+      ImportFromData( Util.FromBASIC( editDataImport.Text ) );
+      Modified = true;
+    }
+
+
+
+    private void btnImportCharsetFromBASICHex_Click( object sender, EventArgs e )
+    {
+      ImportFromData( Util.FromBASICHex( editDataImport.Text ) );
+      Modified = true;
+    }
+
+
+
   }
 }
 
