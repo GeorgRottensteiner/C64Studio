@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C64Studio.Parser;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -48,6 +49,7 @@ namespace C64Studio
 
       RefillIgnoredMessageList();
       RefillWarningsAsErrorList();
+      RefillC64StudioHackList();
 
       comboToolType.Items.Add( "<Choose one>" );
       comboToolType.Items.Add( "Assembler" );
@@ -124,6 +126,23 @@ namespace C64Studio
       {
         asmLibraryPathList.Items.Add( libPath );
       }
+    }
+
+
+
+    private void RefillC64StudioHackList()
+    {
+      listHacks.Items.Clear();
+      listHacks.BeginUpdate();
+      foreach ( AssemblerSettings.Hacks hack in Enum.GetValues( typeof( AssemblerSettings.Hacks ) ) )
+      {
+        int itemIndex = listHacks.Items.Add( new GR.Generic.Tupel<string, AssemblerSettings.Hacks>( GR.EnumHelper.GetDescription( hack ), hack ) );
+        if ( Core.Settings.EnabledC64StudioHacks.ContainsValue( hack ) )
+        {
+          listHacks.SetItemChecked( itemIndex, true );
+        }
+      }
+      listHacks.EndUpdate();
     }
 
 
@@ -2379,6 +2398,23 @@ namespace C64Studio
       }
 
     }
+
+
+
+    private void listC64StudioHacks_ItemCheck( object sender, ItemCheckEventArgs e )
+    {
+      GR.Generic.Tupel<string, Parser.AssemblerSettings.Hacks> item = (GR.Generic.Tupel<string, Parser.AssemblerSettings.Hacks>)listHacks.Items[e.Index];
+
+      if ( e.NewValue != CheckState.Checked )
+      {
+        Core.Settings.EnabledC64StudioHacks.Remove( item.second );
+      }
+      else
+      {
+        Core.Settings.EnabledC64StudioHacks.Add( item.second );
+      }
+    }
+
   }
 }
 

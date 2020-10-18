@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace C64Studio.Parser
 {
   public class AssemblerSettings
   {
+    public enum Hacks
+    {
+      [Description( "Allows .byte/.word pseudo op additionally to the proper !byte/!word pseudo op" )]
+      ALLOW_DOT_BYTE_INSTRUCTION    = 1
+    }
+
     public GR.Collections.Map<string,int>                           OperatorPrecedence = new GR.Collections.Map<string,int>();
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenStartChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
@@ -34,6 +41,9 @@ namespace C64Studio.Parser
     public bool                                                     HasBinaryNot = true;
     public bool                                                     GreaterOrLessThanAtBeginningAffectFullExpression = false;
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
+    public GR.Collections.Set<Hacks>                                EnabledHacks = new GR.Collections.Set<Hacks>();
+
+
 
     public const string                 INTERNAL_OPENING_BRACE = "╚";
     public const string                 INTERNAL_CLOSING_BRACE = "╝";

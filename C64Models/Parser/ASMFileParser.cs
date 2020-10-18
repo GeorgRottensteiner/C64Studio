@@ -3674,7 +3674,39 @@ namespace C64Studio.Parser
         }
       }
 
-
+      if ( m_AssemblerSettings.EnabledHacks.ContainsValue( AssemblerSettings.Hacks.ALLOW_DOT_BYTE_INSTRUCTION ) )
+      {
+        if ( ( lineTokenInfos.Count >= 1 )
+        &&   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+        &&   ( lineTokenInfos[0].Content.ToUpper() == ".BYTE" ) )
+        {
+          lineTokenInfos[0].Type = TokenInfo.TokenType.MACRO;
+          lineTokenInfos[0].Content = "!byte";
+        }
+        if ( ( lineTokenInfos.Count >= 1 )
+        &&   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+        &&   ( lineTokenInfos[0].Content.ToUpper() == ".WORD" ) )
+        {
+          lineTokenInfos[0].Type = TokenInfo.TokenType.MACRO;
+          lineTokenInfos[0].Content = "!word";
+        }
+        if ( ( lineTokenInfos.Count >= 2 )
+        &&   ( IsLabelInFront( lineTokenInfos, lineTokenInfos[0].Content.ToUpper() ) )
+        &&   ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+        &&   ( lineTokenInfos[1].Content.ToUpper() == ".BYTE" ) )
+        {
+          lineTokenInfos[1].Type = TokenInfo.TokenType.MACRO;
+          lineTokenInfos[1].Content = "!byte";
+        }
+        if ( ( lineTokenInfos.Count >= 2 )
+        &&   ( IsLabelInFront( lineTokenInfos, lineTokenInfos[0].Content.ToUpper() ) )
+        &&   ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+        &&   ( lineTokenInfos[1].Content.ToUpper() == ".WORD" ) )
+        {
+          lineTokenInfos[1].Type = TokenInfo.TokenType.MACRO;
+          lineTokenInfos[1].Content = "!word";
+        }
+      }
       // evaluate, could be a label in front?
       // merge + with local token for possible macro functions
       if ( ( lineTokenInfos.Count >= 2 )
@@ -11092,6 +11124,7 @@ namespace C64Studio.Parser
       m_CompileConfig.LibraryFiles = new List<string>( Config.LibraryFiles );
 
       m_AssemblerSettings.SetAssemblerType( Config.Assembler );
+      m_AssemblerSettings.EnabledHacks = Config.EnabledHacks;
 
       string[] lines = Content.Replace( "\r\n", "\n" ).Replace( '\r', '\n' ).Replace( '\t', ' ' ).Split( '\n' );
 

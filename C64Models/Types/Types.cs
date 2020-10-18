@@ -605,6 +605,7 @@ namespace C64Studio.Types
     public const System.UInt16    SETTINGS_MRU_PROJECTS = 0x2017;
     public const System.UInt16    SETTINGS_MRU_FILES    = 0x2018;
     public const System.UInt16    SETTINGS_WARNINGS_AS_ERRORS = 0x2019;
+    public const System.UInt16    SETTINGS_C64STUDIO_HACKS    = 0x201A;
   }
 
   public enum KeyboardKey

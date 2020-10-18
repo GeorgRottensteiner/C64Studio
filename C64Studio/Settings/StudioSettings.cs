@@ -190,6 +190,7 @@ namespace C64Studio
 
     public GR.Collections.Set<Types.ErrorCode>  IgnoredWarnings = new GR.Collections.Set<C64Studio.Types.ErrorCode>();
     public GR.Collections.Set<Types.ErrorCode>  TreatWarningsAsErrors = new GR.Collections.Set<C64Studio.Types.ErrorCode>();
+    public GR.Collections.Set<Parser.AssemblerSettings.Hacks>  EnabledC64StudioHacks = new GR.Collections.Set<Parser.AssemblerSettings.Hacks>();
 
     public string                               DefaultProjectBasePath = "";
     public WeifenLuo.WinFormsUI.Docking.DockPanel   PanelMain = null;
@@ -665,6 +666,15 @@ namespace C64Studio
       }
       SettingsData.Append( chunkWarningsAsErrors.ToBuffer() );
 
+      GR.IO.FileChunk chunkC64StudioHacks = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_C64STUDIO_HACKS );
+      chunkC64StudioHacks.AppendI32( EnabledC64StudioHacks.Count );
+      foreach ( Types.ErrorCode c64StudioHack in EnabledC64StudioHacks )
+      {
+        chunkC64StudioHacks.AppendI32( (int)c64StudioHack );
+      }
+      SettingsData.Append( chunkC64StudioHacks.ToBuffer() );
+
+
       foreach ( var pair in GenericTools )
       {
         GR.Memory.ByteBuffer    displayDetailData = pair.Value.DisplayDetails();
@@ -1040,6 +1050,18 @@ namespace C64Studio
               for ( int i = 0; i < numWarnignsAsErrors; ++i )
               {
                 TreatWarningsAsErrors.Add( (C64Studio.Types.ErrorCode)binIn.ReadInt32() );
+              }
+            }
+            break;
+          case Types.FileChunk.SETTINGS_C64STUDIO_HACKS:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              int numC64StudioHacks = binIn.ReadInt32();
+
+              for ( int i = 0; i < numC64StudioHacks; ++i )
+              {
+                EnabledC64StudioHacks.Add( (Parser.AssemblerSettings.Hacks)binIn.ReadInt32() );
               }
             }
             break;

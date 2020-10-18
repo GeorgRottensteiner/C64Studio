@@ -11,6 +11,7 @@ using C64Studio.IdleQueue;
 using C64Studio.Types;
 using C64Studio.Displayer;
 using C64Studio.CustomRenderer;
+using C64Studio.Parser;
 
 // 0.9f - added else for !ifdef macro
 // 0.9b - fixed crash bug if opening project with modified active project
@@ -5186,6 +5187,7 @@ namespace C64Studio
       config.LibraryFiles               = StudioCore.Settings.ASMLibraryPaths;
       config.InputFile                  = Document.FullPath;
       config.WarningsToTreatAsError     = StudioCore.Settings.TreatWarningsAsErrors;
+      config.EnabledHacks               = StudioCore.Settings.EnabledC64StudioHacks;
 
       string sourceCode = "";
 
@@ -5198,7 +5200,7 @@ namespace C64Studio
         }
       }
 
-      bool result = Parser.ParseFile(Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines );
+      bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines );
 
       if ( ( config.Assembler != C64Studio.Types.AssemblerType.AUTO )
       &&   ( Document.BaseDoc != null )

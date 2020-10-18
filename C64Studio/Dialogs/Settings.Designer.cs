@@ -142,6 +142,8 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
+      this.label34 = new System.Windows.Forms.Label();
+      this.listHacks = new System.Windows.Forms.CheckedListBox();
       this.alistTools = new C64Studio.ArrangedItemList();
       this.asmLibraryPathList = new C64Studio.ArrangedItemList();
       this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
@@ -870,6 +872,8 @@
       this.tabErrorsWarnings.Controls.Add(this.label30);
       this.tabErrorsWarnings.Controls.Add(this.label26);
       this.tabErrorsWarnings.Controls.Add(this.asmLibraryPathList);
+      this.tabErrorsWarnings.Controls.Add(this.listHacks);
+      this.tabErrorsWarnings.Controls.Add(this.label34);
       this.tabErrorsWarnings.Controls.Add(this.listWarningsAsErrors);
       this.tabErrorsWarnings.Controls.Add(this.label33);
       this.tabErrorsWarnings.Controls.Add(this.listIgnoredWarnings);
@@ -883,7 +887,7 @@
       // 
       // btmASMLibraryPathBrowse
       // 
-      this.btmASMLibraryPathBrowse.Location = new System.Drawing.Point(549, 396);
+      this.btmASMLibraryPathBrowse.Location = new System.Drawing.Point(342, 396);
       this.btmASMLibraryPathBrowse.Name = "btmASMLibraryPathBrowse";
       this.btmASMLibraryPathBrowse.Size = new System.Drawing.Size(35, 20);
       this.btmASMLibraryPathBrowse.TabIndex = 22;
@@ -895,7 +899,7 @@
       // 
       this.editASMLibraryPath.Location = new System.Drawing.Point(21, 397);
       this.editASMLibraryPath.Name = "editASMLibraryPath";
-      this.editASMLibraryPath.Size = new System.Drawing.Size(522, 20);
+      this.editASMLibraryPath.Size = new System.Drawing.Size(315, 20);
       this.editASMLibraryPath.TabIndex = 21;
       // 
       // checkASMShowAddress
@@ -997,7 +1001,7 @@
       // 
       this.listWarningsAsErrors.CheckOnClick = true;
       this.listWarningsAsErrors.FormattingEnabled = true;
-      this.listWarningsAsErrors.Location = new System.Drawing.Point(323, 127);
+      this.listWarningsAsErrors.Location = new System.Drawing.Point(390, 127);
       this.listWarningsAsErrors.Name = "listWarningsAsErrors";
       this.listWarningsAsErrors.Size = new System.Drawing.Size(261, 79);
       this.listWarningsAsErrors.TabIndex = 3;
@@ -1006,7 +1010,7 @@
       // label33
       // 
       this.label33.AutoSize = true;
-      this.label33.Location = new System.Drawing.Point(320, 111);
+      this.label33.Location = new System.Drawing.Point(387, 111);
       this.label33.Name = "label33";
       this.label33.Size = new System.Drawing.Size(127, 13);
       this.label33.TabIndex = 2;
@@ -1016,7 +1020,7 @@
       // 
       this.listIgnoredWarnings.CheckOnClick = true;
       this.listIgnoredWarnings.FormattingEnabled = true;
-      this.listIgnoredWarnings.Location = new System.Drawing.Point(323, 23);
+      this.listIgnoredWarnings.Location = new System.Drawing.Point(390, 23);
       this.listIgnoredWarnings.Name = "listIgnoredWarnings";
       this.listIgnoredWarnings.Size = new System.Drawing.Size(261, 79);
       this.listIgnoredWarnings.TabIndex = 3;
@@ -1025,7 +1029,7 @@
       // label20
       // 
       this.label20.AutoSize = true;
-      this.label20.Location = new System.Drawing.Point(320, 7);
+      this.label20.Location = new System.Drawing.Point(387, 7);
       this.label20.Name = "label20";
       this.label20.Size = new System.Drawing.Size(88, 13);
       this.label20.TabIndex = 2;
@@ -1365,6 +1369,25 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
+      // label34
+      // 
+      this.label34.AutoSize = true;
+      this.label34.Location = new System.Drawing.Point(387, 219);
+      this.label34.Name = "label34";
+      this.label34.Size = new System.Drawing.Size(207, 13);
+      this.label34.TabIndex = 2;
+      this.label34.Text = "Enable Hacks (C64Studio assembler only):";
+      // 
+      // listHacks
+      // 
+      this.listHacks.CheckOnClick = true;
+      this.listHacks.FormattingEnabled = true;
+      this.listHacks.Location = new System.Drawing.Point(390, 240);
+      this.listHacks.Name = "listHacks";
+      this.listHacks.Size = new System.Drawing.Size(261, 79);
+      this.listHacks.TabIndex = 3;
+      this.listHacks.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listC64StudioHacks_ItemCheck);
+      // 
       // alistTools
       // 
       this.alistTools.AddButtonEnabled = true;
@@ -1378,6 +1401,7 @@
       this.alistTools.MoveUpButtonEnabled = false;
       this.alistTools.MustHaveOneElement = false;
       this.alistTools.Name = "alistTools";
+      this.alistTools.SelectedIndex = -1;
       this.alistTools.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       this.alistTools.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.alistTools.Size = new System.Drawing.Size(184, 349);
@@ -1404,9 +1428,10 @@
       this.asmLibraryPathList.MoveUpButtonEnabled = false;
       this.asmLibraryPathList.MustHaveOneElement = false;
       this.asmLibraryPathList.Name = "asmLibraryPathList";
+      this.asmLibraryPathList.SelectedIndex = -1;
       this.asmLibraryPathList.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       this.asmLibraryPathList.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      this.asmLibraryPathList.Size = new System.Drawing.Size(563, 154);
+      this.asmLibraryPathList.Size = new System.Drawing.Size(356, 154);
       this.asmLibraryPathList.TabIndex = 20;
       this.asmLibraryPathList.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.asmLibraryPathList_AddingItem);
       this.asmLibraryPathList.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemAdded);
@@ -1622,5 +1647,7 @@
         private System.Windows.Forms.CheckedListBox listWarningsAsErrors;
         private System.Windows.Forms.Label label33;
     private ArrangedItemList alistTools;
+    private System.Windows.Forms.CheckedListBox listHacks;
+    private System.Windows.Forms.Label label34;
   }
 }

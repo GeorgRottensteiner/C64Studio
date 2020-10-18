@@ -363,7 +363,8 @@ namespace C64Studio.Tasks
                                           TargetType = Core.DetermineTargetType( Doc, parser ),
                                           OutputFile = Core.DetermineTargetFilename( Doc, parser ),
                                           AutoTruncateLiteralValues = Core.Settings.ASMAutoTruncateLiteralValues,
-                                          StartAddress = startAddress
+                                          StartAddress = startAddress,
+                                          EnabledHacks = Core.Settings.EnabledC64StudioHacks
                                         } ) )
           ||   ( parser.Errors > 0 ) )
           {
