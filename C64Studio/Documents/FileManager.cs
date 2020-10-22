@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection.Emit;
+using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
+using C64Studio.Formats;
 using C64Studio.Types;
 using GR.Memory;
 using WeifenLuo.WinFormsUI.Docking;
@@ -1232,6 +1234,29 @@ namespace C64Studio
           RefreshFileView();
           UpdateStatusInfo();
         }
+      }
+    }
+
+
+
+    private void labelMediaTitle_Click( object sender, EventArgs e )
+    {
+      if ( ( m_Media != null )
+      &&   ( m_Media.SupportsRenamingTitle ) )
+      {
+        var disk = (Disk)m_Media;
+
+        var diskID = new GR.Memory.ByteBuffer();
+        diskID.AppendU16NetworkOrder( disk.DiskID );
+        var renameDisk = new FormRenameDisk( Core, disk.DiskName, diskID );
+        if ( renameDisk.ShowDialog() != DialogResult.OK )
+        {
+          return;
+        }
+        disk.DiskName = renameDisk.DiskName;
+        disk.DiskID   = renameDisk.DiskID.UInt16NetworkOrderAt( 0 );
+        RefreshFileView();
+        SetModified();
       }
     }
   }

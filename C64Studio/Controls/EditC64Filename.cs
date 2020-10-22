@@ -29,6 +29,7 @@ namespace C64Studio
     private int m_SelectionEndPos = -1;
     private int maxCharacters = 5;
     private int letterWidth = 14;
+    private const char    EMPTY_CHAR = '◄';   // replaces 0xa0
 
 
 
@@ -99,10 +100,20 @@ namespace C64Studio
     {
       get
       {
+        if ( ( m_CursorPos < 0 )
+        ||   ( m_CursorPos >= Text.Length ) )
+        {
+          return ' ';
+        }
         return Text[m_CursorPos];
       }
       set
       {
+        if ( ( m_CursorPos < 0 )
+        ||   ( m_CursorPos >= Text.Length ) )
+        {
+          return;
+        }
         string NewText = Text.Substring( 0, m_CursorPos ) + value + Text.Substring( m_CursorPos + 1 );
         base.Text = NewText;
         Invalidate();
@@ -123,6 +134,8 @@ namespace C64Studio
         return false;
       }
     }
+
+
 
     public string Selection
     {
@@ -154,16 +167,16 @@ namespace C64Studio
     {
       get
       {
-        return base.Text;
+        return base.Text.Replace( EMPTY_CHAR, (char)0xa0 );
       }
       set
       {
-        string NewText = value;
+        string NewText = value.Replace( (char)0xa0, EMPTY_CHAR );
         if ( NewText == null )
         {
           NewText = "";
         }
-        NewText = NewText.PadRight( this.MaxLength, ' ' );
+        NewText = NewText.PadRight( this.MaxLength, EMPTY_CHAR );
         if ( NewText.Length > this.MaxLength )
         {
           NewText = NewText.Substring( 0, this.MaxLength );
@@ -232,21 +245,21 @@ namespace C64Studio
             && ( i >= m_SelectionEndPos )
             && ( i < m_SelectionStartPos ) )
             {
-              pe.Graphics.DrawString( Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.HighlightText ), letterBounds, sf );
+              pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.HighlightText ), letterBounds, sf );
             }
             else if ( ( i >= m_SelectionStartPos )
             && ( i < m_SelectionEndPos ) )
             {
-              pe.Graphics.DrawString( Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.HighlightText ), letterBounds, sf );
+              pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.HighlightText ), letterBounds, sf );
             }
             else
             {
-              pe.Graphics.DrawString( Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.WindowText ), letterBounds, sf );
+              pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.WindowText ), letterBounds, sf );
             }
           }
           else
           {
-            pe.Graphics.DrawString( Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.WindowText ), letterBounds, sf );
+            pe.Graphics.DrawString( base.Text.Substring( i, 1 ), this.Font, new SolidBrush( SystemColors.WindowText ), letterBounds, sf );
           }
         }
       }
@@ -255,6 +268,8 @@ namespace C64Studio
         System.Windows.Forms.ControlPaint.DrawFocusRectangle( pe.Graphics, new Rectangle( 0, 0, rect.Width, rect.Height ) );
       }
     }
+
+
 
     private void FormTextBox_SizeChanged( object sender, EventArgs e )
     {
@@ -391,7 +406,7 @@ namespace C64Studio
             if ( m_CursorPos < Text.Length )
             {
               Text = Text.Substring( 0, m_CursorPos ) + Text.Substring( m_CursorPos + 1 );
-              Text = Text.PadRight( maxCharacters, ' ' );
+              Text = Text.PadRight( maxCharacters, EMPTY_CHAR );
               Invalidate();
             }
           }
@@ -516,7 +531,7 @@ namespace C64Studio
       NewText = Text.Substring( 0, Start );
       NewText += Replacement;
       NewText += Text.Substring( End );
-      NewText = NewText.PadRight( maxCharacters, ' ' );
+      NewText = NewText.PadRight( maxCharacters, EMPTY_CHAR );
       Text = NewText;
       m_CursorPos = Start;
       SetCaretPos( m_CursorPos * letterWidth, 0 );
@@ -543,7 +558,7 @@ namespace C64Studio
             NewText = Text.Substring( 0, m_CursorPos - 1 );
           }
           NewText += Text.Substring( m_CursorPos );
-          NewText = NewText.PadRight( maxCharacters, ' ' );
+          NewText = NewText.PadRight( maxCharacters, EMPTY_CHAR );
           Text = NewText;
           m_CursorPos--;
           SetCaretPos( m_CursorPos * letterWidth, 0 );
@@ -571,23 +586,6 @@ namespace C64Studio
               Text = NewText;
               OnTextChanged( new EventArgs() );
             }
-            /*
-            if ( Text.Length >= maxCharacters )
-            {
-              return;
-            }
-            string NewText = "";
-            if ( m_CursorPos > 0 )
-            {
-              NewText = Text.Substring( 0, m_CursorPos );
-            }
-            NewText += e.KeyChar;
-            if ( m_CursorPos + 1 < Text.Length )
-            {
-              NewText += Text.Substring( m_CursorPos );
-            }
-            Text = NewText;
-             */
             m_CursorPos++;
             SetCaretPos( m_CursorPos * letterWidth, 0 );
             Invalidate();
@@ -595,6 +593,8 @@ namespace C64Studio
         }
       }
     }
+
+
 
     protected override void WndProc( ref Message msg )
     {
@@ -616,10 +616,12 @@ namespace C64Studio
       base.WndProc( ref msg );
     }
 
+
+
     private void FormTextBox_MouseDown( object sender, MouseEventArgs e )
     {
       if ( ( e.X >= 0 )
-      && ( e.X < maxCharacters * letterWidth ) )
+      &&   ( e.X < maxCharacters * letterWidth ) )
       {
         int LetterOffset = e.X / letterWidth;
         if ( LetterOffset > Text.Length )

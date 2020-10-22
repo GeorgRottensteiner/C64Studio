@@ -365,6 +365,19 @@ namespace GR
 
 
 
+      public void SetU16NetworkOrderAt( int Index, System.UInt16 WordValue )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index + 1 >= Length ) )
+        {
+          return;
+        }
+        m_Data[Index]     = (byte)( WordValue >> 8 );
+        m_Data[Index + 1] = (byte)( WordValue & 0xff );
+      }
+
+
+
       public void SetU8At( int Index, System.Byte Byte )
       {
         if ( ( Index < 0 )

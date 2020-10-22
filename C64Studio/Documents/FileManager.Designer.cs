@@ -411,6 +411,7 @@
       this.labelMediaTitle.Size = new System.Drawing.Size(300, 22);
       this.labelMediaTitle.Text = "toolStripLabel1";
       this.labelMediaTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      this.labelMediaTitle.Click += new System.EventHandler(this.labelMediaTitle_Click);
       // 
       // FileManager
       // 

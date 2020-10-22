@@ -92,6 +92,12 @@
     <Compile Include="Dialogs\FormDeltaValue.Designer.cs">
       <DependentUpon>FormDeltaValue.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\FormRenameDisk.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\FormRenameDisk.Designer.cs">
+      <DependentUpon>FormRenameDisk.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\FormSplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -490,6 +496,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\FormDeltaValue.resx">
       <DependentUpon>FormDeltaValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FormRenameDisk.resx">
+      <DependentUpon>FormRenameDisk.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\FormSplashScreen.resx">
       <DependentUpon>FormSplashScreen.cs</DependentUpon>

@@ -21,6 +21,13 @@ namespace C64Studio.Formats
 
 
 
+    protected MediaFormat()
+    {
+      SupportsRenamingTitle = false;
+    }
+
+
+
     public virtual void Validate()
     {
     }
@@ -70,6 +77,13 @@ namespace C64Studio.Formats
       {
         return new GR.Memory.ByteBuffer();
       }
+    }
+
+
+
+    public bool SupportsRenamingTitle 
+    { 
+      get; internal set; 
     }
 
 

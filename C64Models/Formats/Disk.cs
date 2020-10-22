@@ -174,6 +174,13 @@ namespace C64Studio.Formats
 
 
 
+    protected Disk()
+    {
+      SupportsRenamingTitle = true;
+    }
+
+
+
     public override void Clear()
     {
       _LastError = "";
@@ -237,13 +244,13 @@ namespace C64Studio.Formats
         }
         Track trackHeader = Tracks[TRACK_HEADER - 1];
 
-        return trackHeader.Sectors[SECTOR_HEADER].Data.UInt16At( 0xa2 );
+        return trackHeader.Sectors[SECTOR_HEADER].Data.UInt16NetworkOrderAt( 0xa2 );
       }
       set
       {
         Track trackHeader = Tracks[TRACK_HEADER - 1];
 
-        trackHeader.Sectors[SECTOR_HEADER].Data.SetU16At( 0xa2, value );
+        trackHeader.Sectors[SECTOR_HEADER].Data.SetU16NetworkOrderAt( 0xa2, value );
       }
     }
 
@@ -288,11 +295,11 @@ namespace C64Studio.Formats
 
         if ( value.Length >= 16 )
         {
-          value.CopyTo( trackHeader.Sectors[SECTOR_HEADER].Data, 0x90, 16 );
+          value.CopyTo( trackHeader.Sectors[SECTOR_HEADER].Data, 0, 16, 0x90 );
         }
         else
         {
-          value.CopyTo( trackHeader.Sectors[SECTOR_HEADER].Data, 0x90, (int)value.Length );
+          value.CopyTo( trackHeader.Sectors[SECTOR_HEADER].Data, 0, (int)value.Length, 0x90 );
         }
       }
     }
