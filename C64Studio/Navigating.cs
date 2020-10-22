@@ -15,7 +15,7 @@ namespace C64Studio
 
     public int    LastShownMessageIndex = -1;
 
-    public delegate void OpenDocumentAndGotoLineCallback( Project MarkProject, string DocumentFilename, int Line );
+    public delegate void OpenDocumentAndGotoLineCallback( Project MarkProject, DocumentInfo Document, int Line );
 
 
 
@@ -84,24 +84,18 @@ namespace C64Studio
 
 
 
-    public void OpenDocumentAndGotoLine( Project MarkProject, string DocumentFilename, int Line )
+    public void OpenDocumentAndGotoLine( Project MarkProject, DocumentInfo Document, int Line )
     {
       if ( Core.MainForm.InvokeRequired )
       {
-        Core.MainForm.Invoke( new OpenDocumentAndGotoLineCallback( OpenDocumentAndGotoLine ), new object[] { MarkProject, DocumentFilename, Line } );
+        Core.MainForm.Invoke( new OpenDocumentAndGotoLineCallback( OpenDocumentAndGotoLine ), new object[] { MarkProject, Document, Line } );
         return;
       }
-      string  inPath = DocumentFilename.Replace( "\\", "/" );
-      foreach ( IDockContent dockContent in Core.MainForm.panelMain.Documents )
-      {
-        BaseDocument baseDoc = (BaseDocument)dockContent;
-        if ( baseDoc.DocumentInfo.FullPath == null )
-        {
-          continue;
-        }
 
-        string    myPath = baseDoc.DocumentInfo.FullPath.Replace( "\\", "/" );
-        if ( String.Compare( myPath, inPath, true ) == 0 )
+      if ( Document != null )
+      {
+        var baseDoc = Core.Navigating.FindDocumentByPath( Document.FullPath );
+        if ( baseDoc != null )
         {
           baseDoc.Show();
           baseDoc.SetCursorToLine( Line, true );
@@ -111,6 +105,8 @@ namespace C64Studio
 
       if ( MarkProject != null )
       {
+        string  inPath = Document.FullPath.Replace( "\\", "/" );
+
         foreach ( ProjectElement element in MarkProject.Elements )
         {
           if ( GR.Path.IsPathEqual( GR.Path.Append( MarkProject.Settings.BasePath, element.Filename ), inPath ) )
@@ -124,10 +120,10 @@ namespace C64Studio
           }
         }
       }
-      if ( DocumentFilename.Length > 0 )
+      if ( Document.FullPath.Length > 0 )
       {
         // file is not part of project
-        BaseDocument newDoc = Core.MainForm.OpenFile( DocumentFilename );
+        BaseDocument newDoc = Core.MainForm.OpenFile( Document.FullPath );
         if ( newDoc != null )
         {
           bool setFromMainDoc = false;
@@ -149,8 +145,57 @@ namespace C64Studio
 
 
 
+    public BaseDocument FindDocumentByPath( string FullPath )
+    {
+      string  inPath = FullPath.Replace( "\\", "/" );
+      foreach ( IDockContent dockContent in Core.MainForm.panelMain.Documents )
+      {
+        BaseDocument baseDoc = (BaseDocument)dockContent;
+        if ( baseDoc.DocumentInfo.FullPath == null )
+        {
+          continue;
+        }
+
+        string    myPath = baseDoc.DocumentInfo.FullPath.Replace( "\\", "/" );
+        if ( String.Compare( myPath, inPath, true ) == 0 )
+        {
+          return baseDoc;
+        }
+      }
+      return null;
+    }
+
+
+
+    public DocumentInfo FindDocumentInfoByPath( string FullPath )
+    {
+      string  inPath = FullPath.Replace( "\\", "/" );
+      foreach ( IDockContent dockContent in Core.MainForm.panelMain.Documents )
+      {
+        BaseDocument baseDoc = (BaseDocument)dockContent;
+        if ( baseDoc.DocumentInfo.FullPath == null )
+        {
+          continue;
+        }
+
+        string    myPath = baseDoc.DocumentInfo.FullPath.Replace( "\\", "/" );
+        if ( String.Compare( myPath, inPath, true ) == 0 )
+        {
+          return baseDoc.DocumentInfo;
+        }
+      }
+      return new DocumentInfo() { DocumentFilename = FullPath };
+    }
+
+
+
     internal void OpenSourceOfNextMessage()
     {
+      if ( CompileMessages == null )
+      {
+        return;
+      }
+
       if ( LastShownMessageIndex == -1 )
       {
         LastShownMessageIndex = 0;
@@ -182,7 +227,8 @@ namespace C64Studio
             documentFile = message.Value.AlternativeFile;
             documentLine = message.Value.AlternativeLineIndex;
           }
-          OpenDocumentAndGotoLine( Project, documentFile, documentLine );
+
+          OpenDocumentAndGotoLine( Project, FindDocumentInfoByPath( documentFile ), documentLine );
           return;
         }
         --offset;
@@ -209,13 +255,13 @@ namespace C64Studio
         && ( !string.IsNullOrEmpty( tokenInfo.DocumentFilename ) ) )
         {
           // try stored info first
-          OpenDocumentAndGotoLine( ASMDoc.Project, tokenInfo.DocumentFilename, tokenInfo.LocalLineIndex );
+          OpenDocumentAndGotoLine( ASMDoc.Project, FindDocumentInfoByPath( tokenInfo.DocumentFilename ), tokenInfo.LocalLineIndex );
           return;
         }
 
         if ( fileToDebug.FindTrueLineSource( tokenInfo.LineIndex, out documentFile, out documentLine ) )
         {
-          OpenDocumentAndGotoLine( ASMDoc.Project, documentFile, documentLine );
+          OpenDocumentAndGotoLine( ASMDoc.Project, FindDocumentInfoByPath( tokenInfo.DocumentFilename ), documentLine );
         }
       }
       else

@@ -47,7 +47,7 @@ namespace C64Studio
       else
       {
         item.SubItems.Add( FoundInfo.FoundInDocument.DocumentFilename );
-        item.Tag = FoundInfo.FoundInDocument.FullPath;
+        item.Tag = FoundInfo.FoundInDocument;
       }
       item.SubItems.Add( FoundInfo.FoundLine );
 
@@ -76,7 +76,7 @@ namespace C64Studio
         else
         {
           item.SubItems.Add( foundInfo.FoundInDocument.DocumentFilename );
-          item.Tag = foundInfo.FoundInDocument.FullPath;
+          item.Tag = foundInfo.FoundInDocument;
         }
         item.SubItems.Add( foundInfo.FoundLine );
         ++i;
@@ -187,7 +187,7 @@ namespace C64Studio
 
       int     lineNumber = GR.Convert.ToI32( listResults.Items[index].Text );
       string  fileName = listResults.Items[index].SubItems[1].Text;
-      string  fullPath = (string)listResults.Items[index].Tag;
+      string  fullPath = ( (DocumentInfo)listResults.Items[index].Tag ).FullPath;
       if ( !string.IsNullOrEmpty( fullPath ) )
       {
         fileName = fullPath;
@@ -200,7 +200,7 @@ namespace C64Studio
           fileName = GR.Path.Normalize( GR.Path.Append( m_ListProject.Settings.BasePath, fileName ), false );
         }
       }
-      Core.Navigating.OpenDocumentAndGotoLine( m_ListProject, fileName, lineNumber - 1 );
+      Core.Navigating.OpenDocumentAndGotoLine( m_ListProject, Core.Navigating.FindDocumentInfoByPath( fileName ), lineNumber - 1 );
     }
 
 

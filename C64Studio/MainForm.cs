@@ -3823,7 +3823,7 @@ namespace C64Studio
         // unmark current marked line
         if ( StudioCore.Debugging.MarkedDocument != null )
         {
-          StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
+          StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo, -1 );
           StudioCore.Debugging.MarkedDocument = null;
         }
 
@@ -3885,7 +3885,7 @@ namespace C64Studio
 
         if ( StudioCore.Debugging.MarkedDocument != null )
         {
-          StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
+          StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo, -1 );
           StudioCore.Debugging.MarkedDocument = null;
         }
 
@@ -3943,7 +3943,7 @@ namespace C64Studio
 
             if ( StudioCore.Debugging.MarkedDocument != null )
             {
-              StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
+              StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo, -1 );
               StudioCore.Debugging.MarkedDocument = null;
             }
             /*
@@ -4144,8 +4144,9 @@ namespace C64Studio
         //Debug.Log( "Try with activefile first" );
         if ( activeFile.ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) )
         {
-          StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
-          StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
+          var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );
+          StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
+          StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
           return true;
         }
       }
@@ -4155,8 +4156,9 @@ namespace C64Studio
         //Debug.Log( "Try with activefile first" );
         if ( currentMarkedFile.ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) )
         {
-          StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
-          StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
+          var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );
+          StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
+          StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
           return true;
         }
       }
@@ -4166,8 +4168,9 @@ namespace C64Studio
       && ( foundMatches[0].ASMFileInfo.DocumentAndLineFromAddress( CurrentPos, out documentFile, out documentLine ) ) )
       {
         //Debug.Log( "use first of left overs: " + foundMatches[0].FullPath );
-        StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
-        StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
+        var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );
+        StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
+        StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
         return true;
       }
       return false;
@@ -4207,11 +4210,12 @@ namespace C64Studio
           if ( StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.DocumentAndLineFromAddress( currentPos, out documentFile, out documentLine ) )
           {
             if ( ( StudioCore.Debugging.MarkedDocument == null )
-            || ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
-            || ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
+            ||   ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
+            ||   ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
             {
-              StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
-              StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, documentFile, documentLine );
+              var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );
+              StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
+              StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
             }
           }
           else
@@ -5141,7 +5145,7 @@ namespace C64Studio
               {
                 if ( StudioCore.Debugging.MarkedDocument != null )
                 {
-                  StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, -1 );
+                  StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo, -1 );
                   StudioCore.Debugging.MarkedDocument = null;
                 }
                 StudioCore.Debugging.DebugDisassembly.SetText( "Disassembly\r\nfailed\r\n" + disassembly );

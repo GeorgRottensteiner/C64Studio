@@ -69,7 +69,7 @@ namespace C64Studio
         {
           fileName = GR.Path.Normalize( GR.Path.Append( Core.MainForm.CurrentProject.Settings.BasePath, fileName ), false );
         }
-        Core.Navigating.OpenDocumentAndGotoLine( Core.MainForm.CurrentProject, fileName, lineNumber - 1 );
+        Core.Navigating.OpenDocumentAndGotoLine( Core.MainForm.CurrentProject, Core.Navigating.FindDocumentInfoByPath( fileName ), lineNumber - 1 );
         return;
       }
       
@@ -92,7 +92,7 @@ namespace C64Studio
 
               if ( int.TryParse( clickedLine.Substring( linePos + 6, lineEndPos - linePos - 6 ), out lineNumber ) )
               {
-                Core.Navigating.OpenDocumentAndGotoLine( Core.MainForm.CurrentProject, fileName, lineNumber - 1 );
+                Core.Navigating.OpenDocumentAndGotoLine( Core.MainForm.CurrentProject, Core.Navigating.FindDocumentInfoByPath( fileName ), lineNumber - 1 );
               }
             }
           }

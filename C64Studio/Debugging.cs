@@ -215,7 +215,7 @@ namespace C64Studio
 
       if ( MarkedDocument != null )
       {
-        MarkLine( MarkedDocument.DocumentInfo.Project, MarkedDocument.DocumentInfo.FullPath, -1 );
+        MarkLine( MarkedDocument.DocumentInfo.Project, MarkedDocument.DocumentInfo, -1 );
         MarkedDocument = null;
       }
 
@@ -252,19 +252,20 @@ namespace C64Studio
 
 
 
-    public void MarkLine( Project MarkProject, string DocumentFilename, int Line )
+    public void MarkLine( Project MarkProject, DocumentInfo Document, int Line )
     {
       if ( MarkedDocument != null )
       {
         if ( MarkedDocument.InvokeRequired )
         {
-          MarkedDocument.Invoke( new Navigating.OpenDocumentAndGotoLineCallback( MarkLine ), new object[] { MarkProject, DocumentFilename, Line } );
+          MarkedDocument.Invoke( new Navigating.OpenDocumentAndGotoLineCallback( MarkLine ), 
+                                 new object[] { MarkProject, Document, Line } );
           return;
         }
       }
       UnmarkLine();
 
-      string  inPath = DocumentFilename.Replace( "\\", "/" );
+      string  inPath = Document.FullPath.Replace( "\\", "/" );
       if ( MarkProject != null )
       {
         foreach ( ProjectElement element in MarkProject.Elements )

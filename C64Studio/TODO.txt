@@ -1,5 +1,6 @@
 ﻿C64Studio
 o duplicate zone names, add onto each other
+o Document reloading order, Charset Editor and Watch in wrong window
 o Auto-Save Documents -> Crash safety-check on Find/Replace!
 o Charset conversion -> force number of chars (lossy conversion)
 o CharScreen -> Copy Selection/Ranges to preview window

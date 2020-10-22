@@ -13,12 +13,6 @@ namespace C64Studio
 
 
 
-    public virtual FastColoredTextBoxNS.FastColoredTextBox SourceControl
-    {
-      get;
-    }
-
-
     public void CenterOnCaret()
     {
       // automatically centers

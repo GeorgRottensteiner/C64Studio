@@ -237,7 +237,7 @@ namespace C64Studio
         }
         ++index;
       }
-      Core.Navigating.OpenDocumentAndGotoLine( m_ListProject, fileToJumpTo, lineNumber - 1 );
+      Core.Navigating.OpenDocumentAndGotoLine( m_ListProject, Core.Navigating.FindDocumentInfoByPath( fileToJumpTo ), lineNumber - 1 );
     }
 
 

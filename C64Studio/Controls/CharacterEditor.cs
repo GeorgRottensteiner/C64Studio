@@ -839,8 +839,7 @@ namespace C64Studio.Controls
       }
 
       e.Graphics.FillRectangle( new System.Drawing.SolidBrush( labelCharNo.BackColor ), labelCharNo.ClientRectangle );
-      // the text is drawn automatically?
-      //e.Graphics.DrawString( labelCharNo.Text, labelCharNo.Font, new System.Drawing.SolidBrush( labelCharNo.ForeColor ), labelCharNo.ClientRectangle );
+      e.Graphics.DrawString( labelCharNo.Text, labelCharNo.Font, new System.Drawing.SolidBrush( labelCharNo.ForeColor ), labelCharNo.ClientRectangle );
 
       if ( !Types.ConstantData.ScreenCodeToChar.ContainsKey( (byte)m_CurrentChar ) )
       {

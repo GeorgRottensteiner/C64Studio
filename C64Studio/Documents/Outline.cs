@@ -43,7 +43,7 @@ namespace C64Studio
         //MainForm.OpenDocumentAndGotoLine( tokenInfo.DocumentFilename, tokenInfo.LocalLineIndex );
         return;
       }
-      Core.Navigating.OpenDocumentAndGotoLine( OutlineProject, tokenInfo.DocumentFilename, tokenInfo.LocalLineIndex );
+      Core.Navigating.OpenDocumentAndGotoLine( OutlineProject, Core.Navigating.FindDocumentInfoByPath( tokenInfo.DocumentFilename ), tokenInfo.LocalLineIndex );
     }
 
 

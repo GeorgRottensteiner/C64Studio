@@ -106,6 +106,16 @@ namespace C64Studio
 
 
 
+    public virtual FastColoredTextBoxNS.FastColoredTextBox SourceControl
+    {
+      get
+      {
+        return null;
+      }
+    }
+
+
+
     protected bool DoNotUpdateFromControls
     {
       get

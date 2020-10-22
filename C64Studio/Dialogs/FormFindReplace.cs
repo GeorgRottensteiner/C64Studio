@@ -443,16 +443,12 @@ namespace C64Studio
 
     private FastColoredTextBoxNS.FastColoredTextBox EditFromDocumentEx( DocumentInfo Document )
     {
-      if ( Document == null )
+      if ( ( Document == null )
+      ||   ( Document.BaseDoc == null ) )
       {
         return null;
       }
-      var compilableDoc = Document.CompilableDocument;
-      if ( compilableDoc == null )
-      {
-        return null;
-      }
-      return compilableDoc.SourceControl;
+      return Document.BaseDoc.SourceControl;
     }
 
 
