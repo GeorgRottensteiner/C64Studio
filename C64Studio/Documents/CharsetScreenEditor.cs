@@ -477,12 +477,19 @@ namespace C64Studio
                (byte)( selectionChar.second & 0xff ),
                (byte)( selectionChar.second >> 8 ) );
 
+            DrawCharImage( m_Image,
+               ( m_CharsetScreen.ScreenOffsetX + undoX + i ) * 8,
+               ( m_CharsetScreen.ScreenOffsetY + undoY + j ) * 8,
+               (byte)( selectionChar.second & 0xff ),
+               (byte)( selectionChar.second >> 8 ) );
+
+            /*
             pictureEditor.DisplayPage.DrawTo( m_Image,
                                               ( m_CharsetScreen.ScreenOffsetX + undoX + i ) * 8,
                                               ( m_CharsetScreen.ScreenOffsetY + undoY + j ) * 8,
                                               ( undoX + i ) * 8,
                                               ( undoY + j ) * 8,
-                                              8, 8 );
+                                              8, 8 );*/
             pictureEditor.Invalidate( new System.Drawing.Rectangle( ( undoX + i ) * 8,
                                                                     ( undoY + j ) * 8,
                                                                     8, 8 ) );
@@ -1496,8 +1503,8 @@ namespace C64Studio
         {
           if ( m_SelectedChars[x, y] )
           {
-            if ( ( y - m_CharsetScreen.ScreenOffsetY == 0 )
-            || ( !m_SelectedChars[x, y - 1] ) )
+            if ( ( y == 0 )
+            ||   ( !m_SelectedChars[x, y - 1] ) )
             {
               for ( int i = 0; i < 8; ++i )
               {
@@ -1506,8 +1513,8 @@ namespace C64Studio
                                                     16 );
               }
             }
-            if ( ( y - m_CharsetScreen.ScreenOffsetY == m_SelectedChars.GetUpperBound( 1 ) )
-            || ( !m_SelectedChars[x, y + 1] ) )
+            if ( ( y == m_SelectedChars.GetUpperBound( 1 ) )
+            ||   ( !m_SelectedChars[x, y + 1] ) )
             {
               for ( int i = 0; i < 8; ++i )
               {
@@ -1516,8 +1523,8 @@ namespace C64Studio
                                                     16 );
               }
             }
-            if ( ( x - m_CharsetScreen.ScreenOffsetX == 0 )
-            || ( !m_SelectedChars[x - 1, y] ) )
+            if ( ( x == 0 )
+            ||   ( !m_SelectedChars[x - 1, y] ) )
             {
               for ( int i = 0; i < 8; ++i )
               {
@@ -1526,8 +1533,8 @@ namespace C64Studio
                                                     16 );
               }
             }
-            if ( ( x - m_CharsetScreen.ScreenOffsetX == m_SelectedChars.GetUpperBound( 0 ) )
-            || ( !m_SelectedChars[x + 1, y] ) )
+            if ( ( x == m_SelectedChars.GetUpperBound( 0 ) )
+            ||   ( !m_SelectedChars[x + 1, y] ) )
             {
               for ( int i = 0; i < 8; ++i )
               {
