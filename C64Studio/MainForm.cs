@@ -27,7 +27,7 @@ namespace C64Studio
 
     public OutputDisplay          m_Output = new OutputDisplay();
 
-    public SolutionExplorer       m_SolutionExplorer = new SolutionExplorer();
+    public SolutionExplorer       m_SolutionExplorer = null;
 
     public BinaryDisplay          m_BinaryEditor = null;
     public DebugRegisters         m_DebugRegisters = new DebugRegisters();
@@ -574,6 +574,7 @@ namespace C64Studio
 
       SetupDebugger();
 
+      m_SolutionExplorer    = new SolutionExplorer( StudioCore );
       m_BinaryEditor        = new BinaryDisplay( StudioCore, new GR.Memory.ByteBuffer( 2 ), true, false );
       m_CharsetEditor       = new CharsetEditor( StudioCore );
       m_SpriteEditor        = new SpriteEditor( StudioCore );
@@ -3440,6 +3441,10 @@ namespace C64Studio
       if ( projectToAddTo == null )
       {
         projectToAddTo = m_CurrentProject;
+        if ( projectToAddTo == null )
+        {
+          return false;
+        }
         Node = projectToAddTo.Node;
       }
       if ( projectToAddTo == null )

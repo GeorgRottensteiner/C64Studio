@@ -22,13 +22,31 @@ namespace C64Studio
 
 
 
-    public SolutionExplorer()
+    public SolutionExplorer( StudioCore Core )
     {
+      this.Core = Core;
+
       InitializeComponent();
 
       m_BoldFont = new System.Drawing.Font( treeProject.Font, System.Drawing.FontStyle.Bold );
 
       timerDragDrop.Tick += new EventHandler( timerDragDrop_Tick );
+
+      Core.MainForm.ApplicationEvent += MainForm_ApplicationEvent;
+    }
+
+
+
+    private void MainForm_ApplicationEvent( Types.ApplicationEvent Event )
+    {
+      switch ( Event.EventType )
+      {
+        case Types.ApplicationEvent.Type.SOLUTION_CLOSED:
+          seBtnAddExisting.Enabled = false;
+          seBtnAddNewItem.Enabled = false;
+          seBtnDelete.Enabled = false;
+          break;
+      }
     }
 
 
