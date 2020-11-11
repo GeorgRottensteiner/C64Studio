@@ -90,7 +90,7 @@ namespace C64Studio.Parser
       public TokenValue TokenValue = TokenValue.BLACK;
     };
 
-    internal class Token
+    public class Token
     {
       public enum Type
       {
@@ -3333,7 +3333,7 @@ namespace C64Studio.Parser
 
 
 
-    private bool IsComment( Token token )
+    public bool IsComment( Token token )
     {
       if ( token.ByteValue == m_Opcodes["REM"].InsertionValue )
       {

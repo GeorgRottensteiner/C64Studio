@@ -6,9 +6,11 @@ namespace C64Studio
 {
   static class Program
   {
-    /// <summary>
-    /// Der Haupteinstiegspunkt für die Anwendung.
-    /// </summary>
+    [System.Runtime.InteropServices.DllImport( "user32.dll" )]
+    private static extern bool SetProcessDPIAware();
+
+
+
     [STAThread]
     static void Main( string[] args )
     {
@@ -16,6 +18,11 @@ namespace C64Studio
       try
       {
 #endif
+        if ( Environment.OSVersion.Version.Major >= 6 )
+        {
+          SetProcessDPIAware();
+        }
+
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault( false );
         Application.Run( new MainForm( args ) );
@@ -29,5 +36,6 @@ namespace C64Studio
       }
 #endif
     }
+
   }
 }

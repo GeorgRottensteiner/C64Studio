@@ -287,89 +287,89 @@
       // fileNewSolutionToolStripMenuItem
       // 
       this.fileNewSolutionToolStripMenuItem.Name = "fileNewSolutionToolStripMenuItem";
-      this.fileNewSolutionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.fileNewSolutionToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewSolutionToolStripMenuItem.Text = "&Solution";
       this.fileNewSolutionToolStripMenuItem.Click += new System.EventHandler(this.fileNewSolutionToolStripMenuItem_Click);
       // 
       // fileNewProjectToolStripMenuItem
       // 
       this.fileNewProjectToolStripMenuItem.Name = "fileNewProjectToolStripMenuItem";
-      this.fileNewProjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.fileNewProjectToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewProjectToolStripMenuItem.Text = "&Project";
       this.fileNewProjectToolStripMenuItem.Click += new System.EventHandler(this.fileNewProjectToolStripMenuItem_Click);
       // 
       // toolStripSeparator2
       // 
       this.toolStripSeparator2.Name = "toolStripSeparator2";
-      this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+      this.toolStripSeparator2.Size = new System.Drawing.Size(160, 6);
       // 
       // fileNewASMFileToolStripMenuItem
       // 
       this.fileNewASMFileToolStripMenuItem.Name = "fileNewASMFileToolStripMenuItem";
-      this.fileNewASMFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.fileNewASMFileToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewASMFileToolStripMenuItem.Text = "ASM File";
       this.fileNewASMFileToolStripMenuItem.Click += new System.EventHandler(this.fileNewASMFileToolStripMenuItem_Click);
       // 
       // fileNewBasicFileToolStripMenuItem
       // 
       this.fileNewBasicFileToolStripMenuItem.Name = "fileNewBasicFileToolStripMenuItem";
-      this.fileNewBasicFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.fileNewBasicFileToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewBasicFileToolStripMenuItem.Text = "BASIC File";
       this.fileNewBasicFileToolStripMenuItem.Click += new System.EventHandler(this.fileNewBasicFileToolStripMenuItem_Click);
       // 
       // fileNewSpriteFileToolStripMenuItem
       // 
       this.fileNewSpriteFileToolStripMenuItem.Name = "fileNewSpriteFileToolStripMenuItem";
-      this.fileNewSpriteFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.fileNewSpriteFileToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewSpriteFileToolStripMenuItem.Text = "Sprite Set";
       this.fileNewSpriteFileToolStripMenuItem.Click += new System.EventHandler(this.fileNewSpriteFileToolStripMenuItem_Click);
       // 
       // fileNewCharacterFileToolStripMenuItem
       // 
       this.fileNewCharacterFileToolStripMenuItem.Name = "fileNewCharacterFileToolStripMenuItem";
-      this.fileNewCharacterFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.fileNewCharacterFileToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewCharacterFileToolStripMenuItem.Text = "Character Set";
       this.fileNewCharacterFileToolStripMenuItem.Click += new System.EventHandler(this.fileNewCharacterFileToolStripMenuItem_Click);
       // 
       // fileNewCharacterScreenEditorToolStripMenuItem
       // 
       this.fileNewCharacterScreenEditorToolStripMenuItem.Name = "fileNewCharacterScreenEditorToolStripMenuItem";
-      this.fileNewCharacterScreenEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.fileNewCharacterScreenEditorToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewCharacterScreenEditorToolStripMenuItem.Text = "Character Screen";
       this.fileNewCharacterScreenEditorToolStripMenuItem.Click += new System.EventHandler(this.fileNewCharacterScreenEditorToolStripMenuItem_Click);
       // 
       // fileNewGraphicScreenEditorToolStripMenuItem
       // 
       this.fileNewGraphicScreenEditorToolStripMenuItem.Name = "fileNewGraphicScreenEditorToolStripMenuItem";
-      this.fileNewGraphicScreenEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.fileNewGraphicScreenEditorToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewGraphicScreenEditorToolStripMenuItem.Text = "Graphic Screen";
       this.fileNewGraphicScreenEditorToolStripMenuItem.Click += new System.EventHandler(this.fileNewScreenEditorToolStripMenuItem_Click);
       // 
       // fileNewMapEditorToolStripMenuItem
       // 
       this.fileNewMapEditorToolStripMenuItem.Name = "fileNewMapEditorToolStripMenuItem";
-      this.fileNewMapEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.fileNewMapEditorToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewMapEditorToolStripMenuItem.Text = "Map";
       this.fileNewMapEditorToolStripMenuItem.Click += new System.EventHandler(this.fileNewMapEditorToolStripMenuItem_Click);
       // 
       // valueTableToolStripMenuItem
       // 
       this.valueTableToolStripMenuItem.Name = "valueTableToolStripMenuItem";
-      this.valueTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.valueTableToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.valueTableToolStripMenuItem.Text = "Value Table";
       this.valueTableToolStripMenuItem.Click += new System.EventHandler(this.valueTableToolStripMenuItem_Click);
       // 
       // fileNewBinaryEditorToolStripMenuItem
       // 
       this.fileNewBinaryEditorToolStripMenuItem.Name = "fileNewBinaryEditorToolStripMenuItem";
-      this.fileNewBinaryEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.fileNewBinaryEditorToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.fileNewBinaryEditorToolStripMenuItem.Text = "Binary Editor";
       this.fileNewBinaryEditorToolStripMenuItem.Click += new System.EventHandler(this.fileNewBinaryEditorToolStripMenuItem_Click);
       // 
       // memoryViewToolStripMenuItem
       // 
       this.memoryViewToolStripMenuItem.Name = "memoryViewToolStripMenuItem";
-      this.memoryViewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.memoryViewToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.memoryViewToolStripMenuItem.Text = "Memory View";
       this.memoryViewToolStripMenuItem.Click += new System.EventHandler(this.memoryViewToolStripMenuItem_Click);
       // 
@@ -379,20 +379,20 @@
             this.newTapeImageToolStripMenuItem,
             this.newDiskImageToolStripMenuItem});
       this.mediaToolStripMenuItem.Name = "mediaToolStripMenuItem";
-      this.mediaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.mediaToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
       this.mediaToolStripMenuItem.Text = "Media";
       // 
       // newTapeImageToolStripMenuItem
       // 
       this.newTapeImageToolStripMenuItem.Name = "newTapeImageToolStripMenuItem";
-      this.newTapeImageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.newTapeImageToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
       this.newTapeImageToolStripMenuItem.Text = "Tape Image";
       this.newTapeImageToolStripMenuItem.Click += new System.EventHandler(this.newTapeImageToolStripMenuItem_Click);
       // 
       // newDiskImageToolStripMenuItem
       // 
       this.newDiskImageToolStripMenuItem.Name = "newDiskImageToolStripMenuItem";
-      this.newDiskImageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.newDiskImageToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
       this.newDiskImageToolStripMenuItem.Text = "Disk Image";
       this.newDiskImageToolStripMenuItem.Click += new System.EventHandler(this.newDiskImageToolStripMenuItem_Click);
       // 
@@ -1675,8 +1675,8 @@
       // MainForm
       // 
       this.AllowDrop = true;
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
       this.ClientSize = new System.Drawing.Size(1120, 677);
       this.Controls.Add(this.mainStatus);
       this.Controls.Add(this.mainTools);

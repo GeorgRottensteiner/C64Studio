@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using static C64Studio.Parser.BasicFileParser;
 using GR.IO;
+using System.Linq;
 
 namespace C64Studio
 {
@@ -1147,6 +1148,11 @@ namespace C64Studio
             {
               if ( actualChar == "?" )
               {
+                if ( InsideREM() )
+                {
+                  editSource.SelectedText = "?";
+                  return true;
+                }
                 if ( m_LowerCaseMode )
                 {
                   editSource.SelectedText = MakeLowerCase( "PRINT" );
@@ -1358,6 +1364,18 @@ namespace C64Studio
       }
       // swallow unmapped keys that would produce text (or disallowed characters, e.g. small letters)
       return base.ProcessCmdKey( ref msg, keyData );
+    }
+
+
+
+    private bool InsideREM()
+    {
+      int     lineIndex = editSource.Selection.Start.iLine;
+
+      var lineInfo = m_Parser.PureTokenizeLine( editSource.Lines[lineIndex], lineIndex );
+
+      var rem = lineInfo.Tokens.Where( t => m_Parser.IsComment( t ) ).FirstOrDefault();
+      return ( rem != null );
     }
 
 
