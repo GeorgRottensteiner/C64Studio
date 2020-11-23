@@ -12773,7 +12773,7 @@ namespace C64Studio.Parser
         ++charPos;
       }
       if ( ( tokenStartPos < charPos )
-      && ( currentTokenType != Types.TokenInfo.TokenType.UNKNOWN ) )
+      &&   ( currentTokenType != Types.TokenInfo.TokenType.UNKNOWN ) )
       {
         // auto end token
         Types.TokenInfo token = new Types.TokenInfo();
@@ -12784,13 +12784,16 @@ namespace C64Studio.Parser
         result.Add( token );
       }
 
+      // collapse ## (with labels!)
+      CollapsePreprocessorLabels( result );
+
       // collapse # 
       if ( ( result.Count >= 3 )
-      && ( result[1].Type == Types.TokenInfo.TokenType.SEPARATOR )
-      && ( result[1].Length == 1 )
-      && ( Source[result[1].StartPos] == '#' )
-      && ( result[2].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
-      && ( result[2].StartPos == result[1].StartPos + 1 ) )
+      &&   ( result[1].Type == Types.TokenInfo.TokenType.SEPARATOR )
+      &&   ( result[1].Length == 1 )
+      &&   ( Source[result[1].StartPos] == '#' )
+      &&   ( result[2].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER )
+      &&   ( result[2].StartPos == result[1].StartPos + 1 ) )
       {
         --result[2].StartPos;
         ++result[2].Length;
@@ -13143,6 +13146,57 @@ namespace C64Studio.Parser
 
 
 
+    private void CollapsePreprocessorLabels( List<TokenInfo> result )
+    {
+      // collapse <label#>#<value> (make a single token label name)
+      if ( result.Count >= 3 )
+      {
+        for ( int i = 1; i <= result.Count - 2; ++i )
+        {
+          if ( ( TokenIsLabel( result[i -1].Type ) )
+          &&   ( result[i - 1].Content.EndsWith( "#" ) )
+          &&   ( result[i].Content == "#" )
+          &&   ( TokenIsLabel( result[i - 1].Type ) )
+          &&   ( TokenIsLabel( result[i + 1].Type ) ) )
+          {
+            // collapse
+            if ( EvaluateLabel( -1, result[i + 1].Content, out int labelValue ) )
+            {
+              result[i - 1].Content = result[i - 1].Content.Substring( 0, result[i - 1].Length - 1 ) + labelValue.ToString();
+              result[i - 1].Length  = result[i - 1].Content.Length;
+              result.RemoveRange( i, 2 );
+              --i;
+              continue;
+            }
+          }
+        }
+      }
+      // collapse <label>##<value> (make a single token label name)
+      if ( result.Count >= 4 )
+      {
+        for ( int i = 1; i <= result.Count - 3; ++i )
+        {
+          if ( ( TokenIsLabel( result[i -1].Type ) )
+          &&   ( result[i].Content == "#" )
+          &&   ( result[i + 1].Content == "#" )
+          &&   ( TokenIsLabel( result[i + 2].Type ) ) )
+          {
+            // collapse
+            if ( EvaluateLabel( -1, result[i + 2].Content, out int labelValue ) )
+            {
+              result[i - 1].Content = result[i - 1].Content + labelValue.ToString();
+              result[i - 1].Length  = result[i - 1].Content.Length;
+              result.RemoveRange( i, 3 );
+              --i;
+              continue;
+            }
+          }
+        }
+      }
+    }
+
+
+
     private void CollapsePDSLocalLabels( List<TokenInfo> result )
     {
       // collapse PDS local label (! is interpreted as operator)
@@ -13152,9 +13206,9 @@ namespace C64Studio.Parser
         for ( int i = 0; i < result.Count - 1; ++i )
         {
           if ( ( result[i].Content == "!" )
-          && ( ( result[i + 1].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
-          || ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER ) )
-          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
+          &&   ( ( result[i + 1].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+          ||     ( result[i + 1].Type == Types.TokenInfo.TokenType.LITERAL_NUMBER ) )
+          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
           {
             // collapse
             result[i].Content = "!" + result[i + 1].Content;
@@ -13167,7 +13221,9 @@ namespace C64Studio.Parser
         }
       }
     }
-
+    
+    
+    
     private bool IsBlankChar( char Character )
     {
       if ( ( Character == ' ' )

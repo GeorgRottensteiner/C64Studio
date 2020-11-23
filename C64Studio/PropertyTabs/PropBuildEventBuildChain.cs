@@ -180,6 +180,7 @@ namespace C64Studio
       {
         return;
       }
+
       var  projectName = (string)comboBuildChainProject.SelectedItem;
       var project = Core.MainForm.m_Solution.GetProjectByName( projectName );
 
@@ -196,7 +197,20 @@ namespace C64Studio
             comboBuildChainFile.Items.Add( element.DocumentInfo.DocumentFilename );
           }
         }
-        Core.MainForm.MarkAsDirty( Element.DocumentInfo );
+        if ( listBuildChainProjects.SelectedIndices.Count == 0 )
+        {
+          return;
+        }
+        var buildChainEntry = (BuildChainEntry)listBuildChainProjects.SelectedItems[0].Tag;
+        if ( buildChainEntry.ProjectName != projectName )
+        {
+          buildChainEntry.ProjectName = projectName;
+
+          listBuildChainProjects.SelectedItems[0].Text = buildChainEntry.ProjectName + " - " + buildChainEntry.Config;
+          Element.DocumentInfo.Project.SetModified();
+          Core.MainForm.MarkAsDirty( Element.DocumentInfo );
+          listBuildChainProjects.Update();
+        }
       }
     }
 
