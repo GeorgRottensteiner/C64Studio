@@ -1,5 +1,5 @@
 ﻿C64Studio
-o Concatenate labels with numbers (e.g. !for loops)
+o Concatenate labels with numbers (e.g. !for loops) -> partially in, requires label generating rewrite
 o duplicate zone names, add onto each other
 o Document reloading order, Charset Editor and Watch in wrong window
 o Auto-Save Documents -> Crash safety-check on Find/Replace!

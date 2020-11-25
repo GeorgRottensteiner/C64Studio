@@ -2555,7 +2555,7 @@ namespace Be.Windows.Forms
 		{
 			PointF headerPointF = GetColumnInfoPointF(col);
 
-			string sB = ConvertByteToHex(b);
+			string sB = ConvertByteToHex( (byte)( ( (int)b + DisplayedAddressOffset ) & 0xff ) );
 
 			g.DrawString(sB.Substring(0, 1), Font, brush, headerPointF, _stringFormat);
 			headerPointF.X += _charSize.Width;
