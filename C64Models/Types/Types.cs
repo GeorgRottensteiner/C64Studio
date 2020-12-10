@@ -1019,7 +1019,7 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_COLON, KeyModifier.SHIFT, KeyType.NORMAL, 155, true, 27, true, (char)0xee9b, true, "REVERSE [" );
 
       AddC64Key( KeyboardKey.KEY_3, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 28, true, 28, true, (char)0xee9c, true, "RED" ).Replacements.Add( "RED" );
-      AddC64Key( KeyboardKey.KEY_CURSOR_LEFT_RIGHT, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 29, true, 29, true, (char)0xee9d, -1, 0, true, "CURSOR RIGHT", "CUR RIGHT" ).Replacements.Add( "RIGHT" );
+      AddC64Key( KeyboardKey.KEY_CURSOR_LEFT_RIGHT, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 128 + 29, true, 29, true, (char)0xee9d, -1, 0, true, "CURSOR RIGHT", "CUR RIGHT" ).Replacements.AddRange( new string[] { "RIGHT", "RGHT" } );
       AddC64Key( KeyboardKey.KEY_6, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 30, true, 30, true, (char)0xee9e, -1, 0, true, "GREEN", "GRN" ).Replacements.AddRange( new string[] { "GREEN", "GRN" } );
       AddC64Key( KeyboardKey.KEY_7, KeyModifier.CONTROL, KeyType.CONTROL_CODE, 128 + 31, true, 31, true, (char)0xee9f, -1, 0, true, "BLUE", "BLU" ).Replacements.AddRange( new string[] { "BLUE", "BLU" } );
       //  32- 63 $20-$3F       0 $00         32- 63 $20-$3F  
