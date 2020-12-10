@@ -562,6 +562,12 @@ namespace C64Studio
                   case 0x36:
                     info.Cycles = itemValue;
                     break;
+                  case 0x37:
+                    // $00
+                    break;
+                  case 0x38:
+                    info.ProcessorPort01 = (byte)itemValue;
+                    break;
                   default:
                     Debug.Log( "Invalid Item ID " + itemID.ToString( "X2" ) + " received" );
                     //m_ReceivedDataBin.Clear();
@@ -1559,7 +1565,17 @@ namespace C64Studio
           if ( m_FullBinaryInterface )
           {
             // step over
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_REGISTERS_GET, null, Data );
+
+            /*
+            e_default_space = 0,
+            e_comp_space,
+            e_disk8_space,
+            e_disk9_space,
+            e_disk10_space,
+            e_disk11_space,
+            e_invalid_space
+            */
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_REGISTERS_GET, new ByteBuffer( "00" ), Data );
           }
           return SendCommand( "registers" );
         case DebugRequestType.NEXT:
@@ -2028,7 +2044,7 @@ namespace C64Studio
       }
 
       // queue if there is an active request or queued incoming data
-      Debug.Log( "QueueRequest - sending data directly? Request is " + Data.Type + ", current request type is " + m_Request.Type + ", current incoming data is " + m_ReceivedDataBin.ToString() );
+      Debug.Log( "QueueRequest - sending data directly? Queue has " + m_RequestQueue.Count + " entries, request is " + Data.Type + ", current request type is " + m_Request.Type + ", current incoming data is " + m_ReceivedDataBin.ToString() );
       if ( ( m_Request.Type != DebugRequestType.NONE )
       ||   ( ( m_FullBinaryInterface )
       &&     ( m_ReceivedDataBin.Length > 0 ) ) )

@@ -491,7 +491,7 @@ namespace C64Studio
 
 
 
-    protected void EnableFileWatcher()
+    public void EnableFileWatcher()
     {
       try
       {
@@ -504,7 +504,7 @@ namespace C64Studio
 
 
 
-    protected void DisableFileWatcher()
+    public void DisableFileWatcher()
     {
       if ( ( m_FileWatcher.Path.Length == 0 )
       &&   ( DocumentInfo.DocumentFilename != null )
