@@ -191,7 +191,8 @@ namespace C64Studio.Parser
 
     public ParseMessage AddWarning( int Line, Types.ErrorCode Code, string Text, int CharIndex, int Length )
     {
-      if ( m_CompileConfig.WarningsToTreatAsError.ContainsValue( Code ) )
+      if ( ( m_CompileConfig != null )
+      &&   ( m_CompileConfig.WarningsToTreatAsError.ContainsValue( Code ) ) )
       {
         return AddError( Line, Code, Text, CharIndex, Length );
       }
