@@ -953,6 +953,7 @@ namespace C64Studio
         e.CancelEdit = true;
         return;
       }
+      e.Node.Text = System.IO.Path.GetFileNameWithoutExtension( e.Node.Text );
     }
 
 
@@ -966,6 +967,8 @@ namespace C64Studio
         return;
       }
       string    newText = e.Label;
+
+      newText = e.Label + System.IO.Path.GetExtension( e.Node.Text );
 
       Project project = ProjectFromNode( e.Node );
       ProjectElement element = (ProjectElement)e.Node.Tag;
@@ -987,6 +990,10 @@ namespace C64Studio
         return;
       }
 
+      if ( element.Document != null )
+      {
+        element.Document.DisableFileWatcher();
+      }
       try
       {
         System.IO.File.Move( oldFilename, newFilename );
@@ -999,6 +1006,10 @@ namespace C64Studio
       {
         e.CancelEdit = true;
         System.Windows.Forms.MessageBox.Show( "An error occurred while renaming\r\n" + ex.Message, "Error while renaming" );
+        if ( element.Document != null )
+        {
+          element.Document.EnableFileWatcher();
+        }
         return;
       }
       if ( Core.MainForm.m_Solution != null )
@@ -1006,6 +1017,12 @@ namespace C64Studio
         Core.MainForm.m_Solution.RenameElement( element, oldFilename, newFilename );
       }
       AdjustElementHierarchy( element, e.Node );
+
+      if ( element.Document != null )
+      {
+        element.Document.EnableFileWatcher();
+      }
+
       project.SetModified();
     }
 
@@ -1017,7 +1034,8 @@ namespace C64Studio
       {
         if ( treeProject.SelectedNode.Level >= 1 )
         {
-          treeProject.SelectedNode.BeginEdit();
+          treeProject.StartLabelEdit();
+          //treeProject.SelectedNode.BeginEdit();
           e.Handled = true;
           e.SuppressKeyPress = true;
         }
