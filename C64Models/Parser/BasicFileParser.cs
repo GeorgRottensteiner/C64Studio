@@ -4022,7 +4022,7 @@ namespace C64Studio.Parser
         else if ( ( singleChar >= 0x61 )
         &&        ( singleChar <= 0x7a ) )
         {
-          sb.Append( (char)( singleChar - 0x20 + 0xe000 ) );
+          sb.Append( (char)( singleChar - 0x20 ) );
         }
         else
         {
