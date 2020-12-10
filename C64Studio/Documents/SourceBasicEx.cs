@@ -641,6 +641,10 @@ namespace C64Studio
       {
         string basicText = System.IO.File.ReadAllText( DocumentInfo.FullPath );
 
+        // quick compatibility hack with petcat
+        basicText = basicText.Replace( "~", "{SHIFT-ARROW UP}" );
+        basicText = basicText.Replace( "\\", "{POUND}" );
+
         if ( m_SymbolMode )
         {
         }
@@ -648,9 +652,6 @@ namespace C64Studio
         {
           basicText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( basicText );
         }
-
-        editSource.Text = basicText;
-        editSource.ClearUndo();
 
         if ( DocumentInfo.Element != null )
         {
@@ -674,6 +675,9 @@ namespace C64Studio
 
         m_LabelMode = IsInLabelMode( basicText );
         btnToggleLabelMode.Checked = m_LabelMode;
+
+        editSource.Text = basicText;
+        editSource.ClearUndo();
       }
       catch ( System.IO.IOException ex )
       {
