@@ -17,6 +17,56 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+11.12.2020 - 6.6:         Add: Support for $01 for VICE binary interface
+                          Add: petcat compatiblity at BASIC file import
+                          Fix: reverted errornous DPI adjusting of dialogs
+                          Add: Alternative spelling of {RGHT}
+                          Fix: Crash with warnings without compile config
+                          Fix: Import of lower case BASIC files
+                          Add: Renaming file hides extension
+                          Add: Add display offset to column in hex display
+                          Add: Partial support for concattenated labels (LABEL##VALUE)
+                          Add: DPI awareness
+                          Fix: Crash if solution was closed and one of the add item buttons was clicked
+                          Fix: Charset screen editor: potential selection crash when going outside
+                          Add: Allow editing of disk name/ID in File Manager
+                          Fix: Display Char number in charseteditor
+                          Add: Hack option to allow .byte/.word additionally
+                          Add: Charset editor, import from BASIC (Hex) Data
+                          add second unit test for virtual segments
+                          Add: Virtual values (!byte ?, !word ?)
+                          Fix: Graphic screen editor: Full Paste button of graphic screen offers size adjustment
+                          Fix: Adjust !byte values also when following a label
+                          Add: Display type of undo as tooltip text
+                          Add: Clear screen option to charscreen editor
+                          Fix: start charset editor with default uppercase charset
+                          Fix: Description of regular letters for BASIC key map setting dialog
+                          Fix: Literal 16bit value watches now default to one byte (not two)
+                          Fix: Multiplying watch entries if you have more than one project in a solution
+                          Add: Copy debug watch lines/values to clipboard
+                          Add: Recalculate !byte, !word, etc. values on right click in assembler editor
+                          Add: Binary display of X, Y, A registers in Debug window
+                          Potential crash fix in Undo after Replace all
+                          Add: Map Editor Up/Down to sort maps
+                          Add more info to kernal.asm
+                          Fix: Potential crash in File Manager when deleting files
+                          Add: BASIC Replace ? with PRINT
+                          Fix: Tooltip text for add new file in File Manager
+                          Add: Show Selection length in BASIC editor (useful for PRINTs)
+                          Fix: Allow Ctrl-I in BASIC
+                          Fix: Crash if deleting folder with content in Solution Explorer
+                          Fix: right pad file name with Shift-Space instead of space on import in File Manager
+                          Add: Support for Simons BASIC
+                          Add: missing response type to VICE debugger for binary interface
+                          Fix: Rename bug when file inside sub folder
+                          Add: DASM incdir directive
+                          Add: !realign pseudo op
+                          Fix: Text screen editor, graphic errors if in selection mode, inserting a floating selection and dragging the mouse
+                          Fix: Renumber in BASIC not working if selection was upside down
+                          Fix: FileManager properly move dir entries with duplicate names
+                          Add: File Manager with PETSCII table
+                          Fix: TLS1.2 hack for .NET 3.5 for update check
+
 01.08.2020 - 6.5:         Fix: Update URL for version check
                           Fix: Allow {, }, _ as valid keys for BASIC (to access assembly symbols)
                           Add: Binary Editor - remove nth byte option
