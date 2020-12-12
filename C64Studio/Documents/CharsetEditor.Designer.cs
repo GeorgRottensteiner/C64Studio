@@ -54,6 +54,8 @@ namespace C64Studio
       this.btnDefaultLowerCase = new System.Windows.Forms.Button();
       this.btnDefaultUppercase = new System.Windows.Forms.Button();
       this.btnClearImportData = new System.Windows.Forms.Button();
+      this.btnImportFromBASICHex = new System.Windows.Forms.Button();
+      this.btnImportFromBASIC = new System.Windows.Forms.Button();
       this.btnImportFromAssembly = new System.Windows.Forms.Button();
       this.btnImportCharsetFromImage = new System.Windows.Forms.Button();
       this.btnImportFromFile = new System.Windows.Forms.Button();
@@ -90,8 +92,8 @@ namespace C64Studio
       this.exchangeMultiColor1AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMultiColor2AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnImportFromBASIC = new System.Windows.Forms.Button();
-      this.btnImportFromBASICHex = new System.Windows.Forms.Button();
+      this.checkPrefixLoadAddress = new System.Windows.Forms.CheckBox();
+      this.editPrefixLoadAddress = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabCharsetEditor.SuspendLayout();
       this.tabCharEditor.SuspendLayout();
@@ -351,6 +353,26 @@ namespace C64Studio
       this.btnClearImportData.UseVisualStyleBackColor = true;
       this.btnClearImportData.Click += new System.EventHandler(this.btnClearImportData_Click);
       // 
+      // btnImportFromBASICHex
+      // 
+      this.btnImportFromBASICHex.Location = new System.Drawing.Point(252, 48);
+      this.btnImportFromBASICHex.Name = "btnImportFromBASICHex";
+      this.btnImportFromBASICHex.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromBASICHex.TabIndex = 2;
+      this.btnImportFromBASICHex.Text = "From BASIC Hex";
+      this.btnImportFromBASICHex.UseVisualStyleBackColor = true;
+      this.btnImportFromBASICHex.Click += new System.EventHandler(this.btnImportCharsetFromBASICHex_Click);
+      // 
+      // btnImportFromBASIC
+      // 
+      this.btnImportFromBASIC.Location = new System.Drawing.Point(129, 48);
+      this.btnImportFromBASIC.Name = "btnImportFromBASIC";
+      this.btnImportFromBASIC.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromBASIC.TabIndex = 2;
+      this.btnImportFromBASIC.Text = "From BASIC";
+      this.btnImportFromBASIC.UseVisualStyleBackColor = true;
+      this.btnImportFromBASIC.Click += new System.EventHandler(this.btnImportCharsetFromBASIC_Click);
+      // 
       // btnImportFromAssembly
       // 
       this.btnImportFromAssembly.Location = new System.Drawing.Point(6, 48);
@@ -407,12 +429,14 @@ namespace C64Studio
       this.groupExport.Controls.Add(this.editPrefix);
       this.groupExport.Controls.Add(this.label2);
       this.groupExport.Controls.Add(this.editCharactersCount);
+      this.groupExport.Controls.Add(this.editPrefixLoadAddress);
       this.groupExport.Controls.Add(this.editCharactersFrom);
       this.groupExport.Controls.Add(this.editWrapByteCount);
       this.groupExport.Controls.Add(this.labelCharactersTo);
       this.groupExport.Controls.Add(this.labelCharactersFrom);
       this.groupExport.Controls.Add(this.checkExportToDataWrap);
       this.groupExport.Controls.Add(this.checkIncludeColor);
+      this.groupExport.Controls.Add(this.checkPrefixLoadAddress);
       this.groupExport.Controls.Add(this.checkExportToDataIncludeRes);
       this.groupExport.Controls.Add(this.editDataExport);
       this.groupExport.Controls.Add(this.button1);
@@ -429,7 +453,7 @@ namespace C64Studio
       // 
       // editExportBASICLineOffset
       // 
-      this.editExportBASICLineOffset.Location = new System.Drawing.Point(359, 108);
+      this.editExportBASICLineOffset.Location = new System.Drawing.Point(359, 137);
       this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
       this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
       this.editExportBASICLineOffset.TabIndex = 10;
@@ -437,7 +461,7 @@ namespace C64Studio
       // 
       // editExportBASICLineNo
       // 
-      this.editExportBASICLineNo.Location = new System.Drawing.Point(188, 108);
+      this.editExportBASICLineNo.Location = new System.Drawing.Point(188, 137);
       this.editExportBASICLineNo.Name = "editExportBASICLineNo";
       this.editExportBASICLineNo.Size = new System.Drawing.Size(98, 20);
       this.editExportBASICLineNo.TabIndex = 10;
@@ -446,7 +470,7 @@ namespace C64Studio
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(292, 111);
+      this.label7.Location = new System.Drawing.Point(292, 140);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(55, 13);
       this.label7.TabIndex = 9;
@@ -455,7 +479,7 @@ namespace C64Studio
       // label6
       // 
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(135, 111);
+      this.label6.Location = new System.Drawing.Point(135, 140);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(55, 13);
       this.label6.TabIndex = 9;
@@ -534,7 +558,7 @@ namespace C64Studio
       // checkExportToDataWrap
       // 
       this.checkExportToDataWrap.AutoSize = true;
-      this.checkExportToDataWrap.Location = new System.Drawing.Point(138, 79);
+      this.checkExportToDataWrap.Location = new System.Drawing.Point(138, 81);
       this.checkExportToDataWrap.Name = "checkExportToDataWrap";
       this.checkExportToDataWrap.Size = new System.Drawing.Size(64, 17);
       this.checkExportToDataWrap.TabIndex = 4;
@@ -697,25 +721,23 @@ namespace C64Studio
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
       this.exchangeMultiColor2AndBGColorToolStripMenuItem.Text = "Exchange Multi color 2 and BG color";
       // 
-      // btnImportFromBASIC
+      // checkPrefixLoadAddress
       // 
-      this.btnImportFromBASIC.Location = new System.Drawing.Point(129, 48);
-      this.btnImportFromBASIC.Name = "btnImportFromBASIC";
-      this.btnImportFromBASIC.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromBASIC.TabIndex = 2;
-      this.btnImportFromBASIC.Text = "From BASIC";
-      this.btnImportFromBASIC.UseVisualStyleBackColor = true;
-      this.btnImportFromBASIC.Click += new System.EventHandler(this.btnImportCharsetFromBASIC_Click);
+      this.checkPrefixLoadAddress.AutoSize = true;
+      this.checkPrefixLoadAddress.Location = new System.Drawing.Point(138, 110);
+      this.checkPrefixLoadAddress.Name = "checkPrefixLoadAddress";
+      this.checkPrefixLoadAddress.Size = new System.Drawing.Size(117, 17);
+      this.checkPrefixLoadAddress.TabIndex = 4;
+      this.checkPrefixLoadAddress.Text = "Load Address (hex)";
+      this.checkPrefixLoadAddress.UseVisualStyleBackColor = true;
       // 
-      // btnImportFromBASICHex
+      // editPrefixLoadAddress
       // 
-      this.btnImportFromBASICHex.Location = new System.Drawing.Point(252, 48);
-      this.btnImportFromBASICHex.Name = "btnImportFromBASICHex";
-      this.btnImportFromBASICHex.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromBASICHex.TabIndex = 2;
-      this.btnImportFromBASICHex.Text = "From BASIC Hex";
-      this.btnImportFromBASICHex.UseVisualStyleBackColor = true;
-      this.btnImportFromBASICHex.Click += new System.EventHandler(this.btnImportCharsetFromBASICHex_Click);
+      this.editPrefixLoadAddress.Location = new System.Drawing.Point(271, 107);
+      this.editPrefixLoadAddress.Name = "editPrefixLoadAddress";
+      this.editPrefixLoadAddress.Size = new System.Drawing.Size(56, 20);
+      this.editPrefixLoadAddress.TabIndex = 1;
+      this.editPrefixLoadAddress.TextChanged += new System.EventHandler(this.editPrefixLoadAddress_TextChanged);
       // 
       // CharsetEditor
       // 
@@ -808,5 +830,7 @@ namespace C64Studio
         private CharacterEditor characterEditor;
     private System.Windows.Forms.Button btnImportFromBASICHex;
     private System.Windows.Forms.Button btnImportFromBASIC;
+    private System.Windows.Forms.TextBox editPrefixLoadAddress;
+    private System.Windows.Forms.CheckBox checkPrefixLoadAddress;
   }
 }

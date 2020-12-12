@@ -408,6 +408,14 @@ namespace C64Studio
       {
         charSet.Append( m_Charset.Characters[i].Data );
       }
+      if ( checkPrefixLoadAddress.Checked )
+      {
+        ushort address = GR.Convert.ToU16( editPrefixLoadAddress.Text, 16 );
+
+        var addressData = new ByteBuffer();
+        addressData.AppendU16( address );
+        charSet = addressData + charSet;
+      }
       GR.IO.File.WriteAllBytes( m_Charset.ExportFilename, charSet );
     }
 
@@ -576,6 +584,11 @@ namespace C64Studio
 
     private void ImportFromData( ByteBuffer CharData )
     {
+      if ( CharData.Length == 2050 )
+      {
+        // assume 2 bytes load address 
+        CharData = CharData.SubBuffer( 2 );
+      }
       int charsToImport = (int)CharData.Length / 8;
       if ( charsToImport > 256 )
       {
@@ -1422,6 +1435,13 @@ namespace C64Studio
     {
       ImportFromData( Util.FromBASICHex( editDataImport.Text ) );
       Modified = true;
+    }
+
+
+
+    private void editPrefixLoadAddress_TextChanged( object sender, EventArgs e )
+    {
+      checkPrefixLoadAddress.Checked = true;
     }
 
 

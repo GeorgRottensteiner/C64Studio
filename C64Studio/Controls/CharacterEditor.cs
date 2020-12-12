@@ -62,15 +62,12 @@ namespace C64Studio.Controls
     {
       InitializeComponent();
 
-      pictureEditor.DisplayPage.Create( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      pictureEditor.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback( pictureEditor_PostPaint );
       picturePlayground.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
       panelCharacters.SetDisplaySize( 128, 128 );
       panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       m_ImagePlayground.Create( 256, 256, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
-      CustomRenderer.PaletteManager.ApplyPalette( pictureEditor.DisplayPage );
       CustomRenderer.PaletteManager.ApplyPalette( picturePlayground.DisplayPage );
       CustomRenderer.PaletteManager.ApplyPalette( panelCharacters.DisplayPage );
       CustomRenderer.PaletteManager.ApplyPalette( m_ImagePlayground );
@@ -111,7 +108,7 @@ namespace C64Studio.Controls
       RedrawColorChooser();
 
       panelCharacters.KeyDown += new KeyEventHandler( HandleKeyDown );
-      pictureEditor.PreviewKeyDown += new PreviewKeyDownEventHandler( pictureEditor_PreviewKeyDown );
+      canvasEditor.PreviewKeyDown += new PreviewKeyDownEventHandler( canvasEditor_PreviewKeyDown );
     }
 
 
@@ -133,47 +130,6 @@ namespace C64Studio.Controls
     protected void RaiseCharactersShiftedEvent( int[] OldToNew, int[] NewToOld )
     {
       CharactersShifted?.Invoke( OldToNew, NewToOld );
-    }
-
-
-
-    void pictureEditor_PostPaint( GR.Image.FastImage TargetBuffer )
-    {
-      if ( m_Project.ShowGrid )
-      {
-        if ( ( m_Project.Characters[m_CurrentChar].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
-        &&   ( m_Project.Characters[m_CurrentChar].Color >= 8 ) )
-        {
-          for ( int i = 0; i < 4; ++i )
-          {
-            for ( int j = 0; j < TargetBuffer.Height; ++j )
-            {
-              TargetBuffer.SetPixel( i * ( pictureEditor.ClientRectangle.Width / 4 ), j, 0xffffffff );
-            }
-          }
-          for ( int i = 0; i < 8; ++i )
-          {
-            for ( int j = 0; j < TargetBuffer.Height; ++j )
-            {
-              TargetBuffer.SetPixel( j, i * ( pictureEditor.ClientRectangle.Width / 8 ), 0xffffffff );
-            }
-          }
-        }
-        else
-        {
-          for ( int i = 0; i < 8; ++i )
-          {
-            for ( int j = 0; j < TargetBuffer.Width; ++j )
-            {
-              TargetBuffer.SetPixel( i * ( pictureEditor.ClientRectangle.Width / 8 ), j, 0xffffffff );
-            }
-            for ( int j = 0; j < TargetBuffer.Height; ++j )
-            {
-              TargetBuffer.SetPixel( j, i * ( pictureEditor.ClientRectangle.Width / 8 ), 0xffffffff );
-            }
-          }
-        }
-      }
     }
 
 
@@ -204,7 +160,7 @@ namespace C64Studio.Controls
 
 
 
-    void pictureEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    void canvasEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
     {
       KeyEventArgs ke = new KeyEventArgs( e.KeyData );
       HandleKeyDown( sender, ke );
@@ -359,7 +315,7 @@ namespace C64Studio.Controls
             comboCharColor.SelectedIndex = m_Project.Characters[pastePos].Color;
           }
         }
-        pictureEditor.Invalidate();
+        canvasEditor.Invalidate();
         RaiseModifiedEvent();
         return;
       }
@@ -553,7 +509,7 @@ namespace C64Studio.Controls
         }
       }
 
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RaiseModifiedEvent();
     }
 
@@ -563,7 +519,7 @@ namespace C64Studio.Controls
     {
       int newChar = panelCharacters.SelectedIndex;
       if ( ( newChar != -1 )
-      && ( panelCharacters.SelectedIndices.Count == 1 ) )
+      &&   ( panelCharacters.SelectedIndices.Count == 1 ) )
       {
         labelCharNo.Text = "Character: " + newChar.ToString();
         m_CurrentChar = newChar;
@@ -575,8 +531,7 @@ namespace C64Studio.Controls
         {
           comboCharsetMode.SelectedIndex = (int)m_Project.Characters[m_CurrentChar].Mode;
         }
-        pictureEditor.Image = m_Project.Characters[m_CurrentChar].Image;
-        pictureEditor.Invalidate();
+        canvasEditor.Invalidate();
 
         SelectCategory( m_Project.Characters[m_CurrentChar].Category );
         RedrawColorChooser();
@@ -825,7 +780,7 @@ namespace C64Studio.Controls
       panelCharacters_SelectionChanged( null, null );
 
       panelCharacters.Invalidate();
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RedrawColorChooser();
     }
 
@@ -867,30 +822,10 @@ namespace C64Studio.Controls
 
 
 
-    private void pictureEditor_MouseDown( object sender, MouseEventArgs e )
-    {
-      pictureEditor.Focus();
-      HandleMouseOnEditor( e.X, e.Y, e.Button );
-    }
-
-
-
-    private void pictureEditor_MouseMove( object sender, MouseEventArgs e )
-    {
-      MouseButtons    buttons = e.Button;
-      if ( !pictureEditor.Focused )
-      {
-        buttons = 0;
-      }
-      HandleMouseOnEditor( e.X, e.Y, buttons );
-    }
-
-
-
     private void HandleMouseOnEditor( int X, int Y, MouseButtons Buttons )
     {
-      int     charX = X / ( pictureEditor.ClientRectangle.Width / 8 );
-      int     charY = Y / ( pictureEditor.ClientRectangle.Height / 8 );
+      int     charX = X / ( canvasEditor.ClientRectangle.Width / 8 );
+      int     charY = Y / ( canvasEditor.ClientRectangle.Height / 8 );
       int     affectedCharIndex = m_CurrentChar;
       var     origAffectedChar = m_Project.Characters[m_CurrentChar];
       var     affectedChar = m_Project.Characters[m_CurrentChar];
@@ -924,7 +859,7 @@ namespace C64Studio.Controls
         else
         {
           // multi color
-          charX = X / ( pictureEditor.ClientRectangle.Width / 4 );
+          charX = X / ( canvasEditor.ClientRectangle.Width / 4 );
           charX = 3 - charX;
 
           newByte &= (byte)~( 3 << ( 2 * charX ) );
@@ -976,7 +911,7 @@ namespace C64Studio.Controls
             RebuildCharImage( affectedCharIndex );
             panelCharacters.InvalidateItemRect( affectedCharIndex );
           }
-          pictureEditor.Invalidate();
+          canvasEditor.Invalidate();
         }
       }
       else
@@ -998,7 +933,7 @@ namespace C64Studio.Controls
         else
         {
           // multi color
-          charX = X / ( pictureEditor.ClientRectangle.Width / 4 );
+          charX = X / ( canvasEditor.ClientRectangle.Width / 4 );
           charX = 3 - charX;
 
           newByte &= (byte)~( 3 << ( 2 * charX ) );
@@ -1027,7 +962,7 @@ namespace C64Studio.Controls
             RebuildCharImage( affectedCharIndex );
             panelCharacters.InvalidateItemRect( affectedCharIndex );
           }
-          pictureEditor.Invalidate();
+          canvasEditor.Invalidate();
         }
       }
       else
@@ -1102,7 +1037,8 @@ namespace C64Studio.Controls
     private void checkShowGrid_CheckedChanged( object sender, EventArgs e )
     {
       m_Project.ShowGrid = checkShowGrid.Checked;
-      pictureEditor.Invalidate();
+
+      canvasEditor.Invalidate();
     }
 
 
@@ -1131,7 +1067,7 @@ namespace C64Studio.Controls
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RaiseModifiedEvent();
     }
 
@@ -1159,8 +1095,8 @@ namespace C64Studio.Controls
 
     private void HandleMouseOnPlayground( int X, int Y, MouseButtons Buttons )
     {
-      int     charX = X / ( pictureEditor.ClientRectangle.Width / 16 );
-      int     charY = Y / ( pictureEditor.ClientRectangle.Height / 16 );
+      int     charX = X / ( picturePlayground.ClientRectangle.Width / 16 );
+      int     charY = Y / ( picturePlayground.ClientRectangle.Height / 16 );
 
       if ( ( Buttons & MouseButtons.Left ) == 0 )
       {
@@ -1282,7 +1218,7 @@ namespace C64Studio.Controls
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RaiseModifiedEvent();
     }
 
@@ -1306,7 +1242,7 @@ namespace C64Studio.Controls
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RaiseModifiedEvent();
     }
 
@@ -1376,7 +1312,7 @@ namespace C64Studio.Controls
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RaiseModifiedEvent();
     }
 
@@ -1446,7 +1382,7 @@ namespace C64Studio.Controls
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RaiseModifiedEvent();
     }
 
@@ -1477,7 +1413,7 @@ namespace C64Studio.Controls
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RaiseModifiedEvent();
     }
 
@@ -1522,7 +1458,7 @@ namespace C64Studio.Controls
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RaiseModifiedEvent();
     }
 
@@ -1555,7 +1491,7 @@ namespace C64Studio.Controls
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RaiseModifiedEvent();
     }
 
@@ -1589,7 +1525,7 @@ namespace C64Studio.Controls
         RebuildCharImage( index );
         panelCharacters.InvalidateItemRect( index );
       }
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RaiseModifiedEvent();
     }
 
@@ -1675,7 +1611,7 @@ namespace C64Studio.Controls
           RebuildCharImage( i );
         }
         RaiseModifiedEvent();
-        pictureEditor.Invalidate();
+        canvasEditor.Invalidate();
         panelCharacters.Invalidate();
       }
     }
@@ -1694,7 +1630,7 @@ namespace C64Studio.Controls
           RebuildCharImage( i );
         }
         RaiseModifiedEvent();
-        pictureEditor.Invalidate();
+        canvasEditor.Invalidate();
         panelCharacters.Invalidate();
       }
     }
@@ -1713,7 +1649,7 @@ namespace C64Studio.Controls
           RebuildCharImage( i );
         }
         RaiseModifiedEvent();
-        pictureEditor.Invalidate();
+        canvasEditor.Invalidate();
         panelCharacters.Invalidate();
       }
     }
@@ -1732,7 +1668,7 @@ namespace C64Studio.Controls
           RebuildCharImage( i );
         }
         RaiseModifiedEvent();
-        pictureEditor.Invalidate();
+        canvasEditor.Invalidate();
         panelCharacters.Invalidate();
       }
     }
@@ -1768,7 +1704,7 @@ namespace C64Studio.Controls
       if ( modified )
       {
         RaiseModifiedEvent();
-        pictureEditor.Invalidate();
+        canvasEditor.Invalidate();
       }
     }
 
@@ -1785,7 +1721,7 @@ namespace C64Studio.Controls
       {
         RebuildCharImage( i );
       }
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       panelCharacters.Invalidate();
     }
 
@@ -1838,7 +1774,7 @@ namespace C64Studio.Controls
       if ( modified )
       {
         RaiseModifiedEvent();
-        pictureEditor.Invalidate();
+        canvasEditor.Invalidate();
       }
     }
 
@@ -2109,7 +2045,7 @@ namespace C64Studio.Controls
       }
       if ( wasModified )
       {
-        pictureEditor.Invalidate();
+        canvasEditor.Invalidate();
         RaiseModifiedEvent();
       }
       DoNotUpdateFromControls = false;
@@ -2200,11 +2136,73 @@ namespace C64Studio.Controls
       panelCharacters.Invalidate();
 
       RedrawPlayground();
-      pictureEditor.Invalidate();
+      canvasEditor.Invalidate();
       RedrawColorChooser();
 
       RaiseCharactersShiftedEvent( charMapOldToNew, charMapNewToOld );
       RaiseModifiedEvent();
+    }
+
+
+
+    private void canvasEditor_Paint( object sender, PaintEventArgs e )
+    {
+      e.Graphics.FillRectangle( System.Drawing.Brushes.Black, 0, 0, canvasEditor.ClientSize.Width, canvasEditor.ClientSize.Height );
+
+      Displayer.CharacterDisplayer.DisplayChar( m_Project, m_CurrentChar, new CustomDrawControlContext( e.Graphics, canvasEditor.ClientSize.Width, canvasEditor.ClientSize.Height ) );
+
+      if ( m_Project.ShowGrid )
+      {
+        if ( ( m_Project.Characters[m_CurrentChar].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        &&   ( m_Project.Characters[m_CurrentChar].Color >= 8 ) )
+        {
+          for ( int i = 0; i < 4; ++i )
+          {
+            e.Graphics.DrawLine( System.Drawing.Pens.White, 
+                                  i * ( canvasEditor.ClientSize.Width / 4 ), 0,
+                                  i * ( canvasEditor.ClientSize.Width / 4 ), canvasEditor.ClientSize.Height - 1 );
+          }
+          for ( int i = 0; i < 8; ++i )
+          {
+            e.Graphics.DrawLine( System.Drawing.Pens.White,
+                                  0, i * ( canvasEditor.ClientSize.Height / 8 ),
+                                  canvasEditor.ClientSize.Height - 1, i * ( canvasEditor.ClientSize.Height / 8 ) );
+          }
+        }
+        else
+        {
+          for ( int i = 0; i < 8; ++i )
+          {
+            e.Graphics.DrawLine( System.Drawing.Pens.White,
+                                  i * ( canvasEditor.ClientSize.Width / 8 ), 0,
+                                  i * ( canvasEditor.ClientSize.Width / 8 ), canvasEditor.ClientSize.Height );
+
+            e.Graphics.DrawLine( System.Drawing.Pens.White,
+                                  0, i * ( canvasEditor.ClientSize.Height / 8 ),
+                                  canvasEditor.ClientSize.Height - 1, i * ( canvasEditor.ClientSize.Height / 8 ) );
+          }
+        }
+      }
+    }
+
+
+
+    private void canvasEditor_MouseDown( object sender, MouseEventArgs e )
+    {
+      canvasEditor.Focus();
+      HandleMouseOnEditor( e.X, e.Y, e.Button );
+    }
+
+
+
+    private void canvasEditor_MouseMove( object sender, MouseEventArgs e )
+    {
+      MouseButtons    buttons = e.Button;
+      if ( !canvasEditor.Focused )
+      {
+        buttons = 0;
+      }
+      HandleMouseOnEditor( e.X, e.Y, buttons );
     }
 
 

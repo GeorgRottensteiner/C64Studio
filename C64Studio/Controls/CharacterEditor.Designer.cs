@@ -30,9 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterEditor));
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage5 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage6 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.btnClearChars = new System.Windows.Forms.Button();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
@@ -68,21 +67,21 @@
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMultiColor1WithBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exchangeMultiColor2WithBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.panelCharColors = new GR.Forms.FastPictureBox();
-      this.picturePlayground = new GR.Forms.FastPictureBox();
-      this.btnExchangeColors = new C64Studio.Controls.MenuButton();
-      this.panelCharacters = new GR.Forms.ImageListbox();
-      this.pictureEditor = new GR.Forms.FastPictureBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnMoveSelectionToTarget = new System.Windows.Forms.Button();
       this.editMoveTargetIndex = new System.Windows.Forms.TextBox();
       this.label10 = new System.Windows.Forms.Label();
+      this.canvasEditor = new C64Studio.Controls.CustomDrawControl();
+      this.panelCharColors = new GR.Forms.FastPictureBox();
+      this.picturePlayground = new GR.Forms.FastPictureBox();
+      this.btnExchangeColors = new C64Studio.Controls.MenuButton();
+      this.panelCharacters = new GR.Forms.ImageListbox();
       this.groupBox2.SuspendLayout();
       this.contextMenuExchangeColors.SuspendLayout();
+      this.groupBox1.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).BeginInit();
-      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
       // groupBox2
@@ -444,10 +443,59 @@
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 2 with BG Color";
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor2AndBGColorToolStripMenuItem_Click);
       // 
+      // groupBox1
+      // 
+      this.groupBox1.Controls.Add(this.btnMoveSelectionToTarget);
+      this.groupBox1.Controls.Add(this.editMoveTargetIndex);
+      this.groupBox1.Controls.Add(this.label10);
+      this.groupBox1.Location = new System.Drawing.Point(580, 301);
+      this.groupBox1.Name = "groupBox1";
+      this.groupBox1.Size = new System.Drawing.Size(249, 56);
+      this.groupBox1.TabIndex = 53;
+      this.groupBox1.TabStop = false;
+      this.groupBox1.Text = "Move Selection To";
+      // 
+      // btnMoveSelectionToTarget
+      // 
+      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 23);
+      this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
+      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 21);
+      this.btnMoveSelectionToTarget.TabIndex = 2;
+      this.btnMoveSelectionToTarget.Text = "Move";
+      this.btnMoveSelectionToTarget.UseVisualStyleBackColor = true;
+      this.btnMoveSelectionToTarget.Click += new System.EventHandler(this.btnMoveSelectionToTarget_Click);
+      // 
+      // editMoveTargetIndex
+      // 
+      this.editMoveTargetIndex.Location = new System.Drawing.Point(82, 23);
+      this.editMoveTargetIndex.Name = "editMoveTargetIndex";
+      this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
+      this.editMoveTargetIndex.TabIndex = 1;
+      // 
+      // label10
+      // 
+      this.label10.AutoSize = true;
+      this.label10.Location = new System.Drawing.Point(6, 26);
+      this.label10.Name = "label10";
+      this.label10.Size = new System.Drawing.Size(70, 13);
+      this.label10.TabIndex = 0;
+      this.label10.Text = "Target Index:";
+      // 
+      // canvasEditor
+      // 
+      this.canvasEditor.Location = new System.Drawing.Point(8, 3);
+      this.canvasEditor.Name = "canvasEditor";
+      this.canvasEditor.Size = new System.Drawing.Size(265, 260);
+      this.canvasEditor.TabIndex = 54;
+      this.canvasEditor.TabStop = false;
+      this.canvasEditor.Paint += new System.Windows.Forms.PaintEventHandler(this.canvasEditor_Paint);
+      this.canvasEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseDown);
+      this.canvasEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseMove);
+      // 
       // panelCharColors
       // 
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage4;
+      this.panelCharColors.DisplayPage = fastImage1;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(782, 271);
       this.panelCharColors.Name = "panelCharColors";
@@ -460,7 +508,7 @@
       // picturePlayground
       // 
       this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picturePlayground.DisplayPage = fastImage5;
+      this.picturePlayground.DisplayPage = fastImage2;
       this.picturePlayground.Image = null;
       this.picturePlayground.Location = new System.Drawing.Point(782, 3);
       this.picturePlayground.Name = "picturePlayground";
@@ -506,63 +554,11 @@
       this.panelCharacters.VisibleAutoScrollVertical = false;
       this.panelCharacters.SelectionChanged += new System.EventHandler(this.panelCharacters_SelectionChanged);
       // 
-      // pictureEditor
-      // 
-      this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage6;
-      this.pictureEditor.Image = null;
-      this.pictureEditor.Location = new System.Drawing.Point(8, 3);
-      this.pictureEditor.Name = "pictureEditor";
-      this.pictureEditor.Size = new System.Drawing.Size(260, 260);
-      this.pictureEditor.TabIndex = 20;
-      this.pictureEditor.TabStop = false;
-      this.pictureEditor.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback(this.pictureEditor_PostPaint);
-      this.pictureEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseDown);
-      this.pictureEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseMove);
-      this.pictureEditor.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.pictureEditor_PreviewKeyDown);
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.btnMoveSelectionToTarget);
-      this.groupBox1.Controls.Add(this.editMoveTargetIndex);
-      this.groupBox1.Controls.Add(this.label10);
-      this.groupBox1.Location = new System.Drawing.Point(580, 301);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(249, 56);
-      this.groupBox1.TabIndex = 53;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Move Selection To";
-      // 
-      // btnMoveSelectionToTarget
-      // 
-      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 23);
-      this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
-      this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 21);
-      this.btnMoveSelectionToTarget.TabIndex = 2;
-      this.btnMoveSelectionToTarget.Text = "Move";
-      this.btnMoveSelectionToTarget.UseVisualStyleBackColor = true;
-      this.btnMoveSelectionToTarget.Click += new System.EventHandler(this.btnMoveSelectionToTarget_Click);
-      // 
-      // editMoveTargetIndex
-      // 
-      this.editMoveTargetIndex.Location = new System.Drawing.Point(82, 23);
-      this.editMoveTargetIndex.Name = "editMoveTargetIndex";
-      this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
-      this.editMoveTargetIndex.TabIndex = 1;
-      // 
-      // label10
-      // 
-      this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(6, 26);
-      this.label10.Name = "label10";
-      this.label10.Size = new System.Drawing.Size(70, 13);
-      this.label10.TabIndex = 0;
-      this.label10.Text = "Target Index:";
-      // 
       // CharacterEditor
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.canvasEditor);
       this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.panelCharColors);
       this.Controls.Add(this.picturePlayground);
@@ -596,17 +592,16 @@
       this.Controls.Add(this.comboMulticolor2);
       this.Controls.Add(this.comboMulticolor1);
       this.Controls.Add(this.comboBackground);
-      this.Controls.Add(this.pictureEditor);
       this.Name = "CharacterEditor";
       this.Size = new System.Drawing.Size(1057, 490);
       this.groupBox2.ResumeLayout(false);
       this.groupBox2.PerformLayout();
       this.contextMenuExchangeColors.ResumeLayout(false);
-      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pictureEditor)).EndInit();
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -649,7 +644,6 @@
         private System.Windows.Forms.ComboBox comboMulticolor2;
         private System.Windows.Forms.ComboBox comboMulticolor1;
         private System.Windows.Forms.ComboBox comboBackground;
-        private GR.Forms.FastPictureBox pictureEditor;
         private System.Windows.Forms.ContextMenuStrip contextMenuExchangeColors;
         private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithMultiColor2ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithBGColorToolStripMenuItem;
@@ -658,5 +652,6 @@
         private System.Windows.Forms.Button btnMoveSelectionToTarget;
         private System.Windows.Forms.TextBox editMoveTargetIndex;
         private System.Windows.Forms.Label label10;
-    }
+    private CustomDrawControl canvasEditor;
+  }
 }
