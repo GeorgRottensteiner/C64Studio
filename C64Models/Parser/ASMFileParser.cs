@@ -1098,7 +1098,7 @@ namespace C64Studio.Parser
 
 
 
-    private bool EvaluateLabel( int LineIndex, string LabelContent, out int Result )
+    private bool EvaluateLabel( int LineIndex, string LabelContent,out int Result )
     {
       ClearErrorInfo();
 
@@ -12903,14 +12903,36 @@ namespace C64Studio.Parser
           }
           // collapse binary representations
           if ( ( result[i].Content[0] == '%' )
-          && ( result[i + 1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
-          && ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
+          &&   ( result[i + 1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
           {
+            // # and . are allowed
+            bool  allValid = true;
+            for ( int j = 0; j < result[i + 1].Content.Length; ++j )
+            { 
+              if ( ( result[i + 1].Content[j] != '.' )
+              &&   ( result[i + 1].Content[j] != '#' ) )
+              {
+                allValid = false;
+                break;
+              }
+            }
+            if ( allValid )
+            {
+              // collapse completely
+              result[i].Content += result[i + 1].Content;
+              result[i].Length += result[i + 1].Content.Length;
+              result[i].Type = Types.TokenInfo.TokenType.LITERAL_NUMBER;
+              result.RemoveAt( i + 1 );
+              --i;
+              continue;
+            }
+
             // several dots are connected as local label, only use first .
             int   dotEnd = -1;
 
             while ( ( dotEnd + 1 < result[i + 1].Content.Length )
-            && ( result[i + 1].Content[dotEnd + 1] == '.' ) )
+            &&      ( result[i + 1].Content[dotEnd + 1] == '.' ) )
             {
               ++dotEnd;
             }
@@ -13193,6 +13215,7 @@ namespace C64Studio.Parser
           }
         }
       }
+      ClearErrorInfo();
     }
 
 

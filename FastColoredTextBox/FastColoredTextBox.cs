@@ -6335,7 +6335,8 @@ namespace FastColoredTextBoxNS
     {
       Invalidate();
 
-      if ( lastModifiers == Keys.Control )
+      //if ( lastModifiers == Keys.Control )
+      if ( Control.ModifierKeys == Keys.Control )
       {
         ChangeFontSize( 2 * Math.Sign( e.Delta ) );
         ( (HandledMouseEventArgs)e ).Handled = true;

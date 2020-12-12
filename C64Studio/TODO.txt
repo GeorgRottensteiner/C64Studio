@@ -1,11 +1,11 @@
 ﻿C64Studio
+o Save/Restore bookmarks (in solution or project)
 o Concatenate labels with numbers (e.g. !for loops) -> partially in, requires label generating rewrite
 o duplicate zone names, add onto each other
 o Document reloading order, Charset Editor and Watch in wrong window
 o Auto-Save Documents -> Crash safety-check on Find/Replace!
 o Charset conversion -> force number of chars (lossy conversion)
 o CharScreen -> Copy Selection/Ranges to preview window
-o Feature request: kannst du beim Font Export "To File..." noch eine Angabe für die 2 Bytes der Startadresse optional mit einbauen? 
 o und lässt sich der Bereich zum Austesten der Zeichen auf 40x25 vergrößern, bzw. skalierbar machen? 
 o Label with : are warning-marked on the wrong line
   line separation by ':' messes up cycle/byte count (see above) but also label locationing!
@@ -98,9 +98,6 @@ o beim exportieren von Map-Daten, funktioniert der wrap m.E. nicht richtig. Zumi
 o Bessere Anzeige der optionalen Zyklen
 o Mehrere Memory-Fenster, machbar?
 o Combined line cycle and byte count info (currently only info of first line is shown in border!)
-
-o DPI-Skalierung wirkt sich komisch aus (Windows Skalierung der GUI/Oberfläche auf 125%)
-
 o TODO - Nested for loops using a local label from outside:
     .LABEL
     !for ROW = 0 to 5
@@ -122,7 +119,6 @@ o Linux:
   cd ~/.winedir/drive_c/Program Files/C64StudioRelease 
   WINEPREFIX=~/.winedir wine C64Studio.exe 
 
-o PETSCII table: Rewrite
 o Docs: list illegal opcodes in help
 o Disassembler: rechtsklick auf Adresse um die als Sprungadresse zu nehmen
 o Disassembler: Option, um alles zu disassemblieren, auch ohne weitere Sprungpunkte
