@@ -483,6 +483,7 @@
       // 
       // canvasEditor
       // 
+      this.canvasEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.canvasEditor.Location = new System.Drawing.Point(8, 3);
       this.canvasEditor.Name = "canvasEditor";
       this.canvasEditor.Size = new System.Drawing.Size(265, 260);

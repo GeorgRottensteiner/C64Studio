@@ -24,10 +24,10 @@ namespace C64Studio.Displayer
             colorIndex = BGColor;
           }
           Context.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[colorIndex], 
-                                          ( i * Context.Bounds.Width / 8 ),
-                                          ( j * Context.Bounds.Height / 8 ),
-                                          ( ( i + 1 ) * Context.Bounds.Width / 8 ) - ( i * Context.Bounds.Width / 8 ) - 1,
-                                          ( ( j + 1 ) * Context.Bounds.Height / 8 ) - ( j * Context.Bounds.Height / 8 ) - 1 );
+                                          ( i * Context.Bounds.Width ) / 8,
+                                          ( j * Context.Bounds.Height ) / 8,
+                                          ( ( i + 1 ) * Context.Bounds.Width ) / 8 - ( i * Context.Bounds.Width ) / 8,
+                                          ( ( j + 1 ) * Context.Bounds.Height ) / 8 - ( j * Context.Bounds.Height ) / 8 );
         }
       }
     }
@@ -68,10 +68,10 @@ namespace C64Studio.Displayer
               break;
           }
           Context.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[pixelValue],
-                                          ( i * Context.Bounds.Width / 4 ),
-                                          ( j * Context.Bounds.Height / 8 ),
-                                          ( ( i + 1 ) * Context.Bounds.Width / 4 ) - ( i * Context.Bounds.Width / 4 ) - 1,
-                                          ( ( j + 1 ) * Context.Bounds.Height / 8 ) - ( j * Context.Bounds.Height / 8 ) - 1 );
+                                          ( i * Context.Bounds.Width ) / 4,
+                                          ( j * Context.Bounds.Height ) / 8,
+                                          ( ( i + 1 ) * Context.Bounds.Width ) / 4 - ( i * Context.Bounds.Width ) / 4,
+                                          ( ( j + 1 ) * Context.Bounds.Height ) / 8 - ( j * Context.Bounds.Height ) / 8 );
         }
       }
     }

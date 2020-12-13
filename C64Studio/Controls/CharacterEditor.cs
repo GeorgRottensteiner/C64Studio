@@ -826,6 +826,22 @@ namespace C64Studio.Controls
     {
       int     charX = X / ( canvasEditor.ClientRectangle.Width / 8 );
       int     charY = Y / ( canvasEditor.ClientRectangle.Height / 8 );
+
+      // iron out rounding bugs
+      for ( int i = 0; i < 7; ++i )
+      {
+        if ( ( X >= ( i * canvasEditor.ClientRectangle.Width ) / 8 )
+        &&   ( X < ( ( i + 1 )  * canvasEditor.ClientRectangle.Width ) / 8 ) )
+        {
+          charX = i;
+        }
+        if ( ( Y >= ( i * canvasEditor.ClientRectangle.Height ) / 8 )
+        &&   ( Y < ( ( i + 1 )  * canvasEditor.ClientRectangle.Height ) / 8 ) )
+        {
+          charY = i;
+        }
+      }
+
       int     affectedCharIndex = m_CurrentChar;
       var     origAffectedChar = m_Project.Characters[m_CurrentChar];
       var     affectedChar = m_Project.Characters[m_CurrentChar];
@@ -2158,15 +2174,15 @@ namespace C64Studio.Controls
         {
           for ( int i = 0; i < 4; ++i )
           {
-            e.Graphics.DrawLine( System.Drawing.Pens.White, 
-                                  i * ( canvasEditor.ClientSize.Width / 4 ), 0,
-                                  i * ( canvasEditor.ClientSize.Width / 4 ), canvasEditor.ClientSize.Height - 1 );
+            e.Graphics.DrawLine( System.Drawing.Pens.White,
+                                  ( i * canvasEditor.ClientSize.Width ) / 4, 0,
+                                  ( i * canvasEditor.ClientSize.Width ) / 4, canvasEditor.ClientSize.Height - 1 );
           }
           for ( int i = 0; i < 8; ++i )
           {
             e.Graphics.DrawLine( System.Drawing.Pens.White,
-                                  0, i * ( canvasEditor.ClientSize.Height / 8 ),
-                                  canvasEditor.ClientSize.Height - 1, i * ( canvasEditor.ClientSize.Height / 8 ) );
+                                  0, ( i * canvasEditor.ClientSize.Height ) / 8,
+                                  canvasEditor.ClientSize.Width - 1, ( i * canvasEditor.ClientSize.Height ) / 8 );
           }
         }
         else
@@ -2174,12 +2190,12 @@ namespace C64Studio.Controls
           for ( int i = 0; i < 8; ++i )
           {
             e.Graphics.DrawLine( System.Drawing.Pens.White,
-                                  i * ( canvasEditor.ClientSize.Width / 8 ), 0,
-                                  i * ( canvasEditor.ClientSize.Width / 8 ), canvasEditor.ClientSize.Height );
+                                  ( i * canvasEditor.ClientSize.Width ) / 8, 0,
+                                  ( i * canvasEditor.ClientSize.Width ) / 8, canvasEditor.ClientSize.Height - 1 );
 
             e.Graphics.DrawLine( System.Drawing.Pens.White,
-                                  0, i * ( canvasEditor.ClientSize.Height / 8 ),
-                                  canvasEditor.ClientSize.Height - 1, i * ( canvasEditor.ClientSize.Height / 8 ) );
+                                  0, ( i * canvasEditor.ClientSize.Height ) / 8,
+                                  canvasEditor.ClientSize.Width - 1, ( i * canvasEditor.ClientSize.Height ) / 8 );
           }
         }
       }
