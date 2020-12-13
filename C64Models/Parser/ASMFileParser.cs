@@ -11571,12 +11571,16 @@ namespace C64Studio.Parser
         }
       }
 
-      memoryBlockLength = currentAddress - memoryBlockStartAddress;
-      if ( ( memoryBlockLength > 0 )
-      &&   ( memoryBlockActualDataLength > 0 ) )
+      if ( memoryBlockStartAddress > -1 )
       {
-        //memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockLength ) );
-        memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength ) );
+        memoryBlockLength = currentAddress - memoryBlockStartAddress;
+        /*
+        if ( ( memoryBlockLength > 0 )
+        &&   ( memoryBlockActualDataLength > 0 ) )*/
+        {
+          //memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockLength ) );
+          memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength ) );
+        }
       }
 
       // Why did I do that? why add a memory block if it could re-add a virtual block?

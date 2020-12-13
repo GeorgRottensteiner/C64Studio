@@ -658,5 +658,31 @@ namespace TestProject
       Assert.AreEqual( "00C00123456789ABCDEF", assembly.ToString() );
     }
 
+
+
+    [TestMethod]
+    public void TestNoDiscardVirtualSection()
+    {
+      string      source = @"* = $1f00
+                                        !byte $17
+                              * = $2000  ";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.crt";
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      var assembly = parser.AssembledOutput;
+
+      Assert.AreEqual( "001F17000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", assembly.Assembly.ToString() );
+    }
+
+
+
   }
 }
