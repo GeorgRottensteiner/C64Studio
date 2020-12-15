@@ -1,4 +1,7 @@
 ﻿C64Studio
+o Beim Basic Renumber wird das Leerzeichen hinter den Zeilennummern gestript.
+o Schaltet man den Label Mode hin und her, wird und bleibt der Macro Mode aktiviert, was dann nicht mit der "Q" Anzeige übereinstimmt, durch 2x Klick auf "Q" kommt man wieder zur Symbol Ansicht.
+o Beim mehrfachen Label Mode Umschalten werden in der REM Zeile Leerzeichen hinzugefügt:
 o Document operators (%, etc.)
 o Save/Restore bookmarks (in solution or project)
 o Concatenate labels with numbers (e.g. !for loops) -> partially in, requires label generating rewrite
@@ -15,7 +18,6 @@ o Charpad format version 6
 o MemViewer: Speicheradresse und nur ein Byte, alles untereinander? 
              Disassembly
 o BASIC - Auto-fix casing on opening a file
-o Charset editor - scaling bug (editor all in one small spot top left!) <- in HUUUUUUGE resolutions?
 o Charset editor:
     Ctrl-Clicking for single character toggling
     Category selection should affect the whole selection
@@ -45,6 +47,8 @@ o *=$0801 "Basic"
   $8000 - $84fb Map Data
   etc
 o When you are creating a new project/solution with the same name, you are not warned that you are about to overwrite the existing project.
+o Still having problems with creating a new solution/project when another solution/project is loaded.
+	Both the times I have done this, it's like it's overwritting the previous .s64 file!!!
 o Theming -> Disabled Controls
 o Abspeichern von .BAS-Dateien mit "richtigem" PETSCII-Wert (falls das nicht mit irgend etwas anderem kollidiert)
 o alternative BASIC-Macro-Darstellung (xxx * Anzahl)
@@ -85,8 +89,6 @@ o BASIC: Undo bei Label-Mode-Wechsel sollte Label-Mode mit wechseln!
 o PDS: lda #< should use lo/hi of the whole expression
 o wie kann ich beim laufenden debuggen den Speicher ändern? (die Register sind ja änderbar - der Mem auch?)
 o wie kann ich dem Debugger beibringen, dass er das Mem-Fenster weiterhin mit der gew. Adresse anzeigt?
-o Still having problems with creating a new solution/project when another solution/project is loaded.
-	Both the times I have done this, it's like it's overwritting the previous .s64 file!!!
 o Start without existing settings, code colors blank!! Crash on exit?
 o Basic-Loader (ASM to BASIC-Loader)
 o Zeilenabstand nicht fixiert, einstellbar

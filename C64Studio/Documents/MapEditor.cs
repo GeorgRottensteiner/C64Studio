@@ -954,7 +954,33 @@ namespace C64Studio
       {
         bgColor = (uint)m_CurrentMap.AlternativeBackgroundColor;
       }
-      pictureEditor.DisplayPage.Box( 0, 0, pictureEditor.DisplayPage.Width, pictureEditor.DisplayPage.Height, (uint)bgColor );
+
+      int     fillWidth = pictureEditor.DisplayPage.Width;
+      int     fillHeight = pictureEditor.DisplayPage.Height;
+
+      if ( m_CurrentMap != null )
+      {
+        fillWidth = m_CurrentMap.TileSpacingX * 8 * m_CurrentMap.Tiles.Width;
+        fillHeight = m_CurrentMap.TileSpacingY * 8 * m_CurrentMap.Tiles.Height;
+        if ( ( m_CurrentMap.Tiles.Width - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX < pictureEditor.DisplayPage.Width )
+        {
+          fillWidth = pictureEditor.DisplayPage.Width - ( m_CurrentMap.Tiles.Width - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX;
+        }
+        if ( ( m_CurrentMap.Tiles.Height - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY < pictureEditor.DisplayPage.Height )
+        {
+          fillHeight = pictureEditor.DisplayPage.Height - ( m_CurrentMap.Tiles.Height - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY;
+        }
+      }
+
+      pictureEditor.DisplayPage.Box( 0, 0, fillWidth, fillHeight, (uint)bgColor );
+      if ( fillWidth < pictureEditor.DisplayPage.Width )
+      {
+        pictureEditor.DisplayPage.Box( fillWidth, 0, pictureEditor.DisplayPage.Width - fillWidth, pictureEditor.DisplayPage.Height, 16 );
+      }
+      if ( fillHeight < pictureEditor.DisplayPage.Height )
+      {
+        pictureEditor.DisplayPage.Box( 0, fillHeight, pictureEditor.DisplayPage.Width, pictureEditor.DisplayPage.Height - fillHeight, 16 );
+      }
 
       if ( m_CurrentMap == null )
       {
@@ -966,9 +992,9 @@ namespace C64Studio
       int offsetY = m_CurEditorOffsetY;
 
       int x1 = offsetX;
-      int x2 = offsetX + m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width;
+      int x2 = offsetX + ( pictureEditor.DisplayPage.Width / ( 8 * m_CurrentMap.TileSpacingX ) );
       int y1 = offsetY;
-      int y2 = offsetY + m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height;
+      int y2 = offsetY + ( pictureEditor.DisplayPage.Height / ( 8 * m_CurrentMap.TileSpacingY ) );
 
       for ( int y = y1; y <= y2; ++y )
       {

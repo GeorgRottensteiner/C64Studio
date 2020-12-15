@@ -61,7 +61,7 @@
       this.btnExportCharset = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
-      this.btnCopyImage = new System.Windows.Forms.Button();
+      this.btnCopyMapImage = new System.Windows.Forms.Button();
       this.btnToolSelect = new System.Windows.Forms.RadioButton();
       this.btnToolFill = new System.Windows.Forms.RadioButton();
       this.btnToolQuad = new System.Windows.Forms.RadioButton();
@@ -81,6 +81,8 @@
       this.comboMapBGColor = new System.Windows.Forms.ComboBox();
       this.comboMapMultiColor1 = new System.Windows.Forms.ComboBox();
       this.btnCopy = new System.Windows.Forms.Button();
+      this.btnMoveMapDown = new System.Windows.Forms.Button();
+      this.btnMoveMapUp = new System.Windows.Forms.Button();
       this.btnMapAdd = new System.Windows.Forms.Button();
       this.btnMapDelete = new System.Windows.Forms.Button();
       this.btnMapApply = new System.Windows.Forms.Button();
@@ -172,8 +174,6 @@
       this.button4 = new System.Windows.Forms.Button();
       this.button5 = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnMoveMapUp = new System.Windows.Forms.Button();
-      this.btnMoveMapDown = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -463,7 +463,7 @@
       // 
       // tabEditor
       // 
-      this.tabEditor.Controls.Add(this.btnCopyImage);
+      this.tabEditor.Controls.Add(this.btnCopyMapImage);
       this.tabEditor.Controls.Add(this.btnToolSelect);
       this.tabEditor.Controls.Add(this.btnToolFill);
       this.tabEditor.Controls.Add(this.btnToolQuad);
@@ -486,15 +486,16 @@
       this.tabEditor.Text = "Map";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
-      // btnCopyImage
+      // btnCopyMapImage
       // 
-      this.btnCopyImage.ImageKey = "(none)";
-      this.btnCopyImage.Location = new System.Drawing.Point(628, 432);
-      this.btnCopyImage.Name = "btnCopyImage";
-      this.btnCopyImage.Size = new System.Drawing.Size(24, 24);
-      this.btnCopyImage.TabIndex = 38;
-      this.btnCopyImage.UseVisualStyleBackColor = true;
-      this.btnCopyImage.Click += new System.EventHandler(this.btnCopyImage_Click);
+      this.btnCopyMapImage.Image = global::C64Studio.Properties.Resources.edit_copy;
+      this.btnCopyMapImage.Location = new System.Drawing.Point(632, 432);
+      this.btnCopyMapImage.Name = "btnCopyMapImage";
+      this.btnCopyMapImage.Size = new System.Drawing.Size(39, 24);
+      this.btnCopyMapImage.TabIndex = 38;
+      this.toolTip1.SetToolTip(this.btnCopyMapImage, "Copy map to clipboard as image");
+      this.btnCopyMapImage.UseVisualStyleBackColor = true;
+      this.btnCopyMapImage.Click += new System.EventHandler(this.btnCopyImage_Click);
       // 
       // btnToolSelect
       // 
@@ -727,6 +728,30 @@
       this.btnCopy.Text = "Cpy";
       this.btnCopy.UseVisualStyleBackColor = true;
       this.btnCopy.Click += new System.EventHandler(this.btnMapCopy_Click);
+      // 
+      // btnMoveMapDown
+      // 
+      this.btnMoveMapDown.Enabled = false;
+      this.btnMoveMapDown.Location = new System.Drawing.Point(231, 43);
+      this.btnMoveMapDown.Name = "btnMoveMapDown";
+      this.btnMoveMapDown.Size = new System.Drawing.Size(35, 23);
+      this.btnMoveMapDown.TabIndex = 27;
+      this.btnMoveMapDown.Text = "▼";
+      this.toolTip1.SetToolTip(this.btnMoveMapDown, "Move Map Down");
+      this.btnMoveMapDown.UseVisualStyleBackColor = true;
+      this.btnMoveMapDown.Click += new System.EventHandler(this.btnMoveMapDown_Click);
+      // 
+      // btnMoveMapUp
+      // 
+      this.btnMoveMapUp.Enabled = false;
+      this.btnMoveMapUp.Location = new System.Drawing.Point(192, 43);
+      this.btnMoveMapUp.Name = "btnMoveMapUp";
+      this.btnMoveMapUp.Size = new System.Drawing.Size(35, 23);
+      this.btnMoveMapUp.TabIndex = 27;
+      this.btnMoveMapUp.Text = "▲";
+      this.toolTip1.SetToolTip(this.btnMoveMapUp, "Move Map Up");
+      this.btnMoveMapUp.UseVisualStyleBackColor = true;
+      this.btnMoveMapUp.Click += new System.EventHandler(this.btnMoveMapUp_Click);
       // 
       // btnMapAdd
       // 
@@ -1677,30 +1702,6 @@
       this.button5.Text = "as assembly source";
       this.button5.UseVisualStyleBackColor = true;
       // 
-      // btnMoveMapUp
-      // 
-      this.btnMoveMapUp.Enabled = false;
-      this.btnMoveMapUp.Location = new System.Drawing.Point(192, 43);
-      this.btnMoveMapUp.Name = "btnMoveMapUp";
-      this.btnMoveMapUp.Size = new System.Drawing.Size(35, 23);
-      this.btnMoveMapUp.TabIndex = 27;
-      this.btnMoveMapUp.Text = "▲";
-      this.toolTip1.SetToolTip(this.btnMoveMapUp, "Move Map Up");
-      this.btnMoveMapUp.UseVisualStyleBackColor = true;
-      this.btnMoveMapUp.Click += new System.EventHandler(this.btnMoveMapUp_Click);
-      // 
-      // btnMoveMapDown
-      // 
-      this.btnMoveMapDown.Enabled = false;
-      this.btnMoveMapDown.Location = new System.Drawing.Point(231, 43);
-      this.btnMoveMapDown.Name = "btnMoveMapDown";
-      this.btnMoveMapDown.Size = new System.Drawing.Size(35, 23);
-      this.btnMoveMapDown.TabIndex = 27;
-      this.btnMoveMapDown.Text = "▼";
-      this.toolTip1.SetToolTip(this.btnMoveMapDown, "Move Map Down");
-      this.btnMoveMapDown.UseVisualStyleBackColor = true;
-      this.btnMoveMapDown.Click += new System.EventHandler(this.btnMoveMapDown_Click);
-      // 
       // MapEditor
       // 
       this.ClientSize = new System.Drawing.Size(1064, 525);
@@ -1879,9 +1880,9 @@
     private System.Windows.Forms.Button btnTileClone;
         private System.Windows.Forms.TabPage tabCharset;
         private Controls.CharacterEditor characterEditor;
-        private System.Windows.Forms.Button btnCopyImage;
         private System.Windows.Forms.Button btnExportCharset;
     private System.Windows.Forms.Button btnMoveMapDown;
     private System.Windows.Forms.Button btnMoveMapUp;
+    private System.Windows.Forms.Button btnCopyMapImage;
   }
 }
