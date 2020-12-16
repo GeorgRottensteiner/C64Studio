@@ -36,13 +36,13 @@ namespace C64Studio
     COMPILE_RESULT,
     [Description( "Breakpoints" )]
     DEBUG_BREAKPOINTS,
-    [Description( "Charset Editor" )]
+    [Description( "Watch" )]
     DEBUG_WATCH,
     [Description( "Memory" )]
     DEBUG_MEMORY,
     [Description( "Registers" )]
     DEBUG_REGISTERS,
-    [Description( "Watch" )]
+    [Description( "Charset Editor" )]
     CHARSET_EDITOR,
     [Description( "Sprite Editor" )]
     SPRITE_EDITOR,
@@ -299,7 +299,11 @@ namespace C64Studio
 
     private IDockContent GetContentFromPersistString( string persistString )
     {
-      //Debug.Log( "persist " + persistString );
+      Debug.Log( "persist " + persistString );
+      if ( persistString == "Watch" )
+      {
+        Debug.Log( "shs" );
+      }
 
       /*
       // ignore built in windows (map editor, etc.), for some reason restoring those breaks
