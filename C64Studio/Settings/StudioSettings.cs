@@ -299,24 +299,7 @@ namespace C64Studio
 
     private IDockContent GetContentFromPersistString( string persistString )
     {
-      Debug.Log( "persist " + persistString );
-      if ( persistString == "Watch" )
-      {
-        Debug.Log( "shs" );
-      }
-
-      /*
-      // ignore built in windows (map editor, etc.), for some reason restoring those breaks
-      if ( ( persistString == "Map Editor" )
-      ||   ( persistString == "Sprite Editor" )
-      ||   ( persistString == "Charset Editor" )
-      ||   ( persistString == "Help" )
-      ||   ( persistString == "Graphic Screen Editor" )
-      ||   ( persistString == "Text Screen Editor" ) )
-      {
-        // Ouch!
-        return null;
-      }*/
+      //Debug.Log( "persist " + persistString );
       foreach ( var toolEntry in Tools )
       {
         if ( persistString == toolEntry.Value.ToolDescription )
@@ -324,8 +307,6 @@ namespace C64Studio
           return toolEntry.Value.Document;
         }
       }
-      //Debug.Log( "aua!" );
-      //return new BaseDocument();
       return null;
     }
 
