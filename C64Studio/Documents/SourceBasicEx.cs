@@ -1515,6 +1515,14 @@ namespace C64Studio
       {
         result = parser.DecodeFromLabels();
       }
+      if ( m_SymbolMode )
+      {
+        result = Core.Compiling.ParserBasic.ReplaceAllMacrosBySymbols( result, out bool hadError );
+      }
+      else
+      {
+        result = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( result );
+      }
 
       if ( parser.Errors > 0 )
       {

@@ -1,7 +1,6 @@
 ﻿C64Studio
 o nach dem Start sind dann meistens "Watch" und "Character Editor" vertauscht.
 o Beim Basic Renumber wird das Leerzeichen hinter den Zeilennummern gestript.
-o Schaltet man den Label Mode hin und her, wird und bleibt der Macro Mode aktiviert, was dann nicht mit der "Q" Anzeige übereinstimmt, durch 2x Klick auf "Q" kommt man wieder zur Symbol Ansicht.
 o Beim mehrfachen Label Mode Umschalten werden in der REM Zeile Leerzeichen hinzugefügt:
 o Document operators (%, etc.)
 o Save/Restore bookmarks (in solution or project)
