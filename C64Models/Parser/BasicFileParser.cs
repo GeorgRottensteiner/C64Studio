@@ -3315,16 +3315,6 @@ namespace C64Studio.Parser
           }
           // if we got here there was no label inserted
           sb.Append( token.Content );
-          if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-          ||   ( token.TokenType == Token.Type.NUMERIC_LITERAL )
-          ||   ( token.TokenType == Token.Type.EX_BASIC_TOKEN ) )
-          {
-            if ( ( !IsComment( token ) )
-            &&   ( hadREM ) )
-            {
-              sb.Append( " " );
-            }
-          }
         }
         sb.AppendLine();
       }
