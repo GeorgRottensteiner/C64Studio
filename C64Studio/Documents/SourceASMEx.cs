@@ -854,12 +854,12 @@ namespace C64Studio
               --numLines;
             }
           }
-          newInfo += ", " + editSource.SelectionLength.ToString() + " bytes, " + numLines.ToString() + " lines selected";
+          newInfo += ", " + editSource.SelectionLength.ToString() + " characters, " + numLines.ToString() + " lines selected";
 
         }
         else
         {
-          newInfo += ", " + editSource.SelectionLength.ToString() + " bytes selected";
+          newInfo += ", " + editSource.SelectionLength.ToString() + " characters selected";
         }
         if ( !hadPotentialEntry )
         {
