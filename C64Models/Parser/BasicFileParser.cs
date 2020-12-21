@@ -3204,8 +3204,6 @@ namespace C64Studio.Parser
           sb.AppendLine();
           sb.Append( lineNumberReference[lineInfo.Value.LineNumber] + "\r\n" );
         }
-        bool  hadREM = false;
-
         for ( int i = 0; i < lineInfo.Value.Tokens.Count; ++i )
         {
           Token token = lineInfo.Value.Tokens[i];
@@ -3225,11 +3223,6 @@ namespace C64Studio.Parser
 
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
-            if ( IsComment( token ) )
-            {
-              hadREM = true;
-            }
-
             if ( ( token.ByteValue == m_Opcodes["RUN"].InsertionValue )
             ||   ( token.ByteValue == m_Opcodes["THEN"].InsertionValue ) )
             {
