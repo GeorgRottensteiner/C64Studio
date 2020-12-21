@@ -363,7 +363,7 @@ namespace C64Studio
       if ( element != null )
       {
         treeProject.SelectedNode = element.Node;
-        element.Node.BeginEdit();
+        treeProject.StartLabelEdit();
       }
     }
 
@@ -793,7 +793,8 @@ namespace C64Studio
       if ( ( m_ContextMenuNode != null )
       &&   ( m_ContextMenuNode.Level >= 1 ) )
       {
-        m_ContextMenuNode.BeginEdit();
+        treeProject.SelectedNode = m_ContextMenuNode;
+        treeProject.StartLabelEdit();
       }
     }
 
@@ -953,7 +954,11 @@ namespace C64Studio
         e.CancelEdit = true;
         return;
       }
-      e.Node.Text = System.IO.Path.GetFileNameWithoutExtension( e.Node.Text );
+      ProjectElement element = (ProjectElement)e.Node.Tag;
+      if ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
+      {
+        e.Node.Text = System.IO.Path.GetFileNameWithoutExtension( e.Node.Text );
+      }
     }
 
 
@@ -968,13 +973,21 @@ namespace C64Studio
       }
       string    newText = e.Label;
 
-      newText = e.Label + System.IO.Path.GetExtension( e.Node.Text );
+      ProjectElement element = (ProjectElement)e.Node.Tag;
+      if ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
+      {
+        newText = e.Label + System.IO.Path.GetExtension( e.Node.Text );
+      }
+      else
+      {
+        newText = e.Label;
+      }
 
       Project project = ProjectFromNode( e.Node );
-      ProjectElement element = (ProjectElement)e.Node.Tag;
       if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
       {
         element.Name = newText;
+        e.Node.Text = newText;
         AdjustElementHierarchy( element, e.Node );
         project.SetModified();
         return;
@@ -1035,7 +1048,6 @@ namespace C64Studio
         if ( treeProject.SelectedNode.Level >= 1 )
         {
           treeProject.StartLabelEdit();
-          //treeProject.SelectedNode.BeginEdit();
           e.Handled = true;
           e.SuppressKeyPress = true;
         }

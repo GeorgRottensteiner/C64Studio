@@ -743,7 +743,8 @@ namespace C64Studio
       element.Node.Tag  = element;
       element.Node.ImageIndex = (int)Type;
       element.Node.SelectedImageIndex = (int)Type;
-      
+
+
 
       ParentNode.Nodes.Add( element.Node );
       //MainForm.m_ProjectExplorer.NodeProject.Nodes.Add( element.Node );

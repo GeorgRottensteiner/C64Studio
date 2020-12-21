@@ -71,6 +71,7 @@ namespace C64Studio
       else*/
       {
         base.OnAfterLabelEdit( e );
+        this.LabelEdit = true;
       }
     }
 
