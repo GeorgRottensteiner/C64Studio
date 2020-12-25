@@ -14,7 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Debugger\MemoryView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Breakpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\CIA.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Processor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\Display.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\SID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\C64\VIC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\data\Memory.cs" />

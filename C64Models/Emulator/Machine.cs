@@ -10,17 +10,20 @@ namespace Tiny64
   {
     public Memory     Memory = new Memory();
     public Processor  CPU = Processor.Create6510();
+    public Display    Display = new Display();
 
     //byte            IODirection = 0x2f;   // RAM 0000
-    byte            PortRegister = 55;    // RAM 0001
+    byte              PortRegister = 55;    // RAM 0001
 
-    public int      TotalCycles = 0;
+    public int        TotalCycles = 0;
 
-    bool            Game = false;
-    bool            ExRom = false;
+    bool              Game = false;
+    bool              ExRom = false;
+
+
 
     GR.Collections.MultiMap<ushort,Breakpoint>        Breakpoints = new GR.Collections.MultiMap<ushort, Breakpoint>();
-    public List<Breakpoint>      TriggeredBreakpoints = new List<Breakpoint>();
+    public List<Breakpoint>                           TriggeredBreakpoints = new List<Breakpoint>();
 
 
 
@@ -111,8 +114,8 @@ namespace Tiny64
       PortRegister  = 55;
       TotalCycles   = 6;
 
-      //Beim Hard-Reset startet die CPU bei der in $FFFC/$FFFD abgelegten Adresse (springt nach $FCE2, RESET
-      CPU.PC = Memory.ReadWordDirect( 0xfffc );
+      //Beim Hard-Reset startet die CPU bei der in $FFFC/$FFFD abgelegten Adresse (springt nach $FCE2, RESET)
+      CPU.PC        = Memory.ReadWordDirect( 0xfffc );
     }
 
 
@@ -132,7 +135,7 @@ namespace Tiny64
         // "update" VIC raster pos
         for ( int i = 0; i < curCycles; ++i )
         {
-          Memory.VIC.RunCycle();
+          Memory.VIC.RunCycle( Memory, Display );
         }
       }
       cyclesUsed -= MaxCycles;
@@ -144,10 +147,52 @@ namespace Tiny64
     // returns numbers of cycles used
     public int RunCycle()
     {
+      // cycle has two phases, usually first VIC, then CPU (if not stalled by VIC)
+
+      Memory.CIA1.RunCycle();
+      Memory.CIA2.RunCycle();
+      Memory.VIC.RunCycle( Memory, Display );
+
+      // TODO check for interrupts!
+      if ( !CPU.FlagIRQ )
+      {
+        if ( IsIRQRaised() )
+        {
+          CPU.FlagIRQ = true;
+        }
+      }
+
+      // TODO - should run opcode in pieces!!
+
+
       int numCycles = RunOpcode();
+
+      // catch up missed cycles 
+      for ( int i = 1; i < numCycles; ++i )
+      {
+        Memory.CIA1.RunCycle();
+        Memory.CIA2.RunCycle();
+        Memory.VIC.RunCycle( Memory, Display );
+      }
+
+      // TODO - NOT clean!!
 
       TotalCycles += numCycles;
       return numCycles;
+    }
+
+
+
+    private bool IsIRQRaised()
+    {
+      if ( ( Memory.VIC.IsIRQRaised )
+      ||   ( Memory.CIA1.IsIRQRaised )
+      ||   ( Memory.CIA2.IsIRQRaised ) )
+      {
+        return true;
+      }
+
+      return false;
     }
 
 

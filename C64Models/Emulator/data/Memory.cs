@@ -71,7 +71,7 @@ namespace Tiny64
       RangeD000ToDFFF = MemorySource.IO;
       RangeE000ToFFFF = MemorySource.KERNAL_ROM;
 
-      VIC.Init();
+      VIC.Initialize();
       SID.Init();
       CIA1.Init();
       CIA2.Init();
@@ -446,6 +446,23 @@ namespace Tiny64
       byte  hi = ReadByteDirect( (ushort)( Address + 1 ) );
 
       return (ushort)( lo + ( hi << 8 ) );
+    }
+
+
+
+    public byte ReadByteDirectAsVIC( ushort Address )
+    {
+      if ( ( Address >= 0x1000 )
+      &&   ( Address < 0x2000 ) )
+      {
+        return CharacterROM[Address & 0x7ff];
+      }
+      else if ( ( Address >= 0x9000 )
+      &&        ( Address < 0xa000 ) )
+      {
+        return CharacterROM[Address & 0x7ff];
+      }
+      return ReadByteDirect( Address );
     }
 
 

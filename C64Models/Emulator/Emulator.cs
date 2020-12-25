@@ -14,6 +14,13 @@ namespace Tiny64
 
 
 
+    public void Reset()
+    {
+      Machine.HardReset();
+    }
+
+
+
     public int RunCycles( int MaxCycles )
     {
       int cyclesUsed = MaxCycles;
@@ -44,12 +51,6 @@ namespace Tiny64
     public void Run( int MaxCycles )
     {
       // TODO - reset?
-      //Machine = new Tiny64.Machine();
-
-      /*
-      GR.Image.MemoryImage    img = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      C64Studio.CustomRenderer.PaletteManager.ApplyPalette( img );*/
-
       State = EmulatorState.RUNNING;
       int   usedCycles = 0;
       while ( usedCycles < MaxCycles )
