@@ -136,6 +136,20 @@ namespace C64Studio
 
 
 
+    internal Project GetProjectByFilename( string Filename )
+    {
+      foreach ( var project in Projects )
+      {
+        if ( GR.Path.IsPathEqual( project.Settings.Filename, Filename ) )
+        {
+          return project;
+        }
+      }
+      return null;
+    }
+
+
+
     internal bool IsValidProjectName( string NewName )
     {
       if ( string.IsNullOrEmpty( NewName ) )

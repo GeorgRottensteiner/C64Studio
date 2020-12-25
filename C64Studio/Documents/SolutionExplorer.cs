@@ -511,9 +511,16 @@ namespace C64Studio
         fileData.AppendI32( fileName.Length );
         fileData.Append( fileName );
 
+        byte[]    projectFile = Encoding.Unicode.GetBytes( element.DocumentInfo.Project.Settings.Filename );
+        var projectData = new GR.Memory.ByteBuffer();
+        projectData.AppendU32( 0x12345678 );
+        projectData.AppendI32( projectFile.Length );
+        projectData.Append( projectFile );
+
         DataObject dataObj = new DataObject();
 
         dataObj.SetData( clipboardDataName, false, fileData.MemoryStream() );
+        dataObj.SetData( "C64Studio.ProjectFile", false, projectData.MemoryStream() );
 
         Clipboard.SetDataObject( dataObj, true );
       }
@@ -534,14 +541,46 @@ namespace C64Studio
       {
         return;
       }
-      ProjectElement  parentElement = ElementFromNode( Node.Parent );
       Project   project = ProjectFromNode( Node.Parent );
-      if ( ( parentElement != null )
-      ||   ( project != null ) )
+      TreeNode  parentNodeToInsertTo = Node.Parent;
+      if ( project == null )
       {
-        TreeNode  parentNodeToInsertTo = Node.Parent;
+        // paste onto project directly?
+        project = ProjectFromNode( Node );
+        if ( Node.Parent == null )
+        {
+          parentNodeToInsertTo = Node;
+        }
+      }
+      Project   sourceProject = project;
 
+      if ( project != null )
+      {
         IDataObject dataObj = Clipboard.GetDataObject();
+        string      sourceProjectFile = "";
+
+        if ( ( dataObj != null )
+        &&   ( dataObj.GetDataPresent( "C64Studio.ProjectFile" ) ) )
+        {
+          System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "C64Studio.ProjectFile" );
+
+          GR.Memory.ByteBuffer clipData = new GR.Memory.ByteBuffer( (uint)ms.Length );
+
+          ms.Read( clipData.Data(), 0, (int)ms.Length );
+
+          GR.IO.MemoryReader memIn = clipData.MemoryReader();
+
+          if ( memIn.ReadUInt32() != 0x12345678 )
+          {
+            return;
+          }
+          int   fileLength = memIn.ReadInt32();
+
+          sourceProjectFile = Encoding.Unicode.GetString( clipData.Data(), 8, fileLength );
+
+          sourceProject = Core.MainForm.m_Solution.GetProjectByFilename( sourceProjectFile );
+        }
+
         if ( ( dataObj != null )
         &&   ( dataObj.GetDataPresent( "C64Studio.Folder" ) ) )
         {
@@ -599,10 +638,18 @@ namespace C64Studio
 
           string  fileName = Encoding.Unicode.GetString( clipData.Data(), 8, fileLength );
 
-          ProjectElement  elementToCopy = project.GetElementByFilename( fileName );
+          ProjectElement  elementToCopy = sourceProject.GetElementByFilename( fileName );
 
           string  newFilenameTemplate = GR.Path.RenameFilenameWithoutExtension( fileName, System.IO.Path.GetFileNameWithoutExtension( fileName ) + " Copy" );
           string  newFilename = newFilenameTemplate;
+
+          if ( sourceProject != project )
+          {
+            // copy file to different project, keep base path
+            newFilenameTemplate = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( sourceProject.Settings.BasePath ), true, fileName, false );
+            newFilenameTemplate = project.FullPath( newFilenameTemplate );
+            newFilename = newFilenameTemplate;
+          }
 
           int     curAttempt = 2;
           while ( project.IsFilenameInUse( newFilename ) )
@@ -625,7 +672,6 @@ namespace C64Studio
 
           ProjectElement element = project.CreateElement( elementToCopy.DocumentInfo.Type, parentNodeToInsertTo );
 
-          //string    relativeFilename = GR.Path.RelativePathTo( openDlg.FileName, false, System.IO.Path.GetFullPath( m_Project.Settings.BasePath ), true );
           string relativeFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( project.Settings.BasePath ), true, newFilename, false );
           element.Name = System.IO.Path.GetFileNameWithoutExtension( relativeFilename );
           element.Filename = relativeFilename;
