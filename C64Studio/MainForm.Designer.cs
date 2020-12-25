@@ -1252,7 +1252,7 @@
             this.mainToolPrint});
       this.mainTools.Location = new System.Drawing.Point(0, 24);
       this.mainTools.Name = "mainTools";
-      this.mainTools.Size = new System.Drawing.Size(749, 25);
+      this.mainTools.Size = new System.Drawing.Size(780, 25);
       this.mainTools.TabIndex = 4;
       this.mainTools.Text = "toolStrip1";
       // 

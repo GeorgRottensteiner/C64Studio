@@ -1,4 +1,10 @@
 ﻿C64Studio
+o Display of used bytes is not correct (shows 43, should show 160 at !byte)
+  !for i = 3 to 0 step -1
+  !for j = 0 to 39 step 1
+  !byte (i * 40) + j
+  !end
+  !end
 o Rename of folder (Explorer), files affected can now not be saved anymore
 o Beim Basic Renumber wird das Leerzeichen hinter den Zeilennummern gestript.
 o Document operators (%, etc.)
