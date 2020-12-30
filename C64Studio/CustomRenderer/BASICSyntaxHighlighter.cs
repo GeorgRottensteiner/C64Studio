@@ -9,11 +9,24 @@ namespace C64Studio.CustomRenderer
   class BASICSyntaxHighlighter : FastColoredTextBoxNS.SyntaxHighlighter
   {
     static Parser.BasicFileParser     _Parser = new Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
+    static C64Models.BASIC.Dialect    _Dialect = null;
+
+
+
+    public void SetBASICDialect( C64Models.BASIC.Dialect Dialect )
+    {
+      _Parser.Settings.BASICDialect = Dialect;
+    }
 
 
 
     public override void HighlightSyntax( Language Language, Range ChangedRange )
     {
+      if ( _Parser.Settings.BASICDialect == null )
+      {
+        _Dialect = C64Models.BASIC.Dialect.ReadBASICDialect( "BASIC Dialects/BASIC V2.txt" );
+        _Parser.Settings.BASICDialect = _Dialect;
+      }
       // get full lines in covered range
       int     firstLine = ChangedRange.Start.iLine;
       int     lastLine = ChangedRange.End.iLine;

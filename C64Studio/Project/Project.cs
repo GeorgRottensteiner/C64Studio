@@ -156,7 +156,7 @@ namespace C64Studio
       }
 
       // BASIC (that is sooo ugly)
-      chunkElement.AppendU32( (uint)Element.BasicVersion );
+      chunkElement.AppendU32( 0 );// (uint)Element.BasicVersion );
 
       // dependency - project
       chunkElement.AppendI32( Element.ForcedDependency.DependentOnFile.Count );
@@ -164,6 +164,9 @@ namespace C64Studio
       {
         chunkElement.AppendString( dependency.Project );
       }
+
+      // replaces basicversion!
+      chunkElement.AppendString( Element.BASICDialect );
 
       buffer.Append( chunkElement.ToBuffer() );
 
@@ -518,13 +521,44 @@ namespace C64Studio
                 element.ExternalDependencies.DependentOnFile.Add( new FileDependency.DependencyInfo( "", dependency, true, false ) );
               }
 
-              element.BasicVersion = (BasicVersion)memChunk.ReadUInt32();
+              var obsoleteBasicVersion = (BasicVersion)memChunk.ReadUInt32();
 
               // dependency - project
               dependencyCount = memChunk.ReadInt32();
               for ( int i = 0; i < dependencyCount; ++i )
               {
                 element.ForcedDependency.DependentOnFile[i].Project = memChunk.ReadString();
+              }
+
+              element.BASICDialect = memChunk.ReadString();
+              if ( string.IsNullOrEmpty( element.BASICDialect ) )
+              {
+                // old version, find dialect from obsoleteBasicVersion
+                string  dialectKey = "BASIC V2";
+                switch ( obsoleteBasicVersion )
+                {
+                  case BasicVersion.C64_BASIC_V2:
+                    break;
+                  case BasicVersion.BASIC_LIGHTNING:
+                    dialectKey = "BASIC Lightning";
+                    break;
+                  case BasicVersion.LASER_BASIC:
+                    dialectKey = "Laser BASIC";
+                    break;
+                  case BasicVersion.SIMONS_BASIC:
+                    dialectKey = "Simon's BASIC";
+                    break;
+                  case BasicVersion.V3_5:
+                    dialectKey = "BASIC V3.5";
+                    break;
+                  case BasicVersion.V7_0:
+                    dialectKey = "BASIC V7.0";
+                    break;
+                }
+                if ( Core.Compiling.BASICDialects.ContainsKey( dialectKey ) )
+                {
+                  element.BASICDialect = dialectKey;
+                }
               }
 
               // TODO - load other stuff

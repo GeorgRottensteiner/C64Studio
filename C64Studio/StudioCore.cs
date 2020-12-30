@@ -220,5 +220,12 @@ namespace C64Studio
 
 
 
+    public void Initialise()
+    {
+      Compiling.Initialise();
+    }
+
+
+
   }
 }

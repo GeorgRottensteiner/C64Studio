@@ -564,6 +564,7 @@ namespace C64Studio
       StudioCore.MainForm = this;
       StudioCore.Settings.PanelMain = panelMain;
       StudioCore.Settings.Main = this;
+      StudioCore.Initialise();
 
       //Parser.BasicFileParser.KeyMap = StudioCore.Settings.BASICKeyMap;
 

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using static C64Studio.Parser.BasicFileParser;
 using GR.IO;
 using System.Linq;
+using C64Models.BASIC;
 
 namespace C64Studio
 {
@@ -31,7 +32,8 @@ namespace C64Studio
     private string                            m_CurrentHighlightText = null;
 
     private string                            m_StartAddress = "2049";
-    private Parser.BasicFileParser.BasicVersion   m_BASICVersion = BasicVersion.C64_BASIC_V2;
+    private string                            m_BASICDialectName = null;
+    private Dialect                           m_BASICDialect = null;
 
     private Parser.BasicFileParser            m_Parser = null;
 
@@ -64,31 +66,21 @@ namespace C64Studio
       DocumentInfo.Type = ProjectElement.ElementType.BASIC_SOURCE;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
 
-      /*
-      string pseudoOps = @"(!byte|!by|!basic|!8|!08|!word|!wo|!16|!text|!tx|!scr|!pet|!raw|!pseudopc|!realpc|!bank|!convtab|!ct|!binary|!bin|!bi|!source|!src|!to|!zone|!zn|!error|!serious|!warn|"
-        + @"!message|!ifdef|!ifndef|!if|!fill|!fi|!align|!endoffile|!nowarn|!for|!end|!macro|!trace|!media|!mediasrc|!sl|!cpu|!set)\b";
-
-      m_TextRegExp[(int)Types.ColorableElement.LITERAL_NUMBER] = new System.Text.RegularExpressions.Regex( @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\B\$[a-fA-F\d]+\b|\b0x[a-fA-F\d]+\b" );
-      m_TextRegExp[(int)Types.ColorableElement.LITERAL_STRING] = new System.Text.RegularExpressions.Regex( @"""""|''|"".*?[^\\]""|'.*?[^\\]'" );
-
-      m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] = new System.Text.RegularExpressions.Regex( pseudoOps, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
-
-      m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[+\-a-zA-Z]+[a-zA-Z_\d]*[:]*" );
-      //m_TextRegExp[(int)Types.SyntaxElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";.*" );
-      m_TextRegExp[(int)Types.ColorableElement.NONE] = new System.Text.RegularExpressions.Regex( @"\S" );
-      */
+      if ( Core.Compiling.BASICDialects.ContainsKey( "BASIC V2" ) )
+      {
+        m_BASICDialectName  = "BASIC V2";
+        m_BASICDialect      = Core.Compiling.BASICDialects[m_BASICDialectName];
+      }
 
       m_IsSaveable = true;
 
       InitializeComponent();
 
-      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "BASIC V2", BasicVersion.C64_BASIC_V2 ) );
-      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "VIC BASIC V2", BasicVersion.VIC_BASIC_V2 ) );
-      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "BASIC 3.5", BasicVersion.V3_5 ) );
-      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "BASIC 7.0", BasicVersion.V7_0 ) );
-      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "BASIC Lightning", BasicVersion.BASIC_LIGHTNING ) );
-      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "Laser BASIC", BasicVersion.LASER_BASIC ) );
-      comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, BasicVersion>( "Simons BASIC", BasicVersion.SIMONS_BASIC ) );
+      foreach ( var dialect in Core.Compiling.BASICDialects )
+      {
+        comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, Dialect>( dialect.Key, dialect.Value ) );
+      }
+      editSource.SyntaxHighlighter = new BASICSyntaxHighlighter();
       comboBASICVersion.SelectedIndex = 0;
 
       btnToggleSymbolMode.Checked = Core.Settings.BASICShowControlCodesAsChars;
@@ -97,7 +89,6 @@ namespace C64Studio
       contextSource.Opening += new CancelEventHandler( contextSource_Opening );
 
       editSource.AutoIndentChars = false;
-      editSource.SyntaxHighlighter = new BASICSyntaxHighlighter();
       editSource.SelectingWord += EditSource_SelectingWord;
 
       if ( !Core.Settings.BASICUseNonC64Font )
@@ -184,15 +175,15 @@ namespace C64Studio
 
 
 
-    public Parser.BasicFileParser.BasicVersion BASICVersion
+    public Dialect BASICDialect
     {
       get
       {
         if ( DocumentInfo.Element != null )
         {
-          return DocumentInfo.Element.BasicVersion;
+          return Core.Compiling.BASICDialects[DocumentInfo.Element.BASICDialect];
         }
-        return m_BASICVersion;
+        return m_BASICDialect;
       }
     }
 
@@ -658,9 +649,9 @@ namespace C64Studio
           editBASICStartAddress.Text = DocumentInfo.Element.StartAddress;
           m_StartAddress = DocumentInfo.Element.StartAddress;
 
-          foreach ( GR.Generic.Tupel<string, BasicVersion> entry in comboBASICVersion.Items )
+          foreach ( GR.Generic.Tupel<string, Dialect> entry in comboBASICVersion.Items )
           {
-            if ( entry.second == DocumentInfo.Element.BasicVersion )
+            if ( entry.first == DocumentInfo.Element.BASICDialect )
             {
               comboBASICVersion.SelectedItem = entry;
               break;
@@ -1178,8 +1169,8 @@ namespace C64Studio
               &&   ( leftText[leftText.Length - 1] >= 'A' )
               &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
               {
-                leftText = leftText.ToLower() + (char)keyData;
-                foreach ( var opcode in m_Parser.m_Opcodes.Values )
+                leftText = leftText.ToLower() + (char)keyData; 
+                foreach ( var opcode in m_Parser.Settings.BASICDialect.Opcodes.Values )
                 {
                   if ( ( opcode.ShortCut != null )
                   &&   ( opcode.ShortCut.Length <= leftText.Length )
@@ -1277,7 +1268,7 @@ namespace C64Studio
               &&   ( leftText[leftText.Length - 1] <= 'Z' ) )
               {
                 leftText = leftText.ToLower() + physKey.Normal.CharValue;
-                foreach ( var opcode in m_Parser.m_Opcodes.Values )
+                foreach ( var opcode in m_Parser.Settings.BASICDialect.Opcodes.Values )
                 {
                   if ( ( opcode.ShortCut != null )
                   &&   ( opcode.ShortCut.Length <= leftText.Length )
@@ -1386,8 +1377,8 @@ namespace C64Studio
 
     private bool CanKeyTriggerShortCut( char keyData, bool ShiftPushed )
     {
-      if ( ( BASICVersion == BasicVersion.BASIC_LIGHTNING )
-      ||   ( BASICVersion == BasicVersion.LASER_BASIC ) )
+      if ( ( m_BASICDialect.Name == "BASIC Lightning" )
+      ||   ( m_BASICDialect.Name == "Laser BASIC" ) )
       {
         return keyData == '.';
       }
@@ -1817,29 +1808,32 @@ namespace C64Studio
 
     private void comboBASICVersion_SelectedIndexChanged( object sender, EventArgs e )
     {
-      BasicVersion version = ( (GR.Generic.Tupel<string, BasicVersion>)comboBASICVersion.SelectedItem ).second;
+      string dialect = ( (GR.Generic.Tupel<string, Dialect>)comboBASICVersion.SelectedItem ).first;
+      Dialect basicDialect = ( (GR.Generic.Tupel<string, Dialect>)comboBASICVersion.SelectedItem ).second;
 
       if ( ( DocumentInfo != null )
       &&   ( DocumentInfo.Element != null ) )
       {
-        DocumentInfo.Element.BasicVersion = version;
+        DocumentInfo.Element.BASICDialect = dialect;
         SetModified();
       }
 
       var settings = new Parser.BasicFileParser.ParserSettings();
       settings.StripSpaces = Core.Settings.BASICStripSpaces;
 
-      Core.Compiling.ParserBasic.Settings.StripSpaces = Core.Settings.BASICStripSpaces;
-      Core.Compiling.ParserBasic.Settings.Version = version;
+      Core.Compiling.ParserBasic.Settings.StripSpaces   = Core.Settings.BASICStripSpaces;
+      Core.Compiling.ParserBasic.Settings.BASICDialect  = basicDialect;
       Core.Compiling.ParserBasic.Settings.UpperCaseMode = !m_LowerCaseMode;
-      m_BASICVersion = version;
+      m_BASICDialectName  = dialect;
+      m_BASICDialect      = basicDialect;
 
       m_Parser = new Parser.BasicFileParser( settings, "" );
-      m_Parser.SetBasicVersion( version );
+      m_Parser.SetBasicDialect( basicDialect );
+      ( (BASICSyntaxHighlighter)editSource.SyntaxHighlighter ).SetBASICDialect( basicDialect );
 
       string opCodes = @"\b(";
 
-      foreach ( var tokenInfo in m_Parser.m_Opcodes )
+      foreach ( var tokenInfo in m_Parser.Settings.BASICDialect.Opcodes )
       {
         var token = tokenInfo.Key;
 

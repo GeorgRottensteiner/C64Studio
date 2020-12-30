@@ -1,0 +1,86 @@
+#C64 Studio BASIC declaration file
+#Comments start with #
+#CSV Format 
+#Token        = actual name of command
+#ByteValues   = one or more byte values (hex)
+#Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
+Token;ByteValues;Abbreviation
+END;80;eN
+FOR;81;fO
+NEXT;82;nE
+DATA;83;dA
+INPUT#;84;iN
+INPUT;85;
+DIM;86;dI
+READ;87;rE
+LET;88;lE
+GOTO;89;gO
+RUN;8A;rU
+IF;8B;
+RESTORE;8C;reS
+GOSUB;8D;goS
+RETURN;8E;reT
+REM;8F;
+STOP;90;sT
+ON;91;
+WAIT;92;wA
+LOAD;93;lO
+SAVE;94;sA
+VERIFY;95;vE
+DEF;96;dE
+POKE;97;pO
+PRINT#;98;pR
+?;99;
+PRINT;99;
+CONT;9A;cO
+LIST;9B;lI
+CLR;9C;cL
+CMD;9D;cM
+SYS;9E;sY
+OPEN;9F;oP
+CLOSE;A0;clO
+GET;A1;gE
+NEW;A2;
+TAB(;A3;tA
+TO;A4;
+FN;A5;
+SPC(;A6;sP
+THEN;A7;tH
+NOT;A8;nO
+STEP;A9;stE
++;AA;
+-;AB;
+*;AC;
+/;AD;
+^;AE;
+AND;AF;aN
+OR;B0;
+>;B1;
+=;B2;
+<;B3;
+SGN;B4;sG
+INT;B5;
+ABS;B6;aB
+USR;B7;uS
+FRE;B8;fE
+POS;B9;
+SQR;BA;sQ
+RND;BB;rN
+LOG;BC;
+EXP;BD;eX
+COS;BE;
+SIN;BF;sI
+TAN;C0;
+ATN;C1;aT
+PEEK;C2;pE
+LEN;C3;
+STR$;C4;stR
+VAL;C5;vA
+ASC;C6;aS
+CHR$;C7;cH
+LEFT$;C8;leF
+RIGHT$;C9;rI
+MID$;CA;mI
+
+#C64 Studio extension
+LABEL;F0;

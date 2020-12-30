@@ -319,7 +319,7 @@ namespace C64Studio.Tasks
         {
           // BASIC may receive symbols from assembly
           ( (Parser.BasicFileParser)parser ).InitialFileInfo = combinedFileInfo;
-          ( (Parser.BasicFileParser)parser ).SetBasicVersion( ( (Parser.BasicFileParser)parser ).Settings.Version );
+          ( (Parser.BasicFileParser)parser ).SetBasicDialect( ( (Parser.BasicFileParser)parser ).Settings.BASICDialect );
           ( (Parser.BasicFileParser)parser ).Settings.UpperCaseMode = !( (SourceBasicEx)Doc.BaseDoc ).m_LowerCaseMode;
           if ( combinedFileInfo != null )
           {
@@ -355,7 +355,7 @@ namespace C64Studio.Tasks
           {
             // BASIC files bring a start address
             startAddress = ( (SourceBasicEx)Doc.BaseDoc ).StartAddress;
-            ( (Parser.BasicFileParser)parser ).SetBasicVersion( ( (SourceBasicEx)Doc.BaseDoc ).BASICVersion );
+            ( (Parser.BasicFileParser)parser ).SetBasicDialect( ( (SourceBasicEx)Doc.BaseDoc ).BASICDialect );
           }
           if ( ( !Core.MainForm.ParseFile( parser, Doc, config, additionalPredefines, OutputMessages, CreatePreProcessedFile ) )
           ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()

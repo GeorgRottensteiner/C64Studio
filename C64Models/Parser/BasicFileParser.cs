@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
+using C64Models.BASIC;
 using GR.Memory;
 
 namespace C64Studio.Parser
@@ -9,6 +11,7 @@ namespace C64Studio.Parser
   {
     public enum BasicVersion
     {
+      [Description( "BASIC V2" )]
       C64_BASIC_V2 = 0, //  Anpassung des VIC BASIC V2 für VC10, C64, C128 (C64-Modus), SX64, PET 64.
       V1_0,             // Version 1.0	Noch recht fehlerbehaftet, erste Versionen im PET 2001
       V2_0,             // August  Version 2.0	Fehlerkorrekturen, eingebaut in weitere Versionen des PET
@@ -16,14 +19,19 @@ namespace C64Studio.Parser
       V4_0,             // Version 4.0	Neue Befehle für leichtere Handhabung für Diskettenlaufwerke für CBM 4000. Auch durch ROM-Austausch für CBM 3000 Serie und PET 2001 verfügbar.
       V4_1,             // Version 4.1	Fehlerkorrigierte Fassung der Version 4.0 mit erweiterter Bildschirmeditor für CBM 8000. Auch durch ROM-Austausch für CBM 3000/4000 Serie verfügbar.
       V4_2,             // Version 4.2	Geänderte und ergänzte Befehle für den CBM 8096.
-      VIC_BASIC_V2,     //  Funktionsumfang von V 2.0 mit Korrekturen aus der Version-4-Linie. Einsatz im VC20.
+      VIC_BASIC_V2,     // Funktionsumfang von V 2.0 mit Korrekturen aus der Version-4-Linie. Einsatz im VC20.
       V4_PLUS,          // (intern bis 4.75)	Neue Befehle und RAM-Unterstützung bis 256 KByte für CBM-II-Serie (CBM 500, 6x0, 7x0). Fortsetzung und Ende der Version-4-Linie.
+      [Description( "BASIC V3.5" )]
       V3_5,             // Version 3.5	Neue Befehle für die Heimcomputer C16/116 und Plus/4. Zusammenführung aus C64 BASIC V2 und Version-4-Linie.
       V3_6,             // Version 3.6	Neue Befehle für LCD-Prototypen.
+      [Description( "BASIC V7.0" )]
       V7_0,             // Version 7.0	Neue Befehle für den C128/D/DCR. Weiterentwicklung des C16/116 BASIC 3.5 .
       V10_0,            // Version 10 Neue Befehle für C65, beinhaltet sehr viele Fehler, kam aus dem Entwicklungsstadium nicht heraus. Weiterentwicklung des BASIC 7.0.
+      [Description( "BASIC Lightning" )]
       BASIC_LIGHTNING,  // BASIC extension
+      [Description( "Laser BASIC" )]
       LASER_BASIC,      // BASIC extension
+      [Description( "Simon's BASIC" )]
       SIMONS_BASIC,     // Simons Basic
       SIMONS_BASIC_2    // Simons Basic Extended (SBX)
     }
@@ -32,8 +40,8 @@ namespace C64Studio.Parser
     {
       public bool         StripSpaces = true;
       public bool         StripREM = false;
-      public BasicVersion Version = BasicVersion.C64_BASIC_V2;
       public bool         UpperCaseMode = true;
+      public Dialect      BASICDialect = null;
     };
 
     public enum TokenValue
@@ -111,26 +119,6 @@ namespace C64Studio.Parser
     };
 
 
-    public class Opcode
-    {
-      public string         Command = "";
-      public int            InsertionValue = -1;
-      public string         ShortCut = null;
-
-      public Opcode( string Command, int InsertionValue )
-      {
-        this.Command        = Command;
-        this.InsertionValue = InsertionValue;
-      }
-
-      public Opcode( string Command, int InsertionValue, string ShortCut )
-      {
-        this.Command        = Command;
-        this.InsertionValue = InsertionValue;
-        this.ShortCut       = ShortCut;
-      }
-    };
-
     internal class LineInfo
     {
       public int                      LineIndex = 0;
@@ -141,10 +129,6 @@ namespace C64Studio.Parser
       public System.Collections.Generic.List<Token>   Tokens = new List<Token>();
     };
 
-    public Dictionary<string, Opcode>     m_Opcodes = new Dictionary<string, Opcode>();
-    public SortedDictionary<ushort, Opcode> m_OpcodesFromByte = new SortedDictionary<ushort, Opcode>();
-    public Dictionary<string, Opcode>     m_ExOpcodes = new Dictionary<string, Opcode>();
-
     private GR.Collections.Map<int, LineInfo> m_LineInfos = new GR.Collections.Map<int, LineInfo>();
 
     public GR.Collections.Map<string, ActionToken>     ActionTokens = new GR.Collections.Map<string, ActionToken>();
@@ -152,8 +136,8 @@ namespace C64Studio.Parser
     public GR.Collections.Map<byte, ActionToken>       ActionTokenByByteValue = new GR.Collections.Map<byte,ActionToken>();
     public ParserSettings       Settings = new ParserSettings();
 
-    public Types.ASM.FileInfo           ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
-    public Types.ASM.FileInfo           InitialFileInfo = null;
+    public Types.ASM.FileInfo         ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
+    public Types.ASM.FileInfo         InitialFileInfo = null;
 
 
 
@@ -161,7 +145,7 @@ namespace C64Studio.Parser
     {
       LabelMode = false;
       this.Settings = Settings;
-      SetBasicVersion( Settings.Version );
+      SetBasicDialect( Settings.BASICDialect );
     }
 
 
@@ -169,18 +153,19 @@ namespace C64Studio.Parser
     public BasicFileParser( ParserSettings Settings, string Filename )
     {
       this.Settings = Settings;
-      SetBasicVersion( Settings.Version );
+      SetBasicDialect( Settings.BASICDialect );
       LabelMode   = false;
       m_Filename  = Filename;
     }
 
 
 
+    /*
     private void AddOpcode( string Opcode, int ByteValue )
     {
       var opcode = new Opcode( Opcode, ByteValue );
-      m_Opcodes[Opcode] = opcode;
-      m_OpcodesFromByte[(ushort)ByteValue] = opcode;
+      Settings.BASICDialect.Opcodes[Opcode] = opcode;
+      Settings.BASICDialect.OpcodesFromByte[(ushort)ByteValue] = opcode;
     }
 
 
@@ -188,16 +173,16 @@ namespace C64Studio.Parser
     private void AddOpcode( string Opcode, int ByteValue, string ShortCut )
     {
       var opcode = new Opcode( Opcode, ByteValue, ShortCut );
-      m_Opcodes[Opcode] = opcode;
-      m_OpcodesFromByte[(ushort)ByteValue] = opcode;
+      Settings.BASICDialect.Opcodes[Opcode] = opcode;
+      Settings.BASICDialect.OpcodesFromByte[(ushort)ByteValue] = opcode;
     }
 
 
 
     private void AddExOpcode( string Opcode, int ByteValue )
     {
-      m_ExOpcodes[Opcode] = new Opcode( Opcode, ByteValue );
-    }
+      Settings.BASICDialect.ExOpcodes[Opcode] = new Opcode( Opcode, ByteValue );
+    }*/
 
 
 
@@ -230,15 +215,14 @@ namespace C64Studio.Parser
 
 
 
-    public void SetBasicVersion( BasicVersion Version )
+    public void SetBasicDialect( Dialect Dialect )
     {
+      Settings.BASICDialect = Dialect;
       ActionTokens.Clear();
       ActionTokenByByteValue.Clear();
       ActionTokenByValue.Clear();
-      m_ExOpcodes.Clear();
-      m_Opcodes.Clear();
-      m_OpcodesFromByte.Clear();
 
+      /*
       if ( ( Version == BasicVersion.C64_BASIC_V2 )
       ||   ( Version == BasicVersion.VIC_BASIC_V2 )
       ||   ( Version == BasicVersion.SIMONS_BASIC )
@@ -401,8 +385,8 @@ namespace C64Studio.Parser
         AddOpcode( "SPC(", 0xA6 );
         AddOpcode( "PEEK", 0xC2, "peE" );
 
-        m_Opcodes.Remove( "RLUM" );
-        m_OpcodesFromByte.Remove( 0xce );
+        Settings.BASICDialect.Opcodes.Remove( "RLUM" );
+        Settings.BASICDialect.OpcodesFromByte.Remove( 0xce );
 
 
         // new commands
@@ -538,7 +522,6 @@ namespace C64Studio.Parser
         AddOpcode( "-", 0xAB );
         AddOpcode( "*", 0xAC );
         AddOpcode( "/", 0xAD );
-        //AddOpcode( "" + (char)0xee1e, 0xAE );
         AddOpcode( "^", 0xAE );
         AddOpcode( "AND", 0xAF );
         AddOpcode( "A.", 0xAF );
@@ -1187,7 +1170,7 @@ namespace C64Studio.Parser
         AddOpcode( "ERRN", 0x647e );
         AddOpcode( "OUT", 0x647f );
       }
-
+      */
       AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-A}", 0xb0 );
       AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-B}", 0xbf );
       AddActionToken( TokenValue.INDIRECT_KEY, "{CBM-C}", 0xbc );
@@ -1335,7 +1318,6 @@ namespace C64Studio.Parser
     {
       m_CompileTarget     = Types.CompileTargetType.PRG;
       m_CompileTargetFile = null;
-      //m_CompileCurrentAddress = -1;
 
       AssembledOutput = null;
       Messages.Clear();
@@ -1375,9 +1357,9 @@ namespace C64Studio.Parser
 
     public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines )
     {
-      if ( m_Opcodes.Count == 0 )
+      if ( Settings.BASICDialect.Opcodes.Count == 0 )
       {
-        AddError( -1, Types.ErrorCode.E1401_INTERNAL_ERROR, "An unsupported BASIC version was chosen" );
+        AddError( -1, Types.ErrorCode.E1401_INTERNAL_ERROR, "An unsupported BASIC version '" + Settings.BASICDialect.Name + "' was chosen" );
         return false;
       }
 
@@ -1441,9 +1423,9 @@ namespace C64Studio.Parser
     private void ParseToken( string CurToken, LineInfo Info, ref bool lastOpcodeWasReferencingLineNumber )
     {
       string token2 = CurToken.Trim().ToUpper();
-      if ( m_Opcodes.ContainsKey( token2 ) )
+      if ( Settings.BASICDialect.Opcodes.ContainsKey( token2 ) )
       {
-        Opcode opCode = m_Opcodes[token2];
+        Opcode opCode = Settings.BASICDialect.Opcodes[token2];
 
         if ( opCode.InsertionValue > 255 )
         {
@@ -1461,9 +1443,9 @@ namespace C64Studio.Parser
         opcodeToken.Content = opCode.Command;
         Info.Tokens.Add( opcodeToken );
       }
-      else if ( m_ExOpcodes.ContainsKey( token2 ) )
+      else if ( Settings.BASICDialect.ExOpcodes.ContainsKey( token2 ) )
       {
-        Opcode opCode = m_ExOpcodes[token2];
+        Opcode opCode = Settings.BASICDialect.ExOpcodes[token2];
 
         Info.LineData.AppendU8( (byte)opCode.InsertionValue );
 
@@ -1870,7 +1852,7 @@ namespace C64Studio.Parser
             // is there a token now?
             bool entryFound = true;
             bool potentialToken = false;
-            foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in m_OpcodesFromByte )
+            foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in Settings.BASICDialect.OpcodesFromByte )
             {
               Opcode  opcode = opcodeEntry.Value;
 
@@ -1930,7 +1912,7 @@ namespace C64Studio.Parser
             }
             // is it an extended token?
             entryFound = true;
-            foreach ( KeyValuePair<string, Opcode> opcodeEntry in m_ExOpcodes )
+            foreach ( KeyValuePair<string, Opcode> opcodeEntry in Settings.BASICDialect.ExOpcodes )
             {
               Opcode opcode = opcodeEntry.Value;
 
@@ -2007,8 +1989,8 @@ namespace C64Studio.Parser
         return true;
       }
       if ( ( Opcode.Command == "'" )
-      &&   ( ( Settings.Version == BasicVersion.LASER_BASIC )
-      ||     ( Settings.Version == BasicVersion.BASIC_LIGHTNING ) ) )
+      &&   ( ( Settings.BASICDialect.Name == "Laser BASIC" )
+      ||     ( Settings.BASICDialect.Name == "BASIC Lightning" ) ) )
       {
         return true;
       }
@@ -2219,8 +2201,8 @@ namespace C64Studio.Parser
             {
               var c64Key = Types.ConstantData.FindC64KeyByPETSCII( nextByte );
               if ( ( c64Key != null )
-              && ( nextByte != 32 )   // do not replace for Space
-              && ( c64Key.Replacements.Count > 0 ) )
+              &&   ( nextByte != 32 )   // do not replace for Space
+              &&   ( c64Key.Replacements.Count > 0 ) )
               {
                 stringLiteral += "{" + c64Key.Replacements[0] + "}";
               }
@@ -2295,8 +2277,7 @@ namespace C64Studio.Parser
           // not a token, add directly
           AddDirectToken( info, nextByte, bytePos );
 
-          if ( ( Settings.Version == BasicVersion.BASIC_LIGHTNING )
-          ||   ( Settings.Version == BasicVersion.LASER_BASIC ) )
+          if ( IsLightningOrLaserBASIC() )
           {
             // random hack -> avoid letters following letters forming tokens (e.g. s-or-t)
             if ( ( nextByte >= 'A' )
@@ -2359,9 +2340,9 @@ namespace C64Studio.Parser
               continue;
             }
           }
+          // alternative comment char
           if ( ( nextByte == 39 )
-          &&   ( ( Settings.Version == BasicVersion.BASIC_LIGHTNING )
-          ||     ( Settings.Version == BasicVersion.LASER_BASIC ) ) )
+          &&   ( IsLightningOrLaserBASIC() ) )
           {
             insideREMStatement = true;
           }
@@ -2441,6 +2422,18 @@ namespace C64Studio.Parser
         }
       }
       return info;
+    }
+
+
+
+    private bool IsLightningOrLaserBASIC()
+    {
+      if ( ( Settings.BASICDialect.Name == "Laser BASIC" )
+      ||   ( Settings.BASICDialect.Name == "BASIC Lightning" ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -2655,8 +2648,7 @@ namespace C64Studio.Parser
 
     private bool FindOpcode( ByteBuffer TempData, ref int BytePos, LineInfo Info, ref bool InsideDataStatement, ref bool InsideREMStatement )
     {
-      if ( ( Settings.Version == BasicVersion.LASER_BASIC )
-      ||   ( Settings.Version == BasicVersion.BASIC_LIGHTNING ) )
+      if ( IsLightningOrLaserBASIC() )
       {
         // special behavior - no token after PROC and LABEL
         int   prevTokenIndex = Info.Tokens.Count - 1;
@@ -2668,8 +2660,9 @@ namespace C64Studio.Parser
             --prevTokenIndex;
             continue;
           }
-          if ( ( Info.Tokens[prevTokenIndex].ByteValue == m_Opcodes["PROC"].InsertionValue )
-          ||   ( Info.Tokens[prevTokenIndex].ByteValue == m_Opcodes["LABEL"].InsertionValue ) )
+          if ( ( Info.Tokens[prevTokenIndex].TokenType == Token.Type.DIRECT_TOKEN )
+          &&   ( ( Info.Tokens[prevTokenIndex].ByteValue == Settings.BASICDialect.Opcodes["PROC"].InsertionValue )
+          ||     ( Info.Tokens[prevTokenIndex].ByteValue == Settings.BASICDialect.Opcodes["LABEL"].InsertionValue ) ) )
           {
             // previous token was PROC or LABEL
             return false;
@@ -2679,7 +2672,7 @@ namespace C64Studio.Parser
 
         // special behavior - no token after TASK<number>,
         if ( ( Info.Tokens.Count > 3 )
-        &&   ( Info.Tokens[Info.Tokens.Count - 3].ByteValue == m_Opcodes["TASK"].InsertionValue )
+        &&   ( Info.Tokens[Info.Tokens.Count - 3].ByteValue == Settings.BASICDialect.Opcodes["TASK"].InsertionValue )
         &&   ( Info.Tokens[Info.Tokens.Count - 2].TokenType == Token.Type.NUMERIC_LITERAL )
         &&   ( Info.Tokens[Info.Tokens.Count - 1].ByteValue == ',' ) )
         {
@@ -2688,8 +2681,9 @@ namespace C64Studio.Parser
         }
       }
 
-      bool entryFound = true;
-      foreach ( var opcodeEntry in m_Opcodes )
+      bool entryFound = false;
+      Opcode potentialOpcode = null;
+      foreach ( var opcodeEntry in Settings.BASICDialect.Opcodes )
       {
         Opcode  opcode = opcodeEntry.Value;
 
@@ -2710,54 +2704,62 @@ namespace C64Studio.Parser
         }
         if ( entryFound )
         {
-          Token basicToken = new Token();
-          basicToken.TokenType = Token.Type.BASIC_TOKEN;
-          basicToken.ByteValue = opcode.InsertionValue;
-          basicToken.Content = opcode.Command;
-          basicToken.StartIndex = BytePos;
-          Info.Tokens.Add( basicToken );
-
-          if ( opcode.InsertionValue > 255 )
+          if ( ( potentialOpcode == null )
+          ||   ( opcode.Command.Length > potentialOpcode.Command.Length ) )
           {
-            Info.LineData.AppendU16NetworkOrder( (ushort)opcode.InsertionValue );
+            potentialOpcode = opcode;
           }
-          else
-          {
-            Info.LineData.AppendU8( (byte)opcode.InsertionValue );
-          }
-          BytePos += opcode.Command.Length;
-
-          InsideDataStatement = ( opcode.Command == "DATA" );
-          if ( IsComment( opcode ) )
-          {
-            InsideREMStatement = true;
-
-            if ( Settings.StripREM )
-            {
-              Info.LineData.Truncate( 1 );
-              if ( opcode.InsertionValue > 255 )
-              {
-                Info.LineData.Truncate( 1 );
-              }
-              if ( ( Info.LineData.Length > 0 )
-              &&   ( Info.LineData.ByteAt( (int)Info.LineData.Length - 1 ) == ':' ) )
-              {
-                // remove optional separator before REM
-                Info.LineData.Truncate( 1 );
-              }
-            }
-          }
-          break;
         }
       }
-      if ( entryFound )
+      if ( potentialOpcode != null )
       {
+        Token basicToken = new Token();
+        basicToken.TokenType = Token.Type.BASIC_TOKEN;
+        basicToken.ByteValue = potentialOpcode.InsertionValue;
+        basicToken.Content = potentialOpcode.Command;
+        basicToken.StartIndex = BytePos;
+        Info.Tokens.Add( basicToken );
+
+        if ( potentialOpcode.InsertionValue > 255 )
+        {
+          Info.LineData.AppendU16NetworkOrder( (ushort)potentialOpcode.InsertionValue );
+        }
+        else
+        {
+          Info.LineData.AppendU8( (byte)potentialOpcode.InsertionValue );
+        }
+        BytePos += potentialOpcode.Command.Length;
+
+        InsideDataStatement = ( potentialOpcode.Command == "DATA" );
+        if ( IsComment( potentialOpcode ) )
+        {
+          InsideREMStatement = true;
+
+          if ( Settings.StripREM )
+          {
+            Info.LineData.Truncate( 1 );
+            if ( potentialOpcode.InsertionValue > 255 )
+            {
+              Info.LineData.Truncate( 1 );
+            }
+            if ( ( Info.LineData.Length > 0 )
+            &&   ( Info.LineData.ByteAt( (int)Info.LineData.Length - 1 ) == ':' ) )
+            {
+              // remove optional separator before REM
+              Info.LineData.Truncate( 1 );
+            }
+          }
+        }
         return true;
       }
 
       // is it an extended token?
       entryFound = true;
-      foreach ( KeyValuePair<string, Opcode> opcodeEntry in m_ExOpcodes )
+      if ( Settings.BASICDialect.ExOpcodes.Count == 0 )
+      {
+        entryFound = false;
+      }
+      foreach ( KeyValuePair<string, Opcode> opcodeEntry in Settings.BASICDialect.ExOpcodes )
       {
         Opcode opcode = opcodeEntry.Value;
 
@@ -2809,7 +2811,11 @@ namespace C64Studio.Parser
       FoundToken = null;
       FoundOpcode = null;
       bool entryFound = true;
-      foreach ( var opcodeEntry in m_Opcodes )
+      if ( Settings.BASICDialect.Opcodes.Count == 0 )
+      {
+        entryFound = false;
+      }
+      foreach ( var opcodeEntry in Settings.BASICDialect.Opcodes )
       {
         Opcode  opcode = opcodeEntry.Value;
 
@@ -2848,7 +2854,11 @@ namespace C64Studio.Parser
 
       // is it an extended token?
       entryFound = true;
-      foreach ( KeyValuePair<string, Opcode> opcodeEntry in m_ExOpcodes )
+      if ( Settings.BASICDialect.ExOpcodes.Count == 0 )
+      {
+        entryFound = false;
+      }
+      foreach ( KeyValuePair<string, Opcode> opcodeEntry in Settings.BASICDialect.ExOpcodes )
       {
         Opcode opcode = opcodeEntry.Value;
 
@@ -3223,8 +3233,8 @@ namespace C64Studio.Parser
 
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
-            if ( ( token.ByteValue == m_Opcodes["RUN"].InsertionValue )
-            ||   ( token.ByteValue == m_Opcodes["THEN"].InsertionValue ) )
+            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["RUN"].InsertionValue )
+            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["THEN"].InsertionValue ) )
             {
               // insert label instead of line number
               if ( i + 1 < lineInfo.Value.Tokens.Count )
@@ -3245,8 +3255,8 @@ namespace C64Studio.Parser
                 }
               }
             }
-            if ( ( token.ByteValue == m_Opcodes["GOTO"].InsertionValue )
-            ||   ( token.ByteValue == m_Opcodes["GOSUB"].InsertionValue ) )
+            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue )
+            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue ) )
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number
@@ -3318,12 +3328,11 @@ namespace C64Studio.Parser
 
     public bool IsComment( Token token )
     {
-      if ( token.ByteValue == m_Opcodes["REM"].InsertionValue )
+      if ( token.ByteValue == Settings.BASICDialect.Opcodes["REM"].InsertionValue )
       {
         return true;
       }
-      if ( ( Settings.Version == BasicVersion.BASIC_LIGHTNING )
-      ||   ( Settings.Version == BasicVersion.LASER_BASIC ) )
+      if ( IsLightningOrLaserBASIC() )
       {
         if ( token.Content == "'" )
         {
@@ -3367,7 +3376,7 @@ namespace C64Studio.Parser
       {
         if ( ( lineInfo.Value.Tokens.Count > 0 )
         &&   ( lineInfo.Value.Tokens[0].TokenType == Token.Type.EX_BASIC_TOKEN )
-        &&   ( lineInfo.Value.Tokens[0].ByteValue == m_ExOpcodes["LABEL"].InsertionValue ) )
+        &&   ( lineInfo.Value.Tokens[0].ByteValue == Settings.BASICDialect.Opcodes["LABEL"].InsertionValue ) )
         {
           // skip label definitions
           if ( lineInfo.Value.Tokens.Count > 1 )
@@ -3399,7 +3408,7 @@ namespace C64Studio.Parser
         &&   ( nextTokenIndex3 == -1 ) )
         {
           if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
-          &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == m_ExOpcodes["LABEL"].InsertionValue )
+          &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
           &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
           {
             // a label definition
@@ -3429,12 +3438,13 @@ namespace C64Studio.Parser
 
 
           if ( ( token.TokenType == Token.Type.BASIC_TOKEN )
-          &&   ( ( token.ByteValue == m_Opcodes["GOTO"].InsertionValue )
-          ||     ( token.ByteValue == m_Opcodes["GOSUB"].InsertionValue )
-          ||     ( token.ByteValue == m_Opcodes["THEN"].InsertionValue )
-          ||     ( token.ByteValue == m_Opcodes["RUN"].InsertionValue ) ) )
+          &&   ( ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue )
+          ||     ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue )
+          ||     ( token.ByteValue == Settings.BASICDialect.Opcodes["THEN"].InsertionValue )
+          ||     ( token.ByteValue == Settings.BASICDialect.Opcodes["RUN"].InsertionValue ) ) )
           {
-            bool    isGotoOrGosub = ( token.ByteValue == m_Opcodes["GOTO"].InsertionValue ) | ( token.ByteValue == m_Opcodes["GOSUB"].InsertionValue );
+            bool    isGotoOrGosub = ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue ) 
+                                  | ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue );
             nextTokenIndex = FindNextToken( lineInfo.Value.Tokens, tokenIndex );
             nextTokenIndex2 = FindNextToken( lineInfo.Value.Tokens, nextTokenIndex );
 
@@ -3442,7 +3452,7 @@ namespace C64Studio.Parser
             &&      ( nextTokenIndex2 != -1 ) )
             {
               if ( ( lineInfo.Value.Tokens[nextTokenIndex].TokenType == Token.Type.EX_BASIC_TOKEN )
-              &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == m_ExOpcodes["LABEL"].InsertionValue )
+              &&   ( lineInfo.Value.Tokens[nextTokenIndex].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue )
               &&   ( lineInfo.Value.Tokens[nextTokenIndex2].TokenType == Token.Type.NUMERIC_LITERAL ) )
               {
                 string label = "LABEL" + lineInfo.Value.Tokens[nextTokenIndex2].Content;
@@ -3585,9 +3595,9 @@ namespace C64Studio.Parser
             }
 
             // REM is only remark, no opcode parsing anymore
-            if ( m_OpcodesFromByte.ContainsKey( byteValue ) )
+            if ( Settings.BASICDialect.OpcodesFromByte.ContainsKey( byteValue ) )
             {
-              lineContent += m_OpcodesFromByte[byteValue].Command;
+              lineContent += Settings.BASICDialect.OpcodesFromByte[byteValue].Command;
             }
             else if ( Types.ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
             {
@@ -3635,8 +3645,8 @@ namespace C64Studio.Parser
           }
           else
           {
-            if ( ( !m_OpcodesFromByte.ContainsKey( byteValue ) )
-            ||   ( m_OpcodesFromByte[byteValue].Command.StartsWith( "{" ) ) )
+            if ( ( !Settings.BASICDialect.OpcodesFromByte.ContainsKey( byteValue ) )
+            ||   ( Settings.BASICDialect.OpcodesFromByte[byteValue].Command.StartsWith( "{" ) ) )
             {
               //if ( KeymapEntryExists( System.Windows.Forms.InputLanguage.CurrentInputLanguage, System.Windows.Forms.Keys
               if ( Types.ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
@@ -3660,11 +3670,11 @@ namespace C64Studio.Parser
             }
             else
             {
-              if ( m_OpcodesFromByte[byteValue].InsertionValue == 0x8F )
+              if ( Settings.BASICDialect.OpcodesFromByte[byteValue].InsertionValue == 0x8F )
               {
                 encounteredREM = true;
               }
-              lineContent += m_OpcodesFromByte[byteValue].Command;
+              lineContent += Settings.BASICDialect.OpcodesFromByte[byteValue].Command;
             }
           }
           ++dataPos;
@@ -3760,8 +3770,8 @@ namespace C64Studio.Parser
           }
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
           {
-            if ( ( token.ByteValue == m_Opcodes["RUN"].InsertionValue )
-            ||   ( token.ByteValue == m_Opcodes["THEN"].InsertionValue ) )
+            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["RUN"].InsertionValue )
+            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["THEN"].InsertionValue ) )
             {
               // insert label instead of line number
               if ( i + 1 < lineInfo.Tokens.Count )
@@ -3792,8 +3802,8 @@ namespace C64Studio.Parser
                 }
               }
             }
-            if ( ( token.ByteValue == m_Opcodes["GOTO"].InsertionValue )
-            ||   ( token.ByteValue == m_Opcodes["GOSUB"].InsertionValue ) )
+            if ( ( token.ByteValue == Settings.BASICDialect.Opcodes["GOTO"].InsertionValue )
+            ||   ( token.ByteValue == Settings.BASICDialect.Opcodes["GOSUB"].InsertionValue ) )
             {
               // ON x GOTO/GOSUB can have more than one line number
               // insert label instead of line number

@@ -73,8 +73,9 @@ namespace C64Studio
     public GR.Collections.Map<string,PerConfigSettings>     Settings = new GR.Collections.Map<string, PerConfigSettings>();
     public bool             IsShown = false;
     public AssemblerType    AssemblerType = C64Studio.Types.AssemblerType.AUTO;
-    public BasicVersion     BasicVersion = BasicVersion.C64_BASIC_V2;
+    //public BasicVersion     BasicVersion = BasicVersion.C64_BASIC_V2;
     public List<string>     ProjectHierarchy = new List<string>();
+    public string           BASICDialect = "BASIC V2";
 
 
 

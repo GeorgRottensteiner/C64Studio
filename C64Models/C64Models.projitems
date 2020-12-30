@@ -44,6 +44,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\AssemblerSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\BASICDialect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\CompileConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ParserBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\ProjectConfig.cs" />

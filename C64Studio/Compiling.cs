@@ -1,4 +1,5 @@
-﻿using C64Studio.Types;
+﻿using C64Models.BASIC;
+using C64Studio.Types;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,11 +24,82 @@ namespace C64Studio
     public Parser.ASMFileParser       ParserASM = new C64Studio.Parser.ASMFileParser();
     public Parser.BasicFileParser     ParserBasic = new C64Studio.Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
 
+    public Dictionary<string,Dialect> BASICDialects = new Dictionary<string, Dialect>();
+
 
 
     public Compiling( StudioCore Core )
     {
       this.Core = Core;
+    }
+
+
+
+    public void Initialise()
+    {
+      InitDialects();
+    }
+
+
+
+    private void InitDialects()
+    {
+      try
+      {
+        var files = System.IO.Directory.GetFiles( "BASIC Dialects", "*.txt" );
+
+        foreach ( var file in files )
+        {
+          ReadBASICDialect( file );
+        }
+      }
+
+      catch ( Exception ex )
+      {
+        Core.AddToOutput( "Exception reading BASIC dialect files: " + ex.Message + System.Environment.NewLine );
+      }
+    }
+
+
+
+    private Dialect ReadBASICDialect( string File )
+    {
+      var dialect = new Dialect();
+      using ( var reader = new GR.IO.BinaryReader( File ) )
+      {
+        string    line;
+        bool      firstLine = true;
+        int       lineIndex = 0;
+
+        while ( reader.ReadLine( out line ) )
+        {
+          ++lineIndex;
+          line = line.Trim();
+          if ( ( string.IsNullOrEmpty( line ) )
+          ||   ( line.StartsWith( "#" ) ) )
+          {
+            continue;
+          }
+          // skip header
+          if ( firstLine )
+          {
+            firstLine = false;
+            continue;
+          }
+
+          string[] parts = line.Split( ';' );
+          if ( parts.Length != 3 )
+          {
+            Core.AddToOutput( "Invalid BASIC format file '" + File + "', expected three columns in line " + lineIndex + System.Environment.NewLine );
+            return null;
+          }
+          dialect.AddOpcode( parts[0], GR.Convert.ToI32( parts[1], 16 ), parts[2] );
+        }
+      }
+      dialect.Name = System.IO.Path.GetFileNameWithoutExtension( File );
+      BASICDialects.Add( dialect.Name, dialect );
+
+      return dialect;
     }
 
 

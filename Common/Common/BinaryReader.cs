@@ -7,12 +7,13 @@ namespace GR
 	  /// <summary>
 	  /// Zusammenfassung für BinaryReader.
 	  /// </summary>
-	  public class BinaryReader : IReader
+	  public class BinaryReader : IReader, IDisposable
 	  {
 
       private System.IO.Stream        m_Stream = null;
       private GR.Memory.ByteBuffer    m_Cache = new GR.Memory.ByteBuffer( 256 );
       private int                     m_CacheBytesUsed = 256;
+      private bool                    m_IsOwner = false;
 
 
 		  public BinaryReader()
@@ -21,7 +22,15 @@ namespace GR
 
 
 
-		  public BinaryReader( System.IO.Stream Stream )
+      public BinaryReader( string Filename )
+      {
+        m_Stream = new System.IO.FileStream( Filename, System.IO.FileMode.Open, System.IO.FileAccess.Read );
+        m_IsOwner = true;
+      }
+
+
+
+      public BinaryReader( System.IO.Stream Stream )
 		  {
         m_Stream = Stream;
 		  }
@@ -292,7 +301,20 @@ namespace GR
 
       public override void Close()
       {
+        if ( ( m_Stream != null )
+        &&   ( m_IsOwner ) )
+        {
+          m_Stream.Close();
+          m_Stream.Dispose();
+        }
         m_Stream = null;
+      }
+
+
+
+      public void Dispose()
+      {
+        Close();
       }
 
 
