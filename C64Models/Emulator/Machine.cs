@@ -8,9 +8,23 @@ namespace Tiny64
 {
   public class Machine
   {
-    public Memory     Memory = new Memory();
+    public Memory     Memory;
     public Processor  CPU = Processor.Create6510();
+    public VIC        VIC;
+    public CIA        CIA1;
+    public CIA        CIA2;
+
+    public SID        SID = new SID();
+
     public Display    Display = new Display();
+
+    public enum IRQSource
+    {
+      VIC,
+      CIA1,
+      CIA2,
+      NMI
+    };
 
     //byte            IODirection = 0x2f;   // RAM 0000
     byte              PortRegister = 55;    // RAM 0001
@@ -19,6 +33,14 @@ namespace Tiny64
 
     bool              Game = false;
     bool              ExRom = false;
+
+    private bool      IRQCIA1Raised = false;
+    private bool      IRQCIA2Raised = false;
+    private bool      IRQVICRaised = false;
+    private bool      IRQNMIRaised = false;
+    private bool      IRQRaised = false;
+
+    private bool      FullDebug = false;
 
 
 
@@ -29,7 +51,86 @@ namespace Tiny64
 
     public Machine()
     {
+      Memory  = new Memory( this );
+      VIC     = new VIC( this );
+      CIA1    = new CIA( this, IRQSource.CIA1 );
+      CIA2    = new CIA( this, IRQSource.CIA2 );
+
       HardReset();
+    }
+
+
+
+    public void RaiseNMI()
+    {
+      IRQNMIRaised = true;
+    }
+
+
+
+    public void LowerNMI()
+    {
+      IRQNMIRaised = false;
+    }
+
+
+
+    public void RaiseIRQ( IRQSource Source )
+    {
+      IRQRaised = true;
+
+      switch ( Source )
+      {
+        case IRQSource.CIA1:
+          IRQCIA1Raised = true;
+          break;
+        case IRQSource.CIA2:
+          IRQCIA2Raised = true;
+          break;
+        case IRQSource.VIC:
+          IRQVICRaised = true;
+          break;
+        default:
+          throw new Exception( "Unsupported IRQ source " + Source );
+      }
+    }
+
+
+
+    public void LowerIRQ( IRQSource Source )
+    {
+      bool    loweredIRQ = false;
+      switch ( Source )
+      {
+        case IRQSource.CIA1:
+          if ( IRQCIA1Raised )
+          {
+            IRQCIA1Raised = false;
+            loweredIRQ = true;
+          }
+          break;
+        case IRQSource.CIA2:
+          if ( IRQCIA2Raised )
+          {
+            IRQCIA2Raised = false;
+            loweredIRQ = true;
+          }
+          break;
+        case IRQSource.VIC:
+          if ( IRQVICRaised )
+          {
+            IRQVICRaised = true;
+            loweredIRQ = true;
+          }
+          break;
+        default:
+          throw new Exception( "Unsupported IRQ source " + Source );
+      }
+      if ( ( loweredIRQ )
+      &&   ( IRQRaised ) )
+      {
+        IRQRaised = false;
+      }
     }
 
 
@@ -107,6 +208,11 @@ namespace Tiny64
 
     public void HardReset()
     {
+      VIC.Initialize();
+      SID.Init();
+      CIA1.Init();
+      CIA2.Init();
+
       Memory.Initialize();
       CPU.Initialize();
 
@@ -135,7 +241,7 @@ namespace Tiny64
         // "update" VIC raster pos
         for ( int i = 0; i < curCycles; ++i )
         {
-          Memory.VIC.RunCycle( Memory, Display );
+          VIC.RunCycle( Memory, Display );
         }
       }
       cyclesUsed -= MaxCycles;
@@ -148,51 +254,69 @@ namespace Tiny64
     public int RunCycle()
     {
       // cycle has two phases, usually first VIC, then CPU (if not stalled by VIC)
-
-      Memory.CIA1.RunCycle();
-      Memory.CIA2.RunCycle();
-      Memory.VIC.RunCycle( Memory, Display );
+      CIA1.RunCycle();
+      CIA2.RunCycle();
+      VIC.RunCycle( Memory, Display );
 
       // TODO check for interrupts!
       if ( !CPU.FlagIRQ )
       {
-        if ( IsIRQRaised() )
+        if ( IRQNMIRaised )
         {
+          // push PC
+          PushStack( (byte)( CPU.PC >> 8 ) );
+          PushStack( (byte)( CPU.PC & 0xff ) );
+          // push state
+          PushStack( CPU.Flags );
+
+          ushort  jumpAddress = (ushort)( Memory.ReadByteDirect( 0xfffa ) | ( Memory.ReadByteDirect( 0xfffb ) << 8 ) );
+
+          CPU.PC = jumpAddress;
+        }
+        else if ( IRQRaised )
+        {
+          // really, do it like that?
           CPU.FlagIRQ = true;
+
+          FullDebug = true;
+
+          // push PC
+          PushStack( (byte)( CPU.PC >> 8 ));
+          PushStack( (byte)( CPU.PC & 0xff ) );
+          // push state
+          PushStack( CPU.Flags );
+
+          ushort  jumpAddress = (ushort)( Memory.ReadByteDirect( 0xfffe ) | ( Memory.ReadByteDirect( 0xffff ) << 8 ) );
+
+          Debug.Log( "Enter IRQ at " + TotalCycles + " at address " + CPU.PC.ToString( "X4" ) + ", IRQ at " + jumpAddress.ToString( "X4" ) );
+
+          /*
+          for ( int i = 0x1f0; i <= 0x1ff; ++i )
+          {
+            Debug.Log( "Stack " + i.ToString( "X4" ) + ": " + Memory.ReadByteDirect( (ushort)i ).ToString( "X" ) );
+          }*/
+
+          CPU.PC = jumpAddress;
         }
       }
 
       // TODO - should run opcode in pieces!!
-
 
       int numCycles = RunOpcode();
 
       // catch up missed cycles 
       for ( int i = 1; i < numCycles; ++i )
       {
-        Memory.CIA1.RunCycle();
-        Memory.CIA2.RunCycle();
-        Memory.VIC.RunCycle( Memory, Display );
+        CIA1.RunCycle();
+        CIA2.RunCycle();
+        VIC.RunCycle( Memory, Display );
       }
 
       // TODO - NOT clean!!
 
       TotalCycles += numCycles;
+
       return numCycles;
-    }
-
-
-
-    private bool IsIRQRaised()
-    {
-      if ( ( Memory.VIC.IsIRQRaised )
-      ||   ( Memory.CIA1.IsIRQRaised )
-      ||   ( Memory.CIA2.IsIRQRaised ) )
-      {
-        return true;
-      }
-
-      return false;
     }
 
 
@@ -201,6 +325,13 @@ namespace Tiny64
     {
       // TODO - split opcodes for number of cycles!!
       byte    opCode = Memory.ReadByteDirect( CPU.PC );
+
+      if ( FullDebug )
+      {
+        //Debug.Log( $"Run {opCode.ToString( "X2" )} at {CPU.PC.ToString( "X4" )}" );
+      }
+
+      //Debug.Log( $"Exec {CPU.PC.ToString( "X4" )} A:{CPU.Accu.ToString( "X2" )} X:{CPU.X.ToString( "X2" )} Y:{CPU.Y.ToString( "X2" )} P:{CPU.Flags.ToString( "X2" )}" );      
 
       OnExecAddress( CPU.PC );
       if ( TriggeredBreakpoints.Count > 0 )
@@ -427,6 +558,25 @@ namespace Tiny64
             CPU.PC += 3;
           }
           return 4;
+          /*
+        case 0x2f:
+          // RLA ROL memory, AND memory       3b, 6c
+          //  A <- (M << 1) /\ (A)
+          {
+            int     newValue = CPU.Accu * 2;
+            if ( CPU.FlagCarry )
+            {
+              newValue |= 0x01;
+            }
+            CPU.FlagCarry = ( ( newValue & 0x100 ) != 0 );
+            CPU.Accu = (byte)newValue;
+
+            CPU.CheckFlagZero();
+            CPU.CheckFlagNegative();
+
+            CPU.PC += 1;
+          }
+          return 2;*/
         case 0x30:
           // BMI $FFFF           2b, 2*c
           return HandleBranch( CPU.FlagNegative );
@@ -441,6 +591,7 @@ namespace Tiny64
           // RTI                 1b, 6c
           {
             CPU.Flags = PopStack();
+            IRQRaised = false;
 
             byte lo = PopStack();
             byte hi = PopStack();
@@ -1465,7 +1616,7 @@ namespace Tiny64
           }
           return 6;
         default:
-          throw new NotSupportedException( "Unsupported opcode " + opCode.ToString( "X2" ) );
+          throw new NotSupportedException( "Unsupported opcode " + opCode.ToString( "X2" ) + " at " + CPU.PC.ToString( "X4" ) );
       }
     }
 
@@ -1512,6 +1663,13 @@ namespace Tiny64
     private void OnWriteAddress( ushort Address, byte Value )
     {
       //TODO - breakpoints
+      /*
+      if ( ( Address == 0x300 )
+      ||   ( Address == 0xcd ) )
+      {
+        Debug.Log( $"Write {Value.ToString( "X2" )} to {Address.ToString( "X4")}" );
+      }*/
+
       Memory.WriteByte( Address, Value );
       CheckBreakpoints( Address, false, true, false );
     }

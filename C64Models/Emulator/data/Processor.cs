@@ -15,7 +15,7 @@ namespace Tiny64
     public byte           Accu = 0;
     public byte           X = 0;
     public byte           Y = 0;
-    public byte           Flags = 0x10;
+    public byte           Flags = 0x00;
 
     public ushort         PC = 0;
     public byte           StackPointer = 0xff;
@@ -111,6 +111,8 @@ namespace Tiny64
       }
     }
 
+
+
     public bool FlagZero
     {
       get
@@ -155,7 +157,7 @@ namespace Tiny64
       Accu          = 0;
       X             = 0;
       Y             = 0;
-      Flags         = 0x10;   // break is set
+      Flags         = 0;    // break is set
       PC            = 0;
       StackPointer  = 0xff;
     }

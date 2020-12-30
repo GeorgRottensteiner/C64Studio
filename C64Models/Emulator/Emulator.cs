@@ -81,27 +81,27 @@ namespace Tiny64
     private void RenderFullImage( Tiny64.Machine machine, GR.Image.MemoryImage img )
     {
       // render image
-      bool  vicActive = ( ( machine.Memory.VIC.ReadByte( 0x11 ) & 0x10 ) != 0 );
+      bool  vicActive = ( ( machine.VIC.ReadByte( 0x11 ) & 0x10 ) != 0 );
       if ( vicActive )
       {
-        int   vicBank = ( machine.Memory.CIA2.ReadByte( 0 ) & 0x03 ) ^ 0x03;
-        int   screenPos = ( ( machine.Memory.VIC.ReadByte( 0x18 ) & 0xf0 ) >> 4 ) * 1024 + vicBank * 16384;
-        int   localCharDataPos = ( machine.Memory.VIC.ReadByte( 0x18 ) & 0x0e ) * 1024;
+        int   vicBank = ( machine.CIA2.ReadByte( 0 ) & 0x03 ) ^ 0x03;
+        int   screenPos = ( ( machine.VIC.ReadByte( 0x18 ) & 0xf0 ) >> 4 ) * 1024 + vicBank * 16384;
+        int   localCharDataPos = ( machine.VIC.ReadByte( 0x18 ) & 0x0e ) * 1024;
         int   charDataPos = localCharDataPos + vicBank * 16384;
-        byte  bgColor = (byte)( machine.Memory.VIC.ReadByte( 0x21 ) & 0x0f );
+        byte  bgColor = (byte)( machine.VIC.ReadByte( 0x21 ) & 0x0f );
 
         GR.Memory.ByteBuffer    charData = null;
         if ( ( ( vicBank == 0 )
-        || ( vicBank == 2 ) )
-        && ( localCharDataPos == 0x1000 ) )
+        ||     ( vicBank == 2 ) )
+        &&   ( localCharDataPos == 0x1000 ) )
         {
           // use default upper case chars
           charData = new GR.Memory.ByteBuffer();
           charData.Append( Machine.Memory.CharacterROM, 0, 2048 );
         }
         else if ( ( ( vicBank == 0 )
-        || ( vicBank == 2 ) )
-        && ( localCharDataPos == 0x2000 ) )
+        ||          ( vicBank == 2 ) )
+        &&        ( localCharDataPos == 0x2000 ) )
         {
           // use default lower case chars
           charData = new GR.Memory.ByteBuffer();

@@ -35,13 +35,19 @@ namespace Tiny64
       FLAG              = 16
     };
 
-    protected byte[]        Registers = new byte[16];
+    protected byte[]              Registers = new byte[16];
 
-    protected int           TimerAValue = 0;
-    protected int           TimerALatch = 0;
+    protected byte                IRQsEnabled = 0;
 
-    protected int           TimerBValue = 0;
-    protected int           TimerBLatch = 0;
+    protected int                 TimerAValue = 0;
+    protected int                 TimerALatch = 0;
+
+    protected int                 TimerBValue = 0;
+    protected int                 TimerBLatch = 0;
+
+    protected Machine             Machine = null;
+
+    protected Machine.IRQSource   CPUIRQSource;
 
 
 
@@ -127,9 +133,17 @@ namespace Tiny64
         Registers[Register.TIMER_B_CONTROL] |= (byte)( ( value & 0x03 ) << 5 );
       }
     }
-    
-    
-    
+
+
+
+    public CIA( Machine Machine, Machine.IRQSource Source )
+    {
+      this.Machine  = Machine;
+      CPUIRQSource  = Source;
+    }
+
+
+
     public void Init()
     {
       Registers = new byte[16];
@@ -159,7 +173,7 @@ namespace Tiny64
           if ( ( TimerBActive )
           &&   ( TimerBInputMode == 0x02 ) )
           {
-            RaiseIRQ( IRQSource.TIMER_B );
+            --TimerBValue;
           }
         }
       }
@@ -198,13 +212,24 @@ namespace Tiny64
 
     private void RaiseIRQ( IRQSource Source )
     {
+      // can this source raise an IRQ?
+      //Debug.Log( "CIA, raise IRQ for " + Source );
+      if ( ( IRQsEnabled & (int)Source ) == 0 )
+      {
+        //Debug.Log( "-not enabled" );
+        return;
+      }
+      //Debug.Log( "-enabled" );
+
+      // mark irq source as raised
       Registers[Register.IRQ_CONTROL_STATE] |= (byte)Source;
 
-      // TODO - only if IRQ flag is enabled!
-      // set the IRQ flag
+      // set the any IRQ flag
       if ( ( Registers[Register.IRQ_CONTROL_STATE] & 0x80 ) == 0 )
       {
         Registers[Register.IRQ_CONTROL_STATE] |= 0x80;
+
+        Machine.RaiseIRQ( CPUIRQSource );
       }
     }
 
@@ -284,6 +309,19 @@ namespace Tiny64
           TimerBInputMode             = (byte)( ( Value & 0x60 ) >> 5 );
           TimerBModeContinuous        = ( ( Value & 0x08 ) == 0 );
           break;
+        case Register.IRQ_CONTROL_STATE:
+          if ( ( Value & 0x80 ) == 0 )
+          {
+            // clear all bits which are set
+            IRQsEnabled &= (byte)~( Value & 0x7f );
+          }
+          else
+          {
+            // set all set bits
+            IRQsEnabled |= (byte)( Value & 0x7f );
+          }
+          //Debug.Log( "CIA, IRQ mask set to " + IRQsEnabled.ToString( "X2" ) );
+          return;
       }
 
       Registers[Address] = Value;
@@ -308,6 +346,12 @@ namespace Tiny64
         case Register.IRQ_CONTROL_STATE:
           {
             byte returnValue = Registers[Address];
+
+            if ( ( returnValue & 0x80 ) != 0 )
+            {
+              // TODO
+              //_irqLine.Lower();
+            }
 
             Registers[Address] = 0;
 

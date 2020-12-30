@@ -35,10 +35,6 @@ namespace Tiny64
     public byte[]         ColorRAM = new byte[1024];
     public byte[]         CartLO = new byte[16384];
     public byte[]         CartHI = new byte[16384];
-    public VIC            VIC = new VIC();
-    public SID            SID = new SID();
-    public CIA            CIA1 = new CIA();
-    public CIA            CIA2 = new CIA();
 
     internal MemorySource   Range0000To0FFF = MemorySource.RAM;
     internal MemorySource   Range1000To7FFF = MemorySource.RAM;
@@ -48,6 +44,15 @@ namespace Tiny64
     internal MemorySource   RangeD000ToDFFF = MemorySource.IO;
     internal MemorySource   RangeE000ToFFFF = MemorySource.KERNAL_ROM;
 
+    Machine               Machine = null;
+
+
+
+
+    public Memory( Machine Machine )
+    {
+      this.Machine = Machine;
+    }
 
 
 
@@ -70,11 +75,6 @@ namespace Tiny64
       RangeC000ToCFFF = MemorySource.RAM;
       RangeD000ToDFFF = MemorySource.IO;
       RangeE000ToFFFF = MemorySource.KERNAL_ROM;
-
-      VIC.Initialize();
-      SID.Init();
-      CIA1.Init();
-      CIA2.Init();
     }
 
 
@@ -665,13 +665,13 @@ namespace Tiny64
 
         // TODO - proper handling!
         byte vicAddress = (byte)( Address & 0x003f );
-        return VIC.ReadByte( vicAddress );
+        return Machine.VIC.ReadByte( vicAddress );
       }
       else if ( ( Address >= 0xd400 )
       &&        ( Address < 0xd800 ) )
       {
         // SID
-        return SID.ReadByte( (byte)( Address & 0x0ff ) );
+        return Machine.SID.ReadByte( (byte)( Address & 0x0ff ) );
       }
       else if ( ( Address >= 0xd800 )
       &&        ( Address < 0xd800 + 1024 ) )
@@ -687,13 +687,13 @@ namespace Tiny64
       &&        ( Address < 0xdd00 ) )
       {
         // CIA1
-        return CIA1.ReadByte( (byte)( Address & 0x0f ) );
+        return Machine.CIA1.ReadByte( (byte)( Address & 0x0f ) );
       }
       else if ( ( Address >= 0xdd00 )
       &&        ( Address < 0xde00 ) )
       {
         // CIA2
-        return CIA2.ReadByte( (byte)( Address & 0x0f ) );
+        return Machine.CIA2.ReadByte( (byte)( Address & 0x0f ) );
       }
       // TODO
       throw new NotSupportedException( "Unsupported IO address " + Address.ToString( "X4" ) );
@@ -710,13 +710,13 @@ namespace Tiny64
         // VIC
         byte vicAddress = (byte)( Address & 0x003f );
 
-        VIC.WriteByte( vicAddress, Value );
+        Machine.VIC.WriteByte( vicAddress, Value );
       }
       else if ( ( Address >= 0xd400 )
       &&        ( Address < 0xd800 ) )
       {
         // SID
-        SID.WriteByte( (byte)( Address & 0x0ff ), Value );
+        Machine.SID.WriteByte( (byte)( Address & 0x0ff ), Value );
       }
       else if ( ( Address >= 0xd800 )
       &&        ( Address < 0xd800 + 1024 ) )
@@ -728,13 +728,13 @@ namespace Tiny64
       &&        ( Address < 0xdd00 ) )
       {
         // CIA1
-        CIA1.WriteByte( (byte)( Address & 0x0f ), Value );
+        Machine.CIA1.WriteByte( (byte)( Address & 0x0f ), Value );
       }
       else if ( ( Address >= 0xdd00 )
       &&        ( Address < 0xde00 ) )
       {
         // CIA2
-        CIA2.WriteByte( (byte)( Address & 0x0f ), Value );
+        Machine.CIA2.WriteByte( (byte)( Address & 0x0f ), Value );
       }
       else
       {

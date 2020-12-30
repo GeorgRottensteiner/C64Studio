@@ -86,6 +86,8 @@ namespace Tiny64
 
     int[]         MemoryBankBase = new int[4]{ 0xc000, 0x8000, 0x4000, 0x0000 };
 
+    Machine       Machine = null;
+
 
 
     byte XScroll 
@@ -165,6 +167,13 @@ namespace Tiny64
         // TODO - raster, collision, etc.
         return false;
       }
+    }
+
+
+
+    public VIC( Machine Machine )
+    {
+      this.Machine = Machine;
     }
 
 
