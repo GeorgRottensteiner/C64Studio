@@ -617,11 +617,11 @@ namespace C64Studio
 
 
 
-    private void ValidateMemory( int Offset, int Length )
+    private void ValidateMemory( MemoryView View, int Offset, int Length )
     {
-      foreach ( int offset in Core.Debugging.ActiveMemory.ValidMemory.Keys )
+      foreach ( int offset in View.ValidMemory.Keys )
       {
-        int     storedlength = Core.Debugging.ActiveMemory.ValidMemory[offset];
+        int     storedlength = View.ValidMemory[offset];
 
         if ( ( Offset >= offset )
         &&   ( Offset < offset + storedlength ) )
@@ -642,33 +642,8 @@ namespace C64Studio
       }
       if ( Length > 0 )
       {
-        Core.Debugging.ActiveMemory.ValidMemory.Add( Offset, Length );
+        View.ValidMemory.Add( Offset, Length );
       }
-      // TODO normalize entries
-      /*
-      var enumerator = m_ValidMemory.GetEnumerator();
-
-      foreach ( int offset in m_ValidMemory.Keys )
-      {
-        int storedlength = m_ValidMemory[offset];
-
-        if ( ( Offset >= offset )
-        && ( Offset < offset + storedlength ) )
-        {
-          // we are at least partially in here
-          if ( Offset + Length < offset + storedlength )
-          {
-            // already fully validated
-            return;
-          }
-          Length -= Offset - offset;
-          Offset = offset + storedlength;
-          if ( Length == 0 )
-          {
-            return;
-          }
-        }
-      }*/
     }
 
 
@@ -690,9 +665,15 @@ namespace C64Studio
 
 
 
-    internal void UpdateMemory( RequestData Request, ByteBuffer Data )
+    internal void UpdateMemory( RequestData Request, ByteBuffer Data, bool AsRAM )
     {
       int Offset = Request.Parameter1;
+
+      MemoryView memoryView = Core.Debugging.ActiveMemory;
+      if ( AsRAM )
+      {
+        memoryView = Core.Debugging.MemoryRAM;
+      }
 
       for ( int i = 0; i < Data.Length; ++i )
       {
@@ -700,18 +681,18 @@ namespace C64Studio
 
         if ( Request.Reason != RequestReason.MEMORY_FETCH )
         {
-          if ( ramByte != Core.Debugging.ActiveMemory.RAM.ByteAt( Offset + i ) )
+          if ( ramByte != memoryView.RAM.ByteAt( Offset + i ) )
           {
-            Core.Debugging.ActiveMemory.RAMChanged[Offset + i] = true;
+            memoryView.RAMChanged[Offset + i] = true;
           }
           else
           {
-            Core.Debugging.ActiveMemory.RAMChanged[Offset + i] = false;
+            memoryView.RAMChanged[Offset + i] = false;
           }
         }
-        Core.Debugging.ActiveMemory.RAM.SetU8At( Offset + i, ramByte );
+        memoryView.RAM.SetU8At( Offset + i, ramByte );
       }
-      ValidateMemory( Offset, (int)Data.Length );
+      ValidateMemory( memoryView, Offset, (int)Data.Length );
 
       foreach ( var debugView in MemoryViews )
       {

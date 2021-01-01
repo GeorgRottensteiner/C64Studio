@@ -5162,7 +5162,11 @@ namespace C64Studio
 
         if ( Request.Info == "C64Studio.MemDump" )
         {
-          StudioCore.Debugging.UpdateMemory( Request, Data );
+          StudioCore.Debugging.UpdateMemory( Request, Data, false );
+        }
+        else if ( Request.Info == "C64Studio.MemDumpRAM" )
+        {
+          StudioCore.Debugging.UpdateMemory( Request, Data, true );
         }
         else
         {

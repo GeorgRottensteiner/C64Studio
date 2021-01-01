@@ -231,7 +231,7 @@ namespace C64Studio
         RequestData requData  = new RequestData( DebugRequestType.MEM_DUMP );
         requData.Parameter1 = Data.Parameter1;
         requData.Parameter2 = Data.Parameter1 + Data.Parameter2 - 1;
-        requData.Info = "C64Studio.MemDump";
+        requData.Info = "C64Studio.MemDumpRAM";
         requData.Reason = Data.Reason;
         if ( requData.Parameter2 >= 0x10000 )
         {

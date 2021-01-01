@@ -2026,7 +2026,7 @@ namespace C64Studio
         RequestData requData  = new RequestData( DebugRequestType.MEM_DUMP );
         requData.Parameter1 = Data.Parameter1;
         requData.Parameter2 = Data.Parameter1 + Data.Parameter2 - 1;
-        requData.Info = "C64Studio.MemDump";
+        requData.Info = "C64Studio.MemDumpRAM";
         requData.Reason = Data.Reason;
         if ( requData.Parameter2 >= 0x10000 )
         {
@@ -2046,6 +2046,7 @@ namespace C64Studio
       // queue if there is an active request or queued incoming data
       Debug.Log( "QueueRequest - sending data directly? Queue has " + m_RequestQueue.Count + " entries, request is " + Data.Type + ", current request type is " + m_Request.Type + ", current incoming data is " + m_ReceivedDataBin.ToString() );
       if ( ( m_Request.Type != DebugRequestType.NONE )
+      ||   ( m_RequestQueue.Count > 0 )
       ||   ( ( m_FullBinaryInterface )
       &&     ( m_ReceivedDataBin.Length > 0 ) ) )
       {
