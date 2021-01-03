@@ -66,11 +66,8 @@ namespace C64Studio
       DocumentInfo.Type = ProjectElement.ElementType.BASIC_SOURCE;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
 
-      if ( Core.Compiling.BASICDialects.ContainsKey( "BASIC V2" ) )
-      {
-        m_BASICDialectName  = "BASIC V2";
-        m_BASICDialect      = Core.Compiling.BASICDialects[m_BASICDialectName];
-      }
+      m_BASICDialectName  = Core.Compiling.BASICV2.Name;
+      m_BASICDialect      = Core.Compiling.BASICV2;
 
       m_IsSaveable = true;
 

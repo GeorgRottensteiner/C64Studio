@@ -24,6 +24,7 @@ namespace C64Studio
     public Parser.ASMFileParser       ParserASM = new C64Studio.Parser.ASMFileParser();
     public Parser.BasicFileParser     ParserBasic = new C64Studio.Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
 
+    public Dialect                    BASICV2 = null;
     public Dictionary<string,Dialect> BASICDialects = new Dictionary<string, Dialect>();
 
 
@@ -42,7 +43,7 @@ namespace C64Studio
 
 
 
-    private void InitDialects()
+    private bool InitDialects()
     {
       try
       {
@@ -53,11 +54,11 @@ namespace C64Studio
           ReadBASICDialect( file );
         }
       }
-
       catch ( Exception ex )
       {
         Core.AddToOutput( "Exception reading BASIC dialect files: " + ex.Message + System.Environment.NewLine );
       }
+      return ( BASICV2 != null );
     }
 
 
@@ -98,6 +99,11 @@ namespace C64Studio
       }
       dialect.Name = System.IO.Path.GetFileNameWithoutExtension( File );
       BASICDialects.Add( dialect.Name, dialect );
+
+      if ( dialect.Name == "BASIC V2" )
+      {
+        BASICV2 = dialect;
+      }
 
       return dialect;
     }
