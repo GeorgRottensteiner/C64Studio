@@ -7746,7 +7746,7 @@ namespace C64Studio.Parser
                     if ( defineName == "*" )
                     {
                       if ( ( address >= 0 )
-                      && ( address <= 0xffff ) )
+                      &&   ( address <= 0xffff ) )
                       {
                         AddError( lineIndex,
                                   Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
@@ -9392,6 +9392,8 @@ namespace C64Studio.Parser
       return Lines;
     }
 
+
+
     private void POZone( List<ScopeInfo> stackScopes, int lineIndex, LineInfo info, List<TokenInfo> lineTokenInfos )
     {
       if ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
@@ -9429,6 +9431,8 @@ namespace C64Studio.Parser
         AddZone( m_CurrentZoneName, lineIndex, zoneToken.StartPos, zoneToken.Length );
       }
     }
+
+
 
     private ParseLineResult POAddLibraryPath( string FolderPath, string ParentFilename, ref int LineIndex )
     {

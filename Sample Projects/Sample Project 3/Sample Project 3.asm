@@ -9,7 +9,7 @@
 firstline    = $0a
 lastline     = $0b
 s_lo         = $fb
-s_hi         = $fc
+s_hi         = $fc 
 linelenght   = $fe
 get          = $ffe4
 

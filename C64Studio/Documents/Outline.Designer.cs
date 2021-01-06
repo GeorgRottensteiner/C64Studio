@@ -141,8 +141,10 @@
       // 
       this.editOutlineFilter.AutoSize = false;
       this.editOutlineFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.editOutlineFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.editOutlineFilter.Name = "editOutlineFilter";
       this.editOutlineFilter.Size = new System.Drawing.Size(200, 23);
+      this.editOutlineFilter.ToolTipText = "Label Filter";
       this.editOutlineFilter.TextChanged += new System.EventHandler(this.editOutlineFilter_TextChanged);
       // 
       // Outline
