@@ -32,6 +32,6 @@ tr    {vertical-align: top;}
 td    {vertical-align: top; background: #e0e0e0; }
 
 
-H1     {font: sans-serif Verdana; font-size: 46%; }
-H2     {font: sans-serif Verdana; font-size: 75%; background: #ffe000; }
-H3     {font: sans-serif Verdana; font-size: 125%; font-weight: bold; }
+H1     {font: sans-serif Verdana; font-size: 46%; background: #FFF3A5; }
+H2     {font: sans-serif Verdana; font-size: 75%; background: #FFF3A5; }
+H3     {font: sans-serif Verdana; font-size: 125%; font-weight: bold; background: #FFF3A5; }

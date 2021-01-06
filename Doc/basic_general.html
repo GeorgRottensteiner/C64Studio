@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>BASIC</H3>
+  <div id="mybody">
+    C64Studio supports common BASIC V2 and several dialects. Other dialects can be added via external token configuration files.<br>
+    <br>
+    The editor provides a upper/lower case toggle, a symbol vs. macro mode and a label mode without actual line numbers.<br>
+    <br>
+    When writing in BASIC typing one apostrophe changes the entry mode, similar to the original BASIC editor. Key placement is now positional.
+    Any control keys actually add their control character instead. Typing a second apostrophe or clicking on the "toggle entry mode" button in the toolbar stops the mode again.<br>
+    <br>
+    <br>
+    <img src="images/basic_editor_normal.png"><br>
+    <br>
+    To allow for the C64s special characters most of the keyboard layout is remapped:<br>
+    <br>
+    The Tab key is used as replacement for the Commodore key<br>
+    <br>
+    Color and mode codes in string literals are replaced by text representations on entry. Currently supported are:<br>
+    <br>
+    <ul>
+      <li>{Black}, {blk}</li>
+      <li>{White}, {wht}</li>
+      <li>{Red}, {red}</li>
+      <li>{Cyn}, {cyn}</li>
+      <li>{Purple}, {pur}</li>
+      <li>{Green}, {grn}</li>
+      <li>{Blue}, {blu}</li>
+      <li>{Yellow}, {yel}</li>
+      <li>{Orange}, {orng}</li>
+      <li>{Brown}, {brn}</li>
+      <li>{Light Red}, {lred}</li>
+      <li>{Dark Grey}, {gry1}</li>
+      <li>{Grey}, {gry2}</li>
+      <li>{Light Green}, {lgrn}</li>
+      <li>{Light Blue}, {lblu}</li>
+      <li>{Light Grey}, {gry3}</li>
+      <li>{Reverse On}, {rvon}</li>
+      <li>{Reverse Off}, {rvof}</li>
+      <li>{Cursor Down}, {down}</li>
+      <li>{Cursor Up}, {up}</li>
+      <li>{Cursor Left}, {left}</li>
+      <li>{Cursor Right}, {rght}</li>
+      <li>{Del}</li>
+      <li>{Insert}</li>
+      <li>{Clr}, {clr}</li>
+      <li>{Home}, {home}</li>
+      <li>{F1}</li>
+      <li>{F2}</li>
+      <li>{F3}</li>
+      <li>{F4}</li>
+      <li>{F5}</li>
+      <li>{F6}</li>
+      <li>{F7}</li>
+      <li>{F8}</li>
+      <li>{CBM-A} to {CBM-Z}</li>
+      <li>{SHIFT-A} to {SHIFT-Z}</li>
+    </ul>
+    <br>
+  </div>
+  <H2>Label Mode</H2>
+  <div id="mybody">
+    Clicking on the toggle button "Label Mode" toggles the Basic editor between common line numbered and label mode.
+    This only works if the listing can be compiled. Any line number references are replaced with labels, and vice versa.<br>
+    <br>
+    <br>
+    <img src="images/basic_label_mode_normal.png"><br>
+    A simple BASIC file with line numbers<br>
+    <br>
+    <br>
+    <img src="images/basic_label_mode_label.png"><br>
+    After changing to label mode<br>
+    <br>
+  </div>
+</body>
+</HTML>

@@ -19,6 +19,8 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -740,8 +742,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BASIC Dialects\BASIC Lightning.txt" />
-    <Content Include="BASIC Dialects\BASIC V2.txt">
+    <Content Include="BASIC Dialects\BASIC Lightning.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="BASIC Dialects\BASIC V3.5.txt">
@@ -753,7 +754,10 @@
     <Content Include="BASIC Dialects\Laser BASIC.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="BASIC Dialects\Simons%27s BASIC.txt">
+    <Content Include="BASIC Dialects\Simons%27 BASIC.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\Tuned Simons%27 BASIC.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="c64.ico" />
@@ -846,5 +850,11 @@
 copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"</PostBuildEvent>
     <PostBuildEvent Condition="'$(OS)' == 'Unix' ">cp "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
         for i in $(TargetDir)*.dll; do cp $i $(SolutionDir)C64StudioRelease; done</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
+copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"
+del "$(SolutionDir)C64StudioRelease/BASIC Dialects/*.*"
+copy "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\BASIC Dialects"</PostBuildEvent>
   </PropertyGroup>
 </Project>

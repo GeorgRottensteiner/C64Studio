@@ -66,8 +66,8 @@ namespace C64Studio
       DocumentInfo.Type = ProjectElement.ElementType.BASIC_SOURCE;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
 
-      m_BASICDialectName  = Core.Compiling.BASICV2.Name;
-      m_BASICDialect      = Core.Compiling.BASICV2;
+      m_BASICDialectName  = Dialect.BASICV2.Name;
+      m_BASICDialect      = Dialect.BASICV2;
 
       m_IsSaveable = true;
 
@@ -1170,6 +1170,7 @@ namespace C64Studio
                 foreach ( var opcode in m_Parser.Settings.BASICDialect.Opcodes.Values )
                 {
                   if ( ( opcode.ShortCut != null )
+                  &&   ( opcode.ShortCut.Length > 0 )
                   &&   ( opcode.ShortCut.Length <= leftText.Length )
                   &&   ( string.Compare( opcode.ShortCut, 0, leftText, leftText.Length - opcode.ShortCut.Length, opcode.ShortCut.Length ) == 0 ) )
                   {
@@ -1479,6 +1480,7 @@ namespace C64Studio
 
       var settings = new Parser.BasicFileParser.ParserSettings();
       settings.StripSpaces = Core.Settings.BASICStripSpaces;
+      settings.BASICDialect = Core.Compiling.BASICDialects[DocumentInfo.Element.BASICDialect];
 
       Parser.BasicFileParser parser = new C64Studio.Parser.BasicFileParser( settings, DocumentInfo.FullPath );
       parser.LabelMode = m_LabelMode;

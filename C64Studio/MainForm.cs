@@ -497,13 +497,6 @@ namespace C64Studio
       StudioCore.Settings.Main = this;
       StudioCore.Initialise();
 
-      if ( StudioCore.Compiling.BASICV2 == null )
-      {
-        MessageBox.Show( "The BASIC dialect file for BASIC V2 is missing!\nPlease restore 'BASIC V2.txt'.", "Missing BASIC dialect file" );
-
-        throw new Exception( "Missing BASIC dialect file 'BASIC V2.txt'" );
-      }
-
       //Parser.BasicFileParser.KeyMap = StudioCore.Settings.BASICKeyMap;
 
       Types.Palette defaultPalette = new C64Studio.Types.Palette();

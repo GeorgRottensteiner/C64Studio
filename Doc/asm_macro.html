@@ -9,10 +9,11 @@
 <body>
   <H3>Assembler - Pseudo Operations</H3>
   <div id="mybody">
-    These pseudo ops are supported:<br>
+    These pseudo ops are supported in ACME/C64Studio mode:<br>
     <br>
     <br>
     <ul>
+      <li><a href="#address">!ADDRESS, !ADDR</a></li>
       <li><a href="#align">!ALIGN</a></li>
       <li><a href="#bank">!BANK</a></li>
       <li><a href="#basic">!BASIC</a></li>
@@ -20,11 +21,11 @@
       <li><a href="#byte">!BYTE, !BY, !8, !08</a></li>
       <li><a href="#convtab">!CONVTAB, !CT</a></li>
       <li><a href="#end">!END</a></li>
-      <li><a href="#eof">!ENDOFFILE</a></li>
-      <li><a href="#error">!ERROR</a></li>
+      <li><a href="#eof">!ENDOFFILE, !EOF</a></li>
+      <li><a href="#error">!ERROR, !SERIOUS</a></li>
       <li><a href="#for">!FOR</a></li>
       <li><a href="#fill">!FILL, !FI</a></li>
-      <li><a href="#hex">!HEX</a></li>
+      <li><a href="#hex">!HEX, !H</a></li>
       <li><a href="#ifdef">!IFDEF, !IF</a></li>
       <li><a href="#ifndef">!IFNDEF</a></li>
       <li><a href="#macro">!MACRO</a></li>
@@ -34,7 +35,9 @@
       <li><a href="#pseudopc">!PSEUDOPC</a></li>
       <li><a href="#realign">!REALIGN</a></li>
       <li><a href="#realpc">!REALPC</a></li>
-      <li><a href="#source">!SOURCE</a></li>
+      <li><a href="#set">!SET</a></li>
+      <li><a href="#sl">!SL</a></li>
+      <li><a href="#source">!SOURCE, !SRC</a></li>
       <li><a href="#text">!TEXT, !TX, !SCR, !PET, !RAW</a></li>
       <li><a href="#to">!TO</a></li>
       <li><a href="#trace">!TRACE</a></li>
@@ -44,6 +47,19 @@
     </ul>
     <br>
     <br>
+  </div>
+  <a name="address"></a>
+    <H2>!ADDRESS, !ADDR {</H2>
+    <div id="mybody">
+      This pseudo is currently a noop added for ACME compatibility. Intention: Any labels declared inside are marked as being addresses and will throw a warning when used in immediate addressing opcodes.<br>
+      <br>
+      <br>
+      <div id="code"><br>      !address {
+        SCREEN_ADDRESS = $0400
+      }
+        <br></div>
+      <br>
+      <br>
   </div>
   <a name="align"></a>
   <H2>!ALIGN &lt;andvalue&gt;,&lt;equalvalue&gt;[,&lt;fillvalue&gt;]</H2>
@@ -169,7 +185,7 @@
     <br>
   </div>
   <a name="error"></a>
-  <H2>!ERROR &lt;message&gt;</H2>
+  <H2>!ERROR, !SERIOUS &lt;message&gt;</H2>
   <div id="mybody">
     This pseudo op adds an error message to the compile result, essentially breaking the build. The message can be any combination of strings and expressions. Expressions are evaluated where possible.<br>
     <br>
@@ -1875,6 +1891,50 @@
       ...
       !REALPC
       <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="to"></a>
+  <H2>!TO &lt;file name&gt;,&lt;output type&gt;</H2>
+  <div id="mybody">
+    This pseudo op sets the output file name and type. This pseudo op will be overridden by any valid output settings in the element properties.<br>
+    <br>
+    <br>
+    Valid output types are CBM, PLAIN, D64, T64, TAP, CART8BIN, CART8CRT, CART16BIN, CART16CRT, MAGICDESKBIN, MAGICDESKCRT, EASYFLASHBIN, EASYFLASHCRT, RGCDBIN, RGCDCRT, GMOD2BIN, GMOD2CRT, ULTIMAX4BIN, ULTIMAX4CRT, ULTIMAX8BIN, ULTIMAX8CRT, ULTIMAX16BIN, ULTIMAX16CRT <br>
+    <br>
+    For cartridge and tape/disk formats a dummy name is currently inserted in the final file.<br>
+    <br>
+    <br>
+    <div id="code"><br>      !to "jmain.prg",cbm
+      !to "cart64banks.crt.bin", magicdeskcrt
+      <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="set"></a>
+  <H2>!SET &lt;label&gt; = &lt;expression&gt;</H2>
+  <div id="mybody">
+    This pseudo op assigns a value or result of an expression to a label. Exactly the same like direct assignment, but an existing label can be reassigned with a different value.<br>
+    <br>
+    <br>
+    <div id="code"><br>      !set SCREEN_CHAR = $0400
+    <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="sl"></a>
+  <H2>!SL &lt;file name&gt;</H2>
+  <div id="mybody">
+    This pseudo op instructs the assembler to write a text file with all labels to the given filename.<br>
+    The file is a csv formatted text file, with no header and semicolon as separator.<br>
+    There are two columns:<br>
+    [Labelname]=$[Value];[Unused]<br>
+    <br>
+    When the label is not used the content of the second column is set to "unused"<br>
+    <br>
+    <br>
+    <div id="code"><br>      !sl "labels.txt"
+    <br></div>
     <br>
     <br>
   </div>

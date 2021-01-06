@@ -24,7 +24,7 @@ namespace C64Studio.CustomRenderer
     {
       if ( _Parser.Settings.BASICDialect == null )
       {
-        _Dialect = C64Models.BASIC.Dialect.ReadBASICDialect( "BASIC Dialects/BASIC V2.txt" );
+        _Dialect = C64Models.BASIC.Dialect.BASICV2;
         _Parser.Settings.BASICDialect = _Dialect;
       }
       // get full lines in covered range

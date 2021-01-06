@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>Getting Started - Set up emulator</H3>
+  <div id="mybody">
+    Per default on a fresh install without previous saved settings an emulator add wizard should appear and ask for the location of an emulator. This wizard is pretty self explanatory, so here only the adding of a new emulator is described.<br>
+    <br>
+    <br>
+  </div>
+  <H2>Open Preferences</H2>
+  <div id="mybody">
+    <img src="images/gs_open_preferences.png"><br>
+    <br>
+    Open the preferences dialog from the main menu (File -> Preferences)<br>
+    <br>
+    <br>
+    <img src="images/gs_preferences_tools.png"><br>
+    <br>
+    Choose the "Tools" tab<br>
+    <br>
+    <br>
+  </div>
+  <H2>Setting up emulator entry</H2>
+  <div id="mybody">
+    Click the green plus icon below the list of entries to add a new (or double plus to clone an existing entry).<br>
+    <br>
+    <br>
+    <img src="images/gs_preferences_tools2.png"><br>
+    <br>
+    Most arguments allow macros to be filled with project relevant data. See below for a list. These settings are available for configuration:<br>
+    <br>
+    <b>Name</b><br>
+    A text description<br>
+    <br>
+    <br>
+    <b>Type</b><br>
+    Allows the distinction between assembler and emulator. Currently only emulator is useful<br>
+    <br>
+    <br>
+    <b>Executable</b><br>
+    Executable file of emulator<br>
+    <br>
+    <br>
+    <b>Working Path</b><br>
+    Path to set when running the executable<br>
+    <br>
+    <br>
+    <b>PRG/T64</b><br>
+    Argument to pass the media to start when it's a tape or disk image<br>
+    <br>
+    <br>
+    <b>Cartridge</b><br>
+    Argument to pass the media to start when it's a cartridge<br>
+    <br>
+    <br>
+    <b>Debug</b><br>
+    Extra Argument to pass when the emulator is started in debugging mode<br>
+    <br>
+    Default interface with older VICE versions:<br>
+    <pre>-initbreak 0x$(DebugStartAddressHex) -remotemonitor</pre>
+    Starting with VICE 3.5 the new binary remote interface is available. To use it set these arguments for Debug:<br>
+    <pre>-initbreak 0x$(DebugStartAddressHex) -binarymonitor -binarymonitoraddress 127.0.0.1:6510</pre>
+    <br>
+    <b>True Drive On</b><br>
+    Argument to pass when true drive emulation is required<br>
+    <br>
+    <br>
+    <b>True Drive Off</b><br>
+    Argument to pass when true drive emulation is not wanted<br>
+    <br>
+    <br>
+    <b>Forward labels to emulator</b><br>
+    When checked the labels are passed on (support for VICE and C64Debugger)<br>
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>

@@ -21,6 +21,8 @@ namespace C64Studio
 
       InitializeComponent();
 
+      webBrowser.ScriptErrorsSuppressed = true;
+
       try
       {
 #if DEBUG

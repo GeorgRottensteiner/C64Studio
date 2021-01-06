@@ -9,15 +9,16 @@
 <body>
   <H3>Debugging</H3>
   <div id="mybody">
-    Debugging is a valuable tool. It currently is only possible in conjunction with Vice 2.3 or 2.4.<br>
+    Debugging is a valuable tool. It currently is only possible in conjunction with Vice 2.3 or later.<br>
     <br>
     <img src="images/ide_debug_code.png"><br>
     <br>
     <br>
     <b>Prerequisites</b><br>
-    You need to have Vice configured as emulator. Debugging is only possible with Vice 2.3 or 2.4.<br>
+    You need to have Vice configured as emulator. Debugging is only possible with Vice 2.3 or later.<br>
     <br>
     Make sure that in the tool settings the "Debug" arguments are set to "-remotemonitor -initbreak 0x$(DebugStartAddressHex)"<br>
+    Starting with VICE 3.5 the new binary remote interface is available. To use it set these arguments for Debug: "-initbreak 0x$(DebugStartAddressHex) -binarymonitor -binarymonitoraddress 127.0.0.1:6510"<br>
     <br>
     <br>
     <b>Start debugging</b><br>

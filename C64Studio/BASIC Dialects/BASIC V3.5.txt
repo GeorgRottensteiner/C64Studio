@@ -132,6 +132,8 @@ USING;fb;
 UNTIL;fc;
 WHILE;fd;
 
+#from here on it's extended opcodes, required for C64Studio extensions
+ExOpcodes
 #C64 Studio extension
 LABEL;F0;
 

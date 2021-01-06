@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>C64Ass</H3>
+  <div id="mybody">
+    C64Ass is a command line version of the assembler.<br>
+    <br>
+    C64Ass is entirely controlled by arguments passed to it:<br>
+    <br>
+    <br>
+    <pre>
+    C64Ass.exe [-H, --HELP]
+               [-O, --OUTFILE &lt;filename&gt;]
+               [-L, --LABELDUMP &lt;filename&gt;]
+               [-LIB, --LIBRARY &lt;library path&gt;]
+               [-F, --FORMAT &lt;PLAIN/CBM&gt;]
+               [-AUTOTRUNCATELITERALS]
+    </pre>
+  </div>
+  <a name="help"></a>
+  <H2>-H, --HELP</H2>
+  <div id="mybody">
+    Displays the supported arguments.
+    <br>
+    <br>
+  </div>
+  <a name="outfile"></a>
+  <H2>-O, --OUTFILE &lt;filename&gt;</H2>
+  <div id="mybody">
+    Overrides the output filename.<br>
+    If not set, the filename given in the !to pseudo op is used.
+    If this one is also not set, the input filename with extension .prg is used.<br>
+    <br>
+    <br>
+  </div>
+  <a name="labelfile"></a>
+  <H2>-L, --LABELDUMP &lt;filename&gt;</H2>
+  <div id="mybody">
+    On successful assembly a file is written with the label info.
+    <br>
+    <br>
+  </div>
+  <a name="library"></a>
+  <H2>-LIB, --LIBRARY &lt;library path&gt;</H2>
+  <div id="mybody">
+    Adds the given path to the library path list.<br>
+    More than one path are separated by comma.<br>
+    <br>
+    <br>
+  </div>
+  <a name="format"></a>
+  <H2>-F, --FORMAT &lt;PLAIN/CBM&gt;</H2>
+  <div id="mybody">
+    Overrides the output format, PLAIN is the plain assembly, CBM starts with 2 bytes for the loading address.<br>
+    <br>
+    <br>
+  </div>
+  <a name="autotruncateliterals"></a>
+  <H2>-AUTOTRUNCATELITERALS</H2>
+  <div id="mybody">
+    Does not result in an error when byte/word values overflow, but silently truncates them.<br>
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>

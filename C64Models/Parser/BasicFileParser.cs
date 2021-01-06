@@ -3376,7 +3376,7 @@ namespace C64Studio.Parser
       {
         if ( ( lineInfo.Value.Tokens.Count > 0 )
         &&   ( lineInfo.Value.Tokens[0].TokenType == Token.Type.EX_BASIC_TOKEN )
-        &&   ( lineInfo.Value.Tokens[0].ByteValue == Settings.BASICDialect.Opcodes["LABEL"].InsertionValue ) )
+        &&   ( lineInfo.Value.Tokens[0].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue ) )
         {
           // skip label definitions
           if ( lineInfo.Value.Tokens.Count > 1 )

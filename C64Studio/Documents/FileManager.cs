@@ -822,7 +822,7 @@ namespace C64Studio
 
             // trunc load address
             var parser = new Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
-            parser.SetBasicDialect( Core.Compiling.BASICV2 );
+            parser.SetBasicDialect( C64Models.BASIC.Dialect.BASICV2 );
             if ( parser.Disassemble( fileInfo.Data.SubBuffer( 2 ), out lines ) )
             {
               BaseDocument document = new SourceBasicEx( Core );

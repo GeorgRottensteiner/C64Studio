@@ -252,6 +252,7 @@ namespace C64Studio.Parser
           AddMacro( "DC.B", Types.MacroInfo.MacroType.TEXT );
           AddMacro( "DC.W", Types.MacroInfo.MacroType.WORD );
           AddMacro( "MAC", Types.MacroInfo.MacroType.MACRO );
+          AddMacro( "MACRO", Types.MacroInfo.MacroType.MACRO );
           AddMacro( "ENDM", Types.MacroInfo.MacroType.END );
           AddMacro( "!TEXT", Types.MacroInfo.MacroType.TEXT );
           AddMacro( "!TX", Types.MacroInfo.MacroType.TEXT );

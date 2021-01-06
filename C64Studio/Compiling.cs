@@ -24,7 +24,6 @@ namespace C64Studio
     public Parser.ASMFileParser       ParserASM = new C64Studio.Parser.ASMFileParser();
     public Parser.BasicFileParser     ParserBasic = new C64Studio.Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
 
-    public Dialect                    BASICV2 = null;
     public Dictionary<string,Dialect> BASICDialects = new Dictionary<string, Dialect>();
 
 
@@ -45,9 +44,21 @@ namespace C64Studio
 
     private bool InitDialects()
     {
+
+      // hard code BASIC V2, this one simply MUST exist
+      BASICDialects.Add( "BASIC V2", Dialect.BASICV2 );
+
       try
       {
-        var files = System.IO.Directory.GetFiles( "BASIC Dialects", "*.txt" );
+        string basePath = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+
+        if ( basePath.ToUpper().StartsWith( "FILE:///" ) )
+        {
+          basePath = basePath.Substring( 8 );
+        }
+        string dialectFilePath = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( basePath ), "BASIC Dialects" );
+
+        var files = System.IO.Directory.GetFiles( dialectFilePath, "*.txt" );
 
         foreach ( var file in files )
         {
@@ -58,7 +69,7 @@ namespace C64Studio
       {
         Core.AddToOutput( "Exception reading BASIC dialect files: " + ex.Message + System.Environment.NewLine );
       }
-      return ( BASICV2 != null );
+      return true;
     }
 
 
@@ -71,6 +82,7 @@ namespace C64Studio
         string    line;
         bool      firstLine = true;
         int       lineIndex = 0;
+        bool      exOpcodes = false;
 
         while ( reader.ReadLine( out line ) )
         {
@@ -88,22 +100,30 @@ namespace C64Studio
             continue;
           }
 
+          if ( line == "ExOpcodes" )
+          {
+            exOpcodes = true;
+            continue;
+          }
+
           string[] parts = line.Split( ';' );
           if ( parts.Length != 3 )
           {
             Core.AddToOutput( "Invalid BASIC format file '" + File + "', expected three columns in line " + lineIndex + System.Environment.NewLine );
             return null;
           }
-          dialect.AddOpcode( parts[0], GR.Convert.ToI32( parts[1], 16 ), parts[2] );
+          if ( exOpcodes )
+          {
+            dialect.AddExOpcode( parts[0], GR.Convert.ToI32( parts[1], 16 ) );
+          }
+          else
+          {
+            dialect.AddOpcode( parts[0], GR.Convert.ToI32( parts[1], 16 ), parts[2] );
+          }
         }
       }
       dialect.Name = System.IO.Path.GetFileNameWithoutExtension( File );
       BASICDialects.Add( dialect.Name, dialect );
-
-      if ( dialect.Name == "BASIC V2" )
-      {
-        BASICV2 = dialect;
-      }
 
       return dialect;
     }
