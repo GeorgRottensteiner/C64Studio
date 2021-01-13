@@ -19,64 +19,70 @@
     <br>
     <img src="images/basic_editor_normal.png"><br>
     <br>
-    To allow for the C64s special characters most of the keyboard layout is remapped:<br>
     <br>
-    The Tab key is used as replacement for the Commodore key<br>
+    From left to right:<br>
     <br>
-    Color and mode codes in string literals are replaced by text representations on entry. Currently supported are:<br>
+    <b>Label Mode</b><br>
+    Toggles between line number and label mode. Note, this function does not do anything if the code won't compile properly.<br>
     <br>
-    <ul>
-      <li>{Black}, {blk}</li>
-      <li>{White}, {wht}</li>
-      <li>{Red}, {red}</li>
-      <li>{Cyn}, {cyn}</li>
-      <li>{Purple}, {pur}</li>
-      <li>{Green}, {grn}</li>
-      <li>{Blue}, {blu}</li>
-      <li>{Yellow}, {yel}</li>
-      <li>{Orange}, {orng}</li>
-      <li>{Brown}, {brn}</li>
-      <li>{Light Red}, {lred}</li>
-      <li>{Dark Grey}, {gry1}</li>
-      <li>{Grey}, {gry2}</li>
-      <li>{Light Green}, {lgrn}</li>
-      <li>{Light Blue}, {lblu}</li>
-      <li>{Light Grey}, {gry3}</li>
-      <li>{Reverse On}, {rvon}</li>
-      <li>{Reverse Off}, {rvof}</li>
-      <li>{Cursor Down}, {down}</li>
-      <li>{Cursor Up}, {up}</li>
-      <li>{Cursor Left}, {left}</li>
-      <li>{Cursor Right}, {rght}</li>
-      <li>{Del}</li>
-      <li>{Insert}</li>
-      <li>{Clr}, {clr}</li>
-      <li>{Home}, {home}</li>
-      <li>{F1}</li>
-      <li>{F2}</li>
-      <li>{F3}</li>
-      <li>{F4}</li>
-      <li>{F5}</li>
-      <li>{F6}</li>
-      <li>{F7}</li>
-      <li>{F8}</li>
-      <li>{CBM-A} to {CBM-Z}</li>
-      <li>{SHIFT-A} to {SHIFT-Z}</li>
-    </ul>
+    <br>
+    <b>Symbol Mode</b><br>
+    Toggles between symbol mode and macro mode. In symbol mode any control characters inside strings are displays as on the C64.<br>
+    In macro mode these symbols are replaced by macros surrounded by {, }.<br>
+    <br>
+    <br>
+    <b>Upper Case/Lower Case toggle</b><br>
+    Toggles characters between lower and upper case<br>
+    <br>
+    <br>
+    <b>Toggle Quote Mode</b><br>
+    Quote mode changes the key mapping between regular PC and a positional key map. This allows entering PETSCII characters the easier way.<br>
+    In quote mode the Tab key is used as replacement for the Commodore Key.<br>
+    Quote mode is automatically entered when an apostrophe is entered, and automatically ended when a second apostrophe is entered (just like the known BASIC editor)<br>
+    <br>
+    <br>
+    <b>Start Address</b><br>
+    The address that is written in front of the compiled file as load address. Default is 2049 for the C64.<br>
+    <br>
+    Useful to change for other machines (VIC20), or BASIC programs, that are not to be placed at the standard load address.<br>
+    <br>
+    <br>
+    <b>BASIC Version</b><br>
+    Choose the BASIC dialect that should be used to compile. This mostly defines the values of the inserted tokens.<br>
+    This list is populated by the files in the sub folder "BASIC Dialects".<br>
+    <br>
     <br>
   </div>
-  <H2>Label Mode</H2>
+  <H2>Renumber</H2>
   <div id="mybody">
-    Clicking on the toggle button "Label Mode" toggles the Basic editor between common line numbered and label mode.
-    This only works if the listing can be compiled. Any line number references are replaced with labels, and vice versa.<br>
+    Choose renumber from either the BASIC menu, or via right click from the context menu.<br>
+    <br>
+    <img src="images/basic_renumber.png"><br>
+    Renumber opens a dialog with some options<br>
     <br>
     <br>
-    <img src="images/basic_label_mode_normal.png"><br>
-    A simple BASIC file with line numbers<br>
+    If opened from the context menu the fields "first line number" and "last line number" are decided by the current selection.<br>
     <br>
     <br>
-    <img src="images/basic_label_mode_label.png"><br>
-    After changing to label mode<br>
+    <b>Start with line number</b><br>
+    The line number to start renumbering with<br>
+    <br>
+    <br>
+    <b>Step by Line Count</b><br>
+    Delta value to increase per line<br>
+    <br>
+    <br>
+    <b>First line number</b><br>
+    First line number of line to renumber<br>
+    <br>
+    <br>
+    <b>Last line number</b><br>
+    Last line number of line to renumber<br>
+    <br>
+    <br>
+    <b>Info box</b><br>
+    Shows whether renumber will work, or if there are some problems with the given values<br>
+    <br>
     <br>
   </div>
 </body>

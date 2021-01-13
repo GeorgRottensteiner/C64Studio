@@ -1,4 +1,5 @@
 * = 16384
+ASM_START
           inc $d020
           ldx #0
           ldy #1
@@ -11,4 +12,4 @@ ANOTHERLABEL
           
           
 TEXT
-          !text "byte;immerich"
+          !text "what? me worry?"
