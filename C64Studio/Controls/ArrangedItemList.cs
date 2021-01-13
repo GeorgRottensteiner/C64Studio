@@ -33,6 +33,7 @@ namespace C64Studio
     private ArrangedItemListCollection _Items;
     private bool      _HasOwnerDrawColumn = false;
     private bool      _AllowClone = true;
+    private bool      _DoNotFireSelectedIndexChanged = false;
 
     public bool MustHaveOneElement { get; set; }
 
@@ -292,6 +293,11 @@ namespace C64Studio
     {
       UpdateUI();
 
+      if ( _DoNotFireSelectedIndexChanged )
+      {
+        return;
+      }
+
       if ( SelectedIndexChanged != null )
       {
         if ( SelectedIndex == -1 )
@@ -468,6 +474,8 @@ namespace C64Studio
       var offset = listItems.AutoScrollOffset;
       var origSelectedItem = listItems.SelectedItem;
       var tempItem = listItems.Items[Index];
+
+      _DoNotFireSelectedIndexChanged = true;
       listItems.Items.RemoveAt( Index );
       listItems.Items.Insert( Index, tempItem );
 
@@ -475,6 +483,7 @@ namespace C64Studio
       {
         listItems.SelectedItem = origSelectedItem;
       }
+      _DoNotFireSelectedIndexChanged = false;
       listItems.AutoScrollOffset = offset;
     }
 

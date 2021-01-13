@@ -2681,7 +2681,10 @@ namespace C64Studio
         return;
       }
       m_CurrentLayer = (Formats.SpriteProject.Layer)Item.Tag;
-      editLayerName.Text = m_CurrentLayer.Name;
+      if ( editLayerName.Text != m_CurrentLayer.Name )
+      {
+        editLayerName.Text = m_CurrentLayer.Name;
+      }
 
 
       int   spriteIndex = 0;
@@ -2723,8 +2726,11 @@ namespace C64Studio
     {
       if ( m_CurrentLayer != null )
       {
-        m_CurrentLayer.Name = editLayerName.Text;
-        listLayers.SelectedItems[0].Text = m_CurrentLayer.Name;
+        if ( m_CurrentLayer.Name != editLayerName.Text )
+        {
+          m_CurrentLayer.Name = editLayerName.Text;
+          listLayers.SelectedItems[0].Text = m_CurrentLayer.Name;
+        }
       }
     }
 
