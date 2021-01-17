@@ -283,17 +283,34 @@
     <br>
   </div>
   <a name="fill"></a><a name="fi"></a>
-  <H2>!FILL, !FI &lt;count&gt;,&lt;value&gt;<br>
+  <H2>!FILL, !FI &lt;count&gt;[,&lt;value&gt;]<br>
   !FILL, !FI &lt;count&gt;,[expression]</H2>
   <div id="mybody">
     This pseudo op fills the given value count times at the current location.<br>
     For the expression form the expression is evaluated for every byte. The expression inside the brackets uses the label "i" as index, ranging from 0 to count - 1. Any global "i" label is suspended inside the brackets and restored afterwards.<br>
     <br>
+    <b>Example #1 - simple fill</b><br>
+    <br>
+    <div id="code"><br>      !fill 8
+    <br></div>
+    <br>
+    Fills 8 bytes with value zero.<br>
+    <br>
+
+    <b>Example #2 - simple fill with value</b><br>
     <br>
     <div id="code"><br>      !fill 8,$ff
-      !fill ITEM_COUNT,0
-      !fill 5, [i * 3]
-      <br></div>
+    <br></div>
+    <br>
+    Fills 8 bytes with value $ff.<br>
+    <br>
+
+    <b>Example #3 - fill with expression</b><br>
+    <br>
+    <div id="code"><br>      !fill 5, [i * 3]
+    <br></div>
+    <br>
+    Fills 5 bytes, with values 0, 3, 6, 9, 12.<br>
     <br>
     <br>
   </div>
