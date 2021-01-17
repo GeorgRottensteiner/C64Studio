@@ -1018,6 +1018,22 @@ namespace C64Studio.Parser
       {
         return true;
       }
+      // a good idea? collapse doubles to byte
+      double  numericResult = 0;
+      if ( ParseLiteralValueNumeric( Value, out failed, out numericResult ) )
+      {
+        Result = (int)numericResult;
+        Result &= 0xffff;
+        if ( Result > 255 )
+        {
+          NumGivenBytes = 2;
+        }
+        else
+        {
+          NumGivenBytes = 1;
+        }
+        return true;
+      }
       if ( failed )
       {
         m_LastErrorInfo.Set( LineIndex, 0, Value.Length, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
@@ -1747,7 +1763,7 @@ namespace C64Studio.Parser
         int     bracketStartPos = -1;
         int     bracketEndPos = -1;
 
-        if ( !FindOutmostBracketPositions( LineIndex, subTokenRange, 0, Count, ref bracketStartPos, ref bracketEndPos ) )
+        if ( !FindInnermostBracketPositions( LineIndex, subTokenRange, 0, Count, ref bracketStartPos, ref bracketEndPos ) )
         {
           return false;
         }
@@ -2076,7 +2092,7 @@ namespace C64Studio.Parser
 
 
 
-    private bool FindOutmostBracketPositions( int LineIndex, List<TokenInfo> subTokenRange, int Offset, int Count, ref int bracketStartPos, ref int bracketEndPos )
+    private bool FindInnermostBracketPositions( int LineIndex, List<TokenInfo> subTokenRange, int Offset, int Count, ref int bracketStartPos, ref int bracketEndPos )
     {
       bracketStartPos = -1;
       bracketEndPos = -1;
@@ -2084,9 +2100,17 @@ namespace C64Studio.Parser
       {
         if ( IsOpeningBraceChar( subTokenRange[i].Content ) )
         {
+          if ( ( bracketStartPos != -1 )
+          &&   ( subTokenRange[bracketStartPos].Content == AssemblerSettings.SQUARE_BRACKETS_OPEN )
+          &&   ( subTokenRange[i].Content != AssemblerSettings.SQUARE_BRACKETS_OPEN ) )
+          {
+            // outer square brackets override!
+            continue;
+          }
           bracketStartPos = i;
         }
-        else if ( IsClosingBraceChar( subTokenRange[i].Content ) )
+        else if ( ( IsClosingBraceChar( subTokenRange[i].Content ) )
+        &&        ( IsMatchingBrace( subTokenRange[bracketStartPos].Content, subTokenRange[i].Content ) ) )
         {
           if ( bracketStartPos == -1 )
           {
@@ -2108,6 +2132,18 @@ namespace C64Studio.Parser
         return false;
       }
       return true;
+    }
+
+
+    private bool IsMatchingBrace( string OpeningBrace, string ClosingBrace )
+    {
+      int     index = m_AssemblerSettings.OpenBracketChars.IndexOf( OpeningBrace );
+      if ( ( index != -1 )
+      &&   ( index < m_AssemblerSettings.CloseBracketChars.Length ) )
+      {
+        return ClosingBrace == m_AssemblerSettings.CloseBracketChars.Substring( index, 1 );
+      }
+      return false;
     }
 
 
