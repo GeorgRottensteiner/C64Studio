@@ -546,5 +546,7 @@ RPL.;231;
 TRACK;022e;
 TRA.;022e;
 
+#from here on it's extended opcodes, required for C64Studio extensions
+ExOpcodes
 #C64 Studio extension
 LABEL;F0;

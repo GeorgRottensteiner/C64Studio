@@ -132,8 +132,33 @@ USING;fb;
 UNTIL;fc;
 WHILE;fd;
 
-#from here on it's extended opcodes, required for C64Studio extensions
-ExOpcodes
+#Es wird mit zwei Tokens gearbeitet. 7F ist das Master Token.
+#Die Befehlstoken beginnen bei 01 fortlaufend.
+#============================================================
+#Befehl          Token
+#------------------------------------------------------------
+AT;7F01;
+CLS;7F02;
+INFO;7F03;
+VER;7F04;
+FRAME;7F05;
+CATALOG;7F06;
+MEMORY;7F07;
+STOP;7F08;#*
+WINDOW;7F09;
+DLRUN;7F0A;
+FIND;7F0B;
+FILES;7F0C;
+BEGINBLOCK;7F0D;
+ENDBLOCK;7F0E;
+RESTORE;7F0F;#*
+RTRIM;7F10;
+LTRIM;7F11;
+XOR;7F12;
+';7F13;APOSTROHPE(ALTERNATIVE ZU REM)
+#* BASIC V2.0 Befehl, wurde aber erweitert wodurch sich das Token geändert hat.
+#==============================================================================
+
 #C64 Studio extension
 LABEL;F0;
 

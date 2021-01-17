@@ -179,6 +179,9 @@ OFF;fe24;
 FAST;fe25;
 SLOW;fe26;
 
+#from here on it's extended opcodes, required for C64Studio extensions
+ExOpcodes
+
 #C64 Studio extension
 LABEL;F0;
 

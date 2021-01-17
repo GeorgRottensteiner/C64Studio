@@ -62,7 +62,7 @@ SGN;B4;sG
 INT;B5;
 ABS;B6;aB
 USR;B7;uS
-FRE;B8;fE
+FRE;B8;fR
 POS;B9;
 SQR;BA;sQ
 RND;BB;rN
@@ -207,6 +207,9 @@ ERR;647e;
 ERRLN;647e;
 ERRN;647e;
 OUT;647f;
+
+#from here on it's extended opcodes, required for C64Studio extensions
+ExOpcodes
 
 #C64 Studio extension
 LABEL;F0;

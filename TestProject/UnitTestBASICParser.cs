@@ -13,7 +13,20 @@ namespace TestProject
 
       parser.Settings.StripSpaces = false;
       parser.Settings.StripREM = false;
-      parser.SetBasicDialect( ReadDialectFromFile( "BASIC Dialects/" + BASICDialectName + ".txt" ) );
+      if ( BASICDialectName == "BASIC V2" )
+      {
+        parser.SetBasicDialect( Dialect.BASICV2 );
+      }
+      else
+      {
+        string error;
+        var dialect = Dialect.ReadBASICDialect( "BASIC Dialects/" + BASICDialectName + ".txt", out error );
+        if ( dialect == null )
+        {
+          Assert.Fail( error );
+        }
+        parser.SetBasicDialect( dialect );
+      }
 
       return parser;
     }
