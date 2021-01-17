@@ -5,13 +5,13 @@ o Display of used bytes is not correct (shows 43, should show 160 at !byte)
   !byte (i * 40) + j
   !end
   !end
+o Outline: bei BASIC auch Variablen anzeigen
 o Rename of folder (Explorer), files affected can now not be saved anymore
 o Beim Basic Renumber wird das Leerzeichen hinter den Zeilennummern gestript.
 o Document operators (%, etc.)
 o Save/Restore bookmarks (in solution or project)
 o Concatenate labels with numbers (e.g. !for loops) -> partially in, requires label generating rewrite
 o duplicate zone names, add onto each other
-o Document reloading order, Charset Editor and Watch in wrong window
 o Auto-Save Documents -> Crash safety-check on Find/Replace!
 o Charset conversion -> force number of chars (lossy conversion)
 o CharScreen -> Copy Selection/Ranges to preview window
