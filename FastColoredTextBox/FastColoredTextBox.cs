@@ -6262,10 +6262,15 @@ namespace FastColoredTextBoxNS
       {
         delta = TabLength;
       }
+      if ( ( Line < 0 )
+      ||   ( Line >= lines.Count ) )
+      {
+        return 0;
+      }
       for ( int i = 0; i < delta; ++i )
       {
         if ( ( CharPos < lines[Line].Count )
-        && ( lines[Line][CharPos].c == '\t' ) )
+        &&   ( lines[Line][CharPos].c == '\t' ) )
         {
           ++CharPos;
         }
