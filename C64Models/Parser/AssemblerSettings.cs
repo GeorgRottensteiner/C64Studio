@@ -203,7 +203,7 @@ namespace C64Studio.Parser
           AddMacro( "!HEX", Types.MacroInfo.MacroType.HEX );
           AddMacro( "!H", Types.MacroInfo.MacroType.HEX );
           AddMacro( "!SL", Types.MacroInfo.MacroType.LABEL_FILE );
-          AddMacro( "!CPU", Types.MacroInfo.MacroType.IGNORE );
+          AddMacro( "!CPU", Types.MacroInfo.MacroType.CPU );
           AddMacro( "!SET", Types.MacroInfo.MacroType.SET );
 
           // helper pseudo ops from ACME to generate some address vs. value warnings

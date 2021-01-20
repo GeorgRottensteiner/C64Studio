@@ -2925,7 +2925,10 @@ namespace C64Studio.Parser
              } 
             }
 
-            if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, out value ) )
+            if ( ( ( lineInfo.Opcode == null )
+            ||     ( ( lineInfo.Opcode != null )
+            &&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_RELATIVE ) ) )
+            &&   ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, out value ) ) )
             {
               /*
               Debug.Log( "need to assemble unparsed expression:" );
@@ -2985,8 +2988,8 @@ namespace C64Studio.Parser
                 {
                   if ( !ValidByteValue( value ) )
                   {
-                    AddError( lineIndex, 
-                              Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, 
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
                               "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:"
                                 + TokensToExpression( lineInfo.NeededParsedExpression ),
                               lineInfo.NeededParsedExpression[0].StartPos,
@@ -2995,8 +2998,76 @@ namespace C64Studio.Parser
                     continue;
                   }
                 }
+                if ( lineInfo.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_RELATIVE )
+                { 
+                  // this has two seperate expressions
+                  List<List<TokenInfo>> tokenInfos;
+                  var result = ParseLineInParameters( lineInfo.NeededParsedExpression, 0, lineInfo.NeededParsedExpression.Count, lineIndex, out tokenInfos );
+                  if ( result != ParseLineResult.OK )
+                  {
+                    AddError( lineIndex,
+                              m_LastErrorInfo.Code,
+                              "Failed to parse opcode arguments" );
+                  }
+                  else if ( tokenInfos.Count != 2 )
+                  {
+                    AddError( lineIndex,
+                              ErrorCode.E1000_SYNTAX_ERROR,
+                              "Expected two arguments to zeropage relative addressing opcode." );
+                  }
+                  else
+                  {
+                    int     zeroPageValue;
+                    int     relativeValue;
+                    if ( !EvaluateTokens( lineIndex, tokenInfos[0], out zeroPageValue ) )
+                    {
+                      AddError( lineIndex,
+                                m_LastErrorInfo.Code,
+                                "Could not evaluate " + lineInfo.Line.Substring( m_LastErrorInfo.Pos, m_LastErrorInfo.Length ),
+                                m_LastErrorInfo.Pos,
+                                m_LastErrorInfo.Length );
+                    }
+                    else if ( !EvaluateTokens( lineIndex, tokenInfos[1], out relativeValue ) )
+                    {
+                      AddError( lineIndex,
+                               m_LastErrorInfo.Code,
+                               "Could not evaluate " + lineInfo.Line.Substring( m_LastErrorInfo.Pos, m_LastErrorInfo.Length ),
+                               m_LastErrorInfo.Pos,
+                               m_LastErrorInfo.Length );
+                    }
+                    else
+                    {
+                      // zeropage numerand
+                      if ( !ValidByteValue( zeroPageValue ) )
+                      {
+                        AddError( lineIndex,
+                                  Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
+                                  "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:"
+                                    + TokensToExpression( tokenInfos[0] ),
+                                  tokenInfos[0][0].StartPos,
+                                  tokenInfos[0][tokenInfos[0].Count - 1].EndPos - tokenInfos[0][0].StartPos + 1 );
+                      }
+                      else
+                      {
+                        lineInfo.LineData.AppendU8( (byte)zeroPageValue );
+                      }
 
-                if ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
+                      // relative label
+                      int delta = relativeValue - lineInfo.AddressStart - 2;
+                      if ( ( delta < -128 )
+                      ||   ( delta > 127 ) )
+                      {
+                        AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
+                        lineInfo.LineData.AppendU8( 0 );
+                      }
+                      else
+                      {
+                        lineInfo.LineData.AppendU8( (byte)delta );
+                      }
+                    }
+                  }                
+                }
+                else if ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
                 {
                   int delta = value - lineInfo.AddressStart - 2;
                   if ( ( delta < -128 )
@@ -6742,7 +6813,6 @@ namespace C64Studio.Parser
 
 
 
-
     private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration, string AdditionalPredefines, out bool HadFatalError )
     {
       List<Types.ScopeInfo>   stackScopes = new List<C64Studio.Types.ScopeInfo>();
@@ -6805,6 +6875,11 @@ namespace C64Studio.Parser
         if ( Lines[lineIndex] != null )
         {
           parseLine = Lines[lineIndex].TrimEnd();
+        }
+
+        if ( parseLine.Contains( "BRA" ) )
+        {
+          Debug.Log( "aha" );
         }
 
         lineSizeInBytes = 0;
@@ -7499,6 +7574,7 @@ namespace C64Studio.Parser
               info.LineData.AppendU8( (byte)info.Opcode.ByteValue );
               int byteValue = -1;
 
+              int startIndex = 1;
               int countTokens = lineTokenInfos.Count - 1;
               // discard prepended ,x or ,y
               if ( ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ABSOLUTE_X )
@@ -7510,7 +7586,73 @@ namespace C64Studio.Parser
               {
                 countTokens -= 2;
               }
-              if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, countTokens, out byteValue ) )
+              if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ABSOLUTE_X_INDIRECT )
+              {
+                // remove ,x)
+                ++startIndex;
+                countTokens -= 4;
+              }
+
+              if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_RELATIVE )
+              {
+                // this has two seperate expressions
+                List<List<TokenInfo>> tokenInfos;
+                var result = ParseLineInParameters( lineTokenInfos, 1, countTokens, lineIndex, out tokenInfos );
+                if ( result != ParseLineResult.OK )
+                {
+                  AddError( lineIndex,
+                            m_LastErrorInfo.Code,
+                            "Failed to parse opcode arguments" );
+                }
+                else if ( tokenInfos.Count != 2 )
+                {
+                  AddError( lineIndex,
+                            ErrorCode.E1000_SYNTAX_ERROR,
+                            "Expected two arguments to zeropage relative addressing opcode." );
+                }
+                else
+                {
+                  int     zeroPageValue;
+                  int     relativeValue;
+                  if ( ( !EvaluateTokens( lineIndex, tokenInfos[0], out zeroPageValue ) )
+                  ||   ( !EvaluateTokens( lineIndex, tokenInfos[1], out relativeValue ) ) )
+                  {
+                    info.NeededParsedExpression = lineTokenInfos.GetRange( 1, countTokens );
+                  }
+                  else
+                  {
+                    // zeropage numerand
+                    if ( !ValidByteValue( zeroPageValue ) )
+                    {
+                      AddError( lineIndex,
+                                Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
+                                "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:"
+                                  + TokensToExpression( tokenInfos[0] ),
+                                tokenInfos[0][0].StartPos,
+                                tokenInfos[0][tokenInfos[0].Count - 1].EndPos - tokenInfos[0][0].StartPos + 1 );
+                      info.LineData.AppendU8( 0 );
+                    }
+                    else
+                    {
+                      info.LineData.AppendU8( (byte)zeroPageValue );
+                    }
+
+                    // relative label
+                    int delta = relativeValue - info.AddressStart - 2;
+                    if ( ( delta < -128 )
+                    ||   ( delta > 127 ) )
+                    {
+                      AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
+                      info.LineData.AppendU8( 0 );
+                    }
+                    else
+                    {
+                      info.LineData.AppendU8( (byte)delta );
+                    }
+                  }
+                }
+              }
+              else if ( EvaluateTokens( lineIndex, lineTokenInfos, startIndex, countTokens, out byteValue ) )
               {
                 if ( ( info.Opcode.ByteValue == 0x6C )
                 &&   ( m_Processor.Name == "6510" )
@@ -7519,19 +7661,19 @@ namespace C64Studio.Parser
                   AddWarning( lineIndex,
                               Types.ErrorCode.W0007_POTENTIAL_PROBLEM,
                               "A indirect JMP with an address ending on 0xff will not work as expected on NMOS CPUs",
-                              lineTokenInfos[1].StartPos,
-                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
+                              lineTokenInfos[startIndex].StartPos,
+                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[startIndex].StartPos );
                 }
 
                 if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
                 &&   ( ( byteValue < 0 )
-                ||   ( byteValue >= 65536 ) ) )
+                ||     ( byteValue >= 65536 ) ) )
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
                             "Value $" + byteValue.ToString( "X" ) + " (" + byteValue + ") is out of bounds",
-                            lineTokenInfos[1].StartPos,
-                            lineTokenInfos[1 + countTokens - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
+                            lineTokenInfos[startIndex].StartPos,
+                            lineTokenInfos[startIndex + countTokens - 1].EndPos + 1 - lineTokenInfos[startIndex].StartPos );
                 }
                 info.LineData.AppendU16( (ushort)byteValue );
                 info.NeededParsedExpression = null;
@@ -7539,7 +7681,7 @@ namespace C64Studio.Parser
               else
               {
                 // TODO - could be better, why save all, check and trunc later??
-                info.NeededParsedExpression = lineTokenInfos.GetRange( 1, lineTokenInfos.Count - 1 );
+                info.NeededParsedExpression = lineTokenInfos.GetRange( startIndex, countTokens );
               }
             }
 
@@ -7709,9 +7851,9 @@ namespace C64Studio.Parser
             else if ( macro.Type == Types.MacroInfo.MacroType.SET )
             {
               if ( ( lineTokenInfos.Count >= 4 )
-              &&   ( m_AssemblerSettings.DefineSeparatorKeywords.ContainsValue( lineTokenInfos[2].Content )
-              &&   ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
-              ||     ( !lineTokenInfos[1].Content.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) )
+              && ( m_AssemblerSettings.DefineSeparatorKeywords.ContainsValue( lineTokenInfos[2].Content )
+              && ( ( m_AssemblerSettings.MacroPrefix.Length == 0 )
+              || ( !lineTokenInfos[1].Content.StartsWith( m_AssemblerSettings.MacroPrefix ) ) ) ) )
               {
                 if ( ScopeInsideMacroDefinition( stackScopes ) )
                 {
@@ -7782,7 +7924,7 @@ namespace C64Studio.Parser
                     if ( defineName == "*" )
                     {
                       if ( ( address >= 0 )
-                      &&   ( address <= 0xffff ) )
+                      && ( address <= 0xffff ) )
                       {
                         AddError( lineIndex,
                                   Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
@@ -7827,14 +7969,14 @@ namespace C64Studio.Parser
                 subFilename = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
               }
               else if ( ( lineTokenInfos.Count == 2 )
-              &&        ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+              && ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
               {
                 // regular include
                 subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
               }
               else if ( ( lineTokenInfos.Count > 3 )
-              &&        ( lineTokenInfos[1].Content == "<" )
-              &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
+              && ( lineTokenInfos[1].Content == "<" )
+              && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
               {
                 // library include
                 subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
@@ -8018,7 +8160,7 @@ namespace C64Studio.Parser
                 lineTokenInfos.RemoveAt( 0 );
 
                 if ( ( lineTokenInfos.Count != 3 )
-                ||   ( lineTokenInfos[1].Content != "," ) )
+                || ( lineTokenInfos[1].Content != "," ) )
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1302_MALFORMED_MACRO,
@@ -8038,28 +8180,28 @@ namespace C64Studio.Parser
                 }
                 string    targetType = lineTokenInfos[2].Content.ToUpper();
                 if ( ( targetType != "CBM" )
-                &&   ( targetType != "PLAIN" )
-                &&   ( targetType != "CART8BIN" )
-                &&   ( targetType != "CART8CRT" )
-                &&   ( targetType != "CART16BIN" )
-                &&   ( targetType != "CART16CRT" )
-				        &&   ( targetType != "ULTIMAX4BIN" )
-				        &&   ( targetType != "ULTIMAX4CRT" )
-				        &&   ( targetType != "ULTIMAX8BIN" )
-				        &&   ( targetType != "ULTIMAX8CRT" )
-				        &&   ( targetType != "ULTIMAX16BIN" )
-				        &&   ( targetType != "ULTIMAX16CRT" )
-                &&   ( targetType != "MAGICDESKBIN" )
-                &&   ( targetType != "MAGICDESKCRT" )
-                &&   ( targetType != "RGCDBIN" )
-                &&   ( targetType != "RGCDCRT" )
-                &&   ( targetType != "GMOD2BIN" )
-                &&   ( targetType != "GMOD2CRT" )
-                &&   ( targetType != "EASYFLASHBIN" )
-                &&   ( targetType != "EASYFLASHCRT" )
-                &&   ( targetType != "D64" )
-                &&   ( targetType != "TAP" )
-                &&   ( targetType != "T64" ) )
+                && ( targetType != "PLAIN" )
+                && ( targetType != "CART8BIN" )
+                && ( targetType != "CART8CRT" )
+                && ( targetType != "CART16BIN" )
+                && ( targetType != "CART16CRT" )
+                && ( targetType != "ULTIMAX4BIN" )
+                && ( targetType != "ULTIMAX4CRT" )
+                && ( targetType != "ULTIMAX8BIN" )
+                && ( targetType != "ULTIMAX8CRT" )
+                && ( targetType != "ULTIMAX16BIN" )
+                && ( targetType != "ULTIMAX16CRT" )
+                && ( targetType != "MAGICDESKBIN" )
+                && ( targetType != "MAGICDESKCRT" )
+                && ( targetType != "RGCDBIN" )
+                && ( targetType != "RGCDCRT" )
+                && ( targetType != "GMOD2BIN" )
+                && ( targetType != "GMOD2CRT" )
+                && ( targetType != "EASYFLASHBIN" )
+                && ( targetType != "EASYFLASHCRT" )
+                && ( targetType != "D64" )
+                && ( targetType != "TAP" )
+                && ( targetType != "T64" ) )
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1304_UNSUPPORTED_TARGET_TYPE,
@@ -8242,8 +8384,8 @@ namespace C64Studio.Parser
                   if ( trailingtokens.Count >= 3 )
                   {
                     if ( ( trailingtokens[trailingtokens.Count - 3].Content == "}" )
-                    &&   ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
-                    &&   ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
+                    && ( trailingtokens[trailingtokens.Count - 2].Content.ToUpper() == "ELSE" )
+                    && ( trailingtokens[trailingtokens.Count - 1].Content == "{" ) )
                     {
                       hadElse = true;
                     }
@@ -8660,7 +8802,7 @@ namespace C64Studio.Parser
               while ( tokenIndex < lineTokenInfos.Count );
 
               if ( ( tokenParams.Count < 2 )
-              ||   ( tokenParams.Count > 3 ) )
+              || ( tokenParams.Count > 3 ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !align <AndValue>,<EqualValue>[,<FillValue>]" );
                 HadFatalError = true;
@@ -8702,8 +8844,8 @@ namespace C64Studio.Parser
               }
             }
             else if ( ( macro.Type == Types.MacroInfo.MacroType.BYTE )
-            ||        ( macro.Type == Types.MacroInfo.MacroType.LOW_BYTE )
-            ||        ( macro.Type == Types.MacroInfo.MacroType.HIGH_BYTE ) )
+            || ( macro.Type == Types.MacroInfo.MacroType.LOW_BYTE )
+            || ( macro.Type == Types.MacroInfo.MacroType.HIGH_BYTE ) )
             {
               PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, macro.Type, textCodeMapping, true );
               info.Line = parseLine;
@@ -8760,8 +8902,8 @@ namespace C64Studio.Parser
               {
                 // expecting mapping table
                 if ( ( textCodeMapping == m_TextCodeMappingPet )
-                ||   ( textCodeMapping == m_TextCodeMappingRaw )
-                ||   ( textCodeMapping == m_TextCodeMappingScr ) )
+                || ( textCodeMapping == m_TextCodeMappingRaw )
+                || ( textCodeMapping == m_TextCodeMappingScr ) )
                 {
                   // only reset mapping if previously mapping was a predefined one
                   textCodeMapping = new GR.Collections.Map<byte, byte>();
@@ -8781,7 +8923,7 @@ namespace C64Studio.Parser
                   string token = lineTokenInfos[tokenIndex].Content;
 
                   if ( ( tokenIndex == 1 )
-                  &&   ( token == "#" ) )
+                  && ( token == "#" ) )
                   {
                     // direct value?
                     if ( ( lineTokenInfos.Count > 2 )
@@ -8883,6 +9025,15 @@ namespace C64Studio.Parser
             {
               // HEX - special macro
               var parseResult = POACMEHex( info, lineTokenInfos, lineIndex, out lineSizeInBytes );
+              if ( parseResult == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+            }
+            else if ( macro.Type == Types.MacroInfo.MacroType.CPU )
+            {
+              var parseResult = POCPU( lineTokenInfos, lineIndex );
               if ( parseResult == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -9524,6 +9675,31 @@ namespace C64Studio.Parser
       lineSizeInBytes = (int)info.LineData.Length;
 
       return ParseLineResult.OK;
+    }
+
+
+
+    private ParseLineResult POCPU( List<TokenInfo> lineTokenInfos, int lineIndex )
+    {
+      if ( lineTokenInfos.Count != 2 )
+      {
+        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510 and W65C02 are supported" );
+        return ParseLineResult.RETURN_NULL;
+      }
+
+      string  cpuType = lineTokenInfos[1].Content.ToUpper();
+
+      switch ( cpuType )
+      {
+        case "6510":
+          m_Processor = Processor.Create6510();
+          return ParseLineResult.OK;
+        case "W65C02":
+          m_Processor = Processor.CreateWDC65C02();
+          return ParseLineResult.OK;
+      }
+      AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510 and W65C02 are supported" );
+      return ParseLineResult.RETURN_NULL;
     }
 
 
@@ -11163,6 +11339,8 @@ namespace C64Studio.Parser
       // clone list - don't modify original!
       m_CompileConfig.LibraryFiles = new List<string>( Config.LibraryFiles );
 
+      // default -> TODO override via commandline
+      m_Processor = Processor.Create6510();
       m_AssemblerSettings.SetAssemblerType( Config.Assembler );
       m_AssemblerSettings.EnabledHacks = Config.EnabledHacks;
 
@@ -13345,6 +13523,28 @@ namespace C64Studio.Parser
           expressionTokenCount -= 2;
           expressionTokenCount = LineTokens.Count - 2 - expressionTokenStartIndex;
         }
+
+        // TODO detect , if not ,x or ,y
+        if ( ( !endsWithCommaX )
+        &&   ( !endsWithCommaY ) )
+        {
+          for ( int i = 1; i < LineTokens.Count - 1; ++i )
+          {
+            if ( LineTokens[i].Content == "," )
+            {
+              // potential zp,rel addressing
+              foreach ( var potentialOp in PossibleOpcodes )
+              {
+                if ( potentialOp.Addressing == Opcode.AddressingType.ZEROPAGE_RELATIVE )
+                {
+                  return potentialOp;
+                }
+              }
+            }
+          }
+        }
+
+
         if ( LineTokens[1].Content == "(" )
         {
           int tokenPos = 2;
@@ -13634,6 +13834,14 @@ namespace C64Studio.Parser
       }
       else if ( twoParamsInBrackets )
       {
+        // could be ABSOLUTE_INDIRECT_X (WDC 65C02)
+        foreach ( Tiny64.Opcode opcode in PossibleOpcodes )
+        {
+          if ( opcode.Addressing == Opcode.AddressingType.ABSOLUTE_X_INDIRECT )
+          {
+            return opcode;
+          }
+        }
         addressing = Tiny64.Opcode.AddressingType.INDIRECT_X;
       }
       else
@@ -13666,6 +13874,16 @@ namespace C64Studio.Parser
       // was in braces, could be simple braces around
       if ( addressing == Tiny64.Opcode.AddressingType.INDIRECT )
       {
+        // could be zeropage indirect
+        foreach ( Tiny64.Opcode opcode in PossibleOpcodes )
+        {
+          if ( opcode.Addressing == Opcode.AddressingType.ZEROPAGE_INDIRECT )
+          {
+            addressing = Opcode.AddressingType.ZEROPAGE_INDIRECT;
+            return opcode;
+          }
+        }
+
         AddError( LineIndex, Types.ErrorCode.E1105_INVALID_OPCODE, "Opcode does not support indirect addressing (remove braces)" );
         return null;
         /*

@@ -20,7 +20,12 @@ namespace Tiny64
       INDIRECT,
       INDIRECT_X,
       INDIRECT_Y,
-      RELATIVE
+      RELATIVE,
+
+      // WD65C02
+      ZEROPAGE_INDIRECT,        // e.g. lda ($12)
+      ABSOLUTE_X_INDIRECT,      // e.g. jmp ($1234,x)
+      ZEROPAGE_RELATIVE         // e.g. BBR0 $12,LABEL
     };
 
     public string Mnemonic = "";

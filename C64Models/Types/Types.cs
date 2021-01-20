@@ -112,7 +112,8 @@ namespace C64Studio.Types
       BASIC,
       ADDRESS,              // ACME: !ADDR with or without braces
       REPEAT,               // PDS: Repeat <x> times next line
-      ADD_INCLUDE_SOURCE    // DASM: Add directory to source code paths (custom library paths)
+      ADD_INCLUDE_SOURCE,   // DASM: Add directory to source code paths (custom library paths)
+      CPU                   // Set the procesor type
     }
 
     public MacroType      Type = MacroType.UNKNOWN;
@@ -263,6 +264,7 @@ namespace C64Studio.Types
     E1308_USER_ERROR                        = 0x1308,
     E1309_ELSE_WITHOUT_IF                   = 0x1309,
     E1310_END_IF_WITHOUT_SCOPE              = 0x1310,
+    E1311_UNSUPPORTED_CPU                   = 0x1311,
 
     E1400_CIRCULAR_INCLUSION                = 0x1400,
     E1401_INTERNAL_ERROR                    = 0x1401,
