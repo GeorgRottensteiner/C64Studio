@@ -425,7 +425,7 @@ namespace C64Studio
       //foreach ( WeifenLuo.WinFormsUI.Docking.IDockContent doc in Core.MainForm.panelMain.Documents )
       foreach ( WeifenLuo.WinFormsUI.Docking.IDockContent doc in Core.MainForm.panelMain.Contents )
       {
-        //if ( doc is BaseDocument )
+        if ( doc is BaseDocument )
         {
           BaseDocument baseDoc = (BaseDocument)doc;
           baseDoc.RefreshDisplayOptions();
