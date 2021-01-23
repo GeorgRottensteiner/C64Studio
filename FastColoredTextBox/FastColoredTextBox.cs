@@ -60,6 +60,10 @@ namespace FastColoredTextBoxNS
     private readonly Timer timer = new Timer();
     private readonly Timer timer2 = new Timer();
     private readonly Timer timer3 = new Timer();
+
+    private readonly Timer tripeClickTimer = new Timer();
+    private int tripleClickCount = 0;
+
     private readonly List<VisualMarker> visibleMarkers = new List<VisualMarker>();
     public int TextHeight;
     public bool AllowInsertRemoveLines = true;
@@ -6120,6 +6124,27 @@ namespace FastColoredTextBoxNS
     protected override void OnMouseUp( MouseEventArgs e )
     {
       base.OnMouseUp( e );
+
+      tripeClickTimer.Stop();
+      ++tripleClickCount;
+      if ( tripleClickCount >= 3 )
+      {
+        // this means the trip click happened - do something
+        OnTripleClick();
+        tripleClickCount = 0;
+        return;
+      }
+      else if ( tripleClickCount < 3 )
+      {
+        tripeClickTimer.Interval = 500;
+        tripeClickTimer.Start();
+        tripeClickTimer.Tick += ( s, t ) =>
+        {
+          tripeClickTimer.Stop();
+          tripleClickCount = 0;
+        };
+      }
+
       isLineSelect = false;
 
       if ( e.Button == System.Windows.Forms.MouseButtons.Left )
@@ -6128,6 +6153,19 @@ namespace FastColoredTextBoxNS
           OnMouseClickText( e );
       }
     }
+
+
+
+    private void OnTripleClick()
+    {
+      int iLine = Selection.Start.iLine;
+
+      var range = new Range( this, 0, iLine, lines[iLine].Count, iLine );
+
+      Selection = range;
+    }
+
+
 
     protected override void OnMouseDown( MouseEventArgs e )
     {
