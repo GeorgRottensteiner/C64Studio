@@ -71,7 +71,8 @@ namespace C64Studio.Formats
       Categories.Add( "Uncategorized" );
       for ( int i = 0; i < 16 * 16; ++i )
       {
-        PlaygroundChars.Add( 0 );
+        // white spaces
+        PlaygroundChars.Add( 0x100 | 0x20 );
       }
     }
 
