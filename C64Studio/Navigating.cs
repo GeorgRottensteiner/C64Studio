@@ -306,5 +306,36 @@ namespace C64Studio
       DocumentInfo.ASMFileInfo.RemoveLines( globalLineIndex, LocalLineIndex, LineCount );
     }
 
+
+
+    internal DocumentInfo FindDocumentByFilename( string Filename )
+    {
+      if ( Project != null )
+      {
+        ProjectElement element = Project.GetElementByFilename( Filename );
+        if ( ( element != null )
+        &&   ( element.DocumentInfo != null ) )
+        {
+          return element.DocumentInfo;
+        }
+      }
+      var docs = Core.MainForm.DocumentInfos;
+      foreach ( var doc in docs )
+      {
+        if ( string.IsNullOrEmpty( doc.FullPath ) )
+        {
+          continue;
+        }
+        if ( GR.Path.IsPathEqual( doc.FullPath, Filename ) )
+        {
+          return doc;
+        }
+      }
+
+      return null;
+    }
+
+
+
   }
 }

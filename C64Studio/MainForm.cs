@@ -2709,15 +2709,12 @@ namespace C64Studio
 
         if ( Breakpoint.DocumentFilename != "C64Studio.DebugBreakpoints" )
         {
-          ProjectElement element = CurrentProject.GetElementByFilename(Breakpoint.DocumentFilename);
-          if ( ( element != null )
-          &&   ( element.Document != null )
-          &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
+          var doc = StudioCore.Navigating.FindDocumentByFilename( Breakpoint.DocumentFilename );
+          if ( ( doc != null )
+          &&   ( doc.Type == ProjectElement.ElementType.ASM_SOURCE ) )
           {
-            SourceASMEx asm = (SourceASMEx)element.Document;
-            asm.RemoveBreakpoint( Breakpoint );
-
-            Debug.Log( "remove breakpoint for " + asm.DocumentFilename + " at line " + Breakpoint.LineIndex );
+            SourceASMEx asm = (SourceASMEx)doc.BaseDoc;
+            asm?.RemoveBreakpoint( Breakpoint );
           }
         }
       }
@@ -3984,8 +3981,8 @@ namespace C64Studio
         foreach ( DocumentInfo doc in tempSet )
         {
           if ( ( tempSet.ContainsValue( doc ) )
-          && ( ( doc != Doc )
-          || ( addedMainElement ) ) )
+          &&   ( ( doc != Doc )
+          ||     ( addedMainElement ) ) )
           {
             continue;
           }
@@ -3995,7 +3992,7 @@ namespace C64Studio
           }
           foreach ( var deducedDependency in doc.DeducedDependency[doc.Project.Settings.CurrentConfig.Name].BuildState.Keys )
           {
-            var element = doc.Project.GetElementByFilename(deducedDependency);
+            var element = doc.Project.GetElementByFilename( deducedDependency );
             if ( element != null )
             {
               if ( !tempSet.ContainsValue( element.DocumentInfo ) )
