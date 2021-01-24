@@ -6877,11 +6877,6 @@ namespace C64Studio.Parser
           parseLine = Lines[lineIndex].TrimEnd();
         }
 
-        if ( parseLine.Contains( "BRA" ) )
-        {
-          Debug.Log( "aha" );
-        }
-
         lineSizeInBytes = 0;
         hadCommentInLine = false;
         hadMacro = false;
@@ -7681,7 +7676,13 @@ namespace C64Studio.Parser
               else
               {
                 // TODO - could be better, why save all, check and trunc later??
-                info.NeededParsedExpression = lineTokenInfos.GetRange( startIndex, countTokens );
+                int   addTokenCountToExpression = 0;
+                if ( ( info.Opcode.Addressing == Opcode.AddressingType.ABSOLUTE_X )
+                ||   ( info.Opcode.Addressing == Opcode.AddressingType.ABSOLUTE_Y ) )
+                {
+                  addTokenCountToExpression = 2;
+                }
+                info.NeededParsedExpression = lineTokenInfos.GetRange( startIndex, countTokens + addTokenCountToExpression );
               }
             }
 
@@ -13508,6 +13509,7 @@ namespace C64Studio.Parser
       int numBytesFirstParam = 0;
       int expressionTokenStartIndex = 1;
       int expressionTokenCount = LineTokens.Count - 1;
+      int expressionTokenCountForLaterEvaluation = LineTokens.Count - 1;
       if ( LineTokens.Count >= 2 )
       {
         if ( ( LineTokens[LineTokens.Count - 2].Content == "," )
@@ -13515,13 +13517,14 @@ namespace C64Studio.Parser
         {
           endsWithCommaX = true;
           expressionTokenCount = LineTokens.Count - 2 - expressionTokenStartIndex;
+          expressionTokenCountForLaterEvaluation = expressionTokenCount + 2; 
         }
         if ( ( LineTokens[LineTokens.Count - 2].Content == "," )
         &&   ( LineTokens[LineTokens.Count - 1].Content.ToUpper() == "Y" ) )
         {
           endsWithCommaY = true;
-          expressionTokenCount -= 2;
           expressionTokenCount = LineTokens.Count - 2 - expressionTokenStartIndex;
+          expressionTokenCountForLaterEvaluation = expressionTokenCount + 2;
         }
 
         // TODO detect , if not ,x or ,y

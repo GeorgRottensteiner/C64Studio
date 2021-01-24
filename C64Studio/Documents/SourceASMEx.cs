@@ -527,6 +527,14 @@ namespace C64Studio
 
     void editSource_LineInserted( object sender, FastColoredTextBoxNS.LineInsertedEventArgs e )
     {
+      // special case, if we insert an empty line, insert "below"
+      int     indexToNotify = e.Index;
+
+      if ( editSource.Lines[e.Index].Trim().Length == 0 )
+      {
+        ++indexToNotify;
+      }
+
       if ( !m_InsertingText )
       {
         Core.Navigating.InsertLines( DocumentInfo, e.Index, e.Count );
@@ -535,7 +543,13 @@ namespace C64Studio
       // move related breakpoints!
       for ( int i = 0; i < e.Count; ++i )
       {
-        m_LineInfos.Insert( e.Index - 1, new Types.ASM.LineInfo() );
+        var info = new Types.ASM.LineInfo();
+        if ( ( indexToNotify > 0 )
+        &&   ( indexToNotify - 1 < m_LineInfos.Count ) )
+        {
+          info.AddressStart = m_LineInfos[indexToNotify - 1].AddressStart;
+        }
+        m_LineInfos.Insert( indexToNotify - 1, info );
       }
 
       if ( !m_InsertingText )

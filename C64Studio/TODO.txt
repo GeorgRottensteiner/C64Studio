@@ -1,4 +1,11 @@
 ﻿C64Studio
+o Debugging - Scroll marks previous marked changes as clean -> only mark regions dirty on step etc.
+o BASIC _ Search in lowercase mode doesn't work with Uppercase letters
+o Shift-Click in Charset Preview Window, clear char
+o Charset editor -> PETSCII order of chars
+o Wrong Address shift when linebreak is inserted at end of line -> now appears on removing line
+o Sub-Zones (nested) viable?
+o Basic-Befehl "REM" same syntax coloring as the configured comment color
 o Display of used bytes is not correct (shows 43, should show 160 at !byte)
   !for i = 3 to 0 step -1
   !for j = 0 to 39 step 1

@@ -300,6 +300,17 @@ namespace C64Studio.Types.ASM
       {
         LineInfo.Add( lineToMove.LineIndex, lineToMove );
       }
+      // insert new lines
+      for ( int i = 0; i < LineCount; ++i )
+      {
+        if ( !LineInfo.ContainsKey( LocalLineIndex + i ) )
+        {
+          var info = new LineInfo() { AddressStart = LineInfo[LocalLineIndex - 1].AddressStart };
+          info.LineIndex = LocalLineIndex + i;
+
+          LineInfo.Add( LocalLineIndex + i, info );
+        }
+      }
 
       List<SourceInfo>    sourceInfosToMove = new List<ASM.SourceInfo>();
       foreach ( var sourceInfo in SourceInfo )
@@ -436,7 +447,14 @@ namespace C64Studio.Types.ASM
       }
       foreach ( var lineToMove in linesToMove )
       {
-        LineInfo.Add( lineToMove.LineIndex, lineToMove );
+        if ( LineInfo.ContainsKey( lineToMove.LineIndex ) )
+        {
+          LineInfo[lineToMove.LineIndex] = lineToMove;
+        }
+        else
+        {
+          LineInfo.Add( lineToMove.LineIndex, lineToMove );
+        }
       }
 
       List<SourceInfo>    sourceInfosToMove = new List<ASM.SourceInfo>();
