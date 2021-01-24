@@ -10,6 +10,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using C64Studio.Formats;
 using GR.Memory;
 using C64Studio.Types;
+using C64Studio.Converter;
 
 namespace C64Studio
 {
@@ -39,6 +40,11 @@ namespace C64Studio
 
     private bool                        m_ButtonReleased = false;
     private bool                        m_RButtonReleased = false;
+
+    private Timer                       m_AnimTimer = new Timer();
+
+    private int                         m_AnimFramePos = 0;
+    private int                         m_AnimFrameTicks = 0;
 
 
 
@@ -124,6 +130,27 @@ namespace C64Studio
       panelCharacters_SelectedIndexChanged( null, null );
 
       RefreshDisplayOptions();
+
+      m_AnimTimer.Tick += animTimer_Tick;
+    }
+
+
+
+    private void animTimer_Tick( object sender, EventArgs e )
+    {
+      if ( m_AnimFramePos >= m_SpriteProject.SpriteLayers.Count )
+      {
+        m_AnimFramePos = 0;
+        m_AnimFrameTicks = 0;
+        listLayers.SelectedIndex = m_AnimFramePos;
+      }
+      m_AnimFrameTicks += 100;
+      if ( m_AnimFrameTicks >= m_CurrentLayer.DelayMS )
+      {
+        m_AnimFrameTicks -= m_CurrentLayer.DelayMS;
+        m_AnimFramePos = ( m_AnimFramePos + 1 ) % m_SpriteProject.SpriteLayers.Count;
+        listLayers.SelectedIndex = m_AnimFramePos;
+      }
     }
 
 
@@ -2677,6 +2704,7 @@ namespace C64Studio
       {
         m_CurrentLayer = null;
         editLayerName.Text = "";
+        editLayerDelay.Text = "";
         RedrawLayer();
         return;
       }
@@ -2685,7 +2713,13 @@ namespace C64Studio
       {
         editLayerName.Text = m_CurrentLayer.Name;
       }
+      string  delayText = m_CurrentLayer.DelayMS.ToString();
+      if ( editLayerDelay.Text != delayText )
+      {
+        editLayerDelay.Text = delayText;
+      }
 
+      comboLayerBGColor.SelectedIndex = m_CurrentLayer.BackgroundColor;
 
       int   spriteIndex = 0;
       foreach ( var sprite in m_CurrentLayer.Sprites )
@@ -3604,5 +3638,134 @@ namespace C64Studio
 
       return item;
     }
+
+
+
+    private void editLayerDelay_TextChanged( object sender, EventArgs e )
+    {
+      if ( m_CurrentLayer != null )
+      {
+        if ( m_CurrentLayer.DelayMS != GR.Convert.ToI32( editLayerDelay.Text ) )
+        {
+          m_CurrentLayer.DelayMS = GR.Convert.ToI32( editLayerDelay.Text );
+          SetModified();
+        }
+      }
+    }
+
+
+
+    private void checkAutoplayAnim_CheckedChanged( object sender, EventArgs e )
+    {
+      m_AnimTimer.Enabled = checkAutoplayAnim.Checked;
+      if ( m_AnimTimer.Enabled )
+      {
+        m_AnimTimer.Interval = 100;
+        m_AnimTimer.Start();
+      }
+      else
+      {
+        m_AnimTimer.Stop();
+      }
+    }
+
+
+
+    private void btnSavePreviewToGIF_Click( object sender, EventArgs e )
+    {
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Save Preview as GIF";
+      saveDlg.Filter = "GIF Image|*.gif";
+      if ( DocumentInfo.Project != null )
+      {
+        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
+      }
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return;
+      }
+
+      // determine bounds
+      int     minX = 64000;
+      int     maxX = 0;
+      int     minY = 48000;
+      int     maxY = 0;
+      foreach ( var layer in m_SpriteProject.SpriteLayers )
+      {
+        foreach ( var entry in layer.Sprites )
+        {
+          minX = Math.Min( entry.X, minX );
+          if ( entry.ExpandX )
+          {
+            maxX = Math.Max( entry.X + 48, minX );
+          }
+          else
+          {
+            maxX = Math.Max( entry.X + 24, minX );
+          }
+          minY = Math.Min( entry.Y, minY );
+          if ( entry.ExpandY )
+          {
+            maxY = Math.Max( entry.Y + 24, minY );
+          }
+          else
+          {
+            maxY = Math.Max( entry.Y + 21, minY );
+          }
+        }
+      }
+
+      try
+      {
+        using ( var outStream = new System.IO.FileStream( saveDlg.FileName, System.IO.FileMode.Create, System.IO.FileAccess.Write ) )
+        using ( var gif = new GIFEncoder( outStream, maxX - minX, maxY - minY ) )
+        {
+          var layerImage = new GR.Image.MemoryImage( maxX - minX, maxY - minY, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+          CustomRenderer.PaletteManager.ApplyPalette( layerImage );
+
+          foreach ( var layer in m_SpriteProject.SpriteLayers )
+          {
+            foreach ( var entry in layer.Sprites )
+            {
+              if ( m_SpriteProject.Sprites[entry.Index].Multicolor )
+              {
+                SpriteDisplayer.DisplayMultiColorSprite( m_SpriteProject.Sprites[entry.Index].Data,
+                                                         layer.BackgroundColor,
+                                                         m_SpriteProject.MultiColor1,
+                                                         m_SpriteProject.MultiColor2,
+                                                         entry.Color,
+                                                         layerImage,
+                                                         entry.X,
+                                                         entry.Y,
+                                                         entry.ExpandX,
+                                                         entry.ExpandY );
+              }
+              else
+              {
+                SpriteDisplayer.DisplayHiResSprite( m_SpriteProject.Sprites[entry.Index].Data,
+                                                    layer.BackgroundColor,
+                                                    entry.Color,
+                                                    layerImage,
+                                                    entry.X,
+                                                    entry.Y,
+                                                    entry.ExpandX,
+                                                    entry.ExpandY );
+              }
+            }
+
+            gif.AddFrame( layerImage.GetAsBitmap(), minX, minY, new TimeSpan( 0, 0, 0, 0, layer.DelayMS ) );
+          }
+          gif.Close();
+        }
+      }
+      catch ( Exception ex )
+      {
+        MessageBox.Show( "An exception occurred during saving:\r\n" + ex.ToString(), "Error saving GIF file" );
+      }
+    }
+
+
+
   }
 }

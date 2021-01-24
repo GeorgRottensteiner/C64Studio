@@ -49,6 +49,7 @@ namespace C64Studio.Formats
       public string             Name = "Default";
       public List<LayerSprite>  Sprites = new List<LayerSprite>();
       public int                BackgroundColor = 0;
+      public int                DelayMS = 0;
     }
 
 
@@ -134,6 +135,7 @@ namespace C64Studio.Formats
         GR.IO.FileChunk   chunkLayerInfo = new GR.IO.FileChunk( Types.FileChunk.SPRITESET_LAYER_INFO );
         chunkLayerInfo.AppendString( layer.Name );
         chunkLayerInfo.AppendU8( (byte)layer.BackgroundColor );
+        chunkLayerInfo.AppendI32( layer.DelayMS );
         chunkLayer.Append( chunkLayerInfo.ToBuffer() );
 
         foreach ( var sprite in layer.Sprites )
@@ -263,8 +265,9 @@ namespace C64Studio.Formats
                 }
                 else if ( subChunk.Type == Types.FileChunk.SPRITESET_LAYER_INFO )
                 {
-                  layer.Name = subChunkReader.ReadString();
+                  layer.Name            = subChunkReader.ReadString();
                   layer.BackgroundColor = subChunkReader.ReadUInt8();
+                  layer.DelayMS         = subChunkReader.ReadInt32();
                 }
               }
             }

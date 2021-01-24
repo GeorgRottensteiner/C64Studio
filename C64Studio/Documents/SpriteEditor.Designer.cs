@@ -50,6 +50,9 @@
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.panelSprites = new GR.Forms.ImageListbox();
       this.tabPage2 = new System.Windows.Forms.TabPage();
+      this.btnSavePreviewToGIF = new System.Windows.Forms.Button();
+      this.checkAutoplayAnim = new System.Windows.Forms.CheckBox();
+      this.label9 = new System.Windows.Forms.Label();
       this.checkExpandY = new System.Windows.Forms.CheckBox();
       this.checkExpandX = new System.Windows.Forms.CheckBox();
       this.listLayerSprites = new C64Studio.ArrangedItemList();
@@ -57,7 +60,9 @@
       this.editLayerY = new System.Windows.Forms.TextBox();
       this.label7 = new System.Windows.Forms.Label();
       this.label4 = new System.Windows.Forms.Label();
+      this.label10 = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
+      this.editLayerDelay = new System.Windows.Forms.TextBox();
       this.editLayerName = new System.Windows.Forms.TextBox();
       this.editLayerX = new System.Windows.Forms.TextBox();
       this.label5 = new System.Windows.Forms.Label();
@@ -213,26 +218,26 @@
             this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem,
             this.forSelectedSpritesToolStripMenuItem});
       this.contextMenuExchangeColors.Name = "contextMenuExchangeColors";
-      this.contextMenuExchangeColors.Size = new System.Drawing.Size(295, 92);
+      this.contextMenuExchangeColors.Size = new System.Drawing.Size(296, 92);
       // 
       // exchangeMultiColor1WithBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Name = "exchangeMultiColor1WithBGColorToolStripMenuItem";
-      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 1 with BG Color";
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1WithBGColorToolStripMenuItem_Click);
       // 
       // exchangeMultiColor2WithBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Name = "exchangeMultiColor2WithBGColorToolStripMenuItem";
-      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 2 with BG Color";
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor2WithBGColorToolStripMenuItem_Click);
       // 
       // exchangeMultiColor1WithMultiColor2ToolStripMenuItem
       // 
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Name = "exchangeMultiColor1WithMultiColor2ToolStripMenuItem";
-      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Text = "Exchange Multi Color 1 with Multi Color 2";
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem_Click);
       // 
@@ -246,48 +251,48 @@
             this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem,
             this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1});
       this.forSelectedSpritesToolStripMenuItem.Name = "forSelectedSpritesToolStripMenuItem";
-      this.forSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+      this.forSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
       this.forSelectedSpritesToolStripMenuItem.Text = "For selected Sprites";
       // 
       // exchangeMulticolor1WithSpriteColorToolStripMenuItem1
       // 
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Name = "exchangeMulticolor1WithSpriteColorToolStripMenuItem1";
-      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Text = "Exchange Multicolor 1 with sprite color";
       this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1_Click);
       // 
       // exchangeMulticolor2WithSpriteColorToolStripMenuItem1
       // 
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Name = "exchangeMulticolor2WithSpriteColorToolStripMenuItem1";
-      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Text = "Exchange Multicolor 2 with sprite color";
       this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1_Click);
       // 
       // exchangeBGColorWithSpriteColorToolStripMenuItem
       // 
       this.exchangeBGColorWithSpriteColorToolStripMenuItem.Name = "exchangeBGColorWithSpriteColorToolStripMenuItem";
-      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
       this.exchangeBGColorWithSpriteColorToolStripMenuItem.Text = "Exchange BG color with sprite color";
       this.exchangeBGColorWithSpriteColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeBGColorWithSpriteColorToolStripMenuItem_Click);
       // 
       // exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem
       // 
       this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Name = "exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem";
-      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
       this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Text = "Exchange Multicolor 1 with BG color";
       this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Click += new System.EventHandler(this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem_Click);
       // 
       // exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem
       // 
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Name = "exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem";
-      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Text = "Exchange Multicolor 2 with BG color";
       this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Click += new System.EventHandler(this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem_Click);
       // 
       // exchangeMulticolor1WithMulticolor2ToolStripMenuItem1
       // 
       this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Name = "exchangeMulticolor1WithMulticolor2ToolStripMenuItem1";
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Size = new System.Drawing.Size(284, 22);
+      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
       this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Text = "Exchange Multicolor 1 with Multicolor 2";
       this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1_Click);
       // 
@@ -301,7 +306,7 @@
       this.tabSpriteDetails.Location = new System.Drawing.Point(446, 2);
       this.tabSpriteDetails.Name = "tabSpriteDetails";
       this.tabSpriteDetails.SelectedIndex = 0;
-      this.tabSpriteDetails.Size = new System.Drawing.Size(540, 449);
+      this.tabSpriteDetails.Size = new System.Drawing.Size(540, 467);
       this.tabSpriteDetails.TabIndex = 9;
       // 
       // tabPage1
@@ -310,7 +315,7 @@
       this.tabPage1.Location = new System.Drawing.Point(4, 22);
       this.tabPage1.Name = "tabPage1";
       this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage1.Size = new System.Drawing.Size(532, 423);
+      this.tabPage1.Size = new System.Drawing.Size(532, 441);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "Sprites";
       this.tabPage1.UseVisualStyleBackColor = true;
@@ -335,7 +340,7 @@
       this.panelSprites.Name = "panelSprites";
       this.panelSprites.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
       this.panelSprites.SelectedIndex = -1;
-      this.panelSprites.Size = new System.Drawing.Size(526, 417);
+      this.panelSprites.Size = new System.Drawing.Size(526, 435);
       this.panelSprites.TabIndex = 4;
       this.panelSprites.TabStop = true;
       this.panelSprites.VisibleAutoScrollHorizontal = false;
@@ -345,6 +350,9 @@
       // 
       // tabPage2
       // 
+      this.tabPage2.Controls.Add(this.btnSavePreviewToGIF);
+      this.tabPage2.Controls.Add(this.checkAutoplayAnim);
+      this.tabPage2.Controls.Add(this.label9);
       this.tabPage2.Controls.Add(this.checkExpandY);
       this.tabPage2.Controls.Add(this.checkExpandX);
       this.tabPage2.Controls.Add(this.listLayerSprites);
@@ -352,7 +360,9 @@
       this.tabPage2.Controls.Add(this.editLayerY);
       this.tabPage2.Controls.Add(this.label7);
       this.tabPage2.Controls.Add(this.label4);
+      this.tabPage2.Controls.Add(this.label10);
       this.tabPage2.Controls.Add(this.label6);
+      this.tabPage2.Controls.Add(this.editLayerDelay);
       this.tabPage2.Controls.Add(this.editLayerName);
       this.tabPage2.Controls.Add(this.editLayerX);
       this.tabPage2.Controls.Add(this.label5);
@@ -364,18 +374,50 @@
       this.tabPage2.Location = new System.Drawing.Point(4, 22);
       this.tabPage2.Name = "tabPage2";
       this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage2.Size = new System.Drawing.Size(532, 423);
+      this.tabPage2.Size = new System.Drawing.Size(532, 441);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "Preview";
       this.tabPage2.UseVisualStyleBackColor = true;
       // 
+      // btnSavePreviewToGIF
+      // 
+      this.btnSavePreviewToGIF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnSavePreviewToGIF.Location = new System.Drawing.Point(389, 342);
+      this.btnSavePreviewToGIF.Name = "btnSavePreviewToGIF";
+      this.btnSavePreviewToGIF.Size = new System.Drawing.Size(75, 23);
+      this.btnSavePreviewToGIF.TabIndex = 13;
+      this.btnSavePreviewToGIF.Text = "Save as GIF";
+      this.btnSavePreviewToGIF.UseVisualStyleBackColor = true;
+      this.btnSavePreviewToGIF.Click += new System.EventHandler(this.btnSavePreviewToGIF_Click);
+      // 
+      // checkAutoplayAnim
+      // 
+      this.checkAutoplayAnim.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.checkAutoplayAnim.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkAutoplayAnim.Location = new System.Drawing.Point(227, 399);
+      this.checkAutoplayAnim.Name = "checkAutoplayAnim";
+      this.checkAutoplayAnim.Size = new System.Drawing.Size(132, 24);
+      this.checkAutoplayAnim.TabIndex = 12;
+      this.checkAutoplayAnim.Text = "Auto-Animation";
+      this.checkAutoplayAnim.UseVisualStyleBackColor = true;
+      this.checkAutoplayAnim.CheckedChanged += new System.EventHandler(this.checkAutoplayAnim_CheckedChanged);
+      // 
+      // label9
+      // 
+      this.label9.AutoSize = true;
+      this.label9.Location = new System.Drawing.Point(3, 274);
+      this.label9.Name = "label9";
+      this.label9.Size = new System.Drawing.Size(44, 13);
+      this.label9.TabIndex = 24;
+      this.label9.Text = "Frames:";
+      // 
       // checkExpandY
       // 
       this.checkExpandY.AutoSize = true;
-      this.checkExpandY.Location = new System.Drawing.Point(91, 265);
+      this.checkExpandY.Location = new System.Drawing.Point(149, 180);
       this.checkExpandY.Name = "checkExpandY";
       this.checkExpandY.Size = new System.Drawing.Size(43, 17);
-      this.checkExpandY.TabIndex = 23;
+      this.checkExpandY.TabIndex = 3;
       this.checkExpandY.Text = "Y*2";
       this.checkExpandY.UseVisualStyleBackColor = true;
       this.checkExpandY.CheckedChanged += new System.EventHandler(this.checkExpandY_CheckedChanged);
@@ -383,10 +425,10 @@
       // checkExpandX
       // 
       this.checkExpandX.AutoSize = true;
-      this.checkExpandX.Location = new System.Drawing.Point(91, 240);
+      this.checkExpandX.Location = new System.Drawing.Point(149, 156);
       this.checkExpandX.Name = "checkExpandX";
       this.checkExpandX.Size = new System.Drawing.Size(43, 17);
-      this.checkExpandX.TabIndex = 23;
+      this.checkExpandX.TabIndex = 2;
       this.checkExpandX.Text = "X*2";
       this.checkExpandX.UseVisualStyleBackColor = true;
       this.checkExpandX.CheckedChanged += new System.EventHandler(this.checkExpandX_CheckedChanged);
@@ -394,6 +436,7 @@
       // listLayerSprites
       // 
       this.listLayerSprites.AddButtonEnabled = true;
+      this.listLayerSprites.AllowClone = true;
       this.listLayerSprites.DeleteButtonEnabled = false;
       this.listLayerSprites.HasOwnerDrawColumn = true;
       this.listLayerSprites.HighlightColor = System.Drawing.SystemColors.HotTrack;
@@ -403,10 +446,11 @@
       this.listLayerSprites.MoveUpButtonEnabled = false;
       this.listLayerSprites.MustHaveOneElement = false;
       this.listLayerSprites.Name = "listLayerSprites";
+      this.listLayerSprites.SelectedIndex = -1;
       this.listLayerSprites.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       this.listLayerSprites.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      this.listLayerSprites.Size = new System.Drawing.Size(133, 148);
-      this.listLayerSprites.TabIndex = 22;
+      this.listLayerSprites.Size = new System.Drawing.Size(192, 148);
+      this.listLayerSprites.TabIndex = 0;
       this.listLayerSprites.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listLayerSprites_AddingItem);
       this.listLayerSprites.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.listLayerSprites_CloningItem);
       this.listLayerSprites.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_ItemAdded);
@@ -418,6 +462,7 @@
       // listLayers
       // 
       this.listLayers.AddButtonEnabled = true;
+      this.listLayers.AllowClone = true;
       this.listLayers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
       this.listLayers.DeleteButtonEnabled = false;
@@ -429,10 +474,11 @@
       this.listLayers.MoveUpButtonEnabled = false;
       this.listLayers.MustHaveOneElement = true;
       this.listLayers.Name = "listLayers";
+      this.listLayers.SelectedIndex = -1;
       this.listLayers.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       this.listLayers.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      this.listLayers.Size = new System.Drawing.Size(133, 93);
-      this.listLayers.TabIndex = 22;
+      this.listLayers.Size = new System.Drawing.Size(192, 145);
+      this.listLayers.TabIndex = 9;
       this.listLayers.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listLayers_AddingItem);
       this.listLayers.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.listLayers_CloningItem);
       this.listLayers.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_ItemAdded);
@@ -445,18 +491,18 @@
       // 
       this.editLayerY.Location = new System.Drawing.Point(91, 208);
       this.editLayerY.Name = "editLayerY";
-      this.editLayerY.Size = new System.Drawing.Size(39, 20);
-      this.editLayerY.TabIndex = 16;
+      this.editLayerY.Size = new System.Drawing.Size(45, 20);
+      this.editLayerY.TabIndex = 5;
       this.editLayerY.TextChanged += new System.EventHandler(this.editLayerY_TextChanged);
       this.editLayerY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editLayerY_KeyPress);
       // 
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(6, 266);
+      this.label7.Location = new System.Drawing.Point(104, 239);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(25, 13);
-      this.label7.TabIndex = 14;
+      this.label7.TabIndex = 8;
       this.label7.Text = "BG:";
       // 
       // label4
@@ -465,26 +511,45 @@
       this.label4.Location = new System.Drawing.Point(6, 239);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(25, 13);
-      this.label4.TabIndex = 15;
+      this.label4.TabIndex = 6;
       this.label4.Text = "Col:";
+      // 
+      // label10
+      // 
+      this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.label10.AutoSize = true;
+      this.label10.Location = new System.Drawing.Point(224, 374);
+      this.label10.Name = "label10";
+      this.label10.Size = new System.Drawing.Size(37, 13);
+      this.label10.TabIndex = 15;
+      this.label10.Text = "Delay:";
       // 
       // label6
       // 
       this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(3, 386);
+      this.label6.Location = new System.Drawing.Point(224, 347);
       this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(26, 13);
+      this.label6.Size = new System.Drawing.Size(38, 13);
       this.label6.TabIndex = 15;
-      this.label6.Text = "Nm:";
+      this.label6.Text = "Name:";
+      // 
+      // editLayerDelay
+      // 
+      this.editLayerDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.editLayerDelay.Location = new System.Drawing.Point(268, 369);
+      this.editLayerDelay.Name = "editLayerDelay";
+      this.editLayerDelay.Size = new System.Drawing.Size(91, 20);
+      this.editLayerDelay.TabIndex = 11;
+      this.editLayerDelay.TextChanged += new System.EventHandler(this.editLayerDelay_TextChanged);
       // 
       // editLayerName
       // 
       this.editLayerName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.editLayerName.Location = new System.Drawing.Point(39, 383);
+      this.editLayerName.Location = new System.Drawing.Point(268, 342);
       this.editLayerName.Name = "editLayerName";
       this.editLayerName.Size = new System.Drawing.Size(91, 20);
-      this.editLayerName.TabIndex = 17;
+      this.editLayerName.TabIndex = 10;
       this.editLayerName.TextChanged += new System.EventHandler(this.editLayerName_TextChanged);
       // 
       // editLayerX
@@ -492,7 +557,7 @@
       this.editLayerX.Location = new System.Drawing.Point(39, 208);
       this.editLayerX.Name = "editLayerX";
       this.editLayerX.Size = new System.Drawing.Size(45, 20);
-      this.editLayerX.TabIndex = 17;
+      this.editLayerX.TabIndex = 4;
       this.editLayerX.TextChanged += new System.EventHandler(this.editLayerX_TextChanged);
       this.editLayerX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editLayerX_KeyPress);
       // 
@@ -519,9 +584,9 @@
       this.comboLayerBGColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboLayerBGColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboLayerBGColor.FormattingEnabled = true;
-      this.comboLayerBGColor.Location = new System.Drawing.Point(39, 263);
+      this.comboLayerBGColor.Location = new System.Drawing.Point(135, 236);
       this.comboLayerBGColor.Name = "comboLayerBGColor";
-      this.comboLayerBGColor.Size = new System.Drawing.Size(45, 21);
+      this.comboLayerBGColor.Size = new System.Drawing.Size(57, 21);
       this.comboLayerBGColor.TabIndex = 8;
       this.comboLayerBGColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboLayerBGColor.SelectedIndexChanged += new System.EventHandler(this.comboLayerBGColor_SelectedIndexChanged);
@@ -533,8 +598,8 @@
       this.comboLayerColor.FormattingEnabled = true;
       this.comboLayerColor.Location = new System.Drawing.Point(39, 236);
       this.comboLayerColor.Name = "comboLayerColor";
-      this.comboLayerColor.Size = new System.Drawing.Size(45, 21);
-      this.comboLayerColor.TabIndex = 9;
+      this.comboLayerColor.Size = new System.Drawing.Size(59, 21);
+      this.comboLayerColor.TabIndex = 7;
       this.comboLayerColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboLayerColor.SelectedIndexChanged += new System.EventHandler(this.comboLayerColor_SelectedIndexChanged);
       // 
@@ -548,19 +613,22 @@
       this.comboSprite.ItemHeight = 42;
       this.comboSprite.Location = new System.Drawing.Point(39, 154);
       this.comboSprite.Name = "comboSprite";
-      this.comboSprite.Size = new System.Drawing.Size(91, 48);
-      this.comboSprite.TabIndex = 10;
+      this.comboSprite.Size = new System.Drawing.Size(97, 48);
+      this.comboSprite.TabIndex = 1;
       this.comboSprite.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboSprite_DrawItem);
       this.comboSprite.SelectedIndexChanged += new System.EventHandler(this.comboSprite_SelectedIndexChanged);
       // 
       // layerPreview
       // 
+      this.layerPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.layerPreview.DisplayPage = fastImage1;
       this.layerPreview.Image = null;
-      this.layerPreview.Location = new System.Drawing.Point(136, 3);
+      this.layerPreview.Location = new System.Drawing.Point(208, 3);
       this.layerPreview.Name = "layerPreview";
-      this.layerPreview.Size = new System.Drawing.Size(644, 404);
+      this.layerPreview.Size = new System.Drawing.Size(318, 333);
       this.layerPreview.TabIndex = 7;
       this.layerPreview.TabStop = false;
       // 
@@ -1359,5 +1427,10 @@
     private System.Windows.Forms.Button btnToBASICHex;
     private System.Windows.Forms.Button btnImportFromBASICHex;
         private System.Windows.Forms.Button btnClearImport;
-    }
+    private System.Windows.Forms.Label label9;
+    private System.Windows.Forms.Label label10;
+    private System.Windows.Forms.TextBox editLayerDelay;
+    private System.Windows.Forms.CheckBox checkAutoplayAnim;
+    private System.Windows.Forms.Button btnSavePreviewToGIF;
+  }
 }
