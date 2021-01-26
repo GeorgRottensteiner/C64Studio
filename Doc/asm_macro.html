@@ -20,6 +20,7 @@
       <li><a href="#binary">!BINARY, !BIN, !BI</a></li>
       <li><a href="#byte">!BYTE, !BY, !8, !08</a></li>
       <li><a href="#convtab">!CONVTAB, !CT</a></li>
+      <li><a href="#cpu">!CPU</a></li>
       <li><a href="#end">!END</a></li>
       <li><a href="#eof">!ENDOFFILE, !EOF</a></li>
       <li><a href="#error">!ERROR, !SERIOUS</a></li>
@@ -229,6 +230,22 @@
 
       !text "HELLO WORLD AGAIN"
       <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="cpu"></a>
+  <H2>!CPU &lt;cpu type&gt;</H2>
+  <div id="mybody">
+    This pseudo op sets the processor to assemble for. Currently there are four supported processors. Default is 6510.<br>
+    <br>
+    * 6510<br>
+    * 65C02<br>
+    * R65C02<br>
+    * w65c02<br>
+    <br>
+    <br>
+    <div id="code"><br>      !cpu 6510
+    <br></div>
     <br>
     <br>
   </div>

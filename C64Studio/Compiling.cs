@@ -62,7 +62,14 @@ namespace C64Studio
 
         foreach ( var file in files )
         {
-          ReadBASICDialect( file );
+          try
+          {
+            ReadBASICDialect( file );
+          }
+          catch ( Exception ex )
+          {
+            Core.AddToOutput( "Exception reading BASIC dialect file " + file + ": " + ex.Message + System.Environment.NewLine );
+          }
         }
       }
       catch ( Exception ex )
