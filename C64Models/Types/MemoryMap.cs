@@ -75,6 +75,13 @@ namespace C64Studio.Types
         &&   ( Entry.StartAddress < entry.StartAddress + entry.Length ) )
         {
           // add to this entry
+
+          // update parent size
+          if ( ( entry.StartAddress == Entry.StartAddress )
+          &&   ( Entry.Length > entry.Length ) )
+          {
+            entry.Length = Entry.Length;
+          }
           entry.SubEntries.InsertEntry( Entry );
           entryAdded = true;
         }
