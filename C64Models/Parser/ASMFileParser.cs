@@ -9684,7 +9684,7 @@ namespace C64Studio.Parser
     {
       if ( lineTokenInfos.Count != 2 )
       {
-        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510 and W65C02 are supported" );
+        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02 and W65C02 are supported" );
         return ParseLineResult.RETURN_NULL;
       }
 
@@ -9695,11 +9695,17 @@ namespace C64Studio.Parser
         case "6510":
           m_Processor = Processor.Create6510();
           return ParseLineResult.OK;
+        case "65C02":
+          m_Processor = Processor.Create65C02();
+          return ParseLineResult.OK;
+        case "R65C02":
+          m_Processor = Processor.CreateR65C02();
+          return ParseLineResult.OK;
         case "W65C02":
           m_Processor = Processor.CreateWDC65C02();
           return ParseLineResult.OK;
       }
-      AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510 and W65C02 are supported" );
+      AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02 and W65C02 are supported" );
       return ParseLineResult.RETURN_NULL;
     }
 
@@ -13969,6 +13975,16 @@ namespace C64Studio.Parser
       for ( int i = 0; i < Count; ++i )
       {
         sb.Append( Tokens[StartIndex + i].Content );
+        // BOO - HISS!
+        if ( Tokens[StartIndex + i].Type == TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
+        {
+          sb.Append( "+2" );
+        }
+        else if ( Tokens[StartIndex + i].Type == TokenInfo.TokenType.OPCODE_FIXED_ZP )
+        {
+          sb.Append( "+1" );
+        }
+
         if ( ( i + 1 < Count )
         &&   ( Tokens[StartIndex + i].StartPos + Tokens[StartIndex + i].Length < Tokens[StartIndex + i + 1].StartPos ) )
         {
