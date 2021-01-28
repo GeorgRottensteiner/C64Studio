@@ -1235,6 +1235,7 @@ namespace C64Studio
             m_ResponseLines.Clear();
 
             OnBreakpointHit();
+            m_Request = new RequestData( DebugRequestType.NONE );
           }
           break;
         case DebugRequestType.NONE:
@@ -1538,7 +1539,7 @@ namespace C64Studio
  	    if ( ( m_RequestQueue.Count != 0 )
       &&   ( m_ReceivedDataBin.Length == 0 ) )
       {
-        Debug.Log( "------> StartNextRequest" );
+        Debug.Log( "------> StartNextRequest:" + m_RequestQueue.First.Value.Type );
         RequestData nextRequest = m_RequestQueue.First.Value;
         m_RequestQueue.RemoveFirst();
 
@@ -2381,7 +2382,8 @@ namespace C64Studio
         m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
 
         // TODO - borked with GTK 3.4 (introduction of new binary interface)
-        m_BinaryMemDump = true;
+        //m_BinaryMemDump = true;
+        m_BinaryMemDump = false;
         return true;
       }
 

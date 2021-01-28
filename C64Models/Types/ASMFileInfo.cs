@@ -303,7 +303,8 @@ namespace C64Studio.Types.ASM
       // insert new lines
       for ( int i = 0; i < LineCount; ++i )
       {
-        if ( !LineInfo.ContainsKey( LocalLineIndex + i ) )
+        if ( ( !LineInfo.ContainsKey( LocalLineIndex + i ) )
+        &&   ( LineInfo.ContainsKey( LocalLineIndex - 1 ) ) )
         {
           var info = new LineInfo() { AddressStart = LineInfo[LocalLineIndex - 1].AddressStart };
           info.LineIndex = LocalLineIndex + i;
@@ -659,6 +660,7 @@ namespace C64Studio.Types.ASM
     {
       StringBuilder   sb = new StringBuilder();
 
+      var  sentLabels = new GR.Collections.Set<int>();
       foreach ( var token in Labels )
       {
         if ( token.Value.Type == Types.SymbolInfo.Types.LABEL )
@@ -666,10 +668,17 @@ namespace C64Studio.Types.ASM
           switch ( Format )
           {
             case LabelFileFormat.VICE:
-              sb.Append( "add_label $" );
-              sb.Append( token.Value.AddressOrValue.ToString( "X4" ) );
-              sb.Append( " ." );
-              sb.AppendLine( token.Key.Replace( '.', '_' ).Replace( '-', '_' ).Replace( "+", "plus" ) );
+              // VICE now bails on values outside 16bit
+              if ( ( token.Value.AddressOrValue >= 0 )
+              &&   ( token.Value.AddressOrValue <= 65535 )
+              &&   ( !sentLabels.ContainsValue( token.Value.AddressOrValue ) ) )
+              {
+                sentLabels.Add( token.Value.AddressOrValue );
+                sb.Append( "add_label $" );
+                sb.Append( token.Value.AddressOrValue.ToString( "X4" ) );
+                sb.Append( " ." );
+                sb.AppendLine( token.Key.Replace( '.', '_' ).Replace( '-', '_' ).Replace( "+", "plus" ) );
+              }
               break;
             case LabelFileFormat.C64DEBUGGER:
               sb.Append( "al C:" );
