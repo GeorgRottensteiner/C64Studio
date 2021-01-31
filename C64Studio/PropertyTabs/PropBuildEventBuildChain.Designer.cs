@@ -32,11 +32,11 @@
       this.comboBuildChainConfig = new System.Windows.Forms.ComboBox();
       this.comboBuildChainProject = new System.Windows.Forms.ComboBox();
       this.listBuildChainProjects = new C64Studio.ArrangedItemList();
-      this.label9 = new System.Windows.Forms.Label();
-      this.label8 = new System.Windows.Forms.Label();
-      this.label6 = new System.Windows.Forms.Label();
+      this.labelDefines = new System.Windows.Forms.Label();
+      this.labelConfig = new System.Windows.Forms.Label();
+      this.labelProject = new System.Windows.Forms.Label();
       this.checkBuildChainActive = new System.Windows.Forms.CheckBox();
-      this.label1 = new System.Windows.Forms.Label();
+      this.labelFile = new System.Windows.Forms.Label();
       this.comboBuildChainFile = new System.Windows.Forms.ComboBox();
       this.SuspendLayout();
       // 
@@ -76,6 +76,7 @@
       // listBuildChainProjects
       // 
       this.listBuildChainProjects.AddButtonEnabled = false;
+      this.listBuildChainProjects.AllowClone = true;
       this.listBuildChainProjects.DeleteButtonEnabled = false;
       this.listBuildChainProjects.Enabled = false;
       this.listBuildChainProjects.HasOwnerDrawColumn = true;
@@ -86,6 +87,7 @@
       this.listBuildChainProjects.MoveUpButtonEnabled = false;
       this.listBuildChainProjects.MustHaveOneElement = false;
       this.listBuildChainProjects.Name = "listBuildChainProjects";
+      this.listBuildChainProjects.SelectedIndex = -1;
       this.listBuildChainProjects.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       this.listBuildChainProjects.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listBuildChainProjects.Size = new System.Drawing.Size(221, 244);
@@ -97,35 +99,35 @@
       this.listBuildChainProjects.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.listBuildChainProjects_ItemMoved);
       this.listBuildChainProjects.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_SelectedIndexChanged);
       // 
-      // label9
+      // labelDefines
       // 
-      this.label9.AutoSize = true;
-      this.label9.Enabled = false;
-      this.label9.Location = new System.Drawing.Point(232, 96);
-      this.label9.Name = "label9";
-      this.label9.Size = new System.Drawing.Size(46, 13);
-      this.label9.TabIndex = 8;
-      this.label9.Text = "Defines:";
+      this.labelDefines.AutoSize = true;
+      this.labelDefines.Enabled = false;
+      this.labelDefines.Location = new System.Drawing.Point(232, 96);
+      this.labelDefines.Name = "labelDefines";
+      this.labelDefines.Size = new System.Drawing.Size(46, 13);
+      this.labelDefines.TabIndex = 8;
+      this.labelDefines.Text = "Defines:";
       // 
-      // label8
+      // labelConfig
       // 
-      this.label8.AutoSize = true;
-      this.label8.Enabled = false;
-      this.label8.Location = new System.Drawing.Point(232, 41);
-      this.label8.Name = "label8";
-      this.label8.Size = new System.Drawing.Size(40, 13);
-      this.label8.TabIndex = 9;
-      this.label8.Text = "Config:";
+      this.labelConfig.AutoSize = true;
+      this.labelConfig.Enabled = false;
+      this.labelConfig.Location = new System.Drawing.Point(232, 41);
+      this.labelConfig.Name = "labelConfig";
+      this.labelConfig.Size = new System.Drawing.Size(40, 13);
+      this.labelConfig.TabIndex = 9;
+      this.labelConfig.Text = "Config:";
       // 
-      // label6
+      // labelProject
       // 
-      this.label6.AutoSize = true;
-      this.label6.Enabled = false;
-      this.label6.Location = new System.Drawing.Point(232, 16);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(43, 13);
-      this.label6.TabIndex = 10;
-      this.label6.Text = "Project:";
+      this.labelProject.AutoSize = true;
+      this.labelProject.Enabled = false;
+      this.labelProject.Location = new System.Drawing.Point(232, 16);
+      this.labelProject.Name = "labelProject";
+      this.labelProject.Size = new System.Drawing.Size(43, 13);
+      this.labelProject.TabIndex = 10;
+      this.labelProject.Text = "Project:";
       // 
       // checkBuildChainActive
       // 
@@ -138,15 +140,15 @@
       this.checkBuildChainActive.UseVisualStyleBackColor = true;
       this.checkBuildChainActive.CheckedChanged += new System.EventHandler(this.checkBuildChainActive_CheckedChanged);
       // 
-      // label1
+      // labelFile
       // 
-      this.label1.AutoSize = true;
-      this.label1.Enabled = false;
-      this.label1.Location = new System.Drawing.Point(232, 67);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(26, 13);
-      this.label1.TabIndex = 9;
-      this.label1.Text = "File:";
+      this.labelFile.AutoSize = true;
+      this.labelFile.Enabled = false;
+      this.labelFile.Location = new System.Drawing.Point(232, 67);
+      this.labelFile.Name = "labelFile";
+      this.labelFile.Size = new System.Drawing.Size(26, 13);
+      this.labelFile.TabIndex = 9;
+      this.labelFile.Text = "File:";
       // 
       // comboBuildChainFile
       // 
@@ -169,10 +171,10 @@
       this.Controls.Add(this.comboBuildChainConfig);
       this.Controls.Add(this.comboBuildChainProject);
       this.Controls.Add(this.listBuildChainProjects);
-      this.Controls.Add(this.label9);
-      this.Controls.Add(this.label1);
-      this.Controls.Add(this.label8);
-      this.Controls.Add(this.label6);
+      this.Controls.Add(this.labelDefines);
+      this.Controls.Add(this.labelFile);
+      this.Controls.Add(this.labelConfig);
+      this.Controls.Add(this.labelProject);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
       this.Name = "PropBuildEventBuildChain";
       this.ShowIcon = false;
@@ -188,11 +190,11 @@
     private System.Windows.Forms.ComboBox comboBuildChainConfig;
     private System.Windows.Forms.ComboBox comboBuildChainProject;
     private ArrangedItemList listBuildChainProjects;
-    private System.Windows.Forms.Label label9;
-    private System.Windows.Forms.Label label8;
-    private System.Windows.Forms.Label label6;
+    private System.Windows.Forms.Label labelDefines;
+    private System.Windows.Forms.Label labelConfig;
+    private System.Windows.Forms.Label labelProject;
     private System.Windows.Forms.CheckBox checkBuildChainActive;
-    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label labelFile;
     private System.Windows.Forms.ComboBox comboBuildChainFile;
 
 

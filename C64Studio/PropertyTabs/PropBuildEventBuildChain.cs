@@ -65,9 +65,10 @@ namespace C64Studio
     private void checkBuildChainActive_CheckedChanged( object sender, EventArgs e )
     {
       listBuildChainProjects.Enabled = checkBuildChainActive.Checked;
-      label6.Enabled = checkBuildChainActive.Checked;
-      label8.Enabled = checkBuildChainActive.Checked;
-      label9.Enabled = checkBuildChainActive.Checked;
+      labelProject.Enabled = checkBuildChainActive.Checked;
+      labelConfig.Enabled = checkBuildChainActive.Checked;
+      labelDefines.Enabled = checkBuildChainActive.Checked;
+      labelFile.Enabled = checkBuildChainActive.Checked;
       comboBuildChainConfig.Enabled = checkBuildChainActive.Checked;
       comboBuildChainProject.Enabled = checkBuildChainActive.Checked;
       comboBuildChainFile.Enabled = checkBuildChainActive.Checked;
@@ -305,5 +306,6 @@ namespace C64Studio
 
       return item;
     }
+
   }
 }

@@ -855,7 +855,7 @@ copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"</PostBuildEvent>
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
 copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"
-del "$(SolutionDir)C64StudioRelease/BASIC Dialects/*.*"
+del "$(SolutionDir)C64StudioRelease\BASIC Dialects\*.*" /Q
 copy "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\BASIC Dialects"</PostBuildEvent>
   </PropertyGroup>
 </Project>
