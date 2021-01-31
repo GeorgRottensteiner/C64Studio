@@ -1,5 +1,4 @@
 ﻿C64Studio
-o Debugging - Scroll marks previous marked changes as clean -> only mark regions dirty on step etc.
 o BASIC _ Search in lowercase mode doesn't work with Uppercase letters
 o Shift-Click in Charset Preview Window, clear char
 o Charset editor -> PETSCII order of chars

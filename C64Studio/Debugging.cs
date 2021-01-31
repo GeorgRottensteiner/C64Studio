@@ -617,50 +617,9 @@ namespace C64Studio
 
 
 
-    private void ValidateMemory( MemoryView View, int Offset, int Length )
-    {
-      foreach ( int offset in View.ValidMemory.Keys )
-      {
-        int     storedlength = View.ValidMemory[offset];
-
-        if ( ( Offset >= offset )
-        &&   ( Offset < offset + storedlength ) )
-        {
-          // we are at least partially in here
-          if ( Offset + Length < offset + storedlength )
-          {
-            // already fully validated
-            return;
-          }
-          Length -= Offset - offset;
-          Offset = offset + storedlength;
-          if ( Length == 0 )
-          {
-            return;
-          }
-        }
-      }
-      if ( Length > 0 )
-      {
-        View.ValidMemory.Add( Offset, Length );
-      }
-    }
-
-
-
     private bool IsMemoryValid( int Offset )
     {
-      foreach ( int offset in Core.Debugging.ActiveMemory.ValidMemory.Keys )
-      {
-        int     storedlength = Core.Debugging.ActiveMemory.ValidMemory[offset];
-
-        if ( ( Offset >= offset )
-        && ( Offset < offset + storedlength ) )
-        {
-          return true;
-        }
-      }
-      return false;
+      return ( Core.Debugging.ActiveMemory.Flags[Offset] & MemoryView.RAMFlag.VALUE_KNOWN ) != 0;
     }
 
 
@@ -683,16 +642,20 @@ namespace C64Studio
         {
           if ( ramByte != memoryView.RAM.ByteAt( Offset + i ) )
           {
-            memoryView.RAMChanged[Offset + i] = true;
+            // only mark as changed when we knew the orig value
+            if ( ( memoryView.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_KNOWN ) == 0 )
+            {
+              memoryView.Flags[Offset + i] |= MemoryView.RAMFlag.VALUE_CHANGED;
+            }
           }
-          else
+          else if ( ( memoryView.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_KNOWN ) == 0 )
           {
-            memoryView.RAMChanged[Offset + i] = false;
+            memoryView.Flags[Offset + i] &= ~MemoryView.RAMFlag.VALUE_CHANGED;
           }
         }
+        memoryView.Flags[Offset + i] |= MemoryView.RAMFlag.VALUE_KNOWN;
         memoryView.RAM.SetU8At( Offset + i, ramByte );
       }
-      ValidateMemory( memoryView, Offset, (int)Data.Length );
 
       foreach ( var debugView in MemoryViews )
       {

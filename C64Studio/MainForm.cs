@@ -2313,6 +2313,7 @@ namespace C64Studio
 
       m_DebugWatch.ReseatWatches( DocumentToDebug.ASMFileInfo );
       StudioCore.Debugging.Debugger.ClearCaches();
+      StudioCore.Debugging.MemoryViews.ForEach( mv => mv.MarkAllMemoryAsUnknown() );
       StudioCore.Debugging.ReseatBreakpoints( DocumentToDebug.ASMFileInfo );
       StudioCore.Debugging.AddVirtualBreakpoints( DocumentToDebug.ASMFileInfo );
       //StudioCore.Debugging.Debugger.SetBreakPoints( StudioCore.Debugging.BreakPoints );

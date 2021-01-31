@@ -6,11 +6,15 @@ namespace C64Studio.Debugger
 {
   public class MemoryView
   {
-    public GR.Memory.ByteBuffer      RAM = new GR.Memory.ByteBuffer( 65536 );
-    public bool[]                    RAMChanged = new bool[65536];
+    [Flags]
+    public enum RAMFlag : byte
+    {
+      VALUE_KNOWN   = 1,
+      VALUE_CHANGED = 2
+    };
 
-    // offset,length
-    public Dictionary<int,int>       ValidMemory = new Dictionary<int, int>();
+    public GR.Memory.ByteBuffer      RAM            = new GR.Memory.ByteBuffer( 65536 );
+    public RAMFlag[]                 Flags       = new RAMFlag[65536];
   }
 
 }
