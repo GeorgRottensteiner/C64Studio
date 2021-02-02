@@ -2521,7 +2521,7 @@ namespace C64Studio
 
       dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
 
-      Clipboard.SetDataObject( dataObj );
+      Clipboard.SetDataObject( dataObj, true );
     }
 
 

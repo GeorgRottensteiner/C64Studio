@@ -1586,7 +1586,40 @@ namespace C64Studio
 
       dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
 
-      Clipboard.SetDataObject( dataObj );
+      // add sprites as image
+      var spriteImage = new GR.Image.MemoryImage( selectedImages.Count * 24, 21, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      CustomRenderer.PaletteManager.ApplyPalette( spriteImage );
+      int curX = 0;
+      foreach ( int index in selectedImages )
+      {
+        var curSprite = m_SpriteProject.Sprites[index];
+        spriteImage.Box( curX, 0, 24, 21, (uint)m_SpriteProject.BackgroundColor );
+        if ( curSprite.Multicolor )
+        {
+          Displayer.SpriteDisplayer.DisplayMultiColorSprite( curSprite.Data,
+                                                             m_SpriteProject.BackgroundColor,
+                                                             m_SpriteProject.MultiColor1,
+                                                             m_SpriteProject.MultiColor2,
+                                                             curSprite.Color,
+                                                             spriteImage, 
+                                                             curX, 0 );
+        }
+        else
+        {
+          Displayer.SpriteDisplayer.DisplayHiResSprite( curSprite.Data,
+                                                        m_SpriteProject.BackgroundColor,
+                                                        curSprite.Color,
+                                                        spriteImage, 
+                                                        curX, 0 );
+        }
+        curX += 24;
+      }
+      GR.Memory.ByteBuffer      dibData2 = spriteImage.CreateHDIBAsBuffer();
+
+      System.IO.MemoryStream    ms2 = dibData2.MemoryStream();
+      dataObj.SetData( "DeviceIndependentBitmap", ms2 );
+
+      Clipboard.SetDataObject( dataObj, true );
     }
 
 
