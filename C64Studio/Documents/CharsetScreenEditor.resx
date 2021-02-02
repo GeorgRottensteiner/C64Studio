@@ -126,10 +126,10 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnClearScreen.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABXSURBVDhPzYpBDsAwCMP4/6e3S0EG0g7tVEuRII5dw/Mz
-        gZKTBLVIclF92tQiyUX1bePlNA0KNaBTvonTzT9wMY2EkiN27BsccMiOfcMHX9mixirXYPYCEoZrlUTR
-        lKIAAAAASUVORK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAFdJREFUOE/NikEOwDAIw/j/p7dLQQbSDu1US5Egjl3D8zOBkpMEtUhyUX3a1CLJ
+        RfVt4+U0DQo1oFO+idPNP3AxjYSSI3bsGxxwyI59wwdf2aLGKtdg9gIShmuVRNGUogAAAABJRU5ErkJg
+        gg==
 </value>
   </data>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

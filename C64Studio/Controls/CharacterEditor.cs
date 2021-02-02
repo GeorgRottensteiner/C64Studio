@@ -24,7 +24,6 @@ namespace C64Studio.Controls
     public delegate void CharsetShiftedHandler( int[] OldToNew, int[] NewToOld );
 
     public event ModifiedHandler        Modified;
-    public event ModifiedHandler        CategoryModified;
     public event CharsetShiftedHandler  CharactersShifted;
 
     private int                         m_CurrentChar = 0;
@@ -104,8 +103,10 @@ namespace C64Studio.Controls
       itemUn.Tag = 0;
       itemUn.SubItems.Add( "0" );
       comboCategories.Items.Add( itemUn.Name );
+      RefreshCategoryCounts();
 
       RedrawColorChooser();
+      
 
       panelCharacters.KeyDown += new KeyEventHandler( HandleKeyDown );
       canvasEditor.PreviewKeyDown += new PreviewKeyDownEventHandler( canvasEditor_PreviewKeyDown );
@@ -113,16 +114,10 @@ namespace C64Studio.Controls
 
 
 
-    protected void RaiseModifiedEvent()
+    //protected void RaiseModifiedEvent()
+    public void RaiseModifiedEvent()
     {
       Modified?.Invoke();
-    }
-
-
-
-    protected void RaiseCategoryModifiedEvent()
-    {
-      CategoryModified?.Invoke();
     }
 
 
@@ -191,6 +186,16 @@ namespace C64Studio.Controls
       get
       {
         return panelCharacters.SelectedIndices;
+      }
+    }
+
+
+
+    public CharsetProject CharacterSet 
+    {
+      get
+      {
+        return m_Project;
       }
     }
 
@@ -392,6 +397,7 @@ namespace C64Studio.Controls
         comboCharsetMode.SelectedIndex = (int)m_Project.Characters[CharIndex].Mode;
       }
 
+      RefreshCategoryCounts();
       DoNotUpdateFromControls = false;
       RaiseModifiedEvent();
     }
@@ -766,6 +772,18 @@ namespace C64Studio.Controls
         panelCharacters.Items[i].MemoryImage = m_Project.Characters[i].Image;
       }
 
+      listCategories.Items.Clear();
+      int categoryIndex = 0;
+      foreach ( var category in m_Project.Categories )
+      {
+        ListViewItem    itemCat = new ListViewItem( category );
+        itemCat.SubItems.Add( "0" );
+        itemCat.Tag = categoryIndex;
+        listCategories.Items.Add( itemCat );
+        ++categoryIndex;
+      }
+      RefreshCategoryCounts();
+
       comboBackground.SelectedIndex   = m_Project.BackgroundColor;
       comboMulticolor1.SelectedIndex  = m_Project.MultiColor1;
       comboMulticolor2.SelectedIndex  = m_Project.MultiColor2;
@@ -811,13 +829,6 @@ namespace C64Studio.Controls
     private void SelectCategory( int Category )
     {
       comboCategories.SelectedItem = m_Project.Categories[Category];
-    }
-
-
-
-    internal void AddCategory( int Index, string Name )
-    {
-      comboCategories.Items.Insert( Index, Name );
     }
 
 
@@ -989,9 +1000,58 @@ namespace C64Studio.Controls
 
 
 
-    internal void RemoveCategory( int CategoryIndex )
+    public void AddCategory( int Index, string Category )
+    {
+      m_Project.Categories.Insert( Index, Category );
+
+      ListViewItem    itemNew = new ListViewItem( Category );
+      itemNew.Tag = Index;
+      itemNew.SubItems.Add( "0" );
+      listCategories.Items.Insert( Index, itemNew );
+
+      comboCategories.Items.Insert( Index, Category );
+
+      RefreshCategoryCounts();
+    }
+
+
+
+    public void RemoveCategory( int CategoryIndex )
     {
       comboCategories.Items.RemoveAt( CategoryIndex );
+
+      listCategories.Items.RemoveAt( CategoryIndex );
+
+      m_Project.Categories.RemoveAt( CategoryIndex );
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        if ( m_Project.Characters[i].Category >= CategoryIndex )
+        {
+          --m_Project.Characters[i].Category;
+        }
+      }
+      RefreshCategoryCounts();
+    }
+
+
+
+    private void RefreshCategoryCounts()
+    {
+      GR.Collections.Map<int,int>   catCounts = new GR.Collections.Map<int, int>();
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        catCounts[m_Project.Characters[i].Category]++;
+      }
+
+      int itemIndex = 0;
+      foreach ( ListViewItem item in listCategories.Items )
+      {
+        item.SubItems[1].Text = catCounts[(int)item.Tag].ToString();
+        item.Tag = itemIndex;
+        ++itemIndex;
+      }
     }
 
 
@@ -1009,15 +1069,27 @@ namespace C64Studio.Controls
         }
         ++categoryIndex;
       }
-      if ( ( categoryIndex != -1 )
-      && ( m_Project.Characters[m_CurrentChar].Category != categoryIndex ) )
-      {
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, m_CurrentChar ) );
 
-        m_Project.Characters[m_CurrentChar].Category = categoryIndex;
-        RaiseCategoryModifiedEvent();
-        RaiseModifiedEvent();
+      List<int>   selectedChars = panelCharacters.SelectedIndices;
+      if ( selectedChars.Count == 0 )
+      {
+        selectedChars.Add( m_CurrentChar );
       }
+
+      bool  firstChar = true;
+      foreach ( var selChar in selectedChars )
+      {
+        if ( ( categoryIndex != -1 )
+        &&   ( m_Project.Characters[selChar].Category != categoryIndex ) )
+        {
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar ), firstChar );
+          firstChar = false;
+
+          m_Project.Characters[selChar].Category = categoryIndex;
+          RaiseModifiedEvent();
+        }
+      }
+      RefreshCategoryCounts();
     }
 
 
@@ -2219,6 +2291,240 @@ namespace C64Studio.Controls
         buttons = 0;
       }
       HandleMouseOnEditor( e.X, e.Y, buttons );
+    }
+
+
+
+    private void btnAddCategory_Click( object sender, EventArgs e )
+    {
+      string    newCategory = editCategoryName.Text;
+
+      UndoManager.AddUndoTask( new Undo.UndoCharsetAddCategory( this, m_Project, m_Project.Categories.Count ) );
+
+      AddCategory( m_Project.Categories.Count, newCategory );
+
+      RaiseModifiedEvent();
+    }
+
+
+
+    private void btnDelete_Click( object sender, EventArgs e )
+    {
+      if ( listCategories.SelectedItems.Count == 0 )
+      {
+        return;
+      }
+      int category = (int)listCategories.SelectedItems[0].Tag;
+
+      UndoManager.AddUndoTask( new Undo.UndoCharsetRemoveCategory( this, m_Project, category ) );
+
+      RemoveCategory( category );
+      RaiseModifiedEvent();
+    }
+
+
+
+    private void btnCollapseCategory_Click( object sender, EventArgs e )
+    {
+      // collapses similar looking characters
+      if ( listCategories.SelectedItems.Count == 0 )
+      {
+        return;
+      }
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), i == 0 );
+      }
+
+      int category = (int)listCategories.SelectedItems[0].Tag;
+      int collapsedCount = 0;
+
+      for ( int i = 0; i < 256 - collapsedCount; ++i )
+      {
+        if ( m_Project.Characters[i].Category == category )
+        {
+          for ( int j = i + 1; j < 256 - collapsedCount; ++j )
+          {
+            if ( m_Project.Characters[j].Category == category )
+            {
+              if ( ( m_Project.Characters[i].Data.Compare( m_Project.Characters[j].Data ) == 0 )
+              &&   ( m_Project.Characters[i].Color == m_Project.Characters[j].Color ) )
+              {
+                // collapse!
+                //Debug.Log( "Collapse " + j.ToString() + " into " + i.ToString() );
+                for ( int l = j; l < 256 - 1 - collapsedCount; ++l )
+                {
+                  m_Project.Characters[l].Data = m_Project.Characters[l + 1].Data;
+                  m_Project.Characters[l].Color = m_Project.Characters[l + 1].Color;
+                  m_Project.Characters[l].Category = m_Project.Characters[l + 1].Category;
+                  m_Project.Characters[l].Mode = m_Project.Characters[l + 1].Mode;
+                }
+                for ( int l = 0; l < 8; ++l )
+                {
+                  m_Project.Characters[255 - collapsedCount].Data.SetU8At( l, 0 );
+                }
+                m_Project.Characters[255 - collapsedCount].Color = 0;
+                ++collapsedCount;
+                --j;
+                continue;
+              }
+            }
+          }
+        }
+      }
+      if ( collapsedCount > 0 )
+      {
+        CharsetUpdated( m_Project );
+        RefreshCategoryCounts();
+
+        RaiseModifiedEvent();
+      }
+    }
+
+
+
+    private void btnSortCategories_Click( object sender, EventArgs e )
+    {
+      for ( int i = 0; i < 256; ++i )
+      {
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), i == 0 );
+      }
+
+
+      int[]   charMapNewToOld = new int[256];
+      int[]   charMapOldToNew = new int[256];
+
+      // resorts characters by category
+      List<Formats.CharData>    newList = new List<C64Studio.Formats.CharData>();
+      for ( int j = 0; j < m_Project.Categories.Count; ++j )
+      {
+        for ( int i = 0; i < 256; ++i )
+        {
+          if ( m_Project.Characters[i].Category == j )
+          {
+            charMapOldToNew[i] = newList.Count;
+            charMapNewToOld[newList.Count] = i;
+
+            newList.Add( m_Project.Characters[i] );
+          }
+        }
+      }
+
+      RaiseCharactersShiftedEvent( charMapOldToNew, charMapNewToOld );
+
+      m_Project.Characters = newList;
+      CharsetUpdated( m_Project );
+      RefreshCategoryCounts();
+      RaiseModifiedEvent();
+    }
+
+
+
+    private void btnReseatCategory_Click( object sender, EventArgs e )
+    {
+      if ( listCategories.SelectedItems.Count == 0 )
+      {
+        return;
+      }
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), i == 0 );
+      }
+
+      int category = (int)listCategories.SelectedItems[0].Tag;
+      int catTarget = GR.Convert.ToI32( editCollapseIndex.Text );
+      int catTargetStart = catTarget;
+
+      List<Formats.CharData> newList = new List<C64Studio.Formats.CharData>();
+
+      int[]   charMapNewToOld = new int[256];
+      int[]   charMapOldToNew = new int[256];
+
+      int lastIndex = 0;
+
+      // fill in front of target
+      if ( catTargetStart > 0 )
+      {
+        for ( int j = 0; j < 256; ++j )
+        {
+          if ( m_Project.Characters[j].Category != category )
+          {
+            charMapOldToNew[j] = newList.Count;
+            charMapNewToOld[newList.Count] = j;
+
+            newList.Add( m_Project.Characters[j] );
+            lastIndex = j + 1;
+            if ( newList.Count == catTargetStart )
+            {
+              break;
+            }
+          }
+        }
+      }
+
+      // fill at target
+      for ( int j = 0; j < 256; ++j )
+      {
+        if ( m_Project.Characters[j].Category == category )
+        {
+          charMapOldToNew[j] = newList.Count;
+          charMapNewToOld[newList.Count] = j;
+          newList.Add( m_Project.Characters[j] );
+        }
+      }
+
+      // fill after target
+      for ( int j = lastIndex; j < 256; ++j )
+      {
+        if ( m_Project.Characters[j].Category != category )
+        {
+          charMapOldToNew[j] = newList.Count;
+          charMapNewToOld[newList.Count] = j;
+          newList.Add( m_Project.Characters[j] );
+        }
+      }
+      m_Project.Characters = newList;
+      RaiseCharactersShiftedEvent( charMapOldToNew, charMapNewToOld );
+      CharsetUpdated( m_Project );
+      RefreshCategoryCounts();
+
+      RaiseModifiedEvent();
+    }
+
+
+
+    private void editCategoryName_TextChanged( object sender, EventArgs e )
+    {
+      bool    validCategory = ( editCategoryName.Text.Length > 0 );
+      foreach ( string category in m_Project.Categories )
+      {
+        if ( category == editCategoryName.Text )
+        {
+          validCategory = false;
+          break;
+        }
+      }
+      btnAddCategory.Enabled = validCategory;
+    }
+
+
+
+    private void listCategories_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      bool    deleteAllowed = ( listCategories.SelectedItems.Count > 0 );
+      bool    collapseAllowed = ( listCategories.SelectedItems.Count > 0 );
+      if ( deleteAllowed )
+      {
+        if ( (int)listCategories.SelectedItems[0].Tag == 0 )
+        {
+          deleteAllowed = false;
+        }
+      }
+      btnDelete.Enabled = deleteAllowed;
+      btnCollapseCategory.Enabled = collapseAllowed;
+      btnReseatCategory.Enabled = collapseAllowed;
     }
 
 

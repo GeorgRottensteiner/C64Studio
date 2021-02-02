@@ -4158,6 +4158,7 @@ namespace C64Studio
             // try to find info in file in dependency chain
             if ( !FindAndOpenBestMatchForLocation( currentPos ) )
             {
+              StudioCore.AddToOutput( "Failed to match address $" + currentPos.ToString( "X4" ) + " to code, showing disassembly" + System.Environment.NewLine );
               ShowDisassemblyAt( currentPos );
             }
           }

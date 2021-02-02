@@ -1200,6 +1200,8 @@ namespace C64Studio
         }
       }
 
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
+
       RedrawColorChooser();
       RedrawFullScreen();
 
@@ -3542,6 +3544,24 @@ namespace C64Studio
 
       RedrawFullScreen();
       Modified = true;
+    }
+
+
+
+    private void charEditor_Modified()
+    {
+      // update charscreen charset from chareditor
+      m_CharsetScreen.CharSet = charEditor.CharacterSet;
+
+      for ( int i = 0; i < 256; ++i )
+      {
+        RebuildCharImage( i );
+      }
+      panelCharacters.Invalidate();
+      pictureEditor.Invalidate();
+      RedrawFullScreen();
+
+      SetModified();
     }
 
 

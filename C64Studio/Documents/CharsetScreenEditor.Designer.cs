@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
       GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
       GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,6 +83,7 @@
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnClearScreen = new System.Windows.Forms.Button();
       this.checkOverrideOriginalColorSettings = new System.Windows.Forms.CheckBox();
       this.checkShowGrid = new System.Windows.Forms.CheckBox();
       this.checkReverse = new System.Windows.Forms.CheckBox();
@@ -119,7 +120,6 @@
       this.tabCharset = new System.Windows.Forms.TabPage();
       this.charEditor = new C64Studio.Controls.CharacterEditor();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnClearScreen = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -704,6 +704,17 @@
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // btnClearScreen
+      // 
+      this.btnClearScreen.Image = ((System.Drawing.Image)(resources.GetObject("btnClearScreen.Image")));
+      this.btnClearScreen.Location = new System.Drawing.Point(8, 462);
+      this.btnClearScreen.Name = "btnClearScreen";
+      this.btnClearScreen.Size = new System.Drawing.Size(24, 23);
+      this.btnClearScreen.TabIndex = 38;
+      this.toolTip1.SetToolTip(this.btnClearScreen, "Clear Screen (set to spaces)");
+      this.btnClearScreen.UseVisualStyleBackColor = true;
+      this.btnClearScreen.Click += new System.EventHandler(this.btnClearScreen_Click);
+      // 
       // checkOverrideOriginalColorSettings
       // 
       this.checkOverrideOriginalColorSettings.AutoSize = true;
@@ -1097,18 +1108,8 @@
       this.charEditor.Name = "charEditor";
       this.charEditor.Size = new System.Drawing.Size(1061, 546);
       this.charEditor.TabIndex = 24;
+      this.charEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);
       this.charEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.charEditor_CharactersShifted);
-      // 
-      // btnClearScreen
-      // 
-      this.btnClearScreen.Image = ((System.Drawing.Image)(resources.GetObject("btnClearScreen.Image")));
-      this.btnClearScreen.Location = new System.Drawing.Point(8, 462);
-      this.btnClearScreen.Name = "btnClearScreen";
-      this.btnClearScreen.Size = new System.Drawing.Size(24, 23);
-      this.btnClearScreen.TabIndex = 38;
-      this.toolTip1.SetToolTip(this.btnClearScreen, "Clear Screen (set to spaces)");
-      this.btnClearScreen.UseVisualStyleBackColor = true;
-      this.btnClearScreen.Click += new System.EventHandler(this.btnClearScreen_Click);
       // 
       // CharsetScreenEditor
       // 

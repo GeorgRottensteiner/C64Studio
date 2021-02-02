@@ -64,21 +64,9 @@ namespace C64Studio
       checkExportToDataIncludeRes.Checked = true;
       checkExportToDataWrap.Checked = true;
 
-      ListViewItem    itemUn = new ListViewItem( "Uncategorized" );
-      itemUn.Tag = 0;
-      itemUn.SubItems.Add( "0" );
-      listCategories.Items.Add( itemUn );
-      RefreshCategoryCounts();
       CreateDefaultUppercaseCharset();
 
       Modified = false;
-    }
-
-
-
-    private void CharacterEditor_Modified()
-    {
-      SetModified();
     }
 
 
@@ -146,7 +134,7 @@ namespace C64Studio
       DocumentInfo.DocumentFilename = "";
 
       m_Charset.Categories.Clear();
-      AddCategory( 0, "Uncategorized" );
+      m_Charset.Categories.Add( "Uncategorized" );
 
       characterEditor.CharsetUpdated( m_Charset );
     }
@@ -228,19 +216,6 @@ namespace C64Studio
       editCharactersFrom.Text         = m_Charset.StartCharacter.ToString();
 
       Modified = false;
-
-      listCategories.Items.Clear();
-
-      int categoryIndex = 0;
-      foreach ( var category in m_Charset.Categories )
-      {
-        ListViewItem    itemCat = new ListViewItem( category );
-        itemCat.SubItems.Add( "0" );
-        itemCat.Tag = categoryIndex;
-        listCategories.Items.Add( itemCat );
-        ++categoryIndex;
-      }
-      RefreshCategoryCounts();
 
       saveCharsetProjectToolStripMenuItem.Enabled = true;
       closeCharsetProjectToolStripMenuItem.Enabled = true;
@@ -916,182 +891,6 @@ namespace C64Studio
 
 
 
-    private void editCategoryName_TextChanged( object sender, EventArgs e )
-    {
-      bool    validCategory = ( editCategoryName.Text.Length > 0 );
-      foreach ( string category in m_Charset.Categories )
-      {
-        if ( category == editCategoryName.Text )
-        {
-          validCategory = false;
-          break;
-        }
-      }
-      btnAddCategory.Enabled = validCategory;
-    }
-
-
-
-    private void btnAddCategory_Click( object sender, EventArgs e )
-    {
-      string    newCategory = editCategoryName.Text;
-
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetAddCategory( this, m_Charset, m_Charset.Categories.Count ) );
-
-      AddCategory( m_Charset.Categories.Count, newCategory );
-    }
-
-
-
-    public void AddCategory( int Index, string Category )
-    {
-      m_Charset.Categories.Insert( Index, Category );
-      
-
-      ListViewItem    itemNew = new ListViewItem( Category );
-      itemNew.Tag = Index;
-      itemNew.SubItems.Add( "0" );
-      listCategories.Items.Insert( Index, itemNew );
-
-      characterEditor.AddCategory( Index, itemNew.Text );
-
-      RefreshCategoryCounts();
-    }
-
-
-
-    private void RefreshCategoryCounts()
-    {
-      GR.Collections.Map<int,int>   catCounts = new GR.Collections.Map<int, int>();
-
-      for ( int i = 0; i < 256; ++i )
-      {
-        catCounts[m_Charset.Characters[i].Category]++;
-      }
-
-      int itemIndex = 0;
-      foreach ( ListViewItem item in listCategories.Items )
-      {
-        item.SubItems[1].Text = catCounts[(int)item.Tag].ToString();
-        item.Tag = itemIndex;
-        ++itemIndex;
-      }
-    }
-
-
-
-    private void listCategories_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      bool    deleteAllowed = ( listCategories.SelectedItems.Count > 0 );
-      bool    collapseAllowed = ( listCategories.SelectedItems.Count > 0 );
-      if ( deleteAllowed )
-      {
-        if ( (int)listCategories.SelectedItems[0].Tag == 0 )
-        {
-          deleteAllowed = false;
-        }
-      }
-      btnDelete.Enabled = deleteAllowed;
-      btnCollapseCategory.Enabled = collapseAllowed;
-      btnReseatCategory.Enabled = collapseAllowed;
-    }
-
-
-
-    private void btnDelete_Click( object sender, EventArgs e )
-    {
-      if ( listCategories.SelectedItems.Count == 0 )
-      {
-        return;
-      }
-      int category = (int)listCategories.SelectedItems[0].Tag;
-
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetRemoveCategory( this, m_Charset, category ) );
-
-      RemoveCategory( category );
-    }
-
-
-
-    public void RemoveCategory( int CategoryIndex )
-    {
-      listCategories.Items.RemoveAt( CategoryIndex );
-
-      characterEditor.RemoveCategory( CategoryIndex );
-
-      m_Charset.Categories.RemoveAt( CategoryIndex );
-
-      for ( int i = 0; i < 256; ++i )
-      {
-        if ( m_Charset.Characters[i].Category >= CategoryIndex )
-        {
-          --m_Charset.Characters[i].Category;
-        }
-      }
-      RefreshCategoryCounts();
-    }
-
-
-
-    private void btnCollapseCategory_Click( object sender, EventArgs e )
-    {
-      // collapses similar looking characters
-      if ( listCategories.SelectedItems.Count == 0 )
-      {
-        return;
-      }
-
-      for ( int i = 0; i < 256; ++i )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetCharChange( this, m_Charset, i ), i == 0 );
-      }
-
-      int category = (int)listCategories.SelectedItems[0].Tag;
-      int collapsedCount = 0;
-
-      for ( int i = 0; i < 256 - collapsedCount; ++i )
-      {
-        if ( m_Charset.Characters[i].Category == category )
-        {
-          for ( int j = i + 1; j < 256 - collapsedCount; ++j )
-          {
-            if ( m_Charset.Characters[j].Category == category )
-            {
-              if ( ( m_Charset.Characters[i].Data.Compare( m_Charset.Characters[j].Data ) == 0 )
-              &&   ( m_Charset.Characters[i].Color == m_Charset.Characters[j].Color ) )
-              {
-                // collapse!
-                //Debug.Log( "Collapse " + j.ToString() + " into " + i.ToString() );
-                for ( int l = j; l < 256 - 1 - collapsedCount; ++l )
-                {
-                  m_Charset.Characters[l].Data  = m_Charset.Characters[l + 1].Data;
-                  m_Charset.Characters[l].Color = m_Charset.Characters[l + 1].Color;
-                  m_Charset.Characters[l].Category = m_Charset.Characters[l + 1].Category;
-                  m_Charset.Characters[l].Mode = m_Charset.Characters[l + 1].Mode;
-                }
-                for ( int l = 0; l < 8; ++l )
-                {
-                  m_Charset.Characters[255 - collapsedCount].Data.SetU8At( l, 0 );
-                }
-                m_Charset.Characters[255 - collapsedCount].Color = 0;
-                ++collapsedCount;
-                --j;
-                continue;
-              }
-            }
-          }
-        }
-      }
-      if ( collapsedCount > 0 )
-      {
-        characterEditor.CharsetUpdated( m_Charset );
-        RefreshCategoryCounts();
-        Modified = true;
-      }
-    }
-
-
-
     private void editStartCharacters_TextChanged( object sender, EventArgs e )
     {
       int   startChar = GR.Convert.ToI32( editCharactersFrom.Text );
@@ -1133,100 +932,8 @@ namespace C64Studio
 
 
 
-    private void btnSortByCategory_Click( object sender, EventArgs e )
-    {
-      for ( int i = 0; i < 256; ++i )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetCharChange( this, m_Charset, i ), i == 0 );
-      }
-
-
-      // resorts characters by category
-      List<Formats.CharData>    newList = new List<C64Studio.Formats.CharData>();
-      for ( int j = 0; j < m_Charset.Categories.Count; ++j )
-      {
-        for ( int i = 0; i < 256; ++i )
-        {
-          if ( m_Charset.Characters[i].Category == j )
-          {
-            newList.Add( m_Charset.Characters[i] );
-          }
-        }
-      }
-
-      m_Charset.Characters = newList;
-      characterEditor.CharsetUpdated( m_Charset );
-      RefreshCategoryCounts();
-      Modified = true;
-    }
-
-
-
     private void btnReseatCategory_Click( object sender, EventArgs e )
     {
-      if ( listCategories.SelectedItems.Count == 0 )
-      {
-        return;
-      }
-
-      for ( int i = 0; i < 256; ++i )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetCharChange( this, m_Charset, i ), i == 0 );
-      }
-
-      int category = (int)listCategories.SelectedItems[0].Tag;
-      int catTarget = GR.Convert.ToI32( editCollapseIndex.Text );
-      int catTargetStart = catTarget;
-
-      List<Formats.CharData> newList = new List<C64Studio.Formats.CharData>();
-      int[] targetIndex = new int[256];
-      int     numCatEntries = 0;
-
-      for ( int i = 0; i < 256; ++i )
-      {
-        targetIndex[i] = i;
-        if ( m_Charset.Characters[i].Category == category )
-        {
-          ++numCatEntries;
-        }
-      }
-
-      int lastIndex = 0;
-      for ( int j = 0; j < 256; ++j )
-      {
-        if ( m_Charset.Characters[j].Category != category )
-        {
-          if ( newList.Count == catTargetStart )
-          {
-            break;
-          }
-          newList.Add( m_Charset.Characters[j] );
-          lastIndex = j;
-        }
-      }
-      if ( lastIndex == 0 )
-      {
-        // nothing to do
-        return;
-      }
-      for ( int j = 0; j < 256; ++j )
-      {
-        if ( m_Charset.Characters[j].Category == category )
-        {
-          newList.Add( m_Charset.Characters[j] );
-        }
-      }
-      for ( int j = lastIndex + 1; j < 256; ++j )
-      {
-        if ( m_Charset.Characters[j].Category != category )
-        {
-          newList.Add( m_Charset.Characters[j] );
-        }
-      }
-      m_Charset.Characters = newList;
-      characterEditor.CharsetUpdated( m_Charset );
-      RefreshCategoryCounts();
-      Modified = true;
     }
 
 
@@ -1416,13 +1123,6 @@ namespace C64Studio
 
 
 
-    private void characterEditor_CategoryModified()
-    {
-      RefreshCategoryCounts();
-    }
-
-
-
     private void btnImportCharsetFromBASIC_Click( object sender, EventArgs e )
     {
       ImportFromData( Util.FromBASIC( editDataImport.Text ) );
@@ -1443,8 +1143,6 @@ namespace C64Studio
     {
       checkPrefixLoadAddress.Checked = true;
     }
-
-
 
   }
 }

@@ -296,5 +296,7 @@ namespace C64Studio.Formats
       return true;
     }
 
+
+
   }
 }

@@ -6,6 +6,10 @@ namespace C64Studio.Undo
 {
   public abstract class UndoTask
   {
+    protected DocumentInfo      ParentDocument = null;
+
+
+
     public UndoTask()
     {
       UndoGroup = 0;
@@ -30,5 +34,15 @@ namespace C64Studio.Undo
 
     public abstract UndoTask CreateComplementaryTask();
     public abstract void Apply();
+
+
+
+    public void MarkParentAsModified()
+    {
+      ParentDocument?.BaseDoc?.SetModified();
+    }
+
+
+
   }
 }

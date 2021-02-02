@@ -3459,13 +3459,6 @@ namespace C64Studio
 
 
 
-    private void characterEditor_CategoryModified()
-    {
-
-    }
-
-
-
     private void characterEditor_Modified()
     {
       RedrawMap();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using C64Studio.Controls;
 using C64Studio.Formats;
 
 
@@ -9,7 +10,7 @@ namespace C64Studio.Undo
 {
   public class UndoCharsetRemoveCategory : UndoTask
   {
-    private CharsetEditor         Editor = null;
+    private CharacterEditor       Editor = null;
     private CharsetProject        Project = null;
     private int                   CategoryIndex = -1;
     private string                CategoryName = "";
@@ -17,7 +18,7 @@ namespace C64Studio.Undo
 
 
 
-    public UndoCharsetRemoveCategory( CharsetEditor Editor, CharsetProject Project, int CategoryIndex )
+    public UndoCharsetRemoveCategory( CharacterEditor Editor, CharsetProject Project, int CategoryIndex )
     {
       this.Editor = Editor;
       this.Project = Project;
@@ -59,6 +60,7 @@ namespace C64Studio.Undo
         ++index;
       }
       Editor.AddCategory( CategoryIndex, CategoryName );
+      MarkParentAsModified();
     }
   }
 }
