@@ -30,8 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterEditor));
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.btnClearChars = new System.Windows.Forms.Button();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
@@ -89,6 +89,8 @@
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.editCategoryName = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
+      this.btnMoveCategoryUp = new System.Windows.Forms.Button();
+      this.btnMoveCategoryDown = new System.Windows.Forms.Button();
       this.canvasEditor = new C64Studio.Controls.CustomDrawControl();
       this.panelCharColors = new GR.Forms.FastPictureBox();
       this.picturePlayground = new GR.Forms.FastPictureBox();
@@ -564,6 +566,8 @@
       // 
       // tabCategories
       // 
+      this.tabCategories.Controls.Add(this.btnMoveCategoryDown);
+      this.tabCategories.Controls.Add(this.btnMoveCategoryUp);
       this.tabCategories.Controls.Add(this.groupAllCategories);
       this.tabCategories.Controls.Add(this.groupCategorySpecific);
       this.tabCategories.Controls.Add(this.btnDelete);
@@ -715,6 +719,28 @@
       this.label3.TabIndex = 5;
       this.label3.Text = "Category:";
       // 
+      // btnMoveCategoryUp
+      // 
+      this.btnMoveCategoryUp.Enabled = false;
+      this.btnMoveCategoryUp.Location = new System.Drawing.Point(9, 201);
+      this.btnMoveCategoryUp.Name = "btnMoveCategoryUp";
+      this.btnMoveCategoryUp.Size = new System.Drawing.Size(75, 23);
+      this.btnMoveCategoryUp.TabIndex = 12;
+      this.btnMoveCategoryUp.Text = "Move Up";
+      this.btnMoveCategoryUp.UseVisualStyleBackColor = true;
+      this.btnMoveCategoryUp.Click += new System.EventHandler(this.btnMoveCategoryUp_Click);
+      // 
+      // btnMoveCategoryDown
+      // 
+      this.btnMoveCategoryDown.Enabled = false;
+      this.btnMoveCategoryDown.Location = new System.Drawing.Point(90, 201);
+      this.btnMoveCategoryDown.Name = "btnMoveCategoryDown";
+      this.btnMoveCategoryDown.Size = new System.Drawing.Size(75, 23);
+      this.btnMoveCategoryDown.TabIndex = 12;
+      this.btnMoveCategoryDown.Text = "Move Down";
+      this.btnMoveCategoryDown.UseVisualStyleBackColor = true;
+      this.btnMoveCategoryDown.Click += new System.EventHandler(this.btnMoveCategoryDown_Click);
+      // 
       // canvasEditor
       // 
       this.canvasEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -730,7 +756,7 @@
       // panelCharColors
       // 
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage3;
+      this.panelCharColors.DisplayPage = fastImage1;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(780, 271);
       this.panelCharColors.Name = "panelCharColors";
@@ -743,7 +769,7 @@
       // picturePlayground
       // 
       this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picturePlayground.DisplayPage = fastImage4;
+      this.picturePlayground.DisplayPage = fastImage2;
       this.picturePlayground.Image = null;
       this.picturePlayground.Location = new System.Drawing.Point(780, 3);
       this.picturePlayground.Name = "picturePlayground";
@@ -880,5 +906,7 @@
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.TextBox editCategoryName;
     private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.Button btnMoveCategoryDown;
+    private System.Windows.Forms.Button btnMoveCategoryUp;
   }
 }

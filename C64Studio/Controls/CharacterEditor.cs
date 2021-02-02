@@ -102,6 +102,7 @@ namespace C64Studio.Controls
       ListViewItem    itemUn = new ListViewItem( "Uncategorized" );
       itemUn.Tag = 0;
       itemUn.SubItems.Add( "0" );
+      listCategories.Items.Add( itemUn );
       comboCategories.Items.Add( itemUn.Name );
       RefreshCategoryCounts();
 
@@ -233,7 +234,7 @@ namespace C64Studio.Controls
 
       dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
 
-      Clipboard.SetDataObject( dataObj );
+      Clipboard.SetDataObject( dataObj, true );
     }
 
 
@@ -2525,6 +2526,62 @@ namespace C64Studio.Controls
       btnDelete.Enabled = deleteAllowed;
       btnCollapseCategory.Enabled = collapseAllowed;
       btnReseatCategory.Enabled = collapseAllowed;
+
+      btnMoveCategoryDown.Enabled = ( ( listCategories.Items.Count > 1 ) 
+                                   && ( listCategories.SelectedIndices.Count > 0 ) 
+                                   && ( listCategories.SelectedIndices[0] + 1 < listCategories.Items.Count ) );
+      btnMoveCategoryUp.Enabled = ( ( listCategories.Items.Count > 1 ) 
+                                 && ( listCategories.SelectedIndices.Count > 0 ) 
+                                 && ( listCategories.SelectedIndices[0] > 0 ) );
+    }
+
+
+
+    private void btnMoveCategoryUp_Click( object sender, EventArgs e )
+    {
+      if ( ( listCategories.Items.Count > 1 )
+      &&   ( listCategories.SelectedIndices.Count > 0 )
+      &&   ( listCategories.SelectedIndices[0] > 0 ) )
+      {
+        int     index1 = listCategories.SelectedIndices[0];
+
+        string    category = listCategories.SelectedItems[0].Text;
+
+
+        m_Project.Categories.RemoveAt( index1 );
+        m_Project.Categories.Insert( index1 - 1, category );
+
+        var item = (ListViewItem)listCategories.SelectedItems[0];
+        listCategories.Items.RemoveAt( index1 );
+        listCategories.Items.Insert( index1 - 1, item );
+
+        RaiseModifiedEvent();
+      }
+    }
+
+
+
+    private void btnMoveCategoryDown_Click( object sender, EventArgs e )
+    {
+      if ( ( listCategories.Items.Count > 1 )
+      &&   ( listCategories.SelectedIndices.Count > 0 )
+      &&   ( listCategories.SelectedIndices[0] + 1 < listCategories.Items.Count ) )
+      {
+        int     index1 = listCategories.SelectedIndices[0];
+
+        string    category = listCategories.SelectedItems[0].Text;
+
+
+        m_Project.Categories.RemoveAt( index1 );
+        m_Project.Categories.Insert( index1 + 1, category );
+
+        var item = (ListViewItem)listCategories.SelectedItems[0];
+        listCategories.Items.RemoveAt( index1 );
+        listCategories.Items.Insert( index1 + 1, item );
+
+        RaiseModifiedEvent();
+        RaiseModifiedEvent();
+      }
     }
 
 
