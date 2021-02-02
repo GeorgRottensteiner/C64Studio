@@ -3871,7 +3871,7 @@ namespace C64Studio
           }
 
           if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-          || ( AppState == Types.StudioState.DEBUGGING_RUN ) )
+          ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
           {
             // send any command to break into the monitor again
             StudioCore.Debugging.Debugger.Quit();
@@ -3895,6 +3895,7 @@ namespace C64Studio
 
             if ( StudioCore.Debugging.DebugDisassembly != null )
             {
+              StudioCore.AddToOutput( "Closing Disassembly window" );
               StudioCore.Debugging.DebugDisassembly.Close();
               StudioCore.Debugging.DebugDisassembly = null;
             }
@@ -4151,6 +4152,13 @@ namespace C64Studio
               var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );
               StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
               StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
+
+              // hide disassembly window
+              if ( StudioCore.Debugging.DebugDisassembly != null )
+              {
+                StudioCore.Debugging.DebugDisassembly.Close();
+                StudioCore.Debugging.DebugDisassembly = null;
+              }
             }
           }
           else
