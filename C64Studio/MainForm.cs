@@ -753,6 +753,11 @@ namespace C64Studio
         var viceDebugger = StudioCore.Debugging.Debugger as VICERemoteDebugger;
         viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );
       }
+      // default to currently visible memory view
+      StudioCore.Debugging.Debugger.SetAutoRefreshMemory( StudioCore.MainForm.m_DebugMemory.MemoryStart,
+                                                          StudioCore.MainForm.m_DebugMemory.MemorySize,
+                                                          StudioCore.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+
       StudioCore.Debugging.Debugger.DebugEvent += Debugger_DebugEvent;
 
     }
