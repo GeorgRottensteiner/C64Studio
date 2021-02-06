@@ -7,15 +7,8 @@ using System.Text;
 
 namespace C64Studio
 {
-  public class VICERemoteDebugger : IDebugger
+  public class VICERemoteDebuggerBinaryInterface : IDebugger
   {
-    public enum WinViceVersion
-    {
-      V_2_3 = 0,
-      V_2_4 = 1,
-      V_3_0 = 2
-    };
-
     private enum BinaryMonitorCommand
     {
       MON_CMD_MEMORY_GET                = 0x01,
@@ -87,12 +80,8 @@ namespace C64Studio
     private int                       m_BytesToSend = 0;
     private int                       m_BrokenAtBreakPoint = -1;
     private bool                      m_InitialBreakpointRemoved = false;
-    private bool                      m_InitialBreakCompleted = false;
     private bool                      m_IsCartridge = false;
-    public WinViceVersion             m_ViceVersion = WinViceVersion.V_2_3;
-    public bool                       m_BinaryMemDump = true;
     private DebuggerState             m_State = DebuggerState.NOT_CONNECTED;
-    public bool                       m_FullBinaryInterface = false;
     private BinaryMonitorBankID       m_FullBinaryInterfaceBank = BinaryMonitorBankID.CPU;
 
     private int                       m_LastRequestedMemoryStartAddress = 0;
@@ -103,9 +92,9 @@ namespace C64Studio
     private MachineType               m_ConnectedMachine = MachineType.UNKNOWN;
 
     private bool                      m_HandlingInitialBreakpoint = false;
+    private bool                      m_ShuttingDown = false;
 
     private int                       m_LastRequestID = 0;
-    private bool                      m_ShuttingDown = false;
 
     private Dictionary<uint,RequestData>   m_UnansweredBinaryRequests = new Dictionary<uint, RequestData>();
 
@@ -119,9 +108,17 @@ namespace C64Studio
     public event BaseDocument.DocumentEventHandler DocumentEvent;
 
 
-    public VICERemoteDebugger( StudioCore Core )
+    public VICERemoteDebuggerBinaryInterface( StudioCore Core )
     {
       this.Core = Core;
+    }
+
+
+
+    private void Log( string Message )
+    {
+      System.Diagnostics.Debug.WriteLine( Message );
+      //Debug.Log( Message );
     }
 
 
@@ -149,7 +146,6 @@ namespace C64Studio
       m_IsCartridge = IsCartridge;
       try
       {
-        m_InitialBreakCompleted = false;
         m_InitialBreakpointRemoved = false;
         connectResultReceived = false;
         m_ReceivedDataBin.Clear();
@@ -182,7 +178,7 @@ namespace C64Studio
         // connected, force reset plus add break points now
         if ( m_IsCartridge )
         {
-          Debug.Log( "Connected - force break" );
+          Log( "Connected - force break" );
           QueueRequest( DebugRequestType.STEP );
         }
       }
@@ -213,212 +209,18 @@ namespace C64Studio
     {
       m_ReceivedDataBin.Append( data, Offset, Length );
 
-      //Debug.Log( "OnDataReceived " + m_ReceivedDataBin.ToString( Offset, Length ) );
+      Log( "<<<<<<< OnDataReceived " + Length + " bytes received" );
+      Log( "<<<<<<< OnDataReceived " + m_ReceivedDataBin.ToString( (int)m_ReceivedDataBin.Length - Length, Length ) );
 
       do
       {
         // have binary data?
-        if ( m_FullBinaryInterface )
+        if ( !HandleBinaryInterface() )
         {
-          if ( !HandleBinaryInterface() )
-          {
-            return;
-          }
-        }
-        else
-        {
-          int binPos = m_ReceivedDataBin.Find( 0x02 );
-          if ( binPos != -1 )
-          {
-            m_ReceivedDataBin.TruncateFront( binPos );
-          }
-
-          if ( ( m_ReceivedDataBin.Length > 0 )
-          && ( m_ReceivedDataBin.ByteAt( 0 ) == 0x02 ) )
-          {
-            // binary dump
-            if ( ( m_ReceivedDataBin.Length > 5 )
-            && ( m_ReceivedDataBin.ByteAt( 0 ) == 0x02 ) )
-            {
-              uint answerLength = m_ReceivedDataBin.UInt32At( 1 );
-              if ( m_ReceivedDataBin.Length >= 6 + answerLength )
-              {
-                // received all data
-                // define MON_ERR_OK            0
-                // #define MON_ERR_CMD_TOO_SHORT 0x80  /* command length is not enough for this command */
-                // #define MON_ERR_INVALID_PARAMETER 0x81  /* command has invalid parameters */
-                // byte 0: STX (0x02)
-                // byte 1: answer length low
-                // byte 2: answer length (bits 8-15)
-                // byte 3: answer length (bits 16-23)
-                // byte 4: answer length (bits 24-31, that is, high)
-                // byte 5: error code
-                // byte 6 - (answer length+6): the binary answer
-
-                //Debug.Log( "Got MemDump data as " + m_ReceivedDataBin.SubBuffer( 0, 6 + (int)answerLength ).ToString() );
-                // 0201010000 00 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-                byte    resultCode = m_ReceivedDataBin.ByteAt( 5 );
-                if ( resultCode != 0 )
-                {
-                  Debug.Log( "Error receiving data: " + resultCode );
-                }
-                else
-                {
-                  /*
-                  if ( m_Request.Parameter1 != m_Request.AdjustedStartAddress )
-                  {
-                    Debug.Log( "Shifted start address" );
-                  }
-                  if ( ( answerLength != m_Request.Parameter2 - m_Request.Parameter1 + 1 )
-                  &&   ( m_Request.Parameter2 != -1 ) )
-                  {
-                    Debug.Log( "warped size" );
-                  }
-                  Debug.Log( "Received " + answerLength + " bytes beginning at " + m_Request.Parameter1.ToString( "x" ) );
-                   */
-                  for ( int i = 0; i < answerLength; ++i )
-                  {
-                    m_MemoryValues[m_Request.Parameter1 + i] = m_ReceivedDataBin.ByteAt( i + 6 );
-                  }
-                  DebugEvent( new DebugEventData()
-                  {
-                    Type = C64Studio.DebugEvent.UPDATE_WATCH,
-                    Request = m_Request,
-                    Data = m_ReceivedDataBin.SubBuffer( 6, (int)answerLength )
-                  } );
-
-                  m_ResponseLines.Clear();
-                  m_ReceivedDataBin.TruncateFront( 6 + (int)answerLength );
-                  /*
-                  if ( !receivedData.Empty() )
-                  {
-                    string stringData = Encoding.ASCII.GetString( receivedData.Data(), 0, (int)receivedData.Length );
-                    m_ReceivedData = stringData;
-                  }*/
-                }
-                m_Request = new RequestData( DebugRequestType.NONE );
-                StartNextRequestIfAvailable();
-              }
-              else
-              {
-                // not complete yet
-                break;
-              }
-              /*
-              byte 0: STX (0x02)
-              byte 1: answer length low
-              byte 2: answer length (bits 8-15)
-              byte 3: answer length (bits 16-23)
-              byte 4: answer length (bits 24-31, that is, high)
-              byte 5: error code
-              byte 6 - (answer length+6): the binary answer
-               */
-            }
-          }
-          else
-          {
-            int     linePos = m_ReceivedDataBin.Find( 0x0a );
-            if ( linePos == -1 )
-            {
-              // binary dump data inside?
-              linePos = m_ReceivedDataBin.Find( 0x02 );
-            }
-
-            //string stringData = Encoding.ASCII.GetString( m_ReceivedDataBin.Data(), 0, (int)m_ReceivedDataBin.Length );
-
-            //Debug.Log( "Received " + receivedData.ToString() + " bytes (" + receivedData.ToString() + "), " + receivedData.ToAsciiString() );
-
-            //receivedData.TruncateFront( (int)receivedData.Length );
-
-            //int linePos = m_ReceivedData.IndexOf( '\n' );
-
-            string    stringData = "";
-            if ( linePos == -1 )
-            {
-              if ( ( m_ReceivedDataBin.Length == 10 )
-              && ( m_ViceVersion >= WinViceVersion.V_2_4 ) )
-              {
-                // Vice 2.4 sometimes does NOT send an ending line break
-                m_ReceivedDataBin.Clear();
-                ProcessResponse();
-                break;
-              }
-              else
-              {
-                // not enough data yet
-                break;
-              }
-            }
-            else
-            {
-              stringData = Encoding.ASCII.GetString( m_ReceivedDataBin.Data(), 0, linePos );
-              m_ReceivedDataBin.TruncateFront( linePos + 1 );
-            }
-
-            if ( m_ViceVersion >= WinViceVersion.V_2_4 )
-            {
-              bool processed = false;
-              while ( linePos != -1 )
-              {
-                //Debug.Log( "Cut at " + ( linePos + 1 ).ToString() );
-                string line = stringData.Substring( 0, linePos );
-                //stringData = stringData.Substring( linePos + 1 );
-
-                linePos = stringData.IndexOf( '\n' );
-                if ( linePos == -1 )
-                {
-                  if ( stringData.Length == 10 )
-                  {
-                    // Vice 2.4 sometimes does NOT send an ending line break
-                    m_ResponseLines.AddLast( line );
-                    processed = true;
-                    ProcessResponse();
-                    stringData = "";
-                    break;
-                  }
-                }
-
-                //Debug.Log( "Line:" + line );
-                //Debug.Log( "Receive data left " + m_ReceivedData );
-                m_ResponseLines.AddLast( line );
-              }
-              if ( !processed )
-              {
-                ProcessResponse();
-              }
-            }
-            else
-            {
-              while ( linePos != -1 )
-              {
-                //Debug.Log( "Cut at " + ( linePos + 1 ).ToString() );
-                string line = stringData.Substring( 0, linePos );
-                //stringData = stringData.Substring( linePos + 1 );
-
-                linePos = stringData.IndexOf( '\n' );
-                if ( linePos == -1 )
-                {
-                  if ( ( stringData.Length == 10 )
-                  && ( m_ViceVersion >= WinViceVersion.V_2_4 ) )
-                  {
-                    // Vice 2.4 sometimes does NOT send an ending line break
-                    stringData = "";
-                  }
-                }
-
-                //Debug.Log( "Line:" + line );
-                //Debug.Log( "Receive data left " + m_ReceivedData );
-                m_ResponseLines.AddLast( line );
-
-                ProcessResponse();
-
-              }
-            }
-          }
+          return;
         }
       }
       while ( m_ReceivedDataBin.Length > 0 );
-      //m_ReceivedData = receivedData;
     }
 
 
@@ -447,13 +249,13 @@ namespace C64Studio
         // This is the request ID given to initiate this response.If the value is 0xffffffff,
         // Then the response was initiated by an event, such as hitting a checkpoint.
 
-        //Debug.Log( "Incoming Binary Data is " + m_ReceivedDataBin.ToString() );
+        //Log( "Incoming Binary Data is " + m_ReceivedDataBin.ToString() );
 
 
         byte  stx = m_ReceivedDataBin.ByteAt( curPos );
         if ( stx != 0x02 )
         {
-          Debug.Log( "Corrupt data received - clearing buffer" );
+          Log( "Corrupt data received - clearing buffer" );
           m_ReceivedDataBin.Clear();
 
           m_Request = new RequestData( DebugRequestType.NONE );
@@ -467,7 +269,7 @@ namespace C64Studio
         byte  apiVersion = m_ReceivedDataBin.ByteAt( curPos + 1 );
         if ( apiVersion != 1 )
         {
-          Debug.Log( "Unsupported API version " + apiVersion.ToString( "X2" ) + " received - clearing buffer" );
+          Log( "Unsupported API version " + apiVersion.ToString( "X2" ) + " received - clearing buffer" );
           m_ReceivedDataBin.Clear();
           m_Request = new RequestData( DebugRequestType.NONE );
           return false;
@@ -484,14 +286,14 @@ namespace C64Studio
         byte errorCode    = m_ReceivedDataBin.ByteAt ( curPos + 7 );
         if ( errorCode != 0 )
         {
-          Debug.Log( "Error " + errorCode.ToString( "X2" ) + " received, skipped command" );
+          Log( "Error " + errorCode.ToString( "X2" ) + " received, skipped command" );
           if ( errorCode == 0x80 )
           {
-            Debug.Log( " -Length of command was wrong" );
+            Log( " -Length of command was wrong" );
           }
           else if ( errorCode == 0x81 )
           {
-            Debug.Log( " -Length of command was wrong" );
+            Log( " -Length of command was wrong" );
           }
 
           m_ReceivedDataBin.TruncateFront( 12 + (int)bodyLength );
@@ -514,8 +316,8 @@ namespace C64Studio
 
         // 0201160000001100FFFFFFFF010000000171A871A8010104000100000000000000000201260000003100FFFFFFFF0900030371A803003A0003010500030214000304F80003FF000003FFFF0003052300030523000201
 
-        Debug.Log( "============ Response is " + responseType.ToString() );
-        Debug.Log( "Processing package " + m_ReceivedDataBin.ToString( 0, 12 + (int)bodyLength ) + " for request " + requestID.ToString( "X8" ) );
+        Log( "============ Response is " + responseType.ToString() );
+        Log( "Processing package " + m_ReceivedDataBin.ToString( 0, 12 + (int)bodyLength ) + " for request " + requestID.ToString( "X8" ) );
         
 
         int    packagePos = curPos + 12;
@@ -535,7 +337,7 @@ namespace C64Studio
 
                 packagePos += itemSize + 1;
 
-                Debug.Log( "Register " + itemID.ToString( "X2" ) + " = " + itemValue.ToString( "X4" ) );
+                Log( "Register " + itemID.ToString( "X2" ) + " = " + itemValue.ToString( "X4" ) );
 
                 switch ( itemID )
                 {
@@ -570,7 +372,7 @@ namespace C64Studio
                     info.ProcessorPort01 = (byte)itemValue;
                     break;
                   default:
-                    Debug.Log( "Invalid Item ID " + itemID.ToString( "X2" ) + " received" );
+                    Log( "Invalid Item ID " + itemID.ToString( "X2" ) + " received" );
                     //m_ReceivedDataBin.Clear();
                     //return true;
                     break;
@@ -631,7 +433,6 @@ namespace C64Studio
                   {
                     origRequest.Breakpoint.RemoteIndex = (int)checkPointNumber;
 
-                    // TODO - replace with DebugEvent!!
                     RaiseDocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, origRequest.Breakpoint ) );
                   }
                   else
@@ -699,7 +500,7 @@ namespace C64Studio
                 m_Request = m_UnansweredBinaryRequests[requestID];
                 m_UnansweredBinaryRequests.Remove( requestID );
 
-                Debug.Log( "MON_RESPONSE_MEM_GET from $" + m_Request.Parameter1.ToString( "X" ) + " to $" + m_Request.Parameter2.ToString( "X" ) );
+                Log( "MON_RESPONSE_MEM_GET from $" + m_Request.Parameter1.ToString( "X" ) + " to $" + m_Request.Parameter2.ToString( "X" ) );
               }
 
               OnMemoryDumpReceived( memContent );
@@ -708,12 +509,12 @@ namespace C64Studio
             }
             break;
           default:
-            Debug.Log( "Unsupported response type " + ( (int)responseType ).ToString( "X2" ) + " received" );
+            Log( "Unsupported response type " + ( (int)responseType ).ToString( "X2" ) + " received" );
             break;
         }
 
         m_ReceivedDataBin.TruncateFront( 12 + (int)bodyLength );
-        //Debug.Log( "Incoming Data left " + m_ReceivedDataBin.ToString() );
+        //Log( "Incoming Data left " + m_ReceivedDataBin.ToString() );
 
         if ( m_Request.Type == DebugRequestType.NONE )
         {
@@ -733,7 +534,7 @@ namespace C64Studio
         if ( recv == 0 )
         {
           // we were closed
-          //Debug.Log( "Other side closed" );
+          //Log( "Other side closed" );
           DebugEvent( new DebugEventData()
           {
             Type = C64Studio.DebugEvent.EMULATOR_CLOSED
@@ -744,7 +545,7 @@ namespace C64Studio
         }
 
         OnDataReceived( data, 0, recv );
-        //Debug.Log( "Set up following BeginReceive" );
+        //Log( "Set up following BeginReceive" );
         if ( client != null )
         {
           client.BeginReceive( data, 0, size, System.Net.Sockets.SocketFlags.None, new AsyncCallback( ReceiveData ), client );
@@ -793,7 +594,7 @@ namespace C64Studio
 
         if ( sent != m_BytesToSend )
         {
-          Debug.Log( "Not all " + m_BytesToSend + " bytes were sent! (only " + sent + ")" );
+          Log( "Not all " + m_BytesToSend + " bytes were sent! (only " + sent + ")" );
           if ( sent > 0 )
           {
             m_BytesToSend -= sent;
@@ -803,22 +604,10 @@ namespace C64Studio
         }
         else
         {
-          //Debug.Log( "Sent " + sent + " bytes (expected " + m_BytesToSend + ")" );
+          //Log( "Sent " + sent + " bytes (expected " + m_BytesToSend + ")" );
         }
 
         Core.Debugging.ForceEmulatorRefresh();
-
-        if ( ( m_BinaryMemDump )
-        &&   ( m_ViceVersion >= WinViceVersion.V_2_4 )
-        &&   ( ( m_Request.Type == DebugRequestType.MEM_DUMP )
-        ||     ( m_Request.Type == DebugRequestType.TRACE_MEM_DUMP ) ) )
-        {
-          // skip processresponse
-        }
-        else if ( !m_FullBinaryInterface )
-        {
-          ProcessResponse();
-        }
       }
       catch ( System.Net.Sockets.SocketException se )
       {
@@ -858,68 +647,9 @@ namespace C64Studio
 
 
 
-    public bool SendCommand( string Command )
-    {
-      if ( m_FullBinaryInterface )
-      {
-        Debug.Log( "Trying to send text command to binary monitor! : " + Command );
-        return false;
-      }
-
-      if ( client == null )
-      {
-        return false;
-      }
-      if ( !client.Connected )
-      {
-        if ( !ConnectToEmulator( Parser.ASMFileParser.IsCartridge( Core.Debugging.DebugType ) ) )
-        {
-          return false;
-        }
-      }
-      string    fullCommand = Command + "\n";
-
-      System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-
-      m_DataToSend = enc.GetBytes( fullCommand );
-
-      try
-      {
-        var bufferData = new GR.Memory.ByteBuffer( m_DataToSend );
-        InterfaceLog( "Debugger>" + Command + "/" + bufferData.ToString() );
-        m_BytesToSend = m_DataToSend.Length;
-
-        // sync send
-        int totalBytesSent = 0;
-
-        while ( m_BytesToSend > 0 )
-        {
-          //Debug.Log( "Trying to send " + m_BytesToSend + " bytes" );
-          int bytesSent = client.Send( m_DataToSend, totalBytesSent, m_BytesToSend, System.Net.Sockets.SocketFlags.None );
-          //Debug.Log( "Sent " + bytesSent + " bytes" );
-          if ( bytesSent == 0 )
-          {
-            InterfaceLog( "Could not send " + m_BytesToSend + " bytes" );
-            break;
-          }
-          m_BytesToSend -= bytesSent;
-          totalBytesSent += bytesSent;
-        }
-        // async send
-        //client.BeginSend( m_DataToSend, 0, m_DataToSend.Length, System.Net.Sockets.SocketFlags.None, new AsyncCallback( SendData ), client );
-      }
-      catch ( System.IO.IOException ex )
-      {
-        Core.AddToOutput( "SendCommand Exception:" + ex.ToString() );
-      }
-      return true;
-    }
-
-
-
     private void InterfaceLog( string Text )
     {
-      Debug.Log( Text );
+      Log( Text );
     }
 
 
@@ -941,7 +671,7 @@ namespace C64Studio
 
       try
       {
-        Debug.Log( "Debugger>" + Command.ToString() + ", " + m_DataToSend.Length + " bytes" );
+        Log( "Debugger>" + Command.ToString() + ", " + m_DataToSend.Length + " bytes" );
         m_BytesToSend = m_DataToSend.Length;
         int totalBytesSent = 0;
 
@@ -950,10 +680,10 @@ namespace C64Studio
           int bytesSent = client.Send( m_DataToSend, totalBytesSent, m_BytesToSend, System.Net.Sockets.SocketFlags.None );
           if ( bytesSent == 0 )
           {
-            Debug.Log( "Could not send " + m_BytesToSend + " bytes" );
+            Log( "Could not send " + m_BytesToSend + " bytes" );
             break;
           }
-          Debug.Log( "Sent " + bytesSent + " bytes" );
+          Log( "Sent " + bytesSent + " bytes" );
           m_BytesToSend -= bytesSent;
           totalBytesSent += bytesSent;
         }
@@ -965,18 +695,6 @@ namespace C64Studio
       }
 
       Core.Debugging.ForceEmulatorRefresh();
-
-      if ( ( m_BinaryMemDump )
-      &&   ( m_ViceVersion >= WinViceVersion.V_2_4 )
-      &&   ( ( m_Request.Type == DebugRequestType.MEM_DUMP )
-      ||     ( m_Request.Type == DebugRequestType.TRACE_MEM_DUMP ) ) )
-      {
-        // skip processresponse
-      }
-      else if ( !m_FullBinaryInterface )
-      {
-        ProcessResponse();
-      }
       return true;
     }
 
@@ -1019,14 +737,6 @@ namespace C64Studio
 
 
 
-    //private void RaiseDebugEvent( DebugEvent EventType, DebugEventData Data )
-    private void RaiseDebugEvent( DebugEventData Data )
-    {
-      DebugEvent?.Invoke( Data );
-    }
-
-
-
     public RequestData RefreshTraceMemory( int StartAddress, int Size, string Info, Types.Breakpoint VirtualBP, Types.Breakpoint TraceBP )
     {
       RequestData requData    = new RequestData( DebugRequestType.TRACE_MEM_DUMP );
@@ -1040,342 +750,6 @@ namespace C64Studio
       QueueRequest( requData );
 
       return requData;
-    }
-
-
-
-    private void HandleBreakpoint()
-    {
-      int breakpointToRemove = 1;
-      m_State = DebuggerState.PAUSED;
-
-      if ( ( ( m_ViceVersion == WinViceVersion.V_2_3 )
-      &&     ( m_ResponseLines.Count >= 3 ) )
-      || ( ( m_ViceVersion >= WinViceVersion.V_2_4 )
-      &&   ( m_ResponseLines.Count >= 2 ) ) )
-      {
-        //(C:$1c1f) #2 (Break) .C:1c25   B1 17      LDA ($17),Y
-        string firstLine = m_ResponseLines.First.Value;
-        int hashPos = firstLine.IndexOf( '#' );
-        if ( hashPos != -1 )
-        {
-          int spacePos = m_ResponseLines.First.Value.IndexOf( ' ', hashPos );
-          if ( spacePos != -1 )
-          {
-            if ( !int.TryParse( m_ResponseLines.First.Value.Substring( hashPos + 1, spacePos - hashPos - 1 ), out breakpointToRemove ) )
-            {
-              Debug.Log( "Failed to parse breakpoint ID" );
-            }
-            else
-            {
-              Debug.Log( "Break point ID = " + breakpointToRemove );
-            }
-          }
-        }
-        //m_ResponseLines.Clear();
-        //m_Request = new RequestData( Request.NONE );
-        m_Request = new RequestData( DebugRequestType.BREAK_INFO );
-        ProcessResponse();
-        return;
-      }
-      m_Request = new RequestData( DebugRequestType.BREAK_INFO );
-    }
-
-
-
-    private void ProcessResponse()
-    {
-      Debug.Log( "ProcessResponse for Request " + m_Request.Type.ToString() + ", lines " + m_ResponseLines.Count.ToString() );
-      string    total = "";
-      foreach ( var line in m_ResponseLines )
-      {
-        total += "\r\n" + line;
-      }
-      Debug.Log( "Responselines are:" + total );
-
-      if ( ( total.ToUpper().Contains( "AN ERROR OCCURRED" ) )
-      &&   ( total.ToUpper().Contains( "JAM" ) ) )
-      {
-        InterfaceLog( "CPU JAM encountered: " + total );
-        InterfaceLog( "Disconnecting from VICE" );
-        DisconnectFromEmulator();
-        return;
-      }
-
-      switch ( m_Request.Type )
-      {
-        case DebugRequestType.READ_REGISTERS:
-          if ( m_ResponseLines.Count >= 2 )
-          {
-            // ReadRegisters:(C:$0810)   ADDR AC XR YR SP 00 01 NV-BDIZC LIN CYC
-            // ReadRegisters:.;0810 00 00 00 f6 2f 37 00100000 055 015
-            string    registers = m_ResponseLines.Last.Value;
-
-            //if ( m_ViceVersion >= WinViceVersion.V_3_0 )
-            {
-              // since of 3.1 and data break points the register values may be in the third line - yay
-              //  don't we just love a human text cmd line as interface
-              // .C:8e77  AC A9 A6    LDY .ARMOR_TURN_POS - A:00 X:00 Y:08 SP:f2 ..-.....   29087560
-              // (C:$8e77)   ADDR A  X  Y  SP 00 01 NV-BDIZC LIN CYC  STOPWATCH
-              // could there be a nother line??
-              if ( registers.IndexOf( "ADDR A  X  Y" ) != -1 )
-              {
-                // Incomplete registers data encountered, fetch another line?
-                // yes! - require another one! 
-                break;
-              }
-            }
-
-            char[] separators = new char[1];
-            separators[0] = ' ';
-            string[]  registerValues = registers.Split( separators, StringSplitOptions.RemoveEmptyEntries );
-            if ( ( ( m_ViceVersion == WinViceVersion.V_2_3 )
-            &&     ( registerValues.Length == 10 ) )
-            ||   ( ( m_ViceVersion >= WinViceVersion.V_2_4 )
-            &&     ( registerValues.Length == 11 ) ) )
-            {
-              var ded = DebugEventDataFromRegisterValueString( registerValues );
-
-              DebugEvent( ded );
-            }
-            m_ResponseLines.Clear();
-            m_Request = new RequestData( DebugRequestType.NONE );
-          }
-          break;
-        case DebugRequestType.NEXT:
-          if ( ( m_ResponseLines.Count > 0 )
-          && ( ( m_ResponseLines.First.Value.IndexOf( "(Break)" ) != -1 )
-          ||   ( m_ResponseLines.First.Value.IndexOf( "(Stop on  exec" ) != -1 )
-          ||   ( m_ResponseLines.First.Value.IndexOf( "(Stop on  load" ) != -1 )
-          ||   ( m_ResponseLines.First.Value.IndexOf( "(Stop on store" ) != -1 ) ) )
-          {
-            // a unexpected break!
-            HandleBreakpoint();
-            break;
-          }
-          if ( ( ( m_ViceVersion == WinViceVersion.V_2_3 )
-          &&     ( m_ResponseLines.Count == 3 ) )
-          ||   ( ( m_ViceVersion >= WinViceVersion.V_2_4 )
-          &&     ( m_ResponseLines.Count == 1 ) ) )
-          {
-            m_ResponseLines.Clear();
-            m_Request = new RequestData( DebugRequestType.NONE );
-            m_State = DebuggerState.PAUSED;
-          }
-          break;
-        case DebugRequestType.RETURN:
-          if ( ( ( m_ViceVersion == WinViceVersion.V_2_3 )
-          &&     ( m_ResponseLines.Count == 3 ) )
-          ||   ( ( m_ViceVersion >= WinViceVersion.V_2_4 )
-          &&     ( m_ResponseLines.Count == 1 ) ) )
-          {
-            m_ResponseLines.Clear();
-            m_State = DebuggerState.PAUSED;
-            m_Request = new RequestData( DebugRequestType.NONE );
-          }
-          break;
-        case DebugRequestType.EXIT:
-          m_State = DebuggerState.RUNNING;
-          m_ResponseLines.Clear();
-          m_Request = new RequestData( DebugRequestType.NONE );
-          break;
-        case DebugRequestType.QUIT:
-          if ( m_ResponseLines.Count == 1 )
-          {
-            m_ResponseLines.Clear();
-            m_Request = new RequestData( DebugRequestType.NONE );
-          }
-          break;
-        case DebugRequestType.STEP:
-          if ( ( !m_InitialBreakCompleted )
-          &&   ( m_ResponseLines.Count > 0 ) )
-          {
-            Debug.Log( "Initial break encountered" );
-            // our first break
-            m_InitialBreakCompleted = true;
-            m_ResponseLines.Clear();
-            m_State = DebuggerState.PAUSED;
-            m_Request = new RequestData( DebugRequestType.NONE );
-
-            // add break points now
-            if ( Core.Debugging.OnInitialBreakpointReached( -1 ) )
-            {
-              //QueueRequest( Request.RESET );
-            }
-            break;
-          }
-
-          if ( ( ( m_ViceVersion == WinViceVersion.V_2_3 )
-          &&     ( m_ResponseLines.Count == 3 ) )
-          ||   ( ( m_ViceVersion >= WinViceVersion.V_2_4 )
-          &&     ( m_ResponseLines.Count == 1 ) ) )
-          {
-            m_ResponseLines.Clear();
-            m_State = DebuggerState.PAUSED;
-            m_Request = new RequestData( DebugRequestType.NONE );
-          }
-          break;
-        case DebugRequestType.BREAK_INFO:
-          if ( ( ( m_ViceVersion == WinViceVersion.V_2_3 )
-          &&     ( m_ResponseLines.Count >= 3 ) )
-          ||   ( ( m_ViceVersion >= WinViceVersion.V_2_4 )
-          &&     ( m_ResponseLines.Count >= 2 ) ) )
-          {
-            //(C:$1c1f) #2 (Break) .C:1c25   B1 17      LDA ($17),Y
-            string  firstLine = m_ResponseLines.First.Value;
-            int hashPos = firstLine.IndexOf( '#' );
-            if ( hashPos != -1 )
-            {
-              int spacePos = m_ResponseLines.First.Value.IndexOf( ' ', hashPos );
-              if ( spacePos != -1 )
-              {
-                if ( !int.TryParse( m_ResponseLines.First.Value.Substring( hashPos + 1, spacePos - hashPos - 1 ), out m_BrokenAtBreakPoint ) )
-                {
-                  Debug.Log( "Failed to parse breakpoint ID" );
-                }
-                else
-                {
-                  //Debug.Log( "Break point ID = " + m_BrokenAtBreakPoint );
-                }
-              }
-              else
-              {
-                Debug.Log( "Could not deduce breakpoint ID" );
-              }
-            }
-            else
-            {
-              Debug.Log( "Could not deduce breakpoint ID 2" );
-            }
-            Debug.Log( "Last line, should be (C:$xxxx): " + m_ResponseLines.Last.Value );
-            m_ResponseLines.Clear();
-
-            OnBreakpointHit();
-            m_Request = new RequestData( DebugRequestType.NONE );
-          }
-          break;
-        case DebugRequestType.NONE:
-          if ( ( m_ResponseLines.Count > 0 )
-          &&   ( ( m_ResponseLines.First.Value.IndexOf( "(Break)" ) != -1 )
-          ||     ( m_ResponseLines.First.Value.IndexOf( "(Stop on  exec" ) != -1 )
-          ||     ( m_ResponseLines.First.Value.IndexOf( "(Stop on  load" ) != -1 )
-          ||     ( m_ResponseLines.First.Value.IndexOf( "(Stop on store" ) != -1 ) ) )
-          {
-            // a unexpected break!
-            HandleBreakpoint();
-          }
-          break;
-        case DebugRequestType.RESET:
-          m_ResponseLines.Clear();
-          m_Request = new RequestData( DebugRequestType.NONE );
-          break;
-        case DebugRequestType.DELETE_BREAKPOINT:
-          if ( m_ResponseLines.Count == 0 )
-          {
-            m_ResponseLines.Clear();
-            if ( m_Request.Breakpoint != null )
-            {
-              // remove from list
-              foreach ( Types.Breakpoint breakPoint in m_BreakPoints )
-              {
-                if ( breakPoint == m_Request.Breakpoint )
-                {
-                  m_BreakPoints.Remove( breakPoint );
-                  break;
-                }
-              }
-            }
-            m_Request = new RequestData( DebugRequestType.NONE );
-          }
-          break;
-        case DebugRequestType.ADD_BREAKPOINT:
-          if ( m_ResponseLines.Count == 1 )
-          {
-            // [0] = "(C:$01f8) BREAK: 3 C:$0855   enabled"
-            // oder  "BREAK: 4  C:$25c1  (Stop on exec)<10>(C:$0007) "
-            // oder            #1 (Stop on  exec 9258)  279 018
-            //                 .C:9258  A9 36       LDA #$36       - A:34 X:3F Y:00 SP:f2 .V-..IZC   29285379
-            int breakpointID = 0;
-            int responsePos = m_ResponseLines.First.Value.IndexOf( "BREAK: " );
-            if ( responsePos == -1 )
-            {
-              responsePos = m_ResponseLines.First.Value.IndexOf( "WATCH: " );
-            }
-            if ( responsePos != -1 )
-            {
-              int spaceBehindPos = m_ResponseLines.First.Value.IndexOf( ' ', responsePos + 7 );
-              if ( spaceBehindPos != -1 )
-              {
-                string breakID = m_ResponseLines.First.Value.Substring( responsePos + 7, spaceBehindPos - responsePos - 7 );
-                int.TryParse( breakID, out breakpointID );
-              }
-            }
-            //Debug.Log( "Breakpoint ID = " + breakpointID.ToString() );
-            if ( ( breakpointID != 0 )
-            &&   ( m_Request.Breakpoint != null ) )
-            {
-              m_Request.Breakpoint.RemoteIndex = breakpointID;
-
-              RaiseDocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, m_Request.Breakpoint ) );
-            }
-            m_ResponseLines.Clear();
-            m_Request = new RequestData( DebugRequestType.NONE );
-          }
-          break;
-        case DebugRequestType.MEM_DUMP:
-        case DebugRequestType.TRACE_MEM_DUMP:
-          {
-            int expectedLines = 1 + ( m_Request.Parameter2 - m_Request.Parameter1 ) / 16;
-            Debug.Log( "Expected lines:" + expectedLines );
-
-            if ( m_ResponseLines.Count == expectedLines )
-            {
-              // (C:$0810) >C:00f1  87                                                   .
-
-              GR.Memory.ByteBuffer    dumpData = new GR.Memory.ByteBuffer();
-              foreach ( string line in m_ResponseLines )
-              {
-                int addressPos = line.IndexOf( ">C:" );
-                if ( addressPos == -1 )
-                {
-                  addressPos = line.IndexOf( "C:" );
-                }
-                if ( ( addressPos != -1 )
-                &&   ( addressPos < line.Length + 9 ) )
-                {
-                  string byteValues = line.Substring( addressPos + 9, 50 ).Replace( " ", "" );
-
-                  dumpData.AppendHex( byteValues );
-                }
-              }
-
-              OnMemoryDumpReceived( dumpData );
-
-              m_ResponseLines.Clear();
-            }
-          }
-          break;
-        case DebugRequestType.RAM_MODE:
-          if ( m_ResponseLines.Count == 0 )
-          {
-            m_ResponseLines.Clear();
-            m_Request = new RequestData( DebugRequestType.NONE );
-          }
-          break;
-        case DebugRequestType.SET_REGISTER:
-          m_ResponseLines.Clear();
-          m_Request = new RequestData( DebugRequestType.NONE );
-          RefreshRegistersAndWatches();
-          break;
-        default:
-          Debug.Log( "Unknown request state! " + m_Request.Type.ToString() );
-          m_ResponseLines.Clear();
-          break;
-      }
-      if ( m_Request.Type == DebugRequestType.NONE )
-      {
-        StartNextRequestIfAvailable();
-      }
     }
 
 
@@ -1398,12 +772,12 @@ namespace C64Studio
           if ( !m_Request.Breakpoint.HasNonVirtual() )
           {
             // and auto-go on with debugging
-            Debug.Log( "Virtual only, go on" );
+            Log( "Virtual only, go on" );
             QueueRequest( DebugRequestType.EXIT );
           }
           else
           {
-            Debug.Log( "Has non virtual bp" );
+            Log( "Has non virtual bp" );
             QueueRequest( DebugRequestType.REFRESH_VALUES );
             RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
           }
@@ -1431,7 +805,7 @@ namespace C64Studio
     {
       m_State = DebuggerState.PAUSED;
 
-      Debug.Log( "Breakpoint " + m_BrokenAtBreakPoint + " hit" );
+      Log( "Breakpoint " + m_BrokenAtBreakPoint + " hit" );
       // TODO - only remove if auto startup breakpoint
       int breakAddress = -1;
       Types.Breakpoint  brokenBP = null;
@@ -1443,16 +817,13 @@ namespace C64Studio
           breakAddress = breakPoint.Address;
           if ( breakPoint.Temporary )
           {
-            Debug.Log( "Remove auto startup breakpoint " + breakPoint.RemoteIndex );
+            Log( "Remove auto startup breakpoint " + breakPoint.RemoteIndex );
             QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint ).Breakpoint = breakPoint;
             brokenBP = null;
             break;
           }
         }
       }
-
-      // newly set to we don't add new breakpoints or do the double command thing
-      m_InitialBreakCompleted = true;
 
       bool skipRefresh = false;
 
@@ -1468,7 +839,7 @@ namespace C64Studio
 
           // DEBUGHACK
           //QueueRequest( Request.MEM_DUMP, 0, 0xffff );
-          //Debug.Log( "Remove initial breakpoint " + m_BrokenAtBreakPoint );
+          Log( "Remove initial breakpoint " + m_BrokenAtBreakPoint );
           QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint );
 
           skipRefresh = Core.Debugging.OnInitialBreakpointReached( breakAddress );
@@ -1560,7 +931,7 @@ namespace C64Studio
  	    if ( ( m_RequestQueue.Count != 0 )
       &&   ( m_ReceivedDataBin.Length == 0 ) )
       {
-        Debug.Log( "------> StartNextRequest:" + m_RequestQueue.First.Value.Type );
+        Log( "------> StartNextRequest:" + m_RequestQueue.First.Value.Type );
         RequestData nextRequest = m_RequestQueue.First.Value;
         m_RequestQueue.RemoveFirst();
 
@@ -1574,115 +945,103 @@ namespace C64Studio
     {
       if ( m_Request.Type != DebugRequestType.NONE )
       {
-        Debug.Log( "====> Trying to send request while processing another! (" + m_Request.Type + ")" );
+        Log( "====> Trying to send request while processing another! (" + m_Request.Type + ")" );
         return false;
       }
-      //Debug.Log( "Set request data to " + Data.Type.ToString() );
+      //Log( "Set request data to " + Data.Type.ToString() );
       m_Request = Data;
       m_ResponseLines.Clear();
 
       switch ( m_Request.Type )
       {
-        case DebugRequestType.READ_REGISTERS:
-          if ( m_FullBinaryInterface )
-          {
-            // step over
-
-            /*
-            e_default_space = 0,
-            e_comp_space,
-            e_disk8_space,
-            e_disk9_space,
-            e_disk10_space,
-            e_disk11_space,
-            e_invalid_space
-            */
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_REGISTERS_GET, new ByteBuffer( "00" ), Data );
-          }
-          return SendCommand( "registers" );
         case DebugRequestType.SET_REGISTER:
           {
-            string    command = "r ";
+            // main memory plus count 1
+            ByteBuffer    requestData = new ByteBuffer( "000100" );
+
             switch ( m_Request.Parameter1 )
             {
               case 'A':
-                command += "A";
+                requestData.AppendU16NetworkOrder( 0x0300 );
+                requestData.AppendU16( (byte)m_Request.Parameter2 );
                 break;
               case 'X':
-                command += "X";
+                requestData.AppendU16NetworkOrder( 0x0301 );
+                requestData.AppendU16( (byte)m_Request.Parameter2 );
                 break;
               case 'Y':
-                command += "Y";
+                requestData.AppendU16NetworkOrder( 0x0302 );
+                requestData.AppendU16( (byte)m_Request.Parameter2 );
                 break;
               case 'F':
-                command += "FL";
+                requestData.AppendU16NetworkOrder( 0x0305 );
+                requestData.AppendU16( (byte)m_Request.Parameter2 );
                 break;
               case 'P':
-                command += "PC";
+                requestData.AppendU16NetworkOrder( 0x0303 );
+                requestData.AppendU16( (ushort)m_Request.Parameter2 );
                 break;
               case 'S':
-                command += "SP";
+                requestData.AppendU16NetworkOrder( 0x0304 );
+                requestData.AppendU16( (ushort)m_Request.Parameter2 );
                 break;
             }
-            command += " = $" + m_Request.Parameter2.ToString( "X" );
-
-            return SendCommand( command );
+            /*
+            byte 0: memspace
+            Describes which part of the computer you want to write:
+            • 0x00: main memory
+            • 0x01: drive 8
+            • 0x02: drive 9
+            • 0x03: drive 10
+            • 0x04: drive 11
+            byte 1 - 2: The count of the array items
+            byte 2 +: An array with items of structure:
+            byte 0: Size of the item, excluding this byte byte 1: ID of the register byte 2 - 3:
+            register value*/
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_REGISTERS_SET, requestData, Data );
           }
+        case DebugRequestType.READ_REGISTERS:
+          // step over
+
+          /*
+          e_default_space = 0,
+          e_comp_space,
+          e_disk8_space,
+          e_disk9_space,
+          e_disk10_space,
+          e_disk11_space,
+          e_invalid_space
+          */
+          return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_REGISTERS_GET, new ByteBuffer( "00" ), Data );
         case DebugRequestType.NEXT:
           m_MemoryValues.Clear();
           m_RequestedMemoryValues.Clear();
           m_State = DebuggerState.RUNNING;
-          if ( m_FullBinaryInterface )
-          {
-            // step over
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_INSTRUCTION, new ByteBuffer( "010100" ), Data );
-          }
-          return SendCommand( "next" );
+          // step over
+          return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_INSTRUCTION, new ByteBuffer( "010100" ), Data );
         case DebugRequestType.STEP:
           m_MemoryValues.Clear();
           m_RequestedMemoryValues.Clear();
           m_State = DebuggerState.RUNNING;
-          if ( m_FullBinaryInterface )
-          {
-            // step into
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_INSTRUCTION, new ByteBuffer( "000100" ), Data );
-          }
-          return SendCommand( "step" );
+          // step into
+          return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_ADVANCE_INSTRUCTION, new ByteBuffer( "000100" ), Data );
         case DebugRequestType.EXIT:
-          if ( m_FullBinaryInterface )
-          {
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_EXIT, null, Data );
-          }
           m_Request.Type = DebugRequestType.NONE;
           m_State = DebuggerState.RUNNING;
           m_RequestedMemoryValues.Clear();
-          return SendCommand( "exit" );
+          return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_EXIT, null, Data );
         case DebugRequestType.QUIT:
-          if ( m_FullBinaryInterface )
-          {
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_QUIT, null, Data );
-          }
-          return SendCommand( "quit" );
+          return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_QUIT, null, Data );
         case DebugRequestType.RETURN:
           m_MemoryValues.Clear();
           m_RequestedMemoryValues.Clear();
           m_State = DebuggerState.RUNNING;
 
-          if ( m_FullBinaryInterface )
-          {
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_STEP_OUT, new ByteBuffer( "000100" ), Data );
-          }
-
-          return SendCommand( "return" );
+          return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_STEP_OUT, new ByteBuffer( "000100" ), Data );
         case DebugRequestType.RESET:
           // hard reset
-          if ( m_FullBinaryInterface )
-          {
-            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_RESET, new ByteBuffer( "01" ), Data );
-          }
-          return SendCommand( "reset 1" );
+          return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_RESET, new ByteBuffer( "01" ), Data );
         case DebugRequestType.ADD_BREAKPOINT:
-          if ( m_FullBinaryInterface )
           {
             // byte 0 - 1: start address
             // byte 2 - 3: end address
@@ -1718,63 +1077,28 @@ namespace C64Studio
 
             return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_CHECKPOINT_SET, requestData, Data );
           }
-          else
-          {
-            string request = "break ";
-
-            if ( m_Request.Breakpoint.TriggerOnExec )
-            {
-              request += "exec ";
-            }
-            if ( m_ViceVersion > WinViceVersion.V_2_3 )
-            {
-              if ( m_Request.Breakpoint.TriggerOnLoad )
-              {
-                request += "load ";
-              }
-              if ( m_Request.Breakpoint.TriggerOnStore )
-              {
-                request += "store ";
-              }
-            }
-            request += m_Request.Parameter1.ToString( "x" );
-            if ( !string.IsNullOrEmpty( m_Request.Breakpoint.Conditions ) )
-            {
-              request += " if " + m_Request.Breakpoint.Conditions;
-            }
-
-            Debug.Log( "Add breakpoint request " + request );
-
-            return SendCommand( request );
-          }
         case DebugRequestType.DELETE_BREAKPOINT:
-          if ( m_FullBinaryInterface )
           {
             var requestBody = new GR.Memory.ByteBuffer();
             requestBody.AppendU32( (uint)m_Request.Parameter1 );
 
             return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_CHECKPOINT_DELETE, requestBody, Data );
           }
-          return SendCommand( "delete " + m_Request.Parameter1.ToString() );
         case DebugRequestType.RAM_MODE:
-          if ( m_FullBinaryInterface )
+          switch ( m_Request.Info )
           {
-            switch ( m_Request.Info )
-            {
-              case "ram":
-                m_FullBinaryInterfaceBank = BinaryMonitorBankID.RAM;
-                break;
-              case "cpu":
-                m_FullBinaryInterfaceBank = BinaryMonitorBankID.CPU;
-                break;
-              default:
-                Debug.Log( "Invalid Bank '" + m_Request.Info + "' requested!" );
-                return false;
-            }
-            m_Request.Type = DebugRequestType.NONE;
-            return true;
+            case "ram":
+              m_FullBinaryInterfaceBank = BinaryMonitorBankID.RAM;
+              break;
+            case "cpu":
+              m_FullBinaryInterfaceBank = BinaryMonitorBankID.CPU;
+              break;
+            default:
+              Log( "Invalid Bank '" + m_Request.Info + "' requested!" );
+              return false;
           }
-          return SendCommand( "bank " + m_Request.Info );
+          m_Request.Type = DebugRequestType.NONE;
+          return true;
         case DebugRequestType.MEM_DUMP:
         case DebugRequestType.TRACE_MEM_DUMP:
           {
@@ -1789,141 +1113,41 @@ namespace C64Studio
             }
             m_Request.AppliedOffset = (byte)offset;
 
-            if ( m_FullBinaryInterface )
-            {
-              // byte 0: side effects?
-              // Should the read cause side effects?
-              // byte 1 - 2: start address
-              // byte 3 - 4: end address
-              // byte 5: memspace
-              // Describes which part of the computer you want to read:
-              // • 0x00: main memory
-              // • 0x01: drive 8
-              // • 0x02: drive 9
-              // • 0x03: drive 10
-              // • 0x04: drive 11
-              // byte 6 - 7: bank ID
-              // Describes which bank you want.This is dependent on your machine.
-              // See Section 13.4.14[MON CMD BANKS AVAILABLE], page 207.If the
-              // memspace selected doesn’t support banks, this value is ignored.
-              var requestBody = new ByteBuffer();
-              requestBody.AppendU8( 0 );    // no side effects!
-              requestBody.AppendU16( (ushort)( offset + m_Request.Parameter1 ) );
-              if ( m_Request.Parameter2 == -1 )
-              {
-                requestBody.AppendU16( (ushort)( offset + m_Request.Parameter1 ) );
-              }
-              else
-              {
-                requestBody.AppendU16( (ushort)( offset + m_Request.Parameter2 ) );
-              }
-
-              requestBody.AppendU8( 0 );    // main memory
-
-              //          "default","cpu","ram","rom","io","cart",
-              //banknums[] = { 1, 0, 1, 2, 3, 4, -1 };
-              requestBody.AppendU16( (ushort)m_FullBinaryInterfaceBank );    // CPU -> TODO, we also have RAM option!
-
-
-              return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_MEMORY_GET, requestBody, Data );
-            }
-
-            if ( !m_BinaryMemDump )
-            //if ( m_ViceVersion == WinViceVersion.V_2_3 )
-            {
-              if ( m_Request.Parameter2 == -1 )
-              {
-                return SendCommand( "m $" + ( offset + m_Request.Parameter1 ).ToString( "x" ) );
-              }
-              return SendCommand( "m $" + ( offset + m_Request.Parameter1 ).ToString( "x" ) + " $" + ( offset + m_Request.Parameter2 ).ToString( "x" ) );
-            }
-
-            // binary request
-            ushort    startAddress = (ushort)( offset + m_Request.Parameter1 );
-            ushort    endAddress = (ushort)( offset + m_Request.Parameter2 );
+            // byte 0: side effects?
+            // Should the read cause side effects?
+            // byte 1 - 2: start address
+            // byte 3 - 4: end address
+            // byte 5: memspace
+            // Describes which part of the computer you want to read:
+            // • 0x00: main memory
+            // • 0x01: drive 8
+            // • 0x02: drive 9
+            // • 0x03: drive 10
+            // • 0x04: drive 11
+            // byte 6 - 7: bank ID
+            // Describes which bank you want.This is dependent on your machine.
+            // See Section 13.4.14[MON CMD BANKS AVAILABLE], page 207.If the
+            // memspace selected doesn’t support banks, this value is ignored.
+            var requestBody = new ByteBuffer();
+            requestBody.AppendU8( 0 );    // no side effects!
+            requestBody.AppendU16( (ushort)( offset + m_Request.Parameter1 ) );
             if ( m_Request.Parameter2 == -1 )
             {
-              if ( startAddress + 1 >= 0x10000 )
-              {
-                // would over flow
-                --startAddress;
-                endAddress = 0xffff;
-              }
-              else
-              {
-                endAddress = (ushort)( startAddress + 1 );
-              }
+              requestBody.AppendU16( (ushort)( offset + m_Request.Parameter1 ) );
             }
-            else if ( startAddress == endAddress )
+            else
             {
-              if ( startAddress == 0xffff )
-              {
-                --startAddress;
-              }
-              else
-              {
-                ++endAddress;
-              }
+              requestBody.AppendU16( (ushort)( offset + m_Request.Parameter2 ) );
             }
-            m_Request.AdjustedStartAddress = startAddress;
 
-            // binary dump (since Vice 2.4)
-            /* The binary remote monitor commands are injected into the "normal" commands. 
-            The remote monitor detects a binary command because it starts with ASCII STX 
-            (0x02). After this, there is one byte telling the length of the command. The 
-            next byte describes the command. Currently, only 0x01 is implemented which 
-            is "memdump". 
+            requestBody.AppendU8( 0 );    // main memory
 
-            Note that the command length byte (the one after STX) does *not* count the 
-            STX, the command length nor the command byte.
+            //          "default","cpu","ram","rom","io","cart",
+            //banknums[] = { 1, 0, 1, 2, 3, 4, -1 };
+            requestBody.AppendU16( (ushort)m_FullBinaryInterfaceBank );    // CPU -> TODO, we also have RAM option!
 
-            Also note that there is no termination character. The command length acts as 
-            synchronisation point.
-              
-              
-            For the memdump command, the next bytes are as follows:
-            1. start address low
-            2. start address high
-            3. end address low
-            4. end address high
-            5. memspace
 
-            The memspace describes which part of the computer you want to read: 
-            0 --> the computer (C64)
-            1 --> drive 8, 2 --> drive 9, 3 --> drive 10, 4 --> drive 11 
-
-            So, for a memdump of 0xa0fe to 0xa123, you have to issue the bytes 
-            (in this order):
-
-            0x02 (STX), 0x05 (command length), 0x01 (command: memdump), 0xfe (SA low), 
-            0xa0 (SA high), 0x23 (EA low), 0xa1 (EA high), 0x00 (computer memspace) 
-
-            The answer looks as follows:
-
-            byte 0: STX (0x02)
-            byte 1: answer length low
-            byte 2: answer length (bits 8-15)
-            byte 3: answer length (bits 16-23)
-            byte 4: answer length (bits 24-31, that is, high)
-            byte 5: error code
-            byte 6 - (answer length+6): the binary answer
-            [...]
-
-            Error codes are currently:
-            0x00: ok, everything worked
-            0x80: command length is not long enough for this specific command 
-            0x81: an invalid parameter occurred
-              */
-            GR.Memory.ByteBuffer tmpData = new GR.Memory.ByteBuffer();
-
-            tmpData.AppendU8( 0x02 );   // STX
-            tmpData.AppendU8( 5 );      // length of command
-            tmpData.AppendU8( 0x01 );   // MON_CMD_MEMDUMP = 1
-            tmpData.AppendU16( startAddress );
-            tmpData.AppendU16( endAddress );
-            tmpData.AppendU8( 0 );    // mem space
-            
-            return SendCommand( tmpData );
+            return SendBinaryCommand( BinaryMonitorCommand.MON_CMD_MEMORY_GET, requestBody, Data );
           }
       }
       return true;
@@ -2045,7 +1269,7 @@ namespace C64Studio
             QueueRequest( requData );
           }
         }
-        Debug.Log( "Request " + gnu + " watch values" );
+        Log( "Request " + gnu + " watch values" );
         return;
       }
       else if ( Data.Type == DebugRequestType.REFRESH_MEMORY )
@@ -2094,17 +1318,16 @@ namespace C64Studio
       }
 
       // queue if there is an active request or queued incoming data
-      Debug.Log( "QueueRequest - sending data directly? Queue has " + m_RequestQueue.Count + " entries, request is " + Data.Type + ", current request type is " + m_Request.Type + ", current incoming data is " + m_ReceivedDataBin.ToString() );
+      Log( "QueueRequest - sending data directly? Queue has " + m_RequestQueue.Count + " entries, request is " + Data.Type + ", current request type is " + m_Request.Type + ", current incoming data is " + m_ReceivedDataBin.ToString() );
       if ( ( m_Request.Type != DebugRequestType.NONE )
       ||   ( m_RequestQueue.Count > 0 )
-      ||   ( ( m_FullBinaryInterface )
-      &&     ( m_ReceivedDataBin.Length > 0 ) ) )
+      ||   ( m_ReceivedDataBin.Length > 0 ) )
       {
-        Debug.Log( "-no" );
+        Log( "-no" );
         m_RequestQueue.AddLast( Data );
         return;
       }
-      Debug.Log( "-yes" );
+      Log( "-yes" );
       SendRequest( Data );
     }
 
@@ -2204,7 +1427,7 @@ namespace C64Studio
           // there is already a breakpoint here
           breakPoint.Virtual.Add( BreakPoint );
           added = true;
-          Debug.Log( "Virtual bp!" );
+          Log( "Virtual bp!" );
           break;
         }
       }
@@ -2234,7 +1457,7 @@ namespace C64Studio
           if ( ( client != null )
           &&   ( client.Connected ) )
           {
-            Debug.Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
+            Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
             RequestData requData = new RequestData( DebugRequestType.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
             QueueRequest( requData );
           }
@@ -2252,7 +1475,7 @@ namespace C64Studio
         if ( ( client != null )
         &&   ( client.Connected ) )
         {
-          Debug.Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
+          Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
           RequestData requData = new RequestData( DebugRequestType.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
           QueueRequest( requData );
         }
@@ -2275,7 +1498,7 @@ namespace C64Studio
             if ( ( client != null )
             && ( client.Connected ) )
             {
-              Debug.Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
+              Log( "Queue - Remove breakpoint " + breakPoint.RemoteIndex );
               RequestData requData = new RequestData( DebugRequestType.DELETE_BREAKPOINT, breakPoint.RemoteIndex );
               QueueRequest( requData );
             }
@@ -2372,10 +1595,6 @@ namespace C64Studio
     {
       switch ( Feature )
       {
-        case DebuggerFeature.ADD_BREAKPOINTS_AFTER_STARTUP:
-          return m_ViceVersion > VICERemoteDebugger.WinViceVersion.V_2_3;
-        case DebuggerFeature.REQUIRES_DOUBLE_ACTION_AFTER_BREAK:
-          return m_ViceVersion == VICERemoteDebugger.WinViceVersion.V_2_3;
         case DebuggerFeature.REMOTE_MONITOR:
           return true;
       }
@@ -2422,43 +1641,8 @@ namespace C64Studio
       }
 
       // what an ugly hack check (there's no version resource anymore :( )
-      m_FullBinaryInterface = ToolRun.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" );
+      //m_FullBinaryInterface = ToolRun.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" );
 
-      if ( ( fileVersion == null )
-      ||   ( string.IsNullOrEmpty( fileVersion.ProductVersion ) ) )
-      {
-        //Core.AddToOutput( "Could not check emulator version, no ProductVersion tag was found, assume VICE > 3.2" );
-        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
-
-        // TODO - borked with GTK 3.4 (introduction of new binary interface)
-        //m_BinaryMemDump = true;
-        m_BinaryMemDump = false;
-        return true;
-      }
-
-      m_BinaryMemDump = false;
-      if ( ( fileVersion.ProductVersion == "2.3" )
-      ||   ( fileVersion.ProductVersion.StartsWith( "2.3." ) ) )
-      {
-        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_2_3;
-      }
-      else if ( ( fileVersion.ProductVersion == "2.4" )
-      ||        ( fileVersion.ProductVersion.StartsWith( "2.4." ) ) )
-      {
-        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_2_4;
-      }
-      else if ( ( fileVersion.ProductVersion == "3.0" )
-      ||        ( fileVersion.ProductVersion.StartsWith( "3.0." ) ) )
-      {
-        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
-        m_BinaryMemDump = true;
-      }
-      else if ( ( !string.IsNullOrEmpty( fileVersion.ProductVersion ) )
-      &&        ( GR.Convert.ToI32( fileVersion.ProductVersion.Substring( 0, 1 ) ) >= 3 ) )
-      {
-        m_ViceVersion = VICERemoteDebugger.WinViceVersion.V_3_0;
-        m_BinaryMemDump = true;
-      }
       return true;
     }
 
@@ -2477,18 +1661,6 @@ namespace C64Studio
 
     public void ForceEmulatorRefresh()
     {
-      if ( m_ViceVersion < VICERemoteDebugger.WinViceVersion.V_3_0 )
-      {
-        try
-        {
-          // hack that's needed for WinVICE to continue
-          // fixed in WinVICE r25309
-          C64Studio.Debugging.InvalidateRect( Core.Executing.RunProcess.MainWindowHandle, IntPtr.Zero, false );
-        }
-        catch ( System.InvalidOperationException )
-        {
-        }
-      }
     }
 
 

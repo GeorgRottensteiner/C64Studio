@@ -52,7 +52,7 @@ namespace C64Studio.Tasks
       }
       catch ( Exception ex )
       {
-        Core.AddToOutput( "An exception occurred: " + ex.Message );
+        Core.AddToOutput( "An exception occurred: " + ex.ToString() + System.Environment.NewLine );
       }
       if ( TaskFinished != null )
       {

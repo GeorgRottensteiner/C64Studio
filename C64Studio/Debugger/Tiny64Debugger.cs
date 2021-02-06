@@ -562,6 +562,16 @@ namespace C64Studio
 
 
 
+    public bool ShuttingDown
+    {
+      get
+      {
+        return false;
+      }
+    }
+
+    
+
     public void SetAutoRefreshMemory( int StartAddress, int Size, MemorySource Source )
     {
       m_LastRequestedMemoryStartAddress = StartAddress;
@@ -574,6 +584,13 @@ namespace C64Studio
     public void Reset()
     {
       QueueRequest( DebugRequestType.RESET );
+    }
+
+
+
+    public void SetRegister( string Register, int Value )
+    {
+      throw new NotImplementedException();
     }
 
 

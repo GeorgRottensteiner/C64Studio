@@ -1,4 +1,7 @@
 ﻿C64Studio
+o  I would like to be able to right click on a label and have a list of references to this label. 
+    So that I can then double click on a reference and jump to it. It would be neat if that list of references stayed open 
+    until I closed it, so that I can quickly inspect all references.
 o BASIC _ Search in lowercase mode doesn't work with Uppercase letters
 o Shift-Click in Charset Preview Window, clear char
 o Charset editor -> PETSCII order of chars

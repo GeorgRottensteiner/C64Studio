@@ -27,7 +27,8 @@ namespace C64Studio
     UPDATE_WATCH,
     EMULATOR_CLOSED,
     REGISTER_INFO,
-    TRACE_OUTPUT
+    TRACE_OUTPUT,
+    UPDATE_BREAKPOINT
   };
 
   public enum DebuggerState
@@ -68,7 +69,8 @@ namespace C64Studio
     ADD_BREAKPOINT,
     TRACE_MEM_DUMP,
     RAM_MODE,
-    RESET
+    RESET,
+    SET_REGISTER
   };
 
   public enum RequestReason
@@ -124,7 +126,9 @@ namespace C64Studio
     public string             Text = null;
   };
 
-  public delegate void DebugEventHandler( DebugEventData Event ); 
+  //public delegate void DebugEventHandler( DebugEvent EventType, DebugEventData Event ); 
+  public delegate void DebugEventHandler( DebugEventData Event );
+
 
 
   public interface IDebugger : IDisposable
@@ -133,7 +137,17 @@ namespace C64Studio
 
 
 
+    bool ShuttingDown
+    {
+      get;
+    }
+
     DebuggerState State
+    {
+      get;
+    }
+
+    Machine ConnectedMachine
     {
       get;
     }
@@ -141,13 +155,6 @@ namespace C64Studio
     bool SupportsFeature( DebuggerFeature Feature );
 
     bool CheckEmulatorVersion( ToolInfo ToolRun );
-
-
-    Machine ConnectedMachine
-    {
-      get;
-    }
-
 
     bool Start( ToolInfo toolRun );
     void Quit();
@@ -201,6 +208,11 @@ namespace C64Studio
 
 
     void ForceEmulatorRefresh();
+
+
+
+    void SetRegister( string Register, int Value );
+
   }
 
 

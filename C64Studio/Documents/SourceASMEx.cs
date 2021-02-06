@@ -1082,7 +1082,8 @@ namespace C64Studio
         toolTipText += "$" + tokenInfo.AddressOrValue.ToString( "x4" ) + ", " + tokenInfo.AddressOrValue.ToString();
 
         byte    valueBelow = 0xcd;
-        if ( Core.Debugging.Debugger.FetchValue( tokenInfo.AddressOrValue, out valueBelow ) )
+        if ( ( Core.Debugging.Debugger != null )
+        &&   ( Core.Debugging.Debugger.FetchValue( tokenInfo.AddressOrValue, out valueBelow ) ) )
         {
           toolTipText += " ($" + valueBelow.ToString( "x2" ) + "/" + valueBelow.ToString() + ")";
         }

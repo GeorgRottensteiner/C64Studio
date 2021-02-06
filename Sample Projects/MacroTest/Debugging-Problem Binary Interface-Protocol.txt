@@ -1,0 +1,58 @@
+### Initial breakpoint $a871 is hit:
+
+============ Response is MON_RESPONSE_CHECKPOINT_INFO
+Processing package 0201160000001100FFFFFFFF010000000171A871A801010400010000000000000000 for request FFFFFFFF
+Breakpoint 1 hit
+QueueRequest - sending data directly? Queue has 0 entries, request is DELETE_BREAKPOINT, current request type is NONE, current incoming data is 0201160000001100FFFFFFFF010000000171A871A801010400010000000000000000
+-no
+QueueRequest - sending data directly? Queue has 1 entries, request is EXIT, current request type is NONE, current incoming data is 0201160000001100FFFFFFFF010000000171A871A801010400010000000000000000
+-no
+------> StartNextRequest:DELETE_BREAKPOINT
+>>>>>>>>>>>>>>> Send Request MON_CMD_CHECKPOINT_DELETE, request ID 1
+                     Command Body 01000000
+Debugger>020104000000010000001301000000, 15 bytes
+Sent 15 bytes
+============ Response is MON_RESPONSE_REGISTER_INFO
+Processing package 02012A0000003100FFFFFFFF0A00030371A803003A0003010500030214000304F80003372F0003383700030523000335A60003360A00 for request FFFFFFFF
+Register 03 = A871
+Register 00 = 003A
+Register 01 = 0005
+Register 02 = 0014
+Register 04 = 00F8
+Register 37 = 002F
+Register 38 = 0037
+Register 05 = 0023
+Register 35 = 00A6
+Register 36 = 000A
+============ Response is MON_RESPONSE_STOPPED
+Processing package 0201020000006200FFFFFFFF71A8 for request FFFFFFFF
+============ Response is MON_RESPONSE_RESUMED
+Processing package 0201020000006300FFFFFFFF71A8 for request FFFFFFFF
+------> StartNextRequest:EXIT
+>>>>>>>>>>>>>>> Send Request MON_CMD_EXIT, request ID 2
+Debugger>02010000000002000000AA, 11 bytes
+Sent 11 bytes
+
+
+### why is it stopping at $0811??
+
+============ Response is MON_RESPONSE_REGISTER_INFO
+Processing package 02012A0000003100FFFFFFFF0A00030311080300F80003010200030200000304F60003372F00033837000305A1000335000003360100 for request FFFFFFFF
+Register 03 = 0811
+Register 00 = 00F8
+Register 01 = 0002
+Register 02 = 0000
+Register 04 = 00F6
+Register 37 = 002F
+Register 38 = 0037
+Register 05 = 00A1
+Register 35 = 0000
+Register 36 = 0001
+============ Response is MON_RESPONSE_STOPPED
+Processing package 0201020000006200FFFFFFFF1108 for request FFFFFFFF
+============ Response is MON_RESPONSE_CHECKPOINT_DELETE
+Processing package 020100000000130001000000 for request 00000001
+============ Response is MON_RESPONSE_EXIT
+Processing package 020100000000AA0002000000 for request 00000002
+============ Response is MON_RESPONSE_RESUMED
+Processing package 0201020000006300FFFFFFFF1108 for request FFFFFFFF

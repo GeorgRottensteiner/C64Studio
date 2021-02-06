@@ -504,8 +504,6 @@ namespace C64Studio
 
       Palettes.Add( defaultPalette.Name, defaultPalette );
 
-      SetupDebugger();
-
       m_SolutionExplorer    = new SolutionExplorer( StudioCore );
       m_BinaryEditor        = new BinaryDisplay( StudioCore, new GR.Memory.ByteBuffer( 2 ), true, false );
       m_CharsetEditor       = new CharsetEditor( StudioCore );
@@ -739,13 +737,24 @@ namespace C64Studio
 
 
 
-    private void SetupDebugger()
+    private void SetupDebugger( ToolInfo RunTool )
     {
-      StudioCore.Debugging.Debugger = new VICERemoteDebugger( StudioCore );
+      if ( RunTool.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" ) )
+      {
+        StudioCore.Debugging.Debugger = new VICERemoteDebuggerBinaryInterface( StudioCore );
+
+        var viceDebugger = StudioCore.Debugging.Debugger as VICERemoteDebuggerBinaryInterface;
+        viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );
+      }
+      else
+      {
+        StudioCore.Debugging.Debugger = new VICERemoteDebugger( StudioCore );
+
+        var viceDebugger = StudioCore.Debugging.Debugger as VICERemoteDebugger;
+        viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );
+      }
       StudioCore.Debugging.Debugger.DebugEvent += Debugger_DebugEvent;
 
-      var viceDebugger = StudioCore.Debugging.Debugger as VICERemoteDebugger;
-      viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Document_DocumentEvent );
     }
 
 
@@ -2186,7 +2195,8 @@ namespace C64Studio
         }
 
         // check file version (WinVICE remote debugger changes)
-        if ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) )
+        if ( ( StudioCore.Debugging.Debugger != null )
+        &&   ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) ) )
         {
           return false;
         }
@@ -2302,6 +2312,8 @@ namespace C64Studio
         StudioCore.AddToOutput( "There is no emulator tool configured!" );
         return false;
       }
+
+      SetupDebugger( toolRun );
 
       if ( !StudioCore.Debugging.Debugger.CheckEmulatorVersion( toolRun ) )
       {
@@ -2567,7 +2579,7 @@ namespace C64Studio
       }
       StudioCore.Executing.RunProcess = null;
 
-      StudioCore.Debugging.Debugger.DisconnectFromEmulator();
+      StudioCore.Debugging.Debugger?.DisconnectFromEmulator();
 
       if ( StudioCore.Debugging.TempDebuggerStartupFilename.Length > 0 )
       {
@@ -3569,11 +3581,14 @@ namespace C64Studio
             SetToolPerspective( Perspective.DEBUG );
             mainDebugGo.Enabled = ( AppState != Types.StudioState.DEBUGGING_RUN );
             mainDebugBreak.Enabled = ( AppState == Types.StudioState.DEBUGGING_RUN );
+
+            m_DebugRegisters.EnableRegisterOverrides( AppState == StudioState.DEBUGGING_BROKEN );
           }
           else
           {
             SetToolPerspective( Perspective.EDIT );
             mainDebugGo.Enabled = true;
+            m_DebugRegisters.EnableRegisterOverrides( false );
           }
         }
         catch ( NullReferenceException )
@@ -3719,7 +3734,7 @@ namespace C64Studio
 
     private void MainForm_FormClosed( object sender, FormClosedEventArgs e )
     {
-      StudioCore.Debugging.Debugger.Quit();
+      StudioCore.Debugging.Debugger?.Quit();
     }
 
 
@@ -3825,6 +3840,7 @@ namespace C64Studio
         }
 
         StudioCore.Executing.BringToForeground();
+        m_DebugRegisters.EnableRegisterOverrides( false );
 
         AppState = Types.StudioState.DEBUGGING_RUN;
         StudioCore.Debugging.FirstActionAfterBreak = false;
@@ -4132,42 +4148,44 @@ namespace C64Studio
           StudioCore.Executing.BringStudioToForeground();
           AppState = Types.StudioState.DEBUGGING_BROKEN;
 
-          m_DebugRegisters.SetRegisters( Registers );
-          /*
-          m_DebugRegisters.SetRegisters( RegisterValues[1], RegisterValues[2], RegisterValues[3], RegisterValues[4],
-                                         RegisterValues[7], RegisterValues[0].Substring( 2 ), RegisterValues[8], RegisterValues[9], RegisterValues[6] );
-          int currentPos = GR.Convert.ToI32( RegisterValues[0].Substring( 2 ), 16 );*/
-          int currentPos = Registers.PC;
-          string documentFile = "";
-          int documentLine = -1;
-
-          //currentPos = 0x918;   // $918 -  $2cbb
-          //currentPos = 0x2430;  // für fehler in Downhill innerhalb speedscroll nested loop
-          if ( StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.DocumentAndLineFromAddress( currentPos, out documentFile, out documentLine ) )
+          // only update if we're not during closing of debugger
+          if ( ( StudioCore.Debugging.Debugger != null )
+          &&   ( !StudioCore.Debugging.Debugger.ShuttingDown ) )
           {
-            if ( ( StudioCore.Debugging.MarkedDocument == null )
-            ||   ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
-            ||   ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
-            {
-              var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );
-              StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
-              StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
+            m_DebugRegisters.SetRegisters( Registers );
+            m_DebugRegisters.EnableRegisterOverrides( true );
+            int currentPos = Registers.PC;
+            string documentFile = "";
+            int documentLine = -1;
 
-              // hide disassembly window
-              if ( StudioCore.Debugging.DebugDisassembly != null )
+            //currentPos = 0x918;   // $918 -  $2cbb
+            //currentPos = 0x2430;  // für fehler in Downhill innerhalb speedscroll nested loop
+            if ( StudioCore.Debugging.DebuggedASMBase.ASMFileInfo.DocumentAndLineFromAddress( currentPos, out documentFile, out documentLine ) )
+            {
+              if ( ( StudioCore.Debugging.MarkedDocument == null )
+              ||   ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, documentFile ) )
+              ||   ( StudioCore.Debugging.MarkedDocumentLine != documentLine ) )
               {
-                StudioCore.Debugging.DebugDisassembly.Close();
-                StudioCore.Debugging.DebugDisassembly = null;
+                var docInfo = StudioCore.Navigating.FindDocumentInfoByPath( documentFile );
+                StudioCore.Navigating.OpenDocumentAndGotoLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
+                StudioCore.Debugging.MarkLine( StudioCore.Debugging.DebuggedProject, docInfo, documentLine );
+
+                // hide disassembly window
+                if ( StudioCore.Debugging.DebugDisassembly != null )
+                {
+                  StudioCore.Debugging.DebugDisassembly.Close();
+                  StudioCore.Debugging.DebugDisassembly = null;
+                }
               }
             }
-          }
-          else
-          {
-            // try to find info in file in dependency chain
-            if ( !FindAndOpenBestMatchForLocation( currentPos ) )
+            else
             {
-              StudioCore.AddToOutput( "Failed to match address $" + currentPos.ToString( "X4" ) + " to code, showing disassembly" + System.Environment.NewLine );
-              ShowDisassemblyAt( currentPos );
+              // try to find info in file in dependency chain
+              if ( !FindAndOpenBestMatchForLocation( currentPos ) )
+              {
+                StudioCore.AddToOutput( "Failed to match address $" + currentPos.ToString( "X4" ) + " to code, showing disassembly" + System.Environment.NewLine );
+                ShowDisassemblyAt( currentPos );
+              }
             }
           }
           mainDebugGo.Enabled = true;
@@ -5530,9 +5548,11 @@ namespace C64Studio
 
         // clear entries
         m_DebugWatch.ClearAllWatchEntries();
-        StudioCore.Debugging.Debugger.ClearAllWatchEntries();
-        StudioCore.Debugging.Debugger.ClearAllBreakpoints();
-
+        if ( StudioCore.Debugging.Debugger != null )
+        {
+          StudioCore.Debugging.Debugger.ClearAllWatchEntries();
+          StudioCore.Debugging.Debugger.ClearAllBreakpoints();
+        }
         RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_CLOSED ) );
       }
     }

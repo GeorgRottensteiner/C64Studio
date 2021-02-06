@@ -78,12 +78,13 @@ namespace C64Studio.Tasks
 
     private void RunToAddress( DocumentInfo m_DocToDebug, DocumentInfo m_DocToHandle, int targetAddress )
     {
+      /*
       if ( ( Core.Debugging.Debugger.SupportsFeature( DebuggerFeature.REQUIRES_DOUBLE_ACTION_AFTER_BREAK ) )
       &&   ( Core.Debugging.FirstActionAfterBreak ) )
       {
         Core.Debugging.FirstActionAfterBreak = false;
         Core.MainForm.RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
-      }
+      }*/
       Core.MainForm.RunToAddress( m_DocToDebug, m_DocToHandle, targetAddress );
     }
 

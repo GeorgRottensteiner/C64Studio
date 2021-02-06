@@ -25,6 +25,7 @@ namespace C64Studio
     private bool            RegisterStatusChanged = false;
     private Color           UnchangedColor = Color.Black;
     private Color           ChangedColor = Color.Red;
+    private bool            SuppressTextChange = false;
 
 
 
@@ -40,6 +41,7 @@ namespace C64Studio
       string content = Content.ToString( "X2" );
       if ( Edit.Text != content )
       {
+        SuppressTextChange = true;
         Edit.Text         = content;
         EditDec.Text      = Content.ToString();
         Edit.ForeColor    = ChangedColor;
@@ -51,17 +53,22 @@ namespace C64Studio
           EditBinary.ForeColor  = ChangedColor;
         }
         Changed           = true;
+        SuppressTextChange = false;
       }
       else
       {
+        SuppressTextChange = true;
         Edit.ForeColor    = UnchangedColor;
+        EditDec.Text      = Content.ToString();
         EditDec.ForeColor = UnchangedColor;
 
         if ( EditBinary != null )
         {
-          EditBinary.ForeColor = UnchangedColor;
+          EditBinary.Text       = Convert.ToString( Content, 2 ).PadLeft( 8, '0' );
+          EditBinary.ForeColor  = UnchangedColor;
         }
         Changed           = false;
+        SuppressTextChange = false;
       }
     }
 
@@ -69,6 +76,7 @@ namespace C64Studio
 
     private void SetRegister( ushort Content, TextBox Edit, TextBox EditDec, ref bool Changed )
     {
+      SuppressTextChange = true;
       string content = Content.ToString( "X4" );
       if ( Edit.Text != content )
       {
@@ -80,47 +88,19 @@ namespace C64Studio
       }
       else
       {
+        EditDec.Text = Content.ToString();
         Edit.ForeColor = UnchangedColor;
         EditDec.ForeColor = UnchangedColor;
         Changed = false;
       }
-    }
-
-
-
-    private void SetRegister( string Content, TextBox Edit, TextBox EditDec, TextBox EditBinary, ref bool Changed )
-    {
-      Content = Content.ToUpper();
-      if ( Edit.Text != Content )
-      {
-        Edit.Text             = Content;
-        EditDec.Text          = GR.Convert.ToI32( Content, 16 ).ToString();
-        Edit.ForeColor        = ChangedColor;
-        EditDec.ForeColor     = ChangedColor;
-
-        if ( EditBinary != null )
-        {
-          EditBinary.Text       = Convert.ToString( GR.Convert.ToI32( Content, 16 ), 2 ).PadLeft( 8, '0' );
-          EditBinary.ForeColor  = ChangedColor;
-        }
-        Changed = true;
-      }
-      else
-      {
-        Edit.ForeColor        = UnchangedColor;
-        EditDec.ForeColor     = UnchangedColor;
-        if ( EditBinary != null )
-        {
-          EditBinary.ForeColor = UnchangedColor;
-        }
-        Changed = false;
-      }
+      SuppressTextChange = false;
     }
 
 
 
     private void SetRegister( string Content, TextBox Edit, ref bool Changed )
     {
+      SuppressTextChange = true;
       if ( Edit.Text != Content )
       {
         Edit.Text = Content;
@@ -132,12 +112,14 @@ namespace C64Studio
         Edit.ForeColor = UnchangedColor;
         Changed = false;
       }
+      SuppressTextChange = false;
     }
 
 
 
     private void SetRegister( int Content, TextBox Edit, ref bool Changed )
     {
+      SuppressTextChange = true;
       string    content = Content.ToString();
       if ( Edit.Text != content )
       {
@@ -150,12 +132,14 @@ namespace C64Studio
         Edit.ForeColor = UnchangedColor;
         Changed = false;
       }
+      SuppressTextChange = false;
     }
 
 
 
     private void SetRegister( byte Content, TextBox Edit, ref bool Changed )
     {
+      SuppressTextChange = true;
       string    content = Content.ToString( "X2" );
       if ( Edit.Text != content )
       {
@@ -168,24 +152,7 @@ namespace C64Studio
         Edit.ForeColor = UnchangedColor;
         Changed = false;
       }
-    }
-
-
-
-    public void SetRegisters( string A, string X, string Y, string Stack, string Status, string PC, string LIN, string Cycle, string ProcessorPort )
-    {
-      SetRegister( A, editA, editADec, editABin, ref RegisterAChanged );
-      SetRegister( X, editX, editXDec, editXBin, ref RegisterXChanged );
-      SetRegister( Y, editY, editYDec, editYBin, ref RegisterYChanged );
-      SetRegister( Stack, editStack, editStackDec, null, ref RegisterSPChanged );
-      SetRegister( PC, editPC, editPCDec, null, ref RegisterPCChanged );
-
-      SetRegister( LIN, editLIN, ref RegisterRasterLineChanged );
-      SetRegister( Cycle, editCycle, ref RegisterCyclesChanged );
-      SetRegister( ProcessorPort, edit01, ref RegisterPort01Changed );
-
-      // NV-BDIZC
-      SetRegister( Status, editStatus, ref RegisterStatusChanged );
+      SuppressTextChange = false;
     }
 
 
@@ -274,6 +241,29 @@ namespace C64Studio
 
 
 
+    private byte FlagStringToByte( string Flags )
+    {
+      byte  result = 0;
+
+      string    workFlags = Flags;
+      if ( workFlags.Length < 8 )
+      {
+        workFlags.PadRight( 8, '.' );
+      }
+
+      for ( int i = 0; i < 8; ++i )
+      {
+        if ( ( workFlags[i] != '.' )
+        &&   ( workFlags[i] != '0' ) )
+        {
+          result |= (byte)( 1 << ( 7 - i ) );
+        }
+      }
+      return result;
+    }
+
+
+
     public override void RefreshDisplayOptions()
     {
       base.RefreshDisplayOptions();
@@ -313,6 +303,182 @@ namespace C64Studio
         Edit.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) );
       }
     }
+
+
+
+    public void EnableRegisterOverrides( bool Enable )
+    {
+      editA.ReadOnly          = !Enable;
+      editADec.ReadOnly       = !Enable;
+      editABin.ReadOnly       = !Enable;
+      editX.ReadOnly          = !Enable;
+      editXDec.ReadOnly       = !Enable;
+      editXBin.ReadOnly       = !Enable;
+      editY.ReadOnly          = !Enable;
+      editYDec.ReadOnly       = !Enable;
+      editYBin.ReadOnly       = !Enable;
+      editPC.ReadOnly         = !Enable;
+      editPCDec.ReadOnly      = !Enable;
+      editStack.ReadOnly      = !Enable;
+      editStackDec.ReadOnly   = !Enable;
+      editStatus.ReadOnly     = !Enable;
+    }
+
+
+
+    private void editA_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "A", GR.Convert.ToI32( editA.Text, 16 ) );
+    }
+
+
+
+    private void editADec_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "A", GR.Convert.ToI32( editADec.Text ) & 0xff );
+    }
+
+
+
+    private void editABin_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "A", GR.Convert.ToI32( editABin.Text, 2 ) );
+    }
+
+
+
+    private void editPC_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "P", GR.Convert.ToI32( editPC.Text, 16 ) );
+    }
+
+
+
+    private void editPCDec_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "P", GR.Convert.ToI32( editPC.Text ) );
+    }
+
+
+
+    private void editX_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "X", GR.Convert.ToI32( editX.Text, 16 ) );
+    }
+
+
+
+    private void editXDec_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "X", GR.Convert.ToI32( editXDec.Text ) );
+    }
+
+
+
+    private void editXBin_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "X", GR.Convert.ToI32( editXBin.Text, 2 ) );
+    }
+
+
+
+    private void editY_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "Y", GR.Convert.ToI32( editY.Text, 16 ) );
+    }
+
+
+
+    private void editYDec_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "Y", GR.Convert.ToI32( editYDec.Text ) );
+    }
+
+
+
+    private void editYBin_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "Y", GR.Convert.ToI32( editYBin.Text, 2 ) );
+    }
+
+
+
+    private void editStack_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "S", GR.Convert.ToI32( editStack.Text, 16 ) );
+    }
+
+
+
+    private void editStackDec_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "S", GR.Convert.ToI32( editStackDec.Text ) );
+    }
+
+
+
+    private void editStatus_TextChanged( object sender, EventArgs e )
+    {
+      if ( SuppressTextChange )
+      {
+        return;
+      }
+      Core.Debugging.DebugSetRegister( "F", FlagStringToByte( editStatus.Text ) );
+    }
+
+
 
   }
 }

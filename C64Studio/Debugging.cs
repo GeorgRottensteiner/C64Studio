@@ -306,6 +306,16 @@ namespace C64Studio
 
 
 
+    public void DebugSetRegister( string Register, int Value )
+    {
+      if ( Debugger != null )
+      {
+        Debugger.SetRegister( Register, Value );
+      }
+    }
+
+
+
     public void ForceEmulatorRefresh()
     {
       if ( Core.Executing.RunProcess != null )

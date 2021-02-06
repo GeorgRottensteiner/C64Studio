@@ -97,6 +97,7 @@
     <Compile Include="CustomRenderer\StudioTheme.cs" />
     <Compile Include="Debugger\IDebugger.cs" />
     <Compile Include="Debugger\Tiny64Debugger.cs" />
+    <Compile Include="Debugger\VICERemoteDebuggerBinaryInterface.cs" />
     <Compile Include="Dialogs\FormDeltaValue.cs">
       <SubType>Form</SubType>
     </Compile>

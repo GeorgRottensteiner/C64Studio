@@ -72,10 +72,12 @@
       // 
       this.editX.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.editX.Location = new System.Drawing.Point(56, 6);
+      this.editX.MaxLength = 2;
       this.editX.Name = "editX";
       this.editX.ReadOnly = true;
       this.editX.Size = new System.Drawing.Size(25, 21);
       this.editX.TabIndex = 1;
+      this.editX.TextChanged += new System.EventHandler(this.editX_TextChanged);
       // 
       // label2
       // 
@@ -90,10 +92,12 @@
       // 
       this.editY.Font = new System.Drawing.Font("Courier New", 9F);
       this.editY.Location = new System.Drawing.Point(56, 32);
+      this.editY.MaxLength = 2;
       this.editY.Name = "editY";
       this.editY.ReadOnly = true;
       this.editY.Size = new System.Drawing.Size(25, 21);
       this.editY.TabIndex = 1;
+      this.editY.TextChanged += new System.EventHandler(this.editY_TextChanged);
       // 
       // label3
       // 
@@ -108,10 +112,12 @@
       // 
       this.editA.Font = new System.Drawing.Font("Courier New", 9F);
       this.editA.Location = new System.Drawing.Point(56, 58);
+      this.editA.MaxLength = 2;
       this.editA.Name = "editA";
       this.editA.ReadOnly = true;
       this.editA.Size = new System.Drawing.Size(25, 21);
       this.editA.TabIndex = 1;
+      this.editA.TextChanged += new System.EventHandler(this.editA_TextChanged);
       // 
       // label4
       // 
@@ -126,10 +132,12 @@
       // 
       this.editPC.Font = new System.Drawing.Font("Courier New", 9F);
       this.editPC.Location = new System.Drawing.Point(56, 84);
+      this.editPC.MaxLength = 4;
       this.editPC.Name = "editPC";
       this.editPC.ReadOnly = true;
       this.editPC.Size = new System.Drawing.Size(64, 21);
       this.editPC.TabIndex = 1;
+      this.editPC.TextChanged += new System.EventHandler(this.editPC_TextChanged);
       // 
       // label5
       // 
@@ -144,10 +152,12 @@
       // 
       this.editStack.Font = new System.Drawing.Font("Courier New", 9F);
       this.editStack.Location = new System.Drawing.Point(56, 110);
+      this.editStack.MaxLength = 4;
       this.editStack.Name = "editStack";
       this.editStack.ReadOnly = true;
       this.editStack.Size = new System.Drawing.Size(64, 21);
       this.editStack.TabIndex = 1;
+      this.editStack.TextChanged += new System.EventHandler(this.editStack_TextChanged);
       // 
       // label6
       // 
@@ -162,10 +172,12 @@
       // 
       this.editStatus.Font = new System.Drawing.Font("Courier New", 9F);
       this.editStatus.Location = new System.Drawing.Point(56, 136);
+      this.editStatus.MaxLength = 8;
       this.editStatus.Name = "editStatus";
       this.editStatus.ReadOnly = true;
       this.editStatus.Size = new System.Drawing.Size(134, 21);
       this.editStatus.TabIndex = 1;
+      this.editStatus.TextChanged += new System.EventHandler(this.editStatus_TextChanged);
       // 
       // label7
       // 
@@ -207,46 +219,56 @@
       // 
       this.editXDec.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.editXDec.Location = new System.Drawing.Point(87, 6);
+      this.editXDec.MaxLength = 3;
       this.editXDec.Name = "editXDec";
       this.editXDec.ReadOnly = true;
       this.editXDec.Size = new System.Drawing.Size(33, 21);
       this.editXDec.TabIndex = 1;
+      this.editXDec.TextChanged += new System.EventHandler(this.editXDec_TextChanged);
       // 
       // editYDec
       // 
       this.editYDec.Font = new System.Drawing.Font("Courier New", 9F);
       this.editYDec.Location = new System.Drawing.Point(87, 32);
+      this.editYDec.MaxLength = 3;
       this.editYDec.Name = "editYDec";
       this.editYDec.ReadOnly = true;
       this.editYDec.Size = new System.Drawing.Size(33, 21);
       this.editYDec.TabIndex = 1;
+      this.editYDec.TextChanged += new System.EventHandler(this.editYDec_TextChanged);
       // 
       // editADec
       // 
       this.editADec.Font = new System.Drawing.Font("Courier New", 9F);
       this.editADec.Location = new System.Drawing.Point(87, 58);
+      this.editADec.MaxLength = 3;
       this.editADec.Name = "editADec";
       this.editADec.ReadOnly = true;
       this.editADec.Size = new System.Drawing.Size(33, 21);
       this.editADec.TabIndex = 1;
+      this.editADec.TextChanged += new System.EventHandler(this.editADec_TextChanged);
       // 
       // editPCDec
       // 
       this.editPCDec.Font = new System.Drawing.Font("Courier New", 9F);
       this.editPCDec.Location = new System.Drawing.Point(126, 84);
+      this.editPCDec.MaxLength = 5;
       this.editPCDec.Name = "editPCDec";
       this.editPCDec.ReadOnly = true;
       this.editPCDec.Size = new System.Drawing.Size(64, 21);
       this.editPCDec.TabIndex = 1;
+      this.editPCDec.TextChanged += new System.EventHandler(this.editPCDec_TextChanged);
       // 
       // editStackDec
       // 
       this.editStackDec.Font = new System.Drawing.Font("Courier New", 9F);
       this.editStackDec.Location = new System.Drawing.Point(126, 110);
+      this.editStackDec.MaxLength = 5;
       this.editStackDec.Name = "editStackDec";
       this.editStackDec.ReadOnly = true;
       this.editStackDec.Size = new System.Drawing.Size(64, 21);
       this.editStackDec.TabIndex = 1;
+      this.editStackDec.TextChanged += new System.EventHandler(this.editStackDec_TextChanged);
       // 
       // label9
       // 
@@ -280,28 +302,34 @@
       // 
       this.editXBin.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.editXBin.Location = new System.Drawing.Point(126, 6);
+      this.editXBin.MaxLength = 8;
       this.editXBin.Name = "editXBin";
       this.editXBin.ReadOnly = true;
       this.editXBin.Size = new System.Drawing.Size(64, 21);
       this.editXBin.TabIndex = 1;
+      this.editXBin.TextChanged += new System.EventHandler(this.editXBin_TextChanged);
       // 
       // editYBin
       // 
       this.editYBin.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.editYBin.Location = new System.Drawing.Point(126, 32);
+      this.editYBin.MaxLength = 8;
       this.editYBin.Name = "editYBin";
       this.editYBin.ReadOnly = true;
       this.editYBin.Size = new System.Drawing.Size(64, 21);
       this.editYBin.TabIndex = 1;
+      this.editYBin.TextChanged += new System.EventHandler(this.editYBin_TextChanged);
       // 
       // editABin
       // 
       this.editABin.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.editABin.Location = new System.Drawing.Point(126, 58);
+      this.editABin.MaxLength = 8;
       this.editABin.Name = "editABin";
       this.editABin.ReadOnly = true;
       this.editABin.Size = new System.Drawing.Size(64, 21);
       this.editABin.TabIndex = 1;
+      this.editABin.TextChanged += new System.EventHandler(this.editABin_TextChanged);
       // 
       // DebugRegisters
       // 
