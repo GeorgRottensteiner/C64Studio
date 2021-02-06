@@ -158,7 +158,7 @@ namespace C64Studio.Tasks
           break;
         case Types.StudioState.BUILD_AND_DEBUG:
           // run program
-          if ( !Core.MainForm.DebugCompiledFile( m_DocumentToDebug, m_DocumentToRun ) )
+          if ( !Core.Debugging.DebugCompiledFile( m_DocumentToDebug, m_DocumentToRun ) )
           {
             Core.MainForm.AppState = Types.StudioState.NORMAL;
             return false;

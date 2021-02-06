@@ -51,6 +51,306 @@ namespace C64Studio
 
 
 
+    public void SetupDebugger( ToolInfo RunTool )
+    {
+      if ( RunTool == null )
+      {
+        return;
+      }
+
+      if ( RunTool.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" ) )
+      {
+        Debugger = new VICERemoteDebuggerBinaryInterface( Core );
+
+        var viceDebugger = Debugger as VICERemoteDebuggerBinaryInterface;
+        viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Core.MainForm.Document_DocumentEvent );
+      }
+      else
+      {
+        Debugger = new VICERemoteDebugger( Core );
+
+        var viceDebugger = Debugger as VICERemoteDebugger;
+        viceDebugger.DocumentEvent += new BaseDocument.DocumentEventHandler( Core.MainForm.Document_DocumentEvent );
+      }
+      // default to currently visible memory view
+      Debugger.SetAutoRefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
+                                     Core.MainForm.m_DebugMemory.MemorySize,
+                                     Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+
+      Debugger.DebugEvent += Core.MainForm.Debugger_DebugEvent;
+    }
+
+
+
+    public bool DebugCompiledFile( DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun )
+    {
+      if ( DocumentToDebug == null )
+      {
+        Core.AddToOutput( "Debug document not found, this is an internal error!" );
+        return false;
+      }
+
+      if ( DocumentToDebug.Element == null )
+      {
+        Core.AddToOutput( "Debugging " + DocumentToDebug.DocumentFilename + System.Environment.NewLine );
+      }
+      else
+      {
+        Core.AddToOutput( "Debugging " + DocumentToDebug.Element.Name + System.Environment.NewLine );
+      }
+
+      ToolInfo toolRun = Core.DetermineTool(DocumentToRun, true);
+      if ( toolRun == null )
+      {
+        System.Windows.Forms.MessageBox.Show( "No emulator tool has been configured yet!", "Missing emulator tool" );
+        Core.AddToOutput( "There is no emulator tool configured!" );
+        return false;
+      }
+
+      SetupDebugger( toolRun );
+
+      if ( !Debugger.CheckEmulatorVersion( toolRun ) )
+      {
+        return false;
+      }
+
+      DebuggedASMBase = DocumentToDebug;
+      DebugBaseDocumentRun = DocumentToRun;
+
+      Core.MainForm.m_DebugWatch.ReseatWatches( DocumentToDebug.ASMFileInfo );
+      Debugger.ClearCaches();
+      MemoryViews.ForEach( mv => mv.MarkAllMemoryAsUnknown() );
+      ReseatBreakpoints( DocumentToDebug.ASMFileInfo );
+      AddVirtualBreakpoints( DocumentToDebug.ASMFileInfo );
+      Debugger.ClearAllBreakpoints();
+      MarkedDocument = null;
+      MarkedDocumentLine = -1;
+      /*
+      Debug.Log( "Breakpoints." );
+      foreach ( var bplist in m_BreakPoints.Values )
+      {
+        foreach ( var bp in bplist )
+        {
+          Debug.Log( "BP at " + bp.LineIndex + " in " + bp.DocumentFilename + " at " + bp.Address + "(" + bp.Address.ToString( "x4" ) + ") V=" + bp.IsVirtual );
+          foreach ( var bpchild in bp.Virtual )
+          {
+            Debug.Log( "-BP at " + bpchild.LineIndex + " in " + bpchild.DocumentFilename + " at " + bpchild.Address + "(" + bp.Address.ToString( "x4" ) + ") V=" + bpchild.IsVirtual );
+          }
+        }
+      }*/
+
+
+      if ( !Core.Executing.StartProcess( toolRun, DocumentToRun ) )
+      {
+        return false;
+      }
+      if ( !System.IO.Directory.Exists( Core.Executing.RunProcess.StartInfo.WorkingDirectory.Trim( new char[] { '"' } ) ) )
+      {
+        Core.AddToOutput( "The determined working directory " + Core.Executing.RunProcess.StartInfo.WorkingDirectory + " does not exist" + System.Environment.NewLine );
+        return false;
+      }
+
+      // determine debug target type
+      Types.CompileTargetType targetType = C64Studio.Types.CompileTargetType.NONE;
+      if ( DocumentToRun.Element != null )
+      {
+        targetType = DocumentToRun.Element.TargetType;
+      }
+
+      string fileToRun = "";
+      if ( DocumentToRun.Element != null )
+      {
+        fileToRun = DocumentToRun.Element.TargetFilename;
+        ProjectElement.PerConfigSettings configSetting = DocumentToRun.Element.Settings[DocumentToRun.Project.Settings.CurrentConfig.Name];
+        if ( !string.IsNullOrEmpty( configSetting.DebugFile ) )
+        {
+          targetType = configSetting.DebugFileType;
+        }
+      }
+
+      if ( targetType == C64Studio.Types.CompileTargetType.NONE )
+      {
+        targetType = Core.Compiling.m_LastBuildInfo.TargetType;
+      }
+      DebugType = targetType;
+
+      string breakPointFile = PrepareAfterStartBreakPoints();
+      string command = toolRun.DebugArguments;
+
+      if ( Parser.ASMFileParser.IsCartridge( targetType ) )
+      {
+        command = command.Replace( "-initbreak 0x$(DebugStartAddressHex) ", "" );
+      }
+
+      if ( ( toolRun.PassLabelsToEmulator )
+      && ( DebuggedASMBase.ASMFileInfo != null ) )
+      {
+        breakPointFile += DebuggedASMBase.ASMFileInfo.LabelsAsFile( toolRun.LabelFormat() );
+      }
+
+      if ( breakPointFile.Length > 0 )
+      {
+        try
+        {
+          TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
+          System.IO.File.WriteAllText( TempDebuggerStartupFilename, breakPointFile );
+          command += " -moncommands \"" + TempDebuggerStartupFilename + "\"";
+        }
+        catch ( System.IO.IOException ioe )
+        {
+          System.Windows.Forms.MessageBox.Show( ioe.Message, "Error writing temporary file" );
+          Core.AddToOutput( "Error writing temporary file" );
+          TempDebuggerStartupFilename = "";
+          return false;
+        }
+      }
+
+      //ParserASM.CompileTarget != Types.CompileTargetType.NONE ) ? ParserASM.CompileTarget : DocumentToRun.Element.TargetType;
+
+      // need to adjust initial breakpoint address for late added store/load breakpoints?
+
+      InitialBreakpointIsTemporary = true;
+      //if ( BreakpointsToAddAfterStartup.Count > 0 )
+      {
+        // yes
+        LateBreakpointOverrideDebugStart = OverrideDebugStart;
+
+        // special start addresses for different run types
+        if ( Parser.ASMFileParser.IsCartridge( targetType ) )
+        {
+          OverrideDebugStart = Debugger.ConnectedMachine.InitialBreakpointAddressCartridge;
+        }
+        else
+        {
+          // directly after calling load from ram (as VICE does when autostarting a .prg file)
+          // TODO - check with .t64, .tap, .d64
+          OverrideDebugStart = Debugger.ConnectedMachine.InitialBreakpointAddress;
+        }
+      }
+      if ( ( DocumentToDebug.Project != null )
+      && ( LateBreakpointOverrideDebugStart == -1 )
+      && ( !string.IsNullOrEmpty( DocumentToDebug.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
+      {
+        int debugStartAddress = -1;
+        if ( !Core.MainForm.DetermineDebugStartAddress( DocumentToDebug, DocumentToDebug.Project.Settings.CurrentConfig.DebugStartAddressLabel, out debugStartAddress ) )
+        {
+          Core.AddToOutput( "Cannot determine value for debug start address from '" + DocumentToDebug.Project.Settings.CurrentConfig.DebugStartAddressLabel + "'" + System.Environment.NewLine );
+          return false;
+        }
+        if ( debugStartAddress != 0 )
+        {
+          InitialBreakpointIsTemporary = false;
+          OverrideDebugStart = debugStartAddress;
+          LateBreakpointOverrideDebugStart = debugStartAddress;
+        }
+      }
+
+      if ( Core.Settings.TrueDriveEnabled )
+      {
+        command = toolRun.TrueDriveOnArguments + " " + command;
+      }
+      else
+      {
+        command = toolRun.TrueDriveOffArguments + " " + command;
+      }
+
+      bool error = false;
+
+      Core.Executing.RunProcess.StartInfo.Arguments = Core.MainForm.FillParameters( command, DocumentToRun, true, out error );
+      if ( error )
+      {
+        return false;
+      }
+
+      if ( Parser.ASMFileParser.IsCartridge( targetType ) )
+      {
+        Core.Executing.RunProcess.StartInfo.Arguments += " " + Core.MainForm.FillParameters( toolRun.CartArguments, DocumentToRun, true, out error );
+      }
+      else
+      {
+        Core.Executing.RunProcess.StartInfo.Arguments += " " + Core.MainForm.FillParameters( toolRun.PRGArguments, DocumentToRun, true, out error );
+      }
+      if ( error )
+      {
+        return false;
+      }
+
+      Core.AddToOutput( "Calling " + Core.Executing.RunProcess.StartInfo.FileName + " with " + Core.Executing.RunProcess.StartInfo.Arguments + System.Environment.NewLine );
+      Core.Executing.RunProcess.Exited += new EventHandler( Core.MainForm.runProcess_Exited );
+      Core.SetStatus( "Running..." );
+
+      Core.MainForm.SetGUIForWaitOnExternalTool( true );
+
+      if ( Core.Executing.RunProcess.Start() )
+      {
+        DateTime    current = DateTime.Now;
+
+        // new GTK VICE opens up with console window (yuck) which nicely interferes with WaitForInputIdle -> give it 5 seconds to open main window
+        bool        waitForInputIdleFailed = false;
+        try
+        {
+          Core.Executing.RunProcess.WaitForInputIdle( 5000 );
+        }
+        catch ( Exception ex )
+        {
+          Debug.Log( "WaitForInputIdle failed: " + ex.ToString() );
+          waitForInputIdleFailed = true;
+        }
+
+        // only connect with debugger if VICE
+        int   numConnectionAttempts = 1;
+        if ( ( string.IsNullOrEmpty( Core.Executing.RunProcess.MainWindowTitle ) )
+        && ( waitForInputIdleFailed ) )
+        {
+          // assume GTK VICE
+          //Debug.Log( "Module:" + StudioCore.Executing.RunProcess.MainModule );
+          numConnectionAttempts = 10;
+        }
+        //Debug.Log( "MainWindow: " + StudioCore.Executing.RunProcess.MainWindowTitle );
+        if ( Core.MainForm.EmulatorSupportsDebugging( toolRun ) )
+        {
+          //Debug.Log( "Have " + numConnectionAttempts + " attempts" );
+          Core.AddToOutput( "Connection attempt " );
+          for ( int i = 0; i < numConnectionAttempts; ++i )
+          {
+            //Debug.Log( "attempt" + i );
+            Core.AddToOutput( ( i + 1 ).ToString() );
+            if ( Debugger.ConnectToEmulator( Parser.ASMFileParser.IsCartridge( targetType ) ) )
+            {
+              //Debug.Log( "-succeeded" );
+              Core.AddToOutput( " succeeded" + System.Environment.NewLine );
+              Core.MainForm.m_CurrentActiveTool = toolRun;
+              DebuggedProject = DocumentToRun.Project;
+              Core.MainForm.AppState = Types.StudioState.DEBUGGING_RUN;
+              Core.MainForm.SetGUIForDebugging( true );
+              break;
+            }
+            // wait a second
+            for ( int j = 0; j < 20; ++j )
+            {
+              System.Threading.Thread.Sleep( 50 );
+              System.Windows.Forms.Application.DoEvents();
+            }
+          }
+          if ( Core.MainForm.AppState != Types.StudioState.DEBUGGING_RUN )
+          {
+            Core.AddToOutput( "failed " + numConnectionAttempts + " times, giving up" + System.Environment.NewLine );
+            return false;
+          }
+        }
+        else
+        {
+          Core.MainForm.m_CurrentActiveTool = toolRun;
+          DebuggedProject = DocumentToRun.Project;
+          Core.MainForm.AppState = Types.StudioState.DEBUGGING_RUN;
+          Core.MainForm.SetGUIForDebugging( true );
+        }
+      }
+      return true;
+    }
+
+
+
     public void AddVirtualBreakpoints( Types.ASM.FileInfo ASMFileInfo )
     {
       if ( ASMFileInfo == null )
