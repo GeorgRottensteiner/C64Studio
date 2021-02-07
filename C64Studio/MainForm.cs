@@ -2422,7 +2422,6 @@ namespace C64Studio
               StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Remove( breakPoint );
               m_DebugBreakpoints.RemoveBreakpoint( breakPoint );
               StudioCore.Debugging.Debugger.RemoveBreakpoint( breakPoint.RemoteIndex );
-              Debug.Log( "-removed" );
               break;
             }
           }
@@ -2452,7 +2451,6 @@ namespace C64Studio
               m_DebugBreakpoints.RemoveBreakpoint( breakPoint );
 
               StudioCore.Debugging.Debugger.RemoveBreakpoint( breakPoint.RemoteIndex, breakPoint );
-              //Debug.Log( "-removed" );
               break;
             }
           }
@@ -3532,13 +3530,14 @@ namespace C64Studio
     private void DebugGo()
     {
       if ( ( m_CurrentActiveTool != null )
-      && ( !EmulatorSupportsDebugging( m_CurrentActiveTool ) ) )
+      &&   ( !EmulatorSupportsDebugging( m_CurrentActiveTool ) ) )
       {
         return;
       }
 
       if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
       {
+        m_DebugMemory.InvalidateAllMemory();
         StudioCore.Debugging.Debugger.Run();
 
         if ( StudioCore.Debugging.MarkedDocument != null )
