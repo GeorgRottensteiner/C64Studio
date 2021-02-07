@@ -73,6 +73,16 @@ namespace C64Studio
 
       InitializeComponent();
 
+      // high DPI adjusting of controls in toolbar
+      var controls = new List<Control>{ btnToggleLabelMode, btnToggleStringEntryMode, btnToggleSymbolMode, btnToggleUpperLowerCase, labelStartAddress, editBASICStartAddress, labelBASICVersion, comboBASICVersion };
+
+      int   curX = btnToggleLabelMode.Left;
+      for ( int i = 1; i < controls.Count; ++i )
+      {
+        curX = curX + controls[i - 1].Width + 10;
+        controls[i].Left = curX;
+      }
+
       foreach ( var dialect in Core.Compiling.BASICDialects )
       {
         comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, Dialect>( dialect.Key, dialect.Value ) );

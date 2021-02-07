@@ -33,8 +33,8 @@
       this.editSource = new FastColoredTextBoxNS.FastColoredTextBox();
       this.contextSource = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.renumberToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.btnToggleLabelMode = new System.Windows.Forms.CheckBox();
@@ -46,8 +46,8 @@
       this.btnToggleUpperLowerCase = new System.Windows.Forms.CheckBox();
       this.btnToggleStringEntryMode = new System.Windows.Forms.CheckBox();
       this.editBASICStartAddress = new System.Windows.Forms.TextBox();
-      this.label1 = new System.Windows.Forms.Label();
-      this.label2 = new System.Windows.Forms.Label();
+      this.labelStartAddress = new System.Windows.Forms.Label();
+      this.labelBASICVersion = new System.Windows.Forms.Label();
       this.comboBASICVersion = new System.Windows.Forms.ComboBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
@@ -94,6 +94,7 @@
       // 
       // contextSource
       // 
+      this.contextSource.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.contextSource.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyToolStripMenuItem,
             this.cutToolStripMenuItem,
@@ -101,38 +102,38 @@
             this.toolStripSeparator1,
             this.renumberToolStripMenuItem1});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(153, 120);
+      this.contextSource.Size = new System.Drawing.Size(139, 98);
       // 
       // copyToolStripMenuItem
       // 
       this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-      this.copyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.copyToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
       this.copyToolStripMenuItem.Text = "&Copy";
       this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
-      // 
-      // pasteToolStripMenuItem
-      // 
-      this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-      this.pasteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.pasteToolStripMenuItem.Text = "&Paste";
-      this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
       // 
       // cutToolStripMenuItem
       // 
       this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-      this.cutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.cutToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
       this.cutToolStripMenuItem.Text = "C&ut";
       this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
+      // 
+      // pasteToolStripMenuItem
+      // 
+      this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+      this.pasteToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+      this.pasteToolStripMenuItem.Text = "&Paste";
+      this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
       // 
       // toolStripSeparator1
       // 
       this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+      this.toolStripSeparator1.Size = new System.Drawing.Size(135, 6);
       // 
       // renumberToolStripMenuItem1
       // 
       this.renumberToolStripMenuItem1.Name = "renumberToolStripMenuItem1";
-      this.renumberToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+      this.renumberToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
       this.renumberToolStripMenuItem1.Text = "Renumber...";
       this.renumberToolStripMenuItem1.Click += new System.EventHandler(this.renumberToolStripMenuItem_Click);
       // 
@@ -150,6 +151,7 @@
       // 
       // menuBASIC
       // 
+      this.menuBASIC.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.menuBASIC.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.bASICToolStripMenuItem});
       this.menuBASIC.Location = new System.Drawing.Point(0, 0);
@@ -222,23 +224,23 @@
       this.editBASICStartAddress.Text = "2049";
       this.editBASICStartAddress.TextChanged += new System.EventHandler(this.editBASICStartAddress_TextChanged);
       // 
-      // label1
+      // labelStartAddress
       // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(171, 32);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(73, 13);
-      this.label1.TabIndex = 5;
-      this.label1.Text = "Start Address:";
+      this.labelStartAddress.AutoSize = true;
+      this.labelStartAddress.Location = new System.Drawing.Point(171, 32);
+      this.labelStartAddress.Name = "labelStartAddress";
+      this.labelStartAddress.Size = new System.Drawing.Size(73, 13);
+      this.labelStartAddress.TabIndex = 5;
+      this.labelStartAddress.Text = "Start Address:";
       // 
-      // label2
+      // labelBASICVersion
       // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(333, 32);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(79, 13);
-      this.label2.TabIndex = 5;
-      this.label2.Text = "BASIC Version:";
+      this.labelBASICVersion.AutoSize = true;
+      this.labelBASICVersion.Location = new System.Drawing.Point(333, 32);
+      this.labelBASICVersion.Name = "labelBASICVersion";
+      this.labelBASICVersion.Size = new System.Drawing.Size(79, 13);
+      this.labelBASICVersion.TabIndex = 5;
+      this.labelBASICVersion.Text = "BASIC Version:";
       // 
       // comboBASICVersion
       // 
@@ -255,8 +257,8 @@
       this.AllowDrop = true;
       this.ClientSize = new System.Drawing.Size(698, 588);
       this.Controls.Add(this.comboBASICVersion);
-      this.Controls.Add(this.label2);
-      this.Controls.Add(this.label1);
+      this.Controls.Add(this.labelBASICVersion);
+      this.Controls.Add(this.labelStartAddress);
       this.Controls.Add(this.editBASICStartAddress);
       this.Controls.Add(this.menuBASIC);
       this.Controls.Add(this.editSource);
@@ -290,8 +292,8 @@
     private System.Windows.Forms.ToolTip toolTip1;
     private System.Windows.Forms.CheckBox btnToggleUpperLowerCase;
     private System.Windows.Forms.TextBox editBASICStartAddress;
-    private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.Label labelStartAddress;
+    private System.Windows.Forms.Label labelBASICVersion;
     private System.Windows.Forms.ComboBox comboBASICVersion;
     private System.Windows.Forms.CheckBox btnToggleStringEntryMode;
     private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;

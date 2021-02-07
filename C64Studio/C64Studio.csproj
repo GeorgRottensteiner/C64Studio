@@ -747,6 +747,9 @@
     <Content Include="BASIC Dialects\BASIC Lightning.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="BASIC Dialects\BASIC V10.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="BASIC Dialects\BASIC V3.5.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
