@@ -3645,36 +3645,58 @@ namespace C64Studio.Parser
           }
           else
           {
-            if ( ( !Settings.BASICDialect.OpcodesFromByte.ContainsKey( byteValue ) )
-            ||   ( Settings.BASICDialect.OpcodesFromByte[byteValue].Command.StartsWith( "{" ) ) )
+            bool    foundTwoByteToken = false;
+            if ( !Settings.BASICDialect.OpcodesFromByte.ContainsKey( byteValue ) )
             {
-              //if ( KeymapEntryExists( System.Windows.Forms.InputLanguage.CurrentInputLanguage, System.Windows.Forms.Keys
-              if ( Types.ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
+              // could be a two byte token?
+              if ( ( dataPos + 1 < Data.Length )
+              &&   ( Data.ByteAt( dataPos + 1 ) != 0 ) )
               {
-                char charToUse = Types.ConstantData.PETSCIIToUnicode[byteValue];
-                /*
-                if ( KeyMap.KeymapEntryExists( (System.Windows.Forms.Keys)charToUse ) )
+                byte    byteValue2 = Data.ByteAt( dataPos + 1 );
+
+                ushort tokenValue = (ushort)( byteValue2 | ( byteValue << 8 ) );
+
+                if ( Settings.BASICDialect.OpcodesFromByte.ContainsKey( tokenValue ) )
                 {
-                  charToUse = KeyMap.GetKeymapEntry( (System.Windows.Forms.Keys)charToUse ).Normal;
-                }*/
-                lineContent += charToUse;
+                  ++dataPos;
+                  lineContent += Settings.BASICDialect.OpcodesFromByte[tokenValue].Command;
+                  foundTwoByteToken = true;
+                }
               }
-              else if ( ActionTokenByByteValue.ContainsKey( byteValue ) )
+            }
+            if ( !foundTwoByteToken )
+            {
+              if ( ( !Settings.BASICDialect.OpcodesFromByte.ContainsKey( byteValue ) )
+              ||   ( Settings.BASICDialect.OpcodesFromByte[byteValue].Command.StartsWith( "{" ) ) )
               {
-                lineContent += ActionTokenByByteValue[byteValue].Replacement;
+                //if ( KeymapEntryExists( System.Windows.Forms.InputLanguage.CurrentInputLanguage, System.Windows.Forms.Keys
+                if ( Types.ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
+                {
+                  char charToUse = Types.ConstantData.PETSCIIToUnicode[byteValue];
+                  /*
+                  if ( KeyMap.KeymapEntryExists( (System.Windows.Forms.Keys)charToUse ) )
+                  {
+                    charToUse = KeyMap.GetKeymapEntry( (System.Windows.Forms.Keys)charToUse ).Normal;
+                  }*/
+                  lineContent += charToUse;
+                }
+                else if ( ActionTokenByByteValue.ContainsKey( byteValue ) )
+                {
+                  lineContent += ActionTokenByByteValue[byteValue].Replacement;
+                }
+                else
+                {
+                  Debug.Log( "Unknown byte value " + byteValue );
+                }
               }
               else
               {
-                Debug.Log( "Unknown byte value " + byteValue );
+                if ( Settings.BASICDialect.OpcodesFromByte[byteValue].InsertionValue == 0x8F )
+                {
+                  encounteredREM = true;
+                }
+                lineContent += Settings.BASICDialect.OpcodesFromByte[byteValue].Command;
               }
-            }
-            else
-            {
-              if ( Settings.BASICDialect.OpcodesFromByte[byteValue].InsertionValue == 0x8F )
-              {
-                encounteredREM = true;
-              }
-              lineContent += Settings.BASICDialect.OpcodesFromByte[byteValue].Command;
             }
           }
           ++dataPos;

@@ -652,10 +652,14 @@ namespace C64Studio
       }
       if ( exportToBasicPossible )
       {
-        subItem = new System.Windows.Forms.ToolStripMenuItem( "Export to Basic code" );
-        subItem.Tag = 0;
-        subItem.Click += new EventHandler( itemExportToBasic_Click );
-        item.DropDownItems.Add( subItem );
+        item.DropDownItems.Add( "--" );
+        foreach ( var dialect in Core.Compiling.BASICDialects )
+        {
+          subItem = new System.Windows.Forms.ToolStripMenuItem( "Export to Basic code: " + dialect.Key );
+          subItem.Tag = dialect.Value;
+          subItem.Click += new EventHandler( itemExportToBasic_Click );
+          item.DropDownItems.Add( subItem );
+        }
       }
 
       // view in Hex display
@@ -785,24 +789,27 @@ namespace C64Studio
 
     void itemExportToBasic_Click( object sender, EventArgs e )
     {
-      ExportSelectedItemsToBASIC();
+      var menuItem = (ToolStripMenuItem)sender;
+
+      var dialect = (C64Models.BASIC.Dialect)menuItem.Tag;
+      ExportSelectedItemsToBASIC( dialect );
     }
 
 
 
-    void ExportSelectedItemsToBASIC()
+    void ExportSelectedItemsToBASIC( C64Models.BASIC.Dialect Dialect )
     {
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
         C64Studio.Types.FileInfo  fileToExport = (C64Studio.Types.FileInfo)item.Tag;
 
-        ExportToBASIC( fileToExport );
+        ExportToBASIC( fileToExport, Dialect );
       }
     }
 
 
 
-    private void ExportToBASIC( Types.FileInfo fileToExport )
+    private void ExportToBASIC( Types.FileInfo fileToExport, C64Models.BASIC.Dialect Dialect )
     {
       C64Studio.Types.FileInfo  fileInfo = null;
 
@@ -822,7 +829,7 @@ namespace C64Studio
 
             // trunc load address
             var parser = new Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
-            parser.SetBasicDialect( C64Models.BASIC.Dialect.BASICV2 );
+            parser.SetBasicDialect( Dialect );
             if ( parser.Disassemble( fileInfo.Data.SubBuffer( 2 ), out lines ) )
             {
               BaseDocument document = new SourceBasicEx( Core );
@@ -1149,7 +1156,7 @@ namespace C64Studio
 
     private void toolStripBtnOpenBASIC_Click( object sender, EventArgs e )
     {
-      ExportSelectedItemsToBASIC();
+      ExportSelectedItemsToBASIC( C64Models.BASIC.Dialect.BASICV2 );
     }
 
 
