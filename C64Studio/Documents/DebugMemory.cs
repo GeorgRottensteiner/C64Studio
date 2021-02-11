@@ -407,7 +407,13 @@ namespace C64Studio
 
             hexView.SelectedByteProvider.SetByteSelectionState( Offset + i, false );
           }*/
-          hexView.SelectedByteProvider.SetByteSelectionState( Offset + i, ( Core.Debugging.ActiveMemory.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_CHANGED ) != 0 );
+          bool    markAsChanged = ( Core.Debugging.ActiveMemory.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_CHANGED ) != 0;
+          if ( ( Core.Debugging.ActiveMemory.Flags[Offset + i] & MemoryView.RAMFlag.VALUE_KNOWN ) == 0 )
+          {
+            markAsChanged = false;
+          }
+
+          hexView.SelectedByteProvider.SetByteSelectionState( Offset + i, markAsChanged );
         }
         //Core.Debugging.ActiveMemory.RAM.SetU8At( Offset + i, ramByte );
         hexView.ByteProvider.WriteByte( Offset + i, ramByte );
