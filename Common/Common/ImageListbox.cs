@@ -108,6 +108,8 @@ namespace GR.Forms
     private System.Drawing.Imaging.PixelFormat    m_PixelFormat = System.Drawing.Imaging.PixelFormat.Undefined;
     private int                   m_DisplayWidth = -1;
     private int                   m_DisplayHeight = -1;
+    private float                 m_DPIFactorX = 96.0f;
+    private float                 m_DPIFactorY = 96.0f;
 
 
     public event System.Windows.Forms.DrawItemEventHandler    DrawItem;
@@ -484,31 +486,49 @@ namespace GR.Forms
 
     public int ItemAtLocation( int X, int Y )
     {
-      int     itemWidth = m_ItemWidth;
-      int     itemHeight = m_ItemHeight;
+      float     itemWidth = (float)m_ItemWidth;
+      float     itemHeight = (float)m_ItemHeight;
 
       if ( m_DisplayPage.Width != ClientRectangle.Width )
       {
-        itemWidth *= ( ClientRectangle.Width / m_DisplayPage.Width );
-        itemHeight *= ( ClientRectangle.Width / m_DisplayPage.Width );
+        itemWidth *= ( (float)ClientRectangle.Width / m_DisplayPage.Width );
+        itemHeight *= ( (float)ClientRectangle.Width / m_DisplayPage.Width );
+      }
+      int     numItemsX = m_DisplayPage.Width / m_ItemWidth;
+      int     numItemsY = m_DisplayPage.Height / m_ItemHeight;
+
+      int     itemX = -1;
+      for ( int i = 0; i < numItemsX; ++i )
+      {
+        if ( ( X >= i * itemWidth )
+        &&   ( X < ( i + 1 ) * itemWidth ) )
+        {
+          itemX = i;
+          break;
+        }
+      }
+      int     itemY = -1;
+      for ( int i = 0; i < numItemsY; ++i )
+      {
+        if ( ( Y >= i * itemHeight )
+        &&   ( Y < ( i + 1 ) * itemHeight ) )
+        {
+          itemY = i;
+          break;
+        }
       }
 
-      int xoffset = X / itemWidth;
-      if ( xoffset >= m_ItemsPerLine )
+      if ( ( itemX >= m_ItemsPerLine )
+      ||   ( itemX < 0 ) )
       {
         return -1;
       }
-      int yoffset = Y / itemHeight;
-      if ( yoffset * m_ItemsPerLine + AutoScrollVPos * m_ItemsPerLine >= Items.Count )
+      if ( ( itemY < 0 )
+      ||   ( itemY * m_ItemsPerLine + AutoScrollVPos * m_ItemsPerLine >= Items.Count ) )
       {
         return -1;
       }
-      int itemIndex = ( m_Offset + yoffset ) * m_ItemsPerLine + xoffset;
-      if ( itemIndex >= Items.Count )
-      {
-        return -1;
-      }
-      return itemIndex;
+      return ( m_Offset + itemY ) * m_ItemsPerLine + itemX;
     }
 
 
@@ -702,14 +722,15 @@ namespace GR.Forms
     {
       System.Drawing.Rectangle  trueRect = InternalItemRect( ItemIndex );
 
-      if ( ClientRectangle.Width != m_DisplayPage.Width )
+      //if ( ClientRectangle.Width != m_DisplayPage.Width )
       {
-        int     factor = ClientRectangle.Width / m_DisplayPage.Width;
+        float     factorX = (float)ClientRectangle.Width / m_DisplayPage.Width;
+        float     factorY = (float)ClientRectangle.Height / m_DisplayPage.Height;
 
-        trueRect.X *= factor;
-        trueRect.Y *= factor;
-        trueRect.Width *= factor;
-        trueRect.Height *= factor;
+        trueRect.X = (int)( trueRect.X * factorX );
+        trueRect.Y = (int)( trueRect.Y * factorY );
+        trueRect.Width = (int)( trueRect.Width * factorX );
+        trueRect.Height = (int)( trueRect.Height * factorY );
       }
 
       return trueRect;
@@ -741,6 +762,9 @@ namespace GR.Forms
         e.Graphics.FillRectangle( System.Drawing.SystemBrushes.Control, e.ClipRectangle );
         return;
       }
+
+      m_DPIFactorX = e.Graphics.DpiX;
+      m_DPIFactorY = e.Graphics.DpiY;
 
       System.Drawing.SolidBrush hottrackBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( HottrackColor ) );
 
@@ -840,7 +864,7 @@ namespace GR.Forms
             for ( int i = i1; i <= i2; ++i )
             {
               if ( ( i % m_ItemsPerLine >= x1 )
-              && ( i % m_ItemsPerLine <= x2 ) )
+              &&   ( i % m_ItemsPerLine <= x2 ) )
               {
                 e.Graphics.FillRectangle( hottrackBrush, ItemRect( i ) );
               }

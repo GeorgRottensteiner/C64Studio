@@ -41,10 +41,10 @@
       this.menuBASIC = new System.Windows.Forms.MenuStrip();
       this.bASICToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.renumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.btnToggleSymbolMode = new System.Windows.Forms.CheckBox();
+      this.btnToggleSymbolMode = new C64Studio.Controls.CSCheckBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnToggleUpperLowerCase = new System.Windows.Forms.CheckBox();
-      this.btnToggleStringEntryMode = new System.Windows.Forms.CheckBox();
+      this.btnToggleUpperLowerCase = new C64Studio.Controls.CSCheckBox();
+      this.btnToggleStringEntryMode = new C64Studio.Controls.CSCheckBox();
       this.editBASICStartAddress = new System.Windows.Forms.TextBox();
       this.labelStartAddress = new System.Windows.Forms.Label();
       this.labelBASICVersion = new System.Windows.Forms.Label();
@@ -248,7 +248,7 @@
       this.comboBASICVersion.FormattingEnabled = true;
       this.comboBASICVersion.Location = new System.Drawing.Point(418, 28);
       this.comboBASICVersion.Name = "comboBASICVersion";
-      this.comboBASICVersion.Size = new System.Drawing.Size(121, 21);
+      this.comboBASICVersion.Size = new System.Drawing.Size(150, 21);
       this.comboBASICVersion.TabIndex = 6;
       this.comboBASICVersion.SelectedIndexChanged += new System.EventHandler(this.comboBASICVersion_SelectedIndexChanged);
       // 
@@ -288,14 +288,14 @@
     private System.Windows.Forms.MenuStrip menuBASIC;
     private System.Windows.Forms.ToolStripMenuItem bASICToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem renumberToolStripMenuItem;
-    private System.Windows.Forms.CheckBox btnToggleSymbolMode;
+    private C64Studio.Controls.CSCheckBox btnToggleSymbolMode;
     private System.Windows.Forms.ToolTip toolTip1;
-    private System.Windows.Forms.CheckBox btnToggleUpperLowerCase;
+    private C64Studio.Controls.CSCheckBox btnToggleUpperLowerCase;
     private System.Windows.Forms.TextBox editBASICStartAddress;
     private System.Windows.Forms.Label labelStartAddress;
     private System.Windows.Forms.Label labelBASICVersion;
     private System.Windows.Forms.ComboBox comboBASICVersion;
-    private System.Windows.Forms.CheckBox btnToggleStringEntryMode;
+    private C64Studio.Controls.CSCheckBox btnToggleStringEntryMode;
     private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;

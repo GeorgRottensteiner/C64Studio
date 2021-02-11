@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\ByteBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Convert.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\debug.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DPIHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\FastImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\FastPictureBox.cs">
       <SubType>Component</SubType>

@@ -110,8 +110,10 @@ namespace C64Studio.Parser
         EX_BASIC_TOKEN,
         MACRO,
         COMMENT,
-        VARIABLE
+        VARIABLE,
+        HARD_COMMENT
       };
+
       public Type       TokenType = Type.DIRECT_TOKEN;
       public string     Content = "";
       public int        ByteValue = 0;
@@ -1648,7 +1650,16 @@ namespace C64Studio.Parser
 
     internal LineInfo PureTokenizeLine( string Line, int LineIndex )
     {
-      //line = ReplaceMacros( lineIndex, line );
+      if ( Line.StartsWith( "#" ) )
+      {
+        // hard comment
+        var hardInfo = new LineInfo();
+        hardInfo.Line = Line;
+        hardInfo.Tokens.Add( new Token() { Content = Line, TokenType = Token.Type.HARD_COMMENT } );
+
+        return hardInfo;
+      }
+
       int     endOfDigitPos = -1;
       for ( int i = 0; i < Line.Length; ++i )
       {
@@ -1659,6 +1670,12 @@ namespace C64Studio.Parser
         }
         ++endOfDigitPos;
       }
+
+      if ( Line.Contains( "ONXGOTO" ) )
+      {
+        Debug.Log( "aha" );
+      }
+
       LineInfo info = new LineInfo();
       info.LineIndex = LineIndex;
       if ( !LabelMode )
@@ -1688,9 +1705,13 @@ namespace C64Studio.Parser
       int       stringLiteralStartPos = -1;
       int       macroStartPos = -1;
       int       tempDataStartPos = -1;
+
       GR.Memory.ByteBuffer tempData = new GR.Memory.ByteBuffer();
 
+      TranslateCharactersToPETSCII( Line, LineIndex, endOfDigitPos, ref posInLine, ref insideMacro, ref macroStartPos, tempData );
+
       // translate line to actual PETSCII codes
+      posInLine = endOfDigitPos + 1;
       while ( posInLine < Line.Length )
       {
         char    curChar = Line[posInLine];
@@ -1849,9 +1870,11 @@ namespace C64Studio.Parser
               ++posInLine;
               continue;
             }
+
+            /*
             // is there a token now?
-            bool entryFound = true;
-            bool potentialToken = false;
+            bool entryFound = false;
+            Opcode potentialOpcode = null;
             foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in Settings.BASICDialect.OpcodesFromByte )
             {
               Opcode  opcode = opcodeEntry.Value;
@@ -1863,10 +1886,6 @@ namespace C64Studio.Parser
                 {
                   // can't be this token, length not complete
                   entryFound = false;
-                  if ( i > 0 )
-                  {
-                    potentialToken = true;
-                  }
                   break;
                 }
                 if ( tempData.ByteAt( i ) != (byte)opcode.Command[i] )
@@ -1877,36 +1896,41 @@ namespace C64Studio.Parser
               }
               if ( entryFound )
               {
-                Token basicToken4 = new Token();
-                basicToken4.TokenType  = Token.Type.BASIC_TOKEN;
-                basicToken4.ByteValue  = (byte)opcode.InsertionValue;
-                basicToken4.Content    = opcode.Command;
-                basicToken4.StartIndex = tempDataStartPos;
-                info.Tokens.Add( basicToken4 );
-
-                tempData.Clear();
-                tempDataStartPos = -1;
-                insideDataStatement = ( opcode.Command == "DATA" );
-
-                if ( IsComment( opcode ) )
+                if ( ( potentialOpcode == null )
+                ||   ( opcode.Command.Length > potentialOpcode.Command.Length ) )
                 {
-                  if ( basicToken4.StartIndex + 3 < Line.Length )
-                  {
-                    // everything else is comment
-                    Token comment       = new Token();
-                    comment.TokenType   = Token.Type.COMMENT;
-                    comment.Content     = Line.Substring( basicToken4.StartIndex + 3 );
-                    comment.StartIndex  = basicToken4.StartIndex + 3;
-                    info.Tokens.Add( comment );
-
-                    return info;
-                  }
+                  potentialOpcode = opcode;
                 }
-                break;
               }
             }
-            if ( entryFound )
+            if ( potentialOpcode != null )
             {
+              Token basicToken4 = new Token();
+              basicToken4.TokenType = Token.Type.BASIC_TOKEN;
+              basicToken4.ByteValue = (byte)potentialOpcode.InsertionValue;
+              basicToken4.Content = potentialOpcode.Command;
+              basicToken4.StartIndex = tempDataStartPos;
+              info.Tokens.Add( basicToken4 );
+
+              tempData.Clear();
+              tempDataStartPos = -1;
+              insideDataStatement = ( potentialOpcode.Command == "DATA" );
+
+              if ( IsComment( potentialOpcode ) )
+              {
+                if ( basicToken4.StartIndex + 3 < Line.Length )
+                {
+                  // everything else is comment
+                  Token comment       = new Token();
+                  comment.TokenType = Token.Type.COMMENT;
+                  comment.Content = Line.Substring( basicToken4.StartIndex + 3 );
+                  comment.StartIndex = basicToken4.StartIndex + 3;
+                  info.Tokens.Add( comment );
+
+                  return info;
+                }
+              }
+
               ++posInLine;
               continue;
             }
@@ -1922,10 +1946,6 @@ namespace C64Studio.Parser
                 if ( i >= tempData.Length )
                 {
                   // can't be this token
-                  if ( i > 0 )
-                  {
-                    potentialToken = true;
-                  }
                   entryFound = false;
                   break;
                 }
@@ -1955,15 +1975,16 @@ namespace C64Studio.Parser
             {
               ++posInLine;
               continue;
-            }
-            // not a token, add directly, but only if not a potential BASIC token!!
-            if ( !potentialToken )
+            }*/
+
+            bool insideREMStatement = false;
+            if ( FindOpcode( tempData, ref posInLine, info, ref insideDataStatement, ref insideREMStatement ) )
             {
-              /*
-              ConsolidateTokens( info, tempData, tempDataStartPos );
-              tempData.Clear();
-              tempDataStartPos = -1;*/
+              continue;
             }
+
+            // not a token, add directly
+            AddDirectToken( info, nextByte, posInLine );
           }
         }
 
@@ -2129,7 +2150,30 @@ namespace C64Studio.Parser
 
     internal LineInfo TokenizeLine( string Line, int LineIndex, ref int LastLineNumber )
     {
-      //line = ReplaceMacros( lineIndex, line );
+      if ( Line.Length == 0 )
+      {
+        var emptyInfo = new LineInfo();
+        emptyInfo.LineIndex = LineIndex;
+        emptyInfo.Line = Line;
+
+        return emptyInfo;
+      }
+
+      if ( Line.StartsWith( "#" ) )
+      {
+        // hard comment
+        var hardInfo = new LineInfo();
+        hardInfo.Line = Line;
+        hardInfo.Tokens.Add( new Token() { Content = Line, TokenType = Token.Type.HARD_COMMENT } );
+
+        return hardInfo;
+      }
+
+      if ( Line.Contains( "ONXGOTO" ) )
+      {
+        Debug.Log( "aha" );
+      }
+
       int     endOfDigitPos = -1;
       for ( int i = 0; i < Line.Length; ++i )
       {
@@ -2156,7 +2200,7 @@ namespace C64Studio.Parser
       int       macroStartPos = -1;
       GR.Memory.ByteBuffer tempData = new GR.Memory.ByteBuffer();
 
-      TranslateCharactersToPETSCII( Line, LineIndex, endOfDigitPos, ref posInLine, ref insideMacro, ref macroStartPos, tempData );
+      int numCharsSkipped = TranslateCharactersToPETSCII( Line, LineIndex, endOfDigitPos, ref posInLine, ref insideMacro, ref macroStartPos, tempData );
 
       
       if ( tempData.Length + endOfDigitPos + 1 > 80 )
@@ -2421,6 +2465,11 @@ namespace C64Studio.Parser
           }
         }
       }
+      // offset by line number
+      for ( int i = 1; i < info.Tokens.Count; ++i )
+      {
+        info.Tokens[i].StartIndex += endOfDigitPos + 1 + numCharsSkipped;
+      }
       return info;
     }
 
@@ -2438,8 +2487,10 @@ namespace C64Studio.Parser
 
 
 
-    private void TranslateCharactersToPETSCII( string Line, int LineIndex, int endOfDigitPos, ref int posInLine, ref bool insideMacro, ref int macroStartPos, ByteBuffer tempData )
+    private int TranslateCharactersToPETSCII( string Line, int LineIndex, int endOfDigitPos, ref int posInLine, ref bool insideMacro, ref int macroStartPos, ByteBuffer tempData )
     {
+      int numCharsSkipped = 0;
+
       while ( posInLine < Line.Length )
       {
         char    curChar = Line[posInLine];
@@ -2533,15 +2584,18 @@ namespace C64Studio.Parser
           continue;
         }
         // find actual byte value of char
-        MapCharacterToActualKey( LineIndex, curChar, posInLine, endOfDigitPos, tempData );
+        numCharsSkipped += MapCharacterToActualKey( LineIndex, curChar, posInLine, endOfDigitPos, tempData );
         ++posInLine;
       }
+
+      return numCharsSkipped;
     }
 
 
 
-    private void MapCharacterToActualKey( int LineIndex, char curChar, int posInLine, int endOfDigitPos, ByteBuffer tempData )
+    private int MapCharacterToActualKey( int LineIndex, char curChar, int posInLine, int endOfDigitPos, ByteBuffer tempData )
     {
+      int numCharsSkipped = 0;
       if ( !Settings.UpperCaseMode )
       {
         // lower case mode
@@ -2555,15 +2609,19 @@ namespace C64Studio.Parser
           else
           {
             if ( ( curChar != 32 )
-            ||   ( posInLine > endOfDigitPos + 1 ) )
+            || ( posInLine > endOfDigitPos + 1 ) )
             {
               // strip spaces after line numbers
 
               // TODO - lower case petscii!
               tempData.AppendU8( foundKey.LowerCasePETSCII );
             }
+            else
+            {
+              ++numCharsSkipped;
+            }
           }
-          return;
+          return numCharsSkipped;
         }
       }
       if ( ( !Types.ConstantData.CharToC64Char.ContainsKey( curChar ) )
@@ -2592,7 +2650,12 @@ namespace C64Studio.Parser
         {
           tempData.AppendU8( petsciiValue );
         }
+        else
+        {
+          ++numCharsSkipped;
+        }
       }
+      return numCharsSkipped;
     }
 
 
@@ -3397,6 +3460,14 @@ namespace C64Studio.Parser
       lineNumber = 10;
       foreach ( KeyValuePair<int, LineInfo> lineInfo in m_LineInfos )
       {
+        if ( ( lineInfo.Value.Tokens.Count == 1 )
+        &&   ( lineInfo.Value.Tokens[0].TokenType == Token.Type.HARD_COMMENT ) )
+        {
+          // leave as is
+          sb.AppendLine( lineInfo.Value.Tokens[0].Content );
+          continue;
+        }
+
         bool    hadREM = false;
 
         // is this a label definition?
@@ -4015,33 +4086,53 @@ namespace C64Studio.Parser
 
 
 
-    public static string MakeUpperCase( string BASICText )
+    public static string MakeUpperCase( string BASICText, bool C64Font )
     {
       StringBuilder   sb = new StringBuilder( BASICText.Length );
 
       foreach ( var singleChar in BASICText )
       {
-        if ( ( singleChar & 0xff00 ) == 0xef00 )
+        if ( C64Font )
         {
-          char    newChar = (char)( ( singleChar & 0x00ff ) | 0xee00 );
-          if ( ( newChar >= 0xee01 )
-          &&   ( newChar <= 0xee01 + 25 ) )
+          if ( ( singleChar & 0xff00 ) == 0xef00 )
           {
-            sb.Append( (char)( newChar - 0xee01 + 'A' ) );
+            char    newChar = (char)( ( singleChar & 0x00ff ) | 0xee00 );
+            if ( ( newChar >= 0xee01 )
+            &&   ( newChar <= 0xee01 + 25 ) )
+            {
+              sb.Append( (char)( newChar - 0xee01 + 'A' ) );
+            }
+            else
+            {
+              sb.Append( newChar );
+            }
+          }
+          else if ( ( singleChar >= 0x61 )
+          && ( singleChar <= 0x7a ) )
+          {
+            sb.Append( (char)( singleChar - 0x20 ) );
           }
           else
           {
-            sb.Append( newChar );
+            sb.Append( singleChar );
           }
-        }
-        else if ( ( singleChar >= 0x61 )
-        &&        ( singleChar <= 0x7a ) )
-        {
-          sb.Append( (char)( singleChar - 0x20 ) );
         }
         else
         {
-          sb.Append( singleChar );
+          if ( ( singleChar >= 'A' )
+          &&   ( singleChar <= 'Z' ) )
+          {
+            sb.Append( (char)( singleChar + 'a' - 'A' ) );
+          }
+          else if ( ( singleChar >= 'a' )
+          &&        ( singleChar <= 'z' ) )
+          {
+            sb.Append( (char)( singleChar + 'A' - 'a' ) );
+          }
+          else
+          {
+            sb.Append( singleChar );
+          }
         }
       }
       return sb.ToString();
@@ -4049,33 +4140,53 @@ namespace C64Studio.Parser
 
 
 
-    public static string MakeLowerCase( string BASICText )
+    public static string MakeLowerCase( string BASICText, bool C64Font )
     {
       StringBuilder   sb = new StringBuilder( BASICText.Length );
 
       foreach ( var singleChar in BASICText )
       {
-        if ( ( singleChar & 0xff00 ) == 0xee00 )
+        if ( C64Font )
         {
-          char    newChar = (char)( ( singleChar & 0x00ff ) | 0xef00 );
-          if ( ( newChar >= 'A' )
-          &&   ( newChar <= 'Z' ) )
+          if ( ( singleChar & 0xff00 ) == 0xee00 )
           {
-            sb.Append( (char)( newChar + 0xef01 - 'A' ) );
+            char    newChar = (char)( ( singleChar & 0x00ff ) | 0xef00 );
+            if ( ( newChar >= 'A' )
+            &&   ( newChar <= 'Z' ) )
+            {
+              sb.Append( (char)( newChar + 0xef01 - 'A' ) );
+            }
+            else
+            {
+              sb.Append( newChar );
+            }
+          }
+          else if ( ( singleChar >= 'A' )
+          &&        ( singleChar <= 'Z' ) )
+          {
+            sb.Append( (char)( singleChar + 0xef01 - 'A' ) );
           }
           else
           {
-            sb.Append( newChar );
+            sb.Append( singleChar );
           }
-        }
-        else if ( ( singleChar >= 'A' )
-        &&        ( singleChar <= 'Z' ) )
-        {
-          sb.Append( (char)( singleChar + 0xef01 - 'A' ) );
         }
         else
         {
-          sb.Append( singleChar );
+          if ( ( singleChar >= 'A' )
+          &&   ( singleChar <= 'Z' ) )
+          {
+            sb.Append( (char)( singleChar + 'a' - 'A' ) );
+          }
+          else if ( ( singleChar >= 'a' )
+          &&        ( singleChar <= 'z' ) )
+          {
+            sb.Append( (char)( singleChar + 'A' - 'a' ) );
+          }
+          else
+          {
+            sb.Append( singleChar );
+          }
         }
       }
       return sb.ToString();

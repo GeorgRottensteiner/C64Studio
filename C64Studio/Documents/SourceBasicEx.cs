@@ -83,6 +83,11 @@ namespace C64Studio
         controls[i].Left = curX;
       }
 
+      int   oldHeight = editSource.Height;
+      int   newHeight = oldHeight - ( ( comboBASICVersion.Bottom + 5 ) - editSource.Top );
+      editSource.Top = comboBASICVersion.Bottom + 5;
+      editSource.Height = newHeight;
+
       foreach ( var dialect in Core.Compiling.BASICDialects )
       {
         comboBASICVersion.Items.Add( new GR.Generic.Tupel<string, Dialect>( dialect.Key, dialect.Value ) );
@@ -111,7 +116,8 @@ namespace C64Studio
       editSource.RightBracket = ')';
       editSource.LeftBracket2 = '\x0';
       editSource.RightBracket2 = '\x0';
-      editSource.CommentPrefix = "REM";
+      editSource.CommentPrefix = "#";
+      //editSource.CommentPrefix = "REM";
 
       RefreshDisplayOptions();
 
@@ -214,10 +220,12 @@ namespace C64Studio
       string    content = editSource.Lines[e.Place.iLine];
       if ( m_LowerCaseMode )
       {
-        content = MakeUpperCase( content );
+        content = MakeUpperCase( content, Core.Settings.BASICUseNonC64Font );
       }
 
-      var info = Core.Compiling.ParserBasic.PureTokenizeLine( content, e.Place.iLine );
+      //var info = Core.Compiling.ParserBasic.PureTokenizeLine( content, e.Place.iLine );
+      int dummyLastLineNumber = -1;
+      var info = Core.Compiling.ParserBasic.TokenizeLine( content, e.Place.iLine, ref dummyLastLineNumber );
 
       foreach ( var token in info.Tokens )
       {
@@ -282,18 +290,6 @@ namespace C64Studio
 
     void editSource_TextChanged( object sender, FastColoredTextBoxNS.TextChangedEventArgs e )
     {
-      /*
-      //clear previous highlighting
-      e.ChangedRange.ClearStyle( m_TextStyles );
-
-      // apply all styles
-      e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LITERAL_NUMBER )], m_TextRegExp[(int)Types.ColorableElement.LITERAL_NUMBER] );
-      e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LITERAL_STRING )], m_TextRegExp[(int)Types.ColorableElement.LITERAL_STRING] );
-      e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.CODE )], m_TextRegExp[(int)Types.ColorableElement.CODE] );
-      e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )], m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] );
-      e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.LABEL )], m_TextRegExp[(int)Types.ColorableElement.LABEL] );
-      //e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.SyntaxElement.COMMENT )], m_TextRegExp[(int)Types.SyntaxElement.COMMENT] );
-      */
       if ( UndoPossible )
       {
         SetModified();
@@ -335,7 +331,8 @@ namespace C64Studio
         editSource.Font = new System.Drawing.Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
       }
 
-      editSource.CharHeight = 18;
+      var g= editSource.CreateGraphics();
+      editSource.CharHeight = (int)( 18 * g.DpiY / 96.0f );
 
       editSource.Language = FastColoredTextBoxNS.Language.Custom;
 
@@ -365,7 +362,8 @@ namespace C64Studio
       ApplySyntaxColoring( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS );
       ApplySyntaxColoring( Types.ColorableElement.ERROR_UNDERLINE );
 
-      editSource.CommentPrefix = "REM";
+      //editSource.CommentPrefix = "REM";
+      editSource.CommentPrefix = "#";
 
       //editSource.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
       editSource.TabLength = Core.Settings.TabSize;
@@ -622,7 +620,7 @@ namespace C64Studio
       string    content = editSource.Text;
       if ( m_LowerCaseMode )
       {
-        content = MakeUpperCase( content );
+        content = MakeUpperCase( content, Core.Settings.BASICUseNonC64Font );
       }
       return content;
     }
@@ -1157,7 +1155,7 @@ namespace C64Studio
                 }
                 if ( m_LowerCaseMode )
                 {
-                  editSource.SelectedText = MakeLowerCase( "PRINT" );
+                  editSource.SelectedText = MakeLowerCase( "PRINT", Core.Settings.BASICUseNonC64Font );
                 }
                 else
                 {
@@ -1169,7 +1167,7 @@ namespace C64Studio
               string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
               if ( m_LowerCaseMode )
               {
-                leftText = MakeUpperCase( leftText );
+                leftText = MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
               }
 
               if ( ( leftText.Length >= 1 )
@@ -1187,7 +1185,7 @@ namespace C64Studio
                     // TODO - case!
                     if ( m_LowerCaseMode )
                     {
-                      editSource.SelectedText = MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ) );
+                      editSource.SelectedText = MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
                     }
                     else
                     {
@@ -1268,7 +1266,7 @@ namespace C64Studio
               string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
               if ( m_LowerCaseMode )
               {
-                leftText = MakeUpperCase( leftText );
+                leftText = MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
               }
 
               if ( ( leftText.Length >= 1 )
@@ -1285,7 +1283,7 @@ namespace C64Studio
                     // TODO - case!
                     if ( m_LowerCaseMode )
                     {
-                      editSource.SelectedText = MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ) );
+                      editSource.SelectedText = MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
                     }
                     else
                     {
@@ -1375,7 +1373,8 @@ namespace C64Studio
     {
       int     lineIndex = editSource.Selection.Start.iLine;
 
-      var lineInfo = m_Parser.PureTokenizeLine( editSource.Lines[lineIndex], lineIndex );
+      int dummyLastLineNumber = -1;
+      var lineInfo = m_Parser.TokenizeLine( editSource.Lines[lineIndex], lineIndex, ref dummyLastLineNumber );
 
       var rem = lineInfo.Tokens.Where( t => m_Parser.IsComment( t ) ).FirstOrDefault();
       return ( rem != null );
@@ -1490,7 +1489,7 @@ namespace C64Studio
 
       var settings = new Parser.BasicFileParser.ParserSettings();
       settings.StripSpaces = Core.Settings.BASICStripSpaces;
-      settings.BASICDialect = Core.Compiling.BASICDialects[DocumentInfo.Element.BASICDialect];
+      settings.BASICDialect = m_BASICDialect;
 
       Parser.BasicFileParser parser = new C64Studio.Parser.BasicFileParser( settings, DocumentInfo.FullPath );
       parser.LabelMode = m_LabelMode;
@@ -1544,7 +1543,7 @@ namespace C64Studio
     {
       if ( m_LowerCaseMode )
       {
-        Text = MakeLowerCase( Text );
+        Text = MakeLowerCase( Text, Core.Settings.BASICUseNonC64Font );
       }
       editSource.Text = Text;
       SetModified();
@@ -1750,11 +1749,11 @@ namespace C64Studio
 
       if ( m_LowerCaseMode )
       {
-        text = MakeLowerCase( text );
+        text = MakeLowerCase( text, Core.Settings.BASICUseNonC64Font );
       }
       else
       {
-        text = MakeUpperCase( text );
+        text = MakeUpperCase( text, Core.Settings.BASICUseNonC64Font );
       }
       editSource.Text = text;
 
@@ -1819,6 +1818,15 @@ namespace C64Studio
     {
       string dialect = ( (GR.Generic.Tupel<string, Dialect>)comboBASICVersion.SelectedItem ).first;
       Dialect basicDialect = ( (GR.Generic.Tupel<string, Dialect>)comboBASICVersion.SelectedItem ).second;
+
+      // override start address if it's default
+      if ( m_BASICDialect != null )
+      {
+        if ( m_StartAddress == m_BASICDialect.DefaultStartAddress )
+        {
+          editBASICStartAddress.Text = basicDialect.DefaultStartAddress;
+        }
+      }
 
       if ( ( DocumentInfo != null )
       &&   ( DocumentInfo.Element != null ) )

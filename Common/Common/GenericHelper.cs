@@ -76,10 +76,26 @@ namespace GR
         return Obj1.Equals( Obj2 );
       }
 
+
+
       public static bool operator !=( Tupel<T1, T2> Obj1, Tupel<T1, T2> Obj2 )
       {
+        if ( object.ReferenceEquals( Obj1, null ) )
+        {
+          if ( object.ReferenceEquals( Obj2, null ) )
+          {
+            return false;
+          }
+          return true;
+        }
+        if ( object.ReferenceEquals( Obj2, null ) )
+        {
+          return true;
+        }
         return !Obj1.Equals( Obj2 );
       }
+
+
 
       public bool Equals( Tupel<T1,T2> OtherTupel )
       {

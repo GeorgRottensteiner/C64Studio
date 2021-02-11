@@ -32,6 +32,7 @@ namespace C64Models.BASIC
     public Dictionary<string, Opcode>       Opcodes = new Dictionary<string, Opcode>();
     public SortedDictionary<ushort, Opcode> OpcodesFromByte = new SortedDictionary<ushort, Opcode>();
     public Dictionary<string, Opcode>       ExOpcodes = new Dictionary<string, Opcode>();
+    public string                           DefaultStartAddress = "2049";
 
     public static Dialect                   BASICV2;
 
@@ -160,7 +161,7 @@ namespace C64Models.BASIC
 
 
 
-    public static Dialect ReadBASICDialect( string File, out string ErrorMessage )
+    public static Dialect ReadBASICDialectForUnitTest( string File, out string ErrorMessage )
     {
       ErrorMessage = "";
       var dialect = new Dialect();
@@ -178,6 +179,11 @@ namespace C64Models.BASIC
           if ( ( string.IsNullOrEmpty( line ) )
           ||   ( line.StartsWith( "#" ) ) )
           {
+            continue;
+          }
+          if ( line.StartsWith( "StartAddress=" ) )
+          {
+            dialect.DefaultStartAddress = line.Substring( 13 );
             continue;
           }
           // skip header

@@ -42,7 +42,15 @@ namespace C64Studio.CustomRenderer
       {
         int     lastLineNo = i;
         var     line = ChangedRange.tb.Lines[i];
-        var info = _Parser.PureTokenizeLine( line, i );
+
+        if ( line.Contains( "ONXGOTO" ) )
+        {
+          Debug.Log( "aha" );
+        }
+        //var info = _Parser.PureTokenizeLine( line, i );
+
+        int lastLineNumber = -1;
+        var info = _Parser.TokenizeLine( line, i, ref lastLineNumber );
 
         var lineRange = ChangedRange.tb.GetLine( i );
         lineRange.ClearStyle();
@@ -71,6 +79,7 @@ namespace C64Studio.CustomRenderer
               subRange.SetStyle( StyleIndex.Style4 );
               break;
             case Parser.BasicFileParser.Token.Type.COMMENT:
+            case Parser.BasicFileParser.Token.Type.HARD_COMMENT:
               subRange.SetStyle( StyleIndex.Style3 );
               break;
             case Parser.BasicFileParser.Token.Type.MACRO:

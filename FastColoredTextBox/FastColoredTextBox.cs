@@ -2062,6 +2062,7 @@ namespace FastColoredTextBoxNS
       SizeF size = GetCharSize( BaseFont, 'M' );
       CharWidth = (int)Math.Round( size.Width * 1f /*0.85*/) - 1 /*0*/;
       CharHeight = lineInterval + (int)Math.Round( size.Height * 1f /*0.9*/) - 1 /*0*/;
+
       //
       //if (wordWrap)
       //    RecalcWordWrap(0, Lines.Count - 1);

@@ -100,12 +100,19 @@ namespace C64Studio
           {
             continue;
           }
+          if ( line.StartsWith( "StartAddress=" ) )
+          {
+            dialect.DefaultStartAddress = line.Substring( 13 );
+            continue;
+          }
+
           // skip header
           if ( firstLine )
           {
             firstLine = false;
             continue;
           }
+          
 
           if ( line == "ExOpcodes" )
           {

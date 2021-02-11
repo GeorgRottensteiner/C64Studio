@@ -76,6 +76,9 @@
     <Compile Include="Controls\CharacterEditor.Designer.cs">
       <DependentUpon>CharacterEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CSCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\CustomDrawControl.cs">
       <SubType>Component</SubType>
     </Compile>

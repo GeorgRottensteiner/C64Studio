@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using C64Studio.CustomRenderer;
 
 namespace GR.Forms
 {
@@ -114,7 +115,7 @@ namespace GR.Forms
           m_DirtyRectRight  = m_ImageWidth;
           m_DirtyRectBottom = m_ImageHeight;
         }
-        m_DisplayPage.Resize( newWidth, newHeight );
+        //m_DisplayPage.Resize( newWidth, newHeight );
         m_DisplayPageBuffer.Resize( newWidth, newHeight );
         m_Width = newWidth;
         m_Height = newHeight;
@@ -122,29 +123,6 @@ namespace GR.Forms
       base.OnSizeChanged( e );
     }
 
-
-    /*
-    public void Draw()
-    {
-      if ( ( m_DisplayPage.Width == 0 )
-      ||   ( m_MemoryImage == null ) )
-      {
-        System.Drawing.Graphics g = CreateGraphics();
-        g.FillRectangle( System.Drawing.SystemBrushes.ButtonFace, ClientRectangle );
-
-        OnPaint( new PaintEventArgs( g, ClientRectangle ) );
-        g.Dispose();
-        return;
-      }
-      Invalidate();
-
-      m_DisplayPage.DrawFromMemoryImage( m_MemoryImage, 0, 0 );
-      System.Drawing.Graphics g2 = CreateGraphics();
-      OnPaint( new PaintEventArgs( g2, ClientRectangle ) );
-      g2.Dispose();
-      Update();
-    }
-    */
 
 
     private void OnPostPaint( GR.Image.FastImage TargetBuffer )
@@ -195,7 +173,6 @@ namespace GR.Forms
 
             g.Dispose();
           }
-          //m_DisplayPage.Draw( Handle, ClientRectangle );
         }
         return;
       }
