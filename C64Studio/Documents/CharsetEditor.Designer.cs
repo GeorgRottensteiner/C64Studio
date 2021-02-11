@@ -499,6 +499,7 @@ namespace C64Studio
       // 
       // menuStrip1
       // 
+      this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -569,6 +570,8 @@ namespace C64Studio
       // 
       // CharsetEditor
       // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(1064, 527);
       this.Controls.Add(this.tabCharsetEditor);
       this.Controls.Add(this.menuStrip1);

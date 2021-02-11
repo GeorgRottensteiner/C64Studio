@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using C64Studio.Formats;
+using GR.Image;
 
 namespace C64Studio.Controls
 {
@@ -821,7 +822,8 @@ namespace C64Studio.Controls
       }
       else
       {
-        e.Graphics.DrawString( "" + Types.ConstantData.ScreenCodeToChar[(byte)m_CurrentChar].CharValue, new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel ), System.Drawing.SystemBrushes.WindowText, 100, 0 );
+        int offset = (int)e.Graphics.MeasureString( labelCharNo.Text, labelCharNo.Font ).Width;
+        e.Graphics.DrawString( "" + Types.ConstantData.ScreenCodeToChar[(byte)m_CurrentChar].CharValue, new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel ), System.Drawing.SystemBrushes.WindowText, offset + 10, 0 );
       }
     }
 
@@ -1184,8 +1186,8 @@ namespace C64Studio.Controls
 
     private void HandleMouseOnPlayground( int X, int Y, MouseButtons Buttons )
     {
-      int     charX = X / ( picturePlayground.ClientRectangle.Width / 16 );
-      int     charY = Y / ( picturePlayground.ClientRectangle.Height / 16 );
+      int     charX = (int)( ( 16 * X ) / picturePlayground.ClientRectangle.Width );
+      int     charY = (int)( ( 16 * Y ) / picturePlayground.ClientRectangle.Height );
 
       if ( ( Buttons & MouseButtons.Left ) == 0 )
       {
@@ -1247,7 +1249,7 @@ namespace C64Studio.Controls
     {
       if ( ( Buttons & MouseButtons.Left ) == MouseButtons.Left )
       {
-        int colorIndex = X / 16;
+        int colorIndex = (int)( ( 16 * X ) / panelCharColors.ClientSize.Width );
         m_CurrentColor = (byte)colorIndex;
         RedrawColorChooser();
       }
@@ -1630,7 +1632,9 @@ namespace C64Studio.Controls
         return;
       }
 
-      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20, e.Bounds.Top, e.Bounds.Width - 20, e.Bounds.Height );
+      int offset = (int)e.Graphics.MeasureString( "22", combo.Font ).Width + 5 + 3;
+
+      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset, e.Bounds.Top, e.Bounds.Width - offset, e.Bounds.Height );
       if ( ( e.State & DrawItemState.Disabled ) != 0 )
       {
         e.Graphics.FillRectangle( System.Drawing.SystemBrushes.GrayText, itemRect );
@@ -1655,12 +1659,16 @@ namespace C64Studio.Controls
       ComboBox combo = (ComboBox)sender;
 
       e.DrawBackground();
-      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20, e.Bounds.Top, e.Bounds.Width - 20, e.Bounds.Height );
+
+      int offset = (int)e.Graphics.MeasureString( "22", combo.Font ).Width + 5 + 3;
+      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset, e.Bounds.Top, e.Bounds.Width - offset, e.Bounds.Height );
+
+      
       if ( e.Index >= 8 )
       {
-        itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20, e.Bounds.Top, ( e.Bounds.Width - 20 ) / 2, e.Bounds.Height );
+        itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset, e.Bounds.Top, ( e.Bounds.Width - offset ) / 2, e.Bounds.Height );
         e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
-        itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20 + ( e.Bounds.Width - 20 ) / 2, e.Bounds.Top, e.Bounds.Width - ( e.Bounds.Width - 20 ) / 2, e.Bounds.Height );
+        itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset + ( e.Bounds.Width - offset ) / 2, e.Bounds.Top, e.Bounds.Width - ( e.Bounds.Width - offset ) / 2, e.Bounds.Height );
         e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index - 8], itemRect );
       }
       else
