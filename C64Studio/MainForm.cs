@@ -2214,8 +2214,6 @@ namespace C64Studio
             try
             {
               StudioCore.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
-              System.IO.File.WriteAllText( StudioCore.Debugging.TempDebuggerStartupFilename, labelInfo );
-
               if ( System.IO.Path.GetFileNameWithoutExtension( toolRun.Filename ).ToUpper().StartsWith( "C64DEBUGGER" ) )
               {
                 runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
@@ -2224,7 +2222,9 @@ namespace C64Studio
               {
                 // VICE format
                 runArguments = "-moncommands \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+                labelInfo += "\nexit\n";
               }
+              System.IO.File.WriteAllText( StudioCore.Debugging.TempDebuggerStartupFilename, labelInfo );
             }
             catch ( System.IO.IOException ioe )
             {
