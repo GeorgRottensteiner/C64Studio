@@ -1,9 +1,13 @@
 #C64 Studio BASIC declaration file
 #Comments start with #
 #CSV Format 
-#Token        = actual name of command
-#ByteValues   = one or more byte values (hex)
-#Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
+#Token              = actual name of command
+#ByteValues         = one or more byte values (hex)
+#Abbreviation       = short cut of command if it exists (lower case, shifted letters are upper case)
+#StartAddress=xxxx  = sets the default BASIC start address
+
+StartAddress=8193
+
 Token;ByteValues;Abbreviation
 ABS;B6;
 AND;AF;

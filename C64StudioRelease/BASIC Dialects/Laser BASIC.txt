@@ -4,6 +4,10 @@
 #Token        = actual name of command
 #ByteValues   = one or more byte values (hex)
 #Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
+#StartAddress=xxxx  = sets the default BASIC start address
+
+StartAddress=2049
+
 Token;ByteValues;Abbreviation
 END;80;
 E.;80;
