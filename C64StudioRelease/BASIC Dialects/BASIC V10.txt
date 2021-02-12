@@ -157,7 +157,7 @@ SCRATCH;f2;
 SCREEN;fe2e;
 SET;fe2d;
 SGN;b4;
-SIN;be;
+SIN;bf;
 SLEEP;fe0b;
 SLOW;fe26;
 SOUND;da;
