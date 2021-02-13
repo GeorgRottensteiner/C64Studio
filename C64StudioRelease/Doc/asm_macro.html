@@ -20,6 +20,7 @@
       <li><a href="#binary">!BINARY, !BIN, !BI</a></li>
       <li><a href="#byte">!BYTE, !BY, !8, !08</a></li>
       <li><a href="#convtab">!CONVTAB, !CT</a></li>
+      <li><a href="#cpu">!CPU</a></li>
       <li><a href="#end">!END</a></li>
       <li><a href="#eof">!ENDOFFILE, !EOF</a></li>
       <li><a href="#error">!ERROR, !SERIOUS</a></li>
@@ -91,16 +92,85 @@
     <br>
   </div>
   <a name="basic"></a>
-  <H2>!BASIC [,&lt;jump address&gt;]<br>!BASIC &lt;line number&gt;,&lt;label&gt;<br>!BASIC &lt;line number&gt;,&lt;text comment,&gt;,&lt;label&gt;</H2>
+  <H2>!BASIC [,&lt;jump address&gt;]<br>!BASIC &lt;line number&gt;,&lt;label&gt;<br>!BASIC &lt;line number&gt;,&lt;special/tokens,&gt;,&lt;label&gt;</H2>
   <div id="mybody">
-    This pseudo op adds a BASIC start line with a sys call to either the given jump address or the first statement after the pseudo op. If not provided otherwise the added BASIC line always has line number 10 and a 4 digit target address. This way the BASIC line will always require 12 bytes.<br>
+    This pseudo op adds a BASIC start line with a sys call to either the given jump address or the first statement after the pseudo op. If not provided otherwise the added BASIC line always has line number 10 and a 4 digit target address. This way the BASIC line will always require 12 bytes.
+    If the jump address is 5 decimal digits the line will use 13 bytes.<br>
     <br>
-    If the string comment is used it is appended directly after the SYS number.<br>
+    If a string comment is used it is appended directly after the SYS number.<br>
+    Note: If no colon is added this will result in a syntax error when returning to BASIC.<br>
     <br>
     <br>
-    <div id="code"><br>      !basic InitTitle
-      !basic 2018,START_ADDRESS
-      !basic 2018," BY RGCD",START_ADDRESS
+    <b>Example #1 - standard, no parameters</b><br>
+    <br>
+    <div id="code"><br>      *=$0801
+      ;12 bytes basic sys call
+    !basic
+
+      ;SYS call jumps here
+      rts
+    <br></div>
+    <br>
+    BASIC listing looks like:<br>
+    <br>
+    <div id="code"><br>    10 SYS2061
+    <br></div>
+    <br>
+    <br>
+
+
+    <b>Example #2 - start address</b><br>
+    <br>
+    <div id="code"><br>      *=$0801
+      ;12 bytes basic sys call
+    !basic init
+
+    init
+      ;SYS call jumps here
+      rts
+    <br></div>
+    <br>
+    BASIC listing looks like:<br>
+    <br>
+    <div id="code"><br>    10 SYS2061
+    <br></div>
+    <br>
+    <br>
+
+    <b>Example #3 - line number and start address</b><br>
+    <br>
+    <div id="code"><br>      *=$0801
+      ;12 bytes basic sys call
+    !basic 2021, init
+
+    init
+      ;SYS call jumps here
+      rts
+    <br></div>
+    <br>
+    BASIC listing looks like:<br>
+    <br>
+    <div id="code"><br>    2021 SYS2061
+    <br></div>
+    <br>
+    <br>
+
+
+    <b>Example #4 - full monty, line number, tokens/text and start address</b><br>
+    <br>
+    <div id="code"><br>      *=$0801
+      ;29 bytes basic sys call
+      ;sys call is followed by colon, a REM token, 4 backspaces to hide them during LIST, and the actual comment
+    !basic 2021, ":", $8F, $14,$14,$14,$14, " MY COMMENT", init
+
+    init
+      ;SYS call jumps here
+      rts
+    <br></div>
+    <br>
+    BASIC listing looks like:<br>
+    <br>
+    <div id="code"><br>    2021 SYS2061 MY COMMENT
     <br></div>
     <br>
     <br>
@@ -163,6 +233,25 @@
     <br>
     <br>
   </div>
+  <a name="cpu"></a>
+  <H2>!CPU &lt;cpu type&gt;</H2>
+  <div id="mybody">
+    This pseudo op sets the processor to assemble for. Currently there are four supported processors. Default is 6510.<br>
+    <br>
+    * 6510 - Default 6501 with illegal opcodes (used e.g. in C64)<br>
+    * 65C02 - 6502 with BRA, PHX/Y, PLX/Y, STZ, TRB/TSB<br>
+    * R65C02 - 65C02 with BBRx, BBSx, RMBx, SMBx<br>
+    * W65C02 - WDC 65C02<br>
+    * 65CE02<br>
+    * 4502<br>
+    * M65 - 4502 with long and quad mode using prefixes (used e.g. in Mega65)<br>
+    <br>
+    <br>
+    <div id="code"><br>      !cpu 6510
+    <br></div>
+    <br>
+    <br>
+  </div>
   <a name="end"></a>
   <H2>!END</H2>
   <div id="mybody">
@@ -214,17 +303,34 @@
     <br>
   </div>
   <a name="fill"></a><a name="fi"></a>
-  <H2>!FILL, !FI &lt;count&gt;,&lt;value&gt;<br>
+  <H2>!FILL, !FI &lt;count&gt;[,&lt;value&gt;]<br>
   !FILL, !FI &lt;count&gt;,[expression]</H2>
   <div id="mybody">
     This pseudo op fills the given value count times at the current location.<br>
     For the expression form the expression is evaluated for every byte. The expression inside the brackets uses the label "i" as index, ranging from 0 to count - 1. Any global "i" label is suspended inside the brackets and restored afterwards.<br>
     <br>
+    <b>Example #1 - simple fill</b><br>
+    <br>
+    <div id="code"><br>      !fill 8
+    <br></div>
+    <br>
+    Fills 8 bytes with value zero.<br>
+    <br>
+
+    <b>Example #2 - simple fill with value</b><br>
     <br>
     <div id="code"><br>      !fill 8,$ff
-      !fill ITEM_COUNT,0
-      !fill 5, [i * 3]
-      <br></div>
+    <br></div>
+    <br>
+    Fills 8 bytes with value $ff.<br>
+    <br>
+
+    <b>Example #3 - fill with expression</b><br>
+    <br>
+    <div id="code"><br>      !fill 5, [i * 3]
+    <br></div>
+    <br>
+    Fills 5 bytes, with values 0, 3, 6, 9, 12.<br>
     <br>
     <br>
   </div>
