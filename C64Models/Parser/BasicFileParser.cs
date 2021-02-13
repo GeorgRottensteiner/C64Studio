@@ -2169,11 +2169,6 @@ namespace C64Studio.Parser
         return hardInfo;
       }
 
-      if ( Line.Contains( "ONXGOTO" ) )
-      {
-        Debug.Log( "aha" );
-      }
-
       int     endOfDigitPos = -1;
       for ( int i = 0; i < Line.Length; ++i )
       {

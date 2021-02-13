@@ -43,25 +43,32 @@ namespace C64Studio.CustomRenderer
         int     lastLineNo = i;
         var     line = ChangedRange.tb.Lines[i];
 
-        if ( line.Contains( "ONXGOTO" ) )
-        {
-          Debug.Log( "aha" );
-        }
         //var info = _Parser.PureTokenizeLine( line, i );
 
         int lastLineNumber = -1;
         var info = _Parser.TokenizeLine( line, i, ref lastLineNumber );
 
         var lineRange = ChangedRange.tb.GetLine( i );
-        lineRange.ClearStyle();
+        lineRange.ClearStyle( StyleIndex.All );
+
+        bool hadREM = false;
 
         foreach ( var token in info.Tokens )
         {
           var subRange = new Range( ChangedRange.tb, token.StartIndex, i, token.StartIndex + token.Content.Length, i );
+          if ( hadREM )
+          {
+            subRange.SetStyle( StyleIndex.Style3 );
+            continue;
+          }
           switch ( token.TokenType )
           {
             case Parser.BasicFileParser.Token.Type.BASIC_TOKEN:
               subRange.SetStyle( StyleIndex.Style8 );
+              if ( _Parser.IsComment( token ) )
+              {
+                hadREM = true;
+              }
               break;
             case Parser.BasicFileParser.Token.Type.DIRECT_TOKEN:
               subRange.SetStyle( StyleIndex.Style6 );
