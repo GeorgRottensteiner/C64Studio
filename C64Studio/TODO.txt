@@ -1,4 +1,13 @@
 ﻿C64Studio
+o Scaling:
+  All editors under the ‘Window’ menu except the charset editor suffer from :
+  - controls halfway drawn
+  - controls overlapping
+  - cursor position off when drawing
+  - editor size to small
+  - buttons not fitting in panel area
+  - import export tab all controls drawn at half height 
+o  Wenn man sich einen Speicherbereich anschaut, den man vorher noch nie gesehen hat, ist da immer noch alles rot.
 o  I would like to be able to right click on a label and have a list of references to this label. 
     So that I can then double click on a reference and jump to it. It would be neat if that list of references stayed open 
     until I closed it, so that I can quickly inspect all references.

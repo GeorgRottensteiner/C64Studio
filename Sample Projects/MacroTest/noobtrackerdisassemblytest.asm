@@ -2,6 +2,8 @@
 !basic
 jsr getnewblock
 nop
+lda #1
+sta $0400
 jmp *
 
 rts; --- breakpoint ---

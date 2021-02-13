@@ -1079,6 +1079,8 @@ namespace C64Studio
     [DllImport( "user32.dll" )]
     static extern int ToUnicodeEx( uint wVirtKey, uint wScanCode, byte[] lpKeyState, [Out, MarshalAs( UnmanagedType.LPWStr )] StringBuilder pwszBuff, int cchBuff, uint wFlags, IntPtr dwhkl );
 
+
+
     protected override bool ProcessCmdKey( ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData )
     {
       if ( ( keyData == m_ControlKeyReplacement )
