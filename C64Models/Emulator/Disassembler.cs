@@ -35,11 +35,11 @@ namespace Tiny64
         case Tiny64.Opcode.AddressingType.INDIRECT:
           targetAddress = Memory.ReadWordDirect( (ushort)( CodePos + 1 ) );
           break;
-        case Tiny64.Opcode.AddressingType.INDIRECT_X:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X:
           targetAddress = Memory.ReadByteDirect( (ushort)( CodePos + 1 ) );
           twoBytes = false;
           break;
-        case Tiny64.Opcode.AddressingType.INDIRECT_Y:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y:
           targetAddress = Memory.ReadByteDirect( (ushort)( CodePos + 1 ) );
           twoBytes = false;
           break;
@@ -104,10 +104,10 @@ namespace Tiny64
         case Tiny64.Opcode.AddressingType.INDIRECT:
           output += " ( " + addressPlacement + " )";
           break;
-        case Tiny64.Opcode.AddressingType.INDIRECT_X:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X:
           output += " ( " + addressPlacement + ", x)";
           break;
-        case Tiny64.Opcode.AddressingType.INDIRECT_Y:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y:
           output += " ( " + addressPlacement + " ), y";
           break;
         case Tiny64.Opcode.AddressingType.RELATIVE:

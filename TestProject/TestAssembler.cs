@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace TestProject
 {
   [TestClass]
-  public class UnitTestAssembler
+  public partial class TestAssembler
   {
     private GR.Memory.ByteBuffer TestAssemblePDS( string Source )
     {
@@ -404,12 +404,13 @@ namespace TestProject
       config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
 
-      Assert.IsTrue( parser.Parse( source, null, config, null ) );
-      Assert.IsTrue( parser.Assemble( config ) );
+      var assembly = TestAssembleC64Studio( source );
+      //Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      //Assert.IsTrue( parser.Assemble( config ) );
 
-      var assembly = parser.AssembledOutput;
+      //var assembly = parser.AssembledOutput;
 
-      Assert.AreEqual( "01080B080A009E32303631000000A900186D00208D0020A9016D01208D012060", assembly.Assembly.ToString() );
+      Assert.AreEqual( "01080B080A009E32303631000000A900186D00208D0020A9016D01208D012060", assembly.ToString() );
     }
 
 
@@ -681,7 +682,6 @@ namespace TestProject
 
       Assert.AreEqual( "001F17000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", assembly.Assembly.ToString() );
     }
-
 
 
   }

@@ -36,6 +36,7 @@ namespace C64Studio.Types.ASM
     public List<Types.TokenInfo>  NeededParsedExpression = null;
     public GR.Collections.Map<byte, byte> LineCodeMapping = null;
     public Tiny64.Opcode          Opcode = null;
+    public bool                   OpcodeUsingLongMode = false;
     public GR.Memory.ByteBuffer   LineData = null;
     public bool                   HasCollapsedContent = false;
   };

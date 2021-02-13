@@ -2487,6 +2487,18 @@ namespace C64Studio.Parser
 
 
 
+    private bool IsTrueOpeningBraceChar( string Token )
+    {
+      if ( ( Token == "(" )
+      ||   ( Token == "[" ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
     private bool IsOpeningBraceChar( string Token )
     {
       return m_AssemblerSettings.OpenBracketChars.Contains( Token );
@@ -2927,7 +2939,9 @@ namespace C64Studio.Parser
 
             if ( ( ( lineInfo.Opcode == null )
             ||     ( ( lineInfo.Opcode != null )
-            &&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_RELATIVE ) ) )
+            &&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_RELATIVE )
+            &&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.RELATIVE_16 )
+            &&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_INDIRECT_SP_Y ) ) )
             &&   ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, out value ) ) )
             {
               /*
@@ -2980,8 +2994,9 @@ namespace C64Studio.Parser
                               lineInfo.NeededParsedExpression[lineInfo.NeededParsedExpression.Count - 1].EndPos + 1 - lineInfo.NeededParsedExpression[0].StartPos );
                 }
                 // check value size
-                if ( ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.INDIRECT_Y )
-                ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.INDIRECT_X )
+                if ( ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y )
+                ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X )
+                ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Z )
                 ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE )
                 ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_X )
                 ||   ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_Y ) )
@@ -3053,7 +3068,7 @@ namespace C64Studio.Parser
                       }
 
                       // relative label
-                      int delta = relativeValue - lineInfo.AddressStart - 2;
+                      int delta = relativeValue - lineInfo.AddressStart - 3;
                       if ( ( delta < -128 )
                       ||   ( delta > 127 ) )
                       {
@@ -3063,6 +3078,53 @@ namespace C64Studio.Parser
                       else
                       {
                         lineInfo.LineData.AppendU8( (byte)delta );
+                      }
+                    }
+                  }                
+                }
+                else if ( lineInfo.Opcode.Addressing == Opcode.AddressingType.ZEROPAGE_INDIRECT_SP_Y )
+                {
+                  // this has two seperate expressions
+                  List<List<TokenInfo>> tokenInfos;
+                  var result = ParseLineInParameters( lineInfo.NeededParsedExpression, 1, lineInfo.NeededParsedExpression.Count - 3, lineIndex, out tokenInfos );
+                  if ( result != ParseLineResult.OK )
+                  {
+                    AddError( lineIndex,
+                              m_LastErrorInfo.Code,
+                              "Failed to parse opcode arguments" );
+                  }
+                  else if ( tokenInfos.Count != 2 )
+                  {
+                    AddError( lineIndex,
+                              ErrorCode.E1000_SYNTAX_ERROR,
+                              "Expected two arguments to zeropage SP relative addressing opcode." );
+                  }
+                  else
+                  {
+                    int     zeroPageValue;
+                    if ( !EvaluateTokens( lineIndex, tokenInfos[0], out zeroPageValue ) )
+                    {
+                      AddError( lineIndex,
+                                m_LastErrorInfo.Code,
+                                "Could not evaluate " + lineInfo.Line.Substring( m_LastErrorInfo.Pos, m_LastErrorInfo.Length ),
+                                m_LastErrorInfo.Pos,
+                                m_LastErrorInfo.Length );
+                    }
+                    else
+                    {
+                      // zeropage numerand
+                      if ( !ValidByteValue( zeroPageValue ) )
+                      {
+                        AddError( lineIndex,
+                                  Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE,
+                                  "Value out of bounds for byte, needs to be >= -128 and <= 255. Expression:"
+                                    + TokensToExpression( tokenInfos[0] ),
+                                  tokenInfos[0][0].StartPos,
+                                  tokenInfos[0][tokenInfos[0].Count - 1].EndPos - tokenInfos[0][0].StartPos + 1 );
+                      }
+                      else
+                      {
+                        lineInfo.LineData.AppendU8( (byte)zeroPageValue );
                       }
                     }
                   }                
@@ -3080,6 +3142,21 @@ namespace C64Studio.Parser
                   else
                   {
                     lineInfo.LineData.AppendU8( (byte)delta );
+                  }
+                }
+                else if ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE_16 )
+                {
+                  int delta = value - lineInfo.AddressStart - 2;
+                  if ( ( delta < -32768 )
+                  ||   ( delta > 32767 ) )
+                  {
+                    AddError( lineIndex, Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR, "Relative jump too far, trying to jump " + delta + " bytes" );
+                    lineInfo.LineData.AppendU16( 0 );
+                    //return false;
+                  }
+                  else
+                  {
+                    lineInfo.LineData.AppendU16( (ushort)delta );
                   }
                 }
                 else if ( lineInfo.Opcode.NumOperands == 1 )
@@ -7464,12 +7541,13 @@ namespace C64Studio.Parser
           }
 
           info.Line = parseLine;
-          Tiny64.Opcode estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info );
+          var estimatedOpcode = EstimateOpcode( lineIndex, lineTokenInfos, possibleOpcodes, ref info );
           if ( estimatedOpcode != null )
           {
             //dh.Log( "Found Token " + opcode.Mnemonic + ", size " + info.NumBytes.ToString() + " in line " + parseLine );
-            info.NumBytes = estimatedOpcode.NumOperands + 1;
-            info.Opcode = estimatedOpcode;
+            info.NumBytes = estimatedOpcode.first.NumOperands + 1;
+            info.Opcode = estimatedOpcode.first;
+            info.OpcodeUsingLongMode = estimatedOpcode.second;
           }
 
           if ( info.Opcode != null )
@@ -7480,6 +7558,7 @@ namespace C64Studio.Parser
               {
                 info.LineData = new GR.Memory.ByteBuffer();
               }
+              HandleM65OpcodePrefixes( info );
               info.LineData.AppendU8( (byte)info.Opcode.ByteValue );
               info.NeededParsedExpression = null;
             }
@@ -7489,6 +7568,7 @@ namespace C64Studio.Parser
               {
                 info.LineData = new GR.Memory.ByteBuffer();
               }
+              HandleM65OpcodePrefixes( info );
               info.LineData.AppendU8( (byte)info.Opcode.ByteValue );
               int byteValue = -1;
 
@@ -7512,13 +7592,16 @@ namespace C64Studio.Parser
                 continue;
               }
 
+              int     startingTokensToStrip = info.Opcode.StartingTokenCount;
+              int     trailingTokensToStrip = info.Opcode.TrailingTokenCount;
+
               if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, out byteValue ) )
               {
                 if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
                 {
                   int delta = byteValue - info.AddressStart - 2;
                   if ( ( delta < -128 )
-                  || ( delta > 127 ) )
+                  ||   ( delta > 127 ) )
                   {
                     AddError( lineIndex,
                               Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR,
@@ -7566,6 +7649,8 @@ namespace C64Studio.Parser
               {
                 info.LineData = new GR.Memory.ByteBuffer();
               }
+              HandleM65OpcodePrefixes( info );
+
               info.LineData.AppendU8( (byte)info.Opcode.ByteValue );
               int byteValue = -1;
 
@@ -7576,12 +7661,12 @@ namespace C64Studio.Parser
               ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ABSOLUTE_Y )
               ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_X )
               ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_Y )
-              ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.INDIRECT_X )
-              ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.INDIRECT_Y ) )
+              ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X )
+              ||   ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y ) )
               {
                 countTokens -= 2;
               }
-              if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ABSOLUTE_X_INDIRECT )
+              if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.ABSOLUTE_INDIRECT_X )
               {
                 // remove ,x)
                 ++startIndex;
@@ -7633,7 +7718,7 @@ namespace C64Studio.Parser
                     }
 
                     // relative label
-                    int delta = relativeValue - info.AddressStart - 2;
+                    int delta = relativeValue - info.AddressStart - 3;
                     if ( ( delta < -128 )
                     ||   ( delta > 127 ) )
                     {
@@ -7670,7 +7755,29 @@ namespace C64Studio.Parser
                             lineTokenInfos[startIndex].StartPos,
                             lineTokenInfos[startIndex + countTokens - 1].EndPos + 1 - lineTokenInfos[startIndex].StartPos );
                 }
-                info.LineData.AppendU16( (ushort)byteValue );
+
+                if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE_16 )
+                {
+                  int delta = byteValue - info.AddressStart - 2;
+                  if ( ( delta < -32768 )
+                  ||   ( delta > 32767 ) )
+                  {
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1100_RELATIVE_JUMP_TOO_FAR,
+                              "Relative jump too far, trying to jump " + delta + " bytes",
+                              lineTokenInfos[1].StartPos,
+                              lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
+                    info.LineData.AppendU16( 0 );
+                  }
+                  else
+                  {
+                    info.LineData.AppendU16( (ushort)delta );
+                  }
+                }
+                else
+                {
+                  info.LineData.AppendU16( (ushort)byteValue );
+                }
                 info.NeededParsedExpression = null;
               }
               else
@@ -7717,7 +7824,7 @@ namespace C64Studio.Parser
                     info.NeededParsedExpression.RemoveRange( info.NeededParsedExpression.Count - 2, 2 );
                   }
                   break;
-                case Tiny64.Opcode.AddressingType.INDIRECT_X:
+                case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X:
                   if ( ( info.NeededParsedExpression.Count < 4 )
                   ||   ( !IsOpeningBraceChar( info.NeededParsedExpression[0].Content )
                   ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 3].Content != "," )
@@ -7750,7 +7857,7 @@ namespace C64Studio.Parser
                   break;
                 case Tiny64.Opcode.AddressingType.ABSOLUTE_Y:
                 case Tiny64.Opcode.AddressingType.ZEROPAGE_Y:
-                case Tiny64.Opcode.AddressingType.INDIRECT_Y:
+                case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y:
                   // in case of case Opcode.AddressingType.INDIRECT_Y the brackets are parsed out already!
                   if ( ( info.NeededParsedExpression.Count < 2 )
                   ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
@@ -7759,6 +7866,23 @@ namespace C64Studio.Parser
                     AddError( lineIndex,
                               Types.ErrorCode.E1305_EXPECTED_TRAILING_SYMBOL,
                               "Expected trailing ,y",
+                              info.NeededParsedExpression[0].StartPos,
+                              info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].EndPos + 1 - info.NeededParsedExpression[0].StartPos );
+                  }
+                  else
+                  {
+                    info.NeededParsedExpression.RemoveRange( info.NeededParsedExpression.Count - 2, 2 );
+                  }
+                  break;
+                case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Z:
+                  // in case of case Opcode.AddressingType.INDIRECT_Z the brackets are parsed out already!
+                  if ( ( info.NeededParsedExpression.Count < 2 )
+                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 2].Content != "," )
+                  ||   ( info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].Content.ToUpper() != "Z" ) )
+                  {
+                    AddError( lineIndex,
+                              Types.ErrorCode.E1305_EXPECTED_TRAILING_SYMBOL,
+                              "Expected trailing ,z",
                               info.NeededParsedExpression[0].StartPos,
                               info.NeededParsedExpression[info.NeededParsedExpression.Count - 1].EndPos + 1 - info.NeededParsedExpression[0].StartPos );
                   }
@@ -9582,6 +9706,34 @@ namespace C64Studio.Parser
 
 
 
+    private void HandleM65OpcodePrefixes( LineInfo info )
+    {
+      // m65 long mode is using prefixed "nop"
+      if ( ( info.OpcodeUsingLongMode )
+      &&   ( info.Opcode.NumNopsToPrefix == 2 ) )
+      {
+        // long mode combined with quad mode, prefix NEG:NEG:EOM
+        info.LineData.AppendU16( 0x4242 );
+        info.LineData.AppendU8( 0xea );
+        info.NumBytes += 3;
+      }
+      else if ( info.OpcodeUsingLongMode )
+      {
+        info.LineData.AppendU8( 0xea );
+        ++info.NumBytes;
+      }
+      else
+      {
+        for ( int i = 0; i < info.Opcode.NumNopsToPrefix; ++i )
+        {
+          info.LineData.AppendU8( 0x42 );
+          ++info.NumBytes;
+        }
+      }
+    }
+
+
+
     private void POZone( List<ScopeInfo> stackScopes, int lineIndex, LineInfo info, List<TokenInfo> lineTokenInfos )
     {
       if ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" )
@@ -9684,7 +9836,7 @@ namespace C64Studio.Parser
     {
       if ( lineTokenInfos.Count != 2 )
       {
-        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02 and W65C02 are supported" );
+        AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502 and M65 are supported" );
         return ParseLineResult.RETURN_NULL;
       }
 
@@ -9704,8 +9856,17 @@ namespace C64Studio.Parser
         case "W65C02":
           m_Processor = Processor.CreateWDC65C02();
           return ParseLineResult.OK;
+        case "65CE02":
+          m_Processor = Processor.Create65CE02();
+          return ParseLineResult.OK;
+        case "4502":
+          m_Processor = Processor.Create4502();
+          return ParseLineResult.OK;
+        case "M65":
+          m_Processor = Processor.CreateM65();
+          return ParseLineResult.OK;
       }
-      AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02 and W65C02 are supported" );
+      AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502 and M65 are supported" );
       return ParseLineResult.RETURN_NULL;
     }
 
@@ -13488,7 +13649,7 @@ namespace C64Studio.Parser
 
 
 
-    private Tiny64.Opcode EstimateOpcode( int LineIndex, List<Types.TokenInfo> LineTokens, List<Tiny64.Opcode> PossibleOpcodes, ref Types.ASM.LineInfo info )
+    private GR.Generic.Tupel<Tiny64.Opcode, bool> EstimateOpcode( int LineIndex, List<Types.TokenInfo> LineTokens, List<Tiny64.Opcode> PossibleOpcodes, ref Types.ASM.LineInfo info )
     {
       // lineTokens[0] contains the mnemonic
       if ( LineTokens.Count == 0 )
@@ -13505,13 +13666,16 @@ namespace C64Studio.Parser
       &&   ( PossibleOpcodes[0].Addressing == Tiny64.Opcode.AddressingType.IMMEDIATE ) )
       {
         // that one is given
-        return PossibleOpcodes[0];
+        return new GR.Generic.Tupel<Tiny64.Opcode, bool>( PossibleOpcodes[0], false );
       }
 
       bool endsWithCommaX = false;
       bool endsWithCommaY = false;
+      bool endsWithCommaZ = false;
       bool oneParamInBrackets = false;
       bool twoParamsInBrackets = false;
+      bool secondParamIsSP = false;
+      bool longMode = false;
       int numBytesFirstParam = 0;
       int expressionTokenStartIndex = 1;
       int expressionTokenCount = LineTokens.Count - 1;
@@ -13532,10 +13696,18 @@ namespace C64Studio.Parser
           expressionTokenCount = LineTokens.Count - 2 - expressionTokenStartIndex;
           expressionTokenCountForLaterEvaluation = expressionTokenCount + 2;
         }
+        if ( ( LineTokens[LineTokens.Count - 2].Content == "," )
+        &&   ( LineTokens[LineTokens.Count - 1].Content.ToUpper() == "Z" ) )
+        {
+          endsWithCommaZ = true;
+          expressionTokenCount = LineTokens.Count - 2 - expressionTokenStartIndex;
+          expressionTokenCountForLaterEvaluation = expressionTokenCount + 2;
+        }
 
         // TODO detect , if not ,x or ,y
         if ( ( !endsWithCommaX )
-        &&   ( !endsWithCommaY ) )
+        &&   ( !endsWithCommaY )
+        &&   ( !endsWithCommaZ ) )
         {
           for ( int i = 1; i < LineTokens.Count - 1; ++i )
           {
@@ -13546,7 +13718,7 @@ namespace C64Studio.Parser
               {
                 if ( potentialOp.Addressing == Opcode.AddressingType.ZEROPAGE_RELATIVE )
                 {
-                  return potentialOp;
+                  return new GR.Generic.Tupel<Tiny64.Opcode, bool>( potentialOp, longMode );
                 }
               }
             }
@@ -13554,20 +13726,21 @@ namespace C64Studio.Parser
         }
 
 
-        if ( LineTokens[1].Content == "(" )
+        if ( IsTrueOpeningBraceChar( LineTokens[1].Content ) )
         {
+          longMode = ( LineTokens[1].Content == AssemblerSettings.SQUARE_BRACKETS_OPEN );
           int tokenPos = 2;
           int numBracketCount = 1;
           expressionTokenStartIndex = 2;
           while ( ( tokenPos < LineTokens.Count )
-          &&      ( ( LineTokens[tokenPos].Content != ")" )
+          &&      ( ( !IsMatchingBrace( LineTokens[1].Content, LineTokens[tokenPos].Content ) )
           ||        ( numBracketCount > 1 ) ) )
           {
-            if ( LineTokens[tokenPos].Content == ")" )
+            if ( IsClosingBraceChar( LineTokens[tokenPos].Content ) )
             {
               --numBracketCount;
             }
-            else if ( LineTokens[tokenPos].Content == "(" )
+            else if ( IsOpeningBraceChar( LineTokens[tokenPos].Content ) )
             {
               ++numBracketCount;
             }
@@ -13575,6 +13748,12 @@ namespace C64Studio.Parser
             {
               twoParamsInBrackets = true;
               expressionTokenCount = tokenPos - expressionTokenStartIndex;
+              if ( ( tokenPos + 2 < LineTokens.Count )
+              &&   ( LineTokens[tokenPos + 1].Content.ToUpper() == "S" )
+              &&   ( IsClosingBraceChar( LineTokens[tokenPos + 2].Content ) ) )
+              {
+                secondParamIsSP = true;
+              }
               break;
             }
             ++tokenPos;
@@ -13604,7 +13783,7 @@ namespace C64Studio.Parser
               {
                 if ( opcode.Addressing == Tiny64.Opcode.AddressingType.IMPLICIT )
                 {
-                  return opcode;
+                  return new GR.Generic.Tupel<Tiny64.Opcode, bool>( opcode, longMode );
                 }
               }
             }
@@ -13794,6 +13973,13 @@ namespace C64Studio.Parser
             addressing = Tiny64.Opcode.AddressingType.ABSOLUTE_Y;
           }
         }
+        else if ( endsWithCommaZ )
+        {
+          if ( numBytesFirstParam == 1 )
+          {
+            addressing = Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Z;
+          }
+        }
         else
         {
           if ( numBytesFirstParam == 1 )
@@ -13834,7 +14020,11 @@ namespace C64Studio.Parser
         }
         else if ( endsWithCommaY )
         {
-          addressing = Tiny64.Opcode.AddressingType.INDIRECT_Y;
+          addressing = Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y;
+        }
+        else if ( endsWithCommaZ )
+        {
+          addressing = Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Z;
         }
         else
         {
@@ -13846,12 +14036,18 @@ namespace C64Studio.Parser
         // could be ABSOLUTE_INDIRECT_X (WDC 65C02)
         foreach ( Tiny64.Opcode opcode in PossibleOpcodes )
         {
-          if ( opcode.Addressing == Opcode.AddressingType.ABSOLUTE_X_INDIRECT )
+          if ( ( secondParamIsSP )
+          &&   ( opcode.Addressing == Opcode.AddressingType.ZEROPAGE_INDIRECT_SP_Y )
+          &&   ( endsWithCommaY ) )
           {
-            return opcode;
+            return new GR.Generic.Tupel<Tiny64.Opcode, bool>( opcode, longMode );
+          }
+          if ( opcode.Addressing == Opcode.AddressingType.ABSOLUTE_INDIRECT_X )
+          {
+            return new GR.Generic.Tupel<Tiny64.Opcode, bool>( opcode, longMode );
           }
         }
-        addressing = Tiny64.Opcode.AddressingType.INDIRECT_X;
+        addressing = Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X;
       }
       else
       {
@@ -13862,7 +14058,7 @@ namespace C64Studio.Parser
       {
         if ( opcode.Addressing == addressing )
         {
-          return opcode;
+          return new GR.Generic.Tupel<Tiny64.Opcode, bool>( opcode, longMode );
         }
       }
       if ( addressing == Tiny64.Opcode.AddressingType.ZEROPAGE_X )
@@ -13880,6 +14076,11 @@ namespace C64Studio.Parser
         // no zeropage kind found, try full
         addressing = Tiny64.Opcode.AddressingType.ABSOLUTE;
       }
+      // psw
+      if ( addressing == Opcode.AddressingType.IMMEDIATE )
+      {
+        addressing = Opcode.AddressingType.IMMEDIATE_16;
+      }
       // was in braces, could be simple braces around
       if ( addressing == Tiny64.Opcode.AddressingType.INDIRECT )
       {
@@ -13889,51 +14090,20 @@ namespace C64Studio.Parser
           if ( opcode.Addressing == Opcode.AddressingType.ZEROPAGE_INDIRECT )
           {
             addressing = Opcode.AddressingType.ZEROPAGE_INDIRECT;
-            return opcode;
+            return new GR.Generic.Tupel<Tiny64.Opcode, bool>( opcode, longMode );
           }
         }
 
+        // then it was regular braces, just evaluate as non indirect
+        //addressing = Opcode.AddressingType.ZEROPAGE;
         AddError( LineIndex, Types.ErrorCode.E1105_INVALID_OPCODE, "Opcode does not support indirect addressing (remove braces)" );
         return null;
-        /*
-        // could be absolute, but also zeropage, determine by parameter size
-        int value = -1;
-        int numGivenBytes = 0;
-
-        // determine addressing from parameter size
-        if ( EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex, expressionTokenCount, out value, out numGivenBytes ) )
-        //if ( ParseValue( LineIndex, LineTokens[1].Content, out value, out numGivenBytes ) )
-        {
-          if ( numGivenBytes > 0 )
-          {
-            if ( numGivenBytes == 1 )
-            {
-              addressing = Tiny64.Opcode.AddressingType.ZEROPAGE;
-            }
-            else
-            {
-              addressing = Tiny64.Opcode.AddressingType.ABSOLUTE;
-            }
-          }
-          else if ( ( value & 0xff00 ) != 0 )
-          {
-            addressing = Tiny64.Opcode.AddressingType.ABSOLUTE;
-          }
-          else
-          {
-            addressing = Tiny64.Opcode.AddressingType.ZEROPAGE;
-          }
-        }
-        else
-        {
-          addressing = Tiny64.Opcode.AddressingType.ABSOLUTE;
-        }*/
       }
       foreach ( Tiny64.Opcode opcode in PossibleOpcodes )
       {
         if ( opcode.Addressing == addressing )
         {
-          return opcode;
+          return new GR.Generic.Tupel<Tiny64.Opcode, bool>( opcode, longMode );
         }
       }
 

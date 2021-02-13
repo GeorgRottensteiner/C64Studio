@@ -28,21 +28,21 @@ namespace C64Studio.Parser
       if ( ( CodeStartAddress < DataStartAddress )
       ||   ( CodeStartAddress >= DataStartAddress + Data.Length ) )
       {
-        Debug.Log( "dis code outside of data" );
+        Debug.Log( "disassembler code outside of data" );
         NotComplete = true;
         return false;
       }
       byte instruction = Data.ByteAt( CodeStartAddress - DataStartAddress );
       if ( !m_Processor.OpcodeByValue.ContainsKey( instruction ) )
       {
-        Debug.Log( "dis unknown opcode byte" );
+        Debug.Log( "disassembler unknown opcode byte" );
         return false;
       }
       opcode = m_Processor.OpcodeByValue[instruction];
       if ( CodeStartAddress + opcode.NumOperands >= DataStartAddress + Data.Length )
       {
         // opcode with operands does not fit
-        Debug.Log( "dis code operands outside of data" );
+        Debug.Log( "disassembler code operands outside of data" );
         NotComplete = true;
         return false;
       }
@@ -78,11 +78,11 @@ namespace C64Studio.Parser
         case Tiny64.Opcode.AddressingType.INDIRECT:
           targetAddress = Data.UInt16At( CodePos + 1 - DataStartAddress );
           break;
-        case Tiny64.Opcode.AddressingType.INDIRECT_X:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
           break;
-        case Tiny64.Opcode.AddressingType.INDIRECT_Y:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y:
           targetAddress = Data.ByteAt( CodePos + 1 - DataStartAddress );
           twoBytes = false;
           break;
@@ -147,10 +147,10 @@ namespace C64Studio.Parser
         case Tiny64.Opcode.AddressingType.INDIRECT:
           output += " ( " + addressPlacement + " )";
           break;
-        case Tiny64.Opcode.AddressingType.INDIRECT_X:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_X:
           output += " ( " + addressPlacement + ", x)";
           break;
-        case Tiny64.Opcode.AddressingType.INDIRECT_Y:
+        case Tiny64.Opcode.AddressingType.ZEROPAGE_INDIRECT_Y:
           output += " ( " + addressPlacement + " ), y";
           break;
         case Tiny64.Opcode.AddressingType.RELATIVE:

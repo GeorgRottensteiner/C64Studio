@@ -1151,7 +1151,7 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_PLUS, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 123 - 32, true, 123, true, (char)0xee5b, true, "SHIFT +" );   // Shift +
       AddC64Key( KeyboardKey.KEY_MINUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 124 - 32, true, 124, true, (char)0xee5c, true, "CBM -" ).Replacements.Add( "CBM--" );   // C= -
       AddC64Key( KeyboardKey.KEY_MINUS, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 125 - 32, true, 125, true, (char)0xee5d, true, "SHIFT -" ).Replacements.Add( "SHIFT--" );   // Shift -
-      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 126 - 32, true, 0xff, true, (char)0xee5e, true, "PI" ).Replacements.Add( "PI" );   // PI (Shift and Commodore)
+      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 126 - 32, true, 0xff, true, (char)0xee5e, true, "PI" ).Replacements.Add( "PI" );   // PI (Shift and Commodore)
       AddC64Key( KeyboardKey.KEY_STAR, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 127 - 32, true, 127, true, (char)0xee5f, true, "CBM *" );   // C= *
 
       // 128-159 $80-$9F     +64 $40        192-223 $C0-$DF  
@@ -1272,8 +1272,10 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_G, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 229 - 128, true, 229, true, (char)0xee65, true, "CBM G" ).Replacements.Add( "CBM-G" );   // C= G
       AddC64Key( KeyboardKey.KEY_PLUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 230 - 128, true, 230, true, (char)0xee66, true, "CBM +" ).Replacements.Add( "CBM-+" );   // C= +
       AddC64Key( KeyboardKey.KEY_N, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 231 - 128, true, 231, true, (char)0xee67, true, "CBM N" ).Replacements.Add( "CBM-N" );   // C= N
-      AddC64Key( KeyboardKey.KEY_INST_DEL, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 232 - 128, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );  // C= Insert 
-      AddC64Key( KeyboardKey.KEY_INST_DEL, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 233 - 128, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );   // Shift Insert 
+      //AddC64Key( KeyboardKey.KEY_INST_DEL, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 232 - 128, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );  // C= Insert 
+      //AddC64Key( KeyboardKey.KEY_INST_DEL, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 233 - 128, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );   // Shift Insert 
+      AddC64Key( KeyboardKey.KEY_INST_DEL, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 212, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );  // C= Insert 
+      AddC64Key( KeyboardKey.KEY_INST_DEL, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 212, true, 148, true, (char)0xeed4, true, "INSERT" ).Replacements.AddRange( new string[] { "INS", "INSERT", "INST" } );   // Shift Insert 
       AddC64Key( KeyboardKey.KEY_M, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 234 - 128, true, 234, true, (char)0xee6a, true, "CBM M" ).Replacements.Add( "CBM-M" );   // C= M
       AddC64Key( KeyboardKey.KEY_Q, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 235 - 128, true, 235, true, (char)0xee6b, true, "CBM Q" ).Replacements.Add( "CBM-Q" );   // C= Q
       AddC64Key( KeyboardKey.KEY_D, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 236 - 128, true, 236, true, (char)0xee6c, true, "CBM D" ).Replacements.Add( "CBM-D" );   // C= D

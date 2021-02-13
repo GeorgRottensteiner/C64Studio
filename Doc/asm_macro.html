@@ -238,10 +238,13 @@
   <div id="mybody">
     This pseudo op sets the processor to assemble for. Currently there are four supported processors. Default is 6510.<br>
     <br>
-    * 6510<br>
-    * 65C02<br>
-    * R65C02<br>
-    * W65C02<br>
+    * 6510 - Default 6501 with illegal opcodes (used e.g. in C64)<br>
+    * 65C02 - 6502 with BRA, PHX/Y, PLX/Y, STZ, TRB/TSB<br>
+    * R65C02 - 65C02 with BBRx, BBSx, RMBx, SMBx<br>
+    * W65C02 - WDC 65C02<br>
+    * 65CE02<br>
+    * 4502<br>
+    * M65 - 4502 with long and quad mode using prefixes (used e.g. in Mega65)<br>
     <br>
     <br>
     <div id="code"><br>      !cpu 6510
