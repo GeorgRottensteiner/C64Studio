@@ -23,7 +23,7 @@ namespace C64Studio
 
       AddElementTabs();
 
-      
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
     }
 
 

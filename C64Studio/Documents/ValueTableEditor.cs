@@ -31,6 +31,10 @@ namespace C64Studio
       m_IsSaveable = true;
       InitializeComponent();
 
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
+
+      pictureGraphPreview.DisplayPage.Create( pictureGraphPreview.ClientSize.Width, pictureGraphPreview.ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb );
+
       checkExportToDataIncludeRes.Checked = true;
       checkExportToDataWrap.Checked = true;
 

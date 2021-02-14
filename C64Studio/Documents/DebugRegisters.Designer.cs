@@ -333,6 +333,7 @@
       // 
       // DebugRegisters
       // 
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.ClientSize = new System.Drawing.Size(534, 390);
       this.Controls.Add(this.editStatus);
       this.Controls.Add(this.label9);

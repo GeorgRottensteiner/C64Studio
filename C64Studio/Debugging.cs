@@ -76,6 +76,11 @@ namespace C64Studio
       Debugger.SetAutoRefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
                                      Core.MainForm.m_DebugMemory.MemorySize,
                                      Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+      // pass on remembered wathes
+      foreach ( var watch in Core.MainForm.m_DebugWatch.m_WatchEntries )
+      {
+        Debugger.AddWatchEntry( watch );
+      }
 
       Debugger.DebugEvent += Core.MainForm.Debugger_DebugEvent;
     }

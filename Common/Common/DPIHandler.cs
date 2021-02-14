@@ -8,6 +8,11 @@ using System.Drawing.Drawing2D;
 
 namespace GR.Image
 {
+  public interface IDPIHandlerResize
+  {
+    void ResizeControl();
+  }
+
   public static class DPIHandler
   {
     public static bool DPIRatioIsOne = true;
@@ -68,12 +73,14 @@ namespace GR.Image
           continue;
         }
 
-        // Here more controls tahn button can be adjusted if needed...
+        // Here more controls than button can be adjusted if needed...
 
         // Recursive
         var nestedControls = control.Controls;
         if ( nestedControls.Count == 0 )
-        { continue; }
+        { 
+          continue; 
+        }
         var disposables = nestedControls.AdjustControlsThroughDPI();
         list.AddRange( disposables );
       }
@@ -92,6 +99,97 @@ namespace GR.Image
 
       var imageStretched = image.GetImageStretchedDPI();
       button.Image = imageStretched;
+    }
+
+
+
+    public static void ResizeControlsForDPI( Control Control )
+    {
+      if ( DPIRatioIsOne )
+      {
+        return;
+      }
+
+      Control.SuspendLayout();
+
+      if ( Control is IDPIHandlerResize )
+      {
+        var dpiHandler = Control as IDPIHandlerResize;
+
+        dpiHandler.ResizeControl();
+      }
+      else
+      {
+        AdjustControlSize( Control );
+        AdjustControlChildsSize( Control );
+        
+      }
+      Control.ResumeLayout();
+    }
+
+
+
+    public static void AdjustControlChildsSize( Control Control )
+    {
+      foreach ( Control control in Control.Controls )
+      {
+        ResizeControlsForDPI( control );
+      }
+
+      if ( Control is ToolStrip )
+      {
+        var ts = Control as ToolStrip;
+
+        foreach ( ToolStripItem item in ts.Items )
+        {
+          ResizeControlsForDPI( item );
+        }
+      }
+    }
+
+
+
+    public static void AdjustControlSize( Control Control )
+    {
+      int     newWidth  = (int)( Control.Width * DPIX / 96.0f + 0.5f );
+      int     newHeight = (int)( Control.Height * DPIY / 96.0f + 0.5f );
+      int     newX      = (int)( Control.Location.X * DPIX / 96.0f + 0.5f );
+      int     newY      = (int)( Control.Location.Y * DPIY / 96.0f + 0.5f );
+
+      Control.Location  = new Point( newX, newY );
+      Control.Size      = new Size( newWidth, newHeight );
+
+      if ( Control is ListBox )
+      {
+        var lb = Control as ListBox;
+        lb.ItemHeight = (int)( lb.ItemHeight * DPIY / 96.0f + 0.5f );
+      }
+    }
+
+
+
+    private static void ResizeControlsForDPI( ToolStripItem Item )
+    {
+      if ( DPIRatioIsOne )
+      {
+        return;
+      }
+
+      if ( Item is ToolStripMenuItem )
+      {
+        var ts = Item as ToolStripMenuItem;
+
+        foreach ( ToolStripItem item in ts.DropDownItems )
+        {
+          ResizeControlsForDPI( item );
+        }
+      }
+
+      // change parent later so childs are properly handled during OnSize
+      int     newWidth  = (int)( Item.Width * DPIX / 96.0f + 0.5f );
+      int     newHeight = (int)( Item.Height * DPIY / 96.0f + 0.5f );
+
+      Item.Size = new Size( newWidth, newHeight );
     }
 
 

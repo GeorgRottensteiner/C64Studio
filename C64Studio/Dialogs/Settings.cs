@@ -1,4 +1,5 @@
 ﻿using C64Studio.Parser;
+using GR.Image;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,6 +36,8 @@ namespace C64Studio
     {
       this.Core = Core;
       InitializeComponent();
+
+      DPIHandler.ResizeControlsForDPI( this );
 
       labelFontPreview.Font = new Font( Core.Settings.SourceFontFamily, Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 

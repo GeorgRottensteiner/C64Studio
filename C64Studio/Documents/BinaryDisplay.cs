@@ -6,6 +6,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using GR.Image;
 
 namespace C64Studio
 {
@@ -18,6 +19,9 @@ namespace C64Studio
       this.Core = Core;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       InitializeComponent();
+
+      DPIHandler.ResizeControlsForDPI( this );
+
       if ( WorkData == null )
       {
         SetHexData( new GR.Memory.ByteBuffer() );

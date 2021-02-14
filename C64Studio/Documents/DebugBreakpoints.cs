@@ -22,6 +22,8 @@ namespace C64Studio
     public DebugBreakpoints()
     {
       InitializeComponent();
+
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
     }
 
 

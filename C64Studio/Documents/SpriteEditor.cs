@@ -57,6 +57,8 @@ namespace C64Studio
       m_IsSaveable = true;
       InitializeComponent();
 
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
+
       listLayers.ItemAdded += new ArrangedItemList.ItemModifiedEventHandler( listLayers_ItemAdded );
 
       pictureEditor.DisplayPage.Create( 24, 21, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
@@ -388,21 +390,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      e.DrawBackground();
-      if ( e.Index == -1 )
-      {
-        return;
-      }
-      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20, e.Bounds.Top, e.Bounds.Width - 20, e.Bounds.Height );
-      e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
-      if ( ( e.State & DrawItemState.Selected ) != 0 )
-      {
-        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + 1.0f );
-      }
-      else
-      {
-        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Black ), 3.0f, e.Bounds.Top + 1.0f );
-      }
+      Core.Theming.DrawSingleColorComboBox( combo, e );
     }
 
 
@@ -411,23 +399,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      e.DrawBackground();
-      if ( e.Index == -1 )
-      {
-        return;
-      }
-
-      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20, e.Bounds.Top, e.Bounds.Width - 20, e.Bounds.Height );
-      e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
-      if ( ( e.State & DrawItemState.Selected ) != 0 )
-      {
-        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + 1.0f );
-      }
-      else
-      {
-        e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Black ), 3.0f, e.Bounds.Top + 1.0f );
-      }
-
+      Core.Theming.DrawMultiColorComboBox( combo, e );
     }
 
 

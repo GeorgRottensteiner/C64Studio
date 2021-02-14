@@ -20,6 +20,8 @@ namespace C64Studio
     public DebugWatch()
     {
       InitializeComponent();
+
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
     }
 
 

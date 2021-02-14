@@ -28,6 +28,8 @@ namespace C64Studio
 
       InitializeComponent();
 
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
+
       m_BoldFont = new System.Drawing.Font( treeProject.Font, System.Drawing.FontStyle.Bold );
 
       timerDragDrop.Tick += new EventHandler( timerDragDrop_Tick );

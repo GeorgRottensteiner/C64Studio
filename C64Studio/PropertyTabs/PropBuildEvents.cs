@@ -81,6 +81,8 @@ namespace C64Studio
       BuildEventDetails.Parent    = this;
       BuildEventDetails.Location  = new Point( 6, 68 );
       BuildEventDetails.Visible   = true;
+
+      GR.Image.DPIHandler.ResizeControlsForDPI( BuildEventDetails );
     }
 
 

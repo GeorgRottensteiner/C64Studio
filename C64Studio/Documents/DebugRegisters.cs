@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using GR.Memory;
 using C64Studio.Types;
+using GR.Image;
 
 namespace C64Studio
 {
@@ -32,6 +33,8 @@ namespace C64Studio
     public DebugRegisters()
     {
       InitializeComponent();
+
+      DPIHandler.ResizeControlsForDPI( this );
     }
 
 

@@ -15,6 +15,7 @@ using GR.Memory;
 using GR.IO;
 using System.Globalization;
 using C64Studio.Parser;
+using GR.Image;
 
 namespace C64Studio
 {
@@ -128,6 +129,8 @@ namespace C64Studio
 
       m_IsSaveable = true;
       InitializeComponent();
+
+      DPIHandler.ResizeControlsForDPI( this );
 
       m_DelayedEventTimer.Interval = 500;
       m_DelayedEventTimer.Tick += m_DelayedEventTimer_Tick;

@@ -20,10 +20,12 @@ namespace C64Studio
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       InitializeComponent();
 
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
+
       _DefaultFont = listPETSCII.Font;
 
-      listPETSCII.ItemWidth = 80;
-      listPETSCII.ItemHeight = 40;
+      listPETSCII.ItemWidth = (int)( 80 * GR.Image.DPIHandler.DPIX / 96.0f );
+      listPETSCII.ItemHeight = (int)( 40 * GR.Image.DPIHandler.DPIY / 96.0f );
       listPETSCII.SetDisplaySize( listPETSCII.ClientSize.Width, listPETSCII.ClientSize.Height );
       listPETSCII.DisplayPage.Create( 120, 120, System.Drawing.Imaging.PixelFormat.Format24bppRgb );
       listPETSCII.PixelFormat = System.Drawing.Imaging.PixelFormat.Format24bppRgb;

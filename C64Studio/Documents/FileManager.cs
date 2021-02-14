@@ -38,11 +38,14 @@ namespace C64Studio
       DocumentInfo.Type = ProjectElement.ElementType.MEDIA_MANAGER;
 
       InitializeComponent();
+
       oldFont = listFiles.Font;
 
       listFiles.ItemFonts.Add( new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel ) );
       statusFileManager.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 8, System.Drawing.GraphicsUnit.Pixel );
       labelMediaTitle.Font = statusFileManager.Font;
+
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
       if ( Filename.Length > 0 )
       {

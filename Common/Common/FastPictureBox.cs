@@ -41,6 +41,10 @@ namespace GR.Forms
 
 
 
+    public bool AutoResize { get; set; } = false;
+
+
+
     public new GR.Image.MemoryImage     Image
     {
       get
@@ -115,7 +119,10 @@ namespace GR.Forms
           m_DirtyRectRight  = m_ImageWidth;
           m_DirtyRectBottom = m_ImageHeight;
         }
-        //m_DisplayPage.Resize( newWidth, newHeight );
+        if ( AutoResize )
+        {
+          m_DisplayPage.Resize( newWidth, newHeight );
+        }
         m_DisplayPageBuffer.Resize( newWidth, newHeight );
         m_Width = newWidth;
         m_Height = newHeight;

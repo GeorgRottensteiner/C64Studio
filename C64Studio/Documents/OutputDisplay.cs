@@ -10,6 +10,8 @@ namespace C64Studio
     {
       InitializeComponent();
 
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
+
       editText.Language = FastColoredTextBoxNS.Language.Custom;
     }
 

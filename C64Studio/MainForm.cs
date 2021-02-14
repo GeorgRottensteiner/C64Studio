@@ -12,6 +12,7 @@ using C64Studio.Types;
 using C64Studio.Displayer;
 using C64Studio.CustomRenderer;
 using C64Studio.Parser;
+using GR.Image;
 
 // 0.9f - added else for !ifdef macro
 // 0.9b - fixed crash bug if opening project with modified active project
@@ -479,6 +480,10 @@ namespace C64Studio
 
       InitializeComponent();
 
+      DPIHandler.ResizeControlsForDPI( this );
+
+      panelMain.Height = ClientSize.Height - mainStatus.Height - mainMenu.Height - mainToolBuild.Height - 7;
+
       Application.Idle += new EventHandler( Application_Idle );
 
       panelMain.ShowDocumentIcon = true;
@@ -688,6 +693,8 @@ namespace C64Studio
 
       mainTools.Visible = StudioCore.Settings.ToolbarActiveMain;
       debugTools.Visible = StudioCore.Settings.ToolbarActiveDebugger;
+      debugTools.Left = mainTools.Right;
+      debugTools.Top = mainTools.Top;
 
       m_FindReplace.RefreshDisplayOptions();
       StudioCore.Settings.RefreshDisplayOnAllDocuments( StudioCore );
@@ -2421,7 +2428,7 @@ namespace C64Studio
             {
               StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Remove( breakPoint );
               m_DebugBreakpoints.RemoveBreakpoint( breakPoint );
-              StudioCore.Debugging.Debugger.RemoveBreakpoint( breakPoint.RemoteIndex );
+              StudioCore.Debugging.Debugger?.RemoveBreakpoint( breakPoint.RemoteIndex );
               break;
             }
           }
@@ -3281,6 +3288,9 @@ namespace C64Studio
         try
         {
           debugTools.Enabled = DebugModeActive;
+          debugTools.Left = mainTools.Right;
+          debugTools.Top = mainTools.Top;
+
           menuWindowToolbarDebugger.Checked = debugTools.Enabled;
           if ( DebugModeActive )
           {
@@ -4743,15 +4753,15 @@ namespace C64Studio
     public void AddWatchEntry( WatchEntry Watch )
     {
       if ( ( AppState == Types.StudioState.DEBUGGING_RUN )
-      || ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      || ( AppState == Types.StudioState.NORMAL ) )
+      ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN )
+      ||   ( AppState == Types.StudioState.NORMAL ) )
       {
         m_DebugWatch.AddWatchEntry( Watch );
-        StudioCore.Debugging.Debugger.AddWatchEntry( Watch );
+        StudioCore.Debugging.Debugger?.AddWatchEntry( Watch );
 
         if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
         {
-          StudioCore.Debugging.Debugger.RefreshRegistersAndWatches();
+          StudioCore.Debugging.Debugger?.RefreshRegistersAndWatches();
         }
       }
     }
@@ -4761,7 +4771,7 @@ namespace C64Studio
     public void RemoveWatchEntry( WatchEntry Watch )
     {
       m_DebugWatch.RemoveWatchEntry( Watch );
-      StudioCore.Debugging.Debugger.RemoveWatchEntry( Watch );
+      StudioCore.Debugging.Debugger?.RemoveWatchEntry( Watch );
     }
 
 

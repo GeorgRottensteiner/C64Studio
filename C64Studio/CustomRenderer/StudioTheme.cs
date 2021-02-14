@@ -162,6 +162,74 @@ namespace C64Studio.CustomRenderer
       return System.Drawing.Color.FromArgb( OrigColor.A, (int)( OrigColor.R * darkFactor ), (int)( OrigColor.G * darkFactor ), (int)( OrigColor.B * darkFactor ) );
     }
 
-  }
 
+
+    public void DrawSingleColorComboBox( ComboBox Combo, DrawItemEventArgs e )
+    {
+      e.DrawBackground();
+      if ( e.Index == -1 )
+      {
+        return;
+      }
+
+      int offset = (int)e.Graphics.MeasureString( "22", Combo.Font ).Width + 5 + 3;
+
+      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset, e.Bounds.Top, e.Bounds.Width - offset, e.Bounds.Height );
+      if ( ( e.State & DrawItemState.Disabled ) != 0 )
+      {
+        e.Graphics.FillRectangle( System.Drawing.SystemBrushes.GrayText, itemRect );
+        e.Graphics.DrawString( Combo.Items[e.Index].ToString(), Combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Gray ), 3.0f, e.Bounds.Top + 1.0f );
+      }
+      else if ( ( e.State & DrawItemState.Selected ) != 0 )
+      {
+        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
+        e.Graphics.DrawString( Combo.Items[e.Index].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
+      }
+      else
+      {
+        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
+        e.Graphics.DrawString( Combo.Items[e.Index].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
+      }
+    }
+
+
+
+    public void DrawMultiColorComboBox( ComboBox Combo, DrawItemEventArgs e )
+    {
+      e.DrawBackground();
+      if ( e.Index == -1 )
+      {
+        return;
+      }
+
+      int offset = (int)e.Graphics.MeasureString( "22", Combo.Font ).Width + 5 + 3;
+      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset, e.Bounds.Top, e.Bounds.Width - offset, e.Bounds.Height );
+
+
+      if ( e.Index >= 8 )
+      {
+        itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset, e.Bounds.Top, ( e.Bounds.Width - offset ) / 2, e.Bounds.Height );
+        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
+        itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset + ( e.Bounds.Width - offset ) / 2, e.Bounds.Top, e.Bounds.Width - ( e.Bounds.Width - offset ) / 2, e.Bounds.Height );
+        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index - 8], itemRect );
+      }
+      else
+      {
+        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
+      }
+      if ( ( e.State & DrawItemState.Disabled ) != 0 )
+      {
+        e.Graphics.DrawString( Combo.Items[e.Index].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
+      }
+      else if ( ( e.State & DrawItemState.Selected ) != 0 )
+      {
+        e.Graphics.DrawString( Combo.Items[e.Index].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
+      }
+      else
+      {
+        e.Graphics.DrawString( Combo.Items[e.Index].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
+      }
+    }
+
+  }
 }

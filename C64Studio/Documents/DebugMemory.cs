@@ -74,6 +74,8 @@ namespace C64Studio
 
       this.Core = Core;
 
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
+
       Core.Debugging.MemoryViews.Add( this );
       SetHexData( Core.Debugging.ActiveMemory.RAM );
      

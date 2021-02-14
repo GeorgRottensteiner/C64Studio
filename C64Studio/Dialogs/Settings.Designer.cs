@@ -57,6 +57,7 @@
       this.label13 = new System.Windows.Forms.Label();
       this.label11 = new System.Windows.Forms.Label();
       this.tabTools = new System.Windows.Forms.TabPage();
+      this.alistTools = new C64Studio.ArrangedItemList();
       this.checkPassLabelsToEmulator = new System.Windows.Forms.CheckBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.button1 = new System.Windows.Forms.Button();
@@ -107,6 +108,9 @@
       this.checkASMShowLineNumbers = new System.Windows.Forms.CheckBox();
       this.label30 = new System.Windows.Forms.Label();
       this.label26 = new System.Windows.Forms.Label();
+      this.asmLibraryPathList = new C64Studio.ArrangedItemList();
+      this.listHacks = new System.Windows.Forms.CheckedListBox();
+      this.label34 = new System.Windows.Forms.Label();
       this.listWarningsAsErrors = new System.Windows.Forms.CheckedListBox();
       this.label33 = new System.Windows.Forms.Label();
       this.listIgnoredWarnings = new System.Windows.Forms.CheckedListBox();
@@ -130,6 +134,11 @@
       this.btnBindBASICKeyMapBinding = new System.Windows.Forms.Button();
       this.editBASICKeyMapBinding = new System.Windows.Forms.TextBox();
       this.label25 = new System.Windows.Forms.Label();
+      this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
+      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+      this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.label21 = new System.Windows.Forms.Label();
       this.tabBASIC = new System.Windows.Forms.TabPage();
       this.checkBASICAutoToggleEntryMode = new System.Windows.Forms.CheckBox();
@@ -142,15 +151,6 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.label34 = new System.Windows.Forms.Label();
-      this.listHacks = new System.Windows.Forms.CheckedListBox();
-      this.alistTools = new C64Studio.ArrangedItemList();
-      this.asmLibraryPathList = new C64Studio.ArrangedItemList();
-      this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
-      this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -494,6 +494,31 @@
       this.tabTools.Text = "Tools";
       this.tabTools.UseVisualStyleBackColor = true;
       // 
+      // alistTools
+      // 
+      this.alistTools.AddButtonEnabled = true;
+      this.alistTools.AllowClone = true;
+      this.alistTools.DeleteButtonEnabled = false;
+      this.alistTools.HasOwnerDrawColumn = true;
+      this.alistTools.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      this.alistTools.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
+      this.alistTools.Location = new System.Drawing.Point(9, 29);
+      this.alistTools.MoveDownButtonEnabled = false;
+      this.alistTools.MoveUpButtonEnabled = false;
+      this.alistTools.MustHaveOneElement = false;
+      this.alistTools.Name = "alistTools";
+      this.alistTools.SelectedIndex = -1;
+      this.alistTools.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      this.alistTools.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
+      this.alistTools.Size = new System.Drawing.Size(184, 349);
+      this.alistTools.TabIndex = 11;
+      this.alistTools.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.alistTools_AddingItem);
+      this.alistTools.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.alistTools_CloningItem);
+      this.alistTools.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemAdded);
+      this.alistTools.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemRemoved);
+      this.alistTools.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.alistTools_ItemMoved);
+      this.alistTools.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_SelectedIndexChanged);
+      // 
       // checkPassLabelsToEmulator
       // 
       this.checkPassLabelsToEmulator.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -809,9 +834,7 @@
       // 
       // listFunctions
       // 
-      this.listFunctions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+      this.listFunctions.Anchor = System.Windows.Forms.AnchorStyles.None;
       this.listFunctions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4,
             this.columnHeader1,
@@ -997,6 +1020,50 @@
       this.label26.TabIndex = 13;
       this.label26.Text = "Assembler Editor:";
       // 
+      // asmLibraryPathList
+      // 
+      this.asmLibraryPathList.AddButtonEnabled = true;
+      this.asmLibraryPathList.AllowClone = true;
+      this.asmLibraryPathList.Anchor = System.Windows.Forms.AnchorStyles.None;
+      this.asmLibraryPathList.DeleteButtonEnabled = false;
+      this.asmLibraryPathList.HasOwnerDrawColumn = true;
+      this.asmLibraryPathList.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      this.asmLibraryPathList.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
+      this.asmLibraryPathList.Location = new System.Drawing.Point(21, 240);
+      this.asmLibraryPathList.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+      this.asmLibraryPathList.MoveDownButtonEnabled = false;
+      this.asmLibraryPathList.MoveUpButtonEnabled = false;
+      this.asmLibraryPathList.MustHaveOneElement = false;
+      this.asmLibraryPathList.Name = "asmLibraryPathList";
+      this.asmLibraryPathList.SelectedIndex = -1;
+      this.asmLibraryPathList.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      this.asmLibraryPathList.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
+      this.asmLibraryPathList.Size = new System.Drawing.Size(356, 154);
+      this.asmLibraryPathList.TabIndex = 20;
+      this.asmLibraryPathList.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.asmLibraryPathList_AddingItem);
+      this.asmLibraryPathList.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemAdded);
+      this.asmLibraryPathList.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemRemoved);
+      this.asmLibraryPathList.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.asmLibraryPathList_ItemMoved);
+      // 
+      // listHacks
+      // 
+      this.listHacks.CheckOnClick = true;
+      this.listHacks.FormattingEnabled = true;
+      this.listHacks.Location = new System.Drawing.Point(390, 240);
+      this.listHacks.Name = "listHacks";
+      this.listHacks.Size = new System.Drawing.Size(261, 79);
+      this.listHacks.TabIndex = 3;
+      this.listHacks.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listC64StudioHacks_ItemCheck);
+      // 
+      // label34
+      // 
+      this.label34.AutoSize = true;
+      this.label34.Location = new System.Drawing.Point(387, 219);
+      this.label34.Name = "label34";
+      this.label34.Size = new System.Drawing.Size(207, 13);
+      this.label34.TabIndex = 2;
+      this.label34.Text = "Enable Hacks (C64Studio assembler only):";
+      // 
       // listWarningsAsErrors
       // 
       this.listWarningsAsErrors.CheckOnClick = true;
@@ -1157,16 +1224,14 @@
       // 
       // listColoring
       // 
-      this.listColoring.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+      this.listColoring.Anchor = System.Windows.Forms.AnchorStyles.None;
       this.listColoring.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader3});
       this.listColoring.FullRowSelect = true;
       this.listColoring.HideSelection = false;
       this.listColoring.Location = new System.Drawing.Point(12, 23);
       this.listColoring.Name = "listColoring";
-      this.listColoring.Size = new System.Drawing.Size(252, 270);
+      this.listColoring.Size = new System.Drawing.Size(252, 409);
       this.listColoring.TabIndex = 3;
       this.listColoring.UseCompatibleStateImageBehavior = false;
       this.listColoring.View = System.Windows.Forms.View.Details;
@@ -1240,6 +1305,48 @@
       this.label25.Size = new System.Drawing.Size(66, 13);
       this.label25.TabIndex = 5;
       this.label25.Text = "Key Binding:";
+      // 
+      // listBASICKeyMap
+      // 
+      this.listBASICKeyMap.AllowDrop = true;
+      this.listBASICKeyMap.Anchor = System.Windows.Forms.AnchorStyles.None;
+      this.listBASICKeyMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6,
+            this.columnHeader7,
+            this.columnHeader10});
+      this.listBASICKeyMap.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+      this.listBASICKeyMap.FullRowSelect = true;
+      this.listBASICKeyMap.HideSelection = false;
+      this.listBASICKeyMap.ItemHeight = 14;
+      this.listBASICKeyMap.Location = new System.Drawing.Point(11, 25);
+      this.listBASICKeyMap.MultiSelect = false;
+      this.listBASICKeyMap.Name = "listBASICKeyMap";
+      this.listBASICKeyMap.Size = new System.Drawing.Size(655, 348);
+      this.listBASICKeyMap.TabIndex = 4;
+      this.listBASICKeyMap.UseCompatibleStateImageBehavior = false;
+      this.listBASICKeyMap.View = System.Windows.Forms.View.Details;
+      this.listBASICKeyMap.SelectedIndexChanged += new System.EventHandler(this.listBASICKeyMap_SelectedIndexChanged);
+      // 
+      // columnHeader5
+      // 
+      this.columnHeader5.Text = "C64 Key";
+      this.columnHeader5.Width = 145;
+      // 
+      // columnHeader6
+      // 
+      this.columnHeader6.Text = "PETSCII";
+      this.columnHeader6.Width = 62;
+      // 
+      // columnHeader7
+      // 
+      this.columnHeader7.Text = "PC Key";
+      this.columnHeader7.Width = 309;
+      // 
+      // columnHeader10
+      // 
+      this.columnHeader10.Text = "Display";
+      this.columnHeader10.Width = 108;
       // 
       // label21
       // 
@@ -1369,124 +1476,10 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
-      // label34
-      // 
-      this.label34.AutoSize = true;
-      this.label34.Location = new System.Drawing.Point(387, 219);
-      this.label34.Name = "label34";
-      this.label34.Size = new System.Drawing.Size(207, 13);
-      this.label34.TabIndex = 2;
-      this.label34.Text = "Enable Hacks (C64Studio assembler only):";
-      // 
-      // listHacks
-      // 
-      this.listHacks.CheckOnClick = true;
-      this.listHacks.FormattingEnabled = true;
-      this.listHacks.Location = new System.Drawing.Point(390, 240);
-      this.listHacks.Name = "listHacks";
-      this.listHacks.Size = new System.Drawing.Size(261, 79);
-      this.listHacks.TabIndex = 3;
-      this.listHacks.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listC64StudioHacks_ItemCheck);
-      // 
-      // alistTools
-      // 
-      this.alistTools.AddButtonEnabled = true;
-      this.alistTools.AllowClone = true;
-      this.alistTools.DeleteButtonEnabled = false;
-      this.alistTools.HasOwnerDrawColumn = true;
-      this.alistTools.HighlightColor = System.Drawing.SystemColors.HotTrack;
-      this.alistTools.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
-      this.alistTools.Location = new System.Drawing.Point(9, 29);
-      this.alistTools.MoveDownButtonEnabled = false;
-      this.alistTools.MoveUpButtonEnabled = false;
-      this.alistTools.MustHaveOneElement = false;
-      this.alistTools.Name = "alistTools";
-      this.alistTools.SelectedIndex = -1;
-      this.alistTools.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      this.alistTools.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      this.alistTools.Size = new System.Drawing.Size(184, 349);
-      this.alistTools.TabIndex = 11;
-      this.alistTools.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.alistTools_AddingItem);
-      this.alistTools.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.alistTools_CloningItem);
-      this.alistTools.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemAdded);
-      this.alistTools.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemRemoved);
-      this.alistTools.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.alistTools_ItemMoved);
-      this.alistTools.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_SelectedIndexChanged);
-      // 
-      // asmLibraryPathList
-      // 
-      this.asmLibraryPathList.AddButtonEnabled = true;
-      this.asmLibraryPathList.AllowClone = true;
-      this.asmLibraryPathList.Anchor = System.Windows.Forms.AnchorStyles.None;
-      this.asmLibraryPathList.DeleteButtonEnabled = false;
-      this.asmLibraryPathList.HasOwnerDrawColumn = true;
-      this.asmLibraryPathList.HighlightColor = System.Drawing.SystemColors.HotTrack;
-      this.asmLibraryPathList.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
-      this.asmLibraryPathList.Location = new System.Drawing.Point(21, 240);
-      this.asmLibraryPathList.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
-      this.asmLibraryPathList.MoveDownButtonEnabled = false;
-      this.asmLibraryPathList.MoveUpButtonEnabled = false;
-      this.asmLibraryPathList.MustHaveOneElement = false;
-      this.asmLibraryPathList.Name = "asmLibraryPathList";
-      this.asmLibraryPathList.SelectedIndex = -1;
-      this.asmLibraryPathList.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      this.asmLibraryPathList.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      this.asmLibraryPathList.Size = new System.Drawing.Size(356, 154);
-      this.asmLibraryPathList.TabIndex = 20;
-      this.asmLibraryPathList.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.asmLibraryPathList_AddingItem);
-      this.asmLibraryPathList.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemAdded);
-      this.asmLibraryPathList.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemRemoved);
-      this.asmLibraryPathList.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.asmLibraryPathList_ItemMoved);
-      // 
-      // listBASICKeyMap
-      // 
-      this.listBASICKeyMap.AllowDrop = true;
-      this.listBASICKeyMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.listBASICKeyMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6,
-            this.columnHeader7,
-            this.columnHeader10});
-      this.listBASICKeyMap.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.listBASICKeyMap.FullRowSelect = true;
-      this.listBASICKeyMap.HideSelection = false;
-      this.listBASICKeyMap.ItemHeight = 14;
-      this.listBASICKeyMap.Location = new System.Drawing.Point(11, 25);
-      this.listBASICKeyMap.MultiSelect = false;
-      this.listBASICKeyMap.Name = "listBASICKeyMap";
-      this.listBASICKeyMap.Size = new System.Drawing.Size(655, 348);
-      this.listBASICKeyMap.TabIndex = 4;
-      this.listBASICKeyMap.UseCompatibleStateImageBehavior = false;
-      this.listBASICKeyMap.View = System.Windows.Forms.View.Details;
-      this.listBASICKeyMap.SelectedIndexChanged += new System.EventHandler(this.listBASICKeyMap_SelectedIndexChanged);
-      // 
-      // columnHeader5
-      // 
-      this.columnHeader5.Text = "C64 Key";
-      this.columnHeader5.Width = 145;
-      // 
-      // columnHeader6
-      // 
-      this.columnHeader6.Text = "PETSCII";
-      this.columnHeader6.Width = 62;
-      // 
-      // columnHeader7
-      // 
-      this.columnHeader7.Text = "PC Key";
-      this.columnHeader7.Width = 309;
-      // 
-      // columnHeader10
-      // 
-      this.columnHeader10.Text = "Display";
-      this.columnHeader10.Width = 108;
-      // 
       // Settings
       // 
       this.AcceptButton = this.btnOK;
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.CancelButton = this.btnOK;
       this.ClientSize = new System.Drawing.Size(697, 509);
       this.Controls.Add(this.btnExportCurrentPageSettings);

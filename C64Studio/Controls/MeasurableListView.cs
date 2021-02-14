@@ -4,7 +4,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-
+using GR.Image;
 
 namespace C64Studio.Controls
 {
@@ -51,6 +51,7 @@ namespace C64Studio.Controls
     public new event System.Windows.Forms.DrawItemEventHandler DrawItem;
     public event MeasureItemEventHandler MeasureItem;
     public const int LVS_OWNERDRAWFIXED      = 0x0400;
+    private int m_ItemHeight = 14;
     private DrawMode drawMode;
 
     public List<System.Drawing.Font>      ItemFonts = new List<Font>();
@@ -59,8 +60,14 @@ namespace C64Studio.Controls
 
     public int ItemHeight
     {
-      get;
-      set;
+      get
+      { 
+        return m_ItemHeight;
+      }
+      set
+      {
+        m_ItemHeight = (int)( value * DPIHandler.DPIY / 96.0f + 0.5f );
+      }
     }
 
 

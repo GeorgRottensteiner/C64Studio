@@ -16,6 +16,8 @@ namespace C64Studio
     public Calculator()
     {
       InitializeComponent();
+
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
     }
 
 

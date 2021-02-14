@@ -219,11 +219,12 @@
       this.panelMain.DockBackColor = System.Drawing.SystemColors.AppWorkspace;
       this.panelMain.Location = new System.Drawing.Point(0, 52);
       this.panelMain.Name = "panelMain";
-      this.panelMain.Size = new System.Drawing.Size(1120, 600);
-      this.panelMain.TabIndex = 0;
+      this.panelMain.Size = new System.Drawing.Size(1101, 521);
+      this.panelMain.TabIndex = 3;
       // 
       // mainMenu
       // 
+      this.mainMenu.AutoSize = false;
       this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.solutionToolStripMenuItem,
@@ -236,12 +237,13 @@
             this.aboutToolStripMenuItem});
       this.mainMenu.Location = new System.Drawing.Point(0, 0);
       this.mainMenu.Name = "mainMenu";
-      this.mainMenu.Size = new System.Drawing.Size(1120, 24);
-      this.mainMenu.TabIndex = 3;
+      this.mainMenu.Size = new System.Drawing.Size(1101, 24);
+      this.mainMenu.TabIndex = 0;
       this.mainMenu.Text = "menuStrip1";
       // 
       // fileToolStripMenuItem
       // 
+      this.fileToolStripMenuItem.AutoSize = false;
       this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
@@ -534,6 +536,7 @@
       // 
       // solutionToolStripMenuItem
       // 
+      this.solutionToolStripMenuItem.AutoSize = false;
       this.solutionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.solutionAddNewProjectToolStripMenuItem,
             this.solutionAddExistingProjectToolStripMenuItem,
@@ -575,6 +578,7 @@
       // 
       // projectToolStripMenuItem
       // 
+      this.projectToolStripMenuItem.AutoSize = false;
       this.projectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addNewToolStripMenuItem,
             this.saveProjectToolStripMenuItem,
@@ -702,6 +706,7 @@
       // 
       // editToolStripMenuItem
       // 
+      this.editToolStripMenuItem.AutoSize = false;
       this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.undoToolStripMenuItem,
             this.redoToolStripMenuItem,
@@ -790,6 +795,7 @@
       // 
       // buildToolStripMenuItem
       // 
+      this.buildToolStripMenuItem.AutoSize = false;
       this.buildToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.compileToolStripMenuItem,
             this.buildToolStripMenuItem1,
@@ -851,6 +857,7 @@
       // 
       // debugToolStripMenuItem
       // 
+      this.debugToolStripMenuItem.AutoSize = false;
       this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.debugConnectToolStripMenuItem,
             this.debugDisconnectToolStripMenuItem,
@@ -953,6 +960,7 @@
       // 
       // toolsToolStripMenuItem
       // 
+      this.toolsToolStripMenuItem.AutoSize = false;
       this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.disassembleToolsToolStripMenuItem});
       this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -968,6 +976,7 @@
       // 
       // windowToolStripMenuItem
       // 
+      this.windowToolStripMenuItem.AutoSize = false;
       this.windowToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.breakpointsToolStripMenuItem,
             this.debugMemoryToolStripMenuItem,
@@ -1176,6 +1185,7 @@
       // 
       // aboutToolStripMenuItem
       // 
+      this.aboutToolStripMenuItem.AutoSize = false;
       this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpToolStripMenuItem1,
             this.toolStripSeparator5,
@@ -1252,12 +1262,13 @@
             this.mainToolPrint});
       this.mainTools.Location = new System.Drawing.Point(0, 24);
       this.mainTools.Name = "mainTools";
-      this.mainTools.Size = new System.Drawing.Size(780, 25);
-      this.mainTools.TabIndex = 4;
+      this.mainTools.Size = new System.Drawing.Size(777, 27);
+      this.mainTools.TabIndex = 1;
       this.mainTools.Text = "toolStrip1";
       // 
       // mainToolNewItem
       // 
+      this.mainToolNewItem.AutoSize = false;
       this.mainToolNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolNewItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.solutionToolStripMenuItem1,
@@ -1275,7 +1286,7 @@
       this.mainToolNewItem.Image = global::C64Studio.Properties.Resources.ToolNewItem;
       this.mainToolNewItem.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolNewItem.Name = "mainToolNewItem";
-      this.mainToolNewItem.Size = new System.Drawing.Size(32, 22);
+      this.mainToolNewItem.Size = new System.Drawing.Size(44, 24);
       this.mainToolNewItem.Text = "New Item";
       this.mainToolNewItem.ButtonClick += new System.EventHandler(this.mainToolNewItem_ButtonClick);
       // 
@@ -1377,199 +1388,218 @@
       // 
       // mainToolOpenFile
       // 
+      this.mainToolOpenFile.AutoSize = false;
       this.mainToolOpenFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolOpenFile.Image = global::C64Studio.Properties.Resources.ToolOpenFile;
       this.mainToolOpenFile.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolOpenFile.Name = "mainToolOpenFile";
-      this.mainToolOpenFile.Size = new System.Drawing.Size(23, 22);
+      this.mainToolOpenFile.Size = new System.Drawing.Size(24, 24);
       this.mainToolOpenFile.Text = "Open File";
       this.mainToolOpenFile.Click += new System.EventHandler(this.mainToolOpenFile_Click);
       // 
       // mainToolSave
       // 
+      this.mainToolSave.AutoSize = false;
       this.mainToolSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolSave.Enabled = false;
       this.mainToolSave.Image = global::C64Studio.Properties.Resources.ToolSave;
       this.mainToolSave.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolSave.Name = "mainToolSave";
-      this.mainToolSave.Size = new System.Drawing.Size(23, 22);
+      this.mainToolSave.Size = new System.Drawing.Size(24, 24);
       this.mainToolSave.Text = "Save";
       this.mainToolSave.Click += new System.EventHandler(this.mainToolSave_Click);
       // 
       // mainToolSaveAll
       // 
+      this.mainToolSaveAll.AutoSize = false;
       this.mainToolSaveAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolSaveAll.Enabled = false;
       this.mainToolSaveAll.Image = global::C64Studio.Properties.Resources.ToolSaveAll;
       this.mainToolSaveAll.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolSaveAll.Name = "mainToolSaveAll";
-      this.mainToolSaveAll.Size = new System.Drawing.Size(23, 22);
+      this.mainToolSaveAll.Size = new System.Drawing.Size(24, 24);
       this.mainToolSaveAll.Text = "Save All";
       this.mainToolSaveAll.Click += new System.EventHandler(this.mainToolSaveAll_Click);
       // 
       // mainToolCommentSelection
       // 
+      this.mainToolCommentSelection.AutoSize = false;
       this.mainToolCommentSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolCommentSelection.Image = global::C64Studio.Properties.Resources.ToolCommentSelection;
       this.mainToolCommentSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolCommentSelection.Name = "mainToolCommentSelection";
-      this.mainToolCommentSelection.Size = new System.Drawing.Size(23, 22);
+      this.mainToolCommentSelection.Size = new System.Drawing.Size(24, 24);
       this.mainToolCommentSelection.Text = "Comment Selection";
       this.mainToolCommentSelection.Click += new System.EventHandler(this.mainToolCommentSelection_Click);
       // 
       // mainToolUncommentSelection
       // 
+      this.mainToolUncommentSelection.AutoSize = false;
       this.mainToolUncommentSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolUncommentSelection.Image = global::C64Studio.Properties.Resources.ToolUncommentSelection;
       this.mainToolUncommentSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolUncommentSelection.Name = "mainToolUncommentSelection";
-      this.mainToolUncommentSelection.Size = new System.Drawing.Size(23, 22);
+      this.mainToolUncommentSelection.Size = new System.Drawing.Size(24, 24);
       this.mainToolUncommentSelection.Text = "Uncomment Selection";
       this.mainToolUncommentSelection.Click += new System.EventHandler(this.mainToolUncommentSelection_Click);
       // 
       // mainToolCompile
       // 
+      this.mainToolCompile.AutoSize = false;
       this.mainToolCompile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolCompile.Image = global::C64Studio.Properties.Resources.ToolCompile;
       this.mainToolCompile.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolCompile.Name = "mainToolCompile";
-      this.mainToolCompile.Size = new System.Drawing.Size(23, 22);
+      this.mainToolCompile.Size = new System.Drawing.Size(24, 24);
       this.mainToolCompile.Text = "Compile";
       this.mainToolCompile.Click += new System.EventHandler(this.mainToolCompile_Click_1);
       // 
       // mainToolBuild
       // 
+      this.mainToolBuild.AutoSize = false;
       this.mainToolBuild.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolBuild.Image = global::C64Studio.Properties.Resources.ToolBuild;
       this.mainToolBuild.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolBuild.Name = "mainToolBuild";
-      this.mainToolBuild.Size = new System.Drawing.Size(23, 22);
+      this.mainToolBuild.Size = new System.Drawing.Size(24, 24);
       this.mainToolBuild.Text = "Build";
       this.mainToolBuild.Click += new System.EventHandler(this.mainToolCompile_Click);
       // 
       // mainToolRebuild
       // 
+      this.mainToolRebuild.AutoSize = false;
       this.mainToolRebuild.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolRebuild.Image = global::C64Studio.Properties.Resources.ToolRebuild;
       this.mainToolRebuild.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolRebuild.Name = "mainToolRebuild";
-      this.mainToolRebuild.Size = new System.Drawing.Size(23, 22);
+      this.mainToolRebuild.Size = new System.Drawing.Size(24, 24);
       this.mainToolRebuild.Text = "Rebuild";
       this.mainToolRebuild.Click += new System.EventHandler(this.mainToolRebuild_Click);
       // 
       // mainToolBuildAndRun
       // 
+      this.mainToolBuildAndRun.AutoSize = false;
       this.mainToolBuildAndRun.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolBuildAndRun.Image = global::C64Studio.Properties.Resources.ToolBuildAndRun;
       this.mainToolBuildAndRun.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolBuildAndRun.Name = "mainToolBuildAndRun";
-      this.mainToolBuildAndRun.Size = new System.Drawing.Size(23, 22);
+      this.mainToolBuildAndRun.Size = new System.Drawing.Size(24, 24);
       this.mainToolBuildAndRun.Text = "Build and Run";
       this.mainToolBuildAndRun.Click += new System.EventHandler(this.mainToolCompileAndRun_Click);
       // 
       // mainToolDebug
       // 
+      this.mainToolDebug.AutoSize = false;
       this.mainToolDebug.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolDebug.Image = global::C64Studio.Properties.Resources.ToolDebug;
       this.mainToolDebug.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolDebug.Name = "mainToolDebug";
-      this.mainToolDebug.Size = new System.Drawing.Size(23, 22);
+      this.mainToolDebug.Size = new System.Drawing.Size(24, 24);
       this.mainToolDebug.Text = "Debug";
       this.mainToolDebug.Click += new System.EventHandler(this.mainToolDebug_Click);
       // 
       // mainToolConfig
       // 
+      this.mainToolConfig.AutoSize = false;
       this.mainToolConfig.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.mainToolConfig.Name = "mainToolConfig";
-      this.mainToolConfig.Size = new System.Drawing.Size(121, 25);
+      this.mainToolConfig.Size = new System.Drawing.Size(121, 23);
       this.mainToolConfig.SelectedIndexChanged += new System.EventHandler(this.mainToolConfig_SelectedIndexChanged);
       // 
       // mainToolToggleTrueDrive
       // 
+      this.mainToolToggleTrueDrive.AutoSize = false;
       this.mainToolToggleTrueDrive.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolToggleTrueDrive.Image = global::C64Studio.Properties.Resources.toolbar_truedrive_enabled;
       this.mainToolToggleTrueDrive.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolToggleTrueDrive.Name = "mainToolToggleTrueDrive";
-      this.mainToolToggleTrueDrive.Size = new System.Drawing.Size(23, 22);
+      this.mainToolToggleTrueDrive.Size = new System.Drawing.Size(24, 24);
       this.mainToolToggleTrueDrive.Text = "Toggle True Drive";
       this.mainToolToggleTrueDrive.Click += new System.EventHandler(this.mainToolToggleTrueDrive_Click);
       // 
       // mainToolEmulator
       // 
+      this.mainToolEmulator.AutoSize = false;
       this.mainToolEmulator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.mainToolEmulator.Name = "mainToolEmulator";
-      this.mainToolEmulator.Size = new System.Drawing.Size(206, 25);
+      this.mainToolEmulator.Size = new System.Drawing.Size(206, 23);
       this.mainToolEmulator.SelectedIndexChanged += new System.EventHandler(this.mainToolEmulator_SelectedIndexChanged);
       // 
       // toolStripSeparator14
       // 
       this.toolStripSeparator14.Name = "toolStripSeparator14";
-      this.toolStripSeparator14.Size = new System.Drawing.Size(6, 25);
+      this.toolStripSeparator14.Size = new System.Drawing.Size(6, 27);
       // 
       // mainToolUndo
       // 
+      this.mainToolUndo.AutoSize = false;
       this.mainToolUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolUndo.Enabled = false;
       this.mainToolUndo.Image = global::C64Studio.Properties.Resources.ToolUndo;
       this.mainToolUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolUndo.Name = "mainToolUndo";
-      this.mainToolUndo.Size = new System.Drawing.Size(23, 22);
+      this.mainToolUndo.Size = new System.Drawing.Size(24, 24);
       this.mainToolUndo.Text = "Undo";
       this.mainToolUndo.Click += new System.EventHandler(this.mainToolUndo_Click);
       // 
       // mainToolRedo
       // 
+      this.mainToolRedo.AutoSize = false;
       this.mainToolRedo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolRedo.Enabled = false;
       this.mainToolRedo.Image = global::C64Studio.Properties.Resources.ToolRedo;
       this.mainToolRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolRedo.Name = "mainToolRedo";
-      this.mainToolRedo.Size = new System.Drawing.Size(23, 22);
+      this.mainToolRedo.Size = new System.Drawing.Size(24, 24);
       this.mainToolRedo.Text = "Redo";
       this.mainToolRedo.Click += new System.EventHandler(this.mainToolRedo_Click);
       // 
       // mainToolFind
       // 
+      this.mainToolFind.AutoSize = false;
       this.mainToolFind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolFind.Enabled = false;
       this.mainToolFind.Image = global::C64Studio.Properties.Resources.ToolFind;
       this.mainToolFind.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolFind.Name = "mainToolFind";
-      this.mainToolFind.Size = new System.Drawing.Size(23, 22);
+      this.mainToolFind.Size = new System.Drawing.Size(24, 24);
       this.mainToolFind.Text = "Find";
       this.mainToolFind.Click += new System.EventHandler(this.mainToolFind_Click);
       // 
       // mainToolFindReplace
       // 
+      this.mainToolFindReplace.AutoSize = false;
       this.mainToolFindReplace.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolFindReplace.Enabled = false;
       this.mainToolFindReplace.Image = global::C64Studio.Properties.Resources.ToolFindReplace;
       this.mainToolFindReplace.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolFindReplace.Name = "mainToolFindReplace";
-      this.mainToolFindReplace.Size = new System.Drawing.Size(23, 22);
+      this.mainToolFindReplace.Size = new System.Drawing.Size(24, 24);
       this.mainToolFindReplace.Text = "Find/Replace";
       this.mainToolFindReplace.Click += new System.EventHandler(this.mainToolFindReplace_Click);
       // 
       // mainToolPrint
       // 
+      this.mainToolPrint.AutoSize = false;
       this.mainToolPrint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolPrint.Enabled = false;
       this.mainToolPrint.Image = global::C64Studio.Properties.Resources.ToolPrint;
       this.mainToolPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolPrint.Name = "mainToolPrint";
-      this.mainToolPrint.Size = new System.Drawing.Size(23, 22);
+      this.mainToolPrint.Size = new System.Drawing.Size(24, 24);
       this.mainToolPrint.Text = "Print Source Code";
       this.mainToolPrint.Click += new System.EventHandler(this.mainToolPrint_Click);
       // 
       // mainStatus
       // 
+      this.mainStatus.ImageScalingSize = new System.Drawing.Size(28, 28);
       this.mainStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabelInfo,
             this.statusProgress,
             this.statusEditorDetails});
-      this.mainStatus.Location = new System.Drawing.Point(0, 655);
+      this.mainStatus.Location = new System.Drawing.Point(0, 576);
       this.mainStatus.Name = "mainStatus";
-      this.mainStatus.Size = new System.Drawing.Size(1120, 22);
+      this.mainStatus.Size = new System.Drawing.Size(1101, 22);
       this.mainStatus.TabIndex = 5;
       this.mainStatus.Text = "statusStrip1";
       // 
@@ -1597,6 +1627,7 @@
       // 
       // debugTools
       // 
+      this.debugTools.AutoSize = false;
       this.debugTools.Dock = System.Windows.Forms.DockStyle.None;
       this.debugTools.Enabled = false;
       this.debugTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1606,83 +1637,88 @@
             this.mainDebugStepInto,
             this.mainDebugStepOver,
             this.mainDebugStepOut});
-      this.debugTools.Location = new System.Drawing.Point(743, 24);
+      this.debugTools.Location = new System.Drawing.Point(777, 24);
       this.debugTools.Name = "debugTools";
-      this.debugTools.Size = new System.Drawing.Size(150, 25);
-      this.debugTools.TabIndex = 8;
+      this.debugTools.Size = new System.Drawing.Size(235, 27);
+      this.debugTools.TabIndex = 2;
       this.debugTools.Text = "toolStrip1";
       // 
       // mainDebugGo
       // 
+      this.mainDebugGo.AutoSize = false;
       this.mainDebugGo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainDebugGo.Image = global::C64Studio.Properties.Resources.DebugGo;
       this.mainDebugGo.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugGo.Name = "mainDebugGo";
-      this.mainDebugGo.Size = new System.Drawing.Size(23, 22);
+      this.mainDebugGo.Size = new System.Drawing.Size(24, 24);
       this.mainDebugGo.Text = "Resume";
       this.mainDebugGo.Click += new System.EventHandler(this.mainDebugGo_Click);
       // 
       // mainDebugBreak
       // 
+      this.mainDebugBreak.AutoSize = false;
       this.mainDebugBreak.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainDebugBreak.Image = global::C64Studio.Properties.Resources.DebugBreak;
       this.mainDebugBreak.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugBreak.Name = "mainDebugBreak";
-      this.mainDebugBreak.Size = new System.Drawing.Size(23, 22);
+      this.mainDebugBreak.Size = new System.Drawing.Size(24, 24);
       this.mainDebugBreak.Text = "Break into Debug Mode";
       this.mainDebugBreak.Click += new System.EventHandler(this.mainDebugBreak_Click);
       // 
       // mainDebugStop
       // 
+      this.mainDebugStop.AutoSize = false;
       this.mainDebugStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainDebugStop.Image = global::C64Studio.Properties.Resources.DebugStop;
       this.mainDebugStop.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStop.Name = "mainDebugStop";
-      this.mainDebugStop.Size = new System.Drawing.Size(23, 22);
+      this.mainDebugStop.Size = new System.Drawing.Size(24, 24);
       this.mainDebugStop.Text = "Stop Debugging";
       this.mainDebugStop.Click += new System.EventHandler(this.mainDebugStop_Click);
       // 
       // mainDebugStepInto
       // 
+      this.mainDebugStepInto.AutoSize = false;
       this.mainDebugStepInto.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainDebugStepInto.Image = global::C64Studio.Properties.Resources.DebugStepInto;
       this.mainDebugStepInto.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStepInto.Name = "mainDebugStepInto";
-      this.mainDebugStepInto.Size = new System.Drawing.Size(23, 22);
+      this.mainDebugStepInto.Size = new System.Drawing.Size(24, 24);
       this.mainDebugStepInto.Text = "Step Into";
       this.mainDebugStepInto.Click += new System.EventHandler(this.mainDebugStepInto_Click);
       // 
       // mainDebugStepOver
       // 
+      this.mainDebugStepOver.AutoSize = false;
       this.mainDebugStepOver.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainDebugStepOver.Image = global::C64Studio.Properties.Resources.DebugStepOver;
       this.mainDebugStepOver.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStepOver.Name = "mainDebugStepOver";
-      this.mainDebugStepOver.Size = new System.Drawing.Size(23, 22);
+      this.mainDebugStepOver.Size = new System.Drawing.Size(24, 24);
       this.mainDebugStepOver.Text = "Step Over";
       this.mainDebugStepOver.Click += new System.EventHandler(this.mainDebugStepOver_Click);
       // 
       // mainDebugStepOut
       // 
+      this.mainDebugStepOut.AutoSize = false;
       this.mainDebugStepOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainDebugStepOut.Image = global::C64Studio.Properties.Resources.DebugStepOut;
       this.mainDebugStepOut.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStepOut.Name = "mainDebugStepOut";
-      this.mainDebugStepOut.Size = new System.Drawing.Size(23, 22);
+      this.mainDebugStepOut.Size = new System.Drawing.Size(24, 24);
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
       // MainForm
       // 
       this.AllowDrop = true;
-      this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-      this.ClientSize = new System.Drawing.Size(1120, 677);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+      this.ClientSize = new System.Drawing.Size(1101, 598);
       this.Controls.Add(this.mainStatus);
       this.Controls.Add(this.mainTools);
+      this.Controls.Add( this.debugTools );
       this.Controls.Add(this.mainMenu);
       this.Controls.Add(this.panelMain);
-      this.Controls.Add(this.debugTools);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.IsMdiContainer = true;
       this.MainMenuStrip = this.mainMenu;

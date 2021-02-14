@@ -51,6 +51,7 @@
       this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
       this.commentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.uncommentSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.addSubtractDataValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
       this.showMemoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.showMiniOverviewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,7 +62,6 @@
       this.miniMap = new FastColoredTextBoxNS.DocumentMap();
       this.contextMenuMiniMap = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.addSubtractDataValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -112,6 +112,7 @@
       // 
       // contextSource
       // 
+      this.contextSource.ImageScalingSize = new System.Drawing.Size(28, 28);
       this.contextSource.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyToolStripMenuItem,
             this.cutToolStripMenuItem,
@@ -136,7 +137,7 @@
             this.separatorCommenting,
             this.openFileToolStripMenuItem});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(217, 414);
+      this.contextSource.Size = new System.Drawing.Size(217, 392);
       // 
       // copyToolStripMenuItem
       // 
@@ -266,6 +267,13 @@
       this.uncommentSelectionToolStripMenuItem.Text = "Uncomment Selection";
       this.uncommentSelectionToolStripMenuItem.Click += new System.EventHandler(this.uncommentSelectionToolStripMenuItem_Click);
       // 
+      // addSubtractDataValuesToolStripMenuItem
+      // 
+      this.addSubtractDataValuesToolStripMenuItem.Name = "addSubtractDataValuesToolStripMenuItem";
+      this.addSubtractDataValuesToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+      this.addSubtractDataValuesToolStripMenuItem.Text = "Add/Subtract data values...";
+      this.addSubtractDataValuesToolStripMenuItem.Click += new System.EventHandler(this.addSubtractDataValuesToolStripMenuItem_Click);
+      // 
       // toolStripMenuItem1
       // 
       this.toolStripMenuItem1.Name = "toolStripMenuItem1";
@@ -336,6 +344,7 @@
       // 
       // contextMenuMiniMap
       // 
+      this.contextMenuMiniMap.ImageScalingSize = new System.Drawing.Size(28, 28);
       this.contextMenuMiniMap.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hideToolStripMenuItem});
       this.contextMenuMiniMap.Name = "contextMenuMiniMap";
@@ -348,15 +357,9 @@
       this.hideToolStripMenuItem.Text = "Hide";
       this.hideToolStripMenuItem.Click += new System.EventHandler(this.hideToolStripMenuItem_Click);
       // 
-      // addSubtractDataValuesToolStripMenuItem
-      // 
-      this.addSubtractDataValuesToolStripMenuItem.Name = "addSubtractDataValuesToolStripMenuItem";
-      this.addSubtractDataValuesToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-      this.addSubtractDataValuesToolStripMenuItem.Text = "Add/Subtract data values...";
-      this.addSubtractDataValuesToolStripMenuItem.Click += new System.EventHandler(this.addSubtractDataValuesToolStripMenuItem_Click);
-      // 
       // SourceASMEx
       // 
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.ClientSize = new System.Drawing.Size(575, 471);
       this.Controls.Add(this.miniMap);
       this.Controls.Add(this.comboZoneSelector);

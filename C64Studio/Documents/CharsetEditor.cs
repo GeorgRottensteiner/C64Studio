@@ -47,6 +47,9 @@ namespace C64Studio
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       m_IsSaveable = true;
       InitializeComponent();
+      characterEditor.Core = Core;
+
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
       characterEditor.UndoManager = DocumentInfo.UndoManager;
       characterEditor.Core = Core;

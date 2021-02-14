@@ -140,6 +140,7 @@
       // listValues
       // 
       this.listValues.AddButtonEnabled = true;
+      this.listValues.AllowClone = true;
       this.listValues.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
       this.listValues.DeleteButtonEnabled = false;
@@ -151,6 +152,7 @@
       this.listValues.MoveUpButtonEnabled = false;
       this.listValues.MustHaveOneElement = false;
       this.listValues.Name = "listValues";
+      this.listValues.SelectedIndex = -1;
       this.listValues.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       this.listValues.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listValues.Size = new System.Drawing.Size(317, 379);
@@ -221,6 +223,7 @@
       this.pictureGraphPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.pictureGraphPreview.AutoResize = true;
       this.pictureGraphPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.pictureGraphPreview.DisplayPage = fastImage1;
       this.pictureGraphPreview.Image = null;
@@ -602,20 +605,20 @@
             this.saveValueTableProjectToolStripMenuItem,
             this.closeValueTableProjectToolStripMenuItem});
       this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-      this.fileToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
+      this.fileToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
       this.fileToolStripMenuItem.Text = "&Value Table";
       // 
       // openValueTableProjectToolStripMenuItem
       // 
       this.openValueTableProjectToolStripMenuItem.Name = "openValueTableProjectToolStripMenuItem";
-      this.openValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+      this.openValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
       this.openValueTableProjectToolStripMenuItem.Text = "&Open Value Table Project...";
       this.openValueTableProjectToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
       // 
       // saveValueTableProjectToolStripMenuItem
       // 
       this.saveValueTableProjectToolStripMenuItem.Name = "saveValueTableProjectToolStripMenuItem";
-      this.saveValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+      this.saveValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
       this.saveValueTableProjectToolStripMenuItem.Text = "&Save Project";
       this.saveValueTableProjectToolStripMenuItem.Click += new System.EventHandler(this.saveCharsetProjectToolStripMenuItem_Click);
       // 
@@ -623,7 +626,7 @@
       // 
       this.closeValueTableProjectToolStripMenuItem.Enabled = false;
       this.closeValueTableProjectToolStripMenuItem.Name = "closeValueTableProjectToolStripMenuItem";
-      this.closeValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+      this.closeValueTableProjectToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
       this.closeValueTableProjectToolStripMenuItem.Text = "&Close Value Table Project";
       this.closeValueTableProjectToolStripMenuItem.Click += new System.EventHandler(this.closeCharsetProjectToolStripMenuItem_Click);
       // 

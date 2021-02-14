@@ -21,6 +21,8 @@ namespace C64Studio
     {
       InitializeComponent();
 
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
+
       NodeRoot = new System.Windows.Forms.TreeNode( "Outline" );
       NodeRoot.ImageIndex = 0;
       NodeRoot.SelectedImageIndex = 0;

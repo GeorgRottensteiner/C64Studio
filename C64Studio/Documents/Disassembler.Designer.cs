@@ -31,6 +31,8 @@
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Disassembler));
       this.editDisassembly = new FastColoredTextBoxNS.FastColoredTextBox();
+      this.contextMenuDisassembler = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.addJumpAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.panel1 = new System.Windows.Forms.Panel();
       this.btnOpenBinary = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -66,10 +68,9 @@
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.contextMenuDisassembler = new System.Windows.Forms.ContextMenuStrip(this.components);
-      this.addJumpAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).BeginInit();
+      this.contextMenuDisassembler.SuspendLayout();
       this.panel1.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
@@ -78,7 +79,6 @@
       this.tabBinary.SuspendLayout();
       this.groupBox3.SuspendLayout();
       this.groupBox4.SuspendLayout();
-      this.contextMenuDisassembler.SuspendLayout();
       this.SuspendLayout();
       // 
       // editDisassembly
@@ -115,6 +115,22 @@
       this.editDisassembly.TabIndex = 1;
       this.editDisassembly.TabLength = 2;
       this.editDisassembly.Zoom = 100;
+      // 
+      // contextMenuDisassembler
+      // 
+      this.contextMenuDisassembler.ImageScalingSize = new System.Drawing.Size(28, 28);
+      this.contextMenuDisassembler.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addJumpAddressToolStripMenuItem});
+      this.contextMenuDisassembler.Name = "contextMenuDisassembler";
+      this.contextMenuDisassembler.Size = new System.Drawing.Size(174, 26);
+      this.contextMenuDisassembler.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuDisassembler_Opening);
+      // 
+      // addJumpAddressToolStripMenuItem
+      // 
+      this.addJumpAddressToolStripMenuItem.Name = "addJumpAddressToolStripMenuItem";
+      this.addJumpAddressToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.addJumpAddressToolStripMenuItem.Text = "Add Jump Address";
+      this.addJumpAddressToolStripMenuItem.Click += new System.EventHandler(this.addJumpAddressToolStripMenuItem_Click);
       // 
       // panel1
       // 
@@ -248,6 +264,7 @@
       this.listJumpedAtAddresses.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
+      this.listJumpedAtAddresses.HideSelection = false;
       this.listJumpedAtAddresses.Location = new System.Drawing.Point(6, 47);
       this.listJumpedAtAddresses.Name = "listJumpedAtAddresses";
       this.listJumpedAtAddresses.Size = new System.Drawing.Size(170, 117);
@@ -304,11 +321,13 @@
       this.hexView.BytesPerLine = 8;
       this.hexView.ColumnInfoVisible = true;
       this.hexView.CustomHexViewer = null;
+      this.hexView.DisplayedAddressOffset = ((long)(0));
       this.hexView.Dock = System.Windows.Forms.DockStyle.Fill;
       this.hexView.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.hexView.InfoForeColor = System.Drawing.SystemColors.AppWorkspace;
       this.hexView.LineInfoVisible = true;
       this.hexView.Location = new System.Drawing.Point(3, 3);
+      this.hexView.MarkedForeColor = System.Drawing.Color.Empty;
       this.hexView.Name = "hexView";
       this.hexView.NumDigitsMemorySize = 8;
       this.hexView.SelectedByteProvider = null;
@@ -457,6 +476,7 @@
       this.listNamedLabels.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader3,
             this.columnHeader4});
+      this.listNamedLabels.HideSelection = false;
       this.listNamedLabels.Location = new System.Drawing.Point(6, 70);
       this.listNamedLabels.Name = "listNamedLabels";
       this.listNamedLabels.Size = new System.Drawing.Size(264, 93);
@@ -479,26 +499,10 @@
       // 
       this.toolTip1.ShowAlways = true;
       // 
-      // contextMenuDisassembler
-      // 
-      this.contextMenuDisassembler.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addJumpAddressToolStripMenuItem});
-      this.contextMenuDisassembler.Name = "contextMenuDisassembler";
-      this.contextMenuDisassembler.Size = new System.Drawing.Size(174, 26);
-      this.contextMenuDisassembler.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuDisassembler_Opening);
-      // 
-      // addJumpAddressToolStripMenuItem
-      // 
-      this.addJumpAddressToolStripMenuItem.Name = "addJumpAddressToolStripMenuItem";
-      this.addJumpAddressToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-      this.addJumpAddressToolStripMenuItem.Text = "Add Jump Address";
-      this.addJumpAddressToolStripMenuItem.Click += new System.EventHandler(this.addJumpAddressToolStripMenuItem_Click);
-      // 
       // Disassembler
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(968, 680);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+      this.ClientSize = new System.Drawing.Size(968, 598);
       this.Controls.Add(this.groupBox3);
       this.Controls.Add(this.tabContent);
       this.Controls.Add(this.groupBox4);
@@ -512,6 +516,7 @@
       this.Text = "Disassembler";
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).EndInit();
+      this.contextMenuDisassembler.ResumeLayout(false);
       this.panel1.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
@@ -524,7 +529,6 @@
       this.groupBox3.PerformLayout();
       this.groupBox4.ResumeLayout(false);
       this.groupBox4.PerformLayout();
-      this.contextMenuDisassembler.ResumeLayout(false);
       this.ResumeLayout(false);
 
     }

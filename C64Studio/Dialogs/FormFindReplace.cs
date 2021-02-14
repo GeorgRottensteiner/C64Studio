@@ -112,6 +112,8 @@ namespace C64Studio
 
       InitializeComponent();
 
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
+
       foreach ( FindTarget target in Enum.GetValues( typeof( FindTarget ) ) )
       {
         comboSearchTarget.Items.Add( GR.EnumHelper.GetDescription( target ) );

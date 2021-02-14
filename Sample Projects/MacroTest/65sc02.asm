@@ -16,3 +16,8 @@
           LDA ($12,SP),Y
   
 lsmf2  
+
+!byte 1,2,3
+!byte 4,5,6
+
+huhu

@@ -161,7 +161,7 @@
       this.tabSpriteEditor.Location = new System.Drawing.Point(0, 24);
       this.tabSpriteEditor.Name = "tabSpriteEditor";
       this.tabSpriteEditor.SelectedIndex = 0;
-      this.tabSpriteEditor.Size = new System.Drawing.Size(994, 503);
+      this.tabSpriteEditor.Size = new System.Drawing.Size(782, 450);
       this.tabSpriteEditor.TabIndex = 0;
       // 
       // tabEditor
@@ -195,14 +195,14 @@
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(986, 477);
+      this.tabEditor.Size = new System.Drawing.Size(774, 424);
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Sprite";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
       // btnExchangeColors
       // 
-      this.btnExchangeColors.Location = new System.Drawing.Point(227, 438);
+      this.btnExchangeColors.Location = new System.Drawing.Point(227, 381);
       this.btnExchangeColors.Menu = this.contextMenuExchangeColors;
       this.btnExchangeColors.Name = "btnExchangeColors";
       this.btnExchangeColors.Size = new System.Drawing.Size(121, 26);
@@ -212,6 +212,7 @@
       // 
       // contextMenuExchangeColors
       // 
+      this.contextMenuExchangeColors.ImageScalingSize = new System.Drawing.Size(28, 28);
       this.contextMenuExchangeColors.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exchangeMultiColor1WithBGColorToolStripMenuItem,
             this.exchangeMultiColor2WithBGColorToolStripMenuItem,
@@ -306,7 +307,7 @@
       this.tabSpriteDetails.Location = new System.Drawing.Point(446, 2);
       this.tabSpriteDetails.Name = "tabSpriteDetails";
       this.tabSpriteDetails.SelectedIndex = 0;
-      this.tabSpriteDetails.Size = new System.Drawing.Size(540, 467);
+      this.tabSpriteDetails.Size = new System.Drawing.Size(328, 414);
       this.tabSpriteDetails.TabIndex = 9;
       // 
       // tabPage1
@@ -315,7 +316,7 @@
       this.tabPage1.Location = new System.Drawing.Point(4, 22);
       this.tabPage1.Name = "tabPage1";
       this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage1.Size = new System.Drawing.Size(532, 441);
+      this.tabPage1.Size = new System.Drawing.Size(320, 388);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "Sprites";
       this.tabPage1.UseVisualStyleBackColor = true;
@@ -340,7 +341,7 @@
       this.panelSprites.Name = "panelSprites";
       this.panelSprites.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
       this.panelSprites.SelectedIndex = -1;
-      this.panelSprites.Size = new System.Drawing.Size(526, 435);
+      this.panelSprites.Size = new System.Drawing.Size(314, 382);
       this.panelSprites.TabIndex = 4;
       this.panelSprites.TabStop = true;
       this.panelSprites.VisibleAutoScrollHorizontal = false;
@@ -374,7 +375,7 @@
       this.tabPage2.Location = new System.Drawing.Point(4, 22);
       this.tabPage2.Name = "tabPage2";
       this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage2.Size = new System.Drawing.Size(532, 441);
+      this.tabPage2.Size = new System.Drawing.Size(320, 388);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "Preview";
       this.tabPage2.UseVisualStyleBackColor = true;
@@ -382,7 +383,7 @@
       // btnSavePreviewToGIF
       // 
       this.btnSavePreviewToGIF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnSavePreviewToGIF.Location = new System.Drawing.Point(389, 342);
+      this.btnSavePreviewToGIF.Location = new System.Drawing.Point(389, 289);
       this.btnSavePreviewToGIF.Name = "btnSavePreviewToGIF";
       this.btnSavePreviewToGIF.Size = new System.Drawing.Size(75, 23);
       this.btnSavePreviewToGIF.TabIndex = 13;
@@ -394,7 +395,7 @@
       // 
       this.checkAutoplayAnim.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.checkAutoplayAnim.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkAutoplayAnim.Location = new System.Drawing.Point(227, 399);
+      this.checkAutoplayAnim.Location = new System.Drawing.Point(227, 346);
       this.checkAutoplayAnim.Name = "checkAutoplayAnim";
       this.checkAutoplayAnim.Size = new System.Drawing.Size(132, 24);
       this.checkAutoplayAnim.TabIndex = 12;
@@ -477,7 +478,7 @@
       this.listLayers.SelectedIndex = -1;
       this.listLayers.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       this.listLayers.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      this.listLayers.Size = new System.Drawing.Size(192, 145);
+      this.listLayers.Size = new System.Drawing.Size(192, 92);
       this.listLayers.TabIndex = 9;
       this.listLayers.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listLayers_AddingItem);
       this.listLayers.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.listLayers_CloningItem);
@@ -518,7 +519,7 @@
       // 
       this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(224, 374);
+      this.label10.Location = new System.Drawing.Point(224, 321);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(37, 13);
       this.label10.TabIndex = 15;
@@ -528,7 +529,7 @@
       // 
       this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(224, 347);
+      this.label6.Location = new System.Drawing.Point(224, 294);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(38, 13);
       this.label6.TabIndex = 15;
@@ -537,7 +538,7 @@
       // editLayerDelay
       // 
       this.editLayerDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.editLayerDelay.Location = new System.Drawing.Point(268, 369);
+      this.editLayerDelay.Location = new System.Drawing.Point(268, 316);
       this.editLayerDelay.Name = "editLayerDelay";
       this.editLayerDelay.Size = new System.Drawing.Size(91, 20);
       this.editLayerDelay.TabIndex = 11;
@@ -546,7 +547,7 @@
       // editLayerName
       // 
       this.editLayerName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.editLayerName.Location = new System.Drawing.Point(268, 342);
+      this.editLayerName.Location = new System.Drawing.Point(268, 289);
       this.editLayerName.Name = "editLayerName";
       this.editLayerName.Size = new System.Drawing.Size(91, 20);
       this.editLayerName.TabIndex = 10;
@@ -623,19 +624,20 @@
       this.layerPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.layerPreview.AutoResize = false;
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.layerPreview.DisplayPage = fastImage1;
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(208, 3);
       this.layerPreview.Name = "layerPreview";
-      this.layerPreview.Size = new System.Drawing.Size(318, 333);
+      this.layerPreview.Size = new System.Drawing.Size(106, 280);
       this.layerPreview.TabIndex = 7;
       this.layerPreview.TabStop = false;
       // 
       // btnDeleteSprite
       // 
       this.btnDeleteSprite.Enabled = false;
-      this.btnDeleteSprite.Location = new System.Drawing.Point(365, 439);
+      this.btnDeleteSprite.Location = new System.Drawing.Point(365, 382);
       this.btnDeleteSprite.Name = "btnDeleteSprite";
       this.btnDeleteSprite.Size = new System.Drawing.Size(75, 23);
       this.btnDeleteSprite.TabIndex = 8;
@@ -744,7 +746,7 @@
       // 
       // btnCopyToClipboard
       // 
-      this.btnCopyToClipboard.Location = new System.Drawing.Point(227, 413);
+      this.btnCopyToClipboard.Location = new System.Drawing.Point(227, 356);
       this.btnCopyToClipboard.Name = "btnCopyToClipboard";
       this.btnCopyToClipboard.Size = new System.Drawing.Size(121, 23);
       this.btnCopyToClipboard.TabIndex = 6;
@@ -754,7 +756,7 @@
       // 
       // btnPasteFromClipboard
       // 
-      this.btnPasteFromClipboard.Location = new System.Drawing.Point(227, 385);
+      this.btnPasteFromClipboard.Location = new System.Drawing.Point(227, 328);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
       this.btnPasteFromClipboard.Size = new System.Drawing.Size(121, 23);
       this.btnPasteFromClipboard.TabIndex = 6;
@@ -764,7 +766,7 @@
       // 
       // labelCharNo
       // 
-      this.labelCharNo.Location = new System.Drawing.Point(304, 363);
+      this.labelCharNo.Location = new System.Drawing.Point(304, 306);
       this.labelCharNo.Name = "labelCharNo";
       this.labelCharNo.Size = new System.Drawing.Size(82, 23);
       this.labelCharNo.TabIndex = 5;
@@ -773,7 +775,7 @@
       // checkShowGrid
       // 
       this.checkShowGrid.AutoSize = true;
-      this.checkShowGrid.Location = new System.Drawing.Point(365, 415);
+      this.checkShowGrid.Location = new System.Drawing.Point(365, 358);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
       this.checkShowGrid.TabIndex = 3;
@@ -784,7 +786,7 @@
       // checkMulticolor
       // 
       this.checkMulticolor.AutoSize = true;
-      this.checkMulticolor.Location = new System.Drawing.Point(227, 362);
+      this.checkMulticolor.Location = new System.Drawing.Point(227, 305);
       this.checkMulticolor.Name = "checkMulticolor";
       this.checkMulticolor.Size = new System.Drawing.Size(71, 17);
       this.checkMulticolor.TabIndex = 3;
@@ -795,7 +797,7 @@
       // radioSpriteColor
       // 
       this.radioSpriteColor.AutoSize = true;
-      this.radioSpriteColor.Location = new System.Drawing.Point(13, 442);
+      this.radioSpriteColor.Location = new System.Drawing.Point(13, 385);
       this.radioSpriteColor.Name = "radioSpriteColor";
       this.radioSpriteColor.Size = new System.Drawing.Size(79, 17);
       this.radioSpriteColor.TabIndex = 2;
@@ -807,7 +809,7 @@
       // radioMulticolor2
       // 
       this.radioMulticolor2.AutoSize = true;
-      this.radioMulticolor2.Location = new System.Drawing.Point(13, 415);
+      this.radioMulticolor2.Location = new System.Drawing.Point(13, 358);
       this.radioMulticolor2.Name = "radioMulticolor2";
       this.radioMulticolor2.Size = new System.Drawing.Size(79, 17);
       this.radioMulticolor2.TabIndex = 2;
@@ -819,7 +821,7 @@
       // radioMultiColor1
       // 
       this.radioMultiColor1.AutoSize = true;
-      this.radioMultiColor1.Location = new System.Drawing.Point(13, 388);
+      this.radioMultiColor1.Location = new System.Drawing.Point(13, 331);
       this.radioMultiColor1.Name = "radioMultiColor1";
       this.radioMultiColor1.Size = new System.Drawing.Size(79, 17);
       this.radioMultiColor1.TabIndex = 2;
@@ -831,7 +833,7 @@
       // radioBackground
       // 
       this.radioBackground.AutoSize = true;
-      this.radioBackground.Location = new System.Drawing.Point(13, 361);
+      this.radioBackground.Location = new System.Drawing.Point(13, 304);
       this.radioBackground.Name = "radioBackground";
       this.radioBackground.Size = new System.Drawing.Size(83, 17);
       this.radioBackground.TabIndex = 2;
@@ -845,7 +847,7 @@
       this.comboSpriteColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboSpriteColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboSpriteColor.FormattingEnabled = true;
-      this.comboSpriteColor.Location = new System.Drawing.Point(102, 442);
+      this.comboSpriteColor.Location = new System.Drawing.Point(102, 385);
       this.comboSpriteColor.Name = "comboSpriteColor";
       this.comboSpriteColor.Size = new System.Drawing.Size(79, 21);
       this.comboSpriteColor.TabIndex = 1;
@@ -857,7 +859,7 @@
       this.comboMulticolor2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboMulticolor2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboMulticolor2.FormattingEnabled = true;
-      this.comboMulticolor2.Location = new System.Drawing.Point(102, 415);
+      this.comboMulticolor2.Location = new System.Drawing.Point(102, 358);
       this.comboMulticolor2.Name = "comboMulticolor2";
       this.comboMulticolor2.Size = new System.Drawing.Size(79, 21);
       this.comboMulticolor2.TabIndex = 1;
@@ -869,7 +871,7 @@
       this.comboMulticolor1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboMulticolor1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboMulticolor1.FormattingEnabled = true;
-      this.comboMulticolor1.Location = new System.Drawing.Point(102, 388);
+      this.comboMulticolor1.Location = new System.Drawing.Point(102, 331);
       this.comboMulticolor1.Name = "comboMulticolor1";
       this.comboMulticolor1.Size = new System.Drawing.Size(79, 21);
       this.comboMulticolor1.TabIndex = 1;
@@ -881,7 +883,7 @@
       this.comboBackground.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBackground.FormattingEnabled = true;
-      this.comboBackground.Location = new System.Drawing.Point(102, 360);
+      this.comboBackground.Location = new System.Drawing.Point(102, 303);
       this.comboBackground.Name = "comboBackground";
       this.comboBackground.Size = new System.Drawing.Size(79, 21);
       this.comboBackground.TabIndex = 1;
@@ -890,12 +892,13 @@
       // 
       // pictureEditor
       // 
+      this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.pictureEditor.DisplayPage = fastImage2;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(40, 6);
       this.pictureEditor.Name = "pictureEditor";
-      this.pictureEditor.Size = new System.Drawing.Size(400, 333);
+      this.pictureEditor.Size = new System.Drawing.Size(357, 282);
       this.pictureEditor.TabIndex = 0;
       this.pictureEditor.TabStop = false;
       this.pictureEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseDown);
@@ -908,7 +911,7 @@
       this.tabProject.Location = new System.Drawing.Point(4, 22);
       this.tabProject.Name = "tabProject";
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
-      this.tabProject.Size = new System.Drawing.Size(986, 477);
+      this.tabProject.Size = new System.Drawing.Size(774, 424);
       this.tabProject.TabIndex = 1;
       this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
@@ -925,9 +928,9 @@
       this.groupBox1.Controls.Add(this.btnImportFromHex);
       this.groupBox1.Controls.Add(this.button2);
       this.groupBox1.Controls.Add(this.editDataImport);
-      this.groupBox1.Location = new System.Drawing.Point(455, 6);
+      this.groupBox1.Location = new System.Drawing.Point(425, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(430, 463);
+      this.groupBox1.Size = new System.Drawing.Size(331, 354);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -936,7 +939,7 @@
       // 
       this.btnImportFromFile.Location = new System.Drawing.Point(9, 19);
       this.btnImportFromFile.Name = "btnImportFromFile";
-      this.btnImportFromFile.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromFile.Size = new System.Drawing.Size(101, 23);
       this.btnImportFromFile.TabIndex = 2;
       this.btnImportFromFile.Text = "From File...";
       this.btnImportFromFile.UseVisualStyleBackColor = true;
@@ -946,7 +949,7 @@
       // 
       this.btnClearImport.Location = new System.Drawing.Point(9, 80);
       this.btnClearImport.Name = "btnClearImport";
-      this.btnClearImport.Size = new System.Drawing.Size(117, 23);
+      this.btnClearImport.Size = new System.Drawing.Size(101, 23);
       this.btnClearImport.TabIndex = 2;
       this.btnClearImport.Text = "Clear";
       this.btnClearImport.UseVisualStyleBackColor = true;
@@ -956,7 +959,7 @@
       // 
       this.btnImportFromASM.Location = new System.Drawing.Point(9, 50);
       this.btnImportFromASM.Name = "btnImportFromASM";
-      this.btnImportFromASM.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromASM.Size = new System.Drawing.Size(101, 23);
       this.btnImportFromASM.TabIndex = 2;
       this.btnImportFromASM.Text = "From ASM";
       this.btnImportFromASM.UseVisualStyleBackColor = true;
@@ -964,9 +967,9 @@
       // 
       // btnImportFromBASICHex
       // 
-      this.btnImportFromBASICHex.Location = new System.Drawing.Point(255, 50);
+      this.btnImportFromBASICHex.Location = new System.Drawing.Point(223, 50);
       this.btnImportFromBASICHex.Name = "btnImportFromBASICHex";
-      this.btnImportFromBASICHex.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromBASICHex.Size = new System.Drawing.Size(101, 23);
       this.btnImportFromBASICHex.TabIndex = 2;
       this.btnImportFromBASICHex.Text = "From BASIC hex";
       this.btnImportFromBASICHex.UseVisualStyleBackColor = true;
@@ -974,9 +977,9 @@
       // 
       // btnImportFromBASIC
       // 
-      this.btnImportFromBASIC.Location = new System.Drawing.Point(132, 50);
+      this.btnImportFromBASIC.Location = new System.Drawing.Point(116, 50);
       this.btnImportFromBASIC.Name = "btnImportFromBASIC";
-      this.btnImportFromBASIC.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromBASIC.Size = new System.Drawing.Size(101, 23);
       this.btnImportFromBASIC.TabIndex = 2;
       this.btnImportFromBASIC.Text = "From BASIC";
       this.btnImportFromBASIC.UseVisualStyleBackColor = true;
@@ -984,9 +987,9 @@
       // 
       // btnImportFromHex
       // 
-      this.btnImportFromHex.Location = new System.Drawing.Point(255, 18);
+      this.btnImportFromHex.Location = new System.Drawing.Point(223, 19);
       this.btnImportFromHex.Name = "btnImportFromHex";
-      this.btnImportFromHex.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromHex.Size = new System.Drawing.Size(101, 23);
       this.btnImportFromHex.TabIndex = 2;
       this.btnImportFromHex.Text = "From Hex";
       this.btnImportFromHex.UseVisualStyleBackColor = true;
@@ -994,9 +997,9 @@
       // 
       // button2
       // 
-      this.button2.Location = new System.Drawing.Point(132, 18);
+      this.button2.Location = new System.Drawing.Point(116, 19);
       this.button2.Name = "button2";
-      this.button2.Size = new System.Drawing.Size(117, 23);
+      this.button2.Size = new System.Drawing.Size(101, 23);
       this.button2.TabIndex = 2;
       this.button2.Text = "From Image...";
       this.button2.UseVisualStyleBackColor = true;
@@ -1011,7 +1014,7 @@
       this.editDataImport.Multiline = true;
       this.editDataImport.Name = "editDataImport";
       this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataImport.Size = new System.Drawing.Size(415, 309);
+      this.editDataImport.Size = new System.Drawing.Size(316, 200);
       this.editDataImport.TabIndex = 3;
       this.editDataImport.WordWrap = false;
       this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataImport_KeyPress);
@@ -1042,7 +1045,7 @@
       this.groupExport.Controls.Add(this.btnExportCharset);
       this.groupExport.Location = new System.Drawing.Point(8, 6);
       this.groupExport.Name = "groupExport";
-      this.groupExport.Size = new System.Drawing.Size(441, 463);
+      this.groupExport.Size = new System.Drawing.Size(411, 410);
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
@@ -1051,7 +1054,7 @@
       // 
       this.editExportBASICLineOffset.Location = new System.Drawing.Point(352, 108);
       this.editExportBASICLineOffset.Name = "editExportBASICLineOffset";
-      this.editExportBASICLineOffset.Size = new System.Drawing.Size(73, 20);
+      this.editExportBASICLineOffset.Size = new System.Drawing.Size(36, 20);
       this.editExportBASICLineOffset.TabIndex = 28;
       this.editExportBASICLineOffset.Text = "10";
       // 
@@ -1075,9 +1078,9 @@
       // 
       // editSpriteCount
       // 
-      this.editSpriteCount.Location = new System.Drawing.Point(367, 21);
+      this.editSpriteCount.Location = new System.Drawing.Point(352, 22);
       this.editSpriteCount.Name = "editSpriteCount";
-      this.editSpriteCount.Size = new System.Drawing.Size(56, 20);
+      this.editSpriteCount.Size = new System.Drawing.Size(36, 20);
       this.editSpriteCount.TabIndex = 12;
       this.editSpriteCount.TextChanged += new System.EventHandler(this.editSpriteCount_TextChanged);
       // 
@@ -1094,7 +1097,7 @@
       // 
       this.editSpriteFrom.Location = new System.Drawing.Point(262, 21);
       this.editSpriteFrom.Name = "editSpriteFrom";
-      this.editSpriteFrom.Size = new System.Drawing.Size(56, 20);
+      this.editSpriteFrom.Size = new System.Drawing.Size(39, 20);
       this.editSpriteFrom.TabIndex = 11;
       this.editSpriteFrom.TextChanged += new System.EventHandler(this.editSpriteFrom_TextChanged);
       // 
@@ -1110,7 +1113,7 @@
       // labelCharactersTo
       // 
       this.labelCharactersTo.AutoSize = true;
-      this.labelCharactersTo.Location = new System.Drawing.Point(324, 24);
+      this.labelCharactersTo.Location = new System.Drawing.Point(307, 24);
       this.labelCharactersTo.Name = "labelCharactersTo";
       this.labelCharactersTo.Size = new System.Drawing.Size(37, 13);
       this.labelCharactersTo.TabIndex = 10;
@@ -1202,7 +1205,7 @@
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(429, 291);
+      this.editDataExport.Size = new System.Drawing.Size(399, 238);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
@@ -1239,11 +1242,12 @@
       // 
       // menuStrip1
       // 
+      this.menuStrip1.ImageScalingSize = new System.Drawing.Size(28, 28);
       this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(994, 24);
+      this.menuStrip1.Size = new System.Drawing.Size(782, 24);
       this.menuStrip1.TabIndex = 1;
       this.menuStrip1.Text = "menuStrip1";
       // 
@@ -1295,7 +1299,8 @@
       // 
       // SpriteEditor
       // 
-      this.ClientSize = new System.Drawing.Size(994, 527);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+      this.ClientSize = new System.Drawing.Size(782, 474);
       this.Controls.Add(this.tabSpriteEditor);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

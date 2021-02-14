@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Image;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,8 @@ namespace C64Studio
       InitializeComponent();
 
       labelInfo.Text = labelInfo.Text.Replace( "<v>", StudioCore.StudioVersion );
+
+      DPIHandler.ResizeControlsForDPI( this );
     }
 
 

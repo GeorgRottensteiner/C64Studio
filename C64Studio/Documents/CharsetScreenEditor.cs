@@ -76,6 +76,9 @@ namespace C64Studio
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
       m_IsSaveable = true;
       InitializeComponent();
+      charEditor.Core = Core;
+
+      GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
       charEditor.UndoManager = DocumentInfo.UndoManager;
 
@@ -330,32 +333,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      e.DrawBackground();
-      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20, e.Bounds.Top, e.Bounds.Width - 20, e.Bounds.Height );
-      if ( ( e.State & DrawItemState.Disabled ) != 0 )
-      {
-        e.Graphics.FillRectangle( System.Drawing.SystemBrushes.GrayText, itemRect );
-        if ( e.Index >= 0 )
-        {
-          e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Gray ), 3.0f, e.Bounds.Top + 1.0f );
-        }
-      }
-      else if ( ( e.State & DrawItemState.Selected ) != 0 )
-      {
-        if ( e.Index >= 0 )
-        {
-          e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
-          e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + 1.0f );
-        }
-      }
-      else
-      {
-        if ( e.Index >= 0 )
-        {
-          e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
-          e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Black ), 3.0f, e.Bounds.Top + 1.0f );
-        }
-      }
+      Core.Theming.DrawSingleColorComboBox( combo, e );
     }
 
 
@@ -364,34 +342,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      e.DrawBackground();
-      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20, e.Bounds.Top, e.Bounds.Width - 20, e.Bounds.Height );
-      if ( e.Index >= 8 )
-      {
-        itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20, e.Bounds.Top, ( e.Bounds.Width - 20 ) / 2, e.Bounds.Height );
-        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
-        itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 20 + ( e.Bounds.Width - 20 ) / 2, e.Bounds.Top, e.Bounds.Width - ( e.Bounds.Width - 20 ) / 2, e.Bounds.Height );
-        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index - 8], itemRect );
-      }
-      else if ( e.Index >= 0 )
-      {
-        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
-      }
-      if ( e.Index >= 0 )
-      {
-        if ( ( e.State & DrawItemState.Disabled ) != 0 )
-        {
-          e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Gray ), 3.0f, e.Bounds.Top + 1.0f );
-        }
-        else if ( ( e.State & DrawItemState.Selected ) != 0 )
-        {
-          e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + 1.0f );
-        }
-        else
-        {
-          e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.Black ), 3.0f, e.Bounds.Top + 1.0f );
-        }
-      }
+      Core.Theming.DrawMultiColorComboBox( combo, e );
     }
 
 

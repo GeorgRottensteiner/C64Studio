@@ -74,7 +74,14 @@
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.tabCharacterEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.canvasEditor = new C64Studio.Controls.CustomDrawControl();
+      this.panelCharColors = new GR.Forms.FastPictureBox();
+      this.picturePlayground = new GR.Forms.FastPictureBox();
+      this.btnExchangeColors = new C64Studio.Controls.MenuButton();
+      this.panelCharacters = new GR.Forms.ImageListbox();
       this.tabCategories = new System.Windows.Forms.TabPage();
+      this.btnMoveCategoryDown = new System.Windows.Forms.Button();
+      this.btnMoveCategoryUp = new System.Windows.Forms.Button();
       this.groupAllCategories = new System.Windows.Forms.GroupBox();
       this.btnSortCategories = new System.Windows.Forms.Button();
       this.groupCategorySpecific = new System.Windows.Forms.GroupBox();
@@ -89,24 +96,17 @@
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.editCategoryName = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.btnMoveCategoryUp = new System.Windows.Forms.Button();
-      this.btnMoveCategoryDown = new System.Windows.Forms.Button();
-      this.canvasEditor = new C64Studio.Controls.CustomDrawControl();
-      this.panelCharColors = new GR.Forms.FastPictureBox();
-      this.picturePlayground = new GR.Forms.FastPictureBox();
-      this.btnExchangeColors = new C64Studio.Controls.MenuButton();
-      this.panelCharacters = new GR.Forms.ImageListbox();
       this.groupBox2.SuspendLayout();
       this.contextMenuExchangeColors.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.tabCharacterEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
-      this.tabCategories.SuspendLayout();
-      this.groupAllCategories.SuspendLayout();
-      this.groupCategorySpecific.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).BeginInit();
+      this.tabCategories.SuspendLayout();
+      this.groupAllCategories.SuspendLayout();
+      this.groupCategorySpecific.SuspendLayout();
       this.SuspendLayout();
       // 
       // groupBox2
@@ -443,6 +443,7 @@
       // 
       // contextMenuExchangeColors
       // 
+      this.contextMenuExchangeColors.ImageScalingSize = new System.Drawing.Size(28, 28);
       this.contextMenuExchangeColors.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem,
             this.exchangeMultiColor1WithBGColorToolStripMenuItem,
@@ -564,6 +565,80 @@
       this.tabEditor.Text = "Editor";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // canvasEditor
+      // 
+      this.canvasEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.canvasEditor.Location = new System.Drawing.Point(6, 3);
+      this.canvasEditor.Name = "canvasEditor";
+      this.canvasEditor.Size = new System.Drawing.Size(265, 260);
+      this.canvasEditor.TabIndex = 54;
+      this.canvasEditor.TabStop = false;
+      this.canvasEditor.Paint += new System.Windows.Forms.PaintEventHandler(this.canvasEditor_Paint);
+      this.canvasEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseDown);
+      this.canvasEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseMove);
+      // 
+      // panelCharColors
+      // 
+      this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.panelCharColors.DisplayPage = fastImage1;
+      this.panelCharColors.Image = null;
+      this.panelCharColors.Location = new System.Drawing.Point(780, 271);
+      this.panelCharColors.Name = "panelCharColors";
+      this.panelCharColors.Size = new System.Drawing.Size(260, 20);
+      this.panelCharColors.TabIndex = 52;
+      this.panelCharColors.TabStop = false;
+      this.panelCharColors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseDown);
+      this.panelCharColors.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseMove);
+      // 
+      // picturePlayground
+      // 
+      this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.picturePlayground.DisplayPage = fastImage2;
+      this.picturePlayground.Image = null;
+      this.picturePlayground.Location = new System.Drawing.Point(780, 3);
+      this.picturePlayground.Name = "picturePlayground";
+      this.picturePlayground.Size = new System.Drawing.Size(260, 260);
+      this.picturePlayground.TabIndex = 51;
+      this.picturePlayground.TabStop = false;
+      this.picturePlayground.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picturePlayground_MouseDown);
+      this.picturePlayground.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picturePlayground_MouseMove);
+      // 
+      // btnExchangeColors
+      // 
+      this.btnExchangeColors.Location = new System.Drawing.Point(387, 143);
+      this.btnExchangeColors.Name = "btnExchangeColors";
+      this.btnExchangeColors.Size = new System.Drawing.Size(121, 26);
+      this.btnExchangeColors.TabIndex = 49;
+      this.btnExchangeColors.Text = "Exchange Colors";
+      this.btnExchangeColors.UseVisualStyleBackColor = true;
+      this.btnExchangeColors.Click += new System.EventHandler(this.btnExchangeColors_Click);
+      // 
+      // panelCharacters
+      // 
+      this.panelCharacters.AutoScroll = true;
+      this.panelCharacters.AutoScrollHorizontalMaximum = 100;
+      this.panelCharacters.AutoScrollHorizontalMinimum = 0;
+      this.panelCharacters.AutoScrollHPos = 0;
+      this.panelCharacters.AutoScrollVerticalMaximum = -23;
+      this.panelCharacters.AutoScrollVerticalMinimum = 0;
+      this.panelCharacters.AutoScrollVPos = 0;
+      this.panelCharacters.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.panelCharacters.EnableAutoScrollHorizontal = true;
+      this.panelCharacters.EnableAutoScrollVertical = true;
+      this.panelCharacters.HottrackColor = ((uint)(2151694591u));
+      this.panelCharacters.ItemHeight = 8;
+      this.panelCharacters.ItemWidth = 8;
+      this.panelCharacters.Location = new System.Drawing.Point(514, 3);
+      this.panelCharacters.Name = "panelCharacters";
+      this.panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
+      this.panelCharacters.SelectedIndex = -1;
+      this.panelCharacters.Size = new System.Drawing.Size(260, 260);
+      this.panelCharacters.TabIndex = 33;
+      this.panelCharacters.TabStop = true;
+      this.panelCharacters.VisibleAutoScrollHorizontal = false;
+      this.panelCharacters.VisibleAutoScrollVertical = false;
+      this.panelCharacters.SelectionChanged += new System.EventHandler(this.panelCharacters_SelectionChanged);
+      // 
       // tabCategories
       // 
       this.tabCategories.Controls.Add(this.btnMoveCategoryDown);
@@ -582,6 +657,28 @@
       this.tabCategories.TabIndex = 1;
       this.tabCategories.Text = "Categories";
       this.tabCategories.UseVisualStyleBackColor = true;
+      // 
+      // btnMoveCategoryDown
+      // 
+      this.btnMoveCategoryDown.Enabled = false;
+      this.btnMoveCategoryDown.Location = new System.Drawing.Point(90, 201);
+      this.btnMoveCategoryDown.Name = "btnMoveCategoryDown";
+      this.btnMoveCategoryDown.Size = new System.Drawing.Size(75, 23);
+      this.btnMoveCategoryDown.TabIndex = 12;
+      this.btnMoveCategoryDown.Text = "Move Down";
+      this.btnMoveCategoryDown.UseVisualStyleBackColor = true;
+      this.btnMoveCategoryDown.Click += new System.EventHandler(this.btnMoveCategoryDown_Click);
+      // 
+      // btnMoveCategoryUp
+      // 
+      this.btnMoveCategoryUp.Enabled = false;
+      this.btnMoveCategoryUp.Location = new System.Drawing.Point(9, 201);
+      this.btnMoveCategoryUp.Name = "btnMoveCategoryUp";
+      this.btnMoveCategoryUp.Size = new System.Drawing.Size(75, 23);
+      this.btnMoveCategoryUp.TabIndex = 12;
+      this.btnMoveCategoryUp.Text = "Move Up";
+      this.btnMoveCategoryUp.UseVisualStyleBackColor = true;
+      this.btnMoveCategoryUp.Click += new System.EventHandler(this.btnMoveCategoryUp_Click);
       // 
       // groupAllCategories
       // 
@@ -719,106 +816,9 @@
       this.label3.TabIndex = 5;
       this.label3.Text = "Category:";
       // 
-      // btnMoveCategoryUp
-      // 
-      this.btnMoveCategoryUp.Enabled = false;
-      this.btnMoveCategoryUp.Location = new System.Drawing.Point(9, 201);
-      this.btnMoveCategoryUp.Name = "btnMoveCategoryUp";
-      this.btnMoveCategoryUp.Size = new System.Drawing.Size(75, 23);
-      this.btnMoveCategoryUp.TabIndex = 12;
-      this.btnMoveCategoryUp.Text = "Move Up";
-      this.btnMoveCategoryUp.UseVisualStyleBackColor = true;
-      this.btnMoveCategoryUp.Click += new System.EventHandler(this.btnMoveCategoryUp_Click);
-      // 
-      // btnMoveCategoryDown
-      // 
-      this.btnMoveCategoryDown.Enabled = false;
-      this.btnMoveCategoryDown.Location = new System.Drawing.Point(90, 201);
-      this.btnMoveCategoryDown.Name = "btnMoveCategoryDown";
-      this.btnMoveCategoryDown.Size = new System.Drawing.Size(75, 23);
-      this.btnMoveCategoryDown.TabIndex = 12;
-      this.btnMoveCategoryDown.Text = "Move Down";
-      this.btnMoveCategoryDown.UseVisualStyleBackColor = true;
-      this.btnMoveCategoryDown.Click += new System.EventHandler(this.btnMoveCategoryDown_Click);
-      // 
-      // canvasEditor
-      // 
-      this.canvasEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.canvasEditor.Location = new System.Drawing.Point(6, 3);
-      this.canvasEditor.Name = "canvasEditor";
-      this.canvasEditor.Size = new System.Drawing.Size(265, 260);
-      this.canvasEditor.TabIndex = 54;
-      this.canvasEditor.TabStop = false;
-      this.canvasEditor.Paint += new System.Windows.Forms.PaintEventHandler(this.canvasEditor_Paint);
-      this.canvasEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseDown);
-      this.canvasEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseMove);
-      // 
-      // panelCharColors
-      // 
-      this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage1;
-      this.panelCharColors.Image = null;
-      this.panelCharColors.Location = new System.Drawing.Point(780, 271);
-      this.panelCharColors.Name = "panelCharColors";
-      this.panelCharColors.Size = new System.Drawing.Size(260, 20);
-      this.panelCharColors.TabIndex = 52;
-      this.panelCharColors.TabStop = false;
-      this.panelCharColors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseDown);
-      this.panelCharColors.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseMove);
-      // 
-      // picturePlayground
-      // 
-      this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picturePlayground.DisplayPage = fastImage2;
-      this.picturePlayground.Image = null;
-      this.picturePlayground.Location = new System.Drawing.Point(780, 3);
-      this.picturePlayground.Name = "picturePlayground";
-      this.picturePlayground.Size = new System.Drawing.Size(260, 260);
-      this.picturePlayground.TabIndex = 51;
-      this.picturePlayground.TabStop = false;
-      this.picturePlayground.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picturePlayground_MouseDown);
-      this.picturePlayground.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picturePlayground_MouseMove);
-      // 
-      // btnExchangeColors
-      // 
-      this.btnExchangeColors.Location = new System.Drawing.Point(387, 143);
-      this.btnExchangeColors.Name = "btnExchangeColors";
-      this.btnExchangeColors.Size = new System.Drawing.Size(121, 26);
-      this.btnExchangeColors.TabIndex = 49;
-      this.btnExchangeColors.Text = "Exchange Colors";
-      this.btnExchangeColors.UseVisualStyleBackColor = true;
-      this.btnExchangeColors.Click += new System.EventHandler(this.btnExchangeColors_Click);
-      // 
-      // panelCharacters
-      // 
-      this.panelCharacters.AutoScroll = true;
-      this.panelCharacters.AutoScrollHorizontalMaximum = 100;
-      this.panelCharacters.AutoScrollHorizontalMinimum = 0;
-      this.panelCharacters.AutoScrollHPos = 0;
-      this.panelCharacters.AutoScrollVerticalMaximum = -23;
-      this.panelCharacters.AutoScrollVerticalMinimum = 0;
-      this.panelCharacters.AutoScrollVPos = 0;
-      this.panelCharacters.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharacters.EnableAutoScrollHorizontal = true;
-      this.panelCharacters.EnableAutoScrollVertical = true;
-      this.panelCharacters.HottrackColor = ((uint)(2151694591u));
-      this.panelCharacters.ItemHeight = 8;
-      this.panelCharacters.ItemWidth = 8;
-      this.panelCharacters.Location = new System.Drawing.Point(514, 3);
-      this.panelCharacters.Name = "panelCharacters";
-      this.panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
-      this.panelCharacters.SelectedIndex = -1;
-      this.panelCharacters.Size = new System.Drawing.Size(260, 260);
-      this.panelCharacters.TabIndex = 33;
-      this.panelCharacters.TabStop = true;
-      this.panelCharacters.VisibleAutoScrollHorizontal = false;
-      this.panelCharacters.VisibleAutoScrollVertical = false;
-      this.panelCharacters.SelectionChanged += new System.EventHandler(this.panelCharacters_SelectionChanged);
-      // 
       // CharacterEditor
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.Controls.Add(this.tabCharacterEditor);
       this.Name = "CharacterEditor";
       this.Size = new System.Drawing.Size(1057, 490);
@@ -830,14 +830,14 @@
       this.tabCharacterEditor.ResumeLayout(false);
       this.tabEditor.ResumeLayout(false);
       this.tabEditor.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).EndInit();
       this.tabCategories.ResumeLayout(false);
       this.tabCategories.PerformLayout();
       this.groupAllCategories.ResumeLayout(false);
       this.groupCategorySpecific.ResumeLayout(false);
       this.groupCategorySpecific.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).EndInit();
       this.ResumeLayout(false);
 
     }

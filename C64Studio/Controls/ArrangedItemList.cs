@@ -6,10 +6,11 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections;
+using GR.Image;
 
 namespace C64Studio
 {
-  public partial class ArrangedItemList : UserControl
+  public partial class ArrangedItemList : UserControl, IDPIHandlerResize
   {
     // Declare the delegate (if using non-generic pattern).
     public delegate ArrangedItemEntry AddingItemEventHandler( object sender );
@@ -49,6 +50,10 @@ namespace C64Studio
     {
       _Items = new ArrangedItemListCollection( this );
       InitializeComponent();
+      using ( var g = listItems.CreateGraphics() )
+      {
+        listItems.ItemHeight = (int)( g.MeasureString( "Ay", listItems.Font ).Height + 0.5f );
+      }
 
       listItems.DrawItem += ListItems_DrawItem;
       listItems.DrawMode = DrawMode.OwnerDrawFixed;
@@ -434,6 +439,13 @@ namespace C64Studio
 
     private void ArrangedItemList_SizeChanged( object sender, EventArgs e )
     {
+      RescaleButtons();
+    }
+
+
+
+    private void RescaleButtons()
+    {
       // TODO - rearrange buttons
       //186+40-3
       //240 all
@@ -520,6 +532,17 @@ namespace C64Studio
       }
       UpdateUI();
     }
+
+
+
+    public void ResizeControl()
+    {
+      DPIHandler.AdjustControlSize( this );
+      DPIHandler.AdjustControlChildsSize( this );
+
+      RescaleButtons();
+    }
+
 
 
   }

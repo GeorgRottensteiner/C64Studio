@@ -54,7 +54,7 @@
       this.labelInfo.Name = "labelInfo";
       this.labelInfo.Size = new System.Drawing.Size(351, 96);
       this.labelInfo.TabIndex = 2;
-      this.labelInfo.Text = "C64 Studio <v>\r\n\r\nWritten by Georg Rottensteiner 2011-2020\r\n\r\nBased on WinVICE\r\n";
+      this.labelInfo.Text = "C64 Studio <v>\r\n\r\nWritten by Georg Rottensteiner 2011-2021\r\n\r\nBased on WinVICE\r\n";
       this.labelInfo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
       // 
       // pictureBox1
@@ -81,8 +81,8 @@
       // 
       // FormSplashScreen
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
       this.ClientSize = new System.Drawing.Size(619, 319);
       this.ControlBox = false;
       this.Controls.Add(this.pictureBox2);
