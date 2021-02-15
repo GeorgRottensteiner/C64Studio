@@ -3854,6 +3854,18 @@ namespace C64Studio.Parser
             {
               sb.Append( lineInfo.LineNumber );
             }
+            if ( ( i == 0 )
+            &&   ( i + 1 < lineInfo.Tokens.Count ) )
+            {
+              if ( token.StartIndex + token.Content.Length < lineInfo.Tokens[i + 1].StartIndex )
+              {
+                // keep spaces after line numbers
+                for ( int j = 0; j < lineInfo.Tokens[i + 1].StartIndex - ( token.StartIndex + token.Content.Length ); ++j )
+                {
+                  sb.Append( ' ' );
+                }
+              }
+            }
             continue;
           }
           if ( token.TokenType == Token.Type.BASIC_TOKEN )
