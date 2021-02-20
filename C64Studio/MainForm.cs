@@ -429,6 +429,10 @@ namespace C64Studio
         {
           basePath = basePath.Substring( 8 );
         }
+        if ( basePath.ToUpper().StartsWith( @"FILE:\\" ) )
+        {
+          basePath = basePath.Substring( 7 );
+        }
         string fontPath = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( basePath ), @"C64_Pro_Mono_v1.0-STYLE.ttf" );
 
         m_FontC64.AddFontFile( fontPath );

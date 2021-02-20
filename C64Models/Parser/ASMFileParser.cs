@@ -12945,7 +12945,7 @@ namespace C64Studio.Parser
 
               // special case, labels with :; : is not part of label
               if ( ( currentTokenType == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-              || ( currentTokenType == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
+              ||   ( currentTokenType == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
               {
                 if ( curChar == ':' )
                 {
