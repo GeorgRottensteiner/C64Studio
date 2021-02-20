@@ -42,11 +42,15 @@ namespace C64Studio.CustomRenderer
       {
         int     lastLineNo = i;
         var     line = ChangedRange.tb.Lines[i];
+        if ( line.Length == 0 )
+        {
+          continue;
+        }
 
-        //var info = _Parser.PureTokenizeLine( line, i );
-
-        int lastLineNumber = -1;
-        var info = _Parser.TokenizeLine( line, i, ref lastLineNumber );
+        var info = _Parser.PureTokenizeLine( line );
+        /*
+        int dummyLine = -1;
+        var info = _Parser.TokenizeLine( line, -1, ref dummyLine );*/
 
         var lineRange = ChangedRange.tb.GetLine( i );
         lineRange.ClearStyle( StyleIndex.All );

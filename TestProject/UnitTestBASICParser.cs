@@ -80,7 +80,7 @@ namespace TestProject
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
 
-      Assert.AreEqual( "10IFA=1THEN 10", result );
+      Assert.AreEqual( "10 IFA=1THEN 10", result );
     }
 
 
@@ -101,7 +101,7 @@ namespace TestProject
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
 
-      Assert.AreEqual( "10IFA=1THEN 10", result );
+      Assert.AreEqual( "10 IFA=1THEN 10", result );
     }
 
 
@@ -122,8 +122,8 @@ namespace TestProject
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
 
-      Assert.AreEqual( @"10GOTO13
-13GOTO10", result );
+      Assert.AreEqual( @"10 GOTO13
+13 GOTO10", result );
     }
 
 
@@ -146,10 +146,10 @@ namespace TestProject
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
 
-      Assert.AreEqual( @"10ONXGOSUB13,16,19
+      Assert.AreEqual( @"10 ONXGOSUB13,16,19
 13PRINTA
-16PRINTB
-19PRINTC", result );
+16 PRINTB
+19 PRINTC", result );
     }
 
 
@@ -173,11 +173,11 @@ namespace TestProject
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
 
-      Assert.AreEqual( @"10ONXGOSUB13,16,19:GOTO22
+      Assert.AreEqual( @"10 ONXGOSUB13,16,19:GOTO22
 13PRINTA
-16PRINTB
-19PRINTC
-22PRINTD", result );
+16 PRINTB
+19 PRINTC
+22 PRINTD", result );
     }
 
 

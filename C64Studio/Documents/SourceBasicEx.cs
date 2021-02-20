@@ -223,9 +223,10 @@ namespace C64Studio
         content = MakeUpperCase( content, Core.Settings.BASICUseNonC64Font );
       }
 
-      //var info = Core.Compiling.ParserBasic.PureTokenizeLine( content, e.Place.iLine );
+      var info = Core.Compiling.ParserBasic.PureTokenizeLine( content );
+      /*
       int dummyLastLineNumber = -1;
-      var info = Core.Compiling.ParserBasic.TokenizeLine( content, e.Place.iLine, ref dummyLastLineNumber );
+      var info = Core.Compiling.ParserBasic.TokenizeLine( content, e.Place.iLine, ref dummyLastLineNumber );*/
 
       foreach ( var token in info.Tokens )
       {
@@ -1849,6 +1850,8 @@ namespace C64Studio
       m_Parser = new Parser.BasicFileParser( settings, "" );
       m_Parser.SetBasicDialect( basicDialect );
       ( (BASICSyntaxHighlighter)editSource.SyntaxHighlighter ).SetBASICDialect( basicDialect );
+
+      editSource.PreferredLineWidth = basicDialect.SafeLineLength;
 
       string opCodes = @"\b(";
 

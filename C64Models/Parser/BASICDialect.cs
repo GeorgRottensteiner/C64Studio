@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C64Studio.Parser;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,6 +10,9 @@ namespace C64Models.BASIC
     public string         Command = "";
     public int            InsertionValue = -1;
     public string         ShortCut = null;
+    public bool           IsComment = false;
+
+
 
     public Opcode( string Command, int InsertionValue )
     {
@@ -33,6 +37,7 @@ namespace C64Models.BASIC
     public SortedDictionary<ushort, Opcode> OpcodesFromByte = new SortedDictionary<ushort, Opcode>();
     public Dictionary<string, Opcode>       ExOpcodes = new Dictionary<string, Opcode>();
     public string                           DefaultStartAddress = "2049";
+    public int                              SafeLineLength = 80;
 
     public static Dialect                   BASICV2;
 
@@ -57,7 +62,7 @@ namespace C64Models.BASIC
       BASICV2.AddOpcode( "RESTORE", 0x8C, "reS" );
       BASICV2.AddOpcode( "GOSUB", 0x8D, "goS" );
       BASICV2.AddOpcode( "RETURN", 0x8E, "reT" );
-      BASICV2.AddOpcode( "REM", 0x8F );
+      BASICV2.AddOpcode( "REM", 0x8F ).IsComment = true;
       BASICV2.AddOpcode( "STOP", 0x90, "sT" );
       BASICV2.AddOpcode( "ON", 0x91 );
       BASICV2.AddOpcode( "WAIT", 0x92, "wA" );
@@ -136,20 +141,24 @@ namespace C64Models.BASIC
 
 
 
-    public void AddOpcode( string Opcode, int ByteValue )
+    public Opcode AddOpcode( string Opcode, int ByteValue )
     {
       var opcode = new Opcode( Opcode, ByteValue );
       Opcodes[Opcode] = opcode;
       OpcodesFromByte[(ushort)ByteValue] = opcode;
+
+      return opcode;
     }
 
 
 
-    public void AddOpcode( string Opcode, int ByteValue, string ShortCut )
+    public Opcode AddOpcode( string Opcode, int ByteValue, string ShortCut )
     {
       var opcode = new Opcode( Opcode, ByteValue, ShortCut );
       Opcodes[Opcode] = opcode;
       OpcodesFromByte[(ushort)ByteValue] = opcode;
+
+      return opcode;
     }
 
 
@@ -186,6 +195,11 @@ namespace C64Models.BASIC
             dialect.DefaultStartAddress = line.Substring( 13 );
             continue;
           }
+          else if ( line.StartsWith( "SafeLineLength=" ) )
+          {
+            dialect.SafeLineLength = GR.Convert.ToI32( line.Substring( 15 ) );
+            continue;
+          }
           // skip header
           if ( firstLine )
           {
@@ -199,9 +213,10 @@ namespace C64Models.BASIC
           }
 
           string[] parts = line.Split( ';' );
-          if ( parts.Length != 3 )
+          if ( ( parts.Length != 3 )
+          &&   ( parts.Length != 4 ) )
           {
-            ErrorMessage = "Invalid BASIC format file '" + File + "', expected three columns in line " + lineIndex;
+            ErrorMessage = "Invalid BASIC format file '" + File + "', expected three or four columns in line " + lineIndex;
             return null;
           }
           if ( exOpcodes )
@@ -210,13 +225,48 @@ namespace C64Models.BASIC
           }
           else
           {
-            dialect.AddOpcode( parts[0], GR.Convert.ToI32( parts[1], 16 ), parts[2] );
+            var opCode = dialect.AddOpcode( parts[0], GR.Convert.ToI32( parts[1], 16 ), parts[2] );
+
+            if ( parts.Length == 4 )
+            {
+              string[]    extraInfo = parts[3].Split( ',' );
+
+              for ( int i = 0; i < extraInfo.Length; ++i )
+              {
+                if ( string.Compare( extraInfo[i], "COMMENT", true ) == 0 )
+                {
+                  opCode.IsComment = true;
+                }
+              }
+            }
           }
         }
       }
       dialect.Name = System.IO.Path.GetFileNameWithoutExtension( File );
 
       return dialect;
+    }
+
+
+
+    public bool IsComment( BasicFileParser.Token BasicToken )
+    {
+      if ( Opcodes.ContainsKey( BasicToken.Content ) )
+      {
+        return Opcodes[BasicToken.Content].IsComment;
+      }
+      return false;
+    }
+
+
+
+    public bool TokenDoesNotParseOtherTokens( BasicFileParser.Token BasicToken )
+    {
+      if ( BasicToken.Content == "DATA" )
+      {
+        return true;
+      }
+      return false;
     }
 
 

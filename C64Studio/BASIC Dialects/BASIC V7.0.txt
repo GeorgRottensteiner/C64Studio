@@ -4,11 +4,15 @@
 #Token        = actual name of command
 #ByteValues   = one or more byte values (hex)
 #Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
+#OptionalInfo = a list of strings (comment means the rest of the line is a comment)
+#
 #StartAddress=xxxx  = sets the default BASIC start address
+#SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
 
 StartAddress=2049
+SafeLineLength=160
 
-Token;ByteValues;Abbreviation
+Token;ByteValues;Abbreviation[;OptionalInfo]
 DATA;83;dA
 INPUT#;84;iN
 INPUT;85;
@@ -20,7 +24,7 @@ IF;8B;
 RESTORE;8C;reS
 GOSUB;8D;goS
 RETURN;8E;reT
-REM;8F;
+REM;8F;;comment
 ON;91;
 WAIT;92;wA
 LOAD;93;lO

@@ -120,7 +120,6 @@ namespace C64Studio.Parser
       public int        StartIndex = 0;
     };
 
-
     internal class LineInfo
     {
       public int                      LineIndex = 0;
@@ -141,13 +140,17 @@ namespace C64Studio.Parser
     public Types.ASM.FileInfo         ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
     public Types.ASM.FileInfo         InitialFileInfo = null;
 
+    public GR.Collections.Map<Token.Type, string>     AllowedTokenStartChars = new GR.Collections.Map<Token.Type, string>();
+    public GR.Collections.Map<Token.Type, string>     AllowedTokenChars = new GR.Collections.Map<Token.Type, string>();
+    public GR.Collections.Map<Token.Type, string>     AllowedTokenEndChars = new GR.Collections.Map<Token.Type, string>();
+    public string                                     AllowedSingleTokens;
+
 
 
     public BasicFileParser( ParserSettings Settings )
     {
-      LabelMode = false;
       this.Settings = Settings;
-      SetBasicDialect( Settings.BASICDialect );
+      Setup();
     }
 
 
@@ -155,36 +158,35 @@ namespace C64Studio.Parser
     public BasicFileParser( ParserSettings Settings, string Filename )
     {
       this.Settings = Settings;
+      m_Filename = Filename;
+      Setup();
+    }
+
+
+
+    private void Setup()
+    {
+      LabelMode = false;
+
+      AllowedTokenStartChars[Token.Type.HARD_COMMENT] = "#";
+
+      AllowedTokenStartChars[Token.Type.VARIABLE] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      AllowedTokenChars[Token.Type.VARIABLE] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890";
+      AllowedTokenEndChars[Token.Type.VARIABLE] = "%$";
+
+      AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL] = "0123456789.";
+      AllowedTokenChars[Token.Type.NUMERIC_LITERAL] = "0123456789.";
+      AllowedTokenEndChars[Token.Type.NUMERIC_LITERAL] = "";
+
+      AllowedTokenChars[Token.Type.DIRECT_TOKEN] = "()+-,;:<>=!?'&/^{}";
+      AllowedTokenEndChars[Token.Type.DIRECT_TOKEN] = "()+-,;:<>=!?'&/^{}";
+
+      AllowedTokenStartChars[Token.Type.BASIC_TOKEN] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      AllowedSingleTokens = "()+-,;:<>=!?'&/^{}";
+
       SetBasicDialect( Settings.BASICDialect );
-      LabelMode   = false;
-      m_Filename  = Filename;
     }
-
-
-
-    /*
-    private void AddOpcode( string Opcode, int ByteValue )
-    {
-      var opcode = new Opcode( Opcode, ByteValue );
-      Settings.BASICDialect.Opcodes[Opcode] = opcode;
-      Settings.BASICDialect.OpcodesFromByte[(ushort)ByteValue] = opcode;
-    }
-
-
-
-    private void AddOpcode( string Opcode, int ByteValue, string ShortCut )
-    {
-      var opcode = new Opcode( Opcode, ByteValue, ShortCut );
-      Settings.BASICDialect.Opcodes[Opcode] = opcode;
-      Settings.BASICDialect.OpcodesFromByte[(ushort)ByteValue] = opcode;
-    }
-
-
-
-    private void AddExOpcode( string Opcode, int ByteValue )
-    {
-      Settings.BASICDialect.ExOpcodes[Opcode] = new Opcode( Opcode, ByteValue );
-    }*/
 
 
 
@@ -1648,357 +1650,237 @@ namespace C64Studio.Parser
 
 
 
-    internal LineInfo PureTokenizeLine( string Line, int LineIndex )
+    internal LineInfo PureTokenizeLine( string Line )
     {
+      var  lineInfo = new LineInfo();
+      lineInfo.Line = Line;
+
+      if ( Line.Length == 0 )
+      {
+        return lineInfo;
+      }
+
       if ( Line.StartsWith( "#" ) )
       {
         // hard comment
-        var hardInfo = new LineInfo();
-        hardInfo.Line = Line;
-        hardInfo.Tokens.Add( new Token() { Content = Line, TokenType = Token.Type.HARD_COMMENT } );
-
-        return hardInfo;
+        lineInfo.Tokens.Add( new Token() { Content = Line, TokenType = Token.Type.HARD_COMMENT } );
+        return lineInfo;
       }
 
-      int     endOfDigitPos = -1;
-      for ( int i = 0; i < Line.Length; ++i )
-      {
-        if ( ( Line[i] < '0' )
-        ||   ( Line[i] > '9' ) )
-        {
-          break;
-        }
-        ++endOfDigitPos;
-      }
-
-      if ( Line.Contains( "ONXGOTO" ) )
-      {
-        Debug.Log( "aha" );
-      }
-
-      LineInfo info = new LineInfo();
-      info.LineIndex = LineIndex;
-      if ( !LabelMode )
-      {
-        if ( endOfDigitPos == -1 )
-        {
-          AddError( LineIndex, Types.ErrorCode.E3000_BASIC_MISSING_LINE_NUMBER, "Missing line number" );
-        }
-        else
-        {
-          Token lineNumberToken = new Token();
-          lineNumberToken.TokenType   = Token.Type.LINE_NUMBER;
-          lineNumberToken.ByteValue   = GR.Convert.ToI32( Line.Substring( 0, endOfDigitPos + 1 ) );
-          lineNumberToken.Content     = Line.Substring( 0, endOfDigitPos + 1 ).Trim();
-          lineNumberToken.StartIndex  = 0;
-          info.Tokens.Add( lineNumberToken );
-          info.LineNumber = lineNumberToken.ByteValue;
-          info.Line       = Line.Substring( endOfDigitPos + 1 ).Trim();
-        }
-      }
-
-      int       posInLine = endOfDigitPos + 1;
-      bool      insideMacro = false;
+      int       posInLine = 0;
       bool      insideDataStatement = false;
+      int       tokenStartPos = 0;
       bool      insideStringLiteral = false;
-      int       lastCharStartPos = -1;
-      int       stringLiteralStartPos = -1;
-      int       macroStartPos = -1;
-      int       tempDataStartPos = -1;
+      Token     currentToken = null;
 
-      GR.Memory.ByteBuffer tempData = new GR.Memory.ByteBuffer();
 
-      TranslateCharactersToPETSCII( Line, LineIndex, endOfDigitPos, ref posInLine, ref insideMacro, ref macroStartPos, tempData );
-
-      // translate line to actual PETSCII codes
-      posInLine = endOfDigitPos + 1;
+      // now the real token crunching
       while ( posInLine < Line.Length )
       {
-        char    curChar = Line[posInLine];
+        char    nextByte = Line[posInLine];
 
-        if ( insideMacro )
+        if ( insideStringLiteral )
         {
-          if ( curChar == '}' )
+          if ( nextByte == '"' )
           {
-            insideMacro = false;
+            currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos + 1 );
+            currentToken = null;
+            insideStringLiteral = false;
 
-            if ( !insideStringLiteral )
+            tokenStartPos = posInLine + 1;
+          }
+          ++posInLine;
+          continue;
+        }
+
+        if ( nextByte == 34 )
+        {
+          if ( ( currentToken != null )
+          &&   ( currentToken.TokenType != Token.Type.STRING_LITERAL ) )
+          {
+            // end of previous token
+            currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos );
+            currentToken = null;
+          }
+
+          currentToken = new Token();
+          currentToken.TokenType = Token.Type.STRING_LITERAL;
+          currentToken.StartIndex = posInLine;
+          insideStringLiteral = true;
+
+          tokenStartPos = posInLine;
+          lineInfo.Tokens.Add( currentToken );
+
+          ++posInLine;
+          continue;
+        }
+
+        if ( AllowedTokenStartChars[Token.Type.BASIC_TOKEN].IndexOf( nextByte ) != -1 )
+        {
+          // BASIC tokens are always searched forward
+          if ( ( !insideDataStatement )
+          &&   ( IsBASICTokenStartingHere( Line, posInLine, out string Token ) ) )
+          {
+            if ( currentToken != null )
             {
-              string macro = Line.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
-
-              Token tokenMacro = new Token();
-              tokenMacro.TokenType = Token.Type.MACRO;
-              tokenMacro.Content = macro;
-              tokenMacro.StartIndex = macroStartPos;
-              info.Tokens.Add( tokenMacro );
+              currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos );
+              currentToken = null;
             }
+            var basicToken = new Token();
+            basicToken.TokenType  = BasicFileParser.Token.Type.BASIC_TOKEN;
+            basicToken.StartIndex = posInLine;
+            basicToken.Content    = Token;
+
+            lineInfo.Tokens.Add( basicToken );
+
+            posInLine += Token.Length;
+            tokenStartPos = posInLine;
+
+            if ( Settings.BASICDialect.IsComment( basicToken ) )
+            {
+              // the rest of the line is a comment
+              var commentToken = new Token();
+              commentToken.StartIndex = posInLine;
+              commentToken.Content = Line.Substring( posInLine );
+              commentToken.TokenType = BasicFileParser.Token.Type.COMMENT;
+
+              lineInfo.Tokens.Add( commentToken );
+              return lineInfo;
+            }
+            if ( Settings.BASICDialect.TokenDoesNotParseOtherTokens( basicToken ) )
+            {
+              insideDataStatement = true;
+            }
+            continue;
+          }
+          // potential variable
+          if ( currentToken == null )
+          {
+            currentToken = new Token();
+            currentToken.StartIndex = posInLine;
+            currentToken.TokenType = BasicFileParser.Token.Type.VARIABLE;
+
+            lineInfo.Tokens.Add( currentToken );
           }
           ++posInLine;
           continue;
         }
-        if ( curChar == '{' )
+
+        if ( currentToken != null )
         {
-          if ( tempData.Length > 0 )
+          if ( AllowedTokenEndChars[currentToken.TokenType].IndexOf( nextByte ) != -1 )
           {
-            ConsolidateTokens( info, tempData, tempDataStartPos );
-            tempData.Clear();
-            tempDataStartPos = -1;
+            // the last char of a token
+            currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos + 1 );
+            currentToken = null;
+            ++posInLine;
+            tokenStartPos = posInLine;
+            continue;
           }
-          insideMacro = true;
-          macroStartPos = posInLine;
-          ++posInLine;
-          continue;
-        }
-        if ( curChar == '"' )
-        {
-          insideStringLiteral = !insideStringLiteral;
-          if ( !insideStringLiteral )
+          if ( AllowedTokenChars[currentToken.TokenType].IndexOf( nextByte ) != -1 )
           {
-            Token tokenStringLiteral      = new Token();
-            tokenStringLiteral.TokenType  = Token.Type.STRING_LITERAL;
-            tokenStringLiteral.Content    = Line.Substring( stringLiteralStartPos, posInLine - stringLiteralStartPos + 1 );
-            tokenStringLiteral.StartIndex = stringLiteralStartPos;
-            info.Tokens.Add( tokenStringLiteral );
             ++posInLine;
             continue;
           }
-          else
-          {
-            if ( tempData.Length > 0 )
-            {
-              ConsolidateTokens( info, tempData, tempDataStartPos );
-              tempData.Clear();
-              tempDataStartPos = -1;
-            }
-            stringLiteralStartPos = posInLine;
-          }
+          // char is not allowed in this token!
+          // the last char of a token
+          currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos );
+          currentToken = null;
+          ++posInLine;
+          tokenStartPos = posInLine;
+          continue;
         }
-        if ( !insideStringLiteral )
+        if ( currentToken == null )
         {
-          if ( ( curChar >= 'A' )
-          &&   ( curChar <= 'Z' ) )
+          if ( AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL].IndexOf( nextByte ) != -1 )
           {
-            if ( lastCharStartPos == -1 )
-            {
-              // start of chars, potential BASIC code
-              if ( tempData.Length > 0 )
-              {
-                ConsolidateTokens( info, tempData, tempDataStartPos );
-                tempData.Clear();
-                tempDataStartPos = -1;
-              }
-              lastCharStartPos = posInLine;
-            }
+            currentToken = new Token();
+            currentToken.TokenType = Token.Type.NUMERIC_LITERAL;
+            currentToken.StartIndex = posInLine;
+            lineInfo.Tokens.Add( currentToken );
+            tokenStartPos = posInLine;
+
+            ++posInLine;
+            continue;
           }
-          else
+          if ( AllowedSingleTokens.IndexOf( nextByte ) != -1 )
           {
-            lastCharStartPos = -1;
-          }
+            Token numericToken      = new Token();
 
-          if ( !Types.ConstantData.CharToC64Char.ContainsKey( curChar ) )
-          {
-            if ( !Types.ConstantData.CharToC64Char.ContainsKey( char.ToUpper( curChar ) ) )
-            {
-              AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
-            }
-            else if ( !Types.ConstantData.CharToC64Char[char.ToUpper( curChar )].HasPetSCII )
-            {
-              AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
-            }
-            else
-            {
-              if ( tempDataStartPos == -1 )
-              {
-                tempDataStartPos = posInLine;
-              }
-              tempData.AppendU8( Types.ConstantData.CharToC64Char[char.ToUpper( curChar )].PetSCIIValue );
-            }
-          }
-          else if ( !Types.ConstantData.CharToC64Char[curChar].HasPetSCII )
-          {
-            AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
-          }
-          else
-          {
-            //if ( posInLine > endOfDigitPos + 1 )
-            {
-              if ( tempDataStartPos == -1 )
-              {
-                tempDataStartPos = posInLine;
-              }
-              tempData.AppendU8( Types.ConstantData.CharToC64Char[curChar].PetSCIIValue );
-            }
-          }
-          // is there a BASIC token in there?
-          if ( tempData.Length > 0 )
-          {
-            byte    nextByte = tempData.ByteAt( 0 );
+            numericToken.TokenType  = Token.Type.DIRECT_TOKEN;
+            numericToken.StartIndex = posInLine;
+            numericToken.Content    = "" + nextByte;
+            lineInfo.Tokens.Add( numericToken );
+            tokenStartPos = posInLine;
 
-            if ( nextByte == 32 )
+            if ( nextByte == ':' )
             {
-              // Space
-              if ( tempData.Length > 0 )
-              {
-                ConsolidateTokens( info, tempData, tempDataStartPos );
-                tempData.Clear();
-                tempDataStartPos = -1;
-              }
-              ++posInLine;
-              continue;
-            }
-            if ( nextByte == 0x3f )
-            {
-              // ? durch PRINT ersetzen
-              /*
-              if ( tempData.Length > 0 )
-              {
-                ConsolidateTokens( info, tempData, tempDataStartPos );
-                tempData.Clear();
-                tempDataStartPos = -1;
-              }*/
-              nextByte = 0x99;
-
-              Token basicToken2      = new Token();
-              basicToken2.TokenType  = Token.Type.BASIC_TOKEN;
-              basicToken2.ByteValue  = nextByte;
-              basicToken2.Content    = "" + Types.ConstantData.PetSCIIToChar[0x3f].CharValue;
-              basicToken2.StartIndex = posInLine;
-              info.Tokens.Add( basicToken2 );
-
-              tempData.Clear();
-              tempDataStartPos = -1;
-              ++posInLine;
-              continue;
+              insideDataStatement = false;
             }
 
-            /*
-            // is there a token now?
-            bool entryFound = false;
-            Opcode potentialOpcode = null;
-            foreach ( KeyValuePair<ushort, Opcode> opcodeEntry in Settings.BASICDialect.OpcodesFromByte )
-            {
-              Opcode  opcode = opcodeEntry.Value;
-
-              entryFound = true;
-              for ( int i = 0; i < opcode.Command.Length; ++i )
-              {
-                if ( i >= tempData.Length )
-                {
-                  // can't be this token, length not complete
-                  entryFound = false;
-                  break;
-                }
-                if ( tempData.ByteAt( i ) != (byte)opcode.Command[i] )
-                {
-                  entryFound = false;
-                  break;
-                }
-              }
-              if ( entryFound )
-              {
-                if ( ( potentialOpcode == null )
-                ||   ( opcode.Command.Length > potentialOpcode.Command.Length ) )
-                {
-                  potentialOpcode = opcode;
-                }
-              }
-            }
-            if ( potentialOpcode != null )
-            {
-              Token basicToken4 = new Token();
-              basicToken4.TokenType = Token.Type.BASIC_TOKEN;
-              basicToken4.ByteValue = (byte)potentialOpcode.InsertionValue;
-              basicToken4.Content = potentialOpcode.Command;
-              basicToken4.StartIndex = tempDataStartPos;
-              info.Tokens.Add( basicToken4 );
-
-              tempData.Clear();
-              tempDataStartPos = -1;
-              insideDataStatement = ( potentialOpcode.Command == "DATA" );
-
-              if ( IsComment( potentialOpcode ) )
-              {
-                if ( basicToken4.StartIndex + 3 < Line.Length )
-                {
-                  // everything else is comment
-                  Token comment       = new Token();
-                  comment.TokenType = Token.Type.COMMENT;
-                  comment.Content = Line.Substring( basicToken4.StartIndex + 3 );
-                  comment.StartIndex = basicToken4.StartIndex + 3;
-                  info.Tokens.Add( comment );
-
-                  return info;
-                }
-              }
-
-              ++posInLine;
-              continue;
-            }
-            // is it an extended token?
-            entryFound = true;
-            foreach ( KeyValuePair<string, Opcode> opcodeEntry in Settings.BASICDialect.ExOpcodes )
-            {
-              Opcode opcode = opcodeEntry.Value;
-
-              entryFound = true;
-              for ( int i = 0; i < opcode.Command.Length; ++i )
-              {
-                if ( i >= tempData.Length )
-                {
-                  // can't be this token
-                  entryFound = false;
-                  break;
-                }
-                if ( tempData.ByteAt( i ) != (byte)opcode.Command[i] )
-                {
-                  entryFound = false;
-                  break;
-                }
-              }
-              if ( entryFound )
-              {
-                Token basicToken5 = new Token();
-                basicToken5.TokenType  = Token.Type.EX_BASIC_TOKEN;
-                basicToken5.ByteValue  = (byte)opcode.InsertionValue;
-                basicToken5.Content    = opcode.Command;
-                basicToken5.StartIndex = tempDataStartPos;
-                info.Tokens.Add( basicToken5 );
-
-                tempData.Clear();
-                tempDataStartPos = -1;
-
-                insideDataStatement = false;
-                break;
-              }
-            }
-            if ( entryFound )
-            {
-              ++posInLine;
-              continue;
-            }*/
-
-            bool insideREMStatement = false;
-            if ( FindOpcode( tempData, ref posInLine, info, ref insideDataStatement, ref insideREMStatement ) )
-            {
-              continue;
-            }
-
-            // not a token, add directly
-            AddDirectToken( info, nextByte, posInLine );
+            ++posInLine;
+            tokenStartPos = posInLine;
+            continue;
           }
         }
+        /*
+        if ( insideDataStatement )
+        {
+          // innerhalb von Data keine Token-Aufschlüsselung
+          if ( nextByte == ':' )
+          {
+            insideDataStatement = false;
+          }
+
+          AddDirectToken( info, nextByte, bytePos );
+          ++bytePos;
+          continue;
+        }
+        */
+
+        /*
+        // alternative comment char
+        if ( ( nextByte == 39 )
+        &&   ( IsLightningOrLaserBASIC() ) )
+        {
+          insideREMStatement = true;
+        }*/
 
         ++posInLine;
+        continue;
       }
 
-      if ( ( tempDataStartPos != -1 )
-      &&   ( tempDataStartPos < Line.Length ) )
+      if ( currentToken != null )
       {
-        // all the rest is one token
-        ConsolidateTokens( info, tempData, tempDataStartPos );
+        currentToken.Content = Line.Substring( tokenStartPos );
       }
 
-      return info;
+      if ( ( lineInfo.Tokens.Count > 0 )
+      &&   ( LabelMode )
+      &&   ( lineInfo.Tokens[0].TokenType == Token.Type.NUMERIC_LITERAL )
+      &&   ( lineInfo.Tokens[0].Content.IndexOf( '.' ) == -1 ) )
+      {
+        lineInfo.Tokens[0].TokenType = Token.Type.LINE_NUMBER;
+      }
+      return lineInfo;
+    }
+
+
+
+    private bool IsBASICTokenStartingHere( string Line, int PosInLine, out string Token )
+    {
+      // find best match
+      Token = null;
+      foreach ( var token in Settings.BASICDialect.Opcodes.Keys )
+      {
+        if ( ( PosInLine + token.Length <= Line.Length )
+        &&   ( string.Compare( Line, PosInLine, token, 0, token.Length ) == 0 ) )
+        {
+          Token = token;
+          return true;
+        }
+      }
+      return false;
     }
 
 
@@ -2198,7 +2080,7 @@ namespace C64Studio.Parser
       int numCharsSkipped = TranslateCharactersToPETSCII( Line, LineIndex, endOfDigitPos, ref posInLine, ref insideMacro, ref macroStartPos, tempData );
 
       
-      if ( tempData.Length + endOfDigitPos + 1 > 80 )
+      if ( tempData.Length + endOfDigitPos + 1 > Settings.BASICDialect.SafeLineLength )
       {
         AddWarning( LineIndex, Types.ErrorCode.W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY, "Line " + LastLineNumber + " is too long for manual entry", 0, info.Line.Length );
       }
@@ -2378,12 +2260,6 @@ namespace C64Studio.Parser
               bytePos = forwardPos + 1;
               continue;
             }
-          }
-          // alternative comment char
-          if ( ( nextByte == 39 )
-          &&   ( IsLightningOrLaserBASIC() ) )
-          {
-            insideREMStatement = true;
           }
 
           ++bytePos;
