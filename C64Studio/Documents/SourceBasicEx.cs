@@ -323,6 +323,7 @@ namespace C64Studio
     {
       base.RefreshDisplayOptions();
 
+      float     fontSize = Core.Settings.SourceFontSize;
       if ( !Core.Settings.BASICUseNonC64Font )
       {
         editSource.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
@@ -330,10 +331,13 @@ namespace C64Studio
       else
       {
         editSource.Font = new System.Drawing.Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
+        fontSize = Core.Settings.BASICSourceFontSize;
       }
+      // i have no idea why +7
+      fontSize += 7.0f;
 
       var g= editSource.CreateGraphics();
-      editSource.CharHeight = (int)( 18 * g.DpiY / 96.0f );
+      editSource.CharHeight = (int)( fontSize * g.DpiY / 96.0f );
 
       editSource.Language = FastColoredTextBoxNS.Language.Custom;
 

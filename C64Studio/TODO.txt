@@ -1,4 +1,5 @@
 ﻿C64Studio
+o Save inbuilt editors automatically
 o I also tried the C64 Pro Mono fonts by Style and it 'crashed'. It did not crash the entire application, but just the 
   change font selector saying it was not a truetype font.
 o Undo for Category-Exchange
