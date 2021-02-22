@@ -437,11 +437,20 @@ namespace C64Studio
 
         m_FontC64.AddFontFile( fontPath );
       }
-      catch ( Exception ex )
+      catch ( Exception )
       {
-        MessageBox.Show( "C64Studio can't find the C64 true type font file C64_Pro_Mono_v1.0-STYLE.ttf.\r\nMake sure it's in the path of C64Studio.exe.\r\n\r\n" + ex.Message, "Can't load font" );
+        // fallback to straight path
+        try
+        {
+          string fontPath = @"C64_Pro_Mono_v1.0-STYLE.ttf";
 
-        throw new Exception( "Missing font file 'C64_Pro_Mono_v1.0-STYLE.ttf'" );
+          m_FontC64.AddFontFile( fontPath );
+        }
+        catch ( Exception ex2 )
+        {
+          MessageBox.Show( "C64Studio can't find or open the C64 true type font file C64_Pro_Mono_v1.0-STYLE.ttf.\r\nMake sure it's in the path of C64Studio.exe.\r\n\r\n" + ex2.Message, "Can't load font" );
+          throw new Exception( "Missing font file 'C64_Pro_Mono_v1.0-STYLE.ttf'" );
+        }
       }
 
       /*
