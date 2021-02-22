@@ -1,0 +1,261 @@
+﻿Opcode;Value;Addressing;Example;Cycles;Comment
+BRK;$00;Immediate;BRK;7;
+ORA;$01;(Indirect,X);ORA ($FF,X);6;
+JAM;$02;Implied;JAM;1;
+SLO;$03;(Indirect,X);SLO ($12,X);8;Illegal
+NOP;$04;Zeropage;NOP $12;3;Illegal
+ORA;$05;Zeropage;ORA $12;3;
+ASL;$06;Zeropage;ASL $12;5;
+SLO;$07;Zeropage;SLO $12;5;Illegal
+PHP;$08;Implied;PHP;3;
+ORA;$09;Immediate;ORA #$12;2;
+ASL;$0A;Implied;"ASL
+ASL A";2;
+ANC;$0B;Immediate;ANC #$12;2;Illegal
+NOP;$0C;Absolute;NOP $1234;4;Illegal
+ORA;$0D;Absolute;ORA $1234;4;
+ASL;$0E;Absolute;ASL $1234;6;
+SLO;$0F;Absolute;SLO $1234;6;Illegal
+BPL;$10;Relative;BPL $1234;2*;
+ORA;$11;(Indirect),Y;ORA ($12),Y;5*;
+JAM;$12;Implied;JAM;1;
+SLO;$13;(Indirect),Y;SLO ($12),Y;8;Illegal
+NOP;$14;Zeropage,X;NOP $12,X;4;Illegal
+ORA;$15;Zeropage,X;ORA $12,X;4;
+ASL;$16;Zeropage,X;ASL $12,X;6;
+SLO;$17;Zeropage,X;SLO $12,X;6;Illegal
+CLC;$18;Implied;CLC;2;
+ORA;$19;Absolute,Y;ORA $1234,Y;4*;
+NOP;$1A;Implied;NOP;2;Illegal
+SLO;$1B;Absolute,Y;SLO $1234,Y;7;Illegal
+NOP;$1C;Absolute,X;NOP $1234,X;4*;Illegal
+ORA;$1D;Absolute,X;ORA $1234,X;4*;
+ASL;$1E;Absolute,X;ASL $1234,X;7;
+SLO;$1F;Absolute,X;SLO $1234,X;7;Illegal
+JSR;$20;Absolute;JSR $1234;6;
+AND;$21;(Indirect,X);AND ($12,X);6;
+JAM;$22;Implied;JAM;1;
+RLA;$23;(Indirect,X);RLA ($12,X);8;
+BIT;$24;Zeropage;BIT $12;3;
+AND;$25;Zeropage;AND $12;3;
+ROL;$26;Zeropage;ROL $12;5;
+RLA;$27;Zeropage;RLA $12;5;
+PLP;$28;Implied;PLP;4;
+AND;$29;Immediate;AND #$12;2;
+ROL;$2A;Implied;"ROL
+ROL A";2;
+ANC;$2B;Immediate;ANC #$12;2;Illegal
+BIT;$2C;Absolute;BIT $1234;4;
+AND;$2D;Absolute;AND $1234;4;
+ROL;$2E;Absolute;ROL $1234;6;
+RLA;$2F;Absolute;RLA $1234;6;
+BMI;$30;Relative;BMI $1234;2*;
+AND;$31;(Indirect),Y;AND ($12),Y;5*;
+JAM;$32;Implied;JAM;1;
+RLA;$33;(Indirect),Y;RLA ($12),Y;8;
+NOP;$34;Zeropage,X;NOP $12,X;4;Illegal
+AND;$35;Zeropage,X;AND $12,X;4;
+ROL;$36;Zeropage,X;ROL $12,X;6;
+RLA;$37;Zeropage,X;RLA $12,X;6;
+SEC;$38;Implied;SEC;2;
+AND;$39;Absolute,Y;AND $1234,Y;4*;
+NOP;$3A;Implied;NOP;2;Illegal
+RLA;$3B;Absolute,Y;RLA $1234,Y;7;
+NOP;$3C;Absolute,X;NOP $1234,X;4*;Illegal
+AND;$3D;Absolute,X;AND $1234,X;4*;
+ROL;$3E;Absolute,X;ROL $1234,X;7;
+RLA;$3F;Absolute,X;RLA $1234,X;7;
+RTI;$40;Implied;RTI;6;
+EOR;$41;(Indirect,X);EOR ($12,X);6;
+JAM;$42;Implied;JAM;1;
+SRE;$43;(Indirect,X);SRE ($12,X);8;Illegal
+NOP;$44;Zeropage;NOP $12;3;Illegal
+EOR;$45;Zeropage;EOR $12;3;
+LSR;$46;Zeropage;LSR $12;5;
+SRE;$47;Zeropage;SRE $12;5;Illegal
+PHA;$48;Implied;PHA;3;
+EOR;$49;Immediate;EOR #$12;2;
+LSR;$4A;Implied;"LSR
+LSR A";2;
+ASR;$4B;Immediate;ASR #$12;2;Illegal
+JMP;$4C;Absolute;JMP $1234;3;
+EOR;$4D;Absolute;EOR $1234;4;
+LSR;$4E;Absolute;LSR $1234;6;
+SRE;$4F;Absolute;SRE $1234;6;Illegal
+BVC;$50;Relative;BVC $1234;2*;
+EOR;$51;(Indirect),Y;EOR ($12),Y;5*;
+JAM;$52;Implied;JAM;1;
+SRE;$53;(Indirect),Y;SRE ($12),Y;8;Illegal
+NOP;$54;Zeropage,X;NOP $12,X;4;Illegal
+EOR;$55;Zeropage,X;EOR $12,X;4;
+LSR;$56;Zeropage,X;LSR $12,X;6;
+SRE;$57;Zeropage,X;SRE $12,X;6;Illegal
+CLI;$58;Implied;CLI;2;
+EOR;$59;Absolute,Y;EOR $1234,Y;4*;
+NOP;$5A;Implied;NOP;2;Illegal
+SRE;$5B;Absolute,Y;SRE $1234,Y;7;Illegal
+NOP;$5C;Absolute,X;NOP $1234,X;4*;Illegal
+EOR;$5D;Absolute,X;EOR $1234,X;4*;
+LSR;$5E;Absolute,X;LSR $1234,X;7;
+SRE;$5F;Absolute,X;SRE $1234,X;7;Illegal
+RTS;$60;Implied;RTS;6;
+ADC;$61;(Indirect,X);ADC ($12,X);6;
+JAM;$62;Implied;JAM;1;
+RRA;$63;(Indirect,X);RRA ($12,X);8;Illegal
+NOP;$64;Zeropage;NOP $12;3;Illegal
+ADC;$65;Zeropage;ADC $12;3;
+ROR;$66;Zeropage;ROR $12;5;
+RRA;$67;Zeropage;RRA $12;5;Illegal
+PLA;$68;Implied;PLA;4;
+ADC;$69;Immediate;ADC #$12;2;
+ROR;$6A;Implied;"ROR
+ROR A";2;
+ARR;$6B;Immediate;ARR #$12;2;Illegal
+JMP;$6C;(Abs. Indirect);JMP ($1234);5;
+ADC;$6D;Absolute;ADC $1234;4;
+ROR;$6E;Absolute;ROR $1234;6;
+RRA;$6F;Absolute;RRA $1234;6;Illegal
+BVS;$70;Relative;BVS $1234;2*;
+ADC;$71;(Indirect),Y;ADC ($12),Y;5*;
+JAM;$72;Implied;JAM;1;
+RRA;$73;(Indirect),Y;RRA ($12),Y;8;Illegal
+NOP;$74;Zeropage,X;NOP $12,X;4;Illegal
+ADC;$75;Zeropage,X;ADC $12,X;4;
+ROR;$76;Zeropage,X;ROR $12,X;6;
+RRA;$77;Zeropage,X;RRA $12,X;6;Illegal
+SEI;$78;Implied;SEI;2;
+ADC;$79;Absolute,Y;ADC $1234,Y;4*;
+NOP;$7A;Implied;NOP;2;Illegal
+RRA;$7B;Absolute,Y;RRA $1234,Y;7;Illegal
+NOP;$7C;Absolute,X;NOP $1234,X;4*;Illegal
+ADC;$7D;Absolute,X;ADC $1234,X;4*;
+ROR;$7E;Absolute,X;ROR $1234,X;7;
+RRA;$7F;Absolute,X;RRA $1234,X;7;Illegal
+NOP;$80;Immediate;NOP #$12;2;Illegal
+STA;$81;(Indirect,X);STA ($12,X);6;
+NOP;$82;Immediate;NOP #$12;2;Illegal
+SAX;$83;(Indirect,X);SAX ($12,X);6;Illegal
+STY;$84;Zeropage;STY $12;3;
+STA;$85;Zeropage;STA $12;3;
+STX;$86;Zeropage;STX $12;3;
+SAX;$87;Zeropage;SAX $12;3;Illegal
+DEY;$88;Implied;DEY;2;
+NOP;$89;Immediate;NOP #$12;2;Illegal
+TXA;$8A;Implied;TXA;2;
+ANE;$8B;Immediate;ANE #$12;2;Illegal
+STY;$8C;Absolute;STY $1234;4;
+STA;$8D;Absolute;STA $1234;4;
+STX;$8E;Absolute;STX $1234;4;
+SAX;$8F;Absolute;SAX $1234;4;Illegal
+BCC;$90;Relative;BCC $1234;2*;
+STA;$91;(Indirect),Y;STA ($12),Y;6;
+JAM;$92;Implied;JAM;1;
+SHA;$93;Absolute,X;SHA $1234,X;5;Illegal
+STY;$94;Zeropage,X;STY $12,X;4;
+STA;$95;Zeropage,X;STA $12,X;4;
+STX;$96;Zeropage,Y;STX $12,Y;4;
+SAX;$97;Zeropage,Y;SAX $12,Y;4;Illegal
+TYA;$98;Implied;TYA;2;
+STA;$99;Absolute,Y;STA $1234,Y;5;
+TXS;$9A;Implied;TXS;2;
+SHS;$9B;Absolute,Y;SHS $1234,Y;5;Illegal
+SHY;$9C;Absolute,X;SHY $1234,X;5;Illegal
+STA;$9D;Absolute,X;STA $1234,X;5;
+SHX;$9E;Absolute,Y;SHX $1234,Y;5;Illegal
+SHA;$9F;Absolute,Y;SHA $1234,Y;5;Illegal
+LDY;$A0;Immediate;LDY #$12;2;
+LDA;$A1;(Indirect,X);LDA ($12,X);6;
+LDX;$A2;Immediate;LDX #$12;2;
+LAX;$A3;(Indirect,X);LAX ($12,X);6;Illegal
+LDY;$A4;Zeropage;LDY $12;3;
+LDA;$A5;Zeropage;LDA $12;3;
+LDX;$A6;Zeropage;LDX $12;3;
+LAX;$A7;Zeropage;LAX $12;3;Illegal
+TAY;$A8;Implied;TAY;2;
+LDA;$A9;Immediate;LDA #$12;2;
+TAX;$AA;Implied;TAX;2;
+LXA;$AB;Immediate;LXA #$12;2;Illegal
+LDY;$AC;Absolute;LDY $1234;4;
+LDA;$AD;Absolute;LDA $1234;4;
+LDX;$AE;Absolute;LDX $1234;4;
+LAX;$AF;Absolute;LAX $1234;4;Illegal
+BCS;$B0;Relative;BCS $1234;2*;
+LDA;$B1;(Indirect),Y;LDA ($12),Y;5*;
+JAM;$B2;Implied;JAM;1;
+LAX;$B3;(Indirect),Y;LAX ($12),Y;5*;Illegal
+LDY;$B4;Zeropage,X;LDY $12,X;4;
+LDA;$B5;Zeropage,X;LDA $12,X;4;
+LDX;$B6;Zeropage,Y;LDX $12,Y;4;
+LAX;$B7;Zeropage,Y;LAX $12,Y;4;Illegal
+CLV;$B8;Implied;CLV;2;
+LDA;$B9;Absolute,Y;LDA $1234,Y;4*;
+TSX;$BA;Implied;TSX;2;
+LAE;$BB;Absolute,Y;LAE $1234,Y;4*;Illegal
+LDY;$BC;Absolute,X;LDY $1234,X;4*;
+LDA;$BD;Absolute,X;LDA $1234,X;4*;
+LDX;$BE;Absolute,Y;LDX $1234,Y;4*;
+LAX;$BF;Absolute,Y;LAX $1234,Y;4*;Illegal
+CPY;$C0;Immediate;CPY #$12;2;
+CMP;$C1;(Indirect,X);CMP ($12,X);6;
+NOP;$C2;Immediate;NOP #$12;2;Illegal
+DCP;$C3;(Indirect,X);DCP ($12,X);8;Illegal
+CPY;$C4;Zeropage;CPY $12;3;
+CMP;$C5;Zeropage;CMP $12;3;
+DEC;$C6;Zeropage;DEC $12;5;
+DCP;$C7;Zeropage;DCP $12;5;Illegal
+INY;$C8;Implied;INY;2;
+CMP;$C9;Immediate;CMP #$12;2;
+DEX;$CA;Implied;DEX;2;
+SBX;$CB;Immediate;SBC #$12;2;Illegal
+CPY;$CC;Absolute;CPY $1234;4;
+CMP;$CD;Absolute;CMP $1234;4;
+DEC;$CE;Absolute;DEC $1234;6;
+DCP;$CF;Absolute;DCP $1234;6;Illegal
+BNE;$D0;Relative;BNE $1234;2*;
+CMP;$D1;(Indirect),Y;CMP ($12),Y;5*;
+JAM;$D2;Implied;JAM;1;
+DCP;$D3;(Indirect),Y;DCP ($12),Y;8;Illegal
+NOP;$D4;Zeropage,X;NOP $12,X;4;Illegal
+CMP;$D5;Zeropage,X;CMP $12,X;4;
+DEC;$D6;Zeropage,X;DEC $12,X;6;
+DCP;$D7;Zeropage,X;DCP $12,X;6;Illegal
+CLD;$D8;Implied;CLD;2;
+CMP;$D9;Absolute,Y;CMP $1234,Y;4*;
+NOP;$DA;Implied;NOP;2;Illegal
+DCP;$DB;Absolute,Y;DCP $1234,Y;7;Illegal
+NOP;$DC;Absolute,X;NOP $1234,X;4*;Illegal
+CMP;$DD;Absolute,X;CMP $1234,X;4*;
+DEC;$DE;Absolute,X;DEC $1234,X;7;
+DCP;$DF;Absolute,X;DCP $1234,X;7;Illegal
+CPX;$E0;Immediate;CPX #$12;2;
+SBC;$E1;(Indirect,X);SBC ($12,X);6;
+NOP;$E2;Immediate;NOP #$12;2;Illegal
+ISB;$E3;(Indirect,X);ISB ($12,X);8;Illegal
+CPX;$E4;Zeropage;CPX $12;3;
+SBC;$E5;Zeropage;SBC $12;3;
+INC;$E6;Zeropage;INC $12;5;
+ISB;$E7;Zeropage;ISB $12;5;Illegal
+INX;$E8;Implied;INX;2;
+SBC;$E9;Immediate;SBC #$12;2;
+NOP;$EA;Implied;NOP;2;
+SBC;$EB;Immediate;SBC #$12;2;Illegal
+CPX;$EC;Absolute;CPX $1234;4;
+SBC;$ED;Absolute;SBC $1234;4;
+INC;$EE;Absolute;INC $1234;6;
+ISB;$EF;Absolute;ISB $1234;6;Illegal
+BEQ;$F0;Relative;BEQ $1234;2*;
+SBC;$F1;(Indirect),Y;SBC ($12),Y;5*;
+JAM;$F2;Implied;JAM;1;
+ISB;$F3;(Indirect),Y;ISB ($12),Y;8;Illegal
+NOP;$F4;Zeropage,X;NOP $12,X;4;Illegal
+SBC;$F5;Zeropage,X;SBC $12,X;4;
+INC;$F6;Zeropage,X;INC $12,X;6;
+ISB;$F7;Zeropage,X;ISB $12,X;6;Illegal
+SED;$F8;Implied;SED;2;
+SBC;$F9;Absolute,Y;SBC $1234,Y;4*;
+NOP;$FA;Implied;NOP;2;Illegal
+ISB;$FB;Absolute,Y;ISB $1234,Y;7;Illegal
+NOP;$FC;Absolute,X;NOP $1234,X;4*;Illegal
+SBC;$FD;Absolute,X;SBC $1234,X;4*;
+INC;$FE;Absolute,X;INC $1234,X;7;
+ISB;$FF;Absolute,X;ISB $1234,X;7;Illegal

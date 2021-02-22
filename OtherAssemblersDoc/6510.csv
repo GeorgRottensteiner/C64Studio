@@ -1,0 +1,341 @@
+Opcode	Value	Addressing	Example	Cycles	Comment
+BRK	$00	Immediate	BRK	7	
+ORA	$01	(Indirect,X)	ORA ($FF,X)	6	
+ORQ	$01	Zeropage	ORQ ($12)	3	
+CLE	$02	Implied	CLE	2	
+SEE	$03	Implied	SEE	2	
+TSB	$04	Zeropage	TSB	5	
+ORA	$05	Zeropage	ORA $12	3	
+ASL	$06	Zeropage	ASL $12	5	
+ASLQ	$06	Zeropage	ASLQ $12	5	
+RMB0	$07	Zeropage	RMB0 $12	5	
+PHP	$08	Implied	PHP	3	
+ORA	$09	Immediate	ORA #$12	2	
+ASL	$0A	Implied	"ASL
+ASL A"	2	
+ASLQ	$0A	Implicit	ASLQ	2	
+TSY	$0B	Absolute	TSB	6	
+TSB	$0C	Absolute	TSB	6	
+ORA	$0D	Absolute	ORA $1234	4	
+ORQ	$0D	Zeropage Indirect	ORQ ($12)	4	
+ASL	$0E	Absolute	ASL $1234	6	
+ASLQ	$0E	Absolute	ASLQ	6	
+BBR0	$0F	Zeropage Relative	BBR0 $12,$1234	2*	
+BPL	$10	Relative	BPL $1234	2*	
+ORA	$11	(Indirect),Y	ORA ($12),Y	5*	
+ORA	$12	(Indirect),Z	ORA ($12),Z	5	
+ORA	$12	(Indirect),Z	ORA [$12],Z	5	long mode
+ORQ	$12	Zeropage Indirect	ORQ ($12)	5	
+ORQ	$12	Zeropage Indirect	ORQ [$12]	5	long mode
+LBPL	$13	Relative 16bit	LBPL $1234	3*	
+TRB	$14	Zeropage	TRB	5	
+ORA	$15	Zeropage,X	ORA $12,X	4	
+ASL	$16	Zeropage,X	ASL $12,X	6	
+ASLQ	$16	Zeropage,X	ASLQ $12,X	6*	
+RMB1	$17	Zeropage	RMB1 $12	5	
+CLC	$18	Implied	CLC	2	
+ORA	$19	Absolute,Y	ORA $1234,Y	4*	
+INC	$1A	Implied	INC	2	
+INQ	$1A	Implied	INQ	2	
+INZ	$1B	Implied	INZ	2	
+TRB	$1C	Absolute	TRB	6	
+ORA	$1D	Absolute,X	ORA $1234,X	4*	
+ASL	$1E	Absolute,X	ASL $1234,X	7	
+ASLQ	$1E	Absolute,X	ASLQ $1234,X	7*	
+BBR1	$1F	Zeropage Relative	BBR1 $12,$1234	2*	
+JSR	$20	Absolute	JSR $1234	6	
+AND	$21	(Indirect,X)	AND ($12,X)	6	
+JSR	$22	(Abs. Indirect)	JSR ($1234)	6	
+JSR	$23	(Abs. Indirect,X)	JSR ($1234,X)	6	
+BIT	$24	Zeropage	BIT $12	3	
+BITQ	$24	Zeropage	BITQ $12	3	
+AND	$25	Zeropage	AND $12	3	
+ANDQ	$25	Zeropage	ANDQ $12	3	
+ROL	$26	Zeropage	ROL $12	5	
+ROLQ	$26	Zeropage	ROLQ $12	5	
+RMB2	$27	Zeropage	RMB2 $12	5	
+PLP	$28	Implied	PLP	4	
+AND	$29	Immediate	AND #$12	2	
+ROL	$2A	Implied	"ROL
+ROL A"	2	
+ROLQ	$2A	Implied	ROLQ	2	
+TYS	$2B	Implied	TYS	2	
+BIT	$2C	Absolute	BIT $1234	4	
+BITQ	$2C	Absolute	BITQ $1234	4	
+AND	$2D	Absolute	AND $1234	4	
+ANDQ	$2D	Absolute	ANDQ $1234	4	
+ROL	$2E	Absolute	ROL $1234	6	
+ROLQ	$2E	Absolute	ROLQ $1234	6	
+BBR2	$2F	Zeropage Relative	BBR2 $12,$1234	2*	
+BMI	$30	Relative	BMI $1234	2*	
+AND	$31	(Indirect),Y	AND ($12),Y	5*	
+AND	$32	(Indirect),Z	AND ($12),Z	5	
+AND	$32	(Indirect),Z	AND [$12],Z	5	long mode
+ANDQ	$32	Zeropage Indirect	ANDQ ($12)	5	
+ANDQ	$32	Zeropage Indirect	ANDQ [$12]	5	long mode
+LBMI	$33	Relative 16bit	LBMI $1234	3*	
+BIT	$34	Zeropage,X	BIT $12,X	4	
+AND	$35	Zeropage,X	AND $12,X	4	
+ROL	$36	Zeropage,X	ROL $12,X	6	
+ROLQ	$36	Zeropage,X	ROLQ $12,X	6	
+RMB3	$37	Zeropage	RMB3 $12	5	
+SEC	$38	Implied	SEC	2	
+AND	$39	Absolute,Y	AND $1234,Y	4*	
+DEC	$3A	Implied	DEC	2	
+DEQ	$3A	Implied	DEQ	2	
+DEZ	$3B	Implied	DEZ	2	
+BIT	$3C	Absolute,X	BIT $1234,X	4*	
+AND	$3D	Absolute,X	AND $1234,X	4*	
+ROL	$3E	Absolute,X	ROL $1234,X	7	
+ROLQ	$3E	Absolute,X	ROLQ $1234,X	7	
+BBR3	$3F	Zeropage Relative	BBR3 $12,$1234	2*	
+RTI	$40	Implied	RTI	6	
+EOR	$41	(Indirect,X)	EOR ($12,X)	6	
+NEG	$42	Implied	NEG	2	
+ASR	$43	Implied	ASR	2	
+ASRQ	$43	Implied	ASRQ	2	
+ASR	$44	Zeropage	ASR $12	5	
+ASRQ	$44	Zeropage	ASRQ $12	5	
+EOR	$45	Zeropage	EOR $12	3	
+EORQ	$45	Zeropage	EORQ $12	3	
+LSR	$46	Zeropage	LSR $12	5	
+LSRQ	$46	Zeropage	LSRQ $12	5	
+RMB4	$47	Zeropage	RMB4 $12	5	
+PHA	$48	Implied	PHA	3	
+EOR	$49	Immediate	EOR #$12	2	
+LSR	$4A	Implied	"LSR
+LSR A"	2	
+LSRQ	$4A	Implied	LSRQ	2	
+TAZ	$4B	Implied	TAZ	2	
+JMP	$4C	Absolute	JMP $1234	3	
+EOR	$4D	Absolute	EOR $1234	4	
+EORQ	$4D	Absolute	EORQ $1234	4	
+LSR	$4E	Absolute	LSR $1234	6	
+LSRQ	$4E	Absolute	LSRQ $1234	6	
+BBR4	$4F	Zeropage Relative	BBR4 $12,$1234	2*	
+BVC	$50	Relative	BVC $1234	2*	
+EOR	$51	(Indirect),Y	EOR ($12),Y	5*	
+EOR	$52	(Indirect),Z	EOR ($12),Z	5	
+EOR	$52	(Indirect),Z	EOR [$12],Z	5	long mode
+EORQ	$52	Zeropage Indirect	EORQ ($12)	5	
+EORQ	$52	Zeropage Indirect	EORQ [$12]	5	long mode
+LBVC	$53	Relative 16bit	LBVC $1234	3*	
+ASR	$54	Zeropage,X	ASR $12,X	6	
+ASRQ	$54	Zeropage,X	ASRQ $12,X	6	
+EOR	$55	Zeropage,X	EOR $12,X	4	
+LSR	$56	Zeropage,X	LSR $12,X	6	
+LSRQ	$56	Zeropage,X	LSRQ $12,X	6	
+RMB5	$57	Zeropage	RMB5 $12	5	
+CLI	$58	Implied	CLI	2	
+EOR	$59	Absolute,Y	EOR $1234,Y	4*	
+PHY	$5A	Implied	PHY	?	
+TAB	$5B	Implied	TAB	2	
+MAP	$5C	Implied	MAP	2	
+EOR	$5D	Absolute,X	EOR $1234,X	4*	
+LSR	$5E	Absolute,X	LSR $1234,X	7	
+LSRQ	$5E	Absolute,X	LSRQ $1234,X	6*	
+BBR5	$5F	Zeropage Relative	BBR5 $12,$1234	2*	
+RTS	$60	Implied	RTS	6	
+ADC	$61	(Indirect,X)	ADC ($12,X)	6	
+RTN	$62	Immediate	RTN #$12	6	
+LBSR	$63	Relative 16bit	LBSR $1234	3*	
+STZ	$64	Zeropage	STZ	3	
+ADC	$65	Zeropage	ADC $12	3	
+ADCQ	$65	Zeropage	ADCQ $12	3	
+ROR	$66	Zeropage	ROR $12	5	
+RORQ	$66	Zeropage	RORQ $12	5	
+RMB6	$67	Zeropage	RMB6 $12	5	
+PLA	$68	Implied	PLA	4	
+ADC	$69	Immediate	ADC #$12	2	
+ROR	$6A	Implied	"ROR
+ROR A"	2	
+RORQ	$6A	Implied	RORQ	2	
+TZA	$6B	Implied	TZA	2	
+JMP	$6C	(Abs. Indirect)	JMP ($1234)	5	
+ADC	$6D	Absolute	ADC $1234	4	
+ADCQ	$6D	Absolute	ADCQ $1234	4	
+ROR	$6E	Absolute	ROR $1234	6	
+RORQ	$6E	Absolute	RORQ $1234	6	
+BBR6	$6F	Zeropage Relative	BBR6 $12,$1234	2*	
+BVS	$70	Relative	BVS $1234	2*	
+ADC	$71	(Indirect),Y	ADC ($12),Y	5*	
+ADC	$72	(Indirect),Z	ADC ($12),Z	5	
+ADC	$72	(Indirect),Z	ADC [$12],Z	5	long mode
+ADCQ	$72	Zeropage Indirect	ADCQ ($12),Z	5	
+ADCQ	$72	Zeropage Indirect	ADCQ [$12]	5	long mode
+LBVS	$73	Relative 16bit	LBVS $1234	3*	
+STZ	$74	Zeropage,X	STZ	4	
+ADC	$75	Zeropage,X	ADC $12,X	4	
+ROR	$76	Zeropage,X	ROR $12,X	6	
+RORQ	$76	Zeropage,X	RORQ $12,X	6	
+RMB7	$77	Zeropage	RMB7 $12	5	
+SEI	$78	Implied	SEI	2	
+ADC	$79	Absolute,Y	ADC $1234,Y	4*	
+PLY	$7A	Implied	PLY	4	
+TBA	$7B	Implied	TBA	2	
+JMP	$7C	Absolute Indirect X	JMP ($1234,X)	6	
+ADC	$7D	Absolute,X	ADC $1234,X	4*	
+ROR	$7E	Absolute,X	ROR $1234,X	7	
+RORQ	$7E	Absolute,X	RORQ $1234,X	7	
+BBR7	$7F	Zeropage Relative	BBR7 $12,$1234	2*	
+BRA	$80	Relative	BRA $1234	3*	
+STA	$81	(Indirect,X)	STA ($12,X)	6	
+STA	$82	(Indirect,Stack),Y	STA ($12,S),Y	7	
+LBRA	$83	Relative 16bit	LBRA $1234	4	
+STY	$84	Zeropage	STY $12	3	
+STA	$85	Zeropage	STA $12	3	
+STQ	$85	Zeropage	STQ $12	3	
+STX	$86	Zeropage	STX $12	3	
+SMB0	$87	Zeropage	SMB0 $12	5	
+DEY	$88	Implied	DEY	2	
+BIT	$89	Immediate	BIT #$12	2	
+TXA	$8A	Implied	TXA	2	
+STY	$8B	Absolute,X	STY $1234,X	5	
+STY	$8C	Absolute	STY $1234	4	
+STA	$8D	Absolute	STA $1234	4	
+STQ	$8D	Absolute	STQ $1234	4	
+STX	$8E	Absolute	STX $1234	4	
+BBS0	$8F	Zeropage Relative	BBS0 $12,$1234	2*	
+BCC	$90	Relative	BCC $1234	2*	
+STA	$91	(Indirect),Y	STA ($12),Y	6	
+STA	$92	(Indirect),Z	STA ($12),Z	5	
+STA	$92	(Indirect),Z	STA [$12],Z	5	long mode
+STQ	$92	Zeropage Indirect	STQ ($12)	5	
+STQ	$92	Zeropage Indirect	STQ [$12]	5	long mode
+LBCC	$93	Relative 16bit	LBCC $1234	3*	
+STY	$94	Zeropage,X	STY $12,X	4	
+STA	$95	Zeropage,X	STA $12,X	4	
+STX	$96	Zeropage,Y	STX $12,Y	4	
+SMB1	$97	Zeropage	SMB1 $12	5	
+TYA	$98	Implied	TYA	2	
+STA	$99	Absolute,Y	STA $1234,Y	5	
+TXS	$9A	Implied	TXS	2	
+STX	$9B	Absolute,Y	STX $1234,Y	5	
+STZ	$9C	Absolute	STZ	4	
+STA	$9D	Absolute,X	STA $1234,X	5	
+STZ	$9E	Absolute,X	STZ	5	
+BBS1	$9F	Zeropage Relative	BBS1 $12,$1234	2*	
+LDY	$A0	Immediate	LDY #$12	2	
+LDA	$A1	(Indirect,X)	LDA ($12,X)	6	
+LDX	$A2	Immediate	LDX #$12	2	
+LDZ	$A3	Immediate	LDZ #$12	2	
+LDY	$A4	Zeropage	LDY $12	3	
+LDA	$A5	Zeropage	LDA $12	3	
+LDQ	$A5	Zeropage	LDQ $12	3	
+LDX	$A6	Zeropage	LDX $12	3	
+SMB2	$A7	Zeropage	SMB2 $12	5	
+TAY	$A8	Implied	TAY	2	
+LDA	$A9	Immediate	LDA #$12	2	
+TAX	$AA	Implied	TAX	2	
+LDZ	$AB	Absolute	LDZ $1234	4	
+LDY	$AC	Absolute	LDY $1234	4	
+LDA	$AD	Absolute	LDA $1234	4	
+LDQ	$AD	Absolute	LDQ $1234	4	
+LDX	$AE	Absolute	LDX $1234	4	
+BBS2	$AF	Zeropage Relative	BBS2 $12,$1234	2*	
+BCS	$B0	Relative	BCS $1234	2*	
+LDA	$B1	(Indirect),Y	LDA ($12),Y	5*	
+LDQ	$B1	(Indirect),Y	LDQ ($12),Y	5*	
+LDA	$B2	(Indirect),Z	LDA ($12),Z	5	
+LDA	$B2	(Indirect),Z	LDA [$12],Z	5	long mode
+LDQ	$B2	Zeropage Indirect	LDQ ($12)	5	
+LDQ	$B2	Zeropage Indirect	LDQ [$12]	5	long mode
+LBCS	$B3	Relative 16bit	LBCS $1234	3*	
+LDY	$B4	Zeropage,X	LDY $12,X	4	
+LDA	$B5	Zeropage,X	LDA $12,X	4	
+LDQ	$B5	Zeropage,X	LDQ $12,X	4	
+LDX	$B6	Zeropage,Y	LDX $12,Y	4	
+SMB3	$B7	Zeropage	SMB3 $12	5	
+CLV	$B8	Implied	CLV	2	
+LDA	$B9	Absolute,Y	LDA $1234,Y	4*	
+LDQ	$B9	Absolute,Y	LDQ $1234,Y	4*	
+TSX	$BA	Implied	TSX	2	
+LDZ	$BB	Absolute,X	LDZ $1234,X	4*	
+LDY	$BC	Absolute,X	LDY $1234,X	4*	
+LDA	$BD	Absolute,X	LDA $1234,X	4*	
+LDQ	$BD	Absolute,X	LDQ $1234,X	4*	
+LDX	$BE	Absolute,Y	LDX $1234,Y	4*	
+BBS3	$BF	Zeropage Relative	BBS3 $12,$1234	2*	
+CPY	$C0	Immediate	CPY #$12	2	
+CMP	$C1	(Indirect,X)	CMP ($12,X)	6	
+CPZ	$C2	Immediate	CPZ #$12	2	
+DEW	$C3	Zeropage	DEW $12	6	
+CPY	$C4	Zeropage	CPY $12	3	
+CMP	$C5	Zeropage	CMP $12	3	
+CPQ	$C5	Absolute	CPQ $1234	3	
+DEC	$C6	Zeropage	DEC $12	5	
+DEQ	$C6	Zeropage	DEQ $12	5	
+SMB4	$C7	Zeropage	SMB4 $12	5	
+INY	$C8	Implied	INY	2	
+CMP	$C9	Immediate	CMP #$12	2	
+DEX	$CA	Implied	DEX	2	
+ASW	$CB	Absolute	ASW	7	
+CPY	$CC	Absolute	CPY $1234	4	
+CMP	$CD	Absolute	CMP $1234	4	
+CPQ	$CD	Absolute	CPQ $1234	4	
+DEC	$CE	Absolute	DEC $1234	6	
+DEQ	$CE	Absolute	DEQ $1234	6	
+BBS4	$CF	Zeropage Relative	BBS4 $12,$1234	2*	
+BNE	$D0	Relative	BNE $1234	2*	
+CMP	$D1	(Indirect),Y	CMP ($12),Y	5*	
+CMP	$D2	(Indirect),Z	CMP [$12],Z	5	long mode
+CMP	$D2	(Indirect),Z	CMP ($12),Z	5	
+CPQ	$D2	Zeropage Indirect	CPQ ($12)	5	
+CPQ	$D2	Zeropage Indirect	CPQ [$12]	5	long mode
+LBNE	$D3	Relative 16bit	LBNE $1234	3*	
+CPZ	$D4	Zeropage	CPZ $12	3	
+CMP	$D5	Zeropage,X	CMP $12,X	4	
+DEC	$D6	Zeropage,X	DEC $12,X	6	
+DEQ	$D6	Zeropage,X	DEQ $12,X	6	
+SMB5	$D7	Zeropage	SMB5 $12	5	
+CLD	$D8	Implied	CLD	2	
+CMP	$D9	Absolute,Y	CMP $1234,Y	4*	
+PHX	$DA	Implied	PHX	3	
+PHZ	$DB	Implied	PHZ	3	
+CPZ	$DC	Absolute	CPZ $1234	4	
+CMP	$DD	Absolute,X	CMP $1234,X	4*	
+DEC	$DE	Absolute,X	DEC $1234,X	7	
+DEQ	$DE	Absolute,X	DEQ $1234,X	7	
+BBS5	$DF	Zeropage Relative	BBS5 $12,$1234	2*	
+CPX	$E0	Immediate	CPX #$12	2	
+SBC	$E1	(Indirect,X)	SBC ($12,X)	6	
+LDA	$E2	(Indirect,Stack),Y	LDA ($12,S),Y	7	
+LDQ	$E2	(Indirect,Stack),Y	LDQ ($12,S),Y	7	
+INW	$E3	Zeropage	INW $12	7	
+CPX	$E4	Zeropage	CPX $12	3	
+SBC	$E5	Zeropage	SBC $12	3	
+SBCQ	$E5	Zeropage	SBCQ $12	3	
+INC	$E6	Zeropage	INC $12	5	
+INQ	$E6	Zeropage	INQ $12	5	
+SMB6	$E7	Zeropage	SMB6 $12	5	
+INX	$E8	Implied	INX	2	
+SBC	$E9	Immediate	SBC #$12	2	
+EOM	$EA	Implied	EOM	2	NOP
+ROW	$EB	Absolute	ROW $1234	7	
+CPX	$EC	Absolute	CPX $1234	4	
+SBC	$ED	Absolute	SBC $1234	4	
+SBCQ	$ED	Absolute	SBCQ $1234	4*	
+INC	$EE	Absolute	INC $1234	6	
+INQ	$EE	Absolute	INQ $1234	5	
+BBS6	$EF	Zeropage Relative	BBS6 $12,$1234	2*	
+BEQ	$F0	Relative	BEQ $1234	2*	
+SBC	$F1	(Indirect),Y	SBC ($12),Y	5*	
+SBC	$F2	(Indirect),Z	SBC ($12),Z	5	
+SBC	$F2	(Indirect),Z	SBC [$12],Z	5	long mode
+SBCQ	$F2	Zeropage Indirect	SBCQ ($12)	5	
+SBCQ	$F2	Zeropage Indirect	SBCQ [$12]	5	long mode
+LBEQ	$F3	Relative 16bit	LBEQ $1234	3*	
+PHW	$F4	Immediate Word	PHW	4	
+SBC	$F5	Zeropage,X	SBC $12,X	4	
+INC	$F6	Zeropage,X	INC $12,X	6	
+INQ	$F6	Zeropage,X	INQ $12,X	6	
+SMB7	$F7	Zeropage	SMB7 $12	5	
+SED	$F8	Implied	SED	2	
+SBC	$F9	Absolute,Y	SBC $1234,Y	4*	
+PLX	$FA	Implied	PLX	4	
+PLZ	$FB	Implied	PLZ	4	
+PHW	$FC	Absolute	PHW	4	
+SBC	$FD	Absolute,X	SBC $1234,X	4*	
+INC	$FE	Absolute,X	INC $1234,X	7	
+INQ	$FE	Absolute,X	INQ $1234,X	7	
+BBS7	$FF	Zeropage Relative	BBS7 $12,$1234	2*	

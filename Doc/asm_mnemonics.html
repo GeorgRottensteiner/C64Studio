@@ -7,118 +7,23 @@
 </HEAD>
 
 <body>
+  <script type="text/javascript" src="tablesort.js"></script>
   <H3>Assembler - Mnemonics</H3>
   <div id="mybody">
-    C64Studio supports all regular and illegal opcodes of the 6510.<br>
+    C64Studio supports several CPU types with all regular and illegal opcodes. For now these are:<br>
     <br>
     <br>
-    <table>
-      <tr>
-        <th>
-          Addressing Mode
-        </th>
-        <th>
-            Syntax
-        </th>
-      </tr>
-      <tr>
-        <td>
-          Implied
-        </td>
-        <td>
-          dex
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Accumulator
-        </td>
-        <td>
-          asl<br>
-          asl A
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Immediate
-        </td>
-        <td>
-          lda #$ff
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Zeropage
-        </td>
-        <td>
-          lda $ff
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Zeropage,x
-        </td>
-        <td>
-          lda #$ff,x
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Absolute
-        </td>
-        <td>
-          lda $ffff
-        </td>
-      </tr>
-      <tr>
-        <td>
-          (Absolute Indirect)
-        </td>
-        <td>
-          lda ($ffff)
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Absolute,x
-        </td>
-        <td>
-          lda $ffff,x
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Absolute,y
-        </td>
-        <td>
-          lda $ffff,y
-        </td>
-      </tr>
-      <tr>
-        <td>
-          (Indirect,x)
-        </td>
-        <td>
-          lda ($ff,x)
-        </td>
-      </tr>
-      <tr>
-        <td>
-          (Indirect),y
-        </td>
-        <td>
-          lda ($ff),y
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Relative
-        </td>
-        <td>
-          bne $ff
-        </td>
-      </tr>
-    </table>
+    <ul>
+      <li><a href="asm_cpu_6510.html">6510 - Used in C64</a></li><br>
+      <li><a href="asm_cpu_65C02.html">65C02</a></li><br>
+      <li><a href="asm_cpu_R65C02.html">R65C02</a></li><br>
+      <li><a href="asm_cpu_WDC65C02.html">W65C02</a></li><br>
+      <li><a href="asm_cpu_65CE02.html">65CE02</a></li><br>
+      <li><a href="asm_cpu_4502.html">4502</a></li><br>
+      <li><a href="asm_cpu_M65.html">M65 - Used in Mega65</a></li><br>
+    </ul>
+    <br>
+    <br>
   </div>
 </body>
 </HTML>
