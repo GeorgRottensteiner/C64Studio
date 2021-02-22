@@ -380,6 +380,10 @@ namespace C64Studio
       UpdateKeyBinding( C64Studio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
       UpdateKeyBinding( C64Studio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
       UpdateKeyBinding( C64Studio.Types.Function.DELETE_LINE, FastColoredTextBoxNS.FCTBAction.DeleteLine );
+
+      /*
+      editSource.HotkeysMapping.Remove( Keys.Control | Keys.A );
+      editSource.HotkeysMapping.Add( Keys.Control | Keys.A, FastColoredTextBoxNS.FCTBAction.SelectAll );*/
     }
 
 
@@ -1093,6 +1097,15 @@ namespace C64Studio
       {
         // we misuse tab as command key, avoid common processing
         return true;
+      }
+
+      if ( !m_StringEnterMode )
+      {
+        if ( keyData == ( Keys.Control | Keys.A ) )
+        {
+          editSource.SelectAll();
+          return true;
+        }
       }
 
       System.Windows.Forms.Keys bareKey = keyData & ~( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.ShiftKey | System.Windows.Forms.Keys.Alt );
