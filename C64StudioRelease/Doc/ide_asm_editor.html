@@ -11,17 +11,35 @@
   <div id="mybody">
     The ASM editor supports syntax coloring and code completion.<br>
     <br>
+  </div>
+  <H2>Editor Window</H2>
+  <div id="mybody">
     <img src="images/asm_editor.png"><br>
     <br>
-    To access code completion either type . or press Control-Space (default key configuration).<br>
+    The toolbar on top shows all zones in the left combo box, and all symbols defined inside that zone in the right combo box. Chose an entry to jump to its definition.<br>
     <br>
-    Breakpoints are toggled by clicking in the margin to the left.<br>
+    To access code completion either type . or press Control-Space (default key configuration). This only triggers if there's an alphanumeric symbol to the left of the cursor.<br>
+    <br>
+    Breakpoints are toggled by clicking in the margin to the left. The red circle in the screenshot shows a set breakpoint.<br>
     <br>
     To find the value of a label hover the mouse over it (must have compiled successfully once). During debugging hovering also shows
     the value of the memory location.<br>
     <br>
+    On the right side a mini view of the whole file is shown. This allows faster scrolling, and can be toggled in the preferences or from the context menu.<br>
     <br>
-    <b>Context menu</b><br>
+    After a succesful assembly this info appears in the left border:<br>
+    <br>
+    <li>The address of the line<br>
+    <li>The number of bytes used in the line<br>
+    <li>The number of cycles used in the line.<br>
+    Since the number of cycles is not always fixed, the first number shows the minimum count, and the right the potential additional cycle count.<br>
+    <br>
+    <br>
+  </div>
+  <H2>Context Menu</H2>
+  <div id="mybody">
+    <img src="images/asm_editor_contextmenu.png"><br>
+    <br>
     Right clicking anywhere in the source window shows a context menu. The context menu allows you to:<br>
     <br>
     <br>
@@ -43,6 +61,14 @@
     <br>
     <b>Add to Watch</b><br>
     Add the variable under the cursor to the debug watch list<br>
+    <br>
+    <br>
+    <b>Add Data Breakpoint</b><br>
+    Adds a data breakpoint which triggers only if a read and/or write is executed on the symbols address (either the symbol under the cursor or the current zone).<br>
+    <br>
+    <br>
+    <b>Add Breakpoint</b><br>
+    Adds an execution breakpoint which triggers only the CPU executes the symbols address.<br>
     <br>
     <br>
     <b>Go to declaration</b><br>

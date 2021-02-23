@@ -17,6 +17,9 @@
       <li><a href="#io.filesize">io.filesize</a></li>
       <li><a href="#math.min">math.min</a></li>
       <li><a href="#math.max">math.max</a></li>
+      <li><a href="#math.sin">math.sin</a></li>
+      <li><a href="#math.cos">math.cos</a></li>
+      <li><a href="#math.tan">math.tan</a></li>
     </ul>
     <br>
     <br>
@@ -28,7 +31,7 @@
     io.filesize expects a file name and returns the file size in bytes. If the file name contains a relative path its base is the assembly path.<br>
     <br>
     <br>
-    <div id="code"><br>BYTES_TO_COPY = io.filesize( "file.prg" )
+    <div id="code"><br>  BYTES_TO_COPY = io.filesize( "file.prg" )
     <br></div>
     <br>
     <br>
@@ -40,7 +43,7 @@
     math.min compares both numeric parameters and returns the smaller one.<br>
     <br>
     <br>
-    <div id="code"><br>PAD_BYTES = math.min( 4, FIELD_LENGTH % 4 )
+    <div id="code"><br>  PAD_BYTES = math.min( 4, FIELD_LENGTH % 4 )
     <br></div>
     <br>
     <br>
@@ -52,10 +55,46 @@
     math.max compares both numeric parameters and returns the higher one.<br>
     <br>
     <br>
-    <div id="code"><br>PAD_BYTES = math.max( 128, FIELD_LENGTH )
+    <div id="code"><br>  PAD_BYTES = math.max( 128, FIELD_LENGTH )
     <br></div>
     <br>
     <br>
   </div>
-</body>
+  <a name="math.sin"></a>
+  <H2>MATH.SIN</H2>
+  <div id="mybody">
+    <b>result = math.sin( 90 )</b><br><br>
+    math.sin calculates the sinus of the provided expression. The expression is treated as degrees. The result is a real number. Note that a real number will be cast to byte.<br>
+    <br>
+    <br>
+    <div id="code"><br>  !fill 256, [127 + 128 * math.sin( i * 360 / 256 )]
+    <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="math.cos"></a>
+  <H2>MATH.COS</H2>
+  <div id="mybody">
+    <b>result = math.cos( 90 )</b><br><br>
+    math.sin calculates the cosinus of the provided expression. The expression is treated as degrees. The result is a real number. Note that a real number will be cast to byte.<br>
+    <br>
+    <br>
+    <div id="code"><br>  !fill 256, [127 + 128 * math.cos( i * 360 / 256 )]
+    <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="math.tan"></a>
+  <H2>MATH.TAN</H2>
+  <div id="mybody">
+    <b>result = math.tan( 90 )</b><br><br>
+    math.sin calculates the tangens of the provided expression. The expression is treated as degrees. The result is a real number. Note that a real number will be cast to byte.<br>
+    <br>
+    <br>
+    <div id="code"><br>  !fill 256, [127 + 128 * math.tan( i * 360 / 256 )]
+    <br></div>
+    <br>
+    <br>
+  </div>
+  </body>
 </HTML>

@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+  <link rel="stylesheet" type="text/css" href="msoffice.css" />
+  <Title>C64 Studio</Title>
+</HEAD>
+
+<body>
+  <H3>BASIC - Dialects</H3>
+  <div id="mybody">
+    There exist several BASIC dialects. BASIC V2 is hard wired, but any others can be configured externally.<br>
+    <br>
+    Laser BASIC and BASIC Lightning have been special cased as their parser seems to behave differently from the common parser.<br>
+    <br>
+    Adding new BASIC dialects with new token byte values (one or two bytes) is the expected process.<br>
+    <br>
+    <br>
+  </div>
+  <H2>BASIC Dialect File</H2>
+  <div id="mybody">
+    Several BASIC dialects come with C64Studio in the sub folder "BASIC Dialects". They are pretty self explanatory, a combination of text and CSV format file.<br>
+    <br>
+    C64Studio reads all dialect files on startup. If there are any format errors a message is added to the "Output" view.<br>
+    <br>
+    <br>
+    Lines starting with # or empty lines are skipped.<br>
+    A line "ExOpcodes" starts the extended opcode section. These are used for C64Studio internally.<br>
+    All other lines are expected to contain three csv columns, separated by semicolon.<br>
+    The first csv line is treated as header and also skipped.<br>
+    <br>
+    The three columns are "BASIC Token", "Byte Value(s)", and "BASIC Abbreviation".<br>
+    <br>
+    For example:<br>
+    <br>
+    <div id="code"><br>    NEXT;82;nE
+    </div><br>
+    NEXT is the regular BASIC command.<br>
+    <br>
+    82 is the hexadecimal representation of the byte value(s) to be inserted. C64Studio supports one byte, and two byte tokens.<br>
+    <br>
+    nE is the abbreviation. Normal token part is in lower case, any shifted letter is upper case. If there is no abbreviation for the token leave that column empty.<br>
+    If an abreviation ends with an upper case letter typing that in the BASIC editor will automatically fill in the full command (e.g. "P-Shift-O" will turn to "POKE")<br>
+    <br>
+    <br>
+  </div>
+</body>
+</HTML>
