@@ -9,10 +9,8 @@ o  I would like to be able to right click on a label and have a list of referenc
     until I closed it, so that I can quickly inspect all references.
 o BASIC _ Search in lowercase mode doesn't work with Uppercase letters
 o Shift-Click in Charset Preview Window, clear char
-o Charset editor -> PETSCII order of chars
-o Wrong Address shift when linebreak is inserted at end of line -> now appears on removing line
+o Charset Editor - Selection Picture with toggleable PETSCII sorting (Forum64 thread)
 o Sub-Zones (nested) viable?
-o Basic-Befehl "REM" same syntax coloring as the configured comment color
 o Display of used bytes is not correct (shows 43, should show 160 at !byte)
   !for i = 3 to 0 step -1
   !for j = 0 to 39 step 1
@@ -21,7 +19,6 @@ o Display of used bytes is not correct (shows 43, should show 160 at !byte)
   !end
 o Outline: bei BASIC auch Variablen anzeigen
 o Rename of folder (Explorer), files affected can now not be saved anymore
-o Beim Basic Renumber wird das Leerzeichen hinter den Zeilennummern gestript.
 o Document operators (%, etc.)
 o Save/Restore bookmarks (in solution or project)
 o Concatenate labels with numbers (e.g. !for loops) -> partially in, requires label generating rewrite
@@ -52,7 +49,6 @@ o Kategorien, Ich denke, Sie sollten mehrere auswählen, z. B. mehrfarbig, und s
      Wenn mehrere Farben ausgewählt sind, ändert sich das Lineal nicht (?), um diese neuen Zeichen aufzunehmen.
 
 o charscreen layout change from Docster!
-o Charset Editor - Selection Picture with toggleable PETSCII sorting (Forum64 thread)
 o Expressions with sin/cos/tan?
 o *=$0801 "Basic"
           rts
@@ -80,8 +76,6 @@ o Binary Editor -> To BASIC, ASM, Längenbegrenzung!
 o BASIC -> Optimierung beim "Compile", REM entfernen, 0 durch ., usw.
 o BASIC -> Run/Debug Configuration
 o BASIC -> Debug?
-o BASIC-Extensions external config instead of hard-coded?
-o C128-Unterstützung (BASIC mit Hex-Data, Debug-Start, etc..)
 o Search Bookmarks-> Functionality
 o Sprite-Import from file -> allow skipping a number of bytes (open binary editor view?)
 o komme gerade mit dem Text Screen Editor nicht zurecht. Habe die Größe auf 40x200 gestellt und Text als ASM exportiert. 
@@ -96,7 +90,6 @@ o Still sometimes crashing:
   button -> replace all
   löscht den gesamten code, studio stürzt ab und gibt beigefügte meldung aus.
   Stacktrace in Auflistung wurde geändert in Forms.Application.ExitInternal
-o Sprite-Editor - Automatic Animation?
 o Custom Build: Show analysis of configured target file/type (load address, size?)
 o Path editor: I have a suggestion for a feature which I think would be great for C64 studio.I think it might make game programmers quite happy. 
   How about something like a tool in which generates path based movement for sprites. Basically, create some basic path trails for sprite movement. 
@@ -118,7 +111,6 @@ o Comparison of file (as addon to version control)
 o Intellisense in Kommentaren nicht mehr
 o beim exportieren von Map-Daten, funktioniert der wrap m.E. nicht richtig. Zumindest bei den Tiles werden die nicht wie gewünscht "gewrappt
 o Bessere Anzeige der optionalen Zyklen
-o Mehrere Memory-Fenster, machbar?
 o Combined line cycle and byte count info (currently only info of first line is shown in border!)
 o TODO - Nested for loops using a local label from outside:
     .LABEL
@@ -129,7 +121,6 @@ o TODO - Nested for loops using a local label from outside:
     !end
 o float point Konstante eingebe? z.B. wie beim CBM Program Studio, da ging das irgendwie (habs nicht ganz parat) so: !flp 32.442.
 Das ist logisch auf den ersten Blick, es wäre aber cool, wenn man auch sigened values eintippen könnte und der Assembler das gleich umrechnet in die entsprechende 2-complement Zahl.
-o eine Datei, wo alle verwendeten Symbole, Labels usw. mit Adresse aufgelistet werden
 o re-introduce lda #< to behave like hi/lo is part of the mnemonic for ACME and CBM PRG Studio (Option Assembler)
 o Charset editor, multi-chars (1x2, 2x2, ..) in one window, with adjustable char offsets (+$40,$80,$c0)
 o Hätte wieder mal einen kleinen Feature-Request (falls es das nicht eh' schon gibt und ich nur nicht weiß, wo der Knopf ist):

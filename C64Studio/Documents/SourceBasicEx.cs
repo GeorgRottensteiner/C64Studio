@@ -1106,6 +1106,16 @@ namespace C64Studio
           editSource.SelectAll();
           return true;
         }
+        if ( keyData == ( Keys.Control | Keys.Add ) )
+        {
+          editSource.ChangeFontSize( 2 );
+          return true;
+        }
+        if ( keyData == ( Keys.Control | Keys.Subtract ) )
+        {
+          editSource.ChangeFontSize( -2 );
+          return true;
+        }
       }
 
       System.Windows.Forms.Keys bareKey = keyData & ~( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.ShiftKey | System.Windows.Forms.Keys.Alt );
