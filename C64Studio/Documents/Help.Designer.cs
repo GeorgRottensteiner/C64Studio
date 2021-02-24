@@ -28,7 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager( typeof( Help ) );
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Help));
       this.toolStripNavigation = new System.Windows.Forms.ToolStrip();
       this.toolStripBtnBack = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnForward = new System.Windows.Forms.ToolStripButton();
@@ -38,114 +38,114 @@
       this.toolStripBtnZoomOut = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnZoomReset = new System.Windows.Forms.ToolStripButton();
       this.webBrowser = new C64Studio.ZoomBrowser();
-      ( (System.ComponentModel.ISupportInitialize)( this.m_FileWatcher ) ).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolStripNavigation.SuspendLayout();
       this.SuspendLayout();
       // 
       // toolStripNavigation
       // 
-      this.toolStripNavigation.Items.AddRange( new System.Windows.Forms.ToolStripItem[] {
+      this.toolStripNavigation.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripBtnBack,
             this.toolStripBtnForward,
             this.toolStripBtnHome,
             this.toolStripSeparator1,
             this.toolStripBtnZoomIn,
             this.toolStripBtnZoomOut,
-            this.toolStripBtnZoomReset} );
-      this.toolStripNavigation.Location = new System.Drawing.Point( 0, 0 );
+            this.toolStripBtnZoomReset});
+      this.toolStripNavigation.Location = new System.Drawing.Point(0, 0);
       this.toolStripNavigation.Name = "toolStripNavigation";
-      this.toolStripNavigation.Size = new System.Drawing.Size( 896, 25 );
+      this.toolStripNavigation.Size = new System.Drawing.Size(896, 25);
       this.toolStripNavigation.TabIndex = 1;
       this.toolStripNavigation.Text = "toolStrip1";
       // 
       // toolStripBtnBack
       // 
       this.toolStripBtnBack.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      this.toolStripBtnBack.Image = ( (System.Drawing.Image)( resources.GetObject( "toolStripBtnBack.Image" ) ) );
+      this.toolStripBtnBack.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnBack.Image")));
       this.toolStripBtnBack.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnBack.Name = "toolStripBtnBack";
-      this.toolStripBtnBack.Size = new System.Drawing.Size( 33, 22 );
+      this.toolStripBtnBack.Size = new System.Drawing.Size(36, 22);
       this.toolStripBtnBack.Text = "Back";
-      this.toolStripBtnBack.Click += new System.EventHandler( this.toolStripBtnBack_Click );
+      this.toolStripBtnBack.Click += new System.EventHandler(this.toolStripBtnBack_Click);
       // 
       // toolStripBtnForward
       // 
       this.toolStripBtnForward.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      this.toolStripBtnForward.Image = ( (System.Drawing.Image)( resources.GetObject( "toolStripBtnForward.Image" ) ) );
+      this.toolStripBtnForward.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnForward.Image")));
       this.toolStripBtnForward.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnForward.Name = "toolStripBtnForward";
-      this.toolStripBtnForward.Size = new System.Drawing.Size( 51, 22 );
+      this.toolStripBtnForward.Size = new System.Drawing.Size(54, 22);
       this.toolStripBtnForward.Text = "Forward";
-      this.toolStripBtnForward.Click += new System.EventHandler( this.toolStripBtnForward_Click );
+      this.toolStripBtnForward.Click += new System.EventHandler(this.toolStripBtnForward_Click);
       // 
       // toolStripBtnHome
       // 
       this.toolStripBtnHome.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      this.toolStripBtnHome.Image = ( (System.Drawing.Image)( resources.GetObject( "toolStripBtnHome.Image" ) ) );
+      this.toolStripBtnHome.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnHome.Image")));
       this.toolStripBtnHome.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnHome.Name = "toolStripBtnHome";
-      this.toolStripBtnHome.Size = new System.Drawing.Size( 38, 22 );
+      this.toolStripBtnHome.Size = new System.Drawing.Size(44, 22);
       this.toolStripBtnHome.Text = "Home";
-      this.toolStripBtnHome.Click += new System.EventHandler( this.toolStripBtnHome_Click );
+      this.toolStripBtnHome.Click += new System.EventHandler(this.toolStripBtnHome_Click);
       // 
       // toolStripSeparator1
       // 
       this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size( 6, 25 );
+      this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
       // 
       // toolStripBtnZoomIn
       // 
       this.toolStripBtnZoomIn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.toolStripBtnZoomIn.Image = ( (System.Drawing.Image)( resources.GetObject( "toolStripBtnZoomIn.Image" ) ) );
+      this.toolStripBtnZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnZoomIn.Image")));
       this.toolStripBtnZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnZoomIn.Name = "toolStripBtnZoomIn";
-      this.toolStripBtnZoomIn.Size = new System.Drawing.Size( 23, 22 );
+      this.toolStripBtnZoomIn.Size = new System.Drawing.Size(23, 22);
       this.toolStripBtnZoomIn.Text = "Zoom In";
-      this.toolStripBtnZoomIn.Click += new System.EventHandler( this.toolStripBtnZoomIn_Click );
+      this.toolStripBtnZoomIn.Click += new System.EventHandler(this.toolStripBtnZoomIn_Click);
       // 
       // toolStripBtnZoomOut
       // 
       this.toolStripBtnZoomOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.toolStripBtnZoomOut.Image = ( (System.Drawing.Image)( resources.GetObject( "toolStripBtnZoomOut.Image" ) ) );
+      this.toolStripBtnZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnZoomOut.Image")));
       this.toolStripBtnZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnZoomOut.Name = "toolStripBtnZoomOut";
-      this.toolStripBtnZoomOut.Size = new System.Drawing.Size( 23, 22 );
+      this.toolStripBtnZoomOut.Size = new System.Drawing.Size(23, 22);
       this.toolStripBtnZoomOut.Text = "Zoom Out";
-      this.toolStripBtnZoomOut.Click += new System.EventHandler( this.toolStripBtnZoomOut_Click );
+      this.toolStripBtnZoomOut.Click += new System.EventHandler(this.toolStripBtnZoomOut_Click);
       // 
       // toolStripBtnZoomReset
       // 
       this.toolStripBtnZoomReset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.toolStripBtnZoomReset.Image = ( (System.Drawing.Image)( resources.GetObject( "toolStripBtnZoomReset.Image" ) ) );
+      this.toolStripBtnZoomReset.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnZoomReset.Image")));
       this.toolStripBtnZoomReset.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnZoomReset.Name = "toolStripBtnZoomReset";
-      this.toolStripBtnZoomReset.Size = new System.Drawing.Size( 23, 22 );
+      this.toolStripBtnZoomReset.Size = new System.Drawing.Size(23, 22);
       this.toolStripBtnZoomReset.Text = "Reset Zoom";
-      this.toolStripBtnZoomReset.Click += new System.EventHandler( this.toolStripBtnZoomReset_Click );
+      this.toolStripBtnZoomReset.Click += new System.EventHandler(this.toolStripBtnZoomReset_Click);
       // 
       // webBrowser
       // 
       this.webBrowser.AllowWebBrowserDrop = false;
       this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.webBrowser.Location = new System.Drawing.Point( 0, 25 );
-      this.webBrowser.MinimumSize = new System.Drawing.Size( 20, 20 );
+      this.webBrowser.Location = new System.Drawing.Point(0, 25);
+      this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
       this.webBrowser.Name = "webBrowser";
-      this.webBrowser.Size = new System.Drawing.Size( 896, 679 );
+      this.webBrowser.ScriptErrorsSuppressed = true;
+      this.webBrowser.Size = new System.Drawing.Size(896, 679);
       this.webBrowser.TabIndex = 2;
       // 
       // Help
       // 
-      this.ClientSize = new System.Drawing.Size( 896, 704 );
-      this.Controls.Add( this.webBrowser );
-      this.Controls.Add( this.toolStripNavigation );
-      this.Font = new System.Drawing.Font( "Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ) );
-      this.Icon = ( (System.Drawing.Icon)( resources.GetObject( "$this.Icon" ) ) );
+      this.ClientSize = new System.Drawing.Size(896, 704);
+      this.Controls.Add(this.webBrowser);
+      this.Controls.Add(this.toolStripNavigation);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "Help";
       this.Text = "Help";
-      ( (System.ComponentModel.ISupportInitialize)( this.m_FileWatcher ) ).EndInit();
-      this.toolStripNavigation.ResumeLayout( false );
+      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
+      this.toolStripNavigation.ResumeLayout(false);
       this.toolStripNavigation.PerformLayout();
-      this.ResumeLayout( false );
+      this.ResumeLayout(false);
       this.PerformLayout();
 
     }
