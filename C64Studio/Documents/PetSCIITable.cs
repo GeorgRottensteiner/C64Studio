@@ -21,11 +21,11 @@ namespace C64Studio
       InitializeComponent();
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
-
-      _DefaultFont = listPETSCII.Font;
+      _DefaultFont = new System.Drawing.Font( listPETSCII.Font.FontFamily, listPETSCII.Font.Size * 96.0f / DPIHandler.DPIY, listPETSCII.Font.Style );
 
       listPETSCII.ItemWidth = (int)( 80 * GR.Image.DPIHandler.DPIX / 96.0f );
       listPETSCII.ItemHeight = (int)( 40 * GR.Image.DPIHandler.DPIY / 96.0f );
+
       listPETSCII.SetDisplaySize( listPETSCII.ClientSize.Width, listPETSCII.ClientSize.Height );
       listPETSCII.DisplayPage.Create( 120, 120, System.Drawing.Imaging.PixelFormat.Format24bppRgb );
       listPETSCII.PixelFormat = System.Drawing.Imaging.PixelFormat.Format24bppRgb;
@@ -69,7 +69,7 @@ namespace C64Studio
 
       g.DrawString( "" + character.CharValue, listPETSCII.Font, brush, new System.Drawing.PointF( 2, 4 ) );
       g.DrawString( character.PetSCIIValue.ToString( "X02" ), _DefaultFont, brush, new System.Drawing.PointF( 40, 4 ) );
-      g.DrawString( character.Desc, _DefaultFont, brush, new System.Drawing.PointF( 0, 24 ) );
+      g.DrawString( character.Desc, _DefaultFont, brush, new System.Drawing.PointF( 1, 24 ) );
 
       g.Dispose();
 
@@ -113,6 +113,7 @@ namespace C64Studio
       // 
       // PetSCIITable
       // 
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.ClientSize = new System.Drawing.Size(534, 390);
       this.Controls.Add(this.listPETSCII);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
