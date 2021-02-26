@@ -1156,9 +1156,6 @@ namespace C64Studio
           &&       ( symbol.SourceInfo.FullPath == DocumentInfo.FullPath ) )
           ||     ( GR.Path.IsPathEqual( symbol.DocumentFilename, DocumentInfo.FullPath ) ) )
           &&   ( symbol.Type == C64Studio.Types.SymbolInfo.Types.ZONE ) )
-          /*
-          &&   ( !string.IsNullOrEmpty( symbol.Zone ) )
-          &&   ( DocumentInfo.ASMFileInfo.Zones.ContainsKey( symbol.Zone ) ) )*/
           {
             uniqueZones.Add( symbol.Zone, symbol );
           }
@@ -1180,8 +1177,6 @@ namespace C64Studio
         comboZoneSelector.SelectedIndex = 0;
       }
       comboZoneSelector.EndUpdate();
-      //RefreshLocalSymbols();
-      //RefreshAutoComplete();
     }
 
 

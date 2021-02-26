@@ -1,9 +1,8 @@
 ﻿C64Studio
+o Get rid of GR.Path.IsPathEqual during OnKnownTokensChanged and OnKnownKeywordsChanged!
 o Save inbuilt editors automatically
-o I also tried the C64 Pro Mono fonts by Style and it 'crashed'. It did not crash the entire application, but just the 
-  change font selector saying it was not a truetype font.
 o Undo for Category-Exchange
-o Scaling: PETSCII
+o Scaling: PETSCII table
 o  I would like to be able to right click on a label and have a list of references to this label. 
     So that I can then double click on a reference and jump to it. It would be neat if that list of references stayed open 
     until I closed it, so that I can quickly inspect all references.
