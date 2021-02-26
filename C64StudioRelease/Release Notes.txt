@@ -17,6 +17,73 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+26.02.2021 - 6.7:         Fix: BASIC V10, wrong opcodes
+                          Fix: Scaling issue of PETSCII table
+                          Fix: scaling on File Manager toolbar
+                          Add: Ctrl-+/- to zoom in BASIC
+                          Add: Ctrl-A (Select All) for BASIC
+                          Fix Basic V3.5 default start address
+                          Add: CPU opcode docs
+                          Fix: BASIC editor line height now works with custom font sizes
+                          Fix: BASIC syntax coloring properly updates now
+                          Fix: keep spaces after line numbers when renumbering
+                          Add/Fix: Scaling issues now almost all gone
+                          Fix: BASIC coloring issues
+                          Fix: BASIC V10 SIN token
+                          Add: !CPU support for 4502, Mega65
+                          Fix: Basic V10 SIN token was wrong (thanks Heinz!)
+                          Fix: BASIC editor scaling issues
+                          Fix: Charset editor scaling issues (DPI)
+                          Fix: Initial debug memory values are not marked as changed
+                          Add: Default start address for BASIC dialects
+                          Fix: Add "exit" to label file when not debugging (VICE 3.5 GTK leaves the monitor open when passing a label file)
+                          Add: File Manager -> export to BASIC now lists all BASIC dialects
+                          Fix: Scaling issue in BASIC editor
+                          Fix: retarget .NET 3.5 for projects set > 3.5 (while not being needed)
+                          Fix: invalidate memory on DebugGo
+                          Add: Basic V10 dialect file
+                          Fix: On new debug session default auto refresh memory to currently visible memory display
+                          Add: Debugger allows changing of registers, PC, SP and flags
+                          Add: Hide disassembly window when debugger jumps back into owned code
+                          Fix: Clipboard ownage of pasted images
+                          Add: character editor. Allow category reordering
+                          Move Charset categories to control
+                          Fix: Do not remove change marks in memory view by scrolling
+                          Fix: Label file enabling in build chain properties
+                          Fix: Old interface in newer GTK VICEs does not support binary dump anymore
+                          Fix: catching exceptions for every single BASIC dialect file
+                          Fix: Bug in duplicate memory map entries, longer length might have gotten lost
+                          Add: Support for !cpu 65C02 and R65C02
+                          Fix: Address of line update when inserting line breaks
+                          Add: Sprite Editor -> save animation to GIF
+                          Add: Charset editor preview, prefill with white spaces instead of black @s
+                          Fix: Crash when removing breakpoint from non-project file
+                          Add: Triple click selects full line
+                          Add: Doc update for math.sin, math.cos, math.tan
+                          Fix: potential crash in FastColoredTextBox
+                          Fix: potential crash
+                          Add: Support for WDC65C02 processor (!cpu)
+                          Fix: dialect files in test project
+                          Add: Add math.sin/math.cos/math.tan to regular options. Float is casted to int
+                          Fix: Sprite Editor - name change of layer would reset cursor on first char
+                          Fix: BASIC label mode after Dialect addon
+                          Add: Make BASIC tokens externally configurable to allow for new dialects
+                          Fix: Potential swallowed remote debugger command in VICE legacy interface
+                          Add: more emulator shenanigans
+                          Fix: Laser BASIC and BASIC Lightning Tokens
+                          Add: Allow copy of file between projects
+                          Add: Major tiny64 update (added display, cia is wip)
+                          Fix: duplicate label text for character editor (this time for good?)
+                          Fix: Replace selection character count with "character" instead of "bytes"
+                          Fix: no inserting spaces in REM when toggling between label/no label mode
+                          Fix: BASIC toggling label mode now properly uses the set symbol mode
+                          Fix: Fixed mixed up charset/watch tool name
+                          Add: Display unused background in map editor
+                          Fix: Character Editor control, slightly offset pixel detection
+                          Fix: Bug when memory section was not filled with trailing * = ... statement
+                          Fix: Broken binary literal parsing
+                          Fix: Replace Win32 StretchBlt with .NET draw code for Charset Editor Control
+
 11.12.2020 - 6.6:         Add: Support for $01 for VICE binary interface
                           Add: petcat compatiblity at BASIC file import
                           Fix: reverted errornous DPI adjusting of dialogs
