@@ -1118,7 +1118,8 @@ namespace C64Studio
     {
       int     tabSize = GR.Convert.ToI32( editTabSize.Text );
 
-      if ( tabSize >= 1 )
+      if ( ( tabSize >= 1 )
+      &&   ( Core.Settings.TabSize != tabSize ) )
       {
         Core.Settings.TabSize = tabSize;
         RefreshDisplayOnDocuments();

@@ -10,6 +10,7 @@ using static C64Studio.Parser.BasicFileParser;
 using GR.IO;
 using System.Linq;
 using C64Models.BASIC;
+using GR.Image;
 
 namespace C64Studio
 {
@@ -140,13 +141,9 @@ namespace C64Studio
 
 
       editSource.KeyPressing += EditSource_KeyPressing;
+      editSource.ZoomChanged += EditSource_ZoomChanged;
 
-      ///editSource.Scrolling.HorizontalScrollWidth = 3000;
-
-      ///editSource.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
       editSource.TabLength = Core.Settings.TabSize;
-
-      //editSource.OnSyntaxHighlight
 
       m_ToolTip.Active = true;
       m_ToolTip.SetToolTip( editSource, "x" );
@@ -156,6 +153,22 @@ namespace C64Studio
 
       m_StartAddress = "2049";
       editBASICStartAddress.Text = "2049";
+
+      Debug.Log( "Zoom " + editSource.Zoom + ", lineinterval " + editSource.LineInterval + ", charheight " + editSource.CharHeight );
+    }
+
+
+
+    private void EditSource_ZoomChanged( object sender, EventArgs e )
+    {
+      editSource.LeftPadding = (int)( 40 * DPIHandler.DPIX / 96.0f );
+
+      float     fontSize = editSource.Font.Size;
+      // i have no idea why +7
+      fontSize *= 1.6f;
+
+      editSource.CharHeight = editSource.LineInterval + (int)( fontSize * DPIHandler.DPIY / 96.0f );
+      Debug.Log( "Zoom " + editSource.Zoom + ", lineinterval " + editSource.LineInterval + ", charheight " + editSource.CharHeight );
     }
 
 
@@ -334,10 +347,10 @@ namespace C64Studio
         fontSize = Core.Settings.BASICSourceFontSize;
       }
       // i have no idea why +7
-      fontSize += 7.0f;
+      //fontSize += 7.0f;
+      fontSize *= 1.6f;
 
-      var g= editSource.CreateGraphics();
-      editSource.CharHeight = (int)( fontSize * g.DpiY / 96.0f );
+      editSource.CharHeight = editSource.LineInterval + (int)( fontSize * DPIHandler.DPIY / 96.0f );
 
       editSource.Language = FastColoredTextBoxNS.Language.Custom;
 
@@ -380,10 +393,6 @@ namespace C64Studio
       UpdateKeyBinding( C64Studio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
       UpdateKeyBinding( C64Studio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
       UpdateKeyBinding( C64Studio.Types.Function.DELETE_LINE, FastColoredTextBoxNS.FCTBAction.DeleteLine );
-
-      /*
-      editSource.HotkeysMapping.Remove( Keys.Control | Keys.A );
-      editSource.HotkeysMapping.Add( Keys.Control | Keys.A, FastColoredTextBoxNS.FCTBAction.SelectAll );*/
     }
 
 

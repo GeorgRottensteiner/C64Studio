@@ -93,6 +93,8 @@ namespace FastColoredTextBoxNS
     private Range leftBracketPosition;
     private Range leftBracketPosition2;
     private int leftPadding;
+    private int leftPaddingInCharacters;
+    private bool leftPaddingIsPixel = true;
     private int lineInterval;
     private Color lineNumberColor;
     private uint lineNumberStartValue;
@@ -129,6 +131,7 @@ namespace FastColoredTextBoxNS
     private WordWrapMode wordWrapMode = WordWrapMode.WordWrapControlWidth;
     private int reservedCountOfLineNumberChars = 1;
     private int zoom = 100;
+    private int zoomPos = 100;
     private Size localAutoScrollMinSize;
     private bool mouseDownInLeftBorderArea = false;
 
@@ -1094,6 +1097,26 @@ namespace FastColoredTextBoxNS
       set
       {
         leftPadding = value;
+        leftPaddingIsPixel = true;
+        Invalidate();
+      }
+    }
+
+    /// <summary>
+    /// Left padding in pixels
+    /// </summary>
+    [DefaultValue( 0 )]
+    [Description( "Width of left service area (in characters), will be DPI scaled" )]
+    public int LeftPaddingInCharacters
+    {
+      get
+      {
+        return leftPaddingInCharacters;
+      }
+      set
+      {
+        leftPaddingInCharacters = value;
+        leftPaddingIsPixel = false;
         Invalidate();
       }
     }
@@ -3587,18 +3610,29 @@ namespace FastColoredTextBoxNS
 
       needRecalc = false;
       //calc min left indent
-      LeftIndent = LeftPadding;
+      if ( leftPaddingIsPixel )
+      {
+        LeftIndent = LeftPadding;
+      }
+      else
+      {
+        LeftIndent = leftPaddingInCharacters * CharWidth;
+      }
       long maxLineNumber = LinesCount + lineNumberStartValue - 1;
       int charsForLineNumber = 2 + ( maxLineNumber > 0 ? (int)Math.Log10( maxLineNumber ) : 0 );
 
       // If there are reserved character for line numbers: correct this
       if ( this.ReservedCountOfLineNumberChars + 1 > charsForLineNumber )
+      {
         charsForLineNumber = this.ReservedCountOfLineNumberChars + 1;
+      }
 
       if ( Created )
       {
         if ( ShowLineNumbers )
+        {
           LeftIndent += charsForLineNumber * CharWidth + minLeftIndent + 1;
+        }
 
         //calc wordwrapping
         if ( needRecalcWordWrap )
@@ -3608,7 +3642,9 @@ namespace FastColoredTextBoxNS
         }
       }
       else
+      {
         needRecalc = true;
+      }
 
       //calc max line length and count of wordWrapLines
       TextHeight = 0;
@@ -6375,18 +6411,18 @@ namespace FastColoredTextBoxNS
       }
     }
 
+
+
     protected override void OnMouseWheel( MouseEventArgs e )
     {
       Invalidate();
 
-      //if ( lastModifiers == Keys.Control )
       if ( Control.ModifierKeys == Keys.Control )
       {
         ChangeFontSize( 2 * Math.Sign( e.Delta ) );
         ( (HandledMouseEventArgs)e ).Handled = true;
       }
-      else
-        if ( VerticalScroll.Visible || !ShowScrollBars )
+      else if ( VerticalScroll.Visible || !ShowScrollBars )
       {
         //base.OnMouseWheel(e);
 
@@ -6400,6 +6436,8 @@ namespace FastColoredTextBoxNS
 
       DeactivateMiddleClickScrollingMode();
     }
+
+
 
     private void DoScrollVertical( int countLines, int direction )
     {
@@ -6465,7 +6503,21 @@ namespace FastColoredTextBoxNS
         if ( newPoints < 1f )
           return;
         var k = newPoints / originalFont.SizeInPoints;
-        Zoom = (int)( 100 * k );
+        //Zoom = (int)( 100 * k );
+
+        int   curZoom = zoomPos + step;
+        if ( curZoom < 2 )
+        {
+          curZoom = 2;
+        }
+        if ( curZoom > 16384 )
+        {
+          curZoom = 16384;
+        }
+        zoomPos = curZoom;
+
+        int     newZoom = (int)( (float)curZoom * curZoom / 100 );
+        Zoom = newZoom;
       }
     }
 

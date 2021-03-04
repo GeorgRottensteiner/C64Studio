@@ -2267,11 +2267,14 @@ namespace C64Studio
         StudioCore.SetStatus( "Running..." );
 
         SetGUIForWaitOnExternalTool( true );
+
         return StudioCore.Executing.RunProcess.Start();
       }
       catch ( Exception ex )
       {
+        SetGUIForWaitOnExternalTool( false );
         StudioCore.AddToOutput( "Internal Error in RunCompiledFile: " + ex.ToString() );
+        StudioCore.SetStatus( "Ready" );
         return false;
       }
     }

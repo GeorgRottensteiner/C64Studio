@@ -4,10 +4,6 @@
 #Token        = actual name of command
 #ByteValues   = one or more byte values (hex)
 #Abbreviation = short cut of command if it exists (lower case, shifted letters are upper case)
-#StartAddress=xxxx  = sets the default BASIC start address
-
-StartAddress=2049
-
 Token;ByteValues;Abbreviation
 END;80;eN
 FOR;81;fO
@@ -160,6 +156,9 @@ RTRIM;7F10;
 LTRIM;7F11;
 XOR;7F12;
 ';7F13;APOSTROHPE(ALTERNATIVE ZU REM)
+DELAY;7F14;
+BEEP;7F15;
+CALL;7F16;
 #* BASIC V2.0 Befehl, wurde aber erweitert wodurch sich das Token geändert hat.
 #==============================================================================
 

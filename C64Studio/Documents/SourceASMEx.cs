@@ -307,24 +307,28 @@ namespace C64Studio
 
       int approxWidthOfChar = editSource.CharWidth;
       int approxWidthOfAddress = 5 * approxWidthOfChar;
+      int numChars = 0;
 
       int     newPadding = (int)( BORDER_MARKER_WIDTH * zoomFactor );    // space for marker symbol on left side
       if ( Core.Settings.ASMShowAddress )
       {
         m_AddressOffset = newPadding;
         newPadding += approxWidthOfAddress + approxWidthOfChar;
+        numChars += 5 + 1;
       }
       if ( Core.Settings.ASMShowBytes )
       {
         m_ByteSizeOffset = newPadding;
         newPadding += 3 * approxWidthOfChar;
+        numChars += 3;
       }
       if ( Core.Settings.ASMShowCycles )
       {
         m_CycleOffset = newPadding;
         newPadding += 4 * approxWidthOfChar;
+        numChars += 4;
       }
-      editSource.LeftPadding = newPadding;
+      editSource.LeftPaddingInCharacters = numChars;
     }
 
 
