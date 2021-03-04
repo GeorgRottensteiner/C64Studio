@@ -515,7 +515,7 @@ namespace Tiny64
       sys.AddOpcode( "lxa", 0xab, 1, AddressingType.IMMEDIATE, 2 );        // lax #$nn
 
       sys.AddOpcode( "sbx", 0xcb, 1, AddressingType.IMMEDIATE, 2 );        // sbx #$nn
-      sys.AddOpcode( "asx", 0xcb, 1, AddressingType.IMMEDIATE, 2 );        // asx #$nn  (alternative to sbx)
+      sys.AddOpcode( "axs", 0xcb, 1, AddressingType.IMMEDIATE, 2 );        // axs #$nn  (alternative to sbx)
       sys.AddOpcodeForDisassembly( "sbc", 0xeb, 1, AddressingType.IMMEDIATE );        // sbc #$nn
 
       // unstable!

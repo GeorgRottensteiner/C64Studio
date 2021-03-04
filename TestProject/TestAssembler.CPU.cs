@@ -272,7 +272,7 @@ namespace TestProject
                         tas $1234,y
                         las $1234,y
 
-                        asx #$12    ;alternative to sbx
+                        axs #$12    ;alternative to sbx
                         ";
 
       C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
