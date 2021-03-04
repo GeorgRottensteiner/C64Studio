@@ -3686,6 +3686,12 @@ namespace C64Studio.Parser
 
     public string Renumber( int LineStart, int LineStep, int FirstLineNumber, int LastLineNumber )
     {
+      // UGLY HACK - > TODO make it clean later (as if) -> store stripping settings
+      bool settingsStripSpaces = Settings.StripSpaces;
+      bool settingsStripREM = Settings.StripREM;
+      Settings.StripSpaces = false;
+      Settings.StripREM = false;
+
       StringBuilder sb = new StringBuilder();
 
       GR.Collections.Map<int, int> lineNumberReference = new GR.Collections.Map<int, int>();
@@ -3860,6 +3866,10 @@ namespace C64Studio.Parser
       {
         sb.Remove( sb.Length - 2, 2 );
       }
+
+      // UGLY HACK part #2, restore settings
+      Settings.StripSpaces  = settingsStripSpaces;
+      Settings.StripREM     = settingsStripREM;
       return sb.ToString();
     }
 
