@@ -511,8 +511,10 @@ namespace Tiny64
 
       // highly unstable!
       sys.AddOpcode( "ane", 0x8b, 1, AddressingType.IMMEDIATE, 2 );        // ane #$nn
+      sys.AddOpcode( "xaa", 0x8b, 1, AddressingType.IMMEDIATE, 2 );        // xaa #$nn
       // highly unstable!
-      sys.AddOpcode( "lxa", 0xab, 1, AddressingType.IMMEDIATE, 2 );        // lax #$nn
+      sys.AddOpcode( "lxa", 0xab, 1, AddressingType.IMMEDIATE, 2 );        // lxa #$nn
+      sys.AddOpcode( "lax", 0xab, 1, AddressingType.IMMEDIATE, 2 );        // lax #$nn
 
       sys.AddOpcode( "sbx", 0xcb, 1, AddressingType.IMMEDIATE, 2 );        // sbx #$nn
       sys.AddOpcode( "axs", 0xcb, 1, AddressingType.IMMEDIATE, 2 );        // axs #$nn  (alternative to sbx)
@@ -520,8 +522,10 @@ namespace Tiny64
 
       // unstable!
       sys.AddOpcode( "sha", 0x93, 1, AddressingType.ZEROPAGE_INDIRECT_Y, 5 );    // sha ($ll),Y
+      sys.AddOpcode( "ahx", 0x93, 1, AddressingType.ZEROPAGE_INDIRECT_Y, 5 );    // sha ($ll),Y
       // unstable!
       sys.AddOpcode( "sha", 0x9f, 2, AddressingType.ABSOLUTE_Y, 5 );    // sha $hhll, Y
+      sys.AddOpcode( "ahx", 0x9f, 2, AddressingType.ABSOLUTE_Y, 5 );    // sha $hhll, Y
 
       // unstable!
       sys.AddOpcode( "shy", 0x9c, 2, AddressingType.ABSOLUTE_X, 5 );    // shy $hhll, X
