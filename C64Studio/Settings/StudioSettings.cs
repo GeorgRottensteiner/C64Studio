@@ -1393,7 +1393,8 @@ namespace C64Studio
           BGColorAuto = false
         };
       }
-      if ( SyntaxColoring[Element].BGColorAuto )
+      if ( ( SyntaxColoring[Element].BGColorAuto )
+      &&   ( Element != ColorableElement.EMPTY_SPACE ) )
       {
         return BGColor( ColorableElement.EMPTY_SPACE );
       }
