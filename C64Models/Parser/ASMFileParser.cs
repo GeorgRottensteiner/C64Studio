@@ -3905,15 +3905,27 @@ namespace C64Studio.Parser
         lineTokenInfos[1].Length = lineTokenInfos[1].Length + lineTokenInfos[0].Length;
         lineTokenInfos.RemoveAt( 0 );
       }
+
+      // ++labelname should be concattenated
+      if ( ( lineTokenInfos.Count >= 2 )
+      &&   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+      &&   ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      &&   ( lineTokenInfos[0].StartPos + lineTokenInfos[0].Length == lineTokenInfos[1].StartPos ) )
+      {
+        lineTokenInfos[0].Content += lineTokenInfos[1].Content;
+        lineTokenInfos[1].Length += lineTokenInfos[1].Length;
+        lineTokenInfos.RemoveAt( 1 );
+      }
+
       if ( ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
       ||   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
       {
         // could be a label in front
         if ( ( lineTokenInfos.Count >= 3 )
-        && ( lineTokenInfos[1].Content == m_AssemblerSettings.MacroFunctionCallPrefix )
-        && ( ( lineTokenInfos[2].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        || ( lineTokenInfos[2].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
-        && ( lineTokenInfos[1].StartPos + lineTokenInfos[1].Length == lineTokenInfos[2].StartPos ) )
+        &&   ( lineTokenInfos[1].Content == m_AssemblerSettings.MacroFunctionCallPrefix )
+        &&   ( ( lineTokenInfos[2].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        ||     ( lineTokenInfos[2].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+        &&   ( lineTokenInfos[1].StartPos + lineTokenInfos[1].Length == lineTokenInfos[2].StartPos ) )
         {
           lineTokenInfos[2].Type = C64Studio.Types.TokenInfo.TokenType.CALL_MACRO;
           lineTokenInfos[2].Content = lineTokenInfos[1].Content + lineTokenInfos[2].Content;
@@ -6973,6 +6985,11 @@ namespace C64Studio.Parser
         info.Zone = m_CurrentZoneName;
         info.CheapLabelZone = cheapLabelParent;
         info.AddressStart = programStepPos;
+
+        if ( lineIndex == 18 )
+        {
+          Debug.Log( "aha" );
+        }
 
         if ( ScopeInsideMacroDefinition( stackScopes ) )
         {
@@ -10836,12 +10853,15 @@ namespace C64Studio.Parser
                 //tokens.InsertRange( tokenIndex, tempTokens );
                 if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
                 {
-                  // TODO - take i in account, 
-                  //token.Content = "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + token.Content;
-                  token.Content += InternalLabelPrefix + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes );
-                  //token.Content = token.Content.Replace( "+", "_plus_" );
-                  //token.Content = token.Content.Replace( "-", "_minus_" );
-                  //Debug.Log( "Replaced internal label in line " + i + " with " + token.Content );
+                  if ( token.Content[0] == '-' )
+                  {
+                    // TODO - take i in account, 
+                    //token.Content = "_c64studiointernal_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + token.Content;
+                    token.Content += InternalLabelPrefix + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes );
+                    //token.Content = token.Content.Replace( "+", "_plus_" );
+                    //token.Content = token.Content.Replace( "-", "_minus_" );
+                    //Debug.Log( "Replaced internal label in line " + i + " with " + token.Content );
+                  }
                 }
                 else if ( !ScopeInsideLoop( Scopes ) )
                 {
