@@ -413,6 +413,42 @@ namespace TestProject
       Assert.AreEqual( "01080B080A009E32303631000000A900186D00208D0020A9016D01208D012060", assembly.ToString() );
     }
 
+    
+
+    [TestMethod]
+    public void TestMacroWithImmediateForwardLabels()
+    {
+      string   source =@"*=$0801
+                        !basic
+                        !macro name
+                          lda #0
+                          beq +
+                           lda #1
+                           jmp ++
+                          +
+                           lda #2
+                          ++
+                        !end
+                        +name";
+
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      var assembly = TestAssembleC64Studio( source );
+      //Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      //Assert.IsTrue( parser.Assemble( config ) );
+
+      //var assembly = parser.AssembledOutput;
+
+      Assert.AreEqual( "01080B080A009E32303631000000A900F005A9014C1808A902", assembly.ToString() );
+    }
+
 
 
     [TestMethod]
