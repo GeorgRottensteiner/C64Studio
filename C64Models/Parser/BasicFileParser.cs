@@ -1540,7 +1540,7 @@ namespace C64Studio.Parser
           }
           else
           {
-            AddError( LineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unknown macro " + macro );
+            AddError( LineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, "Unknown macro " + macro );
           }
         }
         lastStartPos = bracketEndPos + 1;
@@ -2419,7 +2419,7 @@ namespace C64Studio.Parser
                 }
                 else
                 {
-                  AddError( LineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unknown macro " + macro );
+                  AddError( LineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, "Unknown macro " + macro );
                 }
               }
               else
@@ -2439,7 +2439,7 @@ namespace C64Studio.Parser
                 }
                 else
                 {
-                  AddError( LineIndex, Types.ErrorCode.E1301_MACRO_UNKNOWN, "Unknown macro " + macro );
+                  AddError( LineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, "Unknown macro " + macro );
                 }
               }
             }

@@ -4194,7 +4194,7 @@ namespace C64Studio
         {
           m_Help.NavigateTo( "aay64h64/AAY64/B" + Keyword.ToUpper() + ".HTM" );
         }
-        else if ( StudioCore.Compiling.ParserASM.ASMFileInfo.AssemblerSettings.Macros.ContainsKey( Keyword.ToUpper() ) )
+        else if ( StudioCore.Compiling.ParserASM.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) )
         {
           m_Help.NavigateTo( "asm_macro.html#" + Keyword.Substring( 1 ).ToLower() );
         }

@@ -1323,6 +1323,7 @@ namespace C64Studio
 
     private void PasteFromClipboard()
     {
+      m_ImportError = "";
       IDataObject dataObj = Clipboard.GetDataObject();
       if ( dataObj == null )
       {

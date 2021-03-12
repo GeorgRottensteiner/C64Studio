@@ -119,11 +119,12 @@ namespace C64Studio
       ||     ( String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) ) )
       {
         // default to same name.prg and cbm
+        string    targetExtension = Parser.DefaultTargetExtension;
         if ( Doc.Project == null )
         {
-          return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Doc.FullPath ), System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) ) + ".prg";
+          return System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Doc.FullPath ), System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) ) + targetExtension;
         }
-        return System.IO.Path.Combine( Doc.Project.Settings.BasePath, System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) + ".prg" );
+        return System.IO.Path.Combine( Doc.Project.Settings.BasePath, System.IO.Path.GetFileNameWithoutExtension( Doc.FullPath ) + targetExtension );
       }
       if ( ( Doc.Element != null )
       && ( !String.IsNullOrEmpty( Doc.Element.TargetFilename ) ) )

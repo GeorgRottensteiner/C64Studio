@@ -1103,7 +1103,7 @@ namespace C64Studio
       else
       {
         string  upperWord = wordBelow.ToUpper();
-        if ( Parser.ASMFileInfo.AssemblerSettings.Macros.ContainsKey( upperWord ) )
+        if ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperWord ) )
         {
           return;
         }
@@ -1471,7 +1471,7 @@ namespace C64Studio
       if ( Parser.ASMFileInfo.AssemblerSettings != null )
       {
         // add pseudo ops
-        foreach ( var pseudoOp in Parser.ASMFileInfo.AssemblerSettings.Macros )
+        foreach ( var pseudoOp in Parser.ASMFileInfo.AssemblerSettings.PseudoOps )
         {
           newList.Add( new AutocompleteItem( pseudoOp.Key ) { ToolTipTitle = pseudoOp.Key, ToolTipText = "Pseudo OP" } );
         }
@@ -2045,7 +2045,7 @@ namespace C64Studio
         string    potentialPseudoOp = '!' + wordBelow;
 
         if ( ( Parser.ASMFileInfo.AssemblerSettings != null )
-        &&   ( Parser.ASMFileInfo.AssemblerSettings.Macros.ContainsKey( potentialPseudoOp.ToUpper() ) ) )
+        &&   ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( potentialPseudoOp.ToUpper() ) ) )
         {
           wordBelow = potentialPseudoOp;
         }
@@ -3170,21 +3170,21 @@ namespace C64Studio
         }
 
         if ( ( tokens.Count > firstLiteralTokenIndex )
-        &&   ( tokens[firstLiteralTokenIndex - 1].Type == TokenInfo.TokenType.MACRO ) )
+        &&   ( tokens[firstLiteralTokenIndex - 1].Type == TokenInfo.TokenType.PSEUDO_OP ) )
         {
           string  upperToken = tokens[firstLiteralTokenIndex - 1].Content.ToUpper();
-          if ( Parser.ASMFileInfo.AssemblerSettings.Macros.ContainsKey( upperToken ) )
+          if ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperToken ) )
           {
-            var pseudoOp = Parser.ASMFileInfo.AssemblerSettings.Macros[upperToken];
+            var pseudoOp = Parser.ASMFileInfo.AssemblerSettings.PseudoOps[upperToken];
 
-            if ( ( pseudoOp.Type == MacroInfo.MacroType.BYTE )
-            ||   ( pseudoOp.Type == MacroInfo.MacroType.WORD )
-            ||   ( pseudoOp.Type == MacroInfo.MacroType.LOW_BYTE )
-            ||   ( pseudoOp.Type == MacroInfo.MacroType.HIGH_BYTE )
-            ||   ( pseudoOp.Type == MacroInfo.MacroType.TEXT )
-            ||   ( pseudoOp.Type == MacroInfo.MacroType.TEXT_PET )
-            ||   ( pseudoOp.Type == MacroInfo.MacroType.TEXT_RAW )
-            ||   ( pseudoOp.Type == MacroInfo.MacroType.TEXT_SCREEN ) )
+            if ( ( pseudoOp.Type == MacroInfo.PseudoOpType.BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.WORD )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.LOW_BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.HIGH_BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_PET )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_RAW )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_SCREEN ) )
             {
               // we only touch literal values!
               for ( int i = firstLiteralTokenIndex; i < tokens.Count; ++i )
