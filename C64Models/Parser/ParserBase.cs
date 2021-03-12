@@ -109,6 +109,7 @@ namespace C64Studio.Parser
     protected Types.CompileTargetType m_CompileTarget = Types.CompileTargetType.PRG;
 
     protected string            m_CompileTargetFile = null;
+    protected string            m_DefaultTargetExtension = ".prg";
 
     protected string            m_DocBasePath = "";
     protected string            m_Filename = "";
@@ -149,7 +150,16 @@ namespace C64Studio.Parser
 
 
 
-    public Types.CompileTargetType CompileTarget
+    public virtual string DefaultTargetExtension
+    {
+      get
+      {
+        return m_DefaultTargetExtension;
+      }
+    }
+
+
+    public virtual Types.CompileTargetType CompileTarget
     {
       get
       {

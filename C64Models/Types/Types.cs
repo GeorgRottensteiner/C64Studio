@@ -62,7 +62,7 @@ namespace C64Studio.Types
 
   public class MacroInfo
   {
-    public enum MacroType
+    public enum PseudoOpType
     {
       UNKNOWN,
       BYTE,
@@ -98,7 +98,8 @@ namespace C64Studio.Types
       HIGH_BYTE,
       LOOP_START,     // PDS: DO, DASM: REPEAT
       LOOP_END,       // PDS: LOOP, DASM: REPEND
-      SEG,
+      SEG,            // DASM: SEG
+      SEG_VIRTUAL,    // DASM: SEG.U
       TEXT_PET,
       TRACE,
       TEXT_RAW,
@@ -116,7 +117,7 @@ namespace C64Studio.Types
       CPU                   // Set the procesor type
     }
 
-    public MacroType      Type = MacroType.UNKNOWN;
+    public PseudoOpType      Type = PseudoOpType.UNKNOWN;
     public string         Keyword = "";
   };
 
@@ -254,7 +255,7 @@ namespace C64Studio.Types
     E1203_REDEFINITION_OF_CONSTANT          = 0x1203,
 
     E1300_OPCODE_AMBIGIOUS                  = 0x1300,
-    E1301_MACRO_UNKNOWN                     = 0x1301,
+    E1301_PSEUDO_OPERATION                     = 0x1301,
     E1302_MALFORMED_MACRO                   = 0x1302,
     E1303_MALFORMED_ZONE_DESCRIPTOR         = 0x1303,
     E1304_UNSUPPORTED_TARGET_TYPE           = 0x1304,
@@ -1541,7 +1542,7 @@ namespace C64Studio.Types
       LITERAL_CHAR,
       LITERAL_STRING,
       COMMENT,
-      MACRO,
+      PSEUDO_OP,
       SEPARATOR,
       LABEL_INTERNAL,
       CALL_MACRO,

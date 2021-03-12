@@ -18,12 +18,12 @@ namespace C64Studio.Parser
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
     public GR.Collections.Map<Types.TokenInfo.TokenType, string>    AllowedTokenEndChars = new GR.Collections.Map<Types.TokenInfo.TokenType, string>();
     public string                                                   AllowedSingleTokens;
-    public GR.Collections.Set<Types.MacroInfo.MacroType>            RestOfLineAsSingleToken = new GR.Collections.Set<Types.MacroInfo.MacroType>();
+    public GR.Collections.Set<Types.MacroInfo.PseudoOpType>         RestOfLineAsSingleToken = new GR.Collections.Set<Types.MacroInfo.PseudoOpType>();
     public string                                                   OpenBracketChars = "";
     public string                                                   CloseBracketChars = "";
     public string                                                   LineSeparatorChars = "";
-    public GR.Collections.Map<string, Types.MacroInfo>              Macros = new GR.Collections.Map<string, Types.MacroInfo>();
-    public string                                                   MacroPrefix = "";
+    public GR.Collections.Map<string, Types.MacroInfo>              PseudoOps = new GR.Collections.Map<string, Types.MacroInfo>();
+    public string                                                   POPrefix = "";
     public string                                                   LabelPostfix = "";
     public string                                                   MacroFunctionCallPrefix = "";                                               
     public bool                                                     GlobalLabelsAutoZone = false;
@@ -36,12 +36,18 @@ namespace C64Studio.Parser
     public GR.Collections.Set<string>                               DefineSeparatorKeywords = new GR.Collections.Set<string>();
     public bool                                                     CaseSensitive = true;
     public bool                                                     IncludeExpectsStringLiteral = true;
+    public bool                                                     LoopEndHasNoScope = false;
     public bool                                                     IncludeHasOnlyFilename = false;
     public bool                                                     IncludeSourceIsAlwaysUsingLibraryPathAndFile = false;
     public bool                                                     HasBinaryNot = true;
     public bool                                                     GreaterOrLessThanAtBeginningAffectFullExpression = false;
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
     public GR.Collections.Set<Hacks>                                EnabledHacks = new GR.Collections.Set<Hacks>();
+
+    public Types.AssemblerType                                      AssemblerType = Types.AssemblerType.AUTO;
+
+    public Types.CompileTargetType                                  DefaultTargetType = Types.CompileTargetType.PRG;
+    public string                                                   DefaultTargetExtension = ".prg";
 
 
 
@@ -53,11 +59,11 @@ namespace C64Studio.Parser
 
 
 
-    public void AddMacro( string Macro, Types.MacroInfo.MacroType Type )
+    public void AddPseudoOp( string PseudoOp, Types.MacroInfo.PseudoOpType Type )
     {
-      Macros[Macro] = new Types.MacroInfo();
-      Macros[Macro].Keyword = Macro;
-      Macros[Macro].Type = Type;
+      PseudoOps[PseudoOp] = new Types.MacroInfo();
+      PseudoOps[PseudoOp].Keyword = PseudoOp;
+      PseudoOps[PseudoOp].Type = Type;
     }
 
 
@@ -70,9 +76,9 @@ namespace C64Studio.Parser
       AllowedTokenEndChars.Clear();
       AllowedTokenStartChars.Clear();
       DefineSeparatorKeywords.Clear();
-      Macros.Clear();
+      PseudoOps.Clear();
       StatementSeparatorChars.Clear();
-      MacroPrefix = "";
+      POPrefix = "";
       LabelPostfix = "";
       MacroFunctionCallPrefix = "";
       MacroIsZone = false;
@@ -85,6 +91,10 @@ namespace C64Studio.Parser
       MacrosUseCheapLabelsAsParameters = false;
       LabelsMustBeAtStartOfLine = false;
       GreaterOrLessThanAtBeginningAffectFullExpression = false;
+      LoopEndHasNoScope = false;
+      AssemblerType = Type;
+      DefaultTargetType = Types.CompileTargetType.PRG;
+      DefaultTargetExtension = ".prg";
 
       OperatorPrecedence.Clear();
       OperatorPrecedence["-"] = 0;
@@ -145,72 +155,72 @@ namespace C64Studio.Parser
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.MACRO] = "!";
-          AllowedTokenChars[Types.TokenInfo.TokenType.MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "!";
+          AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
           AllowedSingleTokens = ",#{}*?" + OpenBracketChars + CloseBracketChars;
 
-          AddMacro( "!ADDR", Types.MacroInfo.MacroType.ADDRESS );
-          AddMacro( "!ADDRESS", Types.MacroInfo.MacroType.ADDRESS );
-          AddMacro( "!BYTE", Types.MacroInfo.MacroType.BYTE );
-          AddMacro( "!BY", Types.MacroInfo.MacroType.BYTE );
-          AddMacro( "!BASIC", Types.MacroInfo.MacroType.BASIC );
-          AddMacro( "!8", Types.MacroInfo.MacroType.BYTE );
-          AddMacro( "!08", Types.MacroInfo.MacroType.BYTE );
-          AddMacro( "!WORD", Types.MacroInfo.MacroType.WORD );
-          AddMacro( "!WO", Types.MacroInfo.MacroType.WORD );
-          AddMacro( "!16", Types.MacroInfo.MacroType.WORD );
-          AddMacro( "!TEXT", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "!TX", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "!SCR", Types.MacroInfo.MacroType.TEXT_SCREEN );
-          AddMacro( "!PET", Types.MacroInfo.MacroType.TEXT_PET );
-          AddMacro( "!RAW", Types.MacroInfo.MacroType.TEXT_RAW );
-          AddMacro( "!PSEUDOPC", Types.MacroInfo.MacroType.PSEUDO_PC );
-          AddMacro( "!REALPC", Types.MacroInfo.MacroType.REAL_PC );
-          AddMacro( "!BANK", Types.MacroInfo.MacroType.BANK );
-          AddMacro( "!CONVTAB", Types.MacroInfo.MacroType.CONVERSION_TAB );
-          AddMacro( "!CT", Types.MacroInfo.MacroType.CONVERSION_TAB );
-          AddMacro( "!BINARY", Types.MacroInfo.MacroType.INCLUDE_BINARY );
-          AddMacro( "!BIN", Types.MacroInfo.MacroType.INCLUDE_BINARY );
-          AddMacro( "!BI", Types.MacroInfo.MacroType.INCLUDE_BINARY );
-          AddMacro( "!SOURCE", Types.MacroInfo.MacroType.INCLUDE_SOURCE );
-          AddMacro( "!SRC", Types.MacroInfo.MacroType.INCLUDE_SOURCE );
-          AddMacro( "!TO", Types.MacroInfo.MacroType.COMPILE_TARGET );
-          AddMacro( "!ZONE", Types.MacroInfo.MacroType.ZONE );
-          AddMacro( "!ZN", Types.MacroInfo.MacroType.ZONE );
-          AddMacro( "!ERROR", Types.MacroInfo.MacroType.ERROR );
-          AddMacro( "!SERIOUS", Types.MacroInfo.MacroType.ERROR );
-          AddMacro( "!WARN", Types.MacroInfo.MacroType.WARN );
-          AddMacro( "!MESSAGE", Types.MacroInfo.MacroType.MESSAGE );
-          AddMacro( "!IFDEF", Types.MacroInfo.MacroType.IFDEF );
-          AddMacro( "!IFNDEF", Types.MacroInfo.MacroType.IFNDEF );
-          AddMacro( "!IF", Types.MacroInfo.MacroType.IF );
-          AddMacro( "!FILL", Types.MacroInfo.MacroType.FILL );
-          AddMacro( "!FI", Types.MacroInfo.MacroType.FILL );
-          AddMacro( "!ALIGN", Types.MacroInfo.MacroType.ALIGN );
-          AddMacro( "!REALIGN", Types.MacroInfo.MacroType.ALIGN_DASM );
-          AddMacro( "!ENDOFFILE", Types.MacroInfo.MacroType.END_OF_FILE );
-          AddMacro( "!EOF", Types.MacroInfo.MacroType.END_OF_FILE );
-          AddMacro( "!NOWARN", Types.MacroInfo.MacroType.NO_WARNING );
-          AddMacro( "!FOR", Types.MacroInfo.MacroType.FOR );
-          AddMacro( "!END", Types.MacroInfo.MacroType.END );
-          AddMacro( "!MACRO", Types.MacroInfo.MacroType.MACRO );
-          AddMacro( "!TRACE", Types.MacroInfo.MacroType.TRACE );
-          AddMacro( "!MEDIA", Types.MacroInfo.MacroType.INCLUDE_MEDIA );
-          AddMacro( "!MEDIASRC", Types.MacroInfo.MacroType.INCLUDE_MEDIA_SOURCE );
-          AddMacro( "!HEX", Types.MacroInfo.MacroType.HEX );
-          AddMacro( "!H", Types.MacroInfo.MacroType.HEX );
-          AddMacro( "!SL", Types.MacroInfo.MacroType.LABEL_FILE );
-          AddMacro( "!CPU", Types.MacroInfo.MacroType.CPU );
-          AddMacro( "!SET", Types.MacroInfo.MacroType.SET );
+          AddPseudoOp( "!ADDR", Types.MacroInfo.PseudoOpType.ADDRESS );
+          AddPseudoOp( "!ADDRESS", Types.MacroInfo.PseudoOpType.ADDRESS );
+          AddPseudoOp( "!BYTE", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( "!BY", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( "!BASIC", Types.MacroInfo.PseudoOpType.BASIC );
+          AddPseudoOp( "!8", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( "!08", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( "!WORD", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "!WO", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "!16", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "!TEXT", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "!TX", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "!SCR", Types.MacroInfo.PseudoOpType.TEXT_SCREEN );
+          AddPseudoOp( "!PET", Types.MacroInfo.PseudoOpType.TEXT_PET );
+          AddPseudoOp( "!RAW", Types.MacroInfo.PseudoOpType.TEXT_RAW );
+          AddPseudoOp( "!PSEUDOPC", Types.MacroInfo.PseudoOpType.PSEUDO_PC );
+          AddPseudoOp( "!REALPC", Types.MacroInfo.PseudoOpType.REAL_PC );
+          AddPseudoOp( "!BANK", Types.MacroInfo.PseudoOpType.BANK );
+          AddPseudoOp( "!CONVTAB", Types.MacroInfo.PseudoOpType.CONVERSION_TAB );
+          AddPseudoOp( "!CT", Types.MacroInfo.PseudoOpType.CONVERSION_TAB );
+          AddPseudoOp( "!BINARY", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+          AddPseudoOp( "!BIN", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+          AddPseudoOp( "!BI", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+          AddPseudoOp( "!SOURCE", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+          AddPseudoOp( "!SRC", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+          AddPseudoOp( "!TO", Types.MacroInfo.PseudoOpType.COMPILE_TARGET );
+          AddPseudoOp( "!ZONE", Types.MacroInfo.PseudoOpType.ZONE );
+          AddPseudoOp( "!ZN", Types.MacroInfo.PseudoOpType.ZONE );
+          AddPseudoOp( "!ERROR", Types.MacroInfo.PseudoOpType.ERROR );
+          AddPseudoOp( "!SERIOUS", Types.MacroInfo.PseudoOpType.ERROR );
+          AddPseudoOp( "!WARN", Types.MacroInfo.PseudoOpType.WARN );
+          AddPseudoOp( "!MESSAGE", Types.MacroInfo.PseudoOpType.MESSAGE );
+          AddPseudoOp( "!IFDEF", Types.MacroInfo.PseudoOpType.IFDEF );
+          AddPseudoOp( "!IFNDEF", Types.MacroInfo.PseudoOpType.IFNDEF );
+          AddPseudoOp( "!IF", Types.MacroInfo.PseudoOpType.IF );
+          AddPseudoOp( "!FILL", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "!FI", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "!ALIGN", Types.MacroInfo.PseudoOpType.ALIGN );
+          AddPseudoOp( "!REALIGN", Types.MacroInfo.PseudoOpType.ALIGN_DASM );
+          AddPseudoOp( "!ENDOFFILE", Types.MacroInfo.PseudoOpType.END_OF_FILE );
+          AddPseudoOp( "!EOF", Types.MacroInfo.PseudoOpType.END_OF_FILE );
+          AddPseudoOp( "!NOWARN", Types.MacroInfo.PseudoOpType.NO_WARNING );
+          AddPseudoOp( "!FOR", Types.MacroInfo.PseudoOpType.FOR );
+          AddPseudoOp( "!END", Types.MacroInfo.PseudoOpType.END );
+          AddPseudoOp( "!MACRO", Types.MacroInfo.PseudoOpType.MACRO );
+          AddPseudoOp( "!TRACE", Types.MacroInfo.PseudoOpType.TRACE );
+          AddPseudoOp( "!MEDIA", Types.MacroInfo.PseudoOpType.INCLUDE_MEDIA );
+          AddPseudoOp( "!MEDIASRC", Types.MacroInfo.PseudoOpType.INCLUDE_MEDIA_SOURCE );
+          AddPseudoOp( "!HEX", Types.MacroInfo.PseudoOpType.HEX );
+          AddPseudoOp( "!H", Types.MacroInfo.PseudoOpType.HEX );
+          AddPseudoOp( "!SL", Types.MacroInfo.PseudoOpType.LABEL_FILE );
+          AddPseudoOp( "!CPU", Types.MacroInfo.PseudoOpType.CPU );
+          AddPseudoOp( "!SET", Types.MacroInfo.PseudoOpType.SET );
 
           // helper pseudo ops from ACME to generate some address vs. value warnings
           //AddMacro( "!ADDR", Types.MacroInfo.MacroType.IGNORE );
           //AddMacro( "!ADDRESS", Types.MacroInfo.MacroType.IGNORE );
 
-          MacroPrefix = "!";
+          POPrefix = "!";
           MacroFunctionCallPrefix = "+";
           GlobalLabelsAutoZone = false;
           DefineSeparatorKeywords.Add( "=" );
@@ -218,7 +228,7 @@ namespace C64Studio.Parser
           StatementSeparatorChars.Add( ':' );
           break;
         case Types.AssemblerType.DASM:
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü_";
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
           AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#:";
 
@@ -239,55 +249,56 @@ namespace C64Studio.Parser
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.MACRO] = "!";
-          AllowedTokenChars[Types.TokenInfo.TokenType.MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "!";
+          AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = ":";
           AllowedTokenChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
-          AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars + "\\";
+          AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars + "\\{}";
 
-          AddMacro( "DC.B", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "DC.W", Types.MacroInfo.MacroType.WORD );
-          AddMacro( "MAC", Types.MacroInfo.MacroType.MACRO );
-          AddMacro( "MACRO", Types.MacroInfo.MacroType.MACRO );
-          AddMacro( "ENDM", Types.MacroInfo.MacroType.END );
-          AddMacro( "!TEXT", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "!TX", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "!SCR", Types.MacroInfo.MacroType.TEXT_SCREEN );
-          AddMacro( "RORG", Types.MacroInfo.MacroType.PSEUDO_PC );
-          AddMacro( "REND", Types.MacroInfo.MacroType.REAL_PC );
-          AddMacro( "!BANK", Types.MacroInfo.MacroType.BANK );
-          AddMacro( "!CONVTAB", Types.MacroInfo.MacroType.CONVERSION_TAB );
-          AddMacro( "!CT", Types.MacroInfo.MacroType.CONVERSION_TAB );
-          AddMacro( "INCBIN", Types.MacroInfo.MacroType.INCLUDE_BINARY );
-          AddMacro( "INCLUDE", Types.MacroInfo.MacroType.INCLUDE_SOURCE );
-          AddMacro( "!TO", Types.MacroInfo.MacroType.COMPILE_TARGET );
-          AddMacro( "SUBROUTINE", Types.MacroInfo.MacroType.ZONE );
-          AddMacro( "!ERROR", Types.MacroInfo.MacroType.ERROR );
-          AddMacro( "!IFDEF", Types.MacroInfo.MacroType.IFDEF );
-          AddMacro( "!IFNDEF", Types.MacroInfo.MacroType.IFNDEF );
-          AddMacro( "IF", Types.MacroInfo.MacroType.IF );
-          AddMacro( "ELSE", Types.MacroInfo.MacroType.ELSE );
-          AddMacro( "ENDIF", Types.MacroInfo.MacroType.END_IF );
-          AddMacro( "DS.Z", Types.MacroInfo.MacroType.FILL );
-          AddMacro( "DS", Types.MacroInfo.MacroType.FILL );
-          AddMacro( "DS.B", Types.MacroInfo.MacroType.FILL );
-          AddMacro( "ALIGN", Types.MacroInfo.MacroType.ALIGN_DASM );
-          AddMacro( "!ENDOFFILE", Types.MacroInfo.MacroType.END_OF_FILE );
+          AddPseudoOp( "DC.B", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DC.W", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( ".WORD", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "MAC", Types.MacroInfo.PseudoOpType.MACRO );
+          AddPseudoOp( "MACRO", Types.MacroInfo.PseudoOpType.MACRO );
+          AddPseudoOp( "ENDM", Types.MacroInfo.PseudoOpType.END );
+          AddPseudoOp( "!TEXT", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "!TX", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "!SCR", Types.MacroInfo.PseudoOpType.TEXT_SCREEN );
+          AddPseudoOp( "RORG", Types.MacroInfo.PseudoOpType.PSEUDO_PC );
+          AddPseudoOp( "REND", Types.MacroInfo.PseudoOpType.REAL_PC );
+          AddPseudoOp( "!BANK", Types.MacroInfo.PseudoOpType.BANK );
+          AddPseudoOp( "!CONVTAB", Types.MacroInfo.PseudoOpType.CONVERSION_TAB );
+          AddPseudoOp( "!CT", Types.MacroInfo.PseudoOpType.CONVERSION_TAB );
+          AddPseudoOp( "INCBIN", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+          AddPseudoOp( "INCLUDE", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+          AddPseudoOp( "!TO", Types.MacroInfo.PseudoOpType.COMPILE_TARGET );
+          AddPseudoOp( "SUBROUTINE", Types.MacroInfo.PseudoOpType.ZONE );
+          AddPseudoOp( "!ERROR", Types.MacroInfo.PseudoOpType.ERROR );
+          AddPseudoOp( "IFCONST", Types.MacroInfo.PseudoOpType.IFDEF );
+          AddPseudoOp( "IFNCONST", Types.MacroInfo.PseudoOpType.IFNDEF );
+          AddPseudoOp( "IF", Types.MacroInfo.PseudoOpType.IF );
+          AddPseudoOp( "ELSE", Types.MacroInfo.PseudoOpType.ELSE );
+          AddPseudoOp( "ENDIF", Types.MacroInfo.PseudoOpType.END_IF );
+          AddPseudoOp( "DS.Z", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "DS", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "DS.B", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "ALIGN", Types.MacroInfo.PseudoOpType.ALIGN_DASM );
+          AddPseudoOp( "!ENDOFFILE", Types.MacroInfo.PseudoOpType.END_OF_FILE );
 
-          AddMacro( "REPEAT", Types.MacroInfo.MacroType.LOOP_START );
-          AddMacro( "REPEND", Types.MacroInfo.MacroType.LOOP_END );
+          AddPseudoOp( "REPEAT", Types.MacroInfo.PseudoOpType.LOOP_START );
+          AddPseudoOp( "REPEND", Types.MacroInfo.PseudoOpType.LOOP_END );
 
-          AddMacro( "PROCESSOR", Types.MacroInfo.MacroType.IGNORE );
-          AddMacro( "ORG", Types.MacroInfo.MacroType.ORG );
-          AddMacro( "SEG", Types.MacroInfo.MacroType.SEG );
-          AddMacro( "SEG.U", Types.MacroInfo.MacroType.SEG );
-          AddMacro( "INCDIR", Types.MacroInfo.MacroType.ADD_INCLUDE_SOURCE );
+          AddPseudoOp( "PROCESSOR", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( "ORG", Types.MacroInfo.PseudoOpType.ORG );
+          AddPseudoOp( "SEG", Types.MacroInfo.PseudoOpType.SEG );
+          AddPseudoOp( "SEG.U", Types.MacroInfo.PseudoOpType.SEG_VIRTUAL );
+          AddPseudoOp( "INCDIR", Types.MacroInfo.PseudoOpType.ADD_INCLUDE_SOURCE );
 
-          RestOfLineAsSingleToken.Add( Types.MacroInfo.MacroType.ADD_INCLUDE_SOURCE );
+          RestOfLineAsSingleToken.Add( Types.MacroInfo.PseudoOpType.ADD_INCLUDE_SOURCE );
 
           LabelPostfix = ":";
           MacroFunctionCallPrefix = ":";
@@ -301,6 +312,9 @@ namespace C64Studio.Parser
           IncludeHasOnlyFilename = true;
           IncludeSourceIsAlwaysUsingLibraryPathAndFile = true;
           CaseSensitive = false;
+          LoopEndHasNoScope = true;
+          DefaultTargetType       = Types.CompileTargetType.PLAIN;
+          DefaultTargetExtension  = ".bin";
           break;
         case Types.AssemblerType.PDS:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
@@ -341,48 +355,48 @@ namespace C64Studio.Parser
 
           AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars;
 
-          AddMacro( "DC.B", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "DC.V", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "DB", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "DEFM", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "DM", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "DFM", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "DH", Types.MacroInfo.MacroType.HIGH_BYTE );
-          AddMacro( "DL", Types.MacroInfo.MacroType.LOW_BYTE );
-          AddMacro( "DW", Types.MacroInfo.MacroType.WORD );
-          AddMacro( "HEX", Types.MacroInfo.MacroType.HEX );
-          AddMacro( "CBM", Types.MacroInfo.MacroType.TEXT_SCREEN );
-          AddMacro( "INCBIN", Types.MacroInfo.MacroType.INCLUDE_BINARY );
-          AddMacro( "INCLUDE", Types.MacroInfo.MacroType.INCLUDE_SOURCE );
-          AddMacro( "ERROR", Types.MacroInfo.MacroType.ERROR );
-          AddMacro( "IF", Types.MacroInfo.MacroType.IF );
-          AddMacro( "ENDIF", Types.MacroInfo.MacroType.END_IF );
-          AddMacro( "ELSE", Types.MacroInfo.MacroType.ELSE );
-          AddMacro( "DS", Types.MacroInfo.MacroType.FILL );
-          AddMacro( "DO", Types.MacroInfo.MacroType.LOOP_START );
-          AddMacro( "LOOP", Types.MacroInfo.MacroType.LOOP_END );
-          AddMacro( "UNTIL", Types.MacroInfo.MacroType.LOOP_END );
-          AddMacro( "MACRO", Types.MacroInfo.MacroType.MACRO );
-          AddMacro( "ENDM", Types.MacroInfo.MacroType.END );
+          AddPseudoOp( "DC.B", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DC.V", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DB", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DEFM", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DM", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DFM", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DH", Types.MacroInfo.PseudoOpType.HIGH_BYTE );
+          AddPseudoOp( "DL", Types.MacroInfo.PseudoOpType.LOW_BYTE );
+          AddPseudoOp( "DW", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "HEX", Types.MacroInfo.PseudoOpType.HEX );
+          AddPseudoOp( "CBM", Types.MacroInfo.PseudoOpType.TEXT_SCREEN );
+          AddPseudoOp( "INCBIN", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+          AddPseudoOp( "INCLUDE", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+          AddPseudoOp( "ERROR", Types.MacroInfo.PseudoOpType.ERROR );
+          AddPseudoOp( "IF", Types.MacroInfo.PseudoOpType.IF );
+          AddPseudoOp( "ENDIF", Types.MacroInfo.PseudoOpType.END_IF );
+          AddPseudoOp( "ELSE", Types.MacroInfo.PseudoOpType.ELSE );
+          AddPseudoOp( "DS", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "DO", Types.MacroInfo.PseudoOpType.LOOP_START );
+          AddPseudoOp( "LOOP", Types.MacroInfo.PseudoOpType.LOOP_END );
+          AddPseudoOp( "UNTIL", Types.MacroInfo.PseudoOpType.LOOP_END );
+          AddPseudoOp( "MACRO", Types.MacroInfo.PseudoOpType.MACRO );
+          AddPseudoOp( "ENDM", Types.MacroInfo.PseudoOpType.END );
 
-          AddMacro( "PROCESSOR", Types.MacroInfo.MacroType.IGNORE );
-          AddMacro( "ORG", Types.MacroInfo.MacroType.ORG );
-          AddMacro( "FREE", Types.MacroInfo.MacroType.IGNORE );
-          AddMacro( "SEND", Types.MacroInfo.MacroType.IGNORE );
-          AddMacro( "SKIP", Types.MacroInfo.MacroType.IGNORE );
-          AddMacro( "INFO", Types.MacroInfo.MacroType.IGNORE );
-          AddMacro( "RUN", Types.MacroInfo.MacroType.IGNORE );
+          AddPseudoOp( "PROCESSOR", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( "ORG", Types.MacroInfo.PseudoOpType.ORG );
+          AddPseudoOp( "FREE", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( "SEND", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( "SKIP", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( "INFO", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( "RUN", Types.MacroInfo.PseudoOpType.IGNORE );
 
-          AddMacro( "EXEC", Types.MacroInfo.MacroType.IGNORE );
-          AddMacro( "START", Types.MacroInfo.MacroType.IGNORE );
+          AddPseudoOp( "EXEC", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( "START", Types.MacroInfo.PseudoOpType.IGNORE );
 
-          AddMacro( "DSECT", Types.MacroInfo.MacroType.IGNORE );
-          AddMacro( "DEND", Types.MacroInfo.MacroType.IGNORE );
+          AddPseudoOp( "DSECT", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( "DEND", Types.MacroInfo.PseudoOpType.IGNORE );
 
-          AddMacro( "MSW", Types.MacroInfo.MacroType.IGNORE );
+          AddPseudoOp( "MSW", Types.MacroInfo.PseudoOpType.IGNORE );
 
-          AddMacro( "END", Types.MacroInfo.MacroType.END_OF_FILE );
-          AddMacro( "REPEAT", Types.MacroInfo.MacroType.REPEAT );
+          AddPseudoOp( "END", Types.MacroInfo.PseudoOpType.END_OF_FILE );
+          AddPseudoOp( "REPEAT", Types.MacroInfo.PseudoOpType.REPEAT );
 
           OperatorPrecedence["!"] = 4;
 
@@ -425,17 +439,17 @@ namespace C64Studio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
           //AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR] = "*";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.MACRO] = ".";
-          AllowedTokenChars[Types.TokenInfo.TokenType.MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = ".";
+          AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
           AllowedSingleTokens = ",#{}*" + OpenBracketChars + CloseBracketChars;
 
-          MacroPrefix = ".";
+          POPrefix = ".";
 
-          AddMacro( ".BYTE", Types.MacroInfo.MacroType.BYTE );
-          AddMacro( ".WORD", Types.MacroInfo.MacroType.WORD );
+          AddPseudoOp( ".BYTE", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( ".WORD", Types.MacroInfo.PseudoOpType.WORD );
 
           GlobalLabelsAutoZone = true;
           DefineSeparatorKeywords.Add( "=" );
@@ -464,8 +478,8 @@ namespace C64Studio.Parser
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.MACRO] = "!";
-          AllowedTokenChars[Types.TokenInfo.TokenType.MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "!";
+          AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
           AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = ":";
           AllowedTokenChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
@@ -474,42 +488,42 @@ namespace C64Studio.Parser
 
           AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars;
 
-          AddMacro( "DC.B", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "DC.W", Types.MacroInfo.MacroType.WORD );
-          AddMacro( "MAC", Types.MacroInfo.MacroType.MACRO );
-          AddMacro( "ENDM", Types.MacroInfo.MacroType.END );
-          AddMacro( "!TEXT", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "!TX", Types.MacroInfo.MacroType.TEXT );
-          AddMacro( "!SCR", Types.MacroInfo.MacroType.TEXT_SCREEN );
-          AddMacro( "RORG", Types.MacroInfo.MacroType.PSEUDO_PC );
-          AddMacro( "REND", Types.MacroInfo.MacroType.REAL_PC );
-          AddMacro( "!BANK", Types.MacroInfo.MacroType.BANK );
-          AddMacro( "!CONVTAB", Types.MacroInfo.MacroType.CONVERSION_TAB );
-          AddMacro( "!CT", Types.MacroInfo.MacroType.CONVERSION_TAB );
-          AddMacro( "INCBIN", Types.MacroInfo.MacroType.INCLUDE_BINARY );
-          AddMacro( "INCLUDE", Types.MacroInfo.MacroType.INCLUDE_SOURCE );
-          AddMacro( "!TO", Types.MacroInfo.MacroType.COMPILE_TARGET );
-          AddMacro( "SUBROUTINE", Types.MacroInfo.MacroType.ZONE );
-          AddMacro( "!ERROR", Types.MacroInfo.MacroType.ERROR );
-          AddMacro( "!IFDEF", Types.MacroInfo.MacroType.IFDEF );
-          AddMacro( "!IFNDEF", Types.MacroInfo.MacroType.IFNDEF );
-          AddMacro( "IF", Types.MacroInfo.MacroType.IF );
-          AddMacro( "ELSE", Types.MacroInfo.MacroType.ELSE );
-          AddMacro( "ENDIF", Types.MacroInfo.MacroType.END_IF );
-          AddMacro( "DS.Z", Types.MacroInfo.MacroType.FILL );
-          AddMacro( "DS", Types.MacroInfo.MacroType.FILL );
-          AddMacro( "DS.B", Types.MacroInfo.MacroType.FILL );
-          AddMacro( "ALIGN", Types.MacroInfo.MacroType.ALIGN_DASM );
-          AddMacro( "!ENDOFFILE", Types.MacroInfo.MacroType.END_OF_FILE );
+          AddPseudoOp( "DC.B", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "DC.W", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "MAC", Types.MacroInfo.PseudoOpType.MACRO );
+          AddPseudoOp( "ENDM", Types.MacroInfo.PseudoOpType.END );
+          AddPseudoOp( "!TEXT", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "!TX", Types.MacroInfo.PseudoOpType.TEXT );
+          AddPseudoOp( "!SCR", Types.MacroInfo.PseudoOpType.TEXT_SCREEN );
+          AddPseudoOp( "RORG", Types.MacroInfo.PseudoOpType.PSEUDO_PC );
+          AddPseudoOp( "REND", Types.MacroInfo.PseudoOpType.REAL_PC );
+          AddPseudoOp( "!BANK", Types.MacroInfo.PseudoOpType.BANK );
+          AddPseudoOp( "!CONVTAB", Types.MacroInfo.PseudoOpType.CONVERSION_TAB );
+          AddPseudoOp( "!CT", Types.MacroInfo.PseudoOpType.CONVERSION_TAB );
+          AddPseudoOp( "INCBIN", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
+          AddPseudoOp( "INCLUDE", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
+          AddPseudoOp( "!TO", Types.MacroInfo.PseudoOpType.COMPILE_TARGET );
+          AddPseudoOp( "SUBROUTINE", Types.MacroInfo.PseudoOpType.ZONE );
+          AddPseudoOp( "!ERROR", Types.MacroInfo.PseudoOpType.ERROR );
+          AddPseudoOp( "!IFDEF", Types.MacroInfo.PseudoOpType.IFDEF );
+          AddPseudoOp( "!IFNDEF", Types.MacroInfo.PseudoOpType.IFNDEF );
+          AddPseudoOp( "IF", Types.MacroInfo.PseudoOpType.IF );
+          AddPseudoOp( "ELSE", Types.MacroInfo.PseudoOpType.ELSE );
+          AddPseudoOp( "ENDIF", Types.MacroInfo.PseudoOpType.END_IF );
+          AddPseudoOp( "DS.Z", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "DS", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "DS.B", Types.MacroInfo.PseudoOpType.FILL );
+          AddPseudoOp( "ALIGN", Types.MacroInfo.PseudoOpType.ALIGN_DASM );
+          AddPseudoOp( "!ENDOFFILE", Types.MacroInfo.PseudoOpType.END_OF_FILE );
 
-          AddMacro( "REPEAT", Types.MacroInfo.MacroType.LOOP_START );
-          AddMacro( "REPEND", Types.MacroInfo.MacroType.LOOP_END );
+          AddPseudoOp( "REPEAT", Types.MacroInfo.PseudoOpType.LOOP_START );
+          AddPseudoOp( "REPEND", Types.MacroInfo.PseudoOpType.LOOP_END );
 
-          AddMacro( "PROCESSOR", Types.MacroInfo.MacroType.IGNORE );
-          AddMacro( "ORG", Types.MacroInfo.MacroType.ORG );
-          AddMacro( "SEG", Types.MacroInfo.MacroType.SEG );
-          AddMacro( "SEG.U", Types.MacroInfo.MacroType.SEG );
-          AddMacro( "BYTE", Types.MacroInfo.MacroType.BYTE );
+          AddPseudoOp( "PROCESSOR", Types.MacroInfo.PseudoOpType.IGNORE );
+          AddPseudoOp( "ORG", Types.MacroInfo.PseudoOpType.ORG );
+          AddPseudoOp( "SEG", Types.MacroInfo.PseudoOpType.SEG );
+          AddPseudoOp( "SEG.U", Types.MacroInfo.PseudoOpType.SEG );
+          AddPseudoOp( "BYTE", Types.MacroInfo.PseudoOpType.BYTE );
 
           LabelPostfix = ":";
           MacroFunctionCallPrefix = ":";
