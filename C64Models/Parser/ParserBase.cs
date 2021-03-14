@@ -248,6 +248,7 @@ namespace C64Studio.Parser
     static public Types.AssemblerType DetectAssemblerType( string Text )
     {
       bool hasORG = ( Text.IndexOf( "ORG " ) != -1 ) || ( Text.IndexOf( "org " ) != -1 );
+      bool hasMAC = ( Text.IndexOf( "MAC " ) != -1 );
       bool hasInclude = ( Text.IndexOf( "INCLUDE " ) != -1 ) || ( Text.IndexOf( "INCLUDE " ) != -1 );
       bool hasTo = ( Text.IndexOf( "!to " ) != -1 ) || ( Text.IndexOf( "!TO " ) != -1 );
       bool hasEQU = ( Text.IndexOf( "EQU " ) != -1 );
@@ -261,6 +262,14 @@ namespace C64Studio.Parser
       {
         return C64Studio.Types.AssemblerType.C64_STUDIO;
       }
+
+      if ( ( ( hasORG )
+      &&     ( hasTo ) )
+      ||   ( hasProcessor )
+      ||   ( hasMAC ) )
+      {
+        return C64Studio.Types.AssemblerType.DASM;
+      }
       if ( ( ( hasORG )
       ||     ( hasEQU )
       ||     ( hasInclude ) )
@@ -268,12 +277,7 @@ namespace C64Studio.Parser
       {
         return C64Studio.Types.AssemblerType.PDS;
       }
-      if ( ( ( hasORG )
-      && ( hasTo ) )
-      || ( hasProcessor ) )
-      {
-        return C64Studio.Types.AssemblerType.DASM;
-      }
+      
       if ( hasByte )
       {
         return C64Studio.Types.AssemblerType.C64_STUDIO;

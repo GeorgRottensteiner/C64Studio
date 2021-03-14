@@ -41,6 +41,7 @@ namespace C64Studio.Parser
     public bool                                                     IncludeSourceIsAlwaysUsingLibraryPathAndFile = false;
     public bool                                                     HasBinaryNot = true;
     public bool                                                     GreaterOrLessThanAtBeginningAffectFullExpression = false;
+    public bool                                                     MessageAutoIncludesBlanksBetweenParameters = false;
     public GR.Collections.Set<char>                                 StatementSeparatorChars = new GR.Collections.Set<char>();
     public GR.Collections.Set<Hacks>                                EnabledHacks = new GR.Collections.Set<Hacks>();
 
@@ -48,6 +49,10 @@ namespace C64Studio.Parser
 
     public Types.CompileTargetType                                  DefaultTargetType = Types.CompileTargetType.PRG;
     public string                                                   DefaultTargetExtension = ".prg";
+
+    public string                                                   OpcodeSizeIdentifierSeparator = ".";
+    public List<string>                                             OpcodeSizeIdentifierOneByteOperands = new List<string>();
+    public List<string>                                             OpcodeSizeIdentifierTwoByteOperands = new List<string>();
 
 
 
@@ -92,7 +97,12 @@ namespace C64Studio.Parser
       LabelsMustBeAtStartOfLine = false;
       GreaterOrLessThanAtBeginningAffectFullExpression = false;
       LoopEndHasNoScope = false;
+      MessageAutoIncludesBlanksBetweenParameters = false;
       AssemblerType = Type;
+      OpcodeSizeIdentifierSeparator = "+";
+      OpcodeSizeIdentifierOneByteOperands = new List<string>() { "1" };
+      OpcodeSizeIdentifierTwoByteOperands = new List<string>() { "2" };
+
       DefaultTargetType = Types.CompileTargetType.PRG;
       DefaultTargetExtension = ".prg";
 
@@ -252,32 +262,26 @@ namespace C64Studio.Parser
           AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "!";
           AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = ":";
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
           AllowedTokenChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
 
           AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
 
-          AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars + "\\{}";
+          AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars + "\\{}[]";
 
           AddPseudoOp( "DC.B", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "DC.W", Types.MacroInfo.PseudoOpType.WORD );
           AddPseudoOp( ".WORD", Types.MacroInfo.PseudoOpType.WORD );
-          AddPseudoOp( "MAC", Types.MacroInfo.PseudoOpType.MACRO );
+          AddPseudoOp( ".BYTE", Types.MacroInfo.PseudoOpType.BYTE );
           AddPseudoOp( "MACRO", Types.MacroInfo.PseudoOpType.MACRO );
+          AddPseudoOp( "MAC", Types.MacroInfo.PseudoOpType.MACRO );
           AddPseudoOp( "ENDM", Types.MacroInfo.PseudoOpType.END );
-          AddPseudoOp( "!TEXT", Types.MacroInfo.PseudoOpType.TEXT );
-          AddPseudoOp( "!TX", Types.MacroInfo.PseudoOpType.TEXT );
-          AddPseudoOp( "!SCR", Types.MacroInfo.PseudoOpType.TEXT_SCREEN );
           AddPseudoOp( "RORG", Types.MacroInfo.PseudoOpType.PSEUDO_PC );
           AddPseudoOp( "REND", Types.MacroInfo.PseudoOpType.REAL_PC );
-          AddPseudoOp( "!BANK", Types.MacroInfo.PseudoOpType.BANK );
-          AddPseudoOp( "!CONVTAB", Types.MacroInfo.PseudoOpType.CONVERSION_TAB );
-          AddPseudoOp( "!CT", Types.MacroInfo.PseudoOpType.CONVERSION_TAB );
           AddPseudoOp( "INCBIN", Types.MacroInfo.PseudoOpType.INCLUDE_BINARY );
           AddPseudoOp( "INCLUDE", Types.MacroInfo.PseudoOpType.INCLUDE_SOURCE );
-          AddPseudoOp( "!TO", Types.MacroInfo.PseudoOpType.COMPILE_TARGET );
           AddPseudoOp( "SUBROUTINE", Types.MacroInfo.PseudoOpType.ZONE );
-          AddPseudoOp( "!ERROR", Types.MacroInfo.PseudoOpType.ERROR );
+          AddPseudoOp( "ERR", Types.MacroInfo.PseudoOpType.ERROR );
           AddPseudoOp( "IFCONST", Types.MacroInfo.PseudoOpType.IFDEF );
           AddPseudoOp( "IFNCONST", Types.MacroInfo.PseudoOpType.IFNDEF );
           AddPseudoOp( "IF", Types.MacroInfo.PseudoOpType.IF );
@@ -287,7 +291,7 @@ namespace C64Studio.Parser
           AddPseudoOp( "DS", Types.MacroInfo.PseudoOpType.FILL );
           AddPseudoOp( "DS.B", Types.MacroInfo.PseudoOpType.FILL );
           AddPseudoOp( "ALIGN", Types.MacroInfo.PseudoOpType.ALIGN_DASM );
-          AddPseudoOp( "!ENDOFFILE", Types.MacroInfo.PseudoOpType.END_OF_FILE );
+          AddPseudoOp( "ECHO", Types.MacroInfo.PseudoOpType.MESSAGE );
 
           AddPseudoOp( "REPEAT", Types.MacroInfo.PseudoOpType.LOOP_START );
           AddPseudoOp( "REPEND", Types.MacroInfo.PseudoOpType.LOOP_END );
@@ -313,8 +317,14 @@ namespace C64Studio.Parser
           IncludeSourceIsAlwaysUsingLibraryPathAndFile = true;
           CaseSensitive = false;
           LoopEndHasNoScope = true;
+          MessageAutoIncludesBlanksBetweenParameters = true;
           DefaultTargetType       = Types.CompileTargetType.PLAIN;
           DefaultTargetExtension  = ".bin";
+          LabelsMustBeAtStartOfLine = true;
+
+          OpcodeSizeIdentifierSeparator = ".";
+          OpcodeSizeIdentifierOneByteOperands = new List<string> () { "b", "d", "z" };
+          OpcodeSizeIdentifierTwoByteOperands = new List<string>() { "w", "wx", "wy" };
           break;
         case Types.AssemblerType.PDS:
           AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü";
