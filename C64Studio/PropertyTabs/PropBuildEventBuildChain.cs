@@ -29,9 +29,9 @@ namespace C64Studio
       InitializeComponent();
 
       // Build Chains
-      if ( Core.MainForm.m_Solution != null )
+      if ( Core.Navigating.Solution != null )
       {
-        foreach ( var project in Core.MainForm.m_Solution.Projects )
+        foreach ( var project in Core.Navigating.Solution.Projects )
         {
           comboBuildChainProject.Items.Add( project.Settings.Name );
         }
@@ -183,7 +183,7 @@ namespace C64Studio
       }
 
       var  projectName = (string)comboBuildChainProject.SelectedItem;
-      var project = Core.MainForm.m_Solution.GetProjectByName( projectName );
+      var project = Core.Navigating.Solution.GetProjectByName( projectName );
 
       if ( project != null )
       {
@@ -251,7 +251,7 @@ namespace C64Studio
       {
         // do not allow to add current build config
         var projectName = (string)comboBuildChainProject.SelectedItem;
-        var project     = Core.MainForm.m_Solution.GetProjectByName( projectName );
+        var project     = Core.Navigating.Solution.GetProjectByName( projectName );
         string config   = (string)comboBuildChainConfig.SelectedItem;
         string file     = (string)comboBuildChainFile.SelectedItem;
 

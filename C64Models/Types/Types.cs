@@ -540,6 +540,7 @@ namespace C64Studio.Types
     public const System.UInt16    SOLUTION              = 0x0400;
     public const System.UInt16    SOLUTION_INFO         = 0x0401;
     public const System.UInt16    SOLUTION_PROJECT      = 0x0402;
+    public const System.UInt16    SOLUTION_NODES        = 0x0403;
 
     public const System.UInt16    PROJECT               = 0x1000;
     public const System.UInt16    PROJECT_ELEMENT       = 0x1001;

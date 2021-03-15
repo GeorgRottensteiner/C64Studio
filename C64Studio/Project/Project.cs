@@ -126,7 +126,12 @@ namespace C64Studio
 
         chunkElement.Append( chunkElementPerConfigSetting.ToBuffer() );
       }
-      chunkElement.AppendI32( Element.IsShown ? 1 : 0 );
+      uint   flags = 0;
+      if ( Element.IsShown )
+      {
+        flags |= 1;
+      }
+      chunkElement.AppendU32( flags );
       chunkElement.AppendU32( (uint)Element.AssemblerType );
 
       chunkElement.AppendI32( Element.ProjectHierarchy.Count );
@@ -222,6 +227,8 @@ namespace C64Studio
       {
         chunkProject.AppendString( "" );
       }
+      uint  flags = 0;
+      chunkProject.AppendU32( flags );
 
       bufferProject.Append( chunkProject.ToBuffer() );
 
@@ -328,6 +335,7 @@ namespace C64Studio
 
       Node = new System.Windows.Forms.TreeNode();
       Node.Tag = this;
+      Node.Collapse();
 
       GR.IO.MemoryReader memIn = new GR.IO.MemoryReader( ProjectData );
 
@@ -353,6 +361,7 @@ namespace C64Studio
             Settings.MainDocument = memChunk.ReadString();
             currentConfig         = memChunk.ReadString();
             activeElement         = memChunk.ReadString();
+            memChunk.ReadUInt32();    // flags (all free)
 
             if ( projectVersion == 1 )
             {
@@ -385,6 +394,14 @@ namespace C64Studio
               else
               {
                 element.Node.Text = System.IO.Path.GetFileName( element.Filename );
+              }
+              if ( Core.Navigating.Solution.IsNodeExpanded( element ) )
+              {
+                element.Node.Expand();
+              }
+              else
+              {
+                element.Node.Collapse();
               }
 
               GR.IO.FileChunk           subChunk = new GR.IO.FileChunk();
@@ -473,7 +490,8 @@ namespace C64Studio
                 }
               }
 
-              element.IsShown = ( memChunk.ReadInt32() != 0 );
+              uint  flags = memChunk.ReadUInt32();
+              element.IsShown     = ( ( flags & 1 ) != 0 );
               element.AssemblerType = (C64Studio.Types.AssemblerType)memChunk.ReadUInt32();
 
               int hierarchyPartCount = memChunk.ReadInt32();

@@ -24,8 +24,6 @@ namespace C64Studio
   {
     private Project               m_CurrentProject = null;
 
-    public Solution               m_Solution = null;
-
     public OutputDisplay          m_Output = new OutputDisplay();
 
     public SolutionExplorer       m_SolutionExplorer = null;
@@ -1055,9 +1053,9 @@ namespace C64Studio
       {
         List<DocumentInfo> list = new List<DocumentInfo>();
 
-        if ( m_Solution != null )
+        if ( StudioCore.Navigating.Solution != null )
         {
-          foreach ( var project in m_Solution.Projects )
+          foreach ( var project in StudioCore.Navigating.Solution.Projects )
           {
             foreach ( var element in project.Elements )
             {
@@ -1512,12 +1510,12 @@ namespace C64Studio
 
     bool CloseAllProjects()
     {
-      if ( m_Solution == null )
+      if ( StudioCore.Navigating.Solution == null )
       {
         return true;
       }
       SaveSolution();
-      foreach ( Project project in m_Solution.Projects )
+      foreach ( Project project in StudioCore.Navigating.Solution.Projects )
       {
         if ( !SaveProject( project ) )
         {
@@ -1526,9 +1524,9 @@ namespace C64Studio
       }
       if ( !s_SystemShutdown )
       {
-        while ( m_Solution.Projects.Count > 0 )
+        while ( StudioCore.Navigating.Solution.Projects.Count > 0 )
         {
-          if ( !CloseProject( m_Solution.Projects[0] ) )
+          if ( !CloseProject( StudioCore.Navigating.Solution.Projects[0] ) )
           {
             return false;
           }
@@ -2028,7 +2026,7 @@ namespace C64Studio
 
       AppState = Types.StudioState.BUILD;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocInfo, null, null, m_Solution, false ) )
+      if ( !StartCompile( DocInfo, null, null, StudioCore.Navigating.Solution, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -2060,7 +2058,7 @@ namespace C64Studio
         AppState = Types.StudioState.BUILD;
       }
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( Document, null, null, m_Solution, CreatePreProcessedFile ) )
+      if ( !StartCompile( Document, null, null, StudioCore.Navigating.Solution, CreatePreProcessedFile ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -2076,7 +2074,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.COMPILE;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( Document, null, null, m_Solution, false ) )
+      if ( !StartCompile( Document, null, null, StudioCore.Navigating.Solution, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -2607,14 +2605,15 @@ namespace C64Studio
       Text += " - " + newProject.Settings.Name;
 
       // TODO - adjust GUI to changed project
-      if ( m_Solution == null )
+      if ( StudioCore.Navigating.Solution == null )
       {
-        m_Solution = new Solution( this );
+        StudioCore.Navigating.Solution = new Solution( this );
       }
-      m_Solution.Projects.Add( newProject );
+      StudioCore.Navigating.Solution.Projects.Add( newProject );
 
       // TODO - should be different
       m_SolutionExplorer.treeProject.Nodes.Add( newProject.Node );
+      newProject.Node.Expand();
 
       RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
 
@@ -2761,7 +2760,7 @@ namespace C64Studio
       }
 
       // TODO - adjust GUI to changed project
-      m_Solution.RemoveProject( ProjectToClose );
+      StudioCore.Navigating.Solution.RemoveProject( ProjectToClose );
       if ( m_CurrentProject == ProjectToClose )
       {
         mainToolConfig.Items.Clear();
@@ -2869,9 +2868,9 @@ namespace C64Studio
 
     public Project OpenProject( string Filename )
     {
-      if ( m_Solution != null )
+      if ( StudioCore.Navigating.Solution != null )
       {
-        foreach ( Project project in m_Solution.Projects )
+        foreach ( Project project in StudioCore.Navigating.Solution.Projects )
         {
           if ( GR.Path.IsPathEqual( Filename, project.Settings.Filename ) )
           {
@@ -2882,11 +2881,11 @@ namespace C64Studio
       }
 
       bool createdNewSolution = false;
-      if ( m_Solution == null )
+      if ( StudioCore.Navigating.Solution == null )
       {
         createdNewSolution = true;
-        m_Solution = new Solution( this );
-
+        StudioCore.Navigating.Solution = new Solution( this );
+        StudioCore.Navigating.Solution.DuringLoad = true;
         SaveSolution();
       }
 
@@ -2896,8 +2895,11 @@ namespace C64Studio
       if ( newProject.Load( Filename ) )
       {
         m_LoadingProject = false;
-        m_Solution.Projects.Add( newProject );
+        StudioCore.Navigating.Solution.Projects.Add( newProject );
         m_SolutionExplorer.treeProject.Nodes.Add( newProject.Node );
+
+        StudioCore.Navigating.Solution.DuringLoad = true;
+
         projectToolStripMenuItem.Visible = true;
 
         if ( createdNewSolution )
@@ -3068,7 +3070,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.BUILD_AND_RUN;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocumentToBuild, null, DocumentToRun, m_Solution, false ) )
+      if ( !StartCompile( DocumentToBuild, null, DocumentToRun, StudioCore.Navigating.Solution, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -3479,7 +3481,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.BUILD_AND_DEBUG;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, m_Solution, false ) )
+      if ( !StartCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, StudioCore.Navigating.Solution, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -3544,7 +3546,7 @@ namespace C64Studio
       {
         AppState = Types.StudioState.BUILD_AND_DEBUG;
         StudioCore.Debugging.OverrideDebugStart = DebugAddress;
-        if ( !StartCompile( DocumentToRun, DocumentToDebug, DocumentToRun, m_Solution, false ) )
+        if ( !StartCompile( DocumentToRun, DocumentToDebug, DocumentToRun, StudioCore.Navigating.Solution, false ) )
         {
           AppState = Types.StudioState.NORMAL;
         }
@@ -4463,13 +4465,13 @@ namespace C64Studio
           return true;
         case C64Studio.Types.Function.SAVE_ALL:
           SaveSolution();
-          if ( m_Solution != null )
+          if ( StudioCore.Navigating.Solution != null )
           {
-            foreach ( Project project in m_Solution.Projects )
+            foreach ( Project project in StudioCore.Navigating.Solution.Projects )
             {
               SaveProject( project );
             }
-            foreach ( Project project in m_Solution.Projects )
+            foreach ( Project project in StudioCore.Navigating.Solution.Projects )
             {
               foreach ( ProjectElement element in project.Elements )
               {
@@ -4480,7 +4482,7 @@ namespace C64Studio
               }
             }
             // elements saving could have changed project settings, so save again
-            foreach ( Project project in m_Solution.Projects )
+            foreach ( Project project in StudioCore.Navigating.Solution.Projects )
             {
               SaveProject( project );
             }
@@ -5137,12 +5139,12 @@ namespace C64Studio
       }
 
       // check ALL projects
-      if ( m_Solution != null )
+      if ( StudioCore.Navigating.Solution != null )
       {
-        foreach ( Project project in m_Solution.Projects )
+        foreach ( Project project in StudioCore.Navigating.Solution.Projects )
         {
           if ( ( project != null )
-          && ( project.Modified ) )
+          &&   ( project.Modified ) )
           {
             DialogResult result = System.Windows.Forms.MessageBox.Show( "The project " + project.Settings.Name + " has unsaved changes, save now?", "Save Project?", MessageBoxButtons.YesNoCancel );
             if ( result == DialogResult.Cancel )
@@ -5272,11 +5274,11 @@ namespace C64Studio
 
     public void CloseSolution()
     {
-      if ( m_Solution != null )
+      if ( StudioCore.Navigating.Solution != null )
       {
         CloseAllProjects();
-        m_Solution.Projects.Clear();
-        m_Solution = null;
+        StudioCore.Navigating.Solution.Projects.Clear();
+        StudioCore.Navigating.Solution = null;
         StudioCore.Settings.LastSolutionWasEmpty = true;
 
         // clear entries
@@ -5297,25 +5299,27 @@ namespace C64Studio
       CloseSolution();
 
       //AddTask( new C64Studio.Tasks.TaskOpenSolution( Filename ) );
-      m_Solution = new Solution( this );
+      StudioCore.Navigating.Solution = new Solution( this );
 
       GR.Memory.ByteBuffer solutionData = GR.IO.File.ReadAllBytes(Filename);
       if ( solutionData == null )
       {
-        m_Solution = null;
+        StudioCore.Navigating.Solution = null;
         return false;
       }
-      if ( !m_Solution.FromBuffer( solutionData, Filename ) )
+      StudioCore.Navigating.Solution.DuringLoad = true;
+      if ( !StudioCore.Navigating.Solution.FromBuffer( solutionData, Filename ) )
       {
         StudioCore.Settings.RemoveFromMRU( StudioCore.Settings.MRUProjects, Filename, this );
         CloseSolution();
-        m_Solution = null;
+        StudioCore.Navigating.Solution = null;
         return false;
       }
       StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, Filename, this );
       StudioCore.Settings.LastSolutionWasEmpty = false;
 
-      m_Solution.Modified = false;
+      StudioCore.Navigating.Solution.Modified = false;
+      StudioCore.Navigating.Solution.DuringLoad = false;
 
       RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
       return true;
@@ -5325,11 +5329,11 @@ namespace C64Studio
 
     public void SaveSolution()
     {
-      if ( m_Solution == null )
+      if ( StudioCore.Navigating.Solution == null )
       {
         return;
       }
-      if ( string.IsNullOrEmpty( m_Solution.Filename ) )
+      if ( string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename ) )
       {
         if ( InvokeRequired )
         {
@@ -5344,11 +5348,11 @@ namespace C64Studio
         {
           return;
         }
-        m_Solution.Filename = saveDlg.FileName;
+        StudioCore.Navigating.Solution.Filename = saveDlg.FileName;
       }
-      GR.IO.File.WriteAllBytes( m_Solution.Filename, m_Solution.ToBuffer() );
-      m_Solution.Modified = false;
-      StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, m_Solution.Filename, this );
+      GR.IO.File.WriteAllBytes( StudioCore.Navigating.Solution.Filename, StudioCore.Navigating.Solution.ToBuffer() );
+      StudioCore.Navigating.Solution.Modified = false;
+      StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, StudioCore.Navigating.Solution.Filename, this );
     }
 
 
@@ -5370,8 +5374,8 @@ namespace C64Studio
       }
 
       Project  project;
-      if ( ( m_Solution != null )
-      &&   ( m_Solution.FilenameUsed( Filename, out project ) ) )
+      if ( ( StudioCore.Navigating.Solution != null )
+      &&   ( StudioCore.Navigating.Solution.FilenameUsed( Filename, out project ) ) )
       {
         // file is part of a project!
         StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
@@ -5701,8 +5705,8 @@ namespace C64Studio
             else
             {
               StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, taskOS.SolutionFilename, this );
-              m_Solution = taskOS.Solution;
-              m_Solution.Modified = false;
+              StudioCore.Navigating.Solution = taskOS.Solution;
+              StudioCore.Navigating.Solution.Modified = false;
               RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
             }
           }
@@ -6237,7 +6241,7 @@ namespace C64Studio
 
     private void AddNewProjectAndOrSolution()
     {
-      if ( m_Solution == null )
+      if ( StudioCore.Navigating.Solution == null )
       {
         FormSolutionWizard solWizard = new FormSolutionWizard( "New Solution", StudioCore.Settings );
         if ( solWizard.ShowDialog() == DialogResult.OK )
@@ -6252,9 +6256,9 @@ namespace C64Studio
             return;
           }
 
-          m_Solution = new Solution( this );
-          m_Solution.Name = solWizard.SolutionName;
-          m_Solution.Filename = solWizard.SolutionFilename;
+          StudioCore.Navigating.Solution = new Solution( this );
+          StudioCore.Navigating.Solution.Name = solWizard.SolutionName;
+          StudioCore.Navigating.Solution.Filename = solWizard.SolutionFilename;
 
           Project newProject = new Project();
           newProject.Core = StudioCore;
@@ -6267,9 +6271,10 @@ namespace C64Studio
 
           Text += " - " + newProject.Settings.Name;
 
-          m_Solution.Projects.Add( newProject );
+          StudioCore.Navigating.Solution.Projects.Add( newProject );
 
           m_SolutionExplorer.treeProject.Nodes.Add( newProject.Node );
+          newProject.Node.Collapse();
 
           RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
 
@@ -6835,12 +6840,12 @@ namespace C64Studio
       var chunkRestartInfo = new GR.IO.FileChunk( Types.FileChunk.RESTART_DATA );
       // version
       chunkRestartInfo.AppendI32( 1 );
-      if ( m_Solution != null )
+      if ( StudioCore.Navigating.Solution != null )
       {
-        chunkRestartInfo.AppendString( m_Solution.Filename );
-        if ( m_Solution.Modified )
+        chunkRestartInfo.AppendString( StudioCore.Navigating.Solution.Filename );
+        if ( StudioCore.Navigating.Solution.Modified )
         {
-          var solutionData = m_Solution.ToBuffer();
+          var solutionData = StudioCore.Navigating.Solution.ToBuffer();
           chunkRestartInfo.AppendU32( solutionData.Length );
           chunkRestartInfo.Append( solutionData );
         }
@@ -6957,11 +6962,11 @@ namespace C64Studio
                 {
                   return false;
                 }
-                if ( !m_Solution.FromBuffer( solutionData, solutionFile ) )
+                if ( !StudioCore.Navigating.Solution.FromBuffer( solutionData, solutionFile ) )
                 {
                   return false;
                 }
-                m_Solution.Modified = true;
+                StudioCore.Navigating.Solution.Modified = true;
               }
             }
             break;
@@ -6982,9 +6987,9 @@ namespace C64Studio
               {
                 BaseDocument    doc = null;
                 Project         project = null;
-                if ( m_Solution != null )
+                if ( StudioCore.Navigating.Solution != null )
                 {
-                  project = m_Solution.GetProjectByName( docProjectName );
+                  project = StudioCore.Navigating.Solution.GetProjectByName( docProjectName );
                 }
                 if ( project == null )
                 {

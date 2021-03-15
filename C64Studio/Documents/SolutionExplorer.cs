@@ -48,6 +48,36 @@ namespace C64Studio
           seBtnAddNewItem.Enabled = false;
           seBtnDelete.Enabled = false;
           break;
+        case Types.ApplicationEvent.Type.SOLUTION_OPENED:
+          // apply node expansions
+          foreach ( var expandedNode in Core.Navigating.Solution.ExpandedNodes )
+          {
+            string[]    parts = expandedNode.Split( '*' );
+
+            if ( ( parts.Length == 2 )
+            &&   ( parts[0] == "Project" ) )
+            {
+              var project = Core.Navigating.Solution.GetProjectByName( parts[1] );
+              if ( project != null )
+              {
+                project.Node.Expand();
+              }
+            }
+            else if ( ( parts.Length == 3 )
+            &&        ( parts[0] == "Element" ) )
+            {
+              var project = Core.Navigating.Solution.GetProjectByName( parts[1] );
+              if ( project != null )
+              {
+                var element = project.GetElementByFilename( parts[2] );
+                if ( element != null )
+                {
+                  element.Node.Expand();
+                }
+              }
+            }
+          }
+          break;
       }
     }
 
@@ -580,7 +610,7 @@ namespace C64Studio
 
           sourceProjectFile = Encoding.Unicode.GetString( clipData.Data(), 8, fileLength );
 
-          sourceProject = Core.MainForm.m_Solution.GetProjectByFilename( sourceProjectFile );
+          sourceProject = Core.Navigating.Solution.GetProjectByFilename( sourceProjectFile );
         }
 
         if ( ( dataObj != null )
@@ -718,7 +748,7 @@ namespace C64Studio
         Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, Element.DocumentInfo ) );
         Element.Document.Close();
       }
-      Core.MainForm.m_Solution.RemoveElement( Element );
+      Core.Navigating.Solution.RemoveElement( Element );
       Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_REMOVED, Element ) );
       Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, Element.DocumentInfo ) );
     }
@@ -740,7 +770,7 @@ namespace C64Studio
         Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, Element.DocumentInfo ) );
         Element.Document.Close();
       }
-      Core.MainForm.m_Solution.RemoveElement( Element );
+      Core.Navigating.Solution.RemoveElement( Element );
       Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_REMOVED, Element ) );
       Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, Element.DocumentInfo ) );
     }
@@ -767,13 +797,13 @@ namespace C64Studio
 
         if ( projectToRemove != null )
         {
-          if ( Core.MainForm.m_Solution.Projects.Count == 1 )
+          if ( Core.Navigating.Solution.Projects.Count == 1 )
           {
             System.Windows.Forms.MessageBox.Show( "You can't remove the last project from a solution.", "Last Project!", MessageBoxButtons.OK );
             return;
           }
           Core.MainForm.CloseProject( projectToRemove );
-          Core.MainForm.m_Solution.Modified = true;
+          Core.Navigating.Solution.Modified = true;
           Core.MainForm.SaveSolution();
         }
         return;
@@ -1073,9 +1103,9 @@ namespace C64Studio
         }
         return;
       }
-      if ( Core.MainForm.m_Solution != null )
+      if ( Core.Navigating.Solution != null )
       {
-        Core.MainForm.m_Solution.RenameElement( element, oldFilename, newFilename );
+        Core.Navigating.Solution.RenameElement( element, oldFilename, newFilename );
       }
       AdjustElementHierarchy( element, e.Node );
 
@@ -1243,80 +1273,6 @@ namespace C64Studio
         }
       }
       timerDragDrop.Stop();
-
-      /*
-      // Retrieve the client coordinates of the drop location.
-      Point targetPoint = treeProject.PointToClient( new Point( e.X, e.Y ) );
-
-      // Retrieve the node at the drop location.
-      TreeNode targetNode = treeProject.GetNodeAt( targetPoint );
-
-      // Retrieve the node that was dragged.
-      TreeNode draggedNode = (TreeNode)e.Data.GetData( typeof( TreeNode ) );
-
-      // Confirm that the node at the drop location is not 
-      // the dragged node or a descendant of the dragged node.
-      if ( ( !draggedNode.Equals( targetNode ) )
-      &&   ( !ContainsNode( draggedNode, targetNode ) ) )
-      {
-        // If it is a move operation, remove the node from its current 
-        // location and add it to the node at the drop location.
-        if ( e.Effect == DragDropEffects.Move )
-        {
-          Project draggedProject = ProjectFromNode( draggedNode );
-          Project projectUnderMouse = ProjectFromNode( targetNode );
-
-          if ( draggedProject != projectUnderMouse )
-          {
-            e.Effect = DragDropEffects.None;
-            return;
-          }
-
-          ProjectElement targetElement = ElementFromNode( targetNode );
-          if ( ( targetElement != null )
-          &&   ( targetElement.Type != ProjectElement.ElementType.PROJECT )
-          &&   ( targetElement.Type != ProjectElement.ElementType.FOLDER ) )
-          {
-            // use parent of element
-            TreeNode curNode = targetElement.Node;
-            while ( curNode.Parent != null )
-            {
-              curNode = curNode.Parent;
-              targetElement = ElementFromNode( curNode );
-              if ( ( targetElement == null )
-              ||   ( targetElement.Type == ProjectElement.ElementType.PROJECT )
-              ||   ( targetElement.Type == ProjectElement.ElementType.FOLDER ) )
-              {
-                targetNode = curNode;
-                break;
-              }
-            }
-          }
-          draggedNode.Remove();
-          targetNode.Nodes.Add( draggedNode );
-
-          // reset element hierarchy
-          ProjectElement draggedElement = ElementFromNode( draggedNode );
-
-          AdjustElementHierarchy( draggedElement, draggedNode );
-
-          // reorder in element list
-          draggedProject.Elements.Remove( draggedElement );
-          if ( targetElement == null )
-          {
-            draggedProject.Elements.AddLast( draggedElement );
-          }
-          else
-          {
-            LinkedListNode<ProjectElement> nodeTarget = draggedProject.Elements.Find( targetElement );
-            draggedProject.Elements.AddAfter( nodeTarget, draggedElement );
-          }
-          draggedProject.SetModified();
-        }
-        // Expand the node at the location 
-        // to show the dropped node.
-        targetNode.Expand();
-      }*/
     }
 
 
@@ -1921,6 +1877,48 @@ namespace C64Studio
     {
       Core.MainForm.AddNewProject();
     }
+
+
+
+    private void treeProject_AfterExpand( object sender, TreeViewEventArgs e )
+    {
+      if ( e.Node.Tag != null )
+      {
+        var project = ProjectFromNode( e.Node );
+        if ( project != null )
+        {
+          Core.Navigating.Solution.ExpandNode( project );
+        }
+        var element = ElementFromNode( e.Node );
+        if ( ( element != null )
+        &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+        {
+          Core.Navigating.Solution.ExpandNode( element );
+        }
+      }
+    }
+
+
+
+    private void treeProject_AfterCollapse( object sender, TreeViewEventArgs e )
+    {
+      if ( e.Node.Tag != null )
+      {
+        var project = ProjectFromNode( e.Node );
+        if ( project != null )
+        {
+          Core.Navigating.Solution.CollapseNode( project );
+        }
+        var element = ElementFromNode( e.Node );
+        if ( ( element != null )
+        &&   ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER ) )
+        {
+          Core.Navigating.Solution.CollapseNode( element );
+        }
+
+      }
+    }
+
 
 
   }

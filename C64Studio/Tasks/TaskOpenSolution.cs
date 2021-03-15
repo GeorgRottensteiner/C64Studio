@@ -45,8 +45,8 @@ namespace C64Studio.Tasks
       {
         return false;
       }
-      Core.MainForm.m_Solution = new Solution( Core.MainForm );
-      _Solution = Core.MainForm.m_Solution;
+      Core.Navigating.Solution = new Solution( Core.MainForm );
+      _Solution = Core.Navigating.Solution;
       
       if ( !_Solution.FromBuffer( solutionData, _SolutionFile ) )
       {

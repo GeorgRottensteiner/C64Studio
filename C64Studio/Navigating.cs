@@ -10,6 +10,7 @@ namespace C64Studio
     public StudioCore         Core = null;
 
     public GR.Collections.MultiMap<int, C64Studio.Parser.ParserBase.ParseMessage>   CompileMessages = null;
+    public Solution           Solution = null;
     public Project            Project = null;
     public Types.ASM.FileInfo ASMInfo = null;
 

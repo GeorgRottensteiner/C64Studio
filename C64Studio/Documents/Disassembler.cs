@@ -471,9 +471,9 @@ namespace C64Studio
         newFilename = "disassembly.asm";
       }
 
-      if ( Core.MainForm.m_Solution != null )
+      if ( Core.Navigating.Solution != null )
       {
-        while ( Core.MainForm.m_Solution.FilenameUsed( newFilename ) )
+        while ( Core.Navigating.Solution.FilenameUsed( newFilename ) )
         {
           newFilename = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_OpenedFilename ), System.IO.Path.GetFileNameWithoutExtension( m_OpenedFilename ) ) + "1.asm";
         }

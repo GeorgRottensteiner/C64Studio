@@ -736,7 +736,7 @@ namespace C64Studio
       FastColoredTextBoxNS.FastColoredTextBox  edit = null;
 
       if ( ( Target == FindTarget.FULL_SOLUTION )
-      &&   ( Core.MainForm.m_Solution == null ) )
+      &&   ( Core.Navigating.Solution == null ) )
       {
         // fall back - full solution without solution
         Target = FindTarget.ALL_OPEN_DOCUMENTS;
@@ -1405,9 +1405,9 @@ namespace C64Studio
           }
           break;
         case FindTarget.FULL_SOLUTION:
-          if ( Core.MainForm.m_Solution != null )
+          if ( Core.Navigating.Solution != null )
           {
-            foreach ( Project proj in Core.MainForm.m_Solution.Projects )
+            foreach ( Project proj in Core.Navigating.Solution.Projects )
             {
               foreach ( ProjectElement element in proj.Elements )
               {

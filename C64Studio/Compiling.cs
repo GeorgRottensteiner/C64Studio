@@ -195,7 +195,7 @@ namespace C64Studio
       {
         foreach ( var dependency in DocInfo.Element.ForcedDependency.DependentOnFile )
         {
-          var project = Core.MainForm.m_Solution.GetProjectByName( dependency.Project );
+          var project = Core.Navigating.Solution.GetProjectByName( dependency.Project );
           if ( project == null )
           {
             Core.AddToOutput( "Could not find dependency project " + dependency.Project + " for " + dependency + System.Environment.NewLine );

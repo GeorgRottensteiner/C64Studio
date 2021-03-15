@@ -11,7 +11,9 @@ namespace C64Studio
     public string           Name = "";
     public string           Filename = "";
     public bool             Modified = false;
+    public bool             DuringLoad = false;   // to avoid modification
     public MainForm         MainForm = null;
+    public List<string>     ExpandedNodes = new List<string>();
 
 
 
@@ -66,6 +68,13 @@ namespace C64Studio
 
       chunkSolution.Append( chunkSolutionInfo.ToBuffer() );
 
+      GR.IO.FileChunk   chunkExpandedNodes = new GR.IO.FileChunk( Types.FileChunk.SOLUTION_NODES );
+      foreach ( string key in ExpandedNodes )
+      {
+        chunkExpandedNodes.AppendString( key );
+      }
+      chunkSolution.Append( chunkExpandedNodes.ToBuffer() );
+
       foreach ( Project project in Projects )
       {
         GR.IO.FileChunk chunkSolutionProject = new GR.IO.FileChunk( Types.FileChunk.SOLUTION_PROJECT );
@@ -73,6 +82,7 @@ namespace C64Studio
 
         chunkSolution.Append( chunkSolutionProject.ToBuffer() );
       }
+
       return chunkSolution.ToBuffer();
     }
 
@@ -112,6 +122,18 @@ namespace C64Studio
                 filename = GR.Path.Normalize( System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Filename ), filename ), false );
 
                 Project project = MainForm.OpenProject( filename );
+              }
+              break;
+            case Types.FileChunk.SOLUTION_NODES:
+              while ( memSubChunk.DataAvailable )
+              {
+                string  node = memSubChunk.ReadString();
+
+                if ( !ExpandedNodes.Contains( node ) )
+                {
+                  ExpandedNodes.Add( node );
+                  Debug.Log( "Expanded Node: " + node );
+                }
               }
               break;
           }
@@ -343,7 +365,99 @@ namespace C64Studio
       {
         Element.Filename = System.IO.Path.GetFileName( NewFilename );
       }
-
     }
+
+
+
+    internal void ExpandNode( Project Project )
+    {
+      if ( DuringLoad )
+      {
+        return;
+      }
+
+      string key = "Project*" + Project.Settings.Name;
+
+      if ( !ExpandedNodes.Contains( key ) )
+      {
+        ExpandedNodes.Add( key );
+        Modified = true;
+      }
+    }
+
+
+
+    internal void ExpandNode( ProjectElement Element )
+    {
+      if ( DuringLoad )
+      {
+        return;
+      }
+
+      string key = "Element*" + Element.DocumentInfo.Project.Settings.Name + "*" + Element.Name;
+
+      if ( !ExpandedNodes.Contains( key ) )
+      {
+        ExpandedNodes.Add( key );
+        Modified = true;
+      }
+    }
+
+
+
+    internal void CollapseNode( Project Project )
+    {
+      if ( DuringLoad )
+      {
+        return;
+      }
+
+      string key = "Project*" + Project.Settings.Name;
+
+      if ( ExpandedNodes.Contains( key ) )
+      {
+        ExpandedNodes.Remove( key );
+        Modified = true;
+      }
+    }
+
+
+
+    internal void CollapseNode( ProjectElement Element )
+    {
+      if ( DuringLoad )
+      {
+        return;
+      }
+
+      string key = "Element*" + Element.DocumentInfo.Project.Settings.Name + "*" + Element.Name;
+
+      if ( ExpandedNodes.Contains( key ) )
+      {
+        ExpandedNodes.Remove( key );
+        Modified = true;
+      }
+    }
+
+
+
+    internal bool IsNodeExpanded( ProjectElement Element )
+    {
+      string key = "Element*" + Element.DocumentInfo.Project.Settings.Name + "*" + Element.Name;
+
+      return ExpandedNodes.Contains( key );
+    }
+
+
+
+    internal bool IsNodeExpanded( Project Project )
+    {
+      string key = "Project*" + Project.Settings.Name;
+
+      return ExpandedNodes.Contains( key );
+    }
+
+
+
   }
 }

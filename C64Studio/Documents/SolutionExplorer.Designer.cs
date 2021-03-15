@@ -68,6 +68,8 @@
       this.treeProject.Text = "NoDblClkTreeView";
       this.treeProject.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeProject_BeforeLabelEdit);
       this.treeProject.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeProject_AfterLabelEdit);
+      this.treeProject.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.treeProject_AfterCollapse);
+      this.treeProject.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.treeProject_AfterExpand);
       this.treeProject.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeProject_ItemDrag);
       this.treeProject.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeProject_AfterSelect);
       this.treeProject.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseClick);

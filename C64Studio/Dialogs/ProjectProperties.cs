@@ -52,9 +52,9 @@ namespace C64Studio
 
     private void editProjectName_TextChanged( object sender, EventArgs e )
     {
-      if ( m_Core.MainForm.m_Solution.IsValidProjectName( editProjectName.Text ) )
+      if ( m_Core.Navigating.Solution.IsValidProjectName( editProjectName.Text ) )
       {
-        m_Core.MainForm.m_Solution.RenameProject( m_Project, editProjectName.Text );
+        m_Core.Navigating.Solution.RenameProject( m_Project, editProjectName.Text );
       }
     }
 

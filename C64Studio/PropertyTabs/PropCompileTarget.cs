@@ -65,7 +65,7 @@ namespace C64Studio
       {
         VerifyElement( element );
       }
-      foreach ( var project in Core.MainForm.m_Solution.Projects )
+      foreach ( var project in Core.Navigating.Solution.Projects )
       {
         if ( project != Element.DocumentInfo.Project )
         {
