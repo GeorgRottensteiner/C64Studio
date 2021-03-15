@@ -132,7 +132,6 @@ namespace C64Studio
                 if ( !ExpandedNodes.Contains( node ) )
                 {
                   ExpandedNodes.Add( node );
-                  Debug.Log( "Expanded Node: " + node );
                 }
               }
               break;
