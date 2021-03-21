@@ -108,7 +108,6 @@ o Char screen editor, move chars, optionally do not move other chars around
 o Version control support, GIT/SVN (how?)
 o Comparison of file (as addon to version control)
 o Intellisense in Kommentaren nicht mehr
-o beim exportieren von Map-Daten, funktioniert der wrap m.E. nicht richtig. Zumindest bei den Tiles werden die nicht wie gewünscht "gewrappt
 o Bessere Anzeige der optionalen Zyklen
 o Combined line cycle and byte count info (currently only info of first line is shown in border!)
 o TODO - Nested for loops using a local label from outside:

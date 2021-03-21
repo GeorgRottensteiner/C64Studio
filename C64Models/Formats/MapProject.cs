@@ -462,41 +462,30 @@ namespace C64Studio.Formats
         sbTileColorHi.Append( " >" + LabelPrefix + "TILE_COLOR_" + tile.Name.ToUpper() + Environment.NewLine );
 
         sbTileChars.Append( LabelPrefix + "TILE_CHAR_" + tile.Name.ToUpper() + Environment.NewLine );
-        sbTileChars.Append( DataByteDirective );
-        sbTileChars.Append( ' ' );
+
+        var tileCharData = new GR.Memory.ByteBuffer();
         for ( int j = 0; j < tile.Chars.Height; ++j )
         {
           for ( int i = 0; i < tile.Chars.Width; ++i )
           {
-            sbTileChars.Append( tile.Chars[i, j].Character.ToString() );
-            if ( i + j * tile.Chars.Width + 1 < tile.Chars.Width * tile.Chars.Height )
-            {
-              sbTileChars.Append( ',' );
-            }
-            else
-            {
-              sbTileChars.Append( Environment.NewLine );
-            }
+            tileCharData.AppendU8( tile.Chars[i, j].Character );
           }
         }
+        sbTileChars.AppendLine( Util.ToASMData( tileCharData, WrapData, WrapByteCount, DataByteDirective ) );
+
+
         sbTileColors.Append( LabelPrefix + "TILE_COLOR_" + tile.Name.ToUpper() + Environment.NewLine );
-        sbTileColors.Append( DataByteDirective );
-        sbTileColors.Append( ' ' );
+
+        var tileColorData = new GR.Memory.ByteBuffer();
         for ( int j = 0; j < tile.Chars.Height; ++j )
         {
           for ( int i = 0; i < tile.Chars.Width; ++i )
           {
-            sbTileColors.Append( tile.Chars[i, j].Color.ToString() );
-            if ( i + j * tile.Chars.Width + 1 < tile.Chars.Width * tile.Chars.Height )
-            {
-              sbTileColors.Append( ',' );
-            }
-            else
-            {
-              sbTileColors.Append( Environment.NewLine );
-            }
+            tileColorData.AppendU8( tile.Chars[i, j].Color );
           }
         }
+        sbTileColors.AppendLine( Util.ToASMData( tileColorData, WrapData, WrapByteCount, DataByteDirective ) );
+
       }
       TileData = LabelPrefix + "NUM_TILES = " + Tiles.Count + System.Environment.NewLine
                 + LabelPrefix + "TILE_WIDTH" + System.Environment.NewLine + Util.ToASMData( tileDataW, WrapData, WrapByteCount, DataByteDirective ) + System.Environment.NewLine
@@ -532,64 +521,36 @@ namespace C64Studio.Formats
         }
       }
 
-      StringBuilder[] sbTileChars = new StringBuilder[maxTileWidth * maxTileHeight];
-      StringBuilder[] sbTileColors = new StringBuilder[maxTileWidth * maxTileHeight];
-      for ( int i = 0; i < sbTileChars.Length; ++i )
+      GR.Memory.ByteBuffer[]  tileCharData = new GR.Memory.ByteBuffer[maxTileWidth * maxTileHeight];
+      GR.Memory.ByteBuffer[]  tileColorData = new GR.Memory.ByteBuffer[maxTileWidth * maxTileHeight];
+      for ( int j = 0; j < maxTileHeight; ++j )
       {
-        sbTileChars[i] = new StringBuilder();
-        sbTileColors[i] = new StringBuilder();
-
-        sbTileChars[i].Append( LabelPrefix + "TILE_CHARS_" );
-        sbTileChars[i].Append( ( i % maxTileWidth ) );
-        sbTileChars[i].Append( "_" );
-        sbTileChars[i].Append( ( i / maxTileWidth ) );
-        sbTileChars[i].AppendLine();
-        sbTileChars[i].Append( DataByteDirective );
-        sbTileChars[i].Append( ' ' );
-
-        sbTileColors[i].Append( LabelPrefix + "TILE_COLORS_" );
-        sbTileColors[i].Append( ( i % maxTileWidth ) );
-        sbTileColors[i].Append( "_" );
-        sbTileColors[i].Append( ( i / maxTileWidth ) );
-        sbTileColors[i].AppendLine();
-        sbTileColors[i].Append( DataByteDirective );
-        sbTileColors[i].Append( ' ' );
+        for ( int i = 0; i < maxTileWidth; ++i )
+        {
+          tileCharData[i + j * maxTileWidth] = new GR.Memory.ByteBuffer( (uint)Tiles.Count );
+          tileColorData[i + j * maxTileWidth] = new GR.Memory.ByteBuffer( (uint)Tiles.Count );
+        }
       }
 
+
       int tileIndex = 0;
-      foreach ( var tile in Tiles )
+      
+      for ( int j = 0; j < maxTileHeight; ++j )
       {
-        for ( int j = 0; j < maxTileHeight; ++j )
+        for ( int i = 0; i < maxTileWidth; ++i )
         {
-          for ( int i = 0; i < maxTileWidth; ++i )
+          tileIndex = 0;
+          foreach ( var tile in Tiles )
           {
-            int byteSetIndex = i + j * maxTileWidth;
             if ( ( i < tile.Chars.Width )
             &&   ( j < tile.Chars.Height ) )
             {
-              sbTileChars[byteSetIndex].Append( "$" );
-              sbTileChars[byteSetIndex].Append( tile.Chars[i, j].Character.ToString( "X2" ) );
-              sbTileColors[byteSetIndex].Append( "$" );
-              sbTileColors[byteSetIndex].Append( tile.Chars[i, j].Color.ToString( "X2" ) );
+              tileCharData[i + j * maxTileWidth].SetU8At( tileIndex, tile.Chars[i, j].Character );
+              tileColorData[i + j * maxTileWidth].SetU8At( tileIndex, tile.Chars[i, j].Color );
             }
-            else
-            {
-              sbTileChars[byteSetIndex].Append( "$00" );
-              sbTileColors[byteSetIndex].Append( "$00" );
-            }
-            if ( tileIndex + 1 < Tiles.Count )
-            {
-              sbTileChars[byteSetIndex].Append( "," );
-              sbTileColors[byteSetIndex].Append( "," );
-            }
-            else
-            {
-              sbTileChars[byteSetIndex].AppendLine();
-              sbTileColors[byteSetIndex].AppendLine();
-            }
+            ++tileIndex;
           }
         }
-        ++tileIndex;
       }
 
       StringBuilder sb = new StringBuilder();
@@ -600,14 +561,28 @@ namespace C64Studio.Formats
       {
         for ( int i = 0; i < maxTileWidth; ++i )
         {
-          sb.AppendLine( sbTileChars[i + j * maxTileWidth].ToString() );
+          sb.Append( LabelPrefix + "TILE_CHARS_" );
+          sb.Append( i );
+          sb.Append( "_" );
+          sb.Append( j );
+          sb.AppendLine();
+
+          sb.AppendLine( Util.ToASMData( tileCharData[i + j * maxTileWidth], WrapData, WrapByteCount, DataByteDirective ) );
+          sb.AppendLine();
         }
       }
       for ( int j = 0; j < maxTileHeight; ++j )
       {
         for ( int i = 0; i < maxTileWidth; ++i )
         {
-          sb.AppendLine( sbTileColors[i + j * maxTileWidth].ToString() );
+          sb.Append( LabelPrefix + "TILE_COLORS_" );
+          sb.Append( i );
+          sb.Append( "_" );
+          sb.Append( j );
+          sb.AppendLine();
+
+          sb.AppendLine( Util.ToASMData( tileColorData[i + j * maxTileWidth], WrapData, WrapByteCount, DataByteDirective ) );
+          sb.AppendLine();
         }
       }
       TileData = sb.ToString();
