@@ -655,5 +655,40 @@ namespace TestProject
     }
 
 
+
+    [TestMethod]
+    public void TestPseudoOpBank()
+    {
+      string      source = @"!bank 0, $20
+                              !pseudopc $8000
+
+                              !byte 20
+
+                              !bank 1, $20
+                              !pseudopc $8000
+
+                              !byte 30
+
+                              !bank 2, $20
+                              !pseudopc $8000
+
+                              !byte 40";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.crt";
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Assemble( config ) );
+      Assert.AreEqual( 0, parser.Messages.Count );  // no warnings regarding overlapped segments
+
+      var assembly = parser.AssembledOutput;
+
+      Assert.AreEqual( "008014000000000000000000000000000000000000000000000000000000000000001E0000000000000000000000000000000000000000000000000000000000000028", assembly.Assembly.ToString() );
+    }
+
   }
 }
