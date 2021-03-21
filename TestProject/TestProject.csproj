@@ -53,6 +53,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Assemblers\TestAssembler.PDS.cs" />
+    <Compile Include="Assemblers\TestAssembler.C64Studio.PseudoOps.cs" />
     <Compile Include="Assemblers\TestAssembler.DASM.cs" />
     <Compile Include="TestAssembler.CPU.cs" />
     <Compile Include="UnitTestBASICParser.cs" />
