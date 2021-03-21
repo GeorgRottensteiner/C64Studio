@@ -8889,7 +8889,7 @@ namespace C64Studio.Parser
                 }
               }
               if ( ( paramPos == 0 )
-              || ( paramPos > 1 ) )
+              ||   ( paramPos > 1 ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !bank <Number>[,<Size>]" );
               }
@@ -8931,6 +8931,7 @@ namespace C64Studio.Parser
 
                       info.NumBytes = delta;
                       info.LineData = new GR.Memory.ByteBuffer( (uint)delta );
+                      lineSizeInBytes = delta;
                     }
                     else
                     {

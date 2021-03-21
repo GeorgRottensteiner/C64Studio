@@ -328,7 +328,7 @@ namespace C64Studio
         newPadding += 4 * approxWidthOfChar;
         numChars += 4;
       }
-      editSource.LeftPaddingInCharacters = numChars;
+      editSource.LeftPaddingInCharacters = numChars + 3;
     }
 
 
