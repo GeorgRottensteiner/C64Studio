@@ -1441,6 +1441,19 @@ namespace C64Studio
         TabSize = 800;
       }
 
+      if ( SourceFontSize <= 0.0f )
+      {
+        SourceFontFamily = "Consolas";
+        SourceFontSize = 9.0f;
+      }
+      if ( BASICSourceFontSize <= 0.0f )
+      {
+        BASICSourceFontFamily = "Consolas";
+        BASICSourceFontSize = 9.0f;
+        BASICUseNonC64Font = true;
+      }
+
+
       // key bindings
       ValidateOrSetKeyBindingKey( C64Studio.Types.Function.SAVE_DOCUMENT, Keys.Control | Keys.S );
       ValidateOrSetKeyBindingKey( C64Studio.Types.Function.BUILD_AND_RUN, Keys.Control | Keys.F5 );

@@ -12225,11 +12225,17 @@ namespace C64Studio.Parser
         }
       }
 
-      if ( memoryMap.Entries.Count == 0 )
+      if ( ( memoryMap.Entries.Count == 0 )
+      ||   ( builtSegments.Count > 0 ) )
       {
         // count from segments?
         foreach ( var segment in builtSegments )
         {
+          if ( segment.second.Length == 0 )
+          {
+            // ignore virtual segments
+            continue;
+          }
           lowestStart = Math.Min( segment.first, lowestStart );
           highestEnd = Math.Max( segment.second.StartAddress + segment.second.Length, highestEnd );
 
