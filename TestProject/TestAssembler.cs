@@ -376,5 +376,73 @@ namespace TestProject
 
 
 
+    [TestMethod]
+    public void TestNoVirtualSectionAt840()
+    {
+      string source = @"!to ""lady-bug.prg"",cbm
+        *=$0801   : !BASIC          ; Basiczeile erzeugen
+
+        BLOCK     = 33            ; Spriteblock -> Block*64 = Spritedaten
+        MATRIX    = $0400         ; Bildschirmspeicher
+        POINTER_0   = MATRIX+$03F8        ; Spritepointer
+
+              SEI           ; IRQ sperren
+
+              LDA #$B0          ; X-Koordinate
+              STA $D000         ; Sprite 0
+
+              LDA #$81          ; Y-Koordinate
+              STA $D001         ; Sprite 0
+
+              LDA #BLOCK          ; Spriteblock
+              STA POINTER_0       ; Spritepointer 0
+
+              LDA #%00000001        ; Sprite Nr. 0
+              STA $D015         ; Sprite-DMA Register
+
+        -     JMP -           ; Warten
+
+              !FILL $19,$EA       ; Code bis $083E bis 083F = Kein Sprite
+
+        *=BLOCK*64                ; Adresse der Spritedaten -> Ballon
+
+              !BYTE %00000011,%11111000,%00000000
+              !BYTE %00001111,%11111110,%00000000
+              !BYTE %00011111,%11111111,%00000000
+              !BYTE %00011111,%00111111,%00000000
+              !BYTE %00111110,%11001111,%10000000
+              !BYTE %00111110,%11111111,%10000000
+              !BYTE %00111110,%11001111,%10000000
+              !BYTE %00011111,%00111111,%00000000
+              !BYTE %00011111,%11111111,%00000000
+              !BYTE %00011111,%11111111,%00000000
+              !BYTE %00010111,%11111101,%00000000
+              !BYTE %00001011,%11111010,%00000000
+              !BYTE %00001001,%11110010,%00000000
+              !BYTE %00000100,%11100100,%00000000
+              !BYTE %00000100,%11100100,%00000000
+              !BYTE %00000010,%01001000,%00000000
+              !BYTE %00000010,%01001000,%00000000
+              !BYTE %00000001,%11110000,%00000000
+              !BYTE %00000001,%11110000,%00000000
+              !BYTE %00000001,%11110000,%00000000
+              !BYTE %00000000,%11100000,%00000000
+              !BYTE $00";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Assemble( config ) );
+
+      var assembly = parser.AssembledOutput;
+
+      Assert.AreEqual( "01080B080A009E3230363100000078A9B08D00D0A9818D01D0A9218DF807A9018D15D04C2208EAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEA000003F8000FFE001FFF001F3F003ECF803EFF803ECF801F3F001FFF001FFF0017FD000BFA0009F20004E40004E40002480002480001F00001F00001F00000E00000", assembly.Assembly.ToString() );
+    }
+
   }
 }
