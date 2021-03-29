@@ -66,6 +66,9 @@ namespace C64Studio
 
     private string                            m_CurrentHighlightText = null;
 
+    private string                            m_SyntaxColoringCurrentKnownCPU       = "";
+    private AssemblerType                     m_SyntaxColoringCurrentKnownAssembler = AssemblerType.AUTO;
+
 
 
     private GR.Collections.Map<int,Types.Breakpoint>    m_BreakPoints = new GR.Collections.Map<int,C64Studio.Types.Breakpoint>();
@@ -109,23 +112,14 @@ namespace C64Studio
       DocumentInfo.Type = ProjectElement.ElementType.ASM_SOURCE;
       DocumentInfo.UndoManager.MainForm = Core.MainForm;
 
-      string opCodes = @"\b(lda|sta|ldy|sty|ldx|stx|rts|jmp|jsr|rti|sei|cli|asl|lsr|inc|dec|inx|dex|iny|dey|cpx|cpy|cmp|bit|bne|beq|bcc|bcs|bpl|bmi|adc|sec|clc|sbc|tax|tay|tya|txa|pha|pla|eor|and|ora|ror|rol|php|plp|clv|cld|bvc|bvs|brk|nop|txs|tsx|slo|rla|sre|rra|sax|lax|dcp|isc|anc|alr|arr|ane|xaa|lxa|axs|sha|ahx|shy|shx|tas|las|sed|sbx)\b";
-      // TODO - dynamically build from known macros! -> depending on assembler source!
-      string pseudoOps = @"(!byte|!by|!basic|!8|!08|!word|!wo|!16|!text|!tx|!scr|!pet|!raw|!pseudopc|!realpc|!bank|!convtab|!ct|!binary|!bin|!bi|!source|!src|!to|!zone|!zn|!error|!serious|!warn|"
-        + @"!message|!ifdef|!ifndef|!if|!fill|!fi|!align|!endoffile|!nowarn|!for|!end|!macro|!trace|!media|!mediasrc|!sl|!cpu|!set|!hex|!h|!realign)\b";
-
       m_TextRegExp[(int)Types.ColorableElement.LITERAL_NUMBER] = new System.Text.RegularExpressions.Regex( @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\B\$[a-fA-F\d]+\b|\b0x[a-fA-F\d]+\b" );
       m_TextRegExp[(int)Types.ColorableElement.LITERAL_STRING] = new System.Text.RegularExpressions.Regex( @"""""|''|"".*?[^\\]""|'.*?[^\\]'" );
-
-      m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( opCodes, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
-      m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] = new System.Text.RegularExpressions.Regex( pseudoOps, System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
 
       m_TextRegExp[(int)Types.ColorableElement.LABEL] = new System.Text.RegularExpressions.Regex( @"[.@]{0,1}[+\-a-zA-Z]+[a-zA-Z_\d.]*[:]*" );
       m_TextRegExp[(int)Types.ColorableElement.COMMENT] = new System.Text.RegularExpressions.Regex( @";.*" );
 
       m_TextRegExp[(int)Types.ColorableElement.OPERATOR] = new System.Text.RegularExpressions.Regex( @"[+\-/*(){}=<>,#%]" );
       m_TextRegExp[(int)Types.ColorableElement.NONE] = new System.Text.RegularExpressions.Regex( @"\S" );
-
 
       m_IsSaveable = true;
       InitializeComponent();
@@ -183,6 +177,9 @@ namespace C64Studio
       editSource.RightBracket2 = '\x0';
       editSource.CommentPrefix = ";";
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
+
+      UpdatePseudoOpSyntaxColoringSource();
+      UpdateOpcodeSyntaxColoringSource();
 
       RefreshDisplayOptions();
 
@@ -1203,9 +1200,67 @@ namespace C64Studio
 
     public override void OnKnownKeywordsChanged()
     {
+      if ( Parser != null )
+      {
+        // TODO - adjust syntax coloring to use assembler type/cpu type
+        bool  modified = false;
+        if ( m_SyntaxColoringCurrentKnownCPU != DocumentInfo.ASMFileInfo.Processor.Name )
+        {
+          m_SyntaxColoringCurrentKnownCPU = DocumentInfo.ASMFileInfo.Processor.Name;
+
+          UpdateOpcodeSyntaxColoringSource();
+          modified = true;
+        }
+
+        if ( m_SyntaxColoringCurrentKnownAssembler != DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType )
+        {
+          m_SyntaxColoringCurrentKnownAssembler = DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType;
+
+          UpdatePseudoOpSyntaxColoringSource();
+          modified = true;
+        }
+        if ( modified )
+        {
+          ResetAllStyles( editSource.Range );
+          editSource.OnSyntaxHighlight( new FastColoredTextBoxNS.TextChangedEventArgs( editSource.Range ) );
+        }
+      }
+
       m_LastZoneUpdateLine = -1;
       RefreshLocalSymbols();
       RefreshAutoComplete();
+    }
+
+
+
+    private void UpdatePseudoOpSyntaxColoringSource()
+    {
+      var sb = new StringBuilder();
+
+      if ( DocumentInfo.ASMFileInfo.AssemblerSettings == null )
+      {
+        DocumentInfo.ASMFileInfo.AssemblerSettings = new AssemblerSettings();
+        DocumentInfo.ASMFileInfo.AssemblerSettings.SetAssemblerType( AssemblerType.C64_STUDIO );
+      }
+
+      sb.Append( @"(" );
+      sb.Append( string.Join( "|", DocumentInfo.ASMFileInfo.AssemblerSettings.PseudoOps.Keys.ToArray() ) );
+      sb.Append( @")\b" );
+
+      m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] = new System.Text.RegularExpressions.Regex( sb.ToString(), System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
+    }
+
+
+
+    private void UpdateOpcodeSyntaxColoringSource()
+    {
+      var sb = new StringBuilder();
+
+      sb.Append( @"\b(" );
+      sb.Append( string.Join( "|", DocumentInfo.ASMFileInfo.Processor.Opcodes.Keys.ToArray() ) );
+      sb.Append( @")\b" );
+
+      m_TextRegExp[(int)Types.ColorableElement.CODE] = new System.Text.RegularExpressions.Regex( sb.ToString(), System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled );
     }
 
 

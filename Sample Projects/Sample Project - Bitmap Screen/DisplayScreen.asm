@@ -50,8 +50,8 @@ BITMAP_LOCATION = $a000
           sta $D800 + 1 * 250,X 
           lda $4400 + 2 * 250,X 
           sta $D800 + 2 * 250,X 
-          lda $4400 + 1 * 250,X 
-          sta $D800 + 1 * 250,X 
+          lda $4400 + 3 * 250,X 
+          sta $D800 + 3 * 250,X 
           
 !for ROW = 0 TO 31
           lda $2000 + ROW * 250,x

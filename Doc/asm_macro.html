@@ -97,6 +97,8 @@
     This pseudo op adds a BASIC start line with a sys call to either the given jump address or the first statement after the pseudo op. If not provided otherwise the added BASIC line always has line number 10 and a 4 digit target address. This way the BASIC line will always require 12 bytes.
     If the jump address is 5 decimal digits the line will use 13 bytes.<br>
     <br>
+    Note: If !cpu is set to m65 (Mega65) the !basic directive will add a line before the actual SYS call setting the bank to 0 (10 BANK 0). All other parts will be moved to the second line.<br>
+    <br>
     If a string comment is used it is appended directly after the SYS number.<br>
     Note: If no colon is added this will result in a syntax error when returning to BASIC.<br>
     <br>
@@ -114,6 +116,12 @@
     BASIC listing looks like:<br>
     <br>
     <div id="code"><br>    10 SYS2061
+    <br></div>
+    <br>
+    BASIC listing looks like for !cpu M65:<br>
+    <br>
+    <div id="code"><br>    10 MODE0
+    20 SYS2061
     <br></div>
     <br>
     <br>

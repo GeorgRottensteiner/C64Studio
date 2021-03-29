@@ -456,6 +456,15 @@ namespace GR.Forms
 
     private void AdjustScrollbars()
     {
+      if ( m_ItemHeight == 0 )
+      {
+        VisibleAutoScrollVertical = false;
+        return;
+      }
+      if ( m_ItemsPerLine <= 0 )
+      {
+        m_ItemsPerLine = 1;
+      }
       int visibleItems = m_DisplayHeight / m_ItemHeight;
       int scrollLength = ( Items.Count / m_ItemsPerLine ) - visibleItems;
 

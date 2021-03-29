@@ -92,6 +92,7 @@ namespace C64Studio.Types.ASM
     public Parser.AssemblerSettings               AssemblerSettings = null;
     public Dictionary<int,Types.Breakpoint>       VirtualBreakpoints = new Dictionary<int,Breakpoint>();
     public string                                 LabelDumpFile = "";
+    public Tiny64.Processor                       Processor = Tiny64.Processor.Create6510();
 
 
 

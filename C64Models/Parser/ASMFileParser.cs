@@ -113,7 +113,6 @@ namespace C64Studio.Parser
 
     public ASMFileParser()
     {
-
       for ( int i = 0; i < 256; ++i )
       {
         m_TextCodeMappingRaw[(byte)i] = (byte)i;
@@ -165,6 +164,16 @@ namespace C64Studio.Parser
       AddExtFunction( "math.tan", 1, 1, ExtMathTangens );
 
       SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+    }
+
+
+
+    public AssemblerSettings AssemblerSettings
+    {
+      get
+      {
+        return m_AssemblerSettings;
+      }
     }
 
 
@@ -5688,10 +5697,61 @@ namespace C64Studio.Parser
 
     private ParseLineResult POBasic( string Line, List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, GR.Collections.Map<byte,byte> textCodeMapping, bool AllowLaterEvaluation, out int lineSizeInBytes )
     {
+      // !basic behaves differently for Mega65!
       lineSizeInBytes = 13;
       info.NumBytes   = 13;
 
+      info.LineData = new GR.Memory.ByteBuffer();
+
       int       basicLineNumber = 10;
+      int       startAddress = info.AddressStart;
+      int       secondLineStartAddressOffset = 0;
+
+      if ( m_Processor.Name == "M65" )
+      {
+        if ( info.AddressStart >= 65536 )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, "BASIC upstart address is too high (>65535)" );
+          return ParseLineResult.RETURN_NULL;
+        }
+
+        info.LineData.AppendU16( (ushort)( info.AddressStart + 8 ) );
+        info.LineData.AppendU16( (ushort)basicLineNumber );
+        info.LineData.AppendHex( "FE023000" );    // bank 0
+
+
+        lineSizeInBytes += 8;
+        info.NumBytes += 8;
+        secondLineStartAddressOffset = 8;
+
+        basicLineNumber += 10;
+        startAddress += 8;
+      }
+
+      /*
+      *=$2001
+        !byte $09,$20;
+              End of command
+        !byte $0a,$00;
+              Line 10
+        !byte $fe,$02,$30,$00;
+              Bank 0 command
+
+        !byte <end, >end        ;
+              end of command
+        !byte $14,$00;
+              Line 20
+        !byte $9e;
+              SYS
+        !text "8214";
+              Start Address
+          !byte $00;
+              end
+        end:
+          !byte $00,$00;
+      End of basic
+        */
+
       GR.Memory.ByteBuffer    commentData = new ByteBuffer();
 
       List<int> tokenParams = new List<int>();
@@ -5749,10 +5809,10 @@ namespace C64Studio.Parser
           info.NeededParsedExpression = lineTokenInfos;
           info.Line = Line;
           // can we use 4 digits?
-          if ( info.AddressStart + 12 < 10000 )
+          if ( info.AddressStart + lineSizeInBytes - 1 < 10000 )
           {
-            lineSizeInBytes = 12;
-            info.NumBytes = 12;
+            --lineSizeInBytes;
+            --info.NumBytes;
           }
           if ( !AllowLaterEvaluation )
           {
@@ -5778,10 +5838,10 @@ namespace C64Studio.Parser
           info.NeededParsedExpression = lineTokenInfos;
           info.Line = Line;
           // can we use 4 digits?
-          if ( info.AddressStart + 12 < 10000 )
+          if ( info.AddressStart + lineSizeInBytes - 1 < 10000 )
           {
-            lineSizeInBytes = 12;
-            info.NumBytes = 12;
+            --lineSizeInBytes;
+            --info.NumBytes;
           }
           if ( !AllowLaterEvaluation )
           {
@@ -5802,10 +5862,10 @@ namespace C64Studio.Parser
           info.NeededParsedExpression = lineTokenInfos;
           info.Line = Line;
           // can we use 4 digits?
-          if ( info.AddressStart + 12 < 10000 )
+          if ( info.AddressStart + lineSizeInBytes - 1 < 10000 )
           {
-            lineSizeInBytes = 12;
-            info.NumBytes = 12;
+            --lineSizeInBytes;
+            --info.NumBytes;
           }
           if ( !AllowLaterEvaluation )
           {
@@ -5832,10 +5892,10 @@ namespace C64Studio.Parser
           info.NeededParsedExpression = lineTokenInfos;
           info.Line = Line;
           // can we use 4 digits?
-          if ( info.AddressStart + 12 < 10000 )
+          if ( info.AddressStart + lineSizeInBytes - 1 < 10000 )
           {
-            lineSizeInBytes = 12;
-            info.NumBytes = 12;
+            --lineSizeInBytes;
+            --info.NumBytes;
           }
           if ( !AllowLaterEvaluation )
           {
@@ -5890,10 +5950,10 @@ namespace C64Studio.Parser
           info.NeededParsedExpression = lineTokenInfos;// poParams[poParams.Count - 1];
           info.Line = Line;
           // can we use 4 digits?
-          if ( info.AddressStart + 12 + lengthOfCommentData < 10000 )
+          if ( info.AddressStart + lineSizeInBytes - 1 + lengthOfCommentData < 10000 )
           {
-            lineSizeInBytes = 12 + lengthOfCommentData;
-            info.NumBytes = 12 + lengthOfCommentData;
+            lineSizeInBytes = lineSizeInBytes - 1 + lengthOfCommentData;
+            info.NumBytes = lineSizeInBytes - 1 + lengthOfCommentData;
           }
           if ( !AllowLaterEvaluation )
           {
@@ -5920,7 +5980,7 @@ namespace C64Studio.Parser
 
       if ( jumpAddress == -1 )
       {
-        int   endAddress = info.AddressStart + 8 + 5;
+        int   endAddress = info.AddressStart + 8 + 5 + lineSizeInBytes - 13;
         jumpAddress = endAddress - 5 + CalcNumDigits( endAddress );
       }
 
@@ -5931,8 +5991,6 @@ namespace C64Studio.Parser
       {
         jumpAddress -= 5 - numDigits;
       }*/
-
-      info.LineData = new GR.Memory.ByteBuffer();
 
       // Startadresse der folgenden Programmzeile in der Reihenfolge Low - Byte, High - Byte($0000 kennzeichnet das Programmende ).
       // Zeilennummer in der Form Low - Byte, High - Byte.
@@ -5947,7 +6005,7 @@ namespace C64Studio.Parser
       info.LineData.AppendU16( (ushort)basicLineNumber );
       info.LineData.AppendHex( "9E" );
       int     lineLength = (int)( 2 + 3 + numDigits + commentData.Length + 1 );
-      info.LineData.SetU16At( 0, (ushort)( info.AddressStart + lineLength ) );
+      info.LineData.SetU16At( secondLineStartAddressOffset, (ushort)( startAddress + lineLength ) );
 
       lineSizeInBytes = (int)info.LineData.Length + numDigits + 1 + (int)commentData.Length;
 
@@ -6993,6 +7051,7 @@ namespace C64Studio.Parser
       ASMFileInfo.Zones.Clear();
       ASMFileInfo.LineInfo.Clear();
       ASMFileInfo.TempLabelInfo.Clear();
+      ASMFileInfo.Processor = Tiny64.Processor.Create6510();
 
       stackScopes.Clear();
       Messages.Clear();
@@ -7024,12 +7083,8 @@ namespace C64Studio.Parser
       m_CurrentZoneName = "";
       m_CurrentSegmentIsVirtual = false;
 
-      //int lineIndex = 0;
-      //foreach ( string line in Lines )
       for ( int lineIndex = 0; lineIndex < Lines.Length; ++lineIndex )
       {
-        // there was a reason for this (leading spaces), but shouldn't be needed anymore
-        //string parseLine = Lines[lineIndex].Trim();
         string parseLine = "";
         if ( Lines[lineIndex] != null )
         {
@@ -7040,7 +7095,6 @@ namespace C64Studio.Parser
         hadCommentInLine = false;
         hadPseudoOp = false;
 
-        // TODO - damit geht ; in Strings auch nicht!
         int commentPos = -1;
 
         if ( FindStartOfComment( parseLine, out commentPos ) )
@@ -7056,12 +7110,9 @@ namespace C64Studio.Parser
         info.CheapLabelZone = cheapLabelParent;
         info.AddressStart = programStepPos;
 
-        if ( ScopeInsideMacroDefinition( stackScopes ) )
+        if ( !ScopeInsideMacroDefinition( stackScopes ) )
         {
           // do not store code inside a macro definition
-        }
-        else
-        {
           if ( ScopeInsideLoop( stackScopes ) )
           {
             // if a loop is repeated line infos may already exist
@@ -10042,32 +10093,36 @@ namespace C64Studio.Parser
       {
         case "6502":
           m_Processor = Processor.Create6502();
-          return ParseLineResult.OK;
+          break;
         case "nmos6502":
         case "6510":
           m_Processor = Processor.Create6510();
-          return ParseLineResult.OK;
+          break;
         case "65C02":
           m_Processor = Processor.Create65C02();
-          return ParseLineResult.OK;
+          break;
         case "R65C02":
           m_Processor = Processor.CreateR65C02();
-          return ParseLineResult.OK;
+          break;
         case "W65C02":
           m_Processor = Processor.CreateWDC65C02();
-          return ParseLineResult.OK;
+          break;
         case "65CE02":
           m_Processor = Processor.Create65CE02();
-          return ParseLineResult.OK;
+          break;
         case "4502":
           m_Processor = Processor.Create4502();
-          return ParseLineResult.OK;
+          break;
         case "M65":
           m_Processor = Processor.CreateM65();
-          return ParseLineResult.OK;
+          break;
+        default:
+          AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502 and M65 are supported" );
+          return ParseLineResult.RETURN_NULL;
       }
-      AddError( lineIndex, Types.ErrorCode.E1311_UNSUPPORTED_CPU, "Unsupported CPU type, currently only 6510, 65C02, R65C02, W65C02, 65CE02, 4502 and M65 are supported" );
-      return ParseLineResult.RETURN_NULL;
+
+      ASMFileInfo.Processor = m_Processor;
+      return ParseLineResult.OK;
     }
 
 

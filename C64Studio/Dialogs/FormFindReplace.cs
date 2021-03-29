@@ -381,9 +381,13 @@ namespace C64Studio
         {
           match = regEx.Match( SearchSource, 0, startPos );
         }
-        else
+        else if ( startPos < SearchSource.Length )
         {
           match = regEx.Match( SearchSource, startPos );
+        }
+        else
+        {
+          return new SearchLocation();
         }
         if ( match.Success )
         {
