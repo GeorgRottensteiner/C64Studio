@@ -3418,7 +3418,7 @@ namespace C64Studio
 
 
 
-    private void btnExportToImage_Click( object sender, EventArgs e )
+    private void btnExportToImageFile_Click( object sender, EventArgs e )
     {
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
@@ -3440,7 +3440,6 @@ namespace C64Studio
 
       System.Drawing.Bitmap bmpTarget = targetImg.GetAsBitmap();
       bmpTarget.Save( saveDlg.FileName, System.Drawing.Imaging.ImageFormat.Png );
-
     }
 
 
@@ -3513,6 +3512,25 @@ namespace C64Studio
       RedrawFullScreen();
 
       SetModified();
+    }
+
+
+
+    private void btnExportToImage_Click( object sender, EventArgs e )
+    {
+      int     neededWidth   = m_CharsetScreen.ScreenWidth * 8;
+      int     neededHeight  = m_CharsetScreen.ScreenHeight * 8;
+
+      GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+
+      CustomRenderer.PaletteManager.ApplyPalette( targetImg );
+
+      m_Image.DrawTo( targetImg, 0, 0 );
+
+      System.Drawing.Bitmap bmpTarget = targetImg.GetAsBitmap();
+
+      Clipboard.SetImage( bmpTarget );
+      bmpTarget.Dispose();
     }
 
 

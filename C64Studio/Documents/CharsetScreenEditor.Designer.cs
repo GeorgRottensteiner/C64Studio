@@ -30,8 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,7 +79,7 @@
       this.btnExportToBASICHexData = new System.Windows.Forms.Button();
       this.btnExportToBASICData = new System.Windows.Forms.Button();
       this.btnExportToBasic = new System.Windows.Forms.Button();
-      this.btnExportToImage = new System.Windows.Forms.Button();
+      this.btnExportToImageFile = new System.Windows.Forms.Button();
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
@@ -120,6 +120,7 @@
       this.tabCharset = new System.Windows.Forms.TabPage();
       this.charEditor = new C64Studio.Controls.CharacterEditor();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnExportToImage = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -317,6 +318,7 @@
       this.groupExport.Controls.Add(this.btnExportToBASICData);
       this.groupExport.Controls.Add(this.btnExportToBasic);
       this.groupExport.Controls.Add(this.btnExportToImage);
+      this.groupExport.Controls.Add(this.btnExportToImageFile);
       this.groupExport.Controls.Add(this.btnExportToFile);
       this.groupExport.Controls.Add(this.btnExportToData);
       this.groupExport.Location = new System.Drawing.Point(11, 6);
@@ -630,15 +632,15 @@
       this.btnExportToBasic.UseVisualStyleBackColor = true;
       this.btnExportToBasic.Click += new System.EventHandler(this.btnExportToBasic_Click);
       // 
-      // btnExportToImage
+      // btnExportToImageFile
       // 
-      this.btnExportToImage.Location = new System.Drawing.Point(6, 272);
-      this.btnExportToImage.Name = "btnExportToImage";
-      this.btnExportToImage.Size = new System.Drawing.Size(106, 23);
-      this.btnExportToImage.TabIndex = 17;
-      this.btnExportToImage.Text = "to image";
-      this.btnExportToImage.UseVisualStyleBackColor = true;
-      this.btnExportToImage.Click += new System.EventHandler(this.btnExportToImage_Click);
+      this.btnExportToImageFile.Location = new System.Drawing.Point(6, 272);
+      this.btnExportToImageFile.Name = "btnExportToImageFile";
+      this.btnExportToImageFile.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToImageFile.TabIndex = 17;
+      this.btnExportToImageFile.Text = "to image file";
+      this.btnExportToImageFile.UseVisualStyleBackColor = true;
+      this.btnExportToImageFile.Click += new System.EventHandler(this.btnExportToImageFile_Click);
       // 
       // btnExportToFile
       // 
@@ -1053,8 +1055,9 @@
       // 
       // panelCharColors
       // 
+      this.panelCharColors.AutoResize = false;
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage1;
+      this.panelCharColors.DisplayPage = fastImage3;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(677, 416);
       this.panelCharColors.Name = "panelCharColors";
@@ -1066,8 +1069,9 @@
       // 
       // pictureEditor
       // 
+      this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage4;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1110,6 +1114,16 @@
       this.charEditor.TabIndex = 24;
       this.charEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);
       this.charEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.charEditor_CharactersShifted);
+      // 
+      // btnExportToImage
+      // 
+      this.btnExportToImage.Location = new System.Drawing.Point(117, 272);
+      this.btnExportToImage.Name = "btnExportToImage";
+      this.btnExportToImage.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToImage.TabIndex = 17;
+      this.btnExportToImage.Text = "to image";
+      this.btnExportToImage.UseVisualStyleBackColor = true;
+      this.btnExportToImage.Click += new System.EventHandler(this.btnExportToImage_Click);
       // 
       // CharsetScreenEditor
       // 
@@ -1225,8 +1239,9 @@
     private System.Windows.Forms.CheckBox checkAutoCenter;
     private System.Windows.Forms.CheckBox checkReverse;
     private System.Windows.Forms.Button btnExportToBASICHexData;
-    private System.Windows.Forms.Button btnExportToImage;
+    private System.Windows.Forms.Button btnExportToImageFile;
         private Controls.CharacterEditor charEditor;
     private System.Windows.Forms.Button btnClearScreen;
+    private System.Windows.Forms.Button btnExportToImage;
   }
 }

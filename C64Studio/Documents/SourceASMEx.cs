@@ -1212,7 +1212,8 @@ namespace C64Studio
           modified = true;
         }
 
-        if ( m_SyntaxColoringCurrentKnownAssembler != DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType )
+        if ( ( DocumentInfo.ASMFileInfo.AssemblerSettings != null )
+        &&   ( m_SyntaxColoringCurrentKnownAssembler != DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType ) )
         {
           m_SyntaxColoringCurrentKnownAssembler = DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType;
 
