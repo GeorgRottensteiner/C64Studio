@@ -262,5 +262,44 @@ namespace TestProject
       Assert.AreEqual( "008014000000000000000000000000000000000000000000000000000000000000001E0000000000000000000000000000000000000000000000000000000000000028", assembly.Assembly.ToString() );
     }
 
+
+    [TestMethod]
+    public void TestPseudoOpByteWordDWord()
+    {
+      string      source = @"!to ""po_byte_word_dword.prg"",cbm
+                * = $2000
+                          !byte 1
+                          !byte 2,3,4,5,6,7
+                          !byte %...##...
+
+                          !word 1
+                          !16 2,3,4,5,6,7
+                          !le16 2,3,4,5,6,7
+                          !be16 1
+                          !be16 2,3,4,5,6,7
+          
+                          !dword 2,3,4
+                          !32 5,6,7
+                          !le32 2,3,4,5,6,7
+                          !be32 1";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.crt";
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsTrue( parser.Parse( source, null, config, null ) );
+      Assert.IsTrue( parser.Assemble( config ) );
+      Assert.AreEqual( 0, parser.Messages.Count );  // no warnings regarding overlapped segments
+
+      var assembly = parser.AssembledOutput;
+
+      Assert.AreEqual( "002001020304050607180100020003000400050006000700020003000400050006000700000100020003000400050006000702000000030000000400000005000000060000000700000002000000030000000400000005000000060000000700000000000001", assembly.Assembly.ToString() );
+    }
+
+
+
   }
 }

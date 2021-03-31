@@ -182,6 +182,12 @@ namespace C64Studio.Parser
           AddPseudoOp( "!WORD", Types.MacroInfo.PseudoOpType.WORD );
           AddPseudoOp( "!WO", Types.MacroInfo.PseudoOpType.WORD );
           AddPseudoOp( "!16", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "!LE16", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( "!BE16", Types.MacroInfo.PseudoOpType.WORD_BE );
+          AddPseudoOp( "!DWORD", Types.MacroInfo.PseudoOpType.DWORD );
+          AddPseudoOp( "!32", Types.MacroInfo.PseudoOpType.DWORD );
+          AddPseudoOp( "!LE32", Types.MacroInfo.PseudoOpType.DWORD );
+          AddPseudoOp( "!BE32", Types.MacroInfo.PseudoOpType.DWORD_BE );
           AddPseudoOp( "!TEXT", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "!TX", Types.MacroInfo.PseudoOpType.TEXT );
           AddPseudoOp( "!SCR", Types.MacroInfo.PseudoOpType.TEXT_SCREEN );

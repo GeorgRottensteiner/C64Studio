@@ -1,4 +1,4 @@
-!to "text-modes.prg",cbm
+!to "po_text_pet_scr.prg",cbm
 
 * = $0801
 !BASIC

@@ -1,6 +1,6 @@
-!to "pobyte.prg",cbm
+!to "po_byte_word_dword.prg",cbm
 
-HAVE_ERRORS
+;HAVE_ERRORS
 
 * = $2000
 
@@ -35,7 +35,25 @@ HAVE_ERRORS
           !word 1
           
           ;ok
-          !word 2,3,4,5,6,7
+          !16 2,3,4,5,6,7
+          
+          ;ok
+          !le16 2,3,4,5,6,7
+          
+          ;ok
+          !be16 1
+          
+          ;ok
+          !be16 2,3,4,5,6,7
+          
+          ;ok
+          !32 2,3,4,5,6,7
+          
+          ;ok
+          !le32 2,3,4,5,6,7
+          
+          ;ok
+          !be32 1
           
           !ifdef HAVE_ERRORS {
           ;not ok

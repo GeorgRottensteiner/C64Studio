@@ -21,6 +21,7 @@
       <li><a href="#byte">!BYTE, !BY, !8, !08</a></li>
       <li><a href="#convtab">!CONVTAB, !CT</a></li>
       <li><a href="#cpu">!CPU</a></li>
+      <li><a href="#dword">!DWORD, !32, !BE32, !LE32</a></li>
       <li><a href="#end">!END</a></li>
       <li><a href="#eof">!ENDOFFILE, !EOF</a></li>
       <li><a href="#error">!ERROR, !SERIOUS</a></li>
@@ -43,7 +44,7 @@
       <li><a href="#to">!TO</a></li>
       <li><a href="#trace">!TRACE</a></li>
       <li><a href="#warn">!WARN</a></li>
-      <li><a href="#word">!WORD, !WO, !16</a></li>
+      <li><a href="#word">!WORD, !WO, !16, !BE16, !LE16</a></li>
       <li><a href="#zone">!ZONE, !ZN</a></li>
     </ul>
     <br>
@@ -258,6 +259,24 @@
     <br>
     <div id="code"><br>      !cpu 6510
     <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="dword"></a>
+  <H2>!DWORD, !32, !LE32, !BE32</H2>
+  <div id="mybody">
+    This pseudo op allows to insert a double word (4 bytes) at the current location.<br>
+    <br>
+    Allowed are constant values, expressions and labels as content.<br>
+    Constant values can be set as decimal, hexadecimal (with prefixed $).<br>
+    Labels are treated as 32-bit values. Default is little endian, unless !BE32 is used.<br>
+    Expressions are evaluated during the final pass. They must evaluate to a valid word value.<br>
+    <br>
+    <br>
+    <div id="code"><br>      !dword 128,270,320
+      !32 NoBehaviour
+      !le32 ( SCREEN_CHAR + 40 )
+      <br></div>
     <br>
     <br>
   </div>
@@ -2132,13 +2151,13 @@
     <br>
   </div>
   <a name="word"></a><a name="wo"></a><a name="16"></a>
-  <H2>!WORD, !WO, !16</H2>
+  <H2>!WORD, !WO, !16, !LE16, !BE16</H2>
   <div id="mybody">
     This pseudo op allows to insert words (2 bytes) at the current location.<br>
     <br>
     Allowed are constant values, expressions and labels as content.<br>
     Constant values can be set as decimal, hexadecimal (with prefixed $).<br>
-    Labels are treated as 16-bit values.<br>
+    Labels are treated as 16-bit values. Default is little endian, unless !BE16 is used.<br>
     Expressions are evaluated during the final pass. They must evaluate to a valid word value.<br>
     <br>
     <br>

@@ -2876,7 +2876,37 @@ namespace C64Studio.Parser
                 case MacroInfo.PseudoOpType.WORD:
                   {
                     int     lineInBytes = 0;
-                    var result = PODataWord( lineInfo.NeededParsedExpression, lineInfo.LineIndex, 0, lineInfo.NeededParsedExpression.Count, lineInfo, lineToCheck, false, out lineInBytes );
+                    var result = PODataWord( lineInfo.NeededParsedExpression, lineInfo.LineIndex, 0, lineInfo.NeededParsedExpression.Count, lineInfo, lineToCheck, false, true, out lineInBytes );
+                    if ( result == ParseLineResult.RETURN_FALSE )
+                    {
+                      return false;
+                    }
+                  }
+                  break;
+                case MacroInfo.PseudoOpType.WORD_BE:
+                  {
+                    int     lineInBytes = 0;
+                    var result = PODataWord( lineInfo.NeededParsedExpression, lineInfo.LineIndex, 0, lineInfo.NeededParsedExpression.Count, lineInfo, lineToCheck, false, false, out lineInBytes );
+                    if ( result == ParseLineResult.RETURN_FALSE )
+                    {
+                      return false;
+                    }
+                  }
+                  break;
+                case MacroInfo.PseudoOpType.DWORD:
+                  {
+                    int     lineInBytes = 0;
+                    var result = PODataDWord( lineInfo.NeededParsedExpression, lineInfo.LineIndex, 0, lineInfo.NeededParsedExpression.Count, lineInfo, lineToCheck, false, true, out lineInBytes );
+                    if ( result == ParseLineResult.RETURN_FALSE )
+                    {
+                      return false;
+                    }
+                  }
+                  break;
+                case MacroInfo.PseudoOpType.DWORD_BE:
+                  {
+                    int     lineInBytes = 0;
+                    var result = PODataDWord( lineInfo.NeededParsedExpression, lineInfo.LineIndex, 0, lineInfo.NeededParsedExpression.Count, lineInfo, lineToCheck, false, false, out lineInBytes );
                     if ( result == ParseLineResult.RETURN_FALSE )
                     {
                       return false;
@@ -6206,7 +6236,7 @@ namespace C64Studio.Parser
 
 
 
-    private ParseLineResult PODataWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, out int lineSizeInBytes )
+    private ParseLineResult PODataWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, bool LittleEndian, out int lineSizeInBytes )
     {
       GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
 
@@ -6257,7 +6287,14 @@ namespace C64Studio.Parser
                           lineTokenInfos[firstTokenIndex].StartPos,
                           lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
               }
-              data.AppendU16( (ushort)wordValue );
+              if ( LittleEndian )
+              {
+                data.AppendU16( (ushort)wordValue );
+              }
+              else
+              {
+                data.AppendU16NetworkOrder( (ushort)wordValue );
+              }
             }
             else if ( AllowNeededExpression )
             {
@@ -6308,7 +6345,14 @@ namespace C64Studio.Parser
                       lineTokenInfos[firstTokenIndex].StartPos,
                       lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
           }
-          data.AppendU16( (ushort)wordValue );
+          if ( LittleEndian )
+          {
+            data.AppendU16( (ushort)wordValue );
+          }
+          else
+          {
+            data.AppendU16NetworkOrder( (ushort)wordValue );
+          }
         }
         else if ( AllowNeededExpression )
         {
@@ -6338,6 +6382,152 @@ namespace C64Studio.Parser
 
 
 
+    private ParseLineResult PODataDWord( List<Types.TokenInfo> lineTokenInfos, int LineIndex, int StartIndex, int Count, Types.ASM.LineInfo info, String parseLine, bool AllowNeededExpression, bool LittleEndian, out int lineSizeInBytes )
+    {
+      GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer();
+
+      int commaCount = 0;
+      int firstTokenIndex = StartIndex;
+      for ( int tokenIndex = StartIndex; tokenIndex < StartIndex + Count; ++tokenIndex )
+      {
+        string token = lineTokenInfos[tokenIndex].Content;
+
+        if ( ( tokenIndex == StartIndex )
+        &&   ( token == "#" ) )
+        {
+          // direct value?
+          if ( ( lineTokenInfos.Count > 2 )
+          &&   ( lineTokenInfos[2].Content != "#" )
+          &&   ( lineTokenInfos[2].Content != "." ) )
+          {
+            // not a binary value
+            continue;
+          }
+        }
+
+        if ( token == "," )
+        {
+          ++commaCount;
+
+          if ( tokenIndex - firstTokenIndex >= 1 )
+          {
+            int     wordValue = -1;
+            int     numBytesGiven = 0;
+
+            if ( ( tokenIndex - firstTokenIndex == 1 )
+            &&   ( lineTokenInfos[firstTokenIndex].Content == "?" ) )
+            {
+              AddError( info.LineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Virtual value only allowed as single value. Expression:"
+                           + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
+                           lineTokenInfos[firstTokenIndex].StartPos,
+                           lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
+            }
+
+            if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, out wordValue, out numBytesGiven ) )
+            {
+              if ( !ValidDWordValue( wordValue ) )
+              {
+                AddError( info.LineIndex,
+                          Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
+                          "Value out of bounds for word, needs to be >= −2147483648 and <= 4294967295. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
+                          lineTokenInfos[firstTokenIndex].StartPos,
+                          lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
+              }
+              if ( LittleEndian )
+              {
+                data.AppendU32( (ushort)wordValue );
+              }
+              else
+              {
+                data.AppendU32NetworkOrder( (ushort)wordValue );
+              }
+            }
+            else if ( AllowNeededExpression )
+            {
+              info.NeededParsedExpression = lineTokenInfos.GetRange( StartIndex, Count );
+            }
+            else
+            {
+              AddError( info.LineIndex,
+                          Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
+                          "Failed to evaluate expression " + TokensToExpression( lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex ),
+                          lineTokenInfos[firstTokenIndex].StartPos,
+                          lineTokenInfos[tokenIndex - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
+            }
+          }
+          firstTokenIndex = tokenIndex + 1;
+        }
+      }
+      if ( ( firstTokenIndex > 0 )
+      &&   ( firstTokenIndex == lineTokenInfos.Count )
+      &&   ( commaCount > 0 ) )
+      {
+        // last parameter has no value!
+        AddError( info.LineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Missing value after last separator."
+                          + TokensToExpression( lineTokenInfos, lineTokenInfos.Count - 1, 1 ),
+                          lineTokenInfos[lineTokenInfos.Count - 1].StartPos,
+                          lineTokenInfos[lineTokenInfos.Count - 1].Length );
+      }
+      if ( firstTokenIndex + 1 <= lineTokenInfos.Count )
+      {
+        int wordValue = -1;
+        int numBytesGiven = 0;
+
+        if ( ( lineTokenInfos.Count - firstTokenIndex == 1 )
+        &&   ( lineTokenInfos[firstTokenIndex].Content == "?" ) )
+        {
+          info.NumBytes = 4;
+          lineSizeInBytes = 4;
+          return ParseLineResult.ERROR_ABORT;
+        }
+
+        if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, out wordValue, out numBytesGiven ) )
+        {
+          if ( !ValidDWordValue( wordValue ) )
+          {
+            AddError( info.LineIndex,
+                      Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD,
+                      "Value out of bounds for word, needs to be >= −2147483648 and <= 4294967295. Expression:" + TokensToExpression( lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ),
+                      lineTokenInfos[firstTokenIndex].StartPos,
+                      lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
+          }
+          if ( LittleEndian )
+          {
+            data.AppendU32( (ushort)wordValue );
+          }
+          else
+          {
+            data.AppendU32NetworkOrder( (ushort)wordValue );
+          }
+        }
+        else if ( AllowNeededExpression )
+        {
+          info.NeededParsedExpression = lineTokenInfos.GetRange( StartIndex, Count );
+        }
+        else
+        {
+          AddError( info.LineIndex,
+                      Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
+                      "Failed to evaluate expression " + TokensToExpression( lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex ),
+                      lineTokenInfos[firstTokenIndex].StartPos,
+                      lineTokenInfos[lineTokenInfos.Count - 1].EndPos - lineTokenInfos[firstTokenIndex].StartPos + 1 );
+        }
+      }
+      // TODO - this is a ugly check if there was an error or not
+      if ( ( ( AllowNeededExpression )
+      &&     ( info.NeededParsedExpression == null ) )
+      ||   ( !AllowNeededExpression ) )
+      {
+        info.LineData = data;
+      }
+      info.NumBytes = 4 * ( 1 + commaCount );
+      info.Line = parseLine;
+      lineSizeInBytes = info.NumBytes;
+      return ParseLineResult.OK;
+    }
+
+
+
     private bool ValidWordValue( int WordValue )
     {
       if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
@@ -6351,6 +6541,19 @@ namespace C64Studio.Parser
 
 
 
+    private bool ValidDWordValue( long DWordValue )
+    {
+      if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
+      &&   ( ( DWordValue < -2147483648 )
+      ||     ( DWordValue > 4294967295 ) ) )
+      {
+        return false;
+      }
+      return true;
+    }
+    
+    
+    
     private ParseLineResult POIncludeSource( PathResolving Resolving, string subFilename, string ParentFilename, ref int lineIndex, ref string[] Lines )
     {
       if ( m_AssemblerSettings.IncludeSourceIsAlwaysUsingLibraryPathAndFile )
@@ -9114,8 +9317,8 @@ namespace C64Studio.Parser
               }
             }
             else if ( ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BYTE )
-            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
-            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
+            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
+            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
             {
               PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, pseudoOp.Type, textCodeMapping, true );
               info.Line = parseLine;
@@ -9123,7 +9326,46 @@ namespace C64Studio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WORD )
             {
-              var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, out lineSizeInBytes );
+              var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
+              if ( result == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+              else if ( result == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.WORD_BE )
+            {
+              var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
+              if ( result == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+              else if ( result == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.DWORD )
+            {
+              var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
+              if ( result == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+              else if ( result == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.DWORD_BE )
+            {
+              var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
               if ( result == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -9523,7 +9765,46 @@ namespace C64Studio.Parser
           }
           else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.WORD )
           {
-            var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, out lineSizeInBytes );
+            var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
+            if ( result == ParseLineResult.RETURN_NULL )
+            {
+              HadFatalError = true;
+              return Lines;
+            }
+            else if ( result == ParseLineResult.CALL_CONTINUE )
+            {
+              continue;
+            }
+          }
+          else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.WORD_BE )
+          {
+            var result = PODataWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
+            if ( result == ParseLineResult.RETURN_NULL )
+            {
+              HadFatalError = true;
+              return Lines;
+            }
+            else if ( result == ParseLineResult.CALL_CONTINUE )
+            {
+              continue;
+            }
+          }
+          else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.DWORD )
+          {
+            var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, true, out lineSizeInBytes );
+            if ( result == ParseLineResult.RETURN_NULL )
+            {
+              HadFatalError = true;
+              return Lines;
+            }
+            else if ( result == ParseLineResult.CALL_CONTINUE )
+            {
+              continue;
+            }
+          }
+          else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.DWORD_BE )
+          {
+            var result = PODataDWord( lineTokenInfos, lineIndex, 1, lineTokenInfos.Count - 1, info, parseLine, true, false, out lineSizeInBytes );
             if ( result == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
