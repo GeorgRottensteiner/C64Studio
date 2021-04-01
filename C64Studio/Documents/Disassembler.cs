@@ -483,7 +483,7 @@ namespace C64Studio
       document.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
       document.Core = Core;
       document.Text = System.IO.Path.GetFileName( newFilename );
-      document.FillContent( disassembly );
+      document.FillContent( disassembly, false );
       document.Show( Core.MainForm.panelMain );
     }
 

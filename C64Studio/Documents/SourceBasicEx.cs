@@ -1578,13 +1578,23 @@ namespace C64Studio
 
 
 
-    public override void FillContent( string Text )
+    public override void FillContent( string Text, bool KeepCursorPosIntact )
     {
       if ( m_LowerCaseMode )
       {
         Text = MakeLowerCase( Text, Core.Settings.BASICUseNonC64Font );
       }
+
+      int scrollOffset = editSource.VerticalScroll.Value;
+      editSource.Navigate( editSource.Selection.Start.iLine );
       editSource.Text = Text;
+
+      if ( KeepCursorPosIntact )
+      {
+        editSource.VerticalScroll.Value = scrollOffset;
+        editSource.UpdateScrollbars();
+      }
+
       SetModified();
     }
 

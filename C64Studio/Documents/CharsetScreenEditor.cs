@@ -1783,7 +1783,7 @@ namespace C64Studio
           document.SetDocumentFilename( "New BASIC File.bas" );
           document.DocumentInfo.Element.Filename = document.DocumentInfo.DocumentFilename;
         }
-        document.FillContent( sb.ToString() );
+        document.FillContent( sb.ToString(), false );
         document.SetModified();
         document.Save();
       }

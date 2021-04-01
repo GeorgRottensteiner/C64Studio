@@ -1991,8 +1991,6 @@ namespace C64Studio
         Line = 0;
       }
       editSource.Navigate( Line );
-      ///editSource.Caret.Goto( editSource.Lines[Line].StartPosition );
-      ///editSource.Scrolling.ScrollToCaret();
       CenterOnCaret();
     }
 
@@ -2577,10 +2575,20 @@ namespace C64Studio
 
 
 
-    public override void FillContent( string Text )
+    public override void FillContent( string Text, bool KeepCursorPosIntact )
     {
       m_InsertingText = true;
+
+      int scrollOffset = editSource.VerticalScroll.Value;
+      editSource.Navigate( editSource.Selection.Start.iLine );
       editSource.Text = Text;
+
+      if ( KeepCursorPosIntact )
+      {
+        editSource.VerticalScroll.Value = scrollOffset;
+        editSource.UpdateScrollbars();
+      }
+
       m_InsertingText = false;
       SetModified();
     }

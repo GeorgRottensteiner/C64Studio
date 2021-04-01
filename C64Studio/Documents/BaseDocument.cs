@@ -387,7 +387,7 @@ namespace C64Studio
 
 
 
-    public virtual void FillContent( string Text )
+    public virtual void FillContent( string Text, bool KeepCursorPosIntact )
     {
     }
 

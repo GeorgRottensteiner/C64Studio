@@ -846,7 +846,7 @@ namespace C64Studio
               {
                 sb.AppendLine( line );
               }
-              document.FillContent( sb.ToString() );
+              document.FillContent( sb.ToString(), false );
             }
           }
         }

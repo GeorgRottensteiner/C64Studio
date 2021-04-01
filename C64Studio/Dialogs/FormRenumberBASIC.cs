@@ -112,7 +112,7 @@ namespace C64Studio
         newText = m_Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( newText );
       }
 
-      m_Basic.FillContent( newText );
+      m_Basic.FillContent( newText, true );
       Close();
     }
 

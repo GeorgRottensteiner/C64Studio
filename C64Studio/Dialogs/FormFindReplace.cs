@@ -1471,7 +1471,7 @@ namespace C64Studio
       if ( DocumentInfo.BaseDoc != null )
       {
         // easy - replace in edit
-        DocumentInfo.BaseDoc.FillContent( NewText );
+        DocumentInfo.BaseDoc.FillContent( NewText, true );
         return;
       }
       // write to file
