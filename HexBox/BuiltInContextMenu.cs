@@ -219,7 +219,7 @@ namespace Be.Windows.Forms
         /// <summary>
         /// Gets the text of the "Select All" ContextMenuStrip item.
         /// </summary>
-        internal string SelectAllMenuItemTextInternal { get { return !string.IsNullOrEmpty(SelectAllMenuItemText) ? SelectAllMenuItemText : "SelectAll"; } }
+        internal string SelectAllMenuItemTextInternal { get { return !string.IsNullOrEmpty(SelectAllMenuItemText) ? SelectAllMenuItemText : "Select All"; } }
 
         /// <summary>
         /// Gets or sets the image of the "Cut" ContextMenuStrip item.
