@@ -4219,7 +4219,8 @@ namespace C64Studio.Parser
         return false;
       }
       if ( ( !paramTokens[0][0].Content.StartsWith( "\"" ) )
-      ||   ( !paramTokens[0][0].Content.EndsWith( "\"" ) ) )
+      ||   ( !paramTokens[0][0].Content.EndsWith( "\"" ) )
+      ||   ( paramTokens[0][0].Length <= 2 ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Expected proper file name between apostrophes" );
         return false;
@@ -8442,14 +8443,14 @@ namespace C64Studio.Parser
                 subFilename = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
               }
               else if ( ( lineTokenInfos.Count == 2 )
-              && ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+              &&        ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
               {
                 // regular include
                 subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
               }
               else if ( ( lineTokenInfos.Count > 3 )
-              && ( lineTokenInfos[1].Content == "<" )
-              && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
+              &&        ( lineTokenInfos[1].Content == "<" )
+              &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
               {
                 // library include
                 subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
