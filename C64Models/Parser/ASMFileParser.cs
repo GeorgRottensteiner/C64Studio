@@ -6773,7 +6773,8 @@ namespace C64Studio.Parser
       if ( m_AssemblerSettings.IncludeExpectsStringLiteral )
       {
         if ( ( !paramsFile[0].Content.StartsWith( "\"" ) )
-        ||   ( !paramsFile[0].Content.EndsWith( "\"" ) ) )
+        ||   ( !paramsFile[0].Content.EndsWith( "\"" ) )
+        ||   ( paramsFile[0].Length <= 2 ) )
         {
           AddError( lineIndex, Types.ErrorCode.E1307_FILENAME_INCOMPLETE, "Expected proper file name between apostrophes" );
           return ParseLineResult.RETURN_NULL;
@@ -6805,7 +6806,7 @@ namespace C64Studio.Parser
 
       // special case, allow 0 length as all bytes
       if ( ( fileSizeValid )
-      && ( fileSize == 0 ) )
+      &&   ( fileSize == 0 ) )
       {
         fileSizeValid = false;
       }
