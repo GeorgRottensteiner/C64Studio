@@ -243,6 +243,15 @@ namespace C64Studio
       Types.ASM.FileInfo fileToDebug = DetermineASMFileInfo( ASMDoc );
 
       Types.SymbolInfo tokenInfo = fileToDebug.TokenInfoFromName( Word, Zone, CheapLabelParent );
+      var macro = ASMDoc.ASMFileInfo.MacroFromName( Word );
+      if ( macro != null )
+      {
+        if ( fileToDebug.FindTrueLineSource( macro.LineIndex, out string fileName, out int localLineIndex ) )
+        {
+          OpenDocumentAndGotoLine( ASMDoc.Project, FindDocumentInfoByPath( fileName ), localLineIndex );
+          return;
+        }
+      }
       if ( tokenInfo == null )
       {
         fileToDebug = ASMDoc.ASMFileInfo;
@@ -252,8 +261,9 @@ namespace C64Studio
       {
         string documentFile = "";
         int documentLine = -1;
+
         if ( ( tokenInfo.LineIndex == 0 )
-        && ( !string.IsNullOrEmpty( tokenInfo.DocumentFilename ) ) )
+        &&   ( !string.IsNullOrEmpty( tokenInfo.DocumentFilename ) ) )
         {
           // try stored info first
           OpenDocumentAndGotoLine( ASMDoc.Project, FindDocumentInfoByPath( tokenInfo.DocumentFilename ), tokenInfo.LocalLineIndex );
@@ -263,12 +273,10 @@ namespace C64Studio
         if ( fileToDebug.FindTrueLineSource( tokenInfo.LineIndex, out documentFile, out documentLine ) )
         {
           OpenDocumentAndGotoLine( ASMDoc.Project, FindDocumentInfoByPath( tokenInfo.DocumentFilename ), documentLine );
+          return;
         }
       }
-      else
-      {
-        System.Windows.Forms.MessageBox.Show( "Could not determine item source" );
-      }
+      System.Windows.Forms.MessageBox.Show( "Could not determine item source" );
     }
 
 

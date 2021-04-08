@@ -93,6 +93,7 @@ namespace C64Studio.Types.ASM
     public Dictionary<int,Types.Breakpoint>       VirtualBreakpoints = new Dictionary<int,Breakpoint>();
     public string                                 LabelDumpFile = "";
     public Tiny64.Processor                       Processor = Tiny64.Processor.Create6510();
+    public GR.Collections.Map<string, C64Studio.Types.MacroFunctionInfo>    Macros = new GR.Collections.Map<string, MacroFunctionInfo>();
 
 
 
@@ -594,6 +595,24 @@ namespace C64Studio.Types.ASM
         return null;
       }
       return Labels[Token];
+    }
+
+
+
+    public MacroFunctionInfo MacroFromName( string MacroName )
+    {
+      if ( AssemblerSettings != null )
+      {
+        if ( !AssemblerSettings.CaseSensitive )
+        {
+          MacroName = MacroName.ToUpper();
+        }
+      }
+      if ( !Macros.ContainsKey( MacroName ) )
+      {
+        return null;
+      }
+      return Macros[MacroName];
     }
 
 

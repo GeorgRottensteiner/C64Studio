@@ -7237,7 +7237,6 @@ namespace C64Studio.Parser
     private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration, string AdditionalPredefines, out bool HadFatalError )
     {
       List<Types.ScopeInfo>   stackScopes = new List<C64Studio.Types.ScopeInfo>();
-      GR.Collections.Map<string,Types.MacroFunctionInfo>     macroFunctions = new GR.Collections.Map<string,C64Studio.Types.MacroFunctionInfo>();
 
       ASMFileInfo.Labels.Clear();
       m_CurrentCommentSB = new StringBuilder();
@@ -7257,6 +7256,7 @@ namespace C64Studio.Parser
       ASMFileInfo.LineInfo.Clear();
       ASMFileInfo.TempLabelInfo.Clear();
       ASMFileInfo.Processor = Tiny64.Processor.Create6510();
+      ASMFileInfo.Macros    = new GR.Collections.Map<string, C64Studio.Types.MacroFunctionInfo>();
 
       stackScopes.Clear();
       Messages.Clear();
@@ -7379,7 +7379,7 @@ namespace C64Studio.Parser
 
 
         // PDS/DASM macro call?
-        DetectPDSOrDASMMacroCall( macroFunctions, lineTokenInfos );
+        DetectPDSOrDASMMacroCall( ASMFileInfo.Macros, lineTokenInfos );
 
         // do we have a DASM scope operator? (must skip scope check then)
         bool  isDASMScopePseudoOP = false;
@@ -7521,7 +7521,7 @@ namespace C64Studio.Parser
                   AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
                   continue;
                 }
-                var result = HandleScopeEnd( macroFunctions, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                var result = HandleScopeEnd( ASMFileInfo.Macros, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
                 if ( result == ParseLineResult.CALL_CONTINUE )
                 {
                   --lineIndex;
@@ -7549,7 +7549,7 @@ namespace C64Studio.Parser
                 }
                 OnScopeRemoved( lineIndex, stackScopes );
                 stackScopes.RemoveAt( stackScopes.Count - 1 );
-                var result = HandleScopeEnd( macroFunctions, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
+                var result = HandleScopeEnd( ASMFileInfo.Macros, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
                 if ( result == ParseLineResult.CALL_CONTINUE )
                 {
                   --lineIndex;
@@ -8264,7 +8264,7 @@ namespace C64Studio.Parser
 
           if ( !ScopeInsideMacroDefinition( stackScopes ) )
           {
-            var result = POCallMacro( lineTokenInfos, ref lineIndex, info, parseLine, ParentFilename, labelInFront, macroFunctions, ref Lines, stackScopes, out lineSizeInBytes );
+            var result = POCallMacro( lineTokenInfos, ref lineIndex, info, parseLine, ParentFilename, labelInFront, ASMFileInfo.Macros, ref Lines, stackScopes, out lineSizeInBytes );
             if ( result == ParseLineResult.CALL_CONTINUE )
             {
               continue;
@@ -8934,7 +8934,7 @@ namespace C64Studio.Parser
               int localLineIndex = 0;
               ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
 
-              if ( POMacro( labelInFront, macroFunctions, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
+              if ( POMacro( labelInFront, ASMFileInfo.Macros, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
               {
                 if ( m_AssemblerSettings.MacroIsZone )
                 {
@@ -8950,7 +8950,7 @@ namespace C64Studio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.END )
             {
-              var result = HandleScopeEnd( macroFunctions, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
+              var result = HandleScopeEnd( ASMFileInfo.Macros, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
               if ( result == ParseLineResult.CALL_CONTINUE )
               {
                 --lineIndex;
@@ -9855,7 +9855,7 @@ namespace C64Studio.Parser
             int localLineIndex = 0;
             ASMFileInfo.FindTrueLineSource( lineIndex, out outerFilename, out localLineIndex );
 
-            if ( POMacro( labelInFront, macroFunctions, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
+            if ( POMacro( labelInFront, ASMFileInfo.Macros, outerFilename, lineIndex, lineTokenInfos, stackScopes, out macroName ) )
             {
               if ( m_AssemblerSettings.MacroIsZone )
               {
@@ -9872,7 +9872,7 @@ namespace C64Studio.Parser
             {
               continue;
             }
-            var result = HandleScopeEnd( macroFunctions, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
+            var result = HandleScopeEnd( ASMFileInfo.Macros, stackScopes, lineTokenInfos, ref lineIndex, ref intermediateLineOffset, ref Lines );
             if ( result == ParseLineResult.CALL_CONTINUE )
             {
               --lineIndex;
@@ -10197,7 +10197,7 @@ namespace C64Studio.Parser
           }
         }
       }
-      foreach ( Types.MacroFunctionInfo macroFunction in macroFunctions.Values )
+      foreach ( Types.MacroFunctionInfo macroFunction in ASMFileInfo.Macros.Values )
       {
         if ( macroFunction.LineEnd == -1 )
         {

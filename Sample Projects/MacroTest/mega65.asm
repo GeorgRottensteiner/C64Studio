@@ -128,7 +128,9 @@ Entry
     lda #$01
     inz 
     sta [ZP.Screen], z 
-
+    lda #$00
+    inz 
+    sta [ZP.Screen], z 
 
     ;change the 16 bit extended atrributes
     ldz #$00
@@ -138,6 +140,9 @@ Entry
     inz 
     sta [ZP.Color], z 
 
+    lda #%10000000 ;Set bit 7 = Vertical flip
+    inz 
+    ;sta [ZP.Color], z     
     jmp *
     
 
