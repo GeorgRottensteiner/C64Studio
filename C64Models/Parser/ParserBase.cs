@@ -247,37 +247,90 @@ namespace C64Studio.Parser
 
     static public Types.AssemblerType DetectAssemblerType( string Text )
     {
-      bool hasORG = ( Text.IndexOf( "ORG " ) != -1 ) || ( Text.IndexOf( "org " ) != -1 );
-      bool hasMAC = ( Text.IndexOf( "MAC " ) != -1 );
-      bool hasInclude = ( Text.IndexOf( "INCLUDE " ) != -1 ) || ( Text.IndexOf( "INCLUDE " ) != -1 );
-      bool hasTo = ( Text.IndexOf( "!to " ) != -1 ) || ( Text.IndexOf( "!TO " ) != -1 );
-      bool hasEQU = ( Text.IndexOf( "EQU " ) != -1 );
-      bool hasByte = ( Text.IndexOf( "!byte" ) != -1 ) || ( Text.IndexOf( "!BYTE" ) != -1 ) || ( Text.IndexOf( "!BY " ) != -1 );
-      bool hasZone = ( Text.IndexOf( "!zone" ) != -1 ) || ( Text.IndexOf( "!ZONE" ) != -1 );
-      bool hasProcessor = ( Text.IndexOf( "processor " ) != -1 ) || ( Text.IndexOf( "PROCESSOR " ) != -1 );
+      bool hasORG = false;
+      bool hasMAC = false;
+      bool hasInclude = false;
+      bool hasTo = false;
+      bool hasEQU = false;
+      bool hasByte = false;
+      bool hasZone = false;
+      bool hasProcessor = false;
 
-      if ( ( hasTo )
-      ||   ( hasByte )
-      ||   ( hasZone ) )
+      var memoryReader = new GR.IO.MemoryReader( Encoding.UTF8.GetBytes( Text ) );
+
+      while ( memoryReader.ReadLine( out string line ) )
       {
-        return C64Studio.Types.AssemblerType.C64_STUDIO;
+        line = line.Trim();
+
+        if ( line.StartsWith( ";" ) )
+        {
+          // must be a comment
+          return Types.AssemblerType.C64_STUDIO;
+        }
+        if ( ( Text.IndexOf( "ORG " ) != -1 ) 
+        ||   ( Text.IndexOf( "org " ) != -1 ) )
+        {
+          hasORG = true;
+        }
+        if ( Text.IndexOf( "MAC " ) != -1 )
+        {
+          hasMAC = true;
+        }
+        if ( ( Text.IndexOf( "INCLUDE " ) != -1 ) 
+        ||   ( Text.IndexOf( "INCLUDE " ) != -1 ) )
+        {
+          hasInclude = true;
+        }
+        if ( ( Text.IndexOf( "!to " ) != -1 )
+        ||   ( Text.IndexOf( "!TO " ) != -1 ) )
+        {
+          hasTo = true;
+        }
+        if ( Text.IndexOf( "EQU " ) != -1 )
+        {
+          hasEQU = true;
+        }
+        if ( ( Text.IndexOf( "!byte" ) != -1 ) 
+        ||   ( Text.IndexOf( "!BYTE" ) != -1 ) 
+        ||   ( Text.IndexOf( "!BY " ) != -1 ) )
+        {
+          hasByte = true;
+        }
+        if ( ( Text.IndexOf( "!zone" ) != -1 ) 
+        ||   ( Text.IndexOf( "!ZONE" ) != -1 ) )
+        {
+          hasZone = true;
+        }
+        if ( ( Text.IndexOf( "processor " ) != -1 ) 
+        ||   ( Text.IndexOf( "PROCESSOR " ) != -1 ) )
+        {
+          hasProcessor = true;
+        }
+
+        // early detection
+        if ( ( hasTo )
+        ||   ( hasByte )
+        ||   ( hasZone ) )
+        {
+          return C64Studio.Types.AssemblerType.C64_STUDIO;
+        }
+
+        if ( ( ( hasORG )
+        &&     ( hasTo ) )
+        ||   ( hasProcessor )
+        ||   ( hasMAC ) )
+        {
+          return C64Studio.Types.AssemblerType.DASM;
+        }
+        if ( ( ( hasORG )
+        ||     ( hasEQU )
+        ||     ( hasInclude ) )
+        &&   ( !hasByte ) )
+        {
+          return C64Studio.Types.AssemblerType.PDS;
+        }
       }
 
-      if ( ( ( hasORG )
-      &&     ( hasTo ) )
-      ||   ( hasProcessor )
-      ||   ( hasMAC ) )
-      {
-        return C64Studio.Types.AssemblerType.DASM;
-      }
-      if ( ( ( hasORG )
-      ||     ( hasEQU )
-      ||     ( hasInclude ) )
-      && ( !hasByte ) )
-      {
-        return C64Studio.Types.AssemblerType.PDS;
-      }
-      
       if ( hasByte )
       {
         return C64Studio.Types.AssemblerType.C64_STUDIO;
