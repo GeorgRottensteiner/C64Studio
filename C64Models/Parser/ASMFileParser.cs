@@ -2793,6 +2793,12 @@ namespace C64Studio.Parser
             return false;
           }
 
+          if ( ( lineInfo.NeededParsedExpression.Count == 1 )
+          &&   ( lineInfo.NeededParsedExpression[0].Content == "HitTile.NoLockBlock" ) )
+          {
+            Debug.Log( "aha" );
+          }
+
           // strip prefixed #
           if ( lineInfo.NeededParsedExpression[0].Content.StartsWith( "#" ) )
           {
@@ -3010,7 +3016,7 @@ namespace C64Studio.Parser
             if ( ( ( lineInfo.Opcode == null )
             ||     ( ( lineInfo.Opcode != null )
             &&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_RELATIVE )
-            &&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.RELATIVE_16 )
+            //&&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.RELATIVE_16 )
             &&       ( lineInfo.Opcode.Addressing != Opcode.AddressingType.ZEROPAGE_INDIRECT_SP_Y ) ) )
             &&   ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, out value ) ) )
             {
