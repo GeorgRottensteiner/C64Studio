@@ -29,7 +29,10 @@
 ;| Bit  0   |   Unused
 ;Default Value: $14/20 (%00010100).
 .MEMORY_CONTROL      = $d018
+
+
 .IRQ_REQUEST         = $d019 
+
 ;| Bit 7-4  |   Always 1
 ;| Bit 3    |   Light-Pen Triggered IRQ Flag
 ;| Bit 2    |   Sprite to Sprite Collision IRQ Flag     (see $D01E)

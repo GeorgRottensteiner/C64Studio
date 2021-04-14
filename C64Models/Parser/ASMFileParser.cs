@@ -2793,12 +2793,6 @@ namespace C64Studio.Parser
             return false;
           }
 
-          if ( ( lineInfo.NeededParsedExpression.Count == 1 )
-          &&   ( lineInfo.NeededParsedExpression[0].Content == "HitTile.NoLockBlock" ) )
-          {
-            Debug.Log( "aha" );
-          }
-
           // strip prefixed #
           if ( lineInfo.NeededParsedExpression[0].Content.StartsWith( "#" ) )
           {

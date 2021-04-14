@@ -138,8 +138,14 @@ namespace C64Studio
 
       foreach ( BaseDocument doc in docList )
       {
+        
         if ( doc != this )
         {
+          if ( doc.HideOnClose )
+          {
+            doc.Hide();
+            continue;
+          }
           docsToClose.Add( doc );
         }
       }
@@ -926,6 +932,11 @@ namespace C64Studio
 
       foreach ( BaseDocument doc in docList )
       {
+        if ( doc.HideOnClose )
+        {
+          doc.Hide();
+          continue;
+        }
         docsToClose.Add( doc );
       }
 
