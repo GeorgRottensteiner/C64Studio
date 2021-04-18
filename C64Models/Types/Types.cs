@@ -189,7 +189,9 @@ namespace C64Studio.Types
     BOOKMARK_DELETE,
     BOOKMARK_DELETE_ALL,
     BOOKMARK_NEXT,
-    BOOKMARK_PREVIOUS
+    BOOKMARK_PREVIOUS,
+    NAVIGATE_BACK,
+    NAVIGATE_FORWARD
   }
 
   public enum StudioState

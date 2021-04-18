@@ -95,7 +95,23 @@
 
 
 !zone CIA1
+;| Bits 7-0 |   Write Keyboard Column Values for Keyboard Scan
+;| Bits 7-6 |   Paddles on: 01 = Port A, 10 = Port B
+;| Bit  4   |   Joystick A Fire Button: 0 = Pressed
+;| Bit  3   |   Joystick A Right: 0 = Pressed, or Paddle Button
+;| Bit  2   |   Joystick A Left : 0 = Pressed, or Paddle Button
+;| Bit  1   |   Joystick A Down : 0 = Pressed
+;| Bit  0   |   Joystick A Up   : 0 = Pressed
 .DATA_PORT_A         = $dc00
+
+;| Bits 7-0 |   Read Keyboard Row Values for Keyboard Scan
+;| Bit  4   |   Joystick B Fire Button: 0 = Pressed
+;| Bit  3   |   Joystick B Right: 0 = Pressed, or Paddle Button
+;| Bit  2   |   Joystick B Left : 0 = Pressed, or Paddle Button
+;| Bit  1   |   Joystick B Down : 0 = Pressed
+;| Bit  0   |   Joystick B Up   : 0 = Pressed
+.DATA_PORT_B         = $dc01
+
 ;| Bit 7 |   On Read:  1 = Interrupt occured
 ;|       |   On Write: 1 = Set Int.-Flags, 0 = Clear Int-.Flags
 ;| Bit 4 |   FLAG1 IRQ (Cassette Read / Serial Bus SRQ Input)

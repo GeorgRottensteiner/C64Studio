@@ -2677,6 +2677,9 @@ namespace C64Studio
       UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_PREVIOUS, FastColoredTextBoxNS.FCTBAction.GoPrevBookmark );
       UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_NEXT, FastColoredTextBoxNS.FCTBAction.GoNextBookmark );
 
+      UpdateKeyBinding( Function.NAVIGATE_BACK, FastColoredTextBoxNS.FCTBAction.NavigateBackward );
+      UpdateKeyBinding( Function.NAVIGATE_FORWARD, FastColoredTextBoxNS.FCTBAction.NavigateForward );
+
       AutoComplete.Enabled = Core.Settings.ASMShowAutoComplete;
 
       miniMap.ForeColor = GR.Color.Helper.FromARGB( 0xffff0000 );

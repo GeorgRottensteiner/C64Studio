@@ -267,42 +267,42 @@ namespace C64Studio.Parser
           // must be a comment
           return Types.AssemblerType.C64_STUDIO;
         }
-        if ( ( Text.IndexOf( "ORG " ) != -1 ) 
-        ||   ( Text.IndexOf( "org " ) != -1 ) )
+        if ( ( line.IndexOf( "ORG " ) != -1 ) 
+        ||   ( line.IndexOf( "org " ) != -1 ) )
         {
           hasORG = true;
         }
-        if ( Text.IndexOf( "MAC " ) != -1 )
+        if ( line.IndexOf( "MAC " ) != -1 )
         {
           hasMAC = true;
         }
-        if ( ( Text.IndexOf( "INCLUDE " ) != -1 ) 
-        ||   ( Text.IndexOf( "INCLUDE " ) != -1 ) )
+        if ( ( line.IndexOf( "INCLUDE " ) != -1 ) 
+        ||   ( line.IndexOf( "INCLUDE " ) != -1 ) )
         {
           hasInclude = true;
         }
-        if ( ( Text.IndexOf( "!to " ) != -1 )
-        ||   ( Text.IndexOf( "!TO " ) != -1 ) )
+        if ( ( line.IndexOf( "!to " ) != -1 )
+        ||   ( line.IndexOf( "!TO " ) != -1 ) )
         {
           hasTo = true;
         }
-        if ( Text.IndexOf( "EQU " ) != -1 )
+        if ( line.IndexOf( "EQU " ) != -1 )
         {
           hasEQU = true;
         }
-        if ( ( Text.IndexOf( "!byte" ) != -1 ) 
-        ||   ( Text.IndexOf( "!BYTE" ) != -1 ) 
-        ||   ( Text.IndexOf( "!BY " ) != -1 ) )
+        if ( ( line.IndexOf( "!byte" ) != -1 ) 
+        ||   ( line.IndexOf( "!BYTE" ) != -1 ) 
+        ||   ( line.IndexOf( "!BY " ) != -1 ) )
         {
           hasByte = true;
         }
-        if ( ( Text.IndexOf( "!zone" ) != -1 ) 
-        ||   ( Text.IndexOf( "!ZONE" ) != -1 ) )
+        if ( ( line.IndexOf( "!zone" ) != -1 ) 
+        ||   ( line.IndexOf( "!ZONE" ) != -1 ) )
         {
           hasZone = true;
         }
-        if ( ( Text.IndexOf( "processor " ) != -1 ) 
-        ||   ( Text.IndexOf( "PROCESSOR " ) != -1 ) )
+        if ( ( line.IndexOf( "processor " ) != -1 ) 
+        ||   ( line.IndexOf( "PROCESSOR " ) != -1 ) )
         {
           hasProcessor = true;
         }

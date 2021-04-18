@@ -271,6 +271,9 @@ namespace C64Studio
       RegisterFunction( Function.BOOKMARK_NEXT, "Next Bookmark", FunctionStudioState.ANY );
       RegisterFunction( Function.BOOKMARK_PREVIOUS, "Previous Bookmark", FunctionStudioState.ANY );
 
+      RegisterFunction( Function.NAVIGATE_BACK, "Navigate Backward", FunctionStudioState.ANY );
+      RegisterFunction( Function.NAVIGATE_FORWARD, "Navigate Forward", FunctionStudioState.ANY );
+
       // functions for running debugger
       RegisterFunction( Function.DEBUG_BREAK, "Break into Debugger", FunctionStudioState.DEBUGGER_RUNNING );
 
