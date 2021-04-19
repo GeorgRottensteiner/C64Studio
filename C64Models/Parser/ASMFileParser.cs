@@ -3965,7 +3965,7 @@ namespace C64Studio.Parser
       // evaluate, could be a label in front?
       // merge + with local token for possible macro functions
       if ( ( lineTokenInfos.Count >= 2 )
-      &&   ( lineTokenInfos[0].Content == m_AssemblerSettings.MacroFunctionCallPrefix )
+      &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Contains( lineTokenInfos[0].Content ) )
       &&   ( ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
       ||     ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
       &&   ( lineTokenInfos[0].StartPos + lineTokenInfos[0].Length == lineTokenInfos[1].StartPos ) )
@@ -3993,7 +3993,7 @@ namespace C64Studio.Parser
       {
         // could be a label in front
         if ( ( lineTokenInfos.Count >= 3 )
-        &&   ( lineTokenInfos[1].Content == m_AssemblerSettings.MacroFunctionCallPrefix )
+        &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Contains( lineTokenInfos[1].Content ) )
         &&   ( ( lineTokenInfos[2].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
         ||     ( lineTokenInfos[2].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
         &&   ( lineTokenInfos[1].StartPos + lineTokenInfos[1].Length == lineTokenInfos[2].StartPos ) )
@@ -6909,19 +6909,24 @@ namespace C64Studio.Parser
       // +macro Macroname [param1[,param2]]
       lineSizeInBytes = 0;
 
-      if ( m_AssemblerSettings.MacroFunctionCallPrefix.Length >= lineTokenInfos[0].Content.Length )
+      if ( ( m_AssemblerSettings.MacroFunctionCallPrefix.Count > 0 )
+      &&   ( m_AssemblerSettings.MacroFunctionCallPrefix[0].Length >= lineTokenInfos[0].Content.Length ) )
       {
         AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unnamed macro function" );
         return ParseLineResult.OK;
       }
 
       string functionName = lineTokenInfos[0].Content;
-      if ( ( m_AssemblerSettings.MacroFunctionCallPrefix.Length > 0 )
-      &&   ( functionName.StartsWith( m_AssemblerSettings.MacroFunctionCallPrefix ) ) )
+      if ( m_AssemblerSettings.MacroFunctionCallPrefix.Count > 0 )
       {
-        functionName = functionName.Substring( m_AssemblerSettings.MacroFunctionCallPrefix.Length );
+        foreach ( var prefix in m_AssemblerSettings.MacroFunctionCallPrefix )
+        {
+          if ( functionName.StartsWith( prefix ) )
+          {
+            functionName = functionName.Substring( prefix.Length );
+          }
+        }
       }
-
       if ( ( !macroFunctions.ContainsKey( functionName ) )
       ||   ( macroFunctions[functionName].LineEnd == -1 ) )
       {
@@ -10462,7 +10467,7 @@ namespace C64Studio.Parser
     private void DetectPDSOrDASMMacroCall( Map<string, MacroFunctionInfo> macroFunctions, List<TokenInfo> lineTokenInfos )
     {
       if ( ( lineTokenInfos.Count >= 1 )
-      &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Length == 0 )
+      &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Count == 0 )
       &&   ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
       &&   ( macroFunctions.ContainsKey( lineTokenInfos[0].Content ) ) )
       {
