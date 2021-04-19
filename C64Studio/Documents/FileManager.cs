@@ -835,11 +835,12 @@ namespace C64Studio
             parser.SetBasicDialect( Dialect );
             if ( parser.Disassemble( fileInfo.Data.SubBuffer( 2 ), out lines ) )
             {
-              BaseDocument document = new SourceBasicEx( Core );
+              var document = new SourceBasicEx( Core );
               document.ShowHint = DockState.Document;
 
               document.Core = Core;
               document.Show( Core.MainForm.panelMain );
+              document.SetBASICDialect( Dialect );
 
               StringBuilder sb = new StringBuilder();
               foreach ( string line in lines )

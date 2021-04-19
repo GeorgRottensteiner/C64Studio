@@ -738,6 +738,20 @@ namespace C64Studio
 
 
 
+    public void SetBASICDialect( Dialect Dialect )
+    {
+      foreach ( GR.Generic.Tupel<string, Dialect> dialect in comboBASICVersion.Items )
+      {
+        if ( dialect.second == Dialect )
+        {
+          comboBASICVersion.SelectedItem = dialect;
+          return;
+        }
+      }
+    }
+
+
+
     private string FilterString( string Source )
     {
       return Source.Substring( 0, Source.Length - 1 );
