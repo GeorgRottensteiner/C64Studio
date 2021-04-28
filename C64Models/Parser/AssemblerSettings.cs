@@ -111,7 +111,7 @@ namespace C64Studio.Parser
       OperatorPrecedence["+"] = 0;
       OperatorPrecedence["/"] = 1;
       OperatorPrecedence["*"] = 1;
-      OperatorPrecedence["%"] = 2;
+      OperatorPrecedence["%"] = 1;
       OperatorPrecedence["EOR"] = 3;
       OperatorPrecedence["eor"] = 3;
       OperatorPrecedence["XOR"] = 3;
