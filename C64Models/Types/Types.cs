@@ -1163,15 +1163,15 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_STAR, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 127 - 32, true, 127, true, (char)0xee5f, true, "CBM *" );   // C= *
 
       // 128-159 $80-$9F     +64 $40        192-223 $C0-$DF  
-      AddC64Key( KeyboardKey.KEY_AT, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 192, true, 0, false, (char)0xeec0, true, "REVERSE SHIFT @" );
+      AddC64Key( KeyboardKey.KEY_AT, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 192, true, 192, true, (char)0xeec0, true, "REVERSE SHIFT @" );
 
       AddC64Key( KeyboardKey.KEY_1, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 129 + 64, true, 129, true, (char)0xeec1, -1, 0, true, "ORANGE", "ORN" ).Replacements.AddRange( new string[] { "ORANGE", "ORN", "ORNG" } );   // orange
 
-      AddC64Key( KeyboardKey.KEY_B, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 194, true, 0, false, (char)0xeec2, true, "REVERSE SHIFT B" );
+      AddC64Key( KeyboardKey.KEY_B, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 194, true, 157, true, (char)0xeec2, true, "REVERSE SHIFT B" );
 
       AddC64Key( KeyboardKey.KEY_RUN_STOP, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 131 + 64, true, 131, true, (char)0xeec3, -1, 0, true, "LOAD+RUN", "L+R" );   // TODO load+run
 
-      AddC64Key( KeyboardKey.KEY_D, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 196, true, 0, false, (char)0xeec4, true, "REVERSE SHIFT D" );
+      AddC64Key( KeyboardKey.KEY_D, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 196, true, 196, true, (char)0xeec4, true, "REVERSE SHIFT D" );
 
       AddC64Key( KeyboardKey.KEY_F1, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 133 + 64, true, 133, true, (char)0xeec5, true, "F1" ).Replacements.Add( "F1" );   // TODO F1
       AddC64Key( KeyboardKey.KEY_F3, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 134 + 64, true, 134, true, (char)0xeec6, true, "F3" ).Replacements.Add( "F3" );   // TODO F3

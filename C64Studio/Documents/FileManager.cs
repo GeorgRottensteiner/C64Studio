@@ -1271,5 +1271,57 @@ namespace C64Studio
         SetModified();
       }
     }
+
+
+
+    private void importDirArtFilesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      var importDirArt = new DlgImportDirArt( Core );
+
+      if ( importDirArt.ShowDialog() != DialogResult.OK )
+      {
+        return;
+      }
+
+      int     pos = 0;
+      bool    changed = false;
+
+      while ( pos < importDirArt.ResultingData.Length )
+      {
+        int     len = 16;
+        if ( pos + len > importDirArt.ResultingData.Length )
+        {
+          len = (int)importDirArt.ResultingData.Length - pos;
+        }
+        var emptyFile = new ByteBuffer();
+        var sourceName = importDirArt.ResultingData.SubBuffer( pos, len );
+        var fileName = new ByteBuffer();
+
+        for ( int i = 0; i < sourceName.Length; ++i )
+        {
+          byte scrCode = sourceName.ByteAt( i );
+          if ( !Types.ConstantData.ScreenCodeToChar[scrCode].HasPetSCII )
+          {
+            Debug.Log( "Missing PETSCII!! for " + scrCode );
+          }
+
+          fileName.AppendU8( Types.ConstantData.ScreenCodeToChar[scrCode].PetSCIIValue );
+        }
+        if ( m_Media.WriteFile( fileName, emptyFile, C64Studio.Types.FileType.USR ) )
+        {
+          changed = true;
+        }
+        pos += 16;
+      }
+
+      if ( changed )
+      {
+        RefreshFileView();
+        UpdateStatusInfo();
+      }
+    }
+
+
+
   }
 }

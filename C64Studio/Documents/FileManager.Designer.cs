@@ -67,6 +67,7 @@
       this.toolStripBtnOpenHex = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnOpenBASIC = new System.Windows.Forms.ToolStripButton();
       this.labelMediaTitle = new System.Windows.Forms.ToolStripLabel();
+      this.importDirArtFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuFileManager.SuspendLayout();
       this.statusMedia.SuspendLayout();
@@ -97,6 +98,7 @@
             this.validateMediumToolStripMenuItem,
             this.toolStripSeparator3,
             this.importFileToolStripMenuItem,
+            this.importDirArtFilesToolStripMenuItem,
             this.toolStripSeparator4,
             this.closeToolStripMenuItem});
       this.toolStripMenuItem1.Name = "toolStripMenuItem1";
@@ -106,14 +108,14 @@
       // openToolStripMenuItem
       // 
       this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-      this.openToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+      this.openToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
       this.openToolStripMenuItem.Text = "&Open...";
       this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
       // 
       // saveToolStripMenuItem
       // 
       this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-      this.saveToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+      this.saveToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
       this.saveToolStripMenuItem.Text = "&Save...";
       this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
       // 
@@ -121,19 +123,19 @@
       // 
       this.saveasToolStripMenuItem.Enabled = false;
       this.saveasToolStripMenuItem.Name = "saveasToolStripMenuItem";
-      this.saveasToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+      this.saveasToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
       this.saveasToolStripMenuItem.Text = "Save &as...";
       this.saveasToolStripMenuItem.Click += new System.EventHandler(this.saveasToolStripMenuItem_Click);
       // 
       // toolStripSeparator1
       // 
       this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(169, 6);
+      this.toolStripSeparator1.Size = new System.Drawing.Size(179, 6);
       // 
       // createEmptyTapeToolStripMenuItem
       // 
       this.createEmptyTapeToolStripMenuItem.Name = "createEmptyTapeToolStripMenuItem";
-      this.createEmptyTapeToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+      this.createEmptyTapeToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
       this.createEmptyTapeToolStripMenuItem.Text = "Create empty &Tape";
       this.createEmptyTapeToolStripMenuItem.Click += new System.EventHandler(this.createEmptyTapeToolStripMenuItem_Click);
       // 
@@ -145,7 +147,7 @@
             this.d71ToolStripMenuItem,
             this.d81ToolStripMenuItem});
       this.newDiskToolStripMenuItem.Name = "newDiskToolStripMenuItem";
-      this.newDiskToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+      this.newDiskToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
       this.newDiskToolStripMenuItem.Text = "Create empty &Disk";
       // 
       // d64ToolStripMenuItem
@@ -179,38 +181,38 @@
       // toolStripSeparator2
       // 
       this.toolStripSeparator2.Name = "toolStripSeparator2";
-      this.toolStripSeparator2.Size = new System.Drawing.Size(169, 6);
+      this.toolStripSeparator2.Size = new System.Drawing.Size(179, 6);
       // 
       // validateMediumToolStripMenuItem
       // 
       this.validateMediumToolStripMenuItem.Enabled = false;
       this.validateMediumToolStripMenuItem.Name = "validateMediumToolStripMenuItem";
-      this.validateMediumToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+      this.validateMediumToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
       this.validateMediumToolStripMenuItem.Text = "&Validate medium";
       this.validateMediumToolStripMenuItem.Click += new System.EventHandler(this.validateMediumToolStripMenuItem_Click);
       // 
       // toolStripSeparator3
       // 
       this.toolStripSeparator3.Name = "toolStripSeparator3";
-      this.toolStripSeparator3.Size = new System.Drawing.Size(169, 6);
+      this.toolStripSeparator3.Size = new System.Drawing.Size(179, 6);
       // 
       // importFileToolStripMenuItem
       // 
       this.importFileToolStripMenuItem.Name = "importFileToolStripMenuItem";
-      this.importFileToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+      this.importFileToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
       this.importFileToolStripMenuItem.Text = "Import File...";
       this.importFileToolStripMenuItem.Click += new System.EventHandler(this.importFileToolStripMenuItem_Click);
       // 
       // toolStripSeparator4
       // 
       this.toolStripSeparator4.Name = "toolStripSeparator4";
-      this.toolStripSeparator4.Size = new System.Drawing.Size(169, 6);
+      this.toolStripSeparator4.Size = new System.Drawing.Size(179, 6);
       // 
       // closeToolStripMenuItem
       // 
       this.closeToolStripMenuItem.Enabled = false;
       this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-      this.closeToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+      this.closeToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
       this.closeToolStripMenuItem.Text = "&Close";
       // 
       // listFiles
@@ -327,7 +329,7 @@
       this.toolStripBtnImportFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnImportFile.Image")));
       this.toolStripBtnImportFile.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnImportFile.Name = "toolStripBtnImportFile";
-      this.toolStripBtnImportFile.Size = new System.Drawing.Size(32, 32);
+      this.toolStripBtnImportFile.Size = new System.Drawing.Size(23, 17);
       this.toolStripBtnImportFile.Text = "Import File";
       this.toolStripBtnImportFile.ToolTipText = "Import File";
       this.toolStripBtnImportFile.Click += new System.EventHandler(this.toolStripBtnImportFile_Click);
@@ -338,14 +340,14 @@
       this.toolStripBtnSave.Image = global::C64Studio.Properties.Resources.ToolSave;
       this.toolStripBtnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnSave.Name = "toolStripBtnSave";
-      this.toolStripBtnSave.Size = new System.Drawing.Size(32, 32);
+      this.toolStripBtnSave.Size = new System.Drawing.Size(23, 17);
       this.toolStripBtnSave.Text = "Save";
       this.toolStripBtnSave.Click += new System.EventHandler(this.toolStripBtnSave_Click);
       // 
       // toolStripSeparator6
       // 
       this.toolStripSeparator6.Name = "toolStripSeparator6";
-      this.toolStripSeparator6.Size = new System.Drawing.Size(6, 35);
+      this.toolStripSeparator6.Size = new System.Drawing.Size(6, 20);
       // 
       // toolStripBtnMoveFileUp
       // 
@@ -354,7 +356,7 @@
       this.toolStripBtnMoveFileUp.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnMoveFileUp.Image")));
       this.toolStripBtnMoveFileUp.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnMoveFileUp.Name = "toolStripBtnMoveFileUp";
-      this.toolStripBtnMoveFileUp.Size = new System.Drawing.Size(32, 32);
+      this.toolStripBtnMoveFileUp.Size = new System.Drawing.Size(23, 17);
       this.toolStripBtnMoveFileUp.Text = "toolStripButton1";
       this.toolStripBtnMoveFileUp.ToolTipText = "Move File Up";
       this.toolStripBtnMoveFileUp.Click += new System.EventHandler(this.toolStripBtnMoveFileUp_Click);
@@ -383,7 +385,7 @@
       this.toolStripBtnExportToFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnExportToFile.Image")));
       this.toolStripBtnExportToFile.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnExportToFile.Name = "toolStripBtnExportToFile";
-      this.toolStripBtnExportToFile.Size = new System.Drawing.Size(32, 32);
+      this.toolStripBtnExportToFile.Size = new System.Drawing.Size(23, 17);
       this.toolStripBtnExportToFile.Text = "toolStripButton1";
       this.toolStripBtnExportToFile.ToolTipText = "Export to File";
       this.toolStripBtnExportToFile.Click += new System.EventHandler(this.toolStripBtnExportToFile_Click);
@@ -395,7 +397,7 @@
       this.toolStripBtnOpenHex.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnOpenHex.Image")));
       this.toolStripBtnOpenHex.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnOpenHex.Name = "toolStripBtnOpenHex";
-      this.toolStripBtnOpenHex.Size = new System.Drawing.Size(32, 32);
+      this.toolStripBtnOpenHex.Size = new System.Drawing.Size(23, 17);
       this.toolStripBtnOpenHex.Text = "toolStripButton1";
       this.toolStripBtnOpenHex.ToolTipText = "Open in Hex Editor";
       this.toolStripBtnOpenHex.Click += new System.EventHandler(this.toolStripBtnOpenHex_Click);
@@ -407,7 +409,7 @@
       this.toolStripBtnOpenBASIC.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnOpenBASIC.Image")));
       this.toolStripBtnOpenBASIC.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnOpenBASIC.Name = "toolStripBtnOpenBASIC";
-      this.toolStripBtnOpenBASIC.Size = new System.Drawing.Size(32, 32);
+      this.toolStripBtnOpenBASIC.Size = new System.Drawing.Size(23, 17);
       this.toolStripBtnOpenBASIC.Text = "toolStripButton1";
       this.toolStripBtnOpenBASIC.ToolTipText = "Open in BASIC editor";
       this.toolStripBtnOpenBASIC.Click += new System.EventHandler(this.toolStripBtnOpenBASIC_Click);
@@ -420,6 +422,13 @@
       this.labelMediaTitle.Text = "toolStripLabel1";
       this.labelMediaTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       this.labelMediaTitle.Click += new System.EventHandler(this.labelMediaTitle_Click);
+      // 
+      // importDirArtFilesToolStripMenuItem
+      // 
+      this.importDirArtFilesToolStripMenuItem.Name = "importDirArtFilesToolStripMenuItem";
+      this.importDirArtFilesToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+      this.importDirArtFilesToolStripMenuItem.Text = "Import Dir Art Files...";
+      this.importDirArtFilesToolStripMenuItem.Click += new System.EventHandler(this.importDirArtFilesToolStripMenuItem_Click);
       // 
       // FileManager
       // 
@@ -485,5 +494,6 @@
     private System.Windows.Forms.ToolStripMenuItem d71ToolStripMenuItem;
     private System.Windows.Forms.ToolStripButton toolStripBtnSave;
     private System.Windows.Forms.ToolStripButton btnAddNew;
+    private System.Windows.Forms.ToolStripMenuItem importDirArtFilesToolStripMenuItem;
   }
 }

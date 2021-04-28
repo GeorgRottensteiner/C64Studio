@@ -104,6 +104,12 @@
     <Compile Include="Debugger\IDebugger.cs" />
     <Compile Include="Debugger\Tiny64Debugger.cs" />
     <Compile Include="Debugger\VICERemoteDebuggerBinaryInterface.cs" />
+    <Compile Include="Dialogs\DlgImportDirArt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\DlgImportDirArt.Designer.cs">
+      <DependentUpon>DlgImportDirArt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\FormDeltaValue.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -508,6 +514,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CharacterEditor.resx">
       <DependentUpon>CharacterEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DlgImportDirArt.resx">
+      <DependentUpon>DlgImportDirArt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgInterleaveData.resx">
       <DependentUpon>DlgInterleaveData.cs</DependentUpon>
