@@ -5357,12 +5357,13 @@ namespace C64Studio.Parser
         if ( ( method != "TILE" )
         &&   ( method != "TILEDATA" )
         &&   ( method != "MAP" )
+        &&   ( method != "MAPEXTRADATA" )
         &&   ( method != "MAPVERTICAL" )
         &&   ( method != "TILEELEMENTS" )
         &&   ( method != "MAPTILE" )
         &&   ( method != "MAPVERTICALTILE" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are MAP, MAPVERTICAL, TILE, TILEDATA, TILEELEMENTS, MAPTILE, MAPVERTICALTILE" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are MAP, MAPVERTICAL, TILE, TILEDATA, TILEELEMENTS, MAPTILE, MAPVERTICALTILE, EXTRADATA" );
           return false;
         }
 
@@ -5397,6 +5398,10 @@ namespace C64Studio.Parser
         else if ( method == "MAP" )
         {
           map.ExportMapsAsAssembly( false, out textToInclude, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
+        }
+        else if ( method == "MAPEXTRADATA" )
+        {
+          map.ExportMapExtraDataAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
         }
         else if ( method == "MAPVERTICAL" )
         {

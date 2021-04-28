@@ -763,6 +763,82 @@ namespace C64Studio.Formats
 
 
 
+    public bool ExportMapExtraDataAsAssembly( out string MapData, string LabelPrefix, bool WrapData, int WrapByteCount, string DataByteDirective )
+    {
+      bool hasExtraData = false;
+      foreach ( var map in Maps )
+      {
+        if ( map.ExtraDataText.Length > 0 )
+        {
+          hasExtraData = true;
+          break;
+        }
+      }
+
+      StringBuilder sbMaps = new StringBuilder();
+
+      sbMaps.Append( LabelPrefix );
+      sbMaps.Append( "NUM_MAPS = " );
+      sbMaps.AppendLine( Maps.Count.ToString() );
+
+      if ( hasExtraData )
+      {
+        sbMaps.Append( LabelPrefix );
+        sbMaps.AppendLine( "MAP_EXTRA_DATA_LIST_LO" );
+        for ( int i = 0; i < Maps.Count; ++i )
+        {
+          sbMaps.Append( DataByteDirective );
+          sbMaps.Append( ' ' );
+          sbMaps.AppendLine( "<" + LabelPrefix + "MAP_EXTRA_DATA_" + Maps[i].Name.ToUpper().Replace( ' ', '_' ) );
+        }
+        sbMaps.Append( LabelPrefix );
+        sbMaps.AppendLine( "MAP_EXTRA_DATA_LIST_HI" );
+        for ( int i = 0; i < Maps.Count; ++i )
+        {
+          sbMaps.Append( DataByteDirective );
+          sbMaps.Append( ' ' );
+          sbMaps.AppendLine( ">" + LabelPrefix + "MAP_EXTRA_DATA_" + Maps[i].Name.ToUpper().Replace( ' ', '_' ) );
+        }
+        sbMaps.AppendLine();
+      }
+
+
+      for ( int i = 0; i < Maps.Count; ++i )
+      {
+        var map = Maps[i];
+
+        if ( ( hasExtraData )
+        &&   ( map.ExtraDataText.Length > 0 ) )
+        {
+          sbMaps.AppendLine( ";extra data" );
+          sbMaps.Append( LabelPrefix );
+          sbMaps.AppendLine( "MAP_EXTRA_DATA_" + map.Name.ToUpper().Replace( ' ', '_' ) );
+
+          // clean extra data
+          GR.Memory.ByteBuffer    extraData = new GR.Memory.ByteBuffer();
+          string[]  lines = map.ExtraDataText.Split( new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries );
+          foreach ( string line in lines )
+          {
+            string    tempLine = line.Trim().Replace( " ", "" );
+            if ( ( !tempLine.StartsWith( ";" ) )
+            &&   ( !tempLine.StartsWith( "#" ) )
+            &&   ( !tempLine.StartsWith( "//" ) ) )
+            {
+              extraData.AppendHex( tempLine );
+            }
+          }
+
+          sbMaps.Append( Util.ToASMData( extraData, WrapData, WrapByteCount, DataByteDirective ) );
+          sbMaps.AppendLine();
+        }
+      }
+
+      MapData = sbMaps.ToString();
+      return true;
+    }
+
+
+
     internal void ExportTilesAsBuffer( bool RowByRow, out GR.Memory.ByteBuffer TileData )
     {
       TileData = new GR.Memory.ByteBuffer();
