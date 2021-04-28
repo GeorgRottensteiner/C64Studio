@@ -153,8 +153,6 @@ namespace C64Studio
 
       m_StartAddress = "2049";
       editBASICStartAddress.Text = "2049";
-
-      Debug.Log( "Zoom " + editSource.Zoom + ", lineinterval " + editSource.LineInterval + ", charheight " + editSource.CharHeight );
     }
 
 
@@ -168,7 +166,6 @@ namespace C64Studio
       fontSize *= 1.6f;
 
       editSource.CharHeight = editSource.LineInterval + (int)( fontSize * DPIHandler.DPIY / 96.0f );
-      Debug.Log( "Zoom " + editSource.Zoom + ", lineinterval " + editSource.LineInterval + ", charheight " + editSource.CharHeight );
     }
 
 
@@ -1188,8 +1185,9 @@ namespace C64Studio
       {
         // simply insert, no key mapping!
         // need uppercase when lowercase mode is not active!
-        if ( ( !m_LowerCaseMode )
-        &&   ( !commodorePushed )
+        if ( //( !m_LowerCaseMode )
+        //&&   ( !commodorePushed )
+             ( !commodorePushed )
         &&   ( !altPushed ) )
         {
           string  actualChar = KeyCodeToUnicode( keyData );
@@ -1250,7 +1248,17 @@ namespace C64Studio
               }
             }
 
-            InsertOrReplaceChar( char.ToUpper( (char)keyData ) );
+            if ( m_LowerCaseMode )
+            {
+              if ( actualChar.Length == 1 )
+              {
+                InsertOrReplaceChar( actualChar[0] );
+              }
+            }
+            else
+            {
+              InsertOrReplaceChar( char.ToUpper( (char)keyData ) );
+            }
             return true;
           }
         }
