@@ -635,7 +635,7 @@ namespace C64Studio
       string    content = editSource.Text;
       if ( m_LowerCaseMode )
       {
-        content = MakeUpperCase( content, Core.Settings.BASICUseNonC64Font );
+        content = MakeUpperCase( content, !Core.Settings.BASICUseNonC64Font );
       }
       return content;
     }
@@ -1820,11 +1820,11 @@ namespace C64Studio
 
       if ( m_LowerCaseMode )
       {
-        text = MakeLowerCase( text, Core.Settings.BASICUseNonC64Font );
+        text = MakeLowerCase( text, !Core.Settings.BASICUseNonC64Font );
       }
       else
       {
-        text = MakeUpperCase( text, Core.Settings.BASICUseNonC64Font );
+        text = MakeUpperCase( text, !Core.Settings.BASICUseNonC64Font );
       }
       editSource.Text = text;
 
@@ -1912,6 +1912,8 @@ namespace C64Studio
       Core.Compiling.ParserBasic.Settings.StripSpaces   = Core.Settings.BASICStripSpaces;
       Core.Compiling.ParserBasic.Settings.BASICDialect  = basicDialect;
       Core.Compiling.ParserBasic.Settings.UpperCaseMode = !m_LowerCaseMode;
+      Core.Compiling.ParserBasic.Settings.UseC64Font    = !Core.Settings.BASICUseNonC64Font;
+
       m_BASICDialectName  = dialect;
       m_BASICDialect      = basicDialect;
 

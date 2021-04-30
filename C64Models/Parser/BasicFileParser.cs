@@ -41,6 +41,7 @@ namespace C64Studio.Parser
       public bool         StripSpaces = true;
       public bool         StripREM = false;
       public bool         UpperCaseMode = true;
+      public bool         UseC64Font = true;
       public Dialect      BASICDialect = null;
     };
 
@@ -1361,6 +1362,10 @@ namespace C64Studio.Parser
 
     public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines )
     {
+      if ( !Settings.UpperCaseMode )
+      {
+        Content = MakeUpperCase( Content, Settings.UseC64Font );
+      }
       if ( Settings.BASICDialect.Opcodes.Count == 0 )
       {
         AddError( -1, Types.ErrorCode.E1401_INTERNAL_ERROR, "An unsupported BASIC version '" + Settings.BASICDialect.Name + "' was chosen" );
