@@ -111,7 +111,9 @@ namespace C64Studio
       {
         if ( doc.DocumentInfo.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
         {
-          comboCharScreens.Items.Add( new Types.ComboItem( doc.Name, doc.DocumentInfo ) );
+          var item = new Types.ComboItem( doc.DocumentInfo.DocumentFilename, doc.DocumentInfo );
+          item.Tag = doc.DocumentInfo;
+          comboCharScreens.Items.Add( item );
         }
       }
       comboCharScreens.SelectedIndex = 0;
@@ -255,7 +257,9 @@ namespace C64Studio
         if ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
         {
           string    nameToUse = Event.Doc.DocumentFilename ?? "New File";
-          comboCharScreens.Items.Add( new Types.ComboItem( nameToUse, Event.Doc ) );
+          var item = new Types.ComboItem( nameToUse, Event.Doc );
+          item.Tag = Event.Doc;
+          comboCharScreens.Items.Add( item );
         }
       }
       if ( Event.EventType == C64Studio.Types.ApplicationEvent.Type.ELEMENT_REMOVED )
@@ -2787,6 +2791,8 @@ namespace C64Studio
       comboTiles.Items.Clear();
       listTileInfo.Items.Clear();
 
+      characterEditor.CharsetUpdated( m_MapProject.Charset );
+
       for ( int i = 0; i < cpProject.NumTiles; ++i )
       {
         Formats.MapProject.Tile tile = new Formats.MapProject.Tile();
@@ -3327,19 +3333,26 @@ namespace C64Studio
 
     private void btnExportToCharScreen_Click( object sender, EventArgs e )
     {
-      if ( m_CurrentMap == null )
+      var mapToExport = m_CurrentMap;
+
+      if ( mapToExport == null )
       {
-        return;
+        if ( m_MapProject.Maps.Count == 0 )
+        {
+          MessageBox.Show( "There is no map to export.", "Cannot export" );
+          return;
+        }
+        mapToExport = m_MapProject.Maps[0];
       }
 
-      GR.Memory.ByteBuffer      charData = new GR.Memory.ByteBuffer( (uint)( m_CurrentMap.Tiles.Width * m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Height * m_CurrentMap.TileSpacingY ) );
-      GR.Memory.ByteBuffer      colorData = new GR.Memory.ByteBuffer( (uint)( m_CurrentMap.Tiles.Width * m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Height * m_CurrentMap.TileSpacingY ) );
+      GR.Memory.ByteBuffer      charData = new GR.Memory.ByteBuffer( (uint)( mapToExport.Tiles.Width * mapToExport.TileSpacingX * mapToExport.Tiles.Height * mapToExport.TileSpacingY ) );
+      GR.Memory.ByteBuffer      colorData = new GR.Memory.ByteBuffer( (uint)( mapToExport.Tiles.Width * mapToExport.TileSpacingX * mapToExport.Tiles.Height * mapToExport.TileSpacingY ) );
 
-      for ( int y = 0; y < m_CurrentMap.Tiles.Height; ++y )
+      for ( int y = 0; y < mapToExport.Tiles.Height; ++y )
       {
-        for ( int x = 0; x < m_CurrentMap.Tiles.Width; ++x )
+        for ( int x = 0; x < mapToExport.Tiles.Width; ++x )
         {
-          int tileIndex = m_CurrentMap.Tiles[x, y];
+          int tileIndex = mapToExport.Tiles[x, y];
           if ( tileIndex < m_MapProject.Tiles.Count )
           {
             // a real tile
@@ -3349,8 +3362,8 @@ namespace C64Studio
             {
               for ( int i = 0; i < tile.Chars.Width; ++i )
               {
-                charData.SetU8At( x * m_CurrentMap.TileSpacingX + i + ( y * m_CurrentMap.TileSpacingY + j ) * ( m_CurrentMap.Tiles.Width * m_CurrentMap.TileSpacingX ), tile.Chars[i, j].Character );
-                colorData.SetU8At( x * m_CurrentMap.TileSpacingX + i + ( y * m_CurrentMap.TileSpacingY + j ) * ( m_CurrentMap.Tiles.Width * m_CurrentMap.TileSpacingX ), tile.Chars[i, j].Color );
+                charData.SetU8At( x * mapToExport.TileSpacingX + i + ( y * mapToExport.TileSpacingY + j ) * ( mapToExport.Tiles.Width * mapToExport.TileSpacingX ), tile.Chars[i, j].Character );
+                colorData.SetU8At( x * mapToExport.TileSpacingX + i + ( y * mapToExport.TileSpacingY + j ) * ( mapToExport.Tiles.Width * mapToExport.TileSpacingX ), tile.Chars[i, j].Color );
               }
             }
           }
@@ -3376,8 +3389,8 @@ namespace C64Studio
           document.DocumentInfo.Element.Filename = document.DocumentInfo.DocumentFilename;
         }
         CharsetScreenEditor   charEditor = (CharsetScreenEditor)document;
-        charEditor.ImportFromData( m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width,
-                                   m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height,
+        charEditor.ImportFromData( mapToExport.TileSpacingX * mapToExport.Tiles.Width,
+                                   mapToExport.TileSpacingY * mapToExport.Tiles.Height,
                                    charData, colorData, m_MapProject.Charset );
         document.SetModified();
         document.Save();
@@ -3386,8 +3399,8 @@ namespace C64Studio
       {
         var docInfo = (DocumentInfo)comboItem.Tag;
         CharsetScreenEditor   charEditor = (CharsetScreenEditor)docInfo.BaseDoc;
-        charEditor.ImportFromData( m_CurrentMap.TileSpacingX * m_CurrentMap.Tiles.Width,
-                                   m_CurrentMap.TileSpacingY * m_CurrentMap.Tiles.Height,
+        charEditor.ImportFromData( mapToExport.TileSpacingX * mapToExport.Tiles.Width,
+                                   mapToExport.TileSpacingY * mapToExport.Tiles.Height,
                                    charData, colorData, m_MapProject.Charset );
         charEditor.SetModified();
       }

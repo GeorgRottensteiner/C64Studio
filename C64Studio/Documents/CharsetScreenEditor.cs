@@ -1976,6 +1976,8 @@ namespace C64Studio
           m_CharsetScreen.CharSet.BackgroundColor = cpProject.BackgroundColor;
           m_CharsetScreen.CharSet.MultiColor1 = cpProject.MultiColor1;
           m_CharsetScreen.CharSet.MultiColor2 = cpProject.MultiColor2;
+          m_CharsetScreen.MultiColor1 = cpProject.MultiColor1;
+          m_CharsetScreen.MultiColor2 = cpProject.MultiColor2;
 
           int maxChars = cpProject.NumChars;
           if ( maxChars > 256 )
@@ -1995,6 +1997,8 @@ namespace C64Studio
 
           // import tiles
           var mapProject = new MapProject();
+          mapProject.MultiColor1 = cpProject.MultiColor1;
+          mapProject.MultiColor2 = cpProject.MultiColor2;
 
           for ( int i = 0; i < cpProject.NumTiles; ++i )
           {
@@ -3177,13 +3181,6 @@ namespace C64Studio
     {
       SetScreenSize( Width, Height );
       m_CharsetScreen.SetScreenSize( Width, Height );
-      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.BackgroundColor;
-      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.MultiColor2;
-      comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
-      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.BGColor4;
-      editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
-      editScreenHeight.Text = m_CharsetScreen.ScreenHeight.ToString();
       AdjustScrollbars();
 
       screenHScroll.Value = m_CharsetScreen.ScreenOffsetX;
@@ -3200,6 +3197,15 @@ namespace C64Studio
 
       ByteBuffer    CharsetProject = Charset.SaveToBuffer();
       m_CharsetScreen.CharSet.ReadFromBuffer( CharsetProject );
+
+      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.BackgroundColor;
+      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.MultiColor1;
+      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.MultiColor2;
+      comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
+      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.BGColor4;
+      editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
+      editScreenHeight.Text = m_CharsetScreen.ScreenHeight.ToString();
+
       for ( int i = 0; i < m_CharsetScreen.CharSet.NumCharacters; ++i )
       {
         RebuildCharImage( i );
