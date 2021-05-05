@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -45,8 +46,6 @@ namespace C64Studio
       if ( dlgBrowse.ShowDialog() == DialogResult.OK )
       {
         editPathACME.Text = dlgBrowse.FileName;
-
-        btnOK.Enabled = ( ( editPathACME.Text.Length > 0 ) || ( editPathVice.Text.Length > 0 ) );
       }
     }
 
@@ -62,9 +61,17 @@ namespace C64Studio
       if ( dlgBrowse.ShowDialog() == DialogResult.OK )
       {
         editPathVice.Text = dlgBrowse.FileName;
-        //btnOK.Enabled = ( ( editPathACME.Text.Length > 0 ) || ( editPathVice.Text.Length > 0 ) );
-        btnOK.Enabled = ( editPathVice.Text.Length > 0 );
       }
+    }
+
+    private void editPath_TextChanged( object sender, EventArgs e )
+    {
+      EnableOK();
+    }
+
+    private void EnableOK()
+    {
+      btnOK.Enabled = ( ( editPathVice.Text.Length > 0 && File.Exists(editPathVice.Text) ) || ( editPathACME.Text.Length > 0 && File.Exists(editPathACME.Text) ) );
     }
 
   }
