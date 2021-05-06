@@ -41,9 +41,7 @@ namespace C64Studio
 
       if ( dlgBrowse.ShowDialog() == DialogResult.OK )
       {
-        editPathACME.Text = dlgBrowse.FileName;
-
-        btnOK.Enabled = ( ( editPathACME.Text.Length > 0 ) || ( editPathVice.Text.Length > 0 ) );
+        editPathEmulator.Text = dlgBrowse.FileName;
       }
     }
 
