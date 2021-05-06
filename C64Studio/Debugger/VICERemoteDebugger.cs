@@ -908,7 +908,7 @@ namespace C64Studio
         // async send
         //client.BeginSend( m_DataToSend, 0, m_DataToSend.Length, System.Net.Sockets.SocketFlags.None, new AsyncCallback( SendData ), client );
       }
-      catch ( System.IO.IOException ex )
+      catch ( Exception ex )
       {
         Core.AddToOutput( "SendCommand Exception:" + ex.ToString() );
       }

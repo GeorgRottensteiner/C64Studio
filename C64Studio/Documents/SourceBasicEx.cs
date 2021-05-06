@@ -1556,7 +1556,14 @@ namespace C64Studio
       parser.LabelMode = m_LabelMode;
 
       var compilerConfig = new C64Studio.Parser.CompileConfig() { Assembler = C64Studio.Types.AssemblerType.AUTO };
-      if ( !parser.Parse( editSource.Text, null, compilerConfig, null ) )
+
+      string basicSource = editSource.Text;
+      if ( m_LowerCaseMode )
+      {
+        basicSource = Parser.BasicFileParser.MakeUpperCase( basicSource, !Core.Settings.BASICUseNonC64Font );
+      }
+
+      if ( !parser.Parse( basicSource, null, compilerConfig, null ) )
       {
         Core.MainForm.m_CompileResult.UpdateFromMessages( parser, DocumentInfo.Project );
         Core.Navigating.UpdateFromMessages( parser.Messages,
@@ -1593,6 +1600,12 @@ namespace C64Studio
         Core.MainForm.m_CompileResult.Show();
         return false;
       }
+
+      if ( m_LowerCaseMode )
+      {
+        result = Parser.BasicFileParser.MakeLowerCase( result, !Core.Settings.BASICUseNonC64Font );
+      }
+
       editSource.Text = result;
       m_LabelMode = labelMode;
       return true;

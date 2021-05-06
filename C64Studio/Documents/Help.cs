@@ -15,8 +15,9 @@ namespace C64Studio
 
 
 
-    public Help()
+    public Help( StudioCore Core )
     {
+      this.Core = Core;
       HideOnClose = true;
 
       InitializeComponent();
@@ -26,14 +27,19 @@ namespace C64Studio
       try
       {
 #if DEBUG
-        webBrowser.Navigate( System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Application.ExecutablePath ), "../../../Doc/main.html" ) );
+        string    helpDocPath = @"..\..\..\Doc\main.html";
 #else
-        webBrowser.Navigate( System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Application.ExecutablePath ), "Doc/main.html" ) );
+        string    helpDocPath = @"Doc\main.html";
 #endif
+        string    fullPath = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( Application.ExecutablePath ), helpDocPath );
+
+        Core.AddToOutput( "Help Path: " + fullPath );
+        webBrowser.Navigate( fullPath );
       }
       catch ( Exception ex )
       {
         Debug.Log( "Got exception: " + ex.ToString() );
+        Core.AddToOutput( "Help exception: " + ex.ToString() );
       }
       webBrowser.CanGoBackChanged += new EventHandler( webBrowser_CanGoBackChanged );
       webBrowser.CanGoForwardChanged += new EventHandler( webBrowser_CanGoForwardChanged );

@@ -44,7 +44,7 @@ namespace C64Studio
     public PetSCIITable           m_PetSCIITable = null;
     public Outline                m_Outline = new Outline();
     public ValueTableEditor       m_ValueTableEditor = null;
-    public Help                   m_Help = new Help();
+    public Help                   m_Help = null;
     public FormFindReplace        m_FindReplace = null;
     public FormFilesChanged       m_FilesChanged = null;
 
@@ -533,6 +533,7 @@ namespace C64Studio
       m_DebugMemory         = new DebugMemory( StudioCore );
       m_ValueTableEditor    = new ValueTableEditor( StudioCore );
       m_FindReplace         = new FormFindReplace( StudioCore );
+      m_Help                = new Help( StudioCore );
 
       m_BinaryEditor.SetInternal();
       m_CharsetEditor.SetInternal();
@@ -5213,29 +5214,53 @@ namespace C64Studio
 
       if ( wizard.ShowDialog() == DialogResult.OK )
       {
-        /*
-        ToolInfo      toolAssembler = new ToolInfo();
-
-        toolAssembler.Name          = "ACME Assembler";
-        toolAssembler.Filename      = wizard.editPathACME.Text;
-        toolAssembler.Arguments     = "\"$(Filename)\"";
-        toolAssembler.WorkPath      = "\"$(FilePath)\"";
-        toolAssembler.Type          = ToolInfo.ToolType.ASSEMBLER;
-
-        Settings.Tools.AddLast( toolAssembler );
-         */
+        string emulatorFilename = wizard.editPathEmulator.Text;
 
         ToolInfo toolEmulator = new ToolInfo();
 
-        toolEmulator.Name = "WinVICE";
-        toolEmulator.Filename = wizard.editPathVice.Text;
-        toolEmulator.PRGArguments = "\"$(RunFilename)\"";
-        toolEmulator.CartArguments = "-cartcrt \"$(RunFilename)\"";
+        toolEmulator.Filename = wizard.editPathEmulator.Text;
         toolEmulator.WorkPath = "\"$(RunPath)\"";
-        toolEmulator.DebugArguments = "-initbreak 0x$(DebugStartAddressHex) -remotemonitor";
-        toolEmulator.TrueDriveOnArguments = "-truedrive +virtualdev";
-        toolEmulator.TrueDriveOffArguments = "+truedrive -virtualdev";
-        toolEmulator.Type = ToolInfo.ToolType.EMULATOR;
+        toolEmulator.Type                   = ToolInfo.ToolType.EMULATOR;
+        toolEmulator.CartArguments          = "";
+        toolEmulator.DebugArguments         = "";
+        toolEmulator.TrueDriveOnArguments   = "";
+        toolEmulator.TrueDriveOffArguments  = "";
+
+        string upperCaseFilename = emulatorFilename.ToString();
+
+        if ( ( upperCaseFilename.StartsWith( "X64" ) )
+        ||   ( upperCaseFilename.StartsWith( "XVIC" ) )
+        ||   ( upperCaseFilename.StartsWith( "X128" ) ) )
+        {
+          // VICE
+          toolEmulator.Name                   = "WinVICE";
+          toolEmulator.PRGArguments           = "\"$(RunFilename)\"";
+          toolEmulator.CartArguments          = "-cartcrt \"$(RunFilename)\"";
+          toolEmulator.DebugArguments         = "-initbreak 0x$(DebugStartAddressHex) -remotemonitor";
+          toolEmulator.TrueDriveOnArguments   = "-truedrive +virtualdev";
+          toolEmulator.TrueDriveOffArguments  = "+truedrive -virtualdev";
+          toolEmulator.PassLabelsToEmulator   = true;
+        }
+        else if ( upperCaseFilename.StartsWith( "CCS64" ) )
+        {
+          // CCS64
+          toolEmulator.Name                   = "CCS64";
+          toolEmulator.PRGArguments           = "\"$(RunFilename)\"";
+          toolEmulator.PassLabelsToEmulator   = false;
+        }
+        else if ( upperCaseFilename.StartsWith( "XMEGA65" ) )
+        {
+          // XMEGA65
+          toolEmulator.Name = "XMEGA65";
+          toolEmulator.PRGArguments = "-prg \"$(RunFilename)\"";
+        }
+        else
+        {
+          // fallback
+          toolEmulator.Name                   = upperCaseFilename;
+          toolEmulator.PRGArguments           = "\"$(RunFilename)\"";
+          toolEmulator.PassLabelsToEmulator   = true;
+        }
 
         StudioCore.Settings.ToolInfos.Add( toolEmulator );
       }
