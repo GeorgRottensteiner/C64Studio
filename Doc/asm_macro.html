@@ -1910,6 +1910,30 @@
           *.mapproject
         </td>
         <td>
+          mapextradata
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all map extradata as lookup tables like this:<br>
+          &lt;LabelPrefix&gt;NUM_MAPS = (number of maps)<br>
+          Only if at least one map has valid extra data:<br>
+          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_LO (low bytes of pointer to map extra data)<br>
+          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_HI (high bytes of pointer to map extra data)<br>
+          For every map:<br>
+          &lt;LabelPrefix&gt;MAP_&lt;map name&gt; (all tile indices of a map column major)<br>
+          (all extra data bytes of a map)<br>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Map Project File
+        </td>
+        <td>
+          *.mapproject
+        </td>
+        <td>
           maptile
         </td>
         <td>
