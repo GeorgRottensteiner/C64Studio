@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -40,7 +41,9 @@ namespace C64Studio
 
       if ( dlgBrowse.ShowDialog() == DialogResult.OK )
       {
-        editPathEmulator.Text = dlgBrowse.FileName;
+        editPathACME.Text = dlgBrowse.FileName;
+
+        btnOK.Enabled = ( ( editPathACME.Text.Length > 0 ) || ( editPathVice.Text.Length > 0 ) );
       }
     }
 
