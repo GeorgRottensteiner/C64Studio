@@ -5042,10 +5042,15 @@ namespace C64Studio.Parser
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid start index" );
             return false;
           }
-          if ( ( numChars <= 0 )
-          ||   ( startIndex + numChars > screenProject.CharSet.NumCharacters ) )
+          if ( numChars <= 0 )
           {
-            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of characters" );
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of characters, must be >= 1" );
+            return false;
+          }
+          if ( startIndex + numChars > screenProject.CharSet.NumCharacters )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of characters, charset has " 
+                  + screenProject.CharSet.NumCharacters + " characters, but we're trying to fetch up to " + ( startIndex + numChars ) );
             return false;
           }
           dataToInclude = screenProject.CharSet.CharacterData().SubBuffer( startIndex * 8, numChars * 8 );
