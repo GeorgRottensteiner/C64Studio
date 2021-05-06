@@ -1129,33 +1129,33 @@ namespace C64Studio.Types
       AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.NORMAL, KeyType.NORMAL, 94 - 64, true, 94, true, (char)0xee1e, true, "ARROW UP" ).Replacements.Add( "ARROW UP" );
       AddC64Key( KeyboardKey.KEY_ARROW_LEFT, KeyModifier.NORMAL, KeyType.NORMAL, 95 - 64, true, 95, true, (char)0xee1f, true, "ARROW LEFT" ).Replacements.Add( "ARROW LEFT" ); // arrow left
       //  96-127 $60-$7F     -32 $E0         64- 95 $40-$5F  
-      AddC64Key( KeyboardKey.KEY_STAR, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 96 - 32, true, 96, true, (char)0xee40, true, "SHIFT *" );   // Shift *
-      AddC64Key( KeyboardKey.KEY_A, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 97 - 32, true, 97, true, (char)0xee41, true, "SHIFT A" );   // Shift-A
-      AddC64Key( KeyboardKey.KEY_B, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 98 - 32, true, 98, true, (char)0xee42, true, "SHIFT B" );   // Shift-B
-      AddC64Key( KeyboardKey.KEY_C, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 99 - 32, true, 99, true, (char)0xee43, true, "SHIFT C" );   // Shift-C
-      AddC64Key( KeyboardKey.KEY_D, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 100 - 32, true, 100, true, (char)0xee44, true, "SHIFT D" );   // Shift-D
-      AddC64Key( KeyboardKey.KEY_E, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 101 - 32, true, 101, true, (char)0xee45, true, "SHIFT E" );   // Shift-E
-      AddC64Key( KeyboardKey.KEY_F, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 102 - 32, true, 102, true, (char)0xee46, true, "SHIFT F" );   // Shift-F
-      AddC64Key( KeyboardKey.KEY_G, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 103 - 32, true, 103, true, (char)0xee47, true, "SHIFT G" );   // Shift-G
-      AddC64Key( KeyboardKey.KEY_H, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 104 - 32, true, 104, true, (char)0xee48, true, "SHIFT H" );   // Shift-H
-      AddC64Key( KeyboardKey.KEY_I, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 105 - 32, true, 105, true, (char)0xee49, true, "SHIFT I" );   // Shift-I
-      AddC64Key( KeyboardKey.KEY_J, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 106 - 32, true, 106, true, (char)0xee4a, true, "SHIFT J" );   // Shift-J
-      AddC64Key( KeyboardKey.KEY_K, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 107 - 32, true, 107, true, (char)0xee4b, true, "SHIFT K" );   // Shift-K
-      AddC64Key( KeyboardKey.KEY_L, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 108 - 32, true, 108, true, (char)0xee4c, true, "SHIFT L" );   // Shift-L
-      AddC64Key( KeyboardKey.KEY_M, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 109 - 32, true, 109, true, (char)0xee4d, true, "SHIFT M" );   // Shift-M
-      AddC64Key( KeyboardKey.KEY_N, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 110 - 32, true, 110, true, (char)0xee4e, true, "SHIFT N" );   // Shift-N
-      AddC64Key( KeyboardKey.KEY_O, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 111 - 32, true, 111, true, (char)0xee4f, true, "SHIFT O" );   // Shift-O
-      AddC64Key( KeyboardKey.KEY_P, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 112 - 32, true, 112, true, (char)0xee50, true, "SHIFT P" );   // Shift-P
-      AddC64Key( KeyboardKey.KEY_Q, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 113 - 32, true, 113, true, (char)0xee51, true, "SHIFT Q" );   // Shift-Q
-      AddC64Key( KeyboardKey.KEY_R, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 114 - 32, true, 114, true, (char)0xee52, true, "SHIFT R" );   // Shift-R
-      AddC64Key( KeyboardKey.KEY_S, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 115 - 32, true, 115, true, (char)0xee53, true, "SHIFT S" );   // Shift-S
-      AddC64Key( KeyboardKey.KEY_T, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 116 - 32, true, 116, true, (char)0xee54, true, "SHIFT T" );   // Shift-T
-      AddC64Key( KeyboardKey.KEY_U, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 117 - 32, true, 117, true, (char)0xee55, true, "SHIFT U" );   // Shift-U
-      AddC64Key( KeyboardKey.KEY_V, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 118 - 32, true, 118, true, (char)0xee56, true, "SHIFT V" );   // Shift-V
-      AddC64Key( KeyboardKey.KEY_W, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 119 - 32, true, 119, true, (char)0xee57, true, "SHIFT W" );   // Shift-W
-      AddC64Key( KeyboardKey.KEY_X, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 120 - 32, true, 120, true, (char)0xee58, true, "SHIFT X" );   // Shift-X
-      AddC64Key( KeyboardKey.KEY_Y, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 121 - 32, true, 121, true, (char)0xee59, true, "SHIFT Y" );   // Shift-Y
-      AddC64Key( KeyboardKey.KEY_Z, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 122 - 32, true, 122, true, (char)0xee5a, true, "SHIFT Z" );   // Shift-Z
+      AddC64Key( KeyboardKey.KEY_STAR, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 96 - 32, true, 96, true, (char)0xee40, true, "SHIFT *" ).Replacements.Add( "SHIFT-*" );   // Shift *
+      AddC64Key( KeyboardKey.KEY_A, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 97 - 32, true, 97, true, (char)0xee41, true, "SHIFT A" ).Replacements.Add( "SHIFT-A" );   // Shift-A
+      AddC64Key( KeyboardKey.KEY_B, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 98 - 32, true, 98, true, (char)0xee42, true, "SHIFT B" ).Replacements.Add( "SHIFT-B" );   // Shift-B
+      AddC64Key( KeyboardKey.KEY_C, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 99 - 32, true, 99, true, (char)0xee43, true, "SHIFT C" ).Replacements.Add( "SHIFT-C" );   // Shift-C
+      AddC64Key( KeyboardKey.KEY_D, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 100 - 32, true, 100, true, (char)0xee44, true, "SHIFT D" ).Replacements.Add( "SHIFT-D" );   // Shift-D
+      AddC64Key( KeyboardKey.KEY_E, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 101 - 32, true, 101, true, (char)0xee45, true, "SHIFT E" ).Replacements.Add( "SHIFT-E" );   // Shift-E
+      AddC64Key( KeyboardKey.KEY_F, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 102 - 32, true, 102, true, (char)0xee46, true, "SHIFT F" ).Replacements.Add( "SHIFT-F" );   // Shift-F
+      AddC64Key( KeyboardKey.KEY_G, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 103 - 32, true, 103, true, (char)0xee47, true, "SHIFT G" ).Replacements.Add( "SHIFT-G" );   // Shift-G
+      AddC64Key( KeyboardKey.KEY_H, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 104 - 32, true, 104, true, (char)0xee48, true, "SHIFT H" ).Replacements.Add( "SHIFT-H" );   // Shift-H
+      AddC64Key( KeyboardKey.KEY_I, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 105 - 32, true, 105, true, (char)0xee49, true, "SHIFT I" ).Replacements.Add( "SHIFT-I" );   // Shift-I
+      AddC64Key( KeyboardKey.KEY_J, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 106 - 32, true, 106, true, (char)0xee4a, true, "SHIFT J" ).Replacements.Add( "SHIFT-J" );   // Shift-J
+      AddC64Key( KeyboardKey.KEY_K, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 107 - 32, true, 107, true, (char)0xee4b, true, "SHIFT K" ).Replacements.Add( "SHIFT-K" );   // Shift-K
+      AddC64Key( KeyboardKey.KEY_L, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 108 - 32, true, 108, true, (char)0xee4c, true, "SHIFT L" ).Replacements.Add( "SHIFT-L" );   // Shift-L
+      AddC64Key( KeyboardKey.KEY_M, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 109 - 32, true, 109, true, (char)0xee4d, true, "SHIFT M" ).Replacements.Add( "SHIFT-M" );   // Shift-M
+      AddC64Key( KeyboardKey.KEY_N, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 110 - 32, true, 110, true, (char)0xee4e, true, "SHIFT N" ).Replacements.Add( "SHIFT-N" );   // Shift-N
+      AddC64Key( KeyboardKey.KEY_O, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 111 - 32, true, 111, true, (char)0xee4f, true, "SHIFT O" ).Replacements.Add( "SHIFT-O" );   // Shift-O
+      AddC64Key( KeyboardKey.KEY_P, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 112 - 32, true, 112, true, (char)0xee50, true, "SHIFT P" ).Replacements.Add( "SHIFT-P" );   // Shift-P
+      AddC64Key( KeyboardKey.KEY_Q, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 113 - 32, true, 113, true, (char)0xee51, true, "SHIFT Q" ).Replacements.Add( "SHIFT-Q" );   // Shift-Q
+      AddC64Key( KeyboardKey.KEY_R, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 114 - 32, true, 114, true, (char)0xee52, true, "SHIFT R" ).Replacements.Add( "SHIFT-R" );   // Shift-R
+      AddC64Key( KeyboardKey.KEY_S, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 115 - 32, true, 115, true, (char)0xee53, true, "SHIFT S" ).Replacements.Add( "SHIFT-S" );   // Shift-S
+      AddC64Key( KeyboardKey.KEY_T, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 116 - 32, true, 116, true, (char)0xee54, true, "SHIFT T" ).Replacements.Add( "SHIFT-T" );   // Shift-T
+      AddC64Key( KeyboardKey.KEY_U, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 117 - 32, true, 117, true, (char)0xee55, true, "SHIFT U" ).Replacements.Add( "SHIFT-U" );   // Shift-U
+      AddC64Key( KeyboardKey.KEY_V, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 118 - 32, true, 118, true, (char)0xee56, true, "SHIFT V" ).Replacements.Add( "SHIFT-V" );   // Shift-V
+      AddC64Key( KeyboardKey.KEY_W, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 119 - 32, true, 119, true, (char)0xee57, true, "SHIFT W" ).Replacements.Add( "SHIFT-W" );   // Shift-W
+      AddC64Key( KeyboardKey.KEY_X, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 120 - 32, true, 120, true, (char)0xee58, true, "SHIFT X" ).Replacements.Add( "SHIFT-X" );   // Shift-X
+      AddC64Key( KeyboardKey.KEY_Y, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 121 - 32, true, 121, true, (char)0xee59, true, "SHIFT Y" ).Replacements.Add( "SHIFT-Y" );   // Shift-Y
+      AddC64Key( KeyboardKey.KEY_Z, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 122 - 32, true, 122, true, (char)0xee5a, true, "SHIFT Z" ).Replacements.Add( "SHIFT-Z" );   // Shift-Z
       AddC64Key( KeyboardKey.KEY_PLUS, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 123 - 32, true, 123, true, (char)0xee5b, true, "SHIFT +" );   // Shift +
       AddC64Key( KeyboardKey.KEY_MINUS, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 124 - 32, true, 124, true, (char)0xee5c, true, "CBM -" ).Replacements.Add( "CBM--" );   // C= -
       AddC64Key( KeyboardKey.KEY_MINUS, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 125 - 32, true, 125, true, (char)0xee5d, true, "SHIFT -" ).Replacements.Add( "SHIFT--" );   // Shift -
@@ -1521,6 +1521,20 @@ namespace C64Studio.Types
 
     public static C64Character FindC64KeyByPETSCII( byte PETSCIIValue )
     {
+      if ( ( PETSCIIValue >= 192 )
+      &&   ( PETSCIIValue <= 223 ) )
+      {
+        PETSCIIValue -= 96;
+      }
+      else if ( ( PETSCIIValue >= 224 )
+      &&        ( PETSCIIValue <= 254 ) )
+      {
+        PETSCIIValue -= 64;
+      }
+      else if ( PETSCIIValue == 255 )
+      {
+        PETSCIIValue = 126;
+      }
       foreach ( var c64Key in Types.ConstantData.AllPhysicalKeyInfos )
       {
         if ( c64Key.PetSCIIValue == PETSCIIValue )
