@@ -62,6 +62,7 @@
       this.editPathACME.Name = "editPathACME";
       this.editPathACME.Size = new System.Drawing.Size( 376, 20 );
       this.editPathACME.TabIndex = 0;
+      this.editPathACME.TextChanged += new System.EventHandler(this.editPath_TextChanged);
       // 
       // btnBrowseACME
       // 
@@ -88,6 +89,7 @@
       this.editPathVice.Name = "editPathVice";
       this.editPathVice.Size = new System.Drawing.Size( 376, 20 );
       this.editPathVice.TabIndex = 2;
+      this.editPathVice.TextChanged += new System.EventHandler(this.editPath_TextChanged);
       // 
       // btnBrowseVice
       // 
