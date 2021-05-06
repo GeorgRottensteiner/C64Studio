@@ -37,6 +37,7 @@
       this.editDeleteNthByte = new System.Windows.Forms.TextBox();
       this.btnExport = new System.Windows.Forms.Button();
       this.btnImport = new System.Windows.Forms.Button();
+      this.btnPackNibble = new System.Windows.Forms.Button();
       this.btnDeleteNthByte = new System.Windows.Forms.Button();
       this.btnUpsize = new System.Windows.Forms.Button();
       this.btnInterleave = new System.Windows.Forms.Button();
@@ -64,6 +65,7 @@
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.modifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.interleaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.btnSwizzle = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabMain.SuspendLayout();
       this.tabData.SuspendLayout();
@@ -136,6 +138,8 @@
       this.groupBox2.Controls.Add(this.editDeleteNthByte);
       this.groupBox2.Controls.Add(this.btnExport);
       this.groupBox2.Controls.Add(this.btnImport);
+      this.groupBox2.Controls.Add(this.btnSwizzle);
+      this.groupBox2.Controls.Add(this.btnPackNibble);
       this.groupBox2.Controls.Add(this.btnDeleteNthByte);
       this.groupBox2.Controls.Add(this.btnUpsize);
       this.groupBox2.Controls.Add(this.btnInterleave);
@@ -173,6 +177,16 @@
       this.btnImport.Text = "Import";
       this.btnImport.UseVisualStyleBackColor = true;
       this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+      // 
+      // btnPackNibble
+      // 
+      this.btnPackNibble.Location = new System.Drawing.Point(6, 134);
+      this.btnPackNibble.Name = "btnPackNibble";
+      this.btnPackNibble.Size = new System.Drawing.Size(75, 23);
+      this.btnPackNibble.TabIndex = 0;
+      this.btnPackNibble.Text = "Pack Nibble";
+      this.btnPackNibble.UseVisualStyleBackColor = true;
+      this.btnPackNibble.Click += new System.EventHandler(this.btnPackNibbles_Click);
       // 
       // btnDeleteNthByte
       // 
@@ -453,6 +467,16 @@
       this.interleaveToolStripMenuItem.Text = "Interleave...";
       this.interleaveToolStripMenuItem.Click += new System.EventHandler(this.interleaveToolStripMenuItem_Click);
       // 
+      // btnSwizzle
+      // 
+      this.btnSwizzle.Location = new System.Drawing.Point(6, 163);
+      this.btnSwizzle.Name = "btnSwizzle";
+      this.btnSwizzle.Size = new System.Drawing.Size(75, 23);
+      this.btnSwizzle.TabIndex = 0;
+      this.btnSwizzle.Text = "Swizzle";
+      this.btnSwizzle.UseVisualStyleBackColor = true;
+      this.btnSwizzle.Click += new System.EventHandler(this.btnSwizzle_Click);
+      // 
       // BinaryDisplay
       // 
       this.ClientSize = new System.Drawing.Size(733, 538);
@@ -514,5 +538,7 @@
     private System.Windows.Forms.TextBox editWrapCount;
     private System.Windows.Forms.TextBox editDeleteNthByte;
     private System.Windows.Forms.Button btnDeleteNthByte;
+    private System.Windows.Forms.Button btnPackNibble;
+    private System.Windows.Forms.Button btnSwizzle;
   }
 }

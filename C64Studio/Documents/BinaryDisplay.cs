@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using GR.Image;
+using GR.Memory;
 
 namespace C64Studio
 {
@@ -68,7 +69,7 @@ namespace C64Studio
 
     public override Size GetPreferredSize( Size proposedSize )
     {
-      return new Size( 660, 480 );
+      return new Size( 733, 514 );
     }
 
 
@@ -567,6 +568,48 @@ namespace C64Studio
       }
       SetHexData( data );
     }
+
+
+
+    private void btnPackNibbles_Click( object sender, EventArgs e )
+    {
+      var data = DataFromHex();
+      var resultingData = new ByteBuffer( ( data.Length + 1 ) / 2 );
+
+      int   curPos = 0;
+
+      while ( curPos + 1 < data.Length )
+      {
+        var curByte = (byte)( data.ByteAt( curPos ) | ( data.ByteAt( curPos + 1 ) << 4 ) );
+
+        resultingData.SetU8At( curPos / 2, curByte );
+        curPos += 2;
+      }
+      SetHexData( resultingData );
+    }
+
+
+
+    private void btnSwizzle_Click( object sender, EventArgs e )
+    {
+      var data = DataFromHex();
+
+      int   curPos = 0;
+
+      while ( curPos < data.Length )
+      {
+        var curByte = data.ByteAt( curPos );
+
+        curByte = (byte)( ( curByte << 4 ) | ( curByte >> 4 ) );
+
+        data.SetU8At( curPos, curByte );
+        ++curPos;
+      }
+      SetHexData( data );
+    }
+
+
+
   }
 }
 
