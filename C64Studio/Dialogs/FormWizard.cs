@@ -14,10 +14,6 @@ namespace C64Studio
     {
       InitializeComponent();
       btnOK.Enabled = false;
-
-      labelACMEPath.Visible = false;
-      editPathACME.Visible = false;
-      btnBrowseACME.Visible = false;
     }
     
     private void btnOK_Click( object sender, EventArgs e )
@@ -35,23 +31,6 @@ namespace C64Studio
 
 
 
-    private void btnBrowseACME_Click( object sender, EventArgs e )
-    {
-      OpenFileDialog    dlgBrowse = new OpenFileDialog();
-
-      dlgBrowse.Title = "Select ACME executable";
-      dlgBrowse.Filter = FilterString( Types.Constants.FILEFILTER_ACME + Types.Constants.FILEFILTER_EXECUTABLE + Types.Constants.FILEFILTER_ALL );
-
-      if ( dlgBrowse.ShowDialog() == DialogResult.OK )
-      {
-        editPathACME.Text = dlgBrowse.FileName;
-
-        btnOK.Enabled = ( ( editPathACME.Text.Length > 0 ) || ( editPathVice.Text.Length > 0 ) );
-      }
-    }
-
-
-
     private void btnBrowseVice_Click( object sender, EventArgs e )
     {
       OpenFileDialog    dlgBrowse = new OpenFileDialog();
@@ -61,11 +40,18 @@ namespace C64Studio
 
       if ( dlgBrowse.ShowDialog() == DialogResult.OK )
       {
-        editPathVice.Text = dlgBrowse.FileName;
-        //btnOK.Enabled = ( ( editPathACME.Text.Length > 0 ) || ( editPathVice.Text.Length > 0 ) );
-        btnOK.Enabled = ( editPathVice.Text.Length > 0 );
+        editPathEmulator.Text = dlgBrowse.FileName;
       }
     }
+
+
+
+    private void editPathEmulator_TextChanged( object sender, EventArgs e )
+    {
+      btnOK.Enabled = ( editPathEmulator.Text.Length > 0 ) && ( System.IO.File.Exists( editPathEmulator.Text ) );
+    }
+
+
 
   }
 }
