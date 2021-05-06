@@ -272,7 +272,7 @@ namespace C64Studio.Formats
         }
       }
       NumCharacters = memIn.ReadInt32();
-      if ( NumCharacters == 0 )
+      if ( NumCharacters < 256 )
       {
         NumCharacters = 256;
       }
