@@ -358,6 +358,7 @@
       this.btnInvert.Name = "btnInvert";
       this.btnInvert.Size = new System.Drawing.Size(26, 26);
       this.btnInvert.TabIndex = 44;
+      this.toolTip1.SetToolTip(this.btnInvert, "Invert");
       this.btnInvert.UseVisualStyleBackColor = true;
       this.btnInvert.Click += new System.EventHandler(this.btnInvert_Click);
       // 
@@ -368,6 +369,7 @@
       this.btnMirrorY.Name = "btnMirrorY";
       this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorY.TabIndex = 43;
+      this.toolTip1.SetToolTip(this.btnMirrorY, "Mirror Y");
       this.btnMirrorY.UseVisualStyleBackColor = true;
       this.btnMirrorY.Click += new System.EventHandler(this.btnMirrorY_Click);
       // 
@@ -378,6 +380,7 @@
       this.btnMirrorX.Name = "btnMirrorX";
       this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorX.TabIndex = 47;
+      this.toolTip1.SetToolTip(this.btnMirrorX, "Mirror X");
       this.btnMirrorX.UseVisualStyleBackColor = true;
       this.btnMirrorX.Click += new System.EventHandler(this.btnMirrorX_Click);
       // 
@@ -388,6 +391,7 @@
       this.btnShiftDown.Name = "btnShiftDown";
       this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
       this.btnShiftDown.TabIndex = 48;
+      this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
       this.btnShiftDown.UseVisualStyleBackColor = true;
       this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
       // 
@@ -398,6 +402,7 @@
       this.btnShiftUp.Name = "btnShiftUp";
       this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
       this.btnShiftUp.TabIndex = 38;
+      this.toolTip1.SetToolTip(this.btnShiftUp, "Shift Up");
       this.btnShiftUp.UseVisualStyleBackColor = true;
       this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
       // 
@@ -408,6 +413,7 @@
       this.btnShiftRight.Name = "btnShiftRight";
       this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
       this.btnShiftRight.TabIndex = 39;
+      this.toolTip1.SetToolTip(this.btnShiftRight, "Shift Right");
       this.btnShiftRight.UseVisualStyleBackColor = true;
       this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
       // 
@@ -418,6 +424,7 @@
       this.button3.Name = "button3";
       this.button3.Size = new System.Drawing.Size(26, 26);
       this.button3.TabIndex = 42;
+      this.toolTip1.SetToolTip(this.button3, "Rotate Right");
       this.button3.UseVisualStyleBackColor = true;
       this.button3.Click += new System.EventHandler(this.btnRotateRight_Click);
       // 
@@ -428,6 +435,7 @@
       this.btnRotateLeft.Name = "btnRotateLeft";
       this.btnRotateLeft.Size = new System.Drawing.Size(26, 26);
       this.btnRotateLeft.TabIndex = 41;
+      this.toolTip1.SetToolTip(this.btnRotateLeft, "Rotate Left");
       this.btnRotateLeft.UseVisualStyleBackColor = true;
       this.btnRotateLeft.Click += new System.EventHandler(this.btnRotateLeft_Click);
       // 
@@ -438,6 +446,7 @@
       this.btnShiftLeft.Name = "btnShiftLeft";
       this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
       this.btnShiftLeft.TabIndex = 40;
+      this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift Left");
       this.btnShiftLeft.UseVisualStyleBackColor = true;
       this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
       // 
@@ -579,6 +588,7 @@
       // 
       // panelCharColors
       // 
+      this.panelCharColors.AutoResize = false;
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.panelCharColors.DisplayPage = fastImage1;
       this.panelCharColors.Image = null;
@@ -592,6 +602,7 @@
       // 
       // picturePlayground
       // 
+      this.picturePlayground.AutoResize = false;
       this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.picturePlayground.DisplayPage = fastImage2;
       this.picturePlayground.Image = null;
