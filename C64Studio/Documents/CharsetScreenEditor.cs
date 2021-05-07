@@ -1016,7 +1016,13 @@ namespace C64Studio
                          ( j - y1 ) * 8,
                          (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ),
                          (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 8 ) );
-          DrawCharImage( m_Image, ( i - x1 + m_CharsetScreen.ScreenOffsetX ) * 8, ( j - y1 + m_CharsetScreen.ScreenOffsetY ) * 8,
+        }
+      }
+      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      {
+        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        {
+          DrawCharImage( m_Image, i * 8, j * 8,
                          (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ),
                          (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 8 ) );
         }
@@ -3550,6 +3556,82 @@ namespace C64Studio
 
       Clipboard.SetImage( bmpTarget );
       bmpTarget.Dispose();
+    }
+
+
+
+    private void btnShiftLeft_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+
+      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      {
+        ushort  oldChar = m_CharsetScreen.Chars[0 + j * m_CharsetScreen.ScreenWidth];
+        for ( int i = 1; i < m_CharsetScreen.ScreenWidth; ++i )
+        {
+          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth - 1] = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth];
+        }
+        m_CharsetScreen.Chars[j * m_CharsetScreen.ScreenWidth + m_CharsetScreen.ScreenWidth - 1] = oldChar;
+      }
+      SetModified();
+      RedrawFullScreen();
+    }
+
+
+
+    private void btnShiftRight_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+
+      for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+      {
+        ushort  oldChar = m_CharsetScreen.Chars[m_CharsetScreen.ScreenWidth - 1 + j * m_CharsetScreen.ScreenWidth];
+        for ( int i = m_CharsetScreen.ScreenWidth - 1; i >= 1; --i )
+        {
+          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth - 1];
+        }
+        m_CharsetScreen.Chars[j * m_CharsetScreen.ScreenWidth] = oldChar;
+      }
+      SetModified();
+      RedrawFullScreen();
+    }
+
+
+
+    private void btnShiftUp_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+
+      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      {
+        ushort  oldChar = m_CharsetScreen.Chars[i];
+        for ( int j = 0; j < m_CharsetScreen.ScreenHeight - 1; ++j )
+        {
+          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = m_CharsetScreen.Chars[i + ( j + 1 ) * m_CharsetScreen.ScreenWidth];
+        }
+        m_CharsetScreen.Chars[i + ( m_CharsetScreen.ScreenHeight - 1 ) * m_CharsetScreen.ScreenWidth] = oldChar;
+      }
+      SetModified();
+      RedrawFullScreen();
+    }
+
+
+
+    private void btnShiftDown_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ) );
+
+      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      {
+        ushort  oldChar = m_CharsetScreen.Chars[i + ( m_CharsetScreen.ScreenHeight - 1 ) * m_CharsetScreen.ScreenWidth];
+        for ( int j = m_CharsetScreen.ScreenHeight - 1; j >= 1; --j )
+        {
+          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = m_CharsetScreen.Chars[i + ( j - 1 ) * m_CharsetScreen.ScreenWidth];
+        }
+        m_CharsetScreen.Chars[i] = oldChar;
+      }
+      SetModified();
+      RedrawFullScreen();
     }
 
 

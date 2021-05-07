@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,6 +79,7 @@
       this.btnExportToBASICHexData = new System.Windows.Forms.Button();
       this.btnExportToBASICData = new System.Windows.Forms.Button();
       this.btnExportToBasic = new System.Windows.Forms.Button();
+      this.btnExportToImage = new System.Windows.Forms.Button();
       this.btnExportToImageFile = new System.Windows.Forms.Button();
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
@@ -120,7 +121,10 @@
       this.tabCharset = new System.Windows.Forms.TabPage();
       this.charEditor = new C64Studio.Controls.CharacterEditor();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnExportToImage = new System.Windows.Forms.Button();
+      this.btnShiftDown = new System.Windows.Forms.Button();
+      this.btnShiftUp = new System.Windows.Forms.Button();
+      this.btnShiftRight = new System.Windows.Forms.Button();
+      this.btnShiftLeft = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -632,6 +636,16 @@
       this.btnExportToBasic.UseVisualStyleBackColor = true;
       this.btnExportToBasic.Click += new System.EventHandler(this.btnExportToBasic_Click);
       // 
+      // btnExportToImage
+      // 
+      this.btnExportToImage.Location = new System.Drawing.Point(117, 272);
+      this.btnExportToImage.Name = "btnExportToImage";
+      this.btnExportToImage.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToImage.TabIndex = 17;
+      this.btnExportToImage.Text = "to image";
+      this.btnExportToImage.UseVisualStyleBackColor = true;
+      this.btnExportToImage.Click += new System.EventHandler(this.btnExportToImage_Click);
+      // 
       // btnExportToImageFile
       // 
       this.btnExportToImageFile.Location = new System.Drawing.Point(6, 272);
@@ -664,6 +678,10 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnShiftDown);
+      this.tabEditor.Controls.Add(this.btnShiftUp);
+      this.tabEditor.Controls.Add(this.btnShiftRight);
+      this.tabEditor.Controls.Add(this.btnShiftLeft);
       this.tabEditor.Controls.Add(this.btnClearScreen);
       this.tabEditor.Controls.Add(this.checkOverrideOriginalColorSettings);
       this.tabEditor.Controls.Add(this.checkShowGrid);
@@ -709,7 +727,7 @@
       // btnClearScreen
       // 
       this.btnClearScreen.Image = ((System.Drawing.Image)(resources.GetObject("btnClearScreen.Image")));
-      this.btnClearScreen.Location = new System.Drawing.Point(8, 462);
+      this.btnClearScreen.Location = new System.Drawing.Point(8, 460);
       this.btnClearScreen.Name = "btnClearScreen";
       this.btnClearScreen.Size = new System.Drawing.Size(24, 23);
       this.btnClearScreen.TabIndex = 38;
@@ -1057,7 +1075,7 @@
       // 
       this.panelCharColors.AutoResize = false;
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage3;
+      this.panelCharColors.DisplayPage = fastImage1;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(677, 416);
       this.panelCharColors.Name = "panelCharColors";
@@ -1071,7 +1089,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage4;
+      this.pictureEditor.DisplayPage = fastImage2;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1115,15 +1133,49 @@
       this.charEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);
       this.charEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.charEditor_CharactersShifted);
       // 
-      // btnExportToImage
+      // btnShiftDown
       // 
-      this.btnExportToImage.Location = new System.Drawing.Point(117, 272);
-      this.btnExportToImage.Name = "btnExportToImage";
-      this.btnExportToImage.Size = new System.Drawing.Size(106, 23);
-      this.btnExportToImage.TabIndex = 17;
-      this.btnExportToImage.Text = "to image";
-      this.btnExportToImage.UseVisualStyleBackColor = true;
-      this.btnExportToImage.Click += new System.EventHandler(this.btnExportToImage_Click);
+      this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
+      this.btnShiftDown.Location = new System.Drawing.Point(104, 460);
+      this.btnShiftDown.Name = "btnShiftDown";
+      this.btnShiftDown.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftDown.TabIndex = 52;
+      this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
+      this.btnShiftDown.UseVisualStyleBackColor = true;
+      this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
+      // 
+      // btnShiftUp
+      // 
+      this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
+      this.btnShiftUp.Location = new System.Drawing.Point(80, 460);
+      this.btnShiftUp.Name = "btnShiftUp";
+      this.btnShiftUp.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftUp.TabIndex = 49;
+      this.toolTip1.SetToolTip(this.btnShiftUp, "Shift Up");
+      this.btnShiftUp.UseVisualStyleBackColor = true;
+      this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
+      // 
+      // btnShiftRight
+      // 
+      this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
+      this.btnShiftRight.Location = new System.Drawing.Point(56, 460);
+      this.btnShiftRight.Name = "btnShiftRight";
+      this.btnShiftRight.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftRight.TabIndex = 50;
+      this.toolTip1.SetToolTip(this.btnShiftRight, "Shift Right");
+      this.btnShiftRight.UseVisualStyleBackColor = true;
+      this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
+      // 
+      // btnShiftLeft
+      // 
+      this.btnShiftLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftLeft.Image")));
+      this.btnShiftLeft.Location = new System.Drawing.Point(32, 460);
+      this.btnShiftLeft.Name = "btnShiftLeft";
+      this.btnShiftLeft.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftLeft.TabIndex = 51;
+      this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift Left");
+      this.btnShiftLeft.UseVisualStyleBackColor = true;
+      this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
       // 
       // CharsetScreenEditor
       // 
@@ -1243,5 +1295,9 @@
         private Controls.CharacterEditor charEditor;
     private System.Windows.Forms.Button btnClearScreen;
     private System.Windows.Forms.Button btnExportToImage;
+    private System.Windows.Forms.Button btnShiftDown;
+    private System.Windows.Forms.Button btnShiftUp;
+    private System.Windows.Forms.Button btnShiftRight;
+    private System.Windows.Forms.Button btnShiftLeft;
   }
 }
