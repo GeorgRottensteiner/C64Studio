@@ -771,11 +771,14 @@ namespace C64Studio
                 CalcRect( m_DragStartPos, m_LastDragEndPos, out o1, out o2 );
 
                 m_Image.DrawTo( pictureEditor.DisplayPage,
-                                o1.X * 8, o1.Y * 8,
                                 ( o1.X - m_CharsetScreen.ScreenOffsetX ) * 8, ( o1.Y - m_CharsetScreen.ScreenOffsetY ) * 8,
+                                o1.X * 8, o1.Y * 8,
                                 ( o2.X - o1.X + 1 ) * 8, ( o2.Y - o1.Y + 1 ) * 8 );
 
-                pictureEditor.Invalidate( new System.Drawing.Rectangle( o1.X * 8, o1.Y * 8, ( o2.X - o1.X + 1 ) * 8, ( o2.Y - o1.Y + 1 ) * 8 ) );
+                pictureEditor.Invalidate( new System.Drawing.Rectangle( ( o1.X - m_CharsetScreen.ScreenOffsetX ) * 8,
+                                                                        ( o1.Y - m_CharsetScreen.ScreenOffsetY ) * 8, 
+                                                                        ( o2.X - o1.X + 1 ) * 8, 
+                                                                        ( o2.Y - o1.Y + 1 ) * 8 ) );
               }
               m_LastDragEndPos = m_DragEndPos;
 
@@ -806,7 +809,10 @@ namespace C64Studio
                   }
                 }
               }
-              pictureEditor.Invalidate( new System.Drawing.Rectangle( p1.X * 8, p1.Y * 8, ( p2.X - p1.X + 1 ) * 8, ( p2.Y - p1.Y + 1 ) * 8 ) );
+              pictureEditor.Invalidate( new System.Drawing.Rectangle( ( p1.X - m_CharsetScreen.ScreenOffsetX ) * 8, 
+                                                                      ( p1.Y - m_CharsetScreen.ScreenOffsetY ) * 8, 
+                                                                      ( p2.X - p1.X + 1 ) * 8, 
+                                                                      ( p2.Y - p1.Y + 1 ) * 8 ) );
             }
             break;
           case ToolMode.SELECT:
@@ -998,12 +1004,19 @@ namespace C64Studio
       {
         for ( int j = y1; j <= y2; ++j )
         {
+          if ( ( j < 0 )
+          ||   ( j >= m_CharsetScreen.ScreenHeight )
+          ||   ( i < 0 )
+          ||   ( i >= m_CharsetScreen.ScreenWidth ) )
+          {
+            continue;
+          }
           DrawCharImage( pictureEditor.DisplayPage,
                          ( i - x1 ) * 8,
                          ( j - y1 ) * 8,
                          (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ),
                          (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 8 ) );
-          DrawCharImage( m_Image, ( i - x1 ) * 8 + m_CharsetScreen.ScreenOffsetX, ( j - y1 ) * 8 + m_CharsetScreen.ScreenOffsetY,
+          DrawCharImage( m_Image, ( i - x1 + m_CharsetScreen.ScreenOffsetX ) * 8, ( j - y1 + m_CharsetScreen.ScreenOffsetY ) * 8,
                          (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ),
                          (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 8 ) );
         }
