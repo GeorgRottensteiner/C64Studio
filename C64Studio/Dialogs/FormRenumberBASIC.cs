@@ -112,6 +112,11 @@ namespace C64Studio
         newText = m_Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( newText );
       }
 
+      if ( m_Basic.m_LowerCaseMode )
+      {
+        newText = Parser.BasicFileParser.MakeLowerCase( newText, !m_Core.Settings.BASICUseNonC64Font );
+      }
+
       m_Basic.FillContent( newText, true );
       Close();
     }

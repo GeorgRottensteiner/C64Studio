@@ -2125,10 +2125,6 @@ namespace C64Studio.Parser
             int     startIndex = bytePos;
             do
             {
-              if ( nextByte == 196 )
-              {
-                Debug.Log( "aha" );
-              }
               var c64Key = Types.ConstantData.FindC64KeyByPETSCII( nextByte );
               if ( ( c64Key != null )
               &&   ( nextByte != 32 )   // do not replace for Space
