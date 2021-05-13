@@ -12,7 +12,11 @@ namespace C64Studio.Types
     UNKNOWN,
     C64,
     VC20,
-    C128
+    C128,
+    PLUS4,
+    PET,
+    CBM,
+    ATARI2600
   };
 
   public class Machine

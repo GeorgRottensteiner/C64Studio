@@ -196,7 +196,7 @@ namespace C64Studio
       if ( ( toolRun.PassLabelsToEmulator )
       && ( DebuggedASMBase.ASMFileInfo != null ) )
       {
-        breakPointFile += DebuggedASMBase.ASMFileInfo.LabelsAsFile( toolRun.LabelFormat() );
+        breakPointFile += DebuggedASMBase.ASMFileInfo.LabelsAsFile( EmulatorInfo.LabelFormat( toolRun ) );
       }
 
       if ( breakPointFile.Length > 0 )
@@ -311,14 +311,12 @@ namespace C64Studio
         // only connect with debugger if VICE
         int   numConnectionAttempts = 1;
         if ( ( string.IsNullOrEmpty( Core.Executing.RunProcess.MainWindowTitle ) )
-        && ( waitForInputIdleFailed ) )
+        &&   ( waitForInputIdleFailed ) )
         {
           // assume GTK VICE
-          //Debug.Log( "Module:" + StudioCore.Executing.RunProcess.MainModule );
           numConnectionAttempts = 10;
         }
-        //Debug.Log( "MainWindow: " + StudioCore.Executing.RunProcess.MainWindowTitle );
-        if ( Core.MainForm.EmulatorSupportsDebugging( toolRun ) )
+        if ( EmulatorInfo.SupportsDebugging( toolRun ) )
         {
           //Debug.Log( "Have " + numConnectionAttempts + " attempts" );
           Core.AddToOutput( "Connection attempt " );
@@ -807,7 +805,7 @@ namespace C64Studio
       }
 
       if ( ( Core.MainForm.m_CurrentActiveTool != null )
-      &&   ( !Core.MainForm.EmulatorSupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
+      &&   ( !EmulatorInfo.SupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
       {
         return;
       }
@@ -860,7 +858,7 @@ namespace C64Studio
       }
 
       if ( ( Core.MainForm.m_CurrentActiveTool != null )
-      &&   ( !Core.MainForm.EmulatorSupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
+      &&   ( !EmulatorInfo.SupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
       {
         return;
       }
@@ -911,7 +909,7 @@ namespace C64Studio
       }
 
       if ( ( Core.MainForm.m_CurrentActiveTool != null )
-      &&   ( !Core.MainForm.EmulatorSupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
+      &&   ( !EmulatorInfo.SupportsDebugging( Core.MainForm.m_CurrentActiveTool ) ) )
       {
         return;
       }

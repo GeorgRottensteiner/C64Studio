@@ -2227,21 +2227,23 @@ namespace C64Studio
         &&   ( Document.ASMFileInfo != null )
         &&   ( toolRun.PassLabelsToEmulator ) )
         {
-          string labelInfo = Document.ASMFileInfo.LabelsAsFile( toolRun.LabelFormat() );
+          string labelInfo = Document.ASMFileInfo.LabelsAsFile( EmulatorInfo.LabelFormat( toolRun ) );
           if ( labelInfo.Length > 0 )
           {
             try
             {
               StudioCore.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
-              if ( System.IO.Path.GetFileNameWithoutExtension( toolRun.Filename ).ToUpper().StartsWith( "C64DEBUGGER" ) )
+
+              switch ( EmulatorInfo.LabelFormat( toolRun ) )
               {
-                runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
-              }
-              else
-              {
-                // VICE format
-                runArguments = "-moncommands \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
-                labelInfo += "\nexit\n";
+                case Types.ASM.LabelFileFormat.C64DEBUGGER:
+                  runArguments = "-vicesymbols \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+                  break;
+                case Types.ASM.LabelFileFormat.VICE:
+                default:
+                  runArguments = "-moncommands \"" + StudioCore.Debugging.TempDebuggerStartupFilename + "\" " + runArguments;
+                  labelInfo += "\nexit\n";
+                  break;
               }
               System.IO.File.WriteAllText( StudioCore.Debugging.TempDebuggerStartupFilename, labelInfo );
             }
@@ -2276,15 +2278,6 @@ namespace C64Studio
         StudioCore.SetStatus( "Ready" );
         return false;
       }
-    }
-
-
-
-    internal bool EmulatorSupportsDebugging( ToolInfo Emulator )
-    {
-      return ( System.IO.Path.GetFileNameWithoutExtension( Emulator.Filename ).ToUpper().StartsWith( "X64" ) )
-        ||   ( System.IO.Path.GetFileNameWithoutExtension( Emulator.Filename ).ToUpper().StartsWith( "XVIC" ) )
-        ||   ( System.IO.Path.GetFileNameWithoutExtension( Emulator.Filename ).ToUpper().StartsWith( "XMEGA65" ) );
     }
 
 
@@ -3560,7 +3553,7 @@ namespace C64Studio
     private void DebugGo()
     {
       if ( ( m_CurrentActiveTool != null )
-      &&   ( !EmulatorSupportsDebugging( m_CurrentActiveTool ) ) )
+      &&   ( !EmulatorInfo.SupportsDebugging( m_CurrentActiveTool ) ) )
       {
         return;
       }
@@ -3613,7 +3606,7 @@ namespace C64Studio
         try
         {
           if ( ( m_CurrentActiveTool != null )
-          && ( !EmulatorSupportsDebugging( m_CurrentActiveTool ) ) )
+          && ( !EmulatorInfo.SupportsDebugging( m_CurrentActiveTool ) ) )
           {
             if ( StudioCore.Executing.RunProcess != null )
             {
@@ -5211,7 +5204,7 @@ namespace C64Studio
 
     private void fileSetupWizardToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      FormWizard wizard = new FormWizard();
+      var wizard = new FormWizard();
 
       if ( wizard.ShowDialog() == DialogResult.OK )
       {
@@ -5220,48 +5213,8 @@ namespace C64Studio
         ToolInfo toolEmulator = new ToolInfo();
 
         toolEmulator.Filename = wizard.editPathEmulator.Text;
-        toolEmulator.WorkPath = "\"$(RunPath)\"";
-        toolEmulator.Type                   = ToolInfo.ToolType.EMULATOR;
-        toolEmulator.CartArguments          = "";
-        toolEmulator.DebugArguments         = "";
-        toolEmulator.TrueDriveOnArguments   = "";
-        toolEmulator.TrueDriveOffArguments  = "";
 
-        string upperCaseFilename = emulatorFilename.ToString();
-
-        if ( ( upperCaseFilename.StartsWith( "X64" ) )
-        ||   ( upperCaseFilename.StartsWith( "XVIC" ) )
-        ||   ( upperCaseFilename.StartsWith( "X128" ) ) )
-        {
-          // VICE
-          toolEmulator.Name                   = "WinVICE";
-          toolEmulator.PRGArguments           = "\"$(RunFilename)\"";
-          toolEmulator.CartArguments          = "-cartcrt \"$(RunFilename)\"";
-          toolEmulator.DebugArguments         = "-initbreak 0x$(DebugStartAddressHex) -remotemonitor";
-          toolEmulator.TrueDriveOnArguments   = "-truedrive +virtualdev";
-          toolEmulator.TrueDriveOffArguments  = "+truedrive -virtualdev";
-          toolEmulator.PassLabelsToEmulator   = true;
-        }
-        else if ( upperCaseFilename.StartsWith( "CCS64" ) )
-        {
-          // CCS64
-          toolEmulator.Name                   = "CCS64";
-          toolEmulator.PRGArguments           = "\"$(RunFilename)\"";
-          toolEmulator.PassLabelsToEmulator   = false;
-        }
-        else if ( upperCaseFilename.StartsWith( "XMEGA65" ) )
-        {
-          // XMEGA65
-          toolEmulator.Name = "XMEGA65";
-          toolEmulator.PRGArguments = "-prg \"$(RunFilename)\"";
-        }
-        else
-        {
-          // fallback
-          toolEmulator.Name                   = upperCaseFilename;
-          toolEmulator.PRGArguments           = "\"$(RunFilename)\"";
-          toolEmulator.PassLabelsToEmulator   = true;
-        }
+        EmulatorInfo.SetDefaultRunArguments( toolEmulator );
 
         StudioCore.Settings.ToolInfos.Add( toolEmulator );
       }

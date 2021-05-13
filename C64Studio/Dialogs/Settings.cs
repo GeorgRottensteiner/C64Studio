@@ -1,4 +1,5 @@
 ﻿using C64Studio.Parser;
+using C64Studio.Types;
 using GR.Image;
 using System;
 using System.Collections.Generic;
@@ -391,6 +392,17 @@ namespace C64Studio
         if ( tool.Filename != labelToolPath.Text )
         {
           tool.Filename = labelToolPath.Text;
+
+          // auto-fill initial entries if nothing is set
+          if ( ( string.IsNullOrEmpty( tool.PRGArguments ) )
+          &&   ( string.IsNullOrEmpty( tool.DebugArguments ) )
+          &&   ( string.IsNullOrEmpty( tool.CartArguments ) )
+          &&   ( string.IsNullOrEmpty( tool.TrueDriveOffArguments ) )
+          &&   ( string.IsNullOrEmpty( tool.TrueDriveOnArguments ) ) )
+          {
+            EmulatorInfo.SetDefaultRunArguments( tool );
+            alistTools_SelectedIndexChanged( null, null );
+          }
         }
       }
     }

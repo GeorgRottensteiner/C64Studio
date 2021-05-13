@@ -722,6 +722,7 @@
     <Compile Include="ToolInfo.cs" />
     <Compile Include="Types\BuildChain.cs" />
     <Compile Include="Types\BuildChainEntry.cs" />
+    <Compile Include="Types\EmulatorInfo.cs" />
     <Compile Include="Undo\UndoCharscreenCharsetChange.cs" />
     <Compile Include="Undo\UndoCharacterEditorCharChange.cs" />
     <Compile Include="Undo\UndoCharacterEditorPlaygroundCharChange.cs" />

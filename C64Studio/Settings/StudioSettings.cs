@@ -846,27 +846,10 @@ namespace C64Studio
               tool.FromChunk( chunkData );
 
               // sanitize args
-              tool.CartArguments = tool.CartArguments.Replace( "$(BuildTargetFilename)", "$(RunFilename)" );
-              tool.PRGArguments = tool.PRGArguments.Replace( "$(BuildTargetFilename)", "$(RunFilename)" );
-              tool.WorkPath = tool.WorkPath.Replace( "$(FilePath)", "$(RunPath)" );
+              tool.CartArguments  = tool.CartArguments.Replace( "$(BuildTargetFilename)", "$(RunFilename)" );
+              tool.PRGArguments   = tool.PRGArguments.Replace( "$(BuildTargetFilename)", "$(RunFilename)" );
+              tool.WorkPath       = tool.WorkPath.Replace( "$(FilePath)", "$(RunPath)" );
 
-              // auto-add true drive arguments only for VICE
-              if ( tool.IsVICE() )
-              {
-                if ( string.IsNullOrEmpty( tool.TrueDriveOnArguments ) )
-                {
-                  tool.TrueDriveOnArguments = "-truedrive +virtualdev";
-                  tool.TrueDriveOffArguments = "+truedrive -virtualdev";
-                }
-                if ( tool.PRGArguments.Contains( "-truedrive " ) )
-                {
-                  tool.PRGArguments = tool.PRGArguments.Replace( "-truedrive ", "" );
-                }
-                if ( tool.PRGArguments.Contains( " -truedrive" ) )
-                {
-                  tool.PRGArguments = tool.PRGArguments.Replace( " -truedrive", "" );
-                }
-              }
               ToolInfos.Add( tool );
             }
             break;

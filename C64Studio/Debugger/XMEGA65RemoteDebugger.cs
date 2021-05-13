@@ -1595,24 +1595,7 @@ namespace C64Studio
       }
 
       // find machine type from executable
-      string    filename = System.IO.Path.GetFileNameWithoutExtension( ToolRun.Filename ).ToUpper();
-
-      m_ConnectedMachine = MachineType.UNKNOWN;
-      if ( filename.StartsWith( "X64" ) )
-      {
-        m_ConnectedMachine = MachineType.C64;
-      }
-      else if ( filename.StartsWith( "XVIC" ) )
-      {
-        m_ConnectedMachine = MachineType.VC20;
-      }
-      else if ( filename.StartsWith( "X128" ) )
-      {
-        m_ConnectedMachine = MachineType.C128;
-      }
-
-      // what an ugly hack check (there's no version resource anymore :( )
-      //m_FullBinaryInterface = ToolRun.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" );
+      m_ConnectedMachine = EmulatorInfo.DetectMachineType( ToolRun );
 
       return true;
     }
