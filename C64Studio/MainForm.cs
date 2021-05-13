@@ -2283,7 +2283,8 @@ namespace C64Studio
     internal bool EmulatorSupportsDebugging( ToolInfo Emulator )
     {
       return ( System.IO.Path.GetFileNameWithoutExtension( Emulator.Filename ).ToUpper().StartsWith( "X64" ) )
-        ||   ( System.IO.Path.GetFileNameWithoutExtension( Emulator.Filename ).ToUpper().StartsWith( "XVIC" ) );
+        ||   ( System.IO.Path.GetFileNameWithoutExtension( Emulator.Filename ).ToUpper().StartsWith( "XVIC" ) )
+        ||   ( System.IO.Path.GetFileNameWithoutExtension( Emulator.Filename ).ToUpper().StartsWith( "XMEGA65" ) );
     }
 
 

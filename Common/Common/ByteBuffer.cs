@@ -352,6 +352,21 @@ namespace GR
 
 
 
+      public void SetU32NetworkOrderAt( int Index, System.UInt32 DWordValue )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index + 3 >= Length ) )
+        {
+          return;
+        }
+        m_Data[Index + 0] = (byte)( ( DWordValue >> 24 ) & 0xff );
+        m_Data[Index + 1] = (byte)( ( DWordValue >> 16 ) & 0xff );
+        m_Data[Index + 2] = (byte)( ( DWordValue >> 8 ) & 0xff );
+        m_Data[Index + 3] = (byte)  ( DWordValue & 0xff );
+      }
+
+
+
       public void SetU16At( int Index, System.UInt16 WordValue )
       {
         if ( ( Index < 0 )
@@ -736,6 +751,22 @@ namespace GR
                                 + ( (System.UInt32)ByteAt( Index + 2 ) << 16 )
                                 + ( (System.UInt32)ByteAt( Index + 1 ) << 8 )
                                 + ( (System.UInt32)ByteAt( Index ) );
+        return dwValue;
+      }
+
+
+
+      public System.UInt32 UInt32NetworkOrderAt( int Index )
+      {
+        if ( ( Index < 0 )
+        ||   ( Index + 3 >= Length ) )
+        {
+          return 0;
+        }
+        System.UInt32   dwValue = ( (System.UInt32)ByteAt( Index + 0 ) << 24 )
+                                + ( (System.UInt32)ByteAt( Index + 1 ) << 16 )
+                                + ( (System.UInt32)ByteAt( Index + 2 ) << 8 )
+                                + ( (System.UInt32)ByteAt( Index + 3 ) );
         return dwValue;
       }
 
