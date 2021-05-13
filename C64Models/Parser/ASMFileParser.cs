@@ -1079,6 +1079,13 @@ namespace C64Studio.Parser
         return false;
       }
 
+      if ( ( m_TemporaryFillLoopPos != -1 )
+      &&   ( Value == "i" ) )
+      {
+        Result = m_TemporaryFillLoopPos;
+        return true;
+      }
+
       // check for temp labels
       foreach ( Types.ASM.TemporaryLabelInfo labelInfo in ASMFileInfo.TempLabelInfo )
       {
@@ -5618,7 +5625,39 @@ namespace C64Studio.Parser
 
       if ( lineParams.Count == 2 )
       {
-        if ( ContainsExpression( lineParams[1] ) )
+        if ( IsList( lineParams[1] ) )
+        {
+          List<List<TokenInfo>>   listParams;
+
+          var parseListParams =  ParseLineInParameters( lineParams[1], 1, lineParams[1].Count - 2, lineIndex, out listParams );
+          if ( parseListParams != ParseLineResult.OK )
+          {
+            return parseListParams;
+          }
+
+          lineData = new GR.Memory.ByteBuffer( (uint)numBytes );
+
+          for ( int i = 0; i < numBytes; ++i )
+          {
+            m_TemporaryFillLoopPos = i;
+
+            int expressionResult = 0;
+
+            if ( !EvaluateTokens( lineIndex, listParams[i % listParams.Count], out expressionResult ) )
+            {
+              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + ":" + TokensToExpression( listParams[i % listParams.Count] ) );
+              return ParseLineResult.RETURN_NULL;
+            }
+            if ( !ValidByteValue( expressionResult ) )
+            {
+              AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Fill expression for byte " + i.ToString() + " out of bounds, resulting in value " + expressionResult );
+              return ParseLineResult.RETURN_NULL;
+            }
+            lineData.SetU8At( i, (byte)expressionResult );
+          }
+          m_TemporaryFillLoopPos = -1;
+        }
+        else // if ( ContainsExpression( lineParams[1] ) )
         {
           lineData = new GR.Memory.ByteBuffer( (uint)numBytes );
           
@@ -5629,7 +5668,7 @@ namespace C64Studio.Parser
             int expressionResult = 0;
             if ( !EvaluateTokens( lineIndex, lineParams[1], out expressionResult ) )
             {
-              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + TokensToExpression( lineParams[1] ) );
+              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + ":" + TokensToExpression( lineParams[1] ) );
               return ParseLineResult.RETURN_NULL;
             }
             if ( !ValidByteValue( expressionResult ) )
@@ -5639,12 +5678,14 @@ namespace C64Studio.Parser
             }
             lineData.SetU8At( i, (byte)expressionResult );
           }
+          m_TemporaryFillLoopPos = -1;
         }
+        /*
         else if ( !EvaluateTokens( lineIndex, lineParams[1], out fillValue ) )
         {
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill value parameter: " + TokensToExpression( lineParams[1] ) );
           return ParseLineResult.RETURN_NULL;
-        }
+        }*/
       }
 
       if ( !m_CurrentSegmentIsVirtual )
@@ -5664,6 +5705,22 @@ namespace C64Studio.Parser
       }
       lineSizeInBytes = info.NumBytes;
       return ParseLineResult.OK;
+    }
+
+
+
+    private bool IsList( List<TokenInfo> Tokens )
+    {
+      if ( Tokens.Count < 2 )
+      {
+        return false;
+      }
+      if ( ( Tokens[0].Content == "[" )
+      &&   ( Tokens[Tokens.Count - 1].Content == "]" ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -10690,6 +10747,7 @@ namespace C64Studio.Parser
     public ParseLineResult ParseLineInParameters( List<TokenInfo> lineTokenInfos, int Offset, int Count, int LineIndex, out List<List<TokenInfo>> lineParams )
     {
       int     paramStartIndex = Offset;
+      int     bracketStackDepth = 0;
 
       lineParams = new List<List<TokenInfo>>();
 
@@ -10697,6 +10755,20 @@ namespace C64Studio.Parser
       {
         var token = lineTokenInfos[Offset + i];
 
+        if ( IsOpeningBraceChar( token.Content ) )
+        {
+          ++bracketStackDepth;
+          continue;
+        }
+        if ( IsClosingBraceChar( token.Content ) )
+        {
+          --bracketStackDepth;
+          continue;
+        }
+        if ( bracketStackDepth > 0 )
+        {
+          continue;
+        }
         if ( ( token.Type == TokenInfo.TokenType.SEPARATOR )
         &&   ( token.Content == "," ) )
         {
@@ -11468,9 +11540,7 @@ namespace C64Studio.Parser
             else if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
             {
               // need to take loop into account, force new local label!
-              //token.Content += GetLoopGUID( Scopes ) + "_" + i.ToString() + "_" + lineIndex.ToString();
-              token.Content += GetLoopGUID( Scopes ) + "_" + lineIndex.ToString();
-              //Debug.Log( "RelabelLocalLabelsForLoop Replaced internal label at line " + i + " in loop with " + token.Content );
+              //token.Content += GetLoopGUID( Scopes ) + "_" + lineIndex.ToString();
               replacedParam = true;
             }
           }

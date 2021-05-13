@@ -241,7 +241,7 @@ namespace TestProject
     public void TestFillWithExpression()
     {
       string      source = @"* = $2000
-                           !fill 5,[i * 8]";
+                           !fill 5,(i * 8)";
 
       var assembly = TestAssemble( source );
 
@@ -254,7 +254,7 @@ namespace TestProject
     public void TestFillWithExpressionCascade()
     {
       string      source = @"* = $2000
-                           !fill 5,[i * 3] * [i * 3]";
+                           !fill 5,(i * 3) * (i * 3)";
 
       var assembly = TestAssemble( source );
 
@@ -268,12 +268,25 @@ namespace TestProject
     {
       string      source = @"* = $2000
                            i = 17
-                           !fill 5,[i * 3] + i
+                           !fill 5,(i * 3) + i
                            !byte i";
 
       var assembly = TestAssemble( source );
 
-      Assert.AreEqual( "00201114171A1D11", assembly.ToString() );
+      Assert.AreEqual( "00200004080C1011", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestFillWithExpressionList()
+    {
+      string      source = @"* = $2000
+                           !fill 6,[0,i,2]";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "0020000102000402", assembly.ToString() );
     }
 
 
