@@ -335,7 +335,8 @@
   !FILL, !FI &lt;count&gt;,[expression]</H2>
   <div id="mybody">
     This pseudo op fills the given value count times at the current location.<br>
-    For the expression form the expression is evaluated for every byte. The expression inside the brackets uses the label "i" as index, ranging from 0 to count - 1. Any global "i" label is suspended inside the brackets and restored afterwards.<br>
+    The expression form can be a list, several expressions are separated by comma. !fill uses every element of a list after each other, and restarts at the first element if required.
+    The calculation is evaluated for every byte. The expression inside the brackets uses the label "i" as index, counting the usage of the full list. Any global "i" label is suspended inside the brackets and restored afterwards.<br>
     <br>
     <b>Example #1 - simple fill</b><br>
     <br>
@@ -359,6 +360,14 @@
     <br></div>
     <br>
     Fills 5 bytes, with values 0, 3, 6, 9, 12.<br>
+    <br>
+
+    <b>Example #4 - fill with list</b><br>
+        <br>
+        <div id="code"><br>      !fill 9, [0,i]
+        <br></div>
+        <br>
+        Fills 9 bytes, with values 0, 0, 0, 1, 0, 2 0, 3, 0.<br>
     <br>
     <br>
   </div>

@@ -146,7 +146,9 @@ namespace Tiny64
       this.PageBoundaryCycles = PageBoundaryCycles;
       this.BranchOtherPagePenalty = BranchOtherPagePenalty;
       this.BranchSamePagePenalty = BranchSamePagePenalty;
-      NumPenaltyCycles = PageBoundaryCycles + BranchOtherPagePenalty + BranchSamePagePenalty;
+      NumPenaltyCycles = PageBoundaryCycles;
+
+      NumPenaltyCycles += Math.Max( BranchOtherPagePenalty, BranchSamePagePenalty );
     }
   }
 }

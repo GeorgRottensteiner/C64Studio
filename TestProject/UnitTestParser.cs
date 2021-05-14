@@ -286,7 +286,7 @@ namespace TestProject
 
       var assembly = TestAssemble( source );
 
-      Assert.AreEqual( "0020000102000402", assembly.ToString() );
+      Assert.AreEqual( "0020000002000102", assembly.ToString() );
     }
 
 

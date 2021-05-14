@@ -5636,12 +5636,18 @@ namespace C64Studio.Parser
           }
 
           lineData = new GR.Memory.ByteBuffer( (uint)numBytes );
+          int     listLoopIndex = 0;
 
           for ( int i = 0; i < numBytes; ++i )
           {
-            m_TemporaryFillLoopPos = i;
+            m_TemporaryFillLoopPos = listLoopIndex; // was i;
 
             int expressionResult = 0;
+
+            if ( ( i % listParams.Count ) == listParams.Count - 1 )
+            {
+              ++listLoopIndex;
+            }
 
             if ( !EvaluateTokens( lineIndex, listParams[i % listParams.Count], out expressionResult ) )
             {

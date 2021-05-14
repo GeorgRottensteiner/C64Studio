@@ -1,4 +1,7 @@
 ﻿C64Studio
+o Character Scrolling Effect (in one char, shifting with direction)
+  ->also flip char content through a list of other chars content
+  ->should display in preview pane, map editor and char screen editor
 o Get rid of GR.Path.IsPathEqual during OnKnownTokensChanged and OnKnownKeywordsChanged!
 o Save inbuilt editors automatically
 o Undo for Category-Exchange
