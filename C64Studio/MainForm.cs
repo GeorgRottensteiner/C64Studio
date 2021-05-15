@@ -2427,7 +2427,8 @@ namespace C64Studio
 
     private void RemoveBreakpoint( Types.Breakpoint Breakpoint )
     {
-      if ( AppState == Types.StudioState.NORMAL )
+      if ( AppState == Types.StudioState.NORMAL
+      || AppState == Types.StudioState.DEBUGGING_BROKEN )
       {
         if ( StudioCore.Debugging.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
         {
@@ -2437,7 +2438,10 @@ namespace C64Studio
             {
               StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Remove( breakPoint );
               m_DebugBreakpoints.RemoveBreakpoint( breakPoint );
-              StudioCore.Debugging.Debugger?.RemoveBreakpoint( breakPoint.RemoteIndex );
+              if ( AppState == Types.StudioState.NORMAL )
+                StudioCore.Debugging.Debugger?.RemoveBreakpoint( breakPoint.RemoteIndex );
+              else
+                StudioCore.Debugging.Debugger.RemoveBreakpoint(breakPoint.RemoteIndex, breakPoint);
               break;
             }
           }
@@ -2454,27 +2458,7 @@ namespace C64Studio
           }
         }
       }
-      else if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
-      {
-        //Debug.Log( "try to remove live breakpoint for " + Event.Doc.DocumentFilename + " at line " + Event.LineIndex );
-        if ( StudioCore.Debugging.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
-        {
-          foreach ( Types.Breakpoint breakPoint in StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename] )
-          {
-            if ( breakPoint == Breakpoint )
-            {
-              StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Remove( breakPoint );
-              m_DebugBreakpoints.RemoveBreakpoint( breakPoint );
-
-              StudioCore.Debugging.Debugger.RemoveBreakpoint( breakPoint.RemoteIndex, breakPoint );
-              break;
-            }
-          }
-        }
-      }
     }
-
-
 
     public void Document_DocumentEvent( BaseDocument.DocEvent Event )
     {
