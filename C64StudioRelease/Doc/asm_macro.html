@@ -21,6 +21,7 @@
       <li><a href="#byte">!BYTE, !BY, !8, !08</a></li>
       <li><a href="#convtab">!CONVTAB, !CT</a></li>
       <li><a href="#cpu">!CPU</a></li>
+      <li><a href="#dword">!DWORD, !32, !BE32, !LE32</a></li>
       <li><a href="#end">!END</a></li>
       <li><a href="#eof">!ENDOFFILE, !EOF</a></li>
       <li><a href="#error">!ERROR, !SERIOUS</a></li>
@@ -43,7 +44,7 @@
       <li><a href="#to">!TO</a></li>
       <li><a href="#trace">!TRACE</a></li>
       <li><a href="#warn">!WARN</a></li>
-      <li><a href="#word">!WORD, !WO, !16</a></li>
+      <li><a href="#word">!WORD, !WO, !16, !BE16, !LE16</a></li>
       <li><a href="#zone">!ZONE, !ZN</a></li>
     </ul>
     <br>
@@ -97,6 +98,8 @@
     This pseudo op adds a BASIC start line with a sys call to either the given jump address or the first statement after the pseudo op. If not provided otherwise the added BASIC line always has line number 10 and a 4 digit target address. This way the BASIC line will always require 12 bytes.
     If the jump address is 5 decimal digits the line will use 13 bytes.<br>
     <br>
+    Note: If !cpu is set to m65 (Mega65) the !basic directive will add a line before the actual SYS call setting the bank to 0 (10 BANK 0). All other parts will be moved to the second line.<br>
+    <br>
     If a string comment is used it is appended directly after the SYS number.<br>
     Note: If no colon is added this will result in a syntax error when returning to BASIC.<br>
     <br>
@@ -114,6 +117,12 @@
     BASIC listing looks like:<br>
     <br>
     <div id="code"><br>    10 SYS2061
+    <br></div>
+    <br>
+    BASIC listing looks like for !cpu M65:<br>
+    <br>
+    <div id="code"><br>    10 MODE0
+    20 SYS2061
     <br></div>
     <br>
     <br>
@@ -253,6 +262,24 @@
     <br>
     <br>
   </div>
+  <a name="dword"></a>
+  <H2>!DWORD, !32, !LE32, !BE32</H2>
+  <div id="mybody">
+    This pseudo op allows to insert a double word (4 bytes) at the current location.<br>
+    <br>
+    Allowed are constant values, expressions and labels as content.<br>
+    Constant values can be set as decimal, hexadecimal (with prefixed $).<br>
+    Labels are treated as 32-bit values. Default is little endian, unless !BE32 is used.<br>
+    Expressions are evaluated during the final pass. They must evaluate to a valid word value.<br>
+    <br>
+    <br>
+    <div id="code"><br>      !dword 128,270,320
+      !32 NoBehaviour
+      !le32 ( SCREEN_CHAR + 40 )
+      <br></div>
+    <br>
+    <br>
+  </div>
   <a name="end"></a>
   <H2>!END</H2>
   <div id="mybody">
@@ -308,7 +335,8 @@
   !FILL, !FI &lt;count&gt;,[expression]</H2>
   <div id="mybody">
     This pseudo op fills the given value count times at the current location.<br>
-    For the expression form the expression is evaluated for every byte. The expression inside the brackets uses the label "i" as index, ranging from 0 to count - 1. Any global "i" label is suspended inside the brackets and restored afterwards.<br>
+    The expression form can be a list, several expressions are separated by comma. !fill uses every element of a list after each other, and restarts at the first element if required.
+    The calculation is evaluated for every byte. The expression inside the brackets uses the label "i" as index, counting the usage of the full list. Any global "i" label is suspended inside the brackets and restored afterwards.<br>
     <br>
     <b>Example #1 - simple fill</b><br>
     <br>
@@ -332,6 +360,14 @@
     <br></div>
     <br>
     Fills 5 bytes, with values 0, 3, 6, 9, 12.<br>
+    <br>
+
+    <b>Example #4 - fill with list</b><br>
+        <br>
+        <div id="code"><br>      !fill 9, [0,i]
+        <br></div>
+        <br>
+        Fills 9 bytes, with values 0, 0, 0, 1, 0, 2 0, 3, 0.<br>
     <br>
     <br>
   </div>
@@ -1883,6 +1919,30 @@
           *.mapproject
         </td>
         <td>
+          mapextradata
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all map extradata as lookup tables like this:<br>
+          &lt;LabelPrefix&gt;NUM_MAPS = (number of maps)<br>
+          Only if at least one map has valid extra data:<br>
+          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_LO (low bytes of pointer to map extra data)<br>
+          &lt;LabelPrefix&gt;MAP_EXTRA_DATA_LIST_HI (high bytes of pointer to map extra data)<br>
+          For every map:<br>
+          &lt;LabelPrefix&gt;MAP_&lt;map name&gt; (all tile indices of a map column major)<br>
+          (all extra data bytes of a map)<br>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Map Project File
+        </td>
+        <td>
+          *.mapproject
+        </td>
+        <td>
           maptile
         </td>
         <td>
@@ -2124,13 +2184,13 @@
     <br>
   </div>
   <a name="word"></a><a name="wo"></a><a name="16"></a>
-  <H2>!WORD, !WO, !16</H2>
+  <H2>!WORD, !WO, !16, !LE16, !BE16</H2>
   <div id="mybody">
     This pseudo op allows to insert words (2 bytes) at the current location.<br>
     <br>
     Allowed are constant values, expressions and labels as content.<br>
     Constant values can be set as decimal, hexadecimal (with prefixed $).<br>
-    Labels are treated as 16-bit values.<br>
+    Labels are treated as 16-bit values. Default is little endian, unless !BE16 is used.<br>
     Expressions are evaluated during the final pass. They must evaluate to a valid word value.<br>
     <br>
     <br>

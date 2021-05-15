@@ -17,6 +17,53 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+14.05.2021 - 6.8:         Add: Allow list for !fill expression
+                          Add: Auto-Fill emulator entries on wizard or new entry
+                          Add: !fill expression parsing with list
+                          Fix: BASIC renumber messing up lower case mode
+                          Add: Charsetscreen editor: Shifting
+                          Fix: Charscreen editor: Several display errors in extra wide charscreens
+                          Fix: Tooltips in embedded charset editor control
+                          Add: Wizard emulator detection, Enable OK Button on paste
+                          Add: Binary Editor: Pack half bytes and swizzle
+                          Add: Export option for !mediasrc and maps, mapextradata only
+                          Fix: BASIC : Most issues with upper/lowercase toggling are fixed
+                          Enhance: Error message on wrong character count on !media/!mediasrc for charset
+                          Fix: Imported charsets should always have at least 256 chars
+                          Fix: Exporting from MapEditor to charscreen sets color controls properly
+                          Fix: BASIC code, toggle upper/lower case now properly handle string literals
+                          Add: File manager - Little feature, import screen code asm !byte statements to automatically create dir art entries
+                          Add: Map editor, allow export of extra data only
+                          Fix: BASIC Editor, auto-complete BASIC commands also in lower case mode
+                          Fix: Change operator prio of modulus to match division/multiplication. This might break things for people who don't use brackets
+                          WIP: TASM/C64Tass support
+                          Fix: Exporting BASIC file via File Manager now sets the chosen BASIC dialect
+                          Fix: Autodetect assembler type fix did not properly handle comments
+                          Fix: Crash when opening help after help was closed via close all function
+                          Fix issue on late evaluation of relative 16 bit branches/jumps
+                          Fix: Optimize assembler detection (skip comments)
+                          Fix: Same issue with POIncludeMedia
+                          Fix: Exception with !binary "
+                          Fix: Restore cursor position/scroll offset after replace all
+                          Add: Image export to clipboard for charscreen editor
+                          Add pseudo op !be16, !le16, !32, !be32, !le32
+                          Add: Adjust syntax color to currently used CPU and assembler
+                          Add unit test for wrong memory segment combination
+                          Fix: off by one error (writing wrong values if !fill was followed by a one byte gap and then more data)
+                          Fix: Wrapping of tile data export in map editor
+                          Fix: Wrong error message with overlapping segments when using !bank pseudo op
+                          Add: Atari 2600 Samples
+                          Add: Store collapsed/expanded state of projects/folders in Solution Explorer
+                          Fix: DASM . as alternative to *
+                          Add: !cpu type 6502
+                          Fix: DASM settings to work with Atari samples
+                          Fix: Stack Overflow when setting EMPTY SPACE background color to Auto
+                          Fix: Re-add alternative illegal opcodes for 6510
+                          Fix: Forward immediate labels in macros
+                          Fix: no stripping of spaces or REMs when renumbering (requires cleanup)
+                          Fix: Add alternative illegal 6510 opcode axs (alt. to sbx)
+                          Fix: Line spacing and zoom issues in ASM and BASIC editor display
+
 26.02.2021 - 6.7:         Fix: BASIC V10, wrong opcodes
                           Fix: Scaling issue of PETSCII table
                           Fix: scaling on File Manager toolbar
