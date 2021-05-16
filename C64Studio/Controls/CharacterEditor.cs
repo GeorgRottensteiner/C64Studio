@@ -2505,18 +2505,39 @@ namespace C64Studio.Controls
       {
         int     index1 = listCategories.SelectedIndices[0];
 
-        string    category = listCategories.SelectedItems[0].Text;
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorSwapCategories( this, m_Project, index1 - 1, index1 ) );
 
-
-        m_Project.Categories.RemoveAt( index1 );
-        m_Project.Categories.Insert( index1 - 1, category );
-
-        var item = (ListViewItem)listCategories.SelectedItems[0];
-        listCategories.Items.RemoveAt( index1 );
-        listCategories.Items.Insert( index1 - 1, item );
+        SwapCategories( index1, index1 - 1 );
 
         RaiseModifiedEvent();
       }
+    }
+
+
+
+    public void SwapCategories( int CategoryIndex1, int CategoryIndex2 )
+    {
+      string    category = m_Project.Categories[CategoryIndex1];
+
+      m_Project.Categories.RemoveAt( CategoryIndex1 );
+      m_Project.Categories.Insert( CategoryIndex2, category );
+
+      // swap character categories as well
+      for ( int i = 0; i < 256; ++i )
+      {
+        if ( m_Project.Characters[i].Category == CategoryIndex1 )
+        {
+          m_Project.Characters[i].Category = CategoryIndex2;
+        }
+        else if ( m_Project.Characters[i].Category == CategoryIndex2 )
+        {
+          m_Project.Characters[i].Category = CategoryIndex1;
+        }
+      }
+
+      var item = (ListViewItem)listCategories.SelectedItems[0];
+      listCategories.Items.RemoveAt( CategoryIndex1 );
+      listCategories.Items.Insert( CategoryIndex2, item );
     }
 
 
@@ -2529,17 +2550,10 @@ namespace C64Studio.Controls
       {
         int     index1 = listCategories.SelectedIndices[0];
 
-        string    category = listCategories.SelectedItems[0].Text;
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorSwapCategories( this, m_Project, index1 + 1, index1 ) );
 
+        SwapCategories( index1, index1 + 1 );
 
-        m_Project.Categories.RemoveAt( index1 );
-        m_Project.Categories.Insert( index1 + 1, category );
-
-        var item = (ListViewItem)listCategories.SelectedItems[0];
-        listCategories.Items.RemoveAt( index1 );
-        listCategories.Items.Insert( index1 + 1, item );
-
-        RaiseModifiedEvent();
         RaiseModifiedEvent();
       }
     }

@@ -1833,11 +1833,19 @@ namespace C64Studio
 
       var exportRect = DetermineExportRectangle();
 
+      StringBuilder   sb = new StringBuilder();
+
       if ( checkExportASMAsPetSCII.Checked )
       {
         // pet export only exports chars, no color changes
-        StringBuilder   sb = new StringBuilder();
         bool            isReverse = false;
+
+        sb.Append( ";size " );
+        sb.Append( exportRect.Width );
+        sb.Append( "," );
+        sb.Append( exportRect.Height );
+        sb.AppendLine();
+
         for ( int i = exportRect.Top; i < exportRect.Bottom; ++i )
         {
           sb.Append( "!pet \"" );
@@ -1880,19 +1888,25 @@ namespace C64Studio
       string screenData = Util.ToASMData( screenCharData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), editPrefix.Text, checkExportHex.Checked );
       string colorData = Util.ToASMData( screenColorData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), editPrefix.Text, checkExportHex.Checked );
 
+      sb.Append( ";size " );
+      sb.Append( exportRect.Width );
+      sb.Append( "," );
+      sb.Append( exportRect.Height );
+      sb.AppendLine();
+
       switch ( comboExportData.SelectedIndex )
       {
         case 0:
-          editDataExport.Text = ";screen char data" + System.Environment.NewLine + screenData + System.Environment.NewLine + ";screen color data" + System.Environment.NewLine + colorData;
+          editDataExport.Text = sb + ";screen char data" + System.Environment.NewLine + screenData + System.Environment.NewLine + ";screen color data" + System.Environment.NewLine + colorData;
           break;
         case 1:
-          editDataExport.Text = ";screen char data" + System.Environment.NewLine + screenData + System.Environment.NewLine;
+          editDataExport.Text = sb + ";screen char data" + System.Environment.NewLine + screenData + System.Environment.NewLine;
           break;
         case 2:
-          editDataExport.Text = ";screen color data" + System.Environment.NewLine + colorData;
+          editDataExport.Text = sb + ";screen color data" + System.Environment.NewLine + colorData;
           break;
         case 3:
-          editDataExport.Text = ";screen color data" + System.Environment.NewLine + colorData + System.Environment.NewLine + ";screen char data" + System.Environment.NewLine + screenData;
+          editDataExport.Text = sb + ";screen color data" + System.Environment.NewLine + colorData + System.Environment.NewLine + ";screen char data" + System.Environment.NewLine + screenData;
           break;
       }
     }
