@@ -60,16 +60,10 @@ namespace GR
 
         m_Position += 4;
 
-        float     Value = System.BitConverter.ToSingle( System.BitConverter.GetBytes( ui32 ), 0 );
-
-        /*
-        unsafe
-        {
-          Value = *(float*)( &ui32 );
-        }*/
-
-        return Value;
+        return System.BitConverter.ToSingle( System.BitConverter.GetBytes( ui32 ), 0 );
       }
+
+
 
       public override System.UInt32 ReadUInt32()
       {
@@ -126,6 +120,62 @@ namespace GR
           return 0;
         }
         System.UInt16     ui16 = (UInt16)m_Buffer.UInt16At( m_Position );
+        m_Position += 2;
+
+        return ui16;
+      }
+
+
+
+      public override System.UInt32 ReadUInt32NetworkOrder()
+      {
+        if ( m_Buffer == null )
+        {
+          return 0;
+        }
+        if ( m_Position + 4 > m_Buffer.Length )
+        {
+          return 0;
+        }
+        System.UInt32     ui32 = m_Buffer.UInt32NetworkOrderAt( m_Position );
+
+        m_Position += 4;
+
+        return ui32;
+      }
+
+
+
+      public override System.Int32 ReadInt32NetworkOrder()
+      {
+        if ( m_Buffer == null )
+        {
+          return 0;
+        }
+        if ( m_Position + 4 > m_Buffer.Length )
+        {
+          return 0;
+        }
+        System.Int32     i32 = (int)m_Buffer.UInt32NetworkOrderAt( m_Position );
+
+        m_Position += 4;
+
+        return i32;
+      }
+
+
+
+      public override System.UInt16 ReadUInt16NetworkOrder()
+      {
+        if ( m_Buffer == null )
+        {
+          return 0;
+        }
+        if ( m_Position + 2 > m_Buffer.Length )
+        {
+          return 0;
+        }
+        System.UInt16     ui16 = (UInt16)m_Buffer.UInt16NetworkOrderAt( m_Position );
         m_Position += 2;
 
         return ui16;
@@ -253,6 +303,8 @@ namespace GR
         }
       }
 
+
+
       public override long Position
       {
         get
@@ -260,6 +312,20 @@ namespace GR
           return m_Position;
         }
       }
+
+
+
+      public override void Skip( int BytesToSkip )
+      {
+        if ( m_Position + BytesToSkip > Size )
+        {
+          m_Position = (int)Size;
+          return;
+        }
+        m_Position += BytesToSkip;
+      }
+
+
 
     }
 

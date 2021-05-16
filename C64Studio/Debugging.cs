@@ -136,20 +136,6 @@ namespace C64Studio
       Debugger.ClearAllBreakpoints();
       MarkedDocument = null;
       MarkedDocumentLine = -1;
-      /*
-      Debug.Log( "Breakpoints." );
-      foreach ( var bplist in m_BreakPoints.Values )
-      {
-        foreach ( var bp in bplist )
-        {
-          Debug.Log( "BP at " + bp.LineIndex + " in " + bp.DocumentFilename + " at " + bp.Address + "(" + bp.Address.ToString( "x4" ) + ") V=" + bp.IsVirtual );
-          foreach ( var bpchild in bp.Virtual )
-          {
-            Debug.Log( "-BP at " + bpchild.LineIndex + " in " + bpchild.DocumentFilename + " at " + bpchild.Address + "(" + bp.Address.ToString( "x4" ) + ") V=" + bpchild.IsVirtual );
-          }
-        }
-      }*/
-
 
       if ( !Core.Executing.StartProcess( toolRun, DocumentToRun ) )
       {
@@ -194,7 +180,7 @@ namespace C64Studio
       }
 
       if ( ( toolRun.PassLabelsToEmulator )
-      && ( DebuggedASMBase.ASMFileInfo != null ) )
+      &&   ( DebuggedASMBase.ASMFileInfo != null ) )
       {
         breakPointFile += DebuggedASMBase.ASMFileInfo.LabelsAsFile( EmulatorInfo.LabelFormat( toolRun ) );
       }
@@ -239,8 +225,8 @@ namespace C64Studio
         }
       }
       if ( ( DocumentToDebug.Project != null )
-      && ( LateBreakpointOverrideDebugStart == -1 )
-      && ( !string.IsNullOrEmpty( DocumentToDebug.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
+      &&   ( LateBreakpointOverrideDebugStart == -1 )
+      &&   ( !string.IsNullOrEmpty( DocumentToDebug.Project.Settings.CurrentConfig.DebugStartAddressLabel ) ) )
       {
         int debugStartAddress = -1;
         if ( !Core.MainForm.DetermineDebugStartAddress( DocumentToDebug, DocumentToDebug.Project.Settings.CurrentConfig.DebugStartAddressLabel, out debugStartAddress ) )

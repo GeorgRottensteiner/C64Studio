@@ -179,6 +179,65 @@ namespace GR
 
 
 
+      public override System.UInt32 ReadUInt32NetworkOrder()
+      {
+        if ( m_Stream == null )
+        {
+          return 0;
+        }
+        if ( !EnsureReadBuffer( 4 ) )
+        {
+          return 0;
+        }
+        System.UInt32     ui32 = (uint)( NextByte() << 24 );
+        ui32 |= ( (uint)NextByte() << 16 );
+        ui32 |= ( (uint)NextByte() << 8 );
+        ui32 |= (uint)NextByte();
+
+        return ui32;
+      }
+
+
+
+      public override System.Int32 ReadInt32NetworkOrder()
+      {
+        if ( m_Stream == null )
+        {
+          return 0;
+        }
+        if ( !EnsureReadBuffer( 4 ) )
+        {
+          return 0;
+        }
+        System.Int32     i32 = (int)( NextByte() << 24 );
+        i32 |= ( (int)NextByte() << 16 );
+        i32 |= ( (int)NextByte() << 8 );
+        i32 |= (int)NextByte();
+
+        return i32;
+      }
+
+
+
+      public override System.UInt16 ReadUInt16NetworkOrder()
+      {
+        if ( m_Stream == null )
+        {
+          return 0;
+        }
+        if ( !EnsureReadBuffer( 2 ) )
+        {
+          return 0;
+        }
+        System.UInt16     ui16 = (UInt16)( NextByte() << 8 );
+
+        ui16 |= (UInt16)NextByte();
+
+        return ui16;
+      }
+
+
+
       public override System.Byte ReadUInt8()
       {
         if ( m_Stream == null )
@@ -344,6 +403,33 @@ namespace GR
           return m_Stream.Position - ( m_Cache.Length - m_CacheBytesUsed );
         }
       }
+
+
+
+      public override void Skip( int BytesToSkip )
+      {
+        int   bytesInCache = (int)m_Cache.Length - m_CacheBytesUsed;
+
+        if ( BytesToSkip <= bytesInCache )
+        {
+          m_CacheBytesUsed += BytesToSkip;
+          return;
+        }
+
+        // partially in cache
+        m_CacheBytesUsed += bytesInCache;
+        BytesToSkip -= bytesInCache;
+
+        // skip rest from stream
+        if ( m_Stream.Position + BytesToSkip > m_Stream.Length )
+        {
+          BytesToSkip = (int)( m_Stream.Length - m_Stream.Position );
+        }
+
+        m_Stream.Seek( BytesToSkip, System.IO.SeekOrigin.Current );
+      }
+
+
 
     }
 
