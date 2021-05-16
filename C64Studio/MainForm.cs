@@ -2427,8 +2427,8 @@ namespace C64Studio
 
     private void RemoveBreakpoint( Types.Breakpoint Breakpoint )
     {
-      if ( AppState == Types.StudioState.NORMAL
-      || AppState == Types.StudioState.DEBUGGING_BROKEN )
+      if ( ( AppState == Types.StudioState.NORMAL )
+      ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
       {
         if ( StudioCore.Debugging.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
         {
@@ -2439,9 +2439,13 @@ namespace C64Studio
               StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Remove( breakPoint );
               m_DebugBreakpoints.RemoveBreakpoint( breakPoint );
               if ( AppState == Types.StudioState.NORMAL )
+              {
                 StudioCore.Debugging.Debugger?.RemoveBreakpoint( breakPoint.RemoteIndex );
+              }
               else
-                StudioCore.Debugging.Debugger.RemoveBreakpoint(breakPoint.RemoteIndex, breakPoint);
+              {
+                StudioCore.Debugging.Debugger.RemoveBreakpoint( breakPoint.RemoteIndex, breakPoint );
+              }
               break;
             }
           }
@@ -2459,6 +2463,8 @@ namespace C64Studio
         }
       }
     }
+
+
 
     public void Document_DocumentEvent( BaseDocument.DocEvent Event )
     {
