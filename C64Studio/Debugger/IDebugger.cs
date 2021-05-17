@@ -174,6 +174,7 @@ namespace C64Studio
     void AddWatchEntry( WatchEntry Watch );
     void ClearAllWatchEntries();
     void RemoveWatchEntry( WatchEntry Watch );
+    List<WatchEntry> CurrentWatches();
 
 
     // get memory content

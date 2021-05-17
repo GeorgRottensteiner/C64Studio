@@ -70,13 +70,13 @@ namespace C64Studio
     private byte[]                    m_DataToSend;
     private int                       size = 1024;
     private bool                      connectResultReceived = false;
-    Dictionary<int,LinkedList<string>> m_Labels = new Dictionary<int, LinkedList<string>>();
+    Dictionary<int,List<string>>      m_Labels = new Dictionary<int, List<string>>();
     private GR.Memory.ByteBuffer      m_ReceivedDataBin = new GR.Memory.ByteBuffer();
     private RequestData               m_Request = new RequestData( DebugRequestType.NONE );
-    private LinkedList<string>        m_ResponseLines = new LinkedList<string>();
-    private LinkedList<RequestData>   m_RequestQueue = new LinkedList<RequestData>();
+    private List<string>              m_ResponseLines = new List<string>();
+    private List<RequestData>         m_RequestQueue = new List<RequestData>();
     private StudioCore                Core = null;
-    private LinkedList<WatchEntry>    m_WatchEntries = new LinkedList<WatchEntry>();
+    private List<WatchEntry>          m_WatchEntries = new List<WatchEntry>();
     private int                       m_BytesToSend = 0;
     private int                       m_BrokenAtBreakPoint = -1;
     private bool                      m_InitialBreakpointRemoved = false;
@@ -704,9 +704,9 @@ namespace C64Studio
     {
       if ( !m_Labels.ContainsKey( Value ) )
       {
-        m_Labels.Add( Value, new LinkedList<string>() );
+        m_Labels.Add( Value, new List<string>() );
       }
-      m_Labels[Value].AddLast( Name );
+      m_Labels[Value].Add( Name );
     }
 
 
@@ -931,9 +931,9 @@ namespace C64Studio
  	    if ( ( m_RequestQueue.Count != 0 )
       &&   ( m_ReceivedDataBin.Length == 0 ) )
       {
-        Log( "------> StartNextRequest:" + m_RequestQueue.First.Value.Type );
-        RequestData nextRequest = m_RequestQueue.First.Value;
-        m_RequestQueue.RemoveFirst();
+        Log( "------> StartNextRequest:" + m_RequestQueue[0].Type );
+        RequestData nextRequest = m_RequestQueue[0];
+        m_RequestQueue.RemoveAt( 0 );
 
         SendRequest( nextRequest );
       }
@@ -1324,7 +1324,7 @@ namespace C64Studio
       ||   ( m_ReceivedDataBin.Length > 0 ) )
       {
         Log( "-no" );
-        m_RequestQueue.AddLast( Data );
+        m_RequestQueue.Add( Data );
         return;
       }
       Log( "-yes" );
@@ -1347,7 +1347,7 @@ namespace C64Studio
 
     public void AddWatchEntry( WatchEntry Watch )
     {
-      m_WatchEntries.AddLast( Watch );
+      m_WatchEntries.Add( Watch );
     }
 
 
@@ -1732,6 +1732,13 @@ namespace C64Studio
         return;
       }
       QueueRequest( DebugRequestType.SET_REGISTER, Register[0], Value );
+    }
+
+
+
+    List<WatchEntry> IDebugger.CurrentWatches()
+    {
+      return m_WatchEntries;
     }
 
 

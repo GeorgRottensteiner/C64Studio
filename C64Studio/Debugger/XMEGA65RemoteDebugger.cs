@@ -1704,5 +1704,12 @@ namespace C64Studio
 
 
 
+    List<WatchEntry> IDebugger.CurrentWatches()
+    {
+      throw new NotImplementedException();
+    }
+
+
+
   }
 }

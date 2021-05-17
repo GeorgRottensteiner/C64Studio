@@ -245,12 +245,9 @@ namespace C64Studio
       }
 
       // only save watches once, for the active project
-      if ( Core.MainForm.m_DebugWatch.DebuggedProject == this )
+      foreach ( var watch in Settings.WatchEntries )
       {
-        foreach ( var watch in Core.MainForm.m_DebugWatch.m_WatchEntries )
-        {
-          bufferProject.Append( watch.Save() );
-        }
+        bufferProject.Append( watch.Save() );
       }
 
       return bufferProject;
@@ -629,7 +626,8 @@ namespace C64Studio
               WatchEntry watch = new WatchEntry();
 
               watch.Load( memChunk );
-              Core.MainForm.AddWatchEntry( watch );
+              //Core.MainForm.AddWatchEntry( watch );
+              Settings.WatchEntries.Add( watch );
               //Debug.Log( "loaded watch entry for " + watch.Name );
             }
             break;

@@ -683,9 +683,18 @@ namespace C64Studio
       listWatch.Items.Insert( index - 1, item );
 
       // also exchange in project settings!
+      if ( m_WatchEntries.Count != listWatch.Items.Count )
+      {
+        Debug.Log( "Watch Entry count mismatch!!" );
+      }
+
       var oldItem = m_WatchEntries[index];
+      m_WatchEntries[index] = m_WatchEntries[index - 1];
+      m_WatchEntries[index - 1] = oldItem;
+      /*
       m_WatchEntries.RemoveAt( index );
       m_WatchEntries.Insert( index - 1, oldItem );
+      */
     }
 
 
@@ -709,11 +718,17 @@ namespace C64Studio
       listWatch.Items.Insert( index + 1, item );
 
       // also exchange in project settings!
+      if ( m_WatchEntries.Count != listWatch.Items.Count )
+      {
+        Debug.Log( "Watch Entry count mismatch!!" );
+      }
       var oldItem = m_WatchEntries[index];
-      m_WatchEntries.RemoveAt( index );
-      m_WatchEntries.Insert( index + 1, oldItem );
 
-      
+      m_WatchEntries[index] = m_WatchEntries[index + 1];
+      m_WatchEntries[index + 1] = oldItem;
+      /*
+      m_WatchEntries.RemoveAt( index );
+      m_WatchEntries.Insert( index + 1, oldItem );*/
     }
 
 

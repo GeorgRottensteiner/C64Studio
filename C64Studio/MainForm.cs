@@ -907,7 +907,10 @@ namespace C64Studio
           StopDebugging();
           break;
         case DebugEvent.UPDATE_WATCH:
-          UpdateWatchInfo( Event.Request, Event.Data );
+          if ( IsWatchShowingCurrentDebuggedProject() )
+          {
+            UpdateWatchInfo( Event.Request, Event.Data );
+          }
           break;
         case DebugEvent.TRACE_OUTPUT:
           AddToOutputAndShow( Event.Text );
@@ -1182,7 +1185,23 @@ namespace C64Studio
           UpdateCaption();
           break;
         case C64Studio.Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED:
-          m_DebugWatch.DebuggedProject        = m_CurrentProject;
+          m_DebugWatch.DebuggedProject = m_CurrentProject;
+          m_DebugWatch.ClearAllWatchEntries();
+          if ( m_CurrentProject != null )
+          {
+            foreach ( var watch in m_CurrentProject.Settings.WatchEntries )
+            {
+              m_DebugWatch.AddWatchEntry( watch );
+            }
+          }
+          else if ( StudioCore.Debugging.Debugger != null )
+          {
+            // projectless debugging, use watches from debugger
+            foreach ( var watch in StudioCore.Debugging.Debugger.CurrentWatches() )
+            {
+              m_DebugWatch.AddWatchEntry( watch );
+            }
+          }
           m_DebugRegisters.DebuggedProject    = m_CurrentProject;
           m_DebugMemory.DebuggedProject       = m_CurrentProject;
           m_DebugBreakpoints.DebuggedProject  = m_CurrentProject;
@@ -3617,18 +3636,6 @@ namespace C64Studio
               StudioCore.Debugging.MarkLine( StudioCore.Debugging.MarkedDocument.DocumentInfo.Project, StudioCore.Debugging.MarkedDocument.DocumentInfo, -1 );
               StudioCore.Debugging.MarkedDocument = null;
             }
-            /*
-            if ( ( ActiveDocument != StudioCore.Debugging.DebugDisassembly )
-            &&   ( ActiveDocumentInfo != null ) )
-            {
-              MarkLine( ActiveDocumentInfo.Project, ActiveDocumentInfo.FullPath, -1 );
-            }
-            else
-            {
-              StudioCore.Debugging.MarkedDocument = null;
-              StudioCore.Debugging.MarkedDocumentLine = -1;
-            }*/
-
             if ( StudioCore.Debugging.DebugDisassembly != null )
             {
               StudioCore.AddToOutput( "Closing Disassembly window" );
@@ -3638,6 +3645,7 @@ namespace C64Studio
             StudioCore.Debugging.CurrentCodePosition = -1;
 
             StudioCore.Debugging.DebuggedProject = null;
+            StudioCore.Debugging.Debugger = null;
             m_CurrentActiveTool = null;
             StudioCore.Debugging.FirstActionAfterBreak = false;
             mainDebugGo.Enabled = false;
@@ -4760,13 +4768,31 @@ namespace C64Studio
       ||   ( AppState == Types.StudioState.NORMAL ) )
       {
         m_DebugWatch.AddWatchEntry( Watch );
-        StudioCore.Debugging.Debugger?.AddWatchEntry( Watch );
 
-        if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
+        m_CurrentProject?.Settings.WatchEntries.Add( Watch );
+
+        if ( IsWatchShowingCurrentDebuggedProject() )
         {
-          StudioCore.Debugging.Debugger?.RefreshRegistersAndWatches();
+          StudioCore.Debugging.Debugger?.AddWatchEntry( Watch );
+
+          if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
+          {
+            StudioCore.Debugging.Debugger?.RefreshRegistersAndWatches();
+          }
         }
       }
+    }
+
+
+
+    private bool IsWatchShowingCurrentDebuggedProject()
+    {
+      if ( ( StudioCore.Debugging.Debugger != null )
+      &&   ( StudioCore.Debugging.DebuggedProject == m_CurrentProject ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -4774,7 +4800,10 @@ namespace C64Studio
     public void RemoveWatchEntry( WatchEntry Watch )
     {
       m_DebugWatch.RemoveWatchEntry( Watch );
-      StudioCore.Debugging.Debugger?.RemoveWatchEntry( Watch );
+      if ( IsWatchShowingCurrentDebuggedProject() )
+      {
+        StudioCore.Debugging.Debugger?.RemoveWatchEntry( Watch );
+      }
     }
 
 

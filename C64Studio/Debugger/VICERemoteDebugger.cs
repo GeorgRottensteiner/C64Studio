@@ -77,13 +77,13 @@ namespace C64Studio
     private byte[]                    m_DataToSend;
     private int                       size = 1024;
     private bool                      connectResultReceived = false;
-    Dictionary<int,LinkedList<string>> m_Labels = new Dictionary<int, LinkedList<string>>();
+    Dictionary<int,List<string>>      m_Labels = new Dictionary<int, List<string>>();
     private GR.Memory.ByteBuffer      m_ReceivedDataBin = new GR.Memory.ByteBuffer();
     private RequestData               m_Request = new RequestData( DebugRequestType.NONE );
-    private LinkedList<string>        m_ResponseLines = new LinkedList<string>();
-    private LinkedList<RequestData>   m_RequestQueue = new LinkedList<RequestData>();
+    private List<string>              m_ResponseLines = new List<string>();
+    private List<RequestData>         m_RequestQueue = new List<RequestData>();
     private StudioCore                Core = null;
-    private LinkedList<WatchEntry>    m_WatchEntries = new LinkedList<WatchEntry>();
+    private List<WatchEntry>          m_WatchEntries = new List<WatchEntry>();
     private int                       m_BytesToSend = 0;
     private int                       m_BrokenAtBreakPoint = -1;
     private bool                      m_InitialBreakpointRemoved = false;
@@ -370,7 +370,7 @@ namespace C64Studio
                   if ( stringData.Length == 10 )
                   {
                     // Vice 2.4 sometimes does NOT send an ending line break
-                    m_ResponseLines.AddLast( line );
+                    m_ResponseLines.Add( line );
                     processed = true;
                     ProcessResponse();
                     stringData = "";
@@ -380,7 +380,7 @@ namespace C64Studio
 
                 //Debug.Log( "Line:" + line );
                 //Debug.Log( "Receive data left " + m_ReceivedData );
-                m_ResponseLines.AddLast( line );
+                m_ResponseLines.Add( line );
               }
               if ( !processed )
               {
@@ -408,7 +408,7 @@ namespace C64Studio
 
                 //Debug.Log( "Line:" + line );
                 //Debug.Log( "Receive data left " + m_ReceivedData );
-                m_ResponseLines.AddLast( line );
+                m_ResponseLines.Add( line );
 
                 ProcessResponse();
 
@@ -986,9 +986,9 @@ namespace C64Studio
     {
       if ( !m_Labels.ContainsKey( Value ) )
       {
-        m_Labels.Add( Value, new LinkedList<string>() );
+        m_Labels.Add( Value, new List<string>() );
       }
-      m_Labels[Value].AddLast( Name );
+      m_Labels[Value].Add( Name );
     }
 
 
@@ -1055,14 +1055,14 @@ namespace C64Studio
       &&   ( m_ResponseLines.Count >= 2 ) ) )
       {
         //(C:$1c1f) #2 (Break) .C:1c25   B1 17      LDA ($17),Y
-        string firstLine = m_ResponseLines.First.Value;
+        string firstLine = m_ResponseLines[0];
         int hashPos = firstLine.IndexOf( '#' );
         if ( hashPos != -1 )
         {
-          int spacePos = m_ResponseLines.First.Value.IndexOf( ' ', hashPos );
+          int spacePos = m_ResponseLines[0].IndexOf( ' ', hashPos );
           if ( spacePos != -1 )
           {
-            if ( !int.TryParse( m_ResponseLines.First.Value.Substring( hashPos + 1, spacePos - hashPos - 1 ), out breakpointToRemove ) )
+            if ( !int.TryParse( m_ResponseLines[0].Substring( hashPos + 1, spacePos - hashPos - 1 ), out breakpointToRemove ) )
             {
               Debug.Log( "Failed to parse breakpoint ID" );
             }
@@ -1109,7 +1109,7 @@ namespace C64Studio
           {
             // ReadRegisters:(C:$0810)   ADDR AC XR YR SP 00 01 NV-BDIZC LIN CYC
             // ReadRegisters:.;0810 00 00 00 f6 2f 37 00100000 055 015
-            string    registers = m_ResponseLines.Last.Value;
+            string    registers = m_ResponseLines[m_ResponseLines.Count - 1];
 
             //if ( m_ViceVersion >= WinViceVersion.V_3_0 )
             {
@@ -1144,10 +1144,10 @@ namespace C64Studio
           break;
         case DebugRequestType.NEXT:
           if ( ( m_ResponseLines.Count > 0 )
-          && ( ( m_ResponseLines.First.Value.IndexOf( "(Break)" ) != -1 )
-          ||   ( m_ResponseLines.First.Value.IndexOf( "(Stop on  exec" ) != -1 )
-          ||   ( m_ResponseLines.First.Value.IndexOf( "(Stop on  load" ) != -1 )
-          ||   ( m_ResponseLines.First.Value.IndexOf( "(Stop on store" ) != -1 ) ) )
+          && ( ( m_ResponseLines[0].IndexOf( "(Break)" ) != -1 )
+          ||   ( m_ResponseLines[0].IndexOf( "(Stop on  exec" ) != -1 )
+          ||   ( m_ResponseLines[0].IndexOf( "(Stop on  load" ) != -1 )
+          ||   ( m_ResponseLines[0].IndexOf( "(Stop on store" ) != -1 ) ) )
           {
             // a unexpected break!
             HandleBreakpoint();
@@ -1222,14 +1222,14 @@ namespace C64Studio
           &&     ( m_ResponseLines.Count >= 2 ) ) )
           {
             //(C:$1c1f) #2 (Break) .C:1c25   B1 17      LDA ($17),Y
-            string  firstLine = m_ResponseLines.First.Value;
+            string  firstLine = m_ResponseLines[0];
             int hashPos = firstLine.IndexOf( '#' );
             if ( hashPos != -1 )
             {
-              int spacePos = m_ResponseLines.First.Value.IndexOf( ' ', hashPos );
+              int spacePos = m_ResponseLines[0].IndexOf( ' ', hashPos );
               if ( spacePos != -1 )
               {
-                if ( !int.TryParse( m_ResponseLines.First.Value.Substring( hashPos + 1, spacePos - hashPos - 1 ), out m_BrokenAtBreakPoint ) )
+                if ( !int.TryParse( m_ResponseLines[0].Substring( hashPos + 1, spacePos - hashPos - 1 ), out m_BrokenAtBreakPoint ) )
                 {
                   Debug.Log( "Failed to parse breakpoint ID" );
                 }
@@ -1247,7 +1247,7 @@ namespace C64Studio
             {
               Debug.Log( "Could not deduce breakpoint ID 2" );
             }
-            Debug.Log( "Last line, should be (C:$xxxx): " + m_ResponseLines.Last.Value );
+            Debug.Log( "Last line, should be (C:$xxxx): " + m_ResponseLines[m_ResponseLines.Count - 1] );
             m_ResponseLines.Clear();
 
             OnBreakpointHit();
@@ -1256,10 +1256,10 @@ namespace C64Studio
           break;
         case DebugRequestType.NONE:
           if ( ( m_ResponseLines.Count > 0 )
-          &&   ( ( m_ResponseLines.First.Value.IndexOf( "(Break)" ) != -1 )
-          ||     ( m_ResponseLines.First.Value.IndexOf( "(Stop on  exec" ) != -1 )
-          ||     ( m_ResponseLines.First.Value.IndexOf( "(Stop on  load" ) != -1 )
-          ||     ( m_ResponseLines.First.Value.IndexOf( "(Stop on store" ) != -1 ) ) )
+          &&   ( ( m_ResponseLines[0].IndexOf( "(Break)" ) != -1 )
+          ||     ( m_ResponseLines[0].IndexOf( "(Stop on  exec" ) != -1 )
+          ||     ( m_ResponseLines[0].IndexOf( "(Stop on  load" ) != -1 )
+          ||     ( m_ResponseLines[0].IndexOf( "(Stop on store" ) != -1 ) ) )
           {
             // a unexpected break!
             HandleBreakpoint();
@@ -1296,17 +1296,17 @@ namespace C64Studio
             // oder            #1 (Stop on  exec 9258)  279 018
             //                 .C:9258  A9 36       LDA #$36       - A:34 X:3F Y:00 SP:f2 .V-..IZC   29285379
             int breakpointID = 0;
-            int responsePos = m_ResponseLines.First.Value.IndexOf( "BREAK: " );
+            int responsePos = m_ResponseLines[0].IndexOf( "BREAK: " );
             if ( responsePos == -1 )
             {
-              responsePos = m_ResponseLines.First.Value.IndexOf( "WATCH: " );
+              responsePos = m_ResponseLines[0].IndexOf( "WATCH: " );
             }
             if ( responsePos != -1 )
             {
-              int spaceBehindPos = m_ResponseLines.First.Value.IndexOf( ' ', responsePos + 7 );
+              int spaceBehindPos = m_ResponseLines[0].IndexOf( ' ', responsePos + 7 );
               if ( spaceBehindPos != -1 )
               {
-                string breakID = m_ResponseLines.First.Value.Substring( responsePos + 7, spaceBehindPos - responsePos - 7 );
+                string breakID = m_ResponseLines[0].Substring( responsePos + 7, spaceBehindPos - responsePos - 7 );
                 int.TryParse( breakID, out breakpointID );
               }
             }
@@ -1560,9 +1560,9 @@ namespace C64Studio
  	    if ( ( m_RequestQueue.Count != 0 )
       &&   ( m_ReceivedDataBin.Length == 0 ) )
       {
-        Debug.Log( "------> StartNextRequest:" + m_RequestQueue.First.Value.Type );
-        RequestData nextRequest = m_RequestQueue.First.Value;
-        m_RequestQueue.RemoveFirst();
+        Debug.Log( "------> StartNextRequest:" + m_RequestQueue[0].Type );
+        RequestData nextRequest = m_RequestQueue[0];
+        m_RequestQueue.RemoveAt( 0 );
 
         SendRequest( nextRequest );
       }
@@ -2101,7 +2101,7 @@ namespace C64Studio
       &&     ( m_ReceivedDataBin.Length > 0 ) ) )
       {
         Debug.Log( "-no" );
-        m_RequestQueue.AddLast( Data );
+        m_RequestQueue.Add( Data );
         return;
       }
       Debug.Log( "-yes" );
@@ -2124,7 +2124,7 @@ namespace C64Studio
 
     public void AddWatchEntry( WatchEntry Watch )
     {
-      m_WatchEntries.AddLast( Watch );
+      m_WatchEntries.Add( Watch );
     }
 
 
@@ -2560,6 +2560,13 @@ namespace C64Studio
         return;
       }
       QueueRequest( DebugRequestType.SET_REGISTER, Register[0], Value );
+    }
+
+
+
+    List<WatchEntry> IDebugger.CurrentWatches()
+    {
+      return m_WatchEntries;
     }
 
 
