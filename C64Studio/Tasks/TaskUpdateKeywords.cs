@@ -23,12 +23,23 @@ namespace C64Studio.Tasks
       {
         return false;
       }
+
+      Doc.OnKnownKeywordsChanged();
+
       if ( Doc.InvokeRequired )
       {
-        return (bool)Doc.Invoke( new ProcessTaskCallback( ProcessTask ) );
+        return (bool)Doc.Invoke( new ProcessTaskCallback( ProcessTaskPart2 ) );
       }
-      //Debug.Log( "Update keywords for " + Doc.DocumentFilename );
-      Doc.OnKnownKeywordsChanged();
+      //Debug.Log( "Update keywords for " + Doc.DocumentFilename );*/
+
+      //Debug.Log( "Update keywords done for " + Doc.DocumentFilename );
+      return true;
+    }
+
+
+
+    protected bool ProcessTaskPart2()
+    {
       Doc.OnKnownTokensChanged();
       //Debug.Log( "Update keywords done for " + Doc.DocumentFilename );
       return true;

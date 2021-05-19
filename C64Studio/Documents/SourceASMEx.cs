@@ -69,6 +69,8 @@ namespace C64Studio
     private string                            m_SyntaxColoringCurrentKnownCPU       = "";
     private AssemblerType                     m_SyntaxColoringCurrentKnownAssembler = AssemblerType.AUTO;
 
+    private delegate void delSimpleEventHandler();
+
 
 
     private GR.Collections.Map<int,Types.Breakpoint>    m_BreakPoints = new GR.Collections.Map<int,C64Studio.Types.Breakpoint>();
@@ -162,7 +164,6 @@ namespace C64Studio
       this.Activated += new EventHandler( SourceASM_Activated );
 
       editSource.TextChanged += new EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>( editSource_TextChanged );
-      editSource.TextChanging += new EventHandler<FastColoredTextBoxNS.TextChangingEventArgs>( editSource_TextChanging );
       editSource.TextChangedDelayed += editSource_TextChangedDelayed;
       editSource.FoldingBlockStateChanged += editSource_FoldingBlockStateChanged;
 
@@ -401,8 +402,9 @@ namespace C64Studio
 
     void editSource_TextChangedDelayed( object sender, FastColoredTextBoxNS.TextChangedEventArgs e )
     {
+      //return;
       //Debug.Log( "editSource_TextChangedDelayed for " + DocumentInfo.FullPath );
-      ResetAllStyles( e.ChangedRange );
+      //ResetAllStyles( e.ChangedRange );
 
       //ShowAutoComplete();
 
@@ -621,13 +623,6 @@ namespace C64Studio
       }
       //UpdateFoldingBlocks();
       //StoreFoldedBlocks();
-    }
-
-
-
-    void editSource_TextChanging( object sender, FastColoredTextBoxNS.TextChangingEventArgs e )
-    {
-      //throw new NotImplementedException();
     }
 
 
@@ -1213,7 +1208,7 @@ namespace C64Studio
         }
 
         if ( ( DocumentInfo.ASMFileInfo.AssemblerSettings != null )
-        &&   ( m_SyntaxColoringCurrentKnownAssembler != DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType ) )
+        && ( m_SyntaxColoringCurrentKnownAssembler != DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType ) )
         {
           m_SyntaxColoringCurrentKnownAssembler = DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType;
 
@@ -1222,11 +1217,37 @@ namespace C64Studio
         }
         if ( modified )
         {
-          ResetAllStyles( editSource.Range );
+          //ResetAllStyles( editSource.Range );
+
+          // only update pseudo op style regex
+          var fullRange = editSource.Range;
+          var styles = new Style[]
+            {
+              m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )],
+              m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.CODE )]
+            };
+          fullRange.ClearStyle( styles );
+          fullRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.PSEUDO_OP )], m_TextRegExp[(int)Types.ColorableElement.PSEUDO_OP] );
+          fullRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.CODE )], m_TextRegExp[(int)Types.ColorableElement.CODE] );
+
           editSource.OnSyntaxHighlight( new FastColoredTextBoxNS.TextChangedEventArgs( editSource.Range ) );
         }
       }
 
+      if ( InvokeRequired )
+      {
+        Invoke( new delSimpleEventHandler( UpdateKeywordsAndTokens ) );
+      }
+      else
+      {
+        UpdateKeywordsAndTokens();
+      }
+    }
+
+
+
+    private void UpdateKeywordsAndTokens()
+    {
       m_LastZoneUpdateLine = -1;
       RefreshLocalSymbols();
       RefreshAutoComplete();

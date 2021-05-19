@@ -72,6 +72,7 @@ namespace C64Studio.Tasks
       m_Document.SetASMFileInfo( parser.ASMFileInfo, knownTokens, knownTokenInfos );
 
       var task = new Tasks.TaskUpdateKeywords( m_Document.BaseDoc );
+      task.Core = Core;
       task.RunTask();
 
       return true;
