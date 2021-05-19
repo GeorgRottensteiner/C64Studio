@@ -9,7 +9,7 @@
 #StartAddress=xxxx  = sets the default BASIC start address
 #SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
 
-StartAddress=2049
+StartAddress=7169
 SafeLineLength=160
 
 Token;ByteValues;Abbreviation[;OptionalInfo]
