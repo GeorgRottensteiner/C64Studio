@@ -229,56 +229,13 @@ namespace C64Studio
 
 
 
-    internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset )
-    {
-      StringBuilder   sb = new StringBuilder();
-
-      if ( LineOffset <= 0 )
-      {
-        LineOffset = 1;
-      }
-      if ( StartLine < 0 )
-      {
-        StartLine = 0;
-      }
-      int     dataPos = 0;
-
-      while ( dataPos < Data.Length )
-      {
-        int     startLength = sb.Length;
-
-        sb.Append( StartLine );
-        sb.Append( "DATA" );
-
-        bool    firstByte = true;
-
-        while ( ( sb.Length - startLength < 80 )
-        &&      ( dataPos < Data.Length ) )
-        {
-          if ( !firstByte )
-          {
-            sb.Append( ',' );
-          }
-          firstByte = false;
-          sb.Append( Data.ByteAt( dataPos ) );
-          ++dataPos;
-        }
-        sb.AppendLine();
-
-        StartLine += LineOffset;
-      }
-      return sb.ToString();
-    }
-
-
-
     internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount )
     {
       StringBuilder   sb = new StringBuilder();
 
       if ( WrapByteCount < 1 )
       {
-        return ToBASICData( Data, StartLine, LineOffset, WrapByteCount );
+        WrapByteCount = 80;
       }
       if ( LineOffset <= 0 )
       {

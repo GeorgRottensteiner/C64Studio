@@ -3329,7 +3329,7 @@ namespace C64Studio
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset );
+        editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset, 80 );
       }
     }
 

@@ -3629,7 +3629,7 @@ namespace C64Studio
           ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
           {
             // send any command to break into the monitor again
-            StudioCore.Debugging.Debugger.Quit();
+            StudioCore.Debugging.Debugger?.Quit();
 
             if ( StudioCore.Debugging.MarkedDocument != null )
             {

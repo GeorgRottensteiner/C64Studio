@@ -431,7 +431,7 @@ namespace C64Studio
 
     private void btnExportCharsetToData_Click( object sender, EventArgs e )
     {
-      int wrapByteCount = GR.Convert.ToI32( editWrapByteCount.Text );
+      int wrapByteCount = GetExportWrapCount();
       if ( wrapByteCount <= 0 )
       {
         wrapByteCount = 8;
@@ -464,6 +464,17 @@ namespace C64Studio
       }
 
       editDataExport.Text = resultText;
+    }
+
+
+
+    private int GetExportWrapCount()
+    {
+      if ( checkExportToDataWrap.Checked )
+      {
+        return GR.Convert.ToI32( editWrapByteCount.Text );
+      }
+      return 80;
     }
 
 
@@ -977,6 +988,7 @@ namespace C64Studio
       {
         startLine = 10;
       }
+      int wrapByteCount = GetExportWrapCount();
 
       List<int>     exportIndices = ListOfExportIndices();
 
@@ -986,7 +998,7 @@ namespace C64Studio
         charSet.Append( m_Charset.Characters[index].Data );
       }
 
-      string    resultText = Util.ToBASICData( charSet, startLine, lineOffset );
+      string    resultText = Util.ToBASICData( charSet, startLine, lineOffset, wrapByteCount );
 
       editDataExport.Text = resultText;
     }

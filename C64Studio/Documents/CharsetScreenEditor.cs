@@ -1720,6 +1720,11 @@ namespace C64Studio
 
       int   startLineNo = GR.Convert.ToI32( editExportBASICLineNo.Text );
       int   lineStep = GR.Convert.ToI32( editExportBASICLineOffset.Text );
+      int   wrapByteCount = GetExportWrapCount();
+      if ( wrapByteCount < 10 )
+      {
+        wrapByteCount = 10;
+      }
 
       sb.Append( startLineNo );
       sb.Append( " PRINT\"" + Types.ConstantData.PetSCIIToChar[147].CharValue + "\";\n" );
@@ -1733,6 +1738,7 @@ namespace C64Studio
 
       for ( int i = exportRect.Top; i < exportRect.Bottom; ++i )
       {
+        int   startLength = sb.Length;
         sb.Append( startLineNo );
         startLineNo += lineStep;
         sb.Append( " PRINT\"" );
@@ -1741,9 +1747,11 @@ namespace C64Studio
           byte newColor = (byte)( ( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff00 ) >> 8 ) & 0x0f );
           byte newChar = (byte)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff );
 
+          List<char>  charsToAppend = new List<char>();
+
           if ( newColor != curColor )
           {
-            sb.Append( Types.ConstantData.PetSCIIToChar[Types.ConstantData.ColorToPetSCIIChar[newColor]].CharValue );
+            charsToAppend.Add( Types.ConstantData.PetSCIIToChar[Types.ConstantData.ColorToPetSCIIChar[newColor]].CharValue );
             curColor = newColor;
           }
           if ( newChar >= 128 )
@@ -1751,34 +1759,62 @@ namespace C64Studio
             if ( !isReverse )
             {
               isReverse = true;
-              sb.Append( Types.ConstantData.PetSCIIToChar[18].CharValue );
+              charsToAppend.Add( Types.ConstantData.PetSCIIToChar[18].CharValue );
             }
           }
           else if ( isReverse )
           {
             isReverse = false;
-            sb.Append( Types.ConstantData.PetSCIIToChar[146].CharValue );
+            charsToAppend.Add( Types.ConstantData.PetSCIIToChar[146].CharValue );
           }
           if ( isReverse )
           {
-            sb.Append( Types.ConstantData.ScreenCodeToChar[(byte)( newChar - 128 )].CharValue );
+            if ( newChar == 128 + 34 )
+            {
+              // reverse apostrophe
+              string    replacement = "\"CHR$(34)CHR$(20)CHR$(34)\"";
+
+              for ( int t = 0; t < replacement.Length; ++t )
+              {
+                charsToAppend.Add( Types.ConstantData.CharToC64Char[replacement[t]].CharValue );
+              }
+            }
+            else
+            {
+              charsToAppend.Add( Types.ConstantData.ScreenCodeToChar[(byte)( newChar - 128 )].CharValue );
+            }
           }
           else
           {
             if ( newChar == 34 )
             {
-              // an apostrohpe!
-              string    replacement = "\";CHR$(34);\"";
+              // a regular apostrophe
+              string    replacement = "\"CHR$(34)CHR$(20)CHR$(34)\"";
 
               for ( int t = 0; t < replacement.Length; ++t )
               {
-                sb.Append( Types.ConstantData.CharToC64Char[replacement[t]].CharValue );
+                charsToAppend.Add( Types.ConstantData.CharToC64Char[replacement[t]].CharValue );
               }
             }
             else
             {
-              sb.Append( Types.ConstantData.ScreenCodeToChar[newChar].CharValue );
+              charsToAppend.Add( Types.ConstantData.ScreenCodeToChar[newChar].CharValue );
             }
+          }
+
+          // don't make lines too long!
+          if ( sb.Length - startLength + charsToAppend.Count >= wrapByteCount - 1 )
+          {
+            // we need to break and start a new line
+            sb.Append( "\";\n" );
+            startLength = sb.Length;
+            sb.Append( startLineNo );
+            startLineNo += lineStep;
+            sb.Append( " PRINT\"" );
+          }
+          foreach ( char toAppend in charsToAppend )
+          {
+            sb.Append( toAppend );
           }
         }
         sb.Append( "\";\n" );
@@ -1820,6 +1856,17 @@ namespace C64Studio
         document.BaseDoc.InsertText( sb.ToString() );
         document.BaseDoc.SetModified();
       }
+    }
+
+
+
+    private int GetExportWrapCount()
+    {
+      if ( checkExportToDataWrap.Checked )
+      {
+        return GR.Convert.ToI32( editWrapByteCount.Text );
+      }
+      return 80;
     }
 
 
@@ -3086,17 +3133,17 @@ namespace C64Studio
 
       int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
       if ( ( startLine < 0 )
-      || ( startLine > 63999 ) )
+      ||   ( startLine > 63999 ) )
       {
         startLine = 10;
       }
       int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
       if ( ( lineOffset < 0 )
-      || ( lineOffset > 63999 ) )
+      ||   ( lineOffset > 63999 ) )
       {
         startLine = 10;
       }
-
+      int wrapByteCount = GetExportWrapCount();
 
       var exportRect = DetermineExportRectangle();
 
@@ -3105,16 +3152,16 @@ namespace C64Studio
       switch ( comboExportData.SelectedIndex )
       {
         case 0:
-          editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, startLine, lineOffset );
+          editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, startLine, lineOffset, wrapByteCount );
           break;
         case 1:
-          editDataExport.Text = Util.ToBASICData( screenCharData, startLine, lineOffset );
+          editDataExport.Text = Util.ToBASICData( screenCharData, startLine, lineOffset, wrapByteCount );
           break;
         case 2:
-          editDataExport.Text = Util.ToBASICData( screenColorData, startLine, lineOffset );
+          editDataExport.Text = Util.ToBASICData( screenColorData, startLine, lineOffset, wrapByteCount );
           break;
         case 3:
-          editDataExport.Text = Util.ToBASICData( screenColorData + screenCharData, startLine, lineOffset );
+          editDataExport.Text = Util.ToBASICData( screenColorData + screenCharData, startLine, lineOffset, wrapByteCount );
           break;
       }
     }

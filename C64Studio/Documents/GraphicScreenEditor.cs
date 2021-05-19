@@ -920,7 +920,7 @@ namespace C64Studio
 
     private string ToASMData( GR.Memory.ByteBuffer Data )
     {
-      int wrapByteCount = GR.Convert.ToI32( editWrapByteCount.Text );
+      int wrapByteCount = GetExportWrapCount();
       if ( wrapByteCount <= 0 )
       {
         wrapByteCount = 8;
@@ -2164,7 +2164,7 @@ namespace C64Studio
 
 
 
-    private void ExportHiresBitmap( int StartLine, int LineOffset, bool Hex )
+    private void ExportHiresBitmap( int StartLine, int LineOffset, bool Hex, int WrapByteCount )
     {
       GR.Memory.ByteBuffer screenChar;
       GR.Memory.ByteBuffer screenColor;
@@ -2174,11 +2174,11 @@ namespace C64Studio
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset );
+        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset );
+        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount );
       }
     }
 
@@ -2204,7 +2204,7 @@ namespace C64Studio
 
 
 
-    private void ExportMCBitmap( int StartLine, int LineOffset, bool Hex )
+    private void ExportMCBitmap( int StartLine, int LineOffset, bool Hex, int WrapByteCount )
     {
       GR.Memory.ByteBuffer              screenChar;
       GR.Memory.ByteBuffer              screenColor;
@@ -2215,11 +2215,11 @@ namespace C64Studio
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset );
+        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset );
+        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount );
       }
     }
 
@@ -2282,7 +2282,7 @@ namespace C64Studio
 
 
 
-    private void ExportHiResCharset( int StartLine, int LineOffset, bool Hex )
+    private void ExportHiResCharset( int StartLine, int LineOffset, bool Hex, int WrapByteCount )
     {
       // export possible
       Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
@@ -2324,11 +2324,11 @@ namespace C64Studio
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset );
+        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset );
+        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount );
       }
     }
 
@@ -2391,7 +2391,7 @@ namespace C64Studio
 
 
 
-    private void ExportMCCharset( int StartLine, int LineOffset, bool Hex )
+    private void ExportMCCharset( int StartLine, int LineOffset, bool Hex, int WrapByteCount )
     {
       // export possible
       Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
@@ -2432,11 +2432,11 @@ namespace C64Studio
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset );
+        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset );
+        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount );
       }
     }
 
@@ -3045,27 +3045,43 @@ namespace C64Studio
       {
         startLine = 10;
       }
+      int wrapByteCount = GetExportWrapCount();
+      if ( wrapByteCount < 10 )
+      {
+        wrapByteCount = 10;
+      }
 
       switch ( (ExportDataType)comboExportType.SelectedIndex )
       {
         case ExportDataType.HIRES_BITMAP:
-          ExportHiresBitmap( startLine, lineOffset, false );
+          ExportHiresBitmap( startLine, lineOffset, false, wrapByteCount );
           break;
         case ExportDataType.MULTICOLOR_BITMAP:
-          ExportMCBitmap( startLine, lineOffset, false );
+          ExportMCBitmap( startLine, lineOffset, false, wrapByteCount );
           break;
         case ExportDataType.HIRES_CHARSET:
         case ExportDataType.HIRES_CHARSET_SCREEN_ASSEMBLY:
-          ExportHiResCharset( startLine, lineOffset, false );
+          ExportHiResCharset( startLine, lineOffset, false, wrapByteCount );
           break;
         case ExportDataType.MULTICOLOR_CHARSET:
         case ExportDataType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
-          ExportMCCharset( startLine, lineOffset, false );
+          ExportMCCharset( startLine, lineOffset, false, wrapByteCount );
           break;
         case ExportDataType.CHARACTERS_TO_CLIPBOARD:
           UsedCharsToClipboard();
           break;
       }
+    }
+
+
+
+    private int GetExportWrapCount()
+    {
+      if ( !checkExportToDataWrap.Checked )
+      {
+        return 80;
+      }
+      return GR.Convert.ToI32( editWrapByteCount.Text );
     }
 
 
@@ -3470,22 +3486,27 @@ namespace C64Studio
       {
         startLine = 10;
       }
+      int wrapByteCount = GetExportWrapCount();
+      if ( wrapByteCount < 10 )
+      {
+        wrapByteCount = 10;
+      }
 
       switch ( (ExportDataType)comboExportType.SelectedIndex )
       {
         case ExportDataType.HIRES_BITMAP:
-          ExportHiresBitmap( startLine, lineOffset, true );
+          ExportHiresBitmap( startLine, lineOffset, true, wrapByteCount );
           break;
         case ExportDataType.MULTICOLOR_BITMAP:
-          ExportMCBitmap( startLine, lineOffset, true );
+          ExportMCBitmap( startLine, lineOffset, true, wrapByteCount );
           break;
         case ExportDataType.HIRES_CHARSET:
         case ExportDataType.HIRES_CHARSET_SCREEN_ASSEMBLY:
-          ExportHiResCharset( startLine, lineOffset, true );
+          ExportHiResCharset( startLine, lineOffset, true, wrapByteCount );
           break;
         case ExportDataType.MULTICOLOR_CHARSET:
         case ExportDataType.MULTICOLOR_CHARSET_SCREEN_ASSEMBLY:
-          ExportMCCharset( startLine, lineOffset, true );
+          ExportMCCharset( startLine, lineOffset, true, wrapByteCount );
           break;
         case ExportDataType.CHARACTERS_TO_CLIPBOARD:
           UsedCharsToClipboard();
