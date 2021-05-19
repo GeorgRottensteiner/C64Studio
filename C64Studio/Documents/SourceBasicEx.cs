@@ -652,14 +652,35 @@ namespace C64Studio
       {
         string basicText = System.IO.File.ReadAllText( DocumentInfo.FullPath );
 
+        // meta data on top?
+        int     endOfLine = basicText.IndexOf( '\n' );
+        string  firstLine;
+        if ( endOfLine != -1 )
+        {
+          firstLine = basicText.Substring( 0, endOfLine ).Trim();
+          basicText = basicText.Substring( endOfLine + 1 );
+        }
+        else
+        {
+          firstLine = basicText;
+          basicText = "";
+        }
+
+        if ( firstLine.StartsWith( "#C64Studio.MetaData.BASIC:" ) )
+        {
+          int     commaPos = firstLine.IndexOf( ',', 26 );
+          if ( commaPos != -1 )
+          {
+            m_StartAddress      = firstLine.Substring( 26, commaPos - 26 );
+            m_BASICDialectName = firstLine.Substring( commaPos + 1 );
+          }
+        }
+
         // quick compatibility hack with petcat
         basicText = basicText.Replace( "~", "{SHIFT-ARROW UP}" );
         basicText = basicText.Replace( "\\", "{POUND}" );
 
-        if ( m_SymbolMode )
-        {
-        }
-        else
+        if ( !m_SymbolMode )
         {
           basicText = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( basicText );
         }
@@ -678,6 +699,19 @@ namespace C64Studio
             }
           }
         }
+        else
+        {
+          editBASICStartAddress.Text = m_StartAddress;
+          foreach ( GR.Generic.Tupel<string, Dialect> entry in comboBASICVersion.Items )
+          {
+            if ( entry.first == m_BASICDialectName )
+            {
+              comboBASICVersion.SelectedItem = entry;
+              break;
+            }
+          }
+        }
+
         if ( string.IsNullOrEmpty( m_StartAddress ) )
         {
           m_StartAddress = "";
@@ -820,8 +854,12 @@ namespace C64Studio
       {
         DisableFileWatcher();
 
-        
-        System.IO.File.WriteAllText( Filename, GetContent() );
+        string    content = GetContent();
+
+        // add "meta data" in front
+        string metaData = "#C64Studio.MetaData.BASIC:" + m_StartAddress + "," + m_BASICDialectName + "\r\n";
+
+        System.IO.File.WriteAllText( Filename, metaData + content );
       }
       catch ( System.IO.IOException ex )
       {
