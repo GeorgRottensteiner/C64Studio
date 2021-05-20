@@ -36,6 +36,8 @@ namespace C64Studio
     private bool[,]                     m_SelectedChars = new bool[40, 25];
     private bool[,]                     m_ReverseCache = new bool[40, 25];
 
+    private System.Drawing.Rectangle    m_SelectionBounds = new System.Drawing.Rectangle();
+
 
     private System.Drawing.Point        m_SelectedChar = new System.Drawing.Point( -1, -1 );
 
@@ -543,6 +545,20 @@ namespace C64Studio
       sb.Append( spritePosY.ToString( "X2" ) );
       sb.Append( '/' );
       sb.Append( spritePosY );
+      sb.AppendLine();
+
+      if ( m_SelectionBounds.Width > 0 )
+      {
+        sb.Append( "Selection " );
+        sb.Append( m_SelectionBounds.X );
+        sb.Append( ", " );
+        sb.Append( m_SelectionBounds.Y );
+        sb.Append( " " );
+        sb.Append( m_SelectionBounds.Width );
+        sb.Append( "*" );
+        sb.Append( m_SelectionBounds.Height );
+        sb.AppendLine();
+      }
 
       return sb.ToString();
     }
@@ -641,7 +657,7 @@ namespace C64Studio
               bool shiftPressed = ( ( ModifierKeys & Keys.Shift ) == Keys.Shift );
 
               if ( ( !shiftPressed )
-              && ( ( ModifierKeys & Keys.Control ) == Keys.None ) )
+              &&   ( ( ModifierKeys & Keys.Control ) == Keys.None ) )
               {
                 // not ctrl-Click, remove previous selection
                 for ( int x = 0; x < m_CharsetScreen.ScreenWidth; ++x )
@@ -667,6 +683,8 @@ namespace C64Studio
                   }
                 }
               }
+              RecalcSelectionBounds();
+              labelInfo.Text = InfoText();
               pictureEditor.Invalidate();
               Redraw();
             }
@@ -845,29 +863,12 @@ namespace C64Studio
 
 
                 pictureEditor.Invalidate( new System.Drawing.Rectangle( o1.X * 8, o1.Y * 8, ( o2.X - o1.X + 1 ) * 8, ( o2.Y - o1.Y + 1 ) * 8 ) );
-                /*
-                for ( int x = o1.X; x <= o2.X; ++x )
-                {
-                  for ( int y = o1.Y; y <= o2.Y; ++y )
-                  {
-                    m_SelectedChars[x, y] = false;
-                  }
-                }*/
               }
               m_LastDragEndPos = m_DragEndPos;
 
               System.Drawing.Point    p1, p2;
 
               CalcRect( m_DragStartPos, m_DragEndPos, out p1, out p2 );
-
-              /*
-              for ( int x = p1.X; x <= p2.X; ++x )
-              {
-                for ( int y = p1.Y; y <= p2.Y; ++y )
-                {
-                  m_SelectedChars[x, y] = true;
-                }
-              }*/
 
               pictureEditor.Invalidate( new System.Drawing.Rectangle( p1.X * 8, p1.Y * 8, ( p2.X - p1.X + 1 ) * 8, ( p2.Y - p1.Y + 1 ) * 8 ) );
               Redraw();
@@ -1641,6 +1642,36 @@ namespace C64Studio
 
 
 
+    private void RecalcSelectionBounds()
+    {
+      int     minX = m_CharsetScreen.ScreenWidth;
+      int     maxX = 0;
+      int     minY = m_CharsetScreen.ScreenHeight;
+      int     maxY = 0;
+
+      for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+      {
+        for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
+        {
+          if ( m_SelectedChars[i, j] )
+          {
+            minX = Math.Min( minX, i );
+            maxX = Math.Max( maxX, i );
+            minY = Math.Min( minY, j );
+            maxY = Math.Max( maxY, j );
+          }
+        }
+      }
+      if ( minX == m_CharsetScreen.ScreenWidth )
+      {
+        m_SelectionBounds = new System.Drawing.Rectangle();
+        return;
+      }
+      m_SelectionBounds = new System.Drawing.Rectangle( minX, minY, maxX - minX + 1, maxY - minY + 1 );
+    }
+
+
+
     private System.Drawing.Rectangle DetermineExportRectangle()
     {
       switch ( comboExportArea.SelectedIndex )
@@ -1651,30 +1682,12 @@ namespace C64Studio
         case 1:
           // selection
           {
-            int     minX = m_CharsetScreen.ScreenWidth;
-            int     maxX = 0;
-            int     minY = m_CharsetScreen.ScreenHeight;
-            int     maxY = 0;
-
-            for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
-            {
-              for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
-              {
-                if ( m_SelectedChars[i, j] )
-                {
-                  minX = Math.Min( minX, i );
-                  maxX = Math.Max( maxX, i );
-                  minY = Math.Min( minY, j );
-                  maxY = Math.Max( maxY, j );
-                }
-              }
-            }
-            if ( minX == m_CharsetScreen.ScreenWidth )
+            if ( m_SelectionBounds.Width == 0 )
             {
               // no selection, select all
               return new System.Drawing.Rectangle( 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
             }
-            return new System.Drawing.Rectangle( minX, minY, maxX - minX + 1, maxY - minY + 1 );
+            return m_SelectionBounds;
           }
         case 2:
           // Area
@@ -2499,6 +2512,7 @@ namespace C64Studio
           m_SelectedChars[i, j] = false;
         }
       }
+      m_SelectionBounds = new System.Drawing.Rectangle();
       Redraw();
     }
 
@@ -2511,6 +2525,7 @@ namespace C64Studio
       int     x2 = 0;
       int     y1 = m_CharsetScreen.ScreenHeight;
       int     y2 = 0;
+
 
       for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
       {

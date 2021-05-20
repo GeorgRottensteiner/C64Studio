@@ -2824,11 +2824,11 @@ namespace C64Studio.Parser
             }
           }
 
-          bool  isMacro = false;
+          bool  isPseudoOP = false;
           if ( ( m_AssemblerSettings.POPrefix.Length != 0 )
           &&   ( lineToCheck.StartsWith( m_AssemblerSettings.POPrefix ) ) )
           {
-            isMacro = true;
+            isPseudoOP = true;
           }
           if ( m_AssemblerSettings.POPrefix.Length == 0 )
           {
@@ -2845,11 +2845,11 @@ namespace C64Studio.Parser
             }
             if ( m_AssemblerSettings.PseudoOps.ContainsKey( startToken ) )
             {
-              isMacro = true;
+              isPseudoOP = true;
             }
           }
 
-          if ( isMacro )
+          if ( isPseudoOP )
           {
             string startToken = "";
             int spacePos = lineToCheck.IndexOf( ' ' );
