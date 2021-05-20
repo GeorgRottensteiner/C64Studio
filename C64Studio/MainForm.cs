@@ -907,7 +907,9 @@ namespace C64Studio
           StopDebugging();
           break;
         case DebugEvent.UPDATE_WATCH:
-          if ( IsWatchShowingCurrentDebuggedProject() )
+          if ( ( IsWatchShowingCurrentDebuggedProject() )
+          ||   ( ( Event.Request.Type == DebugRequestType.MEM_DUMP )
+          &&     ( Event.Request.Parameter1 == StudioCore.Debugging.CurrentCodePosition ) ) )
           {
             UpdateWatchInfo( Event.Request, Event.Data );
           }
