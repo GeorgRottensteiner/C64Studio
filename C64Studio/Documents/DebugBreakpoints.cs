@@ -176,6 +176,28 @@ namespace C64Studio
       bp.Conditions = editTriggerConditions.Text;
       bp.DocumentFilename = "C64Studio.DebugBreakpoints";
 
+      // set marker in associated file
+      if ( DebuggedProject != null )
+      {
+        var element = DebuggedProject.GetElementByFilename( DebuggedProject.Settings.MainDocument );
+        if ( element != null )
+        {
+          var asmFileInfo = Core.Navigating.DetermineASMFileInfo( element.DocumentInfo );
+
+          if ( asmFileInfo.DocumentAndLineFromAddress( bp.Address, out string DocumentFilename, out int lineIndex ) )
+          {
+            element = DebuggedProject.GetElementByFilename( DocumentFilename );
+            if ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+            {
+              var sourceFile = element.Document as SourceASMEx;
+              bp.LineIndex = lineIndex;
+              bp.DocumentFilename = DocumentFilename;
+              sourceFile.AddBreakpoint( bp );
+            }
+          }
+        }
+      }
+
       RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_ADDED, bp ) );
     }
 

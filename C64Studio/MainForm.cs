@@ -2425,7 +2425,6 @@ namespace C64Studio
           StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename] = new List<C64Studio.Types.Breakpoint>();
         }
         StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Add( Breakpoint );
-        //Debug.Log( "add breakpoint for " + asm.DocumentFilename + " at line " + Breakpoint.LineIndex );
       }
       else if ( AppState == Types.StudioState.DEBUGGING_BROKEN )
       {
@@ -2435,7 +2434,6 @@ namespace C64Studio
         }
         StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Add( Breakpoint );
         StudioCore.Debugging.Debugger.AddBreakpoint( Breakpoint );
-        //Debug.Log( "add live breakpoint for " + asm.DocumentFilename + " at line " + Breakpoint.LineIndex );
       }
       else
       {
@@ -2499,7 +2497,7 @@ namespace C64Studio
       {
         case BaseDocument.DocEvent.Type.BREAKPOINT_ADDED:
           if ( ( AppState == Types.StudioState.NORMAL )
-          || ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
+          ||   ( AppState == Types.StudioState.DEBUGGING_BROKEN ) )
           {
             AddBreakpoint( Event.Breakpoint );
           }
@@ -4071,8 +4069,8 @@ namespace C64Studio
     {
       BaseDocument baseDocToCompile = ActiveContent;
       if ( ( ( baseDocToCompile != null )
-      && ( !baseDocToCompile.DocumentInfo.Compilable ) )
-      || ( baseDocToCompile == null ) )
+      &&     ( !baseDocToCompile.DocumentInfo.Compilable ) )
+      ||   ( baseDocToCompile == null ) )
       {
         baseDocToCompile = ActiveDocument;
       }
@@ -4087,7 +4085,7 @@ namespace C64Studio
       if ( ( docToCompile.Element != null )
       && ( !string.IsNullOrEmpty( docToCompile.Project.Settings.MainDocument ) ) )
       {
-        ProjectElement element = docToCompile.Project.GetElementByFilename(docToCompile.Project.Settings.MainDocument);
+        ProjectElement element = docToCompile.Project.GetElementByFilename( docToCompile.Project.Settings.MainDocument );
         if ( element != null )
         //&&   ( element.Document != null ) )
         {

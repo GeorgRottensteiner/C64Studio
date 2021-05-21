@@ -727,48 +727,75 @@ namespace C64Studio
       // break point set
       if ( !m_BreakPoints.ContainsKey( LineIndex ) )
       {
-        Types.Breakpoint bp = new C64Studio.Types.Breakpoint();
-
-        bp.DocumentFilename = DocumentInfo.FullPath;
-        bp.LineIndex = LineIndex;
-
-        Types.ASM.FileInfo fileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
-
-        if ( Core.State == C64Studio.Types.StudioState.DEBUGGING_BROKEN )
+        if ( SetBreakpoint( LineIndex, out Breakpoint bp ) )
         {
-          int   globalLineIndex = -1;
-          if ( fileInfo.FindGlobalLineIndex( LineIndex, DocumentInfo.FullPath, out globalLineIndex ) )
-          {
-            bp.Address = fileInfo.FindLineAddress( globalLineIndex );
-            //Debug.Log( "Found address " + bp.Address.ToString( "x4" ) );
-          }
-          else
-          {
-            return;
-          }
+          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_ADDED, bp ) );
         }
-        else if ( Core.State != C64Studio.Types.StudioState.NORMAL )
-        {
-          // cannot add breakpoints during this state
-          return;
-        }
-
-        m_BreakPoints.Add( LineIndex, bp );
-
-        RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_ADDED, bp ) );
-
-        InvalidateMarkerAreaAtLine( LineIndex );
       }
       else
       {
-        if ( m_BreakPoints.ContainsKey( LineIndex ) )
-        {
-          Types.Breakpoint bp = m_BreakPoints[LineIndex];
-          m_BreakPoints.Remove( LineIndex );
-          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, bp ) );
+        RemoveBreakpoint( LineIndex );
+      }
+    }
 
-          InvalidateMarkerAreaAtLine( LineIndex );
+
+
+    private bool SetBreakpoint( int LineIndex, out Breakpoint BP )
+    {
+      BP = null;
+
+
+      var bp = new C64Studio.Types.Breakpoint();
+
+      bp.DocumentFilename = DocumentInfo.FullPath;
+      bp.LineIndex = LineIndex;
+
+      Types.ASM.FileInfo fileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
+
+      if ( Core.State == C64Studio.Types.StudioState.DEBUGGING_BROKEN )
+      {
+        int   globalLineIndex = -1;
+        if ( fileInfo.FindGlobalLineIndex( LineIndex, DocumentInfo.FullPath, out globalLineIndex ) )
+        {
+          bp.Address = fileInfo.FindLineAddress( globalLineIndex );
+          //Debug.Log( "Found address " + bp.Address.ToString( "x4" ) );
         }
+        else
+        {
+          return false;
+        }
+      }
+      else if ( Core.State != C64Studio.Types.StudioState.NORMAL )
+      {
+        // cannot add breakpoints during this state
+        return false;
+      }
+
+      AddBreakpoint( bp );
+
+      BP = bp;
+      return true;
+    }
+
+
+
+    public void AddBreakpoint( Breakpoint BP )
+    {
+      m_BreakPoints.Add( BP.LineIndex, BP );
+      InvalidateMarkerAreaAtLine( BP.LineIndex );
+    }
+
+
+
+    public void RemoveBreakpoint( int LineIndex )
+    {
+      if ( m_BreakPoints.ContainsKey( LineIndex ) )
+      {
+        Types.Breakpoint bp = m_BreakPoints[LineIndex];
+        m_BreakPoints.Remove( LineIndex );
+        RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, bp ) );
+
+        InvalidateMarkerAreaAtLine( LineIndex );
       }
     }
 
