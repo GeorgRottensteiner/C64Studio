@@ -49,6 +49,7 @@ namespace C64Studio
     public FormFilesChanged       m_FilesChanged = null;
 
     public SearchResults          m_SearchResults = new SearchResults();
+    public FindReferences         m_FindReferences = new FindReferences();
     public Perspective            m_ActivePerspective = Perspective.DEBUG;
 
     public System.Diagnostics.Process CompilerProcess = null;
@@ -567,6 +568,7 @@ namespace C64Studio
       AddToolWindow( ToolWindowType.FIND_REPLACE, m_FindReplace, DockState.Float, searchReplaceToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.SEARCH_RESULTS, m_SearchResults, DockState.DockBottom, searchResultsToolStripMenuItem, false, false );
       AddToolWindow( ToolWindowType.VALUE_TABLE_EDITOR, m_ValueTableEditor, DockState.Document, valueTableEditorToolStripMenuItem, false, false );
+      AddToolWindow( ToolWindowType.FIND_REFERENCES, m_FindReferences, DockState.DockBottom, findReferencesToolStripMenuItem, false, false );
 
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.OUTLINE )]            = m_Outline;
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SOLUTION_EXPLORER )]  = m_SolutionExplorer;
@@ -587,6 +589,7 @@ namespace C64Studio
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.HELP )]                = m_Help;
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.FIND_REPLACE )]         = m_FindReplace;
       StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.SEARCH_RESULTS )]       = m_SearchResults;
+      StudioCore.Settings.GenericTools[GR.EnumHelper.GetDescription( ToolWindowType.FIND_REFERENCES )]      = m_FindReferences;
 
 
       StudioCore.Settings.Functions[Function.COMPILE].MenuItem = compileToolStripMenuItem;
@@ -1965,7 +1968,7 @@ namespace C64Studio
           sb.Append( labelInfo.Value.AddressOrValue.ToString( "X2" ) );
         }
         sb.Append( "; " );
-        if ( !labelInfo.Value.Used )
+        if ( labelInfo.Value.References.Count == 0 )
         {
           sb.AppendLine( "unused" );
         }

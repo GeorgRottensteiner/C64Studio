@@ -3344,5 +3344,60 @@ namespace C64Studio
 
 
 
+    private void findAllReferencesToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      int     lineIndex = m_ContextMenuLineIndex;
+      string  wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
+
+      if ( ( editSource.SelectionLength > 0 )
+      &&   ( editSource.Selection.Start.iLine == lineIndex )
+      &&   ( editSource.Selection.End.iLine == lineIndex ) )
+      {
+        // there is a selection on this line
+        string watchedSelection = editSource.Selection.Text;
+
+        // allow for single label; label,x; label,y; (label),y; (label),x
+        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length );
+
+        if ( tokens.Count != 0 )
+        {
+          // single label
+          if ( tokens.Count == 1 )
+          {
+            wordBelow = tokens[0].Content;
+          }
+          else
+          {
+            System.Windows.Forms.MessageBox.Show( "Could not determine symbol from selection" );
+            return;
+          }
+        }
+      }
+
+      Types.ASM.FileInfo debugFileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
+      if ( debugFileInfo == null )
+      {
+        System.Windows.Forms.MessageBox.Show( "Could not determine symbol of " + wordBelow );
+        return;
+      }
+
+      string zone;
+      string cheapLabelParent;
+
+      debugFileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineIndex, out zone, out cheapLabelParent );
+
+      Types.SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
+      if ( tokenInfo == null )
+      {
+        System.Windows.Forms.MessageBox.Show( "Unrecognized symbol, a recompile may be required" );
+        return;
+      }
+      
+      Core.MainForm.m_FindReferences.UpdateReferences( DocumentInfo.Project, debugFileInfo, tokenInfo );
+      Core.MainForm.m_FindReferences.Show();
+    }
+
+
+
   }
 }

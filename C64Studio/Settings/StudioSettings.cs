@@ -67,7 +67,9 @@ namespace C64Studio
     [Description( "Binary Editor" )]
     BINARY_EDITOR,
     [Description( "Value Table Editor" )]
-    VALUE_TABLE_EDITOR
+    VALUE_TABLE_EDITOR,
+    [Description( "Find References" )]
+    FIND_REFERENCES
   };
 
   public enum MemoryDisplayType

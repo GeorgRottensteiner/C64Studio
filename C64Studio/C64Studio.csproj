@@ -156,6 +156,12 @@
     <Compile Include="Documents\CompilableDocument.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Documents\FindReferences.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\FindReferences.Designer.cs">
+      <DependentUpon>FindReferences.cs</DependentUpon>
+    </Compile>
     <Compile Include="Documents\ValueTableEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -548,6 +554,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Documents\BaseDocument.resx">
       <DependentUpon>BaseDocument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\FindReferences.resx">
+      <DependentUpon>FindReferences.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Documents\SourceBasicEx.resx">
       <DependentUpon>SourceBasicEx.cs</DependentUpon>

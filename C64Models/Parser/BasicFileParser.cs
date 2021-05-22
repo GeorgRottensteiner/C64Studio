@@ -1416,10 +1416,10 @@ namespace C64Studio.Parser
             symbol.LocalLineIndex = entry.Value.LocalLineIndex;
             symbol.Name = entry.Value.Name;
             symbol.Type = entry.Value.Type;
-            symbol.Used = true;
             symbol.Zone = entry.Value.Zone;
             symbol.FromDependency = true;
             symbol.Info = entry.Value.Info;
+            symbol.References.Add( entry.Value.LineIndex );
 
             ASMFileInfo.Labels.Add( entry.Key, symbol );
           }

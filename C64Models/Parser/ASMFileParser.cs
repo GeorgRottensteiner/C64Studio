@@ -658,11 +658,11 @@ namespace C64Studio.Parser
         token.RealValue = Value;
         token.Name = Name;
         token.LineIndex = SourceLine;
-        token.Used = true;
         token.Info = Info;
         token.DocumentFilename  = filename;
         token.LocalLineIndex    = localIndex;
         token.SourceInfo        = srcInfo;
+        token.References.Add( SourceLine );
 
         ASMFileInfo.Labels.Add( Name, token );
       }
@@ -699,11 +699,11 @@ namespace C64Studio.Parser
         token.AddressOrValue  = Value;
         token.Name            = Name;
         token.LineIndex       = SourceLine;
-        token.Used            = true;
         token.Info            = Info;
         token.DocumentFilename = filename;
         token.LocalLineIndex  = localIndex;
         token.SourceInfo      = srcInfo;
+        token.References.Add( SourceLine );
 
         if ( Value < 256 )
         {
@@ -748,7 +748,7 @@ namespace C64Studio.Parser
         token.AddressOrValue = Value;
         token.Name = Name;
         token.LineIndex = SourceLine;
-        token.Used = true;
+        token.References.Add( SourceLine );
 
         if ( Value < 256 )
         {
@@ -1020,7 +1020,7 @@ namespace C64Studio.Parser
           if ( ASMFileInfo.Labels.ContainsKey( m_CurrentZoneName + Value ) )
           {
             Result = ASMFileInfo.Labels[m_CurrentZoneName + Value].AddressOrValue;
-            ASMFileInfo.Labels[m_CurrentZoneName + Value].Used = true;
+            ASMFileInfo.Labels[m_CurrentZoneName + Value].References.Add( LineIndex );
             return true;
           }
         }
@@ -1040,7 +1040,7 @@ namespace C64Studio.Parser
       {
         Result = (double)ASMFileInfo.Labels[Value].AddressOrValue;
       }
-      ASMFileInfo.Labels[Value].Used = true;
+      ASMFileInfo.Labels[Value].References.Add( LineIndex );
       return true;
     }
 
@@ -1110,7 +1110,7 @@ namespace C64Studio.Parser
           if ( ASMFileInfo.Labels.ContainsKey( zoneName + Value ) )
           {
             Result = ASMFileInfo.Labels[zoneName + Value].AddressOrValue;
-            ASMFileInfo.Labels[zoneName + Value].Used = true;
+            ASMFileInfo.Labels[zoneName + Value].References.Add( LineIndex );
             return true;
           }
         }
@@ -1123,7 +1123,7 @@ namespace C64Studio.Parser
       }
 
       Result = ASMFileInfo.Labels[Value].AddressOrValue;
-      ASMFileInfo.Labels[Value].Used = true;
+      ASMFileInfo.Labels[Value].References.Add( LineIndex );
       return true;
     }
 
@@ -2775,7 +2775,7 @@ namespace C64Studio.Parser
             token.AddressOrValue  = result;
             token.Name            = label;
             token.LineIndex       = ASMFileInfo.UnparsedLabels[label].LineIndex;
-            token.Used            = true;
+            token.References.Add( ASMFileInfo.UnparsedLabels[label].LineIndex );
             token.Zone            = ASMFileInfo.UnparsedLabels[label].Zone;
             ASMFileInfo.Labels.Add( label, token );
 
@@ -7286,7 +7286,7 @@ namespace C64Studio.Parser
             symbol.LocalLineIndex = entry.Value.LocalLineIndex;
             symbol.Name = entry.Value.Name;
             symbol.Type = entry.Value.Type;
-            symbol.Used = true;
+            symbol.References.Add( entry.Value.LineIndex );
             symbol.Zone = entry.Value.Zone;
             symbol.FromDependency = true;
             symbol.Info           = entry.Value.Info;
@@ -12174,7 +12174,7 @@ namespace C64Studio.Parser
         ASMFileInfo.PopulateAddressToLine();
         foreach ( Types.SymbolInfo token in ASMFileInfo.Labels.Values )
         {
-          if ( ( !token.Used )
+          if ( ( token.References.Count == 0 )
           &&   ( token.Name != "*" )
           &&   ( !token.Name.Contains( AssemblerSettings.INTERNAL_LOCAL_LOOP_LABEL_PREFIX ) )
           &&   ( token.Type != C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_LABEL ) )

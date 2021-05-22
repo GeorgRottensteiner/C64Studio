@@ -44,6 +44,7 @@
       this.readOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.writeOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.addBreakpointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.findAllReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.gotoDeclarationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.showAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -125,6 +126,7 @@
             this.addBreakpointToolStripMenuItem,
             this.toolStripSeparator2,
             this.gotoDeclarationToolStripMenuItem,
+            this.findAllReferencesToolStripMenuItem,
             this.showAddressToolStripMenuItem,
             this.helpToolStripMenuItem,
             this.toolStripSeparator3,
@@ -137,7 +139,7 @@
             this.separatorCommenting,
             this.openFileToolStripMenuItem});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(217, 392);
+      this.contextSource.Size = new System.Drawing.Size(217, 436);
       // 
       // copyToolStripMenuItem
       // 
@@ -221,6 +223,13 @@
       this.addBreakpointToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
       this.addBreakpointToolStripMenuItem.Text = "Add Breakpoint";
       this.addBreakpointToolStripMenuItem.Click += new System.EventHandler(this.addBreakpointToolStripMenuItem_Click);
+      // 
+      // findAllReferencesToolStripMenuItem
+      // 
+      this.findAllReferencesToolStripMenuItem.Name = "findAllReferencesToolStripMenuItem";
+      this.findAllReferencesToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+      this.findAllReferencesToolStripMenuItem.Text = "Find all references";
+      this.findAllReferencesToolStripMenuItem.Click += new System.EventHandler(this.findAllReferencesToolStripMenuItem_Click);
       // 
       // toolStripSeparator2
       // 
@@ -408,5 +417,6 @@
     private System.Windows.Forms.ToolStripMenuItem hideToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem showMiniOverviewToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem addSubtractDataValuesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem findAllReferencesToolStripMenuItem;
   }
 }

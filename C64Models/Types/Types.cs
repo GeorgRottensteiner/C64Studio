@@ -783,13 +783,13 @@ namespace C64Studio.Types
     public int        LocalLineIndex = 0;
     public int        AddressOrValue = -1;
     public double     RealValue = 0;
-    public bool       Used = false;
     public string     Zone = "";
     public bool       FromDependency = false;
     public string     Info = "";
     public int        CharIndex = -1;
     public int        Length = 0;
     public ASM.SourceInfo SourceInfo = null;
+    public GR.Collections.Set<int>  References = new GR.Collections.Set<int>();
 
 
 

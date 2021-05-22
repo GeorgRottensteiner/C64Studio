@@ -204,6 +204,7 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
+      this.findReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -994,6 +995,7 @@
             this.calculatorToolStripMenuItem,
             this.compileResulttoolStripMenuItem,
             this.disassemblerToolStripMenuItem,
+            this.findReferencesToolStripMenuItem,
             this.outlineToolStripMenuItem,
             this.outputToolStripMenuItem,
             this.petSCIITableToolStripMenuItem,
@@ -1709,6 +1711,12 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
+      // findReferencesToolStripMenuItem
+      // 
+      this.findReferencesToolStripMenuItem.Name = "findReferencesToolStripMenuItem";
+      this.findReferencesToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+      this.findReferencesToolStripMenuItem.Text = "Find References";
+      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -1716,7 +1724,7 @@
       this.ClientSize = new System.Drawing.Size(1101, 598);
       this.Controls.Add(this.mainStatus);
       this.Controls.Add(this.mainTools);
-      this.Controls.Add( this.debugTools );
+      this.Controls.Add(this.debugTools);
       this.Controls.Add(this.mainMenu);
       this.Controls.Add(this.panelMain);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1919,6 +1927,7 @@
     private System.Windows.Forms.ToolStripMenuItem closeSolutionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
-    }
+    private System.Windows.Forms.ToolStripMenuItem findReferencesToolStripMenuItem;
+  }
 }
 
