@@ -59,6 +59,10 @@ namespace C64Studio
           Watch.CurrentValue = data;
           item.SubItems.Add( data.ToString() );
         }
+        else
+        {
+          item.SubItems.Add( "(unread)" );
+        }
       }
       else
       {
@@ -422,6 +426,10 @@ namespace C64Studio
               GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer( watchEntry.Address.ToString( "x04" ) );
               watchEntry.CurrentValue = data;
               itemToModify.SubItems.Add( data.ToString() );
+            }
+            else
+            {
+              itemToModify.SubItems.Add( "(unread)" );
             }
           }
           else
