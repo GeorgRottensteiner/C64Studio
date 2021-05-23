@@ -2432,6 +2432,22 @@ namespace FastColoredTextBoxNS
     public new event EventHandler<TextChangedEventArgs> TextChanged;
 
     /// <summary>
+    /// TextInserted event.
+    /// It occurs after insert operations.
+    /// </summary>
+    [Browsable( true )]
+    [Description( "It occurs after insert operations." )]
+    public new event EventHandler<TextInsertedEventArgs> TextInserted;
+
+    /// <summary>
+    /// TextDeleted event.
+    /// It occurs after delete operations.
+    /// </summary>
+    [Browsable( true )]
+    [Description( "It occurs after delete operations." )]
+    public new event EventHandler<TextDeletedEventArgs> TextDeleted;
+
+    /// <summary>
     /// Fake event for correct data binding
     /// </summary>
     [Browsable( false )]
@@ -2677,6 +2693,7 @@ namespace FastColoredTextBoxNS
         ts.RecalcNeeded += ts_RecalcNeeded;
         ts.RecalcWordWrap += ts_RecalcWordWrap;
         ts.TextChanging += ts_TextChanging;
+        ts.TextDeleted += ts_TextDeleted;
 
         while ( LineInfos.Count < ts.Count )
           LineInfos.Add( new LineInfo( -1 ) );
@@ -2685,6 +2702,7 @@ namespace FastColoredTextBoxNS
       isChanged = false;
       needRecalc = true;
     }
+
 
     private void ts_RecalcWordWrap( object sender, TextSource.TextChangedEventArgs e )
     {
@@ -2698,6 +2716,14 @@ namespace FastColoredTextBoxNS
         string text = e.InsertingText;
         OnTextChanging( ref text );
         e.InsertingText = text;
+      }
+    }
+
+    private void ts_TextDeleted( object sender, TextSource.TextDeletedEventArgs e )
+    {
+      if ( TextSource.CurrentTB == this )
+      {
+        OnTextDeleted( e.DeletedRange );
       }
     }
 
@@ -4564,7 +4590,11 @@ namespace FastColoredTextBoxNS
           {
             var curPlace = Selection.Start;
 
+            // include line break
+            var range = new Range( this, 0, Selection.Start.iLine, 0, Selection.Start.iLine + 1 );
             RemoveLines( new List<int> { Selection.Start.iLine } );
+
+            OnTextDeleted( range );
 
             if ( curPlace.iLine >= LinesCount )
             {
@@ -6811,6 +6841,30 @@ namespace FastColoredTextBoxNS
     {
       return PlaceToPosition( PointToPlace( point ) );
     }
+
+    /// <summary>
+    /// Fires TextDeleted event
+    /// </summary>
+    public virtual void OnTextDeleted( Range DeletedRange )
+    {
+      if ( TextDeleted != null )
+      {
+        TextDeleted( this, new TextDeletedEventArgs( DeletedRange ) );
+      }
+    }
+
+
+    /// <summary>
+    /// Fires TextInserted event
+    /// </summary>
+    public virtual void OnTextInserted( Range InsertedRange )
+    {
+      if ( TextInserted != null )
+      {
+        TextInserted( this, new TextInsertedEventArgs( InsertedRange ) );
+      }
+    }
+
 
     /// <summary>
     /// Fires TextChanging event
@@ -9609,6 +9663,52 @@ window.status = ""#print"";
     /// This range contains changed area of text
     /// </summary>
     public Range ChangedRange
+    {
+      get;
+      set;
+    }
+  }
+
+  /// <summary>
+  /// TextDeleted event argument
+  /// </summary>
+  public class TextDeletedEventArgs : EventArgs
+  {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public TextDeletedEventArgs( Range DeletedRange )
+    {
+      this.DeletedRange = DeletedRange;
+    }
+
+    /// <summary>
+    /// This range contains deleted area of text
+    /// </summary>
+    public Range DeletedRange
+    {
+      get;
+      set;
+    }
+  }
+
+  /// <summary>
+  /// TextInserted event argument
+  /// </summary>
+  public class TextInsertedEventArgs : EventArgs
+  {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public TextInsertedEventArgs( Range InsertedRange )
+    {
+      this.InsertedRange = InsertedRange;
+    }
+
+    /// <summary>
+    /// This range contains inserted area of text
+    /// </summary>
+    public Range InsertedRange
     {
       get;
       set;

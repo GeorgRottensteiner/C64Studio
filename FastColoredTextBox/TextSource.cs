@@ -39,6 +39,10 @@ namespace FastColoredTextBoxNS
     /// </summary>
     public event EventHandler<TextChangedEventArgs> TextChanged;
     /// <summary>
+    /// Occurs when text was deleted
+    /// </summary>
+    public event EventHandler<TextDeletedEventArgs> TextDeleted;
+    /// <summary>
     /// Occurs when recalc is needed
     /// </summary>
     public event EventHandler<TextChangedEventArgs> RecalcNeeded;
@@ -220,6 +224,12 @@ namespace FastColoredTextBoxNS
         TextChanged( this, new TextChangedEventArgs( Math.Min( fromLine, toLine ), Math.Max( fromLine, toLine ) ) );
     }
 
+    public virtual void OnTextDeleted( Range DeleteRange )
+    {
+      if ( TextDeleted != null )
+        TextDeleted( this, new TextDeletedEventArgs( DeleteRange ) );
+    }
+
     public class TextChangedEventArgs : EventArgs
     {
       public int iFromLine;
@@ -229,6 +239,16 @@ namespace FastColoredTextBoxNS
       {
         this.iFromLine = iFromLine;
         this.iToLine = iToLine;
+      }
+    }
+
+    public class TextDeletedEventArgs : EventArgs
+    {
+      public Range DeletedRange;
+
+      public TextDeletedEventArgs( Range DeleteRange )
+      {
+        this.DeletedRange = DeleteRange;
       }
     }
 

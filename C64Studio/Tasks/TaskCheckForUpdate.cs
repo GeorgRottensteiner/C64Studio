@@ -25,6 +25,8 @@ namespace C64Studio.Tasks
     public const SslProtocols _Tls12 = (SslProtocols)0x00000C00;
     public const SecurityProtocolType Tls12 = (SecurityProtocolType)_Tls12;
 
+
+
     protected override bool ProcessTask()
     {
       Core.SetStatus( "Check for update..." );

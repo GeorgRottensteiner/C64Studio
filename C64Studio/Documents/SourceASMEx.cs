@@ -165,6 +165,8 @@ namespace C64Studio
 
       editSource.TextChanged += new EventHandler<FastColoredTextBoxNS.TextChangedEventArgs>( editSource_TextChanged );
       editSource.TextChangedDelayed += editSource_TextChangedDelayed;
+      editSource.TextInserted += EditSource_TextInserted;
+      editSource.TextDeleted += EditSource_TextDeleted;
       editSource.FoldingBlockStateChanged += editSource_FoldingBlockStateChanged;
 
       editSource.LineInserted += new EventHandler<FastColoredTextBoxNS.LineInsertedEventArgs>( editSource_LineInserted );
@@ -199,6 +201,128 @@ namespace C64Studio
       m_LineInfos.Add( new Types.ASM.LineInfo() );
 
       contextSource.Opened += new EventHandler( contextSource_Opened );
+    }
+
+
+
+    private void EditSource_TextInserted( object sender, TextInsertedEventArgs e )
+    {
+      int     firstLine = e.InsertedRange.Start.iLine;
+      int     count = e.InsertedRange.End.iLine - e.InsertedRange.Start.iLine;
+      if ( firstLine > e.InsertedRange.End.iLine )
+      {
+        firstLine = e.InsertedRange.End.iLine;
+        count = -count;
+      }
+      if ( count == 0 )
+      {
+        return;
+      }
+
+      // special case, if we insert an empty line, insert "below"
+      int     indexToNotify = firstLine;
+
+      /*
+      if ( editSource.Lines[firstLine].Trim().Length == 0 )
+      {
+        ++indexToNotify;
+      }*/
+
+      if ( !m_InsertingText )
+      {
+        Core.Navigating.InsertLines( DocumentInfo, firstLine, count );
+      }
+
+      // move related breakpoints!
+      for ( int i = 0; i < count; ++i )
+      {
+        var info = new Types.ASM.LineInfo();
+        if ( ( indexToNotify > 0 )
+        &&   ( indexToNotify - 1 < m_LineInfos.Count ) )
+        {
+          info.AddressStart = m_LineInfos[indexToNotify - 1].AddressStart;
+        }
+        m_LineInfos.Insert( indexToNotify, info );
+      }
+
+      if ( !m_InsertingText )
+      {
+        int                         insertedAtLine = firstLine;
+
+        GR.Collections.Map<int,Types.Breakpoint>   origBreakpoints = new GR.Collections.Map<int,C64Studio.Types.Breakpoint>( m_BreakPoints );
+        List<Types.Breakpoint>                     movedBreakpoints = new List<C64Studio.Types.Breakpoint>();
+
+        foreach ( int breakpointLine in origBreakpoints.Keys )
+        {
+          var bp = origBreakpoints[breakpointLine];
+
+          if ( breakpointLine >= insertedAtLine )
+          {
+            bp.LineIndex += count;
+            movedBreakpoints.Add( bp );
+
+            RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bp ) );
+          }
+          else
+          {
+            movedBreakpoints.Add( bp );
+          }
+        }
+        m_BreakPoints.Clear();
+
+        foreach ( var bp in movedBreakpoints )
+        {
+          m_BreakPoints[bp.LineIndex] = bp;
+        }
+        //UpdateFoldingBlocks();
+        //StoreFoldedBlocks();
+      }
+    }
+
+
+
+    private void EditSource_TextDeleted( object sender, TextDeletedEventArgs e )
+    {
+      int     firstLine = e.DeletedRange.Start.iLine;
+      int     count = e.DeletedRange.End.iLine - e.DeletedRange.Start.iLine;
+      if ( firstLine > e.DeletedRange.End.iLine )
+      {
+        firstLine = e.DeletedRange.End.iLine;
+        count = -count;
+      }
+      if ( count == 0 )
+      {
+        return;
+      }
+      Core.Navigating.RemoveLines( DocumentInfo, firstLine, count );
+
+      //Debug.Log( "Lines removed " + e.Index + ", " + e.Count );
+      m_LineInfos.RemoveRange( firstLine, count );
+
+      // move related breakpoints!
+      int deletedAtLine = firstLine;
+
+      GR.Collections.Map<int,Types.Breakpoint> origBreakpoints = new GR.Collections.Map<int, C64Studio.Types.Breakpoint>( m_BreakPoints );
+
+      foreach ( int breakpointLine in origBreakpoints.Keys )
+      {
+        if ( ( breakpointLine >= firstLine )
+        &&   ( breakpointLine < firstLine + count ) )
+        {
+          // BP was deleted!
+          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_REMOVED, origBreakpoints[breakpointLine] ) );
+        }
+        else if ( breakpointLine >= deletedAtLine )
+        {
+          Types.Breakpoint bpToMove = m_BreakPoints[breakpointLine];
+          m_BreakPoints.Remove( breakpointLine );
+          m_BreakPoints.Add( breakpointLine - count, bpToMove );
+          bpToMove.LineIndex -= count;
+          RaiseDocEvent( new DocEvent( DocEvent.Type.BREAKPOINT_UPDATED, bpToMove ) );
+        }
+      }
+      //UpdateFoldingBlocks();
+      //StoreFoldedBlocks();
     }
 
 
@@ -533,6 +657,7 @@ namespace C64Studio
 
     void editSource_LineInserted( object sender, FastColoredTextBoxNS.LineInsertedEventArgs e )
     {
+      /*
       // special case, if we insert an empty line, insert "below"
       int     indexToNotify = e.Index;
 
@@ -587,13 +712,14 @@ namespace C64Studio
         }
         //UpdateFoldingBlocks();
         //StoreFoldedBlocks();
-      }
+      }*/
     }
 
 
 
     void editSource_LineRemoved( object sender, FastColoredTextBoxNS.LineRemovedEventArgs e )
     {
+      /*
       Core.Navigating.RemoveLines( DocumentInfo, e.Index, e.Count );
 
       //Debug.Log( "Lines removed " + e.Index + ", " + e.Count );
@@ -623,6 +749,7 @@ namespace C64Studio
       }
       //UpdateFoldingBlocks();
       //StoreFoldedBlocks();
+      */
     }
 
 

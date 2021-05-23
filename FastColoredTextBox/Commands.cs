@@ -29,6 +29,9 @@ namespace FastColoredTextBoxNS
     public override void Undo()
     {
       ts.OnTextChanging();
+
+      var previousPlace = ts.CurrentTB.Selection.Start;
+
       switch ( c )
       {
         case '\n':
@@ -106,6 +109,10 @@ namespace FastColoredTextBoxNS
           break;
       }
 
+      var postPlace = ts.CurrentTB.Selection.End;
+
+      ts.CurrentTB.OnTextDeleted( new Range( ts.CurrentTB, previousPlace.iChar, previousPlace.iLine, postPlace.iChar, postPlace.iLine ) );
+
       ts.NeedRecalc( new TextSource.TextChangedEventArgs( sel.Start.iLine, sel.Start.iLine ) );
 
       base.Undo();
@@ -125,10 +132,15 @@ namespace FastColoredTextBoxNS
       if ( String.IsNullOrEmpty( s ) )
         throw new ArgumentOutOfRangeException();
 
+      var previousPlace = ts.CurrentTB.Selection.Start;
 
       if ( ts.Count == 0 )
         InsertLine( ts );
       InsertChar( c, ref deletedChar, ts );
+
+      var postPlace = ts.CurrentTB.Selection.End;
+
+      ts.CurrentTB.OnTextInserted( new Range( ts.CurrentTB, previousPlace.iChar, previousPlace.iLine, postPlace.iChar, postPlace.iLine ) );
 
       ts.NeedRecalc( new TextSource.TextChangedEventArgs( ts.CurrentTB.Selection.Start.iLine, ts.CurrentTB.Selection.Start.iLine ) );
       base.Execute();
@@ -509,6 +521,9 @@ namespace FastColoredTextBoxNS
     internal static void InsertText( string insertedText, TextSource ts )
     {
       var tb = ts.CurrentTB;
+
+      var startPos = new Place( tb.Selection.Start.iChar, tb.Selection.Start.iLine );
+      var endPos = new Place( tb.Selection.Start.iChar, tb.Selection.Start.iLine );
       try
       {
         tb.Selection.BeginUpdate();
@@ -530,10 +545,13 @@ namespace FastColoredTextBoxNS
             InsertCharCommand.InsertChar( c, ref cc, ts );
         }
         ts.NeedRecalc( new TextSource.TextChangedEventArgs( 0, 1 ) );
+
+        endPos = new Place( tb.Selection.Start.iChar, tb.Selection.Start.iLine );
       }
       finally
       {
         tb.Selection.EndUpdate();
+        tb.OnTextInserted( new Range( tb, startPos, endPos ) );
       }
     }
 
@@ -706,8 +724,10 @@ namespace FastColoredTextBoxNS
         throw new ArgumentOutOfRangeException();
 
       deletedText = tb.Selection.Text;
+      var deletedRange = new RangeInfo( tb.Selection );
       ClearSelected( ts );
       lastSel = new RangeInfo( tb.Selection );
+      ts.OnTextDeleted( new Range( tb, deletedRange.Start, deletedRange.End ) );
       ts.OnTextChanged( lastSel.Start.iLine, lastSel.Start.iLine );
     }
 
@@ -908,6 +928,7 @@ namespace FastColoredTextBoxNS
 
       ts.OnTextChanging();
 
+      var insertedRange = new Range( tb, 0, iLines[0], 0, iLines[iLines.Count - 1] + 1 );
       tb.Selection.BeginUpdate();
       //tb.BeginUpdate();
       for ( int i = 0; i < iLines.Count; i++ )
@@ -933,6 +954,8 @@ namespace FastColoredTextBoxNS
       }
       //tb.EndUpdate();
       tb.Selection.EndUpdate();
+
+      tb.OnTextInserted( insertedRange );
 
       ts.NeedRecalc( new TextSource.TextChangedEventArgs( 0, 1 ) );
     }
