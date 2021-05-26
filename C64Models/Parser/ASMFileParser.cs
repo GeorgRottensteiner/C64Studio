@@ -2763,7 +2763,6 @@ namespace C64Studio.Parser
 
           if ( EvaluateLabel( ASMFileInfo.UnparsedLabels[label].LineIndex, ASMFileInfo.UnparsedLabels[label].ToEval, out result ) )
           {
-            //dh.Log( "evaluated unparsed label " + label + " to " + result );
             if ( ASMFileInfo.Labels.ContainsKey( label ) )
             {
               AddError( ASMFileInfo.UnparsedLabels[label].LineIndex, C64Studio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Redefinition of label " + ASMFileInfo.UnparsedLabels[label].Name );

@@ -251,6 +251,7 @@ namespace C64Studio
       RegisterFunction( Function.PASTE, "Paste", Types.FunctionStudioState.ANY );
       RegisterFunction( Function.CUT, "Cut", Types.FunctionStudioState.ANY );
       RegisterFunction( Function.JUMP_TO_LINE, "Jump to Line", FunctionStudioState.ANY );
+      RegisterFunction( Function.FIND_ALL_REFERENCES, "Find all references", FunctionStudioState.ANY );
 
       RegisterFunction( Function.GRAPHIC_ELEMENT_MIRROR_H, "Mirror Horizontal", FunctionStudioState.ANY );
       RegisterFunction( Function.GRAPHIC_ELEMENT_MIRROR_V, "Mirror Vertical", FunctionStudioState.ANY );

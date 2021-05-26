@@ -800,7 +800,7 @@ namespace C64Studio
         }
 
         // find line from pos
-        FindLineAndTextFromResult( activeDocument, newLocation, LastFound, textToLookIn );
+        FindLineAndTextFromResult( newLocation, LastFound, textToLookIn );
         newLocation.LineNumber = LastFound.LineNumber;
 
         var start = edit.VirtualPositionToPosition( newLocation.StartPosition );
@@ -870,7 +870,7 @@ namespace C64Studio
         newLocation.StartPosition += offset;
 
         // find line from pos
-        FindLineAndTextFromResult( activeDocument, newLocation, LastFound, edit.Text );
+        FindLineAndTextFromResult( newLocation, LastFound, edit.Text );
 
         LastFound.FoundInDocument = activeDocument.DocumentInfo;
         LastFound.StartPosition = newLocation.StartPosition;
@@ -926,7 +926,7 @@ namespace C64Studio
           goto retry_search;
         }
         // find line from pos
-        FindLineAndTextFromResult( docToSearch, newLocation, LastFound, textToLookIn );
+        FindLineAndTextFromResult( newLocation, LastFound, textToLookIn );
 
         LastFound.FoundInDocument = docToSearch.DocumentInfo;
         LastFound.StartPosition = newLocation.StartPosition;
@@ -949,7 +949,7 @@ namespace C64Studio
           firstElement = elementToSearch;
         }
         if ( ( elementToSearch == null )
-        || ( string.IsNullOrEmpty( elementToSearch.Filename ) ) )
+        ||   ( string.IsNullOrEmpty( elementToSearch.Filename ) ) )
         {
           LastFound.Clear();
           return false;
@@ -992,7 +992,7 @@ namespace C64Studio
 
 
         // find line from pos
-        FindLineAndTextFromResult( elementToSearch.Document, newLocation, LastFound, textFromElement );
+        FindLineAndTextFromResult( newLocation, LastFound, textFromElement );
 
         LastFound.FoundInDocument = elementToSearch.DocumentInfo;
         LastFound.StartPosition = newLocation.StartPosition;
@@ -1007,53 +1007,33 @@ namespace C64Studio
 
 
 
-    private void FindLineAndTextFromResult( BaseDocument DocToSearch, SearchLocation NewLocation, SearchLocation LastFound, string TextToSearch )
+    private void FindLineAndTextFromResult( SearchLocation NewLocation, SearchLocation LastFound, string TextToSearch )
     {
-      /*
-      if ( DocToSearch != null )
+      // find line number from text
+      int numLines = 0;
+      int curPos = 0;
+      int lastPos = -1;
+
+      while ( curPos < NewLocation.StartPosition )
       {
-        var edit = EditFromDocumentEx( DocToSearch.DocumentInfo );
-        int pos = PositionFromCharacterPos( edit, NewLocation.StartPosition );
-        if ( edit != null )
+        lastPos = curPos;
+        curPos = TextToSearch.IndexOf( '\n', curPos + 1 );
+        ++numLines;
+        if ( curPos == -1 )
         {
-          pos = edit.VirtualPositionToPosition( pos );
+          // not found??
+          break;
         }
-
-        LastFound.LineNumber = edit.PositionToPlace( pos ).iLine;
-        LastFound.FoundLine = edit[LastFound.LineNumber].Text;
-        LastFound.LineNumber++;
-
-        NewLocation.LineNumber = LastFound.LineNumber;
-        NewLocation.FoundLine   = LastFound.FoundLine;
       }
-      else*/
+      LastFound.LineNumber = numLines;
+      if ( ( curPos != -1 )
+      &&   ( lastPos != -1 ) )
       {
-        // find line number from text
-        int numLines = 0;
-        int curPos = 0;
-        int lastPos = -1;
-
-        while ( curPos < NewLocation.StartPosition )
-        {
-          lastPos = curPos;
-          curPos = TextToSearch.IndexOf( '\n', curPos + 1 );
-          ++numLines;
-          if ( curPos == -1 )
-          {
-            // not found??
-            break;
-          }
-        }
-        LastFound.LineNumber = numLines;
-        if ( ( curPos != -1 )
-        &&   ( lastPos != -1 ) )
-        {
-          LastFound.FoundLine = TextToSearch.Substring( lastPos + 1, curPos - lastPos - 2 );
-        }
-        else
-        {
-          LastFound.FoundLine = TextToSearch.Substring( lastPos + 1 );
-        }
+        LastFound.FoundLine = TextToSearch.Substring( lastPos + 1, curPos - lastPos - 2 );
+      }
+      else
+      {
+        LastFound.FoundLine = TextToSearch.Substring( lastPos + 1 );
       }
     }
 
@@ -1517,7 +1497,7 @@ namespace C64Studio
           return TextToSearchIn;
         }
 
-        FindLineAndTextFromResult( DocInfo.BaseDoc, newLocation, LastReplaceFound, TextToSearchIn );
+        FindLineAndTextFromResult( newLocation, LastReplaceFound, TextToSearchIn );
 
         searchResults.Add( new SearchLocation()
           {

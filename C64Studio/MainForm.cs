@@ -626,6 +626,7 @@ namespace C64Studio
       StudioCore.Settings.Functions[Function.FIND_REPLACE].ToolBarButton = mainToolFindReplace;
       StudioCore.Settings.Functions[Function.PRINT].ToolBarButton = mainToolPrint;
       StudioCore.Settings.Functions[Function.BUILD_TO_PREPROCESSED_FILE].MenuItem = preprocessedFileToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.FIND_ALL_REFERENCES].MenuItem = findAllReferencesToolStripMenuItem;
 
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new C64Studio.Converter.PETSCIIToCharConverter();
@@ -4721,6 +4722,22 @@ namespace C64Studio
           }
           ActiveContent.Cut();
           return true;
+        case Function.FIND_ALL_REFERENCES:
+          {
+            DocumentInfo docToHandle = DetermineDocument();
+
+            if ( docToHandle.Type != ProjectElement.ElementType.ASM_SOURCE )
+            {
+              break;
+            }
+            SourceASMEx sourceEx = docToHandle.BaseDoc as SourceASMEx;
+
+            if ( sourceEx != null )
+            {
+              return sourceEx.ApplyFunction( Function );
+            }
+          }
+          return false;
       }
       return false;
     }
@@ -5393,6 +5410,7 @@ namespace C64Studio
       {
         document = new FileManager( StudioCore, Filename );
         document.ShowHint = DockState.Float;
+        openDirectFile = false;
       }
       else if ( ( extension == ".SPRITEPROJECT" )
       ||        ( extension == ".SPR" ) )

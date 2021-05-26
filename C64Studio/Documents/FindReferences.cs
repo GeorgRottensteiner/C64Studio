@@ -188,10 +188,11 @@ namespace C64Studio
 
       int     lineNumber = GR.Convert.ToI32( listResults.Items[index].Text );
       string  fileName = listResults.Items[index].SubItems[1].Text;
-      string  fullPath = ( (DocumentInfo)listResults.Items[index].Tag ).FullPath;
-      if ( !string.IsNullOrEmpty( fullPath ) )
+      var docInfo = (DocumentInfo)listResults.Items[index].Tag;
+      if ( ( docInfo != null )
+      &&   ( !string.IsNullOrEmpty( docInfo.FullPath ) ) )
       {
-        fileName = fullPath;
+        fileName = docInfo.FullPath;
       }
       else
       {
@@ -250,7 +251,24 @@ namespace C64Studio
             {
               item.Tag = element.DocumentInfo;
             }
-            item.SubItems[2].Text = element.Document.SourceControl.GetLine( localLineIndex ).Text;
+
+            if ( element.Document != null )
+            {
+              if ( ( localLineIndex >= 0 )
+              &&   ( localLineIndex < element.Document.SourceControl.LinesCount ) )
+              {
+                item.SubItems[2].Text = element.Document.SourceControl.GetLine( localLineIndex ).Text;
+              }
+            }
+            else
+            {
+              // fetch line from file
+              string textFromElement = Core.Searching.GetDocumentInfoText( element.DocumentInfo );
+
+              string line = FindLineInsideText( textFromElement, localLineIndex );
+
+              item.SubItems[2].Text = line;
+            }
           }
         }
         else
@@ -261,13 +279,45 @@ namespace C64Studio
             item.Tag = doc;
           }
           if ( ( doc != null )
-          && ( doc.BaseDoc != null ) )
+          &&   ( doc.BaseDoc != null ) )
           {
-            item.SubItems[2].Text = doc.BaseDoc.SourceControl.GetLine( localLineIndex ).Text;
+            if ( ( localLineIndex >= 0 )
+            &&   ( localLineIndex < doc.BaseDoc.SourceControl.LinesCount ) )
+            {
+              item.SubItems[2].Text = doc.BaseDoc.SourceControl.GetLine( localLineIndex ).Text;
+            }
           }
         }
       }
       listResults.Items.Add( item );
+    }
+
+
+
+    private string FindLineInsideText( string TextToSearch, int localLineIndex )
+    {
+      // find line number from text
+      int numLines = 0;
+      int curPos = 0;
+      int lastPos = -1;
+
+      while ( numLines <= localLineIndex )
+      {
+        lastPos = curPos;
+        curPos = TextToSearch.IndexOf( '\n', curPos + 1 );
+        ++numLines;
+        if ( curPos == -1 )
+        {
+          // not found??
+          return "";
+        }
+      }
+      if ( ( curPos != -1 )
+      &&   ( lastPos != -1 ) )
+      {
+        return TextToSearch.Substring( lastPos, curPos - lastPos - 1 );
+      }
+      return TextToSearch.Substring( lastPos );
     }
 
 

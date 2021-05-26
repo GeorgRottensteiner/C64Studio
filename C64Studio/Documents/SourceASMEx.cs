@@ -2911,6 +2911,9 @@ namespace C64Studio
           editSource.Bookmarks.Clear();
           editSource.Invalidate();
           return true;
+        case Function.FIND_ALL_REFERENCES:
+          FindAllReferences( editSource.PlaceToPosition( editSource.Selection.Start ), editSource.Selection.Start.iLine );
+          return true;
       }
       return false;
     }
@@ -3473,8 +3476,21 @@ namespace C64Studio
 
     private void findAllReferencesToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      int     lineIndex = m_ContextMenuLineIndex;
-      string  wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
+      FindAllReferences( m_ContextMenuPosition, m_ContextMenuLineIndex );
+    }
+
+
+
+    public void FindAllReferences()
+    {
+    }
+
+
+
+    private void FindAllReferences( int PositionInCode, int LineIndexInCode )
+    {
+      int     lineIndex = LineIndexInCode;
+      string  wordBelow = FindWordFromPosition( PositionInCode, LineIndexInCode );
 
       if ( ( editSource.SelectionLength > 0 )
       &&   ( editSource.Selection.Start.iLine == lineIndex )
