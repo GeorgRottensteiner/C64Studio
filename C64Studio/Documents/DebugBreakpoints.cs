@@ -140,6 +140,7 @@ namespace C64Studio
         checkTriggerExec.Checked = bp.TriggerOnExec;
         checkTriggerLoad.Checked = bp.TriggerOnLoad;
         checkTriggerStore.Checked = bp.TriggerOnStore;
+        editTriggerConditions.Text = bp.Conditions;
       }
     }
 
