@@ -4282,14 +4282,11 @@ namespace C64Studio
               m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
             }
           }
-          if ( m_FindReplace.Visible )
-          {
-            m_FindReplace.comboSearchText.Focus();
-          }
-          else
+          if ( !m_FindReplace.Visible )
           {
             m_FindReplace.Show( panelMain );
           }
+          m_FindReplace.comboSearchText.Focus();
           StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
 
           m_FindReplace.tabFindReplace.SelectedIndex = 0;
@@ -4307,17 +4304,15 @@ namespace C64Studio
               }
             }
           }
-          if ( m_FindReplace.Visible )
-          {
-            m_FindReplace.comboSearchText.Focus();
-          }
-          else
+          if ( !m_FindReplace.Visible )
           {
             m_FindReplace.Show( panelMain );
           }
+          m_FindReplace.comboSearchText.Focus();
           StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
           m_FindReplace.tabFindReplace.SelectedIndex = 0;
-          m_FindReplace.comboSearchTarget.SelectedIndex = 3;
+          // whole solution per default
+          m_FindReplace.comboSearchTarget.SelectedIndex = 4;
           m_FindReplace.AcceptButton = m_FindReplace.btnFindAll;
           return true;
         case C64Studio.Types.Function.FIND_REPLACE:
@@ -4328,14 +4323,11 @@ namespace C64Studio
               m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
             }
           }
-          if ( m_FindReplace.Visible )
-          {
-            m_FindReplace.comboReplaceSearchText.Focus();
-          }
-          else
+          if ( !m_FindReplace.Visible )
           {
             m_FindReplace.Show( panelMain );
           }
+          m_FindReplace.comboReplaceSearchText.Focus();
           StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
           m_FindReplace.tabFindReplace.SelectedIndex = 1;
           return true;
@@ -4347,14 +4339,11 @@ namespace C64Studio
               m_FindReplace.AdjustSettings( compilableDoc.SourceControl );
             }
           }
-          if ( m_FindReplace.Visible )
-          {
-            m_FindReplace.comboReplaceSearchText.Focus();
-          }
-          else
+          if ( !m_FindReplace.Visible )
           {
             m_FindReplace.Show( panelMain );
           }
+          m_FindReplace.comboReplaceSearchText.Focus();
           StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
           m_FindReplace.tabFindReplace.SelectedIndex = 1;
           m_FindReplace.comboReplaceTarget.SelectedIndex = 3;

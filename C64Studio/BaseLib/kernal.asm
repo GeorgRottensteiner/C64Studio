@@ -9,6 +9,7 @@
 ;| Bit  4   |    Blank Screen to Border Color: 0 = Blank
 ;| Bit  3   |    Select 24/25 Row Text Display: 1 = 25 Rows
 ;| Bits 2-0 |    Smooth Scroll to Y Dot-Position (0-7)
+;                Default Value: $9B/155 (%10011011).
 .CONTROL_1           = $d011
 .RASTER_POS          = $d012
 .STROBE_X            = $d013   ;light pen x
@@ -20,6 +21,7 @@
 ;| Bit  4   |    Multi-Color Mode: 1 = Enable (Text or Bitmap)
 ;| Bit  3   |    Select 38/40 Column Text Display: 1 = 40 Cols
 ;| Bits 2-0 |    Smooth Scroll to X Dot-Position (0-7)
+;                Default Value: $08/8 (%00001000).
 .CONTROL_2           = $d016
 .SPRITE_EXPAND_Y     = $d017
 

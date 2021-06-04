@@ -19,7 +19,9 @@ namespace C64Studio
       [Description( "All opened documents" )]
       ALL_OPEN_DOCUMENTS = 2,
       [Description( "Whole project" )]
-      FULL_SOLUTION = 3
+      FULL_PROJECT = 3,
+      [Description( "Whole Solution" )]
+      FULL_SOLUTION = 4
     }
 
 
@@ -561,6 +563,126 @@ namespace C64Studio
 
 
 
+    private ProjectElement GetFirstSolutionElement( bool SearchDown )
+    {
+      if ( Core.Navigating.Solution == null )
+      {
+        return null;
+      }
+      if ( SearchDown )
+      {
+        foreach ( var project in Core.Navigating.Solution.Projects )
+        {
+          foreach ( ProjectElement element in project.Elements )
+          {
+            if ( !HasSearchableControl( element.DocumentInfo ) )
+            {
+              continue;
+            }
+            return element;
+          }
+        }
+        return null;
+      }
+      ProjectElement lastElement = null;
+      foreach ( var project in Core.Navigating.Solution.Projects )
+      {
+        foreach ( ProjectElement element in project.Elements )
+        {
+          if ( !HasSearchableControl( element.DocumentInfo ) )
+          {
+            continue;
+          }
+          lastElement = element;
+        }
+      }
+      return lastElement;
+    }
+
+
+
+    private ProjectElement GetNextSolutionElement( ProjectElement ElementToSearch, bool SearchDown, bool Wrap )
+    {
+      if ( SearchDown )
+      {
+        bool foundEntry = false;
+        foreach ( var project in Core.Navigating.Solution.Projects )
+        {
+          foreach ( ProjectElement element in project.Elements )
+          {
+            if ( !element.DocumentInfo.ContainsCode )
+            {
+              continue;
+            }
+            if ( foundEntry )
+            {
+              return element;
+            }
+            if ( element == ElementToSearch )
+            {
+              foundEntry = true;
+            }
+          }
+        }
+        if ( !Wrap )
+        {
+          return null;
+        }
+        foreach ( var project in Core.Navigating.Solution.Projects )
+        {
+          foreach ( ProjectElement element in project.Elements )
+          {
+            if ( !element.DocumentInfo.ContainsCode )
+            {
+              continue;
+            }
+            if ( element == ElementToSearch )
+            {
+              return null;
+            }
+            return element;
+          }
+        }
+        return null;
+      }
+      // find previous doc
+      ProjectElement previousElement = null;
+      foreach ( var project in Core.Navigating.Solution.Projects )
+      {
+        foreach ( ProjectElement element in project.Elements )
+        {
+          if ( !element.DocumentInfo.ContainsCode )
+          {
+            continue;
+          }
+          if ( element == ElementToSearch )
+          {
+            return previousElement;
+          }
+          previousElement = element;
+        }
+      }
+      if ( ( previousElement == null )
+      &&   ( !Wrap ) )
+      {
+        return null;
+      }
+      foreach ( var project in Core.Navigating.Solution.Projects )
+      {
+        foreach ( ProjectElement element in project.Elements )
+        {
+          if ( !element.DocumentInfo.ContainsCode )
+          {
+            continue;
+          }
+          previousElement = element;
+        }
+      }
+      return previousElement;
+    }
+
+
+
     private BaseDocument GetFirstOpenDocument( bool SearchDown )
     {
       if ( SearchDown )
@@ -739,8 +861,7 @@ namespace C64Studio
 
       FastColoredTextBoxNS.FastColoredTextBox  edit = null;
 
-      if ( ( Target == FindTarget.FULL_SOLUTION )
-      &&   ( Core.Navigating.Solution == null ) )
+      if ( IsTargettingProjectOrSolutionWithoutProject( Target ) )
       {
         // fall back - full solution without solution
         Target = FindTarget.ALL_OPEN_DOCUMENTS;
@@ -934,7 +1055,7 @@ namespace C64Studio
 
         return true;
       }
-      else if ( Target == FindTarget.FULL_SOLUTION )
+      else if ( Target == FindTarget.FULL_PROJECT )
       {
         ProjectElement  elementToSearch = null;
         ProjectElement  firstElement = null;
@@ -999,9 +1120,92 @@ namespace C64Studio
         LastFound.Length = newLocation.Length;
         return true;
       }
+      else if ( Target == FindTarget.FULL_SOLUTION )
+      {
+        ProjectElement  elementToSearch = null;
+        ProjectElement  firstElement = null;
+        Project         firstProject = null;
+
+        if ( LastFound.FoundInDocument != null )
+        {
+          elementToSearch = LastFound.FoundInDocument.Element;
+          firstElement = elementToSearch;
+          firstProject = elementToSearch.DocumentInfo.Project;
+        }
+        if ( elementToSearch == null )
+        {
+          elementToSearch = GetFirstSolutionElement( SearchDown );
+          firstElement = elementToSearch;
+          firstProject = elementToSearch.DocumentInfo.Project;
+        }
+        if ( ( elementToSearch == null )
+        ||   ( string.IsNullOrEmpty( elementToSearch.Filename ) ) )
+        {
+          LastFound.Clear();
+          return false;
+        }
+
+        retry_search:
+        ;
+        string textFromElement = Core.Searching.GetDocumentInfoText( elementToSearch.DocumentInfo );
+        SearchLocation newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
+        if ( newLocation.StartPosition == -1 )
+        {
+          elementToSearch = GetNextSolutionElement( elementToSearch, SearchDown, Wrap );
+          if ( elementToSearch == null )
+          {
+            LastFound.Clear();
+            return false;
+          }
+          if ( elementToSearch == firstElement )
+          {
+            // back to the first element, give up
+            LastFound.Clear();
+            return false;
+          }
+          lastPosition = -1;
+          goto retry_search;
+        }
+
+        if ( elementToSearch.DocumentInfo != null )
+        {
+          var edit2 = EditFromDocumentEx( elementToSearch.DocumentInfo );
+          if ( edit2 != null )
+          {
+            var start = edit2.VirtualPositionToPosition( newLocation.StartPosition );
+            var end = edit2.VirtualPositionToPosition( newLocation.StartPosition + newLocation.Length );
+
+            newLocation.StartPosition = start;
+            newLocation.Length = end - start;
+          }
+        }
+
+
+        // find line from pos
+        FindLineAndTextFromResult( newLocation, LastFound, textFromElement );
+
+        LastFound.FoundInDocument = elementToSearch.DocumentInfo;
+        LastFound.StartPosition = newLocation.StartPosition;
+        LastFound.Length = newLocation.Length;
+        return true;
+      }
 
       // not handled yet
       LastFound.Clear();
+      return false;
+    }
+
+
+
+    private bool IsTargettingProjectOrSolutionWithoutProject( FindTarget Target )
+    {
+      if ( ( ( Target == FindTarget.FULL_PROJECT )
+      &&     ( Core.Navigating.Solution == null ) )
+      ||   ( ( Target == FindTarget.FULL_SOLUTION )
+      &&     ( Core.Navigating.Solution == null ) ) )
+      {
+        return true;
+      }
       return false;
     }
 
@@ -1385,6 +1589,25 @@ namespace C64Studio
             {
               string textFromElement = Core.Searching.GetDocumentInfoText( doc.DocumentInfo );
               elementsToReplaceIn.Add( doc.DocumentInfo, textFromElement );
+            }
+          }
+          break;
+        case FindTarget.FULL_PROJECT:
+          if ( Core.Navigating.Solution != null )
+          {
+            foreach ( Project proj in Core.Navigating.Solution.Projects )
+            {
+              foreach ( ProjectElement element in proj.Elements )
+              {
+                DocumentInfo    docInfo = element.DocumentInfo;
+                if ( ( docInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+                ||   ( docInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+                ||   ( docInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
+                {
+                  string textFromElement = Core.Searching.GetDocumentInfoText( docInfo );
+                  elementsToReplaceIn.Add( docInfo, textFromElement );
+                }
+              }
             }
           }
           break;

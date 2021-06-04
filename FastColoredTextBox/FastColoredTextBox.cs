@@ -2437,7 +2437,7 @@ namespace FastColoredTextBoxNS
     /// </summary>
     [Browsable( true )]
     [Description( "It occurs after insert operations." )]
-    public new event EventHandler<TextInsertedEventArgs> TextInserted;
+    public event EventHandler<TextInsertedEventArgs> TextInserted;
 
     /// <summary>
     /// TextDeleted event.
@@ -2445,7 +2445,7 @@ namespace FastColoredTextBoxNS
     /// </summary>
     [Browsable( true )]
     [Description( "It occurs after delete operations." )]
-    public new event EventHandler<TextDeletedEventArgs> TextDeleted;
+    public event EventHandler<TextDeletedEventArgs> TextDeleted;
 
     /// <summary>
     /// Fake event for correct data binding
