@@ -192,7 +192,7 @@
       // 
       this.btnToggleUpperLowerCase.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleUpperLowerCase.AutoSize = true;
-      this.btnToggleUpperLowerCase.Image = global::C64Studio.Properties.Resources.toolbar_basic_toggle_upperlowercase_down;
+      this.btnToggleUpperLowerCase.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleUpperLowerCase.Image")));
       this.btnToggleUpperLowerCase.Location = new System.Drawing.Point(107, 27);
       this.btnToggleUpperLowerCase.Name = "btnToggleUpperLowerCase";
       this.btnToggleUpperLowerCase.Size = new System.Drawing.Size(22, 22);
@@ -205,7 +205,7 @@
       // 
       this.btnToggleStringEntryMode.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToggleStringEntryMode.AutoSize = true;
-      this.btnToggleStringEntryMode.Image = global::C64Studio.Properties.Resources.toolbar_basic_string_mode_inactive;
+      this.btnToggleStringEntryMode.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleStringEntryMode.Image")));
       this.btnToggleStringEntryMode.Location = new System.Drawing.Point(135, 27);
       this.btnToggleStringEntryMode.Name = "btnToggleStringEntryMode";
       this.btnToggleStringEntryMode.Size = new System.Drawing.Size(22, 22);

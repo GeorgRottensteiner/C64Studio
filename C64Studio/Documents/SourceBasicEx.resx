@@ -147,12 +147,28 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnToggleSymbolMode.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABGdBTUEAALGPC/xhBQAAAF5JREFUOE+V
-        i8ENwCAMA9l/L9ZgliIqpc7FKiDdI7YvrfVxB/OWmkkRUvBkp9jR2FIvbrbUi5st9eJmS7242VIvbrb8
-        rhU82ZGwMilCzhM8vMgqagB7IpN4JzD/08cD9LNgSvBj+CMAAAAASUVORK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABiSURBVDhPpYzBDcAgDMTYf6+uwSoghCqRi3uC8vDDF0Mp
+        T21X4HjCx8hwmwZP7oO4kG8iHLmbCEfuJsKRu4lw5G4iHLlbkDl4ci/DHBluYRzQBy+xW0Shx4PYLPIH
+        HLeprQN/bV9ZtxFoxgAAAABJRU5ErkJggg==
 </value>
   </data>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>536, 17</value>
   </metadata>
+  <data name="btnToggleUpperLowerCase.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABaSURBVDhP5YzRDoAgDAP39/vsmRJqxqyIwTcvqQHMncUm
+        3wfcvZ9GzOxcZrhB5iqPgSyryDSgZI5MA0SJ5M+BLNa1/+3bUQFwJ4OlAFAyWA6AKoPry0s2AxEHwaJM
+        ZtFplpIAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="btnToggleStringEntryMode.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAmSURBVDhPY/hPIaCuAWvXroVjdIBLbtQANAPIAaMGjBrw
+        /////wAdHN9anaYqsQAAAABJRU5ErkJggg==
+</value>
+  </data>
 </root>

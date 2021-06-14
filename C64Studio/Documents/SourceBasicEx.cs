@@ -658,7 +658,10 @@ namespace C64Studio
         if ( endOfLine != -1 )
         {
           firstLine = basicText.Substring( 0, endOfLine ).Trim();
-          basicText = basicText.Substring( endOfLine + 1 );
+          if ( firstLine.StartsWith( "#C64Studio.MetaData.BASIC:" ) )
+          {
+            basicText = basicText.Substring( endOfLine + 1 );
+          }
         }
         else
         {
