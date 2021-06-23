@@ -58,13 +58,11 @@ namespace C64Studio
         return;
       }
 
-      /*
       if ( RunTool.Filename.ToUpper().Contains( "XMEGA65" ) )
       {
         Debugger = new XMEGA65RemoteDebugger( Core );
       }
-      else*/
-      if ( RunTool.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" ) )
+      else if ( RunTool.DebugArguments.ToUpper().Contains( "-BINARYMONITOR" ) )
       {
         Debugger = new VICERemoteDebuggerBinaryInterface( Core );
 

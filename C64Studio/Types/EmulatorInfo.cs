@@ -7,6 +7,15 @@ namespace C64Studio.Types
 {
   public static class EmulatorInfo
   {
+    public static bool IsMega65Family( ToolInfo Tool )
+    {
+      string    uppercaseFilename = System.IO.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
+
+      return uppercaseFilename.StartsWith( "XMEGA65" );
+    }
+
+
+
     public static bool IsVICEFamily( ToolInfo Tool )
     {
       string    uppercaseFilename = System.IO.Path.GetFileNameWithoutExtension( Tool.Filename ).ToUpper();
@@ -25,11 +34,13 @@ namespace C64Studio.Types
     public static bool SupportsDebugging( ToolInfo Tool )
     {
       // currently only the VICE family is supported
-      return IsVICEFamily( Tool );
+      if ( ( IsVICEFamily( Tool ) )
+      ||   ( IsMega65Family( Tool ) ) )
+      {
+        return true;
+      }
+      return false;
     }
-
-
-
 
 
 
@@ -63,7 +74,7 @@ namespace C64Studio.Types
         Tool.Name                 = "CCS64";
         Tool.PassLabelsToEmulator = false;
       }
-      else if ( upperCaseFilename.StartsWith( "XMEGA65" ) )
+      else if ( IsMega65Family( Tool ) )
       {
         // XMEGA65
         Tool.Name         = "XMEGA65";
@@ -131,9 +142,9 @@ namespace C64Studio.Types
       {
         return MachineType.ATARI2600;
       }
-      else if ( filename.StartsWith( "STELLA" ) )
+      else if ( filename.StartsWith( "XMEGA65" ) )
       {
-        return MachineType.ATARI2600;
+        return MachineType.MEGA65;
       }
       return MachineType.UNKNOWN;
     }

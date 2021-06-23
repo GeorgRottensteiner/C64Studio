@@ -1858,6 +1858,8 @@ namespace C64Studio
       result = result.Replace( "$(DebugStartAddressHex)", debugStartAddress.ToString( "x" ) );
 
       // replace symbols
+      var parser = new ASMFileParser();
+
       int dollarPos = result.IndexOf("$(");
       while ( dollarPos != -1 )
       {
@@ -1869,8 +1871,7 @@ namespace C64Studio
           StudioCore.AddToOutput( "Malformed Macro encountered at command " + Mask );
           return "";
         }
-        string macroName = result.Substring(dollarPos + 2, macroEndPos - dollarPos - 2);
-
+        string macroName = result.Substring( dollarPos + 2, macroEndPos - dollarPos - 2 );
         bool asHex = false;
         if ( macroName.StartsWith( "0x" ) )
         {
@@ -1878,6 +1879,26 @@ namespace C64Studio
           macroName = macroName.Substring( 2 );
         }
 
+        var tokens = parser.ParseTokenInfo( macroName, 0, macroName.Length );
+        parser.ASMFileInfo = Document.ASMFileInfo;
+        if ( !parser.EvaluateTokens( 0, tokens, out int macroValue ) )
+        {
+          Error = true;
+          StudioCore.AddToOutput( "Failed to evaluate macro '" + macroName + "' encountered at command " + Mask + System.Environment.NewLine );
+          return "";
+        }
+        string valueToInsert = "";
+        if ( asHex )
+        {
+          valueToInsert = macroValue.ToString( "X" );
+        }
+        else
+        {
+          valueToInsert = macroValue.ToString();
+        }
+        result = result.Substring( 0, dollarPos ) + valueToInsert + result.Substring( macroEndPos + 1 );
+        macroEndPos = dollarPos + valueToInsert.Length;
+        /*
         if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
         {
           string valueToInsert = "";
@@ -1906,7 +1927,7 @@ namespace C64Studio
           Error = true;
           StudioCore.AddToOutput( "Unknown macro " + macroName + " encountered at command " + Mask + System.Environment.NewLine );
           return "";
-        }
+        }*/
         dollarPos = result.IndexOf( "$(", dollarPos );
       }
       return result;

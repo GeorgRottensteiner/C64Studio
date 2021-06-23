@@ -297,7 +297,11 @@ namespace C64Studio
       Core.Navigating.RemoveLines( DocumentInfo, firstLine, count );
 
       //Debug.Log( "Lines removed " + e.Index + ", " + e.Count );
-      m_LineInfos.RemoveRange( firstLine, count );
+      if ( ( firstLine >= 0 )
+      &&   ( firstLine + count <= m_LineInfos.Count ) )
+      {
+        m_LineInfos.RemoveRange( firstLine, count );
+      }
 
       // move related breakpoints!
       int deletedAtLine = firstLine;

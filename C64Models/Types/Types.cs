@@ -16,7 +16,8 @@ namespace C64Studio.Types
     PLUS4,
     PET,
     CBM,
-    ATARI2600
+    ATARI2600,
+    MEGA65
   };
 
   public class Machine

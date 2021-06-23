@@ -5785,9 +5785,14 @@ namespace FastColoredTextBoxNS
         //draw line number
         if ( ShowLineNumbers )
           using ( var lineNumberBrush = new SolidBrush( LineNumberColor ) )
+          {
+            var format = new StringFormat();// StringFormatFlags.DirectionRightToLeft );
+            format.Alignment = StringAlignment.Far;
             e.Graphics.DrawString( ( iLine + lineNumberStartValue ).ToString(), Font, lineNumberBrush,
                                   new RectangleF( -10, y, LeftIndent - minLeftIndent - 2 + 10, CharHeight ),
-                                  new StringFormat( StringFormatFlags.DirectionRightToLeft ) );
+                                  format );
+          }
+
         //create markers
         if ( lineInfo.VisibleState == VisibleState.StartOfHiddenBlock )
           visibleMarkers.Add( new ExpandFoldingMarker( iLine, new Rectangle( LeftIndentLine - 4, y + CharHeight / 2 - 3, 8, 8 ) ) );

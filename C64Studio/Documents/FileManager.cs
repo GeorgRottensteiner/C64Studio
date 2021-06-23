@@ -482,7 +482,12 @@ namespace C64Studio
         bool     changedFile = false;
         foreach ( string file in files )
         {
-          if ( ImportFile( file ) )
+          if ( !ImportFile( file ) )
+          {
+            MessageBox.Show( $"The file {file} could not be imported, too big or invalid filename", "Error importing file" );
+            return;
+          }
+          else
           {
             changedFile = true;
           }
@@ -522,7 +527,12 @@ namespace C64Studio
         {
           if ( m_Media != null )
           {
-            if ( m_Media.WriteFile( file.Filename, fileInfo.Data, file.Type ) )
+            if ( !m_Media.WriteFile( file.Filename, fileInfo.Data, file.Type ) )
+            {
+              MessageBox.Show( $"The file {file.Filename} could not be imported, too big or invalid filename", "Error importing file" );
+              return;
+            }
+            else
             {
               changed = true;
             }
@@ -1084,7 +1094,11 @@ namespace C64Studio
 
       if ( OpenFile( "Choose file to import", C64Studio.Types.Constants.FILEFILTER_PRG + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
-        ImportFile( filename );
+        if ( !ImportFile( filename ) )
+        {
+          MessageBox.Show( $"The file {filename} could not be imported, too big or invalid filename", "Error importing file" );
+          return;
+        }
       }
     }
 

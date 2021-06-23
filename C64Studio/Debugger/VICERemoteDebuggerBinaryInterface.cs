@@ -414,13 +414,14 @@ namespace C64Studio
               uint    hitCount          = m_ReceivedDataBin.UInt32At( packagePos + 13 );
               uint    ignoreCount       = m_ReceivedDataBin.UInt32At( packagePos + 17 );
               bool    hasCondition      = ( m_ReceivedDataBin.ByteAt( packagePos + 21 ) == 1 );
+              bool    wasInitialBreakpoint = false;
 
               Core.AddToOutput( "Breakpoint at address $" + startAddress.ToString( "X2" ) + " has ID " + checkPointNumber + ", enabled " + enabled + ", temporary " + temporary + System.Environment.NewLine );
 
               if ( currentlyHit )
               {
                 m_BrokenAtBreakPoint = (int)checkPointNumber;
-                OnBreakpointHit();
+                OnBreakpointHit( wasInitialBreakpoint );
               }
               RequestData   origRequest= null;
               if ( m_UnansweredBinaryRequests.ContainsKey( requestID ) )
@@ -445,7 +446,7 @@ namespace C64Studio
                   Core.AddToOutput( "-is an unknown breakpoint" + System.Environment.NewLine );
                 }
               }
-              else
+              else if ( !wasInitialBreakpoint )
               {
                 Core.AddToOutput( "-is an unknown breakpoint" + System.Environment.NewLine );
               }
@@ -801,9 +802,10 @@ namespace C64Studio
 
 
 
-    private void OnBreakpointHit()
+    private void OnBreakpointHit( bool WasInitialBreakpoint )
     {
       m_State = DebuggerState.PAUSED;
+      WasInitialBreakpoint = false;
 
       Log( "Breakpoint " + m_BrokenAtBreakPoint + " hit" );
       // TODO - only remove if auto startup breakpoint
@@ -820,7 +822,7 @@ namespace C64Studio
             Log( "Remove auto startup breakpoint " + breakPoint.RemoteIndex );
             QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint ).Breakpoint = breakPoint;
             brokenBP = null;
-            break;
+            WasInitialBreakpoint = true;
           }
         }
       }
@@ -843,6 +845,7 @@ namespace C64Studio
           QueueRequest( DebugRequestType.DELETE_BREAKPOINT, m_BrokenAtBreakPoint );
 
           skipRefresh = Core.Debugging.OnInitialBreakpointReached( breakAddress );
+          WasInitialBreakpoint = true;
         }
       }
       else

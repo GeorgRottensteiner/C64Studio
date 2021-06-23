@@ -299,24 +299,24 @@ namespace C64Studio.Formats
 
         for ( int i = 0; i < 8; ++i )
         {
-          int fileTrack = sec.Data.ByteAt( 0x20 * i + 3 );
-          int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
+          int fileTrack = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 3 );
+          int fileSector = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 4 );
           if ( fileTrack != 0 )
           {
             // valid entry?
-            if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+            if ( sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
             {
-              GR.Memory.ByteBuffer filename = sec.Data.SubBuffer( 0x20 * i + 5, 16 );
+              GR.Memory.ByteBuffer filename = sec.Data.SubBuffer( BYTES_PER_DIR_ENTRY * i + 5, 16 );
               if ( Filename.Compare( filename ) == 0 )
               {
                 FileLocation = new Location( fileTrack, fileSector );
 
-                FileInfo = new C64Studio.Types.FileInfo();
-                FileInfo.Filename = new GR.Memory.ByteBuffer( filename );
-                FileInfo.StartSector = fileSector;
-                FileInfo.StartTrack = fileTrack;
-                FileInfo.Type = (C64Studio.Types.FileType)sec.Data.ByteAt( 0x20 * i + 2 );
-                FileInfo.Blocks = 0;
+                FileInfo              = new C64Studio.Types.FileInfo();
+                FileInfo.Filename     = new GR.Memory.ByteBuffer( filename );
+                FileInfo.StartSector  = fileSector;
+                FileInfo.StartTrack   = fileTrack;
+                FileInfo.Type         = (C64Studio.Types.FileType)sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 );
+                FileInfo.Blocks       = 0;
                 return true;
               }
             }
@@ -499,12 +499,6 @@ namespace C64Studio.Formats
             // scratched (empty) entry
 
             // default set PRG
-            if ( i > 0 )
-            {
-              // set track/sector of next dir sector
-              sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 0, 0 );
-              sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 1, 0 );
-            }
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 2, (byte)Type );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 3, (byte)StartTrack );
             sect.Data.SetU8At( BYTES_PER_DIR_ENTRY * i + 4, (byte)StartSector );
@@ -870,9 +864,9 @@ namespace C64Studio.Formats
 
         for ( int i = 0; i < 8; ++i )
         {
-          int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
-          int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+          int fileTrack  = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 3 );
+          int fileSector = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 4 );
+          if ( sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
           {
             // valid entry?
             if ( ( fileTrack == Track )

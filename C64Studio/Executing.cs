@@ -185,7 +185,7 @@ namespace C64Studio
 
     private bool RunExternalCommand( DocumentInfo Doc, string Command )
     {
-      string[] commands = System.Text.RegularExpressions.Regex.Split(Command, System.Environment.NewLine);
+      string[] commands = System.Text.RegularExpressions.Regex.Split( Command, System.Environment.NewLine );
 
       Core.MainForm.SetGUIForWaitOnExternalTool( true );
       foreach ( string command in commands )

@@ -522,6 +522,8 @@ namespace C64Studio
         macroInfo += "$(BuildTargetFilenameWithoutExtension) = " + Core.MainForm.FillParameters( "$(BuildTargetFilenameWithoutExtension)", Document, false, out error ) + System.Environment.NewLine;
         macroInfo += "$(DebugStartAddress) = " + Core.MainForm.FillParameters( "$(DebugStartAddress)", Document, false, out error ) + System.Environment.NewLine;
         macroInfo += "$(DebugStartAddressHex) = " + Core.MainForm.FillParameters( "$(DebugStartAddressHex)", Document, false, out error ) + System.Environment.NewLine;
+
+        macroInfo += System.Environment.NewLine + System.Environment.NewLine + "Any other value will be calculated as expression, including symbols of the current build. Prefix with '0x' to output the value hexadecimal.";
       }
       System.Windows.Forms.MessageBox.Show( macroInfo, "Macros" );
     }
