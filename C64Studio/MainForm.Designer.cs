@@ -100,6 +100,7 @@
       this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
       this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.findReplaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.findAllReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.buildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.compileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.buildToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -194,6 +195,8 @@
       this.mainToolFind = new System.Windows.Forms.ToolStripButton();
       this.mainToolFindReplace = new System.Windows.Forms.ToolStripButton();
       this.mainToolPrint = new System.Windows.Forms.ToolStripButton();
+      this.btnNavigateBackward = new System.Windows.Forms.ToolStripButton();
+      this.btnNavigateForward = new System.Windows.Forms.ToolStripButton();
       this.mainStatus = new System.Windows.Forms.StatusStrip();
       this.statusLabelInfo = new System.Windows.Forms.ToolStripStatusLabel();
       this.statusProgress = new System.Windows.Forms.ToolStripProgressBar();
@@ -205,7 +208,9 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
-      this.findAllReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.navigateBackwardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.navigateForwardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -720,7 +725,10 @@
             this.toolStripSeparator10,
             this.searchToolStripMenuItem,
             this.findReplaceToolStripMenuItem,
-            this.findAllReferencesToolStripMenuItem});
+            this.findAllReferencesToolStripMenuItem,
+            this.toolStripSeparator16,
+            this.navigateBackwardToolStripMenuItem,
+            this.navigateForwardToolStripMenuItem});
       this.editToolStripMenuItem.Name = "editToolStripMenuItem";
       this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
       this.editToolStripMenuItem.Text = "&Edit";
@@ -795,6 +803,12 @@
       this.findReplaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.findReplaceToolStripMenuItem.Text = "&Find/Replace";
       this.findReplaceToolStripMenuItem.Click += new System.EventHandler(this.findReplaceToolStripMenuItem_Click);
+      // 
+      // findAllReferencesToolStripMenuItem
+      // 
+      this.findAllReferencesToolStripMenuItem.Name = "findAllReferencesToolStripMenuItem";
+      this.findAllReferencesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.findAllReferencesToolStripMenuItem.Text = "Find all references";
       // 
       // buildToolStripMenuItem
       // 
@@ -1269,10 +1283,12 @@
             this.mainToolRedo,
             this.mainToolFind,
             this.mainToolFindReplace,
-            this.mainToolPrint});
+            this.mainToolPrint,
+            this.btnNavigateBackward,
+            this.btnNavigateForward});
       this.mainTools.Location = new System.Drawing.Point(0, 24);
       this.mainTools.Name = "mainTools";
-      this.mainTools.Size = new System.Drawing.Size(777, 27);
+      this.mainTools.Size = new System.Drawing.Size(823, 27);
       this.mainTools.TabIndex = 1;
       this.mainTools.Text = "toolStrip1";
       // 
@@ -1600,6 +1616,26 @@
       this.mainToolPrint.Text = "Print Source Code";
       this.mainToolPrint.Click += new System.EventHandler(this.mainToolPrint_Click);
       // 
+      // btnNavigateBackward
+      // 
+      this.btnNavigateBackward.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.btnNavigateBackward.Image = ((System.Drawing.Image)(resources.GetObject("btnNavigateBackward.Image")));
+      this.btnNavigateBackward.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.btnNavigateBackward.Name = "btnNavigateBackward";
+      this.btnNavigateBackward.Size = new System.Drawing.Size(23, 24);
+      this.btnNavigateBackward.Text = "Navigate to Previous";
+      this.btnNavigateBackward.Click += new System.EventHandler(this.btnNavigatePrevious_Click);
+      // 
+      // btnNavigateForward
+      // 
+      this.btnNavigateForward.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.btnNavigateForward.Image = ((System.Drawing.Image)(resources.GetObject("btnNavigateForward.Image")));
+      this.btnNavigateForward.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.btnNavigateForward.Name = "btnNavigateForward";
+      this.btnNavigateForward.Size = new System.Drawing.Size(23, 24);
+      this.btnNavigateForward.Text = "Navigate Forward";
+      this.btnNavigateForward.Click += new System.EventHandler(this.btnNavigateForward_Click);
+      // 
       // mainStatus
       // 
       this.mainStatus.ImageScalingSize = new System.Drawing.Size(28, 28);
@@ -1647,7 +1683,7 @@
             this.mainDebugStepInto,
             this.mainDebugStepOver,
             this.mainDebugStepOut});
-      this.debugTools.Location = new System.Drawing.Point(777, 24);
+      this.debugTools.Location = new System.Drawing.Point(823, 24);
       this.debugTools.Name = "debugTools";
       this.debugTools.Size = new System.Drawing.Size(235, 27);
       this.debugTools.TabIndex = 2;
@@ -1719,11 +1755,24 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
-      // findAllReferencesToolStripMenuItem
+      // navigateBackwardToolStripMenuItem
       // 
-      this.findAllReferencesToolStripMenuItem.Name = "findAllReferencesToolStripMenuItem";
-      this.findAllReferencesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-      this.findAllReferencesToolStripMenuItem.Text = "Find all references";
+      this.navigateBackwardToolStripMenuItem.Name = "navigateBackwardToolStripMenuItem";
+      this.navigateBackwardToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.navigateBackwardToolStripMenuItem.Text = "Navigate backward";
+      this.navigateBackwardToolStripMenuItem.Click += new System.EventHandler(this.navigateBackwardToolStripMenuItem_Click);
+      // 
+      // navigateForwardToolStripMenuItem
+      // 
+      this.navigateForwardToolStripMenuItem.Name = "navigateForwardToolStripMenuItem";
+      this.navigateForwardToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.navigateForwardToolStripMenuItem.Text = "Navigate forward";
+      this.navigateForwardToolStripMenuItem.Click += new System.EventHandler(this.navigateForwardToolStripMenuItem_Click);
+      // 
+      // toolStripSeparator16
+      // 
+      this.toolStripSeparator16.Name = "toolStripSeparator16";
+      this.toolStripSeparator16.Size = new System.Drawing.Size(177, 6);
       // 
       // MainForm
       // 
@@ -1937,6 +1986,11 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
     private System.Windows.Forms.ToolStripMenuItem findReferencesToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem findAllReferencesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripButton btnNavigateBackward;
+    private System.Windows.Forms.ToolStripButton btnNavigateForward;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
+    private System.Windows.Forms.ToolStripMenuItem navigateBackwardToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem navigateForwardToolStripMenuItem;
   }
 }
 

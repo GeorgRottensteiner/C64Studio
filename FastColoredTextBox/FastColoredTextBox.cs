@@ -113,6 +113,7 @@ namespace FastColoredTextBoxNS
     private bool needRiseSelectionChangedDelayed;
     private bool needRiseTextChangedDelayed;
     private bool needRiseVisibleRangeChangedDelayed;
+    private bool needLineVisitedChangedDelayed;
     private Color paddingBackColor;
     private int preferredLineWidth;
     private Range rightBracketPosition;
@@ -2524,6 +2525,12 @@ namespace FastColoredTextBoxNS
     public event EventHandler<VisualMarkerEventArgs> VisualMarkerClick;
 
     /// <summary>
+    /// </summary>
+    [Browsable( true )]
+    [Description( "Delay called after new line is visited" )]
+    public event EventHandler<LineVisitedArgs> LineVisited;
+
+    /// <summary>
     /// It occurs before visible char is entered (alphabetic, digit, punctuation, DEL, BACKSPACE)
     /// </summary>
     /// <remarks>Set Handle to True for cancel key</remarks>
@@ -2913,6 +2920,11 @@ namespace FastColoredTextBoxNS
       {
         needRiseVisibleRangeChangedDelayed = false;
         OnVisibleRangeChangedDelayed();
+      }
+      if ( needLineVisitedChangedDelayed )
+      {
+        needLineVisitedChangedDelayed = false;
+        OnLineVisitedDelayed();
       }
     }
 
@@ -7047,6 +7059,7 @@ namespace FastColoredTextBoxNS
         HighlightFoldings();
       //
       needRiseSelectionChangedDelayed = true;
+      needLineVisitedChangedDelayed = true;
       ResetTimer( timer );
 
       if ( SelectionChanged != null )
@@ -7056,6 +7069,18 @@ namespace FastColoredTextBoxNS
             Console.WriteLine("OnSelectionChanged: "+ sw.ElapsedMilliseconds);
 #endif
     }
+
+
+
+    public virtual void OnLineVisitedDelayed()
+    {
+      if ( LineVisited != null )
+      {
+        LineVisited( this, new LineVisitedArgs( Selection.Start.iLine, this ) );
+      }
+    }
+
+
 
     //find folding markers for highlighting
     private void HighlightFoldings()
@@ -9650,6 +9675,22 @@ window.status = ""#print"";
       private set;
     }
   }
+
+
+
+  public class LineVisitedArgs : EventArgs
+  {
+    public int                  LineIndex { get; private set; }
+    public FastColoredTextBox   Control { get; private set; }
+
+    public LineVisitedArgs( int LineIndex, FastColoredTextBox Control )
+    {
+      this.LineIndex  = LineIndex;
+      this.Control    = Control;
+    }
+  }
+
+
 
   /// <summary>
   /// TextChanged event argument

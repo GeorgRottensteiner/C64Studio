@@ -3546,5 +3546,12 @@ namespace C64Studio
 
 
 
+    private void editSource_LineVisited( object sender, LineVisitedArgs e )
+    {
+      Core.Navigating.VisitedLine( DocumentInfo, e.LineIndex );
+    }
+
+
+
   }
 }

@@ -16,6 +16,11 @@ namespace C64Studio
 
     public int    LastShownMessageIndex = -1;
 
+    public List<GR.Generic.Tupel<DocumentInfo,int>>   SourcesVisited = new List<GR.Generic.Tupel<DocumentInfo, int>>();
+    private int               CurrentVisitedSource = -1;
+
+
+
     public delegate void OpenDocumentAndGotoLineCallback( Project MarkProject, DocumentInfo Document, int Line );
 
 
@@ -342,6 +347,108 @@ namespace C64Studio
       }
 
       return null;
+    }
+
+
+
+    public void VisitedLine( DocumentInfo Doc, int LineIndex )
+    {
+      if ( CurrentVisitedSource == -1 )
+      {
+        SourcesVisited.Add( new GR.Generic.Tupel<DocumentInfo, int>( Doc, LineIndex ) );
+      }
+      else if ( CurrentVisitedSource < SourcesVisited.Count )
+      {
+        if ( ( SourcesVisited[CurrentVisitedSource].first == Doc )
+        &&   ( SourcesVisited[CurrentVisitedSource].second == LineIndex ) )
+        {
+          // was a visit from the list
+        }
+        else
+        {
+          // a new move, remove all after the current position
+          SourcesVisited.RemoveRange( CurrentVisitedSource, SourcesVisited.Count - CurrentVisitedSource );
+          CurrentVisitedSource = -1;
+
+          SourcesVisited.Add( new GR.Generic.Tupel<DocumentInfo, int>( Doc, LineIndex ) );
+        }
+      }
+      else
+      {
+        CurrentVisitedSource = -1;
+      }
+      Core.MainForm.UpdateUndoSettings();
+    }
+
+
+
+    public bool NavigateForwardPossible
+    {
+      get
+      {
+        return ( ( SourcesVisited.Count > 0 )
+            &&   ( CurrentVisitedSource != -1 )
+            &&   ( CurrentVisitedSource + 1 < SourcesVisited.Count ) );
+      }
+    }
+
+
+
+    public bool NavigateBackwardPossible
+    {
+      get
+      {
+        return ( ( SourcesVisited.Count > 0 )
+              && ( ( CurrentVisitedSource == -1 )
+              ||   ( CurrentVisitedSource > 0 ) ) );
+      }
+    }
+
+
+
+    public void NavigateBack()
+    {
+      if ( SourcesVisited.Count == 0 )
+      {
+        return;
+      }
+
+      if ( CurrentVisitedSource == -1 )
+      {
+        CurrentVisitedSource = SourcesVisited.Count - 1;
+      }
+      if ( CurrentVisitedSource - 1 < 0 )
+      {
+        return;
+      }
+      --CurrentVisitedSource;
+
+      Core.MainForm.UpdateUndoSettings();
+
+      OpenDocumentAndGotoLine( null, SourcesVisited[CurrentVisitedSource].first, SourcesVisited[CurrentVisitedSource].second );
+    }
+
+
+
+    public void NavigateForward()
+    {
+      if ( SourcesVisited.Count == 0 )
+      {
+        return;
+      }
+
+      if ( CurrentVisitedSource == -1 )
+      {
+        CurrentVisitedSource = 0;
+      }
+      if ( CurrentVisitedSource + 1 >= SourcesVisited.Count )
+      {
+        return;
+      }
+      ++CurrentVisitedSource;
+
+      Core.MainForm.UpdateUndoSettings();
+      OpenDocumentAndGotoLine( null, SourcesVisited[CurrentVisitedSource].first, SourcesVisited[CurrentVisitedSource].second );
     }
 
 

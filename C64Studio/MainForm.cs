@@ -627,6 +627,10 @@ namespace C64Studio
       StudioCore.Settings.Functions[Function.PRINT].ToolBarButton = mainToolPrint;
       StudioCore.Settings.Functions[Function.BUILD_TO_PREPROCESSED_FILE].MenuItem = preprocessedFileToolStripMenuItem;
       StudioCore.Settings.Functions[Function.FIND_ALL_REFERENCES].MenuItem = findAllReferencesToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.NAVIGATE_BACK].MenuItem = navigateBackwardToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.NAVIGATE_BACK].ToolBarButton = btnNavigateBackward;
+      StudioCore.Settings.Functions[Function.NAVIGATE_FORWARD].MenuItem = navigateForwardToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.NAVIGATE_FORWARD].ToolBarButton = btnNavigateForward;
 
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new C64Studio.Converter.PETSCIIToCharConverter();
@@ -5837,6 +5841,15 @@ namespace C64Studio
 
     public void UpdateUndoSettings()
     {
+      if ( InvokeRequired )
+      {
+        Invoke( new ParameterLessCallback( UpdateUndoSettings ) );
+        return;
+      }
+
+      btnNavigateForward.Enabled = StudioCore.Navigating.NavigateForwardPossible;
+      btnNavigateBackward.Enabled = StudioCore.Navigating.NavigateBackwardPossible;
+
       if ( ActiveDocument == null )
       {
         mainToolUndo.Enabled = false;
@@ -5850,41 +5863,34 @@ namespace C64Studio
         deleteToolStripMenuItem.Enabled = false;
         return;
       }
-      if ( InvokeRequired )
+      mainToolUndo.Enabled = ActiveDocument.UndoPossible;
+      mainToolRedo.Enabled = ActiveDocument.RedoPossible;
+      undoToolStripMenuItem.Enabled = ActiveDocument.UndoPossible;
+      redoToolStripMenuItem.Enabled = ActiveDocument.RedoPossible;
+
+      copyToolStripMenuItem.Enabled = ActiveDocument.CopyPossible;
+      cutToolStripMenuItem.Enabled = ActiveDocument.CutPossible;
+      pasteToolStripMenuItem.Enabled = ActiveDocument.PastePossible;
+      deleteToolStripMenuItem.Enabled = ActiveDocument.DeletePossible;
+
+      mainToolUndo.ToolTipText = ActiveDocument.UndoInfo;
+      mainToolRedo.ToolTipText = ActiveDocument.RedoInfo;
+
+
+      bool modifications = false;
+      foreach ( BaseDocument doc in panelMain.Contents )
       {
-        Invoke( new ParameterLessCallback( UpdateUndoSettings ) );
-      }
-      else
-      {
-        mainToolUndo.Enabled = ActiveDocument.UndoPossible;
-        mainToolRedo.Enabled = ActiveDocument.RedoPossible;
-        undoToolStripMenuItem.Enabled = ActiveDocument.UndoPossible;
-        redoToolStripMenuItem.Enabled = ActiveDocument.RedoPossible;
-
-        copyToolStripMenuItem.Enabled = ActiveDocument.CopyPossible;
-        cutToolStripMenuItem.Enabled = ActiveDocument.CutPossible;
-        pasteToolStripMenuItem.Enabled = ActiveDocument.PastePossible;
-        deleteToolStripMenuItem.Enabled = ActiveDocument.DeletePossible;
-
-        mainToolUndo.ToolTipText = ActiveDocument.UndoInfo;
-        mainToolRedo.ToolTipText = ActiveDocument.RedoInfo;
-
-
-        bool modifications = false;
-        foreach ( BaseDocument doc in panelMain.Contents )
+        if ( doc.Modified )
         {
-          if ( doc.Modified )
-          {
-            modifications = true;
-            break;
-          }
+          modifications = true;
+          break;
         }
-        saveToolStripMenuItem.Enabled = ActiveDocument.Modified;
-        saveAsToolStripMenuItem.Enabled = true;
-        saveAllToolStripMenuItem.Enabled = modifications;
-        mainToolSave.Enabled = ActiveDocument.Modified;
-        mainToolSaveAll.Enabled = modifications;
       }
+      saveToolStripMenuItem.Enabled = ActiveDocument.Modified;
+      saveAsToolStripMenuItem.Enabled = true;
+      saveAllToolStripMenuItem.Enabled = modifications;
+      mainToolSave.Enabled = ActiveDocument.Modified;
+      mainToolSaveAll.Enabled = modifications;
     }
 
 
@@ -7050,6 +7056,34 @@ namespace C64Studio
     private void checkForUpdateToolStripMenuItem_Click( object sender, EventArgs e )
     {
       AddTask( new Tasks.TaskCheckForUpdate() );
+    }
+
+
+
+    private void btnNavigatePrevious_Click( object sender, EventArgs e )
+    {
+      StudioCore.Navigating.NavigateBack();
+    }
+
+
+
+    private void btnNavigateForward_Click( object sender, EventArgs e )
+    {
+      StudioCore.Navigating.NavigateForward();
+    }
+
+
+
+    private void navigateBackwardToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      StudioCore.Navigating.NavigateBack();
+    }
+
+
+
+    private void navigateForwardToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      StudioCore.Navigating.NavigateForward();
     }
 
 
