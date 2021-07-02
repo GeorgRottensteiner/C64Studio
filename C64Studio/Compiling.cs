@@ -187,6 +187,7 @@ namespace C64Studio
 
         if ( baseDoc.Modified )
         {
+          Core.AddToOutput( "Component '" + baseDoc.DocumentInfo.DocumentFilename + "' needs rebuilding." );
           return true;
         }
       }
@@ -210,6 +211,7 @@ namespace C64Studio
           }
           if ( NeedsRebuild( elementDependency.DocumentInfo, ConfigSetting ) )
           {
+            Core.AddToOutput( "Dependency '" + elementDependency.DocumentInfo.DocumentFilename + "' needs rebuilding." + System.Environment.NewLine );
             return true;
           }
           foreach ( var rebuildFile in m_RebuiltFiles )
@@ -261,23 +263,29 @@ namespace C64Studio
         {
           // no build time stored yet, needs rebuild
           DocInfo.DeducedDependency[ConfigSetting] = new DependencyBuildState();
+
+          Core.AddToOutput( "No last build time found for configuration '" + ConfigSetting + "', need rebuilding." + System.Environment.NewLine );
           return true;
-        }}
+        }
+      }
       if ( DocInfo.Compilable )
       {
         if ( !DocInfo.HasBeenSuccessfullyBuilt )
         {
+          Core.AddToOutput( "Element '" + DocInfo.DocumentFilename + "' was not built successfully last time." + System.Environment.NewLine );
           return true;
         }
       }
       if ( DocInfo.Project == null )
       {
+        Core.AddToOutput( "Element '" + DocInfo.DocumentFilename + "' has no project, therefor needs rebuilding." + System.Environment.NewLine );
         return true;
       }
       if ( DocInfo.DeducedDependency[ConfigSetting] == null )
       {
         // no build time stored yet, needs rebuild
         DocInfo.DeducedDependency[ConfigSetting] = new DependencyBuildState();
+        Core.AddToOutput( "No build time stored for '" + ConfigSetting + "' yet, therefor needs rebuilding." + System.Environment.NewLine );
         return true;
       }
       foreach ( KeyValuePair<string, DateTime> dependency in DocInfo.DeducedDependency[ConfigSetting].BuildState )
@@ -294,6 +302,7 @@ namespace C64Studio
         if ( fileTime != dependency.Value )
         {
           //Debug.Log( "File time differs for " + dependency.Key );
+          Core.AddToOutput( "File '" + dependency.Key + "' was modified, therefor needs rebuilding." + System.Environment.NewLine );
           return true;
         }
       }

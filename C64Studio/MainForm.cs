@@ -4592,6 +4592,44 @@ namespace C64Studio
             }
           }
           return true;
+        case C64Studio.Types.Function.SAVE_DOCUMENT_COPY_AS:
+          {
+            // save current document as
+            BaseDocument docToSave = ActiveContent;
+            if ( ( docToSave != null )
+            &&   ( !docToSave.IsSaveable ) )
+            {
+              docToSave = ActiveDocument;
+            }
+            if ( ( docToSave == null )
+            ||   ( !docToSave.IsSaveable ) )
+            {
+              break;
+            }
+
+            if ( docToSave.DocumentInfo.Project == null )
+            {
+              docToSave.SaveAs();
+              return true;
+            }
+
+            if ( ( docToSave.DocumentInfo.Project == null )
+            ||   ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
+            ||   ( docToSave.DocumentInfo.Element == null ) )
+            {
+              // no project yet (or no project element)
+              if ( !SaveProject( docToSave.DocumentInfo.Project ) )
+              {
+                return true;
+              }
+            }
+            docToSave.SaveAs();
+            if ( !SaveProject( docToSave.DocumentInfo.Project ) )
+            {
+              return true;
+            }
+          }
+          return true;
         case C64Studio.Types.Function.COMPILE:
           {
             DocumentInfo docToCompile = DetermineDocumentToCompile();
@@ -5782,9 +5820,12 @@ namespace C64Studio
 
     private void mainToolConfig_SelectedIndexChanged( object sender, EventArgs e )
     {
-      m_CurrentProject.Settings.CurrentConfig = m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() );
+      if ( m_CurrentProject.Settings.CurrentConfig != m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() ) )
+      {
+        m_CurrentProject.Settings.CurrentConfig = m_CurrentProject.Settings.Configuration( mainToolConfig.SelectedItem.ToString() );
 
-      ProjectConfigChanged();
+        ProjectConfigChanged();
+      }
     }
 
 
@@ -7084,6 +7125,13 @@ namespace C64Studio
     private void navigateForwardToolStripMenuItem_Click( object sender, EventArgs e )
     {
       StudioCore.Navigating.NavigateForward();
+    }
+
+
+
+    private void saveCopyAsToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.SAVE_DOCUMENT_COPY_AS );
     }
 
 

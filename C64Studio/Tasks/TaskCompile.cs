@@ -31,6 +31,7 @@ namespace C64Studio.Tasks
     protected override bool ProcessTask()
     {
       Core.SetStatus( "Building..." );
+      Core.ClearOutput();
       Core.Compiling.m_RebuiltFiles.Clear();
       Core.Compiling.m_RebuiltBuildConfigFiles.Clear();
       Core.Compiling.m_BuildChainStack.Clear();
@@ -74,7 +75,6 @@ namespace C64Studio.Tasks
         Core.MainForm.AppState = Types.StudioState.NORMAL;
         return false;
       }
-      Core.ClearOutput();
       Core.AddToOutput( "Determined " + baseDoc.DocumentFilename + " as active document" + System.Environment.NewLine );
 
       Types.BuildInfo buildInfo = new C64Studio.Types.BuildInfo();

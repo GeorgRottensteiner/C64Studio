@@ -2317,11 +2317,13 @@ namespace FastColoredTextBoxNS
 
     public void StripTrailingSpaces()
     {
+      RemoveTrailingSpaces();
+      /*
       foreach ( var line in lines )
       {
         line.StripTrailingSpaces();
       }
-      ClearUndo();
+      ClearUndo();*/
     }
 
 
@@ -8241,6 +8243,64 @@ namespace FastColoredTextBoxNS
       Selection.EndUpdate();
       EndUpdate();
     }
+
+
+    /// <summary>
+    /// Remove spaces from the end of lines
+    /// </summary>
+    public virtual void RemoveTrailingSpaces()
+    {
+      Range old = Selection.Clone();
+
+      int from = 0;
+      int to = Lines.Count - 1;
+      int   startOffset = old.Start.iChar;
+      if ( old.Start.iLine > old.End.iLine )
+      {
+        startOffset = old.End.iChar;
+      }
+      BeginUpdate();
+      Selection.BeginUpdate();
+      lines.Manager.BeginAutoUndoCommands();
+      lines.Manager.ExecuteCommand( new SelectCommand( TextSource ) );
+      for ( int i = from; i <= to; i++ )
+      {
+        // retabify to get the real number of chars
+        int lastSpacePos = lines[i].Text.Length;
+        while ( lastSpacePos > 0 )
+        {
+          if ( lines[i].Text[lastSpacePos - 1] == ' ' )
+          {
+            --lastSpacePos;
+          }
+          else
+          {
+            break;
+          }
+        }
+        if ( lastSpacePos < lines[i].Text.Length )
+        {
+          Selection.Start = new Place( lastSpacePos, i );
+          Selection.End = new Place( lines[i].Text.Length, i );
+          ClearSelected();
+        }
+      }
+
+      Selection.Start = new Place( old.Start.iChar, old.Start.iLine );
+
+      if ( Selection.Start.iChar > lines[old.Start.iLine].Length )
+      {
+        Selection.Start = new Place( lines[old.Start.iLine].Length, old.Start.iLine );
+      }
+
+      Selection.End = new Place( Selection.Start.iChar, Selection.Start.iLine );
+      needRecalc = true;
+      lines.Manager.EndAutoUndoCommands();
+      Selection.EndUpdate();
+      EndUpdate();
+    }
+
+
 
     /// <summary>
     /// Begins AutoUndo block.
