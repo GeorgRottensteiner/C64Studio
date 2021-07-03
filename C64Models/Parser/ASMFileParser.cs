@@ -2697,7 +2697,7 @@ namespace C64Studio.Parser
         if ( m_CompileCurrentAddress == -1 )
         {
           if ( ( lineInfo.NumBytes == 0 )
-          &&   ( lineInfo.AddressSource != "*" ) )
+          &&   ( !lineInfo.AddressSource.StartsWith( "*" ) ) )
           {
             // defines before program counter are allowed
             continue;
@@ -2711,7 +2711,7 @@ namespace C64Studio.Parser
           m_CompileCurrentAddress = lineInfo.AddressStart;
           trueCompileCurrentAddress = m_CompileCurrentAddress;
         }
-        if ( lineInfo.AddressSource == "*" )
+        if ( lineInfo.AddressSource.StartsWith( "*" ) )
         {
           // set program counter
           m_CompileCurrentAddress = lineInfo.AddressStart;
@@ -7758,18 +7758,20 @@ namespace C64Studio.Parser
           List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
           int address = -1;
 
-          /*
-          if ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
-          {
-            defineName = zoneName + defineName;
-          }*/
-
           if ( defineName == "*" )
           {
             // set program step
             int     newStepPos = 0;
 
+            info.AddressSource = "*";
+
             List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length );
+            if ( ( tokens.Count > 0 )
+            &&   ( tokens[tokens.Count - 1].Type == TokenInfo.TokenType.LITERAL_STRING ) )
+            {
+              info.AddressSource = "*" + tokens[tokens.Count - 1].Content;
+              tokens.RemoveAt( tokens.Count - 1 );
+            }
             if ( !EvaluateTokens( lineIndex, tokens, out newStepPos ) )
             {
               AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate * position value", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
@@ -7790,33 +7792,11 @@ namespace C64Studio.Parser
             }
             if ( !EvaluateTokens( lineIndex, valueTokens, out address ) )
             {
-              if ( defineName == "*" )
-              {
-                AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Cannot evaluate expression for *", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-              }
-              else
-              {
-                AddUnparsedLabel( defineName, defineValue, lineIndex );
-              }
+              AddUnparsedLabel( defineName, defineValue, lineIndex );
             }
             else
             {
               AddConstant( defineName, address, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-              if ( defineName == "*" )
-              {
-                if ( ( address >= 0 )
-                && ( address <= 0xffff ) )
-                {
-                  AddError( lineIndex, Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, "Evaluated constant out of bounds, " + address + " must be >= 0 and <= 65535", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-                }
-                else
-                {
-                  programStepPos = address;
-                  trueCompileCurrentAddress = programStepPos;
-                  info.AddressSource = "*";
-                  //Debug.Log( "Set * to " + address.ToString( "X4" ) );
-                }
-              }
             }
           }
           m_CurrentCommentSB = new StringBuilder();
@@ -10216,7 +10196,7 @@ namespace C64Studio.Parser
           {
             m_CompileCurrentAddress += lineSizeInBytes;
           }
-          if ( info.AddressSource == "*" )
+          if ( info.AddressSource.StartsWith( "*" ) )
           {
             // set program counter
             m_CompileCurrentAddress = info.AddressStart;
@@ -12379,6 +12359,7 @@ namespace C64Studio.Parser
         }
       }
 
+      string  lastAddressSourceDesc = "";
       foreach ( Types.ASM.LineInfo line in ASMFileInfo.LineInfo.Values )
       {
         if ( currentAddress == -1 )
@@ -12400,9 +12381,6 @@ namespace C64Studio.Parser
             }
             memoryBlockStartAddress = currentAddress;
             memoryBlockActualDataLength = 0;
-
-
-            //Debug.Log( "ASM - new block starts at " + line.AddressStart );
 
             var asmSegment = new Types.ASMSegment();
             asmSegment.StartAddress = line.AddressStart;
@@ -12437,28 +12415,6 @@ namespace C64Studio.Parser
             memoryBlockActualDataLength += (int)line.LineData.Length;
           }
 
-          /*
-          if ( trueCurrentAddress == currentAddress )
-          {
-            // was proper PC before
-            if ( line.PseudoPCOffset >= 0 )
-            {
-              // entered PSEUDOPC
-            }
-            else
-            {
-              // proper PC to proper PC with jump
-            }
-          }
-          else
-          {
-            // was pseudo PC before
-            if ( line.PseudoPCOffset == -2 )
-            {
-              // entered REALPC
-            }
-          }*/
-
           // need to fill a gap?
           if ( trueCurrentAddress == currentAddress )
           {
@@ -12475,13 +12431,14 @@ namespace C64Studio.Parser
                 // need to go forward 
                 int   newBytes = line.AddressStart - currentAddress;
 
-                //Debug.Log( "Filler!" );
-
                 if ( currentAddress - fileStartAddress + newBytes > result.Length )
                 {
                   if ( memoryBlockActualDataLength > 0 )
                   {
-                    memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, currentAddress - memoryBlockStartAddress ) );
+                    var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, currentAddress - memoryBlockStartAddress );
+                    entry.Description = lastAddressSourceDesc;
+                    memoryMap.InsertEntry( entry );
+                    lastAddressSourceDesc = "";
                   }
 
                   result.Append( new GR.Memory.ByteBuffer( (uint)( currentAddress - fileStartAddress + newBytes - result.Length ) ) );
@@ -12490,8 +12447,6 @@ namespace C64Studio.Parser
                   memoryBlockLength = 0;
                   memoryBlockActualDataLength = 0;
                 }
-                //result.Append( new GR.Memory.ByteBuffer( (uint)( line.AddressStart - currentAddress ) ) );
-
                 // went forward in memory
                 var asmSegment = new Types.ASMSegment();
                 asmSegment.StartAddress     = line.AddressStart;
@@ -12512,9 +12467,22 @@ namespace C64Studio.Parser
 
                 if ( memoryBlockActualDataLength > 0 )
                 {
-                  //memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, currentAddress - memoryBlockStartAddress ) );
-                  memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength ) );
+                  var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
+                  entry.Description = lastAddressSourceDesc;
+                  memoryMap.InsertEntry( entry );
+                  lastAddressSourceDesc = "";
                 }
+                memoryBlockStartAddress = line.AddressStart;
+                memoryBlockLength = 0;
+              }
+              else if ( line.AddressSource.StartsWith( "*" ) )
+              {
+                // a new block starts here
+                var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
+                entry.Description = lastAddressSourceDesc;
+                memoryMap.InsertEntry( entry );
+                lastAddressSourceDesc = "";
+
                 memoryBlockStartAddress = line.AddressStart;
                 memoryBlockLength = 0;
               }
@@ -12535,8 +12503,10 @@ namespace C64Studio.Parser
                 // only add to memory map when it has actual data (e.g. not virtual)
                 if ( memoryBlockActualDataLength > 0 )
                 {
-                  //memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, currentAddress - memoryBlockStartAddress ) );
-                  memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength ) );
+                  var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
+                  entry.Description = lastAddressSourceDesc;
+                  memoryMap.InsertEntry( entry );
+                  lastAddressSourceDesc = "";
                 }
 
                 result.Append( new GR.Memory.ByteBuffer( (uint)( line.AddressStart - currentAddress ) ) );
@@ -12587,6 +12557,22 @@ namespace C64Studio.Parser
           currentAddress += (int)line.LineData.Length;
           trueCurrentAddress += (int)line.LineData.Length;
         }
+        if ( line.AddressSource.StartsWith( "*" ) )
+        {
+          if ( ( memoryMap.Entries.Count > 0 )
+          &&   ( memoryMap.Entries[memoryMap.Entries.Count - 1].StartAddress != line.AddressStart )
+          &&   ( memoryBlockActualDataLength > 0 ) )
+          {
+            // a new memory map entry
+            var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
+            entry.Description = lastAddressSourceDesc;
+            memoryMap.InsertEntry( entry );
+            lastAddressSourceDesc = "";
+            memoryBlockStartAddress = line.AddressStart;
+            memoryBlockLength = 0;
+          }
+          lastAddressSourceDesc = line.AddressSource.Substring( 1 ).Trim( '"' );
+        }
       }
 
       if ( memoryBlockStartAddress > -1 )
@@ -12596,37 +12582,11 @@ namespace C64Studio.Parser
         if ( ( memoryBlockLength > 0 )
         &&   ( memoryBlockActualDataLength > 0 ) )*/
         {
-          //memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockLength ) );
-          memoryMap.InsertEntry( new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength ) );
+          var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
+          entry.Description = lastAddressSourceDesc;
+          memoryMap.InsertEntry( entry );
         }
       }
-
-      // Why did I do that? why add a memory block if it could re-add a virtual block?
-      /*
-      int     previousLabelStart = -1;
-      string  previousLabelName = "";
-      foreach ( var label in ASMFileInfo.Labels )
-      {
-        if ( ( label.Value.Type == Types.SymbolInfo.Types.LABEL )
-        &&   ( label.Key.IndexOf( '.' ) == -1 )
-        &&   ( !label.Key.StartsWith( InternalLabelPrefix ) ) )
-        {
-          if ( previousLabelStart != -1 )
-          {
-            memoryMap.InsertEntry( new Types.MemoryMapEntry( previousLabelStart, label.Value.AddressOrValue - previousLabelStart, previousLabelName ) );
-          }
-          previousLabelStart = label.Value.AddressOrValue;
-          previousLabelName = label.Key;
-        }
-      }*/
-      /*
-      foreach ( string label in m_Labels.Keys )
-      {
-        dh.Log( "Label " + label + " = " + m_Labels[label].AddressOrValue.ToString( "x" ) );
-      }
-       */
-
-      //memoryMap.Dump();
 
       // determine load address
       int lowestStart = 65536;
@@ -12737,6 +12697,7 @@ namespace C64Studio.Parser
       AssembledOutput.Assembly = assembledData;
       AssembledOutput.OriginalAssemblyStartAddress  = lowestStart;
       AssembledOutput.OriginalAssemblySize          = highestEnd - lowestStart;
+      AssembledOutput.MemoryMap                     = memoryMap;
 
       string    outputPureFilename = "HURZ";
       try

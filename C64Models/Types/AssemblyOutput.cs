@@ -9,5 +9,7 @@ namespace C64Studio.Parser
     public GR.Memory.ByteBuffer       Assembly = null;
     public int                        OriginalAssemblyStartAddress = -1;
     public int                        OriginalAssemblySize = 0;
+
+    public Types.MemoryMap            MemoryMap = null;
   }
 }
