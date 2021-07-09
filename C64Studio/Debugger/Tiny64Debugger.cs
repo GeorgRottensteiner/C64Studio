@@ -50,6 +50,9 @@ namespace C64Studio
 
       m_Emulator.Reset();
 
+      // to shut up the warning for now
+      DebugEvent( new DebugEventData() );
+
       return true;
     }
 

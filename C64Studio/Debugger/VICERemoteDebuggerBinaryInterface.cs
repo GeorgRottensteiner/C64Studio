@@ -267,7 +267,8 @@ namespace C64Studio
           return false;
         }
         byte  apiVersion = m_ReceivedDataBin.ByteAt( curPos + 1 );
-        if ( apiVersion != 1 )
+        if ( ( apiVersion != 1 )
+        &&   ( apiVersion != 2 ) )
         {
           Log( "Unsupported API version " + apiVersion.ToString( "X2" ) + " received - clearing buffer" );
           m_ReceivedDataBin.Clear();
@@ -859,7 +860,8 @@ namespace C64Studio
         }
       }
 
-      if ( !skipRefresh )
+      if ( ( !skipRefresh )
+      &&   ( !WasInitialBreakpoint ) )
       {
         QueueRequest( DebugRequestType.REFRESH_VALUES );
         RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
@@ -1160,6 +1162,7 @@ namespace C64Studio
 
     private bool SendBinaryCommand( BinaryMonitorCommand Command, ByteBuffer RequestData, RequestData OriginatingRequest )
     {
+      return true;
       // UGLY HACK
       m_Request = new C64Studio.RequestData( DebugRequestType.NONE );
 

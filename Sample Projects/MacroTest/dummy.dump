@@ -1,43 +1,81 @@
-00  2000              * = $2000
-01  2000              CHARACTER_ROM   = 1024
-02  2000              CUSTOM_CHAR_SET = $4000
-03  2000              !macro copy_character_range_from_rom start, end
-04  ????              ;removed some code for simplicity
-05  ????              ; Copy char rom to ram
-06  ????              !for char = start to end
-07  ????              ldx #0
-08  ????              -
-09  ????              lda CHARACTER_ROM + char*8, x
-10  ????              sta CUSTOM_CHAR_SET + char*8, x
-11  ????              inx
-12  ????              cpx #8
-13  ????              bne -
-14  ????              !end
-15  ????              !end
-16  2000              
-17  2000              ;removed some code for simplicity
-18  2000              ; Copy char rom to ram
-19  2000              ;ex for loop
-20  2000  A2 00       ldx #0
-21  2002              -c64_local_labelcopy_character_range_from_rom_3_16_
-22  2002  BD 00 04    lda CHARACTER_ROM + char*8, x
-23  2005  9D 00 40    sta CUSTOM_CHAR_SET + char*8, x
-24  2008  E8          inx
-25  2009  E0 08       cpx #8
-26  200B  D0 F5       bne -c64_local_labelcopy_character_range_from_rom_3_16_
-27  200D  A2 00       ldx #0
-28  200F              -c64_local_labelcopy_character_range_from_rom_3_16_0__1_27
-29  200F  BD 08 04    lda CHARACTER_ROM + char*8, x
-30  2012  9D 08 40    sta CUSTOM_CHAR_SET + char*8, x
-31  2015  E8          inx
-32  2016  E0 08       cpx #8
-33  2018  D0          bne -c64_local_labelcopy_character_range_from_rom_3_16_0__6_27
-34  201A  A2 00       ldx #0
-35  201C              -c64_local_labelcopy_character_range_from_rom_3_16_0__1_271__1_27
-36  201C  BD 10 04    lda CHARACTER_ROM + char*8, x
-37  201F  9D 10 40    sta CUSTOM_CHAR_SET + char*8, x
-38  2022  E8          inx
-39  2023  E0 08       cpx #8
-40  2025  D0          bne -c64_local_labelcopy_character_range_from_rom_3_16_0__6_271__6_27
-41  2027              ;ex loop end
-42  2027  60          rts
+00  $2000              * = $2000
+01  $2000              
+02  $2000  0C 34 12    nop $1234
+03  $2003  EA          nop
+04  $2004              CHARACTER_ROM   = 1024
+05  $2004              CUSTOM_CHAR_SET = $4000
+06  $2004              !macro copy_character_range_from_rom start, end
+07  ????              ;removed some code for simplicity
+08  ????              ; Copy char rom to ram
+09  ????              !for char = start to end
+10  ????              ldx #0
+11  ????              -
+12  ????              lda CHARACTER_ROM + char*8, x
+13  ????              sta CUSTOM_CHAR_SET + char*8, x
+14  ????              inx
+15  ????              cpx #8
+16  ????              bne -
+17  ????              !end
+18  ????              !end
+19  $2004              
+20  $2004              ;removed some code for simplicity
+21  $2004              ; Copy char rom to ram
+22  $2004              ;ex for loop
+23  $2004  A2 00       ldx #0
+24  $2006              -c64_local_labelcopy_character_range_from_rom_6_19_
+25  $2006  BD 00 04    lda CHARACTER_ROM + char*8, x
+26  $2009  9D 00 40    sta CUSTOM_CHAR_SET + char*8, x
+27  $200C  E8          inx
+28  $200D  E0 08       cpx #8
+29  $200F  D0 F5       bne -c64_local_labelcopy_character_range_from_rom_6_19_
+30  $2011  A2 00       ldx #0
+31  $2013              -c64_local_labelcopy_character_range_from_rom_6_19_
+32  $2013  BD 08 04    lda CHARACTER_ROM + char*8, x
+33  $2016  9D 08 40    sta CUSTOM_CHAR_SET + char*8, x
+34  $2019  E8          inx
+35  $201A  E0 08       cpx #8
+36  $201C  D0 F5       bne -c64_local_labelcopy_character_range_from_rom_6_19_
+37  $201E  A2 00       ldx #0
+38  $2020              -c64_local_labelcopy_character_range_from_rom_6_19_
+39  $2020  BD 10 04    lda CHARACTER_ROM + char*8, x
+40  $2023  9D 10 40    sta CUSTOM_CHAR_SET + char*8, x
+41  $2026  E8          inx
+42  $2027  E0 08       cpx #8
+43  $2029  D0 F5       bne -c64_local_labelcopy_character_range_from_rom_6_19_
+44  $202B              ;ex loop end
+45  $202B  60          rts
+46  $202C              
+47  $202C              
+48  $202C              
+49  $C000              *=$c000
+50  $C000              
+51  $C000              STACK_LEVEL0 = 0
+52  $C000              
+53  $C000              GLOBAL_VAR = 3
+54  $C000              
+55  $C000              
+56  $C000              !macro PUSH value
+57  ????              
+58  ????              ; some fancy code to move stack values down
+59  ????              
+60  ????              STACK_LEVEL0=value
+61  ????              
+62  ????              !end
+63  $C000              
+64  $C000              
+65  $C000              !macro SOME_MACRO_THAT_USES_PUSH
+66  ????              
+67  ????              +PUSH GLOBAL_VAR
+68  ????              
+69  ????              !end
+70  $C000              
+71  $C000              
+72  $C000              
+73  $C000              
+74  $C000              
+75  $C000              
+76  $C000              ; some fancy code to move stack values down
+77  $C000              
+78  $C000              STACK_LEVEL0=GLOBAL_VAR
+79  $C000              
+80  $C000              

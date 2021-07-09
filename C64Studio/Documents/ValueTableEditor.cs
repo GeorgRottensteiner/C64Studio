@@ -182,12 +182,13 @@ namespace C64Studio
 
 
 
-    private bool SaveProject( bool SaveAs )
+    private bool SaveProject( SaveMethod Method )
     {
       string    saveFilename = DocumentInfo.FullPath;
 
       if ( ( string.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
-      ||   ( SaveAs ) )
+      ||   ( Method == SaveMethod.SAVE_AS )
+      ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
       {
         System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
@@ -202,7 +203,9 @@ namespace C64Studio
           return false;
         }
         saveFilename = saveDlg.FileName;
-        if ( !SaveAs )
+
+        // use chosen file name
+        if ( Method == SaveMethod.SAVE )
         {
           DocumentInfo.DocumentFilename = saveDlg.FileName;
           if ( DocumentInfo.Element != null )
@@ -218,7 +221,7 @@ namespace C64Studio
 
       GR.Memory.ByteBuffer dataToSave = SaveToBuffer();
 
-      return SaveDocumentData( saveFilename, dataToSave, SaveAs );
+      return SaveDocumentData( saveFilename, dataToSave, Method );
     }
 
 
@@ -238,7 +241,7 @@ namespace C64Studio
         }
         if ( doSave == DialogResult.Yes )
         {
-          SaveProject( false );
+          SaveProject( BaseDocument.SaveMethod.SAVE );
         }
       }
       Clear();
@@ -253,21 +256,14 @@ namespace C64Studio
 
     private void saveCharsetProjectToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      SaveProject( false );
+      SaveProject( SaveMethod.SAVE );
     }
 
 
 
-    public override bool Save()
+    public override bool Save( SaveMethod Method )
     {
-      return SaveProject( false );
-    }
-
-
-
-    public override bool SaveAs()
-    {
-      return SaveProject( true );
+      return SaveProject( Method );
     }
 
 

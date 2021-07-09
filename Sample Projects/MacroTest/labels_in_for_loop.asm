@@ -8,7 +8,7 @@ SCREEN_COLOR = $d800
 game_loop 
 
 !for i = 0 to 3 
-TODO auto zone
+;TODO auto zone
 ;!zone 
    
           ldx #250 

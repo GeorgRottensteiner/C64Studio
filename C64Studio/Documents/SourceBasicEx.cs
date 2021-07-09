@@ -793,27 +793,25 @@ namespace C64Studio
 
 
 
-    public override bool SaveAs()
+    public override bool Save( SaveMethod Method )
     {
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Save Basic File as";
-      saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_BASIC + Types.Constants.FILEFILTER_ALL );
-      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      if ( ( Method == SaveMethod.SAVE_AS )
+      ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
       {
-        return false;
+        System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+        saveDlg.Title = "Save Basic File as";
+        saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_BASIC + Types.Constants.FILEFILTER_ALL );
+        if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+        {
+          return false;
+        }
+        if ( !DoSave( saveDlg.FileName ) )
+        {
+          return false;
+        }
+        return true;
       }
-      if ( !DoSave( saveDlg.FileName ) )
-      {
-        return false;
-      }
-      return true;
-    }
-
-
-
-    public override bool Save()
-    {
       if ( DocumentInfo.DocumentFilename == null )
       {
         System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
@@ -1025,6 +1023,7 @@ namespace C64Studio
     public override void Undo()
     {
       editSource.Undo();
+      SetModified();
     }
 
 
@@ -1032,6 +1031,7 @@ namespace C64Studio
     public override void Redo()
     {
       editSource.Redo();
+      SetModified();
     }
 
 
@@ -2100,6 +2100,15 @@ namespace C64Studio
       }
       return true;
     }
+
+
+
+    private void editSource_LineVisited( object sender, FastColoredTextBoxNS.LineVisitedArgs e )
+    {
+      Core.Navigating.VisitedLine( DocumentInfo, e.LineIndex );
+    }
+
+
 
   }
 }

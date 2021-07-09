@@ -1954,26 +1954,20 @@ namespace C64Studio
 
 
 
-    public override bool SaveAs()
+    public override bool Save( SaveMethod Method )
     {
-      return SaveCode( true );
+      return SaveCode( Method );
     }
 
 
 
-    public override bool Save()
-    {
-      return SaveCode( false );
-    }
-
-
-
-    private bool SaveCode( bool SaveAs )
+    private bool SaveCode( SaveMethod Method )
     {
       string    saveFilename = "";
 
       if ( ( DocumentInfo.DocumentFilename == null )
-      ||   ( SaveAs ) )
+      ||   ( Method == SaveMethod.SAVE_AS )
+      ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
       {
         System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
@@ -1988,7 +1982,8 @@ namespace C64Studio
           return false;
         }
 
-        if ( SaveAs )
+        if ( ( Method == SaveMethod.SAVE_AS )
+        ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
         {
           saveFilename = saveDlg.FileName;
         }
@@ -2022,7 +2017,7 @@ namespace C64Studio
       {
         return false;
       }
-      if ( !SaveAs )
+      if ( Method == SaveMethod.SAVE )
       {
         SetUnmodified();
       }
@@ -2047,12 +2042,6 @@ namespace C64Studio
           if ( Core.Settings.StripTrailingSpaces )
           {
             editSource.StripTrailingSpaces();
-            /*
-            var lines = editSource.Lines.ToArray();
-
-            editSource.Text = string.Join( "\r\n", lines );
-
-            editSource.Selection.Start = new Place( caretPos, caretLine );*/
           }
         }
         System.IO.File.WriteAllText( Filename, GetContent() );
@@ -2642,6 +2631,7 @@ namespace C64Studio
     public override void Undo()
     {
       editSource.Undo();
+      SetModified();
     }
 
 
@@ -2649,6 +2639,7 @@ namespace C64Studio
     public override void Redo()
     {
       editSource.Redo();
+      SetModified();
     }
 
 

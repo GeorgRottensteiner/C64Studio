@@ -273,7 +273,7 @@ namespace C64Studio
       string  disassembly;
       var settings = new DisassemblerSettings() { AddLineAddresses = true, AddAssembledBytes = true };
 
-      if ( m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out disassembly ) )
+      if ( m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out disassembly, out int dummy ) )
       {
         editDisassembly.Text = disassembly;
 
@@ -455,7 +455,7 @@ namespace C64Studio
 
       var settings = new DisassemblerSettings();
 
-      if ( !m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out disassembly ) )
+      if ( !m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out disassembly, out int dummy ) )
       {
         return;
       }

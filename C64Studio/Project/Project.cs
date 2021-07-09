@@ -887,5 +887,16 @@ namespace C64Studio
       return GR.Path.Append( Settings.BasePath, ItemPath );
     }
 
+
+
+    public void RenameDocumentFile( string OldName, string NewName )
+    {
+      // document is already renamed, and saved with new name
+
+      // update all references to the old file now!
+    }
+
+
+
   }
 }

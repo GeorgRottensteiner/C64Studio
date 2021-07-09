@@ -198,7 +198,8 @@ namespace C64Studio.Types
     BOOKMARK_PREVIOUS,
     NAVIGATE_BACK,
     NAVIGATE_FORWARD,
-    FIND_ALL_REFERENCES
+    FIND_ALL_REFERENCES,
+    SAVE_DOCUMENT_COPY_AS
   }
 
   public enum StudioState

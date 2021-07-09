@@ -9,6 +9,8 @@ namespace C64Studio
     private FastColoredTextBoxNS.TextStyle[]          m_TextStyles = new FastColoredTextBoxNS.TextStyle[(int)Types.ColorableElement.LAST_ENTRY];
     private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
 
+    private int                                       m_AddressToSet = -1;
+
 
 
     public Disassembly( StudioCore Core )
@@ -132,6 +134,22 @@ namespace C64Studio
       e.ChangedRange.SetStyle( m_TextStyles[SyntaxElementStylePrio( Types.ColorableElement.COMMENT )], m_TextRegExp[(int)Types.ColorableElement.COMMENT] );
     }
 
+
+
+    public void SetAddress( int Address )
+    {
+      m_AddressToSet = Address;
+    }
+
+
+
+    public void ReadjustMarkedLine()
+    {
+      if ( m_AddressToSet != -1 )
+      {
+        SetLineMarked( 1, true );
+      }
+    }
 
 
 

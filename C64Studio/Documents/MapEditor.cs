@@ -1159,12 +1159,13 @@ namespace C64Studio
 
 
 
-    private bool SaveProject( bool SaveAs )
+    private bool SaveProject( SaveMethod Method )
     {
       string    saveFilename = DocumentInfo.FullPath;
 
       if ( ( String.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
-      ||   ( SaveAs ) )
+      ||   ( Method == SaveMethod.SAVE_AS )
+      ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
       {
         System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
@@ -1178,7 +1179,8 @@ namespace C64Studio
         {
           return false;
         }
-        if ( SaveAs )
+        if ( ( Method == SaveMethod.SAVE_AS )
+        ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
         {
           saveFilename = saveDlg.FileName;
         }
@@ -1205,7 +1207,7 @@ namespace C64Studio
 
       GR.Memory.ByteBuffer projectFile = SaveToBuffer();
 
-      return SaveDocumentData( saveFilename, projectFile, SaveAs );
+      return SaveDocumentData( saveFilename, projectFile, Method );
     }
 
 
@@ -1225,7 +1227,7 @@ namespace C64Studio
         }
         if ( doSave == DialogResult.Yes )
         {
-          SaveProject( false );
+          SaveProject( SaveMethod.SAVE );
         }
       }
       Clear();
@@ -1241,23 +1243,15 @@ namespace C64Studio
 
     private void saveCharsetProjectToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      SaveProject( false );
+      SaveProject( SaveMethod.SAVE );
     }
 
 
 
-    public override bool Save()
+    public override bool Save( SaveMethod Method )
     {
-      return SaveProject( false );
+      return SaveProject( Method );
     }
-
-
-
-    public override bool SaveAs()
-    {
-      return SaveProject( true );
-    }
-
 
 
 
@@ -3393,7 +3387,7 @@ namespace C64Studio
                                    mapToExport.TileSpacingY * mapToExport.Tiles.Height,
                                    charData, colorData, m_MapProject.Charset );
         document.SetModified();
-        document.Save();
+        document.Save( SaveMethod.SAVE );
       }
       else
       {

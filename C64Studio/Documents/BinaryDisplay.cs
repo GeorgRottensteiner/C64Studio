@@ -354,16 +354,9 @@ namespace C64Studio
 
 
 
-    public override bool SaveAs()
+    public override bool Save( SaveMethod Method )
     {
-      return SaveBinary( true );
-    }
-
-
-
-    public override bool Save()
-    {
-      return SaveBinary( false );
+      return SaveBinary( Method );
     }
 
 
@@ -375,12 +368,13 @@ namespace C64Studio
 
 
 
-    private bool SaveBinary( bool SaveAs )
+    private bool SaveBinary( SaveMethod Method )
     {
       string    saveFilename = "";
 
       if ( ( DocumentInfo.DocumentFilename == null )
-      ||   ( SaveAs ) )
+      ||   ( Method == SaveMethod.SAVE_AS )
+      ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
       {
         System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
@@ -395,7 +389,8 @@ namespace C64Studio
           return false;
         }
 
-        if ( SaveAs )
+        if ( ( Method == SaveMethod.SAVE_AS )
+        ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
         {
           saveFilename = saveDlg.FileName;
         }
@@ -429,7 +424,7 @@ namespace C64Studio
       {
         return false;
       }
-      if ( !SaveAs )
+      if ( Method == SaveMethod.SAVE )
       {
         SetUnmodified();
       }

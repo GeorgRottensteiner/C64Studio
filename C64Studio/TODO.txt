@@ -1,8 +1,12 @@
 ﻿C64Studio
+o Debugging disassembly, show debug highlight on first line with actual code
 o Character Scrolling Effect (in one char, shifting with direction)
   ->also flip char content through a list of other chars content
   ->should display in preview pane, map editor and char screen editor
 o Get rid of GR.Path.IsPathEqual during OnKnownTokensChanged and OnKnownKeywordsChanged!
+o When debugging. I remove some of my watch entries. It goes away from the listview, but, when I press debug again. They are back!!
+  hehe. Its hard to reproduce something, since it takes along time before it actually happens.
+o Color setting: Empty space bg, setting custom color, but does not display as "custom" in combo box
 o Save inbuilt editors automatically
 o Undo for Category-Exchange
 o Scaling: PETSCII table

@@ -144,8 +144,26 @@ namespace C64Studio
 
 
 
-    public override bool Save()
+    public override bool Save( SaveMethod Method )
     {
+      if ( ( Method == SaveMethod.SAVE_AS )
+      ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
+      {
+        // TODO - nur sinnvoll, wenn leere Medien angelegt werden können
+        System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+        saveDlg.Title = "Save media as";
+        if ( m_Media != null )
+        {
+          saveDlg.Filter = m_Media.FileFilter;
+        }
+        if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+        {
+          return false;
+        }
+        return DoSave( saveDlg.FileName );
+      }
+
       if ( String.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
       {
         // TODO - nur sinnvoll, wenn leere Medien angelegt werden können
@@ -177,25 +195,6 @@ namespace C64Studio
         }
       }
       return DoSave( DocumentInfo.FullPath );
-    }
-
-
-
-    public override bool SaveAs()
-    {
-      // TODO - nur sinnvoll, wenn leere Medien angelegt werden können
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Save media as";
-      if ( m_Media != null )
-      {
-        saveDlg.Filter = m_Media.FileFilter;
-      }
-      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-      {
-        return false;
-      }
-      return DoSave( saveDlg.FileName );
     }
 
 
@@ -1113,14 +1112,14 @@ namespace C64Studio
 
     private void saveasToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      SaveAs();
+      Save( SaveMethod.SAVE_AS );
     }
 
 
 
     private void saveToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      Save();
+      Save( SaveMethod.SAVE );
     }
 
 
@@ -1230,7 +1229,7 @@ namespace C64Studio
 
     private void toolStripBtnSave_Click( object sender, EventArgs e )
     {
-      Save();
+      Save( SaveMethod.SAVE );
     }
 
 

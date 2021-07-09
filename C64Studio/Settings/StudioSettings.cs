@@ -236,6 +236,7 @@ namespace C64Studio
       RegisterFunction( Function.SAVE_ALL, "Save All", FunctionStudioState.ANY );
       RegisterFunction( Function.SAVE_DOCUMENT, "Save Document", FunctionStudioState.ANY );
       RegisterFunction( Function.SAVE_DOCUMENT_AS, "Save Document As", FunctionStudioState.ANY );
+      RegisterFunction( Function.SAVE_DOCUMENT_COPY_AS, "Save Document Copy As", FunctionStudioState.ANY );
       RegisterFunction( Function.MOVE_LINE_UP, "Move Line Up", FunctionStudioState.ANY );
       RegisterFunction( Function.MOVE_LINE_DOWN, "Move Line Down", FunctionStudioState.ANY );
       RegisterFunction( Function.COPY_LINE_UP, "Copy Line Up", FunctionStudioState.ANY );
@@ -618,6 +619,22 @@ namespace C64Studio
       //Debug.Log( xmlOutText );
       chunkLayout.AppendU32( (uint)layoutData.Length );
       chunkLayout.Append( layoutData );
+
+      var activeContents = new List<int>();
+      foreach ( DockPane pane in PanelMain.Panes )
+      {
+        var activeContentID = PanelMain.Contents.IndexOf( pane.ActiveContent );
+        var cnt = pane.Contents.Count;
+
+        if ( ( cnt > 1 )
+        &&   ( activeContentID >= 0 ) )
+        {
+          Debug.Log( "Active Content: " + pane.ActiveContent.ToString() );
+          activeContents.Add( activeContentID );
+        }
+      }
+      //chunkLayout.AppendI32( 
+
       SettingsData.Append( chunkLayout.ToBuffer() );
       memOut.Close();
       memOut.Dispose();

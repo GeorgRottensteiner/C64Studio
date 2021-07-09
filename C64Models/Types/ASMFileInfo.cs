@@ -710,6 +710,7 @@ namespace C64Studio.Types.ASM
           }
         }
       }
+
       return sb.ToString();
     }
 

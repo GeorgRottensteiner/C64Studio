@@ -614,6 +614,7 @@ namespace C64Studio
       StudioCore.Settings.Functions[Function.SAVE_ALL].MenuItem = saveAllToolStripMenuItem;
       StudioCore.Settings.Functions[Function.SAVE_ALL].ToolBarButton = mainToolSaveAll;
       StudioCore.Settings.Functions[Function.SAVE_DOCUMENT_AS].MenuItem = saveAsToolStripMenuItem;
+      StudioCore.Settings.Functions[Function.SAVE_DOCUMENT_COPY_AS].MenuItem = saveCopyAsToolStripMenuItem;
       StudioCore.Settings.Functions[Function.DEBUG_BREAK].ToolBarButton = mainDebugBreak;
       StudioCore.Settings.Functions[Function.DEBUG_GO].ToolBarButton = mainDebugGo;
       StudioCore.Settings.Functions[Function.DEBUG_STOP].ToolBarButton = mainDebugStop;
@@ -916,8 +917,10 @@ namespace C64Studio
           break;
         case DebugEvent.UPDATE_WATCH:
           if ( ( IsWatchShowingCurrentDebuggedProject() )
+          ||   ( Event.Request.Type == DebugRequestType.MEM_DUMP ) )
+            /*
           ||   ( ( Event.Request.Type == DebugRequestType.MEM_DUMP )
-          &&     ( Event.Request.Parameter1 == StudioCore.Debugging.CurrentCodePosition ) ) )
+          &&     ( Event.Request.Parameter1 == StudioCore.Debugging.CurrentCodePosition ) ) )*/
           {
             UpdateWatchInfo( Event.Request, Event.Data );
           }
@@ -1638,7 +1641,7 @@ namespace C64Studio
         {
           if ( !baseDoc.IsInternal )
           {
-            baseDoc.Save();
+            baseDoc.Save( BaseDocument.SaveMethod.SAVE );
           }
         }
       }
@@ -2394,7 +2397,7 @@ namespace C64Studio
           return;
         }
       }
-      baseDoc.Save();
+      baseDoc.Save( BaseDocument.SaveMethod.SAVE );
       if ( baseDoc.DocumentInfo.Project != null )
       {
         baseDoc.DocumentInfo.Project.Save( baseDoc.DocumentInfo.Project.Settings.Filename );
@@ -2768,7 +2771,7 @@ namespace C64Studio
           {
             if ( element.Document != null )
             {
-              element.Document.Save();
+              element.Document.Save( BaseDocument.SaveMethod.SAVE );
             }
           }
         }
@@ -3988,7 +3991,8 @@ namespace C64Studio
         StudioCore.Debugging.MarkedDocument = StudioCore.Debugging.DebugDisassembly;
         StudioCore.Debugging.MarkedDocumentLine = 1;
         StudioCore.Debugging.DebugDisassembly.Select();
-        StudioCore.Debugging.DebugDisassembly.SetLineMarked( 1, 1 != -1 );
+        StudioCore.Debugging.DebugDisassembly.SetLineMarked( 1, true );
+        StudioCore.Debugging.DebugDisassembly.SetAddress( Address );
       }
     }
 
@@ -4488,7 +4492,7 @@ namespace C64Studio
               {
                 if ( element.Document != null )
                 {
-                  element.Document.Save();
+                  element.Document.Save( BaseDocument.SaveMethod.SAVE );
                 }
               }
             }
@@ -4503,7 +4507,7 @@ namespace C64Studio
               if ( ( doc.DocumentInfo.Element == null )
               &&   ( doc.Modified ) )
               {
-                doc.Save();
+                doc.Save( BaseDocument.SaveMethod.SAVE );
               }
             }
           }
@@ -4512,7 +4516,7 @@ namespace C64Studio
             BaseDocument docToSave = ActiveContent;
             if ( docToSave != null )
             {
-              docToSave.Save();
+              docToSave.Save( BaseDocument.SaveMethod.SAVE );
             }
           }
           return true;
@@ -4521,25 +4525,25 @@ namespace C64Studio
             // save current document
             BaseDocument docToSave = ActiveContent;
             if ( ( docToSave != null )
-            && ( !docToSave.IsSaveable ) )
+            &&   ( !docToSave.IsSaveable ) )
             {
               docToSave = ActiveDocument;
             }
             if ( ( docToSave == null )
-            || ( !docToSave.IsSaveable ) )
+            ||   ( !docToSave.IsSaveable ) )
             {
               break;
             }
 
             if ( docToSave.DocumentInfo.Project == null )
             {
-              docToSave.Save();
+              docToSave.Save( BaseDocument.SaveMethod.SAVE );
               return true;
             }
 
             if ( ( docToSave.DocumentInfo.Project == null )
-            || ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
-            || ( docToSave.DocumentInfo.Element == null ) )
+            ||   ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
+            ||   ( docToSave.DocumentInfo.Element == null ) )
             {
               // no project yet (or no project element)
               if ( !SaveProject( docToSave.DocumentInfo.Project ) )
@@ -4547,7 +4551,7 @@ namespace C64Studio
                 return true;
               }
             }
-            docToSave.Save();
+            docToSave.Save( BaseDocument.SaveMethod.SAVE );
             if ( !SaveProject( docToSave.DocumentInfo.Project ) )
             {
               return true;
@@ -4559,25 +4563,25 @@ namespace C64Studio
             // save current document as
             BaseDocument docToSave = ActiveContent;
             if ( ( docToSave != null )
-            && ( !docToSave.IsSaveable ) )
+            &&   ( !docToSave.IsSaveable ) )
             {
               docToSave = ActiveDocument;
             }
             if ( ( docToSave == null )
-            || ( !docToSave.IsSaveable ) )
+            ||   ( !docToSave.IsSaveable ) )
             {
               break;
             }
 
             if ( docToSave.DocumentInfo.Project == null )
             {
-              docToSave.SaveAs();
+              docToSave.Save( BaseDocument.SaveMethod.SAVE_AS );
               return true;
             }
 
             if ( ( docToSave.DocumentInfo.Project == null )
-            || ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
-            || ( docToSave.DocumentInfo.Element == null ) )
+            ||   ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
+            ||   ( docToSave.DocumentInfo.Element == null ) )
             {
               // no project yet (or no project element)
               if ( !SaveProject( docToSave.DocumentInfo.Project ) )
@@ -4585,7 +4589,13 @@ namespace C64Studio
                 return true;
               }
             }
-            docToSave.SaveAs();
+            string  oldName = docToSave.DocumentInfo.FullPath;
+            if ( docToSave.Save( BaseDocument.SaveMethod.SAVE_AS ) )
+            {
+              // need to rename file in project (dependencies, etc.)
+              string  newName = docToSave.DocumentInfo.FullPath;
+              docToSave.DocumentInfo.Project.RenameDocumentFile( oldName, newName );
+            }
             if ( !SaveProject( docToSave.DocumentInfo.Project ) )
             {
               return true;
@@ -4609,7 +4619,7 @@ namespace C64Studio
 
             if ( docToSave.DocumentInfo.Project == null )
             {
-              docToSave.SaveAs();
+              docToSave.Save( BaseDocument.SaveMethod.SAVE_COPY_AS );
               return true;
             }
 
@@ -4623,7 +4633,7 @@ namespace C64Studio
                 return true;
               }
             }
-            docToSave.SaveAs();
+            docToSave.Save( BaseDocument.SaveMethod.SAVE_COPY_AS );
             if ( !SaveProject( docToSave.DocumentInfo.Project ) )
             {
               return true;
@@ -4914,7 +4924,7 @@ namespace C64Studio
 
               var settings = new DisassemblerSettings() { AddLineAddresses = true, AddAssembledBytes = true };
 
-              if ( disassembler.Disassemble( StudioCore.Debugging.CurrentCodePosition, jumpedAtAddresses, namedLabels, settings, out disassembly ) )
+              if ( disassembler.Disassemble( StudioCore.Debugging.CurrentCodePosition, jumpedAtAddresses, namedLabels, settings, out disassembly, out int firstLineIndexWithOpcode ) )
               {
                 StudioCore.Debugging.DebugDisassembly.SetText( disassembly );
                 StudioCore.Debugging.MarkedDocument.SetLineMarked( StudioCore.Debugging.MarkedDocumentLine, false );
@@ -4922,7 +4932,8 @@ namespace C64Studio
                 StudioCore.Debugging.MarkedDocument = StudioCore.Debugging.DebugDisassembly;
                 StudioCore.Debugging.MarkedDocumentLine = 1;
                 StudioCore.Debugging.DebugDisassembly.Select();
-                StudioCore.Debugging.DebugDisassembly.SetLineMarked( 1, 1 != -1 );
+                StudioCore.Debugging.DebugDisassembly.ReadjustMarkedLine();
+                //StudioCore.Debugging.DebugDisassembly.SetLineMarked( 1, 1 != -1 );
               }
               else
               {
@@ -5727,7 +5738,7 @@ namespace C64Studio
         el.Filename = localizedFilename;
         el.Node.Text = System.IO.Path.GetFileName( localizedFilename );
         el.Document.SetDocumentFilename( localizedFilename );
-        el.Document.Save();
+        el.Document.Save( BaseDocument.SaveMethod.SAVE );
       }
     }
 

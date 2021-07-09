@@ -89,6 +89,7 @@
       this.editSource.Size = new System.Drawing.Size(698, 532);
       this.editSource.TabIndex = 0;
       this.editSource.Zoom = 100;
+      this.editSource.LineVisited += new System.EventHandler<FastColoredTextBoxNS.LineVisitedArgs>(this.editSource_LineVisited);
       this.editSource.DragDrop += new System.Windows.Forms.DragEventHandler(this.editSource_DragDrop);
       this.editSource.DragEnter += new System.Windows.Forms.DragEventHandler(this.editSource_DragEnter);
       // 

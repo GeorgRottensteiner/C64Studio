@@ -276,10 +276,11 @@ namespace C64Studio.Parser
 
 
 
-    public bool Disassemble( int DataStartAddress, GR.Collections.Set<int> JumpedAtAddresses, GR.Collections.Map<int,string> NamedLabels, DisassemblerSettings Settings, out string Disassembly )
+    public bool Disassemble( int DataStartAddress, GR.Collections.Set<int> JumpedAtAddresses, GR.Collections.Map<int,string> NamedLabels, DisassemblerSettings Settings, out string Disassembly, out int FirstLineWithOpcode )
     {
       StringBuilder sb = new StringBuilder();
       Disassembly = "";
+      FirstLineWithOpcode = 1;
       if ( JumpedAtAddresses.Count == 0 )
       {
         return false;
@@ -431,6 +432,7 @@ namespace C64Studio.Parser
       int     trueAddress = DataStartAddress;
       bool    hadBytes = false;
       int     hadBytesStart = 0;
+      int     localLineIndex = 1;
       while ( trueAddress < DataStartAddress + m_SourceData.Length )
       {
         if ( disassembly.ContainsKey( (ushort)trueAddress ) )
@@ -446,6 +448,13 @@ namespace C64Studio.Parser
             sb.Append( "$" );
             sb.Append( trueAddress.ToString( "X4" ) + ": " );
           }
+
+          if ( DataStartAddress == trueAddress )
+          {
+            FirstLineWithOpcode = localLineIndex;
+          }
+          ++localLineIndex;
+
 
           if ( accessedAddresses.ContainsValue( (ushort)trueAddress ) )
           {

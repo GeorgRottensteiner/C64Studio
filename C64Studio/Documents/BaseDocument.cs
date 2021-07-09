@@ -10,6 +10,15 @@ namespace C64Studio
 {
   public class BaseDocument : DockContent, IComparable
   {
+    public enum SaveMethod
+    {
+      SAVE,
+      SAVE_AS,
+      SAVE_COPY_AS
+    }
+
+
+
     public class DocEvent
     {
       public enum Type
@@ -435,14 +444,7 @@ namespace C64Studio
 
 
 
-    public virtual bool Save()
-    {
-      return false;
-    }
-
-
-
-    public virtual bool SaveAs()
+    public virtual bool Save( SaveMethod Method )
     {
       return false;
     }
@@ -645,7 +647,7 @@ namespace C64Studio
       {
         return saveResult;
       }
-      if ( !Save() )
+      if ( !Save( SaveMethod.SAVE ) )
       {
         saveResult = DialogResult.Cancel;
       }
@@ -677,7 +679,7 @@ namespace C64Studio
           SetUnmodified();
           return;
         }
-        if ( !Save() )
+        if ( !Save( SaveMethod.SAVE ) )
         {
           e.Cancel = true;
         }
@@ -948,7 +950,7 @@ namespace C64Studio
 
 
 
-    protected bool SaveDocumentData( string SaveFilename, ByteBuffer Data, bool SaveAs )
+    protected bool SaveDocumentData( string SaveFilename, ByteBuffer Data, SaveMethod Method )
     {
       DisableFileWatcher();
       if ( !GR.IO.File.WriteAllBytes( SaveFilename, Data ) )
@@ -956,7 +958,7 @@ namespace C64Studio
         EnableFileWatcher();
         return false;
       }
-      if ( !SaveAs )
+      if ( Method == SaveMethod.SAVE )
       {
         SetUnmodified();
       }

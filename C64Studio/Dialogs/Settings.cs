@@ -604,7 +604,8 @@ namespace C64Studio
         }
       }
 
-      if ( color.BGColorAuto )
+      if ( ( color.BGColorAuto )
+      &&   ( color.Name != "Empty Space" ) )
       {
         comboElementBG.SelectedIndex = 0;
       }
@@ -692,11 +693,25 @@ namespace C64Studio
         comboColor.FGColor = (uint)colDlg.Color.ToArgb();
         color.BGColor = (uint)colDlg.Color.ToArgb();
         color.BGColorAuto = false;
-        comboElementBG.SelectedIndex = 1;
+
+        // select custom entry
+        comboElementBG.SelectedIndex = ColorComboIndexOfCustomItem( color );
         comboElementBG.Invalidate();
         panelElementPreview.Invalidate();
         RefreshDisplayOnDocuments();
       }
+    }
+
+
+
+    private int ColorComboIndexOfCustomItem( ColorSetting Color )
+    {
+      // empty space has no "Auto" item
+      if ( Color.Name == "Empty Space" )
+      {
+        return 0;
+      }
+      return 1;
     }
 
 
@@ -728,13 +743,19 @@ namespace C64Studio
         return;
       }
       Types.ColorSetting color = (Types.ColorSetting)comboElementBG.Items[e.Index];
+      uint colorRGB = color.FGColor;
       if ( color.Name == "Auto" )
       {
         color = new C64Studio.Types.ColorSetting( "Auto", Core.Settings.BGColor( C64Studio.Types.ColorableElement.EMPTY_SPACE ), Core.Settings.BGColor( C64Studio.Types.ColorableElement.EMPTY_SPACE ) );
+        colorRGB = color.FGColor;
+      }
+      else if ( color.Name == "Custom" )
+      {
+        colorRGB = color.FGColor;
       }
       System.Drawing.Rectangle colorBox = new Rectangle( e.Bounds.Left + 2, e.Bounds.Top + 2, 50, e.Bounds.Height - 4 );
 
-      e.Graphics.FillRectangle( new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( color.FGColor ) ), colorBox );
+      e.Graphics.FillRectangle( new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( colorRGB ) ), colorBox );
       e.Graphics.DrawRectangle( System.Drawing.SystemPens.WindowFrame, colorBox );
 
       e.Graphics.DrawString( color.Name, comboElementBG.Font, new System.Drawing.SolidBrush( e.ForeColor ), e.Bounds.Left + 60, e.Bounds.Top + 2 );
