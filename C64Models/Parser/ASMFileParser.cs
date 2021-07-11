@@ -13723,7 +13723,7 @@ namespace C64Studio.Parser
                     token.Length = Length - tokenStartPos;
                     result.Add( token );
 
-                    return result;
+                    goto all_tokens_handled;
                   }
                   break;
                 }
@@ -13773,13 +13773,25 @@ namespace C64Studio.Parser
         result.Add( token );
       }
 
+      all_tokens_handled:
       CollapseLabelsAtStartOfLine( result );
 
       // collapse ## (with labels!)
       CollapsePreprocessorLabels( result );
 
+      // if the last token is an internal label (+/-), and something useless is following, it is interpreted as operator
+      if ( ( result.Count >= 2 )
+      &&   ( result[result.Count - 1].Type == TokenInfo.TokenType.COMMENT )
+      &&   ( result[result.Count - 2].Type == TokenInfo.TokenType.OPERATOR )
+      &&   ( ( result[result.Count - 2].Content == "+" )
+      ||     ( result[result.Count - 2].Content == "-" ) ) )
+      {
+        result[result.Count - 1].Type = TokenInfo.TokenType.LABEL_INTERNAL;
+        result.RemoveAt( result.Count - 1 );
+      }
+
       // collapse # 
-      if ( ( result.Count >= 3 )
+        if ( ( result.Count >= 3 )
       &&   ( result[1].Type == Types.TokenInfo.TokenType.SEPARATOR )
       &&   ( result[1].Length == 1 )
       &&   ( Source[result[1].StartPos] == '#' )
