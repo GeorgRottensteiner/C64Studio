@@ -12360,6 +12360,7 @@ namespace C64Studio.Parser
       }
 
       string  lastAddressSourceDesc = "";
+      int     currentMemBlockActualSize = 0;
       foreach ( Types.ASM.LineInfo line in ASMFileInfo.LineInfo.Values )
       {
         if ( currentAddress == -1 )
@@ -12379,8 +12380,8 @@ namespace C64Studio.Parser
                 dataOffset = 2;
               }
             }
-            memoryBlockStartAddress = currentAddress;
-            memoryBlockActualDataLength = 0;
+            //memoryBlockStartAddress = currentAddress;
+            //memoryBlockActualDataLength = 0;
 
             var asmSegment = new Types.ASMSegment();
             asmSegment.StartAddress = line.AddressStart;
@@ -12433,19 +12434,20 @@ namespace C64Studio.Parser
 
                 if ( currentAddress - fileStartAddress + newBytes > result.Length )
                 {
-                  if ( memoryBlockActualDataLength > 0 )
+                  /*
+                  //if ( memoryBlockActualDataLength > 0 )
                   {
                     var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, currentAddress - memoryBlockStartAddress );
                     entry.Description = lastAddressSourceDesc;
                     memoryMap.InsertEntry( entry );
                     lastAddressSourceDesc = "";
-                  }
+                  }*/
 
                   result.Append( new GR.Memory.ByteBuffer( (uint)( currentAddress - fileStartAddress + newBytes - result.Length ) ) );
 
-                  memoryBlockStartAddress = line.AddressStart;
-                  memoryBlockLength = 0;
-                  memoryBlockActualDataLength = 0;
+                  //memoryBlockStartAddress = line.AddressStart;
+                  //memoryBlockLength = 0;
+                  //memoryBlockActualDataLength = 0;
                 }
                 // went forward in memory
                 var asmSegment = new Types.ASMSegment();
@@ -12465,26 +12467,28 @@ namespace C64Studio.Parser
                 builtSegments.Add( new GR.Generic.Tupel<int, Types.ASMSegment>( asmSegment.StartAddress, asmSegment ) );
                 currentResultBlock = asmSegment.Data;
 
+                /*
                 if ( memoryBlockActualDataLength > 0 )
                 {
                   var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
                   entry.Description = lastAddressSourceDesc;
                   memoryMap.InsertEntry( entry );
                   lastAddressSourceDesc = "";
-                }
-                memoryBlockStartAddress = line.AddressStart;
-                memoryBlockLength = 0;
+                }*/
+                //memoryBlockStartAddress = line.AddressStart;
+                //memoryBlockLength = 0;
               }
               else if ( line.AddressSource.StartsWith( "*" ) )
               {
                 // a new block starts here
+                /*
                 var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
                 entry.Description = lastAddressSourceDesc;
                 memoryMap.InsertEntry( entry );
                 lastAddressSourceDesc = "";
-
-                memoryBlockStartAddress = line.AddressStart;
-                memoryBlockLength = 0;
+                */
+                //memoryBlockStartAddress = line.AddressStart;
+                //memoryBlockLength = 0;
               }
               trueCurrentAddress = line.AddressStart;
             }
@@ -12501,25 +12505,26 @@ namespace C64Studio.Parser
               if ( line.AddressStart > currentAddress )
               {
                 // only add to memory map when it has actual data (e.g. not virtual)
-                if ( memoryBlockActualDataLength > 0 )
+                /*
+                //if ( memoryBlockActualDataLength > 0 )
                 {
                   var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
                   entry.Description = lastAddressSourceDesc;
                   memoryMap.InsertEntry( entry );
                   lastAddressSourceDesc = "";
-                }
+                }*/
 
                 result.Append( new GR.Memory.ByteBuffer( (uint)( line.AddressStart - currentAddress ) ) );
 
-                memoryBlockStartAddress = line.AddressStart;
-                memoryBlockLength = 0;
+                //memoryBlockStartAddress = line.AddressStart;
+                //memoryBlockLength = 0;
               }
             }
           }
           if ( setNewAddress )
           {
             currentAddress = line.AddressStart;
-            memoryBlockLength = currentAddress - memoryBlockStartAddress;
+            //memoryBlockLength = currentAddress - memoryBlockStartAddress;
           }
         }
         if ( line.LineData != null )
@@ -12557,22 +12562,34 @@ namespace C64Studio.Parser
           currentAddress += (int)line.LineData.Length;
           trueCurrentAddress += (int)line.LineData.Length;
         }
+
         if ( line.AddressSource.StartsWith( "*" ) )
         {
           if ( ( memoryMap.Entries.Count > 0 )
-          &&   ( memoryMap.Entries[memoryMap.Entries.Count - 1].StartAddress != line.AddressStart )
-          &&   ( memoryBlockActualDataLength > 0 ) )
+          &&   ( memoryMap.Entries[memoryMap.Entries.Count - 1].StartAddress != line.AddressStart ) )
+          // &&   ( memoryBlockActualDataLength > 0 ) )
           {
             // a new memory map entry
-            var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, memoryBlockActualDataLength );
+            var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, currentMemBlockActualSize );
             entry.Description = lastAddressSourceDesc;
             memoryMap.InsertEntry( entry );
             lastAddressSourceDesc = "";
-            memoryBlockStartAddress = line.AddressStart;
-            memoryBlockLength = 0;
+          }
+          else if ( ( memoryMap.Entries.Count == 0 )
+          &&        ( memoryBlockStartAddress != -1 ) )
+          {
+            // a new memory map entry
+            var entry = new Types.MemoryMapEntry( memoryBlockStartAddress, currentMemBlockActualSize );
+            entry.Description = lastAddressSourceDesc;
+            memoryMap.InsertEntry( entry );
           }
           lastAddressSourceDesc = line.AddressSource.Substring( 1 ).Trim( '"' );
+          memoryBlockStartAddress = line.AddressStart;
+          memoryBlockLength = 0;
+          memoryBlockActualDataLength = 0;
+          currentMemBlockActualSize = 0;
         }
+        currentMemBlockActualSize += line.NumBytes;
       }
 
       if ( memoryBlockStartAddress > -1 )
@@ -12593,6 +12610,10 @@ namespace C64Studio.Parser
       int highestEnd = -1;
       foreach ( var mapSegment in memoryMap.Entries )
       {
+        if ( mapSegment.Length == 0 )
+        {
+          continue;
+        }
         lowestStart = Math.Min( mapSegment.StartAddress, lowestStart );
         highestEnd = Math.Max( mapSegment.StartAddress + mapSegment.Length, highestEnd );
 
@@ -12612,11 +12633,21 @@ namespace C64Studio.Parser
                       + " is out of bounds" );
         }
       }
+      if ( lowestStart == 65536 )
+      {
+        // all virtual or no data at all? we still need a lowest address
+        foreach ( var mapSegment in memoryMap.Entries )
+        {
+          lowestStart = Math.Min( mapSegment.StartAddress, lowestStart );
+          highestEnd = Math.Max( mapSegment.StartAddress + mapSegment.Length, highestEnd );
+        }
+      }
 
       if ( ( memoryMap.Entries.Count == 0 )
       ||   ( builtSegments.Count > 0 ) )
       {
         // count from segments?
+        int     newLowestStart = 65536;
         foreach ( var segment in builtSegments )
         {
           if ( segment.second.Length == 0 )
@@ -12624,7 +12655,7 @@ namespace C64Studio.Parser
             // ignore virtual segments
             continue;
           }
-          lowestStart = Math.Min( segment.first, lowestStart );
+          newLowestStart = Math.Min( segment.first, newLowestStart );
           highestEnd = Math.Max( segment.second.StartAddress + segment.second.Length, highestEnd );
 
           // check, whether segments bigger than $ffff are possible!
@@ -12638,6 +12669,10 @@ namespace C64Studio.Parser
                         + " to $" + ( segment.second.StartAddress + segment.second.Length - 1 ).ToString( "X" )
                         + " is out of bounds" );
           }
+        }
+        if ( newLowestStart != 65536 )
+        {
+          lowestStart = newLowestStart;
         }
       }
 
