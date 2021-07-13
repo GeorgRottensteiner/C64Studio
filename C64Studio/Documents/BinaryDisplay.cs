@@ -354,13 +354,6 @@ namespace C64Studio
 
 
 
-    public override bool Save( SaveMethod Method )
-    {
-      return SaveBinary( Method );
-    }
-
-
-
     private string FilterString( string Source )
     {
       return Source.Substring( 0, Source.Length - 1 );
@@ -368,88 +361,32 @@ namespace C64Studio
 
 
 
-    private bool SaveBinary( SaveMethod Method )
+    protected override bool QueryFilename( out string Filename )
     {
-      string    saveFilename = "";
+      Filename = "";
 
-      if ( ( DocumentInfo.DocumentFilename == null )
-      ||   ( Method == SaveMethod.SAVE_AS )
-      ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Save binary file as";
+      saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_BINARY_FILES + Types.Constants.FILEFILTER_ALL );
+      if ( DocumentInfo.Project != null )
       {
-        System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-        saveDlg.Title = "Save binary file as";
-        saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_BINARY_FILES + Types.Constants.FILEFILTER_ALL );
-        if ( DocumentInfo.Project != null )
-        {
-          saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
-        }
-        if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-        {
-          return false;
-        }
-
-        if ( ( Method == SaveMethod.SAVE_AS )
-        ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
-        {
-          saveFilename = saveDlg.FileName;
-        }
-        else
-        {
-          if ( DocumentInfo.Project == null )
-          {
-            DocumentInfo.DocumentFilename = saveDlg.FileName;
-          }
-          else
-          {
-            SetDocumentFilename( GR.Path.RelativePathTo( saveDlg.FileName, false, System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true ) );
-            DocumentInfo.Element.Name = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
-            DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
-            if ( DocumentInfo.Element.Settings.Count == 0 )
-            {
-              DocumentInfo.Element.Settings["Default"] = new ProjectElement.PerConfigSettings();
-            }
-          }
-          Text = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
-          SetupWatcher();
-          saveFilename = DocumentInfo.FullPath;
-        }
+        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
       }
-      else
-      {
-        saveFilename = DocumentInfo.FullPath;
-      }
-
-      if ( !DoSave( saveFilename ) )
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
       {
         return false;
       }
-      if ( Method == SaveMethod.SAVE )
-      {
-        SetUnmodified();
-      }
+
+      Filename = saveDlg.FileName;
       return true;
     }
 
 
 
-    private bool DoSave( string Filename )
+    protected override bool PerformSave( string FullPath )
     {
-      try
-      {
-        DisableFileWatcher();
-
-        GR.Memory.ByteBuffer data = DataFromHex();
-        GR.IO.File.WriteAllBytes( Filename, data );
-      }
-      catch ( System.IO.IOException ex )
-      {
-        System.Windows.Forms.MessageBox.Show( "Could not save file " + Filename + ".\r\n" + ex.ToString(), "Could not save file" );
-        EnableFileWatcher();
-        return false;
-      }
-      EnableFileWatcher();
-      return true;
+      return SaveDocumentData( FullPath, DataFromHex() );
     }
 
 

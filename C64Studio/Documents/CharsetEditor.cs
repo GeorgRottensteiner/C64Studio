@@ -233,57 +233,32 @@ namespace C64Studio
 
 
 
-    private bool SaveProject( SaveMethod Method )
+    protected override bool QueryFilename( out string Filename )
     {
-      string    saveFilename = DocumentInfo.FullPath;
+      Filename = "";
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
-      if ( ( String.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
-      ||   ( Method == SaveMethod.SAVE_AS )
-      ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
+      saveDlg.Title = "Save Charset Project as";
+      saveDlg.Filter = "Charset Projects|*.charsetproject|All Files|*.*";
+      if ( DocumentInfo.Project != null )
       {
-        System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-        saveDlg.Title = "Save Charset Project as";
-        saveDlg.Filter = "Charset Projects|*.charsetproject|All Files|*.*";
-        if ( DocumentInfo.Project != null )
-        {
-          saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
-        }
-        if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-        {
-          return false;
-        }
-        if ( ( Method == SaveMethod.SAVE_AS )
-        ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
-        {
-          saveFilename = saveDlg.FileName;
-        }
-        else
-        {
-          DocumentInfo.DocumentFilename = saveDlg.FileName;
-          if ( DocumentInfo.Element != null )
-          {
-            if ( string.IsNullOrEmpty( DocumentInfo.Project.Settings.BasePath ) )
-            {
-              DocumentInfo.DocumentFilename = saveDlg.FileName;
-            }
-            else
-            {
-              DocumentInfo.DocumentFilename = GR.Path.RelativePathTo( saveDlg.FileName, false, System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true );
-            }
-            DocumentInfo.Element.Name = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename );
-            DocumentInfo.Element.Node.Text = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
-            DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
-          }
-          saveFilename = DocumentInfo.FullPath;
-        }
+        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
+      }
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return false;
       }
 
-      if ( Method == SaveMethod.SAVE )
-      {
-        m_Charset.Name = DocumentInfo.DocumentFilename;
-        m_Charset.UsedTiles = GR.Convert.ToU32( editCharactersFrom.Text );
-      }
+      Filename = saveDlg.FileName;
+      return true;
+    }
+
+
+
+    protected override bool PerformSave( string FullPath )
+    {
+      m_Charset.Name      = DocumentInfo.DocumentFilename;
+      m_Charset.UsedTiles = GR.Convert.ToU32( editCharactersFrom.Text );
 
       if ( IsBinaryFile() )
       {
@@ -295,19 +270,12 @@ namespace C64Studio
         {
           charSet.Append( m_Charset.Characters[i].Data );
         }
-        DisableFileWatcher();
-        if ( !GR.IO.File.WriteAllBytes( saveFilename, charSet ) )
-        {
-          EnableFileWatcher();
-          return false;
-        }
-        SetUnmodified();
-        EnableFileWatcher();
-        return true;
+
+        return SaveDocumentData( FullPath, charSet );
       }
       GR.Memory.ByteBuffer projectFile = SaveToBuffer();
 
-      return SaveDocumentData( saveFilename, projectFile, Method );
+      return SaveDocumentData( FullPath, projectFile );
     }
 
 
@@ -327,7 +295,7 @@ namespace C64Studio
         }
         if ( doSave == DialogResult.Yes )
         {
-          SaveProject( BaseDocument.SaveMethod.SAVE );
+          Save( BaseDocument.SaveMethod.SAVE );
         }
       }
       Clear();
@@ -342,14 +310,7 @@ namespace C64Studio
 
     private void saveCharsetProjectToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      SaveProject( SaveMethod.SAVE );
-    }
-
-
-
-    public override bool Save( SaveMethod Method )
-    {
-      return SaveProject( Method );
+      Save( SaveMethod.SAVE );
     }
 
 

@@ -149,7 +149,8 @@ namespace C64Studio
 
           // check indirect dependency
           ProjectElement  elementDependency = DocumentInfo.Project.GetElementByFilename( dependency.Filename );
-          if ( elementDependency.IsDependentOn( OtherDocumentFile ) )
+          if ( ( elementDependency != null )
+          &&   ( elementDependency.IsDependentOn( OtherDocumentFile ) ) )
           {
             return true;
           }

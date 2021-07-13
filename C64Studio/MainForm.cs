@@ -1250,6 +1250,7 @@ namespace C64Studio
       {
         saveToolStripMenuItem.Enabled = false;
         saveAsToolStripMenuItem.Enabled = false;
+        saveCopyAsToolStripMenuItem.Enabled = false;
         mainToolSave.Enabled = false;
         fileCloseToolStripMenuItem.Enabled = false;
       }
@@ -1257,6 +1258,7 @@ namespace C64Studio
       {
         saveToolStripMenuItem.Enabled = ActiveDocument.Modified;
         saveAsToolStripMenuItem.Enabled = true;
+        saveCopyAsToolStripMenuItem.Enabled = true;
         mainToolSave.Enabled = ActiveDocument.Modified;
         fileCloseToolStripMenuItem.Enabled = true;
       }
@@ -4592,9 +4594,7 @@ namespace C64Studio
             string  oldName = docToSave.DocumentInfo.FullPath;
             if ( docToSave.Save( BaseDocument.SaveMethod.SAVE_AS ) )
             {
-              // need to rename file in project (dependencies, etc.)
-              string  newName = docToSave.DocumentInfo.FullPath;
-              docToSave.DocumentInfo.Project.RenameDocumentFile( oldName, newName );
+              
             }
             if ( !SaveProject( docToSave.DocumentInfo.Project ) )
             {

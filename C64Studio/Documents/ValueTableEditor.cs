@@ -182,46 +182,31 @@ namespace C64Studio
 
 
 
-    private bool SaveProject( SaveMethod Method )
+    protected override bool QueryFilename( out string Filename )
     {
-      string    saveFilename = DocumentInfo.FullPath;
+      Filename = null;
 
-      if ( ( string.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
-      ||   ( Method == SaveMethod.SAVE_AS )
-      ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Save Value Table Project as";
+      saveDlg.Filter = "Value Table Projects|*.valuetableproject|All Files|*.*";
+      if ( DocumentInfo.Project != null )
       {
-        System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-        saveDlg.Title = "Save Value Table Project as";
-        saveDlg.Filter = "Value Table Projects|*.valuetableproject|All Files|*.*";
-        if ( DocumentInfo.Project != null )
-        {
-          saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
-        }
-        if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-        {
-          return false;
-        }
-        saveFilename = saveDlg.FileName;
-
-        // use chosen file name
-        if ( Method == SaveMethod.SAVE )
-        {
-          DocumentInfo.DocumentFilename = saveDlg.FileName;
-          if ( DocumentInfo.Element != null )
-          {
-            DocumentInfo.DocumentFilename = GR.Path.RelativePathTo( saveDlg.FileName, false, System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true );
-            DocumentInfo.Element.Name = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename );
-            DocumentInfo.Element.Node.Text = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
-            DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
-          }
-          saveFilename = DocumentInfo.FullPath;
-        }
+        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
       }
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return false;
+      }
+      Filename = saveDlg.FileName;
+      return true;
+    }
 
-      GR.Memory.ByteBuffer dataToSave = SaveToBuffer();
 
-      return SaveDocumentData( saveFilename, dataToSave, Method );
+
+    protected override bool PerformSave( string Filename )
+    {
+      return SaveDocumentData( Filename, SaveToBuffer() );
     }
 
 
@@ -241,7 +226,7 @@ namespace C64Studio
         }
         if ( doSave == DialogResult.Yes )
         {
-          SaveProject( BaseDocument.SaveMethod.SAVE );
+          Save( BaseDocument.SaveMethod.SAVE );
         }
       }
       Clear();
@@ -256,14 +241,7 @@ namespace C64Studio
 
     private void saveCharsetProjectToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      SaveProject( SaveMethod.SAVE );
-    }
-
-
-
-    public override bool Save( SaveMethod Method )
-    {
-      return SaveProject( Method );
+      Save( SaveMethod.SAVE );
     }
 
 
@@ -271,45 +249,6 @@ namespace C64Studio
     public override GR.Memory.ByteBuffer SaveToBuffer()
     {
       return m_Project.SaveToBuffer();
-    }
-
-
-
-    private void btnExportSprite_Click( object sender, EventArgs e )
-    {
-      /*
-      var exportIndices = GetExportIndices();
-      if ( exportIndices.Count == 0 )
-      {
-        return;
-      }
-
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Export Sprites to";
-      saveDlg.Filter = "Sprites|*.spr|All Files|*.*";
-      saveDlg.FileName = m_SpriteProject.ExportFilename;
-      if ( DocumentInfo.Project != null )
-      {
-        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
-      }
-      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-      {
-        return;
-      }
-      if ( m_SpriteProject.ExportFilename != saveDlg.FileName )
-      {
-        m_SpriteProject.ExportFilename = saveDlg.FileName;
-        Modified = true;
-      }
-
-      GR.Memory.ByteBuffer spriteData = new GR.Memory.ByteBuffer();
-      for ( int i = 0; i < exportIndices.Count; ++i )
-      {
-        spriteData.Append( m_SpriteProject.Sprites[exportIndices[i]].Data );
-        spriteData.AppendU8( (byte)m_SpriteProject.Sprites[exportIndices[i]].Color );
-      }
-      GR.IO.File.WriteAllBytes( m_SpriteProject.ExportFilename, spriteData );*/
     }
 
 

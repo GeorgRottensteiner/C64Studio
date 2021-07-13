@@ -889,14 +889,5 @@ namespace C64Studio
 
 
 
-    public void RenameDocumentFile( string OldName, string NewName )
-    {
-      // document is already renamed, and saved with new name
-
-      // update all references to the old file now!
-    }
-
-
-
   }
 }

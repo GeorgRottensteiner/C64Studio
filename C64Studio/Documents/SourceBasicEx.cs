@@ -793,63 +793,26 @@ namespace C64Studio
 
 
 
-    public override bool Save( SaveMethod Method )
+    protected override bool QueryFilename( out string Filename )
     {
-      if ( ( Method == SaveMethod.SAVE_AS )
-      ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
-      {
-        System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+      Filename = "";
 
-        saveDlg.Title = "Save Basic File as";
-        saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_BASIC + Types.Constants.FILEFILTER_ALL );
-        if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-        {
-          return false;
-        }
-        if ( !DoSave( saveDlg.FileName ) )
-        {
-          return false;
-        }
-        return true;
-      }
-      if ( DocumentInfo.DocumentFilename == null )
-      {
-        System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
-        saveDlg.Title = "Save Basic File as";
-        saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_BASIC + Types.Constants.FILEFILTER_ALL );
-        if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-        {
-          return false;
-        }
-        if ( DocumentInfo.Project == null )
-        {
-          DocumentInfo.DocumentFilename = saveDlg.FileName;
-        }
-        else
-        {
-          DocumentInfo.DocumentFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, saveDlg.FileName, false );
-          DocumentInfo.Element.Name = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
-          DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
-          if ( DocumentInfo.Element.Settings.Count == 0 )
-          {
-            DocumentInfo.Element.Settings["Default"] = new ProjectElement.PerConfigSettings();
-          }
-        }
-        Text = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
-        SetupWatcher();
-      }
-      if ( !DoSave( DocumentInfo.FullPath ) )
+      saveDlg.Title = "Save Basic File as";
+      saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_BASIC + Types.Constants.FILEFILTER_ALL );
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
       {
         return false;
       }
-      SetUnmodified();
+
+      Filename = saveDlg.FileName;
       return true;
     }
 
 
 
-    private bool DoSave( string Filename )
+    protected override bool PerformSave( string FullPath )
     {
       try
       {
@@ -860,11 +823,11 @@ namespace C64Studio
         // add "meta data" in front
         string metaData = "#C64Studio.MetaData.BASIC:" + m_StartAddress + "," + m_BASICDialectName + "\r\n";
 
-        System.IO.File.WriteAllText( Filename, metaData + content );
+        System.IO.File.WriteAllText( FullPath, metaData + content );
       }
       catch ( System.IO.IOException ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not save file " + Filename + ".\r\n" + ex.ToString(), "Could not save file" );
+        System.Windows.Forms.MessageBox.Show( "Could not save file " + FullPath + ".\r\n" + ex.ToString(), "Could not save file" );
         EnableFileWatcher();
         return false;
       }

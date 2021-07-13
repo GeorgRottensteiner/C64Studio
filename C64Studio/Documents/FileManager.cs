@@ -144,64 +144,32 @@ namespace C64Studio
 
 
 
-    public override bool Save( SaveMethod Method )
+    protected override bool QueryFilename( out string Filename )
     {
-      if ( ( Method == SaveMethod.SAVE_AS )
-      ||   ( Method == SaveMethod.SAVE_COPY_AS ) )
-      {
-        // TODO - nur sinnvoll, wenn leere Medien angelegt werden können
-        System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+      Filename = "";
 
-        saveDlg.Title = "Save media as";
-        if ( m_Media != null )
-        {
-          saveDlg.Filter = m_Media.FileFilter;
-        }
-        if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-        {
-          return false;
-        }
-        return DoSave( saveDlg.FileName );
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Save media as";
+      if ( m_Media != null )
+      {
+        saveDlg.Filter = m_Media.FileFilter;
+      }
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return false;
       }
 
-      if ( String.IsNullOrEmpty( DocumentInfo.DocumentFilename ) )
-      {
-        // TODO - nur sinnvoll, wenn leere Medien angelegt werden können
-        System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-        saveDlg.Title = "Save media as";
-        if ( m_Media != null )
-        {
-          saveDlg.Filter = m_Media.FileFilter;
-        }
-        if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-        {
-          return false;
-        }
-        SetDocumentFilename( saveDlg.FileName );
-        if ( DocumentInfo.Element != null )
-        {
-          if ( string.IsNullOrEmpty( DocumentInfo.Project.Settings.BasePath ) )
-          {
-            DocumentInfo.DocumentFilename = saveDlg.FileName;
-          }
-          else
-          {
-            DocumentInfo.DocumentFilename = GR.Path.RelativePathTo( saveDlg.FileName, false, System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true );
-          }
-          DocumentInfo.Element.Name = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename );
-          DocumentInfo.Element.Node.Text = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
-          DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
-        }
-      }
-      return DoSave( DocumentInfo.FullPath );
+      Filename = saveDlg.FileName;
+      return true;
     }
 
 
 
-    private bool DoSave( string Filename )
+    protected override bool PerformSave( string FullPath )
     {
       DisableFileWatcher();
+
       GR.Memory.ByteBuffer mediaData = null;
 
       if ( m_Media != null )
@@ -210,15 +178,14 @@ namespace C64Studio
       }
       if ( mediaData != null )
       {
-        if ( !GR.IO.File.WriteAllBytes( Filename, mediaData ) )
+        if ( !GR.IO.File.WriteAllBytes( FullPath, mediaData ) )
         {
-          System.Windows.Forms.MessageBox.Show( "Could not save file " + Filename + ".", "Could not save file" );
+          System.Windows.Forms.MessageBox.Show( "Could not save file " + FullPath + ".", "Could not save file" );
           EnableFileWatcher();
           return false;
         }
         SetUnmodified();
       }
-      SetDocumentFilename( Filename );
       EnableFileWatcher();
       return true;
     }

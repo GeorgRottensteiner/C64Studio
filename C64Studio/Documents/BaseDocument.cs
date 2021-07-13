@@ -444,7 +444,123 @@ namespace C64Studio
 
 
 
-    public virtual bool Save( SaveMethod Method )
+    public bool Save( SaveMethod Method )
+    {
+      if ( ( Method == SaveMethod.SAVE_AS )
+      ||   ( Method == SaveMethod.SAVE_COPY_AS )
+      ||   ( DocumentInfo.DocumentFilename == null ) )
+      {
+        // we need a file name
+        string    oldName = "";
+        if ( ( Method == SaveMethod.SAVE_AS )
+        &&   ( DocumentInfo.FullPath != null ) )
+        {
+          oldName = DocumentInfo.FullPath;
+        }
+
+        string    newFilename;
+        
+        if ( !QueryFilename( out newFilename ) )
+        {
+          return false;
+        }
+        if ( DocumentInfo.DocumentFilename == null )
+        {
+          // a new filename
+          if ( DocumentInfo.Project == null )
+          {
+            DocumentInfo.DocumentFilename = newFilename;
+          }
+          else
+          {
+            DocumentInfo.DocumentFilename   = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, newFilename, false );
+            DocumentInfo.Element.Name       = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+            DocumentInfo.Element.Node.Text  = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+            DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
+            if ( DocumentInfo.Element.Settings.Count == 0 )
+            {
+              DocumentInfo.Element.Settings["Default"] = new ProjectElement.PerConfigSettings();
+            }
+          }
+          Text = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
+          SetupWatcher();
+
+          if ( !PerformSave( newFilename ) )
+          {
+            return false;
+          }
+          SetUnmodified();
+          return true;
+        }
+
+        if ( Method == SaveMethod.SAVE_AS )
+        {
+          if ( !PerformSave( newFilename ) )
+          {
+            return false;
+          }
+
+          // rename during save
+          DocumentInfo.DocumentFilename   = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, newFilename, false );
+          DocumentInfo.Element.Name       = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+          DocumentInfo.Element.Node.Text  = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+          DocumentInfo.Element.Filename   = DocumentInfo.DocumentFilename;
+          if ( DocumentInfo.Element.Settings.Count == 0 )
+          {
+            DocumentInfo.Element.Settings["Default"] = new ProjectElement.PerConfigSettings();
+          }
+
+          // need to rename file in project (dependencies, etc.)
+          string  newName = DocumentInfo.FullPath;
+
+          DisableFileWatcher();
+          try
+          {
+            System.IO.File.Delete( oldName );
+          }
+          catch ( System.IO.FileNotFoundException )
+          {
+            // ignore this specific error, go on renaming
+          }
+          catch ( System.Exception ex )
+          {
+            System.Windows.Forms.MessageBox.Show( "An error occurred while deleting old file\r\n" + ex.Message, "Error while renaming" );
+          }
+          if ( Core.Navigating.Solution != null )
+          {
+            Core.Navigating.Solution.RenameElement( DocumentInfo.Element, oldName, newName );
+          }
+          DocumentInfo?.Project?.SetModified();
+          SetUnmodified();
+          return true;
+        }
+        if ( !PerformSave( newFilename ) )
+        {
+          return false;
+        }
+        SetUnmodified();
+        return true;
+      }
+
+      if ( !PerformSave( DocumentInfo.FullPath ) )
+      {
+        return false;
+      }
+      SetUnmodified();
+      return true;
+    }
+
+
+
+    protected virtual bool QueryFilename( out string Filename )
+    {
+      Filename = "";
+      return false;
+    }
+
+
+
+    protected virtual bool PerformSave( string FullPath )
     {
       return false;
     }
@@ -950,17 +1066,13 @@ namespace C64Studio
 
 
 
-    protected bool SaveDocumentData( string SaveFilename, ByteBuffer Data, SaveMethod Method )
+    protected bool SaveDocumentData( string SaveFilename, ByteBuffer Data )
     {
       DisableFileWatcher();
       if ( !GR.IO.File.WriteAllBytes( SaveFilename, Data ) )
       {
         EnableFileWatcher();
         return false;
-      }
-      if ( Method == SaveMethod.SAVE )
-      {
-        SetUnmodified();
       }
       EnableFileWatcher();
       return true;
