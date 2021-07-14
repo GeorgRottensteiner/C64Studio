@@ -10890,7 +10890,7 @@ namespace C64Studio.Parser
         sourceInfo.Filename         = ParentFilename;
         sourceInfo.FullPath         = ParentFilename;
         sourceInfo.GlobalStartLine  = lineIndex;
-        sourceInfo.LineCount        = newLines.Length;
+        sourceInfo.LineCount        = newLines.Length - 1;
         sourceInfo.FilenameParent   = ParentFilename;
 
         string  dummyFile = "";
@@ -10905,15 +10905,14 @@ namespace C64Studio.Parser
 
         string[] result = new string[Lines.Length + sourceInfo.LineCount];
 
-        System.Array.Copy( Lines, 0, result, 0, lineIndex + 1 );
-        System.Array.Copy( newLines, 0, result, lineIndex + 1, newLines.Length );
+        System.Array.Copy( Lines, 0, result, 0, lineIndex );
+        System.Array.Copy( newLines, 0, result, lineIndex, newLines.Length );
 
         // this keeps the !source line in the final code, makes working with source infos easier though
-        System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + newLines.Length + 1, Lines.Length - lineIndex - 1 );
+        System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + newLines.Length, Lines.Length - lineIndex - 1 );
 
         // replace !source with empty line (otherwise source infos would have one line more!)
-        //result[lineIndex + newLines.Length] = "";
-        result[lineIndex] = "";
+        //result[lineIndex] = "";
 
         Lines = result;
 
