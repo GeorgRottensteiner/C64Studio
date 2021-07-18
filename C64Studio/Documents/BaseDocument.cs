@@ -501,13 +501,20 @@ namespace C64Studio
           }
 
           // rename during save
-          DocumentInfo.DocumentFilename   = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, newFilename, false );
-          DocumentInfo.Element.Name       = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
-          DocumentInfo.Element.Node.Text  = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
-          DocumentInfo.Element.Filename   = DocumentInfo.DocumentFilename;
-          if ( DocumentInfo.Element.Settings.Count == 0 )
+          if ( DocumentInfo.Project != null )
           {
-            DocumentInfo.Element.Settings["Default"] = new ProjectElement.PerConfigSettings();
+            DocumentInfo.DocumentFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, newFilename, false );
+            DocumentInfo.Element.Name = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+            DocumentInfo.Element.Node.Text = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+            DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
+            if ( DocumentInfo.Element.Settings.Count == 0 )
+            {
+              DocumentInfo.Element.Settings["Default"] = new ProjectElement.PerConfigSettings();
+            }
+          }
+          else
+          {
+            DocumentInfo.DocumentFilename = newFilename;
           }
 
           // need to rename file in project (dependencies, etc.)

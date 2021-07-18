@@ -1162,7 +1162,7 @@ namespace C64Studio
 
     private bool SendBinaryCommand( BinaryMonitorCommand Command, ByteBuffer RequestData, RequestData OriginatingRequest )
     {
-      return true;
+      //return true;
       // UGLY HACK
       m_Request = new C64Studio.RequestData( DebugRequestType.NONE );
 
