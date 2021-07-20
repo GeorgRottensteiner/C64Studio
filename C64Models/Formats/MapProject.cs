@@ -452,16 +452,16 @@ namespace C64Studio.Formats
         tileDataH.AppendU8( (byte)tile.Chars.Height );
 
         sbTileCharLo.Append( DataByteDirective );
-        sbTileCharLo.Append( " <" + LabelPrefix + "TILE_CHAR_" + tile.Name.ToUpper() + Environment.NewLine );
+        sbTileCharLo.Append( " <" + LabelPrefix + "TILE_CHAR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
         sbTileCharHi.Append( DataByteDirective );
-        sbTileCharHi.Append( " >" + LabelPrefix + "TILE_CHAR_" + tile.Name.ToUpper() + Environment.NewLine );
+        sbTileCharHi.Append( " >" + LabelPrefix + "TILE_CHAR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
 
         sbTileColorLo.Append( DataByteDirective );
-        sbTileColorLo.Append( " <" + LabelPrefix + "TILE_COLOR_" + tile.Name.ToUpper() + Environment.NewLine );
+        sbTileColorLo.Append( " <" + LabelPrefix + "TILE_COLOR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
         sbTileColorHi.Append( DataByteDirective );
-        sbTileColorHi.Append( " >" + LabelPrefix + "TILE_COLOR_" + tile.Name.ToUpper() + Environment.NewLine );
+        sbTileColorHi.Append( " >" + LabelPrefix + "TILE_COLOR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
 
-        sbTileChars.Append( LabelPrefix + "TILE_CHAR_" + tile.Name.ToUpper() + Environment.NewLine );
+        sbTileChars.Append( LabelPrefix + "TILE_CHAR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
 
         var tileCharData = new GR.Memory.ByteBuffer();
         for ( int j = 0; j < tile.Chars.Height; ++j )
@@ -474,7 +474,7 @@ namespace C64Studio.Formats
         sbTileChars.AppendLine( Util.ToASMData( tileCharData, WrapData, WrapByteCount, DataByteDirective ) );
 
 
-        sbTileColors.Append( LabelPrefix + "TILE_COLOR_" + tile.Name.ToUpper() + Environment.NewLine );
+        sbTileColors.Append( LabelPrefix + "TILE_COLOR_" + NormalizeAsLabel( tile.Name.ToUpper() ) + Environment.NewLine );
 
         var tileColorData = new GR.Memory.ByteBuffer();
         for ( int j = 0; j < tile.Chars.Height; ++j )
@@ -664,7 +664,7 @@ namespace C64Studio.Formats
       {
         sbMaps.Append( DataByteDirective );
         sbMaps.Append( ' ' );
-        sbMaps.AppendLine( "<" + LabelPrefix + "MAP_" + Maps[i].Name.ToUpper().Replace( ' ', '_' ) );
+        sbMaps.AppendLine( "<" + LabelPrefix + "MAP_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
       }
       sbMaps.AppendLine();
       sbMaps.Append( LabelPrefix );
@@ -673,7 +673,7 @@ namespace C64Studio.Formats
       {
         sbMaps.Append( DataByteDirective );
         sbMaps.Append( ' ' );
-        sbMaps.AppendLine( ">" + LabelPrefix + "MAP_" + Maps[i].Name.ToUpper().Replace( ' ', '_' ) );
+        sbMaps.AppendLine( ">" + LabelPrefix + "MAP_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
       }
       sbMaps.AppendLine();
 
@@ -685,7 +685,7 @@ namespace C64Studio.Formats
         {
           sbMaps.Append( DataByteDirective );
           sbMaps.Append( ' ' );
-          sbMaps.AppendLine( "<" + LabelPrefix + "MAP_EXTRA_DATA_" + Maps[i].Name.ToUpper().Replace( ' ', '_' ) );
+          sbMaps.AppendLine( "<" + LabelPrefix + "MAP_EXTRA_DATA_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
         }
         sbMaps.Append( LabelPrefix );
         sbMaps.AppendLine( "MAP_EXTRA_DATA_LIST_HI" );
@@ -693,7 +693,7 @@ namespace C64Studio.Formats
         {
           sbMaps.Append( DataByteDirective );
           sbMaps.Append( ' ' );
-          sbMaps.AppendLine( ">" + LabelPrefix + "MAP_EXTRA_DATA_" + Maps[i].Name.ToUpper().Replace( ' ', '_' ) );
+          sbMaps.AppendLine( ">" + LabelPrefix + "MAP_EXTRA_DATA_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
         }
         sbMaps.AppendLine();
       }
@@ -705,7 +705,7 @@ namespace C64Studio.Formats
 
         sbMaps.AppendLine();
         sbMaps.Append( LabelPrefix );
-        sbMaps.AppendLine( "MAP_" + map.Name.ToUpper().Replace( ' ', '_' ) );
+        sbMaps.AppendLine( "MAP_" + NormalizeAsLabel( map.Name.ToUpper() ) );
 
         GR.Memory.ByteBuffer mapDataBuffer = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.Tiles.Height ) );
 
@@ -736,7 +736,7 @@ namespace C64Studio.Formats
         {
           sbMaps.AppendLine( ";extra data" );
           sbMaps.Append( LabelPrefix );
-          sbMaps.AppendLine( "MAP_EXTRA_DATA_" + map.Name.ToUpper().Replace( ' ', '_' ) );
+          sbMaps.AppendLine( "MAP_EXTRA_DATA_" + NormalizeAsLabel( map.Name.ToUpper() ) );
 
           // clean extra data
           GR.Memory.ByteBuffer    extraData = new GR.Memory.ByteBuffer();
@@ -759,6 +759,28 @@ namespace C64Studio.Formats
 
       MapData = sbMaps.ToString();
       return true;
+    }
+
+
+
+    private string NormalizeAsLabel( string Label )
+    {
+      StringBuilder   sb = new StringBuilder();
+
+      foreach ( var c in Label )
+      {
+        if ( ( !char.IsDigit( c ) )
+        &&   ( !char.IsLetter( c ) )
+        &&   ( c != '_' ) )
+        {
+          sb.Append( '_' );
+        }
+        else
+        {
+          sb.Append( c );
+        }
+      }
+      return sb.ToString();
     }
 
 
@@ -789,7 +811,7 @@ namespace C64Studio.Formats
         {
           sbMaps.Append( DataByteDirective );
           sbMaps.Append( ' ' );
-          sbMaps.AppendLine( "<" + LabelPrefix + "MAP_EXTRA_DATA_" + Maps[i].Name.ToUpper().Replace( ' ', '_' ) );
+          sbMaps.AppendLine( "<" + LabelPrefix + "MAP_EXTRA_DATA_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
         }
         sbMaps.Append( LabelPrefix );
         sbMaps.AppendLine( "MAP_EXTRA_DATA_LIST_HI" );
@@ -797,7 +819,7 @@ namespace C64Studio.Formats
         {
           sbMaps.Append( DataByteDirective );
           sbMaps.Append( ' ' );
-          sbMaps.AppendLine( ">" + LabelPrefix + "MAP_EXTRA_DATA_" + Maps[i].Name.ToUpper().Replace( ' ', '_' ) );
+          sbMaps.AppendLine( ">" + LabelPrefix + "MAP_EXTRA_DATA_" + NormalizeAsLabel( Maps[i].Name.ToUpper() ) );
         }
         sbMaps.AppendLine();
       }
@@ -812,7 +834,7 @@ namespace C64Studio.Formats
         {
           sbMaps.AppendLine( ";extra data" );
           sbMaps.Append( LabelPrefix );
-          sbMaps.AppendLine( "MAP_EXTRA_DATA_" + map.Name.ToUpper().Replace( ' ', '_' ) );
+          sbMaps.AppendLine( "MAP_EXTRA_DATA_" + NormalizeAsLabel( map.Name.ToUpper() ) );
 
           // clean extra data
           GR.Memory.ByteBuffer    extraData = new GR.Memory.ByteBuffer();
