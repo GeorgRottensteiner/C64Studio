@@ -105,7 +105,7 @@ namespace C64Studio
       if ( m_SymbolMode )
       {
         bool hadError = false;
-        newText = m_Core.Compiling.ParserBasic.ReplaceAllMacrosBySymbols( newText, out hadError );
+        newText = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( newText, out hadError );
       }
       else
       {

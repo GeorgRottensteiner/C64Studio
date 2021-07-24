@@ -1588,7 +1588,7 @@ namespace C64Studio
       }
       if ( m_SymbolMode )
       {
-        result = Core.Compiling.ParserBasic.ReplaceAllMacrosBySymbols( result, out bool hadError );
+        result = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( result, out bool hadError );
       }
       else
       {
@@ -1749,7 +1749,7 @@ namespace C64Studio
 
       if ( m_SymbolMode )
       {
-        newText = Core.Compiling.ParserBasic.ReplaceAllMacrosBySymbols( editSource.Text, out hadError );
+        newText = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( editSource.Text, out hadError );
       }
       else
       {

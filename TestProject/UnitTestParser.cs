@@ -306,6 +306,20 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestTextModeTextWithTextMacro()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              * = $2000
+                                      !text ""ABCabc123{clr}""";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "002041424361626331323393", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestTextModePET()
     {
       string      source = @"!to ""text-modes.prg"",cbm
@@ -315,6 +329,20 @@ namespace TestProject
       var assembly = TestAssemble( source );
 
       Assert.AreEqual( "0030C1C2C3414243313233", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestTextModePETWithTextMacro()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              * = $3000
+                                      !pet ""{clr}ABCabc123"" ";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "003093C1C2C3414243313233", assembly.ToString() );
     }
 
 
@@ -334,6 +362,20 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestTextModeRawWithTextMacro()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              * = $5000
+                                      !raw ""ABC{clr}abc123""";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "005041424393616263313233", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestTextModeScreen()
     {
       string      source = @"!to ""text-modes.prg"",cbm
@@ -343,6 +385,20 @@ namespace TestProject
       var assembly = TestAssemble( source );
 
       Assert.AreEqual( "0040414243010203313233", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestTextModeScreenWithTextMacro()
+    {
+      string      source = @"!to ""text-modes.prg"",cbm
+                              * = $4000
+                                      !scr ""ABCabc{clr}123""";
+
+      var assembly = TestAssemble( source );
+
+      Assert.AreEqual( "004041424301020393313233", assembly.ToString() );
     }
 
 

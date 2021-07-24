@@ -2586,14 +2586,24 @@ namespace C64Studio.Parser
           if ( tokenIndex - expressionStartIndex == 1 )
           {
             if ( ( lineInfo.NeededParsedExpression[expressionStartIndex].Content.StartsWith( "\"" ) )
-            && ( lineInfo.NeededParsedExpression[expressionStartIndex].Length > 1 )
-            && ( lineInfo.NeededParsedExpression[expressionStartIndex].Content.EndsWith( "\"" ) ) )
+            &&   ( lineInfo.NeededParsedExpression[expressionStartIndex].Length > 1 )
+            &&   ( lineInfo.NeededParsedExpression[expressionStartIndex].Content.EndsWith( "\"" ) ) )
             {
+              string    textLiteral = lineInfo.NeededParsedExpression[expressionStartIndex].Content.Substring( 1, lineInfo.NeededParsedExpression[expressionStartIndex].Length - 2 );
+
+              textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, lineInfo.LineCodeMapping, out bool hadError );
+              if ( ( hadError )
+              &&   ( AddErrors ) )
+              {
+                AddError( lineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + TokensToExpression( lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex ) );
+                return ParseLineResult.RETURN_FALSE;
+              }
+
               // a text
-              foreach ( char aChar in lineInfo.NeededParsedExpression[expressionStartIndex].Content.Substring( 1, lineInfo.NeededParsedExpression[expressionStartIndex].Length - 2 ) )
+              foreach ( char aChar in textLiteral )
               {
                 // map to PETSCII!
-                lineData.AppendU8( MapTextCharacter( lineInfo.LineCodeMapping, (byte)aChar ) );
+                lineData.AppendU8( (byte)aChar );// MapTextCharacter( lineInfo.LineCodeMapping, (byte)aChar ) );
               }
             }
             else
@@ -2634,14 +2644,24 @@ namespace C64Studio.Parser
             if ( tokenIndex - expressionStartIndex == 1 )
             {
               if ( ( lineInfo.NeededParsedExpression[expressionStartIndex].Content.StartsWith( "\"" ) )
-              && ( lineInfo.NeededParsedExpression[expressionStartIndex].Length > 1 )
-              && ( lineInfo.NeededParsedExpression[expressionStartIndex].Content.EndsWith( "\"" ) ) )
+              &&   ( lineInfo.NeededParsedExpression[expressionStartIndex].Length > 1 )
+              &&   ( lineInfo.NeededParsedExpression[expressionStartIndex].Content.EndsWith( "\"" ) ) )
               {
+                string    textLiteral = lineInfo.NeededParsedExpression[expressionStartIndex].Content.Substring( 1, lineInfo.NeededParsedExpression[expressionStartIndex].Length - 2 );
+
+                textLiteral = BasicFileParser.ReplaceAllMacrosByPETSCIICode( textLiteral, lineInfo.LineCodeMapping, out bool hadError );
+                if ( ( hadError )
+                &&   ( AddErrors ) )
+                {
+                  AddError( lineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + TokensToExpression( lineInfo.NeededParsedExpression, expressionStartIndex, tokenIndex - expressionStartIndex ) );
+                  return ParseLineResult.RETURN_FALSE;
+                }
+
                 // a text
-                foreach ( char aChar in lineInfo.NeededParsedExpression[expressionStartIndex].Content.Substring( 1, lineInfo.NeededParsedExpression[expressionStartIndex].Length - 2 ) )
+                foreach ( char aChar in textLiteral )
                 {
                   // map to PETSCII!
-                  lineData.AppendU8( MapTextCharacter( lineInfo.LineCodeMapping, (byte)aChar ) );
+                  lineData.AppendU8( (byte)aChar );// MapTextCharacter( lineInfo.LineCodeMapping, (byte)aChar ) );
                 }
               }
               else
@@ -5774,7 +5794,7 @@ namespace C64Studio.Parser
         if ( ( token.Content.StartsWith( "\"" ) )
         &&   ( token.Content.EndsWith( "\"" ) ) )
         {
-          numBytes += token.Length - 2;
+          numBytes += ActualTextTokenLength( token ) - 2;
           ++literalCount;
         }
         else if ( token.Content == "," )
@@ -5794,6 +5814,56 @@ namespace C64Studio.Parser
       lineSizeInBytes             = info.NumBytes;
 
       return ParseLineResult.OK;
+    }
+
+
+
+    private int ActualTextTokenLength( TokenInfo Token )
+    {
+      int     curPos = 1;
+      int     macroStartPos = -1;
+      int     actualLength = 0;
+      bool    insideMacro = false;
+
+      while ( ( curPos < Token.Length )
+      &&      ( Token.Content[curPos] != '"' ) )
+      {
+        char    currentChar = Token.Content[curPos];
+
+        if ( currentChar == '{' )
+        {
+          if ( insideMacro )
+          {
+            // malformed macro!
+            return 0;
+          }
+          macroStartPos = curPos;
+          insideMacro = true;
+        }
+        else if ( currentChar == '}' )
+        {
+          if ( !insideMacro )
+          {
+            // malformed macro!
+            return 0;
+          }
+          insideMacro = false;
+
+          string macro = Token.Content.Substring( macroStartPos + 1, curPos - macroStartPos - 1 ).ToUpper();
+          int macroCount = 1;
+
+          macro = Parser.BasicFileParser.DetermineMacroCount( macro, out macroCount );
+
+          actualLength += macroCount;
+        }
+        else if ( !insideMacro )
+        {
+          ++actualLength;
+        }
+        ++curPos;
+      }
+
+      return actualLength;
     }
 
 
@@ -13825,7 +13895,7 @@ namespace C64Studio.Parser
       }
 
       // collapse # 
-        if ( ( result.Count >= 3 )
+      if ( ( result.Count >= 3 )
       &&   ( result[1].Type == Types.TokenInfo.TokenType.SEPARATOR )
       &&   ( result[1].Length == 1 )
       &&   ( Source[result[1].StartPos] == '#' )

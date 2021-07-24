@@ -3921,7 +3921,7 @@ namespace C64Studio.Parser
 
 
 
-    public string ReplaceAllMacrosBySymbols( string BasicText, out bool HadError )
+    public static string ReplaceAllMacrosBySymbols( string BasicText, out bool HadError )
     {
       StringBuilder     sb = new StringBuilder();
 
@@ -3977,6 +3977,76 @@ namespace C64Studio.Parser
         }
         // normal chars are passed on (also tabs, cr, lf)
         sb.Append( curChar );
+        ++posInLine;
+      }
+      return sb.ToString();
+    }
+
+
+
+    public static string ReplaceAllMacrosByPETSCIICode( string BasicText, GR.Collections.Map<byte, byte> CustomMapping, out bool HadError )
+    {
+      StringBuilder     sb = new StringBuilder();
+
+      int               posInLine = 0;
+      int               macroStartPos = 0;
+      bool              insideMacro = false;
+
+      HadError = false;
+
+      while ( posInLine < BasicText.Length )
+      {
+        char    curChar = BasicText[posInLine];
+        if ( insideMacro )
+        {
+          if ( curChar == '}' )
+          {
+            insideMacro = false;
+
+            string macro = BasicText.Substring( macroStartPos + 1, posInLine - macroStartPos - 1 ).ToUpper();
+            int macroCount = 1;
+
+            macro = Parser.BasicFileParser.DetermineMacroCount( macro, out macroCount );
+
+            bool  foundMacro = false;
+            foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
+            {
+              if ( key.Replacements.Contains( macro ) )
+              {
+                for ( int i = 0; i < macroCount; ++i )
+                {
+                  sb.Append( (char)key.PetSCIIValue );
+                }
+                foundMacro = true;
+                break;
+              }
+            }
+            if ( !foundMacro )
+            {
+              Debug.Log( "Unknown macro " + macro );
+              HadError = true;
+              return null;
+            }
+          }
+          ++posInLine;
+          continue;
+        }
+        if ( curChar == '{' )
+        {
+          insideMacro = true;
+          macroStartPos = posInLine;
+          ++posInLine;
+          continue;
+        }
+        // normal chars are passed on (also tabs, cr, lf)
+        if ( CustomMapping.ContainsKey( (byte)curChar ) )
+        {
+          sb.Append( (char)CustomMapping[(byte)curChar] );
+        }
+        else
+        {
+          sb.Append( curChar );
+        }
         ++posInLine;
       }
       return sb.ToString();
