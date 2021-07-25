@@ -321,48 +321,53 @@ namespace C64Studio
 
     internal void RenameElement( ProjectElement Element, string OldFilename, string NewFilename )
     {
-      // adjust references
-      foreach ( var project in Projects )
+      if ( Element != null )
       {
-        foreach ( var element in project.Elements )
+        // adjust references
+        foreach ( var project in Projects )
         {
-          foreach ( var perConfigSettings in element.Settings.Values )
+          foreach ( var element in project.Elements )
           {
-            foreach ( var buildChainEntry in perConfigSettings.PreBuildChain.Entries )
+            foreach ( var perConfigSettings in element.Settings.Values )
             {
-              if ( ( buildChainEntry.ProjectName == Element.DocumentInfo.Project.Settings.Name )
-              &&   ( System.IO.Path.GetFileName( buildChainEntry.DocumentFilename ).ToUpper() == System.IO.Path.GetFileName( OldFilename ).ToUpper() ) )
+              foreach ( var buildChainEntry in perConfigSettings.PreBuildChain.Entries )
               {
-                buildChainEntry.DocumentFilename = System.IO.Path.GetFileName( NewFilename );
+                if ( ( Element != null )
+                &&   ( buildChainEntry.ProjectName == Element.DocumentInfo.Project.Settings.Name )
+                &&   ( System.IO.Path.GetFileName( buildChainEntry.DocumentFilename ).ToUpper() == System.IO.Path.GetFileName( OldFilename ).ToUpper() ) )
+                {
+                  buildChainEntry.DocumentFilename = System.IO.Path.GetFileName( NewFilename );
+                }
               }
-            }
-            foreach ( var buildChainEntry in perConfigSettings.PostBuildChain.Entries )
-            {
-              if ( ( buildChainEntry.ProjectName == Element.DocumentInfo.Project.Settings.Name )
-              &&   ( System.IO.Path.GetFileName( buildChainEntry.DocumentFilename ).ToUpper() == System.IO.Path.GetFileName( OldFilename ).ToUpper() ) )
+              foreach ( var buildChainEntry in perConfigSettings.PostBuildChain.Entries )
               {
-                buildChainEntry.DocumentFilename = System.IO.Path.GetFileName( NewFilename );
+                if ( ( Element != null )
+                &&   ( buildChainEntry.ProjectName == Element.DocumentInfo.Project.Settings.Name )
+                &&   ( System.IO.Path.GetFileName( buildChainEntry.DocumentFilename ).ToUpper() == System.IO.Path.GetFileName( OldFilename ).ToUpper() ) )
+                {
+                  buildChainEntry.DocumentFilename = System.IO.Path.GetFileName( NewFilename );
+                }
               }
             }
           }
         }
-      }
 
-      // set new values
-      Element.Name = System.IO.Path.GetFileNameWithoutExtension( NewFilename );
+        // set new values
+        Element.Name = System.IO.Path.GetFileNameWithoutExtension( NewFilename );
 
-      string    newPath = GR.Path.RenameFile( Element.DocumentInfo.DocumentFilename, System.IO.Path.GetFileName( NewFilename ) );
+        string    newPath = GR.Path.RenameFile( Element.DocumentInfo.DocumentFilename, System.IO.Path.GetFileName( NewFilename ) );
 
-      Element.DocumentInfo.DocumentFilename = newPath;
-      if ( Element.Document != null )
-      {
-        Element.Document.SetDocumentFilename( newPath );
-        Element.Filename = newPath;
-        Element.Document.SetModified();
-      }
-      else
-      {
-        Element.Filename = System.IO.Path.GetFileName( NewFilename );
+        Element.DocumentInfo.DocumentFilename = newPath;
+        if ( Element.Document != null )
+        {
+          Element.Document.SetDocumentFilename( newPath );
+          Element.Filename = newPath;
+          Element.Document.SetModified();
+        }
+        else
+        {
+          Element.Filename = System.IO.Path.GetFileName( NewFilename );
+        }
       }
     }
 

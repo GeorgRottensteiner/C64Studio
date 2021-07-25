@@ -1,5 +1,4 @@
 ﻿C64Studio
-o !text "{clear}{home}" in assembler
 o Debugging disassembly, show debug highlight on first line with actual code
 o Character Scrolling Effect (in one char, shifting with direction)
   ->also flip char content through a list of other chars content

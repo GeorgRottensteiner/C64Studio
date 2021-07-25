@@ -2603,7 +2603,7 @@ namespace C64Studio.Parser
               foreach ( char aChar in textLiteral )
               {
                 // map to PETSCII!
-                lineData.AppendU8( (byte)aChar );// MapTextCharacter( lineInfo.LineCodeMapping, (byte)aChar ) );
+                lineData.AppendU8( (byte)aChar );
               }
             }
             else
@@ -2661,7 +2661,7 @@ namespace C64Studio.Parser
                 foreach ( char aChar in textLiteral )
                 {
                   // map to PETSCII!
-                  lineData.AppendU8( (byte)aChar );// MapTextCharacter( lineInfo.LineCodeMapping, (byte)aChar ) );
+                  lineData.AppendU8( (byte)aChar );
                 }
               }
               else
@@ -5794,7 +5794,7 @@ namespace C64Studio.Parser
         if ( ( token.Content.StartsWith( "\"" ) )
         &&   ( token.Content.EndsWith( "\"" ) ) )
         {
-          numBytes += ActualTextTokenLength( token ) - 2;
+          numBytes += ActualTextTokenLength( token );
           ++literalCount;
         }
         else if ( token.Content == "," )
@@ -5835,6 +5835,7 @@ namespace C64Studio.Parser
           if ( insideMacro )
           {
             // malformed macro!
+            Debug.Log( "ActualTextTokenLength malformed!" );
             return 0;
           }
           macroStartPos = curPos;
@@ -5845,6 +5846,7 @@ namespace C64Studio.Parser
           if ( !insideMacro )
           {
             // malformed macro!
+            Debug.Log( "ActualTextTokenLength malformed!" );
             return 0;
           }
           insideMacro = false;
