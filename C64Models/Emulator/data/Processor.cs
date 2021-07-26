@@ -415,12 +415,15 @@ namespace Tiny64
       sys.AddOpcodeForDisassembly( "jam", 0xd2, 0, AddressingType.IMPLICIT );      // JAM
       sys.AddOpcodeForDisassembly( "jam", 0xf2, 0, AddressingType.IMPLICIT );      // JAM
 
-      sys.AddOpcodeForDisassembly( "nop", 0x04, 1, AddressingType.ZEROPAGE );      // NOP $zp
+      //sys.AddOpcodeForDisassembly( "nop", 0x04, 1, AddressingType.ZEROPAGE );      // NOP $zp
+      sys.AddOpcode( "nop", 0x04, 1, AddressingType.ZEROPAGE, 3 );      // NOP $zp
       //sys.AddOpcodeForDisassembly( "nop", 0x0C, 2, AddressingType.ABSOLUTE );      // NOP $abcd
       sys.AddOpcode( "nop", 0x0C, 2, AddressingType.ABSOLUTE, 4 );      // NOP $abcd
-      sys.AddOpcodeForDisassembly( "nop", 0x14, 1, AddressingType.ZEROPAGE_X );    // NOP $zp,x
+      //sys.AddOpcodeForDisassembly( "nop", 0x14, 1, AddressingType.ZEROPAGE_X );    // NOP $zp,x
+      sys.AddOpcode( "nop", 0x14, 1, AddressingType.ZEROPAGE_X, 4 );    // NOP $zp,x
       sys.AddOpcodeForDisassembly( "nop", 0x1A, 0, AddressingType.IMPLICIT );      // NOP
-      sys.AddOpcodeForDisassembly( "nop", 0x1C, 2, AddressingType.ABSOLUTE_X );    // NOP $abcd,x
+      //sys.AddOpcodeForDisassembly( "nop", 0x1C, 2, AddressingType.ABSOLUTE_X );    // NOP $abcd,x
+      sys.AddOpcode( "nop", 0x1C, 2, AddressingType.ABSOLUTE_X, 4, 1 );    // NOP $abcd,x
       sys.AddOpcodeForDisassembly( "nop", 0x34, 1, AddressingType.ZEROPAGE_X );    // NOP $zp,x
       sys.AddOpcodeForDisassembly( "nop", 0x3A, 0, AddressingType.IMPLICIT );      // NOP
       sys.AddOpcodeForDisassembly( "nop", 0x3C, 2, AddressingType.ABSOLUTE_X );    // NOP $abcd,x
@@ -432,7 +435,8 @@ namespace Tiny64
       sys.AddOpcodeForDisassembly( "nop", 0x74, 1, AddressingType.ZEROPAGE_X );    // NOP $zp,x
       sys.AddOpcodeForDisassembly( "nop", 0x7A, 0, AddressingType.IMPLICIT );      // NOP
       sys.AddOpcodeForDisassembly( "nop", 0x7C, 2, AddressingType.ABSOLUTE_X );    // NOP $abcd,x
-      sys.AddOpcodeForDisassembly( "nop", 0x80, 1, AddressingType.IMMEDIATE );        // NOP #xx
+      //sys.AddOpcodeForDisassembly( "nop", 0x80, 1, AddressingType.IMMEDIATE );        // NOP #xx
+      sys.AddOpcode( "nop", 0x80, 1, AddressingType.IMMEDIATE, 2 );        // NOP #xx
       sys.AddOpcodeForDisassembly( "nop", 0x82, 1, AddressingType.IMMEDIATE );        // NOP #xx
       sys.AddOpcodeForDisassembly( "nop", 0x89, 1, AddressingType.IMMEDIATE );        // NOP #xx
       sys.AddOpcodeForDisassembly( "nop", 0xC2, 1, AddressingType.IMMEDIATE );        // NOP #xx
@@ -618,12 +622,15 @@ namespace Tiny64
       sys.AddOpcodeForDisassembly( "jam", 0xd2, 0, AddressingType.IMPLICIT );      // JAM
       sys.AddOpcodeForDisassembly( "jam", 0xf2, 0, AddressingType.IMPLICIT );      // JAM
 
-      sys.AddOpcodeForDisassembly( "nop", 0x04, 1, AddressingType.ZEROPAGE );      // NOP $zp
+      //sys.AddOpcodeForDisassembly( "nop", 0x04, 1, AddressingType.ZEROPAGE );      // NOP $zp
+      sys.AddOpcode( "nop", 0x04, 1, AddressingType.ZEROPAGE, 3 );      // NOP $zp
       //sys.AddOpcodeForDisassembly( "nop", 0x0C, 2, AddressingType.ABSOLUTE );      // NOP $abcd
       sys.AddOpcode( "nop", 0x0C, 2, AddressingType.ABSOLUTE, 4 );      // NOP $abcd
-      sys.AddOpcodeForDisassembly( "nop", 0x14, 1, AddressingType.ZEROPAGE_X );    // NOP $zp,x
+      //sys.AddOpcodeForDisassembly( "nop", 0x14, 1, AddressingType.ZEROPAGE_X );    // NOP $zp,x
+      sys.AddOpcode( "nop", 0x14, 1, AddressingType.ZEROPAGE_X, 4 );    // NOP $zp,x
       sys.AddOpcodeForDisassembly( "nop", 0x1A, 0, AddressingType.IMPLICIT );      // NOP
-      sys.AddOpcodeForDisassembly( "nop", 0x1C, 2, AddressingType.ABSOLUTE_X );    // NOP $abcd,x
+      //sys.AddOpcodeForDisassembly( "nop", 0x1C, 2, AddressingType.ABSOLUTE_X );    // NOP $abcd,x
+      sys.AddOpcode( "nop", 0x1C, 2, AddressingType.ABSOLUTE_X, 4, 1 );    // NOP $abcd,x
       sys.AddOpcodeForDisassembly( "nop", 0x34, 1, AddressingType.ZEROPAGE_X );    // NOP $zp,x
       sys.AddOpcodeForDisassembly( "nop", 0x3A, 0, AddressingType.IMPLICIT );      // NOP
       sys.AddOpcodeForDisassembly( "nop", 0x3C, 2, AddressingType.ABSOLUTE_X );    // NOP $abcd,x
@@ -635,7 +642,8 @@ namespace Tiny64
       sys.AddOpcodeForDisassembly( "nop", 0x74, 1, AddressingType.ZEROPAGE_X );    // NOP $zp,x
       sys.AddOpcodeForDisassembly( "nop", 0x7A, 0, AddressingType.IMPLICIT );      // NOP
       sys.AddOpcodeForDisassembly( "nop", 0x7C, 2, AddressingType.ABSOLUTE_X );    // NOP $abcd,x
-      sys.AddOpcodeForDisassembly( "nop", 0x80, 1, AddressingType.IMMEDIATE );        // NOP #xx
+      //sys.AddOpcodeForDisassembly( "nop", 0x80, 1, AddressingType.IMMEDIATE );        // NOP #xx
+      sys.AddOpcode( "nop", 0x80, 1, AddressingType.IMMEDIATE, 2 );        // NOP #xx
       sys.AddOpcodeForDisassembly( "nop", 0x82, 1, AddressingType.IMMEDIATE );        // NOP #xx
       sys.AddOpcodeForDisassembly( "nop", 0x89, 1, AddressingType.IMMEDIATE );        // NOP #xx
       sys.AddOpcodeForDisassembly( "nop", 0xC2, 1, AddressingType.IMMEDIATE );        // NOP #xx
