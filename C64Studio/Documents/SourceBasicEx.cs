@@ -37,6 +37,7 @@ namespace C64Studio
     private Dialect                           m_BASICDialect = null;
 
     private Parser.BasicFileParser            m_Parser = null;
+    private bool                              m_InsideLoad = false;
 
 
 
@@ -637,6 +638,7 @@ namespace C64Studio
       {
         content = MakeUpperCase( content, !Core.Settings.BASICUseNonC64Font );
       }
+
       return content;
     }
 
@@ -722,10 +724,13 @@ namespace C64Studio
         }
 
         m_LabelMode = IsInLabelMode( basicText );
+        m_InsideLoad = true;
         btnToggleLabelMode.Checked = m_LabelMode;
 
         editSource.Text = basicText;
         editSource.ClearUndo();
+
+        m_InsideLoad = false;
       }
       catch ( System.IO.IOException ex )
       {
@@ -1541,8 +1546,14 @@ namespace C64Studio
 
     private void btnToggleLabelMode_CheckedChanged( object sender, EventArgs e )
     {
+      if ( m_InsideLoad )
+      {
+        return;
+      }
+
       ToggleLabelMode();
     }
+
 
 
 
@@ -1551,6 +1562,25 @@ namespace C64Studio
       bool labelMode = !m_LabelMode;
 
       Core.MainForm.m_CompileResult.ClearMessages();
+
+      string toggledContent;
+
+      if ( !PerformLabelModeToggle( out toggledContent ) )
+      {
+        btnToggleLabelMode.Checked = false;
+        return false;
+      }
+
+      editSource.Text = toggledContent;
+      m_LabelMode = labelMode;
+      return true;
+    }
+
+
+
+    public bool PerformLabelModeToggle( out string Result )
+    {
+      bool labelMode = !m_LabelMode;
 
       var settings = new Parser.BasicFileParser.ParserSettings();
       settings.StripSpaces = Core.Settings.BASICStripSpaces;
@@ -1562,6 +1592,9 @@ namespace C64Studio
       var compilerConfig = new C64Studio.Parser.CompileConfig() { Assembler = C64Studio.Types.AssemblerType.AUTO };
 
       string basicSource = editSource.Text;
+
+      Result = basicSource;
+
       if ( m_LowerCaseMode )
       {
         basicSource = Parser.BasicFileParser.MakeUpperCase( basicSource, !Core.Settings.BASICUseNonC64Font );
@@ -1574,25 +1607,23 @@ namespace C64Studio
                                             null,
                                             DocumentInfo.Project );
         Core.MainForm.m_CompileResult.Show();
-        btnToggleLabelMode.Checked = false;
         return false;
       }
-      string    result;
       if ( labelMode )
       {
-        result = parser.EncodeToLabels();
+        Result = parser.EncodeToLabels();
       }
       else
       {
-        result = parser.DecodeFromLabels();
+        Result = parser.DecodeFromLabels();
       }
       if ( m_SymbolMode )
       {
-        result = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( result, out bool hadError );
+        Result = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( Result, out bool hadError );
       }
       else
       {
-        result = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( result );
+        Result = Core.Compiling.ParserBasic.ReplaceAllSymbolsByMacros( Result );
       }
 
       if ( parser.Errors > 0 )
@@ -1607,11 +1638,8 @@ namespace C64Studio
 
       if ( m_LowerCaseMode )
       {
-        result = Parser.BasicFileParser.MakeLowerCase( result, !Core.Settings.BASICUseNonC64Font );
+        Result = Parser.BasicFileParser.MakeLowerCase( Result, !Core.Settings.BASICUseNonC64Font );
       }
-
-      editSource.Text = result;
-      m_LabelMode = labelMode;
       return true;
     }
 
@@ -2069,6 +2097,18 @@ namespace C64Studio
     private void editSource_LineVisited( object sender, FastColoredTextBoxNS.LineVisitedArgs e )
     {
       Core.Navigating.VisitedLine( DocumentInfo, e.LineIndex );
+    }
+
+
+
+    public bool GetCompilableCode( out string Code )
+    {
+      if ( m_LabelMode )
+      {
+        return PerformLabelModeToggle( out Code );
+      }
+      Code = GetContent();
+      return true;
     }
 
 

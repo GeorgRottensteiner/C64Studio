@@ -378,12 +378,9 @@ namespace C64Studio
 
               ProjectElement.ElementType type = (ProjectElement.ElementType)memChunk.ReadUInt32();
 
-              //System.Windows.Forms.TreeNode nodeParent = NodeFromHierarchy( 
-
               ProjectElement element = CreateElement( type, Node );
-              element.Name = memChunk.ReadString();
-              //element.Filename = System.IO.Path.GetFileName( memChunk.ReadString() );
-              element.Filename = memChunk.ReadString();
+              element.Name      = memChunk.ReadString();
+              element.Filename  = memChunk.ReadString();
               if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
               {
                 element.Node.Text = element.Name;

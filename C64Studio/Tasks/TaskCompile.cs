@@ -476,15 +476,18 @@ namespace C64Studio.Tasks
                             + " to $" + ( parser.AssembledOutput.OriginalAssemblyStartAddress + parser.AssembledOutput.OriginalAssemblySize - 1 ).ToString( "X4" )
                             + ", size " + parser.AssembledOutput.OriginalAssemblySize + " bytes" + System.Environment.NewLine );
           Core.AddToOutput( "Memory Map:" + System.Environment.NewLine );
-          foreach ( var mapEntry in parser.AssembledOutput.MemoryMap.Entries )
+          if ( parser.AssembledOutput.MemoryMap != null )
           {
-            if ( string.IsNullOrEmpty( mapEntry.Description ) )
+            foreach ( var mapEntry in parser.AssembledOutput.MemoryMap.Entries )
             {
-              Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + ( mapEntry.StartAddress + mapEntry.Length - 1 ).ToString( "X4" ) + " - unnamed section" + System.Environment.NewLine );
-            }
-            else
-            {
-              Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + ( mapEntry.StartAddress + mapEntry.Length - 1 ).ToString( "X4" ) + " - " + mapEntry.Description + System.Environment.NewLine );
+              if ( string.IsNullOrEmpty( mapEntry.Description ) )
+              {
+                Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + ( mapEntry.StartAddress + mapEntry.Length - 1 ).ToString( "X4" ) + " - unnamed section" + System.Environment.NewLine );
+              }
+              else
+              {
+                Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + ( mapEntry.StartAddress + mapEntry.Length - 1 ).ToString( "X4" ) + " - " + mapEntry.Description + System.Environment.NewLine );
+              }
             }
           }
           Core.AddToOutput( "Compiled to file " + BuildInfo.TargetFile + ", " + parser.AssembledOutput.Assembly.Length + " bytes" + System.Environment.NewLine );

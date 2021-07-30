@@ -939,6 +939,7 @@ namespace C64Studio
       {
         return;
       }
+      StudioCore.Settings.Perspectives.StoreActiveContent( m_ActivePerspective );
       m_ActivePerspective = NewPerspective;
 
       var previousActiveDoc = ActiveDocumentInfo;
@@ -972,6 +973,8 @@ namespace C64Studio
       {
         previousActiveDoc.BaseDoc.Show();
       }
+
+      StudioCore.Settings.Perspectives.RestoreActiveContent( m_ActivePerspective );
     }
 
 
@@ -4995,10 +4998,16 @@ namespace C64Studio
 
       if ( Document.BaseDoc != null )
       {
-        if ( ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
-        ||   ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
+        if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
         {
           sourceCode = Document.BaseDoc.GetContent();
+        }
+        else if ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
+        {
+          if ( !( (SourceBasicEx)Document.BaseDoc ).GetCompilableCode( out sourceCode ) )
+          {
+            return false;
+          }
         }
       }
 
