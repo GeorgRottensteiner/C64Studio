@@ -383,6 +383,7 @@
     <Compile Include="PropertyTabs\PropertyTabBase.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Settings\PerspectiveDetails.cs" />
     <Compile Include="StudioCore.cs" />
     <Compile Include="Tasks\TaskCheckForUpdate.cs" />
     <Compile Include="Tasks\TaskManager.cs" />

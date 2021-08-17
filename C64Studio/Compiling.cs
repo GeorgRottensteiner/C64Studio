@@ -226,7 +226,8 @@ namespace C64Studio
         if ( DocInfo.DeducedDependency[ConfigSetting] != null )
         {
           // custom build overrides output file -> always rebuild
-          if ( ( !string.IsNullOrEmpty( DocInfo.Element.Settings[ConfigSetting].CustomBuild ) )
+          if ( ( DocInfo.Element.Settings.ContainsKey( ConfigSetting ) )
+          &&   ( !string.IsNullOrEmpty( DocInfo.Element.Settings[ConfigSetting].CustomBuild ) )
           &&   ( !string.IsNullOrEmpty( DocInfo.Element.TargetFilename ) ) )
           {
             Core.AddToOutput( "Custom build always requires a rebuild" + System.Environment.NewLine );

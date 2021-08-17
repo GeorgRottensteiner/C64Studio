@@ -223,6 +223,7 @@ namespace C64Studio
 
     public void Initialise()
     {
+      Settings.Perspectives = new PerspectiveDetails( this );
       Compiling.Initialise();
     }
 

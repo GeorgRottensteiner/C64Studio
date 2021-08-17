@@ -48,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Parser\CompileConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ParserBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\ProjectConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SharedTypes\GraphicTile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ASMFileInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ASMSegment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\AssemblyOutput.cs" />
