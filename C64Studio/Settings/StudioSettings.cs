@@ -207,6 +207,10 @@ namespace C64Studio
 
     private DeserializeDockContent m_deserializeDockContent;
 
+    public PerspectiveDetails                   Perspectives = null;
+    
+    
+
     public StudioSettings()
     {
       m_deserializeDockContent = new DeserializeDockContent( GetContentFromPersistString );
@@ -616,24 +620,11 @@ namespace C64Studio
         xmlOutText = parser.ToText();
       }
 
-      //Debug.Log( xmlOutText );
       chunkLayout.AppendU32( (uint)layoutData.Length );
       chunkLayout.Append( layoutData );
 
-      var activeContents = new List<int>();
-      foreach ( DockPane pane in PanelMain.Panes )
-      {
-        var activeContentID = PanelMain.Contents.IndexOf( pane.ActiveContent );
-        var cnt = pane.Contents.Count;
-
-        if ( ( cnt > 1 )
-        &&   ( activeContentID >= 0 ) )
-        {
-          Debug.Log( "Active Content: " + pane.ActiveContent.ToString() );
-          activeContents.Add( activeContentID );
-        }
-      }
-      //chunkLayout.AppendI32( 
+      Core.Settings.Perspectives.StoreActiveContent( Core.MainForm.m_ActivePerspective );
+      chunkLayout.Append( Core.Settings.Perspectives.ToBuffer() );
 
       SettingsData.Append( chunkLayout.ToBuffer() );
       memOut.Close();
@@ -890,6 +881,8 @@ namespace C64Studio
               GR.Memory.ByteBuffer    tempData = new GR.Memory.ByteBuffer();
               binIn.ReadBlock( tempData, size );
               SetLayoutFromData( tempData );
+
+              Perspectives.ReadFromBuffer( binIn );
             }
             break;
           case Types.FileChunk.SETTINGS_SOUND:
