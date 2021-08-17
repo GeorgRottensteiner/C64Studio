@@ -3743,6 +3743,12 @@ namespace C64Studio.Parser
           var lineReplacement = new string[lastLoop.LoopLength];
           System.Array.Copy( Lines, lastLoop.LineIndex + 1, lineReplacement, 0, lastLoop.LoopLength );
           lineReplacement = RelabelLocalLabelsForLoop( lineReplacement, ScopeList, lineIndex );
+
+          for ( int j = 0; j < lineReplacement.Length; ++j )
+          {
+            lineReplacement[j] = lineReplacement[j] + "; loop with " + lastLoop.Label + "=" + lastLoop.CurrentValue;
+          }
+
           System.Array.Copy( lineReplacement, 0, Lines, lastLoop.LineIndex + 1, lastLoop.LoopLength );
 
           // fix up internal labels
@@ -3775,13 +3781,11 @@ namespace C64Studio.Parser
 
 
           // blank out !for and !end
-          Lines[lastLoop.LineIndex] = ";ex for loop";
-          Lines[lineIndex] = ";ex loop end";
+          Lines[lastLoop.LineIndex] = ";was for loop start for " + lastLoop.Label;
+          Lines[lineIndex] = ";was loop end for " + lastLoop.Label;
 
           //Debug.Log( "Cloning last loop for " + lastLoop.Label );
           CloneTempLabelsExcept( lastLoop.LineIndex, lastLoop.LoopLength, lineIndex - lastLoop.LoopLength - 1, lastLoop.Label );
-
-          DumpTempLabelInfos( "__hla_STACK0" );
 
           //Debug.Log( "Last loop for " + lastLoop.Label + " reached" );
           //CloneSourceInfos( lastLoop.LineIndex, lastLoop.LoopLength, lineIndex - lastLoop.LoopLength );
@@ -3798,10 +3802,10 @@ namespace C64Studio.Parser
 
           // end reached now?
           if ( ( lastLoop.CurrentValue == lastLoop.EndValue )
-          || ( ( lastLoop.StepValue > 0 )
-          && ( lastLoop.CurrentValue + lastLoop.StepValue > lastLoop.EndValue ) )
-          || ( ( lastLoop.StepValue < 0 )
-          && ( lastLoop.CurrentValue + lastLoop.StepValue < lastLoop.EndValue ) ) )
+          ||   ( ( lastLoop.StepValue > 0 )
+          &&     ( lastLoop.CurrentValue + lastLoop.StepValue > lastLoop.EndValue ) )
+          ||   ( ( lastLoop.StepValue < 0 )
+          &&     ( lastLoop.CurrentValue + lastLoop.StepValue < lastLoop.EndValue ) ) )
           {
             endReached = true;
           }
@@ -3812,25 +3816,30 @@ namespace C64Studio.Parser
             lineLoopEndOffset = 0;
           }
 
-          DumpLines( Lines, "a" );
+          //DumpLines( Lines, "a" );
 
           string[] newLines = new string[Lines.Length + linesToCopy];
 
           System.Array.Copy( Lines, 0, newLines, 0, lineIndex );
           System.Array.Copy( lastLoop.Content, 0, newLines, lineIndex, linesToCopy );
+
+          for ( int j = 0; j < lastLoop.Content.Length; ++j )
+          {
+            newLines[lineIndex + j] = newLines[lineIndex + j] + "; loop with " + lastLoop.Label + "=" + lastLoop.CurrentValue;
+          }
+
           System.Array.Copy( Lines, lineIndex + lineLoopEndOffset, newLines, lineIndex + linesToCopy, Lines.Length - lineIndex - lineLoopEndOffset );
 
           // fix up internal labels
           lastLoop.Content = RelabelLocalLabelsForLoop( lastLoop.Content, ScopeList, lineIndex );
 
-          DumpLines( newLines, "b" );
+          //DumpLines( newLines, "b" );
 
           // also copy scoped variables if overlapping!!!
           if ( !endReached )
           {
             //Debug.Log( "Cloning loop " + lastLoop.CurrentValue + "/" + lastLoop.EndValue + " for " + lastLoop.Label );
             CloneTempLabelsExcept( lastLoop.LineIndex, linesToCopy, lineIndex - 1, lastLoop.Label );
-            DumpTempLabelInfos( "__hla_STACK0" );
           }
 
           // adjust source infos to make lookup work correctly
@@ -6800,19 +6809,47 @@ namespace C64Studio.Parser
       SourceInfoLog( "-include at global index " + lineIndex );
       SourceInfoLog( "-has " + subFile.Length + " lines" );
 
-      InsertSourceInfo( sourceInfo );
+      //InsertSourceInfo( sourceInfo );
 
-      //string[] result = new string[Lines.Length + subFile.Length - 1];
+      sourceInfo.GlobalStartLine = lineIndex + 1;
+      InsertSourceInfo( sourceInfo );
+      //InsertSourceInfo( sourceInfo, true, true );
+
+      /*
+      // overwrite !src line
+      string[] result = new string[Lines.Length + subFile.Length - 1];
+
+      System.Array.Copy( Lines, 0, result, 0, lineIndex );
+      System.Array.Copy( subFile, 0, result, lineIndex, subFile.Length );
+
+      // this keeps the !source line in the final code, makes working with source infos easier though
+      System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + subFile.Length, Lines.Length - lineIndex - 1 );
+      */
+
+      // keep !src line on top
+      string[] result = new string[Lines.Length + subFile.Length];
+
+      System.Array.Copy( Lines, 0, result, 0, lineIndex + 1 );
+      System.Array.Copy( subFile, 0, result, lineIndex + 1, subFile.Length );
+
+      // this keeps the !source line in the final code, makes working with source infos easier though
+      System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + subFile.Length + 1, Lines.Length - lineIndex - 1 );
+
+      // replace !source with empty line (otherwise source infos would have one line more!)
+      result[lineIndex] = "";
+
+      /*
       string[] result = new string[Lines.Length + subFile.Length];
 
       System.Array.Copy( Lines, 0, result, 0, lineIndex );
       System.Array.Copy( subFile, 0, result, lineIndex, subFile.Length );
-      //System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + subFile.Length, Lines.Length - lineIndex - 1 );
 
       // this keeps the !source line in the final code, makes working with source infos easier though
       System.Array.Copy( Lines, lineIndex, result, lineIndex + subFile.Length, Lines.Length - lineIndex );
+
       // replace !source with empty line (otherwise source infos would have one line more!)
       result[lineIndex + subFile.Length] = "";
+      */
 
       Lines = result;
 
@@ -10358,7 +10395,13 @@ namespace C64Studio.Parser
         }
       }
 
-      //Debug.Log( "PreProcess done" );
+      /*
+      foreach ( var line in ASMFileInfo.LineInfo )
+      {
+        ASMFileInfo.FindTrueLineSource( line.Key, out string filename, out int localLineIndex );
+        Debug.Log( "Line " + line.Key.ToString( "D3" ) + " ($" + line.Value.AddressStart.ToString( "X4" ) + ": " + line.Value.NumBytes + " bytes: " + line.Value.Line + ", from line " + localLineIndex );
+      }*/
+
       m_CompileCurrentAddress = -1;
       return Lines;
     }
