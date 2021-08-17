@@ -3098,34 +3098,39 @@ namespace C64Studio
     internal void SetLineInfos( Types.ASM.FileInfo FileInfo )
     {
       GR.Collections.Set<int>   setLines = new GR.Collections.Set<int>();
-      foreach ( var sourceInfo in FileInfo.SourceInfo )
+      string                    myFullPath = DocumentInfo.FullPath;
+
+      foreach ( var lineInfo in FileInfo.LineInfo )
       {
-        if ( GR.Path.IsPathEqual( sourceInfo.Value.FullPath, DocumentInfo.FullPath ) )
+        FileInfo.FindTrueLineSource( lineInfo.Key, out string filename, out int localLineIndex );
+
+        if ( filename == myFullPath )
         {
-          for ( int i = 0; i < sourceInfo.Value.LineCount; ++i )
+          var newInfo = lineInfo.Value;
+
+          if ( !setLines.ContainsValue( localLineIndex ) )
           {
-            // TODO - happens if we edit code while compiling
-            if ( ( sourceInfo.Value.LocalStartLine + i < m_LineInfos.Count )
-            &&   ( sourceInfo.Value.LocalStartLine + i >= 0 )
-            &&   ( FileInfo.LineInfo.ContainsKey( sourceInfo.Value.GlobalStartLine + i ) ) )
+            m_LineInfos[localLineIndex] = new Types.ASM.LineInfo()
             {
-              if ( !setLines.ContainsValue( sourceInfo.Value.LocalStartLine + i ) )
-              {
-                m_LineInfos[sourceInfo.Value.LocalStartLine + i] = FileInfo.LineInfo[sourceInfo.Value.GlobalStartLine + i];
-                setLines.Add( sourceInfo.Value.LocalStartLine + i );
-              }
-              else
-              {
-                // accumulate values!
-                var curInfo = m_LineInfos[sourceInfo.Value.LocalStartLine + i];
-                var newInfo = FileInfo.LineInfo[sourceInfo.Value.GlobalStartLine + i];
+              AddressStart = newInfo.AddressStart,
+              NumBytes = newInfo.NumBytes,
+              Line = newInfo.Line,
+              LineIndex = localLineIndex,
+              Zone = newInfo.Zone,
+              Opcode = newInfo.Opcode
+            };
 
-                curInfo.NumBytes += newInfo.NumBytes;
+            setLines.Add( localLineIndex );
+          }
+          else
+          {
+            // accumulate values!
+            var curInfo = m_LineInfos[localLineIndex];
 
-                // TODO - cycles!
-                curInfo.HasCollapsedContent = true;
-              }
-            }
+            curInfo.NumBytes += newInfo.NumBytes;
+
+            // TODO - cycles!
+            curInfo.HasCollapsedContent = true;
           }
         }
       }
