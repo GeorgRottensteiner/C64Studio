@@ -21,6 +21,9 @@
     <br>
     <br>
     Any scripts in a build step are performed sequentially. Several macros are filled with current file and project information.<br>
+    Steps after the main build step (Post Build and Post Build Chain) can also access values of labels from the code.<br>
+    The content of a macro is evaluated as expression, you can perform calculations.<br>
+    If the content of a macro starts with "0x" the result is output in hexadecimal notation.<br>
     <br>
     Available macros are:<br>
     <br>

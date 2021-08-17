@@ -2123,6 +2123,7 @@
   <H2>!TEXT, !TX, !SCR, !PET, !RAW</H2>
   <div id="mybody">
     This pseudo op allows to insert text, characters, or one ore more bytes at the current location.<br>
+    Text literals allow the inclusion of text symbols in squiggly braces. See <a href="basic_macros.html">here</a> for a list. For any macro the PETSCII value is used always, independent from the current used mapping.<br>
     <br>
     Allowed are text literals, character literals, constant values, expressions and labels as content.<br>
     text literals are surrounded by ", character literals by '<br>
@@ -2136,6 +2137,8 @@
     <div id="code"><br>      !text "HELLO WORLD"
       !text " SCORE",60," 00000000   ",224,224,"         LEVEL",60," 00                    ",225,225,"         LIVES",60," 03 *"
       !text 206,184,191,182,198,196,184,0,203,198,0,202,198,204,191,191,184,202,202,0,0
+
+      !text "{clr}HELLO WORLD"
       <br></div>
     <br>
     <br>
