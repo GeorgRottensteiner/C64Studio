@@ -17,6 +17,44 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+20.08.2021 - 6.9:         Add: restore active tab of tabbed panes
+                          Add: Allow BASIC PETSCII macros inside !text statements (e.g. !text "{clr}hello world")
+                          Partial fix: properly add up line sizes on overlapping content (loops, macro calls)
+                          Partial fix: Offset line memory for nested !for loops
+                          Fix: BASIC build now works from label mode directly
+                          Add: Illegal NOP variants following ACME
+                          Fix: for wrong number of bytes in string literals
+                          Add: allow PETSCII control char substitution in assembly as well: !text "{clr}hello world"
+                          Fix: Export map editor to assembly, unusable label names from unfortunate tile/map names
+                          Fix: Source/label info for lines which are separared via colons
+                          Fix: Memory map output
+                          Maybe complete: Save As now does internal renames, save copy as does not
+                          Fix: ASM Parser, not properly collapsing tokens if the line ends with a comment
+                          Add: Textual memory map output after compiling
+                          Add: Do not mark built files as dirty when switching between loaded projects
+                          Fix: NOP $abcd now working with $0c for 6502/6510
+                          Add: Navigating back/forward
+                          Fix: File Manager Disk image, adding new directory entry may overwrite pointer to next track/sector
+                          Fix: Only remove BASIC meta data line if it is actually present (facepalm)
+                          Add: Search/Replace in whole solution
+                          Fix: Updates the condition field when a new breakpoint is selected
+                          Add: Find all references
+                          Fix: Source code changes now handled with new events, breakpoint moves are now correctly handled
+                          Add: Show all references
+                          Fix: Potential fix for missing 3rd column in debug watch view
+                          Fix: Adding a breakpoint via Debug Breakpoints dialog now adds a breakpoint marker in the source file
+                          Add: Charset screen editor, show selection bounds
+                          Fix: Disassembly not updating with code
+                          Fix: Set BASIC V7 default start address to 7169
+                          Add: Save/Restore BASIC file meta data (start address, dialect) in .bas file itself
+                          Fix: Speedup of syntax coloring update during background parse phase for huge files
+                          Fix: BASIC PRINT export from charset screen editor now working with apostrophes
+                          Fix: bug in watch removal
+                          Fix: Debug watches are now displayed per project/single file
+                          Fix: Pressing the Delete Button in the Breakpoints Window will now remove the breakpoint from the ASM window.
+                          Add/Fix: Undo for category swap
+                          Add: Partial support for Charpad ctm format version 7
+
 14.05.2021 - 6.8:         Add: Allow list for !fill expression
                           Add: Auto-Fill emulator entries on wizard or new entry
                           Add: !fill expression parsing with list
