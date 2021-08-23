@@ -851,7 +851,7 @@
       this.comboSpriteColor.Name = "comboSpriteColor";
       this.comboSpriteColor.Size = new System.Drawing.Size(79, 21);
       this.comboSpriteColor.TabIndex = 1;
-      this.comboSpriteColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboMulticolor_DrawItem);
+      this.comboSpriteColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboSpriteColor.SelectedIndexChanged += new System.EventHandler(this.comboSpriteColor_SelectedIndexChanged);
       // 
       // comboMulticolor2

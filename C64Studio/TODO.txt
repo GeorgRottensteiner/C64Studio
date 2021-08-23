@@ -1,4 +1,8 @@
 ﻿C64Studio
+o Find/Replace
+  1) Often, after clicking on "Find Next", it is not the occurrence following the cursor position at that moment that is highlighted but a subsequent one.
+  2) When I click on "Replace", it is not the highlighted recurrence that is replaced but the next one.
+o Charscreeneditor: Export charset as binary
 o Sprites: NES 8x8 (3colors 1bg)
 o Debugging disassembly, show debug highlight on first line with actual code
 o Character Scrolling Effect (in one char, shifting with direction)

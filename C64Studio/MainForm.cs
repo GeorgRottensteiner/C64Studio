@@ -6430,7 +6430,7 @@ namespace C64Studio
         }
       }
 
-      DlgGraphicImport importGFX = new DlgGraphicImport(StudioCore, ImportType, IncomingImage, Filename, MCSettings);
+      DlgGraphicImport importGFX = new DlgGraphicImport( StudioCore, ImportType, IncomingImage, Filename, MCSettings );
       if ( importGFX.ShowDialog() != DialogResult.OK )
       {
         IncomingImage.Dispose();
@@ -6895,7 +6895,7 @@ namespace C64Studio
 
     public void WriteToLog( string Info )
     {
-      System.IO.File.AppendAllText( "testlog.txt", Info + System.Environment.NewLine );
+      //System.IO.File.AppendAllText( "testlog.txt", Info + System.Environment.NewLine );
     }
 
 
