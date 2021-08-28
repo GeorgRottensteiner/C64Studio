@@ -1,4 +1,14 @@
 ﻿C64Studio
+o das Studio bei einigen Vorgängen alle Zones aufklappt (z.B. bei der Suche oder bei nem Doppelklick in die Compiler Messages). 
+o !zone Sprites
+  *=$3c00
+  Mousepointer0Addr
+  !byte $c0,$00,$00,$a0,$00,$00,$90,$00
+  !byte $00,$88,$00,$00,$84,$00,$00,$82
+  ...
+
+  Letzte Zone "verschwindet"? (Nicht mehr per scrollen erreichbar?)
+
 o Find/Replace
   1) Often, after clicking on "Find Next", it is not the occurrence following the cursor position at that moment that is highlighted but a subsequent one.
   2) When I click on "Replace", it is not the highlighted recurrence that is replaced but the next one.

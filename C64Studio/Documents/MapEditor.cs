@@ -940,11 +940,11 @@ namespace C64Studio
         fillHeight = m_CurrentMap.TileSpacingY * 8 * m_CurrentMap.Tiles.Height;
         if ( ( m_CurrentMap.Tiles.Width - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX < pictureEditor.DisplayPage.Width )
         {
-          fillWidth = pictureEditor.DisplayPage.Width - ( m_CurrentMap.Tiles.Width - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX;
+          fillWidth = ( m_CurrentMap.Tiles.Width - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX;
         }
         if ( ( m_CurrentMap.Tiles.Height - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY < pictureEditor.DisplayPage.Height )
         {
-          fillHeight = pictureEditor.DisplayPage.Height - ( m_CurrentMap.Tiles.Height - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY;
+          fillHeight = ( m_CurrentMap.Tiles.Height - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY;
         }
       }
 

@@ -2992,7 +2992,8 @@ namespace C64Studio
 
     private void editSource_DragEnter( object sender, DragEventArgs e )
     {
-      if ( e.Data.GetDataPresent( DataFormats.FileDrop ) )
+      if ( ( e.Data.GetDataPresent( DataFormats.FileDrop ) )
+      ||   ( e.Data.GetDataPresent( DataFormats.Text ) ) )
       {
         e.Effect = DragDropEffects.Copy;
       }
@@ -3009,13 +3010,16 @@ namespace C64Studio
       try
       {
         Array a = (Array)e.Data.GetData( DataFormats.FileDrop );
-
         if ( a != null )
         {
           foreach ( string file in a )
           {
             Core.MainForm.OpenFile( file );
           }
+        }
+        else if ( e.Data.GetDataPresent( DataFormats.Text ) )
+        {
+          base.OnDragDrop( e );
         }
       }
       catch ( Exception ex )
