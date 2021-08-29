@@ -8254,11 +8254,6 @@ namespace FastColoredTextBoxNS
 
       int from = 0;
       int to = Lines.Count - 1;
-      int   startOffset = old.Start.iChar;
-      if ( old.Start.iLine > old.End.iLine )
-      {
-        startOffset = old.End.iChar;
-      }
       BeginUpdate();
       Selection.BeginUpdate();
       lines.Manager.BeginAutoUndoCommands();
@@ -8269,7 +8264,8 @@ namespace FastColoredTextBoxNS
         int lastSpacePos = lines[i].Text.Length;
         while ( lastSpacePos > 0 )
         {
-          if ( lines[i].Text[lastSpacePos - 1] == ' ' )
+          if ( ( lines[i].Text[lastSpacePos - 1] == ' ' )
+          ||   ( lines[i].Text[lastSpacePos - 1] == '\t' ) )
           {
             --lastSpacePos;
           }
