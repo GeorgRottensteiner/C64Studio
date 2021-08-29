@@ -2411,10 +2411,12 @@ namespace FastColoredTextBoxNS
         base.Invalidate();
     }
 
+
     protected virtual void OnCharSizeChanged()
     {
       VerticalScroll.SmallChange = charHeight;
-      VerticalScroll.LargeChange = 10 * charHeight;
+      //VerticalScroll.LargeChange = 10 * charHeight;
+      //VerticalScroll.LargeChange = ClientSize.Height;
       HorizontalScroll.SmallChange = CharWidth;
     }
 
