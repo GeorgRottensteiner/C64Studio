@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,6 +84,10 @@
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnShiftDown = new System.Windows.Forms.Button();
+      this.btnShiftUp = new System.Windows.Forms.Button();
+      this.btnShiftRight = new System.Windows.Forms.Button();
+      this.btnShiftLeft = new System.Windows.Forms.Button();
       this.btnClearScreen = new System.Windows.Forms.Button();
       this.checkOverrideOriginalColorSettings = new System.Windows.Forms.CheckBox();
       this.checkShowGrid = new System.Windows.Forms.CheckBox();
@@ -121,10 +125,6 @@
       this.tabCharset = new System.Windows.Forms.TabPage();
       this.charEditor = new C64Studio.Controls.CharacterEditor();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnShiftDown = new System.Windows.Forms.Button();
-      this.btnShiftUp = new System.Windows.Forms.Button();
-      this.btnShiftRight = new System.Windows.Forms.Button();
-      this.btnShiftLeft = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -724,6 +724,50 @@
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // btnShiftDown
+      // 
+      this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
+      this.btnShiftDown.Location = new System.Drawing.Point(104, 460);
+      this.btnShiftDown.Name = "btnShiftDown";
+      this.btnShiftDown.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftDown.TabIndex = 52;
+      this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
+      this.btnShiftDown.UseVisualStyleBackColor = true;
+      this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
+      // 
+      // btnShiftUp
+      // 
+      this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
+      this.btnShiftUp.Location = new System.Drawing.Point(80, 460);
+      this.btnShiftUp.Name = "btnShiftUp";
+      this.btnShiftUp.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftUp.TabIndex = 49;
+      this.toolTip1.SetToolTip(this.btnShiftUp, "Shift Up");
+      this.btnShiftUp.UseVisualStyleBackColor = true;
+      this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
+      // 
+      // btnShiftRight
+      // 
+      this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
+      this.btnShiftRight.Location = new System.Drawing.Point(56, 460);
+      this.btnShiftRight.Name = "btnShiftRight";
+      this.btnShiftRight.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftRight.TabIndex = 50;
+      this.toolTip1.SetToolTip(this.btnShiftRight, "Shift Right");
+      this.btnShiftRight.UseVisualStyleBackColor = true;
+      this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
+      // 
+      // btnShiftLeft
+      // 
+      this.btnShiftLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftLeft.Image")));
+      this.btnShiftLeft.Location = new System.Drawing.Point(32, 460);
+      this.btnShiftLeft.Name = "btnShiftLeft";
+      this.btnShiftLeft.Size = new System.Drawing.Size(24, 23);
+      this.btnShiftLeft.TabIndex = 51;
+      this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift Left");
+      this.btnShiftLeft.UseVisualStyleBackColor = true;
+      this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
+      // 
       // btnClearScreen
       // 
       this.btnClearScreen.Image = ((System.Drawing.Image)(resources.GetObject("btnClearScreen.Image")));
@@ -738,7 +782,7 @@
       // checkOverrideOriginalColorSettings
       // 
       this.checkOverrideOriginalColorSettings.AutoSize = true;
-      this.checkOverrideOriginalColorSettings.Location = new System.Drawing.Point(838, 59);
+      this.checkOverrideOriginalColorSettings.Location = new System.Drawing.Point(751, 37);
       this.checkOverrideOriginalColorSettings.Name = "checkOverrideOriginalColorSettings";
       this.checkOverrideOriginalColorSettings.Size = new System.Drawing.Size(96, 17);
       this.checkOverrideOriginalColorSettings.TabIndex = 37;
@@ -749,7 +793,7 @@
       // checkShowGrid
       // 
       this.checkShowGrid.AutoSize = true;
-      this.checkShowGrid.Location = new System.Drawing.Point(838, 33);
+      this.checkShowGrid.Location = new System.Drawing.Point(168, 462);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
       this.checkShowGrid.TabIndex = 37;
@@ -812,7 +856,7 @@
       // label9
       // 
       this.label9.AutoSize = true;
-      this.label9.Location = new System.Drawing.Point(827, 6);
+      this.label9.Location = new System.Drawing.Point(677, 11);
       this.label9.Name = "label9";
       this.label9.Size = new System.Drawing.Size(37, 13);
       this.label9.TabIndex = 35;
@@ -822,9 +866,9 @@
       // 
       this.comboCharsetMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboCharsetMode.FormattingEnabled = true;
-      this.comboCharsetMode.Location = new System.Drawing.Point(870, 3);
+      this.comboCharsetMode.Location = new System.Drawing.Point(751, 8);
       this.comboCharsetMode.Name = "comboCharsetMode";
-      this.comboCharsetMode.Size = new System.Drawing.Size(83, 21);
+      this.comboCharsetMode.Size = new System.Drawing.Size(216, 21);
       this.comboCharsetMode.TabIndex = 34;
       this.comboCharsetMode.SelectedIndexChanged += new System.EventHandler(this.comboCharsetMode_SelectedIndexChanged);
       // 
@@ -912,7 +956,7 @@
       // 
       // btnApplyScreenSize
       // 
-      this.btnApplyScreenSize.Location = new System.Drawing.Point(838, 110);
+      this.btnApplyScreenSize.Location = new System.Drawing.Point(897, 114);
       this.btnApplyScreenSize.Name = "btnApplyScreenSize";
       this.btnApplyScreenSize.Size = new System.Drawing.Size(67, 20);
       this.btnApplyScreenSize.TabIndex = 30;
@@ -922,17 +966,17 @@
       // 
       // editScreenHeight
       // 
-      this.editScreenHeight.Location = new System.Drawing.Point(794, 110);
+      this.editScreenHeight.Location = new System.Drawing.Point(830, 114);
       this.editScreenHeight.Name = "editScreenHeight";
-      this.editScreenHeight.Size = new System.Drawing.Size(37, 20);
+      this.editScreenHeight.Size = new System.Drawing.Size(61, 20);
       this.editScreenHeight.TabIndex = 29;
       this.editScreenHeight.TextChanged += new System.EventHandler(this.editScreenHeight_TextChanged);
       // 
       // editScreenWidth
       // 
-      this.editScreenWidth.Location = new System.Drawing.Point(751, 110);
+      this.editScreenWidth.Location = new System.Drawing.Point(751, 114);
       this.editScreenWidth.Name = "editScreenWidth";
-      this.editScreenWidth.Size = new System.Drawing.Size(37, 20);
+      this.editScreenWidth.Size = new System.Drawing.Size(70, 20);
       this.editScreenWidth.TabIndex = 29;
       this.editScreenWidth.TextChanged += new System.EventHandler(this.editScreenWidth_TextChanged);
       // 
@@ -955,7 +999,7 @@
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(677, 114);
+      this.label7.Location = new System.Drawing.Point(677, 117);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(30, 13);
       this.label7.TabIndex = 22;
@@ -964,7 +1008,7 @@
       // labelBGColor4
       // 
       this.labelBGColor4.AutoSize = true;
-      this.labelBGColor4.Location = new System.Drawing.Point(677, 87);
+      this.labelBGColor4.Location = new System.Drawing.Point(677, 90);
       this.labelBGColor4.Name = "labelBGColor4";
       this.labelBGColor4.Size = new System.Drawing.Size(58, 13);
       this.labelBGColor4.TabIndex = 22;
@@ -973,7 +1017,7 @@
       // labelMColor2
       // 
       this.labelMColor2.AutoSize = true;
-      this.labelMColor2.Location = new System.Drawing.Point(677, 60);
+      this.labelMColor2.Location = new System.Drawing.Point(827, 90);
       this.labelMColor2.Name = "labelMColor2";
       this.labelMColor2.Size = new System.Drawing.Size(64, 13);
       this.labelMColor2.TabIndex = 22;
@@ -982,7 +1026,7 @@
       // labelMColor1
       // 
       this.labelMColor1.AutoSize = true;
-      this.labelMColor1.Location = new System.Drawing.Point(677, 33);
+      this.labelMColor1.Location = new System.Drawing.Point(827, 63);
       this.labelMColor1.Name = "labelMColor1";
       this.labelMColor1.Size = new System.Drawing.Size(64, 13);
       this.labelMColor1.TabIndex = 22;
@@ -991,7 +1035,7 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(677, 6);
+      this.label1.Location = new System.Drawing.Point(677, 63);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(68, 13);
       this.label1.TabIndex = 22;
@@ -1028,7 +1072,7 @@
       this.comboBGColor4.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboBGColor4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBGColor4.FormattingEnabled = true;
-      this.comboBGColor4.Location = new System.Drawing.Point(751, 84);
+      this.comboBGColor4.Location = new System.Drawing.Point(751, 87);
       this.comboBGColor4.Name = "comboBGColor4";
       this.comboBGColor4.Size = new System.Drawing.Size(70, 21);
       this.comboBGColor4.TabIndex = 1;
@@ -1040,7 +1084,7 @@
       this.comboMulticolor2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboMulticolor2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboMulticolor2.FormattingEnabled = true;
-      this.comboMulticolor2.Location = new System.Drawing.Point(751, 57);
+      this.comboMulticolor2.Location = new System.Drawing.Point(897, 87);
       this.comboMulticolor2.Name = "comboMulticolor2";
       this.comboMulticolor2.Size = new System.Drawing.Size(70, 21);
       this.comboMulticolor2.TabIndex = 1;
@@ -1052,7 +1096,7 @@
       this.comboMulticolor1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboMulticolor1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboMulticolor1.FormattingEnabled = true;
-      this.comboMulticolor1.Location = new System.Drawing.Point(751, 30);
+      this.comboMulticolor1.Location = new System.Drawing.Point(897, 60);
       this.comboMulticolor1.Name = "comboMulticolor1";
       this.comboMulticolor1.Size = new System.Drawing.Size(70, 21);
       this.comboMulticolor1.TabIndex = 1;
@@ -1064,7 +1108,7 @@
       this.comboBackground.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBackground.FormattingEnabled = true;
-      this.comboBackground.Location = new System.Drawing.Point(751, 3);
+      this.comboBackground.Location = new System.Drawing.Point(751, 60);
       this.comboBackground.Name = "comboBackground";
       this.comboBackground.Size = new System.Drawing.Size(70, 21);
       this.comboBackground.TabIndex = 1;
@@ -1075,7 +1119,7 @@
       // 
       this.panelCharColors.AutoResize = false;
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage1;
+      this.panelCharColors.DisplayPage = fastImage3;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(677, 416);
       this.panelCharColors.Name = "panelCharColors";
@@ -1089,7 +1133,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage4;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1132,50 +1176,6 @@
       this.charEditor.TabIndex = 24;
       this.charEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);
       this.charEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.charEditor_CharactersShifted);
-      // 
-      // btnShiftDown
-      // 
-      this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
-      this.btnShiftDown.Location = new System.Drawing.Point(104, 460);
-      this.btnShiftDown.Name = "btnShiftDown";
-      this.btnShiftDown.Size = new System.Drawing.Size(24, 23);
-      this.btnShiftDown.TabIndex = 52;
-      this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
-      this.btnShiftDown.UseVisualStyleBackColor = true;
-      this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
-      // 
-      // btnShiftUp
-      // 
-      this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
-      this.btnShiftUp.Location = new System.Drawing.Point(80, 460);
-      this.btnShiftUp.Name = "btnShiftUp";
-      this.btnShiftUp.Size = new System.Drawing.Size(24, 23);
-      this.btnShiftUp.TabIndex = 49;
-      this.toolTip1.SetToolTip(this.btnShiftUp, "Shift Up");
-      this.btnShiftUp.UseVisualStyleBackColor = true;
-      this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
-      // 
-      // btnShiftRight
-      // 
-      this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
-      this.btnShiftRight.Location = new System.Drawing.Point(56, 460);
-      this.btnShiftRight.Name = "btnShiftRight";
-      this.btnShiftRight.Size = new System.Drawing.Size(24, 23);
-      this.btnShiftRight.TabIndex = 50;
-      this.toolTip1.SetToolTip(this.btnShiftRight, "Shift Right");
-      this.btnShiftRight.UseVisualStyleBackColor = true;
-      this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
-      // 
-      // btnShiftLeft
-      // 
-      this.btnShiftLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftLeft.Image")));
-      this.btnShiftLeft.Location = new System.Drawing.Point(32, 460);
-      this.btnShiftLeft.Name = "btnShiftLeft";
-      this.btnShiftLeft.Size = new System.Drawing.Size(24, 23);
-      this.btnShiftLeft.TabIndex = 51;
-      this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift Left");
-      this.btnShiftLeft.UseVisualStyleBackColor = true;
-      this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
       // 
       // CharsetScreenEditor
       // 

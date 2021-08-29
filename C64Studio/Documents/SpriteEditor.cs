@@ -11,6 +11,7 @@ using C64Studio.Formats;
 using GR.Memory;
 using C64Studio.Types;
 using C64Studio.Converter;
+using RetroDevStudioModels;
 
 namespace C64Studio
 {
@@ -1337,8 +1338,8 @@ namespace C64Studio
           }
           DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, pastePos ), i == 0 );
 
-          var mode = (Types.CharsetMode)memIn.ReadInt32();
-          m_SpriteProject.Sprites[pastePos].Multicolor = ( mode == Types.CharsetMode.MULTICOLOR );
+          var mode = (SpriteMode)memIn.ReadInt32();
+          m_SpriteProject.Sprites[pastePos].Multicolor = ( mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
           m_SpriteProject.Sprites[pastePos].Color = memIn.ReadInt32();
 
           uint width   = memIn.ReadUInt32();

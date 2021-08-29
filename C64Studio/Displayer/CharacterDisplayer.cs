@@ -1,4 +1,5 @@
 ﻿using C64Studio.Controls;
+using RetroDevStudioModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -167,11 +168,11 @@ namespace C64Studio.Displayer
 
 
 
-    public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, CustomDrawControlContext Context, int AlternativeColor, int AltBGColor, int AltMColor1, int AltMColor2, int AltBGColor4, Types.CharsetMode AlternativeMode )
+    public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, CustomDrawControlContext Context, int AlternativeColor, int AltBGColor, int AltMColor1, int AltMColor2, int AltBGColor4, TextMode AlternativeMode )
     {
       Formats.CharData Char = Charset.Characters[CharIndex];
 
-      if ( AlternativeMode == C64Studio.Types.CharsetMode.ECM )
+      if ( AlternativeMode == TextMode.COMMODORE_40_X_25_ECM )
       {
         // ECM
         Formats.CharData origChar = Charset.Characters[CharIndex % 64];
@@ -189,15 +190,15 @@ namespace C64Studio.Displayer
             bgColor = AltBGColor4;
             break;
         }
-        Displayer.CharacterDisplayer.DisplayHiResChar( origChar.Data, bgColor, AlternativeColor, Context );
+        DisplayHiResChar( origChar.Data, bgColor, AlternativeColor, Context );
       }
-      else if ( AlternativeMode == C64Studio.Types.CharsetMode.MULTICOLOR )
+      else if ( AlternativeMode == TextMode.COMMODORE_40_X_25_MULTICOLOR )
       {
-        Displayer.CharacterDisplayer.DisplayMultiColorChar( Char.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
+        DisplayMultiColorChar( Char.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
       }
-      else if ( AlternativeMode == C64Studio.Types.CharsetMode.HIRES )
+      else if ( AlternativeMode == TextMode.COMMODORE_40_X_25_HIRES )
       {
-        Displayer.CharacterDisplayer.DisplayHiResChar( Char.Data, AltBGColor, AlternativeColor, Context );
+        DisplayHiResChar( Char.Data, AltBGColor, AlternativeColor, Context );
       }
     }
 
@@ -229,11 +230,11 @@ namespace C64Studio.Displayer
 
 
 
-    public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, GR.Image.IImage TargetImage, int X, int Y, int AlternativeColor, int AltBGColor, int AltMColor1, int AltMColor2, int AltBGColor4, Types.CharsetMode AlternativeMode )
+    public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, GR.Image.IImage TargetImage, int X, int Y, int AlternativeColor, int AltBGColor, int AltMColor1, int AltMColor2, int AltBGColor4, TextMode AlternativeMode )
     {
       Formats.CharData Char = Charset.Characters[CharIndex];
 
-      if ( AlternativeMode == C64Studio.Types.CharsetMode.ECM )
+      if ( AlternativeMode == TextMode.COMMODORE_40_X_25_ECM )
       {
         // ECM
         Formats.CharData origChar = Charset.Characters[CharIndex % 64];
@@ -251,15 +252,21 @@ namespace C64Studio.Displayer
             bgColor = AltBGColor4;
             break;
         }
-        Displayer.CharacterDisplayer.DisplayHiResChar( origChar.Data, bgColor, AlternativeColor, TargetImage, X, Y );
+        DisplayHiResChar( origChar.Data, bgColor, AlternativeColor, TargetImage, X, Y );
       }
-      else if ( AlternativeMode == C64Studio.Types.CharsetMode.MULTICOLOR )
+      else if ( ( AlternativeMode == TextMode.COMMODORE_40_X_25_MULTICOLOR )
+      ||        ( AlternativeMode == TextMode.MEGA65_80_X_25_MULTICOLOR ) )
       {
-        Displayer.CharacterDisplayer.DisplayMultiColorChar( Char.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
+        DisplayMultiColorChar( Char.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
       }
-      else if ( AlternativeMode == C64Studio.Types.CharsetMode.HIRES )
+      else if ( ( AlternativeMode == TextMode.COMMODORE_40_X_25_HIRES )
+      ||        ( AlternativeMode == TextMode.MEGA65_80_X_25_HIRES ) )
       {
-        Displayer.CharacterDisplayer.DisplayHiResChar( Char.Data, AltBGColor, AlternativeColor, TargetImage, X, Y );
+        DisplayHiResChar( Char.Data, AltBGColor, AlternativeColor, TargetImage, X, Y );
+      }
+      else
+      {
+        Debug.Log( "DisplayChar unsupported mode " + AlternativeMode );
       }
     }
 

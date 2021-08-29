@@ -1,9 +1,10 @@
 ﻿using C64Studio.Types;
 using GR.Memory;
+using RetroDevStudioModels;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
+
+
 
 namespace C64Studio
 {

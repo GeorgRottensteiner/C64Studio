@@ -254,11 +254,11 @@ namespace C64Studio.Converter
       }
       cd.Color = chosenCharColor;
       if ( ( isMultiColor )
-      && ( chosenCharColor < 8 ) )
+      &&   ( chosenCharColor < 8 ) )
       {
         cd.Color = chosenCharColor + 8;
       }
-      cd.Mode = CheckForMC ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
+      cd.Mode = CheckForMC ? RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
       return true;
     }
 
@@ -414,7 +414,7 @@ namespace C64Studio.Converter
               }
 
               screen.Chars[x + y * blockWidth] = (ushort)( ( origCharData.Color << 8 ) + charData.Index );
-              screen.Mode = project.MultiColor ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
+              screen.Mode = project.MultiColor ? RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
               screen.MultiColor1  = project.MultiColor1;
               screen.MultiColor2  = project.MultiColor2;
               screen.BackgroundColor = project.BackgroundColor;
@@ -427,7 +427,7 @@ namespace C64Studio.Converter
 
           for ( uint c = 0; c < charSet.Length / 8; ++c )
           {
-            screen.CharSet.Characters[(int)c].Mode = C64Studio.Types.CharsetMode.MULTICOLOR;
+            screen.CharSet.Characters[(int)c].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR;
             screen.CharSet.Characters[(int)c].Data = charSet.SubBuffer( (int)c * 8, 8 );
             screen.CharSet.Characters[(int)c].Color = 9;
           }

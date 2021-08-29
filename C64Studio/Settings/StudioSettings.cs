@@ -7,6 +7,7 @@ using System.ComponentModel;
 using GR.Memory;
 using C64Studio.Types;
 using System.Drawing;
+using RetroDevStudioModels;
 
 namespace C64Studio
 {
@@ -170,7 +171,7 @@ namespace C64Studio
 
     public MemoryDisplayType                    MemoryDisplay = MemoryDisplayType.ASCII;
     public MemorySourceType                     MemorySource = MemorySourceType.CPU;
-    public Types.CharsetMode                    MemoryDisplayCharsetMode = Types.CharsetMode.HIRES;
+    public TextMode                             MemoryDisplayCharsetMode = TextMode.COMMODORE_40_X_25_HIRES;
     public int                                  MemoryDisplayCharsetBackgroundColor = 1;
     public int                                  MemoryDisplayCharsetCustomColor = 0;
     public int                                  MemoryDisplayCharsetMulticolor1 = 5;
@@ -1198,7 +1199,7 @@ namespace C64Studio
 
               MemoryDisplay = (MemoryDisplayType)binIn.ReadInt32();
               MemorySource = (MemorySourceType)binIn.ReadInt32();
-              MemoryDisplayCharsetMode = (Types.CharsetMode)binIn.ReadUInt8();
+              MemoryDisplayCharsetMode = (TextMode)binIn.ReadUInt8();
               MemoryDisplayCharsetBackgroundColor = binIn.ReadUInt8();
               MemoryDisplayCharsetCustomColor = binIn.ReadUInt8();
               MemoryDisplayCharsetMulticolor1 = binIn.ReadUInt8();

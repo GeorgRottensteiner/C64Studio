@@ -1,5 +1,6 @@
 ﻿using C64Studio.Displayer;
 using GR.Memory;
+using RetroDevStudioModels;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -45,7 +46,7 @@ namespace Be.Windows.Forms
       set;
     }
 
-    public C64Studio.Types.CharsetMode Mode
+    public TextMode Mode
     {
       get;
       set;
@@ -75,15 +76,18 @@ namespace Be.Windows.Forms
 
             switch ( Mode )
             {
-              case C64Studio.Types.CharsetMode.HIRES:
+              case TextMode.COMMODORE_40_X_25_HIRES:
                 CharacterDisplayer.DisplayHiResChar( charData, BackgroundColor, CustomColor, charImage, 0, 0 );
                 break;
-              case C64Studio.Types.CharsetMode.MULTICOLOR:
+              case TextMode.COMMODORE_40_X_25_MULTICOLOR:
                 CharacterDisplayer.DisplayMultiColorChar( charData, BackgroundColor, CustomColor, MultiColor1, MultiColor2, charImage, 0, 0 );
                 break;
-              case C64Studio.Types.CharsetMode.ECM:
-                // TODO!
+              case TextMode.COMMODORE_40_X_25_ECM:
+                // TODO - not correct
                 CharacterDisplayer.DisplayHiResChar( charData, BackgroundColor, CustomColor, charImage, 0, 0 );
+                break;
+              default:
+                Debug.Log( "PaintHexData: Missing mode displayer" );
                 break;
             }
 
@@ -103,15 +107,15 @@ namespace Be.Windows.Forms
     {
       switch ( Mode )
       {
-        case C64Studio.Types.CharsetMode.HIRES:
-          Mode = C64Studio.Types.CharsetMode.MULTICOLOR;
+        case TextMode.COMMODORE_40_X_25_HIRES:
+          Mode = TextMode.COMMODORE_40_X_25_MULTICOLOR;
           break;
-        case C64Studio.Types.CharsetMode.MULTICOLOR:
-          Mode = C64Studio.Types.CharsetMode.ECM;
+        case  TextMode.COMMODORE_40_X_25_MULTICOLOR:
+          Mode = TextMode.COMMODORE_40_X_25_ECM;
           break;
-        case C64Studio.Types.CharsetMode.ECM:
+        case TextMode.COMMODORE_40_X_25_ECM:
         default:
-          Mode = C64Studio.Types.CharsetMode.HIRES;
+          Mode = TextMode.COMMODORE_40_X_25_HIRES;
           break;
       }
     }

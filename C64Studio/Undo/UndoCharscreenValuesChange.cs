@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using C64Studio.Formats;
+﻿using C64Studio.Formats;
+using RetroDevStudioModels;
 
 
 
@@ -13,11 +11,12 @@ namespace C64Studio.Undo
     public CharsetScreenEditor    Editor = null;
 
 
-    public int        BackgroundColor = 0;
-    public int        Multicolor1 = 0;
-    public int        Multicolor2 = 0;
-    public int        BGColor4 = 0;
-    public Types.CharsetMode    Mode = C64Studio.Types.CharsetMode.HIRES;
+    public MachineType          Machine = MachineType.UNKNOWN;
+    public int                  BackgroundColor = 0;
+    public int                  Multicolor1 = 0;
+    public int                  Multicolor2 = 0;
+    public int                  BGColor4 = 0;
+    public TextMode             Mode = TextMode.COMMODORE_40_X_25_HIRES;
 
 
     public UndoCharscreenValuesChange( CharsetScreenProject Project, CharsetScreenEditor Editor )

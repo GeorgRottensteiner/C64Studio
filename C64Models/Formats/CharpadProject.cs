@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudioModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -111,7 +112,7 @@ namespace C64Studio.Formats
     public int                    MapWidth = 0;
     public int                    MapHeight = 0;
     public ColorMode              TileColorMode = ColorMode.GLOBAL;
-    public Types.CharsetMode      CharsetMode = Types.CharsetMode.HIRES;
+    public TextMode               CharsetMode = TextMode.COMMODORE_40_X_25_HIRES;
 
     public List<SingleChar>       Characters = new List<SingleChar>();
     public List<Tile>             Tiles = new List<Tile>();
@@ -514,7 +515,7 @@ namespace C64Studio.Formats
       CustomColor = Data.ByteAt( 8 );
       TileColorMode = (ColorMode)Data.ByteAt( 9 );
 
-      CharsetMode = (Types.CharsetMode)Data.ByteAt( 10 );
+      CharsetMode = (TextMode)Data.ByteAt( 10 );
 
       byte  flags = Data.ByteAt( 11 );
       bool  tileSysEnabled = ( ( flags & 0x01 ) != 0 );

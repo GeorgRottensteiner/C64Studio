@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudioModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,7 +8,7 @@ namespace C64Studio.Formats
   public class CharData
   {
     public GR.Memory.ByteBuffer Data = new GR.Memory.ByteBuffer( 8 );
-    public Types.CharsetMode    Mode = C64Studio.Types.CharsetMode.HIRES;
+    public TextMode             Mode = TextMode.COMMODORE_40_X_25_HIRES;
     public int                  Color = 1;
     public GR.Image.MemoryImage Image = null;
     public int                  Category = 0;
@@ -209,7 +210,7 @@ namespace C64Studio.Formats
       }
       for ( int i = 0; i < 256; ++i )
       {
-        Characters[i].Mode = (Types.CharsetMode)memIn.ReadUInt8();
+        Characters[i].Mode = (TextMode)memIn.ReadUInt8();
       }
       BackgroundColor = memIn.ReadInt32();
       MultiColor1 = memIn.ReadInt32();

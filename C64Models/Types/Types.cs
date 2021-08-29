@@ -7,47 +7,6 @@ using System.Windows.Forms;
 
 namespace C64Studio.Types
 {
-  public enum MachineType
-  {
-    UNKNOWN,
-    C64,
-    VC20,
-    C128,
-    PLUS4,
-    PET,
-    CBM,
-    ATARI2600,
-    MEGA65,
-    NES
-  };
-
-  public class Machine
-  {
-    public MachineType    Type;
-    public int            InitialBreakpointAddress;           // common initial breakpoint address before jumping to program start (inside Kernal)
-    public int            InitialBreakpointAddressCartridge;  // initial breakpoint address before jumping to cartridge start
-
-
-
-    internal static Machine FromType( MachineType Type )
-    {
-      switch ( Type )
-      {
-        case MachineType.C64:
-          return C64Studio.Lookup.Machines.C64;
-        case MachineType.VC20:
-          return C64Studio.Lookup.Machines.VC20;
-        case MachineType.C128:
-          return C64Studio.Lookup.Machines.C128;
-        default:
-          // fallback to C64
-          return C64Studio.Lookup.Machines.C64;
-      }
-    }
-  }
-
-
-
   public enum AssemblerType
   {
     AUTO,
@@ -57,14 +16,6 @@ namespace C64Studio.Types
     C64ASM,
     CBMPRGSTUDIO,
     TASM
-  };
-
-  public enum CharsetMode
-  {
-    INVALID     = -1,
-    HIRES       = 0,
-    MULTICOLOR  = 1,
-    ECM         = 2
   };
 
   public class MacroInfo

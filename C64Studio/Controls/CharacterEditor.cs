@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using C64Studio.Formats;
 using GR.Image;
+using RetroDevStudioModels;
 
 namespace C64Studio.Controls
 {
@@ -92,9 +93,10 @@ namespace C64Studio.Controls
       comboBGColor4.SelectedIndex = 0;
       comboCharColor.SelectedIndex = 1;
 
-      comboCharsetMode.Items.Add( "HiRes" );
-      comboCharsetMode.Items.Add( "MultiColor" );
-      comboCharsetMode.Items.Add( "Enhanced Char Mode (ECM)" );
+      foreach ( TextMode mode in Enum.GetValues( typeof( TextMode ) ) )
+      {
+        comboCharsetMode.Items.Add( GR.EnumHelper.GetDescription( mode ) );
+      }
       comboCharsetMode.SelectedIndex = 0;
 
       radioCharColor.Checked = true;
@@ -279,7 +281,7 @@ namespace C64Studio.Controls
 
           UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos ), i == 0 );
 
-          m_Project.Characters[pastePos].Mode = (C64Studio.Types.CharsetMode)memIn.ReadInt32();
+          m_Project.Characters[pastePos].Mode = (TextMode)memIn.ReadInt32();
           m_Project.Characters[pastePos].Color = memIn.ReadInt32();
 
           uint width   = memIn.ReadUInt32();
@@ -371,7 +373,7 @@ namespace C64Studio.Controls
 
       bool currentCharChanged = false;
 
-      if ( m_Project.Characters[CharIndex].Mode == C64Studio.Types.CharsetMode.ECM )
+      if ( m_Project.Characters[CharIndex].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_ECM )
       {
         for ( int i = 0; i < 4; ++i )
         {
@@ -757,7 +759,7 @@ namespace C64Studio.Controls
       {
         m_Project.Characters[CharIndex].Color = chosenCharColor + 8;
       }
-      m_Project.Characters[CharIndex].Mode = isMultiColor ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
+      m_Project.Characters[CharIndex].Mode = isMultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES;
       RebuildCharImage( CharIndex );
       return true;
     }
@@ -859,7 +861,7 @@ namespace C64Studio.Controls
       int     affectedCharIndex = m_CurrentChar;
       var     origAffectedChar = m_Project.Characters[m_CurrentChar];
       var     affectedChar = m_Project.Characters[m_CurrentChar];
-      if ( affectedChar.Mode == C64Studio.Types.CharsetMode.ECM )
+      if ( affectedChar.Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_ECM )
       {
         affectedCharIndex %= 64;
         affectedChar = m_Project.Characters[affectedCharIndex];
@@ -871,7 +873,7 @@ namespace C64Studio.Controls
         byte    newByte = charByte;
         int     colorIndex = affectedChar.Color;
 
-        if ( ( affectedChar.Mode != C64Studio.Types.CharsetMode.MULTICOLOR )
+        if ( ( affectedChar.Mode != RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
         ||   ( affectedChar.Color < 8 ) )
         {
           // single color
@@ -928,7 +930,7 @@ namespace C64Studio.Controls
 
           affectedChar.Data.SetU8At( charY, newByte );
 
-          if ( origAffectedChar.Mode == C64Studio.Types.CharsetMode.ECM )
+          if ( origAffectedChar.Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_ECM )
           {
             for ( int i = 0; i < 4; ++i )
             {
@@ -953,7 +955,7 @@ namespace C64Studio.Controls
         byte charByte = affectedChar.Data.ByteAt( charY );
         byte newByte = charByte;
 
-        if ( ( affectedChar.Mode != C64Studio.Types.CharsetMode.MULTICOLOR )
+        if ( ( affectedChar.Mode != RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
         ||   ( affectedChar.Color < 8 ) )
         {
           // single color
@@ -979,7 +981,7 @@ namespace C64Studio.Controls
           RaiseModifiedEvent();
           affectedChar.Data.SetU8At( charY, newByte );
 
-          if ( origAffectedChar.Mode == C64Studio.Types.CharsetMode.ECM )
+          if ( origAffectedChar.Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_ECM )
           {
             for ( int i = 0; i < 4; ++i )
             {
@@ -1284,7 +1286,7 @@ namespace C64Studio.Controls
 
         for ( int y = 0; y < 8; ++y )
         {
-          if ( ( processedChar.Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+          if ( ( processedChar.Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
           &&   ( processedChar.Color >= 8 ) )
           {
             byte result = (byte)( (byte)( ( processedChar.Data.ByteAt( y ) & 0xc0 ) >> 6 )
@@ -1357,7 +1359,7 @@ namespace C64Studio.Controls
 
         GR.Memory.ByteBuffer resultData = new GR.Memory.ByteBuffer( 8 );
 
-        if ( ( m_Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        if ( ( m_Project.Characters[index].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
         ||   ( m_Project.Characters[index].Color >= 8 ) )
         {
           for ( int i = 0; i < 8; i += 2 )
@@ -1427,7 +1429,7 @@ namespace C64Studio.Controls
 
         GR.Memory.ByteBuffer resultData = new GR.Memory.ByteBuffer( 8 );
 
-        if ( ( m_Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        if ( ( m_Project.Characters[index].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
         ||   ( m_Project.Characters[index].Color >= 8 ) )
         {
           for ( int i = 0; i < 8; i += 2 )
@@ -1565,8 +1567,8 @@ namespace C64Studio.Controls
 
         for ( int y = 0; y < 8; ++y )
         {
-          if ( ( m_Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
-          && ( m_Project.Characters[index].Color >= 8 ) )
+          if ( ( m_Project.Characters[index].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
+          &&   ( m_Project.Characters[index].Color >= 8 ) )
           {
             byte result = (byte)( (byte)( ( m_Project.Characters[m_CurrentChar].Data.ByteAt( y ) & 0xc0 ) >> 6 )
                                 | (byte)( ( m_Project.Characters[index].Data.ByteAt( y ) & 0x3f ) << 2 ) );
@@ -1599,7 +1601,7 @@ namespace C64Studio.Controls
 
         for ( int y = 0; y < 8; ++y )
         {
-          if ( ( m_Project.Characters[index].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+          if ( ( m_Project.Characters[index].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
           && ( m_Project.Characters[index].Color >= 8 ) )
           {
             byte result = (byte)( (byte)( ( m_Project.Characters[index].Data.ByteAt( y ) & 0xfc ) >> 2 )
@@ -1792,24 +1794,24 @@ namespace C64Studio.Controls
       bool modified = false;
       foreach ( int selChar in selectedChars )
       {
-        if ( m_Project.Characters[selChar].Mode != (C64Studio.Types.CharsetMode)comboCharsetMode.SelectedIndex )
+        if ( m_Project.Characters[selChar].Mode != (TextMode)comboCharsetMode.SelectedIndex )
         {
           UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar ), !modified );
-          m_Project.Characters[selChar].Mode = (C64Studio.Types.CharsetMode)comboCharsetMode.SelectedIndex;
+          m_Project.Characters[selChar].Mode = (TextMode)comboCharsetMode.SelectedIndex;
           RebuildCharImage( selChar );
           panelCharacters.InvalidateItemRect( selChar );
           modified = true;
         }
       }
 
-      comboBGColor4.Enabled = ( m_Project.Characters[m_CurrentChar].Mode == C64Studio.Types.CharsetMode.ECM );
-      radioBGColor4.Enabled = ( m_Project.Characters[m_CurrentChar].Mode == C64Studio.Types.CharsetMode.ECM );
-      comboMulticolor1.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != C64Studio.Types.CharsetMode.HIRES );
-      radioMultiColor1.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != C64Studio.Types.CharsetMode.HIRES );
-      comboMulticolor2.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != C64Studio.Types.CharsetMode.HIRES );
-      radioMulticolor2.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != C64Studio.Types.CharsetMode.HIRES );
+      comboBGColor4.Enabled = ( m_Project.Characters[m_CurrentChar].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_ECM );
+      radioBGColor4.Enabled = ( m_Project.Characters[m_CurrentChar].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_ECM );
+      comboMulticolor1.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES );
+      radioMultiColor1.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES );
+      comboMulticolor2.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES );
+      radioMulticolor2.Enabled = ( m_Project.Characters[m_CurrentChar].Mode != RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES );
 
-      if ( m_Project.Characters[m_CurrentChar].Mode == C64Studio.Types.CharsetMode.ECM )
+      if ( m_Project.Characters[m_CurrentChar].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_ECM )
       {
         radioMultiColor1.Text = "BGColor 2";
         radioMulticolor2.Text = "BGColor 3";
@@ -1875,7 +1877,7 @@ namespace C64Studio.Controls
       int   charIndex = 0;
       foreach ( var charInfo in m_Project.Characters )
       {
-        if ( ( charInfo.Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        if ( ( charInfo.Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
         &&   ( charInfo.Color >= 8 ) )
         {
           for ( int y = 0; y < 8; ++y )
@@ -1933,7 +1935,7 @@ namespace C64Studio.Controls
       int   charIndex = 0;
       foreach ( var charInfo in m_Project.Characters )
       {
-        if ( ( charInfo.Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        if ( ( charInfo.Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
         &&   ( charInfo.Color >= 8 ) )
         {
           for ( int y = 0; y < 8; ++y )
@@ -1989,7 +1991,7 @@ namespace C64Studio.Controls
       int   charIndex = 0;
       foreach ( var charInfo in m_Project.Characters )
       {
-        if ( ( charInfo.Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        if ( ( charInfo.Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
         &&   ( charInfo.Color >= 8 ) )
         {
           for ( int y = 0; y < 8; ++y )
@@ -2088,7 +2090,7 @@ namespace C64Studio.Controls
 
         if ( i == m_CurrentChar )
         {
-          comboCharsetMode.SelectedIndex = (int)Types.CharsetMode.HIRES;
+          comboCharsetMode.SelectedIndex = (int)TextMode.COMMODORE_40_X_25_HIRES;
           comboCharColor.SelectedIndex = m_Project.Characters[i].Color;
         }
       }
@@ -2202,7 +2204,7 @@ namespace C64Studio.Controls
 
       if ( m_Project.ShowGrid )
       {
-        if ( ( m_Project.Characters[m_CurrentChar].Mode == C64Studio.Types.CharsetMode.MULTICOLOR )
+        if ( ( m_Project.Characters[m_CurrentChar].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
         &&   ( m_Project.Characters[m_CurrentChar].Color >= 8 ) )
         {
           for ( int i = 0; i < 4; ++i )

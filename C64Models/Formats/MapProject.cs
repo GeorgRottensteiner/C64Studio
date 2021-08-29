@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudioModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -36,22 +37,22 @@ namespace C64Studio.Formats
       public int                AlternativeMultiColor2 = -1;
       public int                AlternativeBackgroundColor = -1;
       public int                AlternativeBGColor4 = -1;
-      public Types.CharsetMode  AlternativeMode = C64Studio.Types.CharsetMode.INVALID;
+      public TextMode           AlternativeMode = TextMode.UNKNOWN;
     };
 
 
-    public List<Tile>                  Tiles = new List<Tile>();
+    public List<Tile>                   Tiles = new List<Tile>();
 
-    public List<Map>                   Maps = new List<Map>();
+    public List<Map>                    Maps = new List<Map>();
 
-    public string                      ExternalCharset = "";
-    public int                         BackgroundColor = 0;
-    public int                         MultiColor1 = 0;
-    public int                         MultiColor2 = 0;
-    public int                         BGColor4 = 0;
-    public Types.CharsetMode           Mode = C64Studio.Types.CharsetMode.HIRES;
-    public CharsetProject              Charset = new C64Studio.Formats.CharsetProject();
-    public bool                        ShowGrid = false;
+    public string                       ExternalCharset = "";
+    public int                          BackgroundColor = 0;
+    public int                          MultiColor1 = 0;
+    public int                          MultiColor2 = 0;
+    public int                          BGColor4 = 0;
+    public TextMode                     Mode = TextMode.COMMODORE_40_X_25_HIRES;
+    public CharsetProject               Charset = new C64Studio.Formats.CharsetProject();
+    public bool                         ShowGrid = false;
 
 
 
@@ -218,7 +219,7 @@ namespace C64Studio.Formats
                 switch ( chunkData.Type )
                 {
                   case Types.FileChunk.MULTICOLOR_DATA:
-                    Mode = (Types.CharsetMode)subChunkReader.ReadUInt8();
+                    Mode = (TextMode)subChunkReader.ReadUInt8();
                     BackgroundColor = subChunkReader.ReadUInt8();
                     MultiColor1 = subChunkReader.ReadUInt8();
                     MultiColor2 = subChunkReader.ReadUInt8();
@@ -264,7 +265,7 @@ namespace C64Studio.Formats
                             map.AlternativeMultiColor2 = mapChunkReader.ReadInt32() - 1;
                             map.AlternativeBackgroundColor = mapChunkReader.ReadInt32() - 1;
                             map.AlternativeBGColor4 = mapChunkReader.ReadInt32() - 1;
-                            map.AlternativeMode = (C64Studio.Types.CharsetMode)( mapChunkReader.ReadInt32() - 1 );
+                            map.AlternativeMode = (TextMode)( mapChunkReader.ReadInt32() - 1 );
                             break;
                           case Types.FileChunk.MAP_DATA:
                             {

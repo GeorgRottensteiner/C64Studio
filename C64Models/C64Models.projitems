@@ -40,7 +40,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\SpriteProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\T64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Lookup\Lookup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\C64\C64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\Machines.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\GraphicMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\Mega65\Mega65.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\SpriteMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\TextMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\MachineType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\Machine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\AssemblerSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.cs" />

@@ -1,4 +1,5 @@
 ﻿using C64Studio.Types;
+using RetroDevStudioModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -1001,7 +1002,7 @@ namespace C64Studio
                                                           ( m_CurrentMap.AlternativeMultiColor1 != -1 ) ? m_CurrentMap.AlternativeMultiColor1 : m_MapProject.MultiColor1,
                                                           ( m_CurrentMap.AlternativeMultiColor2 != -1 ) ? m_CurrentMap.AlternativeMultiColor2 : m_MapProject.MultiColor2,
                                                           ( m_CurrentMap.AlternativeBGColor4 != -1 ) ? m_CurrentMap.AlternativeBGColor4 : m_MapProject.BGColor4,
-                                                          ( m_CurrentMap.AlternativeMode != C64Studio.Types.CharsetMode.INVALID ) ? m_CurrentMap.AlternativeMode : m_MapProject.Mode );
+                                                          ( m_CurrentMap.AlternativeMode != TextMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : m_MapProject.Mode );
               }
             }
           }
@@ -2744,7 +2745,7 @@ namespace C64Studio
       {
         m_MapProject.Charset.Characters[charIndex].Data = cpProject.Characters[charIndex].Data;
         m_MapProject.Charset.Characters[charIndex].Color = cpProject.Characters[charIndex].Color;
-        m_MapProject.Charset.Characters[charIndex].Mode = cpProject.MultiColor ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
+        m_MapProject.Charset.Characters[charIndex].Mode = cpProject.MultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES;
 
         RebuildCharImage( charIndex );
       }
@@ -2808,7 +2809,7 @@ namespace C64Studio
       comboTileBackground.SelectedIndex = m_MapProject.Charset.BackgroundColor;
       comboTileMulticolor1.SelectedIndex = m_MapProject.Charset.MultiColor1;
       comboTileMulticolor2.SelectedIndex = m_MapProject.Charset.MultiColor2;
-      comboTileMode.SelectedIndex = (int)( cpProject.MultiColor ? Types.CharsetMode.MULTICOLOR : Types.CharsetMode.HIRES );
+      comboTileMode.SelectedIndex = (int)( cpProject.MultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES );
 
       RedrawMap();
       SetModified();
@@ -3065,7 +3066,7 @@ namespace C64Studio
 
     private void comboTileMode_SelectedIndexChanged( object sender, EventArgs e )
     {
-      m_MapProject.Mode = (C64Studio.Types.CharsetMode)comboTileMode.SelectedIndex;
+      m_MapProject.Mode = (TextMode)comboTileMode.SelectedIndex;
       for ( int i = 0; i < 256; ++i )
       {
         m_MapProject.Charset.Characters[i].Mode = m_MapProject.Mode;
@@ -3118,7 +3119,7 @@ namespace C64Studio
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapValueChange( this, m_CurrentMap ) );
 
-        m_CurrentMap.AlternativeMode = (C64Studio.Types.CharsetMode)( comboMapAlternativeMode.SelectedIndex - 1 );
+        m_CurrentMap.AlternativeMode = (TextMode)( comboMapAlternativeMode.SelectedIndex - 1 );
         RedrawMap();
         Modified = true;
       }

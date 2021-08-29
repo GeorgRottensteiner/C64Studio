@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using C64Studio.Formats;
-
-
+using RetroDevStudioModels;
 
 namespace C64Studio.Undo
 {
@@ -17,7 +16,7 @@ namespace C64Studio.Undo
     public int                    AlternativeBGColor = -1;
     public int                    AlternativeBGColor4 = -1;
     public bool                   UseAlternativeMode = false;
-    public Types.CharsetMode      AlternativeMode = C64Studio.Types.CharsetMode.HIRES;
+    public TextMode               AlternativeMode = TextMode.COMMODORE_40_X_25_HIRES;
     public int                    TileSpacingX = 0;
     public int                    TileSpacingY = 0;
     public string                 Name = "";

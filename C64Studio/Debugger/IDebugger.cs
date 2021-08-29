@@ -1,9 +1,9 @@
-﻿using C64Studio.Types;
-using GR.Memory;
+﻿using GR.Memory;
+using RetroDevStudioModels;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+
+
 
 namespace C64Studio
 {

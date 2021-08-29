@@ -9,6 +9,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using GR.Image;
 using GR.Memory;
 using C64Studio.Formats;
+using RetroDevStudioModels;
 
 namespace C64Studio
 {
@@ -29,6 +30,8 @@ namespace C64Studio
     private byte                        m_CurrentChar = 0;
     private byte                        m_CurrentColor = 1;
     private bool                        m_OverrideCharMode = false;
+    private int                         m_CharsWidth = 40;
+    private int                         m_CharsHeight = 25;
 
     private GR.Image.MemoryImage        m_Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
@@ -80,7 +83,7 @@ namespace C64Studio
       InitializeComponent();
       charEditor.Core = Core;
 
-      GR.Image.DPIHandler.ResizeControlsForDPI( this );
+      DPIHandler.ResizeControlsForDPI( this );
 
       charEditor.UndoManager = DocumentInfo.UndoManager;
 
@@ -116,9 +119,10 @@ namespace C64Studio
       comboExportArea.Items.Add( "Custom Area" );
       comboExportArea.SelectedIndex = 0;
 
-      comboCharsetMode.Items.Add( "HiRes" );
-      comboCharsetMode.Items.Add( "MultiColor" );
-      comboCharsetMode.Items.Add( "Enhanced Char Mode (ECM)" );
+      foreach ( TextMode mode in Enum.GetValues( typeof( TextMode ) ) )
+      {
+        comboCharsetMode.Items.Add( GR.EnumHelper.GetDescription( mode ) );
+      }
       comboCharsetMode.SelectedIndex = 0;
 
       comboBasicFiles.Items.Add( new Types.ComboItem( "To new file" ) );
@@ -149,7 +153,7 @@ namespace C64Studio
         for ( int j = 0; j < 8; ++j )
         {
           m_CharsetScreen.CharSet.Characters[i].Color = 1;
-          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, Types.ConstantData.UpperCaseCharset.ByteAt( i * 8 + j ) );
+          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, ConstantData.UpperCaseCharset.ByteAt( i * 8 + j ) );
         }
       }
 
@@ -191,14 +195,14 @@ namespace C64Studio
         {
           for ( int j = 0; j < TargetBuffer.Height; ++j )
           {
-            TargetBuffer.SetPixel( i * ( pictureEditor.ClientRectangle.Width / 40 ), j, 0xffc0c0c0 );
+            TargetBuffer.SetPixel( i * ( pictureEditor.ClientRectangle.Width / m_CharsWidth ), j, 0xffc0c0c0 );
           }
         }
         for ( int i = 0; i < m_CharsetScreen.ScreenHeight; ++i )
         {
           for ( int j = 0; j < TargetBuffer.Width; ++j )
           {
-            TargetBuffer.SetPixel( j, i * ( pictureEditor.ClientRectangle.Height / 25 ), 0xffc0c0c0 );
+            TargetBuffer.SetPixel( j, i * ( pictureEditor.ClientRectangle.Height / m_CharsHeight ), 0xffc0c0c0 );
           }
         }
       }
@@ -208,7 +212,7 @@ namespace C64Studio
 
     void MainForm_ApplicationEvent( C64Studio.Types.ApplicationEvent Event )
     {
-      if ( Event.EventType == C64Studio.Types.ApplicationEvent.Type.ELEMENT_CREATED )
+      if ( Event.EventType == ApplicationEvent.Type.ELEMENT_CREATED )
       {
         if ( Event.Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
         {
@@ -237,7 +241,7 @@ namespace C64Studio
           comboCharsetFiles.Items.Add( new Types.ComboItem( nameToUse, Event.Doc ) );
         }
       }
-      if ( Event.EventType == C64Studio.Types.ApplicationEvent.Type.ELEMENT_REMOVED )
+      if ( Event.EventType == ApplicationEvent.Type.ELEMENT_REMOVED )
       {
         if ( Event.Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
         {
@@ -279,6 +283,7 @@ namespace C64Studio
       Core.MainForm.ApplicationEvent -= MainForm_ApplicationEvent;
       base.OnClosed( e );
     }
+
 
 
     void RebuildCharImage( int CharIndex )
@@ -436,13 +441,6 @@ namespace C64Studio
                (byte)( selectionChar.second & 0xff ),
                (byte)( selectionChar.second >> 8 ) );
 
-            /*
-            pictureEditor.DisplayPage.DrawTo( m_Image,
-                                              ( m_CharsetScreen.ScreenOffsetX + undoX + i ) * 8,
-                                              ( m_CharsetScreen.ScreenOffsetY + undoY + j ) * 8,
-                                              ( undoX + i ) * 8,
-                                              ( undoY + j ) * 8,
-                                              8, 8 );*/
             pictureEditor.Invalidate( new System.Drawing.Rectangle( ( undoX + i ) * 8,
                                                                     ( undoY + j ) * 8,
                                                                     8, 8 ) );
@@ -567,8 +565,8 @@ namespace C64Studio
 
     private void HandleMouseOnEditor( int X, int Y, MouseButtons Buttons )
     {
-      int     charX = X / ( pictureEditor.ClientRectangle.Width / 40 ) + m_CharsetScreen.ScreenOffsetX;
-      int     charY = Y / ( pictureEditor.ClientRectangle.Height / 25 ) + m_CharsetScreen.ScreenOffsetY;
+      int     charX = X / ( pictureEditor.ClientRectangle.Width / m_CharsWidth ) + m_CharsetScreen.ScreenOffsetX;
+      int     charY = Y / ( pictureEditor.ClientRectangle.Height / m_CharsHeight ) + m_CharsetScreen.ScreenOffsetY;
 
       m_MousePos.X = charX - m_CharsetScreen.ScreenOffsetX;
       m_MousePos.Y = charY - m_CharsetScreen.ScreenOffsetY;
@@ -592,101 +590,100 @@ namespace C64Studio
         {
           case ToolMode.RECTANGLE:
           case ToolMode.FILLED_RECTANGLE:
-            if ( !m_IsDragging )
+            if ( m_IsDragging )
             {
+              m_IsDragging = false;
+              if ( m_LastDragEndPos.X != -1 )
+              {
+                m_LastDragEndPos.X = -1;
+                m_LastDragEndPos.Y = -1;
+
+                System.Drawing.Point    p1, p2;
+
+                CalcRect( m_DragStartPos, m_DragEndPos, out p1, out p2 );
+
+                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, p1.X, p1.Y, p2.X - p1.X + 1, p2.Y - p1.Y + 1 ) );
+
+                if ( m_ToolMode == ToolMode.RECTANGLE )
+                {
+                  for ( int x = p1.X; x <= p2.X; ++x )
+                  {
+                    SetCharacter( x, p1.Y );
+                    SetCharacter( x, p2.Y );
+                  }
+                  for ( int y = p1.Y + 1; y <= p2.Y - 1; ++y )
+                  {
+                    SetCharacter( p1.X, y );
+                    SetCharacter( p2.X, y );
+                  }
+                }
+                else
+                {
+                  for ( int x = p1.X; x <= p2.X; ++x )
+                  {
+                    for ( int y = p1.Y; y <= p2.Y; ++y )
+                    {
+                      SetCharacter( x, y );
+                    }
+                  }
+                }
+                pictureEditor.DisplayPage.DrawTo( m_Image,
+                                                  p1.X * 8, p1.Y * 8,
+                                                  ( p1.X - m_CharsetScreen.ScreenOffsetX ) * 8, ( p1.Y - m_CharsetScreen.ScreenOffsetY ) * 8,
+                                                  ( p2.X - p1.X + 1 ) * 8, ( p2.Y - p1.Y + 1 ) * 8 );
+                pictureEditor.Invalidate( new System.Drawing.Rectangle( p1.X * 8, p1.Y * 8, ( p2.X - p1.X + 1 ) * 8, ( p2.Y - p1.Y + 1 ) * 8 ) );
+                Modified = true;
+              }
               return;
             }
-            m_IsDragging = false;
-            if ( m_LastDragEndPos.X != -1 )
+            break;
+          case ToolMode.SELECT:
+            if ( m_IsDragging )
             {
-              m_LastDragEndPos.X = -1;
-              m_LastDragEndPos.Y = -1;
-
-              System.Drawing.Point    p1, p2;
-
-              CalcRect( m_DragStartPos, m_DragEndPos, out p1, out p2 );
-
-              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, p1.X, p1.Y, p2.X - p1.X + 1, p2.Y - p1.Y + 1 ) );
-
-              if ( m_ToolMode == ToolMode.RECTANGLE )
+              m_IsDragging = false;
+              if ( m_LastDragEndPos.X != -1 )
               {
-                for ( int x = p1.X; x <= p2.X; ++x )
+                m_LastDragEndPos.X = -1;
+                m_LastDragEndPos.Y = -1;
+
+                System.Drawing.Point    p1, p2;
+
+                CalcRect( m_DragStartPos, m_DragEndPos, out p1, out p2 );
+
+                bool shiftPressed = ( ( ModifierKeys & Keys.Shift ) == Keys.Shift );
+
+                if ( ( !shiftPressed )
+                &&   ( ( ModifierKeys & Keys.Control ) == Keys.None ) )
                 {
-                  SetCharacter( x, p1.Y );
-                  SetCharacter( x, p2.Y );
+                  // not ctrl-Click, remove previous selection
+                  for ( int x = 0; x < m_CharsetScreen.ScreenWidth; ++x )
+                  {
+                    for ( int y = 0; y < m_CharsetScreen.ScreenHeight; ++y )
+                    {
+                      m_SelectedChars[x, y] = false;
+                    }
+                  }
                 }
-                for ( int y = p1.Y + 1; y <= p2.Y - 1; ++y )
-                {
-                  SetCharacter( p1.X, y );
-                  SetCharacter( p2.X, y );
-                }
-              }
-              else
-              {
+
                 for ( int x = p1.X; x <= p2.X; ++x )
                 {
                   for ( int y = p1.Y; y <= p2.Y; ++y )
                   {
-                    SetCharacter( x, y );
+                    if ( shiftPressed )
+                    {
+                      m_SelectedChars[x, y] = false;
+                    }
+                    else
+                    {
+                      m_SelectedChars[x, y] = true;
+                    }
                   }
                 }
+                RecalcSelectionBounds();
+                labelInfo.Text = InfoText();
+                pictureEditor.Invalidate();
+                Redraw();
               }
-              pictureEditor.DisplayPage.DrawTo( m_Image,
-                                                p1.X * 8, p1.Y * 8,
-                                                ( p1.X - m_CharsetScreen.ScreenOffsetX ) * 8, ( p1.Y - m_CharsetScreen.ScreenOffsetY ) * 8,
-                                                ( p2.X - p1.X + 1 ) * 8, ( p2.Y - p1.Y + 1 ) * 8 );
-              pictureEditor.Invalidate( new System.Drawing.Rectangle( p1.X * 8, p1.Y * 8, ( p2.X - p1.X + 1 ) * 8, ( p2.Y - p1.Y + 1 ) * 8 ) );
-              Modified = true;
-            }
-            break;
-          case ToolMode.SELECT:
-            if ( !m_IsDragging )
-            {
-              return;
-            }
-            m_IsDragging = false;
-            if ( m_LastDragEndPos.X != -1 )
-            {
-              m_LastDragEndPos.X = -1;
-              m_LastDragEndPos.Y = -1;
-
-              System.Drawing.Point    p1, p2;
-
-              CalcRect( m_DragStartPos, m_DragEndPos, out p1, out p2 );
-
-              bool shiftPressed = ( ( ModifierKeys & Keys.Shift ) == Keys.Shift );
-
-              if ( ( !shiftPressed )
-              &&   ( ( ModifierKeys & Keys.Control ) == Keys.None ) )
-              {
-                // not ctrl-Click, remove previous selection
-                for ( int x = 0; x < m_CharsetScreen.ScreenWidth; ++x )
-                {
-                  for ( int y = 0; y < m_CharsetScreen.ScreenHeight; ++y )
-                  {
-                    m_SelectedChars[x, y] = false;
-                  }
-                }
-              }
-
-              for ( int x = p1.X; x <= p2.X; ++x )
-              {
-                for ( int y = p1.Y; y <= p2.Y; ++y )
-                {
-                  if ( shiftPressed )
-                  {
-                    m_SelectedChars[x, y] = false;
-                  }
-                  else
-                  {
-                    m_SelectedChars[x, y] = true;
-                  }
-                }
-              }
-              RecalcSelectionBounds();
-              labelInfo.Text = InfoText();
-              pictureEditor.Invalidate();
-              Redraw();
             }
             break;
         }
@@ -1127,6 +1124,7 @@ namespace C64Studio
         return false;
       }
       SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+      
 
       comboBackground.SelectedIndex = m_CharsetScreen.CharSet.BackgroundColor;
       comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.MultiColor1;
@@ -1194,7 +1192,7 @@ namespace C64Studio
       }
       catch ( System.IO.IOException ex )
       {
-        System.Windows.Forms.MessageBox.Show( "Could not load charset screen project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message, "Could not load file" );
+        MessageBox.Show( "Could not load charset screen project file " + DocumentInfo.FullPath + ".\r\n" + ex.Message, "Could not load file" );
         return false;
       }
       SetUnmodified();
@@ -1224,7 +1222,7 @@ namespace C64Studio
       {
         saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
       }
-      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      if ( saveDlg.ShowDialog() != DialogResult.OK )
       {
         return false;
       }
@@ -1352,7 +1350,7 @@ namespace C64Studio
     {
       string filename;
 
-      if ( OpenFile( "Open charset or charset project", C64Studio.Types.Constants.FILEFILTER_CHARSET + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Open charset or charset project", Constants.FILEFILTER_CHARSET + Constants.FILEFILTER_ALL, out filename ) )
       {
         if ( ImportCharset( filename ) )
         {
@@ -1395,9 +1393,9 @@ namespace C64Studio
       {
         x2 = m_CharsetScreen.ScreenWidth - 1;
       }
-      if ( x2 - x1 > 40 )
+      if ( x2 - x1 > m_CharsWidth )
       {
-        x2 = x1 + 39;
+        x2 = x1 + m_CharsWidth - 1;
       }
       if ( y1 < 0 )
       {
@@ -1407,9 +1405,9 @@ namespace C64Studio
       {
         y2 = m_CharsetScreen.ScreenHeight - 1;
       }
-      if ( y2 - y1 > 25 )
+      if ( y2 - y1 > m_CharsHeight )
       {
-        y2 = y1 + 24;
+        y2 = y1 + m_CharsHeight - 1;
       }
 
       // mark errornous chars
@@ -1708,7 +1706,7 @@ namespace C64Studio
       }
 
       sb.Append( startLineNo );
-      sb.Append( " PRINT\"" + Types.ConstantData.PetSCIIToChar[147].CharValue + "\";\n" );
+      sb.Append( " PRINT\"" + ConstantData.PetSCIIToChar[147].CharValue + "\";\n" );
       startLineNo += lineStep;
 
       sb.Append( startLineNo );
@@ -1732,7 +1730,7 @@ namespace C64Studio
 
           if ( newColor != curColor )
           {
-            charsToAppend.Add( Types.ConstantData.PetSCIIToChar[Types.ConstantData.ColorToPetSCIIChar[newColor]].CharValue );
+            charsToAppend.Add( ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[newColor]].CharValue );
             curColor = newColor;
           }
           if ( newChar >= 128 )
@@ -1740,13 +1738,13 @@ namespace C64Studio
             if ( !isReverse )
             {
               isReverse = true;
-              charsToAppend.Add( Types.ConstantData.PetSCIIToChar[18].CharValue );
+              charsToAppend.Add( ConstantData.PetSCIIToChar[18].CharValue );
             }
           }
           else if ( isReverse )
           {
             isReverse = false;
-            charsToAppend.Add( Types.ConstantData.PetSCIIToChar[146].CharValue );
+            charsToAppend.Add( ConstantData.PetSCIIToChar[146].CharValue );
           }
           if ( isReverse )
           {
@@ -1757,12 +1755,12 @@ namespace C64Studio
 
               for ( int t = 0; t < replacement.Length; ++t )
               {
-                charsToAppend.Add( Types.ConstantData.CharToC64Char[replacement[t]].CharValue );
+                charsToAppend.Add( ConstantData.CharToC64Char[replacement[t]].CharValue );
               }
             }
             else
             {
-              charsToAppend.Add( Types.ConstantData.ScreenCodeToChar[(byte)( newChar - 128 )].CharValue );
+              charsToAppend.Add( ConstantData.ScreenCodeToChar[(byte)( newChar - 128 )].CharValue );
             }
           }
           else
@@ -1774,12 +1772,12 @@ namespace C64Studio
 
               for ( int t = 0; t < replacement.Length; ++t )
               {
-                charsToAppend.Add( Types.ConstantData.CharToC64Char[replacement[t]].CharValue );
+                charsToAppend.Add( ConstantData.CharToC64Char[replacement[t]].CharValue );
               }
             }
             else
             {
-              charsToAppend.Add( Types.ConstantData.ScreenCodeToChar[newChar].CharValue );
+              charsToAppend.Add( ConstantData.ScreenCodeToChar[newChar].CharValue );
             }
           }
 
@@ -1894,9 +1892,9 @@ namespace C64Studio
             {
               charToAdd -= 128;
             }
-            if ( Types.ConstantData.ScreenCodeToChar[newChar].HasPetSCII )
+            if ( ConstantData.ScreenCodeToChar[newChar].HasPetSCII )
             {
-              sb.Append( Types.ConstantData.ScreenCodeToChar[charToAdd].CharValue );
+              sb.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
             }
             else
             {
@@ -1913,8 +1911,8 @@ namespace C64Studio
 
       m_CharsetScreen.ExportToBuffer( out screenCharData, out screenColorData, out charsetData, exportRect.Left, exportRect.Top, exportRect.Width, exportRect.Height, ( comboExportOrientation.SelectedIndex == 0 ) );
 
-      string screenData = Util.ToASMData( screenCharData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), editPrefix.Text, checkExportHex.Checked );
-      string colorData = Util.ToASMData( screenColorData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), editPrefix.Text, checkExportHex.Checked );
+      string screenData = Util.ToASMData( screenCharData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
+      string colorData = Util.ToASMData( screenColorData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
 
       sb.Append( ";size " );
       sb.Append( exportRect.Width );
@@ -1925,16 +1923,16 @@ namespace C64Studio
       switch ( comboExportData.SelectedIndex )
       {
         case 0:
-          editDataExport.Text = sb + ";screen char data" + System.Environment.NewLine + screenData + System.Environment.NewLine + ";screen color data" + System.Environment.NewLine + colorData;
+          editDataExport.Text = sb + ";screen char data" + Environment.NewLine + screenData + Environment.NewLine + ";screen color data" + Environment.NewLine + colorData;
           break;
         case 1:
-          editDataExport.Text = sb + ";screen char data" + System.Environment.NewLine + screenData + System.Environment.NewLine;
+          editDataExport.Text = sb + ";screen char data" + Environment.NewLine + screenData + Environment.NewLine;
           break;
         case 2:
-          editDataExport.Text = sb + ";screen color data" + System.Environment.NewLine + colorData;
+          editDataExport.Text = sb + ";screen color data" + Environment.NewLine + colorData;
           break;
         case 3:
-          editDataExport.Text = sb + ";screen color data" + System.Environment.NewLine + colorData + System.Environment.NewLine + ";screen char data" + System.Environment.NewLine + screenData;
+          editDataExport.Text = sb + ";screen color data" + Environment.NewLine + colorData + Environment.NewLine + ";screen char data" + Environment.NewLine + screenData;
           break;
       }
     }
@@ -1951,7 +1949,7 @@ namespace C64Studio
       {
         saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
       }
-      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      if ( saveDlg.ShowDialog() != DialogResult.OK )
       {
         return;
       }
@@ -2021,7 +2019,7 @@ namespace C64Studio
     {
       string filename;
 
-      if ( OpenFile( "Open Charpad project, Marc's PETSCII editor files or binary data", C64Studio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + C64Studio.Types.Constants.FILEFILTER_MARCS_PETSCII + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Open Charpad project, Marc's PETSCII editor files or binary data", Constants.FILEFILTER_CHARSET_CHARPAD + Constants.FILEFILTER_MARCS_PETSCII + Constants.FILEFILTER_ALL, out filename ) )
       {
         if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
         {
@@ -2051,7 +2049,7 @@ namespace C64Studio
           {
             m_CharsetScreen.CharSet.Characters[charIndex].Data = cpProject.Characters[charIndex].Data;
             m_CharsetScreen.CharSet.Characters[charIndex].Color = cpProject.Characters[charIndex].Color;
-            m_CharsetScreen.CharSet.Characters[charIndex].Mode = cpProject.MultiColor ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
+            m_CharsetScreen.CharSet.Characters[charIndex].Mode = cpProject.MultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES;
 
             RebuildCharImage( charIndex );
           }
@@ -2096,7 +2094,7 @@ namespace C64Studio
           comboBackground.SelectedIndex = mapProject.Charset.BackgroundColor;
           comboMulticolor1.SelectedIndex = mapProject.Charset.MultiColor1;
           comboMulticolor2.SelectedIndex = mapProject.Charset.MultiColor2;
-          comboCharsetMode.SelectedIndex = (int)( cpProject.MultiColor ? Types.CharsetMode.MULTICOLOR : Types.CharsetMode.HIRES );
+          comboCharsetMode.SelectedIndex = (int)( cpProject.MultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES );
 
           GR.Memory.ByteBuffer      charData = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.TileSpacingX * map.Tiles.Height * map.TileSpacingY ) );
           GR.Memory.ByteBuffer      colorData = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.TileSpacingX * map.Tiles.Height * map.TileSpacingY ) );
@@ -2261,7 +2259,7 @@ namespace C64Studio
       screenVScroll.SmallChange = 1;
       screenVScroll.LargeChange = 1;
 
-      if ( m_CharsetScreen.ScreenWidth <= 40 )
+      if ( m_CharsetScreen.ScreenWidth <= m_CharsWidth )
       {
         screenHScroll.Maximum = 0;
         screenHScroll.Enabled = false;
@@ -2269,7 +2267,7 @@ namespace C64Studio
       }
       else
       {
-        screenHScroll.Maximum = m_CharsetScreen.ScreenWidth - 40;
+        screenHScroll.Maximum = m_CharsetScreen.ScreenWidth - m_CharsWidth;
         screenHScroll.Enabled = true;
       }
       if ( m_CharsetScreen.ScreenOffsetX > screenHScroll.Maximum )
@@ -2278,7 +2276,7 @@ namespace C64Studio
       }
 
       screenVScroll.Minimum = 0;
-      if ( m_CharsetScreen.ScreenHeight <= 25 )
+      if ( m_CharsetScreen.ScreenHeight <= m_CharsHeight )
       {
         screenVScroll.Maximum = 0;
         screenVScroll.Enabled = false;
@@ -2286,7 +2284,7 @@ namespace C64Studio
       }
       else
       {
-        screenVScroll.Maximum = m_CharsetScreen.ScreenHeight - 25;
+        screenVScroll.Maximum = m_CharsetScreen.ScreenHeight - m_CharsHeight;
         screenVScroll.Enabled = true;
       }
       if ( m_CharsetScreen.ScreenOffsetY > screenVScroll.Maximum )
@@ -2426,7 +2424,17 @@ namespace C64Studio
     private void btnToolEdit_CheckedChanged( object sender, EventArgs e )
     {
       HideSelection();
+      HideTextCursor();
       m_ToolMode = ToolMode.SINGLE_CHAR;
+    }
+
+
+
+    private void HideTextCursor()
+    {
+      m_SelectedChar.X = -1;
+      m_SelectedChar.Y = -1;
+      Redraw();
     }
 
 
@@ -2434,6 +2442,7 @@ namespace C64Studio
     private void btnToolRect_CheckedChanged( object sender, EventArgs e )
     {
       HideSelection();
+      HideTextCursor();
       m_ToolMode = ToolMode.RECTANGLE;
     }
 
@@ -2442,6 +2451,7 @@ namespace C64Studio
     private void btnToolFill_CheckedChanged( object sender, EventArgs e )
     {
       HideSelection();
+      HideTextCursor();
       m_ToolMode = ToolMode.FILL;
     }
 
@@ -2449,6 +2459,7 @@ namespace C64Studio
 
     private void btnToolSelect_CheckedChanged( object sender, EventArgs e )
     {
+      HideTextCursor();
       m_ToolMode = ToolMode.SELECT;
     }
 
@@ -2457,6 +2468,7 @@ namespace C64Studio
     private void btnToolQuad_CheckedChanged( object sender, EventArgs e )
     {
       HideSelection();
+      HideTextCursor();
       m_ToolMode = ToolMode.FILLED_RECTANGLE;
     }
 
@@ -2571,7 +2583,7 @@ namespace C64Studio
       IDataObject dataObj = Clipboard.GetDataObject();
       if ( dataObj == null )
       {
-        System.Windows.Forms.MessageBox.Show( "The clipboard is empty" );
+        MessageBox.Show( "The clipboard is empty" );
         return;
       }
       if ( dataObj.GetDataPresent( "C64Studio.CharacterScreenSelection" ) )
@@ -2618,23 +2630,23 @@ namespace C64Studio
     {
       if ( m_ToolMode == ToolMode.TEXT )
       {
-        System.Windows.Forms.Keys bareKey = e.KeyData & ~( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.ShiftKey | System.Windows.Forms.Keys.Alt );
+        System.Windows.Forms.Keys bareKey = e.KeyData & ~( Keys.Control | Keys.Shift | Keys.ShiftKey | Keys.Alt );
         bareKey = e.KeyData;
 
         bool    controlPushed = false;
         bool    commodorePushed = false;
         bool    shiftPushed = false;
-        if ( ( bareKey & System.Windows.Forms.Keys.Shift ) == System.Windows.Forms.Keys.Shift )
+        if ( ( bareKey & Keys.Shift ) == Keys.Shift )
         {
-          bareKey &= ~System.Windows.Forms.Keys.Shift;
+          bareKey &= ~Keys.Shift;
           shiftPushed = true;
         }
-        if ( ( bareKey & System.Windows.Forms.Keys.Control ) == System.Windows.Forms.Keys.Control )
+        if ( ( bareKey & Keys.Control ) == Keys.Control )
         {
-          bareKey &= ~System.Windows.Forms.Keys.Control;
+          bareKey &= ~Keys.Control;
           commodorePushed = true;
         }
-        if ( GR.Win32.KeyboardInfo.GetKeyState( System.Windows.Forms.Keys.Tab ).IsPressed )
+        if ( GR.Win32.KeyboardInfo.GetKeyState( Keys.Tab ).IsPressed )
         {
           controlPushed = true;
         }
@@ -2644,11 +2656,11 @@ namespace C64Studio
 
           var key = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
 
-          if ( !Types.ConstantData.PhysicalKeyInfo.ContainsKey( key.KeyboardKey ) )
+          if ( !ConstantData.PhysicalKeyInfo.ContainsKey( key.KeyboardKey ) )
           {
             Debug.Log( "No physical key info for " + key.KeyboardKey );
           }
-          var physKey = Types.ConstantData.PhysicalKeyInfo[key.KeyboardKey];
+          var physKey = ConstantData.PhysicalKeyInfo[key.KeyboardKey];
 
           C64Character    c64Key = physKey.Normal;
           if ( shiftPushed )
@@ -2730,10 +2742,10 @@ namespace C64Studio
             }
             else if ( m_AutoCenterText )
             {
-              if ( m_TextEntryEnteredText.Count >= 40 )
+              if ( m_TextEntryEnteredText.Count >= m_CharsWidth )
               {
                 ++m_SelectedChar.Y;
-                if ( m_SelectedChar.Y >= 24 )
+                if ( m_SelectedChar.Y >= m_CharsHeight )
                 {
                   m_SelectedChar.Y = 0;
                 }
@@ -2746,11 +2758,11 @@ namespace C64Studio
             else
             {
               DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ) );
-              if ( m_SelectedChar.X >= 39 )
+              if ( m_SelectedChar.X >= m_CharsWidth - 1 )
               {
                 m_SelectedChar.X = 0;
                 ++m_SelectedChar.Y;
-                if ( m_SelectedChar.Y >= 24 )
+                if ( m_SelectedChar.Y >= m_CharsHeight - 1 )
                 {
                   m_SelectedChar.Y = 0;
                 }
@@ -2777,12 +2789,6 @@ namespace C64Studio
                                                 newX * 8, m_SelectedChar.Y * 8,
                                                 ( newX - m_CharsetScreen.ScreenOffsetY ) * 8, ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY ) * 8,
                                                 m_TextEntryCachedLine.Count * 8, 8 );
-              /*
-              SetCharacter( charX, charY, charIndex, m_CurrentColor );
-              pictureEditor.DisplayPage.DrawTo( m_Image,
-                                                charX * 8, charY * 8,
-                                                ( charX - m_CharsetScreen.ScreenOffsetX ) * 8, ( charY - m_CharsetScreen.ScreenOffsetY ) * 8,
-                                                8, 8 );*/
               pictureEditor.Invalidate( new System.Drawing.Rectangle( charX * 8, charY * 8, 8, 8 ) );
               pictureEditor.Invalidate( new System.Drawing.Rectangle( 0, m_SelectedChar.Y * 8, m_CharsetScreen.ScreenWidth * 8, 8 ) );
             }
@@ -2805,7 +2811,7 @@ namespace C64Studio
       if ( m_ToolMode == ToolMode.SELECT )
       {
         if ( ( e.Modifiers == Keys.Control )
-        && ( e.KeyCode == Keys.C ) )
+        &&   ( e.KeyCode == Keys.C ) )
         {
           CopyToClipboard();
         }
@@ -2916,10 +2922,10 @@ namespace C64Studio
 
     private void comboCharsetMode_SelectedIndexChanged( object sender, EventArgs e )
     {
-      if ( m_CharsetScreen.Mode != (C64Studio.Types.CharsetMode)comboCharsetMode.SelectedIndex )
+      if ( m_CharsetScreen.Mode != (TextMode)comboCharsetMode.SelectedIndex )
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
-        m_CharsetScreen.Mode = (C64Studio.Types.CharsetMode)comboCharsetMode.SelectedIndex;
+        m_CharsetScreen.Mode = (TextMode)comboCharsetMode.SelectedIndex;
 
         for ( int i = 0; i < 256; ++i )
         {
@@ -2940,7 +2946,8 @@ namespace C64Studio
 
       switch ( m_CharsetScreen.Mode )
       {
-        case C64Studio.Types.CharsetMode.HIRES:
+        case TextMode.COMMODORE_40_X_25_HIRES:
+        case TextMode.MEGA65_80_X_25_HIRES:
           labelMColor1.Enabled = false;
           labelMColor2.Enabled = false;
           labelBGColor4.Enabled = false;
@@ -2948,7 +2955,8 @@ namespace C64Studio
           comboMulticolor2.Enabled = false;
           comboBGColor4.Enabled = false;
           break;
-        case C64Studio.Types.CharsetMode.MULTICOLOR:
+        case TextMode.COMMODORE_40_X_25_MULTICOLOR:
+        case TextMode.MEGA65_80_X_25_MULTICOLOR:
           labelMColor1.Enabled = true;
           labelMColor1.Text = "Multicolor 1";
           labelMColor2.Enabled = true;
@@ -2958,7 +2966,7 @@ namespace C64Studio
           comboMulticolor2.Enabled = true;
           comboBGColor4.Enabled = false;
           break;
-        case C64Studio.Types.CharsetMode.ECM:
+        case TextMode.COMMODORE_40_X_25_ECM:
           labelMColor1.Enabled = true;
           labelMColor1.Text = "BGColor 2";
           labelMColor2.Enabled = true;
@@ -2968,7 +2976,31 @@ namespace C64Studio
           comboMulticolor2.Enabled = true;
           comboBGColor4.Enabled = true;
           break;
+        default:
+          Debug.Log( "comboCharsetMode_SelectedIndexChanged unsupported mode!" );
+          break;
       }
+
+      switch ( m_CharsetScreen.Mode )
+      {
+        case TextMode.COMMODORE_40_X_25_HIRES:
+        case TextMode.COMMODORE_40_X_25_MULTICOLOR:
+        case TextMode.COMMODORE_40_X_25_ECM:
+          m_CharsWidth = 40;
+          m_CharsHeight = 25;
+          pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+          break;
+        case TextMode.MEGA65_80_X_25_HIRES:
+        case TextMode.MEGA65_80_X_25_MULTICOLOR:
+          m_CharsWidth = 80;
+          m_CharsHeight = 25;
+          pictureEditor.DisplayPage.Create( 640, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+          break;
+        default:
+          Debug.Log( "comboCharsetMode_SelectedIndexChanged unsupported mode!" );
+          break;
+      }
+      RedrawFullScreen();
     }
 
 
@@ -3063,9 +3095,9 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, Types.ConstantData.UpperCaseCharset.ByteAt( i * 8 + j ) );
+          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, ConstantData.UpperCaseCharset.ByteAt( i * 8 + j ) );
         }
-        m_CharsetScreen.CharSet.Characters[i].Mode = C64Studio.Types.CharsetMode.HIRES;
+        m_CharsetScreen.CharSet.Characters[i].Mode = TextMode.COMMODORE_40_X_25_HIRES;
         m_CharsetScreen.CharSet.Characters[i].Color = 1;
       }
       Modified = true;
@@ -3082,9 +3114,9 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, Types.ConstantData.LowerCaseCharset.ByteAt( i * 8 + j ) );
+          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, ConstantData.LowerCaseCharset.ByteAt( i * 8 + j ) );
         }
-        m_CharsetScreen.CharSet.Characters[i].Mode = C64Studio.Types.CharsetMode.HIRES;
+        m_CharsetScreen.CharSet.Characters[i].Mode = TextMode.COMMODORE_40_X_25_HIRES;
         m_CharsetScreen.CharSet.Characters[i].Color = 1;
       }
       Modified = true;
@@ -3156,11 +3188,11 @@ namespace C64Studio
       m_AffectChars = checkApplyCharacter.Checked;
       if ( m_AffectChars )
       {
-        checkApplyCharacter.Image = global::C64Studio.Properties.Resources.charscreen_chars;
+        checkApplyCharacter.Image = Properties.Resources.charscreen_chars;
       }
       else
       {
-        checkApplyCharacter.Image = global::C64Studio.Properties.Resources.charscreen_chars_off.ToBitmap();
+        checkApplyCharacter.Image = Properties.Resources.charscreen_chars_off.ToBitmap();
       }
     }
 
@@ -3171,11 +3203,11 @@ namespace C64Studio
       m_AffectColors = checkApplyColors.Checked;
       if ( m_AffectColors )
       {
-        checkApplyColors.Image = global::C64Studio.Properties.Resources.charscreen_colors;
+        checkApplyColors.Image = Properties.Resources.charscreen_colors;
       }
       else
       {
-        checkApplyColors.Image = global::C64Studio.Properties.Resources.charscreen_colors_off.ToBitmap();
+        checkApplyColors.Image = Properties.Resources.charscreen_colors_off.ToBitmap();
       }
     }
 
@@ -3194,9 +3226,9 @@ namespace C64Studio
       Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
 
       Parser.CompileConfig config = new Parser.CompileConfig();
-      config.TargetType = Types.CompileTargetType.PLAIN;
+      config.TargetType = CompileTargetType.PLAIN;
       config.OutputFile = "temp.bin";
-      config.Assembler = Types.AssemblerType.C64_STUDIO;
+      config.Assembler = AssemblerType.C64_STUDIO;
 
       string    temp = "* = $0801\n" + editDataImport.Text;
       if ( ( asmParser.Parse( temp, null, config, null ) )
@@ -3218,7 +3250,7 @@ namespace C64Studio
 
     private void editDataExport_KeyPress( object sender, KeyPressEventArgs e )
     {
-      if ( ( System.Windows.Forms.Control.ModifierKeys == Keys.Control )
+      if ( ( ModifierKeys == Keys.Control )
       && ( e.KeyChar == 1 ) )
       {
         editDataExport.SelectAll();
@@ -3230,7 +3262,7 @@ namespace C64Studio
 
     private void editDataImport_KeyPress( object sender, KeyPressEventArgs e )
     {
-      if ( ( System.Windows.Forms.Control.ModifierKeys == Keys.Control )
+      if ( ( ModifierKeys == Keys.Control )
       && ( e.KeyChar == 1 ) )
       {
         editDataImport.SelectAll();
@@ -3409,11 +3441,11 @@ namespace C64Studio
         m_TextEntryEnteredText.Clear();
         m_TextEntryStartedInLine = -1;
 
-        checkAutoCenter.Image = global::C64Studio.Properties.Resources.charscreen_autocenter;
+        checkAutoCenter.Image = Properties.Resources.charscreen_autocenter;
       }
       else
       {
-        checkAutoCenter.Image = global::C64Studio.Properties.Resources.charscreen_autocenter_off;
+        checkAutoCenter.Image = Properties.Resources.charscreen_autocenter_off;
       }
     }
 
@@ -3433,11 +3465,11 @@ namespace C64Studio
         }
         checkApplyCharacter.Checked = false;
         checkApplyColors.Checked    = false;
-        checkReverse.Image = global::C64Studio.Properties.Resources.charscreen_reverse_on;
+        checkReverse.Image = Properties.Resources.charscreen_reverse_on;
       }
       else
       {
-        checkReverse.Image = global::C64Studio.Properties.Resources.charscreen_reverse_off;
+        checkReverse.Image = Properties.Resources.charscreen_reverse_off;
       }
     }
 
@@ -3493,7 +3525,7 @@ namespace C64Studio
 
       saveDlg.Title = "Export Screen to Image";
       saveDlg.Filter = "PNG File|*.png";
-      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      if ( saveDlg.ShowDialog() != DialogResult.OK )
       {
         return;
       }

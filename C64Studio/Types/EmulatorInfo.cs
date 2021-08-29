@@ -1,7 +1,7 @@
 ﻿using C64Studio.Types.ASM;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using RetroDevStudioModels;
+
+
 
 namespace C64Studio.Types
 {

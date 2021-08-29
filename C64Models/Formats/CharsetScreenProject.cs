@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudioModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,7 +21,7 @@ namespace C64Studio.Formats
     public List<ushort>                 Chars = new List<ushort>( 40 * 25 );
 
     public string                       ExternalCharset = "";
-    public Types.CharsetMode            Mode = C64Studio.Types.CharsetMode.HIRES;
+    public TextMode                     Mode = TextMode.COMMODORE_40_X_25_HIRES;
 
     public Formats.CharsetProject       CharSet = new C64Studio.Formats.CharsetProject();
 
@@ -31,7 +32,7 @@ namespace C64Studio.Formats
       for ( int j = 0; j < ScreenHeight * ScreenWidth; ++j )
       {
         // spaces with white color
-        Chars.Add( (ushort)0x0120 );
+        Chars.Add( 0x0120 );
       }
     }
 
@@ -43,7 +44,7 @@ namespace C64Studio.Formats
 
       GR.IO.FileChunk chunkScreenInfo = new GR.IO.FileChunk( Types.FileChunk.CHARSET_SCREEN_INFO );
       // version
-      chunkScreenInfo.AppendU32( 0 );
+      chunkScreenInfo.AppendI32( 0 );
       // width
       chunkScreenInfo.AppendI32( ScreenWidth );
       // height
@@ -98,11 +99,11 @@ namespace C64Studio.Formats
         {
           case Types.FileChunk.CHARSET_SCREEN_INFO:
             {
-              uint version  = chunkReader.ReadUInt32();
+              int version = chunkReader.ReadInt32();
               ScreenWidth = chunkReader.ReadInt32();
               ScreenHeight = chunkReader.ReadInt32();
               ExternalCharset = chunkReader.ReadString();
-              Mode = (C64Studio.Types.CharsetMode)chunkReader.ReadInt32();
+              Mode = (TextMode)chunkReader.ReadInt32();
               ScreenOffsetX = chunkReader.ReadInt32();
               ScreenOffsetY = chunkReader.ReadInt32();
 
@@ -114,7 +115,7 @@ namespace C64Studio.Formats
             }
             break;
           case Types.FileChunk.MULTICOLOR_DATA:
-            Mode = (C64Studio.Types.CharsetMode)chunkReader.ReadUInt8();
+            Mode = (TextMode)chunkReader.ReadUInt8();
             BackgroundColor = chunkReader.ReadUInt8();
             MultiColor1 = chunkReader.ReadUInt8();
             MultiColor2 = chunkReader.ReadUInt8();

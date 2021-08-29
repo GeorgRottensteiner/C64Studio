@@ -128,7 +128,7 @@ namespace C64Studio
       for ( int i = 0; i < 256; ++i )
       {
         m_Charset.Characters[i].Color = 0;
-        m_Charset.Characters[i].Mode = C64Studio.Types.CharsetMode.HIRES;
+        m_Charset.Characters[i].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
         for ( int j = 0; j < 8; ++j )
         {
           m_Charset.Characters[i].Data.SetU8At( j, 0 );
@@ -510,7 +510,7 @@ namespace C64Studio
           {
             m_Charset.Characters[charIndex].Data = cpProject.Characters[charIndex].Data;
             m_Charset.Characters[charIndex].Color = cpProject.Characters[charIndex].Color;
-            m_Charset.Characters[charIndex].Mode = cpProject.MultiColor ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
+            m_Charset.Characters[charIndex].Mode = cpProject.MultiColor ? RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
           }
 
           editCharactersFrom.Text = m_Charset.NumCharacters.ToString();
@@ -545,7 +545,7 @@ namespace C64Studio
         {
           m_Charset.Characters[i].Data.SetU8At( j, CharData.ByteAt( i * 8 + j ) );
         }
-        m_Charset.Characters[i].Mode = C64Studio.Types.CharsetMode.HIRES;
+        m_Charset.Characters[i].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
         m_Charset.Characters[i].Color = 1;
       }
       characterEditor.CharsetUpdated( m_Charset );
@@ -573,7 +573,7 @@ namespace C64Studio
         {
           m_Charset.Characters[i].Data.SetU8At( j, Types.ConstantData.UpperCaseCharset.ByteAt( i * 8 + j ) );
         }
-        m_Charset.Characters[i].Mode = C64Studio.Types.CharsetMode.HIRES;
+        m_Charset.Characters[i].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
         m_Charset.Characters[i].Color = 1;
       }
       characterEditor.CharsetUpdated( m_Charset );
@@ -594,7 +594,7 @@ namespace C64Studio
         {
           m_Charset.Characters[i].Data.SetU8At( j, Types.ConstantData.LowerCaseCharset.ByteAt( i * 8 + j ) );
         }
-        m_Charset.Characters[i].Mode = C64Studio.Types.CharsetMode.HIRES;
+        m_Charset.Characters[i].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
         m_Charset.Characters[i].Color = 1;
       }
       characterEditor.CharsetUpdated( m_Charset );
@@ -839,7 +839,7 @@ namespace C64Studio
       {
         m_Charset.Characters[CharIndex].Color = chosenCharColor + 8;
       }
-      m_Charset.Characters[CharIndex].Mode = isMultiColor ? Types.CharsetMode.MULTICOLOR : C64Studio.Types.CharsetMode.HIRES;
+      m_Charset.Characters[CharIndex].Mode = isMultiColor ? RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
       return true;
     }
 
