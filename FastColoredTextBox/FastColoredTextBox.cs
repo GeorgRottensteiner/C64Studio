@@ -2417,6 +2417,8 @@ namespace FastColoredTextBoxNS
       VerticalScroll.SmallChange = charHeight;
       //VerticalScroll.LargeChange = 10 * charHeight;
       //VerticalScroll.LargeChange = ClientSize.Height;
+      int numberOfVisibleLines = ClientSize.Height / CharHeight;
+      VerticalScroll.LargeChange = numberOfVisibleLines * CharHeight;
       HorizontalScroll.SmallChange = CharWidth;
     }
 
@@ -3920,6 +3922,8 @@ namespace FastColoredTextBoxNS
         Invalidate();
       }
       OnVisibleRangeChanged();
+      int numberOfVisibleLines = ClientSize.Height / CharHeight;
+      VerticalScroll.LargeChange = numberOfVisibleLines * CharHeight;
       UpdateScrollbars();
     }
 
