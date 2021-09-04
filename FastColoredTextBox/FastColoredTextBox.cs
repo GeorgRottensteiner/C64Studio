@@ -8267,11 +8267,12 @@ namespace FastColoredTextBoxNS
       for ( int i = from; i <= to; i++ )
       {
         // retabify to get the real number of chars
-        int lastSpacePos = lines[i].Text.Length;
+        string detabbedLine = ReTabifyLine( lines[i].Text, TabLength );
+        int lastSpacePos = detabbedLine.Length;
         while ( lastSpacePos > 0 )
         {
-          if ( ( lines[i].Text[lastSpacePos - 1] == ' ' )
-          ||   ( lines[i].Text[lastSpacePos - 1] == '\t' ) )
+          if ( ( detabbedLine[lastSpacePos - 1] == ' ' )
+          ||   ( detabbedLine[lastSpacePos - 1] == '\t' ) )
           {
             --lastSpacePos;
           }
@@ -8280,10 +8281,10 @@ namespace FastColoredTextBoxNS
             break;
           }
         }
-        if ( lastSpacePos < lines[i].Text.Length )
+        if ( lastSpacePos < detabbedLine.Length )
         {
           Selection.Start = new Place( lastSpacePos, i );
-          Selection.End = new Place( lines[i].Text.Length, i );
+          Selection.End = new Place( detabbedLine.Length, i );
           ClearSelected();
         }
       }

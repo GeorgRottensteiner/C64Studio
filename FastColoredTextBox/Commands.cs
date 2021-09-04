@@ -742,9 +742,17 @@ namespace FastColoredTextBoxNS
         //InsertCharCommand.DumpLine( ts, fromLine );
 
         // remove backwards to properly handle tabs
-        for ( int i = toChar; i >= fromChar; )
+        for ( int i = toChar - 1; i >= fromChar; )
         {
           char  dummy = 'ö';
+
+          /*
+          if ( ( i == toChar )
+          &&   ( i >= ts[fromLine].Count ) )
+          {
+            --i;
+            continue;
+          }*/
 
           int     delta = InsertCharCommand.RemoveChar( ts, fromLine, i, ref dummy );
 
