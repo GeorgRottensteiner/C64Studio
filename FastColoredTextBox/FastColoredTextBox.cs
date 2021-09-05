@@ -4620,6 +4620,11 @@ namespace FastColoredTextBoxNS
             {
               --curPlace.iLine;
             }
+            // fix cursor if outside the right on the shifted up line
+            if ( curPlace.iChar > this[curPlace.iLine].Count )
+            {
+              curPlace.iChar = this[curPlace.iLine].Count;
+            }
             Selection.Start = curPlace;
             if ( isChanged )
             {
