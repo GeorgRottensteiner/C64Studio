@@ -183,6 +183,18 @@ namespace C64Studio
 
     private void btnFindNext_Click( object sender, EventArgs e )
     {
+      // continue searching from cursor
+      if ( Core.MainForm.ActiveDocumentInfo != null )
+      {
+        var edit = EditFromDocumentEx( Core.MainForm.ActiveDocumentInfo );
+
+        if ( edit != null )
+        {
+          LastSearchFound.Clear();
+          LastSearchFound.FoundInDocument = Core.MainForm.ActiveDocumentInfo;
+          LastSearchFound.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
+        }
+      }
       FindNext( null, comboSearchText.Text );
     }
 
@@ -1822,6 +1834,19 @@ namespace C64Studio
       {
         checkReplaceWrap.Checked = false;
       }
+    }
+
+
+
+    internal void CursorWasMoved( DocumentInfo Doc, int LineNumber, int CharPos )
+    {
+      LastReplaceFound.FoundInDocument = Doc;
+      LastReplaceFound.LineNumber = LineNumber;
+      LastReplaceFound.StartPosition = CharPos;
+
+      LastSearchFound.FoundInDocument = Doc;
+      LastSearchFound.LineNumber = LineNumber;
+      LastSearchFound.StartPosition = CharPos;
     }
 
 
