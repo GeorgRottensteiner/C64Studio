@@ -291,7 +291,7 @@ namespace C64Studio
         }
         else
         {
-          Core.SetStatus( "Searched text not found:" + comboSearchText.Text );
+          Core.SetStatus( "Searched text not found: " + comboSearchText.Text );
         }
         if ( Core.Settings.PlaySoundOnSearchFoundNoItem )
         {
@@ -1515,7 +1515,7 @@ namespace C64Studio
         }
         else
         {
-          Core.SetStatus( "Searched text not found:" + comboSearchText.Text );
+          Core.SetStatus( "Searched text not found: " + comboReplaceSearchText.Text );
         }
         if ( Core.Settings.PlaySoundOnSearchFoundNoItem )
         {
