@@ -9,8 +9,6 @@
 #StartAddress=xxxx  = sets the default BASIC start address
 #SafeLineLength=xxxx    > sets the max. number of characters before a warning appears
 
-#Matching manual state from 29.08.2021
-
 StartAddress=8193
 SafeLineLength=160
 
@@ -49,7 +47,6 @@ CONT;9a;
 COPY;f4;
 COS;be;
 CURSOR;fe41;
-CUT;E4;
 DATA;83;
 DCLEAR;fe15;
 DCLOSE;fe0f;
@@ -68,8 +65,6 @@ DOPEN;fe0d;
 DPAT;fe36;
 DSAVE;ef;
 DVERIFY;fe14;
-EDIT;FE45;
-EDMA;FE21;
 ELLIPSE;fe30;
 ELSE;D5;
 END;80;
@@ -79,20 +74,14 @@ ERR$;d3;
 EXIT;ed;
 EXP;bd;
 FAST;fe25;
-FGOSUB;FE48;
-FGOTO;FE47;
 FILTER;fe03;
 FIND;fe2b;
 FN;a5;
-FONT;FE46;
 FOR;81;
 FOREGROUND;fe39;
 FRE;b8;
-FREAD#;FE1C;
-FWRITE#;FE1E;
-GCOPY;FE32;
-GENLOCK;FE38;
 GET;A1;
+GETKEY;a1f9;
 GO;CB;
 GOSUB;8d;
 GOTO;89;
@@ -114,15 +103,12 @@ LET;88;
 LINE;e5;
 LIST;9b;
 LOAD;93;
-LOADIFF;FE43;
+LOCATE;e6;
 LOG;bc;
-LOG10;CE08;
 LOOP;ec;
 LPEN;ce04;
-MEM;FE23;
-MERGE;E6;
 MID$;ca;
-MOD;CE0B;
+#MOD;nn;
 MONITOR;fa;
 MOUSE;fe3e;
 MOVSPR;fe06;
@@ -150,7 +136,7 @@ PRINT#;98;
 USING;fb;
 PUDEF;dd;
 RCOLOR;cd;
-RCURSOR;FE42;
+RPEN;d0;
 READ;87;
 RECORD;fe12;
 REM;8f;;comment
@@ -163,17 +149,13 @@ RGRAPHICS;cc;
 RIGHT$;c9;
 RMOUSE;fe3f;
 RND;bb;
-RPALETTE;CE0D;
-RPEN;d0;
 RREG;fe09;
 RSPCOLOR;ce07;
-RSPEED;CE0E;
 RSPPOS;ce05;
 RSPRITE;ce06;
 RUN;8a;
 RWINDOW;ce09;
 SAVE;94;
-SAVEIFF;FE44;
 SCNCLR;e8;
 SCRATCH;f2;
 SCREEN;fe2e;
@@ -181,11 +163,10 @@ SET;fe2d;
 SGN;b4;
 SIN;bf;
 SLEEP;fe0b;
+SLOW;fe26;
 SOUND;da;
 SPC(;a6;
-SPEED;FE26;
 SPRCOLOR;fe08;
-SPRDEF;FE1D;
 SPRITE;fe07;
 SPRSAV;fe16;
 SQR;ba;
