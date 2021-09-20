@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudioModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,7 +20,7 @@ namespace C64Studio
 
     public GR.Memory.ByteBuffer ToBuffer()
     {
-      GR.IO.FileChunk   chunkLayout = new GR.IO.FileChunk( C64Studio.Types.FileChunk.SETTINGS_LAYOUT );
+      GR.IO.FileChunk   chunkLayout = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_LAYOUT );
 
       chunkLayout.AppendString( Name );
       chunkLayout.AppendI32( Position.X );

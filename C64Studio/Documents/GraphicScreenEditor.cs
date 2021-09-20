@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using C64Studio.Types;
+using RetroDevStudioModels;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace C64Studio
@@ -109,10 +110,10 @@ namespace C64Studio
       m_GraphicScreenProject.Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       colorSelector.DisplayPage.Create( 16 * 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
-      CustomRenderer.PaletteManager.ApplyPalette( pictureEditor.DisplayPage );
-      CustomRenderer.PaletteManager.ApplyPalette( charEditor.DisplayPage );
-      CustomRenderer.PaletteManager.ApplyPalette( m_GraphicScreenProject.Image );
-      CustomRenderer.PaletteManager.ApplyPalette( colorSelector.DisplayPage );
+      PaletteManager.ApplyPalette( pictureEditor.DisplayPage );
+      PaletteManager.ApplyPalette( charEditor.DisplayPage );
+      PaletteManager.ApplyPalette( m_GraphicScreenProject.Image );
+      PaletteManager.ApplyPalette( colorSelector.DisplayPage );
 
       foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
       {
@@ -262,7 +263,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      Core.Theming.DrawSingleColorComboBox( combo, e );
+      Core.Theming.DrawSingleColorComboBox( combo, e, ConstantData.Palette );
     }
 
 
@@ -271,7 +272,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      Core.Theming.DrawMultiColorComboBox( combo, e );
+      Core.Theming.DrawMultiColorComboBox( combo, e, ConstantData.Palette );
     }
 
 
@@ -377,16 +378,14 @@ namespace C64Studio
 
               if ( m_GraphicScreenProject.SelectedCheckType == C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
               {
-                m_Chars[charX + charY * BlockWidth].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR;
                 checkMulticolor.Checked = true;
               }
               else if ( m_GraphicScreenProject.SelectedCheckType == C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET )
               {
-                checkMulticolor.Checked = ( m_Chars[charX + charY * BlockWidth].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR );
+                checkMulticolor.Checked = true;
               }
               else
               {
-                m_Chars[charX + charY * BlockWidth].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
                 checkMulticolor.Checked = false;
               }
               comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Color;
@@ -540,21 +539,6 @@ namespace C64Studio
 
     private void checkMulticolor_CheckedChanged( object sender, EventArgs e )
     {
-      if ( m_SelectedChar.X != -1 )
-      {
-        if ( ( checkMulticolor.Checked )
-        &&   ( m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Mode != RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR ) )
-        {
-          m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR;
-          Modified = true;
-        }
-        else if ( ( !checkMulticolor.Checked )
-        &&        ( m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR ) )
-        {
-          m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
-          Modified = true;
-        }
-      }
       if ( m_GraphicScreenProject.MultiColor != checkMulticolor.Checked )
       {
         m_GraphicScreenProject.MultiColor = checkMulticolor.Checked;
@@ -1556,7 +1540,6 @@ namespace C64Studio
       {
         cd.Color = chosenCharColor + 8;
       }
-      cd.Mode = CheckForMC ? RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
       return true;
     }
 
@@ -1655,16 +1638,7 @@ namespace C64Studio
           }
           else
           {
-            if ( m_Chars[i + j * BlockWidth].Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
-            {
-              m_Chars[i + j * BlockWidth].Error = "Char is multi color";
-              m_ErrornousChars[i, j] = true;
-              foundError = true;
-            }
-            else
-            {
-              m_ErrornousChars[i, j] = false;
-            }
+            m_ErrornousChars[i, j] = false;
           }
         }
       }
@@ -1953,7 +1927,6 @@ namespace C64Studio
       foreach ( Formats.CharData aChar in m_Chars )
       {
         aChar.Error = "";
-        aChar.Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
         aChar.Color = 0;
         aChar.Replacement = null;
       }
@@ -2014,7 +1987,8 @@ namespace C64Studio
           m_ButtonReleased = false;
           DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 ) );
         }
-        if ( charToEdit.Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
+        if ( ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
+        ||   ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET ) )
         {
           byte    colorToSet = m_CurrentColor;
 
@@ -2046,7 +2020,8 @@ namespace C64Studio
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
-        if ( charToEdit.Mode == RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR )
+        if ( ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
+        ||   ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET ) )
         {
           byte    colorToSet = (byte)m_GraphicScreenProject.BackgroundColor;
           charX /= 2;
@@ -2437,7 +2412,7 @@ namespace C64Studio
         // delta in indices
         dataSelection.AppendI32( ( i == 0 ) ? 0 : 1 );
 
-        dataSelection.AppendI32( (int)projectToExport.Characters[i].Mode );
+        dataSelection.AppendI32( 0 ); // was (int)projectToExport.Characters[i].Mode );
         dataSelection.AppendI32( projectToExport.Characters[i].Color );
         dataSelection.AppendU32( 8 );
         dataSelection.AppendU32( 8 );
@@ -2699,7 +2674,6 @@ namespace C64Studio
           if ( m_Chars[i].Replacement == null )
           {
             charset.Characters[m_Chars[i].Index].Data = m_Chars[i].Data;
-            charset.Characters[m_Chars[i].Index].Mode = forceMulticolor ? RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
           }
           else
           {
@@ -2874,7 +2848,7 @@ namespace C64Studio
       System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset, e.Bounds.Top, e.Bounds.Width - offset, e.Bounds.Height );
       if ( e.Index != -1 )
       {
-        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
+        e.Graphics.FillRectangle( ConstantData.Palette.ColorBrushes[e.Index], itemRect );
         if ( ( e.State & DrawItemState.Selected ) != 0 )
         {
           e.Graphics.DrawString( list.Items[e.Index].ToString(), list.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + 1.0f );

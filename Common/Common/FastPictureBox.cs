@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using C64Studio.CustomRenderer;
+
+
 
 namespace GR.Forms
 {

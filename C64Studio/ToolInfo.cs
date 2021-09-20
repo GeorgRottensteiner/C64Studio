@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using C64Studio.Types.ASM;
+using RetroDevStudioModels;
 
 namespace C64Studio
 {
@@ -27,7 +28,7 @@ namespace C64Studio
 
     public GR.IO.FileChunk ToChunk()
     {
-      GR.IO.FileChunk chunk = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_TOOL );
+      GR.IO.FileChunk chunk = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_TOOL );
 
       chunk.AppendU32( (uint)Type );
       chunk.AppendString( Name );
@@ -45,7 +46,7 @@ namespace C64Studio
 
     public bool FromChunk( GR.IO.FileChunk Chunk )
     {
-      if ( Chunk.Type != Types.FileChunk.SETTINGS_TOOL )
+      if ( Chunk.Type != FileChunkConstants.SETTINGS_TOOL )
       {
         return false;
       }

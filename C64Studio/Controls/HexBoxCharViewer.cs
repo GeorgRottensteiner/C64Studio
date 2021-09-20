@@ -72,7 +72,7 @@ namespace Be.Windows.Forms
           }
           using ( GR.Image.FastImage charImage = new GR.Image.FastImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )
           {
-            C64Studio.CustomRenderer.PaletteManager.ApplyPalette( charImage );
+            PaletteManager.ApplyPalette( charImage );
 
             switch ( Mode )
             {

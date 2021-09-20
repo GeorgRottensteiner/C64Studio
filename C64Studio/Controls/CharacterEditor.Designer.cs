@@ -34,8 +34,6 @@
       GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.btnClearChars = new System.Windows.Forms.Button();
-      this.comboCharsetMode = new System.Windows.Forms.ComboBox();
-      this.label1 = new System.Windows.Forms.Label();
       this.comboCategories = new System.Windows.Forms.ComboBox();
       this.btnPasteFromClipboard = new System.Windows.Forms.Button();
       this.label4 = new System.Windows.Forms.Label();
@@ -74,11 +72,8 @@
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.tabCharacterEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
-      this.canvasEditor = new C64Studio.Controls.CustomDrawControl();
-      this.panelCharColors = new GR.Forms.FastPictureBox();
-      this.picturePlayground = new GR.Forms.FastPictureBox();
-      this.btnExchangeColors = new C64Studio.Controls.MenuButton();
-      this.panelCharacters = new GR.Forms.ImageListbox();
+      this.comboCharsetMode = new System.Windows.Forms.ComboBox();
+      this.label1 = new System.Windows.Forms.Label();
       this.tabCategories = new System.Windows.Forms.TabPage();
       this.btnMoveCategoryDown = new System.Windows.Forms.Button();
       this.btnMoveCategoryUp = new System.Windows.Forms.Button();
@@ -96,59 +91,44 @@
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.editCategoryName = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
+      this.btnEditPalette = new System.Windows.Forms.Button();
+      this.canvasEditor = new C64Studio.Controls.CustomDrawControl();
+      this.panelCharColors = new GR.Forms.FastPictureBox();
+      this.picturePlayground = new GR.Forms.FastPictureBox();
+      this.btnExchangeColors = new C64Studio.Controls.MenuButton();
+      this.panelCharacters = new GR.Forms.ImageListbox();
       this.groupBox2.SuspendLayout();
       this.contextMenuExchangeColors.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.tabCharacterEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).BeginInit();
       this.tabCategories.SuspendLayout();
       this.groupAllCategories.SuspendLayout();
       this.groupCategorySpecific.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).BeginInit();
       this.SuspendLayout();
       // 
       // groupBox2
       // 
       this.groupBox2.Controls.Add(this.btnClearChars);
-      this.groupBox2.Controls.Add(this.comboCharsetMode);
-      this.groupBox2.Controls.Add(this.label1);
-      this.groupBox2.Location = new System.Drawing.Point(280, 301);
+      this.groupBox2.Location = new System.Drawing.Point(497, 301);
       this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(292, 56);
+      this.groupBox2.Size = new System.Drawing.Size(150, 56);
       this.groupBox2.TabIndex = 50;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "with selected characters";
+      this.groupBox2.Text = "With selected characters";
       // 
       // btnClearChars
       // 
-      this.btnClearChars.Location = new System.Drawing.Point(177, 23);
+      this.btnClearChars.Location = new System.Drawing.Point(6, 21);
       this.btnClearChars.Name = "btnClearChars";
-      this.btnClearChars.Size = new System.Drawing.Size(98, 22);
+      this.btnClearChars.Size = new System.Drawing.Size(48, 22);
       this.btnClearChars.TabIndex = 6;
       this.btnClearChars.Text = "Clear";
       this.btnClearChars.UseVisualStyleBackColor = true;
       this.btnClearChars.Click += new System.EventHandler(this.btnClear_Click);
-      // 
-      // comboCharsetMode
-      // 
-      this.comboCharsetMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboCharsetMode.FormattingEnabled = true;
-      this.comboCharsetMode.Location = new System.Drawing.Point(52, 23);
-      this.comboCharsetMode.Name = "comboCharsetMode";
-      this.comboCharsetMode.Size = new System.Drawing.Size(109, 21);
-      this.comboCharsetMode.TabIndex = 16;
-      this.comboCharsetMode.SelectedIndexChanged += new System.EventHandler(this.comboCharsetMode_SelectedIndexChanged);
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(9, 26);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(37, 13);
-      this.label1.TabIndex = 17;
-      this.label1.Text = "Mode:";
       // 
       // comboCategories
       // 
@@ -278,7 +258,7 @@
       this.comboCharColor.Name = "comboCharColor";
       this.comboCharColor.Size = new System.Drawing.Size(71, 21);
       this.comboCharColor.TabIndex = 24;
-      this.comboCharColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboMulticolor_DrawItem);
+      this.comboCharColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboCharColor_DrawItem);
       this.comboCharColor.SelectedIndexChanged += new System.EventHandler(this.comboCharColor_SelectedIndexChanged);
       // 
       // comboBGColor4
@@ -486,7 +466,7 @@
       this.groupBox1.Controls.Add(this.btnMoveSelectionToTarget);
       this.groupBox1.Controls.Add(this.editMoveTargetIndex);
       this.groupBox1.Controls.Add(this.label10);
-      this.groupBox1.Location = new System.Drawing.Point(578, 301);
+      this.groupBox1.Location = new System.Drawing.Point(653, 301);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Size = new System.Drawing.Size(249, 56);
       this.groupBox1.TabIndex = 53;
@@ -495,7 +475,7 @@
       // 
       // btnMoveSelectionToTarget
       // 
-      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 23);
+      this.btnMoveSelectionToTarget.Location = new System.Drawing.Point(161, 20);
       this.btnMoveSelectionToTarget.Name = "btnMoveSelectionToTarget";
       this.btnMoveSelectionToTarget.Size = new System.Drawing.Size(75, 21);
       this.btnMoveSelectionToTarget.TabIndex = 2;
@@ -505,7 +485,7 @@
       // 
       // editMoveTargetIndex
       // 
-      this.editMoveTargetIndex.Location = new System.Drawing.Point(82, 23);
+      this.editMoveTargetIndex.Location = new System.Drawing.Point(82, 21);
       this.editMoveTargetIndex.Name = "editMoveTargetIndex";
       this.editMoveTargetIndex.Size = new System.Drawing.Size(73, 20);
       this.editMoveTargetIndex.TabIndex = 1;
@@ -513,7 +493,7 @@
       // label10
       // 
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(6, 26);
+      this.label10.Location = new System.Drawing.Point(6, 24);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(70, 13);
       this.label10.TabIndex = 0;
@@ -532,7 +512,10 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnEditPalette);
       this.tabEditor.Controls.Add(this.canvasEditor);
+      this.tabEditor.Controls.Add(this.comboCharsetMode);
+      this.tabEditor.Controls.Add(this.label1);
       this.tabEditor.Controls.Add(this.comboBackground);
       this.tabEditor.Controls.Add(this.comboMulticolor1);
       this.tabEditor.Controls.Add(this.groupBox1);
@@ -574,81 +557,24 @@
       this.tabEditor.Text = "Editor";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
-      // canvasEditor
+      // comboCharsetMode
       // 
-      this.canvasEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.canvasEditor.Location = new System.Drawing.Point(6, 3);
-      this.canvasEditor.Name = "canvasEditor";
-      this.canvasEditor.Size = new System.Drawing.Size(265, 260);
-      this.canvasEditor.TabIndex = 54;
-      this.canvasEditor.TabStop = false;
-      this.canvasEditor.Paint += new System.Windows.Forms.PaintEventHandler(this.canvasEditor_Paint);
-      this.canvasEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseDown);
-      this.canvasEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseMove);
+      this.comboCharsetMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboCharsetMode.FormattingEnabled = true;
+      this.comboCharsetMode.Location = new System.Drawing.Point(322, 322);
+      this.comboCharsetMode.Name = "comboCharsetMode";
+      this.comboCharsetMode.Size = new System.Drawing.Size(169, 21);
+      this.comboCharsetMode.TabIndex = 16;
+      this.comboCharsetMode.SelectedIndexChanged += new System.EventHandler(this.comboCharsetMode_SelectedIndexChanged);
       // 
-      // panelCharColors
+      // label1
       // 
-      this.panelCharColors.AutoResize = false;
-      this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage1;
-      this.panelCharColors.Image = null;
-      this.panelCharColors.Location = new System.Drawing.Point(780, 271);
-      this.panelCharColors.Name = "panelCharColors";
-      this.panelCharColors.Size = new System.Drawing.Size(260, 20);
-      this.panelCharColors.TabIndex = 52;
-      this.panelCharColors.TabStop = false;
-      this.panelCharColors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseDown);
-      this.panelCharColors.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseMove);
-      // 
-      // picturePlayground
-      // 
-      this.picturePlayground.AutoResize = false;
-      this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picturePlayground.DisplayPage = fastImage2;
-      this.picturePlayground.Image = null;
-      this.picturePlayground.Location = new System.Drawing.Point(780, 3);
-      this.picturePlayground.Name = "picturePlayground";
-      this.picturePlayground.Size = new System.Drawing.Size(260, 260);
-      this.picturePlayground.TabIndex = 51;
-      this.picturePlayground.TabStop = false;
-      this.picturePlayground.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picturePlayground_MouseDown);
-      this.picturePlayground.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picturePlayground_MouseMove);
-      // 
-      // btnExchangeColors
-      // 
-      this.btnExchangeColors.Location = new System.Drawing.Point(387, 143);
-      this.btnExchangeColors.Name = "btnExchangeColors";
-      this.btnExchangeColors.Size = new System.Drawing.Size(121, 26);
-      this.btnExchangeColors.TabIndex = 49;
-      this.btnExchangeColors.Text = "Exchange Colors";
-      this.btnExchangeColors.UseVisualStyleBackColor = true;
-      this.btnExchangeColors.Click += new System.EventHandler(this.btnExchangeColors_Click);
-      // 
-      // panelCharacters
-      // 
-      this.panelCharacters.AutoScroll = true;
-      this.panelCharacters.AutoScrollHorizontalMaximum = 100;
-      this.panelCharacters.AutoScrollHorizontalMinimum = 0;
-      this.panelCharacters.AutoScrollHPos = 0;
-      this.panelCharacters.AutoScrollVerticalMaximum = -23;
-      this.panelCharacters.AutoScrollVerticalMinimum = 0;
-      this.panelCharacters.AutoScrollVPos = 0;
-      this.panelCharacters.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharacters.EnableAutoScrollHorizontal = true;
-      this.panelCharacters.EnableAutoScrollVertical = true;
-      this.panelCharacters.HottrackColor = ((uint)(2151694591u));
-      this.panelCharacters.ItemHeight = 8;
-      this.panelCharacters.ItemWidth = 8;
-      this.panelCharacters.Location = new System.Drawing.Point(514, 3);
-      this.panelCharacters.Name = "panelCharacters";
-      this.panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
-      this.panelCharacters.SelectedIndex = -1;
-      this.panelCharacters.Size = new System.Drawing.Size(260, 260);
-      this.panelCharacters.TabIndex = 33;
-      this.panelCharacters.TabStop = true;
-      this.panelCharacters.VisibleAutoScrollHorizontal = false;
-      this.panelCharacters.VisibleAutoScrollVertical = false;
-      this.panelCharacters.SelectionChanged += new System.EventHandler(this.panelCharacters_SelectionChanged);
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(279, 325);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(37, 13);
+      this.label1.TabIndex = 17;
+      this.label1.Text = "Mode:";
       // 
       // tabCategories
       // 
@@ -827,6 +753,93 @@
       this.label3.TabIndex = 5;
       this.label3.Text = "Category:";
       // 
+      // btnEditPalette
+      // 
+      this.btnEditPalette.Enabled = false;
+      this.btnEditPalette.Location = new System.Drawing.Point(288, 143);
+      this.btnEditPalette.Name = "btnEditPalette";
+      this.btnEditPalette.Size = new System.Drawing.Size(75, 26);
+      this.btnEditPalette.TabIndex = 55;
+      this.btnEditPalette.Text = "Edit Palette";
+      this.btnEditPalette.UseVisualStyleBackColor = true;
+      this.btnEditPalette.Click += new System.EventHandler(this.btnEditPalette_Click);
+      // 
+      // canvasEditor
+      // 
+      this.canvasEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.canvasEditor.Location = new System.Drawing.Point(6, 3);
+      this.canvasEditor.Name = "canvasEditor";
+      this.canvasEditor.Size = new System.Drawing.Size(265, 260);
+      this.canvasEditor.TabIndex = 54;
+      this.canvasEditor.TabStop = false;
+      this.canvasEditor.Paint += new System.Windows.Forms.PaintEventHandler(this.canvasEditor_Paint);
+      this.canvasEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseDown);
+      this.canvasEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.canvasEditor_MouseMove);
+      // 
+      // panelCharColors
+      // 
+      this.panelCharColors.AutoResize = false;
+      this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.panelCharColors.DisplayPage = fastImage1;
+      this.panelCharColors.Image = null;
+      this.panelCharColors.Location = new System.Drawing.Point(780, 271);
+      this.panelCharColors.Name = "panelCharColors";
+      this.panelCharColors.Size = new System.Drawing.Size(260, 20);
+      this.panelCharColors.TabIndex = 52;
+      this.panelCharColors.TabStop = false;
+      this.panelCharColors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseDown);
+      this.panelCharColors.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelCharColors_MouseMove);
+      // 
+      // picturePlayground
+      // 
+      this.picturePlayground.AutoResize = false;
+      this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.picturePlayground.DisplayPage = fastImage2;
+      this.picturePlayground.Image = null;
+      this.picturePlayground.Location = new System.Drawing.Point(780, 3);
+      this.picturePlayground.Name = "picturePlayground";
+      this.picturePlayground.Size = new System.Drawing.Size(260, 260);
+      this.picturePlayground.TabIndex = 51;
+      this.picturePlayground.TabStop = false;
+      this.picturePlayground.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picturePlayground_MouseDown);
+      this.picturePlayground.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picturePlayground_MouseMove);
+      // 
+      // btnExchangeColors
+      // 
+      this.btnExchangeColors.Location = new System.Drawing.Point(387, 143);
+      this.btnExchangeColors.Name = "btnExchangeColors";
+      this.btnExchangeColors.Size = new System.Drawing.Size(121, 26);
+      this.btnExchangeColors.TabIndex = 49;
+      this.btnExchangeColors.Text = "Exchange Colors";
+      this.btnExchangeColors.UseVisualStyleBackColor = true;
+      this.btnExchangeColors.Click += new System.EventHandler(this.btnExchangeColors_Click);
+      // 
+      // panelCharacters
+      // 
+      this.panelCharacters.AutoScroll = true;
+      this.panelCharacters.AutoScrollHorizontalMaximum = 100;
+      this.panelCharacters.AutoScrollHorizontalMinimum = 0;
+      this.panelCharacters.AutoScrollHPos = 0;
+      this.panelCharacters.AutoScrollVerticalMaximum = -23;
+      this.panelCharacters.AutoScrollVerticalMinimum = 0;
+      this.panelCharacters.AutoScrollVPos = 0;
+      this.panelCharacters.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.panelCharacters.EnableAutoScrollHorizontal = true;
+      this.panelCharacters.EnableAutoScrollVertical = true;
+      this.panelCharacters.HottrackColor = ((uint)(2151694591u));
+      this.panelCharacters.ItemHeight = 8;
+      this.panelCharacters.ItemWidth = 8;
+      this.panelCharacters.Location = new System.Drawing.Point(514, 3);
+      this.panelCharacters.Name = "panelCharacters";
+      this.panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
+      this.panelCharacters.SelectedIndex = -1;
+      this.panelCharacters.Size = new System.Drawing.Size(260, 260);
+      this.panelCharacters.TabIndex = 33;
+      this.panelCharacters.TabStop = true;
+      this.panelCharacters.VisibleAutoScrollHorizontal = false;
+      this.panelCharacters.VisibleAutoScrollVertical = false;
+      this.panelCharacters.SelectionChanged += new System.EventHandler(this.panelCharacters_SelectionChanged);
+      // 
       // CharacterEditor
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -834,21 +847,20 @@
       this.Name = "CharacterEditor";
       this.Size = new System.Drawing.Size(1057, 490);
       this.groupBox2.ResumeLayout(false);
-      this.groupBox2.PerformLayout();
       this.contextMenuExchangeColors.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       this.tabCharacterEditor.ResumeLayout(false);
       this.tabEditor.ResumeLayout(false);
       this.tabEditor.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).EndInit();
       this.tabCategories.ResumeLayout(false);
       this.tabCategories.PerformLayout();
       this.groupAllCategories.ResumeLayout(false);
       this.groupCategorySpecific.ResumeLayout(false);
       this.groupCategorySpecific.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.canvasEditor)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.panelCharColors)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.picturePlayground)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -859,8 +871,6 @@
         private GR.Forms.FastPictureBox picturePlayground;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btnClearChars;
-        private System.Windows.Forms.ComboBox comboCharsetMode;
-        private System.Windows.Forms.Label label1;
         private MenuButton btnExchangeColors;
         private System.Windows.Forms.Button btnPaste;
         private System.Windows.Forms.Button btnCopy;
@@ -919,5 +929,8 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Button btnMoveCategoryDown;
     private System.Windows.Forms.Button btnMoveCategoryUp;
+    private System.Windows.Forms.ComboBox comboCharsetMode;
+    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Button btnEditPalette;
   }
 }

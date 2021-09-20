@@ -13,6 +13,7 @@ using C64Studio.Displayer;
 using C64Studio.CustomRenderer;
 using C64Studio.Parser;
 using GR.Image;
+using RetroDevStudioModels;
 
 // 0.9f - added else for !ifdef macro
 // 0.9b - fixed crash bug if opening project with modified active project
@@ -64,7 +65,7 @@ namespace C64Studio
 
     private BaseDocument          m_ActiveSource = null;
     internal ToolInfo             m_CurrentActiveTool = null;
-    public SortedDictionary<string, Types.Palette> Palettes = new SortedDictionary<string, C64Studio.Types.Palette>();
+    public SortedDictionary<string, Palette>  Palettes = new SortedDictionary<string, Palette>();
 
     private static MainForm       s_MainForm = null;
     public static bool            s_SystemShutdown = false;
@@ -516,7 +517,7 @@ namespace C64Studio
 
       //Parser.BasicFileParser.KeyMap = StudioCore.Settings.BASICKeyMap;
 
-      Types.Palette defaultPalette = new C64Studio.Types.Palette();
+      Palette defaultPalette = new Palette();
       defaultPalette.Name = "C64Studio";
 
       Palettes.Add( defaultPalette.Name, defaultPalette );
@@ -1046,12 +1047,12 @@ namespace C64Studio
 
 
 
-    public Types.Palette ActivePalette
+    public Palette ActivePalette
     {
       get
       {
         // TODO - aus Palette-Liste
-        return Types.ConstantData.Palette;
+        return ConstantData.Palette;
       }
     }
 
@@ -6414,9 +6415,9 @@ namespace C64Studio
         bool match = true;
         for ( int i = 0; i < 16; ++i )
         {
-          if ( ( IncomingImage.PaletteRed( i ) != ( ( Types.ConstantData.Palette.ColorValues[i] & 0xff0000 ) >> 16 ) )
-          ||   ( IncomingImage.PaletteGreen( i ) != ( ( Types.ConstantData.Palette.ColorValues[i] & 0xff00 ) >> 8 ) )
-          ||   ( IncomingImage.PaletteBlue( i ) != ( ( Types.ConstantData.Palette.ColorValues[i] & 0xff ) ) ) )
+          if ( ( IncomingImage.PaletteRed( i ) != ( ( ConstantData.Palette.ColorValues[i] & 0xff0000 ) >> 16 ) )
+          ||   ( IncomingImage.PaletteGreen( i ) != ( ( ConstantData.Palette.ColorValues[i] & 0xff00 ) >> 8 ) )
+          ||   ( IncomingImage.PaletteBlue( i ) != ( ( ConstantData.Palette.ColorValues[i] & 0xff ) ) ) )
           {
             match = false;
             break;
@@ -6931,9 +6932,9 @@ namespace C64Studio
 
     private void OnSystemShutDown()
     {
-      var chunkRestartData = new GR.IO.FileChunk( Types.FileChunk.RESTART_INFO );
+      var chunkRestartData = new GR.IO.FileChunk( FileChunkConstants.RESTART_INFO );
 
-      var chunkRestartInfo = new GR.IO.FileChunk( Types.FileChunk.RESTART_DATA );
+      var chunkRestartInfo = new GR.IO.FileChunk( FileChunkConstants.RESTART_DATA );
       // version
       chunkRestartInfo.AppendI32( 1 );
       if ( StudioCore.Navigating.Solution != null )
@@ -6958,7 +6959,7 @@ namespace C64Studio
       {
         if ( doc.Modified )
         {
-          var chunkDocInfo = new GR.IO.FileChunk( Types.FileChunk.RESTART_DOC_INFO );
+          var chunkDocInfo = new GR.IO.FileChunk( FileChunkConstants.RESTART_DOC_INFO );
 
           chunkDocInfo.AppendString( doc.DocumentInfo.FullPath );
           if ( doc.DocumentInfo.Project != null )
@@ -7024,7 +7025,7 @@ namespace C64Studio
       {
         return false;
       }
-      if ( chunk.Type != Types.FileChunk.RESTART_INFO )
+      if ( chunk.Type != FileChunkConstants.RESTART_INFO )
       {
         return false;
       }
@@ -7037,7 +7038,7 @@ namespace C64Studio
         var subChunkReader = subChunk.MemoryReader();
         switch ( subChunk.Type )
         {
-          case Types.FileChunk.RESTART_DATA:
+          case FileChunkConstants.RESTART_DATA:
             {
               uint      version = subChunkReader.ReadUInt32();
               if ( version != 1 )
@@ -7066,7 +7067,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.RESTART_DOC_INFO:
+          case FileChunkConstants.RESTART_DOC_INFO:
             {
               string    docPath = subChunkReader.ReadString();
               string    docProjectName = subChunkReader.ReadString();

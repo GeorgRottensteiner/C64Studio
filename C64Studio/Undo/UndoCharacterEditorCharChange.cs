@@ -27,7 +27,6 @@ namespace C64Studio.Undo
       Char.Color      = Project.Characters[CharIndex].Color;
       Char.Category   = Project.Characters[CharIndex].Category;
       Char.Index      = CharIndex;
-      Char.Mode       = Project.Characters[CharIndex].Mode;
     }
 
 
@@ -55,7 +54,6 @@ namespace C64Studio.Undo
       Project.Characters[CharIndex].Color = Char.Color;
       Project.Characters[CharIndex].Category = Char.Category;
       Project.Characters[CharIndex].Index = Char.Index;
-      Project.Characters[CharIndex].Mode = Char.Mode;
 
       Editor.CharacterChanged( CharIndex );
     }

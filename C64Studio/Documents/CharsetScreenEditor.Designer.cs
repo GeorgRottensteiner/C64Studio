@@ -30,8 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,6 +41,7 @@
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnDefaultLowerCase = new System.Windows.Forms.Button();
       this.btnDefaultUppercase = new System.Windows.Forms.Button();
+      this.btnImportCharsetFromFile = new System.Windows.Forms.Button();
       this.btnImportCharset = new System.Windows.Forms.Button();
       this.btnClearImportData = new System.Windows.Forms.Button();
       this.btnImportFromASM = new System.Windows.Forms.Button();
@@ -199,6 +200,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox1.Controls.Add(this.btnDefaultLowerCase);
       this.groupBox1.Controls.Add(this.btnDefaultUppercase);
+      this.groupBox1.Controls.Add(this.btnImportCharsetFromFile);
       this.groupBox1.Controls.Add(this.btnImportCharset);
       this.groupBox1.Controls.Add(this.btnClearImportData);
       this.groupBox1.Controls.Add(this.btnImportFromASM);
@@ -230,6 +232,16 @@
       this.btnDefaultUppercase.Text = "Default Uppercase";
       this.btnDefaultUppercase.UseVisualStyleBackColor = true;
       this.btnDefaultUppercase.Click += new System.EventHandler(this.btnDefaultUppercase_Click);
+      // 
+      // btnImportCharsetFromFile
+      // 
+      this.btnImportCharsetFromFile.Location = new System.Drawing.Point(129, 48);
+      this.btnImportCharsetFromFile.Name = "btnImportCharsetFromFile";
+      this.btnImportCharsetFromFile.Size = new System.Drawing.Size(117, 23);
+      this.btnImportCharsetFromFile.TabIndex = 1;
+      this.btnImportCharsetFromFile.Text = "Charset from ASM";
+      this.btnImportCharsetFromFile.UseVisualStyleBackColor = true;
+      this.btnImportCharsetFromFile.Click += new System.EventHandler(this.btnImportCharsetFromFile_Click);
       // 
       // btnImportCharset
       // 
@@ -1119,7 +1131,7 @@
       // 
       this.panelCharColors.AutoResize = false;
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage3;
+      this.panelCharColors.DisplayPage = fastImage1;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(677, 416);
       this.panelCharColors.Name = "panelCharColors";
@@ -1133,13 +1145,14 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage4;
+      this.pictureEditor.DisplayPage = fastImage2;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
       this.pictureEditor.Size = new System.Drawing.Size(644, 404);
       this.pictureEditor.TabIndex = 0;
       this.pictureEditor.TabStop = false;
+      this.pictureEditor.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback(this.pictureEditor_PostPaint);
       this.pictureEditor.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureEditor_Paint);
       this.pictureEditor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseDown);
       this.pictureEditor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureEditor_MouseMove);
@@ -1299,5 +1312,6 @@
     private System.Windows.Forms.Button btnShiftUp;
     private System.Windows.Forms.Button btnShiftRight;
     private System.Windows.Forms.Button btnShiftLeft;
+    private System.Windows.Forms.Button btnImportCharsetFromFile;
   }
 }

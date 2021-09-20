@@ -11,6 +11,9 @@ using GR.IO;
 using System.Linq;
 using C64Models.BASIC;
 using GR.Image;
+using RetroDevStudioModels;
+
+
 
 namespace C64Studio
 {
@@ -391,6 +394,24 @@ namespace C64Studio
       UpdateKeyBinding( C64Studio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
       UpdateKeyBinding( C64Studio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
       UpdateKeyBinding( C64Studio.Types.Function.DELETE_LINE, FastColoredTextBoxNS.FCTBAction.DeleteLine );
+
+      UpdateKeyBinding( C64Studio.Types.Function.UNDO, FastColoredTextBoxNS.FCTBAction.Undo );
+      UpdateKeyBinding( C64Studio.Types.Function.REDO, FastColoredTextBoxNS.FCTBAction.Redo );
+
+      UpdateKeyBinding( C64Studio.Types.Function.COPY_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.CopyLineDown );
+      UpdateKeyBinding( C64Studio.Types.Function.COPY_LINE_UP, FastColoredTextBoxNS.FCTBAction.CopyLineUp );
+      UpdateKeyBinding( C64Studio.Types.Function.MOVE_LINE_UP, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesUp );
+      UpdateKeyBinding( C64Studio.Types.Function.MOVE_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesDown );
+
+      UpdateKeyBinding( C64Studio.Types.Function.FIND_NEXT, FastColoredTextBoxNS.FCTBAction.FindNext );
+
+      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_ADD, FastColoredTextBoxNS.FCTBAction.BookmarkLine );
+      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_DELETE, FastColoredTextBoxNS.FCTBAction.UnbookmarkLine );
+      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_PREVIOUS, FastColoredTextBoxNS.FCTBAction.GoPrevBookmark );
+      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_NEXT, FastColoredTextBoxNS.FCTBAction.GoNextBookmark );
+
+      UpdateKeyBinding( Function.NAVIGATE_BACK, FastColoredTextBoxNS.FCTBAction.NavigateBackward );
+      UpdateKeyBinding( Function.NAVIGATE_FORWARD, FastColoredTextBoxNS.FCTBAction.NavigateForward );
     }
 
 
@@ -1278,13 +1299,13 @@ namespace C64Studio
         // hard coded mapping from ^ to arrow up (power)
         if ( mappedKey == "^" )
         {
-          InsertOrReplaceChar( Types.ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].Normal.CharValue );
+          InsertOrReplaceChar( ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].Normal.CharValue );
           return true;
         }
         // PI
         if ( mappedKey == "~" )
         {
-          InsertOrReplaceChar( Types.ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].WithShift.CharValue );
+          InsertOrReplaceChar( ConstantData.PhysicalKeyInfo[KeyboardKey.KEY_ARROW_UP].WithShift.CharValue );
           return true;
         }
         if ( ( (int)bareKey >= 0x30 )
@@ -1305,11 +1326,11 @@ namespace C64Studio
 
         var key = Core.Settings.BASICKeyMap.GetKeymapEntry( bareKey );
 
-        if ( !Types.ConstantData.PhysicalKeyInfo.ContainsKey( key.KeyboardKey ) )
+        if ( !ConstantData.PhysicalKeyInfo.ContainsKey( key.KeyboardKey ) )
         {
           Debug.Log( "No physical key info for " + key.KeyboardKey );
         }
-        var physKey = Types.ConstantData.PhysicalKeyInfo[key.KeyboardKey];
+        var physKey = ConstantData.PhysicalKeyInfo[key.KeyboardKey];
 
         C64Character    c64Key = physKey.Normal;
         if ( shiftPushed )
@@ -1488,7 +1509,7 @@ namespace C64Studio
         return false;
       }
       // check all keys!
-      if ( !Types.ConstantData.CharToC64Char.ContainsKey( MappedKey.ToUpper()[0] ) )
+      if ( !ConstantData.CharToC64Char.ContainsKey( MappedKey.ToUpper()[0] ) )
       {
         // the macro key?
         if ( ( MappedKey == "{" )
@@ -1507,11 +1528,11 @@ namespace C64Studio
 
     private C64Character FindPhysicalKey( KeymapEntry Key, KeyModifier Modifier, char UnicodeChar )
     {
-      if ( !Types.ConstantData.PhysicalKeyInfo.ContainsKey( Key.KeyboardKey ) )
+      if ( !ConstantData.PhysicalKeyInfo.ContainsKey( Key.KeyboardKey ) )
       {
         return null;
       }
-      var key = Types.ConstantData.PhysicalKeyInfo[Key.KeyboardKey];
+      var key = ConstantData.PhysicalKeyInfo[Key.KeyboardKey];
       if ( Modifier == KeyModifier.NORMAL )
       {
         return key.Normal;
@@ -1531,7 +1552,7 @@ namespace C64Studio
 
       return null;
       /*
-      foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
+      foreach ( var key in ConstantData.AllPhysicalKeyInfos )
       {
         if ( ( key.Modifier == Modifier )
         &&   ( key.CharValue == UnicodeChar ) )
@@ -2045,7 +2066,7 @@ namespace C64Studio
 
     public override GR.Memory.ByteBuffer SaveToBuffer()
     {
-      var sourceData = new GR.IO.FileChunk( Types.FileChunk.SOURCE_BASIC );
+      var sourceData = new GR.IO.FileChunk( FileChunkConstants.SOURCE_BASIC );
 
       // version
       sourceData.AppendI32( 1 );
@@ -2065,7 +2086,7 @@ namespace C64Studio
       var chunk = new GR.IO.FileChunk();
 
       if ( ( !chunk.ReadFromStream( Reader ) )
-      ||   ( chunk.Type != Types.FileChunk.SOURCE_BASIC ) )
+      ||   ( chunk.Type != FileChunkConstants.SOURCE_BASIC ) )
       {
         return false;
       }

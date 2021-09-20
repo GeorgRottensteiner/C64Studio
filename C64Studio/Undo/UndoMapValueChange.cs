@@ -16,7 +16,7 @@ namespace C64Studio.Undo
     public int                    AlternativeBGColor = -1;
     public int                    AlternativeBGColor4 = -1;
     public bool                   UseAlternativeMode = false;
-    public TextMode               AlternativeMode = TextMode.COMMODORE_40_X_25_HIRES;
+    public TextCharMode           AlternativeMode = TextCharMode.COMMODORE_HIRES;
     public int                    TileSpacingX = 0;
     public int                    TileSpacingY = 0;
     public string                 Name = "";

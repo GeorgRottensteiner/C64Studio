@@ -16,6 +16,7 @@ using GR.IO;
 using System.Globalization;
 using C64Studio.Parser;
 using GR.Image;
+using RetroDevStudioModels;
 
 namespace C64Studio
 {
@@ -1572,6 +1573,14 @@ namespace C64Studio
       string zone;
       string cheapLabelParent;
 
+      if ( wordBelow.StartsWith( "$" ) )
+      {
+        AutoComplete.MinFragmentLength = 1;
+        AutoComplete.AutoSize = true;
+        AutoComplete.Items.SetAutocompleteItems( new List<string>() );
+        return;
+      }
+
       FindZoneFromLine( lineIndex, out zone, out cheapLabelParent );
       /*
       if ( wordBelow.Length <= 0 )
@@ -2159,7 +2168,8 @@ namespace C64Studio
 
       // TODO - use assembler settings!!
 
-      string tokenAllowedChars = ".@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
+      // add $ so it doesn't show when starting a hex number
+      string tokenAllowedChars = ".@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_$";
       if ( DocumentInfo.Element != null )
       {
         // TODO - should not be defined here
@@ -2167,13 +2177,13 @@ namespace C64Studio
         {
           case Types.AssemblerType.PDS:
           case Types.AssemblerType.AUTO:
-            tokenAllowedChars = "!@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+            tokenAllowedChars = "!@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.$";
             break;
           case Types.AssemblerType.DASM:
-            tokenAllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+            tokenAllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.$";
             break;
           default:
-            tokenAllowedChars = ".@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
+            tokenAllowedChars = ".@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_$";
             break;
         }
       }
@@ -2754,7 +2764,7 @@ namespace C64Studio
       ApplySyntaxColoring( Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS );
       ApplySyntaxColoring( Types.ColorableElement.ERROR_UNDERLINE );
 
-      editSource.AllowTabs            = Core.Settings.AllowTabs;
+      editSource.AllowTabs            = true; //Core.Settings.AllowTabs;
       editSource.ConvertTabsToSpaces  = Core.Settings.TabConvertToSpaces;
       editSource.TabLength            = Core.Settings.TabSize;
       editSource.ShowLineNumbers      = !Core.Settings.ASMHideLineNumbers;
@@ -2798,6 +2808,9 @@ namespace C64Studio
       UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_DELETE, FastColoredTextBoxNS.FCTBAction.UnbookmarkLine );
       UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_PREVIOUS, FastColoredTextBoxNS.FCTBAction.GoPrevBookmark );
       UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_NEXT, FastColoredTextBoxNS.FCTBAction.GoNextBookmark );
+
+      UpdateKeyBinding( C64Studio.Types.Function.UNDO, FastColoredTextBoxNS.FCTBAction.Undo );
+      UpdateKeyBinding( C64Studio.Types.Function.REDO, FastColoredTextBoxNS.FCTBAction.Redo );
 
       UpdateKeyBinding( Function.NAVIGATE_BACK, FastColoredTextBoxNS.FCTBAction.NavigateBackward );
       UpdateKeyBinding( Function.NAVIGATE_FORWARD, FastColoredTextBoxNS.FCTBAction.NavigateForward );
@@ -3114,6 +3127,10 @@ namespace C64Studio
 
           if ( !setLines.ContainsValue( localLineIndex ) )
           {
+            while ( localLineIndex >= m_LineInfos.Count )
+            {
+              m_LineInfos.Add( new Types.ASM.LineInfo() );
+            }
             m_LineInfos[localLineIndex] = new Types.ASM.LineInfo()
             {
               AddressStart = newInfo.AddressStart,
@@ -3286,7 +3303,7 @@ namespace C64Studio
 
     public override ByteBuffer SaveToBuffer()
     {
-      var sourceData = new GR.IO.FileChunk( Types.FileChunk.SOURCE_ASM );
+      var sourceData = new GR.IO.FileChunk( FileChunkConstants.SOURCE_ASM );
 
       // version
       sourceData.AppendI32( 1 );
@@ -3303,7 +3320,7 @@ namespace C64Studio
       var chunk = new GR.IO.FileChunk();
 
       if ( ( !chunk.ReadFromStream( Reader ) )
-      ||   ( chunk.Type != Types.FileChunk.SOURCE_ASM ) )
+      ||   ( chunk.Type != FileChunkConstants.SOURCE_ASM ) )
       {
         return false;
       }

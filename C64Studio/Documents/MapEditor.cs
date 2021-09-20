@@ -132,13 +132,13 @@ namespace C64Studio
 
       m_Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
-      Types.Palette   pal = Core.MainForm.ActivePalette;
+      Palette   pal = Core.MainForm.ActivePalette;
 
-      CustomRenderer.PaletteManager.ApplyPalette( pictureEditor.DisplayPage );
-      CustomRenderer.PaletteManager.ApplyPalette( pictureTileDisplay.DisplayPage );
-      CustomRenderer.PaletteManager.ApplyPalette( panelCharacters.DisplayPage );
-      CustomRenderer.PaletteManager.ApplyPalette( m_Image );
-      CustomRenderer.PaletteManager.ApplyPalette( panelCharColors.DisplayPage );
+      PaletteManager.ApplyPalette( pictureEditor.DisplayPage );
+      PaletteManager.ApplyPalette( pictureTileDisplay.DisplayPage );
+      PaletteManager.ApplyPalette( panelCharacters.DisplayPage );
+      PaletteManager.ApplyPalette( m_Image );
+      PaletteManager.ApplyPalette( panelCharColors.DisplayPage );
 
       comboMapMultiColor1.Items.Add( "From charset" );
       comboMapMultiColor2.Items.Add( "From charset" );
@@ -363,7 +363,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      Core.Theming.DrawSingleColorComboBox( combo, e );
+      Core.Theming.DrawSingleColorComboBox( combo, e, ConstantData.Palette );
     }
 
 
@@ -372,7 +372,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      Core.Theming.DrawMultiColorComboBox( combo, e );
+      Core.Theming.DrawMultiColorComboBox( combo, e, ConstantData.Palette );
     }
 
 
@@ -1002,7 +1002,7 @@ namespace C64Studio
                                                           ( m_CurrentMap.AlternativeMultiColor1 != -1 ) ? m_CurrentMap.AlternativeMultiColor1 : m_MapProject.MultiColor1,
                                                           ( m_CurrentMap.AlternativeMultiColor2 != -1 ) ? m_CurrentMap.AlternativeMultiColor2 : m_MapProject.MultiColor2,
                                                           ( m_CurrentMap.AlternativeBGColor4 != -1 ) ? m_CurrentMap.AlternativeBGColor4 : m_MapProject.BGColor4,
-                                                          ( m_CurrentMap.AlternativeMode != TextMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : m_MapProject.Mode );
+                                                          ( m_CurrentMap.AlternativeMode != TextCharMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : TextCharModeUtil.FromTextMode( m_MapProject.Mode ) );
               }
             }
           }
@@ -2357,7 +2357,7 @@ namespace C64Studio
 
 
       GR.Image.FastImage memImage = new GR.Image.FastImage( tile.Chars.Width * 8, tile.Chars.Height * 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      CustomRenderer.PaletteManager.ApplyPalette( memImage );
+      PaletteManager.ApplyPalette( memImage );
 
       for ( int j = 0; j < tile.Chars.Height; ++j )
       {
@@ -2740,12 +2740,11 @@ namespace C64Studio
         maxChars = 256;
       }
 
-      m_MapProject.Charset.NumCharacters = maxChars;
-      for ( int charIndex = 0; charIndex < m_MapProject.Charset.NumCharacters; ++charIndex )
+      m_MapProject.Charset.ExportNumCharacters = maxChars;
+      for ( int charIndex = 0; charIndex < m_MapProject.Charset.ExportNumCharacters; ++charIndex )
       {
         m_MapProject.Charset.Characters[charIndex].Data = cpProject.Characters[charIndex].Data;
         m_MapProject.Charset.Characters[charIndex].Color = cpProject.Characters[charIndex].Color;
-        m_MapProject.Charset.Characters[charIndex].Mode = cpProject.MultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES;
 
         RebuildCharImage( charIndex );
       }
@@ -2938,7 +2937,7 @@ namespace C64Studio
         }
         itemRect = new System.Drawing.Rectangle( e.Bounds.Left + 80, e.Bounds.Top, e.Bounds.Width - 80, e.Bounds.Height );
       }
-      e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[colorToUse], itemRect );
+      e.Graphics.FillRectangle( ConstantData.Palette.ColorBrushes[colorToUse], itemRect );
       if ( ( e.State & DrawItemState.Selected ) != 0 )
       {
         e.Graphics.DrawString( combo.Items[e.Index].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + 1.0f );
@@ -3067,10 +3066,7 @@ namespace C64Studio
     private void comboTileMode_SelectedIndexChanged( object sender, EventArgs e )
     {
       m_MapProject.Mode = (TextMode)comboTileMode.SelectedIndex;
-      for ( int i = 0; i < 256; ++i )
-      {
-        m_MapProject.Charset.Characters[i].Mode = m_MapProject.Mode;
-      }
+      m_MapProject.Charset.Mode = TextCharModeUtil.FromTextMode( m_MapProject.Mode );
       for ( int i = 0; i < 256; ++i )
       {
         RebuildCharImage( i );
@@ -3119,7 +3115,7 @@ namespace C64Studio
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapValueChange( this, m_CurrentMap ) );
 
-        m_CurrentMap.AlternativeMode = (TextMode)( comboMapAlternativeMode.SelectedIndex - 1 );
+        m_CurrentMap.AlternativeMode = (TextCharMode)( comboMapAlternativeMode.SelectedIndex - 1 );
         RedrawMap();
         Modified = true;
       }

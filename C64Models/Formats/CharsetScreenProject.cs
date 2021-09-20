@@ -21,7 +21,7 @@ namespace C64Studio.Formats
     public List<ushort>                 Chars = new List<ushort>( 40 * 25 );
 
     public string                       ExternalCharset = "";
-    public TextMode                     Mode = TextMode.COMMODORE_40_X_25_HIRES;
+    private TextMode                    _Mode = TextMode.COMMODORE_40_X_25_HIRES;
 
     public Formats.CharsetProject       CharSet = new C64Studio.Formats.CharsetProject();
 
@@ -38,11 +38,26 @@ namespace C64Studio.Formats
 
 
 
+    public TextMode Mode
+    {
+      get
+      {
+        return _Mode;
+      }
+      set
+      {
+        _Mode = value;
+        CharSet.Mode = TextCharModeUtil.FromTextMode( _Mode );
+      }
+    }
+
+
+
     public GR.Memory.ByteBuffer SaveToBuffer()
     {
       GR.Memory.ByteBuffer projectFile = new GR.Memory.ByteBuffer();
 
-      GR.IO.FileChunk chunkScreenInfo = new GR.IO.FileChunk( Types.FileChunk.CHARSET_SCREEN_INFO );
+      GR.IO.FileChunk chunkScreenInfo = new GR.IO.FileChunk( FileChunkConstants.CHARSET_SCREEN_INFO );
       // version
       chunkScreenInfo.AppendI32( 0 );
       // width
@@ -56,25 +71,25 @@ namespace C64Studio.Formats
 
       projectFile.Append( chunkScreenInfo.ToBuffer() );
 
-      GR.IO.FileChunk chunkCharSet = new GR.IO.FileChunk( Types.FileChunk.CHARSET_DATA );
+      GR.IO.FileChunk chunkCharSet = new GR.IO.FileChunk( FileChunkConstants.CHARSET_DATA );
       chunkCharSet.Append( CharSet.SaveToBuffer() );
       projectFile.Append( chunkCharSet.ToBuffer() );
 
-      GR.IO.FileChunk chunkScreenMultiColorData = new GR.IO.FileChunk( Types.FileChunk.MULTICOLOR_DATA );
+      GR.IO.FileChunk chunkScreenMultiColorData = new GR.IO.FileChunk( FileChunkConstants.MULTICOLOR_DATA );
       chunkScreenMultiColorData.AppendU8( (byte)Mode );
       chunkScreenMultiColorData.AppendU8( (byte)BackgroundColor );
       chunkScreenMultiColorData.AppendU8( (byte)MultiColor1 );
       chunkScreenMultiColorData.AppendU8( (byte)MultiColor2 );
       projectFile.Append( chunkScreenMultiColorData.ToBuffer() );
 
-      GR.IO.FileChunk chunkScreenCharData = new GR.IO.FileChunk( Types.FileChunk.SCREEN_CHAR_DATA );
+      GR.IO.FileChunk chunkScreenCharData = new GR.IO.FileChunk( FileChunkConstants.SCREEN_CHAR_DATA );
       for ( int i = 0; i < Chars.Count; ++i )
       {
         chunkScreenCharData.AppendU8( (byte)( Chars[i] & 0xff ) );
       }
       projectFile.Append( chunkScreenCharData.ToBuffer() );
 
-      GR.IO.FileChunk chunkScreenColorData = new GR.IO.FileChunk( Types.FileChunk.SCREEN_COLOR_DATA );
+      GR.IO.FileChunk chunkScreenColorData = new GR.IO.FileChunk( FileChunkConstants.SCREEN_COLOR_DATA );
       for ( int i = 0; i < Chars.Count; ++i )
       {
         chunkScreenColorData.AppendU8( (byte)( Chars[i] >> 8 ) );
@@ -97,7 +112,7 @@ namespace C64Studio.Formats
         GR.IO.MemoryReader chunkReader = chunk.MemoryReader();
         switch ( chunk.Type )
         {
-          case Types.FileChunk.CHARSET_SCREEN_INFO:
+          case FileChunkConstants.CHARSET_SCREEN_INFO:
             {
               int version = chunkReader.ReadInt32();
               ScreenWidth = chunkReader.ReadInt32();
@@ -114,25 +129,25 @@ namespace C64Studio.Formats
               }
             }
             break;
-          case Types.FileChunk.MULTICOLOR_DATA:
+          case FileChunkConstants.MULTICOLOR_DATA:
             Mode = (TextMode)chunkReader.ReadUInt8();
             BackgroundColor = chunkReader.ReadUInt8();
             MultiColor1 = chunkReader.ReadUInt8();
             MultiColor2 = chunkReader.ReadUInt8();
             break;
-          case Types.FileChunk.SCREEN_CHAR_DATA:
+          case FileChunkConstants.SCREEN_CHAR_DATA:
             for ( int i = 0; i < Chars.Count; ++i )
             {
               Chars[i] = (ushort)( ( Chars[i] & 0xff00 ) | chunkReader.ReadUInt8() );
             }
             break;
-          case Types.FileChunk.SCREEN_COLOR_DATA:
+          case FileChunkConstants.SCREEN_COLOR_DATA:
             for ( int i = 0; i < Chars.Count; ++i )
             {
               Chars[i] = (ushort)( ( Chars[i] & 0x00ff ) | ( chunkReader.ReadUInt8() << 8 ) );
             }
             break;
-          case Types.FileChunk.CHARSET_DATA:
+          case FileChunkConstants.CHARSET_DATA:
             {
               if ( !CharSet.ReadFromBuffer( chunk ) )
               {
@@ -143,6 +158,7 @@ namespace C64Studio.Formats
         }
       }
       memReader.Close();
+
       return true;
     }
 

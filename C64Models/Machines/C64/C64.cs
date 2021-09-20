@@ -11,13 +11,13 @@
       InitialBreakpointAddress          = 0xA871,
       InitialBreakpointAddressCartridge = 0x8000,
 
-      TextModes = {
+      TextModes = new System.Collections.Generic.List<TextMode> {
                     TextMode.COMMODORE_40_X_25_HIRES,
                     TextMode.COMMODORE_40_X_25_MULTICOLOR,
                     TextMode.COMMODORE_40_X_25_ECM
                   },
 
-      GraphicModes = {
+      GraphicModes = new System.Collections.Generic.List<GraphicMode> {
                        GraphicMode.COMMODORE_320_X_200_HIRES,
                        GraphicMode.COMMODORE_320_X_200_MULTICOLOR
                      }

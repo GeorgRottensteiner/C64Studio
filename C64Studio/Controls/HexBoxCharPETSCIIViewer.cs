@@ -1,9 +1,8 @@
 ﻿using C64Studio.Displayer;
-using GR.Memory;
-using System;
-using System.Collections.Generic;
+using RetroDevStudioModels;
 using System.Drawing;
-using System.Text;
+
+
 
 namespace Be.Windows.Forms
 {
@@ -27,7 +26,7 @@ namespace Be.Windows.Forms
         graphics.SetClip( _recHex );
 
         GR.Image.FastImage  charImage = new GR.Image.FastImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-        C64Studio.CustomRenderer.PaletteManager.ApplyPalette( charImage );
+        PaletteManager.ApplyPalette( charImage );
 
         for ( int i = 0; i < intern_endByte - _startByte; ++i )
         {
@@ -45,12 +44,12 @@ namespace Be.Windows.Forms
           switch ( Mode )
           {
             case PETSCIIDisplay.UPPER_CASE:
-              CharacterDisplayer.DisplayHiResChar( C64Studio.Types.ConstantData.UpperCaseCharset.SubBuffer( character * 8, 8 ),
+              CharacterDisplayer.DisplayHiResChar( ConstantData.UpperCaseCharsetC64.SubBuffer( character * 8, 8 ),
                                                    bgColor, displayColor,
                                                    charImage, 0, 0 );
               break;
             case PETSCIIDisplay.LOWER_CASE:
-              CharacterDisplayer.DisplayHiResChar( C64Studio.Types.ConstantData.LowerCaseCharset.SubBuffer( character * 8, 8 ),
+              CharacterDisplayer.DisplayHiResChar( ConstantData.LowerCaseCharsetC64.SubBuffer( character * 8, 8 ),
                                                    bgColor, displayColor,
                                                    charImage, 0, 0 );
               break;

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Text;
 using C64Models.BASIC;
 using GR.Memory;
+using RetroDevStudioModels;
 
 namespace C64Studio.Parser
 {
@@ -1521,7 +1522,7 @@ namespace C64Studio.Parser
 
 
         bool  foundMacro = false;
-        foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
+        foreach ( var key in ConstantData.AllPhysicalKeyInfos )
         {
           if ( key.Replacements.Contains( macro ) )
           {
@@ -1627,7 +1628,7 @@ namespace C64Studio.Parser
         &&   ( Info.Tokens[Info.Tokens.Count - 1].ByteValue <= 0x39 ) )
         {
           // attach to previous token
-          Info.Tokens[Info.Tokens.Count - 1].Content += Types.ConstantData.PetSCIIToChar[TokenValue].CharValue;
+          Info.Tokens[Info.Tokens.Count - 1].Content += ConstantData.PetSCIIToChar[TokenValue].CharValue;
           Info.Tokens[Info.Tokens.Count - 1].TokenType = Token.Type.NUMERIC_LITERAL;
 
           Info.LineData.AppendU8( TokenValue );
@@ -1636,7 +1637,7 @@ namespace C64Studio.Parser
         Token numericToken = new Token();
         numericToken.TokenType = Token.Type.NUMERIC_LITERAL;
         numericToken.ByteValue = TokenValue;
-        numericToken.Content = "" + Types.ConstantData.PetSCIIToChar[TokenValue].CharValue;
+        numericToken.Content = "" + ConstantData.PetSCIIToChar[TokenValue].CharValue;
         numericToken.StartIndex = StartIndex;
         Info.Tokens.Add( numericToken );
 
@@ -1646,7 +1647,7 @@ namespace C64Studio.Parser
       Token basicToken = new Token();
       basicToken.TokenType = Token.Type.DIRECT_TOKEN;
       basicToken.ByteValue = TokenValue;
-      basicToken.Content = "" + Types.ConstantData.PetSCIIToChar[TokenValue].CharValue;
+      basicToken.Content = "" + ConstantData.PetSCIIToChar[TokenValue].CharValue;
       basicToken.StartIndex = StartIndex;
       Info.Tokens.Add( basicToken );
 
@@ -1942,7 +1943,7 @@ namespace C64Studio.Parser
             basicToken6.TokenType = Token.Type.VARIABLE;
             for ( int j = lastTokenStartPos; j < i; ++j )
             {
-              basicToken6.Content += "" + Types.ConstantData.PetSCIIToChar[tempData.ByteAt( j )].CharValue;
+              basicToken6.Content += "" + ConstantData.PetSCIIToChar[tempData.ByteAt( j )].CharValue;
             }
             basicToken6.StartIndex = TempDataStartPos + lastTokenStartPos;
             info.Tokens.Add( basicToken6 );
@@ -1965,7 +1966,7 @@ namespace C64Studio.Parser
             basicToken1.TokenType = Token.Type.NUMERIC_LITERAL;
             for ( int j = lastTokenStartPos; j < i; ++j )
             {
-              basicToken1.Content += "" + Types.ConstantData.PetSCIIToChar[tempData.ByteAt( j )].CharValue;
+              basicToken1.Content += "" + ConstantData.PetSCIIToChar[tempData.ByteAt( j )].CharValue;
             }
             basicToken1.StartIndex = TempDataStartPos + lastTokenStartPos;
             info.Tokens.Add( basicToken1 );
@@ -1991,7 +1992,7 @@ namespace C64Studio.Parser
           Token basicToken2       = new Token();
           basicToken2.TokenType   = Token.Type.DIRECT_TOKEN;
           basicToken2.ByteValue   = nextByte;
-          basicToken2.Content     = "" + Types.ConstantData.PetSCIIToChar[nextByte].CharValue;
+          basicToken2.Content     = "" + ConstantData.PetSCIIToChar[nextByte].CharValue;
           basicToken2.StartIndex  = TempDataStartPos + i;
           info.Tokens.Add( basicToken2 );
           lastTokenStartPos = i + 1;
@@ -2003,7 +2004,7 @@ namespace C64Studio.Parser
         basicToken3.TokenType = Token.Type.VARIABLE;
         for ( int j = lastTokenStartPos; j < tempData.Length; ++j )
         {
-          basicToken3.Content += "" + Types.ConstantData.PetSCIIToChar[tempData.ByteAt( j )].CharValue;
+          basicToken3.Content += "" + ConstantData.PetSCIIToChar[tempData.ByteAt( j )].CharValue;
         }
         basicToken3.StartIndex = TempDataStartPos + lastTokenStartPos;
         info.Tokens.Add( basicToken3 );
@@ -2014,7 +2015,7 @@ namespace C64Studio.Parser
         basicToken.TokenType = Token.Type.NUMERIC_LITERAL;
         for ( int j = lastTokenStartPos; j < tempData.Length; ++j )
         {
-          basicToken.Content += "" + Types.ConstantData.PetSCIIToChar[tempData.ByteAt( j )].CharValue;
+          basicToken.Content += "" + ConstantData.PetSCIIToChar[tempData.ByteAt( j )].CharValue;
         }
         basicToken.StartIndex = TempDataStartPos + lastTokenStartPos;
         info.Tokens.Add( basicToken );
@@ -2025,7 +2026,7 @@ namespace C64Studio.Parser
         {
           Token basicToken2       = new Token();
           basicToken2.TokenType   = Token.Type.DIRECT_TOKEN;
-          basicToken2.Content     = "" + Types.ConstantData.PetSCIIToChar[tempData.ByteAt( i )].CharValue;
+          basicToken2.Content     = "" + ConstantData.PetSCIIToChar[tempData.ByteAt( i )].CharValue;
           basicToken2.StartIndex  = TempDataStartPos + i;
           info.Tokens.Add( basicToken2 );
           lastTokenStartPos = i + 1;
@@ -2125,7 +2126,7 @@ namespace C64Studio.Parser
             int     startIndex = bytePos;
             do
             {
-              var c64Key = Types.ConstantData.FindC64KeyByPETSCII( nextByte );
+              var c64Key = ConstantData.FindC64KeyByPETSCII( nextByte );
               if ( ( c64Key != null )
               &&   ( nextByte != 32 )   // do not replace for Space
               &&   ( c64Key.Replacements.Count > 0 ) )
@@ -2134,7 +2135,7 @@ namespace C64Studio.Parser
               }
               else
               {
-                stringLiteral += Types.ConstantData.PetSCIIToChar[nextByte].CharValue;
+                stringLiteral += ConstantData.PetSCIIToChar[nextByte].CharValue;
               }
               info.LineData.AppendU8( nextByte );
               ++bytePos;
@@ -2147,7 +2148,7 @@ namespace C64Studio.Parser
             &&      ( nextByte != 34 ) );
             if ( nextByte == 34 )
             {
-              stringLiteral += Types.ConstantData.PetSCIIToChar[nextByte].CharValue;
+              stringLiteral += ConstantData.PetSCIIToChar[nextByte].CharValue;
               info.LineData.AppendU8( nextByte );
             }
             Token basicToken = new Token();
@@ -2180,7 +2181,7 @@ namespace C64Studio.Parser
             Token basicToken = new Token();
             basicToken.TokenType = Token.Type.BASIC_TOKEN;
             basicToken.ByteValue = nextByte;
-            basicToken.Content = "" + Types.ConstantData.PetSCIIToChar[0x3f].CharValue;
+            basicToken.Content = "" + ConstantData.PetSCIIToChar[0x3f].CharValue;
             basicToken.StartIndex = bytePos;
             info.Tokens.Add( basicToken );
             ++bytePos;
@@ -2234,7 +2235,7 @@ namespace C64Studio.Parser
                     Token basicToken = new Token();
                     basicToken.TokenType = Token.Type.DIRECT_TOKEN;
                     basicToken.ByteValue = tempData.ByteAt( i );
-                    basicToken.Content = "" + Types.ConstantData.PetSCIIToChar[(byte)basicToken.ByteValue].CharValue;
+                    basicToken.Content = "" + ConstantData.PetSCIIToChar[(byte)basicToken.ByteValue].CharValue;
                     basicToken.StartIndex = i;
 
                     info.Tokens.Add( basicToken );
@@ -2383,7 +2384,7 @@ namespace C64Studio.Parser
             macro = DetermineMacroCount( macro, out macroCount );
 
             bool  foundMacro = false;
-            foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
+            foreach ( var key in ConstantData.AllPhysicalKeyInfos )
             {
               if ( key.Replacements.Contains( macro ) )
               {
@@ -2475,9 +2476,9 @@ namespace C64Studio.Parser
       if ( !Settings.UpperCaseMode )
       {
         // lower case mode
-        if ( Types.ConstantData.LowerCaseCharTo64Char.ContainsKey( curChar ) )
+        if ( ConstantData.LowerCaseCharTo64Char.ContainsKey( curChar ) )
         {
-          var foundKey = Types.ConstantData.LowerCaseCharTo64Char[curChar];
+          var foundKey = ConstantData.LowerCaseCharTo64Char[curChar];
           if ( !foundKey.HasPetSCII )
           {
             AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
@@ -2500,14 +2501,14 @@ namespace C64Studio.Parser
           return numCharsSkipped;
         }
       }
-      if ( ( !Types.ConstantData.CharToC64Char.ContainsKey( curChar ) )
-      ||   ( !Types.ConstantData.CharToC64Char[curChar].HasPetSCII ) )
+      if ( ( !ConstantData.CharToC64Char.ContainsKey( curChar ) )
+      ||   ( !ConstantData.CharToC64Char[curChar].HasPetSCII ) )
       {
         AddError( LineIndex, Types.ErrorCode.E3002_BASIC_UNSUPPORTED_CHARACTER, "Unsupported character " + (int)curChar + " encountered" );
       }
       else
       {
-        byte    petsciiValue = Types.ConstantData.CharToC64Char[curChar].PetSCIIValue;
+        byte    petsciiValue = ConstantData.CharToC64Char[curChar].PetSCIIValue;
 
         if ( ( petsciiValue >= 224 )
         &&   ( petsciiValue <= 254 ) )
@@ -3115,7 +3116,7 @@ namespace C64Studio.Parser
         }
         else
         {
-          char replacement = Types.ConstantData.PetSCIIToChar[(byte)value].CharValue;
+          char replacement = ConstantData.PetSCIIToChar[(byte)value].CharValue;
           sbTemp.Append( replacement );
         }
         ++charPos;
@@ -3546,9 +3547,9 @@ namespace C64Studio.Parser
             {
               lineContent += Settings.BASICDialect.OpcodesFromByte[byteValue].Command;
             }
-            else if ( Types.ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
+            else if ( ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
             {
-              char charToUse = Types.ConstantData.PETSCIIToUnicode[byteValue];
+              char charToUse = ConstantData.PETSCIIToUnicode[byteValue];
               lineContent += charToUse;
             }
             ++dataPos;
@@ -3580,7 +3581,7 @@ namespace C64Studio.Parser
               byteValue = 126;
             }
 
-            var c64Key = Types.ConstantData.FindC64KeyByPETSCII( byteValue );
+            var c64Key = ConstantData.FindC64KeyByPETSCII( byteValue );
             if ( c64Key != null )
             {
               lineContent += c64Key.CharValue;
@@ -3617,9 +3618,9 @@ namespace C64Studio.Parser
               ||   ( Settings.BASICDialect.OpcodesFromByte[byteValue].Command.StartsWith( "{" ) ) )
               {
                 //if ( KeymapEntryExists( System.Windows.Forms.InputLanguage.CurrentInputLanguage, System.Windows.Forms.Keys
-                if ( Types.ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
+                if ( ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
                 {
-                  char charToUse = Types.ConstantData.PETSCIIToUnicode[byteValue];
+                  char charToUse = ConstantData.PETSCIIToUnicode[byteValue];
                   /*
                   if ( KeyMap.KeymapEntryExists( (System.Windows.Forms.Keys)charToUse ) )
                   {
@@ -3888,7 +3889,7 @@ namespace C64Studio.Parser
 
         if ( chartoCheck > (char)255 )
         {
-          var c64Key = Types.ConstantData.FindC64KeyByUnicode( chartoCheck );
+          var c64Key = ConstantData.FindC64KeyByUnicode( chartoCheck );
           if ( c64Key != null )
           {
             if ( c64Key.Replacements.Count > 0 )
@@ -3946,7 +3947,7 @@ namespace C64Studio.Parser
             macro = Parser.BasicFileParser.DetermineMacroCount( macro, out macroCount );
 
             bool  foundMacro = false;
-            foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
+            foreach ( var key in ConstantData.AllPhysicalKeyInfos )
             {
               if ( key.Replacements.Contains( macro ) )
               {
@@ -3960,7 +3961,7 @@ namespace C64Studio.Parser
             }
             if ( !foundMacro )
             {
-              Debug.Log( "Unknown macro " + macro );
+              //Debug.Log( "Unknown macro " + macro );
               HadError = true;
               return null;
             }
@@ -4009,7 +4010,7 @@ namespace C64Studio.Parser
             macro = Parser.BasicFileParser.DetermineMacroCount( macro, out macroCount );
 
             bool  foundMacro = false;
-            foreach ( var key in Types.ConstantData.AllPhysicalKeyInfos )
+            foreach ( var key in ConstantData.AllPhysicalKeyInfos )
             {
               if ( key.Replacements.Contains( macro ) )
               {
@@ -4023,7 +4024,7 @@ namespace C64Studio.Parser
             }
             if ( !foundMacro )
             {
-              Debug.Log( "Unknown macro " + macro );
+              //Debug.Log( "Unknown macro " + macro );
               HadError = true;
               return null;
             }

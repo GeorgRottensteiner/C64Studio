@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using C64Studio.Formats;
 using C64Studio.Types;
 using GR.Memory;
+using RetroDevStudioModels;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace C64Studio
@@ -1280,12 +1281,12 @@ namespace C64Studio
         for ( int i = 0; i < sourceName.Length; ++i )
         {
           byte scrCode = sourceName.ByteAt( i );
-          if ( !Types.ConstantData.ScreenCodeToChar[scrCode].HasPetSCII )
+          if ( !ConstantData.ScreenCodeToChar[scrCode].HasPetSCII )
           {
             Debug.Log( "Missing PETSCII!! for " + scrCode );
           }
 
-          fileName.AppendU8( Types.ConstantData.ScreenCodeToChar[scrCode].PetSCIIValue );
+          fileName.AppendU8( ConstantData.ScreenCodeToChar[scrCode].PetSCIIValue );
         }
         if ( m_Media.WriteFile( fileName, emptyFile, C64Studio.Types.FileType.USR ) )
         {

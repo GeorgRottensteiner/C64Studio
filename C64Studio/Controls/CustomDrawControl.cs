@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudioModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,9 @@ namespace C64Studio.Controls
   {
     public System.Drawing.Graphics  Graphics;
     public System.Drawing.Rectangle Bounds;
+    public Palette                  Palette;
+
+
 
     public CustomDrawControlContext( System.Drawing.Graphics Graphics, int Width, int Height )
     {

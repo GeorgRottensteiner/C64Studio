@@ -531,7 +531,6 @@ namespace GR.Image
 
       for ( int i = 0; i < Source.PaletteEntryCount; ++i )
       {
-        //SetPaletteColor( i, (byte)( Source.PaletteRed( i ) / 4 ), (byte)( Source.PaletteGreen( i ) / 4 ), (byte)( Source.PaletteBlue( i ) / 4 ) );
         SetPaletteColor( i, Source.PaletteRed( i ), Source.PaletteGreen( i ), Source.PaletteBlue( i ) );
       }
 

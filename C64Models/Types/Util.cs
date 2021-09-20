@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using GR.Memory;
-
-
+using RetroDevStudioModels;
 
 namespace C64Studio
 {
@@ -37,11 +36,11 @@ namespace C64Studio
         if ( i < Name.Length )
         {
           /*
-          if ( Types.ConstantData.PETSCII.ContainsKey( Name[i] ) )
+          if ( ConstantData.PETSCII.ContainsKey( Name[i] ) )
           {
-            bufName.AppendU8( Types.ConstantData.PETSCII[Name[i]] );
+            bufName.AppendU8( ConstantData.PETSCII[Name[i]] );
           }*/
-          var potChar = Types.ConstantData.PetSCIIToChar.Values.FirstOrDefault( v => v.CharValue == Name[i] );
+          var potChar = ConstantData.PetSCIIToChar.Values.FirstOrDefault( v => v.CharValue == Name[i] );
           if ( potChar != null )
           {
             bufName.AppendU8( potChar.PetSCIIValue );
@@ -79,9 +78,9 @@ namespace C64Studio
       GR.Memory.ByteBuffer bufName = new GR.Memory.ByteBuffer();
       for ( int i = 0; i < Name.Length; ++i )
       {
-        if ( Types.ConstantData.PETSCII.ContainsKey( Name[i] ) )
+        if ( ConstantData.PETSCII.ContainsKey( Name[i] ) )
         {
-          bufName.AppendU8( Types.ConstantData.PETSCII[Name[i]] );
+          bufName.AppendU8( ConstantData.PETSCII[Name[i]] );
         }
         else
         {
@@ -103,7 +102,7 @@ namespace C64Studio
           break;
         }
         byte petscii = Filename.ByteAt( i );
-        filename += (char)Types.ConstantData.PETSCIIToUnicode[petscii];
+        filename += (char)ConstantData.PETSCIIToUnicode[petscii];
       }
       return filename;
     }
@@ -116,7 +115,7 @@ namespace C64Studio
       for ( int i = 0; i < Filename.Length; ++i )
       {
         byte petscii = Filename.ByteAt( i );
-        filename += (char)Types.ConstantData.PETSCIIToUnicode[petscii];
+        filename += (char)ConstantData.PETSCIIToUnicode[petscii];
       }
       return filename;
     }
@@ -133,7 +132,7 @@ namespace C64Studio
           break;
         }
         byte petscii = Filename.ByteAt( i );
-        char character = Types.ConstantData.PETSCIIToUnicode[petscii];
+        char character = ConstantData.PETSCIIToUnicode[petscii];
         if ( ( character >= 32 )
         &&   ( character < 128 ) )
         {

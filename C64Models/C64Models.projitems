@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Converter\KoalaToBitmap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteMega65.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteVC20.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteC64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Debugger\MemoryView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Breakpoint.cs" />
@@ -40,14 +43,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\SpriteProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\T64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\C128\C128.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C64\C64.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Machines\Machines.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\GraphicMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\Mega65\Mega65.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\SpriteMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\TextCharMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\TextMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\MachineType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\Machine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\VC20\VC20.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\AssemblerSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.cs" />
@@ -61,7 +66,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Types\AssemblyOutput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Breakpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\MemoryMap.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Types\Palette.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\Palette.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\FileChunkConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Types.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\DisassemblerSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Util.cs" />

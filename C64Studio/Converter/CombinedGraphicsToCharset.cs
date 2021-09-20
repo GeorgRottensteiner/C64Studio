@@ -258,7 +258,6 @@ namespace C64Studio.Converter
       {
         cd.Color = chosenCharColor + 8;
       }
-      cd.Mode = CheckForMC ? RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
       return true;
     }
 
@@ -427,7 +426,6 @@ namespace C64Studio.Converter
 
           for ( uint c = 0; c < charSet.Length / 8; ++c )
           {
-            screen.CharSet.Characters[(int)c].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR;
             screen.CharSet.Characters[(int)c].Data = charSet.SubBuffer( (int)c * 8, 8 );
             screen.CharSet.Characters[(int)c].Color = 9;
           }

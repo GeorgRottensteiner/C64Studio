@@ -37,7 +37,7 @@ namespace C64Studio.Formats
       public int                AlternativeMultiColor2 = -1;
       public int                AlternativeBackgroundColor = -1;
       public int                AlternativeBGColor4 = -1;
-      public TextMode           AlternativeMode = TextMode.UNKNOWN;
+      public TextCharMode       AlternativeMode = TextCharMode.UNKNOWN;
     };
 
 
@@ -63,7 +63,7 @@ namespace C64Studio.Formats
         for ( int j = 0; j < 8; ++j )
         {
           Charset.Characters[i].Color = 1;
-          Charset.Characters[i].Data.SetU8At( j, Types.ConstantData.UpperCaseCharset.ByteAt( i * 8 + j ) );
+          Charset.Characters[i].Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
         }
       }
     }
@@ -83,20 +83,20 @@ namespace C64Studio.Formats
     {
       GR.Memory.ByteBuffer projectFile = new GR.Memory.ByteBuffer();
 
-      GR.IO.FileChunk chunkProjectInfo = new GR.IO.FileChunk( Types.FileChunk.MAP_PROJECT_INFO );
+      GR.IO.FileChunk chunkProjectInfo = new GR.IO.FileChunk( FileChunkConstants.MAP_PROJECT_INFO );
       // version
       chunkProjectInfo.AppendU32( 0 );
       chunkProjectInfo.AppendString( ExternalCharset );
       chunkProjectInfo.AppendI32( ShowGrid ? 1 : 0 );
       projectFile.Append( chunkProjectInfo.ToBuffer() );
 
-      GR.IO.FileChunk chunkCharset = new GR.IO.FileChunk( Types.FileChunk.MAP_CHARSET );
+      GR.IO.FileChunk chunkCharset = new GR.IO.FileChunk( FileChunkConstants.MAP_CHARSET );
       chunkCharset.Append( Charset.SaveToBuffer() );
       projectFile.Append( chunkCharset.ToBuffer() );
 
-      GR.IO.FileChunk chunkProjectData = new GR.IO.FileChunk( Types.FileChunk.MAP_PROJECT_DATA );
+      GR.IO.FileChunk chunkProjectData = new GR.IO.FileChunk( FileChunkConstants.MAP_PROJECT_DATA );
 
-      GR.IO.FileChunk chunkMCData = new GR.IO.FileChunk( Types.FileChunk.MULTICOLOR_DATA );
+      GR.IO.FileChunk chunkMCData = new GR.IO.FileChunk( FileChunkConstants.MULTICOLOR_DATA );
       chunkMCData.AppendU8( (byte)Mode );
       chunkMCData.AppendU8( (byte)BackgroundColor );
       chunkMCData.AppendU8( (byte)MultiColor1 );
@@ -106,7 +106,7 @@ namespace C64Studio.Formats
 
       foreach ( Tile tile in Tiles )
       {
-        GR.IO.FileChunk chunkTile = new GR.IO.FileChunk( Types.FileChunk.MAP_TILE );
+        GR.IO.FileChunk chunkTile = new GR.IO.FileChunk( FileChunkConstants.MAP_TILE );
 
         chunkTile.AppendString( tile.Name );
         chunkTile.AppendI32( tile.Chars.Width );
@@ -124,9 +124,9 @@ namespace C64Studio.Formats
       }
       foreach ( Map map in Maps )
       {
-        GR.IO.FileChunk chunkMap = new GR.IO.FileChunk( Types.FileChunk.MAP );
+        GR.IO.FileChunk chunkMap = new GR.IO.FileChunk( FileChunkConstants.MAP );
 
-        GR.IO.FileChunk chunkMapInfo = new GR.IO.FileChunk( Types.FileChunk.MAP_INFO );
+        GR.IO.FileChunk chunkMapInfo = new GR.IO.FileChunk( FileChunkConstants.MAP_INFO );
 
         chunkMapInfo.AppendString( map.Name );
         chunkMapInfo.AppendI32( map.TileSpacingX );
@@ -138,7 +138,7 @@ namespace C64Studio.Formats
         chunkMapInfo.AppendI32( (int)map.AlternativeMode + 1 );
         chunkMap.Append( chunkMapInfo.ToBuffer() );
 
-        GR.IO.FileChunk chunkMapData = new GR.IO.FileChunk( Types.FileChunk.MAP_DATA );
+        GR.IO.FileChunk chunkMapData = new GR.IO.FileChunk( FileChunkConstants.MAP_DATA );
         chunkMapData.AppendI32( map.Tiles.Width );
         chunkMapData.AppendI32( map.Tiles.Height );
         for ( int j = 0; j < map.Tiles.Height; ++j )
@@ -152,7 +152,7 @@ namespace C64Studio.Formats
 
         if ( map.ExtraDataText.Length > 0 )
         {
-          GR.IO.FileChunk chunkMapExtraData = new GR.IO.FileChunk( Types.FileChunk.MAP_EXTRA_DATA_TEXT );
+          GR.IO.FileChunk chunkMapExtraData = new GR.IO.FileChunk( FileChunkConstants.MAP_EXTRA_DATA_TEXT );
 
           chunkMapExtraData.AppendString( map.ExtraDataText );
 
@@ -160,7 +160,7 @@ namespace C64Studio.Formats
         }
         if ( map.ExtraDataOld.Length > 0 )
         {
-          GR.IO.FileChunk chunkMapExtraData = new GR.IO.FileChunk( Types.FileChunk.MAP_EXTRA_DATA );
+          GR.IO.FileChunk chunkMapExtraData = new GR.IO.FileChunk( FileChunkConstants.MAP_EXTRA_DATA );
 
           chunkMapExtraData.AppendU32( map.ExtraDataOld.Length );
           chunkMapExtraData.Append( map.ExtraDataOld );
@@ -193,7 +193,7 @@ namespace C64Studio.Formats
         GR.IO.MemoryReader chunkReader = chunk.MemoryReader();
         switch ( chunk.Type )
         {
-          case Types.FileChunk.MAP_PROJECT_INFO:
+          case FileChunkConstants.MAP_PROJECT_INFO:
             {
               uint version  = chunkReader.ReadUInt32();
               importedCharSet = chunkReader.ReadString();
@@ -201,7 +201,7 @@ namespace C64Studio.Formats
               ShowGrid = ( chunkReader.ReadInt32() == 1 );
             }
             break;
-          case Types.FileChunk.MAP_CHARSET:
+          case FileChunkConstants.MAP_CHARSET:
             {
               GR.Memory.ByteBuffer    data = new GR.Memory.ByteBuffer();
               chunkReader.ReadBlock( data, (uint)( chunkReader.Size - chunkReader.Position ) );
@@ -209,7 +209,7 @@ namespace C64Studio.Formats
               Charset.ReadFromBuffer( data );
             }
             break;
-          case Types.FileChunk.MAP_PROJECT_DATA:
+          case FileChunkConstants.MAP_PROJECT_DATA:
             {
               GR.IO.FileChunk chunkData = new GR.IO.FileChunk();
 
@@ -218,14 +218,14 @@ namespace C64Studio.Formats
                 GR.IO.MemoryReader subChunkReader = chunkData.MemoryReader();
                 switch ( chunkData.Type )
                 {
-                  case Types.FileChunk.MULTICOLOR_DATA:
+                  case FileChunkConstants.MULTICOLOR_DATA:
                     Mode = (TextMode)subChunkReader.ReadUInt8();
                     BackgroundColor = subChunkReader.ReadUInt8();
                     MultiColor1 = subChunkReader.ReadUInt8();
                     MultiColor2 = subChunkReader.ReadUInt8();
                     BGColor4 = subChunkReader.ReadUInt8();
                     break;
-                  case Types.FileChunk.MAP_TILE:
+                  case FileChunkConstants.MAP_TILE:
                     {
                       Tile tile = new Tile();
                       tile.Name = subChunkReader.ReadString();
@@ -246,7 +246,7 @@ namespace C64Studio.Formats
                       tile.Index = Tiles.Count - 1;
                     }
                     break;
-                  case Types.FileChunk.MAP:
+                  case FileChunkConstants.MAP:
                     {
                       GR.IO.FileChunk mapChunk = new GR.IO.FileChunk();
 
@@ -257,7 +257,7 @@ namespace C64Studio.Formats
                         GR.IO.MemoryReader mapChunkReader = mapChunk.MemoryReader();
                         switch ( mapChunk.Type )
                         {
-                          case Types.FileChunk.MAP_INFO:
+                          case FileChunkConstants.MAP_INFO:
                             map.Name = mapChunkReader.ReadString();
                             map.TileSpacingX = mapChunkReader.ReadInt32();
                             map.TileSpacingY = mapChunkReader.ReadInt32();
@@ -265,9 +265,9 @@ namespace C64Studio.Formats
                             map.AlternativeMultiColor2 = mapChunkReader.ReadInt32() - 1;
                             map.AlternativeBackgroundColor = mapChunkReader.ReadInt32() - 1;
                             map.AlternativeBGColor4 = mapChunkReader.ReadInt32() - 1;
-                            map.AlternativeMode = (TextMode)( mapChunkReader.ReadInt32() - 1 );
+                            map.AlternativeMode = (TextCharMode)( mapChunkReader.ReadInt32() - 1 );
                             break;
-                          case Types.FileChunk.MAP_DATA:
+                          case FileChunkConstants.MAP_DATA:
                             {
                               int w = mapChunkReader.ReadInt32();
                               int h = mapChunkReader.ReadInt32();
@@ -282,7 +282,7 @@ namespace C64Studio.Formats
                               }
                             }
                             break;
-                          case Types.FileChunk.MAP_EXTRA_DATA:
+                          case FileChunkConstants.MAP_EXTRA_DATA:
                             {
                               uint len = mapChunkReader.ReadUInt32();
 
@@ -292,7 +292,7 @@ namespace C64Studio.Formats
                               map.ExtraDataOld.Clear();
                             }
                             break;
-                          case Types.FileChunk.MAP_EXTRA_DATA_TEXT:
+                          case FileChunkConstants.MAP_EXTRA_DATA_TEXT:
                             {
                               map.ExtraDataText = mapChunkReader.ReadString();
                             }

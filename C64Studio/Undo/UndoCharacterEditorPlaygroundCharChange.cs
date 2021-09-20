@@ -14,7 +14,7 @@ namespace C64Studio.Undo
     public CharsetProject         Project = null;
     public int                    X = 0;
     public int                    Y = 0;
-    public ushort                 Char = 0;
+    public uint                   Char = 0;
 
 
 
@@ -25,7 +25,7 @@ namespace C64Studio.Undo
       this.X = X;
       this.Y = Y;
 
-      Char = Project.PlaygroundChars[X + Y * 16];
+      Char = Project.PlaygroundChars[X + Y * Project.PlaygroundWidth];
     }
 
 
@@ -50,7 +50,7 @@ namespace C64Studio.Undo
 
     public override void Apply()
     {
-      Project.PlaygroundChars[X + Y * 16] = Char;
+      Project.PlaygroundChars[X + Y * Project.PlaygroundWidth] = Char;
 
       Editor.PlaygroundCharacterChanged( X, Y );
     }

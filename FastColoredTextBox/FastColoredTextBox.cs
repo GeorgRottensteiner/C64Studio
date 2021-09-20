@@ -7257,7 +7257,8 @@ namespace FastColoredTextBoxNS
 
 
     /// <summary>
-    /// Gets real virtual position (tab length!)
+    /// Get virtual position (tab length!)
+    /// virtual has single tab chars and \r\n, true pos has tabified tabs and \r\n
     /// </summary>
     public int PositionToVirtualPosition( int pos )
     {
@@ -7302,11 +7303,14 @@ namespace FastColoredTextBoxNS
               }
               pos -= delta;
               ++virtualPos;
+              //++lineLength;
+              lineLength += delta;
             }
             else
             {
               --pos;
               ++virtualPos;
+              ++lineLength;
             }
             if ( pos <= 0 )
             {
@@ -7318,6 +7322,11 @@ namespace FastColoredTextBoxNS
 
         pos -= actualLineLength + System.Environment.NewLine.Length;
         virtualPos += lineToCheck.Length + System.Environment.NewLine.Length;
+        if ( pos < 0 )
+        {
+          virtualPos += pos;
+          pos = 0;
+        }
       }
       return virtualPos;
     }
@@ -7368,11 +7377,13 @@ namespace FastColoredTextBoxNS
               }
               --pos;
               virtualPos += delta;
+              lineLength += delta;
             }
             else
             {
               --pos;
               ++virtualPos;
+              ++lineLength;
             }
             if ( pos <= 0 )
             {

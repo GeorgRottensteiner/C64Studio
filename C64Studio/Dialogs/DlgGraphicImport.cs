@@ -1,10 +1,11 @@
-﻿using System;
+﻿using RetroDevStudioModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+
+
 
 namespace C64Studio
 {
@@ -57,7 +58,7 @@ namespace C64Studio
 
     private GR.Collections.Map<uint,byte>     m_ForcedReplacementColors = new GR.Collections.Map<uint, byte>();
 
-    private Types.Palette           m_CurPalette = Types.ConstantData.Palette;
+    private Palette                 m_CurPalette = ConstantData.Palette;
 
     private List<ErrorRange>        m_Errors = new List<ErrorRange>();
 
@@ -116,10 +117,9 @@ namespace C64Studio
       picOriginal.DisplayPage.Create( picOriginal.ClientSize.Width, picOriginal.ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
       picPreview.DisplayPage.Create( picPreview.ClientSize.Width, picPreview.ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      //picPreview.SetImageSize( 320, 200 );
 
-      CustomRenderer.PaletteManager.ApplyPalette( picPreview.DisplayPage );
-      CustomRenderer.PaletteManager.ApplyPalette( m_ImportImage );
+      PaletteManager.ApplyPalette( picPreview.DisplayPage );
+      PaletteManager.ApplyPalette( m_ImportImage );
 
       switch ( ImportType )
       {
@@ -208,8 +208,8 @@ namespace C64Studio
       m_OriginalImage = new GR.Image.MemoryImage( newImage.Width, newImage.Height, newImage.PixelFormat );
       m_ImportImage = new GR.Image.MemoryImage( newImage.Width, newImage.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
-      CustomRenderer.PaletteManager.ApplyPalette( m_ImportImage );
-      CustomRenderer.PaletteManager.ApplyPalette( m_OriginalImage );
+      PaletteManager.ApplyPalette( m_ImportImage );
+      PaletteManager.ApplyPalette( m_OriginalImage );
       newImage.DrawTo( m_OriginalImage, 0, 0 );
       newImage.Dispose();
 
@@ -217,7 +217,7 @@ namespace C64Studio
       {
         picOriginal.DisplayPage.Create( picOriginal.ClientSize.Width, picOriginal.ClientSize.Height, m_OriginalImage.PixelFormat );
 
-        CustomRenderer.PaletteManager.ApplyPalette( picOriginal.DisplayPage );
+        PaletteManager.ApplyPalette( picOriginal.DisplayPage );
       }
       picOriginal.DisplayPage.Box( 0, 0, picOriginal.DisplayPage.Width, picOriginal.DisplayPage.Height, 0 );
 
@@ -241,7 +241,7 @@ namespace C64Studio
 
 
 
-    int MatchColor( byte R, byte G, byte B, Types.Palette Palette )
+    int MatchColor( byte R, byte G, byte B, Palette Palette )
     {
       int bestMatchDistance = 50000000;
       int bestMatch = -1;

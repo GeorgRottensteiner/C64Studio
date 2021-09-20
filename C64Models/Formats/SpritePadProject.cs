@@ -1,6 +1,7 @@
-﻿using System;
+﻿using RetroDevStudioModels;
 using System.Collections.Generic;
-using System.Text;
+
+
 
 namespace C64Studio.Formats
 {
@@ -76,7 +77,7 @@ namespace C64Studio.Formats
       {
         Sprites.Add( new SpriteData() );
 
-        CustomRenderer.PaletteManager.ApplyPalette( Sprites[i].Image );
+        PaletteManager.ApplyPalette( Sprites[i].Image );
       }
     }
 
@@ -130,16 +131,16 @@ namespace C64Studio.Formats
 
       foreach ( var layer in SpriteLayers )
       {
-        GR.IO.FileChunk   chunkLayer = new GR.IO.FileChunk( Types.FileChunk.SPRITESET_LAYER );
+        GR.IO.FileChunk   chunkLayer = new GR.IO.FileChunk( FileChunkConstants.SPRITESET_LAYER );
 
-        GR.IO.FileChunk   chunkLayerInfo = new GR.IO.FileChunk( Types.FileChunk.SPRITESET_LAYER_INFO );
+        GR.IO.FileChunk   chunkLayerInfo = new GR.IO.FileChunk( FileChunkConstants.SPRITESET_LAYER_INFO );
         chunkLayerInfo.AppendString( layer.Name );
         chunkLayerInfo.AppendU8( (byte)layer.BackgroundColor );
         chunkLayer.Append( chunkLayerInfo.ToBuffer() );
 
         foreach ( var sprite in layer.Sprites )
         {
-          GR.IO.FileChunk   chunkLayerSprite = new GR.IO.FileChunk( Types.FileChunk.SPRITESET_LAYER_ENTRY );
+          GR.IO.FileChunk   chunkLayerSprite = new GR.IO.FileChunk( FileChunkConstants.SPRITESET_LAYER_ENTRY );
           chunkLayerSprite.AppendI32( sprite.Index );
           chunkLayerSprite.AppendU8( (byte)sprite.Color );
           chunkLayerSprite.AppendI32( sprite.X );
@@ -194,7 +195,7 @@ namespace C64Studio.Formats
       for ( int i = 0; i < NumSprites; ++i )
       {
         Sprites.Add( new SpriteData() );
-        CustomRenderer.PaletteManager.ApplyPalette( Sprites[i].Image );
+        PaletteManager.ApplyPalette( Sprites[i].Image );
 
         tempData.Clear();
         memIn.ReadBlock( tempData, 63 );

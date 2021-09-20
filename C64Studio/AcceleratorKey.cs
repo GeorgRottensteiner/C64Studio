@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudioModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
@@ -49,7 +50,7 @@ namespace C64Studio
 
     public GR.IO.FileChunk ToChunk()
     {
-      GR.IO.FileChunk chunk = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_ACCELERATOR );
+      GR.IO.FileChunk chunk = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_ACCELERATOR );
 
       chunk.AppendU32( (uint)Key );
       chunk.AppendU32( (uint)Function );
@@ -62,7 +63,7 @@ namespace C64Studio
 
     public bool FromChunk( GR.IO.FileChunk Chunk )
     {
-      if ( Chunk.Type != Types.FileChunk.SETTINGS_ACCELERATOR )
+      if ( Chunk.Type != FileChunkConstants.SETTINGS_ACCELERATOR )
       {
         return false;
       }

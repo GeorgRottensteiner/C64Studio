@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using C64Studio.Controls;
+﻿using C64Studio.Controls;
 using C64Studio.Formats;
-
-
+using RetroDevStudioModels;
 
 namespace C64Studio.Undo
 {
@@ -16,6 +12,7 @@ namespace C64Studio.Undo
     public int                    MultiColor1 = -1;
     public int                    MultiColor2 = -1;
     public int                    BGColor4 = -1;
+    public Palette                Palette = null;
 
 
 
@@ -28,6 +25,7 @@ namespace C64Studio.Undo
       MultiColor1 = Project.MultiColor1;
       MultiColor2 = Project.MultiColor2;
       BGColor4 = Project.BGColor4;
+      Palette = new Palette( Project.Palette );
     }
 
 
@@ -56,6 +54,7 @@ namespace C64Studio.Undo
       Project.MultiColor1     = MultiColor1;
       Project.MultiColor2     = MultiColor2;
       Project.BGColor4        = BGColor4;
+      Project.Palette         = new Palette( Palette );
 
       Editor.ColorsChanged();
     }

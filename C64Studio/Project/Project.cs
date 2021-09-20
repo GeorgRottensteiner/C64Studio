@@ -1,4 +1,5 @@
 ﻿using C64Studio.Types;
+using RetroDevStudioModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,14 +67,14 @@ namespace C64Studio
     {
       GR.Memory.ByteBuffer buffer = new GR.Memory.ByteBuffer();
 
-      GR.IO.FileChunk chunkElement = new GR.IO.FileChunk( Types.FileChunk.PROJECT_ELEMENT );
+      GR.IO.FileChunk chunkElement = new GR.IO.FileChunk( FileChunkConstants.PROJECT_ELEMENT );
 
       chunkElement.AppendU32( 1 );
       chunkElement.AppendU32( (uint)Element.DocumentInfo.Type );
       chunkElement.AppendString( Element.Name );
       chunkElement.AppendString( Element.Filename );
 
-      GR.IO.FileChunk chunkElementData = new GR.IO.FileChunk( Types.FileChunk.PROJECT_ELEMENT_DATA );
+      GR.IO.FileChunk chunkElementData = new GR.IO.FileChunk( FileChunkConstants.PROJECT_ELEMENT_DATA );
       if ( Element.Document != null )
       {
         Element.Document.SaveToChunk( chunkElementData );
@@ -95,7 +96,7 @@ namespace C64Studio
       chunkElement.AppendI32( Element.Settings.Count );
       foreach ( KeyValuePair<string, ProjectElement.PerConfigSettings> configSetting in Element.Settings )
       {
-        GR.IO.FileChunk chunkElementPerConfigSetting = new GR.IO.FileChunk( Types.FileChunk.PROJECT_ELEMENT_PER_CONFIG_SETTING );
+        GR.IO.FileChunk chunkElementPerConfigSetting = new GR.IO.FileChunk( FileChunkConstants.PROJECT_ELEMENT_PER_CONFIG_SETTING );
 
         chunkElementPerConfigSetting.AppendString( configSetting.Key );
         chunkElementPerConfigSetting.AppendString( configSetting.Value.PreBuild );
@@ -180,7 +181,7 @@ namespace C64Studio
         GR.Memory.ByteBuffer displayDetails = Element.Document.DisplayDetails();
         if ( displayDetails != null )
         {
-          GR.IO.FileChunk chunkElementDisplayData = new GR.IO.FileChunk( Types.FileChunk.PROJECT_ELEMENT_DISPLAY_DATA );
+          GR.IO.FileChunk chunkElementDisplayData = new GR.IO.FileChunk( FileChunkConstants.PROJECT_ELEMENT_DISPLAY_DATA );
           chunkElementDisplayData.AppendString( Element.Filename );
           chunkElementDisplayData.AppendU32( displayDetails.Length );
           chunkElementDisplayData.Append( displayDetails );
@@ -207,7 +208,7 @@ namespace C64Studio
 
       bufferProject.Reserve( 1000000 );
 
-      GR.IO.FileChunk chunkProject = new GR.IO.FileChunk( Types.FileChunk.PROJECT );
+      GR.IO.FileChunk chunkProject = new GR.IO.FileChunk( FileChunkConstants.PROJECT );
 
       // version 2 -> has adjusted debug start address (to get rid of 2049)
       chunkProject.AppendU32( 2 );
@@ -344,7 +345,7 @@ namespace C64Studio
         GR.IO.MemoryReader      memChunk = chunk.MemoryReader();
         switch ( chunk.Type )
         {
-          case Types.FileChunk.PROJECT:
+          case FileChunkConstants.PROJECT:
             // Project Info
 
             // Version
@@ -370,7 +371,7 @@ namespace C64Studio
 
             Node.Text             = Settings.Name;
             break;
-          case Types.FileChunk.PROJECT_ELEMENT:
+          case FileChunkConstants.PROJECT_ELEMENT:
             // Element Info
             {
               // Version
@@ -404,7 +405,7 @@ namespace C64Studio
               {
                 return false;
               }
-              if ( subChunk.Type != Types.FileChunk.PROJECT_ELEMENT_DATA )
+              if ( subChunk.Type != FileChunkConstants.PROJECT_ELEMENT_DATA )
               {
                 return false;
               }
@@ -441,7 +442,7 @@ namespace C64Studio
               {
                 GR.IO.FileChunk chunkElementPerConfigSetting = new GR.IO.FileChunk();
                 chunkElementPerConfigSetting.ReadFromStream( memChunk );
-                if ( chunkElementPerConfigSetting.Type == Types.FileChunk.PROJECT_ELEMENT_PER_CONFIG_SETTING )
+                if ( chunkElementPerConfigSetting.Type == FileChunkConstants.PROJECT_ELEMENT_PER_CONFIG_SETTING )
                 {
                   ProjectElement.PerConfigSettings    perConfigSetting = new ProjectElement.PerConfigSettings();
                   GR.IO.MemoryReader      memSubChunk = chunkElementPerConfigSetting.MemoryReader();
@@ -586,7 +587,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.PROJECT_ELEMENT_DISPLAY_DATA:
+          case FileChunkConstants.PROJECT_ELEMENT_DISPLAY_DATA:
             {
               string    elementFilename = memChunk.ReadString();
 
@@ -604,7 +605,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.PROJECT_CONFIG:
+          case FileChunkConstants.PROJECT_CONFIG:
             {
               ProjectConfig  config = new ProjectConfig();
 
@@ -618,7 +619,7 @@ namespace C64Studio
               Settings.Configuration( config.Name, config );
             }
             break;
-          case Types.FileChunk.PROJECT_WATCH_ENTRY:
+          case FileChunkConstants.PROJECT_WATCH_ENTRY:
             {
               WatchEntry watch = new WatchEntry();
 

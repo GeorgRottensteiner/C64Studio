@@ -11,7 +11,7 @@ namespace RetroDevStudioModels
       InitialBreakpointAddress          = 0xA871,
       InitialBreakpointAddressCartridge = 0x8000,
 
-      TextModes = {
+      TextModes = new List<TextMode> {
                     TextMode.COMMODORE_40_X_25_HIRES,
                     TextMode.COMMODORE_40_X_25_MULTICOLOR,
                     TextMode.COMMODORE_40_X_25_ECM,
@@ -19,7 +19,7 @@ namespace RetroDevStudioModels
                     TextMode.MEGA65_80_X_25_MULTICOLOR
                   },
 
-      GraphicModes = {
+      GraphicModes = new List<GraphicMode> {
                        GraphicMode.COMMODORE_320_X_200_HIRES,
                        GraphicMode.COMMODORE_320_X_200_MULTICOLOR
                      }

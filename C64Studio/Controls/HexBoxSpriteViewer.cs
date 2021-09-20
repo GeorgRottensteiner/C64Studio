@@ -1,5 +1,6 @@
 ﻿using C64Studio.Displayer;
 using GR.Memory;
+using RetroDevStudioModels;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -71,7 +72,7 @@ namespace Be.Windows.Forms
           using ( GR.Image.FastImage spriteImage = new GR.Image.FastImage( 24, 21, System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )
           {
             spriteImage.Box( 0, 0, 24, 21, 1 );
-            C64Studio.CustomRenderer.PaletteManager.ApplyPalette( spriteImage );
+            PaletteManager.ApplyPalette( spriteImage );
 
             if ( MultiColor )
             {

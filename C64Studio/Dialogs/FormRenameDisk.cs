@@ -1,11 +1,9 @@
 ﻿using C64Studio.Types;
+using RetroDevStudioModels;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+
+
 
 namespace C64Studio
 {
@@ -42,7 +40,7 @@ namespace C64Studio
       listPETSCII.PixelFormat = System.Drawing.Imaging.PixelFormat.Format24bppRgb;
       listPETSCII.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
-      foreach ( Types.C64Character character in Types.ConstantData.PetSCIIToChar.Values )
+      foreach ( Types.C64Character character in ConstantData.PetSCIIToChar.Values )
       {
         if ( character.HasChar )
         {

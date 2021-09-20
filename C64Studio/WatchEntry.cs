@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudioModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -29,7 +30,7 @@ namespace C64Studio
 
     public GR.Memory.ByteBuffer Save()
     {
-      GR.IO.FileChunk   chunkWatch = new GR.IO.FileChunk( Types.FileChunk.PROJECT_WATCH_ENTRY );
+      GR.IO.FileChunk   chunkWatch = new GR.IO.FileChunk( FileChunkConstants.PROJECT_WATCH_ENTRY );
 
       chunkWatch.AppendString( Name );
       chunkWatch.AppendI32( SizeInBytes );

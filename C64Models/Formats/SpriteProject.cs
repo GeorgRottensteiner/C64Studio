@@ -1,6 +1,7 @@
-﻿using System;
+﻿using RetroDevStudioModels;
 using System.Collections.Generic;
-using System.Text;
+
+
 
 namespace C64Studio.Formats
 {
@@ -77,7 +78,7 @@ namespace C64Studio.Formats
       {
         Sprites.Add( new SpriteData() );
 
-        CustomRenderer.PaletteManager.ApplyPalette( Sprites[i].Image );
+        PaletteManager.ApplyPalette( Sprites[i].Image );
       }
     }
 
@@ -130,9 +131,9 @@ namespace C64Studio.Formats
 
       foreach ( var layer in SpriteLayers )
       {
-        GR.IO.FileChunk   chunkLayer = new GR.IO.FileChunk( Types.FileChunk.SPRITESET_LAYER );
+        GR.IO.FileChunk   chunkLayer = new GR.IO.FileChunk( FileChunkConstants.SPRITESET_LAYER );
 
-        GR.IO.FileChunk   chunkLayerInfo = new GR.IO.FileChunk( Types.FileChunk.SPRITESET_LAYER_INFO );
+        GR.IO.FileChunk   chunkLayerInfo = new GR.IO.FileChunk( FileChunkConstants.SPRITESET_LAYER_INFO );
         chunkLayerInfo.AppendString( layer.Name );
         chunkLayerInfo.AppendU8( (byte)layer.BackgroundColor );
         chunkLayerInfo.AppendI32( layer.DelayMS );
@@ -140,7 +141,7 @@ namespace C64Studio.Formats
 
         foreach ( var sprite in layer.Sprites )
         {
-          GR.IO.FileChunk   chunkLayerSprite = new GR.IO.FileChunk( Types.FileChunk.SPRITESET_LAYER_ENTRY );
+          GR.IO.FileChunk   chunkLayerSprite = new GR.IO.FileChunk( FileChunkConstants.SPRITESET_LAYER_ENTRY );
           chunkLayerSprite.AppendI32( sprite.Index );
           chunkLayerSprite.AppendU8( (byte)sprite.Color );
           chunkLayerSprite.AppendI32( sprite.X );
@@ -187,7 +188,7 @@ namespace C64Studio.Formats
       for ( int i = 0; i < numSprites; ++i )
       {
         Sprites.Add( new SpriteData() );
-        CustomRenderer.PaletteManager.ApplyPalette( Sprites[i].Image );
+        PaletteManager.ApplyPalette( Sprites[i].Image );
       }
 
       string name = memIn.ReadString();
@@ -236,7 +237,7 @@ namespace C64Studio.Formats
       {
         switch ( chunk.Type )
         {
-          case Types.FileChunk.SPRITESET_LAYER:
+          case FileChunkConstants.SPRITESET_LAYER:
             {
               Layer  layer = new Layer();
 
@@ -250,7 +251,7 @@ namespace C64Studio.Formats
               {
                 var    subChunkReader = subChunk.MemoryReader();
 
-                if ( subChunk.Type == Types.FileChunk.SPRITESET_LAYER_ENTRY )
+                if ( subChunk.Type == FileChunkConstants.SPRITESET_LAYER_ENTRY )
                 {
                   LayerSprite sprite = new LayerSprite();
 
@@ -263,7 +264,7 @@ namespace C64Studio.Formats
 
                   layer.Sprites.Add( sprite );
                 }
-                else if ( subChunk.Type == Types.FileChunk.SPRITESET_LAYER_INFO )
+                else if ( subChunk.Type == FileChunkConstants.SPRITESET_LAYER_INFO )
                 {
                   layer.Name            = subChunkReader.ReadString();
                   layer.BackgroundColor = subChunkReader.ReadUInt8();

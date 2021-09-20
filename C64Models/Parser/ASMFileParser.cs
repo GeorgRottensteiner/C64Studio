@@ -4416,13 +4416,13 @@ namespace C64Studio.Parser
           return false;
         }
         if ( ( startIndex < 0 )
-        ||   ( startIndex >= charProject.NumCharacters ) )
+        ||   ( startIndex >= charProject.ExportNumCharacters ) )
         {
           AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid start index " + startIndex );
           return false;
         }
         if ( ( numChars <= 0 )
-        || ( ( startIndex + numChars ) > charProject.NumCharacters ) )
+        || ( ( startIndex + numChars ) > charProject.ExportNumCharacters ) )
         {
           AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid char count " + numChars );
           return false;
@@ -5009,6 +5009,7 @@ namespace C64Studio.Parser
         // colorvert,x,y,width,height
         // charcolorvert,x,y,width,height
         // colorcharvert,x,y,width,height
+        // palette[,start,count]
         if ( paramTokens.Count > 6 )
         {
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <Char|CharVert|Color|ColorVert|CharColor|CharColorVert|ColorChar|ColorCharVert|CharSet>[,<X>[,<Y>[,<Width>[,<Height>]]]]" );
@@ -5022,9 +5023,10 @@ namespace C64Studio.Parser
         &&   ( method != "CHARVERT" )
         &&   ( method != "COLORVERT" )
         &&   ( method != "CHARCOLORVERT" )
-        &&   ( method != "COLORCHARVERT" ) )
+        &&   ( method != "COLORCHARVERT" )
+        &&   ( method != "PALETTE" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR, COLOR, CHARCOLOR, COLORCHAR, CHARVERT, COLORVERT, CHARCOLORVERT, COLORCHARVERT and CHARSET" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR, COLOR, CHARCOLOR, COLORCHAR, CHARVERT, COLORVERT, CHARCOLORVERT, COLORCHARVERT, CHARSET and PALETTE" );
           return false;
         }
 
@@ -5059,7 +5061,7 @@ namespace C64Studio.Parser
           }
 
           int startIndex = 0;
-          int numChars = screenProject.CharSet.NumCharacters;
+          int numChars = screenProject.CharSet.ExportNumCharacters;
 
           if ( ( paramTokens.Count >= 3 )
           &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
@@ -5069,10 +5071,10 @@ namespace C64Studio.Parser
           if ( ( paramTokens.Count >= 4 )
           &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numChars ) ) )
           {
-            numChars = screenProject.CharSet.NumCharacters;
+            numChars = screenProject.CharSet.ExportNumCharacters;
           }
           if ( ( startIndex < 0 )
-          ||   ( startIndex >= screenProject.CharSet.NumCharacters ) )
+          ||   ( startIndex >= screenProject.CharSet.ExportNumCharacters ) )
           {
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid start index" );
             return false;
@@ -5082,13 +5084,53 @@ namespace C64Studio.Parser
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of characters, must be >= 1" );
             return false;
           }
-          if ( startIndex + numChars > screenProject.CharSet.NumCharacters )
+          if ( startIndex + numChars > screenProject.CharSet.ExportNumCharacters )
           {
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of characters, charset has " 
-                  + screenProject.CharSet.NumCharacters + " characters, but we're trying to fetch up to " + ( startIndex + numChars ) );
+                  + screenProject.CharSet.ExportNumCharacters + " characters, but we're trying to fetch up to " + ( startIndex + numChars ) );
             return false;
           }
-          dataToInclude = screenProject.CharSet.CharacterData().SubBuffer( startIndex * 8, numChars * 8 );
+          dataToInclude = screenProject.CharSet.CharacterData( startIndex, numChars );
+        }
+        else if ( method == "PALETTE" )
+        {
+          if ( !Binary )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as PALETTE is only supported for binary" );
+            return false;
+          }
+
+          int startIndex = 0;
+          int numColors = screenProject.CharSet.Palette.NumColors;
+
+          if ( ( paramTokens.Count >= 3 )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
+          {
+            startIndex = 0;
+          }
+          if ( ( paramTokens.Count >= 4 )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numColors ) ) )
+          {
+            numColors = screenProject.CharSet.Palette.NumColors;
+          }
+          if ( ( startIndex < 0 )
+          ||   ( startIndex >= screenProject.CharSet.ExportNumCharacters ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid start index" );
+            return false;
+          }
+          if ( numColors <= 0 )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, must be >= 1" );
+            return false;
+          }
+          if ( startIndex + numColors > screenProject.CharSet.Palette.NumColors )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, charset has "
+                  + screenProject.CharSet.Palette.NumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
+            return false;
+          }
+          dataToInclude = screenProject.CharSet.Palette.GetExportData( startIndex, numColors );
         }
         else
         {

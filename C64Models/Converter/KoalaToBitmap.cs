@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Text;
+﻿using RetroDevStudioModels;
+using System;
 
 
 
@@ -60,7 +56,7 @@ namespace C64Studio.Converter
       GR.Image.MemoryImage Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
       // Set the palette to the C64 one
-      C64Studio.CustomRenderer.PaletteManager.ApplyPalette( Image );
+      PaletteManager.ApplyPalette( Image );
 
       if ( koala.Length >= 10002 )
       {

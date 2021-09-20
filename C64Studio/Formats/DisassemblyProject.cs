@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudioModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,18 +25,18 @@ namespace C64Studio.Formats
     {
       GR.Memory.ByteBuffer projectFile = new GR.Memory.ByteBuffer();
 
-      GR.IO.FileChunk   chunkProjectInfo = new GR.IO.FileChunk( Types.FileChunk.DISASSEMBLY_INFO );
+      GR.IO.FileChunk   chunkProjectInfo = new GR.IO.FileChunk( FileChunkConstants.DISASSEMBLY_INFO );
       chunkProjectInfo.AppendString( Description );
       projectFile.Append( chunkProjectInfo.ToBuffer() );
 
 
-      GR.IO.FileChunk   chunkProjectData = new GR.IO.FileChunk( Types.FileChunk.DISASSEMBLY_DATA );
+      GR.IO.FileChunk   chunkProjectData = new GR.IO.FileChunk( FileChunkConstants.DISASSEMBLY_DATA );
       chunkProjectData.AppendI32( DataStartAddress );
       chunkProjectData.AppendU32( Data.Length );
       chunkProjectData.Append( Data );
       projectFile.Append( chunkProjectData.ToBuffer() );
 
-      GR.IO.FileChunk   chunkJumpAddresses = new GR.IO.FileChunk( Types.FileChunk.DISASSEMBLY_JUMP_ADDRESSES );
+      GR.IO.FileChunk   chunkJumpAddresses = new GR.IO.FileChunk( FileChunkConstants.DISASSEMBLY_JUMP_ADDRESSES );
       chunkJumpAddresses.AppendI32( JumpedAtAddresses.Count );
       foreach ( int jumpAddress in JumpedAtAddresses )
       {
@@ -43,7 +44,7 @@ namespace C64Studio.Formats
       }
       projectFile.Append( chunkJumpAddresses.ToBuffer() );
 
-      GR.IO.FileChunk   chunkNamedLabels = new GR.IO.FileChunk( Types.FileChunk.DISASSEMBLY_NAMED_LABELS );
+      GR.IO.FileChunk   chunkNamedLabels = new GR.IO.FileChunk( FileChunkConstants.DISASSEMBLY_NAMED_LABELS );
       chunkNamedLabels.AppendI32( NamedLabels.Count );
       foreach ( var namedLabel in NamedLabels )
       {
@@ -77,10 +78,10 @@ namespace C64Studio.Formats
         var chunkReader = chunk.MemoryReader();
         switch ( chunk.Type )
         {
-          case Types.FileChunk.DISASSEMBLY_INFO:
+          case FileChunkConstants.DISASSEMBLY_INFO:
             Description = chunkReader.ReadString();
             break;
-          case Types.FileChunk.DISASSEMBLY_DATA:
+          case FileChunkConstants.DISASSEMBLY_DATA:
             {
               DataStartAddress = chunkReader.ReadInt32();
               uint dataLength = chunkReader.ReadUInt32();
@@ -88,7 +89,7 @@ namespace C64Studio.Formats
               chunkReader.ReadBlock( Data, dataLength );
             }
             break;
-          case Types.FileChunk.DISASSEMBLY_JUMP_ADDRESSES:
+          case FileChunkConstants.DISASSEMBLY_JUMP_ADDRESSES:
             {
               int     numEntries = chunkReader.ReadInt32();
 
@@ -99,7 +100,7 @@ namespace C64Studio.Formats
               }
             }
             break;
-          case Types.FileChunk.DISASSEMBLY_NAMED_LABELS:
+          case FileChunkConstants.DISASSEMBLY_NAMED_LABELS:
             {
               int     numEntries = chunkReader.ReadInt32();
 

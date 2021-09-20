@@ -8,7 +8,6 @@ namespace C64Studio.Formats
   public class CharData
   {
     public GR.Memory.ByteBuffer Data = new GR.Memory.ByteBuffer( 8 );
-    public TextMode             Mode = TextMode.COMMODORE_40_X_25_HIRES;
     public int                  Color = 1;
     public GR.Image.MemoryImage Image = null;
     public int                  Category = 0;
@@ -26,7 +25,6 @@ namespace C64Studio.Formats
     {
       CharData copy = new CharData();
 
-      copy.Mode = Mode;
       copy.Color = Color;
       copy.Data = new GR.Memory.ByteBuffer( Data );
       copy.Image = new GR.Image.MemoryImage( Image );
@@ -55,11 +53,17 @@ namespace C64Studio.Formats
     public string         ExportFilename = "";
 
     public uint           UsedTiles = 0;
-    public int            StartCharacter = 256;
-    public int            NumCharacters = 256;
+    public int            ExportStartCharacter = 256;
+    public int            ExportNumCharacters = 256;
     public bool           ShowGrid = false;
+    public int            TotalNumberOfCharacters = 256;
+    public Palette        Palette;
 
-    public List<ushort>   PlaygroundChars = new List<ushort>( 16 * 16 );
+    private TextCharMode  _Mode = TextCharMode.COMMODORE_HIRES;
+
+    public List<uint>     PlaygroundChars = new List<uint>( 16 * 16 );
+    public int            PlaygroundWidth = 16;
+    public int            PlaygroundHeight = 16;
 
 
 
@@ -73,7 +77,22 @@ namespace C64Studio.Formats
       for ( int i = 0; i < 16 * 16; ++i )
       {
         // white spaces
-        PlaygroundChars.Add( 0x100 | 0x20 );
+        PlaygroundChars.Add( 0x10000 | 0x20 );
+      }
+      Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
+    }
+
+
+
+    public TextCharMode Mode
+    {
+      get
+      {
+        return _Mode;
+      }
+      set
+      {
+        _Mode = value;
       }
     }
 
@@ -81,11 +100,24 @@ namespace C64Studio.Formats
 
     public GR.Memory.ByteBuffer CharacterData()
     {
-      GR.Memory.ByteBuffer projectFile = new GR.Memory.ByteBuffer( (uint)( NumCharacters * 8 ) );
+      return CharacterData( 0, ExportNumCharacters );
+    }
 
-      for ( int i = 0; i < NumCharacters; ++i )
+
+
+    public GR.Memory.ByteBuffer CharacterData( int StartIndex, int Count )
+    {
+      if ( ( StartIndex < 0 )
+      ||   ( StartIndex + Count >= TotalNumberOfCharacters ) )
       {
-        Characters[i].Data.CopyTo( projectFile, 0, 8, i * 8 );
+        return new GR.Memory.ByteBuffer();
+      }
+
+      GR.Memory.ByteBuffer projectFile = new GR.Memory.ByteBuffer( (uint)( Count * TextCharModeUtil.NumBytesOfSingleCharacter( Mode ) ) );
+
+      for ( int i = 0; i < Count; ++i )
+      {
+        Characters[StartIndex + i].Data.CopyTo( projectFile, 0, TextCharModeUtil.NumBytesOfSingleCharacter( Mode ), i * TextCharModeUtil.NumBytesOfSingleCharacter( Mode ) );
       }
       return projectFile;
     }
@@ -94,8 +126,8 @@ namespace C64Studio.Formats
 
     public GR.Memory.ByteBuffer SaveCharsetToBuffer()
     {
-      var charData = new GR.Memory.ByteBuffer( 2048 );
-      for ( int i = 0; i < 256; ++i )
+      var charData = new GR.Memory.ByteBuffer( (uint)( TotalNumberOfCharacters * TextCharModeUtil.NumBytesOfSingleCharacter( Mode ) ) );
+      for ( int i = 0; i < TotalNumberOfCharacters; ++i )
       {
         charData.Append( Characters[i].Data );
       }
@@ -108,6 +140,81 @@ namespace C64Studio.Formats
     {
       GR.Memory.ByteBuffer projectFile = new GR.Memory.ByteBuffer();
 
+      // version
+      projectFile.AppendU32( 2 );
+
+      var chunkCharsetProject = new GR.IO.FileChunk( RetroDevStudioModels.FileChunkConstants.CHARSET_PROJECT );
+
+
+      var chunkCharsetInfo = new GR.IO.FileChunk( RetroDevStudioModels.FileChunkConstants.CHARSET_INFO );
+      chunkCharsetInfo.AppendI32( (int)Mode );
+      chunkCharsetInfo.AppendI32( TotalNumberOfCharacters );
+      chunkCharsetInfo.AppendI32( ShowGrid ? 1 : 0 );
+      chunkCharsetProject.Append( chunkCharsetInfo.ToBuffer() );
+
+
+      var chunkColorSettings = new GR.IO.FileChunk( RetroDevStudioModels.FileChunkConstants.CHARSET_COLOR_SETTINGS );
+
+      chunkColorSettings.AppendI32( BackgroundColor );
+      chunkColorSettings.AppendI32( MultiColor1 );
+      chunkColorSettings.AppendI32( MultiColor2 );
+      chunkColorSettings.AppendI32( BGColor4 );
+
+      chunkCharsetProject.Append( chunkColorSettings.ToBuffer() );
+
+      var chunkPalette = new GR.IO.FileChunk( RetroDevStudioModels.FileChunkConstants.PALETTE );
+      chunkPalette.AppendI32( Palette.NumColors );
+      for ( int i = 0; i < Palette.NumColors; ++i )
+      {
+        chunkPalette.AppendU32( Palette.ColorValues[i] );
+      }
+      chunkCharsetProject.Append( chunkPalette.ToBuffer() );
+
+      var chunkExport = new GR.IO.FileChunk( RetroDevStudioModels.FileChunkConstants.CHARSET_EXPORT );
+
+      chunkExport.AppendI32( ExportStartCharacter );
+      chunkExport.AppendI32( ExportNumCharacters );
+      chunkExport.AppendString( ExportFilename );
+
+      chunkCharsetProject.Append( chunkExport.ToBuffer() );
+
+
+      foreach ( var character in Characters )
+      {
+        var chunkCharsetChar = new GR.IO.FileChunk( RetroDevStudioModels.FileChunkConstants.CHARSET_CHAR );
+
+        //chunkCharsetChar.AppendI32( (int)character.Mode );
+        chunkCharsetChar.AppendI32( 0 );    // was mode
+        chunkCharsetChar.AppendI32( character.Color );
+        chunkCharsetChar.AppendI32( character.Category );
+        chunkCharsetChar.AppendI32( (int)character.Data.Length );
+        chunkCharsetChar.Append( character.Data );
+
+        chunkCharsetProject.Append( chunkCharsetChar.ToBuffer() );
+      }
+
+      foreach ( var category in Categories )
+      {
+        var chunkCategory = new GR.IO.FileChunk( RetroDevStudioModels.FileChunkConstants.CHARSET_CATEGORY );
+        chunkCategory.AppendString( category );
+
+        chunkCharsetProject.Append( chunkCategory.ToBuffer() );
+      }
+
+      var chunkPlayground = new GR.IO.FileChunk( RetroDevStudioModels.FileChunkConstants.CHARSET_PLAYGROUND );
+
+      chunkPlayground.AppendI32( PlaygroundWidth );
+      chunkPlayground.AppendI32( PlaygroundHeight );
+      for ( int i = 0; i < PlaygroundChars.Count; ++i )
+      {
+        // 16 bit index, 16 bit color
+        chunkPlayground.AppendU32( PlaygroundChars[i] );
+      }
+      chunkCharsetProject.Append( chunkPlayground.ToBuffer() );
+
+      projectFile.Append( chunkCharsetProject.ToBuffer() );
+
+      /*
       // version
       projectFile.AppendU32( 1 );
       // Name
@@ -188,6 +295,9 @@ namespace C64Studio.Formats
       {
         projectFile.AppendU16( PlaygroundChars[i] );
       }
+
+      projectFile.AppendI32( (int)Mode );
+      */
       return projectFile;
     }
 
@@ -202,97 +312,194 @@ namespace C64Studio.Formats
       GR.IO.MemoryReader memIn = DataIn.MemoryReader();
 
       uint version = memIn.ReadUInt32();
-      string name = memIn.ReadString();
-      string charsetFilename = memIn.ReadString();
-      for ( int i = 0; i < 256; ++i )
+
+      if ( version == 1 )
       {
-        Characters[i].Color = memIn.ReadInt32();
-      }
-      for ( int i = 0; i < 256; ++i )
-      {
-        Characters[i].Mode = (TextMode)memIn.ReadUInt8();
-      }
-      BackgroundColor = memIn.ReadInt32();
-      MultiColor1 = memIn.ReadInt32();
-      MultiColor2 = memIn.ReadInt32();
+        TotalNumberOfCharacters = 256;
 
-
-      for ( int i = 0; i < 256; ++i )
-      {
-        int tileColor1 = memIn.ReadInt32();
-        int tileColor2 = memIn.ReadInt32();
-        int tileColor3 = memIn.ReadInt32();
-        int tileColor4 = memIn.ReadInt32();
-        int tileChar1 = memIn.ReadInt32();
-        int tileChar2 = memIn.ReadInt32();
-        int tileChar3 = memIn.ReadInt32();
-        int tileChar4 = memIn.ReadInt32();
-      }
-
-      bool genericMulticolor = ( memIn.ReadInt32() != 0 );
-      GR.Memory.ByteBuffer testbed = new GR.Memory.ByteBuffer();
-      memIn.ReadBlock( testbed, 64 );
-
-      GR.Memory.ByteBuffer charsetData = new GR.Memory.ByteBuffer();
-      memIn.ReadBlock( charsetData, 2048 );
-
-      for ( int i = 0; i < 256; ++i )
-      {
-        Characters[i].Data = charsetData.SubBuffer( i * 8, 8 );
-      }
-
-      UsedTiles = memIn.ReadUInt32();
-
-      ExportFilename = memIn.ReadString();
-      string exportPathBlockTable = memIn.ReadString();
-      string exportPathCharset = memIn.ReadString();
-      string exportPathEditorTiles = memIn.ReadString();
-
-      // categories
-      Categories.Clear();
-      int categoryCount = memIn.ReadInt32();
-      for ( int i = 0; i < categoryCount; ++i )
-      {
-        int catKey = memIn.ReadInt32();
-        string catName = memIn.ReadString();
-
-        Categories.Add( catName );
-      }
-      if ( Categories.Count == 0 )
-      {
-        // add default category
-        Categories.Add( "Uncategorized" );
-      }
-      for ( int i = 0; i < 256; ++i )
-      {
-        Characters[i].Category = memIn.ReadInt32();
-        if ( ( Characters[i].Category < 0 )
-        ||   ( Characters[i].Category >= Categories.Count ) )
+        string name = memIn.ReadString();
+        string charsetFilename = memIn.ReadString();
+        for ( int i = 0; i < TotalNumberOfCharacters; ++i )
         {
-          Characters[i].Category = 0;
+          Characters[i].Color = memIn.ReadInt32();
+        }
+        for ( int i = 0; i < TotalNumberOfCharacters; ++i )
+        {
+          memIn.ReadUInt8();
+          //Characters[i].Mode = (TextCharMode)memIn.ReadUInt8();
+        }
+        BackgroundColor = memIn.ReadInt32();
+        MultiColor1 = memIn.ReadInt32();
+        MultiColor2 = memIn.ReadInt32();
+
+
+        for ( int i = 0; i < TotalNumberOfCharacters; ++i )
+        {
+          int tileColor1 = memIn.ReadInt32();
+          int tileColor2 = memIn.ReadInt32();
+          int tileColor3 = memIn.ReadInt32();
+          int tileColor4 = memIn.ReadInt32();
+          int tileChar1 = memIn.ReadInt32();
+          int tileChar2 = memIn.ReadInt32();
+          int tileChar3 = memIn.ReadInt32();
+          int tileChar4 = memIn.ReadInt32();
+        }
+
+        bool genericMulticolor = ( memIn.ReadInt32() != 0 );
+        GR.Memory.ByteBuffer testbed = new GR.Memory.ByteBuffer();
+        memIn.ReadBlock( testbed, 64 );
+
+        GR.Memory.ByteBuffer charsetData = new GR.Memory.ByteBuffer();
+        memIn.ReadBlock( charsetData, (uint)( TotalNumberOfCharacters * 8 ) );
+
+        for ( int i = 0; i < TotalNumberOfCharacters; ++i )
+        {
+          Characters[i].Data = charsetData.SubBuffer( i * 8, 8 );
+        }
+
+        UsedTiles = memIn.ReadUInt32();
+
+        ExportFilename = memIn.ReadString();
+        string exportPathBlockTable = memIn.ReadString();
+        string exportPathCharset = memIn.ReadString();
+        string exportPathEditorTiles = memIn.ReadString();
+
+        // categories
+        Categories.Clear();
+        int categoryCount = memIn.ReadInt32();
+        for ( int i = 0; i < categoryCount; ++i )
+        {
+          int catKey = memIn.ReadInt32();
+          string catName = memIn.ReadString();
+
+          Categories.Add( catName );
+        }
+        if ( Categories.Count == 0 )
+        {
+          // add default category
+          Categories.Add( "Uncategorized" );
+        }
+        for ( int i = 0; i < TotalNumberOfCharacters; ++i )
+        {
+          Characters[i].Category = memIn.ReadInt32();
+          if ( ( Characters[i].Category < 0 )
+          || ( Characters[i].Category >= Categories.Count ) )
+          {
+            Characters[i].Category = 0;
+          }
+        }
+        ExportNumCharacters = memIn.ReadInt32();
+        if ( ExportNumCharacters < TotalNumberOfCharacters )
+        {
+          ExportNumCharacters = TotalNumberOfCharacters;
+        }
+        ShowGrid = ( memIn.ReadInt32() != 0 );
+        ExportStartCharacter = memIn.ReadInt32();
+        BGColor4 = memIn.ReadInt32();
+
+        // playground
+        int   w = memIn.ReadInt32();
+        int   h = memIn.ReadInt32();
+        if ( w * h < 256 )
+        {
+          w = 16;
+          h = 16;
+        }
+        PlaygroundChars = new List<uint>( w * h );
+        for ( int i = 0; i < w * h; ++i )
+        {
+          ushort  charInfo = memIn.ReadUInt16();
+          PlaygroundChars.Add( (uint)( ( charInfo & 0xff ) | ( ( charInfo & 0xff00 ) << 8 ) ) );
+        }
+
+        Mode = (TextCharMode)memIn.ReadInt32();
+      }
+      else if ( version == 2 )
+      {
+        Characters.Clear();
+        Categories.Clear();
+        TotalNumberOfCharacters = 256;
+        Mode = TextCharMode.COMMODORE_HIRES;
+
+        var chunk = new GR.IO.FileChunk();
+
+        while ( chunk.ReadFromStream( memIn ) )
+        {
+          if ( chunk.Type == FileChunkConstants.CHARSET_PROJECT )
+          {
+            var chunkIn = chunk.MemoryReader();
+
+            var subChunk = new GR.IO.FileChunk();
+
+            while ( subChunk.ReadFromStream( chunkIn ) )
+            {
+              var subMemIn = subChunk.MemoryReader();
+              switch ( subChunk.Type )
+              {
+                case FileChunkConstants.CHARSET_INFO:
+                  Mode = (TextCharMode)subMemIn.ReadInt32();
+                  TotalNumberOfCharacters = subMemIn.ReadInt32();
+                  ShowGrid = ( ( subMemIn.ReadInt32() & 1 ) == 1 );
+                  break;
+                case FileChunkConstants.CHARSET_COLOR_SETTINGS:
+                  BackgroundColor = subMemIn.ReadInt32();
+                  MultiColor1 = subMemIn.ReadInt32();
+                  MultiColor2 = subMemIn.ReadInt32();
+                  BGColor4 = subMemIn.ReadInt32();
+                  break;
+                case FileChunkConstants.PALETTE:
+                  {
+                    Palette = new Palette( subMemIn.ReadInt32() );
+                    for ( int i = 0; i < Palette.NumColors; ++i )
+                    {
+                      Palette.ColorValues[i] = subMemIn.ReadUInt32();
+                    }
+                    Palette.CreateBrushes();
+                  }
+                  break;
+                case FileChunkConstants.CHARSET_EXPORT:
+                  ExportStartCharacter = subMemIn.ReadInt32();
+                  ExportNumCharacters = subMemIn.ReadInt32();
+                  ExportFilename = subMemIn.ReadString();
+                  break;
+                case FileChunkConstants.CHARSET_CHAR:
+                  {
+                    var charData = new CharData();
+
+                    subMemIn.ReadInt32(); // was TextCharMode
+                    charData.Color = subMemIn.ReadInt32();
+                    charData.Category = subMemIn.ReadInt32();
+
+                    int dataLength = subMemIn.ReadInt32();
+                    charData.Data = new GR.Memory.ByteBuffer();
+                    subMemIn.ReadBlock( charData.Data, (uint)dataLength );
+
+                    Characters.Add( charData );
+                  }
+                  break;
+                case FileChunkConstants.CHARSET_CATEGORY:
+                  Categories.Add( subMemIn.ReadString() );
+                  break;
+                case FileChunkConstants.CHARSET_PLAYGROUND:
+                  PlaygroundWidth = subMemIn.ReadInt32();
+                  PlaygroundHeight = subMemIn.ReadInt32();
+
+                  PlaygroundChars = new List<uint>( PlaygroundWidth * PlaygroundHeight );
+
+                  for ( int i = 0; i < PlaygroundWidth * PlaygroundHeight; ++i )
+                  {
+                    // 16 bit index, 16 bit color
+                    PlaygroundChars.Add( subMemIn.ReadUInt32() );
+                  }
+                  break;
+              }
+            }
+          }
         }
       }
-      NumCharacters = memIn.ReadInt32();
-      if ( NumCharacters < 256 )
+      else
       {
-        NumCharacters = 256;
-      }
-      ShowGrid = ( memIn.ReadInt32() != 0 );
-      StartCharacter = memIn.ReadInt32();
-      BGColor4 = memIn.ReadInt32();
-
-      // playground
-      int   w = memIn.ReadInt32();
-      int   h = memIn.ReadInt32();
-      if ( w * h < 256 )
-      {
-        w = 16;
-        h = 16;
-      }
-      PlaygroundChars = new List<ushort>( w * h );
-      for ( int i = 0; i < w * h; ++i )
-      {
-        PlaygroundChars.Add( memIn.ReadUInt16() );
+        return false;
       }
       return true;
     }

@@ -543,25 +543,25 @@ namespace C64Studio
         SettingsData.Append( chunkKey.ToBuffer() );
       }
 
-      GR.IO.FileChunk   chunkSoundSettings = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_SOUND );
+      GR.IO.FileChunk   chunkSoundSettings = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_SOUND );
       chunkSoundSettings.AppendU8( (byte)( PlaySoundOnSuccessfulBuild ? 1 : 0 ) );
       
       chunkSoundSettings.AppendU8( (byte)( PlaySoundOnBuildFailure ? 1 : 0 ) );
       chunkSoundSettings.AppendU8( (byte)( PlaySoundOnSearchFoundNoItem ? 1 : 0 ) );
       SettingsData.Append( chunkSoundSettings.ToBuffer() );
 
-      GR.IO.FileChunk   chunkMainWindowPlacement = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_WINDOW );
+      GR.IO.FileChunk   chunkMainWindowPlacement = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_WINDOW );
       chunkMainWindowPlacement.AppendString( MainWindowPlacement );
       SettingsData.Append( chunkMainWindowPlacement.ToBuffer() );
 
-      GR.IO.FileChunk chunkTabs = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_TEXT_EDITOR );
+      GR.IO.FileChunk chunkTabs = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_TEXT_EDITOR );
       chunkTabs.AppendI32( TabSize );
-      chunkTabs.AppendU8( (byte)( AllowTabs ? 1 : 0 ) );
+      chunkTabs.AppendU8( 1 );// (byte)( AllowTabs ? 1 : 0 ) );
       chunkTabs.AppendU8( (byte)( TabConvertToSpaces ? 1 : 0 ) );
       chunkTabs.AppendU8( (byte)( StripTrailingSpaces ? 1 : 0 ) );
       SettingsData.Append( chunkTabs.ToBuffer() );
 
-      GR.IO.FileChunk chunkFont = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_FONT );
+      GR.IO.FileChunk chunkFont = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_FONT );
       chunkFont.AppendString( SourceFontFamily );
       chunkFont.AppendI32( (int)SourceFontSize );
       chunkFont.AppendU8( (byte)( BASICUseNonC64Font ? 1 : 0 ) );
@@ -574,7 +574,7 @@ namespace C64Studio
 
       foreach ( Types.ColorableElement element in SyntaxColoring.Keys )
       {
-        GR.IO.FileChunk chunkSyntaxColor = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_SYNTAX_COLORING );
+        GR.IO.FileChunk chunkSyntaxColor = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_SYNTAX_COLORING );
 
         chunkSyntaxColor.AppendU32( (uint)element );
         chunkSyntaxColor.AppendU32( SyntaxColoring[element].FGColor );
@@ -584,23 +584,23 @@ namespace C64Studio
         SettingsData.Append( chunkSyntaxColor.ToBuffer() );
       }
 
-      GR.IO.FileChunk chunkUI = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_UI );
+      GR.IO.FileChunk chunkUI = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_UI );
       chunkUI.AppendU8( (byte)( ToolbarActiveMain ? 1 : 0 ) );
       chunkUI.AppendU8( (byte)( ToolbarActiveDebugger ? 1 : 0 ) );
       chunkUI.AppendI32( MRUMaxCount );
       SettingsData.Append( chunkUI.ToBuffer() );
 
-      GR.IO.FileChunk chunkRunEmu = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_RUN_EMULATOR );
+      GR.IO.FileChunk chunkRunEmu = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_RUN_EMULATOR );
       chunkRunEmu.AppendU8( (byte)( TrueDriveEnabled ? 1 : 0 ) );
       chunkRunEmu.AppendString( EmulatorToRun );
       SettingsData.Append( chunkRunEmu.ToBuffer() );
 
-      GR.IO.FileChunk chunkDefaults = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_DEFAULTS );
+      GR.IO.FileChunk chunkDefaults = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_DEFAULTS );
       chunkDefaults.AppendString( DefaultProjectBasePath );
       SettingsData.Append( chunkDefaults.ToBuffer() );
 
       // dockpanel layout
-      GR.IO.FileChunk chunkLayout = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_DPS_LAYOUT );
+      GR.IO.FileChunk chunkLayout = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_DPS_LAYOUT );
       System.IO.MemoryStream    memOut = new System.IO.MemoryStream();
       //Debug.Log( "Save with state " + Main.m_DebugRegisters.DockState );
 
@@ -631,7 +631,7 @@ namespace C64Studio
       memOut.Close();
       memOut.Dispose();
 
-      GR.IO.FileChunk chunkFindReplace = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_FIND_REPLACE );
+      GR.IO.FileChunk chunkFindReplace = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_FIND_REPLACE );
       chunkFindReplace.AppendU8( (byte)( LastFindIgnoreCase ? 1 : 0 ) );
       chunkFindReplace.AppendU8( (byte)( LastFindWholeWord ? 1 : 0 ) );
       chunkFindReplace.AppendU8( (byte)( LastFindRegexp ? 1 : 0 ) );
@@ -650,7 +650,7 @@ namespace C64Studio
       }
       SettingsData.Append( chunkFindReplace.ToBuffer() );
 
-      GR.IO.FileChunk chunkIgnoredWarnings = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_IGNORED_WARNINGS );
+      GR.IO.FileChunk chunkIgnoredWarnings = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_IGNORED_WARNINGS );
       chunkIgnoredWarnings.AppendI32( IgnoredWarnings.Count );
       foreach ( Types.ErrorCode ignoredWarning in IgnoredWarnings )
       {
@@ -658,7 +658,7 @@ namespace C64Studio
       }
       SettingsData.Append( chunkIgnoredWarnings.ToBuffer() );
 
-      GR.IO.FileChunk chunkWarningsAsErrors = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_WARNINGS_AS_ERRORS );
+      GR.IO.FileChunk chunkWarningsAsErrors = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_WARNINGS_AS_ERRORS );
       chunkWarningsAsErrors.AppendI32( TreatWarningsAsErrors.Count );
       foreach ( Types.ErrorCode warningAsError in TreatWarningsAsErrors )
       {
@@ -666,7 +666,7 @@ namespace C64Studio
       }
       SettingsData.Append( chunkWarningsAsErrors.ToBuffer() );
 
-      GR.IO.FileChunk chunkC64StudioHacks = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_C64STUDIO_HACKS );
+      GR.IO.FileChunk chunkC64StudioHacks = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_C64STUDIO_HACKS );
       chunkC64StudioHacks.AppendI32( EnabledC64StudioHacks.Count );
       foreach ( Types.ErrorCode c64StudioHack in EnabledC64StudioHacks )
       {
@@ -680,7 +680,7 @@ namespace C64Studio
         GR.Memory.ByteBuffer    displayDetailData = pair.Value.DisplayDetails();
         if ( displayDetailData != null )
         {
-          GR.IO.FileChunk   chunkPanelDisplayDetails = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_PANEL_DISPLAY_DETAILS );
+          GR.IO.FileChunk   chunkPanelDisplayDetails = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_PANEL_DISPLAY_DETAILS );
 
           chunkPanelDisplayDetails.AppendString( pair.Key );
 
@@ -692,7 +692,7 @@ namespace C64Studio
       }
 
       // ASM editor settings
-      GR.IO.FileChunk chunkASMEditor = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_ASSEMBLER_EDITOR );
+      GR.IO.FileChunk chunkASMEditor = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_ASSEMBLER_EDITOR );
       chunkASMEditor.AppendU8( (byte)( ASMHideLineNumbers ? 1 : 0 ) );
       chunkASMEditor.AppendU8( (byte)( !ASMShowCycles ? 1 : 0 ) );
       chunkASMEditor.AppendU8( (byte)( !ASMShowBytes ? 1 : 0 ) );
@@ -708,14 +708,14 @@ namespace C64Studio
       SettingsData.Append( chunkASMEditor.ToBuffer() );
 
       // Outline settings
-      GR.IO.FileChunk chunkOutline = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_OUTLINE );
+      GR.IO.FileChunk chunkOutline = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_OUTLINE );
       chunkOutline.AppendU8( (byte)( !OutlineShowLocalLabels ? 1 : 0 ) );
       chunkOutline.AppendU8( (byte)( !OutlineShowShortCutLabels ? 1 : 0 ) );
       chunkOutline.AppendU8( (byte)( !OutlineSortByIndex ? 1 : 0 ) );
       SettingsData.Append( chunkOutline.ToBuffer() );
 
       // BASIC settings
-      GR.IO.FileChunk chunkBASICParser = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_BASIC_PARSER );
+      GR.IO.FileChunk chunkBASICParser = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_BASIC_PARSER );
       chunkBASICParser.AppendU8( (byte)( BASICStripSpaces ? 1 : 0 ) );
       chunkBASICParser.AppendU8( (byte)( BASICShowControlCodesAsChars ? 1 : 0 ) );
       chunkBASICParser.AppendU8( (byte)( !BASICAutoToggleEntryMode ? 1 : 0 ) );
@@ -723,7 +723,7 @@ namespace C64Studio
       SettingsData.Append( chunkBASICParser.ToBuffer() );
 
       // BASIC key map
-      GR.IO.FileChunk chunkBASICKeyMap = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_BASIC_KEYMAP );
+      GR.IO.FileChunk chunkBASICKeyMap = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_BASIC_KEYMAP );
 
       chunkBASICKeyMap.AppendI32( BASICKeyMap.Keymap.Count );
       foreach ( var entry in BASICKeyMap.Keymap )
@@ -734,7 +734,7 @@ namespace C64Studio
       SettingsData.Append( chunkBASICKeyMap.ToBuffer() );
 
       // environment behaviour settings
-      GR.IO.FileChunk chunkEnvironment = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_ENVIRONMENT );
+      GR.IO.FileChunk chunkEnvironment = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_ENVIRONMENT );
       chunkEnvironment.AppendU8( (byte)( AutoOpenLastSolution ? 1 : 0 ) );
       chunkEnvironment.AppendU8( (byte)( LastSolutionWasEmpty ? 1 : 0 ) );
       chunkEnvironment.AppendU8( (byte)( !CheckForUpdates ? 1 : 0 ) );
@@ -745,10 +745,10 @@ namespace C64Studio
       SettingsData.Append( chunkEnvironment.ToBuffer() );
 
       // tool window settings
-      GR.IO.FileChunk chunkPerspectives = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_PERSPECTIVES );
+      GR.IO.FileChunk chunkPerspectives = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_PERSPECTIVES );
       foreach ( Perspective perspective in System.Enum.GetValues( typeof( Perspective ) ) )
       {
-        GR.IO.FileChunk chunkPerspective = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_PERSPECTIVE );
+        GR.IO.FileChunk chunkPerspective = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_PERSPECTIVE );
 
         chunkPerspective.AppendI32( (int)perspective );
         chunkPerspective.AppendI32( Tools.Count );
@@ -762,7 +762,7 @@ namespace C64Studio
       SettingsData.Append( chunkPerspectives.ToBuffer() );
 
       // hex view 
-      GR.IO.FileChunk chunkHexView = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_HEX_VIEW );
+      GR.IO.FileChunk chunkHexView = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_HEX_VIEW );
 
       chunkHexView.AppendI32( (int)MemoryDisplay );
       chunkHexView.AppendI32( (int)MemorySource );
@@ -784,7 +784,7 @@ namespace C64Studio
 
 
       // MRU projects
-      GR.IO.FileChunk chunkMRUProjects = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_MRU_PROJECTS );
+      GR.IO.FileChunk chunkMRUProjects = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_MRU_PROJECTS );
 
       chunkMRUProjects.AppendI32( MRUProjects.Count );
       for ( int i = 0; i < MRUProjects.Count; ++i )
@@ -794,7 +794,7 @@ namespace C64Studio
       SettingsData.Append( chunkMRUProjects.ToBuffer() );
 
       // MRU files
-      GR.IO.FileChunk chunkMRUFiles = new GR.IO.FileChunk( Types.FileChunk.SETTINGS_MRU_FILES );
+      GR.IO.FileChunk chunkMRUFiles = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_MRU_FILES );
 
       chunkMRUFiles.AppendI32( MRUFiles.Count );
       for ( int i = 0; i < MRUFiles.Count; ++i )
@@ -851,7 +851,7 @@ namespace C64Studio
       {
         switch ( chunkData.Type )
         {
-          case Types.FileChunk.SETTINGS_TOOL:
+          case FileChunkConstants.SETTINGS_TOOL:
             {
               ToolInfo tool = new ToolInfo();
 
@@ -865,7 +865,7 @@ namespace C64Studio
               ToolInfos.Add( tool );
             }
             break;
-          case Types.FileChunk.SETTINGS_ACCELERATOR:
+          case FileChunkConstants.SETTINGS_ACCELERATOR:
             {
               AcceleratorKey key = new AcceleratorKey();
 
@@ -874,7 +874,7 @@ namespace C64Studio
               Accelerators.Add( key.Key, key );
             }
             break;
-          case Types.FileChunk.SETTINGS_DPS_LAYOUT:
+          case FileChunkConstants.SETTINGS_DPS_LAYOUT:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -886,7 +886,7 @@ namespace C64Studio
               Perspectives.ReadFromBuffer( binIn );
             }
             break;
-          case Types.FileChunk.SETTINGS_SOUND:
+          case FileChunkConstants.SETTINGS_SOUND:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -895,14 +895,14 @@ namespace C64Studio
               PlaySoundOnSearchFoundNoItem  = ( binIn.ReadUInt8() != 0 );
             }
             break;
-          case Types.FileChunk.SETTINGS_WINDOW:
+          case FileChunkConstants.SETTINGS_WINDOW:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
               MainWindowPlacement = binIn.ReadString();
             }
             break;
-          case Types.FileChunk.SETTINGS_TEXT_EDITOR:
+          case FileChunkConstants.SETTINGS_TEXT_EDITOR:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -912,12 +912,12 @@ namespace C64Studio
               {
                 TabSize = 2;
               }
-              AllowTabs           = ( binIn.ReadUInt8() != 0 );
+              binIn.ReadUInt8();//AllowTabs           = ( binIn.ReadUInt8() != 0 );
               TabConvertToSpaces  = ( binIn.ReadUInt8() != 0 );
               StripTrailingSpaces = ( binIn.ReadUInt8() != 0 );
             }
             break;
-          case Types.FileChunk.SETTINGS_FONT:
+          case FileChunkConstants.SETTINGS_FONT:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -936,7 +936,7 @@ namespace C64Studio
               BASICSourceFontStyle    = (FontStyle)binIn.ReadInt32();
             }
             break;
-          case Types.FileChunk.SETTINGS_SYNTAX_COLORING:
+          case FileChunkConstants.SETTINGS_SYNTAX_COLORING:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -953,7 +953,7 @@ namespace C64Studio
               SyntaxColoring.Add( element, color );
             }
             break;
-          case Types.FileChunk.SETTINGS_UI:
+          case FileChunkConstants.SETTINGS_UI:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -967,7 +967,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.SETTINGS_RUN_EMULATOR:
+          case FileChunkConstants.SETTINGS_RUN_EMULATOR:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -975,14 +975,14 @@ namespace C64Studio
               EmulatorToRun = binIn.ReadString();
             }
             break;
-          case Types.FileChunk.SETTINGS_DEFAULTS:
+          case FileChunkConstants.SETTINGS_DEFAULTS:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
               DefaultProjectBasePath = binIn.ReadString();
             }
             break;
-          case Types.FileChunk.SETTINGS_OUTLINE:
+          case FileChunkConstants.SETTINGS_OUTLINE:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -992,7 +992,7 @@ namespace C64Studio
               OutlineSortByAlphabet = !OutlineSortByIndex;
             }
             break;
-          case Types.FileChunk.SETTINGS_FIND_REPLACE:
+          case FileChunkConstants.SETTINGS_FIND_REPLACE:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1014,7 +1014,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.SETTINGS_IGNORED_WARNINGS:
+          case FileChunkConstants.SETTINGS_IGNORED_WARNINGS:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1026,7 +1026,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.SETTINGS_WARNINGS_AS_ERRORS:
+          case FileChunkConstants.SETTINGS_WARNINGS_AS_ERRORS:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1038,7 +1038,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.SETTINGS_C64STUDIO_HACKS:
+          case FileChunkConstants.SETTINGS_C64STUDIO_HACKS:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1050,7 +1050,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.SETTINGS_PANEL_DISPLAY_DETAILS:
+          case FileChunkConstants.SETTINGS_PANEL_DISPLAY_DETAILS:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1066,7 +1066,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.SETTINGS_BASIC_KEYMAP:
+          case FileChunkConstants.SETTINGS_BASIC_KEYMAP:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1101,7 +1101,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.SETTINGS_ASSEMBLER_EDITOR:
+          case FileChunkConstants.SETTINGS_ASSEMBLER_EDITOR:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1121,7 +1121,7 @@ namespace C64Studio
               ASMShowAddress = ( binIn.ReadUInt8() == 0 );
             }
             break;
-          case Types.FileChunk.SETTINGS_BASIC_PARSER:
+          case FileChunkConstants.SETTINGS_BASIC_PARSER:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1131,7 +1131,7 @@ namespace C64Studio
               BASICStripREM                 = ( binIn.ReadUInt8() != 0 );
             }
             break;
-          case Types.FileChunk.SETTINGS_ENVIRONMENT:
+          case FileChunkConstants.SETTINGS_ENVIRONMENT:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1162,7 +1162,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.SETTINGS_PERSPECTIVES:
+          case FileChunkConstants.SETTINGS_PERSPECTIVES:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1174,7 +1174,7 @@ namespace C64Studio
 
                 switch ( subChunkData.Type )
                 {
-                  case Types.FileChunk.SETTINGS_PERSPECTIVE:
+                  case FileChunkConstants.SETTINGS_PERSPECTIVE:
                     {
                       Perspective   perspective = (Perspective)subBinIn.ReadInt32();
                       int           numEntries  = subBinIn.ReadInt32();
@@ -1193,7 +1193,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.SETTINGS_HEX_VIEW:
+          case FileChunkConstants.SETTINGS_HEX_VIEW:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1213,7 +1213,7 @@ namespace C64Studio
               MemoryDisplaySpriteMulticolor2 = binIn.ReadUInt8();
             }
             break;
-          case Types.FileChunk.SETTINGS_MRU_PROJECTS:
+          case FileChunkConstants.SETTINGS_MRU_PROJECTS:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1225,7 +1225,7 @@ namespace C64Studio
               }
             }
             break;
-          case Types.FileChunk.SETTINGS_MRU_FILES:
+          case FileChunkConstants.SETTINGS_MRU_FILES:
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
@@ -1333,6 +1333,7 @@ namespace C64Studio
       SetSyntaxColor( C64Studio.Types.ColorableElement.SELECTED_TEXT, 0xff800000, 0xff800000, true );
       SetSyntaxColor( C64Studio.Types.ColorableElement.BACKGROUND_CONTROL, 0xff000000, 0xfff0f0f0, true );
       SetSyntaxColor( C64Studio.Types.ColorableElement.CHANGED_DEBUG_ELEMENT, 0xffff0000, 0xfff0f0f0, true );
+      SetSyntaxColor( C64Studio.Types.ColorableElement.SELECTION_FRAME, 0xff80ff80, 0xff000000, true );
 
       foreach ( Types.ColorableElement color in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {
@@ -1424,13 +1425,15 @@ namespace C64Studio
         }
       }
 
+      AllowTabs = true;
+      /*
       if ( ( AllowTabs )
       &&   ( TabConvertToSpaces ) )
       {
         // both are weird
         TabConvertToSpaces = true;
         AllowTabs = false;
-      }
+      }*/
       if ( TabSize < 1 )
       {
         TabSize = 1;

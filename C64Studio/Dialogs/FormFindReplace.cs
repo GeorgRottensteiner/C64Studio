@@ -1070,7 +1070,7 @@ namespace C64Studio
           if ( edit == null )
           {
             edit = new FastColoredTextBoxNS.FastColoredTextBox();
-            edit.AllowTabs = Core.Settings.AllowTabs;
+            edit.AllowTabs = true; //Core.Settings.AllowTabs;
             edit.TabLength = Core.Settings.TabSize;
             textFromElement = Core.Searching.GetDocumentInfoText( elementToSearch.DocumentInfo );
             edit.Text = textFromElement;
@@ -1135,7 +1135,7 @@ namespace C64Studio
           if ( edit == null )
           {
             edit = new FastColoredTextBoxNS.FastColoredTextBox();
-            edit.AllowTabs = Core.Settings.AllowTabs;
+            edit.AllowTabs = true; // Core.Settings.AllowTabs;
             edit.TabLength = Core.Settings.TabSize;
 
             textFromElement = Core.Searching.GetDocumentInfoText( elementToSearch.DocumentInfo );
@@ -1184,7 +1184,7 @@ namespace C64Studio
       if ( edit == null )
       {
         edit = new FastColoredTextBoxNS.FastColoredTextBox();
-        edit.AllowTabs = Core.Settings.AllowTabs;
+        edit.AllowTabs = true; //Core.Settings.AllowTabs;
         edit.TabLength = Core.Settings.TabSize;
 
         edit.Text = textFromElement;

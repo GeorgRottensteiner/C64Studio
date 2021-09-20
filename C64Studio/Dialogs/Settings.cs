@@ -1,13 +1,12 @@
 ﻿using C64Studio.Parser;
 using C64Studio.Types;
 using GR.Image;
+using RetroDevStudioModels;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+
+
 
 namespace C64Studio
 {
@@ -83,7 +82,7 @@ namespace C64Studio
       checkPlaySoundCompileFail.Checked       = Core.Settings.PlaySoundOnBuildFailure;
       checkPlaySoundSearchTextNotFound.Checked = Core.Settings.PlaySoundOnSearchFoundNoItem;
       checkConvertTabsToSpaces.Checked        = Core.Settings.TabConvertToSpaces;
-      checkAllowTabs.Checked                  = Core.Settings.AllowTabs;
+      //checkAllowTabs.Checked                  = Core.Settings.AllowTabs;
       editTabSize.Text                        = Core.Settings.TabSize.ToString();
       checkStripTrailingSpaces.Checked        = Core.Settings.StripTrailingSpaces;
       checkBASICUseC64Font.Checked            = !Core.Settings.BASICUseNonC64Font;
@@ -273,9 +272,9 @@ namespace C64Studio
 
         ListViewItem    item = new ListViewItem( realKey.ToString() );
 
-        if ( C64Studio.Types.ConstantData.PhysicalKeyInfo.ContainsKey( realKey ) )
+        if ( ConstantData.PhysicalKeyInfo.ContainsKey( realKey ) )
         {
-          var charInfo = C64Studio.Types.ConstantData.PhysicalKeyInfo[realKey];
+          var charInfo = ConstantData.PhysicalKeyInfo[realKey];
 
           item.Text = charInfo.Normal.Desc;
           item.SubItems.Add( charInfo.Normal.PetSCIIValue.ToString( "X02" ) );
@@ -1079,7 +1078,6 @@ namespace C64Studio
       }
       var   realKey = (Types.KeyboardKey)listBASICKeyMap.SelectedItems[0].Tag;
       var   keyMapEntry = FindBASICKeyMapEntry( realKey );
-      var   physicalKeyInfo = C64Studio.Types.ConstantData.PhysicalKeyInfo[realKey];
 
       if ( ( m_PressedKeyMapKey != Keys.None )
       &&   ( ( keyMapEntry == null )
@@ -1168,10 +1166,6 @@ namespace C64Studio
       if ( Core.Settings.TabConvertToSpaces != checkConvertTabsToSpaces.Checked )
       {
         Core.Settings.TabConvertToSpaces = checkConvertTabsToSpaces.Checked;
-        if ( Core.Settings.TabConvertToSpaces )
-        {
-          checkAllowTabs.Checked = false;
-        }
         RefreshDisplayOnDocuments();
       }
     }
@@ -1180,6 +1174,7 @@ namespace C64Studio
 
     private void checkAllowTabs_CheckedChanged( object sender, EventArgs e )
     {
+      /*
       if ( Core.Settings.AllowTabs != checkAllowTabs.Checked )
       {
         Core.Settings.AllowTabs = checkAllowTabs.Checked;
@@ -1188,7 +1183,7 @@ namespace C64Studio
           checkConvertTabsToSpaces.Checked = false;
         }
         RefreshDisplayOnDocuments();
-      }
+      }*/
     }
 
 
@@ -1370,8 +1365,9 @@ namespace C64Studio
         else if ( xmlKey.Type == "Tabs" )
         {
           Core.Settings.TabConvertToSpaces  = GetBooleanFromString( xmlKey.Attribute( "ConvertTabsToSpaces" ) );
-          Core.Settings.AllowTabs           = GetBooleanFromString( xmlKey.Attribute( "AllowTabs" ) );
+          //Core.Settings.AllowTabs           = GetBooleanFromString( xmlKey.Attribute( "AllowTabs" ) );
           Core.Settings.TabSize             = GR.Convert.ToI32( xmlKey.Attribute( "TabSize" ) );
+          Core.Settings.StripTrailingSpaces = GetBooleanFromString( xmlKey.Attribute( "StripTrailingSpaces" ) );
         }
         else if ( xmlKey.Type == "AssemblerEditor" )
         {
@@ -1420,8 +1416,9 @@ namespace C64Studio
       checkPlaySoundSearchTextNotFound.Checked = Core.Settings.PlaySoundOnSearchFoundNoItem;
 
       checkConvertTabsToSpaces.Checked = Core.Settings.TabConvertToSpaces;
-      checkAllowTabs.Checked = Core.Settings.AllowTabs;
+      //checkAllowTabs.Checked = Core.Settings.AllowTabs;
       editTabSize.Text = Core.Settings.TabSize.ToString();
+      checkStripTrailingSpaces.Checked = Core.Settings.StripTrailingSpaces;
 
       checkBASICStripSpaces.Checked = Core.Settings.BASICStripSpaces;
 
@@ -1719,8 +1716,9 @@ namespace C64Studio
       GR.Strings.XMLElement     xmlTabs = new GR.Strings.XMLElement( "Tabs" );
       xmlSettingRoot.AddChild( xmlTabs );
       xmlTabs.AddAttribute( "TabSize", Core.Settings.TabSize.ToString() );
-      xmlTabs.AddAttribute( "AllowTabs", Core.Settings.AllowTabs ? "yes" : "no" );
+      //xmlTabs.AddAttribute( "AllowTabs", Core.Settings.AllowTabs ? "yes" : "no" );
       xmlTabs.AddAttribute( "ConvertTabsToSpaces", Core.Settings.TabConvertToSpaces ? "yes" : "no" );
+      xmlTabs.AddAttribute( "StripTrailingSpaces", Core.Settings.StripTrailingSpaces ? "yes" : "no" );
 
       GR.Strings.XMLElement     xmlASMEditor = new GR.Strings.XMLElement( "AssemblerEditor" );
       xmlSettingRoot.AddChild( xmlASMEditor );

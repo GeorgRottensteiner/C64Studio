@@ -869,7 +869,7 @@ namespace C64Studio
     void treeElementRename_Click( object sender, EventArgs e )
     {
       if ( ( m_ContextMenuNode != null )
-      &&   ( m_ContextMenuNode.Level >= 1 ) )
+      &&   ( m_ContextMenuNode.Level >= 0 ) )
       {
         treeProject.SelectedNode = m_ContextMenuNode;
         treeProject.StartLabelEdit();
@@ -1033,7 +1033,8 @@ namespace C64Studio
         return;
       }
       ProjectElement element = (ProjectElement)e.Node.Tag;
-      if ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
+      if ( ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
+      &&   ( element.DocumentInfo.Type != ProjectElement.ElementType.PROJECT ) )
       {
         e.Node.Text = System.IO.Path.GetFileNameWithoutExtension( e.Node.Text );
       }
@@ -1043,13 +1044,23 @@ namespace C64Studio
 
     private void treeProject_AfterLabelEdit( object sender, System.Windows.Forms.NodeLabelEditEventArgs e )
     {
-      if ( ( e.Node.Level < 1 )
+      if ( ( e.Node.Level < 0 )
       ||   ( string.IsNullOrEmpty( e.Label ) ) )
       {
         e.CancelEdit = true;
         return;
       }
       string    newText = e.Label;
+      Project project = ProjectFromNode( e.Node );
+
+      if ( e.Node.Level == 0 )
+      {
+        if ( Core.Navigating.Solution.IsValidProjectName( newText ) )
+        {
+          Core.Navigating.Solution.RenameProject( project, newText );
+        }
+        return;
+      }
 
       ProjectElement element = (ProjectElement)e.Node.Tag;
       if ( element.DocumentInfo.Type != ProjectElement.ElementType.FOLDER )
@@ -1061,7 +1072,6 @@ namespace C64Studio
         newText = e.Label;
       }
 
-      Project project = ProjectFromNode( e.Node );
       if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
       {
         element.Name = newText;
@@ -1123,7 +1133,7 @@ namespace C64Studio
     {
       if ( e.KeyCode == System.Windows.Forms.Keys.F2 )
       {
-        if ( treeProject.SelectedNode.Level >= 1 )
+        if ( treeProject.SelectedNode.Level >= 0 )
         {
           treeProject.StartLabelEdit();
           e.Handled = true;

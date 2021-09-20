@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
+using RetroDevStudioModels;
 
 
 
@@ -58,7 +57,7 @@ namespace C64Studio.Formats
 
     public GraphicScreenProject()
     {
-      CustomRenderer.PaletteManager.ApplyPalette( Image );
+      PaletteManager.ApplyPalette( Image );
 
       for ( int i = 0; i < 16; ++i )
       {
@@ -94,7 +93,7 @@ namespace C64Studio.Formats
 
       data.Reserve( ScreenHeight * ScreenWidth * 8 );
 
-      GR.IO.FileChunk   chunkScreenInfo = new GR.IO.FileChunk( C64Studio.Types.FileChunk.GRAPHIC_SCREEN_INFO );
+      GR.IO.FileChunk   chunkScreenInfo = new GR.IO.FileChunk( FileChunkConstants.GRAPHIC_SCREEN_INFO );
       chunkScreenInfo.AppendU32( (uint)SelectedCheckType );
       chunkScreenInfo.AppendI32( ScreenOffsetX );
       chunkScreenInfo.AppendI32( ScreenOffsetY );
@@ -102,7 +101,7 @@ namespace C64Studio.Formats
       chunkScreenInfo.AppendI32( ScreenHeight );
       data.Append( chunkScreenInfo.ToBuffer() );
 
-      GR.IO.FileChunk   chunkGraphicData = new GR.IO.FileChunk( C64Studio.Types.FileChunk.GRAPHIC_DATA );
+      GR.IO.FileChunk   chunkGraphicData = new GR.IO.FileChunk( FileChunkConstants.GRAPHIC_DATA );
       chunkGraphicData.AppendI32( Image.Width );
       chunkGraphicData.AppendI32( Image.Height );
       chunkGraphicData.AppendI32( (int)Image.PixelFormat );
@@ -118,14 +117,14 @@ namespace C64Studio.Formats
       chunkGraphicData.Append( imageData );
       data.Append( chunkGraphicData.ToBuffer() );
 
-      GR.IO.FileChunk chunkScreenMultiColorData = new GR.IO.FileChunk( C64Studio.Types.FileChunk.MULTICOLOR_DATA );
+      GR.IO.FileChunk chunkScreenMultiColorData = new GR.IO.FileChunk( FileChunkConstants.MULTICOLOR_DATA );
       chunkScreenMultiColorData.AppendU8( (byte)( MultiColor ? 1 : 0 ) );
       chunkScreenMultiColorData.AppendU8( (byte)BackgroundColor );
       chunkScreenMultiColorData.AppendU8( (byte)MultiColor1 );
       chunkScreenMultiColorData.AppendU8( (byte)MultiColor2 );
       data.Append( chunkScreenMultiColorData.ToBuffer() );
 
-      GR.IO.FileChunk chunkColorMapping = new GR.IO.FileChunk( C64Studio.Types.FileChunk.GRAPHIC_COLOR_MAPPING );
+      GR.IO.FileChunk chunkColorMapping = new GR.IO.FileChunk( FileChunkConstants.GRAPHIC_COLOR_MAPPING );
       chunkColorMapping.AppendI32( ColorMapping.Count );
       for ( int i = 0; i < ColorMapping.Count; ++i )
       {
@@ -161,7 +160,7 @@ namespace C64Studio.Formats
 
         switch ( chunk.Type )
         {
-          case C64Studio.Types.FileChunk.GRAPHIC_SCREEN_INFO:
+          case FileChunkConstants.GRAPHIC_SCREEN_INFO:
             SelectedCheckType = (CheckType)chunkReader.ReadUInt32();
             ScreenOffsetX = chunkReader.ReadInt32();
             ScreenOffsetY = chunkReader.ReadInt32();
@@ -174,7 +173,7 @@ namespace C64Studio.Formats
               ScreenHeight = 200;
             }
             break;
-          case C64Studio.Types.FileChunk.GRAPHIC_COLOR_MAPPING:
+          case FileChunkConstants.GRAPHIC_COLOR_MAPPING:
             {
               ColorMapping.Clear();
 
@@ -195,7 +194,7 @@ namespace C64Studio.Formats
               }
             }
             break;
-          case C64Studio.Types.FileChunk.GRAPHIC_DATA:
+          case FileChunkConstants.GRAPHIC_DATA:
             {
               int width = chunkReader.ReadInt32();
               int height = chunkReader.ReadInt32();
@@ -216,7 +215,7 @@ namespace C64Studio.Formats
               Image.SetData( imageData );
             }
             break;
-          case C64Studio.Types.FileChunk.MULTICOLOR_DATA:
+          case FileChunkConstants.MULTICOLOR_DATA:
             MultiColor = ( chunkReader.ReadUInt8() == 1 );
             BackgroundColor = chunkReader.ReadUInt8();
             MultiColor1 = chunkReader.ReadUInt8();

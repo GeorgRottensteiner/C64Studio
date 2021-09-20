@@ -269,8 +269,6 @@
       this.Controls.Add(this.btnToggleLabelMode);
       this.MainMenuStrip = this.menuBASIC;
       this.Name = "SourceBasicEx";
-      this.DragDrop += new System.Windows.Forms.DragEventHandler(this.SourceBasicEx_DragDrop);
-      this.DragEnter += new System.Windows.Forms.DragEventHandler(this.SourceBasicEx_DragEnter);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).EndInit();
       this.contextSource.ResumeLayout(false);

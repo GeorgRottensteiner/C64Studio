@@ -1,4 +1,5 @@
 ﻿using C64Studio.Types;
+using RetroDevStudioModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -56,9 +57,9 @@ namespace C64Studio
 
     public GR.Memory.ByteBuffer ToBuffer()
     {
-      GR.IO.FileChunk   chunkSolution = new GR.IO.FileChunk( Types.FileChunk.SOLUTION );
+      GR.IO.FileChunk   chunkSolution = new GR.IO.FileChunk( FileChunkConstants.SOLUTION );
 
-      GR.IO.FileChunk   chunkSolutionInfo = new GR.IO.FileChunk( Types.FileChunk.SOLUTION_INFO );
+      GR.IO.FileChunk   chunkSolutionInfo = new GR.IO.FileChunk( FileChunkConstants.SOLUTION_INFO );
       if ( string.IsNullOrEmpty( Name ) )
       {
         Name = System.IO.Path.GetFileNameWithoutExtension( Filename );
@@ -68,7 +69,7 @@ namespace C64Studio
 
       chunkSolution.Append( chunkSolutionInfo.ToBuffer() );
 
-      GR.IO.FileChunk   chunkExpandedNodes = new GR.IO.FileChunk( Types.FileChunk.SOLUTION_NODES );
+      GR.IO.FileChunk   chunkExpandedNodes = new GR.IO.FileChunk( FileChunkConstants.SOLUTION_NODES );
       foreach ( string key in ExpandedNodes )
       {
         chunkExpandedNodes.AppendString( key );
@@ -77,7 +78,7 @@ namespace C64Studio
 
       foreach ( Project project in Projects )
       {
-        GR.IO.FileChunk chunkSolutionProject = new GR.IO.FileChunk( Types.FileChunk.SOLUTION_PROJECT );
+        GR.IO.FileChunk chunkSolutionProject = new GR.IO.FileChunk( FileChunkConstants.SOLUTION_PROJECT );
         chunkSolutionProject.AppendString( GR.Path.RelativePathTo( Filename, false, project.Settings.Filename, false ) );
 
         chunkSolution.Append( chunkSolutionProject.ToBuffer() );
@@ -96,7 +97,7 @@ namespace C64Studio
 
       while ( chunk.ReadFromStream( memIn ) )
       {
-        if ( chunk.Type != Types.FileChunk.SOLUTION )
+        if ( chunk.Type != FileChunkConstants.SOLUTION )
         {
           return false;
         }
@@ -110,12 +111,12 @@ namespace C64Studio
 
           switch ( subChunk.Type )
           {
-            case Types.FileChunk.SOLUTION_INFO:
+            case FileChunkConstants.SOLUTION_INFO:
               Name = memSubChunk.ReadString();
               Filename = memSubChunk.ReadString();
               Filename = FromFile;
               break;
-            case Types.FileChunk.SOLUTION_PROJECT:
+            case FileChunkConstants.SOLUTION_PROJECT:
               {
                 string filename = memSubChunk.ReadString();
 
@@ -124,7 +125,7 @@ namespace C64Studio
                 Project project = MainForm.OpenProject( filename );
               }
               break;
-            case Types.FileChunk.SOLUTION_NODES:
+            case FileChunkConstants.SOLUTION_NODES:
               while ( memSubChunk.DataAvailable )
               {
                 string  node = memSubChunk.ReadString();

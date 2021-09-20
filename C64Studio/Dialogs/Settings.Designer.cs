@@ -368,25 +368,26 @@
       this.checkStripTrailingSpaces.Name = "checkStripTrailingSpaces";
       this.checkStripTrailingSpaces.Size = new System.Drawing.Size(214, 24);
       this.checkStripTrailingSpaces.TabIndex = 3;
-      this.checkStripTrailingSpaces.Text = "Strip Trailing Spaces";
+      this.checkStripTrailingSpaces.Text = "Strip Trailing Spaces/Tabs";
       this.checkStripTrailingSpaces.UseVisualStyleBackColor = true;
       this.checkStripTrailingSpaces.CheckedChanged += new System.EventHandler(this.checkStripTrailingSpaces_CheckedChanged);
       // 
       // checkAllowTabs
       // 
       this.checkAllowTabs.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkAllowTabs.Location = new System.Drawing.Point(23, 125);
+      this.checkAllowTabs.Location = new System.Drawing.Point(388, 162);
       this.checkAllowTabs.Name = "checkAllowTabs";
       this.checkAllowTabs.Size = new System.Drawing.Size(214, 24);
       this.checkAllowTabs.TabIndex = 3;
       this.checkAllowTabs.Text = "Allow Tabs";
       this.checkAllowTabs.UseVisualStyleBackColor = true;
+      this.checkAllowTabs.Visible = false;
       this.checkAllowTabs.CheckedChanged += new System.EventHandler(this.checkAllowTabs_CheckedChanged);
       // 
       // checkConvertTabsToSpaces
       // 
       this.checkConvertTabsToSpaces.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkConvertTabsToSpaces.Location = new System.Drawing.Point(23, 148);
+      this.checkConvertTabsToSpaces.Location = new System.Drawing.Point(28, 125);
       this.checkConvertTabsToSpaces.Name = "checkConvertTabsToSpaces";
       this.checkConvertTabsToSpaces.Size = new System.Drawing.Size(214, 24);
       this.checkConvertTabsToSpaces.TabIndex = 4;

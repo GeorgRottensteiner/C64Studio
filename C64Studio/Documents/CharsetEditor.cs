@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using C64Studio.Formats;
 using C64Studio.Types;
 using GR.Memory;
+using RetroDevStudioModels;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace C64Studio
@@ -56,7 +57,7 @@ namespace C64Studio
 
       for ( int i = 0; i < 256; ++i )
       {
-        CustomRenderer.PaletteManager.ApplyPalette( m_Charset.Characters[i].Image );
+        PaletteManager.ApplyPalette( m_Charset.Characters[i].Image );
       }
 
       comboExportRange.Items.Add( "All" );
@@ -128,7 +129,6 @@ namespace C64Studio
       for ( int i = 0; i < 256; ++i )
       {
         m_Charset.Characters[i].Color = 0;
-        m_Charset.Characters[i].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
         for ( int j = 0; j < 8; ++j )
         {
           m_Charset.Characters[i].Data.SetU8At( j, 0 );
@@ -215,8 +215,8 @@ namespace C64Studio
     {
       characterEditor.CharsetUpdated( m_Charset );
 
-      editCharactersCount.Text        = m_Charset.NumCharacters.ToString();
-      editCharactersFrom.Text         = m_Charset.StartCharacter.ToString();
+      editCharactersCount.Text        = m_Charset.ExportNumCharacters.ToString();
+      editCharactersFrom.Text         = m_Charset.ExportStartCharacter.ToString();
 
       Modified = false;
 
@@ -264,9 +264,9 @@ namespace C64Studio
       {
         // save binary only!
         GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
-        charSet.Reserve( 256 * 8 );
+        charSet.Reserve( m_Charset.TotalNumberOfCharacters * TextCharModeUtil.NumBytesOfSingleCharacter( m_Charset.Mode ) );
 
-        for ( int i = 0; i < 256; ++i )
+        for ( int i = 0; i < m_Charset.TotalNumberOfCharacters; ++i )
         {
           charSet.Append( m_Charset.Characters[i].Data );
         }
@@ -374,9 +374,9 @@ namespace C64Studio
           break;
         case 2:
           // range
-          for ( int i = 0; i < m_Charset.NumCharacters; ++i )
+          for ( int i = 0; i < m_Charset.ExportNumCharacters; ++i )
           {
-            listIndices.Add( m_Charset.StartCharacter + i );
+            listIndices.Add( m_Charset.ExportStartCharacter + i );
           }
           break;
       }
@@ -469,17 +469,16 @@ namespace C64Studio
           m_Charset.BackgroundColor = project.BackgroundColor;
           m_Charset.MultiColor1 = project.MultiColor1;
           m_Charset.MultiColor2 = project.MultiColor2;
-          m_Charset.NumCharacters = project.NumCharacters;
+          m_Charset.ExportNumCharacters = project.ExportNumCharacters;
           m_Charset.ShowGrid = project.ShowGrid;
 
           for ( int i = 0; i < 256; ++i )
           {
             m_Charset.Characters[i].Color = project.Characters[i].Color;
             m_Charset.Characters[i].Data = new GR.Memory.ByteBuffer( project.Characters[i].Data );
-            m_Charset.Characters[i].Mode = project.Characters[i].Mode;
           }
 
-          editCharactersFrom.Text = m_Charset.NumCharacters.ToString();
+          editCharactersFrom.Text = m_Charset.ExportNumCharacters.ToString();
 
           characterEditor.CharsetUpdated( m_Charset );
 
@@ -501,19 +500,18 @@ namespace C64Studio
           m_Charset.MultiColor1     = cpProject.MultiColor1;
           m_Charset.MultiColor2     = cpProject.MultiColor2;
 
-          m_Charset.NumCharacters = cpProject.NumChars;
-          if ( m_Charset.NumCharacters > 256 )
+          m_Charset.ExportNumCharacters = cpProject.NumChars;
+          if ( m_Charset.ExportNumCharacters > 256 )
           {
-            m_Charset.NumCharacters = 256;
+            m_Charset.ExportNumCharacters = 256;
           }
-          for ( int charIndex = 0; charIndex < m_Charset.NumCharacters; ++charIndex )
+          for ( int charIndex = 0; charIndex < m_Charset.ExportNumCharacters; ++charIndex )
           {
             m_Charset.Characters[charIndex].Data = cpProject.Characters[charIndex].Data;
             m_Charset.Characters[charIndex].Color = cpProject.Characters[charIndex].Color;
-            m_Charset.Characters[charIndex].Mode = cpProject.MultiColor ? RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
           }
 
-          editCharactersFrom.Text = m_Charset.NumCharacters.ToString();
+          editCharactersFrom.Text = m_Charset.ExportNumCharacters.ToString();
           characterEditor.CharsetUpdated( m_Charset );
           SetModified();
           return;
@@ -539,13 +537,13 @@ namespace C64Studio
       {
         charsToImport = 256;
       }
+      // TODO - Format!
       for ( int i = 0; i < charsToImport; ++i )
       {
         for ( int j = 0; j < 8; ++j )
         {
           m_Charset.Characters[i].Data.SetU8At( j, CharData.ByteAt( i * 8 + j ) );
         }
-        m_Charset.Characters[i].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
         m_Charset.Characters[i].Color = 1;
       }
       characterEditor.CharsetUpdated( m_Charset );
@@ -571,9 +569,8 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_Charset.Characters[i].Data.SetU8At( j, Types.ConstantData.UpperCaseCharset.ByteAt( i * 8 + j ) );
+          m_Charset.Characters[i].Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
         }
-        m_Charset.Characters[i].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
         m_Charset.Characters[i].Color = 1;
       }
       characterEditor.CharsetUpdated( m_Charset );
@@ -592,9 +589,8 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_Charset.Characters[i].Data.SetU8At( j, Types.ConstantData.LowerCaseCharset.ByteAt( i * 8 + j ) );
+          m_Charset.Characters[i].Data.SetU8At( j, ConstantData.LowerCaseCharsetC64.ByteAt( i * 8 + j ) );
         }
-        m_Charset.Characters[i].Mode = RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
         m_Charset.Characters[i].Color = 1;
       }
       characterEditor.CharsetUpdated( m_Charset );
@@ -615,7 +611,7 @@ namespace C64Studio
       }
 
       GR.Image.MemoryImage    targetImg = new GR.Image.MemoryImage( 128, 128, m_Charset.Characters[0].Image.PixelFormat );
-      CustomRenderer.PaletteManager.ApplyPalette( targetImg );
+      PaletteManager.ApplyPalette( targetImg );
 
       List<int>     exportIndices = ListOfExportIndices();
 
@@ -625,7 +621,6 @@ namespace C64Studio
       }
       System.Drawing.Bitmap bmpTarget = targetImg.GetAsBitmap();
       bmpTarget.Save( saveDlg.FileName, System.Drawing.Imaging.ImageFormat.Png );
-
     }
 
 
@@ -839,7 +834,6 @@ namespace C64Studio
       {
         m_Charset.Characters[CharIndex].Color = chosenCharColor + 8;
       }
-      m_Charset.Characters[CharIndex].Mode = isMultiColor ? RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
       return true;
     }
 
@@ -870,14 +864,14 @@ namespace C64Studio
         startChar = 0;
         editCharactersFrom.Text = startChar.ToString();
       }
-      if ( m_Charset.StartCharacter != startChar )
+      if ( m_Charset.ExportStartCharacter != startChar )
       {
-        m_Charset.StartCharacter = startChar;
+        m_Charset.ExportStartCharacter = startChar;
         Modified = true;
-        if ( startChar + m_Charset.NumCharacters > 256 )
+        if ( startChar + m_Charset.ExportNumCharacters > 256 )
         {
-          m_Charset.NumCharacters = 256 - startChar;
-          editCharactersCount.Text = m_Charset.NumCharacters.ToString();
+          m_Charset.ExportNumCharacters = 256 - startChar;
+          editCharactersCount.Text = m_Charset.ExportNumCharacters.ToString();
         }
       }
     }
@@ -890,12 +884,12 @@ namespace C64Studio
       if ( ( numChars <= 0 )
       ||   ( numChars > 256 ) )
       {
-        numChars = 256 - m_Charset.StartCharacter;
+        numChars = 256 - m_Charset.ExportStartCharacter;
         editCharactersCount.Text = numChars.ToString();
       }
-      if ( m_Charset.NumCharacters != numChars )
+      if ( m_Charset.ExportNumCharacters != numChars )
       {
-        m_Charset.NumCharacters = numChars;
+        m_Charset.ExportNumCharacters = numChars;
         Modified = true;
       }
     }
@@ -1114,6 +1108,8 @@ namespace C64Studio
     {
       checkPrefixLoadAddress.Checked = true;
     }
+
+
 
   }
 }

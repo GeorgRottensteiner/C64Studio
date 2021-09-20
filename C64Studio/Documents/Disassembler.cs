@@ -198,7 +198,7 @@ namespace C64Studio
       editDisassembly.CommentPrefix = ";";
 
       //editSource.Indentation.UseTabs = !Core.Settings.TabConvertToSpaces;
-      editDisassembly.AllowTabs = Core.Settings.AllowTabs;
+      editDisassembly.AllowTabs = true; //Core.Settings.AllowTabs;
       editDisassembly.ConvertTabsToSpaces = Core.Settings.TabConvertToSpaces;
       editDisassembly.TabLength = Core.Settings.TabSize;
 

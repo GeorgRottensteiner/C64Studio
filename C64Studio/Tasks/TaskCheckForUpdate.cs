@@ -16,6 +16,10 @@ namespace C64Studio.Tasks
 
   public class TaskCheckForUpdate : Task
   {
+    private HttpWebRequest _Request = null;
+
+
+
     public TaskCheckForUpdate()
     {
     }
@@ -27,6 +31,40 @@ namespace C64Studio.Tasks
 
 
 
+    void FinishWebRequest( IAsyncResult result )
+    {
+      HttpWebResponse response = (HttpWebResponse)_Request.EndGetResponse( result );
+
+      // Insert code that uses the response object
+      var encoding = Encoding.GetEncoding( response.CharacterSet );
+
+      using ( var reader = new System.IO.StreamReader( response.GetResponseStream(), encoding ) )
+      {
+        string responseText = reader.ReadToEnd();
+
+        if ( responseText.StartsWith( "OK" ) )
+        {
+          string[]    parts = responseText.Trim().Split( new string[] { "<br>" }, StringSplitOptions.RemoveEmptyEntries );
+          if ( parts.Length == 2 )
+          {
+            CompareVersions( parts[1] );
+          }
+          else
+          {
+            Core.SetStatus( "Malformed update check reply: " + responseText );
+          }
+        }
+        else
+        {
+          Core.SetStatus( "Malformed update check reply: " + responseText );
+        }
+        Core.AddToOutput( responseText );
+      }
+      response.Close();
+    }
+
+
+
     protected override bool ProcessTask()
     {
       Core.SetStatus( "Check for update..." );
@@ -35,36 +73,9 @@ namespace C64Studio.Tasks
       try
       {
         ServicePointManager.SecurityProtocol = Tls12;
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create( "https://www.georg-rottensteiner.de/scripts/checkversion.php?checkversion=AppVersion&name=3" );
+        _Request = (HttpWebRequest)WebRequest.Create( "https://www.georg-rottensteiner.de/scripts/checkversion.php?checkversion=AppVersion&name=3" );
 
-        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-        // Insert code that uses the response object
-        var encoding = Encoding.GetEncoding( response.CharacterSet );
-
-        using ( var reader = new System.IO.StreamReader( response.GetResponseStream(), encoding ) )
-        {
-          string responseText = reader.ReadToEnd();
-
-          if ( responseText.StartsWith( "OK" ) )
-          {
-            string[]    parts = responseText.Trim().Split( new string[] { "<br>" }, StringSplitOptions.RemoveEmptyEntries );
-            if ( parts.Length == 2 )
-            {
-              CompareVersions( parts[1] );
-            }
-            else
-            {
-              Core.SetStatus( "Malformed update check reply: " + responseText );
-            }
-          }
-          else
-          {
-            Core.SetStatus( "Malformed update check reply: " + responseText );
-          }
-          Core.AddToOutput( responseText );
-        }
-        response.Close();
+        _Request.BeginGetResponse( new AsyncCallback( FinishWebRequest ), null );
       }
       catch ( Exception ex )
       {

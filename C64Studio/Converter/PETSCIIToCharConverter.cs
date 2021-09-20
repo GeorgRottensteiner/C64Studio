@@ -1,7 +1,7 @@
 ﻿using Be.Windows.Forms;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using RetroDevStudioModels;
+
+
 
 namespace C64Studio.Converter
 {
@@ -9,18 +9,18 @@ namespace C64Studio.Converter
   {
     public char ToChar( byte b )
     {
-      if ( !Types.ConstantData.ScreenCodeToChar.ContainsKey( b ) )
+      if ( !ConstantData.ScreenCodeToChar.ContainsKey( b ) )
       {
         return '.';
       }
-      return Types.ConstantData.ScreenCodeToChar[b].CharValue;
+      return ConstantData.ScreenCodeToChar[b].CharValue;
     }
 
 
 
     public byte ToByte( char c )
     {
-      return Types.ConstantData.PETSCII[c];
+      return ConstantData.PETSCII[c];
     }
 
   }

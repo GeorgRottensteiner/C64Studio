@@ -68,15 +68,15 @@ namespace C64Studio
       panelSprites.SetDisplaySize( 4 * 24, 6 * 21 );
       panelSprites.ClientSize = new System.Drawing.Size( 4 * 24 * 2 + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth, 6 * 21 * 2 );
 
-      CustomRenderer.PaletteManager.ApplyPalette( pictureEditor.DisplayPage );
-      CustomRenderer.PaletteManager.ApplyPalette( panelSprites.DisplayPage );
-      CustomRenderer.PaletteManager.ApplyPalette( layerPreview.DisplayPage );
+      PaletteManager.ApplyPalette( pictureEditor.DisplayPage );
+      PaletteManager.ApplyPalette( panelSprites.DisplayPage );
+      PaletteManager.ApplyPalette( layerPreview.DisplayPage );
 
       for ( int i = 0; i < m_SpriteProject.NumSprites; ++i )
       {
         m_SpriteProject.Sprites.Add( new C64Studio.Formats.SpriteProject.SpriteData() );
         panelSprites.Items.Add( i.ToString(), m_SpriteProject.Sprites[i].Image );
-        CustomRenderer.PaletteManager.ApplyPalette( m_SpriteProject.Sprites[i].Image );
+        PaletteManager.ApplyPalette( m_SpriteProject.Sprites[i].Image );
         comboSprite.Items.Add( i );
       }
 
@@ -391,7 +391,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      Core.Theming.DrawSingleColorComboBox( combo, e );
+      Core.Theming.DrawSingleColorComboBox( combo, e, ConstantData.Palette );
     }
 
 
@@ -400,7 +400,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      Core.Theming.DrawMultiColorComboBox( combo, e );
+      Core.Theming.DrawMultiColorComboBox( combo, e, ConstantData.Palette );
     }
 
 
@@ -1539,7 +1539,7 @@ namespace C64Studio
 
       // add sprites as image
       var spriteImage = new GR.Image.MemoryImage( selectedImages.Count * 24, 21, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      CustomRenderer.PaletteManager.ApplyPalette( spriteImage );
+      PaletteManager.ApplyPalette( spriteImage );
       int curX = 0;
       foreach ( int index in selectedImages )
       {
@@ -1609,7 +1609,7 @@ namespace C64Studio
 
       GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, m_SpriteProject.Sprites[0].Image.PixelFormat );
 
-      CustomRenderer.PaletteManager.ApplyPalette( targetImg );
+      PaletteManager.ApplyPalette( targetImg );
       for ( int i = 0; i < exportIndices.Count; ++i )
       {
         m_SpriteProject.Sprites[exportIndices[i]].Image.DrawTo( targetImg, ( i % 4 ) * 24, ( i / 4 ) * 21 );
@@ -2313,8 +2313,8 @@ namespace C64Studio
       GR.Image.FastImage    fastImage = new GR.Image.FastImage( 24, 21, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       GR.Image.MemoryImage  memImage = new GR.Image.MemoryImage( 24, 21, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
-      CustomRenderer.PaletteManager.ApplyPalette( fastImage );
-      CustomRenderer.PaletteManager.ApplyPalette( memImage );
+      PaletteManager.ApplyPalette( fastImage );
+      PaletteManager.ApplyPalette( memImage );
 
       DrawSpriteImage( memImage, m_SpriteProject.Sprites[e.Index].Data, m_SpriteProject.BackgroundColor, comboLayerColor.SelectedIndex, m_SpriteProject.Sprites[e.Index].Multicolor, m_SpriteProject.MultiColor1, m_SpriteProject.MultiColor2 );
       fastImage.DrawImage( memImage, 0, 0 );
@@ -3706,7 +3706,7 @@ namespace C64Studio
         using ( var gif = new GIFEncoder( outStream, maxX - minX, maxY - minY ) )
         {
           var layerImage = new GR.Image.MemoryImage( maxX - minX, maxY - minY, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-          CustomRenderer.PaletteManager.ApplyPalette( layerImage );
+          PaletteManager.ApplyPalette( layerImage );
 
           foreach ( var layer in m_SpriteProject.SpriteLayers )
           {

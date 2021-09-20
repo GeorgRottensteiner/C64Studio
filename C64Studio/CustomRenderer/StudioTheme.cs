@@ -1,13 +1,10 @@
 ﻿using C64Studio.Controls;
 using C64Studio.Types;
-using System;
-using System.Collections.Generic;
+using RetroDevStudioModels;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
+
+
 
 namespace C64Studio.CustomRenderer
 {
@@ -164,7 +161,7 @@ namespace C64Studio.CustomRenderer
 
 
 
-    public void DrawSingleColorComboBox( ComboBox Combo, DrawItemEventArgs e )
+    public void DrawSingleColorComboBox( ComboBox Combo, DrawItemEventArgs e, Palette Pal )
     {
       e.DrawBackground();
       if ( e.Index == -1 )
@@ -182,19 +179,19 @@ namespace C64Studio.CustomRenderer
       }
       else if ( ( e.State & DrawItemState.Selected ) != 0 )
       {
-        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
+        e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index], itemRect );
         e.Graphics.DrawString( Combo.Items[e.Index].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
       }
       else
       {
-        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
+        e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index], itemRect );
         e.Graphics.DrawString( Combo.Items[e.Index].ToString(), Combo.Font, new System.Drawing.SolidBrush( Combo.ForeColor ), 3.0f, e.Bounds.Top + 1.0f );
       }
     }
 
 
 
-    public void DrawMultiColorComboBox( ComboBox Combo, DrawItemEventArgs e )
+    public void DrawMultiColorComboBox( ComboBox Combo, DrawItemEventArgs e, Palette Pal )
     {
       e.DrawBackground();
       if ( e.Index == -1 )
@@ -209,13 +206,13 @@ namespace C64Studio.CustomRenderer
       if ( e.Index >= 8 )
       {
         itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset, e.Bounds.Top, ( e.Bounds.Width - offset ) / 2, e.Bounds.Height );
-        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
+        e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index], itemRect );
         itemRect = new System.Drawing.Rectangle( e.Bounds.Left + offset + ( e.Bounds.Width - offset ) / 2, e.Bounds.Top, e.Bounds.Width - ( e.Bounds.Width - offset ) / 2, e.Bounds.Height );
-        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index - 8], itemRect );
+        e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index - 8], itemRect );
       }
       else
       {
-        e.Graphics.FillRectangle( Types.ConstantData.Palette.ColorBrushes[e.Index], itemRect );
+        e.Graphics.FillRectangle( Pal.ColorBrushes[e.Index], itemRect );
       }
       if ( ( e.State & DrawItemState.Disabled ) != 0 )
       {

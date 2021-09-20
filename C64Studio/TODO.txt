@@ -1,4 +1,37 @@
 ﻿C64Studio
+o Solution Explorer -> Multiselect
+o immediate labels zoned inside macros
+!macro Math_Decrease_16Bit address
+    lda address
+    bne +
+    dec address + 1
+    + dec address
+    !end
+
+    lda #0
+    sta $02
+    sta $03
+    sta $ff
+
+    lda $ff
+    beq +
+
+    +Math_Decrease_16Bit $02
+
+    + rts
+
+    In my opinion, the "beq +" opcode should branch to "+ rts" instead of jumping to "+ dec address" inside the macro.
+
+    Currently I have solved it this way:
+
+    !macro Math_Decrease_16Bit address
+    lda address
+    bne .m1
+    dec address + 1
+    .m1 dec address
+    !end
+
+    However, I would like to be able to use immediate labels also within macros. It's possible?
 o das Studio bei einigen Vorgängen alle Zones aufklappt (z.B. bei der Suche oder bei nem Doppelklick in die Compiler Messages). 
 o !zone Sprites
   *=$3c00
@@ -8,6 +41,8 @@ o !zone Sprites
   ...
 
   Letzte Zone "verschwindet"? (Nicht mehr per scrollen erreichbar?)
+
+  => Letzte Zeile ist "unter" dem horizontalen Scrollbar
 
 o Find/Replace
   1) Often, after clicking on "Find Next", it is not the occurrence following the cursor position at that moment that is highlighted but a subsequent one.
@@ -57,7 +92,6 @@ o MemViewer: Speicheradresse und nur ein Byte, alles untereinander?
 o BASIC - Auto-fix casing on opening a file
 o Charset editor:
     Ctrl-Clicking for single character toggling
-    Category selection should affect the whole selection
     Open standalone charset editor (and other editors), not only or even instead of the built in one
     Clear option
     Move selection, option to move without colors/Properties?
@@ -71,17 +105,6 @@ o Kategorien, Ich denke, Sie sollten mehrere auswählen, z. B. mehrfarbig, und s
 
 o charscreen layout change from Docster!
 o Expressions with sin/cos/tan?
-o *=$0801 "Basic"
-          rts
-  *=$080d "Basic End"
-  *=$8000 "Map data"
-  *=$f000 "Charset"
-  And have a compile/build summary in the output console://
-
-  $0801 - $080c Basic
-  $080d - $0816 Basic end
-  $8000 - $84fb Map Data
-  etc
 o When you are creating a new project/solution with the same name, you are not warned that you are about to overwrite the existing project.
 o Still having problems with creating a new solution/project when another solution/project is loaded.
 	Both the times I have done this, it's like it's overwritting the previous .s64 file!!!

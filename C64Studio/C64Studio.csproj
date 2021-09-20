@@ -105,6 +105,12 @@
     <Compile Include="Debugger\Tiny64Debugger.cs" />
     <Compile Include="Debugger\XMEGA65RemoteDebugger.cs" />
     <Compile Include="Debugger\VICERemoteDebuggerBinaryInterface.cs" />
+    <Compile Include="Dialogs\DlgPaletteEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\DlgPaletteEditor.Designer.cs">
+      <DependentUpon>DlgPaletteEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DlgImportDirArt.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -522,6 +528,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CharacterEditor.resx">
       <DependentUpon>CharacterEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DlgPaletteEditor.resx">
+      <DependentUpon>DlgPaletteEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgImportDirArt.resx">
       <DependentUpon>DlgImportDirArt.cs</DependentUpon>
