@@ -171,12 +171,12 @@ namespace C64Studio
           comboReplaceTarget.SelectedIndex = (int)FindTarget.ACTIVE_DOCUMENT;
         }
       }
-      /*
-      else
+      else if ( !Edit.Selection.Text.Contains( "\n" ) )
       {
-        comboSearchTarget.SelectedIndex = (int)FindTarget.CURRENT_SELECTION;
-        comboReplaceTarget.SelectedIndex = (int)FindTarget.CURRENT_SELECTION;
-      }*/
+        // only single line
+        comboSearchText.Text = Edit.Selection.Text;
+        comboReplaceSearchText.Text = Edit.Selection.Text;
+      }
     }
 
 
