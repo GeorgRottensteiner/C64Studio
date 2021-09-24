@@ -25,7 +25,11 @@ namespace C64Ass
       _Args.AddParameter( "-FORMAT", true );
       _Args.AddParameter( "F", true );
       _Args.AddParameter( "-SETPC", true );
+      _Args.AddSwitch( "N", true );
+      _Args.AddSwitch( "-NOWARNINGS", true );
       _Args.AddSwitch( "-AUTOTRUNCATELITERALS", true );
+      _Args.AddParameter( "I", true );
+      _Args.AddParameter( "-IGNORE", true );
     }
 
 
@@ -42,14 +46,21 @@ namespace C64Ass
       System.Console.WriteLine( "-F, --FORMAT [PLAIN/CBM]       - Sets the output file format" );
       System.Console.WriteLine( "                                 PLAIN is a raw binary, CBM a .prg file" );
       //System.Console.WriteLine( "--SETPC                    - Forces " );
-      System.Console.WriteLine( "-AUTOTRUNCATELITERALS      - Clamps literal values to bytes/words without error" );
+      System.Console.WriteLine( "-AUTOTRUNCATELITERALS          - Clamps literal values to bytes/words without error" );
+      System.Console.WriteLine( "-D, --DEFINE [Key=Value]       - Add Predefines" );
+      System.Console.WriteLine( "-N, --NOWARNINGS               - Show no warnings" );
+      System.Console.WriteLine( "-I, --IGNORE [WarningNo]       - Ignore specific Warnings" );
+      System.Console.WriteLine( "                                 Multiple warnings separated by comma" );
     }
 
 
 
-    public C64Studio.Parser.CompileConfig CheckParams( string[] Args )
+    public C64Studio.Parser.CompileConfig CheckParams( string[] Args, out string AdditionalDefines, out bool ShowNoWarnings, out List<string> WarningsToIgnore )
     {
       C64Studio.Parser.CompileConfig config = null;
+      AdditionalDefines = null;
+      ShowNoWarnings = false;
+      WarningsToIgnore = new List<string>();
 
       if ( Args.Length == 0 )
       {
@@ -64,15 +75,15 @@ namespace C64Ass
       }
 
       // last arg is filename?
-      if ( ( Args[Args.Length - 1].StartsWith( "-" ) )
-      ||   ( Args[Args.Length - 1].StartsWith( "/" ) ) )
+      if ( _Args.UnknownArgumentCount() < 1 )
       {
+        // last arg should be file name!
         WriteHelp();
         return config;
       }
 
       config = new C64Studio.Parser.CompileConfig();
-      config.InputFile = Args[Args.Length - 1];
+      config.InputFile = _Args.UnknownArgument( _Args.UnknownArgumentCount() - 1 );
 
       if ( _Args.IsParameterSet( "O" ) )
       {
@@ -98,7 +109,46 @@ namespace C64Ass
       {
         config.LibraryFiles = _Args.Parameter( "LIBRARY" ).Split( ',' ).ToList();
       }
+      if ( _Args.IsParameterSet( "N" ) )
+      {
+        ShowNoWarnings = true;
+      }
+      if ( _Args.IsParameterSet( "-NOWARNINGS" ) )
+      {
+        ShowNoWarnings = true;
+      }
+      if ( _Args.IsParameterSet( "I" ) )
+      {
+        ParseWarnings( WarningsToIgnore, _Args.Parameter( "I" ) );
+      }
+      if ( _Args.IsParameterSet( "-IGNORE" ) )
+      {
+        ParseWarnings( WarningsToIgnore, _Args.Parameter( "-IGNORE" ) );
+      }
       config.AutoTruncateLiteralValues = _Args.IsParameterSet( "-AUTOTRUNCATELITERALS" );
+
+      for ( int i = 0; i < _Args.UnknownArgumentCount() - 1; ++i )
+      {
+        var curArg = _Args.UnknownArgument( i ).ToUpper();
+        if ( ( curArg == "-D" )
+        ||   ( curArg == "--DEFINE" ) )
+        {
+          if ( i + 1 >= _Args.UnknownArgumentCount() - 1 )
+          {
+            // no argument for define
+            WriteHelp();
+            return null;
+          }
+          AdditionalDefines += _Args.UnknownArgument( i + 1 ) + "\r\n";
+          ++i;
+        }
+        else
+        {
+          Console.WriteLine( "Unsupported argument: " + _Args.UnknownArgument( i ) );
+          WriteHelp();
+          return null;
+        }
+      }
 
       if ( ( _Args.IsParameterSet( "F" ) )
       ||   ( _Args.IsParameterSet( "-FORMAT" ) ) )
@@ -113,6 +163,10 @@ namespace C64Ass
         {
           config.TargetType = C64Studio.Types.CompileTargetType.PRG;
         }
+        else if ( string.Compare( outputFormat, "D64", true ) == 0 )
+        {
+          config.TargetType = C64Studio.Types.CompileTargetType.D64;
+        }
       }
 
       if ( _Args.IsParameterSet( "-SETPC" ) )
@@ -126,6 +180,19 @@ namespace C64Ass
       }
       return config;
     }
+
+
+
+    private void ParseWarnings( List<string> WarningsToIgnore, string Args )
+    {
+      string[]  parts = Args.Split( ',' );
+      for ( int i = 0; i < parts.Length; ++i )
+      {
+        WarningsToIgnore.Add( parts[i].ToUpper() );
+      }
+    }
+
+
 
   }
 }

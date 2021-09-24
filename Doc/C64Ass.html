@@ -21,6 +21,9 @@
                [-LIB, --LIBRARY &lt;library path&gt;]
                [-F, --FORMAT &lt;PLAIN/CBM&gt;]
                [-AUTOTRUNCATELITERALS]
+               [-D, --DEFINE &lt;Key&lt;=Value&gt;&gt;]
+               [-N, --NOWARNINGS]
+               [-I, --IGNORE &lt;WarningNo&lt;,WarningNo&gt;&gt;]
     </pre>
   </div>
   <a name="help"></a>
@@ -65,6 +68,27 @@
   <H2>-AUTOTRUNCATELITERALS</H2>
   <div id="mybody">
     Does not result in an error when byte/word values overflow, but silently truncates them.<br>
+    <br>
+    <br>
+  </div>
+  <a name="define"></a>
+  <H2>-D, --DEFINE &lt;Key&lt;=Value&gt;&gt;</H2>
+  <div id="mybody">
+    Add additional pre defines<br>
+    <br>
+    <br>
+  </div>
+  <a name="nowarnings"></a>
+  <H2>-N, --NOWARNINGS</H2>
+  <div id="mybody">
+    Disable output of any warnings<br>
+    <br>
+    <br>
+  </div>
+  <a name="define"></a>
+  <H2>-I, --IGNORE &lt;WarningNo&lt;,WarningNo&gt;&gt;</H2>
+  <div id="mybody">
+    Ignore one ore a list of specified warnings, example -I W1000,W1001<br>
     <br>
     <br>
   </div>

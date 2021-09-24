@@ -370,6 +370,25 @@ namespace GR.Text
       return sb.ToString();
     }
 
+
+
+    public int UnknownArgumentCount()
+    {
+      return UnknownParameters.Count;
+    }
+
+
+
+    public string UnknownArgument( int Index )
+    {
+      if ( ( Index < 0 )
+      ||   ( Index >= UnknownParameters.Count ) )
+      {
+        return "Unknown argument index " + Index + " out of bounds";
+      }
+      return UnknownParameters[Index];
+    }
+
   }    
 
 }

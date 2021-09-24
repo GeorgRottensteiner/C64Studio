@@ -1,5 +1,6 @@
 ﻿using C64Studio;
 using C64Studio.Parser;
+using C64Studio.Types.ASM;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -15,7 +16,7 @@ namespace C64Ass
     static int Main( string[] args )
     {
       var configReader = new ArgumentEvaluator();
-      var config = configReader.CheckParams( args );
+      var config = configReader.CheckParams( args, out string additionalDefines, out bool showNoWarnings, out List<string> WarningsToIgnore );
       if ( config == null )
       {
         return 1;
@@ -36,12 +37,12 @@ namespace C64Ass
         config.TargetType = C64Studio.Types.CompileTargetType.PRG;
       }
 
-      bool result = parser.ParseFile( fullPath, "", projectConfig, config, null );
+      bool result = parser.ParseFile( fullPath, "", projectConfig, config, additionalDefines );
       if ( !result )
       {
         System.Console.WriteLine( "Parsing the file failed:" );
 
-        DisplayOutput( parser );
+        DisplayOutput( parser, WarningsToIgnore, showNoWarnings );
         return 1;
       }
 
@@ -61,26 +62,77 @@ namespace C64Ass
       if ( !parser.Assemble( config ) )
       {
         System.Console.WriteLine( "Assembling the output failed" );
-        DisplayOutput( parser );
+        DisplayOutput( parser, WarningsToIgnore, showNoWarnings );
         return 1;
       }
-      DisplayOutput( parser );
+      DisplayOutput( parser, WarningsToIgnore, showNoWarnings );
       if ( !GR.IO.File.WriteAllBytes( config.OutputFile, parser.AssembledOutput.Assembly ) )
       {
         System.Console.WriteLine( "Failed to write output file" );
         return 1;
       }
+      if ( !string.IsNullOrEmpty( config.LabelDumpFile ) )
+      {
+        DumpLabelFile( parser.ASMFileInfo );
+      }
+
       return 0;
     }
 
 
 
-    private static void DisplayOutput( ASMFileParser Parser )
+    private static void DumpLabelFile( FileInfo FileInfo )
+    {
+      StringBuilder sb = new StringBuilder();
+
+      foreach ( var labelInfo in FileInfo.Labels )
+      {
+        sb.Append( labelInfo.Value.Name );
+        sb.Append( " =$" );
+        if ( labelInfo.Value.AddressOrValue > 255 )
+        {
+          sb.Append( labelInfo.Value.AddressOrValue.ToString( "X4" ) );
+        }
+        else
+        {
+          sb.Append( labelInfo.Value.AddressOrValue.ToString( "X2" ) );
+        }
+        sb.Append( "; " );
+        if ( labelInfo.Value.References.Count == 0 )
+        {
+          sb.AppendLine( "unused" );
+        }
+        else
+        {
+          sb.AppendLine();
+        }
+      }
+      GR.IO.File.WriteAllText( FileInfo.LabelDumpFile, sb.ToString() );
+    }
+
+
+
+    private static void DisplayOutput( ASMFileParser Parser, List<string> WarningsToIgnore, bool ShowNoWarnings )
     {
       foreach ( var entry in Parser.Messages )
       {
         string    file;
         int       lineIndex;
+
+        if ( ( ShowNoWarnings )
+        &&   ( entry.Value.Type == ParserBase.ParseMessage.LineType.WARNING ) )
+        {
+          continue;
+        }
+        string  warningCode = entry.Value.Code.ToString();
+        if ( warningCode.Length >= 5 )
+        {
+          warningCode = warningCode.Substring( 0, 5 );
+          if ( WarningsToIgnore.Contains( warningCode ) )
+          {
+            continue;
+          }
+        }
 
         if ( Parser.ASMFileInfo.FindTrueLineSource( entry.Key, out file, out lineIndex ) )
         {
