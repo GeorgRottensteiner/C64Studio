@@ -679,6 +679,19 @@ namespace GR.Forms
 
 
 
+    protected override void OnMouseLeave( EventArgs e )
+    {
+      if ( m_ItemUnderMouse != -1 )
+      {
+        m_ItemUnderMouse = -1;
+        Invalidate();
+      }
+
+      base.OnMouseLeave( e );
+    }
+
+
+
     protected override void OnMouseDown( MouseEventArgs e )
     {
       base.OnMouseDown( e );
