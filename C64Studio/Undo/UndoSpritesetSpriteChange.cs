@@ -26,7 +26,7 @@ namespace C64Studio.Undo
 
       Sprite.Color = Project.Sprites[SpriteIndex].Color;
       Sprite.Data = new GR.Memory.ByteBuffer( Project.Sprites[SpriteIndex].Data );
-      Sprite.Multicolor = Project.Sprites[SpriteIndex].Multicolor;
+      Sprite.Mode = Project.Sprites[SpriteIndex].Mode;
     }
 
 
@@ -53,7 +53,7 @@ namespace C64Studio.Undo
     {
       Project.Sprites[SpriteIndex].Data = new GR.Memory.ByteBuffer( Sprite.Data );
       Project.Sprites[SpriteIndex].Color = Sprite.Color;
-      Project.Sprites[SpriteIndex].Multicolor = Sprite.Multicolor;
+      Project.Sprites[SpriteIndex].Mode = Sprite.Mode;
 
       Editor.SpriteChanged( SpriteIndex );
     }
