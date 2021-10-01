@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using C64Studio.Formats;
-using RetroDevStudioModels;
+using RetroDevStudio;
 
 namespace C64Studio.Undo
 {
@@ -24,8 +24,8 @@ namespace C64Studio.Undo
       for ( int i = 0; i < Project.CharSet.ExportNumCharacters; ++i )
       {
         var Char = new CharData();
-        Char.Data = new GR.Memory.ByteBuffer( Project.CharSet.Characters[i].Data );
-        Char.Color = Project.CharSet.Characters[i].Color;
+        Char.Tile.Data = new GR.Memory.ByteBuffer( Project.CharSet.Characters[i].Tile.Data );
+        Char.Tile.CustomColor = Project.CharSet.Characters[i].Tile.CustomColor;
         Char.Category = Project.CharSet.Characters[i].Category;
         Char.Index = i;
 
@@ -57,8 +57,8 @@ namespace C64Studio.Undo
     {
       foreach ( var singleChar in CharsetData )
       {
-        singleChar.Data.CopyTo( Project.CharSet.Characters[singleChar.Index].Data );
-        Project.CharSet.Characters[singleChar.Index].Color    = singleChar.Color;
+        singleChar.Tile.Data.CopyTo( Project.CharSet.Characters[singleChar.Index].Tile.Data );
+        Project.CharSet.Characters[singleChar.Index].Tile.CustomColor = singleChar.Tile.CustomColor;
         Project.CharSet.Characters[singleChar.Index].Category = singleChar.Category;
       }
       Editor.CharsetChanged();

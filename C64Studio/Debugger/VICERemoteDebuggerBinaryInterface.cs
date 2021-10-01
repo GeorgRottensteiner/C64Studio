@@ -1,6 +1,6 @@
 ﻿using C64Studio.Types;
 using GR.Memory;
-using RetroDevStudioModels;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 

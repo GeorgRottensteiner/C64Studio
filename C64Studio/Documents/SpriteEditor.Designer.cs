@@ -34,6 +34,9 @@
       GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnEditPalette = new System.Windows.Forms.Button();
+      this.comboSpriteProjectMode = new System.Windows.Forms.ComboBox();
+      this.label11 = new System.Windows.Forms.Label();
       this.btnExchangeColors = new C64Studio.Controls.MenuButton();
       this.contextMenuExchangeColors = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.exchangeMultiColor1WithBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -161,11 +164,14 @@
       this.tabSpriteEditor.Location = new System.Drawing.Point(0, 24);
       this.tabSpriteEditor.Name = "tabSpriteEditor";
       this.tabSpriteEditor.SelectedIndex = 0;
-      this.tabSpriteEditor.Size = new System.Drawing.Size(782, 450);
+      this.tabSpriteEditor.Size = new System.Drawing.Size(782, 499);
       this.tabSpriteEditor.TabIndex = 0;
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnEditPalette);
+      this.tabEditor.Controls.Add(this.comboSpriteProjectMode);
+      this.tabEditor.Controls.Add(this.label11);
       this.tabEditor.Controls.Add(this.btnExchangeColors);
       this.tabEditor.Controls.Add(this.tabSpriteDetails);
       this.tabEditor.Controls.Add(this.btnDeleteSprite);
@@ -195,10 +201,40 @@
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(774, 424);
+      this.tabEditor.Size = new System.Drawing.Size(774, 473);
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Sprite";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // btnEditPalette
+      // 
+      this.btnEditPalette.Enabled = false;
+      this.btnEditPalette.Location = new System.Drawing.Point(13, 408);
+      this.btnEditPalette.Name = "btnEditPalette";
+      this.btnEditPalette.Size = new System.Drawing.Size(79, 26);
+      this.btnEditPalette.TabIndex = 56;
+      this.btnEditPalette.Text = "Edit Palette";
+      this.btnEditPalette.UseVisualStyleBackColor = true;
+      this.btnEditPalette.Click += new System.EventHandler(this.btnEditPalette_Click);
+      // 
+      // comboSpriteProjectMode
+      // 
+      this.comboSpriteProjectMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboSpriteProjectMode.FormattingEnabled = true;
+      this.comboSpriteProjectMode.Location = new System.Drawing.Point(60, 442);
+      this.comboSpriteProjectMode.Name = "comboSpriteProjectMode";
+      this.comboSpriteProjectMode.Size = new System.Drawing.Size(288, 21);
+      this.comboSpriteProjectMode.TabIndex = 17;
+      this.comboSpriteProjectMode.SelectedIndexChanged += new System.EventHandler(this.comboSpriteProjectMode_SelectedIndexChanged);
+      // 
+      // label11
+      // 
+      this.label11.AutoSize = true;
+      this.label11.Location = new System.Drawing.Point(10, 445);
+      this.label11.Name = "label11";
+      this.label11.Size = new System.Drawing.Size(37, 13);
+      this.label11.TabIndex = 16;
+      this.label11.Text = "Mode:";
       // 
       // btnExchangeColors
       // 
@@ -307,7 +343,7 @@
       this.tabSpriteDetails.Location = new System.Drawing.Point(446, 2);
       this.tabSpriteDetails.Name = "tabSpriteDetails";
       this.tabSpriteDetails.SelectedIndex = 0;
-      this.tabSpriteDetails.Size = new System.Drawing.Size(328, 414);
+      this.tabSpriteDetails.Size = new System.Drawing.Size(328, 463);
       this.tabSpriteDetails.TabIndex = 9;
       // 
       // tabPage1
@@ -316,7 +352,7 @@
       this.tabPage1.Location = new System.Drawing.Point(4, 22);
       this.tabPage1.Name = "tabPage1";
       this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage1.Size = new System.Drawing.Size(320, 388);
+      this.tabPage1.Size = new System.Drawing.Size(320, 437);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "Sprites";
       this.tabPage1.UseVisualStyleBackColor = true;
@@ -341,7 +377,7 @@
       this.panelSprites.Name = "panelSprites";
       this.panelSprites.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
       this.panelSprites.SelectedIndex = -1;
-      this.panelSprites.Size = new System.Drawing.Size(314, 382);
+      this.panelSprites.Size = new System.Drawing.Size(314, 431);
       this.panelSprites.TabIndex = 4;
       this.panelSprites.TabStop = true;
       this.panelSprites.VisibleAutoScrollHorizontal = false;
@@ -375,7 +411,7 @@
       this.tabPage2.Location = new System.Drawing.Point(4, 22);
       this.tabPage2.Name = "tabPage2";
       this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage2.Size = new System.Drawing.Size(320, 388);
+      this.tabPage2.Size = new System.Drawing.Size(320, 437);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "Preview";
       this.tabPage2.UseVisualStyleBackColor = true;
@@ -383,7 +419,7 @@
       // btnSavePreviewToGIF
       // 
       this.btnSavePreviewToGIF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnSavePreviewToGIF.Location = new System.Drawing.Point(389, 289);
+      this.btnSavePreviewToGIF.Location = new System.Drawing.Point(389, 338);
       this.btnSavePreviewToGIF.Name = "btnSavePreviewToGIF";
       this.btnSavePreviewToGIF.Size = new System.Drawing.Size(75, 23);
       this.btnSavePreviewToGIF.TabIndex = 13;
@@ -395,7 +431,7 @@
       // 
       this.checkAutoplayAnim.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.checkAutoplayAnim.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkAutoplayAnim.Location = new System.Drawing.Point(227, 346);
+      this.checkAutoplayAnim.Location = new System.Drawing.Point(227, 395);
       this.checkAutoplayAnim.Name = "checkAutoplayAnim";
       this.checkAutoplayAnim.Size = new System.Drawing.Size(132, 24);
       this.checkAutoplayAnim.TabIndex = 12;
@@ -478,7 +514,7 @@
       this.listLayers.SelectedIndex = -1;
       this.listLayers.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       this.listLayers.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      this.listLayers.Size = new System.Drawing.Size(192, 92);
+      this.listLayers.Size = new System.Drawing.Size(192, 141);
       this.listLayers.TabIndex = 9;
       this.listLayers.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listLayers_AddingItem);
       this.listLayers.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.listLayers_CloningItem);
@@ -519,7 +555,7 @@
       // 
       this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(224, 321);
+      this.label10.Location = new System.Drawing.Point(224, 370);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(37, 13);
       this.label10.TabIndex = 15;
@@ -529,7 +565,7 @@
       // 
       this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(224, 294);
+      this.label6.Location = new System.Drawing.Point(224, 343);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(38, 13);
       this.label6.TabIndex = 15;
@@ -538,7 +574,7 @@
       // editLayerDelay
       // 
       this.editLayerDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.editLayerDelay.Location = new System.Drawing.Point(268, 316);
+      this.editLayerDelay.Location = new System.Drawing.Point(268, 365);
       this.editLayerDelay.Name = "editLayerDelay";
       this.editLayerDelay.Size = new System.Drawing.Size(91, 20);
       this.editLayerDelay.TabIndex = 11;
@@ -547,7 +583,7 @@
       // editLayerName
       // 
       this.editLayerName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.editLayerName.Location = new System.Drawing.Point(268, 289);
+      this.editLayerName.Location = new System.Drawing.Point(268, 338);
       this.editLayerName.Name = "editLayerName";
       this.editLayerName.Size = new System.Drawing.Size(91, 20);
       this.editLayerName.TabIndex = 10;
@@ -630,7 +666,7 @@
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(208, 3);
       this.layerPreview.Name = "layerPreview";
-      this.layerPreview.Size = new System.Drawing.Size(106, 280);
+      this.layerPreview.Size = new System.Drawing.Size(106, 329);
       this.layerPreview.TabIndex = 7;
       this.layerPreview.TabStop = false;
       // 
@@ -851,7 +887,7 @@
       this.comboSpriteColor.Name = "comboSpriteColor";
       this.comboSpriteColor.Size = new System.Drawing.Size(79, 21);
       this.comboSpriteColor.TabIndex = 1;
-      this.comboSpriteColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
+      this.comboSpriteColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboSpriteColor_DrawItem);
       this.comboSpriteColor.SelectedIndexChanged += new System.EventHandler(this.comboSpriteColor_SelectedIndexChanged);
       // 
       // comboMulticolor2
@@ -911,7 +947,7 @@
       this.tabProject.Location = new System.Drawing.Point(4, 22);
       this.tabProject.Name = "tabProject";
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
-      this.tabProject.Size = new System.Drawing.Size(774, 424);
+      this.tabProject.Size = new System.Drawing.Size(774, 473);
       this.tabProject.TabIndex = 1;
       this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
@@ -930,7 +966,7 @@
       this.groupBox1.Controls.Add(this.editDataImport);
       this.groupBox1.Location = new System.Drawing.Point(425, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(331, 354);
+      this.groupBox1.Size = new System.Drawing.Size(331, 403);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -1014,7 +1050,7 @@
       this.editDataImport.Multiline = true;
       this.editDataImport.Name = "editDataImport";
       this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataImport.Size = new System.Drawing.Size(316, 200);
+      this.editDataImport.Size = new System.Drawing.Size(316, 249);
       this.editDataImport.TabIndex = 3;
       this.editDataImport.WordWrap = false;
       this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataImport_KeyPress);
@@ -1045,7 +1081,7 @@
       this.groupExport.Controls.Add(this.btnExportCharset);
       this.groupExport.Location = new System.Drawing.Point(8, 6);
       this.groupExport.Name = "groupExport";
-      this.groupExport.Size = new System.Drawing.Size(411, 410);
+      this.groupExport.Size = new System.Drawing.Size(411, 459);
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
@@ -1205,7 +1241,7 @@
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(399, 238);
+      this.editDataExport.Size = new System.Drawing.Size(399, 287);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
@@ -1300,7 +1336,7 @@
       // SpriteEditor
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-      this.ClientSize = new System.Drawing.Size(782, 474);
+      this.ClientSize = new System.Drawing.Size(782, 523);
       this.Controls.Add(this.tabSpriteEditor);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1437,5 +1473,8 @@
     private System.Windows.Forms.TextBox editLayerDelay;
     private System.Windows.Forms.CheckBox checkAutoplayAnim;
     private System.Windows.Forms.Button btnSavePreviewToGIF;
+    private System.Windows.Forms.ComboBox comboSpriteProjectMode;
+    private System.Windows.Forms.Label label11;
+    private System.Windows.Forms.Button btnEditPalette;
   }
 }

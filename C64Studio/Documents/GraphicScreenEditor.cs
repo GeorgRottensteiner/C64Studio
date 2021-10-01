@@ -5,8 +5,10 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using C64Studio.Types;
-using RetroDevStudioModels;
-using WeifenLuo.WinFormsUI.Docking;
+using RetroDevStudio;
+using RetroDevStudio.Types;
+
+
 
 namespace C64Studio
 {
@@ -388,7 +390,7 @@ namespace C64Studio
               {
                 checkMulticolor.Checked = false;
               }
-              comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Color;
+              comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Tile.CustomColor;
 
               Redraw();
             }
@@ -413,7 +415,7 @@ namespace C64Studio
                 labelCharInfo.Text = "Determined index " + usedChar.Index;
               }
             }
-            comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Color;
+            comboCharColor.SelectedIndex = m_Chars[charX + charY * BlockWidth].Tile.CustomColor;
             break;
           case PaintTool.FLOOD_FILL:
             if ( m_ButtonReleased )
@@ -588,7 +590,7 @@ namespace C64Studio
     {
       if ( m_SelectedChar.X != -1 )
       {
-        m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Color = comboCharColor.SelectedIndex;
+        m_Chars[m_SelectedChar.X + m_SelectedChar.Y * BlockWidth].Tile.CustomColor = comboCharColor.SelectedIndex;
       }
     }
 
@@ -598,10 +600,12 @@ namespace C64Studio
     {
       GR.Image.FastImage mappedImage = null;
 
-      Types.MulticolorSettings   mcSettings = new Types.MulticolorSettings();
+      var mcSettings = new ColorSettings();
       mcSettings.BackgroundColor  = m_GraphicScreenProject.BackgroundColor;
       mcSettings.MultiColor1      = m_GraphicScreenProject.MultiColor1;
       mcSettings.MultiColor2      = m_GraphicScreenProject.MultiColor2;
+      Debug.Log( "Replace with graphicscreenproject.palette!" );
+      mcSettings.Palette          = Core.MainForm.ActivePalette;
 
       bool pasteAsBlock = false;
       if ( !Core.MainForm.ImportImage( Filename, IncomingImage, Types.GraphicType.BITMAP, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
@@ -1301,9 +1305,9 @@ namespace C64Studio
       cd.Index = 0;
 
       // clear data
-      for ( int i = 0; i < 8; ++i )
+      for ( int i = 0; i < cd.Tile.Data.Length; ++i )
       {
-        cd.Data.SetU8At( i, 0 );
+        cd.Tile.Data.SetU8At( i, 0 );
       }
 
       bool  isMultiColor = false;
@@ -1409,7 +1413,6 @@ namespace C64Studio
         ||   ( ( numColors == 2 )
         &&     ( usedBackgroundColor )
         &&     ( otherColorIndex < 8 ) ) )
-        //||   ( numColors == 2 ) )
         {
           // eligible for single color
           isMultiColor = false;
@@ -1457,7 +1460,7 @@ namespace C64Studio
               {
                 chosenCharColor = ColorIndex;
               }
-              cd.Data.SetU8At( y + x / 8, (byte)( cd.Data.ByteAt( y + x / 8 ) | ( BitPattern << ( ( 7 - ( x % 8 ) ) ) ) ) );
+              cd.Tile.Data.SetU8At( y + x / 8, (byte)( cd.Tile.Data.ByteAt( y + x / 8 ) | ( BitPattern << ( ( 7 - ( x % 8 ) ) ) ) ) );
             }
           }
         }
@@ -1520,7 +1523,7 @@ namespace C64Studio
                 chosenCharColor = usedFreeColor;
                 BitPattern = 0x03;
               }
-              cd.Data.SetU8At( y + x / 4, (byte)( cd.Data.ByteAt( y + x / 4 ) | ( BitPattern << ( ( 3 - ( x % 4 ) ) * 2 ) ) ) );
+              cd.Tile.Data.SetU8At( y + x / 4, (byte)( cd.Tile.Data.ByteAt( y + x / 4 ) | ( BitPattern << ( ( 3 - ( x % 4 ) ) * 2 ) ) ) );
             }
           }
           if ( usedFreeColor == -1 )
@@ -1534,11 +1537,11 @@ namespace C64Studio
       {
         chosenCharColor = 0;
       }
-      cd.Color = chosenCharColor;
+      cd.Tile.CustomColor = chosenCharColor;
       if ( ( isMultiColor )
       &&   ( chosenCharColor < 8 ) )
       {
-        cd.Color = chosenCharColor + 8;
+        cd.Tile.CustomColor = chosenCharColor + 8;
       }
       return true;
     }
@@ -1581,7 +1584,7 @@ namespace C64Studio
         bool wasFolded = false;
         for ( int index2 = 0; index2 < index1; ++index2 )
         {
-          if ( m_Chars[index1].Data.Compare( m_Chars[index2].Data ) == 0 )
+          if ( m_Chars[index1].Tile.Data.Compare( m_Chars[index2].Tile.Data ) == 0 )
           {
             // same data
             if ( m_Chars[index2].Replacement != null )
@@ -1657,7 +1660,7 @@ namespace C64Studio
         bool wasFolded = false;
         for ( int index2 = 0; index2 < index1; ++index2 )
         {
-          if ( m_Chars[index1].Data.Compare( m_Chars[index2].Data ) == 0 )
+          if ( m_Chars[index1].Tile.Data.Compare( m_Chars[index2].Tile.Data ) == 0 )
           {
             // same data
             if ( m_Chars[index2].Replacement != null )
@@ -1927,7 +1930,7 @@ namespace C64Studio
       foreach ( Formats.CharData aChar in m_Chars )
       {
         aChar.Error = "";
-        aChar.Color = 0;
+        aChar.Tile.CustomColor = 0;
         aChar.Replacement = null;
       }
 
@@ -2167,9 +2170,9 @@ namespace C64Studio
       Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
       int curCharIndex = 0;
 
-      projectToExport.MultiColor1 = m_GraphicScreenProject.MultiColor1;
-      projectToExport.MultiColor2 = m_GraphicScreenProject.MultiColor2;
-      projectToExport.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
+      projectToExport.Colors.MultiColor1 = m_GraphicScreenProject.MultiColor1;
+      projectToExport.Colors.MultiColor2 = m_GraphicScreenProject.MultiColor2;
+      projectToExport.Colors.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
       foreach ( Formats.CharData charData in m_Chars )
       {
         if ( charData.Replacement == null )
@@ -2206,7 +2209,7 @@ namespace C64Studio
               charUsed = charUsed.Replacement;
             }
             screenCharData.SetU8At( x + y * BlockWidth, (byte)charUsed.Index );
-            screenColorData.SetU8At( x + y * BlockWidth, (byte)charUsed.Color );
+            screenColorData.SetU8At( x + y * BlockWidth, (byte)charUsed.Tile.CustomColor );
           }
         }
         string screenDataASM = ToASMData( screenCharData );
@@ -2224,9 +2227,11 @@ namespace C64Studio
       Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
       int curCharIndex = 0;
 
-      projectToExport.MultiColor1 = m_GraphicScreenProject.MultiColor1;
-      projectToExport.MultiColor2 = m_GraphicScreenProject.MultiColor2;
-      projectToExport.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
+      projectToExport.Colors.MultiColor1 = m_GraphicScreenProject.MultiColor1;
+      projectToExport.Colors.MultiColor2 = m_GraphicScreenProject.MultiColor2;
+      projectToExport.Colors.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
+      // TODO
+      //projectToExport.Colors.BGColor4 = m_GraphicScreenProject.
       foreach ( Formats.CharData charData in m_Chars )
       {
         if ( charData.Replacement == null )
@@ -2254,7 +2259,7 @@ namespace C64Studio
             charUsed = charUsed.Replacement;
           }
           screenCharData.SetU8At( x + y * BlockWidth, (byte)charUsed.Index );
-          screenColorData.SetU8At( x + y * BlockWidth, (byte)charUsed.Color );
+          screenColorData.SetU8At( x + y * BlockWidth, (byte)charUsed.Tile.CustomColor );
         }
       }
 
@@ -2276,9 +2281,9 @@ namespace C64Studio
       Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
       int curCharIndex = 0;
 
-      projectToExport.MultiColor1 = m_GraphicScreenProject.MultiColor1;
-      projectToExport.MultiColor2 = m_GraphicScreenProject.MultiColor2;
-      projectToExport.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
+      projectToExport.Colors.MultiColor1 = m_GraphicScreenProject.MultiColor1;
+      projectToExport.Colors.MultiColor2 = m_GraphicScreenProject.MultiColor2;
+      projectToExport.Colors.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
       foreach ( Formats.CharData charData in m_Chars )
       {
         if ( charData.Replacement == null )
@@ -2315,7 +2320,7 @@ namespace C64Studio
               charUsed = charUsed.Replacement;
             }
             screenCharData.SetU8At( x + y * BlockWidth, (byte)charUsed.Index );
-            screenColorData.SetU8At( x + y * BlockWidth, (byte)charUsed.Color );
+            screenColorData.SetU8At( x + y * BlockWidth, (byte)charUsed.Tile.CustomColor );
           }
         }
         string screenDataASM = ToASMData( screenCharData );
@@ -2333,9 +2338,9 @@ namespace C64Studio
       Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
       int curCharIndex = 0;
 
-      projectToExport.MultiColor1 = m_GraphicScreenProject.MultiColor1;
-      projectToExport.MultiColor2 = m_GraphicScreenProject.MultiColor2;
-      projectToExport.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
+      projectToExport.Colors.MultiColor1 = m_GraphicScreenProject.MultiColor1;
+      projectToExport.Colors.MultiColor2 = m_GraphicScreenProject.MultiColor2;
+      projectToExport.Colors.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
       foreach ( Formats.CharData charData in m_Chars )
       {
         if ( charData.Replacement == null )
@@ -2362,7 +2367,7 @@ namespace C64Studio
             charUsed = charUsed.Replacement;
           }
           screenCharData.SetU8At( x + y * BlockWidth, (byte)charUsed.Index );
-          screenColorData.SetU8At( x + y * BlockWidth, (byte)charUsed.Color );
+          screenColorData.SetU8At( x + y * BlockWidth, (byte)charUsed.Tile.CustomColor );
         }
       }
 
@@ -2384,9 +2389,9 @@ namespace C64Studio
       Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
       int curCharIndex = 0;
 
-      projectToExport.MultiColor1     = m_GraphicScreenProject.MultiColor1;
-      projectToExport.MultiColor2     = m_GraphicScreenProject.MultiColor2;
-      projectToExport.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
+      projectToExport.Colors.MultiColor1     = m_GraphicScreenProject.MultiColor1;
+      projectToExport.Colors.MultiColor2     = m_GraphicScreenProject.MultiColor2;
+      projectToExport.Colors.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
       foreach ( Formats.CharData charData in m_Chars )
       {
         if ( charData.Replacement == null )
@@ -2407,17 +2412,25 @@ namespace C64Studio
       dataSelection.AppendI32( curCharIndex );
       // selection is range
       dataSelection.AppendI32( 0 );
+
+      dataSelection.AppendI32( projectToExport.Colors.Palette.NumColors );
+      for ( int i = 0; i < projectToExport.Colors.Palette.NumColors; ++i )
+      {
+        dataSelection.AppendU32( projectToExport.Colors.Palette.ColorValues[i] );
+      }
+
+
       for ( int i = 0; i < curCharIndex; ++i )
       {
         // delta in indices
         dataSelection.AppendI32( ( i == 0 ) ? 0 : 1 );
 
         dataSelection.AppendI32( 0 ); // was (int)projectToExport.Characters[i].Mode );
-        dataSelection.AppendI32( projectToExport.Characters[i].Color );
+        dataSelection.AppendI32( projectToExport.Characters[i].Tile.CustomColor );
         dataSelection.AppendU32( 8 );
         dataSelection.AppendU32( 8 );
-        dataSelection.AppendU32( projectToExport.Characters[i].Data.Length );
-        dataSelection.Append( projectToExport.Characters[i].Data );
+        dataSelection.AppendU32( projectToExport.Characters[i].Tile.Data.Length );
+        dataSelection.Append( projectToExport.Characters[i].Tile.Data );
         dataSelection.AppendI32( i );
       }
 
@@ -2658,26 +2671,26 @@ namespace C64Studio
 
         project.SetScreenSize( BlockWidth, BlockHeight );
 
-        project.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
-        project.MultiColor1     = m_GraphicScreenProject.MultiColor1;
-        project.MultiColor2     = m_GraphicScreenProject.MultiColor2;
+        project.CharSet.Colors.BackgroundColor = m_GraphicScreenProject.BackgroundColor;
+        project.CharSet.Colors.MultiColor1     = m_GraphicScreenProject.MultiColor1;
+        project.CharSet.Colors.MultiColor2     = m_GraphicScreenProject.MultiColor2;
 
-        project.Mode            = forceMulticolor ? RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
-        charset.BackgroundColor = project.BackgroundColor;
-        charset.MultiColor1     = project.MultiColor1;
-        charset.MultiColor2     = project.MultiColor2;
-        charset.BGColor4        = project.BGColor4;
+        project.Mode            = forceMulticolor ? RetroDevStudio.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudio.TextMode.COMMODORE_40_X_25_HIRES;
+        charset.Colors.BackgroundColor = project.CharSet.Colors.BackgroundColor;
+        charset.Colors.MultiColor1     = project.CharSet.Colors.MultiColor1;
+        charset.Colors.MultiColor2     = project.CharSet.Colors.MultiColor2;
+        charset.Colors.BGColor4        = project.CharSet.Colors.BGColor4;
 
         for ( int i = 0; i < m_Chars.Count; ++i )
         {
-          project.Chars[i] = (ushort)( ( m_Chars[i].Index & 0xff ) | ( m_Chars[i].Color << 8 ) );
+          project.Chars[i] = (ushort)( ( m_Chars[i].Index & 0xff ) | ( m_Chars[i].Tile.CustomColor << 8 ) );
           if ( m_Chars[i].Replacement == null )
           {
-            charset.Characters[m_Chars[i].Index].Data = m_Chars[i].Data;
+            charset.Characters[m_Chars[i].Index].Tile.Data = m_Chars[i].Tile.Data;
           }
           else
           {
-            project.Chars[i] = (ushort)( ( m_Chars[i].Replacement.Index & 0xff ) | ( m_Chars[i].Color << 8 ) );
+            project.Chars[i] = (ushort)( ( m_Chars[i].Replacement.Index & 0xff ) | ( m_Chars[i].Tile.CustomColor << 8 ) );
           }
         }
 

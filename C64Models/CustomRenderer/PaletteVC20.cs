@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudioModels
+﻿namespace RetroDevStudio
 {
   public partial class ConstantData
   {

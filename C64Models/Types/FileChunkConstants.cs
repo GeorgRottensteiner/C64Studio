@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudioModels
+﻿namespace RetroDevStudio
 {
   public class FileChunkConstants
   {
@@ -48,6 +48,9 @@
     public const ushort    CHARSET_EXPORT        = 0x1345;
     public const ushort    CHARSET_CATEGORY      = 0x1346;
 
+    public const ushort    SPRITESET_PROJECT     = 0x13E0;
+    public const ushort    SPRITESET_INFO        = 0x13E1;
+    public const ushort    SPRITESET_SPRITE      = 0x13E2;
     public const ushort    SPRITESET_LAYER       = 0x1400;
     public const ushort    SPRITESET_LAYER_ENTRY = 0x1401;
     public const ushort    SPRITESET_LAYER_INFO  = 0x1402;

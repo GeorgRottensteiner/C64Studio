@@ -19,9 +19,9 @@ namespace C64Studio.Converter
       cd.Index = 0;
 
       // clear data
-      for ( int i = 0; i < 8; ++i )
+      for ( int i = 0; i < cd.Tile.Data.Length; ++i )
       {
-        cd.Data.SetU8At( i, 0 );
+        cd.Tile.Data.SetU8At( i, 0 );
       }
 
       bool  isMultiColor = false;
@@ -175,7 +175,7 @@ namespace C64Studio.Converter
               {
                 chosenCharColor = ColorIndex;
               }
-              cd.Data.SetU8At( y + x / 8, (byte)( cd.Data.ByteAt( y + x / 8 ) | ( BitPattern << ( ( 7 - ( x % 8 ) ) ) ) ) );
+              cd.Tile.Data.SetU8At( y + x / 8, (byte)( cd.Tile.Data.ByteAt( y + x / 8 ) | ( BitPattern << ( ( 7 - ( x % 8 ) ) ) ) ) );
             }
           }
         }
@@ -238,7 +238,7 @@ namespace C64Studio.Converter
                 chosenCharColor = usedFreeColor;
                 BitPattern = 0x03;
               }
-              cd.Data.SetU8At( y + x / 4, (byte)( cd.Data.ByteAt( y + x / 4 ) | ( BitPattern << ( ( 3 - ( x % 4 ) ) * 2 ) ) ) );
+              cd.Tile.Data.SetU8At( y + x / 4, (byte)( cd.Tile.Data.ByteAt( y + x / 4 ) | ( BitPattern << ( ( 3 - ( x % 4 ) ) * 2 ) ) ) );
             }
           }
           if ( usedFreeColor == -1 )
@@ -252,11 +252,11 @@ namespace C64Studio.Converter
       {
         chosenCharColor = 0;
       }
-      cd.Color = chosenCharColor;
+      cd.Tile.CustomColor = chosenCharColor;
       if ( ( isMultiColor )
       &&   ( chosenCharColor < 8 ) )
       {
-        cd.Color = chosenCharColor + 8;
+        cd.Tile.CustomColor = chosenCharColor + 8;
       }
       return true;
     }
@@ -300,7 +300,7 @@ namespace C64Studio.Converter
         bool wasFolded = false;
         for ( int index2 = 0; index2 < index1; ++index2 )
         {
-          if ( m_Chars[index1].Data.Compare( m_Chars[index2].Data ) == 0 )
+          if ( m_Chars[index1].Tile.Data.Compare( m_Chars[index2].Tile.Data ) == 0 )
           {
             // same data
             if ( m_Chars[index2].Replacement != null )
@@ -384,7 +384,7 @@ namespace C64Studio.Converter
         {
           if ( charInfo.Replacement == null )
           {
-            charSet.Append( charInfo.Data );
+            charSet.Append( charInfo.Tile.Data );
           }
         }
         GR.IO.File.WriteAllBytes( System.IO.Path.Combine( BasePath, "combined.chr" ), charSet );
@@ -412,22 +412,22 @@ namespace C64Studio.Converter
                 charData = charData.Replacement;
               }
 
-              screen.Chars[x + y * blockWidth] = (ushort)( ( origCharData.Color << 8 ) + charData.Index );
-              screen.Mode = project.MultiColor ? RetroDevStudioModels.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudioModels.TextMode.COMMODORE_40_X_25_HIRES;
-              screen.MultiColor1  = project.MultiColor1;
-              screen.MultiColor2  = project.MultiColor2;
-              screen.BackgroundColor = project.BackgroundColor;
+              screen.Chars[x + y * blockWidth] = (ushort)( ( origCharData.Tile.CustomColor << 8 ) + charData.Index );
+              screen.Mode = project.MultiColor ? RetroDevStudio.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudio.TextMode.COMMODORE_40_X_25_HIRES;
+              screen.CharSet.Colors.MultiColor1  = project.MultiColor1;
+              screen.CharSet.Colors.MultiColor2  = project.MultiColor2;
+              screen.CharSet.Colors.BackgroundColor = project.BackgroundColor;
             }
           }
           screen.CharSet = new C64Studio.Formats.CharsetProject();
-          screen.CharSet.BackgroundColor = project.BackgroundColor;
-          screen.CharSet.MultiColor1 = project.MultiColor1;
-          screen.CharSet.MultiColor2 = project.MultiColor2;
+          screen.CharSet.Colors.BackgroundColor = project.BackgroundColor;
+          screen.CharSet.Colors.MultiColor1 = project.MultiColor1;
+          screen.CharSet.Colors.MultiColor2 = project.MultiColor2;
 
           for ( uint c = 0; c < charSet.Length / 8; ++c )
           {
-            screen.CharSet.Characters[(int)c].Data = charSet.SubBuffer( (int)c * 8, 8 );
-            screen.CharSet.Characters[(int)c].Color = 9;
+            screen.CharSet.Characters[(int)c].Tile.Data = charSet.SubBuffer( (int)c * 8, 8 );
+            screen.CharSet.Characters[(int)c].Tile.CustomColor = 9;
           }
 
           string    origFile = System.IO.Path.GetFileNameWithoutExtension( ProjectFiles[projectIndex] );

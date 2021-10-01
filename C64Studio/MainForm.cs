@@ -13,10 +13,9 @@ using C64Studio.Displayer;
 using C64Studio.CustomRenderer;
 using C64Studio.Parser;
 using GR.Image;
-using RetroDevStudioModels;
+using RetroDevStudio;
+using RetroDevStudio.Types;
 
-// 0.9f - added else for !ifdef macro
-// 0.9b - fixed crash bug if opening project with modified active project
 
 
 namespace C64Studio
@@ -680,7 +679,7 @@ namespace C64Studio
         }
       }
       StudioCore.Settings.SanitizeSettings();
-
+      RefreshDisplayOnAllDocuments();
       ApplyMenuShortCuts();
 
       StudioCore.Compiling.ParserBasic.Settings.StripSpaces = StudioCore.Settings.BASICStripSpaces;
@@ -5363,11 +5362,14 @@ namespace C64Studio
 
 
 
-    public void CloseSolution()
+    public bool CloseSolution()
     {
       if ( StudioCore.Navigating.Solution != null )
       {
-        CloseAllProjects();
+        if ( !CloseAllProjects() )
+        {
+          return false;
+        }
         StudioCore.Navigating.Solution.Projects.Clear();
         StudioCore.Navigating.Solution = null;
         StudioCore.Settings.LastSolutionWasEmpty = true;
@@ -5381,6 +5383,7 @@ namespace C64Studio
         }
         RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_CLOSED ) );
       }
+      return true;
     }
 
 
@@ -6398,7 +6401,7 @@ namespace C64Studio
 
 
 
-    public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, Types.GraphicType ImportType, Types.MulticolorSettings MCSettings, out GR.Image.FastImage MappedImage, out Types.MulticolorSettings NewMCSettings, out bool PasteAsBlock )
+    public bool ImportImage( string Filename, GR.Image.FastImage IncomingImage, Types.GraphicType ImportType, ColorSettings MCSettings, out GR.Image.FastImage MappedImage, out ColorSettings NewMCSettings, out bool PasteAsBlock )
     {
       PasteAsBlock = false;
 
@@ -6576,7 +6579,10 @@ namespace C64Studio
 
     private void fileNewSolutionToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      CloseSolution();
+      if ( !CloseSolution() )
+      {
+        return;
+      }
       AddNewProjectAndOrSolution();
     }
 

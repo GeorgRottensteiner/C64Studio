@@ -1,5 +1,5 @@
 ﻿using C64Studio.Types;
-using RetroDevStudioModels;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -584,6 +584,10 @@ namespace C64Studio
                   element.Document.ShowHint = DockState.Document;
                   //element.Document.Show( MainForm.panelMain );
                 }
+              }
+              if ( element.Document != null )
+              {
+                element.Document.RefreshDisplayOptions();
               }
             }
             break;

@@ -246,20 +246,6 @@ namespace GR.Forms
 
 
 
-    /*
-    private void SelectIndex( int Index )
-    {
-      InvalidateItemRect( m_SelectedItem );
-      m_SelectedItem = Index;
-      InvalidateItemRect( Index );
-      if ( SelectedIndexChanged != null )
-      {
-        SelectedIndexChanged( this, new EventArgs() );
-      }
-    }*/
-
-
-
     public List<int> SelectedIndices
     {
       get
@@ -442,11 +428,10 @@ namespace GR.Forms
       while ( m_Offset * m_ItemsPerLine >= Items.Count )
       {
         m_Offset -= m_ItemsPerLine;
-        if ( m_Offset < 0 )
-        {
-          m_Offset = 0;
-          break;
-        }
+      }
+      if ( m_Offset < 0 )
+      {
+        m_Offset = 0;
       }
 
       AdjustScrollbars();
@@ -537,7 +522,12 @@ namespace GR.Forms
       {
         return -1;
       }
-      return ( m_Offset + itemY ) * m_ItemsPerLine + itemX;
+      int     newIndex = ( m_Offset + itemY ) * m_ItemsPerLine + itemX;
+      if ( newIndex >= Items.Count )
+      {
+        return -1;
+      }
+      return newIndex;
     }
 
 

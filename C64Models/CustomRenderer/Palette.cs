@@ -1,7 +1,9 @@
 ﻿using GR.Memory;
 using System;
 
-namespace RetroDevStudioModels
+
+
+namespace RetroDevStudio
 {
   public class Palette
   {
@@ -21,6 +23,17 @@ namespace RetroDevStudioModels
 
     public Palette( int NumColors )
     {
+      if ( NumColors < 16 )
+      {
+        Debug.Log( "< 16 colors" );
+        NumColors = 16;
+      }
+      else if ( ( NumColors > 16 )
+      &&        ( NumColors < 256 ) )
+      {
+        Debug.Log( "< 256 colors" );
+        NumColors = 256;
+      }
       if ( NumColors == 257 )
       {
         NumColors = 256;
@@ -53,7 +66,7 @@ namespace RetroDevStudioModels
     {
       get
       {
-        return NumColorsUsed - 1;
+        return NumColorsUsed;
       }
     }
 
@@ -70,7 +83,7 @@ namespace RetroDevStudioModels
 
 
 
-    internal ByteBuffer GetExportData( int StartIndex, int CountColors )
+    internal ByteBuffer GetExportData( int StartIndex, int CountColors, bool Swizzled )
     {
       if ( ( StartIndex < 0 )
       ||   ( StartIndex + CountColors > NumColors ) )
@@ -92,7 +105,20 @@ namespace RetroDevStudioModels
       {
         result.AppendU8( (byte)( ( ColorValues[i] & 0x000000ff ) ) );
       }
+      if ( Swizzled )
+      {
+        for ( int i = 0; i < result.Length; ++i )
+        {
+          result.SetU8At( i, SwizzleByte( result.ByteAt( i ) ) );
+        }
+      }
       return result;
+    }
+
+
+    private byte SwizzleByte( byte Value )
+    {
+      return (byte)( ( Value >> 4 ) | ( Value << 4 ) );
     }
 
 

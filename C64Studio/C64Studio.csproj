@@ -201,7 +201,6 @@
     <Compile Include="Documents\BaseDocument.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ClipboardData.cs" />
     <Compile Include="ColorSystem.cs" />
     <Compile Include="Controls\MeasurableListView.cs">
       <SubType>Component</SubType>
@@ -741,6 +740,7 @@
     <Compile Include="ToolInfo.cs" />
     <Compile Include="Types\BuildChain.cs" />
     <Compile Include="Types\BuildChainEntry.cs" />
+    <Compile Include="Types\ClipboardImageList.cs" />
     <Compile Include="Types\EmulatorInfo.cs" />
     <Compile Include="Undo\UndoCharscreenCharsetChange.cs" />
     <Compile Include="Undo\UndoCharacterEditorCharChange.cs" />

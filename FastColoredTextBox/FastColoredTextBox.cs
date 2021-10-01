@@ -5094,6 +5094,10 @@ namespace FastColoredTextBoxNS
         Selection.GoRight( true );
         Selection.Inverse();
       }
+
+      bool  wasNotAtStartOfLineWithLinebreak = ( ( c == '\n' ) && ( Selection.Start.iChar > 0 ) );
+      bool  currentLineIsAtLeftEdge = ( this[Selection.Start.iLine].StartSpacesCount == 0 );
+
       //insert char
       if ( !Selection.ReadOnly )
       {
@@ -5101,9 +5105,14 @@ namespace FastColoredTextBoxNS
           InsertChar( c );
       }
 
-      //do autoindent
-      if ( c == '\n' || AutoIndentExistingLines )
+      // do autoindent when it makes sense to do so
+      if ( ( ( c == '\n' )
+      &&     ( wasNotAtStartOfLineWithLinebreak )
+      &&     ( !currentLineIsAtLeftEdge ) )
+      ||   ( AutoIndentExistingLines ) )
+      {
         DoAutoIndentIfNeed();
+      }
 
       if ( AutoIndentChars )
         DoAutoIndentChars( Selection.Start.iLine );
@@ -6324,6 +6333,8 @@ namespace FastColoredTextBoxNS
           {
             mouseIsDragDrop = true;
             mouseIsDrag = false;
+
+            CaretBlinking = false;
           }
         }
         else
@@ -6657,9 +6668,19 @@ namespace FastColoredTextBoxNS
 
       if ( e.Button == MouseButtons.Left && mouseIsDragDrop )
       {
+        var origStart = Selection.Start;
+
         draggedRange = Selection.Clone();
-        DoDragDrop( SelectedText, DragDropEffects.Copy );
+        var dragDropEffect = DoDragDrop( SelectedText, DragDropEffects.Copy );
         draggedRange = null;
+
+        if ( dragDropEffect == DragDropEffects.None )
+        {
+          Selection.Start = origStart;
+          Selection.End = Selection.Start;
+        }
+        CaretBlinking = true;
+        CaretVisible = true;
         return;
       }
 
@@ -7402,6 +7423,64 @@ namespace FastColoredTextBoxNS
 
 
     /// <summary>
+    /// Gets true char position from virtual position (remove tabified pos)
+    /// virtual has single tab chars and \r\n, true pos has tabified tabs and \r\n
+    /// </summary>
+    public int VirtualPositionToPositionInLine( int LineIndex, int pos )
+    {
+      if ( ( LineIndex < 0 )
+      ||   ( LineIndex >= lines.Count ) )
+      {
+        return pos;
+      }
+
+      // probably totally wrong
+      if ( pos <= 0 )
+      {
+        return 0;
+      }
+
+      int     virtualPos = 0;
+
+      var lineToCheck = lines[LineIndex].Text;
+      int actualLineLength = lineToCheck.Length;
+
+      if ( pos > actualLineLength )
+      {
+        return actualLineLength;
+      }
+      // pos is inside this line
+      int lineLength = 0;
+      for ( int j = 0; j < lineToCheck.Length; ++j )
+      {
+        if ( lineToCheck[j] == '\t' )
+        {
+          int delta = TabLength - ( lineLength % TabLength );
+          if ( delta == 0 )
+          {
+            delta = TabLength;
+          }
+          --pos;
+          virtualPos += delta;
+          lineLength += delta;
+        }
+        else
+        {
+          --pos;
+          ++virtualPos;
+          ++lineLength;
+        }
+        if ( pos <= 0 )
+        {
+          return virtualPos;
+        }
+      }
+      return virtualPos + pos;
+    }
+
+
+
+    /// <summary>
     /// Gets line and char position from absolute text position
     /// </summary>
     public Place PositionToPlace( int pos )
@@ -7421,11 +7500,13 @@ namespace FastColoredTextBoxNS
       }
 
       if ( lines.Count > 0 )
+      {
         return new Place( lines[lines.Count - 1].Count, lines.Count - 1 );
-      else
-        return new Place( 0, 0 );
-      //throw new ArgumentOutOfRangeException("Position out of range");
+      }
+      return new Place( 0, 0 );
     }
+
+
 
     /// <summary>
     /// Gets absolute char position from char position
@@ -7434,6 +7515,8 @@ namespace FastColoredTextBoxNS
     {
       return PlaceToPoint( PositionToPlace( pos ) );
     }
+
+
 
     /// <summary>
     /// Gets point for given line and char position
@@ -9064,11 +9147,16 @@ window.status = ""#print"";
       if ( ReadOnly || !AllowDrop )
       {
         IsDragDrop = false;
+        Invalidate();
+        CaretBlinking = true;
+        CaretVisible = true;
         return;
       }
 
       if ( e.Data.GetDataPresent( DataFormats.Text ) )
       {
+        CaretVisible = false;
+
         if ( ParentForm != null )
           ParentForm.Activate();
         Focus();
@@ -9077,122 +9165,11 @@ window.status = ""#print"";
         var place = PointToPlace( p );
         DoDragDrop( place, text );
         IsDragDrop = false;
+
+        CaretBlinking = true;
+        CaretVisible = true;
       }
       base.OnDragDrop( e );
-    }
-
-    private void DoDragDrop_old( Place place, string text )
-    {
-      Range insertRange = new Range( this, place, place );
-
-      // Abort, if insertRange is read only
-      if ( insertRange.ReadOnly )
-        return;
-
-      // Abort, if dragged range contains target place
-      if ( ( draggedRange != null ) && ( draggedRange.Contains( place ) == true ) )
-        return;
-
-      // Determine, if the dragged string should be copied or moved
-      bool copyMode =
-                ( draggedRange == null ) ||       // drag from outside
-          ( draggedRange.ReadOnly ) ||      // dragged range is read only
-          ( ( ModifierKeys & Keys.Control ) != Keys.None );
-
-      //drag from outside?
-      if ( draggedRange == null )
-      {
-        Selection.BeginUpdate();
-        // Insert text
-        Selection.Start = place;
-        InsertText( text );
-        // Select inserted text
-        Selection = new Range( this, place, Selection.Start );
-        Selection.EndUpdate();
-        return;
-      }
-
-      //drag from me
-      Place caretPositionAfterInserting;
-      BeginAutoUndo();
-      Selection.BeginUpdate();
-
-      //remember dragged selection for undo/redo
-      Selection = draggedRange;
-      lines.Manager.ExecuteCommand( new SelectCommand( lines ) );
-      //
-      if ( draggedRange.ColumnSelectionMode )
-      {
-        draggedRange.Normalize();
-        insertRange = new Range( this, place, new Place( place.iChar, place.iLine + draggedRange.End.iLine - draggedRange.Start.iLine ) )
-        {
-          ColumnSelectionMode = true
-        };
-        for ( int i = LinesCount; i <= insertRange.End.iLine; i++ )
-        {
-          Selection.GoLast( false );
-          InsertChar( '\n' );
-        }
-      }
-
-      if ( !insertRange.ReadOnly )
-      {
-        if ( place < draggedRange.Start )
-        {
-          // Delete dragged range if not in copy mode
-          if ( copyMode == false )
-          {
-            Selection = draggedRange;
-            ClearSelected();
-          }
-
-          // Insert text
-          Selection = insertRange;
-          Selection.ColumnSelectionMode = insertRange.ColumnSelectionMode;
-          InsertText( text );
-          caretPositionAfterInserting = Selection.Start;
-        }
-        else
-        {
-          // Insert text
-          Selection = insertRange;
-          Selection.ColumnSelectionMode = insertRange.ColumnSelectionMode;
-          InsertText( text );
-          caretPositionAfterInserting = Selection.Start;
-          var lineLength = this[caretPositionAfterInserting.iLine].Count;
-
-          // Delete dragged range if not in copy mode
-          if ( copyMode == false )
-          {
-            Selection = draggedRange;
-            ClearSelected();
-          }
-
-          var shift = lineLength - this[caretPositionAfterInserting.iLine].Count;
-          caretPositionAfterInserting.iChar = caretPositionAfterInserting.iChar - shift;
-          place.iChar = place.iChar - shift;
-        }
-
-        // Select inserted text
-        if ( !draggedRange.ColumnSelectionMode )
-        {
-          Selection = new Range( this, place, caretPositionAfterInserting );
-        }
-        else
-        {
-          draggedRange.Normalize();
-          Selection = new Range( this, place,
-                                  new Place( place.iChar + draggedRange.End.iChar - draggedRange.Start.iChar,
-                                          place.iLine + draggedRange.End.iLine - draggedRange.Start.iLine ) )
-          {
-            ColumnSelectionMode = true
-          };
-        }
-      }
-
-      Selection.EndUpdate();
-      EndAutoUndo();
-      draggedRange = null;
     }
 
     protected virtual void DoDragDrop( Place place, string text )
@@ -9379,11 +9356,14 @@ window.status = ""#print"";
     {
       if ( e.Data.GetDataPresent( DataFormats.Text ) )
       {
+        CaretVisible = false;
+
         Point p = PointToClient( new Point( e.X, e.Y ) );
         Selection.Start = PointToPlace( p );
         if ( p.Y < 6 && VerticalScroll.Visible && VerticalScroll.Value > 0 )
           VerticalScroll.Value = Math.Max( 0, VerticalScroll.Value - charHeight );
 
+        CaretVisible = true;
         DoCaretVisible();
         Invalidate();
       }
@@ -9392,7 +9372,11 @@ window.status = ""#print"";
 
     protected override void OnDragLeave( EventArgs e )
     {
+      CaretBlinking = true;
+      CaretVisible = true;
+
       IsDragDrop = false;
+      Invalidate();
       base.OnDragLeave( e );
     }
 

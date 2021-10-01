@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using C64Studio.Formats;
-
-
+using RetroDevStudio.Types;
 
 namespace C64Studio.Undo
 {
@@ -11,9 +10,7 @@ namespace C64Studio.Undo
   {
     public SpriteEditor           Editor = null;
     public SpriteProject          Project = null;
-    public int                    BGColor = -1;
-    public int                    MultiColor1 = -1;
-    public int                    MultiColor2 = -1;
+    public ColorSettings          Colors = null;
 
 
 
@@ -22,9 +19,7 @@ namespace C64Studio.Undo
       this.Editor = Editor;
       this.Project = Project;
 
-      BGColor = Project.BackgroundColor;
-      MultiColor1 = Project.MultiColor1;
-      MultiColor2 = Project.MultiColor2;
+      Colors = new ColorSettings( Project.Colors );
     }
 
 
@@ -49,11 +44,12 @@ namespace C64Studio.Undo
 
     public override void Apply()
     {
-      Project.BackgroundColor = BGColor;
-      Project.MultiColor1 = MultiColor1;
-      Project.MultiColor2 = MultiColor2;
+      Project.Colors = new ColorSettings( Colors );
 
       Editor.ColorsChanged();
     }
+
+
+
   }
 }

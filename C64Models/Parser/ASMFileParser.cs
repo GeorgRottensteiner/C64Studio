@@ -7,6 +7,7 @@ using C64Studio.Types;
 using C64Studio.Types.ASM;
 using GR.Collections;
 using GR.Memory;
+using RetroDevStudio;
 using Tiny64;
 
 
@@ -4431,13 +4432,13 @@ namespace C64Studio.Parser
 
         for ( int i = 0; i < numChars; ++i )
         {
-          charProject.Characters[startIndex + i].Data.CopyTo( charData, 0, 8, i * 8 );
+          charProject.Characters[startIndex + i].Tile.Data.CopyTo( charData, 0, 8, i * 8 );
         }
         if ( method == "CHARCOLOR" )
         {
           for ( int i = 0; i < numChars; ++i )
           {
-            charData.AppendU8( (byte)charProject.Characters[startIndex + i].Color );
+            charData.AppendU8( (byte)charProject.Characters[startIndex + i].Tile.CustomColor );
           }
         }
         dataToInclude = charData;
@@ -4725,25 +4726,31 @@ namespace C64Studio.Parser
           }
           if ( numSprites == -1 )
           {
-            numSprites = spriteProject.NumSprites;
+            numSprites = spriteProject.TotalNumberOfSprites;
           }
           if ( ( startIndex < 0 )
-          ||   ( startIndex >= spriteProject.NumSprites ) )
+          ||   ( startIndex >= spriteProject.TotalNumberOfSprites ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid start index " + startIndex );
             return false;
           }
           if ( ( numSprites <= 0 )
-          ||   ( ( startIndex + numSprites ) > spriteProject.NumSprites ) )
+          ||   ( ( startIndex + numSprites ) > spriteProject.TotalNumberOfSprites ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid sprite count " + numSprites );
             return false;
           }
-          GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( numSprites * 64 ) );
+          int paddedLength        = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
+          int singleSpriteLength  = (int)spriteProject.Sprites[startIndex].Tile.Data.Length;
+
+          GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( singleSpriteLength + ( paddedLength * ( numSprites - 1 ) )  ) );
 
           for ( int i = 0; i < numSprites; ++i )
           {
-            spriteProject.Sprites[startIndex + i].Data.CopyTo( spriteData, 0, 63, i * 64 );
+            spriteProject.Sprites[startIndex + i].Tile.Data.CopyTo( spriteData, 
+                                                                    0, 
+                                                                    (int)spriteProject.Sprites[startIndex + i].Tile.Data.Length, 
+                                                                    i * Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode ) );
           }
           dataToInclude = spriteData;
         }
@@ -4794,16 +4801,16 @@ namespace C64Studio.Parser
           }
           if ( numSprites == -1 )
           {
-            numSprites = spriteProject.NumSprites;
+            numSprites = spriteProject.TotalNumberOfSprites;
           }
           if ( ( startIndex < 0 )
-          ||   ( startIndex >= spriteProject.NumSprites ) )
+          ||   ( startIndex >= spriteProject.TotalNumberOfSprites ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid start index " + startIndex );
             return false;
           }
           if ( ( numSprites <= 0 )
-          ||   ( ( startIndex + numSprites ) > spriteProject.NumSprites ) )
+          ||   ( ( startIndex + numSprites ) > spriteProject.TotalNumberOfSprites ) )
           {
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid sprite count " + numSprites );
             return false;
@@ -4812,7 +4819,7 @@ namespace C64Studio.Parser
 
           for ( int i = 0; i < numSprites; ++i )
           {
-            spriteProject.Sprites[startIndex + i].Data.CopyTo( spriteData, 0, 63, i * 64 );
+            spriteProject.Sprites[startIndex + i].Tile.Data.CopyTo( spriteData, 0, 63, i * 64 );
           }
 
           if ( ( offsetBytes >= spriteData.Length )
@@ -5024,9 +5031,10 @@ namespace C64Studio.Parser
         &&   ( method != "COLORVERT" )
         &&   ( method != "CHARCOLORVERT" )
         &&   ( method != "COLORCHARVERT" )
-        &&   ( method != "PALETTE" ) )
+        &&   ( method != "PALETTE" )
+        &&   ( method != "PALETTESWIZZLED" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR, COLOR, CHARCOLOR, COLORCHAR, CHARVERT, COLORVERT, CHARCOLORVERT, COLORCHARVERT, CHARSET and PALETTE" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR, COLOR, CHARCOLOR, COLORCHAR, CHARVERT, COLORVERT, CHARCOLORVERT, COLORCHARVERT, CHARSET, PALETTE and PALETTESWIZZLED" );
           return false;
         }
 
@@ -5092,16 +5100,17 @@ namespace C64Studio.Parser
           }
           dataToInclude = screenProject.CharSet.CharacterData( startIndex, numChars );
         }
-        else if ( method == "PALETTE" )
+        else if ( ( method == "PALETTE" )
+        ||        ( method == "PALETTESWIZZLED" ) )
         {
           if ( !Binary )
           {
-            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as PALETTE is only supported for binary" );
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as PALETTE(SWIZZLED) is only supported for binary" );
             return false;
           }
 
           int startIndex = 0;
-          int numColors = screenProject.CharSet.Palette.NumColors;
+          int numColors = screenProject.CharSet.Colors.Palette.NumColors;
 
           if ( ( paramTokens.Count >= 3 )
           &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
@@ -5111,7 +5120,7 @@ namespace C64Studio.Parser
           if ( ( paramTokens.Count >= 4 )
           &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numColors ) ) )
           {
-            numColors = screenProject.CharSet.Palette.NumColors;
+            numColors = screenProject.CharSet.Colors.Palette.NumColors;
           }
           if ( ( startIndex < 0 )
           ||   ( startIndex >= screenProject.CharSet.ExportNumCharacters ) )
@@ -5124,13 +5133,13 @@ namespace C64Studio.Parser
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, must be >= 1" );
             return false;
           }
-          if ( startIndex + numColors > screenProject.CharSet.Palette.NumColors )
+          if ( startIndex + numColors > screenProject.CharSet.Colors.Palette.NumColors )
           {
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, charset has "
-                  + screenProject.CharSet.Palette.NumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
+                  + screenProject.CharSet.Colors.Palette.NumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
             return false;
           }
-          dataToInclude = screenProject.CharSet.Palette.GetExportData( startIndex, numColors );
+          dataToInclude = screenProject.CharSet.Colors.Palette.GetExportData( startIndex, numColors, method == "PALETTESWIZZLED" );
         }
         else
         {

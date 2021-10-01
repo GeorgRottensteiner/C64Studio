@@ -1,4 +1,5 @@
-﻿using RetroDevStudioModels;
+﻿using RetroDevStudio;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -52,9 +53,6 @@ namespace C64Studio
 
     private StudioCore              Core = null;
     private System.Drawing.Size     m_OrigSize = new Size();
-    private uint[]                  m_ColorValues = new uint[17];
-    private System.Drawing.Color[]  m_Colors = new System.Drawing.Color[17];
-    private System.Drawing.Brush[]  m_ColorBrushes = new System.Drawing.Brush[17];
 
     private GR.Collections.Map<uint,byte>     m_ForcedReplacementColors = new GR.Collections.Map<uint, byte>();
 
@@ -71,44 +69,23 @@ namespace C64Studio
 
     private uint                    m_OrigReplacementColor = 0;
 
-    public Types.MulticolorSettings MultiColorSettings = new C64Studio.Types.MulticolorSettings();
+    public ColorSettings            MultiColorSettings = new ColorSettings();
     public bool                     PasteAsBlock = false;
 
 
 
-    public DlgGraphicImport( StudioCore Core, Types.GraphicType ImportType, GR.Image.FastImage IncomingImage, string Filename, Types.MulticolorSettings MCSettings )
+    public DlgGraphicImport( StudioCore Core, Types.GraphicType ImportType, GR.Image.FastImage IncomingImage, string Filename, ColorSettings MCSettings )
     {
       this.Core = Core;
       InitializeComponent();
 
-      m_CurPalette = Core.MainForm.ActivePalette;
-
-      m_ColorValues[0] = 0xff000000;
-      m_ColorValues[1] = 0xffffffff;
-      m_ColorValues[2] = 0xff8B4131;
-      m_ColorValues[3] = 0xff7BBDC5;
-      m_ColorValues[4] = 0xff8B41AC;
-      m_ColorValues[5] = 0xff6AAC41;
-      m_ColorValues[6] = 0xff3931A4;
-      m_ColorValues[7] = 0xffD5DE73;
-      m_ColorValues[8] = 0xff945A20;
-      m_ColorValues[9] = 0xff5A4100;
-      m_ColorValues[10] = 0xffBD736A;
-      m_ColorValues[11] = 0xff525252;
-      m_ColorValues[12] = 0xff838383;
-      m_ColorValues[13] = 0xffACEE8B;
-      m_ColorValues[14] = 0xff7B73DE;
-      m_ColorValues[15] = 0xffACACAC;
-      m_ColorValues[16] = 0xff80ff80;
+      m_CurPalette = MCSettings.Palette;
 
       comboBackground.Items.Add( "[Any]" );
       comboMulticolor1.Items.Add( "[Any]" );
       comboMulticolor2.Items.Add( "[Any]" );
-      for ( int i = 0; i < 16; ++i )
+      for ( int i = 0; i < m_CurPalette.NumColors; ++i )
       {
-        m_Colors[i] = GR.Color.Helper.FromARGB( m_ColorValues[i] );
-        m_ColorBrushes[i] = new System.Drawing.SolidBrush( m_Colors[i] );
-
         comboBackground.Items.Add( i.ToString( "d2" ) );
         comboMulticolor1.Items.Add( i.ToString( "d2" ) );
         comboMulticolor2.Items.Add( i.ToString( "d2" ) );
@@ -131,6 +108,7 @@ namespace C64Studio
         case C64Studio.Types.GraphicType.CHARACTERS:
           comboImportType.Items.Add( new GR.Generic.Tupel<string, C64Studio.Types.GraphicType>( GR.EnumHelper.GetDescription( C64Studio.Types.GraphicType.CHARACTERS_HIRES ), C64Studio.Types.GraphicType.CHARACTERS_HIRES ) );
           comboImportType.Items.Add( new GR.Generic.Tupel<string, C64Studio.Types.GraphicType>( GR.EnumHelper.GetDescription( C64Studio.Types.GraphicType.CHARACTERS_MULTICOLOR ), C64Studio.Types.GraphicType.CHARACTERS_MULTICOLOR ) );
+          comboImportType.Items.Add( new GR.Generic.Tupel<string, C64Studio.Types.GraphicType>( GR.EnumHelper.GetDescription( C64Studio.Types.GraphicType.CHARACTERS_FCM ), C64Studio.Types.GraphicType.CHARACTERS_FCM ) );
           comboImportType.SelectedIndex = 1;
           break;
         default:
@@ -1168,6 +1146,9 @@ namespace C64Studio
         case C64Studio.Types.GraphicType.CHARACTERS_MULTICOLOR:
           CheckAsCharacters( true );
           break;
+        case C64Studio.Types.GraphicType.CHARACTERS_FCM:
+          // nothing to do, there are no limits
+          break;
         case C64Studio.Types.GraphicType.SPRITES:
           CheckAsSprites();
           break;
@@ -1179,37 +1160,6 @@ namespace C64Studio
           break;
       }
       listProblems.EndUpdate();
-      /*
-      if ( ( ( imgClip.Width % 8 ) != 0 )
-      || ( ( imgClip.Height % 8 ) != 0 )
-      || ( imgClip.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )
-      {
-        imgClip.Dispose();
-        System.Windows.Forms.MessageBox.Show( "Image format invalid!\nNeeds to be 8bit index and have width/height a multiple of 8" );
-        return;
-      }
-      int charsX = imgClip.Width / 8;
-      int charsY = imgClip.Height / 8;
-
-      for ( int i = 0; i < charsX; ++i )
-      {
-        for ( int j = 0; j < charsY; ++j )
-        {
-          if ( ( i >= 16 )
-          || ( j >= 16 ) )
-          {
-            continue;
-          }
-
-          GR.Image.FastImage singleChar = imgClip.GetImage( i * 8, j * 8, 8, 8 );
-
-          ImportChar( singleChar, j * 16 + i, checkPasteMultiColor.Checked );
-          panelCharacters.InvalidateItemRect( j * 16 + i );
-        }
-      }
-      pictureEditor.Invalidate();
-      Modified = true;
-       */
     }
 
 
@@ -1248,7 +1198,7 @@ namespace C64Studio
       else
       {
         int colorIndex = e.Index - 1;
-        e.Graphics.FillRectangle( m_ColorBrushes[colorIndex], itemRect );
+        e.Graphics.FillRectangle( m_CurPalette.ColorBrushes[colorIndex], itemRect );
         if ( ( e.State & DrawItemState.Selected ) != 0 )
         {
           e.Graphics.DrawString( combo.Items[colorIndex + 1].ToString(), combo.Font, new System.Drawing.SolidBrush( System.Drawing.Color.White ), 3.0f, e.Bounds.Top + 1.0f );

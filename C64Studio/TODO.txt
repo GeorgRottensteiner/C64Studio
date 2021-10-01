@@ -1,4 +1,8 @@
 ﻿C64Studio
+o Limit max width of IntelliSense
+o Do not include prefixed auto-labels in IntelliSense at all
+o Disassembler
+  !byte $43,$4f,$4d,$4d,$4f,$44,$52,$45,$20,$43,$36,$34  >  !text "COMMODORE C64"
 o Solution Explorer -> Multiselect
 o immediate labels zoned inside macros
 !macro Math_Decrease_16Bit address

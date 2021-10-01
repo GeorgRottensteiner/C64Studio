@@ -1,7 +1,9 @@
-﻿using RetroDevStudioModels;
+﻿using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Text;
+
+
 
 namespace C64Studio.Formats
 {
@@ -62,8 +64,8 @@ namespace C64Studio.Formats
       {
         for ( int j = 0; j < 8; ++j )
         {
-          Charset.Characters[i].Color = 1;
-          Charset.Characters[i].Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
+          Charset.Characters[i].Tile.CustomColor = 1;
+          Charset.Characters[i].Tile.Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
         }
       }
     }
@@ -312,9 +314,9 @@ namespace C64Studio.Formats
       memReader.Close();
 
 
-      Charset.MultiColor1 = MultiColor1;
-      Charset.MultiColor2 = MultiColor2;
-      Charset.BGColor4 = BGColor4;
+      Charset.Colors.MultiColor1 = MultiColor1;
+      Charset.Colors.MultiColor2 = MultiColor2;
+      Charset.Colors.BGColor4    = BGColor4;
       return true;
     }
 

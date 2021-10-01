@@ -198,7 +198,7 @@ namespace C64Studio
 
 
 
-    public StudioCore   Core
+    public StudioCore Core
     {
       get;
       set;

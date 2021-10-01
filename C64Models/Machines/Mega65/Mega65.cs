@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RetroDevStudioModels
+namespace RetroDevStudio
 {
   public static partial class Machines
   {

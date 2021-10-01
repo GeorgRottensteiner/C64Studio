@@ -1,8 +1,10 @@
 ﻿using C64Studio.Controls;
-using RetroDevStudioModels;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Text;
+
+
 
 namespace C64Studio.Displayer
 {
@@ -264,14 +266,14 @@ namespace C64Studio.Displayer
     {
       Formats.CharData Char = Charset.Characters[CharIndex];
 
-      DisplayChar( Charset, CharIndex, Context, Char.Color );
+      DisplayChar( Charset, CharIndex, Context, Char.Tile.CustomColor );
     }
 
 
 
     public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, CustomDrawControlContext Context, int AlternativeColor )
     {
-      DisplayChar( Charset, CharIndex, Context, AlternativeColor, Charset.BackgroundColor, Charset.MultiColor1, Charset.MultiColor2, Charset.BGColor4 );
+      DisplayChar( Charset, CharIndex, Context, AlternativeColor, Charset.Colors.BackgroundColor, Charset.Colors.MultiColor1, Charset.Colors.MultiColor2, Charset.Colors.BGColor4 );
     }
 
 
@@ -308,24 +310,24 @@ namespace C64Studio.Displayer
             bgColor = AltBGColor4;
             break;
         }
-        DisplayHiResChar( origChar.Data, bgColor, AlternativeColor, Context );
+        DisplayHiResChar( origChar.Tile.Data, bgColor, AlternativeColor, Context );
       }
       else if ( AlternativeMode == TextCharMode.COMMODORE_MULTICOLOR )
       {
-        DisplayMultiColorChar( Char.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
+        DisplayMultiColorChar( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
       }
       else if ( AlternativeMode == TextCharMode.COMMODORE_HIRES )
       {
-        DisplayHiResChar( Char.Data, AltBGColor, AlternativeColor, Context );
+        DisplayHiResChar( Char.Tile.Data, AltBGColor, AlternativeColor, Context );
       }
       else if ( ( AlternativeMode == TextCharMode.MEGA65_FCM )
       ||        ( AlternativeMode == TextCharMode.MEGA65_FCM_16BIT ) )
       {
-        DisplayMega65FCMChar( Char.Data, AltBGColor, AlternativeColor, Context );
+        DisplayMega65FCMChar( Char.Tile.Data, AltBGColor, AlternativeColor, Context );
       }
       else if ( AlternativeMode == TextCharMode.VC20 )
       {
-        DisplayVC20Char( Char.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
+        DisplayVC20Char( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
       }
       else
       {
@@ -339,14 +341,14 @@ namespace C64Studio.Displayer
     {
       Formats.CharData Char = Charset.Characters[CharIndex];
 
-      DisplayChar( Charset, CharIndex, TargetImage, X, Y, Char.Color );
+      DisplayChar( Charset, CharIndex, TargetImage, X, Y, Char.Tile.CustomColor );
     }
 
 
 
     public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, GR.Image.IImage TargetImage, int X, int Y, int AlternativeColor )
     {
-      DisplayChar( Charset, CharIndex, TargetImage, X, Y, AlternativeColor, Charset.BackgroundColor, Charset.MultiColor1, Charset.MultiColor2, Charset.BGColor4 );
+      DisplayChar( Charset, CharIndex, TargetImage, X, Y, AlternativeColor, Charset.Colors.BackgroundColor, Charset.Colors.MultiColor1, Charset.Colors.MultiColor2, Charset.Colors.BGColor4 );
     }
 
 
@@ -383,24 +385,24 @@ namespace C64Studio.Displayer
             bgColor = AltBGColor4;
             break;
         }
-        DisplayHiResChar( origChar.Data, bgColor, AlternativeColor, TargetImage, X, Y );
+        DisplayHiResChar( origChar.Tile.Data, bgColor, AlternativeColor, TargetImage, X, Y );
       }
       else if ( AlternativeMode == TextCharMode.COMMODORE_MULTICOLOR )
       {
-        DisplayMultiColorChar( Char.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
+        DisplayMultiColorChar( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
       }
       else if ( AlternativeMode == TextCharMode.COMMODORE_HIRES )
       {
-        DisplayHiResChar( Char.Data, AltBGColor, AlternativeColor, TargetImage, X, Y );
+        DisplayHiResChar( Char.Tile.Data, AltBGColor, AlternativeColor, TargetImage, X, Y );
       }
       else if ( ( AlternativeMode == TextCharMode.MEGA65_FCM )
       ||        ( AlternativeMode == TextCharMode.MEGA65_FCM_16BIT ) )
       {
-        DisplayMega65FCMChar( Char.Data, AltBGColor, AlternativeColor, TargetImage, X, Y );
+        DisplayMega65FCMChar( Char.Tile.Data, AltBGColor, AlternativeColor, TargetImage, X, Y );
       }
       else if ( AlternativeMode == TextCharMode.VC20 )
       {
-        DisplayVC20Char( Char.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
+        DisplayVC20Char( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
       }
       else
       {

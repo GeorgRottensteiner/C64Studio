@@ -1,5 +1,5 @@
 ﻿using C64Studio.Types;
-using RetroDevStudioModels;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -186,7 +186,7 @@ namespace C64Studio
       for ( int i = 0; i < 256; ++i )
       {
         RebuildCharImage( i );
-        panelCharacters.Items.Add( i.ToString(), m_MapProject.Charset.Characters[i].Image );
+        panelCharacters.Items.Add( i.ToString(), m_MapProject.Charset.Characters[i].Tile.Image );
       }
 
       characterEditor.CharsetUpdated( m_MapProject.Charset );
@@ -295,8 +295,8 @@ namespace C64Studio
 
     void RebuildCharImage( int CharIndex )
     {
-      Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset, CharIndex, m_MapProject.Charset.Characters[CharIndex].Image, 0, 0,
-                                                m_MapProject.Charset.Characters[CharIndex].Color,
+      Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset, CharIndex, m_MapProject.Charset.Characters[CharIndex].Tile.Image, 0, 0,
+                                                m_MapProject.Charset.Characters[CharIndex].Tile.CustomColor,
                                                 m_MapProject.BackgroundColor,
                                                 m_MapProject.MultiColor1,
                                                 m_MapProject.MultiColor2,
@@ -1002,7 +1002,7 @@ namespace C64Studio
                                                           ( m_CurrentMap.AlternativeMultiColor1 != -1 ) ? m_CurrentMap.AlternativeMultiColor1 : m_MapProject.MultiColor1,
                                                           ( m_CurrentMap.AlternativeMultiColor2 != -1 ) ? m_CurrentMap.AlternativeMultiColor2 : m_MapProject.MultiColor2,
                                                           ( m_CurrentMap.AlternativeBGColor4 != -1 ) ? m_CurrentMap.AlternativeBGColor4 : m_MapProject.BGColor4,
-                                                          ( m_CurrentMap.AlternativeMode != TextCharMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : TextCharModeUtil.FromTextMode( m_MapProject.Mode ) );
+                                                          ( m_CurrentMap.AlternativeMode != TextCharMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : Lookup.FromTextMode( m_MapProject.Mode ) );
               }
             }
           }
@@ -1019,8 +1019,8 @@ namespace C64Studio
       if ( m_MapProject.BackgroundColor != comboTileBackground.SelectedIndex )
       {
         m_MapProject.BackgroundColor = comboTileBackground.SelectedIndex;
-        m_MapProject.Charset.BackgroundColor = m_MapProject.BackgroundColor;
-        for ( int i = 0; i < 256; ++i )
+        m_MapProject.Charset.Colors.BackgroundColor = m_MapProject.BackgroundColor;
+        for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
         {
           RebuildCharImage( i );
         }
@@ -1038,7 +1038,7 @@ namespace C64Studio
       if ( m_MapProject.MultiColor1 != comboTileMulticolor1.SelectedIndex )
       {
         m_MapProject.MultiColor1 = comboTileMulticolor1.SelectedIndex;
-        m_MapProject.Charset.MultiColor1 = m_MapProject.MultiColor1;
+        m_MapProject.Charset.Colors.MultiColor1 = m_MapProject.MultiColor1;
         SetModified();
         FullRebuild();
       }
@@ -1051,7 +1051,7 @@ namespace C64Studio
       if ( m_MapProject.MultiColor2 != comboTileMulticolor2.SelectedIndex )
       {
         m_MapProject.MultiColor2 = comboTileMulticolor2.SelectedIndex;
-        m_MapProject.Charset.MultiColor2 = m_MapProject.MultiColor2;
+        m_MapProject.Charset.Colors.MultiColor2 = m_MapProject.MultiColor2;
         SetModified();
         FullRebuild();
       }
@@ -1116,7 +1116,7 @@ namespace C64Studio
       comboTileMode.SelectedIndex = (int)m_MapProject.Mode;
       checkShowGrid.Checked = m_MapProject.ShowGrid;
 
-      for ( int i = 0; i < 256; ++i )
+      for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
       }
@@ -1259,7 +1259,7 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_MapProject.Charset.Characters[i].Data.SetU8At( j, charData.ByteAt( i * 8 + j ) );
+          m_MapProject.Charset.Characters[i].Tile.Data.SetU8At( j, charData.ByteAt( i * 8 + j ) );
         }
         RebuildCharImage( i );
       }
@@ -2413,7 +2413,7 @@ namespace C64Studio
         RebuildCharImage( i );
         if ( i < panelCharacters.Items.Count )
         {
-          panelCharacters.Items[i].MemoryImage = m_MapProject.Charset.Characters[i].Image;
+          panelCharacters.Items[i].MemoryImage = m_MapProject.Charset.Characters[i].Tile.Image;
         }
       }
       panelCharacters.Invalidate();
@@ -2730,9 +2730,9 @@ namespace C64Studio
         return false;
       }
 
-      m_MapProject.Charset.BackgroundColor = cpProject.BackgroundColor;
-      m_MapProject.Charset.MultiColor1 = cpProject.MultiColor1;
-      m_MapProject.Charset.MultiColor2 = cpProject.MultiColor2;
+      m_MapProject.Charset.Colors.BackgroundColor = cpProject.BackgroundColor;
+      m_MapProject.Charset.Colors.MultiColor1 = cpProject.MultiColor1;
+      m_MapProject.Charset.Colors.MultiColor2 = cpProject.MultiColor2;
 
       int maxChars = cpProject.NumChars;
       if ( maxChars > 256 )
@@ -2743,8 +2743,8 @@ namespace C64Studio
       m_MapProject.Charset.ExportNumCharacters = maxChars;
       for ( int charIndex = 0; charIndex < m_MapProject.Charset.ExportNumCharacters; ++charIndex )
       {
-        m_MapProject.Charset.Characters[charIndex].Data = cpProject.Characters[charIndex].Data;
-        m_MapProject.Charset.Characters[charIndex].Color = cpProject.Characters[charIndex].Color;
+        m_MapProject.Charset.Characters[charIndex].Tile.Data = cpProject.Characters[charIndex].Data;
+        m_MapProject.Charset.Characters[charIndex].Tile.CustomColor = cpProject.Characters[charIndex].Color;
 
         RebuildCharImage( charIndex );
       }
@@ -2805,9 +2805,9 @@ namespace C64Studio
       comboMaps.Items.Add( new GR.Generic.Tupel<string, Formats.MapProject.Map>( map.Name, map ) );
       comboMaps.Enabled = true;
 
-      comboTileBackground.SelectedIndex = m_MapProject.Charset.BackgroundColor;
-      comboTileMulticolor1.SelectedIndex = m_MapProject.Charset.MultiColor1;
-      comboTileMulticolor2.SelectedIndex = m_MapProject.Charset.MultiColor2;
+      comboTileBackground.SelectedIndex = m_MapProject.Charset.Colors.BackgroundColor;
+      comboTileMulticolor1.SelectedIndex = m_MapProject.Charset.Colors.MultiColor1;
+      comboTileMulticolor2.SelectedIndex = m_MapProject.Charset.Colors.MultiColor2;
       comboTileMode.SelectedIndex = (int)( cpProject.MultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES );
 
       RedrawMap();
@@ -2925,11 +2925,11 @@ namespace C64Studio
       {
         if ( combo == comboMapMultiColor1 )
         {
-          colorToUse = m_MapProject.Charset.MultiColor1;
+          colorToUse = m_MapProject.Charset.Colors.MultiColor1;
         }
         else if ( combo == comboMapMultiColor2 )
         {
-          colorToUse = m_MapProject.Charset.MultiColor2;
+          colorToUse = m_MapProject.Charset.Colors.MultiColor2;
         }
         else
         {
@@ -3066,7 +3066,7 @@ namespace C64Studio
     private void comboTileMode_SelectedIndexChanged( object sender, EventArgs e )
     {
       m_MapProject.Mode = (TextMode)comboTileMode.SelectedIndex;
-      m_MapProject.Charset.Mode = TextCharModeUtil.FromTextMode( m_MapProject.Mode );
+      m_MapProject.Charset.Mode = Lookup.FromTextMode( m_MapProject.Mode );
       for ( int i = 0; i < 256; ++i )
       {
         RebuildCharImage( i );
@@ -3084,7 +3084,7 @@ namespace C64Studio
       if ( m_MapProject.BGColor4 != comboTileBGColor4.SelectedIndex )
       {
         m_MapProject.BGColor4 = comboTileBGColor4.SelectedIndex;
-        m_MapProject.Charset.BGColor4 = m_MapProject.BGColor4;
+        m_MapProject.Charset.Colors.BGColor4 = m_MapProject.BGColor4;
         SetModified();
         FullRebuild();
       }

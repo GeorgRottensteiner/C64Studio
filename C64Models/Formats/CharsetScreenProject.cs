@@ -1,17 +1,14 @@
-﻿using RetroDevStudioModels;
+﻿using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Text;
+
+
 
 namespace C64Studio.Formats
 {
   public class CharsetScreenProject
   {
-    public int                          BackgroundColor = 0;
-    public int                          MultiColor1 = 0;
-    public int                          MultiColor2 = 0;
-    public int                          BGColor4 = 0;
-
     public int                          ScreenWidth = 40;
     public int                          ScreenHeight = 25;
 
@@ -47,7 +44,7 @@ namespace C64Studio.Formats
       set
       {
         _Mode = value;
-        CharSet.Mode = TextCharModeUtil.FromTextMode( _Mode );
+        CharSet.Mode = Lookup.FromTextMode( _Mode );
       }
     }
 
@@ -77,9 +74,9 @@ namespace C64Studio.Formats
 
       GR.IO.FileChunk chunkScreenMultiColorData = new GR.IO.FileChunk( FileChunkConstants.MULTICOLOR_DATA );
       chunkScreenMultiColorData.AppendU8( (byte)Mode );
-      chunkScreenMultiColorData.AppendU8( (byte)BackgroundColor );
-      chunkScreenMultiColorData.AppendU8( (byte)MultiColor1 );
-      chunkScreenMultiColorData.AppendU8( (byte)MultiColor2 );
+      chunkScreenMultiColorData.AppendU8( (byte)CharSet.Colors.BackgroundColor );
+      chunkScreenMultiColorData.AppendU8( (byte)CharSet.Colors.MultiColor1 );
+      chunkScreenMultiColorData.AppendU8( (byte)CharSet.Colors.MultiColor2 );
       projectFile.Append( chunkScreenMultiColorData.ToBuffer() );
 
       GR.IO.FileChunk chunkScreenCharData = new GR.IO.FileChunk( FileChunkConstants.SCREEN_CHAR_DATA );
@@ -131,9 +128,9 @@ namespace C64Studio.Formats
             break;
           case FileChunkConstants.MULTICOLOR_DATA:
             Mode = (TextMode)chunkReader.ReadUInt8();
-            BackgroundColor = chunkReader.ReadUInt8();
-            MultiColor1 = chunkReader.ReadUInt8();
-            MultiColor2 = chunkReader.ReadUInt8();
+            CharSet.Colors.BackgroundColor = chunkReader.ReadUInt8();
+            CharSet.Colors.MultiColor1 = chunkReader.ReadUInt8();
+            CharSet.Colors.MultiColor2 = chunkReader.ReadUInt8();
             break;
           case FileChunkConstants.SCREEN_CHAR_DATA:
             for ( int i = 0; i < Chars.Count; ++i )

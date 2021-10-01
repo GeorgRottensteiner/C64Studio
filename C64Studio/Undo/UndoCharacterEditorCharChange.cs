@@ -23,10 +23,10 @@ namespace C64Studio.Undo
       this.CharIndex = CharIndex;
 
       Char = new CharData();
-      Char.Data       = new GR.Memory.ByteBuffer( Project.Characters[CharIndex].Data );
-      Char.Color      = Project.Characters[CharIndex].Color;
-      Char.Category   = Project.Characters[CharIndex].Category;
-      Char.Index      = CharIndex;
+      Char.Tile.Data        = new GR.Memory.ByteBuffer( Project.Characters[CharIndex].Tile.Data );
+      Char.Tile.CustomColor = Project.Characters[CharIndex].Tile.CustomColor;
+      Char.Category         = Project.Characters[CharIndex].Category;
+      Char.Index            = CharIndex;
     }
 
 
@@ -50,8 +50,8 @@ namespace C64Studio.Undo
 
     public override void Apply()
     {
-      Project.Characters[CharIndex].Data = new GR.Memory.ByteBuffer( Char.Data );
-      Project.Characters[CharIndex].Color = Char.Color;
+      Project.Characters[CharIndex].Tile.Data = new GR.Memory.ByteBuffer( Char.Tile.Data );
+      Project.Characters[CharIndex].Tile.CustomColor = Char.Tile.CustomColor;
       Project.Characters[CharIndex].Category = Char.Category;
       Project.Characters[CharIndex].Index = Char.Index;
 

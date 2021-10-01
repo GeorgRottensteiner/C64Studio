@@ -1138,6 +1138,7 @@
       this.panelCharColors.Size = new System.Drawing.Size(260, 20);
       this.panelCharColors.TabIndex = 0;
       this.panelCharColors.TabStop = false;
+      this.panelCharColors.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback(this.panelCharColors_PostPaint);
       this.panelCharColors.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureCharColor_MouseDown);
       this.panelCharColors.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureCharColor_MouseMove);
       // 

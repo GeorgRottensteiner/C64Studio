@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RetroDevStudioModels
+namespace RetroDevStudio
 {
   public enum SpriteMode
   {
@@ -10,8 +10,10 @@ namespace RetroDevStudioModels
     COMMODORE_24_X_21_HIRES = 0,
     [Description( "Commodore 24x21 Multicolor" )]
     COMMODORE_24_X_21_MULTICOLOR,
+    [Description( "Mega65 8x21 16 colors" )]
+    MEGA65_8_X_21_16_COLORS,
     [Description( "Mega65 16x21 16 colors" )]
-    MEGA65_16_X_21_16_COLORS
+    MEGA65_16_X_21_16_COLORS,
   }
 
 

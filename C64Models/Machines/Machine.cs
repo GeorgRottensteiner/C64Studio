@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RetroDevStudioModels
+namespace RetroDevStudio
 {
   public class Machine
   {

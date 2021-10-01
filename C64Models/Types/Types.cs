@@ -4,8 +4,10 @@ using System.Text;
 using System.Reflection;
 using System.ComponentModel;
 using System.Windows.Forms;
-using RetroDevStudioModels;
 using C64Studio.Types;
+using RetroDevStudio;
+
+
 
 namespace C64Studio.Types
 {
@@ -342,21 +344,14 @@ namespace C64Studio.Types
     CHARACTERS_HIRES,
     [Description( "Multicolor Characters" )]
     CHARACTERS_MULTICOLOR,
+    [Description( "FCM Characters" )]
+    CHARACTERS_FCM,
     [Description( "Bitmap" )]
     BITMAP,
     [Description( "HiRes Bitmap" )]
     BITMAP_HIRES,
     [Description( "Multicolor Bitmap" )]
     BITMAP_MULTICOLOR
-  };
-
-
-
-  public class MulticolorSettings
-  {
-    public int      BackgroundColor = 0;
-    public int      MultiColor1     = 0;
-    public int      MultiColor2     = 0;
   };
 
 
@@ -897,7 +892,7 @@ namespace C64Studio.Types
 
 
 
-namespace RetroDevStudioModels
+namespace RetroDevStudio
 {
   public partial class ConstantData
   {
@@ -921,7 +916,7 @@ namespace RetroDevStudioModels
 
     static ConstantData()
     {
-      Palette = RetroDevStudioModels.ConstantData.PaletteC64();
+      Palette = RetroDevStudio.ConstantData.PaletteC64();
 
       for ( int i = 0; i < 256; ++i )
       {

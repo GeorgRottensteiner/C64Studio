@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using C64Studio.Types.ASM;
-using RetroDevStudioModels;
+using RetroDevStudio;
 
 namespace C64Studio
 {

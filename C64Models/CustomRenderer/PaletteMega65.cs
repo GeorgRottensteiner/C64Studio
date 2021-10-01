@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudioModels
+﻿namespace RetroDevStudio
 {
   public partial class ConstantData
   {
@@ -26,9 +26,6 @@
         pal.ColorValues[i * 16 + 14] = 0xff7B73DE;
         pal.ColorValues[i * 16 + 15] = 0xffACACAC;
       }
-
-      // selection color
-      pal.ColorValues[256] = 0xff80ff80;
 
       pal.CreateBrushes();
 

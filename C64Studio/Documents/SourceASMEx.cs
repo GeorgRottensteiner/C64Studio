@@ -16,7 +16,7 @@ using GR.IO;
 using System.Globalization;
 using C64Studio.Parser;
 using GR.Image;
-using RetroDevStudioModels;
+using RetroDevStudio;
 
 namespace C64Studio
 {

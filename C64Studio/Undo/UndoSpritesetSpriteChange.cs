@@ -22,11 +22,7 @@ namespace C64Studio.Undo
       this.Project = Project;
       this.SpriteIndex = SpriteIndex;
 
-      Sprite = new SpriteProject.SpriteData();
-
-      Sprite.Color = Project.Sprites[SpriteIndex].Color;
-      Sprite.Data = new GR.Memory.ByteBuffer( Project.Sprites[SpriteIndex].Data );
-      Sprite.Mode = Project.Sprites[SpriteIndex].Mode;
+      Sprite = new SpriteProject.SpriteData( Project.Sprites[SpriteIndex] );
     }
 
 
@@ -51,9 +47,7 @@ namespace C64Studio.Undo
 
     public override void Apply()
     {
-      Project.Sprites[SpriteIndex].Data = new GR.Memory.ByteBuffer( Sprite.Data );
-      Project.Sprites[SpriteIndex].Color = Sprite.Color;
-      Project.Sprites[SpriteIndex].Mode = Sprite.Mode;
+      Project.Sprites[SpriteIndex] = new SpriteProject.SpriteData( Sprite );
 
       Editor.SpriteChanged( SpriteIndex );
     }

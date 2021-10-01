@@ -52,7 +52,7 @@ namespace MediaTool
       GR.Memory.ByteBuffer    exportData = new GR.Memory.ByteBuffer( (uint)( count * 8 ) );
       for ( int i = 0; i < count; ++i )
       {
-        charsetProject.Characters[firstUnit + i].Data.CopyTo( exportData, 0, 8, i * 8 );
+        charsetProject.Characters[firstUnit + i].Tile.Data.CopyTo( exportData, 0, 8, i * 8 );
       }
 
       if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), exportData ) )

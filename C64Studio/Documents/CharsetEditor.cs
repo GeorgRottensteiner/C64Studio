@@ -7,7 +7,8 @@ using System.Windows.Forms;
 using C64Studio.Formats;
 using C64Studio.Types;
 using GR.Memory;
-using RetroDevStudioModels;
+using RetroDevStudio;
+using RetroDevStudio.Types;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace C64Studio
@@ -57,7 +58,7 @@ namespace C64Studio
 
       for ( int i = 0; i < 256; ++i )
       {
-        PaletteManager.ApplyPalette( m_Charset.Characters[i].Image );
+        PaletteManager.ApplyPalette( m_Charset.Characters[i].Tile.Image );
       }
 
       comboExportRange.Items.Add( "All" );
@@ -126,12 +127,12 @@ namespace C64Studio
 
     public void Clear()
     {
-      for ( int i = 0; i < 256; ++i )
+      for ( int i = 0; i < m_Charset.TotalNumberOfCharacters; ++i )
       {
-        m_Charset.Characters[i].Color = 0;
-        for ( int j = 0; j < 8; ++j )
+        m_Charset.Characters[i].Tile.CustomColor = 0;
+        for ( int j = 0; j < m_Charset.Characters[i].Tile.Data.Length; ++j )
         {
-          m_Charset.Characters[i].Data.SetU8At( j, 0 );
+          m_Charset.Characters[i].Tile.Data.SetU8At( j, 0 );
         }
       }
       DocumentInfo.DocumentFilename = "";
@@ -264,11 +265,11 @@ namespace C64Studio
       {
         // save binary only!
         GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
-        charSet.Reserve( m_Charset.TotalNumberOfCharacters * TextCharModeUtil.NumBytesOfSingleCharacter( m_Charset.Mode ) );
+        charSet.Reserve( m_Charset.TotalNumberOfCharacters * Lookup.NumBytesOfSingleCharacter( m_Charset.Mode ) );
 
         for ( int i = 0; i < m_Charset.TotalNumberOfCharacters; ++i )
         {
-          charSet.Append( m_Charset.Characters[i].Data );
+          charSet.Append( m_Charset.Characters[i].Tile.Data );
         }
 
         return SaveDocumentData( FullPath, charSet );
@@ -340,7 +341,7 @@ namespace C64Studio
       List<int>     exportIndices = ListOfExportIndices();
       foreach ( int i in exportIndices )
       {
-        charSet.Append( m_Charset.Characters[i].Data );
+        charSet.Append( m_Charset.Characters[i].Tile.Data );
       }
       if ( checkPrefixLoadAddress.Checked )
       {
@@ -399,7 +400,7 @@ namespace C64Studio
       GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
       foreach ( int index in exportIndices )
       {
-        charSet.Append( m_Charset.Characters[index].Data );
+        charSet.Append( m_Charset.Characters[index].Tile.Data );
       }
 
       bool wrapData = checkExportToDataWrap.Checked;
@@ -414,7 +415,7 @@ namespace C64Studio
         GR.Memory.ByteBuffer    colorData = new GR.Memory.ByteBuffer();
         foreach ( int index in exportIndices )
         {
-          colorData.AppendU8( (byte)m_Charset.Characters[index].Color );
+          colorData.AppendU8( (byte)m_Charset.Characters[index].Tile.CustomColor );
         }
         resultText += Util.ToASMData( colorData, wrapData, wrapByteCount, prefixRes ? prefix : "" );
       }
@@ -466,16 +467,14 @@ namespace C64Studio
           {
             return;
           }
-          m_Charset.BackgroundColor = project.BackgroundColor;
-          m_Charset.MultiColor1 = project.MultiColor1;
-          m_Charset.MultiColor2 = project.MultiColor2;
+          m_Charset.Colors = new ColorSettings( project.Colors );
           m_Charset.ExportNumCharacters = project.ExportNumCharacters;
           m_Charset.ShowGrid = project.ShowGrid;
 
-          for ( int i = 0; i < 256; ++i )
+          for ( int i = 0; i < m_Charset.TotalNumberOfCharacters; ++i )
           {
-            m_Charset.Characters[i].Color = project.Characters[i].Color;
-            m_Charset.Characters[i].Data = new GR.Memory.ByteBuffer( project.Characters[i].Data );
+            m_Charset.Characters[i].Tile.CustomColor = project.Characters[i].Tile.CustomColor;
+            m_Charset.Characters[i].Tile.Data = new GR.Memory.ByteBuffer( project.Characters[i].Tile.Data );
           }
 
           editCharactersFrom.Text = m_Charset.ExportNumCharacters.ToString();
@@ -496,9 +495,9 @@ namespace C64Studio
             return;
           }
 
-          m_Charset.BackgroundColor = cpProject.BackgroundColor;
-          m_Charset.MultiColor1     = cpProject.MultiColor1;
-          m_Charset.MultiColor2     = cpProject.MultiColor2;
+          m_Charset.Colors.BackgroundColor = cpProject.BackgroundColor;
+          m_Charset.Colors.MultiColor1     = cpProject.MultiColor1;
+          m_Charset.Colors.MultiColor2     = cpProject.MultiColor2;
 
           m_Charset.ExportNumCharacters = cpProject.NumChars;
           if ( m_Charset.ExportNumCharacters > 256 )
@@ -507,8 +506,8 @@ namespace C64Studio
           }
           for ( int charIndex = 0; charIndex < m_Charset.ExportNumCharacters; ++charIndex )
           {
-            m_Charset.Characters[charIndex].Data = cpProject.Characters[charIndex].Data;
-            m_Charset.Characters[charIndex].Color = cpProject.Characters[charIndex].Color;
+            m_Charset.Characters[charIndex].Tile.Data = cpProject.Characters[charIndex].Data;
+            m_Charset.Characters[charIndex].Tile.CustomColor = cpProject.Characters[charIndex].Color;
           }
 
           editCharactersFrom.Text = m_Charset.ExportNumCharacters.ToString();
@@ -542,9 +541,9 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_Charset.Characters[i].Data.SetU8At( j, CharData.ByteAt( i * 8 + j ) );
+          m_Charset.Characters[i].Tile.Data.SetU8At( j, CharData.ByteAt( i * 8 + j ) );
         }
-        m_Charset.Characters[i].Color = 1;
+        m_Charset.Characters[i].Tile.CustomColor = 1;
       }
       characterEditor.CharsetUpdated( m_Charset );
       SetModified();
@@ -569,9 +568,9 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_Charset.Characters[i].Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
+          m_Charset.Characters[i].Tile.Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
         }
-        m_Charset.Characters[i].Color = 1;
+        m_Charset.Characters[i].Tile.CustomColor = 1;
       }
       characterEditor.CharsetUpdated( m_Charset );
       SetModified();
@@ -589,9 +588,9 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_Charset.Characters[i].Data.SetU8At( j, ConstantData.LowerCaseCharsetC64.ByteAt( i * 8 + j ) );
+          m_Charset.Characters[i].Tile.Data.SetU8At( j, ConstantData.LowerCaseCharsetC64.ByteAt( i * 8 + j ) );
         }
-        m_Charset.Characters[i].Color = 1;
+        m_Charset.Characters[i].Tile.CustomColor = 1;
       }
       characterEditor.CharsetUpdated( m_Charset );
       SetModified();
@@ -610,14 +609,14 @@ namespace C64Studio
         return;
       }
 
-      GR.Image.MemoryImage    targetImg = new GR.Image.MemoryImage( 128, 128, m_Charset.Characters[0].Image.PixelFormat );
+      GR.Image.MemoryImage    targetImg = new GR.Image.MemoryImage( 128, 128, m_Charset.Characters[0].Tile.Image.PixelFormat );
       PaletteManager.ApplyPalette( targetImg );
 
       List<int>     exportIndices = ListOfExportIndices();
 
       foreach ( int i in exportIndices )
       {
-        m_Charset.Characters[i].Image.DrawTo( targetImg, ( i % 16 ) * 8, ( i / 16 ) * 8 );
+        m_Charset.Characters[i].Tile.Image.DrawTo( targetImg, ( i % 16 ) * 8, ( i / 16 ) * 8 );
       }
       System.Drawing.Bitmap bmpTarget = targetImg.GetAsBitmap();
       bmpTarget.Save( saveDlg.FileName, System.Drawing.Imaging.ImageFormat.Png );
@@ -633,7 +632,7 @@ namespace C64Studio
         return false;
       }
       // Match image data
-      GR.Memory.ByteBuffer Buffer = new GR.Memory.ByteBuffer( m_Charset.Characters[CharIndex].Data );
+      GR.Memory.ByteBuffer Buffer = new GR.Memory.ByteBuffer( m_Charset.Characters[CharIndex].Tile.Data );
 
       int   chosenCharColor = -1;
 
@@ -667,7 +666,7 @@ namespace C64Studio
 
             if ( !usedColor[colorIndex] )
             {
-              if ( colorIndex == m_Charset.BackgroundColor )
+              if ( colorIndex == m_Charset.Colors.BackgroundColor )
               {
                 usedBackgroundColor = true;
               }
@@ -707,7 +706,7 @@ namespace C64Studio
           for ( int i = 0; i < 16; ++i )
           {
             if ( ( usedColor[i] )
-            &&   ( i != m_Charset.BackgroundColor ) )
+            &&   ( i != m_Charset.Colors.BackgroundColor ) )
             {
               otherColorIndex = i;
               break;
@@ -727,7 +726,7 @@ namespace C64Studio
           {
             if ( usedColor[i] )
             {
-              if ( i != m_Charset.BackgroundColor )
+              if ( i != m_Charset.Colors.BackgroundColor )
               {
                 if ( usedFreeColor != -1 )
                 {
@@ -746,7 +745,7 @@ namespace C64Studio
 
               int BitPattern = 0;
 
-              if ( ColorIndex != m_Charset.BackgroundColor )
+              if ( ColorIndex != m_Charset.Colors.BackgroundColor )
               {
                 BitPattern = 1;
               }
@@ -771,9 +770,9 @@ namespace C64Studio
           {
             if ( usedColor[i] )
             {
-              if ( ( i == m_Charset.MultiColor1 )
-              ||   ( i == m_Charset.MultiColor2 )
-              ||   ( i == m_Charset.BackgroundColor ) )
+              if ( ( i == m_Charset.Colors.MultiColor1 )
+              ||   ( i == m_Charset.Colors.MultiColor2 )
+              ||   ( i == m_Charset.Colors.BackgroundColor ) )
               {
                 ++usedMultiColors;
               }
@@ -796,15 +795,15 @@ namespace C64Studio
 
               byte BitPattern = 0;
 
-              if ( ColorIndex == m_Charset.BackgroundColor )
+              if ( ColorIndex == m_Charset.Colors.BackgroundColor )
               {
                 BitPattern = 0x00;
               }
-              else if ( ColorIndex == m_Charset.MultiColor1 )
+              else if ( ColorIndex == m_Charset.Colors.MultiColor1 )
               {
                 BitPattern = 0x01;
               }
-              else if ( ColorIndex == m_Charset.MultiColor2 )
+              else if ( ColorIndex == m_Charset.Colors.MultiColor2 )
               {
                 BitPattern = 0x02;
               }
@@ -822,17 +821,17 @@ namespace C64Studio
       }
       for ( int i = 0; i < 8; ++i )
       {
-        m_Charset.Characters[CharIndex].Data.SetU8At( i, Buffer.ByteAt( i ) );
+        m_Charset.Characters[CharIndex].Tile.Data.SetU8At( i, Buffer.ByteAt( i ) );
       }
       if ( chosenCharColor == -1 )
       {
         chosenCharColor = 0;
       }
-      m_Charset.Characters[CharIndex].Color = chosenCharColor;
+      m_Charset.Characters[CharIndex].Tile.CustomColor = chosenCharColor;
       if ( ( isMultiColor )
       &&   ( chosenCharColor < 8 ) )
       {
-        m_Charset.Characters[CharIndex].Color = chosenCharColor + 8;
+        m_Charset.Characters[CharIndex].Tile.CustomColor = chosenCharColor + 8;
       }
       return true;
     }
@@ -945,7 +944,7 @@ namespace C64Studio
       GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
       foreach ( int index in exportIndices )
       {
-        charSet.Append( m_Charset.Characters[index].Data );
+        charSet.Append( m_Charset.Characters[index].Tile.Data );
       }
 
       string    resultText = Util.ToBASICData( charSet, startLine, lineOffset, wrapByteCount );
@@ -1071,7 +1070,7 @@ namespace C64Studio
       GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
       foreach ( int index in exportIndices )
       {
-        charSet.Append( m_Charset.Characters[index].Data );
+        charSet.Append( m_Charset.Characters[index].Tile.Data );
       }
 
       string    resultText = Util.ToBASICHexData( charSet, startLine, lineOffset );

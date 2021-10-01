@@ -36,6 +36,19 @@
 
 !zone VIC4
 
+;half pixel offset (for 320)
+;default value = $50
+.TEXTXPOS           = $d04c
+
+;1111 xxxx      = SPRTILEN
+;xxxx 1111      = TEXTXPOS high nibble
+.SPRTILEN_TEXTXPOS  = $d04d
+
+.TEXTYPOS           = $d04e
+
+;1111 xxxx      = SPRTILEN
+;xxxx 1111      = TEXTYPOS high nibble
+.SPRTILEN_TEXTYPOS  = $d04f
 
 ;VIC4 display settings
 ;1xxx xxxx      = ALPHEN        alpha compositor enable
@@ -77,6 +90,12 @@
 ;$d062 = hi byte
 .SCRNPTR        = $d060
 
+;3 byte address of chargen position
+;$d068 = lo byte
+;$d069 = medium byte
+;$d06a = hi byte
+.CHARPTR        = $d068
+
 ;enable sprite 16 color mode (bit = sprite index)
 .SPR16EN        = $d06b
 
@@ -111,6 +130,8 @@
 !zone Mega65
 ;read the last key pressed (until written to)
 .PRESSED_KEY    = $d610
+
+.HTRAP00        = $d640
 
 !macro Enable40Mhz
           lda #$41

@@ -1,5 +1,5 @@
 ﻿using C64Studio.Formats;
-using RetroDevStudioModels;
+using RetroDevStudio;
 
 
 
@@ -23,10 +23,10 @@ namespace C64Studio.Undo
     {
       this.Project = Project;
       this.Editor = Editor;
-      BackgroundColor = Project.BackgroundColor;
-      Multicolor1     = Project.MultiColor1;
-      Multicolor2     = Project.MultiColor2;
-      BGColor4        = Project.BGColor4;
+      BackgroundColor = Project.CharSet.Colors.BackgroundColor;
+      Multicolor1     = Project.CharSet.Colors.MultiColor1;
+      Multicolor2     = Project.CharSet.Colors.MultiColor2;
+      BGColor4        = Project.CharSet.Colors.BGColor4;
       Mode            = Project.Mode;
     }
 
@@ -52,11 +52,11 @@ namespace C64Studio.Undo
 
     public override void Apply()
     {
-      Project.BackgroundColor = BackgroundColor;
-      Project.Mode            = Mode;
-      Project.MultiColor1     = Multicolor1;
-      Project.MultiColor2     = Multicolor2;
-      Project.BGColor4        = BGColor4;
+      Project.CharSet.Colors.BackgroundColor  = BackgroundColor;
+      Project.Mode                            = Mode;
+      Project.CharSet.Colors.MultiColor1      = Multicolor1;
+      Project.CharSet.Colors.MultiColor2      = Multicolor2;
+      Project.CharSet.Colors.BGColor4         = BGColor4;
 
       Editor.ValuesChanged();
       Editor.SetModified();

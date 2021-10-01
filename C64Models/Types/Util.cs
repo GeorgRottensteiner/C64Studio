@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using GR.Memory;
-using RetroDevStudioModels;
+using RetroDevStudio;
+
+
 
 namespace C64Studio
 {

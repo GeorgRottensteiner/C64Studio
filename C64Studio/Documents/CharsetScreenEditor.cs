@@ -9,7 +9,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using GR.Image;
 using GR.Memory;
 using C64Studio.Formats;
-using RetroDevStudioModels;
+using RetroDevStudio;
 
 namespace C64Studio
 {
@@ -86,8 +86,6 @@ namespace C64Studio
 
       charEditor.UndoManager = DocumentInfo.UndoManager;
 
-      //pictureEditor.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback( pictureEditor_PostPaint );
-
       pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
       panelCharacters.SetDisplaySize( 128, 128 );
@@ -95,7 +93,7 @@ namespace C64Studio
       m_Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
       ApplyPalette();
-      for ( int i = 0; i < m_CharsetScreen.CharSet.Palette.NumColors; ++i )
+      for ( int i = 0; i < m_CharsetScreen.CharSet.Colors.Palette.NumColors; ++i )
       {
         comboBackground.Items.Add( i.ToString( "d2" ) );
         comboMulticolor1.Items.Add( i.ToString( "d2" ) );
@@ -148,8 +146,8 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_CharsetScreen.CharSet.Characters[i].Color = 1;
-          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
+          m_CharsetScreen.CharSet.Characters[i].Tile.CustomColor = 1;
+          m_CharsetScreen.CharSet.Characters[i].Tile.Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
         }
       }
 
@@ -161,7 +159,7 @@ namespace C64Studio
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
-        panelCharacters.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Image );
+        panelCharacters.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Tile.Image );
       }
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
     }
@@ -170,10 +168,10 @@ namespace C64Studio
 
     private void ApplyPalette()
     {
-      PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_CharsetScreen.CharSet.Palette );
-      PaletteManager.ApplyPalette( panelCharacters.DisplayPage, m_CharsetScreen.CharSet.Palette );
-      PaletteManager.ApplyPalette( m_Image, m_CharsetScreen.CharSet.Palette );
-      PaletteManager.ApplyPalette( panelCharColors.DisplayPage, m_CharsetScreen.CharSet.Palette );
+      PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_CharsetScreen.CharSet.Colors.Palette );
+      PaletteManager.ApplyPalette( panelCharacters.DisplayPage, m_CharsetScreen.CharSet.Colors.Palette );
+      PaletteManager.ApplyPalette( m_Image, m_CharsetScreen.CharSet.Colors.Palette );
+      PaletteManager.ApplyPalette( panelCharColors.DisplayPage, m_CharsetScreen.CharSet.Colors.Palette );
     }
 
 
@@ -195,6 +193,115 @@ namespace C64Studio
 
     private void pictureEditor_PostPaint( FastImage TargetBuffer )
     {
+      if ( m_ShowGrid )
+      {
+        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
+        {
+          for ( int j = 0; j < TargetBuffer.Height; ++j )
+          {
+            TargetBuffer.SetPixel( i * pictureEditor.ClientRectangle.Width / m_CharsWidth, j, 0xffc0c0c0 );
+          }
+        }
+        for ( int i = 0; i < m_CharsetScreen.ScreenHeight; ++i )
+        {
+          for ( int j = 0; j < TargetBuffer.Width; ++j )
+          {
+            TargetBuffer.SetPixel( j, i * pictureEditor.ClientRectangle.Height / m_CharsHeight, 0xffc0c0c0 );
+          }
+        }
+      }
+
+      // draw outside area
+      uint  selColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
+
+      int     fillWidth = 0;
+      int     fillHeight = 0;
+
+      if ( m_CharsetScreen.ScreenWidth - m_CharsetScreen.ScreenOffsetX < m_CharsWidth )
+      {
+        fillWidth = m_CharsWidth - ( m_CharsetScreen.ScreenWidth - m_CharsetScreen.ScreenOffsetX );
+      }
+      if ( m_CharsetScreen.ScreenHeight - m_CharsetScreen.ScreenOffsetY < m_CharsHeight )
+      {
+        fillHeight = m_CharsHeight - ( m_CharsetScreen.ScreenHeight - m_CharsetScreen.ScreenOffsetY );
+      }
+      if ( ( fillWidth > 0 )
+      &&   ( fillHeight > 0 ) )
+      {
+        // bottom right
+        TargetBuffer.Box( ( m_CharsWidth - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth ),
+                          ( m_CharsHeight - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight ),
+                          pictureEditor.ClientRectangle.Width - ( m_CharsWidth - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth ),
+                          pictureEditor.ClientRectangle.Height - ( m_CharsHeight - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight ),
+                          selColor );
+      }
+      if ( fillWidth > 0 )
+      {
+        // right
+        TargetBuffer.Box( ( m_CharsWidth - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth ),
+                          0,
+                          pictureEditor.ClientRectangle.Width - ( m_CharsWidth - fillWidth ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth ),
+                          pictureEditor.ClientRectangle.Height,
+                          selColor );
+      }
+      if ( fillHeight > 0 )
+      {
+        // bottom
+        TargetBuffer.Box( 0,
+                          ( m_CharsHeight - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight ),
+                          pictureEditor.ClientRectangle.Width,
+                          pictureEditor.ClientRectangle.Height - ( m_CharsHeight - fillHeight ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight ),
+                          selColor );
+      }
+
+      // mark selected char
+      if ( m_SelectedChar.X != -1 )
+      {
+        int  sx1 = ( m_SelectedChar.X - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
+        int  sx2 = ( m_SelectedChar.X + 1 - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
+        int  sy1 = ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
+        int  sy2 = ( m_SelectedChar.Y + 1 - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
+
+        if ( m_SelectedChar.X - m_CharsetScreen.ScreenOffsetX == m_CharsWidth - 1 )
+        {
+          --sx2;
+        }
+        if ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY == m_CharsHeight - 1 )
+        {
+          --sy2;
+        }
+
+        TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1 + 1, sy2 - sy1 + 1, selColor );
+      }
+
+      // current dragged selection
+      if ( ( m_ToolMode == ToolMode.SELECT )
+      &&   ( m_LastDragEndPos.X != -1 ) )
+      {
+        System.Drawing.Point    o1, o2;
+
+        CalcRect( m_DragStartPos, m_LastDragEndPos, out o1, out o2 );
+
+        o1.Offset( -m_CharsetScreen.ScreenOffsetX, -m_CharsetScreen.ScreenOffsetY );
+        o2.Offset( -m_CharsetScreen.ScreenOffsetX, -m_CharsetScreen.ScreenOffsetY );
+
+        int  sx1 = ( o1.X - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
+        int  sx2 = ( o2.X + 1 - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
+        int  sy1 = ( o1.Y - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
+        int  sy2 = ( o2.Y + 1 - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
+
+        if ( m_SelectedChar.X - m_CharsetScreen.ScreenOffsetX == m_CharsWidth - 1 )
+        {
+          --sx2;
+        }
+        if ( m_SelectedChar.Y - m_CharsetScreen.ScreenOffsetY == m_CharsHeight - 1 )
+        {
+          --sy2;
+        }
+
+        TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1 + 1, sy2 - sy1 + 1, selColor );
+      }
+
       // draw selection
       int     x1 = m_CharsetScreen.ScreenOffsetX;
       int     y1 = m_CharsetScreen.ScreenOffsetY;
@@ -226,7 +333,6 @@ namespace C64Studio
         y2 = y1 + m_CharsHeight - 1;
       }
 
-      uint  selColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
       for ( int x = x1; x <= x2; ++x )
       {
         for ( int y = y1; y <= y2; ++y )
@@ -234,9 +340,18 @@ namespace C64Studio
           if ( m_SelectedChars[x, y] )
           {
             int  sx1 = ( x - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
-            int  sx2 = ( x + 1 - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth ) - 1;
+            int  sx2 = ( x + 1 - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
             int  sy1 = ( y - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
-            int  sy2 = ( y + 1 - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight ) - 1;
+            int  sy2 = ( y + 1 - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
+
+            if ( x == x2 )
+            {
+              --sx2;
+            }
+            if ( y == y2 )
+            {
+              --sy2;
+            }
 
             if ( ( y == 0 )
             ||   ( !m_SelectedChars[x, y - 1] ) )
@@ -270,24 +385,6 @@ namespace C64Studio
                 TargetBuffer.SetPixel( sx2, i, selColor );
               }
             }
-          }
-        }
-      }
-
-      if ( m_ShowGrid )
-      {
-        for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
-        {
-          for ( int j = 0; j < TargetBuffer.Height; ++j )
-          {
-            TargetBuffer.SetPixel( i * ( pictureEditor.ClientRectangle.Width / m_CharsWidth ), j, 0xffc0c0c0 );
-          }
-        }
-        for ( int i = 0; i < m_CharsetScreen.ScreenHeight; ++i )
-        {
-          for ( int j = 0; j < TargetBuffer.Width; ++j )
-          {
-            TargetBuffer.SetPixel( j, i * ( pictureEditor.ClientRectangle.Height / m_CharsHeight ), 0xffc0c0c0 );
           }
         }
       }
@@ -377,16 +474,16 @@ namespace C64Studio
 
       if ( m_OverrideCharMode )
       {
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Image, 0, 0, m_CurrentColor,
-                m_CharsetScreen.BackgroundColor,
-                m_CharsetScreen.MultiColor1,
-                m_CharsetScreen.MultiColor2,
-                m_CharsetScreen.BGColor4,
-                TextCharModeUtil.FromTextMode( m_CharsetScreen.Mode ) );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Tile.Image, 0, 0, m_CurrentColor,
+                m_CharsetScreen.CharSet.Colors.BackgroundColor,
+                m_CharsetScreen.CharSet.Colors.MultiColor1,
+                m_CharsetScreen.CharSet.Colors.MultiColor2,
+                m_CharsetScreen.CharSet.Colors.BGColor4,
+                Lookup.FromTextMode( m_CharsetScreen.Mode ) );
       }
       else
       {
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Image, 0, 0 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Tile.Image, 0, 0 );
       }
     }
 
@@ -425,7 +522,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      Core.Theming.DrawSingleColorComboBox( combo, e, m_CharsetScreen.CharSet.Palette );
+      Core.Theming.DrawSingleColorComboBox( combo, e, m_CharsetScreen.CharSet.Colors.Palette );
     }
 
 
@@ -434,7 +531,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      Core.Theming.DrawMultiColorComboBox( combo, e, m_CharsetScreen.CharSet.Palette );
+      Core.Theming.DrawMultiColorComboBox( combo, e, m_CharsetScreen.CharSet.Colors.Palette );
     }
 
 
@@ -1055,7 +1152,6 @@ namespace C64Studio
 
     private void RedrawFullScreen()
     {
-      pictureEditor.DisplayPage.Box( 0, 0, pictureEditor.DisplayPage.Width, pictureEditor.DisplayPage.Height, 16 );
       int     x1 = m_CharsetScreen.ScreenOffsetX;
       int     y1 = m_CharsetScreen.ScreenOffsetY;
       int     x2 = x1 + m_CharsetScreen.ScreenWidth - 1;
@@ -1121,7 +1217,7 @@ namespace C64Studio
 
     private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
     {
-      if ( m_CharsetScreen.BackgroundColor != comboBackground.SelectedIndex )
+      if ( m_CharsetScreen.CharSet.Colors.BackgroundColor != comboBackground.SelectedIndex )
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
 
@@ -1133,8 +1229,7 @@ namespace C64Studio
 
     private void SetBackgroundColor( int ColorIndex )
     {
-      m_CharsetScreen.BackgroundColor = ColorIndex;
-      m_CharsetScreen.CharSet.BackgroundColor = m_CharsetScreen.BackgroundColor;
+      m_CharsetScreen.CharSet.Colors.BackgroundColor = ColorIndex;
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
@@ -1150,12 +1245,11 @@ namespace C64Studio
 
     private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
     {
-      if ( m_CharsetScreen.MultiColor1 != comboMulticolor1.SelectedIndex )
+      if ( m_CharsetScreen.CharSet.Colors.MultiColor1 != comboMulticolor1.SelectedIndex )
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
 
-        m_CharsetScreen.MultiColor1 = comboMulticolor1.SelectedIndex;
-        m_CharsetScreen.CharSet.MultiColor1 = m_CharsetScreen.MultiColor1;
+        m_CharsetScreen.CharSet.Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
         for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
         {
           RebuildCharImage( i );
@@ -1172,12 +1266,11 @@ namespace C64Studio
 
     private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
     {
-      if ( m_CharsetScreen.MultiColor2 != comboMulticolor2.SelectedIndex )
+      if ( m_CharsetScreen.CharSet.Colors.MultiColor2 != comboMulticolor2.SelectedIndex )
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
 
-        m_CharsetScreen.MultiColor2 = comboMulticolor2.SelectedIndex;
-        m_CharsetScreen.CharSet.MultiColor2 = m_CharsetScreen.MultiColor2;
+        m_CharsetScreen.CharSet.Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
         for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
         {
           RebuildCharImage( i );
@@ -1216,11 +1309,11 @@ namespace C64Studio
 
       SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
       
-      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.BackgroundColor;
-      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.MultiColor2;
+      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
+      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor1;
+      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
-      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.BGColor4;
+      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
 
       Modified = false;
       if ( m_CharsetScreen.ExternalCharset.Length != 0 )
@@ -1239,7 +1332,7 @@ namespace C64Studio
         for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
         {
           RebuildCharImage( i );
-          panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Image;
+          panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
         }
       }
       editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
@@ -1260,6 +1353,7 @@ namespace C64Studio
         }
       }
 
+      panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.FromTextMode( m_CharsetScreen.Mode ) );
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
       RedrawColorChooser();
@@ -1403,7 +1497,7 @@ namespace C64Studio
 
         for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
         {
-          panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Image;
+          panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
         }
         Modified = true;
         return true;
@@ -1424,7 +1518,7 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, charData.ByteAt( i * 8 + j ) );
+          m_CharsetScreen.CharSet.Characters[i].Tile.Data.SetU8At( j, charData.ByteAt( i * 8 + j ) );
         }
         RebuildCharImage( i );
       }
@@ -1525,82 +1619,6 @@ namespace C64Studio
           }
         }
       }
-      // mark selected char
-      if ( m_SelectedChar.X != -1 )
-      {
-        for ( int x = 0; x < 8; ++x )
-        {
-          pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8 + x - m_CharsetScreen.ScreenOffsetX * 8, m_SelectedChar.Y * 8 - m_CharsetScreen.ScreenOffsetY * 8, 16 );
-          pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8 - m_CharsetScreen.ScreenOffsetX * 8, m_SelectedChar.Y * 8 + x - m_CharsetScreen.ScreenOffsetY * 8, 16 );
-        }
-      }
-
-      /*
-      // draw selection
-      for ( int x = x1; x <= x2; ++x )
-      {
-        for ( int y = y1; y <= y2; ++y )
-        {
-          if ( m_SelectedChars[x, y] )
-          {
-            if ( ( y == 0 )
-            ||   ( !m_SelectedChars[x, y - 1] ) )
-            {
-              for ( int i = 0; i < 8; ++i )
-              {
-                pictureEditor.DisplayPage.SetPixel( ( x - m_CharsetScreen.ScreenOffsetX ) * 8 + i,
-                                                    ( y - m_CharsetScreen.ScreenOffsetY ) * 8,
-                                                    16 );
-              }
-            }
-            if ( ( y == m_SelectedChars.GetUpperBound( 1 ) )
-            ||   ( !m_SelectedChars[x, y + 1] ) )
-            {
-              for ( int i = 0; i < 8; ++i )
-              {
-                pictureEditor.DisplayPage.SetPixel( ( x - m_CharsetScreen.ScreenOffsetX ) * 8 + i,
-                                                    ( y - m_CharsetScreen.ScreenOffsetY ) * 8 + 7,
-                                                    16 );
-              }
-            }
-            if ( ( x == 0 )
-            ||   ( !m_SelectedChars[x - 1, y] ) )
-            {
-              for ( int i = 0; i < 8; ++i )
-              {
-                pictureEditor.DisplayPage.SetPixel( ( x - m_CharsetScreen.ScreenOffsetX ) * 8,
-                                                    ( y - m_CharsetScreen.ScreenOffsetY ) * 8 + i,
-                                                    16 );
-              }
-            }
-            if ( ( x == m_SelectedChars.GetUpperBound( 0 ) )
-            ||   ( !m_SelectedChars[x + 1, y] ) )
-            {
-              for ( int i = 0; i < 8; ++i )
-              {
-                pictureEditor.DisplayPage.SetPixel( ( x - m_CharsetScreen.ScreenOffsetX ) * 8 + 7,
-                                                    ( y - m_CharsetScreen.ScreenOffsetY ) * 8 + i,
-                                                    16 );
-              }
-            }
-          }
-        }
-      }*/
-
-      // current dragged selection
-      if ( ( m_ToolMode == ToolMode.SELECT )
-      && ( m_LastDragEndPos.X != -1 ) )
-      {
-        System.Drawing.Point    o1, o2;
-
-        CalcRect( m_DragStartPos, m_LastDragEndPos, out o1, out o2 );
-
-        o1.Offset( -m_CharsetScreen.ScreenOffsetX, -m_CharsetScreen.ScreenOffsetY );
-        o2.Offset( -m_CharsetScreen.ScreenOffsetX, -m_CharsetScreen.ScreenOffsetY );
-
-        pictureEditor.DisplayPage.Rectangle( o1.X * 8, o1.Y * 8, ( o2.X - o1.X + 1 ) * 8, ( o2.Y - o1.Y + 1 ) * 8, 16 );
-      }
-
 
       if ( m_FloatingSelection != null )
       {
@@ -1657,13 +1675,6 @@ namespace C64Studio
       for ( byte i = 0; i < 16; ++i )
       {
         DrawCharImage( panelCharColors.DisplayPage, i * 8, 0, m_CurrentChar, i );
-      }
-      for ( int i = 0; i < 8; ++i )
-      {
-        panelCharColors.DisplayPage.SetPixel( m_CurrentColor * 8 + i, 0, 16 );
-        panelCharColors.DisplayPage.SetPixel( m_CurrentColor * 8 + i, 7, 16 );
-        panelCharColors.DisplayPage.SetPixel( m_CurrentColor * 8, i, 16 );
-        panelCharColors.DisplayPage.SetPixel( m_CurrentColor * 8 + 7, i, 16 );
       }
       panelCharColors.Invalidate();
     }
@@ -1812,7 +1823,7 @@ namespace C64Studio
 
       sb.Append( startLineNo );
       startLineNo += lineStep;
-      sb.Append( " POKE53280," + m_CharsetScreen.BackgroundColor.ToString() + ":POKE53281," + m_CharsetScreen.BackgroundColor.ToString() + "\n" );
+      sb.Append( " POKE53280," + m_CharsetScreen.CharSet.Colors.BackgroundColor.ToString() + ":POKE53281," + m_CharsetScreen.CharSet.Colors.BackgroundColor.ToString() + "\n" );
 
       System.Drawing.Rectangle    exportRect = DetermineExportRectangle();
 
@@ -2133,11 +2144,9 @@ namespace C64Studio
             return;
           }
 
-          m_CharsetScreen.CharSet.BackgroundColor = cpProject.BackgroundColor;
-          m_CharsetScreen.CharSet.MultiColor1 = cpProject.MultiColor1;
-          m_CharsetScreen.CharSet.MultiColor2 = cpProject.MultiColor2;
-          m_CharsetScreen.MultiColor1 = cpProject.MultiColor1;
-          m_CharsetScreen.MultiColor2 = cpProject.MultiColor2;
+          m_CharsetScreen.CharSet.Colors.BackgroundColor = cpProject.BackgroundColor;
+          m_CharsetScreen.CharSet.Colors.MultiColor1 = cpProject.MultiColor1;
+          m_CharsetScreen.CharSet.Colors.MultiColor2 = cpProject.MultiColor2;
 
           int maxChars = cpProject.NumChars;
           if ( maxChars > 256 )
@@ -2148,8 +2157,8 @@ namespace C64Studio
           m_CharsetScreen.CharSet.ExportNumCharacters = maxChars;
           for ( int charIndex = 0; charIndex < m_CharsetScreen.CharSet.ExportNumCharacters; ++charIndex )
           {
-            m_CharsetScreen.CharSet.Characters[charIndex].Data = cpProject.Characters[charIndex].Data;
-            m_CharsetScreen.CharSet.Characters[charIndex].Color = cpProject.Characters[charIndex].Color;
+            m_CharsetScreen.CharSet.Characters[charIndex].Tile.Data = cpProject.Characters[charIndex].Data;
+            m_CharsetScreen.CharSet.Characters[charIndex].Tile.CustomColor = cpProject.Characters[charIndex].Color;
 
             RebuildCharImage( charIndex );
           }
@@ -2191,9 +2200,10 @@ namespace C64Studio
           map.TileSpacingY = cpProject.TileHeight;
           mapProject.Maps.Add( map );
 
-          comboBackground.SelectedIndex = mapProject.Charset.BackgroundColor;
-          comboMulticolor1.SelectedIndex = mapProject.Charset.MultiColor1;
-          comboMulticolor2.SelectedIndex = mapProject.Charset.MultiColor2;
+          comboBackground.SelectedIndex = mapProject.Charset.Colors.BackgroundColor;
+          comboMulticolor1.SelectedIndex = mapProject.Charset.Colors.MultiColor1;
+          comboMulticolor2.SelectedIndex = mapProject.Charset.Colors.MultiColor2;
+          comboBGColor4.SelectedIndex = mapProject.Charset.Colors.BGColor4;
           comboCharsetMode.SelectedIndex = (int)( cpProject.MultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES );
 
           GR.Memory.ByteBuffer      charData = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.TileSpacingX * map.Tiles.Height * map.TileSpacingY ) );
@@ -2278,7 +2288,7 @@ namespace C64Studio
               if ( screenData.Length == 2002 )
               {
                 // border and BG first
-                m_CharsetScreen.BackgroundColor = screenData.ByteAt( 1 );
+                m_CharsetScreen.CharSet.Colors.BackgroundColor = screenData.ByteAt( 1 );
                 screenData = screenData.SubBuffer( 2 );
               }
               ImportFromData( screenData );
@@ -2344,6 +2354,9 @@ namespace C64Studio
       m_TextEntryCachedLine.Clear();
       m_TextEntryEnteredText.Clear();
       m_TextEntryStartedInLine = -1;
+
+      editScreenWidth.Text  = Width.ToString();
+      editScreenHeight.Text = Height.ToString();
 
       AdjustScrollbars();
       RedrawFullScreen();
@@ -2483,17 +2496,17 @@ namespace C64Studio
       m_CharsetScreen = CharScreen;
       m_CharsetScreen.CharSet = CharSet;
 
-      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.BackgroundColor;
-      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.MultiColor2;
+      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
+      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor1;
+      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
-      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.BGColor4;
+      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
 
       for ( int i = 0; i < m_CharsetScreen.CharSet.ExportNumCharacters; ++i )
       {
         RebuildCharImage( i );
 
-        panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Image;
+        panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
       }
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
@@ -2975,17 +2988,13 @@ namespace C64Studio
 
     public void ValuesChanged()
     {
-      comboBackground.SelectedIndex = m_CharsetScreen.BackgroundColor;
-      comboMulticolor1.SelectedIndex = m_CharsetScreen.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_CharsetScreen.MultiColor2;
+      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
+      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor1;
+      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
-      comboBGColor4.SelectedIndex = m_CharsetScreen.BGColor4;
+      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
 
-      m_CharsetScreen.CharSet.MultiColor1 = m_CharsetScreen.MultiColor1;
-      m_CharsetScreen.CharSet.MultiColor2 = m_CharsetScreen.MultiColor2;
-      m_CharsetScreen.CharSet.BackgroundColor = m_CharsetScreen.BackgroundColor;
-      m_CharsetScreen.CharSet.BGColor4 = m_CharsetScreen.BGColor4;
-      for ( int i = 0; i < 256; ++i )
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
       }
@@ -3032,9 +3041,10 @@ namespace C64Studio
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
         m_CharsetScreen.Mode = (TextMode)comboCharsetMode.SelectedIndex;
-        m_CharsetScreen.CharSet.Mode = TextCharModeUtil.FromTextMode( m_CharsetScreen.Mode );
 
-        for ( int i = 0; i < 256; ++i )
+        UpdatePalette();
+
+        for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
         {
           RebuildCharImage( i );
         }
@@ -3046,6 +3056,8 @@ namespace C64Studio
 
         RedrawColorChooser();
         RedrawFullScreen();
+
+        panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.FromTextMode( m_CharsetScreen.Mode ) );
       }
 
       if ( m_OverrideCharMode )
@@ -3053,7 +3065,7 @@ namespace C64Studio
         RebuildCharPanelImages();
       }
 
-      switch ( TextCharModeUtil.FromTextMode( m_CharsetScreen.Mode ) )
+      switch ( Lookup.FromTextMode( m_CharsetScreen.Mode ) )
       {
         case TextCharMode.COMMODORE_HIRES:
           labelMColor1.Enabled = false;
@@ -3139,15 +3151,28 @@ namespace C64Studio
 
 
 
+    private void UpdatePalette()
+    {
+      int numColors = Lookup.NumberOfColorsInCharacter( Lookup.FromTextMode( m_CharsetScreen.Mode ) );
+
+      if ( m_CharsetScreen.CharSet.Colors.Palette.NumColors == numColors )
+      {
+        // palette is already matching, keep existing
+        return;
+      }
+      m_CharsetScreen.CharSet.Colors.Palette = PaletteManager.PaletteFromNumColors( numColors );
+    }
+
+
+
     private void comboBGColor4_SelectedIndexChanged( object sender, EventArgs e )
     {
-      if ( m_CharsetScreen.BGColor4 != comboBGColor4.SelectedIndex )
+      if ( m_CharsetScreen.CharSet.Colors.BGColor4 != comboBGColor4.SelectedIndex )
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
 
-        m_CharsetScreen.BGColor4 = comboBGColor4.SelectedIndex;
-        m_CharsetScreen.CharSet.BGColor4 = m_CharsetScreen.BGColor4;
-        for ( int i = 0; i < 256; ++i )
+        m_CharsetScreen.CharSet.Colors.BGColor4 = comboBGColor4.SelectedIndex;
+        for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
         {
           RebuildCharImage( i );
         }
@@ -3227,9 +3252,9 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
+          m_CharsetScreen.CharSet.Characters[i].Tile.Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
         }
-        m_CharsetScreen.CharSet.Characters[i].Color = 1;
+        m_CharsetScreen.CharSet.Characters[i].Tile.CustomColor = 1;
       }
       Modified = true;
       CharsetChanged();
@@ -3245,9 +3270,9 @@ namespace C64Studio
       {
         for ( int j = 0; j < 8; ++j )
         {
-          m_CharsetScreen.CharSet.Characters[i].Data.SetU8At( j, ConstantData.LowerCaseCharsetC64.ByteAt( i * 8 + j ) );
+          m_CharsetScreen.CharSet.Characters[i].Tile.Data.SetU8At( j, ConstantData.LowerCaseCharsetC64.ByteAt( i * 8 + j ) );
         }
-        m_CharsetScreen.CharSet.Characters[i].Color = 1;
+        m_CharsetScreen.CharSet.Characters[i].Tile.CustomColor = 1;
       }
       Modified = true;
       CharsetChanged();
@@ -3423,11 +3448,11 @@ namespace C64Studio
       ByteBuffer    CharsetProject = Charset.SaveToBuffer();
       m_CharsetScreen.CharSet.ReadFromBuffer( CharsetProject );
 
-      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.BackgroundColor;
-      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.MultiColor2;
+      comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
+      comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor1;
+      comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
-      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.BGColor4;
+      comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
       editScreenWidth.Text = m_CharsetScreen.ScreenWidth.ToString();
       editScreenHeight.Text = m_CharsetScreen.ScreenHeight.ToString();
 
@@ -3457,7 +3482,7 @@ namespace C64Studio
       {
         RebuildCharImage( i );
 
-        panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Image;
+        panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
       }
       panelCharacters.Invalidate();
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
@@ -3771,12 +3796,24 @@ namespace C64Studio
 
         for ( int i = 0; i < charsToImport; ++i )
         {
-          charData.CopyTo( m_CharsetScreen.CharSet.Characters[i].Data, i * 8, 8 );
+          charData.CopyTo( m_CharsetScreen.CharSet.Characters[i].Tile.Data, i * 8, 8 );
           RebuildCharImage( i );
         }
         SetModified();
         RedrawFullScreen();
       }
+    }
+
+
+
+    private void panelCharColors_PostPaint( FastImage TargetBuffer )
+    {
+      int     x1 = m_CurrentColor * TargetBuffer.Width / 16;
+      int     x2 = ( m_CurrentColor + 1 ) * TargetBuffer.Width / 16;
+
+      uint  selColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
+
+      TargetBuffer.Rectangle( x1, 0, x2 - x1, TargetBuffer.Height, selColor );
     }
 
 

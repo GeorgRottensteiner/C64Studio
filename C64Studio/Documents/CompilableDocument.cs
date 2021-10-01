@@ -46,35 +46,7 @@ namespace C64Studio
         CharLength = lineText.TrimEnd().Length - CharPosStart;
       }
 
-      int     startPos = CharPosStart;
-      if ( SourceControl.AllowTabs )
-      {
-        // adjust offset in case of tabs (butt ugly hackaround)
-        int     pos = SourceControl.VirtualPositionToPosition( SourceControl.PlaceToPosition( new FastColoredTextBoxNS.Place( startPos, LineIndex ) ) );
-
-        pos = SourceControl.PositionToPlace( pos ).iChar;
-
-        startPos = pos;
-        /*
-        string origText = SourceControl[LineIndex].Text;
-
-        if ( CharPosStart < origText.Length )
-        {
-          origText = SourceControl[LineIndex].Text.Substring( CharPosStart );
-        }
-        origText = SourceControl.ReTabifyLine( origText, SourceControl.TabLength );
-
-        startPos = origText.Length;
-
-        if ( ( startPos >= origText.Length )
-        ||   ( startPos + CharLength > origText.Length ) )
-        {
-          startPos = 0;
-          CharLength = origText.Length;
-        }*/
-
-        //startPos = rng.AdjustXPosForTabs( LineIndex, startPos );
-      }
+      int     startPos = SourceControl.VirtualPositionToPositionInLine( LineIndex, CharPosStart );
 
       var range = new FastColoredTextBoxNS.Range( SourceControl, new FastColoredTextBoxNS.Place( startPos, LineIndex ), new FastColoredTextBoxNS.Place( startPos + CharLength, LineIndex ) );
 

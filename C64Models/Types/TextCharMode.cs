@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RetroDevStudioModels
+namespace RetroDevStudio
 {
   public enum TextCharMode
   {

@@ -33,17 +33,17 @@ namespace MediaTool
       }
       if ( count == -1 )
       {
-        count = spriteProject.NumSprites;
+        count = spriteProject.TotalNumberOfSprites;
       }
 
       if ( ( firstSprite < 0 )
-      ||   ( firstSprite >= spriteProject.NumSprites ) )
+      ||   ( firstSprite >= spriteProject.TotalNumberOfSprites ) )
       {
         System.Console.WriteLine( "OFFSET is invalid" );
         return 1;
       }
       if ( ( count <= 0 )
-      ||   ( firstSprite + count > spriteProject.NumSprites ) )
+      ||   ( firstSprite + count > spriteProject.TotalNumberOfSprites ) )
       {
         System.Console.WriteLine( "COUNT is invalid" );
         return 1;
@@ -52,7 +52,7 @@ namespace MediaTool
       GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( count * 64 ) );
       for ( int i = 0; i < count; ++i )
       {
-        spriteProject.Sprites[firstSprite + i].Data.CopyTo( spriteData, 0, 63, i * 64 );
+        spriteProject.Sprites[firstSprite + i].Tile.Data.CopyTo( spriteData, 0, 63, i * 64 );
       }
 
       if ( !GR.IO.File.WriteAllBytes( ArgParser.Parameter( "EXPORT" ), spriteData ) )

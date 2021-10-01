@@ -45,11 +45,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C128\C128.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C64\C64.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Machines\GraphicMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\GraphicMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\Mega65\Mega65.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Machines\SpriteMode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Machines\TextCharMode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Machines\TextMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\ColorType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\SpriteDisplayMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\SpriteMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\GraphicTileMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\TextCharMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Lookup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\TextMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\MachineType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\Machine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\VC20\VC20.cs" />
@@ -60,7 +64,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Parser\CompileConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ParserBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Project\ProjectConfig.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SharedTypes\GraphicTile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\GraphicTile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ASMFileInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ASMSegment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\AssemblyOutput.cs" />
@@ -68,6 +72,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Types\MemoryMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\Palette.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\FileChunkConstants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\ColorSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Types.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\DisassemblerSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Util.cs" />

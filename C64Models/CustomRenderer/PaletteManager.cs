@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RetroDevStudioModels
+namespace RetroDevStudio
 {
   internal class PaletteManager
   {

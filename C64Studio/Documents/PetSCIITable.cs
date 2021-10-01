@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using C64Studio.Types;
 using GR.Image;
-using RetroDevStudioModels;
+using RetroDevStudio;
 
 
 

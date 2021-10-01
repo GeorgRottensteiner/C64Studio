@@ -7,7 +7,7 @@ using System.ComponentModel;
 using GR.Memory;
 using C64Studio.Types;
 using System.Drawing;
-using RetroDevStudioModels;
+using RetroDevStudio;
 
 namespace C64Studio
 {

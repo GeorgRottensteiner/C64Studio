@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using C64Studio.Formats;
 using C64Studio.Types;
 using GR.Memory;
-using RetroDevStudioModels;
+using RetroDevStudio;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace C64Studio

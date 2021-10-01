@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Text;
 using C64Models.BASIC;
 using GR.Memory;
-using RetroDevStudioModels;
+using RetroDevStudio;
 
 namespace C64Studio.Parser
 {
