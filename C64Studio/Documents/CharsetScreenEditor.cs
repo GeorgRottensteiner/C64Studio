@@ -920,7 +920,8 @@ namespace C64Studio
             if ( ( m_ReverseChars )
             ||   ( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] != (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) ) ) )
             {
-              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ) );
+              DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ), m_MouseButtonReleased );
+              m_MouseButtonReleased = false;
 
               SetCharacter( charX, charY );
               pictureEditor.DisplayPage.DrawTo( m_Image,
