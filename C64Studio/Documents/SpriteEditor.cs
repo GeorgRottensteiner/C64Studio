@@ -2038,34 +2038,13 @@ namespace C64Studio
 
         for ( int y = 0; y < m_SpriteHeight; ++y )
         {
-          byte    byte1 = sprite.Tile.Data.ByteAt( y * 3 );
-          byte    byte2 = sprite.Tile.Data.ByteAt( y * 3 + 1 );
-          byte    byte3 = sprite.Tile.Data.ByteAt( y * 3 + 2 );
-          if ( sprite.Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
+          int     tempColor = sprite.Tile.GetPixel( 0, y );
+          for ( int x = 0; x < m_SpriteWidth - 1; ++x )
           {
-            byte1 <<= 2;
-            byte1 |= (byte)( byte2 >> 6 );
-            byte2 <<= 2;
-            byte2 |= (byte)( byte3 >> 6 );
-            byte3 <<= 2;
-            byte3 |= (byte)( sprite.Tile.Data.ByteAt( y * 3 ) >> 6 );
+
+            sprite.Tile.SetPixel( x, y, sprite.Tile.GetPixel( x + 1, y ) );
           }
-          else if ( sprite.Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
-          {
-            byte1 <<= 1;
-            byte1 |= (byte)( byte2 >> 7 );
-            byte2 <<= 1;
-            byte2 |= (byte)( byte3 >> 7 );
-            byte3 <<= 1;
-            byte3 |= (byte)( sprite.Tile.Data.ByteAt( y * 3 ) >> 7 );
-          }
-          else
-          {
-            Debug.Log( "ShiftLeft unsupported mode " + sprite.Mode );
-          }
-          sprite.Tile.Data.SetU8At( y * 3, byte1 );
-          sprite.Tile.Data.SetU8At( y * 3 + 1, byte2 );
-          sprite.Tile.Data.SetU8At( y * 3 + 2, byte3 );
+          sprite.Tile.SetPixel( m_SpriteWidth - 1, y, tempColor );
         }
         RebuildSpriteImage( spriteIndex );
         panelSprites.InvalidateItemRect( spriteIndex );
@@ -2096,34 +2075,13 @@ namespace C64Studio
 
         for ( int y = 0; y < m_SpriteHeight; ++y )
         {
-          byte    byte1 = sprite.Tile.Data.ByteAt( y * 3 );
-          byte    byte2 = sprite.Tile.Data.ByteAt( y * 3 + 1 );
-          byte    byte3 = sprite.Tile.Data.ByteAt( y * 3 + 2 );
-          if ( sprite.Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
+          int     tempColor = sprite.Tile.GetPixel( m_SpriteWidth - 1, y );
+          for ( int x = 0; x < m_SpriteWidth - 1; ++x )
           {
-            byte1 >>= 2;
-            byte1 |= (byte)( byte3 << 6 );
-            byte3 >>= 2;
-            byte3 |= (byte)( byte2 << 6 );
-            byte2 >>= 2;
-            byte2 |= (byte)( sprite.Tile.Data.ByteAt( y * 3 ) << 6 );
+
+            sprite.Tile.SetPixel( m_SpriteWidth - 1 - x, y, sprite.Tile.GetPixel( m_SpriteWidth - x - 2, y ) );
           }
-          else if ( sprite.Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
-          {
-            byte1 >>= 1;
-            byte1 |= (byte)( byte3 << 7 );
-            byte3 >>= 1;
-            byte3 |= (byte)( byte2 << 7 );
-            byte2 >>= 1;
-            byte2 |= (byte)( sprite.Tile.Data.ByteAt( y * 3 ) << 7 );
-          }
-          else
-          {
-            Debug.Log( "ShiftRight unsupported mode " + sprite.Mode );
-          }
-          sprite.Tile.Data.SetU8At( y * 3, byte1 );
-          sprite.Tile.Data.SetU8At( y * 3 + 1, byte2 );
-          sprite.Tile.Data.SetU8At( y * 3 + 2, byte3 );
+          sprite.Tile.SetPixel( 0, y, tempColor );
         }
         RebuildSpriteImage( spriteIndex );
         panelSprites.InvalidateItemRect( spriteIndex );
