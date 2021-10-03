@@ -253,6 +253,7 @@ namespace C64Studio.Parser
       bool hasTo = false;
       bool hasEQU = false;
       bool hasByte = false;
+      bool hasText = false;
       bool hasZone = false;
       bool hasProcessor = false;
 
@@ -267,10 +268,15 @@ namespace C64Studio.Parser
           // must be a comment
           return Types.AssemblerType.C64_STUDIO;
         }
-        if ( ( line.IndexOf( "ORG " ) != -1 ) 
-        ||   ( line.IndexOf( "org " ) != -1 ) )
+        int     orgPos = -1;
+        if ( ( ( orgPos = line.IndexOf( "ORG " ) ) != -1 ) 
+        ||   ( ( orgPos = line.IndexOf( "org " ) ) != -1 ) )
         {
-          hasORG = true;
+          if ( ( line.IndexOf( '"' ) != -1 )
+          &&   ( line.IndexOf( '"' ) < orgPos ) )
+          {
+            hasORG = true;
+          }
         }
         if ( line.IndexOf( "MAC " ) != -1 )
         {
@@ -296,6 +302,12 @@ namespace C64Studio.Parser
         {
           hasByte = true;
         }
+        if ( ( line.IndexOf( "!text" ) != -1 )
+        ||   ( line.IndexOf( "!TEXT" ) != -1 )
+        ||   ( line.IndexOf( "!TX " ) != -1 ) )
+        {
+          hasByte = true;
+        }
         if ( ( line.IndexOf( "!zone" ) != -1 ) 
         ||   ( line.IndexOf( "!ZONE" ) != -1 ) )
         {
@@ -316,7 +328,9 @@ namespace C64Studio.Parser
         }
 
         if ( ( ( hasORG )
-        &&     ( hasTo ) )
+        &&     ( hasTo )
+        &&     ( !hasByte )
+        &&     ( !hasText ) )
         ||   ( hasProcessor )
         ||   ( hasMAC ) )
         {
