@@ -13,7 +13,7 @@ namespace C64Studio
 {
   public partial class FormAbout : Form
   {
-    public FormAbout()
+    public FormAbout( StudioCore Core )
     {
       InitializeComponent();
 
@@ -21,7 +21,11 @@ namespace C64Studio
 
       pictureBox1.Image = pictureBox1.Image.GetImageStretchedDPI();
       pictureBox2.Image = pictureBox2.Image.GetImageStretchedDPI();
+
+      Core.Theming.ApplyTheme( this );
     }
+
+
 
     private void btnOK_Click( object sender, EventArgs e )
     {

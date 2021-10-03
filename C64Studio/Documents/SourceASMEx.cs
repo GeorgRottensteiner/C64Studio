@@ -2882,7 +2882,7 @@ namespace C64Studio
 
     private void JumpToLine()
     {
-      var formLine = new FormGotoLine();
+      var formLine = new FormGotoLine( Core );
 
       if ( formLine.ShowDialog() == DialogResult.OK )
       {
@@ -3344,7 +3344,7 @@ namespace C64Studio
 
     private void addSubtractDataValuesToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      var formDelta = new FormDeltaValue();
+      var formDelta = new FormDeltaValue( Core );
 
       if ( formDelta.ShowDialog() != DialogResult.OK )
       {

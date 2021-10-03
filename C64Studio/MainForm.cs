@@ -2617,7 +2617,7 @@ namespace C64Studio
 
     public Project NewProjectWizard( string ProjectName )
     {
-      FormProjectWizard projectWizard = new FormProjectWizard(ProjectName, StudioCore.Settings);
+      FormProjectWizard projectWizard = new FormProjectWizard( ProjectName, StudioCore.Settings, StudioCore );
 
       if ( projectWizard.ShowDialog() != DialogResult.OK )
       {
@@ -5278,7 +5278,7 @@ namespace C64Studio
 
     private void aboutToolStripMenuItem1_Click( object sender, EventArgs e )
     {
-      FormAbout about = new FormAbout();
+      FormAbout about = new FormAbout( StudioCore );
 
       about.ShowDialog();
     }
@@ -5315,7 +5315,7 @@ namespace C64Studio
 
     private void fileSetupWizardToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      var wizard = new FormWizard();
+      var wizard = new FormWizard( StudioCore );
 
       if ( wizard.ShowDialog() == DialogResult.OK )
       {
@@ -5996,7 +5996,7 @@ namespace C64Studio
       {
         if ( m_FilesChanged == null )
         {
-          m_FilesChanged = new FormFilesChanged( Doc.DocumentInfo );
+          m_FilesChanged = new FormFilesChanged( Doc.DocumentInfo, StudioCore );
           if ( m_FilesChanged.ShowDialog( this ) == DialogResult.OK )
           {
             // TODO - prefer project files (need to be watched as well)
@@ -6453,7 +6453,7 @@ namespace C64Studio
 
     private void licenseToolStripMenuItem_Click_1( object sender, EventArgs e )
     {
-      FormLicense form = new FormLicense();
+      FormLicense form = new FormLicense( StudioCore );
 
       form.ShowDialog();
     }

@@ -14,10 +14,12 @@ namespace C64Studio
 
 
 
-    public FormFilesChanged( DocumentInfo Document )
+    public FormFilesChanged( DocumentInfo Document, StudioCore Core )
     {
       ChangedDocuments.Add( Document );
       InitializeComponent();
+
+      Core.Theming.ApplyTheme( this );
     }
 
 

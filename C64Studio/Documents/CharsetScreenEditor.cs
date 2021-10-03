@@ -282,9 +282,6 @@ namespace C64Studio
 
         CalcRect( m_DragStartPos, m_LastDragEndPos, out o1, out o2 );
 
-        o1.Offset( -m_CharsetScreen.ScreenOffsetX, -m_CharsetScreen.ScreenOffsetY );
-        o2.Offset( -m_CharsetScreen.ScreenOffsetX, -m_CharsetScreen.ScreenOffsetY );
-
         int  sx1 = ( o1.X - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
         int  sx2 = ( o2.X + 1 - m_CharsetScreen.ScreenOffsetX ) * ( pictureEditor.ClientRectangle.Width / m_CharsWidth );
         int  sy1 = ( o1.Y - m_CharsetScreen.ScreenOffsetY ) * ( pictureEditor.ClientRectangle.Height / m_CharsHeight );
@@ -812,11 +809,8 @@ namespace C64Studio
                     }
                   }
                 }
-                pictureEditor.DisplayPage.DrawTo( m_Image,
-                                                  p1.X * 8, p1.Y * 8,
-                                                  ( p1.X - m_CharsetScreen.ScreenOffsetX ) * 8, ( p1.Y - m_CharsetScreen.ScreenOffsetY ) * 8,
-                                                  ( p2.X - p1.X + 1 ) * 8, ( p2.Y - p1.Y + 1 ) * 8 );
-                pictureEditor.Invalidate( new System.Drawing.Rectangle( p1.X * 8, p1.Y * 8, ( p2.X - p1.X + 1 ) * 8, ( p2.Y - p1.Y + 1 ) * 8 ) );
+                RedrawFullScreen();
+                pictureEditor.Invalidate();
                 Modified = true;
               }
               return;
@@ -962,58 +956,49 @@ namespace C64Studio
             m_DragEndPos.X = charX;
             m_DragEndPos.Y = charY;
 
+            if ( ( charX == m_CharsetScreen.ScreenOffsetX + m_CharsWidth - 1 )
+            &&   ( screenHScroll.Value < screenHScroll.Maximum ) )
+            {
+              // autoscroll right
+              ++screenHScroll.Value;
+              ++m_CharsetScreen.ScreenOffsetX;
+              ++charX;
+              m_DragEndPos.X = charX;
+            }
+            if ( ( charX == m_CharsetScreen.ScreenOffsetX )
+            &&   ( screenHScroll.Value > screenHScroll.Minimum ) )
+            {
+              // autoscroll left
+              --screenHScroll.Value;
+              --m_CharsetScreen.ScreenOffsetX;
+              --charX;
+              m_DragEndPos.X = charX;
+            }
+            if ( ( charY == m_CharsetScreen.ScreenOffsetY + m_CharsHeight - 1 )
+            &&   ( screenVScroll.Value < screenVScroll.Maximum ) )
+            {
+              // autoscroll down
+              ++screenVScroll.Value;
+              ++m_CharsetScreen.ScreenOffsetY;
+              ++charY;
+              m_DragEndPos.Y = charY;
+            }
+            if ( ( charY == m_CharsetScreen.ScreenOffsetY )
+            &&   ( screenVScroll.Value > screenVScroll.Minimum ) )
+            {
+              // autoscroll up
+              --screenVScroll.Value;
+              --m_CharsetScreen.ScreenOffsetY;
+              --charY;
+              m_DragEndPos.Y = charY;
+            }
+
             if ( m_DragEndPos != m_LastDragEndPos )
             {
-              // restore background
-              if ( m_LastDragEndPos.X != -1 )
-              {
-                System.Drawing.Point    o1, o2;
-
-                CalcRect( m_DragStartPos, m_LastDragEndPos, out o1, out o2 );
-
-                m_Image.DrawTo( pictureEditor.DisplayPage,
-                                ( o1.X - m_CharsetScreen.ScreenOffsetX ) * 8, ( o1.Y - m_CharsetScreen.ScreenOffsetY ) * 8,
-                                o1.X * 8, o1.Y * 8,
-                                ( o2.X - o1.X + 1 ) * 8, ( o2.Y - o1.Y + 1 ) * 8 );
-
-                pictureEditor.Invalidate( new System.Drawing.Rectangle( ( o1.X - m_CharsetScreen.ScreenOffsetX ) * 8,
-                                                                        ( o1.Y - m_CharsetScreen.ScreenOffsetY ) * 8, 
-                                                                        ( o2.X - o1.X + 1 ) * 8, 
-                                                                        ( o2.Y - o1.Y + 1 ) * 8 ) );
-              }
               m_LastDragEndPos = m_DragEndPos;
 
-              System.Drawing.Point    p1, p2;
-
-              CalcRect( m_DragStartPos, m_DragEndPos, out p1, out p2 );
-
-              if ( m_ToolMode == ToolMode.RECTANGLE )
-              {
-                for ( int x = p1.X; x <= p2.X; ++x )
-                {
-                  DrawCharacter( x, p1.Y );
-                  DrawCharacter( x, p2.Y );
-                }
-                for ( int y = p1.Y + 1; y <= p2.Y - 1; ++y )
-                {
-                  DrawCharacter( p1.X, y );
-                  DrawCharacter( p2.X, y );
-                }
-              }
-              else
-              {
-                for ( int x = p1.X; x <= p2.X; ++x )
-                {
-                  for ( int y = p1.Y; y <= p2.Y; ++y )
-                  {
-                    DrawCharacter( x, y );
-                  }
-                }
-              }
-              pictureEditor.Invalidate( new System.Drawing.Rectangle( ( p1.X - m_CharsetScreen.ScreenOffsetX ) * 8, 
-                                                                      ( p1.Y - m_CharsetScreen.ScreenOffsetY ) * 8, 
-                                                                      ( p2.X - p1.X + 1 ) * 8, 
-                                                                      ( p2.Y - p1.Y + 1 ) * 8 ) );
+              Redraw();
+              pictureEditor.Invalidate();
             }
             break;
           case ToolMode.SELECT:
@@ -1574,6 +1559,39 @@ namespace C64Studio
     {
       pictureEditor.DisplayPage.Box( 0, 0, pictureEditor.DisplayPage.Width, pictureEditor.DisplayPage.Height, 16 );
       pictureEditor.DisplayPage.DrawImage( m_Image, -m_CharsetScreen.ScreenOffsetX * 8, -m_CharsetScreen.ScreenOffsetY * 8 );
+
+      if ( ( ( m_ToolMode == ToolMode.RECTANGLE )
+      ||     ( m_ToolMode == ToolMode.FILLED_RECTANGLE ) )
+      &&   ( m_IsDragging ) )
+      {
+        System.Drawing.Point    p1, p2;
+
+        CalcRect( m_DragStartPos, m_DragEndPos, out p1, out p2 );
+
+        if ( m_ToolMode == ToolMode.RECTANGLE )
+        {
+          for ( int x = p1.X; x <= p2.X; ++x )
+          {
+            DrawCharacter( x, p1.Y );
+            DrawCharacter( x, p2.Y );
+          }
+          for ( int y = p1.Y + 1; y <= p2.Y - 1; ++y )
+          {
+            DrawCharacter( p1.X, y );
+            DrawCharacter( p2.X, y );
+          }
+        }
+        else
+        {
+          for ( int x = p1.X; x <= p2.X; ++x )
+          {
+            for ( int y = p1.Y; y <= p2.Y; ++y )
+            {
+              DrawCharacter( x, y );
+            }
+          }
+        }
+      }
 
       int     x1 = m_CharsetScreen.ScreenOffsetX;
       int     y1 = m_CharsetScreen.ScreenOffsetY;

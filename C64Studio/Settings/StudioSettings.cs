@@ -1334,6 +1334,7 @@ namespace C64Studio
       SetSyntaxColor( C64Studio.Types.ColorableElement.BACKGROUND_CONTROL, 0xff000000, 0xfff0f0f0, true );
       SetSyntaxColor( C64Studio.Types.ColorableElement.CHANGED_DEBUG_ELEMENT, 0xffff0000, 0xfff0f0f0, true );
       SetSyntaxColor( C64Studio.Types.ColorableElement.SELECTION_FRAME, 0xff80ff80, 0xff000000, true );
+      SetSyntaxColor( C64Studio.Types.ColorableElement.BACKGROUND_BUTTON, 0xff000000, 0xffE1E1E1, true );
 
       foreach ( Types.ColorableElement color in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {

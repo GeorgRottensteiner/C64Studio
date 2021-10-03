@@ -10,10 +10,14 @@ namespace C64Studio
 {
   public partial class FormLicense : Form
   {
-    public FormLicense()
+    public FormLicense( StudioCore Core )
     {
       InitializeComponent();
+
+      Core.Theming.ApplyTheme( this );
     }
+
+
 
     private void btnOK_Click( object sender, EventArgs e )
     {

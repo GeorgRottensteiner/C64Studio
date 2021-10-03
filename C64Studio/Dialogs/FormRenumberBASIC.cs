@@ -28,6 +28,8 @@ namespace C64Studio
       editLineStep.Text = "10";
       editFirstLineNumber.Text = FirstLineNumber.ToString();
       editLastLineNumber.Text = LastLineNumber.ToString();
+
+      Core.Theming.ApplyTheme( this );
     }
 
 

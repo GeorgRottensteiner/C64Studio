@@ -29,6 +29,8 @@ namespace C64Studio
         listPalette.Items.Add( Palette.Colors[i] );
       }
       listPalette.SelectedIndex = 0;
+
+      Core.Theming.ApplyTheme( this );
     }
 
 

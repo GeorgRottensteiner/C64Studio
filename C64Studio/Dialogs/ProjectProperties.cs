@@ -39,6 +39,8 @@ namespace C64Studio
         m_Settings.CurrentConfig = m_Settings.GetConfigurations().First();
       }
       comboConfiguration.SelectedItem = m_Settings.CurrentConfig.Name;
+
+      Core.Theming.ApplyTheme( this );
     }
 
 

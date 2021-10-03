@@ -285,7 +285,7 @@ namespace C64Studio
 
     private void toolStripButtonGoto_Click( object sender, EventArgs e )
     {
-      FormGoto frmGoto = new FormGoto();
+      FormGoto frmGoto = new FormGoto( Core );
 
       if ( frmGoto.ShowDialog() == DialogResult.OK )
       {

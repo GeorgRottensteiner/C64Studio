@@ -1,6 +1,7 @@
 ﻿using C64Studio.Controls;
 using C64Studio.Types;
 using RetroDevStudio;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -62,7 +63,7 @@ namespace C64Studio.CustomRenderer
         {
           var tsItem = item as ToolStripSeparator;
 
-          tsItem.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
+          tsItem.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_BUTTON ) );
           tsItem.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) );
         }
         if ( item is ToolStripDropDownItem )
@@ -71,15 +72,6 @@ namespace C64Studio.CustomRenderer
           ApplyThemeToToolStripItems( tsItem.DropDownItems );
         }
       }
-    }
-
-
-
-    internal void ApplyTheme( BaseDocument BaseDoc )
-    {
-      BaseDoc.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
-
-      RecolorControlsRecursive( BaseDoc.Controls );
     }
 
 
@@ -105,6 +97,12 @@ namespace C64Studio.CustomRenderer
 
           combo.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
           combo.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) );
+        }
+        if ( control is Button )
+        {
+          var button = control as Button;
+
+          button.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_BUTTON ) );
         }
         if ( control is ToolStrip )
         {
@@ -149,6 +147,15 @@ namespace C64Studio.CustomRenderer
 
       e.Graphics.DrawString( e.Header.Text, e.Header.ListView.Font, Brushes.White, e.Bounds, stringFormat );
       //e.DrawText();
+    }
+
+
+
+    public void ApplyTheme( Form Form )
+    {
+      Form.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
+
+      RecolorControlsRecursive( Form.Controls );
     }
 
 

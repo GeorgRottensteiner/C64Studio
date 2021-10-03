@@ -14,12 +14,13 @@ namespace C64Studio
     public bool   InsertAsHex = true;
 
 
-    public FormDeltaValue()
+    public FormDeltaValue( StudioCore Core )
     {
       InitializeComponent();
       btnOK.Enabled = false;
 
       Delta = 0;
+      Core.Theming.ApplyTheme( this );
     }
     
 

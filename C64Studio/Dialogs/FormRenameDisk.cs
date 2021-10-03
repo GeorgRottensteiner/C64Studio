@@ -47,6 +47,8 @@ namespace C64Studio
           listPETSCII.Items.Add( CreateItem( character ) );
         }
       }
+
+      Core.Theming.ApplyTheme( this );
     }
 
 

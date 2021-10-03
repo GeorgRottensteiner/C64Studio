@@ -401,6 +401,9 @@ namespace C64Studio.Types
     [Description( "Selection Frame" )]
     SELECTION_FRAME,
 
+    [Description( "Button Background" )]
+    BACKGROUND_BUTTON,
+
     LAST_ENTRY
   }
 

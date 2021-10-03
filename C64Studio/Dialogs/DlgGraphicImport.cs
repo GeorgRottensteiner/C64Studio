@@ -136,6 +136,8 @@ namespace C64Studio
       comboMulticolor2.SelectedIndex  = MCSettings.MultiColor2 + 1;
 
       MultiColorSettings = MCSettings;
+
+      Core.Theming.ApplyTheme( this );
     }
 
 

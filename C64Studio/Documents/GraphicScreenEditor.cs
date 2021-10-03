@@ -627,7 +627,7 @@ namespace C64Studio
         if ( ( mappedImage.Width != m_GraphicScreenProject.Image.Width )
         ||   ( mappedImage.Height != m_GraphicScreenProject.Image.Height ) )
         {
-          Dialogs.DlgImportImageResize    dlg = new C64Studio.Dialogs.DlgImportImageResize( mappedImage.Width, mappedImage.Height, m_GraphicScreenProject.Image.Width, m_GraphicScreenProject.Image.Height );
+          Dialogs.DlgImportImageResize    dlg = new C64Studio.Dialogs.DlgImportImageResize( mappedImage.Width, mappedImage.Height, m_GraphicScreenProject.Image.Width, m_GraphicScreenProject.Image.Height, Core );
 
           dlg.ShowDialog();
           if ( dlg.ChosenResult == C64Studio.Dialogs.DlgImportImageResize.ImportBehaviour.CANCEL )

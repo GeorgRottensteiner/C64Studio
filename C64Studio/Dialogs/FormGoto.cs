@@ -10,17 +10,23 @@ namespace C64Studio
 {
   public partial class FormGoto : Form
   {
-    public FormGoto()
+    public FormGoto( StudioCore Core )
     {
       InitializeComponent();
       btnOK.Enabled = false;
+
+      Core.Theming.ApplyTheme( this );
     }
     
+
+
     private void btnOK_Click( object sender, EventArgs e )
     {
       DialogResult = DialogResult.OK;
       Close();
     }
+
+
 
     private void editAddress_TextChanged(object sender, EventArgs e)
     {

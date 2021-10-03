@@ -24,6 +24,7 @@ namespace C64Studio
       AddElementTabs();
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
+      Core.Theming.ApplyTheme( this );
     }
 
 

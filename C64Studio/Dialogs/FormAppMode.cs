@@ -18,6 +18,8 @@ namespace C64Studio
     {
       this.Core = Core;
       InitializeComponent();
+
+      Core.Theming.ApplyTheme( this );
     }
 
 

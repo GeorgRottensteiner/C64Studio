@@ -44,6 +44,8 @@ namespace C64Studio
       InsertMacro( "$(ProjectPath)" );
       InsertMacro( "$(MediaManager)" );
       InsertMacro( "$(MediaTool)" );
+
+      Core.Theming.ApplyTheme( this );
     }
 
 

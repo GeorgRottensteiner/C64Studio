@@ -48,7 +48,7 @@ namespace C64Studio
 
     private void OnMenuItemChangeOffsetClick( object sender, EventArgs e )
     {
-      var formDisplayOffset = new FormSetOffset();
+      var formDisplayOffset = new FormSetOffset( Core );
       formDisplayOffset.DisplayOffset = hexView.DisplayedAddressOffset;
       if ( formDisplayOffset.ShowDialog() == DialogResult.OK )
       {

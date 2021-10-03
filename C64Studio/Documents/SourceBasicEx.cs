@@ -1726,7 +1726,7 @@ namespace C64Studio
 
     private void JumpToLine()
     {
-      var formLine = new FormGotoLine();
+      var formLine = new FormGotoLine( Core );
 
       if ( formLine.ShowDialog() == DialogResult.OK )
       {

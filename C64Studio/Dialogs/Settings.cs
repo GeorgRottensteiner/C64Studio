@@ -129,6 +129,8 @@ namespace C64Studio
       {
         asmLibraryPathList.Items.Add( libPath );
       }
+
+      Core.Theming.ApplyTheme( this );
     }
 
 
@@ -531,6 +533,7 @@ namespace C64Studio
 
     private void RefreshDisplayOnDocuments()
     {
+      Core.Theming.ApplyTheme( this );
       Core.Settings.RefreshDisplayOnAllDocuments( Core );
     }
 

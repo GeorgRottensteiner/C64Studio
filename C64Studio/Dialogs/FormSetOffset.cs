@@ -29,9 +29,11 @@ namespace C64Studio
 
 
 
-    public FormSetOffset()
+    public FormSetOffset( StudioCore Core )
     {
       InitializeComponent();
+
+      Core.Theming.ApplyTheme( this );
     }
     
 

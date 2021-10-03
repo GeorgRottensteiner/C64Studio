@@ -17,7 +17,7 @@ namespace C64Studio
     private StudioSettings  Settings;
 
 
-    public FormProjectWizard( string ProjectName, StudioSettings Settings )
+    public FormProjectWizard( string ProjectName, StudioSettings Settings, StudioCore Core )
     {
       this.Settings = Settings;
       InitializeComponent();
@@ -26,6 +26,8 @@ namespace C64Studio
 
       btnOK.Enabled = false;
       UpdateSummary();
+
+      Core.Theming.ApplyTheme( this );
     }
     
 

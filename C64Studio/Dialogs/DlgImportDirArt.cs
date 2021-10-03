@@ -17,6 +17,8 @@ namespace C64Studio
     public DlgImportDirArt( StudioCore Core )
     {
       InitializeComponent();
+
+      Core.Theming.ApplyTheme( this );
     }
 
 

@@ -14,10 +14,12 @@ namespace C64Studio
 
 
 
-    public FormGotoLine()
+    public FormGotoLine( StudioCore Core )
     {
       InitializeComponent();
       btnOK.Enabled = false;
+
+      Core.Theming.ApplyTheme( this );
     }
     
 

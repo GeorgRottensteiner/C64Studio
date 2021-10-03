@@ -23,6 +23,8 @@ namespace C64Studio
       SetHexData( hexOrig, OrigData );
       InterleavedData = new GR.Memory.ByteBuffer( OrigData );
       editInterleave.Text = "8";
+
+      Core.Theming.ApplyTheme( this );
     }
 
 

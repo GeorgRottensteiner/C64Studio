@@ -11,12 +11,16 @@ namespace C64Studio
 {
   public partial class FormWizard : Form
   {
-    public FormWizard()
+    public FormWizard( StudioCore Core )
     {
       InitializeComponent();
       btnOK.Enabled = false;
+
+      Core.Theming.ApplyTheme( this );
     }
     
+
+
     private void btnOK_Click( object sender, EventArgs e )
     {
       DialogResult = DialogResult.OK;
