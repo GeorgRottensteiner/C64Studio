@@ -14,8 +14,8 @@ namespace RetroDevStudio
           return ConstantData.PaletteC64();
         case MachineType.MEGA65:
           return ConstantData.PaletteMega65();
-        case MachineType.VC20:
-          return ConstantData.PaletteVC20();
+        case MachineType.VIC20:
+          return ConstantData.PaletteVIC20();
       }
     }
 

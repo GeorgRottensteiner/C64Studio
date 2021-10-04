@@ -16,8 +16,8 @@ namespace RetroDevStudio
     MEGA65_FCM,
     [Description( "Mega65 Full Color Mode 16bit" )]
     MEGA65_FCM_16BIT,
-    [Description( "VC20 Text Mode" )]
-    VC20
+    [Description( "VIC20 Text Mode" )]
+    VIC20
   }
 
 }

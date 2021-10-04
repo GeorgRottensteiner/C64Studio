@@ -12,7 +12,7 @@ namespace RetroDevStudio
         case TextCharMode.COMMODORE_ECM:
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.COMMODORE_MULTICOLOR:
-        case TextCharMode.VC20:
+        case TextCharMode.VIC20:
           return 16;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
@@ -32,7 +32,7 @@ namespace RetroDevStudio
         case TextCharMode.COMMODORE_ECM:
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.COMMODORE_MULTICOLOR:
-        case TextCharMode.VC20:
+        case TextCharMode.VIC20:
           return 8;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
@@ -84,8 +84,8 @@ namespace RetroDevStudio
         case TextMode.MEGA65_40_X_25_FCM_16BIT:
         case TextMode.MEGA65_80_X_25_FCM_16BIT:
           return TextCharMode.MEGA65_FCM_16BIT;
-        case TextMode.COMMODORE_VC20_22_X_23:
-          return TextCharMode.VC20;
+        case TextMode.COMMODORE_VIC20_22_X_23:
+          return TextCharMode.VIC20;
         default:
           Debug.Log( "FromTextMode unsupported Mode " + Mode );
           return TextCharMode.COMMODORE_HIRES;
@@ -102,7 +102,7 @@ namespace RetroDevStudio
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.COMMODORE_MULTICOLOR:
         case TextCharMode.MEGA65_FCM:
-        case TextCharMode.VC20:
+        case TextCharMode.VIC20:
           return 256;
         case TextCharMode.MEGA65_FCM_16BIT:
           return 8192;
@@ -121,7 +121,7 @@ namespace RetroDevStudio
         case TextCharMode.COMMODORE_ECM:
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.COMMODORE_MULTICOLOR:
-        case TextCharMode.VC20:
+        case TextCharMode.VIC20:
           return true;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
@@ -215,7 +215,7 @@ namespace RetroDevStudio
         default:
           return GraphicTileMode.COMMODORE_HIRES;
         case TextCharMode.COMMODORE_MULTICOLOR:
-        case TextCharMode.VC20:
+        case TextCharMode.VIC20:
           return GraphicTileMode.COMMODORE_MULTICOLOR;
         case TextCharMode.MEGA65_FCM:
           return GraphicTileMode.MEGA65_FCM_256_COLORS;

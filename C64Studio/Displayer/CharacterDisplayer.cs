@@ -81,7 +81,7 @@ namespace C64Studio.Displayer
 
 
 
-    public static void DisplayVC20Char( GR.Memory.ByteBuffer Data, int BGColor, int BorderColor, int AuxiliaryColor, int CharColor, CustomDrawControlContext Context )
+    public static void DisplayVIC20Char( GR.Memory.ByteBuffer Data, int BGColor, int BorderColor, int AuxiliaryColor, int CharColor, CustomDrawControlContext Context )
     {
       // multicolor
       if ( CharColor < 8 )
@@ -207,7 +207,7 @@ namespace C64Studio.Displayer
 
 
 
-    public static void DisplayVC20Char( GR.Memory.ByteBuffer Data, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayVIC20Char( GR.Memory.ByteBuffer Data, int BGColor, int MColor1, int MColor2, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       // multicolor
       if ( CharColor < 8 )
@@ -325,9 +325,9 @@ namespace C64Studio.Displayer
       {
         DisplayMega65FCMChar( Char.Tile.Data, AltBGColor, AlternativeColor, Context );
       }
-      else if ( AlternativeMode == TextCharMode.VC20 )
+      else if ( AlternativeMode == TextCharMode.VIC20 )
       {
-        DisplayVC20Char( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
+        DisplayVIC20Char( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
       }
       else
       {
@@ -400,9 +400,9 @@ namespace C64Studio.Displayer
       {
         DisplayMega65FCMChar( Char.Tile.Data, AltBGColor, AlternativeColor, TargetImage, X, Y );
       }
-      else if ( AlternativeMode == TextCharMode.VC20 )
+      else if ( AlternativeMode == TextCharMode.VIC20 )
       {
-        DisplayVC20Char( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
+        DisplayVIC20Char( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
       }
       else
       {

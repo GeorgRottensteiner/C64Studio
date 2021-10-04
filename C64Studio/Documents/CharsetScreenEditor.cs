@@ -3094,7 +3094,7 @@ namespace C64Studio
           comboMulticolor2.Enabled = false;
           comboBGColor4.Enabled = false;
           break;
-        case TextCharMode.VC20:
+        case TextCharMode.VIC20:
           labelMColor1.Enabled = true;
           labelMColor1.Text = "Border Color";
           labelMColor2.Enabled = true;
@@ -3156,7 +3156,7 @@ namespace C64Studio
           m_CharsHeight = 25;
           pictureEditor.DisplayPage.Create( 640, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
           break;
-        case TextMode.COMMODORE_VC20_22_X_23:
+        case TextMode.COMMODORE_VIC20_22_X_23:
           m_CharsWidth = 22;
           m_CharsHeight = 23;
           pictureEditor.DisplayPage.Create( 176, 184, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
@@ -3518,11 +3518,11 @@ namespace C64Studio
         m_TextEntryEnteredText.Clear();
         m_TextEntryStartedInLine = -1;
 
-        checkAutoCenter.Image = Properties.Resources.charscreen_autocenter;
+        checkAutoCenter.Image = Properties.Resources.charscreen_autocenter.ToBitmap();
       }
       else
       {
-        checkAutoCenter.Image = Properties.Resources.charscreen_autocenter_off;
+        checkAutoCenter.Image = Properties.Resources.charscreen_autocenter_off.ToBitmap();
       }
     }
 

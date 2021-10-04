@@ -21,8 +21,8 @@ namespace RetroDevStudio
       {
         case MachineType.C64:
           return Machines.C64;
-        case MachineType.VC20:
-          return Machines.VC20;
+        case MachineType.VIC20:
+          return Machines.VIC20;
         case MachineType.C128:
           return Machines.C128;
         case MachineType.MEGA65:

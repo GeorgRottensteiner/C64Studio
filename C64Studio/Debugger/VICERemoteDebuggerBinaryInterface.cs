@@ -1344,7 +1344,7 @@ namespace C64Studio
     {
       switch ( m_ConnectedMachine )
       {
-        case MachineType.VC20:
+        case MachineType.VIC20:
           return false;
       }
       return true;

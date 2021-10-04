@@ -2,11 +2,11 @@
 {
   public partial class ConstantData
   {
-    public static Palette PaletteVC20()
+    public static Palette PaletteVIC20()
     {
       var pal = new Palette();
 
-      // hard coded VC20 colors (nabbed from Forum64 thread)
+      // hard coded VIC20 colors (nabbed from Forum64 thread)
        pal.ColorValues[0] = 0xff000000;
        pal.ColorValues[1] = 0xffffffff;
        pal.ColorValues[2] = 0xff9e3135;
@@ -23,9 +23,6 @@
       pal.ColorValues[13] = 0xffb4f4b0;
       pal.ColorValues[14] = 0xffa69ee2;
       pal.ColorValues[15] = 0xfff5fcac;
-
-      // selection color
-      pal.ColorValues[16] = 0xff80ff80;
 
       pal.CreateBrushes();
 

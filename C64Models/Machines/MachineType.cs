@@ -8,8 +8,8 @@ namespace RetroDevStudio
     UNKNOWN,
     [Description( "Commodore 64" )]
     C64,
-    [Description( "VC 20" )]
-    VC20,
+    [Description( "VIC 20" )]
+    VIC20,
     [Description( "Commodore 128" )]
     C128,
     [Description( "Commodore Plus 4" )]

@@ -120,7 +120,7 @@ namespace C64Studio.Types
       }
       else if ( filename.StartsWith( "XVIC" ) )
       {
-        return MachineType.VC20;
+        return MachineType.VIC20;
       }
       else if ( filename.StartsWith( "X128" ) )
       {

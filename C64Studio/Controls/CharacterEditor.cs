@@ -1010,7 +1010,7 @@ namespace C64Studio.Controls
           case TextCharMode.COMMODORE_ECM:
           case TextCharMode.COMMODORE_HIRES:
           case TextCharMode.COMMODORE_MULTICOLOR:
-          case TextCharMode.VC20:
+          case TextCharMode.VIC20:
             switch ( (ColorType)pickedColor )
             {
               case ColorType.CUSTOM_COLOR:
