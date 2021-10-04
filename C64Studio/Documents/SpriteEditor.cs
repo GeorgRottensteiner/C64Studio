@@ -439,118 +439,23 @@ namespace C64Studio
           }
         }
 
+        Undo.UndoTask undo = null;
+        if ( m_ButtonReleased )
+        {
+          undo = new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, m_CurrentSprite );
+        }
         if ( affectedSprite.Tile.SetPixel( charX, charY, colorIndex ) )
         {
           Modified = true;
 
-          if ( m_ButtonReleased )
+          if ( undo != null )
           {
-            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, m_CurrentSprite ) );
+            DocumentInfo.UndoManager.AddUndoTask( undo );
             m_ButtonReleased = false;
           }
 
-          //m_SpriteProject.Sprites[m_CurrentSprite].Tile.Data.SetU8At( charY * 3 + byteX, newByte );
-          /*
-          if ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-          {
-            m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.SetPixel( charX * 2, charY, (uint)newColor );
-            m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.SetPixel( charX * 2 + 1, charY, (uint)newColor );
-          }
-          else if ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
-          {
-            m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.SetPixel( charX, charY, (uint)newColor );
-          }
-          else
-          {
-            Debug.Log( "HandleMouseOnEditor #2 unsupported mode " + m_SpriteProject.Sprites[m_CurrentSprite].Mode );
-          }*/
-
           SpriteChanged( m_CurrentSprite );
         }
-
-        /*
-        int byteX = charX / 8;
-        charX %= 8;
-        byte    charByte = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Data.ByteAt( charY * 3 + byteX );
-        byte    newByte = charByte;
-
-        if ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
-        {
-          // single color
-          charX = 7 - charX;
-          if ( m_CurrentColorType == ColorType.CUSTOM_COLOR )
-          {
-            newByte |= (byte)( 1 << charX );
-            newColor = m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor;
-          }
-          else
-          {
-            newByte &= (byte)~( 1 << charX );
-            newColor = m_SpriteProject.Colors.BackgroundColor;
-          }
-        }
-        else if ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-        {
-          // multi color
-          charX = ( ( X * 12 ) / pictureEditor.ClientRectangle.Width ) % 4;
-          charX = 3 - charX;
-
-          newByte &= (byte)~( 3 << ( 2 * charX ) );
-
-          int     replacementBytes = 0;
-
-          switch ( m_CurrentColorType )
-          {
-            case ColorType.BACKGROUND:
-              newColor = m_SpriteProject.Colors.BackgroundColor;
-              break;
-            case ColorType.CUSTOM_COLOR:
-              replacementBytes = 2;
-              newColor = m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor;
-              break;
-            case ColorType.MULTICOLOR_1:
-              replacementBytes = 1;
-              newColor = m_SpriteProject.Colors.MultiColor1;
-              break;
-            case ColorType.MULTICOLOR_2:
-              replacementBytes = 3;
-              newColor = m_SpriteProject.Colors.MultiColor2;
-              break;
-          }
-          newByte |= (byte)( replacementBytes << ( 2 * charX ) );
-        }
-        else
-        {
-          Debug.Log( "HandleMouseOnEditor unsupported mode " + m_SpriteProject.Sprites[m_CurrentSprite].Mode );
-        }
-
-        if ( newByte != charByte )
-        {
-          Modified = true;
-          
-          if ( m_ButtonReleased )
-          {
-            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, m_CurrentSprite ) );
-            m_ButtonReleased = false;
-          }
-
-          m_SpriteProject.Sprites[m_CurrentSprite].Tile.Data.SetU8At( charY * 3 + byteX, newByte );
-          if ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-          {
-            m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.SetPixel( charX * 2, charY, (uint)newColor );
-            m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.SetPixel( charX * 2 + 1, charY, (uint)newColor );
-          }
-          else if ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
-          {
-            m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.SetPixel( charX, charY, (uint)newColor );
-          }
-          else
-          {
-            Debug.Log( "HandleMouseOnEditor #2 unsupported mode " + m_SpriteProject.Sprites[m_CurrentSprite].Mode );
-          }
-
-          SpriteChanged( m_CurrentSprite );
-        }*/
       }
       else
       {
@@ -2249,7 +2154,7 @@ namespace C64Studio
         firstEntry = false;
         var sprite = m_SpriteProject.Sprites[spriteIndex];
 
-        for ( int i = 0; i < 63; ++i )
+        for ( int i = 0; i < sprite.Tile.Data.Length; ++i )
         {
           byte value = (byte)( ~sprite.Tile.Data.ByteAt( i ) );
           sprite.Tile.Data.SetU8At( i, value );
@@ -2281,56 +2186,25 @@ namespace C64Studio
         firstEntry = false;
         var sprite = m_SpriteProject.Sprites[spriteIndex];
 
-        GR.Memory.ByteBuffer    resultData = new GR.Memory.ByteBuffer( 63 );
+        int     side = Math.Min( m_SpriteHeight, m_SpriteWidth );
 
-        if ( sprite.Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
+        var resultTile = new GraphicTile( sprite.Tile );
+
+        for ( int i = 0; i < side; ++i )
         {
-          for ( int i = 0; i < m_SpriteHeight; ++i )
+          for ( int j = 0; j < side; ++j )
           {
-            for ( int j = 0; j < m_SpriteHeight; ++j )
-            {
-              int sourceX = 1 + i;
-              int sourceY = j;
-              int targetX = j;
-              int targetY = m_SpriteHeight - 1 - i;
-              if ( ( sprite.Tile.Data.ByteAt( sourceX / 8 + sourceY * 3 ) & ( 1 << ( 7 - ( sourceX % 8 ) ) ) ) != 0 )
-              {
-                resultData.SetU8At( targetY * 3 + targetX / 8, (byte)( resultData.ByteAt( targetY * 3 + targetX / 8 ) | ( 1 << ( 7 - targetX % 8 ) ) ) );
-              }
-            }
+            int sourceX = i;
+            int sourceY = j;
+            int targetX = j;
+            int targetY = side - 1 - i;
+
+            int   sourceColor = sprite.Tile.GetPixel( sourceX, sourceY );
+            resultTile.SetPixel( targetX, targetY, sourceColor );
           }
         }
-        else if ( sprite.Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-        {
-          for ( int i = 0; i < m_SpriteWidth; i += 2 )
-          {
-            for ( int j = 0; j < m_SpriteHeight; ++j )
-            {
-              int sourceX = m_SpriteHeight - 1 - j;
-              int sourceY = i;
-
-              if ( ( sourceX < 0 )
-              ||   ( sourceX >= m_SpriteWidth )
-              ||   ( sourceY < 0 )
-              ||   ( sourceY >= m_SpriteHeight ) )
-              {
-                continue;
-              }
-              int maskOffset = 6 - ( ( sourceX % 8 ) / 2 ) * 2;
-              byte sourceColor = (byte)( ( sprite.Tile.Data.ByteAt( sourceX / 8 + sourceY * 3 ) & ( 3 << maskOffset ) ) >> maskOffset );
-
-              maskOffset = 6 - ( ( i % 8 ) / 2 ) * 2;
-              resultData.SetU8At( j * 3 + i / 8, (byte)( resultData.ByteAt( j * 3 + i / 8 ) | ( sourceColor << maskOffset ) ) );
-            }
-          }
-        }
-        else
-        {
-          Debug.Log( "RotateLeft unsupported mode " + sprite.Mode );
-        }
-        sprite.Tile.Data = resultData;
-        RebuildSpriteImage( spriteIndex );
-        panelSprites.InvalidateItemRect( spriteIndex );
+        sprite.Tile.Data = resultTile.Data;
+        SpriteChanged( spriteIndex );
       }
       pictureEditor.Invalidate();
       Modified = true;
@@ -2356,56 +2230,25 @@ namespace C64Studio
         firstEntry = false;
         var sprite = m_SpriteProject.Sprites[spriteIndex];
 
-        GR.Memory.ByteBuffer resultData = new GR.Memory.ByteBuffer( 63 );
+        int     side = Math.Min( m_SpriteHeight, m_SpriteWidth );
 
-        if ( sprite.Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
+        var resultTile = new GraphicTile( sprite.Tile );
+
+        for ( int i = 0; i < side; ++i )
         {
-          for ( int i = 0; i < m_SpriteHeight; ++i )
+          for ( int j = 0; j < side; ++j )
           {
-            for ( int j = 0; j < m_SpriteHeight; ++j )
-            {
-              int sourceX = 1 + i;
-              int sourceY = j;
-              int targetX = m_SpriteHeight - 1 - j;
-              int targetY = i;
-              if ( ( sprite.Tile.Data.ByteAt( sourceX / 8 + sourceY * 3 ) & ( 1 << ( 7 - ( sourceX % 8 ) ) ) ) != 0 )
-              {
-                resultData.SetU8At( targetY * 3 + targetX / 8, (byte)( resultData.ByteAt( targetY * 3 + targetX / 8 ) | ( 1 << ( 7 - targetX % 8 ) ) ) );
-              }
-            }
+            int sourceX = i;
+            int sourceY = j;
+            int targetX = side - 1 - j;
+            int targetY = i;
+
+            int   sourceColor = sprite.Tile.GetPixel( sourceX, sourceY );
+            resultTile.SetPixel( targetX, targetY, sourceColor );
           }
         }
-        else if ( sprite.Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-        {
-          for ( int i = 0; i < m_SpriteWidth; i += 2 )
-          {
-            for ( int j = 0; j < m_SpriteHeight; ++j )
-            {
-              int sourceX = j;
-              int sourceY = m_SpriteHeight - 1 - i;
-
-              if ( ( sourceX < 0 )
-              ||   ( sourceX >= m_SpriteWidth )
-              ||   ( sourceY < 0 )
-              ||   ( sourceY >= m_SpriteHeight ) )
-              {
-                continue;
-              }
-              int maskOffset = 6 - ( ( sourceX % 8 ) / 2 ) * 2;
-              byte sourceColor = (byte)( ( sprite.Tile.Data.ByteAt( sourceX / 8 + sourceY * 3 ) & ( 3 << maskOffset ) ) >> maskOffset );
-
-              maskOffset = 6 - ( ( i % 8 ) / 2 ) * 2;
-              resultData.SetU8At( j * 3 + i / 8, (byte)( resultData.ByteAt( j * 3 + i / 8 ) | ( sourceColor << maskOffset ) ) );
-            }
-          }
-        }
-        else
-        {
-          Debug.Log( "RotateRight unsupported mode " + sprite.Mode );
-        }
-        sprite.Tile.Data = resultData;
-        RebuildSpriteImage( spriteIndex );
-        panelSprites.InvalidateItemRect( spriteIndex );
+        sprite.Tile.Data = resultTile.Data;
+        SpriteChanged( spriteIndex );
       }
       pictureEditor.Invalidate();
       Modified = true;
@@ -2930,7 +2773,12 @@ namespace C64Studio
     public void SpriteChanged( int SpriteIndex )
     {
       RebuildSpriteImage( SpriteIndex );
-      pictureEditor.Invalidate();
+      panelSprites.Items[SpriteIndex].MemoryImage = m_SpriteProject.Sprites[SpriteIndex].Tile.Image;
+      if ( m_CurrentSprite == SpriteIndex )
+      {
+        pictureEditor.Image = m_SpriteProject.Sprites[SpriteIndex].Tile.Image;
+        pictureEditor.Invalidate();
+      }
       panelSprites.InvalidateItemRect( SpriteIndex );
       if ( m_CurrentSprite == SpriteIndex )
       {

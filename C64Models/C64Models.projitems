@@ -11,7 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Converter\KoalaToBitmap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteMega65.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteVC20.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteVIC20.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteC64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Debugger\MemoryView.cs" />
@@ -56,7 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Types\TextMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\MachineType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\Machine.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Machines\VC20\VC20.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Machines\VIC20\VIC20.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\ASMFileParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\AssemblerSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.cs" />

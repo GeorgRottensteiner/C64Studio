@@ -1,4 +1,23 @@
 ﻿C64Studio
+o Allow string literals als macro arguments:
+!macro print3 xpos, ypos, strtext, col
+  jmp +
+.l1
+  !pet strtext
+  !byte $ff
++
+  ldx #<(.l1)
+  ldy #>(.l1)
+  stx txt_ptrl
+  sty txt_ptrh
+  lda #col
+  ldx #xpos
+  ldy #ypos
+  jsr printText3x3
+!end
+  
+  +print3 8,15,"atest",14
+
 o Limit max width of IntelliSense
 o Do not include prefixed auto-labels in IntelliSense at all
 o Disassembler

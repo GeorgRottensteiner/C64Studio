@@ -828,7 +828,7 @@
       // checkAutoCenter
       // 
       this.checkAutoCenter.Appearance = System.Windows.Forms.Appearance.Button;
-      this.checkAutoCenter.Image = global::C64Studio.Properties.Resources.charscreen_autocenter_off;
+      this.checkAutoCenter.Image = global::C64Studio.Properties.Resources.charscreen_autocenter_off.ToBitmap();
       this.checkAutoCenter.Location = new System.Drawing.Point(258, 432);
       this.checkAutoCenter.Name = "checkAutoCenter";
       this.checkAutoCenter.Size = new System.Drawing.Size(24, 24);

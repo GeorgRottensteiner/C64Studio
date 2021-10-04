@@ -808,8 +808,6 @@
     <None Include="Resources\toolbar_truedrive_disabled.ico" />
     <None Include="Resources\toolbar_truedrive_disabled.bmp" />
     <None Include="Resources\tool_validate.ico" />
-    <None Include="Resources\charscreen_autocenter.ico" />
-    <None Include="Resources\charscreen_autocenter_off.ico" />
     <None Include="Resources\charscreen_reverse_off.ico" />
     <None Include="Resources\charscreen_reverse_on.ico" />
     <None Include="Resources\charscreen_reverse_off1.ico" />
@@ -823,6 +821,11 @@
     <None Include="Resources\clone1.png" />
     <None Include="Resources\clone2.png" />
     <None Include="Resources\edit_copy.png" />
+    <None Include="Resources\tool_none1.ico" />
+    <None Include="Resources\tool_none.bmp" />
+    <None Include="Resources\tool_none2.png" />
+    <None Include="Resources\charscreen_autocenter.ico" />
+    <None Include="Resources\charscreen_autocenter_off.ico" />
     <Content Include="TODO.txt" />
     <None Include="Resources\charscreen_text1.ico" />
     <None Include="Resources\charscreen_text.ico" />

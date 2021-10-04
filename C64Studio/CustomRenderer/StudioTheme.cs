@@ -104,6 +104,21 @@ namespace C64Studio.CustomRenderer
 
           button.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_BUTTON ) );
         }
+        if ( control is RadioButton )
+        {
+          var button = control as RadioButton;
+
+          button.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_BUTTON ) );
+        }
+        if ( control is CheckBox )
+        {
+          var button = control as CheckBox;
+
+          if ( button.Appearance == Appearance.Button )
+          {
+            button.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_BUTTON ) );
+          }
+        }
         if ( control is ToolStrip )
         {
           var toolStrip = control as ToolStrip;
