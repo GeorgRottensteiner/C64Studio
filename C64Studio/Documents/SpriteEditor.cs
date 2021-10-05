@@ -18,6 +18,12 @@ namespace C64Studio
 {
   public partial class SpriteEditor : BaseDocument
   {
+    enum ToolMode
+    {
+      SINGLE_PIXEL,
+      FILL
+    }
+
     private int                         m_CurrentSprite = 0;
     private ColorType                   m_CurrentColorType = ColorType.CUSTOM_COLOR;
 
@@ -31,6 +37,8 @@ namespace C64Studio
 
     private bool                        m_ButtonReleased = false;
     private bool                        m_RButtonReleased = false;
+
+    private ToolMode                    m_Mode = ToolMode.SINGLE_PIXEL;
 
     private Timer                       m_AnimTimer = new Timer();
 
@@ -128,7 +136,7 @@ namespace C64Studio
       checkMulticolor.Checked = ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
       pictureEditor.Image = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image;
 
-      panelCharacters_SelectedIndexChanged( null, null );
+      panelSprites_SelectedIndexChanged( null, null );
 
       RefreshDisplayOptions();
 
@@ -444,7 +452,19 @@ namespace C64Studio
         {
           undo = new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, m_CurrentSprite );
         }
-        if ( affectedSprite.Tile.SetPixel( charX, charY, colorIndex ) )
+
+        bool  modified = false;
+        switch ( m_Mode )
+        {
+          case ToolMode.SINGLE_PIXEL:
+            modified = affectedSprite.Tile.SetPixel( charX, charY, colorIndex );
+            break;
+          case ToolMode.FILL:
+            modified = affectedSprite.Tile.Fill( charX, charY, colorIndex );
+            break;
+        }
+
+        if ( modified )
         {
           Modified = true;
 
@@ -729,7 +749,7 @@ namespace C64Studio
 
 
 
-    private void panelCharacters_SelectedIndexChanged( object sender, EventArgs e )
+    private void panelSprites_SelectedIndexChanged( object sender, EventArgs e )
     {
       int newChar = panelSprites.SelectedIndex;
       if ( newChar != -1 )
@@ -738,8 +758,12 @@ namespace C64Studio
         m_CurrentSprite = newChar;
 
         DoNotUpdateFromControls = true;
-        comboSpriteColor.SelectedIndex  = m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor;
-        checkMulticolor.Checked         = ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
+
+        if ( !Lookup.HasCustomPalette( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode ) )
+        {
+          comboSpriteColor.SelectedIndex  = m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor;
+          checkMulticolor.Checked         = ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
+        }
         DoNotUpdateFromControls = false;
 
         pictureEditor.Image = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image;
@@ -2525,7 +2549,7 @@ namespace C64Studio
       {
         panelSprites.SelectedIndex = 0;
       }
-      panelCharacters_SelectedIndexChanged( sender, e );
+      panelSprites_SelectedIndexChanged( sender, e );
 
       SetModified();
     }
@@ -3891,6 +3915,20 @@ namespace C64Studio
       {
         Core?.Theming.DrawMultiColorComboBox( combo, e, m_SpriteProject.Colors.Palette );
       }
+    }
+
+
+
+    private void btnToolEdit_CheckedChanged( object sender, EventArgs e )
+    {
+      m_Mode = ToolMode.SINGLE_PIXEL;
+    }
+
+
+
+    private void btnToolFill_CheckedChanged( object sender, EventArgs e )
+    {
+      m_Mode = ToolMode.FILL;
     }
 
 

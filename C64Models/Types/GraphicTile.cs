@@ -310,5 +310,55 @@ namespace RetroDevStudio.Types
 
 
 
+    public bool Fill( int X, int Y, int ColorIndex )
+    {
+      int   origColor = GetPixel( X, Y );
+      if ( origColor == ColorIndex )
+      {
+        return false;
+      }
+
+      List<System.Drawing.Point>      pointsToCheck = new List<System.Drawing.Point>();
+
+      pointsToCheck.Add( new System.Drawing.Point( X, Y ) );
+
+      int     pixelWidth = Lookup.PixelWidth( Mode );
+
+      while ( pointsToCheck.Count != 0 )
+      {
+        System.Drawing.Point    point = pointsToCheck[pointsToCheck.Count - 1];
+        pointsToCheck.RemoveAt( pointsToCheck.Count - 1 );
+
+        if ( GetPixel( point.X, point.Y ) != ColorIndex )
+        {
+          SetPixel( point.X, point.Y, ColorIndex );
+
+          if ( ( point.X - pixelWidth >= 0 )
+          &&   ( GetPixel( point.X - pixelWidth, point.Y ) == origColor ) )
+          {
+            pointsToCheck.Add( new System.Drawing.Point( point.X - pixelWidth, point.Y ) );
+          }
+          if ( ( point.X + pixelWidth < Width )
+          &&   ( GetPixel( point.X + pixelWidth, point.Y ) == origColor ) )
+          {
+            pointsToCheck.Add( new System.Drawing.Point( point.X + pixelWidth, point.Y ) );
+          }
+          if ( ( point.Y > 0 )
+          &&   ( GetPixel( point.X, point.Y - 1 ) == origColor ) )
+          {
+            pointsToCheck.Add( new System.Drawing.Point( point.X, point.Y - 1 ) );
+          }
+          if ( ( point.Y + 1 < Height )
+          &&   ( GetPixel( point.X, point.Y + 1 ) == origColor ) )
+          {
+            pointsToCheck.Add( new System.Drawing.Point( point.X, point.Y + 1 ) );
+          }
+        }
+      }
+      return true;
+    }
+
+
+
   }
 }

@@ -29,9 +29,9 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.btnEditPalette = new System.Windows.Forms.Button();
@@ -141,6 +141,8 @@
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnToolFill = new System.Windows.Forms.RadioButton();
+      this.btnToolEdit = new System.Windows.Forms.RadioButton();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabSpriteEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
@@ -169,6 +171,8 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnToolEdit);
+      this.tabEditor.Controls.Add(this.btnToolFill);
       this.tabEditor.Controls.Add(this.btnEditPalette);
       this.tabEditor.Controls.Add(this.comboSpriteProjectMode);
       this.tabEditor.Controls.Add(this.label11);
@@ -382,7 +386,7 @@
       this.panelSprites.TabStop = true;
       this.panelSprites.VisibleAutoScrollHorizontal = false;
       this.panelSprites.VisibleAutoScrollVertical = false;
-      this.panelSprites.SelectedIndexChanged += new System.EventHandler(this.panelCharacters_SelectedIndexChanged);
+      this.panelSprites.SelectedIndexChanged += new System.EventHandler(this.panelSprites_SelectedIndexChanged);
       this.panelSprites.Resize += new System.EventHandler(this.panelSprites_Resize);
       // 
       // tabPage2
@@ -662,7 +666,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.layerPreview.AutoResize = false;
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.layerPreview.DisplayPage = fastImage1;
+      this.layerPreview.DisplayPage = fastImage4;
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(208, 3);
       this.layerPreview.Name = "layerPreview";
@@ -684,7 +688,7 @@
       // btnInvert
       // 
       this.btnInvert.Image = ((System.Drawing.Image)(resources.GetObject("btnInvert.Image")));
-      this.btnInvert.Location = new System.Drawing.Point(8, 198);
+      this.btnInvert.Location = new System.Drawing.Point(8, 192);
       this.btnInvert.Name = "btnInvert";
       this.btnInvert.Size = new System.Drawing.Size(26, 26);
       this.btnInvert.TabIndex = 7;
@@ -695,7 +699,7 @@
       // btnMirrorY
       // 
       this.btnMirrorY.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorY.Image")));
-      this.btnMirrorY.Location = new System.Drawing.Point(8, 166);
+      this.btnMirrorY.Location = new System.Drawing.Point(8, 161);
       this.btnMirrorY.Name = "btnMirrorY";
       this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorY.TabIndex = 7;
@@ -706,7 +710,7 @@
       // btnMirrorX
       // 
       this.btnMirrorX.Image = ((System.Drawing.Image)(resources.GetObject("btnMirrorX.Image")));
-      this.btnMirrorX.Location = new System.Drawing.Point(8, 134);
+      this.btnMirrorX.Location = new System.Drawing.Point(8, 130);
       this.btnMirrorX.Name = "btnMirrorX";
       this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
       this.btnMirrorX.TabIndex = 7;
@@ -717,7 +721,7 @@
       // btnShiftDown
       // 
       this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
-      this.btnShiftDown.Location = new System.Drawing.Point(8, 102);
+      this.btnShiftDown.Location = new System.Drawing.Point(8, 99);
       this.btnShiftDown.Name = "btnShiftDown";
       this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
       this.btnShiftDown.TabIndex = 7;
@@ -728,7 +732,7 @@
       // btnShiftUp
       // 
       this.btnShiftUp.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftUp.Image")));
-      this.btnShiftUp.Location = new System.Drawing.Point(8, 70);
+      this.btnShiftUp.Location = new System.Drawing.Point(8, 68);
       this.btnShiftUp.Name = "btnShiftUp";
       this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
       this.btnShiftUp.TabIndex = 7;
@@ -739,7 +743,7 @@
       // btnShiftRight
       // 
       this.btnShiftRight.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftRight.Image")));
-      this.btnShiftRight.Location = new System.Drawing.Point(8, 38);
+      this.btnShiftRight.Location = new System.Drawing.Point(8, 37);
       this.btnShiftRight.Name = "btnShiftRight";
       this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
       this.btnShiftRight.TabIndex = 7;
@@ -750,7 +754,7 @@
       // btnRotateRight
       // 
       this.btnRotateRight.Image = ((System.Drawing.Image)(resources.GetObject("btnRotateRight.Image")));
-      this.btnRotateRight.Location = new System.Drawing.Point(8, 262);
+      this.btnRotateRight.Location = new System.Drawing.Point(8, 254);
       this.btnRotateRight.Name = "btnRotateRight";
       this.btnRotateRight.Size = new System.Drawing.Size(26, 26);
       this.btnRotateRight.TabIndex = 7;
@@ -761,7 +765,7 @@
       // btnRotateLeft
       // 
       this.btnRotateLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnRotateLeft.Image")));
-      this.btnRotateLeft.Location = new System.Drawing.Point(8, 230);
+      this.btnRotateLeft.Location = new System.Drawing.Point(8, 223);
       this.btnRotateLeft.Name = "btnRotateLeft";
       this.btnRotateLeft.Size = new System.Drawing.Size(26, 26);
       this.btnRotateLeft.TabIndex = 7;
@@ -833,7 +837,7 @@
       // radioSpriteColor
       // 
       this.radioSpriteColor.AutoSize = true;
-      this.radioSpriteColor.Location = new System.Drawing.Point(13, 385);
+      this.radioSpriteColor.Location = new System.Drawing.Point(44, 385);
       this.radioSpriteColor.Name = "radioSpriteColor";
       this.radioSpriteColor.Size = new System.Drawing.Size(79, 17);
       this.radioSpriteColor.TabIndex = 2;
@@ -845,7 +849,7 @@
       // radioMulticolor2
       // 
       this.radioMulticolor2.AutoSize = true;
-      this.radioMulticolor2.Location = new System.Drawing.Point(13, 358);
+      this.radioMulticolor2.Location = new System.Drawing.Point(44, 358);
       this.radioMulticolor2.Name = "radioMulticolor2";
       this.radioMulticolor2.Size = new System.Drawing.Size(79, 17);
       this.radioMulticolor2.TabIndex = 2;
@@ -857,7 +861,7 @@
       // radioMultiColor1
       // 
       this.radioMultiColor1.AutoSize = true;
-      this.radioMultiColor1.Location = new System.Drawing.Point(13, 331);
+      this.radioMultiColor1.Location = new System.Drawing.Point(44, 331);
       this.radioMultiColor1.Name = "radioMultiColor1";
       this.radioMultiColor1.Size = new System.Drawing.Size(79, 17);
       this.radioMultiColor1.TabIndex = 2;
@@ -869,7 +873,7 @@
       // radioBackground
       // 
       this.radioBackground.AutoSize = true;
-      this.radioBackground.Location = new System.Drawing.Point(13, 304);
+      this.radioBackground.Location = new System.Drawing.Point(44, 304);
       this.radioBackground.Name = "radioBackground";
       this.radioBackground.Size = new System.Drawing.Size(83, 17);
       this.radioBackground.TabIndex = 2;
@@ -883,7 +887,7 @@
       this.comboSpriteColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboSpriteColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboSpriteColor.FormattingEnabled = true;
-      this.comboSpriteColor.Location = new System.Drawing.Point(102, 385);
+      this.comboSpriteColor.Location = new System.Drawing.Point(133, 385);
       this.comboSpriteColor.Name = "comboSpriteColor";
       this.comboSpriteColor.Size = new System.Drawing.Size(79, 21);
       this.comboSpriteColor.TabIndex = 1;
@@ -895,7 +899,7 @@
       this.comboMulticolor2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboMulticolor2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboMulticolor2.FormattingEnabled = true;
-      this.comboMulticolor2.Location = new System.Drawing.Point(102, 358);
+      this.comboMulticolor2.Location = new System.Drawing.Point(133, 358);
       this.comboMulticolor2.Name = "comboMulticolor2";
       this.comboMulticolor2.Size = new System.Drawing.Size(79, 21);
       this.comboMulticolor2.TabIndex = 1;
@@ -907,7 +911,7 @@
       this.comboMulticolor1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboMulticolor1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboMulticolor1.FormattingEnabled = true;
-      this.comboMulticolor1.Location = new System.Drawing.Point(102, 331);
+      this.comboMulticolor1.Location = new System.Drawing.Point(133, 331);
       this.comboMulticolor1.Name = "comboMulticolor1";
       this.comboMulticolor1.Size = new System.Drawing.Size(79, 21);
       this.comboMulticolor1.TabIndex = 1;
@@ -919,7 +923,7 @@
       this.comboBackground.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
       this.comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboBackground.FormattingEnabled = true;
-      this.comboBackground.Location = new System.Drawing.Point(102, 303);
+      this.comboBackground.Location = new System.Drawing.Point(133, 303);
       this.comboBackground.Name = "comboBackground";
       this.comboBackground.Size = new System.Drawing.Size(79, 21);
       this.comboBackground.TabIndex = 1;
@@ -930,7 +934,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage3;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(40, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1333,6 +1337,32 @@
       this.columnHeader6.Text = "Y";
       this.columnHeader6.Width = 30;
       // 
+      // btnToolFill
+      // 
+      this.btnToolFill.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolFill.Image = global::C64Studio.Properties.Resources.tool_fill;
+      this.btnToolFill.Location = new System.Drawing.Point(8, 316);
+      this.btnToolFill.Name = "btnToolFill";
+      this.btnToolFill.Size = new System.Drawing.Size(26, 26);
+      this.btnToolFill.TabIndex = 57;
+      this.toolTip1.SetToolTip(this.btnToolFill, "Fill");
+      this.btnToolFill.UseVisualStyleBackColor = true;
+      this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
+      // 
+      // btnToolEdit
+      // 
+      this.btnToolEdit.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolEdit.Checked = true;
+      this.btnToolEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnToolEdit.Image")));
+      this.btnToolEdit.Location = new System.Drawing.Point(8, 285);
+      this.btnToolEdit.Name = "btnToolEdit";
+      this.btnToolEdit.Size = new System.Drawing.Size(26, 26);
+      this.btnToolEdit.TabIndex = 58;
+      this.btnToolEdit.TabStop = true;
+      this.toolTip1.SetToolTip(this.btnToolEdit, "Single Character");
+      this.btnToolEdit.UseVisualStyleBackColor = true;
+      this.btnToolEdit.CheckedChanged += new System.EventHandler(this.btnToolEdit_CheckedChanged);
+      // 
       // SpriteEditor
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1476,5 +1506,7 @@
     private System.Windows.Forms.ComboBox comboSpriteProjectMode;
     private System.Windows.Forms.Label label11;
     private System.Windows.Forms.Button btnEditPalette;
+    private System.Windows.Forms.RadioButton btnToolFill;
+    private System.Windows.Forms.RadioButton btnToolEdit;
   }
 }
