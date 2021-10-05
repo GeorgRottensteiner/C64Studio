@@ -603,26 +603,32 @@ namespace C64Studio
       {
         for ( int i = 0; i < undoWidth; ++i )
         {
-          var selectionChar = m_FloatingSelection[( offsetX + i ) + ( offsetY + j ) * m_FloatingSelectionSize.Width];
-          if ( selectionChar.first )
+          if ( ( offsetX + i >= 0 )
+          &&   ( offsetX + i < m_CharsetScreen.ScreenWidth )
+          &&   ( offsetY + i >= 0 )
+          &&   ( offsetY + i < m_CharsetScreen.ScreenHeight ) )
           {
-            m_CharsetScreen.Chars[undoX + i + m_CharsetScreen.ScreenOffsetX + ( undoY + j + m_CharsetScreen.ScreenOffsetY ) * m_CharsetScreen.ScreenWidth] = selectionChar.second;
+            var selectionChar = m_FloatingSelection[( offsetX + i ) + ( offsetY + j ) * m_FloatingSelectionSize.Width];
+            if ( selectionChar.first )
+            {
+              m_CharsetScreen.Chars[undoX + i + m_CharsetScreen.ScreenOffsetX + ( undoY + j + m_CharsetScreen.ScreenOffsetY ) * m_CharsetScreen.ScreenWidth] = selectionChar.second;
 
-            DrawCharImage( pictureEditor.DisplayPage,
-               ( undoX + i ) * 8,
-               ( undoY + j ) * 8,
-               (byte)( selectionChar.second & 0xff ),
-               (byte)( selectionChar.second >> 8 ) );
+              DrawCharImage( pictureEditor.DisplayPage,
+                 ( undoX + i ) * 8,
+                 ( undoY + j ) * 8,
+                 (byte)( selectionChar.second & 0xff ),
+                 (byte)( selectionChar.second >> 8 ) );
 
-            DrawCharImage( m_Image,
-               ( m_CharsetScreen.ScreenOffsetX + undoX + i ) * 8,
-               ( m_CharsetScreen.ScreenOffsetY + undoY + j ) * 8,
-               (byte)( selectionChar.second & 0xff ),
-               (byte)( selectionChar.second >> 8 ) );
+              DrawCharImage( m_Image,
+                 ( m_CharsetScreen.ScreenOffsetX + undoX + i ) * 8,
+                 ( m_CharsetScreen.ScreenOffsetY + undoY + j ) * 8,
+                 (byte)( selectionChar.second & 0xff ),
+                 (byte)( selectionChar.second >> 8 ) );
 
-            pictureEditor.Invalidate( new System.Drawing.Rectangle( ( undoX + i ) * 8,
-                                                                    ( undoY + j ) * 8,
-                                                                    8, 8 ) );
+              pictureEditor.Invalidate( new System.Drawing.Rectangle( ( undoX + i ) * 8,
+                                                                      ( undoY + j ) * 8,
+                                                                      8, 8 ) );
+            }
           }
         }
       }
@@ -2557,6 +2563,7 @@ namespace C64Studio
     {
       HideSelection();
       HideTextCursor();
+      RemoveFloatingSelection();
       m_ToolMode = ToolMode.SINGLE_CHAR;
     }
 
@@ -2575,6 +2582,7 @@ namespace C64Studio
     {
       HideSelection();
       HideTextCursor();
+      RemoveFloatingSelection();
       m_ToolMode = ToolMode.RECTANGLE;
     }
 
@@ -2584,6 +2592,7 @@ namespace C64Studio
     {
       HideSelection();
       HideTextCursor();
+      RemoveFloatingSelection();
       m_ToolMode = ToolMode.FILL;
     }
 
@@ -2601,6 +2610,7 @@ namespace C64Studio
     {
       HideSelection();
       HideTextCursor();
+      RemoveFloatingSelection();
       m_ToolMode = ToolMode.FILLED_RECTANGLE;
     }
 
@@ -2609,6 +2619,7 @@ namespace C64Studio
     private void btnToolText_CheckedChanged( object sender, EventArgs e )
     {
       HideSelection();
+      RemoveFloatingSelection();
       m_ToolMode = ToolMode.TEXT;
       m_TextEntryStartedInLine = -1;
     }
@@ -2949,17 +2960,45 @@ namespace C64Studio
         }
         if ( e.KeyCode == Keys.Escape )
         {
-          if ( m_FloatingSelection != null )
+          RemoveFloatingSelection();
+          
+          if ( m_LastDragEndPos.X != -1 )
           {
-            m_FloatingSelection = null;
+            m_LastDragEndPos.X = -1;
+            m_IsDragging = false;
             Redraw();
           }
         }
       }
+
+      if ( ( m_ToolMode == ToolMode.RECTANGLE )
+      ||   ( m_ToolMode == ToolMode.FILLED_RECTANGLE ) )
+      {
+        if ( e.KeyCode == Keys.Escape )
+        {
+          if ( m_IsDragging )
+          {
+            m_IsDragging = false;
+            Redraw();
+          }
+        }
+      }
+
       if ( ( e.Modifiers == Keys.Control )
-      && ( e.KeyCode == Keys.V ) )
+      &&   ( e.KeyCode == Keys.V ) )
       {
         PasteFromClipboard();
+      }
+    }
+
+
+
+    private void RemoveFloatingSelection()
+    {
+      if ( m_FloatingSelection != null )
+      {
+        m_FloatingSelection = null;
+        Redraw();
       }
     }
 
