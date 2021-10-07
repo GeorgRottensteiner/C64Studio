@@ -190,9 +190,14 @@ namespace C64Studio
 
         if ( edit != null )
         {
+          bool  hadLastFind = ( LastSearchFound.FoundInDocument != null );
           LastSearchFound.Clear();
           LastSearchFound.FoundInDocument = Core.MainForm.ActiveDocumentInfo;
           LastSearchFound.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
+          if ( hadLastFind )
+          {
+            ++LastSearchFound.StartPosition;
+          }
         }
       }
       FindNext( null, comboSearchText.Text );
@@ -262,17 +267,9 @@ namespace C64Studio
           // do not modify selection!
           if ( foundRange != null )
           {
-            edit.Navigate( foundRange.Start.iLine );
+            edit.Navigate( foundRange );
             edit.Selection = foundRange;
           }
-          //edit.Selection..ShowLines();
-          //edit.Caret.Position = edit.Selection.Range.End;
-          //edit.Selection.Range.Select();
-        }
-        else
-        {
-          //foundRange.ShowLines();
-          //edit.Caret.Position = foundRange.End;
         }
 
         if ( keepFindActive )
@@ -351,6 +348,11 @@ namespace C64Studio
       }
 
       int     startPos = LastPosition + 1;
+      if ( LastPosition == 0 )
+      {
+        startPos = 0;
+      }
+
       if ( ( LastPosition == -1 )
       &&   ( Upwards ) )
       {
@@ -855,7 +857,7 @@ namespace C64Studio
       // add search text to "history"
       HistoriseSearchString( SearchString );
 
-      int lastPosition = LastFound.StartPosition;
+      int lastPosition = LastFound.StartPosition + LastFound.Length; //.StartPosition;
       SearchLocation newLocation;
       string textFromElement = "";
       DocumentInfo  docInfoToSearch = null;
@@ -1244,6 +1246,11 @@ namespace C64Studio
           break;
         }
       }
+      if ( numLines == 0 )
+      {
+        numLines = 1;
+      }
+
       LastFound.LineNumber = numLines;
       if ( ( curPos != -1 )
       &&   ( lastPos != -1 ) )
@@ -1457,9 +1464,14 @@ namespace C64Studio
 
         if ( edit != null )
         {
+          bool  hadLastFind = ( LastReplaceFound.FoundInDocument != null );
           LastReplaceFound.Clear();
           LastReplaceFound.FoundInDocument = Core.MainForm.ActiveDocumentInfo;
           LastReplaceFound.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
+          if ( hadLastFind )
+          {
+            ++LastReplaceFound.StartPosition;
+          }
         }
       }
 
@@ -1473,11 +1485,6 @@ namespace C64Studio
                         null,
                         LastReplaceFound ) )
       {
-        /*
-        if ( LastSearchFound.FoundInDocument == null )
-        {
-          LastSearchFound.FoundInDocument = DirectlyFromSourceFile.DocumentInfo.Project.ShowDocument( LastSearchFound.FoundInDocument.Element ).DocumentInfo;
-        }*/
         if ( LastReplaceFound.FoundInDocument == null )
         {
           Debug.Log( "Failed to find document from LastReplaceFound:" + LastReplaceFound.FoundInDocument + ", line " + LastReplaceFound.FoundLine );
@@ -1501,7 +1508,7 @@ namespace C64Studio
 
         var foundRange =  RangeFromSearchLocation( edit, LastReplaceFound );
 
-        edit.Navigate( foundRange.Start.iLine );
+        edit.Navigate( foundRange );
         edit.Selection = foundRange;
         return;
       }

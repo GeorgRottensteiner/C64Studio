@@ -82,7 +82,6 @@ namespace C64Studio
         ++i;
       }
       listResults.Items.AddRange( items );
-      //listResults.Items.Add( item );
     }
 
 
