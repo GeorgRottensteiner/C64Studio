@@ -20,5 +20,6 @@ namespace C64Studio.Parser
     public List<string>                         LibraryFiles = new List<string>();
     public Set<Types.ErrorCode>                 WarningsToTreatAsError = new Set<Types.ErrorCode>();
     public Set<AssemblerSettings.Hacks>         EnabledHacks = new Set<AssemblerSettings.Hacks>();
+    public Encoding                             Encoding = Encoding.UTF8;
   }
 }

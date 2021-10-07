@@ -4,6 +4,7 @@ using GR.Image;
 using RetroDevStudio;
 using System;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 
@@ -128,6 +129,17 @@ namespace C64Studio
       foreach ( var libPath in Core.Settings.ASMLibraryPaths )
       {
         asmLibraryPathList.Items.Add( libPath );
+      }
+
+      var allEncodings = System.Text.Encoding.GetEncodings();
+
+      foreach ( var encoding in allEncodings )
+      {
+        comboASMEncoding.Items.Add( new GR.Generic.Tupel<string, Encoding>( encoding.DisplayName + "    Codepage " + encoding.CodePage, encoding.GetEncoding() ) );
+        if ( encoding.GetEncoding() == Core.Settings.SourceFileEncoding )
+        {
+          comboASMEncoding.SelectedIndex = comboASMEncoding.Items.Count - 1;
+        }
       }
 
       Core.Theming.ApplyTheme( this );
@@ -2454,6 +2466,17 @@ namespace C64Studio
         Core.Settings.EnabledC64StudioHacks.Add( item.second );
       }
     }
+
+
+
+    private void comboASMEncoding_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      var  newEncoding = (GR.Generic.Tupel<string, Encoding>)comboASMEncoding.SelectedItem;
+
+      Core.Settings.SourceFileEncoding = newEncoding.second;
+    }
+
+
 
   }
 }

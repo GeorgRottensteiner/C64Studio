@@ -6835,7 +6835,7 @@ namespace C64Studio.Parser
       //Debug.Log( "Read subfile " + subFilename );
       try
       {
-        subFile = System.IO.File.ReadAllLines( subFilenameFull );
+        subFile = System.IO.File.ReadAllLines( subFilenameFull, m_CompileConfig.Encoding );
       }
       catch ( System.IO.IOException )
       {

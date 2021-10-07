@@ -184,6 +184,8 @@ namespace C64Studio
     public int                                  MemoryDisplaySpriteMulticolor1 = 5;
     public int                                  MemoryDisplaySpriteMulticolor2 = 10;
 
+    public Encoding                             SourceFileEncoding = Encoding.UTF8;
+
     public bool                                 CheckForUpdates = true;
     public DateTime                             LastUpdateCheck = DateTime.MinValue;
 
@@ -559,6 +561,7 @@ namespace C64Studio
       chunkTabs.AppendU8( 1 );// (byte)( AllowTabs ? 1 : 0 ) );
       chunkTabs.AppendU8( (byte)( TabConvertToSpaces ? 1 : 0 ) );
       chunkTabs.AppendU8( (byte)( StripTrailingSpaces ? 1 : 0 ) );
+      chunkTabs.AppendString( SourceFileEncoding.WebName );
       SettingsData.Append( chunkTabs.ToBuffer() );
 
       GR.IO.FileChunk chunkFont = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_FONT );
@@ -912,9 +915,22 @@ namespace C64Studio
               {
                 TabSize = 2;
               }
-              binIn.ReadUInt8();//AllowTabs           = ( binIn.ReadUInt8() != 0 );
+              binIn.ReadUInt8();  // was AllowTabs = ( binIn.ReadUInt8() != 0 );
               TabConvertToSpaces  = ( binIn.ReadUInt8() != 0 );
               StripTrailingSpaces = ( binIn.ReadUInt8() != 0 );
+
+              string  encodingName = binIn.ReadString();
+              if ( !string.IsNullOrEmpty( encodingName ) )
+              {
+                try
+                {
+                  SourceFileEncoding = Encoding.GetEncoding( encodingName );
+                }
+                catch ( Exception ex )
+                {
+                  SourceFileEncoding = Encoding.UTF8;
+                }
+              }
             }
             break;
           case FileChunkConstants.SETTINGS_FONT:

@@ -151,6 +151,8 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
+      this.label35 = new System.Windows.Forms.Label();
+      this.comboASMEncoding = new System.Windows.Forms.ComboBox();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -884,6 +886,7 @@
       // 
       // tabErrorsWarnings
       // 
+      this.tabErrorsWarnings.Controls.Add(this.comboASMEncoding);
       this.tabErrorsWarnings.Controls.Add(this.btmASMLibraryPathBrowse);
       this.tabErrorsWarnings.Controls.Add(this.editASMLibraryPath);
       this.tabErrorsWarnings.Controls.Add(this.checkASMShowAddress);
@@ -897,6 +900,7 @@
       this.tabErrorsWarnings.Controls.Add(this.label26);
       this.tabErrorsWarnings.Controls.Add(this.asmLibraryPathList);
       this.tabErrorsWarnings.Controls.Add(this.listHacks);
+      this.tabErrorsWarnings.Controls.Add(this.label35);
       this.tabErrorsWarnings.Controls.Add(this.label34);
       this.tabErrorsWarnings.Controls.Add(this.listWarningsAsErrors);
       this.tabErrorsWarnings.Controls.Add(this.label33);
@@ -1477,6 +1481,25 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
+      // label35
+      // 
+      this.label35.AutoSize = true;
+      this.label35.Location = new System.Drawing.Point(387, 333);
+      this.label35.Name = "label35";
+      this.label35.Size = new System.Drawing.Size(55, 13);
+      this.label35.TabIndex = 2;
+      this.label35.Text = "Encoding:";
+      // 
+      // comboASMEncoding
+      // 
+      this.comboASMEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboASMEncoding.FormattingEnabled = true;
+      this.comboASMEncoding.Location = new System.Drawing.Point(390, 349);
+      this.comboASMEncoding.Name = "comboASMEncoding";
+      this.comboASMEncoding.Size = new System.Drawing.Size(261, 21);
+      this.comboASMEncoding.TabIndex = 23;
+      this.comboASMEncoding.SelectedIndexChanged += new System.EventHandler(this.comboASMEncoding_SelectedIndexChanged);
+      // 
       // Settings
       // 
       this.AcceptButton = this.btnOK;
@@ -1643,5 +1666,7 @@
     private ArrangedItemList alistTools;
     private System.Windows.Forms.CheckedListBox listHacks;
     private System.Windows.Forms.Label label34;
+    private System.Windows.Forms.ComboBox comboASMEncoding;
+    private System.Windows.Forms.Label label35;
   }
 }

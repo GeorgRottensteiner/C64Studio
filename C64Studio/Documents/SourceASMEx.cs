@@ -1899,7 +1899,7 @@ namespace C64Studio
       try
       {
         m_InsertingText = true;
-        editSource.Text = System.IO.File.ReadAllText( DocumentInfo.FullPath );
+        editSource.Text = System.IO.File.ReadAllText( DocumentInfo.FullPath, Core.Settings.SourceFileEncoding );
         m_InsertingText = false;
 
         editSource.ClearUndo();
@@ -2005,7 +2005,7 @@ namespace C64Studio
             editSource.StripTrailingSpaces();
           }
         }
-        System.IO.File.WriteAllText( FullPath, GetContent() );
+        System.IO.File.WriteAllText( FullPath, GetContent(), Core.Settings.SourceFileEncoding );
 
         editSource.TextSource.ClearIsChanged();
         editSource.Invalidate();
