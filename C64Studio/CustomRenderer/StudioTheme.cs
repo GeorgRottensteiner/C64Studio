@@ -107,8 +107,10 @@ namespace C64Studio.CustomRenderer
         if ( control is RadioButton )
         {
           var button = control as RadioButton;
-
-          button.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_BUTTON ) );
+          if ( button.Appearance == Appearance.Button )
+          {
+            button.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_BUTTON ) );
+          }
         }
         if ( control is CheckBox )
         {

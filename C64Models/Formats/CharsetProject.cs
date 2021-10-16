@@ -120,6 +120,25 @@ namespace C64Studio.Formats
 
 
 
+    public GR.Memory.ByteBuffer ColorData( int StartIndex, int Count )
+    {
+      if ( ( StartIndex < 0 )
+      ||   ( StartIndex + Count >= TotalNumberOfCharacters ) )
+      {
+        return new GR.Memory.ByteBuffer();
+      }
+
+      GR.Memory.ByteBuffer colorData = new GR.Memory.ByteBuffer( (uint)Count );
+
+      for ( int i = 0; i < Count; ++i )
+      {
+        colorData.SetU8At( i, (byte)Characters[StartIndex + i].Tile.CustomColor );
+      }
+      return colorData;
+    }
+
+
+
     public GR.Memory.ByteBuffer SaveCharsetToBuffer()
     {
       var charData = new GR.Memory.ByteBuffer( (uint)( TotalNumberOfCharacters * Lookup.NumBytesOfSingleCharacter( Mode ) ) );
@@ -150,21 +169,13 @@ namespace C64Studio.Formats
 
 
       var chunkColorSettings = new GR.IO.FileChunk( RetroDevStudio.FileChunkConstants.CHARSET_COLOR_SETTINGS );
-
       chunkColorSettings.AppendI32( Colors.BackgroundColor );
       chunkColorSettings.AppendI32( Colors.MultiColor1 );
       chunkColorSettings.AppendI32( Colors.MultiColor2 );
       chunkColorSettings.AppendI32( Colors.BGColor4 );
-
       chunkCharsetProject.Append( chunkColorSettings.ToBuffer() );
 
-      var chunkPalette = new GR.IO.FileChunk( RetroDevStudio.FileChunkConstants.PALETTE );
-      chunkPalette.AppendI32( Colors.Palette.NumColors );
-      for ( int i = 0; i < Colors.Palette.NumColors; ++i )
-      {
-        chunkPalette.AppendU32( Colors.Palette.ColorValues[i] );
-      }
-      chunkCharsetProject.Append( chunkPalette.ToBuffer() );
+      chunkCharsetProject.Append( Colors.Palette.ToBuffer() );
 
       var chunkExport = new GR.IO.FileChunk( RetroDevStudio.FileChunkConstants.CHARSET_EXPORT );
 

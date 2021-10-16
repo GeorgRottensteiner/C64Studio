@@ -1,4 +1,5 @@
-﻿using GR.Memory;
+﻿using GR.IO;
+using GR.Memory;
 using System;
 
 
@@ -119,6 +120,39 @@ namespace RetroDevStudio
     private byte SwizzleByte( byte Value )
     {
       return (byte)( ( Value >> 4 ) | ( Value << 4 ) );
+    }
+
+
+
+    public static Palette Read( IReader Reader )
+    {
+      int     numColors = Reader.ReadInt32();
+
+      var pal = new Palette( numColors );
+
+      for ( int i = 0; i < pal.NumColors; ++i )
+      {
+        pal.ColorValues[i] = Reader.ReadUInt32();
+      }
+      pal.CreateBrushes();
+
+      pal.Name = Reader.ReadString();
+      return pal;
+    }
+
+
+
+    public ByteBuffer ToBuffer()
+    {
+      var chunkPalette = new GR.IO.FileChunk( RetroDevStudio.FileChunkConstants.PALETTE );
+      chunkPalette.AppendI32( NumColors );
+      for ( int i = 0; i < NumColors; ++i )
+      {
+        chunkPalette.AppendU32( ColorValues[i] );
+      }
+      chunkPalette.AppendString( Name );
+
+      return chunkPalette.ToBuffer();
     }
 
 

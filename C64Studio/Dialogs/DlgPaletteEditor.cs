@@ -24,6 +24,8 @@ namespace C64Studio
       Palette = new Palette( Pal );
       InitializeComponent();
 
+      paletteList.Items.Add( new ArrangedItemEntry() { Text = "Palette", Tag = Palette } );
+
       for ( int i = 0; i < Palette.NumColors; ++i )
       {
         listPalette.Items.Add( Palette.Colors[i] );
@@ -322,6 +324,72 @@ namespace C64Studio
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
       }
+    }
+
+
+
+    private ArrangedItemEntry paletteList_AddingItem( object sender )
+    {
+      var palette = new Palette( Palette );
+
+      ArrangedItemEntry item = new ArrangedItemEntry();
+      item.Text = "Palette";
+      if ( !string.IsNullOrEmpty( editPaletteName.Text ) )
+      {
+        item.Text = editPaletteName.Text;
+      }
+      item.Tag = palette;
+
+      return item;
+    }
+
+
+
+    private void paletteList_SelectedIndexChanged( object sender, ArrangedItemEntry Item )
+    {
+      if ( Item == null )
+      {
+        editPaletteName.Enabled = false;
+        return;
+      }
+      editPaletteName.Enabled = true;
+      editPaletteName.Text    = Item.Text;
+
+
+      Palette = (Palette)Item.Tag;
+      for ( int i = 0; i < Palette.NumColors; ++i )
+      {
+        listPalette.Items[i] = Palette.Colors[i];
+      }
+      listPalette_SelectedIndexChanged( sender, new EventArgs() );
+    }
+
+
+
+    private void editPaletteName_TextChanged( object sender, EventArgs e )
+    {
+      if ( paletteList.SelectedItem != null )
+      {
+        paletteList.SelectedItem.Text = editPaletteName.Text;
+        ( (Palette)paletteList.SelectedItem.Tag ).Name = editPaletteName.Text;
+      }
+    }
+
+
+
+    private ArrangedItemEntry paletteList_CloningItem( object sender, ArrangedItemEntry Item )
+    {
+      var palette = new Palette( (Palette)Item.Tag );
+
+      ArrangedItemEntry item = new ArrangedItemEntry();
+      item.Text = "Palette";
+      if ( !string.IsNullOrEmpty( editPaletteName.Text ) )
+      {
+        item.Text = editPaletteName.Text;
+      }
+      item.Tag = palette;
+
+      return item;
     }
 
 

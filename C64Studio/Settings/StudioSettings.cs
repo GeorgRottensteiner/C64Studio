@@ -926,7 +926,7 @@ namespace C64Studio
                 {
                   SourceFileEncoding = Encoding.GetEncoding( encodingName );
                 }
-                catch ( Exception ex )
+                catch ( Exception )
                 {
                   SourceFileEncoding = Encoding.UTF8;
                 }

@@ -616,9 +616,13 @@ namespace C64Studio.Controls
       {
         labelCharNo.Text = "Character: " + newChar.ToString();
         m_CurrentChar = newChar;
-        if ( comboCharColor.SelectedIndex != m_Project.Characters[m_CurrentChar].Tile.CustomColor )
+
+        if ( !Lookup.HasCustomPalette( m_Project.Characters[m_CurrentChar].Tile.Mode ) )
         {
-          comboCharColor.SelectedIndex = m_Project.Characters[m_CurrentChar].Tile.CustomColor;
+          if ( comboCharColor.SelectedIndex != m_Project.Characters[m_CurrentChar].Tile.CustomColor )
+          {
+            comboCharColor.SelectedIndex = m_Project.Characters[m_CurrentChar].Tile.CustomColor;
+          }
         }
         canvasEditor.Invalidate();
 
@@ -927,7 +931,6 @@ namespace C64Studio.Controls
       }
       //e.Graphics.FillRectangle( new System.Drawing.SolidBrush( labelCharNo.BackColor ), labelCharNo.ClientRectangle );
       //e.Graphics.DrawString( "lsmf", labelCharNo.Font, new System.Drawing.SolidBrush( labelCharNo.ForeColor ), labelCharNo.ClientRectangle );
-      // labelCharNo.Text
 
       if ( !ConstantData.ScreenCodeToChar.ContainsKey( (byte)m_CurrentChar ) )
       {
@@ -935,8 +938,16 @@ namespace C64Studio.Controls
       }
       else
       {
-        int offset = (int)e.Graphics.MeasureString( labelCharNo.Text, labelCharNo.Font ).Width;
-        e.Graphics.DrawString( "" + ConstantData.ScreenCodeToChar[(byte)m_CurrentChar].CharValue, new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel ), System.Drawing.SystemBrushes.WindowText, offset + 10, 0 );
+        try
+        {
+          int offset = (int)e.Graphics.MeasureString( labelCharNo.Text, labelCharNo.Font ).Width;
+          e.Graphics.DrawString( "" + ConstantData.ScreenCodeToChar[(byte)m_CurrentChar].CharValue, new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel ), System.Drawing.SystemBrushes.WindowText, offset + 10, 0 );
+        }
+        catch ( Exception ex )
+        {
+          Debug.Log( "Exception during drawing char " + ex.ToString() );
+          Core.AddToOutput( "Exception during drawing char " + ex.ToString() );
+        }
       }
     }
 
@@ -965,7 +976,7 @@ namespace C64Studio.Controls
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
-        int     colorIndex = affectedChar.Tile.CustomColor;
+        int     colorIndex = comboCharColor.SelectedIndex;
 
         if ( ( m_Project.Mode != TextCharMode.MEGA65_FCM )
         &&   ( m_Project.Mode != TextCharMode.MEGA65_FCM_16BIT ) )
@@ -973,11 +984,12 @@ namespace C64Studio.Controls
           colorIndex = (int)m_CurrentColorType;
         }
 
+        var potentialUndo = new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedCharIndex );
         if ( affectedChar.Tile.SetPixel( charX, charY, colorIndex ) )
         {
           if ( m_ButtonReleased )
           {
-            UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedCharIndex ) );
+            UndoManager.AddUndoTask( potentialUndo );
             m_ButtonReleased = false;
           }
           RaiseModifiedEvent();
@@ -1897,25 +1909,28 @@ namespace C64Studio.Controls
       {
         if ( m_Project.Characters[selChar].Tile.CustomColor != comboCharColor.SelectedIndex )
         {
-          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar ), modified == false );
-
-          m_Project.Characters[selChar].Tile.CustomColor = comboCharColor.SelectedIndex;
-          if ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+          if ( !Lookup.HasCustomPalette( m_Project.Characters[selChar].Tile.Mode ) )
           {
-            if ( ( m_Project.Characters[selChar].Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
-            &&   ( m_Project.Characters[selChar].Tile.CustomColor >= 8 ) )
+            UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar ), modified == false );
+
+            m_Project.Characters[selChar].Tile.CustomColor = comboCharColor.SelectedIndex;
+            if ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
             {
-              m_Project.Characters[selChar].Tile.Mode = GraphicTileMode.COMMODORE_MULTICOLOR;
+              if ( ( m_Project.Characters[selChar].Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
+              &&   ( m_Project.Characters[selChar].Tile.CustomColor >= 8 ) )
+              {
+                m_Project.Characters[selChar].Tile.Mode = GraphicTileMode.COMMODORE_MULTICOLOR;
+              }
+              else if ( ( m_Project.Characters[selChar].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR )
+              &&        ( m_Project.Characters[selChar].Tile.CustomColor < 8 ) )
+              {
+                m_Project.Characters[selChar].Tile.Mode = GraphicTileMode.COMMODORE_HIRES;
+              }
             }
-            else if ( ( m_Project.Characters[selChar].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR )
-            &&        ( m_Project.Characters[selChar].Tile.CustomColor < 8 ) )
-            {
-              m_Project.Characters[selChar].Tile.Mode = GraphicTileMode.COMMODORE_HIRES;
-            }
+            RebuildCharImage( selChar );
+            modified = true;
+            panelCharacters.InvalidateItemRect( selChar );
           }
-          RebuildCharImage( selChar );
-          modified = true;
-          panelCharacters.InvalidateItemRect( selChar );
         }
       }
       if ( modified )
@@ -2023,26 +2038,7 @@ namespace C64Studio.Controls
         }
       }*/
 
-      // update controls for mode
-      comboBGColor4.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_ECM );
-      radioBGColor4.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_ECM );
-      comboMulticolor1.Enabled = ( m_Project.Mode != TextCharMode.COMMODORE_HIRES );
-      radioMultiColor1.Enabled = ( m_Project.Mode != TextCharMode.COMMODORE_HIRES );
-      comboMulticolor2.Enabled = ( m_Project.Mode != TextCharMode.COMMODORE_HIRES );
-      radioMulticolor2.Enabled = ( m_Project.Mode != TextCharMode.COMMODORE_HIRES );
-
-      panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( m_Project.Mode );
-
-      if ( m_Project.Mode == TextCharMode.COMMODORE_ECM )
-      {
-        radioMultiColor1.Text = "BGColor 2";
-        radioMulticolor2.Text = "BGColor 3";
-      }
-      else
-      {
-        radioMultiColor1.Text = "Multicolor 1";
-        radioMulticolor2.Text = "Multicolor 2";
-      }
+      
       panelCharacters.Invalidate();
       RaiseModifiedEvent();
       canvasEditor.Invalidate();
@@ -2054,13 +2050,11 @@ namespace C64Studio.Controls
     {
       int numColors = Lookup.NumberOfColorsInCharacter( m_Project.Mode );
 
-      if ( m_Project.Colors.Palette.NumColors == numColors )
+      if ( m_Project.Colors.Palette.NumColors != numColors )
       {
-        // palette is already matching, keep existing
-        return;
+        // palette is not matching, create new
+        m_Project.Colors.Palette = PaletteManager.PaletteFromNumColors( Lookup.NumberOfColorsInCharacter( m_Project.Mode ) );
       }
-      m_Project.Colors.Palette = PaletteManager.PaletteFromNumColors( Lookup.NumberOfColorsInCharacter( m_Project.Mode ) );
-
       OnPaletteChanged();
     }
 
@@ -2842,6 +2836,27 @@ namespace C64Studio.Controls
         PaletteManager.ApplyPalette( m_Project.Characters[i].Tile.Image, m_Project.Colors.Palette );
         RebuildCharImage( i );
         panelCharacters.Items.Add( i.ToString(), m_Project.Characters[i].Tile.Image );
+      }
+
+      // update controls for mode
+      comboBGColor4.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_ECM );
+      radioBGColor4.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_ECM );
+      comboMulticolor1.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR );
+      radioMultiColor1.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR );
+      comboMulticolor2.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR );
+      radioMulticolor2.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR );
+
+      panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( m_Project.Mode );
+
+      if ( m_Project.Mode == TextCharMode.COMMODORE_ECM )
+      {
+        radioMultiColor1.Text = "BGColor 2";
+        radioMulticolor2.Text = "BGColor 3";
+      }
+      else
+      {
+        radioMultiColor1.Text = "Multicolor 1";
+        radioMulticolor2.Text = "Multicolor 2";
       }
 
       panelCharacters.Invalidate();

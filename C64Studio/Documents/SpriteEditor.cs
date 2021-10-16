@@ -48,6 +48,9 @@ namespace C64Studio
     private int                         m_SpriteWidth = 24;
     private int                         m_SpriteHeight = 21;
 
+    private int                         m_SpriteEditorOrigWidth = -1;
+    private int                         m_SpriteEditorOrigHeight = -1;
+
 
 
     public SpriteEditor( StudioCore Core )
@@ -60,6 +63,9 @@ namespace C64Studio
       InitializeComponent();
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
+
+      m_SpriteEditorOrigWidth   = pictureEditor.Width;
+      m_SpriteEditorOrigHeight  = pictureEditor.Height;
 
       listLayers.ItemAdded += new ArrangedItemList.ItemModifiedEventHandler( listLayers_ItemAdded );
 
@@ -869,13 +875,12 @@ namespace C64Studio
             spritePad.Sprites[i].Data.CopyTo( m_SpriteProject.Sprites[i].Tile.Data, 0, 63 );
             m_SpriteProject.Sprites[i].Tile.CustomColor = spritePad.Sprites[i].Color;
             m_SpriteProject.Sprites[i].Mode   = spritePad.Sprites[i].Multicolor ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
-            RebuildSpriteImage( i );
           }
         }
+        OnPaletteChanged();
 
         editSpriteFrom.Text = "0";
         editSpriteCount.Text = spritePad.NumSprites.ToString();
-
         comboBackground.SelectedIndex = m_SpriteProject.Colors.BackgroundColor;
         comboMulticolor1.SelectedIndex = m_SpriteProject.Colors.MultiColor1;
         comboMulticolor2.SelectedIndex = m_SpriteProject.Colors.MultiColor2;
@@ -915,9 +920,9 @@ namespace C64Studio
             tempBuffer.CopyTo( m_SpriteProject.Sprites[i].Tile.Data, 0, 63 );
             m_SpriteProject.Sprites[i].Tile.CustomColor = ( tempBuffer.ByteAt( 63 ) & 0xf );
             m_SpriteProject.Sprites[i].Mode = ( ( tempBuffer.ByteAt( 63 ) & 0x80 ) != 0 ) ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
-            RebuildSpriteImage( i );
           }
         }
+        OnPaletteChanged();
 
         editSpriteFrom.Text = "0";
         editSpriteCount.Text  = numSprites.ToString();
@@ -960,11 +965,10 @@ namespace C64Studio
         {
           m_SpriteProject.Sprites.Add( new SpriteProject.SpriteData( sprites.Sprites[i] ) );
 
-          RebuildSpriteImage( i );
-
           panelSprites.Items.Add( i.ToString(), m_SpriteProject.Sprites[i].Tile.Image );
           comboSprite.Items.Add( i );
         }
+        OnPaletteChanged();
         comboSprite.SelectedIndex = 0;
         panelSprites.Invalidate();
         pictureEditor.Invalidate();
@@ -1014,7 +1018,6 @@ namespace C64Studio
       {
         panelSprites.Items.Add( i.ToString(), m_SpriteProject.Sprites[i].Tile.Image );
         comboSprite.Items.Add( i );
-        RebuildSpriteImage( i );
       }
       pictureEditor.Image = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image;
       panelSprites.Invalidate();
@@ -1037,7 +1040,7 @@ namespace C64Studio
       {
         listLayers.SelectedIndices.Add( 0 );
       }
-      //RedrawLayer();
+      OnPaletteChanged();
 
       Modified = false;
 
@@ -3844,6 +3847,13 @@ namespace C64Studio
           Debug.Log( "comboSpriteProjectMode_SelectedIndexChanged, unsupported mode " + m_SpriteProject.Mode );
           break;
       }
+
+      // adjust aspect ratio of the editor
+      int   biggerSize = Math.Max( m_SpriteWidth, m_SpriteHeight );
+
+      pictureEditor.Size = new System.Drawing.Size( m_SpriteWidth * m_SpriteEditorOrigWidth / biggerSize,
+                                                    m_SpriteHeight * m_SpriteEditorOrigHeight / biggerSize );
+
       pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       panelSprites.ItemWidth = m_SpriteWidth;
       panelSprites.ItemHeight = m_SpriteHeight;
@@ -3869,6 +3879,7 @@ namespace C64Studio
     private void OnPaletteChanged()
     {
       btnEditPalette.Enabled = Lookup.HasCustomPalette( Lookup.GraphicTileModeFromSpriteProjectMode( m_SpriteProject.Mode ) );
+      checkMulticolor.Visible = ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC );
 
       PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_SpriteProject.Colors.Palette );
       PaletteManager.ApplyPalette( panelSprites.DisplayPage, m_SpriteProject.Colors.Palette );

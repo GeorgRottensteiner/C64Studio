@@ -4376,9 +4376,11 @@ namespace C64Studio.Parser
           return false;
         }
         if ( ( method != "CHAR" )
-        &&   ( method != "CHARCOLOR" ) )
+        &&   ( method != "CHARCOLOR" )
+        &&   ( method != "PALETTE" ) 
+        &&   ( method != "PALETTESWIZZLED" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR or CHARCOLOR" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR, CHARCOLOR, PALETTE or PALETTESWIZZLED." );
           return false;
         }
         int   startIndex = 0;
@@ -4416,32 +4418,58 @@ namespace C64Studio.Parser
           AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read charset project file " + subFilename );
           return false;
         }
-        if ( ( startIndex < 0 )
-        ||   ( startIndex >= charProject.ExportNumCharacters ) )
-        {
-          AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid start index " + startIndex );
-          return false;
-        }
-        if ( ( numChars <= 0 )
-        || ( ( startIndex + numChars ) > charProject.ExportNumCharacters ) )
-        {
-          AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid char count " + numChars );
-          return false;
-        }
-        GR.Memory.ByteBuffer    charData = new GR.Memory.ByteBuffer( (uint)( numChars * 8 ) );
 
-        for ( int i = 0; i < numChars; ++i )
+        if ( ( method == "PALETTE" )
+        ||   ( method == "PALETTESWIZZLED" ) )
         {
-          charProject.Characters[startIndex + i].Tile.Data.CopyTo( charData, 0, 8, i * 8 );
-        }
-        if ( method == "CHARCOLOR" )
-        {
-          for ( int i = 0; i < numChars; ++i )
+          if ( !Binary )
           {
-            charData.AppendU8( (byte)charProject.Characters[startIndex + i].Tile.CustomColor );
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as PALETTE(SWIZZLED) is only supported for binary" );
+            return false;
+          }
+
+          int numColors = numChars;
+
+          if ( ( startIndex < 0 )
+          ||   ( startIndex >= charProject.Colors.Palette.NumColors ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid start index" );
+            return false;
+          }
+          if ( numColors <= 0 )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, must be >= 1" );
+            return false;
+          }
+          if ( startIndex + numColors > charProject.Colors.Palette.NumColors )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, charset has "
+                  + charProject.Colors.Palette.NumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
+            return false;
+          }
+          dataToInclude = charProject.Colors.Palette.GetExportData( startIndex, numColors, method == "PALETTESWIZZLED" );
+        }
+        else
+        {
+          if ( ( startIndex < 0 )
+          ||   ( startIndex >= charProject.ExportNumCharacters ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid start index " + startIndex );
+            return false;
+          }
+          if ( ( numChars <= 0 )
+          || ( ( startIndex + numChars ) > charProject.ExportNumCharacters ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid char count " + numChars );
+            return false;
+          }
+
+          dataToInclude = charProject.CharacterData( startIndex, numChars );
+          if ( method == "CHARCOLOR" )
+          {
+            dataToInclude += charProject.ColorData( startIndex, numChars );
           }
         }
-        dataToInclude = charData;
       }
       else if ( extension == ".VALUETABLEPROJECT" )
       {
@@ -4668,9 +4696,11 @@ namespace C64Studio.Parser
         }
 
         if ( ( method != "SPRITE" )
+        &&   ( method != "SPRITEDATA" ) 
+        &&   ( method != "SPRITEOPTIMIZE" )
         &&   ( method != "SPRITEDATA" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are SPRITE and SPRITEDATA" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are SPRITE, SPRITEOPTIMIZE, SPRITEDATA and SPRITEDATAOPTIMIZE" );
           return false;
         }
 
@@ -4688,7 +4718,8 @@ namespace C64Studio.Parser
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <SpriteData>,<Index>,<Count>,<Offset>,<NumBytes>" );
           return false;
         }
-        if ( method == "SPRITE" )
+        if ( ( method == "SPRITE" )
+        ||   ( method == "SPRITEOPTIMIZE" ) )
         {
           int   startIndex = 0;
           int   numSprites = -1; 
@@ -4740,21 +4771,60 @@ namespace C64Studio.Parser
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid sprite count " + numSprites );
             return false;
           }
-          int paddedLength        = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
-          int singleSpriteLength  = (int)spriteProject.Sprites[startIndex].Tile.Data.Length;
 
-          GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( singleSpriteLength + ( paddedLength * ( numSprites - 1 ) )  ) );
+          bool  optimizePadding = ( method == "SPRITEOPTIMIZE" );
+          bool  addColor = Lookup.HaveCustomSpriteColor( spriteProject.Mode );
 
-          for ( int i = 0; i < numSprites; ++i )
+          GR.Memory.ByteBuffer    spriteData;
+
+          if ( optimizePadding )
           {
-            spriteProject.Sprites[startIndex + i].Tile.Data.CopyTo( spriteData, 
-                                                                    0, 
-                                                                    (int)spriteProject.Sprites[startIndex + i].Tile.Data.Length, 
-                                                                    i * Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode ) );
+            int paddedLength        = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
+            int singleSpriteLength  = (int)spriteProject.Sprites[startIndex].Tile.Data.Length;
+
+            uint  bufferSize = (uint)( singleSpriteLength + ( paddedLength * ( numSprites - 1 ) ) );
+            if ( addColor )
+            {
+              ++bufferSize;
+            }
+
+            spriteData = new GR.Memory.ByteBuffer( bufferSize );
+
+            for ( int i = 0; i < numSprites; ++i )
+            {
+              spriteProject.Sprites[startIndex + i].Tile.Data.CopyTo( spriteData,
+                                                                      0,
+                                                                      (int)spriteProject.Sprites[startIndex + i].Tile.Data.Length,
+                                                                      i * paddedLength );
+              if ( addColor )
+              {
+                spriteData.SetU8At( i * singleSpriteLength, (byte)spriteProject.Sprites[startIndex + i].Tile.CustomColor );
+              }
+            }
+          }
+          else
+          {
+            int paddedLength        = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
+            int singleSpriteLength  = (int)spriteProject.Sprites[startIndex].Tile.Data.Length;
+
+            spriteData = new GR.Memory.ByteBuffer( (uint)( paddedLength * numSprites ) );
+
+            for ( int i = 0; i < numSprites; ++i )
+            {
+              spriteProject.Sprites[startIndex + i].Tile.Data.CopyTo( spriteData,
+                                                                      0,
+                                                                      (int)spriteProject.Sprites[startIndex + i].Tile.Data.Length,
+                                                                      i * paddedLength );
+              if ( addColor )
+              {
+                spriteData.SetU8At( i * singleSpriteLength, (byte)spriteProject.Sprites[startIndex + i].Tile.CustomColor );
+              }
+            }
           }
           dataToInclude = spriteData;
         }
-        else if ( method == "SPRITEDATA" )
+        else if ( ( method == "SPRITEDATA" )
+        ||        ( method == "SPRITEDATAOPTIMIZE" ) )
         {
           int   startIndex = 0;
           int   numSprites = 256;
@@ -4815,11 +4885,54 @@ namespace C64Studio.Parser
             AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid sprite count " + numSprites );
             return false;
           }
-          GR.Memory.ByteBuffer    spriteData = new GR.Memory.ByteBuffer( (uint)( numSprites * 64 ) );
+          bool  optimizePadding = ( method == "SPRITEDATAOPTIMIZE" );
+          bool  addColor = Lookup.HaveCustomSpriteColor( spriteProject.Mode );
 
-          for ( int i = 0; i < numSprites; ++i )
+          GR.Memory.ByteBuffer    spriteData;
+
+          if ( optimizePadding )
           {
-            spriteProject.Sprites[startIndex + i].Tile.Data.CopyTo( spriteData, 0, 63, i * 64 );
+            int paddedLength        = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
+            int singleSpriteLength  = (int)spriteProject.Sprites[startIndex].Tile.Data.Length;
+
+            uint  bufferSize = (uint)( singleSpriteLength + ( paddedLength * ( numSprites - 1 ) ) );
+            if ( addColor )
+            {
+              ++bufferSize;
+            }
+
+            spriteData = new GR.Memory.ByteBuffer( bufferSize );
+
+            for ( int i = 0; i < numSprites; ++i )
+            {
+              spriteProject.Sprites[startIndex + i].Tile.Data.CopyTo( spriteData,
+                                                                      0,
+                                                                      (int)spriteProject.Sprites[startIndex + i].Tile.Data.Length,
+                                                                      i * paddedLength );
+              if ( addColor )
+              {
+                spriteData.SetU8At( i * singleSpriteLength, (byte)spriteProject.Sprites[startIndex + i].Tile.CustomColor );
+              }
+            }
+          }
+          else
+          {
+            int paddedLength        = Lookup.NumPaddedBytesOfSingleSprite( spriteProject.Mode );
+            int singleSpriteLength  = (int)spriteProject.Sprites[startIndex].Tile.Data.Length;
+
+            spriteData = new GR.Memory.ByteBuffer( (uint)( paddedLength * numSprites ) );
+
+            for ( int i = 0; i < numSprites; ++i )
+            {
+              spriteProject.Sprites[startIndex + i].Tile.Data.CopyTo( spriteData,
+                                                                      0,
+                                                                      (int)spriteProject.Sprites[startIndex + i].Tile.Data.Length,
+                                                                      i * paddedLength );
+              if ( addColor )
+              {
+                spriteData.SetU8At( i * singleSpriteLength, (byte)spriteProject.Sprites[startIndex + i].Tile.CustomColor );
+              }
+            }
           }
 
           if ( ( offsetBytes >= spriteData.Length )
@@ -5123,7 +5236,7 @@ namespace C64Studio.Parser
             numColors = screenProject.CharSet.Colors.Palette.NumColors;
           }
           if ( ( startIndex < 0 )
-          ||   ( startIndex >= screenProject.CharSet.ExportNumCharacters ) )
+          ||   ( startIndex >= screenProject.CharSet.Colors.Palette.NumColors ) )
           {
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid start index" );
             return false;
