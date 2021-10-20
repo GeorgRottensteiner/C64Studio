@@ -104,7 +104,7 @@ namespace C64Studio.Formats
     public GR.Memory.ByteBuffer CharacterData( int StartIndex, int Count )
     {
       if ( ( StartIndex < 0 )
-      ||   ( StartIndex + Count >= TotalNumberOfCharacters ) )
+      ||   ( StartIndex + Count > TotalNumberOfCharacters ) )
       {
         return new GR.Memory.ByteBuffer();
       }
@@ -123,7 +123,7 @@ namespace C64Studio.Formats
     public GR.Memory.ByteBuffer ColorData( int StartIndex, int Count )
     {
       if ( ( StartIndex < 0 )
-      ||   ( StartIndex + Count >= TotalNumberOfCharacters ) )
+      ||   ( StartIndex + Count > TotalNumberOfCharacters ) )
       {
         return new GR.Memory.ByteBuffer();
       }
