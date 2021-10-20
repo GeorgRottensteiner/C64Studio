@@ -2053,6 +2053,7 @@ namespace C64Studio.Parser
         var hardInfo = new LineInfo();
         hardInfo.Line = Line;
         hardInfo.Tokens.Add( new Token() { Content = Line, TokenType = Token.Type.HARD_COMMENT } );
+        hardInfo.LineIndex = LineIndex;
 
         return hardInfo;
       }
@@ -2463,6 +2464,12 @@ namespace C64Studio.Parser
         // find actual byte value of char
         numCharsSkipped += MapCharacterToActualKey( LineIndex, curChar, posInLine, endOfDigitPos, tempData );
         ++posInLine;
+      }
+
+      if ( insideMacro )
+      {
+        // macro is missing closing }!
+        AddError( LineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, "Macro is missing closing brace", macroStartPos, 1 );
       }
 
       return numCharsSkipped;
