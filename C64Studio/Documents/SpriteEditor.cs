@@ -13,6 +13,7 @@ using C64Studio.Types;
 using C64Studio.Converter;
 using RetroDevStudio;
 using RetroDevStudio.Types;
+using System.Linq;
 
 namespace C64Studio
 {
@@ -815,7 +816,7 @@ namespace C64Studio
         listLayers.Items.Add( item );
       }
       CurrentSpriteModified();
-      RedrawLayer();
+      RedrawPreviewLayer();
     }
 
 
@@ -829,7 +830,7 @@ namespace C64Studio
         {
           if ( sprite.Index == m_CurrentSprite )
           {
-            RedrawLayer();
+            RedrawPreviewLayer();
             break;
           }
         }
@@ -2042,7 +2043,7 @@ namespace C64Studio
         firstEntry = false;
         var sprite = m_SpriteProject.Sprites[spriteIndex];
 
-        for ( int x = 0; x < m_SpriteWidth; ++x )
+        for ( int x = 0; x < m_SpriteWidth; x += Lookup.PixelWidth( sprite.Tile.Mode ) )
         {
           int   tempPixel = sprite.Tile.GetPixel( x, 0 );
           for ( int y = 0; y < m_SpriteHeight - 1; ++y )
@@ -2079,7 +2080,7 @@ namespace C64Studio
         firstEntry = false;
         var sprite = m_SpriteProject.Sprites[spriteIndex];
 
-        for ( int x = 0; x < m_SpriteWidth; ++x )
+        for ( int x = 0; x < m_SpriteWidth; x += Lookup.PixelWidth( sprite.Tile.Mode ) )
         {
           int   tempPixel = sprite.Tile.GetPixel( x, m_SpriteHeight - 1 );
           for ( int y = 0; y < m_SpriteHeight - 1; ++y )
@@ -2331,7 +2332,7 @@ namespace C64Studio
         if ( sprite.Color != comboLayerColor.SelectedIndex )
         {
           sprite.Color = comboLayerColor.SelectedIndex;
-          RedrawLayer();
+          RedrawPreviewLayer();
           SetModified();
         }
       }
@@ -2345,7 +2346,7 @@ namespace C64Studio
 
 
 
-    private void RedrawLayer()
+    private void RedrawPreviewLayer()
     {
       if ( m_CurrentLayer != null )
       {
@@ -2383,7 +2384,7 @@ namespace C64Studio
 
       m_CurrentLayer.Sprites.Remove( sprite );
       listLayerSprites.Items.Remove( listLayerSprites.SelectedItems[0] );
-      RedrawLayer();
+      RedrawPreviewLayer();
       SetModified();
     }
 
@@ -2406,7 +2407,7 @@ namespace C64Studio
         listLayerSprites.Items.Remove( itemToSwap );
         listLayerSprites.Items.Insert( insertIndex, itemToSwap );
         itemToSwap.Selected = true;
-        RedrawLayer();
+        RedrawPreviewLayer();
         SetModified();
       }
     }
@@ -2430,7 +2431,7 @@ namespace C64Studio
         listLayerSprites.Items.Remove( itemToSwap );
         listLayerSprites.Items.Insert( insertIndex, itemToSwap );
         itemToSwap.Selected = true;
-        RedrawLayer();
+        RedrawPreviewLayer();
         SetModified();
       }
 
@@ -2448,7 +2449,7 @@ namespace C64Studio
         {
           sprite.Index = comboSprite.SelectedIndex;
           listLayerSprites.SelectedItems[0].Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
-          RedrawLayer();
+          RedrawPreviewLayer();
           SetModified();
         }
       }
@@ -2467,7 +2468,7 @@ namespace C64Studio
         {
           sprite.X = newPos;
           listLayerSprites.SelectedItems[0].Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
-          RedrawLayer();
+          RedrawPreviewLayer();
           SetModified();
         }
       }
@@ -2486,7 +2487,7 @@ namespace C64Studio
         {
           sprite.Y = newPos;
           listLayerSprites.SelectedItems[0].Text = sprite.Index.ToString() + ", " + sprite.X.ToString() + ", " + sprite.Y.ToString();
-          RedrawLayer();
+          RedrawPreviewLayer();
           SetModified();
         }
       }
@@ -2504,7 +2505,7 @@ namespace C64Studio
       if ( comboLayerBGColor.SelectedIndex != m_CurrentLayer.BackgroundColor )
       {
         m_CurrentLayer.BackgroundColor = comboLayerBGColor.SelectedIndex;
-        RedrawLayer();
+        RedrawPreviewLayer();
         SetModified();
       }
     }
@@ -2602,7 +2603,7 @@ namespace C64Studio
         m_CurrentLayer.Sprites.Add( sprite );
       }
       SetModified();
-      RedrawLayer();
+      RedrawPreviewLayer();
     }
 
 
@@ -2617,7 +2618,7 @@ namespace C64Studio
         m_CurrentLayer.Sprites.Add( sprite );
       }
       SetModified();
-      RedrawLayer();
+      RedrawPreviewLayer();
     }
 
 
@@ -2642,7 +2643,7 @@ namespace C64Studio
     {
       m_CurrentLayer = (Formats.SpriteProject.Layer)Item.Tag;
       SetModified();
-      RedrawLayer();
+      RedrawPreviewLayer();
     }
 
 
@@ -2651,7 +2652,7 @@ namespace C64Studio
     {
       var sprite = (Formats.SpriteProject.LayerSprite)Item.Tag;
       SetModified();
-      RedrawLayer();
+      RedrawPreviewLayer();
     }
 
 
@@ -2682,7 +2683,7 @@ namespace C64Studio
         m_CurrentLayer = null;
         editLayerName.Text = "";
         editLayerDelay.Text = "";
-        RedrawLayer();
+        RedrawPreviewLayer();
         return;
       }
       m_CurrentLayer = (Formats.SpriteProject.Layer)Item.Tag;
@@ -2709,7 +2710,7 @@ namespace C64Studio
 
         ++spriteIndex;
       }
-      RedrawLayer();
+      RedrawPreviewLayer();
     }
 
 
@@ -2727,7 +2728,7 @@ namespace C64Studio
       if ( m_CurrentLayer == (Formats.SpriteProject.Layer)Item.Tag )
       {
         m_CurrentLayer = null;
-        RedrawLayer();
+        RedrawPreviewLayer();
       }
     }
 
@@ -2824,6 +2825,16 @@ namespace C64Studio
         }
         DoNotUpdateFromControls = false;
       }
+      if ( comboSprite.SelectedIndex == SpriteIndex )
+      {
+        comboSprite.Invalidate();
+
+        if ( ( m_CurrentLayer != null )
+        &&   ( m_CurrentLayer.Sprites.Any( s => s.Index == SpriteIndex ) ) )
+        {
+          RedrawPreviewLayer();
+        }
+      }
       CurrentSpriteModified();
       SetModified();
     }
@@ -2854,7 +2865,7 @@ namespace C64Studio
       listLayers.Items.Clear();
 
       AddAllLayers();
-      RedrawLayer();
+      RedrawPreviewLayer();
     }
 
 
@@ -2885,7 +2896,7 @@ namespace C64Studio
         {
           sprite.ExpandX = checkExpandX.Checked;
           Modified = true;
-          RedrawLayer();
+          RedrawPreviewLayer();
           SetModified();
         }
       }
@@ -2903,7 +2914,7 @@ namespace C64Studio
         {
           sprite.ExpandY = checkExpandY.Checked;
           Modified = true;
-          RedrawLayer();
+          RedrawPreviewLayer();
           SetModified();
         }
       }

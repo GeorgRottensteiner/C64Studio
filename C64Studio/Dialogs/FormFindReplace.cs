@@ -1153,7 +1153,7 @@ namespace C64Studio
         newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, lastPosition );
         if ( newLocation.StartPosition == -1 )
         {
-          elementToSearch = GetNextSolutionElement( elementToSearch, SearchDown, true );
+          elementToSearch = GetNextSolutionElement( elementToSearch, SearchDown, Wrap );
           if ( elementToSearch == null )
           {
             LastFound.Clear();

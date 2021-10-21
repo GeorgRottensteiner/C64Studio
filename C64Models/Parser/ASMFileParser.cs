@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using C64Studio.Types;
@@ -4817,7 +4818,7 @@ namespace C64Studio.Parser
                                                                       i * paddedLength );
               if ( addColor )
               {
-                spriteData.SetU8At( i * singleSpriteLength, (byte)spriteProject.Sprites[startIndex + i].Tile.CustomColor );
+                spriteData.SetU8At( i * paddedLength + singleSpriteLength, (byte)spriteProject.Sprites[startIndex + i].Tile.CustomColor );
               }
             }
           }
@@ -8968,7 +8969,7 @@ namespace C64Studio.Parser
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1302_MALFORMED_MACRO,
-                            "Expected !to <Filename>,<Type = cbm, plain, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, ultimax4bin, ultimax4crt, ultimax8bin, ultimax8crt, ultimax16bin, ultimax16crt, t64, tap or d64>" );
+                            "Expected !to <Filename>,<Type = " + ListKeys( Lookup.CompileTargetModeToKeyword.Values ) + ">" );
                   HadFatalError = true;
                   return Lines;
                 }
@@ -8983,33 +8984,11 @@ namespace C64Studio.Parser
                   return Lines;
                 }
                 string    targetType = lineTokenInfos[2].Content.ToUpper();
-                if ( ( targetType != "CBM" )
-                &&   ( targetType != "PLAIN" )
-                &&   ( targetType != "CART8BIN" )
-                &&   ( targetType != "CART8CRT" )
-                &&   ( targetType != "CART16BIN" )
-                &&   ( targetType != "CART16CRT" )
-                &&   ( targetType != "ULTIMAX4BIN" )
-                &&   ( targetType != "ULTIMAX4CRT" )
-                &&   ( targetType != "ULTIMAX8BIN" )
-                &&   ( targetType != "ULTIMAX8CRT" )
-                &&   ( targetType != "ULTIMAX16BIN" )
-                &&   ( targetType != "ULTIMAX16CRT" )
-                &&   ( targetType != "MAGICDESKBIN" )
-                &&   ( targetType != "MAGICDESKCRT" )
-                &&   ( targetType != "RGCDBIN" )
-                &&   ( targetType != "RGCDCRT" )
-                &&   ( targetType != "GMOD2BIN" )
-                &&   ( targetType != "GMOD2CRT" )
-                &&   ( targetType != "EASYFLASHBIN" )
-                &&   ( targetType != "EASYFLASHCRT" )
-                &&   ( targetType != "D64" )
-                &&   ( targetType != "TAP" )
-                &&   ( targetType != "T64" ) )
+                if ( !Lookup.CompileTargetModeToKeyword.ContainsValue( targetType ) )
                 {
                   AddError( lineIndex,
                             Types.ErrorCode.E1304_UNSUPPORTED_TARGET_TYPE,
-                            "Unsupported target type " + lineTokenInfos[2].Content + ", only cbm, plain, t64, tap, d64, cart8bin, cart8crt, cart16bin, cart16crt, magicdeskbin, magicdeskcrt, easyflashbin, easyflashcrt, rgcdbin, rgcdcrt, ultimax4bin, ultimax4crt, ultimax8bin, ultimax8crt, ultimax16bin, ultimax16crt, gmod2bin or gmod2crt supported",
+                            "Unsupported target type " + lineTokenInfos[2].Content + ", only " + ListKeys( Lookup.CompileTargetModeToKeyword.Values ) + " supported",
                             lineTokenInfos[2].StartPos,
                             lineTokenInfos[2].Length );
                   HadFatalError = true;
@@ -9025,102 +9004,7 @@ namespace C64Studio.Parser
                 {
                   m_CompileTargetFile = GR.Path.Append( m_DocBasePath, filename );
                 }
-                if ( targetType == "CBM" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.PRG;
-                }
-                else if ( targetType == "PLAIN" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.PLAIN;
-                }
-                else if ( targetType == "T64" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.T64;
-                }
-                else if ( targetType == "TAP" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.TAP;
-                }
-                else if ( targetType == "D64" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.D64;
-                }
-                else if ( targetType == "D81" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.D81;
-                }
-                else if ( targetType == "CART8BIN" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_8K_BIN;
-                }
-                else if ( targetType == "CART8CRT" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_8K_CRT;
-                }
-                else if ( targetType == "CART16BIN" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_16K_BIN;
-                }
-                else if ( targetType == "CART16CRT" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_16K_CRT;
-                }
-                else if ( targetType == "MAGICDESKBIN" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN;
-                }
-                else if ( targetType == "MAGICDESKCRT" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT;
-                }
-                else if ( targetType == "RGCDBIN" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_RGCD_BIN;
-                }
-                else if ( targetType == "RGCDCRT" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_RGCD_CRT;
-                }
-                else if ( targetType == "EASYFLASHBIN" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN;
-                }
-                else if ( targetType == "EASYFLASHCRT" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT;
-                }
-                else if ( targetType == "GMOD2BIN" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_GMOD2_BIN;
-                }
-                else if ( targetType == "GMOD2CRT" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_GMOD2_CRT;
-                }
-                else if ( targetType == "ULTIMAX4BIN" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_BIN;
-                }
-                else if ( targetType == "ULTIMAX4CRT" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT;
-                }
-                else if ( targetType == "ULTIMAX8BIN" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_BIN;
-                }
-                else if ( targetType == "ULTIMAX8CRT" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_8K_CRT;
-                }
-                else if ( targetType == "ULTIMAX16BIN" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_BIN;
-                }
-                else if ( targetType == "ULTIMAX16CRT" )
-                {
-                  m_CompileTarget = Types.CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT;
-                }
+                m_CompileTarget = Lookup.CompileTargetModeToKeyword.Where( c => c.Value == targetType ).Select( c => c.Key ).First();
               }
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.ADDRESS )
@@ -9137,12 +9021,6 @@ namespace C64Studio.Parser
 
               if ( openingBracketTokenIndex != -1 )
               {
-                /*
-                // remove starting tokens
-                for ( int i = 0; i < openingBracketTokenIndex; ++i )
-                {
-                  lineTokenInfos.RemoveAt( 0 );
-                }*/
                 stackScopes.Add( new ScopeInfo( ScopeInfo.ScopeType.ADDRESS ) { Active = true, StartIndex = lineIndex } );
                 continue;
               }
@@ -10568,6 +10446,30 @@ namespace C64Studio.Parser
 
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private string ListKeys( IEnumerable<string> LookupList )
+    {
+      StringBuilder   sb = new StringBuilder();
+
+      int numEntries = LookupList.Count();
+
+      for ( int i = 0; i < numEntries; ++i )
+      {
+        if ( i + 1 == numEntries )
+        {
+          sb.Append( " or " );
+        }
+        else if ( i > 0 )
+        {
+          sb.Append( ", " );
+        }
+        sb.Append( LookupList.ElementAt( i ) );
+      }
+
+      return sb.ToString();
     }
 
 

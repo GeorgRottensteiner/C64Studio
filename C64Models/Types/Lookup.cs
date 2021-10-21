@@ -1,10 +1,46 @@
 ﻿using C64Studio.Formats;
+using C64Studio.Types;
 using System;
+using System.Collections.Generic;
 
 namespace RetroDevStudio
 {
   static class Lookup
   {
+    internal static Dictionary<CompileTargetType,string>     CompileTargetModeToKeyword = new Dictionary<CompileTargetType, string>();
+
+
+
+    static Lookup()
+    {
+      CompileTargetModeToKeyword[CompileTargetType.PRG] = "CBM";
+      CompileTargetModeToKeyword[CompileTargetType.PLAIN] = "PLAIN";
+      CompileTargetModeToKeyword[CompileTargetType.T64] = "T64";
+      CompileTargetModeToKeyword[CompileTargetType.TAP] = "TAP";
+      CompileTargetModeToKeyword[CompileTargetType.D64] = "D64";
+      CompileTargetModeToKeyword[CompileTargetType.D81] = "D81";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_8K_BIN] = "CART8BIN";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_8K_CRT] = "CART8CRT";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_16K_BIN] = "CART16BIN";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_16K_CRT] = "CART16CRT";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_MAGICDESK_BIN] = "MAGICDESKBIN";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_MAGICDESK_CRT] = "MAGICDESKCRT";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_RGCD_BIN] = "RGCDBIN";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_RGCD_CRT] = "RGCDCRT";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_EASYFLASH_BIN] = "EASYFLASHBIN";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_EASYFLASH_CRT] = "EASYFLASHCRT";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_GMOD2_BIN] = "GMOD2BIN";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_GMOD2_CRT] = "GMOD2CRT";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_ULTIMAX_4K_BIN] = "ULTIMAX4BIN";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_ULTIMAX_4K_CRT] = "ULTIMAX4CRT";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_ULTIMAX_8K_BIN] = "ULTIMAX8BIN";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_ULTIMAX_8K_CRT] = "ULTIMAX8CRT";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_ULTIMAX_16K_BIN] = "ULTIMAX16BIN";
+      CompileTargetModeToKeyword[CompileTargetType.CARTRIDGE_ULTIMAX_16K_CRT] = "ULTIMAX16CRT";
+    }
+
+
+
     public static int NumberOfColorsInCharacter( TextCharMode Mode )
     {
       switch ( Mode )
