@@ -6754,11 +6754,11 @@ namespace C64Studio.Parser
               }
               if ( LittleEndian )
               {
-                data.AppendU32( (ushort)wordValue );
+                data.AppendU32( (uint)wordValue );
               }
               else
               {
-                data.AppendU32NetworkOrder( (ushort)wordValue );
+                data.AppendU32NetworkOrder( (uint)wordValue );
               }
             }
             else if ( AllowNeededExpression )
@@ -6812,11 +6812,11 @@ namespace C64Studio.Parser
           }
           if ( LittleEndian )
           {
-            data.AppendU32( (ushort)wordValue );
+            data.AppendU32( (uint)wordValue );
           }
           else
           {
-            data.AppendU32NetworkOrder( (ushort)wordValue );
+            data.AppendU32NetworkOrder( (uint)wordValue );
           }
         }
         else if ( AllowNeededExpression )
