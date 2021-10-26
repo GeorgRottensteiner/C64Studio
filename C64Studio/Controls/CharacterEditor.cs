@@ -35,6 +35,27 @@ namespace C64Studio.Controls
 
     private GR.Image.MemoryImage        m_ImagePlayground = new GR.Image.MemoryImage( 256, 256, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
+    private bool                        _AllowModeChange = true;
+
+
+
+    public bool AllowModeChange
+    {
+      get
+      {
+        return _AllowModeChange;
+      }
+      set
+      {
+        _AllowModeChange = value;
+        if ( comboCharsetMode != null )
+        {
+          comboCharsetMode.Enabled = _AllowModeChange;
+          labelCharsetMode.Enabled = _AllowModeChange;
+        }
+      }
+    }
+
 
 
     public CharacterEditor()
@@ -55,6 +76,8 @@ namespace C64Studio.Controls
 
     private void Setup()
     {
+      AllowModeChange = true;
+
       InitializeComponent();
 
       picturePlayground.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );

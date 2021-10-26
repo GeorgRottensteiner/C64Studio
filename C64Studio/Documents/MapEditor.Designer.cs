@@ -923,6 +923,7 @@
       // 
       // pictureEditor
       // 
+      this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.pictureEditor.DisplayPage = fastImage1;
       this.pictureEditor.Image = null;
@@ -1029,7 +1030,7 @@
       this.comboTileMode.FormattingEnabled = true;
       this.comboTileMode.Location = new System.Drawing.Point(701, 92);
       this.comboTileMode.Name = "comboTileMode";
-      this.comboTileMode.Size = new System.Drawing.Size(121, 21);
+      this.comboTileMode.Size = new System.Drawing.Size(227, 21);
       this.comboTileMode.TabIndex = 27;
       this.comboTileMode.SelectedIndexChanged += new System.EventHandler(this.comboTileMode_SelectedIndexChanged);
       // 
@@ -1322,6 +1323,7 @@
       // 
       // panelCharColors
       // 
+      this.panelCharColors.AutoResize = false;
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.panelCharColors.DisplayPage = fastImage2;
       this.panelCharColors.Image = null;
@@ -1335,6 +1337,7 @@
       // 
       // pictureTileDisplay
       // 
+      this.pictureTileDisplay.AutoResize = false;
       this.pictureTileDisplay.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.pictureTileDisplay.DisplayPage = fastImage3;
       this.pictureTileDisplay.Image = null;
@@ -1358,6 +1361,7 @@
       // 
       // characterEditor
       // 
+      this.characterEditor.AllowModeChange = false;
       this.characterEditor.Dock = System.Windows.Forms.DockStyle.Fill;
       this.characterEditor.Location = new System.Drawing.Point(0, 0);
       this.characterEditor.Name = "characterEditor";
@@ -1479,6 +1483,7 @@
       // 
       // fastPictureBox1
       // 
+      this.fastPictureBox1.AutoResize = false;
       this.fastPictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.fastPictureBox1.DisplayPage = fastImage4;
       this.fastPictureBox1.Image = null;
@@ -1490,6 +1495,7 @@
       // 
       // fastPictureBox2
       // 
+      this.fastPictureBox2.AutoResize = false;
       this.fastPictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.fastPictureBox2.DisplayPage = fastImage5;
       this.fastPictureBox2.Image = null;

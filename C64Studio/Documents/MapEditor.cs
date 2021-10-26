@@ -167,15 +167,23 @@ namespace C64Studio
       comboExportOrientation.SelectedIndex = 0;
       comboExportData.SelectedIndex = 0;
 
-      comboTileMode.Items.Add( "HiRes" );
-      comboTileMode.Items.Add( "MultiColor" );
-      comboTileMode.Items.Add( "Enhanced Char Mode (ECM)" );
+      foreach ( TextCharMode mode in Enum.GetValues( typeof( TextCharMode ) ) )
+      {
+        if ( mode != TextCharMode.UNKNOWN )
+        {
+          comboTileMode.Items.Add( GR.EnumHelper.GetDescription( mode ) );
+        }
+      }
       comboTileMode.SelectedIndex = 0;
 
       comboMapAlternativeMode.Items.Add( "From Project" );
-      comboMapAlternativeMode.Items.Add( "HiRes" );
-      comboMapAlternativeMode.Items.Add( "MultiColor" );
-      comboMapAlternativeMode.Items.Add( "Enhanced Char Mode (ECM)" );
+      foreach ( TextCharMode mode in Enum.GetValues( typeof( TextCharMode ) ) )
+      {
+        if ( mode != TextCharMode.UNKNOWN )
+        {
+          comboMapAlternativeMode.Items.Add( GR.EnumHelper.GetDescription( mode ) );
+        }
+      }
       comboMapAlternativeMode.SelectedIndex = 0;
 
       Core.MainForm.ApplicationEvent += new MainForm.ApplicationEventHandler( MainForm_ApplicationEvent );
@@ -1113,7 +1121,7 @@ namespace C64Studio
       comboTileMulticolor1.SelectedIndex = m_MapProject.MultiColor1;
       comboTileMulticolor2.SelectedIndex = m_MapProject.MultiColor2;
       comboTileBGColor4.SelectedIndex = m_MapProject.BGColor4;
-      comboTileMode.SelectedIndex = (int)m_MapProject.Mode;
+      comboTileMode.SelectedIndex = (int)Lookup.FromTextMode( m_MapProject.Mode );
       checkShowGrid.Checked = m_MapProject.ShowGrid;
 
       for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
@@ -1623,10 +1631,10 @@ namespace C64Studio
         {
           return false;
         }
-        for ( int i = 0; i < 256; ++i )
-        {
-          RebuildCharImage( i );
-        }
+        m_MapProject.Mode = Lookup.TextModeFromTextCharMode( m_MapProject.Charset.Mode );
+        comboTileMode.SelectedIndex = (int)m_MapProject.Charset.Mode;
+
+        FullRebuild();
         characterEditor.CharsetUpdated( m_MapProject.Charset );
         RedrawMap();
         Modified = true;
@@ -2408,7 +2416,7 @@ namespace C64Studio
 
     private void FullRebuild()
     {
-      for ( int i = 0; i < 256; ++i )
+      for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
         if ( i < panelCharacters.Items.Count )
@@ -2808,7 +2816,7 @@ namespace C64Studio
       comboTileBackground.SelectedIndex = m_MapProject.Charset.Colors.BackgroundColor;
       comboTileMulticolor1.SelectedIndex = m_MapProject.Charset.Colors.MultiColor1;
       comboTileMulticolor2.SelectedIndex = m_MapProject.Charset.Colors.MultiColor2;
-      comboTileMode.SelectedIndex = (int)( cpProject.MultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES );
+      comboTileMode.SelectedIndex = (int)( cpProject.MultiColor ? TextCharMode.COMMODORE_MULTICOLOR : TextCharMode.COMMODORE_HIRES );
 
       RedrawMap();
       SetModified();
@@ -3065,9 +3073,9 @@ namespace C64Studio
 
     private void comboTileMode_SelectedIndexChanged( object sender, EventArgs e )
     {
-      m_MapProject.Mode = (TextMode)comboTileMode.SelectedIndex;
-      m_MapProject.Charset.Mode = Lookup.FromTextMode( m_MapProject.Mode );
-      for ( int i = 0; i < 256; ++i )
+      m_MapProject.Charset.Mode = (TextCharMode)comboTileMode.SelectedIndex;
+      m_MapProject.Mode = Lookup.TextModeFromTextCharMode( m_MapProject.Charset.Mode );
+      for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
       }

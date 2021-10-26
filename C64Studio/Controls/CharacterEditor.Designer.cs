@@ -30,8 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.btnClearChars = new System.Windows.Forms.Button();
       this.comboCategories = new System.Windows.Forms.ComboBox();
@@ -75,7 +75,7 @@
       this.btnEditPalette = new System.Windows.Forms.Button();
       this.canvasEditor = new C64Studio.Controls.CustomDrawControl();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
-      this.label1 = new System.Windows.Forms.Label();
+      this.labelCharsetMode = new System.Windows.Forms.Label();
       this.panelCharColors = new GR.Forms.FastPictureBox();
       this.picturePlayground = new GR.Forms.FastPictureBox();
       this.btnExchangeColors = new C64Studio.Controls.MenuButton();
@@ -515,7 +515,7 @@
       this.tabEditor.Controls.Add(this.btnEditPalette);
       this.tabEditor.Controls.Add(this.canvasEditor);
       this.tabEditor.Controls.Add(this.comboCharsetMode);
-      this.tabEditor.Controls.Add(this.label1);
+      this.tabEditor.Controls.Add(this.labelCharsetMode);
       this.tabEditor.Controls.Add(this.comboBackground);
       this.tabEditor.Controls.Add(this.comboMulticolor1);
       this.tabEditor.Controls.Add(this.groupBox1);
@@ -590,20 +590,20 @@
       this.comboCharsetMode.TabIndex = 16;
       this.comboCharsetMode.SelectedIndexChanged += new System.EventHandler(this.comboCharsetMode_SelectedIndexChanged);
       // 
-      // label1
+      // labelCharsetMode
       // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(279, 325);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(37, 13);
-      this.label1.TabIndex = 17;
-      this.label1.Text = "Mode:";
+      this.labelCharsetMode.AutoSize = true;
+      this.labelCharsetMode.Location = new System.Drawing.Point(279, 325);
+      this.labelCharsetMode.Name = "labelCharsetMode";
+      this.labelCharsetMode.Size = new System.Drawing.Size(37, 13);
+      this.labelCharsetMode.TabIndex = 17;
+      this.labelCharsetMode.Text = "Mode:";
       // 
       // panelCharColors
       // 
       this.panelCharColors.AutoResize = false;
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage1;
+      this.panelCharColors.DisplayPage = fastImage3;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(780, 271);
       this.panelCharColors.Name = "panelCharColors";
@@ -618,7 +618,7 @@
       // 
       this.picturePlayground.AutoResize = false;
       this.picturePlayground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.picturePlayground.DisplayPage = fastImage2;
+      this.picturePlayground.DisplayPage = fastImage4;
       this.picturePlayground.Image = null;
       this.picturePlayground.Location = new System.Drawing.Point(780, 3);
       this.picturePlayground.Name = "picturePlayground";
@@ -931,7 +931,7 @@
     private System.Windows.Forms.Button btnMoveCategoryDown;
     private System.Windows.Forms.Button btnMoveCategoryUp;
     private System.Windows.Forms.ComboBox comboCharsetMode;
-    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label labelCharsetMode;
     private System.Windows.Forms.Button btnEditPalette;
   }
 }

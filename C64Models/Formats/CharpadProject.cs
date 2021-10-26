@@ -99,7 +99,6 @@ namespace C64Studio.Formats
       public GR.Memory.ByteBuffer     ColorData = new GR.Memory.ByteBuffer();
     };
 
-
     public int                    BackgroundColor = 0;
     public int                    BackgroundColor4 = 4;
     public int                    MultiColor1 = 8;

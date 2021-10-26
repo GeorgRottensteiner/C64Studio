@@ -39,6 +39,10 @@ namespace C64Studio.Formats
       public int                AlternativeMultiColor2 = -1;
       public int                AlternativeBackgroundColor = -1;
       public int                AlternativeBGColor4 = -1;
+
+      /// <summary>
+      /// overrides Project.Mode when set (e.g. display MC instead of hires)
+      /// </summary>
       public TextCharMode       AlternativeMode = TextCharMode.UNKNOWN;
     };
 
@@ -52,6 +56,10 @@ namespace C64Studio.Formats
     public int                          MultiColor1 = 0;
     public int                          MultiColor2 = 0;
     public int                          BGColor4 = 0;
+
+    /// <summary>
+    /// This mode is used to display/build the tiles
+    /// </summary>
     public TextMode                     Mode = TextMode.COMMODORE_40_X_25_HIRES;
     public CharsetProject               Charset = new C64Studio.Formats.CharsetProject();
     public bool                         ShowGrid = false;

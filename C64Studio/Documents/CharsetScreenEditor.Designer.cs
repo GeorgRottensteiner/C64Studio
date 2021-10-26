@@ -828,7 +828,7 @@
       // checkAutoCenter
       // 
       this.checkAutoCenter.Appearance = System.Windows.Forms.Appearance.Button;
-      this.checkAutoCenter.Image = global::C64Studio.Properties.Resources.charscreen_autocenter_off.ToBitmap();
+      this.checkAutoCenter.Image = ((System.Drawing.Image)(resources.GetObject("checkAutoCenter.Image")));
       this.checkAutoCenter.Location = new System.Drawing.Point(258, 432);
       this.checkAutoCenter.Name = "checkAutoCenter";
       this.checkAutoCenter.Size = new System.Drawing.Size(24, 24);
@@ -1186,6 +1186,7 @@
       this.charEditor.Dock = System.Windows.Forms.DockStyle.Fill;
       this.charEditor.Location = new System.Drawing.Point(0, 0);
       this.charEditor.Name = "charEditor";
+      this.charEditor.AllowModeChange = false;
       this.charEditor.Size = new System.Drawing.Size(1061, 546);
       this.charEditor.TabIndex = 24;
       this.charEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);

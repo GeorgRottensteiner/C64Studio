@@ -185,6 +185,14 @@
         gg==
 </value>
   </data>
+  <data name="checkAutoCenter.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB6SURBVDhPnY0BDsAgCAN55x6/r2wpsYRh3XCXEBF7aH85
+        7bhQ4zqBB1UO5a8FFZ91ZCAXdGUwBboyHx+hIi8X5McIFRnkXMBhDq1+Zs+7U4chDtln6czZIIZCBuwj
+        p1A/k7xA8yKDtQiKvLegyKC/QMgAvaoZIW9gdgPqO5utuCjF/AAAAABJRU5ErkJggg==
+</value>
+  </data>
   <data name="btnToolText.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO

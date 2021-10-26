@@ -333,6 +333,28 @@ namespace RetroDevStudio
 
 
 
+    internal static TextMode TextModeFromTextCharMode( TextCharMode Mode )
+    {
+      switch ( Mode )
+      {
+        case TextCharMode.COMMODORE_ECM:
+          return TextMode.COMMODORE_40_X_25_ECM;
+        case TextCharMode.COMMODORE_HIRES:
+        default:
+          return TextMode.COMMODORE_40_X_25_HIRES;
+        case TextCharMode.COMMODORE_MULTICOLOR:
+          return TextMode.COMMODORE_40_X_25_MULTICOLOR;
+        case TextCharMode.MEGA65_FCM:
+          return TextMode.MEGA65_40_X_25_FCM;
+        case TextCharMode.MEGA65_FCM_16BIT:
+          return TextMode.MEGA65_40_X_25_FCM_16BIT;
+        case TextCharMode.VIC20:
+          return TextMode.COMMODORE_VIC20_22_X_23;
+      }
+    }
+
+
+
   }
 
 }
