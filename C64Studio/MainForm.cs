@@ -3200,10 +3200,17 @@ namespace C64Studio
 
         // determine type by extension
         ProjectElement.ElementType type = ProjectElement.ElementType.ASM_SOURCE;
-        string newFileExtension = System.IO.Path.GetExtension(GR.Path.RelativePathTo(importFile, false, System.IO.Path.GetFullPath(projectToAddTo.Settings.BasePath), true).ToUpper());
+        string newFileExtension = System.IO.Path.GetExtension( GR.Path.RelativePathTo( importFile, false, System.IO.Path.GetFullPath( projectToAddTo.Settings.BasePath ), true ).ToUpper() );
 
-        if ( ( newFileExtension == ".CHARSETPROJECT" )
-        ||   ( newFileExtension == ".CHR" ) )
+        if ( newFileExtension == ".C64" )
+        {
+          type = ProjectElement.ElementType.PROJECT;
+
+          var project = StudioCore.MainForm.OpenProject( importFile );
+          continue;
+        }
+        else if ( ( newFileExtension == ".CHARSETPROJECT" )
+        ||        ( newFileExtension == ".CHR" ) )
         {
           type = ProjectElement.ElementType.CHARACTER_SET;
         }
