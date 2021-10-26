@@ -13,7 +13,7 @@ namespace MediaManager
         System.Console.WriteLine( "MediaManager V" + System.Windows.Forms.Application.ProductVersion );
         System.Console.WriteLine( "" );
         System.Console.WriteLine( "Call with mediamanager" );
-        System.Console.WriteLine( "  [-d64 <disk image>]" );
+        System.Console.WriteLine( "  [-d64,-d81 <disk image>]" );
         System.Console.WriteLine( "  [-t64 <tape file>]" );
         System.Console.WriteLine( "  [-import <file name>[,load address]]" );
         System.Console.WriteLine( "  [-export <file name>]" );
@@ -44,6 +44,7 @@ namespace MediaManager
           expectingParameter = false;
         }
         else if ( ( args[i].ToUpper() == "-D64" )
+        ||        ( args[i].ToUpper() == "-D81" )
         ||        ( args[i].ToUpper() == "-T64" )
         ||        ( args[i].ToUpper() == "-IMPORT" )
         ||        ( args[i].ToUpper() == "-DELETE" )
@@ -84,6 +85,7 @@ namespace MediaManager
       }
       // do we have a container?
       if ( ( !paramMap.ContainsKey( "-D64" ) )
+      &&   ( !paramMap.ContainsKey( "-D81" ) )
       &&   ( !paramMap.ContainsKey( "-T64" ) ) )
       {
         System.Console.Error.WriteLine( "Missing medium" );
@@ -97,6 +99,11 @@ namespace MediaManager
       {
         medium = new C64Studio.Formats.D64();
         mediumFilename = paramMap["-D64"];
+      }
+      else if ( paramMap.ContainsKey( "-D81" ) )
+      {
+        medium = new C64Studio.Formats.D81();
+        mediumFilename = paramMap["-D81"];
       }
       else if ( paramMap.ContainsKey( "-T64" ) )
       {
