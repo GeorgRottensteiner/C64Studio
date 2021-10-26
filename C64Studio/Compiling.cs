@@ -187,7 +187,7 @@ namespace C64Studio
 
         if ( baseDoc.Modified )
         {
-          Core.AddToOutput( "Component '" + baseDoc.DocumentInfo.DocumentFilename + "' needs rebuilding." );
+          Core.AddToOutput( "Component '" + baseDoc.DocumentInfo.DocumentFilename + "' needs rebuilding." + System.Environment.NewLine );
           return true;
         }
       }

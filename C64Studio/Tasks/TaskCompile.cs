@@ -473,21 +473,33 @@ namespace C64Studio.Tasks
             return false;
           }
           Core.AddToOutput( "Build successful, " + parser.Warnings.ToString() + " warnings, 0 errors encountered" + System.Environment.NewLine );
+
+          int assemblyEndAddress = parser.AssembledOutput.OriginalAssemblyStartAddress + parser.AssembledOutput.OriginalAssemblySize - 1;
+          if ( parser.AssembledOutput.OriginalAssemblySize == 0 )
+          {
+            ++assemblyEndAddress;
+          }
+
           Core.AddToOutput( "Start address $" + parser.AssembledOutput.OriginalAssemblyStartAddress.ToString( "X4" )
-                            + " to $" + ( parser.AssembledOutput.OriginalAssemblyStartAddress + parser.AssembledOutput.OriginalAssemblySize - 1 ).ToString( "X4" )
+                            + " to $" + assemblyEndAddress.ToString( "X4" )
                             + ", size " + parser.AssembledOutput.OriginalAssemblySize + " bytes" + System.Environment.NewLine );
           Core.AddToOutput( "Memory Map:" + System.Environment.NewLine );
           if ( parser.AssembledOutput.MemoryMap != null )
           {
             foreach ( var mapEntry in parser.AssembledOutput.MemoryMap.Entries )
             {
+              int     endAddress = mapEntry.StartAddress + mapEntry.Length - 1;
+              if ( mapEntry.Length == 0 )
+              {
+                endAddress = mapEntry.StartAddress;
+              }
               if ( string.IsNullOrEmpty( mapEntry.Description ) )
               {
-                Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + ( mapEntry.StartAddress + mapEntry.Length - 1 ).ToString( "X4" ) + " - unnamed section" + System.Environment.NewLine );
+                Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - unnamed section" + System.Environment.NewLine );
               }
               else
               {
-                Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + ( mapEntry.StartAddress + mapEntry.Length - 1 ).ToString( "X4" ) + " - " + mapEntry.Description + System.Environment.NewLine );
+                Core.AddToOutput( "  $" + mapEntry.StartAddress.ToString( "X4" ) + " - $" + endAddress.ToString( "X4" ) + " - " + mapEntry.Description + System.Environment.NewLine );
               }
             }
           }
