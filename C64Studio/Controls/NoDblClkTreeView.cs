@@ -52,10 +52,12 @@ namespace C64Studio
 
     protected override void OnAfterLabelEdit( NodeLabelEditEventArgs e )
     {
-      this.LabelEdit = false;
+      bool  origLabelEdit = LabelEdit;
+      LabelEdit = false;
       e.CancelEdit = true;
       if ( e.Label == null )
       {
+        LabelEdit = origLabelEdit;
         return;
       }
       /*
@@ -71,7 +73,7 @@ namespace C64Studio
       else*/
       {
         base.OnAfterLabelEdit( e );
-        this.LabelEdit = true;
+        LabelEdit = origLabelEdit;
       }
     }
 
@@ -136,7 +138,7 @@ namespace C64Studio
         {
           if ( wasDoubleClick )
             wasDoubleClick = false;
-          else
+          else if ( LabelEdit )
           {
             TriggerLabelEdit = true;
           }
