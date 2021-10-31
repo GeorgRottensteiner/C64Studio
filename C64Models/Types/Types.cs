@@ -649,7 +649,11 @@ namespace C64Studio.Types
       CONSTANT_1,
       CONSTANT_2,
       ZONE,
-      CONSTANT_F
+      CONSTANT_F,
+      VARIABLE_NUMBER,
+      VARIABLE_INTEGER,
+      VARIABLE_STRING,
+      VARIABLE_ARRAY
     };
 
     public Types      Type = Types.UNKNOWN;

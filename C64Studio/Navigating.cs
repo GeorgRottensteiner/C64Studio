@@ -92,10 +92,22 @@ namespace C64Studio
 
     public void OpenDocumentAndGotoLine( Project MarkProject, DocumentInfo Document, int Line )
     {
+      OpenDocumentAndGotoLine( MarkProject, Document, Line, 0 );
+    }
+
+
+
+    public void OpenDocumentAndGotoLine( Project MarkProject, DocumentInfo Document, int Line, int CharIndex )
+    {
       if ( Core.MainForm.InvokeRequired )
       {
-        Core.MainForm.Invoke( new OpenDocumentAndGotoLineCallback( OpenDocumentAndGotoLine ), new object[] { MarkProject, Document, Line } );
+        Core.MainForm.Invoke( new OpenDocumentAndGotoLineCallback( OpenDocumentAndGotoLine ), new object[] { MarkProject, Document, Line, CharIndex } );
         return;
+      }
+
+      if ( CharIndex < 0 )
+      {
+        CharIndex = 0;
       }
 
       if ( Document != null )
@@ -104,7 +116,7 @@ namespace C64Studio
         if ( baseDoc != null )
         {
           baseDoc.Show();
-          baseDoc.SetCursorToLine( Line, true );
+          baseDoc.SetCursorToLine( Line, CharIndex, true );
           return;
         }
       }
@@ -120,7 +132,7 @@ namespace C64Studio
             BaseDocument doc = MarkProject.ShowDocument( element );
             if ( doc != null )
             {
-              doc.SetCursorToLine( Line, true );
+              doc.SetCursorToLine( Line, CharIndex, true );
             }
             return;
           }
@@ -144,7 +156,7 @@ namespace C64Studio
           //Debug.Log( "m_Outline.RefreshFromDocument after showdoc" );
           //Core.MainForm.m_Outline.RefreshFromDocument( newDoc.DocumentInfo.BaseDoc );
 
-          newDoc.SetCursorToLine( Line, true );
+          newDoc.SetCursorToLine( Line, CharIndex, true );
         }
       }
     }

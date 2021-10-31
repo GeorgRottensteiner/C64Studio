@@ -2889,6 +2889,18 @@ namespace FastColoredTextBoxNS
     }
 
     /// <summary>
+    /// Navigates to defined line, without Line.LastVisit reseting
+    /// </summary>
+    public void Navigate( int iLine, int CharIndex )
+    {
+      if ( iLine >= LinesCount )
+        return;
+      lastNavigatedDateTime = lines[iLine].LastVisit;
+      Selection.Start = new Place( CharIndex, iLine );
+      DoSelectionVisible();
+    }
+
+    /// <summary>
     /// Navigates to defined place, without Line.LastVisit reseting
     /// </summary>
     public void Navigate( Range Range )

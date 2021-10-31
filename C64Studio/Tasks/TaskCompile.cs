@@ -536,7 +536,12 @@ namespace C64Studio.Tasks
           FileInfo = ( (Parser.ASMFileParser)parser ).ASMFileInfo;
           // update symbols in main asm file
           Doc.SetASMFileInfo( FileInfo, parser.KnownTokens(), parser.KnownTokenInfo() );
-          //Debug.Log( "Doc " + Doc.Text + " gets " + ( (SourceASM)Doc ).ASMFileInfo.Labels.Count + " labels" );
+        }
+        else if ( parser is Parser.BasicFileParser )
+        {
+          FileInfo = ( (Parser.BasicFileParser)parser ).ASMFileInfo;
+          // update symbols in main asm file
+          Doc.SetASMFileInfo( FileInfo, parser.KnownTokens(), parser.KnownTokenInfo() );
         }
 
         if ( FileInfo != null )

@@ -2995,12 +2995,6 @@ namespace C64Studio
               continue;
             }
             ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false );
-
-            //var knownTokens = ParserASM.KnownTokens();
-            //var knownTokenInfos = ParserASM.KnownTokenInfo();
-            //Debug.Log( "SetASMFileInfo on " + element.DocumentInfo.DocumentFilename );
-            //element.DocumentInfo.SetASMFileInfo( ParserASM.ASMFileInfo, knownTokens, knownTokenInfos );
-
             updatedFiles.Add( element.DocumentInfo.FullPath );
 
             if ( element.Document != null )
@@ -3016,7 +3010,7 @@ namespace C64Studio
               {
                 ProjectElement element2 = newProject.GetElementByFilename(dependency);
                 if ( ( element2 != null )
-                && ( element2.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
+                &&   ( element2.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
                 {
                   if ( element2.Document != null )
                   {
@@ -3026,6 +3020,18 @@ namespace C64Studio
                 }
               }
             }
+          }
+          else if ( element.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
+          {
+            if ( updatedFiles.Contains( element.DocumentInfo.FullPath ) )
+            {
+              // do not reparse already parsed element
+              continue;
+            }
+            ParseFile( StudioCore.Compiling.ParserBasic, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false );
+            updatedFiles.Add( element.DocumentInfo.FullPath );
+
+            AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
           }
         }
         //m_CompileResult.ClearMessages();
@@ -3989,7 +3995,7 @@ namespace C64Studio
       StudioCore.Debugging.Debugger.RefreshMemory( Address, 32, MemorySource.AS_CPU );
       StudioCore.Debugging.DebugDisassembly.SetText( "Disassembly will\r\nappear here" );
 
-      StudioCore.Debugging.DebugDisassembly.SetCursorToLine( 1, true );
+      StudioCore.Debugging.DebugDisassembly.SetCursorToLine( 1, 0, true );
 
       if ( ( StudioCore.Debugging.MarkedDocument == null )
       ||   ( !GR.Path.IsPathEqual( StudioCore.Debugging.MarkedDocument.DocumentInfo.FullPath, "C64Studio-intermediatedisassembly" ) )
@@ -5121,7 +5127,7 @@ namespace C64Studio
             {
               ProjectElement element2 = Document.Project.GetElementByFilename(dependency);
               if ( ( element2 != null )
-              &&   ( element2.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
+              && ( element2.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE ) )
               {
                 filesToUpdate.Add( element2.DocumentInfo.FullPath );
               }
@@ -5162,6 +5168,11 @@ namespace C64Studio
         {
           asm.DoNotFollowZoneSelectors = false;
         }
+      }
+      else if ( Document.Type == ProjectElement.ElementType.BASIC_SOURCE )
+      {
+        Document.KnownKeywords = StudioCore.Compiling.ParserBasic.KnownTokens();
+        Document.KnownTokens = StudioCore.Compiling.ParserBasic.KnownTokenInfo();
       }
 
       if ( OutputMessages )
@@ -6010,9 +6021,10 @@ namespace C64Studio
             foreach ( var changedDoc in m_FilesChanged.ChangedDocuments )
             {
               int cursorLine = changedDoc.BaseDoc.CursorLine;
+              int charPos = changedDoc.BaseDoc.CursorPosInLine;
               changedDoc.BaseDoc.Load();
               //changedDoc.BaseDoc.SetModified();
-              changedDoc.BaseDoc.SetCursorToLine( cursorLine, true );
+              changedDoc.BaseDoc.SetCursorToLine( cursorLine, charPos, true );
             }
           }
           m_FilesChanged.Dispose();
