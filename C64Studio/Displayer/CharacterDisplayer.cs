@@ -133,11 +133,14 @@ namespace C64Studio.Displayer
         for ( int i = 0; i < 8; ++i )
         {
           int colorIndex = Data.ByteAt( i + j * 8 );
-          Context.Graphics.FillRectangle( Context.Palette.ColorBrushes[colorIndex],
-                                          ( i * Context.Bounds.Width ) / 8,
-                                          ( j * Context.Bounds.Height ) / 8,
-                                          ( ( i + 1 ) * Context.Bounds.Width ) / 8 - ( i * Context.Bounds.Width ) / 8,
-                                          ( ( j + 1 ) * Context.Bounds.Height ) / 8 - ( j * Context.Bounds.Height ) / 8 );
+          if ( colorIndex < Context.Palette.ColorBrushes.Length )
+          {
+            Context.Graphics.FillRectangle( Context.Palette.ColorBrushes[colorIndex],
+                                            ( i * Context.Bounds.Width ) / 8,
+                                            ( j * Context.Bounds.Height ) / 8,
+                                            ( ( i + 1 ) * Context.Bounds.Width ) / 8 - ( i * Context.Bounds.Width ) / 8,
+                                            ( ( j + 1 ) * Context.Bounds.Height ) / 8 - ( j * Context.Bounds.Height ) / 8 );
+          }
         }
       }
     }

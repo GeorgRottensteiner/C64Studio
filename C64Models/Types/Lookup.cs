@@ -241,7 +241,7 @@ namespace RetroDevStudio
 
 
 
-    internal static GraphicTileMode GraphicTileModeFromTextCharMode( TextCharMode Mode )
+    internal static GraphicTileMode GraphicTileModeFromTextCharMode( TextCharMode Mode, int CustomColor )
     {
       switch ( Mode )
       {
@@ -252,6 +252,10 @@ namespace RetroDevStudio
           return GraphicTileMode.COMMODORE_HIRES;
         case TextCharMode.COMMODORE_MULTICOLOR:
         case TextCharMode.VIC20:
+          if ( CustomColor < 8 )
+          {
+            return GraphicTileMode.COMMODORE_HIRES;
+          }
           return GraphicTileMode.COMMODORE_MULTICOLOR;
         case TextCharMode.MEGA65_FCM:
           return GraphicTileMode.MEGA65_FCM_256_COLORS;
@@ -350,6 +354,24 @@ namespace RetroDevStudio
           return TextMode.MEGA65_40_X_25_FCM_16BIT;
         case TextCharMode.VIC20:
           return TextMode.COMMODORE_VIC20_22_X_23;
+      }
+    }
+
+
+
+    internal static SpriteMode SpriteModeFromTileMode( GraphicTileMode Mode )
+    {
+      switch ( Mode )
+      {
+        case GraphicTileMode.COMMODORE_ECM:
+        case GraphicTileMode.COMMODORE_HIRES:
+        default:
+          return SpriteMode.COMMODORE_24_X_21_HIRES;
+        case GraphicTileMode.COMMODORE_MULTICOLOR:
+          return SpriteMode.COMMODORE_24_X_21_MULTICOLOR;
+        case GraphicTileMode.MEGA65_FCM_16_COLORS:
+        case GraphicTileMode.MEGA65_FCM_256_COLORS:
+          return SpriteMode.MEGA65_16_X_21_16_COLORS;
       }
     }
 

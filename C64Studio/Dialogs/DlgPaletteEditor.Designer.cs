@@ -48,9 +48,9 @@
       this.groupBox3 = new System.Windows.Forms.GroupBox();
       this.panelColorPreview = new System.Windows.Forms.Panel();
       this.groupBox4 = new System.Windows.Forms.GroupBox();
-      this.paletteList = new C64Studio.ArrangedItemList();
-      this.label4 = new System.Windows.Forms.Label();
       this.editPaletteName = new System.Windows.Forms.TextBox();
+      this.label4 = new System.Windows.Forms.Label();
+      this.paletteList = new C64Studio.ArrangedItemList();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox3.SuspendLayout();
@@ -256,6 +256,23 @@
       this.groupBox4.TabStop = false;
       this.groupBox4.Text = "Palettes";
       // 
+      // editPaletteName
+      // 
+      this.editPaletteName.Location = new System.Drawing.Point(50, 222);
+      this.editPaletteName.Name = "editPaletteName";
+      this.editPaletteName.Size = new System.Drawing.Size(166, 20);
+      this.editPaletteName.TabIndex = 9;
+      this.editPaletteName.TextChanged += new System.EventHandler(this.editPaletteName_TextChanged);
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(6, 226);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(38, 13);
+      this.label4.TabIndex = 8;
+      this.label4.Text = "Name:";
+      // 
       // paletteList
       // 
       this.paletteList.AddButtonEnabled = true;
@@ -276,24 +293,9 @@
       this.paletteList.TabIndex = 7;
       this.paletteList.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.paletteList_AddingItem);
       this.paletteList.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.paletteList_CloningItem);
+      this.paletteList.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_ItemRemoved);
+      this.paletteList.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.paletteList_ItemMoved);
       this.paletteList.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_SelectedIndexChanged);
-      // 
-      // label4
-      // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(6, 226);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(38, 13);
-      this.label4.TabIndex = 8;
-      this.label4.Text = "Name:";
-      // 
-      // editPaletteName
-      // 
-      this.editPaletteName.Location = new System.Drawing.Point(50, 222);
-      this.editPaletteName.Name = "editPaletteName";
-      this.editPaletteName.Size = new System.Drawing.Size(166, 20);
-      this.editPaletteName.TabIndex = 9;
-      this.editPaletteName.TextChanged += new System.EventHandler(this.editPaletteName_TextChanged);
       // 
       // DlgPaletteEditor
       // 

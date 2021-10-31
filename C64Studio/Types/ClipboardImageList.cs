@@ -50,7 +50,7 @@ namespace RetroDevStudio.Types
         dataSelection.AppendI32( entry.Index - prevIndex );
         prevIndex = entry.Index;
 
-        dataSelection.AppendI32( (int)Mode );
+        dataSelection.AppendI32( (int)entry.Tile.Mode );
         dataSelection.AppendI32( entry.Tile.CustomColor );
         dataSelection.AppendI32( entry.Tile.Width );
         dataSelection.AppendI32( entry.Tile.Height );

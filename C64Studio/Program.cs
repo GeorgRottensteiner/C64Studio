@@ -13,7 +13,7 @@ namespace C64Studio
 
     [STAThread]
     static void Main( string[] args )
-    {
+   {
 #if !DEBUG
       try
       {

@@ -1,18 +1,39 @@
-﻿namespace RetroDevStudio.Types
+﻿using System.Collections.Generic;
+
+
+
+namespace RetroDevStudio.Types
 {
   public class ColorSettings
   {
-    public int      BackgroundColor = 0;
-    public int      MultiColor1     = 0;
-    public int      MultiColor2     = 0;
-    public int      BGColor4        = 0;
+    public int            BackgroundColor = 0;
+    public int            MultiColor1     = 0;
+    public int            MultiColor2     = 0;
+    public int            BGColor4        = 0;
 
-    public Palette  Palette = new Palette();
+    public int            ActivePalette   = 0;
+
+    public List<Palette>  Palettes = new List<Palette>();
+
+
+
+    public Palette Palette
+    {
+      get
+      {
+        return Palettes[ActivePalette];
+      }
+      set
+      {
+        Palettes[ActivePalette] = value;
+      }
+    }
 
 
 
     public ColorSettings()
     {
+      Palettes.Add( new Palette() );
     }
 
 
@@ -23,7 +44,16 @@
       MultiColor1     = OtherSettings.MultiColor1;
       MultiColor2     = OtherSettings.MultiColor2;
       BGColor4        = OtherSettings.BGColor4;
-      Palette         = new Palette( OtherSettings.Palette );
+
+      Palettes = new List<Palette>();
+      foreach ( var pal in OtherSettings.Palettes )
+      {
+        Palettes.Add( new Palette( pal ) );
+      }
+      ActivePalette = OtherSettings.ActivePalette;
     }
+
+
+
   }
 }

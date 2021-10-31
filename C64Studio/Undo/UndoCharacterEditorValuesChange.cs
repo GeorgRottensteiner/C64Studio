@@ -10,6 +10,7 @@ namespace C64Studio.Undo
     public CharacterEditor        Editor = null;
     public CharsetProject         Project = null;
     public ColorSettings          Colors = null;
+    public TextCharMode           Mode = TextCharMode.UNKNOWN;
 
 
 
@@ -17,6 +18,7 @@ namespace C64Studio.Undo
     {
       this.Editor = Editor;
       this.Project = Project;
+      Mode = Project.Mode;
 
       Colors = new ColorSettings( Project.Colors );
     }
@@ -43,7 +45,8 @@ namespace C64Studio.Undo
 
     public override void Apply()
     {
-      Project.Colors = Colors;
+      Project.Colors  = Colors;
+      Project.Mode    = Mode;
 
       Editor.ColorsChanged();
     }

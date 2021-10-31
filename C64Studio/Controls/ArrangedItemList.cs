@@ -526,6 +526,7 @@ namespace C64Studio
       }
       newItem.Text = itemToClone.Text;
       newItem = _Items.Add( newItem );
+      _Items.FixItemIndices();
       if ( ItemAdded != null )
       {
         ItemAdded( this, newItem );
@@ -604,6 +605,9 @@ namespace C64Studio
 
     public object Tag { get; set; } = null;
     public int Index { get; set; } = -1;
+
+
+
     public bool Selected
     {
       get
@@ -761,7 +765,18 @@ namespace C64Studio
     internal void Remove( ArrangedItemEntry item )
     {
       _Owner.listItems.Items.Remove( item );
+      FixItemIndices();
       _Owner.UpdateUI();
+    }
+
+
+
+    internal void FixItemIndices()
+    {
+      for ( int i = 0; i < _Owner.listItems.Items.Count; ++i )
+      {
+        ( (ArrangedItemEntry)_Owner.listItems.Items[i] ).Index = i;
+      }
     }
 
 
@@ -769,6 +784,7 @@ namespace C64Studio
     internal void Insert( int v, ArrangedItemEntry item )
     {
       _Owner.listItems.Items.Insert( v, item );
+      FixItemIndices();
       _Owner.UpdateUI();
     }
   }
@@ -834,7 +850,7 @@ namespace C64Studio
       get
       {
         var item = (ArrangedItemEntry)_Owner.listItems.SelectedItems[Index];
-        item.Index = Index;
+        //item.Index = Index;
         item._Owner = _Owner;
         return item;
       }

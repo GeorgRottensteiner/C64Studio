@@ -26,7 +26,6 @@ namespace C64Studio.Controls
     private int                         m_CurrentColor = 1;
     private ColorType                   m_CurrentColorType = ColorType.CUSTOM_COLOR;
     private bool                        m_ButtonReleased = false;
-    private bool                        m_RButtonReleased = false;
     public StudioCore                   Core = null;
     public Undo.UndoManager             UndoManager = null;
     private bool                        DoNotUpdateFromControls = false;
@@ -36,6 +35,8 @@ namespace C64Studio.Controls
     private GR.Image.MemoryImage        m_ImagePlayground = new GR.Image.MemoryImage( 256, 256, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
     private bool                        _AllowModeChange = true;
+
+    private ColorSettingsBase           _ColorSettingsDlg = null;
 
 
 
@@ -88,31 +89,18 @@ namespace C64Studio.Controls
 
       m_Project.Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
 
+      ChangeColorSettingsDialog();
       OnPaletteChanged();
-
-      for ( int i = 0; i < 16; ++i )
-      {
-        comboBackground.Items.Add( i.ToString( "d2" ) );
-        comboMulticolor1.Items.Add( i.ToString( "d2" ) );
-        comboMulticolor2.Items.Add( i.ToString( "d2" ) );
-        comboBGColor4.Items.Add( i.ToString( "d2" ) );
-      }
-      UpdateCustomColorCombo();
-
-      comboBackground.SelectedIndex = 0;
-      comboMulticolor1.SelectedIndex = 0;
-      comboMulticolor2.SelectedIndex = 0;
-      comboBGColor4.SelectedIndex = 0;
-      comboCharColor.SelectedIndex = 1;
-
 
       foreach ( TextCharMode mode in Enum.GetValues( typeof( TextCharMode ) ) )
       {
-        comboCharsetMode.Items.Add( GR.EnumHelper.GetDescription( mode ) );
+        if ( mode != TextCharMode.UNKNOWN )
+        {
+          comboCharsetMode.Items.Add( GR.EnumHelper.GetDescription( mode ) );
+        }
       }
       comboCharsetMode.SelectedIndex = 0;
 
-      radioCharColor.Checked = true;
       panelCharacters.SelectedIndex = 0;
 
       ListViewItem    itemUn = new ListViewItem( "Uncategorized" );
@@ -217,7 +205,7 @@ namespace C64Studio.Controls
       }
 
       var clipList = new ClipboardImageList();
-      clipList.Mode   = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode );
+      clipList.Mode   = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, 8 );
       clipList.Colors = m_Project.Colors;
       clipList.ColumnBased = panelCharacters.IsSelectionColumnBased;
 
@@ -264,23 +252,33 @@ namespace C64Studio.Controls
 
           var targetTile = m_Project.Characters[pastePos].Tile;
 
+          if ( ( ( entry.Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
+          ||     ( entry.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR ) )
+          &&   ( ( targetTile.Mode == GraphicTileMode.COMMODORE_HIRES )
+          ||     ( targetTile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR ) ) )
+          {
+            // can copy mode
+            targetTile.Mode = entry.Tile.Mode;
+          }
+
           int copyWidth = Math.Min( 8, entry.Tile.Width );
           int copyHeight = Math.Min( 8, entry.Tile.Height );
 
-          for ( int x = 0; x < copyWidth; ++x )
+          for ( int x = 0; x < copyWidth; x += Lookup.PixelWidth( targetTile.Mode ) )
           {
             for ( int y = 0; y < copyHeight; ++y )
             {
               targetTile.SetPixel( x, y, entry.Tile.MapPixelColor( x, y, targetTile ) );
             }
           }
+          targetTile.CustomColor = entry.Tile.CustomColor;
 
           RebuildCharImage( pastePos );
           panelCharacters.InvalidateItemRect( pastePos );
 
           if ( pastePos == m_CurrentChar )
           {
-            comboCharColor.SelectedIndex = m_Project.Characters[pastePos].Tile.CustomColor;
+            _ColorSettingsDlg.CustomColor = m_Project.Characters[pastePos].Tile.CustomColor;
           }
         }
         canvasEditor.Invalidate();
@@ -357,7 +355,7 @@ namespace C64Studio.Controls
             if ( ( width == 8 )
             &&   ( height == 8 ) )
             {
-              var incomingTile = new GraphicTile( (int)width, (int)height, Lookup.GraphicTileModeFromTextCharMode( mode ), incomingColorSettings );
+              var incomingTile = new GraphicTile( (int)width, (int)height, Lookup.GraphicTileModeFromTextCharMode( mode, 8 ), incomingColorSettings );
               incomingTile.Data = tempBuffer;
               if ( m_Project.Mode != mode )
               {
@@ -414,7 +412,7 @@ namespace C64Studio.Controls
 
             if ( pastePos == m_CurrentChar )
             {
-              comboCharColor.SelectedIndex = m_Project.Characters[pastePos].Tile.CustomColor;
+              _ColorSettingsDlg.CustomColor = m_Project.Characters[pastePos].Tile.CustomColor;
             }
           }
           canvasEditor.Invalidate();
@@ -490,7 +488,7 @@ namespace C64Studio.Controls
       if ( currentCharChanged )
       {
         panelCharacters_SelectionChanged( null, null );
-        comboCharColor.SelectedIndex = m_Project.Characters[CharIndex].Tile.CustomColor;
+        _ColorSettingsDlg.CustomColor = m_Project.Characters[CharIndex].Tile.CustomColor;
 
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
       }
@@ -565,9 +563,9 @@ namespace C64Studio.Controls
         return;
       }
 
-      comboBackground.SelectedIndex = mcSettings.BackgroundColor;
-      comboMulticolor1.SelectedIndex = mcSettings.MultiColor1;
-      comboMulticolor2.SelectedIndex = mcSettings.MultiColor2;
+      _ColorSettingsDlg.ColorChanged( ColorType.BACKGROUND, mcSettings.BackgroundColor );
+      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, mcSettings.MultiColor1 );
+      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_2, mcSettings.MultiColor2 );
 
       int charsX = ( mappedImage.Width + 7 ) / 8;
       int charsY = ( mappedImage.Height + 7 ) / 8;
@@ -616,7 +614,7 @@ namespace C64Studio.Controls
 
           if ( currentTargetChar == m_CurrentChar )
           {
-            comboCharColor.SelectedIndex = m_Project.Characters[m_CurrentChar].Tile.CustomColor;
+            _ColorSettingsDlg.CustomColor = m_Project.Characters[m_CurrentChar].Tile.CustomColor;
           }
           if ( !pasteAsBlock )
           {
@@ -642,9 +640,9 @@ namespace C64Studio.Controls
 
         if ( !Lookup.HasCustomPalette( m_Project.Characters[m_CurrentChar].Tile.Mode ) )
         {
-          if ( comboCharColor.SelectedIndex != m_Project.Characters[m_CurrentChar].Tile.CustomColor )
+          if ( _ColorSettingsDlg.CustomColor != m_Project.Characters[m_CurrentChar].Tile.CustomColor )
           {
-            comboCharColor.SelectedIndex = m_Project.Characters[m_CurrentChar].Tile.CustomColor;
+            _ColorSettingsDlg.CustomColor = m_Project.Characters[m_CurrentChar].Tile.CustomColor;
           }
         }
         canvasEditor.Invalidate();
@@ -886,6 +884,8 @@ namespace C64Studio.Controls
       {
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
       }
+
+      ChangeColorSettingsDialog();
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
@@ -894,7 +894,7 @@ namespace C64Studio.Controls
       }
 
       OnPaletteChanged();
-      UpdateCustomColorCombo();
+      //UpdateCustomColorCombo();
 
       listCategories.Items.Clear();
       int categoryIndex = 0;
@@ -909,10 +909,11 @@ namespace C64Studio.Controls
       RefreshCategoryCounts();
 
       checkShowGrid.Checked           = m_Project.ShowGrid;
-      comboBackground.SelectedIndex   = m_Project.Colors.BackgroundColor;
-      comboMulticolor1.SelectedIndex  = m_Project.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex  = m_Project.Colors.MultiColor2;
-      comboBGColor4.SelectedIndex     = m_Project.Colors.BGColor4;
+
+      _ColorSettingsDlg.ColorChanged( ColorType.BACKGROUND, m_Project.Colors.BackgroundColor );
+      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, m_Project.Colors.MultiColor1 );
+      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_2, m_Project.Colors.MultiColor2 );
+      _ColorSettingsDlg.ColorChanged( ColorType.BGCOLOR4, m_Project.Colors.BGColor4 );
 
       panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( m_Project.Mode );
 
@@ -932,6 +933,7 @@ namespace C64Studio.Controls
 
 
 
+    /*
     private void UpdateCustomColorCombo()
     {
       while ( comboCharColor.Items.Count > Lookup.NumberOfColorsInCharacter( m_Project.Mode ) )
@@ -942,7 +944,7 @@ namespace C64Studio.Controls
       {
         comboCharColor.Items.Add( comboCharColor.Items.Count.ToString() );
       }
-    }
+    }*/
 
 
 
@@ -999,7 +1001,7 @@ namespace C64Studio.Controls
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
-        int     colorIndex = comboCharColor.SelectedIndex;
+        int     colorIndex = _ColorSettingsDlg.CustomColor;
 
         if ( ( m_Project.Mode != TextCharMode.MEGA65_FCM )
         &&   ( m_Project.Mode != TextCharMode.MEGA65_FCM_16BIT ) )
@@ -1040,37 +1042,13 @@ namespace C64Studio.Controls
       {
         int   pickedColor = affectedChar.Tile.GetPixel( charX, charY );
 
-        switch ( m_Project.Mode )
+        _ColorSettingsDlg.SelectedColor = (ColorType)pickedColor;
+
+        if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
+        ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
         {
-          case TextCharMode.COMMODORE_ECM:
-          case TextCharMode.COMMODORE_HIRES:
-          case TextCharMode.COMMODORE_MULTICOLOR:
-          case TextCharMode.VIC20:
-            switch ( (ColorType)pickedColor )
-            {
-              case ColorType.CUSTOM_COLOR:
-                radioCharColor.Checked = true;
-                break;
-              case ColorType.MULTICOLOR_1:
-                radioMultiColor1.Checked = true;
-                break;
-              case ColorType.MULTICOLOR_2:
-                radioMulticolor2.Checked = true;
-                break;
-              case ColorType.BACKGROUND:
-                radioBackground.Checked = true;
-                break;
-            }
-            break;
-          case TextCharMode.MEGA65_FCM:
-          case TextCharMode.MEGA65_FCM_16BIT:
-            comboCharColor.SelectedIndex = pickedColor;
-            break;
+          affectedChar.Tile.CustomColor = pickedColor;
         }
-      }
-      else
-      {
-        m_RButtonReleased = true;
       }
     }
 
@@ -1833,144 +1811,19 @@ namespace C64Studio.Controls
 
 
 
-    private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_Project.Colors.BackgroundColor != comboBackground.SelectedIndex )
-      {
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
-
-        m_Project.Colors.BackgroundColor = comboBackground.SelectedIndex;
-        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
-        {
-          RebuildCharImage( i );
-        }
-        RaiseModifiedEvent();
-        canvasEditor.Invalidate();
-        panelCharacters.Invalidate();
-      }
-    }
-
-
-
-    private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_Project.Colors.MultiColor1 != comboMulticolor1.SelectedIndex )
-      {
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
-
-        m_Project.Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
-        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
-        {
-          RebuildCharImage( i );
-        }
-        RaiseModifiedEvent();
-        canvasEditor.Invalidate();
-        panelCharacters.Invalidate();
-      }
-    }
-
-
-
-    private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_Project.Colors.MultiColor2 != comboMulticolor2.SelectedIndex )
-      {
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
-
-        m_Project.Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
-        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
-        {
-          RebuildCharImage( i );
-        }
-        RaiseModifiedEvent();
-        canvasEditor.Invalidate();
-        panelCharacters.Invalidate();
-      }
-    }
-
-
-
-    private void comboBGColor4_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_Project.Colors.BGColor4 != comboBGColor4.SelectedIndex )
-      {
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
-
-        m_Project.Colors.BGColor4 = comboBGColor4.SelectedIndex;
-        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
-        {
-          RebuildCharImage( i );
-        }
-        RaiseModifiedEvent();
-        canvasEditor.Invalidate();
-        panelCharacters.Invalidate();
-      }
-    }
-
-
-
-    private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( DoNotUpdateFromControls )
-      {
-        return;
-      }
-
-      if ( UndoManager == null )
-      {
-        return;
-      }
-
-      List<int>   selectedChars = panelCharacters.SelectedIndices;
-      if ( selectedChars.Count == 0 )
-      {
-        selectedChars.Add( m_CurrentChar );
-      }
-
-      bool    modified = false;
-      foreach ( int selChar in selectedChars )
-      {
-        if ( m_Project.Characters[selChar].Tile.CustomColor != comboCharColor.SelectedIndex )
-        {
-          if ( !Lookup.HasCustomPalette( m_Project.Characters[selChar].Tile.Mode ) )
-          {
-            UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar ), modified == false );
-
-            m_Project.Characters[selChar].Tile.CustomColor = comboCharColor.SelectedIndex;
-            if ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
-            {
-              if ( ( m_Project.Characters[selChar].Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
-              &&   ( m_Project.Characters[selChar].Tile.CustomColor >= 8 ) )
-              {
-                m_Project.Characters[selChar].Tile.Mode = GraphicTileMode.COMMODORE_MULTICOLOR;
-              }
-              else if ( ( m_Project.Characters[selChar].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR )
-              &&        ( m_Project.Characters[selChar].Tile.CustomColor < 8 ) )
-              {
-                m_Project.Characters[selChar].Tile.Mode = GraphicTileMode.COMMODORE_HIRES;
-              }
-            }
-            RebuildCharImage( selChar );
-            modified = true;
-            panelCharacters.InvalidateItemRect( selChar );
-          }
-        }
-      }
-      if ( modified )
-      {
-        RaiseModifiedEvent();
-        canvasEditor.Invalidate();
-      }
-    }
-
-
-
     public void ColorsChanged()
     {
-      comboMulticolor1.SelectedIndex  = m_Project.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex  = m_Project.Colors.MultiColor2;
-      comboBGColor4.SelectedIndex     = m_Project.Colors.BGColor4;
-      comboBackground.SelectedIndex   = m_Project.Colors.BackgroundColor;
+      if ( comboCharsetMode.SelectedIndex != (int)m_Project.Mode )
+      {
+        comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
+        ChangeColorSettingsDialog();
+      }
+
+      _ColorSettingsDlg.ColorChanged( ColorType.BACKGROUND, m_Project.Colors.BackgroundColor );
+      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, m_Project.Colors.MultiColor1 );
+      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_2, m_Project.Colors.MultiColor2 );
+      _ColorSettingsDlg.ColorChanged( ColorType.BGCOLOR4, m_Project.Colors.BGColor4 );
+      _ColorSettingsDlg.PaletteChanged( m_Project.Colors.Palette );
 
       OnPaletteChanged();
 
@@ -2001,6 +1854,9 @@ namespace C64Studio.Controls
 
       m_Project.Mode = (TextCharMode)comboCharsetMode.SelectedIndex;
 
+      UpdatePalette();
+      ChangeColorSettingsDialog();
+
       if ( m_Project.TotalNumberOfCharacters != Lookup.NumCharactersForMode( m_Project.Mode ) )
       {
         m_Project.TotalNumberOfCharacters = Lookup.NumCharactersForMode( m_Project.Mode );
@@ -2015,7 +1871,7 @@ namespace C64Studio.Controls
         {
           var newChar = new CharData()
           {
-            Tile = new GraphicTile( 8, 8, Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode ), m_Project.Characters[0].Tile.Colors )
+            Tile = new GraphicTile( 8, 8, Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, 1 ), m_Project.Characters[0].Tile.Colors )
           };
           newChar.Tile.CustomColor = 1;
           m_Project.Characters.Add( newChar );
@@ -2023,48 +1879,199 @@ namespace C64Studio.Controls
         }
       }
 
-      UpdatePalette();
-      UpdateCustomColorCombo();
-
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
       {
         UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), false );
 
-        m_Project.Characters[i].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode );
+        m_Project.Characters[i].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[i].Tile.CustomColor );
         m_Project.Characters[i].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacter( m_Project.Mode ) );
         RebuildCharImage( i );
       }
 
-      /*
-      List<int>   selectedChars = panelCharacters.SelectedIndices;
-      if ( selectedChars.Count == 0 )
-      {
-        selectedChars.Add( m_CurrentChar );
-      }
-
-      bool modified = false;
-      foreach ( int selChar in selectedChars )
-      {
-        if ( m_Project.Characters[selChar].Mode != (TextCharMode)comboCharsetMode.SelectedIndex )
-        {
-          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar ), !modified );
-
-          m_Project.Characters[selChar].Mode = (TextCharMode)comboCharsetMode.SelectedIndex;
-          if ( ( m_Project.Characters[selChar].Mode == TextCharMode.MEGA65_FCM )
-          &&   ( m_Project.Characters[selChar].Data.Length < 64 ) )
-          {
-            m_Project.Characters[selChar].Data.Resize( 64 );
-          }
-          RebuildCharImage( selChar );
-          panelCharacters.InvalidateItemRect( selChar );
-          modified = true;
-        }
-      }*/
-
-      
       panelCharacters.Invalidate();
       RaiseModifiedEvent();
       canvasEditor.Invalidate();
+    }
+
+
+
+    private void ChangeColorSettingsDialog()
+    {
+      if ( _ColorSettingsDlg != null )
+      {
+        panelColorSettings.Controls.Remove( _ColorSettingsDlg );
+        _ColorSettingsDlg.Dispose();
+        _ColorSettingsDlg = null;
+      }
+
+      switch ( m_Project.Mode )
+      {
+        case TextCharMode.COMMODORE_ECM:
+          _ColorSettingsDlg = new ColorSettingsECM( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
+        case TextCharMode.COMMODORE_HIRES:
+          _ColorSettingsDlg = new ColorSettingsHiRes( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
+        case TextCharMode.COMMODORE_MULTICOLOR:
+          _ColorSettingsDlg = new ColorSettingsMC( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
+        case TextCharMode.VIC20:
+          _ColorSettingsDlg = new ColorSettingsVC20( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
+        case TextCharMode.MEGA65_FCM:
+        case TextCharMode.MEGA65_FCM_16BIT:
+          _ColorSettingsDlg = new ColorSettingsMega65( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
+      }
+      panelColorSettings.Controls.Add( _ColorSettingsDlg );
+      _ColorSettingsDlg.SelectedColorChanged += _ColorSettingsDlg_SelectedColorChanged;
+      _ColorSettingsDlg.ColorsModified += _ColorSettingsDlg_ColorsModified;
+      _ColorSettingsDlg.ColorsExchanged += _ColorSettingsDlg_ColorsExchanged;
+      _ColorSettingsDlg.PaletteModified += _ColorSettingsDlg_PaletteModified;
+      _ColorSettingsDlg_SelectedColorChanged( _ColorSettingsDlg.SelectedColor );
+    }
+
+
+
+    private void _ColorSettingsDlg_PaletteModified( ColorSettings Colors, int CustomColor )
+    {
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
+
+      m_Project.Colors = new ColorSettings( Colors );
+
+      OnPaletteChanged();
+
+      RaiseModifiedEvent();
+    }
+
+
+
+    private void _ColorSettingsDlg_ColorsExchanged( ColorType Color1, ColorType Color2 )
+    {
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorExchangeColors( this, Color1, Color2 ) );
+
+      ExchangeColors( Color1, Color2 );
+    }
+
+
+
+    public void ExchangeColors( ColorType Color1, ColorType Color2 )
+    {
+      /*
+      int   temp = m_Project.Colors.BackgroundColor;
+      m_Project.Colors.BackgroundColor = m_Project.Colors.MultiColor1;
+      m_Project.Colors.MultiColor1 = temp;*/
+
+      int   charIndex = 0;
+      foreach ( var charInfo in m_Project.Characters )
+      {
+        for ( int y = 0; y < charInfo.Tile.Height; ++y )
+        {
+          for ( int x = 0; x < charInfo.Tile.Width; x += Lookup.PixelWidth( charInfo.Tile.Mode ) )
+          {
+            ColorType pixel = (ColorType)charInfo.Tile.GetPixel( x, y );
+
+            if ( pixel == Color1 )
+            {
+              charInfo.Tile.SetPixel( x, y, Color2 );
+            }
+            else if ( pixel == Color2 )
+            {
+              charInfo.Tile.SetPixel( x, y, Color1 );
+            }
+          }
+        }
+        RebuildCharImage( charIndex );
+
+        panelCharacters.Invalidate();
+        ++charIndex;
+      }
+      canvasEditor.Invalidate();
+    }
+
+
+
+    private void _ColorSettingsDlg_ColorsModified( ColorType Color, ColorSettings Colors, int CustomColor )
+    {
+      if ( ( ( Color == ColorType.BACKGROUND )
+      &&     ( m_Project.Colors.BackgroundColor != Colors.BackgroundColor ) )
+      ||   ( ( Color == ColorType.MULTICOLOR_1 )
+      &&     ( m_Project.Colors.MultiColor1 != Colors.MultiColor1 ) )
+      ||   ( ( Color == ColorType.MULTICOLOR_2 )
+      &&     ( m_Project.Colors.MultiColor2 != Colors.MultiColor2 ) )
+      ||   ( ( Color == ColorType.BGCOLOR4 )
+      &&     ( m_Project.Colors.BGColor4 != Colors.BGColor4 ) )
+      ||   ( ( Color == ColorType.CUSTOM_COLOR )
+      &&     ( m_Project.Characters[m_CurrentChar].Tile.CustomColor != CustomColor ) ) )
+      {
+        if ( Color != ColorType.CUSTOM_COLOR )
+        {
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
+        }
+        switch ( Color )
+        {
+          case ColorType.BACKGROUND:
+            m_Project.Colors.BackgroundColor = Colors.BackgroundColor;
+            break;
+          case ColorType.MULTICOLOR_1:
+            m_Project.Colors.MultiColor1 = Colors.MultiColor1;
+            break;
+          case ColorType.MULTICOLOR_2:
+            m_Project.Colors.MultiColor2 = Colors.MultiColor2;
+            break;
+          case ColorType.BGCOLOR4:
+            m_Project.Colors.BGColor4 = Colors.BGColor4;
+            break;
+          case ColorType.CUSTOM_COLOR:
+            {
+              // TODO
+              List<int>   selectedChars = panelCharacters.SelectedIndices;
+              if ( selectedChars.Count == 0 )
+              {
+                selectedChars.Add( m_CurrentChar );
+              }
+
+              bool    modified = false;
+              foreach ( int selChar in selectedChars )
+              {
+                if ( m_Project.Characters[selChar].Tile.CustomColor != CustomColor )
+                {
+                  if ( !Lookup.HasCustomPalette( m_Project.Characters[selChar].Tile.Mode ) )
+                  {
+                    UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar ), modified == false );
+
+                    m_Project.Characters[selChar].Tile.CustomColor = CustomColor;
+                    m_Project.Characters[selChar].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[selChar].Tile.CustomColor );
+                    RebuildCharImage( selChar );
+                    modified = true;
+                    panelCharacters.InvalidateItemRect( selChar );
+                  }
+                }
+              }
+              if ( modified )
+              {
+                RaiseModifiedEvent();
+                canvasEditor.Invalidate();
+              }
+            }
+            break;
+        }
+
+        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+        {
+          RebuildCharImage( i );
+        }
+        RaiseModifiedEvent();
+        canvasEditor.Invalidate();
+        panelCharacters.Invalidate();
+      }
+    }
+
+
+
+    private void _ColorSettingsDlg_SelectedColorChanged( ColorType Color )
+    {
+      m_CurrentColorType = Color;
     }
 
 
@@ -2111,195 +2118,23 @@ namespace C64Studio.Controls
 
 
 
-    private void exchangeMultiColors1And2ToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorExchangeMultiColors( this, C64Studio.Undo.UndoCharacterEditorExchangeMultiColors.ExchangeMode.MULTICOLOR_1_WITH_MULTICOLOR_2 ) );
-
-      ExchangeMultiColors();
-    }
-
-
-
-    public void ExchangeMultiColors()
-    {
-      int   temp = m_Project.Colors.MultiColor1;
-      m_Project.Colors.MultiColor1 = m_Project.Colors.MultiColor2;
-      m_Project.Colors.MultiColor2 = temp;
-
-      int   charIndex = 0;
-      foreach ( var charInfo in m_Project.Characters )
-      {
-        if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
-        &&   ( charInfo.Tile.CustomColor >= 8 ) )
-        {
-          for ( int y = 0; y < 8; ++y )
-          {
-            for ( int x = 0; x < 4; ++x )
-            {
-              int pixelValue = ( charInfo.Tile.Data.ByteAt( y ) & ( 3 << ( ( 3 - x ) * 2 ) ) ) >> ( ( 3 - x ) * 2 );
-
-              if ( pixelValue == 1 )
-              {
-                byte  newValue = (byte)( charInfo.Tile.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
-
-                newValue |= (byte)( 2 << ( ( 3 - x ) * 2 ) );
-
-                charInfo.Tile.Data.SetU8At( y, newValue );
-              }
-              else if ( pixelValue == 2 )
-              {
-                byte  newValue = (byte)( charInfo.Tile.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
-
-                newValue |= (byte)( 1 << ( ( 3 - x ) * 2 ) );
-
-                charInfo.Tile.Data.SetU8At( y, newValue );
-              }
-            }
-          }
-          RebuildCharImage( charIndex );
-          panelCharacters.Invalidate();
-        }
-        ++charIndex;
-      }
-      comboMulticolor1.SelectedIndex = m_Project.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_Project.Colors.MultiColor2;
-
-      RaiseModifiedEvent();
-    }
-
-
-
-    private void exchangeMultiColor1AndBGColorToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorExchangeMultiColors( this, C64Studio.Undo.UndoCharacterEditorExchangeMultiColors.ExchangeMode.MULTICOLOR_1_WITH_BACKGROUND ) );
-
-      ExchangeMultiColor1WithBackground();
-    }
-
-
-
-    public void ExchangeMultiColor1WithBackground()
-    {
-      int   temp = m_Project.Colors.BackgroundColor;
-      m_Project.Colors.BackgroundColor = m_Project.Colors.MultiColor1;
-      m_Project.Colors.MultiColor1 = temp;
-
-      int   charIndex = 0;
-      foreach ( var charInfo in m_Project.Characters )
-      {
-        if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
-        &&   ( charInfo.Tile.CustomColor >= 8 ) )
-        {
-          for ( int y = 0; y < 8; ++y )
-          {
-            for ( int x = 0; x < 4; ++x )
-            {
-              int pixelValue = ( charInfo.Tile.Data.ByteAt( y ) & ( 3 << ( ( 3 - x ) * 2 ) ) ) >> ( ( 3 - x ) * 2 );
-
-              if ( pixelValue == 1 )
-              {
-                byte  newValue = (byte)( charInfo.Tile.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
-
-                charInfo.Tile.Data.SetU8At( y, newValue );
-              }
-              else if ( pixelValue == 0 )
-              {
-                byte  newValue = (byte)( charInfo.Tile.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
-
-                newValue |= (byte)( 1 << ( ( 3 - x ) * 2 ) );
-
-                charInfo.Tile.Data.SetU8At( y, newValue );
-              }
-            }
-          }
-        }
-        RebuildCharImage( charIndex );
-        panelCharacters.Invalidate();
-        ++charIndex;
-      }
-      comboMulticolor1.SelectedIndex  = m_Project.Colors.MultiColor1;
-      comboBackground.SelectedIndex   = m_Project.Colors.BackgroundColor;
-
-      RaiseModifiedEvent();
-    }
-
-
-
-    private void exchangeMultiColor2AndBGColorToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorExchangeMultiColors( this, C64Studio.Undo.UndoCharacterEditorExchangeMultiColors.ExchangeMode.MULTICOLOR_2_WITH_BACKGROUND ) );
-
-      ExchangeMultiColor2WithBackground();
-    }
-
-
-
-    public void ExchangeMultiColor2WithBackground()
-    {
-      int   temp = m_Project.Colors.BackgroundColor;
-      m_Project.Colors.BackgroundColor = m_Project.Colors.MultiColor2;
-      m_Project.Colors.MultiColor2 = temp;
-
-      int   charIndex = 0;
-      foreach ( var charInfo in m_Project.Characters )
-      {
-        if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
-        &&   ( charInfo.Tile.CustomColor >= 8 ) )
-        {
-          for ( int y = 0; y < 8; ++y )
-          {
-            for ( int x = 0; x < 4; ++x )
-            {
-              int pixelValue = ( charInfo.Tile.Data.ByteAt( y ) & ( 3 << ( ( 3 - x ) * 2 ) ) ) >> ( ( 3 - x ) * 2 );
-
-              if ( pixelValue == 2 )
-              {
-                byte  newValue = (byte)( charInfo.Tile.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
-
-                //newValue |= (byte)( 2 << ( ( 3 - x ) * 2 ) );
-
-                charInfo.Tile.Data.SetU8At( y, newValue );
-              }
-              else if ( pixelValue == 0 )
-              {
-                byte  newValue = (byte)( charInfo.Tile.Data.ByteAt( y ) & ~( 3 << ( ( 3 - x ) * 2 ) ) );
-
-                newValue |= (byte)( 2 << ( ( 3 - x ) * 2 ) );
-
-                charInfo.Tile.Data.SetU8At( y, newValue );
-              }
-            }
-          }
-        }
-        RebuildCharImage( charIndex );
-        panelCharacters.Invalidate();
-        ++charIndex;
-      }
-      comboMulticolor2.SelectedIndex = m_Project.Colors.MultiColor2;
-      comboBackground.SelectedIndex = m_Project.Colors.BackgroundColor;
-
-      RaiseModifiedEvent();
-    }
-
-
-
     public void MultiColor2()
     {
-      comboMulticolor2.SelectedIndex = ( comboMulticolor2.SelectedIndex + 1 ) % 16;
+      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_2, ( m_Project.Colors.MultiColor2 + 1 ) % 16 );
     }
 
 
 
     public void MultiColor1()
     {
-      comboMulticolor1.SelectedIndex = ( comboMulticolor1.SelectedIndex + 1 ) % 16;
+      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, ( m_Project.Colors.MultiColor1 + 1 ) % 16 );
     }
 
 
 
     public void CustomColor()
     {
-      comboCharColor.SelectedIndex = ( comboCharColor.SelectedIndex + 1 ) % 16;
+      _ColorSettingsDlg.ColorChanged( ColorType.CUSTOM_COLOR, ( _ColorSettingsDlg.CustomColor + 1 ) % 16 );
     }
 
 
@@ -2346,13 +2181,6 @@ namespace C64Studio.Controls
         RaiseModifiedEvent();
       }
       DoNotUpdateFromControls = false;
-    }
-
-
-
-    private void btnExchangeColors_Click( object sender, EventArgs e )
-    {
-      contextMenuExchangeColors.Show( btnExchangeColors, new Point( 0, btnExchangeColors.Height ) );
     }
 
 
@@ -2829,26 +2657,8 @@ namespace C64Studio.Controls
 
 
 
-    private void btnEditPalette_Click( object sender, EventArgs e )
-    {
-      var dlgPalette = new DlgPaletteEditor( Core, m_Project.Colors.Palette );
-      if ( dlgPalette.ShowDialog() == DialogResult.OK )
-      {
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
-        m_Project.Colors.Palette = dlgPalette.Palette;
-
-        RaiseModifiedEvent();
-        
-        OnPaletteChanged();
-      }
-    }
-
-
-
     private void OnPaletteChanged()
     {
-      btnEditPalette.Enabled = Lookup.HasCustomPalette( Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode ) );
-
       PaletteManager.ApplyPalette( picturePlayground.DisplayPage, m_Project.Colors.Palette );
       PaletteManager.ApplyPalette( panelCharacters.DisplayPage, m_Project.Colors.Palette );
       PaletteManager.ApplyPalette( m_ImagePlayground, m_Project.Colors.Palette );
@@ -2861,26 +2671,7 @@ namespace C64Studio.Controls
         panelCharacters.Items.Add( i.ToString(), m_Project.Characters[i].Tile.Image );
       }
 
-      // update controls for mode
-      comboBGColor4.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_ECM );
-      radioBGColor4.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_ECM );
-      comboMulticolor1.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR );
-      radioMultiColor1.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR );
-      comboMulticolor2.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR );
-      radioMulticolor2.Enabled = ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR );
-
       panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( m_Project.Mode );
-
-      if ( m_Project.Mode == TextCharMode.COMMODORE_ECM )
-      {
-        radioMultiColor1.Text = "BGColor 2";
-        radioMulticolor2.Text = "BGColor 3";
-      }
-      else
-      {
-        radioMultiColor1.Text = "Multicolor 1";
-        radioMulticolor2.Text = "Multicolor 2";
-      }
 
       panelCharacters.Invalidate();
       canvasEditor.Invalidate();

@@ -26,6 +26,8 @@
 
       pal.CreateBrushes();
 
+      pal.Name = "Default VIC20";
+
       return pal;
     }
 

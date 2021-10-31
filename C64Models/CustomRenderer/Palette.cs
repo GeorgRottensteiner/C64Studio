@@ -137,6 +137,10 @@ namespace RetroDevStudio
       pal.CreateBrushes();
 
       pal.Name = Reader.ReadString();
+      if ( string.IsNullOrEmpty( pal.Name ) )
+      {
+        pal.Name = "Default";
+      }
       return pal;
     }
 

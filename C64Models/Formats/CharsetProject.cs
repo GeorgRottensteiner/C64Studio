@@ -76,6 +76,7 @@ namespace C64Studio.Formats
         PlaygroundChars.Add( 0x10000 | 0x20 );
       }
       Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
+      Colors.Palettes.Add( Colors.Palette );
     }
 
 
@@ -173,9 +174,13 @@ namespace C64Studio.Formats
       chunkColorSettings.AppendI32( Colors.MultiColor1 );
       chunkColorSettings.AppendI32( Colors.MultiColor2 );
       chunkColorSettings.AppendI32( Colors.BGColor4 );
+      chunkColorSettings.AppendI32( Colors.ActivePalette );
       chunkCharsetProject.Append( chunkColorSettings.ToBuffer() );
 
-      chunkCharsetProject.Append( Colors.Palette.ToBuffer() );
+      foreach ( var pal in Colors.Palettes )
+      {
+        chunkCharsetProject.Append( pal.ToBuffer() );
+      }
 
       var chunkExport = new GR.IO.FileChunk( RetroDevStudio.FileChunkConstants.CHARSET_EXPORT );
 
@@ -425,6 +430,7 @@ namespace C64Studio.Formats
       {
         Characters.Clear();
         Categories.Clear();
+        Colors.Palettes.Clear();
         TotalNumberOfCharacters = 256;
         Mode = TextCharMode.COMMODORE_HIRES;
 
@@ -453,16 +459,10 @@ namespace C64Studio.Formats
                   Colors.MultiColor1 = subMemIn.ReadInt32();
                   Colors.MultiColor2 = subMemIn.ReadInt32();
                   Colors.BGColor4 = subMemIn.ReadInt32();
+                  Colors.ActivePalette = subMemIn.ReadInt32();
                   break;
                 case FileChunkConstants.PALETTE:
-                  {
-                    Colors.Palette = new Palette( subMemIn.ReadInt32() );
-                    for ( int i = 0; i < Colors.Palette.NumColors; ++i )
-                    {
-                      Colors.Palette.ColorValues[i] = subMemIn.ReadUInt32();
-                    }
-                    Colors.Palette.CreateBrushes();
-                  }
+                  Colors.Palettes.Add( Palette.Read( subMemIn ) );
                   break;
                 case FileChunkConstants.CHARSET_EXPORT:
                   ExportStartCharacter = subMemIn.ReadInt32();
@@ -472,10 +472,11 @@ namespace C64Studio.Formats
                 case FileChunkConstants.CHARSET_CHAR:
                   {
                     var charData = new CharData();
-                    charData.Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( Mode );
 
                     subMemIn.ReadInt32(); // was TextCharMode
                     charData.Tile.CustomColor = subMemIn.ReadInt32();
+                    charData.Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( Mode, charData.Tile.CustomColor );
+
                     charData.Category = subMemIn.ReadInt32();
 
                     int dataLength = subMemIn.ReadInt32();

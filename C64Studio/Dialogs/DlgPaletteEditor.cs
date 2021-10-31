@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +12,7 @@ namespace C64Studio
 {
   public partial class DlgPaletteEditor : Form
   {
-    public Palette Palette
+    public ColorSettings Colors
     {
       private set;
       get;
@@ -19,16 +20,18 @@ namespace C64Studio
 
 
 
-    public DlgPaletteEditor( StudioCore Core, Palette Pal )
+    public DlgPaletteEditor( StudioCore Core, ColorSettings Colors )
     {
-      Palette = new Palette( Pal );
+      this.Colors = new ColorSettings( Colors );
       InitializeComponent();
 
-      paletteList.Items.Add( new ArrangedItemEntry() { Text = "Palette", Tag = Palette } );
-
-      for ( int i = 0; i < Palette.NumColors; ++i )
+      foreach ( var pal in this.Colors.Palettes )
       {
-        listPalette.Items.Add( Palette.Colors[i] );
+        paletteList.Items.Add( new ArrangedItemEntry() { Text = pal.Name, Tag = pal } );
+      }
+      for ( int i = 0; i < Colors.Palette.NumColors; ++i )
+      {
+        listPalette.Items.Add( Colors.Palette.Colors[i] );
       }
       listPalette.SelectedIndex = 0;
 
@@ -64,7 +67,7 @@ namespace C64Studio
         e.Graphics.DrawString( e.Index.ToString(), listPalette.Font, System.Drawing.SystemBrushes.ControlText, textRect );
       }
       var smallerRect = new Rectangle( e.Bounds.Left + 30, e.Bounds.Top, e.Bounds.Width - 30, e.Bounds.Height );
-      e.Graphics.FillRectangle( Palette.ColorBrushes[e.Index], smallerRect );
+      e.Graphics.FillRectangle( Colors.Palette.ColorBrushes[e.Index], smallerRect );
     }
 
 
@@ -76,16 +79,16 @@ namespace C64Studio
         return;
       }
 
-      scrollR.Value   = Palette.Colors[listPalette.SelectedIndex].R;
-      scrollG.Value   = Palette.Colors[listPalette.SelectedIndex].G;
-      scrollB.Value   = Palette.Colors[listPalette.SelectedIndex].B;
+      scrollR.Value   = Colors.Palette.Colors[listPalette.SelectedIndex].R;
+      scrollG.Value   = Colors.Palette.Colors[listPalette.SelectedIndex].G;
+      scrollB.Value   = Colors.Palette.Colors[listPalette.SelectedIndex].B;
 
-      editR.Text = Palette.Colors[listPalette.SelectedIndex].R.ToString();
-      editRHex.Text = Palette.Colors[listPalette.SelectedIndex].R.ToString( "X2" );
-      editG.Text = Palette.Colors[listPalette.SelectedIndex].G.ToString();
-      editGHex.Text = Palette.Colors[listPalette.SelectedIndex].G.ToString( "X2" );
-      editB.Text = Palette.Colors[listPalette.SelectedIndex].B.ToString();
-      editBHex.Text = Palette.Colors[listPalette.SelectedIndex].B.ToString( "X2" );
+      editR.Text      = Colors.Palette.Colors[listPalette.SelectedIndex].R.ToString();
+      editRHex.Text   = Colors.Palette.Colors[listPalette.SelectedIndex].R.ToString( "X2" );
+      editG.Text      = Colors.Palette.Colors[listPalette.SelectedIndex].G.ToString();
+      editGHex.Text   = Colors.Palette.Colors[listPalette.SelectedIndex].G.ToString( "X2" );
+      editB.Text      = Colors.Palette.Colors[listPalette.SelectedIndex].B.ToString();
+      editBHex.Text   = Colors.Palette.Colors[listPalette.SelectedIndex].B.ToString( "X2" );
 
       panelColorPreview.Invalidate();
     }
@@ -100,7 +103,7 @@ namespace C64Studio
         return;
       }
 
-      e.Graphics.FillRectangle( Palette.ColorBrushes[listPalette.SelectedIndex], panelColorPreview.ClientRectangle );
+      e.Graphics.FillRectangle( Colors.Palette.ColorBrushes[listPalette.SelectedIndex], panelColorPreview.ClientRectangle );
     }
 
 
@@ -112,17 +115,17 @@ namespace C64Studio
         return;
       }
 
-      var curColor = Palette.Colors[listPalette.SelectedIndex];
+      var curColor = Colors.Palette.Colors[listPalette.SelectedIndex];
 
-      Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( scrollR.Value << 16 ) | ( curColor.G << 8 ) | ( curColor.B ) );
+      Colors.Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( scrollR.Value << 16 ) | ( curColor.G << 8 ) | ( curColor.B ) );
 
-      curColor = GR.Color.Helper.FromARGB( Palette.ColorValues[listPalette.SelectedIndex] );
+      curColor = GR.Color.Helper.FromARGB( Colors.Palette.ColorValues[listPalette.SelectedIndex] );
 
-      Palette.Colors[listPalette.SelectedIndex] = curColor;
-      Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
+      Colors.Palette.Colors[listPalette.SelectedIndex] = curColor;
+      Colors.Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
 
-      editR.Text = Palette.Colors[listPalette.SelectedIndex].R.ToString();
-      editRHex.Text = Palette.Colors[listPalette.SelectedIndex].R.ToString( "X2" );
+      editR.Text = Colors.Palette.Colors[listPalette.SelectedIndex].R.ToString();
+      editRHex.Text = Colors.Palette.Colors[listPalette.SelectedIndex].R.ToString( "X2" );
 
       listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
       panelColorPreview.Invalidate();
@@ -137,18 +140,18 @@ namespace C64Studio
         return;
       }
 
-      var curColor = Palette.Colors[listPalette.SelectedIndex];
+      var curColor = Colors.Palette.Colors[listPalette.SelectedIndex];
 
-      Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( scrollG.Value << 8 ) | ( curColor.B ) );
+      Colors.Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( scrollG.Value << 8 ) | ( curColor.B ) );
 
-      curColor = GR.Color.Helper.FromARGB( Palette.ColorValues[listPalette.SelectedIndex] );
+      curColor = GR.Color.Helper.FromARGB( Colors.Palette.ColorValues[listPalette.SelectedIndex] );
 
-      Palette.Colors[listPalette.SelectedIndex] = curColor;
-      Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
+      Colors.Palette.Colors[listPalette.SelectedIndex] = curColor;
+      Colors.Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
 
       listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
-      editG.Text = Palette.Colors[listPalette.SelectedIndex].G.ToString();
-      editGHex.Text = Palette.Colors[listPalette.SelectedIndex].G.ToString( "X2" );
+      editG.Text = Colors.Palette.Colors[listPalette.SelectedIndex].G.ToString();
+      editGHex.Text = Colors.Palette.Colors[listPalette.SelectedIndex].G.ToString( "X2" );
       panelColorPreview.Invalidate();
     }
 
@@ -161,18 +164,18 @@ namespace C64Studio
         return;
       }
 
-      var curColor = Palette.Colors[listPalette.SelectedIndex];
+      var curColor = Colors.Palette.Colors[listPalette.SelectedIndex];
 
-      Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( curColor.G << 8 ) | ( scrollB.Value ) );
+      Colors.Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( curColor.G << 8 ) | ( scrollB.Value ) );
 
-      curColor = GR.Color.Helper.FromARGB( Palette.ColorValues[listPalette.SelectedIndex] );
+      curColor = GR.Color.Helper.FromARGB( Colors.Palette.ColorValues[listPalette.SelectedIndex] );
 
-      Palette.Colors[listPalette.SelectedIndex] = curColor;
-      Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
+      Colors.Palette.Colors[listPalette.SelectedIndex] = curColor;
+      Colors.Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
 
       listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
-      editB.Text = Palette.Colors[listPalette.SelectedIndex].B.ToString();
-      editBHex.Text = Palette.Colors[listPalette.SelectedIndex].B.ToString( "X2" );
+      editB.Text = Colors.Palette.Colors[listPalette.SelectedIndex].B.ToString();
+      editBHex.Text = Colors.Palette.Colors[listPalette.SelectedIndex].B.ToString( "X2" );
       panelColorPreview.Invalidate();
     }
 
@@ -185,16 +188,16 @@ namespace C64Studio
         return;
       }
 
-      var curColor = Palette.Colors[listPalette.SelectedIndex];
+      var curColor = Colors.Palette.Colors[listPalette.SelectedIndex];
       var newR = GR.Convert.ToI32( editR.Text );
       if ( newR != curColor.R )
       {
-        Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( newR << 16 ) | ( curColor.G << 8 ) | ( curColor.B ) );
+        Colors.Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( newR << 16 ) | ( curColor.G << 8 ) | ( curColor.B ) );
 
-        curColor = GR.Color.Helper.FromARGB( Palette.ColorValues[listPalette.SelectedIndex] );
+        curColor = GR.Color.Helper.FromARGB( Colors.Palette.ColorValues[listPalette.SelectedIndex] );
 
-        Palette.Colors[listPalette.SelectedIndex] = curColor;
-        Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
+        Colors.Palette.Colors[listPalette.SelectedIndex] = curColor;
+        Colors.Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
@@ -210,16 +213,16 @@ namespace C64Studio
         return;
       }
 
-      var curColor = Palette.Colors[listPalette.SelectedIndex];
+      var curColor = Colors.Palette.Colors[listPalette.SelectedIndex];
       var newR = GR.Convert.ToI32( editRHex.Text, 16 );
       if ( newR != curColor.R )
       {
-        Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( newR << 16 ) | ( curColor.G << 8 ) | ( curColor.B ) );
+        Colors.Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( newR << 16 ) | ( curColor.G << 8 ) | ( curColor.B ) );
 
-        curColor = GR.Color.Helper.FromARGB( Palette.ColorValues[listPalette.SelectedIndex] );
+        curColor = GR.Color.Helper.FromARGB( Colors.Palette.ColorValues[listPalette.SelectedIndex] );
 
-        Palette.Colors[listPalette.SelectedIndex] = curColor;
-        Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
+        Colors.Palette.Colors[listPalette.SelectedIndex] = curColor;
+        Colors.Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
@@ -235,16 +238,16 @@ namespace C64Studio
         return;
       }
 
-      var curColor = Palette.Colors[listPalette.SelectedIndex];
+      var curColor = Colors.Palette.Colors[listPalette.SelectedIndex];
       var newG = GR.Convert.ToI32( editG.Text );
       if ( newG != curColor.G )
       {
-        Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( newG << 8 ) | ( curColor.B ) );
+        Colors.Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( newG << 8 ) | ( curColor.B ) );
 
-        curColor = GR.Color.Helper.FromARGB( Palette.ColorValues[listPalette.SelectedIndex] );
+        curColor = GR.Color.Helper.FromARGB( Colors.Palette.ColorValues[listPalette.SelectedIndex] );
 
-        Palette.Colors[listPalette.SelectedIndex] = curColor;
-        Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
+        Colors.Palette.Colors[listPalette.SelectedIndex] = curColor;
+        Colors.Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
@@ -260,16 +263,16 @@ namespace C64Studio
         return;
       }
 
-      var curColor = Palette.Colors[listPalette.SelectedIndex];
+      var curColor = Colors.Palette.Colors[listPalette.SelectedIndex];
       var newG = GR.Convert.ToI32( editGHex.Text, 16 );
       if ( newG != curColor.G )
       {
-        Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( newG << 8 ) | ( curColor.B ) );
+        Colors.Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( newG << 8 ) | ( curColor.B ) );
 
-        curColor = GR.Color.Helper.FromARGB( Palette.ColorValues[listPalette.SelectedIndex] );
+        curColor = GR.Color.Helper.FromARGB( Colors.Palette.ColorValues[listPalette.SelectedIndex] );
 
-        Palette.Colors[listPalette.SelectedIndex] = curColor;
-        Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
+        Colors.Palette.Colors[listPalette.SelectedIndex] = curColor;
+        Colors.Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
@@ -285,16 +288,16 @@ namespace C64Studio
         return;
       }
 
-      var curColor = Palette.Colors[listPalette.SelectedIndex];
+      var curColor = Colors.Palette.Colors[listPalette.SelectedIndex];
       var newB = GR.Convert.ToI32( editB.Text );
       if ( newB != curColor.B )
       {
-        Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( curColor.G << 8 ) | ( newB ) );
+        Colors.Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( curColor.G << 8 ) | ( newB ) );
 
-        curColor = GR.Color.Helper.FromARGB( Palette.ColorValues[listPalette.SelectedIndex] );
+        curColor = GR.Color.Helper.FromARGB( Colors.Palette.ColorValues[listPalette.SelectedIndex] );
 
-        Palette.Colors[listPalette.SelectedIndex] = curColor;
-        Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
+        Colors.Palette.Colors[listPalette.SelectedIndex] = curColor;
+        Colors.Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
@@ -310,16 +313,16 @@ namespace C64Studio
         return;
       }
 
-      var curColor = Palette.Colors[listPalette.SelectedIndex];
+      var curColor = Colors.Palette.Colors[listPalette.SelectedIndex];
       var newB = GR.Convert.ToI32( editBHex.Text, 16 );
       if ( newB != curColor.B )
       {
-        Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( curColor.G << 8 ) | ( newB ) );
+        Colors.Palette.ColorValues[listPalette.SelectedIndex] = (uint)( ( curColor.A << 24 ) | ( curColor.R << 16 ) | ( curColor.G << 8 ) | ( newB ) );
 
-        curColor = GR.Color.Helper.FromARGB( Palette.ColorValues[listPalette.SelectedIndex] );
+        curColor = GR.Color.Helper.FromARGB( Colors.Palette.ColorValues[listPalette.SelectedIndex] );
 
-        Palette.Colors[listPalette.SelectedIndex] = curColor;
-        Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
+        Colors.Palette.Colors[listPalette.SelectedIndex] = curColor;
+        Colors.Palette.ColorBrushes[listPalette.SelectedIndex] = new System.Drawing.SolidBrush( curColor );
 
         listPalette.Invalidate( listPalette.GetItemRectangle( listPalette.SelectedIndex ) );
         panelColorPreview.Invalidate();
@@ -330,7 +333,7 @@ namespace C64Studio
 
     private ArrangedItemEntry paletteList_AddingItem( object sender )
     {
-      var palette = new Palette( Palette );
+      var palette = new Palette( Colors.Palette );
 
       ArrangedItemEntry item = new ArrangedItemEntry();
       item.Text = "Palette";
@@ -339,6 +342,8 @@ namespace C64Studio
         item.Text = editPaletteName.Text;
       }
       item.Tag = palette;
+
+      Colors.Palettes.Add( palette );
 
       return item;
     }
@@ -355,11 +360,11 @@ namespace C64Studio
       editPaletteName.Enabled = true;
       editPaletteName.Text    = Item.Text;
 
+      Colors.ActivePalette = Item.Index;
 
-      Palette = (Palette)Item.Tag;
-      for ( int i = 0; i < Palette.NumColors; ++i )
+      for ( int i = 0; i < Colors.Palette.NumColors; ++i )
       {
-        listPalette.Items[i] = Palette.Colors[i];
+        listPalette.Items[i] = Colors.Palette.Colors[i];
       }
       listPalette_SelectedIndexChanged( sender, new EventArgs() );
     }
@@ -389,7 +394,29 @@ namespace C64Studio
       }
       item.Tag = palette;
 
+      Colors.Palettes.Add( palette );
+
       return item;
+    }
+
+
+
+    private void paletteList_ItemRemoved( object sender, ArrangedItemEntry Item )
+    {
+      Colors.Palettes.Remove( (Palette)Item.Tag );
+    }
+
+
+
+    private void paletteList_ItemMoved( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
+    {
+      var newPalList = new List<Palette>();
+
+      foreach ( ArrangedItemEntry item in paletteList.Items )
+      {
+        newPalList.Add( (Palette)item.Tag );
+      }
+      Colors.Palettes = newPalList;
     }
 
 

@@ -29,6 +29,8 @@
 
       pal.CreateBrushes();
 
+      pal.Name = "Default C64";
+
       return pal;
     }
 

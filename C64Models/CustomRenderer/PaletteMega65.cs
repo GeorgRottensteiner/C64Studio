@@ -29,6 +29,8 @@
 
       pal.CreateBrushes();
 
+      pal.Name = "Default Mega65";
+
       return pal;
     }
 
