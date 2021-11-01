@@ -19,6 +19,24 @@
   +----------------+-----------------------+---------+---------+----------+
   For penalty cycles on the 65816, check the desired addressing mode.
 
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   STA ($FF,X)         |   $81   |    2    |    ?     |
+  | <A HREF="ADDR23.HTM">(Indirect,S),Y</A> |   STA ($FF,S),Y       |   $82   |    2    |    ?     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   STA $FF             |   $85   |    2    |    ?     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   STA $FFFF           |   $8D   |    3    |    ?     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   STA ($FF),Y         |   $91   |    2    |    ?     |
+  | <A HREF="ADDR18B.HTM">(Indirect),Z</A>  |   STA ($FF),Z         |   $92   |    2    |    ?     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   STA $FF,X           |   $95   |    2    |    ?     |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   STA $FFFF,Y         |   $99   |    3    |    ?     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   STA $FFFF,X         |   $9D   |    3    |    ?     |
+  +----------------+-----------------------+---------+---------+----------+
+
+
  65816 Extensions:
 
   +----------------+-----------------------+---------+---------+----------+

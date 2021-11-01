@@ -1,0 +1,24 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  CMPQ               CMP Compare memory and Q register                 CMPQ
+
+  Operation:  Q - M                                     N V - B D I Z C
+                                                        / . . . . . / /
+
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR25C.HTM">ZeroPage Quad</A>      |   CMPQ $FF            |$42 $42 $C5|    4    |    8r    |
+  |  <A HREF="ADDR25E.HTM">Absolute Quad</A>      |   CMPQ $FFFF          |$42 $42 $CD|    5    |    9r    |
+  |  <A HREF="ADDR25A.HTM">(Indirect Quad)</A>  |   CMPQ ($FF)         |$42 $42 $D2|    4    |   10ipr  |
+  |  <A HREF="ADDR25B.HTM">[Indirect Quad]</A>|   CMPQ [$FF]          |$42 $42 $EA $D2|    5    |   13ipr  |
+  +----------------+-----------------------+---------+---------+----------+
+  i Add 1 if clock speed is at 40 MHz
+  p Add 1 if page boundary is crossed
+  r Add 1 if clock speed is at 40 MHz
+
+</PRE></BODY></HTML>

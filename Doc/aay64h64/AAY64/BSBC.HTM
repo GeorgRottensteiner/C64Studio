@@ -32,6 +32,24 @@
   +----------------+-----------------------+---------+---------+----------+
   There doesn't seem to be a difference to the legal SBC.
 
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   SBC ($FF,X)         |   $E1   |    2    |    ?     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   SBC $FF             |   $E5   |    2    |    ?     |
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   SBC #$FF            |   $E9   |    2    |    ?     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   SBC $FFFF           |   $ED   |    3    |    3     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   SBC ($FF),Y         |   $F1   |    2    |    ?     |
+  | <A HREF="ADDR18B.HTM">(Indirect),Z</A>  |   SBC ($FF),Z         |   $F2   |    2    |    ?     |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   SBC $FF,X           |   $F5   |    2    |    ?     |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   SBC $FFFF,Y         |   $F9   |    3    |    ?     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   SBC $FFFF,X         |   $FD   |    3    |    ?     |
+  +----------------+-----------------------+---------+---------+----------+
+
+
  65816 Extensions:
 
   +----------------+-----------------------+---------+---------+----------+

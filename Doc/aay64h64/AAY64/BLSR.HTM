@@ -18,4 +18,20 @@
   +----------------+-----------------------+---------+---------+----------+
   For penalty cycles on the 65816, check the desired addressing mode.
 
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   LSR $FF             |   $46   |    2    |    4r    |
+  |  <A HREF="ADDR5.HTM">Accumulator</A>   |   LSR A               |   $4A   |    1    |    1s    |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   LSR $FFFF           |   $4E   |    3    |    5r    |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   LSR $FF,X           |   $56   |    2    |    3pr   |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   LSR $FFFF,X         |   $5E   |    3    |    5pr   |
+  +----------------+-----------------------+---------+---------+----------+
+  p Add 1 if page boundary is crossed
+  r Add 1 if clock speed is at 40 MHz
+  s Instruction requires 2 cycles when CPU is run at 1 MHz or 2 MHZ
+
 </PRE></BODY></HTML>

@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  RMB1         Clear bit 1 of indicated address                        RMB1
+
+
+ 4510 Versions:
+
+  Operation:  M(1) &lt;- 0                 N V - B D I Z C
+                                        . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>  |   RMB1 $FF            |   $17   |    2    |    4br   |
+  +----------------+-----------------------+---------+---------+----------+
+  b Add 1 if branch is taken
+    Add 1 if branch taken crosses page boundary
+  r Add 1 if clock speed is at 40 MHz
+
+</PRE></BODY></HTML>

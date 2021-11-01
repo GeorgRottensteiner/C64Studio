@@ -21,6 +21,28 @@
   * Add 1 if page boundary is crossed.
   For penalty cycles on the 65816, check the desired addressing mode.
 
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   CMP ($FF,X)         |   $C1   |    2    |    ?     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   CMP $FF             |   $C5   |    2    |    ?     |
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   CMP #$FF            |   $C9   |    2    |    ?     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   CMP $FFFF           |   $CD   |    3    |    ?     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   CMP ($FF),Y         |   $D1   |    2    |    ?     |
+  |  <A HREF="ADDR7C.HTM">(Indirect),Z</A>  |   CMP ($FF),Z         |   $D2   |    2    |    ?     |
+  |  <A HREF="ADDR25B.HTM">[Indirect Quad]</A>|   CMP [$FF],Z         |  $EA $D2 |    3    |    7ipr  |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   CMP $FF,X           |   $D5   |    2    |    ?     |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   CMP $FFFF,Y         |   $D9   |    3    |    ?     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   CMP $FFFF,X         |   $DD   |    3    |    ?     |
+  +----------------+-----------------------+---------+---------+----------+
+  i Add 1 if clock speed is at 40 MHz
+  p Add 1 if page boundary is crossed
+  r Add 1 if clock speed is at 40 MHz
+
+
  65816 Extensions:
 
   +----------------+-----------------------+---------+---------+----------+

@@ -1,4 +1,6 @@
-﻿!zone VIC3
+﻿!cpu m65
+
+!zone VIC3
 
 
 ;write $A5 and $96 there to enable VIC 3
@@ -126,6 +128,31 @@
 .PALBLUE        = $d300
 
 
+
+!zone FLOPPY
+
+;1xxx xxxx = IRQ          - controller has generated an IRQ (read only)
+;x1xx xxxx = LED          - LED blinks if set
+;xx1x xxxx = MOTOR        - activates drive motor and LED
+;xxx1 xxxx = SWAP         - swap upper and lower halves of data buffer (invert bit 8 of sector buffer)
+;xxxx 1xxx = SIDE         - select side of disk
+;xxxx x111 = DS           - drive select
+;                           internal drive = 0
+;                           internal cable drive = 1
+.MOTORLED       = $d080
+
+.CMDSTEPDIR     = $d081
+.BUSYCRC        = $d082
+.REQIRQ         = $d083
+.TRACK          = $d084
+.SECTOR         = $d085
+.SIDE           = $d086
+.DATA           = $d087
+.CLOCK          = $d088
+.STEP           = $d089
+.PCODE          = $d08a
+
+
 !zone SID2
 .BASE                           = $d420
 .FREQUENCY_LO_1                 = .BASE + 0
@@ -247,6 +274,41 @@
 
 .HTRAP00        = $d640
 
+
+
+!zone DMA
+
+;DMAgic DMA list address LSB, and trigger DMA (when written to)
+.ADDRLSB_TRIG   = $d700
+
+;DMA list address high byte (address bits 8 – 15)
+.ADDRMSB        = $d701
+
+;ADDRBANK DMA list address bank (address bits 16 - 22)
+;                               writing clears $d704
+.ADDRBANK       = $d702
+
+;xxxx xxx1      - enable F018B mode (sub command byte)
+.EN018B         = $d703
+
+;DMA list address mega-byte
+.ADDRMB         = $d704
+
+;DMAgic DMA list address LSB, and trigger enhanced DMA job
+.ETRIG          = $d705
+
+.COMMAND_COPY         = $00
+.COMMAND_MIX          = $01   ;via MINTERMs
+.COMMAND_SWAP         = $02
+.COMMAND_FILL         = $03
+
+.ADDRESSING_LINEAR    = $00   ;Linear (normal) addressing
+.ADDRESSING_MODULO    = $01   ;Modulo (rectangular) addressing
+.ADDRESSING_HOLD      = $02   ;Hold (constant address)
+.ADDRESSING_XY_MOD    = $03   ;XY MOD (bitmap rectangular) addressing
+
+
+
 !macro Enable40Mhz
           lda #$41
           sta $00
@@ -281,4 +343,11 @@
           sta VIC3.KEY
           lda #$53        ;'S'
           sta VIC3.KEY
+}
+
+
+!macro DisableC65ROM {
+          lda #$70
+          sta $d640
+          eom
 }

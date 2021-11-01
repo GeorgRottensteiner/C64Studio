@@ -16,6 +16,20 @@
   +----------------+-----------------------+---------+---------+----------+
   For penalty cycles on the 65816, check the desired addressing mode.
 
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR6A.HTM">Implied</A>       |   DEC                 |   $3A   |    1    |    1s    |
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   DEC $FF             |   $C6   |    2    |    ?     |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   DEC $FFFF           |   $CE   |    3    |    ?     |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   DEC $FF,X           |   $D6   |    2    |    ?     |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   DEC $FFFF,X         |   $DE   |    3    |    ?     |
+  +----------------+-----------------------+---------+---------+----------+
+
+
  65816 Extensions:
 
   +----------------+-----------------------+---------+---------+----------+

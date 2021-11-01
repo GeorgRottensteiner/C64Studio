@@ -3,9 +3,22 @@
 
   TSB                       TSB Test and Set Bit                        TSB
 
- 65816 only!
                                                         N V M X D I Z C
   Operation:  A V W -&gt; W                                . . . . . . / .
+
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  | <A HREF="ADDR4B.HTM">Direct Page</A>    |   TSB $FF             |   $04   |    2    |    3r    |
+  | <A HREF="ADDR2B.HTM">Absolute</A>       |   TSB $FFFF           |   $0C   |    3    |    5r    |
+  +----------------+-----------------------+---------+---------+----------+
+  r Add 1 if clock speed is at 40 MHz
+
+
+ 65816 Versions:
 
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
