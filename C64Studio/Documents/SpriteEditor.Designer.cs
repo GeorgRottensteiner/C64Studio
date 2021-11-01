@@ -29,26 +29,16 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpriteEditor));
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.tabSpriteEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
-      this.btnEditPalette = new System.Windows.Forms.Button();
+      this.panelColorSettings = new System.Windows.Forms.Panel();
+      this.btnToolEdit = new System.Windows.Forms.RadioButton();
+      this.btnToolFill = new System.Windows.Forms.RadioButton();
       this.comboSpriteProjectMode = new System.Windows.Forms.ComboBox();
       this.label11 = new System.Windows.Forms.Label();
-      this.btnExchangeColors = new C64Studio.Controls.MenuButton();
-      this.contextMenuExchangeColors = new System.Windows.Forms.ContextMenuStrip(this.components);
-      this.exchangeMultiColor1WithBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.exchangeMultiColor2WithBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.forSelectedSpritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-      this.exchangeBGColorWithSpriteColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.tabSpriteDetails = new System.Windows.Forms.TabControl();
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.panelSprites = new GR.Forms.ImageListbox();
@@ -88,15 +78,6 @@
       this.btnPasteFromClipboard = new System.Windows.Forms.Button();
       this.labelCharNo = new System.Windows.Forms.Label();
       this.checkShowGrid = new System.Windows.Forms.CheckBox();
-      this.checkMulticolor = new System.Windows.Forms.CheckBox();
-      this.radioSpriteColor = new System.Windows.Forms.RadioButton();
-      this.radioMulticolor2 = new System.Windows.Forms.RadioButton();
-      this.radioMultiColor1 = new System.Windows.Forms.RadioButton();
-      this.radioBackground = new System.Windows.Forms.RadioButton();
-      this.comboSpriteColor = new System.Windows.Forms.ComboBox();
-      this.comboMulticolor2 = new System.Windows.Forms.ComboBox();
-      this.comboMulticolor1 = new System.Windows.Forms.ComboBox();
-      this.comboBackground = new System.Windows.Forms.ComboBox();
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabProject = new System.Windows.Forms.TabPage();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -141,12 +122,9 @@
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnToolFill = new System.Windows.Forms.RadioButton();
-      this.btnToolEdit = new System.Windows.Forms.RadioButton();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabSpriteEditor.SuspendLayout();
       this.tabEditor.SuspendLayout();
-      this.contextMenuExchangeColors.SuspendLayout();
       this.tabSpriteDetails.SuspendLayout();
       this.tabPage1.SuspendLayout();
       this.tabPage2.SuspendLayout();
@@ -166,17 +144,16 @@
       this.tabSpriteEditor.Location = new System.Drawing.Point(0, 24);
       this.tabSpriteEditor.Name = "tabSpriteEditor";
       this.tabSpriteEditor.SelectedIndex = 0;
-      this.tabSpriteEditor.Size = new System.Drawing.Size(782, 499);
+      this.tabSpriteEditor.Size = new System.Drawing.Size(782, 556);
       this.tabSpriteEditor.TabIndex = 0;
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.panelColorSettings);
       this.tabEditor.Controls.Add(this.btnToolEdit);
       this.tabEditor.Controls.Add(this.btnToolFill);
-      this.tabEditor.Controls.Add(this.btnEditPalette);
       this.tabEditor.Controls.Add(this.comboSpriteProjectMode);
       this.tabEditor.Controls.Add(this.label11);
-      this.tabEditor.Controls.Add(this.btnExchangeColors);
       this.tabEditor.Controls.Add(this.tabSpriteDetails);
       this.tabEditor.Controls.Add(this.btnDeleteSprite);
       this.tabEditor.Controls.Add(this.btnInvert);
@@ -192,150 +169,66 @@
       this.tabEditor.Controls.Add(this.btnPasteFromClipboard);
       this.tabEditor.Controls.Add(this.labelCharNo);
       this.tabEditor.Controls.Add(this.checkShowGrid);
-      this.tabEditor.Controls.Add(this.checkMulticolor);
-      this.tabEditor.Controls.Add(this.radioSpriteColor);
-      this.tabEditor.Controls.Add(this.radioMulticolor2);
-      this.tabEditor.Controls.Add(this.radioMultiColor1);
-      this.tabEditor.Controls.Add(this.radioBackground);
-      this.tabEditor.Controls.Add(this.comboSpriteColor);
-      this.tabEditor.Controls.Add(this.comboMulticolor2);
-      this.tabEditor.Controls.Add(this.comboMulticolor1);
-      this.tabEditor.Controls.Add(this.comboBackground);
       this.tabEditor.Controls.Add(this.pictureEditor);
       this.tabEditor.Location = new System.Drawing.Point(4, 22);
       this.tabEditor.Name = "tabEditor";
       this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-      this.tabEditor.Size = new System.Drawing.Size(774, 473);
+      this.tabEditor.Size = new System.Drawing.Size(774, 530);
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Sprite";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
-      // btnEditPalette
+      // panelColorSettings
       // 
-      this.btnEditPalette.Enabled = false;
-      this.btnEditPalette.Location = new System.Drawing.Point(13, 408);
-      this.btnEditPalette.Name = "btnEditPalette";
-      this.btnEditPalette.Size = new System.Drawing.Size(79, 26);
-      this.btnEditPalette.TabIndex = 56;
-      this.btnEditPalette.Text = "Edit Palette";
-      this.btnEditPalette.UseVisualStyleBackColor = true;
-      this.btnEditPalette.Click += new System.EventHandler(this.btnEditPalette_Click);
+      this.panelColorSettings.Location = new System.Drawing.Point(40, 294);
+      this.panelColorSettings.Name = "panelColorSettings";
+      this.panelColorSettings.Size = new System.Drawing.Size(220, 210);
+      this.panelColorSettings.TabIndex = 59;
+      // 
+      // btnToolEdit
+      // 
+      this.btnToolEdit.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolEdit.Checked = true;
+      this.btnToolEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnToolEdit.Image")));
+      this.btnToolEdit.Location = new System.Drawing.Point(8, 285);
+      this.btnToolEdit.Name = "btnToolEdit";
+      this.btnToolEdit.Size = new System.Drawing.Size(26, 26);
+      this.btnToolEdit.TabIndex = 58;
+      this.btnToolEdit.TabStop = true;
+      this.toolTip1.SetToolTip(this.btnToolEdit, "Single Character");
+      this.btnToolEdit.UseVisualStyleBackColor = true;
+      this.btnToolEdit.CheckedChanged += new System.EventHandler(this.btnToolEdit_CheckedChanged);
+      // 
+      // btnToolFill
+      // 
+      this.btnToolFill.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnToolFill.Image = global::C64Studio.Properties.Resources.tool_fill;
+      this.btnToolFill.Location = new System.Drawing.Point(8, 316);
+      this.btnToolFill.Name = "btnToolFill";
+      this.btnToolFill.Size = new System.Drawing.Size(26, 26);
+      this.btnToolFill.TabIndex = 57;
+      this.toolTip1.SetToolTip(this.btnToolFill, "Fill");
+      this.btnToolFill.UseVisualStyleBackColor = true;
+      this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
       // 
       // comboSpriteProjectMode
       // 
       this.comboSpriteProjectMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboSpriteProjectMode.FormattingEnabled = true;
-      this.comboSpriteProjectMode.Location = new System.Drawing.Point(60, 442);
+      this.comboSpriteProjectMode.Location = new System.Drawing.Point(269, 442);
       this.comboSpriteProjectMode.Name = "comboSpriteProjectMode";
-      this.comboSpriteProjectMode.Size = new System.Drawing.Size(288, 21);
+      this.comboSpriteProjectMode.Size = new System.Drawing.Size(171, 21);
       this.comboSpriteProjectMode.TabIndex = 17;
       this.comboSpriteProjectMode.SelectedIndexChanged += new System.EventHandler(this.comboSpriteProjectMode_SelectedIndexChanged);
       // 
       // label11
       // 
       this.label11.AutoSize = true;
-      this.label11.Location = new System.Drawing.Point(10, 445);
+      this.label11.Location = new System.Drawing.Point(266, 423);
       this.label11.Name = "label11";
       this.label11.Size = new System.Drawing.Size(37, 13);
       this.label11.TabIndex = 16;
       this.label11.Text = "Mode:";
-      // 
-      // btnExchangeColors
-      // 
-      this.btnExchangeColors.Location = new System.Drawing.Point(227, 381);
-      this.btnExchangeColors.Menu = this.contextMenuExchangeColors;
-      this.btnExchangeColors.Name = "btnExchangeColors";
-      this.btnExchangeColors.Size = new System.Drawing.Size(121, 26);
-      this.btnExchangeColors.TabIndex = 15;
-      this.btnExchangeColors.Text = "Exchange Colors";
-      this.btnExchangeColors.UseVisualStyleBackColor = true;
-      // 
-      // contextMenuExchangeColors
-      // 
-      this.contextMenuExchangeColors.ImageScalingSize = new System.Drawing.Size(28, 28);
-      this.contextMenuExchangeColors.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exchangeMultiColor1WithBGColorToolStripMenuItem,
-            this.exchangeMultiColor2WithBGColorToolStripMenuItem,
-            this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem,
-            this.forSelectedSpritesToolStripMenuItem});
-      this.contextMenuExchangeColors.Name = "contextMenuExchangeColors";
-      this.contextMenuExchangeColors.Size = new System.Drawing.Size(296, 92);
-      // 
-      // exchangeMultiColor1WithBGColorToolStripMenuItem
-      // 
-      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Name = "exchangeMultiColor1WithBGColorToolStripMenuItem";
-      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 1 with BG Color";
-      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1WithBGColorToolStripMenuItem_Click);
-      // 
-      // exchangeMultiColor2WithBGColorToolStripMenuItem
-      // 
-      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Name = "exchangeMultiColor2WithBGColorToolStripMenuItem";
-      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 2 with BG Color";
-      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor2WithBGColorToolStripMenuItem_Click);
-      // 
-      // exchangeMultiColor1WithMultiColor2ToolStripMenuItem
-      // 
-      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Name = "exchangeMultiColor1WithMultiColor2ToolStripMenuItem";
-      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Text = "Exchange Multi Color 1 with Multi Color 2";
-      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem_Click);
-      // 
-      // forSelectedSpritesToolStripMenuItem
-      // 
-      this.forSelectedSpritesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1,
-            this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1,
-            this.exchangeBGColorWithSpriteColorToolStripMenuItem,
-            this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem,
-            this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem,
-            this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1});
-      this.forSelectedSpritesToolStripMenuItem.Name = "forSelectedSpritesToolStripMenuItem";
-      this.forSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-      this.forSelectedSpritesToolStripMenuItem.Text = "For selected Sprites";
-      // 
-      // exchangeMulticolor1WithSpriteColorToolStripMenuItem1
-      // 
-      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Name = "exchangeMulticolor1WithSpriteColorToolStripMenuItem1";
-      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
-      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Text = "Exchange Multicolor 1 with sprite color";
-      this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithSpriteColorToolStripMenuItem1_Click);
-      // 
-      // exchangeMulticolor2WithSpriteColorToolStripMenuItem1
-      // 
-      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Name = "exchangeMulticolor2WithSpriteColorToolStripMenuItem1";
-      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
-      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Text = "Exchange Multicolor 2 with sprite color";
-      this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor2WithSpriteColorToolStripMenuItem1_Click);
-      // 
-      // exchangeBGColorWithSpriteColorToolStripMenuItem
-      // 
-      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Name = "exchangeBGColorWithSpriteColorToolStripMenuItem";
-      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
-      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Text = "Exchange BG color with sprite color";
-      this.exchangeBGColorWithSpriteColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeBGColorWithSpriteColorToolStripMenuItem_Click);
-      // 
-      // exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem
-      // 
-      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Name = "exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem";
-      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
-      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Text = "Exchange Multicolor 1 with BG color";
-      this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem.Click += new System.EventHandler(this.exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem_Click);
-      // 
-      // exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem
-      // 
-      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Name = "exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem";
-      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Size = new System.Drawing.Size(285, 22);
-      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Text = "Exchange Multicolor 2 with BG color";
-      this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem.Click += new System.EventHandler(this.exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem_Click);
-      // 
-      // exchangeMulticolor1WithMulticolor2ToolStripMenuItem1
-      // 
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Name = "exchangeMulticolor1WithMulticolor2ToolStripMenuItem1";
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Size = new System.Drawing.Size(285, 22);
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Text = "Exchange Multicolor 1 with Multicolor 2";
-      this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1.Click += new System.EventHandler(this.exchangeMulticolor1WithMulticolor2ToolStripMenuItem1_Click);
       // 
       // tabSpriteDetails
       // 
@@ -347,7 +240,7 @@
       this.tabSpriteDetails.Location = new System.Drawing.Point(446, 2);
       this.tabSpriteDetails.Name = "tabSpriteDetails";
       this.tabSpriteDetails.SelectedIndex = 0;
-      this.tabSpriteDetails.Size = new System.Drawing.Size(328, 463);
+      this.tabSpriteDetails.Size = new System.Drawing.Size(328, 520);
       this.tabSpriteDetails.TabIndex = 9;
       // 
       // tabPage1
@@ -356,7 +249,7 @@
       this.tabPage1.Location = new System.Drawing.Point(4, 22);
       this.tabPage1.Name = "tabPage1";
       this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage1.Size = new System.Drawing.Size(320, 437);
+      this.tabPage1.Size = new System.Drawing.Size(320, 494);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "Sprites";
       this.tabPage1.UseVisualStyleBackColor = true;
@@ -381,7 +274,7 @@
       this.panelSprites.Name = "panelSprites";
       this.panelSprites.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
       this.panelSprites.SelectedIndex = -1;
-      this.panelSprites.Size = new System.Drawing.Size(314, 431);
+      this.panelSprites.Size = new System.Drawing.Size(314, 488);
       this.panelSprites.TabIndex = 4;
       this.panelSprites.TabStop = true;
       this.panelSprites.VisibleAutoScrollHorizontal = false;
@@ -415,7 +308,7 @@
       this.tabPage2.Location = new System.Drawing.Point(4, 22);
       this.tabPage2.Name = "tabPage2";
       this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage2.Size = new System.Drawing.Size(320, 437);
+      this.tabPage2.Size = new System.Drawing.Size(320, 494);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "Preview";
       this.tabPage2.UseVisualStyleBackColor = true;
@@ -423,7 +316,7 @@
       // btnSavePreviewToGIF
       // 
       this.btnSavePreviewToGIF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnSavePreviewToGIF.Location = new System.Drawing.Point(389, 338);
+      this.btnSavePreviewToGIF.Location = new System.Drawing.Point(389, 395);
       this.btnSavePreviewToGIF.Name = "btnSavePreviewToGIF";
       this.btnSavePreviewToGIF.Size = new System.Drawing.Size(75, 23);
       this.btnSavePreviewToGIF.TabIndex = 13;
@@ -435,7 +328,7 @@
       // 
       this.checkAutoplayAnim.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.checkAutoplayAnim.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkAutoplayAnim.Location = new System.Drawing.Point(227, 395);
+      this.checkAutoplayAnim.Location = new System.Drawing.Point(227, 452);
       this.checkAutoplayAnim.Name = "checkAutoplayAnim";
       this.checkAutoplayAnim.Size = new System.Drawing.Size(132, 24);
       this.checkAutoplayAnim.TabIndex = 12;
@@ -518,7 +411,7 @@
       this.listLayers.SelectedIndex = -1;
       this.listLayers.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       this.listLayers.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      this.listLayers.Size = new System.Drawing.Size(192, 141);
+      this.listLayers.Size = new System.Drawing.Size(192, 198);
       this.listLayers.TabIndex = 9;
       this.listLayers.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listLayers_AddingItem);
       this.listLayers.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.listLayers_CloningItem);
@@ -559,7 +452,7 @@
       // 
       this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(224, 370);
+      this.label10.Location = new System.Drawing.Point(224, 427);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(37, 13);
       this.label10.TabIndex = 15;
@@ -569,7 +462,7 @@
       // 
       this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(224, 343);
+      this.label6.Location = new System.Drawing.Point(224, 400);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(38, 13);
       this.label6.TabIndex = 15;
@@ -578,7 +471,7 @@
       // editLayerDelay
       // 
       this.editLayerDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.editLayerDelay.Location = new System.Drawing.Point(268, 365);
+      this.editLayerDelay.Location = new System.Drawing.Point(268, 422);
       this.editLayerDelay.Name = "editLayerDelay";
       this.editLayerDelay.Size = new System.Drawing.Size(91, 20);
       this.editLayerDelay.TabIndex = 11;
@@ -587,7 +480,7 @@
       // editLayerName
       // 
       this.editLayerName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.editLayerName.Location = new System.Drawing.Point(268, 338);
+      this.editLayerName.Location = new System.Drawing.Point(268, 395);
       this.editLayerName.Name = "editLayerName";
       this.editLayerName.Size = new System.Drawing.Size(91, 20);
       this.editLayerName.TabIndex = 10;
@@ -666,20 +559,20 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.layerPreview.AutoResize = false;
       this.layerPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.layerPreview.DisplayPage = fastImage4;
+      this.layerPreview.DisplayPage = fastImage1;
       this.layerPreview.Image = null;
       this.layerPreview.Location = new System.Drawing.Point(208, 3);
       this.layerPreview.Name = "layerPreview";
-      this.layerPreview.Size = new System.Drawing.Size(106, 329);
+      this.layerPreview.Size = new System.Drawing.Size(106, 386);
       this.layerPreview.TabIndex = 7;
       this.layerPreview.TabStop = false;
       // 
       // btnDeleteSprite
       // 
       this.btnDeleteSprite.Enabled = false;
-      this.btnDeleteSprite.Location = new System.Drawing.Point(365, 382);
+      this.btnDeleteSprite.Location = new System.Drawing.Point(269, 374);
       this.btnDeleteSprite.Name = "btnDeleteSprite";
-      this.btnDeleteSprite.Size = new System.Drawing.Size(75, 23);
+      this.btnDeleteSprite.Size = new System.Drawing.Size(121, 23);
       this.btnDeleteSprite.TabIndex = 8;
       this.btnDeleteSprite.Text = "Delete";
       this.btnDeleteSprite.UseVisualStyleBackColor = true;
@@ -786,7 +679,7 @@
       // 
       // btnCopyToClipboard
       // 
-      this.btnCopyToClipboard.Location = new System.Drawing.Point(227, 356);
+      this.btnCopyToClipboard.Location = new System.Drawing.Point(269, 345);
       this.btnCopyToClipboard.Name = "btnCopyToClipboard";
       this.btnCopyToClipboard.Size = new System.Drawing.Size(121, 23);
       this.btnCopyToClipboard.TabIndex = 6;
@@ -796,7 +689,7 @@
       // 
       // btnPasteFromClipboard
       // 
-      this.btnPasteFromClipboard.Location = new System.Drawing.Point(227, 328);
+      this.btnPasteFromClipboard.Location = new System.Drawing.Point(269, 316);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
       this.btnPasteFromClipboard.Size = new System.Drawing.Size(121, 23);
       this.btnPasteFromClipboard.TabIndex = 6;
@@ -806,7 +699,7 @@
       // 
       // labelCharNo
       // 
-      this.labelCharNo.Location = new System.Drawing.Point(304, 306);
+      this.labelCharNo.Location = new System.Drawing.Point(266, 400);
       this.labelCharNo.Name = "labelCharNo";
       this.labelCharNo.Size = new System.Drawing.Size(82, 23);
       this.labelCharNo.TabIndex = 5;
@@ -815,7 +708,7 @@
       // checkShowGrid
       // 
       this.checkShowGrid.AutoSize = true;
-      this.checkShowGrid.Location = new System.Drawing.Point(365, 358);
+      this.checkShowGrid.Location = new System.Drawing.Point(269, 294);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
       this.checkShowGrid.TabIndex = 3;
@@ -823,118 +716,11 @@
       this.checkShowGrid.UseVisualStyleBackColor = true;
       this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
       // 
-      // checkMulticolor
-      // 
-      this.checkMulticolor.AutoSize = true;
-      this.checkMulticolor.Location = new System.Drawing.Point(227, 305);
-      this.checkMulticolor.Name = "checkMulticolor";
-      this.checkMulticolor.Size = new System.Drawing.Size(71, 17);
-      this.checkMulticolor.TabIndex = 3;
-      this.checkMulticolor.Text = "Multicolor";
-      this.checkMulticolor.UseVisualStyleBackColor = true;
-      this.checkMulticolor.CheckedChanged += new System.EventHandler(this.checkMulticolor_CheckedChanged);
-      // 
-      // radioSpriteColor
-      // 
-      this.radioSpriteColor.AutoSize = true;
-      this.radioSpriteColor.Location = new System.Drawing.Point(44, 385);
-      this.radioSpriteColor.Name = "radioSpriteColor";
-      this.radioSpriteColor.Size = new System.Drawing.Size(79, 17);
-      this.radioSpriteColor.TabIndex = 2;
-      this.radioSpriteColor.TabStop = true;
-      this.radioSpriteColor.Text = "Sprite Color";
-      this.radioSpriteColor.UseVisualStyleBackColor = true;
-      this.radioSpriteColor.CheckedChanged += new System.EventHandler(this.radioCharColor_CheckedChanged);
-      // 
-      // radioMulticolor2
-      // 
-      this.radioMulticolor2.AutoSize = true;
-      this.radioMulticolor2.Location = new System.Drawing.Point(44, 358);
-      this.radioMulticolor2.Name = "radioMulticolor2";
-      this.radioMulticolor2.Size = new System.Drawing.Size(79, 17);
-      this.radioMulticolor2.TabIndex = 2;
-      this.radioMulticolor2.TabStop = true;
-      this.radioMulticolor2.Text = "Multicolor 2";
-      this.radioMulticolor2.UseVisualStyleBackColor = true;
-      this.radioMulticolor2.CheckedChanged += new System.EventHandler(this.radioMulticolor2_CheckedChanged);
-      // 
-      // radioMultiColor1
-      // 
-      this.radioMultiColor1.AutoSize = true;
-      this.radioMultiColor1.Location = new System.Drawing.Point(44, 331);
-      this.radioMultiColor1.Name = "radioMultiColor1";
-      this.radioMultiColor1.Size = new System.Drawing.Size(79, 17);
-      this.radioMultiColor1.TabIndex = 2;
-      this.radioMultiColor1.TabStop = true;
-      this.radioMultiColor1.Text = "Multicolor 1";
-      this.radioMultiColor1.UseVisualStyleBackColor = true;
-      this.radioMultiColor1.CheckedChanged += new System.EventHandler(this.radioMultiColor1_CheckedChanged);
-      // 
-      // radioBackground
-      // 
-      this.radioBackground.AutoSize = true;
-      this.radioBackground.Location = new System.Drawing.Point(44, 304);
-      this.radioBackground.Name = "radioBackground";
-      this.radioBackground.Size = new System.Drawing.Size(83, 17);
-      this.radioBackground.TabIndex = 2;
-      this.radioBackground.TabStop = true;
-      this.radioBackground.Text = "Background";
-      this.radioBackground.UseVisualStyleBackColor = true;
-      this.radioBackground.CheckedChanged += new System.EventHandler(this.radioBackground_CheckedChanged);
-      // 
-      // comboSpriteColor
-      // 
-      this.comboSpriteColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboSpriteColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboSpriteColor.FormattingEnabled = true;
-      this.comboSpriteColor.Location = new System.Drawing.Point(133, 385);
-      this.comboSpriteColor.Name = "comboSpriteColor";
-      this.comboSpriteColor.Size = new System.Drawing.Size(79, 21);
-      this.comboSpriteColor.TabIndex = 1;
-      this.comboSpriteColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboSpriteColor_DrawItem);
-      this.comboSpriteColor.SelectedIndexChanged += new System.EventHandler(this.comboSpriteColor_SelectedIndexChanged);
-      // 
-      // comboMulticolor2
-      // 
-      this.comboMulticolor2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboMulticolor2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboMulticolor2.FormattingEnabled = true;
-      this.comboMulticolor2.Location = new System.Drawing.Point(133, 358);
-      this.comboMulticolor2.Name = "comboMulticolor2";
-      this.comboMulticolor2.Size = new System.Drawing.Size(79, 21);
-      this.comboMulticolor2.TabIndex = 1;
-      this.comboMulticolor2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboMulticolor2.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor2_SelectedIndexChanged);
-      // 
-      // comboMulticolor1
-      // 
-      this.comboMulticolor1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboMulticolor1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboMulticolor1.FormattingEnabled = true;
-      this.comboMulticolor1.Location = new System.Drawing.Point(133, 331);
-      this.comboMulticolor1.Name = "comboMulticolor1";
-      this.comboMulticolor1.Size = new System.Drawing.Size(79, 21);
-      this.comboMulticolor1.TabIndex = 1;
-      this.comboMulticolor1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboMulticolor1.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor1_SelectedIndexChanged);
-      // 
-      // comboBackground
-      // 
-      this.comboBackground.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-      this.comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboBackground.FormattingEnabled = true;
-      this.comboBackground.Location = new System.Drawing.Point(133, 303);
-      this.comboBackground.Name = "comboBackground";
-      this.comboBackground.Size = new System.Drawing.Size(79, 21);
-      this.comboBackground.TabIndex = 1;
-      this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
-      this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
-      // 
       // pictureEditor
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage3;
+      this.pictureEditor.DisplayPage = fastImage2;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(40, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -951,7 +737,7 @@
       this.tabProject.Location = new System.Drawing.Point(4, 22);
       this.tabProject.Name = "tabProject";
       this.tabProject.Padding = new System.Windows.Forms.Padding(3);
-      this.tabProject.Size = new System.Drawing.Size(774, 473);
+      this.tabProject.Size = new System.Drawing.Size(774, 530);
       this.tabProject.TabIndex = 1;
       this.tabProject.Text = "Import/Export";
       this.tabProject.UseVisualStyleBackColor = true;
@@ -970,7 +756,7 @@
       this.groupBox1.Controls.Add(this.editDataImport);
       this.groupBox1.Location = new System.Drawing.Point(425, 6);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(331, 403);
+      this.groupBox1.Size = new System.Drawing.Size(331, 460);
       this.groupBox1.TabIndex = 4;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
@@ -1054,7 +840,7 @@
       this.editDataImport.Multiline = true;
       this.editDataImport.Name = "editDataImport";
       this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataImport.Size = new System.Drawing.Size(316, 249);
+      this.editDataImport.Size = new System.Drawing.Size(316, 306);
       this.editDataImport.TabIndex = 3;
       this.editDataImport.WordWrap = false;
       this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataImport_KeyPress);
@@ -1085,7 +871,7 @@
       this.groupExport.Controls.Add(this.btnExportCharset);
       this.groupExport.Location = new System.Drawing.Point(8, 6);
       this.groupExport.Name = "groupExport";
-      this.groupExport.Size = new System.Drawing.Size(411, 459);
+      this.groupExport.Size = new System.Drawing.Size(411, 516);
       this.groupExport.TabIndex = 3;
       this.groupExport.TabStop = false;
       this.groupExport.Text = "Export";
@@ -1245,7 +1031,7 @@
       this.editDataExport.Multiline = true;
       this.editDataExport.Name = "editDataExport";
       this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataExport.Size = new System.Drawing.Size(399, 287);
+      this.editDataExport.Size = new System.Drawing.Size(399, 344);
       this.editDataExport.TabIndex = 3;
       this.editDataExport.WordWrap = false;
       this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
@@ -1337,36 +1123,10 @@
       this.columnHeader6.Text = "Y";
       this.columnHeader6.Width = 30;
       // 
-      // btnToolFill
-      // 
-      this.btnToolFill.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolFill.Image = global::C64Studio.Properties.Resources.tool_fill;
-      this.btnToolFill.Location = new System.Drawing.Point(8, 316);
-      this.btnToolFill.Name = "btnToolFill";
-      this.btnToolFill.Size = new System.Drawing.Size(26, 26);
-      this.btnToolFill.TabIndex = 57;
-      this.toolTip1.SetToolTip(this.btnToolFill, "Fill");
-      this.btnToolFill.UseVisualStyleBackColor = true;
-      this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
-      // 
-      // btnToolEdit
-      // 
-      this.btnToolEdit.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolEdit.Checked = true;
-      this.btnToolEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnToolEdit.Image")));
-      this.btnToolEdit.Location = new System.Drawing.Point(8, 285);
-      this.btnToolEdit.Name = "btnToolEdit";
-      this.btnToolEdit.Size = new System.Drawing.Size(26, 26);
-      this.btnToolEdit.TabIndex = 58;
-      this.btnToolEdit.TabStop = true;
-      this.toolTip1.SetToolTip(this.btnToolEdit, "Single Character");
-      this.btnToolEdit.UseVisualStyleBackColor = true;
-      this.btnToolEdit.CheckedChanged += new System.EventHandler(this.btnToolEdit_CheckedChanged);
-      // 
       // SpriteEditor
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-      this.ClientSize = new System.Drawing.Size(782, 523);
+      this.ClientSize = new System.Drawing.Size(782, 580);
       this.Controls.Add(this.tabSpriteEditor);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1376,7 +1136,6 @@
       this.tabSpriteEditor.ResumeLayout(false);
       this.tabEditor.ResumeLayout(false);
       this.tabEditor.PerformLayout();
-      this.contextMenuExchangeColors.ResumeLayout(false);
       this.tabSpriteDetails.ResumeLayout(false);
       this.tabPage1.ResumeLayout(false);
       this.tabPage2.ResumeLayout(false);
@@ -1401,15 +1160,6 @@
     private System.Windows.Forms.TabPage tabEditor;
     private System.Windows.Forms.TabPage tabProject;
     private GR.Forms.FastPictureBox pictureEditor;
-    private System.Windows.Forms.ComboBox comboBackground;
-    private System.Windows.Forms.RadioButton radioBackground;
-    private System.Windows.Forms.RadioButton radioSpriteColor;
-    private System.Windows.Forms.RadioButton radioMulticolor2;
-    private System.Windows.Forms.RadioButton radioMultiColor1;
-    private System.Windows.Forms.ComboBox comboSpriteColor;
-    private System.Windows.Forms.ComboBox comboMulticolor2;
-    private System.Windows.Forms.ComboBox comboMulticolor1;
-    private System.Windows.Forms.CheckBox checkMulticolor;
     private GR.Forms.ImageListbox panelSprites;
     private System.Windows.Forms.Label labelCharNo;
     private System.Windows.Forms.MenuStrip menuStrip1;
@@ -1475,23 +1225,11 @@
     private System.Windows.Forms.CheckBox checkExpandY;
     private System.Windows.Forms.CheckBox checkExpandX;
     private System.Windows.Forms.Button btnImportFromHex;
-    private Controls.MenuButton btnExchangeColors;
-    private System.Windows.Forms.ContextMenuStrip contextMenuExchangeColors;
-    private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithMultiColor2ToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1WithBGColorToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor2WithBGColorToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem forSelectedSpritesToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor1WithSpriteColorToolStripMenuItem1;
-    private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor2WithSpriteColorToolStripMenuItem1;
     private System.Windows.Forms.TextBox editExportBASICLineOffset;
     private System.Windows.Forms.TextBox editExportBASICLineNo;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Button btnExportToBASICData;
-    private System.Windows.Forms.ToolStripMenuItem exchangeBGColorWithSpriteColorToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem exchangeMulticolor1WithMulticolor2ToolStripMenuItem1;
     private System.Windows.Forms.TextBox editDataImport;
     private System.Windows.Forms.Button btnImportFromASM;
     private System.Windows.Forms.Button btnImportFromBASIC;
@@ -1505,8 +1243,8 @@
     private System.Windows.Forms.Button btnSavePreviewToGIF;
     private System.Windows.Forms.ComboBox comboSpriteProjectMode;
     private System.Windows.Forms.Label label11;
-    private System.Windows.Forms.Button btnEditPalette;
     private System.Windows.Forms.RadioButton btnToolFill;
     private System.Windows.Forms.RadioButton btnToolEdit;
+    private System.Windows.Forms.Panel panelColorSettings;
   }
 }

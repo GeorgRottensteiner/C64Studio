@@ -14,6 +14,7 @@ using C64Studio.Converter;
 using RetroDevStudio;
 using RetroDevStudio.Types;
 using System.Linq;
+using C64Studio.Controls;
 
 namespace C64Studio
 {
@@ -26,7 +27,6 @@ namespace C64Studio
     }
 
     private int                         m_CurrentSprite = 0;
-    private ColorType                   m_CurrentColorType = ColorType.CUSTOM_COLOR;
 
     private string                      m_ImportError = "";
 
@@ -37,7 +37,6 @@ namespace C64Studio
     private Formats.SpriteProject.Layer m_CurrentLayer = null;
 
     private bool                        m_ButtonReleased = false;
-    private bool                        m_RButtonReleased = false;
 
     private ToolMode                    m_Mode = ToolMode.SINGLE_PIXEL;
 
@@ -51,6 +50,8 @@ namespace C64Studio
 
     private int                         m_SpriteEditorOrigWidth = -1;
     private int                         m_SpriteEditorOrigHeight = -1;
+
+    private ColorSettingsBase           _ColorSettingsDlg = null;
 
 
 
@@ -86,25 +87,17 @@ namespace C64Studio
         PaletteManager.ApplyPalette( m_SpriteProject.Sprites[i].Tile.Image, m_SpriteProject.Colors.Palette );
         comboSprite.Items.Add( i );
       }
+      ChangeColorSettingsDialog();
 
       for ( int i = 0; i < 16; ++i )
       {
-        comboBackground.Items.Add( i.ToString( "d2" ) );
-        comboMulticolor1.Items.Add( i.ToString( "d2" ) );
-        comboMulticolor2.Items.Add( i.ToString( "d2" ) );
-        comboSpriteColor.Items.Add( i.ToString( "d2" ) );
         comboLayerColor.Items.Add( i.ToString( "d2" ) );
         comboLayerBGColor.Items.Add( i.ToString( "d2" ) );
       }
-      comboBackground.SelectedIndex = 0;
-      comboMulticolor1.SelectedIndex = 0;
-      comboMulticolor2.SelectedIndex = 0;
-      comboSpriteColor.SelectedIndex = 1;
       comboLayerColor.SelectedIndex = 1;
       comboLayerBGColor.SelectedIndex = 0;
       comboSprite.SelectedIndex = 0;
 
-      radioSpriteColor.Checked = true;
       pictureEditor.SetImageSize( m_SpriteWidth, m_SpriteHeight );
       panelSprites.SelectedIndex = 0;
 
@@ -139,8 +132,6 @@ namespace C64Studio
       }
 
       labelCharNo.Text = "Sprite: " + m_CurrentSprite.ToString();
-      comboSpriteColor.SelectedIndex = m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor;
-      checkMulticolor.Checked = ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
       pictureEditor.Image = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image;
 
       panelSprites_SelectedIndexChanged( null, null );
@@ -176,87 +167,6 @@ namespace C64Studio
       KeyEventArgs ke = new KeyEventArgs( e.KeyData );
       HandleKeyDown( sender, ke );
     }
-
-
-
-    /*
-    void DrawSpriteImage( GR.Image.MemoryImage Target, int Width, int Height, GR.Memory.ByteBuffer Data, int BackgroundColor, int CustomColor, SpriteMode Mode, int MultiColor1, int MultiColor2 )
-    {
-      if ( Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
-      {
-        // single color
-        for ( int j = 0; j < Height; ++j )
-        {
-          for ( int k = 0; k < Width / 8; ++k )
-          {
-            for ( int i = 0; i < 8; ++i )
-            {
-              if ( ( Data.ByteAt( j * 3 + k ) & ( 1 << ( 7 - i ) ) ) != 0 )
-              {
-                Target.SetPixel( k * 8 + i, j, (uint)CustomColor );
-              }
-              else
-              {
-                Target.SetPixel( k * 8 + i, j, (uint)BackgroundColor );
-              }
-            }
-          }
-        }
-      }
-      else if ( Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-      {
-        // multicolor
-        for ( int j = 0; j < Height; ++j )
-        {
-          for ( int k = 0; k < Width / 8; ++k )
-          {
-            for ( int i = 0; i < 4; ++i )
-            {
-              int pixelValue = ( Data.ByteAt( j * 3 + k ) & ( 3 << ( ( 3 - i ) * 2 ) ) ) >> ( ( 3 - i ) * 2 );
-
-              switch ( pixelValue )
-              {
-                case 0:
-                  pixelValue = BackgroundColor;
-                  break;
-                case 1:
-                  pixelValue = MultiColor1;
-                  break;
-                case 3:
-                  pixelValue = MultiColor2;
-                  break;
-                case 2:
-                  pixelValue = CustomColor;
-                  break;
-              }
-              Target.SetPixel( k * 8 + i * 2, j, (uint)pixelValue );
-              Target.SetPixel( k * 8 + i * 2 + 1, j, (uint)pixelValue );
-            }
-          }
-        }
-      }
-      else if ( Mode == SpriteMode.MEGA65_16_X_21_16_COLORS )
-      {
-        for ( int j = 0; j < Height; ++j )
-        {
-          for ( int i = 0; i < Width; ++i )
-          {
-            if ( Data.ByteAt( j * 16 + i ) != 0 )
-            {
-              Target.SetPixel( i, j, Data.ByteAt( j * 16 + i ) );
-            }
-            else
-            {
-              Target.SetPixel( i, j, (uint)BackgroundColor );
-            }
-          }
-        }
-      }
-      else
-      {
-        Debug.Log( "DrawSpriteImage, unsupported mode " + Mode );
-      }
-    }*/
 
 
 
@@ -437,13 +347,10 @@ namespace C64Studio
 
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
-        int     colorIndex = comboSpriteColor.SelectedIndex;
-
+        int     colorIndex = (int)_ColorSettingsDlg.SelectedColor;
         if ( ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
         &&   ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS ) )
         {
-          colorIndex = (int)m_CurrentColorType;
-
           if ( colorIndex == (int)ColorType.MULTICOLOR_2 )
           {
             colorIndex = (int)ColorType.CUSTOM_COLOR;
@@ -492,129 +399,27 @@ namespace C64Studio
       {
         int   pickedColor = affectedSprite.Tile.GetPixel( charX, charY );
 
-        switch ( m_SpriteProject.Mode )
+        if ( ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
+        &&   ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS ) )
         {
-          case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
-            if ( pickedColor == (int)ColorType.MULTICOLOR_2 )
-            {
-              pickedColor = (int)ColorType.CUSTOM_COLOR;
-            }
-            else if ( pickedColor == (int)ColorType.CUSTOM_COLOR )
-            {
-              pickedColor = (int)ColorType.MULTICOLOR_2;
-            }
-
-            switch ( (ColorType)pickedColor )
-            {
-              case ColorType.CUSTOM_COLOR:
-                radioSpriteColor.Checked = true;
-                break;
-              case ColorType.MULTICOLOR_1:
-                radioMultiColor1.Checked = true;
-                break;
-              case ColorType.MULTICOLOR_2:
-                radioMulticolor2.Checked = true;
-                break;
-              case ColorType.BACKGROUND:
-                radioBackground.Checked = true;
-                break;
-            }
-            break;
-          case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
-          case SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS:
-            comboSpriteColor.SelectedIndex = pickedColor;
-            break;
-        }
-        /*
-        int xPos = charX;
-
-        int byteX = charX / 8;
-        charX %= 8;
-        byte charByte = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Data.ByteAt( charY * 3 + byteX );
-        byte newByte = charByte;
-
-        if ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
-        {
-          // single color
-          charX = 7 - charX;
-          newByte &= (byte)~( 1 << charX );
-        }
-        else if ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-        {
-          // multi color
-          charX = ( ( X * m_SpriteWidth / 2 ) / pictureEditor.ClientRectangle.Width ) % 4;
-          charX = 3 - charX;
-          xPos &= 0xfe;
-
-          newByte &= (byte)~( 3 << ( 2 * charX ) );
-        }
-        else
-        {
-          Debug.Log( "HandleMouseOnEditor #3 unsupported mode " + m_SpriteProject.Sprites[m_CurrentSprite].Mode );
+          if ( pickedColor == (int)ColorType.MULTICOLOR_2 )
+          {
+            pickedColor = (int)ColorType.CUSTOM_COLOR;
+          }
+          else if ( pickedColor == (int)ColorType.CUSTOM_COLOR )
+          {
+            pickedColor = (int)ColorType.MULTICOLOR_2;
+          }
         }
 
-        if ( newByte != charByte )
+        _ColorSettingsDlg.SelectedColor = (ColorType)pickedColor;
+
+        if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
+        ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS ) )
         {
-          Modified = true;
-
-          if ( m_RButtonReleased )
-          {
-            m_RButtonReleased = false;
-            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, m_CurrentSprite ) );
-          }
-
-          m_SpriteProject.Sprites[m_CurrentSprite].Tile.Data.SetU8At( charY * 3 + byteX, newByte );
-
-          if ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-          {
-            m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.SetPixel( xPos, charY, (uint)m_SpriteProject.Colors.BackgroundColor );
-            m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.SetPixel( xPos + 1, charY, (uint)m_SpriteProject.Colors.BackgroundColor );
-          }
-          else if ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
-          {
-            m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image.SetPixel( xPos, charY, (uint)m_SpriteProject.Colors.BackgroundColor );
-          }
-          else
-          {
-            Debug.Log( "HandleMouseOnEditor #3 unsupported mode " + m_SpriteProject.Sprites[m_CurrentSprite].Mode );
-          }
-          CurrentSpriteModified();
-          pictureEditor.Invalidate();
-          panelSprites.InvalidateItemRect( m_CurrentSprite );
-        }*/
+          affectedSprite.Tile.CustomColor = pickedColor;
+        }
       }
-      else
-      {
-        m_RButtonReleased = true;
-      }
-    }
-
-
-
-    private void radioBackground_CheckedChanged( object sender, EventArgs e )
-    {
-      m_CurrentColorType = ColorType.BACKGROUND;
-    }
-
-
-
-    private void radioMultiColor1_CheckedChanged( object sender, EventArgs e )
-    {
-      m_CurrentColorType = ColorType.MULTICOLOR_1;
-    }
-
-
-
-    private void radioMulticolor2_CheckedChanged( object sender, EventArgs e )
-    {
-      m_CurrentColorType = ColorType.MULTICOLOR_2;
-    }
-
-
-
-    private void radioCharColor_CheckedChanged( object sender, EventArgs e )
-    {
-      m_CurrentColorType = ColorType.CUSTOM_COLOR;
     }
 
 
@@ -631,131 +436,6 @@ namespace C64Studio
 
 
 
-    private void checkMulticolor_CheckedChanged( object sender, EventArgs e )
-    {
-      if ( DoNotUpdateFromControls )
-      {
-        return;
-      }
-      DocumentInfo.UndoManager.StartUndoGroup();
-
-      var selectedSprites = panelSprites.SelectedIndices;
-
-      foreach ( var i in selectedSprites )
-      {
-        if ( ( m_SpriteProject.Sprites[i].Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
-        ||   ( m_SpriteProject.Sprites[i].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR ) )
-        {
-          if ( ( m_SpriteProject.Sprites[i].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR ) != checkMulticolor.Checked )
-          {
-            DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ) );
-
-            m_SpriteProject.Sprites[i].Mode       = checkMulticolor.Checked ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
-            m_SpriteProject.Sprites[i].Tile.Mode  = checkMulticolor.Checked ? GraphicTileMode.COMMODORE_MULTICOLOR : GraphicTileMode.COMMODORE_HIRES;
-            Modified = true;
-            RebuildSpriteImage( i );
-            if ( m_CurrentSprite == i )
-            {
-              pictureEditor.Invalidate();
-            }
-            panelSprites.InvalidateItemRect( i );
-          }
-        }
-      }
-    }
-
-
-
-    private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_SpriteProject.Colors.BackgroundColor != comboBackground.SelectedIndex )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ) );
-
-        m_SpriteProject.Colors.BackgroundColor = comboBackground.SelectedIndex;
-        Modified = true;
-        for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
-        {
-          RebuildSpriteImage( i );
-        }
-        pictureEditor.Invalidate();
-        panelSprites.Invalidate();
-      }
-    }
-
-
-
-    private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_SpriteProject.Colors.MultiColor1 != comboMulticolor1.SelectedIndex )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ) );
-
-        m_SpriteProject.Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
-        Modified = true;
-        for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
-        {
-          RebuildSpriteImage( i );
-        }
-        pictureEditor.Invalidate();
-        panelSprites.Invalidate();
-      }
-    }
-
-
-
-    private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( m_SpriteProject.Colors.MultiColor2 != comboMulticolor2.SelectedIndex )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ) );
-
-        m_SpriteProject.Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
-        Modified = true;
-        for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
-        {
-          RebuildSpriteImage( i );
-        }
-        pictureEditor.Invalidate();
-        panelSprites.Invalidate();
-      }
-    }
-
-
-
-    private void comboSpriteColor_SelectedIndexChanged( object sender, EventArgs e )
-    {
-      if ( DoNotUpdateFromControls )
-      {
-        return;
-      }
-
-      if ( Lookup.HaveCustomSpriteColor( m_SpriteProject.Mode ) )
-      {
-        DocumentInfo.UndoManager.StartUndoGroup();
-
-        var selectedSprites = panelSprites.SelectedIndices;
-
-        foreach ( var i in selectedSprites )
-        {
-          if ( m_SpriteProject.Sprites[i].Tile.CustomColor != comboSpriteColor.SelectedIndex )
-          {
-            DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ) );
-            m_SpriteProject.Sprites[i].Tile.CustomColor = comboSpriteColor.SelectedIndex;
-            Modified = true;
-            RebuildSpriteImage( i );
-            if ( i == m_CurrentSprite )
-            {
-              pictureEditor.Invalidate();
-            }
-            panelSprites.InvalidateItemRect( i );
-          }
-        }
-      }
-    }
-
-
-
     private void panelSprites_SelectedIndexChanged( object sender, EventArgs e )
     {
       int newChar = panelSprites.SelectedIndex;
@@ -768,8 +448,9 @@ namespace C64Studio
 
         if ( !Lookup.HasCustomPalette( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode ) )
         {
-          comboSpriteColor.SelectedIndex  = m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor;
-          checkMulticolor.Checked         = ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
+          _ColorSettingsDlg.CustomColor = m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor;
+
+          _ColorSettingsDlg.MultiColorEnabled = ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
         }
         DoNotUpdateFromControls = false;
 
@@ -878,13 +559,11 @@ namespace C64Studio
             m_SpriteProject.Sprites[i].Mode   = spritePad.Sprites[i].Multicolor ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
           }
         }
+        ChangeColorSettingsDialog();
         OnPaletteChanged();
 
         editSpriteFrom.Text = "0";
         editSpriteCount.Text = spritePad.NumSprites.ToString();
-        comboBackground.SelectedIndex = m_SpriteProject.Colors.BackgroundColor;
-        comboMulticolor1.SelectedIndex = m_SpriteProject.Colors.MultiColor1;
-        comboMulticolor2.SelectedIndex = m_SpriteProject.Colors.MultiColor2;
 
         if ( ( m_SpriteProject.ExportStartIndex != 0 )
         ||   ( m_SpriteProject.ExportSpriteCount != 256 ) )
@@ -903,7 +582,6 @@ namespace C64Studio
       }
       else if ( System.IO.Path.GetExtension( Filename ).ToUpper() != ".SPRITEPROJECT" )
       {
-        //m_IsSpriteProject = false;
         comboSpriteProjectMode.SelectedIndex = (int)SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC;
         int numSprites = (int)projectFile.Length / 64;
         for ( int i = 0; i < numSprites; ++i )
@@ -923,6 +601,7 @@ namespace C64Studio
             m_SpriteProject.Sprites[i].Mode = ( ( tempBuffer.ByteAt( 63 ) & 0x80 ) != 0 ) ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
           }
         }
+        ChangeColorSettingsDialog();
         OnPaletteChanged();
 
         editSpriteFrom.Text = "0";
@@ -969,6 +648,7 @@ namespace C64Studio
           panelSprites.Items.Add( i.ToString(), m_SpriteProject.Sprites[i].Tile.Image );
           comboSprite.Items.Add( i );
         }
+        ChangeColorSettingsDialog();
         OnPaletteChanged();
         comboSprite.SelectedIndex = 0;
         panelSprites.Invalidate();
@@ -1002,9 +682,8 @@ namespace C64Studio
       comboSprite.Items.Clear();
 
       comboSpriteProjectMode.SelectedIndex = (int)m_SpriteProject.Mode;
-      comboBackground.SelectedIndex  = m_SpriteProject.Colors.BackgroundColor;
-      comboMulticolor1.SelectedIndex = m_SpriteProject.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_SpriteProject.Colors.MultiColor2;
+
+      ChangeColorSettingsDialog();
 
       editSpriteFrom.Text = m_SpriteProject.ExportStartIndex.ToString();
       editSpriteCount.Text = m_SpriteProject.ExportSpriteCount.ToString();
@@ -1377,6 +1056,22 @@ namespace C64Studio
 
           var targetTile = m_SpriteProject.Sprites[pastePos].Tile;
 
+          if ( ( ( entry.Tile.Mode == GraphicTileMode.COMMODORE_HIRES )
+          ||     ( entry.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR ) )
+          &&   ( ( targetTile.Mode == GraphicTileMode.COMMODORE_HIRES )
+          ||     ( targetTile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR ) ) )
+          {
+            // can copy mode
+            targetTile.Mode = entry.Tile.Mode;
+
+            m_SpriteProject.Sprites[pastePos].Mode = Lookup.SpriteModeFromTileMode( targetTile.Mode );
+          }
+
+          if ( Lookup.HaveCustomSpriteColor( m_SpriteProject.Mode ) )
+          {
+            targetTile.CustomColor = entry.Tile.CustomColor;
+          }
+
           int copyWidth = Math.Min( m_SpriteWidth, entry.Tile.Width );
           int copyHeight = Math.Min( m_SpriteHeight, entry.Tile.Height );
 
@@ -1393,109 +1088,12 @@ namespace C64Studio
 
           if ( pastePos == m_CurrentSprite )
           {
-            comboSpriteColor.SelectedIndex = m_SpriteProject.Sprites[pastePos].Tile.CustomColor;
+            _ColorSettingsDlg.CustomColor       = m_SpriteProject.Sprites[pastePos].Tile.CustomColor;
+            _ColorSettingsDlg.MultiColorEnabled = ( m_SpriteProject.Sprites[pastePos].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR );
           }
         }
         pictureEditor.Invalidate();
         SetModified();
-        return;
-      }
-      /*
-      if ( dataObj.GetDataPresent( "C64Studio.ImageList" ) )
-      {
-        System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "C64Studio.ImageList" );
-
-        GR.Memory.ByteBuffer spriteData = new GR.Memory.ByteBuffer( (uint)ms.Length );
-
-        ms.Read( spriteData.Data(), 0, (int)ms.Length );
-
-        GR.IO.MemoryReader  memIn = spriteData.MemoryReader();
-
-        int rangeCount = memIn.ReadInt32();
-        bool columnBased = ( memIn.ReadInt32() > 0 ) ? true : false;
-        int numColors = memIn.ReadInt32();
-        for ( int i = 0; i < numColors; ++i )
-        {
-          uint colorValue = memIn.ReadUInt32();
-        }
-
-        int pastePos = panelSprites.SelectedIndex;
-        if ( pastePos == -1 )
-        {
-          pastePos = 0;
-        }
-
-        for ( int i = 0; i < rangeCount; ++i )
-        {
-          int indexGap = memIn.ReadInt32();
-          pastePos += indexGap;
-
-          if ( pastePos >= m_SpriteProject.Sprites.Count )
-          {
-            break;
-          }
-          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, pastePos ), i == 0 );
-
-          var mode = (SpriteMode)memIn.ReadInt32();
-          m_SpriteProject.Sprites[pastePos].Mode = mode;
-          m_SpriteProject.Sprites[pastePos].Tile.CustomColor = memIn.ReadInt32();
-
-          uint width   = memIn.ReadUInt32();
-          uint height  = memIn.ReadUInt32();
-
-          uint dataLength = memIn.ReadUInt32();
-
-          GR.Memory.ByteBuffer    tempBuffer = new GR.Memory.ByteBuffer();
-          tempBuffer.Reserve( (int)dataLength );
-          memIn.ReadBlock( tempBuffer, dataLength );
-
-          m_SpriteProject.Sprites[pastePos].Tile.Data = new GR.Memory.ByteBuffer( 63 );
-
-          if ( ( width == m_SpriteWidth )
-          &&   ( height == m_SpriteHeight ) )
-          {
-            tempBuffer.CopyTo( m_SpriteProject.Sprites[pastePos].Tile.Data, 0, 63 );
-          }
-          else if ( ( width == 8 )
-          &&        ( height == 8 ) )
-          {
-            for ( int j = 0; j < 8; ++j )
-            {
-              m_SpriteProject.Sprites[pastePos].Tile.Data.SetU8At( j * 3, tempBuffer.ByteAt( j ) );
-            }
-          }
-          else
-          {
-            tempBuffer.CopyTo( m_SpriteProject.Sprites[pastePos].Tile.Data, 0, Math.Min( 8, (int)dataLength ) );
-          }
-
-          //memIn.ReadBlock( m_SpriteProject.Sprites[pastePos].Data, dataLength );
-          int index = memIn.ReadInt32();
-
-          RebuildSpriteImage( pastePos );
-          panelSprites.InvalidateItemRect( pastePos );
-          if ( pastePos == m_CurrentSprite )
-          {
-            CurrentSpriteModified();
-            DoNotUpdateFromControls = true;
-            comboSpriteColor.SelectedIndex = m_SpriteProject.Sprites[pastePos].Tile.CustomColor;
-            DoNotUpdateFromControls = false;
-          }
-        }
-        pictureEditor.Invalidate();
-        Modified = true;
-        return;
-      }
-      else */
-      if ( dataObj.GetDataPresent( "C64Studio.Sprites" ) )
-      {
-        System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "C64Studio.Sprites" );
-
-        GR.Memory.ByteBuffer spriteData = new GR.Memory.ByteBuffer( (uint)ms.Length );
-
-        ms.Read( spriteData.Data(), 0, (int)ms.Length );
-
-        // TODO
         return;
       }
       else if ( !Clipboard.ContainsImage() )
@@ -1535,9 +1133,11 @@ namespace C64Studio
         return;
       }
 
-      comboBackground.SelectedIndex = mcSettings.BackgroundColor;
-      comboMulticolor1.SelectedIndex = mcSettings.MultiColor1;
-      comboMulticolor2.SelectedIndex = mcSettings.MultiColor2;
+      m_SpriteProject.Colors.BackgroundColor = mcSettings.BackgroundColor;
+      m_SpriteProject.Colors.MultiColor1 = mcSettings.MultiColor1;
+      m_SpriteProject.Colors.MultiColor2 = mcSettings.MultiColor2;
+
+      ChangeColorSettingsDialog();
 
       int spritesY = ( mappedImage.Height + m_SpriteHeight - 1 ) / m_SpriteHeight;
       int spritesX = ( mappedImage.Width + m_SpriteWidth - 1 ) / m_SpriteWidth;
@@ -1584,7 +1184,8 @@ namespace C64Studio
           {
             CurrentSpriteModified();
             DoNotUpdateFromControls = true;
-            comboSpriteColor.SelectedIndex = m_SpriteProject.Sprites[currentTargetSprite].Tile.CustomColor;
+
+            _ColorSettingsDlg.CustomColor = m_SpriteProject.Sprites[currentTargetSprite].Tile.CustomColor;
             DoNotUpdateFromControls = false;
           }
           RebuildSpriteImage( currentTargetSprite );
@@ -1918,14 +1519,16 @@ namespace C64Studio
       mcSettings.Palette          = Core.MainForm.ActivePalette;
 
       bool pasteAsBlock = false;
-      if ( !Core.MainForm.ImportImage(filename, null, C64Studio.Types.GraphicType.SPRITES, mcSettings, out spriteImage, out mcSettings, out pasteAsBlock ) )
+      if ( !Core.MainForm.ImportImage( filename, null, C64Studio.Types.GraphicType.SPRITES, mcSettings, out spriteImage, out mcSettings, out pasteAsBlock ) )
       {
         return;
       }
 
-      comboBackground.SelectedIndex   = mcSettings.BackgroundColor;
-      comboMulticolor1.SelectedIndex  = mcSettings.MultiColor1;
-      comboMulticolor2.SelectedIndex  = mcSettings.MultiColor2;
+      m_SpriteProject.Colors.BackgroundColor = mcSettings.BackgroundColor;
+      m_SpriteProject.Colors.MultiColor1 = mcSettings.MultiColor1;
+      m_SpriteProject.Colors.MultiColor2 = mcSettings.MultiColor2;
+
+      ChangeColorSettingsDialog();
 
       int   currentSpriteIndex = 0;
       int   curX = 0;
@@ -2810,17 +2413,18 @@ namespace C64Studio
       panelSprites.InvalidateItemRect( SpriteIndex );
       if ( m_CurrentSprite == SpriteIndex )
       {
-        // TODO - can only do those once a list of undo steps has been completely finished undoing
+        // can only do those once a list of undo steps has been completely finished undoing
         DoNotUpdateFromControls = true;
-        if ( ( m_SpriteProject.Sprites[SpriteIndex].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR ) != checkMulticolor.Checked )
+
+        if ( ( m_SpriteProject.Sprites[SpriteIndex].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR ) != _ColorSettingsDlg.MultiColorEnabled )
         {
-          checkMulticolor.Checked = m_SpriteProject.Sprites[SpriteIndex].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR;
+          _ColorSettingsDlg.MultiColorEnabled = ( m_SpriteProject.Sprites[SpriteIndex].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
         }
         if ( Lookup.HaveCustomSpriteColor( m_SpriteProject.Mode ) )
         {
-          if ( m_SpriteProject.Sprites[SpriteIndex].Tile.CustomColor != comboSpriteColor.SelectedIndex )
+          if ( m_SpriteProject.Sprites[SpriteIndex].Tile.CustomColor != _ColorSettingsDlg.CustomColor )
           {
-            comboSpriteColor.SelectedIndex = m_SpriteProject.Sprites[SpriteIndex].Tile.CustomColor;
+            _ColorSettingsDlg.CustomColor = m_SpriteProject.Sprites[SpriteIndex].Tile.CustomColor;
           }
         }
         DoNotUpdateFromControls = false;
@@ -2843,9 +2447,10 @@ namespace C64Studio
 
     public void ColorsChanged()
     {
-      comboMulticolor1.SelectedIndex  = m_SpriteProject.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex  = m_SpriteProject.Colors.MultiColor2;
-      comboBackground.SelectedIndex   = m_SpriteProject.Colors.BackgroundColor;
+      comboSpriteProjectMode.SelectedIndex = (int)m_SpriteProject.Mode;
+      AdjustSpriteSizes();
+      ChangeColorSettingsDialog();
+      OnPaletteChanged();
 
       for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
       {
@@ -2993,234 +2598,38 @@ namespace C64Studio
 
 
 
-    public void ExchangeMultiColors()
+    public void ReplaceSpriteColors( ColorType Color1, ColorType Color2 )
     {
-      int   temp = m_SpriteProject.Colors.MultiColor1;
-      m_SpriteProject.Colors.MultiColor1 = m_SpriteProject.Colors.MultiColor2;
-      m_SpriteProject.Colors.MultiColor2 = temp;
-
-      List<int>     allIndices = new List<int>();
-      for ( int i = 0; i < 256; ++i )
+      foreach ( var spriteIndex in panelSprites.SelectedIndices )
       {
-        allIndices.Add( i );
-      }
-      ExchangeMultiColors( allIndices, false );
-
-      pictureEditor.Invalidate();
-
-      comboMulticolor1.SelectedIndex = m_SpriteProject.Colors.MultiColor1;
-      comboMulticolor2.SelectedIndex = m_SpriteProject.Colors.MultiColor2;
-
-      Modified = true;
-    }
-
-
-
-    private void ExchangeMultiColors( List<int> SelectedSprites, bool AddUndo )
-    {
-      bool    firstEntry = true;
-      foreach ( int spriteIndex in SelectedSprites )
-      {
-        var sprite = m_SpriteProject.Sprites[spriteIndex];
-        if ( sprite.Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-        {
-          if ( AddUndo )
-          {
-            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
-          }
-          firstEntry = false;
-          ReplaceSpriteColors( sprite, 1, 3 );
-          RebuildSpriteImage( spriteIndex );
-          panelSprites.InvalidateItemRect( spriteIndex );
-        }
+        ReplaceSpriteColors( m_SpriteProject.Sprites[spriteIndex], Color1, Color2 );
       }
     }
 
 
 
-    private void ReplaceSpriteColors( SpriteProject.SpriteData Sprite, int PixelPattern1, int PixelPattern2 )
+    private void ReplaceSpriteColors( SpriteProject.SpriteData Sprite, ColorType Color1, ColorType Color2 )
     {
       if ( Sprite == null )
       {
         Debug.Log( "ReplaceSpriteColors invalid sprite passed" );
         return;
       }
-      if ( ( PixelPattern1 < 0 )
-      ||   ( PixelPattern1 > 3 )
-      ||   ( PixelPattern2 < 0 )
-      ||   ( PixelPattern2 > 3 ) )
-      {
-        Debug.Log( "ReplaceSpriteColors: Invalid pixel patterns passed " + PixelPattern1 + "," + PixelPattern2 );
-        return;
-      }
       for ( int y = 0; y < m_SpriteHeight; ++y )
       {
-        for ( int x = 0; x < 3; ++x )
+        for ( int x = 0; x < m_SpriteWidth; x += Lookup.PixelWidth( Sprite.Tile.Mode ) )
         {
-          int     bytePos = y * 3 + x;
-          for ( int b = 0; b < 4; ++b )
+          ColorType color = (ColorType)Sprite.Tile.GetPixel( x, y );
+          if ( color == Color1 )
           {
-            int pixelValue = ( Sprite.Tile.Data.ByteAt( bytePos ) & ( 3 << ( ( 3 - b ) * 2 ) ) ) >> ( ( 3 - b ) * 2 );
-
-            if ( pixelValue == PixelPattern1 )
-            {
-              byte  newValue = (byte)( Sprite.Tile.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-              newValue |= (byte)( PixelPattern2 << ( ( 3 - b ) * 2 ) );
-
-              Sprite.Tile.Data.SetU8At( bytePos, newValue );
-            }
-            else if ( pixelValue == PixelPattern2 )
-            {
-              byte  newValue = (byte)( Sprite.Tile.Data.ByteAt( bytePos ) & ~( 3 << ( ( 3 - b ) * 2 ) ) );
-
-              newValue |= (byte)( PixelPattern1 << ( ( 3 - b ) * 2 ) );
-
-              Sprite.Tile.Data.SetU8At( bytePos, newValue );
-            }
+            Sprite.Tile.SetPixel( x, y, Color2 );
+          }
+          else if ( color == Color2 )
+          {
+            Sprite.Tile.SetPixel( x, y, Color1 );
           }
         }
       }
-    }
-
-
-
-    public void ExchangeMultiColor1WithBackground()
-    {
-      int   temp = m_SpriteProject.Colors.BackgroundColor;
-      m_SpriteProject.Colors.BackgroundColor = m_SpriteProject.Colors.MultiColor1;
-      m_SpriteProject.Colors.MultiColor1 = temp;
-
-      List<int>     allIndices = new List<int>();
-      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
-      {
-        allIndices.Add( i );
-      }
-      ExchangeMultiColor1WithBackground( allIndices, false );
-
-      pictureEditor.Invalidate();
-      comboMulticolor1.SelectedIndex = m_SpriteProject.Colors.MultiColor1;
-      comboBackground.SelectedIndex = m_SpriteProject.Colors.BackgroundColor;
-
-    }
-
-
-
-    public void ExchangeMultiColor1WithBackground( List<int> SelectedSprites, bool AddUndo )
-    {
-      bool    firstEntry = true;
-      foreach ( int spriteIndex in SelectedSprites )
-      {
-        var sprite = m_SpriteProject.Sprites[spriteIndex];
-        if ( sprite.Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-        {
-          if ( AddUndo )
-          {
-            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
-          }
-          firstEntry = false;
-          ReplaceSpriteColors( sprite, 0, 1 );
-          RebuildSpriteImage( spriteIndex );
-          panelSprites.Invalidate();
-        }
-      }
-      Modified = true;
-    }
-
-
-
-    public void ExchangeMultiColor2WithBackground( List<int> SelectedSprites, bool AddUndo )
-    {
-      bool    firstEntry = true;
-      foreach ( int spriteIndex in SelectedSprites )
-      {
-        var sprite = m_SpriteProject.Sprites[spriteIndex];
-        if ( sprite.Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-        {
-          if ( AddUndo )
-          {
-            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
-          }
-          firstEntry = false;
-          ReplaceSpriteColors( sprite, 3, 0 );
-          RebuildSpriteImage( spriteIndex );
-          panelSprites.Invalidate();
-        }
-      }
-      Modified = true;
-    }
-
-
-
-    void ExchangeBGColorWithSpriteColor( List<int> SpritesToModify, bool AddUndo )
-    {
-      bool firstEntry = true;
-      foreach ( var spriteIndex in SpritesToModify )
-      {
-        var sprite = m_SpriteProject.Sprites[spriteIndex];
-
-        if ( sprite.Mode != SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-        {
-          continue;
-        }
-        if ( AddUndo )
-        {
-          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
-        }
-        firstEntry = false;
-        ReplaceSpriteColors( sprite, 0, 2 );
-        RebuildSpriteImage( spriteIndex );
-        panelSprites.InvalidateItemRect( spriteIndex );
-      }
-      pictureEditor.Invalidate();
-      Modified = true;
-    }
-
-
-
-    private void exchangeMultiColor1WithMultiColor2ToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetExchangeMultiColors( this, C64Studio.Undo.UndoSpritesetExchangeMultiColors.ExchangeMode.MULTICOLOR_1_WITH_MULTICOLOR_2 ) );
-
-      ExchangeMultiColors();
-    }
-
-    
-    
-    private void exchangeMultiColor1WithBGColorToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetExchangeMultiColors( this, C64Studio.Undo.UndoSpritesetExchangeMultiColors.ExchangeMode.MULTICOLOR_1_WITH_BACKGROUND ) );
-
-      ExchangeMultiColor1WithBackground();
-    }
-
-
-
-    private void exchangeMultiColor2WithBGColorToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetExchangeMultiColors( this, C64Studio.Undo.UndoSpritesetExchangeMultiColors.ExchangeMode.MULTICOLOR_2_WITH_BACKGROUND ) );
-
-      ExchangeMultiColor2WithBackground();
-    }
-
-
-
-    public void ExchangeMultiColor2WithBackground()
-    {
-      int   temp = m_SpriteProject.Colors.BackgroundColor;
-      m_SpriteProject.Colors.BackgroundColor = m_SpriteProject.Colors.MultiColor2;
-      m_SpriteProject.Colors.MultiColor2 = temp;
-
-      List<int>     allIndices = new List<int>();
-      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
-      {
-        allIndices.Add( i );
-      }
-      ExchangeMultiColor2WithBackground( allIndices, false );
-
-      pictureEditor.Invalidate();
-      comboMulticolor2.SelectedIndex = m_SpriteProject.Colors.MultiColor2;
-      comboBackground.SelectedIndex = m_SpriteProject.Colors.BackgroundColor;
     }
 
 
@@ -3228,72 +2637,6 @@ namespace C64Studio
     private void panelSprites_Resize( object sender, EventArgs e )
     {
       panelSprites.SetDisplaySize( panelSprites.ClientSize.Width / 2, panelSprites.ClientSize.Height / 2 );
-    }
-
-
-
-    void ExchangeMultiColor1WithSpriteColor( List<int> SpritesToModify, bool AddUndo )
-    {
-      bool firstEntry = true;
-      foreach ( var spriteIndex in SpritesToModify )
-      {
-        var sprite = m_SpriteProject.Sprites[spriteIndex];
-
-        if ( sprite.Mode != SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-        {
-          continue;
-        }
-        if ( AddUndo )
-        {
-          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
-        }
-        firstEntry = false;
-        ReplaceSpriteColors( sprite, 1, 2 );
-        RebuildSpriteImage( spriteIndex );
-        panelSprites.InvalidateItemRect( spriteIndex );
-      }
-      pictureEditor.Invalidate();
-      Modified = true;
-    }
-
-
-
-    void ExchangeMultiColor2WithSpriteColor( List<int> SpritesToModify, bool AddUndo )
-    {
-      bool firstEntry = true;
-      foreach ( var spriteIndex in SpritesToModify )
-      {
-        var sprite = m_SpriteProject.Sprites[spriteIndex];
-
-        if ( sprite.Mode != SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
-        {
-          continue;
-        }
-        if ( AddUndo )
-        {
-          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
-        }
-        firstEntry = false;
-        ReplaceSpriteColors( sprite, 2, 3 );
-        RebuildSpriteImage( spriteIndex );
-        panelSprites.InvalidateItemRect( spriteIndex );
-      }
-      pictureEditor.Invalidate();
-      Modified = true;
-    }
-
-
-
-    private void exchangeMulticolor1WithSpriteColorToolStripMenuItem1_Click( object sender, EventArgs e )
-    {
-      ExchangeMultiColor1WithSpriteColor( panelSprites.SelectedIndices, true );
-    }
-
-
-
-    private void exchangeMulticolor2WithSpriteColorToolStripMenuItem1_Click( object sender, EventArgs e )
-    {
-      ExchangeMultiColor2WithSpriteColor( panelSprites.SelectedIndices, true );
     }
 
 
@@ -3322,34 +2665,6 @@ namespace C64Studio
       {
         editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset, 80 );
       }
-    }
-
-
-
-    private void exchangeBGColorWithSpriteColorToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      ExchangeBGColorWithSpriteColor( panelSprites.SelectedIndices, true );
-    }
-
-
-
-    private void exchangeMulticolor1WithBGColorSelectedSpritesToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      ExchangeMultiColor1WithBackground( panelSprites.SelectedIndices, true );
-    }
-
-
-
-    private void exchangeMulticolor2WithBGColorSelectedSpritesToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      ExchangeMultiColor2WithBackground( panelSprites.SelectedIndices, true );
-    }
-
-
-
-    private void exchangeMulticolor1WithMulticolor2ToolStripMenuItem1_Click( object sender, EventArgs e )
-    {
-      ExchangeMultiColors( panelSprites.SelectedIndices, true );
     }
 
 
@@ -3482,21 +2797,21 @@ namespace C64Studio
 
     private void MultiColor2()
     {
-      comboMulticolor2.SelectedIndex = ( comboMulticolor2.SelectedIndex + 1 ) % 16;
+      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_2, ( m_SpriteProject.Colors.MultiColor2 + 1 ) % 16 );
     }
 
 
 
     private void MultiColor1()
     {
-      comboMulticolor1.SelectedIndex = ( comboMulticolor1.SelectedIndex + 1 ) % 16;
+      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, ( m_SpriteProject.Colors.MultiColor1 + 1 ) % 16 );
     }
 
 
 
     private void CustomColor()
     {
-      comboSpriteColor.SelectedIndex = ( comboSpriteColor.SelectedIndex + 1 ) % 16;
+      _ColorSettingsDlg.ColorChanged( ColorType.CUSTOM_COLOR, ( m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor + 1 ) % 16 );
     }
 
 
@@ -3791,9 +3106,8 @@ namespace C64Studio
       AdjustSpriteSizes();
 
       m_SpriteProject.Colors.Palette = PaletteManager.PaletteFromNumColors( Lookup.NumberOfColorsInSprite( m_SpriteProject.Mode ) );
+      ChangeColorSettingsDialog();
       OnPaletteChanged();
-
-      UpdateCustomColorCombo();
 
       for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
       {
@@ -3824,12 +3138,6 @@ namespace C64Studio
 
         RebuildSpriteImage( i );
       }
-
-      // update controls for mode
-      comboMulticolor1.Enabled = ( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR );
-      radioMultiColor1.Enabled = ( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR );
-      comboMulticolor2.Enabled = ( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR );
-      radioMulticolor2.Enabled = ( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR );
 
       panelSprites.Invalidate();
       SetModified();
@@ -3873,25 +3181,8 @@ namespace C64Studio
 
 
 
-    private void UpdateCustomColorCombo()
-    {
-      while ( comboSpriteColor.Items.Count > Lookup.NumberOfColorsInSprite( m_SpriteProject.Mode ) )
-      {
-        comboSpriteColor.Items.RemoveAt( comboSpriteColor.Items.Count - 1 );
-      }
-      while ( comboSpriteColor.Items.Count < Lookup.NumberOfColorsInSprite( m_SpriteProject.Mode ) )
-      {
-        comboSpriteColor.Items.Add( comboSpriteColor.Items.Count.ToString() );
-      }
-    }
-
-
-
     private void OnPaletteChanged()
     {
-      btnEditPalette.Enabled = Lookup.HasCustomPalette( Lookup.GraphicTileModeFromSpriteProjectMode( m_SpriteProject.Mode ) );
-      checkMulticolor.Visible = ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC );
-
       PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_SpriteProject.Colors.Palette );
       PaletteManager.ApplyPalette( panelSprites.DisplayPage, m_SpriteProject.Colors.Palette );
       PaletteManager.ApplyPalette( layerPreview.DisplayPage, m_SpriteProject.Colors.Palette );
@@ -3911,11 +3202,11 @@ namespace C64Studio
 
     private void btnEditPalette_Click( object sender, EventArgs e )
     {
-      var dlgPalette = new DlgPaletteEditor( Core, m_SpriteProject.Colors.Palette );
+      var dlgPalette = new DlgPaletteEditor( Core, m_SpriteProject.Colors );
       if ( dlgPalette.ShowDialog() == DialogResult.OK )
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ) );
-        m_SpriteProject.Colors.Palette = dlgPalette.Palette;
+        m_SpriteProject.Colors.Palettes = dlgPalette.Colors.Palettes;
 
         SetModified();
         OnPaletteChanged();
@@ -3951,6 +3242,187 @@ namespace C64Studio
     private void btnToolFill_CheckedChanged( object sender, EventArgs e )
     {
       m_Mode = ToolMode.FILL;
+    }
+
+
+
+    private void ChangeColorSettingsDialog()
+    {
+      if ( _ColorSettingsDlg != null )
+      {
+        panelColorSettings.Controls.Remove( _ColorSettingsDlg );
+        _ColorSettingsDlg.Dispose();
+        _ColorSettingsDlg = null;
+      }
+
+      switch ( m_SpriteProject.Mode )
+      {
+        case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
+          _ColorSettingsDlg = new ColorSettingsMCSprites( Core, 
+                                                          m_SpriteProject.Colors, 
+                                                          m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor, 
+                                                          m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR );
+          break;
+        case SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS:
+        case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
+          _ColorSettingsDlg = new ColorSettingsMega65( Core, m_SpriteProject.Colors, m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor );
+          break;
+      }
+      panelColorSettings.Controls.Add( _ColorSettingsDlg );
+      _ColorSettingsDlg.SelectedColorChanged += _ColorSettingsDlg_SelectedColorChanged;
+      _ColorSettingsDlg.ColorsModified += _ColorSettingsDlg_ColorsModified;
+      _ColorSettingsDlg.ColorsExchanged += _ColorSettingsDlg_ColorsExchanged;
+      _ColorSettingsDlg.PaletteModified += _ColorSettingsDlg_PaletteModified;
+      _ColorSettingsDlg.MulticolorFlagChanged += _ColorSettingsDlg_MulticolorFlagChanged;
+
+      _ColorSettingsDlg_SelectedColorChanged( _ColorSettingsDlg.SelectedColor );
+    }
+
+
+
+    private void _ColorSettingsDlg_MulticolorFlagChanged()
+    {
+      if ( DoNotUpdateFromControls )
+      {
+        return;
+      }
+      DocumentInfo.UndoManager.StartUndoGroup();
+
+      var selectedSprites = panelSprites.SelectedIndices;
+
+      foreach ( var i in selectedSprites )
+      {
+        if ( ( m_SpriteProject.Sprites[i].Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
+        ||   ( m_SpriteProject.Sprites[i].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR ) )
+        {
+          if ( ( m_SpriteProject.Sprites[i].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR ) != _ColorSettingsDlg.MultiColorEnabled )
+          {
+            DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ) );
+
+            m_SpriteProject.Sprites[i].Mode = _ColorSettingsDlg.MultiColorEnabled ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
+            m_SpriteProject.Sprites[i].Tile.Mode = _ColorSettingsDlg.MultiColorEnabled ? GraphicTileMode.COMMODORE_MULTICOLOR : GraphicTileMode.COMMODORE_HIRES;
+            Modified = true;
+            RebuildSpriteImage( i );
+            if ( m_CurrentSprite == i )
+            {
+              pictureEditor.Invalidate();
+            }
+            panelSprites.InvalidateItemRect( i );
+          }
+        }
+      }
+    }
+
+
+
+    private void _ColorSettingsDlg_PaletteModified( ColorSettings Colors, int CustomColor )
+    {
+      throw new NotImplementedException();
+    }
+
+
+
+    private void _ColorSettingsDlg_ColorsExchanged( ColorType Color1, ColorType Color2 )
+    {
+      bool    firstEntry = true;
+      foreach ( int spriteIndex in panelSprites.SelectedIndices )
+      {
+        var sprite = m_SpriteProject.Sprites[spriteIndex];
+
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
+        firstEntry = false;
+
+        ReplaceSpriteColors( sprite, Color1, Color2 );
+
+        RebuildSpriteImage( spriteIndex );
+        panelSprites.InvalidateItemRect( spriteIndex );
+      }
+    }
+
+
+
+    private void _ColorSettingsDlg_ColorsModified( ColorType Color, ColorSettings Colors, int CustomColor )
+    {
+      switch ( Color )
+      {
+        case ColorType.BACKGROUND:
+          if ( m_SpriteProject.Colors.BackgroundColor != _ColorSettingsDlg.Colors.BackgroundColor )
+          {
+            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ) );
+
+            m_SpriteProject.Colors.BackgroundColor = _ColorSettingsDlg.Colors.BackgroundColor;
+            Modified = true;
+            for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+            {
+              RebuildSpriteImage( i );
+            }
+            pictureEditor.Invalidate();
+            panelSprites.Invalidate();
+          }
+          break;
+        case ColorType.MULTICOLOR_1:
+          if ( m_SpriteProject.Colors.MultiColor1 != _ColorSettingsDlg.Colors.MultiColor1 )
+          {
+            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ) );
+
+            m_SpriteProject.Colors.MultiColor1 = _ColorSettingsDlg.Colors.MultiColor1;
+            Modified = true;
+            for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+            {
+              RebuildSpriteImage( i );
+            }
+            pictureEditor.Invalidate();
+            panelSprites.Invalidate();
+          }
+          break;
+        case ColorType.MULTICOLOR_2:
+          if ( m_SpriteProject.Colors.MultiColor2 != _ColorSettingsDlg.Colors.MultiColor2 )
+          {
+            DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ) );
+
+            m_SpriteProject.Colors.MultiColor2 = _ColorSettingsDlg.Colors.MultiColor2;
+            Modified = true;
+            for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+            {
+              RebuildSpriteImage( i );
+            }
+            pictureEditor.Invalidate();
+            panelSprites.Invalidate();
+          }
+          break;
+        case ColorType.CUSTOM_COLOR:
+          if ( Lookup.HaveCustomSpriteColor( m_SpriteProject.Mode ) )
+          {
+            DocumentInfo.UndoManager.StartUndoGroup();
+
+            var selectedSprites = panelSprites.SelectedIndices;
+
+            foreach ( var i in selectedSprites )
+            {
+              if ( m_SpriteProject.Sprites[i].Tile.CustomColor != _ColorSettingsDlg.CustomColor )
+              {
+                DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ) );
+                m_SpriteProject.Sprites[i].Tile.CustomColor = _ColorSettingsDlg.CustomColor;
+                Modified = true;
+                RebuildSpriteImage( i );
+                if ( i == m_CurrentSprite )
+                {
+                  pictureEditor.Invalidate();
+                }
+                panelSprites.InvalidateItemRect( i );
+              }
+            }
+          }
+          break;
+        default:
+          throw new NotImplementedException();
+      }
+    }
+
+
+
+    private void _ColorSettingsDlg_SelectedColorChanged( ColorType Color )
+    {
     }
 
 
