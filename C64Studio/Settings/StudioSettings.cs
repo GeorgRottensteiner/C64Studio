@@ -157,6 +157,7 @@ namespace C64Studio
 
     public List<string>                         FindArguments = new List<string>();
     public List<string>                         ReplaceArguments = new List<string>();
+    public List<string>                         ReplaceWithArguments = new List<string>();
     public bool                                 LastFindIgnoreCase = true;
     public bool                                 LastFindWholeWord = false;
     public bool                                 LastFindRegexp = false;
@@ -651,6 +652,11 @@ namespace C64Studio
       {
         chunkFindReplace.AppendString( replaceArg );
       }
+      chunkFindReplace.AppendI32( ReplaceWithArguments.Count );
+      foreach ( var replaceArg in ReplaceWithArguments )
+      {
+        chunkFindReplace.AppendString( replaceArg );
+      }
       SettingsData.Append( chunkFindReplace.ToBuffer() );
 
       GR.IO.FileChunk chunkIgnoredWarnings = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_IGNORED_WARNINGS );
@@ -1027,6 +1033,11 @@ namespace C64Studio
               for ( int i = 0; i < numReplaceArguments; ++i )
               {
                 ReplaceArguments.Add( binIn.ReadString() );
+              }
+              int numReplaceWithArguments = binIn.ReadInt32();
+              for ( int i = 0; i < numReplaceWithArguments; ++i )
+              {
+                ReplaceWithArguments.Add( binIn.ReadString() );
               }
             }
             break;

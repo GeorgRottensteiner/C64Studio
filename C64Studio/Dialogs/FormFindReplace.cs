@@ -207,6 +207,22 @@ namespace C64Studio
 
     public void FindNext( BaseDocument DirectlyFromSourceFile )
     {
+      if ( Core.MainForm.ActiveDocumentInfo != null )
+      {
+        var edit = EditFromDocumentEx( Core.MainForm.ActiveDocumentInfo );
+
+        if ( edit != null )
+        {
+          bool  hadLastFind = ( LastSearchFound.FoundInDocument != null );
+          LastSearchFound.Clear();
+          LastSearchFound.FoundInDocument = Core.MainForm.ActiveDocumentInfo;
+          LastSearchFound.StartPosition = edit.PlaceToPosition( edit.Selection.Start );
+          if ( hadLastFind )
+          {
+            ++LastSearchFound.StartPosition;
+          }
+        }
+      }
       FindNext( DirectlyFromSourceFile, comboSearchText.Text );
     }
 
@@ -262,7 +278,7 @@ namespace C64Studio
         //Debug.Log( "Found in " + LastSearchFound.FoundInDocument.FullPath + ", line " + LastSearchFound.LineNumber + ", pos " + LastSearchFound.StartPosition );
         var foundRange = RangeFromSearchLocation( edit, LastSearchFound );
 
-        if ( (FindTarget)comboSearchTarget.SelectedIndex != FindTarget.CURRENT_SELECTION )
+        //if ( (FindTarget)comboSearchTarget.SelectedIndex != FindTarget.CURRENT_SELECTION )
         {
           // do not modify selection!
           if ( foundRange != null )
@@ -317,6 +333,47 @@ namespace C64Studio
           comboSearchText.Items.RemoveAt( comboSearchText.Items.Count - 1 );
         }
         comboSearchText.Items.Insert( 0, SearchString );
+      }
+
+      foundInHistory = false;
+      foreach ( string obj in comboReplaceSearchText.Items )
+      {
+        if ( obj == SearchString )
+        {
+          foundInHistory = true;
+          break;
+        }
+      }
+      if ( !foundInHistory )
+      {
+        if ( comboReplaceSearchText.Items.Count >= 50 )
+        {
+          comboReplaceSearchText.Items.RemoveAt( comboReplaceSearchText.Items.Count - 1 );
+        }
+        comboReplaceSearchText.Items.Insert( 0, SearchString );
+      }
+    }
+
+
+
+    private void HistoriseReplaceString( string ReplaceString )
+    {
+      bool foundInHistory = false;
+      foreach ( string obj in comboReplaceWith.Items )
+      {
+        if ( obj == ReplaceString )
+        {
+          foundInHistory = true;
+          break;
+        }
+      }
+      if ( !foundInHistory )
+      {
+        if ( comboReplaceWith.Items.Count >= 50 )
+        {
+          comboReplaceWith.Items.RemoveAt( comboReplaceWith.Items.Count - 1 );
+        }
+        comboReplaceWith.Items.Insert( 0, ReplaceString );
       }
     }
 
@@ -941,19 +998,16 @@ namespace C64Studio
           return false;
         }
 
-        if ( edit.SelectionLength == SearchString.Length )
+        int       searchStart = edit.PlaceToPosition( edit.Selection.Start );
+        int       searchEnd = edit.PlaceToPosition( edit.Selection.End );
+
+        if ( searchEnd < searchStart )
         {
-          // re-select previous search selection
-          edit.Selection = new FastColoredTextBoxNS.Range( edit,
-                                                           edit.PositionToPlace( PreviousSearchSelection.StartPosition ),
-                                                           edit.PositionToPlace( PreviousSearchSelection.StartPosition + PreviousSearchSelection.Length ) );
-          //edit.Selection.Range.ShowLines();
-          //edit.Caret.Position = edit.Selection.Range.End;
-          //edit.Selection.Range.Select();
+          int temp = searchStart;
+          searchStart = searchEnd;
+          searchEnd = temp;
         }
 
-        int       searchStart = 0;
-        int       offset = edit.PlaceToPosition( edit.Selection.Start );
         if ( ( lastPosition >= edit.PlaceToPosition( edit.Selection.Start ) )
         &&   ( lastPosition < edit.PlaceToPosition( edit.Selection.End ) ) )
         {
@@ -966,7 +1020,7 @@ namespace C64Studio
           searchStart = edit.PositionToVirtualPosition( searchStart );
         }
 
-        textFromElement = edit.Selection.Text;
+        textFromElement = edit.Text;
         newLocation = FindNextOccurrence( textFromElement, SearchString, RegularExpression, WholeWords, IgnoreCase, !SearchDown, searchStart - 1 );
         if ( newLocation.StartPosition == -1 )
         {
@@ -983,8 +1037,6 @@ namespace C64Studio
           PreviousSearchSelection.Length = edit.SelectionLength;
           PreviousSearchSelection.FoundInDocument = activeDocument.DocumentInfo;
         }
-
-        newLocation.StartPosition += offset;
       }
       else if ( Target == FindTarget.ALL_OPEN_DOCUMENTS )
       {
@@ -1324,6 +1376,11 @@ namespace C64Studio
       {
         comboReplaceSearchText.Items.Add( replaceArg );
       }
+      comboReplaceWith.Items.Clear();
+      foreach ( var replaceArg in Settings.ReplaceWithArguments )
+      {
+        comboReplaceWith.Items.Add( replaceArg );
+      }
     }
 
 
@@ -1345,6 +1402,11 @@ namespace C64Studio
       foreach ( object obj in comboReplaceSearchText.Items )
       {
         Settings.ReplaceArguments.Add( (string)obj );
+      }
+      Settings.ReplaceWithArguments.Clear();
+      foreach ( object obj in comboReplaceWith.Items )
+      {
+        Settings.ReplaceWithArguments.Add( (string)obj );
       }
     }
 
@@ -1582,6 +1644,9 @@ namespace C64Studio
         }
       }
 
+      HistoriseSearchString( comboReplaceSearchText.Text );
+      HistoriseReplaceString( comboReplaceWith.Text );
+
       if ( FindNextNew( comboReplaceSearchText.Text,
                         radioReplaceSearchDown.Checked,
                         checkReplaceRegexp.Checked,
@@ -1596,9 +1661,6 @@ namespace C64Studio
         LastReplaceFound.FoundInDocument.BaseDoc.Show( Core.MainForm.panelMain );
 
         var replaceFound =  RangeFromSearchLocation( edit, LastReplaceFound );
-        ///replaceFound.ShowLines();
-        ///replaceFound.GotoEnd();
-        ///replaceFound.Select();
 
         if ( replaceFound != null )
         {
@@ -1635,6 +1697,9 @@ namespace C64Studio
       Core.Searching.ClearSearchResults();
 
       FindTarget    replaceTarget = (FindTarget)comboReplaceTarget.SelectedIndex;
+
+      HistoriseSearchString( comboReplaceSearchText.Text );
+      HistoriseReplaceString( comboReplaceWith.Text );
 
       if ( replaceTarget == FindTarget.CURRENT_SELECTION )
       {
