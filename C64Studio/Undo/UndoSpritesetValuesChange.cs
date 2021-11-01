@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using C64Studio.Formats;
+using RetroDevStudio;
 using RetroDevStudio.Types;
+using static C64Studio.Formats.SpriteProject;
+
+
 
 namespace C64Studio.Undo
 {
@@ -10,6 +14,7 @@ namespace C64Studio.Undo
   {
     public SpriteEditor           Editor = null;
     public SpriteProject          Project = null;
+    public SpriteProjectMode      Mode = SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC;
     public ColorSettings          Colors = null;
 
 
@@ -18,6 +23,7 @@ namespace C64Studio.Undo
     {
       this.Editor = Editor;
       this.Project = Project;
+      Mode = Project.Mode;
 
       Colors = new ColorSettings( Project.Colors );
     }
@@ -44,7 +50,8 @@ namespace C64Studio.Undo
 
     public override void Apply()
     {
-      Project.Colors = new ColorSettings( Colors );
+      Project.Colors  = new ColorSettings( Colors );
+      Project.Mode    = Mode;
 
       Editor.ColorsChanged();
     }

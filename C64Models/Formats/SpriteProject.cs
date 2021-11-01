@@ -63,7 +63,6 @@ namespace C64Studio.Formats
 
     public List<SpriteData>       Sprites = new List<SpriteData>( 256 );
     public List<Layer>            SpriteLayers = new List<Layer>();
-    public List<Palette>          Palettes = new List<Palette>();
 
     public ColorSettings  Colors = new ColorSettings();
 
@@ -82,12 +81,12 @@ namespace C64Studio.Formats
     public SpriteProject()
     {
       Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
+      Colors.Palettes.Add( Colors.Palette );
       for ( int i = 0; i < TotalNumberOfSprites; ++i )
       {
         Sprites.Add( new SpriteData( Colors ) );
         PaletteManager.ApplyPalette( Sprites[i].Tile.Image );
       }
-      Palettes.Add( Colors.Palette );
     }
 
 
@@ -279,8 +278,8 @@ namespace C64Studio.Formats
                       {
                         var pal = Palette.Read( subChunkReader );
 
-                        Palettes.Add( pal );
-                        if ( Palettes.Count == 0 )
+                        Colors.Palettes.Add( pal );
+                        if ( Colors.Palettes.Count == 1 )
                         {
                           Colors.Palette = pal;
                         }

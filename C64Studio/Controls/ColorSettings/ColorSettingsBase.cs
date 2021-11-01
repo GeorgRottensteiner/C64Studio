@@ -24,11 +24,13 @@ namespace C64Studio.Controls
     public delegate void ColorsModifiedHandler( ColorType Color, ColorSettings Colors, int CustomColor );
     public delegate void ColorSelectedHandler( ColorType Color );
     public delegate void ExchangeColorsHandler( ColorType Color1, ColorType Color2 );
+    public delegate void MulticolorFlagChangedHandler();
 
-    public event PaletteModifiedHandler PaletteModified;
-    public event ColorsModifiedHandler  ColorsModified;
-    public event ColorSelectedHandler   SelectedColorChanged;
-    public event ExchangeColorsHandler  ColorsExchanged;
+    public event PaletteModifiedHandler       PaletteModified;
+    public event ColorsModifiedHandler        ColorsModified;
+    public event ColorSelectedHandler         SelectedColorChanged;
+    public event ExchangeColorsHandler        ColorsExchanged;
+    public event MulticolorFlagChangedHandler MulticolorFlagChanged;
 
 
 
@@ -48,6 +50,19 @@ namespace C64Studio.Controls
       set
       {
         _CurrentColorType = value;
+      }
+    }
+
+
+
+    public virtual bool MultiColorEnabled 
+    {
+      get
+      {
+        return false;
+      }
+      set
+      {
       }
     }
 
@@ -106,6 +121,16 @@ namespace C64Studio.Controls
       if ( ColorsExchanged != null )
       {
         ColorsExchanged( Color1, Color2 );
+      }
+    }
+
+
+
+    protected void RaiseMulticolorFlagChanged()
+    {
+      if ( MulticolorFlagChanged != null )
+      {
+        MulticolorFlagChanged();
       }
     }
 

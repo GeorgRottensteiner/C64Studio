@@ -76,40 +76,46 @@
     <Compile Include="Controls\CharacterEditor.Designer.cs">
       <DependentUpon>CharacterEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsBase.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsBase.Designer.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsBase.Designer.cs">
       <DependentUpon>ColorSettingsBase.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsVC20.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsMCSprites.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsVC20.Designer.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsMCSprites.Designer.cs">
+      <DependentUpon>ColorSettingsMCSprites.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ColorSettings\ColorSettingsVC20.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ColorSettings\ColorSettingsVC20.Designer.cs">
       <DependentUpon>ColorSettingsVC20.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsMega65.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsMega65.Designer.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsMega65.Designer.cs">
       <DependentUpon>ColorSettingsMega65.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsHiRes.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsHiRes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsHiRes.Designer.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsHiRes.Designer.cs">
       <DependentUpon>ColorSettingsHiRes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsECM.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsECM.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsECM.Designer.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsECM.Designer.cs">
       <DependentUpon>ColorSettingsECM.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsMC.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsMC.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettingsDialog\ColorSettingsMC.Designer.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsMC.Designer.cs">
       <DependentUpon>ColorSettingsMC.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\CSButton.cs">
@@ -564,22 +570,25 @@
     <EmbeddedResource Include="Controls\CharacterEditor.resx">
       <DependentUpon>CharacterEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettingsDialog\ColorSettingsBase.resx">
+    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsBase.resx">
       <DependentUpon>ColorSettingsBase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettingsDialog\ColorSettingsVC20.resx">
+    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsMCSprites.resx">
+      <DependentUpon>ColorSettingsMCSprites.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsVC20.resx">
       <DependentUpon>ColorSettingsVC20.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettingsDialog\ColorSettingsMega65.resx">
+    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsMega65.resx">
       <DependentUpon>ColorSettingsMega65.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettingsDialog\ColorSettingsHiRes.resx">
+    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsHiRes.resx">
       <DependentUpon>ColorSettingsHiRes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettingsDialog\ColorSettingsECM.resx">
+    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsECM.resx">
       <DependentUpon>ColorSettingsECM.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettingsDialog\ColorSettingsMC.resx">
+    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsMC.resx">
       <DependentUpon>ColorSettingsMC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgPaletteEditor.resx">
@@ -802,7 +811,6 @@
     <Compile Include="Undo\UndoCharacterEditorValuesChange.cs" />
     <Compile Include="Undo\UndoCharacterEditorSwapCategories.cs" />
     <Compile Include="Undo\UndoMapSwap.cs" />
-    <Compile Include="Undo\UndoSpritesetExchangeMultiColors.cs" />
     <Compile Include="Undo\UndoGraphicScreenSizeChange.cs" />
     <Compile Include="Undo\UndoGraphicScreenImageChange.cs" />
     <Compile Include="Undo\UndoCharscreenValuesChange.cs" />
