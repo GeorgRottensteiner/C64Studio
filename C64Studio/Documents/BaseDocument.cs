@@ -296,6 +296,16 @@ namespace C64Studio
 
 
 
+    public virtual int CursorPosInLine
+    {
+      get
+      {
+        return 0;
+      }
+    }
+
+
+
     public void SetInternal()
     {
       m_IsInternal = true;
@@ -409,6 +419,12 @@ namespace C64Studio
 
 
     public virtual void InsertText( string Text )
+    {
+    }
+
+
+
+    public virtual void HighlightText( int LineIndex, int CharPos, int Length )
     {
     }
 
@@ -841,7 +857,7 @@ namespace C64Studio
 
 
 
-    public virtual void SetCursorToLine( int Line, bool SetFocus )
+    public virtual void SetCursorToLine( int Line, int CharIndex, bool SetFocus )
     {
     }
 

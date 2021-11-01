@@ -67,14 +67,14 @@ namespace C64Studio
 
 
 
-    public override void SetCursorToLine( int Line, bool SetFocus )
+    public override void SetCursorToLine( int Line, int CharIndex, bool SetFocus )
     {
       if ( SetFocus )
       {
         editText.Focus();
       }
 
-      editText.Navigate( Line );
+      editText.Navigate( Line, CharIndex );
     }
 
   }

@@ -54,6 +54,16 @@ namespace C64Studio
 
 
 
+    public override int CursorPosInLine
+    {
+      get
+      {
+        return editSource.Selection.Start.iChar;
+      }
+    }
+
+
+
     public override FastColoredTextBoxNS.FastColoredTextBox SourceControl
     {
       get
@@ -886,13 +896,13 @@ namespace C64Studio
 
 
 
-    public override void SetCursorToLine( int Line, bool SetFocus )
+    public override void SetCursorToLine( int Line, int CharIndex, bool SetFocus )
     {
       if ( SetFocus )
       {
         editSource.Focus();
       }
-      editSource.Navigate( Line );
+      editSource.Navigate( Line, CharIndex );
     }
 
 
@@ -1093,7 +1103,12 @@ namespace C64Studio
     {
       GR.IO.MemoryReader binReader = Buffer.MemoryReader();
 
-      SetCursorToLine( binReader.ReadInt32(), true );
+      int     line = binReader.ReadInt32();
+      int     position = binReader.ReadInt32();
+
+      var place = editSource.PositionToPlace( position );
+
+      SetCursorToLine( place.iLine, place.iChar, true );
     }
 
 
@@ -2075,6 +2090,7 @@ namespace C64Studio
       sourceData.AppendU8( (byte)( m_LabelMode ? 1 : 0 ) );
       sourceData.AppendU8( (byte)( m_SymbolMode ? 1 : 0 ) );
       sourceData.AppendU8( (byte)( m_LowerCaseMode ? 1 : 0 ) );
+      sourceData.AppendI32( editSource.Selection.Start.iChar );
 
       return sourceData.ToBuffer();
     }
@@ -2101,7 +2117,7 @@ namespace C64Studio
 
       editSource.Text = reader.ReadString();
 
-      SetCursorToLine( reader.ReadInt32(), false );
+      int     lineIndex = reader.ReadInt32();
 
       m_LabelMode     = ( reader.ReadUInt8() == 1 );
       btnToggleLabelMode.Checked = m_LabelMode;
@@ -2114,6 +2130,9 @@ namespace C64Studio
       {
         ToggleCase();
       }
+
+      int     charIndex = reader.ReadInt32();
+      SetCursorToLine( lineIndex, charIndex, false );
       return true;
     }
 
@@ -2134,6 +2153,13 @@ namespace C64Studio
       }
       Code = GetContent();
       return true;
+    }
+
+
+
+    public override void HighlightText( int LineIndex, int CharPos, int Length )
+    {
+      editSource.Selection = new FastColoredTextBoxNS.Range( editSource, CharPos, LineIndex, CharPos + Length, LineIndex );
     }
 
 

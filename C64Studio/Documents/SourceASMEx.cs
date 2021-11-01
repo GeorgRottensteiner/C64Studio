@@ -98,6 +98,16 @@ namespace C64Studio
 
 
 
+    public override int CursorPosInLine
+    {
+      get
+      {
+        return editSource.Selection.Start.iChar;
+      }
+    }
+
+
+
     public override FastColoredTextBoxNS.FastColoredTextBox SourceControl
     {
       get
@@ -2107,7 +2117,7 @@ namespace C64Studio
 
 
 
-    public override void SetCursorToLine( int Line, bool SetFocus )
+    public override void SetCursorToLine( int Line, int CharIndex, bool SetFocus )
     {
       if ( SetFocus )
       {
@@ -2119,7 +2129,7 @@ namespace C64Studio
       {
         Line = 0;
       }
-      editSource.Navigate( Line );
+      editSource.Navigate( Line, CharIndex );
       CenterOnCaret();
     }
 
@@ -2679,6 +2689,7 @@ namespace C64Studio
       GR.IO.MemoryReader binReader = Buffer.MemoryReader();
 
       int     cursorLine = binReader.ReadInt32();
+      int     charIndex = binReader.ReadInt32();
 
       while ( ( cursorLine > 0 )
       &&      ( cursorLine < editSource.LineInfos.Count )
@@ -2702,7 +2713,7 @@ namespace C64Studio
         int     blockEnd = editSource.TextSource[block].FindE
         editSource.Fold
       }*/
-      SetCursorToLine( cursorLine, true );
+      SetCursorToLine( cursorLine, charIndex, true );
     }
 
 
@@ -2936,7 +2947,7 @@ namespace C64Studio
 
       C64Studio.Types.SymbolInfo symbol = (C64Studio.Types.SymbolInfo)comboZoneSelector.SelectedItem;
 
-      SetCursorToLine( symbol.LocalLineIndex, true );
+      SetCursorToLine( symbol.LocalLineIndex, symbol.CharIndex, true );
 
       RefreshLocalSymbols();
     }
@@ -2951,7 +2962,7 @@ namespace C64Studio
       }
       C64Studio.Types.SymbolInfo symbol = (C64Studio.Types.SymbolInfo)comboLocalLabelSelector.SelectedItem;
 
-      SetCursorToLine( symbol.LocalLineIndex, true );
+      SetCursorToLine( symbol.LocalLineIndex, symbol.CharIndex, true );
     }
 
 
@@ -3145,6 +3156,11 @@ namespace C64Studio
           }
           else
           {
+            while ( localLineIndex >= m_LineInfos.Count )
+            {
+              m_LineInfos.Add( new Types.ASM.LineInfo() );
+            }
+
             // accumulate values!
             var curInfo = m_LineInfos[localLineIndex];
 
@@ -3309,6 +3325,7 @@ namespace C64Studio
       sourceData.AppendI32( 1 );
       sourceData.AppendString( editSource.Text );
       sourceData.AppendI32( CursorLine );
+      sourceData.AppendI32( CursorPosInLine );
 
       return sourceData.ToBuffer();
     }
@@ -3335,7 +3352,10 @@ namespace C64Studio
 
       editSource.Text = reader.ReadString();
 
-      SetCursorToLine( reader.ReadInt32(), false );
+      int   cursorLine = reader.ReadInt32();
+      int   cursorPos = reader.ReadInt32();
+
+      SetCursorToLine( cursorLine, cursorPos, false );
 
       return true;
     }

@@ -45,7 +45,7 @@ namespace C64Studio
         //MainForm.OpenDocumentAndGotoLine( tokenInfo.DocumentFilename, tokenInfo.LocalLineIndex );
         return;
       }
-      Core.Navigating.OpenDocumentAndGotoLine( OutlineProject, Core.Navigating.FindDocumentInfoByPath( tokenInfo.DocumentFilename ), tokenInfo.LocalLineIndex );
+      Core.Navigating.OpenDocumentAndGotoLine( OutlineProject, Core.Navigating.FindDocumentInfoByPath( tokenInfo.DocumentFilename ), tokenInfo.LocalLineIndex, tokenInfo.CharIndex );
     }
 
 
@@ -203,6 +203,18 @@ namespace C64Studio
 
         switch ( token.Type )
         {
+          case Types.SymbolInfo.Types.VARIABLE_NUMBER:
+            node.Text += " = Number";
+            break;
+          case Types.SymbolInfo.Types.VARIABLE_STRING:
+            node.Text += " = String";
+            break;
+          case Types.SymbolInfo.Types.VARIABLE_ARRAY:
+            node.Text += " = Array";
+            break;
+          case Types.SymbolInfo.Types.VARIABLE_INTEGER:
+            node.Text += " = Integer";
+            break;
           case C64Studio.Types.SymbolInfo.Types.CONSTANT_1:
           case C64Studio.Types.SymbolInfo.Types.CONSTANT_2:
             node.ImageIndex = node.SelectedImageIndex = 2;
@@ -349,6 +361,24 @@ namespace C64Studio
       Core.Settings.OutlineFilter = editOutlineFilter.Text;
       StoreOpenNodes();
       RefreshNodes();
+    }
+
+
+
+    private void treeProject_AfterSelect( object sender, TreeViewEventArgs e )
+    {
+      Types.SymbolInfo tokenInfo = (Types.SymbolInfo)e.Node.Tag;
+      if ( tokenInfo == null )
+      {
+        return;
+      }
+
+      var doc = Core.Navigating.FindDocumentByPath( tokenInfo.DocumentFilename );
+      if ( doc != null )
+      {
+        doc.HighlightText( tokenInfo.LocalLineIndex, tokenInfo.CharIndex, tokenInfo.Length );
+      }
+
     }
 
 

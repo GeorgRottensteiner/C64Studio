@@ -57,6 +57,7 @@
       this.treeProject.Size = new System.Drawing.Size(534, 364);
       this.treeProject.TabIndex = 0;
       this.treeProject.Text = "NoDblClkTreeView";
+      this.treeProject.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeProject_AfterSelect);
       this.treeProject.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseClick);
       this.treeProject.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeProject_NodeMouseDoubleClick);
       // 
