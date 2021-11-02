@@ -46,6 +46,21 @@ namespace C64Studio.Controls
 
 
 
+    public override int ActivePalette
+    {
+      get
+      {
+        return Colors.ActivePalette;
+      }
+      set
+      {
+        Colors.ActivePalette = value;
+        comboActivePalette.SelectedIndex = Colors.ActivePalette;
+      }
+    }
+    
+    
+    
     public ColorSettingsMega65() :
       base( null, null, 0 )
     { 

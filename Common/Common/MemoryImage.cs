@@ -1348,5 +1348,21 @@ namespace GR.Image
 
 
 
+    public uint PaletteColor( int Index )
+    {
+      if ( ( m_PaletteData == null )
+      ||   ( Index < 0 )
+      ||   ( Index * 3 >= m_PaletteData.Length ) )
+      {
+        return 0;
+      }
+
+      return (uint)( ( m_PaletteData.ByteAt( Index * 3 ) << 16 )
+        + ( m_PaletteData.ByteAt( Index * 3 + 1 ) << 8 )
+        + m_PaletteData.ByteAt( Index * 3 + 2 ) );
+    }
+
+
+
   }
 }

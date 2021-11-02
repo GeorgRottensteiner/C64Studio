@@ -73,7 +73,7 @@ namespace C64Studio
 
       pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       layerPreview.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      panelSprites.PixelFormat = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
+      panelSprites.PixelFormat = System.Drawing.Imaging.PixelFormat.Format24bppRgb;
       panelSprites.SetDisplaySize( 4 * m_SpriteWidth, 6 * m_SpriteHeight );
       panelSprites.ClientSize = new System.Drawing.Size( 4 * m_SpriteWidth * 2 + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth, 6 * m_SpriteHeight * 2 );
 
@@ -452,8 +452,14 @@ namespace C64Studio
 
           _ColorSettingsDlg.MultiColorEnabled = ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
         }
+        else
+        {
+          _ColorSettingsDlg.ActivePalette = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Colors.ActivePalette;
+          m_SpriteProject.Colors.ActivePalette = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Colors.ActivePalette;
+        }
         DoNotUpdateFromControls = false;
 
+        PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_SpriteProject.Colors.Palettes[m_SpriteProject.Sprites[m_CurrentSprite].Tile.Colors.ActivePalette] );
         pictureEditor.Image = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image;
       }
       btnDeleteSprite.Enabled = ( panelSprites.SelectedIndex != -1 );
@@ -2458,6 +2464,8 @@ namespace C64Studio
       }
       pictureEditor.Invalidate();
       panelSprites.Invalidate();
+
+      SetModified();
     }
 
 
@@ -3184,12 +3192,12 @@ namespace C64Studio
     private void OnPaletteChanged()
     {
       PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_SpriteProject.Colors.Palette );
-      PaletteManager.ApplyPalette( panelSprites.DisplayPage, m_SpriteProject.Colors.Palette );
+      //PaletteManager.ApplyPalette( panelSprites.DisplayPage, m_SpriteProject.Colors.Palette );
       PaletteManager.ApplyPalette( layerPreview.DisplayPage, m_SpriteProject.Colors.Palette );
 
       for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
       {
-        PaletteManager.ApplyPalette( m_SpriteProject.Sprites[i].Tile.Image, m_SpriteProject.Colors.Palette );
+        PaletteManager.ApplyPalette( m_SpriteProject.Sprites[i].Tile.Image, m_SpriteProject.Colors.Palettes[m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette] );
         RebuildSpriteImage( i );
         panelSprites.Items[i].MemoryImage = m_SpriteProject.Sprites[i].Tile.Image;
       }
@@ -3317,7 +3325,29 @@ namespace C64Studio
 
     private void _ColorSettingsDlg_PaletteModified( ColorSettings Colors, int CustomColor )
     {
-      throw new NotImplementedException();
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ) );
+
+      m_SpriteProject.Colors = new ColorSettings( Colors );
+      foreach ( int spriteIndex in panelSprites.SelectedIndices )
+      {
+        var sprite = m_SpriteProject.Sprites[spriteIndex];
+
+        sprite.Tile.Colors = new ColorSettings( Colors );
+
+        PaletteManager.ApplyPalette( sprite.Tile.Image, m_SpriteProject.Colors.Palettes[sprite.Tile.Colors.ActivePalette] );
+
+        RebuildSpriteImage( spriteIndex );
+        if ( m_CurrentSprite == spriteIndex )
+        {
+          PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_SpriteProject.Colors.Palettes[sprite.Tile.Colors.ActivePalette] );
+          pictureEditor.Invalidate();
+        }
+        panelSprites.InvalidateItemRect( spriteIndex );
+      }
+
+      OnPaletteChanged();
+
+      SetModified();
     }
 
 

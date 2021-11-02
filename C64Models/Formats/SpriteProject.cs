@@ -34,8 +34,8 @@ namespace C64Studio.Formats
 
       public SpriteData( SpriteData Other )
       {
-        Mode   = Other.Mode;
-        Tile   = new GraphicTile( Other.Tile );
+        Mode          = Other.Mode;
+        Tile          = new GraphicTile( Other.Tile );
       }
     }
 
@@ -114,7 +114,10 @@ namespace C64Studio.Formats
       chunkScreenMultiColorData.AppendI32( (byte)Colors.MultiColor2 );
       chunkProject.Append( chunkScreenMultiColorData.ToBuffer() );
 
-      chunkProject.Append( Colors.Palette.ToBuffer() );
+      foreach ( var pal in Colors.Palettes )
+      {
+        chunkProject.Append( pal.ToBuffer() );
+      }
 
       foreach ( var sprite in Sprites )
       {
@@ -126,6 +129,7 @@ namespace C64Studio.Formats
         chunkSprite.AppendI32( sprite.Tile.Height );
         chunkSprite.AppendI32( (int)sprite.Tile.Data.Length );
         chunkSprite.Append( sprite.Tile.Data );
+        chunkSprite.AppendI32( sprite.Tile.Colors.ActivePalette );
 
         chunkProject.Append( chunkSprite.ToBuffer() );
       }
@@ -243,6 +247,8 @@ namespace C64Studio.Formats
 
       if ( Version == 2 )
       {
+        Colors.Palettes.Clear();
+
         GR.IO.FileChunk   chunkMain = new GR.IO.FileChunk();
 
         while ( chunkMain.ReadFromStream( memIn ) )
@@ -273,21 +279,14 @@ namespace C64Studio.Formats
                       Colors.BackgroundColor = subChunkReader.ReadInt32();
                       Colors.MultiColor1 = subChunkReader.ReadInt32();
                       Colors.MultiColor2 = subChunkReader.ReadInt32();
+                      Colors.ActivePalette = 0;
                       break;
                     case FileChunkConstants.PALETTE:
-                      {
-                        var pal = Palette.Read( subChunkReader );
-
-                        Colors.Palettes.Add( pal );
-                        if ( Colors.Palettes.Count == 1 )
-                        {
-                          Colors.Palette = pal;
-                        }
-                      }
+                      Colors.Palettes.Add( Palette.Read( subChunkReader ) );
                       break;
                     case FileChunkConstants.SPRITESET_SPRITE:
                       {
-                        var sprite = new SpriteData( Colors );
+                        var sprite = new SpriteData( new ColorSettings( Colors ) );
 
                         sprite.Mode = (SpriteMode)subChunkReader.ReadInt32();
                         sprite.Tile.Mode = (GraphicTileMode)subChunkReader.ReadInt32();
@@ -297,6 +296,8 @@ namespace C64Studio.Formats
                         int dataLength = subChunkReader.ReadInt32();
                         sprite.Tile.Data = new GR.Memory.ByteBuffer();
                         subChunkReader.ReadBlock( sprite.Tile.Data, (uint)dataLength );
+
+                        sprite.Tile.Colors.ActivePalette = subChunkReader.ReadInt32();
 
                         Sprites.Add( sprite );
                       }

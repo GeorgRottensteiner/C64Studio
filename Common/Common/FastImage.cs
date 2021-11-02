@@ -641,10 +641,11 @@ namespace GR.Image
         {
           throw new NotSupportedException( "Pixelformat has not been set" );
         }
+        /*
         else
         {
           throw new NotSupportedException( "Mismatching Pixelformat is not supported yet" );
-        }
+        }*/
       }
       // clip to source
       if ( ( SourceX >= Image.Width )
@@ -709,6 +710,30 @@ namespace GR.Image
       {
         copyHeight = Height - Y;
       }
+
+      if ( Image.PixelFormat != PixelFormat )
+      {
+        switch ( Image.PixelFormat )
+        {
+          case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
+            if ( PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb )
+            {
+              for ( int y = 0; y < copyHeight; ++y )
+              {
+                for ( int x = 0; x < copyWidth; ++x )
+                {
+                  uint      pixel = Image.GetPixel( SourceX + x, SourceY + y );
+
+                  SetPixelData( X + x, Y + y, Image.PaletteColor( (int)pixel ) );
+                }
+              }
+              return;
+            }
+            break;
+        }
+        throw new NotSupportedException( "This mismatching Pixelformat is not supported yet" );
+      }
+
       if ( ( PixelFormat == System.Drawing.Imaging.PixelFormat.Format1bppIndexed )
       ||   ( PixelFormat == System.Drawing.Imaging.PixelFormat.Format4bppIndexed ) )
       {
@@ -2897,6 +2922,21 @@ namespace GR.Image
       }
     }
 
+
+
+    public uint PaletteColor( int Index )
+    {
+      if ( ( m_PaletteData == null )
+      ||   ( Index < 0 )
+      ||   ( Index * 3 >= m_PaletteData.Length ) )
+      {
+        return 0;
+      }
+
+      return (uint)( ( m_PaletteData.ByteAt( Index * 3 ) << 16 )
+        + ( m_PaletteData.ByteAt( Index * 3 + 1 ) << 8 )
+        + m_PaletteData.ByteAt( Index * 3 + 2 ) );
+    }
 
 
 

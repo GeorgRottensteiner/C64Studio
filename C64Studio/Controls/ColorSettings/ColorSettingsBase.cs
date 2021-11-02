@@ -68,6 +68,19 @@ namespace C64Studio.Controls
 
 
 
+    public virtual int ActivePalette
+    {
+      get
+      {
+        return 0;
+      }
+      set
+      {
+      }
+    }
+
+
+
     public ColorSettingsBase()
     {
       InitializeComponent();

@@ -61,6 +61,7 @@ namespace GR.Image
     GR.Memory.ByteBuffer CreateHDIBAsBuffer();
 
     void SetPaletteColor( int Index, byte Red, byte Green, byte Blue );
+    uint PaletteColor( int Index );
 
   }
 }
