@@ -6,6 +6,145 @@ namespace TestProject
   [TestClass]
   public partial class TestAssembler
   {
+    [TestMethod]
+    public void TestAssemblyOpcodeDetectionAbsolute()
+    {
+      string      source = @"* = $1000
+                            lda $1234";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010AD3412", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssemblyOpcodeDetectionZeropage()
+    {
+      string      source = @"* = $1000
+                            lda $12";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010A512", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssemblyOpcodeDetectionZeropageX()
+    {
+      string      source = @"* = $1000
+                            lda $12,x";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010B512", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssemblyOpcodeDetectionNoZeropageY()
+    {
+      string      source = @"* = $1000
+                            lda $12,y";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010B91200", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssemblyOpcodeDetectionAbsoluteX()
+    {
+      string      source = @"* = $1000
+                            lda $1234,x";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010BD3412", assembly.ToString() );
+    }
+
+
+
+    
+
+    [TestMethod]
+    public void TestAssemblyOpcodeDetectionNoIndirectAbsoluteX()
+    {
+      string      source = @"* = $1000
+                            lda ($1234),x";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010BD3412", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestOpcodeDetectionZeropageIndirectX()
+    {
+      string      source = @"* = $1000
+                            adc($12, x )";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "00106112", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestOpcodeDetectionNoZeropageIndirectX()
+    {
+      string      source = @"* = $1000
+                            lda ($12),x";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010B512", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssemblyOpcodeDetectionZeropageRelativeY()
+    {
+      string      source = @"* = $1000
+                            lda ($12),y";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010B112", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestAssemblyOpcodeDetectionNoZeropageRelativeY()
+    {
+      string      source = @"* = $1000
+                            lda ($1234),y";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      bool parseResult = parser.Parse( source, null, config, null );
+      Assert.IsFalse( parseResult );
+    }
+
+
+
     private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source, out C64Studio.Types.ASM.FileInfo Info )
     {
       C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();

@@ -4699,10 +4699,73 @@ namespace C64Studio.Parser
         if ( ( method != "SPRITE" )
         &&   ( method != "SPRITEDATA" ) 
         &&   ( method != "SPRITEOPTIMIZE" )
-        &&   ( method != "SPRITEDATA" ) )
+        &&   ( method != "SPRITEDATA" )
+        &&   ( method != "PALETTE" )
+        &&   ( method != "PALETTESWIZZLED" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are SPRITE, SPRITEOPTIMIZE, SPRITEDATA and SPRITEDATAOPTIMIZE" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are SPRITE, SPRITEOPTIMIZE, SPRITEDATA, SPRITEDATAOPTIMIZE, PALETTE or PALETTESWIZZLED" );
           return false;
+        }
+
+        if ( ( method == "PALETTE" )
+        ||   ( method == "PALETTESWIZZLED" ) )
+        {
+          if ( !Binary )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Export as PALETTE(SWIZZLED) is only supported for binary" );
+            return false;
+          }
+
+          Formats.SpriteProject   spriteProject = new C64Studio.Formats.SpriteProject();
+
+          try
+          {
+            dataToInclude = GR.IO.File.ReadAllBytes( subFilename );
+            if ( dataToInclude == null )
+            {
+              AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + subFilename );
+              return false;
+            }
+          }
+          catch ( System.IO.IOException )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + subFilename );
+            return false;
+          }
+
+          int totalNumColors = spriteProject.Colors.Palettes.Count * spriteProject.Colors.Palettes[0].ColorValues.Length;
+
+          int startIndex = 0;
+          int numColors = totalNumColors;
+
+          if ( ( paramTokens.Count >= 3 )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[2], out startIndex ) ) )
+          {
+            startIndex = 0;
+          }
+          if ( ( paramTokens.Count >= 4 )
+          &&   ( !EvaluateTokens( lineIndex, paramTokens[3], out numColors ) ) )
+          {
+            numColors = totalNumColors;
+          }
+          if ( ( startIndex < 0 )
+          ||   ( startIndex >= totalNumColors ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid start index" );
+            return false;
+          }
+          if ( numColors <= 0 )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, must be >= 1" );
+            return false;
+          }
+          if ( startIndex + numColors > totalNumColors )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Invalid number of colors, sprite project has "
+                  + totalNumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
+            return false;
+          }
+          dataToInclude = spriteProject.GetPaletteExportData( startIndex, numColors, method == "PALETTESWIZZLED" );
         }
 
         // sprite set file
@@ -14677,8 +14740,11 @@ namespace C64Studio.Parser
           longMode = ( LineTokens[1].Content == AssemblerSettings.SQUARE_BRACKETS_OPEN );
           int tokenPos = 2;
           int numBracketCount = 1;
+          int numBracketPairs = 0;
           expressionTokenStartIndex = 2;
-          while ( ( tokenPos < LineTokens.Count )
+          expressionTokenCount -= 2;
+
+          while ( ( tokenPos < expressionTokenStartIndex + expressionTokenCount )
           &&      ( ( !IsMatchingBrace( LineTokens[1].Content, LineTokens[tokenPos].Content ) )
           ||        ( numBracketCount > 1 ) ) )
           {
@@ -14689,6 +14755,7 @@ namespace C64Studio.Parser
             else if ( IsOpeningBraceChar( LineTokens[tokenPos].Content ) )
             {
               ++numBracketCount;
+              ++numBracketPairs;
             }
             if ( LineTokens[tokenPos].Content == "," )
             {
@@ -14707,8 +14774,35 @@ namespace C64Studio.Parser
           if ( !twoParamsInBrackets )
           {
             oneParamInBrackets = true;
-            expressionTokenCount = tokenPos - expressionTokenStartIndex;
+
+            int value = -1;
+            int numGivenBytes = 0;
+            bool  couldEvaluate = EvaluateTokens( LineIndex, LineTokens, expressionTokenStartIndex, expressionTokenCount, out value, out numGivenBytes );
+            if ( couldEvaluate )
+            {
+              if ( numGivenBytes > 0 )
+              {
+                numBytesFirstParam = numGivenBytes;
+              }
+              else if ( ( value & 0xff00 ) != 0 )
+              {
+                numBytesFirstParam = 2;
+              }
+              else
+              {
+                numBytesFirstParam = 1;
+              }
+            }
+            //expressionTokenCount = tokenPos - expressionTokenStartIndex;
           }
+          if ( ( numBracketPairs > 1 )
+          &&   ( tokenPos != expressionTokenCount ) )
+          {
+            // no matching brackets
+            oneParamInBrackets = false;
+            twoParamsInBrackets = false;
+          }
+          
         }
         else
         {
@@ -14954,15 +15048,34 @@ namespace C64Studio.Parser
       {
         if ( endsWithCommaX )
         {
-          // wrong! cannot be (address),x
-          AddError( LineIndex,
+          if ( numBytesFirstParam == 1 )
+          {
+            addressing = Tiny64.Opcode.AddressingType.ZEROPAGE_X;
+          }
+          else
+          {
+            addressing = Tiny64.Opcode.AddressingType.ABSOLUTE_X;
+          }
+          /*
+          if ( PossibleOpcodes.Any( po => po.Addressing == Opcode.AddressingType.ZEROPAGE_X ) )
+          {
+            addressing = Opcode.AddressingType.ZEROPAGE_X;
+          }
+          else if ( PossibleOpcodes.Any( po => po.Addressing == Opcode.AddressingType.ABSOLUTE_X ) )
+          {
+            addressing = Opcode.AddressingType.ABSOLUTE_X;
+          }
+          else
+          {
+            // wrong! cannot be (address),x
+            AddError( LineIndex,
                     Types.ErrorCode.E1300_OPCODE_AMBIGIOUS,
                     "Could not determine correct opcode for " + LineTokens[0].Content,
                     LineTokens[0].StartPos,
                     LineTokens[0].Length );
 
-          return null;
-          //addressing = Opcode.AddressingType.INDIRECT_X;
+            return null;
+          }*/
         }
         else if ( endsWithCommaY )
         {
