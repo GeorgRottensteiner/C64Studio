@@ -31,10 +31,13 @@
   |  <A HREF="ADDR2A.HTM">Absolute</A>      |   STA $FFFF           |   $8D   |    3    |    ?     |
   |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   STA ($FF),Y         |   $91   |    2    |    ?     |
   | <A HREF="ADDR18B.HTM">(Indirect),Z</A>  |   STA ($FF),Z         |   $92   |    2    |    ?     |
+  | <A HREF="ADDR7D.HTM">[Indirect 32]</A>   |   STA [$FF],Z         | $EA $92 |    3    |    8ip   |
   |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   STA $FF,X           |   $95   |    2    |    ?     |
   |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   STA $FFFF,Y         |   $99   |    3    |    ?     |
   |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   STA $FFFF,X         |   $9D   |    3    |    ?     |
   +----------------+-----------------------+---------+---------+----------+
+  i Add 1 if clock speed is at 40 MHz
+  p Add 1 if page boundary is crossed
 
 
  65816 Extensions:

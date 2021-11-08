@@ -1,4 +1,5 @@
 ﻿using C64Studio.Types;
+using GR.Collections;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -274,6 +275,10 @@ namespace C64Studio.Tasks
 
         Parser.ParserBase parser = Core.DetermineParser( Doc );
 
+        Doc.DeducedDependency[ConfigSetting].BuildState.Add( Doc.FullPath, Core.Compiling.FileLastWriteTime( Doc.FullPath ) );
+
+        var currentBuildState = new GR.Collections.Map<string,DateTime>( Doc.DeducedDependency[ConfigSetting].BuildState );
+
         if ( Doc.Element != null )
         {
           if ( !Doc.Element.Settings.ContainsKey( ConfigSetting ) )
@@ -292,10 +297,11 @@ namespace C64Studio.Tasks
           }
           if ( configSetting.PreBuildChain.Active )
           {
-            if ( !BuildChain( configSetting.PreBuildChain, "pre build chain", OutputMessages ) )
+            if ( !BuildChain( configSetting.PreBuildChain, "pre build chain", ConfigSetting, OutputMessages ) )
             {
               return false;
             }
+            AppendBuildStates( currentBuildState, Doc.DeducedDependency[ConfigSetting].BuildState );
           }
           Core.AddToOutput( "Running build on " + Doc.Element.Name + " with configuration " + ConfigSetting + System.Environment.NewLine );
         }
@@ -314,6 +320,33 @@ namespace C64Studio.Tasks
             //Debug.Log( "Doc " + Doc.Text + " receives " + combinedFileInfo.Labels.Count + " initial labels" );
           }
           additionalPredefines = AdditionalPredefines;
+
+          /*
+          // add pre/post build chain entries as externally included files to validate their time stamps
+          if ( ( configSetting != null )
+          &&   ( configSetting.PreBuildChain.Active ) )
+          {
+            foreach ( var chainEntry in configSetting.PreBuildChain.Entries )
+            {
+              var chainProject = Core.Navigating.Solution.GetProjectByName( chainEntry.ProjectName );
+              if ( chainProject != null )
+              {
+                ( (Parser.ASMFileParser)parser ).ExternallyIncludedFiles.Add( chainProject.FullPath( chainEntry.DocumentFilename ) );
+              }
+            }
+          }
+          if ( ( configSetting != null )
+          &&   ( configSetting.PostBuildChain.Active ) )
+          {
+            foreach ( var chainEntry in configSetting.PostBuildChain.Entries )
+            {
+              var chainProject = Core.Navigating.Solution.GetProjectByName( chainEntry.ProjectName );
+              if ( chainProject != null )
+              {
+                ( (Parser.ASMFileParser)parser ).ExternallyIncludedFiles.Add( chainProject.FullPath( chainEntry.DocumentFilename ) );
+              }
+            }
+          }*/
         }
         else if ( parser is Parser.BasicFileParser )
         {
@@ -357,6 +390,7 @@ namespace C64Studio.Tasks
             startAddress = ( (SourceBasicEx)Doc.BaseDoc ).StartAddress;
             ( (Parser.BasicFileParser)parser ).SetBasicDialect( ( (SourceBasicEx)Doc.BaseDoc ).BASICDialect );
           }
+
           if ( ( !Core.MainForm.ParseFile( parser, Doc, config, additionalPredefines, OutputMessages, CreatePreProcessedFile ) )
           ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
                                         {
@@ -389,6 +423,8 @@ namespace C64Studio.Tasks
             }
             return false;
           }
+
+          AppendBuildStates( currentBuildState, Doc.DeducedDependency[ConfigSetting].BuildState );
 
           Core.MainForm.AddOutputMessages( parser );
 
@@ -511,12 +547,16 @@ namespace C64Studio.Tasks
         if ( ( configSetting != null )
         &&   ( configSetting.PostBuildChain.Active ) )
         {
-          if ( !BuildChain( configSetting.PostBuildChain, "post build chain", OutputMessages ) )
+          if ( !BuildChain( configSetting.PostBuildChain, "post build chain", ConfigSetting, OutputMessages ) )
           {
             return false;
           }
+          AppendBuildStates( currentBuildState, Doc.DeducedDependency[ConfigSetting].BuildState );
         }
 
+        // store combined build state info in document
+        Doc.DeducedDependency[ConfigSetting].BuildState = currentBuildState;
+        Doc.DeducedDependency[ConfigSetting].BuildState.Remove( Doc.FullPath );
 
         if ( ( configSetting != null )
         &&   ( !string.IsNullOrEmpty( configSetting.PostBuild ) ) )
@@ -565,7 +605,17 @@ namespace C64Studio.Tasks
 
 
 
-    bool BuildChain( Types.BuildChain BuildChain, string BuildChainDescription, bool OutputMessages )
+    private void AppendBuildStates( Map<string, DateTime> CurrentBuildState, Map<string, DateTime> NewBuildState )
+    {
+      foreach ( var entry in NewBuildState )
+      {
+        CurrentBuildState[entry.Key] = entry.Value;
+      }
+    }
+
+
+
+    bool BuildChain( Types.BuildChain BuildChain, string BuildChainDescription, string ParentDocumentConfigSetting, bool OutputMessages )
     {
       if ( Core.Compiling.m_BuildChainStack.Contains( BuildChain ) )
       {
@@ -623,6 +673,8 @@ namespace C64Studio.Tasks
           return false;
         }
         Core.Compiling.m_RebuiltBuildConfigFiles.Add( buildInfoKey );
+
+        m_DocumentToBuild.DeducedDependency[ParentDocumentConfigSetting].BuildState[element.DocumentInfo.FullPath] = Core.Compiling.FileLastWriteTime( element.DocumentInfo.FullPath );
       }
       Core.AddToOutput( "Running " + BuildChainDescription + " completed successfully" + System.Environment.NewLine );
       Core.Compiling.m_BuildChainStack.Pop();

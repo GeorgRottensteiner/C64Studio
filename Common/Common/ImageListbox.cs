@@ -721,6 +721,7 @@ namespace GR.Forms
       int value = ItemAtLocation( e.X, e.Y );
       if ( m_ItemUnderMouse != value )
       {
+        Debug.Log( "Invalidate item " + m_ItemUnderMouse + " and " + value );
         InvalidateItemRect( m_ItemUnderMouse );
         InvalidateItemRect( value );
         m_ItemUnderMouse = value;
@@ -789,6 +790,23 @@ namespace GR.Forms
         int     xoffset = ( itemIndex - m_Offset * m_ItemsPerLine ) % m_ItemsPerLine;
         int     yoffset = ( itemIndex - m_Offset * m_ItemsPerLine ) / m_ItemsPerLine;
         itemRect = new System.Drawing.Rectangle( xoffset * m_ItemWidth, yoffset * m_ItemHeight, m_ItemWidth, m_ItemHeight );
+
+        /*
+        float     factorX = (float)ClientRectangle.Width / m_DisplayPage.Width;
+        float     factorY = (float)ClientRectangle.Height / m_DisplayPage.Height;
+
+        itemRect.Width = (int)( itemRect.Width * factorX );
+        itemRect.Height = (int)( itemRect.Height * factorY );*/
+
+        /*
+        if ( !e.ClipRectangle.IntersectsWith( itemRect ) )
+        {
+          ++itemIndex;
+          itemInLine = ( ( itemInLine + 1 ) % m_ItemsPerLine );
+          continue;
+        }*/
+
+        //Debug.Log( "draw sprite " + itemIndex );
 
         if ( DrawItem != null )
         {
@@ -957,6 +975,10 @@ namespace GR.Forms
 
     public void InvalidateItemRect( int ItemIndex )
     {
+      if ( ItemIndex == -1 )
+      {
+        return;
+      }
       Invalidate( ItemRect( ItemIndex ) );
     }
 

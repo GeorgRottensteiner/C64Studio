@@ -180,6 +180,7 @@ namespace C64Studio
       {
         return false;
       }
+
       // actual parsing and deducing dependencies if a rebuild is necessary!
       foreach ( IDockContent dockContent in Core.MainForm.panelMain.Documents )
       {
@@ -238,24 +239,10 @@ namespace C64Studio
           {
             string      fullPath = BuildFullPath( DocInfo.Project.Settings.BasePath, dependency.Filename );
 
-            DateTime    fileTime = new DateTime();
-
-            try
-            {
-              if ( System.IO.File.Exists( fullPath ) )
-              {
-                fileTime = System.IO.File.GetLastWriteTime( fullPath );
-              }
-            }
-            catch
-            {
-            }
-
+            var fileTime = FileLastWriteTime( fullPath );
             if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] )
             {
               Core.AddToOutput( "External Dependency " + fullPath + " was modified, need to rebuild dependent element " + DocInfo.DocumentFilename + System.Environment.NewLine );
-
-              DocInfo.DeducedDependency[ConfigSetting].BuildState.Add( fullPath, fileTime );
               return true;
             }
           }
@@ -267,6 +254,61 @@ namespace C64Studio
 
           Core.AddToOutput( "No last build time found for configuration '" + ConfigSetting + "', need rebuilding." + System.Environment.NewLine );
           return true;
+        }
+
+        // check indirect dependencies from pre build chains
+        if ( !DocInfo.Element.Settings.ContainsKey( ConfigSetting ) )
+        {
+          DocInfo.Element.Settings.Add( ConfigSetting, new ProjectElement.PerConfigSettings() );
+        }
+        var configSettingInner = DocInfo.Element.Settings[ConfigSetting];
+        if ( configSettingInner.PreBuildChain.Active )
+        {
+          foreach ( var chainEntry in configSettingInner.PreBuildChain.Entries )
+          {
+            var chainProject = Core.Navigating.Solution.GetProjectByName( chainEntry.ProjectName );
+            if ( chainProject != null )
+            {
+              string      fullPath = BuildFullPath( chainProject.Settings.BasePath, chainEntry.DocumentFilename );
+              var fileTime = FileLastWriteTime( fullPath );
+              if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] )
+              {
+                if ( DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] == default( DateTime ) )
+                {
+                  Core.AddToOutput( $"PreBuild chain entry {fullPath} was modified {fileTime} , need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
+                }
+                else
+                {
+                  Core.AddToOutput( $"PreBuild chain entry {fullPath} was modified {fileTime} != {DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath]}, need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
+                }
+                return true;
+              } 
+            }
+          }
+        }
+        if ( configSettingInner.PostBuildChain.Active )
+        {
+          foreach ( var chainEntry in configSettingInner.PostBuildChain.Entries )
+          {
+            var chainProject = Core.Navigating.Solution.GetProjectByName( chainEntry.ProjectName );
+            if ( chainProject != null )
+            {
+              string      fullPath = BuildFullPath( chainProject.Settings.BasePath, chainEntry.DocumentFilename );
+              var fileTime = FileLastWriteTime( fullPath );
+              if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] )
+              {
+                if ( DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] == default( DateTime ) )
+                {
+                  Core.AddToOutput( $"PostBuild chain entry {fullPath} was modified {fileTime} , need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
+                }
+                else
+                {
+                  Core.AddToOutput( $"PostBuild chain entry {fullPath} was modified {fileTime} != {DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath]}, need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
+                }
+                return true;
+              }
+            }
+          }
         }
       }
       if ( DocInfo.Compilable )
@@ -291,15 +333,7 @@ namespace C64Studio
       }
       foreach ( KeyValuePair<string, DateTime> dependency in DocInfo.DeducedDependency[ConfigSetting].BuildState )
       {
-        DateTime    fileTime = new DateTime();
-
-        try
-        {
-          fileTime = System.IO.File.GetLastWriteTime( dependency.Key );
-        }
-        catch
-        {
-        }
+        var fileTime = FileLastWriteTime( dependency.Key );
         if ( fileTime != dependency.Value )
         {
           //Debug.Log( "File time differs for " + dependency.Key );
@@ -356,6 +390,22 @@ namespace C64Studio
       {
         Core.MainForm.AddTask( new C64Studio.Tasks.TaskParseFile( Document.DocumentInfo, null ) );
       }
+    }
+
+
+
+    internal DateTime FileLastWriteTime( string FullPath )
+    {
+      DateTime  fileTime = DateTime.Now;
+      try
+      {
+        fileTime = System.IO.File.GetLastWriteTime( FullPath );
+      }
+      catch ( Exception ex )
+      {
+        Debug.Log( "FileLastWriteTime failed: " + ex.ToString() );
+      }
+      return fileTime;
     }
 
 

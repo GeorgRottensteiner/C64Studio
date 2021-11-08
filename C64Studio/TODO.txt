@@ -1,4 +1,5 @@
 ﻿C64Studio
+o Error when going > $ffff (ACME), not for !cpu m65!
 o Allow string literals als macro arguments:
 !macro print3 xpos, ypos, strtext, col
   jmp +

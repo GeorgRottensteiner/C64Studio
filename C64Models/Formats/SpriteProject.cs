@@ -1,5 +1,7 @@
-﻿using RetroDevStudio;
+﻿using GR.Memory;
+using RetroDevStudio;
 using RetroDevStudio.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -296,6 +298,10 @@ namespace C64Studio.Formats
                         int dataLength = subChunkReader.ReadInt32();
                         sprite.Tile.Data = new GR.Memory.ByteBuffer();
                         subChunkReader.ReadBlock( sprite.Tile.Data, (uint)dataLength );
+                        if ( sprite.Tile.CustomColor == -1 )
+                        {
+                          sprite.Tile.CustomColor = 1;
+                        }
 
                         sprite.Tile.Colors.ActivePalette = subChunkReader.ReadInt32();
 
@@ -453,6 +459,32 @@ namespace C64Studio.Formats
 
       return true;
     }
+
+
+
+    public ByteBuffer GetPaletteExportData( int StartIndex, int NumColors, bool Swizzled )
+    {
+      // get all palette datas, first all R, then all G, then all B
+      var palData = new ByteBuffer();
+      for ( int i = 0; i < Colors.Palettes.Count; ++i )
+      {
+        var curPal = Colors.Palettes[i];
+
+        palData.Append( curPal.GetExportData( 0, curPal.NumColors, Swizzled ) );
+      }
+
+      var finalPalData = new ByteBuffer();
+      int totalNumColors = Colors.Palettes.Count * Colors.Palettes[0].NumColors;
+
+      // extract R, G and B
+      finalPalData.Append( palData.SubBuffer( StartIndex, NumColors ) );
+      finalPalData.Append( palData.SubBuffer( totalNumColors + StartIndex, NumColors ) );
+      finalPalData.Append( palData.SubBuffer( 2 * totalNumColors + StartIndex, NumColors ) );
+
+      return finalPalData;
+    }
+
+
 
   }
 }

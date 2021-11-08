@@ -33,10 +33,12 @@
   |  <A HREF="ADDR2A.HTM">Absolute</A>      |   EOR $FFFF           |   $4D   |    3    |    4r    |
   |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   EOR ($FF),Y         |   $51   |    2    |    5pr   |
   | <A HREF="ADDR18B.HTM">(Indirect),Z</A>  |   EOR ($FF),Z         |   $52   |    2    |     5pr  |
+  | <A HREF="ADDR7D.HTM">[Indirect 32]</A>  |   EOR [$FF],Z         | $EA $52 |    2    |     7ipr |
   |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   EOR $FF,X           |   $55   |    2    |    3p    |
   |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   EOR $FFFF,Y         |   $59   |    3    |    4pr   |
   |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   EOR $FFFF,X         |   $5D   |    3    |    4pr   |
   +----------------+-----------------------+---------+---------+----------+
+  i Add 1 if clock speed is at 40 MHz
   p Add 1 if page boundary is crossed
   r Add 1 if clock speed is at 40 MHz
 

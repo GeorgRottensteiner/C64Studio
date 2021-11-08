@@ -347,7 +347,91 @@
 
 
 !macro DisableC65ROM {
+          ;Disable C65 rom protection using
+          ;hypervisor trap (see mega65 manual)
           lda #$70
           sta $d640
           eom
+
+          ; Unmap C65 Roms $d030 by clearing bits 3-7
+          lda #%11111000
+          trb $d030
+}
+
+!macro DMACacheEnable {
+  poke32bit $BFFFFF2, $E0
+}
+
+
+!macro poke32bit addr, val {
+    RunDMAJob job
+    bra +
+  job
+    +DMAHeader $00, addr >> 20
+    +DMAFillJob val, addr, 1, 0
+  +
+}
+
+!macro RunDMAJob JobPointer {
+    lda #[JobPointer >> 16]
+    sta $d702
+    sta $d704
+    lda #>JobPointer
+    sta $d701
+    lda #<JobPointer
+    sta $d705
+}
+
+!macro DMAHeader SourceBank, DestBank {
+    !byte $0A ; Request format is F018A
+    !byte $80, SourceBank
+    !byte $81, DestBank
+}
+
+!macro DMACopyJob Source, Destination, Length, Chain, Backwards {
+  !byte $00 ;No more options
+  !if Chain = 1 {
+    !byte $04 ;Copy and chain
+  } else {
+    !byte $00 ;Copy and last request
+  }
+
+  .backByte = 0
+  !if (Backwards) {
+    .backByte = $40
+    Source = Source + Length - 1
+    Destination = Destination + Length - 1
+  }
+  !word Length ;Size of Copy
+
+  ;byte 04
+  !word Source & $ffff
+  !byte [Source >> 16] + .backByte
+
+  ;byte 07
+  !word Destination & $ffff
+  !byte [[Destination >> 16] & $0f]  + .backByte
+  ; .if(Chain) {
+  !word $0000
+  ; }
+}
+
+!macro DMAFillJob SourceByte, Destination, Length, Chain {
+  !byte $00 ;No more options
+  !if Chain = 1 {
+    !byte $07 ;Fill and chain
+  } else {
+    !byte $03 ;Fill and last request
+  }
+
+  !word Length ;Size of Copy
+  ;byte 4
+  !word SourceByte
+  !byte $00
+  ;byte 7
+  !word Destination & $ffff
+  !byte [[Destination >> 16] & $0f]
+  !if(Chain) {
+    !word $0000
+  }
 }

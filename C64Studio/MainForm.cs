@@ -5054,6 +5054,7 @@ namespace C64Studio
           Document.DeducedDependency[Configuration.Name] = buildState;
         }
         buildState.Clear();
+        
 
         // auto-add all external dependencies with their current time stamp
         if ( Document.Element != null )

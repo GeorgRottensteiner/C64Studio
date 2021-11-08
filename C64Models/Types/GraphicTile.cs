@@ -12,7 +12,7 @@ namespace RetroDevStudio.Types
     public int                  TransparentColorIndex = -1;
     public int                  Width = 8;
     public int                  Height = 8;
-    public int                  CustomColor = -1;
+    public int                  CustomColor = 1;
     public ByteBuffer           Data = new ByteBuffer( 8 );
     public GR.Image.MemoryImage Image = new GR.Image.MemoryImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
@@ -83,7 +83,6 @@ namespace RetroDevStudio.Types
           }
           break;
         case GraphicTileMode.COMMODORE_MULTICOLOR:
-          //if ( CustomColor >= 8 )
           {
             int bytePos = Y * ( ( Width + 7 ) / 8 ) + X / 8;
 
@@ -114,9 +113,8 @@ namespace RetroDevStudio.Types
               Data.SetU8At( bytePos, newByte );
               return true;
             }
-            break;
           }
-          //goto case GraphicTileMode.COMMODORE_HIRES;
+          break;
         case GraphicTileMode.MEGA65_FCM_16_COLORS:
           {
             int     bytePos = X / 2 + Y * ( ( Width + 1 ) / 2 );
@@ -129,6 +127,7 @@ namespace RetroDevStudio.Types
                 pixelValue |= (byte)( Color << 4 );
 
                 Data.SetU8At( bytePos, pixelValue );
+                //Image.SetPixel( X, Y, (uint)Color );
                 return true;
               }
             }
@@ -140,15 +139,17 @@ namespace RetroDevStudio.Types
                 pixelValue |= (byte)Color;
 
                 Data.SetU8At( bytePos, pixelValue );
+                //Image.SetPixel( X, Y, (uint)Color );
                 return true;
               }
             }
             return false;
           }
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
-          if ( Data.ByteAt( X + Y * 8 ) != Color )
+          if ( Data.ByteAt( X + Y * Width ) != Color )
           {
-            Data.SetU8At( X + Y * 8, (byte)Color );
+            Data.SetU8At( X + Y * Width, (byte)Color );
+            //Image.SetPixel( X, Y, (uint)Color );
             return true;
           }
           break;

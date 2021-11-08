@@ -716,7 +716,8 @@ namespace GR.Image
         switch ( Image.PixelFormat )
         {
           case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
-            if ( PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb )
+            if ( ( PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb )
+            ||   ( PixelFormat == System.Drawing.Imaging.PixelFormat.Format32bppRgb ) )
             {
               for ( int y = 0; y < copyHeight; ++y )
               {

@@ -73,7 +73,7 @@ namespace C64Studio
 
       pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
       layerPreview.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      panelSprites.PixelFormat = System.Drawing.Imaging.PixelFormat.Format24bppRgb;
+      panelSprites.PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb;
       panelSprites.SetDisplaySize( 4 * m_SpriteWidth, 6 * m_SpriteHeight );
       panelSprites.ClientSize = new System.Drawing.Size( 4 * m_SpriteWidth * 2 + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth, 6 * m_SpriteHeight * 2 );
 
@@ -360,11 +360,16 @@ namespace C64Studio
             colorIndex = (int)ColorType.MULTICOLOR_2;
           }
         }
+        else
+        {
+          colorIndex = _ColorSettingsDlg.CustomColor;
+        }
 
         Undo.UndoTask undo = null;
         if ( m_ButtonReleased )
         {
           undo = new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, m_CurrentSprite );
+          m_ButtonReleased = false;
         }
 
         bool  modified = false;
@@ -385,7 +390,6 @@ namespace C64Studio
           if ( undo != null )
           {
             DocumentInfo.UndoManager.AddUndoTask( undo );
-            m_ButtonReleased = false;
           }
 
           SpriteChanged( m_CurrentSprite );
@@ -2438,12 +2442,6 @@ namespace C64Studio
       if ( comboSprite.SelectedIndex == SpriteIndex )
       {
         comboSprite.Invalidate();
-
-        if ( ( m_CurrentLayer != null )
-        &&   ( m_CurrentLayer.Sprites.Any( s => s.Index == SpriteIndex ) ) )
-        {
-          RedrawPreviewLayer();
-        }
       }
       CurrentSpriteModified();
       SetModified();
