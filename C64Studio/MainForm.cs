@@ -4897,6 +4897,7 @@ namespace C64Studio
 
     public void RemoveWatchEntry( WatchEntry Watch )
     {
+      m_CurrentProject?.Settings.WatchEntries.Remove( Watch );
       m_DebugWatch.RemoveWatchEntry( Watch );
       if ( IsWatchShowingCurrentDebuggedProject() )
       {
