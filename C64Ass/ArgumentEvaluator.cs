@@ -30,6 +30,8 @@ namespace C64Ass
       _Args.AddSwitch( "-AUTOTRUNCATELITERALS", true );
       _Args.AddParameter( "I", true );
       _Args.AddParameter( "-IGNORE", true );
+      _Args.AddSwitch( "V", true );
+      _Args.AddSwitch( "-VERSION", true );
     }
 
 
@@ -51,6 +53,7 @@ namespace C64Ass
       System.Console.WriteLine( "-N, --NOWARNINGS               - Show no warnings" );
       System.Console.WriteLine( "-I, --IGNORE [WarningNo]       - Ignore specific Warnings" );
       System.Console.WriteLine( "                                 Multiple warnings separated by comma" );
+      System.Console.WriteLine( "-V, --VERSION                  - Display version" );
     }
 
 
@@ -72,6 +75,15 @@ namespace C64Ass
       {
         WriteHelp();
         return config;
+      }
+
+      if ( ( _Args.IsParameterSet( "V" ) )
+      ||   ( _Args.IsParameterSet( "-VERSION" ) ) )
+      {
+        Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
+        Console.WriteLine( $"C64Ass Assembler V{version}" ); 
+        return null;
       }
 
       // last arg is filename?
