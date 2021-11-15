@@ -1,10 +1,10 @@
 <HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
 <BODY><PRE>
 
-  BSR          BSR Jump to relative new location saving return address      BSR
+  BSR      BSR Jump to relative new location saving return address      BSR
 
-  Operation:  PC + 2 to Stack, (PC + 1) -&gt; PCL          N V - B D I Z C
-                               (PC + 2) -&gt; PCH          . . . . . . . .
+  Operation:  PC + 2 to Stack, (PC + 1) -&gt; PCL              N V - B D I Z C
+                               (PC + 2) -&gt; PCH              . . . . . . . .
 
 
  4510 Versions:
@@ -12,7 +12,7 @@
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
   +----------------+-----------------------+---------+---------+----------+
-  |  <A HREF="ADDR15B.HTM">Relative 16bit</A>  |   BSR $FFFF           |   $63   |    3    |    3b    |
+  | <A HREF="ADDR15B.HTM">Relative 16bit</A> |   BSR $FFFF           |   $63   |    3    |    3b    |
   +----------------+-----------------------+---------+---------+----------+
   b Add 1 if branch is taken
     Add 1 more if branch taken crosses a page boundary

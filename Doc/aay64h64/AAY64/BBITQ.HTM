@@ -3,20 +3,20 @@
 
   BITQ            BIT Test bits in memory with Q register              BITQ
 
-  Operation:  Q /\ M -&gt; Z, M30 -&gt; V, M31 -&gt; N             N V - B D I Z C
-                                                        / / . . . . / .
+  Operation:  Q /\ M -&gt; Z, M30 -&gt; V, M31 -&gt; N               N V - B D I Z C
+                                                            / / . . . . / .
   Bit 30 and 31 are transferred to the status register.
   If the result of Q /\ M is zero then Z = 1, otherwise Z=0.
 
 
  4510 Versions:
 
-  +----------------+-----------------------+---------+---------+----------+
-  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
-  +----------------+-----------------------+---------+---------+----------+
-  |  <A HREF="ADDR25C.HTM">ZeroPage Quad</A>      |   BITQ $FF            |$42 $42 $24|    4    |    8r    |
-  |  <A HREF="ADDR25E.HTM">Absolute Quad</A>      |   BITQ $FFFF          |$42 $42 $2C|    5    |    9r    |
-  +----------------+-----------------------+---------+---------+----------+
+  +----------------+-----------------------+-----------+---------+----------+
+  | Addressing Mode| Assembly Language Form|  OP CODE  |No. Bytes|No. Cycles|
+  +----------------+-----------------------+-----------+---------+----------+
+  | <A HREF="ADDR25C.HTM">ZeroPage Quad</A>  |   BITQ $FF            |$42 $42 $24|    4    |    8r    |
+  | <A HREF="ADDR25E.HTM">Absolute Quad</A>  |   BITQ $FFFF          |$42 $42 $2C|    5    |    9r    |
+  +----------------+-----------------------+-----------+---------+----------+
   r Add 1 if clock speed is at 40 MHz
 
 </PRE></BODY></HTML>

@@ -3,8 +3,8 @@
 
   BPL                     BPL Branch on result plus                     BPL
 
-  Operation:  Branch on N = 0                           N V - B D I Z C
-                                                        . . . . . . . .
+  Operation:  Branch on N = 0                               N V - B D I Z C
+                                                            . . . . . . . .
 
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
@@ -20,8 +20,8 @@
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
   +----------------+-----------------------+---------+---------+----------+
-  |  <A HREF="ADDR15.HTM">Relative</A>      |   BPL $FFFF           |   $10   |    2    |    2b    |
-  |  <A HREF="ADDR15B.HTM">Relative 16bit</A>  |   LBPL $FFFF          |   $13   |    3    |    3b    |
+  | <A HREF="ADDR15.HTM">Relative</A>       |   BPL $FFFF           |   $10   |    2    |    2b    |
+  | <A HREF="ADDR15B.HTM">Relative 16bit</A> |   LBPL $FFFF          |   $13   |    3    |    3b    |
   +----------------+-----------------------+---------+---------+----------+
   b Add 1 if branch is taken
     Add 1 more if branch taken crosses a page boundary

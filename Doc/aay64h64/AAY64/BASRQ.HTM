@@ -3,19 +3,19 @@
 
   ASRQ             ASR AND #immediate, LSR accu                      ASRQ
 
-  Operation:  Q &lt;- Q &lt;&lt; 1 or M &lt;- M &lt;&lt; 1             N V - B D I Z C
-                                                        / . . . . . / /
+  Operation:  Q &lt;- Q &lt;&lt; 1 or M &lt;- M &lt;&lt; 1                  N V - B D I Z C
+                                                          / . . . . . / /
 
 
   4510 Versions:
 
-  +----------------+-----------------------+---------+---------+----------+
-  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
-  +----------------+-----------------------+---------+---------+----------+
-  |  <A HREF="ADDR25D.HTM">Accumulator Quad</A>   |   ASRQ (A)            |$42 $42 $43|    3    |    3     |
-  |  <A HREF="ADDR25C.HTM">ZeroPage Quad</A>      |   ASRQ $FF            |$42 $42 $44|    4    |   12dmr  |
-  |  <A HREF="ADDR25F.HTM">ZeroPage Quad,X</A>    |   ASRQ $FF,X          |$42 $42 $54|    4    |   12dmpr |
-  +----------------+-----------------------+---------+---------+----------+
+  +----------------+-----------------------+-----------+---------+----------+
+  | Addressing Mode| Assembly Language Form|  OP CODE  |No. Bytes|No. Cycles|
+  +----------------+-----------------------+-----------+---------+----------+
+  |<A HREF="ADDR25D.HTM">Accumulator Quad</A>|   ASRQ (A)            |$42 $42 $43|    3    |    3     |
+  |<A HREF="ADDR25C.HTM">ZeroPage Quad</A>   |   ASRQ $FF            |$42 $42 $44|    4    |   12dmr  |
+  |<A HREF="ADDR25F.HTM">ZeroPage Quad,X</A> |   ASRQ $FF,X          |$42 $42 $54|    4    |   12dmpr |
+  +----------------+-----------------------+-----------+---------+----------+
   d Sub 1 if CPU is at 3.5 MHz
   m Sub non-bus cycles when at 40 MHz
   p Add 1 if page boundary is crossed.

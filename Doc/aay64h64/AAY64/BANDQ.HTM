@@ -3,19 +3,19 @@
 
   ANDQ                 &quot;AND&quot; memory with accumulator                  ANDQ
 
-  Operation:  Q /\ M -&gt; Q                               N V - B D I Z C
-                                                        / . . . . . / .
+  Operation:  Q /\ M -&gt; Q                                  N V - B D I Z C
+                                                           / . . . . . / .
 
  4510 Versions:
 
-  +----------------+-----------------------+------------+---------+----------+
-  | Addressing Mode| Assembly Language Form|  OP CODE   |No. Bytes|No. Cycles|
-  +----------------+-----------------------+------------+---------+----------+
-  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   ANDQ $FF            |    $25    |    4    |    8r    |
-  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   ANDQ $FFFF          |    $2D    |    5    |    9r    |
-  |  <A HREF="ADDR25A.HTM">(Indirect Quad)</A>  |   ANDQ ($FF)          |    $32    |    4    |    10ipr |
-  |  <A HREF="ADDR25B.HTM">[Indirect Quad]</A>  |   ANDQ [$FF]          |$42 $42 $32|    5    |   13ipr  |
-  +----------------+-----------------------+---------+---------+----------+
+  +----------------+-----------------------+---------------+---------+----------+
+  | Addressing Mode| Assembly Language Form|    OP CODE    |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------------+---------+----------+
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   ANDQ $FF            |  $42 $42 $25  |    4    |    8r    |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   ANDQ $FFFF          |  $42 $42 $2D  |    5    |    9r    |
+  |<A HREF="ADDR25A.HTM">(Indirect Quad)</A> |   ANDQ ($FF)          |  $42 $42 $32  |    4    |   10ipr |
+  |<A HREF="ADDR25B.HTM">[Indirect Quad]</A> |   ANDQ [$FF]          |$42 $42 $EA $32|    5    |   13ipr  |
+  +----------------+-----------------------+---------------+---------+----------+
   i Add 1 if clock speed is at 40 MHz
   p Add 1 if page boundary is crossed
   r Add 1 if clock speed is at 40 MHz

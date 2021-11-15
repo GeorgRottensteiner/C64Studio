@@ -3,8 +3,8 @@
 
   BVS                    BVS Branch on overflow set                     BVS
 
-  Operation:  Branch on V = 1                           N V - B D I Z C
-                                                        . . . . . . . .
+  Operation:  Branch on V = 1                               N V - B D I Z C
+                                                            . . . . . . . .
 
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
@@ -20,8 +20,8 @@
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
   +----------------+-----------------------+---------+---------+----------+
-  |  <A HREF="ADDR15.HTM">Relative</A>      |   BVS $FFFF           |   $70   |    2    |    2b    |
-  |  <A HREF="ADDR15B.HTM">Relative 16bit</A> |   LBVS $FFFF          |   $73   |    3    |    3b    |
+  | <A HREF="ADDR15.HTM">Relative</A>       |   BVS $FFFF           |   $70   |    2    |    2b    |
+  | <A HREF="ADDR15B.HTM">Relative 16bit</A> |   LBVS $FFFF          |   $73   |    3    |    3b    |
   +----------------+-----------------------+---------+---------+----------+
   b Add 1 if branch is taken
     Add 1 if branch taken crosses page boundary
