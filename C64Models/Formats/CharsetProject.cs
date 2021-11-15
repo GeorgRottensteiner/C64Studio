@@ -76,7 +76,6 @@ namespace C64Studio.Formats
         PlaygroundChars.Add( 0x10000 | 0x20 );
       }
       Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
-      Colors.Palettes.Add( Colors.Palette );
     }
 
 
@@ -110,11 +109,11 @@ namespace C64Studio.Formats
         return new GR.Memory.ByteBuffer();
       }
 
-      GR.Memory.ByteBuffer projectFile = new GR.Memory.ByteBuffer( (uint)( Count * Lookup.NumBytesOfSingleCharacter( Mode ) ) );
+      GR.Memory.ByteBuffer projectFile = new GR.Memory.ByteBuffer( (uint)( Count * Lookup.NumBytesOfSingleCharacterBitmap( Mode ) ) );
 
       for ( int i = 0; i < Count; ++i )
       {
-        Characters[StartIndex + i].Tile.Data.CopyTo( projectFile, 0, Lookup.NumBytesOfSingleCharacter( Mode ), i * Lookup.NumBytesOfSingleCharacter( Mode ) );
+        Characters[StartIndex + i].Tile.Data.CopyTo( projectFile, 0, Lookup.NumBytesOfSingleCharacterBitmap( Mode ), i * Lookup.NumBytesOfSingleCharacterBitmap( Mode ) );
       }
       return projectFile;
     }
@@ -142,7 +141,7 @@ namespace C64Studio.Formats
 
     public GR.Memory.ByteBuffer SaveCharsetToBuffer()
     {
-      var charData = new GR.Memory.ByteBuffer( (uint)( TotalNumberOfCharacters * Lookup.NumBytesOfSingleCharacter( Mode ) ) );
+      var charData = new GR.Memory.ByteBuffer( (uint)( TotalNumberOfCharacters * Lookup.NumBytesOfSingleCharacterBitmap( Mode ) ) );
       for ( int i = 0; i < TotalNumberOfCharacters; ++i )
       {
         charData.Append( Characters[i].Tile.Data );
@@ -504,6 +503,10 @@ namespace C64Studio.Formats
               }
             }
           }
+        }
+        if ( Colors.Palettes.Count == 0 )
+        {
+          Colors.Palettes.Add( PaletteManager.PaletteFromNumColors( Lookup.NumberOfColorsInCharacter( Mode ) ) );
         }
       }
       else
