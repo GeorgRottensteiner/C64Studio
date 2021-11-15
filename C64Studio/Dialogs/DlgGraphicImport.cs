@@ -95,8 +95,8 @@ namespace C64Studio
 
       picPreview.DisplayPage.Create( picPreview.ClientSize.Width, picPreview.ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
+      //PaletteManager.ApplyPalette( m_ImportImage );
       PaletteManager.ApplyPalette( picPreview.DisplayPage );
-      PaletteManager.ApplyPalette( m_ImportImage );
 
       switch ( ImportType )
       {
@@ -188,8 +188,23 @@ namespace C64Studio
       m_OriginalImage = new GR.Image.MemoryImage( newImage.Width, newImage.Height, newImage.PixelFormat );
       m_ImportImage = new GR.Image.MemoryImage( newImage.Width, newImage.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
+      Palette importPal = null;
+      if ( newImage.BitsPerPixel <= 8 )
+      {
+        // an image with palette
+        importPal = new Palette( 1 << newImage.BitsPerPixel );
+        for ( int i = 0; i < importPal.NumColors; ++i )
+        {
+          importPal.ColorValues[i] = (uint)( 0xff000000
+                  + ( newImage.PaletteRed( i ) << 16 )
+                  + ( newImage.PaletteGreen( i ) << 8 )
+                  + newImage.PaletteBlue( i ) );
+        }
+        importPal.CreateBrushes();
+        PaletteManager.ApplyPalette( m_OriginalImage, importPal );
+      }
       PaletteManager.ApplyPalette( m_ImportImage );
-      PaletteManager.ApplyPalette( m_OriginalImage );
+      //PaletteManager.ApplyPalette( m_OriginalImage );
       newImage.DrawTo( m_OriginalImage, 0, 0 );
       newImage.Dispose();
 
@@ -197,7 +212,10 @@ namespace C64Studio
       {
         picOriginal.DisplayPage.Create( picOriginal.ClientSize.Width, picOriginal.ClientSize.Height, m_OriginalImage.PixelFormat );
 
-        PaletteManager.ApplyPalette( picOriginal.DisplayPage );
+        if ( importPal != null )
+        {
+          PaletteManager.ApplyPalette( picOriginal.DisplayPage, importPal );
+        }
       }
       picOriginal.DisplayPage.Box( 0, 0, picOriginal.DisplayPage.Width, picOriginal.DisplayPage.Height, 0 );
 

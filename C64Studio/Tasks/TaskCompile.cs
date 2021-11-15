@@ -275,6 +275,10 @@ namespace C64Studio.Tasks
 
         Parser.ParserBase parser = Core.DetermineParser( Doc );
 
+        if ( !Doc.DeducedDependency.ContainsKey( ConfigSetting ) )
+        {
+          Doc.DeducedDependency.Add( ConfigSetting, new DependencyBuildState() );
+        }
         Doc.DeducedDependency[ConfigSetting].BuildState.Add( Doc.FullPath, Core.Compiling.FileLastWriteTime( Doc.FullPath ) );
 
         var currentBuildState = new GR.Collections.Map<string,DateTime>( Doc.DeducedDependency[ConfigSetting].BuildState );

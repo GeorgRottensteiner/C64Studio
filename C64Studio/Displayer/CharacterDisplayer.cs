@@ -359,6 +359,11 @@ namespace C64Studio.Displayer
 
     public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, GR.Image.IImage TargetImage, int X, int Y, int AlternativeColor, int AltBGColor, int AltMColor1, int AltMColor2, int AltBGColor4 )
     {
+      if ( CharIndex >= Charset.Characters.Count )
+      {
+        return;
+      }
+
       Formats.CharData Char = Charset.Characters[CharIndex];
 
       DisplayChar( Charset, CharIndex, TargetImage, X, Y, AlternativeColor, AltBGColor, AltMColor1, AltMColor2, AltBGColor4, Charset.Mode );

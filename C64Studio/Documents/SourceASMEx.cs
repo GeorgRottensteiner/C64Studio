@@ -3009,7 +3009,7 @@ namespace C64Studio
     {
       string wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
 
-      Core.MainForm.CallHelp( wordBelow );
+      Core.MainForm.CallHelp( wordBelow, DocumentInfo );
     }
 
 

@@ -1,4 +1,25 @@
 ﻿C64Studio
+o label .NOP gets coloring of opcode
+o Same version info for C64Studio and C64Ass
+o I've noticed that the last pixel change is not visible at the "screen" tab, 
+  the last pixel set or removed at "charset" tab is not updated for this screen
+o Scaling: At a ".charscreen" element, we can change the actual color to be used for drawing, 
+  from the row showing the selected character with all colors. If I click on this row to choose a color, 
+  the actually chosen one will be picked by a scaled position, not where I clicked. At the left (black color) it's ok, 
+  but on the right it's like 3 characters to the right. I need to clock above the color #12 to choose the color #15. I guess it's because my Windows 10 display is set at 125% scaling.
+o Scaling #2: there is the character picker window above the color row. In this window the characters can be well picked but they are 
+  split "wrong". Instead of 16, they are split by 20 chars per row and I can't pick some characters directly, need to move to 
+  them with the cursor. (By this 20-char splitting, the bottom 3 rows are empty (black) and are inactive but there should be no such area present.) The similar windows for "charset" tab works good as a 16x16 map.
+
+4. "Show auto complete" checked and use it when editing code text. But it is also applied when not wanted: 
+    If I move the cursor only and the previous auto complete list is canceled, no lists appear, it's ok. 
+    But when I edit the code and change the cursor (e.g. up or down), the autocomplete list appears for the word in the preceding or following 
+    line too. Even for a commented text. After moving the cursor (and before the autocomplete is shown) there should be no autocomplete 
+    list appear.
+4.b. Similar suggestion about the autocomplete: when typing and the list appears, one may press enter instantly to get a new line. 
+    If pressed just one tenth of seconds later, the first autocomplete match will be applied to the last typed word replacing it, instead of inserting a new line. It makes the editing hard. Some may also move the cursor right up/down after writing a word and the list appearing breaks this. Personally I do these all time and suffer from the autocomplete appearing, though I need it, it's useful. My suggestion is that autocomplete could be bound to a key, not being fully automatic. Automatic only if not bound to any key. (As MS Visual Studio does for example. My key is "Alt+right", very handy.)
+5. This one is ok for the compiler: "5+4*-2" but "-5+4*-2" gives an error. 
+    Same if labels are used instead of constants. 
 o Error when going > $ffff (ACME), not for !cpu m65!
 o Allow string literals als macro arguments:
 !macro print3 xpos, ypos, strtext, col

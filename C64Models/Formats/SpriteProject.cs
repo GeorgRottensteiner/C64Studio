@@ -470,17 +470,34 @@ namespace C64Studio.Formats
       {
         var curPal = Colors.Palettes[i];
 
+        //Debug.Log( "orig pal data: " + curPal.GetExportData( 0, curPal.NumColors, false ).ToString() );
+
         palData.Append( curPal.GetExportData( 0, curPal.NumColors, Swizzled ) );
+      }
+
+      //Debug.Log( "Total Pal Data: " + palData.ToString() );
+
+      // pal data has rgbrgbrgb, we need to copy all r,g,bs behind each other
+
+      var orderedPalData = new ByteBuffer();
+
+      for ( int i = 0; i < 3; ++i )
+      {
+        for ( int j = 0; j < Colors.Palettes.Count; ++j )
+        {
+          orderedPalData.Append( palData.SubBuffer( ( i + j * 3 ) * Colors.Palettes[0].NumColors, Colors.Palettes[0].NumColors ) );
+        }
       }
 
       var finalPalData = new ByteBuffer();
       int totalNumColors = Colors.Palettes.Count * Colors.Palettes[0].NumColors;
 
       // extract R, G and B
-      finalPalData.Append( palData.SubBuffer( StartIndex, NumColors ) );
-      finalPalData.Append( palData.SubBuffer( totalNumColors + StartIndex, NumColors ) );
-      finalPalData.Append( palData.SubBuffer( 2 * totalNumColors + StartIndex, NumColors ) );
+      finalPalData.Append( orderedPalData.SubBuffer( StartIndex, NumColors ) );
+      finalPalData.Append( orderedPalData.SubBuffer( totalNumColors + StartIndex, NumColors ) );
+      finalPalData.Append( orderedPalData.SubBuffer( 2 * totalNumColors + StartIndex, NumColors ) );
 
+      //Debug.Log( "GetPaletteExportData: " + finalPalData.ToString() );
       return finalPalData;
     }
 

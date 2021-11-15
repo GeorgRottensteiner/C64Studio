@@ -4732,6 +4732,11 @@ namespace C64Studio.Parser
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read file " + subFilename );
             return false;
           }
+          if ( !spriteProject.ReadFromBuffer( dataToInclude ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Could not read sprite project file " + subFilename );
+            return false;
+          }
 
           int totalNumColors = spriteProject.Colors.Palettes.Count * spriteProject.Colors.Palettes[0].ColorValues.Length;
 

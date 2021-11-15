@@ -721,7 +721,6 @@ namespace GR.Forms
       int value = ItemAtLocation( e.X, e.Y );
       if ( m_ItemUnderMouse != value )
       {
-        Debug.Log( "Invalidate item " + m_ItemUnderMouse + " and " + value );
         InvalidateItemRect( m_ItemUnderMouse );
         InvalidateItemRect( value );
         m_ItemUnderMouse = value;

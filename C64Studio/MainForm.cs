@@ -4222,7 +4222,7 @@ namespace C64Studio
 
 
 
-    public void CallHelp( string Keyword )
+    public void CallHelp( string Keyword, DocumentInfo Doc )
     {
       m_ChangingToolWindows = true;
       if ( string.IsNullOrEmpty( m_Help.Text ) )
@@ -4236,6 +4236,19 @@ namespace C64Studio
 
       if ( !string.IsNullOrEmpty( Keyword ) )
       {
+        if ( Doc != null )
+        {
+          if ( Doc.ASMFileInfo.Processor.Opcodes.ContainsKey( Keyword.ToLower() ) )
+          {
+            m_Help.NavigateTo( "aay64h64/AAY64/B" + Keyword.ToUpper() + ".HTM" );
+            return;
+          }
+          else if ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) )
+          {
+            m_Help.NavigateTo( "asm_macro.html#" + Keyword.Substring( 1 ).ToLower() );
+            return;
+          }
+        }
         if ( StudioCore.Compiling.ParserASM.m_Processor.Opcodes.ContainsKey( Keyword.ToLower() ) )
         {
           m_Help.NavigateTo( "aay64h64/AAY64/B" + Keyword.ToUpper() + ".HTM" );
@@ -4315,7 +4328,7 @@ namespace C64Studio
                 keywordBelow = asm.FindWordAtCaretPosition();
               }
             }
-            CallHelp( keywordBelow );
+            CallHelp( keywordBelow, ActiveDocumentInfo );
           }
           return true;
         case C64Studio.Types.Function.FIND_NEXT:
