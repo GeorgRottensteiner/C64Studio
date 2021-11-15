@@ -1132,8 +1132,7 @@ namespace C64Studio
       mcSettings.BackgroundColor  = m_SpriteProject.Colors.BackgroundColor;
       mcSettings.MultiColor1      = m_SpriteProject.Colors.MultiColor1;
       mcSettings.MultiColor2      = m_SpriteProject.Colors.MultiColor2;
-      Debug.Log( "Replace with spriteproject palette!" );
-      mcSettings.Palette          = Core.MainForm.ActivePalette;
+      mcSettings.Palette          = new Palette( m_SpriteProject.Colors.Palette );
 
       bool pasteAsBlock = false;
       if ( !Core.MainForm.ImportImage( "", imgClip, Types.GraphicType.SPRITES, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
