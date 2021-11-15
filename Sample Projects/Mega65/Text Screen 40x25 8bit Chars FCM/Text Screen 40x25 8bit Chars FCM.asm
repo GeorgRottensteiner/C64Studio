@@ -1,4 +1,4 @@
-;to set the proper CPU
+﻿;to set the proper CPU
 !cpu m65
 
 ;to include VIC constants
@@ -47,30 +47,27 @@ SCREEN_COLOR  = $d800
 
           ldx #0
 -
+          ;we need to add offset to the character data
           lda TEXT_SCREEN_DATA,x
+          clc
+          adc #TILE_DATA / 64
           sta SCREEN_CHAR,x
           lda TEXT_SCREEN_DATA + 1 * 250,x
+          clc
+          adc #TILE_DATA / 64
           sta SCREEN_CHAR + 1 * 250,x
           lda TEXT_SCREEN_DATA + 2 * 250,x
+          clc
+          adc #TILE_DATA / 64
           sta SCREEN_CHAR + 2 * 250,x
           lda TEXT_SCREEN_DATA + 3 * 250,x
+          clc
+          adc #TILE_DATA / 64
           sta SCREEN_CHAR + 3 * 250,x
-
-          ;lda TEXT_SCREEN_DATA + 1000,x
-          ;sta SCREEN_COLOR,x
-          ;lda TEXT_SCREEN_DATA + 1000 + 1 * 250,x
-          ;sta SCREEN_COLOR + 1 * 250,x
-          ;lda TEXT_SCREEN_DATA + 1000 + 2 * 250,x
-          ;sta SCREEN_COLOR + 2 * 250,x
-          ;lda TEXT_SCREEN_DATA + 1000 + 3 * 250,x
-          ;sta SCREEN_COLOR + 3 * 250,x
 
           inx
           cpx #250
           bne -
-
-          lda #192
-          sta SCREEN_CHAR
 
           ;endless loop
           jmp *
@@ -85,13 +82,4 @@ TEXT_SCREEN_DATA
 * = $3000
 TILE_DATA
 
-!media "Text Screen.charscreen",CHARSET,0,1
-        ;!byte 7,7,7,7,7,7,7,7
-        ;!byte 7,3,3,3,3,3,3,3
-        ;!byte 7,3,7,7,7,7,7,7
-        ;!byte 7,3,7,3,3,3,3,3
-        ;!byte 7,3,7,3,3,3,3,3
-        ;!byte 7,3,7,3,3,3,3,3
-        ;!byte 7,3,7,3,3,3,3,3
-        ;!byte 7,3,7,3,3,3,3,3
-
+!media "Text Screen.charscreen",CHARSET,0,2

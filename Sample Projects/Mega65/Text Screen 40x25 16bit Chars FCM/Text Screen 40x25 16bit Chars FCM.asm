@@ -1,4 +1,4 @@
-;to set the proper CPU
+﻿;to set the proper CPU
 !cpu m65
 
 ;to include VIC constants
@@ -52,38 +52,33 @@ SCREEN_COLOR  = $d800
           sta VIC.BACKGROUND_COLOR
 
           ldx #0
+          ldy #0
 -
+          ;we need to add offset to the character data
           lda TEXT_SCREEN_DATA,x
-          sta SCREEN_CHAR,x
+          clc
+          adc #TILE_DATA / 64
+          sta SCREEN_CHAR,y
+          lda #0
+
+          iny
+
           lda TEXT_SCREEN_DATA + 1 * 250,x
+          clc
+          adc #TILE_DATA / 64
           sta SCREEN_CHAR + 1 * 250,x
           lda TEXT_SCREEN_DATA + 2 * 250,x
+          clc
+          adc #TILE_DATA / 64
           sta SCREEN_CHAR + 2 * 250,x
           lda TEXT_SCREEN_DATA + 3 * 250,x
+          clc
+          adc #TILE_DATA / 64
           sta SCREEN_CHAR + 3 * 250,x
-
-          ;lda TEXT_SCREEN_DATA + 1000,x
-          ;sta SCREEN_COLOR,x
-          ;lda TEXT_SCREEN_DATA + 1000 + 1 * 250,x
-          ;sta SCREEN_COLOR + 1 * 250,x
-          ;lda TEXT_SCREEN_DATA + 1000 + 2 * 250,x
-          ;sta SCREEN_COLOR + 2 * 250,x
-          ;lda TEXT_SCREEN_DATA + 1000 + 3 * 250,x
-          ;sta SCREEN_COLOR + 3 * 250,x
 
           inx
           cpx #250
           bne -
-
-          lda #192
-          sta SCREEN_CHAR
-          lda #1
-          sta SCREEN_CHAR + 1
-          ;sta SCREEN_CHAR + 1
-          lda #192
-          sta SCREEN_CHAR + 2
-          lda #0
-          sta SCREEN_CHAR + 3
 
           ;endless loop
           jmp *
