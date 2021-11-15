@@ -28,7 +28,9 @@ namespace C64Studio.Controls
     private bool                        m_ButtonReleased = false;
     public StudioCore                   Core = null;
     public Undo.UndoManager             UndoManager = null;
+
     private bool                        DoNotUpdateFromControls = false;
+    private bool                        DoNotAddUndo = false;
 
     private CharsetProject              m_Project = new CharsetProject();
 
@@ -247,7 +249,7 @@ namespace C64Studio.Controls
             break;
           }
 
-          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos ), firstEntry );
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos, 1 ), firstEntry );
           firstEntry = false;
 
           var targetTile = m_Project.Characters[pastePos].Tile;
@@ -332,7 +334,7 @@ namespace C64Studio.Controls
               break;
             }
 
-            UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos ), i == 0 );
+            UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos, 1 ), i == 0 );
 
             var mode = (TextCharMode)memIn.ReadInt32();
             m_Project.Characters[pastePos].Tile.CustomColor = memIn.ReadInt32();
@@ -387,7 +389,7 @@ namespace C64Studio.Controls
               }
               else
               {
-                tempBuffer.CopyTo( m_Project.Characters[pastePos].Tile.Data, 0, Math.Min( Lookup.NumBytesOfSingleCharacter( m_Project.Mode ), (int)dataLength ) );
+                tempBuffer.CopyTo( m_Project.Characters[pastePos].Tile.Data, 0, Math.Min( Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ), (int)dataLength ) );
               }
             }
             else if ( ( width == 24 )
@@ -401,7 +403,7 @@ namespace C64Studio.Controls
             }
             else
             {
-              tempBuffer.CopyTo( m_Project.Characters[pastePos].Tile.Data, 0, Math.Min( Lookup.NumBytesOfSingleCharacter( m_Project.Mode ), (int)dataLength ) );
+              tempBuffer.CopyTo( m_Project.Characters[pastePos].Tile.Data, 0, Math.Min( Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ), (int)dataLength ) );
             }
 
 
@@ -459,36 +461,39 @@ namespace C64Studio.Controls
 
 
 
-    public void CharacterChanged( int CharIndex )
+    public void CharacterChanged( int CharIndex, int Count )
     {
       DoNotUpdateFromControls = true;
 
       bool currentCharChanged = false;
 
-      if ( m_Project.Mode == TextCharMode.COMMODORE_ECM )
+      for ( int charIndex = CharIndex; charIndex < CharIndex + Count; ++charIndex )
       {
-        for ( int i = 0; i < 4; ++i )
+        if ( m_Project.Mode == TextCharMode.COMMODORE_ECM )
         {
-          RebuildCharImage( ( CharIndex + i * 64 ) % 256 );
-          panelCharacters.InvalidateItemRect( ( CharIndex + i * 64 ) % 256 );
-
-          if ( m_CurrentChar == CharIndex )
+          for ( int i = 0; i < 4; ++i )
           {
-            currentCharChanged = true;
+            RebuildCharImage( ( charIndex + i * 64 ) % 256 );
+            panelCharacters.InvalidateItemRect( ( charIndex + i * 64 ) % 256 );
+
+            if ( m_CurrentChar == charIndex )
+            {
+              currentCharChanged = true;
+            }
           }
         }
-      }
-      else
-      {
-        RebuildCharImage( CharIndex );
-        panelCharacters.InvalidateItemRect( CharIndex );
-        currentCharChanged = ( m_CurrentChar == CharIndex );
+        else
+        {
+          RebuildCharImage( charIndex );
+          panelCharacters.InvalidateItemRect( charIndex );
+          currentCharChanged = ( m_CurrentChar == charIndex );
+        }
       }
 
       if ( currentCharChanged )
       {
         panelCharacters_SelectionChanged( null, null );
-        _ColorSettingsDlg.CustomColor = m_Project.Characters[CharIndex].Tile.CustomColor;
+        _ColorSettingsDlg.CustomColor = m_Project.Characters[m_CurrentChar].Tile.CustomColor;
 
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
       }
@@ -879,11 +884,14 @@ namespace C64Studio.Controls
 
     internal void CharsetUpdated( CharsetProject Project )
     {
+      DoNotAddUndo = true;
+
       m_Project = Project;
       if ( comboCharsetMode.SelectedIndex != (int)m_Project.Mode )
       {
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
       }
+      
 
       ChangeColorSettingsDialog();
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
@@ -929,6 +937,8 @@ namespace C64Studio.Controls
       panelCharacters.Invalidate();
       canvasEditor.Invalidate();
       RedrawColorChooser();
+
+      DoNotAddUndo = false;
     }
 
 
@@ -1009,7 +1019,7 @@ namespace C64Studio.Controls
           colorIndex = (int)m_CurrentColorType;
         }
 
-        var potentialUndo = new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedCharIndex );
+        var potentialUndo = new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedCharIndex, 1 );
         if ( affectedChar.Tile.SetPixel( charX, charY, colorIndex ) )
         {
           if ( m_ButtonReleased )
@@ -1136,7 +1146,7 @@ namespace C64Studio.Controls
         if ( ( categoryIndex != -1 )
         &&   ( m_Project.Characters[selChar].Category != categoryIndex ) )
         {
-          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar ), firstChar );
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar, 1 ), firstChar );
           firstChar = false;
 
           m_Project.Characters[selChar].Category = categoryIndex;
@@ -1199,9 +1209,9 @@ namespace C64Studio.Controls
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
-        for ( int y = 0; y < Lookup.NumBytesOfSingleCharacter( m_Project.Mode ); ++y )
+        for ( int y = 0; y < Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ); ++y )
         {
           byte result = (byte)( ~m_Project.Characters[index].Tile.Data.ByteAt( y ) );
           m_Project.Characters[index].Tile.Data.SetU8At( y, result );
@@ -1329,7 +1339,7 @@ namespace C64Studio.Controls
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
         var processedChar = m_Project.Characters[index];
 
@@ -1383,7 +1393,7 @@ namespace C64Studio.Controls
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
         var processedChar = m_Project.Characters[index];
 
@@ -1432,7 +1442,7 @@ namespace C64Studio.Controls
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
         GR.Memory.ByteBuffer resultData = new GR.Memory.ByteBuffer( m_Project.Characters[index].Tile.Data.Length );
 
@@ -1518,7 +1528,7 @@ namespace C64Studio.Controls
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
         GR.Memory.ByteBuffer resultData = new GR.Memory.ByteBuffer( m_Project.Characters[index].Tile.Data.Length );
 
@@ -1604,7 +1614,7 @@ namespace C64Studio.Controls
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
         if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
         ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
@@ -1665,7 +1675,7 @@ namespace C64Studio.Controls
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
         if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
         ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
@@ -1704,7 +1714,7 @@ namespace C64Studio.Controls
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
         for ( int y = 0; y < 8; ++y )
         {
@@ -1748,7 +1758,7 @@ namespace C64Studio.Controls
       UndoManager.StartUndoGroup();
       foreach ( var index in selectedChars )
       {
-        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index ) );
+        UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, index, 1 ) );
 
         for ( int y = 0; y < 8; ++y )
         {
@@ -1845,14 +1855,14 @@ namespace C64Studio.Controls
         return;
       }
 
-      if ( m_Project.Mode == (TextCharMode)comboCharsetMode.SelectedIndex )
+      if ( m_Project.Mode != (TextCharMode)comboCharsetMode.SelectedIndex )
       {
-        return;
+        if ( !DoNotAddUndo )
+        {
+          UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ), true );
+        }
+        m_Project.Mode = (TextCharMode)comboCharsetMode.SelectedIndex;
       }
-
-      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ), true );
-
-      m_Project.Mode = (TextCharMode)comboCharsetMode.SelectedIndex;
 
       UpdatePalette();
       ChangeColorSettingsDialog();
@@ -1879,12 +1889,14 @@ namespace C64Studio.Controls
         }
       }
 
+      if ( !DoNotAddUndo )
+      {
+        UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ), false );
+      }
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
       {
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), false );
-
         m_Project.Characters[i].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[i].Tile.CustomColor );
-        m_Project.Characters[i].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacter( m_Project.Mode ) );
+        m_Project.Characters[i].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ) );
         RebuildCharImage( i );
       }
 
@@ -2038,7 +2050,7 @@ namespace C64Studio.Controls
                 {
                   if ( !Lookup.HasCustomPalette( m_Project.Characters[selChar].Tile.Mode ) )
                   {
-                    UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar ), modified == false );
+                    UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar, 1 ), modified == false );
 
                     m_Project.Characters[selChar].Tile.CustomColor = CustomColor;
                     m_Project.Characters[selChar].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[selChar].Tile.CustomColor );
@@ -2165,7 +2177,7 @@ namespace C64Studio.Controls
       {
         wasModified = true;
 
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), firstUndoStep );
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i, 1 ), firstUndoStep );
         firstUndoStep = false;
 
         for ( int j = 0; j < m_Project.Characters[i].Tile.Data.Length; ++j )
@@ -2237,10 +2249,7 @@ namespace C64Studio.Controls
         ++insertCharIndex;
       }
 
-      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
-      {
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), i == 0 );
-      }
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
 
       // ..and charset
       List<CharData>    origCharData = new List<CharData>();
@@ -2372,19 +2381,16 @@ namespace C64Studio.Controls
         return;
       }
 
-      for ( int i = 0; i < 256; ++i )
-      {
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), i == 0 );
-      }
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
 
       int category = (int)listCategories.SelectedItems[0].Tag;
       int collapsedCount = 0;
 
-      for ( int i = 0; i < 256 - collapsedCount; ++i )
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters - collapsedCount; ++i )
       {
         if ( m_Project.Characters[i].Category == category )
         {
-          for ( int j = i + 1; j < 256 - collapsedCount; ++j )
+          for ( int j = i + 1; j < m_Project.TotalNumberOfCharacters - collapsedCount; ++j )
           {
             if ( m_Project.Characters[j].Category == category )
             {
@@ -2393,7 +2399,7 @@ namespace C64Studio.Controls
               {
                 // collapse!
                 //Debug.Log( "Collapse " + j.ToString() + " into " + i.ToString() );
-                for ( int l = j; l < 256 - 1 - collapsedCount; ++l )
+                for ( int l = j; l < m_Project.TotalNumberOfCharacters - 1 - collapsedCount; ++l )
                 {
                   m_Project.Characters[l].Tile.Data = m_Project.Characters[l + 1].Tile.Data;
                   m_Project.Characters[l].Tile.CustomColor = m_Project.Characters[l + 1].Tile.CustomColor;
@@ -2401,9 +2407,9 @@ namespace C64Studio.Controls
                 }
                 for ( int l = 0; l < 8; ++l )
                 {
-                  m_Project.Characters[255 - collapsedCount].Tile.Data.SetU8At( l, 0 );
+                  m_Project.Characters[m_Project.TotalNumberOfCharacters - 1 - collapsedCount].Tile.Data.SetU8At( l, 0 );
                 }
-                m_Project.Characters[255 - collapsedCount].Tile.CustomColor = 0;
+                m_Project.Characters[m_Project.TotalNumberOfCharacters - 1 - collapsedCount].Tile.CustomColor = 0;
                 ++collapsedCount;
                 --j;
                 continue;
@@ -2425,11 +2431,7 @@ namespace C64Studio.Controls
 
     private void btnSortCategories_Click( object sender, EventArgs e )
     {
-      for ( int i = 0; i < 256; ++i )
-      {
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), i == 0 );
-      }
-
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
 
       int[]   charMapNewToOld = new int[256];
       int[]   charMapOldToNew = new int[256];
@@ -2467,10 +2469,7 @@ namespace C64Studio.Controls
         return;
       }
 
-      for ( int i = 0; i < 256; ++i )
-      {
-        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, i ), i == 0 );
-      }
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
 
       int category = (int)listCategories.SelectedItems[0].Tag;
       int catTarget = GR.Convert.ToI32( editCollapseIndex.Text );

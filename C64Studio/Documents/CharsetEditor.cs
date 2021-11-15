@@ -78,7 +78,7 @@ namespace C64Studio
 
     internal void CharacterChanged( int charIndex )
     {
-      characterEditor.CharacterChanged( charIndex );
+      characterEditor.CharacterChanged( charIndex, 1 );
     }
 
 
@@ -265,7 +265,7 @@ namespace C64Studio
       {
         // save binary only!
         GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
-        charSet.Reserve( m_Charset.TotalNumberOfCharacters * Lookup.NumBytesOfSingleCharacter( m_Charset.Mode ) );
+        charSet.Reserve( m_Charset.TotalNumberOfCharacters * Lookup.NumBytesOfSingleCharacterBitmap( m_Charset.Mode ) );
 
         for ( int i = 0; i < m_Charset.TotalNumberOfCharacters; ++i )
         {

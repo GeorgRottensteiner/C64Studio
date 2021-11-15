@@ -17,7 +17,7 @@ namespace C64Studio.Undo
     public int        Width = 0;
     public int        Height = 0;
 
-    public GR.Game.Layer<ushort>     ChangedData = new GR.Game.Layer<ushort>();
+    public GR.Game.Layer<uint>     ChangedData = new GR.Game.Layer<uint>();
 
 
 

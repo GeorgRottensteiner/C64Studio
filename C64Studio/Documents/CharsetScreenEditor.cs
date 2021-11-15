@@ -58,7 +58,7 @@ namespace C64Studio
     private System.Drawing.Point        m_DragEndPos = new System.Drawing.Point();
     private System.Drawing.Point        m_LastDragEndPos = new System.Drawing.Point( -1, -1 );
 
-    private List<GR.Generic.Tupel<bool,ushort>>       m_FloatingSelection = null;
+    private List<GR.Generic.Tupel<bool,uint>>         m_FloatingSelection = null;
     private System.Drawing.Size                       m_FloatingSelectionSize;
     private System.Drawing.Point                      m_FloatingSelectionPos;
 
@@ -68,8 +68,8 @@ namespace C64Studio
     private bool                        m_ReverseChars = false;
 
     private int                         m_TextEntryStartedInLine = -1;
-    private List<ushort>                m_TextEntryCachedLine = new List<ushort>();
-    private List<ushort>                m_TextEntryEnteredText = new List<ushort>();
+    private List<uint>                  m_TextEntryCachedLine = new List<uint>();
+    private List<uint>                  m_TextEntryEnteredText = new List<uint>();
 
 
 
@@ -486,7 +486,7 @@ namespace C64Studio
 
 
 
-    void DrawCharImage( GR.Image.IImage TargetImage, int X, int Y, byte Char, byte Color )
+    void DrawCharImage( GR.Image.IImage TargetImage, int X, int Y, ushort Char, ushort Color )
     {
       Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, Char, TargetImage, X, Y, Color );
     }
@@ -645,8 +645,8 @@ namespace C64Studio
 
       pointsToCheck.Add( new System.Drawing.Point( X, Y ) );
 
-      ushort charToFill = m_CharsetScreen.Chars[X + m_CharsetScreen.ScreenWidth * Y];
-      ushort charToInsert = (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) );
+      uint charToFill = m_CharsetScreen.Chars[X + m_CharsetScreen.ScreenWidth * Y];
+      uint charToInsert = (uint)( m_CurrentChar | ( m_CurrentColor << 16 ) );
       if ( charToFill == charToInsert )
       {
         return;
@@ -663,11 +663,6 @@ namespace C64Studio
         {
           DrawCharImage( m_Image, point.X * 8, point.Y * 8, m_CurrentChar, m_CurrentColor );
           DrawCharImage( pictureEditor.DisplayPage, ( point.X - m_CharsetScreen.ScreenOffsetX ) * 8, ( point.Y - m_CharsetScreen.ScreenOffsetY ) * 8, m_CurrentChar, m_CurrentColor );
-          /*
-          pictureEditor.DisplayPage.DrawTo( m_Image,
-                                            point.X * 8, point.Y * 8,
-                                            ( point.X - m_CharsetScreen.ScreenOffsetX ) * 8, ( point.Y - m_CharsetScreen.ScreenOffsetY ) * 8,
-                                            8, 8 );*/
 
           m_CharsetScreen.Chars[point.X + m_CharsetScreen.ScreenWidth * point.Y] = charToInsert;
 
@@ -918,7 +913,7 @@ namespace C64Studio
             break;
           case ToolMode.SINGLE_CHAR:
             if ( ( m_ReverseChars )
-            ||   ( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] != (ushort)( m_CurrentChar | ( m_CurrentColor << 8 ) ) ) )
+            ||   ( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] != (uint)( m_CurrentChar | ( m_CurrentColor << 16 ) ) ) )
             {
               DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, charX, charY, 1, 1 ), m_MouseButtonReleased );
               m_MouseButtonReleased = false;
@@ -1106,7 +1101,7 @@ namespace C64Studio
                        ( X - m_CharsetScreen.ScreenOffsetX ) * 8, 
                        ( Y - m_CharsetScreen.ScreenOffsetY ) * 8,
                        (byte)( origChar ^ 0x80 ), Color );
-        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( ( origChar ^ 0x80 ) | ( Color << 8 ) );
+        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( ( origChar ^ 0x80 ) | ( Color << 16 ) );
         return;
       }
 
@@ -1114,17 +1109,17 @@ namespace C64Studio
       &&   ( m_AffectColors ) )
       {
         DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, Char, Color );
-        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( Char | ( Color << 8 ) );
+        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( Char | ( Color << 16 ) );
       }
       else if ( m_AffectChars )
       {
         DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, Char, (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 8 ) );
-        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( Char | ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff00 ) );
+        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( Char | ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff0000 ) );
       }
       else if ( m_AffectColors )
       {
         DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff ), Color );
-        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (ushort)( ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff ) | ( Color << 8 ) );
+        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ) | ( (uint)Color << 16 ) );
       }
     }
 
@@ -1188,8 +1183,8 @@ namespace C64Studio
           DrawCharImage( pictureEditor.DisplayPage,
                          ( i - x1 ) * 8,
                          ( j - y1 ) * 8,
-                         (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ),
-                         (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 8 ) );
+                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xffff ),
+                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 16 ) );
         }
       }
       for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
@@ -1197,8 +1192,8 @@ namespace C64Studio
         for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
         {
           DrawCharImage( m_Image, i * 8, j * 8,
-                         (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ),
-                         (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 8 ) );
+                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xffff ),
+                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 16 ) );
         }
       }
 
@@ -2345,7 +2340,7 @@ namespace C64Studio
         {
           for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
           {
-            m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( Data.ByteAt( i + j * m_CharsetScreen.ScreenWidth ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff00 ) );
+            m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (uint)( Data.ByteAt( i + j * m_CharsetScreen.ScreenWidth ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff0000 ) );
           }
         }
       }
@@ -2356,7 +2351,7 @@ namespace C64Studio
         {
           for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
           {
-            m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( ( ( Data.ByteAt( m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight + i + j * m_CharsetScreen.ScreenWidth ) & 0x0f ) << 8 ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ) );
+            m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (uint)( ( ( (uint)Data.ByteAt( m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight + i + j * m_CharsetScreen.ScreenWidth ) & 0x0f ) << 16 ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xffff ) );
           }
         }
       }
@@ -2694,7 +2689,7 @@ namespace C64Studio
           if ( m_SelectedChars[x1 + x, y1 + y] )
           {
             dataSelection.AppendU8( 1 );
-            dataSelection.AppendU16( m_CharsetScreen.Chars[( y1 + y ) * m_CharsetScreen.ScreenWidth + x1 + x] );
+            dataSelection.AppendU32( m_CharsetScreen.Chars[( y1 + y ) * m_CharsetScreen.ScreenWidth + x1 + x] );
           }
           else
           {
@@ -2742,7 +2737,7 @@ namespace C64Studio
         int   selectionWidth  = memIn.ReadInt32();
         int   selectionHeight = memIn.ReadInt32();
 
-        m_FloatingSelection = new List<GR.Generic.Tupel<bool, ushort>>();
+        m_FloatingSelection = new List<GR.Generic.Tupel<bool, uint>>();
         m_FloatingSelectionSize = new System.Drawing.Size( selectionWidth, selectionHeight );
 
         for ( int y = 0; y < selectionHeight; ++y )
@@ -2752,11 +2747,11 @@ namespace C64Studio
             bool  isCharSet = ( memIn.ReadUInt8() != 0 );
             if ( isCharSet )
             {
-              m_FloatingSelection.Add( new GR.Generic.Tupel<bool, ushort>( true, memIn.ReadUInt16() ) );
+              m_FloatingSelection.Add( new GR.Generic.Tupel<bool, uint>( true, memIn.ReadUInt32() ) );
             }
             else
             {
-              m_FloatingSelection.Add( new GR.Generic.Tupel<bool, ushort>( false, 0 ) );
+              m_FloatingSelection.Add( new GR.Generic.Tupel<bool, uint>( false, 0 ) );
             }
           }
         }
@@ -2896,7 +2891,7 @@ namespace C64Studio
                 m_TextEntryEnteredText.Clear();
                 CacheScreenLine( m_TextEntryStartedInLine );
               }
-              m_TextEntryEnteredText.Add( (ushort)( charIndex | ( m_CurrentColor << 8 ) ) );
+              m_TextEntryEnteredText.Add( (uint)( charIndex | ( m_CurrentColor << 16 ) ) );
             }
             else
             {
@@ -3034,12 +3029,8 @@ namespace C64Studio
                          (byte)( m_CharsetScreen.Chars[x + y * m_CharsetScreen.ScreenWidth] >> 8 ) );
         }
       }
-      /*
-      pictureEditor.DisplayPage.DrawTo( m_Image,
-                                        X * 8, Y * 8,
-                                        ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8,
-                                        Width * 8, Height * 8 );*/
-      pictureEditor.Invalidate( new System.Drawing.Rectangle( X * 8, Y * 8, Width * 8, Height * 8 ) );
+      pictureEditor.Invalidate( new System.Drawing.Rectangle( ( X - m_CharsetScreen.ScreenOffsetX ) * 8, 
+                                                              ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, Width * 8, Height * 8 ) );
     }
 
 
@@ -3164,6 +3155,7 @@ namespace C64Studio
           comboBGColor4.Enabled = true;
           break;
         case TextCharMode.MEGA65_FCM:
+        case TextCharMode.MEGA65_FCM_16BIT:
           labelMColor1.Enabled = false;
           labelMColor2.Enabled = false;
           labelBGColor4.Enabled = false;
@@ -3499,7 +3491,7 @@ namespace C64Studio
         for ( int i = 0; i < Width; ++i )
         {
           int     bufferIndex = i + j * Width;
-          m_CharsetScreen.Chars[bufferIndex] = (ushort)( CharData.ByteAt( bufferIndex ) + ( ColorData.ByteAt( bufferIndex ) << 8 ) );
+          m_CharsetScreen.Chars[bufferIndex] = (uint)( CharData.ByteAt( bufferIndex ) + ( ColorData.ByteAt( bufferIndex ) << 16 ) );
         }
       }
 
@@ -3670,22 +3662,23 @@ namespace C64Studio
       {
         for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
         {
-          ushort    origChar = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth];
-          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (ushort)( OldToNew[origChar & 0xff] | ( origChar & 0xff00 ) );
+          uint  origChar = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth];
+          uint  origColor = ( origChar & 0xffff0000 );
+          m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (uint)( (uint)OldToNew[(int)( origChar & 0xffff )] | origColor );
         }
       }
 
       // ..and charset
       List<GR.Forms.ImageListbox.ImageListItem>    origListItems = new List<GR.Forms.ImageListbox.ImageListItem>();
 
-      for ( int i = 0; i < 256; ++i )
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
         origListItems.Add( panelCharacters.Items[i] );
       }
 
-      for ( int i = 0; i < 256; ++i )
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
-        panelCharacters.Items[i]              = origListItems[NewToOld[i]];
+        panelCharacters.Items[i] = origListItems[NewToOld[i]];
       }
       panelCharacters.Invalidate();
 
@@ -3759,7 +3752,7 @@ namespace C64Studio
 
       for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
       {
-        ushort  oldChar = m_CharsetScreen.Chars[0 + j * m_CharsetScreen.ScreenWidth];
+        uint  oldChar = m_CharsetScreen.Chars[0 + j * m_CharsetScreen.ScreenWidth];
         for ( int i = 1; i < m_CharsetScreen.ScreenWidth; ++i )
         {
           m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth - 1] = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth];
@@ -3778,7 +3771,7 @@ namespace C64Studio
 
       for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
       {
-        ushort  oldChar = m_CharsetScreen.Chars[m_CharsetScreen.ScreenWidth - 1 + j * m_CharsetScreen.ScreenWidth];
+        uint  oldChar = m_CharsetScreen.Chars[m_CharsetScreen.ScreenWidth - 1 + j * m_CharsetScreen.ScreenWidth];
         for ( int i = m_CharsetScreen.ScreenWidth - 1; i >= 1; --i )
         {
           m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth - 1];
@@ -3797,7 +3790,7 @@ namespace C64Studio
 
       for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
       {
-        ushort  oldChar = m_CharsetScreen.Chars[i];
+        uint  oldChar = m_CharsetScreen.Chars[i];
         for ( int j = 0; j < m_CharsetScreen.ScreenHeight - 1; ++j )
         {
           m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = m_CharsetScreen.Chars[i + ( j + 1 ) * m_CharsetScreen.ScreenWidth];
@@ -3816,7 +3809,7 @@ namespace C64Studio
 
       for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
       {
-        ushort  oldChar = m_CharsetScreen.Chars[i + ( m_CharsetScreen.ScreenHeight - 1 ) * m_CharsetScreen.ScreenWidth];
+        uint  oldChar = m_CharsetScreen.Chars[i + ( m_CharsetScreen.ScreenHeight - 1 ) * m_CharsetScreen.ScreenWidth];
         for ( int j = m_CharsetScreen.ScreenHeight - 1; j >= 1; --j )
         {
           m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = m_CharsetScreen.Chars[i + ( j - 1 ) * m_CharsetScreen.ScreenWidth];
