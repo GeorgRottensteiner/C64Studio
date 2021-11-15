@@ -61,7 +61,7 @@ namespace RetroDevStudio
 
 
 
-    public static int NumBytesOfSingleCharacter( TextCharMode Mode )
+    public static int NumBytesOfSingleCharacterBitmap( TextCharMode Mode )
     {
       switch ( Mode )
       {
@@ -76,6 +76,19 @@ namespace RetroDevStudio
         default:
           Debug.Log( "NumBytesOfSingleCharacter unsupported Mode " + Mode );
           return 8;
+      }
+    }
+
+
+
+    public static int NumBytesOfSingleCharacter( TextCharMode Mode )
+    {
+      switch ( Mode )
+      {
+        case TextCharMode.MEGA65_FCM_16BIT:
+          return 2;
+        default:
+          return 1;
       }
     }
 
@@ -170,6 +183,22 @@ namespace RetroDevStudio
 
 
 
+    internal static bool TextModeUsesColor( TextMode Mode )
+    {
+      switch ( Mode )
+      {
+        case TextMode.MEGA65_40_X_25_FCM:
+        case TextMode.MEGA65_40_X_25_FCM_16BIT:
+        case TextMode.MEGA65_80_X_25_FCM:
+        case TextMode.MEGA65_80_X_25_FCM_16BIT:
+          return false;
+        default:
+          return true;
+      }
+    }
+
+
+
     internal static bool HasCustomPalette( GraphicTileMode Mode )
     {
       switch ( Mode )
@@ -258,6 +287,7 @@ namespace RetroDevStudio
           }
           return GraphicTileMode.COMMODORE_MULTICOLOR;
         case TextCharMode.MEGA65_FCM:
+        case TextCharMode.MEGA65_FCM_16BIT:
           return GraphicTileMode.MEGA65_FCM_256_COLORS;
       }
     }

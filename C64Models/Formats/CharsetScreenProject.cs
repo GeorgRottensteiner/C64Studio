@@ -15,7 +15,7 @@ namespace C64Studio.Formats
     public int                          ScreenOffsetX = 0;
     public int                          ScreenOffsetY = 0;
 
-    public List<ushort>                 Chars = new List<ushort>( 40 * 25 );
+    public List<uint>                   Chars = new List<uint>( 40 * 25 );
 
     public string                       ExternalCharset = "";
     private TextMode                    _Mode = TextMode.COMMODORE_40_X_25_HIRES;
@@ -29,7 +29,7 @@ namespace C64Studio.Formats
       for ( int j = 0; j < ScreenHeight * ScreenWidth; ++j )
       {
         // spaces with white color
-        Chars.Add( 0x0120 );
+        Chars.Add( 0x010020 );
       }
     }
 
@@ -119,10 +119,10 @@ namespace C64Studio.Formats
               ScreenOffsetX = chunkReader.ReadInt32();
               ScreenOffsetY = chunkReader.ReadInt32();
 
-              Chars = new List<ushort>();
+              Chars = new List<uint>();
               for ( int i = 0; i < ScreenWidth * ScreenHeight; ++i )
               {
-                Chars.Add( (ushort)0x0120 );
+                Chars.Add( (uint)0x010020 );
               }
             }
             break;
@@ -135,13 +135,27 @@ namespace C64Studio.Formats
           case FileChunkConstants.SCREEN_CHAR_DATA:
             for ( int i = 0; i < Chars.Count; ++i )
             {
-              Chars[i] = (ushort)( ( Chars[i] & 0xff00 ) | chunkReader.ReadUInt8() );
+              if ( Lookup.NumBytesOfSingleCharacter( Lookup.FromTextMode( Mode ) ) == 1 )
+              {
+                Chars[i] = (uint)( ( Chars[i] & 0xffff0000 ) | chunkReader.ReadUInt8() );
+              }
+              else
+              {
+                Chars[i] = (uint)( ( Chars[i] & 0xffff0000 ) | chunkReader.ReadUInt16() );
+              }
             }
             break;
           case FileChunkConstants.SCREEN_COLOR_DATA:
             for ( int i = 0; i < Chars.Count; ++i )
             {
-              Chars[i] = (ushort)( ( Chars[i] & 0x00ff ) | ( chunkReader.ReadUInt8() << 8 ) );
+              if ( Lookup.NumBytesOfSingleCharacter( Lookup.FromTextMode( Mode ) ) == 1 )
+              {
+                Chars[i] = (uint)( ( Chars[i] & 0xffff ) | ( (uint)chunkReader.ReadUInt8() << 16 ) );
+              }
+              else
+              {
+                Chars[i] = (uint)( ( Chars[i] & 0xffff ) | ( (uint)chunkReader.ReadUInt16() << 16 ) );
+              }
             }
             break;
           case FileChunkConstants.CHARSET_DATA:
@@ -168,6 +182,8 @@ namespace C64Studio.Formats
 
       CharSetData = new GR.Memory.ByteBuffer( CharSet.CharacterData() );
 
+      int numBytesPerChar = Lookup.NumBytesOfSingleCharacter( Lookup.FromTextMode( Mode ) );
+
       if ( RowByRow )
       {
         // row by row
@@ -175,11 +191,21 @@ namespace C64Studio.Formats
         {
           for ( int x = 0; x < Width; ++x )
           {
-            byte newColor = (byte)( ( Chars[( Y + i ) * ScreenWidth + X + x] & 0xff00 ) >> 8 );
-            byte newChar = (byte)( Chars[( Y + i ) * ScreenWidth + X + x] & 0xff );
+            byte newColor = (byte)( ( Chars[( Y + i ) * ScreenWidth + X + x] & 0xff0000 ) >> 16 );
+            ushort newChar = (ushort)( Chars[( Y + i ) * ScreenWidth + X + x] & 0xffff );
 
-            CharData.AppendU8( newChar );
-            ColorData.AppendU8( newColor );
+            if ( numBytesPerChar == 2 )
+            {
+              CharData.AppendU16( newChar );
+            }
+            else
+            {
+              CharData.AppendU8( (byte)newChar );
+            }
+            if ( Lookup.TextModeUsesColor( Mode ) )
+            {
+              ColorData.AppendU8( newColor );
+            }
           }
         }
       }
@@ -189,11 +215,21 @@ namespace C64Studio.Formats
         {
           for ( int i = 0; i < Height; ++i )
           {
-            byte newColor = (byte)( ( Chars[( Y + i ) * ScreenWidth + X + x] & 0xff00 ) >> 8 );
-            byte newChar = (byte)( Chars[( Y + i ) * ScreenWidth + X + x] & 0xff );
+            byte newColor = (byte)( ( Chars[( Y + i ) * ScreenWidth + X + x] & 0xff0000 ) >> 16 );
+            ushort newChar = (ushort)( Chars[( Y + i ) * ScreenWidth + X + x] & 0xffff );
 
-            CharData.AppendU8( newChar );
-            ColorData.AppendU8( newColor );
+            if ( numBytesPerChar == 2 )
+            {
+              CharData.AppendU16( newChar );
+            }
+            else
+            {
+              CharData.AppendU8( (byte)newChar );
+            }
+            if ( Lookup.TextModeUsesColor( Mode ) )
+            {
+              ColorData.AppendU8( newColor );
+            }
           }
         }
       }
@@ -216,15 +252,15 @@ namespace C64Studio.Formats
       ScreenWidth = Width;
       ScreenHeight = Height;
 
-      List<ushort>    newChars = new List<ushort>();
+      List<uint>    newChars = new List<uint>();
 
       int     copyWidth = Math.Min( oldWidth, Width );
       int     copyHeight = Math.Min( oldHeight, Height );
 
-      newChars = new List<ushort>();
+      newChars = new List<uint>();
       for ( int i = 0; i < ScreenWidth * ScreenHeight; ++i )
       {
-        newChars.Add( (ushort)0x0120 );
+        newChars.Add( (uint)0x010020 );
       }
       // copy over orig chars if possible
       for ( int i = 0; i < copyWidth; ++i )
