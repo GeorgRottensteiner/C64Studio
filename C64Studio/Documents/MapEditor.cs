@@ -49,7 +49,7 @@ namespace C64Studio
     private byte                        m_CurrentChar = 0;
     private byte                        m_CurrentColor = 1;
 
-    private GR.Image.MemoryImage        m_Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+    private GR.Image.MemoryImage        m_Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
     private int                         m_CurEditorOffsetX = 0;
     private int                         m_CurEditorOffsetY = 0;
@@ -120,17 +120,17 @@ namespace C64Studio
       comboCharScreens.SelectedIndex = 0;
 
       pictureEditor.MouseWheel += pictureEditor_MouseWheel;
-      pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       pictureEditor.PostPaint += PictureEditor_PostPaint;
       pictureTileDisplay.ClientSize = new System.Drawing.Size( 256, 256 );
-      pictureTileDisplay.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
+      pictureTileDisplay.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb;
       panelCharacters.SetDisplaySize( 128, 128 );
-      panelCharacters.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      panelCharacters.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
-      panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
-      m_Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      m_Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
       Palette   pal = Core.MainForm.ActivePalette;
 
@@ -303,7 +303,9 @@ namespace C64Studio
 
     void RebuildCharImage( int CharIndex )
     {
-      Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset, CharIndex, m_MapProject.Charset.Characters[CharIndex].Tile.Image, 0, 0,
+      Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset,
+                                                m_MapProject.Charset.Colors.Palette,
+                                                CharIndex, m_MapProject.Charset.Characters[CharIndex].Tile.Image, 0, 0,
                                                 m_MapProject.Charset.Characters[CharIndex].Tile.CustomColor,
                                                 m_MapProject.BackgroundColor,
                                                 m_MapProject.MultiColor1,
@@ -340,7 +342,7 @@ namespace C64Studio
         }
       }
        */
-      Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset, Char, TargetImage, X, Y, Color, bgColor, mColor1, mColor2, bgColor4 );
+      Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset, m_MapProject.Charset.Colors.Palette, Char, TargetImage, X, Y, Color, bgColor, mColor1, mColor2, bgColor4 );
     }
 
 
@@ -1001,6 +1003,7 @@ namespace C64Studio
               for ( int i = 0; i < tile.Chars.Width; ++i )
               {
                 Displayer.CharacterDisplayer.DisplayChar( m_MapProject.Charset,
+                                                          m_MapProject.Charset.Colors.Palette,
                                                           tile.Chars[i, j].Character,
                                                           pictureEditor.DisplayPage, 
                                                           ( ( x - offsetX ) * m_CurrentMap.TileSpacingX + i ) * 8, 
@@ -2364,7 +2367,7 @@ namespace C64Studio
 
 
 
-      GR.Image.FastImage memImage = new GR.Image.FastImage( tile.Chars.Width * 8, tile.Chars.Height * 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      GR.Image.FastImage memImage = new GR.Image.FastImage( tile.Chars.Width * 8, tile.Chars.Height * 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       PaletteManager.ApplyPalette( memImage );
 
       for ( int j = 0; j < tile.Chars.Height; ++j )

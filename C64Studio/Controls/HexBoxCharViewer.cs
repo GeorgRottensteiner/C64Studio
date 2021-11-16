@@ -77,14 +77,14 @@ namespace Be.Windows.Forms
             switch ( Mode )
             {
               case TextMode.COMMODORE_40_X_25_HIRES:
-                CharacterDisplayer.DisplayHiResChar( charData, BackgroundColor, CustomColor, charImage, 0, 0 );
+                CharacterDisplayer.DisplayHiResChar( charData, ConstantData.Palette, BackgroundColor, CustomColor, charImage, 0, 0 );
                 break;
               case TextMode.COMMODORE_40_X_25_MULTICOLOR:
-                CharacterDisplayer.DisplayMultiColorChar( charData, BackgroundColor, CustomColor, MultiColor1, MultiColor2, charImage, 0, 0 );
+                CharacterDisplayer.DisplayMultiColorChar( charData, ConstantData.Palette, BackgroundColor, CustomColor, MultiColor1, MultiColor2, charImage, 0, 0 );
                 break;
               case TextMode.COMMODORE_40_X_25_ECM:
                 // TODO - not correct
-                CharacterDisplayer.DisplayHiResChar( charData, BackgroundColor, CustomColor, charImage, 0, 0 );
+                CharacterDisplayer.DisplayHiResChar( charData, ConstantData.Palette, BackgroundColor, CustomColor, charImage, 0, 0 );
                 break;
               default:
                 Debug.Log( "PaintHexData: Missing mode displayer" );

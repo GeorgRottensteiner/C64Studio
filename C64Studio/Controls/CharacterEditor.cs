@@ -34,7 +34,7 @@ namespace C64Studio.Controls
 
     private CharsetProject              m_Project = new CharsetProject();
 
-    private GR.Image.MemoryImage        m_ImagePlayground = new GR.Image.MemoryImage( 256, 256, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+    private GR.Image.MemoryImage        m_ImagePlayground = new GR.Image.MemoryImage( 256, 256, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
     private bool                        _AllowModeChange = true;
 
@@ -83,11 +83,11 @@ namespace C64Studio.Controls
 
       InitializeComponent();
 
-      picturePlayground.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
+      picturePlayground.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb ;
       panelCharacters.SetDisplaySize( 128, 128 );
-      panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      m_ImagePlayground.Create( 256, 256, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      m_ImagePlayground.Create( 256, 256, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
       m_Project.Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
 
@@ -147,7 +147,7 @@ namespace C64Studio.Controls
     {
       for ( byte i = 0; i < 16; ++i )
       {
-        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_CurrentChar, panelCharColors.DisplayPage, i * 8, 0, i );
+        Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, panelCharColors.DisplayPage, i * 8, 0, i );
       }
       panelCharColors.Invalidate();
     }
@@ -372,20 +372,6 @@ namespace C64Studio.Controls
                     //m_Project.Characters[pastePos].Tile.SetPixel( x, y, colorIndex );
                   }
                 }
-                /*
-                var origImage = new MemoryImage( (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format1bppIndexed );
-                origImage.SetData( m_Project.Characters[pastePos].Data );
-
-                var pastedImage = new MemoryImage( (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-                pastedImage.SetData( tempBuffer );
-
-                for ( int x = 0; x < width; ++x )
-                {
-                  for ( int j = 0; j < height; ++j )
-                  {
-                    m_Project.Characters[pastePos].Image.SetPixel( x, j, origImage.GetPixel( x, j ) );
-                  }
-                }*/
               }
               else
               {
@@ -512,7 +498,7 @@ namespace C64Studio.Controls
         m_Project.Characters[CharIndex].Tile.Data.Resize( 64 );
       }
 
-      Displayer.CharacterDisplayer.DisplayChar( m_Project, CharIndex, m_Project.Characters[CharIndex].Tile.Image, 0, 0 );
+      Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, CharIndex, m_Project.Characters[CharIndex].Tile.Image, 0, 0 );
       if ( CharIndex < panelCharacters.Items.Count )
       {
         panelCharacters.Items[CharIndex].MemoryImage = m_Project.Characters[CharIndex].Tile.Image;
@@ -525,7 +511,7 @@ namespace C64Studio.Controls
           if ( ( m_Project.PlaygroundChars[i + j * 16] & 0xff ) == CharIndex )
           {
             playgroundChanged = true;
-            Displayer.CharacterDisplayer.DisplayChar( m_Project, CharIndex, m_ImagePlayground, i * 8, j * 8, (int)m_Project.PlaygroundChars[i + j * 16] >> 16 );
+            Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, CharIndex, m_ImagePlayground, i * 8, j * 8, (int)m_Project.PlaygroundChars[i + j * 16] >> 16 );
           }
         }
       }
@@ -1269,7 +1255,7 @@ namespace C64Studio.Controls
         {
           UndoManager.AddUndoTask( new Undo.UndoCharacterEditorPlaygroundCharChange( this, m_Project, charX, charY ) );
 
-          Displayer.CharacterDisplayer.DisplayChar( m_Project, m_CurrentChar, m_ImagePlayground, charX * 8, charY * 8, m_CurrentColor );
+          Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, m_ImagePlayground, charX * 8, charY * 8, m_CurrentColor );
           RedrawPlayground();
 
           m_Project.PlaygroundChars[charX + charY * 16] = (uint)( m_CurrentChar | ( m_CurrentColor << 16 ) );
@@ -1815,7 +1801,7 @@ namespace C64Studio.Controls
 
     public void PlaygroundCharacterChanged( int X, int Y )
     {
-      Displayer.CharacterDisplayer.DisplayChar( m_Project, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] & 0xffff ), m_ImagePlayground, X * 8, Y * 8, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] >> 16 ) );
+      Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] & 0xffff ), m_ImagePlayground, X * 8, Y * 8, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] >> 16 ) );
       RedrawPlayground();
     }
 

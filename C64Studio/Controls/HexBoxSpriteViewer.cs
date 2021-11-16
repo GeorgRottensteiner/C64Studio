@@ -76,11 +76,11 @@ namespace Be.Windows.Forms
 
             if ( MultiColor )
             {
-              SpriteDisplayer.DisplayMultiColorSprite( spriteData, 24, 21, BackgroundColor, MultiColor1, MultiColor2, CustomColor, spriteImage, 0, 0 );
+              SpriteDisplayer.DisplayMultiColorSprite( spriteData, ConstantData.Palette, 24, 21, BackgroundColor, MultiColor1, MultiColor2, CustomColor, spriteImage, 0, 0 );
             }
             else
             {
-              SpriteDisplayer.DisplayHiResSprite( spriteData, 24, 21, BackgroundColor, CustomColor, spriteImage, 0, 0 );
+              SpriteDisplayer.DisplayHiResSprite( spriteData, ConstantData.Palette, 24, 21, BackgroundColor, CustomColor, spriteImage, 0, 0 );
             }
 
             int     offsetY = (int)( Box.CharSize.Height * ( j - firstSprite ) * 8 + ( Box.CharSize.Height * 8 - spriteSize ) / 2 ) - (int)( Box.CharSize.Height * firstLineOffset );

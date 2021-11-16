@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,14 +7,14 @@ namespace C64Studio.Displayer
 {
   public class SpriteDisplayer
   {
-    public static void DisplayHiResSprite( GR.Memory.ByteBuffer Data, int Width, int Height, int BGColor, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayHiResSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y )
     {
-      DisplayHiResSprite( Data, Width, Height, BGColor, SpriteColor, TargetImage, X, Y, false, false );
+      DisplayHiResSprite( Data, Palette, Width, Height, BGColor, SpriteColor, TargetImage, X, Y, false, false );
     }
 
 
 
-    public static void DisplayHiResSprite( GR.Memory.ByteBuffer Data, int Width, int Height, int BGColor, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY )
+    public static void DisplayHiResSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY )
     {
       int     pixelStepX = 1;
       int     pixelStepY = 1;
@@ -37,19 +38,21 @@ namespace C64Studio.Displayer
             {
               if ( ( Data.ByteAt( j * 3 + k ) & ( 1 << ( 7 - i ) ) ) != 0 )
               {
-                //Data.Image.SetPixel( k * 8 + i, j, m_ColorValues[Data.Color] );
-                Target.SetPixel( X + ( k * 8 + i ) * pixelStepX, Y + j * pixelStepY + pp, (uint)SpriteColor );
+                uint color = Palette.ColorValues[SpriteColor];
+                Target.SetPixel( X + ( k * 8 + i ) * pixelStepX, Y + j * pixelStepY + pp, color );
                 if ( pixelStepX == 2 )
                 {
-                  Target.SetPixel( X + ( k * 8 + i ) * pixelStepX + 1, Y + j * pixelStepY + pp, (uint)SpriteColor );
+                  Target.SetPixel( X + ( k * 8 + i ) * pixelStepX + 1, Y + j * pixelStepY + pp, color );
                 }
               }
               else
               {
-                Target.SetPixel( X + ( k * 8 + i ) * pixelStepX, Y + j * pixelStepY + pp, (uint)BGColor );
+                uint color = Palette.ColorValues[BGColor];
+
+                Target.SetPixel( X + ( k * 8 + i ) * pixelStepX, Y + j * pixelStepY + pp, color );
                 if ( pixelStepX == 2 )
                 {
-                  Target.SetPixel( X + ( k * 8 + i ) * pixelStepX + 1, Y + j * pixelStepY + pp, (uint)BGColor );
+                  Target.SetPixel( X + ( k * 8 + i ) * pixelStepX + 1, Y + j * pixelStepY + pp, color );
                 }
               }
             }
@@ -60,14 +63,14 @@ namespace C64Studio.Displayer
 
 
 
-    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y )
+    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y )
     {
-      DisplayMultiColorSprite( Data, Width, Height, BGColor, MColor1, MColor2, SpriteColor, TargetImage, X, Y, false, false );
+      DisplayMultiColorSprite( Data, Palette, Width, Height, BGColor, MColor1, MColor2, SpriteColor, TargetImage, X, Y, false, false );
     }
 
 
 
-    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY )
+    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY )
     {
       int     pixelStepX = 1;
       int     pixelStepY = 1;
@@ -106,12 +109,15 @@ namespace C64Studio.Displayer
                   pixelValue = SpriteColor;
                   break;
               }
-              Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX, Y + j * pixelStepY + pp, (uint)pixelValue );
-              Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 1, Y + j * pixelStepY + pp, (uint)pixelValue );
+
+              uint color = Palette.ColorValues[pixelValue];
+
+              Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX, Y + j * pixelStepY + pp, color );
+              Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 1, Y + j * pixelStepY + pp, color );
               if ( pixelStepX == 2 )
               {
-                Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 2, Y + j * pixelStepY + pp, (uint)pixelValue );
-                Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 3, Y + j * pixelStepY + pp, (uint)pixelValue );
+                Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 2, Y + j * pixelStepY + pp, color );
+                Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 3, Y + j * pixelStepY + pp, color );
               }
             }
           }
@@ -121,7 +127,7 @@ namespace C64Studio.Displayer
 
 
 
-    public static void DisplayFCMSprite( GR.Memory.ByteBuffer Data, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY )
+    public static void DisplayFCMSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY )
     {
       int     pixelStepX = 1;
       int     pixelStepY = 1;
@@ -148,10 +154,13 @@ namespace C64Studio.Displayer
             {
               colorToUse = (byte)( pixelDuo >> 4 );
             }
-            Target.SetPixel( ( X + i )  * pixelStepX, Y + j * pixelStepY + pp, colorToUse );
+
+            uint color = Palette.ColorValues[colorToUse];
+
+            Target.SetPixel( ( X + i )  * pixelStepX, Y + j * pixelStepY + pp, color );
             if ( pixelStepX == 2 )
             {
-              Target.SetPixel( ( X + i ) * pixelStepX + 1, Y + j * pixelStepY + pp, colorToUse );
+              Target.SetPixel( ( X + i ) * pixelStepX + 1, Y + j * pixelStepY + pp, color );
             }
 
             colorToUse = (byte)BGColor;
@@ -159,10 +168,12 @@ namespace C64Studio.Displayer
             {
               colorToUse = (byte)( pixelDuo & 0x0f );
             }
-            Target.SetPixel( ( X + i + 1 ) * pixelStepX, Y + j * pixelStepY + pp, colorToUse );
+
+            color = Palette.ColorValues[colorToUse];
+            Target.SetPixel( ( X + i + 1 ) * pixelStepX, Y + j * pixelStepY + pp, color );
             if ( pixelStepX == 2 )
             {
-              Target.SetPixel( ( X + i + 1 ) * pixelStepX + 1, Y + j * pixelStepY + pp, colorToUse );
+              Target.SetPixel( ( X + i + 1 ) * pixelStepX + 1, Y + j * pixelStepY + pp, color );
             }
           }
         }

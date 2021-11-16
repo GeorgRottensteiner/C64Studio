@@ -71,8 +71,8 @@ namespace C64Studio
 
       listLayers.ItemAdded += new ArrangedItemList.ItemModifiedEventHandler( listLayers_ItemAdded );
 
-      pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      layerPreview.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      layerPreview.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       panelSprites.PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb;
       panelSprites.SetDisplaySize( 4 * m_SpriteWidth, 6 * m_SpriteHeight );
       panelSprites.ClientSize = new System.Drawing.Size( 4 * m_SpriteWidth * 2 + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth, 6 * m_SpriteHeight * 2 );
@@ -170,19 +170,19 @@ namespace C64Studio
 
 
 
-    void DrawSpriteImage( GR.Image.IImage Target, int X, int Y, GR.Memory.ByteBuffer Data, int Width, int Height, int CustomColor, SpriteMode Mode, int BackgroundColor, int MultiColor1, int MultiColor2, bool ExpandX, bool ExpandY )
+    void DrawSpriteImage( GR.Image.IImage Target, int X, int Y, GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int CustomColor, SpriteMode Mode, int BackgroundColor, int MultiColor1, int MultiColor2, bool ExpandX, bool ExpandY )
     {
       switch ( Mode )
       {
         case SpriteMode.COMMODORE_24_X_21_MULTICOLOR:
-          SpriteDisplayer.DisplayMultiColorSprite( Data, Width, Height, BackgroundColor, MultiColor1, MultiColor2, CustomColor, Target, X, Y, ExpandX, ExpandY );
+          SpriteDisplayer.DisplayMultiColorSprite( Data, Palette, Width, Height, BackgroundColor, MultiColor1, MultiColor2, CustomColor, Target, X, Y, ExpandX, ExpandY );
           break;
         case SpriteMode.COMMODORE_24_X_21_HIRES:
-          SpriteDisplayer.DisplayHiResSprite( Data, Width, Height, BackgroundColor, CustomColor, Target, X, Y, ExpandX, ExpandY );
+          SpriteDisplayer.DisplayHiResSprite( Data, Palette, Width, Height, BackgroundColor, CustomColor, Target, X, Y, ExpandX, ExpandY );
           break;
         case SpriteMode.MEGA65_16_X_21_16_COLORS:
         case SpriteMode.MEGA65_8_X_21_16_COLORS:
-          SpriteDisplayer.DisplayFCMSprite( Data, Width, Height, BackgroundColor, Target, X, Y, ExpandX, ExpandY );
+          SpriteDisplayer.DisplayFCMSprite( Data, Palette, Width, Height, BackgroundColor, Target, X, Y, ExpandX, ExpandY );
           break;
         default:
           Debug.Log( "DrawSpriteImage unsupported mode " + Mode );
@@ -196,7 +196,7 @@ namespace C64Studio
     {
       var Data = m_SpriteProject.Sprites[SpriteIndex];
 
-      DrawSpriteImage( Data.Tile.Image, 0, 0, Data.Tile.Data, Data.Tile.Width, Data.Tile.Height,
+      DrawSpriteImage( Data.Tile.Image, 0, 0, Data.Tile.Data, Data.Tile.Colors.Palette, Data.Tile.Width, Data.Tile.Height,
         Data.Tile.CustomColor,
         Data.Mode,
         m_SpriteProject.Colors.BackgroundColor,
@@ -1907,14 +1907,15 @@ namespace C64Studio
       System.Drawing.Brush textBrush = new System.Drawing.SolidBrush( e.ForeColor );
       e.Graphics.DrawString( e.Index.ToString(), e.Font, textBrush, textRect );
 
-      GR.Image.FastImage    fastImage = new GR.Image.FastImage( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      GR.Image.MemoryImage  memImage = new GR.Image.MemoryImage( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      GR.Image.FastImage    fastImage = new GR.Image.FastImage( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      GR.Image.MemoryImage  memImage = new GR.Image.MemoryImage( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
       PaletteManager.ApplyPalette( fastImage );
       PaletteManager.ApplyPalette( memImage );
 
       DrawSpriteImage( memImage, 0, 0, 
                        m_SpriteProject.Sprites[e.Index].Tile.Data,
+                       m_SpriteProject.Sprites[e.Index].Tile.Colors.Palette,
                        m_SpriteProject.Sprites[e.Index].Tile.Width, m_SpriteProject.Sprites[e.Index].Tile.Height,
                        comboLayerColor.SelectedIndex,
                        m_SpriteProject.Sprites[e.Index].Mode,
@@ -1962,12 +1963,13 @@ namespace C64Studio
     {
       if ( m_CurrentLayer != null )
       {
-        layerPreview.DisplayPage.Box( 0, 0, layerPreview.Width, layerPreview.Height, (uint)m_CurrentLayer.BackgroundColor );
+        layerPreview.DisplayPage.Box( 0, 0, layerPreview.Width, layerPreview.Height, m_SpriteProject.Colors.Palette.ColorValues[m_CurrentLayer.BackgroundColor] );
         foreach ( Formats.SpriteProject.LayerSprite sprite in m_CurrentLayer.Sprites )
         {
           DrawSpriteImage( layerPreview.DisplayPage, 
                            sprite.X, sprite.Y, 
                            m_SpriteProject.Sprites[sprite.Index].Tile.Data,
+                           m_SpriteProject.Sprites[sprite.Index].Tile.Colors.Palette,
                            m_SpriteProject.Sprites[sprite.Index].Tile.Width, m_SpriteProject.Sprites[sprite.Index].Tile.Height,
                            sprite.Color, 
                            m_SpriteProject.Sprites[sprite.Index].Mode,
@@ -3038,7 +3040,7 @@ namespace C64Studio
         using ( var outStream = new System.IO.FileStream( saveDlg.FileName, System.IO.FileMode.Create, System.IO.FileAccess.Write ) )
         using ( var gif = new GIFEncoder( outStream, maxX - minX, maxY - minY ) )
         {
-          var layerImage = new GR.Image.MemoryImage( maxX - minX, maxY - minY, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+          var layerImage = new GR.Image.MemoryImage( maxX - minX, maxY - minY, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
           PaletteManager.ApplyPalette( layerImage );
 
           foreach ( var layer in m_SpriteProject.SpriteLayers )
@@ -3048,6 +3050,7 @@ namespace C64Studio
               if ( m_SpriteProject.Sprites[entry.Index].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
               {
                 SpriteDisplayer.DisplayMultiColorSprite( m_SpriteProject.Sprites[entry.Index].Tile.Data,
+                                                         m_SpriteProject.Sprites[entry.Index].Tile.Colors.Palette,
                                                          m_SpriteProject.Sprites[entry.Index].Tile.Width,
                                                          m_SpriteProject.Sprites[entry.Index].Tile.Height,
                                                          layer.BackgroundColor,
@@ -3063,6 +3066,7 @@ namespace C64Studio
               else if ( m_SpriteProject.Sprites[entry.Index].Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
               {
                 SpriteDisplayer.DisplayHiResSprite( m_SpriteProject.Sprites[entry.Index].Tile.Data,
+                                                    m_SpriteProject.Sprites[entry.Index].Tile.Colors.Palette,
                                                     m_SpriteProject.Sprites[entry.Index].Tile.Width,
                                                     m_SpriteProject.Sprites[entry.Index].Tile.Height,
                                                     layer.BackgroundColor,
@@ -3178,7 +3182,7 @@ namespace C64Studio
       pictureEditor.Size = new System.Drawing.Size( m_SpriteWidth * m_SpriteEditorOrigWidth / biggerSize,
                                                     m_SpriteHeight * m_SpriteEditorOrigHeight / biggerSize );
 
-      pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       panelSprites.ItemWidth = m_SpriteWidth;
       panelSprites.ItemHeight = m_SpriteHeight;
       panelSprites.SetDisplaySize( 4 * m_SpriteWidth, 6 * m_SpriteHeight );

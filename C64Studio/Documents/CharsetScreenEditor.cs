@@ -33,7 +33,7 @@ namespace C64Studio
     private int                         m_CharsWidth = 40;
     private int                         m_CharsHeight = 25;
 
-    private GR.Image.MemoryImage        m_Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+    private GR.Image.MemoryImage        m_Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
     private bool[,]                     m_ErrornousChars = new bool[40, 25];
     private bool[,]                     m_SelectedChars = new bool[40, 25];
@@ -86,11 +86,11 @@ namespace C64Studio
 
       charEditor.UndoManager = DocumentInfo.UndoManager;
 
-      pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
+      pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb;
       panelCharacters.SetDisplaySize( 128, 128 );
-      panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      m_Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      m_Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
       ApplyPalette();
       for ( int i = 0; i < m_CharsetScreen.CharSet.Colors.Palette.NumColors; ++i )
@@ -471,7 +471,7 @@ namespace C64Studio
 
       if ( m_OverrideCharMode )
       {
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Tile.Image, 0, 0, m_CurrentColor,
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, CharIndex, Char.Tile.Image, 0, 0, m_CurrentColor,
                 m_CharsetScreen.CharSet.Colors.BackgroundColor,
                 m_CharsetScreen.CharSet.Colors.MultiColor1,
                 m_CharsetScreen.CharSet.Colors.MultiColor2,
@@ -480,7 +480,7 @@ namespace C64Studio
       }
       else
       {
-        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, CharIndex, Char.Tile.Image, 0, 0 );
+        Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, CharIndex, Char.Tile.Image, 0, 0 );
       }
     }
 
@@ -488,7 +488,7 @@ namespace C64Studio
 
     void DrawCharImage( GR.Image.IImage TargetImage, int X, int Y, ushort Char, ushort Color )
     {
-      Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, Char, TargetImage, X, Y, Color );
+      Displayer.CharacterDisplayer.DisplayChar( m_CharsetScreen.CharSet, m_CharsetScreen.CharSet.Colors.Palette, Char, TargetImage, X, Y, Color );
     }
 
 
@@ -2368,7 +2368,7 @@ namespace C64Studio
       m_ReverseCache = new bool[Width, Height];
 
       m_CharsetScreen.SetScreenSize( Width, Height );
-      m_Image.Create( Width * 8, Height * 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      m_Image.Create( Width * 8, Height * 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       PaletteManager.ApplyPalette( m_Image );
 
       m_TextEntryCachedLine.Clear();
@@ -3177,7 +3177,7 @@ namespace C64Studio
         case TextMode.MEGA65_40_X_25_FCM_16BIT:
           m_CharsWidth = 40;
           m_CharsHeight = 25;
-          pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+          pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
           break;
         case TextMode.MEGA65_80_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_MULTICOLOR:
@@ -3185,12 +3185,12 @@ namespace C64Studio
         case TextMode.MEGA65_80_X_25_FCM_16BIT:
           m_CharsWidth = 80;
           m_CharsHeight = 25;
-          pictureEditor.DisplayPage.Create( 640, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+          pictureEditor.DisplayPage.Create( 640, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
           break;
         case TextMode.COMMODORE_VIC20_22_X_23:
           m_CharsWidth = 22;
           m_CharsHeight = 23;
-          pictureEditor.DisplayPage.Create( 176, 184, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+          pictureEditor.DisplayPage.Create( 176, 184, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
           break;
         default:
           Debug.Log( "comboCharsetMode_SelectedIndexChanged unsupported mode!" );
@@ -3641,7 +3641,7 @@ namespace C64Studio
       int     neededWidth   = m_CharsetScreen.ScreenWidth * 8;
       int     neededHeight  = m_CharsetScreen.ScreenHeight * 8;
 
-      GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
       PaletteManager.ApplyPalette( targetImg );
 
@@ -3732,7 +3732,7 @@ namespace C64Studio
       int     neededWidth   = m_CharsetScreen.ScreenWidth * 8;
       int     neededHeight  = m_CharsetScreen.ScreenHeight * 8;
 
-      GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
       PaletteManager.ApplyPalette( targetImg );
 
