@@ -3132,7 +3132,8 @@ namespace C64Studio
       {
         FileInfo.FindTrueLineSource( lineInfo.Key, out string filename, out int localLineIndex );
 
-        if ( filename == myFullPath )
+        // Windows filenames don't care for case (as the gods intended)
+        if ( string.Compare( filename, myFullPath, true ) == 0 )
         {
           var newInfo = lineInfo.Value;
 
