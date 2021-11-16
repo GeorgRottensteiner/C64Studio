@@ -13,6 +13,7 @@ namespace C64Studio.Undo
     public SpriteProject          Project = null;
     public int                    SpriteIndex = 0;
     public SpriteProject.SpriteData   Sprite = null;
+    public int                    ActivePalette = 0;
 
 
 
@@ -21,6 +22,8 @@ namespace C64Studio.Undo
       this.Editor = Editor;
       this.Project = Project;
       this.SpriteIndex = SpriteIndex;
+
+      ActivePalette = Project.Sprites[SpriteIndex].Tile.Colors.ActivePalette;
 
       Sprite = new SpriteProject.SpriteData( Project.Sprites[SpriteIndex] );
     }
@@ -48,6 +51,7 @@ namespace C64Studio.Undo
     public override void Apply()
     {
       Project.Sprites[SpriteIndex] = new SpriteProject.SpriteData( Sprite );
+      Project.Sprites[SpriteIndex].Tile.Colors.ActivePalette = ActivePalette;
 
       Editor.SpriteChanged( SpriteIndex );
     }

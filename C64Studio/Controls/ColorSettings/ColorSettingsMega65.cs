@@ -186,7 +186,7 @@ namespace C64Studio.Controls
       if ( comboActivePalette.SelectedIndex != Colors.ActivePalette )
       {
         Colors.ActivePalette = comboActivePalette.SelectedIndex;
-        RaisePaletteModifiedEvent();
+        RaisePaletteSelectedEvent();
       }
     }
 

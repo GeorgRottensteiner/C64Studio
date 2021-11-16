@@ -2438,6 +2438,10 @@ namespace C64Studio
             _ColorSettingsDlg.CustomColor = m_SpriteProject.Sprites[SpriteIndex].Tile.CustomColor;
           }
         }
+        if ( m_SpriteProject.Sprites[SpriteIndex].Tile.Colors.ActivePalette != _ColorSettingsDlg.ActivePalette )
+        {
+          _ColorSettingsDlg.ActivePalette = m_SpriteProject.Sprites[SpriteIndex].Tile.Colors.ActivePalette;
+        }
         DoNotUpdateFromControls = false;
       }
       if ( comboSprite.SelectedIndex == SpriteIndex )
@@ -3282,9 +3286,39 @@ namespace C64Studio
       _ColorSettingsDlg.ColorsModified += _ColorSettingsDlg_ColorsModified;
       _ColorSettingsDlg.ColorsExchanged += _ColorSettingsDlg_ColorsExchanged;
       _ColorSettingsDlg.PaletteModified += _ColorSettingsDlg_PaletteModified;
+      _ColorSettingsDlg.PaletteSelected += _ColorSettingsDlg_PaletteSelected;
       _ColorSettingsDlg.MulticolorFlagChanged += _ColorSettingsDlg_MulticolorFlagChanged;
 
       _ColorSettingsDlg_SelectedColorChanged( _ColorSettingsDlg.SelectedColor );
+    }
+
+
+
+    private void _ColorSettingsDlg_PaletteSelected( ColorSettings Colors )
+    {
+      if ( DoNotUpdateFromControls )
+      {
+        return;
+      }
+      DocumentInfo.UndoManager.StartUndoGroup();
+
+      var selectedSprites = panelSprites.SelectedIndices;
+
+      foreach ( var i in selectedSprites )
+      {
+        if ( m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette != Colors.ActivePalette )
+        {
+          DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ) );
+          Modified = true;
+          m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette = Colors.ActivePalette;
+          RebuildSpriteImage( i );
+          if ( m_CurrentSprite == i )
+          {
+            pictureEditor.Invalidate();
+          }
+          panelSprites.InvalidateItemRect( i );
+        }
+      }
     }
 
 

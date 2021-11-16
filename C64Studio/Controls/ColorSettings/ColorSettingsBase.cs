@@ -21,12 +21,14 @@ namespace C64Studio.Controls
 
 
     public delegate void PaletteModifiedHandler( ColorSettings Colors, int CustomColor );
+    public delegate void PaletteSelectedHandler( ColorSettings Colors );
     public delegate void ColorsModifiedHandler( ColorType Color, ColorSettings Colors, int CustomColor );
     public delegate void ColorSelectedHandler( ColorType Color );
     public delegate void ExchangeColorsHandler( ColorType Color1, ColorType Color2 );
     public delegate void MulticolorFlagChangedHandler();
 
     public event PaletteModifiedHandler       PaletteModified;
+    public event PaletteSelectedHandler       PaletteSelected;
     public event ColorsModifiedHandler        ColorsModified;
     public event ColorSelectedHandler         SelectedColorChanged;
     public event ExchangeColorsHandler        ColorsExchanged;
@@ -104,6 +106,16 @@ namespace C64Studio.Controls
       if ( PaletteModified != null )
       {
         PaletteModified( Colors, CustomColor );
+      }
+    }
+
+
+
+    protected void RaisePaletteSelectedEvent()
+    {
+      if ( PaletteSelected != null )
+      {
+        PaletteSelected( Colors );
       }
     }
 
