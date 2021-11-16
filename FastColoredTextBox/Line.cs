@@ -185,6 +185,19 @@ namespace FastColoredTextBoxNS
 
 
 
+    public string ToVirtualText( int Offset )
+    {
+      StringBuilder   sb = new StringBuilder();
+
+      for ( int j = Offset; j < Count; ++j )
+      {
+        sb.Append( chars[j].c );
+      }
+      return sb.ToString();
+    }
+
+
+
     /// <summary>
     /// Clears folding markers
     /// </summary>

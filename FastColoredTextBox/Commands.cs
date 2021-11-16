@@ -169,8 +169,9 @@ namespace FastColoredTextBoxNS
 
       deletedChar = ts[LineIndex][CharIndex].c;
       int     numCharsToDelete = 1;
+      /*
       if ( ( tb.AllowTabs )
-      &&   ( deletedChar == '\t' ) )
+      &&   ( deletedChar == '\t' ) )*/
       {
         int origCharIndex = CharIndex;
         int newPos = tb.AdjustXPosForTabs( LineIndex, CharIndex );
@@ -188,8 +189,9 @@ namespace FastColoredTextBoxNS
         return numCharsToDelete;
       }
 
-      bool changeMade = false;
+      //bool changeMade = false;
 
+      /*
       // if we deleted the right-most char (or the trailing tab), and a tab follows up, collapse it
       if ( ( tb.AllowTabs )
       &&   ( ( ( CharIndex + 1 ) % tb.TabLength ) == 0 )
@@ -207,6 +209,7 @@ namespace FastColoredTextBoxNS
       }
 
       // if we deleted a char in a line where a tab is to the right, fill in one tab char (or a full block if tab collapses)
+      //   but only if there is not already a full tab block!
       if ( tb.AllowTabs )
       {
         // is there a tab in our "block"?
@@ -219,13 +222,21 @@ namespace FastColoredTextBoxNS
             // there's a tab!
 
             // move chars to left
-            for ( int j = CharIndex; j < i; ++j )
+            for ( int j = CharIndex; j < curLine.Count - 1; ++j )
             {
-              ts[LineIndex][j] = new Char( ts[LineIndex][j + 1].c );
-              if ( ts[LineIndex][j].c == '\t' )
+              if ( ( ts[LineIndex][j + 1].c == '\t' )
+              &&   ( ( ( j + 1 ) % tb.TabLength ) == 0 ) )
               {
-                // copyied tab char, we're done
-                break;
+                // tab starts at full block, no copying!
+              }
+              else
+              {
+                ts[LineIndex][j] = new Char( ts[LineIndex][j + 1].c );
+                if ( ts[LineIndex][j].c == '\t' )
+                {
+                  // copyied tab char, we're done
+                  break;
+                }
               }
             }
             changeMade = true;
@@ -233,21 +244,12 @@ namespace FastColoredTextBoxNS
           }
         }
       }
-      /*
-      if ( ( tb.AllowTabs )
-      &&   ( ( ( CharIndex + 1 ) % tb.TabLength ) != 0 )
-      &&   ( ( CharIndex + 1 ) < ts[LineIndex].Count )
-      &&   ( ts[LineIndex][CharIndex + 1].c == '\t' ) )
-      {
-        ts[LineIndex][CharIndex] = new Char( '\t' );
-        changeMade = true;
-      }*/
 
       if ( !changeMade )
       {
         ts[LineIndex].RemoveRange( CharIndex + 1 - numCharsToDelete, numCharsToDelete );
       }
-      return numCharsToDelete;
+      return numCharsToDelete;*/
     }
 
 
@@ -725,6 +727,7 @@ namespace FastColoredTextBoxNS
 
       deletedText = tb.Selection.Text;
       var deletedRange = new RangeInfo( tb.Selection );
+
       ClearSelected( ts );
       lastSel = new RangeInfo( tb.Selection );
       ts.OnTextDeleted( new Range( tb, deletedRange.Start, deletedRange.End ) );
@@ -741,10 +744,18 @@ namespace FastColoredTextBoxNS
       {
         //InsertCharCommand.DumpLine( ts, fromLine );
 
+        System.Diagnostics.Debug.WriteLine( $"Removing range from {fromChar} to {toChar}" );
+
         // remove backwards to properly handle tabs
         for ( int i = toChar - 1; i >= fromChar; )
         {
           char  dummy = 'ö';
+
+          string    deTabbed = ts[fromLine].ToText( fromChar );
+          string    fullTabbed = ts[fromLine].ToVirtualText(0);
+          deTabbed = deTabbed.Replace( '\t', '*' );
+          fullTabbed = fullTabbed.Replace( '\t', '*' );
+          System.Diagnostics.Debug.WriteLine( $"Removing at pos {i}, text is           {fullTabbed}" );
 
           /*
           if ( ( i == toChar )
@@ -755,6 +766,12 @@ namespace FastColoredTextBoxNS
           }*/
 
           int     delta = InsertCharCommand.RemoveChar( ts, fromLine, i, ref dummy );
+
+          deTabbed = ts[fromLine].ToText( fromChar );
+          fullTabbed = ts[fromLine].ToVirtualText(0);
+          fullTabbed = fullTabbed.Replace( '\t', '*' );
+          deTabbed = deTabbed.Replace( '\t', '*' );
+          System.Diagnostics.Debug.WriteLine( $"Removed {delta} characters, text is now     {fullTabbed}" );
 
           i -= delta;
         }

@@ -1,7 +1,12 @@
-;;	hello tabs	end of tabs
-	aaa	ell	ello
+﻿!byte	.a5,	.b5,	.g6,	.d6,	.a5,	.b5,	.g6,	.d6
+
+
+
+
+;;  hello tabs  end of tabs
+  aaa ell ello
 * = $800
-  	!basic
+    !basic
 
 aaa
 aaa
