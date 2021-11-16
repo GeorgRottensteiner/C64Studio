@@ -169,87 +169,20 @@ namespace FastColoredTextBoxNS
 
       deletedChar = ts[LineIndex][CharIndex].c;
       int     numCharsToDelete = 1;
-      /*
-      if ( ( tb.AllowTabs )
-      &&   ( deletedChar == '\t' ) )*/
-      {
-        int origCharIndex = CharIndex;
-        int newPos = tb.AdjustXPosForTabs( LineIndex, CharIndex );
+      int origCharIndex = CharIndex;
+      int newPos = tb.AdjustXPosForTabs( LineIndex, CharIndex );
 
-        numCharsToDelete = CharIndex + 1 - newPos;
-        CharIndex -= numCharsToDelete - 1;
+      numCharsToDelete = CharIndex + 1 - newPos;
+      CharIndex -= numCharsToDelete - 1;
 
-        string    deTabbed = ts[LineIndex].ToText( origCharIndex + 1 );
+      string    deTabbed = ts[LineIndex].ToText( origCharIndex + 1 );
 
-        // remove all after current position
-        ts[LineIndex].RemoveRange( CharIndex, ts[LineIndex].Count - CharIndex );
+      // remove all after current position
+      ts[LineIndex].RemoveRange( CharIndex, ts[LineIndex].Count - CharIndex );
 
-        ts[LineIndex].AddTabified( deTabbed );
+      ts[LineIndex].AddTabified( deTabbed );
 
-        return numCharsToDelete;
-      }
-
-      //bool changeMade = false;
-
-      /*
-      // if we deleted the right-most char (or the trailing tab), and a tab follows up, collapse it
-      if ( ( tb.AllowTabs )
-      &&   ( ( ( CharIndex + 1 ) % tb.TabLength ) == 0 )
-      &&   ( ( CharIndex + 1 ) < ts[LineIndex].Count )
-      &&   ( ts[LineIndex][CharIndex + 1].c == '\t' ) )
-      {
-        // fill our tab slot with tabs
-        for ( int i = 0; i < numCharsToDelete; ++i )
-        {
-          ts[LineIndex][CharIndex + 1 - numCharsToDelete + i] = new Char( '\t' );
-        }
-        // remove follow up tab
-        ts[LineIndex].RemoveRange( CharIndex + 1, tb.TabLength );
-        changeMade = true;
-      }
-
-      // if we deleted a char in a line where a tab is to the right, fill in one tab char (or a full block if tab collapses)
-      //   but only if there is not already a full tab block!
-      if ( tb.AllowTabs )
-      {
-        // is there a tab in our "block"?
-        var curLine = ts[LineIndex];
-
-        for ( int i = CharIndex; i < curLine.Count; ++i )
-        {
-          if ( curLine[i].c == '\t' )
-          {
-            // there's a tab!
-
-            // move chars to left
-            for ( int j = CharIndex; j < curLine.Count - 1; ++j )
-            {
-              if ( ( ts[LineIndex][j + 1].c == '\t' )
-              &&   ( ( ( j + 1 ) % tb.TabLength ) == 0 ) )
-              {
-                // tab starts at full block, no copying!
-              }
-              else
-              {
-                ts[LineIndex][j] = new Char( ts[LineIndex][j + 1].c );
-                if ( ts[LineIndex][j].c == '\t' )
-                {
-                  // copyied tab char, we're done
-                  break;
-                }
-              }
-            }
-            changeMade = true;
-            break;
-          }
-        }
-      }
-
-      if ( !changeMade )
-      {
-        ts[LineIndex].RemoveRange( CharIndex + 1 - numCharsToDelete, numCharsToDelete );
-      }
-      return numCharsToDelete;*/
+      return numCharsToDelete;
     }
 
 
