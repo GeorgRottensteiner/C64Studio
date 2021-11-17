@@ -114,7 +114,7 @@ namespace RetroDevStudio
 
 
 
-    public static TextCharMode FromTextMode( TextMode Mode )
+    public static TextCharMode TextCharModeFromTextMode( TextMode Mode )
     {
       switch ( Mode )
       {

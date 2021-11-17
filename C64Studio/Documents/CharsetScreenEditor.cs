@@ -27,8 +27,8 @@ namespace C64Studio
 
 
 
-    private byte                        m_CurrentChar = 0;
-    private byte                        m_CurrentColor = 1;
+    private ushort                      m_CurrentChar = 0;
+    private ushort                      m_CurrentColor = 1;
     private bool                        m_OverrideCharMode = false;
     private int                         m_CharsWidth = 40;
     private int                         m_CharsHeight = 25;
@@ -476,7 +476,7 @@ namespace C64Studio
                 m_CharsetScreen.CharSet.Colors.MultiColor1,
                 m_CharsetScreen.CharSet.Colors.MultiColor2,
                 m_CharsetScreen.CharSet.Colors.BGColor4,
-                Lookup.FromTextMode( m_CharsetScreen.Mode ) );
+                Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
       }
       else
       {
@@ -605,8 +605,8 @@ namespace C64Studio
         {
           if ( ( offsetX + i >= 0 )
           &&   ( offsetX + i < m_CharsetScreen.ScreenWidth )
-          &&   ( offsetY + i >= 0 )
-          &&   ( offsetY + i < m_CharsetScreen.ScreenHeight ) )
+          &&   ( offsetY + j >= 0 )
+          &&   ( offsetY + j < m_CharsetScreen.ScreenHeight ) )
           {
             var selectionChar = m_FloatingSelection[( offsetX + i ) + ( offsetY + j ) * m_FloatingSelectionSize.Width];
             if ( selectionChar.first )
@@ -616,14 +616,14 @@ namespace C64Studio
               DrawCharImage( pictureEditor.DisplayPage,
                  ( undoX + i ) * 8,
                  ( undoY + j ) * 8,
-                 (byte)( selectionChar.second & 0xff ),
-                 (byte)( selectionChar.second >> 8 ) );
+                 (ushort)( selectionChar.second & 0xffff ),
+                 (ushort)( selectionChar.second >> 16 ) );
 
               DrawCharImage( m_Image,
                  ( m_CharsetScreen.ScreenOffsetX + undoX + i ) * 8,
                  ( m_CharsetScreen.ScreenOffsetY + undoY + j ) * 8,
-                 (byte)( selectionChar.second & 0xff ),
-                 (byte)( selectionChar.second >> 8 ) );
+                 (ushort)( selectionChar.second & 0xffff ),
+                 (ushort)( selectionChar.second >> 16 ) );
 
               pictureEditor.Invalidate( new System.Drawing.Rectangle( ( undoX + i ) * 8,
                                                                       ( undoY + j ) * 8,
@@ -1047,8 +1047,8 @@ namespace C64Studio
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
       {
-        m_CurrentChar = (byte)( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] & 0x00ff );
-        m_CurrentColor = (byte)( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] >> 8 );
+        m_CurrentChar = (ushort)( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] & 0xffff );
+        m_CurrentColor = (ushort)( m_CharsetScreen.Chars[charX + charY * m_CharsetScreen.ScreenWidth] >> 16 );
         panelCharacters.SelectedIndex = m_CurrentChar;
         labelInfo.Text = InfoText();
         RedrawColorChooser();
@@ -1062,8 +1062,8 @@ namespace C64Studio
       if ( m_ReverseChars )
       {
         DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, 
-                       (byte)( ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff ) ^ 0x80 ), 
-                       (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 8 ) );
+                       (ushort)( ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ) ^ 0x80 ), 
+                       (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ) );
         return;
       }
 
@@ -1074,11 +1074,11 @@ namespace C64Studio
       }
       else if ( m_AffectChars )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, m_CurrentChar, (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 8 ) );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, m_CurrentChar, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ) );
       }
       else if ( m_AffectColors )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff ), m_CurrentColor );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ), m_CurrentColor );
       }
     }
 
@@ -1091,7 +1091,7 @@ namespace C64Studio
 
 
 
-    private void SetCharacter( int X, int Y, byte Char, byte Color )
+    private void SetCharacter( int X, int Y, ushort Char, ushort Color )
     {
       if ( m_ReverseChars )
       {
@@ -1100,7 +1100,7 @@ namespace C64Studio
         DrawCharImage( pictureEditor.DisplayPage, 
                        ( X - m_CharsetScreen.ScreenOffsetX ) * 8, 
                        ( Y - m_CharsetScreen.ScreenOffsetY ) * 8,
-                       (byte)( origChar ^ 0x80 ), Color );
+                       (ushort)( origChar ^ 0x80 ), Color );
         m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( ( origChar ^ 0x80 ) | ( Color << 16 ) );
         return;
       }
@@ -1113,12 +1113,12 @@ namespace C64Studio
       }
       else if ( m_AffectChars )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, Char, (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 8 ) );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, Char, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ) );
         m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( Char | ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff0000 ) );
       }
       else if ( m_AffectColors )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, (byte)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xff ), Color );
+        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ), Color );
         m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ) | ( (uint)Color << 16 ) );
       }
     }
@@ -1335,12 +1335,12 @@ namespace C64Studio
         for ( int j = 0; j < m_CharsetScreen.ScreenHeight; ++j )
         {
           DrawCharImage( m_Image, i * 8, j * 8,
-                         (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ),
-                         (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 8 ) );
+                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xffff ),
+                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 16 ) );
         }
       }
 
-      panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.FromTextMode( m_CharsetScreen.Mode ) );
+      panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
       RedrawColorChooser();
@@ -1652,8 +1652,8 @@ namespace C64Studio
               DrawCharImage( pictureEditor.DisplayPage,
                  ( m_MousePos.X + i ) * 8,
                  ( m_MousePos.Y + j ) * 8,
-                 (byte)( selectionChar.second & 0xff ),
-                 (byte)( selectionChar.second >> 8 ) );
+                 (ushort)( selectionChar.second & 0xffff ),
+                 (ushort)( selectionChar.second >> 16 ) );
             }
           }
         }
@@ -1855,14 +1855,14 @@ namespace C64Studio
         sb.Append( " PRINT\"" );
         for ( int x = exportRect.Left; x < exportRect.Right; ++x )
         {
-          byte newColor = (byte)( ( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff00 ) >> 8 ) & 0x0f );
-          byte newChar = (byte)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff );
+          ushort newColor = (ushort)( ( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff00 ) >> 16 ) & 0x0f );
+          ushort newChar = (ushort)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
 
           List<char>  charsToAppend = new List<char>();
 
           if ( newColor != curColor )
           {
-            charsToAppend.Add( ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[newColor]].CharValue );
+            charsToAppend.Add( ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)newColor]].CharValue );
             curColor = newColor;
           }
           if ( newChar >= 128 )
@@ -1909,7 +1909,7 @@ namespace C64Studio
             }
             else
             {
-              charsToAppend.Add( ConstantData.ScreenCodeToChar[newChar].CharValue );
+              charsToAppend.Add( ConstantData.ScreenCodeToChar[(byte)newChar].CharValue );
             }
           }
 
@@ -2092,6 +2092,8 @@ namespace C64Studio
 
       var exportRect = DetermineExportRectangle();
 
+      bool singleBytes = ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) ) == 1 );
+
       if ( comboExportOrientation.SelectedIndex == 0 )
       {
         // row by row
@@ -2099,11 +2101,20 @@ namespace C64Studio
         {
           for ( int x = exportRect.Left; x < exportRect.Right; ++x )
           {
-            byte newColor = (byte)( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff00 ) >> 8 );
-            byte newChar = (byte)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff );
+            ushort newColor = (ushort)( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff0000 ) >> 16 );
+            ushort newChar = (ushort)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
 
-            screenCharData.AppendU8( newChar );
-            screenColorData.AppendU8( newColor );
+
+            if ( singleBytes )
+            {
+              screenCharData.AppendU8( (byte)newChar );
+              screenColorData.AppendU8( (byte)newColor );
+            }
+            else
+            {
+              screenCharData.AppendU16( newChar );
+              screenColorData.AppendU16( newColor );
+            }
           }
         }
       }
@@ -2113,11 +2124,20 @@ namespace C64Studio
         {
           for ( int i = exportRect.Top; i < exportRect.Bottom; ++i )
           {
-            byte newColor = (byte)( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff00 ) >> 8 );
-            byte newChar = (byte)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff );
+            ushort newColor = (ushort)( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff0000 ) >> 16 );
+            ushort newChar = (ushort)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
 
-            screenCharData.AppendU8( newChar );
-            screenColorData.AppendU8( newColor );
+
+            if ( singleBytes )
+            {
+              screenCharData.AppendU8( (byte)newChar );
+              screenColorData.AppendU8( (byte)newColor );
+            }
+            else
+            {
+              screenCharData.AppendU16( newChar );
+              screenColorData.AppendU16( newColor );
+            }
           }
         }
       }
@@ -2543,8 +2563,8 @@ namespace C64Studio
         for ( int j = 0; j < CharScreen.ScreenHeight; ++j )
         {
           DrawCharImage( m_Image, i * 8, j * 8,
-                         (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff ),
-                         (byte)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 8 ) );
+                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xffff ),
+                         (ushort)( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] >> 16 ) );
         }
       }
       pictureEditor.Invalidate();
@@ -2846,8 +2866,8 @@ namespace C64Studio
               // restore old line
               for ( int i = 0; i < m_TextEntryCachedLine.Count; ++i )
               {
-                byte  origChar = (byte)( m_TextEntryCachedLine[i] & 0xff );
-                byte  origColor = (byte)( m_TextEntryCachedLine[i] >> 8 );
+                ushort origChar = (ushort)( m_TextEntryCachedLine[i] & 0xffff );
+                ushort origColor = (ushort)( m_TextEntryCachedLine[i] >> 16 );
                 SetCharacter( i, charY, origChar, origColor );
               }
               pictureEditor.DisplayPage.DrawTo( m_Image,
@@ -2919,8 +2939,8 @@ namespace C64Studio
               int     newX = ( m_CharsetScreen.ScreenWidth - m_TextEntryEnteredText.Count ) / 2;
               for ( int i = 0; i < m_TextEntryEnteredText.Count; ++i )
               {
-                byte  origChar = (byte)( m_TextEntryEnteredText[i] & 0xff );
-                byte  origColor = (byte)( m_TextEntryEnteredText[i] >> 8 );
+                ushort  origChar = (ushort)( m_TextEntryEnteredText[i] & 0xffff );
+                ushort  origColor = (ushort)( m_TextEntryEnteredText[i] >> 16 );
                 SetCharacter( newX + i, m_SelectedChar.Y, origChar, origColor );
               }
               pictureEditor.DisplayPage.DrawTo( m_Image,
@@ -3019,14 +3039,14 @@ namespace C64Studio
           DrawCharImage( pictureEditor.DisplayPage,
                          ( x - m_CharsetScreen.ScreenOffsetX ) * 8,
                          ( y - m_CharsetScreen.ScreenOffsetY ) * 8,
-                         (byte)( m_CharsetScreen.Chars[x + y * m_CharsetScreen.ScreenWidth] & 0xff ),
-                         (byte)( m_CharsetScreen.Chars[x + y * m_CharsetScreen.ScreenWidth] >> 8 ) );
+                         (ushort)( m_CharsetScreen.Chars[x + y * m_CharsetScreen.ScreenWidth] & 0xffff ),
+                         (ushort)( m_CharsetScreen.Chars[x + y * m_CharsetScreen.ScreenWidth] >> 16 ) );
 
           DrawCharImage( m_Image,
                          x * 8,
                          y * 8,
-                         (byte)( m_CharsetScreen.Chars[x + y * m_CharsetScreen.ScreenWidth] & 0xff ),
-                         (byte)( m_CharsetScreen.Chars[x + y * m_CharsetScreen.ScreenWidth] >> 8 ) );
+                         (ushort)( m_CharsetScreen.Chars[x + y * m_CharsetScreen.ScreenWidth] & 0xffff ),
+                         (ushort)( m_CharsetScreen.Chars[x + y * m_CharsetScreen.ScreenWidth] >> 16 ) );
         }
       }
       pictureEditor.Invalidate( new System.Drawing.Rectangle( ( X - m_CharsetScreen.ScreenOffsetX ) * 8, 
@@ -3106,7 +3126,7 @@ namespace C64Studio
         RedrawColorChooser();
         RedrawFullScreen();
 
-        panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.FromTextMode( m_CharsetScreen.Mode ) );
+        panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
       }
 
       if ( m_OverrideCharMode )
@@ -3114,7 +3134,7 @@ namespace C64Studio
         RebuildCharPanelImages();
       }
 
-      switch ( Lookup.FromTextMode( m_CharsetScreen.Mode ) )
+      switch ( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) )
       {
         case TextCharMode.COMMODORE_HIRES:
           labelMColor1.Enabled = false;
@@ -3203,7 +3223,7 @@ namespace C64Studio
 
     private void UpdatePalette()
     {
-      int numColors = Lookup.NumberOfColorsInCharacter( Lookup.FromTextMode( m_CharsetScreen.Mode ) );
+      int numColors = Lookup.NumberOfColorsInCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
 
       if ( m_CharsetScreen.CharSet.Colors.Palette.NumColors == numColors )
       {

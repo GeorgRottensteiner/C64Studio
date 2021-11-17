@@ -334,10 +334,21 @@ namespace C64Studio.Formats
         {
           Characters[i].Tile.CustomColor = memIn.ReadInt32();
         }
+
+        bool  hasAnyMC = false;
         for ( int i = 0; i < TotalNumberOfCharacters; ++i )
         {
-          memIn.ReadUInt8();
-          //Characters[i].Mode = (TextCharMode)memIn.ReadUInt8();
+          var mode = (TextCharMode)memIn.ReadUInt8();
+
+          if ( ( mode == TextCharMode.COMMODORE_MULTICOLOR )
+          &&   ( Characters[i].Tile.CustomColor < 8 ) )
+          {
+            mode = TextCharMode.COMMODORE_HIRES;
+          }
+          if ( mode == TextCharMode.COMMODORE_MULTICOLOR )
+          {
+            hasAnyMC = true;
+          }
         }
         Colors.BackgroundColor  = memIn.ReadInt32();
         Colors.MultiColor1      = memIn.ReadInt32();
@@ -424,6 +435,10 @@ namespace C64Studio.Formats
         }
 
         Mode = (TextCharMode)memIn.ReadInt32();
+        if ( hasAnyMC )
+        {
+          Mode = TextCharMode.COMMODORE_MULTICOLOR;
+        }
       }
       else if ( version == 2 )
       {

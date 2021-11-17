@@ -1,4 +1,7 @@
 ﻿C64Studio
+o When I move somewhere in the code, I would like the label combobox to point to the previous global or local label instead of the immediate 
+  label which, as far as I'm concerned, is of little use.
+o Option to remove the immediate labels from the combobox list above the text editor
 o label .NOP gets coloring of opcode
 o Same version info for C64Studio and C64Ass
 o I've noticed that the last pixel change is not visible at the "screen" tab, 

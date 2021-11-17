@@ -44,7 +44,7 @@ namespace C64Studio.Formats
       set
       {
         _Mode = value;
-        CharSet.Mode = Lookup.FromTextMode( _Mode );
+        CharSet.Mode = Lookup.TextCharModeFromTextMode( _Mode );
       }
     }
 
@@ -115,7 +115,7 @@ namespace C64Studio.Formats
               ScreenWidth = chunkReader.ReadInt32();
               ScreenHeight = chunkReader.ReadInt32();
               ExternalCharset = chunkReader.ReadString();
-              Mode = (TextMode)chunkReader.ReadInt32();
+              _Mode = (TextMode)chunkReader.ReadInt32();
               ScreenOffsetX = chunkReader.ReadInt32();
               ScreenOffsetY = chunkReader.ReadInt32();
 
@@ -127,7 +127,7 @@ namespace C64Studio.Formats
             }
             break;
           case FileChunkConstants.MULTICOLOR_DATA:
-            Mode = (TextMode)chunkReader.ReadUInt8();
+            _Mode = (TextMode)chunkReader.ReadUInt8();
             CharSet.Colors.BackgroundColor = chunkReader.ReadUInt8();
             CharSet.Colors.MultiColor1 = chunkReader.ReadUInt8();
             CharSet.Colors.MultiColor2 = chunkReader.ReadUInt8();
@@ -135,7 +135,7 @@ namespace C64Studio.Formats
           case FileChunkConstants.SCREEN_CHAR_DATA:
             for ( int i = 0; i < Chars.Count; ++i )
             {
-              if ( Lookup.NumBytesOfSingleCharacter( Lookup.FromTextMode( Mode ) ) == 1 )
+              if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) ) == 1 )
               {
                 Chars[i] = (uint)( ( Chars[i] & 0xffff0000 ) | chunkReader.ReadUInt8() );
               }
@@ -148,7 +148,7 @@ namespace C64Studio.Formats
           case FileChunkConstants.SCREEN_COLOR_DATA:
             for ( int i = 0; i < Chars.Count; ++i )
             {
-              if ( Lookup.NumBytesOfSingleCharacter( Lookup.FromTextMode( Mode ) ) == 1 )
+              if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) ) == 1 )
               {
                 Chars[i] = (uint)( ( Chars[i] & 0xffff ) | ( (uint)chunkReader.ReadUInt8() << 16 ) );
               }
@@ -182,7 +182,7 @@ namespace C64Studio.Formats
 
       CharSetData = new GR.Memory.ByteBuffer( CharSet.CharacterData() );
 
-      int numBytesPerChar = Lookup.NumBytesOfSingleCharacter( Lookup.FromTextMode( Mode ) );
+      int numBytesPerChar = Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) );
 
       if ( RowByRow )
       {

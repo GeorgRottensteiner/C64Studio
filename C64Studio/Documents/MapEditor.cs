@@ -959,14 +959,15 @@ namespace C64Studio
         }
       }
 
-      pictureEditor.DisplayPage.Box( 0, 0, fillWidth, fillHeight, (uint)bgColor );
+      pictureEditor.DisplayPage.Box( 0, 0, fillWidth, fillHeight, m_MapProject.Charset.Colors.Palette.ColorValues[bgColor] );
+
       if ( fillWidth < pictureEditor.DisplayPage.Width )
       {
-        pictureEditor.DisplayPage.Box( fillWidth, 0, pictureEditor.DisplayPage.Width - fillWidth, pictureEditor.DisplayPage.Height, 16 );
+        pictureEditor.DisplayPage.Box( fillWidth, 0, pictureEditor.DisplayPage.Width - fillWidth, pictureEditor.DisplayPage.Height, Core.Settings.FGColor( ColorableElement.SELECTION_FRAME ) );
       }
       if ( fillHeight < pictureEditor.DisplayPage.Height )
       {
-        pictureEditor.DisplayPage.Box( 0, fillHeight, pictureEditor.DisplayPage.Width, pictureEditor.DisplayPage.Height - fillHeight, 16 );
+        pictureEditor.DisplayPage.Box( 0, fillHeight, pictureEditor.DisplayPage.Width, pictureEditor.DisplayPage.Height - fillHeight, Core.Settings.FGColor( ColorableElement.SELECTION_FRAME ) );
       }
 
       if ( m_CurrentMap == null )
@@ -1013,7 +1014,7 @@ namespace C64Studio
                                                           ( m_CurrentMap.AlternativeMultiColor1 != -1 ) ? m_CurrentMap.AlternativeMultiColor1 : m_MapProject.MultiColor1,
                                                           ( m_CurrentMap.AlternativeMultiColor2 != -1 ) ? m_CurrentMap.AlternativeMultiColor2 : m_MapProject.MultiColor2,
                                                           ( m_CurrentMap.AlternativeBGColor4 != -1 ) ? m_CurrentMap.AlternativeBGColor4 : m_MapProject.BGColor4,
-                                                          ( m_CurrentMap.AlternativeMode != TextCharMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : Lookup.FromTextMode( m_MapProject.Mode ) );
+                                                          ( m_CurrentMap.AlternativeMode != TextCharMode.UNKNOWN ) ? m_CurrentMap.AlternativeMode : Lookup.TextCharModeFromTextMode( m_MapProject.Mode ) );
               }
             }
           }
@@ -1124,7 +1125,7 @@ namespace C64Studio
       comboTileMulticolor1.SelectedIndex = m_MapProject.MultiColor1;
       comboTileMulticolor2.SelectedIndex = m_MapProject.MultiColor2;
       comboTileBGColor4.SelectedIndex = m_MapProject.BGColor4;
-      comboTileMode.SelectedIndex = (int)Lookup.FromTextMode( m_MapProject.Mode );
+      comboTileMode.SelectedIndex = (int)Lookup.TextCharModeFromTextMode( m_MapProject.Mode );
       checkShowGrid.Checked = m_MapProject.ShowGrid;
 
       for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
@@ -1296,19 +1297,8 @@ namespace C64Studio
         return;
       }
 
-      /*
-      if ( m_SelectedChar.X != -1 )
-      {
-        for ( int x = 0; x < 8; ++x )
-        {
-          pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8 + x, m_SelectedChar.Y * 8, 16 );
-          //pictureEditor.DisplayPage.SetPixel( i * 8 + x, j * 8 + 7, 1 );
-          pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8, m_SelectedChar.Y * 8 + x, 16 );
-          //pictureEditor.DisplayPage.SetPixel( i * 8 + 7, j * 8 + x, 1 );
-        }
-      }*/
-
       // draw selection
+      uint    selectionColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
       for ( int x = 0; x < m_CurrentMap.Tiles.Width; ++x )
       {
         for ( int y = 0; y < m_CurrentMap.Tiles.Height; ++y )
@@ -1322,7 +1312,7 @@ namespace C64Studio
               {
                 pictureEditor.DisplayPage.SetPixel( ( x - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX + i,
                                                     ( y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY,
-                                                    16 );
+                                                    selectionColor );
               }
             }
             if ( ( y == m_CurrentMap.Tiles.Height - 1 )
@@ -1332,7 +1322,7 @@ namespace C64Studio
               {
                 pictureEditor.DisplayPage.SetPixel( ( x - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX + i,
                                                     ( y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY + 8 * m_CurrentMap.TileSpacingY - 1,
-                                                    16 );
+                                                    selectionColor );
               }
             }
             if ( ( x == 0 )
@@ -1342,7 +1332,7 @@ namespace C64Studio
               {
                 pictureEditor.DisplayPage.SetPixel( ( x - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX,
                                                     ( y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY + i,
-                                                    16 );
+                                                    selectionColor );
               }
             }
             if ( ( x == m_CurrentMap.Tiles.Width - 1 )
@@ -1352,7 +1342,7 @@ namespace C64Studio
               {
                 pictureEditor.DisplayPage.SetPixel( ( x - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX + 8 * m_CurrentMap.TileSpacingX - 1,
                                                     ( y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY + i,
-                                                    16 );
+                                                    selectionColor );
               }
             }
           }
@@ -1367,10 +1357,10 @@ namespace C64Studio
 
         CalcRect( m_DragStartPos, m_LastDragEndPos, out o1, out o2 );
 
-        pictureEditor.DisplayPage.Rectangle( ( o1.X - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX, 
+        pictureEditor.DisplayPage.Rectangle( ( o1.X - m_CurEditorOffsetX ) * 8 * m_CurrentMap.TileSpacingX,
                                              ( o1.Y - m_CurEditorOffsetY ) * 8 * m_CurrentMap.TileSpacingY,
-                                             ( o2.X - o1.X + 1 ) * 8 * m_CurrentMap.TileSpacingX, ( o2.Y - o1.Y + 1 ) * 8 * m_CurrentMap.TileSpacingY, 
-                                             16 );
+                                             ( o2.X - o1.X + 1 ) * 8 * m_CurrentMap.TileSpacingX, ( o2.Y - o1.Y + 1 ) * 8 * m_CurrentMap.TileSpacingY,
+                                             selectionColor );
       }
 
 
@@ -1556,13 +1546,7 @@ namespace C64Studio
       {
         DrawCharImage( panelCharColors.DisplayPage, i * 8, 0, m_CurrentChar, i );
       }
-      for ( int i = 0; i < 8; ++i )
-      {
-        panelCharColors.DisplayPage.SetPixel( m_CurrentColor * 8 + i, 0, 16 );
-        panelCharColors.DisplayPage.SetPixel( m_CurrentColor * 8 + i, 7, 16 );
-        panelCharColors.DisplayPage.SetPixel( m_CurrentColor * 8, i, 16 );
-        panelCharColors.DisplayPage.SetPixel( m_CurrentColor * 8 + 7, i, 16 );
-      }
+      panelCharColors.DisplayPage.Rectangle( m_CurrentColor * 8, 0, 8, 8, Core.Settings.FGColor( ColorableElement.SELECTION_FRAME ) );
       panelCharColors.Invalidate();
     }
 
