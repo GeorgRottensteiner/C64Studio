@@ -164,6 +164,8 @@ namespace C64Studio.Parser
       AddExtFunction( "math.sin", 1, 1, ExtMathSinus );
       AddExtFunction( "math.cos", 1, 1, ExtMathCosinus );
       AddExtFunction( "math.tan", 1, 1, ExtMathTangens );
+      AddExtFunction( "math.toradians", 1, 1, ExtMathToRadians );
+      AddExtFunction( "math.todegrees", 1, 1, ExtMathToDegrees );
 
       SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
     }
@@ -392,6 +394,58 @@ namespace C64Studio.Parser
 
 
 
+    private List<TokenInfo> ExtMathToRadians( List<TokenInfo> Arguments )
+    {
+      var result = new List<TokenInfo>();
+
+      if ( Arguments.Count != 1 )
+      {
+        //SetError( "Invalid argument count" );
+        return result;
+      }
+      double functionResult = 0;
+      if ( !EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
+      {
+        //SetError( "Invalid argument" );
+        return result;
+      }
+      var resultValue = new TokenInfo()
+      {
+        Type = TokenInfo.TokenType.LITERAL_NUMBER,
+        Content = ( functionResult * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
+      };
+      result.Add( resultValue );
+      return result;
+    }
+
+
+
+    private List<TokenInfo> ExtMathToDegrees( List<TokenInfo> Arguments )
+    {
+      var result = new List<TokenInfo>();
+
+      if ( Arguments.Count != 1 )
+      {
+        //SetError( "Invalid argument count" );
+        return result;
+      }
+      double functionResult = 0;
+      if ( !EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
+      {
+        //SetError( "Invalid argument" );
+        return result;
+      }
+      var resultValue = new TokenInfo()
+      {
+        Type = TokenInfo.TokenType.LITERAL_NUMBER,
+        Content = ( functionResult * 180.0f / Math.PI ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
+      };
+      result.Add( resultValue );
+      return result;
+    }
+    
+    
+    
     public Types.ASM.TemporaryLabelInfo AddTempLabel( string Name, int LineIndex, int LineCount, int Value, string Info )
     {
       return AddTempLabel( Name, LineIndex, LineCount, Value, Info, -1, 0 );
@@ -1646,7 +1700,8 @@ namespace C64Studio.Parser
       Result = 0;
 
       List<Types.TokenInfo> results = ProcessExtFunction( LineIndex, FunctionName, Tokens, StartIndex, Count );
-      if ( results.Count != 1 )
+      if ( ( results == null )
+      ||   ( results.Count != 1 ) )
       {
         return false;
       }
@@ -14123,7 +14178,7 @@ namespace C64Studio.Parser
 
       // collapse & if prefixed to literal number
       if ( ( m_AssemblerSettings.AllowedTokenStartChars[TokenInfo.TokenType.LITERAL_NUMBER].Contains( "&" ) )
-      && ( result.Count >= 2 ) )
+      &&   ( result.Count >= 2 ) )
       {
         for ( int i = 0; i < result.Count - 1; ++i )
         {
@@ -14136,6 +14191,27 @@ namespace C64Studio.Parser
             result[i].Content = "&" + result[i + 1].Content;
             result[i].Length = result[i].Content.Length;
             result[i].Type = Types.TokenInfo.TokenType.LITERAL_NUMBER;
+            result.RemoveAt( i + 1 );
+            --i;
+            continue;
+          }
+        }
+      }
+
+      // collapse literal number if followed by local label with numbers (real number)
+      if ( result.Count >= 2 )
+      {
+        for ( int i = 0; i < result.Count - 1; ++i )
+        {
+          if ( ( result[i].Type == TokenInfo.TokenType.LITERAL_NUMBER )
+          &&   ( result[i + 1].Type == Types.TokenInfo.TokenType.LABEL_LOCAL )
+          &&   ( IsNumeric( result[i + 1].Content.Substring( 1 ) ) )
+          &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
+          {
+            // collapse
+            result[i].Content += result[i + 1].Content;
+            result[i].Length += result[i + 1].Content.Length;
+            result[i].Type = Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
             result.RemoveAt( i + 1 );
             --i;
             continue;
@@ -14482,6 +14558,24 @@ namespace C64Studio.Parser
         }
       }
       return result;
+    }
+
+
+
+    private bool IsNumeric( string Text )
+    {
+      if ( string.IsNullOrEmpty( Text ) )
+      {
+        return false;
+      }
+      foreach ( char character in Text )
+      {
+        if ( !char.IsNumber( character ) )
+        {
+          return false;
+        }
+      }
+      return true;
     }
 
 

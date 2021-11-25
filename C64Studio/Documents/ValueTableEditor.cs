@@ -493,6 +493,8 @@ namespace C64Studio
       m_Parser.AddExtFunction( "sin", 1, 1, ExtSinus );
       m_Parser.AddExtFunction( "cos", 1, 1, ExtCosinus );
       m_Parser.AddExtFunction( "tan", 1, 1, ExtTan );
+      m_Parser.AddExtFunction( "toradians", 1, 1, ExtToRadians );
+      m_Parser.AddExtFunction( "todegrees", 1, 1, ExtToDegrees );
 
       double  startValue = Util.StringToDouble( m_Project.ValueTable.StartValue );
       double  endValue = Util.StringToDouble( m_Project.ValueTable.EndValue );
@@ -612,6 +614,58 @@ namespace C64Studio
       {
         Type = TokenInfo.TokenType.LITERAL_NUMBER,
         Content = Math.Sin( functionResult * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
+      };
+      result.Add( resultValue );
+      return result;
+    }
+
+
+
+    private List<TokenInfo> ExtToRadians( List<TokenInfo> Arguments )
+    {
+      var result = new List<TokenInfo>();
+
+      if ( Arguments.Count != 1 )
+      {
+        SetError( "Invalid argument count" );
+        return result;
+      }
+      double functionResult = 0;
+      if ( !m_Parser.EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
+      {
+        SetError( "Invalid argument" );
+        return result;
+      }
+      var resultValue = new TokenInfo()
+      {
+        Type = TokenInfo.TokenType.LITERAL_NUMBER,
+        Content = ( functionResult * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
+      };
+      result.Add( resultValue );
+      return result;
+    }
+
+
+
+    private List<TokenInfo> ExtToDegrees( List<TokenInfo> Arguments )
+    {
+      var result = new List<TokenInfo>();
+
+      if ( Arguments.Count != 1 )
+      {
+        SetError( "Invalid argument count" );
+        return result;
+      }
+      double functionResult = 0;
+      if ( !m_Parser.EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
+      {
+        SetError( "Invalid argument" );
+        return result;
+      }
+      var resultValue = new TokenInfo()
+      {
+        Type = TokenInfo.TokenType.LITERAL_NUMBER,
+        Content = ( functionResult * 180.0f / Math.PI ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
       };
       result.Add( resultValue );
       return result;
