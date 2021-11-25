@@ -117,6 +117,7 @@ namespace RetroDevStudio
     }
 
 
+
     private byte SwizzleByte( byte Value )
     {
       return (byte)( ( Value >> 4 ) | ( Value << 4 ) );

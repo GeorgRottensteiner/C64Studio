@@ -50,17 +50,39 @@
       this.groupBox4 = new System.Windows.Forms.GroupBox();
       this.editPaletteName = new System.Windows.Forms.TextBox();
       this.label4 = new System.Windows.Forms.Label();
+      this.tabPalette = new System.Windows.Forms.TabControl();
+      this.tabEditor = new System.Windows.Forms.TabPage();
+      this.tabImportExport = new System.Windows.Forms.TabPage();
+      this.groupBox5 = new System.Windows.Forms.GroupBox();
+      this.checkExportHex = new System.Windows.Forms.CheckBox();
+      this.editPrefix = new System.Windows.Forms.TextBox();
+      this.label5 = new System.Windows.Forms.Label();
+      this.editWrapByteCount = new System.Windows.Forms.TextBox();
+      this.checkExportToDataWrap = new System.Windows.Forms.CheckBox();
+      this.checkExportToDataIncludeRes = new System.Windows.Forms.CheckBox();
+      this.editDataExport = new System.Windows.Forms.TextBox();
+      this.btnExportToFile = new System.Windows.Forms.Button();
+      this.btnExportToData = new System.Windows.Forms.Button();
+      this.checkExportSwizzled = new System.Windows.Forms.CheckBox();
+      this.groupBox6 = new System.Windows.Forms.GroupBox();
+      this.btnImportFromFile = new System.Windows.Forms.Button();
       this.paletteList = new C64Studio.ArrangedItemList();
+      this.checkImportSwizzle = new System.Windows.Forms.CheckBox();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox3.SuspendLayout();
       this.groupBox4.SuspendLayout();
+      this.tabPalette.SuspendLayout();
+      this.tabEditor.SuspendLayout();
+      this.tabImportExport.SuspendLayout();
+      this.groupBox5.SuspendLayout();
+      this.groupBox6.SuspendLayout();
       this.SuspendLayout();
       // 
       // btnCancel
       // 
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(633, 266);
+      this.btnCancel.Location = new System.Drawing.Point(654, 354);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 1;
@@ -69,7 +91,7 @@
       // 
       // btnOK
       // 
-      this.btnOK.Location = new System.Drawing.Point(552, 266);
+      this.btnOK.Location = new System.Drawing.Point(573, 354);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 1;
@@ -92,7 +114,7 @@
       // groupBox1
       // 
       this.groupBox1.Controls.Add(this.listPalette);
-      this.groupBox1.Location = new System.Drawing.Point(240, 12);
+      this.groupBox1.Location = new System.Drawing.Point(234, 0);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Size = new System.Drawing.Size(224, 248);
       this.groupBox1.TabIndex = 3;
@@ -113,7 +135,7 @@
       this.groupBox2.Controls.Add(this.label3);
       this.groupBox2.Controls.Add(this.label2);
       this.groupBox2.Controls.Add(this.label1);
-      this.groupBox2.Location = new System.Drawing.Point(470, 12);
+      this.groupBox2.Location = new System.Drawing.Point(464, 0);
       this.groupBox2.Name = "groupBox2";
       this.groupBox2.Size = new System.Drawing.Size(238, 175);
       this.groupBox2.TabIndex = 4;
@@ -228,7 +250,7 @@
       // groupBox3
       // 
       this.groupBox3.Controls.Add(this.panelColorPreview);
-      this.groupBox3.Location = new System.Drawing.Point(470, 194);
+      this.groupBox3.Location = new System.Drawing.Point(464, 182);
       this.groupBox3.Name = "groupBox3";
       this.groupBox3.Size = new System.Drawing.Size(238, 66);
       this.groupBox3.TabIndex = 5;
@@ -249,7 +271,7 @@
       this.groupBox4.Controls.Add(this.editPaletteName);
       this.groupBox4.Controls.Add(this.label4);
       this.groupBox4.Controls.Add(this.paletteList);
-      this.groupBox4.Location = new System.Drawing.Point(12, 12);
+      this.groupBox4.Location = new System.Drawing.Point(6, 0);
       this.groupBox4.Name = "groupBox4";
       this.groupBox4.Size = new System.Drawing.Size(222, 248);
       this.groupBox4.TabIndex = 6;
@@ -272,6 +294,191 @@
       this.label4.Size = new System.Drawing.Size(38, 13);
       this.label4.TabIndex = 8;
       this.label4.Text = "Name:";
+      // 
+      // tabPalette
+      // 
+      this.tabPalette.Controls.Add(this.tabEditor);
+      this.tabPalette.Controls.Add(this.tabImportExport);
+      this.tabPalette.Location = new System.Drawing.Point(12, 12);
+      this.tabPalette.Name = "tabPalette";
+      this.tabPalette.SelectedIndex = 0;
+      this.tabPalette.Size = new System.Drawing.Size(717, 336);
+      this.tabPalette.TabIndex = 7;
+      // 
+      // tabEditor
+      // 
+      this.tabEditor.Controls.Add(this.groupBox4);
+      this.tabEditor.Controls.Add(this.groupBox1);
+      this.tabEditor.Controls.Add(this.groupBox3);
+      this.tabEditor.Controls.Add(this.groupBox2);
+      this.tabEditor.Location = new System.Drawing.Point(4, 22);
+      this.tabEditor.Name = "tabEditor";
+      this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
+      this.tabEditor.Size = new System.Drawing.Size(709, 310);
+      this.tabEditor.TabIndex = 0;
+      this.tabEditor.Text = "Palette";
+      this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // tabImportExport
+      // 
+      this.tabImportExport.Controls.Add(this.groupBox6);
+      this.tabImportExport.Controls.Add(this.groupBox5);
+      this.tabImportExport.Location = new System.Drawing.Point(4, 22);
+      this.tabImportExport.Name = "tabImportExport";
+      this.tabImportExport.Padding = new System.Windows.Forms.Padding(3);
+      this.tabImportExport.Size = new System.Drawing.Size(709, 310);
+      this.tabImportExport.TabIndex = 1;
+      this.tabImportExport.Text = "Import/Export";
+      this.tabImportExport.UseVisualStyleBackColor = true;
+      // 
+      // groupBox5
+      // 
+      this.groupBox5.Controls.Add(this.checkExportSwizzled);
+      this.groupBox5.Controls.Add(this.checkExportHex);
+      this.groupBox5.Controls.Add(this.editPrefix);
+      this.groupBox5.Controls.Add(this.label5);
+      this.groupBox5.Controls.Add(this.editWrapByteCount);
+      this.groupBox5.Controls.Add(this.checkExportToDataWrap);
+      this.groupBox5.Controls.Add(this.checkExportToDataIncludeRes);
+      this.groupBox5.Controls.Add(this.editDataExport);
+      this.groupBox5.Controls.Add(this.btnExportToFile);
+      this.groupBox5.Controls.Add(this.btnExportToData);
+      this.groupBox5.Location = new System.Drawing.Point(6, 6);
+      this.groupBox5.Name = "groupBox5";
+      this.groupBox5.Size = new System.Drawing.Size(306, 298);
+      this.groupBox5.TabIndex = 0;
+      this.groupBox5.TabStop = false;
+      this.groupBox5.Text = "Export";
+      // 
+      // checkExportHex
+      // 
+      this.checkExportHex.AutoSize = true;
+      this.checkExportHex.Checked = true;
+      this.checkExportHex.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkExportHex.Location = new System.Drawing.Point(118, 42);
+      this.checkExportHex.Name = "checkExportHex";
+      this.checkExportHex.Size = new System.Drawing.Size(92, 17);
+      this.checkExportHex.TabIndex = 27;
+      this.checkExportHex.Text = "Export as Hex";
+      this.checkExportHex.UseVisualStyleBackColor = true;
+      // 
+      // editPrefix
+      // 
+      this.editPrefix.Location = new System.Drawing.Point(214, 17);
+      this.editPrefix.Name = "editPrefix";
+      this.editPrefix.Size = new System.Drawing.Size(43, 20);
+      this.editPrefix.TabIndex = 23;
+      this.editPrefix.Text = "!byte ";
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(235, 70);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(32, 13);
+      this.label5.TabIndex = 26;
+      this.label5.Text = "bytes";
+      // 
+      // editWrapByteCount
+      // 
+      this.editWrapByteCount.Enabled = false;
+      this.editWrapByteCount.Location = new System.Drawing.Point(188, 66);
+      this.editWrapByteCount.Name = "editWrapByteCount";
+      this.editWrapByteCount.Size = new System.Drawing.Size(41, 20);
+      this.editWrapByteCount.TabIndex = 25;
+      this.editWrapByteCount.Text = "40";
+      // 
+      // checkExportToDataWrap
+      // 
+      this.checkExportToDataWrap.AutoSize = true;
+      this.checkExportToDataWrap.Checked = true;
+      this.checkExportToDataWrap.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkExportToDataWrap.Location = new System.Drawing.Point(118, 69);
+      this.checkExportToDataWrap.Name = "checkExportToDataWrap";
+      this.checkExportToDataWrap.Size = new System.Drawing.Size(64, 17);
+      this.checkExportToDataWrap.TabIndex = 24;
+      this.checkExportToDataWrap.Text = "Wrap at";
+      this.checkExportToDataWrap.UseVisualStyleBackColor = true;
+      // 
+      // checkExportToDataIncludeRes
+      // 
+      this.checkExportToDataIncludeRes.AutoSize = true;
+      this.checkExportToDataIncludeRes.Checked = true;
+      this.checkExportToDataIncludeRes.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkExportToDataIncludeRes.Location = new System.Drawing.Point(118, 19);
+      this.checkExportToDataIncludeRes.Name = "checkExportToDataIncludeRes";
+      this.checkExportToDataIncludeRes.Size = new System.Drawing.Size(74, 17);
+      this.checkExportToDataIncludeRes.TabIndex = 22;
+      this.checkExportToDataIncludeRes.Text = "Prefix with";
+      this.checkExportToDataIncludeRes.UseVisualStyleBackColor = true;
+      // 
+      // editDataExport
+      // 
+      this.editDataExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editDataExport.Location = new System.Drawing.Point(0, 94);
+      this.editDataExport.Multiline = true;
+      this.editDataExport.Name = "editDataExport";
+      this.editDataExport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      this.editDataExport.Size = new System.Drawing.Size(300, 198);
+      this.editDataExport.TabIndex = 29;
+      this.editDataExport.WordWrap = false;
+      this.editDataExport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
+      this.editDataExport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
+      // 
+      // btnExportToFile
+      // 
+      this.btnExportToFile.Location = new System.Drawing.Point(6, 44);
+      this.btnExportToFile.Name = "btnExportToFile";
+      this.btnExportToFile.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToFile.TabIndex = 28;
+      this.btnExportToFile.Text = "as binary file";
+      this.btnExportToFile.UseVisualStyleBackColor = true;
+      this.btnExportToFile.Click += new System.EventHandler(this.btnExportToFile_Click);
+      // 
+      // btnExportToData
+      // 
+      this.btnExportToData.Location = new System.Drawing.Point(6, 15);
+      this.btnExportToData.Name = "btnExportToData";
+      this.btnExportToData.Size = new System.Drawing.Size(106, 23);
+      this.btnExportToData.TabIndex = 21;
+      this.btnExportToData.Text = "as assembly source";
+      this.btnExportToData.UseVisualStyleBackColor = true;
+      this.btnExportToData.Click += new System.EventHandler(this.btnExportToData_Click);
+      // 
+      // checkExportSwizzled
+      // 
+      this.checkExportSwizzled.AutoSize = true;
+      this.checkExportSwizzled.Checked = true;
+      this.checkExportSwizzled.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkExportSwizzled.Location = new System.Drawing.Point(216, 42);
+      this.checkExportSwizzled.Name = "checkExportSwizzled";
+      this.checkExportSwizzled.Size = new System.Drawing.Size(61, 17);
+      this.checkExportSwizzled.TabIndex = 27;
+      this.checkExportSwizzled.Text = "Swizzle";
+      this.checkExportSwizzled.UseVisualStyleBackColor = true;
+      // 
+      // groupBox6
+      // 
+      this.groupBox6.Controls.Add(this.checkImportSwizzle);
+      this.groupBox6.Controls.Add(this.btnImportFromFile);
+      this.groupBox6.Location = new System.Drawing.Point(318, 6);
+      this.groupBox6.Name = "groupBox6";
+      this.groupBox6.Size = new System.Drawing.Size(388, 298);
+      this.groupBox6.TabIndex = 1;
+      this.groupBox6.TabStop = false;
+      this.groupBox6.Text = "Import";
+      // 
+      // btnImportFromFile
+      // 
+      this.btnImportFromFile.Location = new System.Drawing.Point(6, 15);
+      this.btnImportFromFile.Name = "btnImportFromFile";
+      this.btnImportFromFile.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromFile.TabIndex = 1;
+      this.btnImportFromFile.Text = "From File...";
+      this.btnImportFromFile.UseVisualStyleBackColor = true;
+      this.btnImportFromFile.Click += new System.EventHandler(this.btnImportFromFile_Click);
       // 
       // paletteList
       // 
@@ -297,17 +504,26 @@
       this.paletteList.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.paletteList_ItemMoved);
       this.paletteList.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_SelectedIndexChanged);
       // 
+      // checkImportSwizzle
+      // 
+      this.checkImportSwizzle.AutoSize = true;
+      this.checkImportSwizzle.Checked = true;
+      this.checkImportSwizzle.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkImportSwizzle.Location = new System.Drawing.Point(129, 19);
+      this.checkImportSwizzle.Name = "checkImportSwizzle";
+      this.checkImportSwizzle.Size = new System.Drawing.Size(78, 17);
+      this.checkImportSwizzle.TabIndex = 27;
+      this.checkImportSwizzle.Text = "De-Swizzle";
+      this.checkImportSwizzle.UseVisualStyleBackColor = true;
+      // 
       // DlgPaletteEditor
       // 
       this.AcceptButton = this.btnOK;
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(717, 300);
-      this.Controls.Add(this.groupBox4);
-      this.Controls.Add(this.groupBox3);
-      this.Controls.Add(this.groupBox2);
-      this.Controls.Add(this.groupBox1);
+      this.ClientSize = new System.Drawing.Size(738, 386);
+      this.Controls.Add(this.tabPalette);
       this.Controls.Add(this.btnOK);
       this.Controls.Add(this.btnCancel);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -324,6 +540,13 @@
       this.groupBox3.ResumeLayout(false);
       this.groupBox4.ResumeLayout(false);
       this.groupBox4.PerformLayout();
+      this.tabPalette.ResumeLayout(false);
+      this.tabEditor.ResumeLayout(false);
+      this.tabImportExport.ResumeLayout(false);
+      this.groupBox5.ResumeLayout(false);
+      this.groupBox5.PerformLayout();
+      this.groupBox6.ResumeLayout(false);
+      this.groupBox6.PerformLayout();
       this.ResumeLayout(false);
 
     }
@@ -353,5 +576,22 @@
     private ArrangedItemList paletteList;
     private System.Windows.Forms.TextBox editPaletteName;
     private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.TabControl tabPalette;
+    private System.Windows.Forms.TabPage tabEditor;
+    private System.Windows.Forms.TabPage tabImportExport;
+    private System.Windows.Forms.GroupBox groupBox5;
+    private System.Windows.Forms.CheckBox checkExportHex;
+    private System.Windows.Forms.TextBox editPrefix;
+    private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.TextBox editWrapByteCount;
+    private System.Windows.Forms.CheckBox checkExportToDataWrap;
+    private System.Windows.Forms.CheckBox checkExportToDataIncludeRes;
+    private System.Windows.Forms.TextBox editDataExport;
+    private System.Windows.Forms.Button btnExportToFile;
+    private System.Windows.Forms.Button btnExportToData;
+    private System.Windows.Forms.CheckBox checkExportSwizzled;
+    private System.Windows.Forms.GroupBox groupBox6;
+    private System.Windows.Forms.Button btnImportFromFile;
+    private System.Windows.Forms.CheckBox checkImportSwizzle;
   }
 }

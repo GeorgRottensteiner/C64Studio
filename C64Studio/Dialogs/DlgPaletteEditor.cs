@@ -1,4 +1,6 @@
-﻿using RetroDevStudio;
+﻿using C64Studio.Types;
+using GR.Memory;
+using RetroDevStudio;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,10 @@ namespace C64Studio
 {
   public partial class DlgPaletteEditor : Form
   {
+    private StudioCore      Core;
+
+
+
     public ColorSettings Colors
     {
       private set;
@@ -23,6 +29,7 @@ namespace C64Studio
     public DlgPaletteEditor( StudioCore Core, ColorSettings Colors )
     {
       this.Colors = new ColorSettings( Colors );
+      this.Core = Core;
       InitializeComponent();
 
       foreach ( var pal in this.Colors.Palettes )
@@ -417,6 +424,175 @@ namespace C64Studio
         newPalList.Add( (Palette)item.Tag );
       }
       Colors.Palettes = newPalList;
+    }
+
+
+
+    private void btnExportToData_Click( object sender, EventArgs e )
+    {
+      var palData = GatherPaletteData();
+
+      string paletteASM = Util.ToASMData( palData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
+
+      StringBuilder   sb = new StringBuilder();
+      sb.Append( ";num entries " );
+      sb.Append( palData.Length / 3 );
+      sb.AppendLine();
+
+      editDataExport.Text = sb + ";palette data" + Environment.NewLine + paletteASM + Environment.NewLine;
+    }
+
+
+
+    private ByteBuffer GatherPaletteData()
+    {
+      // get all palette datas, first all R, then all G, then all B
+      var palData = new ByteBuffer();
+      for ( int i = 0; i < Colors.Palettes.Count; ++i )
+      {
+        var curPal = Colors.Palettes[i];
+
+        palData.Append( curPal.GetExportData( 0, curPal.NumColors, checkExportSwizzled.Checked ) );
+      }
+
+      // pal data has rgbrgbrgb, we need to copy all r,g,bs behind each other
+      var orderedPalData = new ByteBuffer();
+      for ( int i = 0; i < 3; ++i )
+      {
+        for ( int j = 0; j < Colors.Palettes.Count; ++j )
+        {
+          orderedPalData.Append( palData.SubBuffer( ( i + j * 3 ) * Colors.Palettes[0].NumColors, Colors.Palettes[0].NumColors ) );
+        }
+      }
+
+      var finalPalData = new ByteBuffer();
+      int totalNumColors = Colors.Palettes.Count * Colors.Palettes[0].NumColors;
+
+      // extract R, G and B
+      finalPalData.Append( orderedPalData.SubBuffer( 0, totalNumColors ) );
+      finalPalData.Append( orderedPalData.SubBuffer( totalNumColors + 0, totalNumColors ) );
+      finalPalData.Append( orderedPalData.SubBuffer( 2 * totalNumColors + 0, totalNumColors ) );
+
+      return finalPalData;
+    }
+
+
+
+    private void btnExportToFile_Click( object sender, EventArgs e )
+    {
+      var palData = GatherPaletteData();
+
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Save data as";
+      saveDlg.Filter = "Binary Data|*.bin|All Files|*.*";
+      /*
+      if ( DocumentInfo.Project != null )
+      {
+        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
+      }*/
+      if ( saveDlg.ShowDialog() != DialogResult.OK )
+      {
+        return;
+      }
+      GR.IO.File.WriteAllBytes( saveDlg.FileName, palData );
+    }
+
+
+
+    private void editDataExport_KeyPress( object sender, KeyPressEventArgs e )
+    {
+      if ( ( ModifierKeys == Keys.Control )
+      &&   ( e.KeyChar == 1 ) )
+      {
+        editDataExport.SelectAll();
+        e.Handled = true;
+      }
+    }
+
+
+
+    private void editDataExport_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
+    {
+      if ( e.KeyData == ( Keys.A | Keys.Control ) )
+      {
+        editDataExport.SelectAll();
+      }
+    }
+
+
+
+    private void btnImportFromFile_Click( object sender, EventArgs e )
+    {
+      string filename;
+
+      if ( OpenFile( "Open binary data", Constants.FILEFILTER_BINARY_FILES + Constants.FILEFILTER_ALL, out filename ) )
+      {
+        GR.Memory.ByteBuffer data = GR.IO.File.ReadAllBytes( filename );
+
+        ImportFromData( data );
+      }
+    }
+
+
+
+    private bool OpenFile( string Caption, string FileFilter, out string Filename )
+    {
+      Filename = "";
+
+      OpenFileDialog openDlg = new OpenFileDialog();
+
+      openDlg.Title = Caption;
+      openDlg.Filter = Core.MainForm.FilterString( FileFilter );
+      if ( ( openDlg.ShowDialog() != DialogResult.OK )
+      ||   ( string.IsNullOrEmpty( openDlg.FileName ) ) )
+      {
+        return false;
+      }
+      Filename = openDlg.FileName;
+      return true;
+    }
+
+
+
+    private byte SwizzleByte( byte Value )
+    {
+      return (byte)( ( Value >> 4 ) | ( Value << 4 ) );
+    }
+
+
+
+    private void ImportFromData( ByteBuffer Data )
+    {
+      int numColorsInOnePalette = Colors.Palette.NumColors;
+      int numColorsInImport = (int)( Data.Length / 3 );
+      for ( int i = 0; i < numColorsInImport; ++i )
+      {
+        if ( i < Colors.Palettes.Count * numColorsInOnePalette )
+        {
+          uint    color = 0xff000000;
+
+          if ( checkImportSwizzle.Checked )
+          {
+            color |= (uint)( SwizzleByte( Data.ByteAt( i ) ) << 16 );
+            color |= (uint)( SwizzleByte( Data.ByteAt( (int)( i + numColorsInImport * 1 ) ) ) << 8 );
+            color |= (uint)SwizzleByte( Data.ByteAt( (int)( i + numColorsInImport * 2 ) ) );
+          }
+          else
+          {
+            color |= (uint)( Data.ByteAt( i ) << 16 );
+            color |= (uint)( Data.ByteAt( (int)( i + numColorsInImport * 1 ) ) << 8 );
+            color |= (uint)Data.ByteAt( (int)( i + numColorsInImport * 2 ) );
+          }
+          Colors.Palettes[i / numColorsInOnePalette].ColorValues[i % numColorsInOnePalette] = color;
+        }
+      }
+      for ( int i = 0; i < Colors.Palettes.Count; ++i )
+      {
+        Colors.Palettes[i].CreateBrushes();
+      }
+
+      listPalette.Invalidate();
     }
 
 
