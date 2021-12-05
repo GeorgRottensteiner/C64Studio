@@ -88,6 +88,8 @@
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.picPreview = new GR.Forms.FastPictureBox();
       this.picOriginal = new GR.Forms.FastPictureBox();
+      this.groupBox6 = new System.Windows.Forms.GroupBox();
+      this.comboTargetPalette = new System.Windows.Forms.ComboBox();
       this.tabImportSettings.SuspendLayout();
       this.tabSettings.SuspendLayout();
       this.groupBox5.SuspendLayout();
@@ -95,10 +97,12 @@
       this.groupBox3.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox1.SuspendLayout();
+      this.tabPalette.SuspendLayout();
       this.menuImport.SuspendLayout();
       this.contextMenuOrigPic.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.picOriginal)).BeginInit();
+      this.groupBox6.SuspendLayout();
       this.SuspendLayout();
       // 
       // tabImportSettings
@@ -172,6 +176,7 @@
       this.listDirectReplaceColors.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader3,
             this.columnHeader4});
+      this.listDirectReplaceColors.HideSelection = false;
       this.listDirectReplaceColors.Location = new System.Drawing.Point(6, 19);
       this.listDirectReplaceColors.Name = "listDirectReplaceColors";
       this.listDirectReplaceColors.Size = new System.Drawing.Size(259, 97);
@@ -332,6 +337,7 @@
       // 
       // tabPalette
       // 
+      this.tabPalette.Controls.Add(this.groupBox6);
       this.tabPalette.Location = new System.Drawing.Point(4, 22);
       this.tabPalette.Name = "tabPalette";
       this.tabPalette.Padding = new System.Windows.Forms.Padding(3);
@@ -370,6 +376,7 @@
             this.columnHeader1,
             this.columnHeader2});
       this.listProblems.FullRowSelect = true;
+      this.listProblems.HideSelection = false;
       this.listProblems.Location = new System.Drawing.Point(650, 511);
       this.listProblems.Name = "listProblems";
       this.listProblems.Size = new System.Drawing.Size(287, 303);
@@ -619,6 +626,7 @@
       // 
       this.picPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.picPreview.AutoResize = false;
       this.picPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.picPreview.DisplayPage = fastImage1;
       this.picPreview.Image = null;
@@ -635,6 +643,7 @@
       // 
       this.picOriginal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.picOriginal.AutoResize = false;
       this.picOriginal.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.picOriginal.ContextMenuStrip = this.contextMenuOrigPic;
       this.picOriginal.DisplayPage = fastImage2;
@@ -647,6 +656,26 @@
       this.picOriginal.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picOriginal_MouseDown);
       this.picOriginal.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picOriginal_MouseMove);
       this.picOriginal.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picOriginal_MouseUp);
+      // 
+      // groupBox6
+      // 
+      this.groupBox6.Controls.Add(this.comboTargetPalette);
+      this.groupBox6.Location = new System.Drawing.Point(3, 6);
+      this.groupBox6.Name = "groupBox6";
+      this.groupBox6.Size = new System.Drawing.Size(274, 56);
+      this.groupBox6.TabIndex = 0;
+      this.groupBox6.TabStop = false;
+      this.groupBox6.Text = "Target Palette";
+      // 
+      // comboTargetPalette
+      // 
+      this.comboTargetPalette.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboTargetPalette.FormattingEnabled = true;
+      this.comboTargetPalette.Location = new System.Drawing.Point(6, 19);
+      this.comboTargetPalette.Name = "comboTargetPalette";
+      this.comboTargetPalette.Size = new System.Drawing.Size(262, 21);
+      this.comboTargetPalette.TabIndex = 0;
+      this.comboTargetPalette.SelectedIndexChanged += new System.EventHandler(this.comboTargetPalette_SelectedIndexChanged);
       // 
       // DlgGraphicImport
       // 
@@ -686,11 +715,13 @@
       this.groupBox2.PerformLayout();
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
+      this.tabPalette.ResumeLayout(false);
       this.menuImport.ResumeLayout(false);
       this.menuImport.PerformLayout();
       this.contextMenuOrigPic.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.picOriginal)).EndInit();
+      this.groupBox6.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -754,5 +785,7 @@
     private System.Windows.Forms.GroupBox groupBox5;
     private System.Windows.Forms.CheckBox checkPasteAsBlock;
     private System.Windows.Forms.ToolTip toolTip1;
+    private System.Windows.Forms.GroupBox groupBox6;
+    private System.Windows.Forms.ComboBox comboTargetPalette;
   }
 }

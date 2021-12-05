@@ -64,6 +64,7 @@ namespace C64Studio
 
     private GR.Image.MemoryImage    m_OriginalImage = new GR.Image.MemoryImage( 20, 20, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
     private GR.Image.MemoryImage    m_ImportImage = new GR.Image.MemoryImage( 20, 20, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+    private Palette                 m_ImportPalette = null;      
 
     private string                  m_OrigFilename;
 
@@ -72,14 +73,18 @@ namespace C64Studio
     public ColorSettings            MultiColorSettings = new ColorSettings();
     public bool                     PasteAsBlock = false;
 
+    private Types.GraphicType       m_ImportType;
+
 
 
     public DlgGraphicImport( StudioCore Core, Types.GraphicType ImportType, GR.Image.FastImage IncomingImage, string Filename, ColorSettings MCSettings )
     {
       this.Core = Core;
-      InitializeComponent();
-
+      m_ImportType = ImportType;
       m_CurPalette = MCSettings.Palette;
+      MultiColorSettings = MCSettings;
+
+      InitializeComponent();
 
       comboBackground.Items.Add( "[Any]" );
       comboMulticolor1.Items.Add( "[Any]" );
@@ -91,12 +96,21 @@ namespace C64Studio
         comboMulticolor2.Items.Add( i.ToString( "d2" ) );
       }
 
+      for ( int i = 0; i < MCSettings.Palettes.Count; ++i )
+      {
+        comboTargetPalette.Items.Add( MCSettings.Palettes[i].Name );
+      }
+      if ( ImportType == Types.GraphicType.SPRITES_16_COLORS )
+      {
+        comboTargetPalette.Items.Add( "Use incoming palette" );
+      }
+      comboTargetPalette.SelectedIndex = 0;
+
       picOriginal.DisplayPage.Create( picOriginal.ClientSize.Width, picOriginal.ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
       picPreview.DisplayPage.Create( picPreview.ClientSize.Width, picPreview.ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
-      //PaletteManager.ApplyPalette( m_ImportImage );
-      PaletteManager.ApplyPalette( picPreview.DisplayPage );
+      PaletteManager.ApplyPalette( picPreview.DisplayPage, m_CurPalette );
 
       switch ( ImportType )
       {
@@ -134,8 +148,6 @@ namespace C64Studio
       comboBackground.SelectedIndex   = MCSettings.BackgroundColor + 1;
       comboMulticolor1.SelectedIndex  = MCSettings.MultiColor1 + 1;
       comboMulticolor2.SelectedIndex  = MCSettings.MultiColor2 + 1;
-
-      MultiColorSettings = MCSettings;
 
       Core.Theming.ApplyTheme( this );
     }
@@ -188,20 +200,20 @@ namespace C64Studio
       m_OriginalImage = new GR.Image.MemoryImage( newImage.Width, newImage.Height, newImage.PixelFormat );
       m_ImportImage = new GR.Image.MemoryImage( newImage.Width, newImage.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
-      Palette importPal = null;
+      m_ImportPalette = null;
       if ( newImage.BitsPerPixel <= 8 )
       {
         // an image with palette
-        importPal = new Palette( 1 << newImage.BitsPerPixel );
-        for ( int i = 0; i < importPal.NumColors; ++i )
+        m_ImportPalette = new Palette( 1 << newImage.BitsPerPixel );
+        for ( int i = 0; i < m_ImportPalette.NumColors; ++i )
         {
-          importPal.ColorValues[i] = (uint)( 0xff000000
+          m_ImportPalette.ColorValues[i] = (uint)( 0xff000000
                   + ( newImage.PaletteRed( i ) << 16 )
                   + ( newImage.PaletteGreen( i ) << 8 )
                   + newImage.PaletteBlue( i ) );
         }
-        importPal.CreateBrushes();
-        PaletteManager.ApplyPalette( m_OriginalImage, importPal );
+        m_ImportPalette.CreateBrushes();
+        PaletteManager.ApplyPalette( m_OriginalImage, m_ImportPalette );
       }
       PaletteManager.ApplyPalette( m_ImportImage );
       //PaletteManager.ApplyPalette( m_OriginalImage );
@@ -212,9 +224,9 @@ namespace C64Studio
       {
         picOriginal.DisplayPage.Create( picOriginal.ClientSize.Width, picOriginal.ClientSize.Height, m_OriginalImage.PixelFormat );
 
-        if ( importPal != null )
+        if ( m_ImportPalette != null )
         {
-          PaletteManager.ApplyPalette( picOriginal.DisplayPage, importPal );
+          PaletteManager.ApplyPalette( picOriginal.DisplayPage, m_ImportPalette );
         }
       }
       picOriginal.DisplayPage.Box( 0, 0, picOriginal.DisplayPage.Width, picOriginal.DisplayPage.Height, 0 );
@@ -248,7 +260,7 @@ namespace C64Studio
 
       ColorSystem.RGB   origColor = new ColorSystem.RGB( R, G, B );
       
-      for ( int k = 0; k < 16; ++k )
+      for ( int k = 0; k < Palette.NumColors; ++k )
       {
         switch ( matchType )
         {
@@ -335,8 +347,8 @@ namespace C64Studio
             // forced matches
             if ( m_ForcedReplacementColors.ContainsKey( pixelValue ) )
             {
-              matchedColor = m_ForcedReplacementColors[pixelValue];
-              matchedColors[pixelValue] = matchedColor;
+              matchedColor                = m_ForcedReplacementColors[pixelValue];
+              matchedColors[pixelValue]   = matchedColor;
               m_ImportImage.SetPixel( i, j, matchedColor );
               continue;
             }
@@ -359,7 +371,11 @@ namespace C64Studio
             //ColorSystem.RGB rgb = new ColorSystem.RGB( red, green, blue );
 
             // HSV-system (painter!)
-            int bestMatch = MatchColor( red, green, blue, m_CurPalette );
+            int bestMatch = (byte)pixelValue;
+            if ( comboTargetPalette.SelectedIndex < MultiColorSettings.Palettes.Count )
+            {
+              bestMatch = MatchColor( red, green, blue, m_CurPalette );
+            }
             /*
             int bestMatchDistance = 50000000;
             int bestMatch = -1;
@@ -385,7 +401,7 @@ namespace C64Studio
             }
             else
             {
-              matchedColor = (byte)bestMatch;
+              matchedColor              = (byte)bestMatch;
               matchedColors[pixelValue] = matchedColor;
 
               m_ImportImage.SetPixel( i, j, matchedColor );
@@ -1150,6 +1166,10 @@ namespace C64Studio
 
     private void RecalcImport()
     {
+      if ( comboImportType.SelectedItem == null )
+      {
+        return;
+      }
       if ( !CheckColors() )
       {
         return;
@@ -1303,6 +1323,21 @@ namespace C64Studio
     private void btnOK_Click( object sender, EventArgs e )
     {
       DialogResult = DialogResult.OK;
+
+      if ( comboTargetPalette.SelectedIndex >= MultiColorSettings.Palettes.Count )
+      {
+        // we could have more colors in the source palette, truncate
+        var newPal = new Palette( MultiColorSettings.Palettes[0].NumColors );
+        for ( int i = 0; i < newPal.NumColors; ++i )
+        {
+          newPal.ColorValues[i] = m_ImportPalette.ColorValues[i];
+        }
+        newPal.CreateBrushes();
+        newPal.Name = "Imported Palette";
+        MultiColorSettings.Palettes.Add( newPal );
+
+        MultiColorSettings.ActivePalette = MultiColorSettings.Palettes.Count - 1;
+      }
       Close();
     }
 
@@ -1464,6 +1499,24 @@ namespace C64Studio
       picOriginal.Invalidate();
     }
 
+
+
+    private void comboTargetPalette_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( comboTargetPalette.SelectedIndex >= MultiColorSettings.Palettes.Count )
+      {
+        m_CurPalette = m_ImportPalette;
+      }
+      else
+      {
+        m_CurPalette = MultiColorSettings.Palettes[comboTargetPalette.SelectedIndex];
+      }
+      PaletteManager.ApplyPalette( picPreview.DisplayPage, m_CurPalette );
+      RecalcImport();
+
+      picPreview.Invalidate();
+      picOriginal.Invalidate();
+    }
 
 
   }
