@@ -554,6 +554,15 @@ namespace C64Studio.Controls
         return;
       }
 
+      if ( mcSettings.Palettes.Count > m_Project.Colors.Palettes.Count )
+      {
+        // a palette was imported!
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
+
+        _ColorSettingsDlg.PalettesChanged();
+        m_Project.Colors.Palettes.Add( mcSettings.Palettes[mcSettings.Palettes.Count - 1] );
+      }
+
       _ColorSettingsDlg.ColorChanged( ColorType.BACKGROUND, mcSettings.BackgroundColor );
       _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, mcSettings.MultiColor1 );
       _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_2, mcSettings.MultiColor2 );
@@ -1911,7 +1920,7 @@ namespace C64Studio.Controls
           _ColorSettingsDlg = new ColorSettingsHiRes( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.COMMODORE_MULTICOLOR:
-          _ColorSettingsDlg = new ColorSettingsMC( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          _ColorSettingsDlg = new ColorSettingsMCCharacter( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.VIC20:
           _ColorSettingsDlg = new ColorSettingsVC20( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
@@ -1946,23 +1955,21 @@ namespace C64Studio.Controls
 
     private void _ColorSettingsDlg_ColorsExchanged( ColorType Color1, ColorType Color2 )
     {
-      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorExchangeColors( this, Color1, Color2 ) );
+      var selectedIndices = panelCharacters.SelectedIndices;
 
-      ExchangeColors( Color1, Color2 );
+      UndoManager.AddUndoTask( new Undo.UndoCharacterEditorExchangeColors( this, Color1, Color2, selectedIndices ) );
+
+      ExchangeColors( Color1, Color2, selectedIndices );
     }
 
 
 
-    public void ExchangeColors( ColorType Color1, ColorType Color2 )
+    public void ExchangeColors( ColorType Color1, ColorType Color2, List<int> AffectedChars )
     {
-      /*
-      int   temp = m_Project.Colors.BackgroundColor;
-      m_Project.Colors.BackgroundColor = m_Project.Colors.MultiColor1;
-      m_Project.Colors.MultiColor1 = temp;*/
-
-      int   charIndex = 0;
-      foreach ( var charInfo in m_Project.Characters )
+      foreach ( var index in AffectedChars )
       {
+        var charInfo = m_Project.Characters[index];
+
         for ( int y = 0; y < charInfo.Tile.Height; ++y )
         {
           for ( int x = 0; x < charInfo.Tile.Width; x += Lookup.PixelWidth( charInfo.Tile.Mode ) )
@@ -1979,10 +1986,9 @@ namespace C64Studio.Controls
             }
           }
         }
-        RebuildCharImage( charIndex );
+        RebuildCharImage( index );
 
         panelCharacters.Invalidate();
-        ++charIndex;
       }
       canvasEditor.Invalidate();
     }
