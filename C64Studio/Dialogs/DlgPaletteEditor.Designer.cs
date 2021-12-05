@@ -66,8 +66,9 @@
       this.checkExportSwizzled = new System.Windows.Forms.CheckBox();
       this.groupBox6 = new System.Windows.Forms.GroupBox();
       this.btnImportFromFile = new System.Windows.Forms.Button();
-      this.paletteList = new C64Studio.ArrangedItemList();
       this.checkImportSwizzle = new System.Windows.Forms.CheckBox();
+      this.paletteList = new C64Studio.ArrangedItemList();
+      this.checkImportColorsSorted = new System.Windows.Forms.CheckBox();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox3.SuspendLayout();
@@ -461,6 +462,7 @@
       // 
       // groupBox6
       // 
+      this.groupBox6.Controls.Add(this.checkImportColorsSorted);
       this.groupBox6.Controls.Add(this.checkImportSwizzle);
       this.groupBox6.Controls.Add(this.btnImportFromFile);
       this.groupBox6.Location = new System.Drawing.Point(318, 6);
@@ -479,6 +481,18 @@
       this.btnImportFromFile.Text = "From File...";
       this.btnImportFromFile.UseVisualStyleBackColor = true;
       this.btnImportFromFile.Click += new System.EventHandler(this.btnImportFromFile_Click);
+      // 
+      // checkImportSwizzle
+      // 
+      this.checkImportSwizzle.AutoSize = true;
+      this.checkImportSwizzle.Checked = true;
+      this.checkImportSwizzle.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkImportSwizzle.Location = new System.Drawing.Point(129, 19);
+      this.checkImportSwizzle.Name = "checkImportSwizzle";
+      this.checkImportSwizzle.Size = new System.Drawing.Size(78, 17);
+      this.checkImportSwizzle.TabIndex = 27;
+      this.checkImportSwizzle.Text = "De-Swizzle";
+      this.checkImportSwizzle.UseVisualStyleBackColor = true;
       // 
       // paletteList
       // 
@@ -504,17 +518,17 @@
       this.paletteList.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.paletteList_ItemMoved);
       this.paletteList.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_SelectedIndexChanged);
       // 
-      // checkImportSwizzle
+      // checkImportColorsSorted
       // 
-      this.checkImportSwizzle.AutoSize = true;
-      this.checkImportSwizzle.Checked = true;
-      this.checkImportSwizzle.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkImportSwizzle.Location = new System.Drawing.Point(129, 19);
-      this.checkImportSwizzle.Name = "checkImportSwizzle";
-      this.checkImportSwizzle.Size = new System.Drawing.Size(78, 17);
-      this.checkImportSwizzle.TabIndex = 27;
-      this.checkImportSwizzle.Text = "De-Swizzle";
-      this.checkImportSwizzle.UseVisualStyleBackColor = true;
+      this.checkImportColorsSorted.AutoSize = true;
+      this.checkImportColorsSorted.Checked = true;
+      this.checkImportColorsSorted.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkImportColorsSorted.Location = new System.Drawing.Point(213, 19);
+      this.checkImportColorsSorted.Name = "checkImportColorsSorted";
+      this.checkImportColorsSorted.Size = new System.Drawing.Size(57, 17);
+      this.checkImportColorsSorted.TabIndex = 27;
+      this.checkImportColorsSorted.Text = "Sorted";
+      this.checkImportColorsSorted.UseVisualStyleBackColor = true;
       // 
       // DlgPaletteEditor
       // 
@@ -593,5 +607,6 @@
     private System.Windows.Forms.GroupBox groupBox6;
     private System.Windows.Forms.Button btnImportFromFile;
     private System.Windows.Forms.CheckBox checkImportSwizzle;
+    private System.Windows.Forms.CheckBox checkImportColorsSorted;
   }
 }

@@ -572,17 +572,37 @@ namespace C64Studio
         {
           uint    color = 0xff000000;
 
-          if ( checkImportSwizzle.Checked )
+          if ( !checkImportColorsSorted.Checked )
           {
-            color |= (uint)( SwizzleByte( Data.ByteAt( i ) ) << 16 );
-            color |= (uint)( SwizzleByte( Data.ByteAt( (int)( i + numColorsInImport * 1 ) ) ) << 8 );
-            color |= (uint)SwizzleByte( Data.ByteAt( (int)( i + numColorsInImport * 2 ) ) );
+            // RGBRGBRGB...
+            if ( checkImportSwizzle.Checked )
+            {
+              color |= (uint)( SwizzleByte( Data.ByteAt( i * 3 ) ) << 16 );
+              color |= (uint)( SwizzleByte( Data.ByteAt( i * 3 + 1 ) ) << 8 );
+              color |= (uint)SwizzleByte( Data.ByteAt( i * 3 + 2 ) );
+            }
+            else
+            {
+              color |= (uint)( Data.ByteAt( i * 3 ) << 16 );
+              color |= (uint)( Data.ByteAt( i * 3 + 1 ) << 8 );
+              color |= (uint)Data.ByteAt( i * 3 + 2 );
+            }
           }
           else
           {
-            color |= (uint)( Data.ByteAt( i ) << 16 );
-            color |= (uint)( Data.ByteAt( (int)( i + numColorsInImport * 1 ) ) << 8 );
-            color |= (uint)Data.ByteAt( (int)( i + numColorsInImport * 2 ) );
+            // RRRRRRRRRRRGGGGGGGGGGBBBBBBBBBBB
+            if ( checkImportSwizzle.Checked )
+            {
+              color |= (uint)( SwizzleByte( Data.ByteAt( i ) ) << 16 );
+              color |= (uint)( SwizzleByte( Data.ByteAt( (int)( i + numColorsInImport * 1 ) ) ) << 8 );
+              color |= (uint)SwizzleByte( Data.ByteAt( (int)( i + numColorsInImport * 2 ) ) );
+            }
+            else
+            {
+              color |= (uint)( Data.ByteAt( i ) << 16 );
+              color |= (uint)( Data.ByteAt( (int)( i + numColorsInImport * 1 ) ) << 8 );
+              color |= (uint)Data.ByteAt( (int)( i + numColorsInImport * 2 ) );
+            }
           }
           Colors.Palettes[i / numColorsInOnePalette].ColorValues[i % numColorsInOnePalette] = color;
         }
