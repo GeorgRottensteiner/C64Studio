@@ -1081,6 +1081,10 @@ namespace C64Studio
           {
             targetTile.CustomColor = entry.Tile.CustomColor;
           }
+          else
+          {
+            targetTile.Colors.ActivePalette = entry.Tile.Colors.ActivePalette;
+          }
 
           int copyWidth = Math.Min( m_SpriteWidth, entry.Tile.Width );
           int copyHeight = Math.Min( m_SpriteHeight, entry.Tile.Height );
@@ -1100,6 +1104,7 @@ namespace C64Studio
           {
             _ColorSettingsDlg.CustomColor       = m_SpriteProject.Sprites[pastePos].Tile.CustomColor;
             _ColorSettingsDlg.MultiColorEnabled = ( m_SpriteProject.Sprites[pastePos].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR );
+            _ColorSettingsDlg.ActivePalette     = m_SpriteProject.Sprites[pastePos].Tile.Colors.ActivePalette;
           }
         }
         pictureEditor.Invalidate();
@@ -1128,14 +1133,18 @@ namespace C64Studio
       }
       GR.Image.FastImage mappedImage = null;
 
-      var mcSettings = new ColorSettings();
-      mcSettings.BackgroundColor  = m_SpriteProject.Colors.BackgroundColor;
-      mcSettings.MultiColor1      = m_SpriteProject.Colors.MultiColor1;
-      mcSettings.MultiColor2      = m_SpriteProject.Colors.MultiColor2;
-      mcSettings.Palette          = new Palette( m_SpriteProject.Colors.Palette );
+      var mcSettings = new ColorSettings( m_SpriteProject.Colors );
 
       bool pasteAsBlock = false;
-      if ( !Core.MainForm.ImportImage( "", imgClip, Types.GraphicType.SPRITES, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
+
+      var importType = Types.GraphicType.SPRITES;
+      if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
+      ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS ) )
+      {
+        importType = GraphicType.SPRITES_16_COLORS;
+      }
+
+      if ( !Core.MainForm.ImportImage( "", imgClip, importType, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
       {
         imgClip.Dispose();
         m_ImportError = "";
@@ -1145,6 +1154,20 @@ namespace C64Studio
       m_SpriteProject.Colors.BackgroundColor = mcSettings.BackgroundColor;
       m_SpriteProject.Colors.MultiColor1 = mcSettings.MultiColor1;
       m_SpriteProject.Colors.MultiColor2 = mcSettings.MultiColor2;
+
+      bool firstUndoStep = true;
+
+      if ( mcSettings.Palettes.Count > m_SpriteProject.Colors.Palettes.Count )
+      {
+        // a palette was imported!
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ), firstUndoStep );
+        firstUndoStep = false;
+
+        _ColorSettingsDlg.PalettesChanged();
+        m_SpriteProject.Colors.Palettes.Add( mcSettings.Palettes[mcSettings.Palettes.Count - 1] );
+      }
+
+      int activePalette = mcSettings.ActivePalette;
 
       ChangeColorSettingsDialog();
 
@@ -1183,9 +1206,13 @@ namespace C64Studio
             copyHeight = m_SpriteHeight;
           }
 
-          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, currentTargetSprite ), ( i == 0 ) && ( j == 0 ) );
+          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, currentTargetSprite ), firstUndoStep );
+          firstUndoStep = false;
 
           GR.Image.FastImage imgSprite = mappedImage.GetImage( i * m_SpriteWidth, j * m_SpriteHeight, copyWidth, copyHeight ) as GR.Image.FastImage;
+
+          m_SpriteProject.Sprites[currentTargetSprite].Tile.Colors.ActivePalette = activePalette;
+          m_SpriteProject.Sprites[currentTargetSprite].Tile.Colors.Palettes = m_SpriteProject.Colors.Palettes;
           ImportSprite( imgSprite, currentTargetSprite );
           imgSprite.Dispose();
 
@@ -1194,7 +1221,8 @@ namespace C64Studio
             CurrentSpriteModified();
             DoNotUpdateFromControls = true;
 
-            _ColorSettingsDlg.CustomColor = m_SpriteProject.Sprites[currentTargetSprite].Tile.CustomColor;
+            _ColorSettingsDlg.CustomColor   = m_SpriteProject.Sprites[currentTargetSprite].Tile.CustomColor;
+            _ColorSettingsDlg.ActivePalette = m_SpriteProject.Sprites[currentTargetSprite].Tile.Colors.ActivePalette;
             DoNotUpdateFromControls = false;
           }
           RebuildSpriteImage( currentTargetSprite );
@@ -1206,6 +1234,12 @@ namespace C64Studio
             ++currentTargetSprite;
           }
         }
+      }
+
+      // update all palettes for all sprites
+      for ( int i = 0; i < m_SpriteProject.Sprites.Count; ++i )
+      {
+        m_SpriteProject.Sprites[i].Tile.Colors.Palettes = m_SpriteProject.Colors.Palettes;
       }
       mappedImage.Dispose();
       imgClip.Dispose();
@@ -1485,6 +1519,7 @@ namespace C64Studio
       }
       else
       {
+        ChosenSpriteColor = 0;
         insertMode = SpriteMode.MEGA65_16_X_21_16_COLORS;
 
         for ( int y = 0; y < Image.Height; ++y )
@@ -1520,22 +1555,35 @@ namespace C64Studio
 
       GR.Image.FastImage spriteImage;
 
-      var mcSettings = new ColorSettings();
-      mcSettings.BackgroundColor  = m_SpriteProject.Colors.BackgroundColor;
-      mcSettings.MultiColor1      = m_SpriteProject.Colors.MultiColor1;
-      mcSettings.MultiColor2      = m_SpriteProject.Colors.MultiColor2;
-      Debug.Log( "Replace with spriteproject palette!" );
-      mcSettings.Palette          = Core.MainForm.ActivePalette;
+      var mcSettings = new ColorSettings( m_SpriteProject.Colors );
+
+      var importType = Types.GraphicType.SPRITES;
+      if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
+      ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS ) )
+      {
+        importType = GraphicType.SPRITES_16_COLORS;
+      }
 
       bool pasteAsBlock = false;
-      if ( !Core.MainForm.ImportImage( filename, null, C64Studio.Types.GraphicType.SPRITES, mcSettings, out spriteImage, out mcSettings, out pasteAsBlock ) )
+      if ( !Core.MainForm.ImportImage( filename, null, importType, mcSettings, out spriteImage, out mcSettings, out pasteAsBlock ) )
       {
         return;
       }
 
+      bool firstUndoStep = true;
+
       m_SpriteProject.Colors.BackgroundColor = mcSettings.BackgroundColor;
       m_SpriteProject.Colors.MultiColor1 = mcSettings.MultiColor1;
       m_SpriteProject.Colors.MultiColor2 = mcSettings.MultiColor2;
+      if ( mcSettings.Palettes.Count > m_SpriteProject.Colors.Palettes.Count )
+      {
+        // a palette was imported!
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ), firstUndoStep );
+        firstUndoStep = false;
+
+        _ColorSettingsDlg.PalettesChanged();
+        m_SpriteProject.Colors.Palettes.Add( mcSettings.Palettes[mcSettings.Palettes.Count - 1] );
+      }
 
       ChangeColorSettingsDialog();
 
@@ -1544,7 +1592,7 @@ namespace C64Studio
       int   curY = 0;
       while ( curY + m_SpriteHeight <= spriteImage.Height )
       {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, currentSpriteIndex ), currentSpriteIndex == 0 );
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, currentSpriteIndex ), firstUndoStep );
 
         ImportSprite( spriteImage.GetImage( curX, curY, m_SpriteWidth, m_SpriteHeight ) as GR.Image.FastImage, currentSpriteIndex );
 
@@ -1843,6 +1891,27 @@ namespace C64Studio
             resultTile.SetPixel( targetX, targetY, sourceColor );
           }
         }
+        // need to black out unrotated parts
+        if ( side < m_SpriteWidth )
+        {
+          for ( int i = side; i < m_SpriteWidth; ++i )
+          {
+            for ( int j = 0; j < m_SpriteHeight; ++j )
+            {
+              resultTile.SetPixel( i, j, 0 );
+            }
+          }
+        }
+        if ( side < m_SpriteHeight )
+        {
+          for ( int i = 0; i < m_SpriteWidth; ++i )
+          {
+            for ( int j = side; j < m_SpriteHeight; ++j )
+            {
+              resultTile.SetPixel( i, j, 0 );
+            }
+          }
+        }
         sprite.Tile.Data = resultTile.Data;
         SpriteChanged( spriteIndex );
       }
@@ -1885,6 +1954,27 @@ namespace C64Studio
 
             int   sourceColor = sprite.Tile.GetPixel( sourceX, sourceY );
             resultTile.SetPixel( targetX, targetY, sourceColor );
+          }
+        }
+        // need to black out unrotated parts
+        if ( side < m_SpriteWidth )
+        {
+          for ( int i = side; i < m_SpriteWidth; ++i )
+          {
+            for ( int j = 0; j < m_SpriteHeight; ++j )
+            {
+              resultTile.SetPixel( i, j, 0 );
+            }
+          }
+        }
+        if ( side < m_SpriteHeight )
+        {
+          for ( int i = 0; i < m_SpriteWidth; ++i )
+          {
+            for ( int j = side; j < m_SpriteHeight; ++j )
+            {
+              resultTile.SetPixel( i, j, 0 );
+            }
           }
         }
         sprite.Tile.Data = resultTile.Data;
@@ -3378,6 +3468,16 @@ namespace C64Studio
           pictureEditor.Invalidate();
         }
         panelSprites.InvalidateItemRect( spriteIndex );
+      }
+
+      for ( int i = 0; i < m_SpriteProject.Sprites.Count; ++i )
+      {
+        if ( m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette >= m_SpriteProject.Colors.Palettes.Count )
+        {
+          m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette = m_SpriteProject.Colors.Palettes.Count - 1;
+          m_SpriteProject.Sprites[i].Tile.Colors.Palettes = m_SpriteProject.Colors.Palettes;
+          RebuildSpriteImage( i );
+        }
       }
 
       OnPaletteChanged();
