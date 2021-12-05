@@ -37,10 +37,16 @@ namespace RetroDevStudio.Types
       dataSelection.AppendI32( Colors.MultiColor1 );
       dataSelection.AppendI32( Colors.MultiColor2 );
       dataSelection.AppendI32( Colors.BGColor4 );
-      dataSelection.AppendI32( Colors.Palette.NumColors );
-      for ( int i = 0; i < Colors.Palette.NumColors; ++i )
+
+      dataSelection.AppendI32( Colors.Palettes.Count );
+      for ( int j = 0; j < Colors.Palettes.Count; ++j )
       {
-        dataSelection.AppendU32( Colors.Palette.ColorValues[i] );
+        var pal = Colors.Palettes[j];
+        dataSelection.AppendI32( pal.NumColors );
+        for ( int i = 0; i < pal.NumColors; ++i )
+        {
+          dataSelection.AppendU32( pal.ColorValues[i] );
+        }
       }
 
       int prevIndex = Entries[0].Index;
@@ -52,6 +58,7 @@ namespace RetroDevStudio.Types
 
         dataSelection.AppendI32( (int)entry.Tile.Mode );
         dataSelection.AppendI32( entry.Tile.CustomColor );
+        dataSelection.AppendI32( entry.Tile.Colors.ActivePalette );
         dataSelection.AppendI32( entry.Tile.Width );
         dataSelection.AppendI32( entry.Tile.Height );
         dataSelection.AppendU32( entry.Tile.Data.Length );
@@ -65,8 +72,7 @@ namespace RetroDevStudio.Types
 
 
       // add as one image
-      var fullImage = new GR.Image.MemoryImage( Entries.Count * Entries[0].Tile.Width, Entries[0].Tile.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      PaletteManager.ApplyPalette( fullImage, Colors.Palette );
+      var fullImage = new GR.Image.MemoryImage( Entries.Count * Entries[0].Tile.Width, Entries[0].Tile.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       int curX = 0;
       foreach ( var entry in Entries )
       {
@@ -112,14 +118,19 @@ namespace RetroDevStudio.Types
       incomingColorSettings.MultiColor2 = memIn.ReadInt32();
       incomingColorSettings.BGColor4 = memIn.ReadInt32();
 
-      int numPaletteEntries = memIn.ReadInt32();
-      incomingColorSettings.Palette = new Palette( numPaletteEntries );
-      for ( int i = 0; i < numPaletteEntries; ++i )
+      incomingColorSettings.Palettes.Clear();
+      int numPalettes = memIn.ReadInt32();
+      for ( int j = 0; j < numPalettes; ++j )
       {
-        incomingColorSettings.Palette.ColorValues[i] = memIn.ReadUInt32();
+        int numPaletteEntries = memIn.ReadInt32();
+        var pal = new Palette( numPaletteEntries );
+        for ( int i = 0; i < numPaletteEntries; ++i )
+        {
+          pal.ColorValues[i] = memIn.ReadUInt32();
+        }
+        pal.CreateBrushes();
+        incomingColorSettings.Palettes.Add( pal );
       }
-      incomingColorSettings.Palette.CreateBrushes();
-
 
       for ( int i = 0; i < numEntries; ++i )
       {
@@ -127,15 +138,17 @@ namespace RetroDevStudio.Types
 
         entry.Index = memIn.ReadInt32();
 
-        entry.Tile.Mode         = (GraphicTileMode)memIn.ReadInt32();
-        entry.Tile.CustomColor  = memIn.ReadInt32();
-        entry.Tile.Width        = memIn.ReadInt32();
-        entry.Tile.Height       = memIn.ReadInt32();
-        uint dataLength         = memIn.ReadUInt32();
-        entry.Tile.Data         = new GR.Memory.ByteBuffer();
+        entry.Tile.Mode                 = (GraphicTileMode)memIn.ReadInt32();
+        entry.Tile.CustomColor          = memIn.ReadInt32();
+        int palIndex = memIn.ReadInt32();
+        entry.Tile.Width                = memIn.ReadInt32();
+        entry.Tile.Height               = memIn.ReadInt32();
+        uint dataLength                 = memIn.ReadUInt32();
+        entry.Tile.Data                 = new GR.Memory.ByteBuffer();
         memIn.ReadBlock( entry.Tile.Data, dataLength );
 
-        entry.Tile.Colors       = incomingColorSettings;
+        entry.Tile.Colors = new ColorSettings( incomingColorSettings );
+        entry.Tile.Colors.ActivePalette = palIndex;
 
         int originalIndex = memIn.ReadInt32();
 
