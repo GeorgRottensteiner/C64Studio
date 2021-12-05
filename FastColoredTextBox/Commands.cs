@@ -170,7 +170,11 @@ namespace FastColoredTextBoxNS
       deletedChar = ts[LineIndex][CharIndex].c;
       int     numCharsToDelete = 1;
       int origCharIndex = CharIndex;
-      int newPos = tb.AdjustXPosForTabs( LineIndex, CharIndex );
+      int newPos = CharIndex;
+      if ( deletedChar == '\t' )
+      {
+        newPos = tb.AdjustXPosForTabs( LineIndex, CharIndex );
+      }
 
       numCharsToDelete = CharIndex + 1 - newPos;
       CharIndex -= numCharsToDelete - 1;
@@ -677,36 +681,12 @@ namespace FastColoredTextBoxNS
       {
         //InsertCharCommand.DumpLine( ts, fromLine );
 
-        System.Diagnostics.Debug.WriteLine( $"Removing range from {fromChar} to {toChar}" );
-
         // remove backwards to properly handle tabs
         for ( int i = toChar - 1; i >= fromChar; )
         {
           char  dummy = 'ö';
 
-          string    deTabbed = ts[fromLine].ToText( fromChar );
-          string    fullTabbed = ts[fromLine].ToVirtualText(0);
-          deTabbed = deTabbed.Replace( '\t', '*' );
-          fullTabbed = fullTabbed.Replace( '\t', '*' );
-          System.Diagnostics.Debug.WriteLine( $"Removing at pos {i}, text is           {fullTabbed}" );
-
-          /*
-          if ( ( i == toChar )
-          &&   ( i >= ts[fromLine].Count ) )
-          {
-            --i;
-            continue;
-          }*/
-
-          int     delta = InsertCharCommand.RemoveChar( ts, fromLine, i, ref dummy );
-
-          deTabbed = ts[fromLine].ToText( fromChar );
-          fullTabbed = ts[fromLine].ToVirtualText(0);
-          fullTabbed = fullTabbed.Replace( '\t', '*' );
-          deTabbed = deTabbed.Replace( '\t', '*' );
-          System.Diagnostics.Debug.WriteLine( $"Removed {delta} characters, text is now     {fullTabbed}" );
-
-          i -= delta;
+          i -= InsertCharCommand.RemoveChar( ts, fromLine, i, ref dummy );
         }
       }
       else
