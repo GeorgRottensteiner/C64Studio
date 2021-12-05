@@ -113,6 +113,7 @@ namespace C64Studio.Controls
     private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.BackgroundColor = comboBackground.SelectedIndex;
+      radioBackground.Checked = true;
       RaiseColorsModifiedEvent( ColorType.BACKGROUND );
     }
 
@@ -121,6 +122,7 @@ namespace C64Studio.Controls
     private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
     {
       CustomColor = comboCharColor.SelectedIndex;
+      radioCharColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }
 
@@ -190,6 +192,22 @@ namespace C64Studio.Controls
       }
     }
 
+
+
+    public override void PalettesChanged()
+    {
+      if ( comboActivePalette.Items.Count != Colors.Palettes.Count )
+      {
+        comboActivePalette.BeginUpdate();
+        comboActivePalette.Items.Clear();
+        foreach ( var pal in Colors.Palettes )
+        {
+          comboActivePalette.Items.Add( pal.Name );
+        }
+        comboActivePalette.SelectedIndex = 0;
+        comboActivePalette.EndUpdate();
+      }
+    }
 
 
   }

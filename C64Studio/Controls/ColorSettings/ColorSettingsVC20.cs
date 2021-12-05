@@ -39,7 +39,7 @@ namespace C64Studio.Controls
       }
       set
       {
-        switch ( _CurrentColorType )
+        switch ( value )
         {
           case ColorType.BACKGROUND:
             radioBackground.Checked = true;
@@ -113,6 +113,7 @@ namespace C64Studio.Controls
     private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.BackgroundColor = comboBackground.SelectedIndex;
+      radioBackground.Checked = true;
       RaiseColorsModifiedEvent( ColorType.BACKGROUND );
     }
 
@@ -121,6 +122,7 @@ namespace C64Studio.Controls
     private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
+      radioMultiColor1.Checked = true;
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_1 );
     }
 
@@ -129,6 +131,7 @@ namespace C64Studio.Controls
     private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
+      radioMulticolor2.Checked = true;
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_2 );
     }
 
@@ -137,6 +140,7 @@ namespace C64Studio.Controls
     private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
     {
       CustomColor = comboCharColor.SelectedIndex;
+      radioCharColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }
 

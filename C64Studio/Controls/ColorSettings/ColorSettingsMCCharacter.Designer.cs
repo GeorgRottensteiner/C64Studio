@@ -1,7 +1,7 @@
 ﻿
 namespace C64Studio.Controls
 {
-  partial class ColorSettingsMC
+  partial class ColorSettingsMCCharacter
   {
     /// <summary> 
     /// Required designer variable.

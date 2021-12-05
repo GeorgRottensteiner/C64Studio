@@ -175,5 +175,11 @@ namespace C64Studio.Controls
 
 
 
+    public virtual void PalettesChanged()
+    {
+    }
+
+
+
   }
 }

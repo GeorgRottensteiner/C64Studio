@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace C64Studio.Controls
 {
-  public partial class ColorSettingsMC : ColorSettingsBase
+  public partial class ColorSettingsMCCharacter : ColorSettingsBase
   {
     public override int CustomColor
     {
@@ -39,7 +39,7 @@ namespace C64Studio.Controls
       }
       set
       {
-        switch ( _CurrentColorType )
+        switch ( value )
         {
           case ColorType.BACKGROUND:
             radioBackground.Checked = true;
@@ -62,14 +62,14 @@ namespace C64Studio.Controls
 
 
 
-    public ColorSettingsMC() :
+    public ColorSettingsMCCharacter() :
       base( null, null, 0 )
     { 
     }
 
 
 
-    public ColorSettingsMC( StudioCore Core, ColorSettings Colors, int CustomColor ) :
+    public ColorSettingsMCCharacter( StudioCore Core, ColorSettings Colors, int CustomColor ) :
       base( Core, Colors, CustomColor )
     {
       InitializeComponent();
@@ -112,6 +112,7 @@ namespace C64Studio.Controls
     private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.BackgroundColor = comboBackground.SelectedIndex;
+      radioBackground.Checked = true;
       RaiseColorsModifiedEvent( ColorType.BACKGROUND );
     }
 
@@ -120,6 +121,7 @@ namespace C64Studio.Controls
     private void comboMulticolor1_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
+      radioMultiColor1.Checked = true;
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_1 );
     }
 
@@ -128,6 +130,7 @@ namespace C64Studio.Controls
     private void comboMulticolor2_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
+      radioMulticolor2.Checked = true;
       RaiseColorsModifiedEvent( ColorType.MULTICOLOR_2 );
     }
 
@@ -136,6 +139,7 @@ namespace C64Studio.Controls
     private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
     {
       CustomColor = comboCharColor.SelectedIndex;
+      radioCharColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }
 

@@ -102,6 +102,7 @@ namespace C64Studio.Controls
     private void comboBackground_SelectedIndexChanged( object sender, EventArgs e )
     {
       Colors.BackgroundColor = comboBackground.SelectedIndex;
+      radioBackground.Checked = true;
       RaiseColorsModifiedEvent( ColorType.BACKGROUND );
     }
 
@@ -110,6 +111,7 @@ namespace C64Studio.Controls
     private void comboCharColor_SelectedIndexChanged( object sender, EventArgs e )
     {
       CustomColor = comboCharColor.SelectedIndex;
+      radioCharColor.Checked = true;
       RaiseColorsModifiedEvent( ColorType.CUSTOM_COLOR );
     }
 
