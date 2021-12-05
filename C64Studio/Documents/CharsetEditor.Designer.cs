@@ -74,10 +74,6 @@ namespace C64Studio
       this.openCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.closeCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-      this.exchangeMultiColors1And2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.exchangeMultiColor1AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.exchangeMultiColor2AndBGColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.tabCharsetEditor.SuspendLayout();
@@ -111,6 +107,7 @@ namespace C64Studio
       // 
       // characterEditor
       // 
+      this.characterEditor.AllowModeChange = true;
       this.characterEditor.Dock = System.Windows.Forms.DockStyle.Fill;
       this.characterEditor.Location = new System.Drawing.Point(0, 0);
       this.characterEditor.Name = "characterEditor";
@@ -513,11 +510,7 @@ namespace C64Studio
       this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openCharsetProjectToolStripMenuItem,
             this.saveCharsetProjectToolStripMenuItem,
-            this.closeCharsetProjectToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.exchangeMultiColors1And2ToolStripMenuItem,
-            this.exchangeMultiColor1AndBGColorToolStripMenuItem,
-            this.exchangeMultiColor2AndBGColorToolStripMenuItem});
+            this.closeCharsetProjectToolStripMenuItem});
       this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
       this.fileToolStripMenuItem.Size = new System.Drawing.Size(75, 20);
       this.fileToolStripMenuItem.Text = "&Characters";
@@ -525,7 +518,7 @@ namespace C64Studio
       // openCharsetProjectToolStripMenuItem
       // 
       this.openCharsetProjectToolStripMenuItem.Name = "openCharsetProjectToolStripMenuItem";
-      this.openCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+      this.openCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
       this.openCharsetProjectToolStripMenuItem.Text = "&Open Charset Project...";
       this.openCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
       // 
@@ -533,7 +526,7 @@ namespace C64Studio
       // 
       this.saveCharsetProjectToolStripMenuItem.Enabled = false;
       this.saveCharsetProjectToolStripMenuItem.Name = "saveCharsetProjectToolStripMenuItem";
-      this.saveCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+      this.saveCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
       this.saveCharsetProjectToolStripMenuItem.Text = "&Save Project";
       this.saveCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.saveCharsetProjectToolStripMenuItem_Click);
       // 
@@ -541,32 +534,9 @@ namespace C64Studio
       // 
       this.closeCharsetProjectToolStripMenuItem.Enabled = false;
       this.closeCharsetProjectToolStripMenuItem.Name = "closeCharsetProjectToolStripMenuItem";
-      this.closeCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+      this.closeCharsetProjectToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
       this.closeCharsetProjectToolStripMenuItem.Text = "&Close Charset Project";
       this.closeCharsetProjectToolStripMenuItem.Click += new System.EventHandler(this.closeCharsetProjectToolStripMenuItem_Click);
-      // 
-      // toolStripSeparator1
-      // 
-      this.toolStripSeparator1.Name = "toolStripSeparator1";
-      this.toolStripSeparator1.Size = new System.Drawing.Size(263, 6);
-      // 
-      // exchangeMultiColors1And2ToolStripMenuItem
-      // 
-      this.exchangeMultiColors1And2ToolStripMenuItem.Name = "exchangeMultiColors1And2ToolStripMenuItem";
-      this.exchangeMultiColors1And2ToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-      this.exchangeMultiColors1And2ToolStripMenuItem.Text = "Exchange Multi colors 1 and 2";
-      // 
-      // exchangeMultiColor1AndBGColorToolStripMenuItem
-      // 
-      this.exchangeMultiColor1AndBGColorToolStripMenuItem.Name = "exchangeMultiColor1AndBGColorToolStripMenuItem";
-      this.exchangeMultiColor1AndBGColorToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-      this.exchangeMultiColor1AndBGColorToolStripMenuItem.Text = "Exchange Multi color 1 and BG color";
-      // 
-      // exchangeMultiColor2AndBGColorToolStripMenuItem
-      // 
-      this.exchangeMultiColor2AndBGColorToolStripMenuItem.Name = "exchangeMultiColor2AndBGColorToolStripMenuItem";
-      this.exchangeMultiColor2AndBGColorToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-      this.exchangeMultiColor2AndBGColorToolStripMenuItem.Text = "Exchange Multi color 2 and BG color";
       // 
       // CharsetEditor
       // 
@@ -623,10 +593,6 @@ namespace C64Studio
     private System.Windows.Forms.Label labelCharactersTo;
     private System.Windows.Forms.CheckBox checkIncludeColor;
     private System.Windows.Forms.ToolTip toolTip1;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-    private System.Windows.Forms.ToolStripMenuItem exchangeMultiColors1And2ToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor1AndBGColorToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem exchangeMultiColor2AndBGColorToolStripMenuItem;
     private System.Windows.Forms.TextBox editExportBASICLineOffset;
     private System.Windows.Forms.TextBox editExportBASICLineNo;
     private System.Windows.Forms.Label label7;

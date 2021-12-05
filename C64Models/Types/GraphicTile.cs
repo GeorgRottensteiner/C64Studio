@@ -60,6 +60,11 @@ namespace RetroDevStudio.Types
 
     public bool SetPixel( int X, int Y, int Color )
     {
+      if ( !IsInside( X, Y ) )
+      {
+        return false;
+      }
+
       switch ( Mode )
       {
         case GraphicTileMode.COMMODORE_ECM:
@@ -164,6 +169,10 @@ namespace RetroDevStudio.Types
 
     public int GetPixel( int X, int Y )
     {
+      if ( !IsInside( X, Y ) )
+      {
+        return 0;
+      }
       switch ( Mode )
       {
         case GraphicTileMode.COMMODORE_ECM:
@@ -211,6 +220,19 @@ namespace RetroDevStudio.Types
           Debug.Log( "GraphicTile.GetPixel, unsupported mode " + Mode );
           return 0;
       }
+    }
+
+
+    private bool IsInside( int X, int Y )
+    {
+      if ( ( X < 0 )
+      ||   ( X >= Width )
+      ||   ( Y < 0 )
+      ||   ( Y >= Height ) )
+      {
+        return false;
+      }
+      return true;
     }
 
 

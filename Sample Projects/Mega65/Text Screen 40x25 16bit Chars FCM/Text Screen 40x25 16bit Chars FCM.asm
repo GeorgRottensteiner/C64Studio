@@ -51,33 +51,37 @@ SCREEN_COLOR  = $d800
           lda #0
           sta VIC.BACKGROUND_COLOR
 
-          ldx #0
-          ldy #0
+					lda #<TEXT_SCREEN_DATA
+					sta $fe
+					lda #>TEXT_SCREEN_DATA
+					sta $ff
+
+					ldy #0
+
 -
           ;we need to add offset to the character data
+
+					lda #0
+					sta SCREEN_COLOR,y
+
+					;lo byte
+					lda ($fe),y
+          clc
+          adc #<( TILE_DATA / 64 )
+          sta SCREEN_CHAR,y
+					iny
+
+					;hi byte
+					lda #0
+					sta SCREEN_COLOR,y
+
           lda TEXT_SCREEN_DATA,x
           clc
-          adc #TILE_DATA / 64
+          adc #>( TILE_DATA / 64 )
           sta SCREEN_CHAR,y
-          lda #0
 
           iny
-
-          lda TEXT_SCREEN_DATA + 1 * 250,x
-          clc
-          adc #TILE_DATA / 64
-          sta SCREEN_CHAR + 1 * 250,x
-          lda TEXT_SCREEN_DATA + 2 * 250,x
-          clc
-          adc #TILE_DATA / 64
-          sta SCREEN_CHAR + 2 * 250,x
-          lda TEXT_SCREEN_DATA + 3 * 250,x
-          clc
-          adc #TILE_DATA / 64
-          sta SCREEN_CHAR + 3 * 250,x
-
-          inx
-          cpx #250
+          cpy #160
           bne -
 
           ;endless loop
@@ -86,14 +90,14 @@ SCREEN_COLOR  = $d800
 
 
 TEXT_SCREEN_DATA
-          ;contains 40x25 character bytes
+          ;contains 40x25 character words (40 * 25 * 2 bytes)
           !media "Text Screen.charscreen",CHAR
 
 
 * = $3000
 TILE_DATA
 
-!media "Text Screen.charscreen",CHARSET,0,1
+!media "Text Screen.charscreen",CHARSET,0,2
         ;!byte 7,7,7,7,7,7,7,7
         ;!byte 7,3,3,3,3,3,3,3
         ;!byte 7,3,7,7,7,7,7,7

@@ -30,8 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -155,7 +155,7 @@
             this.saveCharsetProjectToolStripMenuItem,
             this.closeCharsetProjectToolStripMenuItem});
       this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-      this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+      this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 15);
       this.fileToolStripMenuItem.Text = "&Screen";
       // 
       // importCharsetToolStripMenuItem
@@ -1131,7 +1131,7 @@
       // 
       this.panelCharColors.AutoResize = false;
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage1;
+      this.panelCharColors.DisplayPage = fastImage3;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(677, 416);
       this.panelCharColors.Name = "panelCharColors";
@@ -1146,7 +1146,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage4;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1183,10 +1183,10 @@
       // 
       // charEditor
       // 
+      this.charEditor.AllowModeChange = false;
       this.charEditor.Dock = System.Windows.Forms.DockStyle.Fill;
       this.charEditor.Location = new System.Drawing.Point(0, 0);
       this.charEditor.Name = "charEditor";
-      this.charEditor.AllowModeChange = false;
       this.charEditor.Size = new System.Drawing.Size(1061, 546);
       this.charEditor.TabIndex = 24;
       this.charEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);

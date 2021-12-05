@@ -12,15 +12,17 @@ namespace C64Studio.Undo
     private CharacterEditor         Editor = null;
     private ColorType               Color1 = ColorType.BACKGROUND;
     private ColorType               Color2 = ColorType.CUSTOM_COLOR;
+    private List<int>               AffectedChars = new List<int>();
     
 
 
 
-    public UndoCharacterEditorExchangeColors( CharacterEditor Editor, ColorType Color1, ColorType Color2 )
+    public UndoCharacterEditorExchangeColors( CharacterEditor Editor, ColorType Color1, ColorType Color2, List<int> AffectedChars )
     {
       this.Editor = Editor;
       this.Color1 = Color1;
       this.Color2 = Color2;
+      this.AffectedChars = AffectedChars;
     }
 
 
@@ -38,14 +40,14 @@ namespace C64Studio.Undo
 
     public override UndoTask CreateComplementaryTask()
     {
-      return new UndoCharacterEditorExchangeColors( Editor, Color1, Color2 );
+      return new UndoCharacterEditorExchangeColors( Editor, Color1, Color2, AffectedChars );
     }
 
 
 
     public override void Apply()
     {
-      Editor.ExchangeColors( Color1, Color2 );
+      Editor.ExchangeColors( Color1, Color2, AffectedChars );
     }
   }
 }

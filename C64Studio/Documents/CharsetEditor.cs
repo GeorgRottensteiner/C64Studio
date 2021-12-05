@@ -894,8 +894,6 @@ namespace C64Studio
       checkPrefixLoadAddress.Checked = true;
     }
 
-
-
   }
 }
 

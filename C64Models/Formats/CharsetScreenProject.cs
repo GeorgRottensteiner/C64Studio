@@ -80,16 +80,36 @@ namespace C64Studio.Formats
       projectFile.Append( chunkScreenMultiColorData.ToBuffer() );
 
       GR.IO.FileChunk chunkScreenCharData = new GR.IO.FileChunk( FileChunkConstants.SCREEN_CHAR_DATA );
-      for ( int i = 0; i < Chars.Count; ++i )
+      if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) ) == 2 )
       {
-        chunkScreenCharData.AppendU8( (byte)( Chars[i] & 0xff ) );
+        for ( int i = 0; i < Chars.Count; ++i )
+        {
+          chunkScreenCharData.AppendU16( (ushort)( Chars[i] & 0xffff ) );
+        }
+      }
+      else
+      {
+        for ( int i = 0; i < Chars.Count; ++i )
+        {
+          chunkScreenCharData.AppendU8( (byte)( Chars[i] & 0xffff ) );
+        }
       }
       projectFile.Append( chunkScreenCharData.ToBuffer() );
 
       GR.IO.FileChunk chunkScreenColorData = new GR.IO.FileChunk( FileChunkConstants.SCREEN_COLOR_DATA );
-      for ( int i = 0; i < Chars.Count; ++i )
+      if ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) ) == 2 )
       {
-        chunkScreenColorData.AppendU8( (byte)( Chars[i] >> 8 ) );
+        for ( int i = 0; i < Chars.Count; ++i )
+        {
+          chunkScreenColorData.AppendU16( (ushort)( Chars[i] >> 16 ) );
+        }
+      }
+      else
+      {
+        for ( int i = 0; i < Chars.Count; ++i )
+        {
+          chunkScreenColorData.AppendU8( (byte)( Chars[i] >> 16 ) );
+        }
       }
       projectFile.Append( chunkScreenColorData.ToBuffer() );
 

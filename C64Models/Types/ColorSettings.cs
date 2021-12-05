@@ -21,6 +21,10 @@ namespace RetroDevStudio.Types
     {
       get
       {
+        if ( ActivePalette >= Palettes.Count )
+        {
+          return Palettes[0];
+        }
         return Palettes[ActivePalette];
       }
       set

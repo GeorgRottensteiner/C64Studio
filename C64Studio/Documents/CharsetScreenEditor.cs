@@ -82,8 +82,6 @@ namespace C64Studio
       InitializeComponent();
       charEditor.Core = Core;
 
-      DPIHandler.ResizeControlsForDPI( this );
-
       charEditor.UndoManager = DocumentInfo.UndoManager;
 
       pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
@@ -92,6 +90,7 @@ namespace C64Studio
       panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       m_Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
+      DPIHandler.ResizeControlsForDPI( this );
       ApplyPalette();
       for ( int i = 0; i < m_CharsetScreen.CharSet.Colors.Palette.NumColors; ++i )
       {
@@ -1316,9 +1315,18 @@ namespace C64Studio
       }
       else
       {
+        if ( panelCharacters.Items.Count > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
+        {
+          panelCharacters.Items.RemoveRange( m_CharsetScreen.CharSet.TotalNumberOfCharacters,
+                                             panelCharacters.Items.Count - m_CharsetScreen.CharSet.TotalNumberOfCharacters );
+        }
         for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
         {
           RebuildCharImage( i );
+          if ( i >= panelCharacters.Items.Count )
+          {
+            panelCharacters.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Tile.Image );
+          }
           panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
         }
       }
@@ -1497,9 +1505,9 @@ namespace C64Studio
       }
 
       int charsToImport = (int)charData.Length / 8;
-      if ( charsToImport > 256 )
+      if ( charsToImport > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
       {
-        charsToImport = 256;
+        charsToImport = m_CharsetScreen.CharSet.TotalNumberOfCharacters;
       }
       for ( int i = 0; i < charsToImport; ++i )
       {
@@ -1855,7 +1863,7 @@ namespace C64Studio
         sb.Append( " PRINT\"" );
         for ( int x = exportRect.Left; x < exportRect.Right; ++x )
         {
-          ushort newColor = (ushort)( ( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff00 ) >> 16 ) & 0x0f );
+          ushort newColor = (ushort)( ( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff0000 ) >> 16 ) & 0x0f );
           ushort newChar = (ushort)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
 
           List<char>  charsToAppend = new List<char>();
@@ -2189,9 +2197,9 @@ namespace C64Studio
           m_CharsetScreen.CharSet.Colors.MultiColor2 = cpProject.MultiColor2;
 
           int maxChars = cpProject.NumChars;
-          if ( maxChars > 256 )
+          if ( maxChars > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
           {
-            maxChars = 256;
+            maxChars = m_CharsetScreen.CharSet.TotalNumberOfCharacters;
           }
 
           m_CharsetScreen.CharSet.ExportNumCharacters = maxChars;
@@ -3195,6 +3203,7 @@ namespace C64Studio
         case TextMode.COMMODORE_40_X_25_ECM:
         case TextMode.MEGA65_40_X_25_FCM:
         case TextMode.MEGA65_40_X_25_FCM_16BIT:
+        case TextMode.MEGA65_40_X_25_ECM:
           m_CharsWidth = 40;
           m_CharsHeight = 25;
           pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
@@ -3203,6 +3212,7 @@ namespace C64Studio
         case TextMode.MEGA65_80_X_25_MULTICOLOR:
         case TextMode.MEGA65_80_X_25_FCM:
         case TextMode.MEGA65_80_X_25_FCM_16BIT:
+        case TextMode.MEGA65_80_X_25_ECM:
           m_CharsWidth = 80;
           m_CharsHeight = 25;
           pictureEditor.DisplayPage.Create( 640, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
@@ -3352,7 +3362,7 @@ namespace C64Studio
 
     internal void CharsetChanged()
     {
-      for ( int i = 0; i < 256; ++i )
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
       }
@@ -3476,7 +3486,7 @@ namespace C64Studio
     private void editDataExport_KeyPress( object sender, KeyPressEventArgs e )
     {
       if ( ( ModifierKeys == Keys.Control )
-      && ( e.KeyChar == 1 ) )
+      &&   ( e.KeyChar == 1 ) )
       {
         editDataExport.SelectAll();
         e.Handled = true;
@@ -3488,7 +3498,7 @@ namespace C64Studio
     private void editDataImport_KeyPress( object sender, KeyPressEventArgs e )
     {
       if ( ( ModifierKeys == Keys.Control )
-      && ( e.KeyChar == 1 ) )
+      &&   ( e.KeyChar == 1 ) )
       {
         editDataImport.SelectAll();
         e.Handled = true;
@@ -3548,7 +3558,7 @@ namespace C64Studio
 
     private void RebuildCharPanelImages()
     {
-      for ( int i = 0; i < 256; ++i )
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
 
@@ -3858,9 +3868,9 @@ namespace C64Studio
         GR.Memory.ByteBuffer charData = asmParser.AssembledOutput.Assembly;
 
         int charsToImport = (int)charData.Length / 8;
-        if ( charsToImport > 256 )
+        if ( charsToImport > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
         {
-          charsToImport = 256;
+          charsToImport = m_CharsetScreen.CharSet.TotalNumberOfCharacters;
         }
 
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharsetChange( m_CharsetScreen, this ) );
