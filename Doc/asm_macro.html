@@ -332,7 +332,7 @@
   </div>
   <a name="fill"></a><a name="fi"></a>
   <H2>!FILL, !FI &lt;count&gt;[,&lt;value&gt;]<br>
-  !FILL, !FI &lt;count&gt;,[expression]</H2>
+  !FILL, !FI &lt;count&gt;,[expression (list)]</H2>
   <div id="mybody">
     This pseudo op fills the given value count times at the current location.<br>
     The expression form can be a list, several expressions are separated by comma. !fill uses every element of a list after each other, and restarts at the first element if required.
@@ -364,10 +364,10 @@
 
     <b>Example #4 - fill with list</b><br>
         <br>
-        <div id="code"><br>      !fill 9, [0,i]
+        <div id="code"><br>      !fill 4, [0,i]
         <br></div>
         <br>
-        Fills 9 bytes, with values 0, 0, 0, 1, 0, 2 0, 3, 0.<br>
+        Fills 4 * 2 bytes, with values 0, 0, 0, 1, 0, 2 0, 3.<br>
     <br>
     <br>
   </div>

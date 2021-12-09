@@ -5951,6 +5951,10 @@ namespace C64Studio.Parser
             return parseListParams;
           }
 
+          // in case of a list the number is the number of repeats
+          info.NumBytes *= listParams.Count;
+          numBytes *= listParams.Count;
+
           lineData = new GR.Memory.ByteBuffer( (uint)numBytes );
           int     listLoopIndex = 0;
 
