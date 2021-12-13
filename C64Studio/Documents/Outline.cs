@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -6,13 +7,15 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
+
+
 namespace C64Studio
 {
   public partial class Outline : BaseDocument
   {
     public System.Windows.Forms.TreeNode      NodeRoot = null;
     private Project                           OutlineProject = null;
-    private GR.Collections.MultiMap<string,Types.SymbolInfo>       OutlineTokens = new GR.Collections.MultiMap<string, Types.SymbolInfo>();
+    private GR.Collections.MultiMap<string,SymbolInfo>       OutlineTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
     private GR.Collections.Map<string,bool>   _ExpandedNodes = new GR.Collections.Map<string, bool>();
 
 
@@ -33,7 +36,7 @@ namespace C64Studio
 
     private void treeProject_NodeMouseDoubleClick( object sender, System.Windows.Forms.TreeNodeMouseClickEventArgs e )
     {
-      Types.SymbolInfo tokenInfo = (Types.SymbolInfo)e.Node.Tag;
+      SymbolInfo tokenInfo = (SymbolInfo)e.Node.Tag;
       if ( tokenInfo == null )
       {
         if ( e.Node == NodeRoot )
@@ -110,13 +113,13 @@ namespace C64Studio
       treeProject.BeginUpdate();
       NodeRoot.Nodes.Clear();
 
-      IList<Types.SymbolInfo>     sortedTokens = null;
+      IList<SymbolInfo>     sortedTokens = null;
 
       // sort by line number
       if ( Core.Settings.OutlineSortByIndex )
       {
-        GR.Collections.MultiMap<int, Types.SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<int, C64Studio.Types.SymbolInfo>();
-        foreach ( KeyValuePair<string, Types.SymbolInfo> token in OutlineTokens )
+        GR.Collections.MultiMap<int, SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<int, SymbolInfo>();
+        foreach ( KeyValuePair<string, SymbolInfo> token in OutlineTokens )
         {
           if ( !string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
           {
@@ -135,8 +138,8 @@ namespace C64Studio
       }
       else
       {
-        GR.Collections.MultiMap<string, Types.SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo>();
-        foreach ( KeyValuePair<string, Types.SymbolInfo> token in OutlineTokens )
+        GR.Collections.MultiMap<string, SymbolInfo> sortedTokensInner = new GR.Collections.MultiMap<string, SymbolInfo>();
+        foreach ( KeyValuePair<string, SymbolInfo> token in OutlineTokens )
         {
           if ( !string.IsNullOrEmpty( Core.Settings.OutlineFilter ) )
           {
@@ -167,7 +170,7 @@ namespace C64Studio
       // add zone nodes first
       foreach ( var token in sortedTokens )
       {
-        if ( token.Type == C64Studio.Types.SymbolInfo.Types.ZONE )
+        if ( token.Type == SymbolInfo.Types.ZONE )
         {
           System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode();
 
@@ -188,7 +191,7 @@ namespace C64Studio
       parentNode = globalZone;
       foreach ( var token in sortedTokens )
       {
-        if ( token.Type == C64Studio.Types.SymbolInfo.Types.ZONE )
+        if ( token.Type == SymbolInfo.Types.ZONE )
         {
           curZone = token.Zone;
           parentNode = zoneNodes[token.Zone];
@@ -203,24 +206,24 @@ namespace C64Studio
 
         switch ( token.Type )
         {
-          case Types.SymbolInfo.Types.VARIABLE_NUMBER:
+          case SymbolInfo.Types.VARIABLE_NUMBER:
             node.Text += " = Number";
             break;
-          case Types.SymbolInfo.Types.VARIABLE_STRING:
+          case SymbolInfo.Types.VARIABLE_STRING:
             node.Text += " = String";
             break;
-          case Types.SymbolInfo.Types.VARIABLE_ARRAY:
+          case SymbolInfo.Types.VARIABLE_ARRAY:
             node.Text += " = Array";
             break;
-          case Types.SymbolInfo.Types.VARIABLE_INTEGER:
+          case SymbolInfo.Types.VARIABLE_INTEGER:
             node.Text += " = Integer";
             break;
-          case C64Studio.Types.SymbolInfo.Types.CONSTANT_1:
-          case C64Studio.Types.SymbolInfo.Types.CONSTANT_2:
+          case SymbolInfo.Types.CONSTANT_1:
+          case SymbolInfo.Types.CONSTANT_2:
             node.ImageIndex = node.SelectedImageIndex = 2;
             node.Text += " = $" + token.AddressOrValue.ToString( "X4" );
             break;
-          case C64Studio.Types.SymbolInfo.Types.LABEL:
+          case SymbolInfo.Types.LABEL:
             if ( ( token.Name.Contains( "." ) )
             &&   ( !Core.Settings.OutlineShowLocalLabels ) )
             {
@@ -234,13 +237,13 @@ namespace C64Studio
             node.ImageIndex = node.SelectedImageIndex = 1;
             node.Text += " = $" + token.AddressOrValue.ToString( "X4" );
             break;
-          case C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_LABEL:
-          case C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_CONSTANT_1:
-          case C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_CONSTANT_2:
+          case SymbolInfo.Types.PREPROCESSOR_LABEL:
+          case SymbolInfo.Types.PREPROCESSOR_CONSTANT_1:
+          case SymbolInfo.Types.PREPROCESSOR_CONSTANT_2:
             node.ImageIndex = node.SelectedImageIndex = 3;
             node.Text += " = $" + token.AddressOrValue.ToString( "X4" );
             break;
-          case C64Studio.Types.SymbolInfo.Types.UNKNOWN:
+          case SymbolInfo.Types.UNKNOWN:
             break;
         }
 
@@ -367,7 +370,7 @@ namespace C64Studio
 
     private void treeProject_AfterSelect( object sender, TreeViewEventArgs e )
     {
-      Types.SymbolInfo tokenInfo = (Types.SymbolInfo)e.Node.Tag;
+      SymbolInfo tokenInfo = (SymbolInfo)e.Node.Tag;
       if ( tokenInfo == null )
       {
         return;

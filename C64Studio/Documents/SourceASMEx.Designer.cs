@@ -234,7 +234,7 @@
       // 
       this.gotoDeclarationToolStripMenuItem.Name = "gotoDeclarationToolStripMenuItem";
       this.gotoDeclarationToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-      this.gotoDeclarationToolStripMenuItem.Text = "Goto declaration";
+      this.gotoDeclarationToolStripMenuItem.Text = "Go to declaration";
       this.gotoDeclarationToolStripMenuItem.Click += new System.EventHandler(this.gotoDeclarationToolStripMenuItem_Click);
       // 
       // findAllReferencesToolStripMenuItem

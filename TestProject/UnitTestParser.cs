@@ -286,7 +286,7 @@ namespace TestProject
 
       var assembly = TestAssemble( source );
 
-      Assert.AreEqual( "0020000002000102", assembly.ToString() );
+      Assert.AreEqual( "0020000002000102000202000302000402000502", assembly.ToString() );
     }
 
 
@@ -1225,27 +1225,19 @@ namespace TestProject
     public void TestOperatorLessOrEqual()
     {
       string    source = @"RED=2
-GREEN=5
+                            GREEN=5
 
+                            *=$0801
+                            !BASIC
 
-*=$0801
+                            !IF 5<=2 {
+                              lda #GREEN
+                            } else {
+                              lda #RED
+                            }
 
-!BASIC
-
-
-!IF 5<=2 {
-
-  lda #GREEN
-
-} else {
-
-  lda #RED
-
-}
-
-  sta $D021
-
-  rts";
+                              sta $D021
+                              rts";
 
       var assembly = TestAssemble( source );
 

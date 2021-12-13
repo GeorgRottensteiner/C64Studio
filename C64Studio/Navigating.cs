@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
@@ -259,7 +260,7 @@ namespace C64Studio
     {
       Types.ASM.FileInfo fileToDebug = DetermineASMFileInfo( ASMDoc );
 
-      Types.SymbolInfo tokenInfo = fileToDebug.TokenInfoFromName( Word, Zone, CheapLabelParent );
+      SymbolInfo tokenInfo = fileToDebug.TokenInfoFromName( Word, Zone, CheapLabelParent );
       var macro = ASMDoc.ASMFileInfo.MacroFromName( Word );
       if ( macro != null )
       {

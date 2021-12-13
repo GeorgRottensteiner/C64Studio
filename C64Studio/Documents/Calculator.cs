@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -82,10 +83,9 @@ namespace C64Studio
       var tokens = parser.ParseTokenInfo( editCalc.Text, 0, editCalc.TextLength );
       if ( tokens != null )
       {
-        int   result = -1;
-        if ( parser.EvaluateTokens( -1, tokens, out result ) )
+        if ( parser.EvaluateTokens( -1, tokens, out SymbolInfo result ) )
         {
-          editResult.Text = "$" + result.ToString( "X" ) + ", " + result.ToString();
+          editResult.Text = "$" + result.ToInteger().ToString( "X" ) + ", " + result.ToInteger().ToString();
           editCalc.BackColor = System.Drawing.SystemColors.Window;
         }
         else

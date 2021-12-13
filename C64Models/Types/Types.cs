@@ -351,7 +351,9 @@ namespace C64Studio.Types
     [Description( "HiRes Bitmap" )]
     BITMAP_HIRES,
     [Description( "Multicolor Bitmap" )]
-    BITMAP_MULTICOLOR
+    BITMAP_MULTICOLOR,
+    [Description( "Sprites 16color" )]
+    SPRITES_16_COLORS
   };
 
 
@@ -637,48 +639,6 @@ namespace C64Studio.Types
     public int DirEntryIndex = -1;
   }
 
-  public class SymbolInfo
-  {
-    public enum Types
-    {
-      UNKNOWN = 0,
-      LABEL,
-      PREPROCESSOR_LABEL,
-      PREPROCESSOR_CONSTANT_1,
-      PREPROCESSOR_CONSTANT_2,
-      CONSTANT_1,
-      CONSTANT_2,
-      ZONE,
-      CONSTANT_F,
-      VARIABLE_NUMBER,
-      VARIABLE_INTEGER,
-      VARIABLE_STRING,
-      VARIABLE_ARRAY
-    };
-
-    public Types      Type = Types.UNKNOWN;
-    public string     Name = "";
-    public int        LineIndex = 0;            // global
-    public int        LineCount = -1;           // global (-1 is for complete file)
-    public string     DocumentFilename = "";
-    public int        LocalLineIndex = 0;
-    public int        AddressOrValue = -1;
-    public double     RealValue = 0;
-    public string     Zone = "";
-    public bool       FromDependency = false;
-    public string     Info = "";
-    public int        CharIndex = -1;
-    public int        Length = 0;
-    public ASM.SourceInfo SourceInfo = null;
-    public GR.Collections.Set<int>  References = new GR.Collections.Set<int>();
-
-
-
-    public override string ToString()
-    {
-      return Name;
-    }
-  }
 
 
   public class C64Character

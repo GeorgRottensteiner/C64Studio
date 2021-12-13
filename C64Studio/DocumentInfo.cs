@@ -1,4 +1,5 @@
 ﻿using C64Studio.Types;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,7 +25,7 @@ namespace C64Studio
 
 
     private List<Types.AutoCompleteItemInfo>    m_KnownKeywords = new List<Types.AutoCompleteItemInfo>();
-    private GR.Collections.MultiMap<string, Types.SymbolInfo> m_KnownTokens = new GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo>();
+    private GR.Collections.MultiMap<string, SymbolInfo> m_KnownTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
 
     public GR.Collections.Set<int>        CollapsedFoldingBlocks = new GR.Collections.Set<int>();
 
@@ -44,7 +45,7 @@ namespace C64Studio
 
 
 
-    public GR.Collections.MultiMap<string, Types.SymbolInfo> KnownTokens
+    public GR.Collections.MultiMap<string, SymbolInfo> KnownTokens
     {
       get
       {
@@ -142,7 +143,7 @@ namespace C64Studio
 
 
 
-    public void SetASMFileInfo( Types.ASM.FileInfo FileInfo, List<Types.AutoCompleteItemInfo> KnownTokenList, GR.Collections.MultiMap<string, Types.SymbolInfo> KnownTokenInfo )
+    public void SetASMFileInfo( Types.ASM.FileInfo FileInfo, List<Types.AutoCompleteItemInfo> KnownTokenList, GR.Collections.MultiMap<string, SymbolInfo> KnownTokenInfo )
     {
       SourceASMEx   asm = null;
 

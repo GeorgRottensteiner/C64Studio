@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using C64Studio.Types;
 using GR.Memory;
+using RetroDevStudio;
 
 namespace C64Studio
 {
@@ -532,36 +533,36 @@ namespace C64Studio
 
       do
       {
-        m_Parser.AddConstantF( "x", curValue, 0, "", 0, 1 );
+        m_Parser.AddConstantF( "x", curValue, 0, "", "", 0, 1 );
         var tokens = m_Parser.ParseTokenInfo( m_Project.ValueTable.Formula, 0, m_Project.ValueTable.Formula.Length );
         if ( tokens == null )
         {
           SetError( m_Parser.GetError().Code.ToString() );
           return;
         }
-        double result = 0.0;
-        if ( !m_Parser.EvaluateTokensNumeric( 0, tokens, out result ) )
+        if ( !m_Parser.EvaluateTokens( 0, tokens, out SymbolInfo result ) )
         {
           SetError( m_Parser.GetError().Code.ToString() );
           return;
         }
 
+        double resultValue = result.ToNumber();
         if ( m_Project.ValueTable.GenerateDeltas )
         {
           if ( !firstValue )
           {
-            m_Project.ValueTable.Values.Add( ( result - lastValue ).ToString() );
-            listValues.Items.Add( ( result - lastValue ).ToString() );
+            m_Project.ValueTable.Values.Add( ( resultValue - lastValue ).ToString() );
+            listValues.Items.Add( ( resultValue - lastValue ).ToString() );
           }
           firstValue = false;
         }
         else
         {
-          m_Project.ValueTable.Values.Add( result.ToString() );
-          listValues.Items.Add( result.ToString() );
+          m_Project.ValueTable.Values.Add( resultValue.ToString() );
+          listValues.Items.Add( resultValue.ToString() );
         }
 
-        lastValue = result;
+        lastValue = resultValue;
         curValue += stepValue;
 
         if ( startValue == endValue )
@@ -604,8 +605,7 @@ namespace C64Studio
         SetError( "Invalid argument count" );
         return result;
       }
-      double functionResult = 0;
-      if ( !m_Parser.EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -613,7 +613,7 @@ namespace C64Studio
       var resultValue = new TokenInfo()
       {
         Type = TokenInfo.TokenType.LITERAL_NUMBER,
-        Content = Math.Sin( functionResult * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
+        Content = Math.Sin( functionResult.ToNumber() * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
       };
       result.Add( resultValue );
       return result;
@@ -630,8 +630,7 @@ namespace C64Studio
         SetError( "Invalid argument count" );
         return result;
       }
-      double functionResult = 0;
-      if ( !m_Parser.EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -639,7 +638,7 @@ namespace C64Studio
       var resultValue = new TokenInfo()
       {
         Type = TokenInfo.TokenType.LITERAL_NUMBER,
-        Content = ( functionResult * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
+        Content = ( functionResult.ToNumber() * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
       };
       result.Add( resultValue );
       return result;
@@ -656,8 +655,7 @@ namespace C64Studio
         SetError( "Invalid argument count" );
         return result;
       }
-      double functionResult = 0;
-      if ( !m_Parser.EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -665,7 +663,7 @@ namespace C64Studio
       var resultValue = new TokenInfo()
       {
         Type = TokenInfo.TokenType.LITERAL_NUMBER,
-        Content = ( functionResult * 180.0f / Math.PI ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
+        Content = ( functionResult.ToNumber() * 180.0f / Math.PI ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
       };
       result.Add( resultValue );
       return result;
@@ -682,8 +680,7 @@ namespace C64Studio
         SetError( "Invalid argument count" );
         return result;
       }
-      double functionResult = 0;
-      if ( !m_Parser.EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -691,7 +688,7 @@ namespace C64Studio
       var resultValue = new TokenInfo()
       {
         Type = TokenInfo.TokenType.LITERAL_NUMBER,
-        Content = Math.Cos( functionResult * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
+        Content = Math.Cos( functionResult.ToNumber() * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
       };
       result.Add( resultValue );
       return result;
@@ -708,8 +705,7 @@ namespace C64Studio
         SetError( "Invalid argument count" );
         return result;
       }
-      double functionResult = 0;
-      if ( !m_Parser.EvaluateTokensNumeric( 0, Arguments, out functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -717,7 +713,7 @@ namespace C64Studio
       var resultValue = new TokenInfo()
       {
         Type = TokenInfo.TokenType.LITERAL_NUMBER,
-        Content = Math.Tan( functionResult * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
+        Content = Math.Tan( functionResult.ToNumber() * Math.PI / 180.0f ).ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture )
       };
       result.Add( resultValue );
       return result;

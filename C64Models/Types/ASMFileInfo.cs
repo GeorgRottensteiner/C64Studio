@@ -1,4 +1,5 @@
 ﻿using GR.Generic;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -85,8 +86,8 @@ namespace C64Studio.Types.ASM
     public Dictionary<int, int>                   AddressToLine = new Dictionary<int, int>();
     public Dictionary<int, LineInfo>              LineInfo = new Dictionary<int, LineInfo>();
     public Dictionary<string, UnparsedEvalInfo>   UnparsedLabels = new Dictionary<string, UnparsedEvalInfo>();
-    public Dictionary<string, Types.SymbolInfo>   Labels = new Dictionary<string, Types.SymbolInfo>();
-    public Dictionary<string, Types.SymbolInfo>   Zones = new Dictionary<string, Types.SymbolInfo>();
+    public Dictionary<string, SymbolInfo>         Labels = new Dictionary<string, SymbolInfo>();
+    public Dictionary<string, SymbolInfo>         Zones = new Dictionary<string, SymbolInfo>();
     public List<BankInfo>                         Banks = new List<BankInfo>();
     public List<TemporaryLabelInfo>               TempLabelInfo = new List<TemporaryLabelInfo>();
     public Parser.AssemblerSettings               AssemblerSettings = null;
@@ -570,7 +571,7 @@ namespace C64Studio.Types.ASM
 
 
 
-    public Types.SymbolInfo TokenInfoFromName( string Token, string Zone, string CheapLabelParent )
+    public SymbolInfo TokenInfoFromName( string Token, string Zone, string CheapLabelParent )
     {
       if ( AssemblerSettings != null )
       {
@@ -684,7 +685,7 @@ namespace C64Studio.Types.ASM
       var  sentLabels = new GR.Collections.Set<int>();
       foreach ( var token in Labels )
       {
-        if ( token.Value.Type == Types.SymbolInfo.Types.LABEL )
+        if ( token.Value.Type == SymbolInfo.Types.LABEL )
         {
           switch ( Format )
           {

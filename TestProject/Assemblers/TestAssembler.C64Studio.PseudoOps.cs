@@ -229,6 +229,48 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestExpressionSubtract()
+    {
+      string      source = @"  * = $1000
+                               lda #$50 - 8";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "0010A948", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestExpressionNegate()
+    {
+      string      source = @"  * = $1000
+                               OF_ON_GROUND = 2
+                               OF_ON_PLATFORM = 1
+                               lda #~( OF_ON_GROUND | OF_ON_PLATFORM )";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "0010A9FC", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
+    public void TestExpressionAdd()
+    {
+      // 100.35 is truncated to 100
+      string      source = @"  * = $1000
+                               lda #$50 + 20.35";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "0010A964", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestPseudoOpBank()
     {
       string      source = @"!bank 0, $20

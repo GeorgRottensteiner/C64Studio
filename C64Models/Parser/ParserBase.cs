@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -406,9 +407,9 @@ namespace C64Studio.Parser
 
 
 
-    public virtual GR.Collections.MultiMap<string, Types.SymbolInfo> KnownTokenInfo()
+    public virtual GR.Collections.MultiMap<string, SymbolInfo> KnownTokenInfo()
     {
-      return new GR.Collections.MultiMap<string, Types.SymbolInfo>();
+      return new GR.Collections.MultiMap<string, SymbolInfo>();
     }
 
 

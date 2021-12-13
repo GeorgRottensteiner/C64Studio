@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -65,7 +66,7 @@ namespace C64Studio.Tasks
           ( (SourceASMEx)m_Document.BaseDoc ).SetLineInfos( parser.ASMFileInfo );
         }
         var knownTokens = parser.KnownTokens();
-        GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo> knownTokenInfos = parser.KnownTokenInfo();
+        GR.Collections.MultiMap<string, SymbolInfo> knownTokenInfos = parser.KnownTokenInfo();
 
         m_Document.SetASMFileInfo( parser.ASMFileInfo, knownTokens, knownTokenInfos );
       }

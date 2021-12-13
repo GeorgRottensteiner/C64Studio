@@ -1097,13 +1097,13 @@ namespace C64Studio
 
       FindZoneAtCaretPosition( out zone, out cheapLabelParent );
 
-      C64Studio.Types.SymbolInfo symbol = (C64Studio.Types.SymbolInfo)comboZoneSelector.SelectedItem;
+      var symbol = (SymbolInfo)comboZoneSelector.SelectedItem;
       if ( ( symbol != null )
       &&   ( zone != symbol.Zone ) )
       {
         for ( int i = 0; i < comboZoneSelector.Items.Count; ++i )
         {
-          C64Studio.Types.SymbolInfo symbol2 = (C64Studio.Types.SymbolInfo)comboZoneSelector.Items[i];
+          var symbol2 = (SymbolInfo)comboZoneSelector.Items[i];
           if ( symbol2.Zone == zone )
           {
             DoNotFollowZoneSelectors = true;
@@ -1114,7 +1114,7 @@ namespace C64Studio
 
             for ( int j = 0; j < comboLocalLabelSelector.Items.Count; ++j )
             {
-              C64Studio.Types.SymbolInfo symbol3 = (C64Studio.Types.SymbolInfo)comboLocalLabelSelector.Items[j];
+              var symbol3 = (SymbolInfo)comboLocalLabelSelector.Items[j];
               if ( ( symbol3.LocalLineIndex <= CurrentLineIndex )
               &&   ( symbol3.LocalLineIndex > localSymbolLine ) )
               {
@@ -1139,7 +1139,7 @@ namespace C64Studio
 
         for ( int j = 0; j < comboLocalLabelSelector.Items.Count; ++j )
         {
-          C64Studio.Types.SymbolInfo symbol3 = (C64Studio.Types.SymbolInfo)comboLocalLabelSelector.Items[j];
+          var symbol3 = (SymbolInfo) comboLocalLabelSelector.Items[j];
           if ( ( symbol3.LocalLineIndex <= CurrentLineIndex )
           &&   ( symbol3.LocalLineIndex > localSymbolLine ) )
           {
@@ -1241,9 +1241,9 @@ namespace C64Studio
 
       debugFileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineNumber, out zone, out cheapLabelParent );
 
-      Types.SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
+      SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
       if ( ( tokenInfo != null )
-      &&   ( tokenInfo.Type != Types.SymbolInfo.Types.UNKNOWN ) )
+      &&   ( tokenInfo.Type != SymbolInfo.Types.UNKNOWN ) )
       {
         string toolTipText = tokenInfo.Info;
 
@@ -1260,16 +1260,31 @@ namespace C64Studio
           m_LastTooltipText = toolTipText;
           m_ToolTip.SetToolTip( editSource, toolTipText );
         }
+        return;
       }
-      else
+      var macroInfo = debugFileInfo.MacroFromName( wordBelow );
+      if ( macroInfo != null )
       {
-        string  upperWord = wordBelow.ToUpper();
-        if ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperWord ) )
+        string toolTipText = macroInfo.Name;
+
+        foreach ( var parameter in macroInfo.ParameterNames )
         {
-          return;
+          toolTipText += " " + parameter;
         }
-        m_ToolTip.Hide( editSource );
+        if ( m_LastTooltipText != toolTipText )
+        {
+          m_LastTooltipText = toolTipText;
+          m_ToolTip.SetToolTip( editSource, toolTipText );
+        }
+        return;
       }
+
+      string  upperWord = wordBelow.ToUpper();
+      if ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperWord ) )
+      {
+        return;
+      }
+      m_ToolTip.Hide( editSource );
     }
 
 
@@ -1295,32 +1310,32 @@ namespace C64Studio
       string currentZone = "Global";
       if ( comboZoneSelector.SelectedIndex != -1 )
       {
-        C64Studio.Types.SymbolInfo symbol = (C64Studio.Types.SymbolInfo)comboZoneSelector.SelectedItem;
+        var symbol = (SymbolInfo)comboZoneSelector.SelectedItem;
         currentZone = symbol.Name;
       }
 
       comboZoneSelector.BeginUpdate();
       comboZoneSelector.Items.Clear();
 
-      C64Studio.Types.SymbolInfo    globalSymbol = new C64Studio.Types.SymbolInfo();
+      var globalSymbol = new SymbolInfo();
       globalSymbol.Name = "Global";
       globalSymbol.LocalLineIndex = 0;
       globalSymbol.DocumentFilename = DocumentFilename;
       comboZoneSelector.Items.Add( globalSymbol );
 
       GR.Collections.Set<string>    keySet = DocumentInfo.KnownTokens.GetUniqueKeys();
-      GR.Collections.Map<string,C64Studio.Types.SymbolInfo>  uniqueZones = new GR.Collections.Map<string, C64Studio.Types.SymbolInfo>();
+      var  uniqueZones = new GR.Collections.Map<string, SymbolInfo>();
 
       foreach ( string key in keySet )
       {
-        List<C64Studio.Types.SymbolInfo>    listValues = DocumentInfo.KnownTokens.GetValues( key, false );
+        List<SymbolInfo>    listValues = DocumentInfo.KnownTokens.GetValues( key, false );
 
-        foreach ( C64Studio.Types.SymbolInfo symbol in listValues )
+        foreach ( SymbolInfo symbol in listValues )
         {
           if ( ( ( ( symbol.SourceInfo != null )
           &&       ( symbol.SourceInfo.FullPath == DocumentInfo.FullPath ) )
           ||     ( GR.Path.IsPathEqual( symbol.DocumentFilename, DocumentInfo.FullPath ) ) )
-          &&   ( symbol.Type == C64Studio.Types.SymbolInfo.Types.ZONE ) )
+          &&   ( symbol.Type == SymbolInfo.Types.ZONE ) )
           {
             uniqueZones.Add( symbol.Zone, symbol );
           }
@@ -1366,7 +1381,7 @@ namespace C64Studio
     {
       if ( Parser != null )
       {
-        // TODO - adjust syntax coloring to use assembler type/cpu type
+        // adjust syntax coloring to use assembler type/cpu type (different opcodes per cpu)
         bool  modified = false;
         if ( m_SyntaxColoringCurrentKnownCPU != DocumentInfo.ASMFileInfo.Processor.Name )
         {
@@ -1377,7 +1392,7 @@ namespace C64Studio
         }
 
         if ( ( DocumentInfo.ASMFileInfo.AssemblerSettings != null )
-        && ( m_SyntaxColoringCurrentKnownAssembler != DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType ) )
+        &&   ( m_SyntaxColoringCurrentKnownAssembler != DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType ) )
         {
           m_SyntaxColoringCurrentKnownAssembler = DocumentInfo.ASMFileInfo.AssemblerSettings.AssemblerType;
 
@@ -1461,7 +1476,7 @@ namespace C64Studio
       string currentZone = "";
       if ( comboZoneSelector.SelectedIndex != -1 )
       {
-        C64Studio.Types.SymbolInfo symbol = (C64Studio.Types.SymbolInfo)comboZoneSelector.SelectedItem;
+        var symbol = (SymbolInfo)comboZoneSelector.SelectedItem;
         currentZone = symbol.Name;
         if ( currentZone == "Global" )
         {
@@ -1471,7 +1486,7 @@ namespace C64Studio
       string currentLabel = "";
       if ( comboLocalLabelSelector.SelectedIndex != -1 )
       {
-        C64Studio.Types.SymbolInfo symbol = (C64Studio.Types.SymbolInfo)comboLocalLabelSelector.SelectedItem;
+        var symbol = (SymbolInfo)comboLocalLabelSelector.SelectedItem;
         currentLabel = symbol.Name;
       }
 
@@ -1482,12 +1497,12 @@ namespace C64Studio
       string fullPath = DocumentInfo.FullPath;
       foreach ( string key in keySet )
       {
-        List<C64Studio.Types.SymbolInfo> listValues = DocumentInfo.KnownTokens.GetValues( key, false );
-        foreach ( C64Studio.Types.SymbolInfo symbol in listValues )
+        List<SymbolInfo> listValues = DocumentInfo.KnownTokens.GetValues( key, false );
+        foreach ( SymbolInfo symbol in listValues )
         {
-          if ( ( symbol.Type == C64Studio.Types.SymbolInfo.Types.CONSTANT_1 )
-          ||   ( symbol.Type == C64Studio.Types.SymbolInfo.Types.CONSTANT_2 )
-          ||   ( symbol.Type == C64Studio.Types.SymbolInfo.Types.LABEL ) )
+          if ( ( symbol.Type == SymbolInfo.Types.CONSTANT_1 )
+          ||   ( symbol.Type == SymbolInfo.Types.CONSTANT_2 )
+          ||   ( symbol.Type == SymbolInfo.Types.LABEL ) )
           {
             if ( ( ( ( symbol.SourceInfo != null )
             &&       ( symbol.SourceInfo.FullPath == DocumentInfo.FullPath ) )
@@ -1665,6 +1680,31 @@ namespace C64Studio
           newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Key.Substring( zone.Length ) ) { ToolTipTitle = entry.Key.Substring( zone.Length ), ToolTipText = toolTipText } );
         }
       }
+
+      // add macros
+      string  macroPrefix = "";
+      if ( Parser.ASMFileInfo.AssemblerSettings.MacroFunctionCallPrefix.Count > 0 )
+      {
+        macroPrefix = Parser.ASMFileInfo.AssemblerSettings.MacroFunctionCallPrefix[0];
+      }
+      foreach ( var entry in DocumentInfo.ASMFileInfo.Macros )
+      {
+        if ( uniqueKeys.Contains( entry.Key ) )
+        {
+          // do not override entries!
+          continue;
+        }
+        // list parameters
+        string    toolTipText =  entry.Key;
+
+        foreach ( var parameter in entry.Value.ParameterNames )
+        {
+          toolTipText += " " + parameter;
+        }
+
+        // always add common entries
+        newList.Add( new FastColoredTextBoxNS.AutocompleteItem( macroPrefix + entry.Key ) { ToolTipTitle = macroPrefix + entry.Key, ToolTipText = toolTipText } );
+      }
       if ( newList.Count > 0 )
       {
         newList.Sort( AutoCompleteItemComparison );
@@ -1730,7 +1770,6 @@ namespace C64Studio
           newList.Add( new AutocompleteItem( pseudoOp.Key ) { ToolTipTitle = pseudoOp.Key, ToolTipText = "Pseudo OP" } );
         }
       }
-
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {
         if ( entry.Token.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
@@ -1739,7 +1778,6 @@ namespace C64Studio
           continue;
         }
         newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Token ) { ToolTipTitle = entry.ToolTipTitle, ToolTipText = entry.ToolTipText } );
-        //newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Token.Substring( zone.Length ) ) { ToolTipTitle = entry.ToolTipTitle, ToolTipText = entry.ToolTipText } );
       }
       GR.Collections.Set<string>    uniqueKeys = DocumentInfo.KnownTokens.GetUniqueKeys();
       foreach ( string entry in uniqueKeys )
@@ -1751,7 +1789,6 @@ namespace C64Studio
         }
 
         newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry ) { ToolTipTitle = entry, ToolTipText = "sowas" } );
-        //newList.Add( new FastColoredTextBoxNS.AutocompleteItem( entry.Substring( zone.Length ) ) { ToolTipTitle = entry.Substring( zone.Length ), ToolTipText = "tool tip text" } );
       }
       if ( newList.Count > 0 )
       {
@@ -2244,7 +2281,6 @@ namespace C64Studio
           wordBelow = potentialPseudoOp;
         }
       }
-
       return wordBelow;
     }
 
@@ -2338,7 +2374,7 @@ namespace C64Studio
         return;
       }
 
-      Types.SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
+      SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
       if ( tokenInfo != null )
       {
         WatchEntry entry = new WatchEntry();
@@ -2371,9 +2407,9 @@ namespace C64Studio
       FindZoneFromLine( m_ContextMenuLineIndex, out zone, out cheapLabelParent );
 
       //Core.MainForm.EnsureFileIsParsed();
-      Types.SymbolInfo tokenInfo = DocumentInfo.ASMFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
+      SymbolInfo tokenInfo = DocumentInfo.ASMFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
       if ( ( tokenInfo != null )
-      &&   ( tokenInfo.Type != Types.SymbolInfo.Types.UNKNOWN ) )
+      &&   ( tokenInfo.Type != SymbolInfo.Types.UNKNOWN ) )
       {
         if ( ( tokenInfo.AddressOrValue >= 0 )
         &&   ( tokenInfo.AddressOrValue <= 65535 ) )
@@ -2441,7 +2477,7 @@ namespace C64Studio
       }
 
       int closestLine = -1;
-      Types.SymbolInfo possibleLabel = null;
+      SymbolInfo possibleLabel = null;
       int globalLineIndex = -1;
 
       if ( !debugFileInfo.FindGlobalLineIndex( LineIndex, DocumentInfo.FullPath, out globalLineIndex ) )
@@ -2449,7 +2485,7 @@ namespace C64Studio
         return "";
       }
 
-      foreach ( Types.SymbolInfo symbol in debugFileInfo.Labels.Values )
+      foreach ( SymbolInfo symbol in debugFileInfo.Labels.Values )
       {
         if ( ( symbol.LineIndex <= globalLineIndex )
         &&   ( symbol.LineIndex > closestLine ) )
@@ -2566,9 +2602,9 @@ namespace C64Studio
       FindZoneFromLine( m_ContextMenuLineIndex, out zone, out cheapLabelParent );
 
       Core.MainForm.EnsureFileIsParsed();
-      Types.SymbolInfo tokenInfo = DocumentInfo.ASMFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
+      SymbolInfo tokenInfo = DocumentInfo.ASMFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
       if ( ( tokenInfo != null )
-      &&   ( tokenInfo.Type != Types.SymbolInfo.Types.UNKNOWN ) )
+      &&   ( tokenInfo.Type != SymbolInfo.Types.UNKNOWN ) )
       {
         Core.AddToOutput( "Value of " + wordBelow + ": $" + tokenInfo.AddressOrValue.ToString( "x4" ) + ", " + tokenInfo.AddressOrValue.ToString() + Environment.NewLine );
       }
@@ -2945,7 +2981,7 @@ namespace C64Studio
         return;
       }
 
-      C64Studio.Types.SymbolInfo symbol = (C64Studio.Types.SymbolInfo)comboZoneSelector.SelectedItem;
+      SymbolInfo symbol = (SymbolInfo)comboZoneSelector.SelectedItem;
 
       SetCursorToLine( symbol.LocalLineIndex, symbol.CharIndex, true );
 
@@ -2960,7 +2996,7 @@ namespace C64Studio
       {
         return;
       }
-      C64Studio.Types.SymbolInfo symbol = (C64Studio.Types.SymbolInfo)comboLocalLabelSelector.SelectedItem;
+      SymbolInfo symbol = (SymbolInfo)comboLocalLabelSelector.SelectedItem;
 
       SetCursorToLine( symbol.LocalLineIndex, symbol.CharIndex, true );
     }
@@ -3436,8 +3472,9 @@ namespace C64Studio
                 &&         ( tokens[i + 1].Content == "," ) )
                 ||       ( i + 1 == tokens.Count ) ) ) )
                 {
-                  if ( Parser.EvaluateTokens( i, tokens, i, 1, out int resultValue ) )
+                  if ( Parser.EvaluateTokens( i, tokens, i, 1, out SymbolInfo resultValueSymbol ) )
                   {
+                    int resultValue = resultValueSymbol.ToInteger();
                     resultValue += formDelta.Delta;
 
                     if ( formDelta.InsertAsHex )
@@ -3523,7 +3560,7 @@ namespace C64Studio
 
       debugFileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineIndex, out zone, out cheapLabelParent );
 
-      Types.SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
+      SymbolInfo tokenInfo = debugFileInfo.TokenInfoFromName( wordBelow, zone, cheapLabelParent );
       if ( tokenInfo == null )
       {
         System.Windows.Forms.MessageBox.Show( "Unrecognized symbol, a recompile may be required" );

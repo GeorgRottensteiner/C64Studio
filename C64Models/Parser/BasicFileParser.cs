@@ -442,17 +442,17 @@ namespace C64Studio.Parser
       {
         foreach ( var entry in InitialFileInfo.Labels )
         {
-          if ( ( entry.Value.Type != C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_CONSTANT_1 )
-          &&   ( entry.Value.Type != C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_CONSTANT_2 )
-          &&   ( entry.Value.Type != C64Studio.Types.SymbolInfo.Types.PREPROCESSOR_LABEL ) )
+          if ( ( entry.Value.Type != SymbolInfo.Types.PREPROCESSOR_CONSTANT_1 )
+          &&   ( entry.Value.Type != SymbolInfo.Types.PREPROCESSOR_CONSTANT_2 )
+          &&   ( entry.Value.Type != SymbolInfo.Types.PREPROCESSOR_LABEL ) )
           {
-            if ( ( entry.Value.Type == C64Studio.Types.SymbolInfo.Types.LABEL )
+            if ( ( entry.Value.Type == SymbolInfo.Types.LABEL )
             &&   ( entry.Key.StartsWith( ASMFileParser.InternalLabelPrefix ) ) )
             {
               // do not pass on internal local labels
               continue;
             }
-            C64Studio.Types.SymbolInfo    symbol = new C64Studio.Types.SymbolInfo();
+            var symbol = new SymbolInfo();
             symbol.AddressOrValue = entry.Value.AddressOrValue;
             symbol.DocumentFilename = entry.Value.DocumentFilename;
             symbol.LocalLineIndex = entry.Value.LocalLineIndex;
@@ -1915,13 +1915,13 @@ namespace C64Studio.Parser
         {
           if ( variable.TokenType == Token.Type.VARIABLE )
           {
-            var     symbolType = Types.SymbolInfo.Types.VARIABLE_NUMBER;
+            var     symbolType = SymbolInfo.Types.VARIABLE_NUMBER;
             string  varName = variable.Content;
 
             // verify next token
             if ( variable.Content.EndsWith( "$" ) )
             {
-              symbolType = Types.SymbolInfo.Types.VARIABLE_STRING;
+              symbolType = SymbolInfo.Types.VARIABLE_STRING;
               if ( varName.Length > 3 )
               {
                 // cut to signifact characters
@@ -1930,7 +1930,7 @@ namespace C64Studio.Parser
             }
             else if ( variable.Content.EndsWith( "%" ) )
             {
-              symbolType = Types.SymbolInfo.Types.VARIABLE_INTEGER;
+              symbolType = SymbolInfo.Types.VARIABLE_INTEGER;
               if ( varName.Length > 3 )
               {
                 // cut to signifact characters
@@ -1943,7 +1943,7 @@ namespace C64Studio.Parser
               var nextToken = pureInfo.Tokens[tokenIndex + 1];
               if ( nextToken.Content == "(" )
               {
-                symbolType = Types.SymbolInfo.Types.VARIABLE_ARRAY;
+                symbolType = SymbolInfo.Types.VARIABLE_ARRAY;
                 if ( varName.Length > 3 )
                 {
                   // cut to signifact characters
@@ -1968,7 +1968,7 @@ namespace C64Studio.Parser
 
             if ( !ASMFileInfo.Labels.ContainsKey( varName ) )
             {
-              var symbolInfo              = new Types.SymbolInfo();
+              var symbolInfo              = new SymbolInfo();
               symbolInfo.AddressOrValue   = 0;
               symbolInfo.CharIndex        = variable.StartIndex;
               symbolInfo.Name             = varName;
@@ -1994,17 +1994,17 @@ namespace C64Studio.Parser
 
 
 
-    public override GR.Collections.MultiMap<string, Types.SymbolInfo> KnownTokenInfo()
+    public override GR.Collections.MultiMap<string, SymbolInfo> KnownTokenInfo()
     {
-      GR.Collections.MultiMap<string, Types.SymbolInfo> knownTokens = new GR.Collections.MultiMap<string, Types.SymbolInfo>();
+      GR.Collections.MultiMap<string, SymbolInfo> knownTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
 
-      foreach ( KeyValuePair<string, Types.SymbolInfo> label in ASMFileInfo.Labels )
+      foreach ( KeyValuePair<string, SymbolInfo> label in ASMFileInfo.Labels )
       {
         knownTokens.Add( label.Key, label.Value );
       }
       foreach ( KeyValuePair<string, Types.ASM.UnparsedEvalInfo> label in ASMFileInfo.UnparsedLabels )
       {
-        Types.SymbolInfo token = new C64Studio.Types.SymbolInfo();
+        var token = new SymbolInfo();
 
         token.Name = label.Key;
         knownTokens.Add( token.Name, token );

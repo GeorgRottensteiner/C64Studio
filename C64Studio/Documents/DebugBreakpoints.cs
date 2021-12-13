@@ -6,6 +6,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using RetroDevStudio;
 
 namespace C64Studio
 {
@@ -13,9 +14,9 @@ namespace C64Studio
   {
     public Project                    DebuggedProject = null;
 
-    private GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo>       m_TokenInfos = null;
+    private GR.Collections.MultiMap<string, SymbolInfo>       m_TokenInfos = null;
 
-    private delegate void SetTokensCallback( GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo> TokenInfo );
+    private delegate void SetTokensCallback( GR.Collections.MultiMap<string, SymbolInfo> TokenInfo );
 
 
 
@@ -286,7 +287,7 @@ namespace C64Studio
 
 
 
-    public void SetTokens( GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo> TokenInfo )
+    public void SetTokens( GR.Collections.MultiMap<string, SymbolInfo> TokenInfo )
     {
       if ( InvokeRequired )
       {
@@ -316,7 +317,7 @@ namespace C64Studio
       string    key = (string)comboSymbols.SelectedItem;
       if ( m_TokenInfos.ContainsKey( key ) )
       {
-        List<C64Studio.Types.SymbolInfo> tokens = m_TokenInfos.GetValues( key, false );
+        List<SymbolInfo> tokens = m_TokenInfos.GetValues( key, false );
         if ( tokens == null )
         {
           return;

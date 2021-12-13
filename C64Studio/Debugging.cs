@@ -6,6 +6,7 @@ using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
 using GR.Memory;
 using C64Studio.Types;
+using RetroDevStudio;
 
 namespace C64Studio
 {
@@ -637,11 +638,12 @@ namespace C64Studio
           continue;
         }
         int   result = -1;
-        if ( !Core.Compiling.ParserASM.EvaluateTokens( -1, tokenInfos, out result ) )
+        if ( !Core.Compiling.ParserASM.EvaluateTokens( -1, tokenInfos, out SymbolInfo resultSymbol ) )
         {
           Core.AddToOutput( "Failed to evaluate " + virtualBP.Expression + System.Environment.NewLine );
           continue;
         }
+        result = resultSymbol.ToInteger();
         if ( ( result < 0 )
         ||   ( result >= 65536 ) )
         {
