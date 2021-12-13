@@ -646,16 +646,23 @@ namespace C64Studio
         var form = new FormAppMode(StudioCore);
         form.ShowDialog();
 
-        if ( StudioCore.Settings.BASICKeyMap.DefaultKeymaps.ContainsKey( (uint)System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID ) )
+        try
         {
-          StudioCore.Settings.BASICKeyMap.Keymap = StudioCore.Settings.BASICKeyMap.DefaultKeymaps[(uint)System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID];
+          if ( StudioCore.Settings.BASICKeyMap.DefaultKeymaps.ContainsKey( (uint)System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID ) )
+          {
+            StudioCore.Settings.BASICKeyMap.Keymap = StudioCore.Settings.BASICKeyMap.DefaultKeymaps[(uint)System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.LCID];
+          }
+          else
+          {
+            // default to english
+            StudioCore.Settings.BASICKeyMap.Keymap = StudioCore.Settings.BASICKeyMap.DefaultKeymaps[9];
+          }
         }
-        else
+        catch ( Exception )
         {
           // default to english
           StudioCore.Settings.BASICKeyMap.Keymap = StudioCore.Settings.BASICKeyMap.DefaultKeymaps[9];
         }
-
         StudioCore.Settings.SetDefaultKeyBinding();
         StudioCore.Settings.SetDefaultColors();
       }
@@ -1893,12 +1900,13 @@ namespace C64Studio
 
         var tokens = parser.ParseTokenInfo( macroName, 0, macroName.Length );
         parser.ASMFileInfo = Document.ASMFileInfo;
-        if ( !parser.EvaluateTokens( 0, tokens, out int macroValue ) )
+        if ( !parser.EvaluateTokens( 0, tokens, out SymbolInfo macroValueSymbol ) )
         {
           Error = true;
           StudioCore.AddToOutput( "Failed to evaluate macro '" + macroName + "' encountered at command " + Mask + System.Environment.NewLine );
           return "";
         }
+        int macroValue = macroValueSymbol.ToInteger( );
         string valueToInsert = "";
         if ( asHex )
         {
@@ -5126,7 +5134,7 @@ namespace C64Studio
         {
           // give all other files the same keywords!
           var knownTokens = StudioCore.Compiling.ParserASM.KnownTokens();
-          GR.Collections.MultiMap<string, C64Studio.Types.SymbolInfo> knownTokenInfos = StudioCore.Compiling.ParserASM.KnownTokenInfo();
+          var knownTokenInfos = StudioCore.Compiling.ParserASM.KnownTokenInfo();
 
           // from source info
           GR.Collections.Set<string> filesToUpdate = new GR.Collections.Set<string>();
@@ -5679,6 +5687,7 @@ namespace C64Studio
         newDoc.DocumentInfo.Project = Project;
         newDoc.DocumentInfo.Type = Type;
         newDoc.DocumentInfo.UndoManager.MainForm = this;
+        newDoc.DocumentInfo.BaseDoc = newDoc;
         newDoc.ShowHint = DockState.Document;
         newDoc.Core = StudioCore;
         newDoc.Text = "*";

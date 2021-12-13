@@ -1,11 +1,24 @@
 ﻿C64Studio
+o BASIC - Rename Variables, list all occurrences
+o 16bit charset screen -> add offset
+o Intellisense -> add macros!
+o 120% scaling in imagelistbox 
+o Rename Project in Solution Explorer, also rename .c64 file!
+o Beim "Graphic Screen" -> "Export" optionale "Load Address (hex)" wie beim Character Set
+o Clone Solution/Project
+o Disassembler: Special case "bit" shortcat, e.g. target label is not placed
+*=$033c
+            lda $14
+            bmi weiter
+!byte $2c ; "bit"
+weiter      lda #$00
+            sta $15
+            rts
 o When I move somewhere in the code, I would like the label combobox to point to the previous global or local label instead of the immediate 
   label which, as far as I'm concerned, is of little use.
 o Option to remove the immediate labels from the combobox list above the text editor
 o label .NOP gets coloring of opcode
 o Same version info for C64Studio and C64Ass
-o I've noticed that the last pixel change is not visible at the "screen" tab, 
-  the last pixel set or removed at "charset" tab is not updated for this screen
 o Scaling: At a ".charscreen" element, we can change the actual color to be used for drawing, 
   from the row showing the selected character with all colors. If I click on this row to choose a color, 
   the actually chosen one will be picked by a scaled position, not where I clicked. At the left (black color) it's ok, 
@@ -92,9 +105,6 @@ o !zone Sprites
 
   => Letzte Zeile ist "unter" dem horizontalen Scrollbar
 
-o Find/Replace
-  1) Often, after clicking on "Find Next", it is not the occurrence following the cursor position at that moment that is highlighted but a subsequent one.
-  2) When I click on "Replace", it is not the highlighted recurrence that is replaced but the next one.
 o Charscreeneditor: Export charset as binary
 o Sprites: NES 8x8 (3colors 1bg)
 o Debugging disassembly, show debug highlight on first line with actual code
@@ -102,8 +112,6 @@ o Character Scrolling Effect (in one char, shifting with direction)
   ->also flip char content through a list of other chars content
   ->should display in preview pane, map editor and char screen editor
 o Get rid of GR.Path.IsPathEqual during OnKnownTokensChanged and OnKnownKeywordsChanged!
-o When debugging. I remove some of my watch entries. It goes away from the listview, but, when I press debug again. They are back!!
-  hehe. Its hard to reproduce something, since it takes along time before it actually happens.
 o Color setting: Empty space bg, setting custom color, but does not display as "custom" in combo box
 o Save inbuilt editors automatically
 o Undo for Category-Exchange
@@ -121,7 +129,6 @@ o Display of used bytes is not correct (shows 43, should show 160 at !byte)
   !byte (i * 40) + j
   !end
   !end
-o Outline: bei BASIC auch Variablen anzeigen
 o Rename of folder (Explorer), files affected can now not be saved anymore
 o Document operators (%, etc.)
 o Save/Restore bookmarks (in solution or project)
@@ -152,7 +159,6 @@ o Kategorien, Ich denke, Sie sollten mehrere auswählen, z. B. mehrfarbig, und s
      Wenn mehrere Farben ausgewählt sind, ändert sich das Lineal nicht (?), um diese neuen Zeichen aufzunehmen.
 
 o charscreen layout change from Docster!
-o Expressions with sin/cos/tan?
 o When you are creating a new project/solution with the same name, you are not warned that you are about to overwrite the existing project.
 o Still having problems with creating a new solution/project when another solution/project is loaded.
 	Both the times I have done this, it's like it's overwritting the previous .s64 file!!!
@@ -191,6 +197,7 @@ o Path editor: I have a suggestion for a feature which I think would be great fo
 o SID editor
 o BASIC: Undo bei Label-Mode-Wechsel sollte Label-Mode mit wechseln!
 o PDS: lda #< should use lo/hi of the whole expression
+       o re-introduce lda #< to behave like hi/lo is part of the mnemonic for ACME and CBM PRG Studio (Option Assembler)
 o wie kann ich beim laufenden debuggen den Speicher ändern? (die Register sind ja änderbar - der Mem auch?)
 o wie kann ich dem Debugger beibringen, dass er das Mem-Fenster weiterhin mit der gew. Adresse anzeigt?
 o Start without existing settings, code colors blank!! Crash on exit?
@@ -212,7 +219,6 @@ o TODO - Nested for loops using a local label from outside:
     !end
 o float point Konstante eingebe? z.B. wie beim CBM Program Studio, da ging das irgendwie (habs nicht ganz parat) so: !flp 32.442.
 Das ist logisch auf den ersten Blick, es wäre aber cool, wenn man auch sigened values eintippen könnte und der Assembler das gleich umrechnet in die entsprechende 2-complement Zahl.
-o re-introduce lda #< to behave like hi/lo is part of the mnemonic for ACME and CBM PRG Studio (Option Assembler)
 o Charset editor, multi-chars (1x2, 2x2, ..) in one window, with adjustable char offsets (+$40,$80,$c0)
 o Hätte wieder mal einen kleinen Feature-Request (falls es das nicht eh' schon gibt und ich nur nicht weiß, wo der Knopf ist):
   Im Debugger würde ich gerne die Cycle-Zahl auf NULL stellen können, um die Cycles ab einem bestimmten Punkt starten und zählen zu können.
@@ -231,7 +237,6 @@ o Automated code formatting
 o Map Editor:
   Map: 
     gerne auch mit Zeilen/Spaltennumerierung
-    möglichkeit die Reihenfolge der Maps zu verschieben, wie bei den Tiles (Up/Down)
   Tiles: 
     wenn die Hintergrundfarbe weiß=charcolor ist, kann ich nix sehen (habe als Workaround auf dunkelgrau gestellt)
     schön wäre es noch, wenn man das obere Nibble der colortables für "material" hätte = 16 Werte für lau
@@ -257,7 +262,6 @@ o Optionale Parameter und eine Assemblervariable, die anzeigt, wieviele Paramete
     } 
 o MediaManager: * Dateien mit gleichem Namen unterbinden (bzw. nachfragen!)
                 * Titel und ID ändern bzw. angeben beim neu erstellen
-o BASIC: Renumber bei THEN <zeile> tut nicht ?? Seems to work fine
 o BASIC: Snippet-Wizard
 o BASIC: falls ich da bisher etwas übersehen haben sollte, habe ich eine Anregung für einen neuen Editor: 
   Memorymap in Basic erstellen, d.h.:

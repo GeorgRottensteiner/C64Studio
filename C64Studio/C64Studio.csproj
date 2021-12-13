@@ -112,11 +112,11 @@
     <Compile Include="Controls\ColorSettings\ColorSettingsECM.Designer.cs">
       <DependentUpon>ColorSettingsECM.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsMC.cs">
+    <Compile Include="Controls\ColorSettings\ColorSettingsMCCharacter.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsMC.Designer.cs">
-      <DependentUpon>ColorSettingsMC.cs</DependentUpon>
+    <Compile Include="Controls\ColorSettings\ColorSettingsMCCharacter.Designer.cs">
+      <DependentUpon>ColorSettingsMCCharacter.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\CSButton.cs">
       <SubType>Component</SubType>
@@ -588,8 +588,8 @@
     <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsECM.resx">
       <DependentUpon>ColorSettingsECM.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsMC.resx">
-      <DependentUpon>ColorSettingsMC.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsMCCharacter.resx">
+      <DependentUpon>ColorSettingsMCCharacter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgPaletteEditor.resx">
       <DependentUpon>DlgPaletteEditor.cs</DependentUpon>

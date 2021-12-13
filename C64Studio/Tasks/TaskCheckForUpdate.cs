@@ -33,34 +33,41 @@ namespace C64Studio.Tasks
 
     void FinishWebRequest( IAsyncResult result )
     {
-      HttpWebResponse response = (HttpWebResponse)_Request.EndGetResponse( result );
-
-      // Insert code that uses the response object
-      var encoding = Encoding.GetEncoding( response.CharacterSet );
-
-      using ( var reader = new System.IO.StreamReader( response.GetResponseStream(), encoding ) )
+      try
       {
-        string responseText = reader.ReadToEnd();
+        HttpWebResponse response = (HttpWebResponse)_Request.EndGetResponse( result );
 
-        if ( responseText.StartsWith( "OK" ) )
+        // Insert code that uses the response object
+        var encoding = Encoding.GetEncoding( response.CharacterSet );
+
+        using ( var reader = new System.IO.StreamReader( response.GetResponseStream(), encoding ) )
         {
-          string[]    parts = responseText.Trim().Split( new string[] { "<br>" }, StringSplitOptions.RemoveEmptyEntries );
-          if ( parts.Length == 2 )
+          string responseText = reader.ReadToEnd();
+
+          if ( responseText.StartsWith( "OK" ) )
           {
-            CompareVersions( parts[1] );
+            string[]    parts = responseText.Trim().Split( new string[] { "<br>" }, StringSplitOptions.RemoveEmptyEntries );
+            if ( parts.Length == 2 )
+            {
+              CompareVersions( parts[1] );
+            }
+            else
+            {
+              Core.SetStatus( "Malformed update check reply: " + responseText );
+            }
           }
           else
           {
             Core.SetStatus( "Malformed update check reply: " + responseText );
           }
+          Core.AddToOutput( responseText );
         }
-        else
-        {
-          Core.SetStatus( "Malformed update check reply: " + responseText );
-        }
-        Core.AddToOutput( responseText );
+        response.Close();
       }
-      response.Close();
+      catch ( Exception ex )
+      {
+        Core.AddToOutput( "Failed to check for update: " + ex.Message );
+      }
     }
 
 
