@@ -18,6 +18,10 @@ namespace C64Studio.Formats
       HIRES_CHARSET,
       [Description( "Multicolor Charset" )]
       MULTICOLOR_CHARSET,
+      [Description( "Mega65 FCM Charset" )]
+      MEGA65_FCM_CHARSET,
+      [Description( "Mega65 FCM 16bit Charset" )]
+      MEGA65_FCM_CHARSET_16BIT
     };
 
     public enum ColorMappingTarget

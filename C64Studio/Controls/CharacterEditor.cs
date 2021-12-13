@@ -502,13 +502,14 @@ namespace C64Studio.Controls
       if ( CharIndex < panelCharacters.Items.Count )
       {
         panelCharacters.Items[CharIndex].MemoryImage = m_Project.Characters[CharIndex].Tile.Image;
+        panelCharacters.InvalidateItemRect( CharIndex );
       }
       bool playgroundChanged = false;
       for ( int i = 0; i < 16; ++i )
       {
         for ( int j = 0; j < 16; ++j )
         {
-          if ( ( m_Project.PlaygroundChars[i + j * 16] & 0xff ) == CharIndex )
+          if ( ( m_Project.PlaygroundChars[i + j * 16] & 0xffff ) == CharIndex )
           {
             playgroundChanged = true;
             Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, CharIndex, m_ImagePlayground, i * 8, j * 8, (int)m_Project.PlaygroundChars[i + j * 16] >> 16 );
@@ -561,6 +562,9 @@ namespace C64Studio.Controls
 
         _ColorSettingsDlg.PalettesChanged();
         m_Project.Colors.Palettes.Add( mcSettings.Palettes[mcSettings.Palettes.Count - 1] );
+        m_Project.Colors.ActivePalette = m_Project.Colors.Palettes.Count - 1;
+        ChangeColorSettingsDialog();
+        OnPaletteChanged();
       }
 
       _ColorSettingsDlg.ColorChanged( ColorType.BACKGROUND, mcSettings.BackgroundColor );
@@ -644,6 +648,10 @@ namespace C64Studio.Controls
           {
             _ColorSettingsDlg.CustomColor = m_Project.Characters[m_CurrentChar].Tile.CustomColor;
           }
+        }
+        else
+        {
+          _ColorSettingsDlg.ActivePalette = m_Project.Characters[m_CurrentChar].Tile.Colors.ActivePalette;
         }
         canvasEditor.Invalidate();
 
@@ -1935,7 +1943,26 @@ namespace C64Studio.Controls
       _ColorSettingsDlg.ColorsModified += _ColorSettingsDlg_ColorsModified;
       _ColorSettingsDlg.ColorsExchanged += _ColorSettingsDlg_ColorsExchanged;
       _ColorSettingsDlg.PaletteModified += _ColorSettingsDlg_PaletteModified;
+      _ColorSettingsDlg.PaletteSelected += _ColorSettingsDlg_PaletteSelected;
       _ColorSettingsDlg_SelectedColorChanged( _ColorSettingsDlg.SelectedColor );
+    }
+
+
+
+    private void _ColorSettingsDlg_PaletteSelected( ColorSettings Colors )
+    {
+      if ( m_Project.Colors.ActivePalette != Colors.ActivePalette )
+      {
+        UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
+
+        m_Project.Colors.ActivePalette = Colors.ActivePalette;
+        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+        {
+          m_Project.Characters[i].Tile.Colors.ActivePalette = Colors.ActivePalette;
+          RebuildCharImage( i );
+        }
+        RaiseModifiedEvent();
+      }
     }
 
 

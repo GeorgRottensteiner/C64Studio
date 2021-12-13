@@ -1,4 +1,4 @@
-!zone VIC
+﻿!zone VIC
 .SPRITE_X_POS        = $d000
 .SPRITE_Y_POS        = $d001
 .SPRITE_X_EXTEND     = $d010
@@ -9,12 +9,11 @@
 ;| Bit  4   |    Blank Screen to Border Color: 0 = Blank
 ;| Bit  3   |    Select 24/25 Row Text Display: 1 = 25 Rows
 ;| Bits 2-0 |    Smooth Scroll to Y Dot-Position (0-7)
-;                Default Value: $9B/155 (%10011011).
 .CONTROL_1           = $d011
 .RASTER_POS          = $d012
 .STROBE_X            = $d013   ;light pen x
 .STROBE_Y            = $d014   ;light pen y
-.SPRITE_ENABLE       = $d015 
+.SPRITE_ENABLE       = $d015
 
 ;| Bits 7-6 |    Unused
 ;| Bit  5   |    Reset-Bit: 1 = Stop VIC (no Video Out, no RAM refresh, no bus access)
@@ -29,12 +28,8 @@
 ;| Bit  3   |   Bitmap-Mode: Select Base Address (inside VIC)
 ;| Bits 3-1 |   Character Dot-Data Base Address (inside VIC)
 ;| Bit  0   |   Unused
-;Default Value: $14/20 (%00010100).
 .MEMORY_CONTROL      = $d018
-
-
-.IRQ_REQUEST         = $d019 
-
+.IRQ_REQUEST         = $d019
 ;| Bit 7-4  |   Always 1
 ;| Bit 3    |   Light-Pen Triggered IRQ Flag
 ;| Bit 2    |   Sprite to Sprite Collision IRQ Flag     (see $D01E)
@@ -56,6 +51,46 @@
 .SPRITE_COLOR        = $d027
 .KEYBOARD_LINES      = $d02f
 .CLOCK_SWITCH        = $d030
+
+
+!zone CIA1
+.DATA_PORT_A         = $dc00
+;| Bit 7 |   On Read:  1 = Interrupt occured
+;|       |   On Write: 1 = Set Int.-Flags, 0 = Clear Int-.Flags
+;| Bit 4 |   FLAG1 IRQ (Cassette Read / Serial Bus SRQ Input)
+;| Bit 3 |   Serial Port Interrupt ($DC0C full/empty)
+;| Bit 2 |   Time-of-Day Clock Alarm Interrupt
+;| Bit 1 |   Timer B Interrupt (Tape, Serial Port)
+;| Bit 0 |   Timer A Interrupt (Kernal-IRQ, Tape)
+.IRQ_CONTROL         = $dc0d
+
+
+!zone CIA2
+.DATA_PORT_A         = $dd00
+
+;| Bit 7 |   On Read:  1 = Interrupt occured
+;|       |   On Write: 1 = Set Int.-Flags, 0 = Clear Int.-Flags
+;| Bit 4 |   FLAG1 NMI (User/RS232 Received Data Input)
+;| Bit 3 |   Serial Port Interrupt ($DD0C full/empty)
+;| Bit 2 |   Time-of-Day Clock Alarm Interrupt
+;| Bit 1 |   Timer B Interrupt (RS232)
+;| Bit 0 |   Timer A Interrupt (RS232)
+.NMI_CONTROL            = $dd0d
+
+
+IRQ_RETURN_KERNAL       = $ea81
+IRQ_RETURN_KERNAL_KEYBOARD  = $ea31
+
+JOYSTICK_PORT_II        = $dc00
+JOYSTICK_PORT_I         = $dc01
+
+
+PROCESSOR_PORT          = $01
+
+KERNAL_IRQ_LO           = $fffe
+KERNAL_IRQ_HI           = $ffff
+
+
 
 !zone SID
 .BASE                           = $d400
@@ -94,71 +129,6 @@
 
 .OSCILLATOR_3_OUTPUT            = .BASE + 27
 .ENV_GENERATOR_3_OUTPUT         = .BASE + 28
-
-
-!zone CIA1
-;| Bits 7-0 |   Write Keyboard Column Values for Keyboard Scan
-;| Bits 7-6 |   Paddles on: 01 = Port A, 10 = Port B
-;| Bit  4   |   Joystick A Fire Button: 0 = Pressed
-;| Bit  3   |   Joystick A Right: 0 = Pressed, or Paddle Button
-;| Bit  2   |   Joystick A Left : 0 = Pressed, or Paddle Button
-;| Bit  1   |   Joystick A Down : 0 = Pressed
-;| Bit  0   |   Joystick A Up   : 0 = Pressed
-.DATA_PORT_A         = $dc00
-
-;| Bits 7-0 |   Read Keyboard Row Values for Keyboard Scan
-;| Bit  4   |   Joystick B Fire Button: 0 = Pressed
-;| Bit  3   |   Joystick B Right: 0 = Pressed, or Paddle Button
-;| Bit  2   |   Joystick B Left : 0 = Pressed, or Paddle Button
-;| Bit  1   |   Joystick B Down : 0 = Pressed
-;| Bit  0   |   Joystick B Up   : 0 = Pressed
-.DATA_PORT_B         = $dc01
-
-;| Bit 7 |   On Read:  1 = Interrupt occured
-;|       |   On Write: 1 = Set Int.-Flags, 0 = Clear Int-.Flags
-;| Bit 4 |   FLAG1 IRQ (Cassette Read / Serial Bus SRQ Input)
-;| Bit 3 |   Serial Port Interrupt ($DC0C full/empty)
-;| Bit 2 |   Time-of-Day Clock Alarm Interrupt
-;| Bit 1 |   Timer B Interrupt (Tape, Serial Port)
-;| Bit 0 |   Timer A Interrupt (Kernal-IRQ, Tape)
-.IRQ_CONTROL         = $dc0d
-
-
-!zone CIA2
-;| Bit  7   |  Serial Bus Data Input
-;| Bit  6   |  Serial Bus Clock Pulse Input
-;| Bit  5   |  Serial Bus Data Output
-;| Bit  4   |  Serial Bus Clock Pulse Output
-;| Bit  3   |  Serial Bus ATN Signal Output
-;| Bit  2   |  RS232 Data Output (User Port)
-;| Bit  1-0 |  VIC Chip System Memory Bank Select (low active!)
-;|          |  %00, 0: Bank 3: $C000-$FFFF, 49152-65535
-;|          |  %01, 1: Bank 2: $8000-$BFFF, 32768-49151
-;|          |  %10, 2: Bank 1: $4000-$7FFF, 16384-32767
-;|          |  %11, 3: Bank 0: $0000-$3FFF, 0-16383 (Standard)
-.DATA_PORT_A         = $dd00
-
-;| Bit 7 |   On Read:  1 = Interrupt occured
-;|       |   On Write: 1 = Set Int.-Flags, 0 = Clear Int.-Flags
-;| Bit 4 |   FLAG1 NMI (User/RS232 Received Data Input)
-;| Bit 3 |   Serial Port Interrupt ($DD0C full/empty)
-;| Bit 2 |   Time-of-Day Clock Alarm Interrupt
-;| Bit 1 |   Timer B Interrupt (RS232)
-;| Bit 0 |   Timer A Interrupt (RS232)
-.NMI_CONTROL            = $dd0d
-
-
-IRQ_RETURN_KERNAL       = $ea81
-IRQ_RETURN_KERNAL_KEYBOARD  = $ea31 
- 
-JOYSTICK_PORT_II        = $dc00
-JOYSTICK_PORT_I         = $dc01
-
-
-PROCESSOR_PORT          = $01
-
-KERNAL_IRQ_LO           = $fffe
-KERNAL_IRQ_HI           = $ffff
 
 
 

@@ -50,10 +50,16 @@
       this.groupBox4 = new System.Windows.Forms.GroupBox();
       this.editPaletteName = new System.Windows.Forms.TextBox();
       this.label4 = new System.Windows.Forms.Label();
+      this.paletteList = new C64Studio.ArrangedItemList();
       this.tabPalette = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.tabImportExport = new System.Windows.Forms.TabPage();
+      this.groupBox6 = new System.Windows.Forms.GroupBox();
+      this.checkImportColorsSorted = new System.Windows.Forms.CheckBox();
+      this.checkImportSwizzle = new System.Windows.Forms.CheckBox();
+      this.btnImportFromFile = new System.Windows.Forms.Button();
       this.groupBox5 = new System.Windows.Forms.GroupBox();
+      this.checkExportSwizzled = new System.Windows.Forms.CheckBox();
       this.checkExportHex = new System.Windows.Forms.CheckBox();
       this.editPrefix = new System.Windows.Forms.TextBox();
       this.label5 = new System.Windows.Forms.Label();
@@ -63,12 +69,8 @@
       this.editDataExport = new System.Windows.Forms.TextBox();
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
-      this.checkExportSwizzled = new System.Windows.Forms.CheckBox();
-      this.groupBox6 = new System.Windows.Forms.GroupBox();
-      this.btnImportFromFile = new System.Windows.Forms.Button();
-      this.checkImportSwizzle = new System.Windows.Forms.CheckBox();
-      this.paletteList = new C64Studio.ArrangedItemList();
-      this.checkImportColorsSorted = new System.Windows.Forms.CheckBox();
+      this.editDataImport = new System.Windows.Forms.TextBox();
+      this.btnImportFromAssembly = new System.Windows.Forms.Button();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox3.SuspendLayout();
@@ -76,8 +78,8 @@
       this.tabPalette.SuspendLayout();
       this.tabEditor.SuspendLayout();
       this.tabImportExport.SuspendLayout();
-      this.groupBox5.SuspendLayout();
       this.groupBox6.SuspendLayout();
+      this.groupBox5.SuspendLayout();
       this.SuspendLayout();
       // 
       // btnCancel
@@ -296,6 +298,30 @@
       this.label4.TabIndex = 8;
       this.label4.Text = "Name:";
       // 
+      // paletteList
+      // 
+      this.paletteList.AddButtonEnabled = true;
+      this.paletteList.AllowClone = true;
+      this.paletteList.DeleteButtonEnabled = false;
+      this.paletteList.HasOwnerDrawColumn = true;
+      this.paletteList.HighlightColor = System.Drawing.SystemColors.HotTrack;
+      this.paletteList.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
+      this.paletteList.Location = new System.Drawing.Point(6, 22);
+      this.paletteList.MoveDownButtonEnabled = false;
+      this.paletteList.MoveUpButtonEnabled = false;
+      this.paletteList.MustHaveOneElement = true;
+      this.paletteList.Name = "paletteList";
+      this.paletteList.SelectedIndex = -1;
+      this.paletteList.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      this.paletteList.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
+      this.paletteList.Size = new System.Drawing.Size(210, 189);
+      this.paletteList.TabIndex = 7;
+      this.paletteList.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.paletteList_AddingItem);
+      this.paletteList.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.paletteList_CloningItem);
+      this.paletteList.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_ItemRemoved);
+      this.paletteList.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.paletteList_ItemMoved);
+      this.paletteList.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_SelectedIndexChanged);
+      // 
       // tabPalette
       // 
       this.tabPalette.Controls.Add(this.tabEditor);
@@ -332,6 +358,54 @@
       this.tabImportExport.Text = "Import/Export";
       this.tabImportExport.UseVisualStyleBackColor = true;
       // 
+      // groupBox6
+      // 
+      this.groupBox6.Controls.Add(this.checkImportColorsSorted);
+      this.groupBox6.Controls.Add(this.checkImportSwizzle);
+      this.groupBox6.Controls.Add(this.btnImportFromAssembly);
+      this.groupBox6.Controls.Add(this.btnImportFromFile);
+      this.groupBox6.Controls.Add(this.editDataImport);
+      this.groupBox6.Location = new System.Drawing.Point(318, 6);
+      this.groupBox6.Name = "groupBox6";
+      this.groupBox6.Size = new System.Drawing.Size(388, 298);
+      this.groupBox6.TabIndex = 1;
+      this.groupBox6.TabStop = false;
+      this.groupBox6.Text = "Import";
+      // 
+      // checkImportColorsSorted
+      // 
+      this.checkImportColorsSorted.AutoSize = true;
+      this.checkImportColorsSorted.Checked = true;
+      this.checkImportColorsSorted.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkImportColorsSorted.Location = new System.Drawing.Point(213, 19);
+      this.checkImportColorsSorted.Name = "checkImportColorsSorted";
+      this.checkImportColorsSorted.Size = new System.Drawing.Size(57, 17);
+      this.checkImportColorsSorted.TabIndex = 27;
+      this.checkImportColorsSorted.Text = "Sorted";
+      this.checkImportColorsSorted.UseVisualStyleBackColor = true;
+      // 
+      // checkImportSwizzle
+      // 
+      this.checkImportSwizzle.AutoSize = true;
+      this.checkImportSwizzle.Checked = true;
+      this.checkImportSwizzle.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkImportSwizzle.Location = new System.Drawing.Point(129, 19);
+      this.checkImportSwizzle.Name = "checkImportSwizzle";
+      this.checkImportSwizzle.Size = new System.Drawing.Size(78, 17);
+      this.checkImportSwizzle.TabIndex = 27;
+      this.checkImportSwizzle.Text = "De-Swizzle";
+      this.checkImportSwizzle.UseVisualStyleBackColor = true;
+      // 
+      // btnImportFromFile
+      // 
+      this.btnImportFromFile.Location = new System.Drawing.Point(6, 15);
+      this.btnImportFromFile.Name = "btnImportFromFile";
+      this.btnImportFromFile.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromFile.TabIndex = 1;
+      this.btnImportFromFile.Text = "From File...";
+      this.btnImportFromFile.UseVisualStyleBackColor = true;
+      this.btnImportFromFile.Click += new System.EventHandler(this.btnImportFromFile_Click);
+      // 
       // groupBox5
       // 
       this.groupBox5.Controls.Add(this.checkExportSwizzled);
@@ -350,6 +424,18 @@
       this.groupBox5.TabIndex = 0;
       this.groupBox5.TabStop = false;
       this.groupBox5.Text = "Export";
+      // 
+      // checkExportSwizzled
+      // 
+      this.checkExportSwizzled.AutoSize = true;
+      this.checkExportSwizzled.Checked = true;
+      this.checkExportSwizzled.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkExportSwizzled.Location = new System.Drawing.Point(216, 42);
+      this.checkExportSwizzled.Name = "checkExportSwizzled";
+      this.checkExportSwizzled.Size = new System.Drawing.Size(61, 17);
+      this.checkExportSwizzled.TabIndex = 27;
+      this.checkExportSwizzled.Text = "Swizzle";
+      this.checkExportSwizzled.UseVisualStyleBackColor = true;
       // 
       // checkExportHex
       // 
@@ -448,87 +534,30 @@
       this.btnExportToData.UseVisualStyleBackColor = true;
       this.btnExportToData.Click += new System.EventHandler(this.btnExportToData_Click);
       // 
-      // checkExportSwizzled
+      // editDataImport
       // 
-      this.checkExportSwizzled.AutoSize = true;
-      this.checkExportSwizzled.Checked = true;
-      this.checkExportSwizzled.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkExportSwizzled.Location = new System.Drawing.Point(216, 42);
-      this.checkExportSwizzled.Name = "checkExportSwizzled";
-      this.checkExportSwizzled.Size = new System.Drawing.Size(61, 17);
-      this.checkExportSwizzled.TabIndex = 27;
-      this.checkExportSwizzled.Text = "Swizzle";
-      this.checkExportSwizzled.UseVisualStyleBackColor = true;
+      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.editDataImport.Location = new System.Drawing.Point(6, 94);
+      this.editDataImport.Multiline = true;
+      this.editDataImport.Name = "editDataImport";
+      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+      this.editDataImport.Size = new System.Drawing.Size(376, 198);
+      this.editDataImport.TabIndex = 29;
+      this.editDataImport.WordWrap = false;
+      this.editDataImport.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editDataExport_KeyPress);
+      this.editDataImport.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.editDataExport_PreviewKeyDown);
       // 
-      // groupBox6
+      // btnImportFromAssembly
       // 
-      this.groupBox6.Controls.Add(this.checkImportColorsSorted);
-      this.groupBox6.Controls.Add(this.checkImportSwizzle);
-      this.groupBox6.Controls.Add(this.btnImportFromFile);
-      this.groupBox6.Location = new System.Drawing.Point(318, 6);
-      this.groupBox6.Name = "groupBox6";
-      this.groupBox6.Size = new System.Drawing.Size(388, 298);
-      this.groupBox6.TabIndex = 1;
-      this.groupBox6.TabStop = false;
-      this.groupBox6.Text = "Import";
-      // 
-      // btnImportFromFile
-      // 
-      this.btnImportFromFile.Location = new System.Drawing.Point(6, 15);
-      this.btnImportFromFile.Name = "btnImportFromFile";
-      this.btnImportFromFile.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromFile.TabIndex = 1;
-      this.btnImportFromFile.Text = "From File...";
-      this.btnImportFromFile.UseVisualStyleBackColor = true;
-      this.btnImportFromFile.Click += new System.EventHandler(this.btnImportFromFile_Click);
-      // 
-      // checkImportSwizzle
-      // 
-      this.checkImportSwizzle.AutoSize = true;
-      this.checkImportSwizzle.Checked = true;
-      this.checkImportSwizzle.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkImportSwizzle.Location = new System.Drawing.Point(129, 19);
-      this.checkImportSwizzle.Name = "checkImportSwizzle";
-      this.checkImportSwizzle.Size = new System.Drawing.Size(78, 17);
-      this.checkImportSwizzle.TabIndex = 27;
-      this.checkImportSwizzle.Text = "De-Swizzle";
-      this.checkImportSwizzle.UseVisualStyleBackColor = true;
-      // 
-      // paletteList
-      // 
-      this.paletteList.AddButtonEnabled = true;
-      this.paletteList.AllowClone = true;
-      this.paletteList.DeleteButtonEnabled = false;
-      this.paletteList.HasOwnerDrawColumn = true;
-      this.paletteList.HighlightColor = System.Drawing.SystemColors.HotTrack;
-      this.paletteList.HighlightTextColor = System.Drawing.SystemColors.HighlightText;
-      this.paletteList.Location = new System.Drawing.Point(6, 22);
-      this.paletteList.MoveDownButtonEnabled = false;
-      this.paletteList.MoveUpButtonEnabled = false;
-      this.paletteList.MustHaveOneElement = true;
-      this.paletteList.Name = "paletteList";
-      this.paletteList.SelectedIndex = -1;
-      this.paletteList.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-      this.paletteList.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
-      this.paletteList.Size = new System.Drawing.Size(210, 189);
-      this.paletteList.TabIndex = 7;
-      this.paletteList.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.paletteList_AddingItem);
-      this.paletteList.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.paletteList_CloningItem);
-      this.paletteList.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_ItemRemoved);
-      this.paletteList.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.paletteList_ItemMoved);
-      this.paletteList.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_SelectedIndexChanged);
-      // 
-      // checkImportColorsSorted
-      // 
-      this.checkImportColorsSorted.AutoSize = true;
-      this.checkImportColorsSorted.Checked = true;
-      this.checkImportColorsSorted.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkImportColorsSorted.Location = new System.Drawing.Point(213, 19);
-      this.checkImportColorsSorted.Name = "checkImportColorsSorted";
-      this.checkImportColorsSorted.Size = new System.Drawing.Size(57, 17);
-      this.checkImportColorsSorted.TabIndex = 27;
-      this.checkImportColorsSorted.Text = "Sorted";
-      this.checkImportColorsSorted.UseVisualStyleBackColor = true;
+      this.btnImportFromAssembly.Location = new System.Drawing.Point(6, 44);
+      this.btnImportFromAssembly.Name = "btnImportFromAssembly";
+      this.btnImportFromAssembly.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromAssembly.TabIndex = 1;
+      this.btnImportFromAssembly.Text = "From assembly";
+      this.btnImportFromAssembly.UseVisualStyleBackColor = true;
+      this.btnImportFromAssembly.Click += new System.EventHandler(this.btnImportFromAssembly_Click);
       // 
       // DlgPaletteEditor
       // 
@@ -557,10 +586,10 @@
       this.tabPalette.ResumeLayout(false);
       this.tabEditor.ResumeLayout(false);
       this.tabImportExport.ResumeLayout(false);
-      this.groupBox5.ResumeLayout(false);
-      this.groupBox5.PerformLayout();
       this.groupBox6.ResumeLayout(false);
       this.groupBox6.PerformLayout();
+      this.groupBox5.ResumeLayout(false);
+      this.groupBox5.PerformLayout();
       this.ResumeLayout(false);
 
     }
@@ -608,5 +637,7 @@
     private System.Windows.Forms.Button btnImportFromFile;
     private System.Windows.Forms.CheckBox checkImportSwizzle;
     private System.Windows.Forms.CheckBox checkImportColorsSorted;
+    private System.Windows.Forms.Button btnImportFromAssembly;
+    private System.Windows.Forms.TextBox editDataImport;
   }
 }

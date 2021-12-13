@@ -351,13 +351,11 @@ namespace C64Studio
         if ( ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
         &&   ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS ) )
         {
-          if ( colorIndex == (int)ColorType.MULTICOLOR_2 )
+          if ( affectedSprite.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR )
           {
-            colorIndex = (int)ColorType.CUSTOM_COLOR;
-          }
-          else if ( colorIndex == (int)ColorType.CUSTOM_COLOR )
-          {
-            colorIndex = (int)ColorType.MULTICOLOR_2;
+            ColorType   replaceColor = (ColorType)colorIndex;
+            SwitchMultiColors( ref replaceColor );
+            colorIndex = (int)replaceColor;
           }
         }
         else
@@ -406,13 +404,11 @@ namespace C64Studio
         if ( ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
         &&   ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS ) )
         {
-          if ( pickedColor == (int)ColorType.MULTICOLOR_2 )
+          if ( affectedSprite.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR )
           {
-            pickedColor = (int)ColorType.CUSTOM_COLOR;
-          }
-          else if ( pickedColor == (int)ColorType.CUSTOM_COLOR )
-          {
-            pickedColor = (int)ColorType.MULTICOLOR_2;
+            ColorType   replaceColor = (ColorType)pickedColor;
+            SwitchMultiColors( ref replaceColor );
+            pickedColor = (int)replaceColor;
           }
         }
 
@@ -1512,10 +1508,13 @@ namespace C64Studio
             }
           }
         }
+        m_SpriteProject.Sprites[SpriteIndex].Mode       = insertMode;
+        m_SpriteProject.Sprites[SpriteIndex].Tile.Mode  = Lookup.GraphicTileModeFromSpriteMode( insertMode );
         for ( int i = 0; i < Buffer.Length; ++i )
         {
           m_SpriteProject.Sprites[SpriteIndex].Tile.Data.SetU8At( i, Buffer.ByteAt( i ) );
         }
+        ChangeColorSettingsDialog();
       }
       else
       {
@@ -3497,10 +3496,34 @@ namespace C64Studio
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
         firstEntry = false;
 
+        if ( sprite.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR )
+        {
+          SwitchMultiColors( ref Color1 );
+          SwitchMultiColors( ref Color2 );
+        }
         ReplaceSpriteColors( sprite, Color1, Color2 );
 
         RebuildSpriteImage( spriteIndex );
         panelSprites.InvalidateItemRect( spriteIndex );
+
+        if ( spriteIndex == m_CurrentSprite )
+        {
+          pictureEditor.Invalidate();
+        }
+      }
+    }
+
+
+
+    private void SwitchMultiColors( ref ColorType Color )
+    {
+      if ( Color == ColorType.MULTICOLOR_2 )
+      {
+        Color = ColorType.CUSTOM_COLOR;
+      }
+      else if ( Color == ColorType.CUSTOM_COLOR )
+      {
+        Color = ColorType.MULTICOLOR_2;
       }
     }
 

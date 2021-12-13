@@ -27,7 +27,9 @@ namespace RetroDevStudio
     [Description( "Mega 65 80x25 FCM 16bit Chars" )]
     MEGA65_80_X_25_FCM_16BIT,
     [Description( "Commodore VIC20 22x23" )]
-    COMMODORE_VIC20_22_X_23
+    COMMODORE_VIC20_22_X_23,
+    [Description( "Mega 65 40x25 ECM" )]
+    MEGA65_40_X_25_ECM
   }
 
 }

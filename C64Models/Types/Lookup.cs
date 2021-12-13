@@ -120,6 +120,7 @@ namespace RetroDevStudio
       {
         case TextMode.COMMODORE_40_X_25_ECM:
         case TextMode.MEGA65_80_X_25_ECM:
+        case TextMode.MEGA65_40_X_25_ECM:
           return TextCharMode.COMMODORE_ECM;
         case TextMode.COMMODORE_40_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_HIRES:
@@ -405,6 +406,23 @@ namespace RetroDevStudio
       }
     }
 
+
+
+    internal static GraphicTileMode GraphicTileModeFromSpriteMode( SpriteMode Mode )
+    {
+      switch ( Mode )
+      {
+        case SpriteMode.COMMODORE_24_X_21_HIRES:
+          return GraphicTileMode.COMMODORE_HIRES;
+        case SpriteMode.COMMODORE_24_X_21_MULTICOLOR:
+          return GraphicTileMode.COMMODORE_MULTICOLOR;
+        case SpriteMode.MEGA65_16_X_21_16_COLORS:
+        case SpriteMode.MEGA65_8_X_21_16_COLORS:
+          return GraphicTileMode.MEGA65_FCM_16_COLORS;
+        default:
+          return GraphicTileMode.COMMODORE_HIRES;
+      }
+    }
 
 
   }

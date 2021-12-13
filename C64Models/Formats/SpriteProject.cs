@@ -375,6 +375,7 @@ namespace C64Studio.Formats
       for ( int i = 0; i < numSprites; ++i )
       {
         Sprites[i].Mode = (SpriteMode)memIn.ReadUInt8();
+        Sprites[i].Tile.Mode = Lookup.GraphicTileModeFromSpriteMode( Sprites[i].Mode );
       }
       Colors.BackgroundColor = memIn.ReadInt32();
       Colors.MultiColor1 = memIn.ReadInt32();

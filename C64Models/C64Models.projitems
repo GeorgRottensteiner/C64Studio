@@ -73,6 +73,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\Palette.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\FileChunkConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ColorSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\SymbolInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Types.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\DisassemblerSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\Util.cs" />

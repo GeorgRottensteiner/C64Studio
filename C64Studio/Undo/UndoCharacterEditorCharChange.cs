@@ -58,10 +58,10 @@ namespace C64Studio.Undo
       {
         var charData = Chars[i];
 
-        Project.Characters[CharIndex].Tile.Data = new GR.Memory.ByteBuffer( charData.Tile.Data );
-        Project.Characters[CharIndex].Tile.CustomColor = charData.Tile.CustomColor;
-        Project.Characters[CharIndex].Category = charData.Category;
-        Project.Characters[CharIndex].Index = charData.Index;
+        Project.Characters[CharIndex + i].Tile.Data = new GR.Memory.ByteBuffer( charData.Tile.Data );
+        Project.Characters[CharIndex + i].Tile.CustomColor = charData.Tile.CustomColor;
+        Project.Characters[CharIndex + i].Category = charData.Category;
+        Project.Characters[CharIndex + i].Index = charData.Index;
       }
       Editor.CharacterChanged( CharIndex, CharCount );
     }

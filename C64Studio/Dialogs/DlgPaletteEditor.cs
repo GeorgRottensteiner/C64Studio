@@ -437,6 +437,8 @@ namespace C64Studio
       StringBuilder   sb = new StringBuilder();
       sb.Append( ";num entries " );
       sb.Append( palData.Length / 3 );
+      sb.Append( Colors.Palettes[0].NumColors );
+      sb.Append( ", color count " );
       sb.AppendLine();
 
       editDataExport.Text = sb + ";palette data" + Environment.NewLine + paletteASM + Environment.NewLine;
@@ -530,7 +532,7 @@ namespace C64Studio
       {
         GR.Memory.ByteBuffer data = GR.IO.File.ReadAllBytes( filename );
 
-        ImportFromData( data );
+        ImportFromData( data, checkImportSwizzle.Checked, checkImportColorsSorted.Checked );
       }
     }
 
@@ -562,7 +564,7 @@ namespace C64Studio
 
 
 
-    private void ImportFromData( ByteBuffer Data )
+    private void ImportFromData( ByteBuffer Data, bool Swizzle, bool SortedByRGB )
     {
       int numColorsInOnePalette = Colors.Palette.NumColors;
       int numColorsInImport = (int)( Data.Length / 3 );
@@ -572,10 +574,10 @@ namespace C64Studio
         {
           uint    color = 0xff000000;
 
-          if ( !checkImportColorsSorted.Checked )
+          if ( !SortedByRGB )
           {
             // RGBRGBRGB...
-            if ( checkImportSwizzle.Checked )
+            if ( Swizzle )
             {
               color |= (uint)( SwizzleByte( Data.ByteAt( i * 3 ) ) << 16 );
               color |= (uint)( SwizzleByte( Data.ByteAt( i * 3 + 1 ) ) << 8 );
@@ -591,7 +593,7 @@ namespace C64Studio
           else
           {
             // RRRRRRRRRRRGGGGGGGGGGBBBBBBBBBBB
-            if ( checkImportSwizzle.Checked )
+            if ( Swizzle )
             {
               color |= (uint)( SwizzleByte( Data.ByteAt( i ) ) << 16 );
               color |= (uint)( SwizzleByte( Data.ByteAt( (int)( i + numColorsInImport * 1 ) ) ) << 8 );
@@ -613,6 +615,25 @@ namespace C64Studio
       }
 
       listPalette.Invalidate();
+    }
+
+
+
+    private void btnImportFromAssembly_Click( object sender, EventArgs e )
+    {
+      Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
+
+      Parser.CompileConfig config = new Parser.CompileConfig();
+      config.TargetType = Types.CompileTargetType.PLAIN;
+      config.OutputFile = "temp.bin";
+      config.Assembler = Types.AssemblerType.C64_STUDIO;
+
+      string    temp = "* = $0801\n" + editDataImport.Text;
+      if ( ( asmParser.Parse( temp, null, config, null ) )
+      &&   ( asmParser.Assemble( config ) ) )
+      {
+        ImportFromData( asmParser.AssembledOutput.Assembly, checkImportSwizzle.Checked, checkImportColorsSorted.Checked );
+      }
     }
 
 

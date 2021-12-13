@@ -1,4 +1,5 @@
 ﻿using C64Studio.Types;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

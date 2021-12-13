@@ -2794,6 +2794,22 @@ namespace C64Studio
 
     private void pictureEditor_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
     {
+      if ( e.KeyCode == Keys.Escape )
+      {
+        if ( m_FloatingSelection != null )
+        {
+          RemoveFloatingSelection();
+
+          if ( m_LastDragEndPos.X != -1 )
+          {
+            m_LastDragEndPos.X = -1;
+            m_IsDragging = false;
+            Redraw();
+            return;
+          }
+        }
+      }
+
       if ( m_ToolMode == ToolMode.TEXT )
       {
         System.Windows.Forms.Keys bareKey = e.KeyData & ~( Keys.Control | Keys.Shift | Keys.ShiftKey | Keys.Alt );
@@ -2980,17 +2996,6 @@ namespace C64Studio
         &&   ( e.KeyCode == Keys.C ) )
         {
           CopyToClipboard();
-        }
-        if ( e.KeyCode == Keys.Escape )
-        {
-          RemoveFloatingSelection();
-          
-          if ( m_LastDragEndPos.X != -1 )
-          {
-            m_LastDragEndPos.X = -1;
-            m_IsDragging = false;
-            Redraw();
-          }
         }
       }
 

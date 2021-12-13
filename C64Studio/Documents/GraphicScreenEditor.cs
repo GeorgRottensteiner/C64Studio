@@ -456,6 +456,7 @@ namespace C64Studio
                 m_GraphicScreenProject.Image.Box( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
                 break;
               case PaintTool.DRAW_RECTANGLE:
+                DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, x1, y1, x2 - x1 + 1, y2 - y1 + 1 ) );
                 m_GraphicScreenProject.Image.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1, m_CurrentColor );
                 if ( m_GraphicScreenProject.MultiColor )
                 {
@@ -467,7 +468,7 @@ namespace C64Studio
                 // only make selection if we didn't place a floating selection before
                 if ( m_DragStartPoint.X != -1 )
                 {
-                  m_Selection = new System.Drawing.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1 );
+                  m_Selection = new System.Drawing.Rectangle( x1, y1, x2 - x1, y2 - y1 );
                 }
                 break;
             }
@@ -1172,49 +1173,6 @@ namespace C64Studio
 
       switch ( m_PaintTool )
       {
-        case PaintTool.VALIDATE:
-          for ( int j = 0; j < BlockHeight; ++j )
-          {
-            for ( int i = 0; i < BlockWidth; ++i )
-            {
-              if ( m_ErrornousChars[i, j] )
-              {
-                for ( int x = 0; x < 8; ++x )
-                {
-                  pictureEditor.DisplayPage.SetPixel( i * 8 + x - m_GraphicScreenProject.ScreenOffsetX * 8, j * 8 - m_GraphicScreenProject.ScreenOffsetY * 8, (uint)( 1 + ( x & 1 ) * 15 ) );
-                  pictureEditor.DisplayPage.SetPixel( i * 8 - m_GraphicScreenProject.ScreenOffsetX * 8, j * 8 + x - m_GraphicScreenProject.ScreenOffsetY * 8, (uint)( 1 + ( x & 1 ) * 15 ) );
-                }
-              }
-            }
-          }
-          if ( m_SelectedChar.X != -1 )
-          {
-            for ( int x = 0; x < 8; ++x )
-            {
-              pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8 + x - m_GraphicScreenProject.ScreenOffsetX * 8, m_SelectedChar.Y * 8 - m_GraphicScreenProject.ScreenOffsetY * 8, 16 );
-              pictureEditor.DisplayPage.SetPixel( m_SelectedChar.X * 8 - m_GraphicScreenProject.ScreenOffsetX * 8, m_SelectedChar.Y * 8 + x - m_GraphicScreenProject.ScreenOffsetY * 8, 16 );
-            }
-          }
-          break;
-        case PaintTool.SELECT:
-          if ( m_DragStartPoint.X != -1 )
-          {
-            int     x1 = Math.Min( m_DragStartPoint.X, m_DragCurrentPoint.X );
-            int     x2 = Math.Max( m_DragStartPoint.X, m_DragCurrentPoint.X );
-            int     y1 = Math.Min( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
-            int     y2 = Math.Max( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
-
-            pictureEditor.DisplayPage.Rectangle( x1, y1, x2 - x1 + 1, y2 - y1 + 1, 16 );
-          }
-          if ( m_Selection.Width > 0 )
-          {
-            pictureEditor.DisplayPage.Rectangle( m_Selection.X, m_Selection.Y, m_Selection.Width, m_Selection.Height, 16 );
-          }
-          if ( m_SelectionFloating )
-          {
-            pictureEditor.DisplayPage.DrawImage( m_SelectionFloatingImage, m_SelectionFloatingPos.X, m_SelectionFloatingPos.Y );
-          }
-          break;
         case PaintTool.DRAW_BOX:
         case PaintTool.DRAW_RECTANGLE:
           if ( m_DragStartPoint.X != -1 )
@@ -1236,6 +1194,12 @@ namespace C64Studio
               pictureEditor.DisplayPage.Line( x1 + 1, y1, x1 + 1, y2, m_CurrentColor );
               pictureEditor.DisplayPage.Line( x2 - 1, y1, x2 - 1, y2, m_CurrentColor );
             }
+          }
+          break;
+        case PaintTool.SELECT:
+          if ( m_SelectionFloating )
+          {
+            pictureEditor.DisplayPage.DrawImage( m_SelectionFloatingImage, m_SelectionFloatingPos.X, m_SelectionFloatingPos.Y );
           }
           break;
       }
@@ -1700,6 +1664,74 @@ namespace C64Studio
 
 
 
+    private bool CheckForFCMCharsetErrors( int AllowedNumberOfChars )
+    {
+      btnExportAs.Enabled = false;
+
+      bool      foundError = false;
+      for ( int j = 0; j < BlockHeight; ++j )
+      {
+        for ( int i = 0; i < BlockWidth; ++i )
+        {
+          // nothing can go wrong, 256 colors for free use
+          m_ErrornousChars[i, j] = false;
+        }
+      }
+      if ( foundError )
+      {
+        return true;
+      }
+
+      // check for duplicates
+      int items = m_Chars.Count;
+      int foldedItems = 0;
+      int curIndex = 0;
+
+      for ( int index1 = 0; index1 < m_Chars.Count; ++index1 )
+      {
+        bool wasFolded = false;
+        for ( int index2 = 0; index2 < index1; ++index2 )
+        {
+          if ( m_Chars[index1].Tile.Data.Compare( m_Chars[index2].Tile.Data ) == 0 )
+          {
+            // same data
+            if ( m_Chars[index2].Replacement != null )
+            {
+              m_Chars[index1].Replacement = m_Chars[index2].Replacement;
+            }
+            else
+            {
+              m_Chars[index1].Replacement = m_Chars[index2];
+            }
+            ++foldedItems;
+            wasFolded = true;
+            break;
+          }
+        }
+        if ( !wasFolded )
+        {
+          // item was not folded
+          m_Chars[index1].Index = curIndex;
+          ++curIndex;
+        }
+      }
+      labelCharInfo.Text = "";
+      labelCharInfoExport.Text = "";
+      if ( items - foldedItems > AllowedNumberOfChars )
+      {
+        labelCharInfo.Text = "Too many unique characters (" + ( items - foldedItems ) + ")";
+        labelCharInfoExport.Text = labelCharInfo.Text;
+        return true;
+      }
+      labelCharInfo.Text = ( items - foldedItems ).ToString() + " unique chars, duplicates removed " + foldedItems;
+      labelCharInfoExport.Text = labelCharInfo.Text;
+
+      btnExportAs.Enabled = true;
+      return false;
+    }
+
+
+
     private void CheckForHiResBitmapErrors()
     {
       for ( int y = 0; y < BlockHeight; ++y )
@@ -1947,6 +1979,15 @@ namespace C64Studio
           break;
         case C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET:
           CheckForMCCharsetErrors();
+          break;
+        case C64Studio.Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
+          CheckForFCMCharsetErrors( 256 );
+          break;
+        case C64Studio.Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
+          CheckForFCMCharsetErrors( 8192 );
+          break;
+        default:
+          Debug.Log( "Unsupported CheckType: " + (Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex );
           break;
       }
       Redraw();
@@ -2683,14 +2724,14 @@ namespace C64Studio
 
         for ( int i = 0; i < m_Chars.Count; ++i )
         {
-          project.Chars[i] = (ushort)( ( m_Chars[i].Index & 0xff ) | ( m_Chars[i].Tile.CustomColor << 8 ) );
+          project.Chars[i] = (uint)( ( m_Chars[i].Index & 0xffff ) | ( m_Chars[i].Tile.CustomColor << 16 ) );
           if ( m_Chars[i].Replacement == null )
           {
             charset.Characters[m_Chars[i].Index].Tile.Data = m_Chars[i].Tile.Data;
           }
           else
           {
-            project.Chars[i] = (ushort)( ( m_Chars[i].Replacement.Index & 0xff ) | ( m_Chars[i].Tile.CustomColor << 8 ) );
+            project.Chars[i] = (uint)( ( m_Chars[i].Replacement.Index & 0xffff ) | ( m_Chars[i].Tile.CustomColor << 16 ) );
           }
         }
 
@@ -3460,6 +3501,85 @@ namespace C64Studio
           UsedCharsToClipboard();
           break;
       }
+    }
+
+
+
+    private void pictureEditor_PostPaint( GR.Image.FastImage TargetBuffer )
+    {
+      uint  selColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
+
+      switch ( m_PaintTool )
+      {
+        case PaintTool.VALIDATE:
+          for ( int j = 0; j < BlockHeight; ++j )
+          {
+            for ( int i = 0; i < BlockWidth; ++i )
+            {
+              if ( m_ErrornousChars[i, j] )
+              {
+                int  sx1 = ( ( i - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / 40;
+                int  sx2 = ( ( i + 1 - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / 40;
+                int  sy1 = ( ( j - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / 25;
+                int  sy2 = ( ( j + 1 - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / 25;
+
+                for ( int x = sx1; x <= sx2; ++x )
+                {
+                  TargetBuffer.SetPixel( x, sy1, (uint)( ( x & 1 ) * selColor ) );
+                }
+                for ( int y = sy1; y <= sy2; ++y )
+                {
+                  TargetBuffer.SetPixel( sx1, y, (uint)( ( y & 1 ) * selColor ) );
+                }
+              }
+            }
+          }
+          if ( m_SelectedChar.X != -1 )
+          {
+            int  sx1 = ( ( m_SelectedChar.X - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / 40;
+            int  sx2 = ( ( m_SelectedChar.X + 1 - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / 40;
+            int  sy1 = ( ( m_SelectedChar.Y - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / 25;
+            int  sy2 = ( ( m_SelectedChar.Y + 1 - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / 25;
+
+            TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1, sy2 - sy1, selColor );
+          }
+          break;
+        case PaintTool.SELECT:
+          if ( m_DragStartPoint.X != -1 )
+          {
+            int     x1 = Math.Min( m_DragStartPoint.X, m_DragCurrentPoint.X );
+            int     x2 = Math.Max( m_DragStartPoint.X, m_DragCurrentPoint.X );
+            int     y1 = Math.Min( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
+            int     y2 = Math.Max( m_DragStartPoint.Y, m_DragCurrentPoint.Y );
+
+            int  sx1 = ( ( x1 - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_GraphicScreenProject.ScreenWidth;
+            int  sx2 = ( ( x2 - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_GraphicScreenProject.ScreenWidth;
+            int  sy1 = ( ( y1 - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_GraphicScreenProject.ScreenHeight;
+            int  sy2 = ( ( y2 - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_GraphicScreenProject.ScreenHeight;
+
+            TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1, sy2 - sy1, selColor );
+          }
+          if ( m_Selection.Width > 0 )
+          {
+            int  sx1 = ( ( m_Selection.X - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_GraphicScreenProject.ScreenWidth;
+            int  sx2 = ( ( m_Selection.X + m_Selection.Width - m_GraphicScreenProject.ScreenOffsetX ) * pictureEditor.ClientRectangle.Width ) / m_GraphicScreenProject.ScreenWidth;
+            int  sy1 = ( ( m_Selection.Y - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_GraphicScreenProject.ScreenHeight;
+            int  sy2 = ( ( m_Selection.Y + m_Selection.Height - m_GraphicScreenProject.ScreenOffsetY ) * pictureEditor.ClientRectangle.Height ) / m_GraphicScreenProject.ScreenHeight;
+
+            TargetBuffer.Rectangle( sx1, sy1, sx2 - sx1, sy2 - sy1, selColor );
+          }
+          break;
+      }
+    }
+
+
+
+    private void btnClearScreen_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenImageChange( m_GraphicScreenProject, this, 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
+      m_GraphicScreenProject.Image.Box( 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight, 0 );
+      Redraw();
+      SetModified();
     }
 
 
