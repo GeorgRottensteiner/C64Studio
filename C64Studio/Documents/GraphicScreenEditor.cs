@@ -609,7 +609,14 @@ namespace C64Studio
       mcSettings.Palette          = Core.MainForm.ActivePalette;
 
       bool pasteAsBlock = false;
-      if ( !Core.MainForm.ImportImage( Filename, IncomingImage, Types.GraphicType.BITMAP, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
+
+      var importType = Types.GraphicType.BITMAP;
+      if ( ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET )
+      ||   ( m_GraphicScreenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT ) )
+      {
+        importType = GraphicType.CHARACTERS_FCM;
+      }
+      if ( !Core.MainForm.ImportImage( Filename, IncomingImage, importType, mcSettings, out mappedImage, out mcSettings, out pasteAsBlock ) )
       {
         return false;
       }
@@ -1689,10 +1696,17 @@ namespace C64Studio
 
       for ( int index1 = 0; index1 < m_Chars.Count; ++index1 )
       {
+        var  tile1 = ( (GR.Image.MemoryImage)m_GraphicScreenProject.Image.GetImage( ( index1 % ( ( m_GraphicScreenProject.ScreenWidth + 7 ) / 8 ) ) * 8,
+          ( index1 / ( ( m_GraphicScreenProject.ScreenWidth + 7 ) / 8 ) ) * 8,
+          8, 8 ) ).GetAsData();
         bool wasFolded = false;
         for ( int index2 = 0; index2 < index1; ++index2 )
         {
-          if ( m_Chars[index1].Tile.Data.Compare( m_Chars[index2].Tile.Data ) == 0 )
+          var  tile2 = ( (GR.Image.MemoryImage)m_GraphicScreenProject.Image.GetImage( ( index2 % ( ( m_GraphicScreenProject.ScreenWidth + 7 ) / 8 ) ) * 8,
+                                    ( index2 / ( ( m_GraphicScreenProject.ScreenWidth + 7 ) / 8 ) ) * 8,
+                                    8, 8 ) ).GetAsData();
+
+          if ( tile1.Compare( tile2 ) == 0 )
           {
             // same data
             if ( m_Chars[index2].Replacement != null )

@@ -304,6 +304,7 @@ namespace C64Studio.Formats
                         }
 
                         sprite.Tile.Colors.ActivePalette = subChunkReader.ReadInt32();
+                        sprite.Tile.Image = new GR.Image.MemoryImage( sprite.Tile.Width, sprite.Tile.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
                         Sprites.Add( sprite );
                       }
