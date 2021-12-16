@@ -69,7 +69,7 @@ namespace Be.Windows.Forms
           {
             spriteData.SetU8At( i, Box.ByteProvider.ReadByte( firstTrueByte + ( j - firstSprite ) * 64 + i ) );
           }
-          using ( GR.Image.FastImage spriteImage = new GR.Image.FastImage( 24, 21, System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )
+          using ( GR.Image.FastImage spriteImage = new GR.Image.FastImage( 24, 21, System.Drawing.Imaging.PixelFormat.Format32bppRgb ) )
           {
             spriteImage.Box( 0, 0, 24, 21, 1 );
             PaletteManager.ApplyPalette( spriteImage );

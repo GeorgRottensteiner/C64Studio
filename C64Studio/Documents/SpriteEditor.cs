@@ -77,14 +77,9 @@ namespace C64Studio
       panelSprites.SetDisplaySize( 4 * m_SpriteWidth, 6 * m_SpriteHeight );
       panelSprites.ClientSize = new System.Drawing.Size( 4 * m_SpriteWidth * 2 + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth, 6 * m_SpriteHeight * 2 );
 
-      PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_SpriteProject.Colors.Palette );
-      PaletteManager.ApplyPalette( panelSprites.DisplayPage, m_SpriteProject.Colors.Palette );
-      PaletteManager.ApplyPalette( layerPreview.DisplayPage, m_SpriteProject.Colors.Palette );
-
       for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
       {
         panelSprites.Items.Add( i.ToString(), m_SpriteProject.Sprites[i].Tile.Image );
-        PaletteManager.ApplyPalette( m_SpriteProject.Sprites[i].Tile.Image, m_SpriteProject.Colors.Palette );
         comboSprite.Items.Add( i );
       }
       ChangeColorSettingsDialog();
@@ -459,7 +454,6 @@ namespace C64Studio
         }
         DoNotUpdateFromControls = false;
 
-        PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_SpriteProject.Colors.Palettes[m_SpriteProject.Sprites[m_CurrentSprite].Tile.Colors.ActivePalette] );
         pictureEditor.Image = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image;
       }
       btnDeleteSprite.Enabled = ( panelSprites.SelectedIndex != -1 );
@@ -727,6 +721,7 @@ namespace C64Studio
         listLayers.SelectedIndices.Add( 0 );
       }
       OnPaletteChanged();
+      _ColorSettingsDlg.ActivePalette = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Colors.ActivePalette;
 
       Modified = false;
 
@@ -1308,7 +1303,6 @@ namespace C64Studio
 
       GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, m_SpriteProject.Sprites[0].Tile.Image.PixelFormat );
 
-      PaletteManager.ApplyPalette( targetImg );
       for ( int i = 0; i < exportIndices.Count; ++i )
       {
         m_SpriteProject.Sprites[exportIndices[i]].Tile.Image.DrawTo( targetImg, ( i % 4 ) * m_SpriteWidth, ( i / 4 ) * m_SpriteHeight );
@@ -1538,6 +1532,7 @@ namespace C64Studio
       m_SpriteProject.Sprites[SpriteIndex].Tile.CustomColor = ChosenSpriteColor;
       m_SpriteProject.Sprites[SpriteIndex].Mode = insertMode;
       RebuildSpriteImage( SpriteIndex );
+
       return true;
     }
 
@@ -1998,9 +1993,6 @@ namespace C64Studio
 
       GR.Image.FastImage    fastImage = new GR.Image.FastImage( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       GR.Image.MemoryImage  memImage = new GR.Image.MemoryImage( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-
-      PaletteManager.ApplyPalette( fastImage );
-      PaletteManager.ApplyPalette( memImage );
 
       DrawSpriteImage( memImage, 0, 0, 
                        m_SpriteProject.Sprites[e.Index].Tile.Data,
@@ -2552,7 +2544,16 @@ namespace C64Studio
 
       for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
       {
+        int   activePal = m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette;
+        m_SpriteProject.Sprites[i].Tile.Colors.Palettes = m_SpriteProject.Colors.Palettes;
+        m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette = activePal;
+
         RebuildSpriteImage( i );
+
+        if ( i == m_CurrentSprite )
+        {
+          _ColorSettingsDlg.ActivePalette = activePal;
+        }
       }
       pictureEditor.Invalidate();
       panelSprites.Invalidate();
@@ -3134,7 +3135,6 @@ namespace C64Studio
         using ( var gif = new GIFEncoder( outStream, maxX - minX, maxY - minY ) )
         {
           var layerImage = new GR.Image.MemoryImage( maxX - minX, maxY - minY, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-          PaletteManager.ApplyPalette( layerImage );
 
           foreach ( var layer in m_SpriteProject.SpriteLayers )
           {
@@ -3285,13 +3285,8 @@ namespace C64Studio
 
     private void OnPaletteChanged()
     {
-      PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_SpriteProject.Colors.Palette );
-      //PaletteManager.ApplyPalette( panelSprites.DisplayPage, m_SpriteProject.Colors.Palette );
-      PaletteManager.ApplyPalette( layerPreview.DisplayPage, m_SpriteProject.Colors.Palette );
-
       for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
       {
-        PaletteManager.ApplyPalette( m_SpriteProject.Sprites[i].Tile.Image, m_SpriteProject.Colors.Palettes[m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette] );
         RebuildSpriteImage( i );
         panelSprites.Items[i].MemoryImage = m_SpriteProject.Sprites[i].Tile.Image;
       }
@@ -3447,35 +3442,41 @@ namespace C64Studio
 
 
 
-    private void _ColorSettingsDlg_PaletteModified( ColorSettings Colors, int CustomColor )
+    private void _ColorSettingsDlg_PaletteModified( ColorSettings Colors, int CustomColor, List<int> PaletteMapping )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ) );
 
       m_SpriteProject.Colors = new ColorSettings( Colors );
-      foreach ( int spriteIndex in panelSprites.SelectedIndices )
-      {
-        var sprite = m_SpriteProject.Sprites[spriteIndex];
 
+      // make sure all sprites still have valid palette indices!
+      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+      {
+        var sprite = m_SpriteProject.Sprites[i];
+
+        int     origPalIndex = sprite.Tile.Colors.ActivePalette;
         sprite.Tile.Colors = new ColorSettings( Colors );
+        sprite.Tile.Colors.ActivePalette = origPalIndex;
 
-        PaletteManager.ApplyPalette( sprite.Tile.Image, m_SpriteProject.Colors.Palettes[sprite.Tile.Colors.ActivePalette] );
-
-        RebuildSpriteImage( spriteIndex );
-        if ( m_CurrentSprite == spriteIndex )
+        int   newPalIndex = PaletteMapping[origPalIndex];
+        if ( newPalIndex == -1 )
         {
-          PaletteManager.ApplyPalette( pictureEditor.DisplayPage, m_SpriteProject.Colors.Palettes[sprite.Tile.Colors.ActivePalette] );
-          pictureEditor.Invalidate();
+          // a new palette, or a removed one, reset to slot 0
+          newPalIndex = 0;
         }
-        panelSprites.InvalidateItemRect( spriteIndex );
-      }
 
-      for ( int i = 0; i < m_SpriteProject.Sprites.Count; ++i )
-      {
-        if ( m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette >= m_SpriteProject.Colors.Palettes.Count )
+        if ( sprite.Tile.Colors.ActivePalette != newPalIndex )
         {
-          m_SpriteProject.Sprites[i].Tile.Colors.ActivePalette = m_SpriteProject.Colors.Palettes.Count - 1;
-          m_SpriteProject.Sprites[i].Tile.Colors.Palettes = m_SpriteProject.Colors.Palettes;
+          DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ) );
+          sprite.Tile.Colors.ActivePalette = newPalIndex;
+
           RebuildSpriteImage( i );
+
+          if ( m_CurrentSprite == i )
+          {
+            _ColorSettingsDlg.ActivePalette = sprite.Tile.Colors.ActivePalette;
+            pictureEditor.Invalidate();
+          }
+          panelSprites.InvalidateItemRect( i );
         }
       }
 

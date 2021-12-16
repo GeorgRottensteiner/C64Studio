@@ -555,11 +555,12 @@ namespace C64Studio.Controls
         return;
       }
 
+      bool  hadFirstUndoStep = false;
       if ( mcSettings.Palettes.Count > m_Project.Colors.Palettes.Count )
       {
         // a palette was imported!
         UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
-
+        hadFirstUndoStep = true;
         _ColorSettingsDlg.PalettesChanged();
         m_Project.Colors.Palettes.Add( mcSettings.Palettes[mcSettings.Palettes.Count - 1] );
         m_Project.Colors.ActivePalette = m_Project.Colors.Palettes.Count - 1;
@@ -612,6 +613,9 @@ namespace C64Studio.Controls
             copyHeight = 8;
           }
           GR.Image.FastImage singleChar = mappedImage.GetImage( i * 8, j * 8, copyWidth, copyHeight ) as GR.Image.FastImage;
+
+          UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, currentTargetChar, 1 ), !hadFirstUndoStep );
+          hadFirstUndoStep = true;
 
           ImportChar( singleChar, currentTargetChar, ForceMulticolor );
           panelCharacters.InvalidateItemRect( currentTargetChar );
@@ -1837,6 +1841,9 @@ namespace C64Studio.Controls
       _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_2, m_Project.Colors.MultiColor2 );
       _ColorSettingsDlg.ColorChanged( ColorType.BGCOLOR4, m_Project.Colors.BGColor4 );
       _ColorSettingsDlg.PaletteChanged( m_Project.Colors.Palette );
+      _ColorSettingsDlg.Colors.Palettes = m_Project.Colors.Palettes;
+      _ColorSettingsDlg.PalettesChanged();
+      _ColorSettingsDlg.ActivePalette = m_Project.Colors.ActivePalette;
 
       OnPaletteChanged();
 
@@ -1967,14 +1974,27 @@ namespace C64Studio.Controls
 
 
 
-    private void _ColorSettingsDlg_PaletteModified( ColorSettings Colors, int CustomColor )
+    private void _ColorSettingsDlg_PaletteModified( ColorSettings Colors, int CustomColor, List<int> PaletteMapping )
     {
       UndoManager.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ) );
 
       m_Project.Colors = new ColorSettings( Colors );
 
-      OnPaletteChanged();
+      // make sure all chars still have valid palette indices!
+      UndoManager.AddGroupedUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ) );
 
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        var character = m_Project.Characters[i];
+
+        character.Tile.Colors = new ColorSettings( Colors );
+        character.Tile.Colors.ActivePalette = m_Project.Colors.ActivePalette;
+        RebuildCharImage( i );
+        panelCharacters.InvalidateItemRect( i );
+      }
+      canvasEditor.Invalidate();
+
+      OnPaletteChanged();
       RaiseModifiedEvent();
     }
 
@@ -2682,9 +2702,11 @@ namespace C64Studio.Controls
       PaletteManager.ApplyPalette( m_ImagePlayground, m_Project.Colors.Palette );
       PaletteManager.ApplyPalette( panelCharColors.DisplayPage, m_Project.Colors.Palette );
       panelCharacters.Items.Clear();
+
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
       {
-        PaletteManager.ApplyPalette( m_Project.Characters[i].Tile.Image, m_Project.Colors.Palette );
+        m_Project.Characters[i].Tile.Colors.ActivePalette = m_Project.Colors.ActivePalette;
+
         RebuildCharImage( i );
         panelCharacters.Items.Add( i.ToString(), m_Project.Characters[i].Tile.Image );
       }

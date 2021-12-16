@@ -135,7 +135,7 @@ namespace C64Studio.Controls
       {
         Colors.Palettes = dlgPalette.Colors.Palettes;
 
-        RaisePaletteModifiedEvent();
+        RaisePaletteModifiedEvent( dlgPalette.PaletteMapping );
 
         comboActivePalette.BeginUpdate();
         comboActivePalette.Items.Clear();

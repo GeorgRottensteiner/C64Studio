@@ -20,12 +20,11 @@ namespace Be.Windows.Forms
 
     public void PaintHexData( HexBox Box, Graphics graphics, long _startByte, long intern_endByte, Rectangle _recHex )
     {
-      //if ( Box.BytesPerLine == 8 )
       {
         var oldClip = graphics.Clip;
         graphics.SetClip( _recHex );
 
-        GR.Image.FastImage  charImage = new GR.Image.FastImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+        GR.Image.FastImage  charImage = new GR.Image.FastImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
         PaletteManager.ApplyPalette( charImage );
 
         for ( int i = 0; i < intern_endByte - _startByte; ++i )

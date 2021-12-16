@@ -19,8 +19,7 @@ namespace C64Studio.Controls
     protected ColorType                 _CurrentColorType;
     protected int                       _CustomColor = 1;
 
-
-    public delegate void PaletteModifiedHandler( ColorSettings Colors, int CustomColor );
+    public delegate void PaletteModifiedHandler( ColorSettings Colors, int CustomColor, List<int> PaletteIndexMapping );
     public delegate void PaletteSelectedHandler( ColorSettings Colors );
     public delegate void ColorsModifiedHandler( ColorType Color, ColorSettings Colors, int CustomColor );
     public delegate void ColorSelectedHandler( ColorType Color );
@@ -101,11 +100,11 @@ namespace C64Studio.Controls
 
 
 
-    protected void RaisePaletteModifiedEvent()
+    protected void RaisePaletteModifiedEvent( List<int> PaletteMapping )
     {
       if ( PaletteModified != null )
       {
-        PaletteModified( Colors, CustomColor );
+        PaletteModified( Colors, CustomColor, PaletteMapping );
       }
     }
 

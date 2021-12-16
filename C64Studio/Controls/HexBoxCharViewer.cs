@@ -70,7 +70,7 @@ namespace Be.Windows.Forms
           {
             charData.SetU8At( i, Box.ByteProvider.ReadByte( _startByte + j * 8 + i ) );
           }
-          using ( GR.Image.FastImage charImage = new GR.Image.FastImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )
+          using ( GR.Image.FastImage charImage = new GR.Image.FastImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb ) )
           {
             PaletteManager.ApplyPalette( charImage );
 

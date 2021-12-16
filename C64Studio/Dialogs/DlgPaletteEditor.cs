@@ -16,6 +16,7 @@ namespace C64Studio
   {
     private StudioCore      Core;
 
+    private List<Palette>   OriginalOrder;
 
 
     public ColorSettings Colors
@@ -26,15 +27,32 @@ namespace C64Studio
 
 
 
+    public List<int> PaletteMapping
+    {
+      private set;
+      get;
+    }
+
+
+
     public DlgPaletteEditor( StudioCore Core, ColorSettings Colors )
     {
+      PaletteMapping = new List<int>();
+      OriginalOrder = new List<Palette>();
+
       this.Colors = new ColorSettings( Colors );
       this.Core = Core;
       InitializeComponent();
 
+      int palIndex = 0;
+
       foreach ( var pal in this.Colors.Palettes )
       {
         paletteList.Items.Add( new ArrangedItemEntry() { Text = pal.Name, Tag = pal } );
+
+        OriginalOrder.Add( pal );
+        PaletteMapping.Add( palIndex );
+        ++palIndex;
       }
       for ( int i = 0; i < Colors.Palette.NumColors; ++i )
       {
@@ -352,6 +370,8 @@ namespace C64Studio
 
       Colors.Palettes.Add( palette );
 
+      RebuildPaletteMapping();
+
       return item;
     }
 
@@ -403,6 +423,7 @@ namespace C64Studio
 
       Colors.Palettes.Add( palette );
 
+      RebuildPaletteMapping();
       return item;
     }
 
@@ -411,6 +432,8 @@ namespace C64Studio
     private void paletteList_ItemRemoved( object sender, ArrangedItemEntry Item )
     {
       Colors.Palettes.Remove( (Palette)Item.Tag );
+
+      RebuildPaletteMapping();
     }
 
 
@@ -424,6 +447,20 @@ namespace C64Studio
         newPalList.Add( (Palette)item.Tag );
       }
       Colors.Palettes = newPalList;
+
+      RebuildPaletteMapping();
+    }
+
+
+
+    private void RebuildPaletteMapping()
+    {
+      for ( int i = 0; i < OriginalOrder.Count; ++i )
+      {
+        var pal = OriginalOrder[i];
+
+        PaletteMapping[i] = Colors.Palettes.IndexOf( pal );
+      }
     }
 
 
