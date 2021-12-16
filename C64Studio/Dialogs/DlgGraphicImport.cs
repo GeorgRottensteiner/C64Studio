@@ -101,7 +101,7 @@ namespace C64Studio
         comboTargetPalette.Items.Add( MCSettings.Palettes[i].Name );
       }
       if ( ( ImportType == Types.GraphicType.SPRITES_16_COLORS )
-      ||   ( ImportType == Types.GraphicType.CHARACTERS_FCM ) )
+      ||   ( ImportType == Types.GraphicType.BITMAP ) )
       {
         comboTargetPalette.Items.Add( "Use incoming palette" );
       }
@@ -215,6 +215,23 @@ namespace C64Studio
         }
         m_ImportPalette.CreateBrushes();
         PaletteManager.ApplyPalette( m_OriginalImage, m_ImportPalette );
+      }
+      else
+      {
+        var quant = new C64Studio.Converter.ColorQuantizer( 256 );
+
+        quant.AddSourceToColorCube( newImage );
+        quant.Calculate();
+
+        var resultingImage = quant.Reduce( newImage );
+
+        GR.Memory.ByteBuffer      dibData2 = resultingImage.CreateHDIBAsBuffer();
+
+        System.IO.MemoryStream    ms2 = dibData2.MemoryStream();
+        DataObject dataObj = new DataObject();
+        dataObj.SetData( "DeviceIndependentBitmap", ms2 );
+
+        Clipboard.SetDataObject( dataObj, true );
       }
       PaletteManager.ApplyPalette( m_ImportImage );
       //PaletteManager.ApplyPalette( m_OriginalImage );
