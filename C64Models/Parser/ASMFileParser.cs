@@ -166,6 +166,8 @@ namespace C64Studio.Parser
       AddExtFunction( "math.tan", 1, 1, ExtMathTangens );
       AddExtFunction( "math.toradians", 1, 1, ExtMathToRadians );
       AddExtFunction( "math.todegrees", 1, 1, ExtMathToDegrees );
+      AddExtFunction( "math.floor", 1, 1, ExtMathFloor );
+      AddExtFunction( "math.ceiling", 1, 1, ExtMathCeiling );
 
       SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
     }
@@ -284,15 +286,39 @@ namespace C64Studio.Parser
     {
       List<Types.TokenInfo>     result = new List<Types.TokenInfo>();
 
-      int     arg1 = GR.Convert.ToI32( Arguments[0].Content );
-      int     arg2 = GR.Convert.ToI32( Arguments[1].Content );
+      if ( !EvaluateTokens( 0, Arguments, 0, 1, out SymbolInfo arg1 ) )
+      {
+        return result;
+      }
+      if ( !EvaluateTokens( 0, Arguments, 1, 1, out SymbolInfo arg2 ) )
+      {
+        return result;
+      }
 
-      long    resultValue = Math.Min( arg1, arg2 );
+      var resultToken = new C64Studio.Types.TokenInfo();
 
-      Types.TokenInfo   fileSizeToken = new C64Studio.Types.TokenInfo();
-      fileSizeToken.Type = C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER;
-      fileSizeToken.Content = resultValue.ToString();
-      result.Add( fileSizeToken );
+      if ( ( arg1.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+      ||   ( arg2.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER ) )
+      {
+        double     argV1 = arg1.ToNumber();
+        double     argV2 = arg2.ToNumber();
+
+        double    resultValue = Math.Min( argV1, argV2 );
+
+        resultToken.Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER;
+        resultToken.Content = Util.DoubleToString( resultValue );
+      }
+      else
+      {
+        int     argV1 = arg1.ToInteger( );
+        int     argV2 = arg2.ToInteger( );
+
+        long    resultValue = Math.Min( argV1, argV2 );
+
+        resultToken.Type = TokenInfo.TokenType.LITERAL_NUMBER;
+        resultToken.Content = resultValue.ToString();
+      }
+      result.Add( resultToken );
       return result;
     }
 
@@ -433,7 +459,7 @@ namespace C64Studio.Parser
       double argument = functionResult.ToNumber();
       var resultValue = new TokenInfo()
       {
-        Type = TokenInfo.TokenType.LITERAL_NUMBER,
+        Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
         Content = Util.DoubleToString( argument * Math.PI / 180.0f )
       };
       result.Add( resultValue );
@@ -459,15 +485,65 @@ namespace C64Studio.Parser
 
       var resultValue = new TokenInfo()
       {
-        Type = TokenInfo.TokenType.LITERAL_NUMBER,
+        Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
         Content = Util.DoubleToString( argument * 180.0f / Math.PI )
       };
       result.Add( resultValue );
       return result;
     }
-    
-    
-    
+
+
+
+    private List<TokenInfo> ExtMathFloor( List<TokenInfo> Arguments )
+    {
+      var result = new List<TokenInfo>();
+
+      if ( Arguments.Count != 1 )
+      {
+        //SetError( "Invalid argument count" );
+        return result;
+      }
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
+      {
+        return result;
+      }
+      double argument = functionResult.ToNumber();
+      var resultValue = new TokenInfo()
+      {
+        Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
+        Content = Util.DoubleToString( Math.Floor( argument ) )
+      };
+      result.Add( resultValue );
+      return result;
+    }
+
+
+
+    private List<TokenInfo> ExtMathCeiling( List<TokenInfo> Arguments )
+    {
+      var result = new List<TokenInfo>();
+
+      if ( Arguments.Count != 1 )
+      {
+        //SetError( "Invalid argument count" );
+        return result;
+      }
+      if ( !EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
+      {
+        return result;
+      }
+      double argument = functionResult.ToNumber();
+      var resultValue = new TokenInfo()
+      {
+        Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
+        Content = Util.DoubleToString( Math.Ceiling( argument ) )
+      };
+      result.Add( resultValue );
+      return result;
+    }
+
+
+
     public Types.ASM.TemporaryLabelInfo AddTempLabel( string Name, int LineIndex, int LineCount, int Value, string Info )
     {
       return AddTempLabel( Name, LineIndex, LineCount, Value, Info, -1, 0 );
@@ -2071,13 +2147,9 @@ namespace C64Studio.Parser
                   SymbolInfo value;
                   if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, out value, out numBytesGiven ) )
                   {
-                    if ( !value.IsInteger() )
-                    {
-                      return false;
-                    }
                     NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
 
-                    int resultValue = ( value.AddressOrValue & 0x00ff );
+                    int resultValue = ( value.ToInteger() & 0x00ff );
 
                     subTokenRange.RemoveRange( highestPrecedenceTokenIndex, 2 );
 
@@ -2096,14 +2168,9 @@ namespace C64Studio.Parser
                   SymbolInfo value;
                   if ( EvaluateTokens( LineIndex, subTokenRange, highestPrecedenceTokenIndex + 1, 1, out value, out numBytesGiven ) )
                   {
-                    if ( !value.IsInteger() )
-                    {
-                      return false;
-                    }
-
                     NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
 
-                    int resultValue = ( value.AddressOrValue & 0xff00 ) >> 8;
+                    int resultValue = ( value.ToInteger() & 0xff00 ) >> 8;
                     subTokenRange.RemoveRange( highestPrecedenceTokenIndex, 2 );
 
                     Types.TokenInfo tokenResult = new Types.TokenInfo();
@@ -3101,9 +3168,25 @@ namespace C64Studio.Parser
 
       int commaCount = 0;
       int firstTokenIndex = StartIndex;
+      int insideOtherBrackets = 0;
       for ( int tokenIndex = StartIndex; tokenIndex < StartIndex + Count; ++tokenIndex )
       {
         string token = lineTokenInfos[tokenIndex].Content;
+
+        if ( IsOpeningBraceChar( token ) )
+        {
+          ++insideOtherBrackets;
+          continue;
+        }
+        if ( IsClosingBraceChar( token ) )
+        {
+          --insideOtherBrackets;
+          
+        }
+        if ( insideOtherBrackets > 0 )
+        {
+          continue;
+        }
 
         if ( ( tokenIndex == StartIndex )
         &&   ( token == "#" ) )
@@ -6429,9 +6512,25 @@ namespace C64Studio.Parser
 
       int commaCount = 0;
       int firstTokenIndex = StartIndex;
+      int insideOtherBrackets = 0;
       for ( int tokenIndex = StartIndex; tokenIndex < StartIndex + Count; ++tokenIndex )
       {
         string token = lineTokenInfos[tokenIndex].Content;
+
+        if ( IsOpeningBraceChar( token ) )
+        {
+          ++insideOtherBrackets;
+          continue;
+        }
+        if ( IsClosingBraceChar( token ) )
+        {
+          --insideOtherBrackets;
+
+        }
+        if ( insideOtherBrackets > 0 )
+        {
+          continue;
+        }
 
         if ( ( tokenIndex == StartIndex )
         &&   ( token == "#" ) )
@@ -6577,9 +6676,25 @@ namespace C64Studio.Parser
 
       int commaCount = 0;
       int firstTokenIndex = StartIndex;
+      int insideOtherBrackets = 0;
       for ( int tokenIndex = StartIndex; tokenIndex < StartIndex + Count; ++tokenIndex )
       {
         string token = lineTokenInfos[tokenIndex].Content;
+
+        if ( IsOpeningBraceChar( token ) )
+        {
+          ++insideOtherBrackets;
+          continue;
+        }
+        if ( IsClosingBraceChar( token ) )
+        {
+          --insideOtherBrackets;
+
+        }
+        if ( insideOtherBrackets > 0 )
+        {
+          continue;
+        }
 
         if ( ( tokenIndex == StartIndex )
         &&   ( token == "#" ) )
