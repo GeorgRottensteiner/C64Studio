@@ -85,12 +85,23 @@
 ;xx11 1111 = SIDBDRWD         = width of single side border
 .HOTREG         = $d05d
 
+;number of characters to display per row
+.CHRCOUNT				= $d05e
 
 ;3 byte address of screen ram
 ;$d060 = lo byte
 ;$d061 = medium byte
 ;$d062 = hi byte
 .SCRNPTR        = $d060
+.SCRNPTR_LO     = $d060
+.SCRNPTR_HI     = $d061
+.SCRNPTR_BANK   = $d062
+
+;1xxx xxxx = EXGLYPH
+;x0xx xxxx = unused
+;xx11 xxxx = msb of CHRCOUNT
+;xxxx 1111 = msg of SCRNPTR
+.EXGLYPH_CHRCOUNT_SCRNPTR = $d063
 
 ;3 byte address of chargen position
 ;$d068 = lo byte
