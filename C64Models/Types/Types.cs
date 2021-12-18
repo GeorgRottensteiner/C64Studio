@@ -808,14 +808,15 @@ namespace C64Studio.Types
 
   public class MacroFunctionInfo
   {
-    public int      LineIndex = 0;
-    public int      LineEnd = -1;
-    public string   Name = "";
+    public int          LineIndex = 0;
+    public int          LineEnd = -1;
+    public string       Name = "";
     public List<string> ParameterNames = new List<string>();
-    public List<bool> ParametersAreReferences = new List<bool>();
-    public string[] Content = null;
-    public bool     UsesBracket = false;
-    public string   ParentFileName = "";
+    public List<bool>   ParametersAreReferences = new List<bool>();
+    public string[]     Content = null;
+    public bool         UsesBracket = false;
+    public string       ParentFileName = "";
+    public SymbolInfo   Symbol = new SymbolInfo();
   };
 
 

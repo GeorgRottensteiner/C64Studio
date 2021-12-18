@@ -7281,6 +7281,8 @@ namespace C64Studio.Parser
         int           startIndex = 1;
         bool          hadError = false;
 
+        functionInfo.Symbol.References.Add( lineIndex );
+
         for ( int i = 1; i < lineTokenInfos.Count; ++i )
         {
           if ( lineTokenInfos[i].Content == "," )
@@ -11790,6 +11792,11 @@ namespace C64Studio.Parser
         macroFunction.ParentFileName  = OuterFilename;
         macroFunction.UsesBracket     = hasBracket;
 
+        macroFunction.Symbol                  = new SymbolInfo();
+        macroFunction.Symbol.Name             = LabelInFront;
+        macroFunction.Symbol.LineIndex        = lineIndex;
+        macroFunction.Symbol.References.Add( lineIndex );
+
         macroFunctions.Add( LabelInFront, macroFunction );
 
         MacroFunctionName = LabelInFront;
@@ -11889,12 +11896,17 @@ namespace C64Studio.Parser
           {
             Types.MacroFunctionInfo macroFunction = new C64Studio.Types.MacroFunctionInfo();
 
-            macroFunction.Name            = macroName;
-            macroFunction.LineIndex       = lineIndex;
-            macroFunction.ParentFileName  = OuterFilename;
-            macroFunction.ParameterNames  = param;
+            macroFunction.Name                    = macroName;
+            macroFunction.LineIndex               = lineIndex;
+            macroFunction.ParentFileName          = OuterFilename;
+            macroFunction.ParameterNames          = param;
             macroFunction.ParametersAreReferences = paramIsRef;
-            macroFunction.UsesBracket     = hasBracket;
+            macroFunction.UsesBracket             = hasBracket;
+
+            macroFunction.Symbol                  = new SymbolInfo();
+            macroFunction.Symbol.Name             = LabelInFront;
+            macroFunction.Symbol.LineIndex        = lineIndex;
+            macroFunction.Symbol.References.Add( lineIndex );
 
             macroFunctions.Add( macroName, macroFunction );
 

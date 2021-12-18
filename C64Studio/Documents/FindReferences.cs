@@ -271,6 +271,14 @@ namespace C64Studio
               item.SubItems[2].Text = line;
             }
           }
+          else
+          {
+            // not a direct project member, read from file
+            string textFromElement = Core.Searching.GetTextFromFile( filename );
+
+            string line = FindLineInsideText( textFromElement, localLineIndex );
+            item.SubItems[2].Text = line;
+          }
         }
         else
         {
@@ -287,6 +295,14 @@ namespace C64Studio
             {
               item.SubItems[2].Text = doc.BaseDoc.SourceControl.GetLine( localLineIndex ).Text;
             }
+          }
+          else
+          {
+            // not a direct project member, read from file
+            string textFromElement = Core.Searching.GetTextFromFile( filename );
+
+            string line = FindLineInsideText( textFromElement, localLineIndex );
+            item.SubItems[2].Text = line;
           }
         }
       }

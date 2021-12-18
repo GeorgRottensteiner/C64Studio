@@ -593,6 +593,11 @@ namespace C64Studio.Types.ASM
         {
           return Labels[Zone + Token];
         }
+
+        if ( Macros.ContainsKey( Token ) )
+        {
+          return Macros[Token].Symbol;
+        }
         return null;
       }
       return Labels[Token];

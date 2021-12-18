@@ -86,6 +86,13 @@ namespace C64Studio
         return "";
       }
 
+      return GetTextFromFile( elementPath );
+    }
+
+
+
+    internal string GetTextFromFile( string Filename )
+    {
       // can we use cached text?
       bool    cacheIsUpToDate = false;
 
@@ -93,7 +100,7 @@ namespace C64Studio
 
       try
       {
-        lastAccessTimeStamp = System.IO.File.GetLastWriteTime( elementPath );
+        lastAccessTimeStamp = System.IO.File.GetLastWriteTime( Filename );
 
         cacheIsUpToDate = ( lastAccessTimeStamp <= PreviousSearchedFileTimeStamp );
 
@@ -103,17 +110,19 @@ namespace C64Studio
       {
       }
 
-      if ( ( GR.Path.IsPathEqual( PreviousSearchedFile, elementPath ) )
+      if ( ( GR.Path.IsPathEqual( PreviousSearchedFile, Filename ) )
       &&   ( cacheIsUpToDate )
       &&   ( PreviousSearchedFileContent != null ) )
       {
         return PreviousSearchedFileContent;
       }
 
-      PreviousSearchedFileContent = GR.IO.File.ReadAllText( elementPath );
-      PreviousSearchedFile = elementPath;
+      PreviousSearchedFileContent = GR.IO.File.ReadAllText( Filename );
+      PreviousSearchedFile = Filename;
       return PreviousSearchedFileContent;
     }
+
+
 
   }
 }
