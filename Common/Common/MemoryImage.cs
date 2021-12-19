@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Memory;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -1360,6 +1361,29 @@ namespace GR.Image
       return (uint)( ( m_PaletteData.ByteAt( Index * 3 ) << 16 )
         + ( m_PaletteData.ByteAt( Index * 3 + 1 ) << 8 )
         + m_PaletteData.ByteAt( Index * 3 + 2 ) );
+    }
+
+
+
+    // resize and try to keep existing data intact
+    public void Resize( int NewWidth, int NewHeight )
+    {
+      int     safeWidth = Math.Min( Width, NewWidth );
+      int     safeHeight = Math.Min( Height, NewHeight );
+
+      int   origBytesPerLine = BitsPerPixel * Width / 8;
+      int   bytesPerLine = BitsPerPixel * NewWidth / 8;
+
+      var newImageData = new ByteBuffer(  (uint)( bytesPerLine * Height ) );
+
+      for ( int j = 0; j < safeHeight; ++j )
+      {
+        m_ImageData.CopyTo( newImageData, bytesPerLine * j, ( BitsPerPixel * safeWidth ) / 8, j * origBytesPerLine );
+      }
+
+      m_Width       = NewWidth;
+      m_Height      = NewHeight;
+      m_ImageData   = newImageData;
     }
 
 

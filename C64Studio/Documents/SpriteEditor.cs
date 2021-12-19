@@ -170,14 +170,15 @@ namespace C64Studio
       switch ( Mode )
       {
         case SpriteMode.COMMODORE_24_X_21_MULTICOLOR:
+        case SpriteMode.MEGA65_64_X_21_16_MULTICOLOR:
           SpriteDisplayer.DisplayMultiColorSprite( Data, Palette, Width, Height, BackgroundColor, MultiColor1, MultiColor2, CustomColor, Target, X, Y, ExpandX, ExpandY );
           break;
         case SpriteMode.COMMODORE_24_X_21_HIRES:
+        case SpriteMode.MEGA65_64_X_21_16_HIRES:
           SpriteDisplayer.DisplayHiResSprite( Data, Palette, Width, Height, BackgroundColor, CustomColor, Target, X, Y, ExpandX, ExpandY );
           break;
         case SpriteMode.MEGA65_16_X_21_16_COLORS:
-        case SpriteMode.MEGA65_8_X_21_16_COLORS:
-          SpriteDisplayer.DisplayFCMSprite( Data, Palette, Width, Height, BackgroundColor, Target, X, Y, ExpandX, ExpandY );
+          SpriteDisplayer.DisplayNCMSprite( Data, Palette, Width, Height, BackgroundColor, Target, X, Y, ExpandX, ExpandY );
           break;
         default:
           Debug.Log( "DrawSpriteImage unsupported mode " + Mode );
@@ -265,7 +266,7 @@ namespace C64Studio
 
         for ( int y = 0; y < m_SpriteHeight / 2; ++y )
         {
-          for ( int x = 0; x < m_SpriteWidth; ++x )
+          for ( int x = 0; x < m_SpriteWidth; x += Lookup.PixelWidth( sprite.Tile.Mode ) )
           {
             int oldValue = sprite.Tile.GetPixel( x, y );
             sprite.Tile.SetPixel( x, y, sprite.Tile.GetPixel( x, m_SpriteHeight - 1 - y ) );
@@ -343,10 +344,10 @@ namespace C64Studio
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
         int     colorIndex = (int)_ColorSettingsDlg.SelectedColor;
-        if ( ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
-        &&   ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS ) )
+        if ( Lookup.SpriteModeSupportsMulticolorFlag( m_SpriteProject.Mode ) )
         {
-          if ( affectedSprite.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR )
+          if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
+          ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC ) )
           {
             ColorType   replaceColor = (ColorType)colorIndex;
             SwitchMultiColors( ref replaceColor );
@@ -396,10 +397,10 @@ namespace C64Studio
       {
         int   pickedColor = affectedSprite.Tile.GetPixel( charX, charY );
 
-        if ( ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
-        &&   ( m_SpriteProject.Mode != SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS ) )
+        if ( Lookup.SpriteModeSupportsMulticolorFlag( m_SpriteProject.Mode ) )
         {
-          if ( affectedSprite.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR )
+          if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
+          ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC ) )
           {
             ColorType   replaceColor = (ColorType)pickedColor;
             SwitchMultiColors( ref replaceColor );
@@ -409,8 +410,7 @@ namespace C64Studio
 
         _ColorSettingsDlg.SelectedColor = (ColorType)pickedColor;
 
-        if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
-        ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS ) )
+        if ( !Lookup.SpriteModeSupportsMulticolorFlag( m_SpriteProject.Mode ) )
         {
           affectedSprite.Tile.CustomColor = pickedColor;
         }
@@ -1129,8 +1129,7 @@ namespace C64Studio
       bool pasteAsBlock = false;
 
       var importType = Types.GraphicType.SPRITES;
-      if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
-      ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS ) )
+      if ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
       {
         importType = GraphicType.SPRITES_16_COLORS;
       }
@@ -1333,8 +1332,13 @@ namespace C64Studio
       int   ChosenSpriteColor = -1;
 
       SpriteMode insertMode = SpriteMode.COMMODORE_24_X_21_HIRES;
+      if ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC )
+      {
+        insertMode = SpriteMode.MEGA65_64_X_21_16_HIRES;
+      }
 
-      if ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
+      if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
+      ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC ) )
       {
         // determine single/multi color
         bool[]  usedColor = new bool[16];
@@ -1373,34 +1377,34 @@ namespace C64Studio
           }
         }
         if ( ( hasSinglePixel )
-        && ( numColors > 2 ) )
+        &&   ( numColors > 2 ) )
         {
           m_ImportError = "Has a single pixel, but more than two colors";
           return false;
         }
         if ( ( hasSinglePixel )
-        && ( numColors == 2 )
-        && ( !usedBackgroundColor ) )
+        &&   ( numColors == 2 )
+        &&   ( !usedBackgroundColor ) )
         {
           m_ImportError = "Looks like single color, but doesn't use the set background color";
           return false;
         }
         if ( ( !hasSinglePixel )
-        && ( numColors > 4 ) )
+        &&   ( numColors > 4 ) )
         {
           m_ImportError = "Uses more than 4 colors";
           return false;
         }
         if ( ( !hasSinglePixel )
-        && ( numColors == 4 )
-        && ( !usedBackgroundColor ) )
+        &&   ( numColors == 4 )
+        &&   ( !usedBackgroundColor ) )
         {
           m_ImportError = "Uses 4 colors, but doesn't use the set background color";
           return false;
         }
         if ( ( hasSinglePixel )
-        || ( ( numColors == 2 )
-        && ( usedBackgroundColor ) ) )
+        ||   ( ( numColors == 2 )
+        &&     ( usedBackgroundColor ) ) )
         {
           // eligible for single color
           int usedFreeColor = -1;
@@ -1439,14 +1443,14 @@ namespace C64Studio
                 ChosenSpriteColor = ColorIndex;
               }
               byte byteMask = (byte)( 255 - ( 1 << ( ( 7 - ( x % 8 ) ) ) ) );
-              Buffer.SetU8At( y * 3 + x / 8, (byte)( ( Buffer.ByteAt( y * 3 + x / 8 ) & byteMask ) | ( BitPattern << ( ( 7 - ( x % 8 ) ) ) ) ) );
+              Buffer.SetU8At( y * m_SpriteWidth / 8 + x / 8, (byte)( ( Buffer.ByteAt( y * m_SpriteWidth / 8 + x / 8 ) & byteMask ) | ( BitPattern << ( ( 7 - ( x % 8 ) ) ) ) ) );
             }
           }
         }
         else
         {
           // multi color
-          insertMode = SpriteMode.COMMODORE_24_X_21_MULTICOLOR;
+          SetMulticolorMode( ref insertMode, true );
           int     usedMultiColors = 0;
           int     usedFreeColor = -1;
           for ( int i = 0; i < 16; ++i )
@@ -1498,7 +1502,7 @@ namespace C64Studio
                 BitPattern = 0x02;
               }
               byte byteMask = (byte)( 255 - ( 3 << ( ( 3 - ( x % 4 ) ) * 2 ) ) );
-              Buffer.SetU8At( y * 3 + x / 4, (byte)( ( Buffer.ByteAt( y * 3 + x / 4 ) & byteMask ) | ( BitPattern << ( ( 3 - ( x % 4 ) ) * 2 ) ) ) );
+              Buffer.SetU8At( y * m_SpriteWidth / 8 + x / 4, (byte)( ( Buffer.ByteAt( y * m_SpriteWidth / 8 + x / 4 ) & byteMask ) | ( BitPattern << ( ( 3 - ( x % 4 ) ) * 2 ) ) ) );
             }
           }
         }
@@ -1552,8 +1556,7 @@ namespace C64Studio
       var mcSettings = new ColorSettings( m_SpriteProject.Colors );
 
       var importType = Types.GraphicType.SPRITES;
-      if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
-      ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS ) )
+      if ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
       {
         importType = GraphicType.SPRITES_16_COLORS;
       }
@@ -1771,7 +1774,7 @@ namespace C64Studio
     {
       if ( m_SpriteProject.ShowGrid )
       {
-        if ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
+        if ( Lookup.SpriteHasMulticolorEnabled( m_SpriteProject.Sprites[m_CurrentSprite].Mode ) )
         {
           for ( int i = 0; i < m_SpriteWidth / 2; ++i )
           {
@@ -3220,6 +3223,7 @@ namespace C64Studio
         m_SpriteProject.Sprites[i].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleSprite( m_SpriteProject.Mode ) );
         m_SpriteProject.Sprites[i].Tile.Width = m_SpriteWidth;
         m_SpriteProject.Sprites[i].Tile.Height = m_SpriteHeight;
+        m_SpriteProject.Sprites[i].Tile.Image.Resize( m_SpriteWidth, m_SpriteHeight );
 
         switch ( m_SpriteProject.Mode )
         {
@@ -3230,8 +3234,8 @@ namespace C64Studio
               m_SpriteProject.Sprites[i].Mode = SpriteMode.COMMODORE_24_X_21_HIRES;
             }
             break;
-          case SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS:
-            m_SpriteProject.Sprites[i].Mode = SpriteMode.MEGA65_8_X_21_16_COLORS;
+          case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
+            m_SpriteProject.Sprites[i].Mode = SpriteMode.MEGA65_64_X_21_16_HIRES;
             break;
           case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
             m_SpriteProject.Sprites[i].Mode = SpriteMode.MEGA65_16_X_21_16_COLORS;
@@ -3256,8 +3260,8 @@ namespace C64Studio
           m_SpriteWidth = 24;
           m_SpriteHeight = 21;
           break;
-        case SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS:
-          m_SpriteWidth = 8;
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
+          m_SpriteWidth = 64;
           m_SpriteHeight = 21;
           break;
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
@@ -3316,14 +3320,13 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
-      ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS ) )
+      if ( Lookup.SpriteModeSupportsMulticolorFlag( m_SpriteProject.Mode ) )
       {
-        Core?.Theming.DrawSingleColorComboBox( combo, e, m_SpriteProject.Colors.Palette );
+        Core?.Theming.DrawMultiColorComboBox( combo, e, m_SpriteProject.Colors.Palette );
       }
       else
       {
-        Core?.Theming.DrawMultiColorComboBox( combo, e, m_SpriteProject.Colors.Palette );
+        Core?.Theming.DrawSingleColorComboBox( combo, e, m_SpriteProject.Colors.Palette );
       }
     }
 
@@ -3355,12 +3358,12 @@ namespace C64Studio
       switch ( m_SpriteProject.Mode )
       {
         case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
           _ColorSettingsDlg = new ColorSettingsMCSprites( Core, 
                                                           m_SpriteProject.Colors, 
                                                           m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor, 
                                                           m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR );
           break;
-        case SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS:
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
           _ColorSettingsDlg = new ColorSettingsMega65( Core, m_SpriteProject.Colors, m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor );
           break;
@@ -3419,15 +3422,15 @@ namespace C64Studio
 
       foreach ( var i in selectedSprites )
       {
-        if ( ( m_SpriteProject.Sprites[i].Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
-        ||   ( m_SpriteProject.Sprites[i].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR ) )
+        if ( Lookup.SpriteModeSupportsMulticolorFlag( m_SpriteProject.Mode ) )
         {
-          if ( ( m_SpriteProject.Sprites[i].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR ) != _ColorSettingsDlg.MultiColorEnabled )
+          if ( Lookup.SpriteHasMulticolorEnabled( m_SpriteProject.Sprites[i].Mode ) != _ColorSettingsDlg.MultiColorEnabled )
           {
             DocumentInfo.UndoManager.AddGroupedUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ) );
 
-            m_SpriteProject.Sprites[i].Mode = _ColorSettingsDlg.MultiColorEnabled ? SpriteMode.COMMODORE_24_X_21_MULTICOLOR : SpriteMode.COMMODORE_24_X_21_HIRES;
-            m_SpriteProject.Sprites[i].Tile.Mode = _ColorSettingsDlg.MultiColorEnabled ? GraphicTileMode.COMMODORE_MULTICOLOR : GraphicTileMode.COMMODORE_HIRES;
+            SetMulticolorMode( ref m_SpriteProject.Sprites[i].Mode, _ColorSettingsDlg.MultiColorEnabled );
+            m_SpriteProject.Sprites[i].Tile.Mode  = _ColorSettingsDlg.MultiColorEnabled ? GraphicTileMode.COMMODORE_MULTICOLOR : GraphicTileMode.COMMODORE_HIRES;
+
             Modified = true;
             RebuildSpriteImage( i );
             if ( m_CurrentSprite == i )
@@ -3437,6 +3440,32 @@ namespace C64Studio
             panelSprites.InvalidateItemRect( i );
           }
         }
+      }
+    }
+
+
+
+    private void SetMulticolorMode( ref SpriteMode Mode, bool MultiColorEnabled )
+    {
+      if ( ( MultiColorEnabled )
+      &&   ( Mode == SpriteMode.COMMODORE_24_X_21_HIRES ) )
+      {
+        Mode = SpriteMode.COMMODORE_24_X_21_MULTICOLOR;
+      }
+      if ( ( MultiColorEnabled )
+      &&   ( Mode == SpriteMode.MEGA65_64_X_21_16_HIRES ) )
+      {
+        Mode = SpriteMode.MEGA65_64_X_21_16_MULTICOLOR;
+      }
+      if ( ( !MultiColorEnabled )
+      &&   ( Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR ) )
+      {
+        Mode = SpriteMode.COMMODORE_24_X_21_HIRES;
+      }
+      if ( ( !MultiColorEnabled )
+      &&   ( Mode == SpriteMode.MEGA65_64_X_21_16_MULTICOLOR ) )
+      {
+        Mode = SpriteMode.MEGA65_64_X_21_16_HIRES;
       }
     }
 
@@ -3497,7 +3526,8 @@ namespace C64Studio
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstEntry );
         firstEntry = false;
 
-        if ( sprite.Tile.Mode == GraphicTileMode.COMMODORE_MULTICOLOR )
+        if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
+        ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC ) )
         {
           SwitchMultiColors( ref Color1 );
           SwitchMultiColors( ref Color2 );

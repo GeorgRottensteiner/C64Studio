@@ -225,9 +225,8 @@ namespace RetroDevStudio
       {
         case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
           return 63;
-        case SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS:
-          return 84;
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
           return 168;
         default:
           Debug.Log( "NumBytesOfSingleSprite unsupported Mode " + Mode );
@@ -243,9 +242,8 @@ namespace RetroDevStudio
       {
         case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
           return 64;
-        case SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS:
-          return 128;
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
           return 256;
         default:
           Debug.Log( "NumPaddedBytesOfSingleSprite unsupported Mode " + Mode );
@@ -260,7 +258,7 @@ namespace RetroDevStudio
       switch ( Mode )
       {
         case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
-        case SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS:
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
           return 16;
         default:
@@ -317,9 +315,9 @@ namespace RetroDevStudio
       switch ( Mode )
       {
         case SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC:
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
         default:
           return GraphicTileMode.COMMODORE_HIRES;
-        case SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS:
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
           return GraphicTileMode.MEGA65_FCM_16_COLORS;
       }
@@ -347,11 +345,36 @@ namespace RetroDevStudio
         default:
           // TODO - not correct!
           return SpriteMode.COMMODORE_24_X_21_HIRES;
-        case SpriteProject.SpriteProjectMode.MEGA65_8_X_21_16_COLORS:
-          return SpriteMode.MEGA65_8_X_21_16_COLORS;
+        case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
+          // TODO - not correct as well!
+          return SpriteMode.MEGA65_64_X_21_16_HIRES;
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
           return SpriteMode.MEGA65_16_X_21_16_COLORS;
       }
+    }
+
+
+
+    internal static bool SpriteModeSupportsMulticolorFlag( SpriteProject.SpriteProjectMode Mode )
+    {
+      if ( ( Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
+      ||   ( Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    internal static bool SpriteModeHasMulticolorEnabled( SpriteMode Mode )
+    {
+      if ( ( Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
+      ||   ( Mode == SpriteMode.MEGA65_64_X_21_16_MULTICOLOR ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -417,12 +440,25 @@ namespace RetroDevStudio
         case SpriteMode.COMMODORE_24_X_21_MULTICOLOR:
           return GraphicTileMode.COMMODORE_MULTICOLOR;
         case SpriteMode.MEGA65_16_X_21_16_COLORS:
-        case SpriteMode.MEGA65_8_X_21_16_COLORS:
+        case SpriteMode.MEGA65_64_X_21_16_HIRES:
           return GraphicTileMode.MEGA65_FCM_16_COLORS;
         default:
           return GraphicTileMode.COMMODORE_HIRES;
       }
     }
+
+
+
+    public static bool SpriteHasMulticolorEnabled( SpriteMode Mode )
+    {
+      if ( ( Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
+      ||   ( Mode == SpriteMode.MEGA65_64_X_21_16_MULTICOLOR ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
 
 
   }

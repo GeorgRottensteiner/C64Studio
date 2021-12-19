@@ -36,7 +36,7 @@ namespace C64Studio.Displayer
           {
             for ( int i = 0; i < 8; ++i )
             {
-              if ( ( Data.ByteAt( j * 3 + k ) & ( 1 << ( 7 - i ) ) ) != 0 )
+              if ( ( Data.ByteAt( j * Width / 8 + k ) & ( 1 << ( 7 - i ) ) ) != 0 )
               {
                 uint color = Palette.ColorValues[SpriteColor];
                 Target.SetPixel( X + ( k * 8 + i ) * pixelStepX, Y + j * pixelStepY + pp, color );
@@ -92,7 +92,7 @@ namespace C64Studio.Displayer
           {
             for ( int i = 0; i < 4; ++i )
             {
-              int pixelValue = ( Data.ByteAt( j * 3 + k ) & ( 3 << ( ( 3 - i ) * 2 ) ) ) >> ( ( 3 - i ) * 2 );
+              int pixelValue = ( Data.ByteAt( j * Width / 8 + k ) & ( 3 << ( ( 3 - i ) * 2 ) ) ) >> ( ( 3 - i ) * 2 );
 
               switch ( pixelValue )
               {
@@ -127,7 +127,7 @@ namespace C64Studio.Displayer
 
 
 
-    public static void DisplayFCMSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY )
+    public static void DisplayNCMSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY )
     {
       int     pixelStepX = 1;
       int     pixelStepY = 1;

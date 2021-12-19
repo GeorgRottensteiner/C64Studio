@@ -13,8 +13,8 @@ namespace C64Studio.Formats
     {
       [Description( "Commodore 24x21" )]
       COMMODORE_24_X_21_HIRES_OR_MC,
-      [Description( "Mega65 8x21 16 colors" )]
-      MEGA65_8_X_21_16_COLORS,
+      [Description( "Mega65 64x21" )]
+      MEGA65_64_X_21_HIRES_OR_MC,
       [Description( "Mega65 16x21 16 colors" )]
       MEGA65_16_X_21_16_COLORS
     }
