@@ -144,6 +144,13 @@ namespace C64Studio
             System.Windows.Forms.ToolStripMenuItem subItem = new System.Windows.Forms.ToolStripMenuItem( "New" );
             item.DropDownItems.Add( subItem );
 
+            if ( isProject )
+            {
+              System.Windows.Forms.ToolStripMenuItem subItemCloneProject = new System.Windows.Forms.ToolStripMenuItem( "Clone" );
+              subItemCloneProject.Click += new EventHandler( subItemCloneProject_Click );
+              contextMenu.Items.Add( subItemCloneProject );
+            }
+
             if ( ( isFolder )
             ||   ( isProject ) )
             {
@@ -346,6 +353,18 @@ namespace C64Studio
         }
         contextMenu.Show( treeProject.PointToScreen( e.Location ) );
       }
+    }
+
+
+
+    private void subItemCloneProject_Click( object sender, EventArgs e )
+    {
+      var project = ProjectFromNode( m_ContextMenuNode, false );
+      if ( project == null )
+      {
+        return;
+      }
+      Core.MainForm.CloneProject( project );
     }
 
 
@@ -1272,12 +1291,11 @@ namespace C64Studio
           ProjectElement targetElement = ElementFromNode( draggedNode.Parent );
           if ( targetElement == null )
           {
-            draggedProject.Elements.AddLast( draggedElement );
+            draggedProject.Elements.Add( draggedElement );
           }
           else
           {
-            LinkedListNode<ProjectElement> nodeTarget = draggedProject.Elements.Find( targetElement );
-            draggedProject.Elements.AddAfter( nodeTarget, draggedElement );
+            draggedProject.Elements.Insert( draggedProject.Elements.IndexOf( targetElement ) + 1, draggedElement );
           }
           draggedProject.SetModified();
         }

@@ -772,6 +772,54 @@ namespace C64Studio
 
 
 
+    internal Project CloneProject( Project Project )
+    {
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Clone Project as";
+      saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_PROJECT + Types.Constants.FILEFILTER_ALL );
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return null;
+      }
+
+      var projectData = Project.Save();
+
+      var newProject  = new Project();
+      newProject.Core = StudioCore;
+      if ( !newProject.Load( projectData.Data(), false ) )
+      {
+        return null;
+      }
+
+      newProject.Settings.Filename  = saveDlg.FileName;
+      newProject.Settings.Name      = System.IO.Path.GetFileNameWithoutExtension( saveDlg.FileName );
+      newProject.Settings.BasePath  = System.IO.Path.GetDirectoryName( saveDlg.FileName );
+
+      if ( !newProject.Save( saveDlg.FileName ) )
+      {
+        return null;
+      }
+
+      // clone all contained files
+      for ( int i = 0; i < Project.Elements.Count; ++i )
+      {
+        var sourceElement = Project.Elements[i];
+        var targetElement = newProject.Elements[i];
+
+        if ( GR.Path.IsSubPath( Project.Settings.BasePath, sourceElement.DocumentInfo.FullPath ) )
+        {
+          Debug.Log( "need to clone " + sourceElement.DocumentInfo.FullPath );
+          System.IO.File.Copy( sourceElement.DocumentInfo.FullPath, targetElement.DocumentInfo.FullPath );
+        }
+      }
+
+      // and add to existing solution
+      return OpenProject( saveDlg.FileName );
+    }
+
+
+
     internal void RefreshDisplayOnAllDocuments()
     {
       var bgColor = GR.Color.Helper.FromARGB( StudioCore.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );

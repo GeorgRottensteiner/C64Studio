@@ -17,7 +17,7 @@ namespace C64Studio
     public System.Windows.Forms.TreeNode           Node = null;
 
 
-    public System.Collections.Generic.LinkedList<ProjectElement>   Elements = new LinkedList<ProjectElement>();
+    public List<ProjectElement>   Elements = new List<ProjectElement>();
 
 
     public bool Modified
@@ -315,7 +315,7 @@ namespace C64Studio
       Settings.Filename = Filename;
       Settings.BasePath = System.IO.Path.GetDirectoryName( Settings.Filename );
 
-      if ( !Load( projectData ) )
+      if ( !Load( projectData, true ) )
       {
         return false;
       }
@@ -326,7 +326,7 @@ namespace C64Studio
 
 
 
-    public bool Load( byte[] ProjectData )
+    public bool Load( byte[] ProjectData, bool AutoCreateGUIItems )
     {
       string currentConfig = "Default";
       string activeElement = "";
@@ -369,7 +369,7 @@ namespace C64Studio
               }
             }
 
-            Node.Text             = Settings.Name;
+            Node.Text = Settings.Name;
             break;
           case FileChunkConstants.PROJECT_ELEMENT:
             // Element Info
@@ -382,6 +382,7 @@ namespace C64Studio
               ProjectElement element = CreateElement( type, Node );
               element.Name      = memChunk.ReadString();
               element.Filename  = memChunk.ReadString();
+
               if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
               {
                 element.Node.Text = element.Name;
@@ -523,7 +524,6 @@ namespace C64Studio
               {
                 int   collapsedBlockLine = memChunk.ReadInt32();
                 element.DocumentInfo.CollapsedFoldingBlocks.Add( collapsedBlockLine  );
-                //Debug.Log( "Get collapsed blocked for " + element.DocumentInfo.FullPath + ", line " + collapsedBlockLine );
               }
 
               // external dependencies
@@ -576,13 +576,13 @@ namespace C64Studio
 
               // TODO - load other stuff
               if ( ( element != null )
-              &&   ( element.IsShown ) )
+              &&   ( element.IsShown )
+              &&   ( AutoCreateGUIItems ) )
               {
                 ShowDocument( element );
                 if ( element.Document != null )
                 {
                   element.Document.ShowHint = DockState.Document;
-                  //element.Document.Show( MainForm.panelMain );
                 }
               }
               if ( element.Document != null )
@@ -628,9 +628,7 @@ namespace C64Studio
               WatchEntry watch = new WatchEntry();
 
               watch.Load( memChunk );
-              //Core.MainForm.AddWatchEntry( watch );
               Settings.WatchEntries.Add( watch );
-              //Debug.Log( "loaded watch entry for " + watch.Name );
             }
             break;
         }
@@ -662,17 +660,19 @@ namespace C64Studio
             element.Settings[configName] = new ProjectElement.PerConfigSettings();
           }
         }
-        if ( ( !string.IsNullOrEmpty( element.Filename ) )
-        &&   ( GR.Path.IsPathEqual( element.Filename, Settings.MainDocument ) ) )
+
+        if ( AutoCreateGUIItems )
         {
-          Core.MainForm.m_SolutionExplorer.HighlightNode( element.Node );
+          if ( ( !string.IsNullOrEmpty( element.Filename ) )
+          &&   ( GR.Path.IsPathEqual( element.Filename, Settings.MainDocument ) ) )
+          {
+            Core.MainForm.m_SolutionExplorer.HighlightNode( element.Node );
+          }
+
+          Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED, element.DocumentInfo ) );
+          Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_CREATED, element ) );
         }
-
-        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED, element.DocumentInfo ) );
-        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_CREATED, element ) );
       }
-
-
 
       if ( !String.IsNullOrEmpty( activeElement ) )
       {
@@ -792,23 +792,24 @@ namespace C64Studio
       element.DocumentInfo.Type = Type;
       element.DocumentInfo.Project = this;
       element.DocumentInfo.UndoManager.MainForm = Core.MainForm;
-      element.Node      = new System.Windows.Forms.TreeNode();
-      element.Node.Tag  = element;
-      element.Node.ImageIndex = (int)Type;
-      element.Node.SelectedImageIndex = (int)Type;
 
+      if ( ParentNode != null )
+      {
+        element.Node = new System.Windows.Forms.TreeNode();
+        element.Node.Tag = element;
+        element.Node.ImageIndex = (int)Type;
+        element.Node.SelectedImageIndex = (int)Type;
 
-
-      ParentNode.Nodes.Add( element.Node );
-      //MainForm.m_ProjectExplorer.NodeProject.Nodes.Add( element.Node );
-      element.Node.Parent.Expand();
+        ParentNode.Nodes.Add( element.Node );
+        element.Node.Parent.Expand();
+      }
 
       foreach ( var configName in Settings.GetConfigurationNames() )
       {
         element.Settings[configName] = new ProjectElement.PerConfigSettings();
       }
 
-      Elements.AddLast( element );
+      Elements.Add( element );
 
       m_Modified = true;
       return element;
