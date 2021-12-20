@@ -36,8 +36,12 @@ namespace C64Studio
       this.characterEditor = new C64Studio.Controls.CharacterEditor();
       this.tabProject = new System.Windows.Forms.TabPage();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnDefaultLowerCase = new System.Windows.Forms.Button();
-      this.btnDefaultUppercase = new System.Windows.Forms.Button();
+      this.btnDefaultCharset = new C64Studio.Controls.MenuButton();
+      this.contextMenuDefaultCharsets = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.c64UppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.c64LowercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.viC20UppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.viC20LowercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.btnClearImportData = new System.Windows.Forms.Button();
       this.btnImportFromBASICHex = new System.Windows.Forms.Button();
       this.btnImportFromBASIC = new System.Windows.Forms.Button();
@@ -80,6 +84,7 @@ namespace C64Studio
       this.tabCharEditor.SuspendLayout();
       this.tabProject.SuspendLayout();
       this.groupBox1.SuspendLayout();
+      this.contextMenuDefaultCharsets.SuspendLayout();
       this.groupExport.SuspendLayout();
       this.menuStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -132,8 +137,7 @@ namespace C64Studio
       this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox1.Controls.Add(this.btnDefaultLowerCase);
-      this.groupBox1.Controls.Add(this.btnDefaultUppercase);
+      this.groupBox1.Controls.Add(this.btnDefaultCharset);
       this.groupBox1.Controls.Add(this.btnClearImportData);
       this.groupBox1.Controls.Add(this.btnImportFromBASICHex);
       this.groupBox1.Controls.Add(this.btnImportFromBASIC);
@@ -148,29 +152,57 @@ namespace C64Studio
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Import";
       // 
-      // btnDefaultLowerCase
+      // btnDefaultCharset
       // 
-      this.btnDefaultLowerCase.Location = new System.Drawing.Point(129, 77);
-      this.btnDefaultLowerCase.Name = "btnDefaultLowerCase";
-      this.btnDefaultLowerCase.Size = new System.Drawing.Size(117, 23);
-      this.btnDefaultLowerCase.TabIndex = 2;
-      this.btnDefaultLowerCase.Text = "Default Lowercase";
-      this.btnDefaultLowerCase.UseVisualStyleBackColor = true;
-      this.btnDefaultLowerCase.Click += new System.EventHandler(this.btnDefaultLowercase_Click);
+      this.btnDefaultCharset.Location = new System.Drawing.Point(6, 77);
+      this.btnDefaultCharset.Name = "btnDefaultCharset";
+      this.btnDefaultCharset.Size = new System.Drawing.Size(240, 23);
+      this.btnDefaultCharset.TabIndex = 2;
+      this.btnDefaultCharset.Text = "Default Character Set";
+      this.btnDefaultCharset.UseVisualStyleBackColor = true;
+      this.btnDefaultCharset.Click += new System.EventHandler(this.btnDefaultCharset_Click);
       // 
-      // btnDefaultUppercase
+      // contextMenuDefaultCharsets
       // 
-      this.btnDefaultUppercase.Location = new System.Drawing.Point(6, 77);
-      this.btnDefaultUppercase.Name = "btnDefaultUppercase";
-      this.btnDefaultUppercase.Size = new System.Drawing.Size(117, 23);
-      this.btnDefaultUppercase.TabIndex = 2;
-      this.btnDefaultUppercase.Text = "Default Uppercase";
-      this.btnDefaultUppercase.UseVisualStyleBackColor = true;
-      this.btnDefaultUppercase.Click += new System.EventHandler(this.btnDefaultUppercase_Click);
+      this.contextMenuDefaultCharsets.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.c64UppercaseToolStripMenuItem,
+            this.c64LowercaseToolStripMenuItem,
+            this.viC20UppercaseToolStripMenuItem,
+            this.viC20LowercaseToolStripMenuItem});
+      this.contextMenuDefaultCharsets.Name = "contextMenuDefaultCharsets";
+      this.contextMenuDefaultCharsets.Size = new System.Drawing.Size(163, 92);
+      // 
+      // c64UppercaseToolStripMenuItem
+      // 
+      this.c64UppercaseToolStripMenuItem.Name = "c64UppercaseToolStripMenuItem";
+      this.c64UppercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+      this.c64UppercaseToolStripMenuItem.Text = "C64 Uppercase";
+      this.c64UppercaseToolStripMenuItem.Click += new System.EventHandler(this.c64UppercaseToolStripMenuItem_Click);
+      // 
+      // c64LowercaseToolStripMenuItem
+      // 
+      this.c64LowercaseToolStripMenuItem.Name = "c64LowercaseToolStripMenuItem";
+      this.c64LowercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+      this.c64LowercaseToolStripMenuItem.Text = "C64 Lowercase";
+      this.c64LowercaseToolStripMenuItem.Click += new System.EventHandler(this.c64LowercaseToolStripMenuItem_Click);
+      // 
+      // viC20UppercaseToolStripMenuItem
+      // 
+      this.viC20UppercaseToolStripMenuItem.Name = "viC20UppercaseToolStripMenuItem";
+      this.viC20UppercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+      this.viC20UppercaseToolStripMenuItem.Text = "ViC20 Uppercase";
+      this.viC20UppercaseToolStripMenuItem.Click += new System.EventHandler(this.viC20UppercaseToolStripMenuItem_Click);
+      // 
+      // viC20LowercaseToolStripMenuItem
+      // 
+      this.viC20LowercaseToolStripMenuItem.Name = "viC20LowercaseToolStripMenuItem";
+      this.viC20LowercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+      this.viC20LowercaseToolStripMenuItem.Text = "ViC20 Lowercase";
+      this.viC20LowercaseToolStripMenuItem.Click += new System.EventHandler(this.viC20LowercaseToolStripMenuItem_Click);
       // 
       // btnClearImportData
       // 
-      this.btnClearImportData.Location = new System.Drawing.Point(129, 106);
+      this.btnClearImportData.Location = new System.Drawing.Point(6, 104);
       this.btnClearImportData.Name = "btnClearImportData";
       this.btnClearImportData.Size = new System.Drawing.Size(117, 23);
       this.btnClearImportData.TabIndex = 2;
@@ -553,6 +585,7 @@ namespace C64Studio
       this.tabProject.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
+      this.contextMenuDefaultCharsets.ResumeLayout(false);
       this.groupExport.ResumeLayout(false);
       this.groupExport.PerformLayout();
       this.menuStrip1.ResumeLayout(false);
@@ -584,8 +617,7 @@ namespace C64Studio
     private System.Windows.Forms.TextBox editPrefix;
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.Button btnImportFromFile;
-    private System.Windows.Forms.Button btnDefaultUppercase;
-    private System.Windows.Forms.Button btnDefaultLowerCase;
+    private C64Studio.Controls.MenuButton btnDefaultCharset;
     private System.Windows.Forms.Button button1;
     private System.Windows.Forms.Button btnImportCharsetFromImage;
     private System.Windows.Forms.ComboBox comboExportRange;
@@ -608,5 +640,10 @@ namespace C64Studio
     private System.Windows.Forms.Button btnImportFromBASIC;
     private System.Windows.Forms.TextBox editPrefixLoadAddress;
     private System.Windows.Forms.CheckBox checkPrefixLoadAddress;
+    private System.Windows.Forms.ContextMenuStrip contextMenuDefaultCharsets;
+    private System.Windows.Forms.ToolStripMenuItem c64UppercaseToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem c64LowercaseToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem viC20UppercaseToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem viC20LowercaseToolStripMenuItem;
   }
 }

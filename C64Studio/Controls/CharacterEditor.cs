@@ -2136,6 +2136,18 @@ namespace C64Studio.Controls
         // palette is not matching, create new
         m_Project.Colors.Palette = PaletteManager.PaletteFromNumColors( Lookup.NumberOfColorsInCharacter( m_Project.Mode ) );
       }
+
+      switch ( m_Project.Mode )
+      {
+        case TextCharMode.COMMODORE_ECM:
+        case TextCharMode.COMMODORE_HIRES:
+        case TextCharMode.COMMODORE_MULTICOLOR:
+          m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C64 );
+          break;
+        case TextCharMode.VIC20:
+          m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
+          break;
+      }
       OnPaletteChanged();
     }
 
@@ -2329,7 +2341,8 @@ namespace C64Studio.Controls
 
       if ( m_Project.ShowGrid )
       {
-        if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+        if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+        ||     ( m_Project.Mode == TextCharMode.VIC20 ) )
         &&   ( m_Project.Characters[m_CurrentChar].Tile.CustomColor >= 8 ) )
         {
           for ( int i = 0; i < 4; ++i )

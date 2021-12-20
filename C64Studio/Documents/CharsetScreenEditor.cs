@@ -3240,6 +3240,19 @@ namespace C64Studio
     {
       int numColors = Lookup.NumberOfColorsInCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
 
+      // hard coded palettes
+      switch ( m_CharsetScreen.Mode )
+      {
+        case TextMode.COMMODORE_40_X_25_ECM:
+        case TextMode.COMMODORE_40_X_25_HIRES:
+        case TextMode.COMMODORE_40_X_25_MULTICOLOR:
+          m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C64 );
+          return;
+        case TextMode.COMMODORE_VIC20_22_X_23:
+          m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
+          return;
+      }
+
       if ( m_CharsetScreen.CharSet.Colors.Palette.NumColors == numColors )
       {
         // palette is already matching, keep existing

@@ -373,7 +373,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      Core.Theming.DrawSingleColorComboBox( combo, e, ConstantData.Palette );
+      Core.Theming.DrawSingleColorComboBox( combo, e, m_MapProject.Charset.Colors.Palette );
     }
 
 
@@ -382,7 +382,7 @@ namespace C64Studio
     {
       ComboBox combo = (ComboBox)sender;
 
-      Core.Theming.DrawMultiColorComboBox( combo, e, ConstantData.Palette );
+      Core.Theming.DrawMultiColorComboBox( combo, e, m_MapProject.Charset.Colors.Palette );
     }
 
 
@@ -3062,6 +3062,19 @@ namespace C64Studio
     {
       m_MapProject.Charset.Mode = (TextCharMode)comboTileMode.SelectedIndex;
       m_MapProject.Mode = Lookup.TextModeFromTextCharMode( m_MapProject.Charset.Mode );
+
+      switch ( m_MapProject.Mode )
+      {
+        case TextMode.COMMODORE_40_X_25_ECM:
+        case TextMode.COMMODORE_40_X_25_HIRES:
+        case TextMode.COMMODORE_40_X_25_MULTICOLOR:
+          m_MapProject.Charset.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C64 );
+          break;
+        case TextMode.COMMODORE_VIC20_22_X_23:
+          m_MapProject.Charset.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
+          break;
+      }
+
       for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
@@ -3111,6 +3124,18 @@ namespace C64Studio
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapValueChange( this, m_CurrentMap ) );
 
         m_CurrentMap.AlternativeMode = (TextCharMode)( comboMapAlternativeMode.SelectedIndex - 1 );
+
+        switch ( m_CurrentMap.AlternativeMode )
+        {
+          case TextCharMode.COMMODORE_ECM:
+          case TextCharMode.COMMODORE_HIRES:
+          case TextCharMode.COMMODORE_MULTICOLOR:
+            m_MapProject.Charset.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.C64 );
+            break;
+          case TextCharMode.VIC20:
+            m_MapProject.Charset.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
+            break;
+        }
         RedrawMap();
         Modified = true;
       }

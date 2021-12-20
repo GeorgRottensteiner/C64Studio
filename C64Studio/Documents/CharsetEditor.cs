@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using C64Studio.Formats;
@@ -551,17 +552,6 @@ namespace C64Studio
 
 
 
-    private void btnDefaultUppercase_Click( object sender, EventArgs e )
-    {
-      for ( int i = 0; i < 256; ++i )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetCharChange( this, m_Charset, i ), i == 0 );
-      }
-      CreateDefaultUppercaseCharset();
-    }
-
-
-
     private void CreateDefaultUppercaseCharset()
     {
       for ( int i = 0; i < 256; ++i )
@@ -893,6 +883,65 @@ namespace C64Studio
     {
       checkPrefixLoadAddress.Checked = true;
     }
+
+
+
+    private void c64UppercaseToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      SetDefaultCharset( ConstantData.UpperCaseCharsetC64 );
+    }
+
+
+
+    private void SetDefaultCharset( ByteBuffer CharsetData )
+    {
+      for ( int i = 0; i < m_Charset.TotalNumberOfCharacters; ++i )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharsetCharChange( this, m_Charset, i ), i == 0 );
+      }
+
+      // TODO - and with mega65??
+      for ( int i = 0; i < m_Charset.TotalNumberOfCharacters; ++i )
+      {
+        for ( int j = 0; j < 8; ++j )
+        {
+          m_Charset.Characters[i].Tile.Data.SetU8At( j, CharsetData.ByteAt( i * 8 + j ) );
+        }
+        m_Charset.Characters[i].Tile.CustomColor = 1;
+      }
+      characterEditor.CharsetUpdated( m_Charset );
+      SetModified();
+    }
+
+
+
+    private void c64LowercaseToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      SetDefaultCharset( ConstantData.LowerCaseCharsetC64 );
+    }
+
+
+
+    private void viC20UppercaseToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      SetDefaultCharset( ConstantData.UpperCaseCharsetViC20 );
+    }
+
+
+
+    private void viC20LowercaseToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      SetDefaultCharset( ConstantData.LowerCaseCharsetViC20 );
+    }
+
+
+
+    private void btnDefaultCharset_Click( object sender, EventArgs e )
+    {
+      contextMenuDefaultCharsets.Show( btnDefaultCharset, new Point( 0, btnDefaultCharset.Height ) );
+    }
+
+
 
   }
 }

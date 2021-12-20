@@ -158,25 +158,25 @@ namespace C64Studio.Controls
             this.exchangeMultiColor1WithBGColorToolStripMenuItem,
             this.exchangeMultiColor2WithBGColorToolStripMenuItem});
       this.contextMenuExchangeColors.Name = "contextMenuExchangeColors";
-      this.contextMenuExchangeColors.Size = new System.Drawing.Size(296, 70);
+      this.contextMenuExchangeColors.Size = new System.Drawing.Size(281, 92);
       // 
       // exchangeMultiColor1WithMultiColor2ToolStripMenuItem
       // 
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Name = "exchangeMultiColor1WithMultiColor2ToolStripMenuItem";
-      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Text = "Exchange Multi Color 1 with Multi Color 2";
+      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Size = new System.Drawing.Size(280, 22);
+      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Text = "Exchange Border Color with Aux. Color";
       // 
       // exchangeMultiColor1WithBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Name = "exchangeMultiColor1WithBGColorToolStripMenuItem";
-      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 1 with BG Color";
+      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(280, 22);
+      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Text = "Exchange Border Color with BG Color";
       // 
       // exchangeMultiColor2WithBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Name = "exchangeMultiColor2WithBGColorToolStripMenuItem";
-      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Text = "Exchange Multi Color 2 with BG Color";
+      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(280, 22);
+      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Text = "Exchange Aux. Color with BG Color";
       // 
       // ColorSettingsVC20
       // 
