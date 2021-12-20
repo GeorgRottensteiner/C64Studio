@@ -1,0 +1,26 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  ASLQ         Shift Left One Bit (Q pseudo registers)                 ASLQ
+
+  Operation:  Q &lt;- Q &lt;&lt; 1 or M &lt;- M &lt;&lt; 1                    N V - B D I Z C
+                                                            / . . . . . / /
+
+
+  4510 Versions:
+
+  +----------------+-----------------------+-----------+---------+----------+
+  | Addressing Mode| Assembly Language Form|  OP CODE  |No. Bytes|No. Cycles|
+  +----------------+-----------------------+-----------+---------+----------+
+  |<A HREF="ADDR25C.HTM">ZeroPage Quad</A>   |   ASLQ $FF            |$42 $42 $06|    4    |   12dmr  |
+  |<A HREF="ADDR25D.HTM">Accumulator Quad</A>|   ASLQ (A)            |$42 $42 $0A|    3    |    3     |
+  |<A HREF="ADDR25E.HTM">Absolute Quad</A>   |   ASLQ $FFFF          |$42 $42 $0E|    5    |   13dmr  |
+  |<A HREF="ADDR25F.HTM">ZeroPage Quad,X</A> |   ASLQ $FF,X          |$42 $42 $16|    4    |   12dmpr |
+  |<A HREF="ADDR25G.HTM">Absolute Quad,X</A> |   ASLQ $FFFF,X        |$42 $42 $1E|    5    |   13dmpr |
+  +----------------+-----------------------+-----------+---------+----------+
+  d Sub 1 if CPU is at 3.5 MHz
+  m Sub non-bus cycles when at 40 MHz
+  p Add 1 if page boundary is crossed.
+  r Add 1 if clock speed is at 40 MHz
+
+</PRE></BODY></HTML>

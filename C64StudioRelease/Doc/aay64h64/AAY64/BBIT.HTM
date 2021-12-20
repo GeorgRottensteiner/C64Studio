@@ -3,8 +3,8 @@
 
   BIT             BIT Test bits in memory with accumulator              BIT
 
-  Operation:  A /\ M -&gt; Z, M7 -&gt; N, M6 -&gt; V             N V - B D I Z C
-                                                        M7M6. . . . / .
+  Operation:  A /\ M -&gt; Z, M7 -&gt; N, M6 -&gt; V                 N V - B D I Z C
+                                                            M7M6. . . . / .
   Bit 6 and 7 are transferred to the status register.
   If the result of A /\ M is zero then Z = 1, otherwise Z=0.
 
@@ -15,6 +15,22 @@
   |  <A HREF="ADDR2A.HTM">Absolute</A>      |   BIT $FFFF           |   $2C   |    3    |    4     |
   +----------------+-----------------------+---------+---------+----------+
   For penalty cycles on the 65816, check the desired addressing mode.
+
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   BIT $FF             |   $24   |    2    |    3r    |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   BIT $FFFF           |   $2C   |    3    |    4r    |
+  |  <A HREF="ADDR10A.HTM">Direct Page,X</A> |   BIT $FF,X           |   $34   |    2    |    3pr   |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   BIT $FFFF,X         |   $3C   |    3    |    4pr   |
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   BIT #$FF            |   $89   |    2    |    ?     |
+  +----------------+-----------------------+---------+---------+----------+
+  p Add 1 if page boundary is crossed
+  r Add 1 if clock speed is at 40 MHz
+
 
  65816 Extensions:
 

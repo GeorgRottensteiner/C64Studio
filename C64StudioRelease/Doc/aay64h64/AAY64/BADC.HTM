@@ -23,6 +23,28 @@
 
   Note: See <A HREF="CPUBUGS.HTM">CPU-Bugs</A> for a description how flags are affected.
 
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   ADC ($FF,X)         |   $61   |    2    |    5r    |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   ADC $FF             |   $65   |    2    |    3r    |
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   ADC #$FF            |   $69   |    2    |    2     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   ADC $FFFF           |   $6D   |    3    |    4r    |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   ADC ($FF),Y         |   $71   |    2    |    5pr   |
+  |  <A HREF="ADDR7C.HTM">(Indirect),Z</A>  |   ADC ($FF),Z         |   $72   |    2    |    5pr   |
+  |  <A HREF="ADDR7D.HTM">[Indirect 32]</A> |   ADC [$FF],Z         | $EA $72 |    3    |    7ipr  |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   ADC $FF,X           |   $75   |    2    |    3r    |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   ADC $FFFF,Y         |   $79   |    3    |    4r    |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   ADC $FFFF,X         |   $7D   |    3    |    4r    |
+  +----------------+-----------------------+---------+---------+----------+
+  i Add 1 if clock speed is at 40 MHz
+  p Add 1 if page boundary is crossed.
+  r Add 1 if clock speed is at 40 MHz
+
+
  65816 Extensions:
 
   +----------------+-----------------------+---------+---------+----------+

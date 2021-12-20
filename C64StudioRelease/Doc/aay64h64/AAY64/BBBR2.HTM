@@ -1,0 +1,20 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  BBR2         Branch to Address if bit 2 is clear in indicated address location    BBR2
+
+
+  4510 Versions:
+
+  Operation:  PC &lt;- [PC + R8]                               N V - B D I Z C
+                                                            . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR10C.HTM">ZeroPage,Rel</A>  |   BBR2 $FF,$RR        |   $2F   |    3    |    5b    |
+  +----------------+-----------------------+---------+---------+----------+
+  b Add 1 if branch is taken
+    Add 1 if branch taken crosses a page boundary
+
+</PRE></BODY></HTML>

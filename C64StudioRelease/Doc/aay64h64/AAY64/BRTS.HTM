@@ -13,4 +13,18 @@
   +----------------+-----------------------+---------+---------+----------+
    See also: <A HREF="BRTL.HTM">RTL</A>
 
+
+ 4510 Versions:
+
+  Operation:  PC &lt;- Stack + N, SP &lt;- SP + 2 + N      N V - B D I Z C
+                                                        . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR21D.HTM">Implied/Stack</A> |   RTS                 |   $60   |    1    |    6m    |
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   RTS #$FF            |   $62   |    2    |    4     |
+  +----------------+-----------------------+---------+---------+----------+
+  m Subtract non-bus cycles when at 40 MHz
+
 </PRE></BODY></HTML>

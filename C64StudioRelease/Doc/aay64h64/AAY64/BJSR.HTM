@@ -12,6 +12,20 @@
   |  <A HREF="ADDR2D.HTM">Absolute</A>      |   JSR $FFFF           |   $20   |    3    |    6     |
   +----------------+-----------------------+---------+---------+----------+
 
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR2D.HTM">Absolute</A>      |   JSR $FFFF           |   $20   |    3    |    5     |
+  | <A HREF="ADDR17A.HTM">(Abs.Indirect)</A> |   JSR ($FFFF)         |   $22   |    3    |    5r    |
+  | <A HREF="ADDR20B.HTM">(Abs.Ind.,X)</A>   |   JSR ($FFFF,X)       |   $23   |    3    |     5pr  |
+  +----------------+-----------------------+---------+---------+----------+
+  p Add 1 if page boundary is crossed
+  r Add 1 if clock speed is at 40 MHz
+
+
  65816 Extensions:
 
   +----------------+-----------------------+---------+---------+----------+

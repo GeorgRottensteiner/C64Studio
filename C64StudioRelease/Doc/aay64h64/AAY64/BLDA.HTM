@@ -21,6 +21,29 @@
   * Add 1 if page boundary is crossed.
   For penalty cycles on the 65816, check the desired addressing mode.
 
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR9A.HTM">(Indirect,X)</A>  |   LDA ($FF,X)         |   $A1   |    2    |    ?     |
+  |  <A HREF="ADDR4A.HTM">ZeroPage</A>      |   LDA $FF             |   $A5   |    2    |    ?     |
+  |  <A HREF="ADDR1.HTM">Immediate</A>     |   LDA #$FF            |   $A9   |    2    |    2     |
+  |  <A HREF="ADDR2A.HTM">Absolute</A>      |   LDA $FFFF           |   $AD   |    3    |    ?     |
+  |  <A HREF="ADDR7A.HTM">(Indirect),Y</A>  |   LDA ($FF),Y         |   $B1   |    2    |    ?     |
+  | <A HREF="ADDR18.HTM">(Indirect)</A>     |   LDA ($FF)           |   $B2   |    2    |     ?    |
+  | <A HREF="ADDR7D.HTM">[Indirect 32]</A>     |   LDA [$FF],Z         | $EA $B2  |    3    |     7ipr |
+  |  <A HREF="ADDR10A.HTM">ZeroPage,X</A>    |   LDA $FF,X           |   $B5   |    2    |    ?     |
+  |  <A HREF="ADDR12A.HTM">Absolute,Y</A>    |   LDA $FFFF,Y         |   $B9   |    3    |    ?     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   LDA $FFFF,X         |   $BD   |    3    |    ?     |
+  |  <A HREF="ADDR12A.HTM">Absolute,X</A>    |   LDA $FFFF,X         |   $BD   |    3    |    ?     |
+  | <A HREF="ADDR23.HTM">(Indirect,S),Y</A> |   LDA ($FF,S),Y       |   $E2   |    2    |     ?    |
+  +----------------+-----------------------+---------+---------+----------+
+  i Add 1 if clock speed is at 40 MHz
+  p Add 1 if page boundary is crossed
+  r Add 1 if clock speed is at 40 MHz
+
  65816 Extensions:
 
   +----------------+-----------------------+---------+---------+----------+

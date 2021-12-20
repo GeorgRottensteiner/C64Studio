@@ -1,0 +1,21 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  BBR6         Branch to Address if bit 6 is clear in indicated address location    BBR6
+
+
+  4510 Versions:
+
+  Operation:  PC &lt;- [PC + R8]                               N V - B D I Z C
+                                                            . . . . . . . .
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR10C.HTM">ZeroPage,Rel</A>  |   BBR6 $FF,$RR        |   $6F   |    3    |    4br   |
+  +----------------+-----------------------+---------+---------+----------+
+  b Add 1 if branch is taken
+    Add 1 if branch taken crosses a page boundary
+  r Add 1 if clock speed is at 40 MHz
+
+</PRE></BODY></HTML>

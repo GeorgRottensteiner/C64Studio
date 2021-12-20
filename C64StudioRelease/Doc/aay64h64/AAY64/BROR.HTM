@@ -23,4 +23,19 @@
     Note: ROR instruction is available on MCS650X microprocessors after
           June, 1976.
 
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR4B.HTM">ZeroPage</A>      |   ROR $FF             |   $66   |    2    |    5r    |
+  |  <A HREF="ADDR5.HTM">Accumulator</A>   |   ROR A               |   $6A   |    1    |    1s    |
+  |  <A HREF="ADDR2B.HTM">Absolute</A>      |   ROR $FFFF           |   $6E   |    3    |    6r    |
+  |  <A HREF="ADDR10B.HTM">ZeroPage,X</A>    |   ROR $FF,X           |   $76   |    2    |    ?     |
+  |  <A HREF="ADDR12B.HTM">Absolute,X</A>    |   ROR $FFFF,X         |   $7E   |    3    |    ?     |
+  +----------------+-----------------------+---------+---------+----------+
+  r Add 1 if clock speed is at 40 MHz
+  s Instruction requires 2 cycles when CPU is run at 1 MHz or 2 MHZ
+
 </PRE></BODY></HTML>

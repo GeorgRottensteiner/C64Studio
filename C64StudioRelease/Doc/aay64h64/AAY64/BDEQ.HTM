@@ -1,0 +1,25 @@
+<HTML><HEAD><TITLE>All_About_Your_64-Online-Help Version 0.64</TITLE></HEAD>
+<BODY><PRE>
+
+  DEQ                   DEQ Decrement 32bit memory by one                 DEQ
+
+  Operation:  Q &lt;- Q - 1 or M &lt;- M - 1               N V - B D I Z C
+                                                        / . . . . . / .
+
+ 4510 Versions:
+
+  +----------------+-----------------------+---------+---------+----------+
+  | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
+  +----------------+-----------------------+---------+---------+----------+
+  |  <A HREF="ADDR25D.HTM">Q Register</A> |   DEQ   |$42 $42 $3A|    3    |    3     |
+  |  <A HREF="ADDR25C.HTM">ZeroPage Quad</A>      |   DEQ $FF            |$42 $42 $C6|    4    |   12dmr  |
+  |  <A HREF="ADDR25E.HTM">Absolute Quad</A>      |   DEQ $FFFF          |$42 $42 $CE|    5    |   13dmr  |
+  |  <A HREF="ADDR25F.HTM">ZeroPage Quad,X</A>    |   DEQ $FF,X          |$42 $42 $D6|    4    |   12dmpr |
+  |  <A HREF="ADDR25G.HTM">Absolute Quad,X</A>    |   DEQ $FFFF,X        |$42 $42 $DE|    5    |   13dmpr |
+  +----------------+-----------------------+---------+---------+----------+
+  d Sub 1 if CPU is at 3.5 MHz
+  m Sub non-bus cycles when at 40 MHz
+  p Add 1 if page boundary is crossed.
+  r Add 1 if clock speed is at 40 MHz
+
+</PRE></BODY></HTML>
