@@ -523,7 +523,7 @@
           None
         </td>
         <td>
-          Exports 256 * 8 bytes of the source file
+          Exports all characters data bytes of the source file (C64 256 * 8, FCM 256 * 64, FCM 16bit 8192 * 64)
         </td>
       </tr>
       <tr>
@@ -540,7 +540,7 @@
           Index, Count
         </td>
         <td>
-          Exports Count * 8 bytes starting at Index * 8 bytes of the source file
+          Exports Count character data bytes starting at Index of the source file
         </td>
       </tr>
       <tr>
@@ -557,7 +557,7 @@
           None
         </td>
         <td>
-          Exports 256 * 8 bytes of the character data
+          Exports all characters data bytes of the source file (C64 256 * 8, FCM 256 * 64, FCM 16bit 8192 * 64)
         </td>
       </tr>
       <tr>
@@ -574,24 +574,75 @@
           Index, Count
         </td>
         <td>
-          Exports Count * 8 bytes starting at Index * 8 bytes of the character data
+          Exports Count character data bytes starting at Index bytes of the character data
         </td>
       </tr>
       <tr>
         <td>
-          Sprite File
+          Character Project File
         </td>
         <td>
-          *.spr
+          *.charsetproject
         </td>
         <td>
-          sprite
+          palette
         </td>
         <td>
           None
         </td>
         <td>
-          Exports 256 * 64 bytes of the source file
+          Exports all colors from all palettes, color values ordered all reds, then all greens, then all blues
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Project File
+        </td>
+        <td>
+          *.charsetproject
+        </td>
+        <td>
+          palette
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered all reds, then all greens, then all blues
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Project File
+        </td>
+        <td>
+          *.charsetproject
+        </td>
+        <td>
+          paletteswizzled
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all colors from all palettes, color values ordered all reds, then all greens, then all blues. Color bytes are swizzled (nibbles swapped)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Character Project File
+        </td>
+        <td>
+          *.charsetproject
+        </td>
+        <td>
+          paletteswizzled
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered all reds, then all greens, then all blues. Color bytes are swizzled (nibbles swapped)
         </td>
       </tr>
       <tr>
@@ -603,12 +654,33 @@
         </td>
         <td>
           sprite
+          spriteoptimize
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all sprite data bytes of the source file (C64 256 * 64, Mega65 Expanded 256 * 168, NCM 256 * 168).
+          If optimize is not set sprite data is padded (C64 aligns sprites to 64 bytes, Mega65 aligns sprites to 192 bytes)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sprite File
+        </td>
+        <td>
+          *.spr
+        </td>
+        <td>
+          sprite
+          spriteoptimize
         </td>
         <td>
           Index, Count
         </td>
         <td>
-          Exports Count * 64 bytes starting at Index * 64 bytes of the source file
+          Exports Count sprite data bytes starting at Index bytes of the source file
+          If optimize is not set sprite data is padded (C64 aligns sprites to 64 bytes, Mega65 aligns sprites to 192 bytes)
         </td>
       </tr>
       <tr>
@@ -620,12 +692,14 @@
         </td>
         <td>
           spritedata
+          spritedataoptimize
         </td>
         <td>
           Index, Count, Offset, Number of Bytes
         </td>
         <td>
-          Takes the sprite data for Count sprites starting at Index (*64) and exports Number of Bytes bytes starting at Offset from there
+          Takes the sprite data for Count sprites starting at Index and exports Number of Bytes bytes starting at Offset from there
+          If optimize is not set sprite data is padded (C64 aligns sprites to 64 bytes, Mega65 aligns sprites to 192 bytes)
         </td>
       </tr>
       <tr>
@@ -637,12 +711,14 @@
         </td>
         <td>
           sprite
+          spriteoptimize
         </td>
         <td>
           None
         </td>
         <td>
-          Exports 256 * 64 bytes of the sprite data
+          Exports all sprite data bytes of the source file (C64 256 * 64, Mega65 Expanded 256 * 168, NCM 256 * 168)
+          If optimize is not set sprite data is padded (C64 aligns sprites to 64 bytes, Mega65 aligns sprites to 192 bytes)
         </td>
       </tr>
       <tr>
@@ -654,12 +730,14 @@
         </td>
         <td>
           sprite
+          spriteoptimize
         </td>
         <td>
           Index, Count
         </td>
         <td>
-          Exports Count * 64 bytes starting at Index * 64 bytes of the sprite data
+          Exports Count sprite data bytes starting at Index bytes of the sprite data
+          If optimize is not set sprite data is padded (C64 aligns sprites to 64 bytes, Mega65 aligns sprites to 192 bytes)
         </td>
       </tr>
       <tr>
@@ -671,12 +749,82 @@
         </td>
         <td>
           spritedata
+          spritedataoptimize
         </td>
         <td>
           Index, Count, Offset, Number of Bytes
         </td>
         <td>
-          Takes the sprite data for Count sprites starting at Index (*64) and exports Number of Bytes bytes starting at Offset from there
+          Takes the sprite data for Count sprites starting at Index and exports Number of Bytes bytes starting at Offset from there
+          If optimize is not set sprite data is padded (C64 aligns sprites to 64 bytes, Mega65 aligns sprites to 192 bytes)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sprite Project File
+        </td>
+        <td>
+          *.spriteproject
+        </td>
+        <td>
+          palette
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all colors from all palettes, color values ordered all reds, then all greens, then all blues
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sprite Project File
+        </td>
+        <td>
+          *.spriteproject
+        </td>
+        <td>
+          palette
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered all reds, then all greens, then all blues
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sprite Project File
+        </td>
+        <td>
+          *.spriteproject
+        </td>
+        <td>
+          paletteswizzled
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all colors from all palettes, color values ordered all reds, then all greens, then all blues. Color bytes are swizzled (nibbles swapped)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sprite Project File
+        </td>
+        <td>
+          *.spriteproject
+        </td>
+        <td>
+          paletteswizzled
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports count colors, starting at index, over all palettes, color values ordered all reds, then all greens, then all blues. Color bytes are swizzled (nibbles swapped)
         </td>
       </tr>
       <tr>
@@ -1022,7 +1170,7 @@
           *.charscreen
         </td>
         <td>
-          CHARSET
+          charset
         </td>
         <td>
           None

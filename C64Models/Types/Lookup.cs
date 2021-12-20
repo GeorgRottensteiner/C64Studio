@@ -244,7 +244,7 @@ namespace RetroDevStudio
           return 64;
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
         case SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC:
-          return 256;
+          return 192;
         default:
           Debug.Log( "NumPaddedBytesOfSingleSprite unsupported Mode " + Mode );
           return 64;

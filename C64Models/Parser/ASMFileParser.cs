@@ -4574,7 +4574,7 @@ namespace C64Studio.Parser
         if ( ( method != "SPRITE" )
         &&   ( method != "SPRITEDATA" ) 
         &&   ( method != "SPRITEOPTIMIZE" )
-        &&   ( method != "SPRITEDATA" )
+        &&   ( method != "SPRITEDATAOPTIMIZE" )
         &&   ( method != "PALETTE" )
         &&   ( method != "PALETTESWIZZLED" ) )
         {
