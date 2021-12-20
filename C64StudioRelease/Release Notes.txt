@@ -17,6 +17,60 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+20.12.2021 - 7.0:         Add: Mega65 sample projects showing a few new features
+                          Add: Find Reference also works on macros
+                          Add: math.floor and math.ceiling
+                          Add: Import graphic for FCM mode
+                          Add: graphic import, generate palette from > 8bit images
+                          Add: Real number support throughout assembly
+                          Fix: File manager showing proper PETSCII characters for file names
+                          Fix: !fill with expression list filling num times sequence, not num bytes
+                          Add: Sprite Editor, allow importing new palette from clipboard image
+                          Add: Palette editor: Support import of regular formatted palette file RRRRRRRRGGGGGGGGGGBBBBBBBB
+                          Fix: Backspace with tab in front could auto-delete the tab and mess up undo
+                          Add: Exchanging colors now only affeects selected characters
+                          Add: Changing a color auto-selects it for drawing
+                          Fix: Mega65 16bit charmode mostly working
+                          Add: New functions math.todegrees and math.toradians
+                          Fix: BASIC import from prg now properly restores PI symbol
+                          Fix: Charscreen editor - cut off floating selection, fix for 16bit chars
+                          Fix: Share asm file info also if file name case does not match
+                          Fix: Deleting selection with tabs inside and tabs following
+                          Add: Mega65 16bit character support
+                          Add: Charset project multiple palette support
+                          Add: C64Ass -v/--version option
+                          Fix: issue #55, watch entries cannot be deleted permanently
+                          Add: Opcode docs for Mega65
+                          Fix: Allow sta ( x*y) + ( 231 - 3 ),x  to compile
+                          Add: active palette per sprite
+                          Add: Outline showing BASIC variables
+                          Add: Store Replace settings in Find/Replace dialog
+                          Fix: Add Project as add Existing item now properly adds the project to the solution
+                          Add: Media Manager support for D81 format
+                          Add: Mega65 modes in Map Editor
+                          Fix: !dword upper two bytes were zeroed out
+                          Fix: BASIC parser logging error on a unclosed macro
+                          Add: assembler source file encoding choice
+                          Fix: Find/Replace showing result on screen (scroll horz), find at first position and proper line index
+                          Add: Sprite Editor fill method
+                          Fix: Do not overlap pasting floating selection in charscreen editor
+                          Fix: assembler type autodetection detecting PDS/DASM with "org" inside string literals
+                          Add: Syntax coloring for button backcolors
+                          Add: Charscreen editor: Painting in one stroke is now one undo step instead of every single char
+                          Fix: undo charset screen size would not update size textboxes
+                          Fix: Char/Sprite list remove mouse over highlight if mouse is outside
+                          Add: C64Ass define, nowarnings, ignore specific warning arguments
+                          Add: autofill current selection in find/replace dialog (only if single line)
+                          Add: Support for VC20 and Mega65 FCM modes in charset and charscreen editor
+                          Major rewrite: Find/Replace now working with tabs properly
+                          Fix: Update BASIC 10 commands to latest doc state
+                          Fix: Find Next/Replace Next now always starts at the cursor pos, not on a previously last found pos
+                          Fix: Caret pos when deleting line and line below is shorted then the deleted one
+                          Fix the strip spacing fix to not destroy code with tabs inside
+                          Add: mega65 support to text screen editor for 80x25 modes (hires and mc for now)
+                          Add: Strip Trailing Spaces now also trips trailing tabs
+                          Fix: Drag&Drop with mouse dragging (plus Ctrl) works again
+
 20.08.2021 - 6.9:         Add: restore active tab of tabbed panes
                           Add: Allow BASIC PETSCII macros inside !text statements (e.g. !text "{clr}hello world")
                           Partial fix: properly add up line sizes on overlapping content (loops, macro calls)

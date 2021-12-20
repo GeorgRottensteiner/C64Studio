@@ -1,4 +1,5 @@
 ﻿C64Studio
+o ViC20 Palette in charset/screen editor
 o BASIC - Rename Variables, list all occurrences
 o 16bit charset screen -> add offset
 o Intellisense -> add macros!
