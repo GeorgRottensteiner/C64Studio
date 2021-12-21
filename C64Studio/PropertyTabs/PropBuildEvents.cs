@@ -78,6 +78,9 @@ namespace C64Studio
           BuildEventDetails = new PropBuildEventBuildChain( Element, Core, configSetting.PostBuildChain, config );
           break;
       }
+
+      Core.Theming.ApplyTheme( BuildEventDetails );
+
       BuildEventDetails.Parent    = this;
       BuildEventDetails.Location  = new Point( 6, 68 );
       BuildEventDetails.Visible   = true;
