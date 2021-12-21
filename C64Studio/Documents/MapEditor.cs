@@ -1575,7 +1575,7 @@ namespace C64Studio
     {
       if ( ( Buttons & MouseButtons.Left ) == MouseButtons.Left )
       {
-        int colorIndex = X / 16;
+        int colorIndex = (int)( ( 16 * X ) / panelCharColors.ClientSize.Width );
         m_CurrentColor = (byte)colorIndex;
         RedrawColorChooser();
 
