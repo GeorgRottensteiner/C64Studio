@@ -631,14 +631,14 @@ namespace C64Studio
         {
           continue;
         }
-        var tokenInfos = Core.Compiling.ParserASM.ParseTokenInfo( virtualBP.Expression, 0, virtualBP.Expression.Length );
+        var tokenInfos = Core.Compiling.ParserASM.ParseTokenInfo( virtualBP.Expression, 0, virtualBP.Expression.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
         if ( Core.Compiling.ParserASM.HasError() )
         {
           Core.AddToOutput( "Failed to ParseTokenInfo" + System.Environment.NewLine );
           continue;
         }
         int   result = -1;
-        if ( !Core.Compiling.ParserASM.EvaluateTokens( -1, tokenInfos, out SymbolInfo resultSymbol ) )
+        if ( !Core.Compiling.ParserASM.EvaluateTokens( -1, tokenInfos, Core.Compiling.ParserASM.m_TextCodeMappingRaw, out SymbolInfo resultSymbol ) )
         {
           Core.AddToOutput( "Failed to evaluate " + virtualBP.Expression + System.Environment.NewLine );
           continue;

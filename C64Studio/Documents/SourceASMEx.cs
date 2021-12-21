@@ -1538,7 +1538,7 @@ namespace C64Studio
       int posX = editSource.Selection.Start.iChar;
 
       // ugly quick hack, allow x and y as index fields for opcodes (e.g. sta $fff,x)
-      var tokens = Parser.PrepareLineTokens( curLine );
+      var tokens = Parser.PrepareLineTokens( curLine, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
       bool hadOpcodeFirst = false;
       if ( tokens != null )
       {
@@ -2301,7 +2301,7 @@ namespace C64Studio
         string watchedSelection = editSource.Selection.Text;
 
         // allow for single label; label,x; label,y; (label),y; (label),x
-        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length );
+        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
 
         if ( tokens.Count != 0 )
         {
@@ -3235,7 +3235,7 @@ namespace C64Studio
         string watchedSelection = editSource.Selection.Text;
 
         // allow for single label; label,x; label,y; (label),y; (label),x
-        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length );
+        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
 
         if ( tokens.Count > 0 )
         {
@@ -3431,7 +3431,7 @@ namespace C64Studio
       {
         string    text = editSource.Lines[lineIndex];
 
-        var tokens = Parser.ParseTokenInfo( text, 0, text.Length );
+        var tokens = Parser.ParseTokenInfo( text, 0, text.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
 
         int     firstLiteralTokenIndex = 1;
 
@@ -3472,7 +3472,7 @@ namespace C64Studio
                 &&         ( tokens[i + 1].Content == "," ) )
                 ||       ( i + 1 == tokens.Count ) ) ) )
                 {
-                  if ( Parser.EvaluateTokens( i, tokens, i, 1, out SymbolInfo resultValueSymbol ) )
+                  if ( Parser.EvaluateTokens( i, tokens, i, 1, Core.Compiling.ParserASM.m_TextCodeMappingRaw, out SymbolInfo resultValueSymbol ) )
                   {
                     int resultValue = resultValueSymbol.ToInteger();
                     resultValue += formDelta.Delta;
@@ -3531,7 +3531,7 @@ namespace C64Studio
         string watchedSelection = editSource.Selection.Text;
 
         // allow for single label; label,x; label,y; (label),y; (label),x
-        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length );
+        List<Types.TokenInfo> tokens = Core.Compiling.ParserASM.ParseTokenInfo( watchedSelection, 0, watchedSelection.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
 
         if ( tokens.Count != 0 )
         {

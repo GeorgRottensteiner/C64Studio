@@ -534,13 +534,13 @@ namespace C64Studio
       do
       {
         m_Parser.AddConstantF( "x", curValue, 0, "", "", 0, 1 );
-        var tokens = m_Parser.ParseTokenInfo( m_Project.ValueTable.Formula, 0, m_Project.ValueTable.Formula.Length );
+        var tokens = m_Parser.ParseTokenInfo( m_Project.ValueTable.Formula, 0, m_Project.ValueTable.Formula.Length, m_Parser.m_TextCodeMappingRaw );
         if ( tokens == null )
         {
           SetError( m_Parser.GetError().Code.ToString() );
           return;
         }
-        if ( !m_Parser.EvaluateTokens( 0, tokens, out SymbolInfo result ) )
+        if ( !m_Parser.EvaluateTokens( 0, tokens, m_Parser.m_TextCodeMappingRaw, out SymbolInfo result ) )
         {
           SetError( m_Parser.GetError().Code.ToString() );
           return;
@@ -596,7 +596,7 @@ namespace C64Studio
 
 
 
-    private List<TokenInfo> ExtSinus( List<TokenInfo> Arguments )
+    private List<TokenInfo> ExtSinus( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
     {
       var result = new List<TokenInfo>();
 
@@ -605,7 +605,7 @@ namespace C64Studio
         SetError( "Invalid argument count" );
         return result;
       }
-      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -621,7 +621,7 @@ namespace C64Studio
 
 
 
-    private List<TokenInfo> ExtToRadians( List<TokenInfo> Arguments )
+    private List<TokenInfo> ExtToRadians( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
     {
       var result = new List<TokenInfo>();
 
@@ -630,7 +630,7 @@ namespace C64Studio
         SetError( "Invalid argument count" );
         return result;
       }
-      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -646,7 +646,7 @@ namespace C64Studio
 
 
 
-    private List<TokenInfo> ExtToDegrees( List<TokenInfo> Arguments )
+    private List<TokenInfo> ExtToDegrees( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
     {
       var result = new List<TokenInfo>();
 
@@ -655,7 +655,7 @@ namespace C64Studio
         SetError( "Invalid argument count" );
         return result;
       }
-      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -671,7 +671,7 @@ namespace C64Studio
 
 
 
-    private List<TokenInfo> ExtCosinus( List<TokenInfo> Arguments )
+    private List<TokenInfo> ExtCosinus( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
     {
       var result = new List<TokenInfo>();
 
@@ -680,7 +680,7 @@ namespace C64Studio
         SetError( "Invalid argument count" );
         return result;
       }
-      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;
@@ -696,7 +696,7 @@ namespace C64Studio
 
 
 
-    private List<TokenInfo> ExtTan( List<TokenInfo> Arguments )
+    private List<TokenInfo> ExtTan( List<TokenInfo> Arguments, GR.Collections.Map<byte, byte> TextCodeMapping )
     {
       var result = new List<TokenInfo>();
 
@@ -705,7 +705,7 @@ namespace C64Studio
         SetError( "Invalid argument count" );
         return result;
       }
-      if ( !m_Parser.EvaluateTokens( 0, Arguments, out SymbolInfo functionResult ) )
+      if ( !m_Parser.EvaluateTokens( 0, Arguments, TextCodeMapping, out SymbolInfo functionResult ) )
       {
         SetError( "Invalid argument" );
         return result;

@@ -1946,9 +1946,9 @@ namespace C64Studio
           macroName = macroName.Substring( 2 );
         }
 
-        var tokens = parser.ParseTokenInfo( macroName, 0, macroName.Length );
+        var tokens = parser.ParseTokenInfo( macroName, 0, macroName.Length, parser.m_TextCodeMappingRaw );
         parser.ASMFileInfo = Document.ASMFileInfo;
-        if ( !parser.EvaluateTokens( 0, tokens, out SymbolInfo macroValueSymbol ) )
+        if ( !parser.EvaluateTokens( 0, tokens, parser.m_TextCodeMappingRaw, out SymbolInfo macroValueSymbol ) )
         {
           Error = true;
           StudioCore.AddToOutput( "Failed to evaluate macro '" + macroName + "' encountered at command " + Mask + System.Environment.NewLine );

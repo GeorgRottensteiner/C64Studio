@@ -26,6 +26,7 @@
     public string     DocumentFilename = "";
     public int        LocalLineIndex = 0;
     public int        AddressOrValue = -1;
+    public string     String = "";
     public double     RealValue = 0;
     public string     Zone = "";
     public bool       FromDependency = false;
@@ -63,6 +64,23 @@
       if ( Type == Types.CONSTANT_REAL_NUMBER )
       {
         return (int)RealValue;
+      }
+      if ( Type == Types.VARIABLE_STRING )
+      {
+        if ( String.Length == 0 )
+        {
+          return 0;
+        }
+        if ( ( String.StartsWith( "\"" ) )
+        &&   ( String.EndsWith( "\"" ) ) )
+        {
+          if ( String.Length > 2 )
+          {
+            return (char)String[1];
+          }
+          return 0;
+        }
+        return (char)String[0];
       }
       return AddressOrValue;
     }
