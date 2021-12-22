@@ -17,6 +17,7 @@ namespace C64Studio.Undo
     public int                  Multicolor2 = 0;
     public int                  BGColor4 = 0;
     public TextMode             Mode = TextMode.COMMODORE_40_X_25_HIRES;
+    public int                  CharOffset = 0;
 
 
     public UndoCharscreenValuesChange( CharsetScreenProject Project, CharsetScreenEditor Editor )
@@ -28,6 +29,7 @@ namespace C64Studio.Undo
       Multicolor2     = Project.CharSet.Colors.MultiColor2;
       BGColor4        = Project.CharSet.Colors.BGColor4;
       Mode            = Project.Mode;
+      CharOffset      = Project.CharOffset;
     }
 
 
@@ -57,6 +59,7 @@ namespace C64Studio.Undo
       Project.CharSet.Colors.MultiColor1      = Multicolor1;
       Project.CharSet.Colors.MultiColor2      = Multicolor2;
       Project.CharSet.Colors.BGColor4         = BGColor4;
+      Project.CharOffset                      = CharOffset;
 
       Editor.ValuesChanged();
       Editor.SetModified();

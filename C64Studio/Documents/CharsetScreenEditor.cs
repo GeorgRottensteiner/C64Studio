@@ -1300,6 +1300,7 @@ namespace C64Studio
       comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
       comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
+      editCharOffset.Text = m_CharsetScreen.CharOffset.ToString();
 
       Modified = false;
       if ( m_CharsetScreen.ExternalCharset.Length != 0 )
@@ -3077,6 +3078,8 @@ namespace C64Studio
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
       comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
 
+      editCharOffset.Text = m_CharsetScreen.CharOffset.ToString();
+
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
@@ -3914,6 +3917,19 @@ namespace C64Studio
       uint  selColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
 
       TargetBuffer.Rectangle( x1, 0, x2 - x1, TargetBuffer.Height, selColor );
+    }
+
+
+
+    private void editCharOffset_TextChanged( object sender, EventArgs e )
+    {
+      if ( m_CharsetScreen.CharOffset != GR.Convert.ToI32( editCharOffset.Text ) )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
+
+        m_CharsetScreen.CharOffset = GR.Convert.ToI32( editCharOffset.Text );
+        SetModified();
+      }
     }
 
 

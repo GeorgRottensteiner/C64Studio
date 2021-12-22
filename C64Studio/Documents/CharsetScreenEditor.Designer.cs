@@ -126,6 +126,8 @@
       this.tabCharset = new System.Windows.Forms.TabPage();
       this.charEditor = new C64Studio.Controls.CharacterEditor();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.label10 = new System.Windows.Forms.Label();
+      this.editCharOffset = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -690,6 +692,7 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.editCharOffset);
       this.tabEditor.Controls.Add(this.btnShiftDown);
       this.tabEditor.Controls.Add(this.btnShiftUp);
       this.tabEditor.Controls.Add(this.btnShiftRight);
@@ -701,6 +704,7 @@
       this.tabEditor.Controls.Add(this.checkAutoCenter);
       this.tabEditor.Controls.Add(this.checkApplyColors);
       this.tabEditor.Controls.Add(this.checkApplyCharacter);
+      this.tabEditor.Controls.Add(this.label10);
       this.tabEditor.Controls.Add(this.label9);
       this.tabEditor.Controls.Add(this.comboCharsetMode);
       this.tabEditor.Controls.Add(this.labelInfo);
@@ -742,7 +746,7 @@
       this.btnShiftDown.Location = new System.Drawing.Point(104, 460);
       this.btnShiftDown.Name = "btnShiftDown";
       this.btnShiftDown.Size = new System.Drawing.Size(24, 23);
-      this.btnShiftDown.TabIndex = 16;
+      this.btnShiftDown.TabIndex = 14;
       this.toolTip1.SetToolTip(this.btnShiftDown, "Shift Down");
       this.btnShiftDown.UseVisualStyleBackColor = true;
       this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
@@ -753,7 +757,7 @@
       this.btnShiftUp.Location = new System.Drawing.Point(80, 460);
       this.btnShiftUp.Name = "btnShiftUp";
       this.btnShiftUp.Size = new System.Drawing.Size(24, 23);
-      this.btnShiftUp.TabIndex = 15;
+      this.btnShiftUp.TabIndex = 13;
       this.toolTip1.SetToolTip(this.btnShiftUp, "Shift Up");
       this.btnShiftUp.UseVisualStyleBackColor = true;
       this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
@@ -764,7 +768,7 @@
       this.btnShiftRight.Location = new System.Drawing.Point(56, 460);
       this.btnShiftRight.Name = "btnShiftRight";
       this.btnShiftRight.Size = new System.Drawing.Size(24, 23);
-      this.btnShiftRight.TabIndex = 14;
+      this.btnShiftRight.TabIndex = 12;
       this.toolTip1.SetToolTip(this.btnShiftRight, "Shift Right");
       this.btnShiftRight.UseVisualStyleBackColor = true;
       this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
@@ -775,7 +779,7 @@
       this.btnShiftLeft.Location = new System.Drawing.Point(32, 460);
       this.btnShiftLeft.Name = "btnShiftLeft";
       this.btnShiftLeft.Size = new System.Drawing.Size(24, 23);
-      this.btnShiftLeft.TabIndex = 13;
+      this.btnShiftLeft.TabIndex = 11;
       this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift Left");
       this.btnShiftLeft.UseVisualStyleBackColor = true;
       this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
@@ -786,7 +790,7 @@
       this.btnClearScreen.Location = new System.Drawing.Point(8, 460);
       this.btnClearScreen.Name = "btnClearScreen";
       this.btnClearScreen.Size = new System.Drawing.Size(24, 23);
-      this.btnClearScreen.TabIndex = 12;
+      this.btnClearScreen.TabIndex = 10;
       this.toolTip1.SetToolTip(this.btnClearScreen, "Clear Screen (set to spaces)");
       this.btnClearScreen.UseVisualStyleBackColor = true;
       this.btnClearScreen.Click += new System.EventHandler(this.btnClearScreen_Click);
@@ -797,7 +801,7 @@
       this.checkOverrideOriginalColorSettings.Location = new System.Drawing.Point(751, 37);
       this.checkOverrideOriginalColorSettings.Name = "checkOverrideOriginalColorSettings";
       this.checkOverrideOriginalColorSettings.Size = new System.Drawing.Size(96, 17);
-      this.checkOverrideOriginalColorSettings.TabIndex = 19;
+      this.checkOverrideOriginalColorSettings.TabIndex = 17;
       this.checkOverrideOriginalColorSettings.Text = "Override Mode";
       this.checkOverrideOriginalColorSettings.UseVisualStyleBackColor = true;
       this.checkOverrideOriginalColorSettings.CheckedChanged += new System.EventHandler(this.checkOverrideMode_CheckedChanged);
@@ -808,7 +812,7 @@
       this.checkShowGrid.Location = new System.Drawing.Point(168, 462);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
-      this.checkShowGrid.TabIndex = 17;
+      this.checkShowGrid.TabIndex = 15;
       this.checkShowGrid.Text = "Show Grid";
       this.checkShowGrid.UseVisualStyleBackColor = true;
       this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
@@ -820,7 +824,7 @@
       this.checkReverse.Location = new System.Drawing.Point(228, 432);
       this.checkReverse.Name = "checkReverse";
       this.checkReverse.Size = new System.Drawing.Size(24, 24);
-      this.checkReverse.TabIndex = 11;
+      this.checkReverse.TabIndex = 8;
       this.toolTip1.SetToolTip(this.checkReverse, "Reverse Characters");
       this.checkReverse.UseVisualStyleBackColor = true;
       this.checkReverse.CheckedChanged += new System.EventHandler(this.checkReverse_CheckedChanged);
@@ -832,7 +836,7 @@
       this.checkAutoCenter.Location = new System.Drawing.Point(258, 432);
       this.checkAutoCenter.Name = "checkAutoCenter";
       this.checkAutoCenter.Size = new System.Drawing.Size(24, 24);
-      this.checkAutoCenter.TabIndex = 36;
+      this.checkAutoCenter.TabIndex = 9;
       this.toolTip1.SetToolTip(this.checkAutoCenter, "Automatically center text on entry");
       this.checkAutoCenter.UseVisualStyleBackColor = true;
       this.checkAutoCenter.CheckedChanged += new System.EventHandler(this.checkAutoCenterText_CheckedChanged);
@@ -846,7 +850,7 @@
       this.checkApplyColors.Location = new System.Drawing.Point(198, 432);
       this.checkApplyColors.Name = "checkApplyColors";
       this.checkApplyColors.Size = new System.Drawing.Size(24, 24);
-      this.checkApplyColors.TabIndex = 9;
+      this.checkApplyColors.TabIndex = 7;
       this.toolTip1.SetToolTip(this.checkApplyColors, "Affect Colors");
       this.checkApplyColors.UseVisualStyleBackColor = true;
       this.checkApplyColors.CheckedChanged += new System.EventHandler(this.checkApplyColors_CheckedChanged);
@@ -860,7 +864,7 @@
       this.checkApplyCharacter.Location = new System.Drawing.Point(168, 432);
       this.checkApplyCharacter.Name = "checkApplyCharacter";
       this.checkApplyCharacter.Size = new System.Drawing.Size(24, 24);
-      this.checkApplyCharacter.TabIndex = 8;
+      this.checkApplyCharacter.TabIndex = 6;
       this.toolTip1.SetToolTip(this.checkApplyCharacter, "Affect Characters");
       this.checkApplyCharacter.UseVisualStyleBackColor = true;
       this.checkApplyCharacter.CheckedChanged += new System.EventHandler(this.checkApplyCharacter_CheckedChanged);
@@ -881,7 +885,7 @@
       this.comboCharsetMode.Location = new System.Drawing.Point(751, 8);
       this.comboCharsetMode.Name = "comboCharsetMode";
       this.comboCharsetMode.Size = new System.Drawing.Size(216, 21);
-      this.comboCharsetMode.TabIndex = 18;
+      this.comboCharsetMode.TabIndex = 16;
       this.comboCharsetMode.SelectedIndexChanged += new System.EventHandler(this.comboCharsetMode_SelectedIndexChanged);
       // 
       // labelInfo
@@ -899,7 +903,7 @@
       this.btnToolText.Location = new System.Drawing.Point(128, 432);
       this.btnToolText.Name = "btnToolText";
       this.btnToolText.Size = new System.Drawing.Size(24, 24);
-      this.btnToolText.TabIndex = 7;
+      this.btnToolText.TabIndex = 5;
       this.toolTip1.SetToolTip(this.btnToolText, "Direct Text Entry");
       this.btnToolText.UseVisualStyleBackColor = true;
       this.btnToolText.CheckedChanged += new System.EventHandler(this.btnToolText_CheckedChanged);
@@ -911,7 +915,7 @@
       this.btnToolSelect.Location = new System.Drawing.Point(104, 432);
       this.btnToolSelect.Name = "btnToolSelect";
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
-      this.btnToolSelect.TabIndex = 6;
+      this.btnToolSelect.TabIndex = 4;
       this.toolTip1.SetToolTip(this.btnToolSelect, "Selection");
       this.btnToolSelect.UseVisualStyleBackColor = true;
       this.btnToolSelect.CheckedChanged += new System.EventHandler(this.btnToolSelect_CheckedChanged);
@@ -923,7 +927,7 @@
       this.btnToolFill.Location = new System.Drawing.Point(80, 432);
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
-      this.btnToolFill.TabIndex = 5;
+      this.btnToolFill.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnToolFill, "Fill");
       this.btnToolFill.UseVisualStyleBackColor = true;
       this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
@@ -935,7 +939,7 @@
       this.btnToolQuad.Location = new System.Drawing.Point(56, 432);
       this.btnToolQuad.Name = "btnToolQuad";
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
-      this.btnToolQuad.TabIndex = 4;
+      this.btnToolQuad.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnToolQuad, "Filled Rectangle");
       this.btnToolQuad.UseVisualStyleBackColor = true;
       this.btnToolQuad.CheckedChanged += new System.EventHandler(this.btnToolQuad_CheckedChanged);
@@ -947,7 +951,7 @@
       this.btnToolRect.Location = new System.Drawing.Point(32, 432);
       this.btnToolRect.Name = "btnToolRect";
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
-      this.btnToolRect.TabIndex = 3;
+      this.btnToolRect.TabIndex = 1;
       this.toolTip1.SetToolTip(this.btnToolRect, "Rectangle");
       this.btnToolRect.UseVisualStyleBackColor = true;
       this.btnToolRect.CheckedChanged += new System.EventHandler(this.btnToolRect_CheckedChanged);
@@ -960,7 +964,7 @@
       this.btnToolEdit.Location = new System.Drawing.Point(8, 432);
       this.btnToolEdit.Name = "btnToolEdit";
       this.btnToolEdit.Size = new System.Drawing.Size(24, 24);
-      this.btnToolEdit.TabIndex = 2;
+      this.btnToolEdit.TabIndex = 0;
       this.btnToolEdit.TabStop = true;
       this.toolTip1.SetToolTip(this.btnToolEdit, "Single Character");
       this.btnToolEdit.UseVisualStyleBackColor = true;
@@ -971,7 +975,7 @@
       this.btnApplyScreenSize.Location = new System.Drawing.Point(897, 114);
       this.btnApplyScreenSize.Name = "btnApplyScreenSize";
       this.btnApplyScreenSize.Size = new System.Drawing.Size(67, 20);
-      this.btnApplyScreenSize.TabIndex = 26;
+      this.btnApplyScreenSize.TabIndex = 25;
       this.btnApplyScreenSize.Text = "Apply";
       this.btnApplyScreenSize.UseVisualStyleBackColor = true;
       this.btnApplyScreenSize.Click += new System.EventHandler(this.btnApplyScreenSize_Click);
@@ -981,7 +985,7 @@
       this.editScreenHeight.Location = new System.Drawing.Point(830, 114);
       this.editScreenHeight.Name = "editScreenHeight";
       this.editScreenHeight.Size = new System.Drawing.Size(61, 20);
-      this.editScreenHeight.TabIndex = 25;
+      this.editScreenHeight.TabIndex = 24;
       this.editScreenHeight.TextChanged += new System.EventHandler(this.editScreenHeight_TextChanged);
       // 
       // editScreenWidth
@@ -989,7 +993,7 @@
       this.editScreenWidth.Location = new System.Drawing.Point(751, 114);
       this.editScreenWidth.Name = "editScreenWidth";
       this.editScreenWidth.Size = new System.Drawing.Size(70, 20);
-      this.editScreenWidth.TabIndex = 24;
+      this.editScreenWidth.TabIndex = 23;
       this.editScreenWidth.TextChanged += new System.EventHandler(this.editScreenWidth_TextChanged);
       // 
       // screenVScroll
@@ -1073,7 +1077,7 @@
       this.panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
       this.panelCharacters.SelectedIndex = -1;
       this.panelCharacters.Size = new System.Drawing.Size(260, 260);
-      this.panelCharacters.TabIndex = 27;
+      this.panelCharacters.TabIndex = 26;
       this.panelCharacters.TabStop = true;
       this.panelCharacters.VisibleAutoScrollHorizontal = false;
       this.panelCharacters.VisibleAutoScrollVertical = false;
@@ -1087,7 +1091,7 @@
       this.comboBGColor4.Location = new System.Drawing.Point(751, 87);
       this.comboBGColor4.Name = "comboBGColor4";
       this.comboBGColor4.Size = new System.Drawing.Size(70, 21);
-      this.comboBGColor4.TabIndex = 22;
+      this.comboBGColor4.TabIndex = 21;
       this.comboBGColor4.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboBGColor4.SelectedIndexChanged += new System.EventHandler(this.comboBGColor4_SelectedIndexChanged);
       // 
@@ -1099,7 +1103,7 @@
       this.comboMulticolor2.Location = new System.Drawing.Point(897, 87);
       this.comboMulticolor2.Name = "comboMulticolor2";
       this.comboMulticolor2.Size = new System.Drawing.Size(70, 21);
-      this.comboMulticolor2.TabIndex = 23;
+      this.comboMulticolor2.TabIndex = 22;
       this.comboMulticolor2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboMulticolor2.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor2_SelectedIndexChanged);
       // 
@@ -1111,7 +1115,7 @@
       this.comboMulticolor1.Location = new System.Drawing.Point(897, 60);
       this.comboMulticolor1.Name = "comboMulticolor1";
       this.comboMulticolor1.Size = new System.Drawing.Size(70, 21);
-      this.comboMulticolor1.TabIndex = 21;
+      this.comboMulticolor1.TabIndex = 20;
       this.comboMulticolor1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboMulticolor1.SelectedIndexChanged += new System.EventHandler(this.comboMulticolor1_SelectedIndexChanged);
       // 
@@ -1123,7 +1127,7 @@
       this.comboBackground.Location = new System.Drawing.Point(751, 60);
       this.comboBackground.Name = "comboBackground";
       this.comboBackground.Size = new System.Drawing.Size(70, 21);
-      this.comboBackground.TabIndex = 20;
+      this.comboBackground.TabIndex = 19;
       this.comboBackground.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboColor_DrawItem);
       this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
       // 
@@ -1191,6 +1195,23 @@
       this.charEditor.TabIndex = 24;
       this.charEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);
       this.charEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.charEditor_CharactersShifted);
+      // 
+      // label10
+      // 
+      this.label10.AutoSize = true;
+      this.label10.Location = new System.Drawing.Point(853, 38);
+      this.label10.Name = "label10";
+      this.label10.Size = new System.Drawing.Size(38, 13);
+      this.label10.TabIndex = 35;
+      this.label10.Text = "Offset:";
+      // 
+      // editCharOffset
+      // 
+      this.editCharOffset.Location = new System.Drawing.Point(897, 35);
+      this.editCharOffset.Name = "editCharOffset";
+      this.editCharOffset.Size = new System.Drawing.Size(70, 20);
+      this.editCharOffset.TabIndex = 18;
+      this.editCharOffset.TextChanged += new System.EventHandler(this.editCharOffset_TextChanged);
       // 
       // CharsetScreenEditor
       // 
@@ -1315,5 +1336,7 @@
     private System.Windows.Forms.Button btnShiftRight;
     private System.Windows.Forms.Button btnShiftLeft;
     private System.Windows.Forms.Button btnImportCharsetFromFile;
+    private System.Windows.Forms.TextBox editCharOffset;
+    private System.Windows.Forms.Label label10;
   }
 }

@@ -15,6 +15,9 @@ namespace C64Studio.Formats
     public int                          ScreenOffsetX = 0;
     public int                          ScreenOffsetY = 0;
 
+    // used to add onto char values on export
+    public int                          CharOffset = 0;
+
     public List<uint>                   Chars = new List<uint>( 40 * 25 );
 
     public string                       ExternalCharset = "";
@@ -65,6 +68,7 @@ namespace C64Studio.Formats
       chunkScreenInfo.AppendI32( (int)Mode );
       chunkScreenInfo.AppendI32( ScreenOffsetX );
       chunkScreenInfo.AppendI32( ScreenOffsetY );
+      chunkScreenInfo.AppendI32( CharOffset );
 
       projectFile.Append( chunkScreenInfo.ToBuffer() );
 
@@ -138,6 +142,7 @@ namespace C64Studio.Formats
               _Mode = (TextMode)chunkReader.ReadInt32();
               ScreenOffsetX = chunkReader.ReadInt32();
               ScreenOffsetY = chunkReader.ReadInt32();
+              CharOffset = chunkReader.ReadInt32();
 
               Chars = new List<uint>();
               for ( int i = 0; i < ScreenWidth * ScreenHeight; ++i )
@@ -214,6 +219,8 @@ namespace C64Studio.Formats
             byte newColor = (byte)( ( Chars[( Y + i ) * ScreenWidth + X + x] & 0xff0000 ) >> 16 );
             ushort newChar = (ushort)( Chars[( Y + i ) * ScreenWidth + X + x] & 0xffff );
 
+            newChar = (ushort)( newChar + CharOffset );
+
             if ( numBytesPerChar == 2 )
             {
               CharData.AppendU16( newChar );
@@ -237,6 +244,8 @@ namespace C64Studio.Formats
           {
             byte newColor = (byte)( ( Chars[( Y + i ) * ScreenWidth + X + x] & 0xff0000 ) >> 16 );
             ushort newChar = (ushort)( Chars[( Y + i ) * ScreenWidth + X + x] & 0xffff );
+
+            newChar = (ushort)( newChar + CharOffset );
 
             if ( numBytesPerChar == 2 )
             {
