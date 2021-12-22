@@ -86,7 +86,7 @@
 .HOTREG         = $d05d
 
 ;number of characters to display per row
-.CHRCOUNT				= $d05e
+.CHRCOUNT       = $d05e
 
 ;3 byte address of screen ram
 ;$d060 = lo byte
@@ -102,6 +102,10 @@
 ;xx11 xxxx = msb of CHRCOUNT
 ;xxxx 1111 = msg of SCRNPTR
 .EXGLYPH_CHRCOUNT_SCRNPTR = $d063
+
+;16 bit address offset of color RAM
+.COLPTR_LO        = $d064
+.COLPTR_HI        = $d065
 
 ;3 byte address of chargen position
 ;$d068 = lo byte
@@ -122,9 +126,9 @@
 ;x111 1111 =   SPRPTRBNK - sprite pointer bank
 .SPRPTR16       = $d06e
 
-;1xxx xxxx =  PALNTSC		- 1 = NTSC emulation mode
-;x1xx xxxx =  VGAHDTD		- 1 = select more VGA compatible output
-;xx11 1111 =	RASLINE0	    = first VIC2 raster line
+;1xxx xxxx =  PALNTSC   - 1 = NTSC emulation mode
+;x1xx xxxx =  VGAHDTD   - 1 = select more VGA compatible output
+;xx11 1111 =  RASLINE0      = first VIC2 raster line
 .PALNTSC_VGAHDTV_RASLINE0 = $d06f
 
 ;11xx xxxx = MAPEDPAL     - palette bank mapped at $d100 to $d3ff

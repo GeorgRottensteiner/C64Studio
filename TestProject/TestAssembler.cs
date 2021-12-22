@@ -612,5 +612,23 @@ namespace TestProject
       Assert.AreEqual( "01080B080A009E3230363100000078A9B08D00D0A9818D01D0A9218DF807A9018D15D04C2208EAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEAEA000003F8000FFE001FFF001F3F003ECF803EFF803ECF801F3F001FFF001FFF0017FD000BFA0009F20004E40004E40002480002480001F00001F00001F00000E00000", assembly.Assembly.ToString() );
     }
 
+
+
+    [TestMethod]
+    public void TestAssemblyStringLiterals()
+    {
+      // assembles as raw mapping of the first character
+
+      string      source = @"* = $1000
+                            lda #""i""
+                            !byte ""i""";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010A96969", assembly.ToString() );
+    }
+
+
+
   }
 }

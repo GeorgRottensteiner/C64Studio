@@ -444,7 +444,6 @@ namespace C64Studio
         if ( !Lookup.HasCustomPalette( m_SpriteProject.Sprites[m_CurrentSprite].Tile.Mode ) )
         {
           _ColorSettingsDlg.CustomColor = m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor;
-
           _ColorSettingsDlg.MultiColorEnabled = ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR );
         }
         else
@@ -3562,6 +3561,11 @@ namespace C64Studio
 
     private void _ColorSettingsDlg_ColorsModified( ColorType Color, ColorSettings Colors, int CustomColor )
     {
+      if ( DoNotUpdateFromControls )
+      {
+        return;
+      }
+
       switch ( Color )
       {
         case ColorType.BACKGROUND:

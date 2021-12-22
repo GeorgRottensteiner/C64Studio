@@ -1,12 +1,10 @@
 ﻿C64Studio
-o ViC20 Palette in charset/screen editor
+o Funktion um alle Zones zuzuklappen
 o BASIC - Rename Variables, list all occurrences
 o 16bit charset screen -> add offset
-o Intellisense -> add macros!
-o 120% scaling in imagelistbox 
+o 120% scaling in imagelistbox und color selector
 o Rename Project in Solution Explorer, also rename .c64 file!
 o Beim "Graphic Screen" -> "Export" optionale "Load Address (hex)" wie beim Character Set
-o Clone Solution/Project
 o Disassembler: Special case "bit" shortcat, e.g. target label is not placed
 *=$033c
             lda $14
