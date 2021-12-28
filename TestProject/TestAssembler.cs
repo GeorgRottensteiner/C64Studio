@@ -630,5 +630,21 @@ namespace TestProject
 
 
 
+    [TestMethod]
+    public void TestAssemblyCharLiterals()
+    {
+      // assembles as raw mapping of the first character
+
+      string      source = @"* = $1000
+                            lda #'a'
+                            !byte 'b'";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010A96162", assembly.ToString() );
+    }
+
+
+
   }
 }

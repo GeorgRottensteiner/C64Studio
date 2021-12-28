@@ -1806,7 +1806,7 @@ namespace C64Studio.Parser
           case TokenInfo.TokenType.LITERAL_CHAR:
             {
               var symbol = new SymbolInfo();
-              symbol.AddressOrValue = (byte)Tokens[StartIndex].Content[0];
+              symbol.AddressOrValue = (byte)Tokens[StartIndex].Content[1];
               symbol.Type = SymbolInfo.Types.CONSTANT_1;
               NumBytesGiven = 1;
               ResultingToken = symbol;

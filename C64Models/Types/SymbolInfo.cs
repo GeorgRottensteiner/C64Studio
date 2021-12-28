@@ -80,6 +80,15 @@
           }
           return 0;
         }
+        if ( ( String.StartsWith( "'" ) )
+        &&   ( String.EndsWith( "'" ) ) )
+        {
+          if ( String.Length > 2 )
+          {
+            return (char)String[1];
+          }
+          return 0;
+        }
         return (char)String[0];
       }
       return AddressOrValue;
