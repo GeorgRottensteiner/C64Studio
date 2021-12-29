@@ -253,6 +253,10 @@ namespace C64Studio
         {
           info.AddressStart = m_LineInfos[indexToNotify - 1].AddressStart;
         }
+        while ( indexToNotify >= m_LineInfos.Count )
+        {
+          m_LineInfos.Add( new Types.ASM.LineInfo() );
+        }
         m_LineInfos.Insert( indexToNotify, info );
       }
 

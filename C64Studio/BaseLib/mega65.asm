@@ -52,6 +52,12 @@
 ;xxxx 1111      = TEXTYPOS high nibble
 .SPRTILEN_TEXTYPOS  = $d04f
 
+;1xxx xxxx      = NORRDEL       when clear, raster rewrite double buffering is used
+;x1xx xxxx      = DBLRR         when set, the Raster Rewrite Buffer is only updated every 2nd raster line,
+;                               limiting resolution to V200, but allowing more cycles for Raster-Rewrite actions.
+;xx11 1111      = XPOS          Read horizontal raster scan position LSB
+.NORRDEL_DBLRR_XPOS = $d051
+
 ;VIC4 display settings
 ;1xxx xxxx      = ALPHEN        alpha compositor enable
 ;x1xx xxxx      = VFAST         C65GS FAST mode (48MHz)
