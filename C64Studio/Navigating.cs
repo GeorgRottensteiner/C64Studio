@@ -64,7 +64,7 @@ namespace C64Studio
 
     public Types.ASM.FileInfo DetermineASMFileInfo( DocumentInfo doc )
     {
-      DocumentInfo possibleDoc = Core.MainForm.DetermineDocumentToCompile();
+      DocumentInfo possibleDoc = Core.MainForm.DetermineDocumentToCompile( false );
 
       if ( ( possibleDoc != null )
       &&   ( DocumentHasASMFileInfo( possibleDoc ) ) )

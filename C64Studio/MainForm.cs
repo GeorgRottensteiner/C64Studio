@@ -4172,9 +4172,25 @@ namespace C64Studio
 
 
 
-    public DocumentInfo DetermineDocumentToCompile()
+    public DocumentInfo DetermineDocumentToCompile( bool AllowMainProjectOverride )
     {
       BaseDocument baseDocToCompile = ActiveContent;
+
+      if ( ( AllowMainProjectOverride )
+      &&   ( StudioCore.Navigating.Solution != null )
+      &&   ( StudioCore.Navigating.Solution.ActiveProject != "" ) )
+      {
+        var project = StudioCore.Navigating.Solution.GetProjectByName( StudioCore.Navigating.Solution.ActiveProject );
+        if ( project != null )
+        {
+          ProjectElement element = project.GetElementByFilename( project.Settings.MainDocument );
+          if ( element != null )
+          {
+            baseDocToCompile = element.Document;
+          }
+        }
+      }
+
       if ( ( ( baseDocToCompile != null )
       &&     ( !baseDocToCompile.DocumentInfo.Compilable ) )
       ||   ( baseDocToCompile == null ) )
@@ -4190,7 +4206,7 @@ namespace C64Studio
 
 
       if ( ( docToCompile.Element != null )
-      && ( !string.IsNullOrEmpty( docToCompile.Project.Settings.MainDocument ) ) )
+      &&   ( !string.IsNullOrEmpty( docToCompile.Project.Settings.MainDocument ) ) )
       {
         ProjectElement element = docToCompile.Project.GetElementByFilename( docToCompile.Project.Settings.MainDocument );
         if ( element != null )
@@ -4549,7 +4565,7 @@ namespace C64Studio
           }
           {
             DocumentInfo docToDebug = DetermineDocumentToHandle();
-            DocumentInfo docToHandle = DetermineDocumentToCompile();
+            DocumentInfo docToHandle = DetermineDocumentToCompile( false );
             DocumentInfo docActive = DetermineDocument();
 
             if ( ( docToDebug.Type != ProjectElement.ElementType.ASM_SOURCE )
@@ -4727,7 +4743,7 @@ namespace C64Studio
           return true;
         case C64Studio.Types.Function.COMPILE:
           {
-            DocumentInfo docToCompile = DetermineDocumentToCompile();
+            DocumentInfo docToCompile = DetermineDocumentToCompile( true );
             if ( docToCompile != null )
             {
               Compile( docToCompile );
@@ -4737,7 +4753,7 @@ namespace C64Studio
           break;
         case C64Studio.Types.Function.BUILD:
           {
-            DocumentInfo docToCompile = DetermineDocumentToCompile();
+            DocumentInfo docToCompile = DetermineDocumentToCompile( true );
             if ( docToCompile != null )
             {
               Build( docToCompile );
@@ -4747,7 +4763,7 @@ namespace C64Studio
           break;
         case Function.BUILD_TO_PREPROCESSED_FILE:
           {
-            DocumentInfo docToCompile = DetermineDocumentToCompile();
+            DocumentInfo docToCompile = DetermineDocumentToCompile( true );
             if ( docToCompile != null )
             {
               Build( docToCompile, true );
@@ -4757,7 +4773,7 @@ namespace C64Studio
           break;
         case C64Studio.Types.Function.REBUILD:
           {
-            DocumentInfo docToCompile = DetermineDocumentToCompile();
+            DocumentInfo docToCompile = DetermineDocumentToCompile( true );
             if ( docToCompile != null )
             {
               Rebuild( docToCompile );
@@ -4767,7 +4783,7 @@ namespace C64Studio
           break;
         case C64Studio.Types.Function.BUILD_AND_RUN:
           {
-            DocumentInfo docToCompile = DetermineDocumentToCompile();
+            DocumentInfo docToCompile = DetermineDocumentToCompile( true );
             if ( docToCompile != null )
             {
               BuildAndRun( docToCompile, docToCompile );
@@ -4778,7 +4794,7 @@ namespace C64Studio
         case C64Studio.Types.Function.BUILD_AND_DEBUG:
           if ( AppState == Types.StudioState.NORMAL )
           {
-            DocumentInfo docToCompile = DetermineDocumentToCompile();
+            DocumentInfo docToCompile = DetermineDocumentToCompile( true );
             if ( docToCompile != null )
             {
               BuildAndDebug( docToCompile, DetermineDocumentToHandle(), docToCompile );
@@ -4793,7 +4809,7 @@ namespace C64Studio
           break;
         case C64Studio.Types.Function.GO_TO_DECLARATION:
           {
-            DocumentInfo docToDebug = DetermineDocumentToCompile();
+            DocumentInfo docToDebug = DetermineDocumentToCompile( false );
             DocumentInfo docToHandle = DetermineDocument();
 
             if ( docToDebug == null )

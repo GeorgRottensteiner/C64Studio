@@ -11,6 +11,7 @@ namespace C64Studio
     public List<Project>    Projects = new List<Project>();
     public string           Name = "";
     public string           Filename = "";
+    public string           ActiveProject = "";
     public bool             Modified = false;
     public bool             DuringLoad = false;   // to avoid modification
     public MainForm         MainForm = null;
@@ -66,6 +67,7 @@ namespace C64Studio
       }
       chunkSolutionInfo.AppendString( Name );
       chunkSolutionInfo.AppendString( this.Filename );
+      chunkSolutionInfo.AppendString( ActiveProject );
 
       chunkSolution.Append( chunkSolutionInfo.ToBuffer() );
 
@@ -114,6 +116,8 @@ namespace C64Studio
             case FileChunkConstants.SOLUTION_INFO:
               Name = memSubChunk.ReadString();
               Filename = memSubChunk.ReadString();
+              ActiveProject = memSubChunk.ReadString();
+
               Filename = FromFile;
               break;
             case FileChunkConstants.SOLUTION_PROJECT:

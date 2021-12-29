@@ -77,6 +77,16 @@ namespace C64Studio
               }
             }
           }
+
+          if ( Core.Navigating.Solution.ActiveProject != "" )
+          {
+            var project = Core.Navigating.Solution.GetProjectByName( Core.Navigating.Solution.ActiveProject );
+            if ( project != null )
+            {
+              project.Node.NodeFont = m_BoldFont;
+              project.Node.Text     = project.Node.Text;
+            }
+          }
           break;
       }
     }
@@ -162,6 +172,22 @@ namespace C64Studio
 
             if ( isProject )
             {
+
+              if ( Core.Navigating.Solution.ActiveProject == project.Settings.Name )
+              {
+                var itemUnmark = new System.Windows.Forms.ToolStripMenuItem( "Unmark as active project" );
+                itemUnmark.Tag = 0;
+                itemUnmark.Click += new EventHandler( treeMarkProjectAsActive_Click );
+                contextMenu.Items.Add( itemUnmark );
+              }
+              else
+              {
+                var itemMark = new System.Windows.Forms.ToolStripMenuItem( "Mark as active project" );
+                itemMark.Tag = 0;
+                itemMark.Click += new EventHandler( treeMarkProjectAsActive_Click );
+                contextMenu.Items.Add( itemMark );
+              }
+
               System.Windows.Forms.ToolStripMenuItem subItemNewProject = new System.Windows.Forms.ToolStripMenuItem( "Project" );
               subItemNewProject.Click += new EventHandler( subItemNewProject_Click );
               subItem.DropDownItems.Add( subItemNewProject );
@@ -353,6 +379,41 @@ namespace C64Studio
         }
         contextMenu.Show( treeProject.PointToScreen( e.Location ) );
       }
+    }
+
+
+
+    private void treeMarkProjectAsActive_Click( object sender, EventArgs e )
+    {
+      Project         project = ProjectFromNode( m_ContextMenuNode );
+      if ( project == null )
+      {
+        return;
+      }
+
+      if ( Core.Navigating.Solution.ActiveProject != "" )
+      {
+        var unmarkProject = Core.Navigating.Solution.GetProjectByName( Core.Navigating.Solution.ActiveProject );
+        if ( unmarkProject != null )
+        {
+          // unmark
+          unmarkProject.Node.NodeFont = treeProject.Font;
+          unmarkProject.Node.Text     = unmarkProject.Node.Text;
+
+          Core.Navigating.Solution.ActiveProject = "";
+          Core.Navigating.Solution.Modified = true;
+        }
+        if ( unmarkProject == project )
+        {
+          return;
+        }
+      }
+
+      project.Node.NodeFont = m_BoldFont;
+      project.Node.Text     = project.Node.Text;
+      
+      Core.Navigating.Solution.ActiveProject = project.Settings.Name;
+      Core.Navigating.Solution.Modified = true;
     }
 
 
