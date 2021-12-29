@@ -30,8 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
-      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,6 +85,7 @@
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.editCharOffset = new System.Windows.Forms.TextBox();
       this.btnShiftDown = new System.Windows.Forms.Button();
       this.btnShiftUp = new System.Windows.Forms.Button();
       this.btnShiftRight = new System.Windows.Forms.Button();
@@ -96,6 +97,7 @@
       this.checkAutoCenter = new System.Windows.Forms.CheckBox();
       this.checkApplyColors = new System.Windows.Forms.CheckBox();
       this.checkApplyCharacter = new System.Windows.Forms.CheckBox();
+      this.label10 = new System.Windows.Forms.Label();
       this.label9 = new System.Windows.Forms.Label();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
       this.labelInfo = new System.Windows.Forms.Label();
@@ -126,8 +128,7 @@
       this.tabCharset = new System.Windows.Forms.TabPage();
       this.charEditor = new C64Studio.Controls.CharacterEditor();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.label10 = new System.Windows.Forms.Label();
-      this.editCharOffset = new System.Windows.Forms.TextBox();
+      this.btnImportFromBASIC = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -205,6 +206,7 @@
       this.groupBox1.Controls.Add(this.btnImportCharsetFromFile);
       this.groupBox1.Controls.Add(this.btnImportCharset);
       this.groupBox1.Controls.Add(this.btnClearImportData);
+      this.groupBox1.Controls.Add(this.btnImportFromBASIC);
       this.groupBox1.Controls.Add(this.btnImportFromASM);
       this.groupBox1.Controls.Add(this.btnImportFromFile);
       this.groupBox1.Controls.Add(this.editDataImport);
@@ -257,7 +259,7 @@
       // 
       // btnClearImportData
       // 
-      this.btnClearImportData.Location = new System.Drawing.Point(129, 106);
+      this.btnClearImportData.Location = new System.Drawing.Point(252, 106);
       this.btnClearImportData.Name = "btnClearImportData";
       this.btnClearImportData.Size = new System.Drawing.Size(117, 23);
       this.btnClearImportData.TabIndex = 6;
@@ -740,6 +742,14 @@
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
       // 
+      // editCharOffset
+      // 
+      this.editCharOffset.Location = new System.Drawing.Point(897, 35);
+      this.editCharOffset.Name = "editCharOffset";
+      this.editCharOffset.Size = new System.Drawing.Size(70, 20);
+      this.editCharOffset.TabIndex = 18;
+      this.editCharOffset.TextChanged += new System.EventHandler(this.editCharOffset_TextChanged);
+      // 
       // btnShiftDown
       // 
       this.btnShiftDown.Image = ((System.Drawing.Image)(resources.GetObject("btnShiftDown.Image")));
@@ -868,6 +878,15 @@
       this.toolTip1.SetToolTip(this.checkApplyCharacter, "Affect Characters");
       this.checkApplyCharacter.UseVisualStyleBackColor = true;
       this.checkApplyCharacter.CheckedChanged += new System.EventHandler(this.checkApplyCharacter_CheckedChanged);
+      // 
+      // label10
+      // 
+      this.label10.AutoSize = true;
+      this.label10.Location = new System.Drawing.Point(853, 38);
+      this.label10.Name = "label10";
+      this.label10.Size = new System.Drawing.Size(38, 13);
+      this.label10.TabIndex = 35;
+      this.label10.Text = "Offset:";
       // 
       // label9
       // 
@@ -1135,7 +1154,7 @@
       // 
       this.panelCharColors.AutoResize = false;
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage3;
+      this.panelCharColors.DisplayPage = fastImage1;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(677, 416);
       this.panelCharColors.Name = "panelCharColors";
@@ -1150,7 +1169,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage4;
+      this.pictureEditor.DisplayPage = fastImage2;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1196,22 +1215,15 @@
       this.charEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);
       this.charEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.charEditor_CharactersShifted);
       // 
-      // label10
+      // btnImportFromBASIC
       // 
-      this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(853, 38);
-      this.label10.Name = "label10";
-      this.label10.Size = new System.Drawing.Size(38, 13);
-      this.label10.TabIndex = 35;
-      this.label10.Text = "Offset:";
-      // 
-      // editCharOffset
-      // 
-      this.editCharOffset.Location = new System.Drawing.Point(897, 35);
-      this.editCharOffset.Name = "editCharOffset";
-      this.editCharOffset.Size = new System.Drawing.Size(70, 20);
-      this.editCharOffset.TabIndex = 18;
-      this.editCharOffset.TextChanged += new System.EventHandler(this.editCharOffset_TextChanged);
+      this.btnImportFromBASIC.Location = new System.Drawing.Point(129, 106);
+      this.btnImportFromBASIC.Name = "btnImportFromBASIC";
+      this.btnImportFromBASIC.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromBASIC.TabIndex = 5;
+      this.btnImportFromBASIC.Text = "From BASIC";
+      this.btnImportFromBASIC.UseVisualStyleBackColor = true;
+      this.btnImportFromBASIC.Click += new System.EventHandler(this.btnImportFromBASIC_Click);
       // 
       // CharsetScreenEditor
       // 
@@ -1338,5 +1350,6 @@
     private System.Windows.Forms.Button btnImportCharsetFromFile;
     private System.Windows.Forms.TextBox editCharOffset;
     private System.Windows.Forms.Label label10;
+    private System.Windows.Forms.Button btnImportFromBASIC;
   }
 }
