@@ -206,5 +206,26 @@ namespace C64Studio.Controls
 
 
 
+    private void exchangeMultiColor1WithMultiColor2ToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      RaiseColorsExchangedEvent( ColorType.MULTICOLOR_1, ColorType.CUSTOM_COLOR );
+    }
+
+
+
+    private void exchangeMultiColor1WithBGColorToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      RaiseColorsExchangedEvent( ColorType.MULTICOLOR_1, ColorType.BACKGROUND );
+    }
+
+
+
+    private void exchangeMultiColor2WithBGColorToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      RaiseColorsExchangedEvent( ColorType.CUSTOM_COLOR, ColorType.BACKGROUND );
+    }
+
+
+
   }
 }

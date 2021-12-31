@@ -1,4 +1,33 @@
 ﻿C64Studio
+o If I right click on a reference declared in another file and select Go to declaration, the program opens that file. 
+  If I then go back to the previous file, the editor moves to the cursor position instead of staying where it was before.
+o If I select a sprite, select Multicolor 1 or Multicolor 2, and then select another sprite that has a different custom color, 
+  Custom Color is automatically selected. I think it shouldn't.
+o Would it be possible to see the total number of cycles taken by a macro?
+o Maybe when a sprite is copied from one cell to another, the "Multicolor" property might be copied as well?
+o He asked me how to copy and paste a selection 
+  into the screen editor. He opened the Edit menu and saw that the Copy command remains off even after selecting something with the 
+  Selection command. In fact it is not very intuitive that you only have to use the keyboard. Maybe it would be a good idea to add the Copy and Paste buttons? See for yourself if that's the case.
+o suppose that in the sprite editor I have a hundred sprites and that I want to insert one at position 20. How can I do this? I don't see the Move command like in the char editor. 
+  At the moment I copy (Copy to Clipboard) the sprites from the 20th position onwards and paste them one position further. It works, but I see that the Copy to 
+  Clipboard command is quite slow (it takes a few seconds).
+o I use a tab size of 8. If I insert the line "jsr routine" preceded by a tab, move the cursor right after "jsr" (before the space), 
+  and hit enter, I would expect the new line to consist of a tab followed by a space followed by "routine". Instead I have a line 
+  that starts with 8 spaces followed by "routine" and the cursor is in the 7th column. To return to the previous situation, I have to press Undo twice.
+o If I select an entire line and, while holding Ctrl, drag it to the beginning of the immediately following line or to the beginning of the line itself, it is not copied. Other text editors do this instead.
+o Sometimes, after opening a project, the list in the combo next to the "to Charset..." button does not show the charsets 
+  contained in the project. If I close and reopen the program, the list correctly shows the charsets:
+o I used Find/Replace to replace all occurrences of "_Lo" with "_lo". The next day I changed my mind and wanted to replace 
+  all occurrences of "_lo" with "_Lo", but if I wrote "_lo" in the "Search for" combobox, it immediately became "_Lo" (like the 
+  first time I entered it). I had to use notepad++ and manually edit the "settings.dat" file to be able to do it.
+  The same problem occurs with the "Replace with" combo.
+o The pixels in the sprite editor preview are wider than they are high. But I probably already told you this.
+o If you move the cursor inside a pair of brackets, they are highlighted. If you move the cursor outside the brackets, 
+  they remain highlighted. Only by moving the cursor once more the highlighting of the brackets is removed.
+o suppose I have the following line:
+  zone.label,x
+  Now suppose I delete "label". I would expect Intellisense to appear but it doesn't.
+
 o Funktion um alle Zones zuzuklappen
 o BASIC - Rename Variables, list all occurrences
 o 16bit charset screen -> add offset

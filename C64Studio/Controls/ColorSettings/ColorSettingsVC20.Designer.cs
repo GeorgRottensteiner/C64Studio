@@ -165,18 +165,21 @@ namespace C64Studio.Controls
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Name = "exchangeMultiColor1WithMultiColor2ToolStripMenuItem";
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Size = new System.Drawing.Size(280, 22);
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Text = "Exchange Border Color with Aux. Color";
+      this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem_Click);
       // 
       // exchangeMultiColor1WithBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Name = "exchangeMultiColor1WithBGColorToolStripMenuItem";
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(280, 22);
       this.exchangeMultiColor1WithBGColorToolStripMenuItem.Text = "Exchange Border Color with BG Color";
+      this.exchangeMultiColor1WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor1WithBGColorToolStripMenuItem_Click);
       // 
       // exchangeMultiColor2WithBGColorToolStripMenuItem
       // 
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Name = "exchangeMultiColor2WithBGColorToolStripMenuItem";
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Size = new System.Drawing.Size(280, 22);
       this.exchangeMultiColor2WithBGColorToolStripMenuItem.Text = "Exchange Aux. Color with BG Color";
+      this.exchangeMultiColor2WithBGColorToolStripMenuItem.Click += new System.EventHandler(this.exchangeMultiColor2WithBGColorToolStripMenuItem_Click);
       // 
       // ColorSettingsVC20
       // 
