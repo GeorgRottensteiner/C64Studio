@@ -455,6 +455,7 @@ namespace C64Studio
 
         pictureEditor.Image = m_SpriteProject.Sprites[m_CurrentSprite].Tile.Image;
       }
+      btnClearSprite.Enabled = ( panelSprites.SelectedIndex != -1 );
       btnDeleteSprite.Enabled = ( panelSprites.SelectedIndex != -1 );
     }
 
@@ -3646,6 +3647,23 @@ namespace C64Studio
 
     private void _ColorSettingsDlg_SelectedColorChanged( ColorType Color )
     {
+    }
+
+
+
+    private void btnClearSprite_Click( object sender, EventArgs e )
+    {
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, m_CurrentSprite ) );
+
+      for ( int i = 0; i < m_SpriteProject.Sprites[m_CurrentSprite].Tile.Width; ++i )
+      {
+        for ( int j = 0; j < m_SpriteProject.Sprites[m_CurrentSprite].Tile.Height; ++j )
+        {
+          m_SpriteProject.Sprites[m_CurrentSprite].Tile.SetPixel( i, j, ColorType.BACKGROUND );
+        }
+      }
+      SpriteChanged( m_CurrentSprite );
+      SetModified();
     }
 
 

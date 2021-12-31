@@ -64,6 +64,7 @@
       this.comboLayerColor = new System.Windows.Forms.ComboBox();
       this.comboSprite = new System.Windows.Forms.ComboBox();
       this.layerPreview = new GR.Forms.FastPictureBox();
+      this.btnClearSprite = new System.Windows.Forms.Button();
       this.btnDeleteSprite = new System.Windows.Forms.Button();
       this.btnInvert = new System.Windows.Forms.Button();
       this.btnMirrorY = new System.Windows.Forms.Button();
@@ -155,6 +156,7 @@
       this.tabEditor.Controls.Add(this.comboSpriteProjectMode);
       this.tabEditor.Controls.Add(this.label11);
       this.tabEditor.Controls.Add(this.tabSpriteDetails);
+      this.tabEditor.Controls.Add(this.btnClearSprite);
       this.tabEditor.Controls.Add(this.btnDeleteSprite);
       this.tabEditor.Controls.Add(this.btnInvert);
       this.tabEditor.Controls.Add(this.btnMirrorY);
@@ -193,7 +195,7 @@
       this.btnToolEdit.Location = new System.Drawing.Point(8, 285);
       this.btnToolEdit.Name = "btnToolEdit";
       this.btnToolEdit.Size = new System.Drawing.Size(26, 26);
-      this.btnToolEdit.TabIndex = 58;
+      this.btnToolEdit.TabIndex = 9;
       this.btnToolEdit.TabStop = true;
       this.toolTip1.SetToolTip(this.btnToolEdit, "Single Character");
       this.btnToolEdit.UseVisualStyleBackColor = true;
@@ -206,7 +208,7 @@
       this.btnToolFill.Location = new System.Drawing.Point(8, 316);
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(26, 26);
-      this.btnToolFill.TabIndex = 57;
+      this.btnToolFill.TabIndex = 10;
       this.toolTip1.SetToolTip(this.btnToolFill, "Fill");
       this.btnToolFill.UseVisualStyleBackColor = true;
       this.btnToolFill.CheckedChanged += new System.EventHandler(this.btnToolFill_CheckedChanged);
@@ -241,7 +243,7 @@
       this.tabSpriteDetails.Name = "tabSpriteDetails";
       this.tabSpriteDetails.SelectedIndex = 0;
       this.tabSpriteDetails.Size = new System.Drawing.Size(328, 520);
-      this.tabSpriteDetails.TabIndex = 9;
+      this.tabSpriteDetails.TabIndex = 18;
       // 
       // tabPage1
       // 
@@ -567,13 +569,24 @@
       this.layerPreview.TabIndex = 7;
       this.layerPreview.TabStop = false;
       // 
+      // btnClearSprite
+      // 
+      this.btnClearSprite.Enabled = false;
+      this.btnClearSprite.Location = new System.Drawing.Point(270, 374);
+      this.btnClearSprite.Name = "btnClearSprite";
+      this.btnClearSprite.Size = new System.Drawing.Size(57, 23);
+      this.btnClearSprite.TabIndex = 14;
+      this.btnClearSprite.Text = "Clear";
+      this.btnClearSprite.UseVisualStyleBackColor = true;
+      this.btnClearSprite.Click += new System.EventHandler(this.btnClearSprite_Click);
+      // 
       // btnDeleteSprite
       // 
       this.btnDeleteSprite.Enabled = false;
-      this.btnDeleteSprite.Location = new System.Drawing.Point(269, 374);
+      this.btnDeleteSprite.Location = new System.Drawing.Point(333, 374);
       this.btnDeleteSprite.Name = "btnDeleteSprite";
-      this.btnDeleteSprite.Size = new System.Drawing.Size(121, 23);
-      this.btnDeleteSprite.TabIndex = 8;
+      this.btnDeleteSprite.Size = new System.Drawing.Size(57, 23);
+      this.btnDeleteSprite.TabIndex = 15;
       this.btnDeleteSprite.Text = "Delete";
       this.btnDeleteSprite.UseVisualStyleBackColor = true;
       this.btnDeleteSprite.Click += new System.EventHandler(this.btnDeleteSprite_Click);
@@ -584,7 +597,7 @@
       this.btnInvert.Location = new System.Drawing.Point(8, 192);
       this.btnInvert.Name = "btnInvert";
       this.btnInvert.Size = new System.Drawing.Size(26, 26);
-      this.btnInvert.TabIndex = 7;
+      this.btnInvert.TabIndex = 6;
       this.toolTip1.SetToolTip(this.btnInvert, "Invert selected sprites colors");
       this.btnInvert.UseVisualStyleBackColor = true;
       this.btnInvert.Click += new System.EventHandler(this.btnInvert_Click);
@@ -595,7 +608,7 @@
       this.btnMirrorY.Location = new System.Drawing.Point(8, 161);
       this.btnMirrorY.Name = "btnMirrorY";
       this.btnMirrorY.Size = new System.Drawing.Size(26, 26);
-      this.btnMirrorY.TabIndex = 7;
+      this.btnMirrorY.TabIndex = 5;
       this.toolTip1.SetToolTip(this.btnMirrorY, "Mirror selected sprites vertically");
       this.btnMirrorY.UseVisualStyleBackColor = true;
       this.btnMirrorY.Click += new System.EventHandler(this.btnMirrorY_Click);
@@ -606,7 +619,7 @@
       this.btnMirrorX.Location = new System.Drawing.Point(8, 130);
       this.btnMirrorX.Name = "btnMirrorX";
       this.btnMirrorX.Size = new System.Drawing.Size(26, 26);
-      this.btnMirrorX.TabIndex = 7;
+      this.btnMirrorX.TabIndex = 4;
       this.toolTip1.SetToolTip(this.btnMirrorX, "Mirror selected sprites horizontally");
       this.btnMirrorX.UseVisualStyleBackColor = true;
       this.btnMirrorX.Click += new System.EventHandler(this.btnMirrorX_Click);
@@ -617,7 +630,7 @@
       this.btnShiftDown.Location = new System.Drawing.Point(8, 99);
       this.btnShiftDown.Name = "btnShiftDown";
       this.btnShiftDown.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftDown.TabIndex = 7;
+      this.btnShiftDown.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnShiftDown, "Shift selected sprites down");
       this.btnShiftDown.UseVisualStyleBackColor = true;
       this.btnShiftDown.Click += new System.EventHandler(this.btnShiftDown_Click);
@@ -628,7 +641,7 @@
       this.btnShiftUp.Location = new System.Drawing.Point(8, 68);
       this.btnShiftUp.Name = "btnShiftUp";
       this.btnShiftUp.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftUp.TabIndex = 7;
+      this.btnShiftUp.TabIndex = 2;
       this.toolTip1.SetToolTip(this.btnShiftUp, "Shift selected sprites up");
       this.btnShiftUp.UseVisualStyleBackColor = true;
       this.btnShiftUp.Click += new System.EventHandler(this.btnShiftUp_Click);
@@ -639,7 +652,7 @@
       this.btnShiftRight.Location = new System.Drawing.Point(8, 37);
       this.btnShiftRight.Name = "btnShiftRight";
       this.btnShiftRight.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftRight.TabIndex = 7;
+      this.btnShiftRight.TabIndex = 1;
       this.toolTip1.SetToolTip(this.btnShiftRight, "Shift selected sprites right");
       this.btnShiftRight.UseVisualStyleBackColor = true;
       this.btnShiftRight.Click += new System.EventHandler(this.btnShiftRight_Click);
@@ -650,7 +663,7 @@
       this.btnRotateRight.Location = new System.Drawing.Point(8, 254);
       this.btnRotateRight.Name = "btnRotateRight";
       this.btnRotateRight.Size = new System.Drawing.Size(26, 26);
-      this.btnRotateRight.TabIndex = 7;
+      this.btnRotateRight.TabIndex = 8;
       this.toolTip1.SetToolTip(this.btnRotateRight, "Rotate selected sprites right");
       this.btnRotateRight.UseVisualStyleBackColor = true;
       this.btnRotateRight.Click += new System.EventHandler(this.btnRotateRight_Click);
@@ -672,7 +685,7 @@
       this.btnShiftLeft.Location = new System.Drawing.Point(8, 6);
       this.btnShiftLeft.Name = "btnShiftLeft";
       this.btnShiftLeft.Size = new System.Drawing.Size(26, 26);
-      this.btnShiftLeft.TabIndex = 7;
+      this.btnShiftLeft.TabIndex = 0;
       this.toolTip1.SetToolTip(this.btnShiftLeft, "Shift selected sprites left");
       this.btnShiftLeft.UseVisualStyleBackColor = true;
       this.btnShiftLeft.Click += new System.EventHandler(this.btnShiftLeft_Click);
@@ -682,7 +695,7 @@
       this.btnCopyToClipboard.Location = new System.Drawing.Point(269, 345);
       this.btnCopyToClipboard.Name = "btnCopyToClipboard";
       this.btnCopyToClipboard.Size = new System.Drawing.Size(121, 23);
-      this.btnCopyToClipboard.TabIndex = 6;
+      this.btnCopyToClipboard.TabIndex = 13;
       this.btnCopyToClipboard.Text = "Copy to Clipboard";
       this.btnCopyToClipboard.UseVisualStyleBackColor = true;
       this.btnCopyToClipboard.Click += new System.EventHandler(this.btnCopyToClipboard_Click);
@@ -692,7 +705,7 @@
       this.btnPasteFromClipboard.Location = new System.Drawing.Point(269, 316);
       this.btnPasteFromClipboard.Name = "btnPasteFromClipboard";
       this.btnPasteFromClipboard.Size = new System.Drawing.Size(121, 23);
-      this.btnPasteFromClipboard.TabIndex = 6;
+      this.btnPasteFromClipboard.TabIndex = 12;
       this.btnPasteFromClipboard.Text = "Paste from Clipboard";
       this.btnPasteFromClipboard.UseVisualStyleBackColor = true;
       this.btnPasteFromClipboard.Click += new System.EventHandler(this.btnPasteFromClipboard_Click);
@@ -702,7 +715,7 @@
       this.labelCharNo.Location = new System.Drawing.Point(266, 400);
       this.labelCharNo.Name = "labelCharNo";
       this.labelCharNo.Size = new System.Drawing.Size(82, 23);
-      this.labelCharNo.TabIndex = 5;
+      this.labelCharNo.TabIndex = 16;
       this.labelCharNo.Text = "label1";
       // 
       // checkShowGrid
@@ -711,7 +724,7 @@
       this.checkShowGrid.Location = new System.Drawing.Point(269, 294);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
-      this.checkShowGrid.TabIndex = 3;
+      this.checkShowGrid.TabIndex = 11;
       this.checkShowGrid.Text = "Show Grid";
       this.checkShowGrid.UseVisualStyleBackColor = true;
       this.checkShowGrid.CheckedChanged += new System.EventHandler(this.checkShowGrid_CheckedChanged);
@@ -1246,5 +1259,6 @@
     private System.Windows.Forms.RadioButton btnToolFill;
     private System.Windows.Forms.RadioButton btnToolEdit;
     private System.Windows.Forms.Panel panelColorSettings;
+    private System.Windows.Forms.Button btnClearSprite;
   }
 }
