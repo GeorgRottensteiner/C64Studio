@@ -1362,7 +1362,8 @@ namespace C64Studio.Controls
               processedChar.Tile.Data.SetU8At( y * 8 + ( 7 - x ), temp );
             }
           }
-          else if ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+          else if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+          ||          ( m_Project.Mode == TextCharMode.VIC20 ) )
           &&        ( processedChar.Tile.CustomColor >= 8 ) )
           {
             byte result = (byte)( (byte)( ( processedChar.Tile.Data.ByteAt( y ) & 0xc0 ) >> 6 )
