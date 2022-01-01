@@ -772,7 +772,7 @@ namespace C64Studio
 
     public override bool ApplyFunction( Function Function )
     {
-      if ( !characterEditor.Focused )
+      if ( !characterEditor.EditorFocused )
       {
         return false;
       }
@@ -819,6 +819,9 @@ namespace C64Studio
           return true;
         case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
           characterEditor.MultiColor2();
+          return true;
+        case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
+          characterEditor.BackgroundColor();
           return true;
       }
       return base.ApplyFunction( Function );

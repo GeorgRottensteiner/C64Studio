@@ -274,6 +274,7 @@ namespace C64Studio
       RegisterFunction( Function.GRAPHIC_ELEMENT_CUSTOM_COLOR, "Custom Color", FunctionStudioState.ANY );
       RegisterFunction( Function.GRAPHIC_ELEMENT_MULTI_COLOR_1, "Multi Color 1", FunctionStudioState.ANY );
       RegisterFunction( Function.GRAPHIC_ELEMENT_MULTI_COLOR_2, "Multi Color 2", FunctionStudioState.ANY );
+      RegisterFunction( Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR, "Background Color", FunctionStudioState.ANY );
       RegisterFunction( Function.GRAPHIC_ELEMENT_NEXT, "Next Element", FunctionStudioState.ANY );
       RegisterFunction( Function.GRAPHIC_ELEMENT_PREVIOUS, "Previous Element", FunctionStudioState.ANY );
 

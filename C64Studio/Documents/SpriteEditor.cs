@@ -2893,6 +2893,9 @@ namespace C64Studio
         case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
           MultiColor2();
           return true;
+        case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
+          BackgroundColor();
+          return true;
       }
       return base.ApplyFunction( Function );
     }
@@ -2901,21 +2904,28 @@ namespace C64Studio
 
     private void MultiColor2()
     {
-      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_2, ( m_SpriteProject.Colors.MultiColor2 + 1 ) % 16 );
+      _ColorSettingsDlg.SelectedColor = ColorType.MULTICOLOR_2;
+    }
+
+
+
+    private void BackgroundColor()
+    {
+      _ColorSettingsDlg.SelectedColor = ColorType.BACKGROUND;
     }
 
 
 
     private void MultiColor1()
     {
-      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, ( m_SpriteProject.Colors.MultiColor1 + 1 ) % 16 );
+      _ColorSettingsDlg.SelectedColor = ColorType.MULTICOLOR_1;
     }
 
 
 
     private void CustomColor()
     {
-      _ColorSettingsDlg.ColorChanged( ColorType.CUSTOM_COLOR, ( m_SpriteProject.Sprites[m_CurrentSprite].Tile.CustomColor + 1 ) % 16 );
+      _ColorSettingsDlg.SelectedColor = ColorType.CUSTOM_COLOR;
     }
 
 

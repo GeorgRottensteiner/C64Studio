@@ -198,6 +198,16 @@ namespace C64Studio.Controls
 
 
 
+    public bool EditorFocused 
+    {
+      get
+      {
+        return canvasEditor.Focused;
+      }
+    }
+
+
+
     private void CopyToClipboard()
     {
       List<int> selectedImages = panelCharacters.SelectedIndices;
@@ -885,6 +895,13 @@ namespace C64Studio.Controls
       }
       RebuildCharImage( CharIndex );
       return true;
+    }
+
+
+
+    public void BackgroundColor()
+    {
+      _ColorSettingsDlg.SelectedColor = ColorType.BACKGROUND;
     }
 
 
@@ -2184,21 +2201,21 @@ namespace C64Studio.Controls
 
     public void MultiColor2()
     {
-      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_2, ( m_Project.Colors.MultiColor2 + 1 ) % 16 );
+      _ColorSettingsDlg.SelectedColor = ColorType.MULTICOLOR_2;
     }
 
 
 
     public void MultiColor1()
     {
-      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, ( m_Project.Colors.MultiColor1 + 1 ) % 16 );
+      _ColorSettingsDlg.SelectedColor = ColorType.MULTICOLOR_1;
     }
 
 
 
     public void CustomColor()
     {
-      _ColorSettingsDlg.ColorChanged( ColorType.CUSTOM_COLOR, ( _ColorSettingsDlg.CustomColor + 1 ) % 16 );
+      _ColorSettingsDlg.SelectedColor = ColorType.CUSTOM_COLOR;
     }
 
 

@@ -4510,6 +4510,7 @@ namespace C64Studio
         case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
         case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
         case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
+        case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
         case Function.GRAPHIC_ELEMENT_INVERT:
           // pass through to document
           {
