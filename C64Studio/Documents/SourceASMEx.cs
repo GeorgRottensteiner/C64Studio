@@ -2519,7 +2519,9 @@ namespace C64Studio
       string wordBelow = FindWordFromPosition( m_ContextMenuPosition, m_ContextMenuLineIndex );
       string zone;
       string cheapLabelParent;
-      
+
+      Core.Navigating.VisitedLine( DocumentInfo, m_ContextMenuLineIndex );
+
       FindZoneFromLine( m_ContextMenuLineIndex, out zone, out cheapLabelParent );
 
       Core.Navigating.GotoDeclaration( DocumentInfo, wordBelow, zone, cheapLabelParent );

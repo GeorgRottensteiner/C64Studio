@@ -2976,18 +2976,31 @@ namespace FastColoredTextBoxNS
       if ( LeftBracket2 != '\x0' && RightBracket2 != '\x0' )
         HighlightBrackets( LeftBracket2, RightBracket2, ref leftBracketPosition2, ref rightBracketPosition2 );
       //remember last visit time
-      if ( Selection.IsEmpty && Selection.Start.iLine < LinesCount )
+      if ( Selection.IsEmpty )
       {
-        if ( lastNavigatedDateTime != lines[Selection.Start.iLine].LastVisit )
-        {
-          lines[Selection.Start.iLine].LastVisit = DateTime.Now;
-          lastNavigatedDateTime = lines[Selection.Start.iLine].LastVisit;
-        }
+        MarkLineAsVisited( Selection.Start.iLine );
       }
 
       if ( SelectionChangedDelayed != null )
         SelectionChangedDelayed( this, new EventArgs() );
     }
+
+
+
+    public void MarkLineAsVisited( int LineIndex )
+    {
+      if ( LineIndex < LinesCount )
+      {
+        if ( ( lastNavigatedDateTime != lines[LineIndex].LastVisit )
+        ||   ( lastNavigatedDateTime == new DateTime() ) )
+        {
+          lines[LineIndex].LastVisit = DateTime.Now;
+          lastNavigatedDateTime = lines[LineIndex].LastVisit;
+        }
+      }
+    }
+
+
 
     public virtual void OnVisibleRangeChangedDelayed()
     {

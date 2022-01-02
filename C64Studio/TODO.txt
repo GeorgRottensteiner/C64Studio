@@ -1,8 +1,5 @@
 ﻿C64Studio
-o If I right click on a reference declared in another file and select Go to declaration, the program opens that file. 
-  If I then go back to the previous file, the editor moves to the cursor position instead of staying where it was before.
-o If I select a sprite, select Multicolor 1 or Multicolor 2, and then select another sprite that has a different custom color, 
-  Custom Color is automatically selected. I think it shouldn't.
+o Basic-Dateien im VICE-petcat-Format schreiben lassen? 
 o Would it be possible to see the total number of cycles taken by a macro?
 o Maybe when a sprite is copied from one cell to another, the "Multicolor" property might be copied as well?
 o He asked me how to copy and paste a selection 
