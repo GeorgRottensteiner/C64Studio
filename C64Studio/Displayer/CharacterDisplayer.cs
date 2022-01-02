@@ -135,6 +135,10 @@ namespace C64Studio.Displayer
           int colorIndex = Data.ByteAt( i + j * 8 );
           if ( colorIndex < Context.Palette.ColorBrushes.Length )
           {
+            if ( colorIndex == 0 )
+            {
+              colorIndex = BGColor;
+            }
             Context.Graphics.FillRectangle( Context.Palette.ColorBrushes[colorIndex],
                                             ( i * Context.Bounds.Width ) / 8,
                                             ( j * Context.Bounds.Height ) / 8,
@@ -264,6 +268,10 @@ namespace C64Studio.Displayer
         for ( int i = 0; i < 8; ++i )
         {
           int colorIndex = Data.ByteAt( i + j * 8 );
+          if ( colorIndex == 0 )
+          {
+            colorIndex = BGColor;
+          }
           TargetImage.SetPixel( X + i, Y + j, Palette.ColorValues[colorIndex] );
         }
       }
