@@ -44,6 +44,7 @@
       this.btnImportCharsetFromFile = new System.Windows.Forms.Button();
       this.btnImportCharset = new System.Windows.Forms.Button();
       this.btnClearImportData = new System.Windows.Forms.Button();
+      this.btnImportFromBASIC = new System.Windows.Forms.Button();
       this.btnImportFromASM = new System.Windows.Forms.Button();
       this.btnImportFromFile = new System.Windows.Forms.Button();
       this.editDataImport = new System.Windows.Forms.TextBox();
@@ -85,6 +86,8 @@
       this.btnExportToFile = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.tabEditor = new System.Windows.Forms.TabPage();
+      this.btnPaste = new System.Windows.Forms.Button();
+      this.btnCopy = new System.Windows.Forms.Button();
       this.editCharOffset = new System.Windows.Forms.TextBox();
       this.btnShiftDown = new System.Windows.Forms.Button();
       this.btnShiftUp = new System.Windows.Forms.Button();
@@ -128,7 +131,6 @@
       this.tabCharset = new System.Windows.Forms.TabPage();
       this.charEditor = new C64Studio.Controls.CharacterEditor();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnImportFromBASIC = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -266,6 +268,16 @@
       this.btnClearImportData.Text = "Clear";
       this.btnClearImportData.UseVisualStyleBackColor = true;
       this.btnClearImportData.Click += new System.EventHandler(this.btnClearImportData_Click);
+      // 
+      // btnImportFromBASIC
+      // 
+      this.btnImportFromBASIC.Location = new System.Drawing.Point(129, 106);
+      this.btnImportFromBASIC.Name = "btnImportFromBASIC";
+      this.btnImportFromBASIC.Size = new System.Drawing.Size(117, 23);
+      this.btnImportFromBASIC.TabIndex = 5;
+      this.btnImportFromBASIC.Text = "From BASIC";
+      this.btnImportFromBASIC.UseVisualStyleBackColor = true;
+      this.btnImportFromBASIC.Click += new System.EventHandler(this.btnImportFromBASIC_Click);
       // 
       // btnImportFromASM
       // 
@@ -694,6 +706,8 @@
       // 
       // tabEditor
       // 
+      this.tabEditor.Controls.Add(this.btnPaste);
+      this.tabEditor.Controls.Add(this.btnCopy);
       this.tabEditor.Controls.Add(this.editCharOffset);
       this.tabEditor.Controls.Add(this.btnShiftDown);
       this.tabEditor.Controls.Add(this.btnShiftUp);
@@ -741,6 +755,30 @@
       this.tabEditor.TabIndex = 0;
       this.tabEditor.Text = "Screen";
       this.tabEditor.UseVisualStyleBackColor = true;
+      // 
+      // btnPaste
+      // 
+      this.btnPaste.Enabled = false;
+      this.btnPaste.Image = ((System.Drawing.Image)(resources.GetObject("btnPaste.Image")));
+      this.btnPaste.Location = new System.Drawing.Point(198, 460);
+      this.btnPaste.Name = "btnPaste";
+      this.btnPaste.Size = new System.Drawing.Size(24, 24);
+      this.btnPaste.TabIndex = 48;
+      this.toolTip1.SetToolTip(this.btnPaste, "Paste Characters");
+      this.btnPaste.UseVisualStyleBackColor = true;
+      this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
+      // 
+      // btnCopy
+      // 
+      this.btnCopy.Enabled = false;
+      this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
+      this.btnCopy.Location = new System.Drawing.Point(168, 460);
+      this.btnCopy.Name = "btnCopy";
+      this.btnCopy.Size = new System.Drawing.Size(24, 24);
+      this.btnCopy.TabIndex = 47;
+      this.toolTip1.SetToolTip(this.btnCopy, "Copy Selected Characters to Clipboard");
+      this.btnCopy.UseVisualStyleBackColor = true;
+      this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
       // 
       // editCharOffset
       // 
@@ -819,7 +857,7 @@
       // checkShowGrid
       // 
       this.checkShowGrid.AutoSize = true;
-      this.checkShowGrid.Location = new System.Drawing.Point(168, 462);
+      this.checkShowGrid.Location = new System.Drawing.Point(258, 462);
       this.checkShowGrid.Name = "checkShowGrid";
       this.checkShowGrid.Size = new System.Drawing.Size(75, 17);
       this.checkShowGrid.TabIndex = 15;
@@ -1215,16 +1253,6 @@
       this.charEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);
       this.charEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.charEditor_CharactersShifted);
       // 
-      // btnImportFromBASIC
-      // 
-      this.btnImportFromBASIC.Location = new System.Drawing.Point(129, 106);
-      this.btnImportFromBASIC.Name = "btnImportFromBASIC";
-      this.btnImportFromBASIC.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromBASIC.TabIndex = 5;
-      this.btnImportFromBASIC.Text = "From BASIC";
-      this.btnImportFromBASIC.UseVisualStyleBackColor = true;
-      this.btnImportFromBASIC.Click += new System.EventHandler(this.btnImportFromBASIC_Click);
-      // 
       // CharsetScreenEditor
       // 
       this.ClientSize = new System.Drawing.Size(1069, 596);
@@ -1351,5 +1379,7 @@
     private System.Windows.Forms.TextBox editCharOffset;
     private System.Windows.Forms.Label label10;
     private System.Windows.Forms.Button btnImportFromBASIC;
+    private System.Windows.Forms.Button btnPaste;
+    private System.Windows.Forms.Button btnCopy;
   }
 }

@@ -2590,6 +2590,7 @@ namespace C64Studio
       HideTextCursor();
       RemoveFloatingSelection();
       m_ToolMode = ToolMode.SINGLE_CHAR;
+      OnToolModeChanged();
     }
 
 
@@ -2619,6 +2620,15 @@ namespace C64Studio
       HideTextCursor();
       RemoveFloatingSelection();
       m_ToolMode = ToolMode.FILL;
+      OnToolModeChanged();
+    }
+
+
+
+    private void OnToolModeChanged()
+    {
+      btnCopy.Enabled = ( m_ToolMode == ToolMode.SELECT );
+      btnPaste.Enabled = ( m_ToolMode == ToolMode.SELECT );
     }
 
 
@@ -2627,6 +2637,7 @@ namespace C64Studio
     {
       HideTextCursor();
       m_ToolMode = ToolMode.SELECT;
+      OnToolModeChanged();
     }
 
 
@@ -2637,6 +2648,7 @@ namespace C64Studio
       HideTextCursor();
       RemoveFloatingSelection();
       m_ToolMode = ToolMode.FILLED_RECTANGLE;
+      OnToolModeChanged();
     }
 
 
@@ -2647,6 +2659,7 @@ namespace C64Studio
       RemoveFloatingSelection();
       m_ToolMode = ToolMode.TEXT;
       m_TextEntryStartedInLine = -1;
+      OnToolModeChanged();
     }
 
 
@@ -4102,6 +4115,20 @@ namespace C64Studio
           }
         }
       }
+    }
+
+
+
+    private void btnCopy_Click( object sender, EventArgs e )
+    {
+      CopyToClipboard();
+    }
+
+
+
+    private void btnPaste_Click( object sender, EventArgs e )
+    {
+      PasteFromClipboard();
     }
 
 

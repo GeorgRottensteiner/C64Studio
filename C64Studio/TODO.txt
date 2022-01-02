@@ -2,9 +2,6 @@
 o Basic-Dateien im VICE-petcat-Format schreiben lassen? 
 o Would it be possible to see the total number of cycles taken by a macro?
 o Maybe when a sprite is copied from one cell to another, the "Multicolor" property might be copied as well?
-o He asked me how to copy and paste a selection 
-  into the screen editor. He opened the Edit menu and saw that the Copy command remains off even after selecting something with the 
-  Selection command. In fact it is not very intuitive that you only have to use the keyboard. Maybe it would be a good idea to add the Copy and Paste buttons? See for yourself if that's the case.
 o suppose that in the sprite editor I have a hundred sprites and that I want to insert one at position 20. How can I do this? I don't see the Move command like in the char editor. 
   At the moment I copy (Copy to Clipboard) the sprites from the 20th position onwards and paste them one position further. It works, but I see that the Copy to 
   Clipboard command is quite slow (it takes a few seconds).
@@ -27,8 +24,6 @@ o suppose I have the following line:
 
 o Funktion um alle Zones zuzuklappen
 o BASIC - Rename Variables, list all occurrences
-o 16bit charset screen -> add offset
-o 120% scaling in imagelistbox und color selector
 o Rename Project in Solution Explorer, also rename .c64 file!
 o Beim "Graphic Screen" -> "Export" optionale "Load Address (hex)" wie beim Character Set
 o Disassembler: Special case "bit" shortcat, e.g. target label is not placed
