@@ -101,6 +101,7 @@ namespace C64Studio
         comboTargetPalette.Items.Add( MCSettings.Palettes[i].Name );
       }
       if ( ( ImportType == Types.GraphicType.SPRITES_16_COLORS )
+      ||   ( ImportType == Types.GraphicType.CHARACTERS_FCM )
       ||   ( ImportType == Types.GraphicType.BITMAP ) )
       {
         comboTargetPalette.Items.Add( "Use incoming palette" );
