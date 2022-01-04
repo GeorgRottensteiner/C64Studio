@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -77,7 +78,7 @@ namespace C64Studio.Formats
       }
       LoadAddress = data.UInt16At( 0 );
       Data        = new GR.Memory.ByteBuffer( data );
-      this.Filename = C64Studio.Util.ToFilename( System.IO.Path.GetFileNameWithoutExtension( Filename ).ToUpper() );
+      this.Filename = Util.ToFilename( System.IO.Path.GetFileNameWithoutExtension( Filename ).ToUpper() );
       return true;
     }
 

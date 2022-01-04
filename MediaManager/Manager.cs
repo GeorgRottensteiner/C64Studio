@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -124,7 +125,7 @@ namespace MediaManager
 
         foreach ( C64Studio.Types.FileInfo file in files )
         {
-          string    filename = C64Studio.Util.FilenameToReadableUnicode( file.Filename );
+          string    filename = Util.FilenameToReadableUnicode( file.Filename );
           filename = filename.PadRight( 16 );
           System.Console.WriteLine( "\"" + filename + "\"  " + file.Blocks + " blocks  " + file.Type.ToString() + "  " + file.Filename );
         }
@@ -132,7 +133,7 @@ namespace MediaManager
       }
       else if ( methodToUse == "-EXPORT" )
       {
-        C64Studio.Types.FileInfo fileInfo = medium.LoadFile( C64Studio.Util.ToFilename( paramMap["-EXPORT"] ) );
+        C64Studio.Types.FileInfo fileInfo = medium.LoadFile( Util.ToFilename( paramMap["-EXPORT"] ) );
         if ( fileInfo != null )
         {
           string outputFilename = paramMap["-EXPORT"];
@@ -153,10 +154,10 @@ namespace MediaManager
       }
       else if ( methodToUse == "-DELETE" )
       {
-        C64Studio.Types.FileInfo fileInfo = medium.LoadFile( C64Studio.Util.ToFilename( paramMap["-DELETE"] ) );
+        C64Studio.Types.FileInfo fileInfo = medium.LoadFile( Util.ToFilename( paramMap["-DELETE"] ) );
         if ( fileInfo != null )
         {
-          if ( !medium.DeleteFile( C64Studio.Util.ToFilename( paramMap["-DELETE"] ) ) )
+          if ( !medium.DeleteFile( Util.ToFilename( paramMap["-DELETE"] ) ) )
           {
             System.Console.Error.WriteLine( "File could not be deleted: " + medium.LastError );
           }
@@ -231,7 +232,7 @@ namespace MediaManager
         {
           filenameImport = paramMap["-RENAMETO"];
         }
-        if ( !medium.WriteFile( C64Studio.Util.ToFilename( filenameImport ), data, C64Studio.Types.FileType.PRG ) )
+        if ( !medium.WriteFile( Util.ToFilename( filenameImport ), data, C64Studio.Types.FileType.PRG ) )
         {
           System.Console.Error.WriteLine( "Could not write file to medium: " + medium.LastError );
           return 1;
@@ -250,9 +251,9 @@ namespace MediaManager
           return 1;
         }
         string origFilename = paramMap["-RENAME"];
-        GR.Memory.ByteBuffer    origFilenameBuffer = C64Studio.Util.ToFilename( origFilename );
+        GR.Memory.ByteBuffer    origFilenameBuffer = Util.ToFilename( origFilename );
         string targetFilename = paramMap["-RENAMETO"];
-        GR.Memory.ByteBuffer    targetFilenameBuffer = C64Studio.Util.ToFilename( targetFilename );
+        GR.Memory.ByteBuffer    targetFilenameBuffer = Util.ToFilename( targetFilename );
 
         if ( !medium.RenameFile( origFilenameBuffer, targetFilenameBuffer ) )
         {

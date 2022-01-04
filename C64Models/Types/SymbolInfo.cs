@@ -40,6 +40,14 @@
 
     public override string ToString()
     {
+      if ( Type == Types.CONSTANT_REAL_NUMBER )
+      {
+        return Util.DoubleToString( RealValue );
+      }
+      else if ( IsInteger() )
+      {
+        return AddressOrValue.ToString();
+      }
       return Name;
     }
 

@@ -213,7 +213,7 @@ namespace C64Studio
 
       if ( m_Media != null )
       {
-        labelMediaTitle.Text = C64Studio.Util.PETSCIIToUnicode( m_Media.Title );
+        labelMediaTitle.Text = Util.PETSCIIToUnicode( m_Media.Title );
         files = m_Media.Files();
       }
       else

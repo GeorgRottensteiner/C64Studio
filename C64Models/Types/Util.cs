@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using GR.Memory;
-using RetroDevStudio;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class Util
   {
@@ -444,7 +443,7 @@ namespace C64Studio
 
     internal static string DoubleToString( double Value )
     {
-      return Value.ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture );
+      return Value.ToString( "G", System.Globalization.CultureInfo.InvariantCulture );
     }
   }
 }

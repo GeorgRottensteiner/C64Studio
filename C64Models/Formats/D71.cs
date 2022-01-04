@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -963,9 +964,9 @@ namespace C64Studio.Formats
       {
         GR.Memory.ByteBuffer    title = new GR.Memory.ByteBuffer();
 
-        title.Append( C64Studio.Util.ToPETSCII( "0 \"" ) );
+        title.Append( Util.ToPETSCII( "0 \"" ) );
         title.Append( DiskName );
-        title.Append( C64Studio.Util.ToPETSCII( "\" " ) );
+        title.Append( Util.ToPETSCII( "\" " ) );
         title.AppendU16NetworkOrder( DiskID );
         return title;
       }
