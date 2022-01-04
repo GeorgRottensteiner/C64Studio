@@ -809,6 +809,30 @@ namespace C64Studio.Parser
 
             lineInfo.Tokens.Add( currentToken );
           }
+          else
+          {
+            if ( AllowedTokenEndChars[currentToken.TokenType].IndexOf( nextByte ) != -1 )
+            {
+              // the last char of a token
+              currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos + 1 );
+              currentToken = null;
+              ++posInLine;
+              tokenStartPos = posInLine;
+              continue;
+            }
+            if ( AllowedTokenChars[currentToken.TokenType].IndexOf( nextByte ) != -1 )
+            {
+              ++posInLine;
+              continue;
+            }
+            // char is not allowed in this token!
+            // the last char of a token
+            currentToken.Content = Line.Substring( tokenStartPos, posInLine - tokenStartPos );
+            currentToken = null;
+            //++posInLine;
+            tokenStartPos = posInLine;
+            continue;
+          }
           ++posInLine;
           continue;
         }
