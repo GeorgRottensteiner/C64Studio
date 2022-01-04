@@ -260,6 +260,11 @@ namespace C64Studio
           ||   ( !zoneNodes.ContainsKey( token.Zone ) ) )
           {
             globalZone.Nodes.Add( node );
+            if ( ( _ExpandedNodes.ContainsKey( globalZone.Text ) )
+            &&   ( _ExpandedNodes[globalZone.Text] ) )
+            {
+              globalZone.Expand();
+            }
           }
           else 
           //if ( curZone.Length > 0 )
