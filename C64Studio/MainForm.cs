@@ -5459,10 +5459,12 @@ namespace C64Studio
         return;
       }
       string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-      foreach ( string file in fileList )
+      if ( fileList != null )
       {
-        OpenFile( file );
+        foreach ( string file in fileList )
+        {
+          OpenFile( file );
+        }
       }
     }
 

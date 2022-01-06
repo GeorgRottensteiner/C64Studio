@@ -745,30 +745,19 @@ namespace C64Studio
 
     private void btnImportFromASM_Click( object sender, EventArgs e )
     {
-      var parser = new Parser.ASMFileParser();
-
-      Parser.CompileConfig    config = new Parser.CompileConfig();
-      config.TargetType = Types.CompileTargetType.PLAIN;
-      config.OutputFile = "temp.bin";
-      config.Assembler = Types.AssemblerType.C64_STUDIO;
-
-      string    temp = "* = $0801\n" + editDataExport.Text;
-
-
-      if ( ( !parser.Parse( temp, new ProjectConfig(), config, null ) )
-      ||   ( !parser.Assemble( config ) ) )
+      var output = Util.FromASMData( editDataExport.Text );
+      if ( output == null )
       {
         return;
       }
-      var output = parser.AssembledOutput;
 
       m_Project.ValueTable.Data.Clear();
       m_Project.ValueTable.Values.Clear();
       listValues.Items.Clear();
 
-      for ( int i = 0; i < output.Assembly.Length; ++i )
+      for ( int i = 0; i < output.Length; ++i )
       {
-        byte    nextValue = output.Assembly.ByteAt( i );
+        byte    nextValue = output.ByteAt( i );
         m_Project.ValueTable.Values.Add( nextValue.ToString() );
         m_Project.ValueTable.Data.AppendU8( nextValue );
         listValues.Items.Add( nextValue.ToString() );

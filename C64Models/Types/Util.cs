@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using GR.Memory;
-
-
+using C64Studio.Types;
 
 namespace RetroDevStudio
 {
@@ -445,5 +444,35 @@ namespace RetroDevStudio
     {
       return Value.ToString( "G", System.Globalization.CultureInfo.InvariantCulture );
     }
+
+
+
+    internal static ByteBuffer FromASMData( string Text )
+    {
+      var asmParser = new C64Studio.Parser.ASMFileParser();
+
+      var config        = new C64Studio.Parser.CompileConfig();
+      config.TargetType = CompileTargetType.PLAIN;
+      config.OutputFile = "temp.bin";
+      config.Assembler  = AssemblerType.C64_STUDIO;
+
+      string    temp = "* = $0801\n" + Text;
+      if ( Text.Contains( ".BYTE" ) )
+      {
+        config.Assembler = AssemblerType.DASM;
+        // DASM requires pseudo ops to be not at the left most border
+        temp = "  ORG $0801\n" + Text.Replace( ".BYTE", " .BYTE" );
+      }
+
+      if ( ( asmParser.Parse( temp, null, config, null ) )
+      &&   ( asmParser.Assemble( config ) ) )
+      {
+        return asmParser.AssembledOutput.Assembly;
+      }
+      return null;
+    }
+
+
+
   }
 }

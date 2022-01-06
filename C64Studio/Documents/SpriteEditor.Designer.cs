@@ -850,6 +850,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.editDataImport.Location = new System.Drawing.Point(9, 148);
+      this.editDataImport.MaxLength = 10000000;
       this.editDataImport.Multiline = true;
       this.editDataImport.Name = "editDataImport";
       this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;

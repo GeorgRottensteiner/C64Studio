@@ -3493,20 +3493,7 @@ namespace C64Studio
 
     private void btnImportFromASM_Click( object sender, EventArgs e )
     {
-      Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
-
-      Parser.CompileConfig config = new Parser.CompileConfig();
-      config.TargetType = CompileTargetType.PLAIN;
-      config.OutputFile = "temp.bin";
-      config.Assembler = AssemblerType.C64_STUDIO;
-
-      string    temp = "* = $0801\n" + editDataImport.Text;
-      if ( ( asmParser.Parse( temp, null, config, null ) )
-      && ( asmParser.Assemble( config ) ) )
-      {
-        GR.Memory.ByteBuffer data = asmParser.AssembledOutput.Assembly;
-        ImportFromData( data );
-      }
+      ImportFromData( Util.FromASMData( editDataImport.Text ) );
     }
 
 
@@ -3542,6 +3529,65 @@ namespace C64Studio
 
 
 
+    public override bool ApplyFunction( Function Function )
+    {
+      if ( !charEditor.EditorFocused )
+      {
+        return false;
+      }
+      switch ( Function )
+      {
+        case Function.GRAPHIC_ELEMENT_MIRROR_H:
+          charEditor.MirrorX();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MIRROR_V:
+          charEditor.MirrorY();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_D:
+          charEditor.ShiftDown();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_U:
+          charEditor.ShiftUp();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_L:
+          charEditor.ShiftLeft();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_R:
+          charEditor.ShiftRight();
+          return true;
+        case Function.GRAPHIC_ELEMENT_ROTATE_L:
+          charEditor.RotateLeft();
+          return true;
+        case Function.GRAPHIC_ELEMENT_ROTATE_R:
+          charEditor.RotateRight();
+          return true;
+        case Function.GRAPHIC_ELEMENT_INVERT:
+          charEditor.Invert();
+          return true;
+        case Function.GRAPHIC_ELEMENT_PREVIOUS:
+          charEditor.Previous();
+          return true;
+        case Function.GRAPHIC_ELEMENT_NEXT:
+          charEditor.Next();
+          return true;
+        case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
+          charEditor.CustomColor();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
+          charEditor.MultiColor1();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
+          charEditor.MultiColor2();
+          return true;
+        case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
+          charEditor.BackgroundColor();
+          return true;
+      }
+      return base.ApplyFunction( Function );
+    }
+    
+    
+    
     public void ImportFromData( int Width, int Height, ByteBuffer CharData, ByteBuffer ColorData, CharsetProject Charset )
     {
       SetScreenSize( Width, Height );

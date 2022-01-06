@@ -2775,21 +2775,7 @@ namespace C64Studio
 
     private void btnImportFromASM_Click( object sender, EventArgs e )
     {
-      Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
-
-      Parser.CompileConfig config = new Parser.CompileConfig();
-      config.TargetType = Types.CompileTargetType.PLAIN;
-      config.OutputFile = "temp.bin";
-      config.Assembler = Types.AssemblerType.C64_STUDIO;
-
-      string    temp = "* = $0801\n" + editDataImport.Text;
-      if ( ( asmParser.Parse( temp, null, config, null ) )
-      &&   ( asmParser.Assemble( config ) ) )
-      {
-        GR.Memory.ByteBuffer spriteData = asmParser.AssembledOutput.Assembly;
-
-        ImportFromData( spriteData );
-      }
+      ImportFromData( Util.FromASMData( editDataImport.Text ) );
     }
 
 

@@ -498,7 +498,8 @@ namespace C64Studio
               DocumentInfo.Element.Settings["Default"] = new ProjectElement.PerConfigSettings();
             }
           }
-          Text = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
+          Text    = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
+          TabText = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
           SetupWatcher();
 
           if ( !PerformSave( newFilename ) )
@@ -532,6 +533,8 @@ namespace C64Studio
           {
             DocumentInfo.DocumentFilename = newFilename;
           }
+          Text    = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
+          TabText = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
 
           // need to rename file in project (dependencies, etc.)
           string  newName = DocumentInfo.FullPath;

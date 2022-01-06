@@ -203,6 +203,65 @@ namespace C64Studio
 
 
 
+    public override bool ApplyFunction( Function Function )
+    {
+      if ( !characterEditor.EditorFocused )
+      {
+        return false;
+      }
+      switch ( Function )
+      {
+        case Function.GRAPHIC_ELEMENT_MIRROR_H:
+          characterEditor.MirrorX();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MIRROR_V:
+          characterEditor.MirrorY();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_D:
+          characterEditor.ShiftDown();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_U:
+          characterEditor.ShiftUp();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_L:
+          characterEditor.ShiftLeft();
+          return true;
+        case Function.GRAPHIC_ELEMENT_SHIFT_R:
+          characterEditor.ShiftRight();
+          return true;
+        case Function.GRAPHIC_ELEMENT_ROTATE_L:
+          characterEditor.RotateLeft();
+          return true;
+        case Function.GRAPHIC_ELEMENT_ROTATE_R:
+          characterEditor.RotateRight();
+          return true;
+        case Function.GRAPHIC_ELEMENT_INVERT:
+          characterEditor.Invert();
+          return true;
+        case Function.GRAPHIC_ELEMENT_PREVIOUS:
+          characterEditor.Previous();
+          return true;
+        case Function.GRAPHIC_ELEMENT_NEXT:
+          characterEditor.Next();
+          return true;
+        case Function.GRAPHIC_ELEMENT_CUSTOM_COLOR:
+          characterEditor.CustomColor();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_1:
+          characterEditor.MultiColor1();
+          return true;
+        case Function.GRAPHIC_ELEMENT_MULTI_COLOR_2:
+          characterEditor.MultiColor2();
+          return true;
+        case Function.GRAPHIC_ELEMENT_BACKGROUND_COLOR:
+          characterEditor.BackgroundColor();
+          return true;
+      }
+      return base.ApplyFunction( Function );
+    }
+    
+    
+    
     private void PictureEditor_PostPaint( GR.Image.FastImage TargetBuffer )
     {
       if ( m_MapProject.ShowGrid )

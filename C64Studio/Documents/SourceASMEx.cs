@@ -1251,14 +1251,22 @@ namespace C64Studio
       {
         string toolTipText = tokenInfo.Info;
 
-        toolTipText += "$" + tokenInfo.AddressOrValue.ToString( "x4" ) + ", " + tokenInfo.AddressOrValue.ToString();
-
-        byte    valueBelow = 0xcd;
-        if ( ( Core.Debugging.Debugger != null )
-        &&   ( Core.Debugging.Debugger.FetchValue( tokenInfo.AddressOrValue, out valueBelow ) ) )
+        if ( tokenInfo.IsInteger() )
         {
-          toolTipText += " ($" + valueBelow.ToString( "x2" ) + "/" + valueBelow.ToString() + ")";
+          toolTipText += "$" + tokenInfo.AddressOrValue.ToString( "x4" ) + ", " + tokenInfo.AddressOrValue.ToString();
+
+          byte    valueBelow = 0xcd;
+          if ( ( Core.Debugging.Debugger != null )
+          &&   ( Core.Debugging.Debugger.FetchValue( tokenInfo.AddressOrValue, out valueBelow ) ) )
+          {
+            toolTipText += " ($" + valueBelow.ToString( "x2" ) + "/" + valueBelow.ToString() + ")";
+          }
         }
+        else
+        {
+          toolTipText += tokenInfo.ToString();
+        }
+        
         if ( m_LastTooltipText != toolTipText )
         {
           m_LastTooltipText = toolTipText;

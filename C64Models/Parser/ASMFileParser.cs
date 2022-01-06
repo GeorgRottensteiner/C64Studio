@@ -1959,23 +1959,10 @@ namespace C64Studio.Parser
                 return false;
               }
 
-              /*
-              //if ( !EvaluateExtFunction( possibleFunction, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, out resultValue ) )
-              double resultValueNumeric = 0.0;
-              if ( !EvaluateExtFunctionNumeric( possibleFunction, subTokenRange, bracketStartPos + 1, bracketEndPos - bracketStartPos - 1, out resultValueNumeric ) )
-              {
-                return false;
-              }*/
-
               int     startPosB = subTokenRange[bracketStartPos - 1].StartPos;
               subTokenRange.RemoveRange( bracketStartPos - 1, bracketEndPos - bracketStartPos + 2 );
               Count -= bracketEndPos - bracketStartPos + 2;
 
-              /*
-              Types.TokenInfo extFunctionResult = new Types.TokenInfo();
-              tokenResultF.Content = resultValueNumeric.ToString( "0.00000000000000000000", System.Globalization.CultureInfo.InvariantCulture );
-              tokenResultF.Type = Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
-              tokenResultF.StartPos = startPosB;*/
               results[0].StartPos = startPosB;
 
               subTokenRange.Insert( bracketStartPos - 1, results[0] );
@@ -8823,8 +8810,8 @@ namespace C64Studio.Parser
               AddWarning( lineIndex,
                           Types.ErrorCode.W0005_USER_WARNING,
                           EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ),
-                          lineTokenInfos[1].StartPos,
-                          lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
+                          lineTokenInfos[0].StartPos,
+                          lineTokenInfos[0].Length );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.MESSAGE )
             {
@@ -15454,7 +15441,7 @@ namespace C64Studio.Parser
           {
             return "";
           }
-          sb.Append( result.ToInteger() );
+          sb.Append( result.ToString() );
         }
       }
       return sb.ToString();

@@ -732,21 +732,7 @@ namespace C64Studio
 
     private void btnImportCharsetFromASM_Click( object sender, EventArgs e )
     {
-      Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
-
-      Parser.CompileConfig config = new Parser.CompileConfig();
-      config.TargetType = Types.CompileTargetType.PLAIN;
-      config.OutputFile = "temp.bin";
-      config.Assembler = Types.AssemblerType.C64_STUDIO;
-
-      string    temp = "* = $0801\n" + editDataImport.Text;
-      if ( ( asmParser.Parse( temp, null, config, null ) )
-      &&   ( asmParser.Assemble( config ) ) )
-      {
-        GR.Memory.ByteBuffer charData = asmParser.AssembledOutput.Assembly;
-
-        ImportFromData( charData );
-      }
+      ImportFromData( Util.FromASMData( editDataImport.Text ) );
     }
 
 
