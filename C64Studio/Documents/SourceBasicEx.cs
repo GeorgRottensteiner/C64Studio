@@ -1242,6 +1242,20 @@ namespace C64Studio
           {
             if ( shiftPushed )
             {
+              // only expand token if we are not inside a comment!
+              string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
+              if ( m_LowerCaseMode )
+              {
+                leftText = MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
+              }
+
+              var tokens = m_Parser.PureTokenizeLine( leftText );
+              if ( ( tokens.Tokens.Count == 0 )
+              ||   ( tokens.Tokens.Any( t => IsTokenComment( t ) ) ) )
+              {
+                return true;
+              }
+
               if ( actualChar == "?" )
               {
                 if ( InsideREM() )
@@ -1260,11 +1274,6 @@ namespace C64Studio
                 return true;
               }
               // could be a token
-              string  leftText = editSource.GetLineText( CursorLine ).Substring( 0, editSource.Selection.Start.iChar );
-              if ( m_LowerCaseMode )
-              {
-                leftText = MakeUpperCase( leftText, Core.Settings.BASICUseNonC64Font );
-              }
 
               if ( ( leftText.Length >= 1 )
               &&   ( leftText[leftText.Length - 1] >= 'A' )
@@ -1278,7 +1287,6 @@ namespace C64Studio
                   &&   ( opcode.ShortCut.Length <= leftText.Length )
                   &&   ( string.Compare( opcode.ShortCut, 0, leftText, leftText.Length - opcode.ShortCut.Length, opcode.ShortCut.Length ) == 0 ) )
                   {
-                    // TODO - case!
                     if ( m_LowerCaseMode )
                     {
                       editSource.SelectedText = MakeLowerCase( opcode.Command.Substring( opcode.ShortCut.Length - 1 ), Core.Settings.BASICUseNonC64Font );
@@ -1471,6 +1479,23 @@ namespace C64Studio
       }
       // swallow unmapped keys that would produce text (or disallowed characters, e.g. small letters)
       return base.ProcessCmdKey( ref msg, keyData );
+    }
+
+
+
+    private bool IsTokenComment( Token Token )
+    {
+      if ( Token.TokenType == Token.Type.HARD_COMMENT )
+      {
+        return true;
+      }
+      var commentOpcode = m_Parser.Settings.BASICDialect.Opcodes.FirstOrDefault( o => o.Value.InsertionValue == Token.ByteValue );
+      if ( ( commentOpcode.Value != null )
+      &&   ( commentOpcode.Value.IsComment ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 

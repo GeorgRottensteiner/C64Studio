@@ -963,7 +963,7 @@ namespace C64Studio.Parser
 
 
 
-    private bool IsComment( Opcode Opcode )
+    public bool IsComment( Opcode Opcode )
     {
       if ( Opcode.Command == "REM" )
       {
@@ -2506,6 +2506,13 @@ namespace C64Studio.Parser
       // collect labels
       foreach ( KeyValuePair<int,LineInfo> lineInfo in m_LineInfos )
       {
+        if ( ( lineInfo.Value.Tokens.Count == 1 )
+        &&   ( lineInfo.Value.Tokens[0].TokenType == Token.Type.HARD_COMMENT ) )
+        {
+          // leave as is
+          continue;
+        }
+
         if ( ( lineInfo.Value.Tokens.Count > 0 )
         &&   ( lineInfo.Value.Tokens[0].TokenType == Token.Type.EX_BASIC_TOKEN )
         &&   ( lineInfo.Value.Tokens[0].ByteValue == Settings.BASICDialect.ExOpcodes["LABEL"].InsertionValue ) )
