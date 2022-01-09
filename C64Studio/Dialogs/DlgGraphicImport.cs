@@ -225,16 +225,14 @@ namespace C64Studio
         quant.Calculate();
 
         var resultingImage = quant.Reduce( newImage );
-
-        GR.Memory.ByteBuffer      dibData2 = resultingImage.CreateHDIBAsBuffer();
-
-        System.IO.MemoryStream    ms2 = dibData2.MemoryStream();
-        DataObject dataObj = new DataObject();
-        dataObj.SetData( "DeviceIndependentBitmap", ms2 );
-
-        Clipboard.SetDataObject( dataObj, true );
+        m_ImportPalette = new Palette( 1 << resultingImage.BitsPerPixel );
+        for ( int i = 0; i < m_ImportPalette.NumColors; ++i )
+        {
+          m_ImportPalette.ColorValues[i] = resultingImage.PaletteColor( i );
+        }
+        //PaletteManager.ApplyPalette( m_OriginalImage, m_ImportPalette );
       }
-      PaletteManager.ApplyPalette( m_ImportImage );
+      //PaletteManager.ApplyPalette( m_ImportImage );
       //PaletteManager.ApplyPalette( m_OriginalImage );
       newImage.DrawTo( m_OriginalImage, 0, 0 );
       newImage.Dispose();

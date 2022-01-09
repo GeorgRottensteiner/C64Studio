@@ -1352,6 +1352,8 @@ namespace C64Studio
       panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
+      UpdatePalette();
+
       RedrawColorChooser();
       RedrawFullScreen();
 
@@ -3268,6 +3270,22 @@ namespace C64Studio
         case TextMode.COMMODORE_VIC20_22_X_23:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
           return;
+      }
+
+      if ( comboBackground.Items.Count != numColors )
+      {
+        comboBackground.BeginUpdate();
+
+        while ( comboBackground.Items.Count < numColors )
+        {
+          comboBackground.Items.Add( comboBackground.Items.Count.ToString( "d2" ) );
+        }
+        while ( comboBackground.Items.Count > numColors )
+        {
+          comboBackground.Items.RemoveAt( numColors );
+        }
+
+        comboBackground.EndUpdate();
       }
 
       if ( m_CharsetScreen.CharSet.Colors.Palette.NumColors == numColors )

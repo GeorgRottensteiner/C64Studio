@@ -1,4 +1,5 @@
 ﻿C64Studio
+o Screen-Editor Shift UDLR, Mirror
 o Basic-Dateien im VICE-petcat-Format schreiben lassen? 
 o Would it be possible to see the total number of cycles taken by a macro?
 o Maybe when a sprite is copied from one cell to another, the "Multicolor" property might be copied as well?
