@@ -1294,7 +1294,9 @@ namespace C64Studio
       ApplyPalette();
 
       SetScreenSize( m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
-      
+
+      UpdatePalette();
+
       comboBackground.SelectedIndex = m_CharsetScreen.CharSet.Colors.BackgroundColor;
       comboMulticolor1.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor1;
       comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
@@ -1351,8 +1353,6 @@ namespace C64Studio
 
       panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
-
-      UpdatePalette();
 
       RedrawColorChooser();
       RedrawFullScreen();
