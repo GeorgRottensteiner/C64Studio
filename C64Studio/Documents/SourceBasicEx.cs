@@ -1250,8 +1250,7 @@ namespace C64Studio
               }
 
               var tokens = m_Parser.PureTokenizeLine( leftText );
-              if ( ( tokens.Tokens.Count == 0 )
-              ||   ( tokens.Tokens.Any( t => IsTokenComment( t ) ) ) )
+              if ( tokens.Tokens.Any( t => IsTokenComment( t ) ) )
               {
                 return true;
               }
