@@ -218,6 +218,9 @@ namespace C64Studio
           case SymbolInfo.Types.VARIABLE_INTEGER:
             node.Text += " = Integer";
             break;
+          case SymbolInfo.Types.CONSTANT_STRING:
+            node.Text += " = " + token.String;
+            break;
           case SymbolInfo.Types.CONSTANT_1:
           case SymbolInfo.Types.CONSTANT_2:
             node.ImageIndex = node.SelectedImageIndex = 2;

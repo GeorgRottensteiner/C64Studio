@@ -830,6 +830,38 @@ namespace C64Studio.Parser
 
 
 
+    public void AddConstantString( string Name, string Value, int SourceLine, string Info, string Zone, int CharIndex, int Length )
+    {
+      string      filename = "";
+      int         localIndex = -1;
+      SourceInfo  srcInfo;
+      ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
+
+      if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
+      {
+        SymbolInfo token = new SymbolInfo();
+        token.Type = SymbolInfo.Types.CONSTANT_STRING;
+        token.String = Value;
+        token.Name = Name;
+        token.LineIndex = SourceLine;
+        token.Info = Info;
+        token.DocumentFilename = filename;
+        token.LocalLineIndex = localIndex;
+        token.SourceInfo = srcInfo;
+        token.Zone = Zone;
+        token.References.Add( SourceLine );
+
+        ASMFileInfo.Labels.Add( Name, token );
+      }
+      else
+      {
+        ASMFileInfo.Labels[Name].String = Value;
+        ASMFileInfo.Labels[Name].Type = SymbolInfo.Types.CONSTANT_STRING;
+      }
+    }
+
+
+
     public void AddConstant( string Name, int Value, int SourceLine, string Info, string Zone, int CharIndex, int Length )
     {
       string      filename = "";
@@ -1280,6 +1312,10 @@ namespace C64Studio.Parser
       {
         ResultingSymbol = CreateNumberSymbol( ASMFileInfo.Labels[Value].RealValue );
       }
+      else if ( ASMFileInfo.Labels[Value].Type == SymbolInfo.Types.CONSTANT_STRING )
+      {
+        ResultingSymbol = CreateStringSymbol( ASMFileInfo.Labels[Value].String );
+      }
       else
       {
         ResultingSymbol = CreateIntegerSymbol( ASMFileInfo.Labels[Value].AddressOrValue, out NumGivenBytes );
@@ -1296,6 +1332,18 @@ namespace C64Studio.Parser
 
       symbol.Type       = SymbolInfo.Types.CONSTANT_REAL_NUMBER;
       symbol.RealValue  = Value;
+
+      return symbol;
+    }
+
+
+
+    private SymbolInfo CreateStringSymbol( string Value )
+    {
+      var symbol = new SymbolInfo();
+
+      symbol.Type   = SymbolInfo.Types.CONSTANT_STRING;
+      symbol.String = Value;
 
       return symbol;
     }
@@ -1797,7 +1845,7 @@ namespace C64Studio.Parser
             {
               var symbol = new SymbolInfo();
               symbol.AddressOrValue = 1;
-              symbol.Type = SymbolInfo.Types.VARIABLE_STRING;
+              symbol.Type = SymbolInfo.Types.CONSTANT_STRING;
               symbol.String = Tokens[StartIndex].Content;
               NumBytesGiven = Tokens[StartIndex].Length;
               ResultingToken = symbol;
@@ -3163,7 +3211,7 @@ namespace C64Studio.Parser
 
             if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, TextMapping, out SymbolInfo byteValueSymbol, out numBytesGiven ) )
             {
-              if ( byteValueSymbol.Type == SymbolInfo.Types.VARIABLE_STRING )
+              if ( byteValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
               {
                 if ( ( byteValueSymbol.String.StartsWith( "\"" ) )
                 &&   ( byteValueSymbol.String.Length > 1 )
@@ -3247,7 +3295,7 @@ namespace C64Studio.Parser
 
         if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, TextMapping, out SymbolInfo byteValueSymbol, out numBytesGiven ) )
         {
-          if ( byteValueSymbol.Type == SymbolInfo.Types.VARIABLE_STRING )
+          if ( byteValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
           {
             if ( ( byteValueSymbol.String.StartsWith( "\"" ) )
             &&   ( byteValueSymbol.String.Length > 1 )
@@ -6561,7 +6609,7 @@ namespace C64Studio.Parser
 
             if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, info.LineCodeMapping, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
             {
-              if ( wordValueSymbol.Type == SymbolInfo.Types.VARIABLE_STRING )
+              if ( wordValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
               {
                 if ( ( wordValueSymbol.String.StartsWith( "\"" ) )
                 &&   ( wordValueSymbol.String.Length > 1 )
@@ -6654,7 +6702,7 @@ namespace C64Studio.Parser
 
         if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, info.LineCodeMapping, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
         {
-          if ( wordValueSymbol.Type == SymbolInfo.Types.VARIABLE_STRING )
+          if ( wordValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
           {
             if ( ( wordValueSymbol.String.StartsWith( "\"" ) )
             &&   ( wordValueSymbol.String.Length > 1 )
@@ -6793,7 +6841,7 @@ namespace C64Studio.Parser
 
             if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, tokenIndex - firstTokenIndex, info.LineCodeMapping, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
             {
-              if ( wordValueSymbol.Type == SymbolInfo.Types.VARIABLE_STRING )
+              if ( wordValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
               {
                 if ( ( wordValueSymbol.String.StartsWith( "\"" ) )
                 &&   ( wordValueSymbol.String.Length > 1 )
@@ -6886,7 +6934,7 @@ namespace C64Studio.Parser
 
         if ( EvaluateTokens( LineIndex, lineTokenInfos, firstTokenIndex, lineTokenInfos.Count - firstTokenIndex, info.LineCodeMapping, out SymbolInfo wordValueSymbol, out numBytesGiven ) )
         {
-          if ( wordValueSymbol.Type == SymbolInfo.Types.VARIABLE_STRING )
+          if ( wordValueSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
           {
             if ( ( wordValueSymbol.String.StartsWith( "\"" ) )
             &&   ( wordValueSymbol.String.Length > 1 )
@@ -8203,6 +8251,10 @@ namespace C64Studio.Parser
               if ( addressSymbol.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
               {
                 AddConstantF( defineName, addressSymbol.RealValue, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+              }
+              else if ( addressSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
+              {
+                AddConstantString( defineName, addressSymbol.String, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
               }
               else
               {
@@ -15422,6 +15474,12 @@ namespace C64Studio.Parser
         {
           sb.Append( token.Content.Substring( 1, token.Content.Length - 2 ) );
         }
+        /*
+        else if ( ( StartIndex + Count - startTokenIndex == 1 )
+        &&        ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
+        {
+          sb.Append( token.Content.Substring( 1, token.Content.Length - 2 ) );
+        }*/
         else
         {
           SymbolInfo  result;

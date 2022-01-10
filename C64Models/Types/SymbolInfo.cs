@@ -13,6 +13,7 @@
       CONSTANT_2,
       ZONE,
       CONSTANT_REAL_NUMBER,
+      CONSTANT_STRING,
       VARIABLE_NUMBER,
       VARIABLE_INTEGER,
       VARIABLE_STRING,
@@ -44,6 +45,10 @@
       {
         return Util.DoubleToString( RealValue );
       }
+      else if ( Type == Types.CONSTANT_STRING )
+      {
+        return Util.RemoveQuotes( String );
+      }
       else if ( IsInteger() )
       {
         return AddressOrValue.ToString();
@@ -73,7 +78,7 @@
       {
         return (int)RealValue;
       }
-      if ( Type == Types.VARIABLE_STRING )
+      if ( Type == Types.CONSTANT_STRING )
       {
         if ( String.Length == 0 )
         {
