@@ -341,24 +341,31 @@ namespace C64Studio
 
       var affectedSprite = m_SpriteProject.Sprites[m_CurrentSprite];
 
+      int     colorIndex = (int)_ColorSettingsDlg.SelectedColor;
+      if ( Lookup.SpriteModeSupportsMulticolorFlag( m_SpriteProject.Mode ) )
+      {
+        if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
+        ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC ) )
+        {
+          ColorType   replaceColor = (ColorType)colorIndex;
+          SwitchMultiColors( ref replaceColor );
+          colorIndex = (int)replaceColor;
+        }
+      }
+      else
+      {
+        colorIndex = _ColorSettingsDlg.CustomColor;
+      }
+
+      if ( ( Core.Settings.BehaviourRightClickIsBGColorPaint )
+      &&   ( ( Buttons & MouseButtons.Right ) != 0 ) )
+      {
+        Buttons = MouseButtons.Left;
+        colorIndex = (int)ColorType.BACKGROUND;
+      }
+
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
-        int     colorIndex = (int)_ColorSettingsDlg.SelectedColor;
-        if ( Lookup.SpriteModeSupportsMulticolorFlag( m_SpriteProject.Mode ) )
-        {
-          if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
-          ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC ) )
-          {
-            ColorType   replaceColor = (ColorType)colorIndex;
-            SwitchMultiColors( ref replaceColor );
-            colorIndex = (int)replaceColor;
-          }
-        }
-        else
-        {
-          colorIndex = _ColorSettingsDlg.CustomColor;
-        }
-
         Undo.UndoTask undo = null;
         if ( m_ButtonReleased )
         {
@@ -402,9 +409,13 @@ namespace C64Studio
           if ( ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.COMMODORE_24_X_21_HIRES_OR_MC )
           ||   ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_64_X_21_HIRES_OR_MC ) )
           {
-            ColorType   replaceColor = (ColorType)pickedColor;
-            SwitchMultiColors( ref replaceColor );
-            pickedColor = (int)replaceColor;
+            if ( ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.COMMODORE_24_X_21_MULTICOLOR )
+            ||   ( m_SpriteProject.Sprites[m_CurrentSprite].Mode == SpriteMode.MEGA65_64_X_21_16_MULTICOLOR ) )
+            {
+              ColorType   replaceColor = (ColorType)pickedColor;
+              SwitchMultiColors( ref replaceColor );
+              pickedColor = (int)replaceColor;
+            }
           }
         }
 

@@ -46,7 +46,6 @@
       this.label14 = new System.Windows.Forms.Label();
       this.checkAutoOpenLastSolution = new System.Windows.Forms.CheckBox();
       this.checkStripTrailingSpaces = new System.Windows.Forms.CheckBox();
-      this.checkAllowTabs = new System.Windows.Forms.CheckBox();
       this.checkConvertTabsToSpaces = new System.Windows.Forms.CheckBox();
       this.checkPlaySoundSearchTextNotFound = new System.Windows.Forms.CheckBox();
       this.checkPlaySoundCompileSuccessful = new System.Windows.Forms.CheckBox();
@@ -97,6 +96,7 @@
       this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.label9 = new System.Windows.Forms.Label();
       this.tabErrorsWarnings = new System.Windows.Forms.TabPage();
+      this.comboASMEncoding = new System.Windows.Forms.ComboBox();
       this.btmASMLibraryPathBrowse = new System.Windows.Forms.Button();
       this.editASMLibraryPath = new System.Windows.Forms.TextBox();
       this.checkASMShowAddress = new System.Windows.Forms.CheckBox();
@@ -110,6 +110,7 @@
       this.label26 = new System.Windows.Forms.Label();
       this.asmLibraryPathList = new C64Studio.ArrangedItemList();
       this.listHacks = new System.Windows.Forms.CheckedListBox();
+      this.label35 = new System.Windows.Forms.Label();
       this.label34 = new System.Windows.Forms.Label();
       this.listWarningsAsErrors = new System.Windows.Forms.CheckedListBox();
       this.label33 = new System.Windows.Forms.Label();
@@ -151,8 +152,7 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.label35 = new System.Windows.Forms.Label();
-      this.comboASMEncoding = new System.Windows.Forms.ComboBox();
+      this.checkRightClickIsBGColor = new System.Windows.Forms.CheckBox();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -185,6 +185,7 @@
       // 
       // tabGeneral
       // 
+      this.tabGeneral.Controls.Add(this.checkRightClickIsBGColor);
       this.tabGeneral.Controls.Add(this.btnBrowseDefaultOpenSolutionPath);
       this.tabGeneral.Controls.Add(this.editDefaultOpenSolutionPath);
       this.tabGeneral.Controls.Add(this.comboAppMode);
@@ -201,7 +202,6 @@
       this.tabGeneral.Controls.Add(this.label14);
       this.tabGeneral.Controls.Add(this.checkAutoOpenLastSolution);
       this.tabGeneral.Controls.Add(this.checkStripTrailingSpaces);
-      this.tabGeneral.Controls.Add(this.checkAllowTabs);
       this.tabGeneral.Controls.Add(this.checkConvertTabsToSpaces);
       this.tabGeneral.Controls.Add(this.checkPlaySoundSearchTextNotFound);
       this.tabGeneral.Controls.Add(this.checkPlaySoundCompileSuccessful);
@@ -223,7 +223,7 @@
       this.btnBrowseDefaultOpenSolutionPath.Location = new System.Drawing.Point(624, 46);
       this.btnBrowseDefaultOpenSolutionPath.Name = "btnBrowseDefaultOpenSolutionPath";
       this.btnBrowseDefaultOpenSolutionPath.Size = new System.Drawing.Size(23, 20);
-      this.btnBrowseDefaultOpenSolutionPath.TabIndex = 18;
+      this.btnBrowseDefaultOpenSolutionPath.TabIndex = 5;
       this.btnBrowseDefaultOpenSolutionPath.Text = "...";
       this.btnBrowseDefaultOpenSolutionPath.UseVisualStyleBackColor = true;
       this.btnBrowseDefaultOpenSolutionPath.Click += new System.EventHandler(this.btnBrowseDefaultOpenSolutionPath_Click);
@@ -233,7 +233,7 @@
       this.editDefaultOpenSolutionPath.Location = new System.Drawing.Point(478, 46);
       this.editDefaultOpenSolutionPath.Name = "editDefaultOpenSolutionPath";
       this.editDefaultOpenSolutionPath.Size = new System.Drawing.Size(140, 20);
-      this.editDefaultOpenSolutionPath.TabIndex = 17;
+      this.editDefaultOpenSolutionPath.TabIndex = 4;
       // 
       // comboAppMode
       // 
@@ -246,7 +246,7 @@
       this.comboAppMode.Location = new System.Drawing.Point(28, 227);
       this.comboAppMode.Name = "comboAppMode";
       this.comboAppMode.Size = new System.Drawing.Size(209, 21);
-      this.comboAppMode.TabIndex = 6;
+      this.comboAppMode.TabIndex = 10;
       this.comboAppMode.SelectedIndexChanged += new System.EventHandler(this.comboAppMode_SelectedIndexChanged);
       // 
       // btnSetDefaultsFont
@@ -254,7 +254,7 @@
       this.btnSetDefaultsFont.Location = new System.Drawing.Point(478, 287);
       this.btnSetDefaultsFont.Name = "btnSetDefaultsFont";
       this.btnSetDefaultsFont.Size = new System.Drawing.Size(124, 23);
-      this.btnSetDefaultsFont.TabIndex = 15;
+      this.btnSetDefaultsFont.TabIndex = 13;
       this.btnSetDefaultsFont.Text = "Set Default Fonts";
       this.btnSetDefaultsFont.UseVisualStyleBackColor = true;
       this.btnSetDefaultsFont.Click += new System.EventHandler(this.btnSetDefaultsFont_Click);
@@ -265,7 +265,7 @@
       this.checkBASICUseC64Font.Location = new System.Drawing.Point(336, 343);
       this.checkBASICUseC64Font.Name = "checkBASICUseC64Font";
       this.checkBASICUseC64Font.Size = new System.Drawing.Size(88, 17);
-      this.checkBASICUseC64Font.TabIndex = 9;
+      this.checkBASICUseC64Font.TabIndex = 15;
       this.checkBASICUseC64Font.Text = "Use C64 font";
       this.checkBASICUseC64Font.UseVisualStyleBackColor = true;
       this.checkBASICUseC64Font.CheckedChanged += new System.EventHandler(this.checkBASICUseC64Font_CheckedChanged);
@@ -276,7 +276,7 @@
       this.btnChangeBASICFont.Location = new System.Drawing.Point(242, 339);
       this.btnChangeBASICFont.Name = "btnChangeBASICFont";
       this.btnChangeBASICFont.Size = new System.Drawing.Size(88, 23);
-      this.btnChangeBASICFont.TabIndex = 16;
+      this.btnChangeBASICFont.TabIndex = 14;
       this.btnChangeBASICFont.Text = "Change Font";
       this.btnChangeBASICFont.UseVisualStyleBackColor = true;
       this.btnChangeBASICFont.Click += new System.EventHandler(this.btnChooseBASICFont_Click);
@@ -294,7 +294,7 @@
       this.btnChooseFont.Location = new System.Drawing.Point(242, 287);
       this.btnChooseFont.Name = "btnChooseFont";
       this.btnChooseFont.Size = new System.Drawing.Size(88, 23);
-      this.btnChooseFont.TabIndex = 14;
+      this.btnChooseFont.TabIndex = 12;
       this.btnChooseFont.Text = "Change Font";
       this.btnChooseFont.UseVisualStyleBackColor = true;
       this.btnChooseFont.Click += new System.EventHandler(this.btnChooseFont_Click);
@@ -313,16 +313,16 @@
       this.editMaxMRUEntries.MaxLength = 2;
       this.editMaxMRUEntries.Name = "editMaxMRUEntries";
       this.editMaxMRUEntries.Size = new System.Drawing.Size(140, 20);
-      this.editMaxMRUEntries.TabIndex = 5;
+      this.editMaxMRUEntries.TabIndex = 6;
       this.editMaxMRUEntries.TextChanged += new System.EventHandler(this.editMaxMRUEntries_TextChanged);
       // 
       // editTabSize
       // 
-      this.editTabSize.Location = new System.Drawing.Point(149, 170);
+      this.editTabSize.Location = new System.Drawing.Point(154, 155);
       this.editTabSize.MaxLength = 2;
       this.editTabSize.Name = "editTabSize";
       this.editTabSize.Size = new System.Drawing.Size(88, 20);
-      this.editTabSize.TabIndex = 5;
+      this.editTabSize.TabIndex = 9;
       this.editTabSize.TextChanged += new System.EventHandler(this.editTabSize_TextChanged);
       // 
       // label32
@@ -346,7 +346,7 @@
       // label14
       // 
       this.label14.AutoSize = true;
-      this.label14.Location = new System.Drawing.Point(25, 173);
+      this.label14.Location = new System.Drawing.Point(27, 158);
       this.label14.Name = "label14";
       this.label14.Size = new System.Drawing.Size(52, 13);
       this.label14.TabIndex = 5;
@@ -358,7 +358,7 @@
       this.checkAutoOpenLastSolution.Location = new System.Drawing.Point(336, 21);
       this.checkAutoOpenLastSolution.Name = "checkAutoOpenLastSolution";
       this.checkAutoOpenLastSolution.Size = new System.Drawing.Size(311, 24);
-      this.checkAutoOpenLastSolution.TabIndex = 13;
+      this.checkAutoOpenLastSolution.TabIndex = 3;
       this.checkAutoOpenLastSolution.Text = "Open last solution on startup";
       this.checkAutoOpenLastSolution.UseVisualStyleBackColor = true;
       this.checkAutoOpenLastSolution.CheckedChanged += new System.EventHandler(this.checkOpenLastSolution_CheckedChanged);
@@ -369,22 +369,10 @@
       this.checkStripTrailingSpaces.Location = new System.Drawing.Point(262, 125);
       this.checkStripTrailingSpaces.Name = "checkStripTrailingSpaces";
       this.checkStripTrailingSpaces.Size = new System.Drawing.Size(214, 24);
-      this.checkStripTrailingSpaces.TabIndex = 3;
+      this.checkStripTrailingSpaces.TabIndex = 8;
       this.checkStripTrailingSpaces.Text = "Strip Trailing Spaces/Tabs";
       this.checkStripTrailingSpaces.UseVisualStyleBackColor = true;
       this.checkStripTrailingSpaces.CheckedChanged += new System.EventHandler(this.checkStripTrailingSpaces_CheckedChanged);
-      // 
-      // checkAllowTabs
-      // 
-      this.checkAllowTabs.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkAllowTabs.Location = new System.Drawing.Point(388, 162);
-      this.checkAllowTabs.Name = "checkAllowTabs";
-      this.checkAllowTabs.Size = new System.Drawing.Size(214, 24);
-      this.checkAllowTabs.TabIndex = 3;
-      this.checkAllowTabs.Text = "Allow Tabs";
-      this.checkAllowTabs.UseVisualStyleBackColor = true;
-      this.checkAllowTabs.Visible = false;
-      this.checkAllowTabs.CheckedChanged += new System.EventHandler(this.checkAllowTabs_CheckedChanged);
       // 
       // checkConvertTabsToSpaces
       // 
@@ -392,7 +380,7 @@
       this.checkConvertTabsToSpaces.Location = new System.Drawing.Point(28, 125);
       this.checkConvertTabsToSpaces.Name = "checkConvertTabsToSpaces";
       this.checkConvertTabsToSpaces.Size = new System.Drawing.Size(214, 24);
-      this.checkConvertTabsToSpaces.TabIndex = 4;
+      this.checkConvertTabsToSpaces.TabIndex = 7;
       this.checkConvertTabsToSpaces.Text = "Convert tabs to spaces";
       this.checkConvertTabsToSpaces.UseVisualStyleBackColor = true;
       this.checkConvertTabsToSpaces.CheckedChanged += new System.EventHandler(this.checkConvertTabsToSpaces_CheckedChanged);
@@ -439,11 +427,11 @@
       // label28
       // 
       this.label28.AutoSize = true;
-      this.label28.Location = new System.Drawing.Point(322, 7);
+      this.label28.Location = new System.Drawing.Point(333, 211);
       this.label28.Name = "label28";
-      this.label28.Size = new System.Drawing.Size(69, 13);
+      this.label28.Size = new System.Drawing.Size(88, 13);
       this.label28.TabIndex = 2;
-      this.label28.Text = "Environment:";
+      this.label28.Text = "Editor Behaviour:";
       // 
       // label29
       // 
@@ -913,6 +901,16 @@
       this.tabErrorsWarnings.Text = "Assembler";
       this.tabErrorsWarnings.UseVisualStyleBackColor = true;
       // 
+      // comboASMEncoding
+      // 
+      this.comboASMEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboASMEncoding.FormattingEnabled = true;
+      this.comboASMEncoding.Location = new System.Drawing.Point(390, 349);
+      this.comboASMEncoding.Name = "comboASMEncoding";
+      this.comboASMEncoding.Size = new System.Drawing.Size(261, 21);
+      this.comboASMEncoding.TabIndex = 23;
+      this.comboASMEncoding.SelectedIndexChanged += new System.EventHandler(this.comboASMEncoding_SelectedIndexChanged);
+      // 
       // btmASMLibraryPathBrowse
       // 
       this.btmASMLibraryPathBrowse.Location = new System.Drawing.Point(342, 396);
@@ -1059,6 +1057,15 @@
       this.listHacks.Size = new System.Drawing.Size(261, 79);
       this.listHacks.TabIndex = 3;
       this.listHacks.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listC64StudioHacks_ItemCheck);
+      // 
+      // label35
+      // 
+      this.label35.AutoSize = true;
+      this.label35.Location = new System.Drawing.Point(387, 333);
+      this.label35.Name = "label35";
+      this.label35.Size = new System.Drawing.Size(55, 13);
+      this.label35.TabIndex = 2;
+      this.label35.Text = "Encoding:";
       // 
       // label34
       // 
@@ -1481,24 +1488,16 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
-      // label35
+      // checkRightClickIsBGColor
       // 
-      this.label35.AutoSize = true;
-      this.label35.Location = new System.Drawing.Point(387, 333);
-      this.label35.Name = "label35";
-      this.label35.Size = new System.Drawing.Size(55, 13);
-      this.label35.TabIndex = 2;
-      this.label35.Text = "Encoding:";
-      // 
-      // comboASMEncoding
-      // 
-      this.comboASMEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.comboASMEncoding.FormattingEnabled = true;
-      this.comboASMEncoding.Location = new System.Drawing.Point(390, 349);
-      this.comboASMEncoding.Name = "comboASMEncoding";
-      this.comboASMEncoding.Size = new System.Drawing.Size(261, 21);
-      this.comboASMEncoding.TabIndex = 23;
-      this.comboASMEncoding.SelectedIndexChanged += new System.EventHandler(this.comboASMEncoding_SelectedIndexChanged);
+      this.checkRightClickIsBGColor.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkRightClickIsBGColor.Location = new System.Drawing.Point(340, 225);
+      this.checkRightClickIsBGColor.Name = "checkRightClickIsBGColor";
+      this.checkRightClickIsBGColor.Size = new System.Drawing.Size(307, 24);
+      this.checkRightClickIsBGColor.TabIndex = 11;
+      this.checkRightClickIsBGColor.Text = "Right Click is Paint with BG Color";
+      this.checkRightClickIsBGColor.UseVisualStyleBackColor = true;
+      this.checkRightClickIsBGColor.CheckedChanged += new System.EventHandler(this.checkRightClickIsBGColor_CheckedChanged);
       // 
       // Settings
       // 
@@ -1624,7 +1623,6 @@
     private System.Windows.Forms.TabPage tabBASIC;
     private System.Windows.Forms.CheckBox checkBASICStripSpaces;
     private System.Windows.Forms.Label label22;
-    private System.Windows.Forms.CheckBox checkAllowTabs;
     private System.Windows.Forms.Label label27;
     private System.Windows.Forms.CheckBox checkAutoOpenLastSolution;
     private System.Windows.Forms.Label label28;
@@ -1668,5 +1666,6 @@
     private System.Windows.Forms.Label label34;
     private System.Windows.Forms.ComboBox comboASMEncoding;
     private System.Windows.Forms.Label label35;
+    private System.Windows.Forms.CheckBox checkRightClickIsBGColor;
   }
 }

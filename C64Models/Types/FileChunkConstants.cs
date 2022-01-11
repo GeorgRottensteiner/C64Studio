@@ -91,6 +91,7 @@
     public const ushort    SETTINGS_MRU_FILES    = 0x2018;
     public const ushort    SETTINGS_WARNINGS_AS_ERRORS = 0x2019;
     public const ushort    SETTINGS_C64STUDIO_HACKS    = 0x201A;
+    public const ushort    SETTINGS_EDITOR_BEHAVIOURS   = 0x201B;
   }
 
 }

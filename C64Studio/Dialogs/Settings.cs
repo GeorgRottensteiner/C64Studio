@@ -99,6 +99,7 @@ namespace C64Studio
       checkASMAutoTruncateLiteralValues.Checked = Core.Settings.ASMAutoTruncateLiteralValues;
       checkASMShowAutoComplete.Checked        = Core.Settings.ASMShowAutoComplete;
       checkASMShowAddress.Checked             = Core.Settings.ASMShowAddress;
+      checkRightClickIsBGColor.Checked        = Core.Settings.BehaviourRightClickIsBGColorPaint;
 
       editDefaultOpenSolutionPath.Text        = Core.Settings.DefaultProjectBasePath;
       editMaxMRUEntries.Text                  = Core.Settings.MRUMaxCount.ToString();
@@ -2474,6 +2475,13 @@ namespace C64Studio
       var  newEncoding = (GR.Generic.Tupel<string, Encoding>)comboASMEncoding.SelectedItem;
 
       Core.Settings.SourceFileEncoding = newEncoding.second;
+    }
+
+
+
+    private void checkRightClickIsBGColor_CheckedChanged( object sender, EventArgs e )
+    {
+      Core.Settings.BehaviourRightClickIsBGColorPaint = checkRightClickIsBGColor.Checked;
     }
 
 

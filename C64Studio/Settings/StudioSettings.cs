@@ -155,6 +155,8 @@ namespace C64Studio
     public FontStyle                            BASICSourceFontStyle = FontStyle.Regular;
     public bool                                 BASICUseNonC64Font = false;
 
+    public bool                                 BehaviourRightClickIsBGColorPaint = false;
+
     public List<string>                         FindArguments = new List<string>();
     public List<string>                         ReplaceArguments = new List<string>();
     public List<string>                         ReplaceWithArguments = new List<string>();
@@ -676,6 +678,12 @@ namespace C64Studio
       }
       SettingsData.Append( chunkWarningsAsErrors.ToBuffer() );
 
+      GR.IO.FileChunk chunkEditorBehaviours = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_EDITOR_BEHAVIOURS );
+      chunkEditorBehaviours.AppendI32( BehaviourRightClickIsBGColorPaint ? 1 : 0 );
+      SettingsData.Append( chunkEditorBehaviours.ToBuffer() );
+
+      
+
       GR.IO.FileChunk chunkC64StudioHacks = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_C64STUDIO_HACKS );
       chunkC64StudioHacks.AppendI32( EnabledC64StudioHacks.Count );
       foreach ( Types.ErrorCode c64StudioHack in EnabledC64StudioHacks )
@@ -1052,6 +1060,13 @@ namespace C64Studio
               {
                 IgnoredWarnings.Add( (C64Studio.Types.ErrorCode)binIn.ReadInt32() );
               }
+            }
+            break;
+          case FileChunkConstants.SETTINGS_EDITOR_BEHAVIOURS:
+            {
+              GR.IO.IReader binIn = chunkData.MemoryReader();
+
+              BehaviourRightClickIsBGColorPaint = ( binIn.ReadInt32() == 1 );
             }
             break;
           case FileChunkConstants.SETTINGS_WARNINGS_AS_ERRORS:

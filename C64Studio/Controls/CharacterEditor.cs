@@ -1033,16 +1033,22 @@ namespace C64Studio.Controls
         affectedChar = m_Project.Characters[affectedCharIndex];
       }
 
+      int     colorIndex = _ColorSettingsDlg.CustomColor;
+      if ( ( m_Project.Mode != TextCharMode.MEGA65_FCM )
+      &&   ( m_Project.Mode != TextCharMode.MEGA65_FCM_16BIT ) )
+      {
+        colorIndex = (int)m_CurrentColorType;
+      }
+
+      if ( ( Core.Settings.BehaviourRightClickIsBGColorPaint )
+      &&   ( ( Buttons & MouseButtons.Right ) != 0 ) )
+      {
+        Buttons = MouseButtons.Left;
+        colorIndex = (int)ColorType.BACKGROUND;
+      }
+
       if ( ( Buttons & MouseButtons.Left ) != 0 )
       {
-        int     colorIndex = _ColorSettingsDlg.CustomColor;
-
-        if ( ( m_Project.Mode != TextCharMode.MEGA65_FCM )
-        &&   ( m_Project.Mode != TextCharMode.MEGA65_FCM_16BIT ) )
-        {
-          colorIndex = (int)m_CurrentColorType;
-        }
-
         var potentialUndo = new Undo.UndoCharacterEditorCharChange( this, m_Project, affectedCharIndex, 1 );
         if ( affectedChar.Tile.SetPixel( charX, charY, colorIndex ) )
         {
