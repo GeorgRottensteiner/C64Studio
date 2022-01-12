@@ -2854,6 +2854,14 @@ namespace C64Studio
       }
       map.TileSpacingX = cpProject.TileWidth;
       map.TileSpacingY = cpProject.TileHeight;
+      if ( map.TileSpacingX <= 0 )
+      {
+        map.TileSpacingX = 1;
+      }
+      if ( map.TileSpacingY <= 0 )
+      {
+        map.TileSpacingY = 1;
+      }
       map.Name = "Imported Map";
       m_MapProject.Maps.Add( map );
       comboMaps.Items.Add( new GR.Generic.Tupel<string, Formats.MapProject.Map>( map.Name, map ) );
