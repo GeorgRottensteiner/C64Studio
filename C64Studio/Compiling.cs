@@ -270,6 +270,15 @@ namespace C64Studio
             if ( chainProject != null )
             {
               string      fullPath = BuildFullPath( chainProject.Settings.BasePath, chainEntry.DocumentFilename );
+              var prebuildDoc = chainProject.GetElementByFilename( fullPath );
+              if ( prebuildDoc != null )
+              {
+                if ( NeedsRebuild( prebuildDoc.DocumentInfo ) )
+                {
+                  return true;
+                }
+              }
+
               var fileTime = FileLastWriteTime( fullPath );
               if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] )
               {
