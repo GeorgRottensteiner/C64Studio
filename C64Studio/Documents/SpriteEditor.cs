@@ -3289,7 +3289,7 @@ namespace C64Studio
       pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       panelSprites.ItemWidth = m_SpriteWidth;
       panelSprites.ItemHeight = m_SpriteHeight;
-      panelSprites.SetDisplaySize( 4 * m_SpriteWidth, 6 * m_SpriteHeight );
+      panelSprites.SetDisplaySize( panelSprites.ClientSize.Width / 2, panelSprites.ClientSize.Height / 2 );
     }
 
 

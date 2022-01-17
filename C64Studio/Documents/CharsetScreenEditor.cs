@@ -2199,6 +2199,7 @@ namespace C64Studio
           m_CharsetScreen.CharSet.Colors.BackgroundColor = cpProject.BackgroundColor;
           m_CharsetScreen.CharSet.Colors.MultiColor1 = cpProject.MultiColor1;
           m_CharsetScreen.CharSet.Colors.MultiColor2 = cpProject.MultiColor2;
+          m_CharsetScreen.CharSet.Colors.BGColor4 = cpProject.BackgroundColor4;
 
           int maxChars = cpProject.NumChars;
           if ( maxChars > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
@@ -2256,7 +2257,8 @@ namespace C64Studio
           comboMulticolor1.SelectedIndex = mapProject.Charset.Colors.MultiColor1;
           comboMulticolor2.SelectedIndex = mapProject.Charset.Colors.MultiColor2;
           comboBGColor4.SelectedIndex = mapProject.Charset.Colors.BGColor4;
-          comboCharsetMode.SelectedIndex = (int)( cpProject.MultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES );
+          comboCharsetMode.SelectedIndex = (int)cpProject.DisplayModeFile;
+            //( cpProject.MultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES );
 
           GR.Memory.ByteBuffer      charData = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.TileSpacingX * map.Tiles.Height * map.TileSpacingY ) );
           GR.Memory.ByteBuffer      colorData = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.TileSpacingX * map.Tiles.Height * map.TileSpacingY ) );
@@ -2279,6 +2281,18 @@ namespace C64Studio
                     colorData.SetU8At( x * map.TileSpacingX + i + ( y * map.TileSpacingY + j ) * ( map.Tiles.Width * map.TileSpacingX ), tile.Chars[i, j].Color );
                   }
                 }
+              }
+            }
+          }
+
+          if ( cpProject.MapColorData != null )
+          {
+            // this charpad project has alternative color data
+            for ( int i = 0; i < cpProject.MapHeight; ++i )
+            {
+              for ( int j = 0; j < cpProject.MapWidth; ++j )
+              {
+                colorData.SetU8At( j + i * cpProject.MapWidth, cpProject.MapColorData.ByteAt( j + i * cpProject.MapWidth ) );
               }
             }
           }

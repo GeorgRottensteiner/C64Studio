@@ -2787,6 +2787,7 @@ namespace C64Studio
       m_MapProject.Charset.Colors.BackgroundColor = cpProject.BackgroundColor;
       m_MapProject.Charset.Colors.MultiColor1 = cpProject.MultiColor1;
       m_MapProject.Charset.Colors.MultiColor2 = cpProject.MultiColor2;
+      m_MapProject.Charset.Colors.BGColor4 = cpProject.BackgroundColor4;
 
       int maxChars = cpProject.NumChars;
       if ( maxChars > 256 )
@@ -2810,6 +2811,22 @@ namespace C64Studio
       m_MapProject.Tiles.Clear();
       comboTiles.Items.Clear();
       listTileInfo.Items.Clear();
+
+      switch ( cpProject.DisplayModeFile )
+      {
+        case Formats.CharpadProject.DisplayMode.HIRES:
+          comboTileMode.SelectedIndex = (int)TextCharMode.COMMODORE_HIRES;
+          m_MapProject.Charset.Mode = TextCharMode.COMMODORE_HIRES;
+          break;
+        case Formats.CharpadProject.DisplayMode.MULTICOLOR:
+          comboTileMode.SelectedIndex = (int)TextCharMode.COMMODORE_MULTICOLOR;
+          m_MapProject.Charset.Mode = TextCharMode.COMMODORE_MULTICOLOR;
+          break;
+        case Formats.CharpadProject.DisplayMode.ECM:
+          comboTileMode.SelectedIndex = (int)TextCharMode.COMMODORE_ECM;
+          m_MapProject.Charset.Mode = TextCharMode.COMMODORE_ECM;
+          break;
+      }
 
       characterEditor.CharsetUpdated( m_MapProject.Charset );
 
@@ -2870,7 +2887,7 @@ namespace C64Studio
       comboTileBackground.SelectedIndex = m_MapProject.Charset.Colors.BackgroundColor;
       comboTileMulticolor1.SelectedIndex = m_MapProject.Charset.Colors.MultiColor1;
       comboTileMulticolor2.SelectedIndex = m_MapProject.Charset.Colors.MultiColor2;
-      comboTileMode.SelectedIndex = (int)( cpProject.MultiColor ? TextCharMode.COMMODORE_MULTICOLOR : TextCharMode.COMMODORE_HIRES );
+      comboTileBGColor4.SelectedIndex = m_MapProject.Charset.Colors.BGColor4;
 
       RedrawMap();
       SetModified();
