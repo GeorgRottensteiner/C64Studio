@@ -999,7 +999,6 @@ namespace C64Studio
     {
       m_RequestedMemoryValues.Clear();
       m_MemoryValues.Clear();
-      //m_WatchEntries.Clear();
     }
 
 
@@ -1021,7 +1020,6 @@ namespace C64Studio
 
 
 
-    //private void RaiseDebugEvent( DebugEvent EventType, DebugEventData Data )
     private void RaiseDebugEvent( DebugEventData Data )
     {
       DebugEvent?.Invoke( Data );
@@ -1384,7 +1382,7 @@ namespace C64Studio
 
     private void OnMemoryDumpReceived( ByteBuffer DumpData )
     {
-      //dh.Log( "Got MemDump data as " + dumpData.ToString() );
+      //Debug.Log( "Got MemDump data as " + DumpData.ToString() );
       if ( m_Request.Type == DebugRequestType.TRACE_MEM_DUMP )
       {
         string    traceText = "Trace " + m_Request.Info + " from $" + m_Request.Parameter1.ToString( "X4" ) + " as $" + DumpData.ToString() + "/" + DumpData.ByteAt( 0 ) + System.Environment.NewLine;
@@ -1400,12 +1398,12 @@ namespace C64Studio
           if ( !m_Request.Breakpoint.HasNonVirtual() )
           {
             // and auto-go on with debugging
-            Debug.Log( "Virtual only, go on" );
+            //Debug.Log( "Virtual only, go on" );
             QueueRequest( DebugRequestType.EXIT );
           }
           else
           {
-            Debug.Log( "Has non virtual bp" );
+            //Debug.Log( "Has non virtual bp" );
             QueueRequest( DebugRequestType.REFRESH_VALUES );
             RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
           }
@@ -1433,7 +1431,7 @@ namespace C64Studio
     {
       m_State = DebuggerState.PAUSED;
 
-      Debug.Log( "Breakpoint " + m_BrokenAtBreakPoint + " hit" );
+      //Debug.Log( "Breakpoint " + m_BrokenAtBreakPoint + " hit" );
       // TODO - only remove if auto startup breakpoint
       int breakAddress = -1;
       Types.Breakpoint  brokenBP = null;

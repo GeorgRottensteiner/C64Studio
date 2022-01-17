@@ -759,7 +759,7 @@ namespace C64Studio
 
     private void OnMemoryDumpReceived( ByteBuffer DumpData )
     {
-      //dh.Log( "Got MemDump data as " + dumpData.ToString() );
+      Debug.Log( "Got MemDump data as " + DumpData.ToString() );
       if ( m_Request.Type == DebugRequestType.TRACE_MEM_DUMP )
       {
         string    traceText = "Trace " + m_Request.Info + " from $" + m_Request.Parameter1.ToString( "X4" ) + " as $" + DumpData.ToString() + "/" + DumpData.ByteAt( 0 ) + System.Environment.NewLine;

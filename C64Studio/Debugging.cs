@@ -657,7 +657,7 @@ namespace C64Studio
         }
 
         int     traceSize = 1;
-        var requData = Debugger.RefreshTraceMemory( result, result + traceSize - 1, virtualBP.Expression, virtualBP, Breakpoint );
+        var requData = Debugger.RefreshTraceMemory( result, traceSize, virtualBP.Expression, virtualBP, Breakpoint );
 
         if ( requData.Parameter2 >= 0x10000 )
         {
@@ -689,7 +689,7 @@ namespace C64Studio
       {
         foreach ( Types.Breakpoint breakPoint in BreakPoints[key] )
         {
-          if ( key != "C64Studio.DebugBreakpoints" )
+          //if ( key != "C64Studio.DebugBreakpoints" )
           {
             bool mustBeAddedLater = false;
 
@@ -732,6 +732,7 @@ namespace C64Studio
               Core.MainForm.Document_DocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, breakPoint ) );
             }
           }
+          /*
           else
           {
             // manual breakpoint
@@ -774,7 +775,7 @@ namespace C64Studio
             }
 
             Core.MainForm.Document_DocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, breakPoint ) );
-          }
+          }*/
         }
       }
       return breakPointFile;
