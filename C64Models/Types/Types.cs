@@ -1288,7 +1288,7 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_STAR, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 223 - 128, true, 223, true, (char)0xee5f, true, "CBM *" ).Replacements.Add( "CBM-*" );   // C= *
 
       // 224-254 $E0-$FE    -128 $80         96-126 $60-$7E  
-      AddC64Key( KeyboardKey.KEY_SPACE, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 224 - 128, true, 224, true, (char)0xee60, true, "SHIFT SPACE" ).Replacements.Add( "SHIFT-SPACE" );   // shift-space
+      //AddC64Key( KeyboardKey.KEY_SPACE, KeyModifier.SHIFT, KeyType.GRAPHIC_SYMBOL, 224 - 128, true, 224, true, (char)0xee60, true, "SHIFT SPACE" ).Replacements.Add( "SHIFT-SPACE" );   // shift-space
       AddC64Key( KeyboardKey.KEY_K, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 225 - 128, true, 225, true, (char)0xee61, true, "CBM K" ).Replacements.Add( "CBM-K" );   // C= K
       AddC64Key( KeyboardKey.KEY_I, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 226 - 128, true, 226, true, (char)0xee62, true, "CBM I" ).Replacements.Add( "CBM-I" );   // C= I
       AddC64Key( KeyboardKey.KEY_T, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 227 - 128, true, 227, true, (char)0xee63, true, "CBM T" ).Replacements.Add( "CBM-T" );   // C= T
@@ -1323,10 +1323,10 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_V, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 254 - 128, true, 254, true, (char)0xee7e, true, "CBM V" ).Replacements.Add( "CBM-V" );   // C= V
 
       // 255 $FF                                 94 $5E  
-      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 158, true, 0xff, true, (char)0xee5e, true, "PI" ).Replacements.Add( "PI" );   // PI
+      AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 158, true, 0xff, true, (char)0xee5e, true, "PI" ).Replacements.AddRange( new string[] { "PI", "SHIFT-ARROWUP" } );   // PI
 
       // reverse keys!
-      AddC64Key( KeyboardKey.KEY_SPACE, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 160, true, 0, false, (char)0xeee0, true );   // reverse space
+      //AddC64Key( KeyboardKey.KEY_SPACE, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 160, true, 0, false, (char)0xeee0, true );   // reverse space
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 161, true, 0, false, (char)0xeea1, true, "REVERSE !" );
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 162, true, 0, false, (char)0xeea2, true, "REVERSE \"" );
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 163, true, 0, false, (char)0xeea3, true, "REVERSE #" );

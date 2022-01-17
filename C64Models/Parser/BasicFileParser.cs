@@ -287,7 +287,7 @@ namespace C64Studio.Parser
       AddActionToken( TokenValue.INDIRECT_KEY, "{SHIFT-Y}", 0x79 );
       AddActionToken( TokenValue.INDIRECT_KEY, "{SHIFT-Z}", 0x7a );
       AddActionToken( TokenValue.INDIRECT_KEY, "{SHIFT-ARROWUP}", 0xff );   // PI
-      AddActionToken( TokenValue.INDIRECT_KEY, "{SHIFT-ARROWLEFT}", 0x5f );
+      //AddActionToken( TokenValue.INDIRECT_KEY, "{SHIFT-ARROWLEFT}", 0x5f );
       AddActionToken( TokenValue.INDIRECT_KEY, "{SHIFT-+}", 0x7b );
       AddActionToken( TokenValue.INDIRECT_KEY, "{SHIFT-*}", 0x60 );
       AddActionToken( TokenValue.INDIRECT_KEY, "{SHIFT--}", 0x7d );
