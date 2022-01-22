@@ -72,10 +72,10 @@ namespace C64Studio.Types.ASM
     public string Name = "";
     public int LineIndex = 0;
     public int LineCount = 0;
-    public int Value = 0;
     public string Info = "";
     public int CharIndex = -1;
     public int Length = 0;
+    public SymbolInfo   Symbol = null;
   };
 
 
@@ -87,7 +87,7 @@ namespace C64Studio.Types.ASM
     public Dictionary<int, LineInfo>              LineInfo = new Dictionary<int, LineInfo>();
     public Dictionary<string, UnparsedEvalInfo>   UnparsedLabels = new Dictionary<string, UnparsedEvalInfo>();
     public Dictionary<string, SymbolInfo>         Labels = new Dictionary<string, SymbolInfo>();
-    public Dictionary<string, SymbolInfo>         Zones = new Dictionary<string, SymbolInfo>();
+    public Dictionary<string, List<SymbolInfo>>   Zones = new Dictionary<string, List<SymbolInfo>>(); 
     public List<BankInfo>                         Banks = new List<BankInfo>();
     public List<TemporaryLabelInfo>               TempLabelInfo = new List<TemporaryLabelInfo>();
     public Parser.AssemblerSettings               AssemblerSettings = null;
@@ -365,17 +365,20 @@ namespace C64Studio.Types.ASM
           virtualBP.Value.LineIndex += LineCount;
         }
       }
-      foreach ( var zone in Zones )
+      foreach ( var zoneList in Zones )
       {
-        // Grow or move
-        if ( ( zone.Value.LineIndex < GlobalLineIndex )
-        &&   ( zone.Value.LineIndex + zone.Value.LineCount >= GlobalLineIndex + LineCount ) )
+        foreach ( var zone in zoneList.Value )
         {
-          zone.Value.LineCount += LineCount;
-        }
-        if ( zone.Value.LineIndex >= GlobalLineIndex )
-        {
-          zone.Value.LineIndex += LineCount;
+          // Grow or move
+          if ( ( zone.LineIndex < GlobalLineIndex )
+          &&   ( zone.LineIndex + zone.LineCount >= GlobalLineIndex + LineCount ) )
+          {
+            zone.LineCount += LineCount;
+          }
+          if ( zone.LineIndex >= GlobalLineIndex )
+          {
+            zone.LineIndex += LineCount;
+          }
         }
       }
     }
@@ -394,10 +397,10 @@ namespace C64Studio.Types.ASM
           lineAddressesToMove.Add( new Tupel<int, int>( entry.Key, entry.Value ) );
         }
         else if ( ( entry.Value >= GlobalLineIndex )
-        &&        ( entry.Value < GlobalLineIndex + LineCount ) )
+        && ( entry.Value < GlobalLineIndex + LineCount ) )
         {
           lineAddressesToRemove.Add( new Tupel<int, int>( entry.Key, entry.Value ) );
-        } 
+        }
       }
       foreach ( var entry in lineAddressesToMove )
       {
@@ -472,14 +475,14 @@ namespace C64Studio.Types.ASM
           continue;
         }
         if ( ( sourceInfo.Value.GlobalStartLine >= GlobalLineIndex )
-        &&   ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount <= GlobalLineIndex + LineCount ) )
+        && ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount <= GlobalLineIndex + LineCount ) )
         {
           // completely inside, remove
           sourceInfosToRemove.Add( sourceInfo.Value );
           continue;
         }
         if ( ( sourceInfo.Value.GlobalStartLine < GlobalLineIndex )
-        &&   ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount <= GlobalLineIndex + LineCount ) )
+        && ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount <= GlobalLineIndex + LineCount ) )
         {
           // outside top
           int     linesToCutTop = GlobalLineIndex - sourceInfo.Value.GlobalStartLine;
@@ -491,7 +494,7 @@ namespace C64Studio.Types.ASM
           continue;
         }
         if ( ( sourceInfo.Value.GlobalStartLine >= GlobalLineIndex )
-        &&   ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount > GlobalLineIndex + LineCount ) )
+        && ( sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount > GlobalLineIndex + LineCount ) )
         {
           // outside bottom
           int     linesToCut = sourceInfo.Value.GlobalStartLine + sourceInfo.Value.LineCount - ( GlobalLineIndex + LineCount );
@@ -543,17 +546,20 @@ namespace C64Studio.Types.ASM
           virtualBP.Value.LineIndex -= LineCount;
         }
       }
-      foreach ( var zone in Zones )
+      foreach ( var zoneList in Zones )
       {
-        // shrink or move
-        if ( ( zone.Value.LineIndex < GlobalLineIndex )
-        &&   ( zone.Value.LineIndex + zone.Value.LineCount >= GlobalLineIndex + LineCount ) )
+        foreach ( var zone in zoneList.Value )
         {
-          zone.Value.LineCount -= LineCount;
-        }
-        if ( zone.Value.LineIndex >= GlobalLineIndex + LineCount )
-        {
-          zone.Value.LineIndex -= LineCount;
+          // shrink or move
+          if ( ( zone.LineIndex < GlobalLineIndex )
+          &&   ( zone.LineIndex + zone.LineCount >= GlobalLineIndex + LineCount ) )
+          {
+            zone.LineCount -= LineCount;
+          }
+          if ( zone.LineIndex >= GlobalLineIndex + LineCount )
+          {
+            zone.LineIndex -= LineCount;
+          }
         }
       }
     }

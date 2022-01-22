@@ -39,6 +39,34 @@
 
 
 
+    public SymbolInfo()
+    { 
+    }
+
+
+
+    public SymbolInfo( SymbolInfo RHS )
+    {
+      Type = RHS.Type;
+      Name = RHS.Name;
+      LineIndex = RHS.LineIndex;            // global
+      LineCount = RHS.LineCount;           // global (-1 is for complete file)
+      DocumentFilename = RHS.DocumentFilename;
+      LocalLineIndex = RHS.LocalLineIndex;
+      AddressOrValue = RHS.AddressOrValue;
+      String = RHS.String;
+      RealValue = RHS.RealValue;
+      Zone = RHS.Zone;
+      FromDependency = RHS.FromDependency;
+      Info = RHS.Info;
+      CharIndex = RHS.CharIndex;
+      Length = RHS.Length;
+      SourceInfo = RHS.SourceInfo;
+      References = RHS.References;
+    }
+
+
+
     public override string ToString()
     {
       if ( Type == Types.CONSTANT_REAL_NUMBER )

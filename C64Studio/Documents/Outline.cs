@@ -157,6 +157,7 @@ namespace C64Studio
       }
 
       string curZone = "";
+
       System.Windows.Forms.TreeNode parentNode = new System.Windows.Forms.TreeNode();
       parentNode = new System.Windows.Forms.TreeNode();
       parentNode.Text = "Global Zone";
@@ -164,7 +165,7 @@ namespace C64Studio
       NodeRoot.Nodes.Add( parentNode );
       System.Windows.Forms.TreeNode globalZone = parentNode;
 
-      Dictionary<string,TreeNode>     zoneNodes = new Dictionary<string, TreeNode>();
+      var zoneNodes = new Dictionary<string, TreeNode>();
       zoneNodes.Add( parentNode.Text, globalZone );
 
       // add zone nodes first
@@ -172,6 +173,10 @@ namespace C64Studio
       {
         if ( token.Type == SymbolInfo.Types.ZONE )
         {
+          if ( zoneNodes.ContainsKey( token.Zone ) )
+          {
+            continue;
+          }
           System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode();
 
           node.Text = token.Name;
