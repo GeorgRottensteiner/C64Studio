@@ -544,27 +544,15 @@ namespace C64Studio.Parser
 
 
 
-    public Types.ASM.TemporaryLabelInfo AddTempLabel( string Name, int LineIndex, int LineCount, int Value, string Info )
+    public Types.ASM.TemporaryLabelInfo AddTempLabel( string Name, int LineIndex, int LineCount, SymbolInfo Value, string Info )
     {
       return AddTempLabel( Name, LineIndex, LineCount, Value, Info, -1, 0 );
     }
 
 
 
-    public Types.ASM.TemporaryLabelInfo AddTempLabel( string Name, int LineIndex, int LineCount, int Value, string Info, int CharIndex, int Length )
+    public Types.ASM.TemporaryLabelInfo AddTempLabel( string Name, int LineIndex, int LineCount, SymbolInfo Value, string Info, int CharIndex, int Length )
     {
-      /*
-      if ( Name == "VALUE" )
-      {
-        Debug.Log( "Adding Temp Label VALUE to " + LineIndex + ", " + LineCount + ", with value " + Value );
-        foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
-        {
-          if ( oldTempInfo.Name == Name )
-          {
-            Debug.Log( "previously VALUE exists at " + oldTempInfo.LineIndex + ", " + oldTempInfo.LineCount );
-          }
-        }
-      }*/
       foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
       {
         if ( oldTempInfo.Name == Name )
@@ -589,18 +577,6 @@ namespace C64Studio.Parser
               msg.AddMessage( "  already defined in " + filename + "(" + ( localLine + 1 ) + ")", filename, localLine, oldTempInfo.CharIndex, oldTempInfo.Length );
               //AddError( LineIndex, Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "  already defined in " + filename + "(" + ( localLine + 1 ) + ")", oldTempInfo.CharIndex, oldTempInfo.Length );
             }
-
-            if ( Name == "__hla_STACK0" )
-            {
-              foreach ( var tempInfo2 in ASMFileInfo.TempLabelInfo )
-              {
-                if ( tempInfo2.Name == Name )
-                {
-                  Debug.Log( "Label " + Name + " already defined with value " + tempInfo2.Value + " for line " + ( tempInfo2.LineIndex + 1 ) + " to " + ( tempInfo2.LineIndex + 1 + tempInfo2.LineCount - 1 ) );
-                }
-              }
-              Debug.Log( "During AddTempLabel for " + Name + " with value " + Value + " for line " + ( LineIndex + 1 ) + " to " + ( LineIndex + 1 + LineCount - 1 ) );
-            }
             return null;
           }
         }
@@ -611,7 +587,7 @@ namespace C64Studio.Parser
       tempInfo.Name = Name;
       tempInfo.LineIndex  = LineIndex;
       tempInfo.LineCount  = LineCount;
-      tempInfo.Value      = Value;
+      tempInfo.Symbol     = Value;
       tempInfo.Info       = Info;
       tempInfo.CharIndex  = CharIndex;
       tempInfo.Length     = Length;
@@ -668,7 +644,7 @@ namespace C64Studio.Parser
           tempInfo.Name       = oldTempInfo.Name;
           tempInfo.LineIndex  = oldTempInfo.LineIndex + TargetIndex - SourceIndex;
           tempInfo.LineCount  = oldTempInfo.LineCount;
-          tempInfo.Value      = oldTempInfo.Value;
+          tempInfo.Symbol     = new SymbolInfo( oldTempInfo.Symbol );
           tempInfo.Info       = oldTempInfo.Info;
 
           foreach ( var origTempInfo in ASMFileInfo.TempLabelInfo )
@@ -772,28 +748,21 @@ namespace C64Studio.Parser
       SourceInfo    srcInfo;
       ASMFileInfo.FindTrueLineSource( SourceLine, out zoneFile, out localLine, out srcInfo );
 
+      var token = new SymbolInfo();
+      token.Type              = SymbolInfo.Types.ZONE;
+      token.Name              = Name;
+      token.LineIndex         = SourceLine;
+      token.Zone              = Name;
+      token.CharIndex         = CharIndex;
+      token.Length            = Length;
+      token.DocumentFilename  = zoneFile;
+      token.SourceInfo        = srcInfo;
+
       if ( !ASMFileInfo.Zones.ContainsKey( Name ) )
       {
-        var token = new SymbolInfo();
-        token.Type      = SymbolInfo.Types.ZONE;
-        token.Name      = Name;
-        token.LineIndex = SourceLine;
-        token.Zone      = Name;
-        token.CharIndex = CharIndex;
-        token.Length    = Length;
-        token.DocumentFilename = zoneFile;
-        token.SourceInfo = srcInfo;
-        ASMFileInfo.Zones.Add( Name, token );
+        ASMFileInfo.Zones.Add( Name, new List<SymbolInfo>() );
       }
-      else
-      {
-        if ( ASMFileInfo.Zones[Name].LineIndex != SourceLine )
-        {
-          var msg = AddError( ASMFileInfo.Zones[Name].LineIndex, Types.ErrorCode.E1202_REDEFINITION_OF_ZONE, "Duplicate declaration of zone " + Name, CharIndex, Length );
-          msg.AddMessage( "  already declared in file " + zoneFile + " at line " + ( localLine + 1 ), zoneFile, localLine );
-        }
-        ASMFileInfo.Zones[Name].LineIndex = SourceLine;
-      }
+      ASMFileInfo.Zones[Name].Add( token );
     }
 
 
@@ -862,7 +831,7 @@ namespace C64Studio.Parser
 
 
 
-    public void AddConstant( string Name, int Value, int SourceLine, string Info, string Zone, int CharIndex, int Length )
+    public void AddConstant( string Name, SymbolInfo Value, int SourceLine, string Info, string Zone, int CharIndex, int Length )
     {
       string      filename = "";
       int         localIndex = -1;
@@ -881,6 +850,7 @@ namespace C64Studio.Parser
 
       if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
       {
+        /*
         SymbolInfo token = new SymbolInfo();
         token.Type            = SymbolInfo.Types.CONSTANT_2;
         token.AddressOrValue  = Value;
@@ -897,30 +867,47 @@ namespace C64Studio.Parser
           token.Type = SymbolInfo.Types.CONSTANT_1;
         }
         token.Zone = Zone;
-
         ASMFileInfo.Labels.Add( Name, token );
+        */
+        Value.Name              = Name;
+        Value.LineIndex         = SourceLine;
+        Value.Info              = Info;
+        Value.DocumentFilename  = filename;
+        Value.LocalLineIndex    = localIndex;
+        Value.SourceInfo        = srcInfo;
+        Value.References.Add( SourceLine );
+        Value.Zone              = Zone;
+
+        ASMFileInfo.Labels.Add( Name, Value );
       }
       else
       {
-        if ( ASMFileInfo.Labels[Name].AddressOrValue != Value )
+        if ( ASMFileInfo.Labels[Name] != Value )
         {
           if ( Name != "*" )
           {
-            //Debug.Log( "add constant error" );
-
             // allow redefinition, turn into temp label
             var origLabel = ASMFileInfo.Labels[Name];
 
             ASMFileInfo.Labels.Remove( Name );
 
             // re-add orig as temp
-            AddTempLabel( Name, origLabel.LineIndex, SourceLine - origLabel.LineIndex, origLabel.AddressOrValue, Info, CharIndex, Length );
+            AddTempLabel( Name, origLabel.LineIndex, SourceLine - origLabel.LineIndex, origLabel, Info, CharIndex, Length );
+
             // add new label
+            Value.Name              = Name;
+            Value.LineIndex         = SourceLine;
+            Value.Info              = Info;
+            Value.DocumentFilename  = filename;
+            Value.LocalLineIndex    = localIndex;
+            Value.SourceInfo        = srcInfo;
+            Value.References.Add( SourceLine );
+            Value.Zone              = Zone;
             AddTempLabel( Name, SourceLine, -1, Value, Info, CharIndex, Length );
             return;
           }
         }
-        ASMFileInfo.Labels[Name].AddressOrValue = Value;
+        ASMFileInfo.Labels[Name] = Value;
       }
     }
 
@@ -1162,84 +1149,6 @@ namespace C64Studio.Parser
 
 
 
-    public bool ParseValueNumeric( int LineIndex, string Value, out double Result )
-    {
-      ClearErrorInfo();
-
-      if ( Util.StringToDouble( Value, out Result ) )
-      {
-        return true;
-      }
-
-      Result = -1;
-      ClearErrorInfo();
-      bool failed   = false;
-
-      if ( ParseLiteralValueNumeric( Value, out failed, out Result ) )
-      {
-        return true;
-      }
-      if ( failed )
-      {
-        m_LastErrorInfo.Set( LineIndex, 0, Value.Length, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION );
-        return false;
-      }
-
-      if ( ( m_TemporaryFillLoopPos != -1 )
-      &&   ( Value == "i" ) )
-      {
-        Result = m_TemporaryFillLoopPos;
-        return true;
-      }
-
-      // check for temp labels
-      foreach ( Types.ASM.TemporaryLabelInfo labelInfo in ASMFileInfo.TempLabelInfo )
-      {
-        if ( ( LineIndex >= labelInfo.LineIndex )
-        &&   ( ( LineIndex < labelInfo.LineIndex + labelInfo.LineCount )
-        ||     ( labelInfo.LineCount == -1 ) )
-        &&   ( labelInfo.Name == Value ) )
-        {
-          Result = labelInfo.Value;
-          return true;
-        }
-      }
-      // parse labels
-      if ( !ASMFileInfo.Labels.ContainsKey( Value ) )
-      {
-        if ( ( IsLocalLabel( Value ) )
-        &&   ( !string.IsNullOrEmpty( m_CurrentZoneName ) ) )
-        {
-          // a local label inside a zone has the actual zone name in front!
-          if ( ASMFileInfo.Labels.ContainsKey( m_CurrentZoneName + Value ) )
-          {
-            Result = ASMFileInfo.Labels[m_CurrentZoneName + Value].AddressOrValue;
-            ASMFileInfo.Labels[m_CurrentZoneName + Value].References.Add( LineIndex );
-            return true;
-          }
-        }
-        if ( ASMFileInfo.UnparsedLabels.ContainsKey( Value ) )
-        {
-          ASMFileInfo.UnparsedLabels[Value].Used = true;
-        }
-        m_LastErrorInfo = new ErrorInfo( LineIndex, 0, Value.Length, Types.ErrorCode.E1010_UNKNOWN_LABEL );
-        return false;
-      }
-
-      if ( ASMFileInfo.Labels[Value].Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
-      {
-        Result = ASMFileInfo.Labels[Value].RealValue;
-      }
-      else
-      {
-        Result = (double)ASMFileInfo.Labels[Value].AddressOrValue;
-      }
-      ASMFileInfo.Labels[Value].References.Add( LineIndex );
-      return true;
-    }
-
-
-
     public bool ParseValue( int LineIndex, string Value, out SymbolInfo ResultingSymbol, out int NumGivenBytes )
     {
       ResultingSymbol = null;
@@ -1280,7 +1189,7 @@ namespace C64Studio.Parser
         ||     ( labelInfo.LineCount == -1 ) )
         &&   ( labelInfo.Name == Value ) )
         {
-          ResultingSymbol = CreateIntegerSymbol( labelInfo.Value, out NumGivenBytes );
+          ResultingSymbol = labelInfo.Symbol;
           return true;
         }
       }
@@ -3674,7 +3583,11 @@ namespace C64Studio.Parser
         }
 
         // label exists only after !for
-        AddTempLabel( lastLoop.Label, lineIndex - lastLoop.LoopLength, lastLoop.LoopLength, lastLoop.CurrentValue, "" );
+        AddTempLabel( lastLoop.Label, 
+                      lineIndex - lastLoop.LoopLength, 
+                      lastLoop.LoopLength, 
+                      CreateIntegerSymbol( lastLoop.CurrentValue ), 
+                      "" );
 
         bool  endReached = false;
 
@@ -8210,7 +8123,6 @@ namespace C64Studio.Parser
           }
 
           List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, textCodeMapping );
-          int address = -1;
 
           if ( defineName == "*" )
           {
@@ -8258,8 +8170,7 @@ namespace C64Studio.Parser
               }
               else
               {
-                address = addressSymbol.ToInteger();
-                AddConstant( defineName, address, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+                AddConstant( defineName, addressSymbol, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
               }
             }
           }
@@ -8933,9 +8844,8 @@ namespace C64Studio.Parser
                   }
                   else
                   {
-                    address = addressSymbol.ToInteger();
                     AddConstant( defineName,
-                                 address,
+                                 addressSymbol,
                                  lineIndex,
                                  m_CurrentCommentSB.ToString(),
                                  m_CurrentZoneName,
@@ -12185,19 +12095,22 @@ namespace C64Studio.Parser
       }*/
 
       // move zones
-      foreach ( var zoneInfo in ASMFileInfo.Zones.Values )
+      foreach ( var zoneList in ASMFileInfo.Zones.Values )
       {
-        if ( zoneInfo.LineIndex >= sourceInfo.GlobalStartLine + lineCount )
+        foreach ( var zoneInfo in zoneList )
         {
-          zoneInfo.LineIndex += lineCount;
-          continue;
+          if ( zoneInfo.LineIndex >= sourceInfo.GlobalStartLine + lineCount )
+          {
+            zoneInfo.LineIndex += lineCount;
+            continue;
+          }
+          else if ( zoneInfo.LineIndex < sourceInfo.GlobalStartLine )
+          {
+            continue;
+          }
+          // inside (simply grow) -> not split?
+          zoneInfo.LineCount += lineCount;
         }
-        else if ( zoneInfo.LineIndex < sourceInfo.GlobalStartLine )
-        {
-          continue;
-        }
-        // inside (simply grow) -> not split?
-        zoneInfo.LineCount += lineCount;
       }
 
       List<Types.ASM.SourceInfo> movedInfos = new List<Types.ASM.SourceInfo>();
@@ -12371,10 +12284,13 @@ namespace C64Studio.Parser
     {
       GR.Collections.MultiMap<string, SymbolInfo> knownTokens = new GR.Collections.MultiMap<string, SymbolInfo>();
 
-      foreach ( KeyValuePair<string, SymbolInfo> zone in ASMFileInfo.Zones )
+      foreach ( var zoneList in ASMFileInfo.Zones )
       {
-        DocumentAndLineFromGlobalLine( zone.Value.LineIndex, out zone.Value.DocumentFilename, out zone.Value.LocalLineIndex, out zone.Value.SourceInfo );
-        knownTokens.Add( zone.Key, zone.Value );
+        foreach ( var zone in zoneList.Value )
+        {
+          DocumentAndLineFromGlobalLine( zone.LineIndex, out zone.DocumentFilename, out zone.LocalLineIndex, out zone.SourceInfo );
+          knownTokens.Add( zoneList.Key, zone );
+        }
       }
       foreach ( KeyValuePair<string, SymbolInfo> label in ASMFileInfo.Labels )
       {
@@ -12391,6 +12307,11 @@ namespace C64Studio.Parser
         token.Name = label.Key;
         DocumentAndLineFromGlobalLine( label.Value.LineIndex, out token.DocumentFilename, out token.LineIndex, out token.SourceInfo );
         knownTokens.Add( token.Name, token );
+      }
+      foreach ( var tempLabel in ASMFileInfo.TempLabelInfo )
+      {
+        DocumentAndLineFromGlobalLine( tempLabel.LineIndex, out tempLabel.Symbol.DocumentFilename, out tempLabel.Symbol.LocalLineIndex, out tempLabel.Symbol.SourceInfo );
+        knownTokens.Add( tempLabel.Name, tempLabel.Symbol );
       }
       return knownTokens;
     }
@@ -12460,7 +12381,7 @@ namespace C64Studio.Parser
     {
       foreach ( var entry in ASMFileInfo.TempLabelInfo )
       {
-        Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to " + ( entry.LineIndex + 1 + entry.LineCount - 1 ) + ", name " + entry.Name + ", value " + entry.Value );
+        Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to " + ( entry.LineIndex + 1 + entry.LineCount - 1 ) + ", name " + entry.Name + ", value " + entry.Symbol.ToString() );
       }
     }
 
@@ -12472,7 +12393,7 @@ namespace C64Studio.Parser
       {
         if ( entry.Name == Name )
         {
-          Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to " + ( entry.LineIndex + 1 + entry.LineCount - 1 ) + ", name " + entry.Name + ", value " + entry.Value );
+          Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to " + ( entry.LineIndex + 1 + entry.LineCount - 1 ) + ", name " + entry.Name + ", value " + entry.Symbol.ToString() );
         }
       }
     }

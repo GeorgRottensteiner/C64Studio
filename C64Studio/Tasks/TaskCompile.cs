@@ -1,5 +1,6 @@
 ﻿using C64Studio.Types;
 using GR.Collections;
+using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -594,24 +595,46 @@ namespace C64Studio.Tasks
 
         Doc.HasBeenSuccessfullyBuilt = true;
 
+        Types.ASM.FileInfo   fileInfo = null;
+        List<AutoCompleteItemInfo> knownTokens = null;
+        MultiMap<string,SymbolInfo> knownTokenInfo = null;
         if ( parser is Parser.ASMFileParser )
         {
-          FileInfo = ( (Parser.ASMFileParser)parser ).ASMFileInfo;
+          fileInfo = ( (Parser.ASMFileParser)parser ).ASMFileInfo;
           // update symbols in main asm file
-          Doc.SetASMFileInfo( FileInfo, parser.KnownTokens(), parser.KnownTokenInfo() );
+          knownTokens = parser.KnownTokens();
+          knownTokenInfo = parser.KnownTokenInfo();
         }
         else if ( parser is Parser.BasicFileParser )
         {
-          FileInfo = ( (Parser.BasicFileParser)parser ).ASMFileInfo;
+          fileInfo = ( (Parser.BasicFileParser)parser ).ASMFileInfo;
           // update symbols in main asm file
-          Doc.SetASMFileInfo( FileInfo, parser.KnownTokens(), parser.KnownTokenInfo() );
+          knownTokens = parser.KnownTokens();
+          knownTokenInfo = parser.KnownTokenInfo();
+          //Doc.SetASMFileInfo( fileInfo, parser.KnownTokens(), parser.KnownTokenInfo() );
         }
 
-        if ( FileInfo != null )
+        if ( ( fileInfo != null )
+        &&   ( Doc.Project == null ) )
         {
-          if ( !string.IsNullOrEmpty( FileInfo.LabelDumpFile ) )
+          // not part of project, spread known tokens to all participating files
+          foreach ( var document in Core.MainForm.DocumentInfos )
           {
-            Core.MainForm.DumpLabelFile( FileInfo );
+            if ( document != null )
+            {
+              if ( fileInfo.ContainsFile( document.DocumentFilename ) )
+              {
+                document.SetASMFileInfo( fileInfo, knownTokens, knownTokenInfo );
+              }
+            }
+          }
+        }
+
+        if ( fileInfo != null )
+        {
+          if ( !string.IsNullOrEmpty( fileInfo.LabelDumpFile ) )
+          {
+            Core.MainForm.DumpLabelFile( fileInfo );
           }
         }
 
