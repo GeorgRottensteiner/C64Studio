@@ -126,14 +126,23 @@ namespace C64Studio.Tasks
 
       switch ( Core.MainForm.AppState )
       {
-        case Types.StudioState.COMPILE:
-        case Types.StudioState.BUILD:
+        case StudioState.COMPILE:
+        case StudioState.BUILD:
         case StudioState.BUILD_PRE_PROCESSED_FILE:
-          Core.MainForm.AppState = Types.StudioState.NORMAL;
           if ( Core.Settings.PlaySoundOnSuccessfulBuild )
           {
             System.Media.SystemSounds.Asterisk.Play();
+
+            if ( Core.MainForm.AppState == StudioState.BUILD_PRE_PROCESSED_FILE )
+            {
+              Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+              string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".dump" );
+              //Core.MainForm.OpenFile( pathLog );
+              Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
+            }
           }
+          Core.MainForm.AppState = Types.StudioState.NORMAL;
           break;
         case Types.StudioState.BUILD_AND_RUN:
           // run program
