@@ -15,8 +15,7 @@ using C64Studio.Parser;
 using GR.Image;
 using RetroDevStudio;
 using RetroDevStudio.Types;
-
-
+using System.Threading;
 
 namespace C64Studio
 {
@@ -635,6 +634,10 @@ namespace C64Studio
 
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new C64Studio.Converter.PETSCIIToCharConverter();
+
+      DPIHandler.ResizeControlsForDPI( mainTools );
+      DPIHandler.ResizeControlsForDPI( debugTools  );
+      debugTools.Left = mainTools.Right;
 
       // auto-set app mode by checking for existing settings files
       DetermineSettingsPath();
@@ -2297,7 +2300,7 @@ namespace C64Studio
           StudioCore.AddToOutput( "Running " + Document.DocumentFilename + System.Environment.NewLine );
         }
 
-        ToolInfo toolRun = StudioCore.DetermineTool(Document, true);
+        ToolInfo toolRun = StudioCore.DetermineTool( Document, true );
         if ( toolRun == null )
         {
           System.Windows.Forms.MessageBox.Show( "No emulator tool has been configured yet!", "Missing emulator tool" );
@@ -2312,7 +2315,7 @@ namespace C64Studio
           return false;
         }
 
-        if ( !StudioCore.Executing.StartProcess( toolRun, Document ) )
+        if ( !StudioCore.Executing.PrepareStartProcess( toolRun, Document ) )
         {
           return false;
         }
@@ -2383,7 +2386,11 @@ namespace C64Studio
 
         SetGUIForWaitOnExternalTool( true );
 
-        return StudioCore.Executing.RunProcess.Start();
+        if ( !StudioCore.Executing.StartPreparedProcess() )
+        {
+          return false;
+        }
+        return true;
       }
       catch ( Exception ex )
       {
@@ -2406,6 +2413,19 @@ namespace C64Studio
       {
         try
         {
+          if ( StudioCore.Executing.EventOutCompleted != null )
+          {
+            StudioCore.Executing.EventOutCompleted.WaitOne();
+            StudioCore.Executing.EventOutCompleted.Close();
+            StudioCore.Executing.EventOutCompleted = null;
+          }
+          if ( StudioCore.Executing.EventErrCompleted != null )
+          {
+            StudioCore.Executing.EventErrCompleted.WaitOne();
+            StudioCore.Executing.EventErrCompleted.Close();
+            StudioCore.Executing.EventErrCompleted = null;
+          }
+
           StudioCore.AddToOutput( "Run exited with result code " + StudioCore.Executing.RunProcess.ExitCode + System.Environment.NewLine );
           StudioCore.Executing.RunProcess.Close();
           StudioCore.Executing.RunProcess.Dispose();
@@ -4721,7 +4741,9 @@ namespace C64Studio
 
             if ( docToSave.DocumentInfo.Project == null )
             {
-              docToSave.Save( BaseDocument.SaveMethod.SAVE_COPY_AS );
+              docToSave.Save( BaseDocument.SaveMethod.SAVE_COPY_AS, out string newFilename );
+
+              OpenFile( newFilename );
               return true;
             }
 
@@ -4735,11 +4757,12 @@ namespace C64Studio
                 return true;
               }
             }
-            docToSave.Save( BaseDocument.SaveMethod.SAVE_COPY_AS );
+            docToSave.Save( BaseDocument.SaveMethod.SAVE_COPY_AS, out string newFilename2 );
             if ( !SaveProject( docToSave.DocumentInfo.Project ) )
             {
               return true;
             }
+            OpenFile( newFilename2 );
           }
           return true;
         case C64Studio.Types.Function.COMPILE:

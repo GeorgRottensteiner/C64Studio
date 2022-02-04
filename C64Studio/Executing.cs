@@ -4,11 +4,47 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.ComponentModel;
+using System.Threading;
+using System.IO;
+using GR.Memory;
 
 namespace C64Studio
 {
   public class Executing
   {
+    protected class ExecutingReadOutput
+    {
+      private StreamReader      _Reader;
+      private ManualResetEvent  _Complete;
+      private StudioCore        _Core;
+
+      public ExecutingReadOutput( StreamReader Reader, ManualResetEvent Complete, StudioCore Core )
+      {
+        _Core = Core;
+        _Reader = Reader;
+        _Complete = Complete;
+
+        new Thread( ReadAll ).Start();
+      }
+
+
+
+      void ReadAll()
+      {
+        string    line;
+        while ( null != ( line = _Reader.ReadLine() ) )
+        {
+          if ( line.Length > 0 )
+          {
+            _Core.AddToOutput( line + System.Environment.NewLine );
+          }
+        }
+        _Complete.Set();
+      }
+    }
+
+
+
     [DllImport( "USER32.DLL" )]
     public static extern bool SetForegroundWindow( IntPtr hWnd );
 
@@ -17,6 +53,9 @@ namespace C64Studio
     public StudioCore                   Core = null;
 
     public System.Diagnostics.Process   RunProcess = null;
+
+    public ManualResetEvent             EventOutCompleted = null;
+    public ManualResetEvent             EventErrCompleted = null;
 
     private System.Diagnostics.Process  m_ExternalProcess = null;
 
@@ -43,7 +82,7 @@ namespace C64Studio
 
 
 
-    internal bool StartProcess( ToolInfo toolRun, DocumentInfo Document )
+    internal bool PrepareStartProcess( ToolInfo toolRun, DocumentInfo Document )
     {
       bool  error = false;
 
@@ -51,6 +90,25 @@ namespace C64Studio
       RunProcess.StartInfo.FileName = toolRun.Filename;
       RunProcess.StartInfo.WorkingDirectory = Core.MainForm.FillParameters( toolRun.WorkPath, Document, true, out error );
       RunProcess.EnableRaisingEvents = true;
+
+      if ( ( RunProcess.StartInfo.WorkingDirectory.StartsWith( "\"" ) )
+      &&   ( RunProcess.StartInfo.WorkingDirectory.EndsWith( "\"" ) )
+      &&   ( RunProcess.StartInfo.WorkingDirectory.Length >= 2 ) )
+      {
+        RunProcess.StartInfo.WorkingDirectory = RunProcess.StartInfo.WorkingDirectory.Substring( 1, RunProcess.StartInfo.WorkingDirectory.Length - 2 );
+      }
+
+      RunProcess.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler( ExternalProcessOutputReceived );
+      RunProcess.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler( ExternalProcessOutputReceived );
+      RunProcess.StartInfo.RedirectStandardError = true;
+      RunProcess.StartInfo.RedirectStandardOutput = true;
+      RunProcess.StartInfo.UseShellExecute = false;
+
+      //RunProcess.StartInfo.CreateNoWindow = true;
+      RunProcess.EnableRaisingEvents = true;
+
+      //RunProcess.BeginOutputReadLine();
+      //RunProcess.BeginErrorReadLine();
 
       return !error;
     }
@@ -208,6 +266,7 @@ namespace C64Studio
 
     void ExternalProcessOutputReceived( object sender, System.Diagnostics.DataReceivedEventArgs e )
     {
+      //Debug.Log( "Received Data " + e.Data );
       m_LastReceivedOutputTime = System.DateTime.Now;
       if ( !String.IsNullOrEmpty( e.Data ) )
       {
@@ -217,5 +276,28 @@ namespace C64Studio
 
 
 
+    public bool StartPreparedProcess()
+    {
+      if ( !RunProcess.Start() )
+      {
+        return false;
+      }
+
+      // this must be called after start
+      EventOutCompleted = new ManualResetEvent( false );
+      EventErrCompleted = new ManualResetEvent( false );
+
+      new ExecutingReadOutput( RunProcess.StandardOutput, EventOutCompleted, Core );
+      new ExecutingReadOutput( RunProcess.StandardError, EventErrCompleted, Core );
+
+      return true;
+    }
+
+
+
   }
+
+
+
+
 }
