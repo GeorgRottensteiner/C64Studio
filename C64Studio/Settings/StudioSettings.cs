@@ -33,7 +33,7 @@ namespace C64Studio
     SOLUTION_EXPLORER,
     [Description( "Output" )]
     OUTPUT,
-    [Description( "CompileResult" )]
+    [Description( "Compiler Messages" )]
     COMPILE_RESULT,
     [Description( "Breakpoints" )]
     DEBUG_BREAKPOINTS,
@@ -53,7 +53,7 @@ namespace C64Studio
     GRAPHIC_SCREEN_EDITOR,
     [Description( "Map Editor" )]
     MAP_EDITOR,
-    [Description( "PetSCII" )]
+    [Description( "PETSCII" )]
     PETSCII_TABLE,
     [Description( "Calculator" )]
     CALCULATOR,
@@ -317,7 +317,11 @@ namespace C64Studio
 
     private IDockContent GetContentFromPersistString( string persistString )
     {
-      //Debug.Log( "persist " + persistString );
+      if ( string.IsNullOrEmpty( persistString ) )
+      {
+        return null;
+      }
+
       foreach ( var toolEntry in Tools )
       {
         if ( persistString == toolEntry.Value.ToolDescription )
@@ -325,6 +329,7 @@ namespace C64Studio
           return toolEntry.Value.Document;
         }
       }
+      //Debug.Log( "persist doc not found for " + persistString );
       return null;
     }
 
@@ -838,6 +843,15 @@ namespace C64Studio
       Main.CloseAllDocuments();
 
       //Debug.Log( Data.ToAsciiString() );
+
+      if ( ( Data.Length >= 3 )
+      &&   ( Data.ByteAt( 0 ) == 0xef )
+      &&   ( Data.ByteAt( 1 ) == 0xbb )
+      &&   ( Data.ByteAt( 2 ) == 0xbf ) )
+      {
+        // strip BOM
+        Data = Data.SubBuffer( 3 );
+      }
 
       System.IO.MemoryStream    memIn = new System.IO.MemoryStream( Data.Data(), false );
 

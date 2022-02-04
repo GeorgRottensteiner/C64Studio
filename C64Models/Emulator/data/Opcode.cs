@@ -18,8 +18,8 @@ namespace Tiny64
       ZEROPAGE_X,               // lda $12,x
       ZEROPAGE_Y,               // lda $12,y
       INDIRECT,                 // jmp ($1234), jsr ($1234)
-      ZEROPAGE_INDIRECT_X,
-      ZEROPAGE_INDIRECT_Y,
+      ZEROPAGE_INDIRECT_X,      // adc ($12,x)
+      ZEROPAGE_INDIRECT_Y,      // lda ($12),y
       RELATIVE,
 
       // WD65C02

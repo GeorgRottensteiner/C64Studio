@@ -330,6 +330,18 @@ namespace C64Studio
               item.Enabled = false;
             }
 
+            /*
+            item = new System.Windows.Forms.ToolStripMenuItem( "Save As" );
+            item.Tag = 0;
+            item.Click += new EventHandler( treeSaveAsElement_Click );
+            contextMenu.Items.Add( item );
+
+            item = new System.Windows.Forms.ToolStripMenuItem( "Save Copy As" );
+            item.Tag = 0;
+            item.Click += new EventHandler( treeSaveCopyAsElement_Click );
+            contextMenu.Items.Add( item );
+            */
+
             contextMenu.Items.Add( "-" );
 
             if ( ( element.DocumentInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
@@ -379,6 +391,20 @@ namespace C64Studio
         }
         contextMenu.Show( treeProject.PointToScreen( e.Location ) );
       }
+    }
+
+
+
+    private void treeSaveCopyAsElement_Click( object sender, EventArgs e )
+    {
+      throw new NotImplementedException();
+    }
+
+
+
+    private void treeSaveAsElement_Click( object sender, EventArgs e )
+    {
+      throw new NotImplementedException();
     }
 
 
