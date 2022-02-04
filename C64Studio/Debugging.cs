@@ -44,6 +44,10 @@ namespace C64Studio
     public CompileTargetType DebugType = CompileTargetType.NONE;
     internal bool               InitialBreakpointIsTemporary;
 
+    public delegate void MarkLineCallback( Project MarkProject, DocumentInfo Document, int Line );
+
+
+
     public Debugging( StudioCore Core )
     {
       this.Core = Core;
@@ -136,7 +140,7 @@ namespace C64Studio
       MarkedDocument = null;
       MarkedDocumentLine = -1;
 
-      if ( !Core.Executing.StartProcess( toolRun, DocumentToRun ) )
+      if ( !Core.Executing.PrepareStartProcess( toolRun, DocumentToRun ) )
       {
         return false;
       }
@@ -552,7 +556,7 @@ namespace C64Studio
       {
         if ( MarkedDocument.InvokeRequired )
         {
-          MarkedDocument.Invoke( new Navigating.OpenDocumentAndGotoLineCallback( MarkLine ), 
+          MarkedDocument.Invoke( new MarkLineCallback( MarkLine ), 
                                  new object[] { MarkProject, Document, Line } );
           return;
         }
@@ -684,7 +688,7 @@ namespace C64Studio
       BreakpointsToAddAfterStartup.Clear();
 
       string  breakPointFile = "";
-      int     remoteIndex = 2;    // 1 is the init breakpoint
+      //int     remoteIndex = 2;    // 1 is the init breakpoint
       foreach ( var key in BreakPoints.Keys )
       {
         foreach ( Types.Breakpoint breakPoint in BreakPoints[key] )

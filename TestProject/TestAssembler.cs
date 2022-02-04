@@ -20,6 +20,19 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestAssemblyOpcodeDetectionAbsoluteSet()
+    {
+      string      source = @"!set * = $1000
+                            lda $1234";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+
+      Assert.AreEqual( "0010AD3412", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestAssemblyOpcodeDetectionZeropage()
     {
       string      source = @"* = $1000
@@ -79,9 +92,18 @@ namespace TestProject
       string      source = @"* = $1000
                             lda ($1234),x";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
 
-      Assert.AreEqual( "0010BD3412", assembly.ToString() );
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      bool parseResult = parser.Parse( source, null, config, null );
+      Assert.IsFalse( parseResult );
+      //var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      //Assert.AreEqual( "0010BD3412", assembly.ToString() );
     }
 
 
@@ -105,9 +127,19 @@ namespace TestProject
       string      source = @"* = $1000
                             lda ($12),x";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
 
-      Assert.AreEqual( "0010B512", assembly.ToString() );
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      bool parseResult = parser.Parse( source, null, config, null );
+      Assert.IsFalse( parseResult );
+
+      //var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      //Assert.AreEqual( "0010B512", assembly.ToString() );
     }
 
 

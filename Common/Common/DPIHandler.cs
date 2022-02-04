@@ -164,6 +164,11 @@ namespace GR.Image
         var lb = Control as ListBox;
         lb.ItemHeight = (int)( lb.ItemHeight * DPIY / 96.0f + 0.5f );
       }
+      if ( Control is ToolStrip )
+      {
+        var ts = Control as ToolStrip;
+        ts.ImageScalingSize = new Size( (int)( ts.ImageScalingSize.Width * DPIY / 96.0f ), (int)( ts.ImageScalingSize.Height * DPIY / 96.0f ) );
+      }
     }
 
 

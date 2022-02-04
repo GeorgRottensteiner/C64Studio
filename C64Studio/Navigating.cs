@@ -22,7 +22,7 @@ namespace C64Studio
 
 
 
-    public delegate void OpenDocumentAndGotoLineCallback( Project MarkProject, DocumentInfo Document, int Line );
+    public delegate void OpenDocumentAndGotoLineCallback( Project MarkProject, DocumentInfo Document, int Line, int CharIndex );
 
 
 

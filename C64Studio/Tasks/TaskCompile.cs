@@ -623,15 +623,14 @@ namespace C64Studio.Tasks
           //Doc.SetASMFileInfo( fileInfo, parser.KnownTokens(), parser.KnownTokenInfo() );
         }
 
-        if ( ( fileInfo != null )
-        &&   ( Doc.Project == null ) )
+        if ( fileInfo != null )
         {
-          // not part of project, spread known tokens to all participating files
+          // spread asm info to all participating files
           foreach ( var document in Core.MainForm.DocumentInfos )
           {
             if ( document != null )
             {
-              if ( fileInfo.ContainsFile( document.DocumentFilename ) )
+              if ( fileInfo.ContainsFile( document.FullPath ) )
               {
                 document.SetASMFileInfo( fileInfo, knownTokens, knownTokenInfo );
               }

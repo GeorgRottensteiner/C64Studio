@@ -462,6 +462,16 @@ namespace C64Studio
 
     public bool Save( SaveMethod Method )
     {
+      string  dummy;
+
+      return Save( Method, out dummy );
+    }
+
+
+
+    public bool Save( SaveMethod Method, out string NewFilename )
+    {
+      NewFilename = "";
       if ( ( Method == SaveMethod.SAVE_AS )
       ||   ( Method == SaveMethod.SAVE_COPY_AS )
       ||   ( DocumentInfo.DocumentFilename == null ) )
@@ -474,9 +484,7 @@ namespace C64Studio
           oldName = DocumentInfo.FullPath;
         }
 
-        string    newFilename;
-        
-        if ( !QueryFilename( out newFilename ) )
+        if ( !QueryFilename( out NewFilename ) )
         {
           return false;
         }
@@ -485,11 +493,11 @@ namespace C64Studio
           // a new filename
           if ( DocumentInfo.Project == null )
           {
-            DocumentInfo.DocumentFilename = newFilename;
+            DocumentInfo.DocumentFilename = NewFilename;
           }
           else
           {
-            DocumentInfo.DocumentFilename   = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, newFilename, false );
+            DocumentInfo.DocumentFilename   = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, NewFilename, false );
             DocumentInfo.Element.Name       = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
             DocumentInfo.Element.Node.Text  = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
             DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
@@ -502,7 +510,7 @@ namespace C64Studio
           TabText = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
           SetupWatcher();
 
-          if ( !PerformSave( newFilename ) )
+          if ( !PerformSave( NewFilename ) )
           {
             return false;
           }
@@ -512,7 +520,7 @@ namespace C64Studio
 
         if ( Method == SaveMethod.SAVE_AS )
         {
-          if ( !PerformSave( newFilename ) )
+          if ( !PerformSave( NewFilename ) )
           {
             return false;
           }
@@ -520,7 +528,7 @@ namespace C64Studio
           // rename during save
           if ( DocumentInfo.Project != null )
           {
-            DocumentInfo.DocumentFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, newFilename, false );
+            DocumentInfo.DocumentFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, NewFilename, false );
             DocumentInfo.Element.Name = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
             DocumentInfo.Element.Node.Text = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
             DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
@@ -531,7 +539,7 @@ namespace C64Studio
           }
           else
           {
-            DocumentInfo.DocumentFilename = newFilename;
+            DocumentInfo.DocumentFilename = NewFilename;
           }
           Text    = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
           TabText = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
@@ -560,7 +568,7 @@ namespace C64Studio
           SetUnmodified();
           return true;
         }
-        if ( !PerformSave( newFilename ) )
+        if ( !PerformSave( NewFilename ) )
         {
           return false;
         }
