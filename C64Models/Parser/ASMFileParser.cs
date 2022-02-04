@@ -553,6 +553,11 @@ namespace C64Studio.Parser
 
     public Types.ASM.TemporaryLabelInfo AddTempLabel( string Name, int LineIndex, int LineCount, SymbolInfo Value, string Info, int CharIndex, int Length )
     {
+      if ( string.IsNullOrEmpty( Value.Name ) )
+      {
+        Value.Name = Name;
+      }
+
       foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
       {
         if ( oldTempInfo.Name == Name )
@@ -584,7 +589,7 @@ namespace C64Studio.Parser
 
       Types.ASM.TemporaryLabelInfo tempInfo = new C64Studio.Types.ASM.TemporaryLabelInfo();
 
-      tempInfo.Name = Name;
+      tempInfo.Name       = Name;
       tempInfo.LineIndex  = LineIndex;
       tempInfo.LineCount  = LineCount;
       tempInfo.Symbol     = Value;
@@ -593,20 +598,6 @@ namespace C64Studio.Parser
       tempInfo.Length     = Length;
 
       ASMFileInfo.TempLabelInfo.Add( tempInfo );
-
-      /*
-      if ( Name == "VALUE" )
-      {
-        Debug.Log( "Add Temp Label " + Name + " at " + LineIndex );
-
-        foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
-        {
-          if ( oldTempInfo.Name == Name )
-          {
-            Debug.Log( "VALUE exists at " + oldTempInfo.LineIndex + ", " + oldTempInfo.LineCount );
-          }
-        }
-      }*/
       return tempInfo;
     }
 
@@ -1366,6 +1357,7 @@ namespace C64Studio.Parser
       // TODO - elevate to numeric if required!
       if ( ( token1.Type != SymbolInfo.Types.CONSTANT_REAL_NUMBER )
       &&   ( token1.Type != SymbolInfo.Types.CONSTANT_1 )
+      &&   ( token1.Type != SymbolInfo.Types.TEMP_LABEL )
       &&   ( token1.Type != SymbolInfo.Types.CONSTANT_2 ) )
       {
         AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Cannot use arithmetic on non-numeric first argument", Token1.StartPos, Token1.Length );
@@ -1374,6 +1366,7 @@ namespace C64Studio.Parser
       }
       if ( ( token2.Type != SymbolInfo.Types.CONSTANT_REAL_NUMBER )
       &&   ( token2.Type != SymbolInfo.Types.CONSTANT_1 )
+      &&   ( token2.Type != SymbolInfo.Types.TEMP_LABEL )
       &&   ( token2.Type != SymbolInfo.Types.CONSTANT_2 ) )
       {
         AddError( LineIndex, ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Cannot use arithmetic on non-numeric second argument", Token2.StartPos, Token2.Length );
@@ -3583,10 +3576,12 @@ namespace C64Studio.Parser
         }
 
         // label exists only after !for
+        var   tempLabelSymbol = CreateIntegerSymbol( lastLoop.CurrentValue );
+        tempLabelSymbol.Type = SymbolInfo.Types.TEMP_LABEL;
         AddTempLabel( lastLoop.Label, 
                       lineIndex - lastLoop.LoopLength, 
-                      lastLoop.LoopLength, 
-                      CreateIntegerSymbol( lastLoop.CurrentValue ), 
+                      lastLoop.LoopLength,
+                      tempLabelSymbol, 
                       "" );
 
         bool  endReached = false;
@@ -8104,77 +8099,12 @@ namespace C64Studio.Parser
         else if ( IsDefine( lineTokenInfos ) )
         {
           // a define
-          if ( ScopeInsideMacroDefinition( stackScopes ) )
+          var callReturn = PODefine( stackScopes, lineTokenInfos, lineIndex, info, textCodeMapping, ref programStepPos, ref trueCompileCurrentAddress );
+          if ( callReturn == ParseLineResult.ERROR_ABORT )
           {
-            continue;
+            HadFatalError = true;
+            return Lines;
           }
-          int equPos = lineTokenInfos[1].StartPos;
-          string defineName = lineTokenInfos[0].Content;
-          if ( !m_AssemblerSettings.CaseSensitive )
-          {
-            defineName = defineName.ToUpper();
-          }
-          int   defineLength = lineTokenInfos[lineTokenInfos.Count - 1].StartPos + lineTokenInfos[lineTokenInfos.Count - 1].Length - ( equPos + lineTokenInfos[1].Content.Length );
-          string defineValue = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 2 );
-          // avoid detecting as label
-          if ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
-          {
-            defineValue = " " + defineValue;
-          }
-
-          List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, textCodeMapping );
-
-          if ( defineName == "*" )
-          {
-            // set program step
-            info.AddressSource = "*";
-
-            List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length, textCodeMapping );
-            if ( ( tokens.Count > 0 )
-            &&   ( tokens[tokens.Count - 1].Type == TokenInfo.TokenType.LITERAL_STRING ) )
-            {
-              info.AddressSource = "*" + tokens[tokens.Count - 1].Content;
-              tokens.RemoveAt( tokens.Count - 1 );
-            }
-            if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo newStepPosSymbol ) )
-            {
-              AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate * position value", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-              HadFatalError = true;
-              return Lines;
-            }
-            programStepPos = newStepPosSymbol.ToInteger();
-            m_CompileCurrentAddress = programStepPos;
-            trueCompileCurrentAddress = programStepPos;
-
-            info.AddressStart = programStepPos;
-          }
-          else
-          {
-            if ( ScopeInsideMacroDefinition( stackScopes ) )
-            {
-              continue;
-            }
-            if ( !EvaluateTokens( lineIndex, valueTokens, textCodeMapping, out SymbolInfo addressSymbol ) )
-            {
-              AddUnparsedLabel( defineName, defineValue, lineIndex );
-            }
-            else
-            {
-              if ( addressSymbol.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
-              {
-                AddConstantF( defineName, addressSymbol.RealValue, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-              }
-              else if ( addressSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
-              {
-                AddConstantString( defineName, addressSymbol.String, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-              }
-              else
-              {
-                AddConstant( defineName, addressSymbol, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
-              }
-            }
-          }
-          m_CurrentCommentSB = new StringBuilder();
           continue;
         }
         else if ( IsLabelInFront( lineTokenInfos, upToken ) )
@@ -8782,11 +8712,20 @@ namespace C64Studio.Parser
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.SET )
             {
-              if ( ( lineTokenInfos.Count >= 4 )
-              && ( m_AssemblerSettings.DefineSeparatorKeywords.ContainsValue( lineTokenInfos[2].Content )
-              && ( ( m_AssemblerSettings.POPrefix.Length == 0 )
-              || ( !lineTokenInfos[1].Content.StartsWith( m_AssemblerSettings.POPrefix ) ) ) ) )
+              var callReturn = PODefine( stackScopes, lineTokenInfos.GetRange( 1, lineTokenInfos.Count - 1 ), lineIndex, info, textCodeMapping, ref programStepPos, ref trueCompileCurrentAddress );
+              if ( callReturn == ParseLineResult.ERROR_ABORT )
               {
+                HadFatalError = true;
+                return Lines;
+              }
+              continue;
+              /*
+              if ( ( lineTokenInfos.Count >= 4 )
+              &&   ( m_AssemblerSettings.DefineSeparatorKeywords.ContainsValue( lineTokenInfos[2].Content )
+              &&   ( ( m_AssemblerSettings.POPrefix.Length == 0 )
+              ||     ( !lineTokenInfos[1].Content.StartsWith( m_AssemblerSettings.POPrefix ) ) ) ) )
+              {
+
                 if ( ScopeInsideMacroDefinition( stackScopes ) )
                 {
                   continue;
@@ -8873,7 +8812,7 @@ namespace C64Studio.Parser
                 }
                 m_CurrentCommentSB = new StringBuilder();
                 continue;
-              }
+              }*/
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.PSEUDO_PC )
             {
@@ -10567,6 +10506,84 @@ namespace C64Studio.Parser
 
 
 
+    private ParseLineResult PODefine( List<ScopeInfo> stackScopes, List<TokenInfo> lineTokenInfos, int lineIndex, LineInfo info, Map<byte,byte> textCodeMapping, ref int programStepPos, ref int trueCompileCurrentAddress )
+    {
+      if ( ScopeInsideMacroDefinition( stackScopes ) )
+      {
+        return ParseLineResult.CALL_CONTINUE;
+      }
+      int equPos = lineTokenInfos[1].StartPos;
+      string defineName = lineTokenInfos[0].Content;
+      if ( !m_AssemblerSettings.CaseSensitive )
+      {
+        defineName = defineName.ToUpper();
+      }
+      int   defineLength = lineTokenInfos[lineTokenInfos.Count - 1].StartPos + lineTokenInfos[lineTokenInfos.Count - 1].Length - ( equPos + lineTokenInfos[1].Content.Length );
+      string defineValue = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 2 );
+      // avoid detecting as label
+      if ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
+      {
+        defineValue = " " + defineValue;
+      }
+
+      List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, textCodeMapping );
+
+      if ( defineName == "*" )
+      {
+        // set program step
+        info.AddressSource = "*";
+
+        List<Types.TokenInfo> tokens = ParseTokenInfo( defineValue, 0, defineValue.Length, textCodeMapping );
+        if ( ( tokens.Count > 0 )
+        && ( tokens[tokens.Count - 1].Type == TokenInfo.TokenType.LITERAL_STRING ) )
+        {
+          info.AddressSource = "*" + tokens[tokens.Count - 1].Content;
+          tokens.RemoveAt( tokens.Count - 1 );
+        }
+        if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo newStepPosSymbol ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate * position value", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+          return ParseLineResult.ERROR_ABORT;
+        }
+        programStepPos = newStepPosSymbol.ToInteger();
+        m_CompileCurrentAddress = programStepPos;
+        trueCompileCurrentAddress = programStepPos;
+
+        info.AddressStart = programStepPos;
+      }
+      else
+      {
+        if ( ScopeInsideMacroDefinition( stackScopes ) )
+        {
+          return ParseLineResult.CALL_CONTINUE;
+        }
+        if ( !EvaluateTokens( lineIndex, valueTokens, textCodeMapping, out SymbolInfo addressSymbol ) )
+        {
+          AddUnparsedLabel( defineName, defineValue, lineIndex );
+        }
+        else
+        {
+          if ( addressSymbol.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
+          {
+            AddConstantF( defineName, addressSymbol.RealValue, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+          }
+          else if ( addressSymbol.Type == SymbolInfo.Types.CONSTANT_STRING )
+          {
+            AddConstantString( defineName, addressSymbol.String, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+          }
+          else
+          {
+            AddConstant( defineName, addressSymbol, lineIndex, m_CurrentCommentSB.ToString(), m_CurrentZoneName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+          }
+        }
+      }
+      m_CurrentCommentSB = new StringBuilder();
+
+      return ParseLineResult.CALL_CONTINUE;
+    }
+
+
+
     private string ListKeys( IEnumerable<string> LookupList )
     {
       StringBuilder   sb = new StringBuilder();
@@ -10643,7 +10660,11 @@ namespace C64Studio.Parser
         if ( lineTokenInfos.Count == 1 )
         {
           // anonymous zone -> all upper case 
-          m_CurrentZoneName = "ANON_SCOPE_" + lineIndex.ToString();
+          // TODO - really?
+          //m_CurrentZoneName = "ANON_SCOPE_" + lineIndex.ToString();
+          // back to global zone 
+          m_CurrentZoneName = "";
+          return;
         }
         else
         {
@@ -15173,34 +15194,9 @@ namespace C64Studio.Parser
       {
         if ( endsWithCommaX )
         {
-          if ( numBytesFirstParam == 1 )
-          {
-            addressing = Tiny64.Opcode.AddressingType.ZEROPAGE_X;
-          }
-          else
-          {
-            addressing = Tiny64.Opcode.AddressingType.ABSOLUTE_X;
-          }
-          /*
-          if ( PossibleOpcodes.Any( po => po.Addressing == Opcode.AddressingType.ZEROPAGE_X ) )
-          {
-            addressing = Opcode.AddressingType.ZEROPAGE_X;
-          }
-          else if ( PossibleOpcodes.Any( po => po.Addressing == Opcode.AddressingType.ABSOLUTE_X ) )
-          {
-            addressing = Opcode.AddressingType.ABSOLUTE_X;
-          }
-          else
-          {
-            // wrong! cannot be (address),x
-            AddError( LineIndex,
-                    Types.ErrorCode.E1300_OPCODE_AMBIGIOUS,
-                    "Could not determine correct opcode for " + LineTokens[0].Content,
-                    LineTokens[0].StartPos,
-                    LineTokens[0].Length );
-
-            return null;
-          }*/
+          // no fallback anymore
+          AddError( LineIndex, Types.ErrorCode.E1105_INVALID_OPCODE, "Opcode does not support indirect addressing with ,x outside (remove braces)" );
+          return null;
         }
         else if ( endsWithCommaY )
         {

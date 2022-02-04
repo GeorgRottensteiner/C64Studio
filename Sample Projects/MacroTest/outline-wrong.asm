@@ -1,16 +1,28 @@
+﻿
+;!Zone Wurst
+;
+;*=$c000
+;
+;w_Mem   =$2000
+;
+;b_Farbe   =$fc  ; Das gerade aktuelle Farbbyte
+;
+;  rts
+;
+;x1          !by 0
+;
+;x2          !by 0
+;
+;s_Sub
 
-!Zone Wurst
 
-*=$c000
+; library.libary not showing up in outline?
 
-w_Mem   =$2000
+!zone library
 
-b_Farbe   =$fc  ; Das gerade aktuelle Farbbyte
+.libary = 17
+.libary = 18
 
-  rts
+!set .libary = 20
 
-x1          !by 0
-
-x2          !by 0
-
-s_Sub
+!message "library.libary",.libary

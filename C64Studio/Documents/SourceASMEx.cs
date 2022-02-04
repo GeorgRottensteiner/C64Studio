@@ -1118,7 +1118,7 @@ namespace C64Studio
 
             for ( int j = 0; j < comboLocalLabelSelector.Items.Count; ++j )
             {
-              var symbol3 = (SymbolInfo)comboLocalLabelSelector.Items[j];
+              var symbol3 = (SymbolInfo)( (ComboItem)comboLocalLabelSelector.Items[j] ).Tag;
               if ( ( symbol3.LocalLineIndex <= CurrentLineIndex )
               &&   ( symbol3.LocalLineIndex > localSymbolLine ) )
               {
@@ -1143,7 +1143,7 @@ namespace C64Studio
 
         for ( int j = 0; j < comboLocalLabelSelector.Items.Count; ++j )
         {
-          var symbol3 = (SymbolInfo) comboLocalLabelSelector.Items[j];
+          var symbol3 = (SymbolInfo)( (ComboItem)comboLocalLabelSelector.Items[j] ).Tag;
           if ( ( symbol3.LocalLineIndex <= CurrentLineIndex )
           &&   ( symbol3.LocalLineIndex > localSymbolLine ) )
           {
@@ -1330,8 +1330,9 @@ namespace C64Studio
       comboZoneSelector.Items.Clear();
 
       var globalSymbol = new SymbolInfo();
-      globalSymbol.Name = "Global";
+      globalSymbol.Name           = "Global";
       globalSymbol.LocalLineIndex = 0;
+      globalSymbol.CharIndex      = 0;
       globalSymbol.DocumentFilename = DocumentFilename;
       comboZoneSelector.Items.Add( globalSymbol );
 
@@ -1498,7 +1499,7 @@ namespace C64Studio
       string currentLabel = "";
       if ( comboLocalLabelSelector.SelectedIndex != -1 )
       {
-        var symbol = (SymbolInfo)comboLocalLabelSelector.SelectedItem;
+        var symbol = (SymbolInfo)( (ComboItem)comboLocalLabelSelector.SelectedItem ).Tag;
         currentLabel = symbol.Name;
       }
 
@@ -1521,7 +1522,7 @@ namespace C64Studio
             ||     ( GR.Path.IsPathEqual( symbol.DocumentFilename, fullPath ) ) )
             &&   ( symbol.Zone == currentZone ) )
             {
-              int itemIndex = comboLocalLabelSelector.Items.Add( symbol );
+              int itemIndex = comboLocalLabelSelector.Items.Add( new ComboItem( symbol.Name, symbol ) );
               if ( symbol.Name == currentLabel )
               {
                 comboLocalLabelSelector.SelectedIndex = itemIndex;
@@ -3010,9 +3011,9 @@ namespace C64Studio
       {
         return;
       }
-      SymbolInfo symbol = (SymbolInfo)comboLocalLabelSelector.SelectedItem;
+      SymbolInfo symbol = (SymbolInfo)( (ComboItem)comboLocalLabelSelector.SelectedItem ).Tag;
 
-      SetCursorToLine( symbol.LocalLineIndex, symbol.CharIndex, true );
+      SetCursorToLine( symbol.LocalLineIndex, symbol.CharIndex > -1 ? symbol.CharIndex : 0, true );
     }
 
 

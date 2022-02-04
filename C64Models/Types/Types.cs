@@ -1326,7 +1326,7 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_ARROW_UP, KeyModifier.COMMODORE, KeyType.GRAPHIC_SYMBOL, 158, true, 0xff, true, (char)0xee5e, true, "PI" ).Replacements.AddRange( new string[] { "PI", "SHIFT-ARROWUP" } );   // PI
 
       // reverse keys!
-      //AddC64Key( KeyboardKey.KEY_SPACE, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 160, true, 0, false, (char)0xeee0, true );   // reverse space
+      AddC64Key( KeyboardKey.KEY_SPACE, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 160, true, 0, false, (char)0xeee0, true, "REVERSE SPACE" );   // reverse space
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 161, true, 0, false, (char)0xeea1, true, "REVERSE !" );
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 162, true, 0, false, (char)0xeea2, true, "REVERSE \"" );
       AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 163, true, 0, false, (char)0xeea3, true, "REVERSE #" );

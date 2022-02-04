@@ -202,6 +202,10 @@ namespace C64Studio
           parentNode = zoneNodes[token.Zone];
           continue;
         }
+        if ( token.Type == SymbolInfo.Types.TEMP_LABEL )
+        {
+          continue;
+        }
 
         System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode();
         bool addNode = true;

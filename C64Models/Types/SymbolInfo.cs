@@ -17,7 +17,8 @@
       VARIABLE_NUMBER,
       VARIABLE_INTEGER,
       VARIABLE_STRING,
-      VARIABLE_ARRAY
+      VARIABLE_ARRAY,
+      TEMP_LABEL
     };
 
     public Types      Type = Types.UNKNOWN;
@@ -88,10 +89,11 @@
 
     public bool IsInteger()
     {
-      if ( ( Type == SymbolInfo.Types.CONSTANT_1 )
-      ||   ( Type == SymbolInfo.Types.CONSTANT_2 )
-      ||   ( Type == SymbolInfo.Types.PREPROCESSOR_CONSTANT_1 )
-      ||   ( Type == SymbolInfo.Types.PREPROCESSOR_CONSTANT_2 ) )
+      if ( ( Type == Types.CONSTANT_1 )
+      ||   ( Type == Types.CONSTANT_2 )
+      ||   ( Type == Types.TEMP_LABEL )
+      ||   ( Type == Types.PREPROCESSOR_CONSTANT_1 )
+      ||   ( Type == Types.PREPROCESSOR_CONSTANT_2 ) )
       {
         return true;
       }
