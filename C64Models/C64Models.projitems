@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Converter\KoalaToBitmap.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteMega65.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteMega65_256.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteVIC20.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteC64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomRenderer\PaletteManager.cs" />

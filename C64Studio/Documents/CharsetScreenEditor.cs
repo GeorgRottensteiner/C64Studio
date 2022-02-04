@@ -32,6 +32,7 @@ namespace C64Studio
     private bool                        m_OverrideCharMode = false;
     private int                         m_CharsWidth = 40;
     private int                         m_CharsHeight = 25;
+    private int                         m_NumColorsInColorChooser = 16;
 
     private GR.Image.MemoryImage        m_Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
 
@@ -1703,7 +1704,7 @@ namespace C64Studio
 
     private void RedrawColorChooser()
     {
-      for ( byte i = 0; i < 16; ++i )
+      for ( byte i = 0; i < m_NumColorsInColorChooser; ++i )
       {
         DrawCharImage( panelCharColors.DisplayPage, i * 8, 0, m_CurrentChar, i );
       }
@@ -1728,10 +1729,14 @@ namespace C64Studio
 
     private void HandleMouseOnColorChooser( int X, int Y, MouseButtons Buttons )
     {
+      if ( ( X < 0 )
+      ||   ( X >= panelCharColors.ClientSize.Width ) )
+      {
+        return;
+      }
       if ( ( Buttons & MouseButtons.Left ) == MouseButtons.Left )
       {
-        int colorIndex = (int)( ( 16 * X ) / panelCharColors.ClientSize.Width );
-        //int colorIndex = X / 16;
+        int colorIndex = (int)( ( m_NumColorsInColorChooser * X ) / panelCharColors.ClientSize.Width );
         m_CurrentColor = (byte)colorIndex;
         RedrawColorChooser();
         labelInfo.Text = InfoText();
@@ -2021,7 +2026,7 @@ namespace C64Studio
           sb.Append( "!pet \"" );
           for ( int x = exportRect.Left; x < exportRect.Right; ++x )
           {
-            byte newChar = (byte)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xff );
+            byte newChar = (byte)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
             byte charToAdd = newChar;
 
             if ( newChar >= 128 )
@@ -2036,7 +2041,8 @@ namespace C64Studio
             {
               charToAdd -= 128;
             }
-            if ( ConstantData.ScreenCodeToChar[newChar].HasPetSCII )
+            if ( ( ConstantData.ScreenCodeToChar[newChar].HasPetSCII )
+            &&   ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
             {
               sb.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
             }
@@ -2044,7 +2050,7 @@ namespace C64Studio
             {
               sb.Append( "\", $" );
               sb.Append( newChar.ToString( "X2" ) );
-              sb.Append( "\"" );
+              sb.Append( ", \"" );
             }
           }
           sb.AppendLine( "\"" );
@@ -2397,7 +2403,24 @@ namespace C64Studio
         {
           for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
           {
-            m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (uint)( ( ( (uint)Data.ByteAt( m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight + i + j * m_CharsetScreen.ScreenWidth ) & 0x0f ) << 16 ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xffff ) );
+            ushort colorValue = Data.ByteAt( m_CharsetScreen.ScreenWidth * m_CharsetScreen.ScreenHeight + i + j * m_CharsetScreen.ScreenWidth );
+            colorValue &= 0x4f;
+
+            if ( ( m_CharsetScreen.Mode == TextMode.MEGA65_80_X_25_HIRES )
+            ||   ( m_CharsetScreen.Mode == TextMode.MEGA65_40_X_25_HIRES ) )
+            {
+              // colors >= 16 and < 32 need to be shifted up
+              if ( ( colorValue & 0x40 ) == 0x40 )
+              {
+                colorValue -= 64 - 16;
+              }
+            }
+            else
+            {
+              colorValue &= 0x0f;
+            }
+
+            m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (uint)( ( ( (uint)colorValue ) << 16 ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xffff ) );
           }
         }
       }
@@ -3183,6 +3206,7 @@ namespace C64Studio
       switch ( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) )
       {
         case TextCharMode.COMMODORE_HIRES:
+        case TextCharMode.MEGA65_HIRES:
           labelMColor1.Enabled = false;
           labelMColor2.Enabled = false;
           labelBGColor4.Enabled = false;
@@ -3242,6 +3266,7 @@ namespace C64Studio
         case TextMode.MEGA65_40_X_25_FCM:
         case TextMode.MEGA65_40_X_25_FCM_16BIT:
         case TextMode.MEGA65_40_X_25_ECM:
+        case TextMode.MEGA65_40_X_25_HIRES:
           m_CharsWidth = 40;
           m_CharsHeight = 25;
           pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
@@ -3274,8 +3299,14 @@ namespace C64Studio
       int numColors = Lookup.NumberOfColorsInCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
 
       // hard coded palettes
+      int     numColorsInChooser = 16;
+
       switch ( m_CharsetScreen.Mode )
       {
+        case TextMode.MEGA65_40_X_25_HIRES:
+        case TextMode.MEGA65_80_X_25_HIRES:
+          numColorsInChooser = 32;
+          break;
         case TextMode.COMMODORE_40_X_25_ECM:
         case TextMode.COMMODORE_40_X_25_HIRES:
         case TextMode.COMMODORE_40_X_25_MULTICOLOR:
@@ -3284,6 +3315,14 @@ namespace C64Studio
         case TextMode.COMMODORE_VIC20_22_X_23:
           m_CharsetScreen.CharSet.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
           return;
+      }
+
+      if ( m_NumColorsInColorChooser != numColorsInChooser )
+      {
+        m_NumColorsInColorChooser = numColorsInChooser;
+
+        panelCharColors.DisplayPage.Create( 8 * m_NumColorsInColorChooser, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+        RedrawColorChooser();
       }
 
       if ( comboBackground.Items.Count != numColors )
@@ -4002,8 +4041,8 @@ namespace C64Studio
 
     private void panelCharColors_PostPaint( FastImage TargetBuffer )
     {
-      int     x1 = m_CurrentColor * TargetBuffer.Width / 16;
-      int     x2 = ( m_CurrentColor + 1 ) * TargetBuffer.Width / 16;
+      int     x1 = m_CurrentColor * TargetBuffer.Width / m_NumColorsInColorChooser;
+      int     x2 = ( m_CurrentColor + 1 ) * TargetBuffer.Width / m_NumColorsInColorChooser;
 
       uint  selColor = Core.Settings.FGColor( ColorableElement.SELECTION_FRAME );
 

@@ -13,7 +13,7 @@ namespace RetroDevStudio
         default:
           return ConstantData.PaletteC64();
         case MachineType.MEGA65:
-          return ConstantData.PaletteMega65();
+          return ConstantData.PaletteMega65_256();
         case MachineType.VIC20:
           return ConstantData.PaletteVIC20();
       }
@@ -49,7 +49,7 @@ namespace RetroDevStudio
         default:
           return ConstantData.PaletteC64();
         case 256:
-          return ConstantData.PaletteMega65();
+          return ConstantData.PaletteMega65_256();
       }
     }
 

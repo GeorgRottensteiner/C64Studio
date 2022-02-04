@@ -40,6 +40,8 @@ namespace C64Studio.Controls
 
     private ColorSettingsBase           _ColorSettingsDlg = null;
 
+    private int                         _NumColorsInColorSelector = 16;
+
 
 
     public bool AllowModeChange
@@ -145,7 +147,7 @@ namespace C64Studio.Controls
 
     private void RedrawColorChooser()
     {
-      for ( byte i = 0; i < 16; ++i )
+      for ( byte i = 0; i < _NumColorsInColorSelector; ++i )
       {
         Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, panelCharColors.DisplayPage, i * 8, 0, i );
       }
@@ -918,6 +920,7 @@ namespace C64Studio.Controls
       
 
       ChangeColorSettingsDialog();
+      UpdatePalette();
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
@@ -1338,9 +1341,14 @@ namespace C64Studio.Controls
 
     private void HandleMouseOnColorChooser( int X, int Y, MouseButtons Buttons )
     {
+      if ( ( X < 0 )
+      ||   ( X >= panelCharColors.ClientSize.Width ) )
+      {
+        return;
+      }
       if ( ( Buttons & MouseButtons.Left ) == MouseButtons.Left )
       {
-        int colorIndex = (int)( ( 16 * X ) / panelCharColors.ClientSize.Width );
+        int colorIndex = (int)( ( _NumColorsInColorSelector * X ) / panelCharColors.ClientSize.Width );
         m_CurrentColor = (byte)colorIndex;
         RedrawColorChooser();
       }
@@ -1955,8 +1963,14 @@ namespace C64Studio.Controls
         case TextCharMode.COMMODORE_ECM:
           _ColorSettingsDlg = new ColorSettingsECM( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
+        case TextCharMode.MEGA65_ECM:
+          _ColorSettingsDlg = new ColorSettingsECMMega65( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
         case TextCharMode.COMMODORE_HIRES:
           _ColorSettingsDlg = new ColorSettingsHiRes( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
+        case TextCharMode.MEGA65_HIRES:
+          _ColorSettingsDlg = new ColorSettingsHiResMega65( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.COMMODORE_MULTICOLOR:
           _ColorSettingsDlg = new ColorSettingsMCCharacter( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
@@ -2161,8 +2175,12 @@ namespace C64Studio.Controls
         m_Project.Colors.Palette = PaletteManager.PaletteFromNumColors( Lookup.NumberOfColorsInCharacter( m_Project.Mode ) );
       }
 
+      int   colorsInSelector = 16;
       switch ( m_Project.Mode )
       {
+        case TextCharMode.MEGA65_HIRES:
+          colorsInSelector = 32;
+          break;
         case TextCharMode.COMMODORE_ECM:
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.COMMODORE_MULTICOLOR:
@@ -2172,6 +2190,14 @@ namespace C64Studio.Controls
           m_Project.Colors.Palettes[0] = PaletteManager.PaletteFromMachine( MachineType.VIC20 );
           break;
       }
+
+
+      if ( _NumColorsInColorSelector != colorsInSelector )
+      {
+        _NumColorsInColorSelector = colorsInSelector;
+        panelCharColors.DisplayPage.Create( 8 * _NumColorsInColorSelector, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      }
+
       OnPaletteChanged();
     }
 
@@ -2758,8 +2784,8 @@ namespace C64Studio.Controls
 
     private void panelCharColors_PostPaint( FastImage TargetBuffer )
     {
-      int     x1 = m_CurrentColor * TargetBuffer.Width / 16;
-      int     x2 = ( m_CurrentColor + 1 ) * TargetBuffer.Width / 16;
+      int     x1 = m_CurrentColor * TargetBuffer.Width / _NumColorsInColorSelector;
+      int     x2 = ( m_CurrentColor + 1 ) * TargetBuffer.Width / _NumColorsInColorSelector;
 
       if ( Core != null )
       {

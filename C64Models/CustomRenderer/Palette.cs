@@ -32,7 +32,7 @@ namespace RetroDevStudio
       else if ( ( NumColors > 16 )
       &&        ( NumColors < 256 ) )
       {
-        Debug.Log( "< 256 colors" );
+        Debug.Log( "< 256 colors and != 32" );
         NumColors = 256;
       }
       if ( NumColors == 257 )

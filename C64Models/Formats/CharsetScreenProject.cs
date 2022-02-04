@@ -231,6 +231,15 @@ namespace C64Studio.Formats
             }
             if ( Lookup.TextModeUsesColor( Mode ) )
             {
+              if ( ( Mode == TextMode.MEGA65_80_X_25_HIRES )
+              ||   ( Mode == TextMode.MEGA65_40_X_25_HIRES ) )
+              {
+                // colors >= 16 and < 32 need to be shifted up
+                if ( newColor >= 16 )
+                {
+                  newColor += 64 - 16;
+                }
+              }
               ColorData.AppendU8( newColor );
             }
           }
@@ -257,6 +266,15 @@ namespace C64Studio.Formats
             }
             if ( Lookup.TextModeUsesColor( Mode ) )
             {
+              if ( ( Mode == TextMode.MEGA65_80_X_25_HIRES )
+              ||   ( Mode == TextMode.MEGA65_40_X_25_HIRES ) )
+              {
+                // colors >= 16 and < 32 need to be shifted up
+                if ( newColor >= 16 )
+                {
+                  newColor += 64 - 16;
+                }
+              }
               ColorData.AppendU8( newColor );
             }
           }

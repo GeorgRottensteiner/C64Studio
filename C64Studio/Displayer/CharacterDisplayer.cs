@@ -309,7 +309,8 @@ namespace C64Studio.Displayer
     {
       Formats.CharData Char = Charset.Characters[CharIndex];
 
-      if ( AlternativeMode == TextCharMode.COMMODORE_ECM )
+      if ( ( AlternativeMode == TextCharMode.COMMODORE_ECM )
+      ||   ( AlternativeMode == TextCharMode.MEGA65_ECM ) )
       {
         // ECM
         Formats.CharData origChar = Charset.Characters[CharIndex % 64];
@@ -333,7 +334,8 @@ namespace C64Studio.Displayer
       {
         DisplayMultiColorChar( Char.Tile.Data, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, Context );
       }
-      else if ( AlternativeMode == TextCharMode.COMMODORE_HIRES )
+      else if ( ( AlternativeMode == TextCharMode.COMMODORE_HIRES )
+      ||        ( AlternativeMode == TextCharMode.MEGA65_HIRES ) )
       {
         DisplayHiResChar( Char.Tile.Data, AltBGColor, AlternativeColor, Context );
       }
@@ -389,7 +391,8 @@ namespace C64Studio.Displayer
     {
       Formats.CharData Char = Charset.Characters[CharIndex];
 
-      if ( AlternativeMode == TextCharMode.COMMODORE_ECM )
+      if ( ( AlternativeMode == TextCharMode.COMMODORE_ECM )
+      ||   ( AlternativeMode == TextCharMode.MEGA65_ECM ) )
       {
         // ECM
         Formats.CharData origChar = Charset.Characters[CharIndex % 64];
@@ -413,7 +416,8 @@ namespace C64Studio.Displayer
       {
         DisplayMultiColorChar( Char.Tile.Data, Palette, AltBGColor, AltMColor1, AltMColor2, AlternativeColor, TargetImage, X, Y );
       }
-      else if ( AlternativeMode == TextCharMode.COMMODORE_HIRES )
+      else if ( ( AlternativeMode == TextCharMode.COMMODORE_HIRES )
+      ||        ( AlternativeMode == TextCharMode.MEGA65_HIRES ) )
       {
         DisplayHiResChar( Char.Tile.Data, Palette, AltBGColor, AlternativeColor, TargetImage, X, Y );
       }
