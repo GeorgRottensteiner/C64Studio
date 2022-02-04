@@ -1250,14 +1250,17 @@ namespace C64Studio
               }
 
               var tokens = m_Parser.PureTokenizeLine( leftText );
-              if ( tokens.Tokens.Any( t => IsTokenComment( t ) ) )
+              bool isInsideComment = tokens.Tokens.Any( t => IsTokenComment( t ) );
+
+              if ( ( actualChar != "?" )
+              &&   ( isInsideComment ) )
               {
                 return true;
               }
 
               if ( actualChar == "?" )
               {
-                if ( InsideREM() )
+                if ( isInsideComment )
                 {
                   editSource.SelectedText = "?";
                   return true;
