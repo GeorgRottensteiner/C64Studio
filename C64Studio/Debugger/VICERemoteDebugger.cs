@@ -1440,7 +1440,7 @@ namespace C64Studio
         if ( breakPoint.RemoteIndex == m_BrokenAtBreakPoint )
         {
           brokenBP = breakPoint;
-          breakAddress = breakPoint.Address;
+          breakAddress = (int)breakPoint.Address;
           if ( breakPoint.Temporary )
           {
             Debug.Log( "Remove auto startup breakpoint " + breakPoint.RemoteIndex );
@@ -2214,7 +2214,7 @@ namespace C64Studio
         if ( ( client != null )
         &&   ( client.Connected ) )
         {
-          RequestData requData = new RequestData( DebugRequestType.ADD_BREAKPOINT, BreakPoint.Address );
+          RequestData requData = new RequestData( DebugRequestType.ADD_BREAKPOINT, (int)BreakPoint.Address );
           requData.Breakpoint = BreakPoint;
           QueueRequest( requData );
         }

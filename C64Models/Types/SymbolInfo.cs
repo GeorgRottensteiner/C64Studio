@@ -27,7 +27,7 @@
     public int        LineCount = -1;           // global (-1 is for complete file)
     public string     DocumentFilename = "";
     public int        LocalLineIndex = 0;
-    public int        AddressOrValue = -1;
+    public long       AddressOrValue = -1;
     public string     String = "";
     public double     RealValue = 0;
     public string     Zone = "";
@@ -102,7 +102,14 @@
 
 
 
-    public int ToInteger()
+    public int ToInt32()
+    {
+      return (int)ToInteger();
+    }
+
+
+
+    public long ToInteger()
     {
       if ( Type == Types.CONSTANT_REAL_NUMBER )
       {

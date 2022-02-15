@@ -1257,7 +1257,7 @@ namespace C64Studio
 
           byte    valueBelow = 0xcd;
           if ( ( Core.Debugging.Debugger != null )
-          &&   ( Core.Debugging.Debugger.FetchValue( tokenInfo.AddressOrValue, out valueBelow ) ) )
+          &&   ( Core.Debugging.Debugger.FetchValue( (int)tokenInfo.AddressOrValue, out valueBelow ) ) )
           {
             toolTipText += " ($" + valueBelow.ToString( "x2" ) + "/" + valueBelow.ToString() + ")";
           }
@@ -2365,7 +2365,7 @@ namespace C64Studio
       debugFileInfo.FindZoneInfoFromDocumentLine( DocumentInfo.FullPath, lineIndex, out zone, out cheapLabelParent );
 
       // TODO - determine if known label/var
-      int     result = -1;
+      long    result = -1;
       int     bytesGiven = 0;
       bool    failed = true;
 
@@ -2375,7 +2375,7 @@ namespace C64Studio
         entry.Name          = wordBelow;
         entry.SizeInBytes   = 1;
         entry.Type          = WatchEntry.DisplayType.HEX;
-        entry.Address       = result;
+        entry.Address       = (int)result;
         entry.IndexedX      = indexedX;
         entry.IndexedY      = indexedY;
         entry.DisplayMemory = true;
@@ -2394,7 +2394,7 @@ namespace C64Studio
         entry.Name        = wordBelow;
         entry.SizeInBytes = 1;
         entry.Type        = WatchEntry.DisplayType.HEX;
-        entry.Address     = tokenInfo.AddressOrValue;
+        entry.Address     = (int)tokenInfo.AddressOrValue;
         entry.IndexedX    = indexedX;
         entry.IndexedY    = indexedY;
         entry.DisplayMemory = true;
@@ -2427,7 +2427,7 @@ namespace C64Studio
         if ( ( tokenInfo.AddressOrValue >= 0 )
         &&   ( tokenInfo.AddressOrValue <= 65535 ) )
         {
-          int line = tokenInfo.AddressOrValue / Core.MainForm.m_DebugMemory.hexView.BytesPerLine;
+          int line = (int)tokenInfo.AddressOrValue / Core.MainForm.m_DebugMemory.hexView.BytesPerLine;
           Core.MainForm.m_DebugMemory.Show();
           Core.MainForm.m_DebugMemory.hexView.PerformScrollToLine( line );
           Core.MainForm.m_DebugMemory.RefreshViewScroller();
@@ -3288,19 +3288,19 @@ namespace C64Studio
       if ( ( tokenInfo != null )
       &&   ( tokenInfo.AddressOrValue != -1 ) )
       {
-        address = tokenInfo.AddressOrValue;
+        address = (int)tokenInfo.AddressOrValue;
       }
       else if ( DocumentInfo.ASMFileInfo.Labels.ContainsKey( wordBelow ) )
       {
         var labelInfo = DocumentInfo.ASMFileInfo.Labels[wordBelow];
 
-        address = labelInfo.AddressOrValue;
+        address = (int)labelInfo.AddressOrValue;
       }
       else if ( debugFileInfo.Labels.ContainsKey( wordBelow ) )
       {
         var labelInfo = debugFileInfo.Labels[wordBelow];
 
-        address = labelInfo.AddressOrValue;
+        address = (int)labelInfo.AddressOrValue;
       }
 
       if ( address != -1 )
@@ -3489,7 +3489,7 @@ namespace C64Studio
                 {
                   if ( Parser.EvaluateTokens( i, tokens, i, 1, Core.Compiling.ParserASM.m_TextCodeMappingRaw, out SymbolInfo resultValueSymbol ) )
                   {
-                    int resultValue = resultValueSymbol.ToInteger();
+                    int resultValue = resultValueSymbol.ToInt32();
                     resultValue += formDelta.Delta;
 
                     if ( formDelta.InsertAsHex )

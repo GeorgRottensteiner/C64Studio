@@ -1957,7 +1957,7 @@ namespace C64Studio
           StudioCore.AddToOutput( "Failed to evaluate macro '" + macroName + "' encountered at command " + Mask + System.Environment.NewLine );
           return "";
         }
-        int macroValue = macroValueSymbol.ToInteger( );
+        long macroValue = macroValueSymbol.ToInteger( );
         string valueToInsert = "";
         if ( asHex )
         {
@@ -2013,7 +2013,7 @@ namespace C64Studio
       {
         if ( Document.ASMFileInfo.Labels.ContainsKey( Label ) )
         {
-          Address = Document.ASMFileInfo.Labels[Label].AddressOrValue;
+          Address = (int)Document.ASMFileInfo.Labels[Label].AddressOrValue;
           return true;
         }
       }
@@ -2101,18 +2101,21 @@ namespace C64Studio
       }
       if ( DocInfo.Project != null )
       {
-        if ( !DocInfo.DeducedDependency.ContainsKey( DocInfo.Project.Settings.CurrentConfig.Name ) )
+        lock ( DocInfo.DeducedDependency )
         {
-          DocInfo.DeducedDependency.Add( DocInfo.Project.Settings.CurrentConfig.Name, new DependencyBuildState() );
-        }
-        foreach ( var deducedDependency in DocInfo.DeducedDependency[DocInfo.Project.Settings.CurrentConfig.Name].BuildState )
-        {
-          ProjectElement elementDependency = DocInfo.Project.GetElementByFilename(deducedDependency.Key);
-          if ( elementDependency == null )
+          if ( !DocInfo.DeducedDependency.ContainsKey( DocInfo.Project.Settings.CurrentConfig.Name ) )
           {
-            return;
+            DocInfo.DeducedDependency.Add( DocInfo.Project.Settings.CurrentConfig.Name, new DependencyBuildState() );
           }
-          MarkAsDirty( elementDependency.DocumentInfo );
+          foreach ( var deducedDependency in DocInfo.DeducedDependency[DocInfo.Project.Settings.CurrentConfig.Name].BuildState )
+          {
+            ProjectElement elementDependency = DocInfo.Project.GetElementByFilename(deducedDependency.Key);
+            if ( elementDependency == null )
+            {
+              return;
+            }
+            MarkAsDirty( elementDependency.DocumentInfo );
+          }
         }
       }
     }
@@ -3501,7 +3504,10 @@ namespace C64Studio
       string settingFilename = SettingsPath();
 
       System.IO.Directory.CreateDirectory( System.IO.Directory.GetParent( settingFilename ).FullName );
-      System.IO.File.WriteAllBytes( settingFilename, SettingsData.Data() );
+      if ( !GR.IO.File.WriteAllBytes( settingFilename, SettingsData ) )
+      {
+        StudioCore.AddToOutput( "Failed to write settings to file" + System.Environment.NewLine );
+      }
 
       CloseSolution();
     }
@@ -3842,6 +3848,7 @@ namespace C64Studio
         return tempSet;
       }
 
+
       tempSet.Add( Doc );
       bool foundElement = true;
       bool addedMainElement = false;
@@ -3862,15 +3869,18 @@ namespace C64Studio
           {
             addedMainElement = true;
           }
-          foreach ( var deducedDependency in doc.DeducedDependency[doc.Project.Settings.CurrentConfig.Name].BuildState.Keys )
+          lock ( doc.DeducedDependency )
           {
-            var element = doc.Project.GetElementByFilename( deducedDependency );
-            if ( element != null )
+            foreach ( var deducedDependency in doc.DeducedDependency[doc.Project.Settings.CurrentConfig.Name].BuildState.Keys )
             {
-              if ( !tempSet.ContainsValue( element.DocumentInfo ) )
+              var element = doc.Project.GetElementByFilename( deducedDependency );
+              if ( element != null )
               {
-                tempSet.Add( element.DocumentInfo );
-                foundElement = true;
+                if ( !tempSet.ContainsValue( element.DocumentInfo ) )
+                {
+                  tempSet.Add( element.DocumentInfo );
+                  foundElement = true;
+                }
               }
             }
           }
@@ -4335,7 +4345,8 @@ namespace C64Studio
             m_Help.NavigateTo( "aay64h64/AAY64/B" + Keyword.ToUpper() + ".HTM" );
             return;
           }
-          else if ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) )
+          else if ( ( Doc.ASMFileInfo.AssemblerSettings != null )
+          &&        ( Doc.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( Keyword.ToUpper() ) ) )
           {
             m_Help.NavigateTo( "asm_macro.html#" + Keyword.Substring( 1 ).ToLower() );
             return;

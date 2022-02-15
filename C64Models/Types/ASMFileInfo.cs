@@ -572,7 +572,7 @@ namespace C64Studio.Types.ASM
       {
         return -1;
       }
-      return Labels[Token].AddressOrValue;
+      return (int)Labels[Token].AddressOrValue;
     }
 
 
@@ -693,7 +693,7 @@ namespace C64Studio.Types.ASM
     {
       StringBuilder   sb = new StringBuilder();
 
-      var  sentLabels = new GR.Collections.Set<int>();
+      var  sentLabels = new GR.Collections.Set<long>();
       foreach ( var token in Labels )
       {
         if ( token.Value.Type == SymbolInfo.Types.LABEL )

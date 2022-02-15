@@ -271,6 +271,25 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestTempLabelLateResolution()
+    {
+      // 100.35 is truncated to 100
+      string      source = @"  * = $1000
+                               lda latelabel
+
+                          latelabel
+                               asl
+                          latelabel = latelabel + 3
+                              !byte 50";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "0010AD03100A32", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestPseudoOpBank()
     {
       string      source = @"!bank 0, $20

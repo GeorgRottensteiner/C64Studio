@@ -310,9 +310,8 @@ namespace C64Studio.Parser
       }
       else
       {
-        int     argV1 = arg1.ToInteger( );
-        int     argV2 = arg2.ToInteger( );
-
+        long    argV1 = arg1.ToInteger();
+        long    argV2 = arg2.ToInteger();
         long    resultValue = Math.Min( argV1, argV2 );
 
         resultToken.Type = TokenInfo.TokenType.LITERAL_NUMBER;
@@ -352,9 +351,8 @@ namespace C64Studio.Parser
       }
       else
       {
-        int     argV1 = arg1.ToInteger( );
-        int     argV2 = arg2.ToInteger( );
-
+        long    argV1 = arg1.ToInteger();
+        long    argV2 = arg2.ToInteger();
         long    resultValue = Math.Max( argV1, argV2 );
 
         resultToken.Type = TokenInfo.TokenType.LITERAL_NUMBER;
@@ -904,7 +902,7 @@ namespace C64Studio.Parser
 
 
 
-    public void AddPreprocessorConstant( string Name, int Value, int SourceLine )
+    public void AddPreprocessorConstant( string Name, long Value, int SourceLine )
     {
       if ( !ASMFileInfo.Labels.ContainsKey( Name ) )
       {
@@ -960,7 +958,7 @@ namespace C64Studio.Parser
 
 
 
-    public bool ParseLiteralValue( string Value, out bool Failed, out int Result, out int NumGivenBytes )
+    public bool ParseLiteralValue( string Value, out bool Failed, out long Result, out int NumGivenBytes )
     {
       Result = -1;
       NumGivenBytes = 0;
@@ -970,7 +968,7 @@ namespace C64Studio.Parser
       if ( ( Value.StartsWith( "$" ) )
       ||   ( Value.StartsWith( "&" ) ) )
       {
-        if ( int.TryParse( Value.Substring( 1 ), System.Globalization.NumberStyles.HexNumber, null, out Result ) )
+        if ( long.TryParse( Value.Substring( 1 ), System.Globalization.NumberStyles.HexNumber, null, out Result ) )
         {
           NumGivenBytes = ( Value.Length - 1 + 1 ) / 2;
           return true;
@@ -980,7 +978,7 @@ namespace C64Studio.Parser
       }
       else if ( Value.StartsWith( "0x" ) )
       {
-        if ( int.TryParse( Value.Substring( 2 ), System.Globalization.NumberStyles.HexNumber, null, out Result ) )
+        if ( long.TryParse( Value.Substring( 2 ), System.Globalization.NumberStyles.HexNumber, null, out Result ) )
         {
           NumGivenBytes = ( Value.Length - 2 + 1 ) / 2;
           return true;
@@ -1064,8 +1062,7 @@ namespace C64Studio.Parser
         return true;
       }
 
-      int resultValue = 0;
-      if ( int.TryParse( Value, out resultValue ) )
+      if ( long.TryParse( Value, out long resultValue ) )
       {
         Result = resultValue;
         if ( Result > 255 )
@@ -1094,7 +1091,7 @@ namespace C64Studio.Parser
         return true;
       }
 
-      int   dummyInt = -1;
+      long   dummyInt = -1;
 
       if ( !ParseLiteralValue( Value, out Failed, out dummyInt, out NumGivenBytes ) )
       {
@@ -1147,7 +1144,7 @@ namespace C64Studio.Parser
       ClearErrorInfo();
       bool failed   = false;
 
-      if ( ParseLiteralValue( Value, out failed, out int IntegerValue, out NumGivenBytes ) )
+      if ( ParseLiteralValue( Value, out failed, out long IntegerValue, out NumGivenBytes ) )
       {
         ResultingSymbol = CreateIntegerSymbol( IntegerValue, out NumGivenBytes );
         return true;
@@ -1173,6 +1170,10 @@ namespace C64Studio.Parser
       }
 
       // check for temp labels
+      bool    firstTempLabelFound = false;
+      int     firstTempLabelLineIndex = 999999999;
+      TemporaryLabelInfo    tempLabelInfo = null;
+
       foreach ( Types.ASM.TemporaryLabelInfo labelInfo in ASMFileInfo.TempLabelInfo )
       {
         if ( ( LineIndex >= labelInfo.LineIndex )
@@ -1183,7 +1184,24 @@ namespace C64Studio.Parser
           ResultingSymbol = labelInfo.Symbol;
           return true;
         }
+        if ( ( labelInfo.Name == Value )
+        &&   ( labelInfo.LineIndex < firstTempLabelLineIndex ) )
+        {
+          firstTempLabelLineIndex = labelInfo.LineIndex;
+          firstTempLabelFound = true;
+          tempLabelInfo = labelInfo;
+        }
       }
+
+      if ( firstTempLabelFound )
+      {
+        // we had a temp label, but accessed it before the first definition, fall back to the first occurrence
+        ResultingSymbol = tempLabelInfo.Symbol;
+        return true;
+      }
+
+
+
       // parse labels
       if ( !ASMFileInfo.Labels.ContainsKey( Value ) )
       {
@@ -1250,7 +1268,7 @@ namespace C64Studio.Parser
 
 
 
-    private SymbolInfo CreateIntegerSymbol( int Value )
+    private SymbolInfo CreateIntegerSymbol( long Value )
     {
       int     dummy;
 
@@ -1259,7 +1277,7 @@ namespace C64Studio.Parser
 
 
 
-    private SymbolInfo CreateIntegerSymbol( int Value, out int NumBytesGiven )
+    private SymbolInfo CreateIntegerSymbol( long Value, out int NumBytesGiven )
     {
       var symbol = new SymbolInfo();
 
@@ -1311,7 +1329,7 @@ namespace C64Studio.Parser
 
 
 
-    private bool EvaluateLabel( int LineIndex, string LabelContent, GR.Collections.Map<byte, byte> TextCodeMapping, out int Result )
+    private bool EvaluateLabel( int LineIndex, string LabelContent, GR.Collections.Map<byte, byte> TextCodeMapping, out long Result )
     {
       Result = 0;
       ClearErrorInfo();
@@ -1515,7 +1533,7 @@ namespace C64Studio.Parser
       }
       else if ( opText == ">>" )
       {
-        Symbol = CreateIntegerSymbol( arg1 >> arg2 );
+        Symbol = CreateIntegerSymbol( arg1 >> (int)arg2 );
         return true;
       }
       else if ( opText == "^" )
@@ -1525,7 +1543,7 @@ namespace C64Studio.Parser
       }
       else if ( opText == "<<" )
       {
-        Symbol = CreateIntegerSymbol( arg1 << arg2 );
+        Symbol = CreateIntegerSymbol( arg1 << (int)arg2 );
         return true;
       }
       else if ( opText == "=" )
@@ -1730,10 +1748,13 @@ namespace C64Studio.Parser
             {
               var symbol = new SymbolInfo();
 
-              ParseLiteralValue( Tokens[StartIndex].Content, out bool failed, out symbol.AddressOrValue, out NumBytesGiven );
+              if ( !ParseLiteralValue( Tokens[StartIndex].Content, out bool failed, out symbol.AddressOrValue, out NumBytesGiven ) )
+              {
+                return false;
+              }
               symbol.Type = SymbolInfo.Types.CONSTANT_1;
 
-              int result = symbol.AddressOrValue;
+              long result = symbol.AddressOrValue;
               result &= 0xffff;
               if ( result > 255 )
               {
@@ -2042,7 +2063,7 @@ namespace C64Studio.Parser
                   {
                     NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
 
-                    int resultValue = ( value.ToInteger() & 0x00ff );
+                    long resultValue = ( value.ToInteger() & 0x00ff );
 
                     subTokenRange.RemoveRange( highestPrecedenceTokenIndex, 2 );
 
@@ -2063,7 +2084,7 @@ namespace C64Studio.Parser
                   {
                     NumBytesGiven = Math.Max( numBytesGiven, NumBytesGiven );
 
-                    int resultValue = ( value.ToInteger() & 0xff00 ) >> 8;
+                    long resultValue = ( value.ToInteger() & 0xff00 ) >> 8;
                     subTokenRange.RemoveRange( highestPrecedenceTokenIndex, 2 );
 
                     Types.TokenInfo tokenResult = new Types.TokenInfo();
@@ -2128,7 +2149,7 @@ namespace C64Studio.Parser
                 return false;
               }
 
-              int     negatedResult = -value.AddressOrValue;
+              long     negatedResult = -value.AddressOrValue;
 
               int     startPos = subTokenRange[highestPrecedenceTokenIndex + 1].StartPos;
               subTokenRange.RemoveRange( highestPrecedenceTokenIndex + 1, 2 );
@@ -2508,8 +2529,7 @@ namespace C64Studio.Parser
         redo:;
         foreach ( string label in ASMFileInfo.UnparsedLabels.Keys )
         {
-          //dh.Log( "Unparsed label:" + label + ", " + m_UnparsedLabels[label].ToEval );
-          int     result = -1;
+          long     result = -1;
 
           // set program counter
           int     curLine = ASMFileInfo.UnparsedLabels[label].LineIndex;
@@ -2713,8 +2733,8 @@ namespace C64Studio.Parser
                       return false;
                     }
 
-                    int     count = -1;
-                    int     value = -1;
+                    long    count = -1;
+                    long    value = -1;
                     int     dummyBytesGiven;
 
                     if ( !EvaluateTokens( lineIndex, lineInfo.NeededParsedExpression, 0, tokenCommaIndex, lineInfo.LineCodeMapping, out SymbolInfo symbol , out dummyBytesGiven ) )
@@ -2822,7 +2842,7 @@ namespace C64Studio.Parser
             }
             else
             {
-              int     addressValue = 0;
+              long     addressValue = 0;
               if ( value != null )
               {
                 addressValue = value.ToInteger();
@@ -2896,8 +2916,8 @@ namespace C64Studio.Parser
                     }
                     else
                     {
-                      int     zeroPageValue = zeroPageValueSymbol.ToInteger( );
-                      int     relativeValue = relativeValueSymbol.ToInteger( );
+                      long  zeroPageValue = zeroPageValueSymbol.ToInteger();
+                      long  relativeValue = relativeValueSymbol.ToInteger();
                       // zeropage numerand
                       if ( !ValidByteValue( zeroPageValue ) )
                       {
@@ -2914,7 +2934,7 @@ namespace C64Studio.Parser
                       }
 
                       // relative label
-                      int delta = relativeValue - lineInfo.AddressStart - 3;
+                      long delta = relativeValue - lineInfo.AddressStart - 3;
                       if ( ( delta < -128 )
                       ||   ( delta > 127 ) )
                       {
@@ -2958,7 +2978,7 @@ namespace C64Studio.Parser
                     else
                     {
                       // zeropage numerand
-                      int zeroPageValue = zeroPageValueSymbol.ToInteger( );
+                      long zeroPageValue = zeroPageValueSymbol.ToInteger();
                       if ( !ValidByteValue( zeroPageValue ) )
                       {
                         AddError( lineIndex,
@@ -2977,7 +2997,7 @@ namespace C64Studio.Parser
                 }
                 else if ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
                 {
-                  int delta = addressValue - lineInfo.AddressStart - 2;
+                  long delta = addressValue - lineInfo.AddressStart - 2;
                   if ( ( delta < -128 )
                   ||   ( delta > 127 ) )
                   {
@@ -2992,7 +3012,7 @@ namespace C64Studio.Parser
                 }
                 else if ( lineInfo.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE_16 )
                 {
-                  int delta = addressValue - lineInfo.AddressStart - 2;
+                  long delta = addressValue - lineInfo.AddressStart - 2;
                   if ( ( delta < -32768 )
                   ||   ( delta > 32767 ) )
                   {
@@ -3138,7 +3158,7 @@ namespace C64Studio.Parser
               }
               else
               {
-                int   byteValue = byteValueSymbol.ToInteger();
+                long   byteValue = byteValueSymbol.ToInteger();
                 switch ( Type )
                 {
                   case C64Studio.Types.MacroInfo.PseudoOpType.LOW_BYTE:
@@ -3222,7 +3242,7 @@ namespace C64Studio.Parser
           }
           else
           {
-            int byteValue = byteValueSymbol.ToInteger( );
+            long byteValue = byteValueSymbol.ToInteger();
             switch ( Type )
             {
               case C64Studio.Types.MacroInfo.PseudoOpType.LOW_BYTE:
@@ -3281,7 +3301,7 @@ namespace C64Studio.Parser
 
 
 
-    private bool ValidByteValue( int ByteValue )
+    private bool ValidByteValue( long ByteValue )
     {
       if ( ( !m_CompileConfig.AutoTruncateLiteralValues )
       &&   ( ( ByteValue < -128 )
@@ -3424,7 +3444,7 @@ namespace C64Studio.Parser
           return ParseLineResult.ERROR_ABORT;
         }
 
-        int result = resultSymbol.ToInteger( );
+        long result = resultSymbol.ToInteger();
 
         ++repeatUntil.NumRepeats;
 
@@ -3576,13 +3596,15 @@ namespace C64Studio.Parser
         }
 
         // label exists only after !for
+        /*
         var   tempLabelSymbol = CreateIntegerSymbol( lastLoop.CurrentValue );
         tempLabelSymbol.Type = SymbolInfo.Types.TEMP_LABEL;
+        tempLabelSymbol.AddressOrValue = lastLoop.CurrentValue;
         AddTempLabel( lastLoop.Label, 
                       lineIndex - lastLoop.LoopLength, 
                       lastLoop.LoopLength,
                       tempLabelSymbol, 
-                      "" );
+                      "" );*/
 
         bool  endReached = false;
 
@@ -3621,7 +3643,15 @@ namespace C64Studio.Parser
           lastLoop.CurrentValue += lastLoop.StepValue;
 
           // restart loop
-          SetLabelValue( lastLoop.Label, lastLoop.CurrentValue );
+          //SetLabelValue( lastLoop.Label, lastLoop.CurrentValue );
+          var tempLabelSymbol = CreateIntegerSymbol( lastLoop.CurrentValue );
+          tempLabelSymbol.Type = SymbolInfo.Types.TEMP_LABEL;
+          tempLabelSymbol.AddressOrValue = lastLoop.CurrentValue;
+          AddTempLabel( lastLoop.Label,
+                        lineIndex,
+                        lastLoop.LoopLength,
+                        tempLabelSymbol,
+                        "" );
 
           int linesToCopy = loopBlockLength;
           int lineLoopEndOffset = 0;
@@ -4144,18 +4174,18 @@ namespace C64Studio.Parser
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR" );
           return false;
         }
-        int   startIndex = 0;
-        int   numChars = 256;
+        int startIndex = 0;
+        int numChars = 256;
 
         if ( ( paramTokens.Count >= 3 )
         &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
         {
-          startIndex = startIndexSymbol.ToInteger();
+          startIndex = (int)startIndexSymbol.ToInteger();
         }
         if ( ( paramTokens.Count >= 4 )
         &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numCharsSymbol ) ) )
         {
-          numChars = numCharsSymbol.ToInteger();
+          numChars = (int)numCharsSymbol.ToInteger();
         }
         try
         {
@@ -4208,13 +4238,13 @@ namespace C64Studio.Parser
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are CHAR, CHARCOLOR, PALETTE or PALETTESWIZZLED." );
           return false;
         }
-        int   startIndex = 0;
-        int   numChars = 256;
+        int startIndex = 0;
+        int numChars = 256;
 
         if ( ( paramTokens.Count >= 3 )
         &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
         {
-          startIndex = startIndexSymbol.ToInteger();
+          startIndex = (int)startIndexSymbol.ToInteger();
         }
         if ( paramTokens.Count >= 4 )
         {
@@ -4223,7 +4253,7 @@ namespace C64Studio.Parser
             AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Failed to evaluate expression " + TokensToExpression( paramTokens[3] ) );
             return false;
           }
-          numChars = numCharsSymbol.ToInteger();
+          numChars = (int)numCharsSymbol.ToInteger();
         }
         Formats.CharsetProject    charProject = new C64Studio.Formats.CharsetProject();
 
@@ -4256,7 +4286,7 @@ namespace C64Studio.Parser
             return false;
           }
 
-          int numColors = numChars;
+          long numColors = numChars;
 
           if ( ( startIndex < 0 )
           ||   ( startIndex >= charProject.Colors.Palette.NumColors ) )
@@ -4275,7 +4305,7 @@ namespace C64Studio.Parser
                   + charProject.Colors.Palette.NumColors + " colors, but we're trying to fetch up to " + ( startIndex + numColors ) );
             return false;
           }
-          dataToInclude = charProject.Colors.Palette.GetExportData( startIndex, numColors, method == "PALETTESWIZZLED" );
+          dataToInclude = charProject.Colors.Palette.GetExportData( (int)startIndex, (int)numColors, method == "PALETTESWIZZLED" );
         }
         else
         {
@@ -4318,17 +4348,17 @@ namespace C64Studio.Parser
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are DATA" );
           return false;
         }
-        int     numBytes = -1;
-        int     startIndex = 0;
+        int   numBytes = -1;
+        int   startIndex = 0;
         if ( ( paramTokens.Count >= 3 )
         &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
         {
-          startIndex = startIndexSymbol.ToInteger();
+          startIndex = (int)startIndexSymbol.ToInteger();
         }
         if ( ( paramTokens.Count >= 4 )
         &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numBytesSymbol ) ) )
         {
-          numBytes = numBytesSymbol.ToInteger();
+          numBytes = (int)numBytesSymbol.ToInteger();
         }
         Formats.ValueTableProject   valueTableProject = new Formats.ValueTableProject();
 
@@ -4400,18 +4430,18 @@ namespace C64Studio.Parser
 
         if ( method == "SPRITE" )
         {
-          int   startIndex = 0;
-          int   numSprites = -1;
+          int startIndex = 0;
+          int numSprites = -1;
 
           if ( ( paramTokens.Count >= 3 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
           {
-            startIndex = startIndexSymbol.ToInteger();
+            startIndex = (int)startIndexSymbol.ToInteger();
           }
           if ( ( paramTokens.Count >= 4 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) ) )
           {
-            numSprites = numSpritesSymbol.ToInteger();
+            numSprites = (int)numSpritesSymbol.ToInteger();
           }
           try
           {
@@ -4454,19 +4484,19 @@ namespace C64Studio.Parser
 
           if ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) )
           {
-            startIndex = startIndexSymbol.ToInteger();
+            startIndex = (int)startIndexSymbol.ToInteger();
           }
           if ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) )
           {
-            numSprites = numSpritesSymbol.ToInteger();
+            numSprites = (int)numSpritesSymbol.ToInteger();
           }
           if ( EvaluateTokens( lineIndex, paramTokens[4], info.LineCodeMapping, out SymbolInfo offsetBytesSymbol ) )
           {
-            offsetBytes = offsetBytesSymbol.ToInteger();
+            offsetBytes = (int)offsetBytesSymbol.ToInteger();
           }
           if ( EvaluateTokens( lineIndex, paramTokens[5], info.LineCodeMapping, out SymbolInfo numBytesSymbol ) )
           {
-            numBytes = numBytesSymbol.ToInteger();
+            numBytes = (int)numBytesSymbol.ToInteger();
           }
 
           try
@@ -4566,19 +4596,18 @@ namespace C64Studio.Parser
           }
 
           int totalNumColors = spriteProject.Colors.Palettes.Count * spriteProject.Colors.Palettes[0].ColorValues.Length;
-
           int startIndex = 0;
           int numColors = totalNumColors;
 
           if ( ( paramTokens.Count >= 3 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
           {
-            startIndex = startIndexSymbol.ToInteger();
+            startIndex = (int)startIndexSymbol.ToInteger();
           }
           if ( ( paramTokens.Count >= 4 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numColorsSymbol ) ) )
           {
-            numColors = numColorsSymbol.ToInteger();
+            numColors = (int)numColorsSymbol.ToInteger();
           }
           if ( ( startIndex < 0 )
           ||   ( startIndex >= totalNumColors ) )
@@ -4623,12 +4652,12 @@ namespace C64Studio.Parser
           if ( ( paramTokens.Count >= 3 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
           {
-            startIndex = startIndexSymbol.ToInteger();
+            startIndex = (int)startIndexSymbol.ToInteger();
           }
           if ( ( paramTokens.Count >= 4 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) ) )
           {
-            numSprites = numSpritesSymbol.ToInteger();
+            numSprites = (int)numSpritesSymbol.ToInteger();
           }
           Formats.SpriteProject   spriteProject = new C64Studio.Formats.SpriteProject();
 
@@ -4729,19 +4758,19 @@ namespace C64Studio.Parser
 
           if ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) )
           {
-            startIndex = startIndexSymbol.ToInteger();
+            startIndex = (int)startIndexSymbol.ToInteger();
           }
           if ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) )
           {
-            numSprites = numSpritesSymbol.ToInteger();
+            numSprites = (int)numSpritesSymbol.ToInteger();
           }
           if ( EvaluateTokens( lineIndex, paramTokens[4], info.LineCodeMapping, out SymbolInfo offsetBytesSymbol ) )
           {
-            offsetBytes = offsetBytesSymbol.ToInteger();
+            offsetBytes = (int)offsetBytesSymbol.ToInteger();
           }
           if ( EvaluateTokens( lineIndex, paramTokens[5], info.LineCodeMapping, out SymbolInfo numBytesSymbol ) )
           {
-            numBytes = numBytesSymbol.ToInteger();
+            numBytes = (int)numBytesSymbol.ToInteger();
           }
 
           Formats.SpriteProject   spriteProject = new C64Studio.Formats.SpriteProject();
@@ -4883,12 +4912,12 @@ namespace C64Studio.Parser
           if ( ( paramTokens.Count >= 3 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
           {
-            startIndex = startIndexSymbol.ToInteger();
+            startIndex = startIndexSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 4 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) ) )
           {
-            numSprites = numSpritesSymbol.ToInteger();
+            numSprites = numSpritesSymbol.ToInt32();
           }
           Formats.SpritePadProject    spriteProject = new Formats.SpritePadProject();
 
@@ -4944,19 +4973,19 @@ namespace C64Studio.Parser
 
           if ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) )
           {
-            startIndex = startIndexSymbol.ToInteger();
+            startIndex = startIndexSymbol.ToInt32();
           }
           if ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numSpritesSymbol ) )
           {
-            numSprites = numSpritesSymbol.ToInteger();
+            numSprites = numSpritesSymbol.ToInt32();
           }
           if ( EvaluateTokens( lineIndex, paramTokens[4], info.LineCodeMapping, out SymbolInfo offsetBytesSymbol ) )
           {
-            offsetBytes = offsetBytesSymbol.ToInteger();
+            offsetBytes = offsetBytesSymbol.ToInt32();
           }
           if ( EvaluateTokens( lineIndex, paramTokens[5], info.LineCodeMapping, out SymbolInfo numBytesSymbol ) )
           {
-            numBytes = numBytesSymbol.ToInteger();
+            numBytes = numBytesSymbol.ToInt32();
           }
 
           Formats.SpritePadProject    spriteProject = new Formats.SpritePadProject();
@@ -5083,12 +5112,12 @@ namespace C64Studio.Parser
           if ( ( paramTokens.Count >= 3 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
           {
-            startIndex = startIndexSymbol.ToInteger();
+            startIndex = startIndexSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 4 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numCharsSymbol ) ) )
           {
-            numChars = numCharsSymbol.ToInteger();
+            numChars = numCharsSymbol.ToInt32();
           }
           if ( ( startIndex < 0 )
           ||   ( startIndex >= screenProject.CharSet.ExportNumCharacters ) )
@@ -5124,12 +5153,12 @@ namespace C64Studio.Parser
           if ( ( paramTokens.Count >= 3 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
           {
-            startIndex = startIndexSymbol.ToInteger();
+            startIndex = startIndexSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 4 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numColorsSymbol ) ) )
           {
-            numColors = numColorsSymbol.ToInteger();
+            numColors = numColorsSymbol.ToInt32();
           }
           if ( ( startIndex < 0 )
           ||   ( startIndex >= screenProject.CharSet.Colors.Palette.NumColors ) )
@@ -5160,22 +5189,22 @@ namespace C64Studio.Parser
           if ( ( paramTokens.Count >= 3 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo xSymbol ) ) )
           {
-            x = xSymbol.ToInteger();
+            x = xSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 4 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo ySymbol ) ) )
           {
-            y = ySymbol.ToInteger();
+            y = ySymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 5 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[4], info.LineCodeMapping, out SymbolInfo wSymbol ) ) )
           {
-            w = wSymbol.ToInteger();
+            w = wSymbol.ToInt32();
           }
           if ( ( paramTokens.Count >= 6 )
           &&   ( EvaluateTokens( lineIndex, paramTokens[5], info.LineCodeMapping, out SymbolInfo hSymbol ) ) )
           {
-            h = hSymbol.ToInteger();
+            h = hSymbol.ToInt32();
           }
 
           if ( ( x < 0 )
@@ -5326,22 +5355,22 @@ namespace C64Studio.Parser
         if ( ( paramTokens.Count >= 3 )
         &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo xSymbol ) ) )
         {
-          x = xSymbol.ToInteger();
+          x = xSymbol.ToInt32();
         }
         if ( ( paramTokens.Count >= 4 )
         &&   ( EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo ySymbol ) ) )
         {
-          y = ySymbol.ToInteger();
+          y = ySymbol.ToInt32();
         }
         if ( ( paramTokens.Count >= 5 )
         &&   ( EvaluateTokens( lineIndex, paramTokens[4], info.LineCodeMapping, out SymbolInfo wSymbol ) ) )
         {
-          w = wSymbol.ToInteger();
+          w = wSymbol.ToInt32();
         }
         if ( ( paramTokens.Count >= 6 )
         && ( EvaluateTokens( lineIndex, paramTokens[5], info.LineCodeMapping, out SymbolInfo hSymbol ) ) )
         {
-          h = hSymbol.ToInteger();
+          h = hSymbol.ToInt32();
         }
         if ( ( x < 0 )
         ||   ( x >= screenProject.ScreenWidth )
@@ -5600,7 +5629,7 @@ namespace C64Studio.Parser
 
         if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info.LineCodeMapping, out SymbolInfo numLoopsSymbol ) )
         {
-          numLoops = numLoopsSymbol.ToInteger();
+          numLoops = numLoopsSymbol.ToInt32();
           bool hadError = false;
           if ( numLoops <= 0 )
           {
@@ -5700,7 +5729,7 @@ namespace C64Studio.Parser
         AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not determine fill count parameter " + TokensToExpression( lineParams[0] ) );
         return ParseLineResult.RETURN_NULL;
       }
-      numBytes = numBytesSymbol.ToInteger();
+      numBytes = numBytesSymbol.ToInt32();
       if ( numBytes < 0 )
       {
         AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro malformed, fill count must be positive or zero" );
@@ -5748,7 +5777,7 @@ namespace C64Studio.Parser
               AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + ":" + TokensToExpression( listParams[i % listParams.Count] ) );
               return ParseLineResult.RETURN_NULL;
             }
-            expressionResult = expressionResultSymbol.ToInteger();
+            expressionResult = expressionResultSymbol.ToInt32();
             if ( !ValidByteValue( expressionResult ) )
             {
               AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Fill expression for byte " + i.ToString() + " out of bounds, resulting in value " + expressionResult );
@@ -5772,7 +5801,7 @@ namespace C64Studio.Parser
               AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Could not evaluate fill expression for byte " + i.ToString() + ":" + TokensToExpression( lineParams[1] ) );
               return ParseLineResult.RETURN_NULL;
             }
-            expressionResult = expressionResultSymbol.ToInteger();
+            expressionResult = expressionResultSymbol.ToInt32();
             if ( !ValidByteValue( expressionResult ) )
             {
               AddError( lineIndex, Types.ErrorCode.E1002_VALUE_OUT_OF_BOUNDS_BYTE, "Fill expression for byte " + i.ToString() + " out of bounds, resulting in value " + expressionResult );
@@ -6072,7 +6101,7 @@ namespace C64Studio.Parser
           }
           return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
         }
-        jumpAddress = jumpAddressSymbol.ToInteger();
+        jumpAddress = jumpAddressSymbol.ToInt32();
         if ( ( jumpAddress < 0 )
         ||   ( jumpAddress >= 65536 ) )
         {
@@ -6102,7 +6131,7 @@ namespace C64Studio.Parser
           }
           return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
         }
-        basicLineNumber = basicLineNumberSymbol.ToInteger();
+        basicLineNumber = basicLineNumberSymbol.ToInt32();
         if ( ( basicLineNumber < 0 )
         ||   ( basicLineNumber > 63999 ) )
         {
@@ -6127,7 +6156,7 @@ namespace C64Studio.Parser
           }
           return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
         }
-        jumpAddress = jumpAddressSymbol.ToInteger();
+        jumpAddress = jumpAddressSymbol.ToInt32();
         if ( ( jumpAddress < 0 )
         ||   ( jumpAddress >= 65536 ) )
         {
@@ -6158,7 +6187,7 @@ namespace C64Studio.Parser
           }
           return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
         }
-        basicLineNumber = basicLineNumberSymbol.ToInteger();
+        basicLineNumber = basicLineNumberSymbol.ToInt32();
         if ( ( basicLineNumber < 0 )
         ||   ( basicLineNumber > 63999 ) )
         {
@@ -6217,7 +6246,7 @@ namespace C64Studio.Parser
           }
           return ParseLineResult.OK_PARSE_EXPRESSION_LATER;
         }
-        jumpAddress = jumpAddressSymbol.ToInteger();
+        jumpAddress = jumpAddressSymbol.ToInt32();
         if ( ( jumpAddress < 0 )
         ||   ( jumpAddress >= 65536 ) )
         {
@@ -6403,7 +6432,7 @@ namespace C64Studio.Parser
             AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
             return ParseLineResult.RETURN_NULL;
           }          
-          tokenParams.Add( value.ToInteger() );
+          tokenParams.Add( value.ToInt32() );
           expressionStartIndex = tokenIndex + 1;
         }
         ++tokenIndex;
@@ -6417,7 +6446,7 @@ namespace C64Studio.Parser
               AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate " + TokensToExpression( lineTokenInfos, expressionStartIndex, tokenIndex - expressionStartIndex ) );
               return ParseLineResult.RETURN_NULL;
             }
-            tokenParams.Add( value.ToInteger() );
+            tokenParams.Add( value.ToInt32() );
           }
         }
       }
@@ -6550,7 +6579,7 @@ namespace C64Studio.Parser
               }
               else
               {
-                wordValue = wordValueSymbol.ToInteger();
+                wordValue = wordValueSymbol.ToInt32();
                 if ( !ValidWordValue( wordValue ) )
                 {
                   AddError( info.LineIndex,
@@ -6643,7 +6672,7 @@ namespace C64Studio.Parser
           }
           else
           {
-            wordValue = wordValueSymbol.ToInteger();
+            wordValue = wordValueSymbol.ToInt32();
             if ( !ValidWordValue( wordValue ) )
             {
               AddError( info.LineIndex,
@@ -6782,7 +6811,7 @@ namespace C64Studio.Parser
               }
               else
               {
-                wordValue = wordValueSymbol.ToInteger();
+                wordValue = wordValueSymbol.ToInt32();
                 if ( !ValidDWordValue( wordValue ) )
                 {
                   AddError( info.LineIndex,
@@ -6875,7 +6904,7 @@ namespace C64Studio.Parser
           }
           else
           {
-            wordValue = wordValueSymbol.ToInteger();
+            wordValue = wordValueSymbol.ToInt32();
             if ( !ValidDWordValue( wordValue ) )
             {
               AddError( info.LineIndex,
@@ -7227,11 +7256,11 @@ namespace C64Studio.Parser
       }
       if ( fileSizeValid )
       {
-        fileSize = fileSizeSymbol.ToInteger();
+        fileSize = fileSizeSymbol.ToInt32();
       }
       if ( fileSkipValid )
       {
-        fileSkip = fileSkipSymbol.ToInteger();
+        fileSkip = fileSkipSymbol.ToInt32();
       }
       // special case, allow 0 length as all bytes
       if ( ( fileSizeValid )
@@ -8051,7 +8080,7 @@ namespace C64Studio.Parser
                   stackScopes.RemoveAt( stackScopes.Count - 1 );
 
                   // start new block
-                  int defineResult = -1;
+                  long defineResult = -1;
 
                   Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                   scope.StartIndex = lineIndex;
@@ -8330,7 +8359,7 @@ namespace C64Studio.Parser
 
               if ( EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping, out SymbolInfo byteValueSymbol ) )
               {
-                byteValue = byteValueSymbol.ToInteger();
+                byteValue = byteValueSymbol.ToInt32();
                 if ( info.Opcode.Addressing == Tiny64.Opcode.AddressingType.RELATIVE )
                 {
                   int delta = byteValue - info.AddressStart - 2;
@@ -8435,8 +8464,8 @@ namespace C64Studio.Parser
                   }
                   else
                   {
-                    zeroPageValue = zeroPageValueSymbol.ToInteger();
-                    relativeValue = relativeValueSymbol.ToInteger();
+                    zeroPageValue = zeroPageValueSymbol.ToInt32();
+                    relativeValue = relativeValueSymbol.ToInt32();
                     // zeropage numerand
                     if ( !ValidByteValue( zeroPageValue ) )
                     {
@@ -8470,7 +8499,7 @@ namespace C64Studio.Parser
               }
               else if ( EvaluateTokens( lineIndex, lineTokenInfos, startIndex, countTokens, textCodeMapping, out SymbolInfo byteValueSymbol ) )
               {
-                byteValue = byteValueSymbol.ToInteger();
+                byteValue = byteValueSymbol.ToInt32();
                 if ( ( info.Opcode.ByteValue == 0x6C )
                 &&   ( m_Processor.Name == "6510" )
                 &&   ( ( byteValue & 0xff ) == 0xff ) )
@@ -9311,6 +9340,7 @@ namespace C64Studio.Parser
 
                 Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
+
                 if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo defineResultSymbol ) )
                 {
                   AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + expressionCheck );
@@ -9436,8 +9466,8 @@ namespace C64Studio.Parser
                 }
                 else
                 {
-                  number = numberSymbol.ToInteger();
-                  size = sizeSymbol.ToInteger();
+                  number = numberSymbol.ToInt32();
+                  size = sizeSymbol.ToInt32();
                   if ( ASMFileInfo.Banks.Count > 0 )
                   {
                     // fill from previous bank
@@ -9522,7 +9552,7 @@ namespace C64Studio.Parser
                     HadFatalError = true;
                     return Lines;
                   }
-                  tokenParams.Add( value.ToInteger() );
+                  tokenParams.Add( value.ToInt32() );
                   expressionStartIndex = tokenIndex + 1;
                 }
                 ++tokenIndex;
@@ -9537,7 +9567,7 @@ namespace C64Studio.Parser
                       HadFatalError = true;
                       return Lines;
                     }
-                    tokenParams.Add( value.ToInteger() );
+                    tokenParams.Add( value.ToInt32() );
                   }
                 }
               }
@@ -9990,8 +10020,8 @@ namespace C64Studio.Parser
                 HadFatalError = true;
                 return Lines;
               }
-              newStepPos = newStepPosSymbol.ToInteger();
-              newPseudoPos = newPseudoPosSymbol.ToInteger();
+              newStepPos = newStepPosSymbol.ToInt32();
+              newPseudoPos = newPseudoPosSymbol.ToInt32();
             }
             else
             {
@@ -10001,7 +10031,7 @@ namespace C64Studio.Parser
                 HadFatalError = true;
                 return Lines;
               }
-              newStepPos = newStepPosSymbol.ToInteger();
+              newStepPos = newStepPosSymbol.ToInt32();
             }
             programStepPos = newStepPos;
             m_CompileCurrentAddress = programStepPos;
@@ -10545,7 +10575,7 @@ namespace C64Studio.Parser
           AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate * position value", lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
           return ParseLineResult.ERROR_ABORT;
         }
-        programStepPos = newStepPosSymbol.ToInteger();
+        programStepPos = newStepPosSymbol.ToInt32();
         m_CompileCurrentAddress = programStepPos;
         trueCompileCurrentAddress = programStepPos;
 
@@ -10980,7 +11010,7 @@ namespace C64Studio.Parser
       {
         return ParseLineResult.ERROR_ABORT;
       }
-      int numRepeats = numRepeatsSymbol.ToInteger( );
+      int numRepeats = numRepeatsSymbol.ToInt32();
       if ( ( numRepeats < 0 )
       ||   ( numRepeats > 99999 ) )
       {
@@ -11391,7 +11421,7 @@ namespace C64Studio.Parser
                   lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
         return ParseLineResult.RETURN_NULL;
       }
-      info.PseudoPCOffset = pseudoStepPos.ToInteger();
+      info.PseudoPCOffset = pseudoStepPos.ToInt32();
       return ParseLineResult.OK;
     }
 
@@ -11462,7 +11492,7 @@ namespace C64Studio.Parser
             }
             else
             {
-              stepValue = stepValueSymbol.ToInteger();
+              stepValue = stepValueSymbol.ToInt32();
               if ( stepValue == 0 )
               {
                 AddError( lineIndex,
@@ -11503,8 +11533,8 @@ namespace C64Studio.Parser
             }
             else
             {
-              startValue = startValueSymbol.ToInteger();
-              endValue = endValueSymbol.ToInteger();
+              startValue = startValueSymbol.ToInt32();
+              endValue = endValueSymbol.ToInt32();
               if ( ( stepValue < 0 )
               &&   ( endValue >= startValue ) )
               {
@@ -11544,7 +11574,9 @@ namespace C64Studio.Parser
               scope.StartIndex = lineIndex;
               stackScopes.Add( scope );
 
-              AddLabel( loop.Label, loop.StartValue, lineIndex + 1, zoneName, lineTokenInfos[1].StartPos, lineTokenInfos[1].Length );
+              AddTempLabel( loop.Label, lineIndex + 1, -1, CreateIntegerSymbol( startValue ), "" );
+
+              //AddLabel( loop.Label, loop.StartValue, lineIndex + 1, zoneName, lineTokenInfos[1].StartPos, lineTokenInfos[1].Length );
               intermediateLineOffset = 0;
 
               //Debug.Log( "add for label for " + loop.Label );
@@ -14724,7 +14756,7 @@ namespace C64Studio.Parser
           &&   ( IsTokenLabel( result[i + 1].Type ) ) )
           {
             // collapse
-            if ( EvaluateLabel( -1, result[i + 1].Content, TextCodeMapping, out int labelValue ) )
+            if ( EvaluateLabel( -1, result[i + 1].Content, TextCodeMapping, out long labelValue ) )
             {
               result[i - 1].Content = result[i - 1].Content.Substring( 0, result[i - 1].Length - 1 ) + labelValue.ToString();
               result[i - 1].Length  = result[i - 1].Content.Length;
@@ -14746,7 +14778,7 @@ namespace C64Studio.Parser
           &&   ( IsTokenLabel( result[i + 2].Type ) ) )
           {
             // collapse
-            if ( EvaluateLabel( -1, result[i + 2].Content, TextCodeMapping, out int labelValue ) )
+            if ( EvaluateLabel( -1, result[i + 2].Content, TextCodeMapping, out long labelValue ) )
             {
               result[i - 1].Content = result[i - 1].Content + labelValue.ToString();
               result[i - 1].Length  = result[i - 1].Content.Length;
@@ -14972,7 +15004,7 @@ namespace C64Studio.Parser
           }
 
 
-          int value = -1;
+          long value = -1;
           int numGivenBytes = 0;
 
           if ( ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
@@ -15080,7 +15112,7 @@ namespace C64Studio.Parser
           }
           if ( extraTokens.Count > 0 )
           {
-            int     expressionResult = -1;
+            long     expressionResult = -1;
             if ( ( m_AssemblerSettings.GreaterOrLessThanAtBeginningAffectFullExpression )
             &&   ( ( extraTokens[0].Content == "<" )
             ||     ( extraTokens[0].Content == ">" ) ) )

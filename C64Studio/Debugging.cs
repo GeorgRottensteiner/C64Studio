@@ -474,7 +474,7 @@ namespace C64Studio
               var address = ASMFileInfo.AddressFromToken( breakPoint.AddressSource );
               if ( address != -1 )
               {
-                breakPoint.Address = address;
+                breakPoint.Address = (int)address;
 
                 Core.MainForm.Document_DocumentEvent( new BaseDocument.DocEvent( BaseDocument.DocEvent.Type.BREAKPOINT_UPDATED, breakPoint ) );
               }
@@ -647,7 +647,7 @@ namespace C64Studio
           Core.AddToOutput( "Failed to evaluate " + virtualBP.Expression + System.Environment.NewLine );
           continue;
         }
-        result = resultSymbol.ToInteger();
+        result = resultSymbol.ToInt32();
         if ( ( result < 0 )
         ||   ( result >= 65536 ) )
         {
