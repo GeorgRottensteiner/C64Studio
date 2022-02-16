@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
+// info from http://www.zimmers.net/cbmpics/cbm/c64/vic-ii.txt
 
 namespace Tiny64
 {
@@ -14,8 +15,11 @@ namespace Tiny64
       RASTER            = 0x12,   // 18| $d012 |                 RASTER                | Raster counter
       CONTROL_2         = 0x16,   // 22| $d016 |  - |  - | RES| MCM|CSEL|    XSCROLL   | Control register 2
       MEMORY_CONTROL    = 0x18,   // 24| $d018 |VM13|VM12|VM11|VM10|CB13|CB12|CB11|  - | Memory pointers
+      IRQ_FLAGS         = 0x19,   // 25| $d019 | IRQ|  - |  - |  - | ILP|IMMC|IMBC|IRST| Interrupt register
+      IRQ_MASK          = 0x1a,   // 26| $d01a |  - |  - |  - |  - | ELP|EMMC|EMBC|ERST| Interrupt enabled
       BORDER_COLOR      = 0x20,   // 32
       BACKGROUND_COLOR  = 0x21
+
     };
 
     enum GraphicMode
@@ -80,6 +84,8 @@ namespace Tiny64
     int           VMLIRead = 0;
     int           VMLIWrite = 0;
     //int           XPos = 0;
+    byte          IRQFlag = 0;
+    byte          IRQMask = 0;
 
     GraphicMode   CurrentMode = GraphicMode.CHAR_HIRES;
     bool          IdleState = false;
@@ -209,6 +215,18 @@ namespace Tiny64
       VMLIWrite         = 0;
       MemoryBank        = 3;
       IdleState         = true;
+    }
+
+
+
+    void TriggerRasterIRQ()
+    {
+      IRQFlag |= 0x01;
+      if ( ( IRQMask & 0x01 ) != 0 )
+      {
+        IRQFlag |= 0x80;
+        Machine.RaiseIRQ( Machine.IRQSource.VIC );
+      }
     }
 
 
@@ -546,6 +564,45 @@ namespace Tiny64
             CurrentMode = DetermineGraphicMode();
             break;
           case Register.MEMORY_CONTROL:
+            break;
+          case Register.RASTER:
+            {
+              // Raster counter
+              ushort newIRQRasterPos = (ushort)( ( IRQRasterLinePos & 0xff00) | Value );
+              if ( ( IRQRasterLinePos != newIRQRasterPos )
+              &&   ( RasterLinePos == newIRQRasterPos ) )
+              {
+                TriggerRasterIRQ();
+              }
+              IRQRasterLinePos = newIRQRasterPos;
+            }
+            break;
+          case Register.IRQ_MASK:
+            IRQMask = (byte)( Value & 0x0f );
+            if ( ( IRQFlag & IRQMask ) != 0 )
+            { 
+              // Trigger interrupt if pending and now allowed
+              IRQFlag |= 0x80;
+              Machine.RaiseIRQ( Machine.IRQSource.VIC );
+            }
+            else
+            {
+              IRQFlag &= 0x7f;
+              Machine.LowerIRQ( Machine.IRQSource.VIC );
+            }
+            break;
+          case Register.IRQ_FLAGS:
+            IRQFlag = (byte)( IRQFlag & ( ~Value & 0x0f ) );
+            if ( ( IRQFlag & IRQMask ) != 0 )
+            {
+              // Set master bit if allowed interrupt still pending
+              IRQFlag |= 0x80;
+            }
+            else
+            {
+              // Else clear interrupt
+              Machine.LowerIRQ( Machine.IRQSource.VIC );
+            }
             break;
         }
         //Debug.Log( "VIC 0xd0" + Address.ToString( "X2" ) + "=" + Value.ToString( "X2" ) );

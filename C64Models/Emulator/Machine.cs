@@ -275,10 +275,7 @@ namespace Tiny64
         }
         else if ( IRQRaised )
         {
-          // really, do it like that?
-          CPU.FlagIRQ = true;
-
-          FullDebug = true;
+          //FullDebug = true;
 
           // push PC
           PushStack( (byte)( CPU.PC >> 8 ));
@@ -286,9 +283,12 @@ namespace Tiny64
           // push state
           PushStack( CPU.Flags );
 
+          // really, do it like that?
+          CPU.FlagIRQ = true;
+
           ushort  jumpAddress = (ushort)( Memory.ReadByteDirect( 0xfffe ) | ( Memory.ReadByteDirect( 0xffff ) << 8 ) );
 
-          Debug.Log( "Enter IRQ at " + TotalCycles + " at address " + CPU.PC.ToString( "X4" ) + ", IRQ at " + jumpAddress.ToString( "X4" ) );
+          //Debug.Log( "Enter IRQ at " + TotalCycles + " at address " + CPU.PC.ToString( "X4" ) + ", IRQ at " + jumpAddress.ToString( "X4" ) );
 
           /*
           for ( int i = 0x1f0; i <= 0x1ff; ++i )
@@ -328,7 +328,7 @@ namespace Tiny64
 
       if ( FullDebug )
       {
-        //Debug.Log( $"Run {opCode.ToString( "X2" )} at {CPU.PC.ToString( "X4" )}" );
+        Debug.Log( $"Run {opCode.ToString( "X2" )}/{CPU.OpcodeByValue[opCode].Mnemonic} at {CPU.PC.ToString( "X4" )}" );
       }
 
       //Debug.Log( $"Exec {CPU.PC.ToString( "X4" )} A:{CPU.Accu.ToString( "X2" )} X:{CPU.X.ToString( "X2" )} Y:{CPU.Y.ToString( "X2" )} P:{CPU.Flags.ToString( "X2" )}" );      
@@ -599,6 +599,9 @@ namespace Tiny64
             ushort  address = (ushort)( lo + ( hi << 8 ) );
 
             CPU.PC = address;
+
+            FullDebug = false;
+            //Debug.Log( "Leave IRQ, return to " + address.ToString( "X" ) );
           }
           return 6;
         case 0x45:
