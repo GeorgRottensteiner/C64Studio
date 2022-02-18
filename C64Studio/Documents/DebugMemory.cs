@@ -663,6 +663,7 @@ namespace C64Studio
       document.Core = Core;
       document.Text = "Memory View";
       document.Load();
+      document.RefreshDisplayOptions();
       document.Show( Core.MainForm.panelMain );
     }
 
