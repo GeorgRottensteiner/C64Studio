@@ -649,10 +649,16 @@ namespace Be.Windows.Forms
 				return true;
 			}
 
-			#endregion
+      protected virtual bool PreProcessWmKeyDown_ControlA( ref Message m )
+      {
+        _hexBox.SelectAll();
+        return true;
+      }
 
-			#region PreProcessWmChar methods
-			public virtual bool PreProcessWmChar(ref Message m)
+      #endregion
+
+      #region PreProcessWmChar methods
+      public virtual bool PreProcessWmChar(ref Message m)
 			{
 				if (Control.ModifierKeys == Keys.Control)
 				{
@@ -810,7 +816,8 @@ namespace Be.Windows.Forms
 						_messageHandlers.Add(Keys.C | Keys.Control, new MessageDelegate(PreProcessWmKeyDown_ControlC)); // copy 
 						_messageHandlers.Add(Keys.X | Keys.Control, new MessageDelegate(PreProcessWmKeyDown_ControlX)); // cut
 						_messageHandlers.Add(Keys.V | Keys.Control, new MessageDelegate(PreProcessWmKeyDown_ControlV)); // paste
-					}
+            _messageHandlers.Add( Keys.A | Keys.Control, new MessageDelegate( PreProcessWmKeyDown_ControlA ) ); // paste
+          }
 					return _messageHandlers;
 				}
 			}
