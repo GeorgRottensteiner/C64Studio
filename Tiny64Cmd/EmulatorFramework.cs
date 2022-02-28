@@ -16,7 +16,11 @@ namespace Tiny64Cmd
 
     public int Run()
     {
-      m_Emulator.AddBreakpoint( 0xA47D, false, false, true );
+      m_Emulator.State = EmulatorState.RUNNING;
+      //m_Emulator.AddBreakpoint( 0xA47D, false, false, true );
+
+      //m_Emulator.AddBreakpoint( 0xa483, false, false, true );
+      //m_Emulator.AddBreakpoint( 0xb824, false, false, true );
 
       while ( m_EmulatorIsRunning )
       {

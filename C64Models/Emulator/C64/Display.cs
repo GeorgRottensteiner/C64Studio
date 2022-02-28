@@ -18,6 +18,9 @@ namespace Tiny64
 		private BitmapData _bitmapData = null;
 		private uint*       _bitmapPtr;
 
+    private volatile bool     _DisplayWasUpdated = true;
+
+
 		// PAL      size = 403 * 312
 		// NTSC#1   size = 411 * 262
 		// NTSC#2   size = 418 * 263
@@ -78,14 +81,21 @@ namespace Tiny64
 
 		public unsafe void Flush()
 		{
-			_TargetControl.BeginInvoke( new DrawDelegate( DrawAsync ), _Screen );
+			_TargetControl?.BeginInvoke( new DrawDelegate( DrawAsync ), _Screen );
 		}
 
 
 
 		private void DrawAsync( Bitmap bmp )
 		{
-			_TargetControl.Invoke( new DrawDelegate( Draw ), bmp );
+      if ( _TargetControl.Visible )
+      {
+        if ( _DisplayWasUpdated )
+        {
+          _DisplayWasUpdated = false;
+          _TargetControl.Invoke( new DrawDelegate( Draw ), bmp );
+        }
+      }
 		}
 
 
@@ -94,7 +104,9 @@ namespace Tiny64
 
 		private void Draw( Bitmap bmp )
 		{
-			Graphics g = _TargetControl.CreateGraphics();
+      _DisplayWasUpdated = true;
+
+      Graphics g = _TargetControl.CreateGraphics();
 			g.DrawImage( bmp, 0, 0 );
 
 			//g.FillRectangle( _clearBrush, 0, 400, 50, 50 );

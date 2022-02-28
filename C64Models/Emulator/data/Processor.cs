@@ -14,7 +14,7 @@ namespace Tiny64
     public byte           Accu = 0;
     public byte           X = 0;
     public byte           Y = 0;
-    public byte           Flags = 0x00;
+    public byte           Flags = 0;
 
     public ushort         PC = 0;
     public byte           StackPointer = 0xff;
@@ -151,12 +151,13 @@ namespace Tiny64
     }
 
 
+
     internal void Initialize()
     {
       Accu          = 0;
       X             = 0;
       Y             = 0;
-      Flags         = 0;    // break is set
+      Flags         = 0;
       PC            = 0;
       StackPointer  = 0xff;
     }

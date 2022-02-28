@@ -47,8 +47,6 @@ namespace Tiny64
 
     protected Machine             Machine = null;
 
-    protected Machine.IRQSource   CPUIRQSource;
-
 
 
     protected bool TimerAActive
@@ -136,10 +134,9 @@ namespace Tiny64
 
 
 
-    public CIA( Machine Machine, Machine.IRQSource Source )
+    public CIA( Machine Machine )
     {
       this.Machine  = Machine;
-      CPUIRQSource  = Source;
     }
 
 
@@ -147,6 +144,41 @@ namespace Tiny64
     public void Init()
     {
       Registers = new byte[16];
+    }
+
+
+
+    public virtual void Reset()
+    {
+      Registers[Register.PRA_DATA_PORT_A] = 0;
+      Registers[Register.PRB_DATA_PORT_B] = 0;
+      Registers[Register.DDRA_DATA_DIR_PORT_A] = 0;
+      Registers[Register.DDRB_DATA_DIR_PORT_B] = 0;
+
+      TimerALatch = 1;
+      TimerBLatch = 1;
+      TimerAValue = 0xffff;
+      TimerBValue = 0xffff;
+
+      Registers[Register.TOD_10TH_SECONDS] = 0;
+      Registers[Register.TOD_SECONDS] = 0;
+      Registers[Register.TOD_MINUTES] = 0;
+      Registers[Register.TOD_HOURS] = 0;
+
+      Registers[Register.TIMER_A_CONTROL] = 0;
+      Registers[Register.TIMER_B_CONTROL] = 0;
+
+      /*
+      alm_10ths = alm_sec = alm_min = alm_hr = 0;
+      sdr = icr = int_mask = 0;
+
+      tod_halt = false;
+      tod_divider = 0;
+
+      ta_cnt_phi2 = tb_cnt_phi2 = tb_cnt_ta = false;
+
+      ta_irq_next_cycle = tb_irq_next_cycle = false;
+      ta_state = tb_state = TimerState.T_STOP;*/
     }
 
 
@@ -229,7 +261,7 @@ namespace Tiny64
       {
         Registers[Register.IRQ_CONTROL_STATE] |= 0x80;
 
-        Machine.RaiseIRQ( CPUIRQSource );
+        Machine.RaiseIRQ( Machine.IRQSource.CIA );
       }
     }
 
@@ -245,7 +277,7 @@ namespace Tiny64
     
     
     
-    public void WriteByte( byte Address, byte Value )
+    protected bool WriteByte( byte Address, byte Value )
     {
       Address &= 0x0f;
 
@@ -253,16 +285,16 @@ namespace Tiny64
       {
         case Register.TIMER_A_LO:
           TimerALatch = ( TimerALatch & 0xff00 ) | Value;
-          return;
+          return true;
         case Register.TIMER_A_HI:
           TimerALatch = ( TimerALatch & 0x00ff ) | ( Value << 8 );
-          return;
+          return true;
         case Register.TIMER_B_LO:
           TimerBLatch = ( TimerBLatch & 0xff00 ) | Value;
-          return;
+          return true;
         case Register.TIMER_B_HI:
           TimerBLatch = ( TimerBLatch & 0x00ff ) | ( Value << 8 );
-          return;
+          return true;
         case Register.TIMER_A_CONTROL:
           // Bit 0:  Start Timer A (1=start, 0=stop)
           // Bit 1:  Select Timer A output on Port B (1=Timer A output appears on Bit 6 of
@@ -283,7 +315,9 @@ namespace Tiny64
           }
           TimerAInputModeCountCycles  = ( ( Value & 0x20 ) == 0 );
           TimerAModeContinuous        = ( ( Value & 0x08 ) == 0 );
-          break;
+
+          Registers[Address] = Value;
+          return true;
         case Register.TIMER_B_CONTROL:
           // Bit 0:  Start Timer B (1=start, 0=stop)
           // Bit 1:  Select Timer B output on Port B (1=Timer B output appears on
@@ -308,7 +342,9 @@ namespace Tiny64
           }
           TimerBInputMode             = (byte)( ( Value & 0x60 ) >> 5 );
           TimerBModeContinuous        = ( ( Value & 0x08 ) == 0 );
-          break;
+
+          Registers[Address] = Value;
+          return true;
         case Register.IRQ_CONTROL_STATE:
           if ( ( Value & 0x80 ) == 0 )
           {
@@ -321,15 +357,14 @@ namespace Tiny64
             IRQsEnabled |= (byte)( Value & 0x7f );
           }
           //Debug.Log( "CIA, IRQ mask set to " + IRQsEnabled.ToString( "X2" ) );
-          return;
+          return true;
       }
-
-      Registers[Address] = Value;
+      return false;
     }
 
 
 
-    public byte ReadByte( byte Address )
+    protected byte ReadByte( byte Address )
     {
       Address &= 0x0f;
 
@@ -349,17 +384,20 @@ namespace Tiny64
 
             if ( ( returnValue & 0x80 ) != 0 )
             {
-              // TODO
-              //_irqLine.Lower();
+              Machine.LowerIRQ( Machine.IRQSource.CIA );
             }
 
             Registers[Address] = 0;
 
             return returnValue;
           }
+        case Register.TIMER_A_CONTROL:
+          return Registers[Register.TIMER_A_CONTROL];
+        case Register.TIMER_B_CONTROL:
+          return Registers[Register.TIMER_B_CONTROL];
       }
-
-      return Registers[Address];
+      Debug.Log( $"CIA.Base 1 or 2, ReadByte, used unsupported address " + Address );
+      return 0;
     }
 
 

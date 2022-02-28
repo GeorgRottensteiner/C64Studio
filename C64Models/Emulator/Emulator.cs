@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Memory;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,9 +9,9 @@ namespace Tiny64
 {
   public class Emulator
   {
-    public Tiny64.Machine    Machine = new Tiny64.Machine();
+    public Tiny64.Machine     Machine = new Tiny64.Machine();
 
-    public EmulatorState     State = EmulatorState.STOPPED;
+    public EmulatorState      State = EmulatorState.RUNNING;
 
 
 
@@ -28,6 +29,11 @@ namespace Tiny64
       {
         ushort    oldPC = Machine.CPU.PC;
         int curCycles = Machine.RunCycle();
+
+        if ( State == EmulatorState.PAUSED )
+        {
+          return cyclesUsed;
+        }
 
         MaxCycles -= curCycles;
       }
@@ -151,6 +157,7 @@ namespace Tiny64
 
 
       Machine.AddTemporaryBreakpoint( (ushort)( Machine.CPU.PC + opCode.NumOperands + 1 ), false, false, true );
+      Machine.SkipNextBreakpointCheck = true;
       State = EmulatorState.RUNNING;
     }
 
@@ -158,6 +165,7 @@ namespace Tiny64
 
     public void StepInto()
     {
+      Machine.SkipNextBreakpointCheck = true;
       Machine.RunCycle();
     }
 

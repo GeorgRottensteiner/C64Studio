@@ -68,6 +68,7 @@
       this.pictureOutput.Size = new System.Drawing.Size(529, 364);
       this.pictureOutput.TabIndex = 1;
       this.pictureOutput.TabStop = false;
+      this.pictureOutput.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.pictureOutput_PreviewKeyDown);
       // 
       // FormMain
       // 
