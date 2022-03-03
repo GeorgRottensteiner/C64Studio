@@ -37,11 +37,6 @@ namespace C64Studio
       this.tabProject = new System.Windows.Forms.TabPage();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.btnDefaultCharset = new C64Studio.Controls.MenuButton();
-      this.contextMenuDefaultCharsets = new System.Windows.Forms.ContextMenuStrip(this.components);
-      this.c64UppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.c64LowercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.viC20UppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.viC20LowercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.btnClearImportData = new System.Windows.Forms.Button();
       this.btnImportFromBASICHex = new System.Windows.Forms.Button();
       this.btnImportFromBASIC = new System.Windows.Forms.Button();
@@ -73,6 +68,11 @@ namespace C64Studio
       this.btnExportToBASIC = new System.Windows.Forms.Button();
       this.btnExportToData = new System.Windows.Forms.Button();
       this.btnExportCharset = new System.Windows.Forms.Button();
+      this.contextMenuDefaultCharsets = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.c64UppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.c64LowercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.viC20UppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.viC20LowercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.openCharsetProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,8 +84,8 @@ namespace C64Studio
       this.tabCharEditor.SuspendLayout();
       this.tabProject.SuspendLayout();
       this.groupBox1.SuspendLayout();
-      this.contextMenuDefaultCharsets.SuspendLayout();
       this.groupExport.SuspendLayout();
+      this.contextMenuDefaultCharsets.SuspendLayout();
       this.menuStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -162,44 +162,6 @@ namespace C64Studio
       this.btnDefaultCharset.UseVisualStyleBackColor = true;
       this.btnDefaultCharset.Click += new System.EventHandler(this.btnDefaultCharset_Click);
       // 
-      // contextMenuDefaultCharsets
-      // 
-      this.contextMenuDefaultCharsets.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.c64UppercaseToolStripMenuItem,
-            this.c64LowercaseToolStripMenuItem,
-            this.viC20UppercaseToolStripMenuItem,
-            this.viC20LowercaseToolStripMenuItem});
-      this.contextMenuDefaultCharsets.Name = "contextMenuDefaultCharsets";
-      this.contextMenuDefaultCharsets.Size = new System.Drawing.Size(163, 92);
-      // 
-      // c64UppercaseToolStripMenuItem
-      // 
-      this.c64UppercaseToolStripMenuItem.Name = "c64UppercaseToolStripMenuItem";
-      this.c64UppercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-      this.c64UppercaseToolStripMenuItem.Text = "C64 Uppercase";
-      this.c64UppercaseToolStripMenuItem.Click += new System.EventHandler(this.c64UppercaseToolStripMenuItem_Click);
-      // 
-      // c64LowercaseToolStripMenuItem
-      // 
-      this.c64LowercaseToolStripMenuItem.Name = "c64LowercaseToolStripMenuItem";
-      this.c64LowercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-      this.c64LowercaseToolStripMenuItem.Text = "C64 Lowercase";
-      this.c64LowercaseToolStripMenuItem.Click += new System.EventHandler(this.c64LowercaseToolStripMenuItem_Click);
-      // 
-      // viC20UppercaseToolStripMenuItem
-      // 
-      this.viC20UppercaseToolStripMenuItem.Name = "viC20UppercaseToolStripMenuItem";
-      this.viC20UppercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-      this.viC20UppercaseToolStripMenuItem.Text = "ViC20 Uppercase";
-      this.viC20UppercaseToolStripMenuItem.Click += new System.EventHandler(this.viC20UppercaseToolStripMenuItem_Click);
-      // 
-      // viC20LowercaseToolStripMenuItem
-      // 
-      this.viC20LowercaseToolStripMenuItem.Name = "viC20LowercaseToolStripMenuItem";
-      this.viC20LowercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-      this.viC20LowercaseToolStripMenuItem.Text = "ViC20 Lowercase";
-      this.viC20LowercaseToolStripMenuItem.Click += new System.EventHandler(this.viC20LowercaseToolStripMenuItem_Click);
-      // 
       // btnClearImportData
       // 
       this.btnClearImportData.Location = new System.Drawing.Point(6, 104);
@@ -266,6 +228,7 @@ namespace C64Studio
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.editDataImport.Location = new System.Drawing.Point(6, 145);
+      this.editDataImport.MaxLength = 10000000;
       this.editDataImport.Multiline = true;
       this.editDataImport.Name = "editDataImport";
       this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -526,6 +489,44 @@ namespace C64Studio
       this.btnExportCharset.UseVisualStyleBackColor = true;
       this.btnExportCharset.Click += new System.EventHandler(this.btnExportCharset_Click);
       // 
+      // contextMenuDefaultCharsets
+      // 
+      this.contextMenuDefaultCharsets.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.c64UppercaseToolStripMenuItem,
+            this.c64LowercaseToolStripMenuItem,
+            this.viC20UppercaseToolStripMenuItem,
+            this.viC20LowercaseToolStripMenuItem});
+      this.contextMenuDefaultCharsets.Name = "contextMenuDefaultCharsets";
+      this.contextMenuDefaultCharsets.Size = new System.Drawing.Size(163, 92);
+      // 
+      // c64UppercaseToolStripMenuItem
+      // 
+      this.c64UppercaseToolStripMenuItem.Name = "c64UppercaseToolStripMenuItem";
+      this.c64UppercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+      this.c64UppercaseToolStripMenuItem.Text = "C64 Uppercase";
+      this.c64UppercaseToolStripMenuItem.Click += new System.EventHandler(this.c64UppercaseToolStripMenuItem_Click);
+      // 
+      // c64LowercaseToolStripMenuItem
+      // 
+      this.c64LowercaseToolStripMenuItem.Name = "c64LowercaseToolStripMenuItem";
+      this.c64LowercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+      this.c64LowercaseToolStripMenuItem.Text = "C64 Lowercase";
+      this.c64LowercaseToolStripMenuItem.Click += new System.EventHandler(this.c64LowercaseToolStripMenuItem_Click);
+      // 
+      // viC20UppercaseToolStripMenuItem
+      // 
+      this.viC20UppercaseToolStripMenuItem.Name = "viC20UppercaseToolStripMenuItem";
+      this.viC20UppercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+      this.viC20UppercaseToolStripMenuItem.Text = "ViC20 Uppercase";
+      this.viC20UppercaseToolStripMenuItem.Click += new System.EventHandler(this.viC20UppercaseToolStripMenuItem_Click);
+      // 
+      // viC20LowercaseToolStripMenuItem
+      // 
+      this.viC20LowercaseToolStripMenuItem.Name = "viC20LowercaseToolStripMenuItem";
+      this.viC20LowercaseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+      this.viC20LowercaseToolStripMenuItem.Text = "ViC20 Lowercase";
+      this.viC20LowercaseToolStripMenuItem.Click += new System.EventHandler(this.viC20LowercaseToolStripMenuItem_Click);
+      // 
       // menuStrip1
       // 
       this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -585,9 +586,9 @@ namespace C64Studio
       this.tabProject.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
-      this.contextMenuDefaultCharsets.ResumeLayout(false);
       this.groupExport.ResumeLayout(false);
       this.groupExport.PerformLayout();
+      this.contextMenuDefaultCharsets.ResumeLayout(false);
       this.menuStrip1.ResumeLayout(false);
       this.menuStrip1.PerformLayout();
       this.ResumeLayout(false);

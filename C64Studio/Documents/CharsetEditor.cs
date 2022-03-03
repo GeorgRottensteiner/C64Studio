@@ -527,22 +527,24 @@ namespace C64Studio
 
     private void ImportFromData( ByteBuffer CharData )
     {
-      if ( CharData.Length == 2050 )
+      int     numBytesPerChar = Lookup.NumBytesOfSingleCharacterBitmap( m_Charset.Mode );
+
+      if ( CharData.Length == numBytesPerChar * m_Charset.TotalNumberOfCharacters + 2 )
       {
         // assume 2 bytes load address 
         CharData = CharData.SubBuffer( 2 );
       }
-      int charsToImport = (int)CharData.Length / 8;
-      if ( charsToImport > 256 )
+      int charsToImport = (int)CharData.Length / numBytesPerChar;
+      if ( charsToImport > m_Charset.TotalNumberOfCharacters )
       {
-        charsToImport = 256;
+        charsToImport = m_Charset.TotalNumberOfCharacters;
       }
       // TODO - Format!
       for ( int i = 0; i < charsToImport; ++i )
       {
-        for ( int j = 0; j < 8; ++j )
+        for ( int j = 0; j < numBytesPerChar; ++j )
         {
-          m_Charset.Characters[i].Tile.Data.SetU8At( j, CharData.ByteAt( i * 8 + j ) );
+          m_Charset.Characters[i].Tile.Data.SetU8At( j, CharData.ByteAt( i * numBytesPerChar + j ) );
         }
         m_Charset.Characters[i].Tile.CustomColor = 1;
       }
