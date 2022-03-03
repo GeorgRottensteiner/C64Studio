@@ -289,50 +289,53 @@ namespace C64Studio.Tasks
 
         if ( ConfigSetting != null )
         {
-          if ( !Doc.DeducedDependency.ContainsKey( ConfigSetting ) )
+          lock ( Doc.DeducedDependency )
           {
-            Doc.DeducedDependency.Add( ConfigSetting, new DependencyBuildState() );
-          }
-          Doc.DeducedDependency[ConfigSetting].BuildState.Add( Doc.FullPath, Core.Compiling.FileLastWriteTime( Doc.FullPath ) );
-
-          currentBuildState = new GR.Collections.Map<string,DateTime>( Doc.DeducedDependency[ConfigSetting].BuildState );
-
-          if ( Doc.Element != null )
-          {
-            if ( !Doc.Element.Settings.ContainsKey( ConfigSetting ) )
+            if ( !Doc.DeducedDependency.ContainsKey( ConfigSetting ) )
             {
-              Doc.Element.Settings.Add( ConfigSetting, new ProjectElement.PerConfigSettings() );
+              Doc.DeducedDependency.Add( ConfigSetting, new DependencyBuildState() );
             }
-            configSetting = Doc.Element.Settings[ConfigSetting];
+            Doc.DeducedDependency[ConfigSetting].BuildState.Add( Doc.FullPath, Core.Compiling.FileLastWriteTime( Doc.FullPath ) );
 
-            if ( !string.IsNullOrEmpty( configSetting.PreBuild ) )
+            currentBuildState = new GR.Collections.Map<string, DateTime>( Doc.DeducedDependency[ConfigSetting].BuildState );
+
+            if ( Doc.Element != null )
             {
-              Core.AddToOutput( "Running pre build step on " + Doc.Element.Name + System.Environment.NewLine );
-              if ( !Core.Executing.RunCommand( Doc, "pre build", configSetting.PreBuild ) )
+              if ( !Doc.Element.Settings.ContainsKey( ConfigSetting ) )
               {
-                return false;
+                Doc.Element.Settings.Add( ConfigSetting, new ProjectElement.PerConfigSettings() );
               }
-            }
-            if ( configSetting.PreBuildChain.Active )
-            {
-              if ( !BuildChain( configSetting.PreBuildChain, "pre build chain", ConfigSetting, OutputMessages ) )
+              configSetting = Doc.Element.Settings[ConfigSetting];
+
+              if ( !string.IsNullOrEmpty( configSetting.PreBuild ) )
               {
-                return false;
+                Core.AddToOutput( "Running pre build step on " + Doc.Element.Name + System.Environment.NewLine );
+                if ( !Core.Executing.RunCommand( Doc, "pre build", configSetting.PreBuild ) )
+                {
+                  return false;
+                }
               }
-              AppendBuildStates( currentBuildState, Doc.DeducedDependency[ConfigSetting].BuildState );
+              if ( configSetting.PreBuildChain.Active )
+              {
+                if ( !BuildChain( configSetting.PreBuildChain, "pre build chain", ConfigSetting, OutputMessages ) )
+                {
+                  return false;
+                }
+                AppendBuildStates( currentBuildState, Doc.DeducedDependency[ConfigSetting].BuildState );
+              }
+              Core.AddToOutput( "Running build on " + Doc.Element.Name + " with configuration " + ConfigSetting + System.Environment.NewLine );
             }
-            Core.AddToOutput( "Running build on " + Doc.Element.Name + " with configuration " + ConfigSetting + System.Environment.NewLine );
-          }
-          else
-          {
-            Core.AddToOutput( "Running build on " + Doc.DocumentFilename + System.Environment.NewLine );
+            else
+            {
+              Core.AddToOutput( "Running build on " + Doc.DocumentFilename + System.Environment.NewLine );
+            }
           }
         }
         else
         {
           currentBuildState = new GR.Collections.Map<string, DateTime>();
           Core.AddToOutput( "Running build on " + Doc.DocumentFilename + System.Environment.NewLine );
-        }
+        } 
 
         // include previous symbols
         string    additionalPredefines = null;
@@ -453,7 +456,10 @@ namespace C64Studio.Tasks
 
           if ( ConfigSetting != null )
           {
-            AppendBuildStates( currentBuildState, Doc.DeducedDependency[ConfigSetting].BuildState );
+            lock ( Doc.DeducedDependency )
+            {
+              AppendBuildStates( currentBuildState, Doc.DeducedDependency[ConfigSetting].BuildState );
+            }
           }
 
           Core.MainForm.AddOutputMessages( parser );
@@ -581,14 +587,20 @@ namespace C64Studio.Tasks
           {
             return false;
           }
-          AppendBuildStates( currentBuildState, Doc.DeducedDependency[ConfigSetting].BuildState );
+          lock ( Doc.DeducedDependency )
+          {
+            AppendBuildStates( currentBuildState, Doc.DeducedDependency[ConfigSetting].BuildState );
+          }
         }
 
         // store combined build state info in document
         if ( ConfigSetting != null )
         {
-          Doc.DeducedDependency[ConfigSetting].BuildState = currentBuildState;
-          Doc.DeducedDependency[ConfigSetting].BuildState.Remove( Doc.FullPath );
+          lock ( Doc.DeducedDependency )
+          {
+            Doc.DeducedDependency[ConfigSetting].BuildState = currentBuildState;
+            Doc.DeducedDependency[ConfigSetting].BuildState.Remove( Doc.FullPath );
+          }
         }
 
         if ( ( configSetting != null )
@@ -728,7 +740,10 @@ namespace C64Studio.Tasks
         }
         Core.Compiling.m_RebuiltBuildConfigFiles.Add( buildInfoKey );
 
-        m_DocumentToBuild.DeducedDependency[ParentDocumentConfigSetting].BuildState[element.DocumentInfo.FullPath] = Core.Compiling.FileLastWriteTime( element.DocumentInfo.FullPath );
+        lock ( m_DocumentToBuild.DeducedDependency )
+        {
+          m_DocumentToBuild.DeducedDependency[ParentDocumentConfigSetting].BuildState[element.DocumentInfo.FullPath] = Core.Compiling.FileLastWriteTime( element.DocumentInfo.FullPath );
+        }
       }
       Core.AddToOutput( "Running " + BuildChainDescription + " completed successfully" + System.Environment.NewLine );
       Core.Compiling.m_BuildChainStack.Pop();

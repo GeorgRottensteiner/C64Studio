@@ -181,173 +181,176 @@ namespace C64Studio
         return false;
       }
 
-      // actual parsing and deducing dependencies if a rebuild is necessary!
-      foreach ( IDockContent dockContent in Core.MainForm.panelMain.Documents )
+      lock ( DocInfo.DeducedDependency )
       {
-        BaseDocument baseDoc = (BaseDocument)dockContent;
-
-        if ( baseDoc.Modified )
+        // actual parsing and deducing dependencies if a rebuild is necessary!
+        foreach ( IDockContent dockContent in Core.MainForm.panelMain.Documents )
         {
-          Core.AddToOutput( "Component '" + baseDoc.DocumentInfo.DocumentFilename + "' needs rebuilding." + System.Environment.NewLine );
-          return true;
+          BaseDocument baseDoc = (BaseDocument)dockContent;
+
+          if ( baseDoc.Modified )
+          {
+            Core.AddToOutput( "Component '" + baseDoc.DocumentInfo.DocumentFilename + "' needs rebuilding." + System.Environment.NewLine );
+            return true;
+          }
         }
-      }
 
-      if ( DocInfo.Element != null )
-      {
-        foreach ( var dependency in DocInfo.Element.ForcedDependency.DependentOnFile )
+        if ( DocInfo.Element != null )
         {
-          var project = Core.Navigating.Solution.GetProjectByName( dependency.Project );
-          if ( project == null )
+          foreach ( var dependency in DocInfo.Element.ForcedDependency.DependentOnFile )
           {
-            Core.AddToOutput( "Could not find dependency project " + dependency.Project + " for " + dependency + System.Environment.NewLine );
-            return true;
-          }
-
-          ProjectElement elementDependency = project.GetElementByFilename( dependency.Filename );
-          if ( elementDependency == null )
-          {
-            Core.AddToOutput( "Could not find dependency " + dependency.Filename + " in project " + dependency.Project + " for " + dependency + System.Environment.NewLine );
-            return true;
-          }
-          if ( NeedsRebuild( elementDependency.DocumentInfo, ConfigSetting ) )
-          {
-            Core.AddToOutput( "Dependency '" + elementDependency.DocumentInfo.DocumentFilename + "' needs rebuilding." + System.Environment.NewLine );
-            return true;
-          }
-          foreach ( var rebuildFile in m_RebuiltFiles )
-          {
-            if ( GR.Path.IsPathEqual( elementDependency.DocumentInfo.DocumentFilename, rebuildFile ) )
+            var project = Core.Navigating.Solution.GetProjectByName( dependency.Project );
+            if ( project == null )
             {
-              Core.AddToOutput( "Dependency " + elementDependency.DocumentInfo.DocumentFilename + " was rebuilt in this cycle, need to rebuild dependent element " + DocInfo.DocumentFilename + System.Environment.NewLine );
+              Core.AddToOutput( "Could not find dependency project " + dependency.Project + " for " + dependency + System.Environment.NewLine );
               return true;
             }
-          }
-        }
-        if ( DocInfo.DeducedDependency[ConfigSetting] != null )
-        {
-          // custom build overrides output file -> always rebuild
-          if ( ( DocInfo.Element.Settings.ContainsKey( ConfigSetting ) )
-          &&   ( !string.IsNullOrEmpty( DocInfo.Element.Settings[ConfigSetting].CustomBuild ) )
-          &&   ( !string.IsNullOrEmpty( DocInfo.Element.TargetFilename ) ) )
-          {
-            Core.AddToOutput( "Custom build always requires a rebuild" + System.Environment.NewLine );
-            return true;
-          }
-          
-          foreach ( var dependency in DocInfo.Element.ExternalDependencies.DependentOnFile )
-          {
-            string      fullPath = BuildFullPath( DocInfo.Project.Settings.BasePath, dependency.Filename );
 
-            var fileTime = FileLastWriteTime( fullPath );
-            if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] )
+            ProjectElement elementDependency = project.GetElementByFilename( dependency.Filename );
+            if ( elementDependency == null )
             {
-              Core.AddToOutput( "External Dependency " + fullPath + " was modified, need to rebuild dependent element " + DocInfo.DocumentFilename + System.Environment.NewLine );
+              Core.AddToOutput( "Could not find dependency " + dependency.Filename + " in project " + dependency.Project + " for " + dependency + System.Environment.NewLine );
               return true;
             }
-          }
-        }
-        else
-        {
-          // no build time stored yet, needs rebuild
-          DocInfo.DeducedDependency[ConfigSetting] = new DependencyBuildState();
-
-          Core.AddToOutput( "No last build time found for configuration '" + ConfigSetting + "', need rebuilding." + System.Environment.NewLine );
-          return true;
-        }
-
-        // check indirect dependencies from pre build chains
-        if ( !DocInfo.Element.Settings.ContainsKey( ConfigSetting ) )
-        {
-          DocInfo.Element.Settings.Add( ConfigSetting, new ProjectElement.PerConfigSettings() );
-        }
-        var configSettingInner = DocInfo.Element.Settings[ConfigSetting];
-        if ( configSettingInner.PreBuildChain.Active )
-        {
-          foreach ( var chainEntry in configSettingInner.PreBuildChain.Entries )
-          {
-            var chainProject = Core.Navigating.Solution.GetProjectByName( chainEntry.ProjectName );
-            if ( chainProject != null )
+            if ( NeedsRebuild( elementDependency.DocumentInfo, ConfigSetting ) )
             {
-              string      fullPath = BuildFullPath( chainProject.Settings.BasePath, chainEntry.DocumentFilename );
-              var prebuildDoc = chainProject.GetElementByFilename( fullPath );
-              if ( prebuildDoc != null )
+              Core.AddToOutput( "Dependency '" + elementDependency.DocumentInfo.DocumentFilename + "' needs rebuilding." + System.Environment.NewLine );
+              return true;
+            }
+            foreach ( var rebuildFile in m_RebuiltFiles )
+            {
+              if ( GR.Path.IsPathEqual( elementDependency.DocumentInfo.DocumentFilename, rebuildFile ) )
               {
-                if ( NeedsRebuild( prebuildDoc.DocumentInfo ) )
+                Core.AddToOutput( "Dependency " + elementDependency.DocumentInfo.DocumentFilename + " was rebuilt in this cycle, need to rebuild dependent element " + DocInfo.DocumentFilename + System.Environment.NewLine );
+                return true;
+              }
+            }
+          }
+          if ( DocInfo.DeducedDependency[ConfigSetting] != null )
+          {
+            // custom build overrides output file -> always rebuild
+            if ( ( DocInfo.Element.Settings.ContainsKey( ConfigSetting ) )
+            &&   ( !string.IsNullOrEmpty( DocInfo.Element.Settings[ConfigSetting].CustomBuild ) )
+            &&   ( !string.IsNullOrEmpty( DocInfo.Element.TargetFilename ) ) )
+            {
+              Core.AddToOutput( "Custom build always requires a rebuild" + System.Environment.NewLine );
+              return true;
+            }
+
+            foreach ( var dependency in DocInfo.Element.ExternalDependencies.DependentOnFile )
+            {
+              string      fullPath = BuildFullPath( DocInfo.Project.Settings.BasePath, dependency.Filename );
+
+              var fileTime = FileLastWriteTime( fullPath );
+              if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] )
+              {
+                Core.AddToOutput( "External Dependency " + fullPath + " was modified, need to rebuild dependent element " + DocInfo.DocumentFilename + System.Environment.NewLine );
+                return true;
+              }
+            }
+          }
+          else
+          {
+            // no build time stored yet, needs rebuild
+            DocInfo.DeducedDependency[ConfigSetting] = new DependencyBuildState();
+
+            Core.AddToOutput( "No last build time found for configuration '" + ConfigSetting + "', need rebuilding." + System.Environment.NewLine );
+            return true;
+          }
+
+          // check indirect dependencies from pre build chains
+          if ( !DocInfo.Element.Settings.ContainsKey( ConfigSetting ) )
+          {
+            DocInfo.Element.Settings.Add( ConfigSetting, new ProjectElement.PerConfigSettings() );
+          }
+          var configSettingInner = DocInfo.Element.Settings[ConfigSetting];
+          if ( configSettingInner.PreBuildChain.Active )
+          {
+            foreach ( var chainEntry in configSettingInner.PreBuildChain.Entries )
+            {
+              var chainProject = Core.Navigating.Solution.GetProjectByName( chainEntry.ProjectName );
+              if ( chainProject != null )
+              {
+                string      fullPath = BuildFullPath( chainProject.Settings.BasePath, chainEntry.DocumentFilename );
+                var prebuildDoc = chainProject.GetElementByFilename( fullPath );
+                if ( prebuildDoc != null )
                 {
+                  if ( NeedsRebuild( prebuildDoc.DocumentInfo ) )
+                  {
+                    return true;
+                  }
+                }
+
+                var fileTime = FileLastWriteTime( fullPath );
+                if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] )
+                {
+                  if ( DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] == default( DateTime ) )
+                  {
+                    Core.AddToOutput( $"PreBuild chain entry {fullPath} was modified {fileTime} , need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
+                  }
+                  else
+                  {
+                    Core.AddToOutput( $"PreBuild chain entry {fullPath} was modified {fileTime} != {DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath]}, need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
+                  }
                   return true;
                 }
               }
-
-              var fileTime = FileLastWriteTime( fullPath );
-              if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] )
-              {
-                if ( DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] == default( DateTime ) )
-                {
-                  Core.AddToOutput( $"PreBuild chain entry {fullPath} was modified {fileTime} , need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
-                }
-                else
-                {
-                  Core.AddToOutput( $"PreBuild chain entry {fullPath} was modified {fileTime} != {DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath]}, need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
-                }
-                return true;
-              } 
             }
           }
-        }
-        if ( configSettingInner.PostBuildChain.Active )
-        {
-          foreach ( var chainEntry in configSettingInner.PostBuildChain.Entries )
+          if ( configSettingInner.PostBuildChain.Active )
           {
-            var chainProject = Core.Navigating.Solution.GetProjectByName( chainEntry.ProjectName );
-            if ( chainProject != null )
+            foreach ( var chainEntry in configSettingInner.PostBuildChain.Entries )
             {
-              string      fullPath = BuildFullPath( chainProject.Settings.BasePath, chainEntry.DocumentFilename );
-              var fileTime = FileLastWriteTime( fullPath );
-              if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] )
+              var chainProject = Core.Navigating.Solution.GetProjectByName( chainEntry.ProjectName );
+              if ( chainProject != null )
               {
-                if ( DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] == default( DateTime ) )
+                string      fullPath = BuildFullPath( chainProject.Settings.BasePath, chainEntry.DocumentFilename );
+                var fileTime = FileLastWriteTime( fullPath );
+                if ( fileTime != DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] )
                 {
-                  Core.AddToOutput( $"PostBuild chain entry {fullPath} was modified {fileTime} , need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
+                  if ( DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath] == default( DateTime ) )
+                  {
+                    Core.AddToOutput( $"PostBuild chain entry {fullPath} was modified {fileTime} , need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
+                  }
+                  else
+                  {
+                    Core.AddToOutput( $"PostBuild chain entry {fullPath} was modified {fileTime} != {DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath]}, need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
+                  }
+                  return true;
                 }
-                else
-                {
-                  Core.AddToOutput( $"PostBuild chain entry {fullPath} was modified {fileTime} != {DocInfo.DeducedDependency[ConfigSetting].BuildState[fullPath]}, need to rebuild dependent element {DocInfo.DocumentFilename}" + System.Environment.NewLine );
-                }
-                return true;
               }
             }
           }
         }
-      }
-      if ( DocInfo.Compilable )
-      {
-        if ( !DocInfo.HasBeenSuccessfullyBuilt )
+        if ( DocInfo.Compilable )
         {
-          Core.AddToOutput( "Element '" + DocInfo.DocumentFilename + "' was not built successfully last time." + System.Environment.NewLine );
+          if ( !DocInfo.HasBeenSuccessfullyBuilt )
+          {
+            Core.AddToOutput( "Element '" + DocInfo.DocumentFilename + "' was not built successfully last time." + System.Environment.NewLine );
+            return true;
+          }
+        }
+        if ( DocInfo.Project == null )
+        {
+          Core.AddToOutput( "Element '" + DocInfo.DocumentFilename + "' has no project, therefor needs rebuilding." + System.Environment.NewLine );
           return true;
         }
-      }
-      if ( DocInfo.Project == null )
-      {
-        Core.AddToOutput( "Element '" + DocInfo.DocumentFilename + "' has no project, therefor needs rebuilding." + System.Environment.NewLine );
-        return true;
-      }
-      if ( DocInfo.DeducedDependency[ConfigSetting] == null )
-      {
-        // no build time stored yet, needs rebuild
-        DocInfo.DeducedDependency[ConfigSetting] = new DependencyBuildState();
-        Core.AddToOutput( "No build time stored for '" + ConfigSetting + "' yet, therefor needs rebuilding." + System.Environment.NewLine );
-        return true;
-      }
-      foreach ( KeyValuePair<string, DateTime> dependency in DocInfo.DeducedDependency[ConfigSetting].BuildState )
-      {
-        var fileTime = FileLastWriteTime( dependency.Key );
-        if ( fileTime != dependency.Value )
+        if ( DocInfo.DeducedDependency[ConfigSetting] == null )
         {
-          //Debug.Log( "File time differs for " + dependency.Key );
-          Core.AddToOutput( "File '" + dependency.Key + "' was modified, therefor needs rebuilding." + System.Environment.NewLine );
+          // no build time stored yet, needs rebuild
+          DocInfo.DeducedDependency[ConfigSetting] = new DependencyBuildState();
+          Core.AddToOutput( "No build time stored for '" + ConfigSetting + "' yet, therefor needs rebuilding." + System.Environment.NewLine );
           return true;
+        }
+        foreach ( KeyValuePair<string, DateTime> dependency in DocInfo.DeducedDependency[ConfigSetting].BuildState )
+        {
+          var fileTime = FileLastWriteTime( dependency.Key );
+          if ( fileTime != dependency.Value )
+          {
+            //Debug.Log( "File time differs for " + dependency.Key );
+            Core.AddToOutput( "File '" + dependency.Key + "' was modified, therefor needs rebuilding." + System.Environment.NewLine );
+            return true;
+          }
         }
       }
       return false;
