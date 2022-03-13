@@ -111,7 +111,10 @@ namespace C64Studio
         newConfigSettings.PostBuild = configSettings.PostBuild;
 
         element.Settings[newConfigName] = newConfigSettings;
-        element.DocumentInfo.DeducedDependency[newConfigName] = new DependencyBuildState();
+        lock ( element.DocumentInfo.DeducedDependency )
+        {
+          element.DocumentInfo.DeducedDependency[newConfigName] = new DependencyBuildState();
+        }
       }
 
       m_Settings.Configuration( config.Name, config );
