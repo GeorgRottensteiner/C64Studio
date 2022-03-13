@@ -3148,6 +3148,12 @@ namespace C64Studio.Parser
                     return;
                   }
 
+                  if ( textLiteral.Length > 1 )
+                  {
+                    AddError( LineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "More than one character in literal is not allowed in this context" );
+                    return;
+                  }
+
                   // a text
                   foreach ( char aChar in textLiteral )
                   {
@@ -3229,6 +3235,12 @@ namespace C64Studio.Parser
               if ( hadError )
               {
                 AddError( LineIndex, Types.ErrorCode.E3005_BASIC_UNKNOWN_MACRO, "Failed to evaluate " + textLiteral );
+                return;
+              }
+
+              if ( textLiteral.Length > 1 )
+              {
+                AddError( LineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "More than one character in literal is not allowed in this context" );
                 return;
               }
 
@@ -5468,16 +5480,11 @@ namespace C64Studio.Parser
       }
       else if ( extension == ".MAPPROJECT" )
       {
-        if ( Binary )
-        {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Binary export from map project is not supported" );
-          return false;
-        }
-
         // map project
         // map,index,count
         // tile,index,count
         // maptile
+        // char,index,count
         if ( paramTokens.Count > 4 )
         {
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected <Map|Tile|MapTile|TileElements|TileData>[,<Index>[,<Count>]]" );
@@ -5489,10 +5496,18 @@ namespace C64Studio.Parser
         &&   ( method != "MAPEXTRADATA" )
         &&   ( method != "MAPVERTICAL" )
         &&   ( method != "TILEELEMENTS" )
+        &&   ( method != "CHAR" )
         &&   ( method != "MAPTILE" )
         &&   ( method != "MAPVERTICALTILE" ) )
         {
-          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are MAP, MAPVERTICAL, TILE, TILEDATA, TILEELEMENTS, MAPTILE, MAPVERTICALTILE, EXTRADATA" );
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are MAP, MAPVERTICAL, TILE, TILEDATA, TILEELEMENTS, MAPTILE, MAPVERTICALTILE, MAPEXTRADATA, CHAR" );
+          return false;
+        }
+
+        if ( ( Binary )
+        &&   ( method != "CHAR" ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Binary export from map project is only supported for method 'CHAR'" );
           return false;
         }
 
@@ -5544,6 +5559,41 @@ namespace C64Studio.Parser
         {
           map.ExportTileDataAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
         }
+        else if ( method == "CHAR" )
+        {
+          int startIndex = 0;
+          int numChars = 256;
+
+          if ( ( paramTokens.Count >= 3 )
+          &&   ( EvaluateTokens( lineIndex, paramTokens[2], info.LineCodeMapping, out SymbolInfo startIndexSymbol ) ) )
+          {
+            startIndex = (int)startIndexSymbol.ToInteger();
+          }
+          if ( paramTokens.Count >= 4 )
+          {
+            if ( !EvaluateTokens( lineIndex, paramTokens[3], info.LineCodeMapping, out SymbolInfo numCharsSymbol ) )
+            {
+              AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Failed to evaluate expression " + TokensToExpression( paramTokens[3] ) );
+              return false;
+            }
+            numChars = (int)numCharsSymbol.ToInteger();
+          }
+
+          if ( ( startIndex < 0 )
+          ||   ( startIndex >= map.Charset.TotalNumberOfCharacters ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid start index " + startIndex );
+            return false;
+          }
+          if ( ( numChars <= 0 )
+          ||   ( ( startIndex + numChars ) > map.Charset.TotalNumberOfCharacters ) )
+          {
+            AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Invalid char count " + numChars );
+            return false;
+          }
+
+          dataToInclude = map.Charset.CharacterData( startIndex, numChars );
+        }
         else if ( method == "MAPTILE" )
         {
           string  dummy;
@@ -5568,6 +5618,9 @@ namespace C64Studio.Parser
         if ( !Binary )
         {
           ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+        }
+        else
+        {
         }
       }
       else
@@ -7387,7 +7440,7 @@ namespace C64Studio.Parser
       if ( ( !macroFunctions.ContainsKey( functionName ) )
       ||   ( macroFunctions[functionName].LineEnd == -1 ) )
       {
-        AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown macro " + functionName );
+        AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown macro " + functionName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
       }
       else
       {
