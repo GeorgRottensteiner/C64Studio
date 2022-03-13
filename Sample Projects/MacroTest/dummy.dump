@@ -1,81 +1,32 @@
-00  $2000              * = $2000
-01  $2000              
-02  $2000  0C 34 12    nop $1234
-03  $2003  EA          nop
-04  $2004              CHARACTER_ROM   = 1024
-05  $2004              CUSTOM_CHAR_SET = $4000
-06  $2004              !macro copy_character_range_from_rom start, end
-07  ????              ;removed some code for simplicity
-08  ????              ; Copy char rom to ram
-09  ????              !for char = start to end
-10  ????              ldx #0
-11  ????              -
-12  ????              lda CHARACTER_ROM + char*8, x
-13  ????              sta CUSTOM_CHAR_SET + char*8, x
-14  ????              inx
-15  ????              cpx #8
-16  ????              bne -
-17  ????              !end
-18  ????              !end
-19  $2004              
-20  $2004              ;removed some code for simplicity
-21  $2004              ; Copy char rom to ram
-22  $2004              ;ex for loop
-23  $2004  A2 00       ldx #0
-24  $2006              -c64_local_labelcopy_character_range_from_rom_6_19_
-25  $2006  BD 00 04    lda CHARACTER_ROM + char*8, x
-26  $2009  9D 00 40    sta CUSTOM_CHAR_SET + char*8, x
-27  $200C  E8          inx
-28  $200D  E0 08       cpx #8
-29  $200F  D0 F5       bne -c64_local_labelcopy_character_range_from_rom_6_19_
-30  $2011  A2 00       ldx #0
-31  $2013              -c64_local_labelcopy_character_range_from_rom_6_19_
-32  $2013  BD 08 04    lda CHARACTER_ROM + char*8, x
-33  $2016  9D 08 40    sta CUSTOM_CHAR_SET + char*8, x
-34  $2019  E8          inx
-35  $201A  E0 08       cpx #8
-36  $201C  D0 F5       bne -c64_local_labelcopy_character_range_from_rom_6_19_
-37  $201E  A2 00       ldx #0
-38  $2020              -c64_local_labelcopy_character_range_from_rom_6_19_
-39  $2020  BD 10 04    lda CHARACTER_ROM + char*8, x
-40  $2023  9D 10 40    sta CUSTOM_CHAR_SET + char*8, x
-41  $2026  E8          inx
-42  $2027  E0 08       cpx #8
-43  $2029  D0 F5       bne -c64_local_labelcopy_character_range_from_rom_6_19_
-44  $202B              ;ex loop end
-45  $202B  60          rts
-46  $202C              
-47  $202C              
-48  $202C              
-49  $C000              *=$c000
-50  $C000              
-51  $C000              STACK_LEVEL0 = 0
-52  $C000              
-53  $C000              GLOBAL_VAR = 3
-54  $C000              
-55  $C000              
-56  $C000              !macro PUSH value
-57  ????              
-58  ????              ; some fancy code to move stack values down
-59  ????              
-60  ????              STACK_LEVEL0=value
-61  ????              
-62  ????              !end
-63  $C000              
-64  $C000              
-65  $C000              !macro SOME_MACRO_THAT_USES_PUSH
-66  ????              
-67  ????              +PUSH GLOBAL_VAR
-68  ????              
-69  ????              !end
-70  $C000              
-71  $C000              
-72  $C000              
-73  $C000              
-74  $C000              
-75  $C000              
-76  $C000              ; some fancy code to move stack values down
-77  $C000              
-78  $C000              STACK_LEVEL0=GLOBAL_VAR
-79  $C000              
-80  $C000              
+00   ----              ;was for loop start for j
+01  $4000              *=$4000+256*j; loop with j=0
+02  $4000  A9 14       ._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=0
+03  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=0
+04  $4002  20 00 40    jsr ._C64STUDIO_LL_0__6_.Einsprung; loop with j=0
+05  $4005  E8          inx; loop with j=0
+06  $4000              *=$4000+256*j; loop with j=1
+07  $4000  A9 14       ._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=1
+08  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=1
+09  $4002  20 00 40    jsr ._C64STUDIO_LL_0__6_.Einsprung; loop with j=1
+10  $4005  E8          inx; loop with j=1
+11  $4000              *=$4000+256*j; loop with j=2
+12  $4000  A9 14       ._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=2
+13  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=2
+14  $4002  20 00 40    jsr ._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung; loop with j=2
+15  $4005  E8          inx; loop with j=2
+16  $4000              *=$4000+256*j; loop with j=3
+17  $4000  A9 14       ._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=3
+18  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=3
+19  $4002  20 00 40    jsr ._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung; loop with j=3
+20  $4005  E8          inx; loop with j=3
+21  $4000              *=$4000+256*j; loop with j=4
+22  $4000  A9 14       ._C64STUDIO_LL_3__16_._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=4
+23  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=4
+24  $4002  20 00 40    jsr ._C64STUDIO_LL_3__16_._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung; loop with j=4
+25  $4005  E8          inx; loop with j=4
+26  $4000              *=$4000+256*j; loop with j=5
+27  $4000  A9 14       ._C64STUDIO_LL_4__21_._C64STUDIO_LL_3__16_._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=5
+28  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=5
+29  $4002  20 00 40    jsr ._C64STUDIO_LL_4__21_._C64STUDIO_LL_3__16_._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung; loop with j=5
+30  $4005  E8          inx; loop with j=5
+31  $4006              ;was loop end for j

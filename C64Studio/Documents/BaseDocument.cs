@@ -498,12 +498,15 @@ namespace C64Studio
           else
           {
             DocumentInfo.DocumentFilename   = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( DocumentInfo.Project.Settings.BasePath ), true, NewFilename, false );
-            DocumentInfo.Element.Name       = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
-            DocumentInfo.Element.Node.Text  = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
-            DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
-            if ( DocumentInfo.Element.Settings.Count == 0 )
+            if ( DocumentInfo.Element != null )
             {
-              DocumentInfo.Element.Settings["Default"] = new ProjectElement.PerConfigSettings();
+              DocumentInfo.Element.Name = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+              DocumentInfo.Element.Node.Text = System.IO.Path.GetFileName( DocumentInfo.DocumentFilename );
+              DocumentInfo.Element.Filename = DocumentInfo.DocumentFilename;
+              if ( DocumentInfo.Element.Settings.Count == 0 )
+              {
+                DocumentInfo.Element.Settings["Default"] = new ProjectElement.PerConfigSettings();
+              }
             }
           }
           Text    = System.IO.Path.GetFileNameWithoutExtension( DocumentInfo.DocumentFilename ) + "*";
