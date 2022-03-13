@@ -11,8 +11,8 @@ namespace C64Studio.Formats
   {
     public class TileChar
     {
-      public byte      Character = 0;
-      public byte      Color = 1;
+      public byte       Character = 0;
+      public byte       Color = 1;
     };
 
     public class Tile
