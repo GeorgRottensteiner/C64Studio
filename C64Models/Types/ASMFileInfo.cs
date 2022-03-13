@@ -2,6 +2,7 @@
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace C64Studio.Types.ASM
@@ -598,6 +599,12 @@ namespace C64Studio.Types.ASM
         if ( Labels.ContainsKey( Zone + Token ) )
         {
           return Labels[Zone + Token];
+        }
+
+        var tempLabel = TempLabelInfo.FirstOrDefault( tl => tl.Name == Token );
+        if ( tempLabel != null )
+        {
+          return tempLabel.Symbol;
         }
 
         if ( Macros.ContainsKey( Token ) )

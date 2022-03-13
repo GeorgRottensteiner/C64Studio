@@ -216,6 +216,35 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestStringLiteralWithMoreThanOneCharacter()
+    {
+      string      source = @"* = $0801
+                !byte 2,""http://www.georg-rottensteiner.de/test/haus1.html""
+                !byte ""http://www.georg-rottensteiner.de/test/haus1.html""";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      Assert.IsFalse( parser.Parse( source, null, config, null ) );
+
+      Assert.AreEqual( 2, parser.Errors );
+      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
+      Assert.AreEqual( C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, parser.Messages.Values[0].Code );
+      Assert.IsTrue( parser.Messages.Values[0].Message.Contains( "More than one" ) );
+
+      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[1].Type );
+      Assert.AreEqual( C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, parser.Messages.Values[1].Code );
+      Assert.IsTrue( parser.Messages.Values[1].Message.Contains( "More than one" ) );
+    }
+
+
+
+    [TestMethod]
     public void TestOverlappingSegmentWarning()
     {
       string      source = @"* = $2000

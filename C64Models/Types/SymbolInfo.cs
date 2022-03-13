@@ -92,6 +92,7 @@
       if ( ( Type == Types.CONSTANT_1 )
       ||   ( Type == Types.CONSTANT_2 )
       ||   ( Type == Types.TEMP_LABEL )
+      ||   ( Type == Types.LABEL )
       ||   ( Type == Types.PREPROCESSOR_CONSTANT_1 )
       ||   ( Type == Types.PREPROCESSOR_CONSTANT_2 ) )
       {
