@@ -8349,6 +8349,8 @@ namespace FastColoredTextBoxNS
       Invalidate();
     }
 
+
+
     /// <summary>
     /// Remove prefix from front of selected lines
     /// This method ignores forward spaces of the line
@@ -8367,26 +8369,37 @@ namespace FastColoredTextBoxNS
       Selection.BeginUpdate();
       lines.Manager.BeginAutoUndoCommands();
       lines.Manager.ExecuteCommand( new SelectCommand( TextSource ) );
+
+      int spaces = GetMinStartSpacesCount( from, to );
       for ( int i = from; i <= to; i++ )
       {
-        // retabify to get the real number of chars
-        string text = ReTabifyLine( lines[i].Text, TabLength );
-        string trimmedText = text.TrimStart();
-        if ( trimmedText.StartsWith( prefix ) )
+        if ( ( i == from )
+        &&   ( spaces < startOffset ) )
         {
-          int spaces = text.Length - trimmedText.Length;
+          Selection.Start = new Place( startOffset, i );
+          Selection.End = old.End;
+        }
+        else
+        {
           Selection.Start = new Place( spaces, i );
-          Selection.End = new Place( spaces + prefix.Length, i );
+          Selection.End = old.End;
+        }
+        if ( Selection.Text.StartsWith( prefix ) )
+        {
+          Selection.End = new Place( Selection.Start.iChar + 1, i );
           ClearSelected();
+
+          Selection.End = old.End;
         }
       }
-      Selection.Start = new Place( 0, from );
+      Selection.Start = new Place( old.Start.iChar, from );
       Selection.End = new Place( lines[to].Count, to );
       needRecalc = true;
       lines.Manager.EndAutoUndoCommands();
       Selection.EndUpdate();
       EndUpdate();
     }
+
 
 
     /// <summary>
