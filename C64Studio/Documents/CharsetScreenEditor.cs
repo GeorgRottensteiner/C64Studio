@@ -2105,60 +2105,7 @@ namespace C64Studio
       }
 
       // prepare data
-      GR.Memory.ByteBuffer screenCharData = new GR.Memory.ByteBuffer();
-      GR.Memory.ByteBuffer screenColorData = new GR.Memory.ByteBuffer();
-
-      var exportRect = DetermineExportRectangle();
-
-      bool singleBytes = ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) ) == 1 );
-
-      if ( comboExportOrientation.SelectedIndex == 0 )
-      {
-        // row by row
-        for ( int i = exportRect.Top; i < exportRect.Bottom; ++i )
-        {
-          for ( int x = exportRect.Left; x < exportRect.Right; ++x )
-          {
-            ushort newColor = (ushort)( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff0000 ) >> 16 );
-            ushort newChar = (ushort)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
-
-
-            if ( singleBytes )
-            {
-              screenCharData.AppendU8( (byte)newChar );
-              screenColorData.AppendU8( (byte)newColor );
-            }
-            else
-            {
-              screenCharData.AppendU16( newChar );
-              screenColorData.AppendU16( newColor );
-            }
-          }
-        }
-      }
-      else
-      {
-        for ( int x = exportRect.Left; x < exportRect.Right; ++x )
-        {
-          for ( int i = exportRect.Top; i < exportRect.Bottom; ++i )
-          {
-            ushort newColor = (ushort)( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff0000 ) >> 16 );
-            ushort newChar = (ushort)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
-
-
-            if ( singleBytes )
-            {
-              screenCharData.AppendU8( (byte)newChar );
-              screenColorData.AppendU8( (byte)newColor );
-            }
-            else
-            {
-              screenCharData.AppendU16( newChar );
-              screenColorData.AppendU16( newColor );
-            }
-          }
-        }
-      }
+      GetExportData( out ByteBuffer screenCharData, out ByteBuffer screenColorData, out System.Drawing.Rectangle exportRect );
 
       GR.Memory.ByteBuffer finalData = null;
 
@@ -2189,7 +2136,7 @@ namespace C64Studio
     {
       string filename;
 
-      if ( OpenFile( "Open Charpad project, Marc's PETSCII editor files or binary data", Constants.FILEFILTER_CHARSET_CHARPAD + Constants.FILEFILTER_MARCS_PETSCII + Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Open Charpad project, Marq's PETSCII editor files or binary data", Constants.FILEFILTER_CHARSET_CHARPAD + Constants.FILEFILTER_MARQS_PETSCII + Constants.FILEFILTER_ALL, out filename ) )
       {
         if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
         {
@@ -2357,12 +2304,10 @@ namespace C64Studio
                 }
               }
 
-              if ( screenData.Length == 2002 )
-              {
-                // border and BG first
-                m_CharsetScreen.CharSet.Colors.BackgroundColor = screenData.ByteAt( 1 );
-                screenData = screenData.SubBuffer( 2 );
-              }
+              // border and BG first
+              m_CharsetScreen.CharSet.Colors.BackgroundColor = screenData.ByteAt( 1 );
+              screenData = screenData.SubBuffer( 2 );
+
               ImportFromData( screenData );
             }
           }
@@ -2590,6 +2535,8 @@ namespace C64Studio
       comboMulticolor2.SelectedIndex = m_CharsetScreen.CharSet.Colors.MultiColor2;
       comboCharsetMode.SelectedIndex = (int)m_CharsetScreen.Mode;
       comboBGColor4.SelectedIndex = m_CharsetScreen.CharSet.Colors.BGColor4;
+
+      OnCharsetScreenModeChanged();
 
       for ( int i = 0; i < m_CharsetScreen.CharSet.ExportNumCharacters; ++i )
       {
@@ -3180,22 +3127,7 @@ namespace C64Studio
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this ) );
         m_CharsetScreen.Mode = (TextMode)comboCharsetMode.SelectedIndex;
 
-        UpdatePalette();
-
-        for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
-        {
-          RebuildCharImage( i );
-        }
-        Modified = true;
-        panelCharacters.Invalidate();
-        charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
-
-        // TODO - change palette to machine type
-
-        RedrawColorChooser();
-        RedrawFullScreen();
-
-        panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
+        OnCharsetScreenModeChanged();
       }
 
       if ( m_OverrideCharMode )
@@ -3290,6 +3222,28 @@ namespace C64Studio
           break;
       }
       RedrawFullScreen();
+    }
+
+
+
+    private void OnCharsetScreenModeChanged()
+    {
+      UpdatePalette();
+
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+      {
+        RebuildCharImage( i );
+      }
+      Modified = true;
+      panelCharacters.Invalidate();
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
+
+      // TODO - change palette to machine type
+
+      RedrawColorChooser();
+      RedrawFullScreen();
+
+      panelCharColors.Visible = Lookup.RequiresCustomColorForCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) );
     }
 
 
@@ -4246,6 +4200,148 @@ namespace C64Studio
     private void btnPaste_Click( object sender, EventArgs e )
     {
       PasteFromClipboard();
+    }
+
+
+
+    private void btnExportToMarqsPETSCII_Click( object sender, EventArgs e )
+    {
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Save data as";
+      saveDlg.Filter = "Marq's PETSCII File|*.c|All Files|*.*";
+      if ( DocumentInfo.Project != null )
+      {
+        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
+      }
+      if ( saveDlg.ShowDialog() != DialogResult.OK )
+      {
+        return;
+      }
+
+      // prepare data
+      GetExportData( out ByteBuffer screenCharData, out ByteBuffer screenColorData, out System.Drawing.Rectangle exportRect );
+
+      StringBuilder   sb = new StringBuilder();
+
+      sb.Append( "unsigned char frame0000[]={// border,bg,chars,colors" );
+      sb.Append( (char)10 );
+      sb.Append( "0," );
+      sb.Append( m_CharsetScreen.CharSet.Colors.BackgroundColor );
+      sb.Append( ',' );
+      sb.Append( (char)10 );
+
+      int     bytePos = 0;
+      for ( int j = 0; j < exportRect.Height; ++j )
+      {
+        for ( int i = 0; i < exportRect.Width; ++i )
+        {
+          sb.Append( screenCharData.ByteAt( bytePos ) );
+          sb.Append( ',' );
+          ++bytePos;
+        }
+        sb.Append( (char)10 );
+      }
+
+      bytePos = 0;
+      for ( int j = 0; j < exportRect.Height; ++j )
+      {
+        for ( int i = 0; i < exportRect.Width; ++i )
+        {
+          sb.Append( screenColorData.ByteAt( bytePos ) );
+          ++bytePos;
+          if ( ( j < exportRect.Height - 1 )
+          ||   ( i + 1 < exportRect.Width ) )
+          {
+            sb.Append( ',' );
+          }
+        }
+        sb.Append( (char)10 );
+      }
+      sb.Append( "};" );
+      sb.Append( (char)10 );
+
+      sb.Append( "// META: " );
+      sb.Append( exportRect.Width );
+      sb.Append( ' ' );
+      sb.Append( exportRect.Height );
+      sb.Append( ' ' );
+      switch ( m_CharsetScreen.Mode )
+      {
+        case TextMode.COMMODORE_40_X_25_ECM:
+        case TextMode.COMMODORE_40_X_25_HIRES:
+        case TextMode.COMMODORE_40_X_25_MULTICOLOR:
+        default:
+          sb.Append( "C64" );
+          break;
+        case TextMode.COMMODORE_VIC20_22_X_23:
+          sb.Append( "VIC20" );
+          break;
+      }
+      sb.Append( " upper" );
+      sb.Append( (char)10 );
+
+      GR.IO.File.WriteAllText( saveDlg.FileName, sb.ToString() );
+    }
+
+
+
+    private void GetExportData( out ByteBuffer ScreenCharData, out ByteBuffer ScreenColorData, out System.Drawing.Rectangle ExportRect )
+    {
+      ScreenCharData = new GR.Memory.ByteBuffer();
+      ScreenColorData = new GR.Memory.ByteBuffer();
+
+      ExportRect = DetermineExportRectangle();
+
+      bool singleBytes = ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) ) == 1 );
+
+      if ( comboExportOrientation.SelectedIndex == 0 )
+      {
+        // row by row
+        for ( int i = ExportRect.Top; i < ExportRect.Bottom; ++i )
+        {
+          for ( int x = ExportRect.Left; x < ExportRect.Right; ++x )
+          {
+            ushort newColor = (ushort)( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff0000 ) >> 16 );
+            ushort newChar = (ushort)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
+
+
+            if ( singleBytes )
+            {
+              ScreenCharData.AppendU8( (byte)newChar );
+              ScreenColorData.AppendU8( (byte)newColor );
+            }
+            else
+            {
+              ScreenCharData.AppendU16( newChar );
+              ScreenColorData.AppendU16( newColor );
+            }
+          }
+        }
+      }
+      else
+      {
+        for ( int x = ExportRect.Left; x < ExportRect.Right; ++x )
+        {
+          for ( int i = ExportRect.Top; i < ExportRect.Bottom; ++i )
+          {
+            ushort newColor = (ushort)( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff0000 ) >> 16 );
+            ushort newChar = (ushort)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
+
+
+            if ( singleBytes )
+            {
+              ScreenCharData.AppendU8( (byte)newChar );
+              ScreenColorData.AppendU8( (byte)newColor );
+            }
+            else
+            {
+              ScreenCharData.AppendU16( newChar );
+              ScreenColorData.AppendU16( newColor );
+            }
+          }
+        }
+      }
     }
 
 

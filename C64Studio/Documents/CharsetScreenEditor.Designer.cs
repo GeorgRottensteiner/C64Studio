@@ -30,8 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetScreenEditor));
-      GR.Image.FastImage fastImage1 = new GR.Image.FastImage();
-      GR.Image.FastImage fastImage2 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage3 = new GR.Image.FastImage();
+      GR.Image.FastImage fastImage4 = new GR.Image.FastImage();
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.importCharsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -131,6 +131,7 @@
       this.tabCharset = new System.Windows.Forms.TabPage();
       this.charEditor = new C64Studio.Controls.CharacterEditor();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnExportToMarqsPETSCII = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
       this.tabProject.SuspendLayout();
@@ -349,6 +350,7 @@
       this.groupExport.Controls.Add(this.btnExportToBASICHexData);
       this.groupExport.Controls.Add(this.btnExportToBASICData);
       this.groupExport.Controls.Add(this.btnExportToBasic);
+      this.groupExport.Controls.Add(this.btnExportToMarqsPETSCII);
       this.groupExport.Controls.Add(this.btnExportToImage);
       this.groupExport.Controls.Add(this.btnExportToImageFile);
       this.groupExport.Controls.Add(this.btnExportToFile);
@@ -1192,7 +1194,7 @@
       // 
       this.panelCharColors.AutoResize = false;
       this.panelCharColors.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.panelCharColors.DisplayPage = fastImage1;
+      this.panelCharColors.DisplayPage = fastImage3;
       this.panelCharColors.Image = null;
       this.panelCharColors.Location = new System.Drawing.Point(677, 416);
       this.panelCharColors.Name = "panelCharColors";
@@ -1207,7 +1209,7 @@
       // 
       this.pictureEditor.AutoResize = false;
       this.pictureEditor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.pictureEditor.DisplayPage = fastImage2;
+      this.pictureEditor.DisplayPage = fastImage4;
       this.pictureEditor.Image = null;
       this.pictureEditor.Location = new System.Drawing.Point(8, 6);
       this.pictureEditor.Name = "pictureEditor";
@@ -1252,6 +1254,16 @@
       this.charEditor.TabIndex = 24;
       this.charEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);
       this.charEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.charEditor_CharactersShifted);
+      // 
+      // btnExportToMarqsPETSCII
+      // 
+      this.btnExportToMarqsPETSCII.Location = new System.Drawing.Point(229, 272);
+      this.btnExportToMarqsPETSCII.Name = "btnExportToMarqsPETSCII";
+      this.btnExportToMarqsPETSCII.Size = new System.Drawing.Size(119, 23);
+      this.btnExportToMarqsPETSCII.TabIndex = 19;
+      this.btnExportToMarqsPETSCII.Text = "to Marq\'s PETSCII";
+      this.btnExportToMarqsPETSCII.UseVisualStyleBackColor = true;
+      this.btnExportToMarqsPETSCII.Click += new System.EventHandler(this.btnExportToMarqsPETSCII_Click);
       // 
       // CharsetScreenEditor
       // 
@@ -1381,5 +1393,6 @@
     private System.Windows.Forms.Button btnImportFromBASIC;
     private System.Windows.Forms.Button btnPaste;
     private System.Windows.Forms.Button btnCopy;
+    private System.Windows.Forms.Button btnExportToMarqsPETSCII;
   }
 }
