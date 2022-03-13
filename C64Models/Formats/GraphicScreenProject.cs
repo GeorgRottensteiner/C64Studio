@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using RetroDevStudio;
-
-
+using RetroDevStudio.Types;
 
 namespace C64Studio.Formats
 {
@@ -40,9 +39,7 @@ namespace C64Studio.Formats
 
 
 
-    public int                          BackgroundColor = 0;
-    public int                          MultiColor1 = 0;
-    public int                          MultiColor2 = 0;
+    public ColorSettings                Colors = new ColorSettings();
     public bool                         MultiColor = false;
     public GR.Image.MemoryImage         Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
@@ -67,6 +64,7 @@ namespace C64Studio.Formats
       {
         ColorMapping.Add( i, new List<ColorMappingTarget> { ColorMappingTarget.ANY } );
       }
+      Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
     }
 
 
@@ -123,10 +121,16 @@ namespace C64Studio.Formats
 
       GR.IO.FileChunk chunkScreenMultiColorData = new GR.IO.FileChunk( FileChunkConstants.MULTICOLOR_DATA );
       chunkScreenMultiColorData.AppendU8( (byte)( MultiColor ? 1 : 0 ) );
-      chunkScreenMultiColorData.AppendU8( (byte)BackgroundColor );
-      chunkScreenMultiColorData.AppendU8( (byte)MultiColor1 );
-      chunkScreenMultiColorData.AppendU8( (byte)MultiColor2 );
+      chunkScreenMultiColorData.AppendU8( (byte)Colors.BackgroundColor );
+      chunkScreenMultiColorData.AppendU8( (byte)Colors.MultiColor1 );
+      chunkScreenMultiColorData.AppendU8( (byte)Colors.MultiColor2 );
+      chunkScreenMultiColorData.AppendI32( Colors.ActivePalette );
       data.Append( chunkScreenMultiColorData.ToBuffer() );
+
+      foreach ( var pal in Colors.Palettes )
+      {
+        data.Append( pal.ToBuffer() );
+      }
 
       GR.IO.FileChunk chunkColorMapping = new GR.IO.FileChunk( FileChunkConstants.GRAPHIC_COLOR_MAPPING );
       chunkColorMapping.AppendI32( ColorMapping.Count );
@@ -153,6 +157,7 @@ namespace C64Studio.Formats
       {
         ColorMapping.Add( i, new List<ColorMappingTarget> { ColorMappingTarget.ANY } );
       }
+      Colors.Palettes.Clear();
 
       GR.IO.MemoryReader memReader = new GR.IO.MemoryReader( ProjectFile );
 
@@ -221,23 +226,32 @@ namespace C64Studio.Formats
             break;
           case FileChunkConstants.MULTICOLOR_DATA:
             MultiColor = ( chunkReader.ReadUInt8() == 1 );
-            BackgroundColor = chunkReader.ReadUInt8();
-            MultiColor1 = chunkReader.ReadUInt8();
-            MultiColor2 = chunkReader.ReadUInt8();
-            if ( ( MultiColor1 < 0 )
-            ||   ( MultiColor1 >= 16 ) )
+            Colors.BackgroundColor = chunkReader.ReadUInt8();
+            Colors.MultiColor1 = chunkReader.ReadUInt8();
+            Colors.MultiColor2 = chunkReader.ReadUInt8();
+            Colors.ActivePalette = chunkReader.ReadInt32();
+            if ( ( Colors.MultiColor1 < 0 )
+            ||   ( Colors.MultiColor1 >= 16 ) )
             {
-              MultiColor1 = 0;
+              Colors.MultiColor1 = 0;
             }
-            if ( ( MultiColor2 < 0 )
-            ||   ( MultiColor2 >= 16 ) )
+            if ( ( Colors.MultiColor2 < 0 )
+            ||   ( Colors.MultiColor2 >= 16 ) )
             {
-              MultiColor2 = 0;
+              Colors.MultiColor2 = 0;
             }
+            break;
+          case FileChunkConstants.PALETTE:
+            Colors.Palettes.Add( Palette.Read( chunkReader ) );
             break;
         }
       }
       memReader.Close();
+
+      if ( Colors.Palettes.Count == 0 )
+      {
+        Colors.Palettes.Add( PaletteManager.PaletteFromMachine( MachineType.C64 ) );
+      }
       return true;
     }
 
@@ -296,7 +310,7 @@ namespace C64Studio.Formats
                 }
                 ++numErrors;
               }
-              if ( colorIndex != BackgroundColor )
+              if ( colorIndex != Colors.BackgroundColor )
               {
                 // remember used color
                 usedColors.Add( colorIndex, 0 );
@@ -427,7 +441,7 @@ namespace C64Studio.Formats
                 }
                 ++numErrors;
               }
-              if ( colorIndex != BackgroundColor )
+              if ( colorIndex != Colors.BackgroundColor )
               {
                 // remember used color
                 usedColors.Add( colorIndex, 0 );
@@ -557,7 +571,7 @@ namespace C64Studio.Formats
               for ( int charX = 0; charX < 4; ++charX )
               {
                 byte colorIndex = (byte)Image.GetPixel( x * 8 + charX * 2, y * 8 + charY );
-                if ( colorIndex != BackgroundColor )
+                if ( colorIndex != Colors.BackgroundColor )
                 {
                   // other color
                   byte colorValue = 0;

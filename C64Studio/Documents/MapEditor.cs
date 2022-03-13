@@ -370,6 +370,11 @@ namespace C64Studio
                                                 m_MapProject.MultiColor1,
                                                 m_MapProject.MultiColor2,
                                                 m_MapProject.BGColor4 );
+
+      if ( CharIndex < panelCharacters.Items.Count )
+      {
+        panelCharacters.Items[CharIndex].MemoryImage = m_MapProject.Charset.Characters[CharIndex].Tile.Image;
+      }
     }
 
 
@@ -3637,6 +3642,29 @@ namespace C64Studio
       comboMaps.Items.RemoveAt( MapIndex1 );
       comboMaps.Items.Insert( MapIndex1, item1 );
     }
+
+
+
+    private void characterEditor_CharactersShifted( int[] OldToNew, int[] NewToOld )
+    {
+      foreach ( var tile in m_MapProject.Tiles )
+      {
+        for ( int i = 0; i < tile.Chars.Width; ++i )
+        {
+          for ( int j = 0; j < tile.Chars.Height; ++j )
+          {
+            tile.Chars[i,j].Character = (byte)OldToNew[tile.Chars[i, j].Character];
+          }
+        }
+      }
+      for ( int i = 0; i < m_MapProject.Charset.TotalNumberOfCharacters; ++i )
+      {
+        panelCharacters.Items[i].MemoryImage = m_MapProject.Charset.Characters[i].Tile.Image;
+      }
+      RedrawMap();
+      RedrawTile();
+    }
+
 
 
   }

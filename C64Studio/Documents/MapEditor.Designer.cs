@@ -1368,6 +1368,7 @@
       this.characterEditor.Size = new System.Drawing.Size(1056, 475);
       this.characterEditor.TabIndex = 0;
       this.characterEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.characterEditor_Modified);
+      this.characterEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.characterEditor_CharactersShifted);
       // 
       // tabPage1
       // 

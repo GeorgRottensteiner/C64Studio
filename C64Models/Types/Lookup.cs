@@ -483,6 +483,37 @@ namespace RetroDevStudio
 
 
 
+    public static int NumberOfColorsInDisplayMode( GraphicScreenProject.CheckType CheckType )
+    {
+      switch ( CheckType )
+      {
+        case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
+        case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
+          return 256;
+        default:
+          return 16;
+      }
+    }
+
+
+
+    public static TextCharMode CharacterModeFromCheckType( GraphicScreenProject.CheckType CheckType )
+    {
+      switch ( CheckType )
+      {
+        case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
+          return TextCharMode.MEGA65_FCM;
+        case GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
+          return TextCharMode.MEGA65_FCM_16BIT;
+        case GraphicScreenProject.CheckType.HIRES_BITMAP:
+        case GraphicScreenProject.CheckType.HIRES_CHARSET:
+        default:
+          return TextCharMode.COMMODORE_HIRES;
+        case GraphicScreenProject.CheckType.MULTICOLOR_BITMAP:
+        case GraphicScreenProject.CheckType.MULTICOLOR_CHARSET:
+          return TextCharMode.COMMODORE_MULTICOLOR;
+      }
+    }
   }
 
 }

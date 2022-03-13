@@ -54,7 +54,7 @@ namespace C64Studio.Converter
 
             if ( !usedColor[colorIndex] )
             {
-              if ( colorIndex == Project.BackgroundColor )
+              if ( colorIndex == Project.Colors.BackgroundColor )
               {
                 usedBackgroundColor = true;
               }
@@ -115,7 +115,7 @@ namespace C64Studio.Converter
           for ( int i = 0; i < 16; ++i )
           {
             if ( ( usedColor[i] )
-            && ( i != Project.BackgroundColor ) )
+            && ( i != Project.Colors.BackgroundColor ) )
             {
               otherColorIndex = i;
               break;
@@ -136,7 +136,7 @@ namespace C64Studio.Converter
           {
             if ( usedColor[i] )
             {
-              if ( i != Project.BackgroundColor )
+              if ( i != Project.Colors.BackgroundColor )
               {
                 if ( usedFreeColor != -1 )
                 {
@@ -165,7 +165,7 @@ namespace C64Studio.Converter
 
               int BitPattern = 0;
 
-              if ( ColorIndex != Project.BackgroundColor )
+              if ( ColorIndex != Project.Colors.BackgroundColor )
               {
                 BitPattern = 1;
               }
@@ -189,9 +189,9 @@ namespace C64Studio.Converter
           {
             if ( usedColor[i] )
             {
-              if ( ( i == Project.MultiColor1 )
-              || ( i == Project.MultiColor2 )
-              || ( i == Project.BackgroundColor ) )
+              if ( ( i == Project.Colors.MultiColor1 )
+              ||   ( i == Project.Colors.MultiColor2 )
+              ||   ( i == Project.Colors.BackgroundColor ) )
               {
                 ++usedMultiColors;
               }
@@ -220,15 +220,15 @@ namespace C64Studio.Converter
 
               byte BitPattern = 0;
 
-              if ( ColorIndex == Project.BackgroundColor )
+              if ( ColorIndex == Project.Colors.BackgroundColor )
               {
                 BitPattern = 0x00;
               }
-              else if ( ColorIndex == Project.MultiColor1 )
+              else if ( ColorIndex == Project.Colors.MultiColor1 )
               {
                 BitPattern = 0x01;
               }
-              else if ( ColorIndex == Project.MultiColor2 )
+              else if ( ColorIndex == Project.Colors.MultiColor2 )
               {
                 BitPattern = 0x02;
               }
@@ -414,15 +414,15 @@ namespace C64Studio.Converter
 
               screen.Chars[x + y * blockWidth] = (ushort)( ( origCharData.Tile.CustomColor << 8 ) + charData.Index );
               screen.Mode = project.MultiColor ? RetroDevStudio.TextMode.COMMODORE_40_X_25_MULTICOLOR : RetroDevStudio.TextMode.COMMODORE_40_X_25_HIRES;
-              screen.CharSet.Colors.MultiColor1  = project.MultiColor1;
-              screen.CharSet.Colors.MultiColor2  = project.MultiColor2;
-              screen.CharSet.Colors.BackgroundColor = project.BackgroundColor;
+              screen.CharSet.Colors.MultiColor1  = project.Colors.MultiColor1;
+              screen.CharSet.Colors.MultiColor2  = project.Colors.MultiColor2;
+              screen.CharSet.Colors.BackgroundColor = project.Colors.BackgroundColor;
             }
           }
           screen.CharSet = new C64Studio.Formats.CharsetProject();
-          screen.CharSet.Colors.BackgroundColor = project.BackgroundColor;
-          screen.CharSet.Colors.MultiColor1 = project.MultiColor1;
-          screen.CharSet.Colors.MultiColor2 = project.MultiColor2;
+          screen.CharSet.Colors.BackgroundColor = project.Colors.BackgroundColor;
+          screen.CharSet.Colors.MultiColor1 = project.Colors.MultiColor1;
+          screen.CharSet.Colors.MultiColor2 = project.Colors.MultiColor2;
 
           for ( uint c = 0; c < charSet.Length / 8; ++c )
           {
