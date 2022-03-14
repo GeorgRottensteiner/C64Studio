@@ -8321,6 +8321,12 @@ namespace FastColoredTextBoxNS
           --to;
         }
       }
+
+      if ( old.Start.iLine == old.End.iLine )
+      {
+        startOffset = Math.Min( old.Start.iChar, old.End.iChar );
+      }
+
       BeginUpdate();
       Selection.BeginUpdate();
       lines.Manager.BeginAutoUndoCommands();
@@ -8361,11 +8367,19 @@ namespace FastColoredTextBoxNS
       int from = Math.Min( Selection.Start.iLine, Selection.End.iLine );
       int to = Math.Max( Selection.Start.iLine, Selection.End.iLine );
       int   startOffset = old.Start.iChar;
+      Place   oldStart = old.Start;
+      Place   oldEnd = old.End;
       if ( old.Start.iLine > old.End.iLine )
       {
         startOffset = old.End.iChar;
+        oldEnd = old.Start;
+        oldStart = old.End;
       }
-      BeginUpdate();
+      if ( old.Start.iLine == old.End.iLine )
+      {
+        startOffset = Math.Min( old.Start.iChar, old.End.iChar );
+      }
+
       Selection.BeginUpdate();
       lines.Manager.BeginAutoUndoCommands();
       lines.Manager.ExecuteCommand( new SelectCommand( TextSource ) );
@@ -8377,12 +8391,12 @@ namespace FastColoredTextBoxNS
         &&   ( spaces < startOffset ) )
         {
           Selection.Start = new Place( startOffset, i );
-          Selection.End = old.End;
+          Selection.End = oldEnd;
         }
         else
         {
           Selection.Start = new Place( spaces, i );
-          Selection.End = old.End;
+          Selection.End = oldEnd;
         }
         if ( Selection.Text.StartsWith( prefix ) )
         {
@@ -8392,7 +8406,7 @@ namespace FastColoredTextBoxNS
           Selection.End = old.End;
         }
       }
-      Selection.Start = new Place( old.Start.iChar, from );
+      Selection.Start = new Place( oldStart.iChar, from );
       Selection.End = new Place( lines[to].Count, to );
       needRecalc = true;
       lines.Manager.EndAutoUndoCommands();
