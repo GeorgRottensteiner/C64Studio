@@ -256,7 +256,6 @@
     <Compile Include="Documents\BaseDocument.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ColorSystem.cs" />
     <Compile Include="Controls\MeasurableListView.cs">
       <SubType>Component</SubType>
     </Compile>

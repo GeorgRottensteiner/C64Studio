@@ -1,9 +1,12 @@
-﻿using RetroDevStudio;
+﻿using C64Studio.Converter;
+using RetroDevStudio;
+using RetroDevStudio.Converter;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 
@@ -12,16 +15,6 @@ namespace C64Studio
 {
   public partial class DlgGraphicImport : Form
   {
-    private enum ColorMatchType
-    {
-      [Description( "RGB distance" )]
-      RGB_DISTANCE = 0,
-      [Description( "HUE distance" )]
-      HUE_DISTANCE,
-      [Description( "CIE76 distance" )]
-      CIE76_DISTANCE
-    };
-
     private class ErrorRange
     {
       public int X = 0;
@@ -268,79 +261,6 @@ namespace C64Studio
 
 
 
-    int MatchColor( byte R, byte G, byte B, Palette Palette )
-    {
-      int bestMatchDistance = 50000000;
-      int bestMatch = -1;
-
-      ColorMatchType    matchType = (ColorMatchType)comboColorMatching.SelectedIndex;
-
-      ColorSystem.RGB   origColor = new ColorSystem.RGB( R, G, B );
-      
-      for ( int k = 0; k < Palette.NumColors; ++k )
-      {
-        switch ( matchType )
-        {
-          case ColorMatchType.RGB_DISTANCE:
-            {
-              int distR = R - (int)( ( Palette.ColorValues[k] & 0xff0000 ) >> 16 );
-              int distG = G - (int)( ( Palette.ColorValues[k] & 0x00ff00 ) >> 8 );
-              int distB = B - (int)( Palette.ColorValues[k] & 0xff );
-              //int distance = (int)( distR * distR * 0.3f + distG * distG * 0.6f + distB * distB * 0.1f );
-              int distance = (int)( distR * distR + distG * distG + distB * distB );
-
-              if ( distance < bestMatchDistance )
-              {
-                bestMatchDistance = distance;
-                bestMatch = k;
-              }
-            }
-            break;
-          case ColorMatchType.HUE_DISTANCE:
-            {
-              ColorSystem.HSV myHSV = ColorSystem.RGBToHSV( origColor );
-              ColorSystem.HSV otherHSV = ColorSystem.RGBToHSV( new ColorSystem.RGB( (byte)( ( Palette.ColorValues[k] & 0xff0000 ) >> 16 ), (byte)( ( Palette.ColorValues[k] & 0x00ff00 ) >> 8 ), (byte)( Palette.ColorValues[k] & 0xff ) ) );
-
-              int distance = Math.Abs( (int)( otherHSV.H - myHSV.H ) );
-              distance = Math.Min( distance, Math.Abs( (int)( otherHSV.H + 360.0 - myHSV.H ) ) );
-              distance = Math.Min( distance, Math.Abs( (int)( otherHSV.H - 360.0 - myHSV.H ) ) );
-
-              distance *= distance;
-              distance += (int)( 255.0f * Math.Abs( myHSV.V - otherHSV.V ) ) * (int)( 255.0f * Math.Abs( myHSV.V - otherHSV.V ) );
-              distance += (int)( 255.0f * Math.Abs( myHSV.S - otherHSV.S ) ) * (int)( 255.0f * Math.Abs( myHSV.S - otherHSV.S ) );
-
-              if ( distance < bestMatchDistance )
-              {
-                bestMatchDistance = distance;
-                bestMatch = k;
-              }
-            }
-            break;
-          case ColorMatchType.CIE76_DISTANCE:
-            {
-              ColorSystem.CIELab myLab = ColorSystem.RGBToCIELab( origColor );
-              ColorSystem.CIELab otherLab = ColorSystem.RGBToCIELab( new ColorSystem.RGB( (byte)( ( Palette.ColorValues[k] & 0xff0000 ) >> 16 ), (byte)( ( Palette.ColorValues[k] & 0x00ff00 ) >> 8 ), (byte)( Palette.ColorValues[k] & 0xff ) ) );
-
-              float distL = ( myLab.L - otherLab.L ) * ( myLab.L - otherLab.L );
-              float dista = ( myLab.a - otherLab.a ) * ( myLab.a - otherLab.a );
-              float distb = ( myLab.b - otherLab.b ) * ( myLab.b - otherLab.b );
-
-              int distance = (int)( distL + dista + distb );
-
-              if ( distance < bestMatchDistance )
-              {
-                bestMatchDistance = distance;
-                bestMatch = k;
-              }
-            }
-            break;
-        }
-      }
-      return bestMatch;
-    }
-
-
-
     bool CheckColors()
     {
       // can all colors be matched to the palette?
@@ -387,30 +307,11 @@ namespace C64Studio
 
             //ColorSystem.RGB rgb = new ColorSystem.RGB( red, green, blue );
 
-            // HSV-system (painter!)
             int bestMatch = (byte)pixelValue;
             if ( comboTargetPalette.SelectedIndex < MultiColorSettings.Palettes.Count )
             {
-              bestMatch = MatchColor( red, green, blue, m_CurPalette );
+              bestMatch = ColorMatcher.MatchColor( (ColorMatchType)comboColorMatching.SelectedIndex, red, green, blue, m_CurPalette.ColorValues.ToList() );
             }
-            /*
-            int bestMatchDistance = 50000000;
-            int bestMatch = -1;
-            for ( int k = 0; k < 16; ++k )
-            {
-              int distR = red - (int)( ( m_CurPalette.ColorValues[k] & 0xff0000 ) >> 16 );
-              int distG = green - (int)( ( m_CurPalette.ColorValues[k] & 0x00ff00 ) >> 8 );
-              int distB = blue - (int)( m_CurPalette.ColorValues[k] & 0xff );
-              //int distance = (int)( distR * distR * 0.3f + distG * distG * 0.6f + distB * distB * 0.1f );
-              int distance = (int)( distR * distR + distG * distG + distB * distB );
-
-              if ( distance < bestMatchDistance )
-              {
-                bestMatchDistance = distance;
-                bestMatch = k;
-              }
-            }*/
-
 
             if ( bestMatch == -1 )
             {

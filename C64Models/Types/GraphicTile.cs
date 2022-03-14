@@ -1,4 +1,7 @@
-﻿using GR.Memory;
+﻿using C64Studio.Converter;
+using GR.Generic;
+using GR.Memory;
+using RetroDevStudio.Converter;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -255,56 +258,72 @@ namespace RetroDevStudio.Types
       uint  pixelColor = GetColorFromValue( pixelValue );
 
       var potentialColors = new List<uint>();
+      var potentialColorTypes =new List<ColorType>();
+
       switch ( TargetTile.Mode )
       {
         case GraphicTileMode.COMMODORE_HIRES:
           potentialColors.Add( Colors.Palette.ColorValues[Colors.BackgroundColor] );
+          potentialColorTypes.Add( ColorType.BACKGROUND );
 
           // TODO - variable color!
           potentialColors.Add( Colors.Palette.ColorValues[CustomColor] );
+          potentialColorTypes.Add( ColorType.CUSTOM_COLOR );
           break;
         case GraphicTileMode.COMMODORE_MULTICOLOR:
           potentialColors.Add( Colors.Palette.ColorValues[Colors.BackgroundColor] );
+          potentialColorTypes.Add( ColorType.BACKGROUND );
           potentialColors.Add( Colors.Palette.ColorValues[Colors.MultiColor1] );
+          potentialColorTypes.Add( ColorType.MULTICOLOR_1 );
           potentialColors.Add( Colors.Palette.ColorValues[Colors.MultiColor2] );
+          potentialColorTypes.Add( ColorType.MULTICOLOR_2 );
 
           // TODO - variable color!
           potentialColors.Add( Colors.Palette.ColorValues[CustomColor] );
+          potentialColorTypes.Add( ColorType.CUSTOM_COLOR );
           break;
         case GraphicTileMode.COMMODORE_ECM:
           potentialColors.Add( Colors.Palette.ColorValues[Colors.BackgroundColor] );
+          potentialColorTypes.Add( ColorType.BACKGROUND );
           potentialColors.Add( Colors.Palette.ColorValues[Colors.BGColor4] );
+          potentialColorTypes.Add( ColorType.BGCOLOR4 );
 
           // TODO - variable colors!
           potentialColors.Add( Colors.Palette.ColorValues[CustomColor] );
+          potentialColorTypes.Add( ColorType.CUSTOM_COLOR );
           break;
         case GraphicTileMode.MEGA65_FCM_16_COLORS:
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
-          potentialColors.AddRange( Colors.Palette.ColorValues );
+          for ( int i = 0; i < Colors.Palette.NumColors; ++i )
+          {
+            potentialColors.Add( Colors.Palette.ColorValues[i] );
+            potentialColorTypes.Add( (ColorType)i );
+          }
           break;
       }
 
-      int bestMatch = FindClosestEntryInPalette( pixelColor, potentialColors );
+      int bestMatch = FindClosestEntryInPalette( pixelColor, potentialColorTypes, potentialColors );
 
       return bestMatch;
     }
 
 
 
-    private int FindClosestEntryInPalette( uint PixelColor, IEnumerable<uint> PotentialColors )
+    private int FindClosestEntryInPalette( uint PixelColor, List<ColorType> ColorTypes, List<uint> PotentialColors )
     {
       int   index = 0;
       foreach ( var color in PotentialColors )
       {
         if ( PixelColor == color )
         {
-          return index;
+          return (int)ColorTypes[index];
         }
         ++index;
       }
 
-      // TODO - find best match
-      return (int)ColorType.BACKGROUND;
+      index = ColorMatcher.MatchColor( ColorMatchType.HUE_DISTANCE, (byte)( PixelColor >> 16 ), (byte)( PixelColor >> 8 ), (byte)PixelColor, PotentialColors );
+
+      return (int)ColorTypes[index];
     }
 
 
