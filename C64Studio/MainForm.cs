@@ -3139,7 +3139,7 @@ namespace C64Studio
       }
       if ( CurrentProject != null )
       {
-        Text = "C64Studio - " + CurrentProject.Settings.Name;
+        Text = "C64Studio - " + StudioCore.Navigating.Solution.Name + " - " + CurrentProject.Settings.Name;
       }
       else
       {

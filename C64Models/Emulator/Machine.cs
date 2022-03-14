@@ -263,6 +263,10 @@ namespace Tiny64
       // TODO check for interrupts!
       if ( !CPU.FlagIRQ )
       {
+        if ( IRQResetRaised )
+        {
+          HardReset();
+        }
         if ( IRQNMIRaised )
         {
           //Debug.Log( "NMIRaised" );
