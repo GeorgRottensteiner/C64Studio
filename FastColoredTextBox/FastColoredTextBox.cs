@@ -8314,7 +8314,7 @@ namespace FastColoredTextBoxNS
           --to;
         }
       }
-      else
+      else if ( old.Start.iLine < old.End.iLine )
       {
         if ( Selection.End.iChar == 0 )
         {
