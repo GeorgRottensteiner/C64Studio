@@ -1164,6 +1164,8 @@ namespace C64Studio
         if ( Core.Navigating.Solution.IsValidProjectName( newText ) )
         {
           Core.Navigating.Solution.RenameProject( project, newText );
+
+          Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_RENAMED ) );
         }
         return;
       }

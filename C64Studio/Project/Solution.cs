@@ -2,6 +2,7 @@
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace C64Studio
@@ -119,6 +120,7 @@ namespace C64Studio
               ActiveProject = memSubChunk.ReadString();
 
               Filename = FromFile;
+              Name = System.IO.Path.GetFileNameWithoutExtension( FromFile );
               break;
             case FileChunkConstants.SOLUTION_PROJECT:
               {
@@ -187,6 +189,17 @@ namespace C64Studio
       {
         return false;
       }
+      var invalidChars = System.IO.Path.GetInvalidFileNameChars();
+      foreach ( char c in NewName )
+      {
+        for ( int i = 0; i < invalidChars.Length; ++i )
+        {
+          if ( c == invalidChars[i] )
+          {
+            return false;
+          }
+        }
+      }
       return true;
     }
 
@@ -198,6 +211,17 @@ namespace C64Studio
       {
         return;
       }
+
+      var oldProjectFilename = Project.Settings.Filename;
+      var newProjectFilename = GR.Path.RenameFilenameWithoutExtension( oldProjectFilename, NewName );
+      if ( System.IO.File.Exists( newProjectFilename ) )
+      {
+        System.Windows.Forms.MessageBox.Show( $"The new project filename '{newProjectFilename}' already exists!", "Cannot rename project" );
+        return;
+      }
+      System.IO.File.Move( oldProjectFilename, newProjectFilename );
+      Project.Settings.Filename = newProjectFilename;
+
       // adjust references
       foreach ( var project in Projects )
       {

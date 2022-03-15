@@ -1241,14 +1241,17 @@ namespace C64Studio
             SetActiveProject( Event.Project );
           }
           break;
-        case C64Studio.Types.ApplicationEvent.Type.SOLUTION_OPENED:
+        case Types.ApplicationEvent.Type.SOLUTION_RENAMED:
+          UpdateCaption();
+          break;
+        case Types.ApplicationEvent.Type.SOLUTION_OPENED:
           solutionToolStripMenuItem.Visible = true;
           solutionCloseToolStripMenuItem.Enabled = true;
           solutionSaveToolStripMenuItem1.Enabled = true;
           closeSolutionToolStripMenuItem.Enabled = true;
           UpdateCaption();
           break;
-        case C64Studio.Types.ApplicationEvent.Type.SOLUTION_CLOSED:
+        case Types.ApplicationEvent.Type.SOLUTION_CLOSED:
           solutionToolStripMenuItem.Visible = false;
           solutionCloseToolStripMenuItem.Enabled = false;
           solutionSaveToolStripMenuItem1.Enabled = false;
@@ -1258,7 +1261,7 @@ namespace C64Studio
           m_CompileResult.ClearMessages();
           UpdateCaption();
           break;
-        case C64Studio.Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED:
+        case Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED:
           m_DebugWatch.DebuggedProject = m_CurrentProject;
           m_DebugWatch.ClearAllWatchEntries();
           if ( m_CurrentProject != null )
