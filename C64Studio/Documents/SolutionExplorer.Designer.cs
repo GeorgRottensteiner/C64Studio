@@ -47,6 +47,8 @@
       this.seBtnAddNewMap = new System.Windows.Forms.ToolStripMenuItem();
       this.seBtnAddExisting = new System.Windows.Forms.ToolStripButton();
       this.seBtnDelete = new System.Windows.Forms.ToolStripButton();
+      this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+      this.seBtnCloneSolution = new System.Windows.Forms.ToolStripButton();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -104,7 +106,9 @@
       this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.seBtnAddNewItem,
             this.seBtnAddExisting,
-            this.seBtnDelete});
+            this.seBtnDelete,
+            this.toolStripSeparator2,
+            this.seBtnCloneSolution});
       this.toolStrip1.Location = new System.Drawing.Point(0, 0);
       this.toolStrip1.Name = "toolStrip1";
       this.toolStrip1.Size = new System.Drawing.Size(534, 25);
@@ -222,6 +226,22 @@
       this.seBtnDelete.Text = "Delete";
       this.seBtnDelete.Click += new System.EventHandler(this.seBtnDelete_Click);
       // 
+      // toolStripSeparator2
+      // 
+      this.toolStripSeparator2.Name = "toolStripSeparator2";
+      this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+      // 
+      // seBtnCloneSolution
+      // 
+      this.seBtnCloneSolution.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.seBtnCloneSolution.Enabled = false;
+      this.seBtnCloneSolution.Image = global::C64Studio.Properties.Resources.clone;
+      this.seBtnCloneSolution.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.seBtnCloneSolution.Name = "seBtnCloneSolution";
+      this.seBtnCloneSolution.Size = new System.Drawing.Size(23, 22);
+      this.seBtnCloneSolution.Text = "Clone Solution";
+      this.seBtnCloneSolution.Click += new System.EventHandler(this.seBtnCloneSolution_Click);
+      // 
       // SolutionExplorer
       // 
       this.ClientSize = new System.Drawing.Size(534, 390);
@@ -257,6 +277,7 @@
     private System.Windows.Forms.ToolStripButton seBtnDelete;
     private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+    private System.Windows.Forms.ToolStripButton seBtnCloneSolution;
   }
 }

@@ -1249,6 +1249,7 @@ namespace C64Studio
           solutionCloseToolStripMenuItem.Enabled = true;
           solutionSaveToolStripMenuItem1.Enabled = true;
           closeSolutionToolStripMenuItem.Enabled = true;
+          solutionCloneToolStripMenuItem.Enabled = true;
           UpdateCaption();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_CLOSED:
@@ -1256,6 +1257,7 @@ namespace C64Studio
           solutionCloseToolStripMenuItem.Enabled = false;
           solutionSaveToolStripMenuItem1.Enabled = false;
           closeSolutionToolStripMenuItem.Enabled = false;
+          solutionCloneToolStripMenuItem.Enabled = false;
 
           m_Output.SetText( "" );
           m_CompileResult.ClearMessages();
@@ -2005,6 +2007,108 @@ namespace C64Studio
         dollarPos = result.IndexOf( "$(", dollarPos );
       }
       return result;
+    }
+
+
+
+    public bool CloneSolution( Solution SourceSolution )
+    {
+      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
+
+      saveDlg.Title = "Clone Solution as";
+      saveDlg.Filter = FilterString( Types.Constants.FILEFILTER_SOLUTION + Types.Constants.FILEFILTER_ALL );
+
+      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+      {
+        return false;
+      }
+
+      StringBuilder   sb = new StringBuilder();
+
+      var newSolutionFilename = saveDlg.FileName;
+
+      var solutionData = SourceSolution.ToBuffer();
+
+      var newSolution  = new Solution( this );
+      if ( !newSolution.FromBuffer( solutionData, newSolutionFilename ) )
+      {
+        return false;
+      }
+
+      var solutionDir = System.IO.Path.GetDirectoryName( SourceSolution.Filename );
+      var newSolutionDir = System.IO.Path.GetDirectoryName( newSolutionFilename );
+
+      // clone all contained projects
+      foreach ( var project in SourceSolution.Projects )
+      {
+        var projectData = project.Save();
+
+        var clonedProject = new Project();
+        clonedProject.Core = StudioCore;
+        if ( !clonedProject.Load( projectData.Data(), false ) )
+        {
+          return false;
+        }
+        // need to re-map project?
+        if ( GR.Path.IsSubPath( solutionDir, project.Settings.BasePath ) )
+        {
+          var relativeProjectFilePath = GR.Path.RelativePathTo( solutionDir, true, project.Settings.BasePath, true );
+          var relativeProjectPath = GR.Path.RelativePathTo( solutionDir, true, System.IO.Path.GetDirectoryName( project.Settings.Filename ), true );
+
+          clonedProject.Settings.BasePath = GR.Path.Append( newSolutionDir, relativeProjectFilePath );
+          clonedProject.Settings.Filename = GR.Path.Append( GR.Path.Append( newSolutionDir, relativeProjectPath ), System.IO.Path.GetFileName( clonedProject.Settings.Filename ) );
+
+          if ( !System.IO.Directory.Exists( clonedProject.Settings.BasePath ) )
+          {
+            System.IO.Directory.CreateDirectory( clonedProject.Settings.BasePath );
+          }
+
+          for ( int i = 0; i < project.Elements.Count; ++i )
+          {
+            var sourceElement = project.Elements[i];
+            var targetElement = clonedProject.Elements[i];
+
+            if ( GR.Path.IsSubPath( project.Settings.BasePath, sourceElement.DocumentInfo.FullPath ) )
+            {
+              // don't overwrite?
+              if ( !System.IO.File.Exists( targetElement.DocumentInfo.FullPath ) )
+              {
+                // need subfolder?
+                string    targetSubfolder = System.IO.Path.GetDirectoryName( targetElement.DocumentInfo.FullPath );
+                if ( !System.IO.Directory.Exists( targetSubfolder ) )
+                {
+                  System.IO.Directory.CreateDirectory( targetSubfolder );
+                }
+                System.IO.File.Copy( sourceElement.DocumentInfo.FullPath, targetElement.DocumentInfo.FullPath );
+              }
+            }
+          }
+          sb.AppendLine( $"Cloned project '{project.Settings.Filename}' to '{clonedProject.Settings.Filename}'" );
+        }
+        else
+        {
+          // what to do with projects outside?? just keep them?
+          sb.AppendLine( $"Cloned project reference '{project.Settings.Filename}'" );
+        }
+        clonedProject.Save( clonedProject.Settings.Filename );
+
+        newSolution.Projects.Add( clonedProject );
+      }
+
+      if ( !GR.IO.File.WriteAllBytes( newSolutionFilename, newSolution.ToBuffer() ) )
+      {
+        return false;
+      }
+      sb.AppendLine( $"Cloned solution '{SourceSolution.Filename}' to '{newSolutionFilename}'" );
+
+      // and add to existing solution
+      if ( !OpenSolution( saveDlg.FileName ) )
+      {
+        return false;
+      }
+
+      StudioCore.AddToOutput( sb.ToString() );
+      return true;
     }
 
 
@@ -7306,6 +7410,16 @@ namespace C64Studio
     private void saveCopyAsToolStripMenuItem_Click( object sender, EventArgs e )
     {
       ApplyFunction( C64Studio.Types.Function.SAVE_DOCUMENT_COPY_AS );
+    }
+
+
+
+    private void solutionCloneToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( StudioCore.Navigating.Solution != null )
+      {
+        CloneSolution( StudioCore.Navigating.Solution );
+      }
     }
 
 

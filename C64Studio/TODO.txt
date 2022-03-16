@@ -1,4 +1,13 @@
 ﻿C64Studio
+o Since there is no "Clone Solution" command !, 
+o to create a new solution based on an existing one (without having to import the files each time and recreate the virtual folders in the 
+  browser), I copy the existing folder, rename the new one and rename the file .s64.
+o Now that you have added the name of the current solution in the title bar of the program, I see that the name of the solution does 
+  not match the name of the new folder but the name of the previous solution (match name of solution to filename!)
+o I repeat, I am in enormous difficulty from this point of view. You could fix all this stuff. 
+o The "Clone Project" command also throws an exception and is unusable. The "Rename Project" command should also rename the .c64 file. I suggest you to provide real and not virtual folders (as Visual Studio does) so that even at the file level, everything is more organized and easier to manage. The commands "Import Project", "Import File" and "Import Folder" should also exist. There should also be multiple selection for files in the browser. I understand that all of this involves a lot of work, but I think you might want to consider it.
+Beyond all this, at the moment, what is the most practical and fastest way to create a new solution starting from an existing one without having to import the files and without having to recreate the virtual folders every time (also considering that every time I create a virtual folder, I have to drag and drop files one by one)?
+
 o Screen-Editor Shift UDLR, Mirror
 o Basic-Dateien im VICE-petcat-Format schreiben lassen? 
 o Would it be possible to see the total number of cycles taken by a macro?

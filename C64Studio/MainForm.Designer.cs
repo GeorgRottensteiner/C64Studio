@@ -212,6 +212,9 @@
       this.mainDebugStepInto = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOver = new System.Windows.Forms.ToolStripButton();
       this.mainDebugStepOut = new System.Windows.Forms.ToolStripButton();
+      this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
+      this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
+      this.solutionCloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.mainMenu.SuspendLayout();
       this.mainTools.SuspendLayout();
       this.mainStatus.SuspendLayout();
@@ -557,7 +560,10 @@
       this.solutionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.solutionAddNewProjectToolStripMenuItem,
             this.solutionAddExistingProjectToolStripMenuItem,
+            this.toolStripSeparator18,
+            this.solutionCloneToolStripMenuItem,
             this.solutionSaveToolStripMenuItem1,
+            this.toolStripSeparator17,
             this.solutionCloseToolStripMenuItem});
       this.solutionToolStripMenuItem.Name = "solutionToolStripMenuItem";
       this.solutionToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
@@ -1784,6 +1790,25 @@
       this.mainDebugStepOut.Text = "Step Out";
       this.mainDebugStepOut.Click += new System.EventHandler(this.mainDebugStepOut_Click);
       // 
+      // toolStripSeparator17
+      // 
+      this.toolStripSeparator17.Name = "toolStripSeparator17";
+      this.toolStripSeparator17.Size = new System.Drawing.Size(186, 6);
+      // 
+      // toolStripSeparator18
+      // 
+      this.toolStripSeparator18.Name = "toolStripSeparator18";
+      this.toolStripSeparator18.Size = new System.Drawing.Size(186, 6);
+      // 
+      // solutionCloneToolStripMenuItem
+      // 
+      this.solutionCloneToolStripMenuItem.Enabled = false;
+      this.solutionCloneToolStripMenuItem.Name = "solutionCloneToolStripMenuItem";
+      this.solutionCloneToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+      this.solutionCloneToolStripMenuItem.Text = "Clone...";
+      this.solutionCloneToolStripMenuItem.ToolTipText = "Clone Solution";
+      this.solutionCloneToolStripMenuItem.Click += new System.EventHandler(this.solutionCloneToolStripMenuItem_Click);
+      // 
       // MainForm
       // 
       this.AllowDrop = true;
@@ -2002,6 +2027,9 @@
     private System.Windows.Forms.ToolStripMenuItem navigateBackwardToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem navigateForwardToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem saveCopyAsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
+    private System.Windows.Forms.ToolStripMenuItem solutionCloneToolStripMenuItem;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
   }
 }
 

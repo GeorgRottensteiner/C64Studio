@@ -47,6 +47,7 @@ namespace C64Studio
           seBtnAddExisting.Enabled = false;
           seBtnAddNewItem.Enabled = false;
           seBtnDelete.Enabled = false;
+          seBtnCloneSolution.Enabled = false;
           break;
         case Types.ApplicationEvent.Type.SOLUTION_OPENED:
           // apply node expansions
@@ -87,6 +88,7 @@ namespace C64Studio
               project.Node.Text     = project.Node.Text;
             }
           }
+          seBtnCloneSolution.Enabled = true;
           break;
       }
     }
@@ -156,7 +158,7 @@ namespace C64Studio
 
             if ( isProject )
             {
-              System.Windows.Forms.ToolStripMenuItem subItemCloneProject = new System.Windows.Forms.ToolStripMenuItem( "Clone" );
+              System.Windows.Forms.ToolStripMenuItem subItemCloneProject = new System.Windows.Forms.ToolStripMenuItem( "Clone Project" );
               subItemCloneProject.Click += new EventHandler( subItemCloneProject_Click );
               contextMenu.Items.Add( subItemCloneProject );
             }
@@ -2034,6 +2036,17 @@ namespace C64Studio
         }
 
       }
+    }
+
+
+
+    private void seBtnCloneSolution_Click( object sender, EventArgs e )
+    {
+      if ( Core.Navigating.Solution == null )
+      {
+        return;
+      }
+      Core.MainForm.CloneSolution( Core.Navigating.Solution );
     }
 
 
