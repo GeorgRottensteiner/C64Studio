@@ -79,7 +79,8 @@ namespace C64Studio.Types
       ADDRESS,              // ACME: !ADDR with or without braces
       REPEAT,               // PDS: Repeat <x> times next line
       ADD_INCLUDE_SOURCE,   // DASM: Add directory to source code paths (custom library paths)
-      CPU                   // Set the procesor type
+      CPU,                  // Set the procesor type
+      PREPROCESSED_LIST      // en/disable output for precompiled file
     }
 
     public PseudoOpType      Type = PseudoOpType.UNKNOWN;

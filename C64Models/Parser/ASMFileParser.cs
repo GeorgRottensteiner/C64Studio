@@ -7804,6 +7804,7 @@ namespace C64Studio.Parser
       int   intermediateLineOffset = 0;
       bool  hadCommentInLine = false;
       bool hadPseudoOp = false;
+      bool hideInPreprocessedOutput = false;
       m_CurrentZoneName = "";
       m_CurrentSegmentIsVirtual = false;
 
@@ -7828,11 +7829,12 @@ namespace C64Studio.Parser
           hadCommentInLine = true;
         }
 
-        Types.ASM.LineInfo info = new Types.ASM.LineInfo();
-        info.LineIndex = lineIndex;
-        info.Zone = m_CurrentZoneName;
-        info.CheapLabelZone = cheapLabelParent;
-        info.AddressStart = programStepPos;
+        Types.ASM.LineInfo info       = new Types.ASM.LineInfo();
+        info.LineIndex                = lineIndex;
+        info.Zone                     = m_CurrentZoneName;
+        info.CheapLabelZone           = cheapLabelParent;
+        info.AddressStart             = programStepPos;
+        info.HideInPreprocessedOutput = hideInPreprocessedOutput;
 
         if ( !ScopeInsideMacroDefinition( stackScopes ) )
         {
@@ -9659,6 +9661,10 @@ namespace C64Studio.Parser
               }
               lineSizeInBytes = info.NumBytes;
             }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.PREPROCESSED_LIST )
+            {
+              POPreprocessedList( lineTokenInfos, lineIndex, info, ref hideInPreprocessedOutput );
+            }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.ALIGN_DASM )
             {
               var parseResult = POAlignDASM( lineTokenInfos, lineIndex, info, ref programStepPos, out lineSizeInBytes );
@@ -10585,6 +10591,30 @@ namespace C64Studio.Parser
 
       m_CompileCurrentAddress = -1;
       return Lines;
+    }
+
+
+
+    private void POPreprocessedList( List<TokenInfo> lineTokenInfos, int lineIndex, LineInfo info, ref bool HideInPreprocessedOutput )
+    {
+      if ( lineTokenInfos.Count != 2 )
+      {
+        AddError( lineIndex, ErrorCode.E1302_MALFORMED_MACRO, "Malformed pseudo op !list, expecting arguments on or off" );
+        return;
+      }
+      if ( lineTokenInfos[1].Content.ToUpper() == "OFF" )
+      {
+        HideInPreprocessedOutput = true;
+        info.HideInPreprocessedOutput = true;
+      }
+      else if ( lineTokenInfos[1].Content.ToUpper() == "ON" )
+      {
+        HideInPreprocessedOutput = false;
+      }
+      else
+      {
+        AddError( lineIndex, ErrorCode.E1302_MALFORMED_MACRO, "Malformed pseudo op !list, expecting arguments on or off" );
+      }
     }
 
 
@@ -12633,14 +12663,18 @@ namespace C64Studio.Parser
 
           for ( int i = 0; i < Lines.Length; ++i )
           {
-            writer.Write( i.ToString( formatString ) );
-            writer.Write( "  " );
-
             if ( FileInfo.LineInfo.ContainsKey( i ) )
             {
               var     info = FileInfo.LineInfo[i];
               if ( info != null )
               {
+                if ( info.HideInPreprocessedOutput )
+                {
+                  continue;
+                }
+
+                writer.Write( i.ToString( formatString ) );
+                writer.Write( "  " );
                 if ( info.AddressStart < 0 )
                 {
                   writer.Write( " ----" );
@@ -12681,12 +12715,18 @@ namespace C64Studio.Parser
               }
               else
               {
+                writer.Write( i.ToString( formatString ) );
+                writer.Write( "  " );
+
                 writer.Write( "????              " );
                 writer.WriteLine( Lines[i].TrimStart() );
               }
             }
             else
             {
+              writer.Write( i.ToString( formatString ) );
+              writer.Write( "  " );
+
               writer.Write( "????              " );
               writer.WriteLine( Lines[i].TrimStart() );
             }

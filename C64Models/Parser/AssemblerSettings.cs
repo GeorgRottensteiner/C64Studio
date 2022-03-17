@@ -231,6 +231,7 @@ namespace C64Studio.Parser
           AddPseudoOp( "!SL", Types.MacroInfo.PseudoOpType.LABEL_FILE );
           AddPseudoOp( "!CPU", Types.MacroInfo.PseudoOpType.CPU );
           AddPseudoOp( "!SET", Types.MacroInfo.PseudoOpType.SET );
+          AddPseudoOp( "!LIST", Types.MacroInfo.PseudoOpType.PREPROCESSED_LIST );
 
           // helper pseudo ops from ACME to generate some address vs. value warnings
           //AddMacro( "!ADDR", Types.MacroInfo.MacroType.IGNORE );

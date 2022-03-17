@@ -41,6 +41,7 @@ namespace C64Studio.Types.ASM
     public bool                   OpcodeUsingLongMode = false;
     public GR.Memory.ByteBuffer   LineData = null;
     public bool                   HasCollapsedContent = false;
+    public bool                   HideInPreprocessedOutput = false;
   };
 
 
