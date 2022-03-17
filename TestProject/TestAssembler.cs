@@ -524,6 +524,28 @@ namespace TestProject
 
 
 
+
+    [TestMethod]
+    public void TestNestedLoops()
+    {
+      string      source = @"ColorRAM      = $d800
+                              Map.ColorMap  = $c000
+                              Map.MapWidth  = 40
+
+                              * = $2000
+                              !for r = 0 to 1 ;11
+                              !for c = 0 to 1 ;38
+                              lda Map.ColorMap + c + r* Map.MapWidth, x
+                              sta ColorRAM + 40 + c + r* 40
+                              !end
+                              !end";
+
+      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      Assert.AreEqual( "0020BD00C08D28D8BD01C08D29D8BD28C08D50D8BD29C08D51D8", assembly.ToString() );
+    }
+
+
+
     [TestMethod]
     public void TestLocalLabelInLoop()
     {

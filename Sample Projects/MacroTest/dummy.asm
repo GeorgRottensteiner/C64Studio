@@ -1,12 +1,14 @@
-﻿!cpu m65
+﻿ColorRAM      = $d800
+
+Map.ColorMap  = $c000
+
+Map.MapWidth  = 40
+
 
 * = $2000
-
-!list off
-
-lda $01,y
-
-
-!list on
-
-  inc $02
+!for r = 0 to 1 ;11
+!for c = 0 to 1 ;38
+lda Map.ColorMap + c + r * Map.MapWidth,x
+sta ColorRAM + 40 + c + r * 40
+!end
+!end

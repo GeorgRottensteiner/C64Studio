@@ -1,6 +1,971 @@
-00   ----              !cpu m65
-01   ----              
-02  $2000              * = $2000
-03  $2000              
-10  $2003              
-11  $2003  E6 02       inc $02
+000   ----              ColorRAM      = $d800
+001   ----              
+002   ----              Map.ColorMap  = $c000
+003   ----              
+004   ----              Map.MapWidth  = 40
+005   ----              
+006   ----              
+007  $2000              * = $2000
+008  $2000              ;was for loop start for r
+009  $2000              ;was for loop start for c; loop with r=0
+010  $2000  BD 00 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=0
+011  $2003  8D 28 D8    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=0
+012  $2006  BD 01 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=0
+013  $2009  8D 29 D8    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=0
+014  $200C  BD 02 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=0
+015  $200F  8D 2A D8    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=0
+016  $2012  BD 03 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=0
+017  $2015  8D 2B D8    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=0
+018  $2018  BD 04 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=0
+019  $201B  8D 2C D8    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=0
+020  $201E  BD 05 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=0
+021  $2021  8D 2D D8    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=0
+022  $2024  BD 06 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=0
+023  $2027  8D 2E D8    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=0
+024  $202A  BD 07 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=0
+025  $202D  8D 2F D8    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=0
+026  $2030  BD 08 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=0
+027  $2033  8D 30 D8    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=0
+028  $2036  BD 09 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=0
+029  $2039  8D 31 D8    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=0
+030  $203C  BD 0A C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=0
+031  $203F  8D 32 D8    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=0
+032  $2042  BD 0B C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=0
+033  $2045  8D 33 D8    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=0
+034  $2048  BD 0C C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=0
+035  $204B  8D 34 D8    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=0
+036  $204E  BD 0D C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=0
+037  $2051  8D 35 D8    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=0
+038  $2054  BD 0E C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=0
+039  $2057  8D 36 D8    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=0
+040  $205A  BD 0F C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=0
+041  $205D  8D 37 D8    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=0
+042  $2060  BD 10 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=0
+043  $2063  8D 38 D8    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=0
+044  $2066  BD 11 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=0
+045  $2069  8D 39 D8    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=0
+046  $206C  BD 12 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=0
+047  $206F  8D 3A D8    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=0
+048  $2072  BD 13 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=0
+049  $2075  8D 3B D8    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=0
+050  $2078  BD 14 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=0
+051  $207B  8D 3C D8    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=0
+052  $207E  BD 15 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=0
+053  $2081  8D 3D D8    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=0
+054  $2084  BD 16 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=0
+055  $2087  8D 3E D8    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=0
+056  $208A  BD 17 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=0
+057  $208D  8D 3F D8    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=0
+058  $2090  BD 18 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=0
+059  $2093  8D 40 D8    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=0
+060  $2096  BD 19 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=0
+061  $2099  8D 41 D8    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=0
+062  $209C  BD 1A C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=0
+063  $209F  8D 42 D8    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=0
+064  $20A2  BD 1B C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=0
+065  $20A5  8D 43 D8    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=0
+066  $20A8  BD 1C C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=0
+067  $20AB  8D 44 D8    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=0
+068  $20AE  BD 1D C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=0
+069  $20B1  8D 45 D8    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=0
+070  $20B4  BD 1E C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=0
+071  $20B7  8D 46 D8    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=0
+072  $20BA  BD 1F C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=0
+073  $20BD  8D 47 D8    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=0
+074  $20C0  BD 20 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=0
+075  $20C3  8D 48 D8    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=0
+076  $20C6  BD 21 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=0
+077  $20C9  8D 49 D8    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=0
+078  $20CC  BD 22 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=0
+079  $20CF  8D 4A D8    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=0
+080  $20D2  BD 23 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=0
+081  $20D5  8D 4B D8    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=0
+082  $20D8  BD 24 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=0
+083  $20DB  8D 4C D8    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=0
+084  $20DE  BD 25 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=0
+085  $20E1  8D 4D D8    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=0
+086  $20E4  BD 26 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=0
+087  $20E7  8D 4E D8    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=0
+088  $20EA              ;was loop end for c; loop with r=0
+089  $20EA              ;was for loop start for c; loop with r=1
+090  $20EA  BD 28 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=1
+091  $20ED  8D 50 D8    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=1
+092  $20F0  BD 29 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=1
+093  $20F3  8D 51 D8    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=1
+094  $20F6  BD 2A C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=1
+095  $20F9  8D 52 D8    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=1
+096  $20FC  BD 2B C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=1
+097  $20FF  8D 53 D8    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=1
+098  $2102  BD 2C C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=1
+099  $2105  8D 54 D8    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=1
+100  $2108  BD 2D C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=1
+101  $210B  8D 55 D8    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=1
+102  $210E  BD 2E C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=1
+103  $2111  8D 56 D8    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=1
+104  $2114  BD 2F C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=1
+105  $2117  8D 57 D8    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=1
+106  $211A  BD 30 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=1
+107  $211D  8D 58 D8    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=1
+108  $2120  BD 31 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=1
+109  $2123  8D 59 D8    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=1
+110  $2126  BD 32 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=1
+111  $2129  8D 5A D8    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=1
+112  $212C  BD 33 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=1
+113  $212F  8D 5B D8    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=1
+114  $2132  BD 34 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=1
+115  $2135  8D 5C D8    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=1
+116  $2138  BD 35 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=1
+117  $213B  8D 5D D8    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=1
+118  $213E  BD 36 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=1
+119  $2141  8D 5E D8    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=1
+120  $2144  BD 37 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=1
+121  $2147  8D 5F D8    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=1
+122  $214A  BD 38 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=1
+123  $214D  8D 60 D8    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=1
+124  $2150  BD 39 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=1
+125  $2153  8D 61 D8    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=1
+126  $2156  BD 3A C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=1
+127  $2159  8D 62 D8    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=1
+128  $215C  BD 3B C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=1
+129  $215F  8D 63 D8    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=1
+130  $2162  BD 3C C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=1
+131  $2165  8D 64 D8    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=1
+132  $2168  BD 3D C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=1
+133  $216B  8D 65 D8    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=1
+134  $216E  BD 3E C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=1
+135  $2171  8D 66 D8    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=1
+136  $2174  BD 3F C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=1
+137  $2177  8D 67 D8    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=1
+138  $217A  BD 40 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=1
+139  $217D  8D 68 D8    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=1
+140  $2180  BD 41 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=1
+141  $2183  8D 69 D8    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=1
+142  $2186  BD 42 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=1
+143  $2189  8D 6A D8    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=1
+144  $218C  BD 43 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=1
+145  $218F  8D 6B D8    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=1
+146  $2192  BD 44 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=1
+147  $2195  8D 6C D8    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=1
+148  $2198  BD 45 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=1
+149  $219B  8D 6D D8    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=1
+150  $219E  BD 46 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=1
+151  $21A1  8D 6E D8    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=1
+152  $21A4  BD 47 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=1
+153  $21A7  8D 6F D8    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=1
+154  $21AA  BD 48 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=1
+155  $21AD  8D 70 D8    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=1
+156  $21B0  BD 49 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=1
+157  $21B3  8D 71 D8    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=1
+158  $21B6  BD 4A C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=1
+159  $21B9  8D 72 D8    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=1
+160  $21BC  BD 4B C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=1
+161  $21BF  8D 73 D8    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=1
+162  $21C2  BD 4C C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=1
+163  $21C5  8D 74 D8    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=1
+164  $21C8  BD 4D C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=1
+165  $21CB  8D 75 D8    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=1
+166  $21CE  BD 4E C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=1
+167  $21D1  8D 76 D8    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=1
+168  $21D4              ;was loop end for c; loop with r=1
+169  $21D4              ;was for loop start for c; loop with r=2
+170  $21D4  BD 50 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=2
+171  $21D7  8D 78 D8    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=2
+172  $21DA  BD 51 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=2
+173  $21DD  8D 79 D8    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=2
+174  $21E0  BD 52 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=2
+175  $21E3  8D 7A D8    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=2
+176  $21E6  BD 53 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=2
+177  $21E9  8D 7B D8    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=2
+178  $21EC  BD 54 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=2
+179  $21EF  8D 7C D8    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=2
+180  $21F2  BD 55 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=2
+181  $21F5  8D 7D D8    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=2
+182  $21F8  BD 56 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=2
+183  $21FB  8D 7E D8    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=2
+184  $21FE  BD 57 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=2
+185  $2201  8D 7F D8    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=2
+186  $2204  BD 58 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=2
+187  $2207  8D 80 D8    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=2
+188  $220A  BD 59 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=2
+189  $220D  8D 81 D8    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=2
+190  $2210  BD 5A C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=2
+191  $2213  8D 82 D8    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=2
+192  $2216  BD 5B C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=2
+193  $2219  8D 83 D8    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=2
+194  $221C  BD 5C C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=2
+195  $221F  8D 84 D8    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=2
+196  $2222  BD 5D C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=2
+197  $2225  8D 85 D8    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=2
+198  $2228  BD 5E C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=2
+199  $222B  8D 86 D8    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=2
+200  $222E  BD 5F C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=2
+201  $2231  8D 87 D8    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=2
+202  $2234  BD 60 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=2
+203  $2237  8D 88 D8    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=2
+204  $223A  BD 61 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=2
+205  $223D  8D 89 D8    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=2
+206  $2240  BD 62 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=2
+207  $2243  8D 8A D8    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=2
+208  $2246  BD 63 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=2
+209  $2249  8D 8B D8    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=2
+210  $224C  BD 64 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=2
+211  $224F  8D 8C D8    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=2
+212  $2252  BD 65 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=2
+213  $2255  8D 8D D8    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=2
+214  $2258  BD 66 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=2
+215  $225B  8D 8E D8    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=2
+216  $225E  BD 67 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=2
+217  $2261  8D 8F D8    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=2
+218  $2264  BD 68 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=2
+219  $2267  8D 90 D8    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=2
+220  $226A  BD 69 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=2
+221  $226D  8D 91 D8    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=2
+222  $2270  BD 6A C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=2
+223  $2273  8D 92 D8    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=2
+224  $2276  BD 6B C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=2
+225  $2279  8D 93 D8    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=2
+226  $227C  BD 6C C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=2
+227  $227F  8D 94 D8    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=2
+228  $2282  BD 6D C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=2
+229  $2285  8D 95 D8    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=2
+230  $2288  BD 6E C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=2
+231  $228B  8D 96 D8    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=2
+232  $228E  BD 6F C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=2
+233  $2291  8D 97 D8    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=2
+234  $2294  BD 70 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=2
+235  $2297  8D 98 D8    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=2
+236  $229A  BD 71 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=2
+237  $229D  8D 99 D8    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=2
+238  $22A0  BD 72 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=2
+239  $22A3  8D 9A D8    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=2
+240  $22A6  BD 73 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=2
+241  $22A9  8D 9B D8    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=2
+242  $22AC  BD 74 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=2
+243  $22AF  8D 9C D8    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=2
+244  $22B2  BD 75 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=2
+245  $22B5  8D 9D D8    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=2
+246  $22B8  BD 76 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=2
+247  $22BB  8D 9E D8    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=2
+248  $22BE              ;was loop end for c; loop with r=2
+249  $22BE              ;was for loop start for c; loop with r=3
+250  $22BE  BD 78 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=3
+251  $22C1  8D A0 D8    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=3
+252  $22C4  BD 79 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=3
+253  $22C7  8D A1 D8    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=3
+254  $22CA  BD 7A C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=3
+255  $22CD  8D A2 D8    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=3
+256  $22D0  BD 7B C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=3
+257  $22D3  8D A3 D8    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=3
+258  $22D6  BD 7C C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=3
+259  $22D9  8D A4 D8    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=3
+260  $22DC  BD 7D C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=3
+261  $22DF  8D A5 D8    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=3
+262  $22E2  BD 7E C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=3
+263  $22E5  8D A6 D8    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=3
+264  $22E8  BD 7F C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=3
+265  $22EB  8D A7 D8    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=3
+266  $22EE  BD 80 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=3
+267  $22F1  8D A8 D8    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=3
+268  $22F4  BD 81 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=3
+269  $22F7  8D A9 D8    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=3
+270  $22FA  BD 82 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=3
+271  $22FD  8D AA D8    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=3
+272  $2300  BD 83 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=3
+273  $2303  8D AB D8    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=3
+274  $2306  BD 84 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=3
+275  $2309  8D AC D8    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=3
+276  $230C  BD 85 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=3
+277  $230F  8D AD D8    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=3
+278  $2312  BD 86 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=3
+279  $2315  8D AE D8    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=3
+280  $2318  BD 87 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=3
+281  $231B  8D AF D8    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=3
+282  $231E  BD 88 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=3
+283  $2321  8D B0 D8    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=3
+284  $2324  BD 89 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=3
+285  $2327  8D B1 D8    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=3
+286  $232A  BD 8A C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=3
+287  $232D  8D B2 D8    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=3
+288  $2330  BD 8B C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=3
+289  $2333  8D B3 D8    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=3
+290  $2336  BD 8C C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=3
+291  $2339  8D B4 D8    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=3
+292  $233C  BD 8D C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=3
+293  $233F  8D B5 D8    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=3
+294  $2342  BD 8E C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=3
+295  $2345  8D B6 D8    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=3
+296  $2348  BD 8F C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=3
+297  $234B  8D B7 D8    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=3
+298  $234E  BD 90 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=3
+299  $2351  8D B8 D8    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=3
+300  $2354  BD 91 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=3
+301  $2357  8D B9 D8    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=3
+302  $235A  BD 92 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=3
+303  $235D  8D BA D8    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=3
+304  $2360  BD 93 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=3
+305  $2363  8D BB D8    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=3
+306  $2366  BD 94 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=3
+307  $2369  8D BC D8    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=3
+308  $236C  BD 95 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=3
+309  $236F  8D BD D8    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=3
+310  $2372  BD 96 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=3
+311  $2375  8D BE D8    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=3
+312  $2378  BD 97 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=3
+313  $237B  8D BF D8    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=3
+314  $237E  BD 98 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=3
+315  $2381  8D C0 D8    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=3
+316  $2384  BD 99 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=3
+317  $2387  8D C1 D8    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=3
+318  $238A  BD 9A C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=3
+319  $238D  8D C2 D8    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=3
+320  $2390  BD 9B C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=3
+321  $2393  8D C3 D8    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=3
+322  $2396  BD 9C C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=3
+323  $2399  8D C4 D8    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=3
+324  $239C  BD 9D C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=3
+325  $239F  8D C5 D8    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=3
+326  $23A2  BD 9E C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=3
+327  $23A5  8D C6 D8    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=3
+328  $23A8              ;was loop end for c; loop with r=3
+329  $23A8              ;was for loop start for c; loop with r=4
+330  $23A8  BD A0 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=4
+331  $23AB  8D C8 D8    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=4
+332  $23AE  BD A1 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=4
+333  $23B1  8D C9 D8    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=4
+334  $23B4  BD A2 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=4
+335  $23B7  8D CA D8    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=4
+336  $23BA  BD A3 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=4
+337  $23BD  8D CB D8    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=4
+338  $23C0  BD A4 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=4
+339  $23C3  8D CC D8    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=4
+340  $23C6  BD A5 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=4
+341  $23C9  8D CD D8    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=4
+342  $23CC  BD A6 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=4
+343  $23CF  8D CE D8    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=4
+344  $23D2  BD A7 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=4
+345  $23D5  8D CF D8    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=4
+346  $23D8  BD A8 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=4
+347  $23DB  8D D0 D8    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=4
+348  $23DE  BD A9 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=4
+349  $23E1  8D D1 D8    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=4
+350  $23E4  BD AA C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=4
+351  $23E7  8D D2 D8    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=4
+352  $23EA  BD AB C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=4
+353  $23ED  8D D3 D8    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=4
+354  $23F0  BD AC C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=4
+355  $23F3  8D D4 D8    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=4
+356  $23F6  BD AD C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=4
+357  $23F9  8D D5 D8    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=4
+358  $23FC  BD AE C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=4
+359  $23FF  8D D6 D8    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=4
+360  $2402  BD AF C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=4
+361  $2405  8D D7 D8    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=4
+362  $2408  BD B0 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=4
+363  $240B  8D D8 D8    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=4
+364  $240E  BD B1 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=4
+365  $2411  8D D9 D8    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=4
+366  $2414  BD B2 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=4
+367  $2417  8D DA D8    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=4
+368  $241A  BD B3 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=4
+369  $241D  8D DB D8    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=4
+370  $2420  BD B4 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=4
+371  $2423  8D DC D8    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=4
+372  $2426  BD B5 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=4
+373  $2429  8D DD D8    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=4
+374  $242C  BD B6 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=4
+375  $242F  8D DE D8    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=4
+376  $2432  BD B7 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=4
+377  $2435  8D DF D8    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=4
+378  $2438  BD B8 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=4
+379  $243B  8D E0 D8    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=4
+380  $243E  BD B9 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=4
+381  $2441  8D E1 D8    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=4
+382  $2444  BD BA C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=4
+383  $2447  8D E2 D8    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=4
+384  $244A  BD BB C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=4
+385  $244D  8D E3 D8    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=4
+386  $2450  BD BC C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=4
+387  $2453  8D E4 D8    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=4
+388  $2456  BD BD C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=4
+389  $2459  8D E5 D8    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=4
+390  $245C  BD BE C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=4
+391  $245F  8D E6 D8    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=4
+392  $2462  BD BF C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=4
+393  $2465  8D E7 D8    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=4
+394  $2468  BD C0 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=4
+395  $246B  8D E8 D8    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=4
+396  $246E  BD C1 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=4
+397  $2471  8D E9 D8    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=4
+398  $2474  BD C2 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=4
+399  $2477  8D EA D8    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=4
+400  $247A  BD C3 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=4
+401  $247D  8D EB D8    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=4
+402  $2480  BD C4 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=4
+403  $2483  8D EC D8    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=4
+404  $2486  BD C5 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=4
+405  $2489  8D ED D8    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=4
+406  $248C  BD C6 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=4
+407  $248F  8D EE D8    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=4
+408  $2492              ;was loop end for c; loop with r=4
+409  $2492              ;was for loop start for c; loop with r=5
+410  $2492  BD C8 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=5
+411  $2495  8D F0 D8    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=5
+412  $2498  BD C9 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=5
+413  $249B  8D F1 D8    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=5
+414  $249E  BD CA C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=5
+415  $24A1  8D F2 D8    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=5
+416  $24A4  BD CB C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=5
+417  $24A7  8D F3 D8    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=5
+418  $24AA  BD CC C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=5
+419  $24AD  8D F4 D8    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=5
+420  $24B0  BD CD C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=5
+421  $24B3  8D F5 D8    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=5
+422  $24B6  BD CE C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=5
+423  $24B9  8D F6 D8    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=5
+424  $24BC  BD CF C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=5
+425  $24BF  8D F7 D8    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=5
+426  $24C2  BD D0 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=5
+427  $24C5  8D F8 D8    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=5
+428  $24C8  BD D1 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=5
+429  $24CB  8D F9 D8    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=5
+430  $24CE  BD D2 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=5
+431  $24D1  8D FA D8    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=5
+432  $24D4  BD D3 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=5
+433  $24D7  8D FB D8    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=5
+434  $24DA  BD D4 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=5
+435  $24DD  8D FC D8    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=5
+436  $24E0  BD D5 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=5
+437  $24E3  8D FD D8    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=5
+438  $24E6  BD D6 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=5
+439  $24E9  8D FE D8    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=5
+440  $24EC  BD D7 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=5
+441  $24EF  8D FF D8    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=5
+442  $24F2  BD D8 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=5
+443  $24F5  8D 00 D9    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=5
+444  $24F8  BD D9 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=5
+445  $24FB  8D 01 D9    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=5
+446  $24FE  BD DA C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=5
+447  $2501  8D 02 D9    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=5
+448  $2504  BD DB C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=5
+449  $2507  8D 03 D9    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=5
+450  $250A  BD DC C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=5
+451  $250D  8D 04 D9    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=5
+452  $2510  BD DD C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=5
+453  $2513  8D 05 D9    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=5
+454  $2516  BD DE C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=5
+455  $2519  8D 06 D9    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=5
+456  $251C  BD DF C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=5
+457  $251F  8D 07 D9    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=5
+458  $2522  BD E0 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=5
+459  $2525  8D 08 D9    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=5
+460  $2528  BD E1 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=5
+461  $252B  8D 09 D9    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=5
+462  $252E  BD E2 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=5
+463  $2531  8D 0A D9    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=5
+464  $2534  BD E3 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=5
+465  $2537  8D 0B D9    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=5
+466  $253A  BD E4 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=5
+467  $253D  8D 0C D9    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=5
+468  $2540  BD E5 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=5
+469  $2543  8D 0D D9    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=5
+470  $2546  BD E6 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=5
+471  $2549  8D 0E D9    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=5
+472  $254C  BD E7 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=5
+473  $254F  8D 0F D9    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=5
+474  $2552  BD E8 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=5
+475  $2555  8D 10 D9    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=5
+476  $2558  BD E9 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=5
+477  $255B  8D 11 D9    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=5
+478  $255E  BD EA C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=5
+479  $2561  8D 12 D9    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=5
+480  $2564  BD EB C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=5
+481  $2567  8D 13 D9    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=5
+482  $256A  BD EC C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=5
+483  $256D  8D 14 D9    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=5
+484  $2570  BD ED C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=5
+485  $2573  8D 15 D9    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=5
+486  $2576  BD EE C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=5
+487  $2579  8D 16 D9    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=5
+488  $257C              ;was loop end for c; loop with r=5
+489  $257C              ;was for loop start for c; loop with r=6
+490  $257C  BD F0 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=6
+491  $257F  8D 18 D9    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=6
+492  $2582  BD F1 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=6
+493  $2585  8D 19 D9    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=6
+494  $2588  BD F2 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=6
+495  $258B  8D 1A D9    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=6
+496  $258E  BD F3 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=6
+497  $2591  8D 1B D9    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=6
+498  $2594  BD F4 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=6
+499  $2597  8D 1C D9    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=6
+500  $259A  BD F5 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=6
+501  $259D  8D 1D D9    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=6
+502  $25A0  BD F6 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=6
+503  $25A3  8D 1E D9    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=6
+504  $25A6  BD F7 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=6
+505  $25A9  8D 1F D9    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=6
+506  $25AC  BD F8 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=6
+507  $25AF  8D 20 D9    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=6
+508  $25B2  BD F9 C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=6
+509  $25B5  8D 21 D9    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=6
+510  $25B8  BD FA C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=6
+511  $25BB  8D 22 D9    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=6
+512  $25BE  BD FB C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=6
+513  $25C1  8D 23 D9    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=6
+514  $25C4  BD FC C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=6
+515  $25C7  8D 24 D9    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=6
+516  $25CA  BD FD C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=6
+517  $25CD  8D 25 D9    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=6
+518  $25D0  BD FE C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=6
+519  $25D3  8D 26 D9    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=6
+520  $25D6  BD FF C0    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=6
+521  $25D9  8D 27 D9    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=6
+522  $25DC  BD 00 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=6
+523  $25DF  8D 28 D9    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=6
+524  $25E2  BD 01 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=6
+525  $25E5  8D 29 D9    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=6
+526  $25E8  BD 02 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=6
+527  $25EB  8D 2A D9    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=6
+528  $25EE  BD 03 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=6
+529  $25F1  8D 2B D9    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=6
+530  $25F4  BD 04 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=6
+531  $25F7  8D 2C D9    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=6
+532  $25FA  BD 05 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=6
+533  $25FD  8D 2D D9    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=6
+534  $2600  BD 06 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=6
+535  $2603  8D 2E D9    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=6
+536  $2606  BD 07 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=6
+537  $2609  8D 2F D9    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=6
+538  $260C  BD 08 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=6
+539  $260F  8D 30 D9    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=6
+540  $2612  BD 09 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=6
+541  $2615  8D 31 D9    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=6
+542  $2618  BD 0A C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=6
+543  $261B  8D 32 D9    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=6
+544  $261E  BD 0B C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=6
+545  $2621  8D 33 D9    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=6
+546  $2624  BD 0C C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=6
+547  $2627  8D 34 D9    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=6
+548  $262A  BD 0D C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=6
+549  $262D  8D 35 D9    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=6
+550  $2630  BD 0E C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=6
+551  $2633  8D 36 D9    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=6
+552  $2636  BD 0F C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=6
+553  $2639  8D 37 D9    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=6
+554  $263C  BD 10 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=6
+555  $263F  8D 38 D9    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=6
+556  $2642  BD 11 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=6
+557  $2645  8D 39 D9    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=6
+558  $2648  BD 12 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=6
+559  $264B  8D 3A D9    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=6
+560  $264E  BD 13 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=6
+561  $2651  8D 3B D9    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=6
+562  $2654  BD 14 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=6
+563  $2657  8D 3C D9    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=6
+564  $265A  BD 15 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=6
+565  $265D  8D 3D D9    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=6
+566  $2660  BD 16 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=6
+567  $2663  8D 3E D9    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=6
+568  $2666              ;was loop end for c; loop with r=6
+569  $2666              ;was for loop start for c; loop with r=7
+570  $2666  BD 18 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=7
+571  $2669  8D 40 D9    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=7
+572  $266C  BD 19 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=7
+573  $266F  8D 41 D9    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=7
+574  $2672  BD 1A C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=7
+575  $2675  8D 42 D9    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=7
+576  $2678  BD 1B C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=7
+577  $267B  8D 43 D9    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=7
+578  $267E  BD 1C C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=7
+579  $2681  8D 44 D9    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=7
+580  $2684  BD 1D C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=7
+581  $2687  8D 45 D9    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=7
+582  $268A  BD 1E C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=7
+583  $268D  8D 46 D9    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=7
+584  $2690  BD 1F C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=7
+585  $2693  8D 47 D9    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=7
+586  $2696  BD 20 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=7
+587  $2699  8D 48 D9    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=7
+588  $269C  BD 21 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=7
+589  $269F  8D 49 D9    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=7
+590  $26A2  BD 22 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=7
+591  $26A5  8D 4A D9    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=7
+592  $26A8  BD 23 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=7
+593  $26AB  8D 4B D9    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=7
+594  $26AE  BD 24 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=7
+595  $26B1  8D 4C D9    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=7
+596  $26B4  BD 25 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=7
+597  $26B7  8D 4D D9    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=7
+598  $26BA  BD 26 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=7
+599  $26BD  8D 4E D9    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=7
+600  $26C0  BD 27 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=7
+601  $26C3  8D 4F D9    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=7
+602  $26C6  BD 28 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=7
+603  $26C9  8D 50 D9    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=7
+604  $26CC  BD 29 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=7
+605  $26CF  8D 51 D9    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=7
+606  $26D2  BD 2A C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=7
+607  $26D5  8D 52 D9    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=7
+608  $26D8  BD 2B C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=7
+609  $26DB  8D 53 D9    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=7
+610  $26DE  BD 2C C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=7
+611  $26E1  8D 54 D9    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=7
+612  $26E4  BD 2D C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=7
+613  $26E7  8D 55 D9    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=7
+614  $26EA  BD 2E C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=7
+615  $26ED  8D 56 D9    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=7
+616  $26F0  BD 2F C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=7
+617  $26F3  8D 57 D9    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=7
+618  $26F6  BD 30 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=7
+619  $26F9  8D 58 D9    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=7
+620  $26FC  BD 31 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=7
+621  $26FF  8D 59 D9    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=7
+622  $2702  BD 32 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=7
+623  $2705  8D 5A D9    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=7
+624  $2708  BD 33 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=7
+625  $270B  8D 5B D9    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=7
+626  $270E  BD 34 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=7
+627  $2711  8D 5C D9    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=7
+628  $2714  BD 35 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=7
+629  $2717  8D 5D D9    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=7
+630  $271A  BD 36 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=7
+631  $271D  8D 5E D9    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=7
+632  $2720  BD 37 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=7
+633  $2723  8D 5F D9    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=7
+634  $2726  BD 38 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=7
+635  $2729  8D 60 D9    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=7
+636  $272C  BD 39 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=7
+637  $272F  8D 61 D9    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=7
+638  $2732  BD 3A C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=7
+639  $2735  8D 62 D9    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=7
+640  $2738  BD 3B C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=7
+641  $273B  8D 63 D9    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=7
+642  $273E  BD 3C C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=7
+643  $2741  8D 64 D9    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=7
+644  $2744  BD 3D C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=7
+645  $2747  8D 65 D9    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=7
+646  $274A  BD 3E C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=7
+647  $274D  8D 66 D9    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=7
+648  $2750              ;was loop end for c; loop with r=7
+649  $2750              ;was for loop start for c; loop with r=8
+650  $2750  BD 40 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=8
+651  $2753  8D 68 D9    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=8
+652  $2756  BD 41 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=8
+653  $2759  8D 69 D9    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=8
+654  $275C  BD 42 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=8
+655  $275F  8D 6A D9    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=8
+656  $2762  BD 43 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=8
+657  $2765  8D 6B D9    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=8
+658  $2768  BD 44 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=8
+659  $276B  8D 6C D9    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=8
+660  $276E  BD 45 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=8
+661  $2771  8D 6D D9    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=8
+662  $2774  BD 46 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=8
+663  $2777  8D 6E D9    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=8
+664  $277A  BD 47 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=8
+665  $277D  8D 6F D9    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=8
+666  $2780  BD 48 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=8
+667  $2783  8D 70 D9    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=8
+668  $2786  BD 49 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=8
+669  $2789  8D 71 D9    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=8
+670  $278C  BD 4A C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=8
+671  $278F  8D 72 D9    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=8
+672  $2792  BD 4B C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=8
+673  $2795  8D 73 D9    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=8
+674  $2798  BD 4C C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=8
+675  $279B  8D 74 D9    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=8
+676  $279E  BD 4D C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=8
+677  $27A1  8D 75 D9    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=8
+678  $27A4  BD 4E C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=8
+679  $27A7  8D 76 D9    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=8
+680  $27AA  BD 4F C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=8
+681  $27AD  8D 77 D9    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=8
+682  $27B0  BD 50 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=8
+683  $27B3  8D 78 D9    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=8
+684  $27B6  BD 51 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=8
+685  $27B9  8D 79 D9    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=8
+686  $27BC  BD 52 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=8
+687  $27BF  8D 7A D9    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=8
+688  $27C2  BD 53 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=8
+689  $27C5  8D 7B D9    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=8
+690  $27C8  BD 54 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=8
+691  $27CB  8D 7C D9    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=8
+692  $27CE  BD 55 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=8
+693  $27D1  8D 7D D9    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=8
+694  $27D4  BD 56 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=8
+695  $27D7  8D 7E D9    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=8
+696  $27DA  BD 57 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=8
+697  $27DD  8D 7F D9    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=8
+698  $27E0  BD 58 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=8
+699  $27E3  8D 80 D9    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=8
+700  $27E6  BD 59 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=8
+701  $27E9  8D 81 D9    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=8
+702  $27EC  BD 5A C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=8
+703  $27EF  8D 82 D9    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=8
+704  $27F2  BD 5B C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=8
+705  $27F5  8D 83 D9    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=8
+706  $27F8  BD 5C C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=8
+707  $27FB  8D 84 D9    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=8
+708  $27FE  BD 5D C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=8
+709  $2801  8D 85 D9    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=8
+710  $2804  BD 5E C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=8
+711  $2807  8D 86 D9    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=8
+712  $280A  BD 5F C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=8
+713  $280D  8D 87 D9    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=8
+714  $2810  BD 60 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=8
+715  $2813  8D 88 D9    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=8
+716  $2816  BD 61 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=8
+717  $2819  8D 89 D9    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=8
+718  $281C  BD 62 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=8
+719  $281F  8D 8A D9    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=8
+720  $2822  BD 63 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=8
+721  $2825  8D 8B D9    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=8
+722  $2828  BD 64 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=8
+723  $282B  8D 8C D9    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=8
+724  $282E  BD 65 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=8
+725  $2831  8D 8D D9    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=8
+726  $2834  BD 66 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=8
+727  $2837  8D 8E D9    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=8
+728  $283A              ;was loop end for c; loop with r=8
+729  $283A              ;was for loop start for c; loop with r=9
+730  $283A  BD 68 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=9
+731  $283D  8D 90 D9    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=9
+732  $2840  BD 69 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=9
+733  $2843  8D 91 D9    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=9
+734  $2846  BD 6A C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=9
+735  $2849  8D 92 D9    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=9
+736  $284C  BD 6B C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=9
+737  $284F  8D 93 D9    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=9
+738  $2852  BD 6C C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=9
+739  $2855  8D 94 D9    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=9
+740  $2858  BD 6D C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=9
+741  $285B  8D 95 D9    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=9
+742  $285E  BD 6E C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=9
+743  $2861  8D 96 D9    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=9
+744  $2864  BD 6F C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=9
+745  $2867  8D 97 D9    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=9
+746  $286A  BD 70 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=9
+747  $286D  8D 98 D9    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=9
+748  $2870  BD 71 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=9
+749  $2873  8D 99 D9    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=9
+750  $2876  BD 72 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=9
+751  $2879  8D 9A D9    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=9
+752  $287C  BD 73 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=9
+753  $287F  8D 9B D9    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=9
+754  $2882  BD 74 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=9
+755  $2885  8D 9C D9    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=9
+756  $2888  BD 75 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=9
+757  $288B  8D 9D D9    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=9
+758  $288E  BD 76 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=9
+759  $2891  8D 9E D9    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=9
+760  $2894  BD 77 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=9
+761  $2897  8D 9F D9    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=9
+762  $289A  BD 78 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=9
+763  $289D  8D A0 D9    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=9
+764  $28A0  BD 79 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=9
+765  $28A3  8D A1 D9    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=9
+766  $28A6  BD 7A C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=9
+767  $28A9  8D A2 D9    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=9
+768  $28AC  BD 7B C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=9
+769  $28AF  8D A3 D9    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=9
+770  $28B2  BD 7C C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=9
+771  $28B5  8D A4 D9    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=9
+772  $28B8  BD 7D C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=9
+773  $28BB  8D A5 D9    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=9
+774  $28BE  BD 7E C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=9
+775  $28C1  8D A6 D9    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=9
+776  $28C4  BD 7F C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=9
+777  $28C7  8D A7 D9    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=9
+778  $28CA  BD 80 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=9
+779  $28CD  8D A8 D9    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=9
+780  $28D0  BD 81 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=9
+781  $28D3  8D A9 D9    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=9
+782  $28D6  BD 82 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=9
+783  $28D9  8D AA D9    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=9
+784  $28DC  BD 83 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=9
+785  $28DF  8D AB D9    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=9
+786  $28E2  BD 84 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=9
+787  $28E5  8D AC D9    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=9
+788  $28E8  BD 85 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=9
+789  $28EB  8D AD D9    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=9
+790  $28EE  BD 86 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=9
+791  $28F1  8D AE D9    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=9
+792  $28F4  BD 87 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=9
+793  $28F7  8D AF D9    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=9
+794  $28FA  BD 88 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=9
+795  $28FD  8D B0 D9    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=9
+796  $2900  BD 89 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=9
+797  $2903  8D B1 D9    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=9
+798  $2906  BD 8A C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=9
+799  $2909  8D B2 D9    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=9
+800  $290C  BD 8B C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=9
+801  $290F  8D B3 D9    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=9
+802  $2912  BD 8C C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=9
+803  $2915  8D B4 D9    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=9
+804  $2918  BD 8D C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=9
+805  $291B  8D B5 D9    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=9
+806  $291E  BD 8E C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=9
+807  $2921  8D B6 D9    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=9
+808  $2924              ;was loop end for c; loop with r=9
+809  $2924              ;was for loop start for c; loop with r=10
+810  $2924  BD 90 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=10
+811  $2927  8D B8 D9    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=10
+812  $292A  BD 91 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=10
+813  $292D  8D B9 D9    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=10
+814  $2930  BD 92 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=10
+815  $2933  8D BA D9    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=10
+816  $2936  BD 93 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=10
+817  $2939  8D BB D9    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=10
+818  $293C  BD 94 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=10
+819  $293F  8D BC D9    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=10
+820  $2942  BD 95 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=10
+821  $2945  8D BD D9    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=10
+822  $2948  BD 96 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=10
+823  $294B  8D BE D9    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=10
+824  $294E  BD 97 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=10
+825  $2951  8D BF D9    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=10
+826  $2954  BD 98 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=10
+827  $2957  8D C0 D9    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=10
+828  $295A  BD 99 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=10
+829  $295D  8D C1 D9    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=10
+830  $2960  BD 9A C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=10
+831  $2963  8D C2 D9    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=10
+832  $2966  BD 9B C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=10
+833  $2969  8D C3 D9    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=10
+834  $296C  BD 9C C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=10
+835  $296F  8D C4 D9    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=10
+836  $2972  BD 9D C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=10
+837  $2975  8D C5 D9    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=10
+838  $2978  BD 9E C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=10
+839  $297B  8D C6 D9    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=10
+840  $297E  BD 9F C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=10
+841  $2981  8D C7 D9    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=10
+842  $2984  BD A0 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=10
+843  $2987  8D C8 D9    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=10
+844  $298A  BD A1 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=10
+845  $298D  8D C9 D9    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=10
+846  $2990  BD A2 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=10
+847  $2993  8D CA D9    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=10
+848  $2996  BD A3 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=10
+849  $2999  8D CB D9    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=10
+850  $299C  BD A4 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=10
+851  $299F  8D CC D9    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=10
+852  $29A2  BD A5 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=10
+853  $29A5  8D CD D9    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=10
+854  $29A8  BD A6 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=10
+855  $29AB  8D CE D9    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=10
+856  $29AE  BD A7 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=10
+857  $29B1  8D CF D9    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=10
+858  $29B4  BD A8 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=10
+859  $29B7  8D D0 D9    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=10
+860  $29BA  BD A9 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=10
+861  $29BD  8D D1 D9    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=10
+862  $29C0  BD AA C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=10
+863  $29C3  8D D2 D9    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=10
+864  $29C6  BD AB C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=10
+865  $29C9  8D D3 D9    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=10
+866  $29CC  BD AC C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=10
+867  $29CF  8D D4 D9    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=10
+868  $29D2  BD AD C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=10
+869  $29D5  8D D5 D9    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=10
+870  $29D8  BD AE C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=10
+871  $29DB  8D D6 D9    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=10
+872  $29DE  BD AF C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=10
+873  $29E1  8D D7 D9    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=10
+874  $29E4  BD B0 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=10
+875  $29E7  8D D8 D9    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=10
+876  $29EA  BD B1 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=10
+877  $29ED  8D D9 D9    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=10
+878  $29F0  BD B2 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=10
+879  $29F3  8D DA D9    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=10
+880  $29F6  BD B3 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=10
+881  $29F9  8D DB D9    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=10
+882  $29FC  BD B4 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=10
+883  $29FF  8D DC D9    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=10
+884  $2A02  BD B5 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=10
+885  $2A05  8D DD D9    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=10
+886  $2A08  BD B6 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=10
+887  $2A0B  8D DE D9    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=10
+888  $2A0E              ;was loop end for c; loop with r=10
+889  $2A0E              ;was for loop start for c; loop with r=11
+890  $2A0E  BD B8 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=0; loop with r=11
+891  $2A11  8D E0 D9    sta ColorRAM + 40 + c + r * 40; loop with c=0; loop with r=11
+892  $2A14  BD B9 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=1; loop with r=11
+893  $2A17  8D E1 D9    sta ColorRAM + 40 + c + r * 40; loop with c=1; loop with r=11
+894  $2A1A  BD BA C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=2; loop with r=11
+895  $2A1D  8D E2 D9    sta ColorRAM + 40 + c + r * 40; loop with c=2; loop with r=11
+896  $2A20  BD BB C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=3; loop with r=11
+897  $2A23  8D E3 D9    sta ColorRAM + 40 + c + r * 40; loop with c=3; loop with r=11
+898  $2A26  BD BC C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=4; loop with r=11
+899  $2A29  8D E4 D9    sta ColorRAM + 40 + c + r * 40; loop with c=4; loop with r=11
+900  $2A2C  BD BD C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=5; loop with r=11
+901  $2A2F  8D E5 D9    sta ColorRAM + 40 + c + r * 40; loop with c=5; loop with r=11
+902  $2A32  BD BE C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=6; loop with r=11
+903  $2A35  8D E6 D9    sta ColorRAM + 40 + c + r * 40; loop with c=6; loop with r=11
+904  $2A38  BD BF C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=7; loop with r=11
+905  $2A3B  8D E7 D9    sta ColorRAM + 40 + c + r * 40; loop with c=7; loop with r=11
+906  $2A3E  BD C0 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=8; loop with r=11
+907  $2A41  8D E8 D9    sta ColorRAM + 40 + c + r * 40; loop with c=8; loop with r=11
+908  $2A44  BD C1 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=9; loop with r=11
+909  $2A47  8D E9 D9    sta ColorRAM + 40 + c + r * 40; loop with c=9; loop with r=11
+910  $2A4A  BD C2 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=10; loop with r=11
+911  $2A4D  8D EA D9    sta ColorRAM + 40 + c + r * 40; loop with c=10; loop with r=11
+912  $2A50  BD C3 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=11; loop with r=11
+913  $2A53  8D EB D9    sta ColorRAM + 40 + c + r * 40; loop with c=11; loop with r=11
+914  $2A56  BD C4 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=12; loop with r=11
+915  $2A59  8D EC D9    sta ColorRAM + 40 + c + r * 40; loop with c=12; loop with r=11
+916  $2A5C  BD C5 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=13; loop with r=11
+917  $2A5F  8D ED D9    sta ColorRAM + 40 + c + r * 40; loop with c=13; loop with r=11
+918  $2A62  BD C6 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=14; loop with r=11
+919  $2A65  8D EE D9    sta ColorRAM + 40 + c + r * 40; loop with c=14; loop with r=11
+920  $2A68  BD C7 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=15; loop with r=11
+921  $2A6B  8D EF D9    sta ColorRAM + 40 + c + r * 40; loop with c=15; loop with r=11
+922  $2A6E  BD C8 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=16; loop with r=11
+923  $2A71  8D F0 D9    sta ColorRAM + 40 + c + r * 40; loop with c=16; loop with r=11
+924  $2A74  BD C9 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=17; loop with r=11
+925  $2A77  8D F1 D9    sta ColorRAM + 40 + c + r * 40; loop with c=17; loop with r=11
+926  $2A7A  BD CA C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=18; loop with r=11
+927  $2A7D  8D F2 D9    sta ColorRAM + 40 + c + r * 40; loop with c=18; loop with r=11
+928  $2A80  BD CB C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=19; loop with r=11
+929  $2A83  8D F3 D9    sta ColorRAM + 40 + c + r * 40; loop with c=19; loop with r=11
+930  $2A86  BD CC C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=20; loop with r=11
+931  $2A89  8D F4 D9    sta ColorRAM + 40 + c + r * 40; loop with c=20; loop with r=11
+932  $2A8C  BD CD C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=21; loop with r=11
+933  $2A8F  8D F5 D9    sta ColorRAM + 40 + c + r * 40; loop with c=21; loop with r=11
+934  $2A92  BD CE C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=22; loop with r=11
+935  $2A95  8D F6 D9    sta ColorRAM + 40 + c + r * 40; loop with c=22; loop with r=11
+936  $2A98  BD CF C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=23; loop with r=11
+937  $2A9B  8D F7 D9    sta ColorRAM + 40 + c + r * 40; loop with c=23; loop with r=11
+938  $2A9E  BD D0 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=24; loop with r=11
+939  $2AA1  8D F8 D9    sta ColorRAM + 40 + c + r * 40; loop with c=24; loop with r=11
+940  $2AA4  BD D1 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=25; loop with r=11
+941  $2AA7  8D F9 D9    sta ColorRAM + 40 + c + r * 40; loop with c=25; loop with r=11
+942  $2AAA  BD D2 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=26; loop with r=11
+943  $2AAD  8D FA D9    sta ColorRAM + 40 + c + r * 40; loop with c=26; loop with r=11
+944  $2AB0  BD D3 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=27; loop with r=11
+945  $2AB3  8D FB D9    sta ColorRAM + 40 + c + r * 40; loop with c=27; loop with r=11
+946  $2AB6  BD D4 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=28; loop with r=11
+947  $2AB9  8D FC D9    sta ColorRAM + 40 + c + r * 40; loop with c=28; loop with r=11
+948  $2ABC  BD D5 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=29; loop with r=11
+949  $2ABF  8D FD D9    sta ColorRAM + 40 + c + r * 40; loop with c=29; loop with r=11
+950  $2AC2  BD D6 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=30; loop with r=11
+951  $2AC5  8D FE D9    sta ColorRAM + 40 + c + r * 40; loop with c=30; loop with r=11
+952  $2AC8  BD D7 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=31; loop with r=11
+953  $2ACB  8D FF D9    sta ColorRAM + 40 + c + r * 40; loop with c=31; loop with r=11
+954  $2ACE  BD D8 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=32; loop with r=11
+955  $2AD1  8D 00 DA    sta ColorRAM + 40 + c + r * 40; loop with c=32; loop with r=11
+956  $2AD4  BD D9 C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=33; loop with r=11
+957  $2AD7  8D 01 DA    sta ColorRAM + 40 + c + r * 40; loop with c=33; loop with r=11
+958  $2ADA  BD DA C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=34; loop with r=11
+959  $2ADD  8D 02 DA    sta ColorRAM + 40 + c + r * 40; loop with c=34; loop with r=11
+960  $2AE0  BD DB C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=35; loop with r=11
+961  $2AE3  8D 03 DA    sta ColorRAM + 40 + c + r * 40; loop with c=35; loop with r=11
+962  $2AE6  BD DC C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=36; loop with r=11
+963  $2AE9  8D 04 DA    sta ColorRAM + 40 + c + r * 40; loop with c=36; loop with r=11
+964  $2AEC  BD DD C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=37; loop with r=11
+965  $2AEF  8D 05 DA    sta ColorRAM + 40 + c + r * 40; loop with c=37; loop with r=11
+966  $2AF2  BD DE C1    lda Map.ColorMap + c + r * Map.MapWidth,x; loop with c=38; loop with r=11
+967  $2AF5  8D 06 DA    sta ColorRAM + 40 + c + r * 40; loop with c=38; loop with r=11
+968  $2AF8              ;was loop end for c; loop with r=11
+969  $2AF8              ;was loop end for r
+970  $2AF8              

@@ -556,6 +556,8 @@ namespace C64Studio.Parser
         Value.Name = Name;
       }
 
+      //Debug.Log( $"AddTempLabel {Name} for Line {LineIndex},{LineCount} with value {Value.AddressOrValue}" );
+
       foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
       {
         if ( oldTempInfo.Name == Name )
@@ -646,6 +648,8 @@ namespace C64Studio.Parser
               origTempInfo.LineCount = tempInfo.LineIndex - origTempInfo.LineIndex;
             }
           }
+
+          //Debug.Log( $"Cloned temp label {tempInfo.Name} for line {tempInfo.LineIndex},{tempInfo.LineCount} with value {tempInfo.Symbol.AddressOrValue}" );
           infosToAdd.Add( tempInfo );
         }
       }
@@ -3655,10 +3659,10 @@ namespace C64Studio.Parser
           lastLoop.CurrentValue += lastLoop.StepValue;
 
           // restart loop
-          //SetLabelValue( lastLoop.Label, lastLoop.CurrentValue );
           var tempLabelSymbol = CreateIntegerSymbol( lastLoop.CurrentValue );
           tempLabelSymbol.Type = SymbolInfo.Types.TEMP_LABEL;
           tempLabelSymbol.AddressOrValue = lastLoop.CurrentValue;
+
           AddTempLabel( lastLoop.Label,
                         lineIndex,
                         lastLoop.LoopLength,
@@ -3684,8 +3688,6 @@ namespace C64Studio.Parser
             lineLoopEndOffset = 0;
           }
 
-          //DumpLines( Lines, "a" );
-
           string[] newLines = new string[Lines.Length + linesToCopy];
 
           System.Array.Copy( Lines, 0, newLines, 0, lineIndex );
@@ -3704,7 +3706,7 @@ namespace C64Studio.Parser
           //DumpLines( newLines, "b" );
 
           // also copy scoped variables if overlapping!!!
-          if ( !endReached )
+          //if ( !endReached )
           {
             //Debug.Log( "Cloning loop " + lastLoop.CurrentValue + "/" + lastLoop.EndValue + " for " + lastLoop.Label );
             CloneTempLabelsExcept( lastLoop.LineIndex, linesToCopy, lineIndex - 1, lastLoop.Label );
