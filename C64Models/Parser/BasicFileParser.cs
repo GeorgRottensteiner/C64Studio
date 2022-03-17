@@ -2742,11 +2742,7 @@ namespace C64Studio.Parser
             }
 
             // REM is only remark, no opcode parsing anymore
-            if ( Settings.BASICDialect.OpcodesFromByte.ContainsKey( byteValue ) )
-            {
-              lineContent += Settings.BASICDialect.OpcodesFromByte[byteValue].Command;
-            }
-            else if ( ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
+            if ( ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
             {
               char charToUse = ConstantData.PETSCIIToUnicode[byteValue];
               lineContent += charToUse;
@@ -2838,7 +2834,7 @@ namespace C64Studio.Parser
               }
               else
               {
-                if ( Settings.BASICDialect.OpcodesFromByte[byteValue].InsertionValue == 0x8F )
+                if ( Settings.BASICDialect.OpcodesFromByte[byteValue].IsComment )
                 {
                   encounteredREM = true;
                 }
