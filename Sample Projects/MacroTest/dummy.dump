@@ -1,32 +1,6 @@
-00   ----              ;was for loop start for j
-01  $4000              *=$4000+256*j; loop with j=0
-02  $4000  A9 14       ._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=0
-03  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=0
-04  $4002  20 00 40    jsr ._C64STUDIO_LL_0__6_.Einsprung; loop with j=0
-05  $4005  E8          inx; loop with j=0
-06  $4000              *=$4000+256*j; loop with j=1
-07  $4000  A9 14       ._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=1
-08  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=1
-09  $4002  20 00 40    jsr ._C64STUDIO_LL_0__6_.Einsprung; loop with j=1
-10  $4005  E8          inx; loop with j=1
-11  $4000              *=$4000+256*j; loop with j=2
-12  $4000  A9 14       ._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=2
-13  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=2
-14  $4002  20 00 40    jsr ._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung; loop with j=2
-15  $4005  E8          inx; loop with j=2
-16  $4000              *=$4000+256*j; loop with j=3
-17  $4000  A9 14       ._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=3
-18  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=3
-19  $4002  20 00 40    jsr ._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung; loop with j=3
-20  $4005  E8          inx; loop with j=3
-21  $4000              *=$4000+256*j; loop with j=4
-22  $4000  A9 14       ._C64STUDIO_LL_3__16_._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=4
-23  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=4
-24  $4002  20 00 40    jsr ._C64STUDIO_LL_3__16_._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung; loop with j=4
-25  $4005  E8          inx; loop with j=4
-26  $4000              *=$4000+256*j; loop with j=5
-27  $4000  A9 14       ._C64STUDIO_LL_4__21_._C64STUDIO_LL_3__16_._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung   Lda #20; loop with j=5
-28  $4002              ;.Zweisprung  Ldx $2000+8*j; loop with j=5
-29  $4002  20 00 40    jsr ._C64STUDIO_LL_4__21_._C64STUDIO_LL_3__16_._C64STUDIO_LL_2__11_._C64STUDIO_LL_1__6_._C64STUDIO_LL_0__6_.Einsprung; loop with j=5
-30  $4005  E8          inx; loop with j=5
-31  $4006              ;was loop end for j
+00   ----              !cpu m65
+01   ----              
+02  $2000              * = $2000
+03  $2000              
+10  $2003              
+11  $2003  E6 02       inc $02

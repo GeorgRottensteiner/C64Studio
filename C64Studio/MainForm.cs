@@ -810,10 +810,17 @@ namespace C64Studio
         var sourceElement = Project.Elements[i];
         var targetElement = newProject.Elements[i];
 
+        if ( sourceElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
+        {
+          continue;
+        }
+
         if ( GR.Path.IsSubPath( Project.Settings.BasePath, sourceElement.DocumentInfo.FullPath ) )
         {
-          Debug.Log( "need to clone " + sourceElement.DocumentInfo.FullPath );
-          System.IO.File.Copy( sourceElement.DocumentInfo.FullPath, targetElement.DocumentInfo.FullPath );
+          if ( !System.IO.File.Exists( targetElement.DocumentInfo.FullPath ) )
+          {
+            System.IO.File.Copy( sourceElement.DocumentInfo.FullPath, targetElement.DocumentInfo.FullPath );
+          }
         }
       }
 
@@ -2067,6 +2074,11 @@ namespace C64Studio
           {
             var sourceElement = project.Elements[i];
             var targetElement = clonedProject.Elements[i];
+
+            if ( sourceElement.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
+            {
+              continue;
+            }
 
             if ( GR.Path.IsSubPath( project.Settings.BasePath, sourceElement.DocumentInfo.FullPath ) )
             {

@@ -1,1 +1,3 @@
-66 IFINT(B)<>BTHENR$(4)="W-":GOSUB181
+#C64Studio.MetaData.BASIC:2049,BASIC V2
+5REM PRINT""
+10PRINT""

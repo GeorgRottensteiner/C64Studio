@@ -1,8 +1,12 @@
-﻿* = $0801
+﻿!cpu m65
 
-          !byte 2,"http://www.georg-rottensteiner.de/test/haus1.html"
-          !byte "http://www.georg-rottensteiner.de/test/haus1.html"
+* = $2000
+
+!list off
+
+lda $01,y
 
 
-;TIMED_OUT_MESSAGE
-          !pet "get ip timed out, check wic64 state",0
+!list on
+
+  inc $02
