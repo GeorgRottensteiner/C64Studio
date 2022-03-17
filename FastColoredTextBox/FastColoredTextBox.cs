@@ -8377,6 +8377,11 @@ namespace FastColoredTextBoxNS
       }
       if ( old.Start.iLine == old.End.iLine )
       {
+        if ( old.End.iChar < old.Start.iChar )
+        {
+          oldEnd = old.Start;
+          oldStart = old.End;
+        }
         startOffset = Math.Min( old.Start.iChar, old.End.iChar );
       }
 
