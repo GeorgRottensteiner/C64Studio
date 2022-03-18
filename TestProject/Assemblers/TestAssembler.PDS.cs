@@ -61,5 +61,25 @@ namespace TestProject
     }
 
 
+
+    [TestMethod]
+    public void TestMacroPDS()
+    {
+      // do not shift the lines, they need to be on the very left
+      string      source = @"  ORG $c000
+lsmf MACRO
+     lda #2
+     ENDM
+          
+lsmf";
+
+      var assembly = TestAssemblePDS( source );
+
+      Assert.AreEqual( "00C0A902", assembly.ToString() );
+    }
+
+
+
+
   }
 }

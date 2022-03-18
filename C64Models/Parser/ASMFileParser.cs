@@ -2657,7 +2657,7 @@ namespace C64Studio.Parser
                 case C64Studio.Types.MacroInfo.PseudoOpType.BASIC:
                   {
                     int lineSize = -1;
-                    if ( POBasic( lineInfo.Line, lineInfo.NeededParsedExpression, lineInfo.LineIndex, lineInfo, m_TextCodeMappingRaw, false, out lineSize ) != ParseLineResult.OK )
+                    if ( POBasic( lineInfo.Line, lineInfo.NeededParsedExpression, lineInfo.LineIndex, lineInfo, m_TextCodeMappingRaw, false, lineInfo.HideInPreprocessedOutput, out lineSize ) != ParseLineResult.OK )
                     {
                       AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
                         "Failed to evaluate expression: " + TokensToExpression( lineInfo.NeededParsedExpression ) );
@@ -6031,7 +6031,7 @@ namespace C64Studio.Parser
 
 
 
-    private ParseLineResult POBasic( string Line, List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, GR.Collections.Map<byte,byte> textCodeMapping, bool AllowLaterEvaluation, out int lineSizeInBytes )
+    private ParseLineResult POBasic( string Line, List<Types.TokenInfo> lineTokenInfos, int lineIndex, Types.ASM.LineInfo info, GR.Collections.Map<byte,byte> textCodeMapping, bool AllowLaterEvaluation, bool HideInPreprocessedOutput, out int lineSizeInBytes )
     {
       // !basic behaves differently for Mega65!
       lineSizeInBytes = 13;
@@ -6251,6 +6251,8 @@ namespace C64Studio.Parser
         }
 
         var dummyLineInfo = new Types.ASM.LineInfo();
+        dummyLineInfo.HideInPreprocessedOutput = HideInPreprocessedOutput;
+
         var subRange = lineTokenInfos.GetRange( secondTokenIndex, lineTokenInfos.Count - secondTokenIndex - 2 );
 
         for ( int i = 1; i < poParams.Count - 1; ++i )
@@ -7829,6 +7831,11 @@ namespace C64Studio.Parser
           m_CurrentCommentSB.AppendLine( parseLine.Substring( commentPos + 1 ) );
           parseLine = parseLine.Substring( 0, commentPos );
           hadCommentInLine = true;
+        }
+
+        if ( parseLine == "name" )
+        {
+          Debug.Log( "aha" );
         }
 
         Types.ASM.LineInfo info       = new Types.ASM.LineInfo();
@@ -9882,7 +9889,7 @@ namespace C64Studio.Parser
             }
             else if ( pseudoOp.Type == C64Studio.Types.MacroInfo.PseudoOpType.BASIC )
             {
-              var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, out lineSizeInBytes );
+              var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, hideInPreprocessedOutput, out lineSizeInBytes );
               if ( parseResult == ParseLineResult.RETURN_NULL )
               {
                 HadFatalError = true;
@@ -10034,7 +10041,7 @@ namespace C64Studio.Parser
           }
           else if ( macroInfo.Type == C64Studio.Types.MacroInfo.PseudoOpType.BASIC )
           {
-            var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, out lineSizeInBytes );
+            var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, hideInPreprocessedOutput, out lineSizeInBytes );
             if ( parseResult == ParseLineResult.RETURN_NULL )
             {
               HadFatalError = true;
@@ -10052,7 +10059,7 @@ namespace C64Studio.Parser
             for ( int i = 1; i < lineTokenInfos.Count; ++i )
             {
               if ( ( lineTokenInfos[i].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
-              && ( lineTokenInfos[i].Content == "," ) )
+              &&   ( lineTokenInfos[i].Content == "," ) )
               {
                 if ( commaCount == 0 )
                 {
@@ -10566,6 +10573,7 @@ namespace C64Studio.Parser
         Types.ASM.LineInfo info = new Types.ASM.LineInfo();
 
         info.LineIndex = Lines.Length;
+        info.HideInPreprocessedOutput = hideInPreprocessedOutput;
         Types.ASM.BankInfo lastBank = ASMFileInfo.Banks[ASMFileInfo.Banks.Count - 1];
 
         if ( sizeInBytes <= lastBank.SizeInBytesStart + lastBank.SizeInBytes )
@@ -10952,6 +10960,7 @@ namespace C64Studio.Parser
 
     private void DetectPDSOrDASMMacroCall( Map<string, MacroFunctionInfo> macroFunctions, List<TokenInfo> lineTokenInfos )
     {
+      // PDS?
       if ( ( lineTokenInfos.Count >= 1 )
       &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Count == 0 )
       &&   ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
@@ -10959,8 +10968,11 @@ namespace C64Studio.Parser
       {
         lineTokenInfos[0].Type = TokenInfo.TokenType.CALL_MACRO;
       }
+
       if ( ( lineTokenInfos.Count >= 1 )
       &&   ( lineTokenInfos[0].Type == Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Count != 0 )
+      &&   ( lineTokenInfos[0].Content.StartsWith( m_AssemblerSettings.MacroFunctionCallPrefix[0] ) )
       &&   ( macroFunctions.ContainsKey( lineTokenInfos[0].Content ) ) )
       {
         lineTokenInfos[0].Type = TokenInfo.TokenType.CALL_MACRO;

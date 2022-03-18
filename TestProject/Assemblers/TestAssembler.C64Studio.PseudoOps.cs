@@ -362,5 +362,22 @@ namespace TestProject
 
 
 
+    [TestMethod]
+    public void TestMacroC64Studio()
+    {
+      // do not shift the lines, they need to be on the very left
+      string      source = @"  * = $c000
+                          !macro lsmf
+                               lda #2
+                          !end
+          
+                          +lsmf";
+
+      var assembly = TestAssembleC64Studio( source );
+
+      Assert.AreEqual( "00C0A902", assembly.ToString() );
+    }
+
+
   }
 }

@@ -1,6 +1,11 @@
-*=$0801
-!basic
-!macro name
+﻿*=$0801
+;!basic
+
+
+;!list off
+
+!macro name {
+
   lda #0
   beq +
    lda #1
@@ -8,5 +13,11 @@
   +
    lda #2
   ++
-!end
+
+
+} ;!end
+
+;!list on
+
+
 +name
