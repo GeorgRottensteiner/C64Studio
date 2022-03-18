@@ -2724,6 +2724,12 @@ namespace C64Studio.Parser
         &&      ( Data.ByteAt( dataPos ) != 0 ) )
         {
           byte    byteValue = Data.ByteAt( dataPos );
+
+          if ( byteValue == 34 )
+          {
+            insideStringLiteral = !insideStringLiteral;
+          }
+
           if ( encounteredREM )
           {
             if ( ( byteValue >= 192 )
@@ -2741,8 +2747,14 @@ namespace C64Studio.Parser
               byteValue = 126;
             }
 
-            // REM is only remark, no opcode parsing anymore
-            if ( ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
+            // REM is only remark, no opcode parsing anymore, but only inside apostrophes!
+
+            if ( ( !insideStringLiteral )
+            &&   ( Settings.BASICDialect.OpcodesFromByte.ContainsKey( byteValue ) ) )
+            {
+              lineContent += Settings.BASICDialect.OpcodesFromByte[byteValue].Command;
+            }
+            else if ( ConstantData.PETSCIIToUnicode.ContainsKey( byteValue ) )
             {
               char charToUse = ConstantData.PETSCIIToUnicode[byteValue];
               lineContent += charToUse;
@@ -2751,10 +2763,6 @@ namespace C64Studio.Parser
             continue;
           }
 
-          if ( byteValue == 34 )
-          {
-            insideStringLiteral = !insideStringLiteral;
-          }
           if ( insideStringLiteral )
           {
             //if ( KeymapEntryExists( System.Windows.Forms.InputLanguage.CurrentInputLanguage, System.Windows.Forms.Keys
