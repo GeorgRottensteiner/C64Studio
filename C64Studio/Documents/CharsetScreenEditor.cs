@@ -2731,7 +2731,8 @@ namespace C64Studio
 
       dataObj.SetData( "C64Studio.CharacterScreenSelection", false, dataSelection.MemoryStream() );
 
-      // TODO - Grafik?
+      Core.Imaging.ImageToClipboardData( pictureEditor.DisplayPage, x1 * 8, y1 * 8, ( x2 - x1 + 1 ) * 8, ( y2 - y1 + 1 ) * 8, dataObj );
+
       /*
       GR.Memory.ByteBuffer      dibData = m_Charset.Characters[m_CurrentChar].Image.CreateHDIBAsBuffer();
 

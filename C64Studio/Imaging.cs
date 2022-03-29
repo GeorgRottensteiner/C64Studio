@@ -84,6 +84,30 @@ namespace C64Studio
 
 
 
+    internal void ImageToClipboardData( IImage Image, int X, int Y, int Width, int Height, System.Windows.Forms.DataObject Data )
+    {
+      if ( Image == null )
+      {
+        return;
+      }
+      if ( ( X >= Image.Width )
+      ||   ( Width <= 0 )
+      ||   ( Height <= 0 )
+      ||   ( X + Width < X )
+      ||   ( Y >= Image.Height )
+      ||   ( Y + Height < Y ) )
+      {
+        return;
+      }
+      GR.Memory.ByteBuffer      dibData2 = Image.GetImage( X, Y, Width, Height ).CreateHDIBAsBuffer();
+
+      System.IO.MemoryStream    ms2 = dibData2.MemoryStream();
+
+      Data.SetData( "DeviceIndependentBitmap", ms2 );
+    }
+
+
+
     internal void ImageToClipboard( MemoryImage Image, Rectangle Selection )
     {
       if ( ( Image == null )
