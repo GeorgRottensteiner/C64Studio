@@ -30,6 +30,7 @@
       <li><a href="#hex">!HEX, !H</a></li>
       <li><a href="#ifdef">!IFDEF, !IF</a></li>
       <li><a href="#ifndef">!IFNDEF</a></li>
+      <li><a href="#list">!LIST</a></li>
       <li><a href="#macro">!MACRO</a></li>
       <li><a href="#media">!MEDIA</a></li>
       <li><a href="#mediasrc">!MEDIASRC</a></li>
@@ -438,6 +439,17 @@
     <br>
     <br>
   </div>
+  <a name="list"></a>
+  <H2>!LIST &lt;on/off&gt;</H2>
+  <div id="mybody">
+    This pseudo op allows to suppress output in preprocessed files. Use !list on to turn on, and !list off to turn off.<br>
+    <br>
+    <br>
+    <div id="code"><br>      !list off
+    <br></div>
+    <br>
+    <br>
+  </div>
   <a name="macro"></a>
   <H2>!MACRO &lt;Function Name&gt; [&lt;Parameter 1&gt;[,&lt;Parameter 2&gt;],..]</H2>
   <div id="mybody">
@@ -484,7 +496,7 @@
   <H2>!MEDIA &lt;File name&gt;,&lt;Method&gt;[,&lt;Method Parameters&gt;...]</H2>
   <div id="mybody">
     This pseudo op allows to directly include relevant portions of different binary or project files. Currently the pseudo op supports character files (*.chr), character project files (*.charsetproject),
-    sprite files (*.spr), sprite project files( *.spriteproject), character screen project files (*.charsetscreen) and graphic screen project files (*.graphicscreen).
+    sprite files (*.spr), sprite project files( *.spriteproject), character screen project files (*.charsetscreen), graphic screen project files (*.graphicscreen) and map project files (*.mapproject).
     <br>
     Method defines what and in which order to export data. The method depends on the given file.<br>
     <br>
@@ -1522,6 +1534,40 @@
           Exports Count values starting with Index as single bytes. Values are capped to the range 0 to 255
         </td>
       </tr>
+      <tr>
+        <td>
+          Map Project File
+        </td>
+        <td>
+          *.mapproject
+        </td>
+        <td>
+          char
+        </td>
+        <td>
+          None
+        </td>
+        <td>
+          Exports all characters data bytes of the source file (C64 256 * 8, FCM 256 * 64, FCM 16bit 8192 * 64)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Map Project File
+        </td>
+        <td>
+          *.mapproject
+        </td>
+        <td>
+          char
+        </td>
+        <td>
+          Index, Count
+        </td>
+        <td>
+          Exports Count character data bytes starting at Index bytes of the character data
+        </td>
+      </tr>
     </table>
     <br>
     <br>
@@ -1531,6 +1577,8 @@
         !media "panel.chr",char,10,32
         !media "panel.charsetproject",char
         !media "panel.charsetproject",char,10,32
+        !media "stage1.mapproject",char
+        !media "stage1.mapproject",char,0,200
 
         ;sprites
         !media "enemies.spr",sprite

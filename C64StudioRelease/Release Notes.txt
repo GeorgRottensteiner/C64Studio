@@ -17,6 +17,76 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+29.03.2022 - 7.1:         Add: Charset screen copy to clipboard also copies image section
+                          Add: Force HiRes bitmap export to use the same color settings if possible
+                          WIP: Relocation file
+                          Fix: BASIC disassembler, no token completion inside string literals inside REM
+                          Fix: C64Studio/ACME style macro only possible with + prefix
+                          Fix: Nested loops were broken (again), last loop had wrong values
+                          Fix crash on cloning projects on overwriting existing files
+                          Add: !list pseudo op to suppress output in preprocessed file
+                          Fix: Export from .prg to .bas file, do not inflate control codes to opcodes in REMarks
+                          Add: Clone solution method
+                          Fix: Renaming project also renames the .c64 file
+                          Add: Caption show name of solution and project
+                          Add: Allow copy/paste of charset from Mega65 to C64 with palette mapping
+                          Fix: Potential concurrency issue on accessing dependencies
+                          Fix: Temp labels not showing up in Outline/Intellisense
+                          Add: Graphic screen editor: Support for Mega65 mode
+                          Add: Colors to map project (beginning support for Mega65 modes)
+                          Add: !media support for mapproject (character data)
+                          Add: Charscreen Editor - Export to Marq's PETSCII editor format
+                          Fix: Uncomment on half selected first line would leave the comment prefix
+                          Fix: Potential racing condition accessing DeducedDependency list
+                          Fix: Charset import from ASM now works for Mega65 formats
+                          Major update on Tiny64 emu: Most common opcodes now working with Wolgang Lorenz' test suite, programs start working
+                          Add: Hexbox, Ctrl-A = Select All
+                          Fix: Secondary memory view uses configured colors now
+                          Fix: Tiny64 irq behaviour, now the cursor blinks!
+                          Fix: late resolve of temp label failed
+                          Fix: Allow to type ? in REM again for BASIC
+                          Add: Update Mega65 BASIC dialect file (BIT command)
+                          Fix: add temp label type (would not show up in Outline)
+                          Add: 32 color support for Mega65 HiRes mode
+                          Add: Capture error/output streams for called emulators
+                          Fix: main toolbar button size for super high DPI
+                          Add: BASIC 65 tokens lock,unlock,bit
+                          Add: Auto-open preprocessed file
+                          Fix: Non project files, that are used in a shared build now also share file info (and thus Outline)
+                          Add: Allow multiple zone declaration
+                          Fix: BASIC Shift-Space now works as expected, Shift-Arrowup is now properly known for PI,remove shift-arrowleft
+                          Fix: Issue 59, !trace not working as expeced
+                          Add: Charpad V8 format import support
+                          Add: Pre build chain projects are now properly check for changes on a rebuild attempt
+                          Add: Option for right click behaviour in charset/sprite editor
+                          Fix: Properly build text messages with !warn/!message/!error
+                          Fix: Charscreen editor bg color combo fix
+                          Fix: BASIC Allow ? as first token in label mode
+                          Fix: Charscreen editor, allow 256 color in bg color for Mega65
+                          Fix: Label mode toggling messing up line numbering when hard comments were inside
+                          Fix: Character shortcut keys now also working in sprite/charscreen/map editors
+                          Fix: Syntax coloring for tokens right after line number
+                          Fix: ToString for real number symbols results in proper value (e.g. 1.5 instead of 1)
+                          Fix: Outline store expansion state of "global zone" node
+                          Add: Copy/Paste buttons in charscreen editor
+                          Add: Allow palette import with FCM charset import
+                          Fix: Display FCM char color 0 as transparent
+                          Add: Go To Declaration automatically sets navigation point on source
+                          Fix: Color shortcuts now only select color, not change it (charset editor, sprite editor)
+                          Fix: VIC20 charset editor exchange color missing functionality
+                          Add: Sprite editor clear
+                          Fix: VIC20 charset mirroring X
+                          Add: Active project per solution
+                          Add: Charset screen import from BASIC listing (parsing PRINT statements)
+                          Fix: single character literals
+                          Add: text screen export with offset
+                          Fix: theming issue on project properties for build events
+                          Fix: Rename Atari Sample project folder
+                          Fix: handling of string literals could result in hard coded value 1
+                          Fix: Color chooser dialog in map and text screen editor
+                          Add/Fix: ViC20 uses proper palette
+                          Add: Clone Project option in Solution Explorer
+
 20.12.2021 - 7.0:         Add: Mega65 sample projects showing a few new features
                           Add: Find Reference also works on macros
                           Add: math.floor and math.ceiling
