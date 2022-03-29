@@ -17,6 +17,7 @@ namespace C64Studio.Parser
     public Types.AssemblerType                  Assembler = Types.AssemblerType.AUTO;
     public bool                                 AutoTruncateLiteralValues = false;
     public bool                                 CreatePreProcesseFile = false;
+    public bool                                 CreateRelocationFile = false;
     public List<string>                         LibraryFiles = new List<string>();
     public Set<Types.ErrorCode>                 WarningsToTreatAsError = new Set<Types.ErrorCode>();
     public Set<AssemblerSettings.Hacks>         EnabledHacks = new Set<AssemblerSettings.Hacks>();

@@ -157,7 +157,8 @@ namespace C64Studio.Types
     NAVIGATE_BACK,
     NAVIGATE_FORWARD,
     FIND_ALL_REFERENCES,
-    SAVE_DOCUMENT_COPY_AS
+    SAVE_DOCUMENT_COPY_AS,
+    BUILD_TO_RELOCATION_FILE
   }
 
   public enum StudioState
@@ -169,7 +170,8 @@ namespace C64Studio.Types
     BUILD_AND_DEBUG,
     DEBUGGING_RUN,
     DEBUGGING_BROKEN,
-    BUILD_PRE_PROCESSED_FILE
+    BUILD_PRE_PROCESSED_FILE,
+    BUILD_RELOCATION_FILE
   };
 
   [Flags]
@@ -1183,6 +1185,8 @@ namespace RetroDevStudio
       AddC64Key( KeyboardKey.KEY_AT, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 192, true, 192, true, (char)0xeec0, true, "REVERSE SHIFT @" );
 
       AddC64Key( KeyboardKey.KEY_1, KeyModifier.COMMODORE, KeyType.CONTROL_CODE, 129 + 64, true, 129, true, (char)0xeec1, -1, 0, true, "ORANGE", "ORN" ).Replacements.AddRange( new string[] { "ORANGE", "ORN", "ORNG" } );   // orange
+
+      //AddC64Key( KeyboardKey.UNDEFINED, KeyModifier.NORMAL, KeyType.CONTROL_CODE, 0, false, 130, true, (char)0, false, "130" );
 
       AddC64Key( KeyboardKey.KEY_B, KeyModifier.SHIFT, KeyType.CONTROL_CODE, 194, true, 157, true, (char)0xeec2, true, "REVERSE SHIFT B" );
 

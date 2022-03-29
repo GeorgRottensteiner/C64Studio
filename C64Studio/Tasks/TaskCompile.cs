@@ -15,12 +15,14 @@ namespace C64Studio.Tasks
     private DocumentInfo    m_ActiveDocument;
     private Solution        m_Solution;
     private bool            CreatePreProcessedFile = false;
+    private bool            CreateRelocationFile = false;
 
 
 
-    public TaskCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, DocumentInfo ActiveDocumentInfo, Solution Solution, bool CreatePreProcessedFile )
+    public TaskCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, DocumentInfo ActiveDocumentInfo, Solution Solution, bool CreatePreProcessedFile, bool CreateRelocationFile )
     {
       this.CreatePreProcessedFile = CreatePreProcessedFile;
+      this.CreateRelocationFile = CreateRelocationFile;
       m_DocumentToBuild = DocumentToBuild;
       m_DocumentToDebug = DocumentToDebug;
       m_DocumentToRun = DocumentToRun;
@@ -129,6 +131,7 @@ namespace C64Studio.Tasks
         case StudioState.COMPILE:
         case StudioState.BUILD:
         case StudioState.BUILD_PRE_PROCESSED_FILE:
+        case StudioState.BUILD_RELOCATION_FILE:
           if ( Core.Settings.PlaySoundOnSuccessfulBuild )
           {
             System.Media.SystemSounds.Asterisk.Play();
@@ -138,7 +141,13 @@ namespace C64Studio.Tasks
               Core.MainForm.AppState = Types.StudioState.NORMAL;
 
               string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".dump" );
-              //Core.MainForm.OpenFile( pathLog );
+              Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
+            }
+            else if ( Core.MainForm.AppState == StudioState.BUILD_RELOCATION_FILE )
+            {
+              Core.MainForm.AppState = Types.StudioState.NORMAL;
+
+              string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( m_DocumentToBuild.FullPath ), System.IO.Path.GetFileNameWithoutExtension( m_DocumentToBuild.FullPath ) + ".loc" );
               Core.Navigating.OpenDocumentAndGotoLine( null, Core.Navigating.FindDocumentInfoByPath( pathLog ), 0 );
             }
           }
@@ -421,7 +430,7 @@ namespace C64Studio.Tasks
             ( (Parser.BasicFileParser)parser ).SetBasicDialect( ( (SourceBasicEx)Doc.BaseDoc ).BASICDialect );
           }
 
-          if ( ( !Core.MainForm.ParseFile( parser, Doc, config, additionalPredefines, OutputMessages, CreatePreProcessedFile ) )
+          if ( ( !Core.MainForm.ParseFile( parser, Doc, config, additionalPredefines, OutputMessages, CreatePreProcessedFile, CreateRelocationFile ) )
           ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
                                         {
                                           TargetType = Core.DetermineTargetType( Doc, parser ),

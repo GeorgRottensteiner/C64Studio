@@ -2241,9 +2241,9 @@ namespace C64Studio
 
 
 
-    private bool StartCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, Solution Solution, bool CreatePreProcessedFile )
+    private bool StartCompile( DocumentInfo DocumentToBuild, DocumentInfo DocumentToDebug, DocumentInfo DocumentToRun, Solution Solution, bool CreatePreProcessedFile, bool CreateRelocationFile )
     {
-      AddTask( new Tasks.TaskCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, ActiveDocumentInfo, Solution, CreatePreProcessedFile ) );
+      AddTask( new Tasks.TaskCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, ActiveDocumentInfo, Solution, CreatePreProcessedFile, CreateRelocationFile ) );
       return true;
     }
 
@@ -2266,7 +2266,7 @@ namespace C64Studio
 
       AppState = Types.StudioState.BUILD;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocInfo, null, null, StudioCore.Navigating.Solution, false ) )
+      if ( !StartCompile( DocInfo, null, null, StudioCore.Navigating.Solution, false, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -2276,18 +2276,25 @@ namespace C64Studio
 
     public void Build( DocumentInfo Document )
     {
-      Build( Document, false );
+      Build( Document, false, false );
     }
 
 
 
-    public void Build( DocumentInfo Document, bool CreatePreProcessedFile )
+    public void Build( DocumentInfo Document, bool CreatePreProcessedFile, bool CreateRelocationFile )
     {
       if ( AppState != Types.StudioState.NORMAL )
       {
         return;
       }
-      if ( CreatePreProcessedFile )
+      if ( CreateRelocationFile )
+      {
+        AppState = Types.StudioState.BUILD_RELOCATION_FILE;
+
+        // always build if relocation file is wanted
+        MarkAsDirty( Document );
+      }
+      else if ( CreatePreProcessedFile )
       {
         AppState = Types.StudioState.BUILD_PRE_PROCESSED_FILE;
         // always build if preprocessed file is wanted
@@ -2298,7 +2305,7 @@ namespace C64Studio
         AppState = Types.StudioState.BUILD;
       }
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( Document, null, null, StudioCore.Navigating.Solution, CreatePreProcessedFile ) )
+      if ( !StartCompile( Document, null, null, StudioCore.Navigating.Solution, CreatePreProcessedFile, CreateRelocationFile ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -2314,7 +2321,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.COMPILE;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( Document, null, null, StudioCore.Navigating.Solution, false ) )
+      if ( !StartCompile( Document, null, null, StudioCore.Navigating.Solution, false, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -3192,7 +3199,7 @@ namespace C64Studio
               // do not reparse already parsed element
               continue;
             }
-            ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false );
+            ParseFile( StudioCore.Compiling.ParserASM, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false, false );
             updatedFiles.Add( element.DocumentInfo.FullPath );
 
             if ( element.Document != null )
@@ -3226,7 +3233,7 @@ namespace C64Studio
               // do not reparse already parsed element
               continue;
             }
-            ParseFile( StudioCore.Compiling.ParserBasic, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false );
+            ParseFile( StudioCore.Compiling.ParserBasic, element.DocumentInfo, newProject.Settings.Configuration( SelectedConfig ), null, false, false, false );
             updatedFiles.Add( element.DocumentInfo.FullPath );
 
             AddTask( new Tasks.TaskUpdateKeywords( element.Document ) );
@@ -3315,7 +3322,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.BUILD_AND_RUN;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocumentToBuild, null, DocumentToRun, StudioCore.Navigating.Solution, false ) )
+      if ( !StartCompile( DocumentToBuild, null, DocumentToRun, StudioCore.Navigating.Solution, false, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -3736,7 +3743,7 @@ namespace C64Studio
       }
       AppState = Types.StudioState.BUILD_AND_DEBUG;
       StudioCore.Debugging.OverrideDebugStart = -1;
-      if ( !StartCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, StudioCore.Navigating.Solution, false ) )
+      if ( !StartCompile( DocumentToBuild, DocumentToDebug, DocumentToRun, StudioCore.Navigating.Solution, false, false ) )
       {
         AppState = Types.StudioState.NORMAL;
       }
@@ -3801,7 +3808,7 @@ namespace C64Studio
       {
         AppState = Types.StudioState.BUILD_AND_DEBUG;
         StudioCore.Debugging.OverrideDebugStart = DebugAddress;
-        if ( !StartCompile( DocumentToRun, DocumentToDebug, DocumentToRun, StudioCore.Navigating.Solution, false ) )
+        if ( !StartCompile( DocumentToRun, DocumentToDebug, DocumentToRun, StudioCore.Navigating.Solution, false, false ) )
         {
           AppState = Types.StudioState.NORMAL;
         }
@@ -4920,7 +4927,17 @@ namespace C64Studio
             DocumentInfo docToCompile = DetermineDocumentToCompile( true );
             if ( docToCompile != null )
             {
-              Build( docToCompile, true );
+              Build( docToCompile, true, false );
+              return true;
+            }
+          }
+          break;
+        case Function.BUILD_TO_RELOCATION_FILE:
+          {
+            DocumentInfo docToCompile = DetermineDocumentToCompile( true );
+            if ( docToCompile != null )
+            {
+              Build( docToCompile, false, true );
               return true;
             }
           }
@@ -5231,7 +5248,7 @@ namespace C64Studio
 
 
 
-    public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, string AdditionalPredefines, bool OutputMessages, bool CreatePreProcessedFile )
+    public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, string AdditionalPredefines, bool OutputMessages, bool CreatePreProcessedFile, bool CreateRelocationFile )
     {
       //Debug.Log( "Parsefile called for " + Document.DocumentFilename );
       C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
@@ -5242,6 +5259,7 @@ namespace C64Studio
       }
       config.AutoTruncateLiteralValues  = StudioCore.Settings.ASMAutoTruncateLiteralValues;
       config.CreatePreProcesseFile      = CreatePreProcessedFile;
+      config.CreateRelocationFile       = CreateRelocationFile;
       config.LibraryFiles               = StudioCore.Settings.ASMLibraryPaths;
       config.InputFile                  = Document.FullPath;
       config.WarningsToTreatAsError     = StudioCore.Settings.TreatWarningsAsErrors;
@@ -5455,7 +5473,7 @@ namespace C64Studio
         {
           config = Document.Project.Settings.Configuration( mainToolConfig.SelectedItem.ToString() );
         }
-        ParseFile( StudioCore.DetermineParser( Document ), Document, config, null, false, false );
+        ParseFile( StudioCore.DetermineParser( Document ), Document, config, null, false, false, false );
       }
     }
 
@@ -7432,6 +7450,13 @@ namespace C64Studio
       {
         CloneSolution( StudioCore.Navigating.Solution );
       }
+    }
+
+
+
+    private void relocationFileToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      ApplyFunction( C64Studio.Types.Function.BUILD_TO_RELOCATION_FILE );
     }
 
 

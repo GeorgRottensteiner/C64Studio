@@ -12646,6 +12646,10 @@ namespace C64Studio.Parser
       {
         CreatePreProcessedFile( Config.InputFile, lines, ASMFileInfo );
       }
+      if ( Config.CreateRelocationFile )
+      {
+        CreateRelocationFile( Config.InputFile, lines, ASMFileInfo );
+      }
 
       if ( ( ASMFileInfo.UnparsedLabels.Count > 0 )
       ||   ( m_ErrorMessages > 0 ) )
@@ -12757,6 +12761,62 @@ namespace C64Studio.Parser
       catch ( Exception ex )
       {
         AddWarning( -1, Types.ErrorCode.E1401_INTERNAL_ERROR, "Can't write preprocessed file:" + ex.Message, 0, 0 );
+      }
+    }
+
+
+
+    private void CreateRelocationFile( string SourceFile, string[] Lines, Types.ASM.FileInfo FileInfo )
+    {
+      try
+      {
+        string pathLog = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( SourceFile ), System.IO.Path.GetFileNameWithoutExtension( SourceFile ) + ".loc" );
+
+        if ( Lines == null )
+        {
+          return;
+        }
+
+        using ( StreamWriter writer = File.CreateText( pathLog ) )
+        {
+          foreach ( var info in FileInfo.Labels )
+          {
+            foreach ( var reference in info.Value.References )
+            {
+              if ( FileInfo.LineInfo.ContainsKey( reference ) )
+              {
+                var line = FileInfo.LineInfo[reference];
+
+                // TODO - check if we're inside the code
+                // is absolute opcode?
+                if ( line.Opcode != null )
+                {
+                  if ( ( line.Opcode.Addressing == Opcode.AddressingType.ABSOLUTE )
+                  ||   ( line.Opcode.Addressing == Opcode.AddressingType.ABSOLUTE_INDIRECT_X )
+                  ||   ( line.Opcode.Addressing == Opcode.AddressingType.ABSOLUTE_X )
+                  ||   ( line.Opcode.Addressing == Opcode.AddressingType.ABSOLUTE_Y ) )
+                  {
+                    writer.WriteLine( "Label " + info.Key );
+                    writer.WriteLine( "  used in line " + line.Line );
+                  }
+                }
+              }
+              else
+              {
+                Debug.Log( "Reference found in unknown line " + reference );
+              }
+            }
+          }
+        }
+        ParseMessage message = new ParseMessage( ParseMessage.LineType.MESSAGE, Types.ErrorCode.OK, "Relocation file written to " + pathLog );
+        message.AlternativeFile = pathLog;
+        message.AlternativeLineIndex = 0;
+        Messages.Add( -1, message );
+        ++m_Messages;
+      }
+      catch ( Exception ex )
+      {
+        AddWarning( -1, Types.ErrorCode.E1401_INTERNAL_ERROR, "Can't write relocation file:" + ex.Message, 0, 0 );
       }
     }
 
