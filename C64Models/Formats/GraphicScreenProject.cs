@@ -337,6 +337,13 @@ namespace C64Studio.Formats
             {
               int colorTarget = 0;
               List<byte> keys = new List<byte>( usedColors.Keys );
+
+              // only one color, that means, the other was background -> force the same bit pattern
+              if ( usedColors.Count == 1 )
+              {
+                colorTarget = 1;
+                firstColorIndex = Colors.BackgroundColor;
+              }
               foreach ( byte colorIndex in keys )
               {
                 if ( colorTarget == 0 )
@@ -360,6 +367,7 @@ namespace C64Studio.Formats
                   screenChar.SetU8At( x + y * WidthChars, value );
                   usedColors[colorIndex] = 2;
                 }
+
                 ++colorTarget;
               }
             }
