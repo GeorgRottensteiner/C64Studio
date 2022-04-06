@@ -230,6 +230,7 @@ namespace C64Studio
       RegisterFunction( Function.COMPILE, "Compile", FunctionStudioState.NORMAL );
       RegisterFunction( Function.REBUILD, "Rebuild", FunctionStudioState.NORMAL );
       RegisterFunction( Function.BUILD_TO_PREPROCESSED_FILE, "Build Preprocessed File", FunctionStudioState.NORMAL );
+      RegisterFunction( Function.BUILD_TO_RELOCATION_FILE, "Build Relocation File", FunctionStudioState.NORMAL );
 
       // functions for any state
       RegisterFunction( Function.CENTER_ON_CURSOR, "Center on Cursor", FunctionStudioState.ANY );

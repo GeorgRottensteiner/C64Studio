@@ -631,12 +631,13 @@ namespace C64Studio
       StudioCore.Settings.Functions[Function.NAVIGATE_BACK].ToolBarButton = btnNavigateBackward;
       StudioCore.Settings.Functions[Function.NAVIGATE_FORWARD].MenuItem = navigateForwardToolStripMenuItem;
       StudioCore.Settings.Functions[Function.NAVIGATE_FORWARD].ToolBarButton = btnNavigateForward;
+      StudioCore.Settings.Functions[Function.BUILD_TO_RELOCATION_FILE].MenuItem = relocationFileToolStripMenuItem;
 
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
       m_DebugMemory.hexView.ByteCharConverter = new C64Studio.Converter.PETSCIIToCharConverter();
 
-      DPIHandler.ResizeControlsForDPI( mainTools );
-      DPIHandler.ResizeControlsForDPI( debugTools  );
+      //DPIHandler.ResizeControlsForDPI( mainTools );
+      //DPIHandler.ResizeControlsForDPI( debugTools  );
       debugTools.Left = mainTools.Right;
 
       // auto-set app mode by checking for existing settings files
@@ -1237,6 +1238,10 @@ namespace C64Studio
           else
           {
             mainToolPrint.Enabled = Event.Doc.ContainsCode;
+            if ( IsCodeDocument( Event.Doc ) )
+            {
+              StudioCore.Navigating.LastActiveCodeDocument = Event.Doc;
+            }
           }
           // current project changed?
           if ( Event.Project == null )
@@ -1298,6 +1303,10 @@ namespace C64Studio
           {
             LastSearchableDocumentInfo = null;
           }
+          if ( StudioCore.Navigating.LastActiveCodeDocument == Event.Doc )
+          {
+            StudioCore.Navigating.LastActiveCodeDocument = null;
+          }
           break;
       }
     }
@@ -1348,6 +1357,22 @@ namespace C64Studio
       if ( ( DocInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
       ||   ( DocInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
       ||   ( DocInfo.Type == ProjectElement.ElementType.DISASSEMBLER ) )
+      {
+        return true;
+      }
+      return false;
+    }
+
+
+
+    private bool IsCodeDocument( DocumentInfo DocInfo )
+    {
+      if ( DocInfo == null )
+      {
+        return false;
+      }
+      if ( ( DocInfo.Type == ProjectElement.ElementType.ASM_SOURCE )
+      ||   ( DocInfo.Type == ProjectElement.ElementType.BASIC_SOURCE ) )
       {
         return true;
       }

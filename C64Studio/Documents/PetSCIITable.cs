@@ -64,7 +64,7 @@ namespace C64Studio
       System.Drawing.Pen  penBorder = new System.Drawing.Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) );
 
       g.FillRectangle( brushBackground, 0, 0, 80, 40 );
-      g.DrawRectangle( penBorder, 0, 0, 80, 40 );
+      g.DrawRectangle( penBorder, 0, 0, 79, 39 );
 
       System.Drawing.Brush  brush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) );
 
@@ -109,6 +109,7 @@ namespace C64Studio
       this.listPETSCII.TabIndex = 1;
       this.listPETSCII.VisibleAutoScrollHorizontal = true;
       this.listPETSCII.VisibleAutoScrollVertical = false;
+      this.listPETSCII.KeyPressed += new System.Windows.Forms.KeyPressEventHandler(this.listPETSCII_KeyPressed);
       this.listPETSCII.SizeChanged += new System.EventHandler(this.listPETSCII_SizeChanged);
       this.listPETSCII.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listPETSCII_MouseDoubleClick);
       // 
@@ -143,16 +144,40 @@ namespace C64Studio
 
     private void listPETSCII_MouseDoubleClick( object sender, MouseEventArgs e )
     {
+      InsertPETSCII();
+    }
+
+
+
+    private void InsertPETSCII()
+    {
       if ( listPETSCII.SelectedIndex == -1 )
       {
         return;
       }
       Types.C64Character character = (Types.C64Character)listPETSCII.Items[listPETSCII.SelectedIndex].Value;
-      BaseDocument doc = Core.MainForm.ActiveDocument;
-      if ( doc != null )
+      if ( ( Core.Navigating.LastActiveCodeDocument != null )
+      &&   ( Core.Navigating.LastActiveCodeDocument.BaseDoc != null ) )
       {
-        doc.InsertText( "" + character.CharValue );
+        BaseDocument doc = Core.Navigating.LastActiveCodeDocument.BaseDoc;
+        if ( doc != null )
+        {
+          doc.InsertText( "" + character.CharValue );
+        }
       }
     }
+
+
+
+    private void listPETSCII_KeyPressed( object sender, KeyPressEventArgs e )
+    {
+      if ( e.KeyChar == '\r' )
+      {
+        InsertPETSCII();
+      }
+    }
+
+
+
   }
 }

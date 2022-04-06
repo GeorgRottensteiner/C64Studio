@@ -1160,7 +1160,7 @@ namespace C64Studio
       if ( ( keyData == m_ControlKeyReplacement )
       ||   ( keyData == m_CommodoreKeyReplacement ) )
       {
-        // we misuse tab as command key, avoid common processing
+        // we misuse tab as command key, avoid common processing -> TODO only inside string mode!
         return true;
       }
 

@@ -435,6 +435,7 @@ namespace GR.Forms
       }
 
       AdjustScrollbars();
+      Invalidate();
     }
 
 
@@ -460,6 +461,7 @@ namespace GR.Forms
       if ( scrollLength <= 0 )
       {
         VisibleAutoScrollVertical = false;
+        m_Offset = 0;
       }
       else
       {
@@ -775,6 +777,7 @@ namespace GR.Forms
         return;
       }
 
+      //e.Graphics.FillRectangle( System.Drawing.SystemBrushes.Control, e.ClipRectangle );
       m_DPIFactorX = e.Graphics.DpiX;
       m_DPIFactorY = e.Graphics.DpiY;
 
@@ -783,29 +786,19 @@ namespace GR.Forms
       int     itemIndex = m_Offset * m_ItemsPerLine;
       int     itemInLine = 0;
       bool    hasNativeImages = false;
-      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle();
+      System.Drawing.Rectangle itemRect = new System.Drawing.Rectangle( 0, 0, ClientSize.Width, 1 );
       while ( itemIndex < Items.Count )
       {
-        int     xoffset = ( itemIndex - m_Offset * m_ItemsPerLine ) % m_ItemsPerLine;
-        int     yoffset = ( itemIndex - m_Offset * m_ItemsPerLine ) / m_ItemsPerLine;
-        itemRect = new System.Drawing.Rectangle( xoffset * m_ItemWidth, yoffset * m_ItemHeight, m_ItemWidth, m_ItemHeight );
-
-        /*
-        float     factorX = (float)ClientRectangle.Width / m_DisplayPage.Width;
-        float     factorY = (float)ClientRectangle.Height / m_DisplayPage.Height;
-
-        itemRect.Width = (int)( itemRect.Width * factorX );
-        itemRect.Height = (int)( itemRect.Height * factorY );*/
-
-        /*
-        if ( !e.ClipRectangle.IntersectsWith( itemRect ) )
+        if ( itemIndex < 0 )
         {
           ++itemIndex;
           itemInLine = ( ( itemInLine + 1 ) % m_ItemsPerLine );
-          continue;
-        }*/
 
-        //Debug.Log( "draw sprite " + itemIndex );
+          continue;
+        }
+        int     xoffset = ( itemIndex - m_Offset * m_ItemsPerLine ) % m_ItemsPerLine;
+        int     yoffset = ( itemIndex - m_Offset * m_ItemsPerLine ) / m_ItemsPerLine;
+        itemRect = new System.Drawing.Rectangle( xoffset * m_ItemWidth, yoffset * m_ItemHeight, m_ItemWidth, m_ItemHeight );
 
         if ( DrawItem != null )
         {

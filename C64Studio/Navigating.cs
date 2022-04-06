@@ -15,6 +15,9 @@ namespace C64Studio
     public Project            Project = null;
     public Types.ASM.FileInfo ASMInfo = null;
 
+    // last active BASIC or ASM source doc
+    public DocumentInfo       LastActiveCodeDocument = null;
+
     public int    LastShownMessageIndex = -1;
 
     public List<GR.Generic.Tupel<DocumentInfo,int>>   SourcesVisited = new List<GR.Generic.Tupel<DocumentInfo, int>>();
