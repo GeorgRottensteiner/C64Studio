@@ -139,6 +139,36 @@
     <Compile Include="Controls\CustomDrawControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsBinaryFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsBinaryFile.Designer.cs">
+      <DependentUpon>ExportAsBinaryFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsBASIC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsBASIC.Designer.cs">
+      <DependentUpon>ExportAsBASIC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsBASICData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsBASICData.Designer.cs">
+      <DependentUpon>ExportAsBASICData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsAssembly.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsAssembly.Designer.cs">
+      <DependentUpon>ExportAsAssembly.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenFormBase.Designer.cs">
+      <DependentUpon>ExportCharscreenFormBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\HexBoxCharPETSCIIViewer.cs" />
     <Compile Include="Controls\HexBoxSpriteViewer.cs" />
     <Compile Include="Controls\ThemedButton.cs">
@@ -609,6 +639,21 @@
     <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsMCCharacter.resx">
       <DependentUpon>ColorSettingsMCCharacter.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsBinaryFile.resx">
+      <DependentUpon>ExportAsBinaryFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsBASIC.resx">
+      <DependentUpon>ExportAsBASIC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsBASICData.resx">
+      <DependentUpon>ExportAsBASICData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsAssembly.resx">
+      <DependentUpon>ExportAsAssembly.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenFormBase.resx">
+      <DependentUpon>ExportCharscreenFormBase.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgPaletteEditor.resx">
       <DependentUpon>DlgPaletteEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -977,9 +1022,17 @@ copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"</PostBuildEvent>
         for i in $(TargetDir)*.dll; do cp $i $(SolutionDir)C64StudioRelease; done</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
-copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"
-del "$(SolutionDir)C64StudioRelease\BASIC Dialects\*.*" /Q
-copy "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\BASIC Dialects"</PostBuildEvent>
-  </PropertyGroup>
+    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">
+      copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
+      copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"
+      del "$(SolutionDir)C64StudioRelease\BASIC Dialects\*.*" /Q
+      copy "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\BASIC Dialects"
+    </PostBuildEvent>
+    <PostBuildEvent Condition="'$(OS)' == 'Unix' ">
+      cp $(TargetDir)C64Studio.exe $(SolutionDir)C64StudioRelease/$(TargetFileName)
+      cp $(TargetDir).dll $(SolutionDir)C64StudioRelease
+      rm -f "$(SolutionDir)C64StudioRelease/BASIC Dialects/"
+      cp $(ProjectDir)BASIC?Dialects/* $(SolutionDir)C64StudioRelease/BASIC?Dialects
+    </PostBuildEvent>
+  </PropertyGroup>  
 </Project>

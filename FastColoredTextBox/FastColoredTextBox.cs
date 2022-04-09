@@ -3567,11 +3567,28 @@ namespace FastColoredTextBoxNS
       return new SizeF( sz2.Width - sz3.Width + 1, /*sz2.Height*/font.Height );
     }
 
+
+
+#if __MonoCS__
+    // replace with dummies
+    public static extern IntPtr ImmGetContext( IntPtr hWnd )
+    {
+      return IntPtr.Zero;
+    }
+
+    public static IntPtr ImmAssociateContext( IntPtr hWnd, IntPtr hIMC )
+    {
+      return IntPtr.Zero;
+    }
+#else
     [DllImport( "Imm32.dll" )]
     public static extern IntPtr ImmGetContext( IntPtr hWnd );
 
     [DllImport( "Imm32.dll" )]
     public static extern IntPtr ImmAssociateContext( IntPtr hWnd, IntPtr hIMC );
+#endif
+
+
 
     protected override void WndProc( ref Message m )
     {
