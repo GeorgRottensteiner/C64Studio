@@ -9,6 +9,7 @@ using C64Studio.Types.ASM;
 using GR.Collections;
 using GR.Memory;
 using RetroDevStudio;
+using RetroDevStudio.Formats;
 using Tiny64;
 
 
@@ -5236,14 +5237,11 @@ namespace C64Studio.Parser
 
           dataToInclude.Clear();
 
-          GR.Memory.ByteBuffer    charData = new GR.Memory.ByteBuffer();
-          GR.Memory.ByteBuffer    colorData = new GR.Memory.ByteBuffer();
-          GR.Memory.ByteBuffer    charSet = new GR.Memory.ByteBuffer();
+          var exportInfo = new ExportCharsetScreenInfo();
+          exportInfo.RowByRow = !method.EndsWith( "VERT" );
+          exportInfo.Area = new System.Drawing.Rectangle( x, y, w, h ); 
 
-          bool    rowByRow = !method.EndsWith( "VERT" );
-
-
-          if ( !screenProject.ExportToBuffer( out charData, out colorData, out charSet, x, y, w, h, rowByRow ) )
+          if ( !screenProject.ExportToBuffer( exportInfo ) )
           {
             AddError( lineIndex, Types.ErrorCode.E2001_FILE_READ_ERROR, "Failed to export data from " + subFilename );
             return false;
@@ -5256,13 +5254,13 @@ namespace C64Studio.Parser
             if ( !Binary )
             {
               textToInclude = labelPrefix + "_CHARS" + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( charData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+              textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
 
               ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
             }
             else
             {
-              dataToInclude = charData;
+              dataToInclude = exportInfo.ScreenCharData;
             }
           }
           else if ( ( method == "COLOR" )
@@ -5271,12 +5269,12 @@ namespace C64Studio.Parser
             if ( !Binary )
             {
               textToInclude = labelPrefix + "_COLOR" + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( colorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+              textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
               ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
             }
             else
             {
-              dataToInclude = colorData;
+              dataToInclude = exportInfo.ScreenColorData;
             }
           }
           else if ( ( method == "CHARCOLOR" )
@@ -5285,15 +5283,15 @@ namespace C64Studio.Parser
             if ( !Binary )
             {
               textToInclude = labelPrefix + "_CHARS" + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( charData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
+              textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
               textToInclude += labelPrefix + "_COLOR" + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( colorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+              textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
 
               ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
             }
             else
             {
-              dataToInclude = charData + colorData;
+              dataToInclude = exportInfo.ScreenCharData + exportInfo.ScreenColorData;
             }
           }
           else if ( ( method == "COLORCHAR" )
@@ -5302,14 +5300,14 @@ namespace C64Studio.Parser
             if ( !Binary )
             {
               textToInclude = labelPrefix + "_COLOR" + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( colorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
+              textToInclude += Util.ToASMData( exportInfo.ScreenColorData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) ) + System.Environment.NewLine;
               textToInclude += labelPrefix + "_CHARS" + System.Environment.NewLine;
-              textToInclude += Util.ToASMData( charData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
+              textToInclude += Util.ToASMData( exportInfo.ScreenCharData, false, 0, MacroByType( Types.MacroInfo.PseudoOpType.BYTE ) );
               ReplacementLines = textToInclude.Split( new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
             }
             else
             {
-              dataToInclude = colorData + charData;
+              dataToInclude = exportInfo.ScreenColorData + exportInfo.ScreenCharData;
             }
           }
         }

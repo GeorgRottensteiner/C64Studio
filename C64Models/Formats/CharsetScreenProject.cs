@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio;
+using RetroDevStudio.Formats;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -122,6 +123,36 @@ namespace C64Studio.Formats
 
 
 
+    public ushort CharacterAt( int X, int Y )
+    {
+      if ( ( X < 0 )
+      ||   ( X >= ScreenWidth )
+      ||   ( Y < 0 )
+      ||   ( Y >= ScreenHeight ) )
+      {
+        return 0;
+      }
+
+      return (ushort)( Chars[Y * ScreenWidth + X] & 0xffff );
+    }
+
+
+
+    public ushort ColorAt( int X, int Y )
+    {
+      if ( ( X < 0 )
+      ||   ( X >= ScreenWidth )
+      ||   ( Y < 0 )
+      ||   ( Y >= ScreenHeight ) )
+      {
+        return 0;
+      }
+
+      return (ushort)( Chars[Y * ScreenWidth + X] >> 16 );
+    }
+
+
+
     public bool ReadFromBuffer( GR.Memory.ByteBuffer ProjectFile )
     {
       GR.IO.MemoryReader    memReader = new GR.IO.MemoryReader( ProjectFile );
@@ -200,34 +231,33 @@ namespace C64Studio.Formats
 
 
 
-    public bool ExportToBuffer( out GR.Memory.ByteBuffer CharData, out GR.Memory.ByteBuffer ColorData, out GR.Memory.ByteBuffer CharSetData, int X, int Y, int Width, int Height, bool RowByRow )
+    public bool ExportToBuffer( ExportCharsetScreenInfo Info )
     {
-      CharData = new GR.Memory.ByteBuffer();
-      ColorData = new GR.Memory.ByteBuffer();
-
-      CharSetData = new GR.Memory.ByteBuffer( CharSet.CharacterData() );
+      Info.ScreenCharData   = new GR.Memory.ByteBuffer();
+      Info.ScreenColorData  = new GR.Memory.ByteBuffer();
+      Info.CharsetData      = new GR.Memory.ByteBuffer( CharSet.CharacterData() );
 
       int numBytesPerChar = Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) );
 
-      if ( RowByRow )
+      if ( Info.RowByRow )
       {
         // row by row
-        for ( int i = 0; i < Height; ++i )
+        for ( int i = 0; i < Info.Area.Height; ++i )
         {
-          for ( int x = 0; x < Width; ++x )
+          for ( int x = 0; x < Info.Area.Width; ++x )
           {
-            byte newColor = (byte)( ( Chars[( Y + i ) * ScreenWidth + X + x] & 0xff0000 ) >> 16 );
-            ushort newChar = (ushort)( Chars[( Y + i ) * ScreenWidth + X + x] & 0xffff );
+            byte newColor = (byte)( ( Chars[( Info.Area.Y + i ) * ScreenWidth + Info.Area.X + x] & 0xff0000 ) >> 16 );
+            ushort newChar = (ushort)( Chars[( Info.Area.Y + i ) * ScreenWidth + Info.Area.X + x] & 0xffff );
 
             newChar = (ushort)( newChar + CharOffset );
 
             if ( numBytesPerChar == 2 )
             {
-              CharData.AppendU16( newChar );
+              Info.ScreenCharData.AppendU16( newChar );
             }
             else
             {
-              CharData.AppendU8( (byte)newChar );
+              Info.ScreenCharData.AppendU8( (byte)newChar );
             }
             if ( Lookup.TextModeUsesColor( Mode ) )
             {
@@ -240,29 +270,29 @@ namespace C64Studio.Formats
                   newColor += 64 - 16;
                 }
               }
-              ColorData.AppendU8( newColor );
+              Info.ScreenColorData.AppendU8( newColor );
             }
           }
         }
       }
       else
       {
-        for ( int x = 0; x < Width; ++x )
+        for ( int x = 0; x < Info.Area.Width; ++x )
         {
-          for ( int i = 0; i < Height; ++i )
+          for ( int i = 0; i < Info.Area.Height; ++i )
           {
-            byte newColor = (byte)( ( Chars[( Y + i ) * ScreenWidth + X + x] & 0xff0000 ) >> 16 );
-            ushort newChar = (ushort)( Chars[( Y + i ) * ScreenWidth + X + x] & 0xffff );
+            byte newColor = (byte)( ( Chars[( Info.Area.Y + i ) * ScreenWidth + Info.Area.X + x] & 0xff0000 ) >> 16 );
+            ushort newChar = (ushort)( Chars[( Info.Area.Y + i ) * ScreenWidth + Info.Area.X + x] & 0xffff );
 
             newChar = (ushort)( newChar + CharOffset );
 
             if ( numBytesPerChar == 2 )
             {
-              CharData.AppendU16( newChar );
+              Info.ScreenCharData.AppendU16( newChar );
             }
             else
             {
-              CharData.AppendU8( (byte)newChar );
+              Info.ScreenCharData.AppendU8( (byte)newChar );
             }
             if ( Lookup.TextModeUsesColor( Mode ) )
             {
@@ -275,7 +305,7 @@ namespace C64Studio.Formats
                   newColor += 64 - 16;
                 }
               }
-              ColorData.AppendU8( newColor );
+              Info.ScreenColorData.AppendU8( newColor );
             }
           }
         }

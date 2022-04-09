@@ -139,6 +139,30 @@
     <Compile Include="Controls\CustomDrawControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsImage.Designer.cs">
+      <DependentUpon>ExportAsImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsMarqSPETSCII.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsMarqSPETSCII.Designer.cs">
+      <DependentUpon>ExportAsMarqSPETSCII.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsImageFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsImageFile.Designer.cs">
+      <DependentUpon>ExportAsImageFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsCharset.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharscreenForms\ExportAsCharset.Designer.cs">
+      <DependentUpon>ExportAsCharset.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ExportCharscreenForms\ExportAsBinaryFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -639,6 +663,18 @@
     <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsMCCharacter.resx">
       <DependentUpon>ColorSettingsMCCharacter.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsImage.resx">
+      <DependentUpon>ExportAsImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsMarqSPETSCII.resx">
+      <DependentUpon>ExportAsMarqSPETSCII.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsImageFile.resx">
+      <DependentUpon>ExportAsImageFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsCharset.resx">
+      <DependentUpon>ExportAsCharset.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsBinaryFile.resx">
       <DependentUpon>ExportAsBinaryFile.cs</DependentUpon>
     </EmbeddedResource>
@@ -1034,5 +1070,5 @@ copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"</PostBuildEvent>
       rm -f "$(SolutionDir)C64StudioRelease/BASIC Dialects/"
       cp $(ProjectDir)BASIC?Dialects/* $(SolutionDir)C64StudioRelease/BASIC?Dialects
     </PostBuildEvent>
-  </PropertyGroup>  
+  </PropertyGroup>
 </Project>

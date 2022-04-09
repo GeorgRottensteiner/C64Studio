@@ -10,6 +10,8 @@ using GR.Image;
 using GR.Memory;
 using C64Studio.Formats;
 using RetroDevStudio;
+using C64Studio.Controls;
+using RetroDevStudio.Formats;
 
 namespace C64Studio
 {
@@ -72,6 +74,8 @@ namespace C64Studio
     private List<uint>                  m_TextEntryCachedLine = new List<uint>();
     private List<uint>                  m_TextEntryEnteredText = new List<uint>();
 
+    private ExportCharscreenFormBase    m_ExportForm = null;
+
 
 
     public CharsetScreenEditor( StudioCore Core )
@@ -82,8 +86,18 @@ namespace C64Studio
       m_IsSaveable = true;
       InitializeComponent();
       charEditor.Core = Core;
-
       charEditor.UndoManager = DocumentInfo.UndoManager;
+
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportAsAssembly ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC Data statements", typeof( ExportAsBASICData ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC code", typeof( ExportAsBASIC ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportAsBinaryFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to charset project file", typeof( ExportAsCharset ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportAsImageFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image (clipboard)", typeof( ExportAsImage ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to Marq's PETSCII editor", typeof( ExportAsMarqSPETSCII ) ) );
+
+      comboExportOrientation.SelectedIndex = 0;
 
       pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb;
@@ -105,7 +119,6 @@ namespace C64Studio
       comboMulticolor2.SelectedIndex = 0;
       comboBGColor4.SelectedIndex = 0;
 
-      comboExportOrientation.SelectedIndex = 0;
       comboExportData.SelectedIndex = 0;
 
       comboExportArea.Items.Add( "All" );
@@ -119,28 +132,7 @@ namespace C64Studio
       }
       comboCharsetMode.SelectedIndex = 0;
 
-      comboBasicFiles.Items.Add( new Types.ComboItem( "To new file" ) );
-      comboCharsetFiles.Items.Add( new Types.ComboItem( "To new charset project" ) );
-      foreach ( BaseDocument doc in Core.MainForm.panelMain.Documents )
-      {
-        if ( doc.DocumentInfo.Type == ProjectElement.ElementType.BASIC_SOURCE )
-        {
-          string    nameToUse = doc.DocumentFilename ?? "New File";
-          comboBasicFiles.Items.Add( new Types.ComboItem( nameToUse, doc.DocumentInfo ) );
-        }
-        else if ( doc.DocumentInfo.Type == ProjectElement.ElementType.CHARACTER_SET )
-        {
-          string    nameToUse = doc.DocumentFilename ?? "New File";
-          comboCharsetFiles.Items.Add( new Types.ComboItem( nameToUse, doc.DocumentInfo ) );
-        }
-      }
-      comboBasicFiles.SelectedIndex = 0;
-      comboCharsetFiles.SelectedIndex = 0;
-
       Core.MainForm.ApplicationEvent += new MainForm.ApplicationEventHandler( MainForm_ApplicationEvent );
-
-      checkExportToDataIncludeRes.Checked = true;
-      checkExportToDataWrap.Checked = true;
 
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
@@ -391,68 +383,7 @@ namespace C64Studio
 
     void MainForm_ApplicationEvent( C64Studio.Types.ApplicationEvent Event )
     {
-      if ( Event.EventType == ApplicationEvent.Type.ELEMENT_CREATED )
-      {
-        if ( Event.Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
-        {
-          foreach ( ComboItem item in comboBasicFiles.Items )
-          {
-            if ( (DocumentInfo)item.Tag == Event.Doc )
-            {
-              return;
-            }
-          }
-
-          string    nameToUse = Event.Doc.DocumentFilename ?? "New File";
-          comboBasicFiles.Items.Add( new Types.ComboItem( nameToUse, Event.Doc ) );
-        }
-        else if ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SET )
-        {
-          foreach ( ComboItem item in comboCharsetFiles.Items )
-          {
-            if ( (DocumentInfo)item.Tag == Event.Doc )
-            {
-              return;
-            }
-          }
-
-          string    nameToUse = Event.Doc.DocumentFilename ?? "New File";
-          comboCharsetFiles.Items.Add( new Types.ComboItem( nameToUse, Event.Doc ) );
-        }
-      }
-      if ( Event.EventType == ApplicationEvent.Type.ELEMENT_REMOVED )
-      {
-        if ( Event.Doc.Type == ProjectElement.ElementType.BASIC_SOURCE )
-        {
-          foreach ( Types.ComboItem comboItem in comboBasicFiles.Items )
-          {
-            if ( (DocumentInfo)comboItem.Tag == Event.Doc )
-            {
-              comboBasicFiles.Items.Remove( comboItem );
-              if ( comboBasicFiles.SelectedIndex == -1 )
-              {
-                comboBasicFiles.SelectedIndex = 0;
-              }
-              break;
-            }
-          }
-        }
-        else if ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SET )
-        {
-          foreach ( Types.ComboItem comboItem in comboCharsetFiles.Items )
-          {
-            if ( (DocumentInfo)comboItem.Tag == Event.Doc )
-            {
-              comboCharsetFiles.Items.Remove( comboItem );
-              if ( comboCharsetFiles.SelectedIndex == -1 )
-              {
-                comboCharsetFiles.SelectedIndex = 0;
-              }
-              break;
-            }
-          }
-        }
-      }
+      
     }
 
 
@@ -1462,20 +1393,6 @@ namespace C64Studio
 
 
 
-    private void checkExportToDataWrap_CheckedChanged( object sender, EventArgs e )
-    {
-      editWrapByteCount.Enabled = checkExportToDataWrap.Checked;
-    }
-
-
-
-    private void checkExportToDataIncludeRes_CheckedChanged( object sender, EventArgs e )
-    {
-      editPrefix.Enabled = checkExportToDataIncludeRes.Checked;
-    }
-
-
-
     private bool ImportCharset( string Filename )
     {
       string extension = System.IO.Path.GetExtension( Filename ).ToUpper();
@@ -1840,298 +1757,6 @@ namespace C64Studio
 
 
 
-    private void btnExportToBasic_Click( object sender, EventArgs e )
-    {
-      StringBuilder sb = new StringBuilder();
-      int     curColor = -1;
-      bool isReverse = false;
-
-      int   startLineNo = GR.Convert.ToI32( editExportBASICLineNo.Text );
-      int   lineStep = GR.Convert.ToI32( editExportBASICLineOffset.Text );
-      int   wrapByteCount = GetExportWrapCount();
-      if ( wrapByteCount < 10 )
-      {
-        wrapByteCount = 10;
-      }
-
-      sb.Append( startLineNo );
-      sb.Append( " PRINT\"" + ConstantData.PetSCIIToChar[147].CharValue + "\";\n" );
-      startLineNo += lineStep;
-
-      sb.Append( startLineNo );
-      startLineNo += lineStep;
-      sb.Append( " POKE53280," + m_CharsetScreen.CharSet.Colors.BackgroundColor.ToString() + ":POKE53281," + m_CharsetScreen.CharSet.Colors.BackgroundColor.ToString() + "\n" );
-
-      System.Drawing.Rectangle    exportRect = DetermineExportRectangle();
-
-      for ( int i = exportRect.Top; i < exportRect.Bottom; ++i )
-      {
-        int   startLength = sb.Length;
-        sb.Append( startLineNo );
-        startLineNo += lineStep;
-        sb.Append( " PRINT\"" );
-        for ( int x = exportRect.Left; x < exportRect.Right; ++x )
-        {
-          ushort newColor = (ushort)( ( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff0000 ) >> 16 ) & 0x0f );
-          ushort newChar = (ushort)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
-
-          List<char>  charsToAppend = new List<char>();
-
-          if ( newColor != curColor )
-          {
-            charsToAppend.Add( ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)newColor]].CharValue );
-            curColor = newColor;
-          }
-          if ( newChar >= 128 )
-          {
-            if ( !isReverse )
-            {
-              isReverse = true;
-              charsToAppend.Add( ConstantData.PetSCIIToChar[18].CharValue );
-            }
-          }
-          else if ( isReverse )
-          {
-            isReverse = false;
-            charsToAppend.Add( ConstantData.PetSCIIToChar[146].CharValue );
-          }
-          if ( isReverse )
-          {
-            if ( newChar == 128 + 34 )
-            {
-              // reverse apostrophe
-              string    replacement = "\"CHR$(34)CHR$(20)CHR$(34)\"";
-
-              for ( int t = 0; t < replacement.Length; ++t )
-              {
-                charsToAppend.Add( ConstantData.CharToC64Char[replacement[t]].CharValue );
-              }
-            }
-            else
-            {
-              charsToAppend.Add( ConstantData.ScreenCodeToChar[(byte)( newChar - 128 )].CharValue );
-            }
-          }
-          else
-          {
-            if ( newChar == 34 )
-            {
-              // a regular apostrophe
-              string    replacement = "\"CHR$(34)CHR$(20)CHR$(34)\"";
-
-              for ( int t = 0; t < replacement.Length; ++t )
-              {
-                charsToAppend.Add( ConstantData.CharToC64Char[replacement[t]].CharValue );
-              }
-            }
-            else
-            {
-              charsToAppend.Add( ConstantData.ScreenCodeToChar[(byte)newChar].CharValue );
-            }
-          }
-
-          // don't make lines too long!
-          if ( sb.Length - startLength + charsToAppend.Count >= wrapByteCount - 1 )
-          {
-            // we need to break and start a new line
-            sb.Append( "\";\n" );
-            startLength = sb.Length;
-            sb.Append( startLineNo );
-            startLineNo += lineStep;
-            sb.Append( " PRINT\"" );
-          }
-          foreach ( char toAppend in charsToAppend )
-          {
-            sb.Append( toAppend );
-          }
-        }
-        sb.Append( "\";\n" );
-      }
-
-      Types.ComboItem comboItem = (Types.ComboItem)comboBasicFiles.SelectedItem;
-      if ( comboItem.Tag == null )
-      {
-        // to new file
-        BaseDocument document = null;
-        if ( DocumentInfo.Project == null )
-        {
-          document = Core.MainForm.CreateNewDocument( ProjectElement.ElementType.BASIC_SOURCE, null );
-        }
-        else
-        {
-          document = Core.MainForm.CreateNewElement( ProjectElement.ElementType.BASIC_SOURCE, "BASIC Screen", DocumentInfo.Project ).Document;
-        }
-        if ( document.DocumentInfo.Element != null )
-        {
-          document.SetDocumentFilename( "New BASIC File.bas" );
-          document.DocumentInfo.Element.Filename = document.DocumentInfo.DocumentFilename;
-        }
-        document.FillContent( sb.ToString(), false );
-        document.SetModified();
-        document.Save( SaveMethod.SAVE );
-      }
-      else
-      {
-        var document = (DocumentInfo)comboItem.Tag;
-        if ( document.BaseDoc == null )
-        {
-          if ( document.Project == null )
-          {
-            return;
-          }
-          document.Project.ShowDocument( document.Element );
-        }
-        document.BaseDoc.InsertText( sb.ToString() );
-        document.BaseDoc.SetModified();
-      }
-    }
-
-
-
-    private int GetExportWrapCount()
-    {
-      if ( checkExportToDataWrap.Checked )
-      {
-        return GR.Convert.ToI32( editWrapByteCount.Text );
-      }
-      return 80;
-    }
-
-
-
-    private void btnExportToData_Click( object sender, EventArgs e )
-    {
-      // prepare data
-      GR.Memory.ByteBuffer screenCharData;
-      GR.Memory.ByteBuffer screenColorData;
-      GR.Memory.ByteBuffer charsetData;
-
-      var exportRect = DetermineExportRectangle();
-
-      StringBuilder   sb = new StringBuilder();
-
-      if ( checkExportASMAsPetSCII.Checked )
-      {
-        // pet export only exports chars, no color changes
-        bool            isReverse = false;
-
-        sb.Append( ";size " );
-        sb.Append( exportRect.Width );
-        sb.Append( "," );
-        sb.Append( exportRect.Height );
-        sb.AppendLine();
-
-        for ( int i = exportRect.Top; i < exportRect.Bottom; ++i )
-        {
-          sb.Append( "!pet \"" );
-          for ( int x = exportRect.Left; x < exportRect.Right; ++x )
-          {
-            byte newChar = (byte)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
-            byte charToAdd = newChar;
-
-            if ( newChar >= 128 )
-            {
-              isReverse = true;
-            }
-            else if ( isReverse )
-            {
-              isReverse = false;
-            }
-            if ( isReverse )
-            {
-              charToAdd -= 128;
-            }
-            if ( ( ConstantData.ScreenCodeToChar[newChar].HasPetSCII )
-            &&   ( ConstantData.ScreenCodeToChar[charToAdd].CharValue < 256 ) )
-            {
-              sb.Append( ConstantData.ScreenCodeToChar[charToAdd].CharValue );
-            }
-            else
-            {
-              sb.Append( "\", $" );
-              sb.Append( newChar.ToString( "X2" ) );
-              sb.Append( ", \"" );
-            }
-          }
-          sb.AppendLine( "\"" );
-        }
-        editDataExport.Text = sb.ToString();
-        return;
-      }
-
-      m_CharsetScreen.ExportToBuffer( out screenCharData, out screenColorData, out charsetData, exportRect.Left, exportRect.Top, exportRect.Width, exportRect.Height, ( comboExportOrientation.SelectedIndex == 0 ) );
-
-      string screenData = Util.ToASMData( screenCharData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
-      string colorData = Util.ToASMData( screenColorData, checkExportToDataWrap.Checked, GR.Convert.ToI32( editWrapByteCount.Text ), checkExportToDataIncludeRes.Checked ? editPrefix.Text : "", checkExportHex.Checked );
-
-      sb.Append( ";size " );
-      sb.Append( exportRect.Width );
-      sb.Append( "," );
-      sb.Append( exportRect.Height );
-      sb.AppendLine();
-
-      switch ( comboExportData.SelectedIndex )
-      {
-        case 0:
-          editDataExport.Text = sb + ";screen char data" + Environment.NewLine + screenData + Environment.NewLine + ";screen color data" + Environment.NewLine + colorData;
-          break;
-        case 1:
-          editDataExport.Text = sb + ";screen char data" + Environment.NewLine + screenData + Environment.NewLine;
-          break;
-        case 2:
-          editDataExport.Text = sb + ";screen color data" + Environment.NewLine + colorData;
-          break;
-        case 3:
-          editDataExport.Text = sb + ";screen color data" + Environment.NewLine + colorData + Environment.NewLine + ";screen char data" + Environment.NewLine + screenData;
-          break;
-      }
-    }
-
-
-
-    private void btnExportToFile_Click( object sender, EventArgs e )
-    {
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Save data as";
-      saveDlg.Filter = "Binary Data|*.bin|All Files|*.*";
-      if ( DocumentInfo.Project != null )
-      {
-        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
-      }
-      if ( saveDlg.ShowDialog() != DialogResult.OK )
-      {
-        return;
-      }
-
-      // prepare data
-      GetExportData( out ByteBuffer screenCharData, out ByteBuffer screenColorData, out System.Drawing.Rectangle exportRect );
-
-      GR.Memory.ByteBuffer finalData = null;
-
-      switch ( comboExportData.SelectedIndex )
-      {
-        case 0:
-          finalData = screenCharData + screenColorData;
-          break;
-        case 1:
-          finalData = screenCharData;
-          break;
-        case 2:
-          finalData = screenColorData;
-          break;
-        case 3:
-          finalData = screenColorData + screenCharData;
-          break;
-      }
-      if ( finalData != null )
-      {
-        GR.IO.File.WriteAllBytes( saveDlg.FileName, finalData );
-      }
-    }
-
-
-
     private void btnImportFromFile_Click( object sender, EventArgs e )
     {
       string filename;
@@ -2383,7 +2008,6 @@ namespace C64Studio
 
       m_CharsetScreen.SetScreenSize( Width, Height );
       m_Image.Create( Width * 8, Height * 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-      PaletteManager.ApplyPalette( m_Image );
 
       m_TextEntryCachedLine.Clear();
       m_TextEntryEnteredText.Clear();
@@ -2470,9 +2094,9 @@ namespace C64Studio
       int     newHeight = GR.Convert.ToI32( editScreenHeight.Text );
 
       if ( ( newWidth >= 1 )
-      && ( newWidth <= 1000 )
-      && ( newHeight >= 1 )
-      && ( newHeight <= 1000 ) )
+      &&   ( newWidth <= 1000 )
+      &&   ( newHeight >= 1 )
+      &&   ( newHeight <= 1000 ) )
       {
         btnApplyScreenSize.Enabled = true;
       }
@@ -2490,9 +2114,9 @@ namespace C64Studio
       int     newHeight = GR.Convert.ToI32( editScreenHeight.Text );
 
       if ( ( newWidth >= 1 )
-      && ( newWidth <= 1000 )
-      && ( newHeight >= 1 )
-      && ( newHeight <= 1000 ) )
+      &&   ( newWidth <= 1000 )
+      &&   ( newHeight >= 1 )
+      &&   ( newHeight <= 1000 ) )
       {
         btnApplyScreenSize.Enabled = true;
       }
@@ -2727,20 +2351,11 @@ namespace C64Studio
         }
       }
 
-      DataObject dataObj = new DataObject();
-
+      var dataObj = new DataObject();
       dataObj.SetData( "C64Studio.CharacterScreenSelection", false, dataSelection.MemoryStream() );
 
       Core.Imaging.ImageToClipboardData( pictureEditor.DisplayPage, x1 * 8, y1 * 8, ( x2 - x1 + 1 ) * 8, ( y2 - y1 + 1 ) * 8, dataObj );
-
-      /*
-      GR.Memory.ByteBuffer      dibData = m_Charset.Characters[m_CurrentChar].Image.CreateHDIBAsBuffer();
-
-      System.IO.MemoryStream    ms = dibData.MemoryStream();
-
-      // WTF - SetData requires streams, NOT global data (HGLOBAL)
-      dataObj.SetData( "DeviceIndependentBitmap", ms );
-      */
+      
       Clipboard.SetDataObject( dataObj, true );
     }
 
@@ -2994,6 +2609,7 @@ namespace C64Studio
 
       if ( m_ToolMode == ToolMode.SELECT )
       {
+        // TODO - use configured accelerator!
         if ( ( e.Modifiers == Keys.Control )
         &&   ( e.KeyCode == Keys.C ) )
         {
@@ -3014,6 +2630,7 @@ namespace C64Studio
         }
       }
 
+      // TODO - use configured accelerator!
       if ( ( e.Modifiers == Keys.Control )
       &&   ( e.KeyCode == Keys.V ) )
       {
@@ -3327,54 +2944,6 @@ namespace C64Studio
 
 
 
-    private void btnExportToCharset_Click( object sender, EventArgs e )
-    {
-      var charSetData = m_CharsetScreen.CharSet.SaveToBuffer();
-
-      Types.ComboItem comboItem = (Types.ComboItem)comboCharsetFiles.SelectedItem;
-      if ( comboItem.Tag == null )
-      {
-        // to new file
-        BaseDocument document = null;
-        if ( DocumentInfo.Project == null )
-        {
-          document = Core.MainForm.CreateNewDocument( ProjectElement.ElementType.CHARACTER_SET, null );
-        }
-        else
-        {
-          document = Core.MainForm.CreateNewElement( ProjectElement.ElementType.CHARACTER_SET, "Character Set", DocumentInfo.Project ).Document;
-        }
-        if ( document.DocumentInfo.Element != null )
-        {
-          document.SetDocumentFilename( "New Character Set.charsetproject" );
-          document.DocumentInfo.Element.Filename = document.DocumentInfo.DocumentFilename;
-        }
-        ( (CharsetEditor)document ).OpenProject( charSetData );
-        document.SetModified();
-        document.Save( SaveMethod.SAVE );
-      }
-      else
-      {
-        DocumentInfo    docInfo = (DocumentInfo)comboItem.Tag;
-        CharsetEditor document = (CharsetEditor)docInfo.BaseDoc;
-        if ( document == null )
-        {
-          if ( docInfo.Project != null )
-          {
-            docInfo.Project.ShowDocument( docInfo.Element );
-            document = (CharsetEditor)docInfo.BaseDoc;
-          }
-        }
-        if ( document != null )
-        {
-          document.OpenProject( charSetData );
-          document.SetModified();
-        }
-      }
-    }
-
-
-
     private void editDataExport_PreviewKeyDown( object sender, PreviewKeyDownEventArgs e )
     {
       if ( e.KeyData == ( Keys.A | Keys.Control ) )
@@ -3431,50 +3000,6 @@ namespace C64Studio
       charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
       pictureEditor.Invalidate();
       RedrawFullScreen();
-    }
-
-
-
-    private void btnExportToBASICData_Click( object sender, EventArgs e )
-    {
-      // prepare data
-      GR.Memory.ByteBuffer screenCharData;
-      GR.Memory.ByteBuffer screenColorData;
-      GR.Memory.ByteBuffer charsetData;
-
-      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
-      if ( ( startLine < 0 )
-      ||   ( startLine > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
-      if ( ( lineOffset < 0 )
-      ||   ( lineOffset > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int wrapByteCount = GetExportWrapCount();
-
-      var exportRect = DetermineExportRectangle();
-
-      m_CharsetScreen.ExportToBuffer( out screenCharData, out screenColorData, out charsetData, exportRect.Left, exportRect.Top, exportRect.Width, exportRect.Height, ( comboExportOrientation.SelectedIndex == 0 ) );
-
-      switch ( comboExportData.SelectedIndex )
-      {
-        case 0:
-          editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, startLine, lineOffset, wrapByteCount );
-          break;
-        case 1:
-          editDataExport.Text = Util.ToBASICData( screenCharData, startLine, lineOffset, wrapByteCount );
-          break;
-        case 2:
-          editDataExport.Text = Util.ToBASICData( screenColorData, startLine, lineOffset, wrapByteCount );
-          break;
-        case 3:
-          editDataExport.Text = Util.ToBASICData( screenColorData + screenCharData, startLine, lineOffset, wrapByteCount );
-          break;
-      }
     }
 
 
@@ -3720,76 +3245,6 @@ namespace C64Studio
 
 
 
-    private void btnExportToBASICDataHex_Click( object sender, EventArgs e )
-    {
-      // prepare data
-      GR.Memory.ByteBuffer screenCharData;
-      GR.Memory.ByteBuffer screenColorData;
-      GR.Memory.ByteBuffer charsetData;
-
-      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
-      if ( ( startLine < 0 )
-      ||   ( startLine > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
-      if ( ( lineOffset < 0 )
-      ||   ( lineOffset > 63999 ) )
-      {
-        startLine = 10;
-      }
-
-
-      var exportRect = DetermineExportRectangle();
-
-      m_CharsetScreen.ExportToBuffer( out screenCharData, out screenColorData, out charsetData, exportRect.Left, exportRect.Top, exportRect.Width, exportRect.Height, ( comboExportOrientation.SelectedIndex == 0 ) );
-
-      switch ( comboExportData.SelectedIndex )
-      {
-        case 0:
-          editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, startLine, lineOffset );
-          break;
-        case 1:
-          editDataExport.Text = Util.ToBASICHexData( screenCharData, startLine, lineOffset );
-          break;
-        case 2:
-          editDataExport.Text = Util.ToBASICHexData( screenColorData, startLine, lineOffset );
-          break;
-        case 3:
-          editDataExport.Text = Util.ToBASICHexData( screenColorData + screenCharData, startLine, lineOffset );
-          break;
-      }
-    }
-
-
-
-    private void btnExportToImageFile_Click( object sender, EventArgs e )
-    {
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Export Screen to Image";
-      saveDlg.Filter = "PNG File|*.png";
-      if ( saveDlg.ShowDialog() != DialogResult.OK )
-      {
-        return;
-      }
-
-      int     neededWidth   = m_CharsetScreen.ScreenWidth * 8;
-      int     neededHeight  = m_CharsetScreen.ScreenHeight * 8;
-
-      GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-
-      PaletteManager.ApplyPalette( targetImg );
-
-      m_Image.DrawTo( targetImg, 0, 0 );
-
-      System.Drawing.Bitmap bmpTarget = targetImg.GetAsBitmap();
-      bmpTarget.Save( saveDlg.FileName, System.Drawing.Imaging.ImageFormat.Png );
-    }
-
-
-
     private void charEditor_CharactersShifted( int[] OldToNew, int[] NewToOld )
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight ), false );
@@ -3860,25 +3315,6 @@ namespace C64Studio
       RedrawFullScreen();
 
       SetModified();
-    }
-
-
-
-    private void btnExportToImage_Click( object sender, EventArgs e )
-    {
-      int     neededWidth   = m_CharsetScreen.ScreenWidth * 8;
-      int     neededHeight  = m_CharsetScreen.ScreenHeight * 8;
-
-      GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-
-      PaletteManager.ApplyPalette( targetImg );
-
-      m_Image.DrawTo( targetImg, 0, 0 );
-
-      System.Drawing.Bitmap bmpTarget = targetImg.GetAsBitmap();
-
-      Clipboard.SetImage( bmpTarget );
-      bmpTarget.Dispose();
     }
 
 
@@ -4205,144 +3641,40 @@ namespace C64Studio
 
 
 
-    private void btnExportToMarqsPETSCII_Click( object sender, EventArgs e )
+    private void comboExportMethod_SelectedIndexChanged( object sender, EventArgs e )
     {
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Save data as";
-      saveDlg.Filter = "Marq's PETSCII File|*.c|All Files|*.*";
-      if ( DocumentInfo.Project != null )
+      if ( m_ExportForm != null )
       {
-        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
+        m_ExportForm.Dispose();
+        m_ExportForm = null;
       }
-      if ( saveDlg.ShowDialog() != DialogResult.OK )
+
+      var item = (GR.Generic.Tupel<string, Type>)comboExportMethod.SelectedItem;
+      if ( ( item == null )
+      ||   ( item.second == null ) )
       {
         return;
       }
-
-      // prepare data
-      GetExportData( out ByteBuffer screenCharData, out ByteBuffer screenColorData, out System.Drawing.Rectangle exportRect );
-
-      StringBuilder   sb = new StringBuilder();
-
-      sb.Append( "unsigned char frame0000[]={// border,bg,chars,colors" );
-      sb.Append( (char)10 );
-      sb.Append( "0," );
-      sb.Append( m_CharsetScreen.CharSet.Colors.BackgroundColor );
-      sb.Append( ',' );
-      sb.Append( (char)10 );
-
-      int     bytePos = 0;
-      for ( int j = 0; j < exportRect.Height; ++j )
-      {
-        for ( int i = 0; i < exportRect.Width; ++i )
-        {
-          sb.Append( screenCharData.ByteAt( bytePos ) );
-          sb.Append( ',' );
-          ++bytePos;
-        }
-        sb.Append( (char)10 );
-      }
-
-      bytePos = 0;
-      for ( int j = 0; j < exportRect.Height; ++j )
-      {
-        for ( int i = 0; i < exportRect.Width; ++i )
-        {
-          sb.Append( screenColorData.ByteAt( bytePos ) );
-          ++bytePos;
-          if ( ( j < exportRect.Height - 1 )
-          ||   ( i + 1 < exportRect.Width ) )
-          {
-            sb.Append( ',' );
-          }
-        }
-        sb.Append( (char)10 );
-      }
-      sb.Append( "};" );
-      sb.Append( (char)10 );
-
-      sb.Append( "// META: " );
-      sb.Append( exportRect.Width );
-      sb.Append( ' ' );
-      sb.Append( exportRect.Height );
-      sb.Append( ' ' );
-      switch ( m_CharsetScreen.Mode )
-      {
-        case TextMode.COMMODORE_40_X_25_ECM:
-        case TextMode.COMMODORE_40_X_25_HIRES:
-        case TextMode.COMMODORE_40_X_25_MULTICOLOR:
-        default:
-          sb.Append( "C64" );
-          break;
-        case TextMode.COMMODORE_VIC20_22_X_23:
-          sb.Append( "VIC20" );
-          break;
-      }
-      sb.Append( " upper" );
-      sb.Append( (char)10 );
-
-      GR.IO.File.WriteAllText( saveDlg.FileName, sb.ToString() );
+      m_ExportForm = (ExportCharscreenFormBase)Activator.CreateInstance( item.second, new object[]{ Core } );
+      m_ExportForm.Parent = panelExport;
+      m_ExportForm.CreateControl();
     }
 
 
 
-    private void GetExportData( out ByteBuffer ScreenCharData, out ByteBuffer ScreenColorData, out System.Drawing.Rectangle ExportRect )
+    private void btnExport_Click( object sender, EventArgs e )
     {
-      ScreenCharData = new GR.Memory.ByteBuffer();
-      ScreenColorData = new GR.Memory.ByteBuffer();
-
-      ExportRect = DetermineExportRectangle();
-
-      bool singleBytes = ( Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) ) == 1 );
-
-      if ( comboExportOrientation.SelectedIndex == 0 )
+      var exportInfo        = new ExportCharsetScreenInfo()
       {
-        // row by row
-        for ( int i = ExportRect.Top; i < ExportRect.Bottom; ++i )
-        {
-          for ( int x = ExportRect.Left; x < ExportRect.Right; ++x )
-          {
-            ushort newColor = (ushort)( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff0000 ) >> 16 );
-            ushort newChar = (ushort)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
+        Charscreen  = m_CharsetScreen,
+        Area        = DetermineExportRectangle(),
+        RowByRow    = ( comboExportOrientation.SelectedIndex == 0 ),
+        Image       = m_Image
+      };
 
+      m_CharsetScreen.ExportToBuffer( exportInfo );
 
-            if ( singleBytes )
-            {
-              ScreenCharData.AppendU8( (byte)newChar );
-              ScreenColorData.AppendU8( (byte)newColor );
-            }
-            else
-            {
-              ScreenCharData.AppendU16( newChar );
-              ScreenColorData.AppendU16( newColor );
-            }
-          }
-        }
-      }
-      else
-      {
-        for ( int x = ExportRect.Left; x < ExportRect.Right; ++x )
-        {
-          for ( int i = ExportRect.Top; i < ExportRect.Bottom; ++i )
-          {
-            ushort newColor = (ushort)( ( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff0000 ) >> 16 );
-            ushort newChar = (ushort)( m_CharsetScreen.Chars[i * m_CharsetScreen.ScreenWidth + x] & 0xffff );
-
-
-            if ( singleBytes )
-            {
-              ScreenCharData.AppendU8( (byte)newChar );
-              ScreenColorData.AppendU8( (byte)newColor );
-            }
-            else
-            {
-              ScreenCharData.AppendU16( newChar );
-              ScreenColorData.AppendU16( newColor );
-            }
-          }
-        }
-      }
+      m_ExportForm.HandleExport( exportInfo, editDataExport, DocumentInfo );
     }
 
 
