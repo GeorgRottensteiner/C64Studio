@@ -3176,8 +3176,7 @@ namespace FastColoredTextBoxNS
       data.SetData( DataFormats.Rtf, new ExportToRTF().GetRtf( Selection.Clone() ) );
     }
 
-    [DllImport( "user32.dll" )]
-    static extern IntPtr GetOpenClipboardWindow();
+
 
     [DllImport( "user32.dll" )]
     static extern IntPtr CloseClipboard();
@@ -3186,9 +3185,6 @@ namespace FastColoredTextBoxNS
     {
       try
       {
-        /*
-        while (GetOpenClipboardWindow() != IntPtr.Zero)
-            Thread.Sleep(0);*/
         CloseClipboard();
         Clipboard.SetDataObject( data, true, 5, 100 );
       }
@@ -3197,6 +3193,8 @@ namespace FastColoredTextBoxNS
         //occurs if some other process holds open clipboard
       }
     }
+
+
 
     public static MemoryStream PrepareHtmlForClipboard( string html )
     {
@@ -3571,7 +3569,7 @@ namespace FastColoredTextBoxNS
 
 #if __MonoCS__
     // replace with dummies
-    public static extern IntPtr ImmGetContext( IntPtr hWnd )
+    public static IntPtr ImmGetContext( IntPtr hWnd )
     {
       return IntPtr.Zero;
     }

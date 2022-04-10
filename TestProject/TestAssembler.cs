@@ -145,6 +145,30 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestOpcodeDetectionNoZeropageIndirectX2()
+    {
+      string      source = @"LABEL = $12
+                              * = $1000
+                            sta (LABEL),x";
+
+      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
+      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+
+      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      config.OutputFile = "test.prg";
+      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+
+      bool parseResult = parser.Parse( source, null, config, null );
+      Assert.IsFalse( parseResult );
+
+      //var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      //Assert.AreEqual( "0010B512", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestAssemblyOpcodeDetectionZeropageRelativeY()
     {
       string      source = @"* = $1000

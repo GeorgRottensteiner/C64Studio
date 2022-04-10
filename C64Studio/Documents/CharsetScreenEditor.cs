@@ -74,6 +74,7 @@ namespace C64Studio
     private List<uint>                  m_TextEntryCachedLine = new List<uint>();
     private List<uint>                  m_TextEntryEnteredText = new List<uint>();
 
+    private System.Drawing.Font         m_DefaultOutputFont = null;
     private ExportCharscreenFormBase    m_ExportForm = null;
 
 
@@ -87,6 +88,8 @@ namespace C64Studio
       InitializeComponent();
       charEditor.Core = Core;
       charEditor.UndoManager = DocumentInfo.UndoManager;
+
+      m_DefaultOutputFont = editDataExport.Font;
 
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportAsAssembly ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC Data statements", typeof( ExportAsBASICData ) ) );
@@ -3649,6 +3652,9 @@ namespace C64Studio
         m_ExportForm = null;
       }
 
+      editDataExport.Text = "";
+      editDataExport.Font = m_DefaultOutputFont;
+
       var item = (GR.Generic.Tupel<string, Type>)comboExportMethod.SelectedItem;
       if ( ( item == null )
       ||   ( item.second == null ) )
@@ -3672,8 +3678,10 @@ namespace C64Studio
         Image       = m_Image
       };
 
-      m_CharsetScreen.ExportToBuffer( exportInfo );
 
+      editDataExport.Text = "";
+      editDataExport.Font = m_DefaultOutputFont;
+      m_CharsetScreen.ExportToBuffer( exportInfo );
       m_ExportForm.HandleExport( exportInfo, editDataExport, DocumentInfo );
     }
 

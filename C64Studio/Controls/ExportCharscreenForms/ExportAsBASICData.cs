@@ -115,6 +115,7 @@ namespace C64Studio.Controls
           return false;
       }
 
+      EditOutput.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
       EditOutput.Text = sb.ToString();
       return true;
     }

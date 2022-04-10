@@ -109,6 +109,9 @@ namespace C64Studio.Controls
       var     sb = new StringBuilder();
       int     curColor = -1;
       bool    isReverse = false;
+      bool    replaceSpaceWithCursorRight = checkExportToBASICReplaceSpaceWithRight.Checked;
+      bool    stripInvisibleColors = checkExportToBASICCollapseColors.Checked;
+      bool    asString = checkExportToBASICAsString.Checked;
 
 
       int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
@@ -126,20 +129,38 @@ namespace C64Studio.Controls
 
       int wrapByteCount = GetExportWrapCount();
 
-      sb.Append( startLine );
-      sb.Append( " PRINT\"" + ConstantData.PetSCIIToChar[147].CharValue + "\";\n" );
-      startLine += lineStep;
+      if ( !asString )
+      {
+        sb.Append( startLine );
+        sb.Append( " PRINT\"" + ConstantData.PetSCIIToChar[147].CharValue + "\";\n" );
+        startLine += lineStep;
 
-      sb.Append( startLine );
-      startLine += lineStep;
-      sb.Append( " POKE53280," + Info.Charscreen.CharSet.Colors.BackgroundColor.ToString() + ":POKE53281," + Info.Charscreen.CharSet.Colors.BackgroundColor.ToString() + "\n" );
+        sb.Append( startLine );
+        startLine += lineStep;
+        sb.Append( " POKE53280," + Info.Charscreen.CharSet.Colors.BackgroundColor.ToString() + ":POKE53281," + Info.Charscreen.CharSet.Colors.BackgroundColor.ToString() + "\n" );
+      }
+      
+
+      int     colorChangeCache = -1;
+
+      if ( asString )
+      {
+        sb.Append( startLine );
+        sb.Append( " B$=\"" );
+        startLine += lineStep;
+      }
 
       for ( int i = Info.Area.Top; i < Info.Area.Bottom; ++i )
       {
         int   startLength = sb.Length;
-        sb.Append( startLine );
-        startLine += lineStep;
-        sb.Append( " PRINT\"" );
+
+        if ( !asString )
+        {
+          sb.Append( startLine );
+          startLine += lineStep;
+          sb.Append( " PRINT\"" );
+        }
+        
         for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
         {
           ushort newColor = (ushort)( Info.Charscreen.ColorAt( x, i ) & 0x0f );
@@ -149,8 +170,25 @@ namespace C64Studio.Controls
 
           if ( newColor != curColor )
           {
-            charsToAppend.Add( ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)newColor]].CharValue );
+            if ( stripInvisibleColors )
+            {
+              colorChangeCache = newColor;
+            }
+            else
+            {
+              charsToAppend.Add( ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)newColor]].CharValue );
+            }
             curColor = newColor;
+          }
+          if ( ( newChar != 32 )
+          &&   ( newChar != 160 )
+          &&   ( stripInvisibleColors ) )
+          {
+            if ( colorChangeCache != -1 )
+            {
+              charsToAppend.Add( ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)colorChangeCache]].CharValue );
+              colorChangeCache = -1;
+            }
           }
           if ( newChar >= 128 )
           {
@@ -194,6 +232,11 @@ namespace C64Studio.Controls
                 charsToAppend.Add( ConstantData.CharToC64Char[replacement[t]].CharValue );
               }
             }
+            else if ( ( replaceSpaceWithCursorRight )
+            &&        ( newChar == 32 ) )
+            {
+              charsToAppend.Add( ConstantData.PetSCIIToChar[29].CharValue );
+            }
             else
             {
               charsToAppend.Add( ConstantData.ScreenCodeToChar[(byte)newChar].CharValue );
@@ -204,18 +247,46 @@ namespace C64Studio.Controls
           if ( sb.Length - startLength + charsToAppend.Count >= wrapByteCount - 1 )
           {
             // we need to break and start a new line
-            sb.Append( "\";\n" );
-            startLength = sb.Length;
-            sb.Append( startLine );
-            startLine += lineStep;
-            sb.Append( " PRINT\"" );
+            if ( !asString )
+            {
+              sb.Append( "\";\n" );
+              startLength = sb.Length;
+              sb.Append( startLine );
+              startLine += lineStep;
+              sb.Append( " PRINT\"" );
+            }
+            else
+            {
+              sb.Append( "\"\n" );
+              startLength = sb.Length;
+              sb.Append( startLine );
+              startLine += lineStep;
+              sb.Append( " B$=B$+\"" );
+            }
           }
           foreach ( char toAppend in charsToAppend )
           {
             sb.Append( toAppend );
           }
         }
-        sb.Append( "\";\n" );
+
+        if ( !asString )
+        {
+          sb.Append( "\";\n" );
+        }
+        else
+        {
+          // down
+          sb.Append( ConstantData.PetSCIIToChar[17].CharValue );
+          for ( int x = 0; x < Info.Area.Width; ++x )
+          {
+            sb.Append( ConstantData.PetSCIIToChar[157].CharValue );
+          }
+        }
+      }
+      if ( asString )
+      {
+        sb.Append( "\"\n" );
       }
 
       Types.ComboItem comboItem = (Types.ComboItem)comboBasicFiles.SelectedItem;
@@ -223,7 +294,8 @@ namespace C64Studio.Controls
       {
         if ( comboItem.Desc == "To output" )
         {
-          EditOutput.Text = sb.ToString();
+          EditOutput.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], 16, System.Drawing.GraphicsUnit.Pixel );
+          EditOutput.Text = sb.ToString().Replace( "\n", "\r\n" );
         }
         else
         {
