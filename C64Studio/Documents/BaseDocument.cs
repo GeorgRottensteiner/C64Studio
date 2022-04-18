@@ -1043,7 +1043,7 @@ namespace C64Studio
 
 
 
-    protected virtual bool OpenFile( string Caption, string FileFilter, out string Filename )
+    public virtual bool OpenFile( string Caption, string FileFilter, out string Filename )
     {
       Filename = "";
 

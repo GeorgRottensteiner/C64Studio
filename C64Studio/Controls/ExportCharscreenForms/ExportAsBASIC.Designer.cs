@@ -41,6 +41,7 @@ namespace C64Studio.Controls
       this.checkExportToBASICReplaceSpaceWithRight = new System.Windows.Forms.CheckBox();
       this.checkExportToBASICAsString = new System.Windows.Forms.CheckBox();
       this.checkExportToBASICCollapseColors = new System.Windows.Forms.CheckBox();
+      this.checkExportToBASICReplaceShiftSpaceWithSpace = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // checkExportToDataWrap
@@ -58,7 +59,6 @@ namespace C64Studio.Controls
       // 
       // editWrapByteCount
       // 
-      this.editWrapByteCount.Enabled = false;
       this.editWrapByteCount.Location = new System.Drawing.Point(90, 1);
       this.editWrapByteCount.Name = "editWrapByteCount";
       this.editWrapByteCount.Size = new System.Drawing.Size(73, 20);
@@ -115,7 +115,7 @@ namespace C64Studio.Controls
       this.comboBasicFiles.Location = new System.Drawing.Point(90, 79);
       this.comboBasicFiles.Name = "comboBasicFiles";
       this.comboBasicFiles.Size = new System.Drawing.Size(224, 21);
-      this.comboBasicFiles.TabIndex = 27;
+      this.comboBasicFiles.TabIndex = 4;
       // 
       // label1
       // 
@@ -132,17 +132,17 @@ namespace C64Studio.Controls
       this.checkExportToBASICReplaceSpaceWithRight.Location = new System.Drawing.Point(3, 129);
       this.checkExportToBASICReplaceSpaceWithRight.Name = "checkExportToBASICReplaceSpaceWithRight";
       this.checkExportToBASICReplaceSpaceWithRight.Size = new System.Drawing.Size(183, 17);
-      this.checkExportToBASICReplaceSpaceWithRight.TabIndex = 28;
+      this.checkExportToBASICReplaceSpaceWithRight.TabIndex = 6;
       this.checkExportToBASICReplaceSpaceWithRight.Text = "Replace Space with Cursor Right";
       this.checkExportToBASICReplaceSpaceWithRight.UseVisualStyleBackColor = true;
       // 
       // checkExportToBASICAsString
       // 
       this.checkExportToBASICAsString.AutoSize = true;
-      this.checkExportToBASICAsString.Location = new System.Drawing.Point(3, 152);
+      this.checkExportToBASICAsString.Location = new System.Drawing.Point(3, 175);
       this.checkExportToBASICAsString.Name = "checkExportToBASICAsString";
       this.checkExportToBASICAsString.Size = new System.Drawing.Size(239, 17);
-      this.checkExportToBASICAsString.TabIndex = 29;
+      this.checkExportToBASICAsString.TabIndex = 8;
       this.checkExportToBASICAsString.Text = "As String (use Down/Left instead of new line)";
       this.checkExportToBASICAsString.UseVisualStyleBackColor = true;
       // 
@@ -152,14 +152,25 @@ namespace C64Studio.Controls
       this.checkExportToBASICCollapseColors.Location = new System.Drawing.Point(3, 106);
       this.checkExportToBASICCollapseColors.Name = "checkExportToBASICCollapseColors";
       this.checkExportToBASICCollapseColors.Size = new System.Drawing.Size(118, 17);
-      this.checkExportToBASICCollapseColors.TabIndex = 30;
+      this.checkExportToBASICCollapseColors.TabIndex = 5;
       this.checkExportToBASICCollapseColors.Text = "Strip invisible colors";
       this.checkExportToBASICCollapseColors.UseVisualStyleBackColor = true;
+      // 
+      // checkExportToBASICReplaceShiftSpaceWithSpace
+      // 
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.AutoSize = true;
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.Location = new System.Drawing.Point(3, 152);
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.Name = "checkExportToBASICReplaceShiftSpaceWithSpace";
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.Size = new System.Drawing.Size(180, 17);
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.TabIndex = 7;
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.Text = "Replace Shift-Space with Space";
+      this.checkExportToBASICReplaceShiftSpaceWithSpace.UseVisualStyleBackColor = true;
       // 
       // ExportAsBASIC
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.checkExportToBASICReplaceShiftSpaceWithSpace);
       this.Controls.Add(this.checkExportToBASICReplaceSpaceWithRight);
       this.Controls.Add(this.checkExportToBASICAsString);
       this.Controls.Add(this.checkExportToBASICCollapseColors);
@@ -192,5 +203,6 @@ namespace C64Studio.Controls
     private System.Windows.Forms.CheckBox checkExportToBASICReplaceSpaceWithRight;
     private System.Windows.Forms.CheckBox checkExportToBASICAsString;
     private System.Windows.Forms.CheckBox checkExportToBASICCollapseColors;
+    private System.Windows.Forms.CheckBox checkExportToBASICReplaceShiftSpaceWithSpace;
   }
 }

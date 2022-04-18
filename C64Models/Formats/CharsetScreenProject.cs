@@ -153,6 +153,40 @@ namespace C64Studio.Formats
 
 
 
+    public bool SetCharacterAt( int X, int Y, ushort CharValue )
+    {
+      if ( ( X < 0 )
+      ||   ( X >= ScreenWidth )
+      ||   ( Y < 0 )
+      ||   ( Y >= ScreenHeight ) )
+      {
+        return false;
+      }
+
+      Chars[Y * ScreenWidth + X] = ( Chars[Y * ScreenWidth + X] & 0xffff0000 ) | CharValue;
+
+      return true;
+    }
+
+
+
+    public bool SetColorAt( int X, int Y, ushort ColorValue )
+    {
+      if ( ( X < 0 )
+      ||   ( X >= ScreenWidth )
+      ||   ( Y < 0 )
+      ||   ( Y >= ScreenHeight ) )
+      {
+        return false;
+      }
+
+      Chars[Y * ScreenWidth + X] = (ushort)( ( Chars[Y * ScreenWidth + X] & 0xffff ) | (ushort)( ColorValue << 16 ) );
+
+      return true;
+    }
+
+
+
     public bool ReadFromBuffer( GR.Memory.ByteBuffer ProjectFile )
     {
       GR.IO.MemoryReader    memReader = new GR.IO.MemoryReader( ProjectFile );

@@ -103,16 +103,10 @@
       this.tabCharset = new System.Windows.Forms.TabPage();
       this.charEditor = new C64Studio.Controls.CharacterEditor();
       this.tabImport = new System.Windows.Forms.TabPage();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnDefaultLowerCase = new System.Windows.Forms.Button();
-      this.btnDefaultUppercase = new System.Windows.Forms.Button();
-      this.btnImportCharsetFromFile = new System.Windows.Forms.Button();
-      this.btnImportCharset = new System.Windows.Forms.Button();
-      this.btnClearImportData = new System.Windows.Forms.Button();
-      this.btnImportFromBASIC = new System.Windows.Forms.Button();
-      this.btnImportFromASM = new System.Windows.Forms.Button();
-      this.btnImportFromFile = new System.Windows.Forms.Button();
-      this.editDataImport = new System.Windows.Forms.TextBox();
+      this.panelImport = new System.Windows.Forms.Panel();
+      this.btnImport = new System.Windows.Forms.Button();
+      this.comboImportMethod = new System.Windows.Forms.ComboBox();
+      this.label2 = new System.Windows.Forms.Label();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.menuStrip1.SuspendLayout();
@@ -123,7 +117,6 @@
       this.tabCharsetEditor.SuspendLayout();
       this.tabCharset.SuspendLayout();
       this.tabImport.SuspendLayout();
-      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
       // menuStrip1
@@ -930,7 +923,10 @@
       // 
       // tabImport
       // 
-      this.tabImport.Controls.Add(this.groupBox1);
+      this.tabImport.Controls.Add(this.panelImport);
+      this.tabImport.Controls.Add(this.btnImport);
+      this.tabImport.Controls.Add(this.comboImportMethod);
+      this.tabImport.Controls.Add(this.label2);
       this.tabImport.Location = new System.Drawing.Point(4, 22);
       this.tabImport.Name = "tabImport";
       this.tabImport.Padding = new System.Windows.Forms.Padding(3);
@@ -939,111 +935,44 @@
       this.tabImport.Text = "Import";
       this.tabImport.UseVisualStyleBackColor = true;
       // 
-      // groupBox1
+      // panelImport
       // 
-      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+      this.panelImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.groupBox1.Controls.Add(this.btnDefaultLowerCase);
-      this.groupBox1.Controls.Add(this.btnDefaultUppercase);
-      this.groupBox1.Controls.Add(this.btnImportCharsetFromFile);
-      this.groupBox1.Controls.Add(this.btnImportCharset);
-      this.groupBox1.Controls.Add(this.btnClearImportData);
-      this.groupBox1.Controls.Add(this.btnImportFromBASIC);
-      this.groupBox1.Controls.Add(this.btnImportFromASM);
-      this.groupBox1.Controls.Add(this.btnImportFromFile);
-      this.groupBox1.Controls.Add(this.editDataImport);
-      this.groupBox1.Location = new System.Drawing.Point(8, 6);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(595, 532);
-      this.groupBox1.TabIndex = 5;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Import";
+      this.panelImport.Location = new System.Drawing.Point(8, 33);
+      this.panelImport.Name = "panelImport";
+      this.panelImport.Size = new System.Drawing.Size(1047, 505);
+      this.panelImport.TabIndex = 33;
       // 
-      // btnDefaultLowerCase
+      // btnImport
       // 
-      this.btnDefaultLowerCase.Location = new System.Drawing.Point(129, 77);
-      this.btnDefaultLowerCase.Name = "btnDefaultLowerCase";
-      this.btnDefaultLowerCase.Size = new System.Drawing.Size(117, 23);
-      this.btnDefaultLowerCase.TabIndex = 4;
-      this.btnDefaultLowerCase.Text = "Default Lowercase";
-      this.btnDefaultLowerCase.UseVisualStyleBackColor = true;
+      this.btnImport.Location = new System.Drawing.Point(342, 5);
+      this.btnImport.Name = "btnImport";
+      this.btnImport.Size = new System.Drawing.Size(75, 21);
+      this.btnImport.TabIndex = 32;
+      this.btnImport.Text = "Import";
+      this.btnImport.UseVisualStyleBackColor = true;
+      this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
       // 
-      // btnDefaultUppercase
+      // comboImportMethod
       // 
-      this.btnDefaultUppercase.Location = new System.Drawing.Point(6, 77);
-      this.btnDefaultUppercase.Name = "btnDefaultUppercase";
-      this.btnDefaultUppercase.Size = new System.Drawing.Size(117, 23);
-      this.btnDefaultUppercase.TabIndex = 3;
-      this.btnDefaultUppercase.Text = "Default Uppercase";
-      this.btnDefaultUppercase.UseVisualStyleBackColor = true;
+      this.comboImportMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboImportMethod.FormattingEnabled = true;
+      this.comboImportMethod.Location = new System.Drawing.Point(93, 6);
+      this.comboImportMethod.Name = "comboImportMethod";
+      this.comboImportMethod.Size = new System.Drawing.Size(243, 21);
+      this.comboImportMethod.TabIndex = 30;
+      this.comboImportMethod.SelectedIndexChanged += new System.EventHandler(this.comboImportMethod_SelectedIndexChanged);
       // 
-      // btnImportCharsetFromFile
+      // label2
       // 
-      this.btnImportCharsetFromFile.Location = new System.Drawing.Point(129, 48);
-      this.btnImportCharsetFromFile.Name = "btnImportCharsetFromFile";
-      this.btnImportCharsetFromFile.Size = new System.Drawing.Size(117, 23);
-      this.btnImportCharsetFromFile.TabIndex = 2;
-      this.btnImportCharsetFromFile.Text = "Charset from ASM";
-      this.btnImportCharsetFromFile.UseVisualStyleBackColor = true;
-      // 
-      // btnImportCharset
-      // 
-      this.btnImportCharset.Location = new System.Drawing.Point(6, 48);
-      this.btnImportCharset.Name = "btnImportCharset";
-      this.btnImportCharset.Size = new System.Drawing.Size(117, 23);
-      this.btnImportCharset.TabIndex = 1;
-      this.btnImportCharset.Text = "Charset...";
-      this.btnImportCharset.UseVisualStyleBackColor = true;
-      // 
-      // btnClearImportData
-      // 
-      this.btnClearImportData.Location = new System.Drawing.Point(252, 106);
-      this.btnClearImportData.Name = "btnClearImportData";
-      this.btnClearImportData.Size = new System.Drawing.Size(117, 23);
-      this.btnClearImportData.TabIndex = 6;
-      this.btnClearImportData.Text = "Clear";
-      this.btnClearImportData.UseVisualStyleBackColor = true;
-      // 
-      // btnImportFromBASIC
-      // 
-      this.btnImportFromBASIC.Location = new System.Drawing.Point(129, 106);
-      this.btnImportFromBASIC.Name = "btnImportFromBASIC";
-      this.btnImportFromBASIC.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromBASIC.TabIndex = 5;
-      this.btnImportFromBASIC.Text = "From BASIC";
-      this.btnImportFromBASIC.UseVisualStyleBackColor = true;
-      // 
-      // btnImportFromASM
-      // 
-      this.btnImportFromASM.Location = new System.Drawing.Point(6, 106);
-      this.btnImportFromASM.Name = "btnImportFromASM";
-      this.btnImportFromASM.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromASM.TabIndex = 5;
-      this.btnImportFromASM.Text = "From ASM";
-      this.btnImportFromASM.UseVisualStyleBackColor = true;
-      // 
-      // btnImportFromFile
-      // 
-      this.btnImportFromFile.Location = new System.Drawing.Point(6, 19);
-      this.btnImportFromFile.Name = "btnImportFromFile";
-      this.btnImportFromFile.Size = new System.Drawing.Size(117, 23);
-      this.btnImportFromFile.TabIndex = 0;
-      this.btnImportFromFile.Text = "From File...";
-      this.btnImportFromFile.UseVisualStyleBackColor = true;
-      // 
-      // editDataImport
-      // 
-      this.editDataImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.editDataImport.Location = new System.Drawing.Point(6, 143);
-      this.editDataImport.Multiline = true;
-      this.editDataImport.Name = "editDataImport";
-      this.editDataImport.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.editDataImport.Size = new System.Drawing.Size(583, 383);
-      this.editDataImport.TabIndex = 7;
-      this.editDataImport.WordWrap = false;
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point(8, 9);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(78, 13);
+      this.label2.TabIndex = 31;
+      this.label2.Text = "Import Method:";
       // 
       // CharsetScreenEditor
       // 
@@ -1065,8 +994,7 @@
       this.tabCharsetEditor.ResumeLayout(false);
       this.tabCharset.ResumeLayout(false);
       this.tabImport.ResumeLayout(false);
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
+      this.tabImport.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1082,9 +1010,6 @@
     private System.Windows.Forms.TabPage tabProject;
     private System.Windows.Forms.TextBox editDataExport;
     private System.Windows.Forms.TabPage tabEditor;
-    private System.Windows.Forms.ComboBox comboMulticolor2;
-    private System.Windows.Forms.ComboBox comboMulticolor1;
-    private System.Windows.Forms.ComboBox comboBackground;
     private GR.Forms.FastPictureBox pictureEditor;
     private System.Windows.Forms.TabControl tabCharsetEditor;
     private GR.Forms.ImageListbox panelCharacters;
@@ -1118,9 +1043,7 @@
     private System.Windows.Forms.TextBox editAreaWidth;
     private System.Windows.Forms.Label labelAreaWidth;
     private System.Windows.Forms.Label label9;
-    private System.Windows.Forms.ComboBox comboCharsetMode;
     private System.Windows.Forms.Label labelBGColor4;
-    private System.Windows.Forms.ComboBox comboBGColor4;
     private System.Windows.Forms.CheckBox checkApplyCharacter;
     private System.Windows.Forms.CheckBox checkApplyColors;
     private System.Windows.Forms.RadioButton btnToolText;
@@ -1140,21 +1063,20 @@
     private System.Windows.Forms.Button btnPaste;
     private System.Windows.Forms.Button btnCopy;
     private System.Windows.Forms.TabPage tabImport;
-    private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.Button btnDefaultLowerCase;
-    private System.Windows.Forms.Button btnDefaultUppercase;
-    private System.Windows.Forms.Button btnImportCharsetFromFile;
-    private System.Windows.Forms.Button btnImportCharset;
-    private System.Windows.Forms.Button btnClearImportData;
-    private System.Windows.Forms.Button btnImportFromBASIC;
-    private System.Windows.Forms.Button btnImportFromASM;
-    private System.Windows.Forms.Button btnImportFromFile;
-    private System.Windows.Forms.TextBox editDataImport;
     private System.Windows.Forms.Panel panelExport;
     private System.Windows.Forms.ComboBox comboExportMethod;
     private System.Windows.Forms.Label label11;
     private System.Windows.Forms.Label label12;
     private System.Windows.Forms.ComboBox comboExportOrientation;
     private System.Windows.Forms.Button btnExport;
+    private System.Windows.Forms.Button btnImport;
+    private System.Windows.Forms.ComboBox comboImportMethod;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.Panel panelImport;
+    public System.Windows.Forms.ComboBox comboBackground;
+    public System.Windows.Forms.ComboBox comboMulticolor2;
+    public System.Windows.Forms.ComboBox comboMulticolor1;
+    public System.Windows.Forms.ComboBox comboBGColor4;
+    public System.Windows.Forms.ComboBox comboCharsetMode;
   }
 }

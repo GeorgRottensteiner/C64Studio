@@ -1,4 +1,5 @@
-﻿using RetroDevStudio;
+﻿using C64Studio.Formats;
+using RetroDevStudio;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using System;
@@ -12,20 +13,20 @@ using System.Windows.Forms;
 
 namespace C64Studio.Controls
 {
-  public partial class ExportCharscreenFormBase : UserControl
+  public partial class ImportCharscreenFormBase : UserControl
   {
     public StudioCore                   Core = null;
 
 
 
-    public ExportCharscreenFormBase()
+    public ImportCharscreenFormBase()
     {
       InitializeComponent();
     }
 
 
 
-    public ExportCharscreenFormBase( StudioCore Core )
+    public ImportCharscreenFormBase( StudioCore Core )
     {
       this.Core         = Core;
 
@@ -34,7 +35,7 @@ namespace C64Studio.Controls
 
 
 
-    public virtual bool HandleExport( ExportCharsetScreenInfo Info, TextBox EditOutput, DocumentInfo DocInfo )
+    public virtual bool HandleImport( CharsetScreenProject CharScreen, CharsetScreenEditor Editor )
     {
       return false;
     }

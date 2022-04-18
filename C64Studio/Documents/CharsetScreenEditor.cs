@@ -76,6 +76,7 @@ namespace C64Studio
 
     private System.Drawing.Font         m_DefaultOutputFont = null;
     private ExportCharscreenFormBase    m_ExportForm = null;
+    private ImportCharscreenFormBase    m_ImportForm = null;
 
 
 
@@ -99,8 +100,15 @@ namespace C64Studio
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportAsImageFile ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image (clipboard)", typeof( ExportAsImage ) ) );
       comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to Marq's PETSCII editor", typeof( ExportAsMarqSPETSCII ) ) );
-
       comboExportOrientation.SelectedIndex = 0;
+
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from binary file", typeof( ImportFromBinaryFile ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from character set file", typeof( ImportFromCharsetFile ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "character set from assembly", typeof( ImportCharsetFromASM ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from assembly", typeof( ImportFromASM ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from BASIC PRINT statements", typeof( ImportFromBASIC ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "set default character sets", typeof( ImportFromDefault ) ) );
+      comboImportMethod.SelectedIndex = 0;
 
       pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb;
@@ -399,7 +407,7 @@ namespace C64Studio
 
 
 
-    void RebuildCharImage( int CharIndex )
+    public void RebuildCharImage( int CharIndex )
     {
       Formats.CharData Char = m_CharsetScreen.CharSet.Characters[CharIndex];
 
@@ -1025,7 +1033,7 @@ namespace C64Studio
 
 
 
-    private void SetCharacter( int X, int Y, ushort Char, ushort Color )
+    public void SetCharacter( int X, int Y, ushort Char, ushort Color )
     {
       if ( m_ReverseChars )
       {
@@ -1047,13 +1055,21 @@ namespace C64Studio
       }
       else if ( m_AffectChars )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, Char, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] >> 16 ) );
-        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( Char | ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff0000 ) );
+        DrawCharImage( pictureEditor.DisplayPage,
+                       ( X - m_CharsetScreen.ScreenOffsetX ) * 8,
+                       ( Y - m_CharsetScreen.ScreenOffsetY ) * 8,
+                       Char,
+                       m_CharsetScreen.ColorAt( X, Y ) );
+        m_CharsetScreen.SetCharacterAt( X, Y, Char );
       }
       else if ( m_AffectColors )
       {
-        DrawCharImage( pictureEditor.DisplayPage, ( X - m_CharsetScreen.ScreenOffsetX ) * 8, ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, (ushort)( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ), Color );
-        m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] = (uint)( ( m_CharsetScreen.Chars[X + Y * m_CharsetScreen.ScreenWidth] & 0xffff ) | ( (uint)Color << 16 ) );
+        DrawCharImage( pictureEditor.DisplayPage, 
+                       ( X - m_CharsetScreen.ScreenOffsetX ) * 8, 
+                       ( Y - m_CharsetScreen.ScreenOffsetY ) * 8, 
+                       m_CharsetScreen.CharacterAt( X, Y ),
+                       Color );
+        m_CharsetScreen.SetColorAt( X, Y, Color );
       }
     }
 
@@ -1446,14 +1462,7 @@ namespace C64Studio
 
 
 
-    private void btnImportCharset_Click( object sender, EventArgs e )
-    {
-      OpenExternalCharset();
-    }
-
-
-
-    private void OpenExternalCharset()
+    public bool OpenExternalCharset()
     {
       string filename;
 
@@ -1482,8 +1491,10 @@ namespace C64Studio
           }
           m_CharsetScreen.ExternalCharset = "";
           Modified = true;
+          return true;
         }
       }
+      return false;
     }
 
 
@@ -1760,198 +1771,7 @@ namespace C64Studio
 
 
 
-    private void btnImportFromFile_Click( object sender, EventArgs e )
-    {
-      string filename;
-
-      if ( OpenFile( "Open Charpad project, Marq's PETSCII editor files or binary data", Constants.FILEFILTER_CHARSET_CHARPAD + Constants.FILEFILTER_MARQS_PETSCII + Constants.FILEFILTER_ALL, out filename ) )
-      {
-        if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
-        {
-          // a charpad project file
-          GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
-
-          Formats.CharpadProject    cpProject = new C64Studio.Formats.CharpadProject();
-          if ( !cpProject.LoadFromFile( projectFile ) )
-          {
-            return;
-          }
-
-          m_CharsetScreen.CharSet.Colors.BackgroundColor = cpProject.BackgroundColor;
-          m_CharsetScreen.CharSet.Colors.MultiColor1 = cpProject.MultiColor1;
-          m_CharsetScreen.CharSet.Colors.MultiColor2 = cpProject.MultiColor2;
-          m_CharsetScreen.CharSet.Colors.BGColor4 = cpProject.BackgroundColor4;
-
-          int maxChars = cpProject.NumChars;
-          if ( maxChars > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
-          {
-            maxChars = m_CharsetScreen.CharSet.TotalNumberOfCharacters;
-          }
-
-          m_CharsetScreen.CharSet.ExportNumCharacters = maxChars;
-          for ( int charIndex = 0; charIndex < m_CharsetScreen.CharSet.ExportNumCharacters; ++charIndex )
-          {
-            m_CharsetScreen.CharSet.Characters[charIndex].Tile.Data = cpProject.Characters[charIndex].Data;
-            m_CharsetScreen.CharSet.Characters[charIndex].Tile.CustomColor = cpProject.Characters[charIndex].Color;
-
-            RebuildCharImage( charIndex );
-          }
-
-          // import tiles
-          var mapProject = new MapProject();
-          mapProject.MultiColor1 = cpProject.MultiColor1;
-          mapProject.MultiColor2 = cpProject.MultiColor2;
-
-          for ( int i = 0; i < cpProject.NumTiles; ++i )
-          {
-            Formats.MapProject.Tile tile = new Formats.MapProject.Tile();
-
-            tile.Name = "Tile " + ( i + 1 ).ToString();
-            tile.Chars.Resize( cpProject.TileWidth, cpProject.TileHeight );
-            tile.Index = i;
-
-            for ( int y = 0; y < tile.Chars.Height; ++y )
-            {
-              for ( int x = 0; x < tile.Chars.Width; ++x )
-              {
-                tile.Chars[x, y].Character = (byte)cpProject.Tiles[i].CharData.UInt16At( 2 * ( x + y * tile.Chars.Width ) );
-                tile.Chars[x, y].Color = cpProject.Tiles[i].ColorData.ByteAt( x + y * tile.Chars.Width );
-              }
-            }
-            mapProject.Tiles.Add( tile );
-          }
-
-          var map = new Formats.MapProject.Map();
-          map.Tiles.Resize( cpProject.MapWidth, cpProject.MapHeight );
-          for ( int j = 0; j < cpProject.MapHeight; ++j )
-          {
-            for ( int i = 0; i < cpProject.MapWidth; ++i )
-            {
-              map.Tiles[i, j] = cpProject.MapData.ByteAt( i + j * cpProject.MapWidth );
-            }
-          }
-          map.TileSpacingX = cpProject.TileWidth;
-          map.TileSpacingY = cpProject.TileHeight;
-          mapProject.Maps.Add( map );
-
-          comboBackground.SelectedIndex = mapProject.Charset.Colors.BackgroundColor;
-          comboMulticolor1.SelectedIndex = mapProject.Charset.Colors.MultiColor1;
-          comboMulticolor2.SelectedIndex = mapProject.Charset.Colors.MultiColor2;
-          comboBGColor4.SelectedIndex = mapProject.Charset.Colors.BGColor4;
-          comboCharsetMode.SelectedIndex = (int)cpProject.DisplayModeFile;
-            //( cpProject.MultiColor ? TextMode.COMMODORE_40_X_25_MULTICOLOR : TextMode.COMMODORE_40_X_25_HIRES );
-
-          GR.Memory.ByteBuffer      charData = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.TileSpacingX * map.Tiles.Height * map.TileSpacingY ) );
-          GR.Memory.ByteBuffer      colorData = new GR.Memory.ByteBuffer( (uint)( map.Tiles.Width * map.TileSpacingX * map.Tiles.Height * map.TileSpacingY ) );
-
-          for ( int y = 0; y < map.Tiles.Height; ++y )
-          {
-            for ( int x = 0; x < map.Tiles.Width; ++x )
-            {
-              int tileIndex = map.Tiles[x, y];
-              if ( tileIndex < mapProject.Tiles.Count )
-              {
-                // a real tile
-                var tile = mapProject.Tiles[tileIndex];
-
-                for ( int j = 0; j < tile.Chars.Height; ++j )
-                {
-                  for ( int i = 0; i < tile.Chars.Width; ++i )
-                  {
-                    charData.SetU8At( x * map.TileSpacingX + i + ( y * map.TileSpacingY + j ) * ( map.Tiles.Width * map.TileSpacingX ), tile.Chars[i, j].Character );
-                    colorData.SetU8At( x * map.TileSpacingX + i + ( y * map.TileSpacingY + j ) * ( map.Tiles.Width * map.TileSpacingX ), tile.Chars[i, j].Color );
-                  }
-                }
-              }
-            }
-          }
-
-          if ( cpProject.MapColorData != null )
-          {
-            // this charpad project has alternative color data
-            for ( int i = 0; i < cpProject.MapHeight; ++i )
-            {
-              for ( int j = 0; j < cpProject.MapWidth; ++j )
-              {
-                colorData.SetU8At( j + i * cpProject.MapWidth, cpProject.MapColorData.ByteAt( j + i * cpProject.MapWidth ) );
-              }
-            }
-          }
-
-          ImportFromData( map.TileSpacingX * map.Tiles.Width,
-                          map.TileSpacingY * map.Tiles.Height,
-                          charData, colorData, m_CharsetScreen.CharSet );
-        }
-        else if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".C" )
-        {
-          string cData = GR.IO.File.ReadAllText( filename );
-          if ( !string.IsNullOrEmpty( cData ) )
-          {
-            int     dataStart = cData.IndexOf( '{' );
-            if ( dataStart == -1 )
-            {
-              return;
-            }
-            int     dataEnd = cData.IndexOf( '}', dataStart );
-            if ( dataEnd == -1 )
-            {
-              return;
-            }
-            string  actualData = cData.Substring( dataStart + 1, dataEnd - dataStart - 2 );
-
-            var screenData = new ByteBuffer();
-
-            var dataLines = actualData.Split( '\n' );
-            for ( int i = 0; i < dataLines.Length; ++i )
-            {
-              var dataLine = dataLines[i].Trim();
-              if ( dataLine.StartsWith( "//" ) )
-              {
-                continue;
-              }
-              int     pos = 0;
-              int     commaPos = -1;
-
-              while ( pos < dataLine.Length )
-              {
-                commaPos = dataLine.IndexOf( ',', pos );
-                if ( commaPos == -1 )
-                {
-                  // end of line
-                  byte    byteValue = GR.Convert.ToU8( dataLine.Substring( pos ) );
-
-                  screenData.AppendU8( byteValue );
-                  break;
-                }
-                else
-                {
-                  byte    byteValue = GR.Convert.ToU8( dataLine.Substring( pos, commaPos - pos ) );
-
-                  screenData.AppendU8( byteValue );
-                  pos = commaPos + 1;
-                }
-              }
-
-              // border and BG first
-              m_CharsetScreen.CharSet.Colors.BackgroundColor = screenData.ByteAt( 1 );
-              screenData = screenData.SubBuffer( 2 );
-
-              ImportFromData( screenData );
-            }
-          }
-        }
-        else
-        {
-          GR.Memory.ByteBuffer data = GR.IO.File.ReadAllBytes( filename );
-
-          ImportFromData( data );
-        }
-      }
-    }
-
-
-
-    private void ImportFromData( ByteBuffer Data )
+    public bool ImportFromData( ByteBuffer Data )
     {
       if ( Data.Length == 1000 )
       {
@@ -1965,7 +1785,7 @@ namespace C64Studio
         {
           for ( int i = 0; i < m_CharsetScreen.ScreenWidth; ++i )
           {
-            m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (uint)( Data.ByteAt( i + j * m_CharsetScreen.ScreenWidth ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xff0000 ) );
+            m_CharsetScreen.SetCharacterAt( i, j, Data.ByteAt( i + j * m_CharsetScreen.ScreenWidth ) );
           }
         }
       }
@@ -1993,12 +1813,11 @@ namespace C64Studio
               colorValue &= 0x0f;
             }
 
-            m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] = (uint)( ( ( (uint)colorValue ) << 16 ) | ( m_CharsetScreen.Chars[i + j * m_CharsetScreen.ScreenWidth] & 0xffff ) );
+            m_CharsetScreen.SetColorAt( i, j, colorValue );
           }
         }
       }
-      Modified = true;
-      RedrawFullScreen();
+      return true;
     }
 
 
@@ -2957,42 +2776,6 @@ namespace C64Studio
 
 
 
-    private void btnDefaultUppercase_Click( object sender, EventArgs e )
-    {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharsetChange( m_CharsetScreen, this ) );
-
-      for ( int i = 0; i < 256; ++i )
-      {
-        for ( int j = 0; j < 8; ++j )
-        {
-          m_CharsetScreen.CharSet.Characters[i].Tile.Data.SetU8At( j, ConstantData.UpperCaseCharsetC64.ByteAt( i * 8 + j ) );
-        }
-        m_CharsetScreen.CharSet.Characters[i].Tile.CustomColor = 1;
-      }
-      Modified = true;
-      CharsetChanged();
-    }
-
-
-
-    private void btnDefaultLowerCase_Click( object sender, EventArgs e )
-    {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharsetChange( m_CharsetScreen, this ) );
-
-      for ( int i = 0; i < 256; ++i )
-      {
-        for ( int j = 0; j < 8; ++j )
-        {
-          m_CharsetScreen.CharSet.Characters[i].Tile.Data.SetU8At( j, ConstantData.LowerCaseCharsetC64.ByteAt( i * 8 + j ) );
-        }
-        m_CharsetScreen.CharSet.Characters[i].Tile.CustomColor = 1;
-      }
-      Modified = true;
-      CharsetChanged();
-    }
-
-
-
     internal void CharsetChanged()
     {
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
@@ -3045,38 +2828,12 @@ namespace C64Studio
 
 
 
-    private void btnImportFromASM_Click( object sender, EventArgs e )
-    {
-      ImportFromData( Util.FromASMData( editDataImport.Text ) );
-    }
-
-
-
-    private void btnClearImportData_Click( object sender, EventArgs e )
-    {
-      editDataImport.Text = "";
-    }
-
-
-
     private void editDataExport_KeyPress( object sender, KeyPressEventArgs e )
     {
       if ( ( ModifierKeys == Keys.Control )
       &&   ( e.KeyChar == 1 ) )
       {
         editDataExport.SelectAll();
-        e.Handled = true;
-      }
-    }
-
-
-
-    private void editDataImport_KeyPress( object sender, KeyPressEventArgs e )
-    {
-      if ( ( ModifierKeys == Keys.Control )
-      &&   ( e.KeyChar == 1 ) )
-      {
-        editDataImport.SelectAll();
         e.Handled = true;
       }
     }
@@ -3398,41 +3155,6 @@ namespace C64Studio
 
 
 
-    private void btnImportCharsetFromFile_Click( object sender, EventArgs e )
-    {
-      Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
-
-      Parser.CompileConfig config = new Parser.CompileConfig();
-      config.TargetType = Types.CompileTargetType.PLAIN;
-      config.OutputFile = "temp.bin";
-      config.Assembler = Types.AssemblerType.C64_STUDIO;
-
-      string    temp = "* = $0801\n" + editDataImport.Text;
-      if ( ( asmParser.Parse( temp, null, config, null ) )
-      &&   ( asmParser.Assemble( config ) ) )
-      {
-        GR.Memory.ByteBuffer charData = asmParser.AssembledOutput.Assembly;
-
-        int charsToImport = (int)charData.Length / 8;
-        if ( charsToImport > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
-        {
-          charsToImport = m_CharsetScreen.CharSet.TotalNumberOfCharacters;
-        }
-
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoCharscreenCharsetChange( m_CharsetScreen, this ) );
-
-        for ( int i = 0; i < charsToImport; ++i )
-        {
-          charData.CopyTo( m_CharsetScreen.CharSet.Characters[i].Tile.Data, i * 8, 8 );
-          RebuildCharImage( i );
-        }
-        SetModified();
-        RedrawFullScreen();
-      }
-    }
-
-
-
     private void panelCharColors_PostPaint( FastImage TargetBuffer )
     {
       int     x1 = m_CurrentColor * TargetBuffer.Width / m_NumColorsInColorChooser;
@@ -3453,178 +3175,6 @@ namespace C64Studio
 
         m_CharsetScreen.CharOffset = GR.Convert.ToI32( editCharOffset.Text );
         SetModified();
-      }
-    }
-
-
-
-    private void btnImportFromBASIC_Click( object sender, EventArgs e )
-    {
-      var settings = new C64Studio.Parser.BasicFileParser.ParserSettings();
-      settings.StripREM     = true;
-      settings.StripSpaces  = true;
-      settings.BASICDialect = C64Models.BASIC.Dialect.BASICV2;
-
-      var parser = new C64Studio.Parser.BasicFileParser( settings );
-
-      string[] lines = editDataImport.Text.Split( new char[]{ '\n' }, StringSplitOptions.RemoveEmptyEntries );
-      int lastLineNumber = -1;
-
-      int     cursorX = 0;
-      int     cursorY = 0;
-      byte    curColor = 14;
-      bool    reverseMode = false;
-
-      foreach ( var line in lines )
-      {
-        var  cleanLine = line.Trim();
-
-        var lineInfo = parser.TokenizeLine( cleanLine, 1, ref lastLineNumber );
-
-        for ( int i = 0; i < lineInfo.Tokens.Count; ++i )
-        {
-          var token = lineInfo.Tokens[i];
-
-          if ( ( token.TokenType == Parser.BasicFileParser.Token.Type.BASIC_TOKEN )
-          &&   ( token.ByteValue == 0x99 ) )
-          {
-            // a PRINT statement
-            bool    hasSemicolonAtEnd = false;
-            while ( ( i + 1 < lineInfo.Tokens.Count )
-            &&      ( lineInfo.Tokens[i + 1].Content != ":" ) )
-            {
-              ++i;
-
-              var nextToken = lineInfo.Tokens[i];
-
-              if ( nextToken.TokenType == Parser.BasicFileParser.Token.Type.STRING_LITERAL )
-              {
-                // handle incoming PETSCII plus control codes!
-                bool hadError = false;
-                var  actualString = Parser.BasicFileParser.ReplaceAllMacrosBySymbols( nextToken.Content.Substring( 1, nextToken.Content.Length - 2 ), out hadError );
-                foreach ( var singleChar in actualString )
-                {
-                  var key = ConstantData.AllPhysicalKeyInfos.Find( x => x.CharValue == singleChar );
-                  if ( key != null )
-                  {
-                    if ( ( key.Type == KeyType.GRAPHIC_SYMBOL )
-                    ||   ( key.Type == KeyType.NORMAL ) )
-                    {
-                      if ( reverseMode )
-                      {
-                        SetCharacter( cursorX, cursorY, (ushort)( key.ScreenCodeValue + 128 ), curColor );
-                      }
-                      else
-                      {
-                        SetCharacter( cursorX, cursorY, key.ScreenCodeValue, curColor );
-                      }
-                      ++cursorX;
-                      if ( cursorX >= m_CharsetScreen.ScreenWidth )
-                      {
-                        cursorX = 0;
-                        ++cursorY;
-                      }
-                    }
-                    else if ( key.Type == KeyType.CONTROL_CODE )
-                    {
-                      switch ( key.PetSCIIValue )
-                      {
-                        case 5:
-                          curColor = 1;
-                          break;
-                        case 17:
-                          ++cursorY;
-                          break;
-                        case 18:
-                          reverseMode = true;
-                          break;
-                        case 28:
-                          curColor = 2;
-                          break;
-                        case 29:
-                          ++cursorX;
-                          break;
-                        case 30:
-                          curColor = 5;
-                          break;
-                        case 31:
-                          curColor = 6;
-                          break;
-                        case 129:
-                          curColor = 8;
-                          break;
-                        case 144:
-                          curColor = 0;
-                          break;
-                        case 145:
-                          --cursorY;
-                          break;
-                        case 146:
-                          reverseMode = false;
-                          break;
-                        case 149:
-                          curColor = 9;
-                          break;
-                        case 150:
-                          curColor = 10;
-                          break;
-                        case 151:
-                          curColor = 11;
-                          break;
-                        case 152:
-                          curColor = 12;
-                          break;
-                        case 153:
-                          curColor = 13;
-                          break;
-                        case 154:
-                          curColor = 14;
-                          break;
-                        case 155:
-                          curColor = 15;
-                          break;
-                        case 156:
-                          curColor = 4;
-                          break;
-                        case 157:
-                          --cursorX;
-                          if ( cursorX < 0 )
-                          {
-                            cursorX += m_CharsetScreen.ScreenWidth;
-                            --cursorY;
-                          }
-                          break;
-                        case 158:
-                          curColor = 7;
-                          break;
-                        case 159:
-                          curColor = 3;
-                          break;
-                      }
-                    }
-                  }
-                }
-                continue;
-              }
-              else if ( nextToken.Content == ";" )
-              {
-                hasSemicolonAtEnd = true;
-              }
-              else
-              {
-                hasSemicolonAtEnd = false;
-                reverseMode = false;
-              }
-            }
-            if ( !hasSemicolonAtEnd )
-            {
-              cursorX = 0;
-              ++cursorY;
-
-              // TODO - Scroll up
-            }
-          }
-        }
       }
     }
 
@@ -3683,6 +3233,49 @@ namespace C64Studio
       editDataExport.Font = m_DefaultOutputFont;
       m_CharsetScreen.ExportToBuffer( exportInfo );
       m_ExportForm.HandleExport( exportInfo, editDataExport, DocumentInfo );
+    }
+
+
+
+    private void comboImportMethod_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( m_ImportForm != null )
+      {
+        m_ImportForm.Dispose();
+        m_ImportForm = null;
+      }
+
+      var item = (GR.Generic.Tupel<string, Type>)comboImportMethod.SelectedItem;
+      if ( ( item == null )
+      ||   ( item.second == null ) )
+      {
+        return;
+      }
+      m_ImportForm = (ImportCharscreenFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
+      m_ImportForm.Parent = panelImport;
+      m_ImportForm.Size = panelImport.ClientSize;
+      m_ImportForm.CreateControl();
+    }
+
+
+
+    private void btnImport_Click( object sender, EventArgs e )
+    {
+      var undo1 = new Undo.UndoCharscreenCharChange( m_CharsetScreen, this, 0, 0, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+      var undo2 = new Undo.UndoCharscreenValuesChange( m_CharsetScreen, this );
+      var undo3 = new Undo.UndoCharscreenCharsetChange( m_CharsetScreen, this );
+      var undo4 = new Undo.UndoCharscreenSizeChange( m_CharsetScreen, this, m_CharsetScreen.ScreenWidth, m_CharsetScreen.ScreenHeight );
+
+      if ( m_ImportForm.HandleImport( m_CharsetScreen, this ) )
+      {
+        DocumentInfo.UndoManager.StartUndoGroup();
+        DocumentInfo.UndoManager.AddUndoTask( undo1, false );
+        DocumentInfo.UndoManager.AddUndoTask( undo2, false );
+        DocumentInfo.UndoManager.AddUndoTask( undo3, false );
+        DocumentInfo.UndoManager.AddUndoTask( undo4, false );
+        SetModified();
+        RedrawFullScreen();
+      }
     }
 
 
