@@ -6,7 +6,7 @@ namespace C64Studio
 {
   public class DependencyBuildState
   {
-    public GR.Collections.Map<string,DateTime>      BuildState = new GR.Collections.Map<string,DateTime>();
+    public GR.Collections.Map<string,SingleBuildInfo>      BuildState = new GR.Collections.Map<string,SingleBuildInfo>();
 
 
     public void Clear()

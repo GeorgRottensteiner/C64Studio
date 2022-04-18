@@ -1855,9 +1855,13 @@ namespace C64Studio
       result = result.Replace( "$(FilePath)", GR.Path.RemoveFileSpec( fullDocPath ) );
 
       string targetFilename = "";
+
       if ( Document.Element == null )
       {
-        targetFilename = StudioCore.Compiling.m_LastBuildInfo.TargetFile;
+        if ( StudioCore.Compiling.m_LastBuildInfo.TryGetValue( Document.FullPath, out SingleBuildInfo lastBuildInfoOfThisFile ) )
+        {
+          targetFilename = lastBuildInfoOfThisFile.TargetFile;
+        }
       }
       else
       {
@@ -5355,7 +5359,7 @@ namespace C64Studio
             catch
             {
             }
-            buildState.BuildState[fullPath] = fileTime;
+            buildState.BuildState[fullPath].TimeStampOfSourceFile = fileTime;
           }
         }
       }
@@ -5377,7 +5381,7 @@ namespace C64Studio
           catch
           {
           }
-          buildState.BuildState.Add( dependency, lastChangeTime );
+          buildState.BuildState.Add( dependency, new SingleBuildInfo() { TimeStampOfSourceFile = lastChangeTime, TargetFile = Parser.CompileTargetFile, TargetType = Parser.CompileTarget }  );
         }
       }
 

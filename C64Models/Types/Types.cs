@@ -825,14 +825,6 @@ namespace C64Studio.Types
 
 
 
-  public class BuildInfo
-  {
-    public string             TargetFile = "";
-    public CompileTargetType  TargetType = CompileTargetType.NONE;
-  };
-
-
-
   public class FunctionInfo
   {
     public Function             Function = Function.NONE;

@@ -20,6 +20,8 @@ namespace C64Studio
 
     public Types.ASM.FileInfo             ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
 
+    public SingleBuildInfo                LastBuildInfo = null;
+
     public Undo.UndoManager UndoManager { get; set; } = new Undo.UndoManager();
 
 

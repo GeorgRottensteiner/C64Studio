@@ -81,7 +81,20 @@ namespace C64Studio.Tasks
       }
       Core.AddToOutput( "Determined " + baseDoc.DocumentFilename + " as active document" + System.Environment.NewLine );
 
-      Types.BuildInfo buildInfo = new C64Studio.Types.BuildInfo();
+      var buildInfo = new SingleBuildInfo();
+
+      SingleBuildInfo buildInfoFromLastBuildOfThisFile = null;
+      //Core.Compiling.m_LastBuildInfo.TryGetValue( baseDoc.FullPath, out buildInfoFromLastBuildOfThisFile );
+      buildInfoFromLastBuildOfThisFile = baseDoc.LastBuildInfo;
+
+      if ( ( buildInfoFromLastBuildOfThisFile != null )
+      &&   ( ( !System.IO.File.Exists( buildInfoFromLastBuildOfThisFile.TargetFile ) )
+      ||     ( buildInfoFromLastBuildOfThisFile.TimeStampOfTargetFile != Core.Compiling.FileLastWriteTime( buildInfoFromLastBuildOfThisFile.TargetFile ) ) ) )
+      {
+        Core.AddToOutput( $"Target file {buildInfoFromLastBuildOfThisFile.TargetFile} was modified or is missing" + System.Environment.NewLine );
+        Core.Compiling.m_BuildIsCurrent = false;
+      }
+
       if ( !Core.Compiling.m_BuildIsCurrent )
       {
         C64Studio.Types.ASM.FileInfo    dummyInfo;
@@ -99,7 +112,7 @@ namespace C64Studio.Tasks
           return false;
         }
 
-        Core.Compiling.m_LastBuildInfo = buildInfo;
+        Core.Compiling.m_LastBuildInfo[baseDoc.FullPath] = buildInfo;
         Core.Compiling.m_BuildIsCurrent = true;
       }
       else
@@ -110,13 +123,12 @@ namespace C64Studio.Tasks
         }
         else
         {
-          buildInfo = Core.Compiling.m_LastBuildInfo;
+          buildInfo = Core.Compiling.m_LastBuildInfo[baseDoc.FullPath];
         }
         if ( buildInfo.TargetType == C64Studio.Types.CompileTargetType.NONE )
         {
-          buildInfo.TargetType = Core.Compiling.m_LastBuildInfo.TargetType;
+          buildInfo.TargetType = Core.Compiling.m_LastBuildInfo[baseDoc.FullPath].TargetType;
         }
-
         Core.AddToOutput( "Build is current" + System.Environment.NewLine );
       }
       if ( Core.Navigating.DetermineASMFileInfo( baseDoc ) == Core.Navigating.DetermineASMFileInfo( m_ActiveDocument ) )
@@ -194,13 +206,16 @@ namespace C64Studio.Tasks
 
 
 
-    bool BuildElement( DocumentInfo Doc, string ConfigSetting, string AdditionalPredefines, bool OutputMessages, out Types.BuildInfo BuildInfo, out Types.ASM.FileInfo FileInfo )
+    bool BuildElement( DocumentInfo Doc, string ConfigSetting, string AdditionalPredefines, bool OutputMessages, out SingleBuildInfo BuildInfo, out Types.ASM.FileInfo FileInfo )
     {
-      BuildInfo = new C64Studio.Types.BuildInfo();
-      BuildInfo.TargetFile = "";
-      BuildInfo.TargetType = Types.CompileTargetType.NONE;
+      BuildInfo = new SingleBuildInfo();
+      BuildInfo.TargetFile            = "";
+      BuildInfo.TargetType            = Types.CompileTargetType.NONE;
+      BuildInfo.TimeStampOfSourceFile = Core.Compiling.FileLastWriteTime( Doc.FullPath );
+      BuildInfo.TimeStampOfTargetFile = default( DateTime );
 
-      FileInfo = null;
+      FileInfo          = null;
+      Doc.LastBuildInfo = null;
 
       Types.ASM.FileInfo combinedFileInfo = null;
 
@@ -251,7 +266,7 @@ namespace C64Studio.Tasks
             }
             else
             {
-              Types.BuildInfo tempInfo = new C64Studio.Types.BuildInfo();
+              var tempInfo = new SingleBuildInfo();
 
               if ( !BuildElement( elementDependency.DocumentInfo, ConfigSetting, null, false, out tempInfo, out dependencyFileInfo ) )
               {
@@ -294,7 +309,7 @@ namespace C64Studio.Tasks
 
         Parser.ParserBase parser = Core.DetermineParser( Doc );
 
-        GR.Collections.Map<string, DateTime>    currentBuildState;
+        GR.Collections.Map<string, SingleBuildInfo>    currentBuildState;
 
         if ( ConfigSetting != null )
         {
@@ -304,9 +319,14 @@ namespace C64Studio.Tasks
             {
               Doc.DeducedDependency.Add( ConfigSetting, new DependencyBuildState() );
             }
-            Doc.DeducedDependency[ConfigSetting].BuildState.Add( Doc.FullPath, Core.Compiling.FileLastWriteTime( Doc.FullPath ) );
+            Doc.DeducedDependency[ConfigSetting].BuildState.Add( Doc.FullPath,
+                new SingleBuildInfo()
+                {
+                  TimeStampOfSourceFile = Core.Compiling.FileLastWriteTime( Doc.FullPath )
+                }
+               );
 
-            currentBuildState = new GR.Collections.Map<string, DateTime>( Doc.DeducedDependency[ConfigSetting].BuildState );
+            currentBuildState = new GR.Collections.Map<string, SingleBuildInfo>( Doc.DeducedDependency[ConfigSetting].BuildState );
 
             if ( Doc.Element != null )
             {
@@ -342,7 +362,7 @@ namespace C64Studio.Tasks
         }
         else
         {
-          currentBuildState = new GR.Collections.Map<string, DateTime>();
+          currentBuildState = new GR.Collections.Map<string, SingleBuildInfo>();
           Core.AddToOutput( "Running build on " + Doc.DocumentFilename + System.Environment.NewLine );
         } 
 
@@ -463,22 +483,27 @@ namespace C64Studio.Tasks
             return false;
           }
 
-          if ( ConfigSetting != null )
-          {
-            lock ( Doc.DeducedDependency )
-            {
-              AppendBuildStates( currentBuildState, Doc.DeducedDependency[ConfigSetting].BuildState );
-            }
-          }
+          FileInfo = Doc.ASMFileInfo;
 
           Core.MainForm.AddOutputMessages( parser );
 
           var compileTarget = Core.DetermineTargetType( Doc, parser );
           string compileTargetFile = Core.DetermineTargetFilename( Doc, parser );
+
+          if ( ConfigSetting != null )
+          {
+            lock ( Doc.DeducedDependency )
+            {
+              currentBuildState[Doc.FullPath].TargetFile = compileTargetFile;
+              currentBuildState[Doc.FullPath].TargetType = compileTarget;
+              AppendBuildStates( currentBuildState, Doc.DeducedDependency[ConfigSetting].BuildState );
+            }
+          }
           if ( Doc.Element != null )
           {
             Doc.Element.CompileTargetFile = compileTargetFile;
           }
+
 
           if ( compileTargetFile == null )
           {
@@ -509,6 +534,8 @@ namespace C64Studio.Tasks
           }
           BuildInfo.TargetFile = compileTargetFile;
           BuildInfo.TargetType = compileTarget;
+
+          Doc.LastBuildInfo = BuildInfo;
 
           if ( parser.Warnings > 0 )
           {
@@ -553,6 +580,7 @@ namespace C64Studio.Tasks
             }
             return false;
           }
+
           Core.AddToOutput( "Build successful, " + parser.Warnings.ToString() + " warnings, 0 errors encountered" + System.Environment.NewLine );
 
           int assemblyEndAddress = parser.AssembledOutput.OriginalAssemblyStartAddress + parser.AssembledOutput.OriginalAssemblySize - 1;
@@ -623,6 +651,7 @@ namespace C64Studio.Tasks
           }
         }
 
+        BuildInfo.TimeStampOfTargetFile = Core.Compiling.FileLastWriteTime( BuildInfo.TargetFile );
         Doc.HasBeenSuccessfullyBuilt = true;
 
         Types.ASM.FileInfo   fileInfo = null;
@@ -680,7 +709,7 @@ namespace C64Studio.Tasks
 
 
 
-    private void AppendBuildStates( Map<string, DateTime> CurrentBuildState, Map<string, DateTime> NewBuildState )
+    private void AppendBuildStates( Map<string, SingleBuildInfo> CurrentBuildState, Map<string, SingleBuildInfo> NewBuildState )
     {
       foreach ( var entry in NewBuildState )
       {
@@ -702,7 +731,7 @@ namespace C64Studio.Tasks
       Core.Compiling.m_BuildChainStack.Push( BuildChain );
       foreach ( var entry in BuildChain.Entries )
       {
-        BuildInfo                     buildInfo;
+        SingleBuildInfo               buildInfo;
         Types.ASM.FileInfo            fileInfo;
 
         string  buildInfoKey = entry.ProjectName + "/" + entry.DocumentFilename + "/" + entry.Config;
@@ -751,7 +780,7 @@ namespace C64Studio.Tasks
 
         lock ( m_DocumentToBuild.DeducedDependency )
         {
-          m_DocumentToBuild.DeducedDependency[ParentDocumentConfigSetting].BuildState[element.DocumentInfo.FullPath] = Core.Compiling.FileLastWriteTime( element.DocumentInfo.FullPath );
+          m_DocumentToBuild.DeducedDependency[ParentDocumentConfigSetting].BuildState[element.DocumentInfo.FullPath].TimeStampOfSourceFile = Core.Compiling.FileLastWriteTime( element.DocumentInfo.FullPath );
         }
       }
       Core.AddToOutput( "Running " + BuildChainDescription + " completed successfully" + System.Environment.NewLine );

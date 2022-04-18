@@ -170,7 +170,9 @@ namespace C64Studio
 
       if ( targetType == C64Studio.Types.CompileTargetType.NONE )
       {
-        targetType = Core.Compiling.m_LastBuildInfo.TargetType;
+        var lastBuildInfoOfThisFile = Core.Compiling.m_LastBuildInfo[DocumentToRun.FullPath];
+
+        targetType = lastBuildInfoOfThisFile.TargetType;
       }
       DebugType = targetType;
 

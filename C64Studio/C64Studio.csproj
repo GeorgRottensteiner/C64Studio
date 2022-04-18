@@ -195,6 +195,48 @@
     </Compile>
     <Compile Include="Controls\HexBoxCharPETSCIIViewer.cs" />
     <Compile Include="Controls\HexBoxSpriteViewer.cs" />
+    <Compile Include="Controls\ImportCharscreenForms\ImportFromBASIC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportFromBASIC.Designer.cs">
+      <DependentUpon>ImportFromBASIC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportFromASM.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportFromASM.Designer.cs">
+      <DependentUpon>ImportFromASM.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportFromDefault.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportFromDefault.Designer.cs">
+      <DependentUpon>ImportFromDefault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportFromCharsetFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportFromCharsetFile.Designer.cs">
+      <DependentUpon>ImportFromCharsetFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharsetFromASM.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharsetFromASM.Designer.cs">
+      <DependentUpon>ImportCharsetFromASM.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportFromBinaryFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportFromBinaryFile.Designer.cs">
+      <DependentUpon>ImportFromBinaryFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFormBase.Designer.cs">
+      <DependentUpon>ImportCharscreenFormBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ThemedButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -292,6 +334,7 @@
     </Compile>
     <Compile Include="Navigating.cs" />
     <Compile Include="Executing.cs" />
+    <Compile Include="Project\SingleBuildInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -689,6 +732,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenFormBase.resx">
       <DependentUpon>ExportCharscreenFormBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportFromBASIC.resx">
+      <DependentUpon>ImportFromBASIC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportFromASM.resx">
+      <DependentUpon>ImportFromASM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportFromDefault.resx">
+      <DependentUpon>ImportFromDefault.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportFromCharsetFile.resx">
+      <DependentUpon>ImportFromCharsetFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharsetFromASM.resx">
+      <DependentUpon>ImportCharsetFromASM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportFromBinaryFile.resx">
+      <DependentUpon>ImportFromBinaryFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenFormBase.resx">
+      <DependentUpon>ImportCharscreenFormBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgPaletteEditor.resx">
       <DependentUpon>DlgPaletteEditor.cs</DependentUpon>
