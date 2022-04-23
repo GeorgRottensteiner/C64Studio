@@ -63,6 +63,8 @@
       this.miniMap = new FastColoredTextBoxNS.DocumentMap();
       this.contextMenuMiniMap = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.btnCloseAllZones = new System.Windows.Forms.Button();
+      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -320,9 +322,9 @@
       this.comboZoneSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboZoneSelector.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
       this.comboZoneSelector.FormattingEnabled = true;
-      this.comboZoneSelector.Location = new System.Drawing.Point(0, 2);
+      this.comboZoneSelector.Location = new System.Drawing.Point(29, 2);
       this.comboZoneSelector.Name = "comboZoneSelector";
-      this.comboZoneSelector.Size = new System.Drawing.Size(318, 21);
+      this.comboZoneSelector.Size = new System.Drawing.Size(289, 21);
       this.comboZoneSelector.TabIndex = 1;
       this.comboZoneSelector.SelectionChangeCommitted += new System.EventHandler(this.comboZoneSelector_SelectedIndexChanged);
       // 
@@ -367,10 +369,22 @@
       this.hideToolStripMenuItem.Text = "Hide";
       this.hideToolStripMenuItem.Click += new System.EventHandler(this.hideToolStripMenuItem_Click);
       // 
+      // btnCloseAllZones
+      // 
+      this.btnCloseAllZones.Image = global::C64Studio.Properties.Resources.close_all_sections;
+      this.btnCloseAllZones.Location = new System.Drawing.Point(0, 0);
+      this.btnCloseAllZones.Name = "btnCloseAllZones";
+      this.btnCloseAllZones.Size = new System.Drawing.Size(23, 23);
+      this.btnCloseAllZones.TabIndex = 3;
+      this.toolTip1.SetToolTip(this.btnCloseAllZones, "Toggle zone collapse state");
+      this.btnCloseAllZones.UseVisualStyleBackColor = true;
+      this.btnCloseAllZones.Click += new System.EventHandler(this.btnCloseAllZones_Click);
+      // 
       // SourceASMEx
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.ClientSize = new System.Drawing.Size(575, 471);
+      this.Controls.Add(this.btnCloseAllZones);
       this.Controls.Add(this.miniMap);
       this.Controls.Add(this.comboZoneSelector);
       this.Controls.Add(this.comboLocalLabelSelector);
@@ -419,5 +433,7 @@
     private System.Windows.Forms.ToolStripMenuItem showMiniOverviewToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem addSubtractDataValuesToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem findAllReferencesToolStripMenuItem;
+    private System.Windows.Forms.Button btnCloseAllZones;
+    private System.Windows.Forms.ToolTip toolTip1;
   }
 }

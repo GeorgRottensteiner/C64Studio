@@ -243,6 +243,16 @@ namespace C64Studio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap close_all_sections {
+            get {
+                object obj = ResourceManager.GetObject("close_all_sections", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DebugBreak {
             get {
                 object obj = ResourceManager.GetObject("DebugBreak", resourceCulture);

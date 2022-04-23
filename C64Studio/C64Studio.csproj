@@ -1051,6 +1051,7 @@
     <None Include="Resources\tool_none2.png" />
     <None Include="Resources\charscreen_autocenter.ico" />
     <None Include="Resources\charscreen_autocenter_off.ico" />
+    <None Include="Resources\close_all_sections.ico" />
     <Content Include="TODO.txt" />
     <None Include="Resources\charscreen_text1.ico" />
     <None Include="Resources\charscreen_text.ico" />

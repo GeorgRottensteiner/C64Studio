@@ -3611,5 +3611,21 @@ namespace C64Studio
 
 
 
+    private void btnCloseAllZones_Click( object sender, EventArgs e )
+    {
+      foreach ( var line in editSource.LineInfos )
+      {
+        if ( line.VisibleState != FastColoredTextBoxNS.VisibleState.Visible )
+        {
+          // a block is folded
+          editSource.ExpandAllFoldingBlocks();
+          return;
+        }
+      }
+      editSource.CollapseAllFoldingBlocks();
+    }
+
+
+
   }
 }
