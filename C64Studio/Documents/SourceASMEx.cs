@@ -408,6 +408,22 @@ namespace C64Studio
         return;
       }
 
+      // no autocomplete on comments
+      string    line = editSource.Lines[sourceLineIndex];
+      var tokens = Parser.ParseTokenInfo( line, 0, line.Length, Parser.m_TextCodeMappingScr );
+
+      if ( tokens != null )
+      {
+        foreach ( var token in tokens )
+        {
+          if ( ( token.StartPos < e.StartPos.iChar )
+          &&   ( token.Type == TokenInfo.TokenType.COMMENT ) )
+          {
+            e.Cancel = true;
+            return;
+          }
+        }
+      }
       /*
       // this is just a attempt on context dependant info!
       // TODO - adjust the content depending on the content
