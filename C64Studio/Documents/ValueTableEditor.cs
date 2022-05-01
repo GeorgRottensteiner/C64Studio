@@ -815,7 +815,7 @@ namespace C64Studio
 
       int         lineDelta = GR.Convert.ToI32( editExportBASICLineOffset.Text );
       int         curLineNumber = GR.Convert.ToI32( editExportBASICLineNo.Text );
-      editDataExport.Text = Util.ToBASICData( exportData, curLineNumber, lineDelta, 80 );
+      editDataExport.Text = Util.ToBASICData( exportData, curLineNumber, lineDelta, 80, 0 );
     }
 
 

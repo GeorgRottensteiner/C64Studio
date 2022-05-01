@@ -228,13 +228,17 @@ namespace RetroDevStudio
 
 
 
-    internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount )
+    internal static string ToBASICData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount )
     {
       StringBuilder   sb = new StringBuilder();
 
       if ( WrapByteCount < 1 )
       {
         WrapByteCount = 80;
+      }
+      if ( WrapCharCount < 20 )
+      {
+        WrapCharCount = 20;
       }
       if ( LineOffset <= 0 )
       {
@@ -256,17 +260,48 @@ namespace RetroDevStudio
         bool    firstByte = true;
         int     numBytesInLine = 0;
 
-        while ( ( numBytesInLine < WrapByteCount )
-        &&      ( dataPos < Data.Length ) )
+        if ( WrapCharCount > 0 )
         {
-          if ( !firstByte )
+          // length of line number plus token
+          numBytesInLine = StartLine.ToString().Length + 1;
+
+          while ( ( numBytesInLine < WrapCharCount )
+          &&      ( dataPos < Data.Length ) )
           {
-            sb.Append( ',' );
+            int   numCharsToAdd = Data.ByteAt( dataPos ).ToString().Length;
+            if ( !firstByte )
+            {
+              ++numCharsToAdd;
+            }
+            if ( numBytesInLine + numCharsToAdd > WrapCharCount )
+            {
+              break;
+            }
+
+            if ( !firstByte )
+            {
+              sb.Append( ',' );
+            }
+            firstByte = false;
+            sb.Append( Data.ByteAt( dataPos ) );
+            ++dataPos;
+            numBytesInLine += numCharsToAdd;
           }
-          firstByte = false;
-          sb.Append( Data.ByteAt( dataPos ) );
-          ++dataPos;
-          ++numBytesInLine;
+        }
+        else
+        {
+          while ( ( numBytesInLine < WrapByteCount )
+          &&      ( dataPos < Data.Length ) )
+          {
+            if ( !firstByte )
+            {
+              sb.Append( ',' );
+            }
+            firstByte = false;
+            sb.Append( Data.ByteAt( dataPos ) );
+            ++dataPos;
+            ++numBytesInLine;
+          }
         }
         sb.AppendLine();
 
@@ -300,7 +335,7 @@ namespace RetroDevStudio
         bool    firstByte = true;
 
         while ( ( sb.Length - startLength < 76 )
-        && ( dataPos < Data.Length ) )
+        &&      ( dataPos < Data.Length ) )
         {
           if ( !firstByte )
           {
@@ -319,9 +354,10 @@ namespace RetroDevStudio
 
 
 
-    internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount )
+    internal static string ToBASICHexData( GR.Memory.ByteBuffer Data, int StartLine, int LineOffset, int WrapByteCount, int WrapCharCount )
     {
-      if ( WrapByteCount < 1 )
+      if ( ( WrapByteCount < 1 )
+      &&   ( WrapCharCount < 1 ) )
       {
         return ToBASICHexData( Data, StartLine, LineOffset );
       }
@@ -347,17 +383,44 @@ namespace RetroDevStudio
         bool    firstByte = true;
         int     numBytesInLine = 0;
 
-        while ( ( numBytesInLine < WrapByteCount )
-        &&      ( dataPos < Data.Length ) )
+        if ( WrapCharCount > 0 )
         {
-          if ( !firstByte )
+          if ( WrapCharCount < 20 )
           {
-            sb.Append( ',' );
+            WrapCharCount = 20;
           }
-          firstByte = false;
-          sb.Append( Data.ByteAt( dataPos ).ToString( "X2" ) );
-          ++dataPos;
-          ++numBytesInLine;
+
+          // size of line number + DATA token
+          numBytesInLine = StartLine.ToString().Length + 1;
+          while ( ( numBytesInLine + 3 <= WrapCharCount )
+          &&      ( dataPos < Data.Length ) )
+          {
+            if ( !firstByte )
+            {
+              sb.Append( ',' );
+              ++numBytesInLine;
+            }
+            firstByte = false;
+            sb.Append( Data.ByteAt( dataPos ).ToString( "X2" ) );
+            ++dataPos;
+            numBytesInLine += 2;
+          }
+        }
+        else
+        {
+
+          while ( ( numBytesInLine < WrapByteCount )
+          &&      ( dataPos < Data.Length ) )
+          {
+            if ( !firstByte )
+            {
+              sb.Append( ',' );
+            }
+            firstByte = false;
+            sb.Append( Data.ByteAt( dataPos ).ToString( "X2" ) );
+            ++dataPos;
+            ++numBytesInLine;
+          }
         }
         sb.AppendLine();
 

@@ -493,6 +493,7 @@ namespace C64Studio
 
       DPIHandler.ResizeControlsForDPI( this );
 
+      panelMain.Theme = new VS2005Theme();
       panelMain.Height = ClientSize.Height - mainStatus.Height - mainMenu.Height - mainToolBuild.Height - 7;
 
       Application.Idle += new EventHandler( Application_Idle );

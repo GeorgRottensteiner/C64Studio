@@ -119,10 +119,7 @@ namespace C64Studio
 
       foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
       {
-        if ( entry != Formats.GraphicScreenProject.ColorMappingTarget.ANY )
-        {
-          comboColorMappingTargets.Items.Add( GR.EnumHelper.GetDescription( entry ) );
-        }
+        comboColorMappingTargets.Items.Add( GR.EnumHelper.GetDescription( entry ) );
       }
 
       for ( int i = 0; i < 16; ++i )
@@ -555,6 +552,7 @@ namespace C64Studio
     {
       if ( m_GraphicScreenProject.Colors.BackgroundColor != comboBackground.SelectedIndex )
       {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
         m_GraphicScreenProject.Colors.BackgroundColor = comboBackground.SelectedIndex;
         Modified = true;
         pictureEditor.Invalidate();
@@ -567,6 +565,7 @@ namespace C64Studio
     {
       if ( m_GraphicScreenProject.Colors.MultiColor1 != comboMulticolor1.SelectedIndex )
       {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
         m_GraphicScreenProject.Colors.MultiColor1 = comboMulticolor1.SelectedIndex;
         Modified = true;
         pictureEditor.Invalidate();
@@ -579,6 +578,7 @@ namespace C64Studio
     {
       if ( m_GraphicScreenProject.Colors.MultiColor2 != comboMulticolor2.SelectedIndex )
       {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
         m_GraphicScreenProject.Colors.MultiColor2 = comboMulticolor2.SelectedIndex;
         Modified = true;
         pictureEditor.Invalidate();
@@ -2123,7 +2123,7 @@ namespace C64Studio
       GR.Memory.ByteBuffer screenColor;
       GR.Memory.ByteBuffer bitmapData;
 
-      m_GraphicScreenProject.ImageToHiresBitmapData( m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
+      m_GraphicScreenProject.ImageToHiresBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
 
       // export data
       string result = ";bitmap data" + System.Environment.NewLine + ToASMData( bitmapData );
@@ -2142,15 +2142,15 @@ namespace C64Studio
       GR.Memory.ByteBuffer screenColor;
       GR.Memory.ByteBuffer bitmapData;
 
-      m_GraphicScreenProject.ImageToHiresBitmapData( m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
+      m_GraphicScreenProject.ImageToHiresBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount );
+        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount );
+        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
       }
     }
 
@@ -2187,11 +2187,11 @@ namespace C64Studio
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount );
+        editDataExport.Text = Util.ToBASICHexData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount );
+        editDataExport.Text = Util.ToBASICData( bitmapData + screenChar + screenColor, StartLine, LineOffset, WrapByteCount, 0 );
       }
     }
 
@@ -2298,11 +2298,11 @@ namespace C64Studio
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount );
+        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount );
+        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
       }
     }
 
@@ -2406,11 +2406,11 @@ namespace C64Studio
 
       if ( Hex )
       {
-        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount );
+        editDataExport.Text = Util.ToBASICHexData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount );
+        editDataExport.Text = Util.ToBASICData( screenCharData + screenColorData, StartLine, LineOffset, WrapByteCount, 0 );
       }
     }
 
@@ -2555,7 +2555,7 @@ namespace C64Studio
       {
         case 0:
           // hires bitmap
-          m_GraphicScreenProject.ImageToHiresBitmapData( m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
+          m_GraphicScreenProject.ImageToHiresBitmapData( m_GraphicScreenProject.ColorMapping, m_Chars, m_ErrornousChars, 0, 0, BlockWidth, BlockHeight, out bitmapData, out screenChar, out screenColor );
           break;
         case 1:
           // MC bitmap
@@ -2860,6 +2860,13 @@ namespace C64Studio
 
     private void listColorMappingColors_SelectedIndexChanged( object sender, EventArgs e )
     {
+      UpdateCurrentColorMapping();
+    }
+
+
+
+    private void UpdateCurrentColorMapping()
+    { 
       listColorMappingTargets.Items.Clear();
       if ( listColorMappingColors.SelectedIndex == -1 )
       {
@@ -2953,6 +2960,8 @@ namespace C64Studio
       {
         return null;
       }
+
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
       m_GraphicScreenProject.ColorMapping[sourceColor].Insert( m_GraphicScreenProject.ColorMapping[sourceColor].Count - 1, targetIndex );
 
       var newItem = new ArrangedItemEntry( GR.EnumHelper.GetDescription( targetIndex ) );
@@ -2976,6 +2985,7 @@ namespace C64Studio
         return;
       }
 
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
       foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
       {
         if ( GR.EnumHelper.GetDescription( entry ) == Item.Text )
@@ -2984,6 +2994,7 @@ namespace C64Studio
           break;
         }
       }
+      Modified = true;
     }
 
 
@@ -2996,12 +3007,14 @@ namespace C64Studio
         return;
       }
 
+      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
       m_GraphicScreenProject.ColorMapping[sourceColor].Clear();
 
       foreach ( ArrangedItemEntry item in listColorMappingTargets.Items )
       {
         m_GraphicScreenProject.ColorMapping[sourceColor].Add( ColorMappingFromItem( item ) );
       }
+      Modified = true;
     }
 
 
@@ -3022,6 +3035,7 @@ namespace C64Studio
 
     private bool listColorMappingTargets_MovingItem( object sender, ArrangedItemEntry Item1, ArrangedItemEntry Item2 )
     {
+            /*
       var     colorMapping1 = ColorMappingFromItem( Item1 );
       var     colorMapping2 = ColorMappingFromItem( Item2 );
 
@@ -3029,7 +3043,7 @@ namespace C64Studio
       ||   ( colorMapping2 == Formats.GraphicScreenProject.ColorMappingTarget.ANY ) )
       {
         return false;
-      }
+      }*/
       return true;
     }
 
@@ -3646,6 +3660,17 @@ namespace C64Studio
       m_GraphicScreenProject.Image.Box( 0, 0, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight, 0 );
       Redraw();
       SetModified();
+    }
+
+
+
+    public void ColorValuesChanged()
+    {
+      UpdateCurrentColorMapping();
+      comboBackground.SelectedIndex = m_GraphicScreenProject.Colors.BackgroundColor;
+      checkMulticolor.Checked = m_GraphicScreenProject.MultiColor;
+      comboMulticolor1.SelectedIndex = m_GraphicScreenProject.Colors.MultiColor1;
+      comboMulticolor2.SelectedIndex = m_GraphicScreenProject.Colors.MultiColor2;
     }
 
 

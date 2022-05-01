@@ -34,6 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Emulator\Types.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\CharpadProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\D71.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportCharsetInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ExportCharsetScreenInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\SpritePadProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formats\ValueTableProject.cs" />

@@ -135,7 +135,7 @@ namespace MediaTool
       if ( !exportMC )
       {
         // HIRES
-        numErrors = graphicScreen.ImageToHiresBitmapData( charData, errornousChars, x / 8, y / 8, width / 8, height / 8, out bitmapData, out screenChar, out screenColor );
+        numErrors = graphicScreen.ImageToHiresBitmapData( graphicScreen.ColorMapping, charData, errornousChars, x / 8, y / 8, width / 8, height / 8, out bitmapData, out screenChar, out screenColor );
       }
       else
       {

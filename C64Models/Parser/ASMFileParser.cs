@@ -5409,13 +5409,18 @@ namespace C64Studio.Parser
         GR.Memory.ByteBuffer screenColor  = new GR.Memory.ByteBuffer();
         GR.Memory.ByteBuffer bitmapData   = new GR.Memory.ByteBuffer();
 
+        if ( !method.Contains( "BITMAPHIRES" ) )
+        {
+          importAsMC = ( screenProject.SelectedCheckType == Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP );
+        }
+
         if ( importAsMC )
         {
           screenProject.ImageToMCBitmapData( screenProject.ColorMapping, null, null, x, y, w / 8, h / 8, out bitmapData, out screenChar, out screenColor );
         }
         else
         {
-          screenProject.ImageToHiresBitmapData( null, null, x, y, w / 8, h / 8, out bitmapData, out screenChar, out screenColor );
+          screenProject.ImageToHiresBitmapData( screenProject.ColorMapping, null, null, x, y, w / 8, h / 8, out bitmapData, out screenChar, out screenColor );
         }
 
         GR.Memory.ByteBuffer    bitmapClipped = new GR.Memory.ByteBuffer( (uint)( w / 8 * h / 8 * 8 ) );

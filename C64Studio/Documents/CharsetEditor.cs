@@ -5,10 +5,12 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using C64Studio.Controls;
 using C64Studio.Formats;
 using C64Studio.Types;
 using GR.Memory;
 using RetroDevStudio;
+using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -25,6 +27,10 @@ namespace C64Studio
     }
 
     public Formats.CharsetProject       m_Charset = new C64Studio.Formats.CharsetProject();
+
+    private System.Drawing.Font         m_DefaultOutputFont = null;
+    private ExportCharsetFormBase       m_ExportForm = null;
+    private ImportCharsetFormBase       m_ImportForm = null;
 
 
 
@@ -67,8 +73,21 @@ namespace C64Studio
       comboExportRange.Items.Add( "Range" );
       comboExportRange.SelectedIndex = 0;
 
-      checkExportToDataIncludeRes.Checked = true;
-      checkExportToDataWrap.Checked = true;
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportCharsetAsAssembly ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportCharsetAsBinaryFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportCharsetAsImageFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image (clipboard)", typeof( ExportCharsetAsImage ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC DATA statements", typeof( ExportCharsetAsBASICData ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC CHARDEF statements", typeof( ExportCharsetAsBASICChardef ) ) );
+      comboExportMethod.SelectedIndex = 0;
+      m_DefaultOutputFont = editDataExport.Font;
+
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from character set/binary file", typeof( ImportCharsetFromBinaryFile ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from image file", typeof( ImportCharsetFromImageFile ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from assembly", typeof( ImportCharsetFromASM ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from BASIC DATA statements", typeof( ImportCharsetFromBASICDATA ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "set default character sets", typeof( ImportCharsetFromDefault ) ) );
+      comboImportMethod.SelectedIndex = 0;
 
       CreateDefaultUppercaseCharset();
 
@@ -317,46 +336,6 @@ namespace C64Studio
 
 
 
-    private void btnExportCharset_Click( object sender, EventArgs e )
-    {
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.FileName = m_Charset.ExportFilename;
-      saveDlg.Title = "Export Charset to";
-      saveDlg.Filter = "Charset|*.chr|All Files|*.*";
-      if ( DocumentInfo.Project != null )
-      {
-        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
-      }
-      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-      {
-        return;
-      }
-      if ( m_Charset.ExportFilename != saveDlg.FileName )
-      {
-        m_Charset.ExportFilename = saveDlg.FileName;
-        Modified = true;
-      }
-      GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
-
-      List<int>     exportIndices = ListOfExportIndices();
-      foreach ( int i in exportIndices )
-      {
-        charSet.Append( m_Charset.Characters[i].Tile.Data );
-      }
-      if ( checkPrefixLoadAddress.Checked )
-      {
-        ushort address = GR.Convert.ToU16( editPrefixLoadAddress.Text, 16 );
-
-        var addressData = new ByteBuffer();
-        addressData.AppendU16( address );
-        charSet = addressData + charSet;
-      }
-      GR.IO.File.WriteAllBytes( m_Charset.ExportFilename, charSet );
-    }
-
-
-
     private List<int> ListOfExportIndices()
     {
       List<int>   listIndices = new List<int>();
@@ -365,7 +344,7 @@ namespace C64Studio
       {
         case 0:
           // all
-          for ( int i = 0; i < 256; ++i )
+          for ( int i = 0; i < m_Charset.TotalNumberOfCharacters; ++i )
           {
             listIndices.Add( i );
           }
@@ -387,145 +366,7 @@ namespace C64Studio
 
 
 
-    private void btnExportCharsetToData_Click( object sender, EventArgs e )
-    {
-      int wrapByteCount = GetExportWrapCount();
-      if ( wrapByteCount <= 0 )
-      {
-        wrapByteCount = 8;
-      }
-      string prefix = editPrefix.Text;
-
-      List<int>     exportIndices = ListOfExportIndices();
-
-      GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
-      foreach ( int index in exportIndices )
-      {
-        charSet.Append( m_Charset.Characters[index].Tile.Data );
-      }
-
-      bool wrapData = checkExportToDataWrap.Checked;
-      bool prefixRes = checkExportToDataIncludeRes.Checked;
-
-      string    resultText = "CHARS" + System.Environment.NewLine;
-      resultText += Util.ToASMData( charSet, wrapData, wrapByteCount, prefixRes ? prefix : "" );
-      if ( checkIncludeColor.Checked )
-      {
-        resultText += System.Environment.NewLine + "COLORS" + System.Environment.NewLine;
-
-        GR.Memory.ByteBuffer    colorData = new GR.Memory.ByteBuffer();
-        foreach ( int index in exportIndices )
-        {
-          colorData.AppendU8( (byte)m_Charset.Characters[index].Tile.CustomColor );
-        }
-        resultText += Util.ToASMData( colorData, wrapData, wrapByteCount, prefixRes ? prefix : "" );
-      }
-
-      editDataExport.Text = resultText;
-    }
-
-
-
-    private int GetExportWrapCount()
-    {
-      if ( checkExportToDataWrap.Checked )
-      {
-        return GR.Convert.ToI32( editWrapByteCount.Text );
-      }
-      return 80;
-    }
-
-
-
-    private void checkExportToDataWrap_CheckedChanged( object sender, EventArgs e )
-    {
-      editWrapByteCount.Enabled = checkExportToDataWrap.Checked;
-    }
-
-
-
-    private void checkExportToDataIncludeRes_CheckedChanged( object sender, EventArgs e )
-    {
-      editPrefix.Enabled = checkExportToDataIncludeRes.Checked;
-    }
-
-
-
-    private void btnImportCharset_Click( object sender, EventArgs e )
-    {
-      string filename;
-
-      //Clear();
-      if ( OpenFile( "Open charset", C64Studio.Types.Constants.FILEFILTER_CHARSET + C64Studio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
-      {
-        if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CHARSETPROJECT" )
-        {
-          // a project
-          GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
-
-          C64Studio.Formats.CharsetProject project = new C64Studio.Formats.CharsetProject();
-          if ( !project.ReadFromBuffer( projectFile ) )
-          {
-            return;
-          }
-          m_Charset.Colors = new ColorSettings( project.Colors );
-          m_Charset.ExportNumCharacters = project.ExportNumCharacters;
-          m_Charset.ShowGrid = project.ShowGrid;
-
-          for ( int i = 0; i < m_Charset.TotalNumberOfCharacters; ++i )
-          {
-            m_Charset.Characters[i].Tile.CustomColor = project.Characters[i].Tile.CustomColor;
-            m_Charset.Characters[i].Tile.Data = new GR.Memory.ByteBuffer( project.Characters[i].Tile.Data );
-          }
-
-          editCharactersFrom.Text = m_Charset.ExportNumCharacters.ToString();
-
-          characterEditor.CharsetUpdated( m_Charset );
-
-          Modified = true;
-          return;
-        }
-        else if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CTM" )
-        {
-          // a charpad project file
-          GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
-
-          Formats.CharpadProject    cpProject = new C64Studio.Formats.CharpadProject();
-          if ( !cpProject.LoadFromFile( projectFile ) )
-          {
-            return;
-          }
-
-          m_Charset.Colors.BackgroundColor = cpProject.BackgroundColor;
-          m_Charset.Colors.MultiColor1     = cpProject.MultiColor1;
-          m_Charset.Colors.MultiColor2     = cpProject.MultiColor2;
-
-          m_Charset.ExportNumCharacters = cpProject.NumChars;
-          if ( m_Charset.ExportNumCharacters > 256 )
-          {
-            m_Charset.ExportNumCharacters = 256;
-          }
-          for ( int charIndex = 0; charIndex < m_Charset.ExportNumCharacters; ++charIndex )
-          {
-            m_Charset.Characters[charIndex].Tile.Data = cpProject.Characters[charIndex].Data;
-            m_Charset.Characters[charIndex].Tile.CustomColor = cpProject.Characters[charIndex].Color;
-          }
-
-          editCharactersFrom.Text = m_Charset.ExportNumCharacters.ToString();
-          characterEditor.CharsetUpdated( m_Charset );
-          SetModified();
-          return;
-        }
-        // treat as binary .chr file
-        GR.Memory.ByteBuffer charData = GR.IO.File.ReadAllBytes( filename );
-
-        ImportFromData( charData );
-      }
-    }
-
-
-
-    private void ImportFromData( ByteBuffer CharData )
+    public void ImportFromData( ByteBuffer CharData )
     {
       int     numBytesPerChar = Lookup.NumBytesOfSingleCharacterBitmap( m_Charset.Mode );
 
@@ -590,53 +431,11 @@ namespace C64Studio
 
 
 
-    private void btnExportCharsetToImage_Click( object sender, EventArgs e )
-    {
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Export Characters to Image";
-      saveDlg.Filter = Core.MainForm.FilterString( C64Studio.Types.Constants.FILEFILTER_IMAGE_FILES );
-      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-      {
-        return;
-      }
-
-      GR.Image.MemoryImage    targetImg = new GR.Image.MemoryImage( 128, 128, m_Charset.Characters[0].Tile.Image.PixelFormat );
-      PaletteManager.ApplyPalette( targetImg );
-
-      List<int>     exportIndices = ListOfExportIndices();
-
-      foreach ( int i in exportIndices )
-      {
-        m_Charset.Characters[i].Tile.Image.DrawTo( targetImg, ( i % 16 ) * 8, ( i / 16 ) * 8 );
-      }
-      System.Drawing.Bitmap bmpTarget = targetImg.GetAsBitmap();
-      bmpTarget.Save( saveDlg.FileName, System.Drawing.Imaging.ImageFormat.Png );
-    }
-
-
-
-    private void btnImportCharsetFromFile_Click( object sender, EventArgs e )
-    {
-      string filename;
-
-      if ( !OpenFile( "Import Charset from Image", C64Studio.Types.Constants.FILEFILTER_IMAGE_FILES, out filename ) )
-      {
-        return;
-      }
-
-      GR.Image.FastImage imgClip = Core.Imaging.LoadImageFromFile( filename );
-
-      characterEditor.PasteImage( filename, imgClip, false );
-    }
-
-
-
     private void editStartCharacters_TextChanged( object sender, EventArgs e )
     {
       int   startChar = GR.Convert.ToI32( editCharactersFrom.Text );
       if ( ( startChar <= 0 )
-      ||   ( startChar > 256 ) )
+      ||   ( startChar > m_Charset.TotalNumberOfCharacters ) )
       {
         startChar = 0;
         editCharactersFrom.Text = startChar.ToString();
@@ -645,9 +444,9 @@ namespace C64Studio
       {
         m_Charset.ExportStartCharacter = startChar;
         Modified = true;
-        if ( startChar + m_Charset.ExportNumCharacters > 256 )
+        if ( startChar + m_Charset.ExportNumCharacters > m_Charset.TotalNumberOfCharacters )
         {
-          m_Charset.ExportNumCharacters = 256 - startChar;
+          m_Charset.ExportNumCharacters = m_Charset.TotalNumberOfCharacters - startChar;
           editCharactersCount.Text = m_Charset.ExportNumCharacters.ToString();
         }
       }
@@ -659,9 +458,9 @@ namespace C64Studio
     {
       int   numChars = GR.Convert.ToI32( editCharactersCount.Text );
       if ( ( numChars <= 0 )
-      ||   ( numChars > 256 ) )
+      ||   ( numChars > m_Charset.TotalNumberOfCharacters ) )
       {
-        numChars = 256 - m_Charset.ExportStartCharacter;
+        numChars = m_Charset.TotalNumberOfCharacters - m_Charset.ExportStartCharacter;
         editCharactersCount.Text = numChars.ToString();
       }
       if ( m_Charset.ExportNumCharacters != numChars )
@@ -697,63 +496,6 @@ namespace C64Studio
         editDataExport.SelectAll();
         e.Handled = true;
       }
-    }
-
-
-
-    private void btnExportCharsetToBASIC_Click( object sender, EventArgs e )
-    {
-      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
-      if ( ( startLine < 0 )
-      ||   ( startLine > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
-      if ( ( lineOffset < 0 )
-      ||   ( lineOffset > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int wrapByteCount = GetExportWrapCount();
-
-      List<int>     exportIndices = ListOfExportIndices();
-
-      GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
-      foreach ( int index in exportIndices )
-      {
-        charSet.Append( m_Charset.Characters[index].Tile.Data );
-      }
-
-      string    resultText = Util.ToBASICData( charSet, startLine, lineOffset, wrapByteCount );
-
-      editDataExport.Text = resultText;
-    }
-
-
-
-    private void btnImportCharsetFromASM_Click( object sender, EventArgs e )
-    {
-      ImportFromData( Util.FromASMData( editDataImport.Text ) );
-    }
-
-
-
-    private void editDataImport_KeyPress( object sender, KeyPressEventArgs e )
-    {
-      if ( ( System.Windows.Forms.Control.ModifierKeys == Keys.Control )
-      &&   ( e.KeyChar == 1 ) )
-      {
-        editDataImport.SelectAll();
-        e.Handled = true;
-      }
-    }
-
-
-
-    private void btnClearImportData_Click( object sender, EventArgs e )
-    {
-      editDataImport.Text = "";
     }
 
 
@@ -817,62 +559,9 @@ namespace C64Studio
 
 
 
-    private void btnExportCharsetToBASICHex_Click( object sender, EventArgs e )
-    {
-      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
-      if ( ( startLine < 0 )
-      ||   ( startLine > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
-      if ( ( lineOffset < 0 )
-      ||   ( lineOffset > 63999 ) )
-      {
-        startLine = 10;
-      }
-
-      List<int>     exportIndices = ListOfExportIndices();
-
-      GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
-      foreach ( int index in exportIndices )
-      {
-        charSet.Append( m_Charset.Characters[index].Tile.Data );
-      }
-
-      string    resultText = Util.ToBASICHexData( charSet, startLine, lineOffset );
-
-      editDataExport.Text = resultText;
-    }
-
-
-
     private void characterEditor_Modified()
     {
       SetModified();
-    }
-
-
-
-    private void btnImportCharsetFromBASIC_Click( object sender, EventArgs e )
-    {
-      ImportFromData( Util.FromBASIC( editDataImport.Text ) );
-      Modified = true;
-    }
-
-
-
-    private void btnImportCharsetFromBASICHex_Click( object sender, EventArgs e )
-    {
-      ImportFromData( Util.FromBASICHex( editDataImport.Text ) );
-      Modified = true;
-    }
-
-
-
-    private void editPrefixLoadAddress_TextChanged( object sender, EventArgs e )
-    {
-      checkPrefixLoadAddress.Checked = true;
     }
 
 
@@ -927,9 +616,87 @@ namespace C64Studio
 
 
 
-    private void btnDefaultCharset_Click( object sender, EventArgs e )
+    private void comboExportMethod_SelectedIndexChanged(object sender, EventArgs e)
     {
-      contextMenuDefaultCharsets.Show( btnDefaultCharset, new Point( 0, btnDefaultCharset.Height ) );
+      if ( m_ExportForm != null )
+      {
+        m_ExportForm.Dispose();
+        m_ExportForm = null;
+      }
+
+      editDataExport.Text = "";
+      editDataExport.Font = m_DefaultOutputFont;
+
+      var item = (GR.Generic.Tupel<string, Type>)comboExportMethod.SelectedItem;
+      if ( ( item == null )
+      ||   (item.second == null ) )
+      {
+        return;
+      }
+      m_ExportForm = (ExportCharsetFormBase)Activator.CreateInstance(item.second, new object[] { Core });
+      m_ExportForm.Parent = panelExport;
+      m_ExportForm.CreateControl();
+    }
+
+
+
+    private void btnExport_Click(object sender, EventArgs e)
+    {
+      List<int> exportIndices = ListOfExportIndices();
+
+      GR.Memory.ByteBuffer charSet = new GR.Memory.ByteBuffer();
+      foreach ( int index in exportIndices )
+      {
+        charSet.Append(m_Charset.Characters[index].Tile.Data);
+      }
+
+      var exportInfo = new ExportCharsetInfo()
+      {
+        Charset         = m_Charset,
+        ExportIndices   = ListOfExportIndices()
+      };
+
+      editDataExport.Text = "";
+      editDataExport.Font = m_DefaultOutputFont;
+      m_ExportForm.HandleExport( exportInfo, editDataExport, DocumentInfo );
+    }
+
+
+
+    private void comboImportMethod_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( m_ImportForm != null )
+      {
+        m_ImportForm.Dispose();
+        m_ImportForm = null;
+      }
+
+      var item = (GR.Generic.Tupel<string, Type>)comboImportMethod.SelectedItem;
+      if ( ( item == null )
+      || ( item.second == null ) )
+      {
+        return;
+      }
+      m_ImportForm = (ImportCharsetFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
+      m_ImportForm.Parent = panelImport;
+      m_ImportForm.Size = panelImport.ClientSize;
+      m_ImportForm.CreateControl();
+    }
+
+
+
+    private void btnImport_Click( object sender, EventArgs e )
+    {
+      var undo1 = new Undo.UndoCharacterEditorCharChange( characterEditor, m_Charset, 0, m_Charset.TotalNumberOfCharacters );
+      var undo2 = new Undo.UndoCharacterEditorValuesChange( characterEditor, m_Charset );
+
+      if ( m_ImportForm.HandleImport( m_Charset, this ) )
+      {
+        DocumentInfo.UndoManager.StartUndoGroup();
+        DocumentInfo.UndoManager.AddUndoTask( undo1, false );
+        DocumentInfo.UndoManager.AddUndoTask( undo2, false );
+        SetModified();
+      }
     }
 
 

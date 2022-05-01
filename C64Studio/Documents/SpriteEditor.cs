@@ -2774,11 +2774,11 @@ namespace C64Studio
       GR.Memory.ByteBuffer exportData = GatherExportData();
       if ( checkExportToDataWrap.Checked )
       {
-        editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset, GR.Convert.ToI32( editWrapByteCount.Text ) );
+        editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset, GR.Convert.ToI32( editWrapByteCount.Text ), 0 );
       }
       else
       {
-        editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset, 80 );
+        editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset, 80, 0 );
       }
     }
 
@@ -2960,7 +2960,7 @@ namespace C64Studio
       }
       if ( checkExportToDataWrap.Checked )
       {
-        editDataExport.Text = Util.ToBASICHexData( exportData, startLine, lineOffset, GR.Convert.ToI32( editWrapByteCount.Text ) );
+        editDataExport.Text = Util.ToBASICHexData( exportData, startLine, lineOffset, GR.Convert.ToI32( editWrapByteCount.Text ), 0 );
       }
       else
       {

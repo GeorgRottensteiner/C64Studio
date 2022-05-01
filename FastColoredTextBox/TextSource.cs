@@ -126,6 +126,11 @@ namespace FastColoredTextBoxNS
     {
       get
       {
+        if ( ( i < 0 )
+        ||   ( i >= lines.Count ) )
+        {
+          return null;
+        }
         return lines[i];
       }
       set

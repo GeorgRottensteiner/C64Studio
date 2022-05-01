@@ -92,22 +92,23 @@ namespace C64Studio
 
       m_DefaultOutputFont = editDataExport.Font;
 
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportAsAssembly ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC Data statements", typeof( ExportAsBASICData ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC code", typeof( ExportAsBASIC ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportAsBinaryFile ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to charset project file", typeof( ExportAsCharset ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportAsImageFile ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image (clipboard)", typeof( ExportAsImage ) ) );
-      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to Marq's PETSCII editor", typeof( ExportAsMarqSPETSCII ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportCharscreenAsAssembly ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC Data statements", typeof( ExportCharscreenAsBASICData ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC code", typeof( ExportCharsetAsBASIC ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportCharscreenAsBinaryFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to charset project file", typeof( ExportCharscreenAsCharset ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportCharscreenAsImageFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image (clipboard)", typeof( ExportCharscreenAsImage ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to Marq's PETSCII editor", typeof( ExportCharscreenAsMarqSPETSCII ) ) );
+      comboExportMethod.SelectedIndex = 0;
       comboExportOrientation.SelectedIndex = 0;
 
-      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from binary file", typeof( ImportFromBinaryFile ) ) );
-      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from character set file", typeof( ImportFromCharsetFile ) ) );
-      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "character set from assembly", typeof( ImportCharsetFromASM ) ) );
-      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from assembly", typeof( ImportFromASM ) ) );
-      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from BASIC PRINT statements", typeof( ImportFromBASIC ) ) );
-      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "set default character sets", typeof( ImportFromDefault ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from binary file", typeof( ImportCharscreenFromBinaryFile ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from character set file", typeof( ImportCharscreenCharsetFromCharsetFile ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "character set from assembly", typeof( ImportCharscreenCharsetFromASM ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from assembly", typeof( ImportCharscreenFromASM ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from BASIC PRINT statements", typeof( ImportCharscreenFromBASIC ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "set default character sets", typeof( ImportCharscreenCharsetFromDefault ) ) );
       comboImportMethod.SelectedIndex = 0;
 
       pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
@@ -1473,8 +1474,6 @@ namespace C64Studio
         if ( ImportCharset( filename ) )
         {
           DocumentInfo.UndoManager.AddUndoTask( undo );
-
-          //CharsetChanged();
 
           RedrawFullScreen();
           pictureEditor.Invalidate();

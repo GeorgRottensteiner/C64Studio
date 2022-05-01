@@ -76,7 +76,9 @@ namespace FastColoredTextBoxNS
           else
           {
             for ( int i = sel.FromX; i < lastSel.FromX; i++ )
-              ts[sel.Start.iLine].RemoveAt( sel.Start.iChar );
+            {
+              ts[sel.Start.iLine]?.RemoveAt( sel.Start.iChar );
+            }
           }
           ts.CurrentTB.Selection.Start = sel.Start;
           break;
@@ -88,23 +90,28 @@ namespace FastColoredTextBoxNS
           {
             for ( int j = sel.Start.iChar + 1; j < ts[sel.Start.iLine].Count; ++j )
             {
-              if ( ts[sel.Start.iLine][j].c == '\t' )
+              var  curLine = ts[sel.Start.iLine];
+              if ( curLine == null )
+              {
+                continue;
+              }
+              if ( curLine[j].c == '\t' )
               {
                 if ( ( j % ts.CurrentTB.TabLength ) == 0 )
                 {
                   // a full tab, needs to be removed and replaced by a single tab char
-                  ts[sel.Start.iLine].RemoveRange( j, ts.CurrentTB.TabLength - 1 );
+                  curLine.RemoveRange( j, ts.CurrentTB.TabLength - 1 );
                 }
                 else
                 {
                   // tab grows backwards
-                  ts[sel.Start.iLine].Insert( j, new Char( '\t' ) );
+                  curLine.Insert( j, new Char( '\t' ) );
                 }
                 break;
               }
             }
           }
-          ts[sel.Start.iLine].RemoveAt( sel.Start.iChar );
+          ts[sel.Start.iLine]?.RemoveAt( sel.Start.iChar );
           ts.CurrentTB.Selection.Start = sel.Start;
           break;
       }

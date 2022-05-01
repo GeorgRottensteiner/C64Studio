@@ -263,7 +263,7 @@ namespace C64Studio
       }
       int   wrapByteCount = GR.Convert.ToI32( editWrapCount.Text );
 
-      textBinaryData.Text = Util.ToBASICData( data, curLineNumber, lineDelta, wrapByteCount );
+      textBinaryData.Text = Util.ToBASICData( data, curLineNumber, lineDelta, wrapByteCount, 0 );
     }
 
 

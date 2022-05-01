@@ -51,13 +51,17 @@
       <HintPath>..\packages\GeorgRottensteiner.SharpSid.0.9.1\lib\net35\SharpSid.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=3.0.6.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
-      <HintPath>..\packages\DockPanelSuite.3.0.6\lib\net35-client\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.3.1.0\lib\net35\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2005, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.ThemeVS2005.3.1.0\lib\net35\WeifenLuo.WinFormsUI.Docking.ThemeVS2005.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -139,53 +143,53 @@
     <Compile Include="Controls\CustomDrawControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsImage.cs">
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsImage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsImage.Designer.cs">
-      <DependentUpon>ExportAsImage.cs</DependentUpon>
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsImage.Designer.cs">
+      <DependentUpon>ExportCharscreenAsImage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsMarqSPETSCII.cs">
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsMarqSPETSCII.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsMarqSPETSCII.Designer.cs">
-      <DependentUpon>ExportAsMarqSPETSCII.cs</DependentUpon>
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsMarqSPETSCII.Designer.cs">
+      <DependentUpon>ExportCharscreenAsMarqSPETSCII.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsImageFile.cs">
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsImageFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsImageFile.Designer.cs">
-      <DependentUpon>ExportAsImageFile.cs</DependentUpon>
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsImageFile.Designer.cs">
+      <DependentUpon>ExportCharscreenAsImageFile.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsCharset.cs">
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsCharset.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsCharset.Designer.cs">
-      <DependentUpon>ExportAsCharset.cs</DependentUpon>
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsCharset.Designer.cs">
+      <DependentUpon>ExportCharscreenAsCharset.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsBinaryFile.cs">
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBinaryFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsBinaryFile.Designer.cs">
-      <DependentUpon>ExportAsBinaryFile.cs</DependentUpon>
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBinaryFile.Designer.cs">
+      <DependentUpon>ExportCharscreenAsBinaryFile.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsBASIC.cs">
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASIC.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsBASIC.Designer.cs">
-      <DependentUpon>ExportAsBASIC.cs</DependentUpon>
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASIC.Designer.cs">
+      <DependentUpon>ExportCharscreenAsBASIC.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsBASICData.cs">
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASICData.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsBASICData.Designer.cs">
-      <DependentUpon>ExportAsBASICData.cs</DependentUpon>
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASICData.Designer.cs">
+      <DependentUpon>ExportCharscreenAsBASICData.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsAssembly.cs">
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsAssembly.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportAsAssembly.Designer.cs">
-      <DependentUpon>ExportAsAssembly.cs</DependentUpon>
+    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsAssembly.Designer.cs">
+      <DependentUpon>ExportCharscreenAsAssembly.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenFormBase.cs">
       <SubType>UserControl</SubType>
@@ -193,49 +197,127 @@
     <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenFormBase.Designer.cs">
       <DependentUpon>ExportCharscreenFormBase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBASICChardef.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBASICChardef.Designer.cs">
+      <DependentUpon>ExportCharsetAsBASICChardef.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBASICData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBASICData.Designer.cs">
+      <DependentUpon>ExportCharsetAsBASICData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsImage.Designer.cs">
+      <DependentUpon>ExportCharsetAsImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsImageFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsImageFile.Designer.cs">
+      <DependentUpon>ExportCharsetAsImageFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBinaryFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBinaryFile.Designer.cs">
+      <DependentUpon>ExportCharsetAsBinaryFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsAssembly.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsAssembly.Designer.cs">
+      <DependentUpon>ExportCharsetAsAssembly.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportCharsetForms\ExportCharsetFormBase.Designer.cs">
+      <DependentUpon>ExportCharsetFormBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\HexBoxCharPETSCIIViewer.cs" />
     <Compile Include="Controls\HexBoxSpriteViewer.cs" />
-    <Compile Include="Controls\ImportCharscreenForms\ImportFromBASIC.cs">
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromBASIC.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportFromBASIC.Designer.cs">
-      <DependentUpon>ImportFromBASIC.cs</DependentUpon>
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromBASIC.Designer.cs">
+      <DependentUpon>ImportCharscreenFromBASIC.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportFromASM.cs">
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromASM.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportFromASM.Designer.cs">
-      <DependentUpon>ImportFromASM.cs</DependentUpon>
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromASM.Designer.cs">
+      <DependentUpon>ImportCharscreenFromASM.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportFromDefault.cs">
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromDefault.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportFromDefault.Designer.cs">
-      <DependentUpon>ImportFromDefault.cs</DependentUpon>
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromDefault.Designer.cs">
+      <DependentUpon>ImportCharscreenCharsetFromDefault.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportFromCharsetFile.cs">
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromCharsetFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportFromCharsetFile.Designer.cs">
-      <DependentUpon>ImportFromCharsetFile.cs</DependentUpon>
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromCharsetFile.Designer.cs">
+      <DependentUpon>ImportCharscreenCharsetFromCharsetFile.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharsetFromASM.cs">
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromASM.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharsetFromASM.Designer.cs">
-      <DependentUpon>ImportCharsetFromASM.cs</DependentUpon>
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromASM.Designer.cs">
+      <DependentUpon>ImportCharscreenCharsetFromASM.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportFromBinaryFile.cs">
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromBinaryFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportFromBinaryFile.Designer.cs">
-      <DependentUpon>ImportFromBinaryFile.cs</DependentUpon>
+    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromBinaryFile.Designer.cs">
+      <DependentUpon>ImportCharscreenFromBinaryFile.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFormBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFormBase.Designer.cs">
       <DependentUpon>ImportCharscreenFormBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromDefault.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromDefault.Designer.cs">
+      <DependentUpon>ImportCharsetFromDefault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromBASICDATA.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromBASICDATA.Designer.cs">
+      <DependentUpon>ImportCharsetFromBASICDATA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromASM.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromASM.Designer.cs">
+      <DependentUpon>ImportCharsetFromASM.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromImageFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromImageFile.Designer.cs">
+      <DependentUpon>ImportCharsetFromImageFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromBinaryFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromBinaryFile.Designer.cs">
+      <DependentUpon>ImportCharsetFromBinaryFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFormBase.Designer.cs">
+      <DependentUpon>ImportCharsetFormBase.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ThemedButton.cs">
       <SubType>Component</SubType>
@@ -706,53 +788,92 @@
     <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsMCCharacter.resx">
       <DependentUpon>ColorSettingsMCCharacter.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsImage.resx">
-      <DependentUpon>ExportAsImage.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsImage.resx">
+      <DependentUpon>ExportCharscreenAsImage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsMarqSPETSCII.resx">
-      <DependentUpon>ExportAsMarqSPETSCII.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsMarqSPETSCII.resx">
+      <DependentUpon>ExportCharscreenAsMarqSPETSCII.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsImageFile.resx">
-      <DependentUpon>ExportAsImageFile.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsImageFile.resx">
+      <DependentUpon>ExportCharscreenAsImageFile.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsCharset.resx">
-      <DependentUpon>ExportAsCharset.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsCharset.resx">
+      <DependentUpon>ExportCharscreenAsCharset.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsBinaryFile.resx">
-      <DependentUpon>ExportAsBinaryFile.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsBinaryFile.resx">
+      <DependentUpon>ExportCharscreenAsBinaryFile.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsBASIC.resx">
-      <DependentUpon>ExportAsBASIC.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASIC.resx">
+      <DependentUpon>ExportCharscreenAsBASIC.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsBASICData.resx">
-      <DependentUpon>ExportAsBASICData.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASICData.resx">
+      <DependentUpon>ExportCharscreenAsBASICData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportAsAssembly.resx">
-      <DependentUpon>ExportAsAssembly.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsAssembly.resx">
+      <DependentUpon>ExportCharscreenAsAssembly.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenFormBase.resx">
       <DependentUpon>ExportCharscreenFormBase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportFromBASIC.resx">
-      <DependentUpon>ImportFromBASIC.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsBASICChardef.resx">
+      <DependentUpon>ExportCharsetAsBASICChardef.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportFromASM.resx">
-      <DependentUpon>ImportFromASM.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsBASICData.resx">
+      <DependentUpon>ExportCharsetAsBASICData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportFromDefault.resx">
-      <DependentUpon>ImportFromDefault.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsImage.resx">
+      <DependentUpon>ExportCharsetAsImage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportFromCharsetFile.resx">
-      <DependentUpon>ImportFromCharsetFile.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsImageFile.resx">
+      <DependentUpon>ExportCharsetAsImageFile.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharsetFromASM.resx">
-      <DependentUpon>ImportCharsetFromASM.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsBinaryFile.resx">
+      <DependentUpon>ExportCharsetAsBinaryFile.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportFromBinaryFile.resx">
-      <DependentUpon>ImportFromBinaryFile.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsAssembly.resx">
+      <DependentUpon>ExportCharsetAsAssembly.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetFormBase.resx">
+      <DependentUpon>ExportCharsetFormBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenFromBASIC.resx">
+      <DependentUpon>ImportCharscreenFromBASIC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenFromASM.resx">
+      <DependentUpon>ImportCharscreenFromASM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromDefault.resx">
+      <DependentUpon>ImportCharscreenCharsetFromDefault.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromCharsetFile.resx">
+      <DependentUpon>ImportCharscreenCharsetFromCharsetFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromASM.resx">
+      <DependentUpon>ImportCharscreenCharsetFromASM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenFromBinaryFile.resx">
+      <DependentUpon>ImportCharscreenFromBinaryFile.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenFormBase.resx">
       <DependentUpon>ImportCharscreenFormBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFromDefault.resx">
+      <DependentUpon>ImportCharsetFromDefault.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFromBASICDATA.resx">
+      <DependentUpon>ImportCharsetFromBASICDATA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFromASM.resx">
+      <DependentUpon>ImportCharsetFromASM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFromImageFile.resx">
+      <DependentUpon>ImportCharsetFromImageFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFromBinaryFile.resx">
+      <DependentUpon>ImportCharsetFromBinaryFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFormBase.resx">
+      <DependentUpon>ImportCharsetFormBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgPaletteEditor.resx">
       <DependentUpon>DlgPaletteEditor.cs</DependentUpon>
@@ -973,6 +1094,7 @@
     <Compile Include="Undo\UndoCharacterEditorPlaygroundCharChange.cs" />
     <Compile Include="Undo\UndoCharacterEditorValuesChange.cs" />
     <Compile Include="Undo\UndoCharacterEditorSwapCategories.cs" />
+    <Compile Include="Undo\UndoGraphicScreenValuesChange.cs" />
     <Compile Include="Undo\UndoMapSwap.cs" />
     <Compile Include="Undo\UndoGraphicScreenSizeChange.cs" />
     <Compile Include="Undo\UndoGraphicScreenImageChange.cs" />

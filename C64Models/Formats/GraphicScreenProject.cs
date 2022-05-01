@@ -34,7 +34,13 @@ namespace C64Studio.Formats
       [Description( "11 (Color RAM)" )]
       BITS_11 = 3,
       [Description( "Any" )]
-      ANY = 4
+      ANY = 4,
+
+      // HiRes
+      [Description( "0 (Color 1)" )]
+      COLOR_1 = 5,
+      [Description( "1 (Color 2)" )]
+      COLOR_2 = 6
     };
 
 
@@ -258,7 +264,7 @@ namespace C64Studio.Formats
 
 
 
-    public int ImageToHiresBitmapData( List<Formats.CharData> Chars, bool[,] ErrornousBlocks, int CharX, int CharY, int WidthChars, int HeightChars, out GR.Memory.ByteBuffer bitmapData, out GR.Memory.ByteBuffer screenChar, out GR.Memory.ByteBuffer screenColor )
+    public int ImageToHiresBitmapData( Dictionary<int, List<ColorMappingTarget>> ForceBitPattern, List<Formats.CharData> Chars, bool[,] ErrornousBlocks, int CharX, int CharY, int WidthChars, int HeightChars, out GR.Memory.ByteBuffer bitmapData, out GR.Memory.ByteBuffer screenChar, out GR.Memory.ByteBuffer screenColor )
     {
       screenChar  = null;
       screenColor = null;
@@ -310,7 +316,7 @@ namespace C64Studio.Formats
                 }
                 ++numErrors;
               }
-              if ( colorIndex != Colors.BackgroundColor )
+              //if ( colorIndex != Colors.BackgroundColor )
               {
                 // remember used color
                 usedColors.Add( colorIndex, 0 );
@@ -338,14 +344,34 @@ namespace C64Studio.Formats
               int colorTarget = 0;
               List<byte> keys = new List<byte>( usedColors.Keys );
 
+              /*
               // only one color, that means, the other was background -> force the same bit pattern
-              if ( usedColors.Count == 1 )
+              if ( ( usedColors.Count == 1 )
+              &&   ( usedColors[0] != Colors.BackgroundColor ) )
               {
                 colorTarget = 1;
                 firstColorIndex = Colors.BackgroundColor;
-              }
+              }*/
+
+              // check for overlaps - two colors are used that would map to the same target pattern?
+              Dictionary<int,ColorMappingTarget>       recommendedPattern = new Dictionary<int, ColorMappingTarget>();
+
+              numErrors += DetermineBestMapping( keys, x, y, ForceBitPattern, recommendedPattern, ErrornousBlocks );
+
               foreach ( byte colorIndex in keys )
               {
+                if ( recommendedPattern.ContainsKey( colorIndex ) )
+                {
+                  if ( recommendedPattern[colorIndex] == ColorMappingTarget.COLOR_1 )
+                  {
+                    colorTarget = 0;
+                  }
+                  else if ( recommendedPattern[colorIndex] == ColorMappingTarget.COLOR_2 )
+                  {
+                    colorTarget = 1;
+                  }
+                }
+
                 if ( colorTarget == 0 )
                 {
                   // upper screen char nibble
@@ -366,6 +392,14 @@ namespace C64Studio.Formats
 
                   screenChar.SetU8At( x + y * WidthChars, value );
                   usedColors[colorIndex] = 2;
+                }
+
+                if ( recommendedPattern.ContainsKey( colorIndex ) )
+                {
+                  if ( recommendedPattern[colorIndex] == ColorMappingTarget.COLOR_2 )
+                  {
+                    firstColorIndex = colorIndex;
+                  }
                 }
 
                 ++colorTarget;
@@ -414,12 +448,6 @@ namespace C64Studio.Formats
       bitmapData = new GR.Memory.ByteBuffer( (uint)( 8 * WidthChars * HeightChars ) );
 
       GR.Collections.Map<byte, ColorMappingTarget> usedColors = new GR.Collections.Map<byte, ColorMappingTarget>();
-
-      /*
-      ForceBitPattern = new Dictionary<int, byte>();
-      ForceBitPattern.Add( 4, 1 );
-      ForceBitPattern.Add( 1, 2 );
-      ForceBitPattern.Add( 3, 3 );*/
 
       for ( int y = 0; y < HeightChars; ++y )
       {
