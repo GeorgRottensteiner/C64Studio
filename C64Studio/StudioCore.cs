@@ -143,10 +143,13 @@ namespace C64Studio
         Doc.Invoke( new MainForm.DocCallback( ShowDocument ), new object[] { Doc } );
         return;
       }
+      if ( !Doc.IsActivated )
+      {
+        Doc.Activate();
+      }
       if ( !Doc.Visible )
       {
-        //Doc.Show();
-        Doc.Activate();
+        Doc.Show();
       }
       if ( Doc.Pane != null )
       {
