@@ -136,6 +136,7 @@ namespace C64Studio
       // 
       // editCharactersCount
       // 
+      this.editCharactersCount.Enabled = false;
       this.editCharactersCount.Location = new System.Drawing.Point(328, 5);
       this.editCharactersCount.Name = "editCharactersCount";
       this.editCharactersCount.Size = new System.Drawing.Size(56, 20);
@@ -144,6 +145,7 @@ namespace C64Studio
       // 
       // editCharactersFrom
       // 
+      this.editCharactersFrom.Enabled = false;
       this.editCharactersFrom.Location = new System.Drawing.Point(223, 5);
       this.editCharactersFrom.Name = "editCharactersFrom";
       this.editCharactersFrom.Size = new System.Drawing.Size(56, 20);

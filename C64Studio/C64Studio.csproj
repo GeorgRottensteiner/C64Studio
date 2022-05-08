@@ -239,6 +239,42 @@
     <Compile Include="Controls\ExportCharsetForms\ExportCharsetFormBase.Designer.cs">
       <DependentUpon>ExportCharsetFormBase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsImageFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsImageFile.Designer.cs">
+      <DependentUpon>ExportSpriteAsImageFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsImage.Designer.cs">
+      <DependentUpon>ExportSpriteAsImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsBinaryFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsBinaryFile.Designer.cs">
+      <DependentUpon>ExportSpriteAsBinaryFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsBASICData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsBASICData.Designer.cs">
+      <DependentUpon>ExportSpriteAsBASICData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsAssembly.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsAssembly.Designer.cs">
+      <DependentUpon>ExportSpriteAsAssembly.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportSpriteForms\ExportSpriteFormBase.Designer.cs">
+      <DependentUpon>ExportSpriteFormBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\HexBoxCharPETSCIIViewer.cs" />
     <Compile Include="Controls\HexBoxSpriteViewer.cs" />
     <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromBASIC.cs">
@@ -318,6 +354,42 @@
     </Compile>
     <Compile Include="Controls\ImportCharsetForms\ImportCharsetFormBase.Designer.cs">
       <DependentUpon>ImportCharsetFormBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromImageFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromImageFile.Designer.cs">
+      <DependentUpon>ImportSpriteFromImageFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromBinaryFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromBinaryFile.Designer.cs">
+      <DependentUpon>ImportSpriteFromBinaryFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromHEX.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromHEX.Designer.cs">
+      <DependentUpon>ImportSpriteFromHEX.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromBASICDATA.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromBASICDATA.Designer.cs">
+      <DependentUpon>ImportSpriteFromBASICDATA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromASM.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromASM.Designer.cs">
+      <DependentUpon>ImportSpriteFromASM.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFormBase.Designer.cs">
+      <DependentUpon>ImportSpriteFormBase.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ThemedButton.cs">
       <SubType>Component</SubType>
@@ -836,6 +908,24 @@
     <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetFormBase.resx">
       <DependentUpon>ExportCharsetFormBase.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteAsImageFile.resx">
+      <DependentUpon>ExportSpriteAsImageFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteAsImage.resx">
+      <DependentUpon>ExportSpriteAsImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteAsBinaryFile.resx">
+      <DependentUpon>ExportSpriteAsBinaryFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteAsBASICData.resx">
+      <DependentUpon>ExportSpriteAsBASICData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteAsAssembly.resx">
+      <DependentUpon>ExportSpriteAsAssembly.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteFormBase.resx">
+      <DependentUpon>ExportSpriteFormBase.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenFromBASIC.resx">
       <DependentUpon>ImportCharscreenFromBASIC.cs</DependentUpon>
     </EmbeddedResource>
@@ -874,6 +964,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFormBase.resx">
       <DependentUpon>ImportCharsetFormBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFromImageFile.resx">
+      <DependentUpon>ImportSpriteFromImageFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFromBinaryFile.resx">
+      <DependentUpon>ImportSpriteFromBinaryFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFromHEX.resx">
+      <DependentUpon>ImportSpriteFromHEX.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFromBASICDATA.resx">
+      <DependentUpon>ImportSpriteFromBASICDATA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFromASM.resx">
+      <DependentUpon>ImportSpriteFromASM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFormBase.resx">
+      <DependentUpon>ImportSpriteFormBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DlgPaletteEditor.resx">
       <DependentUpon>DlgPaletteEditor.cs</DependentUpon>

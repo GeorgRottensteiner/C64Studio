@@ -15,6 +15,7 @@ using RetroDevStudio;
 using RetroDevStudio.Types;
 using System.Linq;
 using C64Studio.Controls;
+using RetroDevStudio.Formats;
 
 namespace C64Studio
 {
@@ -45,13 +46,17 @@ namespace C64Studio
     private int                         m_AnimFramePos = 0;
     private int                         m_AnimFrameTicks = 0;
 
-    private int                         m_SpriteWidth = 24;
-    private int                         m_SpriteHeight = 21;
+    public int                          m_SpriteWidth = 24;
+    public int                          m_SpriteHeight = 21;
 
     private int                         m_SpriteEditorOrigWidth = -1;
     private int                         m_SpriteEditorOrigHeight = -1;
 
     private ColorSettingsBase           _ColorSettingsDlg = null;
+
+    private System.Drawing.Font         m_DefaultOutputFont = null;
+    private ExportSpriteFormBase        m_ExportForm = null;
+    private ImportSpriteFormBase        m_ImportForm = null;
 
 
 
@@ -63,6 +68,21 @@ namespace C64Studio
 
       m_IsSaveable = true;
       InitializeComponent();
+
+      m_DefaultOutputFont = editDataExport.Font;
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as assembly", typeof( ExportSpriteAsAssembly ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "as BASIC DATA statements", typeof( ExportSpriteAsBASICData ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to binary file", typeof( ExportSpriteAsBinaryFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image file", typeof( ExportSpriteAsImageFile ) ) );
+      comboExportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "to image (clipboard)", typeof( ExportSpriteAsImage ) ) );
+      comboExportMethod.SelectedIndex = 0;
+
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from assembly", typeof( ImportSpriteFromASM ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from BASIC DATA statements", typeof( ImportSpriteFromBASICDATA ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from HEX", typeof( ImportSpriteFromHEX ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from sprite set/binary file", typeof( ImportSpriteFromBinaryFile ) ) );
+      comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "from image file", typeof( ImportSpriteFromImageFile ) ) );
+      comboImportMethod.SelectedIndex = 0;
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
@@ -98,8 +118,6 @@ namespace C64Studio
 
       pictureEditor.PostPaint += new GR.Forms.FastPictureBox.PostPaintCallback( pictureEditor_PostPaint );
 
-      checkExportToDataIncludeRes.Checked = true;
-      checkExportToDataWrap.Checked = true;
       comboExportRange.Items.Add( "All" );
       comboExportRange.Items.Add( "Selection" );
       comboExportRange.Items.Add( "Range" );
@@ -577,7 +595,8 @@ namespace C64Studio
         editSpriteCount.Text = spritePad.NumSprites.ToString();
 
         if ( ( m_SpriteProject.ExportStartIndex != 0 )
-        ||   ( m_SpriteProject.ExportSpriteCount != 256 ) )
+        ||   ( ( m_SpriteProject.ExportSpriteCount != 256 )
+        &&     ( m_SpriteProject.ExportSpriteCount != 0 ) ) )
         {
           comboExportRange.SelectedIndex = 2;
         }
@@ -699,10 +718,11 @@ namespace C64Studio
       editSpriteFrom.Text = m_SpriteProject.ExportStartIndex.ToString();
       editSpriteCount.Text = m_SpriteProject.ExportSpriteCount.ToString();
       if ( ( m_SpriteProject.ExportStartIndex != 0 )
-      ||   ( m_SpriteProject.ExportSpriteCount != 256 ) )
+      ||   ( ( m_SpriteProject.ExportSpriteCount != 256 )
+      &&     ( m_SpriteProject.ExportSpriteCount != 0 ) ) )
       {
         comboExportRange.SelectedIndex = 2;
-      }
+      }      
 
       // re-add item (update tags)
       for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
@@ -935,89 +955,6 @@ namespace C64Studio
           break;
       }
       return exportIndices;
-    }
-
-
-
-    private void btnExportSprite_Click( object sender, EventArgs e )
-    {
-      var exportIndices = GetExportIndices();
-      if ( exportIndices.Count == 0 )
-      {
-        return;
-      }
-
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Export Sprites to";
-      saveDlg.Filter = "Sprites|*.spr|All Files|*.*";
-      saveDlg.FileName = m_SpriteProject.ExportFilename;
-      if ( DocumentInfo.Project != null )
-      {
-        saveDlg.InitialDirectory = DocumentInfo.Project.Settings.BasePath;
-      }
-      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-      {
-        return;
-      }
-      if ( m_SpriteProject.ExportFilename != saveDlg.FileName )
-      {
-        m_SpriteProject.ExportFilename = saveDlg.FileName;
-        Modified = true;
-      }
-
-      GR.Memory.ByteBuffer exportData = GatherExportData();
-      GR.IO.File.WriteAllBytes( m_SpriteProject.ExportFilename, exportData );
-    }
-
-
-
-    private void btnExportSpriteToData_Click( object sender, EventArgs e )
-    {
-      int wrapByteCount = GR.Convert.ToI32( editWrapByteCount.Text );
-      if ( wrapByteCount <= 0 )
-      {
-        wrapByteCount = 8;
-      }
-      string prefix = editPrefix.Text;
-
-      GR.Memory.ByteBuffer exportData = GatherExportData();
-
-      bool wrapData = checkExportToDataWrap.Checked;
-      bool prefixRes = checkExportToDataIncludeRes.Checked;
-      if ( !prefixRes )
-      {
-        prefix = "";
-      }
-
-      string line = Util.ToASMData( exportData, wrapData, wrapByteCount, prefix );
-      editDataExport.Text = line;
-    }
-
-
-
-    private void checkExportToDataWrap_CheckedChanged( object sender, EventArgs e )
-    {
-      editWrapByteCount.Enabled = checkExportToDataWrap.Checked;
-    }
-
-
-
-    private void checkExportToDataIncludeRes_CheckedChanged( object sender, EventArgs e )
-    {
-      editPrefix.Enabled = checkExportToDataIncludeRes.Checked;
-    }
-
-
-
-    private void btnImportSprite_Click( object sender, EventArgs e )
-    {
-      string filename;
-
-      if ( OpenFile( "Open sprite file", Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_SPRITE_SPRITEPAD + Types.Constants.FILEFILTER_ALL, out filename ) )
-      {
-        ImportSprites( filename, true, true );
-      }
     }
 
 
@@ -1286,44 +1223,7 @@ namespace C64Studio
 
 
 
-    private void btnExportSpriteToImage_Click( object sender, EventArgs e )
-    {
-      List<int> exportIndices = GetExportIndices();
-      if ( exportIndices.Count == 0 )
-      {
-        return;
-      }
-
-      System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
-
-      saveDlg.Title = "Export Sprites to Image";
-      saveDlg.Filter = "PNG File|*.png";
-      if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
-      {
-        return;
-      }
-
-      int     neededWidth = exportIndices.Count * m_SpriteWidth;
-      if ( neededWidth > 4 * m_SpriteWidth )
-      {
-        neededWidth = 4 * m_SpriteWidth;
-      }
-      int     neededHeight = ( exportIndices.Count + 3 ) / 4 + 1;
-      neededHeight *= m_SpriteHeight;
-
-      GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, m_SpriteProject.Sprites[0].Tile.Image.PixelFormat );
-
-      for ( int i = 0; i < exportIndices.Count; ++i )
-      {
-        m_SpriteProject.Sprites[exportIndices[i]].Tile.Image.DrawTo( targetImg, ( i % 4 ) * m_SpriteWidth, ( i / 4 ) * m_SpriteHeight );
-      }
-      System.Drawing.Bitmap bmpTarget = targetImg.GetAsBitmap();
-      bmpTarget.Save( saveDlg.FileName, System.Drawing.Imaging.ImageFormat.Png );
-    }
-
-
-
-    private bool ImportSprite( GR.Image.FastImage Image, int SpriteIndex )
+    public bool ImportSprite( GR.Image.FastImage Image, int SpriteIndex )
     {
       m_ImportError = "";
       /*
@@ -1549,72 +1449,6 @@ namespace C64Studio
       RebuildSpriteImage( SpriteIndex );
 
       return true;
-    }
-
-
-
-    private void btnImportFromImage_Click( object sender, EventArgs e )
-    {
-      string filename;
-
-      if ( !OpenFile( "Import Sprites from Image", C64Studio.Types.Constants.FILEFILTER_IMAGE_FILES, out filename ) )
-      {
-        return;
-      }
-
-      GR.Image.FastImage spriteImage;
-
-      var mcSettings = new ColorSettings( m_SpriteProject.Colors );
-
-      var importType = Types.GraphicType.SPRITES;
-      if ( m_SpriteProject.Mode == SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS )
-      {
-        importType = GraphicType.SPRITES_16_COLORS;
-      }
-
-      bool pasteAsBlock = false;
-      if ( !Core.MainForm.ImportImage( filename, null, importType, mcSettings, out spriteImage, out mcSettings, out pasteAsBlock ) )
-      {
-        return;
-      }
-
-      bool firstUndoStep = true;
-
-      m_SpriteProject.Colors.BackgroundColor = mcSettings.BackgroundColor;
-      m_SpriteProject.Colors.MultiColor1 = mcSettings.MultiColor1;
-      m_SpriteProject.Colors.MultiColor2 = mcSettings.MultiColor2;
-      if ( mcSettings.Palettes.Count > m_SpriteProject.Colors.Palettes.Count )
-      {
-        // a palette was imported!
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ), firstUndoStep );
-        firstUndoStep = false;
-
-        _ColorSettingsDlg.PalettesChanged();
-        m_SpriteProject.Colors.Palettes.Add( mcSettings.Palettes[mcSettings.Palettes.Count - 1] );
-      }
-
-      ChangeColorSettingsDialog();
-
-      int   currentSpriteIndex = 0;
-      int   curX = 0;
-      int   curY = 0;
-      while ( curY + m_SpriteHeight <= spriteImage.Height )
-      {
-        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, currentSpriteIndex ), firstUndoStep );
-
-        ImportSprite( spriteImage.GetImage( curX, curY, m_SpriteWidth, m_SpriteHeight ) as GR.Image.FastImage, currentSpriteIndex );
-
-        ++currentSpriteIndex;
-        curX += m_SpriteWidth;
-        if ( curX >= spriteImage.Width )
-        {
-          curX = 0;
-          curY += m_SpriteHeight;
-        }
-      }
-      panelSprites.Invalidate();
-      pictureEditor.Invalidate();
-      Modified = true;
     }
 
 
@@ -2677,42 +2511,6 @@ namespace C64Studio
 
 
 
-    private void btnImportFromHex_Click( object sender, EventArgs e )
-    {
-      string    binaryText = editDataImport.Text.Replace( " ", "" ).Replace( "\r", "" ).Replace( "\n", "" );
-
-      GR.Memory.ByteBuffer    data = new GR.Memory.ByteBuffer( binaryText );
-
-      int numSprites = ( (int)data.Length + 63 ) / 64;
-      for ( int i = 0; i < numSprites; ++i )
-      {
-        var tempBuffer = new GR.Memory.ByteBuffer( 64 );
-
-        int     numBytesToCopy = 64;
-        if ( i * 64 + numBytesToCopy > (int)data.Length )
-        {
-          numBytesToCopy = (int)data.Length - i * 64;
-        }
-        data.CopyTo( tempBuffer, i * 64, numBytesToCopy );
-
-
-        if ( i < m_SpriteProject.Sprites.Count )
-        {
-          DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ), i == 0 );
-
-          tempBuffer.CopyTo( m_SpriteProject.Sprites[i].Tile.Data, 0, 63 );
-          m_SpriteProject.Sprites[i].Tile.CustomColor = ( tempBuffer.ByteAt( 63 ) & 0xf );
-          RebuildSpriteImage( i );
-        }
-      }
-
-      panelSprites.Invalidate();
-      pictureEditor.Invalidate();
-      Modified = true;
-    }
-
-
-
     public void ReplaceSpriteColors( ColorType Color1, ColorType Color2 )
     {
       foreach ( var spriteIndex in panelSprites.SelectedIndices )
@@ -2756,42 +2554,7 @@ namespace C64Studio
 
 
 
-    private void btnExportToBASICData_Click( object sender, EventArgs e )
-    {
-      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
-      if ( ( startLine < 0 )
-      ||   ( startLine > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
-      if ( ( lineOffset < 0 )
-      ||   ( lineOffset > 63999 ) )
-      {
-        startLine = 10;
-      }
-
-      GR.Memory.ByteBuffer exportData = GatherExportData();
-      if ( checkExportToDataWrap.Checked )
-      {
-        editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset, GR.Convert.ToI32( editWrapByteCount.Text ), 0 );
-      }
-      else
-      {
-        editDataExport.Text = Util.ToBASICData( exportData, startLine, lineOffset, 80, 0 );
-      }
-    }
-
-
-
-    private void btnImportFromASM_Click( object sender, EventArgs e )
-    {
-      ImportFromData( Util.FromASMData( editDataImport.Text ) );
-    }
-
-
-
-    private void ImportFromData( ByteBuffer SpriteData )
+    public void ImportFromData( ByteBuffer SpriteData )
     {
       if ( SpriteData == null )
       {
@@ -2828,14 +2591,6 @@ namespace C64Studio
 
       saveSpriteProjectToolStripMenuItem.Enabled = true;
       closeCharsetProjectToolStripMenuItem.Enabled = true;
-    }
-
-
-
-    private void btnImportFromBASIC_Click( object sender, EventArgs e )
-    {
-      ImportFromData( Util.FromBASIC( editDataImport.Text ) );
-      Modified = true;
     }
 
 
@@ -2941,35 +2696,6 @@ namespace C64Studio
 
 
 
-    private void btnExportToBASICHexData_Click( object sender, EventArgs e )
-    {
-      GR.Memory.ByteBuffer exportData = GatherExportData();
-
-      int startLine = GR.Convert.ToI32( editExportBASICLineNo.Text );
-
-      if ( ( startLine < 0 )
-      ||   ( startLine > 63999 ) )
-      {
-        startLine = 10;
-      }
-      int lineOffset = GR.Convert.ToI32( editExportBASICLineOffset.Text );
-      if ( ( lineOffset < 0 )
-      ||   ( lineOffset > 63999 ) )
-      {
-        startLine = 10;
-      }
-      if ( checkExportToDataWrap.Checked )
-      {
-        editDataExport.Text = Util.ToBASICHexData( exportData, startLine, lineOffset, GR.Convert.ToI32( editWrapByteCount.Text ), 0 );
-      }
-      else
-      {
-        editDataExport.Text = Util.ToBASICHexData( exportData, startLine, lineOffset );
-      }
-    }
-
-
-
     private ByteBuffer GatherExportData()
     {
       GR.Memory.ByteBuffer exportData = new GR.Memory.ByteBuffer();
@@ -2987,33 +2713,6 @@ namespace C64Studio
         exportData.AppendU8( color );
       }
       return exportData;
-    }
-
-
-
-    private void btnImportFromBASICHex_Click( object sender, EventArgs e )
-    {
-      ImportFromData( Util.FromBASICHex( editDataImport.Text ) );
-      Modified = true;
-    }
-
-
-
-    private void editDataImport_KeyPress( object sender, KeyPressEventArgs e )
-    {
-      if ( ( System.Windows.Forms.Control.ModifierKeys == Keys.Control )
-      &&   ( e.KeyChar == 1 ) )
-      {
-        editDataImport.SelectAll();
-        e.Handled = true;
-      }
-    }
-
-
-
-    private void btnClear_Click( object sender, EventArgs e )
-    {
-      editDataImport.Clear();
     }
 
 
@@ -3353,7 +3052,7 @@ namespace C64Studio
 
 
 
-    private void ChangeColorSettingsDialog()
+    public void ChangeColorSettingsDialog()
     {
       if ( _ColorSettingsDlg != null )
       {
@@ -3671,6 +3370,92 @@ namespace C64Studio
       }
       SpriteChanged( m_CurrentSprite );
       SetModified();
+    }
+
+
+
+    private void comboExportMethod_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( m_ExportForm != null )
+      {
+        m_ExportForm.Dispose();
+        m_ExportForm = null;
+      }
+
+      editDataExport.Text = "";
+      editDataExport.Font = m_DefaultOutputFont;
+
+      var item = (GR.Generic.Tupel<string, Type>)comboExportMethod.SelectedItem;
+      if ( ( item == null )
+      || ( item.second == null ) )
+      {
+        return;
+      }
+      m_ExportForm = (ExportSpriteFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
+      m_ExportForm.Parent = panelExport;
+      m_ExportForm.CreateControl();
+    }
+
+
+    private void btnExport_Click( object sender, EventArgs e )
+    {
+      List<int> exportIndices = GetExportIndices();
+
+      var exportInfo = new ExportSpriteInfo()
+      {
+        Project         = m_SpriteProject,
+        ExportData      = GatherExportData(),
+        ExportIndices   = exportIndices
+      };
+
+      editDataExport.Text = "";
+      editDataExport.Font = m_DefaultOutputFont;
+      m_ExportForm.HandleExport( exportInfo, editDataExport, DocumentInfo );
+    }
+
+
+
+    private void comboImportMethod_SelectedIndexChanged( object sender, EventArgs e )
+    {
+      if ( m_ImportForm != null )
+      {
+        m_ImportForm.Dispose();
+        m_ImportForm = null;
+      }
+
+      var item = (GR.Generic.Tupel<string, Type>)comboImportMethod.SelectedItem;
+      if ( ( item == null )
+      || ( item.second == null ) )
+      {
+        return;
+      }
+      m_ImportForm = (ImportSpriteFormBase)Activator.CreateInstance( item.second, new object[] { Core } );
+      m_ImportForm.Parent = panelImport;
+      m_ImportForm.Size = panelImport.ClientSize;
+      m_ImportForm.CreateControl();
+    }
+
+
+
+    private void btnImport_Click( object sender, EventArgs e )
+    {
+      var undos = new List<Undo.UndoTask>();
+
+      for ( int i = 0; i < m_SpriteProject.TotalNumberOfSprites; ++i )
+      {
+        undos.Add( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, i ) );
+      }
+      undos.Add( new Undo.UndoSpritesetValuesChange( this, m_SpriteProject ) );
+
+      if ( m_ImportForm.HandleImport( m_SpriteProject, this ) )
+      {
+        DocumentInfo.UndoManager.StartUndoGroup();
+        foreach ( var undo in undos )
+        {
+          DocumentInfo.UndoManager.AddUndoTask( undo, false );
+        }
+        SetModified();
+      }
     }
 
 
