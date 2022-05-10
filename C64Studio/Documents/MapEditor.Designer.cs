@@ -489,7 +489,7 @@
       // btnCopyMapImage
       // 
       this.btnCopyMapImage.Image = global::C64Studio.Properties.Resources.edit_copy;
-      this.btnCopyMapImage.Location = new System.Drawing.Point(632, 432);
+      this.btnCopyMapImage.Location = new System.Drawing.Point(357, 432);
       this.btnCopyMapImage.Name = "btnCopyMapImage";
       this.btnCopyMapImage.Size = new System.Drawing.Size(39, 24);
       this.btnCopyMapImage.TabIndex = 38;
@@ -556,7 +556,7 @@
       // 
       // labelEditInfo
       // 
-      this.labelEditInfo.Location = new System.Drawing.Point(681, 433);
+      this.labelEditInfo.Location = new System.Drawing.Point(406, 433);
       this.labelEditInfo.Name = "labelEditInfo";
       this.labelEditInfo.Size = new System.Drawing.Size(265, 23);
       this.labelEditInfo.TabIndex = 32;
