@@ -7190,6 +7190,65 @@ namespace C64Studio.Parser
 
 
 
+    private ParseLineResult PONoWarning( List<TokenInfo> TokenInfos, ref int lineIndex, ref string[] Lines )
+    {
+      var plResult = ParseLineInParameters( TokenInfos, 1, TokenInfos.Count - 1, lineIndex, out List<List<TokenInfo>> lineParams );
+      if ( plResult != ParseLineResult.OK )
+      {
+        return plResult;
+      }
+      foreach ( var warning in lineParams )
+      {
+        if ( ( warning.Count != 1 )
+        || ( warning[0].Type != TokenInfo.TokenType.LABEL_GLOBAL )
+        || ( warning[0].Length != 5 )
+        || ( ( warning[0].Content[0] != 'W' )
+        && ( warning[0].Content[0] != 'w' ) ) )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed warning number, expect warning value in line " + ( lineIndex + 1 ) );
+          return ParseLineResult.RETURN_NULL;
+        }
+        string warningText = warning[0].Content.ToUpper();
+
+        var warningEnums = System.Enum.GetNames( typeof( ErrorCode ) );
+        var warningValues = System.Enum.GetValues( typeof( ErrorCode ) );
+        int index = 0;
+        bool foundWarning = false;
+        foreach ( var warningEnum in warningEnums )
+        {
+          if ( warningEnum.Length < 5 )
+          {
+            ++index;
+            continue;
+          }
+          if ( warningText == warningEnum.Substring( 0, 5 ) )
+          {
+            var actualWarning = (ErrorCode)warningValues.GetValue( index );
+
+            if ( ( (int)actualWarning <= (int)ErrorCode.WARNING_START )
+            || ( (int)actualWarning >= (int)ErrorCode.WARNING_LAST_PLUS_ONE ) )
+            {
+              AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, $"Malformed warning number, {warning[0].Content} is not a known warning code in line " + ( lineIndex + 1 ) );
+              return ParseLineResult.RETURN_NULL;
+            }
+            m_WarningsToIgnore.Add( actualWarning );
+            foundWarning = true;
+            break;
+          }
+          ++index;
+        }
+        if ( !foundWarning )
+        {
+          AddError( lineIndex, Types.ErrorCode.E1000_SYNTAX_ERROR, $"Malformed warning number, {warning[0].Content} is not a known warning code in line " + ( lineIndex + 1 ) );
+          return ParseLineResult.RETURN_NULL;
+        }
+
+      }
+      return ParseLineResult.CALL_CONTINUE;
+    }
+
+
+
     private string BuildFullPath( string ParentPath, string SubFilename )
     {
       if ( System.IO.Path.IsPathRooted( SubFilename ) )
@@ -8780,6 +8839,19 @@ namespace C64Studio.Parser
             if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.END_OF_FILE )
             {
               break;
+            }
+            else if ( pseudoOp.Type == C64Studio.Types.MacroInfo.PseudoOpType.NO_WARNING )
+            {
+              ParseLineResult   plResult = PONoWarning( lineTokenInfos, ref lineIndex, ref Lines );
+              if ( plResult == ParseLineResult.RETURN_NULL )
+              {
+                HadFatalError = true;
+                return Lines;
+              }
+              else if ( plResult == ParseLineResult.CALL_CONTINUE )
+              {
+                continue;
+              }
             }
             else if ( pseudoOp.Type == C64Studio.Types.MacroInfo.PseudoOpType.TRACE )
             {
@@ -13234,16 +13306,18 @@ namespace C64Studio.Parser
             {
               //Debug.Log( "block overlap! " + builtSegments[i].first + "," + builtSegments[i].second.Length + " <> " + builtSegments[j].first + "," + builtSegments[j].second.Length );
               var message = AddSevereWarning( builtSegments[i].second.GlobalLineIndex, Types.ErrorCode.W0001_SEGMENT_OVERLAP, "Segment starts inside another one, overwriting it" );
-
-              message.AddMessage( "  overlapping block starts in " + builtSegments[j].second.Filename + " at line " + ( builtSegments[j].second.LocalLineIndex + 1 ),
-                                  builtSegments[j].second.Filename,
-                                  builtSegments[j].second.LocalLineIndex );
-              message.AddMessage( "  first block from $" + builtSegments[i].second.StartAddress.ToString( "X4" ) + " to $" + ( builtSegments[i].second.StartAddress + builtSegments[i].second.Length - 1 ).ToString( "X4" ),
-                                  builtSegments[i].second.Filename,
-                                  builtSegments[i].second.LocalLineIndex );
-              message.AddMessage( "  second block from $" + builtSegments[j].second.StartAddress.ToString( "X4" ) + " to $" + ( builtSegments[j].second.StartAddress + builtSegments[j].second.Length - 1 ).ToString( "X4" ),
-                                  builtSegments[j].second.Filename,
-                                  builtSegments[j].second.LocalLineIndex );
+              if ( message != null )
+              {
+                message.AddMessage( "  overlapping block starts in " + builtSegments[j].second.Filename + " at line " + ( builtSegments[j].second.LocalLineIndex + 1 ),
+                                    builtSegments[j].second.Filename,
+                                    builtSegments[j].second.LocalLineIndex );
+                message.AddMessage( "  first block from $" + builtSegments[i].second.StartAddress.ToString( "X4" ) + " to $" + ( builtSegments[i].second.StartAddress + builtSegments[i].second.Length - 1 ).ToString( "X4" ),
+                                    builtSegments[i].second.Filename,
+                                    builtSegments[i].second.LocalLineIndex );
+                message.AddMessage( "  second block from $" + builtSegments[j].second.StartAddress.ToString( "X4" ) + " to $" + ( builtSegments[j].second.StartAddress + builtSegments[j].second.Length - 1 ).ToString( "X4" ),
+                                    builtSegments[j].second.Filename,
+                                    builtSegments[j].second.LocalLineIndex );
+              }
             }
           }
         }
@@ -15661,6 +15735,30 @@ namespace C64Studio.Parser
       }
       return "";
     }
+
+
+
+    public new ParseMessage AddWarning( int Line, Types.ErrorCode Code, string Text, int CharIndex, int Length )
+    {
+      if ( m_WarningsToIgnore.Contains( Code ) )
+      {
+        return null;
+      }
+      return base.AddWarning( Line, Code, Text, CharIndex, Length );
+    }
+
+
+
+    public new ParseMessage AddSevereWarning( int Line, Types.ErrorCode Code, string Text )
+    {
+      if ( m_WarningsToIgnore.Contains( Code ) )
+      {
+        return null;
+      }
+      return base.AddSevereWarning( Line, Code, Text );
+    }
+
+
 
   }
 }
