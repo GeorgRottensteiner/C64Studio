@@ -8,18 +8,18 @@ using System.Windows.Forms;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class PropBuildEventScript : PropertyTabs.PropertyTabBase
   {
     ProjectElement        Element;
     StudioCore            Core;
-    C64Studio.ProjectElement.PerConfigSettings            Settings;
-    C64Studio.ProjectElement.PerConfigSettings.BuildEvent Event;
+    RetroDevStudio.ProjectElement.PerConfigSettings            Settings;
+    RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent Event;
 
 
 
-    public PropBuildEventScript( ProjectElement Element, StudioCore Core, C64Studio.ProjectElement.PerConfigSettings Settings, C64Studio.ProjectElement.PerConfigSettings.BuildEvent Event )
+    public PropBuildEventScript( ProjectElement Element, StudioCore Core, RetroDevStudio.ProjectElement.PerConfigSettings Settings, RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent Event )
     {
       this.Element = Element;
       this.Core = Core;

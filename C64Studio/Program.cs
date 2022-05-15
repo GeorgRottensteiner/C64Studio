@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   static class Program
   {

@@ -1,11 +1,11 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class Solution
   {

@@ -13,7 +13,7 @@ namespace MediaTool
         return 1;
       }
 
-      var charsetProject = new C64Studio.Formats.CharsetProject();
+      var charsetProject = new RetroDevStudio.Formats.CharsetProject();
 
       if ( !charsetProject.ReadFromBuffer( GR.IO.File.ReadAllBytes( ArgParser.Parameter( "CHARSETPROJECT" ) ) ) )
       {

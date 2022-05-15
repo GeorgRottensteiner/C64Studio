@@ -7,10 +7,10 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using GR.Memory;
-using C64Studio.Types;
+using RetroDevStudio.Types;
 using GR.Image;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class DebugRegisters : BaseDocument
   {

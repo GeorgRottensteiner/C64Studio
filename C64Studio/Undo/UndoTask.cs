@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Undo
+namespace RetroDevStudio.Undo
 {
   public abstract class UndoTask
   {

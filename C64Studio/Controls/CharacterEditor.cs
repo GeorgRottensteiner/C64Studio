@@ -6,13 +6,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using C64Studio.Formats;
+using RetroDevStudio.Formats;
 using GR.Image;
 using RetroDevStudio;
 using RetroDevStudio.Types;
-using C64Studio.Types;
 
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   public partial class CharacterEditor : UserControl
   {
@@ -307,9 +306,9 @@ namespace C64Studio.Controls
           System.Windows.Forms.MessageBox.Show( "No image on clipboard" );
           return;
         }
-        if ( dataObj.GetDataPresent( "C64Studio.ImageList" ) )
+        if ( dataObj.GetDataPresent( "RetroDevStudio.ImageList" ) )
         {
-          System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "C64Studio.ImageList" );
+          System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.ImageList" );
 
           GR.Memory.ByteBuffer spriteData = new GR.Memory.ByteBuffer( (uint)ms.Length );
 
@@ -2539,7 +2538,7 @@ namespace C64Studio.Controls
       int[]   charMapOldToNew = new int[256];
 
       // resorts characters by category
-      List<Formats.CharData>    newList = new List<C64Studio.Formats.CharData>();
+      List<Formats.CharData>    newList = new List<RetroDevStudio.Formats.CharData>();
       for ( int j = 0; j < m_Project.Categories.Count; ++j )
       {
         for ( int i = 0; i < 256; ++i )
@@ -2577,7 +2576,7 @@ namespace C64Studio.Controls
       int catTarget = GR.Convert.ToI32( editCollapseIndex.Text );
       int catTargetStart = catTarget;
 
-      List<Formats.CharData> newList = new List<C64Studio.Formats.CharData>();
+      List<Formats.CharData> newList = new List<RetroDevStudio.Formats.CharData>();
 
       int[]   charMapNewToOld = new int[256];
       int[]   charMapOldToNew = new int[256];

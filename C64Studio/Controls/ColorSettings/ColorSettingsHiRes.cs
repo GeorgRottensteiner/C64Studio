@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   public partial class ColorSettingsHiRes : ColorSettingsBase
   {

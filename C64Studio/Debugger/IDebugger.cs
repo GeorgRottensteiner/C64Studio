@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public enum DebuggerFeature
   {

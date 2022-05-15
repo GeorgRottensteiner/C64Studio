@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class FormWizard : Form
   {

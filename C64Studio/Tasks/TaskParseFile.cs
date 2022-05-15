@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Tasks
+namespace RetroDevStudio.Tasks
 {
   /// <summary>
   /// preparses a single file (without project) and populates hover and label info
@@ -35,7 +35,7 @@ namespace C64Studio.Tasks
       {
         Parser.ASMFileParser parser = new Parser.ASMFileParser();
 
-        var compileConfig = new C64Studio.Parser.CompileConfig();
+        var compileConfig = new RetroDevStudio.Parser.CompileConfig();
         if ( m_Document.Element != null )
         {
           compileConfig.Assembler = m_Document.Element.AssemblerType;
@@ -50,7 +50,7 @@ namespace C64Studio.Tasks
 
         parser.ParseFile( m_Document.FullPath, sourceCode, m_Configuration, compileConfig, null );
 
-        if ( ( compileConfig.Assembler != C64Studio.Types.AssemblerType.AUTO )
+        if ( ( compileConfig.Assembler != RetroDevStudio.Types.AssemblerType.AUTO )
         && ( m_Document.BaseDoc != null )
         && ( m_Document.Element != null ) )
         {
@@ -80,7 +80,7 @@ namespace C64Studio.Tasks
           ( (Parser.BasicFileParser)parser ).Settings.UpperCaseMode = !( (SourceBasicEx)m_Document.BaseDoc ).m_LowerCaseMode;
         }
 
-        var compileConfig = new C64Studio.Parser.CompileConfig();
+        var compileConfig = new RetroDevStudio.Parser.CompileConfig();
         if ( m_Document.Element != null )
         {
           compileConfig.Assembler = m_Document.Element.AssemblerType;

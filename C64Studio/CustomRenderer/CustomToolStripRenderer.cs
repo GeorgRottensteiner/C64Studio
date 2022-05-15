@@ -5,7 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio.CustomRenderer
+namespace RetroDevStudio.CustomRenderer
 {
   class LightThemeColorTable : ProfessionalColorTable
   {

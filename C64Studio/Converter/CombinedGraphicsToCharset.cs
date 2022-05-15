@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Converter
+namespace RetroDevStudio.Converter
 {
   public class CombinedGraphicsToCharset
   {
@@ -338,11 +338,11 @@ namespace C64Studio.Converter
 
     public void ConvertScreens( string BasePath, List<string> ProjectFiles )
     {
-      var projects = new List<C64Studio.Formats.GraphicScreenProject>();
+      var projects = new List<RetroDevStudio.Formats.GraphicScreenProject>();
 
       foreach ( var file in ProjectFiles )
       {
-        var project = new C64Studio.Formats.GraphicScreenProject();
+        var project = new RetroDevStudio.Formats.GraphicScreenProject();
 
         project.ReadFromBuffer( GR.IO.File.ReadAllBytes( file ) );
 
@@ -360,7 +360,7 @@ namespace C64Studio.Converter
 
       for ( int i = 0; i < numChars; ++i )
       {
-        m_Chars.Add( new C64Studio.Formats.CharData() );
+        m_Chars.Add( new RetroDevStudio.Formats.CharData() );
       }
 
       int     curCharOffset = 0;
@@ -395,7 +395,7 @@ namespace C64Studio.Converter
         foreach ( var project in projects )
         {
           // create screens from graphic
-          var screen = new C64Studio.Formats.CharsetScreenProject();
+          var screen = new RetroDevStudio.Formats.CharsetScreenProject();
 
           int blockWidth = ( ( project.Image.Width + 7 ) / 8 );
           int blockHeight = ( ( project.Image.Height + 7 ) / 8 );
@@ -419,7 +419,7 @@ namespace C64Studio.Converter
               screen.CharSet.Colors.BackgroundColor = project.Colors.BackgroundColor;
             }
           }
-          screen.CharSet = new C64Studio.Formats.CharsetProject();
+          screen.CharSet = new RetroDevStudio.Formats.CharsetProject();
           screen.CharSet.Colors.BackgroundColor = project.Colors.BackgroundColor;
           screen.CharSet.Colors.MultiColor1 = project.Colors.MultiColor1;
           screen.CharSet.Colors.MultiColor2 = project.Colors.MultiColor2;

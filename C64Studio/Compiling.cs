@@ -1,11 +1,11 @@
 ﻿using C64Models.BASIC;
-using C64Studio.Types;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class Compiling
   {
@@ -21,8 +21,8 @@ namespace C64Studio
     public GR.Collections.Set<string> m_RebuiltBuildConfigFiles = new GR.Collections.Set<string>();
 
 
-    public Parser.ASMFileParser       ParserASM = new C64Studio.Parser.ASMFileParser();
-    public Parser.BasicFileParser     ParserBasic = new C64Studio.Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
+    public Parser.ASMFileParser       ParserASM = new RetroDevStudio.Parser.ASMFileParser();
+    public Parser.BasicFileParser     ParserBasic = new RetroDevStudio.Parser.BasicFileParser( new Parser.BasicFileParser.ParserSettings() );
 
     public Dictionary<string,Dialect> BASICDialects = new Dictionary<string, Dialect>();
 
@@ -414,11 +414,11 @@ namespace C64Studio
     {
       if ( Document.DocumentInfo.Project != null )
       {
-        Core.MainForm.AddTask( new C64Studio.Tasks.TaskParseFile( Document.DocumentInfo, Document.DocumentInfo.Project.Settings.CurrentConfig ) );
+        Core.MainForm.AddTask( new RetroDevStudio.Tasks.TaskParseFile( Document.DocumentInfo, Document.DocumentInfo.Project.Settings.CurrentConfig ) );
       }
       else
       {
-        Core.MainForm.AddTask( new C64Studio.Tasks.TaskParseFile( Document.DocumentInfo, null ) );
+        Core.MainForm.AddTask( new RetroDevStudio.Tasks.TaskParseFile( Document.DocumentInfo, null ) );
       }
     }
 

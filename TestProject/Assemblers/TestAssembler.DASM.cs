@@ -12,13 +12,13 @@ namespace TestProject
 LABEL
                              dc.b  1,2,3,4,5,6,7,8";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.PDS );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.PDS );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.DASM;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.DASM;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -27,8 +27,8 @@ LABEL
       var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( 1, parser.Warnings );
-      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.W1000_UNUSED_LABEL, parser.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1000_UNUSED_LABEL, parser.Messages.Values[0].Code );
 
       Assert.AreEqual( "00200102030405060708", assembly.Assembly.ToString() );
     }
@@ -44,13 +44,13 @@ LABEL
                         +  "  inc $d000\r\n"
                         +  "  jmp .locallabel";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.DASM );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.DASM );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.DASM;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.DASM;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -59,8 +59,8 @@ LABEL
       var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( 1, parser.Warnings );
-      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.W1000_UNUSED_LABEL, parser.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W1000_UNUSED_LABEL, parser.Messages.Values[0].Code );
 
       Assert.AreEqual( "0020EE00D04C0020", assembly.Assembly.ToString() );
     }

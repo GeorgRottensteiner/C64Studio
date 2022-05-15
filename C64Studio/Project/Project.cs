@@ -1,13 +1,13 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
-using static C64Studio.Parser.BasicFileParser;
+using static RetroDevStudio.Parser.BasicFileParser;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class Project
   {
@@ -453,7 +453,7 @@ namespace C64Studio
                   perConfigSetting.CustomBuild  = memSubChunk.ReadString();
                   perConfigSetting.PostBuild    = memSubChunk.ReadString();
                   perConfigSetting.DebugFile    = memSubChunk.ReadString();
-                  perConfigSetting.DebugFileType = (C64Studio.Types.CompileTargetType)memSubChunk.ReadInt32();
+                  perConfigSetting.DebugFileType = (RetroDevStudio.Types.CompileTargetType)memSubChunk.ReadInt32();
 
                   perConfigSetting.PreBuildChain.Active = ( memSubChunk.ReadInt32() == 1 );
                   int numEntries = memSubChunk.ReadInt32();
@@ -488,7 +488,7 @@ namespace C64Studio
 
               uint  flags = memChunk.ReadUInt32();
               element.IsShown     = ( ( flags & 1 ) != 0 );
-              element.AssemblerType = (C64Studio.Types.AssemblerType)memChunk.ReadUInt32();
+              element.AssemblerType = (RetroDevStudio.Types.AssemblerType)memChunk.ReadUInt32();
 
               int hierarchyPartCount = memChunk.ReadInt32();
               for ( int i = 0; i < hierarchyPartCount; ++i )
@@ -669,8 +669,8 @@ namespace C64Studio
             Core.MainForm.m_SolutionExplorer.HighlightNode( element.Node );
           }
 
-          Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED, element.DocumentInfo ) );
-          Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_CREATED, element ) );
+          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED, element.DocumentInfo ) );
+          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_CREATED, element ) );
         }
       }
 
@@ -778,8 +778,8 @@ namespace C64Studio
       }
       Element.Document.Select();
       Element.IsShown = true;
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_OPENED, Element.DocumentInfo ) );
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_OPENED, Element ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_OPENED, Element.DocumentInfo ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_OPENED, Element ) );
 
       return Element.Document;
     }

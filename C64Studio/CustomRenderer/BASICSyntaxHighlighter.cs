@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace C64Studio.CustomRenderer
+
+
+namespace RetroDevStudio.CustomRenderer
 {
   class BASICSyntaxHighlighter : FastColoredTextBoxNS.SyntaxHighlighter
   {

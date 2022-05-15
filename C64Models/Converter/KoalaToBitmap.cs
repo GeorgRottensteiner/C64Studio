@@ -3,7 +3,7 @@ using System;
 
 
 
-namespace C64Studio.Converter
+namespace RetroDevStudio.Converter
 {
   class KoalaToBitmap
   {

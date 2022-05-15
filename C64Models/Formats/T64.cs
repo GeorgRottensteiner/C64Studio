@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   public class T64 : MediaFormat
   {
@@ -63,7 +63,7 @@ namespace C64Studio.Formats
     public class FileRecord
     {
       public byte     EntryType = 0;
-      public C64Studio.Types.FileType C64FileType = C64Studio.Types.FileType.SCRATCHED;
+      public Types.FileType C64FileType = Types.FileType.SCRATCHED;
       public ushort   StartAddress = 0;
       public ushort   EndAddress = 0;
       public ushort   Filler = 0;
@@ -237,18 +237,18 @@ namespace C64Studio.Formats
 
 
 
-    public override List<C64Studio.Types.FileInfo> Files()
+    public override List<RetroDevStudio.Types.FileInfo> Files()
     {
       _LastError = "";
 
-      List<C64Studio.Types.FileInfo> files = new List<C64Studio.Types.FileInfo>();
+      var files = new List<RetroDevStudio.Types.FileInfo>();
       int dirEntryIndex = 0;
 
       foreach ( FileRecord file in FileRecords )
       {
         if ( file.EntryType == 1 )
         {
-          C64Studio.Types.FileInfo info = new C64Studio.Types.FileInfo();
+          var info = new Types.FileInfo();
 
           info.Filename = file.Filename;
           info.Blocks   = ( file.EndAddress - file.StartAddress ) / 254 + 1;
@@ -353,7 +353,7 @@ namespace C64Studio.Formats
           entryPos += 32;
           continue;
         }
-        file.C64FileType = (C64Studio.Types.FileType)data.ByteAt( entryPos + 1 );
+        file.C64FileType = (Types.FileType)data.ByteAt( entryPos + 1 );
         file.StartAddress = data.UInt16At( entryPos + 2 );
         file.EndAddress   = data.UInt16At( entryPos + 4 );
         file.FileOffset   = data.UInt32At( entryPos + 8 );
@@ -382,8 +382,8 @@ namespace C64Studio.Formats
     public override Types.FileInfo LoadFile( GR.Memory.ByteBuffer Filename )
     {
       _LastError = "";
-      int             fileIndex = 0;
-      Types.FileInfo  fileInfo = new C64Studio.Types.FileInfo();
+      int    fileIndex = 0;
+      var    fileInfo = new Types.FileInfo();
       foreach ( FileRecord file in FileRecords )
       {
         if ( file.EntryType == 1 )
@@ -396,7 +396,7 @@ namespace C64Studio.Formats
 
             fileInfo.Data = exportData;
             fileInfo.Filename = new GR.Memory.ByteBuffer( file.Filename );
-            fileInfo.Type = C64Studio.Types.FileType.PRG;
+            fileInfo.Type = Types.FileType.PRG;
             return fileInfo;
           }
         }
@@ -408,7 +408,7 @@ namespace C64Studio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, C64Studio.Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
     {
       _LastError = "";
 
@@ -420,7 +420,7 @@ namespace C64Studio.Formats
           // free slot found
           file.EntryType    = 1;
           file.C64FileType  = Type;
-          if ( Type == C64Studio.Types.FileType.PRG )
+          if ( Type == Types.FileType.PRG )
           {
             file.StartAddress = Content.UInt16At( 0 );
             if ( Content.Length < 2 )
@@ -483,7 +483,7 @@ namespace C64Studio.Formats
           if ( file.Filename == Filename )
           {
             file.EntryType = 0;
-            file.C64FileType = C64Studio.Types.FileType.SCRATCHED;
+            file.C64FileType = Types.FileType.SCRATCHED;
             file.StartAddress = 0;
             file.EndAddress = 0;
             file.FileOffset = 0;

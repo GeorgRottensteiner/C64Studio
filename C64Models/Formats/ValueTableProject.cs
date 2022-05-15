@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   public class ValueTable
   {

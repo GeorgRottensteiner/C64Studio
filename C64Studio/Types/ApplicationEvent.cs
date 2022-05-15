@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Types
+namespace RetroDevStudio.Types
 {
   public class ApplicationEvent
   {

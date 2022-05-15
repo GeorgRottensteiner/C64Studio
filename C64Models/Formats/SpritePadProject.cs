@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   public class SpritePadProject
   {

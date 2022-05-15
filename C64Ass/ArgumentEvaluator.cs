@@ -58,9 +58,9 @@ namespace C64Ass
 
 
 
-    public C64Studio.Parser.CompileConfig CheckParams( string[] Args, out string AdditionalDefines, out bool ShowNoWarnings, out List<string> WarningsToIgnore )
+    public RetroDevStudio.Parser.CompileConfig CheckParams( string[] Args, out string AdditionalDefines, out bool ShowNoWarnings, out List<string> WarningsToIgnore )
     {
-      C64Studio.Parser.CompileConfig config = null;
+      RetroDevStudio.Parser.CompileConfig config = null;
       AdditionalDefines = null;
       ShowNoWarnings = false;
       WarningsToIgnore = new List<string>();
@@ -94,7 +94,7 @@ namespace C64Ass
         return config;
       }
 
-      config = new C64Studio.Parser.CompileConfig();
+      config = new RetroDevStudio.Parser.CompileConfig();
       config.InputFile = _Args.UnknownArgument( _Args.UnknownArgumentCount() - 1 );
 
       if ( _Args.IsParameterSet( "O" ) )
@@ -169,15 +169,15 @@ namespace C64Ass
 
         if ( string.Compare( outputFormat, "PLAIN", true ) == 0 )
         {
-          config.TargetType = C64Studio.Types.CompileTargetType.PLAIN;
+          config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
         }
         else if ( string.Compare( outputFormat, "CBM", true ) == 0 )
         {
-          config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+          config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
         }
         else if ( string.Compare( outputFormat, "D64", true ) == 0 )
         {
-          config.TargetType = C64Studio.Types.CompileTargetType.D64;
+          config.TargetType = RetroDevStudio.Types.CompileTargetType.D64;
         }
       }
 

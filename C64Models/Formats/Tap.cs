@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   public class Tap : MediaFormat
   {
@@ -328,19 +328,19 @@ namespace C64Studio.Formats
 
 
 
-    public override List<C64Studio.Types.FileInfo> Files()
+    public override List<Types.FileInfo> Files()
     {
       _LastError = "";
-      List<C64Studio.Types.FileInfo>  files = new List<C64Studio.Types.FileInfo>();
+      var files = new List<Types.FileInfo>();
       int dirEntryIndex = 0;
 
       foreach ( FileEntry file in TapFiles )
       {
-        C64Studio.Types.FileInfo    info = new C64Studio.Types.FileInfo();
+        var info = new Types.FileInfo();
 
         info.Filename = new GR.Memory.ByteBuffer( file.Filename );
         info.Blocks = (int)( file.Data.Length + 253 ) / 254;
-        info.Type = C64Studio.Types.FileType.PRG;
+        info.Type = Types.FileType.PRG;
         info.DirEntryIndex = dirEntryIndex;
         ++dirEntryIndex;
 
@@ -371,14 +371,14 @@ namespace C64Studio.Formats
     public override Types.FileInfo LoadFile( GR.Memory.ByteBuffer Filename )
     {
       _LastError = "";
-      Types.FileInfo fileInfo = new C64Studio.Types.FileInfo();
+      var fileInfo = new Types.FileInfo();
       foreach ( FileEntry file in TapFiles )
       {
         if ( file.Filename.Compare( Filename ) == 0 )
         {
           fileInfo.Filename = new GR.Memory.ByteBuffer( file.Filename );
           fileInfo.Data = file.Data;
-          fileInfo.Type = C64Studio.Types.FileType.PRG;
+          fileInfo.Type = Types.FileType.PRG;
           return fileInfo;
         }
       }
@@ -388,14 +388,14 @@ namespace C64Studio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, C64Studio.Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
     {
       _LastError = "";
       FileEntry   file = new FileEntry();
 
       file.Filename     = new GR.Memory.ByteBuffer( Filename );
       file.Data         = new GR.Memory.ByteBuffer( Content );
-      if ( Type == C64Studio.Types.FileType.PRG )
+      if ( Type == Types.FileType.PRG )
       {
         if ( Content.Length >= 2 )
         {

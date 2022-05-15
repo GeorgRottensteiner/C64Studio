@@ -1,8 +1,8 @@
-﻿using C64Studio.Formats;
+﻿using RetroDevStudio.Formats;
 
 
 
-namespace C64Studio.Undo
+namespace RetroDevStudio.Undo
 {
   public class UndoCharsetCharChange : UndoTask
   {

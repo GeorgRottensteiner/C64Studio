@@ -1,11 +1,11 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using RetroDevStudio;
 using System;
 using System.Windows.Forms;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class FormRenameDisk : Form
   {

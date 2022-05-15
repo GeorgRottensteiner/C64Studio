@@ -1,6 +1,5 @@
-﻿using C64Studio.Formats;
+﻿using RetroDevStudio.Formats;
 using RetroDevStudio;
-using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   public partial class ImportCharsetFormBase : UserControl
   {

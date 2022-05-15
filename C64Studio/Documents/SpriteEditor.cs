@@ -1,5 +1,5 @@
-﻿using C64Studio.CustomRenderer;
-using C64Studio.Displayer;
+﻿using RetroDevStudio.CustomRenderer;
+using RetroDevStudio.Displayer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,17 +7,15 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-using C64Studio.Formats;
-using GR.Memory;
-using C64Studio.Types;
-using C64Studio.Converter;
-using RetroDevStudio;
-using RetroDevStudio.Types;
-using System.Linq;
-using C64Studio.Controls;
 using RetroDevStudio.Formats;
+using GR.Memory;
+using RetroDevStudio.Types;
+using RetroDevStudio.Converter;
+using RetroDevStudio;
+using System.Linq;
+using RetroDevStudio.Controls;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class SpriteEditor : BaseDocument
   {
@@ -33,7 +31,7 @@ namespace C64Studio
 
     private bool                        m_IsSpriteProject = true;
 
-    private Formats.SpriteProject       m_SpriteProject = new C64Studio.Formats.SpriteProject();
+    private Formats.SpriteProject       m_SpriteProject = new RetroDevStudio.Formats.SpriteProject();
 
     private Formats.SpriteProject.Layer m_CurrentLayer = null;
 
@@ -513,7 +511,7 @@ namespace C64Studio
       m_SpriteProject.SpriteLayers.Clear();
 
       m_CurrentSprite = 0;
-      m_CurrentLayer = new C64Studio.Formats.SpriteProject.Layer();
+      m_CurrentLayer = new RetroDevStudio.Formats.SpriteProject.Layer();
       m_CurrentLayer.Name = "Default";
       m_SpriteProject.SpriteLayers.Add( m_CurrentLayer );
       listLayerSprites.Items.Clear();
@@ -651,7 +649,7 @@ namespace C64Studio
       if ( OnlyImportFromProject )
       {
         // only import sprite data
-        Formats.SpriteProject   sprites = new C64Studio.Formats.SpriteProject();
+        Formats.SpriteProject   sprites = new RetroDevStudio.Formats.SpriteProject();
 
         if ( !sprites.ReadFromBuffer( projectFile ) )
         {
@@ -736,7 +734,7 @@ namespace C64Studio
 
       if ( m_SpriteProject.SpriteLayers.Count == 0 )
       {
-        m_CurrentLayer = new C64Studio.Formats.SpriteProject.Layer();
+        m_CurrentLayer = new RetroDevStudio.Formats.SpriteProject.Layer();
         m_CurrentLayer.Name = "Default";
         m_SpriteProject.SpriteLayers.Add( m_CurrentLayer );
       }
@@ -2204,7 +2202,7 @@ namespace C64Studio
     {
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetAddLayer( this, m_SpriteProject, m_SpriteProject.SpriteLayers.Count ) );
 
-      Formats.SpriteProject.Layer   layer = new C64Studio.Formats.SpriteProject.Layer();
+      Formats.SpriteProject.Layer   layer = new RetroDevStudio.Formats.SpriteProject.Layer();
 
       layer.Name = editLayerName.Text;
 

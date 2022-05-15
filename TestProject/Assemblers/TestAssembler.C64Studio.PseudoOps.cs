@@ -46,13 +46,13 @@ namespace TestProject
 
                       rts";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -114,13 +114,13 @@ namespace TestProject
         rts";
 
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       var assembly = TestAssembleC64Studio( source );
       //Assert.IsTrue( parser.Parse( source, null, config, null ) );
@@ -150,13 +150,13 @@ namespace TestProject
                         +name";
 
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       var assembly = TestAssembleC64Studio( source );
       //Assert.IsTrue( parser.Parse( source, null, config, null ) );
@@ -175,13 +175,13 @@ namespace TestProject
       string      source = @"* = $2000
                              !fill 5";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -198,13 +198,13 @@ namespace TestProject
       string      source = @"* = $2000
                              !fill 5,$17";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -307,12 +307,12 @@ namespace TestProject
 
                               !byte 40";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -344,12 +344,12 @@ namespace TestProject
                           !le32 2,3,4,5,6,7
                           !be32 1";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );

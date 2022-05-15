@@ -1,6 +1,5 @@
-﻿using C64Studio.Converter;
+﻿using RetroDevStudio.Converter;
 using RetroDevStudio;
-using RetroDevStudio.Converter;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ using System.Windows.Forms;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class DlgGraphicImport : Form
   {
@@ -109,19 +108,19 @@ namespace C64Studio
 
       switch ( ImportType )
       {
-        case C64Studio.Types.GraphicType.BITMAP:
-          comboImportType.Items.Add( new GR.Generic.Tupel<string,C64Studio.Types.GraphicType>( GR.EnumHelper.GetDescription( C64Studio.Types.GraphicType.BITMAP_HIRES ), C64Studio.Types.GraphicType.BITMAP_HIRES ) );
-          comboImportType.Items.Add( new GR.Generic.Tupel<string,C64Studio.Types.GraphicType>( GR.EnumHelper.GetDescription( C64Studio.Types.GraphicType.BITMAP_MULTICOLOR ), C64Studio.Types.GraphicType.BITMAP_MULTICOLOR ) );
+        case RetroDevStudio.Types.GraphicType.BITMAP:
+          comboImportType.Items.Add( new GR.Generic.Tupel<string,RetroDevStudio.Types.GraphicType>( GR.EnumHelper.GetDescription( RetroDevStudio.Types.GraphicType.BITMAP_HIRES ), RetroDevStudio.Types.GraphicType.BITMAP_HIRES ) );
+          comboImportType.Items.Add( new GR.Generic.Tupel<string,RetroDevStudio.Types.GraphicType>( GR.EnumHelper.GetDescription( RetroDevStudio.Types.GraphicType.BITMAP_MULTICOLOR ), RetroDevStudio.Types.GraphicType.BITMAP_MULTICOLOR ) );
           comboImportType.SelectedIndex = 1;
           break;
-        case C64Studio.Types.GraphicType.CHARACTERS:
-          comboImportType.Items.Add( new GR.Generic.Tupel<string, C64Studio.Types.GraphicType>( GR.EnumHelper.GetDescription( C64Studio.Types.GraphicType.CHARACTERS_HIRES ), C64Studio.Types.GraphicType.CHARACTERS_HIRES ) );
-          comboImportType.Items.Add( new GR.Generic.Tupel<string, C64Studio.Types.GraphicType>( GR.EnumHelper.GetDescription( C64Studio.Types.GraphicType.CHARACTERS_MULTICOLOR ), C64Studio.Types.GraphicType.CHARACTERS_MULTICOLOR ) );
-          comboImportType.Items.Add( new GR.Generic.Tupel<string, C64Studio.Types.GraphicType>( GR.EnumHelper.GetDescription( C64Studio.Types.GraphicType.CHARACTERS_FCM ), C64Studio.Types.GraphicType.CHARACTERS_FCM ) );
+        case RetroDevStudio.Types.GraphicType.CHARACTERS:
+          comboImportType.Items.Add( new GR.Generic.Tupel<string, RetroDevStudio.Types.GraphicType>( GR.EnumHelper.GetDescription( RetroDevStudio.Types.GraphicType.CHARACTERS_HIRES ), RetroDevStudio.Types.GraphicType.CHARACTERS_HIRES ) );
+          comboImportType.Items.Add( new GR.Generic.Tupel<string, RetroDevStudio.Types.GraphicType>( GR.EnumHelper.GetDescription( RetroDevStudio.Types.GraphicType.CHARACTERS_MULTICOLOR ), RetroDevStudio.Types.GraphicType.CHARACTERS_MULTICOLOR ) );
+          comboImportType.Items.Add( new GR.Generic.Tupel<string, RetroDevStudio.Types.GraphicType>( GR.EnumHelper.GetDescription( RetroDevStudio.Types.GraphicType.CHARACTERS_FCM ), RetroDevStudio.Types.GraphicType.CHARACTERS_FCM ) );
           comboImportType.SelectedIndex = 1;
           break;
         default:
-          comboImportType.Items.Add( new GR.Generic.Tupel<string,C64Studio.Types.GraphicType>( GR.EnumHelper.GetDescription( ImportType ), ImportType ) );
+          comboImportType.Items.Add( new GR.Generic.Tupel<string,RetroDevStudio.Types.GraphicType>( GR.EnumHelper.GetDescription( ImportType ), ImportType ) );
           comboImportType.SelectedIndex = 0;
           break;
       }
@@ -168,7 +167,7 @@ namespace C64Studio
       OpenFileDialog openDlg = new OpenFileDialog();
 
       openDlg.Title = "Import image";
-      openDlg.Filter = Core.MainForm.FilterString( C64Studio.Types.Constants.FILEFILTER_IMAGE_FILES );
+      openDlg.Filter = Core.MainForm.FilterString( RetroDevStudio.Types.Constants.FILEFILTER_IMAGE_FILES );
       if ( Core.MainForm.CurrentProject != null )
       {
         openDlg.InitialDirectory = Core.MainForm.CurrentProject.Settings.BasePath;
@@ -212,7 +211,7 @@ namespace C64Studio
       }
       else
       {
-        var quant = new C64Studio.Converter.ColorQuantizer( 256 );
+        var quant = new RetroDevStudio.Converter.ColorQuantizer( 256 );
 
         quant.AddSourceToColorCube( newImage );
         quant.Calculate();
@@ -1097,23 +1096,23 @@ namespace C64Studio
       listProblems.BeginUpdate();
       switch ( ( (GR.Generic.Tupel<string,Types.GraphicType>)comboImportType.SelectedItem ).second )
       { 
-        case C64Studio.Types.GraphicType.CHARACTERS:
-        case C64Studio.Types.GraphicType.CHARACTERS_HIRES:
+        case RetroDevStudio.Types.GraphicType.CHARACTERS:
+        case RetroDevStudio.Types.GraphicType.CHARACTERS_HIRES:
           CheckAsCharacters( false );
           break;
-        case C64Studio.Types.GraphicType.CHARACTERS_MULTICOLOR:
+        case RetroDevStudio.Types.GraphicType.CHARACTERS_MULTICOLOR:
           CheckAsCharacters( true );
           break;
-        case C64Studio.Types.GraphicType.CHARACTERS_FCM:
+        case RetroDevStudio.Types.GraphicType.CHARACTERS_FCM:
           // nothing to do, there are no limits
           break;
-        case C64Studio.Types.GraphicType.SPRITES:
+        case RetroDevStudio.Types.GraphicType.SPRITES:
           CheckAsSprites();
           break;
-        case C64Studio.Types.GraphicType.BITMAP_HIRES:
+        case RetroDevStudio.Types.GraphicType.BITMAP_HIRES:
           CheckAsHiResBitmap();
           break;
-        case C64Studio.Types.GraphicType.BITMAP_MULTICOLOR:
+        case RetroDevStudio.Types.GraphicType.BITMAP_MULTICOLOR:
           CheckAsMCBitmap();
           break;
       }

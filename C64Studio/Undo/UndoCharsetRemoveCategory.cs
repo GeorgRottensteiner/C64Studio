@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using C64Studio.Controls;
-using C64Studio.Formats;
+using RetroDevStudio.Controls;
+using RetroDevStudio.Formats;
 
 
 
-namespace C64Studio.Undo
+namespace RetroDevStudio.Undo
 {
   public class UndoCharsetRemoveCategory : UndoTask
   {

@@ -1,10 +1,10 @@
-﻿using C64Studio.Types;
-using RetroDevStudio;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio
+
+
+namespace RetroDevStudio
 {
   public class DocumentInfo
   {
@@ -18,7 +18,7 @@ namespace C64Studio
 
     public ProjectElement.ElementType     Type = ProjectElement.ElementType.INVALID;
 
-    public Types.ASM.FileInfo             ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
+    public Types.ASM.FileInfo             ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
 
     public SingleBuildInfo                LastBuildInfo = null;
 

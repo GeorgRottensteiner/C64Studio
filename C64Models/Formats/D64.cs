@@ -5,7 +5,7 @@ using System.Text;
 
 
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   public class D64 : Disk
   {
@@ -294,18 +294,18 @@ namespace C64Studio.Formats
           if ( fileTrack != 0 )
           {
             // valid entry?
-            if ( sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+            if ( sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) != (byte)RetroDevStudio.Types.FileType.SCRATCHED )
             {
               GR.Memory.ByteBuffer filename = sec.Data.SubBuffer( BYTES_PER_DIR_ENTRY * i + 5, 16 );
               if ( Filename.Compare( filename ) == 0 )
               {
                 FileLocation = new Location( fileTrack, fileSector );
 
-                FileInfo              = new C64Studio.Types.FileInfo();
+                FileInfo              = new RetroDevStudio.Types.FileInfo();
                 FileInfo.Filename     = new GR.Memory.ByteBuffer( filename );
                 FileInfo.StartSector  = fileSector;
                 FileInfo.StartTrack   = fileTrack;
-                FileInfo.Type         = (C64Studio.Types.FileType)sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 );
+                FileInfo.Type         = (RetroDevStudio.Types.FileType)sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 );
                 FileInfo.Blocks       = 0;
                 return true;
               }
@@ -462,7 +462,7 @@ namespace C64Studio.Formats
 
 
 
-    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, C64Studio.Types.FileType Type )
+    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileType Type )
     {
       _LastError = "";
       Track   dirTrack = Tracks[TRACK_DIRECTORY - 1];
@@ -634,7 +634,7 @@ namespace C64Studio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, C64Studio.Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
     {
       _LastError = "";
       GR.Memory.ByteBuffer    dataToWrite = new GR.Memory.ByteBuffer( Content );
@@ -852,7 +852,7 @@ namespace C64Studio.Formats
         {
           int fileTrack  = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 3 );
           int fileSector = sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 4 );
-          if ( sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+          if ( sec.Data.ByteAt( BYTES_PER_DIR_ENTRY * i + 2 ) != (byte)RetroDevStudio.Types.FileType.SCRATCHED )
           {
             // valid entry?
             if ( ( fileTrack == Track )

@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class DebugBreakpoints
   {
@@ -36,9 +36,9 @@
       this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.btnAddBreakpoint = new C64Studio.Controls.ThemedButton();
-      this.btnDeleteBreakpoint = new C64Studio.Controls.ThemedButton();
-      this.btnApplyChanges = new C64Studio.Controls.ThemedButton();
+      this.btnAddBreakpoint = new RetroDevStudio.Controls.ThemedButton();
+      this.btnDeleteBreakpoint = new RetroDevStudio.Controls.ThemedButton();
+      this.btnApplyChanges = new RetroDevStudio.Controls.ThemedButton();
       this.groupBreakpointData = new System.Windows.Forms.GroupBox();
       this.comboSymbols = new System.Windows.Forms.ComboBox();
       this.checkTriggerStore = new System.Windows.Forms.CheckBox();
@@ -49,7 +49,7 @@
       this.label2 = new System.Windows.Forms.Label();
       this.editBPAddress = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
-      this.btnDeleteAll = new C64Studio.Controls.ThemedButton();
+      this.btnDeleteAll = new RetroDevStudio.Controls.ThemedButton();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.groupBreakpointData.SuspendLayout();
       this.SuspendLayout();

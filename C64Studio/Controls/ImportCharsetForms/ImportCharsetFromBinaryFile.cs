@@ -1,9 +1,7 @@
-﻿using C64Studio.Formats;
-using C64Studio.Types;
+﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Types;
 using GR.Memory;
 using RetroDevStudio;
-using RetroDevStudio.Formats;
-using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,9 +10,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using static C64Studio.BaseDocument;
+using static RetroDevStudio.BaseDocument;
 
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   public partial class ImportCharsetFromBinaryFile : ImportCharsetFormBase
   {
@@ -38,14 +36,14 @@ namespace C64Studio.Controls
       string filename;
 
       //Clear();
-      if ( Editor.OpenFile( "Open charset", C64Studio.Types.Constants.FILEFILTER_CHARSET + C64Studio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( Editor.OpenFile( "Open charset", RetroDevStudio.Types.Constants.FILEFILTER_CHARSET + RetroDevStudio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + RetroDevStudio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CHARSETPROJECT" )
         {
           // a project
           GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
 
-          C64Studio.Formats.CharsetProject project = new C64Studio.Formats.CharsetProject();
+          RetroDevStudio.Formats.CharsetProject project = new RetroDevStudio.Formats.CharsetProject();
           if ( !project.ReadFromBuffer( projectFile ) )
           {
             return false;
@@ -70,7 +68,7 @@ namespace C64Studio.Controls
           // a charpad project file
           GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
 
-          Formats.CharpadProject    cpProject = new C64Studio.Formats.CharpadProject();
+          Formats.CharpadProject    cpProject = new RetroDevStudio.Formats.CharpadProject();
           if ( !cpProject.LoadFromFile( projectFile ) )
           {
             return false;

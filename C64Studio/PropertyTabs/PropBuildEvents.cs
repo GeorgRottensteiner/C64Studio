@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class PropBuildEvents : PropertyTabs.PropertyTabBase
   {
@@ -26,11 +26,11 @@ namespace C64Studio
       Text = "Build Events";
       InitializeComponent();
 
-      comboBuildEvents.Items.Add( new GR.Generic.Tupel<string,C64Studio.ProjectElement.PerConfigSettings.BuildEvent>( "Pre Build", C64Studio.ProjectElement.PerConfigSettings.BuildEvent.PRE ) );
-      comboBuildEvents.Items.Add( new GR.Generic.Tupel<string, C64Studio.ProjectElement.PerConfigSettings.BuildEvent>( "Pre Build Chain", C64Studio.ProjectElement.PerConfigSettings.BuildEvent.PRE_BUILD_CHAIN ) );
-      comboBuildEvents.Items.Add( new GR.Generic.Tupel<string, C64Studio.ProjectElement.PerConfigSettings.BuildEvent>( "Custom Build", C64Studio.ProjectElement.PerConfigSettings.BuildEvent.CUSTOM ) );
-      comboBuildEvents.Items.Add( new GR.Generic.Tupel<string, C64Studio.ProjectElement.PerConfigSettings.BuildEvent>( "Post Build Chain", C64Studio.ProjectElement.PerConfigSettings.BuildEvent.POST_BUILD_CHAIN ) );
-      comboBuildEvents.Items.Add( new GR.Generic.Tupel<string, C64Studio.ProjectElement.PerConfigSettings.BuildEvent>( "Post Build", C64Studio.ProjectElement.PerConfigSettings.BuildEvent.POST ) );
+      comboBuildEvents.Items.Add( new GR.Generic.Tupel<string,RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent>( "Pre Build", RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent.PRE ) );
+      comboBuildEvents.Items.Add( new GR.Generic.Tupel<string, RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent>( "Pre Build Chain", RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent.PRE_BUILD_CHAIN ) );
+      comboBuildEvents.Items.Add( new GR.Generic.Tupel<string, RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent>( "Custom Build", RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent.CUSTOM ) );
+      comboBuildEvents.Items.Add( new GR.Generic.Tupel<string, RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent>( "Post Build Chain", RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent.POST_BUILD_CHAIN ) );
+      comboBuildEvents.Items.Add( new GR.Generic.Tupel<string, RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent>( "Post Build", RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent.POST ) );
       comboBuildEvents.SelectedIndex = 4;
 
       foreach ( var configName in Element.DocumentInfo.Project.Settings.GetConfigurationNames() )
@@ -63,7 +63,7 @@ namespace C64Studio
         BuildEventDetails = null;
       }
 
-      var buildEvent = ( (GR.Generic.Tupel<string,C64Studio.ProjectElement.PerConfigSettings.BuildEvent>)comboBuildEvents.SelectedItem ).second;
+      var buildEvent = ( (GR.Generic.Tupel<string,RetroDevStudio.ProjectElement.PerConfigSettings.BuildEvent>)comboBuildEvents.SelectedItem ).second;
       switch ( buildEvent )
       {
         case ProjectElement.PerConfigSettings.BuildEvent.PRE:

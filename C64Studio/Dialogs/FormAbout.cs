@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class FormAbout : Form
   {

@@ -1,4 +1,4 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class ProjectProperties : Form
   {

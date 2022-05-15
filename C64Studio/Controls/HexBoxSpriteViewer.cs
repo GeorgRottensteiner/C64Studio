@@ -1,4 +1,4 @@
-﻿using C64Studio.Displayer;
+﻿using RetroDevStudio.Displayer;
 using GR.Memory;
 using RetroDevStudio;
 using System;

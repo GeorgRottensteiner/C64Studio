@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using C64Models.BASIC;
+using RetroDevStudio.Parser;
 using GR.Memory;
 using RetroDevStudio;
 
-namespace C64Studio.Parser
+
+
+namespace RetroDevStudio.Parser
 {
-  public class BasicFileParser : ParserBase
+  public partial class BasicFileParser : ParserBase
   {
     public enum BasicVersion
     {
@@ -139,7 +142,7 @@ namespace C64Studio.Parser
     public GR.Collections.Map<byte, ActionToken>       ActionTokenByByteValue = new GR.Collections.Map<byte,ActionToken>();
     public ParserSettings       Settings = new ParserSettings();
 
-    public Types.ASM.FileInfo         ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
+    public Types.ASM.FileInfo         ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
     public Types.ASM.FileInfo         InitialFileInfo = null;
 
     public GR.Collections.Map<Token.Type, string>     AllowedTokenStartChars = new GR.Collections.Map<Token.Type, string>();
@@ -1127,6 +1130,14 @@ namespace C64Studio.Parser
         hardInfo.Tokens.Add( new Token() { Content = Line, TokenType = Token.Type.HARD_COMMENT } );
         hardInfo.LineIndex = LineIndex;
 
+        if ( Line.StartsWith( "#RetroDevStudio.MetaData:" ) )
+        {
+          if ( !ProcessMetaData( LineIndex, Line.Substring( "#RetroDevStudio.MetaData:".Length ) ) )
+          {
+            return null;
+          }
+        }
+
         return hardInfo;
       }
 
@@ -1424,6 +1435,35 @@ namespace C64Studio.Parser
     }
 
 
+
+    private bool ProcessMetaData( int LineIndex, string MetaData )
+    {
+      int     sepPos = MetaData.IndexOf( ':' );
+      string  metaDataType;
+      if ( sepPos == -1 )
+      {
+        metaDataType = MetaData;
+      }
+      else
+      {
+        metaDataType = MetaData.Substring( sepPos + 1 );
+      }
+
+      switch ( metaDataType.ToUpper() )
+      {
+        case "BASIC":
+          // ok, but nothing to do here
+          return true;
+        case "INCLUDE":
+          return MetaDataInclude( LineIndex, MetaData );
+      }
+
+
+      AddError( LineIndex, Types.ErrorCode.E3007_BASIC_UNKNOWN_METADATA, $"Unknown meta data '{metaDataType}' type" );
+      return false;
+    }
+
+    
 
     private bool IsLightningOrLaserBASIC()
     {
@@ -2116,9 +2156,9 @@ namespace C64Studio.Parser
       AssembledOutput.Assembly = result;
       if ( Config.TargetType == Types.CompileTargetType.T64 )
       {
-        Formats.T64 t64 = new C64Studio.Formats.T64();
+        Formats.T64 t64 = new RetroDevStudio.Formats.T64();
 
-        Formats.T64.FileRecord  record = new C64Studio.Formats.T64.FileRecord();
+        Formats.T64.FileRecord  record = new RetroDevStudio.Formats.T64.FileRecord();
 
         record.Filename = Util.ToFilename( outputPureFilename );
         record.StartAddress = (ushort)fileStartAddress;
@@ -2132,31 +2172,31 @@ namespace C64Studio.Parser
       }
       else if ( Config.TargetType == Types.CompileTargetType.D64 )
       {
-        Formats.D64 d64 = new C64Studio.Formats.D64();
+        Formats.D64 d64 = new RetroDevStudio.Formats.D64();
 
         d64.CreateEmptyMedia();
 
         GR.Memory.ByteBuffer    bufName = Util.ToFilename( outputPureFilename );
-        d64.WriteFile( bufName, AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
+        d64.WriteFile( bufName, AssembledOutput.Assembly, RetroDevStudio.Types.FileType.PRG );
 
         AssembledOutput.Assembly = d64.Compile();
       }
       else if ( Config.TargetType == Types.CompileTargetType.D81 )
       {
-        Formats.D81 d81 = new C64Studio.Formats.D81();
+        Formats.D81 d81 = new RetroDevStudio.Formats.D81();
 
         d81.CreateEmptyMedia();
 
         GR.Memory.ByteBuffer    bufName = Util.ToFilename( outputPureFilename );
-        d81.WriteFile( bufName, AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
+        d81.WriteFile( bufName, AssembledOutput.Assembly, RetroDevStudio.Types.FileType.PRG );
 
         AssembledOutput.Assembly = d81.Compile();
       }
       else if ( Config.TargetType == Types.CompileTargetType.TAP )
       {
-        Formats.Tap tap = new C64Studio.Formats.Tap();
+        Formats.Tap tap = new RetroDevStudio.Formats.Tap();
 
-        tap.WriteFile( Util.ToFilename( outputPureFilename ), AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
+        tap.WriteFile( Util.ToFilename( outputPureFilename ), AssembledOutput.Assembly, RetroDevStudio.Types.FileType.PRG );
         AssembledOutput.Assembly = tap.Compile();
       }
       else if ( ( Config.TargetType == Types.CompileTargetType.CARTRIDGE_8K_BIN )

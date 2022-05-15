@@ -1,4 +1,4 @@
-﻿using C64Studio.Formats;
+﻿using RetroDevStudio.Formats;
 using GR.Memory;
 using System.Collections.Generic;
 

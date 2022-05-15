@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using GR.Image;
 
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   public class MeasurableListView : System.Windows.Forms.ListView
   {

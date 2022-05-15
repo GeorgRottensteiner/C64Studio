@@ -8,7 +8,7 @@
     <ProjectGuid>{5BEA5CE5-4C5D-4EC5-83F3-83634E929858}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>C64Studio</RootNamespace>
+    <RootNamespace>RetroDevStudio</RootNamespace>
     <AssemblyName>C64Studio</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

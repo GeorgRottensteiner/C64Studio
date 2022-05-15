@@ -7,7 +7,7 @@ using GR.Image;
 using WeifenLuo.WinFormsUI.Docking;
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class Imaging
   {
@@ -30,7 +30,7 @@ namespace C64Studio
       if ( ( extension == ".KOA" )
       ||   ( extension == ".KLA" ) )
       {
-        var koalaImage = C64Studio.Converter.KoalaToBitmap.BitmapFromKoala( Filename );
+        var koalaImage = RetroDevStudio.Converter.KoalaToBitmap.BitmapFromKoala( Filename );
         var bitmap = koalaImage.GetAsBitmap();
 
         newImage = GR.Image.FastImage.FromImage( bitmap );

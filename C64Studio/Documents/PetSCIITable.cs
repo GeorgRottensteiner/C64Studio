@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
-using C64Studio.Types;
+using RetroDevStudio.Types;
 using GR.Image;
 using RetroDevStudio;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class PetSCIITable : BaseDocument
   {

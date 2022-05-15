@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   public class MenuButton : Button
   {

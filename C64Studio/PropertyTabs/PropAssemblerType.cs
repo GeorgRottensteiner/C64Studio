@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class PropAssemblerType : PropertyTabs.PropertyTabBase
   {
@@ -23,12 +23,12 @@ namespace C64Studio
       Text = "Assembler";
       InitializeComponent();
 
-      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "Auto", C64Studio.Types.AssemblerType.AUTO ) );
-      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "C64Studio/ACME", C64Studio.Types.AssemblerType.C64_STUDIO ) );
-      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "PDS", C64Studio.Types.AssemblerType.PDS ) );
-      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "DASM", C64Studio.Types.AssemblerType.DASM ) );
-      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "C64ASM", C64Studio.Types.AssemblerType.C64ASM ) );
-      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "CBMPRGSTUDIO", C64Studio.Types.AssemblerType.CBMPRGSTUDIO ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "Auto", RetroDevStudio.Types.AssemblerType.AUTO ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "C64Studio/ACME", RetroDevStudio.Types.AssemblerType.C64_STUDIO ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "PDS", RetroDevStudio.Types.AssemblerType.PDS ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "DASM", RetroDevStudio.Types.AssemblerType.DASM ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "C64ASM", RetroDevStudio.Types.AssemblerType.C64ASM ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "CBMPRGSTUDIO", RetroDevStudio.Types.AssemblerType.CBMPRGSTUDIO ) );
 
       SetType( Element.AssemblerType );
     }
@@ -56,7 +56,7 @@ namespace C64Studio
 
       if ( entry == null )
       {
-        Element.AssemblerType = C64Studio.Types.AssemblerType.AUTO;
+        Element.AssemblerType = RetroDevStudio.Types.AssemblerType.AUTO;
       }
       else
       {

@@ -1,4 +1,4 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Text;
 
 
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   public abstract class Disk : MediaFormat
   {
@@ -440,18 +440,18 @@ namespace C64Studio.Formats
           if ( fileTrack != 0 )
           {
             // valid entry?
-            if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+            if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileType.SCRATCHED )
             {
               GR.Memory.ByteBuffer filename = sec.Data.SubBuffer( 0x20 * i + 5, 16 );
               if ( Filename.Compare( filename ) == 0 )
               {
                 FileLocation = new Location( fileTrack, fileSector );
 
-                FileInfo = new C64Studio.Types.FileInfo();
+                FileInfo = new Types.FileInfo();
                 FileInfo.Filename = new GR.Memory.ByteBuffer( filename );
                 FileInfo.StartSector = fileSector;
                 FileInfo.StartTrack = fileTrack;
-                FileInfo.Type = (C64Studio.Types.FileType)sec.Data.ByteAt( 0x20 * i + 2 );
+                FileInfo.Type = (Types.FileType)sec.Data.ByteAt( 0x20 * i + 2 );
                 FileInfo.Blocks = 0;
                 return true;
               }
@@ -628,7 +628,7 @@ namespace C64Studio.Formats
 
 
 
-    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, C64Studio.Types.FileType Type )
+    bool AddDirectoryEntry( GR.Memory.ByteBuffer Filename, int StartTrack, int StartSector, int SectorsWritten, Types.FileType Type )
     {
       _LastError = "";
       Track   dirTrack = Tracks[TRACK_DIRECTORY - 1];
@@ -800,7 +800,7 @@ namespace C64Studio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, C64Studio.Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
     {
       _LastError = "";
       GR.Memory.ByteBuffer    dataToWrite = new GR.Memory.ByteBuffer( Content );
@@ -1037,10 +1037,10 @@ namespace C64Studio.Formats
         {
           int fileTrack = sec.Data.ByteAt( 0x20 * i + 3 );
           int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileType.SCRATCHED )
           {
             // valid entry?
-            C64Studio.Types.FileInfo info = new C64Studio.Types.FileInfo();
+            var info = new Types.FileInfo();
 
             FollowChain( fileTrack, fileSector, usedSectors, info.Filename, errors );
           }
@@ -1104,7 +1104,7 @@ namespace C64Studio.Formats
         {
           int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
           int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileType.SCRATCHED )
           {
             // valid entry?
             if ( ( fileTrack == Track )
@@ -1140,7 +1140,7 @@ namespace C64Studio.Formats
         {
           int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
           int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileType.SCRATCHED )
           {
             // valid entry?
             if ( DirEntryIndex == entryIndex )
@@ -1212,7 +1212,7 @@ namespace C64Studio.Formats
 
 
 
-    public bool MoveFileUp( C64Studio.Types.FileInfo File )
+    public bool MoveFileUp( Types.FileInfo File )
     {
       _LastError = "";
       if ( File.DirEntryIndex == 0 )
@@ -1237,7 +1237,7 @@ namespace C64Studio.Formats
 
 
 
-    public bool MoveFileDown( C64Studio.Types.FileInfo File )
+    public bool MoveFileDown( Types.FileInfo File )
     {
       _LastError = "";
       DirEntryLocation dirLocOrig = LocateDirEntry( File.DirEntryIndex );
@@ -1316,11 +1316,11 @@ namespace C64Studio.Formats
 
 
 
-    public override List<C64Studio.Types.FileInfo> Files()
+    public override List<RetroDevStudio.Types.FileInfo> Files()
     {
       _LastError = "";
 
-      List<C64Studio.Types.FileInfo> files = new List<C64Studio.Types.FileInfo>();
+      var files = new List<FileInfo>();
 
       int   curTrack = TRACK_DIRECTORY;
       int   curSector = SECTOR_DIRECTORY;
@@ -1340,15 +1340,15 @@ namespace C64Studio.Formats
         {
           int fileTrack  = sec.Data.ByteAt( 0x20 * i + 3 );
           int fileSector = sec.Data.ByteAt( 0x20 * i + 4 );
-          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)C64Studio.Types.FileType.SCRATCHED )
+          if ( sec.Data.ByteAt( 0x20 * i + 2 ) != (byte)Types.FileType.SCRATCHED )
           {
             // valid entry?
-            C64Studio.Types.FileInfo info = new C64Studio.Types.FileInfo();
+            Types.FileInfo info = new Types.FileInfo();
 
             info.Filename = sec.Data.SubBuffer( 0x20 * i + 5, 16 );
             info.StartSector = fileSector;
             info.StartTrack = fileTrack;
-            info.Type = (C64Studio.Types.FileType)sec.Data.ByteAt( 0x20 * i + 2 );
+            info.Type = (Types.FileType)sec.Data.ByteAt( 0x20 * i + 2 );
             info.Blocks = sec.Data.ByteAt( 0x20 * i + 30 ) + 256 * sec.Data.ByteAt( 0x20 * i + 31 );
             info.DirEntryIndex = dirEntryIndex;
             ++dirEntryIndex;

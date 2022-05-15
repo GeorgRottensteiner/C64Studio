@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class GraphicScreenEditor
   {
@@ -105,7 +105,7 @@
       this.tabGraphicScreenEditor = new System.Windows.Forms.TabControl();
       this.tabColorMapping = new System.Windows.Forms.TabPage();
       this.groupColorMapping = new System.Windows.Forms.GroupBox();
-      this.listColorMappingTargets = new C64Studio.ArrangedItemList();
+      this.listColorMappingTargets = new RetroDevStudio.ArrangedItemList();
       this.comboColorMappingTargets = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
@@ -497,7 +497,7 @@
       // 
       this.btnToolValidate.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToolValidate.Checked = true;
-      this.btnToolValidate.Image = global::C64Studio.Properties.Resources.tool_validate;
+      this.btnToolValidate.Image = global::RetroDevStudio.Properties.Resources.tool_validate;
       this.btnToolValidate.Location = new System.Drawing.Point(128, 438);
       this.btnToolValidate.Name = "btnToolValidate";
       this.btnToolValidate.Size = new System.Drawing.Size(24, 24);
@@ -510,7 +510,7 @@
       // btnToolSelect
       // 
       this.btnToolSelect.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolSelect.Image = global::C64Studio.Properties.Resources.tool_select;
+      this.btnToolSelect.Image = global::RetroDevStudio.Properties.Resources.tool_select;
       this.btnToolSelect.Location = new System.Drawing.Point(104, 438);
       this.btnToolSelect.Name = "btnToolSelect";
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
@@ -522,7 +522,7 @@
       // btnToolFill
       // 
       this.btnToolFill.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolFill.Image = global::C64Studio.Properties.Resources.tool_fill;
+      this.btnToolFill.Image = global::RetroDevStudio.Properties.Resources.tool_fill;
       this.btnToolFill.Location = new System.Drawing.Point(80, 438);
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
@@ -534,7 +534,7 @@
       // btnToolQuad
       // 
       this.btnToolQuad.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolQuad.Image = global::C64Studio.Properties.Resources.tool_quad;
+      this.btnToolQuad.Image = global::RetroDevStudio.Properties.Resources.tool_quad;
       this.btnToolQuad.Location = new System.Drawing.Point(56, 438);
       this.btnToolQuad.Name = "btnToolQuad";
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
@@ -546,7 +546,7 @@
       // btnToolRect
       // 
       this.btnToolRect.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolRect.Image = global::C64Studio.Properties.Resources.tool_rect;
+      this.btnToolRect.Image = global::RetroDevStudio.Properties.Resources.tool_rect;
       this.btnToolRect.Location = new System.Drawing.Point(32, 438);
       this.btnToolRect.Name = "btnToolRect";
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
@@ -558,7 +558,7 @@
       // btnToolPaint
       // 
       this.btnToolPaint.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolPaint.Image = global::C64Studio.Properties.Resources.tool_none;
+      this.btnToolPaint.Image = global::RetroDevStudio.Properties.Resources.tool_none;
       this.btnToolPaint.Location = new System.Drawing.Point(8, 438);
       this.btnToolPaint.Name = "btnToolPaint";
       this.btnToolPaint.Size = new System.Drawing.Size(24, 24);
@@ -953,12 +953,12 @@
       this.listColorMappingTargets.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listColorMappingTargets.Size = new System.Drawing.Size(207, 263);
       this.listColorMappingTargets.TabIndex = 5;
-      this.listColorMappingTargets.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listColorMappingTargets_AddingItem);
-      this.listColorMappingTargets.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemAdded);
-      this.listColorMappingTargets.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemRemoved);
-      this.listColorMappingTargets.MovingItem += new C64Studio.ArrangedItemList.ItemExchangingEventHandler(this.listColorMappingTargets_MovingItem);
-      this.listColorMappingTargets.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.listColorMappingTargets_ItemMoved);
-      this.listColorMappingTargets.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_SelectedIndexChanged);
+      this.listColorMappingTargets.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.listColorMappingTargets_AddingItem);
+      this.listColorMappingTargets.ItemAdded += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemAdded);
+      this.listColorMappingTargets.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemRemoved);
+      this.listColorMappingTargets.MovingItem += new RetroDevStudio.ArrangedItemList.ItemExchangingEventHandler(this.listColorMappingTargets_MovingItem);
+      this.listColorMappingTargets.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.listColorMappingTargets_ItemMoved);
+      this.listColorMappingTargets.SelectedIndexChanged += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_SelectedIndexChanged);
       // 
       // comboColorMappingTargets
       // 

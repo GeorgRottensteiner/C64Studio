@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class Settings
   {
@@ -56,7 +56,7 @@
       this.label13 = new System.Windows.Forms.Label();
       this.label11 = new System.Windows.Forms.Label();
       this.tabTools = new System.Windows.Forms.TabPage();
-      this.alistTools = new C64Studio.ArrangedItemList();
+      this.alistTools = new RetroDevStudio.ArrangedItemList();
       this.checkPassLabelsToEmulator = new System.Windows.Forms.CheckBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.button1 = new System.Windows.Forms.Button();
@@ -108,7 +108,7 @@
       this.checkASMShowLineNumbers = new System.Windows.Forms.CheckBox();
       this.label30 = new System.Windows.Forms.Label();
       this.label26 = new System.Windows.Forms.Label();
-      this.asmLibraryPathList = new C64Studio.ArrangedItemList();
+      this.asmLibraryPathList = new RetroDevStudio.ArrangedItemList();
       this.listHacks = new System.Windows.Forms.CheckedListBox();
       this.label35 = new System.Windows.Forms.Label();
       this.label34 = new System.Windows.Forms.Label();
@@ -135,7 +135,7 @@
       this.btnBindBASICKeyMapBinding = new System.Windows.Forms.Button();
       this.editBASICKeyMapBinding = new System.Windows.Forms.TextBox();
       this.label25 = new System.Windows.Forms.Label();
-      this.listBASICKeyMap = new C64Studio.Controls.MeasurableListView();
+      this.listBASICKeyMap = new RetroDevStudio.Controls.MeasurableListView();
       this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -503,12 +503,12 @@
       this.alistTools.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.alistTools.Size = new System.Drawing.Size(184, 349);
       this.alistTools.TabIndex = 11;
-      this.alistTools.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.alistTools_AddingItem);
-      this.alistTools.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.alistTools_CloningItem);
-      this.alistTools.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemAdded);
-      this.alistTools.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemRemoved);
-      this.alistTools.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.alistTools_ItemMoved);
-      this.alistTools.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_SelectedIndexChanged);
+      this.alistTools.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.alistTools_AddingItem);
+      this.alistTools.CloningItem += new RetroDevStudio.ArrangedItemList.CloningItemEventHandler(this.alistTools_CloningItem);
+      this.alistTools.ItemAdded += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemAdded);
+      this.alistTools.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemRemoved);
+      this.alistTools.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.alistTools_ItemMoved);
+      this.alistTools.SelectedIndexChanged += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_SelectedIndexChanged);
       // 
       // checkPassLabelsToEmulator
       // 
@@ -1043,10 +1043,10 @@
       this.asmLibraryPathList.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.asmLibraryPathList.Size = new System.Drawing.Size(356, 154);
       this.asmLibraryPathList.TabIndex = 20;
-      this.asmLibraryPathList.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.asmLibraryPathList_AddingItem);
-      this.asmLibraryPathList.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemAdded);
-      this.asmLibraryPathList.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemRemoved);
-      this.asmLibraryPathList.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.asmLibraryPathList_ItemMoved);
+      this.asmLibraryPathList.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.asmLibraryPathList_AddingItem);
+      this.asmLibraryPathList.ItemAdded += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemAdded);
+      this.asmLibraryPathList.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemRemoved);
+      this.asmLibraryPathList.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.asmLibraryPathList_ItemMoved);
       // 
       // listHacks
       // 
@@ -1607,7 +1607,7 @@
     private System.Windows.Forms.CheckBox checkBASICUseC64Font;
     private System.Windows.Forms.TabPage tabKeyMaps;
     private System.Windows.Forms.Label label21;
-    private C64Studio.Controls.MeasurableListView listBASICKeyMap;
+    private RetroDevStudio.Controls.MeasurableListView listBASICKeyMap;
     private System.Windows.Forms.ColumnHeader columnHeader5;
     private System.Windows.Forms.ColumnHeader columnHeader6;
     private System.Windows.Forms.ColumnHeader columnHeader7;

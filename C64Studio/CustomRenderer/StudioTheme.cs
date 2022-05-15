@@ -1,5 +1,5 @@
-﻿using C64Studio.Controls;
-using C64Studio.Types;
+﻿using RetroDevStudio.Controls;
+using RetroDevStudio.Types;
 using RetroDevStudio;
 using System;
 using System.Drawing;
@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 
 
-namespace C64Studio.CustomRenderer
+namespace RetroDevStudio.CustomRenderer
 {
   public class ToolStripSeparatorRenderer : ToolStripProfessionalRenderer
   {

@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class EditC64Filename : Control
   {

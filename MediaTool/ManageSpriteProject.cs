@@ -13,7 +13,7 @@ namespace MediaTool
         return 1;
       }
 
-      var spriteProject = new C64Studio.Formats.SpriteProject();
+      var spriteProject = new RetroDevStudio.Formats.SpriteProject();
 
       if ( !spriteProject.ReadFromBuffer( GR.IO.File.ReadAllBytes( ArgParser.Parameter( "SPRITEPROJECT" ) ) ) )
       {

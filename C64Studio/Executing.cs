@@ -8,7 +8,7 @@ using System.Threading;
 using System.IO;
 using GR.Memory;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class Executing
   {

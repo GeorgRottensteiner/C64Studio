@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class Tiny64Debugger : IDebugger
   {
@@ -28,7 +28,7 @@ namespace C64Studio
     GR.Collections.Map<int, byte>     m_MemoryValues = new GR.Collections.Map<int, byte>();
     GR.Collections.Map<int, bool>     m_RequestedMemoryValues = new GR.Collections.Map<int, bool>();
 
-    GR.Collections.Set<Types.Breakpoint> m_BreakPoints = new GR.Collections.Set<C64Studio.Types.Breakpoint>();
+    GR.Collections.Set<Types.Breakpoint> m_BreakPoints = new GR.Collections.Set<RetroDevStudio.Types.Breakpoint>();
 
     public event BaseDocument.DocumentEventHandler DocumentEvent;
 
@@ -212,7 +212,7 @@ namespace C64Studio
         RequestData requData  = new RequestData( DebugRequestType.MEM_DUMP );
         requData.Parameter1   = Data.Parameter1;
         requData.Parameter2   = Data.Parameter1 + Data.Parameter2 - 1;
-        requData.Info         = "C64Studio.MemDump";
+        requData.Info         = "RetroDevStudio.MemDump";
         requData.Reason       = Data.Reason;
 
         if ( requData.Parameter2 >= 0x10000 )
@@ -235,7 +235,7 @@ namespace C64Studio
         RequestData requData  = new RequestData( DebugRequestType.MEM_DUMP );
         requData.Parameter1 = Data.Parameter1;
         requData.Parameter2 = Data.Parameter1 + Data.Parameter2 - 1;
-        requData.Info = "C64Studio.MemDumpRAM";
+        requData.Info = "RetroDevStudio.MemDumpRAM";
         requData.Reason = Data.Reason;
         if ( requData.Parameter2 >= 0x10000 )
         {

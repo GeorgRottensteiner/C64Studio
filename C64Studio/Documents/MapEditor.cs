@@ -1,4 +1,4 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class MapEditor : BaseDocument
   {
@@ -37,7 +37,7 @@ namespace C64Studio
       MAP_DATA_SELECTION
     }
 
-    private Formats.MapProject          m_MapProject = new C64Studio.Formats.MapProject();
+    private Formats.MapProject          m_MapProject = new RetroDevStudio.Formats.MapProject();
 
     private Formats.MapProject.Map      m_CurrentMap = null;
 
@@ -318,9 +318,9 @@ namespace C64Studio
 
 
 
-    void MainForm_ApplicationEvent( C64Studio.Types.ApplicationEvent Event )
+    void MainForm_ApplicationEvent( RetroDevStudio.Types.ApplicationEvent Event )
     {
-      if ( Event.EventType == C64Studio.Types.ApplicationEvent.Type.ELEMENT_CREATED )
+      if ( Event.EventType == RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_CREATED )
       {
         if ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
         {
@@ -330,7 +330,7 @@ namespace C64Studio
           comboCharScreens.Items.Add( item );
         }
       }
-      if ( Event.EventType == C64Studio.Types.ApplicationEvent.Type.ELEMENT_REMOVED )
+      if ( Event.EventType == RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_REMOVED )
       {
         if ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SCREEN )
         {
@@ -1519,7 +1519,7 @@ namespace C64Studio
 
       DataObject dataObj = new DataObject();
 
-      dataObj.SetData( "C64Studio.MapEditorSelection", false, dataSelection.MemoryStream() );
+      dataObj.SetData( "RetroDevStudio.MapEditorSelection", false, dataSelection.MemoryStream() );
 
       // TODO - Grafik?
       /*
@@ -1543,9 +1543,9 @@ namespace C64Studio
         System.Windows.Forms.MessageBox.Show( "The clipboard is empty" );
         return;
       }
-      if ( dataObj.GetDataPresent( "C64Studio.MapEditorSelection" ) )
+      if ( dataObj.GetDataPresent( "RetroDevStudio.MapEditorSelection" ) )
       {
-        System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "C64Studio.MapEditorSelection" );
+        System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.MapEditorSelection" );
 
         GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer( (uint)ms.Length );
 
@@ -2748,7 +2748,7 @@ namespace C64Studio
       string filename;
 
       //Clear();
-      if ( OpenFile( "Open map project", C64Studio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Open map project", RetroDevStudio.Types.Constants.FILEFILTER_CHARSET_CHARPAD + RetroDevStudio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         if ( System.IO.Path.GetExtension( filename ).ToUpper() == ".CHARSETPROJECT" )
         {
@@ -2783,7 +2783,7 @@ namespace C64Studio
     {
       GR.Memory.ByteBuffer projectFile = GR.IO.File.ReadAllBytes( filename );
 
-      Formats.CharpadProject    cpProject = new C64Studio.Formats.CharpadProject();
+      Formats.CharpadProject    cpProject = new RetroDevStudio.Formats.CharpadProject();
       if ( !cpProject.LoadFromFile( projectFile ) )
       {
         return false;
@@ -2970,7 +2970,7 @@ namespace C64Studio
         return;
       }
 
-      var newMap = new C64Studio.Formats.MapProject.Map();
+      var newMap = new RetroDevStudio.Formats.MapProject.Map();
       newMap.ExtraDataOld = new GR.Memory.ByteBuffer( m_CurrentMap.ExtraDataOld );
       newMap.ExtraDataText = string.Copy( m_CurrentMap.ExtraDataText );
       newMap.Name = string.Copy( m_CurrentMap.Name );

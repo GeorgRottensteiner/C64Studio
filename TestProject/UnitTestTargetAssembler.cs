@@ -12,13 +12,13 @@ namespace TestProject
       string      source = @"* = $8000
                               !byte 0,1,2,3,4,5,6,7";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_16K_BIN;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_16K_BIN;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -37,13 +37,13 @@ namespace TestProject
       string      source = @"* = $8000
                               !byte 0,1,2,3,4,5,6,7";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_16K_CRT;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_16K_CRT;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -62,13 +62,13 @@ namespace TestProject
       string      source = @"* = $8000
                               !byte 0,1,2,3,4,5,6,7";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_8K_BIN;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_8K_BIN;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -87,13 +87,13 @@ namespace TestProject
       string      source = @"* = $8000
                               !byte 0,1,2,3,4,5,6,7";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_8K_CRT;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_8K_CRT;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -112,13 +112,13 @@ namespace TestProject
       string      source = @"* = $8000
                               !byte 0,1,2,3,4,5,6,7";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_BIN;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -137,13 +137,13 @@ namespace TestProject
       string      source = @"* = $8000
                               !byte 0,1,2,3,4,5,6,7";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_EASYFLASH_CRT;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -162,13 +162,13 @@ namespace TestProject
       string      source = @"* = $8000
                               !byte 0,1,2,3,4,5,6,7";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_BIN;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -187,13 +187,13 @@ namespace TestProject
       string      source = @"* = $8000
                               !byte 0,1,2,3,4,5,6,7";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_MAGICDESK_CRT;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -212,13 +212,13 @@ namespace TestProject
       string      source = @"* = $8000
                               !byte 0,1,2,3,4,5,6,7";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_RGCD_BIN;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_RGCD_BIN;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -237,13 +237,13 @@ namespace TestProject
       string      source = @"* = $8000
                               !byte 0,1,2,3,4,5,6,7";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.TargetType = C64Studio.Types.CompileTargetType.CARTRIDGE_RGCD_CRT;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.CARTRIDGE_RGCD_CRT;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 

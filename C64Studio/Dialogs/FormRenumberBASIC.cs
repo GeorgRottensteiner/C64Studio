@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class FormRenumberBASIC : Form
   {
@@ -78,15 +78,15 @@ namespace C64Studio
       Parser.BasicFileParser.RenumberResult res = m_Core.Compiling.ParserBasic.CanRenumber( lineStart, lineStep, firstLineNumber, lastLineNumber );
       switch ( res )
       {
-        case C64Studio.Parser.BasicFileParser.RenumberResult.OK:
+        case RetroDevStudio.Parser.BasicFileParser.RenumberResult.OK:
           labelRenumberInfo.Text = "Press OK to renumber current listing";
           btnOK.Enabled = true;
           break;
-        case C64Studio.Parser.BasicFileParser.RenumberResult.TOO_MANY_LINES:
+        case RetroDevStudio.Parser.BasicFileParser.RenumberResult.TOO_MANY_LINES:
           labelRenumberInfo.Text = "Last line number is higher or equal 64000, reduce step value";
           btnOK.Enabled = false;
           break;
-        case C64Studio.Parser.BasicFileParser.RenumberResult.NOTHING_TO_DO:
+        case RetroDevStudio.Parser.BasicFileParser.RenumberResult.NOTHING_TO_DO:
           labelRenumberInfo.Text = "Nothing to do (Maybe parsing was not completed yet)";
           btnOK.Enabled = false;
           break;

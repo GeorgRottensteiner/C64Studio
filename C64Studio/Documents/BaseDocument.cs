@@ -1,4 +1,4 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using GR.Memory;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class BaseDocument : DockContent, IComparable
   {
@@ -192,7 +192,7 @@ namespace C64Studio
 
 
 
-    public virtual void OnApplicationEvent( C64Studio.Types.ApplicationEvent Event )
+    public virtual void OnApplicationEvent( Types.ApplicationEvent Event )
     {
     }
 
@@ -317,7 +317,7 @@ namespace C64Studio
     {
       if ( InvokeRequired )
       {
-        Invoke( new C64Studio.MainForm.ParameterLessCallback( SetModified ) );
+        Invoke( new RetroDevStudio.MainForm.ParameterLessCallback( SetModified ) );
         return;
       }
 
@@ -407,7 +407,7 @@ namespace C64Studio
         FloatPane.Text = TabText;
         FloatPane.FloatWindow.Text = TabText;
       }
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_FILENAME_CHANGED, DocumentInfo ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_FILENAME_CHANGED, DocumentInfo ) );
     }
 
 
@@ -768,17 +768,17 @@ namespace C64Studio
       }
       DisposeWatcher();
       Core.MainForm.ApplicationEvent -= OnApplicationEvent;
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, DocumentInfo ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, DocumentInfo ) );
       if ( DocumentInfo.Element != null )
       {
-        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_CLOSED, DocumentInfo.Element ) );
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_CLOSED, DocumentInfo.Element ) );
         DocumentInfo.Element.IsShown = false;
         DocumentInfo.Element.Document = null;
         DocumentInfo.BaseDoc = null;
       }
       else
       {
-        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, DocumentInfo ) );
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, DocumentInfo ) );
       }
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace C64Studio.Parser
+namespace RetroDevStudio.Parser
 {
   public class AssemblerSettings
   {

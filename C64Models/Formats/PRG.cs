@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   public class PRG : MediaFormat
   {
@@ -44,15 +44,15 @@ namespace C64Studio.Formats
 
 
 
-    public override List<C64Studio.Types.FileInfo> Files()
+    public override List<RetroDevStudio.Types.FileInfo> Files()
     {
       _LastError = "";
-      List<C64Studio.Types.FileInfo>  fileList = new List<C64Studio.Types.FileInfo>();
+      var  fileList = new List<RetroDevStudio.Types.FileInfo>();
 
-      C64Studio.Types.FileInfo info = new C64Studio.Types.FileInfo();
+      var info = new RetroDevStudio.Types.FileInfo();
       info.Filename = Filename;
       info.Blocks   = (int)Data.Length / 254;
-      info.Type     = C64Studio.Types.FileType.PRG;
+      info.Type     = Types.FileType.PRG;
       info.DirEntryIndex = 0;
 
       fileList.Add( info );
@@ -101,8 +101,8 @@ namespace C64Studio.Formats
         _LastError = "file not found";
         return null;
       }
-      Types.FileInfo fileInfo = new C64Studio.Types.FileInfo();
-      fileInfo.Type = C64Studio.Types.FileType.PRG;
+      var fileInfo = new Types.FileInfo();
+      fileInfo.Type = Types.FileType.PRG;
       fileInfo.Data = new GR.Memory.ByteBuffer( Data );
       fileInfo.Filename = new GR.Memory.ByteBuffer( Filename );
 
@@ -111,11 +111,11 @@ namespace C64Studio.Formats
 
 
 
-    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, C64Studio.Types.FileType Type )
+    public override bool WriteFile( GR.Memory.ByteBuffer Filename, GR.Memory.ByteBuffer Content, Types.FileType Type )
     {
       _LastError = "";
       if ( ( Data.Length > 0 )
-      ||   ( Type != C64Studio.Types.FileType.PRG ) )
+      ||   ( Type != Types.FileType.PRG ) )
       {
         _LastError = "invalid file type";
         return false;

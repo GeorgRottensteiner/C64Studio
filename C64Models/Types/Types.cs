@@ -4,12 +4,10 @@ using System.Text;
 using System.Reflection;
 using System.ComponentModel;
 using System.Windows.Forms;
-using C64Studio.Types;
 using RetroDevStudio;
+using RetroDevStudio.Types;
 
-
-
-namespace C64Studio.Types
+namespace RetroDevStudio.Types
 {
   public enum AssemblerType
   {
@@ -254,6 +252,8 @@ namespace C64Studio.Types
     E3004_BASIC_MISSING_LABEL               = 0x3004,
     E3005_BASIC_UNKNOWN_MACRO               = 0x3005,
     E3006_BASIC_LINE_TOO_LONG               = 0x3006,
+    E3007_BASIC_UNKNOWN_METADATA            = 0x3007,
+    E3008_BASIC_MALFORMED_METADATA          = 0x3008,
 
 
     WARNING_START                           = 0x7FFF,
@@ -1535,12 +1535,12 @@ namespace RetroDevStudio
     public static C64Character FindC64KeyByPETSCII( byte PETSCIIValue )
     {
       if ( ( PETSCIIValue >= 192 )
-      && ( PETSCIIValue <= 223 ) )
+      &&   ( PETSCIIValue <= 223 ) )
       {
         PETSCIIValue -= 96;
       }
       else if ( ( PETSCIIValue >= 224 )
-      && ( PETSCIIValue <= 254 ) )
+      &&        ( PETSCIIValue <= 254 ) )
       {
         PETSCIIValue -= 64;
       }

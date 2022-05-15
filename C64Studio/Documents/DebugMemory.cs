@@ -7,11 +7,11 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using Be.Windows.Forms;
 using System.Drawing;
-using C64Studio.Types;
+using RetroDevStudio.Types;
 using GR.Memory;
-using C64Studio.Debugger;
+using RetroDevStudio.Debugger;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class DebugMemory : BaseDocument
   {
@@ -624,13 +624,13 @@ namespace C64Studio
 
       if ( MemoryAsCPU )
       {
-        toolStripBtnMemoryFromCPU.Image = C64Studio.Properties.Resources.icon_memory_cpu.ToBitmap();
+        toolStripBtnMemoryFromCPU.Image = RetroDevStudio.Properties.Resources.icon_memory_cpu.ToBitmap();
         toolStripBtnMemoryFromCPU.ToolTipText = "Show RAM as CPU sees it";
         Core.Debugging.ActiveMemory = Core.Debugging.MemoryCPU;
       }
       else
       {
-        toolStripBtnMemoryFromCPU.Image = C64Studio.Properties.Resources.icon_memory_ram.ToBitmap();
+        toolStripBtnMemoryFromCPU.Image = RetroDevStudio.Properties.Resources.icon_memory_ram.ToBitmap();
         toolStripBtnMemoryFromCPU.ToolTipText = "Show RAM";
         Core.Debugging.ActiveMemory = Core.Debugging.MemoryRAM;
       }

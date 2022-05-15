@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.IdleQueue
+namespace RetroDevStudio.IdleQueue
 {
   public class IdleRequest
   {

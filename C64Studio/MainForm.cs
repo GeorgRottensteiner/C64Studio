@@ -7,17 +7,18 @@ using WeifenLuo.WinFormsUI.Docking;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using C64Studio.IdleQueue;
-using C64Studio.Types;
-using C64Studio.Displayer;
-using C64Studio.CustomRenderer;
-using C64Studio.Parser;
+using RetroDevStudio.IdleQueue;
+using RetroDevStudio.Types;
+using RetroDevStudio.Displayer;
+using RetroDevStudio.CustomRenderer;
+using RetroDevStudio.Parser;
 using GR.Image;
 using RetroDevStudio;
-using RetroDevStudio.Types;
 using System.Threading;
 
-namespace C64Studio
+
+
+namespace RetroDevStudio
 {
   public partial class MainForm : Form
   {
@@ -55,7 +56,7 @@ namespace C64Studio
 
     public StudioCore             StudioCore = new StudioCore();
 
-    private List<Tasks.Task>      m_Tasks = new List<C64Studio.Tasks.Task>();
+    private List<Tasks.Task>      m_Tasks = new List<RetroDevStudio.Tasks.Task>();
     private Tasks.Task            m_CurrentTask = null;
 
     private bool                  m_ChangingToolWindows = false;
@@ -93,7 +94,7 @@ namespace C64Studio
     public delegate void DocCallback( BaseDocument Document );
     delegate void DocumentEventHandlerCallback( BaseDocument.DocEvent Event );
     delegate void NotifyAllDocumentsCallback( bool CanToggleBreakpoints );
-    delegate void TaskFinishedCallback( C64Studio.Tasks.Task FinishedTask );
+    delegate void TaskFinishedCallback( RetroDevStudio.Tasks.Task FinishedTask );
     public delegate void ASMFileInfoCallback( Types.ASM.FileInfo ASMFileInfo );
 
 
@@ -446,7 +447,7 @@ namespace C64Studio
         }
         catch ( Exception ex2 )
         {
-          MessageBox.Show( "C64Studio can't find or open the C64 true type font file C64_Pro_Mono_v1.0-STYLE.ttf.\r\nMake sure it's in the path of C64Studio.exe.\r\n\r\n" + ex2.Message, "Can't load font" );
+          MessageBox.Show( "C64Studio can't find or open the C64 true type font file C64_Pro_Mono_v1.0-STYLE.ttf.\r\nMake sure it's in the path of RetroDevStudio.exe.\r\n\r\n" + ex2.Message, "Can't load font" );
           throw new Exception( "Missing font file 'C64_Pro_Mono_v1.0-STYLE.ttf'" );
         }
       }
@@ -487,7 +488,7 @@ namespace C64Studio
 
       // init custom renderer
       //ToolStripManager.Renderer = new CustomRenderer.CustomToolStripRenderer();
-      //ToolStripManager.Renderer = new C64Studio.CustomRenderer.LightToolStripRenderer();
+      //ToolStripManager.Renderer = new RetroDevStudio.CustomRenderer.LightToolStripRenderer();
 
       InitializeComponent();
 
@@ -635,7 +636,7 @@ namespace C64Studio
       StudioCore.Settings.Functions[Function.BUILD_TO_RELOCATION_FILE].MenuItem = relocationFileToolStripMenuItem;
 
       m_DebugMemory.hexView.TextFont = new System.Drawing.Font( m_FontC64.Families[0], 9, System.Drawing.GraphicsUnit.Pixel );
-      m_DebugMemory.hexView.ByteCharConverter = new C64Studio.Converter.PETSCIIToCharConverter();
+      m_DebugMemory.hexView.ByteCharConverter = new RetroDevStudio.Converter.PETSCIIToCharConverter();
 
       //DPIHandler.ResizeControlsForDPI( mainTools );
       //DPIHandler.ResizeControlsForDPI( debugTools  );
@@ -696,8 +697,8 @@ namespace C64Studio
 
       StudioCore.Compiling.ParserBasic.Settings.StripSpaces = StudioCore.Settings.BASICStripSpaces;
       StudioCore.Compiling.ParserBasic.Settings.StripREM    = StudioCore.Settings.BASICStripREM;
-      m_Outline.checkShowLocalLabels.Image = StudioCore.Settings.OutlineShowLocalLabels ? C64Studio.Properties.Resources.flag_green_on.ToBitmap() : C64Studio.Properties.Resources.flag_green_off.ToBitmap();
-      m_Outline.checkShowShortCutLabels.Image = StudioCore.Settings.OutlineShowShortCutLabels ? C64Studio.Properties.Resources.flag_blue_on.ToBitmap() : C64Studio.Properties.Resources.flag_blue_off.ToBitmap();
+      m_Outline.checkShowLocalLabels.Image = StudioCore.Settings.OutlineShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
+      m_Outline.checkShowShortCutLabels.Image = StudioCore.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
 
       EmulatorListUpdated();
 
@@ -1221,17 +1222,17 @@ namespace C64Studio
 
 
 
-    void MainForm_ApplicationEvent( C64Studio.Types.ApplicationEvent Event )
+    void MainForm_ApplicationEvent( RetroDevStudio.Types.ApplicationEvent Event )
     {
       switch ( Event.EventType )
       {
         case Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED:
           ApplyMenuShortCuts();
           break;
-        case C64Studio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED:
+        case RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED:
           EmulatorListUpdated();
           break;
-        case C64Studio.Types.ApplicationEvent.Type.DOCUMENT_ACTIVATED:
+        case RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_ACTIVATED:
           if ( Event.Doc == null )
           {
             mainToolPrint.Enabled = false;
@@ -1317,7 +1318,7 @@ namespace C64Studio
     void panelMain_ActiveDocumentChanged( object sender, EventArgs e )
     {
       var docInfo = ActiveDocumentInfo;
-      RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_ACTIVATED, docInfo ) );
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_ACTIVATED, docInfo ) );
 
       mainToolFind.Enabled = ( docInfo != null ) ? docInfo.Compilable : false;
       mainToolFindReplace.Enabled = mainToolFind.Enabled;
@@ -2361,7 +2362,7 @@ namespace C64Studio
 
     private void mainToolCompile_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.BUILD );
+      ApplyFunction( RetroDevStudio.Types.Function.BUILD );
     }
 
 
@@ -2392,7 +2393,7 @@ namespace C64Studio
       foreach ( System.Collections.Generic.KeyValuePair<int, Parser.ParserBase.ParseMessage> msg in Parser.Messages )
       {
         Parser.ParserBase.ParseMessage message = msg.Value;
-        if ( message.Type == C64Studio.Parser.ParserBase.ParseMessage.LineType.MESSAGE )
+        if ( message.Type == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.MESSAGE )
         {
           StudioCore.AddToOutput( message.Message + System.Environment.NewLine );
         }
@@ -2675,14 +2676,14 @@ namespace C64Studio
 
       if ( element.Document != null )
       {
-        RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_CREATED, element.DocumentInfo ) );
+        RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_CREATED, element.DocumentInfo ) );
       }
       projectToAdd.ShowDocument( element );
       if ( element.Document != null )
       {
         element.Document.SetModified();
       }
-      RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED, element.DocumentInfo ) );
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED, element.DocumentInfo ) );
       return element;
     }
 
@@ -2694,7 +2695,7 @@ namespace C64Studio
       {
         if ( !StudioCore.Debugging.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
         {
-          StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename] = new List<C64Studio.Types.Breakpoint>();
+          StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename] = new List<RetroDevStudio.Types.Breakpoint>();
         }
         StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Add( Breakpoint );
       }
@@ -2702,7 +2703,7 @@ namespace C64Studio
       {
         if ( !StudioCore.Debugging.BreakPoints.ContainsKey( Breakpoint.DocumentFilename ) )
         {
-          StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename] = new List<C64Studio.Types.Breakpoint>();
+          StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename] = new List<RetroDevStudio.Types.Breakpoint>();
         }
         StudioCore.Debugging.BreakPoints[Breakpoint.DocumentFilename].Add( Breakpoint );
         StudioCore.Debugging.Debugger.AddBreakpoint( Breakpoint );
@@ -2742,7 +2743,7 @@ namespace C64Studio
           }
         }
 
-        if ( Breakpoint.DocumentFilename != "C64Studio.DebugBreakpoints" )
+        if ( Breakpoint.DocumentFilename != "RetroDevStudio.DebugBreakpoints" )
         {
           var doc = StudioCore.Navigating.FindDocumentByFilename( Breakpoint.DocumentFilename );
           if ( ( doc != null )
@@ -2891,7 +2892,7 @@ namespace C64Studio
       m_SolutionExplorer.treeProject.Nodes.Add( newProject.Node );
       newProject.Node.Expand();
 
-      RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
 
       SetActiveProject( newProject );
 
@@ -3024,7 +3025,7 @@ namespace C64Studio
           element.Document.ForceClose();
         }
 
-        RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, element.DocumentInfo ) );
+        RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, element.DocumentInfo ) );
       }
 
       try
@@ -3116,7 +3117,7 @@ namespace C64Studio
       if ( m_CurrentProject != NewProject )
       {
         m_CurrentProject = NewProject;
-        RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED, NewProject ) );
+        RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ACTIVE_PROJECT_CHANGED, NewProject ) );
         if ( mainToolConfig.ComboBox != null )
         {
           mainToolConfig.Items.Clear();
@@ -3180,7 +3181,7 @@ namespace C64Studio
 
         if ( createdNewSolution )
         {
-          RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+          RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
         }
 
         SetActiveProject( newProject );
@@ -3362,7 +3363,7 @@ namespace C64Studio
 
     private void mainToolCompileAndRun_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.BUILD_AND_RUN );
+      ApplyFunction( RetroDevStudio.Types.Function.BUILD_AND_RUN );
     }
 
 
@@ -3642,7 +3643,7 @@ namespace C64Studio
 
     private void filePreferencesToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      Settings prefDlg = new Settings(StudioCore, C64Studio.Settings.TabPage.GENERAL);
+      Settings prefDlg = new Settings(StudioCore, RetroDevStudio.Settings.TabPage.GENERAL);
 
       prefDlg.ShowDialog();
     }
@@ -3783,7 +3784,7 @@ namespace C64Studio
 
     private void mainToolDebug_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.BUILD_AND_DEBUG );
+      ApplyFunction( RetroDevStudio.Types.Function.BUILD_AND_DEBUG );
     }
 
 
@@ -3812,7 +3813,7 @@ namespace C64Studio
         //mainDebugGo.Enabled = false;
         //mainDebugBreak.Enabled = true;
 
-        Types.Breakpoint tempBP = new C64Studio.Types.Breakpoint();
+        Types.Breakpoint tempBP = new RetroDevStudio.Types.Breakpoint();
         tempBP.Address = DebugAddress;
         tempBP.Temporary = true;
         Debug.Log( "Try to add Breakpoint at $" + DebugAddress.ToString( "X4" ) );
@@ -3952,7 +3953,7 @@ namespace C64Studio
 
     private void mainDebugStop_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.DEBUG_STOP );
+      ApplyFunction( RetroDevStudio.Types.Function.DEBUG_STOP );
     }
 
 
@@ -4534,7 +4535,7 @@ namespace C64Studio
         case Types.Function.FIND_NEXT_MESSAGE:
           StudioCore.Navigating.OpenSourceOfNextMessage();
           return true;
-        case C64Studio.Types.Function.OPEN_FILES:
+        case RetroDevStudio.Types.Function.OPEN_FILES:
           {
             System.Windows.Forms.OpenFileDialog openDlg = new System.Windows.Forms.OpenFileDialog();
             openDlg.Title = "Open existing item";
@@ -4556,9 +4557,9 @@ namespace C64Studio
             }
           }
           return true;
-        case C64Studio.Types.Function.TOGGLE_BREAKPOINT:
+        case RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT:
           if ( ( AppState != Types.StudioState.NORMAL )
-          &&   ( AppState != C64Studio.Types.StudioState.DEBUGGING_BROKEN ) )
+          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -4570,7 +4571,7 @@ namespace C64Studio
             return true;
           }
           break;
-        case C64Studio.Types.Function.HELP:
+        case RetroDevStudio.Types.Function.HELP:
           {
             string keywordBelow = null;
             if ( ( ActiveContent != null )
@@ -4590,10 +4591,10 @@ namespace C64Studio
             CallHelp( keywordBelow, ActiveDocumentInfo );
           }
           return true;
-        case C64Studio.Types.Function.FIND_NEXT:
+        case RetroDevStudio.Types.Function.FIND_NEXT:
           m_FindReplace.FindNext( ActiveDocument );
           return true;
-        case C64Studio.Types.Function.FIND:
+        case RetroDevStudio.Types.Function.FIND:
           {
             var compilableDoc = ActiveDocumentInfo.CompilableDocument;
             if ( compilableDoc != null )
@@ -4612,7 +4613,7 @@ namespace C64Studio
           m_FindReplace.comboSearchTarget.SelectedIndex = 1;
           m_FindReplace.AcceptButton = m_FindReplace.btnFindNext;
           return true;
-        case C64Studio.Types.Function.FIND_IN_PROJECT:
+        case RetroDevStudio.Types.Function.FIND_IN_PROJECT:
           {
             if ( ActiveDocumentInfo != null )
             {
@@ -4634,7 +4635,7 @@ namespace C64Studio
           m_FindReplace.comboSearchTarget.SelectedIndex = 4;
           m_FindReplace.AcceptButton = m_FindReplace.btnFindAll;
           return true;
-        case C64Studio.Types.Function.FIND_REPLACE:
+        case RetroDevStudio.Types.Function.FIND_REPLACE:
           {
             var compilableDoc = ActiveDocumentInfo.CompilableDocument;
             if ( compilableDoc != null )
@@ -4650,7 +4651,7 @@ namespace C64Studio
           StudioCore.Settings.Tools[ToolWindowType.FIND_REPLACE].Visible[m_ActivePerspective] = true;
           m_FindReplace.tabFindReplace.SelectedIndex = 1;
           return true;
-        case C64Studio.Types.Function.REPLACE_IN_PROJECT:
+        case RetroDevStudio.Types.Function.REPLACE_IN_PROJECT:
           {
             var compilableDoc = ActiveDocumentInfo.CompilableDocument;
             if ( compilableDoc != null )
@@ -4710,7 +4711,7 @@ namespace C64Studio
             }
           }
           break;
-        case C64Studio.Types.Function.CENTER_ON_CURSOR:
+        case RetroDevStudio.Types.Function.CENTER_ON_CURSOR:
           {
             // save current document
             BaseDocument curDoc = ActiveContent;
@@ -4727,27 +4728,27 @@ namespace C64Studio
             }
           }
           break;
-        case C64Studio.Types.Function.DEBUG_STEP:
+        case RetroDevStudio.Types.Function.DEBUG_STEP:
           StudioCore.Debugging.DebugStepInto();
           return true;
-        case C64Studio.Types.Function.DEBUG_STEP_OVER:
+        case RetroDevStudio.Types.Function.DEBUG_STEP_OVER:
           StudioCore.Debugging.DebugStepOver();
           return true;
         case Function.DEBUG_STEP_OUT:
           StudioCore.Debugging.DebugStepOut();
           return true;
-        case C64Studio.Types.Function.DEBUG_STOP:
+        case RetroDevStudio.Types.Function.DEBUG_STOP:
           StopDebugging();
           return true;
-        case C64Studio.Types.Function.DEBUG_GO:
+        case RetroDevStudio.Types.Function.DEBUG_GO:
           DebugGo();
           return true;
-        case C64Studio.Types.Function.DEBUG_BREAK:
+        case RetroDevStudio.Types.Function.DEBUG_BREAK:
           StudioCore.Debugging.DebugBreak();
           return true;
-        case C64Studio.Types.Function.DEBUG_RUN_TO:
+        case RetroDevStudio.Types.Function.DEBUG_RUN_TO:
           if ( ( AppState != Types.StudioState.NORMAL )
-          &&   ( AppState != C64Studio.Types.StudioState.DEBUGGING_BROKEN ) )
+          &&   ( AppState != RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN ) )
           {
             break;
           }
@@ -4769,7 +4770,7 @@ namespace C64Studio
             AddTask( new Tasks.TaskDebugRunTo( docToHandle, docToDebug, docActive ) );
           }
           return true;
-        case C64Studio.Types.Function.SAVE_ALL:
+        case RetroDevStudio.Types.Function.SAVE_ALL:
           SaveSolution();
           if ( StudioCore.Navigating.Solution != null )
           {
@@ -4811,7 +4812,7 @@ namespace C64Studio
             }
           }
           return true;
-        case C64Studio.Types.Function.SAVE_DOCUMENT:
+        case RetroDevStudio.Types.Function.SAVE_DOCUMENT:
           {
             // save current document
             BaseDocument docToSave = ActiveContent;
@@ -4849,7 +4850,7 @@ namespace C64Studio
             }
           }
           return true;
-        case C64Studio.Types.Function.SAVE_DOCUMENT_AS:
+        case RetroDevStudio.Types.Function.SAVE_DOCUMENT_AS:
           {
             // save current document as
             BaseDocument docToSave = ActiveContent;
@@ -4891,7 +4892,7 @@ namespace C64Studio
             }
           }
           return true;
-        case C64Studio.Types.Function.SAVE_DOCUMENT_COPY_AS:
+        case RetroDevStudio.Types.Function.SAVE_DOCUMENT_COPY_AS:
           {
             // save current document as
             BaseDocument docToSave = ActiveContent;
@@ -4932,7 +4933,7 @@ namespace C64Studio
             OpenFile( newFilename2 );
           }
           return true;
-        case C64Studio.Types.Function.COMPILE:
+        case RetroDevStudio.Types.Function.COMPILE:
           {
             DocumentInfo docToCompile = DetermineDocumentToCompile( true );
             if ( docToCompile != null )
@@ -4942,7 +4943,7 @@ namespace C64Studio
             }
           }
           break;
-        case C64Studio.Types.Function.BUILD:
+        case RetroDevStudio.Types.Function.BUILD:
           {
             DocumentInfo docToCompile = DetermineDocumentToCompile( true );
             if ( docToCompile != null )
@@ -4972,7 +4973,7 @@ namespace C64Studio
             }
           }
           break;
-        case C64Studio.Types.Function.REBUILD:
+        case RetroDevStudio.Types.Function.REBUILD:
           {
             DocumentInfo docToCompile = DetermineDocumentToCompile( true );
             if ( docToCompile != null )
@@ -4982,7 +4983,7 @@ namespace C64Studio
             }
           }
           break;
-        case C64Studio.Types.Function.BUILD_AND_RUN:
+        case RetroDevStudio.Types.Function.BUILD_AND_RUN:
           {
             DocumentInfo docToCompile = DetermineDocumentToCompile( true );
             if ( docToCompile != null )
@@ -4992,7 +4993,7 @@ namespace C64Studio
             }
           }
           break;
-        case C64Studio.Types.Function.BUILD_AND_DEBUG:
+        case RetroDevStudio.Types.Function.BUILD_AND_DEBUG:
           if ( AppState == Types.StudioState.NORMAL )
           {
             DocumentInfo docToCompile = DetermineDocumentToCompile( true );
@@ -5008,7 +5009,7 @@ namespace C64Studio
             return true;
           }
           break;
-        case C64Studio.Types.Function.GO_TO_DECLARATION:
+        case RetroDevStudio.Types.Function.GO_TO_DECLARATION:
           {
             DocumentInfo docToDebug = DetermineDocumentToCompile( false );
             DocumentInfo docToHandle = DetermineDocument();
@@ -5037,7 +5038,7 @@ namespace C64Studio
             }
           }
           break;
-        case C64Studio.Types.Function.UNDO:
+        case RetroDevStudio.Types.Function.UNDO:
           BaseDocument docUndo = ActiveDocument;
           if ( ( docUndo != null )
           &&   ( docUndo.UndoPossible ) )
@@ -5046,7 +5047,7 @@ namespace C64Studio
             return true;
           }
           break;
-        case C64Studio.Types.Function.REDO:
+        case RetroDevStudio.Types.Function.REDO:
           BaseDocument docRedo = ActiveDocument;
           if ( ( docRedo != null )
           &&   ( docRedo.RedoPossible ) )
@@ -5055,11 +5056,11 @@ namespace C64Studio
             return true;
           }
           break;
-        case C64Studio.Types.Function.DELETE_LINE:
-        case C64Studio.Types.Function.COPY_LINE_UP:
-        case C64Studio.Types.Function.COPY_LINE_DOWN:
-        case C64Studio.Types.Function.MOVE_LINE_DOWN:
-        case C64Studio.Types.Function.MOVE_LINE_UP:
+        case RetroDevStudio.Types.Function.DELETE_LINE:
+        case RetroDevStudio.Types.Function.COPY_LINE_UP:
+        case RetroDevStudio.Types.Function.COPY_LINE_DOWN:
+        case RetroDevStudio.Types.Function.MOVE_LINE_DOWN:
+        case RetroDevStudio.Types.Function.MOVE_LINE_UP:
           // let control handle it
           return false;
         case Function.COPY:
@@ -5216,7 +5217,7 @@ namespace C64Studio
             if ( StudioCore.Debugging.DebugDisassembly != null )
             {
               // update disassembly
-              Parser.Disassembler disassembler = new C64Studio.Parser.Disassembler(Tiny64.Processor.Create6510());
+              Parser.Disassembler disassembler = new RetroDevStudio.Parser.Disassembler(Tiny64.Processor.Create6510());
               string disassembly = "";
 
               disassembler.SetData( Data );
@@ -5251,11 +5252,11 @@ namespace C64Studio
           }
         }
 
-        if ( Request.Info == "C64Studio.MemDump" )
+        if ( Request.Info == "RetroDevStudio.MemDump" )
         {
           StudioCore.Debugging.UpdateMemory( Request, Data, false );
         }
-        else if ( Request.Info == "C64Studio.MemDumpRAM" )
+        else if ( Request.Info == "RetroDevStudio.MemDumpRAM" )
         {
           StudioCore.Debugging.UpdateMemory( Request, Data, true );
         }
@@ -5281,7 +5282,7 @@ namespace C64Studio
     public bool ParseFile( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration, string AdditionalPredefines, bool OutputMessages, bool CreatePreProcessedFile, bool CreateRelocationFile )
     {
       //Debug.Log( "Parsefile called for " + Document.DocumentFilename );
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.Assembler = Types.AssemblerType.AUTO;
       if ( Document.Element != null )
       {
@@ -5314,7 +5315,7 @@ namespace C64Studio
 
       bool result = Parser.ParseFile( Document.FullPath, sourceCode, Configuration, config, AdditionalPredefines );
 
-      if ( ( config.Assembler != C64Studio.Types.AssemblerType.AUTO )
+      if ( ( config.Assembler != RetroDevStudio.Types.AssemblerType.AUTO )
       &&   ( Document.BaseDoc != null )
       &&   ( Document.Element != null ) )
       {
@@ -5327,7 +5328,7 @@ namespace C64Studio
 
       if ( Document.Type == ProjectElement.ElementType.ASM_SOURCE )
       {
-        C64Studio.Parser.ASMFileParser asmParser = (C64Studio.Parser.ASMFileParser)Parser;
+        RetroDevStudio.Parser.ASMFileParser asmParser = (RetroDevStudio.Parser.ASMFileParser)Parser;
 
         Document.ASMFileInfo = asmParser.ASMFileInfo;
       }
@@ -5690,7 +5691,7 @@ namespace C64Studio
           StudioCore.Debugging.Debugger.ClearAllWatchEntries();
           StudioCore.Debugging.Debugger.ClearAllBreakpoints();
         }
-        RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_CLOSED ) );
+        RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_CLOSED ) );
       }
       return true;
     }
@@ -5701,7 +5702,7 @@ namespace C64Studio
     {
       CloseSolution();
 
-      //AddTask( new C64Studio.Tasks.TaskOpenSolution( Filename ) );
+      //AddTask( new RetroDevStudio.Tasks.TaskOpenSolution( Filename ) );
       StudioCore.Navigating.Solution = new Solution( this );
 
       GR.Memory.ByteBuffer solutionData = GR.IO.File.ReadAllBytes(Filename);
@@ -5724,7 +5725,7 @@ namespace C64Studio
       StudioCore.Navigating.Solution.Modified = false;
       StudioCore.Navigating.Solution.DuringLoad = false;
 
-      RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
       return true;
     }
 
@@ -5867,7 +5868,7 @@ namespace C64Studio
 
       StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
 
-      RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED, document.DocumentInfo ) );
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED, document.DocumentInfo ) );
 
       return document;
     }
@@ -5884,29 +5885,29 @@ namespace C64Studio
       switch ( DocInfo.Type )
       {
         case ProjectElement.ElementType.ASM_SOURCE:
-          return C64Studio.Properties.Resources.source;
+          return RetroDevStudio.Properties.Resources.source;
         case ProjectElement.ElementType.BASIC_SOURCE:
-          return C64Studio.Properties.Resources.source_basic;
+          return RetroDevStudio.Properties.Resources.source_basic;
         case ProjectElement.ElementType.CHARACTER_SCREEN:
-          return C64Studio.Properties.Resources.charsetscreen;
+          return RetroDevStudio.Properties.Resources.charsetscreen;
         case ProjectElement.ElementType.CHARACTER_SET:
-          return C64Studio.Properties.Resources.charset;
+          return RetroDevStudio.Properties.Resources.charset;
         case ProjectElement.ElementType.FOLDER:
-          return C64Studio.Properties.Resources.folder;
+          return RetroDevStudio.Properties.Resources.folder;
         case ProjectElement.ElementType.GRAPHIC_SCREEN:
-          return C64Studio.Properties.Resources.graphicscreen;
+          return RetroDevStudio.Properties.Resources.graphicscreen;
         case ProjectElement.ElementType.MAP_EDITOR:
-          return C64Studio.Properties.Resources.mapeditor;
+          return RetroDevStudio.Properties.Resources.mapeditor;
         case ProjectElement.ElementType.PROJECT:
-          return C64Studio.Properties.Resources.project;
+          return RetroDevStudio.Properties.Resources.project;
         case ProjectElement.ElementType.SOLUTION:
-          return C64Studio.Properties.Resources.solution;
+          return RetroDevStudio.Properties.Resources.solution;
         case ProjectElement.ElementType.SPRITE_SET:
-          return C64Studio.Properties.Resources.spriteset;
+          return RetroDevStudio.Properties.Resources.spriteset;
         case ProjectElement.ElementType.BINARY_FILE:
-          return C64Studio.Properties.Resources.binary;
+          return RetroDevStudio.Properties.Resources.binary;
         case ProjectElement.ElementType.VALUE_TABLE:
-          return C64Studio.Properties.Resources.valuetable;
+          return RetroDevStudio.Properties.Resources.valuetable;
       }
       return System.Drawing.SystemIcons.Asterisk;
     }
@@ -6083,7 +6084,7 @@ namespace C64Studio
 
 
 
-    void Task_TaskFinished( C64Studio.Tasks.Task FinishedTask )
+    void Task_TaskFinished( RetroDevStudio.Tasks.Task FinishedTask )
     {
       if ( InvokeRequired )
       {
@@ -6096,11 +6097,11 @@ namespace C64Studio
 
       switch ( FinishedTask.Type )
       {
-        case C64Studio.Tasks.Task.TaskType.PARSE_FILE:
+        case RetroDevStudio.Tasks.Task.TaskType.PARSE_FILE:
           break;
-        case C64Studio.Tasks.Task.TaskType.OPEN_SOLUTION:
+        case RetroDevStudio.Tasks.Task.TaskType.OPEN_SOLUTION:
           {
-            var taskOS = (C64Studio.Tasks.TaskOpenSolution)FinishedTask;
+            var taskOS = (RetroDevStudio.Tasks.TaskOpenSolution)FinishedTask;
 
             if ( !FinishedTask.TaskSuccessful )
             {
@@ -6112,7 +6113,7 @@ namespace C64Studio
               StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, taskOS.SolutionFilename, this );
               StudioCore.Navigating.Solution = taskOS.Solution;
               StudioCore.Navigating.Solution.Modified = false;
-              RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+              RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
             }
           }
           break;
@@ -6286,7 +6287,7 @@ namespace C64Studio
 
     private void mainToolCompile_Click_1( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.COMPILE );
+      ApplyFunction( RetroDevStudio.Types.Function.COMPILE );
     }
 
 
@@ -6429,7 +6430,7 @@ namespace C64Studio
 
     private void helpToolStripMenuItem1_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.HELP );
+      ApplyFunction( RetroDevStudio.Types.Function.HELP );
     }
 
 
@@ -6455,70 +6456,70 @@ namespace C64Studio
 
     private void fileOpenToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.OPEN_FILES );
+      ApplyFunction( RetroDevStudio.Types.Function.OPEN_FILES );
     }
 
 
 
     private void searchToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.FIND );
+      ApplyFunction( RetroDevStudio.Types.Function.FIND );
     }
 
 
 
     private void findReplaceToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.FIND_REPLACE );
+      ApplyFunction( RetroDevStudio.Types.Function.FIND_REPLACE );
     }
 
 
 
     private void mainToolFind_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.FIND );
+      ApplyFunction( RetroDevStudio.Types.Function.FIND );
     }
 
 
 
     private void mainToolFindReplace_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.FIND_REPLACE );
+      ApplyFunction( RetroDevStudio.Types.Function.FIND_REPLACE );
     }
 
 
 
     private void mainToolPrint_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.PRINT );
+      ApplyFunction( RetroDevStudio.Types.Function.PRINT );
     }
 
 
 
     private void mainToolSaveAll_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.SAVE_ALL );
+      ApplyFunction( RetroDevStudio.Types.Function.SAVE_ALL );
     }
 
 
 
     private void saveToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.SAVE_DOCUMENT );
+      ApplyFunction( RetroDevStudio.Types.Function.SAVE_DOCUMENT );
     }
 
 
 
     private void saveAsToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.SAVE_DOCUMENT_AS );
+      ApplyFunction( RetroDevStudio.Types.Function.SAVE_DOCUMENT_AS );
     }
 
 
 
     private void saveAllToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.SAVE_ALL );
+      ApplyFunction( RetroDevStudio.Types.Function.SAVE_ALL );
     }
 
 
@@ -6687,7 +6688,7 @@ namespace C64Studio
           m_SolutionExplorer.treeProject.Nodes.Add( newProject.Node );
           newProject.Node.Collapse();
 
-          RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
+          RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_OPENED ) );
 
           SetActiveProject( newProject );
           projectToolStripMenuItem.Visible = true;
@@ -6881,7 +6882,7 @@ namespace C64Studio
 
     private void runTestsToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      UnitTests.TestManager manager = new C64Studio.UnitTests.TestManager(this);
+      UnitTests.TestManager manager = new RetroDevStudio.UnitTests.TestManager(this);
 
       manager.RunTests();
     }
@@ -6901,7 +6902,7 @@ namespace C64Studio
 
     private void mainToolRebuild_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.REBUILD );
+      ApplyFunction( RetroDevStudio.Types.Function.REBUILD );
     }
 
 
@@ -7065,21 +7066,21 @@ namespace C64Studio
 
     private void mainToolOpenFile_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.OPEN_FILES );
+      ApplyFunction( RetroDevStudio.Types.Function.OPEN_FILES );
     }
 
 
 
     private void mainToolCommentSelection_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.COMMENT_SELECTION );
+      ApplyFunction( RetroDevStudio.Types.Function.COMMENT_SELECTION );
     }
 
 
 
     private void mainToolUncommentSelection_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.UNCOMMENT_SELECTION );
+      ApplyFunction( RetroDevStudio.Types.Function.UNCOMMENT_SELECTION );
     }
 
 
@@ -7099,38 +7100,38 @@ namespace C64Studio
 
     private void compileToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.COMPILE );
+      ApplyFunction( RetroDevStudio.Types.Function.COMPILE );
     }
 
 
     private void buildToolStripMenuItem1_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.BUILD );
+      ApplyFunction( RetroDevStudio.Types.Function.BUILD );
     }
 
 
     private void rebuildToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.REBUILD );
+      ApplyFunction( RetroDevStudio.Types.Function.REBUILD );
     }
 
 
     private void buildandRunToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.BUILD_AND_RUN );
+      ApplyFunction( RetroDevStudio.Types.Function.BUILD_AND_RUN );
     }
 
 
     private void debugToolStripMenuItem1_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.BUILD_AND_DEBUG );
+      ApplyFunction( RetroDevStudio.Types.Function.BUILD_AND_DEBUG );
     }
 
 
 
     private void preprocessedFileToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.BUILD_TO_PREPROCESSED_FILE );
+      ApplyFunction( RetroDevStudio.Types.Function.BUILD_TO_PREPROCESSED_FILE );
     }
 
 
@@ -7469,7 +7470,7 @@ namespace C64Studio
 
     private void saveCopyAsToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.SAVE_DOCUMENT_COPY_AS );
+      ApplyFunction( RetroDevStudio.Types.Function.SAVE_DOCUMENT_COPY_AS );
     }
 
 
@@ -7486,7 +7487,7 @@ namespace C64Studio
 
     private void relocationFileToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      ApplyFunction( C64Studio.Types.Function.BUILD_TO_RELOCATION_FILE );
+      ApplyFunction( RetroDevStudio.Types.Function.BUILD_TO_RELOCATION_FILE );
     }
 
 

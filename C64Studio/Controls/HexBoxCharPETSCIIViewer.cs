@@ -1,4 +1,4 @@
-﻿using C64Studio.Displayer;
+﻿using RetroDevStudio.Displayer;
 using RetroDevStudio;
 using System.Drawing;
 

@@ -1,4 +1,4 @@
-﻿using C64Studio.Controls;
+﻿using RetroDevStudio.Controls;
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Text;
 
 
 
-namespace C64Studio.Displayer
+namespace RetroDevStudio.Displayer
 {
   public class CharacterDisplayer
   {

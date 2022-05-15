@@ -1,8 +1,7 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using GR.Memory;
 using RetroDevStudio;
 using RetroDevStudio.Formats;
-using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,9 +10,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using static C64Studio.BaseDocument;
+using static RetroDevStudio.BaseDocument;
 
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   public partial class ExportCharsetAsImageFile : ExportCharsetFormBase
   {
@@ -37,7 +36,7 @@ namespace C64Studio.Controls
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
       saveDlg.Title = "Export Characters to Image";
-      saveDlg.Filter = Core.MainForm.FilterString( C64Studio.Types.Constants.FILEFILTER_IMAGE_FILES );
+      saveDlg.Filter = Core.MainForm.FilterString( RetroDevStudio.Types.Constants.FILEFILTER_IMAGE_FILES );
       if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
       {
         return false;

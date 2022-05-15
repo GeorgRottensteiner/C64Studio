@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class MapEditor
   {
@@ -142,7 +142,7 @@
       this.panelCharColors = new GR.Forms.FastPictureBox();
       this.pictureTileDisplay = new GR.Forms.FastPictureBox();
       this.tabCharset = new System.Windows.Forms.TabPage();
-      this.characterEditor = new C64Studio.Controls.CharacterEditor();
+      this.characterEditor = new RetroDevStudio.Controls.CharacterEditor();
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.label7 = new System.Windows.Forms.Label();
       this.label8 = new System.Windows.Forms.Label();
@@ -488,7 +488,7 @@
       // 
       // btnCopyMapImage
       // 
-      this.btnCopyMapImage.Image = global::C64Studio.Properties.Resources.edit_copy;
+      this.btnCopyMapImage.Image = global::RetroDevStudio.Properties.Resources.edit_copy;
       this.btnCopyMapImage.Location = new System.Drawing.Point(357, 432);
       this.btnCopyMapImage.Name = "btnCopyMapImage";
       this.btnCopyMapImage.Size = new System.Drawing.Size(39, 24);
@@ -500,7 +500,7 @@
       // btnToolSelect
       // 
       this.btnToolSelect.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolSelect.Image = global::C64Studio.Properties.Resources.tool_select;
+      this.btnToolSelect.Image = global::RetroDevStudio.Properties.Resources.tool_select;
       this.btnToolSelect.Location = new System.Drawing.Point(103, 432);
       this.btnToolSelect.Name = "btnToolSelect";
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
@@ -511,7 +511,7 @@
       // btnToolFill
       // 
       this.btnToolFill.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolFill.Image = global::C64Studio.Properties.Resources.tool_fill;
+      this.btnToolFill.Image = global::RetroDevStudio.Properties.Resources.tool_fill;
       this.btnToolFill.Location = new System.Drawing.Point(79, 432);
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
@@ -522,7 +522,7 @@
       // btnToolQuad
       // 
       this.btnToolQuad.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolQuad.Image = global::C64Studio.Properties.Resources.tool_quad;
+      this.btnToolQuad.Image = global::RetroDevStudio.Properties.Resources.tool_quad;
       this.btnToolQuad.Location = new System.Drawing.Point(55, 432);
       this.btnToolQuad.Name = "btnToolQuad";
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
@@ -533,7 +533,7 @@
       // btnToolRect
       // 
       this.btnToolRect.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolRect.Image = global::C64Studio.Properties.Resources.tool_rect;
+      this.btnToolRect.Image = global::RetroDevStudio.Properties.Resources.tool_rect;
       this.btnToolRect.Location = new System.Drawing.Point(31, 432);
       this.btnToolRect.Name = "btnToolRect";
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
@@ -545,7 +545,7 @@
       // 
       this.btnToolEdit.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToolEdit.Checked = true;
-      this.btnToolEdit.Image = global::C64Studio.Properties.Resources.tool_none;
+      this.btnToolEdit.Image = global::RetroDevStudio.Properties.Resources.tool_none;
       this.btnToolEdit.Location = new System.Drawing.Point(7, 432);
       this.btnToolEdit.Name = "btnToolEdit";
       this.btnToolEdit.Size = new System.Drawing.Size(24, 24);
@@ -1367,8 +1367,8 @@
       this.characterEditor.Name = "characterEditor";
       this.characterEditor.Size = new System.Drawing.Size(1056, 475);
       this.characterEditor.TabIndex = 0;
-      this.characterEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.characterEditor_Modified);
-      this.characterEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.characterEditor_CharactersShifted);
+      this.characterEditor.Modified += new RetroDevStudio.Controls.CharacterEditor.ModifiedHandler(this.characterEditor_Modified);
+      this.characterEditor.CharactersShifted += new RetroDevStudio.Controls.CharacterEditor.CharsetShiftedHandler(this.characterEditor_CharactersShifted);
       // 
       // tabPage1
       // 

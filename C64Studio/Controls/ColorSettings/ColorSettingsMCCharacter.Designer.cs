@@ -1,5 +1,5 @@
 ﻿
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   partial class ColorSettingsMCCharacter
   {
@@ -37,7 +37,7 @@ namespace C64Studio.Controls
       this.radioMultiColor1 = new System.Windows.Forms.RadioButton();
       this.radioMulticolor2 = new System.Windows.Forms.RadioButton();
       this.radioCharColor = new System.Windows.Forms.RadioButton();
-      this.btnExchangeColors = new C64Studio.Controls.MenuButton();
+      this.btnExchangeColors = new RetroDevStudio.Controls.MenuButton();
       this.comboMulticolor2 = new System.Windows.Forms.ComboBox();
       this.contextMenuExchangeColors = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.exchangeMultiColor1WithMultiColor2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();

@@ -1,4 +1,4 @@
-﻿namespace C64Studio.Controls
+﻿namespace RetroDevStudio.Controls
 {
   partial class CharacterEditor
   {
@@ -59,7 +59,7 @@
       this.tabCharacterEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.panelColorSettings = new System.Windows.Forms.Panel();
-      this.canvasEditor = new C64Studio.Controls.CustomDrawControl();
+      this.canvasEditor = new RetroDevStudio.Controls.CustomDrawControl();
       this.comboCharsetMode = new System.Windows.Forms.ComboBox();
       this.labelCharsetMode = new System.Windows.Forms.Label();
       this.panelCharColors = new GR.Forms.FastPictureBox();

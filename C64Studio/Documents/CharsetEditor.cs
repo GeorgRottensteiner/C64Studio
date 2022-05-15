@@ -5,16 +5,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using C64Studio.Controls;
-using C64Studio.Formats;
-using C64Studio.Types;
-using GR.Memory;
-using RetroDevStudio;
+using RetroDevStudio.Controls;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
+using GR.Memory;
+using RetroDevStudio;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class CharsetEditor : BaseDocument
   {
@@ -26,7 +24,7 @@ namespace C64Studio
       CHAR_COLOR
     }
 
-    public Formats.CharsetProject       m_Charset = new C64Studio.Formats.CharsetProject();
+    public Formats.CharsetProject       m_Charset = new RetroDevStudio.Formats.CharsetProject();
 
     private System.Drawing.Font         m_DefaultOutputFont = null;
     private ExportCharsetFormBase       m_ExportForm = null;
@@ -137,7 +135,7 @@ namespace C64Studio
     {
       string    filename;
 
-      if ( OpenFile( "Open Charset Project", C64Studio.Types.Constants.FILEFILTER_CHARSET_PROJECT + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Open Charset Project", RetroDevStudio.Types.Constants.FILEFILTER_CHARSET_PROJECT + RetroDevStudio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         OpenProject( filename );
       }

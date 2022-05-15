@@ -1,11 +1,11 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Authentication;
 using System.Text;
 
-namespace C64Studio.Tasks
+namespace RetroDevStudio.Tasks
 {
   public class VersionInfoParts
   {

@@ -12,7 +12,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda $1234";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010AD3412", assembly.ToString() );
     }
@@ -25,7 +25,7 @@ namespace TestProject
       string      source = @"!set * = $1000
                             lda $1234";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010AD3412", assembly.ToString() );
     }
@@ -38,7 +38,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda $12";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010A512", assembly.ToString() );
     }
@@ -51,7 +51,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda $12,x";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010B512", assembly.ToString() );
     }
@@ -64,7 +64,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda $12,y";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010B91200", assembly.ToString() );
     }
@@ -77,7 +77,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda $1234,x";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010BD3412", assembly.ToString() );
     }
@@ -92,17 +92,17 @@ namespace TestProject
       string      source = @"* = $1000
                             lda ($1234),x";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       bool parseResult = parser.Parse( source, null, config, null );
       Assert.IsFalse( parseResult );
-      //var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      //var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
       //Assert.AreEqual( "0010BD3412", assembly.ToString() );
     }
 
@@ -114,7 +114,7 @@ namespace TestProject
       string      source = @"* = $1000
                             adc($12, x )";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "00106112", assembly.ToString() );
     }
@@ -127,18 +127,18 @@ namespace TestProject
       string      source = @"* = $1000
                             lda ($12),x";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       bool parseResult = parser.Parse( source, null, config, null );
       Assert.IsFalse( parseResult );
 
-      //var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      //var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
       //Assert.AreEqual( "0010B512", assembly.ToString() );
     }
 
@@ -151,18 +151,18 @@ namespace TestProject
                               * = $1000
                             sta (LABEL),x";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       bool parseResult = parser.Parse( source, null, config, null );
       Assert.IsFalse( parseResult );
 
-      //var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      //var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
       //Assert.AreEqual( "0010B512", assembly.ToString() );
     }
 
@@ -174,7 +174,7 @@ namespace TestProject
       string      source = @"* = $1000
                             lda ($12),y";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010B112", assembly.ToString() );
     }
@@ -187,13 +187,13 @@ namespace TestProject
       string      source = @"* = $1000
                             lda ($1234),y";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       bool parseResult = parser.Parse( source, null, config, null );
       Assert.IsFalse( parseResult );
@@ -201,15 +201,15 @@ namespace TestProject
 
 
 
-    private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source, out C64Studio.Types.ASM.FileInfo Info )
+    private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source, out RetroDevStudio.Types.ASM.FileInfo Info )
     {
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       bool parseResult = parser.Parse( Source, null, config, null );
       if ( !parseResult )
@@ -234,7 +234,7 @@ namespace TestProject
 
     private GR.Memory.ByteBuffer TestAssembleC64Studio( string Source )
     {
-      return TestAssembleC64Studio( Source, out C64Studio.Types.ASM.FileInfo Info );
+      return TestAssembleC64Studio( Source, out RetroDevStudio.Types.ASM.FileInfo Info );
     }
 
 
@@ -246,23 +246,23 @@ namespace TestProject
                 !byte 2,""http://www.georg-rottensteiner.de/test/haus1.html""
                 !byte ""http://www.georg-rottensteiner.de/test/haus1.html""";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsFalse( parser.Parse( source, null, config, null ) );
 
       Assert.AreEqual( 2, parser.Errors );
-      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, parser.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, parser.Messages.Values[0].Code );
       Assert.IsTrue( parser.Messages.Values[0].Message.Contains( "More than one" ) );
 
-      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[1].Type );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, parser.Messages.Values[1].Code );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[1].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, parser.Messages.Values[1].Code );
       Assert.IsTrue( parser.Messages.Values[1].Message.Contains( "More than one" ) );
     }
 
@@ -277,13 +277,13 @@ namespace TestProject
                              * = $20fe
                              rts";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -292,8 +292,8 @@ namespace TestProject
       var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( 1, parser.Warnings );
-      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.SEVERE_WARNING, parser.Messages.Values[0].Type  );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.W0001_SEGMENT_OVERLAP, parser.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.SEVERE_WARNING, parser.Messages.Values[0].Type  );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0001_SEGMENT_OVERLAP, parser.Messages.Values[0].Code );
 
       Assert.AreEqual( "002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000", assembly.Assembly.ToString() );
     }
@@ -316,7 +316,7 @@ namespace TestProject
               sta VALUE_2
               rts";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0108A502850360", assembly.ToString() );
       Assert.AreEqual( 0x0002, info.Labels["VALUE_1"].AddressOrValue );
@@ -344,7 +344,7 @@ namespace TestProject
               sta VALUE_2
               rts";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "050001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000A502850360", assembly.ToString() );
       Assert.AreEqual( 0x0002, info.Labels["VALUE_1"].AddressOrValue );
@@ -362,13 +362,13 @@ namespace TestProject
 
                              jmp (JUMP_ADDRESS )";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -377,8 +377,8 @@ namespace TestProject
       var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( 1, parser.Warnings );
-      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.W0007_POTENTIAL_PROBLEM, parser.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0007_POTENTIAL_PROBLEM, parser.Messages.Values[0].Code );
 
       Assert.AreEqual( "00206CFF3F", assembly.Assembly.ToString() );
     }
@@ -394,13 +394,13 @@ namespace TestProject
 
                             JUMP_ADDRESS = $3fff";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -409,8 +409,8 @@ namespace TestProject
       var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( 1, parser.Warnings );
-      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.W0007_POTENTIAL_PROBLEM, parser.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING, parser.Messages.Values[0].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.W0007_POTENTIAL_PROBLEM, parser.Messages.Values[0].Code );
 
       Assert.AreEqual( "00206CFF3F", assembly.Assembly.ToString() );
     }
@@ -428,13 +428,13 @@ namespace TestProject
                             jmp Zeropage_Routine
                             !byte 50+100";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config ) );
 
@@ -443,8 +443,8 @@ namespace TestProject
       var assembly = parser.AssembledOutput;
 
       Assert.AreEqual( 1, parser.Errors );
-      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.E1106_SEGMENT_OUT_OF_BOUNDS, parser.Messages.Values[0].Code );*/
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1106_SEGMENT_OUT_OF_BOUNDS, parser.Messages.Values[0].Code );*/
     }
 
 
@@ -455,19 +455,19 @@ namespace TestProject
       string      source = @"* = $ff00
                              jmp $12345";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsFalse( parser.Parse( source, null, config, null ) );
 
       Assert.AreEqual( 1, parser.Errors );
-      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, parser.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, parser.Messages.Values[0].Code );
     }
 
 
@@ -480,19 +480,19 @@ namespace TestProject
                              jmp Zeropage_Routine2
                              Zeropage_Routine2";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsFalse( parser.Parse( source, null, config, null ) );
 
       Assert.AreEqual( 1, parser.Errors );
-      Assert.AreEqual( C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
-      Assert.AreEqual( C64Studio.Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, parser.Messages.Values[0].Code );
+      Assert.AreEqual( RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.ERROR, parser.Messages.Values[0].Type );
+      Assert.AreEqual( RetroDevStudio.Types.ErrorCode.E1003_VALUE_OUT_OF_BOUNDS_WORD, parser.Messages.Values[0].Code );
     }
 
 
@@ -503,13 +503,13 @@ namespace TestProject
       string      source = @"* = $2000
                              !fill $80000";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -541,7 +541,7 @@ namespace TestProject
                                 !end
                                 rts";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo Info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo Info );
 
       Assert.AreEqual( "0020A000B90104990004C8C927D0F5BD28208D2704A000B92904992804C8C927D0F5BD28218D4F04A000B95104995004C8C927D0F5BD28228D7704A000B97904997804C8C927D0F5BD28238D9F04A000B9A10499A004C8C927D0F5BD28248DC704A000B9C90499C804C8C927D0F5BD28258DEF04A000B9F10499F004C8C927D0F5BD28268D1705A000B91905991805C8C927D0F5BD28278D3F05A000B94105994005C8C927D0F5BD28288D6705A000B96905996805C8C927D0F5BD28298D8F05A000B99105999005C8C927D0F5BD282A8DB705A000B9B90599B805C8C927D0F5BD282B8DDF05A000B9E10599E005C8C927D0F5BD282C8D0706A000B90906990806C8C927D0F5BD282D8D2F06A000B93106993006C8C927D0F5BD282E8D5706A000B95906995806C8C927D0F5BD282F8D7F06A000B98106998006C8C927D0F5BD28308DA706A000B9A90699A806C8C927D0F5BD28318DCF06A000B9D10699D006C8C927D0F5BD28328DF706A000B9F90699F806C8C927D0F5BD28338D1F07A000B92107992007C8C927D0F5BD28348D4707A000B94907994807C8C927D0F5BD28358D6F07A000B97107997007C8C927D0F5BD28368D9707A000B99907999807C8C927D0F5BD28378DBF07A000B9C10799C007C8C927D0F5BD28388DE707A000B9E90799E807C8C927D0F5BD28398D0F0860", assembly.ToString() );
     }
@@ -564,7 +564,7 @@ namespace TestProject
                               !end
                               !end";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
       Assert.AreEqual( "0020BD00C08D28D8BD01C08D29D8BD28C08D50D8BD29C08D51D8", assembly.ToString() );
     }
 
@@ -581,13 +581,13 @@ namespace TestProject
             inx
 !end";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -634,12 +634,12 @@ namespace TestProject
                                         !byte $17
                               * = $2000  ";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.crt";
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -704,12 +704,12 @@ namespace TestProject
               !BYTE %00000000,%11100000,%00000000
               !BYTE $00";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -730,7 +730,7 @@ namespace TestProject
                             lda #""i""
                             !byte ""i""";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010A96969", assembly.ToString() );
     }
@@ -746,7 +746,7 @@ namespace TestProject
                             lda #'a'
                             !byte 'b'";
 
-      var assembly = TestAssembleC64Studio( source, out C64Studio.Types.ASM.FileInfo info );
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
 
       Assert.AreEqual( "0010A96162", assembly.ToString() );
     }

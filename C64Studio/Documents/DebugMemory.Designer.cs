@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class DebugMemory
   {
@@ -143,7 +143,7 @@
       // toolStripBtnGoto
       // 
       this.toolStripBtnGoto.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.toolStripBtnGoto.Image = global::C64Studio.Properties.Resources.DebugMemoryGoto;
+      this.toolStripBtnGoto.Image = global::RetroDevStudio.Properties.Resources.DebugMemoryGoto;
       this.toolStripBtnGoto.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnGoto.Name = "toolStripBtnGoto";
       this.toolStripBtnGoto.Size = new System.Drawing.Size(23, 22);
@@ -168,7 +168,7 @@
       // toolStripBtnAddView
       // 
       this.toolStripBtnAddView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.toolStripBtnAddView.Image = global::C64Studio.Properties.Resources.add;
+      this.toolStripBtnAddView.Image = global::RetroDevStudio.Properties.Resources.add;
       this.toolStripBtnAddView.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnAddView.Name = "toolStripBtnAddView";
       this.toolStripBtnAddView.Size = new System.Drawing.Size(23, 22);

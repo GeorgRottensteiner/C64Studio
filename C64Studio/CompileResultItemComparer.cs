@@ -3,7 +3,7 @@ using System.Collections;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class CompileResultItemComparer : IComparer
   {

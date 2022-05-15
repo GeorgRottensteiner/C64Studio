@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using C64Studio.Formats;
+using RetroDevStudio.Formats;
 using RetroDevStudio;
 
-namespace C64Studio.Undo
+namespace RetroDevStudio.Undo
 {
   public class UndoCharscreenCharsetChange : UndoTask
   {

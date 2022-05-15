@@ -94,21 +94,21 @@ namespace MediaManager
       }
 
       // load
-      C64Studio.Formats.MediaFormat   medium = null;
+      RetroDevStudio.Formats.MediaFormat   medium = null;
       string                          mediumFilename = "";
       if ( paramMap.ContainsKey( "-D64" ) )
       {
-        medium = new C64Studio.Formats.D64();
+        medium = new RetroDevStudio.Formats.D64();
         mediumFilename = paramMap["-D64"];
       }
       else if ( paramMap.ContainsKey( "-D81" ) )
       {
-        medium = new C64Studio.Formats.D81();
+        medium = new RetroDevStudio.Formats.D81();
         mediumFilename = paramMap["-D81"];
       }
       else if ( paramMap.ContainsKey( "-T64" ) )
       {
-        medium = new C64Studio.Formats.T64();
+        medium = new RetroDevStudio.Formats.T64();
         mediumFilename = paramMap["-T64"];
       }
 
@@ -121,9 +121,9 @@ namespace MediaManager
       // handle command
       if ( methodToUse == "-LISTFILES" )
       {
-        List<C64Studio.Types.FileInfo> files = medium.Files();
+        List<RetroDevStudio.Types.FileInfo> files = medium.Files();
 
-        foreach ( C64Studio.Types.FileInfo file in files )
+        foreach ( RetroDevStudio.Types.FileInfo file in files )
         {
           string    filename = Util.FilenameToReadableUnicode( file.Filename );
           filename = filename.PadRight( 16 );
@@ -133,7 +133,7 @@ namespace MediaManager
       }
       else if ( methodToUse == "-EXPORT" )
       {
-        C64Studio.Types.FileInfo fileInfo = medium.LoadFile( Util.ToFilename( paramMap["-EXPORT"] ) );
+        RetroDevStudio.Types.FileInfo fileInfo = medium.LoadFile( Util.ToFilename( paramMap["-EXPORT"] ) );
         if ( fileInfo != null )
         {
           string outputFilename = paramMap["-EXPORT"];
@@ -154,7 +154,7 @@ namespace MediaManager
       }
       else if ( methodToUse == "-DELETE" )
       {
-        C64Studio.Types.FileInfo fileInfo = medium.LoadFile( Util.ToFilename( paramMap["-DELETE"] ) );
+        RetroDevStudio.Types.FileInfo fileInfo = medium.LoadFile( Util.ToFilename( paramMap["-DELETE"] ) );
         if ( fileInfo != null )
         {
           if ( !medium.DeleteFile( Util.ToFilename( paramMap["-DELETE"] ) ) )
@@ -232,7 +232,7 @@ namespace MediaManager
         {
           filenameImport = paramMap["-RENAMETO"];
         }
-        if ( !medium.WriteFile( Util.ToFilename( filenameImport ), data, C64Studio.Types.FileType.PRG ) )
+        if ( !medium.WriteFile( Util.ToFilename( filenameImport ), data, RetroDevStudio.Types.FileType.PRG ) )
         {
           System.Console.Error.WriteLine( "Could not write file to medium: " + medium.LastError );
           return 1;

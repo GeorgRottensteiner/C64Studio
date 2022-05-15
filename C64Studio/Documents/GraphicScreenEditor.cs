@@ -4,13 +4,12 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
-using C64Studio.Types;
-using RetroDevStudio;
 using RetroDevStudio.Types;
+using RetroDevStudio;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class GraphicScreenEditor : BaseDocument, IDisposable
   {
@@ -83,7 +82,7 @@ namespace C64Studio
     private List<Formats.CharData>      m_Chars = new List<Formats.CharData>();
     private System.Drawing.Point        m_SelectedChar = new System.Drawing.Point( -1, -1 );
 
-    public Formats.GraphicScreenProject m_GraphicScreenProject = new C64Studio.Formats.GraphicScreenProject();
+    public Formats.GraphicScreenProject m_GraphicScreenProject = new RetroDevStudio.Formats.GraphicScreenProject();
 
     private PaintTool                   m_PaintTool = PaintTool.VALIDATE;
 
@@ -117,7 +116,7 @@ namespace C64Studio
       PaletteManager.ApplyPalette( m_GraphicScreenProject.Image );
       PaletteManager.ApplyPalette( colorSelector.DisplayPage );
 
-      foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
+      foreach ( RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
       {
         comboColorMappingTargets.Items.Add( GR.EnumHelper.GetDescription( entry ) );
       }
@@ -375,11 +374,11 @@ namespace C64Studio
               charEditor.DisplayPage.DrawImage( m_GraphicScreenProject.Image, 0, 0, m_SelectedChar.X * 8, m_SelectedChar.Y * 8, 8, 8 );
               charEditor.Invalidate();
 
-              if ( m_GraphicScreenProject.SelectedCheckType == C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
+              if ( m_GraphicScreenProject.SelectedCheckType == RetroDevStudio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP )
               {
                 checkMulticolor.Checked = true;
               }
-              else if ( m_GraphicScreenProject.SelectedCheckType == C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET )
+              else if ( m_GraphicScreenProject.SelectedCheckType == RetroDevStudio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET )
               {
                 checkMulticolor.Checked = true;
               }
@@ -398,7 +397,7 @@ namespace C64Studio
             }
             else
             {
-              C64Studio.Formats.CharData usedChar = m_Chars[charX + charY * BlockWidth];
+              RetroDevStudio.Formats.CharData usedChar = m_Chars[charX + charY * BlockWidth];
               if ( usedChar.Replacement != null )
               {
                 while ( usedChar.Replacement != null )
@@ -627,24 +626,24 @@ namespace C64Studio
         return false;
       }
 
-      Dialogs.DlgImportImageResize.ImportBehaviour    behaviour = C64Studio.Dialogs.DlgImportImageResize.ImportBehaviour.CLIP_IMAGE;
+      Dialogs.DlgImportImageResize.ImportBehaviour    behaviour = RetroDevStudio.Dialogs.DlgImportImageResize.ImportBehaviour.CLIP_IMAGE;
 
       if ( InsertMode == ImageInsertionMode.AS_FULL_SCREEN )
       {
         if ( ( mappedImage.Width != m_GraphicScreenProject.Image.Width )
         ||   ( mappedImage.Height != m_GraphicScreenProject.Image.Height ) )
         {
-          Dialogs.DlgImportImageResize    dlg = new C64Studio.Dialogs.DlgImportImageResize( mappedImage.Width, mappedImage.Height, m_GraphicScreenProject.Image.Width, m_GraphicScreenProject.Image.Height, Core );
+          Dialogs.DlgImportImageResize    dlg = new RetroDevStudio.Dialogs.DlgImportImageResize( mappedImage.Width, mappedImage.Height, m_GraphicScreenProject.Image.Width, m_GraphicScreenProject.Image.Height, Core );
 
           dlg.ShowDialog();
-          if ( dlg.ChosenResult == C64Studio.Dialogs.DlgImportImageResize.ImportBehaviour.CANCEL )
+          if ( dlg.ChosenResult == RetroDevStudio.Dialogs.DlgImportImageResize.ImportBehaviour.CANCEL )
           {
             return false;
           }
           behaviour = dlg.ChosenResult;
         }
       }
-      if ( behaviour == C64Studio.Dialogs.DlgImportImageResize.ImportBehaviour.ADJUST_SCREEN_SIZE )
+      if ( behaviour == RetroDevStudio.Dialogs.DlgImportImageResize.ImportBehaviour.ADJUST_SCREEN_SIZE )
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenSizeChange( m_GraphicScreenProject, this, m_GraphicScreenProject.ScreenWidth, m_GraphicScreenProject.ScreenHeight ) );
 
@@ -1960,22 +1959,22 @@ namespace C64Studio
 
       switch ( (Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex )
       {
-        case C64Studio.Formats.GraphicScreenProject.CheckType.HIRES_BITMAP:
+        case RetroDevStudio.Formats.GraphicScreenProject.CheckType.HIRES_BITMAP:
           CheckForHiResBitmapErrors();
           break;
-        case C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP:
+        case RetroDevStudio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_BITMAP:
           CheckForMCBitmapErrors();
           break;
-        case C64Studio.Formats.GraphicScreenProject.CheckType.HIRES_CHARSET:
+        case RetroDevStudio.Formats.GraphicScreenProject.CheckType.HIRES_CHARSET:
           CheckForHiResCharsetErrors();
           break;
-        case C64Studio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET:
+        case RetroDevStudio.Formats.GraphicScreenProject.CheckType.MULTICOLOR_CHARSET:
           CheckForMCCharsetErrors();
           break;
-        case C64Studio.Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
+        case RetroDevStudio.Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET:
           CheckForFCMCharsetErrors( 256 );
           break;
-        case C64Studio.Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
+        case RetroDevStudio.Formats.GraphicScreenProject.CheckType.MEGA65_FCM_CHARSET_16BIT:
           CheckForFCMCharsetErrors( 8192 );
           break;
         default:
@@ -2200,7 +2199,7 @@ namespace C64Studio
     private void ExportHiResCharset( bool ExportScreenAssembly )
     {
       // export possible
-      Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
+      Formats.CharsetProject projectToExport = new RetroDevStudio.Formats.CharsetProject();
       int curCharIndex = 0;
 
       projectToExport.Colors.MultiColor1 = m_GraphicScreenProject.Colors.MultiColor1;
@@ -2236,7 +2235,7 @@ namespace C64Studio
         {
           for ( int x = 0; x < BlockWidth; ++x )
           {
-            C64Studio.Formats.CharData  charUsed = m_Chars[x + y * BlockWidth];
+            RetroDevStudio.Formats.CharData  charUsed = m_Chars[x + y * BlockWidth];
             while ( charUsed.Replacement != null )
             {
               charUsed = charUsed.Replacement;
@@ -2257,7 +2256,7 @@ namespace C64Studio
     private void ExportHiResCharset( int StartLine, int LineOffset, bool Hex, int WrapByteCount )
     {
       // export possible
-      Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
+      Formats.CharsetProject projectToExport = new RetroDevStudio.Formats.CharsetProject();
       int curCharIndex = 0;
 
       projectToExport.Colors.MultiColor1 = m_GraphicScreenProject.Colors.MultiColor1;
@@ -2286,7 +2285,7 @@ namespace C64Studio
       {
         for ( int x = 0; x < BlockWidth; ++x )
         {
-          C64Studio.Formats.CharData  charUsed = m_Chars[x + y * BlockWidth];
+          RetroDevStudio.Formats.CharData  charUsed = m_Chars[x + y * BlockWidth];
           while ( charUsed.Replacement != null )
           {
             charUsed = charUsed.Replacement;
@@ -2311,7 +2310,7 @@ namespace C64Studio
     private void ExportMCCharset( bool ExportScreenAssembly )
     {
       // export possible
-      Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
+      Formats.CharsetProject projectToExport = new RetroDevStudio.Formats.CharsetProject();
       int curCharIndex = 0;
 
       projectToExport.Colors.MultiColor1 = m_GraphicScreenProject.Colors.MultiColor1;
@@ -2347,7 +2346,7 @@ namespace C64Studio
         {
           for ( int x = 0; x < BlockWidth; ++x )
           {
-            C64Studio.Formats.CharData  charUsed = m_Chars[x + y * BlockWidth];
+            RetroDevStudio.Formats.CharData  charUsed = m_Chars[x + y * BlockWidth];
             while ( charUsed.Replacement != null )
             {
               charUsed = charUsed.Replacement;
@@ -2368,7 +2367,7 @@ namespace C64Studio
     private void ExportMCCharset( int StartLine, int LineOffset, bool Hex, int WrapByteCount )
     {
       // export possible
-      Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
+      Formats.CharsetProject projectToExport = new RetroDevStudio.Formats.CharsetProject();
       int curCharIndex = 0;
 
       projectToExport.Colors.MultiColor1 = m_GraphicScreenProject.Colors.MultiColor1;
@@ -2394,7 +2393,7 @@ namespace C64Studio
       {
         for ( int x = 0; x < BlockWidth; ++x )
         {
-          C64Studio.Formats.CharData  charUsed = m_Chars[x + y * BlockWidth];
+          RetroDevStudio.Formats.CharData  charUsed = m_Chars[x + y * BlockWidth];
           while ( charUsed.Replacement != null )
           {
             charUsed = charUsed.Replacement;
@@ -2419,7 +2418,7 @@ namespace C64Studio
     private void UsedCharsToClipboard()
     {
       // export possible
-      Formats.CharsetProject projectToExport = new C64Studio.Formats.CharsetProject();
+      Formats.CharsetProject projectToExport = new RetroDevStudio.Formats.CharsetProject();
       int curCharIndex = 0;
 
       projectToExport.Colors.MultiColor1     = m_GraphicScreenProject.Colors.MultiColor1;
@@ -2469,7 +2468,7 @@ namespace C64Studio
 
       DataObject dataObj = new DataObject();
 
-      dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
+      dataObj.SetData( "RetroDevStudio.ImageList", false, dataSelection.MemoryStream() );
 
       Clipboard.SetDataObject( dataObj, true );
     }
@@ -2479,7 +2478,7 @@ namespace C64Studio
     private void comboCheckType_SelectedIndexChanged( object sender, EventArgs e )
     {
       comboExportType.SelectedIndex = comboCheckType.SelectedIndex;
-      m_GraphicScreenProject.SelectedCheckType = (C64Studio.Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex;
+      m_GraphicScreenProject.SelectedCheckType = (RetroDevStudio.Formats.GraphicScreenProject.CheckType)comboCheckType.SelectedIndex;
 
       int     numBytes = Lookup.NumBytesOfSingleCharacterBitmap( Lookup.CharacterModeFromCheckType( m_GraphicScreenProject.SelectedCheckType ) );
       if ( ( m_Chars.Count > 0 )
@@ -2709,8 +2708,8 @@ namespace C64Studio
 
       if ( charScreen != null )
       {
-        Formats.CharsetScreenProject    project = new C64Studio.Formats.CharsetScreenProject();
-        Formats.CharsetProject          charset = new C64Studio.Formats.CharsetProject();
+        Formats.CharsetScreenProject    project = new RetroDevStudio.Formats.CharsetScreenProject();
+        Formats.CharsetProject          charset = new RetroDevStudio.Formats.CharsetProject();
 
         project.SetScreenSize( BlockWidth, BlockHeight );
 
@@ -2765,15 +2764,15 @@ namespace C64Studio
 
 
 
-    void MainForm_ApplicationEvent( C64Studio.Types.ApplicationEvent Event )
+    void MainForm_ApplicationEvent( Types.ApplicationEvent Event )
     {
-      if ( ( Event.EventType == C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED )
+      if ( ( Event.EventType == Types.ApplicationEvent.Type.DOCUMENT_INFO_CREATED )
       &&   ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SCREEN ) )
       {
         string    nameToUse = Event.Doc.DocumentFilename ?? "New File";
         comboCharScreens.Items.Add( new Types.ComboItem( nameToUse, Event.Doc ) );
       }
-      if ( ( Event.EventType == C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED )
+      if ( ( Event.EventType == Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED )
       &&   ( Event.Doc.Type == ProjectElement.ElementType.CHARACTER_SCREEN ) )
       {
         foreach ( Types.ComboItem comboItem in comboCharScreens.Items )
@@ -2891,7 +2890,7 @@ namespace C64Studio
 
     void UpdateColorMappingButtons()
     {
-      C64Studio.Formats.GraphicScreenProject.ColorMappingTarget   targetIndex = (C64Studio.Formats.GraphicScreenProject.ColorMappingTarget)comboColorMappingTargets.SelectedIndex;
+      RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget   targetIndex = (RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget)comboColorMappingTargets.SelectedIndex;
 
       listColorMappingTargets.DeleteButtonEnabled = ( ( listColorMappingTargets.SelectedIndices.Count > 0 )
                                                 && ( listColorMappingTargets.SelectedIndices[0] + 1 < listColorMappingTargets.Items.Count ) );
@@ -2948,7 +2947,7 @@ namespace C64Studio
 
     private ArrangedItemEntry listColorMappingTargets_AddingItem( object sender )
     {
-      C64Studio.Formats.GraphicScreenProject.ColorMappingTarget   targetIndex = (C64Studio.Formats.GraphicScreenProject.ColorMappingTarget)comboColorMappingTargets.SelectedIndex;
+      RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget   targetIndex = (RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget)comboColorMappingTargets.SelectedIndex;
 
       int     sourceColor = listColorMappingColors.SelectedIndex;
       if ( sourceColor == -1 )
@@ -2986,7 +2985,7 @@ namespace C64Studio
       }
 
       DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoGraphicScreenValuesChange( m_GraphicScreenProject, this ) );
-      foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
+      foreach ( RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
       {
         if ( GR.EnumHelper.GetDescription( entry ) == Item.Text )
         {
@@ -3019,9 +3018,9 @@ namespace C64Studio
 
 
 
-    private C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ColorMappingFromItem( ArrangedItemEntry Item )
+    private RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget ColorMappingFromItem( ArrangedItemEntry Item )
     {
-      foreach ( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( C64Studio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
+      foreach ( RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget entry in System.Enum.GetValues( typeof( RetroDevStudio.Formats.GraphicScreenProject.ColorMappingTarget ) ) )
       {
         if ( GR.EnumHelper.GetDescription( entry ) == Item.Text )
         {
@@ -3129,7 +3128,7 @@ namespace C64Studio
       System.Windows.Forms.SaveFileDialog saveDlg = new System.Windows.Forms.SaveFileDialog();
 
       saveDlg.Title = "Export Characters to Image";
-      saveDlg.Filter = Core.MainForm.FilterString( C64Studio.Types.Constants.FILEFILTER_IMAGE_FILES );
+      saveDlg.Filter = Core.MainForm.FilterString( RetroDevStudio.Types.Constants.FILEFILTER_IMAGE_FILES );
       if ( saveDlg.ShowDialog() != System.Windows.Forms.DialogResult.OK )
       {
         return;
@@ -3159,7 +3158,7 @@ namespace C64Studio
       if ( ( extension == ".KLA" )
       ||   ( extension == ".KOA" ) )
       {
-        var koalaData = C64Studio.Converter.KoalaToBitmap.KoalaFromBitmap( bitmapData, screenChar, screenColor, (byte)m_GraphicScreenProject.Colors.BackgroundColor );
+        var koalaData = RetroDevStudio.Converter.KoalaToBitmap.KoalaFromBitmap( bitmapData, screenChar, screenColor, (byte)m_GraphicScreenProject.Colors.BackgroundColor );
 
         if ( !GR.IO.File.WriteAllBytes( saveDlg.FileName, koalaData ) )
         {

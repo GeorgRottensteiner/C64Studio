@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using C64Studio.Types.ASM;
+using RetroDevStudio.Types.ASM;
 using RetroDevStudio;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class ToolInfo
   {

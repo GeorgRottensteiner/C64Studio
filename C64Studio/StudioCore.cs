@@ -1,10 +1,10 @@
-﻿using C64Studio.CustomRenderer;
+﻿using RetroDevStudio.CustomRenderer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class StudioCore
   {
@@ -98,12 +98,12 @@ namespace C64Studio
     public Types.CompileTargetType DetermineTargetType( DocumentInfo Doc, Parser.ParserBase Parser )
     {
       // compile target
-      Types.CompileTargetType   compileTarget = C64Studio.Types.CompileTargetType.NONE;
+      Types.CompileTargetType   compileTarget = RetroDevStudio.Types.CompileTargetType.NONE;
       if ( Doc.Element != null )
       {
         compileTarget = Doc.Element.TargetType;
       }
-      if ( compileTarget == C64Studio.Types.CompileTargetType.NONE )
+      if ( compileTarget == RetroDevStudio.Types.CompileTargetType.NONE )
       {
         compileTarget = Parser.CompileTarget;
       }

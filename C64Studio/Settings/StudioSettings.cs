@@ -5,11 +5,11 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using System.ComponentModel;
 using GR.Memory;
-using C64Studio.Types;
+using RetroDevStudio.Types;
 using System.Drawing;
 using RetroDevStudio;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public enum Perspective
   {
@@ -97,7 +97,7 @@ namespace C64Studio
 
   public class KeymapEntry
   {
-    public Types.KeyboardKey  KeyboardKey = C64Studio.Types.KeyboardKey.UNDEFINED;
+    public Types.KeyboardKey  KeyboardKey = RetroDevStudio.Types.KeyboardKey.UNDEFINED;
     public System.Windows.Forms.Keys Key = System.Windows.Forms.Keys.None;
   };
 
@@ -196,16 +196,16 @@ namespace C64Studio
 
     public GR.Collections.Map<string, LayoutInfo> ToolLayout = new GR.Collections.Map<string,LayoutInfo>();
 
-    public GR.Collections.Set<Types.ErrorCode>  IgnoredWarnings = new GR.Collections.Set<C64Studio.Types.ErrorCode>();
-    public GR.Collections.Set<Types.ErrorCode>  TreatWarningsAsErrors = new GR.Collections.Set<C64Studio.Types.ErrorCode>();
+    public GR.Collections.Set<Types.ErrorCode>  IgnoredWarnings = new GR.Collections.Set<RetroDevStudio.Types.ErrorCode>();
+    public GR.Collections.Set<Types.ErrorCode>  TreatWarningsAsErrors = new GR.Collections.Set<RetroDevStudio.Types.ErrorCode>();
     public GR.Collections.Set<Parser.AssemblerSettings.Hacks>  EnabledC64StudioHacks = new GR.Collections.Set<Parser.AssemblerSettings.Hacks>();
 
     public string                               DefaultProjectBasePath = "";
     public WeifenLuo.WinFormsUI.Docking.DockPanel   PanelMain = null;
 
-    public GR.Collections.Map<Types.ColorableElement,Types.ColorSetting>  SyntaxColoring = new GR.Collections.Map<C64Studio.Types.ColorableElement, C64Studio.Types.ColorSetting>();
+    public GR.Collections.Map<Types.ColorableElement,Types.ColorSetting>  SyntaxColoring = new GR.Collections.Map<RetroDevStudio.Types.ColorableElement, RetroDevStudio.Types.ColorSetting>();
 
-    public GR.Collections.Map<Types.Function, Types.FunctionInfo> Functions = new GR.Collections.Map<C64Studio.Types.Function, Types.FunctionInfo>();
+    public GR.Collections.Map<Types.Function, Types.FunctionInfo> Functions = new GR.Collections.Map<RetroDevStudio.Types.Function, Types.FunctionInfo>();
 
     public GR.Collections.Map<ToolWindowType, ToolWindow> Tools = new GR.Collections.Map<ToolWindowType, ToolWindow>();
 
@@ -465,19 +465,19 @@ namespace C64Studio
       Types.FunctionStudioState   functionMask = 0;
       switch ( State )
       {
-        case C64Studio.Types.StudioState.NORMAL:
+        case RetroDevStudio.Types.StudioState.NORMAL:
           functionMask |= FunctionStudioState.NORMAL;
           break;
-        case C64Studio.Types.StudioState.COMPILE:
-        case C64Studio.Types.StudioState.BUILD:
-        case C64Studio.Types.StudioState.BUILD_AND_DEBUG:
-        case C64Studio.Types.StudioState.BUILD_AND_RUN:
+        case RetroDevStudio.Types.StudioState.COMPILE:
+        case RetroDevStudio.Types.StudioState.BUILD:
+        case RetroDevStudio.Types.StudioState.BUILD_AND_DEBUG:
+        case RetroDevStudio.Types.StudioState.BUILD_AND_RUN:
           functionMask |= FunctionStudioState.BUILDING;
           break;
-        case C64Studio.Types.StudioState.DEBUGGING_BROKEN:
+        case RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN:
           functionMask |= FunctionStudioState.DEBUGGER_BROKEN;
           break;
-        case C64Studio.Types.StudioState.DEBUGGING_RUN:
+        case RetroDevStudio.Types.StudioState.DEBUGGING_RUN:
           functionMask |= FunctionStudioState.DEBUGGER_RUNNING;
           break;
       }
@@ -543,7 +543,7 @@ namespace C64Studio
         SettingsData.Append( chunkTool.ToBuffer() );
       }
       /*
-      foreach ( C64Studio.LayoutInfo layout in ToolLayout.Values )
+      foreach ( RetroDevStudio.LayoutInfo layout in ToolLayout.Values )
       {
         layout.StoreLayout();
         SettingsData.Append( layout.ToBuffer() );
@@ -986,9 +986,9 @@ namespace C64Studio
             {
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
-              Types.ColorableElement   element = (C64Studio.Types.ColorableElement)binIn.ReadUInt32();
+              Types.ColorableElement   element = (RetroDevStudio.Types.ColorableElement)binIn.ReadUInt32();
 
-              Types.ColorSetting color = new C64Studio.Types.ColorSetting( GR.EnumHelper.GetDescription( element ) );
+              Types.ColorSetting color = new RetroDevStudio.Types.ColorSetting( GR.EnumHelper.GetDescription( element ) );
               color.FGColor = binIn.ReadUInt32();
               color.BGColor = binIn.ReadUInt32();
               color.BGColorAuto = ( binIn.ReadUInt32() != 0 );
@@ -1073,7 +1073,7 @@ namespace C64Studio
 
               for ( int i = 0; i < numIgnoredWarnings; ++i )
               {
-                IgnoredWarnings.Add( (C64Studio.Types.ErrorCode)binIn.ReadInt32() );
+                IgnoredWarnings.Add( (RetroDevStudio.Types.ErrorCode)binIn.ReadInt32() );
               }
             }
             break;
@@ -1092,7 +1092,7 @@ namespace C64Studio
 
               for ( int i = 0; i < numWarnignsAsErrors; ++i )
               {
-                TreatWarningsAsErrors.Add( (C64Studio.Types.ErrorCode)binIn.ReadInt32() );
+                TreatWarningsAsErrors.Add( (RetroDevStudio.Types.ErrorCode)binIn.ReadInt32() );
               }
             }
             break;
@@ -1141,7 +1141,7 @@ namespace C64Studio
               for ( int i = 0; i < numEntries; ++i )
               {
                 Keys  key                 = (Keys)binIn.ReadUInt32();
-                Types.KeyboardKey  cmdKey = (C64Studio.Types.KeyboardKey)binIn.ReadInt32();
+                Types.KeyboardKey  cmdKey = (RetroDevStudio.Types.KeyboardKey)binIn.ReadInt32();
 
                 //Debug.Log( "Key " + key.ToString() + " maps to " + cmdKey );
 
@@ -1302,7 +1302,7 @@ namespace C64Studio
 
 
 
-    private void SetKeyBindingKey( C64Studio.Types.Function Function, Keys Key )
+    private void SetKeyBindingKey( RetroDevStudio.Types.Function Function, Keys Key )
     {
       foreach ( var accPair in Accelerators )
       {
@@ -1325,44 +1325,44 @@ namespace C64Studio
 
     public void SetDefaultKeyBinding()
     {
-      SetKeyBindingKey( C64Studio.Types.Function.SAVE_DOCUMENT, Keys.Control | Keys.S );
-      SetKeyBindingKey( C64Studio.Types.Function.BUILD_AND_RUN, Keys.Control | Keys.F5 );
-      SetKeyBindingKey( C64Studio.Types.Function.BUILD, Keys.F7 );
-      SetKeyBindingKey( C64Studio.Types.Function.BUILD_AND_DEBUG, Keys.F5 );
-      SetKeyBindingKey( C64Studio.Types.Function.DEBUG_GO, Keys.F5 );
-      SetKeyBindingKey( C64Studio.Types.Function.DEBUG_STEP_OUT, Keys.F9 );
-      SetKeyBindingKey( C64Studio.Types.Function.CENTER_ON_CURSOR, Keys.Clear );
-      SetKeyBindingKey( C64Studio.Types.Function.DELETE_LINE, Keys.Control | Keys.Y );
-      SetKeyBindingKey( C64Studio.Types.Function.DEBUG_STEP, Keys.F11 );
-      SetKeyBindingKey( C64Studio.Types.Function.DEBUG_STEP_OVER, Keys.F10 );
-      SetKeyBindingKey( C64Studio.Types.Function.DEBUG_STOP, Keys.Shift | Keys.F5 );
-      SetKeyBindingKey( C64Studio.Types.Function.DEBUG_RUN_TO, Keys.Control | Keys.F10 );
-      SetKeyBindingKey( C64Studio.Types.Function.GO_TO_DECLARATION, Keys.Control | Keys.G );
-      SetKeyBindingKey( C64Studio.Types.Function.COMPILE, Keys.Control | Keys.B );
-      SetKeyBindingKey( C64Studio.Types.Function.FIND, Keys.Control | Keys.F );
-      SetKeyBindingKey( C64Studio.Types.Function.FIND_NEXT, Keys.Control | Keys.L );
-      SetKeyBindingKey( C64Studio.Types.Function.FIND_REPLACE, Keys.Control | Keys.H );
-      SetKeyBindingKey( C64Studio.Types.Function.FIND_IN_PROJECT, Keys.Control | Keys.Shift | Keys.F );
-      SetKeyBindingKey( C64Studio.Types.Function.REPLACE_IN_PROJECT, Keys.Control | Keys.Shift | Keys.H );
-      SetKeyBindingKey( C64Studio.Types.Function.SAVE_ALL, Keys.Control | Keys.Shift | Keys.S );
-      SetKeyBindingKey( C64Studio.Types.Function.PRINT, Keys.Control | Keys.P );
-      SetKeyBindingKey( C64Studio.Types.Function.HELP, Keys.F1 );
-      SetKeyBindingKey( C64Studio.Types.Function.SAVE_DOCUMENT_AS, Keys.F12 );
-      SetKeyBindingKey( C64Studio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
-      SetKeyBindingKey( C64Studio.Types.Function.UNDO, Keys.Alt | Keys.Back );
-      SetKeyBindingKey( C64Studio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
-      SetKeyBindingKey( C64Studio.Types.Function.COPY, Keys.Control | Keys.C );
-      SetKeyBindingKey( C64Studio.Types.Function.PASTE, Keys.Control | Keys.V );
-      SetKeyBindingKey( C64Studio.Types.Function.CUT, Keys.Control | Keys.X );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_DOCUMENT, Keys.Control | Keys.S );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.BUILD_AND_RUN, Keys.Control | Keys.F5 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.BUILD, Keys.F7 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.BUILD_AND_DEBUG, Keys.F5 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_GO, Keys.F5 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_STEP_OUT, Keys.F9 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.CENTER_ON_CURSOR, Keys.Clear );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.DELETE_LINE, Keys.Control | Keys.Y );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_STEP, Keys.F11 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_STEP_OVER, Keys.F10 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_STOP, Keys.Shift | Keys.F5 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_RUN_TO, Keys.Control | Keys.F10 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.GO_TO_DECLARATION, Keys.Control | Keys.G );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.COMPILE, Keys.Control | Keys.B );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.FIND, Keys.Control | Keys.F );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.FIND_NEXT, Keys.Control | Keys.L );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.FIND_REPLACE, Keys.Control | Keys.H );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.FIND_IN_PROJECT, Keys.Control | Keys.Shift | Keys.F );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.REPLACE_IN_PROJECT, Keys.Control | Keys.Shift | Keys.H );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_ALL, Keys.Control | Keys.Shift | Keys.S );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.PRINT, Keys.Control | Keys.P );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.HELP, Keys.F1 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_DOCUMENT_AS, Keys.F12 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.UNDO, Keys.Alt | Keys.Back );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.COPY, Keys.Control | Keys.C );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.PASTE, Keys.Control | Keys.V );
+      SetKeyBindingKey( RetroDevStudio.Types.Function.CUT, Keys.Control | Keys.X );
     }
 
 
 
-    public void SetSyntaxColor( C64Studio.Types.ColorableElement Element, uint FGColor, uint BGColor, bool AutoBGColor )
+    public void SetSyntaxColor( RetroDevStudio.Types.ColorableElement Element, uint FGColor, uint BGColor, bool AutoBGColor )
     {
       if ( SyntaxColoring[Element] == null )
       {
-        SyntaxColoring[Element] = new C64Studio.Types.ColorSetting( GR.EnumHelper.GetDescription( Element ), FGColor, BGColor );
+        SyntaxColoring[Element] = new RetroDevStudio.Types.ColorSetting( GR.EnumHelper.GetDescription( Element ), FGColor, BGColor );
       }
       else
       {
@@ -1376,23 +1376,23 @@ namespace C64Studio
 
     public void SetDefaultColors()
     {
-      SetSyntaxColor( C64Studio.Types.ColorableElement.NONE, 0xff800000, 0xffffffff, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.CODE, 0xff000000, 0xffffffff, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.LITERAL_STRING, 0xff008000, 0xffffffff, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.LITERAL_NUMBER, 0xff0000ff, 0xffffffff, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.LABEL, 0xff800000, 0xffffffff, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.COMMENT, 0xff008000, 0xffffffff, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.PSEUDO_OP, 0xffff8000, 0xffffffff, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.CURRENT_DEBUG_LINE, 0xff000000, 0xffffff00, false );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.EMPTY_SPACE, 0xff000000, 0xffffffff, false );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.OPERATOR, 0xff000080, 0xffffffff, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.ERROR_UNDERLINE, 0xffff0000, 0xffffffff, false );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS, 0xff000080, 0xffff8000, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.SELECTED_TEXT, 0xff800000, 0xff800000, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.BACKGROUND_CONTROL, 0xff000000, 0xfff0f0f0, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.CHANGED_DEBUG_ELEMENT, 0xffff0000, 0xfff0f0f0, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.SELECTION_FRAME, 0xff80ff80, 0xff000000, true );
-      SetSyntaxColor( C64Studio.Types.ColorableElement.BACKGROUND_BUTTON, 0xff000000, 0xffE1E1E1, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.NONE, 0xff800000, 0xffffffff, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.CODE, 0xff000000, 0xffffffff, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.LITERAL_STRING, 0xff008000, 0xffffffff, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.LITERAL_NUMBER, 0xff0000ff, 0xffffffff, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.LABEL, 0xff800000, 0xffffffff, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.COMMENT, 0xff008000, 0xffffffff, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.PSEUDO_OP, 0xffff8000, 0xffffffff, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.CURRENT_DEBUG_LINE, 0xff000000, 0xffffff00, false );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.EMPTY_SPACE, 0xff000000, 0xffffffff, false );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.OPERATOR, 0xff000080, 0xffffffff, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.ERROR_UNDERLINE, 0xffff0000, 0xffffffff, false );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS, 0xff000080, 0xffff8000, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.SELECTED_TEXT, 0xff800000, 0xff800000, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.BACKGROUND_CONTROL, 0xff000000, 0xfff0f0f0, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.CHANGED_DEBUG_ELEMENT, 0xffff0000, 0xfff0f0f0, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.SELECTION_FRAME, 0xff80ff80, 0xff000000, true );
+      SetSyntaxColor( RetroDevStudio.Types.ColorableElement.BACKGROUND_BUTTON, 0xff000000, 0xffE1E1E1, true );
 
       foreach ( Types.ColorableElement color in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {
@@ -1517,35 +1517,35 @@ namespace C64Studio
 
 
       // key bindings
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.SAVE_DOCUMENT, Keys.Control | Keys.S );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.BUILD_AND_RUN, Keys.Control | Keys.F5 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.BUILD, Keys.F7 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.BUILD_AND_DEBUG, Keys.F5 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_GO, Keys.F5 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_STEP_OUT, Keys.F9 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.CENTER_ON_CURSOR, Keys.Clear );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DELETE_LINE, Keys.Control | Keys.Y );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_STEP, Keys.F11 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_STEP_OVER, Keys.F10 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_STOP, Keys.Shift | Keys.F5 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.DEBUG_RUN_TO, Keys.Control | Keys.F10 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.GO_TO_DECLARATION, Keys.Control | Keys.G );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.COMPILE, Keys.Control | Keys.B );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.FIND, Keys.Control | Keys.F );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.FIND_NEXT, Keys.Control | Keys.L );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.FIND_REPLACE, Keys.Control | Keys.H );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.FIND_IN_PROJECT, Keys.Control | Keys.Shift | Keys.F );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.REPLACE_IN_PROJECT, Keys.Control | Keys.Shift | Keys.H );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.SAVE_ALL, Keys.Control | Keys.Shift | Keys.S );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.PRINT, Keys.Control | Keys.P );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.HELP, Keys.F1 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.SAVE_DOCUMENT_AS, Keys.F12 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.UNDO, Keys.Alt | Keys.Back );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.COPY, Keys.Control | Keys.C );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.PASTE, Keys.Control | Keys.V );
-      ValidateOrSetKeyBindingKey( C64Studio.Types.Function.CUT, Keys.Control | Keys.X );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_DOCUMENT, Keys.Control | Keys.S );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.BUILD_AND_RUN, Keys.Control | Keys.F5 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.BUILD, Keys.F7 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.BUILD_AND_DEBUG, Keys.F5 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_GO, Keys.F5 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_STEP_OUT, Keys.F9 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.CENTER_ON_CURSOR, Keys.Clear );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.DELETE_LINE, Keys.Control | Keys.Y );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_STEP, Keys.F11 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_STEP_OVER, Keys.F10 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_STOP, Keys.Shift | Keys.F5 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.DEBUG_RUN_TO, Keys.Control | Keys.F10 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.GO_TO_DECLARATION, Keys.Control | Keys.G );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.COMPILE, Keys.Control | Keys.B );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.FIND, Keys.Control | Keys.F );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.FIND_NEXT, Keys.Control | Keys.L );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.FIND_REPLACE, Keys.Control | Keys.H );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.FIND_IN_PROJECT, Keys.Control | Keys.Shift | Keys.F );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.REPLACE_IN_PROJECT, Keys.Control | Keys.Shift | Keys.H );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_ALL, Keys.Control | Keys.Shift | Keys.S );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.PRINT, Keys.Control | Keys.P );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.HELP, Keys.F1 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.SAVE_DOCUMENT_AS, Keys.F12 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.TOGGLE_BREAKPOINT, Keys.Shift | Keys.F9 );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.UNDO, Keys.Alt | Keys.Back );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.REDO, Keys.Shift | Keys.Alt | Keys.Back );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.COPY, Keys.Control | Keys.C );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.PASTE, Keys.Control | Keys.V );
+      ValidateOrSetKeyBindingKey( RetroDevStudio.Types.Function.CUT, Keys.Control | Keys.X );
 
       // auto-add baselib path
       if ( ASMLibraryPaths.Count == 0 )

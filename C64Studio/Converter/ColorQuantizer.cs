@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace C64Studio.Converter
+namespace RetroDevStudio.Converter
 {
   public class ColorQuantizer
   {

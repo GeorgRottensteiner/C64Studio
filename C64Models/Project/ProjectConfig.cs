@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class ProjectConfig
   {

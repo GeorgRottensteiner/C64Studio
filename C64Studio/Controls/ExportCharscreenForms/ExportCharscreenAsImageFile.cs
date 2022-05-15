@@ -1,7 +1,6 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using RetroDevStudio;
 using RetroDevStudio.Formats;
-using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,9 +9,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using static C64Studio.BaseDocument;
+using static RetroDevStudio.BaseDocument;
 
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   public partial class ExportCharscreenAsImageFile : ExportCharscreenFormBase
   {

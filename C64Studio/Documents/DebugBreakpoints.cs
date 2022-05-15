@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using RetroDevStudio;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class DebugBreakpoints : BaseDocument
   {
@@ -56,7 +56,7 @@ namespace C64Studio
         Item.Text = Breakpoint.RemoteIndex.ToString();
       }
 
-      if ( Breakpoint.DocumentFilename != "C64Studio.DebugBreakpoints" )
+      if ( Breakpoint.DocumentFilename != "RetroDevStudio.DebugBreakpoints" )
       {
         Item.SubItems[1].Text = Breakpoint.DocumentFilename;
       }
@@ -168,7 +168,7 @@ namespace C64Studio
 
     private void btnAddBreakpoint_Click( object sender, EventArgs e )
     {
-      Types.Breakpoint bp = new C64Studio.Types.Breakpoint();
+      Types.Breakpoint bp = new RetroDevStudio.Types.Breakpoint();
 
       bp.Address = GR.Convert.ToI32( editBPAddress.Text, 16 );
       bp.TriggerOnExec  = checkTriggerExec.Checked;
@@ -176,7 +176,7 @@ namespace C64Studio
       bp.TriggerOnStore = checkTriggerStore.Checked;
       bp.LineIndex = -1;
       bp.Conditions = editTriggerConditions.Text;
-      bp.DocumentFilename = "C64Studio.DebugBreakpoints";
+      bp.DocumentFilename = "RetroDevStudio.DebugBreakpoints";
 
       // set marker in associated file
       if ( DebuggedProject != null )

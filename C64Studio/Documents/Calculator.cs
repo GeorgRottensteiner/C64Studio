@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class Calculator : BaseDocument
   {
@@ -79,7 +79,7 @@ namespace C64Studio
 
     private void editCalc_TextChanged( object sender, EventArgs e )
     {
-      Parser.ASMFileParser    parser = new C64Studio.Parser.ASMFileParser();
+      Parser.ASMFileParser    parser = new RetroDevStudio.Parser.ASMFileParser();
       var tokens = parser.ParseTokenInfo( editCalc.Text, 0, editCalc.TextLength, parser.m_TextCodeMappingRaw );
       if ( tokens != null )
       {

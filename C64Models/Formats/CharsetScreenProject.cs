@@ -6,7 +6,7 @@ using System.Text;
 
 
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   public class CharsetScreenProject
   {
@@ -24,7 +24,7 @@ namespace C64Studio.Formats
     public string                       ExternalCharset = "";
     private TextMode                    _Mode = TextMode.COMMODORE_40_X_25_HIRES;
 
-    public Formats.CharsetProject       CharSet = new C64Studio.Formats.CharsetProject();
+    public Formats.CharsetProject       CharSet = new RetroDevStudio.Formats.CharsetProject();
 
 
 

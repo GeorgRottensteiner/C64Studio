@@ -1,4 +1,4 @@
-﻿using C64Studio.Formats;
+﻿using RetroDevStudio.Formats;
 using System.Collections.Generic;
 
 namespace RetroDevStudio.Formats

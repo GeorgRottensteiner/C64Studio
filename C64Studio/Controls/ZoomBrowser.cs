@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class ZoomBrowser : WebBrowser
   {

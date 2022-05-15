@@ -1,11 +1,11 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
-using static C64Studio.Parser.BasicFileParser;
+using static RetroDevStudio.Parser.BasicFileParser;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class ProjectElement
   {
@@ -51,7 +51,7 @@ namespace C64Studio
       public string           PreBuild = "";
       public string           CustomBuild = "";
       public string           DebugFile = null;
-      public Types.CompileTargetType DebugFileType = C64Studio.Types.CompileTargetType.NONE;
+      public Types.CompileTargetType DebugFileType = RetroDevStudio.Types.CompileTargetType.NONE;
       public BuildChain       PreBuildChain = new BuildChain();
       public BuildChain       PostBuildChain = new BuildChain();
     };
@@ -72,7 +72,7 @@ namespace C64Studio
     // per setting
     public GR.Collections.Map<string,PerConfigSettings>     Settings = new GR.Collections.Map<string, PerConfigSettings>();
     public bool             IsShown = false;
-    public AssemblerType    AssemblerType = C64Studio.Types.AssemblerType.AUTO;
+    public AssemblerType    AssemblerType = RetroDevStudio.Types.AssemblerType.AUTO;
     public List<string>     ProjectHierarchy = new List<string>();
     public string           BASICDialect = "BASIC V2";
 

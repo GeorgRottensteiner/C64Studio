@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Parser
+namespace RetroDevStudio.Parser
 {
   public class AssemblyOutput
   {

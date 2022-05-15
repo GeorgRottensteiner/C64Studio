@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class PerspectiveDetails
   {

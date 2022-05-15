@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class SolutionExplorer : BaseDocument
   {
@@ -323,7 +323,7 @@ namespace C64Studio
 
             IDataObject dataObj = Clipboard.GetDataObject();
             if ( ( dataObj != null )
-            &&   ( dataObj.GetDataPresent( "C64Studio.SolutionFile" ) ) )
+            &&   ( dataObj.GetDataPresent( "RetroDevStudio.SolutionFile" ) ) )
             {
               item.Enabled = true;
             }
@@ -352,13 +352,13 @@ namespace C64Studio
               item = new System.Windows.Forms.ToolStripMenuItem( "Build" );
               item.Tag = 0;
               item.Click += new EventHandler( treeElementBuild_Click );
-              item.Enabled = ( Core.MainForm.AppState == C64Studio.Types.StudioState.NORMAL );
+              item.Enabled = ( Core.MainForm.AppState == RetroDevStudio.Types.StudioState.NORMAL );
               contextMenu.Items.Add( item );
 
               item = new System.Windows.Forms.ToolStripMenuItem( "Rebuild" );
               item.Tag = 0;
               item.Click += new EventHandler( treeElementRebuild_Click );
-              item.Enabled = ( Core.MainForm.AppState == C64Studio.Types.StudioState.NORMAL );
+              item.Enabled = ( Core.MainForm.AppState == RetroDevStudio.Types.StudioState.NORMAL );
               contextMenu.Items.Add( item );
             }
             item = new System.Windows.Forms.ToolStripMenuItem( "Rename file" );
@@ -641,11 +641,11 @@ namespace C64Studio
         fileData.AppendU32( 0x12345678 );
 
         string  filenameToCopy = element.DocumentInfo.FullPath;
-        string  clipboardDataName = "C64Studio.SolutionFile";
+        string  clipboardDataName = "RetroDevStudio.SolutionFile";
         if ( element.DocumentInfo.Type == ProjectElement.ElementType.FOLDER )
         {
           filenameToCopy = element.Name;
-          clipboardDataName = "C64Studio.Folder";
+          clipboardDataName = "RetroDevStudio.Folder";
         }
         byte[]    fileName = Encoding.Unicode.GetBytes( filenameToCopy );
         fileData.AppendI32( fileName.Length );
@@ -660,7 +660,7 @@ namespace C64Studio
         DataObject dataObj = new DataObject();
 
         dataObj.SetData( clipboardDataName, false, fileData.MemoryStream() );
-        dataObj.SetData( "C64Studio.ProjectFile", false, projectData.MemoryStream() );
+        dataObj.SetData( "RetroDevStudio.ProjectFile", false, projectData.MemoryStream() );
 
         Clipboard.SetDataObject( dataObj, true );
       }
@@ -700,9 +700,9 @@ namespace C64Studio
         string      sourceProjectFile = "";
 
         if ( ( dataObj != null )
-        &&   ( dataObj.GetDataPresent( "C64Studio.ProjectFile" ) ) )
+        &&   ( dataObj.GetDataPresent( "RetroDevStudio.ProjectFile" ) ) )
         {
-          System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "C64Studio.ProjectFile" );
+          System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.ProjectFile" );
 
           GR.Memory.ByteBuffer clipData = new GR.Memory.ByteBuffer( (uint)ms.Length );
 
@@ -722,9 +722,9 @@ namespace C64Studio
         }
 
         if ( ( dataObj != null )
-        &&   ( dataObj.GetDataPresent( "C64Studio.Folder" ) ) )
+        &&   ( dataObj.GetDataPresent( "RetroDevStudio.Folder" ) ) )
         {
-          System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "C64Studio.Folder" );
+          System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.Folder" );
 
           GR.Memory.ByteBuffer clipData = new GR.Memory.ByteBuffer( (uint)ms.Length );
 
@@ -760,9 +760,9 @@ namespace C64Studio
         }
 
         if ( ( dataObj != null )
-        &&   ( dataObj.GetDataPresent( "C64Studio.SolutionFile" ) ) )
+        &&   ( dataObj.GetDataPresent( "RetroDevStudio.SolutionFile" ) ) )
         {
-          System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "C64Studio.SolutionFile" );
+          System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.SolutionFile" );
 
           GR.Memory.ByteBuffer clipData = new GR.Memory.ByteBuffer( (uint)ms.Length );
 
@@ -853,12 +853,12 @@ namespace C64Studio
       }
       if ( Element.Document != null )
       {
-        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, Element.DocumentInfo ) );
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, Element.DocumentInfo ) );
         Element.Document.Close();
       }
       Core.Navigating.Solution.RemoveElement( Element );
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_REMOVED, Element ) );
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, Element.DocumentInfo ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_REMOVED, Element ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, Element.DocumentInfo ) );
     }
 
 
@@ -875,12 +875,12 @@ namespace C64Studio
       }
       if ( Element.Document != null )
       {
-        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, Element.DocumentInfo ) );
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, Element.DocumentInfo ) );
         Element.Document.Close();
       }
       Core.Navigating.Solution.RemoveElement( Element );
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_REMOVED, Element ) );
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, Element.DocumentInfo ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_REMOVED, Element ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, Element.DocumentInfo ) );
     }
 
 
@@ -942,13 +942,13 @@ namespace C64Studio
       {
         if ( element.Document != null )
         {
-          Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, element.DocumentInfo ) );
+          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_CLOSED, element.DocumentInfo ) );
           element.Document.Close();
         }
         element.DocumentInfo.Project.RemoveElement( element );
         treeProject.Nodes.Remove( Node );
-        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.ELEMENT_REMOVED, element ) );
-        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, element.DocumentInfo ) );
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.ELEMENT_REMOVED, element ) );
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.DOCUMENT_INFO_REMOVED, element.DocumentInfo ) );
         element.DocumentInfo.Project.SetModified();
       }
       else
@@ -1055,7 +1055,7 @@ namespace C64Studio
         }
       }
 
-      Converter.CombinedGraphicsToCharset   converter = new C64Studio.Converter.CombinedGraphicsToCharset();
+      Converter.CombinedGraphicsToCharset   converter = new RetroDevStudio.Converter.CombinedGraphicsToCharset();
 
       converter.ConvertScreens( basePath, projects );
     }
@@ -1167,7 +1167,7 @@ namespace C64Studio
         {
           Core.Navigating.Solution.RenameProject( project, newText );
 
-          Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.SOLUTION_RENAMED ) );
+          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_RENAMED ) );
         }
         return;
       }

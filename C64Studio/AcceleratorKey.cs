@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class AcceleratorKey
   {
@@ -12,7 +12,7 @@ namespace C64Studio
     {
       Key           = Keys.None;
       SecondaryKey  = Keys.None;
-      Function      = C64Studio.Types.Function.NONE;
+      Function      = RetroDevStudio.Types.Function.NONE;
     }
 
     public AcceleratorKey( Keys Key, Types.Function Function )
@@ -71,7 +71,7 @@ namespace C64Studio
       GR.IO.IReader reader = Chunk.MemoryReader();
 
       Key           = (Keys)reader.ReadUInt32();
-      Function      = (C64Studio.Types.Function)reader.ReadUInt32();
+      Function      = (RetroDevStudio.Types.Function)reader.ReadUInt32();
       SecondaryKey  = (Keys)reader.ReadUInt32();
       return true;
     }

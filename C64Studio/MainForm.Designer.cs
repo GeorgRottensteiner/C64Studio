@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class MainForm
   {
@@ -295,7 +295,7 @@
             this.fileNewBinaryEditorToolStripMenuItem,
             this.memoryViewToolStripMenuItem,
             this.mediaToolStripMenuItem});
-      this.newToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolNewItem;
+      this.newToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolNewItem;
       this.newToolStripMenuItem.Name = "newToolStripMenuItem";
       this.newToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
       this.newToolStripMenuItem.Text = "&New";
@@ -420,7 +420,7 @@
             this.toolStripSeparator6,
             this.projectOpenTapeDiskFileMenuItem,
             this.editorOpenToolStripMenuItem});
-      this.openToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolOpenFile;
+      this.openToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolOpenFile;
       this.openToolStripMenuItem.Name = "openToolStripMenuItem";
       this.openToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
       this.openToolStripMenuItem.Text = "&Open";
@@ -461,7 +461,7 @@
       // saveToolStripMenuItem
       // 
       this.saveToolStripMenuItem.Enabled = false;
-      this.saveToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolSave;
+      this.saveToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolSave;
       this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
       this.saveToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
       this.saveToolStripMenuItem.Text = "&Save";
@@ -486,7 +486,7 @@
       // saveAllToolStripMenuItem
       // 
       this.saveAllToolStripMenuItem.Enabled = false;
-      this.saveAllToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolSaveAll;
+      this.saveAllToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolSaveAll;
       this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
       this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
       this.saveAllToolStripMenuItem.Text = "Save all";
@@ -773,7 +773,7 @@
       // 
       // undoToolStripMenuItem
       // 
-      this.undoToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolUndo;
+      this.undoToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolUndo;
       this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
       this.undoToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
       this.undoToolStripMenuItem.Text = "&Undo";
@@ -781,7 +781,7 @@
       // 
       // redoToolStripMenuItem
       // 
-      this.redoToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolRedo;
+      this.redoToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolRedo;
       this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
       this.redoToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
       this.redoToolStripMenuItem.Text = "&Redo";
@@ -827,7 +827,7 @@
       // 
       // searchToolStripMenuItem
       // 
-      this.searchToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolFind;
+      this.searchToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolFind;
       this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
       this.searchToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
       this.searchToolStripMenuItem.Text = "&Search...";
@@ -835,7 +835,7 @@
       // 
       // findReplaceToolStripMenuItem
       // 
-      this.findReplaceToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolFindReplace;
+      this.findReplaceToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolFindReplace;
       this.findReplaceToolStripMenuItem.Name = "findReplaceToolStripMenuItem";
       this.findReplaceToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
       this.findReplaceToolStripMenuItem.Text = "&Find/Replace";
@@ -884,7 +884,7 @@
       // 
       // compileToolStripMenuItem
       // 
-      this.compileToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolCompile;
+      this.compileToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolCompile;
       this.compileToolStripMenuItem.Name = "compileToolStripMenuItem";
       this.compileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.compileToolStripMenuItem.Tag = "";
@@ -893,7 +893,7 @@
       // 
       // buildToolStripMenuItem1
       // 
-      this.buildToolStripMenuItem1.Image = global::C64Studio.Properties.Resources.ToolBuild;
+      this.buildToolStripMenuItem1.Image = global::RetroDevStudio.Properties.Resources.ToolBuild;
       this.buildToolStripMenuItem1.Name = "buildToolStripMenuItem1";
       this.buildToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
       this.buildToolStripMenuItem1.Text = "&Build";
@@ -901,7 +901,7 @@
       // 
       // rebuildToolStripMenuItem
       // 
-      this.rebuildToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolRebuild;
+      this.rebuildToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolRebuild;
       this.rebuildToolStripMenuItem.Name = "rebuildToolStripMenuItem";
       this.rebuildToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.rebuildToolStripMenuItem.Text = "&Rebuild";
@@ -909,7 +909,7 @@
       // 
       // buildandRunToolStripMenuItem
       // 
-      this.buildandRunToolStripMenuItem.Image = global::C64Studio.Properties.Resources.ToolBuildAndRun;
+      this.buildandRunToolStripMenuItem.Image = global::RetroDevStudio.Properties.Resources.ToolBuildAndRun;
       this.buildandRunToolStripMenuItem.Name = "buildandRunToolStripMenuItem";
       this.buildandRunToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.buildandRunToolStripMenuItem.Text = "Build &and Run";
@@ -917,7 +917,7 @@
       // 
       // debugToolStripMenuItem1
       // 
-      this.debugToolStripMenuItem1.Image = global::C64Studio.Properties.Resources.ToolDebug;
+      this.debugToolStripMenuItem1.Image = global::RetroDevStudio.Properties.Resources.ToolDebug;
       this.debugToolStripMenuItem1.Name = "debugToolStripMenuItem1";
       this.debugToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
       this.debugToolStripMenuItem1.Text = "D&ebug";
@@ -1367,7 +1367,7 @@
             this.mapToolStripMenuItem,
             this.toolStripSeparator9,
             this.toolStripMenuItem1});
-      this.mainToolNewItem.Image = global::C64Studio.Properties.Resources.ToolNewItem;
+      this.mainToolNewItem.Image = global::RetroDevStudio.Properties.Resources.ToolNewItem;
       this.mainToolNewItem.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolNewItem.Name = "mainToolNewItem";
       this.mainToolNewItem.Size = new System.Drawing.Size(44, 24);
@@ -1474,7 +1474,7 @@
       // 
       this.mainToolOpenFile.AutoSize = false;
       this.mainToolOpenFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolOpenFile.Image = global::C64Studio.Properties.Resources.ToolOpenFile;
+      this.mainToolOpenFile.Image = global::RetroDevStudio.Properties.Resources.ToolOpenFile;
       this.mainToolOpenFile.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolOpenFile.Name = "mainToolOpenFile";
       this.mainToolOpenFile.Size = new System.Drawing.Size(24, 24);
@@ -1486,7 +1486,7 @@
       this.mainToolSave.AutoSize = false;
       this.mainToolSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolSave.Enabled = false;
-      this.mainToolSave.Image = global::C64Studio.Properties.Resources.ToolSave;
+      this.mainToolSave.Image = global::RetroDevStudio.Properties.Resources.ToolSave;
       this.mainToolSave.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolSave.Name = "mainToolSave";
       this.mainToolSave.Size = new System.Drawing.Size(24, 24);
@@ -1498,7 +1498,7 @@
       this.mainToolSaveAll.AutoSize = false;
       this.mainToolSaveAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolSaveAll.Enabled = false;
-      this.mainToolSaveAll.Image = global::C64Studio.Properties.Resources.ToolSaveAll;
+      this.mainToolSaveAll.Image = global::RetroDevStudio.Properties.Resources.ToolSaveAll;
       this.mainToolSaveAll.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolSaveAll.Name = "mainToolSaveAll";
       this.mainToolSaveAll.Size = new System.Drawing.Size(24, 24);
@@ -1509,7 +1509,7 @@
       // 
       this.mainToolCommentSelection.AutoSize = false;
       this.mainToolCommentSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolCommentSelection.Image = global::C64Studio.Properties.Resources.ToolCommentSelection;
+      this.mainToolCommentSelection.Image = global::RetroDevStudio.Properties.Resources.ToolCommentSelection;
       this.mainToolCommentSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolCommentSelection.Name = "mainToolCommentSelection";
       this.mainToolCommentSelection.Size = new System.Drawing.Size(24, 24);
@@ -1520,7 +1520,7 @@
       // 
       this.mainToolUncommentSelection.AutoSize = false;
       this.mainToolUncommentSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolUncommentSelection.Image = global::C64Studio.Properties.Resources.ToolUncommentSelection;
+      this.mainToolUncommentSelection.Image = global::RetroDevStudio.Properties.Resources.ToolUncommentSelection;
       this.mainToolUncommentSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolUncommentSelection.Name = "mainToolUncommentSelection";
       this.mainToolUncommentSelection.Size = new System.Drawing.Size(24, 24);
@@ -1531,7 +1531,7 @@
       // 
       this.mainToolCompile.AutoSize = false;
       this.mainToolCompile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolCompile.Image = global::C64Studio.Properties.Resources.ToolCompile;
+      this.mainToolCompile.Image = global::RetroDevStudio.Properties.Resources.ToolCompile;
       this.mainToolCompile.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolCompile.Name = "mainToolCompile";
       this.mainToolCompile.Size = new System.Drawing.Size(24, 24);
@@ -1542,7 +1542,7 @@
       // 
       this.mainToolBuild.AutoSize = false;
       this.mainToolBuild.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolBuild.Image = global::C64Studio.Properties.Resources.ToolBuild;
+      this.mainToolBuild.Image = global::RetroDevStudio.Properties.Resources.ToolBuild;
       this.mainToolBuild.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolBuild.Name = "mainToolBuild";
       this.mainToolBuild.Size = new System.Drawing.Size(24, 24);
@@ -1553,7 +1553,7 @@
       // 
       this.mainToolRebuild.AutoSize = false;
       this.mainToolRebuild.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolRebuild.Image = global::C64Studio.Properties.Resources.ToolRebuild;
+      this.mainToolRebuild.Image = global::RetroDevStudio.Properties.Resources.ToolRebuild;
       this.mainToolRebuild.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolRebuild.Name = "mainToolRebuild";
       this.mainToolRebuild.Size = new System.Drawing.Size(24, 24);
@@ -1564,7 +1564,7 @@
       // 
       this.mainToolBuildAndRun.AutoSize = false;
       this.mainToolBuildAndRun.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolBuildAndRun.Image = global::C64Studio.Properties.Resources.ToolBuildAndRun;
+      this.mainToolBuildAndRun.Image = global::RetroDevStudio.Properties.Resources.ToolBuildAndRun;
       this.mainToolBuildAndRun.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolBuildAndRun.Name = "mainToolBuildAndRun";
       this.mainToolBuildAndRun.Size = new System.Drawing.Size(24, 24);
@@ -1575,7 +1575,7 @@
       // 
       this.mainToolDebug.AutoSize = false;
       this.mainToolDebug.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolDebug.Image = global::C64Studio.Properties.Resources.ToolDebug;
+      this.mainToolDebug.Image = global::RetroDevStudio.Properties.Resources.ToolDebug;
       this.mainToolDebug.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolDebug.Name = "mainToolDebug";
       this.mainToolDebug.Size = new System.Drawing.Size(24, 24);
@@ -1594,7 +1594,7 @@
       // 
       this.mainToolToggleTrueDrive.AutoSize = false;
       this.mainToolToggleTrueDrive.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainToolToggleTrueDrive.Image = global::C64Studio.Properties.Resources.toolbar_truedrive_enabled;
+      this.mainToolToggleTrueDrive.Image = global::RetroDevStudio.Properties.Resources.toolbar_truedrive_enabled;
       this.mainToolToggleTrueDrive.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolToggleTrueDrive.Name = "mainToolToggleTrueDrive";
       this.mainToolToggleTrueDrive.Size = new System.Drawing.Size(24, 24);
@@ -1619,7 +1619,7 @@
       this.mainToolUndo.AutoSize = false;
       this.mainToolUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolUndo.Enabled = false;
-      this.mainToolUndo.Image = global::C64Studio.Properties.Resources.ToolUndo;
+      this.mainToolUndo.Image = global::RetroDevStudio.Properties.Resources.ToolUndo;
       this.mainToolUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolUndo.Name = "mainToolUndo";
       this.mainToolUndo.Size = new System.Drawing.Size(24, 24);
@@ -1631,7 +1631,7 @@
       this.mainToolRedo.AutoSize = false;
       this.mainToolRedo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolRedo.Enabled = false;
-      this.mainToolRedo.Image = global::C64Studio.Properties.Resources.ToolRedo;
+      this.mainToolRedo.Image = global::RetroDevStudio.Properties.Resources.ToolRedo;
       this.mainToolRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolRedo.Name = "mainToolRedo";
       this.mainToolRedo.Size = new System.Drawing.Size(24, 24);
@@ -1643,7 +1643,7 @@
       this.mainToolFind.AutoSize = false;
       this.mainToolFind.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolFind.Enabled = false;
-      this.mainToolFind.Image = global::C64Studio.Properties.Resources.ToolFind;
+      this.mainToolFind.Image = global::RetroDevStudio.Properties.Resources.ToolFind;
       this.mainToolFind.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolFind.Name = "mainToolFind";
       this.mainToolFind.Size = new System.Drawing.Size(24, 24);
@@ -1655,7 +1655,7 @@
       this.mainToolFindReplace.AutoSize = false;
       this.mainToolFindReplace.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolFindReplace.Enabled = false;
-      this.mainToolFindReplace.Image = global::C64Studio.Properties.Resources.ToolFindReplace;
+      this.mainToolFindReplace.Image = global::RetroDevStudio.Properties.Resources.ToolFindReplace;
       this.mainToolFindReplace.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolFindReplace.Name = "mainToolFindReplace";
       this.mainToolFindReplace.Size = new System.Drawing.Size(24, 24);
@@ -1667,7 +1667,7 @@
       this.mainToolPrint.AutoSize = false;
       this.mainToolPrint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.mainToolPrint.Enabled = false;
-      this.mainToolPrint.Image = global::C64Studio.Properties.Resources.ToolPrint;
+      this.mainToolPrint.Image = global::RetroDevStudio.Properties.Resources.ToolPrint;
       this.mainToolPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainToolPrint.Name = "mainToolPrint";
       this.mainToolPrint.Size = new System.Drawing.Size(24, 24);
@@ -1751,7 +1751,7 @@
       // 
       this.mainDebugGo.AutoSize = false;
       this.mainDebugGo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugGo.Image = global::C64Studio.Properties.Resources.DebugGo;
+      this.mainDebugGo.Image = global::RetroDevStudio.Properties.Resources.DebugGo;
       this.mainDebugGo.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugGo.Name = "mainDebugGo";
       this.mainDebugGo.Size = new System.Drawing.Size(24, 24);
@@ -1762,7 +1762,7 @@
       // 
       this.mainDebugBreak.AutoSize = false;
       this.mainDebugBreak.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugBreak.Image = global::C64Studio.Properties.Resources.DebugBreak;
+      this.mainDebugBreak.Image = global::RetroDevStudio.Properties.Resources.DebugBreak;
       this.mainDebugBreak.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugBreak.Name = "mainDebugBreak";
       this.mainDebugBreak.Size = new System.Drawing.Size(24, 24);
@@ -1773,7 +1773,7 @@
       // 
       this.mainDebugStop.AutoSize = false;
       this.mainDebugStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugStop.Image = global::C64Studio.Properties.Resources.DebugStop;
+      this.mainDebugStop.Image = global::RetroDevStudio.Properties.Resources.DebugStop;
       this.mainDebugStop.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStop.Name = "mainDebugStop";
       this.mainDebugStop.Size = new System.Drawing.Size(24, 24);
@@ -1784,7 +1784,7 @@
       // 
       this.mainDebugStepInto.AutoSize = false;
       this.mainDebugStepInto.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugStepInto.Image = global::C64Studio.Properties.Resources.DebugStepInto;
+      this.mainDebugStepInto.Image = global::RetroDevStudio.Properties.Resources.DebugStepInto;
       this.mainDebugStepInto.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStepInto.Name = "mainDebugStepInto";
       this.mainDebugStepInto.Size = new System.Drawing.Size(24, 24);
@@ -1795,7 +1795,7 @@
       // 
       this.mainDebugStepOver.AutoSize = false;
       this.mainDebugStepOver.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugStepOver.Image = global::C64Studio.Properties.Resources.DebugStepOver;
+      this.mainDebugStepOver.Image = global::RetroDevStudio.Properties.Resources.DebugStepOver;
       this.mainDebugStepOver.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStepOver.Name = "mainDebugStepOver";
       this.mainDebugStepOver.Size = new System.Drawing.Size(24, 24);
@@ -1806,7 +1806,7 @@
       // 
       this.mainDebugStepOut.AutoSize = false;
       this.mainDebugStepOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.mainDebugStepOut.Image = global::C64Studio.Properties.Resources.DebugStepOut;
+      this.mainDebugStepOut.Image = global::RetroDevStudio.Properties.Resources.DebugStepOut;
       this.mainDebugStepOut.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.mainDebugStepOut.Name = "mainDebugStepOut";
       this.mainDebugStepOut.Size = new System.Drawing.Size(24, 24);

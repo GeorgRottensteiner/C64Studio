@@ -11,7 +11,7 @@ using System.Text;
 
 
 
-namespace C64Studio.Converter
+namespace RetroDevStudio.Converter
 {
   public class GIFEncoder : IDisposable
   {

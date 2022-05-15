@@ -5,7 +5,7 @@ using System.Text;
 
 
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   /*
   File Header, 20 bytes...

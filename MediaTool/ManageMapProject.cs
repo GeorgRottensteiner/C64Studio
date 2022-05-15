@@ -21,7 +21,7 @@ namespace MediaTool
         return 1;
       }
 
-      var mapProject = new C64Studio.Formats.MapProject();
+      var mapProject = new RetroDevStudio.Formats.MapProject();
       if ( !mapProject.ReadFromBuffer( data ) )
       {
         System.Console.WriteLine( "Couldn't read map project from file " + ArgParser.Parameter( "MAPPROJECT" ) );

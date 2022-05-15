@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 
 
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   public class CSButton : Button
   {

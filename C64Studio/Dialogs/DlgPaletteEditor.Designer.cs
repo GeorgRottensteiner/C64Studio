@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class DlgPaletteEditor
   {
@@ -50,7 +50,7 @@
       this.groupBox4 = new System.Windows.Forms.GroupBox();
       this.editPaletteName = new System.Windows.Forms.TextBox();
       this.label4 = new System.Windows.Forms.Label();
-      this.paletteList = new C64Studio.ArrangedItemList();
+      this.paletteList = new RetroDevStudio.ArrangedItemList();
       this.tabPalette = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.tabImportExport = new System.Windows.Forms.TabPage();
@@ -316,11 +316,11 @@
       this.paletteList.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.paletteList.Size = new System.Drawing.Size(210, 189);
       this.paletteList.TabIndex = 7;
-      this.paletteList.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.paletteList_AddingItem);
-      this.paletteList.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.paletteList_CloningItem);
-      this.paletteList.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_ItemRemoved);
-      this.paletteList.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.paletteList_ItemMoved);
-      this.paletteList.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_SelectedIndexChanged);
+      this.paletteList.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.paletteList_AddingItem);
+      this.paletteList.CloningItem += new RetroDevStudio.ArrangedItemList.CloningItemEventHandler(this.paletteList_CloningItem);
+      this.paletteList.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_ItemRemoved);
+      this.paletteList.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.paletteList_ItemMoved);
+      this.paletteList.SelectedIndexChanged += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.paletteList_SelectedIndexChanged);
       // 
       // tabPalette
       // 

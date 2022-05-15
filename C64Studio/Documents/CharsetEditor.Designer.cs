@@ -1,5 +1,5 @@
-﻿using C64Studio.Controls;
-namespace C64Studio
+﻿using RetroDevStudio.Controls;
+namespace RetroDevStudio
 {
   partial class CharsetEditor
   {
@@ -33,7 +33,7 @@ namespace C64Studio
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharsetEditor));
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.tabCharEditor = new System.Windows.Forms.TabPage();
-      this.characterEditor = new C64Studio.Controls.CharacterEditor();
+      this.characterEditor = new RetroDevStudio.Controls.CharacterEditor();
       this.tabExport = new System.Windows.Forms.TabPage();
       this.comboExportRange = new System.Windows.Forms.ComboBox();
       this.editCharactersCount = new System.Windows.Forms.TextBox();
@@ -101,7 +101,7 @@ namespace C64Studio
       this.characterEditor.Name = "characterEditor";
       this.characterEditor.Size = new System.Drawing.Size(1056, 477);
       this.characterEditor.TabIndex = 0;
-      this.characterEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.characterEditor_Modified);
+      this.characterEditor.Modified += new RetroDevStudio.Controls.CharacterEditor.ModifiedHandler(this.characterEditor_Modified);
       // 
       // tabExport
       // 

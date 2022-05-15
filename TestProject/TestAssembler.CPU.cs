@@ -279,13 +279,13 @@ namespace TestProject
                         nop $1234
                         nop $1234,x";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.bin";
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      config.TargetType = C64Studio.Types.CompileTargetType.PLAIN;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -524,13 +524,13 @@ namespace TestProject
                             tsb $12
                             tsb $1234";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.bin";
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      config.TargetType = C64Studio.Types.CompileTargetType.PLAIN;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -803,13 +803,13 @@ namespace TestProject
                                 smb6 $12
                                 smb7 $12";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.bin";
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      config.TargetType = C64Studio.Types.CompileTargetType.PLAIN;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -1085,13 +1085,13 @@ namespace TestProject
                                 stp
                                 wai";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.bin";
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      config.TargetType = C64Studio.Types.CompileTargetType.PLAIN;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -1416,13 +1416,13 @@ namespace TestProject
                             phw #$1234
                             phw $1234";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.bin";
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      config.TargetType = C64Studio.Types.CompileTargetType.PLAIN;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );
@@ -2155,13 +2155,13 @@ namespace TestProject
                             sbcq [$12]
                             ";
 
-      C64Studio.Parser.ASMFileParser      parser = new C64Studio.Parser.ASMFileParser();
-      parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      RetroDevStudio.Parser.ASMFileParser      parser = new RetroDevStudio.Parser.ASMFileParser();
+      parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.bin";
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
-      config.TargetType = C64Studio.Types.CompileTargetType.PLAIN;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
       Assert.IsTrue( parser.Assemble( config ) );

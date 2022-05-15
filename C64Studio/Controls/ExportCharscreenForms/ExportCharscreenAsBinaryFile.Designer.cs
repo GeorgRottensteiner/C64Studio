@@ -1,5 +1,5 @@
 ﻿
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   partial class ExportCharscreenAsBinaryFile
   {

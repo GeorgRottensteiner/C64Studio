@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class FormRenameDisk
   {
@@ -32,9 +32,9 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.label1 = new System.Windows.Forms.Label();
       this.listPETSCII = new GR.Forms.ImageListbox();
-      this.editDiskName = new C64Studio.EditC64Filename();
+      this.editDiskName = new RetroDevStudio.EditC64Filename();
       this.label2 = new System.Windows.Forms.Label();
-      this.editDiskID = new C64Studio.EditC64Filename();
+      this.editDiskID = new RetroDevStudio.EditC64Filename();
       this.SuspendLayout();
       // 
       // btnCancel

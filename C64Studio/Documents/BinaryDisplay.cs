@@ -10,7 +10,7 @@ using GR.Image;
 using GR.Memory;
 using RetroDevStudio;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class BinaryDisplay : BaseDocument
   {
@@ -142,7 +142,7 @@ namespace C64Studio
     {
       string filename;
 
-      if ( OpenFile( "Open Binary File", C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Open Binary File", RetroDevStudio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         GR.Memory.ByteBuffer data = GR.IO.File.ReadAllBytes( filename );
         if ( data != null )
@@ -200,7 +200,7 @@ namespace C64Studio
 
     private void btnFromASM_Click( object sender, EventArgs e )
     {
-      Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
+      Parser.ASMFileParser asmParser = new RetroDevStudio.Parser.ASMFileParser();
 
       Parser.CompileConfig    config = new Parser.CompileConfig();
       config.TargetType = Types.CompileTargetType.PLAIN;

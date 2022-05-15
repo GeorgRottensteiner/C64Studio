@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class Help
   {
@@ -37,7 +37,7 @@
       this.toolStripBtnZoomIn = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnZoomOut = new System.Windows.Forms.ToolStripButton();
       this.toolStripBtnZoomReset = new System.Windows.Forms.ToolStripButton();
-      this.webBrowser = new C64Studio.ZoomBrowser();
+      this.webBrowser = new RetroDevStudio.ZoomBrowser();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       this.toolStripNavigation.SuspendLayout();
       this.SuspendLayout();

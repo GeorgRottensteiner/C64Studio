@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace C64Studio.Types.ASM
+namespace RetroDevStudio.Types.ASM
 {
   public enum LabelFileFormat
   {
@@ -96,7 +96,7 @@ namespace C64Studio.Types.ASM
     public Dictionary<int,Types.Breakpoint>       VirtualBreakpoints = new Dictionary<int,Breakpoint>();
     public string                                 LabelDumpFile = "";
     public Tiny64.Processor                       Processor = Tiny64.Processor.Create6510();
-    public GR.Collections.Map<string, C64Studio.Types.MacroFunctionInfo>    Macros = new GR.Collections.Map<string, MacroFunctionInfo>();
+    public GR.Collections.Map<string, Types.MacroFunctionInfo>    Macros = new GR.Collections.Map<string, MacroFunctionInfo>();
 
 
 

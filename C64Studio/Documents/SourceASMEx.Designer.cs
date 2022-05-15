@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class SourceASMEx
   {
@@ -371,7 +371,7 @@
       // 
       // btnCloseAllZones
       // 
-      this.btnCloseAllZones.Image = global::C64Studio.Properties.Resources.close_all_sections;
+      this.btnCloseAllZones.Image = global::RetroDevStudio.Properties.Resources.close_all_sections;
       this.btnCloseAllZones.Location = new System.Drawing.Point(0, 0);
       this.btnCloseAllZones.Name = "btnCloseAllZones";
       this.btnCloseAllZones.Size = new System.Drawing.Size(23, 23);

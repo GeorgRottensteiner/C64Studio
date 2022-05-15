@@ -6,7 +6,7 @@ using System.Text;
 
 
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   public class CharData
   {

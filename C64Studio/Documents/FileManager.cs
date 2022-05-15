@@ -6,13 +6,15 @@ using System.Reflection.Emit;
 using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
-using C64Studio.Formats;
-using C64Studio.Types;
+using RetroDevStudio.Formats;
+using RetroDevStudio.Types;
 using GR.Memory;
 using RetroDevStudio;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace C64Studio
+
+
+namespace RetroDevStudio
 {
   public partial class FileManager : BaseDocument
   {
@@ -20,7 +22,7 @@ namespace C64Studio
     {
       public FileManager Parent = null;
       public Formats.MediaFormat Media = null;
-      public List<C64Studio.Types.FileInfo> Files = null;
+      public List<Types.FileInfo> Files = null;
     };
 
     string          m_Filename;
@@ -61,7 +63,7 @@ namespace C64Studio
     public void CreateEmptyDiskImage()
     {
       CloseMedia();
-      m_Media = new C64Studio.Formats.D64();
+      m_Media = new RetroDevStudio.Formats.D64();
       m_Media.CreateEmptyMedia();
       SetUnmodified();
       UpdateStatusInfo();
@@ -76,7 +78,7 @@ namespace C64Studio
     public void CreateEmptyTapeImage()
     {
       CloseMedia();
-      m_Media = new C64Studio.Formats.T64();
+      m_Media = new RetroDevStudio.Formats.T64();
       m_Media.CreateEmptyMedia();
       SetUnmodified();
       UpdateStatusInfo();
@@ -95,27 +97,27 @@ namespace C64Studio
       if ( upperName.EndsWith( ".D64" ) )
       {
         // disk file
-        m_Media = new C64Studio.Formats.D64();
+        m_Media = new RetroDevStudio.Formats.D64();
       }
       else if ( upperName.EndsWith( ".D71" ) )
       {
         // disk file
-        m_Media = new C64Studio.Formats.D71();
+        m_Media = new RetroDevStudio.Formats.D71();
       }
       else if ( upperName.EndsWith( ".D81" ) )
       {
         // disk file
-        m_Media = new C64Studio.Formats.D81();
+        m_Media = new RetroDevStudio.Formats.D81();
       }
       else if ( upperName.EndsWith( ".T64" ) )
       {
         // tape file
-        m_Media = new C64Studio.Formats.T64();
+        m_Media = new RetroDevStudio.Formats.T64();
       }
       else if ( upperName.EndsWith( ".PRG" ) )
       {
         // prg file
-        m_Media = new C64Studio.Formats.PRG();
+        m_Media = new RetroDevStudio.Formats.PRG();
       }
       else
       {
@@ -209,7 +211,7 @@ namespace C64Studio
       listFiles.BeginUpdate();
       listFiles.Items.Clear();
 
-      List<C64Studio.Types.FileInfo> files = null;
+      List<Types.FileInfo> files = null;
 
       if ( m_Media != null )
       {
@@ -222,7 +224,7 @@ namespace C64Studio
       }
       if ( files != null )
       {
-        foreach ( C64Studio.Types.FileInfo file in files )
+        foreach ( Types.FileInfo file in files )
         {
           ByteBuffer  displayFilename = new ByteBuffer( file.Filename );
 
@@ -242,34 +244,34 @@ namespace C64Studio
           item.SubItems.Add( file.Blocks.ToString() );
           string     fileType = "";
 
-          if ( ( file.Type & C64Studio.Types.FileType.CLOSED ) != 0 )
+          if ( ( file.Type & Types.FileType.CLOSED ) != 0 )
           {
             switch ( (Types.FileType)( (byte)file.Type & ( 0x0f | (byte)Types.FileType.CLOSED ) ) )
             {
-              case C64Studio.Types.FileType.DEL:
+              case Types.FileType.DEL:
                 fileType = "DEL";
                 break;
-              case C64Studio.Types.FileType.PRG:
+              case Types.FileType.PRG:
                 fileType = "PRG";
                 break;
-              case C64Studio.Types.FileType.REL:
+              case Types.FileType.REL:
                 fileType = "REL";
                 break;
-              case C64Studio.Types.FileType.SEQ:
+              case Types.FileType.SEQ:
                 fileType = "SEQ";
                 break;
-              case C64Studio.Types.FileType.USR:
+              case Types.FileType.USR:
                 fileType = "USR";
                 break;
             }
           }
 
           
-          if ( ( file.Type & C64Studio.Types.FileType.CLOSED ) == 0 )
+          if ( ( file.Type & RetroDevStudio.Types.FileType.CLOSED ) == 0 )
           {
             fileType += "*";
           }
-          if ( ( file.Type & C64Studio.Types.FileType.LOCKED ) != 0 )
+          if ( ( file.Type & RetroDevStudio.Types.FileType.LOCKED ) != 0 )
           {
             fileType += "<";
           }
@@ -300,7 +302,7 @@ namespace C64Studio
       OpenFileDialog      openDlg = new OpenFileDialog();
 
       openDlg.Title = "Choose an emulator medium to open";
-      openDlg.Filter = Core.MainForm.FilterString( C64Studio.Types.Constants.FILEFILTER_MEDIA_FILES );
+      openDlg.Filter = Core.MainForm.FilterString( RetroDevStudio.Types.Constants.FILEFILTER_MEDIA_FILES );
       openDlg.Multiselect = false;
       if ( openDlg.ShowDialog() == DialogResult.OK )
       {
@@ -323,7 +325,7 @@ namespace C64Studio
           bool deletedFile = false;
           foreach ( ListViewItem item in listFiles.SelectedItems )
           {
-            C64Studio.Types.FileInfo fileToDelete = (C64Studio.Types.FileInfo)item.Tag;
+            RetroDevStudio.Types.FileInfo fileToDelete = (RetroDevStudio.Types.FileInfo)item.Tag;
 
             if ( m_Media != null )
             {
@@ -350,8 +352,8 @@ namespace C64Studio
     {
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
-        C64Studio.Types.FileInfo fileToExport = (C64Studio.Types.FileInfo)item.Tag;
-        C64Studio.Types.FileInfo fileInfo = null;
+        RetroDevStudio.Types.FileInfo fileToExport = (RetroDevStudio.Types.FileInfo)item.Tag;
+        RetroDevStudio.Types.FileInfo fileInfo = null;
 
         if ( m_Media != null )
         {
@@ -372,7 +374,7 @@ namespace C64Studio
           saveDlg.Title = "Select target file name for " + readableFilename;
           saveDlg.Filter = "All Files|*.*";
           saveDlg.FileName = readableFilename;
-          if ( fileToExport.Type == C64Studio.Types.FileType.PRG )
+          if ( fileToExport.Type == RetroDevStudio.Types.FileType.PRG )
           {
             saveDlg.FileName += ".prg";
           }
@@ -408,12 +410,12 @@ namespace C64Studio
       }
       DragData dragData = new DragData();
       dragData.Parent = this;
-      dragData.Files = new List<C64Studio.Types.FileInfo>();
+      dragData.Files = new List<RetroDevStudio.Types.FileInfo>();
       dragData.Media = m_Media;
 
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
-        dragData.Files.Add( (C64Studio.Types.FileInfo)item.Tag );
+        dragData.Files.Add( (RetroDevStudio.Types.FileInfo)item.Tag );
       }
       listFiles.DoDragDrop( dragData, DragDropEffects.Copy );
     }
@@ -433,12 +435,12 @@ namespace C64Studio
         return;
       }
 
-      if ( !e.Data.GetDataPresent( "C64Studio.FileManager+DragData" ) )
+      if ( !e.Data.GetDataPresent( "RetroDevStudio.FileManager+DragData" ) )
       {
         e.Effect = DragDropEffects.None;
         return;
       }
-      DragData dragData = (DragData)e.Data.GetData( "C64Studio.FileManager+DragData" );
+      DragData dragData = (DragData)e.Data.GetData( "RetroDevStudio.FileManager+DragData" );
 
       if ( dragData.Parent == this )
       {
@@ -479,13 +481,13 @@ namespace C64Studio
         }
         return;
       }
-      else if ( !e.Data.GetDataPresent( "C64Studio.FileManager+DragData" ) )
+      else if ( !e.Data.GetDataPresent( "RetroDevStudio.FileManager+DragData" ) )
       {
         return;
       }
       else
       {
-        dragData = (DragData)e.Data.GetData( "C64Studio.FileManager+DragData" );
+        dragData = (DragData)e.Data.GetData( "RetroDevStudio.FileManager+DragData" );
         if ( dragData.Parent == this )
         {
           return;
@@ -494,7 +496,7 @@ namespace C64Studio
 
       // insert file
       bool changed = false;
-      foreach ( C64Studio.Types.FileInfo file in dragData.Files )
+      foreach ( RetroDevStudio.Types.FileInfo file in dragData.Files )
       {
         Types.FileInfo          fileInfo = null;
         if ( dragData.Media != null )
@@ -554,7 +556,7 @@ namespace C64Studio
         }
         if ( m_Media != null )
         {
-          if ( m_Media.WriteFile( fileName, fileData, C64Studio.Types.FileType.PRG ) )
+          if ( m_Media.WriteFile( fileName, fileData, RetroDevStudio.Types.FileType.PRG ) )
           {
             RefreshFileView();
             UpdateStatusInfo();
@@ -608,7 +610,7 @@ namespace C64Studio
         statusFileManager.Text = "No media opened";
         return;
       }
-      C64Studio.Types.FileInfo file = (C64Studio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
+      RetroDevStudio.Types.FileInfo file = (RetroDevStudio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
 
       statusFileManager.Text = Util.FilenameToUnicode( file.Filename ) + " " + file.Blocks.ToString() + " blocks";
     }
@@ -636,8 +638,8 @@ namespace C64Studio
       bool  exportToBasicPossible = true;
       foreach ( ListViewItem listItem in listFiles.SelectedItems )
       {
-        C64Studio.Types.FileInfo fileInfo = (C64Studio.Types.FileInfo)listItem.Tag;
-        if ( fileInfo.Type != C64Studio.Types.FileType.PRG )
+        RetroDevStudio.Types.FileInfo fileInfo = (RetroDevStudio.Types.FileInfo)listItem.Tag;
+        if ( fileInfo.Type != RetroDevStudio.Types.FileType.PRG )
         {
           exportToBasicPossible = false;
         }
@@ -718,7 +720,7 @@ namespace C64Studio
       bool changedType = false;
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
-        C64Studio.Types.FileInfo fileToChange = (C64Studio.Types.FileInfo)item.Tag;
+        RetroDevStudio.Types.FileInfo fileToChange = (RetroDevStudio.Types.FileInfo)item.Tag;
         if ( fileToChange.Type != NewFileType )
         {
           m_Media.ChangeFileType( fileToChange, NewFileType );
@@ -743,9 +745,9 @@ namespace C64Studio
 
 
 
-    void OpenInHexEditor( C64Studio.Types.FileInfo FileToImport )
+    void OpenInHexEditor( Types.FileInfo FileToImport )
     {
-      C64Studio.Types.FileInfo fileInfo = null;
+      Types.FileInfo fileInfo = null;
 
       if ( m_Media != null )
       {
@@ -771,7 +773,7 @@ namespace C64Studio
     {
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
-        C64Studio.Types.FileInfo fileToExport = (C64Studio.Types.FileInfo)item.Tag;
+        RetroDevStudio.Types.FileInfo fileToExport = (RetroDevStudio.Types.FileInfo)item.Tag;
 
         OpenInHexEditor( fileToExport );
       }
@@ -793,7 +795,7 @@ namespace C64Studio
     {
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
-        C64Studio.Types.FileInfo  fileToExport = (C64Studio.Types.FileInfo)item.Tag;
+        RetroDevStudio.Types.FileInfo  fileToExport = (RetroDevStudio.Types.FileInfo)item.Tag;
 
         ExportToBASIC( fileToExport, Dialect );
       }
@@ -803,7 +805,7 @@ namespace C64Studio
 
     private void ExportToBASIC( Types.FileInfo fileToExport, C64Models.BASIC.Dialect Dialect )
     {
-      C64Studio.Types.FileInfo  fileInfo = null;
+      RetroDevStudio.Types.FileInfo  fileInfo = null;
 
       if ( m_Media != null )
       {
@@ -871,7 +873,7 @@ namespace C64Studio
       bool renamedFile = false;
       foreach ( ListViewItem item in listFiles.SelectedItems )
       {
-        C64Studio.Types.FileInfo fileToRename = (C64Studio.Types.FileInfo)item.Tag;
+        RetroDevStudio.Types.FileInfo fileToRename = (RetroDevStudio.Types.FileInfo)item.Tag;
 
         FormRenameFile formRename = new FormRenameFile( Core, fileToRename.Filename );
 
@@ -917,7 +919,7 @@ namespace C64Studio
     {
       CloseMedia();
 
-      m_Media = new C64Studio.Formats.T64();
+      m_Media = new RetroDevStudio.Formats.T64();
       m_Media.CreateEmptyMedia();
       SetUnmodified();
       RefreshFileView();
@@ -944,7 +946,7 @@ namespace C64Studio
       if ( m_Media is Formats.D64 )
       {
         Formats.D64 disk = m_Media as Formats.D64;
-        C64Studio.Types.FileInfo fileToMove = (C64Studio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
+        RetroDevStudio.Types.FileInfo fileToMove = (RetroDevStudio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
 
         int oldIndex = listFiles.SelectedIndices[0];
         if ( disk.MoveFileUp( fileToMove ) )
@@ -959,7 +961,7 @@ namespace C64Studio
       else if ( m_Media is Formats.D81 )
       {
         Formats.D81 disk = m_Media as Formats.D81;
-        C64Studio.Types.FileInfo fileToMove = (C64Studio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
+        RetroDevStudio.Types.FileInfo fileToMove = (RetroDevStudio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
 
         int oldIndex = listFiles.SelectedIndices[0];
         if ( disk.MoveFileUp( fileToMove ) )
@@ -980,7 +982,7 @@ namespace C64Studio
       if ( m_Media is Formats.D64 )
       {
         Formats.D64 disk = m_Media as Formats.D64;
-        C64Studio.Types.FileInfo fileToMove = (C64Studio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
+        RetroDevStudio.Types.FileInfo fileToMove = (RetroDevStudio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
 
         int oldIndex = listFiles.SelectedIndices[0];
         if ( disk.MoveFileDown( fileToMove ) )
@@ -995,7 +997,7 @@ namespace C64Studio
       else if ( m_Media is Formats.D71 )
       {
         Formats.D71 disk = m_Media as Formats.D71;
-        C64Studio.Types.FileInfo fileToMove = (C64Studio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
+        RetroDevStudio.Types.FileInfo fileToMove = (RetroDevStudio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
 
         int oldIndex = listFiles.SelectedIndices[0];
         if ( disk.MoveFileDown( fileToMove ) )
@@ -1010,7 +1012,7 @@ namespace C64Studio
       else if ( m_Media is Formats.D81 )
       {
         Formats.D81 disk = m_Media as Formats.D81;
-        C64Studio.Types.FileInfo fileToMove = (C64Studio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
+        RetroDevStudio.Types.FileInfo fileToMove = (RetroDevStudio.Types.FileInfo)listFiles.SelectedItems[0].Tag;
 
         int oldIndex = listFiles.SelectedIndices[0];
         if ( disk.MoveFileDown( fileToMove ) )
@@ -1042,8 +1044,8 @@ namespace C64Studio
         bool  exportToBasicPossible = true;
         foreach ( ListViewItem listItem in listFiles.SelectedItems )
         {
-          C64Studio.Types.FileInfo fileInfo = (C64Studio.Types.FileInfo)listItem.Tag;
-          if ( fileInfo.Type != C64Studio.Types.FileType.PRG )
+          RetroDevStudio.Types.FileInfo fileInfo = (RetroDevStudio.Types.FileInfo)listItem.Tag;
+          if ( fileInfo.Type != RetroDevStudio.Types.FileType.PRG )
           {
             exportToBasicPossible = false;
             break;
@@ -1071,7 +1073,7 @@ namespace C64Studio
     {
       string filename;
 
-      if ( OpenFile( "Choose file to import", C64Studio.Types.Constants.FILEFILTER_PRG + C64Studio.Types.Constants.FILEFILTER_ALL, out filename ) )
+      if ( OpenFile( "Choose file to import", RetroDevStudio.Types.Constants.FILEFILTER_PRG + RetroDevStudio.Types.Constants.FILEFILTER_ALL, out filename ) )
       {
         if ( !ImportFile( filename ) )
         {
@@ -1108,7 +1110,7 @@ namespace C64Studio
     {
       CloseMedia();
 
-      m_Media = new C64Studio.Formats.D64();
+      m_Media = new RetroDevStudio.Formats.D64();
       m_Media.CreateEmptyMedia();
       SetUnmodified();
       RefreshFileView();
@@ -1121,7 +1123,7 @@ namespace C64Studio
     {
       CloseMedia();
 
-      m_Media = new C64Studio.Formats.D81();
+      m_Media = new RetroDevStudio.Formats.D81();
       m_Media.CreateEmptyMedia();
       SetUnmodified();
       RefreshFileView();
@@ -1134,7 +1136,7 @@ namespace C64Studio
     {
       CloseMedia();
 
-      var d64 = new C64Studio.Formats.D64();
+      var d64 = new RetroDevStudio.Formats.D64();
       d64.CreateEmptyMedia40Tracks();
       m_Media = d64;
       SetUnmodified();
@@ -1170,7 +1172,7 @@ namespace C64Studio
       OpenFileDialog      openDlg = new OpenFileDialog();
 
       openDlg.Title = "Choose a file to import";
-      openDlg.Filter = Core.MainForm.FilterString( C64Studio.Types.Constants.FILEFILTER_ALL );
+      openDlg.Filter = Core.MainForm.FilterString( RetroDevStudio.Types.Constants.FILEFILTER_ALL );
       openDlg.Multiselect = true;
       if ( openDlg.ShowDialog() == DialogResult.OK )
       {
@@ -1198,7 +1200,7 @@ namespace C64Studio
     {
       CloseMedia();
 
-      m_Media = new C64Studio.Formats.D71();
+      m_Media = new RetroDevStudio.Formats.D71();
       m_Media.CreateEmptyMedia();
       SetUnmodified();
       RefreshFileView();
@@ -1234,7 +1236,7 @@ namespace C64Studio
       {
         var emptyFile = new ByteBuffer();
         var fileName = Util.ToFilename( "NEW FILE" );
-        if ( m_Media.WriteFile( fileName, emptyFile, C64Studio.Types.FileType.PRG ) )
+        if ( m_Media.WriteFile( fileName, emptyFile, RetroDevStudio.Types.FileType.PRG ) )
         {
           RefreshFileView();
           UpdateStatusInfo();
@@ -1300,7 +1302,7 @@ namespace C64Studio
 
           fileName.AppendU8( ConstantData.ScreenCodeToChar[scrCode].PetSCIIValue );
         }
-        if ( m_Media.WriteFile( fileName, emptyFile, C64Studio.Types.FileType.USR ) )
+        if ( m_Media.WriteFile( fileName, emptyFile, RetroDevStudio.Types.FileType.USR ) )
         {
           changed = true;
         }

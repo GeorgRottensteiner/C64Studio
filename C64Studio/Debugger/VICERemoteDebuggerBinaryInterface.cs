@@ -1,4 +1,4 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using GR.Memory;
 using RetroDevStudio;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class VICERemoteDebuggerBinaryInterface : IDebugger
   {
@@ -104,7 +104,7 @@ namespace C64Studio
     GR.Collections.Map<int, byte>     m_MemoryValues = new GR.Collections.Map<int, byte>();
     GR.Collections.Map<int, bool>     m_RequestedMemoryValues = new GR.Collections.Map<int, bool>();
 
-    GR.Collections.Set<Types.Breakpoint> m_BreakPoints = new GR.Collections.Set<C64Studio.Types.Breakpoint>();
+    GR.Collections.Set<Types.Breakpoint> m_BreakPoints = new GR.Collections.Set<RetroDevStudio.Types.Breakpoint>();
 
     public event BaseDocument.DocumentEventHandler DocumentEvent;
 
@@ -395,7 +395,7 @@ namespace C64Studio
               {
                 var ded       = new DebugEventData();
                 ded.Registers = info;
-                ded.Type      = C64Studio.DebugEvent.REGISTER_INFO;
+                ded.Type      = RetroDevStudio.DebugEvent.REGISTER_INFO;
 
                 DebugEvent( ded );
               }
@@ -540,7 +540,7 @@ namespace C64Studio
           //Log( "Other side closed" );
           DebugEvent( new DebugEventData()
           {
-            Type = C64Studio.DebugEvent.EMULATOR_CLOSED
+            Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED
           }  );
           m_Request.Type = DebugRequestType.NONE;
           DisconnectFromEmulator();
@@ -565,7 +565,7 @@ namespace C64Studio
         /*
         DebugEvent( new DebugEventData()
         {
-          Type = C64Studio.DebugEvent.EMULATOR_CLOSED
+          Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED
         } );*/
         m_Request.Type = DebugRequestType.NONE;
         DisconnectFromEmulator();
@@ -576,7 +576,7 @@ namespace C64Studio
           Core.AddToOutput( "Reconnect failed, stopping debug session" );
           DebugEvent( new DebugEventData()
           {
-            Type = C64Studio.DebugEvent.EMULATOR_CLOSED
+            Type = RetroDevStudio.DebugEvent.EMULATOR_CLOSED
           } );
         }
         else
@@ -765,7 +765,7 @@ namespace C64Studio
         string    traceText = "Trace " + m_Request.Info + " from $" + m_Request.Parameter1.ToString( "X4" ) + " as $" + DumpData.ToString() + "/" + DumpData.ByteAt( 0 ) + System.Environment.NewLine;
         DebugEvent( new DebugEventData()
         {
-          Type = C64Studio.DebugEvent.TRACE_OUTPUT,
+          Type = RetroDevStudio.DebugEvent.TRACE_OUTPUT,
           Text = traceText
         } );
 
@@ -794,7 +794,7 @@ namespace C64Studio
         }
         DebugEvent( new DebugEventData()
         {
-          Type = C64Studio.DebugEvent.UPDATE_WATCH,
+          Type = RetroDevStudio.DebugEvent.UPDATE_WATCH,
           Request = m_Request,
           Data = DumpData
         } );
@@ -876,7 +876,7 @@ namespace C64Studio
     {
       DebugEventData  ded = new DebugEventData()
       {
-        Type = C64Studio.DebugEvent.REGISTER_INFO
+        Type = RetroDevStudio.DebugEvent.REGISTER_INFO
       };
 
       ded.Registers = new RegisterInfo();
@@ -1165,7 +1165,7 @@ namespace C64Studio
     {
       //return true;
       // UGLY HACK
-      m_Request = new C64Studio.RequestData( DebugRequestType.NONE );
+      m_Request = new RetroDevStudio.RequestData( DebugRequestType.NONE );
 
       int   bodyLength = 0;
       if ( RequestData != null )
@@ -1195,7 +1195,7 @@ namespace C64Studio
         // Should the read cause side effects?
         // byte 1 - 2: start address
         // byte 3 - 4: end address
-        m_UnansweredBinaryRequests.Add( requestID, new RequestData( DebugRequestType.MEM_DUMP ) { Parameter1 = RequestData.UInt16At( 1 ), Parameter2 = RequestData.UInt16At( 3 ), Info = "C64Studio.MemDump" } );
+        m_UnansweredBinaryRequests.Add( requestID, new RequestData( DebugRequestType.MEM_DUMP ) { Parameter1 = RequestData.UInt16At( 1 ), Parameter2 = RequestData.UInt16At( 3 ), Info = "RetroDevStudio.MemDump" } );
       }*/
 
       InterfaceLog( ">>>>>>>>>>>>>>> Send Request " + Command.ToString() + ", request ID " + requestID );
@@ -1284,7 +1284,7 @@ namespace C64Studio
         RequestData requData  = new RequestData( DebugRequestType.MEM_DUMP );
         requData.Parameter1   = Data.Parameter1;
         requData.Parameter2   = Data.Parameter1 + Data.Parameter2 - 1;
-        requData.Info         = "C64Studio.MemDump";
+        requData.Info         = "RetroDevStudio.MemDump";
         requData.Reason       = Data.Reason;
 
         if ( requData.Parameter2 >= 0x10000 )
@@ -1307,7 +1307,7 @@ namespace C64Studio
         RequestData requData  = new RequestData( DebugRequestType.MEM_DUMP );
         requData.Parameter1 = Data.Parameter1;
         requData.Parameter2 = Data.Parameter1 + Data.Parameter2 - 1;
-        requData.Info = "C64Studio.MemDumpRAM";
+        requData.Info = "RetroDevStudio.MemDumpRAM";
         requData.Reason = Data.Reason;
         if ( requData.Parameter2 >= 0x10000 )
         {

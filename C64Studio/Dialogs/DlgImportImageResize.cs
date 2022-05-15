@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace C64Studio.Dialogs
+namespace RetroDevStudio.Dialogs
 {
   partial class DlgImportImageResize : Form
   {

@@ -1,11 +1,11 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class CompilableDocument : BaseDocument
   {

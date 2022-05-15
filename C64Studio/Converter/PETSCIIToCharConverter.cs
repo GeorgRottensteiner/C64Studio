@@ -3,7 +3,7 @@ using RetroDevStudio;
 
 
 
-namespace C64Studio.Converter
+namespace RetroDevStudio.Converter
 {
   public class PETSCIIToCharConverter : IByteCharConverter
   {

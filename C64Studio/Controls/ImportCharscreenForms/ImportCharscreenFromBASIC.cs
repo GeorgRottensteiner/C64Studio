@@ -1,9 +1,7 @@
-﻿using C64Studio.Formats;
-using C64Studio.Types;
+﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Types;
 using GR.Memory;
 using RetroDevStudio;
-using RetroDevStudio.Formats;
-using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,9 +10,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using static C64Studio.BaseDocument;
+using static RetroDevStudio.BaseDocument;
 
-namespace C64Studio.Controls
+namespace RetroDevStudio.Controls
 {
   public partial class ImportCharscreenFromBASIC : ImportCharscreenFormBase
   {
@@ -37,12 +35,12 @@ namespace C64Studio.Controls
 
     public override bool HandleImport( CharsetScreenProject CharScreen, CharsetScreenEditor Editor )
     {
-      var settings = new C64Studio.Parser.BasicFileParser.ParserSettings();
+      var settings = new RetroDevStudio.Parser.BasicFileParser.ParserSettings();
       settings.StripREM = true;
       settings.StripSpaces = true;
       settings.BASICDialect = C64Models.BASIC.Dialect.BASICV2;
 
-      var parser = new C64Studio.Parser.BasicFileParser( settings );
+      var parser = new RetroDevStudio.Parser.BasicFileParser( settings );
 
       string[] lines = editInput.Text.Split( new char[]{ '\n' }, StringSplitOptions.RemoveEmptyEntries );
       int lastLineNumber = -1;

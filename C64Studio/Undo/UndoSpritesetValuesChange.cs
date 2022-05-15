@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using C64Studio.Formats;
+using RetroDevStudio.Formats;
 using RetroDevStudio;
 using RetroDevStudio.Types;
-using static C64Studio.Formats.SpriteProject;
+using static RetroDevStudio.Formats.SpriteProject;
 
 
 
-namespace C64Studio.Undo
+namespace RetroDevStudio.Undo
 {
   public class UndoSpritesetValuesChange : UndoTask
   {

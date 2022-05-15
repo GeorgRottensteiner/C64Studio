@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Tasks
+namespace RetroDevStudio.Tasks
 {
   public class TaskUpdateWatches : Task
   {

@@ -6,13 +6,13 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class Disassembler : CompilableDocument
   {
-    private Formats.DisassemblyProject  m_DisassemblyProject = new C64Studio.Formats.DisassemblyProject();
+    private Formats.DisassemblyProject  m_DisassemblyProject = new RetroDevStudio.Formats.DisassemblyProject();
 
-    private Parser.Disassembler         m_Disassembler = new C64Studio.Parser.Disassembler( Tiny64.Processor.Create6510() );
+    private Parser.Disassembler         m_Disassembler = new RetroDevStudio.Parser.Disassembler( Tiny64.Processor.Create6510() );
 
     private string                      m_OpenedFilename = "";
 
@@ -214,34 +214,34 @@ namespace C64Studio
 
       switch ( Element )
       {
-        case C64Studio.Types.ColorableElement.CODE:
+        case RetroDevStudio.Types.ColorableElement.CODE:
           value = 6;
           break;
-        case C64Studio.Types.ColorableElement.COMMENT:
+        case RetroDevStudio.Types.ColorableElement.COMMENT:
           value = 2;
           break;
-        case C64Studio.Types.ColorableElement.CURRENT_DEBUG_LINE:
+        case RetroDevStudio.Types.ColorableElement.CURRENT_DEBUG_LINE:
           value = 1;
           break;
-        case C64Studio.Types.ColorableElement.EMPTY_SPACE:
+        case RetroDevStudio.Types.ColorableElement.EMPTY_SPACE:
           value = 0;
           break;
-        case C64Studio.Types.ColorableElement.LABEL:
+        case RetroDevStudio.Types.ColorableElement.LABEL:
           value = 7;
           break;
-        case C64Studio.Types.ColorableElement.LITERAL_NUMBER:
+        case RetroDevStudio.Types.ColorableElement.LITERAL_NUMBER:
           value = 3;
           break;
-        case C64Studio.Types.ColorableElement.LITERAL_STRING:
+        case RetroDevStudio.Types.ColorableElement.LITERAL_STRING:
           value = 4;
           break;
-        case C64Studio.Types.ColorableElement.PSEUDO_OP:
+        case RetroDevStudio.Types.ColorableElement.PSEUDO_OP:
           value = 5;
           break;
-        case C64Studio.Types.ColorableElement.NONE:
+        case RetroDevStudio.Types.ColorableElement.NONE:
           value = 9;
           break;
-        case C64Studio.Types.ColorableElement.OPERATOR:
+        case RetroDevStudio.Types.ColorableElement.OPERATOR:
           value = 8;
           break;
       }

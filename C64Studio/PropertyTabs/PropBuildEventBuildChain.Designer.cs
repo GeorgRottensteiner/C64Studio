@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class PropBuildEventBuildChain
   {
@@ -31,7 +31,7 @@
       this.editBuildChainDefines = new System.Windows.Forms.TextBox();
       this.comboBuildChainConfig = new System.Windows.Forms.ComboBox();
       this.comboBuildChainProject = new System.Windows.Forms.ComboBox();
-      this.listBuildChainProjects = new C64Studio.ArrangedItemList();
+      this.listBuildChainProjects = new RetroDevStudio.ArrangedItemList();
       this.labelDefines = new System.Windows.Forms.Label();
       this.labelConfig = new System.Windows.Forms.Label();
       this.labelProject = new System.Windows.Forms.Label();
@@ -92,12 +92,12 @@
       this.listBuildChainProjects.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listBuildChainProjects.Size = new System.Drawing.Size(221, 244);
       this.listBuildChainProjects.TabIndex = 11;
-      this.listBuildChainProjects.AddingItem += new C64Studio.ArrangedItemList.AddingItemEventHandler(this.listBuildChainProjects_AddingItem);
-      this.listBuildChainProjects.CloningItem += new C64Studio.ArrangedItemList.CloningItemEventHandler(this.listBuildChainProjects_CloningItem);
-      this.listBuildChainProjects.ItemAdded += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemAdded);
-      this.listBuildChainProjects.ItemRemoved += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemRemoved);
-      this.listBuildChainProjects.ItemMoved += new C64Studio.ArrangedItemList.ItemExchangedEventHandler(this.listBuildChainProjects_ItemMoved);
-      this.listBuildChainProjects.SelectedIndexChanged += new C64Studio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_SelectedIndexChanged);
+      this.listBuildChainProjects.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.listBuildChainProjects_AddingItem);
+      this.listBuildChainProjects.CloningItem += new RetroDevStudio.ArrangedItemList.CloningItemEventHandler(this.listBuildChainProjects_CloningItem);
+      this.listBuildChainProjects.ItemAdded += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemAdded);
+      this.listBuildChainProjects.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemRemoved);
+      this.listBuildChainProjects.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.listBuildChainProjects_ItemMoved);
+      this.listBuildChainProjects.SelectedIndexChanged += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_SelectedIndexChanged);
       // 
       // labelDefines
       // 

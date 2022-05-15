@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class CompileResult : BaseDocument
   {
@@ -110,17 +110,17 @@ namespace C64Studio
 
         ListViewItem item = new ListViewItem();
 
-        if ( msgType == C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR )
+        if ( msgType == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.ERROR )
         {
           item.ImageIndex = 0;
           item.Text = "0";
         }
-        else if ( msgType == C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING )
+        else if ( msgType == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING )
         {
           item.ImageIndex = 1;
           item.Text = "2";
         }
-        else if ( msgType == C64Studio.Parser.ParserBase.ParseMessage.LineType.SEVERE_WARNING )
+        else if ( msgType == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.SEVERE_WARNING )
         {
           item.ImageIndex = 2;
           item.Text = "1";
@@ -158,17 +158,17 @@ namespace C64Studio
           {
             ListViewItem childItem = new ListViewItem();
 
-            if ( childMessage.Type == C64Studio.Parser.ParserBase.ParseMessage.LineType.ERROR )
+            if ( childMessage.Type == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.ERROR )
             {
               childItem.ImageIndex = 0;
               childItem.Text = "0";
             }
-            else if ( childMessage.Type == C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING )
+            else if ( childMessage.Type == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING )
             {
               childItem.ImageIndex = 1;
               childItem.Text = "2";
             }
-            else if ( childMessage.Type == C64Studio.Parser.ParserBase.ParseMessage.LineType.SEVERE_WARNING )
+            else if ( childMessage.Type == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.SEVERE_WARNING )
             {
               childItem.ImageIndex = 2;
               childItem.Text = "1";
@@ -285,7 +285,7 @@ namespace C64Studio
       {
         Parser.ParserBase.ParseMessage message = (Parser.ParserBase.ParseMessage)item.Tag;
 
-        if ( message.Type == C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING )
+        if ( message.Type == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING )
         {
           hasWarnings = true;
           break;
@@ -313,7 +313,7 @@ namespace C64Studio
       {
         Parser.ParserBase.ParseMessage message = (Parser.ParserBase.ParseMessage)item.Tag;
 
-        if ( message.Type == C64Studio.Parser.ParserBase.ParseMessage.LineType.WARNING )
+        if ( message.Type == RetroDevStudio.Parser.ParserBase.ParseMessage.LineType.WARNING )
         {
           Core.Settings.IgnoredWarnings.Add( message.Code );
         }
@@ -324,7 +324,7 @@ namespace C64Studio
 
     private void manageWarningIgnoreListToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      Settings prefDlg = new Settings( Core, C64Studio.Settings.TabPage.ERRORS_WARNINGS );
+      Settings prefDlg = new Settings( Core, RetroDevStudio.Settings.TabPage.ERRORS_WARNINGS );
 
       prefDlg.ShowDialog();
     }

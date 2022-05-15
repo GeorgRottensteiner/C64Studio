@@ -3,7 +3,7 @@ using System.ComponentModel;
 using RetroDevStudio;
 using RetroDevStudio.Types;
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   public class GraphicScreenProject
   {

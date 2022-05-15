@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.UnitTests
+namespace RetroDevStudio.UnitTests
 {
   public class TestManager
   {

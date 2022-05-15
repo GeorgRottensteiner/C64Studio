@@ -35,7 +35,7 @@
     public string     Info = "";
     public int        CharIndex = -1;
     public int        Length = 0;
-    public C64Studio.Types.ASM.SourceInfo SourceInfo = null;
+    public RetroDevStudio.Types.ASM.SourceInfo SourceInfo = null;
     public GR.Collections.Set<int>  References = new GR.Collections.Set<int>();
 
 

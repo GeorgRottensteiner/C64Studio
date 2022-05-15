@@ -9,7 +9,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class Outline : BaseDocument
   {
@@ -241,7 +241,7 @@ namespace C64Studio
             {
               addNode = false;
             }
-            if ( ( token.Name.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
+            if ( ( token.Name.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) )
             &&   ( !Core.Settings.OutlineShowShortCutLabels ) )
             {
               addNode = false;
@@ -328,7 +328,7 @@ namespace C64Studio
     {
       Core.Settings.OutlineShowLocalLabels = !Core.Settings.OutlineShowLocalLabels;
 
-      checkShowLocalLabels.Image = Core.Settings.OutlineShowLocalLabels ? C64Studio.Properties.Resources.flag_green_on.ToBitmap() : C64Studio.Properties.Resources.flag_green_off.ToBitmap();
+      checkShowLocalLabels.Image = Core.Settings.OutlineShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
 
       StoreOpenNodes();
       RefreshNodes();
@@ -340,7 +340,7 @@ namespace C64Studio
     {
       Core.Settings.OutlineShowShortCutLabels = !Core.Settings.OutlineShowShortCutLabels;
 
-      checkShowShortCutLabels.Image = Core.Settings.OutlineShowShortCutLabels ? C64Studio.Properties.Resources.flag_blue_on.ToBitmap() : C64Studio.Properties.Resources.flag_blue_off.ToBitmap();
+      checkShowShortCutLabels.Image = Core.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
 
       StoreOpenNodes();
       RefreshNodes();

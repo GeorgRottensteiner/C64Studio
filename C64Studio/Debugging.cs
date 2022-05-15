@@ -1,14 +1,14 @@
-﻿using C64Studio.Debugger;
+﻿using RetroDevStudio.Debugger;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
 using GR.Memory;
-using C64Studio.Types;
+using RetroDevStudio.Types;
 using RetroDevStudio;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class Debugging
   {
@@ -38,8 +38,8 @@ namespace C64Studio
     public List<DebugMemory>    MemoryViews = new List<DebugMemory>();
 
 
-    public GR.Collections.Map<string, List<Types.Breakpoint>> BreakPoints = new GR.Collections.Map<string, List<C64Studio.Types.Breakpoint>>();
-    public List<Types.Breakpoint>                             BreakpointsToAddAfterStartup = new List<C64Studio.Types.Breakpoint>();
+    public GR.Collections.Map<string, List<Types.Breakpoint>> BreakPoints = new GR.Collections.Map<string, List<RetroDevStudio.Types.Breakpoint>>();
+    public List<Types.Breakpoint>                             BreakpointsToAddAfterStartup = new List<RetroDevStudio.Types.Breakpoint>();
 
     public CompileTargetType DebugType = CompileTargetType.NONE;
     internal bool               InitialBreakpointIsTemporary;
@@ -151,7 +151,7 @@ namespace C64Studio
       }
 
       // determine debug target type
-      Types.CompileTargetType targetType = C64Studio.Types.CompileTargetType.NONE;
+      Types.CompileTargetType targetType = RetroDevStudio.Types.CompileTargetType.NONE;
       if ( DocumentToRun.Element != null )
       {
         targetType = DocumentToRun.Element.TargetType;
@@ -168,7 +168,7 @@ namespace C64Studio
         }
       }
 
-      if ( targetType == C64Studio.Types.CompileTargetType.NONE )
+      if ( targetType == RetroDevStudio.Types.CompileTargetType.NONE )
       {
         var lastBuildInfoOfThisFile = Core.Compiling.m_LastBuildInfo[DocumentToRun.FullPath];
 
@@ -373,7 +373,7 @@ namespace C64Studio
 
           if ( existingBP == null )
           {
-            C64Studio.Types.Breakpoint bp = new C64Studio.Types.Breakpoint();
+            RetroDevStudio.Types.Breakpoint bp = new RetroDevStudio.Types.Breakpoint();
 
             bp.LineIndex = virtualBP.LineIndex;
             bp.Address = address;
@@ -383,11 +383,11 @@ namespace C64Studio
             bp.Virtual.Add( virtualBP );
             virtualBP.Address = address;
             // we just need any key (as null is not allowed)
-            if ( !BreakPoints.ContainsKey( "C64Studio.DebugBreakpoints" ) )
+            if ( !BreakPoints.ContainsKey( "RetroDevStudio.DebugBreakpoints" ) )
             {
-              BreakPoints.Add( "C64Studio.DebugBreakpoints", new List<C64Studio.Types.Breakpoint>() );
+              BreakPoints.Add( "RetroDevStudio.DebugBreakpoints", new List<RetroDevStudio.Types.Breakpoint>() );
             }
-            BreakPoints["C64Studio.DebugBreakpoints"].Add( bp );
+            BreakPoints["RetroDevStudio.DebugBreakpoints"].Add( bp );
             //AddBreakpoint( bp );
             Debug.Log( "Add virtual bp for $" + address.ToString( "X4" ) );
           }
@@ -453,7 +453,7 @@ namespace C64Studio
           breakPoint.Virtual.Clear();
           breakPoint.Virtual.Add( breakPoint );
 
-          if ( key != "C64Studio.DebugBreakpoints" )
+          if ( key != "RetroDevStudio.DebugBreakpoints" )
           {
             breakPoint.Address = -1;
             int globalLineIndex = 0;
@@ -504,7 +504,7 @@ namespace C64Studio
       if ( Address != LateBreakpointOverrideDebugStart )
       {
         // need to add new intermediate break point
-        Types.Breakpoint bpTemp = new C64Studio.Types.Breakpoint();
+        Types.Breakpoint bpTemp = new RetroDevStudio.Types.Breakpoint();
 
         bpTemp.Address        = LateBreakpointOverrideDebugStart;
         bpTemp.TriggerOnExec  = true;
@@ -695,7 +695,7 @@ namespace C64Studio
       {
         foreach ( Types.Breakpoint breakPoint in BreakPoints[key] )
         {
-          //if ( key != "C64Studio.DebugBreakpoints" )
+          //if ( key != "RetroDevStudio.DebugBreakpoints" )
           {
             bool mustBeAddedLater = false;
 

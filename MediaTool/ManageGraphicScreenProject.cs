@@ -14,7 +14,7 @@ namespace MediaTool
       if ( ( extension == ".KOA" )
       ||   ( extension == ".KLA" ) )
       {
-        var koalaImage = C64Studio.Converter.KoalaToBitmap.BitmapFromKoala( Filename );
+        var koalaImage = RetroDevStudio.Converter.KoalaToBitmap.BitmapFromKoala( Filename );
         var bitmap = koalaImage.GetAsBitmap();
 
         newImage = GR.Image.FastImage.FromImage( bitmap );
@@ -53,7 +53,7 @@ namespace MediaTool
         return 1;
       }
 
-      var graphicScreen = new C64Studio.Formats.GraphicScreenProject();
+      var graphicScreen = new RetroDevStudio.Formats.GraphicScreenProject();
       if ( !graphicScreen.ReadFromBuffer( data ) )
       {
         System.Console.WriteLine( "Couldn't read graphicscreen project from file " + inputFile );
@@ -129,7 +129,7 @@ namespace MediaTool
       GR.Memory.ByteBuffer bitmapData   = new GR.Memory.ByteBuffer();
 
       bool[,]   errornousChars = new bool[( width + 7 ) / 8, ( height + 7 ) / 8];
-      var       charData = new List<C64Studio.Formats.CharData>( errornousChars.Length );
+      var       charData = new List<RetroDevStudio.Formats.CharData>( errornousChars.Length );
       int       numErrors = 0;
 
       if ( !exportMC )

@@ -1,5 +1,5 @@
-﻿using C64Studio.Parser;
-using C64Studio.Types;
+﻿using RetroDevStudio.Parser;
+using RetroDevStudio.Types;
 using GR.Image;
 using RetroDevStudio;
 using System;
@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class Settings : Form
   {
@@ -181,7 +181,7 @@ namespace C64Studio
       listFunctions.Items.Clear();
       foreach ( Types.Function function in Enum.GetValues( typeof( Types.Function ) ) )
       {
-        if ( function == C64Studio.Types.Function.NONE )
+        if ( function == RetroDevStudio.Types.Function.NONE )
         {
           continue;
         }
@@ -256,7 +256,7 @@ namespace C64Studio
       listColoring.Items.Clear();
       foreach ( Types.ColorableElement element in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {
-        if ( element == C64Studio.Types.ColorableElement.LAST_ENTRY )
+        if ( element == RetroDevStudio.Types.ColorableElement.LAST_ENTRY )
         {
           continue;
         }
@@ -278,7 +278,7 @@ namespace C64Studio
     private void RefillBASICKeyMappingList()
     {
       listBASICKeyMap.Items.Clear();
-      foreach ( C64Studio.Types.KeyboardKey realKey in Enum.GetValues( typeof( C64Studio.Types.KeyboardKey ) ) )
+      foreach ( RetroDevStudio.Types.KeyboardKey realKey in Enum.GetValues( typeof( RetroDevStudio.Types.KeyboardKey ) ) )
       {
         if ( !IsKeyMappable( realKey ) )
         {
@@ -320,7 +320,7 @@ namespace C64Studio
 
     private bool IsKeyMappable( Types.KeyboardKey Key )
     {
-      if ( ( Key == C64Studio.Types.KeyboardKey.UNDEFINED )
+      if ( ( Key == RetroDevStudio.Types.KeyboardKey.UNDEFINED )
       ||   ( Key == Types.KeyboardKey.LAST_ENTRY )
       ||   ( Key == Types.KeyboardKey.KEY_RESTORE )
       ||   ( Key == Types.KeyboardKey.KEY_SHIFT_LOCK )
@@ -510,7 +510,7 @@ namespace C64Studio
       listFunctions.SelectedItems[0].SubItems[2].Text = m_PressedKey.ToString();
       btnUnbindKey.Enabled = ( Core.Settings.DetermineAccelerator( function ) != null );
 
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
       RefreshDisplayOnDocuments();
     }
 
@@ -761,7 +761,7 @@ namespace C64Studio
       uint colorRGB = color.FGColor;
       if ( color.Name == "Auto" )
       {
-        color = new C64Studio.Types.ColorSetting( "Auto", Core.Settings.BGColor( C64Studio.Types.ColorableElement.EMPTY_SPACE ), Core.Settings.BGColor( C64Studio.Types.ColorableElement.EMPTY_SPACE ) );
+        color = new RetroDevStudio.Types.ColorSetting( "Auto", Core.Settings.BGColor( RetroDevStudio.Types.ColorableElement.EMPTY_SPACE ), Core.Settings.BGColor( RetroDevStudio.Types.ColorableElement.EMPTY_SPACE ) );
         colorRGB = color.FGColor;
       }
       else if ( color.Name == "Custom" )
@@ -862,7 +862,7 @@ namespace C64Studio
 
       if ( color.BGColorAuto )
       {
-        var bgElementColor = Core.Settings.BGColor( C64Studio.Types.ColorableElement.EMPTY_SPACE );
+        var bgElementColor = Core.Settings.BGColor( RetroDevStudio.Types.ColorableElement.EMPTY_SPACE );
         e.Graphics.FillRectangle( new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( bgElementColor ) ), panelElementPreview.ClientRectangle );
       }
       else
@@ -908,7 +908,7 @@ namespace C64Studio
         {
           Core.Settings.Accelerators.Remove( accPair.Key, accPair.Value );
 
-          Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
+          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
           break;
         }
       }
@@ -1011,7 +1011,7 @@ namespace C64Studio
 
       if ( emulatorAffected )
       {
-        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
       }
     }
 
@@ -1253,7 +1253,7 @@ namespace C64Studio
       {
         btnUnbindKey.Enabled = ( Core.Settings.DetermineAccelerator( (Types.Function)listFunctions.SelectedItems[0].Tag ) != null );
       }
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
     }
 
 
@@ -1506,7 +1506,7 @@ namespace C64Studio
       {
         alistTools.SelectedIndex = 0;
       }
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
     }
 
 
@@ -1801,7 +1801,7 @@ namespace C64Studio
 
       foreach ( Types.Function function in Enum.GetValues( typeof( Types.Function ) ) )
       {
-        if ( function == C64Studio.Types.Function.NONE )
+        if ( function == RetroDevStudio.Types.Function.NONE )
         {
           continue;
         }
@@ -1859,7 +1859,7 @@ namespace C64Studio
 
       foreach ( Types.ColorableElement element in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
       {
-        if ( element == C64Studio.Types.ColorableElement.LAST_ENTRY )
+        if ( element == RetroDevStudio.Types.ColorableElement.LAST_ENTRY )
         {
           continue;
         }
@@ -2126,7 +2126,7 @@ namespace C64Studio
 
       if ( emulatorAffected )
       {
-        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
       }
 
     }
@@ -2270,7 +2270,7 @@ namespace C64Studio
 
       btnUnbindKey.Enabled = ( Core.Settings.DetermineAccelerator( function ) != null );
 
-      Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.KEY_BINDINGS_MODIFIED ) );
       RefreshDisplayOnDocuments();
     }
 
@@ -2394,7 +2394,7 @@ namespace C64Studio
       Core.Settings.ToolInfos.Add( tool );
       if ( tool.Type == ToolInfo.ToolType.EMULATOR )
       {
-        Core.MainForm.RaiseApplicationEvent( new C64Studio.Types.ApplicationEvent( C64Studio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.EMULATOR_LIST_CHANGED ) );
       }
     }
 

@@ -20,7 +20,7 @@ namespace MediaTool
         return 1;
       }
 
-      var charScreenProject = new C64Studio.Formats.CharsetScreenProject();
+      var charScreenProject = new RetroDevStudio.Formats.CharsetScreenProject();
       if ( !charScreenProject.ReadFromBuffer( data ) )
       {
         System.Console.WriteLine( "Couldn't read charscreen project from file " + ArgParser.Parameter( "CHARSCREEN" ) );

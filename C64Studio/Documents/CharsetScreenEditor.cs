@@ -1,4 +1,4 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,12 +8,11 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using GR.Image;
 using GR.Memory;
-using C64Studio.Formats;
-using RetroDevStudio;
-using C64Studio.Controls;
 using RetroDevStudio.Formats;
+using RetroDevStudio;
+using RetroDevStudio.Controls;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class CharsetScreenEditor : BaseDocument
   {
@@ -47,7 +46,7 @@ namespace C64Studio
 
     private System.Drawing.Point        m_SelectedChar = new System.Drawing.Point( -1, -1 );
 
-    private Formats.CharsetScreenProject    m_CharsetScreen = new C64Studio.Formats.CharsetScreenProject();
+    private Formats.CharsetScreenProject    m_CharsetScreen = new RetroDevStudio.Formats.CharsetScreenProject();
 
     private ToolMode                    m_ToolMode = ToolMode.SINGLE_CHAR;
 
@@ -393,7 +392,7 @@ namespace C64Studio
 
 
 
-    void MainForm_ApplicationEvent( C64Studio.Types.ApplicationEvent Event )
+    void MainForm_ApplicationEvent( Types.ApplicationEvent Event )
     {
       
     }
@@ -2173,7 +2172,7 @@ namespace C64Studio
       }
 
       var dataObj = new DataObject();
-      dataObj.SetData( "C64Studio.CharacterScreenSelection", false, dataSelection.MemoryStream() );
+      dataObj.SetData( "RetroDevStudio.CharacterScreenSelection", false, dataSelection.MemoryStream() );
 
       Core.Imaging.ImageToClipboardData( pictureEditor.DisplayPage, x1 * 8, y1 * 8, ( x2 - x1 + 1 ) * 8, ( y2 - y1 + 1 ) * 8, dataObj );
       
@@ -2190,9 +2189,9 @@ namespace C64Studio
         MessageBox.Show( "The clipboard is empty" );
         return;
       }
-      if ( dataObj.GetDataPresent( "C64Studio.CharacterScreenSelection" ) )
+      if ( dataObj.GetDataPresent( "RetroDevStudio.CharacterScreenSelection" ) )
       {
-        System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "C64Studio.CharacterScreenSelection" );
+        System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.CharacterScreenSelection" );
 
         GR.Memory.ByteBuffer data = new GR.Memory.ByteBuffer( (uint)ms.Length );
 

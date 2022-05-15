@@ -257,7 +257,7 @@ o Linux:
   WINEPREFIX=~/.winedir WINEARCH=win32 wineboot 
   WINEPREFIX=~/.winedir winetricks dotnet35sp1 -q 
   cd ~/.winedir/drive_c/Program Files/C64StudioRelease 
-  WINEPREFIX=~/.winedir wine C64Studio.exe 
+  WINEPREFIX=~/.winedir wine RetroDevStudio.exe 
 
 o Docs: list illegal opcodes in help
 o Disassembler: rechtsklick auf Adresse um die als Sprungadresse zu nehmen
@@ -320,7 +320,7 @@ o Replace All in active doc:
      at System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
      at System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 reason, ApplicationContext context)
      at System.Windows.Forms.Application.Run(Form mainForm)
-     at C64Studio.Program.Main(String[] args)
+     at RetroDevStudio.Program.Main(String[] args)
 
   When C64Studio is started up again the search/replace work fine, so I'm not sure what it reacts to.
   I've also noticed sometimes the cursor isn't moved to the right line during a search, which may be why the replace fails.

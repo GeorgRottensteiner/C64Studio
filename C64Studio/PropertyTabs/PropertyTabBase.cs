@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio.PropertyTabs
+namespace RetroDevStudio.PropertyTabs
 {
   public class PropertyTabBase : Form
   {

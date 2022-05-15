@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using C64Studio.Formats;
+using RetroDevStudio.Formats;
 
 
 
-namespace C64Studio.Undo
+namespace RetroDevStudio.Undo
 {
   public class UndoMapSizeChange : UndoTask
   {

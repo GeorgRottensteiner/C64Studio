@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using GR.Memory;
-using C64Studio.Types;
+using RetroDevStudio.Types;
 
 namespace RetroDevStudio
 {
@@ -512,9 +512,9 @@ namespace RetroDevStudio
 
     internal static ByteBuffer FromASMData( string Text )
     {
-      var asmParser = new C64Studio.Parser.ASMFileParser();
+      var asmParser = new Parser.ASMFileParser();
 
-      var config        = new C64Studio.Parser.CompileConfig();
+      var config        = new Parser.CompileConfig();
       config.TargetType = CompileTargetType.PLAIN;
       config.OutputFile = "temp.bin";
       config.Assembler  = AssemblerType.C64_STUDIO;

@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class CharsetScreenEditor
   {
@@ -101,7 +101,7 @@
       this.pictureEditor = new GR.Forms.FastPictureBox();
       this.tabCharsetEditor = new System.Windows.Forms.TabControl();
       this.tabCharset = new System.Windows.Forms.TabPage();
-      this.charEditor = new C64Studio.Controls.CharacterEditor();
+      this.charEditor = new RetroDevStudio.Controls.CharacterEditor();
       this.tabImport = new System.Windows.Forms.TabPage();
       this.panelImport = new System.Windows.Forms.Panel();
       this.btnImport = new System.Windows.Forms.Button();
@@ -536,7 +536,7 @@
       // checkReverse
       // 
       this.checkReverse.Appearance = System.Windows.Forms.Appearance.Button;
-      this.checkReverse.Image = global::C64Studio.Properties.Resources.charscreen_reverse_off;
+      this.checkReverse.Image = global::RetroDevStudio.Properties.Resources.charscreen_reverse_off;
       this.checkReverse.Location = new System.Drawing.Point(228, 432);
       this.checkReverse.Name = "checkReverse";
       this.checkReverse.Size = new System.Drawing.Size(24, 24);
@@ -562,7 +562,7 @@
       this.checkApplyColors.Appearance = System.Windows.Forms.Appearance.Button;
       this.checkApplyColors.Checked = true;
       this.checkApplyColors.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkApplyColors.Image = global::C64Studio.Properties.Resources.charscreen_colors;
+      this.checkApplyColors.Image = global::RetroDevStudio.Properties.Resources.charscreen_colors;
       this.checkApplyColors.Location = new System.Drawing.Point(198, 432);
       this.checkApplyColors.Name = "checkApplyColors";
       this.checkApplyColors.Size = new System.Drawing.Size(24, 24);
@@ -576,7 +576,7 @@
       this.checkApplyCharacter.Appearance = System.Windows.Forms.Appearance.Button;
       this.checkApplyCharacter.Checked = true;
       this.checkApplyCharacter.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkApplyCharacter.Image = global::C64Studio.Properties.Resources.charscreen_chars;
+      this.checkApplyCharacter.Image = global::RetroDevStudio.Properties.Resources.charscreen_chars;
       this.checkApplyCharacter.Location = new System.Drawing.Point(168, 432);
       this.checkApplyCharacter.Name = "checkApplyCharacter";
       this.checkApplyCharacter.Size = new System.Drawing.Size(24, 24);
@@ -636,7 +636,7 @@
       // btnToolSelect
       // 
       this.btnToolSelect.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolSelect.Image = global::C64Studio.Properties.Resources.tool_select;
+      this.btnToolSelect.Image = global::RetroDevStudio.Properties.Resources.tool_select;
       this.btnToolSelect.Location = new System.Drawing.Point(104, 432);
       this.btnToolSelect.Name = "btnToolSelect";
       this.btnToolSelect.Size = new System.Drawing.Size(24, 24);
@@ -648,7 +648,7 @@
       // btnToolFill
       // 
       this.btnToolFill.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolFill.Image = global::C64Studio.Properties.Resources.tool_fill;
+      this.btnToolFill.Image = global::RetroDevStudio.Properties.Resources.tool_fill;
       this.btnToolFill.Location = new System.Drawing.Point(80, 432);
       this.btnToolFill.Name = "btnToolFill";
       this.btnToolFill.Size = new System.Drawing.Size(24, 24);
@@ -660,7 +660,7 @@
       // btnToolQuad
       // 
       this.btnToolQuad.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolQuad.Image = global::C64Studio.Properties.Resources.tool_quad;
+      this.btnToolQuad.Image = global::RetroDevStudio.Properties.Resources.tool_quad;
       this.btnToolQuad.Location = new System.Drawing.Point(56, 432);
       this.btnToolQuad.Name = "btnToolQuad";
       this.btnToolQuad.Size = new System.Drawing.Size(24, 24);
@@ -672,7 +672,7 @@
       // btnToolRect
       // 
       this.btnToolRect.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnToolRect.Image = global::C64Studio.Properties.Resources.tool_rect;
+      this.btnToolRect.Image = global::RetroDevStudio.Properties.Resources.tool_rect;
       this.btnToolRect.Location = new System.Drawing.Point(32, 432);
       this.btnToolRect.Name = "btnToolRect";
       this.btnToolRect.Size = new System.Drawing.Size(24, 24);
@@ -685,7 +685,7 @@
       // 
       this.btnToolEdit.Appearance = System.Windows.Forms.Appearance.Button;
       this.btnToolEdit.Checked = true;
-      this.btnToolEdit.Image = global::C64Studio.Properties.Resources.tool_none;
+      this.btnToolEdit.Image = global::RetroDevStudio.Properties.Resources.tool_none;
       this.btnToolEdit.Location = new System.Drawing.Point(8, 432);
       this.btnToolEdit.Name = "btnToolEdit";
       this.btnToolEdit.Size = new System.Drawing.Size(24, 24);
@@ -919,8 +919,8 @@
       this.charEditor.Name = "charEditor";
       this.charEditor.Size = new System.Drawing.Size(1061, 546);
       this.charEditor.TabIndex = 24;
-      this.charEditor.Modified += new C64Studio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);
-      this.charEditor.CharactersShifted += new C64Studio.Controls.CharacterEditor.CharsetShiftedHandler(this.charEditor_CharactersShifted);
+      this.charEditor.Modified += new RetroDevStudio.Controls.CharacterEditor.ModifiedHandler(this.charEditor_Modified);
+      this.charEditor.CharactersShifted += new RetroDevStudio.Controls.CharacterEditor.CharsetShiftedHandler(this.charEditor_CharactersShifted);
       // 
       // tabImport
       // 

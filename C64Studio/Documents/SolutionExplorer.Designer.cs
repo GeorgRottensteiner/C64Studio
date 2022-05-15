@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class SolutionExplorer
   {
@@ -30,7 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SolutionExplorer));
-      this.treeProject = new C64Studio.NoDblClkTreeView();
+      this.treeProject = new RetroDevStudio.NoDblClkTreeView();
       this.imageListExplorer = new System.Windows.Forms.ImageList(this.components);
       this.timerDragDrop = new System.Windows.Forms.Timer(this.components);
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -235,7 +235,7 @@
       // 
       this.seBtnCloneSolution.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.seBtnCloneSolution.Enabled = false;
-      this.seBtnCloneSolution.Image = global::C64Studio.Properties.Resources.clone;
+      this.seBtnCloneSolution.Image = global::RetroDevStudio.Properties.Resources.clone;
       this.seBtnCloneSolution.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.seBtnCloneSolution.Name = "seBtnCloneSolution";
       this.seBtnCloneSolution.Size = new System.Drawing.Size(23, 22);

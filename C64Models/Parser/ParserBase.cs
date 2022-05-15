@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Parser
+namespace RetroDevStudio.Parser
 {
   public abstract class ParserBase
   {
@@ -89,8 +89,8 @@ namespace C64Studio.Parser
 
     public class TokenSyntax
     {
-      public string               Token = "";
-      public Types.ColorableElement  Type  = C64Studio.Types.ColorableElement.NONE;
+      public string                   Token = "";
+      public Types.ColorableElement   Type  = Types.ColorableElement.NONE;
 
       public TokenSyntax( string Token, Types.ColorableElement Type )
       {
@@ -325,7 +325,7 @@ namespace C64Studio.Parser
         ||   ( hasByte )
         ||   ( hasZone ) )
         {
-          return C64Studio.Types.AssemblerType.C64_STUDIO;
+          return Types.AssemblerType.C64_STUDIO;
         }
 
         if ( ( ( hasORG )
@@ -335,22 +335,22 @@ namespace C64Studio.Parser
         ||   ( hasProcessor )
         ||   ( hasMAC ) )
         {
-          return C64Studio.Types.AssemblerType.DASM;
+          return Types.AssemblerType.DASM;
         }
         if ( ( ( hasORG )
         ||     ( hasEQU )
         ||     ( hasInclude ) )
         &&   ( !hasByte ) )
         {
-          return C64Studio.Types.AssemblerType.PDS;
+          return Types.AssemblerType.PDS;
         }
       }
 
       if ( hasByte )
       {
-        return C64Studio.Types.AssemblerType.C64_STUDIO;
+        return Types.AssemblerType.C64_STUDIO;
       }
-      return C64Studio.Types.AssemblerType.AUTO;
+      return Types.AssemblerType.AUTO;
     }
 
 
@@ -386,15 +386,15 @@ namespace C64Studio.Parser
         }
       }
 
-      if ( Config.Assembler == C64Studio.Types.AssemblerType.AUTO )
+      if ( Config.Assembler == Types.AssemblerType.AUTO )
       {
         // try to detect -> modifying passed in Config!!
         Config.Assembler = DetectAssemblerType( text );
       }
-      if ( Config.Assembler == C64Studio.Types.AssemblerType.AUTO )
+      if ( Config.Assembler == Types.AssemblerType.AUTO )
       {
         // safety fallback to avoid crashes
-        Config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+        Config.Assembler = Types.AssemblerType.C64_STUDIO;
       }
 
       m_CompileConfig = Config;

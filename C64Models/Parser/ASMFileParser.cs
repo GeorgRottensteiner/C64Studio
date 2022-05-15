@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using C64Studio.Types;
-using C64Studio.Types.ASM;
+using RetroDevStudio.Types;
+using RetroDevStudio.Types.ASM;
 using GR.Collections;
 using GR.Memory;
 using RetroDevStudio;
@@ -14,7 +14,7 @@ using Tiny64;
 
 
 
-namespace C64Studio.Parser
+namespace RetroDevStudio.Parser
 {
   public class ASMFileParser : ParserBase
   {
@@ -37,17 +37,17 @@ namespace C64Studio.Parser
 
     public class ErrorInfo
     {
-      public int                           LineIndex = 0;
-      public int                           Pos = -1;
-      public int                           Length = 0;
-      public C64Studio.Types.ErrorCode     Code = C64Studio.Types.ErrorCode.OK;
+      public int                 LineIndex = 0;
+      public int                 Pos = -1;
+      public int                 Length = 0;
+      public Types.ErrorCode     Code = Types.ErrorCode.OK;
 
 
       public ErrorInfo()
       {
       }
 
-      public ErrorInfo( int LineIndex, int Pos, int Length, C64Studio.Types.ErrorCode Code )
+      public ErrorInfo( int LineIndex, int Pos, int Length, Types.ErrorCode Code )
       {
         this.LineIndex = LineIndex;
         this.Pos = Pos;
@@ -89,7 +89,7 @@ namespace C64Studio.Parser
 
     private AssemblerSettings           m_AssemblerSettings = new AssemblerSettings();
 
-    private List<Types.ErrorCode>       m_WarningsToIgnore = new List<C64Studio.Types.ErrorCode>();
+    private List<Types.ErrorCode>       m_WarningsToIgnore = new List<Types.ErrorCode>();
 
     private StringBuilder               m_CurrentCommentSB = new StringBuilder();
 
@@ -99,7 +99,7 @@ namespace C64Studio.Parser
 
     private GR.Collections.Map<string,ExtFunctionInfo>    m_ExtFunctions = new GR.Collections.Map<string, ExtFunctionInfo>();
 
-    public Types.ASM.FileInfo           ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
+    public Types.ASM.FileInfo           ASMFileInfo = new Types.ASM.FileInfo();
 
     public Types.ASM.FileInfo           InitialFileInfo = null;
 
@@ -170,7 +170,7 @@ namespace C64Studio.Parser
       AddExtFunction( "math.floor", 1, 1, ExtMathFloor );
       AddExtFunction( "math.ceiling", 1, 1, ExtMathCeiling );
 
-      SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      SetAssemblerType( Types.AssemblerType.C64_STUDIO );
     }
 
 
@@ -185,7 +185,7 @@ namespace C64Studio.Parser
 
 
 
-    public void SetAssemblerType( C64Studio.Types.AssemblerType Type )
+    public void SetAssemblerType( Types.AssemblerType Type )
     {
       m_AssemblerSettings.SetAssemblerType( Type );
       if ( ASMFileInfo.AssemblerSettings == null )
@@ -274,8 +274,8 @@ namespace C64Studio.Parser
       catch ( Exception )
       {
       }
-      Types.TokenInfo   fileSizeToken = new C64Studio.Types.TokenInfo();
-      fileSizeToken.Type = C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER;
+      Types.TokenInfo   fileSizeToken = new Types.TokenInfo();
+      fileSizeToken.Type = Types.TokenInfo.TokenType.LITERAL_NUMBER;
       fileSizeToken.Content = fileSize.ToString();
       result.Add( fileSizeToken );
       return result;
@@ -296,7 +296,7 @@ namespace C64Studio.Parser
         return result;
       }
 
-      var resultToken = new C64Studio.Types.TokenInfo();
+      var resultToken = new Types.TokenInfo();
 
       if ( ( arg1.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
       ||   ( arg2.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER ) )
@@ -337,7 +337,7 @@ namespace C64Studio.Parser
         return result;
       }
 
-      var resultToken = new C64Studio.Types.TokenInfo();
+      var resultToken = new Types.TokenInfo();
 
       if ( ( arg1.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
       ||   ( arg2.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER ) )
@@ -588,7 +588,7 @@ namespace C64Studio.Parser
         }
       }
 
-      Types.ASM.TemporaryLabelInfo tempInfo = new C64Studio.Types.ASM.TemporaryLabelInfo();
+      Types.ASM.TemporaryLabelInfo tempInfo = new Types.ASM.TemporaryLabelInfo();
 
       tempInfo.Name       = Name;
       tempInfo.LineIndex  = LineIndex;
@@ -620,7 +620,7 @@ namespace C64Studio.Parser
 
     private void CloneTempLabelsExcept( int SourceIndex, int CopyLength, int TargetIndex, string ExceptThisLabel )
     {
-      List<Types.ASM.TemporaryLabelInfo>    infosToAdd = new List<C64Studio.Types.ASM.TemporaryLabelInfo>();
+      List<Types.ASM.TemporaryLabelInfo>    infosToAdd = new List<Types.ASM.TemporaryLabelInfo>();
 
       foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
       {
@@ -631,7 +631,7 @@ namespace C64Studio.Parser
         {
           // fully inside source scope
           // need to copy!
-          Types.ASM.TemporaryLabelInfo tempInfo = new C64Studio.Types.ASM.TemporaryLabelInfo();
+          Types.ASM.TemporaryLabelInfo tempInfo = new Types.ASM.TemporaryLabelInfo();
 
           tempInfo.Name       = oldTempInfo.Name;
           tempInfo.LineIndex  = oldTempInfo.LineIndex + TargetIndex - SourceIndex;
@@ -833,7 +833,7 @@ namespace C64Studio.Parser
       ASMFileInfo.FindTrueLineSource( SourceLine, out filename, out localIndex, out srcInfo );
 
       // check if temp label exists
-      foreach ( C64Studio.Types.ASM.TemporaryLabelInfo tempLabel in ASMFileInfo.TempLabelInfo )
+      foreach ( RetroDevStudio.Types.ASM.TemporaryLabelInfo tempLabel in ASMFileInfo.TempLabelInfo )
       {
         if ( tempLabel.Name == Name )
         {
@@ -1641,16 +1641,16 @@ namespace C64Studio.Parser
             + " for argument " + ( argIndex + 1 ) + " for extended function '" + FunctionName + "'" );
           return null;
         }
-        Types.TokenInfo   emptyToken = new C64Studio.Types.TokenInfo();
+        Types.TokenInfo   emptyToken = new RetroDevStudio.Types.TokenInfo();
         if ( result.Type == SymbolInfo.Types.CONSTANT_REAL_NUMBER )
         {
           emptyToken.Content = Util.DoubleToString( result.RealValue );
-          emptyToken.Type = C64Studio.Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
+          emptyToken.Type = RetroDevStudio.Types.TokenInfo.TokenType.LITERAL_REAL_NUMBER;
         }
         else
         {
           emptyToken.Content = result.AddressOrValue.ToString();
-          emptyToken.Type = C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER;
+          emptyToken.Type = RetroDevStudio.Types.TokenInfo.TokenType.LITERAL_NUMBER;
         }
 
         functionArguments.Add( emptyToken );
@@ -1659,9 +1659,9 @@ namespace C64Studio.Parser
 
       while ( functionArguments.Count < fInfo.NumArguments )
       {
-        Types.TokenInfo   emptyToken = new C64Studio.Types.TokenInfo();
+        Types.TokenInfo   emptyToken = new RetroDevStudio.Types.TokenInfo();
         emptyToken.Content = "0";
-        emptyToken.Type = C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER;
+        emptyToken.Type = RetroDevStudio.Types.TokenInfo.TokenType.LITERAL_NUMBER;
 
         functionArguments.Add( emptyToken );
       }
@@ -1672,9 +1672,9 @@ namespace C64Studio.Parser
       // make sure we have the expected number of result tokens
       while ( results.Count < fInfo.NumResults )
       {
-        Types.TokenInfo   emptyToken = new C64Studio.Types.TokenInfo();
+        Types.TokenInfo   emptyToken = new RetroDevStudio.Types.TokenInfo();
         emptyToken.Content = "0";
-        emptyToken.Type = C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER;
+        emptyToken.Type = RetroDevStudio.Types.TokenInfo.TokenType.LITERAL_NUMBER;
         results.Add( emptyToken );
       }
       if ( results.Count > fInfo.NumResults )
@@ -2053,12 +2053,12 @@ namespace C64Studio.Parser
               // the token before must not be a evaluatable type
               //if ( ( subTokenRange[highestPrecedenceTokenIndex].StartPos + subTokenRange[highestPrecedenceTokenIndex].Length == subTokenRange[highestPrecedenceTokenIndex + 1].StartPos )
               if ( ( highestPrecedenceTokenIndex == 0 )
-              ||     ( ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
-              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+              ||     ( ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
               &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Content != "*" )
-              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_CHAR )
-              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != C64Studio.Types.TokenInfo.TokenType.LITERAL_NUMBER ) ) )
+              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LITERAL_CHAR )
+              &&       ( subTokenRange[highestPrecedenceTokenIndex - 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LITERAL_NUMBER ) ) )
               {
                 // eval hi/lo byte, only locally for next token!!
                 if ( subTokenRange[highestPrecedenceTokenIndex].Content == "<" )
@@ -2554,7 +2554,7 @@ namespace C64Studio.Parser
           {
             if ( ASMFileInfo.Labels.ContainsKey( label ) )
             {
-              AddError( ASMFileInfo.UnparsedLabels[label].LineIndex, C64Studio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Redefinition of label " + ASMFileInfo.UnparsedLabels[label].Name );
+              AddError( ASMFileInfo.UnparsedLabels[label].LineIndex, RetroDevStudio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Redefinition of label " + ASMFileInfo.UnparsedLabels[label].Name );
               continue;
             }
 
@@ -2655,12 +2655,12 @@ namespace C64Studio.Parser
 
               switch ( pseudoOp.Type )
               {
-                case C64Studio.Types.MacroInfo.PseudoOpType.BASIC:
+                case RetroDevStudio.Types.MacroInfo.PseudoOpType.BASIC:
                   {
                     int lineSize = -1;
                     if ( POBasic( lineInfo.Line, lineInfo.NeededParsedExpression, lineInfo.LineIndex, lineInfo, m_TextCodeMappingRaw, false, lineInfo.HideInPreprocessedOutput, out lineSize ) != ParseLineResult.OK )
                     {
-                      AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
+                      AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, 
                         "Failed to evaluate expression: " + TokensToExpression( lineInfo.NeededParsedExpression ) );
                     }
                   }
@@ -3172,10 +3172,10 @@ namespace C64Studio.Parser
                 long   byteValue = byteValueSymbol.ToInteger();
                 switch ( Type )
                 {
-                  case C64Studio.Types.MacroInfo.PseudoOpType.LOW_BYTE:
+                  case RetroDevStudio.Types.MacroInfo.PseudoOpType.LOW_BYTE:
                     byteValue = byteValue & 0x00ff;
                     break;
-                  case C64Studio.Types.MacroInfo.PseudoOpType.HIGH_BYTE:
+                  case RetroDevStudio.Types.MacroInfo.PseudoOpType.HIGH_BYTE:
                     byteValue = ( byteValue >> 8 ) & 0xff;
                     break;
                 }
@@ -3262,10 +3262,10 @@ namespace C64Studio.Parser
             long byteValue = byteValueSymbol.ToInteger();
             switch ( Type )
             {
-              case C64Studio.Types.MacroInfo.PseudoOpType.LOW_BYTE:
+              case RetroDevStudio.Types.MacroInfo.PseudoOpType.LOW_BYTE:
                 byteValue = byteValue & 0x00ff;
                 break;
-              case C64Studio.Types.MacroInfo.PseudoOpType.HIGH_BYTE:
+              case RetroDevStudio.Types.MacroInfo.PseudoOpType.HIGH_BYTE:
                 byteValue = ( byteValue >> 8 ) & 0xff;
                 break;
             }
@@ -3338,7 +3338,7 @@ namespace C64Studio.Parser
       {
         Types.TokenInfo   token = lineTokenInfos[i];
 
-        if ( token.Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        if ( token.Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
         {
           continue;
         }
@@ -3838,14 +3838,14 @@ namespace C64Studio.Parser
       &&   ( m_AssemblerSettings.AssemblerType == AssemblerType.C64_STUDIO ) )
       {
         if ( ( lineTokenInfos.Count >= 1 )
-        &&   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+        &&   ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
         &&   ( lineTokenInfos[0].Content.ToUpper() == ".BYTE" ) )
         {
           lineTokenInfos[0].Type = TokenInfo.TokenType.PSEUDO_OP;
           lineTokenInfos[0].Content = "!byte";
         }
         if ( ( lineTokenInfos.Count >= 1 )
-        &&   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+        &&   ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
         &&   ( lineTokenInfos[0].Content.ToUpper() == ".WORD" ) )
         {
           lineTokenInfos[0].Type = TokenInfo.TokenType.PSEUDO_OP;
@@ -3853,7 +3853,7 @@ namespace C64Studio.Parser
         }
         if ( ( lineTokenInfos.Count >= 2 )
         &&   ( IsLabelInFront( lineTokenInfos, lineTokenInfos[0].Content.ToUpper() ) )
-        &&   ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+        &&   ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
         &&   ( lineTokenInfos[1].Content.ToUpper() == ".BYTE" ) )
         {
           lineTokenInfos[1].Type = TokenInfo.TokenType.PSEUDO_OP;
@@ -3861,7 +3861,7 @@ namespace C64Studio.Parser
         }
         if ( ( lineTokenInfos.Count >= 2 )
         &&   ( IsLabelInFront( lineTokenInfos, lineTokenInfos[0].Content.ToUpper() ) )
-        &&   ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+        &&   ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
         &&   ( lineTokenInfos[1].Content.ToUpper() == ".WORD" ) )
         {
           lineTokenInfos[1].Type = TokenInfo.TokenType.PSEUDO_OP;
@@ -3872,11 +3872,11 @@ namespace C64Studio.Parser
       // merge + with local token for possible macro functions
       if ( ( lineTokenInfos.Count >= 2 )
       &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Contains( lineTokenInfos[0].Content ) )
-      &&   ( ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-      ||     ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+      &&   ( ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      ||     ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
       &&   ( lineTokenInfos[0].StartPos + lineTokenInfos[0].Length == lineTokenInfos[1].StartPos ) )
       {
-        lineTokenInfos[1].Type = C64Studio.Types.TokenInfo.TokenType.CALL_MACRO;
+        lineTokenInfos[1].Type = RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO;
         lineTokenInfos[1].Content = lineTokenInfos[0].Content + lineTokenInfos[1].Content;
         lineTokenInfos[1].StartPos = lineTokenInfos[0].StartPos;
         lineTokenInfos[1].Length = lineTokenInfos[1].Length + lineTokenInfos[0].Length;
@@ -3885,8 +3885,8 @@ namespace C64Studio.Parser
 
       // ++labelname should be concattenated
       if ( ( lineTokenInfos.Count >= 2 )
-      &&   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
-      &&   ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      &&   ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+      &&   ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
       &&   ( lineTokenInfos[0].StartPos + lineTokenInfos[0].Length == lineTokenInfos[1].StartPos ) )
       {
         lineTokenInfos[0].Content += lineTokenInfos[1].Content;
@@ -3894,17 +3894,17 @@ namespace C64Studio.Parser
         lineTokenInfos.RemoveAt( 1 );
       }
 
-      if ( ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-      ||   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+      if ( ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      ||   ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
       {
         // could be a label in front
         if ( ( lineTokenInfos.Count >= 3 )
         &&   ( m_AssemblerSettings.MacroFunctionCallPrefix.Contains( lineTokenInfos[1].Content ) )
-        &&   ( ( lineTokenInfos[2].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        ||     ( lineTokenInfos[2].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+        &&   ( ( lineTokenInfos[2].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        ||     ( lineTokenInfos[2].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
         &&   ( lineTokenInfos[1].StartPos + lineTokenInfos[1].Length == lineTokenInfos[2].StartPos ) )
         {
-          lineTokenInfos[2].Type = C64Studio.Types.TokenInfo.TokenType.CALL_MACRO;
+          lineTokenInfos[2].Type = RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO;
           lineTokenInfos[2].Content = lineTokenInfos[1].Content + lineTokenInfos[2].Content;
           lineTokenInfos[2].StartPos = lineTokenInfos[1].StartPos;
           lineTokenInfos[2].Length = lineTokenInfos[2].Length + lineTokenInfos[1].Length;
@@ -3931,7 +3931,7 @@ namespace C64Studio.Parser
     // find macro in following lines (
     private int FindLoopEnd( string[] Lines, int StartIndex, List<Types.ScopeInfo> StackDefineBlocks, GR.Collections.Map<byte, byte> TextCodeMapping )
     {
-      List<Types.ScopeInfo> stackDefineBlocks = new List<C64Studio.Types.ScopeInfo>( StackDefineBlocks );
+      List<Types.ScopeInfo> stackDefineBlocks = new List<RetroDevStudio.Types.ScopeInfo>( StackDefineBlocks );
 
       int loopCount = 1;
 
@@ -3967,7 +3967,7 @@ namespace C64Studio.Parser
             {
               // a new block starts here!
               // false, since it doesn't matter
-              Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+              Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
               scope.StartIndex = lineIndex;
               scope.Active = false;
               stackDefineBlocks.Add( scope );
@@ -3978,7 +3978,7 @@ namespace C64Studio.Parser
             &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" ) )
             {
               // ACME style pseudo pc with bracket
-              Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.PSEUDO_PC );
+              Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.PSEUDO_PC );
               scope.StartIndex = lineIndex;
               scope.Active = false;
               stackDefineBlocks.Add( scope );
@@ -3989,7 +3989,7 @@ namespace C64Studio.Parser
             &&        ( lineTokenInfos[1].Content == "{" ) )
             {
               // ACME style Addr with bracket
-              Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ADDRESS );
+              Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ADDRESS );
               scope.StartIndex = lineIndex;
               scope.Active = false;
               stackDefineBlocks.Add( scope );
@@ -3999,7 +3999,7 @@ namespace C64Studio.Parser
             &&        ( lineTokenInfos.Count >= 2 )
             &&        ( lineTokenInfos[1].Content == "{" ) )
             {
-              Types.ScopeInfo   zoneScope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
+              Types.ScopeInfo   zoneScope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
               zoneScope.StartIndex = lineIndex;
               zoneScope.Active = false;
 
@@ -4018,13 +4018,13 @@ namespace C64Studio.Parser
 
         int     isMacroIndex = -1;
 
-        if ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.PSEUDO_OP )
+        if ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.PSEUDO_OP )
         {
           isMacroIndex = 0;
         }
-        if ( ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        ||   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
-        ||   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
+        if ( ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        ||   ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+        ||   ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
         {
           if ( m_AssemblerSettings.PseudoOps.ContainsKey( lineTokenInfos[0].Content.ToUpper() ) )
           {
@@ -4032,9 +4032,9 @@ namespace C64Studio.Parser
           }
           else if ( lineTokenInfos.Count > 1 )
           {
-            if ( ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-            ||   ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
-            ||   ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
+            if ( ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+            ||   ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+            ||   ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
             {
               if ( m_AssemblerSettings.PseudoOps.ContainsKey( lineTokenInfos[1].Content.ToUpper() ) )
               {
@@ -4048,7 +4048,7 @@ namespace C64Studio.Parser
         {
           Types.MacroInfo macro = m_AssemblerSettings.PseudoOps[lineTokenInfos[isMacroIndex].Content.ToUpper()];
           
-          if ( macro.Type == C64Studio.Types.MacroInfo.PseudoOpType.LOOP_END )
+          if ( macro.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.LOOP_END )
           {
             --loopCount;
             if ( loopCount == 0 )
@@ -4056,7 +4056,7 @@ namespace C64Studio.Parser
               return lineIndex;
             }
           }
-          else if ( macro.Type == C64Studio.Types.MacroInfo.PseudoOpType.LOOP_START )
+          else if ( macro.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.LOOP_START )
           {
             ++loopCount;
           }
@@ -4074,8 +4074,8 @@ namespace C64Studio.Parser
       lineSizeInBytes = 0;
 
 
-      List<List<Types.TokenInfo>>   paramTokens = new List<List<C64Studio.Types.TokenInfo>>();
-      paramTokens.Add( new List<C64Studio.Types.TokenInfo>() );
+      List<List<Types.TokenInfo>>   paramTokens = new List<List<RetroDevStudio.Types.TokenInfo>>();
+      paramTokens.Add( new List<RetroDevStudio.Types.TokenInfo>() );
 
       int             paramPos = 0;
 
@@ -4096,7 +4096,7 @@ namespace C64Studio.Parser
             }
             return false;
           }
-          paramTokens.Add( new List<C64Studio.Types.TokenInfo>() );
+          paramTokens.Add( new List<RetroDevStudio.Types.TokenInfo>() );
         }
         else
         {
@@ -4146,8 +4146,8 @@ namespace C64Studio.Parser
         }
         // label prefix 
         if ( ( paramTokens[1].Count != 1 )
-        ||   ( ( paramTokens[1][0].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        &&     ( paramTokens[1][0].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) ) )
+        ||   ( ( paramTokens[1][0].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        &&     ( paramTokens[1][0].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) ) )
         {
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected proper global or local label prefix" );
           return false;
@@ -4159,7 +4159,7 @@ namespace C64Studio.Parser
 
       string    extension = System.IO.Path.GetExtension( subFilename ).ToUpper();
       if ( ( paramTokens[includeMethodParamIndex].Count != 1 )
-      ||   ( paramTokens[includeMethodParamIndex][0].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
+      ||   ( paramTokens[includeMethodParamIndex][0].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
       {
         AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Pseudo op not formatted as expected. Expected known import method" );
         return false;
@@ -4270,7 +4270,7 @@ namespace C64Studio.Parser
           }
           numChars = (int)numCharsSymbol.ToInteger();
         }
-        Formats.CharsetProject    charProject = new C64Studio.Formats.CharsetProject();
+        Formats.CharsetProject    charProject = new RetroDevStudio.Formats.CharsetProject();
 
         try
         {
@@ -4588,7 +4588,7 @@ namespace C64Studio.Parser
             return false;
           }
 
-          Formats.SpriteProject   spriteProject = new C64Studio.Formats.SpriteProject();
+          Formats.SpriteProject   spriteProject = new RetroDevStudio.Formats.SpriteProject();
 
           try
           {
@@ -4674,7 +4674,7 @@ namespace C64Studio.Parser
           {
             numSprites = (int)numSpritesSymbol.ToInteger();
           }
-          Formats.SpriteProject   spriteProject = new C64Studio.Formats.SpriteProject();
+          Formats.SpriteProject   spriteProject = new RetroDevStudio.Formats.SpriteProject();
 
           try
           {
@@ -4788,7 +4788,7 @@ namespace C64Studio.Parser
             numBytes = (int)numBytesSymbol.ToInteger();
           }
 
-          Formats.SpriteProject   spriteProject = new C64Studio.Formats.SpriteProject();
+          Formats.SpriteProject   spriteProject = new RetroDevStudio.Formats.SpriteProject();
 
           try
           {
@@ -5091,7 +5091,7 @@ namespace C64Studio.Parser
           return false;
         }
 
-        Formats.CharsetScreenProject    screenProject = new C64Studio.Formats.CharsetScreenProject();
+        Formats.CharsetScreenProject    screenProject = new RetroDevStudio.Formats.CharsetScreenProject();
 
         try
         {
@@ -5337,7 +5337,7 @@ namespace C64Studio.Parser
           AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown method '" + method + "', supported values for this file name are BITMAP, BITMAPSCREEN, BITMAPSCREENCOLOR, BITMAPHIRES, BITMAPHIRESSCREEN, BITMAPHIRESSCREENCOLOR, SCREEN and COLOR" );
           return false;
         }
-        Formats.GraphicScreenProject screenProject = new C64Studio.Formats.GraphicScreenProject();
+        Formats.GraphicScreenProject screenProject = new RetroDevStudio.Formats.GraphicScreenProject();
 
         try
         {
@@ -5516,7 +5516,7 @@ namespace C64Studio.Parser
           return false;
         }
 
-        Formats.MapProject map = new C64Studio.Formats.MapProject();
+        Formats.MapProject map = new RetroDevStudio.Formats.MapProject();
 
         try
         {
@@ -5542,27 +5542,27 @@ namespace C64Studio.Parser
 
         if ( method == "TILEELEMENTS" )
         {
-          map.ExportTilesAsElements( out textToInclude, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportTilesAsElements( out textToInclude, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
         }
         else if ( method == "MAP" )
         {
-          map.ExportMapsAsAssembly( false, out textToInclude, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportMapsAsAssembly( false, out textToInclude, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
         }
         else if ( method == "MAPEXTRADATA" )
         {
-          map.ExportMapExtraDataAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportMapExtraDataAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
         }
         else if ( method == "MAPVERTICAL" )
         {
-          map.ExportMapsAsAssembly( true, out textToInclude, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportMapsAsAssembly( true, out textToInclude, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
         }
         else if ( method == "TILE" )
         {
-          map.ExportTilesAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportTilesAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
         }
         else if ( method == "TILEDATA" )
         {
-          map.ExportTileDataAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportTileDataAsAssembly( out textToInclude, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
         }
         else if ( method == "CHAR" )
         {
@@ -5602,20 +5602,20 @@ namespace C64Studio.Parser
         else if ( method == "MAPTILE" )
         {
           string  dummy;
-          map.ExportTilesAsAssembly( out dummy, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportTilesAsAssembly( out dummy, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
           textToInclude += dummy;
 
-          map.ExportMapsAsAssembly( false, out dummy, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportMapsAsAssembly( false, out dummy, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
           textToInclude += dummy;
           //Debug.Log( textToInclude );
         }
         else if ( method == "MAPVERTICALTILE" )
         {
           string  dummy;
-          map.ExportTilesAsAssembly( out dummy, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportTilesAsAssembly( out dummy, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
           textToInclude += dummy;
 
-          map.ExportMapsAsAssembly( true, out dummy, labelPrefix, false, 0, MacroByType( C64Studio.Types.MacroInfo.PseudoOpType.BYTE ) );
+          map.ExportMapsAsAssembly( true, out dummy, labelPrefix, false, 0, MacroByType( RetroDevStudio.Types.MacroInfo.PseudoOpType.BYTE ) );
           textToInclude += dummy;
           //Debug.Log( textToInclude );
         }
@@ -5630,7 +5630,7 @@ namespace C64Studio.Parser
       }
       else
       {
-        AddError( lineIndex, C64Studio.Types.ErrorCode.E2002_UNSUPPORTED_FILE_TYPE, "Unknown file type" );
+        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E2002_UNSUPPORTED_FILE_TYPE, "Unknown file type" );
         return false;
       }
 
@@ -5668,7 +5668,7 @@ namespace C64Studio.Parser
 
           repeatUntil.LineIndex = lineIndex;
 
-          Types.ScopeInfo   scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.DO_UNTIL );
+          Types.ScopeInfo   scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.DO_UNTIL );
 
           scope.Active      = true;
           scope.RepeatUntil = repeatUntil;
@@ -5678,7 +5678,7 @@ namespace C64Studio.Parser
         }
         else
         {
-          AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed DO loop, expected DO <Expression>" );
+          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed DO loop, expected DO <Expression>" );
         }
       }
       else
@@ -5691,7 +5691,7 @@ namespace C64Studio.Parser
           bool hadError = false;
           if ( numLoops <= 0 )
           {
-            AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Loop count must be positive" );
+            AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Loop count must be positive" );
             hadError = true;
           }
           if ( !hadError )
@@ -5700,7 +5700,7 @@ namespace C64Studio.Parser
             int nextLineIndex = FindLoopEnd( Lines, lineIndex + 1, Scopes, info.LineCodeMapping );
             if ( nextLineIndex == -1 )
             {
-              AddError( lineIndex, C64Studio.Types.ErrorCode.E1008_MISSING_LOOP_END, "Missing loop end" );
+              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1008_MISSING_LOOP_END, "Missing loop end" );
               hadError = true;
             }
             else
@@ -7488,7 +7488,7 @@ namespace C64Studio.Parser
       if ( ( m_AssemblerSettings.MacroFunctionCallPrefix.Count > 0 )
       &&   ( m_AssemblerSettings.MacroFunctionCallPrefix[0].Length >= lineTokenInfos[0].Content.Length ) )
       {
-        AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unnamed macro function" );
+        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unnamed macro function" );
         return ParseLineResult.OK;
       }
 
@@ -7506,7 +7506,7 @@ namespace C64Studio.Parser
       if ( ( !macroFunctions.ContainsKey( functionName ) )
       ||   ( macroFunctions[functionName].LineEnd == -1 ) )
       {
-        AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown macro " + functionName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
+        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Unknown macro " + functionName, lineTokenInfos[0].StartPos, lineTokenInfos[0].Length );
       }
       else
       {
@@ -7532,12 +7532,12 @@ namespace C64Studio.Parser
             {
               if ( param.Count > functionInfo.ParametersAreReferences.Count )
               {
-                AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
                 hadError = true;
               }
               else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
               {
-                AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
                 hadError = true;
               }
             }
@@ -7582,12 +7582,12 @@ namespace C64Studio.Parser
           {
             if ( param.Count > functionInfo.ParametersAreReferences.Count )
             {
-              AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
               hadError = true;
             }
             else if ( param[param.Count - 1].StartsWith( "~" ) != functionInfo.ParametersAreReferences[param.Count - 1] )
             {
-              AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
+              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Referenced parameters are not matching macro definition" );
               hadError = true;
             }
           }
@@ -7607,7 +7607,7 @@ namespace C64Studio.Parser
         if ( ( !m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
         &&   ( param.Count != functionInfo.ParameterNames.Count ) )
         {
-          AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter count does not match for macro " + functionInfo.Name );
+          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter count does not match for macro " + functionInfo.Name );
         }
         else if ( !hadError )
         {
@@ -7617,7 +7617,7 @@ namespace C64Studio.Parser
           string[] replacementLines = RelabelLocalLabelsForMacro( Lines, Scopes, lineIndex, functionName, functionInfo, param, info.LineCodeMapping, out lineIndexInMacro );
           if ( replacementLines == null )
           {
-            AddError( lineIndexInMacro, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + m_LastErrorInfo.Pos );
+            AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + m_LastErrorInfo.Pos );
           }
           else
           {
@@ -7819,7 +7819,7 @@ namespace C64Studio.Parser
 
     private string[] PreProcess( string[] Lines, string ParentFilename, ProjectConfig Configuration, string AdditionalPredefines, out bool HadFatalError )
     {
-      List<Types.ScopeInfo>   stackScopes = new List<C64Studio.Types.ScopeInfo>();
+      List<Types.ScopeInfo>   stackScopes = new List<RetroDevStudio.Types.ScopeInfo>();
 
       ASMFileInfo.Labels.Clear();
       m_CurrentCommentSB = new StringBuilder();
@@ -7839,7 +7839,7 @@ namespace C64Studio.Parser
       ASMFileInfo.LineInfo.Clear();
       ASMFileInfo.TempLabelInfo.Clear();
       ASMFileInfo.Processor = Tiny64.Processor.Create6510();
-      ASMFileInfo.Macros    = new GR.Collections.Map<string, C64Studio.Types.MacroFunctionInfo>();
+      ASMFileInfo.Macros    = new GR.Collections.Map<string, RetroDevStudio.Types.MacroFunctionInfo>();
 
       stackScopes.Clear();
       Messages.Clear();
@@ -7935,7 +7935,7 @@ namespace C64Studio.Parser
         List<Types.TokenInfo> lineTokenInfos = PrepareLineTokens( parseLine, textCodeMapping );
         if ( lineTokenInfos == null )
         {
-          AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error at position " + ( m_LastErrorInfo.Pos + 1 ).ToString() + " (" + parseLine[m_LastErrorInfo.Pos] + ")" );
+          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Syntax error at position " + ( m_LastErrorInfo.Pos + 1 ).ToString() + " (" + parseLine[m_LastErrorInfo.Pos] + ")" );
           continue;
         }
 
@@ -7986,11 +7986,11 @@ namespace C64Studio.Parser
         &&   ( m_AssemblerSettings.PseudoOps.ContainsKey( lineTokenInfos[tokenOffset].Content.ToUpper() ) ) )
         {
           var macroInfo = m_AssemblerSettings.PseudoOps[lineTokenInfos[tokenOffset].Content.ToUpper()];
-          if ( ( macroInfo.Type == C64Studio.Types.MacroInfo.PseudoOpType.IF )
-          ||   ( macroInfo.Type == C64Studio.Types.MacroInfo.PseudoOpType.IFNDEF )
-          ||   ( macroInfo.Type == C64Studio.Types.MacroInfo.PseudoOpType.IFDEF )
-          ||   ( macroInfo.Type == C64Studio.Types.MacroInfo.PseudoOpType.ELSE )
-          ||   ( macroInfo.Type == C64Studio.Types.MacroInfo.PseudoOpType.END_IF ) )
+          if ( ( macroInfo.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.IF )
+          ||   ( macroInfo.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.IFNDEF )
+          ||   ( macroInfo.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.IFDEF )
+          ||   ( macroInfo.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.ELSE )
+          ||   ( macroInfo.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.END_IF ) )
           {
             isDASMScopePseudoOP = true;
           }
@@ -8020,7 +8020,7 @@ namespace C64Studio.Parser
             {
               // a new block starts here!
               // false, since it doesn't matter
-              Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+              Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
               scope.StartIndex = lineIndex;
               scope.Active = false;
               stackScopes.Add( scope );
@@ -8041,7 +8041,7 @@ namespace C64Studio.Parser
             &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == "{" ) )
             {
               // ACME style other scopes with bracket
-              Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( detectedScopeType );
+              Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( detectedScopeType );
               scope.StartIndex = lineIndex;
               scope.Active = false;
 
@@ -8110,7 +8110,7 @@ namespace C64Studio.Parser
               {
                 if ( lineTokenInfos.Count != 1 )
                 {
-                  AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
+                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
                   continue;
                 }
                 var result = HandleScopeEnd( ASMFileInfo.Macros, stackScopes, lineTokenInfos, textCodeMapping, ref lineIndex, ref intermediateLineOffset, ref Lines );
@@ -8127,7 +8127,7 @@ namespace C64Studio.Parser
               }
               else
               {
-                AddError( lineIndex, C64Studio.Types.ErrorCode.E1401_INTERNAL_ERROR, "Macro function scope encountered, but no macro function set" );
+                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1401_INTERNAL_ERROR, "Macro function scope encountered, but no macro function set" );
                 continue;
               }
               break;
@@ -8136,7 +8136,7 @@ namespace C64Studio.Parser
               {
                 if ( lineTokenInfos.Count != 1 )
                 {
-                  AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
+                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
                   continue;
                 }
                 OnScopeRemoved( lineIndex, stackScopes );
@@ -8157,7 +8157,7 @@ namespace C64Studio.Parser
             case Types.ScopeInfo.ScopeType.ZONE:
               if ( lineTokenInfos.Count != 1 )
               {
-                AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
+                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Closing brace must be single element" );
                 continue;
               }
               OnScopeRemoved( lineIndex, stackScopes );
@@ -8208,11 +8208,11 @@ namespace C64Studio.Parser
                   // start new block
                   long defineResult = -1;
 
-                  Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                  Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                   scope.StartIndex = lineIndex;
                   if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1, textCodeMapping, out SymbolInfo defineResultSymbol ) )
                   {
-                    AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
+                    AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: "
                               + TokensToExpression( lineTokenInfos, 3, lineTokenInfos.Count - 3 - 1 ),
                               lineTokenInfos[3].StartPos, lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[3].StartPos );
                     scope.Active = true;
@@ -8327,12 +8327,12 @@ namespace C64Studio.Parser
 
             // hack - macro call after label
             if ( ( lineTokenInfos.Count >= 2 )
-            &&   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.OPERATOR )
+            &&   ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPERATOR )
             &&   ( lineTokenInfos[0].Content == "+" )
             &&   ( lineTokenInfos[0].StartPos + lineTokenInfos[0].Length == lineTokenInfos[1].StartPos )
-            &&   ( lineTokenInfos[1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
+            &&   ( lineTokenInfos[1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
             {
-              lineTokenInfos[0].Type = C64Studio.Types.TokenInfo.TokenType.CALL_MACRO;
+              lineTokenInfos[0].Type = RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO;
               lineTokenInfos[0].Content = "+" + lineTokenInfos[1].Content;
               lineTokenInfos[0].Length += lineTokenInfos[1].Length;
               lineTokenInfos.RemoveAt( 1 );
@@ -8346,7 +8346,7 @@ namespace C64Studio.Parser
           List<Tiny64.Opcode> possibleOpcodes = new List<Tiny64.Opcode>( m_Processor.Opcodes[upToken.ToLower()] );
 
           //Debug.Log( "TODO - if either ZP option is active dismiss unfitting possible opcodes" );
-          if ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
+          if ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
           {
             // dismiss any zp based opcodes
             for ( int i = 0; i < possibleOpcodes.Count; ++i )
@@ -8363,7 +8363,7 @@ namespace C64Studio.Parser
               }
             }
           }
-          else if ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_DIRECT_VALUE )
+          else if ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_DIRECT_VALUE )
           {
             // dismiss any zp based opcodes
             for ( int i = 0; i < possibleOpcodes.Count; ++i )
@@ -8378,7 +8378,7 @@ namespace C64Studio.Parser
               }
             }
           }
-          else if ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP )
+          else if ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP )
           {
             // dismiss any non zp based opcodes
             for ( int i = 0; i < possibleOpcodes.Count; ++i )
@@ -8399,7 +8399,7 @@ namespace C64Studio.Parser
           if ( possibleOpcodes.Count == 0 )
           {
             AddError( lineIndex,
-                      C64Studio.Types.ErrorCode.E1105_INVALID_OPCODE,
+                      RetroDevStudio.Types.ErrorCode.E1105_INVALID_OPCODE,
                       "Cannot deduce matching opcode from zero page settings",
                       lineTokenInfos[0].StartPos,
                       lineTokenInfos[0].Length );
@@ -8800,7 +8800,7 @@ namespace C64Studio.Parser
 
         // macro function
         if ( ( lineTokenInfos.Count > 0 )
-        &&   ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.CALL_MACRO ) )
+        &&   ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO ) )
         {
           evaluatedContent = true;
           hadPseudoOp = true;
@@ -8840,7 +8840,7 @@ namespace C64Studio.Parser
             {
               break;
             }
-            else if ( pseudoOp.Type == C64Studio.Types.MacroInfo.PseudoOpType.NO_WARNING )
+            else if ( pseudoOp.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.NO_WARNING )
             {
               ParseLineResult   plResult = PONoWarning( lineTokenInfos, ref lineIndex, ref Lines );
               if ( plResult == ParseLineResult.RETURN_NULL )
@@ -8853,7 +8853,7 @@ namespace C64Studio.Parser
                 continue;
               }
             }
-            else if ( pseudoOp.Type == C64Studio.Types.MacroInfo.PseudoOpType.TRACE )
+            else if ( pseudoOp.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.TRACE )
             {
               string  traceFilename;
               int     localLineIndex = -1;
@@ -8909,7 +8909,7 @@ namespace C64Studio.Parser
                 List<Types.TokenInfo>  valueTokens = ParseTokenInfo( defineValue, 0, defineValue.Length, textCodeMapping );
                 int address = -1;
 
-                if ( lineTokenInfos[0].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+                if ( lineTokenInfos[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
                 {
                   defineName = m_CurrentZoneName + defineName;
                 }
@@ -9187,7 +9187,7 @@ namespace C64Studio.Parser
               if ( !string.IsNullOrEmpty( m_CompileTargetFile ) )
               {
                 AddWarning( lineIndex,
-                            C64Studio.Types.ErrorCode.W0004_TARGET_FILENAME_ALREADY_PROVIDED,
+                            RetroDevStudio.Types.ErrorCode.W0004_TARGET_FILENAME_ALREADY_PROVIDED,
                             "A target file name was already provided, ignoring this one",
                             -1,
                             0 );
@@ -9312,7 +9312,7 @@ namespace C64Studio.Parser
                   }
                 }
                 {
-                  Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                  Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                   scope.StartIndex = lineIndex;
 
                   // only evaluate the first token
@@ -9334,7 +9334,7 @@ namespace C64Studio.Parser
                 }
               }
             }
-            else if ( pseudoOp.Type == C64Studio.Types.MacroInfo.PseudoOpType.LABEL_FILE )
+            else if ( pseudoOp.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.LABEL_FILE )
             {
               lineTokenInfos.RemoveAt( 0 );
 
@@ -9357,7 +9357,7 @@ namespace C64Studio.Parser
               if ( !string.IsNullOrEmpty( ASMFileInfo.LabelDumpFile ) )
               {
                 AddWarning( lineIndex,
-                            C64Studio.Types.ErrorCode.W0006_LABEL_DUMP_FILE_ALREADY_GIVEN,
+                            RetroDevStudio.Types.ErrorCode.W0006_LABEL_DUMP_FILE_ALREADY_GIVEN,
                             "Label dump file name has already been provided",
                             lineTokenInfos[0].StartPos,
                             lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[0].StartPos );
@@ -9408,7 +9408,7 @@ namespace C64Studio.Parser
                 // Skip !if check inside macro definition
 
                 // still need to add scope!
-                Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
                 scope.Active = false;
 
@@ -9429,7 +9429,7 @@ namespace C64Studio.Parser
 
                 List<Types.TokenInfo> tokens = ParseTokenInfo( defineCheck, 0, defineCheck.Length, textCodeMapping );
 
-                Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
                 if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo defineResultSymbol ) )
                 {
@@ -9451,7 +9451,7 @@ namespace C64Studio.Parser
                 // Skip !if check inside macro definition
 
                 // still need to add scope!
-                Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
                 scope.Active = false;
 
@@ -9477,12 +9477,12 @@ namespace C64Studio.Parser
 
                 List<Types.TokenInfo> tokens = ParseTokenInfo( expressionCheck, 0, expressionCheck.Length, textCodeMapping );
 
-                Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+                Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
                 scope.StartIndex = lineIndex;
 
                 if ( !EvaluateTokens( lineIndex, tokens, textCodeMapping, out SymbolInfo defineResultSymbol ) )
                 {
-                  AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + expressionCheck );
+                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + expressionCheck );
                   scope.Active = true;
                   scope.IfChainHadActiveEntry = true;
                   HadFatalError = true;
@@ -9514,7 +9514,7 @@ namespace C64Studio.Parser
               //Debug.Log( "other else" );
               if ( stackScopes.Count == 0 )
               {
-                AddError( lineIndex, C64Studio.Types.ErrorCode.E1309_ELSE_WITHOUT_IF, "Else statement without if encountered" );
+                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1309_ELSE_WITHOUT_IF, "Else statement without if encountered" );
               }
               else
               {
@@ -9639,7 +9639,7 @@ namespace C64Studio.Parser
                     AddError( lineIndex, Types.ErrorCode.E1104_BANK_SIZE_INVALID, "Bank size is invalid" );
                   }
 
-                  Types.ASM.BankInfo bank = new C64Studio.Types.ASM.BankInfo();
+                  Types.ASM.BankInfo bank = new RetroDevStudio.Types.ASM.BankInfo();
                   bank.Number = number;
                   bank.SizeInBytes = size;
                   bank.StartLine = lineIndex;
@@ -9962,7 +9962,7 @@ namespace C64Studio.Parser
             {
               labelInFront = "";
             }
-            else if ( pseudoOp.Type == C64Studio.Types.MacroInfo.PseudoOpType.BASIC )
+            else if ( pseudoOp.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.BASIC )
             {
               var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, hideInPreprocessedOutput, out lineSizeInBytes );
               if ( parseResult == ParseLineResult.RETURN_NULL )
@@ -10005,7 +10005,7 @@ namespace C64Studio.Parser
           // TODO - ugly, copied code!!
           hadPseudoOp = true;
           Types.MacroInfo macroInfo = m_AssemblerSettings.PseudoOps[upToken];
-          if ( macroInfo.Type == C64Studio.Types.MacroInfo.PseudoOpType.HEX )
+          if ( macroInfo.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.HEX )
           {
             // HEX - special macro
             info.LineData = new GR.Memory.ByteBuffer();
@@ -10016,7 +10016,7 @@ namespace C64Studio.Parser
               {
                 if ( !info.LineData.AppendHex( "0" + tokenHex.Content ) )
                 {
-                  AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
+                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
                   HadFatalError = true;
                   return Lines;
                 }
@@ -10025,7 +10025,7 @@ namespace C64Studio.Parser
               {
                 if ( !info.LineData.AppendHex( tokenHex.Content ) )
                 {
-                  AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
+                  AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
                   HadFatalError = true;
                   return Lines;
                 }
@@ -10041,7 +10041,7 @@ namespace C64Studio.Parser
               // Skip !if check inside macro definition
 
               // still need to add scope!
-              Types.ScopeInfo scopeIfNotDef = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+              Types.ScopeInfo scopeIfNotDef = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
               scopeIfNotDef.StartIndex = lineIndex;
               scopeIfNotDef.Active = false;
 
@@ -10057,12 +10057,12 @@ namespace C64Studio.Parser
             if ( ( tokens.Count != 1 )
             || ( !IsTokenLabel( tokens[0].Type ) ) )
             {
-              AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Expected single label" );
+              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Expected single label" );
               HadFatalError = true;
               return Lines;
             }
 
-            Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+            Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
             scope.StartIndex = lineIndex;
             scope.Active = !IsKnownLabel( tokens[0] );
             stackScopes.Add( scope );
@@ -10075,7 +10075,7 @@ namespace C64Studio.Parser
               // Skip !if check inside macro definition
 
               // still need to add scope!
-              Types.ScopeInfo scopeIfNotDef = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+              Types.ScopeInfo scopeIfNotDef = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
               scopeIfNotDef.StartIndex = lineIndex;
               scopeIfNotDef.Active = false;
 
@@ -10091,12 +10091,12 @@ namespace C64Studio.Parser
             if ( ( tokens.Count != 1 )
             ||   ( !IsTokenLabel( tokens[0].Type ) ) )
             {
-              AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Expected single label" );
+              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Expected single label" );
               HadFatalError = true;
               return Lines;
             }
 
-            Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+            Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
             scope.StartIndex = lineIndex;
             scope.Active = IsKnownLabel( tokens[0] );
             stackScopes.Add( scope );
@@ -10114,7 +10114,7 @@ namespace C64Studio.Parser
           {
             m_CurrentSegmentIsVirtual = true;
           }
-          else if ( macroInfo.Type == C64Studio.Types.MacroInfo.PseudoOpType.BASIC )
+          else if ( macroInfo.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.BASIC )
           {
             var parseResult = POBasic( parseLine, lineTokenInfos, lineIndex, info, textCodeMapping, true, hideInPreprocessedOutput, out lineSizeInBytes );
             if ( parseResult == ParseLineResult.RETURN_NULL )
@@ -10123,7 +10123,7 @@ namespace C64Studio.Parser
               return Lines;
             }
           }
-          else if ( macroInfo.Type == C64Studio.Types.MacroInfo.PseudoOpType.ORG )
+          else if ( macroInfo.Type == RetroDevStudio.Types.MacroInfo.PseudoOpType.ORG )
           {
             // set program step
             int newStepPos = 0;
@@ -10133,7 +10133,7 @@ namespace C64Studio.Parser
             int commaCount = 0;
             for ( int i = 1; i < lineTokenInfos.Count; ++i )
             {
-              if ( ( lineTokenInfos[i].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+              if ( ( lineTokenInfos[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.SEPARATOR )
               &&   ( lineTokenInfos[i].Content == "," ) )
               {
                 if ( commaCount == 0 )
@@ -10398,7 +10398,7 @@ namespace C64Studio.Parser
               // Skip !if check inside macro definition
 
               // still need to add scope!
-              Types.ScopeInfo scopeIfNotDef = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+              Types.ScopeInfo scopeIfNotDef = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
               scopeIfNotDef.StartIndex = lineIndex;
               scopeIfNotDef.Active = false;
 
@@ -10407,11 +10407,11 @@ namespace C64Studio.Parser
               continue;
             }
 
-            Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
+            Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.IF_OR_IFDEF );
             scope.StartIndex = lineIndex;
             if ( !EvaluateTokens( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping, out SymbolInfo defineResult ) )
             {
-              AddError( lineIndex, C64Studio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ) );
+              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression: " + TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 ) );
               scope.Active = true;
               scope.IfChainHadActiveEntry = true;
             }
@@ -10431,7 +10431,7 @@ namespace C64Studio.Parser
           {
             if ( stackScopes.Count == 0 )
             {
-              AddError( lineIndex, C64Studio.Types.ErrorCode.E1309_ELSE_WITHOUT_IF, "Else statement without if encountered" );
+              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1309_ELSE_WITHOUT_IF, "Else statement without if encountered" );
             }
             else
             {
@@ -10526,7 +10526,7 @@ namespace C64Studio.Parser
           else if ( ( macroInfo.Type != MacroInfo.PseudoOpType.IGNORE )
           &&        ( macroInfo.Type != MacroInfo.PseudoOpType.ERROR ) )
           {
-            AddError( lineIndex, C64Studio.Types.ErrorCode.E1301_PSEUDO_OPERATION, "Unsupported pseudo op " + macroInfo.Keyword + " encountered" );
+            AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1301_PSEUDO_OPERATION, "Unsupported pseudo op " + macroInfo.Keyword + " encountered" );
             HadFatalError = true;
             return Lines;
           }
@@ -10842,7 +10842,7 @@ namespace C64Studio.Parser
 
         // TODO - check of zonescope exists, no nestes zone scopes!
 
-        Types.ScopeInfo   zoneScope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
+        Types.ScopeInfo   zoneScope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.ZONE );
         zoneScope.StartIndex = lineIndex;
 
         stackScopes.Add( zoneScope );
@@ -10917,13 +10917,13 @@ namespace C64Studio.Parser
 
         if ( ( hexData.Length % 2 ) != 0 )
         {
-          AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
+          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
 
           return ParseLineResult.RETURN_NULL;
         }
         if ( !info.LineData.AppendHex( hexData ) )
         {
-          AddError( lineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
+          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Malformed hex data" );
 
           return ParseLineResult.RETURN_NULL;
         }
@@ -10986,7 +10986,7 @@ namespace C64Studio.Parser
 
     private bool IsLabelInFront( List<TokenInfo> lineTokenInfos, string UpToken )
     {
-      if ( ( lineTokenInfos[0].Type != C64Studio.Types.TokenInfo.TokenType.CALL_MACRO )
+      if ( ( lineTokenInfos[0].Type != RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO )
       &&   ( ( !m_Processor.Opcodes.ContainsKey( UpToken.ToLower() ) )
       &&     ( ( m_AssemblerSettings.POPrefix.Length == 0 )
       &&       ( ( ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )
@@ -11004,10 +11004,10 @@ namespace C64Studio.Parser
 
     private bool IsOpcode( TokenInfo.TokenType TokenType )
     {
-      if ( ( TokenType == C64Studio.Types.TokenInfo.TokenType.OPCODE )
-      ||   ( TokenType == C64Studio.Types.TokenInfo.TokenType.OPCODE_DIRECT_VALUE )
-      ||   ( TokenType == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
-      ||   ( TokenType == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP ) )
+      if ( ( TokenType == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE )
+      ||   ( TokenType == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_DIRECT_VALUE )
+      ||   ( TokenType == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
+      ||   ( TokenType == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP ) )
       {
         return true;
       }
@@ -11058,7 +11058,7 @@ namespace C64Studio.Parser
 
     private static void DetectInternalLabels( int lineIndex, List<TokenInfo> lineTokenInfos )
     {
-      if ( ( lineTokenInfos[0].Type != C64Studio.Types.TokenInfo.TokenType.CALL_MACRO )
+      if ( ( lineTokenInfos[0].Type != RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO )
       &&   ( ( lineTokenInfos[0].Content.StartsWith( "-" ) )
       ||     ( lineTokenInfos[0].Content.StartsWith( "+" ) ) ) )
       {
@@ -11073,7 +11073,7 @@ namespace C64Studio.Parser
     {
       if ( m_AssemblerSettings.GlobalLabelsAutoZone )
       {
-        if ( ( lineTokenInfos[0].Type != C64Studio.Types.TokenInfo.TokenType.CALL_MACRO )
+        if ( ( lineTokenInfos[0].Type != RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO )
         &&   ( ( !m_Processor.Opcodes.ContainsKey( upToken.ToLower() ) )
         &&   ( ( ( m_AssemblerSettings.POPrefix.Length == 0 )
         &&       ( !m_AssemblerSettings.PseudoOps.ContainsKey( upToken ) ) )
@@ -11197,7 +11197,7 @@ namespace C64Studio.Parser
       int nextLineIndex = lineIndex + 1;
       if ( nextLineIndex >= Lines.Length )
       {
-        AddError( lineIndex, C64Studio.Types.ErrorCode.E1008_MISSING_LOOP_END, "REPEAT at end of code encountered" );
+        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1008_MISSING_LOOP_END, "REPEAT at end of code encountered" );
         return ParseLineResult.ERROR_ABORT;
       }
       int loopLength = 1;
@@ -11368,7 +11368,7 @@ namespace C64Studio.Parser
       {
         var token = lineTokenInfos[tokenIndex];
 
-        if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+        if ( ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.SEPARATOR )
         &&   ( m_AssemblerSettings.LineSeparatorChars.Contains( token.Content ) ) )
         {
           doesContainSeparator = true;
@@ -11385,7 +11385,7 @@ namespace C64Studio.Parser
         {
           var token = lineTokenInfos[tokenIndex];
 
-          if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+          if ( ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.SEPARATOR )
           &&   ( m_AssemblerSettings.LineSeparatorChars.Contains( token.Content ) ) )
           {
             newLines[partIndex] = TokensToExpression( lineTokenInfos, partStartIndex, tokenIndex - partStartIndex );
@@ -11504,19 +11504,19 @@ namespace C64Studio.Parser
         &&   ( aChar != '\t' ) )
         {
           firstNonWhiteSpaceCharFound = true;
-          if ( ( m_AssemblerSettings.AllowedTokenStartChars.ContainsKey( C64Studio.Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR ) )
-          &&   ( m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR].IndexOf( aChar ) != -1 ) )
+          if ( ( m_AssemblerSettings.AllowedTokenStartChars.ContainsKey( RetroDevStudio.Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR ) )
+          &&   ( m_AssemblerSettings.AllowedTokenStartChars[RetroDevStudio.Types.TokenInfo.TokenType.COMMENT_IF_FIRST_CHAR].IndexOf( aChar ) != -1 ) )
           {
             commentPos = 0;
             return true;
           }
-          if ( m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.COMMENT].IndexOf( aChar ) != -1 )
+          if ( m_AssemblerSettings.AllowedTokenStartChars[RetroDevStudio.Types.TokenInfo.TokenType.COMMENT].IndexOf( aChar ) != -1 )
           {
             commentPos = i;
             return true;
           }
         }
-        if ( m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.COMMENT].IndexOf( aChar ) != -1 )
+        if ( m_AssemblerSettings.AllowedTokenStartChars[RetroDevStudio.Types.TokenInfo.TokenType.COMMENT].IndexOf( aChar ) != -1 )
         {
           commentPos = i;
           return true;
@@ -11610,7 +11610,7 @@ namespace C64Studio.Parser
 
         loop.LineIndex = lineIndex;
 
-        Types.ScopeInfo   scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.LOOP );
+        Types.ScopeInfo   scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.LOOP );
 
         scope.Active = true;
         scope.Loop = loop;
@@ -11620,16 +11620,16 @@ namespace C64Studio.Parser
       }
       if ( lineTokenInfos.Count < 5 )
       {
-        AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !FOR <Variable> = <Start Value Expression> TO <End Value Expression [STEP] <Step Value Expression>" );
+        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !FOR <Variable> = <Start Value Expression> TO <End Value Expression [STEP] <Step Value Expression>" );
       }
       else
       {
-        if ( ( ( lineTokenInfos[1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-        &&     ( lineTokenInfos[1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+        if ( ( ( lineTokenInfos[1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        &&     ( lineTokenInfos[1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
         ||   ( lineTokenInfos[2].Content != "=" ) )
         {
           AddError( lineIndex,
-                    C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
+                    RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
                     "Malformed macro, expect !FOR <Variable> = <Start Value Expression> TO <End Value Expression [STEP] <Step Value Expression>",
                     lineTokenInfos[1].StartPos,
                     lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
@@ -11645,7 +11645,7 @@ namespace C64Studio.Parser
           ||   ( indexTo < 3 ) )
           {
             AddError( lineIndex,
-                      C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
+                      RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
                       "Malformed macro, expect !FOR <Variable> = <Start Value Expression> TO <End Value Expression [STEP] <Step Value Expression>",
                       lineTokenInfos[1].StartPos,
                       lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[1].StartPos );
@@ -11656,7 +11656,7 @@ namespace C64Studio.Parser
             if ( !EvaluateTokens( lineIndex, lineTokenInfos, indexStep + 1, lineTokenInfos.Count - indexStep - 1, TextCodeMapping, out SymbolInfo stepValueSymbol ) )
             {
               AddError( lineIndex,
-                        C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
+                        RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
                         "Malformed macro, expect !FOR <Variable> = <Start Value Expression> TO <End Value Expression [STEP] <Step Value Expression>",
                         lineTokenInfos[indexStep + 1].StartPos,
                         lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[indexStep + 1].StartPos );
@@ -11668,7 +11668,7 @@ namespace C64Studio.Parser
               if ( stepValue == 0 )
               {
                 AddError( lineIndex,
-                          C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
+                          RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
                           "Value of step must not be zero",
                           lineTokenInfos[indexStep + 1].StartPos,
                           lineTokenInfos[lineTokenInfos.Count - 1].EndPos + 1 - lineTokenInfos[indexStep + 1].StartPos );
@@ -11688,7 +11688,7 @@ namespace C64Studio.Parser
             if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, indexTo - 3, TextCodeMapping, out SymbolInfo startValueSymbol ) )
             {
               AddError( lineIndex,
-                        C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
+                        RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
                         "Could not evaluate start value",
                         lineTokenInfos[3].StartPos,
                         lineTokenInfos[indexTo - 3].EndPos + 1 - lineTokenInfos[3].StartPos );
@@ -11697,7 +11697,7 @@ namespace C64Studio.Parser
             else if ( !EvaluateTokens( lineIndex, lineTokenInfos, indexTo + 1, indexStep - indexTo - 1, TextCodeMapping, out SymbolInfo endValueSymbol ) )
             {
               AddError( lineIndex,
-                        C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
+                        RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
                         "Could not evaluate end value",
                         lineTokenInfos[indexTo + 1].StartPos,
                         lineTokenInfos[indexStep - indexTo - 1].EndPos + 1 - lineTokenInfos[indexTo + 1].StartPos );
@@ -11711,7 +11711,7 @@ namespace C64Studio.Parser
               &&   ( endValue >= startValue ) )
               {
                 AddError( lineIndex,
-                          C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
+                          RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
                           "End value must be lower than start value with negative step",
                           lineTokenInfos[indexTo + 1].StartPos,
                           lineTokenInfos[indexStep - 1].EndPos + 1 - lineTokenInfos[indexTo + 1].StartPos );
@@ -11721,7 +11721,7 @@ namespace C64Studio.Parser
               &&        ( endValue < startValue ) )
               {
                 AddError( lineIndex,
-                          C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO,
+                          RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO,
                           "End value must be higher than start value with positive step",
                           lineTokenInfos[indexTo + 1].StartPos,
                           lineTokenInfos[indexStep - indexTo - 1].EndPos + 1 - lineTokenInfos[indexTo + 1].StartPos );
@@ -11739,7 +11739,7 @@ namespace C64Studio.Parser
               loop.StepValue = stepValue;
               loop.CurrentValue = startValue;
 
-              Types.ScopeInfo   scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.LOOP );
+              Types.ScopeInfo   scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.LOOP );
               // TODO - active depends on parent scopes
               scope.Active = true;
               scope.Loop = loop;
@@ -11904,11 +11904,11 @@ namespace C64Studio.Parser
               }
             }
           }
-          if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-          ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
-          ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
+          if ( ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+          ||   ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+          ||   ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
           {
-            List<Types.TokenInfo>   tempTokens = new List<C64Studio.Types.TokenInfo>();
+            List<Types.TokenInfo>   tempTokens = new List<RetroDevStudio.Types.TokenInfo>();
 
             for ( int j = 0; j < functionInfo.ParameterNames.Count; ++j )
             {
@@ -11930,8 +11930,8 @@ namespace C64Studio.Parser
                 if ( ( !HasError() )
                 &&   ( tempTokens.Count >= 1 ) )
                 {
-                  if ( ( tempTokens[0].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-                  &&   ( tempTokens[0].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+                  if ( ( tempTokens[0].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+                  &&   ( tempTokens[0].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
                   {
                   }
                   else
@@ -11964,15 +11964,15 @@ namespace C64Studio.Parser
               }
             }
             // Dasm - Macro local labels start with ., add macro and LINE and loop specific prefix
-            if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
-            ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
+            if ( ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+            ||   ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
             {
               if ( !modifiedToken )
               {
                 modifiedToken = true;
                 //tokens.RemoveAt( tokenIndex );
                 //tokens.InsertRange( tokenIndex, tempTokens );
-                if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+                if ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
                 {
                   if ( token.Content[0] == '-' )
                   {
@@ -11991,7 +11991,7 @@ namespace C64Studio.Parser
                 else
                 {
                   // need to take loop into account, force new local label!
-                  token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
+                  token.Content = m_AssemblerSettings.AllowedTokenStartChars[RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL]
                                 + "_C64STUDIOINTERNAL_" + functionName + "_" + functionInfo.LineIndex.ToString() + "_" + lineIndex.ToString() + "_" + GetLoopGUID( Scopes ) + "_" + token.Content;
                 }
                 replacingTokens.Add( token );
@@ -12034,23 +12034,23 @@ namespace C64Studio.Parser
         int   tokenIndex = 0;
         foreach ( Types.TokenInfo token in tokens )
         {
-          if ( ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-          ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
-          ||   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
+          if ( ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+          ||   ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+          ||   ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
           {
             // Dasm - Macro local labels start with ., add macro and LINE and loop specific prefix
-            if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+            if ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
             {
               // need to take loop into account, force new local label!
               /*
-              token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
+              token.Content = m_AssemblerSettings.AllowedTokenStartChars[RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL]
                             + GetLoopGUID( Scopes ) + "_" + i.ToString() + "_" + lineIndex.ToString() + "_" + token.Content;*/
-              token.Content = m_AssemblerSettings.AllowedTokenStartChars[C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL]
+              token.Content = m_AssemblerSettings.AllowedTokenStartChars[RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL]
                             + AssemblerSettings.INTERNAL_LOCAL_LOOP_LABEL_PREFIX
                             + GetLoopGUID( Scopes ) + "_" + lineIndex.ToString() + "_" + token.Content;
               replacedParam = true;
             }
-            else if ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
+            else if ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL )
             {
               // need to take loop into account, force new local label!
               //token.Content += GetLoopGUID( Scopes ) + "_" + lineIndex.ToString();
@@ -12098,15 +12098,15 @@ namespace C64Studio.Parser
         // PDS style (<macroname> MACRO)
         if ( lineTokenInfos.Count != 1 )
         {
-          AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect <Macroname> MACRO" );
+          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect <Macroname> MACRO" );
           return false;
         }
         if ( macroFunctions.ContainsKey( LabelInFront ) )
         {
-          AddError( lineIndex, C64Studio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Macro name is already in use" );
+          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Macro name is already in use" );
           return false;
         }
-        Types.MacroFunctionInfo macroFunction = new C64Studio.Types.MacroFunctionInfo();
+        Types.MacroFunctionInfo macroFunction = new RetroDevStudio.Types.MacroFunctionInfo();
 
         macroFunction.Name            = LabelInFront;
         macroFunction.LineIndex       = lineIndex;
@@ -12123,7 +12123,7 @@ namespace C64Studio.Parser
         MacroFunctionName = LabelInFront;
 
         // macro scope
-        Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.MACRO_FUNCTION );
+        Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.MACRO_FUNCTION );
 
         scope.StartIndex  = lineIndex;
         scope.Macro       = macroFunction;
@@ -12135,17 +12135,17 @@ namespace C64Studio.Parser
       if ( ( m_AssemblerSettings.MacrosHaveVariableNumberOfArguments )
       &&   ( lineTokenInfos.Count != 2 ) )
       {
-        AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !MACRO <Macroname>" );
+        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !MACRO <Macroname>" );
         hadError = true;
       }
       else if ( lineTokenInfos.Count < 2 )
       {
-        AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !MACRO <Macroname> [<Param1>[,<Param2>[...]]]" );
+        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Malformed macro, expect !MACRO <Macroname> [<Param1>[,<Param2>[...]]]" );
         hadError = true;
       }
-      else if ( lineTokenInfos[1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+      else if ( lineTokenInfos[1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
       {
-        AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro name must be formatted like a global label" );
+        AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro name must be formatted like a global label" );
         hadError = true;
       }
       else
@@ -12155,7 +12155,7 @@ namespace C64Studio.Parser
 
         if ( macroFunctions.ContainsKey( macroName ) )
         {
-          AddError( lineIndex, C64Studio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Macro function name is already in use" );
+          AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1200_REDEFINITION_OF_LABEL, "Macro function name is already in use" );
           hadError = true;
         }
         else
@@ -12171,29 +12171,29 @@ namespace C64Studio.Parser
             {
               if ( lineTokenInfos[i].Content != "," )
               {
-                AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter names must be separated by comma" );
+                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter names must be separated by comma" );
                 hadError = true;
               }
             }
             else if ( ( !shouldParameterBeAComma )
-            &&        ( ( lineTokenInfos[i].Type != C64Studio.Types.TokenInfo.TokenType.OPERATOR )
-            ||          ( ( lineTokenInfos[i].Type == C64Studio.Types.TokenInfo.TokenType.OPERATOR )
+            &&        ( ( lineTokenInfos[i].Type != RetroDevStudio.Types.TokenInfo.TokenType.OPERATOR )
+            ||          ( ( lineTokenInfos[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPERATOR )
             &&            ( lineTokenInfos[i].Content != "~" ) ) )
-            &&        ( lineTokenInfos[i].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-            &&        ( lineTokenInfos[i].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
+            &&        ( lineTokenInfos[i].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+            &&        ( lineTokenInfos[i].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) )
             {
-              AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter name must be formatted like a global label" );
+              AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Parameter name must be formatted like a global label" );
               hadError = true;
             }
             else if ( ( !shouldParameterBeAComma )
-            &&        ( lineTokenInfos[i].Type == C64Studio.Types.TokenInfo.TokenType.OPERATOR )
+            &&        ( lineTokenInfos[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPERATOR )
             &&        ( lineTokenInfos[i].Content == "~" ) )
             {
               if ( ( i + 1 >= lineTokenInfos.Count )
-              ||   ( ( lineTokenInfos[i + 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-              &&     ( lineTokenInfos[i + 1].Type != C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL ) ) )
+              ||   ( ( lineTokenInfos[i + 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+              &&     ( lineTokenInfos[i + 1].Type != RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL ) ) )
               {
-                AddError( lineIndex, C64Studio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error, expected parameter name after ~" );
+                AddError( lineIndex, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error, expected parameter name after ~" );
                 hadError = true;
               }
               else
@@ -12215,7 +12215,7 @@ namespace C64Studio.Parser
           }
           if ( !hadError )
           {
-            Types.MacroFunctionInfo macroFunction = new C64Studio.Types.MacroFunctionInfo();
+            Types.MacroFunctionInfo macroFunction = new RetroDevStudio.Types.MacroFunctionInfo();
 
             macroFunction.Name                    = macroName;
             macroFunction.LineIndex               = lineIndex;
@@ -12234,7 +12234,7 @@ namespace C64Studio.Parser
             MacroFunctionName = macroName;
 
             // macro scope
-            Types.ScopeInfo scope = new C64Studio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.MACRO_FUNCTION );
+            Types.ScopeInfo scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.MACRO_FUNCTION );
 
             scope.StartIndex  = lineIndex;
             scope.Macro       = macroFunction;
@@ -12254,7 +12254,7 @@ namespace C64Studio.Parser
 
     private void AddVirtualBreakpoint( int LineIndex, string DocumentFilename, string Expression )
     {
-      Types.Breakpoint    virtualBP = new C64Studio.Types.Breakpoint();
+      Types.Breakpoint    virtualBP = new RetroDevStudio.Types.Breakpoint();
       virtualBP.LineIndex = LineIndex;
       virtualBP.Expression  = Expression;
       virtualBP.DocumentFilename = DocumentFilename;
@@ -12265,7 +12265,7 @@ namespace C64Studio.Parser
 
     private void CloneSourceInfos( int SourceIndex, int CopyLength, int TargetIndex )
     {
-      List<Types.ASM.SourceInfo>    infosToAdd = new List<C64Studio.Types.ASM.SourceInfo>();
+      List<Types.ASM.SourceInfo>    infosToAdd = new List<RetroDevStudio.Types.ASM.SourceInfo>();
 
       foreach ( Types.ASM.SourceInfo oldInfo in ASMFileInfo.SourceInfo.Values )
       {
@@ -12275,7 +12275,7 @@ namespace C64Studio.Parser
         {
           // fully inside source scope
           // need to copy!
-          Types.ASM.SourceInfo tempInfo = new C64Studio.Types.ASM.SourceInfo();
+          Types.ASM.SourceInfo tempInfo = new RetroDevStudio.Types.ASM.SourceInfo();
 
           tempInfo.LineCount        = oldInfo.LineCount;
           tempInfo.LocalStartLine   = oldInfo.LocalStartLine;
@@ -12498,7 +12498,7 @@ namespace C64Studio.Parser
       Messages.Clear();
       m_ErrorMessages = 0;
       m_WarningMessages = 0;
-      ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
+      ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
       m_LoadedFiles.Clear();
       m_Filename = "";
     }
@@ -12684,7 +12684,7 @@ namespace C64Studio.Parser
       sourceInfo.LineCount        = lines.Length;
       sourceInfo.FullPath         = m_Filename;
 
-      ASMFileInfo = new C64Studio.Types.ASM.FileInfo();
+      ASMFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
       ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
       ASMFileInfo.AssemblerSettings = m_AssemblerSettings;
       ASMFileInfo.LabelDumpFile     = Config.LabelDumpFile;
@@ -12941,7 +12941,7 @@ namespace C64Studio.Parser
     {
       if ( Config.OutputFile == null )
       {
-        AddError( -1, C64Studio.Types.ErrorCode.E0001_NO_OUTPUT_FILENAME, "No output file name provided" );
+        AddError( -1, RetroDevStudio.Types.ErrorCode.E0001_NO_OUTPUT_FILENAME, "No output file name provided" );
         return false;
       }
       m_CompileTargetFile = Config.OutputFile;
@@ -13367,13 +13367,13 @@ namespace C64Studio.Parser
 
       if ( Config.TargetType == Types.CompileTargetType.T64 )
       {
-        Formats.T64 t64 = new C64Studio.Formats.T64();
+        Formats.T64 t64 = new RetroDevStudio.Formats.T64();
 
-        Formats.T64.FileRecord  record = new C64Studio.Formats.T64.FileRecord();
+        Formats.T64.FileRecord  record = new RetroDevStudio.Formats.T64.FileRecord();
 
         record.Filename = Util.ToFilename( outputPureFilename );
         record.StartAddress = (ushort)fileStartAddress;
-        record.C64FileType = C64Studio.Types.FileType.PRG;
+        record.C64FileType = RetroDevStudio.Types.FileType.PRG;
         record.EntryType = 1;
 
         t64.TapeInfo.Description = "C64S tape file\r\nDemo tape";
@@ -13385,30 +13385,30 @@ namespace C64Studio.Parser
       }
       else if ( Config.TargetType == Types.CompileTargetType.TAP )
       {
-        Formats.Tap tap = new C64Studio.Formats.Tap();
+        Formats.Tap tap = new RetroDevStudio.Formats.Tap();
 
-        tap.WriteFile( Util.ToFilename( outputPureFilename ), AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
+        tap.WriteFile( Util.ToFilename( outputPureFilename ), AssembledOutput.Assembly, RetroDevStudio.Types.FileType.PRG );
         AssembledOutput.Assembly = tap.Compile();
       }
       else if ( Config.TargetType == Types.CompileTargetType.D64 )
       {
-        Formats.D64 d64 = new C64Studio.Formats.D64();
+        Formats.D64 d64 = new RetroDevStudio.Formats.D64();
 
         d64.CreateEmptyMedia();
 
         GR.Memory.ByteBuffer    bufName = Util.ToFilename( outputPureFilename );
-        d64.WriteFile( bufName, AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
+        d64.WriteFile( bufName, AssembledOutput.Assembly, RetroDevStudio.Types.FileType.PRG );
 
         AssembledOutput.Assembly = d64.Compile();
       }
       else if ( Config.TargetType == Types.CompileTargetType.D81 )
       {
-        Formats.D81 d81 = new C64Studio.Formats.D81();
+        Formats.D81 d81 = new RetroDevStudio.Formats.D81();
 
         d81.CreateEmptyMedia();
 
         GR.Memory.ByteBuffer    bufName = Util.ToFilename( outputPureFilename );
-        d81.WriteFile( bufName, AssembledOutput.Assembly, C64Studio.Types.FileType.PRG );
+        d81.WriteFile( bufName, AssembledOutput.Assembly, RetroDevStudio.Types.FileType.PRG );
 
         AssembledOutput.Assembly = d81.Compile();
       }
@@ -14179,7 +14179,7 @@ namespace C64Studio.Parser
           }
           if ( currentTokenType == Types.TokenInfo.TokenType.UNKNOWN )
           {
-            m_LastErrorInfo.Set( -1, charPos, 1, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR );
+            m_LastErrorInfo.Set( -1, charPos, 1, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR );
             result.Clear();
             return result;
           }
@@ -14199,8 +14199,8 @@ namespace C64Studio.Parser
               token.Length = charPos - tokenStartPos + 1;
 
               // special case, labels with :; : is not part of label
-              if ( ( currentTokenType == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
-              ||   ( currentTokenType == C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
+              if ( ( currentTokenType == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+              ||   ( currentTokenType == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL ) )
               {
                 if ( curChar == ':' )
                 {
@@ -14358,7 +14358,7 @@ namespace C64Studio.Parser
               if ( charPos > tokenStartPos )
               {
                 // some chars were before, but they didn't form a token
-                m_LastErrorInfo.Set( -1, tokenStartPos, charPos - tokenStartPos, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR );
+                m_LastErrorInfo.Set( -1, tokenStartPos, charPos - tokenStartPos, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR );
                 result.Clear();
                 return result;
               }
@@ -14369,7 +14369,7 @@ namespace C64Studio.Parser
                   currentTokenType = pair.Key;
                   tokenStartPos = charPos;
 
-                  if ( currentTokenType == C64Studio.Types.TokenInfo.TokenType.COMMENT )
+                  if ( currentTokenType == RetroDevStudio.Types.TokenInfo.TokenType.COMMENT )
                   {
                     // the rest of the line is a comment!
                     Types.TokenInfo token = new Types.TokenInfo();
@@ -14385,7 +14385,7 @@ namespace C64Studio.Parser
                 }
               }
               // separator char?
-              if ( currentTokenType == C64Studio.Types.TokenInfo.TokenType.UNKNOWN )
+              if ( currentTokenType == RetroDevStudio.Types.TokenInfo.TokenType.UNKNOWN )
               {
                 bool    found = false;
                 foreach ( var separatorChar in m_AssemblerSettings.StatementSeparatorChars )
@@ -14569,7 +14569,7 @@ namespace C64Studio.Parser
 
           // collapse binary representations
           if ( ( result[i].Content[0] == '%' )
-          &&   ( result[i + 1].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+          &&   ( result[i + 1].Type == RetroDevStudio.Types.TokenInfo.TokenType.SEPARATOR )
           &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
           &&   ( result[i + 1].Content == "#" ) )
           {
@@ -14583,7 +14583,7 @@ namespace C64Studio.Parser
           }
           // collapse binary representations
           if ( ( result[i].Content[0] == '%' )
-          &&   ( result[i + 1].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_LOCAL )
+          &&   ( result[i + 1].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_LOCAL )
           &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos ) )
           {
             // # and . are allowed
@@ -14665,7 +14665,7 @@ namespace C64Studio.Parser
         }
         if ( m_Processor.Opcodes.ContainsKey( lowerToken ) )
         {
-          token.Type = C64Studio.Types.TokenInfo.TokenType.OPCODE;
+          token.Type = RetroDevStudio.Types.TokenInfo.TokenType.OPCODE;
         }
       }
 
@@ -14715,7 +14715,7 @@ namespace C64Studio.Parser
               }
             }
           }
-          if ( ( result[i].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE )
+          if ( ( result[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE )
           &&   ( result[i].StartPos + result[i].Length == result[i + 1].StartPos )
           &&   ( result[i + 1].Content == m_AssemblerSettings.OpcodeSizeIdentifierSeparator )
           &&   ( result[i + 1].StartPos + result[i + 1].Length == result[i + 2].StartPos )
@@ -14725,11 +14725,11 @@ namespace C64Studio.Parser
             // combine!
             if ( m_AssemblerSettings.OpcodeSizeIdentifierOneByteOperands.Contains( result[i + 2].Content ) )
             {
-              result[i].Type = C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP;
+              result[i].Type = RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP;
             }
             else
             {
-              result[i].Type = C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP;
+              result[i].Type = RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP;
             }
             result.RemoveRange( i + 1, 2 );
             break;
@@ -14740,14 +14740,14 @@ namespace C64Studio.Parser
       // macro'd internal labels turn up as global label, operator, global label, collapse into one token
       for ( int i = 0; i < result.Count; ++i )
       {
-        if ( ( result[i].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+        if ( ( result[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
         && ( result[i].Content == InternalLabelPrefix ) )
         {
           int     curPos = i + 1;
 
           while ( true )
           {
-            if ( ( result[curPos].Type == C64Studio.Types.TokenInfo.TokenType.OPERATOR )
+            if ( ( result[curPos].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPERATOR )
             && ( result[curPos].StartPos == result[curPos - 1].StartPos + result[curPos - 1].Length )
             && ( ( result[curPos].Content == "-" )
             || ( result[curPos].Content == "+" ) ) )
@@ -14758,12 +14758,12 @@ namespace C64Studio.Parser
               ++curPos;
             }
             else if ( ( curPos < result.Count )
-            && ( result[curPos].Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
+            && ( result[curPos].Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL )
             && ( result[curPos].StartPos == result[curPos - 1].StartPos + result[curPos - 1].Length )
             && ( result[curPos].Content.StartsWith( InternalLabelPostfix ) ) )
             {
               // final label
-              result[i].Type = C64Studio.Types.TokenInfo.TokenType.LABEL_INTERNAL;
+              result[i].Type = RetroDevStudio.Types.TokenInfo.TokenType.LABEL_INTERNAL;
               result[i].Content += result[curPos].Content;
               result[i].Length += result[curPos].Length;
               result.RemoveRange( i + 1, curPos - i );
@@ -15305,16 +15305,16 @@ namespace C64Studio.Parser
               // have to assume the worst
               //numBytesFirstParam = 2;
               // TODO!!!!
-              //AddError( LineIndex, C64Studio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Could not evaluate tokens" );
+              //AddError( LineIndex, RetroDevStudio.Types.ErrorCode.E1000_SYNTAX_ERROR, "Could not evaluate tokens" );
               //return null;
             }
           }
           // force to 1 byte 
-          if ( LineTokens[0].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP )
+          if ( LineTokens[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP )
           {
             numBytesFirstParam = 1;
           }
-          else if ( LineTokens[0].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
+          else if ( LineTokens[0].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
           {
             numBytesFirstParam = 2;
           }
@@ -15663,13 +15663,13 @@ namespace C64Studio.Parser
 
         Types.TokenInfo   token = Tokens[startTokenIndex];
         if ( ( StartIndex + Count - startTokenIndex == 1 )
-        &&   ( token.Type == C64Studio.Types.TokenInfo.TokenType.LITERAL_STRING ) )
+        &&   ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LITERAL_STRING ) )
         {
           sb.Append( token.Content.Substring( 1, token.Content.Length - 2 ) );
         }
         /*
         else if ( ( StartIndex + Count - startTokenIndex == 1 )
-        &&        ( token.Type == C64Studio.Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
+        &&        ( token.Type == RetroDevStudio.Types.TokenInfo.TokenType.LABEL_GLOBAL ) )
         {
           sb.Append( token.Content.Substring( 1, token.Content.Length - 2 ) );
         }*/

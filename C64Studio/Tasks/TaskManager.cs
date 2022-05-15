@@ -5,7 +5,7 @@ using System.Linq;
 
 
 
-namespace C64Studio.Tasks
+namespace RetroDevStudio.Tasks
 {
   public class TaskManager
   {

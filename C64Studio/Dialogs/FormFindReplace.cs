@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class FormFindReplace : BaseDocument
   {
@@ -1358,7 +1358,7 @@ namespace C64Studio
 
 
 
-    public void Fill( C64Studio.StudioSettings Settings )
+    public void Fill( StudioSettings Settings )
     {
       checkSearchFullWords.Checked  = Settings.LastFindWholeWord;
       checkSearchIgnoreCase.Checked = Settings.LastFindIgnoreCase;
@@ -1385,7 +1385,7 @@ namespace C64Studio
 
 
 
-    public void ToSettings( C64Studio.StudioSettings Settings )
+    public void ToSettings( StudioSettings Settings )
     {
       Settings.LastFindWholeWord = checkSearchFullWords.Checked;
       Settings.LastFindIgnoreCase = checkSearchIgnoreCase.Checked;
@@ -1855,7 +1855,7 @@ namespace C64Studio
 
 
 
-    private void SetDocumentText( C64Studio.DocumentInfo DocumentInfo, string NewText )
+    private void SetDocumentText( DocumentInfo DocumentInfo, string NewText )
     {
       DocumentInfo.HasBeenSuccessfullyBuilt = false;
       if ( DocumentInfo.BaseDoc != null )

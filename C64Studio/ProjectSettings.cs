@@ -1,9 +1,9 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public class ProjectSettings
   {

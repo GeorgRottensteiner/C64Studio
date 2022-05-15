@@ -5,7 +5,7 @@ using System.Text;
 
 
 
-namespace C64Studio.Formats
+namespace RetroDevStudio.Formats
 {
   public class MapProject
   {
@@ -61,7 +61,7 @@ namespace C64Studio.Formats
     /// This mode is used to display/build the tiles
     /// </summary>
     public TextMode                     Mode = TextMode.COMMODORE_40_X_25_HIRES;
-    public CharsetProject               Charset = new C64Studio.Formats.CharsetProject();
+    public CharsetProject               Charset = new Formats.CharsetProject();
     public bool                         ShowGrid = false;
 
 

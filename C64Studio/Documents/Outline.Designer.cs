@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class Outline
   {
@@ -30,7 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Outline));
-      this.treeProject = new C64Studio.NoDblClkTreeView();
+      this.treeProject = new RetroDevStudio.NoDblClkTreeView();
       this.m_ImageListOutline = new System.Windows.Forms.ImageList(this.components);
       this.toolStripOutline = new System.Windows.Forms.ToolStrip();
       this.checkShowLocalLabels = new System.Windows.Forms.ToolStripButton();

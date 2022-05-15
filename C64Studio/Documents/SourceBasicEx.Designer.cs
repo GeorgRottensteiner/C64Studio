@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class SourceBasicEx
   {
@@ -41,10 +41,10 @@
       this.menuBASIC = new System.Windows.Forms.MenuStrip();
       this.bASICToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.renumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.btnToggleSymbolMode = new C64Studio.Controls.CSCheckBox();
+      this.btnToggleSymbolMode = new RetroDevStudio.Controls.CSCheckBox();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnToggleUpperLowerCase = new C64Studio.Controls.CSCheckBox();
-      this.btnToggleStringEntryMode = new C64Studio.Controls.CSCheckBox();
+      this.btnToggleUpperLowerCase = new RetroDevStudio.Controls.CSCheckBox();
+      this.btnToggleStringEntryMode = new RetroDevStudio.Controls.CSCheckBox();
       this.editBASICStartAddress = new System.Windows.Forms.TextBox();
       this.labelStartAddress = new System.Windows.Forms.Label();
       this.labelBASICVersion = new System.Windows.Forms.Label();
@@ -287,14 +287,14 @@
     private System.Windows.Forms.MenuStrip menuBASIC;
     private System.Windows.Forms.ToolStripMenuItem bASICToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem renumberToolStripMenuItem;
-    private C64Studio.Controls.CSCheckBox btnToggleSymbolMode;
+    private RetroDevStudio.Controls.CSCheckBox btnToggleSymbolMode;
     private System.Windows.Forms.ToolTip toolTip1;
-    private C64Studio.Controls.CSCheckBox btnToggleUpperLowerCase;
+    private RetroDevStudio.Controls.CSCheckBox btnToggleUpperLowerCase;
     private System.Windows.Forms.TextBox editBASICStartAddress;
     private System.Windows.Forms.Label labelStartAddress;
     private System.Windows.Forms.Label labelBASICVersion;
     private System.Windows.Forms.ComboBox comboBASICVersion;
-    private C64Studio.Controls.CSCheckBox btnToggleStringEntryMode;
+    private RetroDevStudio.Controls.CSCheckBox btnToggleStringEntryMode;
     private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;

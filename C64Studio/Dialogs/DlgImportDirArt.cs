@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class DlgImportDirArt : Form
   {
@@ -33,7 +33,7 @@ namespace C64Studio
 
     private void editASMDirArt_TextChanged( object sender, EventArgs e )
     {
-      Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
+      Parser.ASMFileParser asmParser = new RetroDevStudio.Parser.ASMFileParser();
 
       Parser.CompileConfig config = new Parser.CompileConfig();
       config.TargetType = Types.CompileTargetType.PLAIN;

@@ -1,4 +1,4 @@
-﻿namespace C64Studio.Dialogs
+﻿namespace RetroDevStudio.Dialogs
 {
   partial class DlgImportImageResize
   {

@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class ArrangedItemList
   {
@@ -32,12 +32,12 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ArrangedItemList));
       this.listItems = new System.Windows.Forms.ListBox();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-      this.btnMoveDown = new C64Studio.Controls.CSButton();
-      this.btnMoveUp = new C64Studio.Controls.CSButton();
-      this.btnDelete = new C64Studio.Controls.CSButton();
-      this.btnAdd = new C64Studio.Controls.CSButton();
+      this.btnMoveDown = new RetroDevStudio.Controls.CSButton();
+      this.btnMoveUp = new RetroDevStudio.Controls.CSButton();
+      this.btnDelete = new RetroDevStudio.Controls.CSButton();
+      this.btnAdd = new RetroDevStudio.Controls.CSButton();
       this.toolTipArrangedList = new System.Windows.Forms.ToolTip(this.components);
-      this.btnClone = new C64Studio.Controls.CSButton();
+      this.btnClone = new RetroDevStudio.Controls.CSButton();
       this.SuspendLayout();
       // 
       // listItems
@@ -138,12 +138,12 @@
     #endregion
 
     internal System.Windows.Forms.ListBox listItems;
-    private C64Studio.Controls.CSButton btnAdd;
-    private C64Studio.Controls.CSButton btnDelete;
-    private C64Studio.Controls.CSButton btnMoveUp;
-    private C64Studio.Controls.CSButton btnMoveDown;
+    private RetroDevStudio.Controls.CSButton btnAdd;
+    private RetroDevStudio.Controls.CSButton btnDelete;
+    private RetroDevStudio.Controls.CSButton btnMoveUp;
+    private RetroDevStudio.Controls.CSButton btnMoveDown;
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ToolTip toolTipArrangedList;
-    private C64Studio.Controls.CSButton btnClone;
+    private RetroDevStudio.Controls.CSButton btnClone;
   }
 }

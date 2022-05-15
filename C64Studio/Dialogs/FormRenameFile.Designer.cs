@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class FormRenameFile
   {
@@ -32,7 +32,7 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.label1 = new System.Windows.Forms.Label();
       this.listPETSCII = new GR.Forms.ImageListbox();
-      this.editFilename = new C64Studio.EditC64Filename();
+      this.editFilename = new RetroDevStudio.EditC64Filename();
       this.SuspendLayout();
       // 
       // btnCancel

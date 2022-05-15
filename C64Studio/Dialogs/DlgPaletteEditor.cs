@@ -1,7 +1,6 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using GR.Memory;
 using RetroDevStudio;
-using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +9,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class DlgPaletteEditor : Form
   {
@@ -658,7 +657,7 @@ namespace C64Studio
 
     private void btnImportFromAssembly_Click( object sender, EventArgs e )
     {
-      Parser.ASMFileParser asmParser = new C64Studio.Parser.ASMFileParser();
+      Parser.ASMFileParser asmParser = new RetroDevStudio.Parser.ASMFileParser();
 
       Parser.CompileConfig config = new Parser.CompileConfig();
       config.TargetType = Types.CompileTargetType.PLAIN;

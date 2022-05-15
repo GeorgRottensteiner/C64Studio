@@ -1,6 +1,6 @@
-﻿using C64Studio.CustomRenderer;
-using C64Studio.Displayer;
-using C64Studio.Formats;
+﻿using RetroDevStudio.CustomRenderer;
+using RetroDevStudio.Displayer;
+using RetroDevStudio.Formats;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,11 +8,11 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-using C64Studio.Types;
+using RetroDevStudio.Types;
 using GR.Memory;
 using RetroDevStudio;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class ValueTableEditor : BaseDocument
   {

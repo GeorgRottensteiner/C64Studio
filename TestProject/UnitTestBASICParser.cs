@@ -7,9 +7,9 @@ namespace TestProject
   [TestClass]
   public class UnitTestBASICParser
   {
-    private C64Studio.Parser.BasicFileParser CreateParser( string BASICDialectName )
+    private RetroDevStudio.Parser.BasicFileParser CreateParser( string BASICDialectName )
     {
-      var parser = new C64Studio.Parser.BasicFileParser( new C64Studio.Parser.BasicFileParser.ParserSettings() );
+      var parser = new RetroDevStudio.Parser.BasicFileParser( new RetroDevStudio.Parser.BasicFileParser.ParserSettings() );
 
       parser.Settings.StripSpaces = false;
       parser.Settings.StripREM = false;
@@ -44,9 +44,9 @@ namespace TestProject
     {
       var parser = CreateParser( BASICDialectName );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile   = "test.prg";
-      config.TargetType   = C64Studio.Types.CompileTargetType.PRG;
+      config.TargetType   = RetroDevStudio.Types.CompileTargetType.PRG;
       config.StartAddress = StartAddress;
 
       bool parseResult = parser.Parse( Source, null, config, null );
@@ -72,10 +72,10 @@ namespace TestProject
 
       var parser = CreateParser( "BASIC V2" );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
@@ -93,10 +93,10 @@ namespace TestProject
       var parser = CreateParser( "BASIC V2" );
       parser.Settings.StripSpaces = false;
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
@@ -114,10 +114,10 @@ namespace TestProject
 
       var parser = CreateParser( "BASIC V2" );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
@@ -138,10 +138,10 @@ namespace TestProject
 
       var parser = CreateParser( "BASIC V2" );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
@@ -165,10 +165,10 @@ namespace TestProject
 
       var parser = CreateParser( "BASIC V2" );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
       string result = parser.Renumber( 10, 3, 0, 64000 );
@@ -190,10 +190,10 @@ namespace TestProject
 
       var parser = CreateParser( "BASIC V2" );
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -217,10 +217,10 @@ GOTO LABEL10
 
       parser.Settings.StripSpaces = false;
 
-      C64Studio.Parser.CompileConfig config = new C64Studio.Parser.CompileConfig();
+      RetroDevStudio.Parser.CompileConfig config = new RetroDevStudio.Parser.CompileConfig();
       config.OutputFile = "test.prg";
-      config.TargetType = C64Studio.Types.CompileTargetType.PRG;
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       Assert.IsTrue( parser.Parse( source, null, config, null ) );
 
@@ -268,7 +268,7 @@ GOTO LABEL10
                           270 LABELw: ti$= ""000000"":REPEAT: UNTILti > 50:PROCEND
                           280 '";
 
-      var result = TestCompile( source, C64Studio.Parser.BasicFileParser.BasicVersion.LASER_BASIC );
+      var result = TestCompile( source, RetroDevStudio.Parser.BasicFileParser.BasicVersion.LASER_BASIC );
 
       Assert.AreEqual( "01082C0805008F20544553542057494E444F5742204C4142454C204E414D4520544F4B454E49534154494F4E0060080A008F2044454D4F4E535452415445204D554C54492D5441534B494E4720414E4420534F554E4420494E2041205441534B006708140002250082081E00F13130302C30274D454D4F525981E5F64941424C4553009F083200E5312C0122423A992241204C494E45204F4620544558542200AD083C00F957279241E92E2E2E00CA0846009922414E4F54484552204C494E45204F462054455854212200DA085000893630279281455645522100E0085A009000E60864002700EF086E00EE01224200F5087800E700010982008149B230A431350009098C000127490012099600021E3135001F09A0000213312C33303030003109AA00021B312C302C31322C352C3132003909B400021431004109BE00022130004B09C800021F313230005409D20002203132005F09DC00021A312C3230007B09E6008144B231A43735303A82442792414249544C4F4E474552008209F0008249008909FA00E8D3008F0904012700AE090E01EE573A544924B222303030303030223AE73AE85449B135303AF800B409180127000000", result.ToString() );*/
     }

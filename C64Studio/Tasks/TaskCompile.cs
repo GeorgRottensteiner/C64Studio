@@ -1,11 +1,11 @@
-﻿using C64Studio.Types;
+﻿using RetroDevStudio.Types;
 using GR.Collections;
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace C64Studio.Tasks
+namespace RetroDevStudio.Tasks
 {
   public class TaskCompile : Task
   {
@@ -97,7 +97,7 @@ namespace C64Studio.Tasks
 
       if ( !Core.Compiling.m_BuildIsCurrent )
       {
-        C64Studio.Types.ASM.FileInfo    dummyInfo;
+        RetroDevStudio.Types.ASM.FileInfo    dummyInfo;
 
         string  configSetting = null;
         if ( baseDoc.Project != null )
@@ -125,7 +125,7 @@ namespace C64Studio.Tasks
         {
           buildInfo = Core.Compiling.m_LastBuildInfo[baseDoc.FullPath];
         }
-        if ( buildInfo.TargetType == C64Studio.Types.CompileTargetType.NONE )
+        if ( buildInfo.TargetType == RetroDevStudio.Types.CompileTargetType.NONE )
         {
           buildInfo.TargetType = Core.Compiling.m_LastBuildInfo[baseDoc.FullPath].TargetType;
         }
@@ -171,7 +171,7 @@ namespace C64Studio.Tasks
             Types.CompileTargetType targetType = buildInfo.TargetType;
             if ( m_DocumentToRun.Element != null )
             {
-              if ( m_DocumentToRun.Element.TargetType != C64Studio.Types.CompileTargetType.NONE )
+              if ( m_DocumentToRun.Element.TargetType != RetroDevStudio.Types.CompileTargetType.NONE )
               {
                 targetType = m_DocumentToRun.Element.TargetType;
               }
@@ -278,7 +278,7 @@ namespace C64Studio.Tasks
             {
               if ( combinedFileInfo == null )
               {
-                combinedFileInfo = new C64Studio.Types.ASM.FileInfo();
+                combinedFileInfo = new RetroDevStudio.Types.ASM.FileInfo();
               }
               // merge label info
               if ( dependencyFileInfo != null )
@@ -451,7 +451,7 @@ namespace C64Studio.Tasks
           }
 
           if ( ( !Core.MainForm.ParseFile( parser, Doc, config, additionalPredefines, OutputMessages, CreatePreProcessedFile, CreateRelocationFile ) )
-          ||   ( !parser.Assemble( new C64Studio.Parser.CompileConfig()
+          ||   ( !parser.Assemble( new RetroDevStudio.Parser.CompileConfig()
                                         {
                                           TargetType = Core.DetermineTargetType( Doc, parser ),
                                           OutputFile = Core.DetermineTargetFilename( Doc, parser ),

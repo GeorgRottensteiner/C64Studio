@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using C64Studio.CustomRenderer;
-using C64Studio.Types;
+using RetroDevStudio.Types;
 using FastColoredTextBoxNS;
 
 using System.Linq;
@@ -14,11 +12,11 @@ using System.Drawing;
 using GR.Memory;
 using GR.IO;
 using System.Globalization;
-using C64Studio.Parser;
 using GR.Image;
 using RetroDevStudio;
+using RetroDevStudio.Parser;
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class SourceASMEx : CompilableDocument
   {
@@ -74,11 +72,11 @@ namespace C64Studio
 
 
 
-    private GR.Collections.Map<int,Types.Breakpoint>    m_BreakPoints = new GR.Collections.Map<int,C64Studio.Types.Breakpoint>();
+    private GR.Collections.Map<int,Types.Breakpoint>    m_BreakPoints = new GR.Collections.Map<int,RetroDevStudio.Types.Breakpoint>();
 
     public bool                               DoNotFollowZoneSelectors = false;
 
-    private Parser.ASMFileParser              Parser = new C64Studio.Parser.ASMFileParser();
+    private Parser.ASMFileParser              Parser = new RetroDevStudio.Parser.ASMFileParser();
 
     private FastColoredTextBoxNS.AutocompleteMenu   AutoComplete = null;
 
@@ -158,7 +156,7 @@ namespace C64Studio
 
       //editSource.FindEndOfFoldingBlockStrategy = FastColoredTextBoxNS.FindEndOfFoldingBlockStrategy.Strategy2;
 
-      Parser.SetAssemblerType( C64Studio.Types.AssemblerType.C64_STUDIO );
+      Parser.SetAssemblerType( RetroDevStudio.Types.AssemblerType.C64_STUDIO );
 
       contextSource.Opening += new CancelEventHandler( contextSource_Opening );
 
@@ -264,8 +262,8 @@ namespace C64Studio
       {
         int                         insertedAtLine = firstLine;
 
-        GR.Collections.Map<int,Types.Breakpoint>   origBreakpoints = new GR.Collections.Map<int,C64Studio.Types.Breakpoint>( m_BreakPoints );
-        List<Types.Breakpoint>                     movedBreakpoints = new List<C64Studio.Types.Breakpoint>();
+        GR.Collections.Map<int,Types.Breakpoint>   origBreakpoints = new GR.Collections.Map<int,RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
+        List<Types.Breakpoint>                     movedBreakpoints = new List<RetroDevStudio.Types.Breakpoint>();
 
         foreach ( int breakpointLine in origBreakpoints.Keys )
         {
@@ -321,7 +319,7 @@ namespace C64Studio
       // move related breakpoints!
       int deletedAtLine = firstLine;
 
-      GR.Collections.Map<int,Types.Breakpoint> origBreakpoints = new GR.Collections.Map<int, C64Studio.Types.Breakpoint>( m_BreakPoints );
+      GR.Collections.Map<int,Types.Breakpoint> origBreakpoints = new GR.Collections.Map<int, RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
 
       foreach ( int breakpointLine in origBreakpoints.Keys )
       {
@@ -647,40 +645,40 @@ namespace C64Studio
 
       switch ( Element )
       {
-        case C64Studio.Types.ColorableElement.EMPTY_SPACE:
+        case Types.ColorableElement.EMPTY_SPACE:
           value = 0;
           break;
-        case C64Studio.Types.ColorableElement.CURRENT_DEBUG_LINE:
+        case Types.ColorableElement.CURRENT_DEBUG_LINE:
           value = 1;
           break;
-        case C64Studio.Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS:
+        case Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS:
           value = 2;
           break;
-        case C64Studio.Types.ColorableElement.COMMENT:
+        case Types.ColorableElement.COMMENT:
           value = 3;
           break;
-        case C64Studio.Types.ColorableElement.LITERAL_STRING:
+        case Types.ColorableElement.LITERAL_STRING:
           value = 4;
           break;
-        case C64Studio.Types.ColorableElement.OPERATOR:
+        case Types.ColorableElement.OPERATOR:
           value = 5;
           break;
-        case C64Studio.Types.ColorableElement.PSEUDO_OP:
+        case Types.ColorableElement.PSEUDO_OP:
           value = 6;
           break;
-        case C64Studio.Types.ColorableElement.LITERAL_NUMBER:
+        case Types.ColorableElement.LITERAL_NUMBER:
           value = 7;
           break;
-        case C64Studio.Types.ColorableElement.CODE:
+        case Types.ColorableElement.CODE:
           value = 8;
           break;
-        case C64Studio.Types.ColorableElement.LABEL:
+        case Types.ColorableElement.LABEL:
           value = 9;
           break;
-        case C64Studio.Types.ColorableElement.ERROR_UNDERLINE:
+        case Types.ColorableElement.ERROR_UNDERLINE:
           value = 10;
           break;
-        case C64Studio.Types.ColorableElement.NONE:
+        case Types.ColorableElement.NONE:
           value = 11;
           break;
 
@@ -722,8 +720,8 @@ namespace C64Studio
       {
         int                         insertedAtLine = e.Index;
 
-        GR.Collections.Map<int,Types.Breakpoint>   origBreakpoints = new GR.Collections.Map<int,C64Studio.Types.Breakpoint>( m_BreakPoints );
-        List<Types.Breakpoint>                     movedBreakpoints = new List<C64Studio.Types.Breakpoint>();
+        GR.Collections.Map<int,Types.Breakpoint>   origBreakpoints = new GR.Collections.Map<int,RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
+        List<Types.Breakpoint>                     movedBreakpoints = new List<RetroDevStudio.Types.Breakpoint>();
 
         foreach ( int breakpointLine in origBreakpoints.Keys )
         {
@@ -763,7 +761,7 @@ namespace C64Studio
       // move related breakpoints!
       int deletedAtLine = e.Index;
 
-      GR.Collections.Map<int,Types.Breakpoint> origBreakpoints = new GR.Collections.Map<int, C64Studio.Types.Breakpoint>( m_BreakPoints );
+      GR.Collections.Map<int,Types.Breakpoint> origBreakpoints = new GR.Collections.Map<int, RetroDevStudio.Types.Breakpoint>( m_BreakPoints );
 
       foreach ( int breakpointLine in origBreakpoints.Keys )
       {
@@ -907,14 +905,14 @@ namespace C64Studio
       BP = null;
 
 
-      var bp = new C64Studio.Types.Breakpoint();
+      var bp = new RetroDevStudio.Types.Breakpoint();
 
       bp.DocumentFilename = DocumentInfo.FullPath;
       bp.LineIndex = LineIndex;
 
       Types.ASM.FileInfo fileInfo = Core.Navigating.DetermineASMFileInfo( DocumentInfo );
 
-      if ( Core.State == C64Studio.Types.StudioState.DEBUGGING_BROKEN )
+      if ( Core.State == RetroDevStudio.Types.StudioState.DEBUGGING_BROKEN )
       {
         int   globalLineIndex = -1;
         if ( fileInfo.FindGlobalLineIndex( LineIndex, DocumentInfo.FullPath, out globalLineIndex ) )
@@ -927,7 +925,7 @@ namespace C64Studio
           return false;
         }
       }
-      else if ( Core.State != C64Studio.Types.StudioState.NORMAL )
+      else if ( Core.State != RetroDevStudio.Types.StudioState.NORMAL )
       {
         // cannot add breakpoints during this state
         return false;
@@ -1574,13 +1572,13 @@ namespace C64Studio
         // check for opcode or special command
         for ( int i = 0; i < tokens.Count; ++i )
         {
-          if ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.COMMENT )
+          if ( tokens[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.COMMENT )
           {
             break;
           }
-          if ( ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE )
-          ||   ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
-          ||   ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP ) )
+          if ( ( tokens[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE )
+          ||   ( tokens[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_FIXED_NON_ZP )
+          ||   ( tokens[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.OPCODE_FIXED_ZP ) )
           {
             // we've got an opcode
             hadOpcodeFirst = true;
@@ -1588,7 +1586,7 @@ namespace C64Studio
             for ( int j = i + 1; j < tokens.Count; ++j )
             {
               if ( ( tokens[j].StartPos < posX )
-              &&   ( tokens[j].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+              &&   ( tokens[j].Type == RetroDevStudio.Types.TokenInfo.TokenType.SEPARATOR )
               &&   ( tokens[j].Content == "," ) )
 
               {
@@ -1603,7 +1601,7 @@ namespace C64Studio
               }
             }
           }
-          if ( ( tokens[i].Type == C64Studio.Types.TokenInfo.TokenType.SEPARATOR )
+          if ( ( tokens[i].Type == RetroDevStudio.Types.TokenInfo.TokenType.SEPARATOR )
           &&   ( tokens[i].Content == "," ) )
           {
             if ( hadOpcodeFirst )
@@ -1649,7 +1647,7 @@ namespace C64Studio
       //List<string>    newList = new List<string>();
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {
-        if ( entry.Token.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        if ( entry.Token.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) )
         {
           continue;
         }
@@ -1688,7 +1686,7 @@ namespace C64Studio
       }
       foreach ( var entry in DocumentInfo.KnownTokens )
       {
-        if ( entry.Key.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        if ( entry.Key.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) )
         {
           continue;
         }
@@ -1785,7 +1783,7 @@ namespace C64Studio
     {
       if ( editSource.InvokeRequired )
       {
-        editSource.Invoke( new C64Studio.MainForm.ParameterLessCallback( RefreshAutoComplete ) );
+        editSource.Invoke( new RetroDevStudio.MainForm.ParameterLessCallback( RefreshAutoComplete ) );
         return;
       }
 
@@ -1801,7 +1799,7 @@ namespace C64Studio
       }
       foreach ( var entry in DocumentInfo.KnownKeywords )
       {
-        if ( entry.Token.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        if ( entry.Token.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) )
         {
           // skip internal labels in autocomplete
           continue;
@@ -1811,7 +1809,7 @@ namespace C64Studio
       GR.Collections.Set<string>    uniqueKeys = DocumentInfo.KnownTokens.GetUniqueKeys();
       foreach ( string entry in uniqueKeys )
       {
-        if ( entry.StartsWith( C64Studio.Parser.ASMFileParser.InternalLabelPrefix ) )
+        if ( entry.StartsWith( RetroDevStudio.Parser.ASMFileParser.InternalLabelPrefix ) )
         {
           // skip internal labels in autocomplete
           continue;
@@ -2203,7 +2201,7 @@ namespace C64Studio
 
     private void runToCursorToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      Core.MainForm.ApplyFunction( C64Studio.Types.Function.DEBUG_RUN_TO );
+      Core.MainForm.ApplyFunction( RetroDevStudio.Types.Function.DEBUG_RUN_TO );
     }
 
 
@@ -2870,25 +2868,25 @@ namespace C64Studio
       editSource.OnSyntaxHighlight( new FastColoredTextBoxNS.TextChangedEventArgs( editSource.Range ) );
 
       // update manually set accelerators
-      UpdateKeyBinding( C64Studio.Types.Function.DELETE_LINE, FastColoredTextBoxNS.FCTBAction.DeleteLine );
-      UpdateKeyBinding( C64Studio.Types.Function.COPY_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.CopyLineDown );
-      UpdateKeyBinding( C64Studio.Types.Function.COPY_LINE_UP, FastColoredTextBoxNS.FCTBAction.CopyLineUp );
-      UpdateKeyBinding( C64Studio.Types.Function.MOVE_LINE_UP, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesUp );
-      UpdateKeyBinding( C64Studio.Types.Function.MOVE_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesDown );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.DELETE_LINE, FastColoredTextBoxNS.FCTBAction.DeleteLine );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.COPY_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.CopyLineDown );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.COPY_LINE_UP, FastColoredTextBoxNS.FCTBAction.CopyLineUp );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.MOVE_LINE_UP, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesUp );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.MOVE_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesDown );
 
-      UpdateKeyBinding( C64Studio.Types.Function.COPY, FastColoredTextBoxNS.FCTBAction.Copy );
-      UpdateKeyBinding( C64Studio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
-      UpdateKeyBinding( C64Studio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.COPY, FastColoredTextBoxNS.FCTBAction.Copy );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
 
-      UpdateKeyBinding( C64Studio.Types.Function.FIND_NEXT, FastColoredTextBoxNS.FCTBAction.FindNext );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.FIND_NEXT, FastColoredTextBoxNS.FCTBAction.FindNext );
 
-      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_ADD, FastColoredTextBoxNS.FCTBAction.BookmarkLine );
-      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_DELETE, FastColoredTextBoxNS.FCTBAction.UnbookmarkLine );
-      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_PREVIOUS, FastColoredTextBoxNS.FCTBAction.GoPrevBookmark );
-      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_NEXT, FastColoredTextBoxNS.FCTBAction.GoNextBookmark );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.BOOKMARK_ADD, FastColoredTextBoxNS.FCTBAction.BookmarkLine );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.BOOKMARK_DELETE, FastColoredTextBoxNS.FCTBAction.UnbookmarkLine );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.BOOKMARK_PREVIOUS, FastColoredTextBoxNS.FCTBAction.GoPrevBookmark );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.BOOKMARK_NEXT, FastColoredTextBoxNS.FCTBAction.GoNextBookmark );
 
-      UpdateKeyBinding( C64Studio.Types.Function.UNDO, FastColoredTextBoxNS.FCTBAction.Undo );
-      UpdateKeyBinding( C64Studio.Types.Function.REDO, FastColoredTextBoxNS.FCTBAction.Redo );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.UNDO, FastColoredTextBoxNS.FCTBAction.Undo );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.REDO, FastColoredTextBoxNS.FCTBAction.Redo );
 
       UpdateKeyBinding( Function.NAVIGATE_BACK, FastColoredTextBoxNS.FCTBAction.NavigateBackward );
       UpdateKeyBinding( Function.NAVIGATE_FORWARD, FastColoredTextBoxNS.FCTBAction.NavigateForward );
@@ -2901,7 +2899,7 @@ namespace C64Studio
 
 
 
-    private void UpdateKeyBinding( C64Studio.Types.Function Function, FastColoredTextBoxNS.FCTBAction Action )
+    private void UpdateKeyBinding( Types.Function Function, FastColoredTextBoxNS.FCTBAction Action )
     {
       editSource.HotkeysMapping.RemoveAllMappingsForAction( Action );
 
@@ -2920,20 +2918,20 @@ namespace C64Studio
 
 
 
-    public override bool ApplyFunction( C64Studio.Types.Function Function )
+    public override bool ApplyFunction( RetroDevStudio.Types.Function Function )
     {
       switch ( Function )
       {
-        case C64Studio.Types.Function.PRINT:
+        case Types.Function.PRINT:
           editSource.Print( new FastColoredTextBoxNS.PrintDialogSettings 
                                   {
                                     ShowPageSetupDialog = true, ShowPrintDialog = true, ShowPrintPreviewDialog = true 
                                   } );
           return true;
-        case C64Studio.Types.Function.COMMENT_SELECTION:
+        case Types.Function.COMMENT_SELECTION:
           CommentSelection();
           return true;
-        case C64Studio.Types.Function.UNCOMMENT_SELECTION:
+        case Types.Function.UNCOMMENT_SELECTION:
           UncommentSelection();
           return true;
         case Function.COLLAPSE_ALL_FOLDING_BLOCKS:
@@ -3150,7 +3148,7 @@ namespace C64Studio
 
       if ( m_BreakPoints.ContainsKey( e.LineIndex ) )
       {
-        e.Graphics.DrawImage( C64Studio.Properties.Resources.breakpoint, m_BreakpointOffset, e.LineRect.Top );
+        e.Graphics.DrawImage( RetroDevStudio.Properties.Resources.breakpoint, m_BreakpointOffset, e.LineRect.Top );
       }
 
       var lineInfo = FetchLineInfo( e.LineIndex );
@@ -3321,7 +3319,7 @@ namespace C64Studio
 
       if ( address != -1 )
       {
-        Types.Breakpoint bp = new C64Studio.Types.Breakpoint();
+        Types.Breakpoint bp = new RetroDevStudio.Types.Breakpoint();
 
         bp.LineIndex      = -1;
         bp.Address        = address;

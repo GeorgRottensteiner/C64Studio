@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class FileManager
   {
@@ -47,7 +47,7 @@
       this.importFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
       this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.listFiles = new C64Studio.Controls.MeasurableListView();
+      this.listFiles = new RetroDevStudio.Controls.MeasurableListView();
       this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -337,7 +337,7 @@
       // toolStripBtnSave
       // 
       this.toolStripBtnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.toolStripBtnSave.Image = global::C64Studio.Properties.Resources.ToolSave;
+      this.toolStripBtnSave.Image = global::RetroDevStudio.Properties.Resources.ToolSave;
       this.toolStripBtnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripBtnSave.Name = "toolStripBtnSave";
       this.toolStripBtnSave.Size = new System.Drawing.Size(23, 17);
@@ -459,7 +459,7 @@
     private System.Windows.Forms.MenuStrip menuFileManager;
     private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-    private C64Studio.Controls.MeasurableListView listFiles;
+    private RetroDevStudio.Controls.MeasurableListView listFiles;
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.ColumnHeader columnHeader3;

@@ -68,7 +68,7 @@ namespace RetroDevStudio.Types
 
       DataObject dataObj = new DataObject();
 
-      dataObj.SetData( "C64Studio.ImageList", false, dataSelection.MemoryStream() );
+      dataObj.SetData( "RetroDevStudio.ImageList", false, dataSelection.MemoryStream() );
 
 
       // add as one image
@@ -98,11 +98,11 @@ namespace RetroDevStudio.Types
       {
         return false;
       }
-      if ( !dataObj.GetDataPresent( "C64Studio.ImageList" ) )
+      if ( !dataObj.GetDataPresent( "RetroDevStudio.ImageList" ) )
       {
         return false; 
       }
-      System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "C64Studio.ImageList" );
+      System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.ImageList" );
 
       GR.Memory.ByteBuffer spriteData = new GR.Memory.ByteBuffer( (uint)ms.Length );
       ms.Read( spriteData.Data(), 0, (int)ms.Length );

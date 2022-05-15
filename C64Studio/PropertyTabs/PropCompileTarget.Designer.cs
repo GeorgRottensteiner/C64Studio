@@ -1,4 +1,4 @@
-﻿namespace C64Studio
+﻿namespace RetroDevStudio
 {
   partial class PropCompileTarget
   {
@@ -162,7 +162,7 @@
       // 
       // btnAddExternalDependency
       // 
-      this.btnAddExternalDependency.Image = global::C64Studio.Properties.Resources.add;
+      this.btnAddExternalDependency.Image = global::RetroDevStudio.Properties.Resources.add;
       this.btnAddExternalDependency.Location = new System.Drawing.Point(100, 326);
       this.btnAddExternalDependency.Name = "btnAddExternalDependency";
       this.btnAddExternalDependency.Size = new System.Drawing.Size(38, 23);
@@ -173,7 +173,7 @@
       // btnRemoveExternalDependency
       // 
       this.btnRemoveExternalDependency.Enabled = false;
-      this.btnRemoveExternalDependency.Image = global::C64Studio.Properties.Resources.delete;
+      this.btnRemoveExternalDependency.Image = global::RetroDevStudio.Properties.Resources.delete;
       this.btnRemoveExternalDependency.Location = new System.Drawing.Point(144, 326);
       this.btnRemoveExternalDependency.Name = "btnRemoveExternalDependency";
       this.btnRemoveExternalDependency.Size = new System.Drawing.Size(38, 23);

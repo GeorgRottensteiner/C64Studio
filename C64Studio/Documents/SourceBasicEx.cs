@@ -1,12 +1,12 @@
-﻿using C64Studio.CustomRenderer;
-using C64Studio.Types;
+﻿using RetroDevStudio.CustomRenderer;
+using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using static C64Studio.Parser.BasicFileParser;
+using static RetroDevStudio.Parser.BasicFileParser;
 using GR.IO;
 using System.Linq;
 using C64Models.BASIC;
@@ -15,7 +15,7 @@ using RetroDevStudio;
 
 
 
-namespace C64Studio
+namespace RetroDevStudio
 {
   public partial class SourceBasicEx : CompilableDocument
   {
@@ -323,7 +323,7 @@ namespace C64Studio
 
 
 
-    private void UpdateKeyBinding( C64Studio.Types.Function Function, FastColoredTextBoxNS.FCTBAction Action )
+    private void UpdateKeyBinding( RetroDevStudio.Types.Function Function, FastColoredTextBoxNS.FCTBAction Action )
     {
       editSource.HotkeysMapping.RemoveAllMappingsForAction( Action );
 
@@ -400,25 +400,25 @@ namespace C64Studio
       //call OnTextChanged for refresh syntax highlighting
       editSource.OnTextChanged();
 
-      UpdateKeyBinding( C64Studio.Types.Function.COPY, FastColoredTextBoxNS.FCTBAction.Copy );
-      UpdateKeyBinding( C64Studio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
-      UpdateKeyBinding( C64Studio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
-      UpdateKeyBinding( C64Studio.Types.Function.DELETE_LINE, FastColoredTextBoxNS.FCTBAction.DeleteLine );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.COPY, FastColoredTextBoxNS.FCTBAction.Copy );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.PASTE, FastColoredTextBoxNS.FCTBAction.Paste );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.CUT, FastColoredTextBoxNS.FCTBAction.Cut );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.DELETE_LINE, FastColoredTextBoxNS.FCTBAction.DeleteLine );
 
-      UpdateKeyBinding( C64Studio.Types.Function.UNDO, FastColoredTextBoxNS.FCTBAction.Undo );
-      UpdateKeyBinding( C64Studio.Types.Function.REDO, FastColoredTextBoxNS.FCTBAction.Redo );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.UNDO, FastColoredTextBoxNS.FCTBAction.Undo );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.REDO, FastColoredTextBoxNS.FCTBAction.Redo );
 
-      UpdateKeyBinding( C64Studio.Types.Function.COPY_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.CopyLineDown );
-      UpdateKeyBinding( C64Studio.Types.Function.COPY_LINE_UP, FastColoredTextBoxNS.FCTBAction.CopyLineUp );
-      UpdateKeyBinding( C64Studio.Types.Function.MOVE_LINE_UP, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesUp );
-      UpdateKeyBinding( C64Studio.Types.Function.MOVE_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesDown );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.COPY_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.CopyLineDown );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.COPY_LINE_UP, FastColoredTextBoxNS.FCTBAction.CopyLineUp );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.MOVE_LINE_UP, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesUp );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.MOVE_LINE_DOWN, FastColoredTextBoxNS.FCTBAction.MoveSelectedLinesDown );
 
-      UpdateKeyBinding( C64Studio.Types.Function.FIND_NEXT, FastColoredTextBoxNS.FCTBAction.FindNext );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.FIND_NEXT, FastColoredTextBoxNS.FCTBAction.FindNext );
 
-      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_ADD, FastColoredTextBoxNS.FCTBAction.BookmarkLine );
-      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_DELETE, FastColoredTextBoxNS.FCTBAction.UnbookmarkLine );
-      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_PREVIOUS, FastColoredTextBoxNS.FCTBAction.GoPrevBookmark );
-      UpdateKeyBinding( C64Studio.Types.Function.BOOKMARK_NEXT, FastColoredTextBoxNS.FCTBAction.GoNextBookmark );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.BOOKMARK_ADD, FastColoredTextBoxNS.FCTBAction.BookmarkLine );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.BOOKMARK_DELETE, FastColoredTextBoxNS.FCTBAction.UnbookmarkLine );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.BOOKMARK_PREVIOUS, FastColoredTextBoxNS.FCTBAction.GoPrevBookmark );
+      UpdateKeyBinding( RetroDevStudio.Types.Function.BOOKMARK_NEXT, FastColoredTextBoxNS.FCTBAction.GoNextBookmark );
 
       UpdateKeyBinding( Function.NAVIGATE_BACK, FastColoredTextBoxNS.FCTBAction.NavigateBackward );
       UpdateKeyBinding( Function.NAVIGATE_FORWARD, FastColoredTextBoxNS.FCTBAction.NavigateForward );
@@ -433,40 +433,40 @@ namespace C64Studio
 
       switch ( Element )
       {
-        case C64Studio.Types.ColorableElement.EMPTY_SPACE:
+        case RetroDevStudio.Types.ColorableElement.EMPTY_SPACE:
           value = 0;
           break;
-        case C64Studio.Types.ColorableElement.CURRENT_DEBUG_LINE:
+        case RetroDevStudio.Types.ColorableElement.CURRENT_DEBUG_LINE:
           value = 1;
           break;
-        case C64Studio.Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS:
+        case RetroDevStudio.Types.ColorableElement.HIGHLIGHTED_SEARCH_RESULTS:
           value = 2;
           break;
-        case C64Studio.Types.ColorableElement.COMMENT:
+        case RetroDevStudio.Types.ColorableElement.COMMENT:
           value = 3;
           break;
-        case C64Studio.Types.ColorableElement.LITERAL_STRING:
+        case RetroDevStudio.Types.ColorableElement.LITERAL_STRING:
           value = 4;
           break;
-        case C64Studio.Types.ColorableElement.LITERAL_NUMBER:
+        case RetroDevStudio.Types.ColorableElement.LITERAL_NUMBER:
           value = 5;
           break;
-        case C64Studio.Types.ColorableElement.OPERATOR:
+        case RetroDevStudio.Types.ColorableElement.OPERATOR:
           value = 6;
           break;
-        case C64Studio.Types.ColorableElement.PSEUDO_OP:
+        case RetroDevStudio.Types.ColorableElement.PSEUDO_OP:
           value = 7;
           break;
-        case C64Studio.Types.ColorableElement.CODE:
+        case RetroDevStudio.Types.ColorableElement.CODE:
           value = 8;
           break;
-        case C64Studio.Types.ColorableElement.LABEL:
+        case RetroDevStudio.Types.ColorableElement.LABEL:
           value = 9;
           break;
-        case C64Studio.Types.ColorableElement.ERROR_UNDERLINE:
+        case RetroDevStudio.Types.ColorableElement.ERROR_UNDERLINE:
           value = 10;
           break;
-        case C64Studio.Types.ColorableElement.NONE:
+        case RetroDevStudio.Types.ColorableElement.NONE:
           value = 11;
           break;
 
@@ -691,7 +691,7 @@ namespace C64Studio
         if ( endOfLine != -1 )
         {
           firstLine = basicText.Substring( 0, endOfLine ).Trim();
-          if ( firstLine.StartsWith( "#C64Studio.MetaData.BASIC:" ) )
+          if ( firstLine.StartsWith( "#RetroDevStudio.MetaData.BASIC:" ) )
           {
             basicText = basicText.Substring( endOfLine + 1 );
           }
@@ -702,7 +702,7 @@ namespace C64Studio
           basicText = "";
         }
 
-        if ( firstLine.StartsWith( "#C64Studio.MetaData.BASIC:" ) )
+        if ( firstLine.StartsWith( "#RetroDevStudio.MetaData.BASIC:" ) )
         {
           int     commaPos = firstLine.IndexOf( ',', 26 );
           if ( commaPos != -1 )
@@ -857,7 +857,7 @@ namespace C64Studio
         string    content = GetContent();
 
         // add "meta data" in front
-        string metaData = "#C64Studio.MetaData.BASIC:" + m_StartAddress + "," + m_BASICDialectName + "\r\n";
+        string metaData = "#RetroDevStudio.MetaData.BASIC:" + m_StartAddress + "," + m_BASICDialectName + "\r\n";
 
         System.IO.File.WriteAllText( FullPath, metaData + content );
       }
@@ -1649,10 +1649,10 @@ namespace C64Studio
       settings.StripSpaces = Core.Settings.BASICStripSpaces;
       settings.BASICDialect = m_BASICDialect;
 
-      Parser.BasicFileParser parser = new C64Studio.Parser.BasicFileParser( settings, DocumentInfo.FullPath );
+      Parser.BasicFileParser parser = new RetroDevStudio.Parser.BasicFileParser( settings, DocumentInfo.FullPath );
       parser.LabelMode = m_LabelMode;
 
-      var compilerConfig = new C64Studio.Parser.CompileConfig() { Assembler = C64Studio.Types.AssemblerType.AUTO };
+      var compilerConfig = new RetroDevStudio.Parser.CompileConfig() { Assembler = RetroDevStudio.Types.AssemblerType.AUTO };
 
       string basicSource = editSource.Text;
 
@@ -1738,7 +1738,7 @@ namespace C64Studio
 
 
 
-    public override bool ApplyFunction( C64Studio.Types.Function Function )
+    public override bool ApplyFunction( RetroDevStudio.Types.Function Function )
     {
       switch ( Function )
       {
@@ -1748,13 +1748,13 @@ namespace C64Studio
             return false;
           }
           break;
-        case C64Studio.Types.Function.FIND:
+        case RetroDevStudio.Types.Function.FIND:
           ///editSource.FindReplace.ShowFind();
           break;
-        case C64Studio.Types.Function.FIND_REPLACE:
+        case RetroDevStudio.Types.Function.FIND_REPLACE:
           ///editSource.FindReplace.ShowReplace();
           break;
-        case C64Studio.Types.Function.PRINT:
+        case RetroDevStudio.Types.Function.PRINT:
           editSource.Print();
           return true;
         case Function.JUMP_TO_LINE:
@@ -1833,7 +1833,7 @@ namespace C64Studio
     {
       m_SymbolMode = btnToggleSymbolMode.Checked;
 
-      btnToggleSymbolMode.Image = m_SymbolMode ? global::C64Studio.Properties.Resources.toolbar_basic_symbols_enabled : global::C64Studio.Properties.Resources.toolbar_basic_symbols_disabled;
+      btnToggleSymbolMode.Image = m_SymbolMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_enabled : global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_disabled;
 
       bool    hadError = false;
       string  newText;
@@ -1849,7 +1849,7 @@ namespace C64Studio
       if ( hadError )
       {
         m_SymbolMode = !m_SymbolMode;
-        btnToggleSymbolMode.Image = m_SymbolMode ? global::C64Studio.Properties.Resources.toolbar_basic_symbols_enabled : global::C64Studio.Properties.Resources.toolbar_basic_symbols_disabled;
+        btnToggleSymbolMode.Image = m_SymbolMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_enabled : global::RetroDevStudio.Properties.Resources.toolbar_basic_symbols_disabled;
         return;
       }
       int     offset = editSource.VerticalScroll.Value;
@@ -2080,7 +2080,7 @@ namespace C64Studio
       {
         toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle String Entry Mode (currently inactive)" );
       }
-      btnToggleStringEntryMode.Image = m_StringEnterMode ? global::C64Studio.Properties.Resources.toolbar_basic_string_mode_active : global::C64Studio.Properties.Resources.toolbar_basic_string_mode_inactive;
+      btnToggleStringEntryMode.Image = m_StringEnterMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_string_mode_active : global::RetroDevStudio.Properties.Resources.toolbar_basic_string_mode_inactive;
     }
 
 

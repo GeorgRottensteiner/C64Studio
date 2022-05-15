@@ -1,6 +1,6 @@
-﻿using C64Studio;
-using C64Studio.Parser;
-using C64Studio.Types.ASM;
+﻿using RetroDevStudio;
+using RetroDevStudio.Parser;
+using RetroDevStudio.Types.ASM;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -21,7 +21,7 @@ namespace C64Ass
       {
         return 1;
       }
-      config.Assembler = C64Studio.Types.AssemblerType.C64_STUDIO;
+      config.Assembler = RetroDevStudio.Types.AssemblerType.C64_STUDIO;
 
       var parser = new ASMFileParser();
 
@@ -34,7 +34,7 @@ namespace C64Ass
       {
         // provide a default
         config.OutputFile = GR.Path.RenameExtension( config.InputFile, ".prg" );
-        config.TargetType = C64Studio.Types.CompileTargetType.PRG;
+        config.TargetType = RetroDevStudio.Types.CompileTargetType.PRG;
       }
 
       bool result = parser.ParseFile( fullPath, "", projectConfig, config, additionalDefines );
@@ -47,13 +47,13 @@ namespace C64Ass
       }
 
       // default to plain
-      C64Studio.Types.CompileTargetType compileTargetType = C64Studio.Types.CompileTargetType.PLAIN;
+      RetroDevStudio.Types.CompileTargetType compileTargetType = RetroDevStudio.Types.CompileTargetType.PLAIN;
       // command line given target type overrides everything
-      if ( config.TargetType != C64Studio.Types.CompileTargetType.NONE )
+      if ( config.TargetType != RetroDevStudio.Types.CompileTargetType.NONE )
       {
         compileTargetType = config.TargetType;
       }
-      else if ( parser.CompileTarget != C64Studio.Types.CompileTargetType.NONE )
+      else if ( parser.CompileTarget != RetroDevStudio.Types.CompileTargetType.NONE )
       {
         compileTargetType = parser.CompileTarget;
       }

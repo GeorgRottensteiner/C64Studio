@@ -1,9 +1,9 @@
-﻿using C64Studio.Types.ASM;
+﻿using RetroDevStudio.Types.ASM;
 using RetroDevStudio;
 
 
 
-namespace C64Studio.Types
+namespace RetroDevStudio.Types
 {
   public static class EmulatorInfo
   {
