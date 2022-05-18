@@ -7138,22 +7138,8 @@ namespace RetroDevStudio.Parser
       SourceInfoLog( "-include at global index " + lineIndex );
       SourceInfoLog( "-has " + subFile.Length + " lines" );
 
-      //InsertSourceInfo( sourceInfo );
-
       sourceInfo.GlobalStartLine = lineIndex + 1;
       InsertSourceInfo( sourceInfo );
-      //InsertSourceInfo( sourceInfo, true, true );
-
-      /*
-      // overwrite !src line
-      string[] result = new string[Lines.Length + subFile.Length - 1];
-
-      System.Array.Copy( Lines, 0, result, 0, lineIndex );
-      System.Array.Copy( subFile, 0, result, lineIndex, subFile.Length );
-
-      // this keeps the !source line in the final code, makes working with source infos easier though
-      System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + subFile.Length, Lines.Length - lineIndex - 1 );
-      */
 
       // keep !src line on top
       string[] result = new string[Lines.Length + subFile.Length];
@@ -7166,19 +7152,6 @@ namespace RetroDevStudio.Parser
 
       // replace !source with empty line (otherwise source infos would have one line more!)
       result[lineIndex] = "";
-
-      /*
-      string[] result = new string[Lines.Length + subFile.Length];
-
-      System.Array.Copy( Lines, 0, result, 0, lineIndex );
-      System.Array.Copy( subFile, 0, result, lineIndex, subFile.Length );
-
-      // this keeps the !source line in the final code, makes working with source infos easier though
-      System.Array.Copy( Lines, lineIndex, result, lineIndex + subFile.Length, Lines.Length - lineIndex );
-
-      // replace !source with empty line (otherwise source infos would have one line more!)
-      result[lineIndex + subFile.Length] = "";
-      */
 
       Lines = result;
 
@@ -12678,7 +12651,7 @@ namespace RetroDevStudio.Parser
       CleanLines( lines );
       //Debug.Log( "Filesplit" );
 
-      Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
+      var sourceInfo = new Types.ASM.SourceInfo();
       sourceInfo.Filename         = m_Filename;
       sourceInfo.GlobalStartLine  = 0;
       sourceInfo.LineCount        = lines.Length;

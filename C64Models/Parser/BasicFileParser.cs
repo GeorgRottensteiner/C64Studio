@@ -150,7 +150,9 @@ namespace RetroDevStudio.Parser
     public GR.Collections.Map<Token.Type, string>     AllowedTokenEndChars = new GR.Collections.Map<Token.Type, string>();
     public string                                     AllowedSingleTokens;
 
-    private CompileConfig                             _Config = null;
+    private string[]                                  _Lines;
+    private string                                    _LastLineNumberDocument  = "";
+    private int                                       _LastLineNumberDocLineIndex  = -1;
 
 
 
@@ -405,7 +407,7 @@ namespace RetroDevStudio.Parser
 
     public override bool Parse( string Content, ProjectConfig Configuration, CompileConfig Config, string AdditionalPredefines )
     {
-      _Config = Config;
+      m_CompileConfig = Config;
 
       if ( !Settings.UpperCaseMode )
       {
@@ -423,6 +425,15 @@ namespace RetroDevStudio.Parser
 
       ASMFileInfo.Labels.Clear();
       IncludePreviousSymbols();
+
+      var sourceInfo = new Types.ASM.SourceInfo();
+      sourceInfo.Filename         = m_CompileConfig.InputFile;
+      sourceInfo.GlobalStartLine  = 0;
+      sourceInfo.LineCount        = lines.Length;
+      sourceInfo.FullPath         = m_CompileConfig.InputFile;
+
+      ASMFileInfo.SourceInfo.Clear();
+      ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
 
       ProcessLines( lines, LabelMode );
 
@@ -470,137 +481,6 @@ namespace RetroDevStudio.Parser
           }
         }
       }
-    }
-
-
-
-    private void ParseToken( string CurToken, LineInfo Info, ref bool lastOpcodeWasReferencingLineNumber )
-    {
-      string token2 = CurToken.Trim().ToUpper();
-      if ( Settings.BASICDialect.Opcodes.ContainsKey( token2 ) )
-      {
-        Opcode opCode = Settings.BASICDialect.Opcodes[token2];
-
-        if ( opCode.InsertionValue > 255 )
-        {
-          // a two byte token
-          Info.LineData.AppendU16NetworkOrder( (ushort)opCode.InsertionValue );
-        }
-        else
-        {
-          Info.LineData.AppendU8( (byte)opCode.InsertionValue );
-        }
-
-        Token opcodeToken = new Token();
-        opcodeToken.TokenType = Token.Type.BASIC_TOKEN;
-        opcodeToken.ByteValue = (byte)opCode.InsertionValue;
-        opcodeToken.Content = opCode.Command;
-        Info.Tokens.Add( opcodeToken );
-      }
-      else if ( Settings.BASICDialect.ExOpcodes.ContainsKey( token2 ) )
-      {
-        Opcode opCode = Settings.BASICDialect.ExOpcodes[token2];
-
-        Info.LineData.AppendU8( (byte)opCode.InsertionValue );
-
-        Token opcodeToken = new Token();
-        opcodeToken.TokenType = Token.Type.EX_BASIC_TOKEN;
-        opcodeToken.ByteValue = (byte)opCode.InsertionValue;
-        opcodeToken.Content = opCode.Command;
-        Info.Tokens.Add( opcodeToken );
-      }
-      else if ( token2.Length > 0 )
-      {
-        if ( lastOpcodeWasReferencingLineNumber )
-        {
-          int dummy = -1;
-          if ( int.TryParse( token2, out dummy ) )
-          {
-            Info.ReferencedLineNumbers.Add( dummy );
-          }
-          lastOpcodeWasReferencingLineNumber = false;
-        }
-        //Debug.Log( "Token:" + token2 );
-        Token literalToken = new Token();
-        literalToken.TokenType = Token.Type.STRING_LITERAL;
-        literalToken.Content = token2;
-        Info.Tokens.Add( literalToken );
-        for ( int i = 0; i < token2.Length; ++i )
-        {
-          Info.LineData.AppendU8( (byte)token2[i] );
-        }
-      }
-    }
-
-
-
-    private string ReplaceMacros( int LineIndex, string Line )
-    {
-      int bracketStartPos = Line.IndexOf( '{' );
-      int bracketEndPos = -1;
-
-      if ( bracketStartPos == -1 )
-      {
-        return Line;
-      }
-      int     lastStartPos = 0;
-      string  result = "";
-
-      while ( bracketStartPos != -1 )
-      {
-        if ( bracketStartPos > lastStartPos + 1 )
-        {
-          result += Line.Substring( lastStartPos, bracketStartPos - lastStartPos );
-        }
-
-        bracketEndPos = Line.IndexOf( '}', bracketStartPos );
-        if ( bracketEndPos == -1 )
-        {
-          AddError( LineIndex, Types.ErrorCode.E1005_MISSING_CLOSING_BRACKET, "Missing closing bracket on macro" );
-          return result;
-        }
-        string  macro = Line.Substring( bracketStartPos, bracketEndPos - bracketStartPos + 1 );
-        int     macroCount = 1;
-
-        macro = DetermineMacroCount( macro, out macroCount );
-
-
-        bool  foundMacro = false;
-        foreach ( var key in ConstantData.AllPhysicalKeyInfos )
-        {
-          if ( key.Replacements.Contains( macro ) )
-          {
-            for ( int i = 0; i < macroCount; ++i )
-            {
-              result += (char)key.PetSCIIValue;
-            }
-            foundMacro = true;
-            break;
-          }
-        }
-        if ( !foundMacro )
-        {
-          byte  petsciiValue = 0;
-          if ( byte.TryParse( macro, out petsciiValue ) )
-          {
-            for ( int i = 0; i < macroCount; ++i )
-            {
-              result += (char)petsciiValue;
-            }
-          }
-          else
-          {
-            AddError( LineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, "Unknown macro " + macro );
-          }
-        }
-        lastStartPos = bracketEndPos + 1;
-        bracketStartPos = Line.IndexOf( '{', bracketEndPos );
-      }
-      if ( lastStartPos < Line.Length )
-      {
-        result += Line.Substring( lastStartPos );
-      }
-      return result;
     }
 
 
@@ -1130,14 +1010,6 @@ namespace RetroDevStudio.Parser
         hardInfo.Tokens.Add( new Token() { Content = Line, TokenType = Token.Type.HARD_COMMENT } );
         hardInfo.LineIndex = LineIndex;
 
-        if ( Line.StartsWith( "#RetroDevStudio.MetaData:" ) )
-        {
-          if ( !ProcessMetaData( LineIndex, Line.Substring( "#RetroDevStudio.MetaData:".Length ) ) )
-          {
-            return null;
-          }
-        }
-
         return hardInfo;
       }
 
@@ -1440,6 +1312,7 @@ namespace RetroDevStudio.Parser
     {
       int     sepPos = MetaData.IndexOf( ':' );
       string  metaDataType;
+      string  metaDataParams = "";
       if ( sepPos == -1 )
       {
         metaDataType = MetaData;
@@ -1448,18 +1321,22 @@ namespace RetroDevStudio.Parser
       {
         metaDataType = MetaData.Substring( sepPos + 1 );
       }
+      sepPos = metaDataType.IndexOf( ' ' );
+      if ( sepPos != -1 )
+      {
+        metaDataParams = metaDataType.Substring( sepPos + 1 ).Trim();
+        metaDataType = metaDataType.Substring( 0, sepPos );
+      }
 
       switch ( metaDataType.ToUpper() )
       {
-        case "BASIC":
+        case "RETRODEVSTUDIO.METADATA.BASIC":
+        case "C64STUDIO.METADATA.BASIC":
           // ok, but nothing to do here
           return true;
         case "INCLUDE":
-          return MetaDataInclude( LineIndex, MetaData );
+          return MetaDataInclude( LineIndex, MetaData, metaDataParams );
       }
-
-
-      AddError( LineIndex, Types.ErrorCode.E3007_BASIC_UNKNOWN_METADATA, $"Unknown meta data '{metaDataType}' type" );
       return false;
     }
 
@@ -1692,10 +1569,12 @@ namespace RetroDevStudio.Parser
         }
         else if ( info.LineNumber <= LastLineNumber )
         {
-          AddError( LineIndex,
+          var msg = AddError( LineIndex,
                     Types.ErrorCode.E3001_BASIC_INVALID_LINE_NUMBER,
                     "Line number not increasing, must be higher than the previous line number",
                     lineNumberToken.StartIndex, lineNumberToken.Content.Length );
+          msg.AddMessage( $"Previous line number was {LastLineNumber}, new line number is {info.LineNumber}",
+                          _LastLineNumberDocument, _LastLineNumberDocLineIndex );
         }
         LastLineNumber = info.LineNumber;
       }
@@ -1955,11 +1834,16 @@ namespace RetroDevStudio.Parser
 
     private void ProcessLines( string[] lines, bool LabelMode )
     {
-      int lineIndex = -1;
-      int lastLineNumber = -1;
-      foreach ( string lineArg in lines )
+      _Lines = lines;
+
+      int lineIndex                   = -1;
+      int lastLineNumber              = -1;
+
+      while ( lineIndex + 1 < _Lines.Length )
       {
         ++lineIndex;
+
+        string    lineArg = _Lines[lineIndex];
         if ( lineArg.Length == 0 )
         {
           continue;
@@ -1973,6 +1857,22 @@ namespace RetroDevStudio.Parser
         var info = TokenizeLine( line, lineIndex, ref lastLineNumber );
 
         var pureInfo = PureTokenizeLine( line );
+
+        // remember last line source if a line number was present
+        if ( ( pureInfo.Tokens.Count > 0 )
+        &&   ( pureInfo.Tokens[0].TokenType == Token.Type.NUMERIC_LITERAL ) )
+        {
+          DocumentAndLineFromGlobalLine( lineIndex, out _LastLineNumberDocument, out _LastLineNumberDocLineIndex );
+        }
+
+        if ( ( pureInfo.Tokens.Count == 1 )
+        &&   ( pureInfo.Tokens[0].TokenType == Token.Type.HARD_COMMENT ) )
+        {
+          if ( !ProcessMetaData( lineIndex, pureInfo.Tokens[0].Content.Substring( 1 ) ) )
+          {
+            //return hardInfo;
+          }
+        }
 
         int   tokenIndex = 0;
         foreach ( var variable in pureInfo.Tokens )
@@ -2036,7 +1936,7 @@ namespace RetroDevStudio.Parser
               symbolInfo.AddressOrValue   = 0;
               symbolInfo.CharIndex        = variable.StartIndex;
               symbolInfo.Name             = varName;
-              symbolInfo.DocumentFilename = _Config.InputFile;
+              symbolInfo.DocumentFilename = m_CompileConfig.InputFile;
               symbolInfo.Info             = "Number";
               symbolInfo.Length           = varName.Length;
               symbolInfo.LineIndex        = lineIndex;
@@ -2314,9 +2214,7 @@ namespace RetroDevStudio.Parser
 
     public override bool DocumentAndLineFromGlobalLine( int GlobalLine, out string DocumentFile, out int DocumentLine )
     {
-      DocumentLine = GlobalLine;
-      DocumentFile = m_Filename;
-      return true;
+      return ASMFileInfo.FindTrueLineSource( GlobalLine, out DocumentFile, out DocumentLine );
     }
 
 
@@ -3403,6 +3301,191 @@ namespace RetroDevStudio.Parser
       }
       return sb.ToString();
     }
+
+
+
+    private void InsertSourceInfo( Types.ASM.SourceInfo sourceInfo )
+    {
+      InsertSourceInfo( sourceInfo, true, false );
+    }
+
+
+
+    private void InsertSourceInfo( Types.ASM.SourceInfo sourceInfo, bool AllowShifting, bool OverwriteFirstLineOfOverlapping )
+    {
+      int lineCount = sourceInfo.LineCount;
+      /*
+      if ( OverwriteFirstLineOfOverlapping )
+      {
+        --lineCount;
+      }*/
+
+      // move zones
+      foreach ( var zoneList in ASMFileInfo.Zones.Values )
+      {
+        foreach ( var zoneInfo in zoneList )
+        {
+          if ( zoneInfo.LineIndex >= sourceInfo.GlobalStartLine + lineCount )
+          {
+            zoneInfo.LineIndex += lineCount;
+            continue;
+          }
+          else if ( zoneInfo.LineIndex < sourceInfo.GlobalStartLine )
+          {
+            continue;
+          }
+          // inside (simply grow) -> not split?
+          zoneInfo.LineCount += lineCount;
+        }
+      }
+
+      List<Types.ASM.SourceInfo> movedInfos = new List<Types.ASM.SourceInfo>();
+      foreach ( Types.ASM.SourceInfo oldInfo in ASMFileInfo.SourceInfo.Values )
+      {
+        if ( !AllowShifting )
+        {
+          // only split
+          if ( ( sourceInfo.GlobalStartLine > oldInfo.GlobalStartLine )
+          && ( sourceInfo.GlobalStartLine + sourceInfo.LineCount <= oldInfo.GlobalStartLine + oldInfo.LineCount ) )
+          {
+            // inside split
+            Types.ASM.SourceInfo secondHalf = new Types.ASM.SourceInfo();
+            secondHalf.Filename = oldInfo.Filename;
+            secondHalf.FilenameParent = oldInfo.FilenameParent;
+            secondHalf.FullPath = oldInfo.FullPath;
+            secondHalf.GlobalStartLine = sourceInfo.GlobalStartLine + sourceInfo.LineCount;
+            secondHalf.LineCount = ( oldInfo.GlobalStartLine + oldInfo.LineCount ) - ( sourceInfo.GlobalStartLine + sourceInfo.LineCount );
+
+            oldInfo.LineCount = sourceInfo.GlobalStartLine - oldInfo.GlobalStartLine;
+
+            secondHalf.LocalStartLine = oldInfo.LocalStartLine + oldInfo.LineCount;
+            movedInfos.Add( secondHalf );
+            break;
+          }
+          else if ( ( oldInfo.GlobalStartLine < sourceInfo.GlobalStartLine )
+          && ( oldInfo.GlobalStartLine + oldInfo.LineCount > sourceInfo.GlobalStartLine )
+          && ( oldInfo.GlobalStartLine + oldInfo.LineCount <= sourceInfo.GlobalStartLine + sourceInfo.LineCount ) )
+          {
+            // oldInfo overlaps into new sourceinfo, split second half
+            oldInfo.LineCount = sourceInfo.GlobalStartLine - oldInfo.GlobalStartLine;
+          }
+          else if ( ( oldInfo.GlobalStartLine >= sourceInfo.GlobalStartLine )
+          && ( oldInfo.GlobalStartLine < sourceInfo.GlobalStartLine + sourceInfo.LineCount ) )
+          {
+            // oldInfo starts inside new sourceinfo, split first half
+            oldInfo.LineCount -= sourceInfo.GlobalStartLine + sourceInfo.LineCount - oldInfo.GlobalStartLine;
+            oldInfo.GlobalStartLine = sourceInfo.GlobalStartLine + sourceInfo.LineCount;
+
+            movedInfos.Add( oldInfo );
+            break;
+          }
+        }
+        else
+        {
+          if ( oldInfo.GlobalStartLine >= sourceInfo.GlobalStartLine )
+          {
+            // shift down completely
+            /*
+            if ( OverwriteFirstLineOfOverlapping )
+            {
+              if ( lineCount > 1 )
+              {
+                oldInfo.GlobalStartLine += lineCount - 1;
+                movedInfos.Add( oldInfo );
+              }
+            }
+            else*/
+            {
+              oldInfo.GlobalStartLine += lineCount;
+              movedInfos.Add( oldInfo );
+            }
+          }
+          else if ( oldInfo.GlobalStartLine + oldInfo.LineCount > sourceInfo.GlobalStartLine )
+          {
+            // only split if snippets do not end at the same line
+            //if ( sourceInfo.GlobalStartLine + sourceInfo.LineCount != oldInfo.GlobalStartLine + oldInfo.LineCount )
+            {
+              // split!
+              Types.ASM.SourceInfo secondHalf = new Types.ASM.SourceInfo();
+              secondHalf.Filename = oldInfo.Filename;
+              secondHalf.FilenameParent = oldInfo.FilenameParent;
+              secondHalf.FullPath = oldInfo.FullPath;
+              secondHalf.GlobalStartLine = sourceInfo.GlobalStartLine + sourceInfo.LineCount;
+              secondHalf.LineCount = oldInfo.LineCount - ( sourceInfo.GlobalStartLine - oldInfo.GlobalStartLine );
+
+              oldInfo.LineCount -= secondHalf.LineCount;
+
+              secondHalf.LocalStartLine = oldInfo.LocalStartLine + oldInfo.LineCount;
+
+              /*
+              if ( OverwriteFirstLineOfOverlapping )
+              {
+                // BREAKING CHANGE !!! -> second half gets first line removed!!
+                ++secondHalf.LocalStartLine;
+                --secondHalf.LineCount;
+              }*/
+              movedInfos.Add( secondHalf );
+            }
+            /*
+            else
+            {
+              oldInfo.LineCount -= sourceInfo.LineCount;
+            }*/
+          }
+        }
+      }
+      foreach ( Types.ASM.SourceInfo oldInfo in movedInfos )
+      {
+        foreach ( int key in ASMFileInfo.SourceInfo.Keys )
+        {
+          if ( ASMFileInfo.SourceInfo[key] == oldInfo )
+          {
+            ASMFileInfo.SourceInfo.Remove( key );
+            break;
+          }
+        }
+      }
+
+      bool    dumpInfos = false;
+
+      if ( ASMFileInfo.SourceInfo.ContainsKey( sourceInfo.GlobalStartLine ) )
+      {
+        Debug.Log( "Source Info already exists at global line index " + sourceInfo.GlobalStartLine );
+        return;
+      }
+
+      ASMFileInfo.SourceInfo.Add( sourceInfo.GlobalStartLine, sourceInfo );
+      foreach ( Types.ASM.SourceInfo oldInfo in movedInfos )
+      {
+        if ( oldInfo.LineCount != 0 )
+        {
+          if ( ASMFileInfo.SourceInfo.ContainsKey( oldInfo.GlobalStartLine ) )
+          {
+            Debug.Log( "Trying to insert duplicate source info at global line index " + oldInfo.GlobalStartLine );
+            dumpInfos = true;
+          }
+          else
+          {
+            ASMFileInfo.SourceInfo.Add( oldInfo.GlobalStartLine, oldInfo );
+          }
+        }
+      }
+
+      if ( dumpInfos )
+      {
+        // dump source infos
+        int fullLines = 0;
+        foreach ( var pair in ASMFileInfo.SourceInfo )
+        {
+          var info = pair.Value;
+          //Debug.Log( "Key " + pair.Key + ": Source from " + info.GlobalStartLine + ", " + info.LineCount + " lines, from file " + info.Filename + " at offset " + info.LocalStartLine );
+          Debug.Log( "From " + info.GlobalStartLine + " to " + ( info.GlobalStartLine + info.LineCount - 1 ) + ", " + info.LineCount + " lines, from file " + System.IO.Path.GetFileNameWithoutExtension( info.Filename ) + " at offset " + info.LocalStartLine );
+          fullLines += info.LineCount;
+        }
+        Debug.Log( "Total " + fullLines + " lines" );
+      }
+    }
+
 
 
 

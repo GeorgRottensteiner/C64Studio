@@ -691,7 +691,8 @@ namespace RetroDevStudio
         if ( endOfLine != -1 )
         {
           firstLine = basicText.Substring( 0, endOfLine ).Trim();
-          if ( firstLine.StartsWith( "#RetroDevStudio.MetaData.BASIC:" ) )
+          if ( ( firstLine.StartsWith( "#C64Studio.MetaData.BASIC:" ) )
+          ||   ( firstLine.StartsWith( "#RetroDevStudio.MetaData.BASIC:" ) ) )
           {
             basicText = basicText.Substring( endOfLine + 1 );
           }
@@ -702,7 +703,8 @@ namespace RetroDevStudio
           basicText = "";
         }
 
-        if ( firstLine.StartsWith( "#RetroDevStudio.MetaData.BASIC:" ) )
+        if ( ( firstLine.StartsWith( "#C64Studio.MetaData.BASIC:" ) )
+        ||   ( firstLine.StartsWith( "#RetroDevStudio.MetaData.BASIC:" ) ) )
         {
           int     commaPos = firstLine.IndexOf( ',', 26 );
           if ( commaPos != -1 )
@@ -1641,6 +1643,16 @@ namespace RetroDevStudio
 
 
 
+    public delegate void ControlShower( Control Control );
+
+
+    private void ShowControl( Control Control )
+    {
+      Control.Show();
+    }
+
+
+
     public bool PerformLabelModeToggle( out string Result )
     {
       bool labelMode = !m_LabelMode;
@@ -1653,6 +1665,7 @@ namespace RetroDevStudio
       parser.LabelMode = m_LabelMode;
 
       var compilerConfig = new RetroDevStudio.Parser.CompileConfig() { Assembler = RetroDevStudio.Types.AssemblerType.AUTO };
+      compilerConfig.InputFile = DocumentInfo.FullPath;
 
       string basicSource = editSource.Text;
 
@@ -1691,11 +1704,11 @@ namespace RetroDevStudio
 
       if ( parser.Errors > 0 )
       {
-        Core.MainForm.m_CompileResult.UpdateFromMessages( parser, DocumentInfo.Project );
         Core.Navigating.UpdateFromMessages( parser.Messages,
                                             null,
                                             DocumentInfo.Project );
-        Core.MainForm.m_CompileResult.Show();
+
+        Core.MainForm.AddTask( new Tasks.TaskUpdateCompileResult( parser, DocumentInfo ) );
         return false;
       }
 

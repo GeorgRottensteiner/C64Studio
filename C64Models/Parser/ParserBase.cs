@@ -397,7 +397,6 @@ namespace RetroDevStudio.Parser
         Config.Assembler = Types.AssemblerType.C64_STUDIO;
       }
 
-      m_CompileConfig = Config;
       return Parse( text, Configuration, Config, AdditionalPredefines );
     }
 

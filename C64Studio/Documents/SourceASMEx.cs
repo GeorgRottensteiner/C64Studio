@@ -868,9 +868,13 @@ namespace RetroDevStudio
 
     void InvalidateMarkerAreaAtLine( int LineIndex )
     {
-      int y = editSource.PlaceToPoint( editSource.GetLine( LineIndex ).Start ).Y;
-      System.Drawing.Rectangle    markerRect = new System.Drawing.Rectangle( 0, y, editSource.LeftIndent, editSource.LineInfos[LineIndex].WordWrapStringsCount * editSource.CharHeight );
-      editSource.Invalidate( markerRect );
+      if ( ( LineIndex >= 0 )
+      &&   ( LineIndex < editSource.LinesCount ) )
+      {
+        int y = editSource.PlaceToPoint( editSource.GetLine( LineIndex ).Start ).Y;
+        System.Drawing.Rectangle    markerRect = new System.Drawing.Rectangle( 0, y, editSource.LeftIndent, editSource.LineInfos[LineIndex].WordWrapStringsCount * editSource.CharHeight );
+        editSource.Invalidate( markerRect );
+      }
     }
 
 
