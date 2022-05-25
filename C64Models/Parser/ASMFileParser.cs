@@ -14405,6 +14405,9 @@ namespace RetroDevStudio.Parser
       all_tokens_handled:
       CollapseLabelsAtStartOfLine( result );
 
+      // collapse binary tokens (with # and .), before doing preprocessor!
+      CollapseBinaryTokens( result );
+
       // collapse ## (with labels!)
       CollapsePreprocessorLabels( result, TextCodeMapping );
 
@@ -14849,6 +14852,53 @@ namespace RetroDevStudio.Parser
         }
       }
       return result;
+    }
+
+
+
+    private void CollapseBinaryTokens( List<TokenInfo> Result )
+    {
+      retry:;
+      for ( int i = 1; i < Result.Count; ++i )
+      {
+        if ( ( Result[i].Type == TokenInfo.TokenType.OPERATOR )
+        &&   ( Result[i].Content == "%" ) )
+        {
+          int     firstCollapseTokenIndex = -1;
+          int     lastCollapseTokenIndex = -1;
+          int     lastEndPos = Result[i].EndPos;
+          for ( int j = i + 1; j < Result.Count; ++j )
+          {
+            if ( ( Result[j].StartPos == lastEndPos + 1 )
+            &&   ( !Result[j].Content.Any( c => c != '.' && c != '#' ) ) )
+            {
+              if ( firstCollapseTokenIndex == -1 )
+              {
+                firstCollapseTokenIndex = j;
+              }
+              lastCollapseTokenIndex = j;
+              lastEndPos = Result[j].EndPos;
+            }
+            else
+            {
+              break;
+            }
+          }
+
+          if ( ( firstCollapseTokenIndex != -1 )
+          &&   ( lastCollapseTokenIndex > firstCollapseTokenIndex ) )
+          {
+            for ( int j = firstCollapseTokenIndex; j <= lastCollapseTokenIndex; ++j )
+            {
+              Result[i].Content += Result[j].Content;
+              Result[i].Length += Result[j].Length;
+            }
+            Result[i].Type = TokenInfo.TokenType.LITERAL_NUMBER;
+            Result.RemoveRange( firstCollapseTokenIndex, lastCollapseTokenIndex - firstCollapseTokenIndex + 1 );
+            goto retry;
+          }
+        }
+      }
     }
 
 

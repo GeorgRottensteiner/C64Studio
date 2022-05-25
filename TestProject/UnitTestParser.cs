@@ -832,11 +832,16 @@ namespace TestProject
       string      source = @"    * = $c000
 
                               !byte %...##...
+                              !byte %..#..#..
+                              !byte %.#....#.
+                              !byte %#......#
+                              !byte %........
+                              !byte %########
                               !byte %01000010";
 
       var assembly = TestAssemble( source );
 
-      Assert.AreEqual( "00C01842", assembly.ToString() );
+      Assert.AreEqual( "00C01824428100FF42", assembly.ToString() );
     }
 
 
