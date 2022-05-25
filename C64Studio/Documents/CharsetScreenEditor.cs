@@ -1423,6 +1423,18 @@ namespace RetroDevStudio
         {
           return false;
         }
+        var importProject = new CharsetProject();
+        if ( !importProject.ReadFromBuffer( charSetProject ) )
+        {
+          return false;
+        }
+
+        if ( importProject.Mode != Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode ) )
+        {
+          MessageBox.Show( $"The mode of the imported charset ({importProject.Mode}) is not compatible with the current screen mode ({Lookup.TextCharModeFromTextMode( m_CharsetScreen.Mode )})!",
+            "Character set modes are different!" );
+          return false;
+        }
 
         if ( !m_CharsetScreen.CharSet.ReadFromBuffer( charSetProject ) )
         {
@@ -2776,6 +2788,21 @@ namespace RetroDevStudio
 
     internal void CharsetChanged()
     {
+      // fix up number of items in panelCharacters
+      if ( panelCharacters.Items.Count > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
+      {
+        panelCharacters.Items.RemoveRange( m_CharsetScreen.CharSet.TotalNumberOfCharacters,
+                                           panelCharacters.Items.Count - m_CharsetScreen.CharSet.TotalNumberOfCharacters );
+      }
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+      {
+        if ( i >= panelCharacters.Items.Count )
+        {
+          panelCharacters.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Tile.Image );
+        }
+        panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
+      }
+
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
