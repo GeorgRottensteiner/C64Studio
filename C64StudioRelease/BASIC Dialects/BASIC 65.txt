@@ -217,6 +217,7 @@ VOL;db;
 WAIT;92;
 WHILE;fd;
 WINDOW;fe1a;
+WPOKE;fe1d;
 XOR;ce08;
 +;AA;
 -;AB;
