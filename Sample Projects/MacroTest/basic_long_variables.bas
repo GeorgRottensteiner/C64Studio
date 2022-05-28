@@ -1,0 +1,4 @@
+#RetroDevStudio.MetaData.BASIC:2049,BASIC V2
+10ZEIT=20
+20ZELT=50    
+30ZEUG=80

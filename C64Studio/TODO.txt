@@ -1,4 +1,6 @@
 ﻿C64Studio
+o Allow change of the default palettes
+o BASIC: Lange Variablennamen erkennen und automatisch durch kürzere ersetzen, und dabei auch noch eventuelle Duplikate vermeiden, interessante Idee :)
 o Since there is no "Clone Solution" command !, 
 o to create a new solution based on an existing one (without having to import the files each time and recreate the virtual folders in the 
   browser), I copy the existing folder, rename the new one and rename the file .s64.
