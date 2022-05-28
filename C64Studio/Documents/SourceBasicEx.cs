@@ -700,7 +700,7 @@ namespace RetroDevStudio
         else
         {
           firstLine = basicText;
-          basicText = "";
+          //basicText = "";
         }
 
         if ( ( firstLine.StartsWith( "#C64Studio.MetaData.BASIC:" ) )
@@ -905,6 +905,13 @@ namespace RetroDevStudio
         editSource.Focus();
       }
       editSource.Navigate( Line, CharIndex );
+    }
+
+
+
+    public override void SelectText( int Line, int CharIndex, int Length )
+    {
+      editSource.Selection = new FastColoredTextBoxNS.Range( editSource, CharIndex, Line, CharIndex + Length, Line );
     }
 
 

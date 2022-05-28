@@ -2203,6 +2203,13 @@ namespace RetroDevStudio
 
 
 
+    public override void SelectText( int Line, int CharIndex, int Length )
+    {
+      editSource.Selection = new FastColoredTextBoxNS.Range( editSource, CharIndex, Line, CharIndex + Length, Line );
+    }
+
+
+
     private void runToCursorToolStripMenuItem_Click( object sender, EventArgs e )
     {
       Core.MainForm.ApplyFunction( RetroDevStudio.Types.Function.DEBUG_RUN_TO );

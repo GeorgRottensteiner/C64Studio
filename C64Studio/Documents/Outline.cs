@@ -48,7 +48,7 @@ namespace RetroDevStudio
         //MainForm.OpenDocumentAndGotoLine( tokenInfo.DocumentFilename, tokenInfo.LocalLineIndex );
         return;
       }
-      Core.Navigating.OpenDocumentAndGotoLine( OutlineProject, Core.Navigating.FindDocumentInfoByPath( tokenInfo.DocumentFilename ), tokenInfo.LocalLineIndex, tokenInfo.CharIndex );
+      Core.Navigating.OpenDocumentAndGotoLine( OutlineProject, Core.Navigating.FindDocumentInfoByPath( tokenInfo.DocumentFilename ), tokenInfo.LocalLineIndex, tokenInfo.CharIndex, tokenInfo.Length );
     }
 
 
