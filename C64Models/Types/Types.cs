@@ -275,6 +275,8 @@ namespace RetroDevStudio.Types
     W1000_UNUSED_LABEL                      = 0x9003,
     [Description( "W1001: BASIC line is too long for manual entry" )]
     W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY = 0x9004,
+    [Description( "W1002: BASIC variable potentially ambiguous" )]
+    W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS = 0x9005,
 
     WARNING_LAST_PLUS_ONE
   };

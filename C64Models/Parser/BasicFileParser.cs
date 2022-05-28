@@ -6,8 +6,7 @@ using C64Models.BASIC;
 using RetroDevStudio.Parser;
 using GR.Memory;
 using RetroDevStudio;
-
-
+using System.Linq;
 
 namespace RetroDevStudio.Parser
 {
@@ -423,7 +422,7 @@ namespace RetroDevStudio.Parser
 
       CleanLines( lines );
 
-      ASMFileInfo.Labels.Clear();
+      ASMFileInfo.Clear();//.Labels.Clear();
       IncludePreviousSymbols();
 
       var sourceInfo = new Types.ASM.SourceInfo();
@@ -1881,6 +1880,9 @@ namespace RetroDevStudio.Parser
           {
             var     symbolType = SymbolInfo.Types.VARIABLE_NUMBER;
             string  varName = variable.Content;
+            string  origName = varName;
+
+            ASMFileInfo.OriginalVariables.Add( varName );
 
             // verify next token
             if ( variable.Content.EndsWith( "$" ) )
@@ -1930,6 +1932,47 @@ namespace RetroDevStudio.Parser
               }
             }
 
+            if ( origName != varName )
+            {
+              if ( !ASMFileInfo.MappedVariables.ContainsKey( varName ) )
+              {
+                ASMFileInfo.MappedVariables.Add( varName, new List<SymbolInfo>() );
+              }
+              // name is cut short
+              if ( !ASMFileInfo.Labels.ContainsKey( origName ) )
+              {
+                var symbolInfo              = new SymbolInfo();
+                symbolInfo.AddressOrValue   = 0;
+                symbolInfo.CharIndex        = variable.StartIndex;
+                symbolInfo.Name             = varName;
+                symbolInfo.DocumentFilename = m_CompileConfig.InputFile;
+                symbolInfo.Length           = origName.Length;
+                symbolInfo.LineIndex        = lineIndex;
+                symbolInfo.LocalLineIndex   = lineIndex;
+                symbolInfo.Type             = symbolType;
+                symbolInfo.String           = origName;
+                ASMFileInfo.Labels.Add( origName, symbolInfo );
+
+                if ( ASMFileInfo.MappedVariables[varName].Any() )
+                {
+                  Debug.Log( $"Duplicate shortcut variable name ({varName})" );
+                  var warning = AddWarning( lineIndex, Types.ErrorCode.W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS, $"Variable name {origName} truncated to two characters is ambigious ({varName})",
+                    variable.StartIndex, variable.Content.Length );
+
+                  foreach ( var duplicate in ASMFileInfo.MappedVariables[varName] )
+                  {
+                    DocumentAndLineFromGlobalLine( duplicate.LineIndex, out string curDoc, out int curLine );
+                    warning.AddMessage( $"Ambiguous entry found as {duplicate.String}", curDoc, curLine );
+                  }
+                }
+                if ( !ASMFileInfo.MappedVariables[varName].Any( x => x.Name == origName ) )
+                {
+                  ASMFileInfo.MappedVariables[varName].Add( symbolInfo );
+                }
+              }
+              ASMFileInfo.Labels[origName].References.Add( lineIndex );
+            }
+
             if ( !ASMFileInfo.Labels.ContainsKey( varName ) )
             {
               var symbolInfo              = new SymbolInfo();
@@ -1937,7 +1980,6 @@ namespace RetroDevStudio.Parser
               symbolInfo.CharIndex        = variable.StartIndex;
               symbolInfo.Name             = varName;
               symbolInfo.DocumentFilename = m_CompileConfig.InputFile;
-              symbolInfo.Info             = "Number";
               symbolInfo.Length           = varName.Length;
               symbolInfo.LineIndex        = lineIndex;
               symbolInfo.LocalLineIndex   = lineIndex;

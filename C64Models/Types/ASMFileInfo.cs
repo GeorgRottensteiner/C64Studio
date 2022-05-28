@@ -1,4 +1,5 @@
-﻿using GR.Generic;
+﻿using GR.Collections;
+using GR.Generic;
 using RetroDevStudio;
 using System;
 using System.Collections.Generic;
@@ -89,7 +90,12 @@ namespace RetroDevStudio.Types.ASM
     public Dictionary<int, LineInfo>              LineInfo = new Dictionary<int, LineInfo>();
     public Dictionary<string, UnparsedEvalInfo>   UnparsedLabels = new Dictionary<string, UnparsedEvalInfo>();
     public Dictionary<string, SymbolInfo>         Labels = new Dictionary<string, SymbolInfo>();
-    public Dictionary<string, List<SymbolInfo>>   Zones = new Dictionary<string, List<SymbolInfo>>(); 
+    public Dictionary<string, List<SymbolInfo>>   Zones = new Dictionary<string, List<SymbolInfo>>();
+
+    // used for BASIC, 2-char-name mapped to original name
+    public Dictionary<string, List<SymbolInfo>>   MappedVariables = new Dictionary<string, List<SymbolInfo>>();
+    public Set<string>                            OriginalVariables = new Set<string>();
+
     public List<BankInfo>                         Banks = new List<BankInfo>();
     public List<TemporaryLabelInfo>               TempLabelInfo = new List<TemporaryLabelInfo>();
     public Parser.AssemblerSettings               AssemblerSettings = null;
@@ -113,6 +119,8 @@ namespace RetroDevStudio.Types.ASM
       TempLabelInfo.Clear();
       VirtualBreakpoints.Clear();
       LabelDumpFile = "";
+      MappedVariables.Clear();
+      OriginalVariables.Clear();
     }
 
 
