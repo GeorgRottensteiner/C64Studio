@@ -230,6 +230,16 @@ namespace RetroDevStudio.Parser
     public void SetBasicDialect( Dialect Dialect )
     {
       Settings.BASICDialect = Dialect;
+
+      if ( Dialect != null )
+      {
+        if ( !string.IsNullOrEmpty( Dialect.HexPrefix ) )
+        {
+          AllowedTokenStartChars[Token.Type.NUMERIC_LITERAL] += Dialect.HexPrefix;
+          AllowedTokenChars[Token.Type.NUMERIC_LITERAL] += "ABCDEF";
+        }
+      }
+
       ActionTokens.Clear();
       ActionTokenByByteValue.Clear();
       ActionTokenByValue.Clear();

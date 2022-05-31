@@ -1233,6 +1233,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BASIC Dialects\BASIC 65.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="BASIC Dialects\BASIC Lightning.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
