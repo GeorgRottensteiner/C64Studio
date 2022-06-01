@@ -53,6 +53,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formats\Tap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C128\C128.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\C64\C64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser\BasicFileParser.MetaData.Include.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\GraphicMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Machines\Mega65\Mega65.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Types\ColorType.cs" />
