@@ -62,6 +62,7 @@ namespace RetroDevStudio.Undo
       Project.CharOffset                      = CharOffset;
 
       Editor.ValuesChanged();
+      Editor.CharsetChanged();
       Editor.SetModified();
     }
   }

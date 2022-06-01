@@ -2678,15 +2678,30 @@ namespace RetroDevStudio
 
     private void OnCharsetScreenModeChanged()
     {
+      Modified = true;
+      panelCharacters.Invalidate();
+      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
+
+      if ( panelCharacters.Items.Count > m_CharsetScreen.CharSet.TotalNumberOfCharacters )
+      {
+        panelCharacters.Items.RemoveRange( m_CharsetScreen.CharSet.TotalNumberOfCharacters,
+                                           panelCharacters.Items.Count - m_CharsetScreen.CharSet.TotalNumberOfCharacters );
+      }
+      for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
+      {
+        if ( i >= panelCharacters.Items.Count )
+        {
+          panelCharacters.Items.Add( i.ToString(), m_CharsetScreen.CharSet.Characters[i].Tile.Image );
+        }
+        panelCharacters.Items[i].MemoryImage = m_CharsetScreen.CharSet.Characters[i].Tile.Image;
+      }
+
       UpdatePalette();
 
       for ( int i = 0; i < m_CharsetScreen.CharSet.TotalNumberOfCharacters; ++i )
       {
         RebuildCharImage( i );
       }
-      Modified = true;
-      panelCharacters.Invalidate();
-      charEditor.CharsetUpdated( m_CharsetScreen.CharSet );
 
       // TODO - change palette to machine type
 
