@@ -252,8 +252,7 @@ namespace RetroDevStudio.Types
     E3004_BASIC_MISSING_LABEL               = 0x3004,
     E3005_BASIC_UNKNOWN_MACRO               = 0x3005,
     E3006_BASIC_LINE_TOO_LONG               = 0x3006,
-    E3007_BASIC_UNKNOWN_METADATA            = 0x3007,
-    E3008_BASIC_MALFORMED_METADATA          = 0x3008,
+    E3007_BASIC_MALFORMED_METADATA          = 0x3007,
 
 
     WARNING_START                           = 0x7FFF,
@@ -276,6 +275,8 @@ namespace RetroDevStudio.Types
     W1000_UNUSED_LABEL                      = 0x9003,
     [Description( "W1001: BASIC line is too long for manual entry" )]
     W1001_BASIC_LINE_TOO_LONG_FOR_MANUAL_ENTRY = 0x9004,
+    [Description( "W1002: BASIC variable potentially ambiguous" )]
+    W1002_BASIC_VARIABLE_POTENTIALLY_AMBIGUOUS = 0x9005,
 
     WARNING_LAST_PLUS_ONE
   };

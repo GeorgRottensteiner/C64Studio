@@ -25,7 +25,7 @@ namespace RetroDevStudio
 
 
 
-    public delegate void OpenDocumentAndGotoLineCallback( Project MarkProject, DocumentInfo Document, int Line, int CharIndex );
+    public delegate void OpenDocumentAndGotoLineCallback( Project MarkProject, DocumentInfo Document, int Line, int CharIndex, int Length );
 
 
 
@@ -96,16 +96,16 @@ namespace RetroDevStudio
 
     public void OpenDocumentAndGotoLine( Project MarkProject, DocumentInfo Document, int Line )
     {
-      OpenDocumentAndGotoLine( MarkProject, Document, Line, 0 );
+      OpenDocumentAndGotoLine( MarkProject, Document, Line, 0, -1 );
     }
 
 
 
-    public void OpenDocumentAndGotoLine( Project MarkProject, DocumentInfo Document, int Line, int CharIndex )
+    public void OpenDocumentAndGotoLine( Project MarkProject, DocumentInfo Document, int Line, int CharIndex, int Length )
     {
       if ( Core.MainForm.InvokeRequired )
       {
-        Core.MainForm.Invoke( new OpenDocumentAndGotoLineCallback( OpenDocumentAndGotoLine ), new object[] { MarkProject, Document, Line, CharIndex } );
+        Core.MainForm.Invoke( new OpenDocumentAndGotoLineCallback( OpenDocumentAndGotoLine ), new object[] { MarkProject, Document, Line, CharIndex, Length } );
         return;
       }
 
@@ -121,6 +121,10 @@ namespace RetroDevStudio
         {
           baseDoc.Show();
           baseDoc.SetCursorToLine( Line, CharIndex, true );
+          if ( Length > 0 )
+          {
+            baseDoc.SelectText( Line, CharIndex, Length );
+          }
           return;
         }
       }
@@ -137,6 +141,10 @@ namespace RetroDevStudio
             if ( doc != null )
             {
               doc.SetCursorToLine( Line, CharIndex, true );
+              if ( Length > 0 )
+              {
+                doc.SelectText( Line, CharIndex, Length );
+              }
             }
             return;
           }
@@ -161,6 +169,10 @@ namespace RetroDevStudio
           //Core.MainForm.m_Outline.RefreshFromDocument( newDoc.DocumentInfo.BaseDoc );
 
           newDoc.SetCursorToLine( Line, CharIndex, true );
+          if ( Length > 0 )
+          {
+            newDoc.SelectText( Line, CharIndex, Length );
+          }
         }
       }
     }

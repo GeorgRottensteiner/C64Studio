@@ -177,7 +177,18 @@ namespace RetroDevStudio
             {
               childItem.Text = "3";
             }
-            childItem.SubItems.Add( documentLine.ToString() );
+
+            int    messageDocLine = documentLine;
+            if ( childMessage.AlternativeLineIndex != -1 )
+            {
+              messageDocLine = childMessage.AlternativeLineIndex;
+            }
+            string  messageDoc = documentFile;
+            if ( !string.IsNullOrEmpty( childMessage.AlternativeFile ) )
+            {
+              messageDoc = childMessage.AlternativeFile;
+            }
+            childItem.SubItems.Add( messageDocLine.ToString() );
             if ( childMessage.Code.ToString().Length >= 5 )
             {
               childItem.SubItems.Add( childMessage.Code.ToString().Substring( 0, 5 ) );
@@ -186,7 +197,7 @@ namespace RetroDevStudio
             {
               childItem.SubItems.Add( childMessage.Code.ToString() );
             }
-            childItem.SubItems.Add( documentFile.ToString() );
+            childItem.SubItems.Add( messageDoc.ToString() );
             childItem.SubItems.Add( childMessage.Message );
             childItem.Tag = childMessage;
 

@@ -7138,22 +7138,8 @@ namespace RetroDevStudio.Parser
       SourceInfoLog( "-include at global index " + lineIndex );
       SourceInfoLog( "-has " + subFile.Length + " lines" );
 
-      //InsertSourceInfo( sourceInfo );
-
       sourceInfo.GlobalStartLine = lineIndex + 1;
       InsertSourceInfo( sourceInfo );
-      //InsertSourceInfo( sourceInfo, true, true );
-
-      /*
-      // overwrite !src line
-      string[] result = new string[Lines.Length + subFile.Length - 1];
-
-      System.Array.Copy( Lines, 0, result, 0, lineIndex );
-      System.Array.Copy( subFile, 0, result, lineIndex, subFile.Length );
-
-      // this keeps the !source line in the final code, makes working with source infos easier though
-      System.Array.Copy( Lines, lineIndex + 1, result, lineIndex + subFile.Length, Lines.Length - lineIndex - 1 );
-      */
 
       // keep !src line on top
       string[] result = new string[Lines.Length + subFile.Length];
@@ -7166,19 +7152,6 @@ namespace RetroDevStudio.Parser
 
       // replace !source with empty line (otherwise source infos would have one line more!)
       result[lineIndex] = "";
-
-      /*
-      string[] result = new string[Lines.Length + subFile.Length];
-
-      System.Array.Copy( Lines, 0, result, 0, lineIndex );
-      System.Array.Copy( subFile, 0, result, lineIndex, subFile.Length );
-
-      // this keeps the !source line in the final code, makes working with source infos easier though
-      System.Array.Copy( Lines, lineIndex, result, lineIndex + subFile.Length, Lines.Length - lineIndex );
-
-      // replace !source with empty line (otherwise source infos would have one line more!)
-      result[lineIndex + subFile.Length] = "";
-      */
 
       Lines = result;
 
@@ -12678,7 +12651,7 @@ namespace RetroDevStudio.Parser
       CleanLines( lines );
       //Debug.Log( "Filesplit" );
 
-      Types.ASM.SourceInfo sourceInfo = new Types.ASM.SourceInfo();
+      var sourceInfo = new Types.ASM.SourceInfo();
       sourceInfo.Filename         = m_Filename;
       sourceInfo.GlobalStartLine  = 0;
       sourceInfo.LineCount        = lines.Length;
@@ -14432,6 +14405,9 @@ namespace RetroDevStudio.Parser
       all_tokens_handled:
       CollapseLabelsAtStartOfLine( result );
 
+      // collapse binary tokens (with # and .), before doing preprocessor!
+      CollapseBinaryTokens( result );
+
       // collapse ## (with labels!)
       CollapsePreprocessorLabels( result, TextCodeMapping );
 
@@ -14876,6 +14852,53 @@ namespace RetroDevStudio.Parser
         }
       }
       return result;
+    }
+
+
+
+    private void CollapseBinaryTokens( List<TokenInfo> Result )
+    {
+      retry:;
+      for ( int i = 1; i < Result.Count; ++i )
+      {
+        if ( ( Result[i].Type == TokenInfo.TokenType.OPERATOR )
+        &&   ( Result[i].Content == "%" ) )
+        {
+          int     firstCollapseTokenIndex = -1;
+          int     lastCollapseTokenIndex = -1;
+          int     lastEndPos = Result[i].EndPos;
+          for ( int j = i + 1; j < Result.Count; ++j )
+          {
+            if ( ( Result[j].StartPos == lastEndPos + 1 )
+            &&   ( !Result[j].Content.Any( c => c != '.' && c != '#' ) ) )
+            {
+              if ( firstCollapseTokenIndex == -1 )
+              {
+                firstCollapseTokenIndex = j;
+              }
+              lastCollapseTokenIndex = j;
+              lastEndPos = Result[j].EndPos;
+            }
+            else
+            {
+              break;
+            }
+          }
+
+          if ( ( firstCollapseTokenIndex != -1 )
+          &&   ( lastCollapseTokenIndex > firstCollapseTokenIndex ) )
+          {
+            for ( int j = firstCollapseTokenIndex; j <= lastCollapseTokenIndex; ++j )
+            {
+              Result[i].Content += Result[j].Content;
+              Result[i].Length += Result[j].Length;
+            }
+            Result[i].Type = TokenInfo.TokenType.LITERAL_NUMBER;
+            Result.RemoveRange( firstCollapseTokenIndex, lastCollapseTokenIndex - firstCollapseTokenIndex + 1 );
+            goto retry;
+          }
+        }
+      }
     }
 
 

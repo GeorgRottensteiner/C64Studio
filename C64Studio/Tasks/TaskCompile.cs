@@ -780,6 +780,10 @@ namespace RetroDevStudio.Tasks
 
         lock ( m_DocumentToBuild.DeducedDependency )
         {
+          if ( !m_DocumentToBuild.DeducedDependency[ParentDocumentConfigSetting].BuildState.ContainsKey( element.DocumentInfo.FullPath ) )
+          {
+            m_DocumentToBuild.DeducedDependency[ParentDocumentConfigSetting].BuildState.Add( element.DocumentInfo.FullPath, new SingleBuildInfo() );
+          }
           m_DocumentToBuild.DeducedDependency[ParentDocumentConfigSetting].BuildState[element.DocumentInfo.FullPath].TimeStampOfSourceFile = Core.Compiling.FileLastWriteTime( element.DocumentInfo.FullPath );
         }
       }

@@ -40,6 +40,7 @@ namespace C64Models.BASIC
     public Dictionary<string, Opcode>       ExOpcodes = new Dictionary<string, Opcode>();
     public string                           DefaultStartAddress = "2049";
     public int                              SafeLineLength = 80;
+    public string                           HexPrefix = "";
 
     public static Dialect                   BASICV2;
 
@@ -200,6 +201,11 @@ namespace C64Models.BASIC
           else if ( line.StartsWith( "SafeLineLength=" ) )
           {
             dialect.SafeLineLength = GR.Convert.ToI32( line.Substring( 15 ) );
+            continue;
+          }
+          else if ( line.StartsWith( "HexPrefix=" ) )
+          {
+            dialect.HexPrefix = line.Substring( 10 );
             continue;
           }
           // skip header

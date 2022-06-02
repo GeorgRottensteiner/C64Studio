@@ -110,6 +110,11 @@ namespace RetroDevStudio
             dialect.SafeLineLength = GR.Convert.ToI32( line.Substring( 15 ) );
             continue;
           }
+          else if ( line.StartsWith( "HexPrefix=" ) )
+          {
+            dialect.HexPrefix = line.Substring( 10 );
+            continue;
+          }
 
           // skip header
           if ( firstLine )

@@ -877,6 +877,12 @@ namespace RetroDevStudio
 
 
 
+    public virtual void SelectText( int Line, int CharIndex, int Length )
+    {
+    }
+
+
+
     public virtual int CurrentLineIndex
     {
       get

@@ -91,6 +91,21 @@ namespace GR.Forms
         Container.ItemsModified();
         return base.Count - 1;
       }
+
+
+
+      public new void AddRange( IEnumerable<ImageListItem> Items )
+      {
+        InsertRange( 0, Items );
+        Container.AdjustScrollbars();
+      }
+
+
+      public new void RemoveRange( int Index, int Count )
+      {
+        base.RemoveRange( Index, Count );
+        Container.AdjustScrollbars();
+      }
     }
 
 
@@ -180,18 +195,22 @@ namespace GR.Forms
       set
       {
         m_ItemWidth = value;
+
+        int   actualWidth = ClientRectangle.Width;
+        if ( m_DisplayWidth != -1 )
+        {
+          actualWidth = m_DisplayWidth;
+        }
+        if ( VisibleAutoScrollVertical )
+        {
+          actualWidth -= System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+        }
+
         if ( m_ItemWidth == -1 )
         {
           m_ItemWidth = ClientRectangle.Width;
         }
-        if ( m_DisplayWidth != -1 )
-        {
-          m_ItemsPerLine = m_DisplayWidth / m_ItemWidth;
-        }
-        else
-        {
-          m_ItemsPerLine = ClientRectangle.Width / m_ItemWidth;
-        }
+        m_ItemsPerLine = actualWidth / m_ItemWidth;
         if ( m_ItemsPerLine == 0 )
         {
           m_ItemsPerLine = 1;
@@ -419,7 +438,24 @@ namespace GR.Forms
       {
         itemWidth = 20;
       }
-      m_ItemsPerLine = ClientRectangle.Width / itemWidth;
+
+      int   actualWidth = ClientRectangle.Width;
+      if ( m_DisplayWidth != -1 )
+      {
+        actualWidth = m_DisplayWidth;
+      }
+      if ( VisibleAutoScrollVertical )
+      {
+        actualWidth -= System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+      }
+
+      if ( m_ItemWidth == -1 )
+      {
+        m_ItemWidth = ClientRectangle.Width;
+      }
+      m_ItemsPerLine = actualWidth / m_ItemWidth;
+
+      //m_ItemsPerLine = ClientRectangle.Width / itemWidth;
       if ( m_ItemsPerLine == 0 )
       {
         m_ItemsPerLine = 1;
@@ -445,6 +481,7 @@ namespace GR.Forms
       if ( m_ItemHeight == 0 )
       {
         VisibleAutoScrollVertical = false;
+        AutoScrollVPos = 0;
         return;
       }
       if ( m_ItemsPerLine <= 0 )
@@ -462,10 +499,15 @@ namespace GR.Forms
       {
         VisibleAutoScrollVertical = false;
         m_Offset = 0;
+        AutoScrollVPos = 0;
       }
       else
       {
         AutoScrollVerticalMaximum = scrollLength;
+        if ( AutoScrollVPos > AutoScrollVerticalMaximum )
+        {
+          AutoScrollVerticalMaximum = 0;
+        }
         VisibleAutoScrollVertical = true;
       }
     }
@@ -488,7 +530,7 @@ namespace GR.Forms
       if ( m_DisplayPage.Width != ClientRectangle.Width )
       {
         itemWidth *= ( (float)ClientRectangle.Width / m_DisplayPage.Width );
-        itemHeight *= ( (float)ClientRectangle.Width / m_DisplayPage.Width );
+        itemHeight *= ( (float)ClientRectangle.Height / m_DisplayPage.Height );
       }
       int     numItemsX = m_DisplayPage.Width / m_ItemWidth;
       int     numItemsY = m_DisplayPage.Height / m_ItemHeight;
