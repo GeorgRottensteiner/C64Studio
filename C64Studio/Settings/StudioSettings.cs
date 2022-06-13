@@ -954,11 +954,18 @@ namespace RetroDevStudio
               {
                 try
                 {
-                  SourceFileEncoding = Encoding.GetEncoding( encodingName );
+                  if ( encodingName.ToUpper() == "UTF-8" )
+                  {
+                    SourceFileEncoding = new System.Text.UTF8Encoding( false );
+                  }
+                  else
+                  {
+                    SourceFileEncoding = Encoding.GetEncoding( encodingName );
+                  }
                 }
                 catch ( Exception )
                 {
-                  SourceFileEncoding = Encoding.UTF8;
+                  SourceFileEncoding = new System.Text.UTF8Encoding( false );
                 }
               }
             }
