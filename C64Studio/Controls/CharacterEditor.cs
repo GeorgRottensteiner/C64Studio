@@ -1936,6 +1936,10 @@ namespace RetroDevStudio.Controls
       }
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
       {
+        if ( m_Project.Characters[i].Tile.CustomColor >= Lookup.NumberOfColorsInCharacter( m_Project.Mode ) )
+        {
+          m_Project.Characters[i].Tile.CustomColor %= Lookup.NumberOfColorsInCharacter( m_Project.Mode );
+        }
         m_Project.Characters[i].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[i].Tile.CustomColor );
         m_Project.Characters[i].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ) );
         RebuildCharImage( i );

@@ -211,6 +211,7 @@ namespace RetroDevStudio
       }
       else
       {
+        // calculate a new palette
         var quant = new RetroDevStudio.Converter.ColorQuantizer( 256 );
 
         quant.AddSourceToColorCube( newImage );
@@ -220,12 +221,9 @@ namespace RetroDevStudio
         m_ImportPalette = new Palette( 1 << resultingImage.BitsPerPixel );
         for ( int i = 0; i < m_ImportPalette.NumColors; ++i )
         {
-          m_ImportPalette.ColorValues[i] = resultingImage.PaletteColor( i );
+          m_ImportPalette.ColorValues[i] = resultingImage.PaletteColor( i ) | 0xff000000;
         }
-        //PaletteManager.ApplyPalette( m_OriginalImage, m_ImportPalette );
       }
-      //PaletteManager.ApplyPalette( m_ImportImage );
-      //PaletteManager.ApplyPalette( m_OriginalImage );
       newImage.DrawTo( m_OriginalImage, 0, 0 );
       newImage.Dispose();
 
