@@ -87,7 +87,7 @@ namespace RetroDevStudio.Controls
       {
         comboActivePalette.Items.Add( pal.Name );
       }
-      comboActivePalette.SelectedIndex = 0;
+      comboActivePalette.SelectedIndex = Colors.ActivePalette;
     }
 
 

@@ -223,6 +223,8 @@ namespace RetroDevStudio
         {
           m_ImportPalette.ColorValues[i] = resultingImage.PaletteColor( i ) | 0xff000000;
         }
+        m_ImportPalette.CreateBrushes();
+        PaletteManager.ApplyPalette( m_OriginalImage, m_ImportPalette );
       }
       newImage.DrawTo( m_OriginalImage, 0, 0 );
       newImage.Dispose();
@@ -260,8 +262,21 @@ namespace RetroDevStudio
 
     bool CheckColors()
     {
+      // too early?
+      if ( m_OrigSize.Width == 0 )
+      {
+        return true;
+      }
+
       // can all colors be matched to the palette?
       GR.Collections.Map<uint, byte> matchedColors = new GR.Collections.Map<uint, byte>();
+
+      var curPalColors = m_CurPalette.ColorValues.ToList();
+      var importPalColors = curPalColors;
+      if ( m_ImportPalette != null )
+      {
+        importPalColors = m_ImportPalette.ColorValues.ToList();
+      }
 
       for ( int i = 0; i < m_OrigSize.Width; ++i )
       {
@@ -301,13 +316,14 @@ namespace RetroDevStudio
               blue  = picOriginal.DisplayPage.PaletteBlue( (int)pixelValue );
             }
 
-
-            //ColorSystem.RGB rgb = new ColorSystem.RGB( red, green, blue );
-
-            int bestMatch = (byte)pixelValue;
+            int bestMatch = -1;
             if ( comboTargetPalette.SelectedIndex < MultiColorSettings.Palettes.Count )
             {
-              bestMatch = ColorMatcher.MatchColor( (ColorMatchType)comboColorMatching.SelectedIndex, red, green, blue, m_CurPalette.ColorValues.ToList() );
+              bestMatch = ColorMatcher.MatchColor( (ColorMatchType)comboColorMatching.SelectedIndex, red, green, blue, curPalColors );
+            }
+            else
+            {
+              bestMatch = ColorMatcher.MatchColor( (ColorMatchType)comboColorMatching.SelectedIndex, red, green, blue, importPalColors );
             }
 
             if ( bestMatch == -1 )
