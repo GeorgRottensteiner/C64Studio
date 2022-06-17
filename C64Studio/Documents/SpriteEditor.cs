@@ -3357,16 +3357,27 @@ namespace RetroDevStudio
 
     private void btnClearSprite_Click( object sender, EventArgs e )
     {
-      DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, m_CurrentSprite ) );
-
-      for ( int i = 0; i < m_SpriteProject.Sprites[m_CurrentSprite].Tile.Width; ++i )
+      List<int>     selectedImages = panelSprites.SelectedIndices;
+      if ( selectedImages.Count == 0 )
       {
-        for ( int j = 0; j < m_SpriteProject.Sprites[m_CurrentSprite].Tile.Height; ++j )
-        {
-          m_SpriteProject.Sprites[m_CurrentSprite].Tile.SetPixel( i, j, ColorType.BACKGROUND );
-        }
+        return;
       }
-      SpriteChanged( m_CurrentSprite );
+
+      bool  firstSprite = true;
+      foreach ( var spriteIndex in selectedImages )
+      {
+        DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoSpritesetSpriteChange( this, m_SpriteProject, spriteIndex ), firstSprite );
+        firstSprite = false;
+
+        for ( int i = 0; i < m_SpriteProject.Sprites[spriteIndex].Tile.Width; ++i )
+        {
+          for ( int j = 0; j < m_SpriteProject.Sprites[spriteIndex].Tile.Height; ++j )
+          {
+            m_SpriteProject.Sprites[spriteIndex].Tile.SetPixel( i, j, ColorType.BACKGROUND );
+          }
+        }
+        SpriteChanged( spriteIndex );
+      }
       SetModified();
     }
 

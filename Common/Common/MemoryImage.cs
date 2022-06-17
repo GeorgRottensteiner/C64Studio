@@ -872,7 +872,7 @@ namespace GR.Image
       }
 
       if ( ( subImage.PixelFormat == PixelFormat )
-      && ( BitsPerPixel >= 8 ) )
+      &&   ( BitsPerPixel >= 8 ) )
       {
         unsafe
         {
@@ -884,15 +884,6 @@ namespace GR.Image
           for ( int y = 0; y < copyHeight; ++y )
           {
             CopyMemory( new IntPtr( pTargetPos ), new IntPtr( pSourcePos ), (uint)( copyWidth * BitsPerPixel / 8 ) );
-
-            /*
-            GR.Memory.ByteBuffer    lineData = new GR.Memory.ByteBuffer();
-            for ( int i = 0; i < copyWidth * BitsPerPixel / 8; ++i )
-            {
-              lineData.AppendU8( pSourcePos[i] );
-            }
-            Debug.Log( lineData.ToString() );
-             * */
 
             pTargetPos += subImage.BytesPerLine;
             pSourcePos += BytesPerLine;
@@ -925,13 +916,13 @@ namespace GR.Image
       IntPtr              hDIB;
 
       if ( ( BitsPerPixel != 1 )
-      && ( BitsPerPixel != 2 )
-      && ( BitsPerPixel != 4 )
-      && ( BitsPerPixel != 8 )
-      && ( BitsPerPixel != 15 )
-      && ( BitsPerPixel != 16 )
-      && ( BitsPerPixel != 24 )
-      && ( BitsPerPixel != 32 ) )
+      &&   ( BitsPerPixel != 2 )
+      &&   ( BitsPerPixel != 4 )
+      &&   ( BitsPerPixel != 8 )
+      &&   ( BitsPerPixel != 15 )
+      &&   ( BitsPerPixel != 16 )
+      &&   ( BitsPerPixel != 24 )
+      &&   ( BitsPerPixel != 32 ) )
       {
         // not supported depth
         return null;
@@ -1156,12 +1147,10 @@ namespace GR.Image
         }
 
         byte*   pDIBData = (byte*)lpbi;
-        for ( int i = 0; i < bi.biSize + PaletteSize( bi ) + bi.biSizeImage; ++i )
-        {
-          result.AppendU8( pDIBData[i] );
-        }
 
-        //bi = *lpbi;
+        result.Resize( (uint)( bi.biSize + PaletteSize( bi ) + bi.biSizeImage ) );
+        System.Runtime.InteropServices.Marshal.Copy( new IntPtr( pDIBData ), result.Data(), 0, (int)result.Length );
+
         GlobalUnlock( hDIB );
 
         System.Runtime.InteropServices.Marshal.FreeHGlobal( hDIB );
