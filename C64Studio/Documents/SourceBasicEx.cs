@@ -706,10 +706,15 @@ namespace RetroDevStudio
         if ( ( firstLine.StartsWith( "#C64Studio.MetaData.BASIC:" ) )
         ||   ( firstLine.StartsWith( "#RetroDevStudio.MetaData.BASIC:" ) ) )
         {
-          int     commaPos = firstLine.IndexOf( ',', 26 );
+          int     cutOffPos = 26;
+          if ( firstLine.StartsWith( "#RetroDevStudio.MetaData.BASIC:" ) )
+          {
+            cutOffPos += 5;
+          }
+          int     commaPos = firstLine.IndexOf( ',', cutOffPos );
           if ( commaPos != -1 )
           {
-            m_StartAddress      = firstLine.Substring( 26, commaPos - 26 );
+            m_StartAddress      = firstLine.Substring( cutOffPos, commaPos - cutOffPos );
             m_BASICDialectName = firstLine.Substring( commaPos + 1 );
           }
         }

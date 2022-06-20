@@ -338,7 +338,6 @@
       this.label11.Size = new System.Drawing.Size(79, 13);
       this.label11.TabIndex = 2;
       this.label11.Text = "Export Method:";
-      this.label11.Click += new System.EventHandler(this.label11_Click);
       // 
       // label8
       // 

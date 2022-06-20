@@ -151,6 +151,40 @@ namespace RetroDevStudio.Displayer
 
 
 
+    public static void DisplayMega65NCMChar( GR.Memory.ByteBuffer Data, int BGColor, int CharColor, CustomDrawControlContext Context )
+    {
+      // single color
+      for ( int j = 0; j < 8; ++j )
+      {
+        for ( int i = 0; i < 16; ++i )
+        {
+          int  byteValue = Data.ByteAt( i / 2 + j * 8 );
+          if ( ( i % 2 ) == 0 )
+          {
+            byteValue >>= 4;
+          }
+          else
+          {
+            byteValue &= 0x0f;
+          }
+          if ( byteValue < Context.Palette.ColorBrushes.Length )
+          {
+            if ( byteValue == 0 )
+            {
+              byteValue = BGColor;
+            }
+            Context.Graphics.FillRectangle( Context.Palette.ColorBrushes[byteValue],
+                                            ( i * Context.Bounds.Width ) / 8,
+                                            ( j * Context.Bounds.Height ) / 8,
+                                            ( ( i + 1 ) * Context.Bounds.Width ) / 8 - ( i * Context.Bounds.Width ) / 8,
+                                            ( ( j + 1 ) * Context.Bounds.Height ) / 8 - ( j * Context.Bounds.Height ) / 8 );
+          }
+        }
+      }
+    }
+
+
+
     public static void DisplayHiResChar( GR.Memory.ByteBuffer Data, Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
     {
       // single color
@@ -279,6 +313,32 @@ namespace RetroDevStudio.Displayer
 
 
 
+    public static void DisplayMega65NCMChar( GR.Memory.ByteBuffer Data, Palette Palette, int BGColor, int CharColor, GR.Image.IImage TargetImage, int X, int Y )
+    {
+      for ( int j = 0; j < 8; ++j )
+      {
+        for ( int i = 0; i < 16; ++i )
+        {
+          int  colorIndex = Data.ByteAt( i / 2 + j * 8 );
+          if ( ( i % 2 ) == 0 )
+          {
+            colorIndex >>= 4;
+          }
+          else
+          {
+            colorIndex &= 0x0f;
+          }
+          if ( colorIndex == 0 )
+          {
+            colorIndex = BGColor;
+          }
+          TargetImage.SetPixel( X + i, Y + j, Palette.ColorValues[colorIndex] );
+        }
+      }
+    }
+
+
+
     public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, CustomDrawControlContext Context )
     {
       Formats.CharData Char = Charset.Characters[CharIndex];
@@ -343,6 +403,10 @@ namespace RetroDevStudio.Displayer
       ||        ( AlternativeMode == TextCharMode.MEGA65_FCM_16BIT ) )
       {
         DisplayMega65FCMChar( Char.Tile.Data, AltBGColor, AlternativeColor, Context );
+      }
+      else if ( AlternativeMode == TextCharMode.MEGA65_NCM )
+      {
+        DisplayMega65NCMChar( Char.Tile.Data, AltBGColor, AlternativeColor, Context );
       }
       else if ( AlternativeMode == TextCharMode.VIC20 )
       {
@@ -425,6 +489,10 @@ namespace RetroDevStudio.Displayer
       ||        ( AlternativeMode == TextCharMode.MEGA65_FCM_16BIT ) )
       {
         DisplayMega65FCMChar( Char.Tile.Data, Palette, AltBGColor, AlternativeColor, TargetImage, X, Y );
+      }
+      else if ( AlternativeMode == TextCharMode.MEGA65_NCM )
+      {
+        DisplayMega65NCMChar( Char.Tile.Data, Palette, AltBGColor, AlternativeColor, TargetImage, X, Y );
       }
       else if ( AlternativeMode == TextCharMode.VIC20 )
       {

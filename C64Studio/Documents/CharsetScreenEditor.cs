@@ -3265,6 +3265,7 @@ namespace RetroDevStudio
         Charscreen  = m_CharsetScreen,
         Area        = DetermineExportRectangle(),
         RowByRow    = ( comboExportOrientation.SelectedIndex == 0 ),
+        Data        = (ExportCharsetScreenInfo.ExportData)comboExportData.SelectedIndex,
         Image       = m_Image
       };
 
@@ -3318,9 +3319,7 @@ namespace RetroDevStudio
       }
     }
 
-    private void label11_Click( object sender, EventArgs e )
-    {
 
-    }
+
   } 
 }

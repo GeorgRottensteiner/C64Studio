@@ -21,7 +21,9 @@ namespace RetroDevStudio
     [Description( "Mega65 HiRes (32 colors)" )]
     MEGA65_HIRES,
     [Description( "Mega65 ECM (32 colors)" )]
-    MEGA65_ECM
+    MEGA65_ECM,
+    [Description( "Mega65 NCM (16 colors, 16bit chars)" )]
+    MEGA65_NCM
   }
 
 }

@@ -41,6 +41,11 @@ namespace RetroDevStudio.Controls
 
     private int                         _NumColorsInColorSelector = 16;
 
+    private int                         m_CharacterWidth = 8;
+    private int                         m_CharacterHeight = 8;
+
+    private int                         m_CharacterEditorOrigWidth = -1;
+    private int                         m_CharacterEditorOrigHeight = -1;
 
 
     public bool AllowModeChange
@@ -95,6 +100,9 @@ namespace RetroDevStudio.Controls
       ChangeColorSettingsDialog();
       OnPaletteChanged();
 
+      m_CharacterEditorOrigWidth = canvasEditor.Width;
+      m_CharacterEditorOrigHeight = canvasEditor.Height;
+
       foreach ( TextCharMode mode in Enum.GetValues( typeof( TextCharMode ) ) )
       {
         if ( mode != TextCharMode.UNKNOWN )
@@ -114,7 +122,6 @@ namespace RetroDevStudio.Controls
       RefreshCategoryCounts();
 
       RedrawColorChooser();
-      
 
       panelCharacters.KeyDown += new KeyEventHandler( HandleKeyDown );
       canvasEditor.PreviewKeyDown += new PreviewKeyDownEventHandler( canvasEditor_PreviewKeyDown );
@@ -504,7 +511,7 @@ namespace RetroDevStudio.Controls
 
     void RebuildCharImage( int CharIndex )
     {
-      if ( m_Project.Mode == TextCharMode.MEGA65_FCM )
+      if ( Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ) == 64 )
       {
         m_Project.Characters[CharIndex].Tile.Data.Resize( 64 );
       }
@@ -523,7 +530,7 @@ namespace RetroDevStudio.Controls
           if ( ( m_Project.PlaygroundChars[i + j * 16] & 0xffff ) == CharIndex )
           {
             playgroundChanged = true;
-            Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, CharIndex, m_ImagePlayground, i * 8, j * 8, (int)m_Project.PlaygroundChars[i + j * 16] >> 16 );
+            Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, CharIndex, m_ImagePlayground, i * m_CharacterWidth, j * m_CharacterHeight, (int)m_Project.PlaygroundChars[i + j * 16] >> 16 );
           }
         }
       }
@@ -1866,6 +1873,7 @@ namespace RetroDevStudio.Controls
         comboCharsetMode.SelectedIndex = (int)m_Project.Mode;
         ChangeColorSettingsDialog();
       }
+      AdjustCharacterSizes();
 
       _ColorSettingsDlg.ColorChanged( ColorType.BACKGROUND, m_Project.Colors.BackgroundColor );
       _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, m_Project.Colors.MultiColor1 );
@@ -1903,6 +1911,20 @@ namespace RetroDevStudio.Controls
           UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ), true );
         }
         m_Project.Mode = (TextCharMode)comboCharsetMode.SelectedIndex;
+      }
+
+      AdjustCharacterSizes();
+
+      UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ), false );
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        m_Project.Characters[i].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[i].Tile.CustomColor );
+        m_Project.Characters[i].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacter( m_Project.Mode ) );
+        m_Project.Characters[i].Tile.Width = m_CharacterWidth;
+        m_Project.Characters[i].Tile.Height = m_CharacterHeight;
+        m_Project.Characters[i].Tile.Image.Resize( m_CharacterWidth, m_CharacterHeight );
+
+        RebuildCharImage( i );
       }
 
       UpdatePalette();
@@ -1970,6 +1992,7 @@ namespace RetroDevStudio.Controls
           _ColorSettingsDlg = new ColorSettingsECMMega65( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.COMMODORE_HIRES:
+        case TextCharMode.MEGA65_NCM:
           _ColorSettingsDlg = new ColorSettingsHiRes( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.MEGA65_HIRES:
@@ -2392,36 +2415,39 @@ namespace RetroDevStudio.Controls
           Palette = m_Project.Colors.Palette
       } );
 
+      int numPixelWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[m_CurrentChar].Tile.CustomColor ) );
+      int numPixelHeight = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[m_CurrentChar].Tile.CustomColor ) );
+
       if ( m_Project.ShowGrid )
       {
         if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
         ||     ( m_Project.Mode == TextCharMode.VIC20 ) )
         &&   ( m_Project.Characters[m_CurrentChar].Tile.CustomColor >= 8 ) )
         {
-          for ( int i = 0; i < 4; ++i )
+          for ( int i = 0; i < numPixelWidth / 2; ++i )
           {
             e.Graphics.DrawLine( System.Drawing.Pens.White,
-                                  ( i * canvasEditor.ClientSize.Width ) / 4, 0,
-                                  ( i * canvasEditor.ClientSize.Width ) / 4, canvasEditor.ClientSize.Height - 1 );
+                                  ( i * canvasEditor.ClientSize.Width ) / ( numPixelWidth / 2 ), 0,
+                                  ( i * canvasEditor.ClientSize.Width ) / ( numPixelWidth / 2 ), canvasEditor.ClientSize.Height - 1 );
           }
-          for ( int i = 0; i < 8; ++i )
+          for ( int i = 0; i < numPixelWidth; ++i )
           {
             e.Graphics.DrawLine( System.Drawing.Pens.White,
-                                  0, ( i * canvasEditor.ClientSize.Height ) / 8,
-                                  canvasEditor.ClientSize.Width - 1, ( i * canvasEditor.ClientSize.Height ) / 8 );
+                                  0, ( i * canvasEditor.ClientSize.Height ) / numPixelHeight,
+                                  canvasEditor.ClientSize.Width - 1, ( i * canvasEditor.ClientSize.Height ) / numPixelHeight );
           }
         }
         else
         {
-          for ( int i = 0; i < 8; ++i )
+          for ( int i = 0; i < numPixelWidth; ++i )
           {
             e.Graphics.DrawLine( System.Drawing.Pens.White,
-                                  ( i * canvasEditor.ClientSize.Width ) / 8, 0,
-                                  ( i * canvasEditor.ClientSize.Width ) / 8, canvasEditor.ClientSize.Height - 1 );
+                                  ( i * canvasEditor.ClientSize.Width ) / numPixelWidth, 0,
+                                  ( i * canvasEditor.ClientSize.Width ) / numPixelWidth, canvasEditor.ClientSize.Height - 1 );
 
             e.Graphics.DrawLine( System.Drawing.Pens.White,
-                                  0, ( i * canvasEditor.ClientSize.Height ) / 8,
-                                  canvasEditor.ClientSize.Width - 1, ( i * canvasEditor.ClientSize.Height ) / 8 );
+                                  0, ( i * canvasEditor.ClientSize.Height ) / numPixelHeight,
+                                  canvasEditor.ClientSize.Width - 1, ( i * canvasEditor.ClientSize.Height ) / numPixelHeight );
           }
         }
       }
@@ -2445,6 +2471,42 @@ namespace RetroDevStudio.Controls
         buttons = 0;
       }
       HandleMouseOnEditor( e.X, e.Y, buttons );
+    }
+
+
+
+    private void AdjustCharacterSizes()
+    {
+      switch ( m_Project.Mode )
+      {
+        case TextCharMode.MEGA65_NCM:
+          m_CharacterWidth  = 16;
+          m_CharacterHeight = 8;
+          break;
+        case TextCharMode.COMMODORE_HIRES:
+        case TextCharMode.COMMODORE_ECM:
+        case TextCharMode.COMMODORE_MULTICOLOR:
+        case TextCharMode.MEGA65_HIRES:
+        case TextCharMode.MEGA65_ECM:
+        case TextCharMode.MEGA65_FCM:
+          m_CharacterWidth  = 8;
+          m_CharacterHeight = 8;
+          break;
+        default:
+          Debug.Log( "AdjustCharacterSizes, unsupported mode " + m_Project.Mode );
+          break;
+      }
+
+      // adjust aspect ratio of the editor
+      int   biggerSize = Math.Max( m_CharacterWidth, m_CharacterHeight );
+
+      canvasEditor.Size = new System.Drawing.Size( m_CharacterWidth * m_CharacterEditorOrigWidth / biggerSize,
+                                                    m_CharacterHeight * m_CharacterEditorOrigHeight / biggerSize );
+
+      //canvasEditor.DisplayPage.Create( m_CharacterWidth, m_CharacterHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      panelCharacters.ItemWidth = m_CharacterWidth;
+      panelCharacters.ItemHeight = m_CharacterHeight;
+      panelCharacters.SetDisplaySize( panelCharacters.ClientSize.Width / 2, panelCharacters.ClientSize.Height / 2 );
     }
 
 

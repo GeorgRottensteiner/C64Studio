@@ -515,8 +515,6 @@ namespace RetroDevStudio
       StudioCore.Settings.Main = this;
       StudioCore.Initialise();
 
-      //Parser.BasicFileParser.KeyMap = StudioCore.Settings.BASICKeyMap;
-
       Palette defaultPalette = new Palette();
       defaultPalette.Name = "C64Studio";
 

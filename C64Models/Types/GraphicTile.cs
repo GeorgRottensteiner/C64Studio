@@ -122,7 +122,7 @@ namespace RetroDevStudio.Types
             }
           }
           break;
-        case GraphicTileMode.MEGA65_FCM_16_COLORS:
+        case GraphicTileMode.MEGA65_NCM:
           {
             int     bytePos = X / 2 + Y * ( ( Width + 1 ) / 2 );
             byte pixelValue = Data.ByteAt( bytePos );
@@ -210,7 +210,7 @@ namespace RetroDevStudio.Types
             }
           }
           //goto case GraphicTileMode.COMMODORE_HIRES;
-        case GraphicTileMode.MEGA65_FCM_16_COLORS:
+        case GraphicTileMode.MEGA65_NCM:
           if ( ( X % 2 ) == 1 )
           {
             return Data.ByteAt( X / 2 + Y * ( ( Width + 1 ) / 2 ) ) & 0x0f;
@@ -291,7 +291,7 @@ namespace RetroDevStudio.Types
           potentialColors.Add( Colors.Palette.ColorValues[CustomColor] );
           potentialColorTypes.Add( ColorType.CUSTOM_COLOR );
           break;
-        case GraphicTileMode.MEGA65_FCM_16_COLORS:
+        case GraphicTileMode.MEGA65_NCM:
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
           for ( int i = 0; i < Colors.Palette.NumColors; ++i )
           {

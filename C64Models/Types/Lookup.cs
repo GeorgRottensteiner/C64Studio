@@ -51,6 +51,7 @@ namespace RetroDevStudio
         case TextCharMode.COMMODORE_HIRES:
         case TextCharMode.COMMODORE_MULTICOLOR:
         case TextCharMode.VIC20:
+        case TextCharMode.MEGA65_NCM:
           return 16;
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.MEGA65_ECM:
@@ -78,6 +79,7 @@ namespace RetroDevStudio
           return 8;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
+        case TextCharMode.MEGA65_NCM:
           return 64;
         default:
           Debug.Log( "NumBytesOfSingleCharacter unsupported Mode " + Mode );
@@ -108,7 +110,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
           return ( ( Width + 7 ) / 8 ) * Height;
-        case GraphicTileMode.MEGA65_FCM_16_COLORS:
+        case GraphicTileMode.MEGA65_NCM:
           return ( ( Width + 1 ) / 2 ) * Height;
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
           return Width * Height;
@@ -167,6 +169,7 @@ namespace RetroDevStudio
         case TextCharMode.VIC20:
           return 256;
         case TextCharMode.MEGA65_FCM_16BIT:
+        case TextCharMode.MEGA65_NCM:
           return 8192;
         default:
           Debug.Log( "NumCharactersForMode unsupported Mode " + Mode );
@@ -189,6 +192,7 @@ namespace RetroDevStudio
           return true;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
+        case TextCharMode.MEGA65_NCM:
           return false;
         default:
           Debug.Log( "RequiresCustomColorForCharacter unsupported Mode " + Mode );
@@ -222,7 +226,7 @@ namespace RetroDevStudio
         case GraphicTileMode.COMMODORE_HIRES:
         case GraphicTileMode.COMMODORE_MULTICOLOR:
           return false;
-        case GraphicTileMode.MEGA65_FCM_16_COLORS:
+        case GraphicTileMode.MEGA65_NCM:
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
           return true;
         default:
@@ -276,7 +280,7 @@ namespace RetroDevStudio
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
           return 16;
         default:
-          Debug.Log( "NumberOfColorsInCharacter unsupported Mode " + Mode );
+          Debug.Log( "NumberOfColorsInSprite unsupported Mode " + Mode );
           return 16;
       }
     }
@@ -300,6 +304,8 @@ namespace RetroDevStudio
             return GraphicTileMode.COMMODORE_HIRES;
           }
           return GraphicTileMode.COMMODORE_MULTICOLOR;
+        case TextCharMode.MEGA65_NCM:
+          return GraphicTileMode.MEGA65_NCM;
         case TextCharMode.MEGA65_FCM:
         case TextCharMode.MEGA65_FCM_16BIT:
           return GraphicTileMode.MEGA65_FCM_256_COLORS;
@@ -322,7 +328,7 @@ namespace RetroDevStudio
           return GraphicTileMode.COMMODORE_MULTICOLOR;
         case SpriteDisplayMode.MEGA65_8_X_21_16_COLORS:
         case SpriteDisplayMode.MEGA65_16_X_21_16_COLORS:
-          return GraphicTileMode.MEGA65_FCM_16_COLORS;
+          return GraphicTileMode.MEGA65_NCM;
       }
     }
 
@@ -337,7 +343,7 @@ namespace RetroDevStudio
         default:
           return GraphicTileMode.COMMODORE_HIRES;
         case SpriteProject.SpriteProjectMode.MEGA65_16_X_21_16_COLORS:
-          return GraphicTileMode.MEGA65_FCM_16_COLORS;
+          return GraphicTileMode.MEGA65_NCM;
       }
     }
 
@@ -397,6 +403,43 @@ namespace RetroDevStudio
 
 
 
+    internal static int CharacterWidthInPixel( GraphicTileMode Mode )
+    {
+      switch ( Mode )
+      {
+        case GraphicTileMode.MEGA65_NCM:
+          return 16;
+        case GraphicTileMode.MEGA65_FCM_256_COLORS:
+        case GraphicTileMode.COMMODORE_HIRES:
+        case GraphicTileMode.COMMODORE_ECM:
+        case GraphicTileMode.COMMODORE_MULTICOLOR:
+          return 8;
+        default:
+          Debug.Log( "Lookup.CharacterWidthInPixel - unsupported mode " + Mode );
+          return 0;
+      }
+    }
+
+
+
+    internal static int CharacterHeightInPixel( GraphicTileMode Mode )
+    {
+      switch ( Mode )
+      {
+        case GraphicTileMode.MEGA65_NCM:
+        case GraphicTileMode.MEGA65_FCM_256_COLORS:
+        case GraphicTileMode.COMMODORE_HIRES:
+        case GraphicTileMode.COMMODORE_ECM:
+        case GraphicTileMode.COMMODORE_MULTICOLOR:
+          return 8;
+        default:
+          Debug.Log( "Lookup.CharacterHeightInPixel - unsupported mode " + Mode );
+          return 0;
+      }
+    }
+
+
+
     internal static int PixelWidth( GraphicTileMode Mode )
     {
       switch ( Mode )
@@ -447,7 +490,7 @@ namespace RetroDevStudio
           return SpriteMode.COMMODORE_24_X_21_HIRES;
         case GraphicTileMode.COMMODORE_MULTICOLOR:
           return SpriteMode.COMMODORE_24_X_21_MULTICOLOR;
-        case GraphicTileMode.MEGA65_FCM_16_COLORS:
+        case GraphicTileMode.MEGA65_NCM:
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
           return SpriteMode.MEGA65_16_X_21_16_COLORS;
       }
@@ -465,7 +508,7 @@ namespace RetroDevStudio
           return GraphicTileMode.COMMODORE_MULTICOLOR;
         case SpriteMode.MEGA65_16_X_21_16_COLORS:
         case SpriteMode.MEGA65_64_X_21_16_HIRES:
-          return GraphicTileMode.MEGA65_FCM_16_COLORS;
+          return GraphicTileMode.MEGA65_NCM;
         default:
           return GraphicTileMode.COMMODORE_HIRES;
       }
