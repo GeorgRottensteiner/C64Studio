@@ -557,10 +557,10 @@ namespace RetroDevStudio.Parser
         Value.Name = Name;
       }
 
-      //Debug.Log( $"AddTempLabel {Name} for Line {LineIndex},{LineCount} with value {Value.AddressOrValue}" );
-
-      foreach ( Types.ASM.TemporaryLabelInfo oldTempInfo in ASMFileInfo.TempLabelInfo )
+      for ( int i = 0; i < ASMFileInfo.TempLabelInfo.Count; ++i )
       {
+        var oldTempInfo = ASMFileInfo.TempLabelInfo[ASMFileInfo.TempLabelInfo.Count - i - 1];
+
         if ( oldTempInfo.Name == Name )
         {
           if ( ( oldTempInfo.LineIndex < LineIndex )
@@ -599,6 +599,7 @@ namespace RetroDevStudio.Parser
       tempInfo.Length     = Length;
 
       ASMFileInfo.TempLabelInfo.Add( tempInfo );
+
       return tempInfo;
     }
 
@@ -627,7 +628,8 @@ namespace RetroDevStudio.Parser
         if ( ( oldTempInfo.LineCount != -1 )
         &&   ( oldTempInfo.LineIndex + oldTempInfo.LineCount > SourceIndex )
         &&   ( oldTempInfo.LineIndex <= SourceIndex + CopyLength )
-        &&   ( oldTempInfo.Name != ExceptThisLabel ) )
+        &&   ( oldTempInfo.Name != ExceptThisLabel )
+        &&   ( oldTempInfo.IsForVariable ) )
         {
           // fully inside source scope
           // need to copy!
@@ -3399,11 +3401,11 @@ namespace RetroDevStudio.Parser
             for ( int j = 0; j < lineTokens.Count; ++j )
             {
               if ( ( lineTokens[j].Type == TokenInfo.TokenType.OPERATOR )
-              && ( lineTokens[j].Content == "+" )
-              && ( j + 1 < lineTokens.Count )
-              && ( lineTokens[j].EndPos + 1 == lineTokens[j + 1].StartPos )
-              && ( lineTokens[j + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
-              && ( lineTokens[j + 1].Content == macroInfo.Name ) )
+              &&   ( lineTokens[j].Content == "+" )
+              &&   ( j + 1 < lineTokens.Count )
+              &&   ( lineTokens[j].EndPos + 1 == lineTokens[j + 1].StartPos )
+              &&   ( lineTokens[j + 1].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+              &&   ( lineTokens[j + 1].Content == macroInfo.Name ) )
               {
                 AddError( macroInfo.LineIndex + 1 + i, ErrorCode.E1302_MALFORMED_MACRO, "Macro " + macroInfo.Name + " is calling itself" );
                 return ParseLineResult.ERROR_ABORT;
@@ -3668,7 +3670,7 @@ namespace RetroDevStudio.Parser
                         lineIndex,
                         lastLoop.LoopLength,
                         tempLabelSymbol,
-                        "" );
+                        "" ).IsForVariable = true;
 
           int linesToCopy = loopBlockLength;
           int lineLoopEndOffset = 0;
@@ -3709,7 +3711,7 @@ namespace RetroDevStudio.Parser
           // also copy scoped variables if overlapping!!!
           //if ( !endReached )
           {
-            //Debug.Log( "Cloning loop " + lastLoop.CurrentValue + "/" + lastLoop.EndValue + " for " + lastLoop.Label );
+            // TODO - really required?
             CloneTempLabelsExcept( lastLoop.LineIndex, linesToCopy, lineIndex - 1, lastLoop.Label );
           }
 
@@ -7868,11 +7870,6 @@ namespace RetroDevStudio.Parser
           hadCommentInLine = true;
         }
 
-        if ( parseLine == "name" )
-        {
-          Debug.Log( "aha" );
-        }
-
         Types.ASM.LineInfo info       = new Types.ASM.LineInfo();
         info.LineIndex                = lineIndex;
         info.Zone                     = m_CurrentZoneName;
@@ -11719,7 +11716,7 @@ namespace RetroDevStudio.Parser
               scope.StartIndex = lineIndex;
               stackScopes.Add( scope );
 
-              AddTempLabel( loop.Label, lineIndex + 1, -1, CreateIntegerSymbol( startValue ), "" );
+              AddTempLabel( loop.Label, lineIndex + 1, -1, CreateIntegerSymbol( startValue ), "" ).IsForVariable = true;
 
               //AddLabel( loop.Label, loop.StartValue, lineIndex + 1, zoneName, lineTokenInfos[1].StartPos, lineTokenInfos[1].Length );
               intermediateLineOffset = 0;
@@ -12579,7 +12576,14 @@ namespace RetroDevStudio.Parser
     {
       foreach ( var entry in ASMFileInfo.TempLabelInfo )
       {
-        Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to " + ( entry.LineIndex + 1 + entry.LineCount - 1 ) + ", name " + entry.Name + ", value " + entry.Symbol.ToString() );
+        if ( entry.LineCount == -1 )
+        {
+          Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to the end, name " + entry.Name + ", value " + entry.Symbol.ToString() );
+        }
+        else
+        {
+          Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to " + ( entry.LineIndex + 1 + entry.LineCount - 1 ) + ", name " + entry.Name + ", value " + entry.Symbol.ToString() );
+        }
       }
     }
 
@@ -12591,7 +12595,14 @@ namespace RetroDevStudio.Parser
       {
         if ( entry.Name == Name )
         {
-          Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to " + ( entry.LineIndex + 1 + entry.LineCount - 1 ) + ", name " + entry.Name + ", value " + entry.Symbol.ToString() );
+          if ( entry.LineCount == -1 )
+          {
+            Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to the end, name " + entry.Name + ", value " + entry.Symbol.ToString() );
+          }
+          else
+          {
+            Debug.Log( "From line " + ( entry.LineIndex + 1 ) + " to " + ( entry.LineIndex + 1 + entry.LineCount - 1 ) + ", name " + entry.Name + ", value " + entry.Symbol.ToString() );
+          }
         }
       }
     }

@@ -571,6 +571,22 @@ namespace TestProject
 
 
     [TestMethod]
+    public void TestLoopWithModifiedLabel()
+    {
+      string      source = @"a = 15
+                              * = $2000
+                              !for r = 0 to 9
+                              lda #a
+                              a = a - 1
+                              !end";
+
+      var assembly = TestAssembleC64Studio( source, out RetroDevStudio.Types.ASM.FileInfo info );
+      Assert.AreEqual( "0020A90FA90EA90DA90CA90BA90AA909A908A907A906", assembly.ToString() );
+    }
+
+
+
+    [TestMethod]
     public void TestLocalLabelInLoop()
     {
       string      source = @"!for j = 0 to 5

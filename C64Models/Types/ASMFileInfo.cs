@@ -79,6 +79,7 @@ namespace RetroDevStudio.Types.ASM
     public int CharIndex = -1;
     public int Length = 0;
     public SymbolInfo   Symbol = null;
+    public bool IsForVariable = false;
   };
 
 
