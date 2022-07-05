@@ -2866,7 +2866,6 @@ namespace RetroDevStudio
         miniMap.Visible = Core.Settings.ASMShowMiniView;
         editSource.Width = ClientSize.Width;
       }
-
       m_BreakpointOffset = 0;
       m_CycleOffset = -1;
       m_ByteSizeOffset = -1;

@@ -3810,7 +3810,7 @@ namespace FastColoredTextBoxNS
 
       for ( int i = 0; i < count; i++ )
       {
-        int lineLength = lines.GetLineLength( i );
+        int lineLength = lines[i].Count;
         LineInfo lineInfo = LineInfos[i];
         if ( lineLength > maxLineLength && lineInfo.VisibleState == VisibleState.Visible )
           maxLineLength = lineLength;
@@ -4036,6 +4036,7 @@ namespace FastColoredTextBoxNS
         base.AutoScrollMinSize -= new Size( 1, 0 );
         base.AutoScrollMinSize += new Size( 1, 0 );
 
+        AdjustFormScrollbars( true );
       }
       else
         AutoScrollMinSize = AutoScrollMinSize;
