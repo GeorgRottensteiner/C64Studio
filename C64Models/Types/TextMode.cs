@@ -33,7 +33,11 @@ namespace RetroDevStudio
     [Description( "Mega 65 40x25 HiRes" )]
     MEGA65_40_X_25_HIRES,
     [Description( "Mega 65 40x25 Multicolor" )]
-    MEGA65_40_X_25_MULTICOLOR
+    MEGA65_40_X_25_MULTICOLOR,
+    [Description( "Mega 65 40x25 NCM" )]
+    MEGA65_40_X_25_NCM,
+    [Description( "Mega 65 80x25 NCM" )]
+    MEGA65_80_X_25_NCM
   }
 
 }

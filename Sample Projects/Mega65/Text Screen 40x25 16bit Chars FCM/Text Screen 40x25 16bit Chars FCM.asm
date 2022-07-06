@@ -1,4 +1,4 @@
-﻿;to set the proper CPU
+;to set the proper CPU
 !cpu m65
 
 ;to include VIC constants
@@ -49,6 +49,10 @@ ZEROPAGE_POINTER_TARGET = $fc
           sta VIC4.CHARSTEP_LO
           lda #>80
           sta VIC4.CHARSTEP_HI
+
+          ;number of chars per row
+          lda #40
+          sta VIC4.CHRCOUNT
 
           ;Turn on FCM mode (and 16bit per char number)
           lda #$07

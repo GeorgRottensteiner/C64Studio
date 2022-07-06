@@ -273,6 +273,14 @@ namespace RetroDevStudio.Formats
 
       int numBytesPerChar = Lookup.NumBytesOfSingleCharacter( Lookup.TextCharModeFromTextMode( Mode ) );
 
+      // NCM mode, one character covers two "slots"
+      if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )
+      ||   ( Mode == TextMode.MEGA65_80_X_25_NCM ) )
+      {
+        Info.Area.X = ( Info.Area.X + 1 ) / 2;
+        Info.Area.Width = ( Info.Area.Width / 2 );
+      }
+
       if ( Info.RowByRow )
       {
         // row by row
@@ -280,8 +288,8 @@ namespace RetroDevStudio.Formats
         {
           for ( int x = 0; x < Info.Area.Width; ++x )
           {
-            byte newColor = (byte)( ( Chars[( Info.Area.Y + i ) * ScreenWidth + Info.Area.X + x] & 0xff0000 ) >> 16 );
-            ushort newChar = (ushort)( Chars[( Info.Area.Y + i ) * ScreenWidth + Info.Area.X + x] & 0xffff );
+            byte newColor   = (byte)ColorAt( Info.Area.X + x, Info.Area.Y + i );
+            ushort newChar  = CharacterAt( Info.Area.X + x, Info.Area.Y + i );
 
             newChar = (ushort)( newChar + CharOffset );
 
@@ -303,8 +311,18 @@ namespace RetroDevStudio.Formats
                 {
                   newColor += 64 - 16;
                 }
+                Info.ScreenColorData.AppendU8( newColor );
               }
-              Info.ScreenColorData.AppendU8( newColor );
+              else if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )
+              ||        ( Mode == TextMode.MEGA65_80_X_25_NCM ) )
+              {
+                // set the NCM bit in color byte 0
+                Info.ScreenColorData.AppendU16NetworkOrder( 0x0800 );
+              }
+              else
+              {
+                Info.ScreenColorData.AppendU8( newColor );
+              }
             }
           }
         }
@@ -338,8 +356,18 @@ namespace RetroDevStudio.Formats
                 {
                   newColor += 64 - 16;
                 }
+                Info.ScreenColorData.AppendU8( newColor );
               }
-              Info.ScreenColorData.AppendU8( newColor );
+              else if ( ( Mode == TextMode.MEGA65_40_X_25_NCM )
+              ||        ( Mode == TextMode.MEGA65_80_X_25_NCM ) )
+              {
+                // set the NCM bit in color byte 0
+                Info.ScreenColorData.AppendU16NetworkOrder( 0x0800 );
+              }
+              else
+              {
+                Info.ScreenColorData.AppendU8( newColor );
+              }
             }
           }
         }

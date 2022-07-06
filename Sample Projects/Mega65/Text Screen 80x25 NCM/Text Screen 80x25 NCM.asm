@@ -8,13 +8,16 @@
 !source <mega65.asm>
 
 
-SCREEN_CHAR   = $0800
+SCREEN_CHAR   = $8000
 
 ;the real color RAM is here (at $d800 only the first 1000 bytes are accessible)
 SCREEN_COLOR  = $ff80000
 
-;we use 16bit characters, but in NCM mode 20 characters cover 40 visible characters
-ROW_SIZE_BYTES    = 40
+;we use 16bit characters,
+;  in NCM mode 40 characters cover 80 visible characters
+ROW_SIZE_BYTES    = 80
+
+NUM_LINES = 25
 
 
 ;two pointers for copying
@@ -45,11 +48,13 @@ ZEROPAGE_POINTER_TARGET = $fc
 
           cli
 
-          ;set 40x25 mode
+          ;set 80x25 mode
           lda #$80
+          tsb VIC3.VICDIS
+          lda #$08
           trb VIC3.VICDIS
 
-          ;this sets 80x25 mode
+          ;this sets 80x50 mode
           ;lda #$88
           ;tsb VIC3.VICDIS
 
@@ -64,12 +69,20 @@ ZEROPAGE_POINTER_TARGET = $fc
           lda #>ROW_SIZE_BYTES
           sta VIC4.CHARSTEP_HI
 
-          ;number of chars per row
-          lda #20
+          ;set 40 characers per screen
+          lda #40
           sta VIC4.CHRCOUNT
 
           lda #0
           sta VIC.BACKGROUND_COLOR
+
+          lda #<SCREEN_CHAR
+          sta VIC4.SCRNPTR_LO
+          lda #>SCREEN_CHAR
+          sta VIC4.SCRNPTR_HI
+          lda #( SCREEN_CHAR >> 16 )
+          sta VIC4.SCRNPTR_BANK
+
 
           lda #<SCREEN_DATA
           sta ZEROPAGE_POINTER_1
@@ -103,25 +116,23 @@ ZEROPAGE_POINTER_TARGET = $fc
           ;color byte 0
           lda #$08
           sta [ZEROPAGE_POINTER_TARGET],z
+          inz
+          ;color byte 1
+          lda #0
+          sta [ZEROPAGE_POINTER_TARGET],z
+          inz
 
           ;hi byte char data
           lda (ZEROPAGE_POINTER_1),y
           sta (ZEROPAGE_POINTER_2),y
           iny
-          inz
-
-          ;color byte 1
-          lda #0
-          sta [ZEROPAGE_POINTER_TARGET],z
 
           ;lo byte char data
           lda (ZEROPAGE_POINTER_1),y
           sta (ZEROPAGE_POINTER_2),y
-
           iny
-          inz
 
-          cpy #80
+          cpy #ROW_SIZE_BYTES
           bne -
 
           ;update pointers
@@ -157,12 +168,11 @@ ZEROPAGE_POINTER_TARGET = $fc
           jmp *
 
 
-          ;screen data has a configured offset of 192, so all character values start with 192
-          ;to point at $3000 (192 = $C0, $C0 * 64 = $3000)
-SCREEN_DATA
-          !media "Text Screen.charscreen",CHARCOLOR
-
           ;insert character set data at $3000 directly
 * = $3000
           !media "Text Screen.charscreen",CHARSET,0,2
 
+          ;screen data has a configured offset of 192, so all character values start with 192
+          ;to point at $3000 (192 = $C0, $C0 * 64 = $3000)
+SCREEN_DATA
+          !media "Text Screen.charscreen",CHARCOLOR

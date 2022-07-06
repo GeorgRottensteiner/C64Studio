@@ -162,21 +162,48 @@ namespace RetroDevStudio.Controls
             {
               return false;
             }
+            /*
             int     dataEnd = cData.IndexOf( '}', dataStart );
             if ( dataEnd == -1 )
             {
               return false;
             }
             string  actualData = cData.Substring( dataStart + 1, dataEnd - dataStart - 2 );
+            */
+            string  actualData = cData.Substring( dataStart + 1 );
 
             var screenData = new ByteBuffer();
 
             var dataLines = actualData.Split( '\n' );
+            string  dataType = "";
             for ( int i = 0; i < dataLines.Length; ++i )
             {
               var dataLine = dataLines[i].Trim();
               if ( dataLine.StartsWith( "//" ) )
               {
+                if ( dataLine.Contains( "META:" ) )
+                {
+                  int metaPos = dataLine.IndexOf( "META:" );
+
+                  // META: 16 25 DIRART upper
+                  string[] parms = dataLine.Substring( metaPos + 5 ).Split( new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries );
+
+                  if ( parms.Length >= 2 )
+                  {
+                    int     newWidth = GR.Convert.ToI32( parms[0] );
+                    int     newHeight = GR.Convert.ToI32( parms[1] );
+
+                    if ( ( newWidth > 0 )
+                    &&   ( newHeight > 0 ) )
+                    {
+                      Editor.SetScreenSize( newWidth, newHeight );
+                    }
+                  }
+                  if ( parms.Length >= 3 )
+                  {
+                    dataType = parms[2].ToUpper();
+                  }
+                }
                 continue;
               }
               int     pos = 0;
@@ -201,13 +228,16 @@ namespace RetroDevStudio.Controls
                   pos = commaPos + 1;
                 }
               }
+            }
+            // border and BG first
 
-              // border and BG first
+            if ( dataType != "DIRART" )
+            {
               CharScreen.CharSet.Colors.BackgroundColor = screenData.ByteAt( 1 );
               screenData = screenData.SubBuffer( 2 );
-
-              Editor.ImportFromData( screenData );
             }
+
+            Editor.ImportFromData( screenData );
           }
         }
         else

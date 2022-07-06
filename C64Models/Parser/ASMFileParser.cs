@@ -3614,18 +3614,21 @@ namespace RetroDevStudio.Parser
           lastLoop.Content = RelabelLocalLabelsForLoop( lastLoop.Content, ScopeList, lineIndex, TextCodeMapping );
         }
 
-        // label exists only after !for
-        /*
-        var   tempLabelSymbol = CreateIntegerSymbol( lastLoop.CurrentValue );
-        tempLabelSymbol.Type = SymbolInfo.Types.TEMP_LABEL;
-        tempLabelSymbol.AddressOrValue = lastLoop.CurrentValue;
-        AddTempLabel( lastLoop.Label, 
-                      lineIndex - lastLoop.LoopLength, 
-                      lastLoop.LoopLength,
-                      tempLabelSymbol, 
-                      "" );*/
-
         bool  endReached = false;
+
+        // re-evaluate end token value
+        if ( !EvaluateTokens( lineIndex, lastLoop.EndValueTokens, 0, lastLoop.EndValueTokens.Count, lastLoop.EndValueTokensTextmapping, out SymbolInfo endValueSymbol ) )
+        {
+          AddError( lineIndex,
+                    RetroDevStudio.Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION,
+                    $"Could not evaluate end value for {lastLoop.IterationCount}th iteration",
+                    lastLoop.EndValueTokens[0].StartPos,
+                    lastLoop.EndValueTokens.Last().EndPos + 1 - lastLoop.EndValueTokens[0].StartPos );
+          return ParseLineResult.ERROR_ABORT;
+        }
+        ++lastLoop.IterationCount;
+        lastLoop.EndValue = endValueSymbol.ToInt32();
+        //Debug.Log( $"Loop for {lastLoop.Label}, {lastLoop.IterationCount}th iteration, end value from {TokensToExpression( lastLoop.EndValueTokens )} = {lastLoop.EndValue}" );
 
         if ( ( lastLoop.CurrentValue == lastLoop.EndValue )
         ||   ( ( lastLoop.StepValue > 0 )
@@ -11653,8 +11656,9 @@ namespace RetroDevStudio.Parser
 
           if ( !hadError )
           {
-            int   startValue = 0;
-            int   endValue = 0;
+            var endValueTokens = lineTokenInfos.GetRange( indexTo + 1, indexStep - indexTo - 1 );
+            int startValue = 0;
+            int endValue = 0;
             if ( !EvaluateTokens( lineIndex, lineTokenInfos, 3, indexTo - 3, TextCodeMapping, out SymbolInfo startValueSymbol ) )
             {
               AddError( lineIndex,
@@ -11702,12 +11706,16 @@ namespace RetroDevStudio.Parser
             {
               Types.LoopInfo loop = new Types.LoopInfo();
 
-              loop.Label = lineTokenInfos[1].Content;
-              loop.LineIndex = lineIndex;
-              loop.StartValue = startValue;
-              loop.EndValue = endValue;
-              loop.StepValue = stepValue;
-              loop.CurrentValue = startValue;
+              loop.Label                      = lineTokenInfos[1].Content;
+              loop.LineIndex                  = lineIndex;
+              loop.StartValue                 = startValue;
+              loop.EndValue                   = endValue;
+              loop.StepValue                  = stepValue;
+              loop.CurrentValue               = startValue;
+              loop.EndValueTokens             = endValueTokens;
+              loop.EndValueTokensTextmapping  = TextCodeMapping;
+
+              //Debug.Log( $"Begin Loop for {loop.Label}" );
 
               Types.ScopeInfo   scope = new RetroDevStudio.Types.ScopeInfo( Types.ScopeInfo.ScopeType.LOOP );
               // TODO - active depends on parent scopes

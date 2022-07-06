@@ -124,9 +124,14 @@ namespace RetroDevStudio.Types
           break;
         case GraphicTileMode.MEGA65_NCM:
           {
+            if ( Color == (int)ColorType.CUSTOM_COLOR )
+            {
+              Color = CustomColor;
+            }
+
             int     bytePos = X / 2 + Y * ( ( Width + 1 ) / 2 );
             byte pixelValue = Data.ByteAt( bytePos );
-            if ( ( X % 2 ) == 0 )
+            if ( ( X % 2 ) != 0 )
             {
               if ( ( pixelValue >> 4 ) != Color )
               {
@@ -134,7 +139,6 @@ namespace RetroDevStudio.Types
                 pixelValue |= (byte)( Color << 4 );
 
                 Data.SetU8At( bytePos, pixelValue );
-                //Image.SetPixel( X, Y, (uint)Color );
                 return true;
               }
             }
@@ -146,7 +150,6 @@ namespace RetroDevStudio.Types
                 pixelValue |= (byte)Color;
 
                 Data.SetU8At( bytePos, pixelValue );
-                //Image.SetPixel( X, Y, (uint)Color );
                 return true;
               }
             }
@@ -156,7 +159,6 @@ namespace RetroDevStudio.Types
           if ( Data.ByteAt( X + Y * Width ) != Color )
           {
             Data.SetU8At( X + Y * Width, (byte)Color );
-            //Image.SetPixel( X, Y, (uint)Color );
             return true;
           }
           break;
@@ -187,7 +189,6 @@ namespace RetroDevStudio.Types
             return (int)ColorType.BACKGROUND;
           }
         case GraphicTileMode.COMMODORE_MULTICOLOR:
-          //if ( CustomColor >= 8 )
           {
             // multi color
             int innerX = ( X % 8 ) / 2;
@@ -209,13 +210,25 @@ namespace RetroDevStudio.Types
                 return (int)ColorType.CUSTOM_COLOR;
             }
           }
-          //goto case GraphicTileMode.COMMODORE_HIRES;
         case GraphicTileMode.MEGA65_NCM:
-          if ( ( X % 2 ) == 1 )
           {
-            return Data.ByteAt( X / 2 + Y * ( ( Width + 1 ) / 2 ) ) & 0x0f;
+            byte color = 0;
+            if ( ( X % 2 ) != 1 )
+            {
+              color = (byte)( Data.ByteAt( X / 2 + Y * ( ( Width + 1 ) / 2 ) ) & 0x0f );
+            }
+            else
+            {
+              color = (byte)( Data.ByteAt( X / 2 + Y * ( ( Width + 1 ) / 2 ) ) >> 4 );
+            }
+
+            if ( color == 0 )
+            {
+              return (int)ColorType.BACKGROUND;
+            }
+
+            return color;
           }
-          return Data.ByteAt( X / 2 + Y * ( ( Width + 1 ) / 2 ) ) >> 4;
         case GraphicTileMode.MEGA65_FCM_256_COLORS:
           return Data.ByteAt( X + Y * Width );
         default:

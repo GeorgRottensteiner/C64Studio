@@ -123,8 +123,7 @@ namespace GR.Forms
     private System.Drawing.Imaging.PixelFormat    m_PixelFormat = System.Drawing.Imaging.PixelFormat.Undefined;
     private int                   m_DisplayWidth = -1;
     private int                   m_DisplayHeight = -1;
-    private float                 m_DPIFactorX = 96.0f;
-    private float                 m_DPIFactorY = 96.0f;
+    private bool                  m_UpdateLockActive = false;
 
 
     public event System.Windows.Forms.DrawItemEventHandler    DrawItem;
@@ -516,6 +515,10 @@ namespace GR.Forms
 
     private void ItemsModified()
     {
+      if ( m_UpdateLockActive )
+      {
+        return;
+      }
       AdjustScrollbars();
       Invalidate();
     }
@@ -818,10 +821,6 @@ namespace GR.Forms
         e.Graphics.FillRectangle( System.Drawing.SystemBrushes.Control, e.ClipRectangle );
         return;
       }
-
-      //e.Graphics.FillRectangle( System.Drawing.SystemBrushes.Control, e.ClipRectangle );
-      m_DPIFactorX = e.Graphics.DpiX;
-      m_DPIFactorY = e.Graphics.DpiY;
 
       System.Drawing.SolidBrush hottrackBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( HottrackColor ) );
 
@@ -1155,6 +1154,25 @@ namespace GR.Forms
       }
       return base.ProcessCmdKey( ref msg, keyData );
     }
+
+
+
+    public void BeginUpdate()
+    {
+      m_UpdateLockActive = true;
+    }
+
+
+
+    public void EndUpdate()
+    {
+      if ( m_UpdateLockActive )
+      {
+        m_UpdateLockActive = false;
+        ItemsModified();
+      }
+    }
+
 
 
   }

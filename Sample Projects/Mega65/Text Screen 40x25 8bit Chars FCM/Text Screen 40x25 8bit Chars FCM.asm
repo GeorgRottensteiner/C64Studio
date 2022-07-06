@@ -1,4 +1,4 @@
-﻿;to set the proper CPU
+;to set the proper CPU
 !cpu m65
 
 ;to include VIC constants
@@ -41,6 +41,10 @@ SCREEN_COLOR  = $d800
           ;Turn on FCM mode (not 16bit per char number)
           lda #$06
           sta VIC4.VIC4DIS
+
+          ;number of chars per row
+          lda #40
+          sta VIC4.CHRCOUNT
 
           lda #0
           sta VIC.BACKGROUND_COLOR

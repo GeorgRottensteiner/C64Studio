@@ -159,7 +159,7 @@ namespace RetroDevStudio.Displayer
         for ( int i = 0; i < 16; ++i )
         {
           int  byteValue = Data.ByteAt( i / 2 + j * 8 );
-          if ( ( i % 2 ) == 0 )
+          if ( ( i % 2 ) != 0 )
           {
             byteValue >>= 4;
           }
@@ -174,9 +174,9 @@ namespace RetroDevStudio.Displayer
               byteValue = BGColor;
             }
             Context.Graphics.FillRectangle( Context.Palette.ColorBrushes[byteValue],
-                                            ( i * Context.Bounds.Width ) / 8,
+                                            ( i * Context.Bounds.Width ) / 16,
                                             ( j * Context.Bounds.Height ) / 8,
-                                            ( ( i + 1 ) * Context.Bounds.Width ) / 8 - ( i * Context.Bounds.Width ) / 8,
+                                            ( ( i + 1 ) * Context.Bounds.Width ) / 16 - ( i * Context.Bounds.Width ) / 16,
                                             ( ( j + 1 ) * Context.Bounds.Height ) / 8 - ( j * Context.Bounds.Height ) / 8 );
           }
         }
@@ -320,7 +320,7 @@ namespace RetroDevStudio.Displayer
         for ( int i = 0; i < 16; ++i )
         {
           int  colorIndex = Data.ByteAt( i / 2 + j * 8 );
-          if ( ( i % 2 ) == 0 )
+          if ( ( i % 2 ) != 0 )
           {
             colorIndex >>= 4;
           }

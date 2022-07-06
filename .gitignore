@@ -110,3 +110,6 @@
 /C64StudioRelease/Sample Projects/Mega65/DalekAttack BASIC/DalekAttack.prg
 /Sample Projects/BASIC and Assembly Combined/basic.prg
 /Sample Projects/BASIC and Assembly Combined/assembly.prg
+/Sample Projects/MacroTest/redefined_label.prg
+/Sample Projects/MacroTest/nestedloopmodifiedlabel.prg
+/Sample Projects/MacroTest/extralongline.prg

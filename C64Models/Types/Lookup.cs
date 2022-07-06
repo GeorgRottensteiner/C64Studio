@@ -94,6 +94,7 @@ namespace RetroDevStudio
       switch ( Mode )
       {
         case TextCharMode.MEGA65_FCM_16BIT:
+        case TextCharMode.MEGA65_NCM:
           return 2;
         default:
           return 1;
@@ -148,6 +149,9 @@ namespace RetroDevStudio
           return TextCharMode.MEGA65_FCM_16BIT;
         case TextMode.COMMODORE_VIC20_22_X_23:
           return TextCharMode.VIC20;
+        case TextMode.MEGA65_80_X_25_NCM:
+        case TextMode.MEGA65_40_X_25_NCM:
+          return TextCharMode.MEGA65_NCM;
         default:
           Debug.Log( "TextCharModeFromTextMode unsupported Mode " + Mode );
           return TextCharMode.COMMODORE_HIRES;

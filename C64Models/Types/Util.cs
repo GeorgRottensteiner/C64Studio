@@ -95,12 +95,18 @@ namespace RetroDevStudio
     public static string FilenameToUnicode( GR.Memory.ByteBuffer Filename )
     {
       string filename = "";
-      for ( int i = 0; i < Filename.Length; ++i )
+
+      int numShiftSpacesAtEnd = 0;
+      int pos = (int)Filename.Length;
+      while ( ( pos > 0 )
+      &&      ( Filename.ByteAt( pos - 1 ) == 0xa0 ) )
       {
-        if ( Filename.ByteAt( i ) == 0xa0 )
-        {
-          break;
-        }
+        --pos;
+      }
+      numShiftSpacesAtEnd = (int)Filename.Length - pos;
+
+      for ( int i = 0; i < Filename.Length - numShiftSpacesAtEnd; ++i )
+      {
         byte petscii = Filename.ByteAt( i );
         filename += (char)ConstantData.PETSCIIToUnicode[petscii];
       }

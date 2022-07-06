@@ -15,7 +15,7 @@ namespace RetroDevStudio.Controls
 {
   public partial class CharacterEditor : UserControl
   {
-    public delegate void ModifiedHandler();
+    public delegate void ModifiedHandler( List<int> ModifiedCharacters );
     public delegate void CharsetShiftedHandler( int[] OldToNew, int[] NewToOld );
 
     public event ModifiedHandler        Modified;
@@ -129,9 +129,9 @@ namespace RetroDevStudio.Controls
 
 
 
-    public void RaiseModifiedEvent()
+    public void RaiseModifiedEvent( List<int> ModifiedCharacters )
     {
-      Modified?.Invoke();
+      Modified?.Invoke( ModifiedCharacters );
     }
 
 
@@ -256,7 +256,8 @@ namespace RetroDevStudio.Controls
         {
           pastePos = 0;
         }
-        bool firstEntry = true;
+        bool  firstEntry = true;
+        var   modifiedChars = new List<int>();
         foreach ( var entry in clipList.Entries )
         {
           int indexGap =  entry.Index;
@@ -266,6 +267,8 @@ namespace RetroDevStudio.Controls
           {
             break;
           }
+
+          modifiedChars.Add( pastePos );
 
           UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos, 1 ), firstEntry );
           firstEntry = false;
@@ -302,7 +305,7 @@ namespace RetroDevStudio.Controls
           }
         }
         canvasEditor.Invalidate();
-        RaiseModifiedEvent();
+        RaiseModifiedEvent( modifiedChars );
         return;
       }
       else
@@ -336,6 +339,7 @@ namespace RetroDevStudio.Controls
           }
           incomingColorSettings.Palette.CreateBrushes();
 
+          var   modifiedChars = new List<int>();
           int pastePos = panelCharacters.SelectedIndex;
           if ( pastePos == -1 )
           {
@@ -352,6 +356,7 @@ namespace RetroDevStudio.Controls
               break;
             }
 
+            modifiedChars.Add( pastePos );
             UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, pastePos, 1 ), i == 0 );
 
             var mode = (TextCharMode)memIn.ReadInt32();
@@ -422,7 +427,7 @@ namespace RetroDevStudio.Controls
             }
           }
           canvasEditor.Invalidate();
-          RaiseModifiedEvent();
+          RaiseModifiedEvent( modifiedChars );
           return;
         }
         else if ( !Clipboard.ContainsImage() )
@@ -504,17 +509,20 @@ namespace RetroDevStudio.Controls
 
       RefreshCategoryCounts();
       DoNotUpdateFromControls = false;
-      RaiseModifiedEvent();
+
+      var   modifiedChars = new List<int>();
+      for ( int i = 0; i < Count; ++i )
+      {
+        modifiedChars.Add( CharIndex + i );
+      }
+      RaiseModifiedEvent( modifiedChars );
     }
 
 
 
     void RebuildCharImage( int CharIndex )
     {
-      if ( Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ) == 64 )
-      {
-        m_Project.Characters[CharIndex].Tile.Data.Resize( 64 );
-      }
+      m_Project.Characters[CharIndex].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ) );
 
       Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, CharIndex, m_Project.Characters[CharIndex].Tile.Image, 0, 0 );
       if ( CharIndex < panelCharacters.Items.Count )
@@ -549,6 +557,7 @@ namespace RetroDevStudio.Controls
     public void PasteImage( string FromFile, GR.Image.FastImage Image, bool ForceMulticolor )
     {
       GR.Image.FastImage mappedImage = null;
+
 
       var   mcSettings = new ColorSettings( m_Project.Colors );
 
@@ -595,6 +604,7 @@ namespace RetroDevStudio.Controls
       int curCharX = m_CurrentChar % 16;
       int curCharY = m_CurrentChar / 16;
       int currentTargetChar = m_CurrentChar;
+      var   modifiedChars = new List<int>();
 
       for ( int j = 0; j < charsY; ++j )
       {
@@ -632,6 +642,8 @@ namespace RetroDevStudio.Controls
           }
           GR.Image.FastImage singleChar = mappedImage.GetImage( i * 8, j * 8, copyWidth, copyHeight ) as GR.Image.FastImage;
 
+          modifiedChars.Add( currentTargetChar );
+
           UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, currentTargetChar, 1 ), !hadFirstUndoStep );
           hadFirstUndoStep = true;
 
@@ -650,7 +662,7 @@ namespace RetroDevStudio.Controls
       }
 
       canvasEditor.Invalidate();
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( modifiedChars );
     }
 
 
@@ -1030,8 +1042,8 @@ namespace RetroDevStudio.Controls
 
     private void HandleMouseOnEditor( int X, int Y, MouseButtons Buttons )
     {
-      int     charX = ( 8 * X ) / canvasEditor.ClientRectangle.Width;
-      int     charY = ( 8 * Y ) / canvasEditor.ClientRectangle.Height;
+      int     charX = ( m_CharacterWidth * X ) / canvasEditor.ClientRectangle.Width;
+      int     charY = ( m_CharacterHeight * Y ) / canvasEditor.ClientRectangle.Height;
 
       int     affectedCharIndex = m_CurrentChar;
       var     origAffectedChar = m_Project.Characters[m_CurrentChar];
@@ -1066,7 +1078,7 @@ namespace RetroDevStudio.Controls
             UndoManager.AddUndoTask( potentialUndo );
             m_ButtonReleased = false;
           }
-          RaiseModifiedEvent();
+          RaiseModifiedEvent( new List<int>() { affectedCharIndex } );
           if ( m_Project.Mode == TextCharMode.COMMODORE_ECM )
           {
             for ( int i = 0; i < 4; ++i )
@@ -1091,7 +1103,16 @@ namespace RetroDevStudio.Controls
       {
         int   pickedColor = affectedChar.Tile.GetPixel( charX, charY );
 
-        _ColorSettingsDlg.SelectedColor = (ColorType)pickedColor;
+        if ( ( m_Project.Mode == TextCharMode.MEGA65_NCM )
+        &&   ( (ColorType)pickedColor != ColorType.BACKGROUND ) )
+        {
+          _ColorSettingsDlg.CustomColor = pickedColor;
+          _ColorSettingsDlg.SelectedColor = ColorType.CUSTOM_COLOR;
+        }
+        else
+        {
+          _ColorSettingsDlg.SelectedColor = (ColorType)pickedColor;
+        }
 
         if ( ( m_Project.Mode == TextCharMode.MEGA65_FCM )
         ||   ( m_Project.Mode == TextCharMode.MEGA65_FCM_16BIT ) )
@@ -1180,6 +1201,7 @@ namespace RetroDevStudio.Controls
       }
 
       bool  firstChar = true;
+      var   modifiedChars = new List<int>();
       foreach ( var selChar in selectedChars )
       {
         if ( ( categoryIndex != -1 )
@@ -1189,10 +1211,14 @@ namespace RetroDevStudio.Controls
           firstChar = false;
 
           m_Project.Characters[selChar].Category = categoryIndex;
-          RaiseModifiedEvent();
+          modifiedChars.Add( selChar );
         }
       }
-      RefreshCategoryCounts();
+      if ( modifiedChars.Count > 0 )
+      {
+        RaiseModifiedEvent( modifiedChars );
+        RefreshCategoryCounts();
+      }
     }
 
 
@@ -1259,7 +1285,7 @@ namespace RetroDevStudio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       canvasEditor.Invalidate();
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( selectedChars );
     }
 
 
@@ -1286,8 +1312,8 @@ namespace RetroDevStudio.Controls
 
     private void HandleMouseOnPlayground( int X, int Y, MouseButtons Buttons )
     {
-      int     charX = (int)( ( 16 * X ) / picturePlayground.ClientRectangle.Width );
-      int     charY = (int)( ( 16 * Y ) / picturePlayground.ClientRectangle.Height );
+      int     charX = (int)( ( 64 / m_CharacterWidth * 2 * X ) / picturePlayground.ClientRectangle.Width );
+      int     charY = (int)( ( 8 * 2 * Y ) / picturePlayground.ClientRectangle.Height );
 
       if ( ( Buttons & MouseButtons.Left ) == 0 )
       {
@@ -1308,11 +1334,11 @@ namespace RetroDevStudio.Controls
         {
           UndoManager.AddUndoTask( new Undo.UndoCharacterEditorPlaygroundCharChange( this, m_Project, charX, charY ) );
 
-          Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, m_ImagePlayground, charX * 8, charY * 8, m_CurrentColor );
+          Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, m_CurrentChar, m_ImagePlayground, charX * m_CharacterWidth, charY * m_CharacterHeight, m_CurrentColor );
           RedrawPlayground();
 
           m_Project.PlaygroundChars[charX + charY * 16] = (uint)( m_CurrentChar | ( m_CurrentColor << 16 ) );
-          RaiseModifiedEvent();
+          RaiseModifiedEvent( new List<int>() );
         }
       }
       if ( ( Buttons & MouseButtons.Right ) != 0 )
@@ -1426,7 +1452,7 @@ namespace RetroDevStudio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       canvasEditor.Invalidate();
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( selectedChars );
     }
 
 
@@ -1468,7 +1494,7 @@ namespace RetroDevStudio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       canvasEditor.Invalidate();
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( selectedChars );
     }
 
 
@@ -1554,7 +1580,7 @@ namespace RetroDevStudio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       canvasEditor.Invalidate();
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( selectedChars );
     }
 
 
@@ -1640,7 +1666,7 @@ namespace RetroDevStudio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       canvasEditor.Invalidate();
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( selectedChars );
     }
 
 
@@ -1687,7 +1713,7 @@ namespace RetroDevStudio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       canvasEditor.Invalidate();
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( selectedChars );
     }
 
 
@@ -1748,7 +1774,7 @@ namespace RetroDevStudio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       canvasEditor.Invalidate();
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( selectedChars );
     }
 
 
@@ -1791,7 +1817,7 @@ namespace RetroDevStudio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       canvasEditor.Invalidate();
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( selectedChars );
     }
 
 
@@ -1835,7 +1861,7 @@ namespace RetroDevStudio.Controls
         panelCharacters.InvalidateItemRect( index );
       }
       canvasEditor.Invalidate();
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( selectedChars );
     }
 
 
@@ -1860,7 +1886,7 @@ namespace RetroDevStudio.Controls
 
     public void PlaygroundCharacterChanged( int X, int Y )
     {
-      Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] & 0xffff ), m_ImagePlayground, X * 8, Y * 8, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] >> 16 ) );
+      Displayer.CharacterDisplayer.DisplayChar( m_Project, m_Project.Colors.Palette, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] & 0xffff ), m_ImagePlayground, X * m_CharacterWidth, Y * m_CharacterHeight, (int)( m_Project.PlaygroundChars[X + Y * m_Project.PlaygroundWidth] >> 16 ) );
       RedrawPlayground();
     }
 
@@ -1892,7 +1918,13 @@ namespace RetroDevStudio.Controls
       }
       canvasEditor.Invalidate();
       panelCharacters.Invalidate();
-      RaiseModifiedEvent();
+
+      var modifiedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        modifiedChars.Add( i );
+      }
+      RaiseModifiedEvent( modifiedChars );
     }
 
 
@@ -1908,24 +1940,13 @@ namespace RetroDevStudio.Controls
       {
         if ( !DoNotAddUndo )
         {
-          UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ), true );
+          UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ), true );
+          UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorValuesChange( this, m_Project ), false );
         }
         m_Project.Mode = (TextCharMode)comboCharsetMode.SelectedIndex;
       }
 
       AdjustCharacterSizes();
-
-      UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ), false );
-      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
-      {
-        m_Project.Characters[i].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[i].Tile.CustomColor );
-        m_Project.Characters[i].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacter( m_Project.Mode ) );
-        m_Project.Characters[i].Tile.Width = m_CharacterWidth;
-        m_Project.Characters[i].Tile.Height = m_CharacterHeight;
-        m_Project.Characters[i].Tile.Image.Resize( m_CharacterWidth, m_CharacterHeight );
-
-        RebuildCharImage( i );
-      }
 
       UpdatePalette();
       ChangeColorSettingsDialog();
@@ -1940,35 +1961,46 @@ namespace RetroDevStudio.Controls
 
           panelCharacters.Items.RemoveRange( m_Project.TotalNumberOfCharacters, m_Project.Characters.Count - m_Project.TotalNumberOfCharacters );
         }
+
+        int   startIndex = m_Project.Characters.Count;
+        var   newItems = new List<GR.Forms.ImageListbox.ImageListItem>();
+
+        panelCharacters.BeginUpdate();
         while ( m_Project.Characters.Count < m_Project.TotalNumberOfCharacters )
         {
           var newChar = new CharData()
           {
-            Tile = new GraphicTile( 8, 8, Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, 1 ), m_Project.Characters[0].Tile.Colors )
+            Tile = new GraphicTile( m_CharacterWidth, m_CharacterHeight, Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, 1 ), m_Project.Characters[0].Tile.Colors )
           };
           newChar.Tile.CustomColor = 1;
           m_Project.Characters.Add( newChar );
           panelCharacters.Items.Add( "", newChar.Tile.Image );
         }
+        panelCharacters.EndUpdate();
       }
 
-      if ( !DoNotAddUndo )
-      {
-        UndoManager?.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, 0, m_Project.TotalNumberOfCharacters ), false );
-      }
       for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
       {
+        m_Project.Characters[i].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[i].Tile.CustomColor );
+        m_Project.Characters[i].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ) );
+        m_Project.Characters[i].Tile.Width = m_CharacterWidth;
+        m_Project.Characters[i].Tile.Height = m_CharacterHeight;
+        m_Project.Characters[i].Tile.Image.Resize( m_CharacterWidth, m_CharacterHeight );
         if ( m_Project.Characters[i].Tile.CustomColor >= Lookup.NumberOfColorsInCharacter( m_Project.Mode ) )
         {
           m_Project.Characters[i].Tile.CustomColor %= Lookup.NumberOfColorsInCharacter( m_Project.Mode );
         }
-        m_Project.Characters[i].Tile.Mode = Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[i].Tile.CustomColor );
-        m_Project.Characters[i].Tile.Data.Resize( (uint)Lookup.NumBytesOfSingleCharacterBitmap( m_Project.Mode ) );
+
         RebuildCharImage( i );
       }
-
       panelCharacters.Invalidate();
-      RaiseModifiedEvent();
+
+      var modifiedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        modifiedChars.Add( i );
+      }
+      RaiseModifiedEvent( modifiedChars );
       canvasEditor.Invalidate();
     }
 
@@ -1992,8 +2024,10 @@ namespace RetroDevStudio.Controls
           _ColorSettingsDlg = new ColorSettingsECMMega65( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.COMMODORE_HIRES:
-        case TextCharMode.MEGA65_NCM:
           _ColorSettingsDlg = new ColorSettingsHiRes( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
+          break;
+        case TextCharMode.MEGA65_NCM:
+          _ColorSettingsDlg = new ColorSettingsNCMMega65( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
           break;
         case TextCharMode.MEGA65_HIRES:
           _ColorSettingsDlg = new ColorSettingsHiResMega65( Core, m_Project.Colors, m_Project.Characters[m_CurrentChar].Tile.CustomColor );
@@ -2032,7 +2066,13 @@ namespace RetroDevStudio.Controls
           m_Project.Characters[i].Tile.Colors.ActivePalette = Colors.ActivePalette;
           RebuildCharImage( i );
         }
-        RaiseModifiedEvent();
+
+        var modifiedChars = new List<int>();
+        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+        {
+          modifiedChars.Add( i );
+        }
+        RaiseModifiedEvent( modifiedChars );
       }
     }
 
@@ -2059,7 +2099,13 @@ namespace RetroDevStudio.Controls
       canvasEditor.Invalidate();
 
       OnPaletteChanged();
-      RaiseModifiedEvent();
+
+      var modifiedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        modifiedChars.Add( i );
+      }
+      RaiseModifiedEvent( modifiedChars );
     }
 
 
@@ -2151,7 +2197,8 @@ namespace RetroDevStudio.Controls
               {
                 if ( m_Project.Characters[selChar].Tile.CustomColor != CustomColor )
                 {
-                  if ( !Lookup.HasCustomPalette( m_Project.Characters[selChar].Tile.Mode ) )
+                  if ( ( !Lookup.HasCustomPalette( m_Project.Characters[selChar].Tile.Mode ) )
+                  ||   ( m_Project.Characters[selChar].Tile.Mode == GraphicTileMode.MEGA65_NCM ) )
                   {
                     UndoManager.AddUndoTask( new Undo.UndoCharacterEditorCharChange( this, m_Project, selChar, 1 ), modified == false );
 
@@ -2165,7 +2212,6 @@ namespace RetroDevStudio.Controls
               }
               if ( modified )
               {
-                RaiseModifiedEvent();
                 canvasEditor.Invalidate();
               }
             }
@@ -2176,7 +2222,12 @@ namespace RetroDevStudio.Controls
         {
           RebuildCharImage( i );
         }
-        RaiseModifiedEvent();
+        var modifiedChars = new List<int>();
+        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+        {
+          modifiedChars.Add( i );
+        }
+        RaiseModifiedEvent( modifiedChars );
         canvasEditor.Invalidate();
         panelCharacters.Invalidate();
       }
@@ -2317,7 +2368,7 @@ namespace RetroDevStudio.Controls
       if ( wasModified )
       {
         canvasEditor.Invalidate();
-        RaiseModifiedEvent();
+        RaiseModifiedEvent( selectedChars );
       }
       DoNotUpdateFromControls = false;
     }
@@ -2401,7 +2452,13 @@ namespace RetroDevStudio.Controls
       RedrawColorChooser();
 
       RaiseCharactersShiftedEvent( charMapOldToNew, charMapNewToOld );
-      RaiseModifiedEvent();
+
+      var modifiedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        modifiedChars.Add( i );
+      }
+      RaiseModifiedEvent( modifiedChars );
     }
 
 
@@ -2416,11 +2473,12 @@ namespace RetroDevStudio.Controls
       } );
 
       int numPixelWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[m_CurrentChar].Tile.CustomColor ) );
-      int numPixelHeight = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[m_CurrentChar].Tile.CustomColor ) );
+      int numPixelHeight = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[m_CurrentChar].Tile.CustomColor ) );
 
       if ( m_Project.ShowGrid )
       {
         if ( ( ( m_Project.Mode == TextCharMode.COMMODORE_MULTICOLOR )
+        ||     ( m_Project.Mode == TextCharMode.MEGA65_NCM )
         ||     ( m_Project.Mode == TextCharMode.VIC20 ) )
         &&   ( m_Project.Characters[m_CurrentChar].Tile.CustomColor >= 8 ) )
         {
@@ -2430,7 +2488,7 @@ namespace RetroDevStudio.Controls
                                   ( i * canvasEditor.ClientSize.Width ) / ( numPixelWidth / 2 ), 0,
                                   ( i * canvasEditor.ClientSize.Width ) / ( numPixelWidth / 2 ), canvasEditor.ClientSize.Height - 1 );
           }
-          for ( int i = 0; i < numPixelWidth; ++i )
+          for ( int i = 0; i < numPixelHeight; ++i )
           {
             e.Graphics.DrawLine( System.Drawing.Pens.White,
                                   0, ( i * canvasEditor.ClientSize.Height ) / numPixelHeight,
@@ -2503,7 +2561,6 @@ namespace RetroDevStudio.Controls
       canvasEditor.Size = new System.Drawing.Size( m_CharacterWidth * m_CharacterEditorOrigWidth / biggerSize,
                                                     m_CharacterHeight * m_CharacterEditorOrigHeight / biggerSize );
 
-      //canvasEditor.DisplayPage.Create( m_CharacterWidth, m_CharacterHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
       panelCharacters.ItemWidth = m_CharacterWidth;
       panelCharacters.ItemHeight = m_CharacterHeight;
       panelCharacters.SetDisplaySize( panelCharacters.ClientSize.Width / 2, panelCharacters.ClientSize.Height / 2 );
@@ -2519,7 +2576,7 @@ namespace RetroDevStudio.Controls
 
       AddCategory( m_Project.Categories.Count, newCategory );
 
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( new List<int>() );
     }
 
 
@@ -2535,7 +2592,7 @@ namespace RetroDevStudio.Controls
       UndoManager.AddUndoTask( new Undo.UndoCharsetRemoveCategory( this, m_Project, category ) );
 
       RemoveCategory( category );
-      RaiseModifiedEvent();
+      RaiseModifiedEvent( new List<int>() );
     }
 
 
@@ -2590,7 +2647,12 @@ namespace RetroDevStudio.Controls
         CharsetUpdated( m_Project );
         RefreshCategoryCounts();
 
-        RaiseModifiedEvent();
+        var modifiedChars = new List<int>();
+        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+        {
+          modifiedChars.Add( i );
+        }
+        RaiseModifiedEvent( modifiedChars );
       }
     }
 
@@ -2624,7 +2686,14 @@ namespace RetroDevStudio.Controls
       m_Project.Characters = newList;
       CharsetUpdated( m_Project );
       RefreshCategoryCounts();
-      RaiseModifiedEvent();
+
+      var modifiedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        modifiedChars.Add( i );
+      }
+
+      RaiseModifiedEvent( modifiedChars );
     }
 
 
@@ -2644,15 +2713,15 @@ namespace RetroDevStudio.Controls
 
       List<Formats.CharData> newList = new List<RetroDevStudio.Formats.CharData>();
 
-      int[]   charMapNewToOld = new int[256];
-      int[]   charMapOldToNew = new int[256];
+      int[]   charMapNewToOld = new int[m_Project.TotalNumberOfCharacters];
+      int[]   charMapOldToNew = new int[m_Project.TotalNumberOfCharacters];
 
       int lastIndex = 0;
 
       // fill in front of target
       if ( catTargetStart > 0 )
       {
-        for ( int j = 0; j < 256; ++j )
+        for ( int j = 0; j < m_Project.TotalNumberOfCharacters; ++j )
         {
           if ( m_Project.Characters[j].Category != category )
           {
@@ -2670,7 +2739,7 @@ namespace RetroDevStudio.Controls
       }
 
       // fill at target
-      for ( int j = 0; j < 256; ++j )
+      for ( int j = 0; j < m_Project.TotalNumberOfCharacters; ++j )
       {
         if ( m_Project.Characters[j].Category == category )
         {
@@ -2681,7 +2750,7 @@ namespace RetroDevStudio.Controls
       }
 
       // fill after target
-      for ( int j = lastIndex; j < 256; ++j )
+      for ( int j = lastIndex; j < m_Project.TotalNumberOfCharacters; ++j )
       {
         if ( m_Project.Characters[j].Category != category )
         {
@@ -2695,7 +2764,12 @@ namespace RetroDevStudio.Controls
       CharsetUpdated( m_Project );
       RefreshCategoryCounts();
 
-      RaiseModifiedEvent();
+      var modifiedChars = new List<int>();
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+      {
+        modifiedChars.Add( i );
+      }
+      RaiseModifiedEvent( modifiedChars );
     }
 
 
@@ -2753,7 +2827,12 @@ namespace RetroDevStudio.Controls
 
         SwapCategories( index1, index1 - 1 );
 
-        RaiseModifiedEvent();
+        var modifiedChars = new List<int>();
+        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+        {
+          modifiedChars.Add( i );
+        }
+        RaiseModifiedEvent( modifiedChars );
       }
     }
 
@@ -2767,7 +2846,7 @@ namespace RetroDevStudio.Controls
       m_Project.Categories.Insert( CategoryIndex2, category );
 
       // swap character categories as well
-      for ( int i = 0; i < 256; ++i )
+      for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
       {
         if ( m_Project.Characters[i].Category == CategoryIndex1 )
         {
@@ -2798,7 +2877,12 @@ namespace RetroDevStudio.Controls
 
         SwapCategories( index1, index1 + 1 );
 
-        RaiseModifiedEvent();
+        var modifiedChars = new List<int>();
+        for ( int i = 0; i < m_Project.TotalNumberOfCharacters; ++i )
+        {
+          modifiedChars.Add( i );
+        }
+        RaiseModifiedEvent( modifiedChars );
       }
     }
 

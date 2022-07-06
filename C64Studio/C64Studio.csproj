@@ -89,6 +89,12 @@
     <Compile Include="Controls\ColorSettings\ColorSettingsECMMega65.Designer.cs">
       <DependentUpon>ColorSettingsECMMega65.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ColorSettings\ColorSettingsNCMMega65.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ColorSettings\ColorSettingsNCMMega65.Designer.cs">
+      <DependentUpon>ColorSettingsNCMMega65.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ColorSettings\ColorSettingsHiResMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -835,6 +841,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsECMMega65.resx">
       <DependentUpon>ColorSettingsECMMega65.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsNCMMega65.resx">
+      <DependentUpon>ColorSettingsNCMMega65.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsHiResMega65.resx">
       <DependentUpon>ColorSettingsHiResMega65.cs</DependentUpon>

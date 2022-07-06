@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using RetroDevStudio;
 using RetroDevStudio.Types;
+using GR.Collections;
 
 namespace RetroDevStudio.Types
 {
@@ -766,6 +767,9 @@ namespace RetroDevStudio.Types
     public int                CurrentValue = 0;
     public string[]           Content = null;
     public bool               FirstLoop = true;
+    public int                IterationCount = 1;
+    public Map<byte,byte>     EndValueTokensTextmapping = null;
+    public List<TokenInfo>    EndValueTokens = null;
   };
 
 
@@ -1491,7 +1495,7 @@ namespace RetroDevStudio
         }
       }
       if ( ( HasPetSCII )
-      && ( HasChar ) )
+      &&   ( HasChar ) )
       {
         if ( !PETSCIIToUnicode.ContainsKey( PetSCIIValue ) )
         {

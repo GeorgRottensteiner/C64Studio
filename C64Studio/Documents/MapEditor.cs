@@ -3516,7 +3516,7 @@ namespace RetroDevStudio
 
 
 
-    private void characterEditor_Modified()
+    private void characterEditor_Modified( List<int> AffectedChars )
     {
       RedrawMap();
       RedrawColorChooser();
