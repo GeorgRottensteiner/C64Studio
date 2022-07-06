@@ -31,6 +31,11 @@ SCREEN_COLOR  = $ff80000
           lda #$00
           sta VIC.IRQ_MASK
 
+          ;number of chars per row
+          lda #80
+          sta VIC4.CHRCOUNT
+
+
           cli
 
           lda #0

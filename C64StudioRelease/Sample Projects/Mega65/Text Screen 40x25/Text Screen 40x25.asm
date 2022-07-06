@@ -38,6 +38,11 @@ SCREEN_COLOR  = $d800
           lda #$80
           trb VIC3.VICDIS
 
+          ;number of chars per row
+          lda #40
+          sta VIC4.CHRCOUNT
+
+
           lda #0
           sta VIC.BACKGROUND_COLOR
 
