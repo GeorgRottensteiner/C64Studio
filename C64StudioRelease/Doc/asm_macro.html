@@ -35,6 +35,7 @@
       <li><a href="#media">!MEDIA</a></li>
       <li><a href="#mediasrc">!MEDIASRC</a></li>
       <li><a href="#message">!MESSAGE</a></li>
+      <li><a href="#nowarn">!NOWARN</a></li>
       <li><a href="#pseudopc">!PSEUDOPC</a></li>
       <li><a href="#realign">!REALIGN</a></li>
       <li><a href="#realpc">!REALPC</a></li>
@@ -2210,6 +2211,19 @@
     <br>
     <div id="code"><br>      !message "The compiled section is ", CODE_END - CODE_START, " bytes long"
     <br></div>
+    <br>
+    <br>
+  </div>
+  <a name="nowarn"></a>
+  <H2>!NOWARN &lt;warning code(s)&gt;</H2>
+  <div id="mybody">
+    This pseudo op temporarily adds the given warnings to the ignore warning list.<br>
+    <br>
+    The warning codes are expected in the Wxxxx form. To ignore the overlapping segment warning (W0001) call like shown in the sample below.<br>
+    <br>
+    <br>
+    <div id="code"><br>      !NOWARN w0001
+      <br></div>
     <br>
     <br>
   </div>
