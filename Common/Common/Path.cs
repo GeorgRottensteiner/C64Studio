@@ -137,6 +137,11 @@ namespace GR
         {
           return Path;
         }
+        if ( pos == -1 )
+        {
+          // no more path left after removing the filename!
+          return "";
+        }
       }
 
       while ( true )
