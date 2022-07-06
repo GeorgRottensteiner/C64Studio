@@ -17,6 +17,45 @@ Additionally to this C64 Studio comes with a charset, sprite and media editor.
 Version history:
 ================
 
+06.07.2022 - 7.2:         Update Mega65 samples
+                          Fix opcode doc formatting
+                          "Fix" potential errors in dir art import
+                          Fix: Potential crash on malformed path in !src
+                          Add: First experiments with NCM mode (mega65)
+                          Fix: automatic horizontal scrollbar would not always become visible when tabs are hidden under the mini view
+                          Fix: Issue with temp labels that are modified inside !for loops
+                          WIP: Mega65 NCM
+                          Fix: Major speedup for copying sprites to clipboard
+                          Fix palette mapping for unpaletted pictures
+                          Fix: UTF8 encoding without BOM
+                          Fix alpha part of incoming palette
+                          Add vscrollbar to image list box (now works in character selection panels)
+                          Fix: BASIC - Proper handling of hexadecimal literals for BASIC 65
+                          Fix? : Downgrade DockPanelSuite (had some issues one some machines the layout was hosed on startup)
+                          Add: Outline double click automatically selects source
+                          Add: BASIC65 WPOKE token
+                          Add: BASIC warning if truncated variable names end up ambigious
+                          Add BASIC/Assembly combined sample
+                          Fix potential crash in build
+                          Add: Mega65 sample project Dalek Attack (BASIC)
+                          Fix: On charset import in char screen editor verify import format
+                          Fix: Do not auto-collapse binary literals into local labels (#..## variant)
+                          Add: BASIC #include directive
+                          Add: !nowarn pseudo op
+                          Fix label location
+                          Fix: Import/export for sprite editor
+                          DockPanelSuite Crash fix
+                          Update DockPanelSuite
+                          Add: Button to toggle collapse state of zones in assembly
+                          Add: Stop autocomplete on opening when inside a comment
+                          Add: Dependency checking for missing target files
+                          Cleanup: Import methods in separate forms for Charscreen
+                          Add: charscreen editor Cleanedup export methods, add as string, replace space with cursor right and strip unused color options
+                          Cleanup: Export methods for charscreen editor
+                          Fix: Enhancements for issue https://github.com/GeorgRottensteiner/C64Studio/issues/56
+                          Fix: Reordered BASIC dialect file for Mega65/V10 so GOSUB and GOTO are highlighted properly
+                          Fix: PETSCII table issues (no redraw, no insert if docked)
+
 29.03.2022 - 7.1:         Add: Charset screen copy to clipboard also copies image section
                           Add: Force HiRes bitmap export to use the same color settings if possible
                           WIP: Relocation file
