@@ -229,13 +229,27 @@ namespace RetroDevStudio
           ByteBuffer  displayFilename = new ByteBuffer( file.Filename );
 
           // map to PETSCII range
+          byte    previousByte = 0;
           for ( int i = 0; i < displayFilename.Length; ++i )
           {
             byte    singleByte = displayFilename.ByteAt( i );
             var c64Char = ConstantData.FindC64KeyByPETSCII( singleByte );
+            if ( c64Char == null )
+            {
+              // re-use the previous byte?
+              c64Char = ConstantData.FindC64KeyByPETSCII( 0x9d );
+            }
+            else
+            {
+              previousByte = singleByte;
+            }
             if ( c64Char != null )
             {
               displayFilename.SetU8At( i, c64Char.PetSCIIValue );
+            }
+            else
+            {
+              Debug.Log( "Unsupported PETSCII value " + singleByte );
             }
           }
           string filename = Util.FilenameToUnicode( displayFilename );
