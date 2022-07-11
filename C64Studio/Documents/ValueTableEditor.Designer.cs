@@ -1,4 +1,6 @@
-﻿namespace RetroDevStudio
+﻿using RetroDevStudio.Controls;
+
+namespace RetroDevStudio.Documents
 {
   partial class ValueTableEditor
   {
@@ -34,7 +36,7 @@
       this.tabValueTableEditor = new System.Windows.Forms.TabControl();
       this.tabEditor = new System.Windows.Forms.TabPage();
       this.groupBox3 = new System.Windows.Forms.GroupBox();
-      this.listValues = new RetroDevStudio.ArrangedItemList();
+      this.listValues = new ArrangedItemList();
       this.groupBox4 = new System.Windows.Forms.GroupBox();
       this.editValueEntry = new System.Windows.Forms.TextBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -157,12 +159,12 @@
       this.listValues.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listValues.Size = new System.Drawing.Size(317, 379);
       this.listValues.TabIndex = 0;
-      this.listValues.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.listValues_AddingItem);
-      this.listValues.CloningItem += new RetroDevStudio.ArrangedItemList.CloningItemEventHandler(this.listValues_CloningItem);
-      this.listValues.ItemAdded += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listValues_ItemAdded);
-      this.listValues.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listValues_ItemRemoved);
-      this.listValues.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.listValues_ItemMoved);
-      this.listValues.SelectedIndexChanged += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listValues_SelectedIndexChanged);
+      this.listValues.AddingItem += new RetroDevStudio.Controls.ArrangedItemList.AddingItemEventHandler(this.listValues_AddingItem);
+      this.listValues.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.listValues_CloningItem);
+      this.listValues.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listValues_ItemAdded);
+      this.listValues.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listValues_ItemRemoved);
+      this.listValues.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.listValues_ItemMoved);
+      this.listValues.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listValues_SelectedIndexChanged);
       // 
       // groupBox4
       // 
@@ -712,7 +714,7 @@
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Button btnExportToBASICData;
     private System.Windows.Forms.GroupBox groupBox3;
-    private ArrangedItemList listValues;
+    private Controls.ArrangedItemList listValues;
     private System.Windows.Forms.GroupBox groupBox2;
     private System.Windows.Forms.GroupBox groupBox4;
     private System.Windows.Forms.TextBox editValueEntry;

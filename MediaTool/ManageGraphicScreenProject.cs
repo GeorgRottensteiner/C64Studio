@@ -75,7 +75,7 @@ namespace MediaTool
           System.Console.WriteLine( "Couldn't read image from file " + ArgParser.Parameter( "IMPORTIMAGE" ) );
           return 1;
         }
-        if ( image.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed )
+        if ( image.PixelFormat != GR.Drawing.PixelFormat.Format8bppIndexed )
         {
           image.Dispose();
           Console.WriteLine( "Image format invalid!\nNeeds to be 8bit index" );

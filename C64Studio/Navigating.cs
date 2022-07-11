@@ -1,8 +1,9 @@
-﻿using RetroDevStudio;
+﻿using RetroDevStudio.Documents;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
+
+
 
 namespace RetroDevStudio
 {

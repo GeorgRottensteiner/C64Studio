@@ -168,7 +168,8 @@ namespace GR.Image
     static extern bool InvalidateRect( IntPtr hWnd, IntPtr lpRect, bool bErase );
     [DllImport( "user32.dll" )]
     static extern bool ValidateRect( IntPtr hWnd, ref GR.Image.FastImage.RECT lpRect );
-    [DllImport( "Kernel32.dll", EntryPoint = "CopyMemory" )]
+    //[DllImport( "Kernel32.dll", EntryPoint = "CopyMemory" )]
+    [DllImport( "Kernel32.dll", EntryPoint = "RtlCopyMemory" )]
     static extern void CopyMemory( IntPtr dest, IntPtr src, uint length );
 
     [DllImport( "user32.dll" )]
@@ -299,7 +300,7 @@ namespace GR.Image
     private int     m_Width = 0;
     private int     m_Height = 0;
     private IntPtr  m_Bitmap = IntPtr.Zero;
-    private System.Drawing.Imaging.PixelFormat    m_PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb;
+    private GR.Drawing.PixelFormat  m_PixelFormat = GR.Drawing.PixelFormat.Format32bppRgb;
     private GR.Memory.ByteBuffer    m_PaletteData = null;
     private IntPtr  m_Palette = IntPtr.Zero;
 
@@ -325,7 +326,7 @@ namespace GR.Image
 
 
 
-    public System.Drawing.Imaging.PixelFormat PixelFormat
+    public GR.Drawing.PixelFormat PixelFormat
     {
       get
       {
@@ -354,34 +355,34 @@ namespace GR.Image
       {
         switch ( m_PixelFormat )
         {
-          case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
+          case GR.Drawing.PixelFormat.Format8bppIndexed:
             if ( ( Width % 4 ) != 0 )
             {
               return ( ( Width + 3 ) / 4 ) * 4;
             }
             return Width;
-          case System.Drawing.Imaging.PixelFormat.Format4bppIndexed:
+          case GR.Drawing.PixelFormat.Format4bppIndexed:
             if ( ( Width % 4 ) != 0 )
             {
               return Width / 4 + 1;
             }
             return Width / 4;
-          case System.Drawing.Imaging.PixelFormat.Format16bppArgb1555:
-          case System.Drawing.Imaging.PixelFormat.Format16bppGrayScale:
-          case System.Drawing.Imaging.PixelFormat.Format16bppRgb555:
-          case System.Drawing.Imaging.PixelFormat.Format16bppRgb565:
+          case GR.Drawing.PixelFormat.Format16bppArgb1555:
+          case GR.Drawing.PixelFormat.Format16bppGrayScale:
+          case GR.Drawing.PixelFormat.Format16bppRgb555:
+          case GR.Drawing.PixelFormat.Format16bppRgb565:
             return Width * 2;
-          case System.Drawing.Imaging.PixelFormat.Format1bppIndexed:
+          case GR.Drawing.PixelFormat.Format1bppIndexed:
             return ( ( Width + 7 ) / 8 );
-          case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+          case GR.Drawing.PixelFormat.Format24bppRgb:
             if ( ( ( Width * 3 ) % 4 ) != 0 )
             {
               return Width * 3 + ( 4 - ( ( Width * 3 ) % 4 ) );
             }
             return Width * 3;
-          case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-          case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
-          case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
+          case GR.Drawing.PixelFormat.Format32bppArgb:
+          case GR.Drawing.PixelFormat.Format32bppPArgb:
+          case GR.Drawing.PixelFormat.Format32bppRgb:
             return Width * 4;
         }
         return 0;
@@ -396,22 +397,22 @@ namespace GR.Image
       {
         switch ( m_PixelFormat )
         {
-          case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
+          case GR.Drawing.PixelFormat.Format8bppIndexed:
             return 8;
-          case System.Drawing.Imaging.PixelFormat.Format4bppIndexed:
+          case GR.Drawing.PixelFormat.Format4bppIndexed:
             return 4;
-          case System.Drawing.Imaging.PixelFormat.Format16bppArgb1555:
-          case System.Drawing.Imaging.PixelFormat.Format16bppGrayScale:
-          case System.Drawing.Imaging.PixelFormat.Format16bppRgb555:
-          case System.Drawing.Imaging.PixelFormat.Format16bppRgb565:
+          case GR.Drawing.PixelFormat.Format16bppArgb1555:
+          case GR.Drawing.PixelFormat.Format16bppGrayScale:
+          case GR.Drawing.PixelFormat.Format16bppRgb555:
+          case GR.Drawing.PixelFormat.Format16bppRgb565:
             return 16;
-          case System.Drawing.Imaging.PixelFormat.Format1bppIndexed:
+          case GR.Drawing.PixelFormat.Format1bppIndexed:
             return 1;
-          case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+          case GR.Drawing.PixelFormat.Format24bppRgb:
             return 24;
-          case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-          case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
-          case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
+          case GR.Drawing.PixelFormat.Format32bppArgb:
+          case GR.Drawing.PixelFormat.Format32bppPArgb:
+          case GR.Drawing.PixelFormat.Format32bppRgb:
             return 32;
         }
         return 0;
@@ -428,7 +429,7 @@ namespace GR.Image
 
         bmpData.Width = Width;
         bmpData.Height = Height;
-        bmpData.PixelFormat = m_PixelFormat;
+        bmpData.PixelFormat = (System.Drawing.Imaging.PixelFormat)m_PixelFormat;
         bmpData.Scan0 = m_ImageData;
         bmpData.Stride = BytesPerLine;
 
@@ -539,7 +540,7 @@ namespace GR.Image
 
 
 
-    public FastImage( int Width, int Height, System.Drawing.Imaging.PixelFormat PixelFormat )
+    public FastImage( int Width, int Height, GR.Drawing.PixelFormat PixelFormat )
     {
       m_Width       = Width;
       m_Height      = Height;
@@ -587,11 +588,11 @@ namespace GR.Image
 
 
 
-    public bool Create( int Width, int Height, System.Drawing.Imaging.PixelFormat PixelFormat )
+    public bool Create( int Width, int Height, GR.Drawing.PixelFormat PixelFormat )
     {
       m_Width   = Width;
       m_Height  = Height;
-      return ( CreateBitmap( PixelFormat ) != null );
+      return ( CreateBitmap( PixelFormat ) != IntPtr.Zero );
     }
 
 
@@ -637,7 +638,7 @@ namespace GR.Image
     {
       if ( Image.PixelFormat != PixelFormat )
       {
-        if ( PixelFormat == System.Drawing.Imaging.PixelFormat.Undefined )
+        if ( PixelFormat == GR.Drawing.PixelFormat.Undefined )
         {
           throw new NotSupportedException( "Pixelformat has not been set" );
         }
@@ -715,9 +716,9 @@ namespace GR.Image
       {
         switch ( Image.PixelFormat )
         {
-          case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
-            if ( ( PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb )
-            ||   ( PixelFormat == System.Drawing.Imaging.PixelFormat.Format32bppRgb ) )
+          case GR.Drawing.PixelFormat.Format8bppIndexed:
+            if ( ( PixelFormat == GR.Drawing.PixelFormat.Format24bppRgb )
+            ||   ( PixelFormat == GR.Drawing.PixelFormat.Format32bppRgb ) )
             {
               for ( int y = 0; y < copyHeight; ++y )
               {
@@ -735,8 +736,8 @@ namespace GR.Image
         throw new NotSupportedException( "This mismatching Pixelformat is not supported yet" );
       }
 
-      if ( ( PixelFormat == System.Drawing.Imaging.PixelFormat.Format1bppIndexed )
-      ||   ( PixelFormat == System.Drawing.Imaging.PixelFormat.Format4bppIndexed ) )
+      if ( ( PixelFormat == GR.Drawing.PixelFormat.Format1bppIndexed )
+      ||   ( PixelFormat == GR.Drawing.PixelFormat.Format4bppIndexed ) )
       {
         // less than 1 byte per pixel
         for ( int y = 0; y < copyHeight; ++y )
@@ -753,6 +754,8 @@ namespace GR.Image
         {
           byte*   sourceData = (byte*)Image.PinData();
           byte*   pTargetData = (byte*)m_ImageData;
+
+          
           for ( int y = 0; y < copyHeight; ++y )
           {
             CopyMemory( (IntPtr)( pTargetData + X * BitsPerPixel / 8 + ( y + Y ) * BytesPerLine ),
@@ -902,7 +905,7 @@ namespace GR.Image
 
 
 
-    private IntPtr CreateBitmap( System.Drawing.Imaging.PixelFormat PixelFormat )
+    private IntPtr CreateBitmap( GR.Drawing.PixelFormat PixelFormat )
     {
       if ( m_Bitmap != IntPtr.Zero )
       {
@@ -943,13 +946,13 @@ namespace GR.Image
       {
         switch ( m_PixelFormat )
         {
-          case System.Drawing.Imaging.PixelFormat.Format1bppIndexed:
+          case GR.Drawing.PixelFormat.Format1bppIndexed:
             m_PaletteData = new GR.Memory.ByteBuffer( 2 * 3 );
             break;
-          case System.Drawing.Imaging.PixelFormat.Format4bppIndexed:
+          case GR.Drawing.PixelFormat.Format4bppIndexed:
             m_PaletteData = new GR.Memory.ByteBuffer( 16 * 3 );
             break;
-          case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
+          case GR.Drawing.PixelFormat.Format8bppIndexed:
             m_PaletteData = new GR.Memory.ByteBuffer( 256 * 3 );
             break;
         }
@@ -966,14 +969,14 @@ namespace GR.Image
 
       if ( m_Bitmap != IntPtr.Zero )
       {
-        if ( ( m_PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed )
-        ||   ( m_PixelFormat == System.Drawing.Imaging.PixelFormat.Format4bppIndexed )
-        ||   ( m_PixelFormat == System.Drawing.Imaging.PixelFormat.Format1bppIndexed ) )
+        if ( ( m_PixelFormat == GR.Drawing.PixelFormat.Format8bppIndexed )
+        ||   ( m_PixelFormat == GR.Drawing.PixelFormat.Format4bppIndexed )
+        ||   ( m_PixelFormat == GR.Drawing.PixelFormat.Format1bppIndexed ) )
         {
           RebuildPalette();
         }
       }
-      else if ( m_PixelFormat != System.Drawing.Imaging.PixelFormat.Undefined )
+      else if ( m_PixelFormat != GR.Drawing.PixelFormat.Undefined )
       {
         //System.Windows.Forms.MessageBox.Show( "Last error: " + Marshal.GetLastWin32Error() );
         if ( ( Width != 0 )
@@ -1188,7 +1191,7 @@ namespace GR.Image
       {
         switch ( m_PixelFormat )
         {
-          case System.Drawing.Imaging.PixelFormat.Format1bppIndexed:
+          case GR.Drawing.PixelFormat.Format1bppIndexed:
             unsafe
             {
               int   pitch = ( Width + 7 ) / 8;
@@ -1204,14 +1207,14 @@ namespace GR.Image
               }
             }
             break;
-          case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
-          case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+          case GR.Drawing.PixelFormat.Format32bppRgb:
+          case GR.Drawing.PixelFormat.Format32bppArgb:
             {
               uint* pData = (uint*)m_ImageData;
               pData[Y * m_Width + X] = Color;
             }
             break;
-          case System.Drawing.Imaging.PixelFormat.Format16bppRgb555:
+          case GR.Drawing.PixelFormat.Format16bppRgb555:
             {
               ushort* pData = (ushort*)m_ImageData;
               pData[Y * ( BytesPerLine / 2 ) + X] = (ushort)( ( ( ( Color & 0xff0000 ) >> 19 ) << 10 )
@@ -1219,13 +1222,13 @@ namespace GR.Image
                                                + ( ( ( Color & 0x0000ff ) >> 3 ) ) );;
             }
             break;
-          case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
+          case GR.Drawing.PixelFormat.Format8bppIndexed:
             {
               byte* pData = (byte*)m_ImageData;
               pData[Y * BytesPerLine + X] = (byte)Color;
             }
             break;
-          case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+          case GR.Drawing.PixelFormat.Format24bppRgb:
             unsafe
             {
               byte* pData = (byte*)m_ImageData;
@@ -1259,7 +1262,7 @@ namespace GR.Image
       {
         switch ( m_PixelFormat )
         {
-          case System.Drawing.Imaging.PixelFormat.Format1bppIndexed :
+          case GR.Drawing.PixelFormat.Format1bppIndexed :
             unsafe
             {
               int   pitch = ( Width + 7 ) / 8;
@@ -1267,7 +1270,7 @@ namespace GR.Image
 
               return (uint)( ( pData[Y * pitch + X / 8] >> ( 7 - ( X % 8 ) ) ) & 1 );
             };
-          case System.Drawing.Imaging.PixelFormat.Format4bppIndexed:
+          case GR.Drawing.PixelFormat.Format4bppIndexed:
             unsafe
             {
               int   pitch = Width / 2;
@@ -1279,13 +1282,13 @@ namespace GR.Image
               }
               return (uint)( pData[Y * pitch + X / 2] & 0x0f );
             };
-          case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
-          case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+          case GR.Drawing.PixelFormat.Format32bppRgb:
+          case GR.Drawing.PixelFormat.Format32bppArgb:
             {
               uint* pData = (uint*)m_ImageData;
               return pData[Y * m_Width + X];
             }
-          case System.Drawing.Imaging.PixelFormat.Format16bppRgb555:
+          case GR.Drawing.PixelFormat.Format16bppRgb555:
             {
               ushort* pData = (ushort*)m_ImageData;
               ushort  value = pData[Y * m_Width + X];
@@ -1293,12 +1296,12 @@ namespace GR.Image
                              + ( ( ( ( value & 0x03e0 ) >> 5 ) * 255 / 31 ) << 8 )
                              + ( ( ( ( value & 0x001f ) ) * 255 / 31 ) ) );
             }
-          case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
+          case GR.Drawing.PixelFormat.Format8bppIndexed:
             {
               byte* pData = (byte*)m_ImageData;
               return pData[Y * m_Width + X];
             }
-          case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+          case GR.Drawing.PixelFormat.Format24bppRgb:
             unsafe
             {
               byte* pData = (byte*)m_ImageData;
@@ -1684,7 +1687,7 @@ namespace GR.Image
                 int   iWidth = infoHeader.biWidth,
                       iHeight = infoHeader.biHeight;
 
-                ImageData.Create( iWidth, iHeight, System.Drawing.Imaging.PixelFormat.Format1bppIndexed );
+                ImageData.Create( iWidth, iHeight, GR.Drawing.PixelFormat.Format1bppIndexed );
                 for ( int j = 0; j < System.Math.Abs( iHeight ); j++ )
                 {
                   for ( int i = 0; i < iWidth; i++ )
@@ -1733,7 +1736,7 @@ namespace GR.Image
                 int   iWidth = infoHeader.biWidth,
                       iHeight = infoHeader.biHeight;
 
-                ImageData.Create( iWidth, iHeight, System.Drawing.Imaging.PixelFormat.Format4bppIndexed );
+                ImageData.Create( iWidth, iHeight, GR.Drawing.PixelFormat.Format4bppIndexed );
                 for ( int j = 0; j < System.Math.Abs( iHeight ); j++ )
                 {
                   for ( int i = 0; i < iWidth; i++ )
@@ -1779,7 +1782,7 @@ namespace GR.Image
                 int   iWidth = infoHeader.biWidth,
                       iHeight = infoHeader.biHeight;
 
-                ImageData.Create( iWidth, iHeight, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+                ImageData.Create( iWidth, iHeight, GR.Drawing.PixelFormat.Format8bppIndexed );
                 for ( int j = 0; j < System.Math.Abs( iHeight ); j++ )
                 {
                   for ( int i = 0; i < iWidth; i++ )
@@ -1825,7 +1828,7 @@ namespace GR.Image
                 int   iWidth = infoHeader.biWidth,
                       iHeight = infoHeader.biHeight;
 
-                ImageData.Create( iWidth, iHeight, System.Drawing.Imaging.PixelFormat.Format16bppRgb555 );
+                ImageData.Create( iWidth, iHeight, GR.Drawing.PixelFormat.Format16bppRgb555 );
 
                 ushort    wDummy;
 
@@ -1870,7 +1873,7 @@ namespace GR.Image
                 int   iWidth = infoHeader.biWidth,
                       iHeight = infoHeader.biHeight;
 
-                ImageData.Create( iWidth, iHeight, System.Drawing.Imaging.PixelFormat.Format24bppRgb );
+                ImageData.Create( iWidth, iHeight, GR.Drawing.PixelFormat.Format24bppRgb );
 
                 for ( j = 0; j < System.Math.Abs( iHeight ); j++ )
                 {
@@ -1902,7 +1905,7 @@ namespace GR.Image
                 int   iWidth = infoHeader.biWidth,
                       iHeight = infoHeader.biHeight;
 
-                ImageData.Create( iWidth, iHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+                ImageData.Create( iWidth, iHeight, GR.Drawing.PixelFormat.Format32bppRgb );
 
                 uint   dwDummy;
 
@@ -2745,7 +2748,7 @@ namespace GR.Image
 
     public static FastImage FromImage( System.Drawing.Bitmap Bitmap )
     {
-      GR.Image.FastImage image = new FastImage( Bitmap.Width, Bitmap.Height, Bitmap.PixelFormat );
+      GR.Image.FastImage image = new FastImage( Bitmap.Width, Bitmap.Height, (GR.Drawing.PixelFormat)Bitmap.PixelFormat );
 
       for ( int i = 0; i < Bitmap.Palette.Entries.Length; ++i )
       {

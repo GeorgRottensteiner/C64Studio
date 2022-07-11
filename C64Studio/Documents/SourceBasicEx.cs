@@ -11,11 +11,11 @@ using GR.IO;
 using System.Linq;
 using C64Models.BASIC;
 using GR.Image;
-using RetroDevStudio;
+using RetroDevStudio.Dialogs;
 
 
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class SourceBasicEx : CompilableDocument
   {

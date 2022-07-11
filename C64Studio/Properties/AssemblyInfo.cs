@@ -2,6 +2,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+
+
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
@@ -10,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "GR Games" )]
 [assembly: AssemblyProduct( "C64Studio" )]
-[assembly: AssemblyCopyright( "Copyright © GR Games 2011–2020" )]
+[assembly: AssemblyCopyright( "Copyright © GR Games 2011–2022" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 

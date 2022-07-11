@@ -1,4 +1,5 @@
 ﻿using RetroDevStudio.CustomRenderer;
+using RetroDevStudio.Documents;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -12,7 +12,7 @@ using GR.Memory;
 using RetroDevStudio;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class CharsetEditor : BaseDocument
   {

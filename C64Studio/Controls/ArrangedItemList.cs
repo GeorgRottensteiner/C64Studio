@@ -8,7 +8,9 @@ using System.Windows.Forms;
 using System.Collections;
 using GR.Image;
 
-namespace RetroDevStudio
+
+
+namespace RetroDevStudio.Controls
 {
   public partial class ArrangedItemList : UserControl, IDPIHandlerResize
   {

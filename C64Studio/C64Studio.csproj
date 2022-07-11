@@ -1,1360 +1,303 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5BEA5CE5-4C5D-4EC5-83F3-83634E929858}</ProjectGuid>
+    <TargetFrameworks>net3.5;net4.8;net6.0-windows</TargetFrameworks>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RetroDevStudio</RootNamespace>
-    <AssemblyName>C64Studio</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ApplicationIcon>c64.ico</ApplicationIcon>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpSid, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GeorgRottensteiner.SharpSid.0.9.1\lib\net35\SharpSid.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=3.0.6.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
-      <HintPath>..\packages\DockPanelSuite.3.0.6\lib\net35-client\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AcceleratorKey.cs" />
-    <Compile Include="BASICKeyMap.cs" />
-    <Compile Include="CompileResultItemComparer.cs" />
-    <Compile Include="Controls\ArrangedItemList.cs">
+    <Compile Update="Controls\ArrangedItemList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ArrangedItemList.Designer.cs">
-      <DependentUpon>ArrangedItemList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\CharacterEditor.cs">
+    <Compile Update="Controls\CharacterEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\CharacterEditor.Designer.cs">
-      <DependentUpon>CharacterEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsBase.cs">
+    <Compile Update="Controls\ColorSettings\ColorSettingsBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsBase.Designer.cs">
-      <DependentUpon>ColorSettingsBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsECMMega65.cs">
+    <Compile Update="Controls\ColorSettings\ColorSettingsECMMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsECMMega65.Designer.cs">
-      <DependentUpon>ColorSettingsECMMega65.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsNCMMega65.cs">
+    <Compile Update="Controls\ColorSettings\ColorSettingsNCMMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsNCMMega65.Designer.cs">
-      <DependentUpon>ColorSettingsNCMMega65.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsHiResMega65.cs">
+    <Compile Update="Controls\ColorSettings\ColorSettingsHiResMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsHiResMega65.Designer.cs">
-      <DependentUpon>ColorSettingsHiResMega65.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsMCSprites.cs">
+    <Compile Update="Controls\ColorSettings\ColorSettingsMCSprites.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsMCSprites.Designer.cs">
-      <DependentUpon>ColorSettingsMCSprites.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsVC20.cs">
+    <Compile Update="Controls\ColorSettings\ColorSettingsVC20.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsVC20.Designer.cs">
-      <DependentUpon>ColorSettingsVC20.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsMega65.cs">
+    <Compile Update="Controls\ColorSettings\ColorSettingsMega65.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsMega65.Designer.cs">
-      <DependentUpon>ColorSettingsMega65.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsHiRes.cs">
+    <Compile Update="Controls\ColorSettings\ColorSettingsHiRes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsHiRes.Designer.cs">
-      <DependentUpon>ColorSettingsHiRes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsECM.cs">
+    <Compile Update="Controls\ColorSettings\ColorSettingsECM.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsECM.Designer.cs">
-      <DependentUpon>ColorSettingsECM.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsMCCharacter.cs">
+    <Compile Update="Controls\ColorSettings\ColorSettingsMCCharacter.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ColorSettings\ColorSettingsMCCharacter.Designer.cs">
-      <DependentUpon>ColorSettingsMCCharacter.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\CSButton.cs">
+    <Compile Update="Controls\CSButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\CSCheckBox.cs">
+    <Compile Update="Controls\CSCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\CustomDrawControl.cs">
+    <Compile Update="Controls\CustomDrawControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsImage.cs">
+    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsImage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsImage.Designer.cs">
-      <DependentUpon>ExportCharscreenAsImage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsMarqSPETSCII.cs">
+    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsMarqSPETSCII.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsMarqSPETSCII.Designer.cs">
-      <DependentUpon>ExportCharscreenAsMarqSPETSCII.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsImageFile.cs">
+    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsImageFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsImageFile.Designer.cs">
-      <DependentUpon>ExportCharscreenAsImageFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsCharset.cs">
+    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsCharset.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsCharset.Designer.cs">
-      <DependentUpon>ExportCharscreenAsCharset.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBinaryFile.cs">
+    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsBinaryFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBinaryFile.Designer.cs">
-      <DependentUpon>ExportCharscreenAsBinaryFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASIC.cs">
+    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsBASIC.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASIC.Designer.cs">
-      <DependentUpon>ExportCharscreenAsBASIC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASICData.cs">
+    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsBASICData.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASICData.Designer.cs">
-      <DependentUpon>ExportCharscreenAsBASICData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsAssembly.cs">
+    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenAsAssembly.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenAsAssembly.Designer.cs">
-      <DependentUpon>ExportCharscreenAsAssembly.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenFormBase.cs">
+    <Compile Update="Controls\ExportCharscreenForms\ExportCharscreenFormBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharscreenForms\ExportCharscreenFormBase.Designer.cs">
-      <DependentUpon>ExportCharscreenFormBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBASICChardef.cs">
+    <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsBASICChardef.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBASICChardef.Designer.cs">
-      <DependentUpon>ExportCharsetAsBASICChardef.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBASICData.cs">
+    <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsBASICData.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBASICData.Designer.cs">
-      <DependentUpon>ExportCharsetAsBASICData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsImage.cs">
+    <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsImage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsImage.Designer.cs">
-      <DependentUpon>ExportCharsetAsImage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsImageFile.cs">
+    <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsImageFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsImageFile.Designer.cs">
-      <DependentUpon>ExportCharsetAsImageFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBinaryFile.cs">
+    <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsBinaryFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsBinaryFile.Designer.cs">
-      <DependentUpon>ExportCharsetAsBinaryFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsAssembly.cs">
+    <Compile Update="Controls\ExportCharsetForms\ExportCharsetAsAssembly.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetAsAssembly.Designer.cs">
-      <DependentUpon>ExportCharsetAsAssembly.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetFormBase.cs">
+    <Compile Update="Controls\ExportCharsetForms\ExportCharsetFormBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportCharsetForms\ExportCharsetFormBase.Designer.cs">
-      <DependentUpon>ExportCharsetFormBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsImageFile.cs">
+    <Compile Update="Controls\ExportSpriteForms\ExportSpriteAsImageFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsImageFile.Designer.cs">
-      <DependentUpon>ExportSpriteAsImageFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsImage.cs">
+    <Compile Update="Controls\ExportSpriteForms\ExportSpriteAsImage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsImage.Designer.cs">
-      <DependentUpon>ExportSpriteAsImage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsBinaryFile.cs">
+    <Compile Update="Controls\ExportSpriteForms\ExportSpriteAsBinaryFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsBinaryFile.Designer.cs">
-      <DependentUpon>ExportSpriteAsBinaryFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsBASICData.cs">
+    <Compile Update="Controls\ExportSpriteForms\ExportSpriteAsBASICData.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsBASICData.Designer.cs">
-      <DependentUpon>ExportSpriteAsBASICData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsAssembly.cs">
+    <Compile Update="Controls\ExportSpriteForms\ExportSpriteAsAssembly.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteAsAssembly.Designer.cs">
-      <DependentUpon>ExportSpriteAsAssembly.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteFormBase.cs">
+    <Compile Update="Controls\ExportSpriteForms\ExportSpriteFormBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ExportSpriteForms\ExportSpriteFormBase.Designer.cs">
-      <DependentUpon>ExportSpriteFormBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\HexBoxCharPETSCIIViewer.cs" />
-    <Compile Include="Controls\HexBoxSpriteViewer.cs" />
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromBASIC.cs">
+    <Compile Update="Controls\ImportCharscreenForms\ImportCharscreenFromBASIC.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromBASIC.Designer.cs">
-      <DependentUpon>ImportCharscreenFromBASIC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromASM.cs">
+    <Compile Update="Controls\ImportCharscreenForms\ImportCharscreenFromASM.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromASM.Designer.cs">
-      <DependentUpon>ImportCharscreenFromASM.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromDefault.cs">
+    <Compile Update="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromDefault.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromDefault.Designer.cs">
-      <DependentUpon>ImportCharscreenCharsetFromDefault.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromCharsetFile.cs">
+    <Compile Update="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromCharsetFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromCharsetFile.Designer.cs">
-      <DependentUpon>ImportCharscreenCharsetFromCharsetFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromASM.cs">
+    <Compile Update="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromASM.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromASM.Designer.cs">
-      <DependentUpon>ImportCharscreenCharsetFromASM.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromBinaryFile.cs">
+    <Compile Update="Controls\ImportCharscreenForms\ImportCharscreenFromBinaryFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFromBinaryFile.Designer.cs">
-      <DependentUpon>ImportCharscreenFromBinaryFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFormBase.cs">
+    <Compile Update="Controls\ImportCharscreenForms\ImportCharscreenFormBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharscreenForms\ImportCharscreenFormBase.Designer.cs">
-      <DependentUpon>ImportCharscreenFormBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromDefault.cs">
+    <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromDefault.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromDefault.Designer.cs">
-      <DependentUpon>ImportCharsetFromDefault.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromBASICDATA.cs">
+    <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromBASICDATA.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromBASICDATA.Designer.cs">
-      <DependentUpon>ImportCharsetFromBASICDATA.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromASM.cs">
+    <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromASM.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromASM.Designer.cs">
-      <DependentUpon>ImportCharsetFromASM.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromImageFile.cs">
+    <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromImageFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromImageFile.Designer.cs">
-      <DependentUpon>ImportCharsetFromImageFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromBinaryFile.cs">
+    <Compile Update="Controls\ImportCharsetForms\ImportCharsetFromBinaryFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFromBinaryFile.Designer.cs">
-      <DependentUpon>ImportCharsetFromBinaryFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFormBase.cs">
+    <Compile Update="Controls\ImportCharsetForms\ImportCharsetFormBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportCharsetForms\ImportCharsetFormBase.Designer.cs">
-      <DependentUpon>ImportCharsetFormBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromImageFile.cs">
+    <Compile Update="Controls\ImportSpriteForms\ImportSpriteFromImageFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromImageFile.Designer.cs">
-      <DependentUpon>ImportSpriteFromImageFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromBinaryFile.cs">
+    <Compile Update="Controls\ImportSpriteForms\ImportSpriteFromBinaryFile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromBinaryFile.Designer.cs">
-      <DependentUpon>ImportSpriteFromBinaryFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromHEX.cs">
+    <Compile Update="Controls\ImportSpriteForms\ImportSpriteFromHEX.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromHEX.Designer.cs">
-      <DependentUpon>ImportSpriteFromHEX.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromBASICDATA.cs">
+    <Compile Update="Controls\ImportSpriteForms\ImportSpriteFromBASICDATA.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromBASICDATA.Designer.cs">
-      <DependentUpon>ImportSpriteFromBASICDATA.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromASM.cs">
+    <Compile Update="Controls\ImportSpriteForms\ImportSpriteFromASM.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFromASM.Designer.cs">
-      <DependentUpon>ImportSpriteFromASM.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFormBase.cs">
+    <Compile Update="Controls\ImportSpriteForms\ImportSpriteFormBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ImportSpriteForms\ImportSpriteFormBase.Designer.cs">
-      <DependentUpon>ImportSpriteFormBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ThemedButton.cs">
+    <Compile Update="Controls\ThemedButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\MenuButton.cs">
+    <Compile Update="Controls\MenuButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\HexBoxCharViewer.cs" />
-    <Compile Include="Converter\ColorQuantizer.cs" />
-    <Compile Include="Converter\CombinedGraphicsToCharset.cs" />
-    <Compile Include="Converter\GIFEncoder.cs" />
-    <Compile Include="Converter\PETSCIIToCharConverter.cs" />
-    <Compile Include="CustomRenderer\BASICSyntaxHighlighter.cs" />
-    <Compile Include="CustomRenderer\CustomToolStripRenderer.cs" />
-    <Compile Include="Compiling.cs" />
-    <Compile Include="CustomRenderer\StudioTheme.cs" />
-    <Compile Include="Debugger\IDebugger.cs" />
-    <Compile Include="Debugger\Tiny64Debugger.cs" />
-    <Compile Include="Debugger\XMEGA65RemoteDebugger.cs" />
-    <Compile Include="Debugger\VICERemoteDebuggerBinaryInterface.cs" />
-    <Compile Include="Dialogs\DlgPaletteEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\DlgPaletteEditor.Designer.cs">
-      <DependentUpon>DlgPaletteEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DlgImportDirArt.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\DlgImportDirArt.Designer.cs">
-      <DependentUpon>DlgImportDirArt.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormDeltaValue.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormDeltaValue.Designer.cs">
-      <DependentUpon>FormDeltaValue.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormRenameDisk.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormRenameDisk.Designer.cs">
-      <DependentUpon>FormRenameDisk.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormSplashScreen.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormSplashScreen.Designer.cs">
-      <DependentUpon>FormSplashScreen.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormSetOffset.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormSetOffset.Designer.cs">
-      <DependentUpon>FormSetOffset.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormGotoLine.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormGotoLine.Designer.cs">
-      <DependentUpon>FormGotoLine.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormGoto.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormGoto.Designer.cs">
-      <DependentUpon>FormGoto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormFilesChanged.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormFilesChanged.Designer.cs">
-      <DependentUpon>FormFilesChanged.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\CompilableDocument.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\FindReferences.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\FindReferences.Designer.cs">
-      <DependentUpon>FindReferences.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\ValueTableEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\ValueTableEditor.Designer.cs">
-      <DependentUpon>ValueTableEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Imaging.cs" />
-    <Compile Include="Dialogs\FormAppMode.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormAppMode.Designer.cs">
-      <DependentUpon>FormAppMode.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Navigating.cs" />
-    <Compile Include="Executing.cs" />
-    <Compile Include="Project\SingleBuildInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Searching.cs" />
-    <Compile Include="Debugging.cs" />
-    <Compile Include="Dialogs\DlgInterleaveData.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\DlgInterleaveData.Designer.cs">
-      <DependentUpon>DlgInterleaveData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Displayer\SpriteDisplayer.cs" />
-    <Compile Include="Displayer\CharacterDisplayer.cs" />
-    <Compile Include="Documents\BaseDocument.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Controls\MeasurableListView.cs">
+    <Compile Update="Controls\MeasurableListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Documents\SourceBasicEx.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\SourceBasicEx.Designer.cs">
-      <DependentUpon>SourceBasicEx.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\SourceASMEx.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\SourceASMEx.Designer.cs">
-      <DependentUpon>SourceASMEx.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\DebugStack.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\DebugStack.Designer.cs">
-      <DependentUpon>DebugStack.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DlgImportImageResize.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\DlgImportImageResize.Designer.cs">
-      <DependentUpon>DlgImportImageResize.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DocumentInfo.cs" />
-    <Compile Include="Documents\Disassembler.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\Disassembler.Designer.cs">
-      <DependentUpon>Disassembler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\SearchResults.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\SearchResults.Designer.cs">
-      <DependentUpon>SearchResults.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\DebugRegisters.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\DebugRegisters.Designer.cs">
-      <DependentUpon>DebugRegisters.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\Disassembly.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Controls\EditC64Filename.cs">
+    <Compile Update="Controls\EditC64Filename.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\EditC64Filename.Designer.cs">
-      <DependentUpon>EditC64Filename.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Formats\DisassemblyProject.cs" />
-    <Compile Include="Documents\FileManager.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\FileManager.Designer.cs">
-      <DependentUpon>FileManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormFindReplace.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormFindReplace.Designer.cs">
-      <DependentUpon>FormFindReplace.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DlgGraphicImport.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\DlgGraphicImport.Designer.cs">
-      <DependentUpon>DlgGraphicImport.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormRenameFile.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormRenameFile.Designer.cs">
-      <DependentUpon>FormRenameFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormRenumberBASIC.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormRenumberBASIC.Designer.cs">
-      <DependentUpon>FormRenumberBASIC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\Help.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\Help.Designer.cs">
-      <DependentUpon>Help.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\CharsetScreenEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\CharsetScreenEditor.Designer.cs">
-      <DependentUpon>CharsetScreenEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormProjectWizard.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormProjectWizard.Designer.cs">
-      <DependentUpon>FormProjectWizard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\BinaryDisplay.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\BinaryDisplay.Designer.cs">
-      <DependentUpon>BinaryDisplay.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\DebugBreakpoints.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\DebugBreakpoints.Designer.cs">
-      <DependentUpon>DebugBreakpoints.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormSolutionWizard.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormSolutionWizard.Designer.cs">
-      <DependentUpon>FormSolutionWizard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormLicense.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormLicense.Designer.cs">
-      <DependentUpon>FormLicense.cs</DependentUpon>
-    </Compile>
-    <Compile Include="IdleQueue\IdleRequest.cs" />
-    <Compile Include="LayoutInfo.cs" />
-    <Compile Include="Documents\MapEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\MapEditor.Designer.cs">
-      <DependentUpon>MapEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\PetSCIITable.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Parser\Disassembler.cs" />
-    <Compile Include="Project\Solution.cs" />
-    <Compile Include="PropertyTabs\PropBuildEventBuildChain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PropertyTabs\PropBuildEventBuildChain.Designer.cs">
-      <DependentUpon>PropBuildEventBuildChain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyTabs\PropBuildEventScript.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PropertyTabs\PropBuildEventScript.Designer.cs">
-      <DependentUpon>PropBuildEventScript.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyTabs\PropDebugging.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PropertyTabs\PropDebugging.Designer.cs">
-      <DependentUpon>PropDebugging.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyTabs\PropGeneral.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PropertyTabs\PropGeneral.Designer.cs">
-      <DependentUpon>PropGeneral.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyTabs\PropAssemblerType.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PropertyTabs\PropAssemblerType.Designer.cs">
-      <DependentUpon>PropAssemblerType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyTabs\PropBuildEvents.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PropertyTabs\PropBuildEvents.Designer.cs">
-      <DependentUpon>PropBuildEvents.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyTabs\PropCompileTarget.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PropertyTabs\PropCompileTarget.Designer.cs">
-      <DependentUpon>PropCompileTarget.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PropertyTabs\PropertyTabBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Settings\PerspectiveDetails.cs" />
-    <Compile Include="StudioCore.cs" />
-    <Compile Include="Tasks\TaskCheckForUpdate.cs" />
-    <Compile Include="Tasks\TaskManager.cs" />
-    <Compile Include="Tasks\TaskDebugRunTo.cs" />
-    <Compile Include="Tasks\TaskOpenSolution.cs" />
-    <Compile Include="Tasks\TaskCompile.cs" />
-    <Compile Include="Tasks\TaskUpdateWatches.cs" />
-    <Compile Include="Tasks\TaskRefreshOutline.cs" />
-    <Compile Include="Tasks\TaskPreparseFilesInProject.cs" />
-    <Compile Include="Tasks\TaskUpdateCompileResult.cs" />
-    <Compile Include="Tasks\TaskUpdateKeywords.cs" />
-    <Compile Include="Types\ApplicationEvent.cs" />
-    <Compile Include="Documents\GraphicScreenEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\GraphicScreenEditor.Designer.cs">
-      <DependentUpon>GraphicScreenEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\NoDblClkTreeView.cs">
+    <Compile Update="Controls\NoDblClkTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\NoDblClkTreeView.Designer.cs">
-      <DependentUpon>NoDblClkTreeView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\Outline.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\Outline.Designer.cs">
-      <DependentUpon>Outline.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\DebugWatch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\DebugWatch.Designer.cs">
-      <DependentUpon>DebugWatch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormAbout.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormAbout.Designer.cs">
-      <DependentUpon>FormAbout.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormMacros.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormMacros.Designer.cs">
-      <DependentUpon>FormMacros.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FormWizard.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FormWizard.Designer.cs">
-      <DependentUpon>FormWizard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\CompileResult.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\CompileResult.Designer.cs">
-      <DependentUpon>CompileResult.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\ElementProperties.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\ElementProperties.Designer.cs">
-      <DependentUpon>ElementProperties.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\DebugMemory.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\DebugMemory.Designer.cs">
-      <DependentUpon>DebugMemory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\HexPanel.cs">
+    <Compile Update="Controls\HexPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Documents\CharsetEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\CharsetEditor.Designer.cs">
-      <DependentUpon>CharsetEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\Calculator.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\Calculator.Designer.cs">
-      <DependentUpon>Calculator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Project\DependencyBuildState.cs" />
-    <Compile Include="Project\FileDependency.cs" />
-    <Compile Include="Documents\SpriteEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\SpriteEditor.Designer.cs">
-      <DependentUpon>SpriteEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\ProjectProperties.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\ProjectProperties.Designer.cs">
-      <DependentUpon>ProjectProperties.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ProjectSettings.cs" />
-    <Compile Include="Dialogs\Settings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\Settings.Designer.cs">
-      <DependentUpon>Settings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\SolutionExplorer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\SolutionExplorer.Designer.cs">
-      <DependentUpon>SolutionExplorer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Documents\OutputDisplay.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\ReadOnlyFile.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Documents\ReadOnlyFile.Designer.cs">
-      <DependentUpon>ReadOnlyFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Project\Project.cs" />
-    <Compile Include="Project\ProjectElement.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Controls\ArrangedItemList.resx">
-      <DependentUpon>ArrangedItemList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\CharacterEditor.resx">
-      <DependentUpon>CharacterEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsBase.resx">
-      <DependentUpon>ColorSettingsBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsECMMega65.resx">
-      <DependentUpon>ColorSettingsECMMega65.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsNCMMega65.resx">
-      <DependentUpon>ColorSettingsNCMMega65.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsHiResMega65.resx">
-      <DependentUpon>ColorSettingsHiResMega65.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsMCSprites.resx">
-      <DependentUpon>ColorSettingsMCSprites.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsVC20.resx">
-      <DependentUpon>ColorSettingsVC20.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsMega65.resx">
-      <DependentUpon>ColorSettingsMega65.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsHiRes.resx">
-      <DependentUpon>ColorSettingsHiRes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsECM.resx">
-      <DependentUpon>ColorSettingsECM.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ColorSettings\ColorSettingsMCCharacter.resx">
-      <DependentUpon>ColorSettingsMCCharacter.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsImage.resx">
-      <DependentUpon>ExportCharscreenAsImage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsMarqSPETSCII.resx">
-      <DependentUpon>ExportCharscreenAsMarqSPETSCII.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsImageFile.resx">
-      <DependentUpon>ExportCharscreenAsImageFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsCharset.resx">
-      <DependentUpon>ExportCharscreenAsCharset.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsBinaryFile.resx">
-      <DependentUpon>ExportCharscreenAsBinaryFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASIC.resx">
-      <DependentUpon>ExportCharscreenAsBASIC.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsBASICData.resx">
-      <DependentUpon>ExportCharscreenAsBASICData.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenAsAssembly.resx">
-      <DependentUpon>ExportCharscreenAsAssembly.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharscreenForms\ExportCharscreenFormBase.resx">
-      <DependentUpon>ExportCharscreenFormBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsBASICChardef.resx">
-      <DependentUpon>ExportCharsetAsBASICChardef.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsBASICData.resx">
-      <DependentUpon>ExportCharsetAsBASICData.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsImage.resx">
-      <DependentUpon>ExportCharsetAsImage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsImageFile.resx">
-      <DependentUpon>ExportCharsetAsImageFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsBinaryFile.resx">
-      <DependentUpon>ExportCharsetAsBinaryFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetAsAssembly.resx">
-      <DependentUpon>ExportCharsetAsAssembly.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportCharsetForms\ExportCharsetFormBase.resx">
-      <DependentUpon>ExportCharsetFormBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteAsImageFile.resx">
-      <DependentUpon>ExportSpriteAsImageFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteAsImage.resx">
-      <DependentUpon>ExportSpriteAsImage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteAsBinaryFile.resx">
-      <DependentUpon>ExportSpriteAsBinaryFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteAsBASICData.resx">
-      <DependentUpon>ExportSpriteAsBASICData.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteAsAssembly.resx">
-      <DependentUpon>ExportSpriteAsAssembly.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExportSpriteForms\ExportSpriteFormBase.resx">
-      <DependentUpon>ExportSpriteFormBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenFromBASIC.resx">
-      <DependentUpon>ImportCharscreenFromBASIC.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenFromASM.resx">
-      <DependentUpon>ImportCharscreenFromASM.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromDefault.resx">
-      <DependentUpon>ImportCharscreenCharsetFromDefault.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromCharsetFile.resx">
-      <DependentUpon>ImportCharscreenCharsetFromCharsetFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenCharsetFromASM.resx">
-      <DependentUpon>ImportCharscreenCharsetFromASM.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenFromBinaryFile.resx">
-      <DependentUpon>ImportCharscreenFromBinaryFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharscreenForms\ImportCharscreenFormBase.resx">
-      <DependentUpon>ImportCharscreenFormBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFromDefault.resx">
-      <DependentUpon>ImportCharsetFromDefault.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFromBASICDATA.resx">
-      <DependentUpon>ImportCharsetFromBASICDATA.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFromASM.resx">
-      <DependentUpon>ImportCharsetFromASM.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFromImageFile.resx">
-      <DependentUpon>ImportCharsetFromImageFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFromBinaryFile.resx">
-      <DependentUpon>ImportCharsetFromBinaryFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportCharsetForms\ImportCharsetFormBase.resx">
-      <DependentUpon>ImportCharsetFormBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFromImageFile.resx">
-      <DependentUpon>ImportSpriteFromImageFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFromBinaryFile.resx">
-      <DependentUpon>ImportSpriteFromBinaryFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFromHEX.resx">
-      <DependentUpon>ImportSpriteFromHEX.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFromBASICDATA.resx">
-      <DependentUpon>ImportSpriteFromBASICDATA.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFromASM.resx">
-      <DependentUpon>ImportSpriteFromASM.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ImportSpriteForms\ImportSpriteFormBase.resx">
-      <DependentUpon>ImportSpriteFormBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\DlgPaletteEditor.resx">
-      <DependentUpon>DlgPaletteEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\DlgImportDirArt.resx">
-      <DependentUpon>DlgImportDirArt.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\DlgInterleaveData.resx">
-      <DependentUpon>DlgInterleaveData.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormDeltaValue.resx">
-      <DependentUpon>FormDeltaValue.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormRenameDisk.resx">
-      <DependentUpon>FormRenameDisk.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormSplashScreen.resx">
-      <DependentUpon>FormSplashScreen.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormSetOffset.resx">
-      <DependentUpon>FormSetOffset.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormGotoLine.resx">
-      <DependentUpon>FormGotoLine.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormGoto.resx">
-      <DependentUpon>FormGoto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormFilesChanged.resx">
-      <DependentUpon>FormFilesChanged.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\CompilableDocument.resx">
-      <DependentUpon>CompilableDocument.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\BaseDocument.resx">
-      <DependentUpon>BaseDocument.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\FindReferences.resx">
-      <DependentUpon>FindReferences.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\SourceBasicEx.resx">
-      <DependentUpon>SourceBasicEx.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\SourceASMEx.resx">
-      <DependentUpon>SourceASMEx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\DebugStack.resx">
-      <DependentUpon>DebugStack.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\DlgImportImageResize.resx">
-      <DependentUpon>DlgImportImageResize.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\Disassembler.resx">
-      <DependentUpon>Disassembler.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\SearchResults.resx">
-      <DependentUpon>SearchResults.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\DebugRegisters.resx">
-      <DependentUpon>DebugRegisters.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\DebugWatch.resx">
-      <DependentUpon>DebugWatch.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormAbout.resx">
-      <DependentUpon>FormAbout.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormFindReplace.resx">
-      <DependentUpon>FormFindReplace.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\DlgGraphicImport.resx">
-      <DependentUpon>DlgGraphicImport.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormMacros.resx">
-      <DependentUpon>FormMacros.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormRenameFile.resx">
-      <DependentUpon>FormRenameFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormRenumberBASIC.resx">
-      <DependentUpon>FormRenumberBASIC.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormAppMode.resx">
-      <DependentUpon>FormAppMode.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormWizard.resx">
-      <DependentUpon>FormWizard.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\CompileResult.resx">
-      <DependentUpon>CompileResult.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\ElementProperties.resx">
-      <DependentUpon>ElementProperties.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\DebugMemory.resx">
-      <DependentUpon>DebugMemory.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\CharsetEditor.resx">
-      <DependentUpon>CharsetEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\Calculator.resx">
-      <DependentUpon>Calculator.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\FileManager.resx">
-      <DependentUpon>FileManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\Help.resx">
-      <DependentUpon>Help.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\GraphicScreenEditor.resx">
-      <DependentUpon>GraphicScreenEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\CharsetScreenEditor.resx">
-      <DependentUpon>CharsetScreenEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormProjectWizard.resx">
-      <DependentUpon>FormProjectWizard.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\BinaryDisplay.resx">
-      <DependentUpon>BinaryDisplay.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\DebugBreakpoints.resx">
-      <DependentUpon>DebugBreakpoints.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormSolutionWizard.resx">
-      <DependentUpon>FormSolutionWizard.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\FormLicense.resx">
-      <DependentUpon>FormLicense.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\MapEditor.resx">
-      <DependentUpon>MapEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\PetSCIITable.resx">
-      <DependentUpon>PetSCIITable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\Outline.resx">
-      <DependentUpon>Outline.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\ValueTableEditor.resx">
-      <DependentUpon>ValueTableEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PropertyTabs\PropBuildEventBuildChain.resx">
-      <DependentUpon>PropBuildEventBuildChain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PropertyTabs\PropBuildEventScript.resx">
-      <DependentUpon>PropBuildEventScript.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PropertyTabs\PropDebugging.resx">
-      <DependentUpon>PropDebugging.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PropertyTabs\PropGeneral.resx">
-      <DependentUpon>PropGeneral.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PropertyTabs\PropAssemblerType.resx">
-      <DependentUpon>PropAssemblerType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PropertyTabs\PropBuildEvents.resx">
-      <DependentUpon>PropBuildEvents.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PropertyTabs\PropCompileTarget.resx">
-      <DependentUpon>PropCompileTarget.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\SpriteEditor.resx">
-      <DependentUpon>SpriteEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\SolutionExplorer.resx">
-      <DependentUpon>SolutionExplorer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\OutputDisplay.resx">
-      <DependentUpon>OutputDisplay.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\ProjectProperties.resx">
-      <DependentUpon>ProjectProperties.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Documents\ReadOnlyFile.resx">
-      <DependentUpon>ReadOnlyFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\Settings.resx">
-      <DependentUpon>Settings.cs</DependentUpon>
-    </EmbeddedResource>
-    <None Include="app.config" />
     <EmbeddedResource Include="C64_Pro_Mono_v1.0-STYLE.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
+    <Compile Update="Controls\ZoomBrowser.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Debugger\VICERemoteDebugger.cs" />
-    <Compile Include="Settings\StudioSettings.cs" />
-    <Compile Include="Tasks\Task.cs" />
-    <Compile Include="Tasks\TaskParseFile.cs" />
-    <Compile Include="ToolInfo.cs" />
-    <Compile Include="Types\BuildChain.cs" />
-    <Compile Include="Types\BuildChainEntry.cs" />
-    <Compile Include="Types\ClipboardImageList.cs" />
-    <Compile Include="Types\EmulatorInfo.cs" />
-    <Compile Include="Undo\UndoCharscreenCharsetChange.cs" />
-    <Compile Include="Undo\UndoCharacterEditorCharChange.cs" />
-    <Compile Include="Undo\UndoCharacterEditorPlaygroundCharChange.cs" />
-    <Compile Include="Undo\UndoCharacterEditorValuesChange.cs" />
-    <Compile Include="Undo\UndoCharacterEditorSwapCategories.cs" />
-    <Compile Include="Undo\UndoGraphicScreenValuesChange.cs" />
-    <Compile Include="Undo\UndoMapSwap.cs" />
-    <Compile Include="Undo\UndoGraphicScreenSizeChange.cs" />
-    <Compile Include="Undo\UndoGraphicScreenImageChange.cs" />
-    <Compile Include="Undo\UndoCharscreenValuesChange.cs" />
-    <Compile Include="Undo\UndoCharscreenSizeChange.cs" />
-    <Compile Include="Undo\UndoCharscreenCharChange.cs" />
-    <Compile Include="Undo\UndoSpritesetExchangeLayer.cs" />
-    <Compile Include="Undo\UndoSpritesetRemoveLayer.cs" />
-    <Compile Include="Undo\UndoSpritesetAddLayer.cs" />
-    <Compile Include="Undo\UndoSpritesetValuesChange.cs" />
-    <Compile Include="Undo\UndoSpritesetSpriteChange.cs" />
-    <Compile Include="Undo\UndoCharsetRemoveCategory.cs" />
-    <Compile Include="Undo\UndoCharsetAddCategory.cs" />
-    <Compile Include="Undo\UndoCharacterEditorExchangeColors.cs" />
-    <Compile Include="Undo\UndoCharsetCharChange.cs" />
-    <Compile Include="Undo\UndoMapTileExchange.cs" />
-    <Compile Include="Undo\UndoMapTileRemove.cs" />
-    <Compile Include="Undo\UndoMapTileAdd.cs" />
-    <Compile Include="Undo\UndoMapTileModified.cs" />
-    <Compile Include="Undo\UndoMapRemove.cs" />
-    <Compile Include="Undo\UndoMapAdd.cs" />
-    <Compile Include="Undo\UndoMapValueChange.cs" />
-    <Compile Include="Undo\UndoMapSizeChange.cs" />
-    <Compile Include="Undo\UndoMapTilesChange.cs" />
-    <Compile Include="Undo\UndoTask.cs" />
-    <Compile Include="Undo\UndoManager.cs" />
-    <Compile Include="UnitTests\TestManager.cs" />
-    <Compile Include="WatchEntry.cs" />
-    <Compile Include="Controls\ZoomBrowser.cs">
-      <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BASIC Dialects\BASIC 65.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="BASIC Dialects\BASIC Lightning.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="BASIC Dialects\BASIC V10.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="BASIC Dialects\BASIC V3.5.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="BASIC Dialects\BASIC V7.0.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="BASIC Dialects\Laser BASIC.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="BASIC Dialects\Simons%27 BASIC.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="BASIC Dialects\Tuned Simons%27 BASIC.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="c64.ico" />
-    <None Include="Resources\toolbar_truedrive_enabled.ico" />
-    <None Include="Resources\toolbar_truedrive_enabled1.ico" />
-    <None Include="Resources\toolbar_truedrive_disabled.ico" />
-    <None Include="Resources\toolbar_truedrive_disabled.bmp" />
-    <None Include="Resources\tool_validate.ico" />
-    <None Include="Resources\charscreen_reverse_off.ico" />
-    <None Include="Resources\charscreen_reverse_on.ico" />
-    <None Include="Resources\charscreen_reverse_off1.ico" />
-    <None Include="Resources\charscreen_reverse_on1.ico" />
-    <None Include="Resources\toolbar_basic_toggle_upperlowercase_down.png" />
-    <None Include="Resources\toolbar_basic_toggle_upperlowercase_up.png" />
-    <None Include="Resources\toolbar_basic_string_mode_active.png" />
-    <None Include="Resources\toolbar_basic_string_mode_inactive.png" />
-    <None Include="Resources\add1.png" />
-    <None Include="Resources\clone.png" />
-    <None Include="Resources\clone1.png" />
-    <None Include="Resources\clone2.png" />
-    <None Include="Resources\edit_copy.png" />
     <None Include="Resources\tool_none1.ico" />
     <None Include="Resources\tool_none.bmp" />
     <None Include="Resources\tool_none2.png" />
-    <None Include="Resources\charscreen_autocenter.ico" />
-    <None Include="Resources\charscreen_autocenter_off.ico" />
-    <None Include="Resources\close_all_sections.ico" />
-    <Content Include="TODO.txt" />
-    <None Include="Resources\charscreen_text1.ico" />
-    <None Include="Resources\charscreen_text.ico" />
-    <None Include="Resources\valuetable.ico" />
-    <None Include="Resources\charscreen_colors_off.ico" />
-    <None Include="Resources\charscreen_chars_off.ico" />
-    <None Include="Resources\charscreen_chars.ico" />
-    <None Include="Resources\charscreen_colors.ico" />
-    <None Include="Resources\charscreen_chars.bmp" />
-    <None Include="Resources\icon_memory_ram.ico" />
-    <None Include="Resources\icon_memory_cpu.ico" />
-    <None Include="Resources\toolbar_basic_symbols_enabled.png" />
-    <None Include="Resources\toolbar_basic_symbols_disabled.png" />
-    <None Include="Resources\flag_green_on.ico" />
-    <None Include="Resources\flag_green_off.ico" />
-    <None Include="Resources\flag_blue_on.ico" />
-    <None Include="Resources\flag_blue_off.ico" />
-    <None Include="Resources\disassembler.ico" />
-    <None Include="Resources\binary.ico" />
-    <None Include="Resources\toolbar_truedrive_enabled.bmp" />
-    <None Include="Resources\spriteset.ico" />
-    <None Include="Resources\c64.ico" />
-    <None Include="Resources\charset.ico" />
-    <None Include="Resources\charsetscreen.ico" />
-    <None Include="Resources\folder.ico" />
-    <None Include="Resources\graphicscreen.ico" />
-    <None Include="Resources\mapeditor.ico" />
-    <None Include="Resources\project.ico" />
-    <None Include="Resources\solution.ico" />
-    <None Include="Resources\source.ico" />
-    <None Include="Resources\source_basic.ico" />
-    <None Include="Resources\tool_quad.ico" />
-    <None Include="Resources\tool_fill.ico" />
-    <None Include="Resources\tool_rect.ico" />
-    <None Include="Resources\tool_select.ico" />
-    <None Include="Resources\tool_none.ico" />
-    <None Include="Resources\arrow_down.png" />
-    <None Include="Resources\arrow_up.png" />
-    <None Include="Resources\delete.png" />
-    <None Include="Resources\add.png" />
-    <None Include="Resources\breakpoint.gif" />
-    <None Include="Resources\breakpoint.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Documents\SourceASM.cs" />
+    <Compile Remove="Documents\SourceASM.Designer.cs" />
+    <Compile Remove="Documents\SourceBasic.cs" />
+    <Compile Remove="Documents\SourceBasic.Designer.cs" />
+    <Compile Remove="FastImage.cs" />
+    <Compile Remove="FastPictureBox.cs" />
+    <Compile Remove="FileParser.cs" />
+    <Compile Remove="FormGraphicImport.cs" />
+    <Compile Remove="FormGraphicImport.Designer.cs" />
+    <Compile Remove="ImageListbox.cs" />
+    <Compile Remove="Project.cs" />
+    <Compile Remove="ProjectElement.cs" />
+    <Compile Remove="ProjectExplorer.cs" />
+    <Compile Remove="ProjectExplorer.Designer.cs" />
+    <Compile Remove="ScrollablePanel.cs" />
+    <Compile Remove="StudioSettings.cs" />
+    <Compile Remove="Tasks\TaskBuildElement.cs" />
+    <Compile Remove="Types.cs" />
+    <Compile Remove="Types\CharsetProject.cs" />
+    <EmbeddedResource Remove="Documents\SourceASM.resx" />
+    <EmbeddedResource Remove="Documents\SourceBasic.resx" />
+    <EmbeddedResource Remove="FormGraphicImport.resx" />
+    <EmbeddedResource Remove="ProjectExplorer.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="BASIC Dialects\BASIC 65.txt" />
+    <None Remove="BASIC Dialects\BASIC Lightning.txt" />
+    <None Remove="BASIC Dialects\BASIC V10.txt" />
+    <None Remove="BASIC Dialects\BASIC V3.5.txt" />
+    <None Remove="BASIC Dialects\BASIC V4.5.txt" />
+    <None Remove="BASIC Dialects\BASIC V7.0.txt" />
+    <None Remove="BASIC Dialects\Laser BASIC.txt" />
+    <None Remove="BASIC Dialects\Simons' BASIC.txt" />
+    <None Remove="BASIC Dialects\Tuned Simons' BASIC.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BASIC Dialects\BASIC 65.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\BASIC Lightning.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\BASIC V10.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\BASIC V3.5.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\BASIC V4.5.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\BASIC V7.0.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\Laser BASIC.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\Simons' BASIC.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BASIC Dialects\Tuned Simons' BASIC.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DockPanelSuite" Version="3.1.0" />
+    <PackageReference Include="DockPanelSuite.ThemeVS2005" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FastColoredTextBox\FastColoredTextBox.csproj">
-      <Project>{6dd14a85-ccfc-4774-bd26-0f5772512319}</Project>
-      <Name>FastColoredTextBox</Name>
+      <Private></Private>
+      <Aliases></Aliases>
     </ProjectReference>
-    <ProjectReference Include="..\HexBox\HexBox.csproj">
-      <Project>{EA74431C-8749-4F1A-8F8F-FCEDAFAE89B9}</Project>
-      <Name>HexBox</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\HexBox\HexBox.csproj" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="..\Common\Common.projitems" Label="Shared" />
-  <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <EmbeddedResource Update="Documents\ReadOnlyFile.resx">
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
 copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"</PostBuildEvent>
@@ -1374,5 +317,27 @@ copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"</PostBuildEvent>
       rm -f "$(SolutionDir)C64StudioRelease/BASIC Dialects/"
       cp $(ProjectDir)BASIC?Dialects/* $(SolutionDir)C64StudioRelease/BASIC?Dialects
     </PostBuildEvent>
+    <ApplicationIcon>c64.ico</ApplicationIcon>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net3.5|AnyCPU'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net3.5|AnyCPU'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net4.8|AnyCPU'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net4.8|AnyCPU'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <Import Project="..\Common\Common.projitems" Label="Shared" />
+  <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
 </Project>

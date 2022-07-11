@@ -9,7 +9,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using static RetroDevStudio.BaseDocument;
+
+
 
 namespace RetroDevStudio.Controls
 {
@@ -44,7 +45,7 @@ namespace RetroDevStudio.Controls
       int     neededWidth   = Info.Charscreen.ScreenWidth * 8;
       int     neededHeight  = Info.Charscreen.ScreenHeight * 8;
 
-      GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      GR.Image.MemoryImage targetImg = new GR.Image.MemoryImage( neededWidth, neededHeight, GR.Drawing.PixelFormat.Format32bppRgb );
 
       Info.Image.DrawTo( targetImg, 0, 0 );
 

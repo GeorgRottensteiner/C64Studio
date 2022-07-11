@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+
+
 
 namespace GR.Image
 {
@@ -42,7 +42,7 @@ namespace GR.Image
 
 
 
-    System.Drawing.Imaging.PixelFormat PixelFormat
+    GR.Drawing.PixelFormat PixelFormat
     {
       get;
     }

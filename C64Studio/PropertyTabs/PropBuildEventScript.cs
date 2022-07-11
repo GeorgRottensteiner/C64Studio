@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+﻿using RetroDevStudio.Dialogs;
+using System;
 
 
 
@@ -52,7 +47,7 @@ namespace RetroDevStudio
 
     private void btnMacros_Click( object sender, EventArgs e )
     {
-      FormMacros    formMacro = new FormMacros( Core, Element.DocumentInfo, editBuildCommand );
+      var formMacro = new FormMacros( Core, Element.DocumentInfo, editBuildCommand );
 
       formMacro.ShowDialog();
     }

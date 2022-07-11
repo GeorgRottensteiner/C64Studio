@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public class Disassembly : ReadOnlyFile
   {

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RetroDevStudio.Dialogs;
+using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 
-namespace RetroDevStudio
+
+
+namespace RetroDevStudio.Documents
 {
   public partial class CompileResult : BaseDocument
   {
@@ -335,7 +335,7 @@ namespace RetroDevStudio
 
     private void manageWarningIgnoreListToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      Settings prefDlg = new Settings( Core, RetroDevStudio.Settings.TabPage.ERRORS_WARNINGS );
+      var prefDlg = new Settings( Core, RetroDevStudio.Dialogs.Settings.TabPage.ERRORS_WARNINGS );
 
       prefDlg.ShowDialog();
     }

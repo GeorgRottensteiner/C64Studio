@@ -1,21 +1,17 @@
-﻿using RetroDevStudio.CustomRenderer;
-using RetroDevStudio.Displayer;
+﻿using RetroDevStudio.Displayer;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Text;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 using RetroDevStudio.Formats;
 using GR.Memory;
 using RetroDevStudio.Types;
 using RetroDevStudio.Converter;
-using RetroDevStudio;
-using System.Linq;
 using RetroDevStudio.Controls;
+using RetroDevStudio.Dialogs;
 
-namespace RetroDevStudio
+
+
+namespace RetroDevStudio.Documents
 {
   public partial class SpriteEditor : BaseDocument
   {
@@ -89,9 +85,9 @@ namespace RetroDevStudio
 
       listLayers.ItemAdded += new ArrangedItemList.ItemModifiedEventHandler( listLayers_ItemAdded );
 
-      pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-      layerPreview.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-      panelSprites.PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb;
+      pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, GR.Drawing.PixelFormat.Format32bppRgb );
+      layerPreview.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
+      panelSprites.PixelFormat = GR.Drawing.PixelFormat.Format32bppRgb;
       panelSprites.SetDisplaySize( 4 * m_SpriteWidth, 6 * m_SpriteHeight );
       panelSprites.ClientSize = new System.Drawing.Size( 4 * m_SpriteWidth * 2 + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth, 6 * m_SpriteHeight * 2 );
 
@@ -1228,7 +1224,7 @@ namespace RetroDevStudio
       if ( ( Image.Width != m_SpriteWidth )
       ||   ( Image.Height != m_SpriteHeight )
       ||   ( Image.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )*/
-      if ( Image.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed )
+      if ( Image.PixelFormat != GR.Drawing.PixelFormat.Format8bppIndexed )
       {
         // invalid format
         m_ImportError = "Invalid image format, must be 8 bit index";
@@ -1837,8 +1833,8 @@ namespace RetroDevStudio
       System.Drawing.Brush textBrush = new System.Drawing.SolidBrush( e.ForeColor );
       e.Graphics.DrawString( e.Index.ToString(), e.Font, textBrush, textRect );
 
-      GR.Image.FastImage    fastImage = new GR.Image.FastImage( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-      GR.Image.MemoryImage  memImage = new GR.Image.MemoryImage( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      GR.Image.FastImage    fastImage = new GR.Image.FastImage( m_SpriteWidth, m_SpriteHeight, GR.Drawing.PixelFormat.Format32bppRgb );
+      GR.Image.MemoryImage  memImage = new GR.Image.MemoryImage( m_SpriteWidth, m_SpriteHeight, GR.Drawing.PixelFormat.Format32bppRgb );
 
       DrawSpriteImage( memImage, 0, 0, 
                        m_SpriteProject.Sprites[e.Index].Tile.Data,
@@ -2841,7 +2837,7 @@ namespace RetroDevStudio
         using ( var outStream = new System.IO.FileStream( saveDlg.FileName, System.IO.FileMode.Create, System.IO.FileAccess.Write ) )
         using ( var gif = new GIFEncoder( outStream, maxX - minX, maxY - minY ) )
         {
-          var layerImage = new GR.Image.MemoryImage( maxX - minX, maxY - minY, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+          var layerImage = new GR.Image.MemoryImage( maxX - minX, maxY - minY, GR.Drawing.PixelFormat.Format32bppRgb );
 
           foreach ( var layer in m_SpriteProject.SpriteLayers )
           {
@@ -2983,7 +2979,7 @@ namespace RetroDevStudio
       pictureEditor.Size = new System.Drawing.Size( m_SpriteWidth * m_SpriteEditorOrigWidth / biggerSize,
                                                     m_SpriteHeight * m_SpriteEditorOrigHeight / biggerSize );
 
-      pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      pictureEditor.DisplayPage.Create( m_SpriteWidth, m_SpriteHeight, GR.Drawing.PixelFormat.Format32bppRgb );
       panelSprites.ItemWidth = m_SpriteWidth;
       panelSprites.ItemHeight = m_SpriteHeight;
       panelSprites.SetDisplaySize( panelSprites.ClientSize.Width / 2, panelSprites.ClientSize.Height / 2 );

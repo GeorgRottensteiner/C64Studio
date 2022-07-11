@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio
+﻿namespace RetroDevStudio.Documents
 {
   partial class Outline
   {

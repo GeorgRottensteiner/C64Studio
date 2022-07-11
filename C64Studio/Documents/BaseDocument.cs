@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public class BaseDocument : DockContent, IComparable
   {

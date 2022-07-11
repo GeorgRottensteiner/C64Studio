@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio
+﻿namespace RetroDevStudio.Controls
 {
   partial class ArrangedItemList
   {

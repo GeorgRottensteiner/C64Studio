@@ -1,15 +1,15 @@
 ﻿using RetroDevStudio.Parser;
 using RetroDevStudio.Types;
 using GR.Image;
-using RetroDevStudio;
 using System;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using RetroDevStudio.Controls;
 
 
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Dialogs
 {
   public partial class Settings : Form
   {

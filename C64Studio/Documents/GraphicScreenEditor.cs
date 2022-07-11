@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Text;
 using System.Windows.Forms;
 using RetroDevStudio.Types;
-using RetroDevStudio;
+using RetroDevStudio.Controls;
 
 
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class GraphicScreenEditor : BaseDocument, IDisposable
   {
@@ -106,10 +104,10 @@ namespace RetroDevStudio
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
-      pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      charEditor.DisplayPage.Create( 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      m_GraphicScreenProject.Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-      colorSelector.DisplayPage.Create( 16 * 8, 8, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format8bppIndexed );
+      charEditor.DisplayPage.Create( 8, 8, GR.Drawing.PixelFormat.Format8bppIndexed );
+      m_GraphicScreenProject.Image.Create( 320, 200, GR.Drawing.PixelFormat.Format8bppIndexed );
+      colorSelector.DisplayPage.Create( 16 * 8, 8, GR.Drawing.PixelFormat.Format8bppIndexed );
 
       PaletteManager.ApplyPalette( pictureEditor.DisplayPage );
       PaletteManager.ApplyPalette( charEditor.DisplayPage );
@@ -619,7 +617,7 @@ namespace RetroDevStudio
         return false;
       }
 
-      if ( mappedImage.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed )
+      if ( mappedImage.PixelFormat != GR.Drawing.PixelFormat.Format8bppIndexed )
       {
         mappedImage.Dispose();
         System.Windows.Forms.MessageBox.Show( "Image format invalid!\nNeeds to be 8bit index" );

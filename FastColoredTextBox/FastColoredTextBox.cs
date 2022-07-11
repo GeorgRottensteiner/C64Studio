@@ -1458,7 +1458,7 @@ namespace FastColoredTextBoxNS
     /// </summary>
     [Browsable( true )]
     [DefaultValue( null )]
-    [Editor( typeof( FileNameEditor ), typeof( UITypeEditor ) )]
+    [Editor( typeof( System.Windows.Forms.Design.FileNameEditor ), typeof( UITypeEditor ) )]
     [Description(
         "XML file with description of syntax highlighting. This property works only with Language == Language.Custom."
         )]

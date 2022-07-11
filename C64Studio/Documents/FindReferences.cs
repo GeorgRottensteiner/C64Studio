@@ -7,8 +7,9 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using RetroDevStudio.Dialogs;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class FindReferences : BaseDocument
   {

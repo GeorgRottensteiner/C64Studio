@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class MapEditor : BaseDocument
   {
@@ -49,7 +49,7 @@ namespace RetroDevStudio
     private byte                        m_CurrentChar = 0;
     private byte                        m_CurrentColor = 1;
 
-    private GR.Image.MemoryImage        m_Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+    private GR.Image.MemoryImage        m_Image = new GR.Image.MemoryImage( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
 
     private int                         m_CurEditorOffsetX = 0;
     private int                         m_CurEditorOffsetY = 0;
@@ -120,17 +120,17 @@ namespace RetroDevStudio
       comboCharScreens.SelectedIndex = 0;
 
       pictureEditor.MouseWheel += pictureEditor_MouseWheel;
-      pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
       pictureEditor.PostPaint += PictureEditor_PostPaint;
       pictureTileDisplay.ClientSize = new System.Drawing.Size( 256, 256 );
-      pictureTileDisplay.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-      panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb;
+      pictureTileDisplay.DisplayPage.Create( 128, 128, GR.Drawing.PixelFormat.Format32bppRgb );
+      panelCharacters.PixelFormat = GR.Drawing.PixelFormat.Format32bppRgb;
       panelCharacters.SetDisplaySize( 128, 128 );
-      panelCharacters.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      panelCharacters.DisplayPage.Create( 128, 128, GR.Drawing.PixelFormat.Format32bppRgb );
 
-      panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      panelCharColors.DisplayPage.Create( 128, 8, GR.Drawing.PixelFormat.Format32bppRgb );
 
-      m_Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      m_Image.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
 
       Palette   pal = Core.MainForm.ActivePalette;
 
@@ -2415,7 +2415,7 @@ namespace RetroDevStudio
 
 
 
-      GR.Image.FastImage memImage = new GR.Image.FastImage( tile.Chars.Width * 8, tile.Chars.Height * 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      GR.Image.FastImage memImage = new GR.Image.FastImage( tile.Chars.Width * 8, tile.Chars.Height * 8, GR.Drawing.PixelFormat.Format32bppRgb );
       PaletteManager.ApplyPalette( memImage );
 
       for ( int j = 0; j < tile.Chars.Height; ++j )
@@ -2972,8 +2972,8 @@ namespace RetroDevStudio
 
       var newMap = new RetroDevStudio.Formats.MapProject.Map();
       newMap.ExtraDataOld = new GR.Memory.ByteBuffer( m_CurrentMap.ExtraDataOld );
-      newMap.ExtraDataText = string.Copy( m_CurrentMap.ExtraDataText );
-      newMap.Name = string.Copy( m_CurrentMap.Name );
+      newMap.ExtraDataText = m_CurrentMap.ExtraDataText;
+      newMap.Name = m_CurrentMap.Name;
       newMap.Tiles = new GR.Game.Layer<int>();
       newMap.Tiles.Resize( m_CurrentMap.Tiles.Width, m_CurrentMap.Tiles.Height );
       for ( int i = 0; i < m_CurrentMap.Tiles.Width; ++i )

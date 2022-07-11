@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio
+﻿namespace RetroDevStudio.Dialogs
 {
   partial class DlgInterleaveData
   {

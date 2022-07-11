@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using WeifenLuo.WinFormsUI.Docking;
 using System.Text;
@@ -9,12 +7,11 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using RetroDevStudio.IdleQueue;
 using RetroDevStudio.Types;
-using RetroDevStudio.Displayer;
 using RetroDevStudio.CustomRenderer;
 using RetroDevStudio.Parser;
 using GR.Image;
-using RetroDevStudio;
-using System.Threading;
+using RetroDevStudio.Documents;
+using RetroDevStudio.Dialogs;
 
 
 
@@ -35,7 +32,7 @@ namespace RetroDevStudio
     public DebugBreakpoints       m_DebugBreakpoints = new DebugBreakpoints();
     public CompileResult          m_CompileResult = new CompileResult();
     public CharsetEditor          m_CharsetEditor = null;
-    public Disassembler           m_Disassembler = null;
+    public Documents.Disassembler m_Disassembler = null;
     public CharsetScreenEditor    m_CharScreenEditor = null;
     public GraphicScreenEditor    m_GraphicScreenEditor = null;
     public SpriteEditor           m_SpriteEditor = null;
@@ -44,7 +41,7 @@ namespace RetroDevStudio
     public PetSCIITable           m_PetSCIITable = null;
     public Outline                m_Outline = new Outline();
     public ValueTableEditor       m_ValueTableEditor = null;
-    public Help                   m_Help = null;
+    public Documents.Help         m_Help = null;
     public FormFindReplace        m_FindReplace = null;
     public FormFilesChanged       m_FilesChanged = null;
 
@@ -418,11 +415,9 @@ namespace RetroDevStudio
 
       s_MainForm = this;
 
-      //m_FontC64.AddFontFile( @"D:\privat\projekte\C64Studio\C64Studio\C64_Pro_Mono_v1.0-STYLE.ttf" );
-
       try
       {
-        string basePath = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+        string basePath = System.Reflection.Assembly.GetExecutingAssembly().Location; //.CodeBase;
       
         if ( basePath.ToUpper().StartsWith( "FILE:///" ) )
         {
@@ -529,11 +524,11 @@ namespace RetroDevStudio
       m_PetSCIITable        = new PetSCIITable( StudioCore );
       m_Calculator          = new Calculator();
       m_MapEditor           = new MapEditor( StudioCore );
-      m_Disassembler        = new Disassembler( StudioCore );
+      m_Disassembler        = new Documents.Disassembler( StudioCore );
       m_DebugMemory         = new DebugMemory( StudioCore );
       m_ValueTableEditor    = new ValueTableEditor( StudioCore );
       m_FindReplace         = new FormFindReplace( StudioCore );
-      m_Help                = new Help( StudioCore );
+      m_Help                = new Documents.Help( StudioCore );
 
       m_BinaryEditor.SetInternal();
       m_CharsetEditor.SetInternal();
@@ -3641,7 +3636,7 @@ namespace RetroDevStudio
 
     private void filePreferencesToolStripMenuItem_Click( object sender, EventArgs e )
     {
-      Settings prefDlg = new Settings(StudioCore, RetroDevStudio.Settings.TabPage.GENERAL);
+      Settings prefDlg = new Settings( StudioCore, RetroDevStudio.Dialogs.Settings.TabPage.GENERAL );
 
       prefDlg.ShowDialog();
     }
@@ -5940,7 +5935,7 @@ namespace RetroDevStudio
           newDoc = new SpriteEditor( StudioCore );
           break;
         case ProjectElement.ElementType.DISASSEMBLER:
-          newDoc = new Disassembler( StudioCore );
+          newDoc = new Documents.Disassembler( StudioCore );
           break;
         case ProjectElement.ElementType.BINARY_FILE:
           newDoc = new BinaryDisplay( StudioCore, null, true, false );
@@ -6722,7 +6717,7 @@ namespace RetroDevStudio
       }
 
       MappedImage = null;
-      if ( IncomingImage.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed )
+      if ( IncomingImage.PixelFormat == GR.Drawing.PixelFormat.Format8bppIndexed )
       {
         // match palette
         bool match = true;

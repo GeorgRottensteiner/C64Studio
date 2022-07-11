@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class DebugStack : BaseDocument
   {

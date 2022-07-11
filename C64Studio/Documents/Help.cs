@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class Help : BaseDocument
   {
@@ -27,7 +27,7 @@ namespace RetroDevStudio
       try
       {
 #if DEBUG
-        string    helpDocPath = @"..\..\..\Doc\main.html";
+        string    helpDocPath = @"..\..\..\..\Doc\main.html";
 #else
         string    helpDocPath = @"Doc\main.html";
 #endif
@@ -73,7 +73,7 @@ namespace RetroDevStudio
     private void toolStripBtnHome_Click( object sender, EventArgs e )
     {
 #if DEBUG
-      webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "../../../Doc/main.html" ) );
+      webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../Doc/main.html" ) );
 #else
       webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "Doc/main.html" ) );
 #endif
@@ -84,7 +84,7 @@ namespace RetroDevStudio
     public void NavigateTo( string URL )
     {
 #if DEBUG
-      webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "../../../Doc/" + URL ) );
+      webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "../../../../Doc/" + URL ) );
 #else
       webBrowser.Navigate( System.IO.Path.Combine( System.AppDomain.CurrentDomain.BaseDirectory, "Doc/" + URL ) );
 #endif

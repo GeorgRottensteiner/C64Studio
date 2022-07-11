@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Reflection.Emit;
-using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using GR.Memory;
-using RetroDevStudio;
 using WeifenLuo.WinFormsUI.Docking;
+using RetroDevStudio.Dialogs;
 
 
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class FileManager : BaseDocument
   {
@@ -889,7 +885,7 @@ namespace RetroDevStudio
       {
         RetroDevStudio.Types.FileInfo fileToRename = (RetroDevStudio.Types.FileInfo)item.Tag;
 
-        FormRenameFile formRename = new FormRenameFile( Core, fileToRename.Filename );
+        var formRename = new FormRenameFile( Core, fileToRename.Filename );
 
         if ( formRename.ShowDialog() == DialogResult.OK )
         {

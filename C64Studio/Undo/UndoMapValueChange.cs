@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using RetroDevStudio.Formats;
-using RetroDevStudio;
+﻿using RetroDevStudio.Formats;
+using RetroDevStudio.Documents;
 
 
 

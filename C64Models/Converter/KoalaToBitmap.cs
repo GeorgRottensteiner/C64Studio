@@ -53,7 +53,7 @@ namespace RetroDevStudio.Converter
       int xCooBase = 0;
       int yCooBase = 0;
 
-      GR.Image.MemoryImage Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      GR.Image.MemoryImage Image = new GR.Image.MemoryImage( 320, 200, GR.Drawing.PixelFormat.Format8bppIndexed );
 
       // Set the palette to the C64 one
       PaletteManager.ApplyPalette( Image );

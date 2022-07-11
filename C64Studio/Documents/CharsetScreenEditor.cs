@@ -12,7 +12,7 @@ using RetroDevStudio.Formats;
 using RetroDevStudio;
 using RetroDevStudio.Controls;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class CharsetScreenEditor : BaseDocument
   {
@@ -37,7 +37,7 @@ namespace RetroDevStudio
     private int                         m_CharacterHeight = 8;
     private int                         m_NumColorsInColorChooser = 16;
 
-    private GR.Image.MemoryImage        m_Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+    private GR.Image.MemoryImage        m_Image = new GR.Image.MemoryImage( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
 
     private bool[,]                     m_ErrornousChars = new bool[40, 25];
     private bool[,]                     m_SelectedChars = new bool[40, 25];
@@ -112,11 +112,11 @@ namespace RetroDevStudio
       comboImportMethod.Items.Add( new GR.Generic.Tupel<string, Type>( "set default character sets", typeof( ImportCharscreenCharsetFromDefault ) ) );
       comboImportMethod.SelectedIndex = 0;
 
-      pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-      panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb;
+      pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
+      panelCharacters.PixelFormat = GR.Drawing.PixelFormat.Format32bppRgb;
       panelCharacters.SetDisplaySize( 128, 128 );
-      panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-      m_Image.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      panelCharColors.DisplayPage.Create( 128, 8, GR.Drawing.PixelFormat.Format32bppRgb );
+      m_Image.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
 
       DPIHandler.ResizeControlsForDPI( this );
       ApplyPalette();
@@ -1865,7 +1865,7 @@ namespace RetroDevStudio
       m_ReverseCache = new bool[Width, Height];
 
       m_CharsetScreen.SetScreenSize( Width, Height );
-      m_Image.Create( Width * 8, Height * 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      m_Image.Create( Width * 8, Height * 8, GR.Drawing.PixelFormat.Format32bppRgb );
 
       m_TextEntryCachedLine.Clear();
       m_TextEntryEnteredText.Clear();
@@ -2681,12 +2681,12 @@ namespace RetroDevStudio
         case TextMode.MEGA65_40_X_25_HIRES:
           m_CharsWidth = 40;
           m_CharsHeight = 25;
-          pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+          pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         case TextMode.MEGA65_40_X_25_NCM:
           m_CharsWidth = 20;
           m_CharsHeight = 25;
-          pictureEditor.DisplayPage.Create( 320, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+          pictureEditor.DisplayPage.Create( 320, 200, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         case TextMode.MEGA65_80_X_25_HIRES:
         case TextMode.MEGA65_80_X_25_MULTICOLOR:
@@ -2695,17 +2695,17 @@ namespace RetroDevStudio
         case TextMode.MEGA65_80_X_25_ECM:
           m_CharsWidth = 80;
           m_CharsHeight = 25;
-          pictureEditor.DisplayPage.Create( 640, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+          pictureEditor.DisplayPage.Create( 640, 200, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         case TextMode.MEGA65_80_X_25_NCM:
           m_CharsWidth = 40;
           m_CharsHeight = 25;
-          pictureEditor.DisplayPage.Create( 640, 200, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+          pictureEditor.DisplayPage.Create( 640, 200, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         case TextMode.COMMODORE_VIC20_22_X_23:
           m_CharsWidth = 22;
           m_CharsHeight = 23;
-          pictureEditor.DisplayPage.Create( 176, 184, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+          pictureEditor.DisplayPage.Create( 176, 184, GR.Drawing.PixelFormat.Format32bppRgb );
           break;
         default:
           Debug.Log( "comboCharsetMode_SelectedIndexChanged unsupported mode!" );
@@ -2784,7 +2784,7 @@ namespace RetroDevStudio
       {
         m_NumColorsInColorChooser = numColorsInChooser;
 
-        panelCharColors.DisplayPage.Create( m_CharacterWidth * m_NumColorsInColorChooser, m_CharacterHeight, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+        panelCharColors.DisplayPage.Create( m_CharacterWidth * m_NumColorsInColorChooser, m_CharacterHeight, GR.Drawing.PixelFormat.Format32bppRgb );
         RedrawColorChooser();
       }
 

@@ -1,5 +1,8 @@
 ﻿using RetroDevStudio.Controls;
-namespace RetroDevStudio
+
+
+
+namespace RetroDevStudio.Documents
 {
   partial class CharsetEditor
   {

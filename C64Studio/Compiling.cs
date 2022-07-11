@@ -1,4 +1,5 @@
 ﻿using C64Models.BASIC;
+using RetroDevStudio.Documents;
 using RetroDevStudio.Types;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace RetroDevStudio
 
       try
       {
-        string basePath = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+        string basePath = System.Reflection.Assembly.GetExecutingAssembly().Location; //.CodeBase;
 
         if ( basePath.ToUpper().StartsWith( "FILE:///" ) )
         {

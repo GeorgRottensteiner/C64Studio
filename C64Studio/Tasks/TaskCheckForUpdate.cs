@@ -5,6 +5,8 @@ using System.Net;
 using System.Security.Authentication;
 using System.Text;
 
+
+
 namespace RetroDevStudio.Tasks
 {
   public class VersionInfoParts
@@ -16,7 +18,9 @@ namespace RetroDevStudio.Tasks
 
   public class TaskCheckForUpdate : Task
   {
+#if !NET6_0_OR_GREATER
     private HttpWebRequest _Request = null;
+#endif
 
 
 
@@ -31,6 +35,7 @@ namespace RetroDevStudio.Tasks
 
 
 
+#if !NET6_0_OR_GREATER
     void FinishWebRequest( IAsyncResult result )
     {
       try
@@ -44,23 +49,7 @@ namespace RetroDevStudio.Tasks
         {
           string responseText = reader.ReadToEnd();
 
-          if ( responseText.StartsWith( "OK" ) )
-          {
-            string[]    parts = responseText.Trim().Split( new string[] { "<br>" }, StringSplitOptions.RemoveEmptyEntries );
-            if ( parts.Length == 2 )
-            {
-              CompareVersions( parts[1] );
-            }
-            else
-            {
-              Core.SetStatus( "Malformed update check reply: " + responseText );
-            }
-          }
-          else
-          {
-            Core.SetStatus( "Malformed update check reply: " + responseText );
-          }
-          Core.AddToOutput( responseText );
+          ParseResponse( responseText );
         }
         response.Close();
       }
@@ -68,6 +57,29 @@ namespace RetroDevStudio.Tasks
       {
         Core.AddToOutput( "Failed to check for update: " + ex.Message );
       }
+    }
+#endif
+
+
+    private void ParseResponse( string ResponseText )
+    {
+      if ( ResponseText.StartsWith( "OK" ) )
+      {
+        string[]    parts = ResponseText.Trim().Split( new string[] { "<br>" }, StringSplitOptions.RemoveEmptyEntries );
+        if ( parts.Length == 2 )
+        {
+          CompareVersions( parts[1] );
+        }
+        else
+        {
+          Core.SetStatus( "Malformed update check reply: " + ResponseText );
+        }
+      }
+      else
+      {
+        Core.SetStatus( "Malformed update check reply: " + ResponseText );
+      }
+      Core.AddToOutput( ResponseText );
     }
 
 
@@ -79,10 +91,20 @@ namespace RetroDevStudio.Tasks
 
       try
       {
-        ServicePointManager.SecurityProtocol = Tls12;
-        _Request = (HttpWebRequest)WebRequest.Create( "https://www.georg-rottensteiner.de/scripts/checkversion.php?checkversion=AppVersion&name=3" );
+        string  requestURL = "https://www.georg-rottensteiner.de/scripts/checkversion.php?checkversion=AppVersion&name=3";
 
+#if !NET6_0_OR_GREATER
+        ServicePointManager.SecurityProtocol = Tls12;
+
+        _Request = (HttpWebRequest)WebRequest.Create( requestURL );
         _Request.BeginGetResponse( new AsyncCallback( FinishWebRequest ), null );
+#else
+        var client = new System.Net.Http.HttpClient();
+
+        var responseTask = client.GetStringAsync( requestURL );
+
+        responseTask.ContinueWith( x => ParseResponse( x.Result ) );
+#endif
       }
       catch ( Exception ex )
       {

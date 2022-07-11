@@ -22,9 +22,27 @@ namespace RetroDevStudio
         {
           SetProcessDPIAware();
         }
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Documents.ReadOnlyFile));
+      var obj = resources.GetObject("editText.ServiceColors");
+      /*
+      foreach ( var name in resources. names )
+      {
+        Debug.Log( "Resource " + name );
+        var resInfo = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceInfo( name );
+        if ( resInfo != null )
+        {
+          if ( name.Contains( "ReadOnly" ) )
+          {
+            Debug.Log( " in " + resInfo.FileName );
+          }
+        }
+      }*/
 
         Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault( false );
+#if NET6_0
+      Application.SetHighDpiMode(HighDpiMode.SystemAware);
+#endif
+      Application.SetCompatibleTextRenderingDefault( false );
         Application.Run( new MainForm( args ) );
 #if !DEBUG
       }

@@ -72,7 +72,7 @@ namespace RetroDevStudio.Types
 
 
       // add as one image
-      var fullImage = new GR.Image.MemoryImage( Entries.Count * Entries[0].Tile.Width, Entries[0].Tile.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      var fullImage = new GR.Image.MemoryImage( Entries.Count * Entries[0].Tile.Width, Entries[0].Tile.Height, GR.Drawing.PixelFormat.Format32bppRgb );
       int curX = 0;
       foreach ( var entry in Entries )
       {

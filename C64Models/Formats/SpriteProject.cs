@@ -304,7 +304,7 @@ namespace RetroDevStudio.Formats
                         }
 
                         sprite.Tile.Colors.ActivePalette = subChunkReader.ReadInt32();
-                        sprite.Tile.Image = new GR.Image.MemoryImage( sprite.Tile.Width, sprite.Tile.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+                        sprite.Tile.Image = new GR.Image.MemoryImage( sprite.Tile.Width, sprite.Tile.Height, GR.Drawing.PixelFormat.Format32bppRgb );
 
                         Sprites.Add( sprite );
                       }

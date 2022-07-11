@@ -36,6 +36,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\MultiMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Path.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\PixelFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\ScrollablePanel.cs">
       <SubType>Component</SubType>
     </Compile>

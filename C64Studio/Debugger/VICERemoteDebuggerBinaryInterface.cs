@@ -1,8 +1,8 @@
 ﻿using RetroDevStudio.Types;
 using GR.Memory;
-using RetroDevStudio;
 using System;
 using System.Collections.Generic;
+using RetroDevStudio.Documents;
 
 
 

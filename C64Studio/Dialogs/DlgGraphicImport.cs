@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Dialogs
 {
   public partial class DlgGraphicImport : Form
   {
@@ -54,8 +54,8 @@ namespace RetroDevStudio
 
     private int                     m_Zoom = 1024;
 
-    private GR.Image.MemoryImage    m_OriginalImage = new GR.Image.MemoryImage( 20, 20, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
-    private GR.Image.MemoryImage    m_ImportImage = new GR.Image.MemoryImage( 20, 20, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+    private GR.Image.MemoryImage    m_OriginalImage = new GR.Image.MemoryImage( 20, 20, GR.Drawing.PixelFormat.Format8bppIndexed );
+    private GR.Image.MemoryImage    m_ImportImage = new GR.Image.MemoryImage( 20, 20, GR.Drawing.PixelFormat.Format8bppIndexed );
     private Palette                 m_ImportPalette = null;      
 
     private string                  m_OrigFilename;
@@ -100,9 +100,9 @@ namespace RetroDevStudio
       }
       comboTargetPalette.SelectedIndex = 0;
 
-      picOriginal.DisplayPage.Create( picOriginal.ClientSize.Width, picOriginal.ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      picOriginal.DisplayPage.Create( picOriginal.ClientSize.Width, picOriginal.ClientSize.Height, GR.Drawing.PixelFormat.Format32bppRgb );
 
-      picPreview.DisplayPage.Create( picPreview.ClientSize.Width, picPreview.ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      picPreview.DisplayPage.Create( picPreview.ClientSize.Width, picPreview.ClientSize.Height, GR.Drawing.PixelFormat.Format8bppIndexed );
 
       PaletteManager.ApplyPalette( picPreview.DisplayPage, m_CurPalette );
 
@@ -192,7 +192,7 @@ namespace RetroDevStudio
         return;
       }
       m_OriginalImage = new GR.Image.MemoryImage( newImage.Width, newImage.Height, newImage.PixelFormat );
-      m_ImportImage = new GR.Image.MemoryImage( newImage.Width, newImage.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+      m_ImportImage = new GR.Image.MemoryImage( newImage.Width, newImage.Height, GR.Drawing.PixelFormat.Format8bppIndexed );
 
       m_ImportPalette = null;
       if ( newImage.BitsPerPixel <= 8 )
@@ -307,9 +307,9 @@ namespace RetroDevStudio
             byte green  = (byte)( ( pixelValue & 0x00ff00 ) >> 8 );
             byte blue   = (byte)( pixelValue & 0xff );
 
-            if ( ( picOriginal.DisplayPage.PixelFormat == System.Drawing.Imaging.PixelFormat.Format4bppIndexed )
-            ||   ( picOriginal.DisplayPage.PixelFormat == System.Drawing.Imaging.PixelFormat.Format1bppIndexed )
-            ||   ( picOriginal.DisplayPage.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )
+            if ( ( picOriginal.DisplayPage.PixelFormat == GR.Drawing.PixelFormat.Format4bppIndexed )
+            ||   ( picOriginal.DisplayPage.PixelFormat == GR.Drawing.PixelFormat.Format1bppIndexed )
+            ||   ( picOriginal.DisplayPage.PixelFormat == GR.Drawing.PixelFormat.Format8bppIndexed ) )
             {
               red   = picOriginal.DisplayPage.PaletteRed( (int)pixelValue );
               green = picOriginal.DisplayPage.PaletteGreen( (int)pixelValue );

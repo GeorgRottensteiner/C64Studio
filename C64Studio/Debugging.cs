@@ -6,7 +6,9 @@ using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
 using GR.Memory;
 using RetroDevStudio.Types;
-using RetroDevStudio;
+using RetroDevStudio.Documents;
+
+
 
 namespace RetroDevStudio
 {

@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio
+﻿namespace RetroDevStudio.Documents
 {
   partial class CharsetScreenEditor
   {
@@ -798,7 +798,7 @@
       this.panelCharacters.ItemWidth = 8;
       this.panelCharacters.Location = new System.Drawing.Point(677, 150);
       this.panelCharacters.Name = "panelCharacters";
-      this.panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
+      this.panelCharacters.PixelFormat = GR.Drawing.PixelFormat.DontCare;
       this.panelCharacters.SelectedIndex = -1;
       this.panelCharacters.Size = new System.Drawing.Size(260, 260);
       this.panelCharacters.TabIndex = 26;

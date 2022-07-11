@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+using RetroDevStudio.Dialogs;
 
-namespace RetroDevStudio
+
+
+namespace RetroDevStudio.Documents
 {
   public partial class SolutionExplorer : BaseDocument
   {
@@ -1023,7 +1024,7 @@ namespace RetroDevStudio
         return;
       }
 
-      ProjectProperties dlgProps = new ProjectProperties( project, project.Settings, Core );
+      var dlgProps = new ProjectProperties( project, project.Settings, Core );
       dlgProps.ShowDialog();
 
       if ( dlgProps.Modified )

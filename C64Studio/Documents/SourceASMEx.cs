@@ -13,10 +13,12 @@ using GR.Memory;
 using GR.IO;
 using System.Globalization;
 using GR.Image;
-using RetroDevStudio;
 using RetroDevStudio.Parser;
+using RetroDevStudio.Dialogs;
 
-namespace RetroDevStudio
+
+
+namespace RetroDevStudio.Documents
 {
   public partial class SourceASMEx : CompilableDocument
   {
@@ -195,7 +197,8 @@ namespace RetroDevStudio
 
       RefreshDisplayOptions();
 
-      editSource.ContextMenu = null;
+      //editSource.ContextMenuStrip = null;
+      //editSource.ContextMenu = null;
 
       editSource.AllowDrop = true;
       editSource.MouseEnter += new EventHandler( editSource_MouseEnter );
@@ -393,8 +396,7 @@ namespace RetroDevStudio
 
     private void AutoComplete_PrepareOpening( object sender, PrepareOpeningEventArgs e )
     {
-      if ( ( e == null )
-      ||   ( e.StartPos == null ) )
+      if ( e == null )
       {
         return;
       }

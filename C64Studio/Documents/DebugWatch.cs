@@ -8,7 +8,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class DebugWatch : BaseDocument
   {

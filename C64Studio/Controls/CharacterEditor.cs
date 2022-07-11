@@ -11,6 +11,8 @@ using GR.Image;
 using RetroDevStudio;
 using RetroDevStudio.Types;
 
+
+
 namespace RetroDevStudio.Controls
 {
   public partial class CharacterEditor : UserControl
@@ -33,7 +35,7 @@ namespace RetroDevStudio.Controls
 
     private CharsetProject              m_Project = new CharsetProject();
 
-    private GR.Image.MemoryImage        m_ImagePlayground = new GR.Image.MemoryImage( 256, 256, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+    private GR.Image.MemoryImage        m_ImagePlayground = new GR.Image.MemoryImage( 256, 256, GR.Drawing.PixelFormat.Format32bppRgb );
 
     private bool                        _AllowModeChange = true;
 
@@ -89,11 +91,11 @@ namespace RetroDevStudio.Controls
 
       InitializeComponent();
 
-      picturePlayground.DisplayPage.Create( 128, 128, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-      panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppRgb ;
+      picturePlayground.DisplayPage.Create( 128, 128, GR.Drawing.PixelFormat.Format32bppRgb );
+      panelCharacters.PixelFormat = GR.Drawing.PixelFormat.Format32bppRgb ;
       panelCharacters.SetDisplaySize( 128, 128 );
-      panelCharColors.DisplayPage.Create( 128, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
-      m_ImagePlayground.Create( 256, 256, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      panelCharColors.DisplayPage.Create( 128, 8, GR.Drawing.PixelFormat.Format32bppRgb );
+      m_ImagePlayground.Create( 256, 256, GR.Drawing.PixelFormat.Format32bppRgb );
 
       m_Project.Colors.Palette = PaletteManager.PaletteFromMachine( MachineType.C64 );
 
@@ -575,7 +577,7 @@ namespace RetroDevStudio.Controls
         return;
       }
 
-      if ( mappedImage.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed )
+      if ( mappedImage.PixelFormat != GR.Drawing.PixelFormat.Format8bppIndexed )
       {
         mappedImage.Dispose();
         System.Windows.Forms.MessageBox.Show( "Image format invalid!\nNeeds to be 8bit index" );
@@ -698,7 +700,7 @@ namespace RetroDevStudio.Controls
 
     private bool ImportChar( GR.Image.FastImage Image, int CharIndex, bool ForceMulticolor )
     {
-      if ( Image.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed )
+      if ( Image.PixelFormat != GR.Drawing.PixelFormat.Format8bppIndexed )
       {
         // invalid format
         return false;
@@ -2272,7 +2274,7 @@ namespace RetroDevStudio.Controls
       if ( _NumColorsInColorSelector != colorsInSelector )
       {
         _NumColorsInColorSelector = colorsInSelector;
-        panelCharColors.DisplayPage.Create( 8 * _NumColorsInColorSelector, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+        panelCharColors.DisplayPage.Create( 8 * _NumColorsInColorSelector, 8, GR.Drawing.PixelFormat.Format32bppRgb );
       }
 
       OnPaletteChanged();
@@ -2547,6 +2549,8 @@ namespace RetroDevStudio.Controls
         case TextCharMode.MEGA65_HIRES:
         case TextCharMode.MEGA65_ECM:
         case TextCharMode.MEGA65_FCM:
+        case TextCharMode.MEGA65_FCM_16BIT:
+        case TextCharMode.VIC20:
           m_CharacterWidth  = 8;
           m_CharacterHeight = 8;
           break;

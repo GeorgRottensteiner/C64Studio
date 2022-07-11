@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using RetroDevStudio;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class DebugBreakpoints : BaseDocument
   {

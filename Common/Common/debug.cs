@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
     private static extern int FindWindow(string _ClassName, string _WindowName);
 
     [DllImport("user32.dll",EntryPoint="SendMessage")]
-    private static extern int SendMessage(int _WindowHandler, int _WM_USER, int _data, int _id);
+    private static extern int SendMessage(int _WindowHandler, int _WM_USER, IntPtr _data, IntPtr _id );
 
     struct tagCOPYDATASTRUCT 
     {
@@ -35,7 +35,7 @@ using System.Runtime.InteropServices;
 
         System.Runtime.InteropServices.Marshal.StructureToPtr( cds, iPtr, true );
 
-        SendMessage( iWnd, 0x04a, 0, (int)iPtr );
+        SendMessage( iWnd, 0x04a, IntPtr.Zero, iPtr );
 
         System.Runtime.InteropServices.Marshal.FreeHGlobal( iPtr );
         System.Runtime.InteropServices.Marshal.FreeHGlobal( cds.pData );

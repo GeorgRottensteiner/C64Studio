@@ -1,4 +1,8 @@
-﻿namespace RetroDevStudio
+﻿using RetroDevStudio.Controls;
+
+
+
+namespace RetroDevStudio.Dialogs
 {
   partial class FormRenameDisk
   {
@@ -32,9 +36,9 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.label1 = new System.Windows.Forms.Label();
       this.listPETSCII = new GR.Forms.ImageListbox();
-      this.editDiskName = new RetroDevStudio.EditC64Filename();
+      this.editDiskName = new RetroDevStudio.Controls.EditC64Filename();
       this.label2 = new System.Windows.Forms.Label();
-      this.editDiskID = new RetroDevStudio.EditC64Filename();
+      this.editDiskID = new RetroDevStudio.Controls.EditC64Filename();
       this.SuspendLayout();
       // 
       // btnCancel
@@ -82,7 +86,7 @@
       this.listPETSCII.ItemWidth = 207;
       this.listPETSCII.Location = new System.Drawing.Point(15, 38);
       this.listPETSCII.Name = "listPETSCII";
-      this.listPETSCII.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
+      this.listPETSCII.PixelFormat = GR.Drawing.PixelFormat.DontCare;
       this.listPETSCII.SelectedIndex = -1;
       this.listPETSCII.Size = new System.Drawing.Size(587, 253);
       this.listPETSCII.TabIndex = 3;

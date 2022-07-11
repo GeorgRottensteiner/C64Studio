@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio
+﻿namespace RetroDevStudio.Documents
 {
   partial class ReadOnlyFile
   {
@@ -29,10 +29,10 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager( typeof( ReadOnlyFile ) );
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReadOnlyFile));
       this.editText = new FastColoredTextBoxNS.FastColoredTextBox();
-      ( (System.ComponentModel.ISupportInitialize)( this.m_FileWatcher ) ).BeginInit();
-      ( (System.ComponentModel.ISupportInitialize)( this.editText ) ).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.editText)).BeginInit();
       this.SuspendLayout();
       // 
       // editText
@@ -48,33 +48,35 @@
         '\"',
         '\'',
         '\''};
-      this.editText.AutoScrollMinSize = new System.Drawing.Size( 27, 14 );
+      this.editText.AutoScrollMinSize = new System.Drawing.Size(27, 14);
       this.editText.BackBrush = null;
       this.editText.CharHeight = 14;
       this.editText.CharWidth = 8;
+      this.editText.ConvertTabsToSpaces = false;
       this.editText.Cursor = System.Windows.Forms.Cursors.IBeam;
-      this.editText.DisabledColor = System.Drawing.Color.FromArgb( ( (int)( ( (byte)( 100 ) ) ) ), ( (int)( ( (byte)( 180 ) ) ) ), ( (int)( ( (byte)( 180 ) ) ) ), ( (int)( ( (byte)( 180 ) ) ) ) );
+      this.editText.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
       this.editText.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.editText.Font = new System.Drawing.Font("Courier New", 9.75F);
       this.editText.IsReplaceMode = false;
-      this.editText.Location = new System.Drawing.Point( 0, 0 );
+      this.editText.Location = new System.Drawing.Point(0, 0);
       this.editText.Name = "editText";
-      this.editText.Paddings = new System.Windows.Forms.Padding( 0 );
+      this.editText.Paddings = new System.Windows.Forms.Padding(0);
       this.editText.ReadOnly = true;
-      this.editText.SelectionColor = System.Drawing.Color.FromArgb( ( (int)( ( (byte)( 60 ) ) ) ), ( (int)( ( (byte)( 0 ) ) ) ), ( (int)( ( (byte)( 0 ) ) ) ), ( (int)( ( (byte)( 255 ) ) ) ) );
-      this.editText.ServiceColors = ( (FastColoredTextBoxNS.ServiceColors)( resources.GetObject( "editText.ServiceColors" ) ) );
-      this.editText.Size = new System.Drawing.Size( 534, 390 );
+      this.editText.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+      this.editText.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("editText.ServiceColors")));
+      this.editText.Size = new System.Drawing.Size(534, 390);
       this.editText.TabIndex = 0;
       this.editText.TabLength = 2;
       this.editText.Zoom = 100;
       // 
       // ReadOnlyFile
       // 
-      this.ClientSize = new System.Drawing.Size( 534, 390 );
-      this.Controls.Add( this.editText );
+      this.ClientSize = new System.Drawing.Size(534, 390);
+      this.Controls.Add(this.editText);
       this.Name = "ReadOnlyFile";
-      ( (System.ComponentModel.ISupportInitialize)( this.m_FileWatcher ) ).EndInit();
-      ( (System.ComponentModel.ISupportInitialize)( this.editText ) ).EndInit();
-      this.ResumeLayout( false );
+      ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.editText)).EndInit();
+      this.ResumeLayout(false);
 
     }
 

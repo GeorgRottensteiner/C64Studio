@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class ReadOnlyFile : BaseDocument
   {

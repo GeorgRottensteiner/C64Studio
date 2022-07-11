@@ -1,4 +1,8 @@
-﻿namespace RetroDevStudio
+﻿using RetroDevStudio.Controls;
+
+
+
+namespace RetroDevStudio.Documents
 {
   partial class SpriteEditor
   {
@@ -48,8 +52,8 @@
       this.label9 = new System.Windows.Forms.Label();
       this.checkExpandY = new System.Windows.Forms.CheckBox();
       this.checkExpandX = new System.Windows.Forms.CheckBox();
-      this.listLayerSprites = new RetroDevStudio.ArrangedItemList();
-      this.listLayers = new RetroDevStudio.ArrangedItemList();
+      this.listLayerSprites = new RetroDevStudio.Controls.ArrangedItemList();
+      this.listLayers = new RetroDevStudio.Controls.ArrangedItemList();
       this.editLayerY = new System.Windows.Forms.TextBox();
       this.label7 = new System.Windows.Forms.Label();
       this.label4 = new System.Windows.Forms.Label();
@@ -259,7 +263,7 @@
       this.panelSprites.ItemWidth = 24;
       this.panelSprites.Location = new System.Drawing.Point(3, 3);
       this.panelSprites.Name = "panelSprites";
-      this.panelSprites.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
+      this.panelSprites.PixelFormat = GR.Drawing.PixelFormat.DontCare;
       this.panelSprites.SelectedIndex = -1;
       this.panelSprites.Size = new System.Drawing.Size(314, 488);
       this.panelSprites.TabIndex = 4;
@@ -372,13 +376,13 @@
       this.listLayerSprites.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listLayerSprites.Size = new System.Drawing.Size(192, 148);
       this.listLayerSprites.TabIndex = 0;
-      this.listLayerSprites.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.listLayerSprites_AddingItem);
-      this.listLayerSprites.CloningItem += new RetroDevStudio.ArrangedItemList.CloningItemEventHandler(this.listLayerSprites_CloningItem);
-      this.listLayerSprites.ItemAdded += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_ItemAdded);
-      this.listLayerSprites.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_ItemRemoved);
-      this.listLayerSprites.MovingItem += new RetroDevStudio.ArrangedItemList.ItemExchangingEventHandler(this.listLayerSprites_MovingItem);
-      this.listLayerSprites.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.listLayerSprites_ItemMoved);
-      this.listLayerSprites.SelectedIndexChanged += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_SelectedIndexChanged);
+      this.listLayerSprites.AddingItem += new RetroDevStudio.Controls.ArrangedItemList.AddingItemEventHandler(this.listLayerSprites_AddingItem);
+      this.listLayerSprites.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.listLayerSprites_CloningItem);
+      this.listLayerSprites.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_ItemAdded);
+      this.listLayerSprites.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_ItemRemoved);
+      this.listLayerSprites.MovingItem += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangingEventHandler(this.listLayerSprites_MovingItem);
+      this.listLayerSprites.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.listLayerSprites_ItemMoved);
+      this.listLayerSprites.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayerSprites_SelectedIndexChanged);
       // 
       // listLayers
       // 
@@ -400,13 +404,13 @@
       this.listLayers.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listLayers.Size = new System.Drawing.Size(192, 198);
       this.listLayers.TabIndex = 9;
-      this.listLayers.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.listLayers_AddingItem);
-      this.listLayers.CloningItem += new RetroDevStudio.ArrangedItemList.CloningItemEventHandler(this.listLayers_CloningItem);
-      this.listLayers.ItemAdded += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_ItemAdded);
-      this.listLayers.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_ItemRemoved);
-      this.listLayers.MovingItem += new RetroDevStudio.ArrangedItemList.ItemExchangingEventHandler(this.listLayers_MovingItem);
-      this.listLayers.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.listLayers_ItemMoved);
-      this.listLayers.SelectedIndexChanged += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_SelectedIndexChanged);
+      this.listLayers.AddingItem += new RetroDevStudio.Controls.ArrangedItemList.AddingItemEventHandler(this.listLayers_AddingItem);
+      this.listLayers.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.listLayers_CloningItem);
+      this.listLayers.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_ItemAdded);
+      this.listLayers.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_ItemRemoved);
+      this.listLayers.MovingItem += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangingEventHandler(this.listLayers_MovingItem);
+      this.listLayers.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.listLayers_ItemMoved);
+      this.listLayers.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listLayers_SelectedIndexChanged);
       // 
       // editLayerY
       // 

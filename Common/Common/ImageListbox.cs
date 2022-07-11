@@ -120,7 +120,7 @@ namespace GR.Forms
     private int                   m_SelectionAnchor = -1;
     private bool                  m_SelectionIsRange = true;
     private GR.Image.FastImage    m_DisplayPage = new GR.Image.FastImage();
-    private System.Drawing.Imaging.PixelFormat    m_PixelFormat = System.Drawing.Imaging.PixelFormat.Undefined;
+    private GR.Drawing.PixelFormat  m_PixelFormat = GR.Drawing.PixelFormat.Undefined;
     private int                   m_DisplayWidth = -1;
     private int                   m_DisplayHeight = -1;
     private bool                  m_UpdateLockActive = false;
@@ -163,7 +163,7 @@ namespace GR.Forms
 
 
 
-    public System.Drawing.Imaging.PixelFormat PixelFormat
+    public GR.Drawing.PixelFormat PixelFormat
     {
       get
       {

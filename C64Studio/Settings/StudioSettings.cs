@@ -7,7 +7,9 @@ using System.ComponentModel;
 using GR.Memory;
 using RetroDevStudio.Types;
 using System.Drawing;
-using RetroDevStudio;
+using RetroDevStudio.Documents;
+
+
 
 namespace RetroDevStudio
 {

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Dialogs
 {
   public partial class FormRenameFile : Form
   {
@@ -31,8 +31,8 @@ namespace RetroDevStudio
       listPETSCII.ItemWidth = 80;
       listPETSCII.ItemHeight = 40;
       listPETSCII.SetDisplaySize( listPETSCII.ClientSize.Width, listPETSCII.ClientSize.Height );
-      listPETSCII.DisplayPage.Create( 120, 120, System.Drawing.Imaging.PixelFormat.Format24bppRgb );
-      listPETSCII.PixelFormat = System.Drawing.Imaging.PixelFormat.Format24bppRgb;
+      listPETSCII.DisplayPage.Create( 120, 120, GR.Drawing.PixelFormat.Format24bppRgb );
+      listPETSCII.PixelFormat = GR.Drawing.PixelFormat.Format24bppRgb;
       listPETSCII.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
       foreach ( Types.C64Character character in ConstantData.PetSCIIToChar.Values )

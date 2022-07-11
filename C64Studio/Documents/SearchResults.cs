@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class SearchResults : BaseDocument
   {

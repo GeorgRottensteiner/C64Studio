@@ -111,7 +111,7 @@ namespace RetroDevStudio
     internal void ImageToClipboard( MemoryImage Image, Rectangle Selection )
     {
       if ( ( Image == null )
-      ||   ( Selection == null ) )
+      ||   ( Selection == Rectangle.Empty ) )
       {
         return;
       }

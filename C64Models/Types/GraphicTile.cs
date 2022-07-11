@@ -16,7 +16,7 @@ namespace RetroDevStudio.Types
     public int                  Height = 8;
     public int                  CustomColor = 1;
     public ByteBuffer           Data = new ByteBuffer( 8 );
-    public GR.Image.MemoryImage Image = new GR.Image.MemoryImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+    public GR.Image.MemoryImage Image = new GR.Image.MemoryImage( 8, 8, GR.Drawing.PixelFormat.Format32bppRgb );
 
 
 
@@ -48,7 +48,7 @@ namespace RetroDevStudio.Types
       Colors = Color;
 
       Data  = new ByteBuffer( (uint)Lookup.NumBytes( Width, Height, Mode ) );
-      Image = new GR.Image.MemoryImage( Width, Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+      Image = new GR.Image.MemoryImage( Width, Height, GR.Drawing.PixelFormat.Format32bppRgb );
     }
 
 

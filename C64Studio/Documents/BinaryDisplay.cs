@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 using GR.Image;
 using GR.Memory;
-using RetroDevStudio;
+using RetroDevStudio.Dialogs;
 
-namespace RetroDevStudio
+
+
+namespace RetroDevStudio.Documents
 {
   public partial class BinaryDisplay : BaseDocument
   {

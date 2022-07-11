@@ -1,15 +1,13 @@
 ﻿using RetroDevStudio.Types;
-using RetroDevStudio;
 using RetroDevStudio.Formats;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using static RetroDevStudio.BaseDocument;
+using RetroDevStudio.Documents;
+using static RetroDevStudio.Documents.BaseDocument;
+
+
 
 namespace RetroDevStudio.Controls
 {

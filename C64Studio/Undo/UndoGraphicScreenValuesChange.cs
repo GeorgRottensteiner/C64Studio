@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using RetroDevStudio.Documents;
 using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
+
+
 
 namespace RetroDevStudio.Undo
 {

@@ -564,6 +564,11 @@ namespace GR
           m_Error = "XML is empty";
           return false;
         }
+        // BOM in front?
+        if ( xmlText[0] == 0xfeff )
+        {
+          xmlText = xmlText.Substring( 1 );
+        }
         // Header zuerst
         int iTagStartPos = xmlText.IndexOf( '<' );
         if ( iTagStartPos != 0 )

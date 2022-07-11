@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio
+﻿namespace RetroDevStudio.Documents
 {
   partial class GraphicScreenEditor
   {
@@ -105,7 +105,7 @@
       this.tabGraphicScreenEditor = new System.Windows.Forms.TabControl();
       this.tabColorMapping = new System.Windows.Forms.TabPage();
       this.groupColorMapping = new System.Windows.Forms.GroupBox();
-      this.listColorMappingTargets = new RetroDevStudio.ArrangedItemList();
+      this.listColorMappingTargets = new RetroDevStudio.Controls.ArrangedItemList();
       this.comboColorMappingTargets = new System.Windows.Forms.ComboBox();
       this.label1 = new System.Windows.Forms.Label();
       this.listColorMappingColors = new System.Windows.Forms.ListBox();
@@ -953,12 +953,12 @@
       this.listColorMappingTargets.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listColorMappingTargets.Size = new System.Drawing.Size(207, 263);
       this.listColorMappingTargets.TabIndex = 5;
-      this.listColorMappingTargets.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.listColorMappingTargets_AddingItem);
-      this.listColorMappingTargets.ItemAdded += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemAdded);
-      this.listColorMappingTargets.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemRemoved);
-      this.listColorMappingTargets.MovingItem += new RetroDevStudio.ArrangedItemList.ItemExchangingEventHandler(this.listColorMappingTargets_MovingItem);
-      this.listColorMappingTargets.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.listColorMappingTargets_ItemMoved);
-      this.listColorMappingTargets.SelectedIndexChanged += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_SelectedIndexChanged);
+      this.listColorMappingTargets.AddingItem += new RetroDevStudio.Controls.ArrangedItemList.AddingItemEventHandler(this.listColorMappingTargets_AddingItem);
+      this.listColorMappingTargets.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemAdded);
+      this.listColorMappingTargets.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_ItemRemoved);
+      this.listColorMappingTargets.MovingItem += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangingEventHandler(this.listColorMappingTargets_MovingItem);
+      this.listColorMappingTargets.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.listColorMappingTargets_ItemMoved);
+      this.listColorMappingTargets.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listColorMappingTargets_SelectedIndexChanged);
       // 
       // comboColorMappingTargets
       // 
@@ -1077,7 +1077,7 @@
     private System.Windows.Forms.ComboBox comboColorMappingTargets;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.ListBox listColorMappingColors;
-    private ArrangedItemList listColorMappingTargets;
+    private Controls.ArrangedItemList listColorMappingTargets;
     private System.Windows.Forms.TextBox editExportBASICLineOffset;
     private System.Windows.Forms.TextBox editExportBASICLineNo;
     private System.Windows.Forms.Label label3;

@@ -1,89 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EA74431C-8749-4F1A-8F8F-FCEDAFAE89B9}</ProjectGuid>
+    <TargetFrameworks>net3.5;net4.8;net6.0-windows</TargetFrameworks>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HexBox</RootNamespace>
-    <AssemblyName>HexBox</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="BuiltInContextMenu.cs">
+    <Compile Update="BuiltInContextMenu.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ByteCharConverters.cs" />
-    <Compile Include="ByteCollection.cs" />
-    <Compile Include="BytePositionInfo.cs" />
-    <Compile Include="DynamicByteSelectionProvider.cs" />
-    <Compile Include="ICustomHexViewer.cs" />
-    <Compile Include="ISelectedByteProvider.cs" />
-    <Compile Include="DataBlock.cs" />
-    <Compile Include="DataMap.cs" />
-    <Compile Include="DynamicByteProvider.cs" />
-    <Compile Include="DynamicFileByteProvider.cs" />
-    <Compile Include="FileByteProvider.cs" />
-    <Compile Include="FileDataBlock.cs" />
-    <Compile Include="FindOptions.cs" />
-    <Compile Include="HexBox.cs">
+    <Compile Update="HexBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="HexCasing.cs" />
-    <Compile Include="IByteProvider.cs" />
-    <Compile Include="MemoryDataBlock.cs" />
-    <Compile Include="NativeMethods.cs" />
-    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HexBox.resx">
-      <DependentUpon>HexBox.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Remove="Properties\Resources.Designer.cs" />
+    <EmbeddedResource Remove="Properties\Resources.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.330701">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
   </ItemGroup>
-  <PropertyGroup>
-    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">copy "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"</PostBuildEvent>
-    <PostBuildEvent Condition="'$(OS)' == 'Unix' ">cp "$(TargetPath)" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"</PostBuildEvent>
-  </PropertyGroup>
 </Project>

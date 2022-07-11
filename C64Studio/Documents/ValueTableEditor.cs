@@ -1,18 +1,14 @@
-﻿using RetroDevStudio.CustomRenderer;
-using RetroDevStudio.Displayer;
-using RetroDevStudio.Formats;
+﻿using RetroDevStudio.Formats;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Text;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 using RetroDevStudio.Types;
 using GR.Memory;
-using RetroDevStudio;
+using RetroDevStudio.Controls;
 
-namespace RetroDevStudio
+
+
+namespace RetroDevStudio.Documents
 {
   public partial class ValueTableEditor : BaseDocument
   {
@@ -34,7 +30,7 @@ namespace RetroDevStudio
 
       GR.Image.DPIHandler.ResizeControlsForDPI( this );
 
-      pictureGraphPreview.DisplayPage.Create( pictureGraphPreview.ClientSize.Width, pictureGraphPreview.ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb );
+      pictureGraphPreview.DisplayPage.Create( pictureGraphPreview.ClientSize.Width, pictureGraphPreview.ClientSize.Height, GR.Drawing.PixelFormat.Format32bppArgb );
 
       checkExportToDataIncludeRes.Checked = true;
       checkExportToDataWrap.Checked = true;

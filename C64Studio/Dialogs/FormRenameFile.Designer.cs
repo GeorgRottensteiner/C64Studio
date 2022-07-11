@@ -1,4 +1,8 @@
-﻿namespace RetroDevStudio
+﻿using RetroDevStudio.Controls;
+
+
+
+namespace RetroDevStudio.Dialogs
 {
   partial class FormRenameFile
   {
@@ -32,7 +36,7 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.label1 = new System.Windows.Forms.Label();
       this.listPETSCII = new GR.Forms.ImageListbox();
-      this.editFilename = new RetroDevStudio.EditC64Filename();
+      this.editFilename = new RetroDevStudio.Controls.EditC64Filename();
       this.SuspendLayout();
       // 
       // btnCancel
@@ -80,7 +84,7 @@
       this.listPETSCII.ItemWidth = 207;
       this.listPETSCII.Location = new System.Drawing.Point(15, 58);
       this.listPETSCII.Name = "listPETSCII";
-      this.listPETSCII.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
+      this.listPETSCII.PixelFormat = GR.Drawing.PixelFormat.DontCare;
       this.listPETSCII.SelectedIndex = -1;
       this.listPETSCII.Size = new System.Drawing.Size(587, 233);
       this.listPETSCII.TabIndex = 3;

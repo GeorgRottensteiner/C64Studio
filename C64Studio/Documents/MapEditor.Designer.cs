@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio
+﻿namespace RetroDevStudio.Documents
 {
   partial class MapEditor
   {
@@ -1264,7 +1264,7 @@
       this.panelCharacters.ItemWidth = 8;
       this.panelCharacters.Location = new System.Drawing.Point(371, 123);
       this.panelCharacters.Name = "panelCharacters";
-      this.panelCharacters.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
+      this.panelCharacters.PixelFormat = GR.Drawing.PixelFormat.DontCare;
       this.panelCharacters.SelectedIndex = -1;
       this.panelCharacters.Size = new System.Drawing.Size(260, 260);
       this.panelCharacters.TabIndex = 21;
@@ -1434,7 +1434,7 @@
       this.imageListbox1.ItemWidth = 8;
       this.imageListbox1.Location = new System.Drawing.Point(658, 124);
       this.imageListbox1.Name = "imageListbox1";
-      this.imageListbox1.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
+      this.imageListbox1.PixelFormat = GR.Drawing.PixelFormat.DontCare;
       this.imageListbox1.SelectedIndex = -1;
       this.imageListbox1.Size = new System.Drawing.Size(260, 260);
       this.imageListbox1.TabIndex = 21;

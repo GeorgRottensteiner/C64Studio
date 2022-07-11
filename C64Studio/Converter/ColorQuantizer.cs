@@ -430,11 +430,11 @@ namespace RetroDevStudio.Converter
 
     GR.Image.MemoryImage Assignment( CubeInfo cube_info, GR.Image.IImage pCD )
     {
-      System.Drawing.Imaging.PixelFormat format = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
+      var format = GR.Drawing.PixelFormat.Format8bppIndexed;
 
       if ( m_Colors <= 2 )
       {
-        format = System.Drawing.Imaging.PixelFormat.Format1bppIndexed;
+        format = GR.Drawing.PixelFormat.Format1bppIndexed;
       }
       /*
       else if ( m_Colors <= 4 )
@@ -443,7 +443,7 @@ namespace RetroDevStudio.Converter
       }*/
       else if ( m_Colors <= 16 )
       {
-        format = System.Drawing.Imaging.PixelFormat.Format4bppIndexed;
+        format = GR.Drawing.PixelFormat.Format4bppIndexed;
       }
 
       var       pImage = new GR.Image.MemoryImage( pCD.Width, pCD.Height, format );

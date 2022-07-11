@@ -6,7 +6,7 @@ using RetroDevStudio;
 
 
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public class PetSCIITable : BaseDocument
   {
@@ -28,8 +28,8 @@ namespace RetroDevStudio
       listPETSCII.ItemHeight = (int)( 40 * GR.Image.DPIHandler.DPIY / 96.0f );
 
       listPETSCII.SetDisplaySize( listPETSCII.ClientSize.Width, listPETSCII.ClientSize.Height );
-      listPETSCII.DisplayPage.Create( 120, 120, System.Drawing.Imaging.PixelFormat.Format24bppRgb );
-      listPETSCII.PixelFormat = System.Drawing.Imaging.PixelFormat.Format24bppRgb;
+      listPETSCII.DisplayPage.Create( 120, 120, GR.Drawing.PixelFormat.Format24bppRgb );
+      listPETSCII.PixelFormat = GR.Drawing.PixelFormat.Format24bppRgb;
       listPETSCII.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
 
       foreach ( Types.C64Character character in ConstantData.PetSCIIToChar.Values )
@@ -103,7 +103,7 @@ namespace RetroDevStudio
       this.listPETSCII.ItemWidth = 203;
       this.listPETSCII.Location = new System.Drawing.Point(0, 0);
       this.listPETSCII.Name = "listPETSCII";
-      this.listPETSCII.PixelFormat = System.Drawing.Imaging.PixelFormat.DontCare;
+      this.listPETSCII.PixelFormat = GR.Drawing.PixelFormat.DontCare;
       this.listPETSCII.SelectedIndex = -1;
       this.listPETSCII.Size = new System.Drawing.Size(534, 390);
       this.listPETSCII.TabIndex = 1;

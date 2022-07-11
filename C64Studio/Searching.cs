@@ -1,6 +1,9 @@
-﻿using System;
+﻿using RetroDevStudio.Dialogs;
+using RetroDevStudio.Documents;
+using System;
 using System.Collections.Generic;
-using System.Text;
+
+
 
 namespace RetroDevStudio
 {

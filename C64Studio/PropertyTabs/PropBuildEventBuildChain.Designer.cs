@@ -31,7 +31,7 @@
       this.editBuildChainDefines = new System.Windows.Forms.TextBox();
       this.comboBuildChainConfig = new System.Windows.Forms.ComboBox();
       this.comboBuildChainProject = new System.Windows.Forms.ComboBox();
-      this.listBuildChainProjects = new RetroDevStudio.ArrangedItemList();
+      this.listBuildChainProjects = new RetroDevStudio.Controls.ArrangedItemList();
       this.labelDefines = new System.Windows.Forms.Label();
       this.labelConfig = new System.Windows.Forms.Label();
       this.labelProject = new System.Windows.Forms.Label();
@@ -92,12 +92,12 @@
       this.listBuildChainProjects.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.listBuildChainProjects.Size = new System.Drawing.Size(221, 244);
       this.listBuildChainProjects.TabIndex = 11;
-      this.listBuildChainProjects.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.listBuildChainProjects_AddingItem);
-      this.listBuildChainProjects.CloningItem += new RetroDevStudio.ArrangedItemList.CloningItemEventHandler(this.listBuildChainProjects_CloningItem);
-      this.listBuildChainProjects.ItemAdded += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemAdded);
-      this.listBuildChainProjects.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemRemoved);
-      this.listBuildChainProjects.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.listBuildChainProjects_ItemMoved);
-      this.listBuildChainProjects.SelectedIndexChanged += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_SelectedIndexChanged);
+      this.listBuildChainProjects.AddingItem += new RetroDevStudio.Controls.ArrangedItemList.AddingItemEventHandler(this.listBuildChainProjects_AddingItem);
+      this.listBuildChainProjects.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.listBuildChainProjects_CloningItem);
+      this.listBuildChainProjects.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemAdded);
+      this.listBuildChainProjects.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_ItemRemoved);
+      this.listBuildChainProjects.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.listBuildChainProjects_ItemMoved);
+      this.listBuildChainProjects.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.listBuildChainProjects_SelectedIndexChanged);
       // 
       // labelDefines
       // 
@@ -189,7 +189,7 @@
     private System.Windows.Forms.TextBox editBuildChainDefines;
     private System.Windows.Forms.ComboBox comboBuildChainConfig;
     private System.Windows.Forms.ComboBox comboBuildChainProject;
-    private ArrangedItemList listBuildChainProjects;
+    private Controls.ArrangedItemList listBuildChainProjects;
     private System.Windows.Forms.Label labelDefines;
     private System.Windows.Forms.Label labelConfig;
     private System.Windows.Forms.Label labelProject;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio.Documents;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,7 +7,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace RetroDevStudio
+
+
+namespace RetroDevStudio.Dialogs
 {
   public partial class FormFindReplace : BaseDocument
   {

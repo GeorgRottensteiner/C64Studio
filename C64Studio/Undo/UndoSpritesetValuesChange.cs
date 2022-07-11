@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using RetroDevStudio.Formats;
-using RetroDevStudio;
+﻿using RetroDevStudio.Formats;
 using RetroDevStudio.Types;
 using static RetroDevStudio.Formats.SpriteProject;
-
-
+using RetroDevStudio.Documents;
 
 namespace RetroDevStudio.Undo
 {

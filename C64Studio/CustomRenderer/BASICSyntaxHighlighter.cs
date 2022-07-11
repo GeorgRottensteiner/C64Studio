@@ -22,7 +22,7 @@ namespace RetroDevStudio.CustomRenderer
 
 
 
-    public override void HighlightSyntax( Language Language, Range ChangedRange )
+    public override void HighlightSyntax( Language Language, FastColoredTextBoxNS.Range ChangedRange )
     {
       if ( _Parser.Settings.BASICDialect == null )
       {
@@ -61,7 +61,7 @@ namespace RetroDevStudio.CustomRenderer
 
         foreach ( var token in info.Tokens )
         {
-          var subRange = new Range( ChangedRange.tb, token.StartIndex, i, token.StartIndex + token.Content.Length, i );
+          var subRange = new FastColoredTextBoxNS.Range( ChangedRange.tb, token.StartIndex, i, token.StartIndex + token.Content.Length, i );
           if ( hadREM )
           {
             subRange.SetStyle( StyleIndex.Style3 );

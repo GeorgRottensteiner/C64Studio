@@ -17,7 +17,7 @@ namespace RetroDevStudio.Formats
 
       public SpriteData()
       {
-        Image = new GR.Image.MemoryImage( 24, 21, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+        Image = new GR.Image.MemoryImage( 24, 21, GR.Drawing.PixelFormat.Format8bppIndexed );
       }
 
 

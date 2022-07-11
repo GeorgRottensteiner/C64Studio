@@ -10,7 +10,7 @@ using GR.Memory;
 using RetroDevStudio.Types;
 using GR.Image;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Documents
 {
   public partial class DebugRegisters : BaseDocument
   {

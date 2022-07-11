@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace RetroDevStudio
+namespace RetroDevStudio.Dialogs
 {
   public partial class FormLicense : Form
   {

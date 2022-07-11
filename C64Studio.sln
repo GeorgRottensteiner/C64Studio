@@ -1,20 +1,20 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C64Studio", "C64Studio\C64Studio.csproj", "{5BEA5CE5-4C5D-4EC5-83F3-83634E929858}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C64Studio", "C64Studio\C64Studio.csproj", "{5BEA5CE5-4C5D-4EC5-83F3-83634E929858}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexBox", "HexBox\HexBox.csproj", "{EA74431C-8749-4F1A-8F8F-FCEDAFAE89B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexBox", "HexBox\HexBox.csproj", "{EA74431C-8749-4F1A-8F8F-FCEDAFAE89B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaManager", "MediaManager\MediaManager.csproj", "{0718AAF4-1991-4BA1-A060-476767A30E93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaManager", "MediaManager\MediaManager.csproj", "{0718AAF4-1991-4BA1-A060-476767A30E93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastColoredTextBox", "FastColoredTextBox\FastColoredTextBox.csproj", "{6DD14A85-CCFC-4774-BD26-0F5772512319}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastColoredTextBox", "FastColoredTextBox\FastColoredTextBox.csproj", "{6DD14A85-CCFC-4774-BD26-0F5772512319}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaTool", "MediaTool\MediaTool.csproj", "{DFC77808-2D96-4DFE-8B35-5108E864A325}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaTool", "MediaTool\MediaTool.csproj", "{DFC77808-2D96-4DFE-8B35-5108E864A325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{6AAC13D8-50DE-4199-B331-063516E8F333}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject", "TestProject\TestProject.csproj", "{6AAC13D8-50DE-4199-B331-063516E8F333}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C64Ass", "C64Ass\C64Ass.csproj", "{060EC631-0065-45F1-AE91-5E39FE260337}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C64Ass", "C64Ass\C64Ass.csproj", "{060EC631-0065-45F1-AE91-5E39FE260337}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B80F7D3F-F7FA-49FA-BCEB-63A99D5760F7}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,31 +22,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiny64Cmd", "Tiny64Cmd\Tiny64Cmd.csproj", "{6F69DB22-F5B9-4446-ADB1-56F18B64374E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tiny64Cmd", "Tiny64Cmd\Tiny64Cmd.csproj", "{6F69DB22-F5B9-4446-ADB1-56F18B64374E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiny64Emu", "Tiny64Emu\Tiny64Emu.csproj", "{85F30A2D-5636-4648-8125-A22F11A56F1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tiny64Emu", "Tiny64Emu\Tiny64Emu.csproj", "{85F30A2D-5636-4648-8125-A22F11A56F1F}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedModels", "C64Models\SharedModels.shproj", "{B6F4568C-7D3F-48F5-A5AD-2F4DC2247C40}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common", "Common\Common.shproj", "{8B180733-2DFD-4E66-9351-965518AC3DF5}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		C64Models\C64Models.projitems*{060ec631-0065-45f1-ae91-5e39fe260337}*SharedItemsImports = 4
-		Common\Common.projitems*{060ec631-0065-45f1-ae91-5e39fe260337}*SharedItemsImports = 4
-		C64Models\C64Models.projitems*{0718aaf4-1991-4ba1-a060-476767a30e93}*SharedItemsImports = 4
-		Common\Common.projitems*{0718aaf4-1991-4ba1-a060-476767a30e93}*SharedItemsImports = 4
-		C64Models\C64Models.projitems*{5bea5ce5-4c5d-4ec5-83f3-83634e929858}*SharedItemsImports = 4
-		Common\Common.projitems*{5bea5ce5-4c5d-4ec5-83f3-83634e929858}*SharedItemsImports = 4
-		C64Models\C64Models.projitems*{6f69db22-f5b9-4446-adb1-56f18b64374e}*SharedItemsImports = 4
-		Common\Common.projitems*{6f69db22-f5b9-4446-adb1-56f18b64374e}*SharedItemsImports = 4
-		C64Models\C64Models.projitems*{85f30a2d-5636-4648-8125-a22f11a56f1f}*SharedItemsImports = 4
-		Common\Common.projitems*{85f30a2d-5636-4648-8125-a22f11a56f1f}*SharedItemsImports = 4
-		Common\Common.projitems*{8b180733-2dfd-4e66-9351-965518ac3df5}*SharedItemsImports = 13
-		C64Models\C64Models.projitems*{b6f4568c-7d3f-48f5-a5ad-2f4dc2247c40}*SharedItemsImports = 13
-		C64Models\C64Models.projitems*{dfc77808-2d96-4dfe-8b35-5108e864a325}*SharedItemsImports = 4
-		Common\Common.projitems*{dfc77808-2d96-4dfe-8b35-5108e864a325}*SharedItemsImports = 4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -94,5 +78,21 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98A73691-65BA-4D97-8AA7-0CEA71C3683C}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		C64Models\C64Models.projitems*{060ec631-0065-45f1-ae91-5e39fe260337}*SharedItemsImports = 5
+		Common\Common.projitems*{060ec631-0065-45f1-ae91-5e39fe260337}*SharedItemsImports = 5
+		C64Models\C64Models.projitems*{0718aaf4-1991-4ba1-a060-476767a30e93}*SharedItemsImports = 5
+		Common\Common.projitems*{0718aaf4-1991-4ba1-a060-476767a30e93}*SharedItemsImports = 5
+		C64Models\C64Models.projitems*{5bea5ce5-4c5d-4ec5-83f3-83634e929858}*SharedItemsImports = 5
+		Common\Common.projitems*{5bea5ce5-4c5d-4ec5-83f3-83634e929858}*SharedItemsImports = 5
+		C64Models\C64Models.projitems*{6f69db22-f5b9-4446-adb1-56f18b64374e}*SharedItemsImports = 5
+		Common\Common.projitems*{6f69db22-f5b9-4446-adb1-56f18b64374e}*SharedItemsImports = 5
+		C64Models\C64Models.projitems*{85f30a2d-5636-4648-8125-a22f11a56f1f}*SharedItemsImports = 5
+		Common\Common.projitems*{85f30a2d-5636-4648-8125-a22f11a56f1f}*SharedItemsImports = 5
+		Common\Common.projitems*{8b180733-2dfd-4e66-9351-965518ac3df5}*SharedItemsImports = 13
+		C64Models\C64Models.projitems*{b6f4568c-7d3f-48f5-a5ad-2f4dc2247c40}*SharedItemsImports = 13
+		C64Models\C64Models.projitems*{dfc77808-2d96-4dfe-8b35-5108e864a325}*SharedItemsImports = 5
+		Common\Common.projitems*{dfc77808-2d96-4dfe-8b35-5108e864a325}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

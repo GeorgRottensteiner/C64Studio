@@ -47,7 +47,7 @@ namespace RetroDevStudio.Formats
 
     public ColorSettings                Colors = new ColorSettings();
     public bool                         MultiColor = false;
-    public GR.Image.MemoryImage         Image = new GR.Image.MemoryImage( 320, 200, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+    public GR.Image.MemoryImage         Image = new GR.Image.MemoryImage( 320, 200, GR.Drawing.PixelFormat.Format8bppIndexed );
 
     public CheckType                    SelectedCheckType = CheckType.MULTICOLOR_BITMAP;
 
@@ -213,7 +213,7 @@ namespace RetroDevStudio.Formats
             {
               int width = chunkReader.ReadInt32();
               int height = chunkReader.ReadInt32();
-              System.Drawing.Imaging.PixelFormat format = (System.Drawing.Imaging.PixelFormat)chunkReader.ReadInt32();
+              GR.Drawing.PixelFormat format = (GR.Drawing.PixelFormat)chunkReader.ReadInt32();
               int paletteCount = chunkReader.ReadInt32();
               Image.Create( width, height, format );
               for ( int i = 0; i < paletteCount; ++i )

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
@@ -10,8 +7,11 @@ using System.Drawing;
 using RetroDevStudio.Types;
 using GR.Memory;
 using RetroDevStudio.Debugger;
+using RetroDevStudio.Dialogs;
 
-namespace RetroDevStudio
+
+
+namespace RetroDevStudio.Documents
 {
   public partial class DebugMemory : BaseDocument
   {
@@ -285,7 +285,7 @@ namespace RetroDevStudio
 
     private void toolStripButtonGoto_Click( object sender, EventArgs e )
     {
-      FormGoto frmGoto = new FormGoto( Core );
+      var frmGoto = new FormGoto( Core );
 
       if ( frmGoto.ShowDialog() == DialogResult.OK )
       {

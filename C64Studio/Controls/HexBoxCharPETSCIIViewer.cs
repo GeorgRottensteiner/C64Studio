@@ -24,7 +24,7 @@ namespace Be.Windows.Forms
         var oldClip = graphics.Clip;
         graphics.SetClip( _recHex );
 
-        GR.Image.FastImage  charImage = new GR.Image.FastImage( 8, 8, System.Drawing.Imaging.PixelFormat.Format32bppRgb );
+        GR.Image.FastImage  charImage = new GR.Image.FastImage( 8, 8, GR.Drawing.PixelFormat.Format32bppRgb );
         PaletteManager.ApplyPalette( charImage );
 
         for ( int i = 0; i < intern_endByte - _startByte; ++i )

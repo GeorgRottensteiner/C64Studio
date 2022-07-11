@@ -1,15 +1,15 @@
 ﻿using RetroDevStudio.Types;
 using GR.Memory;
-using RetroDevStudio;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using RetroDevStudio.Controls;
 
-namespace RetroDevStudio
+
+
+namespace RetroDevStudio.Dialogs
 {
   public partial class DlgPaletteEditor : Form
   {

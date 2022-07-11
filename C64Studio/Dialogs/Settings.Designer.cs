@@ -1,4 +1,4 @@
-﻿namespace RetroDevStudio
+﻿namespace RetroDevStudio.Dialogs
 {
   partial class Settings
   {
@@ -56,7 +56,7 @@
       this.label13 = new System.Windows.Forms.Label();
       this.label11 = new System.Windows.Forms.Label();
       this.tabTools = new System.Windows.Forms.TabPage();
-      this.alistTools = new RetroDevStudio.ArrangedItemList();
+      this.alistTools = new RetroDevStudio.Controls.ArrangedItemList();
       this.checkPassLabelsToEmulator = new System.Windows.Forms.CheckBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.button1 = new System.Windows.Forms.Button();
@@ -108,7 +108,7 @@
       this.checkASMShowLineNumbers = new System.Windows.Forms.CheckBox();
       this.label30 = new System.Windows.Forms.Label();
       this.label26 = new System.Windows.Forms.Label();
-      this.asmLibraryPathList = new RetroDevStudio.ArrangedItemList();
+      this.asmLibraryPathList = new RetroDevStudio.Controls.ArrangedItemList();
       this.listHacks = new System.Windows.Forms.CheckedListBox();
       this.label35 = new System.Windows.Forms.Label();
       this.label34 = new System.Windows.Forms.Label();
@@ -503,12 +503,12 @@
       this.alistTools.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.alistTools.Size = new System.Drawing.Size(184, 349);
       this.alistTools.TabIndex = 11;
-      this.alistTools.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.alistTools_AddingItem);
-      this.alistTools.CloningItem += new RetroDevStudio.ArrangedItemList.CloningItemEventHandler(this.alistTools_CloningItem);
-      this.alistTools.ItemAdded += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemAdded);
-      this.alistTools.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemRemoved);
-      this.alistTools.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.alistTools_ItemMoved);
-      this.alistTools.SelectedIndexChanged += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_SelectedIndexChanged);
+      this.alistTools.AddingItem += new RetroDevStudio.Controls.ArrangedItemList.AddingItemEventHandler(this.alistTools_AddingItem);
+      this.alistTools.CloningItem += new RetroDevStudio.Controls.ArrangedItemList.CloningItemEventHandler(this.alistTools_CloningItem);
+      this.alistTools.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemAdded);
+      this.alistTools.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_ItemRemoved);
+      this.alistTools.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.alistTools_ItemMoved);
+      this.alistTools.SelectedIndexChanged += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.alistTools_SelectedIndexChanged);
       // 
       // checkPassLabelsToEmulator
       // 
@@ -1043,10 +1043,10 @@
       this.asmLibraryPathList.SelectionTextColor = System.Drawing.SystemColors.HighlightText;
       this.asmLibraryPathList.Size = new System.Drawing.Size(356, 154);
       this.asmLibraryPathList.TabIndex = 20;
-      this.asmLibraryPathList.AddingItem += new RetroDevStudio.ArrangedItemList.AddingItemEventHandler(this.asmLibraryPathList_AddingItem);
-      this.asmLibraryPathList.ItemAdded += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemAdded);
-      this.asmLibraryPathList.ItemRemoved += new RetroDevStudio.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemRemoved);
-      this.asmLibraryPathList.ItemMoved += new RetroDevStudio.ArrangedItemList.ItemExchangedEventHandler(this.asmLibraryPathList_ItemMoved);
+      this.asmLibraryPathList.AddingItem += new RetroDevStudio.Controls.ArrangedItemList.AddingItemEventHandler(this.asmLibraryPathList_AddingItem);
+      this.asmLibraryPathList.ItemAdded += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemAdded);
+      this.asmLibraryPathList.ItemRemoved += new RetroDevStudio.Controls.ArrangedItemList.ItemModifiedEventHandler(this.asmLibraryPathList_ItemRemoved);
+      this.asmLibraryPathList.ItemMoved += new RetroDevStudio.Controls.ArrangedItemList.ItemExchangedEventHandler(this.asmLibraryPathList_ItemMoved);
       // 
       // listHacks
       // 
@@ -1637,7 +1637,7 @@
     private System.Windows.Forms.CheckBox checkBASICShowControlCodes;
     private System.Windows.Forms.ComboBox comboAppMode;
     private System.Windows.Forms.Label label29;
-    private ArrangedItemList asmLibraryPathList;
+    private Controls.ArrangedItemList asmLibraryPathList;
     private System.Windows.Forms.CheckBox checkASMShowAutoComplete;
     private System.Windows.Forms.CheckBox checkASMAutoTruncateLiteralValues;
     private System.Windows.Forms.CheckBox checkASMShowMiniMap;
@@ -1661,7 +1661,7 @@
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.CheckedListBox listWarningsAsErrors;
         private System.Windows.Forms.Label label33;
-    private ArrangedItemList alistTools;
+    private Controls.ArrangedItemList alistTools;
     private System.Windows.Forms.CheckedListBox listHacks;
     private System.Windows.Forms.Label label34;
     private System.Windows.Forms.ComboBox comboASMEncoding;
