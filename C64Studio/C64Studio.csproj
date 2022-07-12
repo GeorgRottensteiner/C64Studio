@@ -299,23 +299,19 @@
     </None>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
-copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"</PostBuildEvent>
-    <PostBuildEvent Condition="'$(OS)' == 'Unix' ">cp "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
-        for i in $(TargetDir)*.dll; do cp $i $(SolutionDir)C64StudioRelease; done</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">
-      copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFileName)"
-      copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease"
-      del "$(SolutionDir)C64StudioRelease\BASIC Dialects\*.*" /Q
-      copy "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\BASIC Dialects"
+      copy "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetFileName)"
+      if exist "$(TargetDir)*.dll" copy "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)"
+      del "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects\*.*" /Q
+      copy /Y "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects"
+      if exist "$(TargetDir)*.runtimeconfig.json" copy "$(TargetDir)*.runtimeconfig.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)"
     </PostBuildEvent>
     <PostBuildEvent Condition="'$(OS)' == 'Unix' ">
-      cp $(TargetDir)C64Studio.exe $(SolutionDir)C64StudioRelease/$(TargetFileName)
-      cp $(TargetDir).dll $(SolutionDir)C64StudioRelease
-      rm -f "$(SolutionDir)C64StudioRelease/BASIC Dialects/"
-      cp $(ProjectDir)BASIC?Dialects/* $(SolutionDir)C64StudioRelease/BASIC?Dialects
+      cp "$(TargetDir)C64Studio.exe" "$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetFileName)"
+      cp "$(TargetDir)*.dll" "$(SolutionDir)C64StudioRelease\$(TargetFramework)"
+      cp "$(TargetDir)*.runtimeconfig.json" "$(SolutionDir)C64StudioRelease\$(TargetFramework)"
+      rm -f "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects\*.*" /Q
+      cp "$(ProjectDir)BASIC Dialects\*.*" "$(SolutionDir)C64StudioRelease\shared content\BASIC Dialects"
     </PostBuildEvent>
     <ApplicationIcon>c64.ico</ApplicationIcon>
     <PlatformTarget>AnyCPU</PlatformTarget>
