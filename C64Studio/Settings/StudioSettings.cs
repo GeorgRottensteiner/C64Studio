@@ -894,7 +894,7 @@ namespace RetroDevStudio
 
               // sanitize args
               tool.CartArguments  = tool.CartArguments.Replace( "$(BuildTargetFilename)", "$(RunFilename)" );
-              tool.PRGArguments   = tool.PRGArguments.Replace( "$(BuildTargetFilename)", "$(RunFilename)" );
+              tool.PrgArguments   = tool.PrgArguments.Replace( "$(BuildTargetFilename)", "$(RunFilename)" );
               tool.WorkPath       = tool.WorkPath.Replace( "$(FilePath)", "$(RunPath)" );
 
               ToolInfos.Add( tool );
