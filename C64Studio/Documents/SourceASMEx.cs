@@ -3637,5 +3637,185 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void convertDecimalToHexToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      int     firstLine = editSource.Selection.Start.iLine;
+      int     endLine = editSource.Selection.End.iLine;
+
+      if ( firstLine > endLine )
+      {
+        int   temp = firstLine;
+        firstLine = endLine;
+        endLine = temp;
+      }
+
+      if ( editSource.SelectionLength == 0 )
+      {
+        firstLine = m_ContextMenuLineIndex;
+        endLine = firstLine;
+      }
+
+
+      editSource.BeginAutoUndo();
+
+      for ( int lineIndex = firstLine; lineIndex <= endLine; ++lineIndex )
+      {
+        string    text = editSource.Lines[lineIndex];
+
+        var tokens = Parser.ParseTokenInfo( text, 0, text.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
+
+        int     firstLiteralTokenIndex = 1;
+
+        if ( ( tokens.Count > 0 )
+        &&   ( ( tokens[0].Type == TokenInfo.TokenType.LABEL_LOCAL )
+        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_INTERNAL )
+        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_CHEAP_LOCAL ) ) )
+        {
+          firstLiteralTokenIndex = 2;
+        }
+
+        if ( ( tokens.Count > firstLiteralTokenIndex )
+        &&   ( tokens[firstLiteralTokenIndex - 1].Type == TokenInfo.TokenType.PSEUDO_OP ) )
+        {
+          string  upperToken = tokens[firstLiteralTokenIndex - 1].Content.ToUpper();
+          if ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperToken ) )
+          {
+            var pseudoOp = Parser.ASMFileInfo.AssemblerSettings.PseudoOps[upperToken];
+
+            if ( ( pseudoOp.Type == MacroInfo.PseudoOpType.BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.WORD )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.LOW_BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.HIGH_BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_PET )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_RAW )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_SCREEN ) )
+            {
+              // we only touch literal values!
+              for ( int i = firstLiteralTokenIndex; i < tokens.Count; ++i )
+              {
+                if ( ( tokens[i].Type == TokenInfo.TokenType.LITERAL_NUMBER )
+                &&   ( ( ( ( i >= firstLiteralTokenIndex )
+                &&         ( tokens[i - 1].Content == "," ) )
+                ||       ( i == firstLiteralTokenIndex ) ) )
+                ||     ( ( ( ( i + 1 < tokens.Count )
+                &&         ( tokens[i + 1].Content == "," ) )
+                ||       ( i + 1 == tokens.Count ) ) ) )
+                {
+                  if ( Parser.EvaluateTokens( i, tokens, i, 1, Core.Compiling.ParserASM.m_TextCodeMappingRaw, out SymbolInfo resultValueSymbol ) )
+                  {
+                    int resultValue = resultValueSymbol.ToInt32();
+                    tokens[i].Content = "$" + resultValue.ToString( "X2" );
+                  }
+                }
+              }
+              string    newLine = Parser.TokensToExpression( tokens );
+              if ( tokens[0].StartPos > 0 )
+              {
+                newLine = new string( ' ', tokens[0].StartPos ) + newLine;
+              }
+              editSource.SetLineText( lineIndex, newLine ); 
+            }
+          }
+        }
+      }
+      editSource.EndAutoUndo();
+
+      SetModified();    
+    }
+
+
+
+    private void convertHexToDecimalToolStripMenuItem1_Click( object sender, EventArgs e )
+    {
+      int     firstLine = editSource.Selection.Start.iLine;
+      int     endLine = editSource.Selection.End.iLine;
+
+      if ( firstLine > endLine )
+      {
+        int   temp = firstLine;
+        firstLine = endLine;
+        endLine = temp;
+      }
+
+      if ( editSource.SelectionLength == 0 )
+      {
+        firstLine = m_ContextMenuLineIndex;
+        endLine = firstLine;
+      }
+
+
+      editSource.BeginAutoUndo();
+
+      for ( int lineIndex = firstLine; lineIndex <= endLine; ++lineIndex )
+      {
+        string    text = editSource.Lines[lineIndex];
+
+        var tokens = Parser.ParseTokenInfo( text, 0, text.Length, Core.Compiling.ParserASM.m_TextCodeMappingRaw );
+
+        int     firstLiteralTokenIndex = 1;
+
+        if ( ( tokens.Count > 0 )
+        &&   ( ( tokens[0].Type == TokenInfo.TokenType.LABEL_LOCAL )
+        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_INTERNAL )
+        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+        ||     ( tokens[0].Type == TokenInfo.TokenType.LABEL_CHEAP_LOCAL ) ) )
+        {
+          firstLiteralTokenIndex = 2;
+        }
+
+        if ( ( tokens.Count > firstLiteralTokenIndex )
+        &&   ( tokens[firstLiteralTokenIndex - 1].Type == TokenInfo.TokenType.PSEUDO_OP ) )
+        {
+          string  upperToken = tokens[firstLiteralTokenIndex - 1].Content.ToUpper();
+          if ( Parser.ASMFileInfo.AssemblerSettings.PseudoOps.ContainsKey( upperToken ) )
+          {
+            var pseudoOp = Parser.ASMFileInfo.AssemblerSettings.PseudoOps[upperToken];
+
+            if ( ( pseudoOp.Type == MacroInfo.PseudoOpType.BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.WORD )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.LOW_BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.HIGH_BYTE )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_PET )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_RAW )
+            ||   ( pseudoOp.Type == MacroInfo.PseudoOpType.TEXT_SCREEN ) )
+            {
+              // we only touch literal values!
+              for ( int i = firstLiteralTokenIndex; i < tokens.Count; ++i )
+              {
+                if ( ( tokens[i].Type == TokenInfo.TokenType.LITERAL_NUMBER )
+                &&   ( ( ( ( i >= firstLiteralTokenIndex )
+                &&         ( tokens[i - 1].Content == "," ) )
+                ||       ( i == firstLiteralTokenIndex ) ) )
+                ||     ( ( ( ( i + 1 < tokens.Count )
+                &&         ( tokens[i + 1].Content == "," ) )
+                ||       ( i + 1 == tokens.Count ) ) ) )
+                {
+                  if ( Parser.EvaluateTokens( i, tokens, i, 1, Core.Compiling.ParserASM.m_TextCodeMappingRaw, out SymbolInfo resultValueSymbol ) )
+                  {
+                    int resultValue = resultValueSymbol.ToInt32();
+                    tokens[i].Content = resultValue.ToString();
+                  }
+                }
+              }
+              string    newLine = Parser.TokensToExpression( tokens );
+              if ( tokens[0].StartPos > 0 )
+              {
+                newLine = new string( ' ', tokens[0].StartPos ) + newLine;
+              }
+              editSource.SetLineText( lineIndex, newLine ); 
+            }
+          }
+        }
+      }
+      editSource.EndAutoUndo();
+
+      SetModified();    
+    }
+
+
+
   }
 }
