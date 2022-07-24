@@ -180,7 +180,7 @@ namespace RetroDevStudio.Formats
         return false;
       }
 
-      Chars[Y * ScreenWidth + X] = (ushort)( ( Chars[Y * ScreenWidth + X] & 0xffff ) | (ushort)( ColorValue << 16 ) );
+      Chars[Y * ScreenWidth + X] = (uint)( ( Chars[Y * ScreenWidth + X] & 0xffff ) | (uint)( ColorValue << 16 ) );
 
       return true;
     }
