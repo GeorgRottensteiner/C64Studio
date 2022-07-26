@@ -244,6 +244,8 @@ namespace RetroDevStudio.Documents
         item.SubItems[0].Text = ( localLineIndex + 1 ).ToString();
         item.SubItems[1].Text = filename;
 
+        string    lineContent = "";
+
         if ( Project != null )
         {
           var element = Project.GetElementByFilename( filename );
@@ -259,7 +261,7 @@ namespace RetroDevStudio.Documents
               if ( ( localLineIndex >= 0 )
               &&   ( localLineIndex < element.Document.SourceControl.LinesCount ) )
               {
-                item.SubItems[2].Text = element.Document.SourceControl.GetLine( localLineIndex ).Text;
+                lineContent = element.Document.SourceControl.GetLine( localLineIndex ).Text;
               }
             }
             else
@@ -267,9 +269,7 @@ namespace RetroDevStudio.Documents
               // fetch line from file
               string textFromElement = Core.Searching.GetDocumentInfoText( element.DocumentInfo );
 
-              string line = FindLineInsideText( textFromElement, localLineIndex );
-
-              item.SubItems[2].Text = line;
+              lineContent = FindLineInsideText( textFromElement, localLineIndex );
             }
           }
           else
@@ -277,8 +277,7 @@ namespace RetroDevStudio.Documents
             // not a direct project member, read from file
             string textFromElement = Core.Searching.GetTextFromFile( filename );
 
-            string line = FindLineInsideText( textFromElement, localLineIndex );
-            item.SubItems[2].Text = line;
+            lineContent = FindLineInsideText( textFromElement, localLineIndex );
           }
         }
         else
@@ -294,7 +293,7 @@ namespace RetroDevStudio.Documents
             if ( ( localLineIndex >= 0 )
             &&   ( localLineIndex < doc.BaseDoc.SourceControl.LinesCount ) )
             {
-              item.SubItems[2].Text = doc.BaseDoc.SourceControl.GetLine( localLineIndex ).Text;
+              lineContent = doc.BaseDoc.SourceControl.GetLine( localLineIndex ).Text;
             }
           }
           else
@@ -302,10 +301,11 @@ namespace RetroDevStudio.Documents
             // not a direct project member, read from file
             string textFromElement = Core.Searching.GetTextFromFile( filename );
 
-            string line = FindLineInsideText( textFromElement, localLineIndex );
-            item.SubItems[2].Text = line;
+            lineContent = FindLineInsideText( textFromElement, localLineIndex );
           }
         }
+
+        item.SubItems[2].Text = lineContent.Replace( "\t", "  " );
       }
       listResults.Items.Add( item );
     }

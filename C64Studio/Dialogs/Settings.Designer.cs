@@ -30,6 +30,7 @@
     {
       this.tabPreferences = new System.Windows.Forms.TabControl();
       this.tabGeneral = new System.Windows.Forms.TabPage();
+      this.checkRightClickIsBGColor = new System.Windows.Forms.CheckBox();
       this.btnBrowseDefaultOpenSolutionPath = new System.Windows.Forms.Button();
       this.editDefaultOpenSolutionPath = new System.Windows.Forms.TextBox();
       this.comboAppMode = new System.Windows.Forms.ComboBox();
@@ -152,7 +153,6 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.checkRightClickIsBGColor = new System.Windows.Forms.CheckBox();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -217,6 +217,17 @@
       this.tabGeneral.TabIndex = 2;
       this.tabGeneral.Text = "General";
       this.tabGeneral.UseVisualStyleBackColor = true;
+      // 
+      // checkRightClickIsBGColor
+      // 
+      this.checkRightClickIsBGColor.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+      this.checkRightClickIsBGColor.Location = new System.Drawing.Point(340, 225);
+      this.checkRightClickIsBGColor.Name = "checkRightClickIsBGColor";
+      this.checkRightClickIsBGColor.Size = new System.Drawing.Size(307, 24);
+      this.checkRightClickIsBGColor.TabIndex = 11;
+      this.checkRightClickIsBGColor.Text = "Right Click is Paint with BG Color";
+      this.checkRightClickIsBGColor.UseVisualStyleBackColor = true;
+      this.checkRightClickIsBGColor.CheckedChanged += new System.EventHandler(this.checkRightClickIsBGColor_CheckedChanged);
       // 
       // btnBrowseDefaultOpenSolutionPath
       // 
@@ -328,7 +339,7 @@
       // label32
       // 
       this.label32.AutoSize = true;
-      this.label32.Location = new System.Drawing.Point(337, 75);
+      this.label32.Location = new System.Drawing.Point(289, 75);
       this.label32.Name = "label32";
       this.label32.Size = new System.Drawing.Size(95, 13);
       this.label32.TabIndex = 5;
@@ -337,7 +348,7 @@
       // label31
       // 
       this.label31.AutoSize = true;
-      this.label31.Location = new System.Drawing.Point(337, 50);
+      this.label31.Location = new System.Drawing.Point(289, 48);
       this.label31.Name = "label31";
       this.label31.Size = new System.Drawing.Size(139, 13);
       this.label31.TabIndex = 5;
@@ -355,9 +366,9 @@
       // checkAutoOpenLastSolution
       // 
       this.checkAutoOpenLastSolution.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkAutoOpenLastSolution.Location = new System.Drawing.Point(336, 21);
+      this.checkAutoOpenLastSolution.Location = new System.Drawing.Point(292, 21);
       this.checkAutoOpenLastSolution.Name = "checkAutoOpenLastSolution";
-      this.checkAutoOpenLastSolution.Size = new System.Drawing.Size(311, 24);
+      this.checkAutoOpenLastSolution.Size = new System.Drawing.Size(355, 24);
       this.checkAutoOpenLastSolution.TabIndex = 3;
       this.checkAutoOpenLastSolution.Text = "Open last solution on startup";
       this.checkAutoOpenLastSolution.UseVisualStyleBackColor = true;
@@ -1487,17 +1498,6 @@
       this.btnExportCurrentPageSettings.Text = "Export here";
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
-      // 
-      // checkRightClickIsBGColor
-      // 
-      this.checkRightClickIsBGColor.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.checkRightClickIsBGColor.Location = new System.Drawing.Point(340, 225);
-      this.checkRightClickIsBGColor.Name = "checkRightClickIsBGColor";
-      this.checkRightClickIsBGColor.Size = new System.Drawing.Size(307, 24);
-      this.checkRightClickIsBGColor.TabIndex = 11;
-      this.checkRightClickIsBGColor.Text = "Right Click is Paint with BG Color";
-      this.checkRightClickIsBGColor.UseVisualStyleBackColor = true;
-      this.checkRightClickIsBGColor.CheckedChanged += new System.EventHandler(this.checkRightClickIsBGColor_CheckedChanged);
       // 
       // Settings
       // 

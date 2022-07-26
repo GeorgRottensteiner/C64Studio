@@ -201,6 +201,9 @@
     <Compile Update="Controls\ZoomBrowser.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Dialogs\FormRenameSolution.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>

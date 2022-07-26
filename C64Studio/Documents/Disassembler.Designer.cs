@@ -111,7 +111,7 @@
       this.editDisassembly.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
       this.editDisassembly.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("editDisassembly.ServiceColors")));
       this.editDisassembly.ShowLineNumbers = false;
-      this.editDisassembly.Size = new System.Drawing.Size(456, 618);
+      this.editDisassembly.Size = new System.Drawing.Size(456, 536);
       this.editDisassembly.TabIndex = 1;
       this.editDisassembly.TabLength = 2;
       this.editDisassembly.Zoom = 100;
@@ -139,7 +139,7 @@
       this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.panel1.Location = new System.Drawing.Point(3, 3);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(460, 622);
+      this.panel1.Size = new System.Drawing.Size(460, 540);
       this.panel1.TabIndex = 2;
       // 
       // btnOpenBinary
@@ -291,7 +291,7 @@
       this.tabContent.Location = new System.Drawing.Point(12, 14);
       this.tabContent.Name = "tabContent";
       this.tabContent.SelectedIndex = 0;
-      this.tabContent.Size = new System.Drawing.Size(474, 654);
+      this.tabContent.Size = new System.Drawing.Size(474, 572);
       this.tabContent.TabIndex = 5;
       // 
       // tabDisassembly
@@ -300,7 +300,7 @@
       this.tabDisassembly.Location = new System.Drawing.Point(4, 22);
       this.tabDisassembly.Name = "tabDisassembly";
       this.tabDisassembly.Padding = new System.Windows.Forms.Padding(3);
-      this.tabDisassembly.Size = new System.Drawing.Size(466, 628);
+      this.tabDisassembly.Size = new System.Drawing.Size(466, 546);
       this.tabDisassembly.TabIndex = 0;
       this.tabDisassembly.Text = "Disassembly";
       this.tabDisassembly.UseVisualStyleBackColor = true;

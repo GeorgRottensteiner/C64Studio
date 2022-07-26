@@ -25,6 +25,8 @@ namespace RetroDevStudio
     public string           TrueDriveOnArguments = "";
     public string           TrueDriveOffArguments = "";
     public bool             PassLabelsToEmulator = true;
+    public bool             IsInternal = false;
+
 
     public GR.IO.FileChunk ToChunk()
     {

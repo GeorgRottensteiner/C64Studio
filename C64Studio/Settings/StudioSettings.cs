@@ -109,6 +109,7 @@ namespace RetroDevStudio
     public GR.Collections.MultiMap<Keys, AcceleratorKey> Accelerators = new GR.Collections.MultiMap<Keys, AcceleratorKey>();
 
     public List<ToolInfo>                       ToolInfos = new List<ToolInfo>();
+    public ToolInfo                             ToolTiny64 = new ToolInfo();
 
     public List<string>                         MRUProjects = new List<string>();
     public List<string>                         MRUFiles = new List<string>();

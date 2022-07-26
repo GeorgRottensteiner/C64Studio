@@ -33,6 +33,11 @@ namespace RetroDevStudio.Types
 
     public static bool SupportsDebugging( ToolInfo Tool )
     {
+      if ( Tool.IsInternal )
+      {
+        return true;
+      }
+
       // currently only the VICE family is supported
       if ( ( IsVICEFamily( Tool ) )
       ||   ( IsMega65Family( Tool ) ) )

@@ -25,13 +25,16 @@ namespace RetroDevStudio.Types
       DOCUMENT_INFO_REMOVED,
       EMULATOR_LIST_CHANGED,
       KEY_BINDINGS_MODIFIED,
-      SOLUTION_RENAMED
+      SOLUTION_RENAMED,
+      PROJECT_RENAMED
     }
 
     public Type             EventType = Type.NONE;
     public DocumentInfo     Doc = null;
     public ProjectElement   Element = null;
     public Project          Project = null;
+    public string           OriginalValue = "";
+    public string           UpdatedValue = "";
 
 
 

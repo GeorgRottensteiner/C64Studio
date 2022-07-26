@@ -180,6 +180,20 @@ namespace RetroDevStudio
 
 
 
+    public void RenameSolution( string OriginalSolutionFilename, string NewSolutionPath )
+    {
+      Solution.Filename = NewSolutionPath;
+
+      // adapt main form caption
+      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_RENAMED )
+        { 
+          OriginalValue = OriginalSolutionFilename, 
+          UpdatedValue = NewSolutionPath 
+        } );
+    }
+
+
+
     public BaseDocument FindDocumentByPath( string FullPath )
     {
       string  inPath = FullPath.Replace( "\\", "/" );

@@ -159,18 +159,22 @@ namespace RetroDevStudio.Documents
 
             if ( isProject )
             {
+              System.Windows.Forms.ToolStripMenuItem subItemRenameProject = new System.Windows.Forms.ToolStripMenuItem( "Rename Project" );
+              subItemRenameProject.Click += new EventHandler( treeElementRename_Click );
+              contextMenu.Items.Add( subItemRenameProject );
+            }
+            else if ( isFolder )
+            {
+              System.Windows.Forms.ToolStripMenuItem subItemRenameProject = new System.Windows.Forms.ToolStripMenuItem( "Rename Folder" );
+              subItemRenameProject.Click += new EventHandler( treeElementRename_Click );
+              contextMenu.Items.Add( subItemRenameProject );
+            }
+
+            if ( isProject )
+            {
               System.Windows.Forms.ToolStripMenuItem subItemCloneProject = new System.Windows.Forms.ToolStripMenuItem( "Clone Project" );
               subItemCloneProject.Click += new EventHandler( subItemCloneProject_Click );
               contextMenu.Items.Add( subItemCloneProject );
-            }
-
-            if ( ( isFolder )
-            ||   ( isProject ) )
-            {
-              System.Windows.Forms.ToolStripMenuItem folderItem = new System.Windows.Forms.ToolStripMenuItem( "Remove from solution" );
-              folderItem.Tag = 0;
-              folderItem.Click += new EventHandler( treeElementRemove_Click );
-              contextMenu.Items.Add( folderItem );
             }
 
             if ( isProject )
@@ -247,6 +251,17 @@ namespace RetroDevStudio.Documents
             item.Tag = 0;
             item.Click += new EventHandler( openFolderClick );
             contextMenu.Items.Add( item );
+
+            contextMenu.Items.Add( "-" );
+
+            if ( ( isFolder )
+            ||   ( isProject ) )
+            {
+              System.Windows.Forms.ToolStripMenuItem folderItem = new System.Windows.Forms.ToolStripMenuItem( "Remove from solution" );
+              folderItem.Tag = 0;
+              folderItem.Click += new EventHandler( treeElementRemove_Click );
+              contextMenu.Items.Add( folderItem );
+            }
 
             if ( isFolder )
             {
@@ -394,6 +409,14 @@ namespace RetroDevStudio.Documents
         }
         contextMenu.Show( treeProject.PointToScreen( e.Location ) );
       }
+    }
+
+
+
+    private void subItemRename_Click( object sender, EventArgs e )
+    {
+      treeProject.SelectedNode = m_ContextMenuNode;
+      treeProject.StartLabelEdit();
     }
 
 
@@ -1166,9 +1189,15 @@ namespace RetroDevStudio.Documents
       {
         if ( Core.Navigating.Solution.IsValidProjectName( newText ) )
         {
+          string    originalValue = project.Settings.Name;
           Core.Navigating.Solution.RenameProject( project, newText );
 
-          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_RENAMED ) );
+          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.PROJECT_RENAMED )
+              {
+                OriginalValue = originalValue,
+                UpdatedValue = newText 
+              }
+            );
         }
         return;
       }

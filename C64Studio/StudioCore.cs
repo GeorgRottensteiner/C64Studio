@@ -28,6 +28,7 @@ namespace RetroDevStudio
 
 
     delegate void AddToOutputCallback( string Text );
+    delegate void MessageBoxCallback( string Text, string Caption );
     delegate void delSetStatus( string Text, bool ProgressVisible, int ProgressValue );
 
 
@@ -47,12 +48,16 @@ namespace RetroDevStudio
 
 
 
-    public ToolInfo DetermineTool( DocumentInfo Document, bool Run )
+    public ToolInfo DetermineTool( DocumentInfo Document, ToolInfo.ToolType RunType )
     {
+      if ( Settings.EmulatorToRun == Settings.ToolTiny64.Name.ToUpper() )
+      {
+        return Settings.ToolTiny64;
+      }
+
       foreach ( ToolInfo tool in Settings.ToolInfos )
       {
-        if ( ( Run )
-        &&   ( tool.Type == ToolInfo.ToolType.EMULATOR )
+        if ( ( tool.Type == RunType )
         &&   ( tool.Name != null )
         &&   ( tool.Name.ToUpper() == Settings.EmulatorToRun ) )
         {
@@ -64,14 +69,7 @@ namespace RetroDevStudio
       // fallback
       foreach ( ToolInfo tool in Settings.ToolInfos )
       {
-        if ( ( Run )
-        &&   ( tool.Type == ToolInfo.ToolType.EMULATOR ) )
-        {
-          //AddToOutput( "fallback emulator = " + tool.Name );
-          return tool;
-        }
-        if ( ( !Run )
-        &&   ( tool.Type == ToolInfo.ToolType.ASSEMBLER ) )
+        if ( tool.Type == RunType )
         {
           return tool;
         }
@@ -178,6 +176,26 @@ namespace RetroDevStudio
       else
       {
         MainForm.m_Output.AppendText( Text );
+      }
+    }
+
+
+
+    public void MessageBox( string Text, string Caption )
+    {
+      if ( MainForm.InvokeRequired )
+      {
+        try
+        {
+          MainForm.Invoke( new MessageBoxCallback( MessageBox ), new object[] { Text, Caption } );
+        }
+        catch ( System.ObjectDisposedException )
+        {
+        }
+      }
+      else
+      {
+        System.Windows.Forms.MessageBox.Show( MainForm, Text, Caption );
       }
     }
 
