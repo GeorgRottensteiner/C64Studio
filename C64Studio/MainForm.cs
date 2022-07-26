@@ -539,6 +539,11 @@ namespace RetroDevStudio
       m_Disassembler.SetInternal();
       m_ValueTableEditor.SetInternal();
 
+      // butt ugly hack
+      StudioCore.Settings.ToolTiny64.Type       = ToolInfo.ToolType.EMULATOR;
+      StudioCore.Settings.ToolTiny64.Name       = "Tiny64 Internal Debugger";
+      StudioCore.Settings.ToolTiny64.IsInternal = true;
+
       // build default panes
       AddToolWindow( ToolWindowType.OUTLINE, m_Outline, DockState.DockRight, outlineToolStripMenuItem, true, true );
       AddToolWindow( ToolWindowType.BINARY_EDITOR, m_BinaryEditor, DockState.Document, binaryEditorToolStripMenuItem, false, false );
@@ -1086,13 +1091,14 @@ namespace RetroDevStudio
       }
 
       mainToolEmulator.Items.Clear();
+      mainToolEmulator.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( StudioCore.Settings.ToolTiny64.Name, StudioCore.Settings.ToolTiny64 ) );
       foreach ( var tool in StudioCore.Settings.ToolInfos )
       {
         if ( tool.Type == ToolInfo.ToolType.EMULATOR )
         {
-          int itemIndex = mainToolEmulator.Items.Add(new GR.Generic.Tupel<string, ToolInfo>(tool.Name, tool));
+          int itemIndex = mainToolEmulator.Items.Add( new GR.Generic.Tupel<string, ToolInfo>( tool.Name, tool ) );
           if ( ( tool.Name.ToUpper() == StudioCore.Settings.EmulatorToRun )
-          || ( oldTool == tool ) )
+          ||   ( oldTool == tool ) )
           {
             mainToolEmulator.SelectedIndex = itemIndex;
           }
@@ -1248,8 +1254,19 @@ namespace RetroDevStudio
             SetActiveProject( Event.Project );
           }
           break;
+        case Types.ApplicationEvent.Type.PROJECT_RENAMED:
+          UpdateCaption();
+          break;
         case Types.ApplicationEvent.Type.SOLUTION_RENAMED:
           UpdateCaption();
+          // adapt MRU entries
+          for ( int i = 0; i < StudioCore.Settings.MRUFiles.Count; ++i )
+          {
+            if ( StudioCore.Settings.MRUFiles[i] == Event.OriginalValue )
+            {
+              StudioCore.Settings.MRUFiles[i] = Event.UpdatedValue;
+            }
+          }
           break;
         case Types.ApplicationEvent.Type.SOLUTION_OPENED:
           solutionToolStripMenuItem.Visible = true;
@@ -1257,6 +1274,7 @@ namespace RetroDevStudio
           solutionSaveToolStripMenuItem1.Enabled = true;
           closeSolutionToolStripMenuItem.Enabled = true;
           solutionCloneToolStripMenuItem.Enabled = true;
+          solutionRenameToolStripMenuItem.Enabled = true;
           UpdateCaption();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_CLOSED:
@@ -1265,6 +1283,7 @@ namespace RetroDevStudio
           solutionSaveToolStripMenuItem1.Enabled = false;
           closeSolutionToolStripMenuItem.Enabled = false;
           solutionCloneToolStripMenuItem.Enabled = false;
+          solutionRenameToolStripMenuItem.Enabled = false;
 
           m_Output.SetText( "" );
           m_CompileResult.ClearMessages();
@@ -1882,14 +1901,14 @@ namespace RetroDevStudio
       }
       targetFilename = System.IO.Path.GetFileName( targetFilename );
       string targetFilenameWithoutPath = System.IO.Path.GetFileName( targetFilename );
-      string targetFilenameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(targetFilename);
-      string fullTargetFilename = GR.Path.Append(targetPath, targetFilename);
-      string fullTargetFilenameWithoutPath = System.IO.Path.GetFileName(fullTargetFilename);
-      string fullTargetFilenameWithoutExtension = System.IO.Path.Combine( targetPath, System.IO.Path.GetFileNameWithoutExtension(fullTargetFilename) );
+      string targetFilenameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension( targetFilename );
+      string fullTargetFilename = GR.Path.Append( targetPath, targetFilename );
+      string fullTargetFilenameWithoutPath = System.IO.Path.GetFileName( fullTargetFilename );
+      string fullTargetFilenameWithoutExtension = System.IO.Path.Combine( targetPath, System.IO.Path.GetFileNameWithoutExtension( fullTargetFilename ) );
 
-      string runFilename = System.IO.Path.GetFileName(fullTargetFilename);
+      string runFilename = System.IO.Path.GetFileName( fullTargetFilename );
       string fullRunFilename = fullTargetFilename;
-      string runPath = System.IO.Path.GetDirectoryName(fullRunFilename);
+      string runPath = System.IO.Path.GetDirectoryName( fullRunFilename );
 
       // alternative run file name
       if ( ( FillForRunning )
@@ -2453,11 +2472,17 @@ namespace RetroDevStudio
           StudioCore.AddToOutput( "Running " + Document.DocumentFilename + System.Environment.NewLine );
         }
 
-        ToolInfo toolRun = StudioCore.DetermineTool( Document, true );
+        ToolInfo toolRun = StudioCore.DetermineTool( Document, ToolInfo.ToolType.EMULATOR );
         if ( toolRun == null )
         {
-          System.Windows.Forms.MessageBox.Show( "No emulator tool has been configured yet!", "Missing emulator tool" );
+          StudioCore.MessageBox( "No emulator tool has been configured yet!", "Missing emulator tool" );
           StudioCore.AddToOutput( "There is no emulator tool configured!" );
+          return false;
+        }
+        if ( toolRun.IsInternal )
+        {
+          StudioCore.MessageBox( "The internal Tiny64 debugger is not able to run files, only debug!", "Cannot run file!" );
+          StudioCore.AddToOutput( "The internal Tiny64 debugger is not able to run files, only debug!" );
           return false;
         }
 
@@ -2519,7 +2544,7 @@ namespace RetroDevStudio
             }
             catch ( System.IO.IOException ioe )
             {
-              System.Windows.Forms.MessageBox.Show( ioe.Message, "Error writing temporary file" );
+              StudioCore.MessageBox( ioe.Message, "Error writing temporary file" );
               StudioCore.AddToOutput( "Error writing temporary file" );
               StudioCore.Debugging.TempDebuggerStartupFilename = "";
               return false;
@@ -2590,28 +2615,7 @@ namespace RetroDevStudio
       }
       StudioCore.Executing.RunProcess = null;
 
-      StudioCore.Debugging.Debugger?.DisconnectFromEmulator();
-
-      if ( StudioCore.Debugging.TempDebuggerStartupFilename.Length > 0 )
-      {
-        try
-        {
-          System.IO.File.Delete( StudioCore.Debugging.TempDebuggerStartupFilename );
-        }
-        catch ( Exception ex )
-        {
-          StudioCore.AddToOutput( "Failed to delete temporary file " + StudioCore.Debugging.TempDebuggerStartupFilename + ", " + ex.Message );
-        }
-        StudioCore.Debugging.TempDebuggerStartupFilename = "";
-      }
-
-      AppState = Types.StudioState.NORMAL;
-
-      StudioCore.Debugging.RemoveVirtualBreakpoints();
-      StudioCore.SetStatus( "Ready", false, 0 );
-
-      SetGUIForDebugging( false );
-      SetGUIForWaitOnExternalTool( false );
+      StopDebugging();
     }
 
 
@@ -3553,7 +3557,14 @@ namespace RetroDevStudio
         // dockpanelsuite activates the first document, not the currently shown one if focus is set to it (by disabling the toolbar)
         BaseDocument    prevActiveDocument = ActiveDocument;
 
-        mainTools.Enabled = !Wait;
+        mainToolCompile.Enabled         = !Wait;
+        mainToolBuild.Enabled           = !Wait;
+        mainToolRebuild.Enabled         = !Wait;
+        mainToolBuildAndRun.Enabled     = !Wait;
+        mainToolDebug.Enabled           = !Wait;
+        mainToolConfig.Enabled          = !Wait;
+        mainToolToggleTrueDrive.Enabled = !Wait;
+        mainToolEmulator.Enabled        = !Wait;
 
         if ( Wait )
         {
@@ -3567,12 +3578,12 @@ namespace RetroDevStudio
         {
           // leave Window and Help submenu intact!
           if ( ( subMenu.Text != "&Window" )
-          &&   ( subMenu.Text != "&Help" ) )   
+          &&   ( subMenu.Text != "&Help" )
+          &&   ( subMenu.Text != "&Edit" ) )
           {
             subMenu.Enabled = !Wait;
           }
         }
-        //mainMenu.Enabled = !Wait;
       }
     }
 
@@ -3897,7 +3908,7 @@ namespace RetroDevStudio
         try
         {
           if ( ( m_CurrentActiveTool != null )
-          && ( !EmulatorInfo.SupportsDebugging( m_CurrentActiveTool ) ) )
+          &&   ( !EmulatorInfo.SupportsDebugging( m_CurrentActiveTool ) ) )
           {
             if ( StudioCore.Executing.RunProcess != null )
             {
@@ -3907,11 +3918,32 @@ namespace RetroDevStudio
             return;
           }
 
+          if ( StudioCore.Executing.RunProcess != null )
+          {
+            StudioCore.Executing.RunProcess.Exited -= runProcess_Exited;
+            StudioCore.Executing.RunProcess.Kill();
+            StudioCore.Executing.RunProcess = null;
+          }
+
+          if ( StudioCore.Debugging.TempDebuggerStartupFilename.Length > 0 )
+          {
+            try
+            {
+              System.IO.File.Delete( StudioCore.Debugging.TempDebuggerStartupFilename );
+            }
+            catch ( Exception ex )
+            {
+              StudioCore.AddToOutput( "Failed to delete temporary file " + StudioCore.Debugging.TempDebuggerStartupFilename + ", " + ex.Message + Environment.NewLine );
+            }
+            StudioCore.Debugging.TempDebuggerStartupFilename = "";
+          }
+
           if ( ( AppState == Types.StudioState.DEBUGGING_BROKEN )
           ||   ( AppState == Types.StudioState.DEBUGGING_RUN ) )
           {
             // send any command to break into the monitor again
             StudioCore.Debugging.Debugger?.Quit();
+            StudioCore.Debugging.Debugger?.DisconnectFromEmulator();
 
             if ( StudioCore.Debugging.MarkedDocument != null )
             {
@@ -3928,12 +3960,18 @@ namespace RetroDevStudio
 
             StudioCore.Debugging.DebuggedProject = null;
             StudioCore.Debugging.Debugger = null;
-            m_CurrentActiveTool = null;
             StudioCore.Debugging.FirstActionAfterBreak = false;
             mainDebugGo.Enabled = false;
             mainDebugBreak.Enabled = false;
-            AppState = Types.StudioState.NORMAL;
+            m_CurrentActiveTool = null;
+
+            StudioCore.Debugging.RemoveVirtualBreakpoints();
           }
+          AppState = Types.StudioState.NORMAL;
+          StudioCore.SetStatus( "Ready", false, 0 );
+
+          SetGUIForDebugging( false );
+          SetGUIForWaitOnExternalTool( false );
         }
         catch ( System.Exception ex )
         {
@@ -4228,7 +4266,6 @@ namespace RetroDevStudio
       }
 
       // put disassembly in there
-      StudioCore.Debugging.Debugger.RefreshMemory( Address, 32, MemorySource.AS_CPU );
       StudioCore.Debugging.DebugDisassembly.SetText( "Disassembly will\r\nappear here" );
 
       StudioCore.Debugging.DebugDisassembly.SetCursorToLine( 1, 0, true );
@@ -4248,6 +4285,7 @@ namespace RetroDevStudio
         StudioCore.Debugging.DebugDisassembly.SetLineMarked( 1, true );
         StudioCore.Debugging.DebugDisassembly.SetAddress( Address );
       }
+      StudioCore.Debugging.Debugger.RefreshMemory( Address, 32, MemorySource.AS_CPU );
     }
 
 
@@ -5104,7 +5142,7 @@ namespace RetroDevStudio
 
     public bool HandleCmdKey( ref Message msg, Keys keyData )
     {
-      AcceleratorKey usedAccelerator = StudioCore.Settings.DetermineAccelerator( keyData, AppState);
+      AcceleratorKey usedAccelerator = StudioCore.Settings.DetermineAccelerator( keyData, AppState );
       if ( usedAccelerator != null )
       {
         return ApplyFunction( usedAccelerator.Function );
@@ -5210,7 +5248,7 @@ namespace RetroDevStudio
             if ( StudioCore.Debugging.DebugDisassembly != null )
             {
               // update disassembly
-              Parser.Disassembler disassembler = new RetroDevStudio.Parser.Disassembler(Tiny64.Processor.Create6510());
+              Parser.Disassembler disassembler = new RetroDevStudio.Parser.Disassembler( Tiny64.Processor.Create6510() );
               string disassembly = "";
 
               disassembler.SetData( Data );
@@ -5224,7 +5262,7 @@ namespace RetroDevStudio
               if ( disassembler.Disassemble( StudioCore.Debugging.CurrentCodePosition, jumpedAtAddresses, namedLabels, settings, out disassembly, out int firstLineIndexWithOpcode ) )
               {
                 StudioCore.Debugging.DebugDisassembly.SetText( disassembly );
-                StudioCore.Debugging.MarkedDocument.SetLineMarked( StudioCore.Debugging.MarkedDocumentLine, false );
+                StudioCore.Debugging.MarkedDocument?.SetLineMarked( StudioCore.Debugging.MarkedDocumentLine, false );
 
                 StudioCore.Debugging.MarkedDocument = StudioCore.Debugging.DebugDisassembly;
                 StudioCore.Debugging.MarkedDocumentLine = 1;
@@ -7481,6 +7519,20 @@ namespace RetroDevStudio
     private void relocationFileToolStripMenuItem_Click( object sender, EventArgs e )
     {
       ApplyFunction( RetroDevStudio.Types.Function.BUILD_TO_RELOCATION_FILE );
+    }
+
+
+
+    private void solutionRenameToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      if ( StudioCore.Navigating.Solution == null )
+      {
+        return;
+      }
+
+      var formRename = new FormRenameSolution( StudioCore, StudioCore.Navigating.Solution.Name );
+
+      formRename.ShowDialog();
     }
 
 

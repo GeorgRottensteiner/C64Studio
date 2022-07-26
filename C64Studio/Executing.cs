@@ -103,12 +103,7 @@ namespace RetroDevStudio
       RunProcess.StartInfo.RedirectStandardError = true;
       RunProcess.StartInfo.RedirectStandardOutput = true;
       RunProcess.StartInfo.UseShellExecute = false;
-
-      //RunProcess.StartInfo.CreateNoWindow = true;
       RunProcess.EnableRaisingEvents = true;
-
-      //RunProcess.BeginOutputReadLine();
-      //RunProcess.BeginErrorReadLine();
 
       return !error;
     }
@@ -266,7 +261,7 @@ namespace RetroDevStudio
 
     void ExternalProcessOutputReceived( object sender, System.Diagnostics.DataReceivedEventArgs e )
     {
-      //Debug.Log( "Received Data " + e.Data );
+      Debug.Log( "Received Data " + e.Data );
       m_LastReceivedOutputTime = System.DateTime.Now;
       if ( !String.IsNullOrEmpty( e.Data ) )
       {

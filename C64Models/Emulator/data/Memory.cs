@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GR.Memory;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -74,6 +75,81 @@ namespace Tiny64
       RangeC000ToCFFF = MemorySource.RAM;
       RangeD000ToDFFF = MemorySource.IO;
       RangeE000ToFFFF = MemorySource.KERNAL_ROM;
+    }
+
+
+
+    public ByteBuffer ForCPU( int StartAddress, int Size )
+    {
+      if ( ( StartAddress < 0 )
+      ||   ( Size < 0 )
+      ||   ( StartAddress + Size >= 65536 ) )
+      {
+        Debug.Log( "ForCPU - invalid memory range!" );
+        return new ByteBuffer( (uint)Size );
+      }
+
+      var result = new ByteBuffer( (uint)Size );
+
+      /*
+      Range0000To0FFF = MemorySource.RAM;
+    internal MemorySource   Range1000To7FFF = MemorySource.RAM;
+    internal MemorySource   Range8000To9FFF = MemorySource.RAM;
+    internal MemorySource   RangeA000ToBFFF = MemorySource.BASIC_ROM;
+    internal MemorySource   RangeC000ToCFFF = MemorySource.RAM;
+    internal MemorySource   RangeD000ToDFFF = MemorySource.IO;
+    internal MemorySource   RangeE000ToFFFF = MemorySource.KERNAL_ROM;*/
+
+      FetchMemoryRange( StartAddress, Size, 0x0000, 0x0fff, Range0000To0FFF, result );
+      FetchMemoryRange( StartAddress, Size, 0x1000, 0x7fff, Range1000To7FFF, result );
+      FetchMemoryRange( StartAddress, Size, 0x8000, 0x9fff, Range8000To9FFF, result );
+      FetchMemoryRange( StartAddress, Size, 0xa000, 0xbfff, RangeA000ToBFFF, result );
+      FetchMemoryRange( StartAddress, Size, 0xc000, 0xcfff, RangeC000ToCFFF, result );
+      FetchMemoryRange( StartAddress, Size, 0xd000, 0xdfff, RangeD000ToDFFF, result );
+      FetchMemoryRange( StartAddress, Size, 0xe000, 0xffff, RangeE000ToFFFF, result );
+
+      return result;      
+    }
+
+
+
+    private void FetchMemoryRange( int StartAddress, int Size, int RangeStart, int RangeEnd, MemorySource Source, ByteBuffer Result )
+    {
+      if ( ( StartAddress <= RangeEnd )
+      &&   ( StartAddress + Size - 1 >= RangeStart ) )
+      {
+        int     localStart = Math.Max( StartAddress, RangeStart );
+        int     localEnd = Math.Min( StartAddress + Size - 1, RangeEnd );
+
+        switch ( Source )
+        {
+          case MemorySource.RAM:
+            System.Array.Copy( RAM, localStart, Result.Data(), localStart - StartAddress, localEnd - localStart + 1 );
+            break;
+          case MemorySource.KERNAL_ROM:
+            System.Array.Copy( Kernal, localStart - RangeStart, Result.Data(), localStart - StartAddress, localEnd - localStart + 1 );
+            break;
+          case MemorySource.BASIC_ROM:
+            System.Array.Copy( BASICROM, localStart - RangeStart, Result.Data(), localStart - StartAddress, localEnd - localStart + 1 );
+            break;
+          case MemorySource.CHARSET_ROM:
+            System.Array.Copy( CharacterROM, localStart - RangeStart, Result.Data(), localStart - StartAddress, localEnd - localStart + 1 );
+            break;
+          case MemorySource.CART_HI:
+            System.Array.Copy( CartHI, localStart - RangeStart, Result.Data(), localStart - StartAddress, localEnd - localStart + 1 );
+            break;
+          case MemorySource.CART_LO:
+            System.Array.Copy( CartLO, localStart - RangeStart, Result.Data(), localStart - StartAddress, localEnd - localStart + 1 );
+            break;
+            /*
+          case MemorySource.IO:
+            System.Array.Copy( ReadFromIO, localStart - RangeStart, Result.Data(), localStart - StartAddress, localEnd - localStart + 1 );
+            break;*/
+          default:
+            Debug.Log( "FetchMemoryRange unsupported source " + Source );
+            break;
+        }
+      }
     }
 
 

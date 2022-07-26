@@ -2309,6 +2309,14 @@ namespace RetroDevStudio
     public void StepOver()
     {
       QueueRequest( DebugRequestType.NEXT );
+
+      RefreshRegistersAndWatches();
+      SetAutoRefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
+                                     Core.MainForm.m_DebugMemory.MemorySize,
+                                     Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
+      RefreshMemory( Core.MainForm.m_DebugMemory.MemoryStart,
+                              Core.MainForm.m_DebugMemory.MemorySize,
+                              Core.MainForm.m_DebugMemory.MemoryAsCPU ? MemorySource.AS_CPU : MemorySource.RAM );
     }
 
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Tiny64
+﻿namespace Tiny64
 {
   public class Breakpoint
   {
@@ -11,5 +7,6 @@ namespace Tiny64
     public bool       OnRead = true;
     public bool       OnExecute = true;
     public bool       Temporary = false;
+    public int        Index = 0;
   }
 }

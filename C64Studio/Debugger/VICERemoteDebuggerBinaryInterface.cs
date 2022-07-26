@@ -119,7 +119,7 @@ namespace RetroDevStudio
     private void Log( string Message )
     {
       System.Diagnostics.Debug.WriteLine( Message );
-      //Debug.Log( Message );
+      Debug.Log( Message );
     }
 
 
@@ -523,6 +523,10 @@ namespace RetroDevStudio
         {
           StartNextRequestIfAvailable();
         }
+        else if ( m_ReceivedDataBin.Length > 0 )
+        {
+          Log( "We still have data left to handle, with request type " + m_Request.Type );
+        }
       }
     }
 
@@ -607,7 +611,7 @@ namespace RetroDevStudio
         }
         else
         {
-          //Log( "Sent " + sent + " bytes (expected " + m_BytesToSend + ")" );
+          Log( "Sent " + sent + " bytes (expected " + m_BytesToSend + ")" );
         }
 
         Core.Debugging.ForceEmulatorRefresh();
@@ -934,12 +938,13 @@ namespace RetroDevStudio
 
     private void StartNextRequestIfAvailable()
     {
- 	    if ( ( m_RequestQueue.Count != 0 )
-      &&   ( m_ReceivedDataBin.Length == 0 ) )
+ 	    while ( ( m_RequestQueue.Count != 0 )
+      &&      ( m_ReceivedDataBin.Length == 0 ) )
       {
         Log( "------> StartNextRequest:" + m_RequestQueue[0].Type );
         RequestData nextRequest = m_RequestQueue[0];
         m_RequestQueue.RemoveAt( 0 );
+        Log( $"   {m_RequestQueue.Count} requests left in queue" );
 
         SendRequest( nextRequest );
       }

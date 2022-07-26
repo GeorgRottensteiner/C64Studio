@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
-
+using System.Windows.Forms;
 
 namespace Tiny64
 {
@@ -51,11 +50,14 @@ namespace Tiny64
 
     private bool      StartupCompleted = false;
     public ByteBuffer InjectFileAfterStartup = null;
+    private int       CurrentBreakpointIndex = 1;
 
 
 
     GR.Collections.MultiMap<ushort,Breakpoint>        Breakpoints = new GR.Collections.MultiMap<ushort, Breakpoint>();
     public List<Breakpoint>                           TriggeredBreakpoints = new List<Breakpoint>();
+    private List<Keys>                                KeysToInject = new List<Keys>();
+    private bool                                      KeyToInjectDown = true;
 
 
 
@@ -66,7 +68,29 @@ namespace Tiny64
       CIA1    = new CIA1( this );
       CIA2    = new CIA2( this );
 
+      VIC.FrameCompleted += VIC_FrameCompleted;
+
       HardReset();
+    }
+    
+
+
+    private void VIC_FrameCompleted()
+    {
+      if ( KeysToInject.Count > 0 )
+      {
+        if ( KeyToInjectDown )
+        {
+          HandleKeyPress( KeysToInject[0], true );
+          KeyToInjectDown = false;
+        }
+        else
+        {
+          HandleKeyPress( KeysToInject[0], false );
+          KeysToInject.RemoveAt( 0 );
+          KeyToInjectDown = true;
+        }
+      }
     }
 
 
@@ -223,6 +247,8 @@ namespace Tiny64
       //Beim Hard-Reset startet die CPU bei der in $FFFC/$FFFD abgelegten Adresse (springt nach $FCE2, RESET)
       CPU.PC        = Memory.ReadWordDirect( 0xfffc );
 
+      KeysToInject.Clear();
+      KeyToInjectDown = true;
       StartupCompleted = false;
     }
 
@@ -2777,21 +2803,29 @@ namespace Tiny64
 
     private void OnExecAddress( ushort Address )
     {
+      if ( Address == 0xa871 )
+      {
+        Debug.Log( "BASIC start?" );
+      }
+
       if ( Address == 0xE5CD )
       {
         if ( !StartupCompleted )
         {
           StartupCompleted = true;
+          Debug.Log( "Inject file location $E5CD hit" );
           if ( InjectFileAfterStartup != null )
           {
             ushort    startAddress = InjectFileAfterStartup.UInt16At( 0 );
 
+            Debug.Log( $"injecting file at ${startAddress.ToString( "X4" ) } to ${( InjectFileAfterStartup.Length - 2 - startAddress - 1 ).ToString( "X4" ) }" );
+
             System.Array.Copy( InjectFileAfterStartup.Data(), 2, Memory.RAM, startAddress, InjectFileAfterStartup.Length - 2 );
 
-            InjectKey( PhysicalKey.KEY_R );
-            InjectKey( PhysicalKey.KEY_U );
-            InjectKey( PhysicalKey.KEY_N );
-            InjectKey( PhysicalKey.KEY_RETURN );
+            KeysToInject.Add( Keys.R );
+            KeysToInject.Add( Keys.U );
+            KeysToInject.Add( Keys.N );
+            KeysToInject.Add( Keys.Return );
           }
         }
       }
@@ -2814,8 +2848,328 @@ namespace Tiny64
 
 
 
-    private void InjectKey( PhysicalKey Key )
+    private void HandleKeyPress( Keys KeyCode, bool KeyDown )
     {
+      int c64_key = -1;
+
+      PhysicalKey   physicalKey = PhysicalKey.NONE;
+      bool          shifted = false;
+
+      switch ( KeyCode )
+      {
+        case Keys.A:
+          physicalKey = PhysicalKey.KEY_A;
+          break;
+        case Keys.B:
+          physicalKey = PhysicalKey.KEY_B;
+          break;
+        case Keys.C:
+          physicalKey = PhysicalKey.KEY_C;
+          break;
+        case Keys.D:
+          physicalKey = PhysicalKey.KEY_D;
+          break;
+        case Keys.E:
+          physicalKey = PhysicalKey.KEY_E;
+          break;
+        case Keys.F:
+          physicalKey = PhysicalKey.KEY_F;
+          break;
+        case Keys.G:
+          physicalKey = PhysicalKey.KEY_G;
+          break;
+        case Keys.H:
+          physicalKey = PhysicalKey.KEY_H;
+          break;
+        case Keys.I:
+          physicalKey = PhysicalKey.KEY_I;
+          break;
+        case Keys.J:
+          physicalKey = PhysicalKey.KEY_J;
+          break;
+        case Keys.K:
+          physicalKey = PhysicalKey.KEY_K;
+          break;
+        case Keys.L:
+          physicalKey = PhysicalKey.KEY_L;
+          break;
+        case Keys.M:
+          physicalKey = PhysicalKey.KEY_M;
+          break;
+        case Keys.N:
+          physicalKey = PhysicalKey.KEY_N;
+          break;
+        case Keys.O:
+          physicalKey = PhysicalKey.KEY_O;
+          break;
+        case Keys.P:
+          physicalKey = PhysicalKey.KEY_P;
+          break;
+        case Keys.Q:
+          physicalKey = PhysicalKey.KEY_Q;
+          break;
+        case Keys.R:
+          physicalKey = PhysicalKey.KEY_R;
+          break;
+        case Keys.S:
+          physicalKey = PhysicalKey.KEY_S;
+          break;
+        case Keys.T:
+          physicalKey = PhysicalKey.KEY_T;
+          break;
+        case Keys.U:
+          physicalKey = PhysicalKey.KEY_U;
+          break;
+        case Keys.V:
+          physicalKey = PhysicalKey.KEY_V;
+          break;
+        case Keys.W:
+          physicalKey = PhysicalKey.KEY_W;
+          break;
+        case Keys.X:
+          physicalKey = PhysicalKey.KEY_X;
+          break;
+        case Keys.Y:
+          physicalKey = PhysicalKey.KEY_Y;
+          break;
+        case Keys.Z:
+          physicalKey = PhysicalKey.KEY_Z;
+          break;
+        case Keys.D0:
+          physicalKey = PhysicalKey.KEY_0;
+          break;
+        case Keys.D1:
+          physicalKey = PhysicalKey.KEY_1;
+          break;
+        case Keys.D2:
+          physicalKey = PhysicalKey.KEY_2;
+          break;
+        case Keys.D3:
+          physicalKey = PhysicalKey.KEY_3;
+          break;
+        case Keys.D4:
+          physicalKey = PhysicalKey.KEY_4;
+          break;
+        case Keys.D5:
+          physicalKey = PhysicalKey.KEY_5;
+          break;
+        case Keys.D6:
+          physicalKey = PhysicalKey.KEY_6;
+          break;
+        case Keys.D7:
+          physicalKey = PhysicalKey.KEY_7;
+          break;
+        case Keys.D8:
+          physicalKey = PhysicalKey.KEY_8;
+          break;
+        case Keys.D9:
+          physicalKey = PhysicalKey.KEY_9;
+          break;
+        case Keys.Space:
+          physicalKey = PhysicalKey.KEY_SPACE;
+          break;
+        case Keys.OemQuestion:
+          c64_key = ( ( 7 << 3 ) | 1 );
+          break;
+        case Keys.OemBackslash:
+          c64_key = ( ( 6 << 3 ) | 6 );
+          break;
+        case Keys.Oemcomma:
+          c64_key = ( ( 5 << 3 ) | 7 );
+          break;
+        case Keys.OemPeriod:
+          c64_key = ( ( 5 << 3 ) | 4 );
+          break;
+        case Keys.OemMinus:
+          c64_key = ( ( 5 << 3 ) | 0 );
+          break;
+        case Keys.OemPipe:
+          c64_key = ( ( 5 << 3 ) | 3 );
+          break;
+        case Keys.OemOpenBrackets:
+          c64_key = ( ( 5 << 3 ) | 6 );
+          break;
+        case Keys.OemCloseBrackets:
+          c64_key = ( ( 6 << 3 ) | 1 );
+          break;
+        case Keys.OemSemicolon:
+          c64_key = ( ( 5 << 3 ) | 5 );
+          break;
+        case Keys.OemQuotes:
+          c64_key = ( ( 6 << 3 ) | 2 );
+          break;
+        case Keys.Escape:
+          physicalKey = PhysicalKey.KEY_RUN_STOP;
+          break;
+        case Keys.Return:
+          physicalKey = PhysicalKey.KEY_RETURN;
+          break;
+        case Keys.Back:
+          physicalKey = PhysicalKey.KEY_INST_DEL;
+          break;
+        case Keys.Insert:
+          c64_key = ( ( 6 << 3 ) | 3 );
+          break;
+        case Keys.Home:
+          c64_key = ( ( 6 << 3 ) | 3 );
+          break;
+        case Keys.End:
+          c64_key = ( ( 6 << 3 ) | 0 );
+          break;
+        case Keys.PageUp:
+          c64_key = ( ( 6 << 3 ) | 0 );
+          break;
+        case Keys.PageDown:
+          // = 
+          c64_key = ( ( 6 << 3 ) | 5 );
+          break;
+        case Keys.Tab:
+          c64_key = ( ( 7 << 3 ) | 2 );
+          break;
+        case Keys.LControlKey:
+        case Keys.RControlKey:
+        case Keys.ControlKey:
+          // commodore
+          physicalKey = PhysicalKey.KEY_COMMODORE;
+          break;
+        case Keys.ShiftKey:
+          physicalKey = PhysicalKey.KEY_SHIFT_LEFT;
+          break;
+        case Keys.RShiftKey:
+          physicalKey = PhysicalKey.KEY_SHIFT_RIGHT;
+          break;
+        case Keys.LMenu:
+          //case Keys.LeftMeta:
+          c64_key = ( ( 7 << 3 ) | 5 );
+          break;
+        case Keys.RMenu:
+          //case Keys.RightMeta:
+          c64_key = ( ( 7 << 3 ) | 5 );
+          break;
+        case Keys.Up:
+          physicalKey = PhysicalKey.KEY_CURSOR_UP_DOWN;
+          shifted = true;
+          break;
+        case Keys.Down:
+          physicalKey = PhysicalKey.KEY_CURSOR_UP_DOWN;
+          break;
+        case Keys.Left:
+          physicalKey = PhysicalKey.KEY_CURSOR_LEFT_RIGHT;
+          shifted = true;
+          break;
+        case Keys.Right:
+          physicalKey = PhysicalKey.KEY_CURSOR_LEFT_RIGHT;
+          break;
+        case Keys.F1:
+          physicalKey = PhysicalKey.KEY_F1;
+          break;
+        case Keys.F2:
+          physicalKey = PhysicalKey.KEY_F1;
+          shifted = true;
+          break;
+        case Keys.F3:
+          physicalKey = PhysicalKey.KEY_F3;
+          break;
+        case Keys.F4:
+          physicalKey = PhysicalKey.KEY_F3;
+          shifted = true;
+          break;
+        case Keys.F5:
+          physicalKey = PhysicalKey.KEY_F5;
+          break;
+        case Keys.F6:
+          physicalKey = PhysicalKey.KEY_F5;
+          shifted = true;
+          break;
+        case Keys.F7:
+          physicalKey = PhysicalKey.KEY_F7;
+          break;
+        case Keys.F8:
+          physicalKey = PhysicalKey.KEY_F7;
+          shifted = true;
+          break;
+        case Keys.NumPad0:
+        case Keys.NumPad5:
+          c64_key = 0x10 | 0x40;
+          break;
+        case Keys.NumPad1:
+          c64_key = 0x06 | 0x40;
+          break;
+        case Keys.NumPad2:
+          c64_key = 0x02 | 0x40;
+          break;
+        case Keys.NumPad3:
+          c64_key = 0x0a | 0x40;
+          break;
+        case Keys.NumPad4:
+          c64_key = 0x04 | 0x40;
+          break;
+        case Keys.NumPad6:
+          c64_key = 0x08 | 0x40;
+          break;
+        case Keys.NumPad7:
+          c64_key = 0x05 | 0x40;
+          break;
+        case Keys.NumPad8:
+          c64_key = 0x01 | 0x40;
+          break;
+        case Keys.NumPad9:
+          c64_key = 0x09 | 0x40;
+          break;
+
+        case Keys.Divide:
+          c64_key = ( ( 6 << 3 ) | 7 );
+          break;
+          //case Keys.oem.Enter:
+          //  c64_key = ( ( 0 << 3 ) | 1 );
+          //break;
+      }
+
+      if ( physicalKey != PhysicalKey.NONE )
+      {
+        int c64Byte = ( (int)physicalKey >> 3 ) & 7;
+        int c64Bit = (int)physicalKey & 7;
+
+        // key down
+        if ( !KeyDown )
+        {
+          if ( shifted )
+          {
+            CIA1.KeyMatrix[6] |= 0x10;
+            CIA1.RevMatrix[4] |= 0x40;
+          }
+          CIA1.KeyMatrix[c64Byte] |= (byte)( 1 << c64Bit );
+          CIA1.RevMatrix[c64Bit] |= (byte)( 1 << c64Byte );
+        }
+        else
+        {
+          if ( shifted )
+          {
+            CIA1.KeyMatrix[6] &= 0xef;
+            CIA1.RevMatrix[4] &= 0xbf;
+          }
+          CIA1.KeyMatrix[c64Byte] &= (byte)~( 1 << c64Bit );
+          CIA1.RevMatrix[c64Bit] &= (byte)~( 1 << c64Byte );
+        }
+      }
+
+      if ( c64_key < 0 )
+        return;
+
+      // Handle joystick emulation
+      if ( ( c64_key & 0x40 ) != 0 )
+      {
+        c64_key &= 0x1f;
+        if ( !KeyDown )
+        {
+          CIA1.Joystick2 |= (byte)c64_key;
+        }
+        else
+        {
+          CIA1.Joystick2 &= (byte)~c64_key;
+        }
+        return;
+      }
     }
 
 
@@ -2874,9 +3228,9 @@ namespace Tiny64
         {
           TriggeredBreakpoints.Add( bp );
 
-          FullDebug = true;
-          Breakpoints.Clear();
-          TriggeredBreakpoints.Clear();
+          //FullDebug = true;
+          //Breakpoints.Clear();
+          //TriggeredBreakpoints.Clear();
         }
       }
     }
@@ -2987,17 +3341,37 @@ namespace Tiny64
 
 
 
-    internal void AddBreakpoint( ushort Address, bool Read, bool Write, bool Execute )
+    internal int AddBreakpoint( ushort Address, bool Read, bool Write, bool Execute )
     {
-      Breakpoints.Add( Address, new Breakpoint() { Address = Address, OnRead = Read, OnWrite = Write, OnExecute = Execute } );
+      Breakpoints.Add( Address, new Breakpoint() { Address = Address, OnRead = Read, OnWrite = Write, OnExecute = Execute, Index = CurrentBreakpointIndex } );
+      ++CurrentBreakpointIndex;
+      return CurrentBreakpointIndex;
     }
 
 
 
-    internal void AddTemporaryBreakpoint( ushort Address, bool Read, bool Write, bool Execute )
+    internal int AddTemporaryBreakpoint( ushort Address, bool Read, bool Write, bool Execute )
     {
-      Breakpoints.Add( Address, new Breakpoint() { Address = Address, OnRead = Read, OnWrite = Write, OnExecute = Execute, Temporary = true } );
+      Breakpoints.Add( Address, new Breakpoint() { Address = Address, OnRead = Read, OnWrite = Write, OnExecute = Execute, Temporary = true, Index = CurrentBreakpointIndex } );
+      ++CurrentBreakpointIndex;
+      return CurrentBreakpointIndex;
     }
+
+
+
+    public void RemoveBreakpoint( int BreakPointIndex )
+    {
+      foreach ( var bp in Breakpoints )
+      {
+        if ( bp.Value.Index == BreakPointIndex )
+        {
+          Breakpoints.Remove( bp.Key, bp.Value );
+          return;
+        }
+      }
+    }
+
+
 
   }
 }

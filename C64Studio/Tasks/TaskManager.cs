@@ -27,7 +27,7 @@ namespace RetroDevStudio.Tasks
 
     void m_BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
     {
-      while ( !Core.ShuttingDown  )
+      while ( !Core.ShuttingDown )
       {
         Tasks.Task    newTask = null;
         lock ( m_TaskQueue )
@@ -39,7 +39,14 @@ namespace RetroDevStudio.Tasks
           newTask = m_TaskQueue[0];
           m_TaskQueue.RemoveAt( 0 );
         }
-        newTask.RunTask();
+        try
+        {
+          newTask.RunTask();
+        }
+        catch ( Exception ex )
+        {
+          Debug.Log( "Task " + newTask + " had an exception: " + ex.Message );
+        }
       }
     }
 
@@ -52,12 +59,6 @@ namespace RetroDevStudio.Tasks
       {
         var tasksToRemove = new List<Task>();
 
-        /*
-        if ( Task is TaskUpdateKeywords )
-        {
-          Debug.Log( "Add TaskUpdateKeywords for " + ( (TaskUpdateKeywords)Task ).Doc.DocumentFilename );
-        }*/
-
         // remove duplicate update keyword tasks!
         foreach ( var task in m_TaskQueue )
         {
@@ -69,7 +70,6 @@ namespace RetroDevStudio.Tasks
 
             if ( oldTask.Doc == newTask.Doc )
             {
-              //Debug.Log( "remove previous TaskUpdateKeywords as duplicate" );
               tasksToRemove.Add( oldTask );
             }
           }

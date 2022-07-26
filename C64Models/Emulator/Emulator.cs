@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 
 
@@ -12,6 +13,16 @@ namespace Tiny64
     public Tiny64.Machine     Machine = new Tiny64.Machine();
 
     public EmulatorState      State = EmulatorState.RUNNING;
+
+    public delegate void BreakpointHitHandler();
+
+    public event BreakpointHitHandler   BreakpointHit;
+
+
+
+    public Emulator()
+    {
+    }
 
 
 
@@ -29,8 +40,15 @@ namespace Tiny64
       {
         ushort    oldPC = Machine.CPU.PC;
         int curCycles = Machine.RunCycle();
+        if ( Machine.TriggeredBreakpoints.Count > 0 )
+        {
+          State = EmulatorState.STOPPED;
+          BreakpointHit();
+          Machine.TriggeredBreakpoints.Clear();
+        }
 
-        if ( State == EmulatorState.PAUSED )
+        if ( ( State == EmulatorState.PAUSED )
+        ||   ( State == EmulatorState.STOPPED ) )
         {
           return cyclesUsed;
         }
@@ -71,6 +89,9 @@ namespace Tiny64
         {
           Debug.Log( "Breakpoint triggered at $" + Machine.CPU.PC.ToString( "X4" ) );
           State = EmulatorState.PAUSED;
+          Machine.TriggeredBreakpoints.RemoveAll( bp => bp.Temporary );
+
+          BreakpointHit();
           return;
         }
         usedCycles += curCycles;
@@ -144,9 +165,16 @@ namespace Tiny64
 
 
 
-    public void AddBreakpoint( ushort Address, bool Read, bool Write, bool Execute )
+    public int AddBreakpoint( ushort Address, bool Read, bool Write, bool Execute )
     {
-      Machine.AddBreakpoint( Address, Read, Write, Execute );
+      return Machine.AddBreakpoint( Address, Read, Write, Execute );
+    }
+
+
+
+    public void RemoveBreakpoint( int BreakpointIndex )
+    {
+      Machine.RemoveBreakpoint( BreakpointIndex );
     }
 
 
@@ -155,8 +183,39 @@ namespace Tiny64
     {
       var opCode = Machine.CPU.OpcodeByValue[Machine.Memory.ReadByteDirect( Machine.CPU.PC )];
 
+      if ( IsJSRType( opCode ) )
+      {
+        Machine.AddTemporaryBreakpoint( (ushort)( Machine.CPU.PC + opCode.NumOperands + 1 ), false, false, true );
+        Machine.SkipNextBreakpointCheck = true;
+        State = EmulatorState.RUNNING;
+      }
+      else
+      {
+        StepInto();
+      }
+    }
 
-      Machine.AddTemporaryBreakpoint( (ushort)( Machine.CPU.PC + opCode.NumOperands + 1 ), false, false, true );
+
+
+    private bool IsJSRType( Opcode Opcode )
+    {
+      if ( Opcode.Mnemonic == "jsr" )
+      {
+        return true;
+      }
+
+      return false;
+    }
+
+
+
+    public void StepOut()
+    {
+      // fetch return address from stack
+      ushort    returnAddress = Machine.Memory.RAM[0x100 + (byte)( Machine.CPU.StackPointer + 1 )];
+      returnAddress |= (ushort)( Machine.Memory.RAM[0x100 + (byte)( Machine.CPU.StackPointer + 2 )] << 8 );
+
+      Machine.AddTemporaryBreakpoint( returnAddress, false, false, true );
       Machine.SkipNextBreakpointCheck = true;
       State = EmulatorState.RUNNING;
     }
@@ -165,10 +224,12 @@ namespace Tiny64
 
     public void StepInto()
     {
+      State = EmulatorState.PAUSED;
       Machine.SkipNextBreakpointCheck = true;
+      // TODO - should run one opcode, not one cycle (but currently does)
       Machine.RunCycle();
     }
 
-
+    
   }
 }

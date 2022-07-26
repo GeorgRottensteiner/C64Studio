@@ -1,8 +1,8 @@
-﻿using RetroDevStudio.Documents;
+﻿using GR.Memory;
+using RetroDevStudio.Documents;
 using System;
 using System.Collections.Generic;
-
-
+using System.Threading;
 
 namespace RetroDevStudio
 {
@@ -14,7 +14,7 @@ namespace RetroDevStudio
     private StudioCore                Core = null;
     private LinkedList<WatchEntry>    m_WatchEntries = new LinkedList<WatchEntry>();
     private bool                      m_IsCartridge = false;
-    private DebuggerState             m_State = DebuggerState.NOT_CONNECTED;
+    private volatile DebuggerState    m_State = DebuggerState.NOT_CONNECTED;
 
     private int                       m_LastRequestedMemoryStartAddress = 0;
     private int                       m_LastRequestedMemorySize = 32;
@@ -30,12 +30,55 @@ namespace RetroDevStudio
 
     GR.Collections.Set<Types.Breakpoint> m_BreakPoints = new GR.Collections.Set<RetroDevStudio.Types.Breakpoint>();
 
+    private bool                      m_InitialBreakpointHit = false;
+
     public event BaseDocument.DocumentEventHandler DocumentEvent;
+
+    private Thread                    m_EmulatorThread;
+
 
 
     public Tiny64Debugger( StudioCore Core )
     {
       this.Core = Core;
+      m_Emulator.BreakpointHit += OnEmulatorBreakpointHit;
+
+      m_EmulatorThread = new Thread( new ThreadStart( EmulatorUpdate ) );
+    }
+
+
+
+    private void EmulatorUpdate()
+    {
+      while ( m_State != DebuggerState.NOT_CONNECTED )
+      {
+        if ( ( State == DebuggerState.RUNNING )
+        &&   ( m_Emulator.State == Tiny64.EmulatorState.RUNNING ) )
+        {
+          m_Emulator.RunCycles( 4096 );
+        }
+        else
+        {
+          Thread.Sleep( 500 );
+        }
+      }
+    }
+
+
+
+    private void OnEmulatorBreakpointHit()
+    {
+      if ( !m_InitialBreakpointHit )
+      {
+        m_InitialBreakpointHit = true;
+
+        RemoveBreakpoint( 1 );
+        Core.Debugging.OnInitialBreakpointReached( m_Emulator.Machine.CPU.PC );
+        return;
+      }
+      //DebugEvent( new DebugEventData() { Type = RetroDevStudio.DebugEvent.UPDATE_BREAKPOINT );
+      RefreshRegistersAndWatches();
+      RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
     }
 
 
@@ -47,13 +90,10 @@ namespace RetroDevStudio
         return false;
       }
       m_IsCartridge = IsCartridge;
-      m_State = DebuggerState.RUNNING;
 
       m_Emulator.Reset();
-
-      // to shut up the warning for now
-      DebugEvent( new DebugEventData() );
-
+      m_EmulatorThread.Start();
+      m_State = DebuggerState.RUNNING;
       return true;
     }
 
@@ -62,6 +102,7 @@ namespace RetroDevStudio
     public void DisconnectFromEmulator()
     {
       m_State = DebuggerState.NOT_CONNECTED;
+      m_EmulatorThread.Join();
     }
 
 
@@ -134,12 +175,6 @@ namespace RetroDevStudio
 
 
 
-    private void HandleBreakpoint()
-    {
-    }
-
-
-
     void RefreshMemory( int MemoryStartAddress, int MemorySize, bool AsCPU )
     {
       if ( AsCPU )
@@ -190,6 +225,7 @@ namespace RetroDevStudio
           if ( watchEntry.DisplayMemory )
           {
             ++gnu;
+
             RequestData requData = new RequestData( DebugRequestType.MEM_DUMP );
             requData.Parameter1 = watchEntry.Address;
             requData.Parameter2 = watchEntry.Address + watchEntry.SizeInBytes - 1;
@@ -201,6 +237,7 @@ namespace RetroDevStudio
             {
               requData.Parameter2 = 0xffff;
             }
+
             QueueRequest( requData );
           }
         }
@@ -225,6 +262,8 @@ namespace RetroDevStudio
       }
       else if ( Data.Type == DebugRequestType.REFRESH_MEMORY_RAM )
       {
+        RefreshMemoryFromRAM( Data.Parameter1, Data.Parameter1 + Data.Parameter2 - 1 );
+        /*
         if ( MachineSupportsBankCommand() )
         {
           RequestData requRAM = new RequestData( DebugRequestType.RAM_MODE );
@@ -248,7 +287,7 @@ namespace RetroDevStudio
           var requRAM = new RequestData( DebugRequestType.RAM_MODE );
           requRAM.Info = "cpu";
           QueueRequest( requRAM );
-        }
+        }*/
         return;
       }
     }
@@ -357,6 +396,7 @@ namespace RetroDevStudio
       {
         m_BreakPoints.Add( BreakPoint );
       }
+      BreakPoint.RemoteIndex = m_Emulator.AddBreakpoint( (ushort)BreakPoint.Address, BreakPoint.TriggerOnLoad, BreakPoint.TriggerOnStore, BreakPoint.TriggerOnExec );
     }
 
 
@@ -370,6 +410,10 @@ namespace RetroDevStudio
           m_BreakPoints.Remove( breakPoint );
           break;
         }
+      }
+      if ( m_Emulator.State != Tiny64.EmulatorState.RUNNING )
+      {
+        m_Emulator.RemoveBreakpoint( BreakPointIndex );
       }
     }
 
@@ -416,59 +460,107 @@ namespace RetroDevStudio
 
 
 
+    public void InjectFile( ByteBuffer InjectFile )
+    {
+      m_Emulator.Machine.InjectFileAfterStartup = InjectFile;
+    }
+
+
+
     public void StepInto()
     {
-      QueueRequest( DebugRequestType.STEP );
+      m_Emulator.StepInto();
+      RefreshRegistersAndWatches();
+      RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
     }
 
 
 
     public void StepOver()
     {
-      QueueRequest( DebugRequestType.NEXT );
+      m_Emulator.StepOver();
+      m_State = DebuggerState.RUNNING;
     }
 
 
 
     public void StepOut()
     {
-      QueueRequest( DebugRequestType.RETURN );
+      m_Emulator.StepOut();
+      m_State = DebuggerState.RUNNING;
     }
 
 
 
     public void RefreshRegistersAndWatches()
     {
-      QueueRequest( DebugRequestType.REFRESH_VALUES );
+      var ded       = new DebugEventData();
+      ded.Registers = new RegisterInfo()
+      {
+        A = m_Emulator.Machine.CPU.Accu,
+        X = m_Emulator.Machine.CPU.X,
+        Y = m_Emulator.Machine.CPU.Y,
+        Cycles = m_Emulator.Machine.VIC.CycleInRasterLinePos,
+        PC = m_Emulator.Machine.CPU.PC,
+        ProcessorPort01 = m_Emulator.Machine.Memory.RAM[1],
+        RasterLine = m_Emulator.Machine.VIC.RasterPos,
+        StackPointer = m_Emulator.Machine.CPU.StackPointer,
+        StatusFlags = m_Emulator.Machine.CPU.Flags
+      };
+      ded.Type = RetroDevStudio.DebugEvent.REGISTER_INFO;
+
+      DebugEvent( ded );
+      //QueueRequest( DebugRequestType.REFRESH_VALUES );
     }
 
 
 
-    public void RefreshMemory( int StartAddress, int Size )
+    public void RefreshMemoryFromCPU( int StartAddress, int Size )
     {
-      QueueRequest( DebugRequestType.REFRESH_MEMORY, StartAddress, Size );
+      var ded  = new DebugEventData();
+      ded.Type = RetroDevStudio.DebugEvent.UPDATE_WATCH;
+      ded.Data = m_Emulator.Machine.Memory.ForCPU( StartAddress, Size );
+      ded.Request = new RequestData( DebugRequestType.MEM_DUMP );
+      ded.Request.Parameter1 = StartAddress;
+
+      DebugEvent( ded );
+
+      //QueueRequest( DebugRequestType.REFRESH_MEMORY, StartAddress, Size );
+    }
+
+
+
+    public void RefreshMemoryFromRAM( int StartAddress, int Size )
+    {
+      var ded  = new DebugEventData();
+      ded.Type = RetroDevStudio.DebugEvent.UPDATE_WATCH;
+      ded.Request = new RequestData( DebugRequestType.MEM_DUMP );
+      ded.Data = new GR.Memory.ByteBuffer( (uint)Size );
+      ded.Request.Parameter1 = StartAddress;
+
+      System.Array.Copy( m_Emulator.Machine.Memory.RAM, StartAddress, ded.Data.Data(), 0, Size );
+
+      DebugEvent( ded );
     }
 
 
 
     public void Run()
     {
-      QueueRequest( DebugRequestType.EXIT );
+      m_Emulator.State  = Tiny64.EmulatorState.RUNNING;
+      m_State           = DebuggerState.RUNNING;
     }
 
 
 
     public void Break()
     {
-      StepOver();
+      m_Emulator.State = Tiny64.EmulatorState.PAUSED;
       RefreshRegistersAndWatches();
       RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
       m_State = DebuggerState.PAUSED;
-      /*
-      if ( SendCommand( "break" ) )
-      {
-        m_State = DebuggerState.PAUSED;
-      }*/
+
+      Debug.Log( "Break at total cycles " + m_Emulator.Machine.TotalCycles );
     }
 
 
@@ -521,16 +613,18 @@ namespace RetroDevStudio
 
     public void RefreshMemory( int StartAddress, int Size, MemorySource Source )
     {
+      if ( StartAddress + Size > 65536 )
+      {
+        Size = 65536 - StartAddress;
+      }
+
       switch ( Source )
       {
         case MemorySource.AS_CPU:
-          RefreshMemory( StartAddress, Size );
+          RefreshMemoryFromCPU( StartAddress, Size );
           break;
         case MemorySource.RAM:
-          {
-            RequestData data = new RequestData( DebugRequestType.REFRESH_MEMORY_RAM, StartAddress, Size );
-            QueueRequest( data );
-          }
+          RefreshMemoryFromRAM( StartAddress, Size );
           break;
       }
     }
@@ -539,7 +633,8 @@ namespace RetroDevStudio
 
     public void Quit()
     {
-      QueueRequest( DebugRequestType.QUIT );
+      m_Emulator.State = Tiny64.EmulatorState.STOPPED;
+      m_State = DebuggerState.NOT_CONNECTED;
     }
 
 
@@ -587,7 +682,7 @@ namespace RetroDevStudio
 
     public void Reset()
     {
-      QueueRequest( DebugRequestType.RESET );
+      m_Emulator.Reset();
     }
 
 
@@ -601,7 +696,15 @@ namespace RetroDevStudio
 
     List<WatchEntry> IDebugger.CurrentWatches()
     {
-      throw new NotImplementedException();
+      var watches = new List<WatchEntry>();
+
+      return watches;
     }
+
+
+
+
+
+
   }
 }

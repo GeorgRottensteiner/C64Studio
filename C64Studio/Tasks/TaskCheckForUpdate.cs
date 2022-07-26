@@ -102,17 +102,34 @@ namespace RetroDevStudio.Tasks
         var client = new System.Net.Http.HttpClient();
 
         var responseTask = client.GetStringAsync( requestURL );
-
-        responseTask.ContinueWith( x => ParseResponse( x.Result ) );
+        responseTask.ContinueWith( x => ParseAsyncResponse( x ) );
 #endif
       }
       catch ( Exception ex )
       {
         Core.AddToOutput( "Failed to check for update: " + ex.Message );
+        Core.SetStatus( "Update check failed:" + ex.Message );
         return false;
       }
       return true;
     }
+
+
+
+#if NET6_0_OR_GREATER
+    // what a shit show async programming is
+    private void ParseAsyncResponse( System.Threading.Tasks.Task<string> ParseTask )
+    {
+      if ( ParseTask.IsFaulted )
+      {
+        Core.AddToOutput( "Failed to check for update: " + ParseTask.Exception.InnerException.Message );
+        Core.SetStatus( "Update check failed:" + ParseTask.Exception.InnerException.Message );
+        return;
+      }
+
+      ParseResponse( ParseTask.Result );
+    }
+#endif
 
 
 

@@ -94,6 +94,10 @@ namespace Tiny64
 
     Machine       Machine = null;
 
+    public delegate void FrameCompleteHandler();
+
+    public event FrameCompleteHandler FrameCompleted;
+
 
 
     byte XScroll 
@@ -258,6 +262,26 @@ namespace Tiny64
 
 
 
+    public int CycleInRasterLinePos
+    {
+      get
+      {
+        return CycleInLinePos;
+      }
+    }
+
+
+
+    public int RasterPos
+    {
+      get
+      {
+        return RasterLinePos;
+      }
+    }
+
+
+
     public void RunCycle( Memory Memory, Display Display )
     {
       // toggle border state
@@ -332,8 +356,9 @@ namespace Tiny64
         {
           RasterLinePos = 0;
           Display.Flush();
-
           VideoCounterBase = 0;
+
+          FrameCompleted();
         }
       }
 
@@ -618,13 +643,6 @@ namespace Tiny64
         throw new NotImplementedException( "VIC only supports 0x40 registers!" );
       }
       return Registers[Address];
-    }
-
-
-
-    int RasterPos()
-    {
-      return RasterLinePos;
     }
 
 
