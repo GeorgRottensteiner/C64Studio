@@ -110,34 +110,10 @@ namespace RetroDevStudio.Dialogs
 
     private void RenameSolution()
     {
-      string    newFilename       = editSolutionName.Text;
-      string    newSolutionPath   = GR.Path.RenameFilenameWithoutExtension( _OriginalSolutionFilename, editSolutionName.Text );
-      string    solutionFullDir   = System.IO.Path.GetDirectoryName( _OriginalSolutionFilename );
-      string    solutionParentDir = solutionFullDir.Substring( System.IO.Path.GetDirectoryName( solutionFullDir ).Length + 1 );
+      string    newFilename             = editSolutionName.Text;
+      string    newSolutionPath         = GR.Path.RenameFilenameWithoutExtension( _OriginalSolutionFilename, newFilename );
 
-      try
-      {
-        System.IO.File.Move( _OriginalSolutionFilename, newSolutionPath );
-      }
-      catch ( Exception ex )
-      {
-        Core.MessageBox( "Failed to rename solution file: " + ex.ToString(), "Failed to rename solution" );
-        return;
-      }
-
-      Core.Navigating.RenameSolution( _OriginalSolutionFilename, newSolutionPath );
-
-      /*
-      labelRenameInfo.Text = $"The solution file will be renamed to {newSolutionPath}.";
-      if ( solutionParentDir != _OriginalSolutionName )
-      {
-        labelRenameInfo.Text += $"\r\nThe solution parent directory {solutionParentDir} does not match the solution name {_OriginalSolutionName} and will not be renamed.";
-      }
-      else
-      {
-        string    newSolutionParentDir = GR.Path.RenameFile( solutionParentDir, newFilename );
-        labelRenameInfo.Text += $"\r\nThe solution parent directory {solutionParentDir} will be renamed to {newSolutionParentDir}.";
-      }*/
+      Core.Navigating.RenameSolution( newSolutionPath );
     }
 
 

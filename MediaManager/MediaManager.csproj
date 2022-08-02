@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFrameworks>net3.5;net4.8;net6.0-windows</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
@@ -13,9 +13,24 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <Import Project="..\C64Models\C64Models.projitems" Label="Shared" />
   <Import Project="..\Common\Common.projitems" Label="Shared" />
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)C64StudioRelease\$(TargetFileName)&quot;&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFileName)&quot;" />
+    <Exec Condition="'$(TargetFramework)'=='net6.0-windows'" Command="copy &quot;$(TargetDir)/$(TargetName).exe&quot; &quot;$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetName).exe&quot;&#xD;&#xA;copy &quot;$(TargetDir)/$(TargetName).exe&quot; &quot;$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFramework)\$(TargetName).exe&quot;" />
+    <Exec Condition="'$(TargetFramework)'=='net6.0-windows'" Command="copy &quot;$(TargetDir)/$(TargetName).runtimeconfig.json&quot; &quot;$(SolutionDir)C64StudioRelease\$(TargetFramework)\$(TargetName).runtimeconfig.json&quot;&#xD;&#xA;copy &quot;$(TargetDir)/$(TargetName).runtimeconfig.json&quot; &quot;$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFramework)\$(TargetName).runtimeconfig.json&quot;" />
+    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)C64StudioRelease\\$(TargetFramework)\$(TargetFileName)&quot;&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)C64Studio\bin\$(ConfigurationName)\$(TargetFramework)\$(TargetFileName)&quot;" />
   </Target>
 </Project>

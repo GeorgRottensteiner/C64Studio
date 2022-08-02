@@ -1,4 +1,6 @@
 ﻿C64Studio
+o Die WIP Versionen mit Build Nummer zu versehen und diese unter Help/About anzuzeigen? 
+  Oder vielleicht das Dateidatum da einblenden oder wenigstens ein .txt in der .zip mit Datum/Build? 
 o Allow change of the default palettes
 o BASIC: Lange Variablennamen erkennen und automatisch durch kürzere ersetzen, und dabei auch noch eventuelle Duplikate vermeiden, interessante Idee :)
 o Since there is no "Clone Solution" command !, 

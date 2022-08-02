@@ -259,3 +259,13 @@
 /C64StudioRelease/net6.0-windows/C64Studio.runtimeconfig.json
 /C64StudioRelease/net6.0-windows/C64Studio.exe
 /C64StudioRelease/net6.0-windows/C64Studio.dll
+/C64StudioRelease/net6.0-windows/MediaTool.runtimeconfig.json
+/C64StudioRelease/net6.0-windows/MediaTool.exe
+/C64StudioRelease/net6.0-windows/MediaTool.dll
+/C64StudioRelease/net6.0-windows/MediaManager.runtimeconfig.json
+/C64StudioRelease/net6.0-windows/MediaManager.exe
+/C64StudioRelease/net6.0-windows/MediaManager.dll
+/C64StudioRelease/net4.8/MediaTool.exe
+/C64StudioRelease/net4.8/MediaManager.exe
+/C64StudioRelease/net3.5/MediaTool.exe
+/C64StudioRelease/net3.5/MediaManager.exe

@@ -261,7 +261,6 @@ namespace RetroDevStudio
 
     void ExternalProcessOutputReceived( object sender, System.Diagnostics.DataReceivedEventArgs e )
     {
-      Debug.Log( "Received Data " + e.Data );
       m_LastReceivedOutputTime = System.DateTime.Now;
       if ( !String.IsNullOrEmpty( e.Data ) )
       {

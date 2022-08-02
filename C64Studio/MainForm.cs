@@ -12,8 +12,7 @@ using RetroDevStudio.Parser;
 using GR.Image;
 using RetroDevStudio.Documents;
 using RetroDevStudio.Dialogs;
-
-
+using System.Linq;
 
 namespace RetroDevStudio
 {
@@ -1267,6 +1266,14 @@ namespace RetroDevStudio
               StudioCore.Settings.MRUFiles[i] = Event.UpdatedValue;
             }
           }
+          for ( int i = 0; i < StudioCore.Settings.MRUProjects.Count; ++i )
+          {
+            if ( StudioCore.Settings.MRUProjects[i] == Event.OriginalValue )
+            {
+              StudioCore.Settings.MRUProjects[i] = Event.UpdatedValue;
+            }
+          }
+          UpdateMenuMRU();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_OPENED:
           solutionToolStripMenuItem.Visible = true;
@@ -1274,7 +1281,7 @@ namespace RetroDevStudio
           solutionSaveToolStripMenuItem1.Enabled = true;
           closeSolutionToolStripMenuItem.Enabled = true;
           solutionCloneToolStripMenuItem.Enabled = true;
-          solutionRenameToolStripMenuItem.Enabled = true;
+          solutionRenameToolStripMenuItem.Enabled = !string.IsNullOrEmpty( StudioCore.Navigating.Solution.Filename );
           UpdateCaption();
           break;
         case Types.ApplicationEvent.Type.SOLUTION_CLOSED:
@@ -1639,6 +1646,10 @@ namespace RetroDevStudio
     {
       fileRecentlyOpenedProjectsToolStripMenuItem.DropDownItems.Clear();
       fileRecentlyOpenedFilesToolStripMenuItem.DropDownItems.Clear();
+
+      StudioCore.Settings.MRUProjects = StudioCore.Settings.MRUProjects.Distinct().ToList();
+      StudioCore.Settings.MRUFiles = StudioCore.Settings.MRUFiles.Distinct().ToList();
+
       foreach ( string entry in StudioCore.Settings.MRUProjects )
       {
         ToolStripMenuItem menuItem = new ToolStripMenuItem(entry);
@@ -5788,6 +5799,8 @@ namespace RetroDevStudio
       GR.IO.File.WriteAllBytes( StudioCore.Navigating.Solution.Filename, StudioCore.Navigating.Solution.ToBuffer() );
       StudioCore.Navigating.Solution.Modified = false;
       StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUProjects, StudioCore.Navigating.Solution.Filename, this );
+
+      RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_SAVED ) );
     }
 
 

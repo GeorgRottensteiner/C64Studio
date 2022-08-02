@@ -180,16 +180,74 @@ namespace RetroDevStudio
 
 
 
-    public void RenameSolution( string OriginalSolutionFilename, string NewSolutionPath )
+    public void RenameSolution( string NewSolutionPath )
     {
+      string    originalSolutionFilename  = Solution.Filename;
+      string    newSolutionName           = System.IO.Path.GetFileNameWithoutExtension( NewSolutionPath );
+      string    solutionFullDir           = System.IO.Path.GetDirectoryName( originalSolutionFilename );
+      string    solutionParentDir         = solutionFullDir.Substring( System.IO.Path.GetDirectoryName( solutionFullDir ).Length + 1 );
+      bool      solutionFolderIsRenamed   = ( solutionParentDir == Solution.Name );
+      string    newSolutionFullDir        = System.IO.Path.GetDirectoryName( NewSolutionPath );
+      string    renamedSolutionFullDir    = System.IO.Path.Combine( GR.Path.ParentDirectory( newSolutionFullDir ), newSolutionName );
+      string    renamedSolutionFullPath = System.IO.Path.Combine( renamedSolutionFullDir, System.IO.Path.GetFileName( NewSolutionPath ) );
+
+      try
+      {
+        System.IO.File.Move( originalSolutionFilename, NewSolutionPath );
+      }
+      catch ( Exception ex )
+      {
+        Core.MessageBox( "Failed to rename solution file: " + ex.ToString(), "Failed to rename solution" );
+        return;
+      }
+
+      Solution.Name     = System.IO.Path.GetFileNameWithoutExtension( NewSolutionPath );
       Solution.Filename = NewSolutionPath;
 
-      // adapt main form caption
-      Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_RENAMED )
-        { 
-          OriginalValue = OriginalSolutionFilename, 
-          UpdatedValue = NewSolutionPath 
+      if ( solutionFolderIsRenamed )
+      {
+        // we have to reload the projects
+        Core.MainForm.SaveSolution();
+
+        // adapt main form caption
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_RENAMED )
+        {
+          OriginalValue = originalSolutionFilename,
+          UpdatedValue = NewSolutionPath
         } );
+
+        if ( Core.MainForm.CloseSolution() )
+        {
+          try
+          {
+            System.IO.Directory.Move( solutionFullDir, renamedSolutionFullDir );
+          }
+          catch ( Exception ex )
+          {
+            Core.MessageBox( "Failed to rename solution folder: " + ex.ToString(), "Failed to rename solution folder" );
+            return;
+          }
+
+          // adapt main form caption
+          Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_RENAMED )
+          {
+            OriginalValue = NewSolutionPath,
+            UpdatedValue = renamedSolutionFullPath
+          } );
+
+          Core.MainForm.OpenFile( renamedSolutionFullPath );
+        }
+      }
+      else
+      {
+        // adapt main form caption
+        Core.MainForm.RaiseApplicationEvent( new RetroDevStudio.Types.ApplicationEvent( RetroDevStudio.Types.ApplicationEvent.Type.SOLUTION_RENAMED )
+        {
+          OriginalValue = originalSolutionFilename,
+          UpdatedValue = renamedSolutionFullPath
+        } );
+      }
+      
     }
 
 
