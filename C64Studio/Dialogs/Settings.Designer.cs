@@ -153,6 +153,8 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
+      this.labelBASICC64FontSize = new System.Windows.Forms.Label();
+      this.editBASICC64FontSize = new System.Windows.Forms.TextBox();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -185,6 +187,8 @@
       // 
       // tabGeneral
       // 
+      this.tabGeneral.Controls.Add(this.editBASICC64FontSize);
+      this.tabGeneral.Controls.Add(this.labelBASICC64FontSize);
       this.tabGeneral.Controls.Add(this.checkRightClickIsBGColor);
       this.tabGeneral.Controls.Add(this.btnBrowseDefaultOpenSolutionPath);
       this.tabGeneral.Controls.Add(this.editDefaultOpenSolutionPath);
@@ -1499,6 +1503,26 @@
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
       // 
+      // labelBASICC64FontSize
+      // 
+      this.labelBASICC64FontSize.AutoSize = true;
+      this.labelBASICC64FontSize.Enabled = false;
+      this.labelBASICC64FontSize.Location = new System.Drawing.Point(435, 344);
+      this.labelBASICC64FontSize.Name = "labelBASICC64FontSize";
+      this.labelBASICC64FontSize.Size = new System.Drawing.Size(30, 13);
+      this.labelBASICC64FontSize.TabIndex = 16;
+      this.labelBASICC64FontSize.Text = "Size:";
+      // 
+      // editBASICC64FontSize
+      // 
+      this.editBASICC64FontSize.Enabled = false;
+      this.editBASICC64FontSize.Location = new System.Drawing.Point(478, 341);
+      this.editBASICC64FontSize.MaxLength = 3;
+      this.editBASICC64FontSize.Name = "editBASICC64FontSize";
+      this.editBASICC64FontSize.Size = new System.Drawing.Size(100, 20);
+      this.editBASICC64FontSize.TabIndex = 17;
+      this.editBASICC64FontSize.TextChanged += new System.EventHandler(this.editBASICC64FontSize_TextChanged);
+      // 
       // Settings
       // 
       this.AcceptButton = this.btnOK;
@@ -1667,5 +1691,7 @@
     private System.Windows.Forms.ComboBox comboASMEncoding;
     private System.Windows.Forms.Label label35;
     private System.Windows.Forms.CheckBox checkRightClickIsBGColor;
+    private System.Windows.Forms.TextBox editBASICC64FontSize;
+    private System.Windows.Forms.Label labelBASICC64FontSize;
   }
 }

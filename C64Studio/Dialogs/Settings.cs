@@ -44,12 +44,13 @@ namespace RetroDevStudio.Dialogs
 
       if ( !Core.Settings.BASICUseNonC64Font )
       {
-        labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+        labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, System.Drawing.GraphicsUnit.Pixel );
       }
       else
       {
         labelBASICFontPreview.Font = new Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
       }
+      editBASICC64FontSize.Text = ( (int)Core.Settings.BASICSourceFontSize ).ToString();
 
       RefillIgnoredMessageList();
       RefillWarningsAsErrorList();
@@ -106,7 +107,9 @@ namespace RetroDevStudio.Dialogs
 
       comboAppMode.SelectedIndex = (int)Core.Settings.StudioAppMode;
 
-      btnChangeBASICFont.Enabled = !checkBASICUseC64Font.Checked;
+      btnChangeBASICFont.Enabled    = !checkBASICUseC64Font.Checked;
+      labelBASICC64FontSize.Enabled = checkBASICUseC64Font.Checked;
+      editBASICC64FontSize.Enabled  = checkBASICUseC64Font.Checked;
 
       switch ( PageToOpen )
       {
@@ -928,13 +931,17 @@ namespace RetroDevStudio.Dialogs
 
         if ( !Core.Settings.BASICUseNonC64Font )
         {
-          labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+          labelBASICFontPreview.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, System.Drawing.GraphicsUnit.Pixel );
           btnChangeBASICFont.Enabled = false;
+          labelBASICC64FontSize.Enabled = true;
+          editBASICC64FontSize.Enabled = true;
         }
         else
         {
           labelBASICFontPreview.Font = new Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize );
           btnChangeBASICFont.Enabled = true;
+          labelBASICC64FontSize.Enabled = false;
+          editBASICC64FontSize.Enabled = false;
         }
         RefreshDisplayOnDocuments();
       }
@@ -2482,6 +2489,24 @@ namespace RetroDevStudio.Dialogs
     private void checkRightClickIsBGColor_CheckedChanged( object sender, EventArgs e )
     {
       Core.Settings.BehaviourRightClickIsBGColorPaint = checkRightClickIsBGColor.Checked;
+    }
+
+
+
+    private void editBASICC64FontSize_TextChanged( object sender, EventArgs e )
+    {
+      int     fontSize = GR.Convert.ToI32( editBASICC64FontSize.Text );
+      if ( ( fontSize <= 0 )
+      ||   ( fontSize >= 200 ) )
+      {
+        fontSize = 9;
+      }
+      if ( fontSize != Core.Settings.BASICSourceFontSize )
+      {
+        Core.Settings.BASICSourceFontSize = fontSize;
+        labelBASICFontPreview.Font = new Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, System.Drawing.GraphicsUnit.Pixel );
+        RefreshDisplayOnDocuments();
+      }
     }
 
 

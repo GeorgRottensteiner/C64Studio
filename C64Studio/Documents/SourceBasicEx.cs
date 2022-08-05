@@ -350,7 +350,7 @@ namespace RetroDevStudio.Documents
       float     fontSize = Core.Settings.SourceFontSize;
       if ( !Core.Settings.BASICUseNonC64Font )
       {
-        editSource.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.SourceFontSize, Core.Settings.SourceFontStyle );
+        editSource.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
       }
       else
       {
@@ -358,7 +358,12 @@ namespace RetroDevStudio.Documents
         fontSize = Core.Settings.BASICSourceFontSize;
       }
       // i have no idea why +7
-      //fontSize += 7.0f;
+      int lineSpacing = editSource.Font.FontFamily.GetLineSpacing( Core.Settings.BASICSourceFontStyle ) + 7;
+
+      // 18.398438 = 16.0 * 2355 / 2048
+      int lineSpacingPixel = (int)( editSource.Font.Size * lineSpacing / editSource.Font.FontFamily.GetEmHeight( Core.Settings.BASICSourceFontStyle ) );
+
+      fontSize = lineSpacingPixel;
       fontSize *= 1.6f;
 
       editSource.CharHeight = editSource.LineInterval + (int)( fontSize * DPIHandler.DPIY / 96.0f );
