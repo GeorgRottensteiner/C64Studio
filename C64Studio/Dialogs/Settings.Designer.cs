@@ -30,6 +30,8 @@
     {
       this.tabPreferences = new System.Windows.Forms.TabControl();
       this.tabGeneral = new System.Windows.Forms.TabPage();
+      this.editBASICC64FontSize = new System.Windows.Forms.TextBox();
+      this.labelBASICC64FontSize = new System.Windows.Forms.Label();
       this.checkRightClickIsBGColor = new System.Windows.Forms.CheckBox();
       this.btnBrowseDefaultOpenSolutionPath = new System.Windows.Forms.Button();
       this.editDefaultOpenSolutionPath = new System.Windows.Forms.TextBox();
@@ -153,8 +155,6 @@
       this.btnOK = new System.Windows.Forms.Button();
       this.btnImportCurrentPageSettings = new System.Windows.Forms.Button();
       this.btnExportCurrentPageSettings = new System.Windows.Forms.Button();
-      this.labelBASICC64FontSize = new System.Windows.Forms.Label();
-      this.editBASICC64FontSize = new System.Windows.Forms.TextBox();
       this.tabPreferences.SuspendLayout();
       this.tabGeneral.SuspendLayout();
       this.tabTools.SuspendLayout();
@@ -221,6 +221,26 @@
       this.tabGeneral.TabIndex = 2;
       this.tabGeneral.Text = "General";
       this.tabGeneral.UseVisualStyleBackColor = true;
+      // 
+      // editBASICC64FontSize
+      // 
+      this.editBASICC64FontSize.Enabled = false;
+      this.editBASICC64FontSize.Location = new System.Drawing.Point(478, 341);
+      this.editBASICC64FontSize.MaxLength = 3;
+      this.editBASICC64FontSize.Name = "editBASICC64FontSize";
+      this.editBASICC64FontSize.Size = new System.Drawing.Size(100, 20);
+      this.editBASICC64FontSize.TabIndex = 17;
+      this.editBASICC64FontSize.TextChanged += new System.EventHandler(this.editBASICC64FontSize_TextChanged);
+      // 
+      // labelBASICC64FontSize
+      // 
+      this.labelBASICC64FontSize.AutoSize = true;
+      this.labelBASICC64FontSize.Enabled = false;
+      this.labelBASICC64FontSize.Location = new System.Drawing.Point(435, 344);
+      this.labelBASICC64FontSize.Name = "labelBASICC64FontSize";
+      this.labelBASICC64FontSize.Size = new System.Drawing.Size(30, 13);
+      this.labelBASICC64FontSize.TabIndex = 16;
+      this.labelBASICC64FontSize.Text = "Size:";
       // 
       // checkRightClickIsBGColor
       // 
@@ -300,7 +320,7 @@
       // 
       this.labelBASICFontPreview.Location = new System.Drawing.Point(27, 344);
       this.labelBASICFontPreview.Name = "labelBASICFontPreview";
-      this.labelBASICFontPreview.Size = new System.Drawing.Size(210, 62);
+      this.labelBASICFontPreview.Size = new System.Drawing.Size(209, 35);
       this.labelBASICFontPreview.TabIndex = 7;
       this.labelBASICFontPreview.Text = "BASIC Font Preview";
       // 
@@ -1502,26 +1522,6 @@
       this.btnExportCurrentPageSettings.Text = "Export here";
       this.btnExportCurrentPageSettings.UseVisualStyleBackColor = true;
       this.btnExportCurrentPageSettings.Click += new System.EventHandler(this.btnExportCurrentPageSettings_Click);
-      // 
-      // labelBASICC64FontSize
-      // 
-      this.labelBASICC64FontSize.AutoSize = true;
-      this.labelBASICC64FontSize.Enabled = false;
-      this.labelBASICC64FontSize.Location = new System.Drawing.Point(435, 344);
-      this.labelBASICC64FontSize.Name = "labelBASICC64FontSize";
-      this.labelBASICC64FontSize.Size = new System.Drawing.Size(30, 13);
-      this.labelBASICC64FontSize.TabIndex = 16;
-      this.labelBASICC64FontSize.Text = "Size:";
-      // 
-      // editBASICC64FontSize
-      // 
-      this.editBASICC64FontSize.Enabled = false;
-      this.editBASICC64FontSize.Location = new System.Drawing.Point(478, 341);
-      this.editBASICC64FontSize.MaxLength = 3;
-      this.editBASICC64FontSize.Name = "editBASICC64FontSize";
-      this.editBASICC64FontSize.Size = new System.Drawing.Size(100, 20);
-      this.editBASICC64FontSize.TabIndex = 17;
-      this.editBASICC64FontSize.TextChanged += new System.EventHandler(this.editBASICC64FontSize_TextChanged);
       // 
       // Settings
       // 

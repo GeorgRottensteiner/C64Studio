@@ -642,7 +642,14 @@ namespace FastColoredTextBoxNS
       }
       set
       {
-        charHeight = value;
+        if ( value <= 0 )
+        {
+          charHeight = 1;
+        }
+        else
+        {
+          charHeight = value;
+        }
         NeedRecalc();
         OnCharSizeChanged();
       }
