@@ -68,6 +68,9 @@
       this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.groupBox5 = new System.Windows.Forms.GroupBox();
+      this.checkShowLineAddresses = new System.Windows.Forms.CheckBox();
+      this.checkShowHexData = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).BeginInit();
       this.contextMenuDisassembler.SuspendLayout();
@@ -79,6 +82,7 @@
       this.tabBinary.SuspendLayout();
       this.groupBox3.SuspendLayout();
       this.groupBox4.SuspendLayout();
+      this.groupBox5.SuspendLayout();
       this.SuspendLayout();
       // 
       // editDisassembly
@@ -311,7 +315,7 @@
       this.tabBinary.Location = new System.Drawing.Point(4, 22);
       this.tabBinary.Name = "tabBinary";
       this.tabBinary.Padding = new System.Windows.Forms.Padding(3);
-      this.tabBinary.Size = new System.Drawing.Size(466, 628);
+      this.tabBinary.Size = new System.Drawing.Size(466, 546);
       this.tabBinary.TabIndex = 1;
       this.tabBinary.Text = "Binary";
       this.tabBinary.UseVisualStyleBackColor = true;
@@ -332,7 +336,7 @@
       this.hexView.NumDigitsMemorySize = 8;
       this.hexView.SelectedByteProvider = null;
       this.hexView.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
-      this.hexView.Size = new System.Drawing.Size(460, 622);
+      this.hexView.Size = new System.Drawing.Size(460, 540);
       this.hexView.StringViewVisible = true;
       this.hexView.TabIndex = 1;
       this.hexView.TextFont = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -499,10 +503,48 @@
       // 
       this.toolTip1.ShowAlways = true;
       // 
+      // groupBox5
+      // 
+      this.groupBox5.Controls.Add(this.checkShowHexData);
+      this.groupBox5.Controls.Add(this.checkShowLineAddresses);
+      this.groupBox5.Location = new System.Drawing.Point(492, 386);
+      this.groupBox5.Name = "groupBox5";
+      this.groupBox5.Size = new System.Drawing.Size(464, 100);
+      this.groupBox5.TabIndex = 7;
+      this.groupBox5.TabStop = false;
+      this.groupBox5.Text = "Options";
+      // 
+      // checkShowLineAddresses
+      // 
+      this.checkShowLineAddresses.AutoSize = true;
+      this.checkShowLineAddresses.Checked = true;
+      this.checkShowLineAddresses.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkShowLineAddresses.Location = new System.Drawing.Point(10, 19);
+      this.checkShowLineAddresses.Name = "checkShowLineAddresses";
+      this.checkShowLineAddresses.Size = new System.Drawing.Size(200, 17);
+      this.checkShowLineAddresses.TabIndex = 0;
+      this.checkShowLineAddresses.Text = "Show Line Addresses in Disassembly";
+      this.checkShowLineAddresses.UseVisualStyleBackColor = true;
+      this.checkShowLineAddresses.CheckedChanged += new System.EventHandler(this.checkShowLineAddresses_CheckedChanged);
+      // 
+      // checkShowHexData
+      // 
+      this.checkShowHexData.AutoSize = true;
+      this.checkShowHexData.Checked = true;
+      this.checkShowHexData.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkShowHexData.Location = new System.Drawing.Point(10, 42);
+      this.checkShowHexData.Name = "checkShowHexData";
+      this.checkShowHexData.Size = new System.Drawing.Size(166, 17);
+      this.checkShowHexData.TabIndex = 0;
+      this.checkShowHexData.Text = "Show Assembled Byte Values";
+      this.checkShowHexData.UseVisualStyleBackColor = true;
+      this.checkShowHexData.CheckedChanged += new System.EventHandler(this.checkShowHexData_CheckedChanged);
+      // 
       // Disassembler
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.ClientSize = new System.Drawing.Size(968, 598);
+      this.Controls.Add(this.groupBox5);
       this.Controls.Add(this.groupBox3);
       this.Controls.Add(this.tabContent);
       this.Controls.Add(this.groupBox4);
@@ -529,6 +571,8 @@
       this.groupBox3.PerformLayout();
       this.groupBox4.ResumeLayout(false);
       this.groupBox4.PerformLayout();
+      this.groupBox5.ResumeLayout(false);
+      this.groupBox5.PerformLayout();
       this.ResumeLayout(false);
 
     }
@@ -573,5 +617,8 @@
     private System.Windows.Forms.Button btnReloadFile;
     private System.Windows.Forms.ContextMenuStrip contextMenuDisassembler;
     private System.Windows.Forms.ToolStripMenuItem addJumpAddressToolStripMenuItem;
+    private System.Windows.Forms.GroupBox groupBox5;
+    private System.Windows.Forms.CheckBox checkShowLineAddresses;
+    private System.Windows.Forms.CheckBox checkShowHexData;
   }
 }

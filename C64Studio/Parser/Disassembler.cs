@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Tiny64;
 
@@ -455,7 +456,6 @@ namespace RetroDevStudio.Parser
           }
           ++localLineIndex;
 
-
           if ( accessedAddresses.ContainsValue( (ushort)trueAddress ) )
           {
             // line break in front of named label
@@ -472,7 +472,7 @@ namespace RetroDevStudio.Parser
             }
             else
             {
-              sb.Append( "label_" + trueAddress.ToString( "x4" ) + "\r\n" );
+              sb.AppendLine( "label_" + trueAddress.ToString( "x4" ) );
             }
             if ( Settings.AddLineAddresses )
             {
@@ -495,6 +495,51 @@ namespace RetroDevStudio.Parser
             {
               sb.Append( "$" );
               sb.Append( trueAddress.ToString( "X4" ) + ": " );
+            }
+          }
+          else if ( instruction.first.NumOperands > 0 )
+          {
+            // is there a label jumping in the middle of the next opcode?
+            var  addressesInside = accessedAddresses.Where( l => ( l > trueAddress ) && ( l < trueAddress + instruction.first.NumOperands ) );
+            foreach ( var addressInside in addressesInside )
+            {
+              sb.AppendLine();
+              if ( Settings.AddLineAddresses )
+              {
+                sb.Append( "$" );
+                sb.Append( trueAddress.ToString( "X4" ) + ": " );
+              }
+
+              sb.Append( "label_" + addressInside.ToString( "x4" ) );
+              sb.Append( " = * + " );
+              sb.Append( addressInside - trueAddress );
+              sb.AppendLine();
+              if ( Settings.AddLineAddresses )
+              {
+                sb.Append( "$" );
+                sb.Append( trueAddress.ToString( "X4" ) + ": " );
+              }
+            }
+
+            var  labelsInside = NamedLabels.Where( l => ( l.Key > trueAddress ) && ( l.Key < trueAddress + instruction.first.NumOperands ) );
+            foreach ( var labelInside in labelsInside )
+            {
+              sb.AppendLine();
+              if ( Settings.AddLineAddresses )
+              {
+                sb.Append( "$" );
+                sb.Append( trueAddress.ToString( "X4" ) + ": " );
+              }
+
+              sb.Append( NamedLabels[trueAddress] );
+              sb.Append( " = * + " );
+              sb.Append( labelInside.Key - trueAddress );
+              sb.AppendLine();
+              if ( Settings.AddLineAddresses )
+              {
+                sb.Append( "$" );
+                sb.Append( trueAddress.ToString( "X4" ) + ": " );
+              }
             }
           }
 

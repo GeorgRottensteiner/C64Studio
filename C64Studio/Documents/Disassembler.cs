@@ -271,7 +271,7 @@ namespace RetroDevStudio.Documents
       int     topLine = editDisassembly.VisibleRange.Start.iLine;
 
       string  disassembly;
-      var settings = new DisassemblerSettings() { AddLineAddresses = true, AddAssembledBytes = true };
+      var settings = new DisassemblerSettings() { AddLineAddresses = checkShowLineAddresses.Checked, AddAssembledBytes = checkShowHexData.Checked };
 
       if ( m_Disassembler.Disassemble( m_DisassemblyProject.DataStartAddress, m_DisassemblyProject.JumpedAtAddresses, m_DisassemblyProject.NamedLabels, settings, out disassembly, out int dummy ) )
       {
@@ -677,6 +677,22 @@ namespace RetroDevStudio.Documents
         addJumpAddressToolStripMenuItem.Text = "Add jump address";
       }
     }
+
+
+
+    private void checkShowLineAddresses_CheckedChanged( object sender, EventArgs e )
+    {
+      UpdateDisassembly();
+    }
+
+
+
+    private void checkShowHexData_CheckedChanged( object sender, EventArgs e )
+    {
+      UpdateDisassembly();
+    }
+
+
 
   }
 }

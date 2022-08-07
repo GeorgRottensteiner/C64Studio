@@ -175,11 +175,7 @@ namespace RetroDevStudio.Documents
     {
       editSource.LeftPadding = (int)( 40 * DPIHandler.DPIX / 96.0f );
 
-      float     fontSize = editSource.Font.Size;
-      // i have no idea why +7
-      fontSize *= 1.6f;
-
-      editSource.CharHeight = editSource.LineInterval + (int)( fontSize * DPIHandler.DPIY / 96.0f );
+      RecalcCharHeight();
     }
 
 
@@ -347,7 +343,6 @@ namespace RetroDevStudio.Documents
     {
       base.RefreshDisplayOptions();
 
-      float     fontSize = Core.Settings.SourceFontSize;
       if ( !Core.Settings.BASICUseNonC64Font )
       {
         editSource.Font = new System.Drawing.Font( Core.MainForm.m_FontC64.Families[0], Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
@@ -355,18 +350,8 @@ namespace RetroDevStudio.Documents
       else
       {
         editSource.Font = new System.Drawing.Font( Core.Settings.BASICSourceFontFamily, Core.Settings.BASICSourceFontSize, Core.Settings.BASICSourceFontStyle );
-        fontSize = Core.Settings.BASICSourceFontSize;
       }
-      // i have no idea why +7
-      int lineSpacing = editSource.Font.FontFamily.GetLineSpacing( Core.Settings.BASICSourceFontStyle ) + 7;
-
-      // 18.398438 = 16.0 * 2355 / 2048
-      int lineSpacingPixel = (int)( editSource.Font.Size * lineSpacing / editSource.Font.FontFamily.GetEmHeight( Core.Settings.BASICSourceFontStyle ) );
-
-      fontSize = lineSpacingPixel;
-      fontSize *= 1.6f;
-
-      editSource.CharHeight = editSource.LineInterval + (int)( fontSize * DPIHandler.DPIY / 96.0f );
+      RecalcCharHeight();
 
       editSource.Language = FastColoredTextBoxNS.Language.Custom;
 
@@ -427,6 +412,21 @@ namespace RetroDevStudio.Documents
 
       UpdateKeyBinding( Function.NAVIGATE_BACK, FastColoredTextBoxNS.FCTBAction.NavigateBackward );
       UpdateKeyBinding( Function.NAVIGATE_FORWARD, FastColoredTextBoxNS.FCTBAction.NavigateForward );
+    }
+
+
+
+    private void RecalcCharHeight()
+    {
+      // i have no idea why +7
+      int lineSpacing = editSource.Font.FontFamily.GetLineSpacing( Core.Settings.BASICSourceFontStyle ) + 7;
+
+      // 18.398438 = 16.0 * 2355 / 2048
+      int lineSpacingPixel = (int)( editSource.Font.Size * lineSpacing / editSource.Font.FontFamily.GetEmHeight( Core.Settings.BASICSourceFontStyle ) );
+      float fontSize = lineSpacingPixel;
+      fontSize *= 1.6f;
+
+      editSource.CharHeight = editSource.LineInterval + (int)( fontSize * DPIHandler.DPIY / 96.0f );
     }
 
 
