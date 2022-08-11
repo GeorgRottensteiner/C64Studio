@@ -88,6 +88,7 @@ namespace RetroDevStudio
     delegate void UpdateWatchInfoCallback( RequestData Request, GR.Memory.ByteBuffer Data );
     delegate bool ParseFileCallback( Parser.ParserBase Parser, DocumentInfo Document, ProjectConfig Configuration );
     public delegate void DocCallback( BaseDocument Document );
+    public delegate void DocShowCallback( BaseDocument Document, bool Activate );
     delegate void DocumentEventHandlerCallback( BaseDocument.DocEvent Event );
     delegate void NotifyAllDocumentsCallback( bool CanToggleBreakpoints );
     delegate void TaskFinishedCallback( RetroDevStudio.Tasks.Task FinishedTask );

@@ -137,19 +137,66 @@ namespace RetroDevStudio
 
     public void ShowDocument( BaseDocument Doc )
     {
+      ShowDocument( Doc, true );
+    }
+
+
+
+    public void ShowDocument( BaseDocument Doc, bool Activate )
+    {
       if ( Doc.InvokeRequired )
       {
-        Doc.Invoke( new MainForm.DocCallback( ShowDocument ), new object[] { Doc } );
+        Doc.Invoke( new MainForm.DocShowCallback( ShowDocument ), new object[] { Doc, Activate } );
         return;
       }
-      if ( !Doc.IsActivated )
+
+      if ( Doc.IsHidden )
+      {
+        Doc.Visible = true;
+
+        if ( Doc.DockHandler.DockPanel == null )
+        {
+          Doc.DockHandler.Form.Activate();
+          return;
+        }
+
+        if ( Doc.DockHandler.Pane == null )
+        {
+          Doc.DockHandler.Show( Doc.DockHandler.DockPanel );
+          return;
+        }
+
+        Doc.DockHandler.IsHidden = false;
+        Doc.DockHandler.Pane.ActiveContent = Doc.DockHandler.Content;
+        if ( Doc.DockHandler.DockState == WeifenLuo.WinFormsUI.Docking.DockState.Document && Doc.DockHandler.DockPanel.DocumentStyle == WeifenLuo.WinFormsUI.Docking.DocumentStyle.SystemMdi )
+        {
+          Doc.DockHandler.Form.Activate();
+        }
+        else if ( WeifenLuo.WinFormsUI.Docking.DockHelper.IsDockStateAutoHide( Doc.DockHandler.DockState ) && Doc.DockHandler.DockPanel.ActiveAutoHideContent != Doc.DockHandler.Content )
+        {
+          Doc.DockHandler.DockPanel.ActiveAutoHideContent = null;
+        }
+        else if ( !Doc.DockHandler.Form.ContainsFocus && !WeifenLuo.WinFormsUI.Docking.Win32Helper.IsRunningOnMono )
+        {
+          // did this steal the focus if the content was hidden?
+          /*
+          if ( Activate )
+          {
+            Doc.DockHandler.DockPanel.ContentFocusManager.Activate( Doc.DockHandler.Content );
+          }*/
+        }
+      }
+      if ( ( Activate )
+      &&   ( !Doc.IsActivated ) )
       {
         Doc.Activate();
       }
+      /*
       if ( !Doc.Visible )
       {
+        Debug.Log( "Show for " + Doc.Name );
         Doc.Show();
-      }
+      }*/
       if ( Doc.Pane != null )
       {
         if ( Doc.Pane.ActiveContent != Doc )

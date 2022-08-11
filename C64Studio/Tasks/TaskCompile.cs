@@ -777,7 +777,7 @@ namespace RetroDevStudio.Tasks
                                                         Doc.Project );
               Core.MainForm.m_CompileResult.UpdateFromMessages( parser, Doc.Project );
             }
-            Core.ShowDocument( Core.MainForm.m_CompileResult );
+            Core.ShowDocument( Core.MainForm.m_CompileResult, false );
             Core.MainForm.AppState = Types.StudioState.NORMAL;
 
             if ( Core.Settings.PlaySoundOnBuildFailure )
@@ -827,7 +827,7 @@ namespace RetroDevStudio.Tasks
 
               Core.MainForm.m_CompileResult.UpdateFromMessages( parser, Doc.Project );
             }
-            Core.ShowDocument( Core.MainForm.m_CompileResult );
+            Core.ShowDocument( Core.MainForm.m_CompileResult, false );
             Core.MainForm.AppState = Types.StudioState.NORMAL;
 
             if ( Core.Settings.PlaySoundOnBuildFailure )
@@ -851,7 +851,7 @@ namespace RetroDevStudio.Tasks
 
               Core.MainForm.m_CompileResult.UpdateFromMessages( parser, Doc.Project );
             }
-            Core.ShowDocument( Core.MainForm.m_CompileResult );
+            Core.ShowDocument( Core.MainForm.m_CompileResult, false );
           }
         }
 
@@ -947,7 +947,7 @@ namespace RetroDevStudio.Tasks
         if ( ( configSetting != null )
         &&   ( !string.IsNullOrEmpty( configSetting.PostBuild ) ) )
         {
-          Core.ShowDocument( Core.MainForm.m_Output );
+          Core.ShowDocument( Core.MainForm.m_Output, false );
           Core.AddToOutput( "Running post build step on " + Doc.Element.Name + System.Environment.NewLine );
           if ( !Core.Executing.RunCommand( Doc, "post build", configSetting.PostBuild ) )
           {
