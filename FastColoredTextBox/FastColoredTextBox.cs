@@ -9347,6 +9347,14 @@ window.status = ""#print"";
                 Selection = draggedRange;
                 ClearSelected();
               }
+
+              // stopped dragging -> TODO - hide old caret!
+              HideCaret( Handle );
+              prevCaretRect = Rectangle.Empty;
+              /*
+              HideCaret(
+              CaretBlinking = true;*/
+              DoCaretVisible();
             }
           }
 
