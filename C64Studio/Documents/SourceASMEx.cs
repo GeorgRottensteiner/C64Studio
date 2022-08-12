@@ -192,6 +192,8 @@ namespace RetroDevStudio.Documents
       editSource.CommentPrefix = ";";
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
 
+      btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
+
       UpdatePseudoOpSyntaxColoringSource();
       UpdateOpcodeSyntaxColoringSource();
 
@@ -1405,6 +1407,13 @@ namespace RetroDevStudio.Documents
         case ApplicationEvent.Type.DOCUMENT_ACTIVATED:
           UpdateStatusInfo();
           break;
+        case ApplicationEvent.Type.SETTING_MODIFIED:
+          if ( Event.OriginalValue == "ASMShowShortCutLabels" )
+          {
+            btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
+            RefreshLocalSymbols();
+          }
+          break;
       }
     }
 
@@ -1542,10 +1551,19 @@ namespace RetroDevStudio.Documents
             ||     ( GR.Path.IsPathEqual( symbol.DocumentFilename, fullPath ) ) )
             &&   ( symbol.Zone == currentZone ) )
             {
-              int itemIndex = comboLocalLabelSelector.Items.Add( new ComboItem( symbol.Name, symbol ) );
-              if ( symbol.Name == currentLabel )
+              if ( ( symbol.Type == SymbolInfo.Types.LABEL )
+              &&   ( symbol.Name.StartsWith( ASMFileParser.InternalLabelPrefix ) )
+              &&   ( !Core.Settings.ASMShowShortCutLabels ) )
               {
-                comboLocalLabelSelector.SelectedIndex = itemIndex;
+                // skip
+              }
+              else
+              {
+                int itemIndex = comboLocalLabelSelector.Items.Add( new ComboItem( symbol.Name, symbol ) );
+                if ( symbol.Name == currentLabel )
+                {
+                  comboLocalLabelSelector.SelectedIndex = itemIndex;
+                }
               }
             }
           }
@@ -3813,6 +3831,15 @@ namespace RetroDevStudio.Documents
       editSource.EndAutoUndo();
 
       SetModified();    
+    }
+
+
+
+    private void btnShowShortCutLabels_Click( object sender, EventArgs e )
+    {
+      Core.Settings.ASMShowShortCutLabels = !Core.Settings.ASMShowShortCutLabels;
+
+      Core.MainForm.RaiseApplicationEvent( new ApplicationEvent( ApplicationEvent.Type.SETTING_MODIFIED ) { OriginalValue = "ASMShowShortCutLabels" }  );
     }
 
 

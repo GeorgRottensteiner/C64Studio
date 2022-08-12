@@ -136,6 +136,7 @@ namespace RetroDevStudio
     public bool                                 ASMShowAutoComplete = true;
     public bool                                 ASMShowAddress      = true;
     public List<string>                         ASMLibraryPaths     = new List<string>();
+    public bool                                 ASMShowShortCutLabels = true;
 
     public bool                                 StripTrailingSpaces = false;
 
@@ -732,6 +733,7 @@ namespace RetroDevStudio
         chunkASMEditor.AppendString( libPath );
       }
       chunkASMEditor.AppendU8( (byte)( !ASMShowAddress ? 1 : 0 ) );
+      chunkASMEditor.AppendU8( (byte)( !ASMShowShortCutLabels ? 1 : 0 ) );
       SettingsData.Append( chunkASMEditor.ToBuffer() );
 
       // Outline settings
@@ -1186,7 +1188,8 @@ namespace RetroDevStudio
                 ASMLibraryPaths.Add( binIn.ReadString() );
               }
 
-              ASMShowAddress = ( binIn.ReadUInt8() == 0 );
+              ASMShowAddress        = ( binIn.ReadUInt8() == 0 );
+              ASMShowShortCutLabels = ( binIn.ReadUInt8() == 0 );
             }
             break;
           case FileChunkConstants.SETTINGS_BASIC_PARSER:

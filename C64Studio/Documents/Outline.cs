@@ -340,7 +340,7 @@ namespace RetroDevStudio.Documents
     {
       Core.Settings.OutlineShowShortCutLabels = !Core.Settings.OutlineShowShortCutLabels;
 
-      checkShowShortCutLabels.Image = Core.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
+      checkShowShortCutLabels.Image = Core.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
 
       StoreOpenNodes();
       RefreshNodes();

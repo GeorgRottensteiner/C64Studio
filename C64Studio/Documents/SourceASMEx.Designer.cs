@@ -68,6 +68,7 @@
       this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.btnCloseAllZones = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.btnShowShortCutLabels = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -145,7 +146,7 @@
             this.separatorCommenting,
             this.openFileToolStripMenuItem});
       this.contextSource.Name = "contextSource";
-      this.contextSource.Size = new System.Drawing.Size(193, 436);
+      this.contextSource.Size = new System.Drawing.Size(193, 414);
       // 
       // copyToolStripMenuItem
       // 
@@ -349,9 +350,9 @@
       this.comboZoneSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboZoneSelector.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
       this.comboZoneSelector.FormattingEnabled = true;
-      this.comboZoneSelector.Location = new System.Drawing.Point(29, 2);
+      this.comboZoneSelector.Location = new System.Drawing.Point(58, 2);
       this.comboZoneSelector.Name = "comboZoneSelector";
-      this.comboZoneSelector.Size = new System.Drawing.Size(289, 21);
+      this.comboZoneSelector.Size = new System.Drawing.Size(260, 21);
       this.comboZoneSelector.TabIndex = 1;
       this.comboZoneSelector.SelectionChangeCommitted += new System.EventHandler(this.comboZoneSelector_SelectedIndexChanged);
       // 
@@ -407,10 +408,23 @@
       this.btnCloseAllZones.UseVisualStyleBackColor = true;
       this.btnCloseAllZones.Click += new System.EventHandler(this.btnCloseAllZones_Click);
       // 
+      // btnShowShortCutLabels
+      // 
+      this.btnShowShortCutLabels.Appearance = System.Windows.Forms.Appearance.Button;
+      this.btnShowShortCutLabels.AutoSize = true;
+      this.btnShowShortCutLabels.Image = global::RetroDevStudio.Properties.Resources.flag_blue_on;
+      this.btnShowShortCutLabels.Location = new System.Drawing.Point(29, 0);
+      this.btnShowShortCutLabels.Name = "btnShowShortCutLabels";
+      this.btnShowShortCutLabels.Size = new System.Drawing.Size(22, 22);
+      this.btnShowShortCutLabels.TabIndex = 4;
+      this.btnShowShortCutLabels.UseVisualStyleBackColor = true;
+      this.btnShowShortCutLabels.CheckedChanged += new System.EventHandler(this.btnShowShortCutLabels_Click);
+      // 
       // SourceASMEx
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.ClientSize = new System.Drawing.Size(575, 471);
+      this.Controls.Add(this.btnShowShortCutLabels);
       this.Controls.Add(this.btnCloseAllZones);
       this.Controls.Add(this.miniMap);
       this.Controls.Add(this.comboZoneSelector);
@@ -422,6 +436,7 @@
       this.contextSource.ResumeLayout(false);
       this.contextMenuMiniMap.ResumeLayout(false);
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
@@ -465,5 +480,6 @@
     private System.Windows.Forms.ToolStripMenuItem convertDecimalToHexToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem convertHexToDecimalToolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem addSubtractDataValuesToolStripMenuItem;
+    private System.Windows.Forms.CheckBox btnShowShortCutLabels;
   }
 }

@@ -27,7 +27,8 @@ namespace RetroDevStudio.Types
       DOCUMENT_INFO_REMOVED,
       EMULATOR_LIST_CHANGED,
       KEY_BINDINGS_MODIFIED,
-      PROJECT_RENAMED
+      PROJECT_RENAMED,
+      SETTING_MODIFIED          // Originalvalue = name of modified setting
     }
 
     public Type             EventType = Type.NONE;
