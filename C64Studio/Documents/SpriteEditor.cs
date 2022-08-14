@@ -970,7 +970,7 @@ namespace RetroDevStudio.Documents
       IDataObject dataObj = Clipboard.GetDataObject();
       if ( dataObj == null )
       {
-        System.Windows.Forms.MessageBox.Show( "No image on clipboard" );
+        Core.MessageBox( "No image on clipboard", "Cannot paste" );
         return; 
       }
 
@@ -1046,7 +1046,7 @@ namespace RetroDevStudio.Documents
       }
       else if ( !Clipboard.ContainsImage() )
       {
-        System.Windows.Forms.MessageBox.Show( "No image on clipboard" );
+        Core.MessageBox( "No image on clipboard", "Cannot paste" );
         return;
       }
       GR.Image.FastImage    imgClip = null;
@@ -1143,10 +1143,17 @@ namespace RetroDevStudio.Documents
 
           GR.Image.FastImage imgSprite = mappedImage.GetImage( i * m_SpriteWidth, j * m_SpriteHeight, copyWidth, copyHeight ) as GR.Image.FastImage;
 
+          m_ImportError = "";
           m_SpriteProject.Sprites[currentTargetSprite].Tile.Colors.ActivePalette = activePalette;
           m_SpriteProject.Sprites[currentTargetSprite].Tile.Colors.Palettes = m_SpriteProject.Colors.Palettes;
           ImportSprite( imgSprite, currentTargetSprite );
           imgSprite.Dispose();
+
+          if ( !string.IsNullOrEmpty( m_ImportError ) )
+          {
+            Core.AddToOutput( $"Error importing sprite {currentTargetSprite}: {m_ImportError}\r\n" );
+          }
+
 
           if ( currentTargetSprite == m_CurrentSprite )
           {
@@ -1417,7 +1424,10 @@ namespace RetroDevStudio.Documents
         {
           m_SpriteProject.Sprites[SpriteIndex].Tile.Data.SetU8At( i, Buffer.ByteAt( i ) );
         }
-        ChangeColorSettingsDialog();
+        if ( SpriteIndex == m_CurrentSprite )
+        {
+          ChangeColorSettingsDialog();
+        }
       }
       else
       {
