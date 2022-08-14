@@ -658,7 +658,7 @@ namespace RetroDevStudio.Parser
         {
           // BASIC tokens are always searched forward
           if ( ( !insideDataStatement )
-          &&   ( IsBASICTokenStartingHere( Line, posInLine, out string Token ) ) )
+          &&   ( IsBASICTokenStartingHere( Line, posInLine, out string Token, out int tokenValue ) ) )
           {
             if ( currentToken != null )
             {
@@ -669,6 +669,7 @@ namespace RetroDevStudio.Parser
             basicToken.TokenType  = BasicFileParser.Token.Type.BASIC_TOKEN;
             basicToken.StartIndex = posInLine;
             basicToken.Content    = Token;
+            basicToken.ByteValue  = tokenValue;
 
             lineInfo.Tokens.Add( basicToken );
 
@@ -837,16 +838,18 @@ namespace RetroDevStudio.Parser
 
 
 
-    private bool IsBASICTokenStartingHere( string Line, int PosInLine, out string Token )
+    private bool IsBASICTokenStartingHere( string Line, int PosInLine, out string Token, out int TokenValue )
     {
       // find best match
       Token = null;
+      TokenValue = -1;
       foreach ( var token in Settings.BASICDialect.Opcodes.Keys )
       {
         if ( ( PosInLine + token.Length <= Line.Length )
         &&   ( string.Compare( Line, PosInLine, token, 0, token.Length ) == 0 ) )
         {
           Token = token;
+          TokenValue = Settings.BASICDialect.Opcodes[token].InsertionValue;
           return true;
         }
       }
