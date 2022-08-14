@@ -363,10 +363,10 @@ namespace RetroDevStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap flag_blue_on {
+        internal static System.Drawing.Icon flag_blue_on {
             get {
                 object obj = ResourceManager.GetObject("flag_blue_on", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((System.Drawing.Icon)(obj));
             }
         }
         
