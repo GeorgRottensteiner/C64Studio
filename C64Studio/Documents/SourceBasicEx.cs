@@ -1970,11 +1970,11 @@ namespace RetroDevStudio.Documents
 
       if ( m_LowerCaseMode )
       {
-        text = MakeLowerCase( text, !Core.Settings.BASICUseNonC64Font );
+        text = MakeLowerCase( text, Core.Settings.BASICUseNonC64Font );
       }
       else
       {
-        text = MakeUpperCase( text, !Core.Settings.BASICUseNonC64Font );
+        text = MakeUpperCase( text, Core.Settings.BASICUseNonC64Font );
       }
       editSource.Text = text;
 

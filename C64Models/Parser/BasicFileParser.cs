@@ -3251,13 +3251,13 @@ namespace RetroDevStudio.Parser
 
 
 
-    public static string MakeUpperCase( string BASICText, bool C64Font )
+    public static string MakeUpperCase( string BASICText, bool NonC64Font )
     {
       StringBuilder   sb = new StringBuilder( BASICText.Length );
 
       foreach ( var singleChar in BASICText )
       {
-        if ( C64Font )
+        if ( !NonC64Font )
         {
           if ( ( singleChar & 0xff00 ) == 0xef00 )
           {
@@ -3305,13 +3305,13 @@ namespace RetroDevStudio.Parser
 
 
 
-    public static string MakeLowerCase( string BASICText, bool C64Font )
+    public static string MakeLowerCase( string BASICText, bool NonC64Font )
     {
       StringBuilder   sb = new StringBuilder( BASICText.Length );
 
       foreach ( var singleChar in BASICText )
       {
-        if ( C64Font )
+        if ( !NonC64Font )
         {
           if ( ( singleChar & 0xff00 ) == 0xee00 )
           {
