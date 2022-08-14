@@ -9268,6 +9268,11 @@ window.status = ""#print"";
 
     protected virtual void DoDragDrop( Place place, string text )
     {
+      // stopped dragging -> hide old caret!
+      HideCaret( Handle );
+      prevCaretRect = Rectangle.Empty;
+      DoCaretVisible();
+
       Range insertRange = new Range( this, place, place );
 
       // Abort, if insertRange is read only
@@ -9275,8 +9280,11 @@ window.status = ""#print"";
         return;
 
       // Abort, if dragged range contains target place
-      if ( ( draggedRange != null ) && ( draggedRange.Contains( place ) == true ) )
+      if ( ( draggedRange != null ) 
+      &&   ( draggedRange.Contains( place ) ) )
+      {
         return;
+      }
 
       // Determine, if the dragged string should be copied or moved
       bool copyMode =
@@ -9348,13 +9356,11 @@ window.status = ""#print"";
                 ClearSelected();
               }
 
-              // stopped dragging -> TODO - hide old caret!
+              /*
+              // stopped dragging -> hide old caret!
               HideCaret( Handle );
               prevCaretRect = Rectangle.Empty;
-              /*
-              HideCaret(
-              CaretBlinking = true;*/
-              DoCaretVisible();
+              DoCaretVisible();*/
             }
           }
 
