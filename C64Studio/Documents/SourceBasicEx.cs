@@ -1450,6 +1450,14 @@ namespace RetroDevStudio.Documents
 
         if ( c64Key != null )
         {
+          if ( ( m_StringEnterMode )
+          &&   ( c64Key.PetSCIIValue == 13 ) )
+          {
+            // enter breaks out of string mode
+            ToggleStringEntryMode();
+            InsertOrReplaceChar( (char)13 );
+            return true;
+          }
           if ( ( ( !m_StringEnterMode )
           &&     ( ( c64Key.Type == KeyType.GRAPHIC_SYMBOL )
           ||       ( c64Key.Type == KeyType.CONTROL_CODE ) ) )
@@ -2104,11 +2112,11 @@ namespace RetroDevStudio.Documents
       m_StringEnterMode = !m_StringEnterMode;
       if ( m_StringEnterMode )
       {
-        toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle String Entry Mode (currently active)" );
+        toolTip1.SetToolTip( btnToggleStringEntryMode, "Toggle String Entry Mode (currently active)" );
       }
       else
       {
-        toolTip1.SetToolTip( btnToggleUpperLowerCase, "Toggle String Entry Mode (currently inactive)" );
+        toolTip1.SetToolTip( btnToggleStringEntryMode, "Toggle String Entry Mode (currently inactive)" );
       }
       btnToggleStringEntryMode.Image = m_StringEnterMode ? global::RetroDevStudio.Properties.Resources.toolbar_basic_string_mode_active : global::RetroDevStudio.Properties.Resources.toolbar_basic_string_mode_inactive;
     }
