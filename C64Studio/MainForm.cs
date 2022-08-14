@@ -696,7 +696,7 @@ namespace RetroDevStudio
       StudioCore.Compiling.ParserBasic.Settings.StripSpaces = StudioCore.Settings.BASICStripSpaces;
       StudioCore.Compiling.ParserBasic.Settings.StripREM    = StudioCore.Settings.BASICStripREM;
       m_Outline.checkShowLocalLabels.Image = StudioCore.Settings.OutlineShowLocalLabels ? RetroDevStudio.Properties.Resources.flag_green_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_green_off.ToBitmap();
-      m_Outline.checkShowShortCutLabels.Image = StudioCore.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
+      m_Outline.checkShowShortCutLabels.Image = StudioCore.Settings.OutlineShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
 
       EmulatorListUpdated();
 
@@ -3434,119 +3434,127 @@ namespace RetroDevStudio
 
       foreach ( var fileName in openDlg.FileNames )
       {
-        string importFile = fileName;
-
-        bool skipFile = false;
-
-        if ( projectToAddTo.IsFilenameInUse( importFile ) )
-        {
-          System.Windows.Forms.MessageBox.Show( "File " + importFile + " is already part of this project", "File already added" );
-          skipFile = true;
-          break;
-        }
-        if ( skipFile )
-        {
-          continue;
-        }
-
-        // determine type by extension
-        ProjectElement.ElementType type = ProjectElement.ElementType.ASM_SOURCE;
-        string newFileExtension = System.IO.Path.GetExtension( GR.Path.RelativePathTo( importFile, false, System.IO.Path.GetFullPath( projectToAddTo.Settings.BasePath ), true ).ToUpper() );
-
-        if ( newFileExtension == ".C64" )
-        {
-          type = ProjectElement.ElementType.PROJECT;
-
-          var project = StudioCore.MainForm.OpenProject( importFile );
-          continue;
-        }
-        else if ( ( newFileExtension == ".CHARSETPROJECT" )
-        ||        ( newFileExtension == ".CHR" ) )
-        {
-          type = ProjectElement.ElementType.CHARACTER_SET;
-        }
-        else if ( ( newFileExtension == ".SPRITEPROJECT" )
-        ||        ( newFileExtension == ".SPR" ) )
-        {
-          type = ProjectElement.ElementType.SPRITE_SET;
-        }
-        else if ( newFileExtension == ".BIN" )
-        {
-          type = ProjectElement.ElementType.BINARY_FILE;
-        }
-        else if ( newFileExtension == ".CHARSCREEN" )
-        {
-          type = ProjectElement.ElementType.CHARACTER_SCREEN;
-        }
-        else if ( newFileExtension == ".GRAPHICSCREEN" )
-        {
-          type = ProjectElement.ElementType.GRAPHIC_SCREEN;
-        }
-        else if ( newFileExtension == ".BAS" )
-        {
-          type = ProjectElement.ElementType.BASIC_SOURCE;
-        }
-        else if ( newFileExtension == ".MAPPROJECT" )
-        {
-          type = ProjectElement.ElementType.MAP_EDITOR;
-        }
-
-        if ( !GR.Path.IsSubPath( System.IO.Path.GetFullPath( projectToAddTo.Settings.BasePath ), importFile ) )
-        {
-          // not a sub folder
-          var result = System.Windows.Forms.MessageBox.Show("The item is not inside the current project folder. Should a copy be created in the project folder?",
-                                                             "Create a local copy of the added file?",
-                                                             MessageBoxButtons.YesNoCancel);
-          if ( result == DialogResult.Cancel )
-          {
-            return false;
-          }
-          if ( result == DialogResult.Yes )
-          {
-            // create a copy
-            string pureFileName = System.IO.Path.GetFileName(importFile);
-            string newFileName = System.IO.Path.Combine(System.IO.Path.GetFullPath(projectToAddTo.Settings.BasePath), pureFileName);
-
-            while ( System.IO.File.Exists( newFileName ) )
-            {
-              newFileName = System.IO.Path.Combine( System.IO.Path.GetFullPath( projectToAddTo.Settings.BasePath ), System.IO.Path.GetFileNameWithoutExtension( newFileName ) + "_" + System.IO.Path.GetExtension( newFileName ) );
-            }
-            try
-            {
-              System.IO.File.Copy( importFile, newFileName, false );
-            }
-            catch ( System.Exception ex )
-            {
-              StudioCore.AddToOutput( "Could not copy file to new location: " + ex.Message );
-              return false;
-            }
-            importFile = newFileName;
-          }
-        }
-
-        TreeNode parentNodeToInsertTo = Node;
-
-        ProjectElement element = projectToAddTo.CreateElement(type, parentNodeToInsertTo);
-
-        //string    relativeFilename = GR.Path.RelativePathTo( openDlg.FileName, false, System.IO.Path.GetFullPath( m_Project.Settings.BasePath ), true );
-        string relativeFilename = GR.Path.RelativePathTo(System.IO.Path.GetFullPath(projectToAddTo.Settings.BasePath), true, importFile, false);
-        element.Name = System.IO.Path.GetFileNameWithoutExtension( relativeFilename );
-        element.Filename = relativeFilename;
-
-        while ( parentNodeToInsertTo.Level >= 1 )
-        {
-          element.ProjectHierarchy.Insert( 0, parentNodeToInsertTo.Text );
-          parentNodeToInsertTo = parentNodeToInsertTo.Parent;
-        }
-        projectToAddTo.ShowDocument( element );
-        element.DocumentInfo.DocumentFilename = relativeFilename;
-        if ( element.Document != null )
-        {
-          element.Document.SetDocumentFilename( relativeFilename );
-        }
-        projectToAddTo.SetModified();
+        AddExistingFileToProject( projectToAddTo, Node, fileName, false );
       }
       return true;
+    }
+
+
+
+    public void AddExistingFileToProject( Project ProjectToAddTo, TreeNode Node, string Filename, bool CopyToProjectFolderWithoutAsking )
+    {
+      string importFile = Filename;
+
+      if ( ProjectToAddTo.IsFilenameInUse( importFile ) )
+      {
+        StudioCore.MessageBox( "File " + importFile + " is already part of this project", "File already added" );
+        return;
+      }
+
+      // determine type by extension
+      ProjectElement.ElementType type = ProjectElement.ElementType.ASM_SOURCE;
+      string newFileExtension = System.IO.Path.GetExtension( GR.Path.RelativePathTo( importFile, false, System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), true ).ToUpper() );
+
+      if ( newFileExtension == ".C64" )
+      {
+        type = ProjectElement.ElementType.PROJECT;
+
+        var project = StudioCore.MainForm.OpenProject( importFile );
+        return;
+      }
+      else if ( ( newFileExtension == ".CHARSETPROJECT" )
+      ||        ( newFileExtension == ".CHR" ) )
+      {
+        type = ProjectElement.ElementType.CHARACTER_SET;
+      }
+      else if ( ( newFileExtension == ".SPRITEPROJECT" )
+      ||        ( newFileExtension == ".SPR" ) )
+      {
+        type = ProjectElement.ElementType.SPRITE_SET;
+      }
+      else if ( newFileExtension == ".BIN" )
+      {
+        type = ProjectElement.ElementType.BINARY_FILE;
+      }
+      else if ( newFileExtension == ".CHARSCREEN" )
+      {
+        type = ProjectElement.ElementType.CHARACTER_SCREEN;
+      }
+      else if ( newFileExtension == ".GRAPHICSCREEN" )
+      {
+        type = ProjectElement.ElementType.GRAPHIC_SCREEN;
+      }
+      else if ( newFileExtension == ".BAS" )
+      {
+        type = ProjectElement.ElementType.BASIC_SOURCE;
+      }
+      else if ( newFileExtension == ".MAPPROJECT" )
+      {
+        type = ProjectElement.ElementType.MAP_EDITOR;
+      }
+
+      if ( !GR.Path.IsSubPath( System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), importFile ) )
+      {
+        // not a sub folder
+        DialogResult    doCopy = DialogResult.Cancel;
+
+        if ( CopyToProjectFolderWithoutAsking )
+        {
+          doCopy = DialogResult.Yes;
+        }
+        else
+        {
+          doCopy = System.Windows.Forms.MessageBox.Show( "The item is not inside the current project folder. Should a copy be created in the project folder?",
+                                                         "Create a local copy of the added file?",
+                                                         MessageBoxButtons.YesNoCancel );
+        }
+        if ( doCopy == DialogResult.Cancel )
+        {
+          return;
+        }
+        if ( doCopy == DialogResult.Yes )
+        {
+          // create a copy
+          string pureFileName = System.IO.Path.GetFileName( importFile );
+          string newFileName = System.IO.Path.Combine( System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), pureFileName);
+
+          while ( System.IO.File.Exists( newFileName ) )
+          {
+            newFileName = System.IO.Path.Combine( System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), System.IO.Path.GetFileNameWithoutExtension( newFileName ) + "_" + System.IO.Path.GetExtension( newFileName ) );
+          }
+          try
+          {
+            System.IO.File.Copy( importFile, newFileName, false );
+          }
+          catch ( System.Exception ex )
+          {
+            StudioCore.AddToOutput( "Could not copy file to new location: " + ex.Message );
+            return;
+          }
+          importFile = newFileName;
+        }
+      }
+
+      TreeNode parentNodeToInsertTo = Node;
+
+      ProjectElement element = ProjectToAddTo.CreateElement(type, parentNodeToInsertTo);
+
+      string relativeFilename = GR.Path.RelativePathTo( System.IO.Path.GetFullPath( ProjectToAddTo.Settings.BasePath ), true, importFile, false );
+      element.Name = System.IO.Path.GetFileNameWithoutExtension( relativeFilename );
+      element.Filename = relativeFilename;
+
+      while ( parentNodeToInsertTo.Level >= 1 )
+      {
+        element.ProjectHierarchy.Insert( 0, parentNodeToInsertTo.Text );
+        parentNodeToInsertTo = parentNodeToInsertTo.Parent;
+      }
+      ProjectToAddTo.ShowDocument( element );
+      element.DocumentInfo.DocumentFilename = relativeFilename;
+      if ( element.Document != null )
+      {
+        element.Document.SetDocumentFilename( relativeFilename );
+      }
+      ProjectToAddTo.SetModified();
     }
 
 
@@ -5910,6 +5918,7 @@ namespace RetroDevStudio
       document.Show( panelMain );
       document.Icon = IconFromType( document.DocumentInfo );
       document.DocumentInfo.UndoManager.MainForm = this;
+      ApplicationEvent += document.OnApplicationEvent;
 
       StudioCore.Settings.UpdateInMRU( StudioCore.Settings.MRUFiles, Filename, this );
 

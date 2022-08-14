@@ -721,10 +721,12 @@ namespace RetroDevStudio.Documents
       if ( project != null )
       {
         IDataObject dataObj = Clipboard.GetDataObject();
-        string      sourceProjectFile = "";
+        if ( dataObj == null )
+        {
+          return;
+        }
 
-        if ( ( dataObj != null )
-        &&   ( dataObj.GetDataPresent( "RetroDevStudio.ProjectFile" ) ) )
+        if ( dataObj.GetDataPresent( "RetroDevStudio.ProjectFile" ) )
         {
           System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.ProjectFile" );
 
@@ -740,13 +742,10 @@ namespace RetroDevStudio.Documents
           }
           int   fileLength = memIn.ReadInt32();
 
-          sourceProjectFile = Encoding.Unicode.GetString( clipData.Data(), 8, fileLength );
-
-          sourceProject = Core.Navigating.Solution.GetProjectByFilename( sourceProjectFile );
+          string sourceProjectFile  = Encoding.Unicode.GetString( clipData.Data(), 8, fileLength );
+          sourceProject             = Core.Navigating.Solution.GetProjectByFilename( sourceProjectFile );
         }
-
-        if ( ( dataObj != null )
-        &&   ( dataObj.GetDataPresent( "RetroDevStudio.Folder" ) ) )
+        if ( dataObj.GetDataPresent( "RetroDevStudio.Folder" ) )
         {
           System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.Folder" );
 
@@ -783,8 +782,7 @@ namespace RetroDevStudio.Documents
           project.SetModified();
         }
 
-        if ( ( dataObj != null )
-        &&   ( dataObj.GetDataPresent( "RetroDevStudio.SolutionFile" ) ) )
+        if ( dataObj.GetDataPresent( "RetroDevStudio.SolutionFile" ) )
         {
           System.IO.MemoryStream ms = (System.IO.MemoryStream)dataObj.GetData( "RetroDevStudio.SolutionFile" );
 
@@ -851,6 +849,19 @@ namespace RetroDevStudio.Documents
             element.Document.SetDocumentFilename( relativeFilename );
           }
           project.SetModified();
+        }
+        if ( dataObj.GetDataPresent( "FileDrop" ) )
+        {
+          // pasted a file (name) from explorer
+          string[] files = dataObj.GetData("FileDrop") as string[];
+          if ( files == null )
+          {
+            return;
+          }
+          foreach ( var fileToPaste in files )
+          {
+            Core.MainForm.AddExistingFileToProject( project, parentNodeToInsertTo, fileToPaste, true );
+          }
         }
       }
     }
