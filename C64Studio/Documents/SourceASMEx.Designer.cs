@@ -68,7 +68,7 @@
       this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.btnCloseAllZones = new System.Windows.Forms.Button();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-      this.btnShowShortCutLabels = new System.Windows.Forms.CheckBox();
+      this.btnShowShortCutLabels = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editSource)).BeginInit();
       this.contextSource.SuspendLayout();
@@ -402,7 +402,7 @@
       this.btnCloseAllZones.Image = global::RetroDevStudio.Properties.Resources.close_all_sections;
       this.btnCloseAllZones.Location = new System.Drawing.Point(0, 0);
       this.btnCloseAllZones.Name = "btnCloseAllZones";
-      this.btnCloseAllZones.Size = new System.Drawing.Size(23, 23);
+      this.btnCloseAllZones.Size = new System.Drawing.Size(22, 22);
       this.btnCloseAllZones.TabIndex = 3;
       this.toolTip1.SetToolTip(this.btnCloseAllZones, "Toggle zone collapse state");
       this.btnCloseAllZones.UseVisualStyleBackColor = true;
@@ -410,15 +410,14 @@
       // 
       // btnShowShortCutLabels
       // 
-      this.btnShowShortCutLabels.Appearance = System.Windows.Forms.Appearance.Button;
-      this.btnShowShortCutLabels.AutoSize = true;
-      this.btnShowShortCutLabels.Image = global::RetroDevStudio.Properties.Resources.flag_blue_on;
-      this.btnShowShortCutLabels.Location = new System.Drawing.Point(29, 0);
+      this.btnShowShortCutLabels.Image = global::RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap();
+      this.btnShowShortCutLabels.Location = new System.Drawing.Point(25, 0);
       this.btnShowShortCutLabels.Name = "btnShowShortCutLabels";
       this.btnShowShortCutLabels.Size = new System.Drawing.Size(22, 22);
       this.btnShowShortCutLabels.TabIndex = 4;
+      this.toolTip1.SetToolTip(this.btnShowShortCutLabels, "show/hide short cut labels");
       this.btnShowShortCutLabels.UseVisualStyleBackColor = true;
-      this.btnShowShortCutLabels.CheckedChanged += new System.EventHandler(this.btnShowShortCutLabels_Click);
+      this.btnShowShortCutLabels.Click += new System.EventHandler(this.btnShowShortCutLabels_Click);
       // 
       // SourceASMEx
       // 
@@ -480,6 +479,6 @@
     private System.Windows.Forms.ToolStripMenuItem convertDecimalToHexToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem convertHexToDecimalToolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem addSubtractDataValuesToolStripMenuItem;
-    private System.Windows.Forms.CheckBox btnShowShortCutLabels;
+    private System.Windows.Forms.Button btnShowShortCutLabels;
   }
 }

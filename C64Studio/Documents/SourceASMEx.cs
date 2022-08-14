@@ -192,7 +192,7 @@ namespace RetroDevStudio.Documents
       editSource.CommentPrefix = ";";
       editSource.SelectionChangedDelayed += editSource_SelectionChangedDelayed;
 
-      btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
+      btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
 
       UpdatePseudoOpSyntaxColoringSource();
       UpdateOpcodeSyntaxColoringSource();
@@ -1410,7 +1410,7 @@ namespace RetroDevStudio.Documents
         case ApplicationEvent.Type.SETTING_MODIFIED:
           if ( Event.OriginalValue == "ASMShowShortCutLabels" )
           {
-            btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
+            btnShowShortCutLabels.Image = Core.Settings.ASMShowShortCutLabels ? RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap() : RetroDevStudio.Properties.Resources.flag_blue_off.ToBitmap();
             RefreshLocalSymbols();
           }
           break;
