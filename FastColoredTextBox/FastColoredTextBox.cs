@@ -6294,7 +6294,10 @@ namespace FastColoredTextBoxNS
       base.OnMouseUp( e );
 
       tripeClickTimer.Stop();
-      ++tripleClickCount;
+      if ( e.Button == MouseButtons.Left )
+      {
+        ++tripleClickCount;
+      }
       if ( tripleClickCount >= 3 )
       {
         // this means the trip click happened - do something
