@@ -9,12 +9,12 @@ namespace RetroDevStudio.Displayer
   {
     public static void DisplayHiResSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y )
     {
-      DisplayHiResSprite( Data, Palette, Width, Height, BGColor, SpriteColor, TargetImage, X, Y, false, false );
+      DisplayHiResSprite( Data, Palette, Width, Height, BGColor, SpriteColor, TargetImage, X, Y, false, false, false );
     }
 
 
 
-    public static void DisplayHiResSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY )
+    public static void DisplayHiResSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY, bool TransparentBackground )
     {
       int     pixelStepX = 1;
       int     pixelStepY = 1;
@@ -45,7 +45,7 @@ namespace RetroDevStudio.Displayer
                   Target.SetPixel( X + ( k * 8 + i ) * pixelStepX + 1, Y + j * pixelStepY + pp, color );
                 }
               }
-              else
+              else if ( !TransparentBackground )
               {
                 uint color = Palette.ColorValues[BGColor];
 
@@ -65,12 +65,19 @@ namespace RetroDevStudio.Displayer
 
     public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y )
     {
-      DisplayMultiColorSprite( Data, Palette, Width, Height, BGColor, MColor1, MColor2, SpriteColor, TargetImage, X, Y, false, false );
+      DisplayMultiColorSprite( Data, Palette, Width, Height, BGColor, MColor1, MColor2, SpriteColor, TargetImage, X, Y, false, false, false );
     }
 
 
 
-    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY )
+    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage TargetImage, int X, int Y, bool TransparentBackground )
+    {
+      DisplayMultiColorSprite( Data, Palette, Width, Height, BGColor, MColor1, MColor2, SpriteColor, TargetImage, X, Y, false, false, TransparentBackground );
+    }
+
+
+
+    public static void DisplayMultiColorSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, int MColor1, int MColor2, int SpriteColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY, bool TransparentBackground )
     {
       int     pixelStepX = 1;
       int     pixelStepY = 1;
@@ -97,6 +104,10 @@ namespace RetroDevStudio.Displayer
               switch ( pixelValue )
               {
                 case 0:
+                  if ( TransparentBackground )
+                  {
+                    continue;
+                  }
                   pixelValue = BGColor;
                   break;
                 case 1:
@@ -127,7 +138,7 @@ namespace RetroDevStudio.Displayer
 
 
 
-    public static void DisplayNCMSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY )
+    public static void DisplayNCMSprite( GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int BGColor, GR.Image.IImage Target, int X, int Y, bool ExpandX, bool ExpandY, bool TransparentBackground )
     {
       int     pixelStepX = 1;
       int     pixelStepY = 1;
@@ -153,6 +164,10 @@ namespace RetroDevStudio.Displayer
             if ( ( pixelDuo >> 4 ) != 0 )
             {
               colorToUse = (byte)( pixelDuo >> 4 );
+            }
+            else if ( TransparentBackground )
+            {
+              continue;
             }
 
             uint color = Palette.ColorValues[colorToUse];

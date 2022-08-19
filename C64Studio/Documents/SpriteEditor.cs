@@ -177,20 +177,20 @@ namespace RetroDevStudio.Documents
 
 
 
-    void DrawSpriteImage( GR.Image.IImage Target, int X, int Y, GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int CustomColor, SpriteMode Mode, int BackgroundColor, int MultiColor1, int MultiColor2, bool ExpandX, bool ExpandY )
+    void DrawSpriteImage( GR.Image.IImage Target, int X, int Y, GR.Memory.ByteBuffer Data, Palette Palette, int Width, int Height, int CustomColor, SpriteMode Mode, int BackgroundColor, int MultiColor1, int MultiColor2, bool ExpandX, bool ExpandY, bool TransparentBackground )
     {
       switch ( Mode )
       {
         case SpriteMode.COMMODORE_24_X_21_MULTICOLOR:
         case SpriteMode.MEGA65_64_X_21_16_MULTICOLOR:
-          SpriteDisplayer.DisplayMultiColorSprite( Data, Palette, Width, Height, BackgroundColor, MultiColor1, MultiColor2, CustomColor, Target, X, Y, ExpandX, ExpandY );
+          SpriteDisplayer.DisplayMultiColorSprite( Data, Palette, Width, Height, BackgroundColor, MultiColor1, MultiColor2, CustomColor, Target, X, Y, ExpandX, ExpandY, TransparentBackground );
           break;
         case SpriteMode.COMMODORE_24_X_21_HIRES:
         case SpriteMode.MEGA65_64_X_21_16_HIRES:
-          SpriteDisplayer.DisplayHiResSprite( Data, Palette, Width, Height, BackgroundColor, CustomColor, Target, X, Y, ExpandX, ExpandY );
+          SpriteDisplayer.DisplayHiResSprite( Data, Palette, Width, Height, BackgroundColor, CustomColor, Target, X, Y, ExpandX, ExpandY, TransparentBackground );
           break;
         case SpriteMode.MEGA65_16_X_21_16_COLORS:
-          SpriteDisplayer.DisplayNCMSprite( Data, Palette, Width, Height, BackgroundColor, Target, X, Y, ExpandX, ExpandY );
+          SpriteDisplayer.DisplayNCMSprite( Data, Palette, Width, Height, BackgroundColor, Target, X, Y, ExpandX, ExpandY, TransparentBackground );
           break;
         default:
           Debug.Log( "DrawSpriteImage unsupported mode " + Mode );
@@ -209,7 +209,7 @@ namespace RetroDevStudio.Documents
         Data.Mode,
         m_SpriteProject.Colors.BackgroundColor,
         m_SpriteProject.Colors.MultiColor1, m_SpriteProject.Colors.MultiColor2,
-        false, false );
+        false, false, false );
     }
 
 
@@ -1126,6 +1126,11 @@ namespace RetroDevStudio.Documents
             }
             currentTargetSprite = localX + localY * spritesPerLine;
           }
+          if ( currentTargetSprite >= m_SpriteProject.TotalNumberOfSprites )
+          {
+            // trying to paste too far
+            break;
+          }
 
           int copyWidth = mappedImage.Width - i * m_SpriteWidth;
           if ( copyWidth > m_SpriteWidth )
@@ -1854,7 +1859,7 @@ namespace RetroDevStudio.Documents
                        m_SpriteProject.Sprites[e.Index].Mode,
                        m_SpriteProject.Colors.BackgroundColor, 
                        m_SpriteProject.Colors.MultiColor1, m_SpriteProject.Colors.MultiColor2,
-                       false, false );
+                       false, false, false );
       fastImage.DrawImage( memImage, 0, 0 );
       System.Drawing.Rectangle drawRect = new System.Drawing.Rectangle( e.Bounds.Location, e.Bounds.Size );
       drawRect.X += 20;
@@ -1909,7 +1914,7 @@ namespace RetroDevStudio.Documents
                            m_SpriteProject.Colors.BackgroundColor,
                            m_SpriteProject.Colors.MultiColor1, 
                            m_SpriteProject.Colors.MultiColor2,
-                           sprite.ExpandX, sprite.ExpandY );
+                           sprite.ExpandX, sprite.ExpandY, true );
         }
       }
       else
@@ -2849,6 +2854,8 @@ namespace RetroDevStudio.Documents
         {
           var layerImage = new GR.Image.MemoryImage( maxX - minX, maxY - minY, GR.Drawing.PixelFormat.Format32bppRgb );
 
+          layerImage.Box( 0, 0, maxX - minX, maxY - minY, m_SpriteProject.Colors.Palette.ColorValues[m_SpriteProject.Colors.BackgroundColor] );
+
           foreach ( var layer in m_SpriteProject.SpriteLayers )
           {
             foreach ( var entry in layer.Sprites )
@@ -2867,7 +2874,8 @@ namespace RetroDevStudio.Documents
                                                          entry.X,
                                                          entry.Y,
                                                          entry.ExpandX,
-                                                         entry.ExpandY );
+                                                         entry.ExpandY,
+                                                         true );
               }
               else if ( m_SpriteProject.Sprites[entry.Index].Mode == SpriteMode.COMMODORE_24_X_21_HIRES )
               {
@@ -2881,7 +2889,8 @@ namespace RetroDevStudio.Documents
                                                     entry.X,
                                                     entry.Y,
                                                     entry.ExpandX,
-                                                    entry.ExpandY );
+                                                    entry.ExpandY,
+                                                    true );
               }
               else
               {
