@@ -185,6 +185,10 @@ namespace RetroDevStudio.Documents
         }
         SetUnmodified();
       }
+
+      TabText = System.IO.Path.GetFileName( FullPath );
+      Text = System.IO.Path.GetFileName( FullPath );
+
       EnableFileWatcher();
       return true;
     }

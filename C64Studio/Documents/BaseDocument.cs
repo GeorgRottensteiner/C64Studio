@@ -474,7 +474,7 @@ namespace RetroDevStudio.Documents
       NewFilename = "";
       if ( ( Method == SaveMethod.SAVE_AS )
       ||   ( Method == SaveMethod.SAVE_COPY_AS )
-      ||   ( DocumentInfo.DocumentFilename == null ) )
+      ||   ( string.IsNullOrEmpty( DocumentInfo.DocumentFilename ) ) )
       {
         // we need a file name
         string    oldName = "";
