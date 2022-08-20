@@ -366,6 +366,7 @@ namespace RetroDevStudio.Documents
         editSource.CaretColor = System.Drawing.Color.Black;
       }
 
+      BackColor = Core.Theming.DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) );
       editSource.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CODE ) );
 
       ApplySyntaxColoring( Types.ColorableElement.EMPTY_SPACE );
@@ -497,12 +498,13 @@ namespace RetroDevStudio.Documents
       backBrush = new System.Drawing.SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( Element ) ) );
       m_TextStyles[SyntaxElementStylePrio( Element )] = new FastColoredTextBoxNS.TextStyle( foreBrush, backBrush, fontStyle );
 
-      //editSource.AddStyle( m_TextStyles[(int)Element] );
       editSource.Styles[SyntaxElementStylePrio( Element )] = m_TextStyles[SyntaxElementStylePrio( Element )];
 
       // empty space
+      editSource.IndentBackColor = Core.Theming.DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( Types.ColorableElement.BACKGROUND_CONTROL ) ) );
       editSource.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( Types.ColorableElement.EMPTY_SPACE ) );
       editSource.SelectionColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( Types.ColorableElement.SELECTED_TEXT ) );
+      editSource.LineNumberColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( Types.ColorableElement.LINE_NUMBERS ) );
     }
 
 

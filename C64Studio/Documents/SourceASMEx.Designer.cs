@@ -350,7 +350,7 @@
       this.comboZoneSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.comboZoneSelector.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
       this.comboZoneSelector.FormattingEnabled = true;
-      this.comboZoneSelector.Location = new System.Drawing.Point(58, 2);
+      this.comboZoneSelector.Location = new System.Drawing.Point(56, 2);
       this.comboZoneSelector.Name = "comboZoneSelector";
       this.comboZoneSelector.Size = new System.Drawing.Size(260, 21);
       this.comboZoneSelector.TabIndex = 1;
@@ -410,8 +410,8 @@
       // 
       // btnShowShortCutLabels
       // 
-      this.btnShowShortCutLabels.Image = global::RetroDevStudio.Properties.Resources.flag_blue_on.ToBitmap();
-      this.btnShowShortCutLabels.Location = new System.Drawing.Point(25, 0);
+      this.btnShowShortCutLabels.Image = ((System.Drawing.Image)(resources.GetObject("btnShowShortCutLabels.Image")));
+      this.btnShowShortCutLabels.Location = new System.Drawing.Point(28, 0);
       this.btnShowShortCutLabels.Name = "btnShowShortCutLabels";
       this.btnShowShortCutLabels.Size = new System.Drawing.Size(22, 22);
       this.btnShowShortCutLabels.TabIndex = 4;
@@ -435,7 +435,6 @@
       this.contextSource.ResumeLayout(false);
       this.contextMenuMiniMap.ResumeLayout(false);
       this.ResumeLayout(false);
-      this.PerformLayout();
 
     }
 

@@ -1483,6 +1483,14 @@ namespace RetroDevStudio
         SetDefaultColors();
       }
 
+      foreach ( Types.ColorableElement element in System.Enum.GetValues( typeof( Types.ColorableElement ) ) )
+      {
+        if ( !SyntaxColoring.ContainsKey( element ) )
+        {
+          SyntaxColoring.Add( element, new ColorSetting( GR.EnumHelper.GetDescription( element ), 0xff000000, 0xffffffff ) );
+        }
+      }
+
       foreach ( var syntaxColor in SyntaxColoring )
       {
         var trueBGColor = syntaxColor.Value.BGColor;

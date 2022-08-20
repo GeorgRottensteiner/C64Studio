@@ -412,6 +412,9 @@ namespace RetroDevStudio.Types
     [Description( "Button Background" )]
     BACKGROUND_BUTTON,
 
+    [Description( "Line Numbers" )]
+    LINE_NUMBERS,
+
     LAST_ENTRY
   }
 
