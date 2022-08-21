@@ -139,6 +139,7 @@ namespace RetroDevStudio.Controls
       }
       
       int     colorChangeCache = -1;
+      bool    mega65UpperColorRange = false;
 
       if ( asString )
       {
@@ -167,7 +168,7 @@ namespace RetroDevStudio.Controls
         
         for ( int x = Info.Area.Left; x < Info.Area.Right; ++x )
         {
-          ushort newColor = (ushort)( Info.Charscreen.ColorAt( x, i ) & 0x0f );
+          ushort newColor = (ushort)Info.Charscreen.ColorAt( x, i );
           ushort newChar = Info.Charscreen.CharacterAt( x, i );
 
           if ( ( replaceShiftSpaceWithSpace )
@@ -187,7 +188,22 @@ namespace RetroDevStudio.Controls
             }
             else
             {
-              charsToAppend.Add( "" + ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)newColor]].CharValue );
+              int colorToUse = newColor;
+              if ( newColor >= 16 )
+              {
+                if ( !mega65UpperColorRange )
+                {
+                  mega65UpperColorRange = true;
+                  charsToAppend.Add( "" + ConstantData.PetSCIIToChar[1].CharValue );
+                }
+                colorToUse &= 0x0f;
+              }
+              else if ( mega65UpperColorRange )
+              {
+                mega65UpperColorRange = false;
+                charsToAppend.Add( "" + ConstantData.PetSCIIToChar[4].CharValue );
+              }
+              charsToAppend.Add( "" + ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)colorToUse]].CharValue );
             }
             curColor = newColor;
           }
@@ -198,7 +214,23 @@ namespace RetroDevStudio.Controls
           {
             if ( colorChangeCache != -1 )
             {
-              charsToAppend.Add( "" + ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)colorChangeCache]].CharValue );
+              int   colorToUse = colorChangeCache;
+              if ( colorChangeCache >= 16 )
+              {
+                if ( !mega65UpperColorRange )
+                {
+                  mega65UpperColorRange = true;
+                  charsToAppend.Add( "" + ConstantData.PetSCIIToChar[1].CharValue );
+                }
+                colorToUse &= 0x0f;
+              }
+              else if ( mega65UpperColorRange )
+              {
+                mega65UpperColorRange = false;
+                charsToAppend.Add( "" + ConstantData.PetSCIIToChar[4].CharValue );
+              }
+
+              charsToAppend.Add( "" + ConstantData.PetSCIIToChar[ConstantData.ColorToPetSCIIChar[(byte)colorToUse]].CharValue );
               colorChangeCache = -1;
             }
           }
