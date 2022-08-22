@@ -57,7 +57,6 @@
       this.editorOpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.saveCopyAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.fileCloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.closeSolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -263,7 +262,6 @@
             this.openToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
-            this.saveCopyAsToolStripMenuItem,
             this.saveAllToolStripMenuItem,
             this.fileCloseToolStripMenuItem,
             this.closeSolutionToolStripMenuItem,
@@ -475,14 +473,6 @@
       this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
       this.saveAsToolStripMenuItem.Text = "Save &as...";
       this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
-      // 
-      // saveCopyAsToolStripMenuItem
-      // 
-      this.saveCopyAsToolStripMenuItem.Enabled = false;
-      this.saveCopyAsToolStripMenuItem.Name = "saveCopyAsToolStripMenuItem";
-      this.saveCopyAsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-      this.saveCopyAsToolStripMenuItem.Text = "Save copy as...";
-      this.saveCopyAsToolStripMenuItem.Click += new System.EventHandler(this.saveCopyAsToolStripMenuItem_Click);
       // 
       // saveAllToolStripMenuItem
       // 
@@ -2053,7 +2043,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
     private System.Windows.Forms.ToolStripMenuItem navigateBackwardToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem navigateForwardToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem saveCopyAsToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
     private System.Windows.Forms.ToolStripMenuItem solutionCloneToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;

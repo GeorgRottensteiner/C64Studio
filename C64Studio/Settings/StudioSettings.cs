@@ -251,7 +251,6 @@ namespace RetroDevStudio
       RegisterFunction( Function.SAVE_ALL, "Save All", FunctionStudioState.ANY );
       RegisterFunction( Function.SAVE_DOCUMENT, "Save Document", FunctionStudioState.ANY );
       RegisterFunction( Function.SAVE_DOCUMENT_AS, "Save Document As", FunctionStudioState.ANY );
-      RegisterFunction( Function.SAVE_DOCUMENT_COPY_AS, "Save Document Copy As", FunctionStudioState.ANY );
       RegisterFunction( Function.MOVE_LINE_UP, "Move Line Up", FunctionStudioState.ANY );
       RegisterFunction( Function.MOVE_LINE_DOWN, "Move Line Down", FunctionStudioState.ANY );
       RegisterFunction( Function.COPY_LINE_UP, "Copy Line Up", FunctionStudioState.ANY );

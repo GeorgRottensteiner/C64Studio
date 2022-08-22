@@ -613,7 +613,6 @@ namespace RetroDevStudio
       StudioCore.Settings.Functions[Function.SAVE_ALL].MenuItem = saveAllToolStripMenuItem;
       StudioCore.Settings.Functions[Function.SAVE_ALL].ToolBarButton = mainToolSaveAll;
       StudioCore.Settings.Functions[Function.SAVE_DOCUMENT_AS].MenuItem = saveAsToolStripMenuItem;
-      StudioCore.Settings.Functions[Function.SAVE_DOCUMENT_COPY_AS].MenuItem = saveCopyAsToolStripMenuItem;
       StudioCore.Settings.Functions[Function.DEBUG_BREAK].ToolBarButton = mainDebugBreak;
       StudioCore.Settings.Functions[Function.DEBUG_GO].ToolBarButton = mainDebugGo;
       StudioCore.Settings.Functions[Function.DEBUG_STOP].ToolBarButton = mainDebugStop;
@@ -1354,7 +1353,6 @@ namespace RetroDevStudio
       {
         saveToolStripMenuItem.Enabled = false;
         saveAsToolStripMenuItem.Enabled = false;
-        saveCopyAsToolStripMenuItem.Enabled = false;
         mainToolSave.Enabled = false;
         fileCloseToolStripMenuItem.Enabled = false;
       }
@@ -1362,7 +1360,6 @@ namespace RetroDevStudio
       {
         saveToolStripMenuItem.Enabled = ActiveDocument.Modified;
         saveAsToolStripMenuItem.Enabled = true;
-        saveCopyAsToolStripMenuItem.Enabled = true;
         mainToolSave.Enabled = ActiveDocument.Modified;
         fileCloseToolStripMenuItem.Enabled = true;
       }
@@ -4918,7 +4915,10 @@ namespace RetroDevStudio
 
             if ( docToSave.DocumentInfo.Project == null )
             {
-              docToSave.Save( BaseDocument.SaveMethod.SAVE_AS );
+              if ( docToSave.Save( BaseDocument.SaveMethod.SAVE_COPY_AS, out string newFilename ) )
+              {
+                OpenFile( newFilename );
+              }
               return true;
             }
 
@@ -4932,51 +4932,10 @@ namespace RetroDevStudio
                 return true;
               }
             }
-            string  oldName = docToSave.DocumentInfo.FullPath;
-            if ( docToSave.Save( BaseDocument.SaveMethod.SAVE_AS ) )
-            {
-              
-            }
-            if ( !SaveProject( docToSave.DocumentInfo.Project ) )
+            if ( !docToSave.Save( BaseDocument.SaveMethod.SAVE_COPY_AS, out string newFilename2 ) )
             {
               return true;
             }
-          }
-          return true;
-        case RetroDevStudio.Types.Function.SAVE_DOCUMENT_COPY_AS:
-          {
-            // save current document as
-            BaseDocument docToSave = ActiveContent;
-            if ( ( docToSave != null )
-            &&   ( !docToSave.IsSaveable ) )
-            {
-              docToSave = ActiveDocument;
-            }
-            if ( ( docToSave == null )
-            ||   ( !docToSave.IsSaveable ) )
-            {
-              break;
-            }
-
-            if ( docToSave.DocumentInfo.Project == null )
-            {
-              docToSave.Save( BaseDocument.SaveMethod.SAVE_COPY_AS, out string newFilename );
-
-              OpenFile( newFilename );
-              return true;
-            }
-
-            if ( ( docToSave.DocumentInfo.Project == null )
-            ||   ( docToSave.DocumentInfo.Project.Settings.BasePath == null )
-            ||   ( docToSave.DocumentInfo.Element == null ) )
-            {
-              // no project yet (or no project element)
-              if ( !SaveProject( docToSave.DocumentInfo.Project ) )
-              {
-                return true;
-              }
-            }
-            docToSave.Save( BaseDocument.SaveMethod.SAVE_COPY_AS, out string newFilename2 );
             if ( !SaveProject( docToSave.DocumentInfo.Project ) )
             {
               return true;
@@ -7518,13 +7477,6 @@ namespace RetroDevStudio
     private void navigateForwardToolStripMenuItem_Click( object sender, EventArgs e )
     {
       StudioCore.Navigating.NavigateForward();
-    }
-
-
-
-    private void saveCopyAsToolStripMenuItem_Click( object sender, EventArgs e )
-    {
-      ApplyFunction( RetroDevStudio.Types.Function.SAVE_DOCUMENT_COPY_AS );
     }
 
 
