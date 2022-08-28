@@ -447,7 +447,7 @@ namespace RetroDevStudio
       // also refresh main elements
       Core.MainForm.RefreshDisplayOnAllDocuments();
 
-      Core.Theming.ApplyThemeToToolStripItems( Core.MainForm.MainMenuStrip.Items );
+      Core.Theming.ApplyThemeToToolStripItems( Core.MainForm.MainMenuStrip, Core.MainForm.MainMenuStrip.Items );
 
       //foreach ( WeifenLuo.WinFormsUI.Docking.IDockContent doc in Core.MainForm.panelMain.Documents )
       foreach ( WeifenLuo.WinFormsUI.Docking.IDockContent doc in Core.MainForm.panelMain.Contents )

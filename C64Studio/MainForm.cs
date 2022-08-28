@@ -848,8 +848,8 @@ namespace RetroDevStudio
 
       mainMenu.Renderer = new ToolStripSeparatorRenderer( StudioCore );
 
-      StudioCore.Theming.ApplyThemeToToolStripItems( mainTools.Items );
-      StudioCore.Theming.ApplyThemeToToolStripItems( debugTools.Items );
+      StudioCore.Theming.ApplyThemeToToolStripItems( mainTools, mainTools.Items );
+      StudioCore.Theming.ApplyThemeToToolStripItems( debugTools, debugTools.Items );
 
       panelMain.Theme.Skin.DockPaneStripSkin.DocumentGradient.InactiveTabGradient.StartColor = StudioCore.Theming.DarkenColor( bgColor );
       panelMain.Theme.Skin.DockPaneStripSkin.DocumentGradient.InactiveTabGradient.EndColor = StudioCore.Theming.DarkenColor( bgColor );

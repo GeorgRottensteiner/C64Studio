@@ -4,8 +4,7 @@ using RetroDevStudio;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-
-
+using System.Drawing.Drawing2D;
 
 namespace RetroDevStudio.CustomRenderer
 {
@@ -37,9 +36,9 @@ namespace RetroDevStudio.CustomRenderer
 
 
 
-  public class StudioTheme
+  public class StudioTheme : ToolStripProfessionalRenderer
   {
-    private StudioCore        Core;
+    private StudioCore      Core;
 
 
     public SolidBrush       BrushBackgroundControl = null;
@@ -53,8 +52,50 @@ namespace RetroDevStudio.CustomRenderer
 
 
 
-    public void ApplyThemeToToolStripItems( ToolStripItemCollection Items )
+    protected override void OnRenderMenuItemBackground( ToolStripItemRenderEventArgs e )
     {
+      UInt32      color = Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL );
+      if ( ( e.Item.Pressed )
+      ||   ( e.Item.Selected ) )
+      {
+        e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), 0, 0, e.Item.Width, e.Item.Height );
+
+        color = Core.Settings.FGColor( ColorableElement.SELECTED_TEXT );
+
+        // make transparent
+        if ( ( color & 0xff000000 ) == 0xff000000 )
+        {
+          color = ( color & 0x00ffffff ) | 0x40000000;
+        }
+      }
+      e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( color ) ), 0, 0, e.Item.Width, e.Item.Height );
+    }
+
+
+
+    protected override void OnRenderSeparator( ToolStripSeparatorRenderEventArgs e )
+    {
+      var bounds = new Rectangle( Point.Empty, e.Item.Size );
+      bounds = new Rectangle( Point.Empty, e.Item.Bounds.Size );
+      e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) ), bounds );
+
+      int     lineY = bounds.Bottom - ( bounds.Height / 2 ) - 1;
+      int     lineLeft = bounds.Left + 3;
+      int     lineRight = bounds.Right;
+
+      e.Graphics.DrawLine( new System.Drawing.Pen( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.BACKGROUND_CONTROL ) ) ), lineLeft, lineY, lineRight, lineY );
+      //base.OnRenderSeparator( e );
+    }
+
+
+
+    public void ApplyThemeToToolStripItems( ToolStrip Strip, ToolStripItemCollection Items )
+    {
+      if ( Strip.Renderer != this )
+      {
+        Strip.Renderer = this;
+      }
+
       foreach ( ToolStripItem item in Items )
       {
         item.BackColor = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
@@ -69,7 +110,7 @@ namespace RetroDevStudio.CustomRenderer
         if ( item is ToolStripDropDownItem )
         {
           var tsItem = item as ToolStripDropDownItem;
-          ApplyThemeToToolStripItems( tsItem.DropDownItems );
+          ApplyThemeToToolStripItems( Strip, tsItem.DropDownItems );
         }
       }
     }
@@ -88,6 +129,15 @@ namespace RetroDevStudio.CustomRenderer
 
           button.DisabledTextColor = DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.CONTROL_TEXT ) ) );
         }
+        /*
+        if ( control is MenuStrip )
+        {
+          var menuStrip = control as MenuStrip;
+          if ( menuStrip.Renderer != this )
+          {
+            menuStrip.Renderer = this;
+          }
+        }*/
 
         control.ForeColor = GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) );
 
@@ -125,19 +175,73 @@ namespace RetroDevStudio.CustomRenderer
         {
           var toolStrip = control as ToolStrip;
 
-          ApplyThemeToToolStripItems( toolStrip.Items );
+          ApplyThemeToToolStripItems( toolStrip, toolStrip.Items );
         }
+        if ( control is TabControl )
+        {
+          var tabControl = control as TabControl;
 
-        /*
+          if ( tabControl.DrawMode != TabDrawMode.OwnerDrawFixed )
+          {
+            tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
+            tabControl.DrawItem += TabControl_DrawItem;
+          }
+        }
         if ( control is ListView )
         {
           var lv = control as ListView;
 
-          lv.OwnerDraw = true;
-          lv.DrawColumnHeader += ListView_DrawColumnHeader;
-        }*/
+          if ( !lv.OwnerDraw )
+          {
+            lv.OwnerDraw = true;
+            lv.DrawColumnHeader += ListView_DrawColumnHeader;
+            lv.DrawItem += Lv_DrawItem;
+            lv.DrawSubItem += Lv_DrawSubItem;
+          }
+        }
         RecolorControlsRecursive( control.Controls );
       }
+    }
+
+
+
+    private void Lv_DrawSubItem( object sender, DrawListViewSubItemEventArgs e )
+    {
+      e.DrawDefault = true;
+    }
+
+
+
+    private void Lv_DrawItem( object sender, DrawListViewItemEventArgs e )
+    {
+      e.DrawDefault = true;
+    }
+
+
+
+    private void TabControl_DrawItem( object sender, DrawItemEventArgs e )
+    {
+      var control = (TabControl)sender;
+
+      TabPage page = control.TabPages[e.Index];
+
+      var bgColorUnselected = DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) );
+      var bgColorSelected = GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) );
+
+      if ( e.State == DrawItemState.Selected )
+      {
+        page.BackColor = bgColorSelected;
+      }
+      else
+      {
+        page.BackColor = bgColorUnselected;
+      }
+      e.Graphics.FillRectangle( new SolidBrush( page.BackColor ), e.Bounds );
+
+      Rectangle paddedBounds = e.Bounds;
+      int yOffset = (e.State == DrawItemState.Selected) ? -2 : 1;
+      paddedBounds.Offset( 1, yOffset );
+      TextRenderer.DrawText( e.Graphics, page.Text, e.Font, paddedBounds, page.ForeColor );
     }
 
 
@@ -145,10 +249,10 @@ namespace RetroDevStudio.CustomRenderer
     private void ListView_DrawColumnHeader( object sender, DrawListViewColumnHeaderEventArgs e )
     {
       e.DrawBackground();
-      //e.DrawDefault = true;
 
-      //e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.SyntaxColoring[ColorableElement.BACKGROUND_CONTROL].BGColor ) ), e.Bounds );
-      e.Graphics.FillRectangle( new SolidBrush( GR.Color.Helper.FromARGB( 0xffff00ff ) ), e.Bounds );
+      e.Graphics.FillRectangle( new SolidBrush( DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.BACKGROUND_CONTROL ) ) ) ), e.Bounds );
+      e.Graphics.FillRectangle( new SolidBrush( DarkenColor( DarkenColor( GR.Color.Helper.FromARGB( Core.Settings.BGColor( ColorableElement.CONTROL_TEXT ) ) ) ) ),
+        new Rectangle( e.Bounds.Right - 1, e.Bounds.Top, 1, e.Bounds.Height ) );
 
       var stringFormat = new StringFormat();
       stringFormat.LineAlignment = StringAlignment.Center;
@@ -162,8 +266,9 @@ namespace RetroDevStudio.CustomRenderer
         stringFormat.Alignment |= StringAlignment.Far;
       }
 
-      e.Graphics.DrawString( e.Header.Text, e.Header.ListView.Font, Brushes.White, e.Bounds, stringFormat );
-      //e.DrawText();
+      e.Graphics.DrawString( e.Header.Text, e.Header.ListView.Font, 
+        new SolidBrush( GR.Color.Helper.FromARGB( Core.Settings.FGColor( ColorableElement.CONTROL_TEXT ) ) ),
+        e.Bounds, stringFormat );
     }
 
 

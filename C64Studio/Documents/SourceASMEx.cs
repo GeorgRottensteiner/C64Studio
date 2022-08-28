@@ -1904,7 +1904,7 @@ namespace RetroDevStudio.Documents
       {
         showMiniOverviewToolStripMenuItem.Text = "Hide Mini Overview";
       }
-      Core.Theming.ApplyThemeToToolStripItems( contextSource.Items );
+      Core.Theming.ApplyThemeToToolStripItems( contextSource, contextSource.Items );
     }
 
 
