@@ -579,12 +579,16 @@ namespace RetroDevStudio
 
       GR.IO.FileChunk chunkFont = new GR.IO.FileChunk( FileChunkConstants.SETTINGS_FONT );
       chunkFont.AppendString( SourceFontFamily );
-      chunkFont.AppendI32( (int)SourceFontSize );
+      // -1 means use the float value later on
+      chunkFont.AppendI32( -1 );
       chunkFont.AppendU8( (byte)( BASICUseNonC64Font ? 1 : 0 ) );
       chunkFont.AppendString( BASICSourceFontFamily );
-      chunkFont.AppendI32( (int)BASICSourceFontSize );
+      // -1 means use the float value later on
+      chunkFont.AppendI32( -1 );
       chunkFont.AppendI32( (int)SourceFontStyle );
       chunkFont.AppendI32( (int)BASICSourceFontStyle );
+      chunkFont.AppendF32( SourceFontSize );
+      chunkFont.AppendF32( BASICSourceFontSize );
 
       SettingsData.Append( chunkFont.ToBuffer() );
 
@@ -979,18 +983,38 @@ namespace RetroDevStudio
               GR.IO.IReader binIn = chunkData.MemoryReader();
 
               SourceFontFamily        = binIn.ReadString();
-              SourceFontSize          = (float)binIn.ReadInt32();
+              int   obsoleteSourceFontSize = binIn.ReadInt32();
 
               BASICUseNonC64Font      = ( binIn.ReadUInt8() != 0 );
               BASICSourceFontFamily   = binIn.ReadString();
-              BASICSourceFontSize     = (float)binIn.ReadInt32();
+              int obsoleteBASICSourceFontSize = binIn.ReadInt32();
+
+              SourceFontStyle         = (FontStyle)binIn.ReadInt32();
+              BASICSourceFontStyle    = (FontStyle)binIn.ReadInt32();
+
+              float sourceFontSize          = binIn.ReadF32();
+              float basicSourceFontSize     = binIn.ReadF32();
+
+              if ( obsoleteSourceFontSize == -1 )
+              {
+                SourceFontSize = sourceFontSize;
+              }
+              else
+              {
+                SourceFontSize = (float)obsoleteSourceFontSize;
+              }
+              if ( obsoleteBASICSourceFontSize == -1 )
+              {
+                BASICSourceFontSize = basicSourceFontSize;
+              }
+              else
+              {
+                BASICSourceFontSize = (float)obsoleteBASICSourceFontSize;
+              }
               if ( BASICSourceFontSize <= 0 )
               {
                 BASICSourceFontSize = 9.0f;
               }
-
-              SourceFontStyle         = (FontStyle)binIn.ReadInt32();
-              BASICSourceFontStyle    = (FontStyle)binIn.ReadInt32();
             }
             break;
           case FileChunkConstants.SETTINGS_SYNTAX_COLORING:

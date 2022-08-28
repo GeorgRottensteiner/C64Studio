@@ -188,6 +188,11 @@ namespace RetroDevStudio.Dialogs
         {
           continue;
         }
+        if ( !Core.Settings.Functions.ContainsKey( function ) )
+        {
+          continue;
+        }
+
         ListViewItem itemF = new ListViewItem();
 
         itemF.Text = GR.EnumHelper.GetDescription( Core.Settings.Functions[function].State );

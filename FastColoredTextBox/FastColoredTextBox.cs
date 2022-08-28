@@ -6231,8 +6231,7 @@ namespace FastColoredTextBoxNS
         textRange = Selection.GetIntersectionWith( textRange );
         if ( textRange != null && SelectionStyle != null )
         {
-          SelectionStyle.Draw( gr, new Point( startX + ( textRange.Start.iChar - from ) * CharWidth, 1 + y ),
-                              textRange );
+          SelectionStyle.Draw( gr, new Point( startX + ( textRange.Start.iChar - from ) * CharWidth, y ), textRange );
         }
       }
     }
