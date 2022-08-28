@@ -41,11 +41,11 @@ namespace TestProject
       string      source = @"* = $1000
 
                         !byte math.tan(20)
-                        !byte math.tan(45)";
+                        !byte math.tan(64)";
 
       var assembly = TestAssembleC64Studio( source );
 
-      Assert.AreEqual( "00100001", assembly.ToString() );
+      Assert.AreEqual( "00100002", assembly.ToString() );
     }
 
 

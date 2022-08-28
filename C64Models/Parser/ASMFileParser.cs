@@ -439,7 +439,7 @@ namespace RetroDevStudio.Parser
       var resultValue = new TokenInfo()
       {
         Type = TokenInfo.TokenType.LITERAL_REAL_NUMBER,
-        Content = Util.DoubleToString( Math.Tan( argument * Math.PI / 180.0f ) )
+        Content = Util.DoubleToString( Math.Tan( argument * Math.PI / 180.0 ) )
       };
       result.Add( resultValue );
       return result;
