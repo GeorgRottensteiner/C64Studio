@@ -1960,8 +1960,7 @@ namespace RetroDevStudio.Controls
         if ( m_Project.Characters.Count > m_Project.TotalNumberOfCharacters )
         {
           m_Project.Characters.RemoveRange( m_Project.TotalNumberOfCharacters, m_Project.Characters.Count - m_Project.TotalNumberOfCharacters );
-
-          panelCharacters.Items.RemoveRange( m_Project.TotalNumberOfCharacters, m_Project.Characters.Count - m_Project.TotalNumberOfCharacters );
+          panelCharacters.Items.RemoveRange( m_Project.TotalNumberOfCharacters, panelCharacters.Items.Count - m_Project.TotalNumberOfCharacters );
         }
 
         int   startIndex = m_Project.Characters.Count;
@@ -2474,6 +2473,12 @@ namespace RetroDevStudio.Controls
           Palette = m_Project.Colors.Palette
       } );
 
+      if ( m_CurrentChar >= m_Project.Characters.Count )
+      {
+        Debug.Log( $"canvasEditor_Paint, trying to paint character {m_CurrentChar} of {m_Project.Characters.Count}" );
+        return;
+      }
+
       int numPixelWidth = Lookup.CharacterWidthInPixel( Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[m_CurrentChar].Tile.CustomColor ) );
       int numPixelHeight = Lookup.CharacterHeightInPixel( Lookup.GraphicTileModeFromTextCharMode( m_Project.Mode, m_Project.Characters[m_CurrentChar].Tile.CustomColor ) );
 
@@ -2567,7 +2572,7 @@ namespace RetroDevStudio.Controls
 
       panelCharacters.ItemWidth = m_CharacterWidth;
       panelCharacters.ItemHeight = m_CharacterHeight;
-      panelCharacters.SetDisplaySize( panelCharacters.ClientSize.Width / 2, panelCharacters.ClientSize.Height / 2 );
+      //panelCharacters.SetDisplaySize( panelCharacters.ClientSize.Width / 2, panelCharacters.ClientSize.Height / 2 );
     }
 
 

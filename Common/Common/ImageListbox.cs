@@ -475,26 +475,65 @@ namespace GR.Forms
 
 
 
+    private bool _InsideAdjustScrollbars = false;
+
     private void AdjustScrollbars()
     {
-      if ( m_ItemHeight == 0 )
+      if ( _InsideAdjustScrollbars )
+      {
+        return;
+      }
+
+      _InsideAdjustScrollbars = true;
+      if ( ( m_ItemHeight == 0 )
+      ||   ( m_DisplayHeight == -1 ) )
       {
         VisibleAutoScrollVertical = false;
         AutoScrollVPos = 0;
+
+        _InsideAdjustScrollbars = false;
         return;
       }
+      int   actualWidth = ClientRectangle.Width;
+      if ( m_DisplayWidth != -1 )
+      {
+        actualWidth = m_DisplayWidth;
+      }
+      int visibleItems = m_DisplayHeight / m_ItemHeight;
+
+      if ( VisibleAutoScrollVertical )
+      {
+        // TODO - verify if we could fit all items without the scrollbar
+        actualWidth += System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+        int   potentialItemsPerLine = actualWidth / m_ItemWidth;
+        if ( potentialItemsPerLine <= 0 )
+        {
+          potentialItemsPerLine = 1;
+        }
+        int scrollLength = ( Items.Count / potentialItemsPerLine ) - visibleItems;
+        if ( scrollLength <= 0 )
+        {
+          m_ItemsPerLine = potentialItemsPerLine;
+          VisibleAutoScrollVertical = false;
+          m_Offset = 0;
+          AutoScrollVPos = 0;
+          _InsideAdjustScrollbars = false;
+          return;
+        }
+        actualWidth -= System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+      }
+      m_ItemsPerLine = actualWidth / m_ItemWidth;
       if ( m_ItemsPerLine <= 0 )
       {
         m_ItemsPerLine = 1;
       }
-      int visibleItems = m_DisplayHeight / m_ItemHeight;
-      int scrollLength = ( Items.Count / m_ItemsPerLine ) - visibleItems;
+      int scrollLength2 = ( Items.Count / m_ItemsPerLine ) - visibleItems;
 
       if ( ( Items.Count % m_ItemsPerLine ) != 0 )
       {
-        ++scrollLength;
+        ++scrollLength2;
       }
-      if ( scrollLength <= 0 )
+      if ( scrollLength2 <= 0 )
       {
         VisibleAutoScrollVertical = false;
         m_Offset = 0;
@@ -502,13 +541,14 @@ namespace GR.Forms
       }
       else
       {
-        AutoScrollVerticalMaximum = scrollLength;
+        AutoScrollVerticalMaximum = scrollLength2;
         if ( AutoScrollVPos > AutoScrollVerticalMaximum )
         {
           AutoScrollVerticalMaximum = 0;
         }
         VisibleAutoScrollVertical = true;
       }
+      _InsideAdjustScrollbars = false;
     }
 
 

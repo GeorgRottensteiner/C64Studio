@@ -341,6 +341,12 @@ namespace RetroDevStudio.Displayer
 
     public static void DisplayChar( Formats.CharsetProject Charset, int CharIndex, CustomDrawControlContext Context )
     {
+      if ( CharIndex >= Charset.Characters.Count )
+      {
+        Debug.Log( $"Trying to display character {CharIndex} of {Charset.Characters.Count}" );
+        return;
+      }
+
       Formats.CharData Char = Charset.Characters[CharIndex];
 
       DisplayChar( Charset, CharIndex, Context, Char.Tile.CustomColor );
