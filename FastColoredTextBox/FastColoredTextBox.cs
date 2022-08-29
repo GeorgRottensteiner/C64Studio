@@ -5974,18 +5974,18 @@ namespace FastColoredTextBoxNS
         if ( WideCaret )
         {
           using ( var brush = new SolidBrush( CaretColor ) )
-            e.Graphics.FillRectangle( brush, car.X, car.Y, carWidth, caretHeight + 1 );
+            e.Graphics.FillRectangle( brush, car.X, car.Y, carWidth, caretHeight );
         }
         else
           using ( var pen = new Pen( CaretColor ) )
-            e.Graphics.DrawLine( pen, car.X, car.Y, car.X, car.Y + caretHeight );
+            e.Graphics.DrawLine( pen, car.X, car.Y, car.X, car.Y + caretHeight - 1 );
 
-        var caretRect = new Rectangle( HorizontalScroll.Value + car.X, VerticalScroll.Value + car.Y, carWidth, caretHeight + 1 );
+        var caretRect = new Rectangle( HorizontalScroll.Value + car.X, VerticalScroll.Value + car.Y, carWidth, caretHeight );
 
         if ( CaretBlinking )
           if ( prevCaretRect != caretRect || !ShowScrollBars )
           {
-            CreateCaret( Handle, 0, carWidth, caretHeight + 1 );
+            CreateCaret( Handle, 0, carWidth, caretHeight );
             SetCaretPos( car.X, car.Y );
             ShowCaret( Handle );
           }
