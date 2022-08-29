@@ -478,16 +478,28 @@ namespace RetroDevStudio
 
     public void StepOver()
     {
-      m_Emulator.StepOver();
       m_State = DebuggerState.RUNNING;
+      m_Emulator.StepOver();
+      if ( m_Emulator.State != Tiny64.EmulatorState.RUNNING )
+      {
+        m_State = DebuggerState.PAUSED;
+        RefreshRegistersAndWatches();
+        RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+      }
     }
 
 
 
     public void StepOut()
     {
-      m_Emulator.StepOut();
       m_State = DebuggerState.RUNNING;
+      m_Emulator.StepOut();
+      if ( m_Emulator.State != Tiny64.EmulatorState.RUNNING )
+      {
+        m_State = DebuggerState.PAUSED;
+        RefreshRegistersAndWatches();
+        RefreshMemory( m_LastRequestedMemoryStartAddress, m_LastRequestedMemorySize, m_LastRequestedMemorySource );
+      }
     }
 
 
@@ -522,6 +534,7 @@ namespace RetroDevStudio
       ded.Data = m_Emulator.Machine.Memory.ForCPU( StartAddress, Size );
       ded.Request = new RequestData( DebugRequestType.MEM_DUMP );
       ded.Request.Parameter1 = StartAddress;
+      ded.Request.Info = "RetroDevStudio.MemDump";
 
       DebugEvent( ded );
 
@@ -537,6 +550,7 @@ namespace RetroDevStudio
       ded.Request = new RequestData( DebugRequestType.MEM_DUMP );
       ded.Data = new GR.Memory.ByteBuffer( (uint)Size );
       ded.Request.Parameter1 = StartAddress;
+      ded.Request.Info = "RetroDevStudio.MemDumpRAM";
 
       System.Array.Copy( m_Emulator.Machine.Memory.RAM, StartAddress, ded.Data.Data(), 0, Size );
 

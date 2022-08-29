@@ -141,10 +141,12 @@ namespace Tiny64
           case MemorySource.CART_LO:
             System.Array.Copy( CartLO, localStart - RangeStart, Result.Data(), localStart - StartAddress, localEnd - localStart + 1 );
             break;
-            /*
           case MemorySource.IO:
-            System.Array.Copy( ReadFromIO, localStart - RangeStart, Result.Data(), localStart - StartAddress, localEnd - localStart + 1 );
-            break;*/
+            for ( int i = localStart; i <= localEnd; ++i )
+            {
+              Result.SetU8At( i - StartAddress, ReadFromIO( (ushort)i ) );
+            }
+            break;
           default:
             Debug.Log( "FetchMemoryRange unsupported source " + Source );
             break;

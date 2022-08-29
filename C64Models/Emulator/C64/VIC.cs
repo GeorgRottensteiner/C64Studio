@@ -360,6 +360,7 @@ namespace Tiny64
 
           FrameCompleted();
         }
+        Registers[(int)Register.RASTER] = (byte)RasterLinePos;
       }
 
       // toggle border state
