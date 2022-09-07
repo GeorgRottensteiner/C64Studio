@@ -105,6 +105,8 @@ namespace RetroDevStudio.Types.ASM
     public Tiny64.Processor                       Processor = Tiny64.Processor.Create6510();
     public GR.Collections.Map<string, Types.MacroFunctionInfo>    Macros = new GR.Collections.Map<string, MacroFunctionInfo>();
 
+    public List<int>                              FixedBreakpoints = new List<int>();
+
 
 
     public void Clear()
@@ -122,6 +124,7 @@ namespace RetroDevStudio.Types.ASM
       LabelDumpFile = "";
       MappedVariables.Clear();
       OriginalVariables.Clear();
+      FixedBreakpoints.Clear();
     }
 
 

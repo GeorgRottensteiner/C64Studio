@@ -608,6 +608,59 @@ namespace RetroDevStudio.Parser
           MacrosHaveVariableNumberOfArguments = true;
           IncludeExpectsStringLiteral = false;
           break;
+        case Types.AssemblerType.KICKASSEMBLER:
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöü_";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LABEL_GLOBAL] = "#:";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = ".";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_LOCAL] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+
+          OpenBracketChars = "(" + INTERNAL_OPENING_BRACE;
+          CloseBracketChars = ")" + INTERNAL_CLOSING_BRACE;
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_CHAR] = "'";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_STRING] = "\"";
+          AllowedTokenEndChars[Types.TokenInfo.TokenType.LITERAL_STRING] = "\"";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEF$%";
+          AllowedTokenChars[Types.TokenInfo.TokenType.LITERAL_NUMBER] = "0123456789abcdefABCDEFx";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.COMMENT] = ";";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.PSEUDO_OP] = ".";
+          AllowedTokenChars[Types.TokenInfo.TokenType.PSEUDO_OP] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+          AllowedTokenStartChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß";
+          AllowedTokenChars[Types.TokenInfo.TokenType.CALL_MACRO] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_äöüÄÖÜß.";
+
+          AllowedTokenChars[Types.TokenInfo.TokenType.LABEL_INTERNAL] = "+-";
+
+          AllowedSingleTokens = ",#*" + OpenBracketChars + CloseBracketChars + "\\{}[]";
+
+          AddPseudoOp( ".WORD", Types.MacroInfo.PseudoOpType.WORD );
+          AddPseudoOp( ".BYTE", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( ".BY", Types.MacroInfo.PseudoOpType.BYTE );
+          AddPseudoOp( ".BREAK", Types.MacroInfo.PseudoOpType.BREAK_POINT );
+
+          LabelPostfix = ":";
+          MacroFunctionCallPrefix.Add( ":" );
+          GlobalLabelsAutoZone = false;
+          DefineSeparatorKeywords.Add( "=" );
+          MacroIsZone = true;
+          MacrosHaveVariableNumberOfArguments = true;
+          IncludeExpectsStringLiteral = false;
+          IncludeHasOnlyFilename = true;
+          IncludeSourceIsAlwaysUsingLibraryPathAndFile = true;
+          CaseSensitive = false;
+          LoopEndHasNoScope = true;
+          MessageAutoIncludesBlanksBetweenParameters = true;
+          DefaultTargetType = Types.CompileTargetType.PLAIN;
+          DefaultTargetExtension = ".bin";
+          LabelsMustBeAtStartOfLine = true;
+          break;
       }
     }
 

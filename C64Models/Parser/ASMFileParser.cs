@@ -2772,7 +2772,6 @@ namespace RetroDevStudio.Parser
                   }
                   break;
                 default:
-                  //AddError( lineIndex, Types.ErrorCode.E1009_INVALID_VALUE, "Unhandled pseudo op during DetermineUnparsedLabels" );
                   AddError( lineIndex, Types.ErrorCode.E1301_PSEUDO_OPERATION, "Unsupported pseudo op " + startToken );
                   return false;
               }
@@ -8984,14 +8983,14 @@ namespace RetroDevStudio.Parser
                 subFilename = TokensToExpression( lineTokenInfos, 1, lineTokenInfos.Count - 1 );
               }
               else if ( ( lineTokenInfos.Count == 2 )
-              &&        ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
+              && ( lineTokenInfos[1].Type == Types.TokenInfo.TokenType.LITERAL_STRING ) )
               {
                 // regular include
                 subFilename = lineTokenInfos[1].Content.Substring( 1, lineTokenInfos[1].Length - 2 );
               }
               else if ( ( lineTokenInfos.Count > 3 )
-              &&        ( lineTokenInfos[1].Content == "<" )
-              &&        ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
+              && ( lineTokenInfos[1].Content == "<" )
+              && ( lineTokenInfos[lineTokenInfos.Count - 1].Content == ">" ) )
               {
                 // library include
                 subFilename = TokensToExpression( lineTokenInfos, 2, lineTokenInfos.Count - 3 );
@@ -9559,7 +9558,7 @@ namespace RetroDevStudio.Parser
                 }
               }
               if ( ( paramPos == 0 )
-              ||   ( paramPos > 1 ) )
+              || ( paramPos > 1 ) )
               {
                 AddError( lineIndex, Types.ErrorCode.E1302_MALFORMED_MACRO, "Macro not formatted as expected. Expected !bank <Number>[,<Size>]" );
               }
@@ -9575,7 +9574,7 @@ namespace RetroDevStudio.Parser
                   AddError( lineIndex, Types.ErrorCode.E1001_FAILED_TO_EVALUATE_EXPRESSION, "Could not evaluate expression " + expressionCheck );
                 }
                 else if ( ( paramsSize.Count > 0 )
-                &&        ( !EvaluateTokens( lineIndex, paramsSize, textCodeMapping, out sizeSymbol ) ) )
+                && ( !EvaluateTokens( lineIndex, paramsSize, textCodeMapping, out sizeSymbol ) ) )
                 {
                   string expressionCheck = TokensToExpression( paramsNo );
 
@@ -9737,8 +9736,8 @@ namespace RetroDevStudio.Parser
               }
             }
             else if ( ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BYTE )
-            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
-            ||        ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
+            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.LOW_BYTE )
+            || ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.HIGH_BYTE ) )
             {
               PODataByte( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, info, pseudoOp.Type, textCodeMapping, true );
               info.Line = parseLine;
@@ -9935,6 +9934,11 @@ namespace RetroDevStudio.Parser
                   }
                 }
               }
+            }
+            else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.BREAK_POINT )
+            {
+              // these just need to be remembered
+              Debug.Log( "TODO - Store breakpoint address" );
             }
             else if ( pseudoOp.Type == Types.MacroInfo.PseudoOpType.IGNORE )
             {
@@ -10501,6 +10505,11 @@ namespace RetroDevStudio.Parser
           {
             AddOutputMessage( lineIndex, EvaluateAsText( lineIndex, lineTokenInfos, 1, lineTokenInfos.Count - 1, textCodeMapping ) );
           }
+          else if ( macroInfo.Type == Types.MacroInfo.PseudoOpType.BREAK_POINT )
+          {
+            ASMFileInfo.FixedBreakpoints.Add( m_CompileCurrentAddress );
+            Debug.Log( $"TODO - Breakpoint needs to be stored {m_CompileCurrentAddress}" );
+          }
           else if ( ( macroInfo.Type != MacroInfo.PseudoOpType.IGNORE )
           &&        ( macroInfo.Type != MacroInfo.PseudoOpType.ERROR ) )
           {
@@ -10965,6 +10974,7 @@ namespace RetroDevStudio.Parser
     private bool IsLabelInFront( List<TokenInfo> lineTokenInfos, string UpToken )
     {
       if ( ( lineTokenInfos[0].Type != RetroDevStudio.Types.TokenInfo.TokenType.CALL_MACRO )
+      &&   ( lineTokenInfos[0].Type != RetroDevStudio.Types.TokenInfo.TokenType.PSEUDO_OP )
       &&   ( ( !m_Processor.Opcodes.ContainsKey( UpToken.ToLower() ) )
       &&     ( ( m_AssemblerSettings.POPrefix.Length == 0 )
       &&       ( ( ( m_AssemblerSettings.LabelsMustBeAtStartOfLine )

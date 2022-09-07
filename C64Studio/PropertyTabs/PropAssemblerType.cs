@@ -29,6 +29,8 @@ namespace RetroDevStudio
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "DASM", RetroDevStudio.Types.AssemblerType.DASM ) );
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "C64ASM", RetroDevStudio.Types.AssemblerType.C64ASM ) );
       comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "CBMPRGSTUDIO", RetroDevStudio.Types.AssemblerType.CBMPRGSTUDIO ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "TASM", RetroDevStudio.Types.AssemblerType.TASM ) );
+      comboAssemblerType.Items.Add( new GR.Generic.Tupel<string, Types.AssemblerType>( "Kick Assembler", RetroDevStudio.Types.AssemblerType.KICKASSEMBLER ) );
 
       SetType( Element.AssemblerType );
     }
