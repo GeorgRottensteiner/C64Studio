@@ -3673,6 +3673,8 @@ namespace RetroDevStudio.Parser
           tempLabelSymbol.Type = SymbolInfo.Types.TEMP_LABEL;
           tempLabelSymbol.AddressOrValue = lastLoop.CurrentValue;
 
+          //Debug.Log( $"AddTempLabel for {lastLoop.Label}, {lastLoop.IterationCount}th iteration, end value from {TokensToExpression( lastLoop.EndValueTokens )} = {lastLoop.EndValue}" );
+
           AddTempLabel( lastLoop.Label,
                         lineIndex,
                         lastLoop.LoopLength,
@@ -7596,7 +7598,7 @@ namespace RetroDevStudio.Parser
           //string[] replacementLines = RelabelLocalLabels( functionInfo.Content );
 
           int lineIndexInMacro = -1;
-          string[] replacementLines = RelabelLocalLabelsForMacro( Lines, Scopes, lineIndex, functionName, functionInfo, param, info.LineCodeMapping, out lineIndexInMacro );
+          string[] replacementLines = RelabelLocalLabelsForMacro( Lines, Scopes, lineIndex, functionName, functionInfo, functionInfo.ParameterNames, param, info.LineCodeMapping, out lineIndexInMacro );
           if ( replacementLines == null )
           {
             AddError( lineIndexInMacro, RetroDevStudio.Types.ErrorCode.E1302_MALFORMED_MACRO, "Syntax error during macro replacement at position " + m_LastErrorInfo.Pos );
@@ -11755,7 +11757,7 @@ namespace RetroDevStudio.Parser
 
 
     // relabels local labels in macros to avoid clashes with duplicate calls - spares parameters
-    private string[] RelabelLocalLabelsForMacro( string[] Lines, List<Types.ScopeInfo> Scopes, int lineIndex, string functionName, Types.MacroFunctionInfo functionInfo, List<string> param, GR.Collections.Map<byte, byte> TextCodeMapping, out int LineIndexInsideMacro )
+    private string[] RelabelLocalLabelsForMacro( string[] Lines, List<Types.ScopeInfo> Scopes, int lineIndex, string functionName, Types.MacroFunctionInfo functionInfo, List<string> paramName, List<string> param, GR.Collections.Map<byte, byte> TextCodeMapping, out int LineIndexInsideMacro )
     {
       string[] replacementLines = new string[functionInfo.LineEnd - functionInfo.LineIndex - 1];
       int replacementLineIndex = 0;
@@ -11772,6 +11774,42 @@ namespace RetroDevStudio.Parser
           LineIndexInsideMacro = i;
           return null;
         }
+        // text replace macro
+        bool replacedParam = false;
+
+        for ( int j = 0; j < tokens.Count; ++j )
+        {
+          if ( ( j + 2 < tokens.Count )
+          &&   ( ( tokens[j].Type == TokenInfo.TokenType.LABEL_GLOBAL )
+          ||     ( tokens[j].Type == TokenInfo.TokenType.LABEL_LOCAL ) )
+          &&   ( tokens[j].Content.EndsWith( "#" ) )
+          &&   ( tokens[j + 1].Type == TokenInfo.TokenType.SEPARATOR )
+          &&   ( tokens[j + 1].Content == "#" ) 
+          &&   ( paramName.Contains( tokens[j + 2].Content ) ) )
+          {
+            int     paramIndex = paramName.IndexOf( tokens[j + 2].Content );
+
+            var replacementToken = ParseTokenInfo( param[paramIndex], 0, param[paramIndex].Length, TextCodeMapping );
+
+            if ( !EvaluateTokens( lineIndex + i, replacementToken, 0, 1, TextCodeMapping, out SymbolInfo resultingToken ) )
+            {
+              // there was an error!
+              LineIndexInsideMacro = i;
+              return null;
+            }
+
+            Debug.Log( "RelabelLocalLabelsForMacro with " + resultingToken.ToString() );
+
+            tokens[j].Content = tokens[j].Content.Substring( 0, tokens[j].Content.Length - 1 ) + resultingToken.ToString();
+
+            tokens.RemoveRange( j + 1, 2 );
+            j = 0;
+
+            replacedParam = true;
+            continue;
+          }
+        }
+
         var originatingTokens = new List<Types.TokenInfo>();
         for ( int j = 0; j < tokens.Count; ++j )
         {
@@ -11813,7 +11851,6 @@ namespace RetroDevStudio.Parser
             //tokens[0].Type = TokenInfo.TokenType.LABEL_INTERNAL;
           }
         }
-        bool replacedParam = false;
         bool modifiedToken = false;
 
         List<Types.TokenInfo>  replacingTokens = new List<Types.TokenInfo>();
