@@ -674,7 +674,7 @@ namespace RetroDevStudio.Documents
       string    content = editSource.Text;
       if ( m_LowerCaseMode )
       {
-        content = MakeUpperCase( content, !Core.Settings.BASICUseNonC64Font );
+        content = MakeUpperCase( content, Core.Settings.BASICUseNonC64Font );
       }
 
       return content;

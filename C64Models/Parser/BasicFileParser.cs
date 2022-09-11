@@ -2852,7 +2852,7 @@ namespace RetroDevStudio.Parser
           Debug.Log( "reached wrong end" );
           return false;
         }
-        Debug.Log( "Line:" + lineContent );
+        //Debug.Log( "Line:" + lineContent );
         Lines.Add( lineContent );
         ++dataPos;
       }
