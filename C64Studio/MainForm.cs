@@ -13,6 +13,7 @@ using GR.Image;
 using RetroDevStudio.Documents;
 using RetroDevStudio.Dialogs;
 using System.Linq;
+using Disassembler = RetroDevStudio.Documents.Disassembler;
 
 namespace RetroDevStudio
 {
@@ -4593,7 +4594,7 @@ namespace RetroDevStudio
           {
             System.Windows.Forms.OpenFileDialog openDlg = new System.Windows.Forms.OpenFileDialog();
             openDlg.Title = "Open existing item";
-            openDlg.Filter = FilterString( Types.Constants.FILEFILTER_ALL_SUPPORTED_FILES + Types.Constants.FILEFILTER_ASM + Types.Constants.FILEFILTER_CHARSET + Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_BASIC + Types.Constants.FILEFILTER_BINARY_FILES + Types.Constants.FILEFILTER_ALL );
+            openDlg.Filter = FilterString( Types.Constants.FILEFILTER_ALL_SUPPORTED_FILES + Types.Constants.FILEFILTER_ASM + Types.Constants.FILEFILTER_CHARSET + Types.Constants.FILEFILTER_SPRITE + Types.Constants.FILEFILTER_BASIC + Types.Constants.FILEFILTER_BINARY_FILES +Types.Constants.FILEFILTER_DISASSEMBLY + Types.Constants.FILEFILTER_ALL );
 
             if ( m_CurrentProject != null )
             {
@@ -5815,6 +5816,11 @@ namespace RetroDevStudio
         document = new FileManager( StudioCore, Filename );
         document.ShowHint = DockState.Float;
         openDirectFile = false;
+      }
+      else if ( extension == ".DISASSEMBLY" )
+      {
+        document = new Disassembler( StudioCore );
+        document.ShowHint = DockState.Document;
       }
       else if ( ( extension == ".SPRITEPROJECT" )
       ||        ( extension == ".SPR" ) )

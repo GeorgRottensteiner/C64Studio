@@ -482,6 +482,7 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_ALL = "All Files|*.*|";
     public static string FILEFILTER_ASM = "ASM File|*.asm;*.a|";
     public static string FILEFILTER_BASIC = "Basic File|*.bas|";
+    public static string FILEFILTER_DISASSEMBLY = "Disassembly Project|*.disassembly|";
     public static string FILEFILTER_CHARSET_FILE = "Charset File|*.chr|";
     public static string FILEFILTER_CHARSET_PROJECT = "Charset Project|*.charsetproject|";
     public static string FILEFILTER_CHARSET = "Charset Project or File|*.charsetproject;*.chr|";
@@ -501,7 +502,7 @@ namespace RetroDevStudio.Types
     public static string FILEFILTER_PROJECT = "C64 Studio Project Files|*.c64|";
     public static string FILEFILTER_SOLUTION = "C64 Studio Solution Files|*.s64|";
     public static string FILEFILTER_SOLUTION_OR_PROJECTS = "C64 Studio Solution or Project Files|*.s64;*.c64|";
-    public static string FILEFILTER_ALL_SUPPORTED_FILES = "Supported Files|*.s64;*.c64;*.asm;*.a;*.charsetproject;*.spriteproject;*.bas;*.chr;*.spr;*.charscreen;*.graphicscreen;*.mapproject;*.bin|";
+    public static string FILEFILTER_ALL_SUPPORTED_FILES = "Supported Files|*.s64;*.c64;*.asm;*.a;*.charsetproject;*.spriteproject;*.bas;*.chr;*.spr;*.charscreen;*.graphicscreen;*.mapproject;*.bin;*.disassembly|";
     public static string FILEFILTER_SOURCE_FILES = "Source Files|*.asm;*.bas|";
     public static string FILEFILTER_BINARY_FILES = "Binary Files|*.bin|";
     public static string FILEFILTER_MEDIA_FILES = "Tape/Disk Files|*.t64;*.prg;*.d64;*.d71;*.d81|";

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroDevStudio.Formats;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -397,34 +398,40 @@ namespace RetroDevStudio.Documents
       openDialog.Filter = "Disassembly Projects|*.disassembly|All Files|*.*";
       if ( openDialog.ShowDialog() == DialogResult.OK )
       {
-        GR.Memory.ByteBuffer    data = GR.IO.File.ReadAllBytes( openDialog.FileName );
-        if ( ( data != null )
-        && ( m_DisassemblyProject.ReadFromBuffer( data ) ) )
+        OpenDisassemblyProject( openDialog.FileName );
+      }
+    }
+
+
+
+    private void OpenDisassemblyProject( string FileName )
+    {
+      GR.Memory.ByteBuffer    data = GR.IO.File.ReadAllBytes( FileName );
+      if ( ( data != null )
+      &&   ( m_DisassemblyProject.ReadFromBuffer( data ) ) )
+      {
+        m_Disassembler.SetData( m_DisassemblyProject.Data );
+        editStartAddress.Text = "$" + m_DisassemblyProject.DataStartAddress.ToString( "X4" );
+        editDisassemblyProjectName.Text = m_DisassemblyProject.Description;
+        listJumpedAtAddresses.Items.Clear();
+        foreach ( int jumpAddress in m_DisassemblyProject.JumpedAtAddresses )
         {
-          m_Disassembler.SetData( m_DisassemblyProject.Data );
-          editStartAddress.Text = "$" + m_DisassemblyProject.DataStartAddress.ToString( "X4" );
-          editDisassemblyProjectName.Text = m_DisassemblyProject.Description;
-          listJumpedAtAddresses.Items.Clear();
-          foreach ( int jumpAddress in m_DisassemblyProject.JumpedAtAddresses )
-          {
-            ListViewItem    item = new ListViewItem();
-            FillItemFromAddress( item, jumpAddress );
-            item.Tag = jumpAddress;
-            listJumpedAtAddresses.Items.Add( item );
-          }
-
-          listNamedLabels.Items.Clear();
-          foreach ( var namedLabel in m_DisassemblyProject.NamedLabels )
-          {
-            ListViewItem  item = new ListViewItem( namedLabel.Value );
-            item.SubItems.Add( "$" + namedLabel.Key.ToString( "X4" ) );
-            listNamedLabels.Items.Add( item );
-          }
-
-
-          SetHexData( m_DisassemblyProject.Data );
-          UpdateDisassembly();
+          ListViewItem    item = new ListViewItem();
+          FillItemFromAddress( item, jumpAddress );
+          item.Tag = jumpAddress;
+          listJumpedAtAddresses.Items.Add( item );
         }
+
+        listNamedLabels.Items.Clear();
+        foreach ( var namedLabel in m_DisassemblyProject.NamedLabels )
+        {
+          ListViewItem  item = new ListViewItem( namedLabel.Value );
+          item.SubItems.Add( "$" + namedLabel.Key.ToString( "X4" ) );
+          listNamedLabels.Items.Add( item );
+        }
+
+        SetHexData( m_DisassemblyProject.Data );
+        UpdateDisassembly();
       }
     }
 
@@ -678,21 +685,39 @@ namespace RetroDevStudio.Documents
       int     startPos = CharIndex;
       int     endPos = CharIndex;
 
-      while ( ( endPos + 1 < curLine.Length )
-      &&      ( char.IsDigit( curLine[endPos + 1] ) ) )
+      while ( ( endPos < curLine.Length )
+      &&      ( IsHexChar( curLine[endPos] ) ) )
       {
         ++endPos;
       }
 
       while ( ( startPos > 0 )
-      &&      ( char.IsDigit( curLine[startPos - 1] ) ) ) 
+      &&      ( IsHexChar( curLine[startPos - 1] ) ) ) 
       {
         --startPos;
       }
 
-      string    substring = curLine.Substring( startPos, endPos - startPos + 1 );
+      string    substring = curLine.Substring( startPos, endPos - startPos );
 
       return GR.Convert.ToI32( substring, 16 );
+    }
+
+
+
+    private bool IsHexChar( char Character )
+    {
+      if ( char.IsDigit( Character ) )
+      {
+        return true;
+      }
+      if ( ( ( Character >= 'A' )
+      &&     ( Character <= 'F' ) )
+      ||   ( ( Character >= 'a' )
+      &&     ( Character <= 'f' ) ) )
+      {
+        return true;
+      }
+      return false;
     }
 
 
@@ -766,6 +791,17 @@ namespace RetroDevStudio.Documents
         }
       }
     }
+
+
+
+    public override bool Load()
+    {
+      m_DisassemblyProject.Description = DocumentInfo.DocumentFilename;
+
+      OpenDisassemblyProject( DocumentInfo.FullPath );
+      return true;
+    }
+
 
 
 
