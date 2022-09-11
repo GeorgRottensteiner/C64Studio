@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Net;
 using System.Text;
 using System.Windows.Forms;
 
@@ -20,6 +21,7 @@ namespace RetroDevStudio.Documents
     private System.Text.RegularExpressions.Regex[]    m_TextRegExp = new System.Text.RegularExpressions.Regex[(int)Types.ColorableElement.LAST_ENTRY];
 
     private int                         m_ContextMenuOpeningInLineIndex = -1;
+    private int                         m_ContextMenuCharPos = -1;
 
 
 
@@ -659,14 +661,52 @@ namespace RetroDevStudio.Documents
 
 
 
+    private int ExtractAddressFromPosition( int LineIndex, int CharIndex )
+    {
+      if ( ( LineIndex < 0 )
+      ||   ( LineIndex >= editDisassembly.LinesCount ) )
+      {
+        return -1;
+      }
+      string    curLine = editDisassembly.Lines[LineIndex];
+      if ( ( CharIndex < 0 )
+      ||   ( CharIndex > curLine.Length ) )
+      {
+        return -1;
+      }
+
+      int     startPos = CharIndex;
+      int     endPos = CharIndex;
+
+      while ( ( endPos + 1 < curLine.Length )
+      &&      ( char.IsDigit( curLine[endPos + 1] ) ) )
+      {
+        ++endPos;
+      }
+
+      while ( ( startPos > 0 )
+      &&      ( char.IsDigit( curLine[startPos - 1] ) ) ) 
+      {
+        --startPos;
+      }
+
+      string    substring = curLine.Substring( startPos, endPos - startPos + 1 );
+
+      return GR.Convert.ToI32( substring, 16 );
+    }
+
+
+
     private void contextMenuDisassembler_Opening( object sender, CancelEventArgs e )
     {
       System.Drawing.Point mousePos = editDisassembly.PointToClient( Control.MousePosition );
 
       int position                    = editDisassembly.PointToPosition( mousePos );
       m_ContextMenuOpeningInLineIndex = editDisassembly.PositionToPlace( position ).iLine;
+      m_ContextMenuCharPos            = editDisassembly.PositionToPlace( position ).iChar;
 
       int     addressInLine = ExtractAddressFromLine( m_ContextMenuOpeningInLineIndex );
+      int     addressAtCursor = ExtractAddressFromPosition( m_ContextMenuOpeningInLineIndex, m_ContextMenuCharPos );
 
       if ( addressInLine != -1 )
       {
@@ -675,6 +715,15 @@ namespace RetroDevStudio.Documents
       else
       {
         addJumpAddressToolStripMenuItem.Text = "Add jump address";
+      }
+      if ( addressAtCursor != -1 )
+      {
+        addAsLabelToolStripMenuItem.Text = "Add as label ($" + addressAtCursor.ToString( "X4" ) + ")";
+        addAsLabelToolStripMenuItem.Enabled = true;
+      }
+      else
+      {
+        addAsLabelToolStripMenuItem.Enabled = false;
       }
     }
 
@@ -690,6 +739,32 @@ namespace RetroDevStudio.Documents
     private void checkShowHexData_CheckedChanged( object sender, EventArgs e )
     {
       UpdateDisassembly();
+    }
+
+
+
+    private void addAsLabelToolStripMenuItem_Click( object sender, EventArgs e )
+    {
+      int     addressAtCursor = ExtractAddressFromPosition( m_ContextMenuOpeningInLineIndex, m_ContextMenuCharPos );
+
+      if ( ( addressAtCursor >= 0 )
+      &&   ( addressAtCursor < 0x10000 ) )
+      {
+        int address = addressAtCursor;
+
+        string    autoNamedLabel = "label_" + address.ToString( "X4" );
+        if ( !m_DisassemblyProject.NamedLabels.ContainsKey( address ) )
+        {
+          m_DisassemblyProject.NamedLabels[address] = autoNamedLabel;
+
+          ListViewItem  item = new ListViewItem( autoNamedLabel );
+          item.SubItems.Add( "$" + address.ToString( "X4" ) );
+
+          listNamedLabels.Items.Add( item );
+
+          UpdateDisassembly();
+        }
+      }
     }
 
 

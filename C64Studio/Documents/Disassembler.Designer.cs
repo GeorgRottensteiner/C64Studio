@@ -69,8 +69,9 @@
       this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.groupBox5 = new System.Windows.Forms.GroupBox();
-      this.checkShowLineAddresses = new System.Windows.Forms.CheckBox();
       this.checkShowHexData = new System.Windows.Forms.CheckBox();
+      this.checkShowLineAddresses = new System.Windows.Forms.CheckBox();
+      this.addAsLabelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       ((System.ComponentModel.ISupportInitialize)(this.m_FileWatcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.editDisassembly)).BeginInit();
       this.contextMenuDisassembler.SuspendLayout();
@@ -124,15 +125,16 @@
       // 
       this.contextMenuDisassembler.ImageScalingSize = new System.Drawing.Size(28, 28);
       this.contextMenuDisassembler.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addJumpAddressToolStripMenuItem});
+            this.addJumpAddressToolStripMenuItem,
+            this.addAsLabelToolStripMenuItem});
       this.contextMenuDisassembler.Name = "contextMenuDisassembler";
-      this.contextMenuDisassembler.Size = new System.Drawing.Size(174, 26);
+      this.contextMenuDisassembler.Size = new System.Drawing.Size(181, 70);
       this.contextMenuDisassembler.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuDisassembler_Opening);
       // 
       // addJumpAddressToolStripMenuItem
       // 
       this.addJumpAddressToolStripMenuItem.Name = "addJumpAddressToolStripMenuItem";
-      this.addJumpAddressToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+      this.addJumpAddressToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.addJumpAddressToolStripMenuItem.Text = "Add Jump Address";
       this.addJumpAddressToolStripMenuItem.Click += new System.EventHandler(this.addJumpAddressToolStripMenuItem_Click);
       // 
@@ -514,6 +516,19 @@
       this.groupBox5.TabStop = false;
       this.groupBox5.Text = "Options";
       // 
+      // checkShowHexData
+      // 
+      this.checkShowHexData.AutoSize = true;
+      this.checkShowHexData.Checked = true;
+      this.checkShowHexData.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkShowHexData.Location = new System.Drawing.Point(10, 42);
+      this.checkShowHexData.Name = "checkShowHexData";
+      this.checkShowHexData.Size = new System.Drawing.Size(166, 17);
+      this.checkShowHexData.TabIndex = 0;
+      this.checkShowHexData.Text = "Show Assembled Byte Values";
+      this.checkShowHexData.UseVisualStyleBackColor = true;
+      this.checkShowHexData.CheckedChanged += new System.EventHandler(this.checkShowHexData_CheckedChanged);
+      // 
       // checkShowLineAddresses
       // 
       this.checkShowLineAddresses.AutoSize = true;
@@ -527,18 +542,12 @@
       this.checkShowLineAddresses.UseVisualStyleBackColor = true;
       this.checkShowLineAddresses.CheckedChanged += new System.EventHandler(this.checkShowLineAddresses_CheckedChanged);
       // 
-      // checkShowHexData
+      // addAsLabelToolStripMenuItem
       // 
-      this.checkShowHexData.AutoSize = true;
-      this.checkShowHexData.Checked = true;
-      this.checkShowHexData.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkShowHexData.Location = new System.Drawing.Point(10, 42);
-      this.checkShowHexData.Name = "checkShowHexData";
-      this.checkShowHexData.Size = new System.Drawing.Size(166, 17);
-      this.checkShowHexData.TabIndex = 0;
-      this.checkShowHexData.Text = "Show Assembled Byte Values";
-      this.checkShowHexData.UseVisualStyleBackColor = true;
-      this.checkShowHexData.CheckedChanged += new System.EventHandler(this.checkShowHexData_CheckedChanged);
+      this.addAsLabelToolStripMenuItem.Name = "addAsLabelToolStripMenuItem";
+      this.addAsLabelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.addAsLabelToolStripMenuItem.Text = "Add as Label";
+      this.addAsLabelToolStripMenuItem.Click += new System.EventHandler(this.addAsLabelToolStripMenuItem_Click);
       // 
       // Disassembler
       // 
@@ -620,5 +629,6 @@
     private System.Windows.Forms.GroupBox groupBox5;
     private System.Windows.Forms.CheckBox checkShowLineAddresses;
     private System.Windows.Forms.CheckBox checkShowHexData;
-  }
+        private System.Windows.Forms.ToolStripMenuItem addAsLabelToolStripMenuItem;
+    }
 }
