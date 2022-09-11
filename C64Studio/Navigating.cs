@@ -117,7 +117,12 @@ namespace RetroDevStudio
 
       if ( Document != null )
       {
-        var baseDoc = Core.Navigating.FindDocumentByPath( Document.FullPath );
+        var baseDoc = Document.BaseDoc;
+        if ( ( baseDoc == null )
+        &&   ( !string.IsNullOrEmpty( Document.FullPath ) ) )
+        {
+          baseDoc = Core.Navigating.FindDocumentByPath( Document.FullPath );
+        }
         if ( baseDoc != null )
         {
           baseDoc.Show();

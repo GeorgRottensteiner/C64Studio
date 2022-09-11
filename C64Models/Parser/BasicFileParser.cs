@@ -2692,7 +2692,6 @@ namespace RetroDevStudio.Parser
         if ( Data.UInt16At( dataPos ) == 0 )
         {
           // end
-          Debug.Log( "end reached" );
           return true;
         }
 
