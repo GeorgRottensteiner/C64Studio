@@ -136,7 +136,15 @@ namespace RetroDevStudio.Tasks
         {
           Core.Debugging.TempDebuggerStartupFilename = System.IO.Path.GetTempFileName();
           System.IO.File.WriteAllText( Core.Debugging.TempDebuggerStartupFilename, breakPointFile );
-          command += " -moncommands \"" + Core.Debugging.TempDebuggerStartupFilename + "\"";
+          switch ( EmulatorInfo.LabelFormat( toolRun ) )
+          {
+            case Types.ASM.LabelFileFormat.VICE:
+              command += " -moncommands \"" + Core.Debugging.TempDebuggerStartupFilename + "\"";
+              break;
+            case Types.ASM.LabelFileFormat.C64DEBUGGER:
+              command += " -vicesymbols \"" + Core.Debugging.TempDebuggerStartupFilename + "\"";
+              break;
+          }
         }
         catch ( System.IO.IOException ioe )
         {

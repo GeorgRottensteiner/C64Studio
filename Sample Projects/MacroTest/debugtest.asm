@@ -11,12 +11,16 @@ adc #3 ; Breakpoint hier!
 adc #250
 adc #$A
 
+.gnu
 
 ldx #0
 -
 inx
 
 stx $d020
-lsmf 
+lsmf
 bne -
+
+
+jmp fgna
 rts

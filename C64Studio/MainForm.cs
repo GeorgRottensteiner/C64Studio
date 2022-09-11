@@ -3932,6 +3932,12 @@ namespace RetroDevStudio
               StudioCore.Executing.RunProcess.Kill();
               StudioCore.Executing.RunProcess = null;
             }
+
+            AppState = Types.StudioState.NORMAL;
+            StudioCore.SetStatus( "Ready", false, 0 );
+
+            SetGUIForDebugging( false );
+            SetGUIForWaitOnExternalTool( false );
             return;
           }
 
