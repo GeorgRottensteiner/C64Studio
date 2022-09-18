@@ -412,7 +412,7 @@ namespace RetroDevStudio.Documents
 
 
 
-    public virtual void FillContent( string Text, bool KeepCursorPosIntact )
+    public virtual void FillContent( string Text, bool KeepCursorPosIntact, bool KeepBookmarksIntact )
     {
     }
 

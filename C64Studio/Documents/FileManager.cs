@@ -852,7 +852,7 @@ namespace RetroDevStudio.Documents
               {
                 sb.AppendLine( line );
               }
-              document.FillContent( sb.ToString(), false );
+              document.FillContent( sb.ToString(), false, false );
             }
           }
         }

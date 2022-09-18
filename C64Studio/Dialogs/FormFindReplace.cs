@@ -1864,7 +1864,7 @@ namespace RetroDevStudio.Dialogs
       if ( DocumentInfo.BaseDoc != null )
       {
         // easy - replace in edit
-        DocumentInfo.BaseDoc.FillContent( NewText, true );
+        DocumentInfo.BaseDoc.FillContent( NewText, true, true );
         return;
       }
       // write to file

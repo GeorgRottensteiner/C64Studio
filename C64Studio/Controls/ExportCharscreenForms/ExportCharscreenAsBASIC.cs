@@ -410,7 +410,7 @@ namespace RetroDevStudio.Controls
             document.SetDocumentFilename( "New BASIC File.bas" );
             document.DocumentInfo.Element.Filename = document.DocumentInfo.DocumentFilename;
           }
-          document.FillContent( sb.ToString(), false );
+          document.FillContent( sb.ToString(), false, false );
           document.SetModified();
           document.Save( SaveMethod.SAVE );
         }

@@ -2814,12 +2814,21 @@ namespace RetroDevStudio.Documents
 
 
 
-    public override void FillContent( string Text, bool KeepCursorPosIntact )
+    public override void FillContent( string Text, bool KeepCursorPosIntact, bool KeepBookmarksIntact )
     {
       m_InsertingText = true;
 
       int scrollOffset = editSource.VerticalScroll.Value;
       editSource.Navigate( editSource.Selection.Start.iLine );
+
+      List<int> currentBookmarks = null;
+      if ( KeepBookmarksIntact )
+      {
+        currentBookmarks = new List<int>();
+        currentBookmarks.AddRange( editSource.Bookmarks.Select( x => x.LineIndex ) );
+      }
+      editSource.BeginAutoUndo();
+      editSource.TextSource.Manager.ExecuteCommand( new BookmarkCommand( editSource.TextSource ) );
       editSource.Text = Text;
 
       if ( KeepCursorPosIntact )
@@ -2827,6 +2836,17 @@ namespace RetroDevStudio.Documents
         editSource.VerticalScroll.Value = scrollOffset;
         editSource.UpdateScrollbars();
       }
+      if ( KeepBookmarksIntact )
+      {
+        editSource.Bookmarks.Clear();
+        foreach ( var origBookmark in currentBookmarks )
+        {
+          editSource.Bookmarks.Add( origBookmark );
+        }
+        // re-keep again for redo
+        editSource.TextSource.Manager.ExecuteCommand( new BookmarkCommand( editSource.TextSource ) );
+      }
+      editSource.EndAutoUndo();
 
       m_InsertingText = false;
       SetModified();

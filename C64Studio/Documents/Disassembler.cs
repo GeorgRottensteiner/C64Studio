@@ -492,7 +492,7 @@ namespace RetroDevStudio.Documents
       document.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
       document.Core = Core;
       document.Text = System.IO.Path.GetFileName( newFilename );
-      document.FillContent( disassembly, false );
+      document.FillContent( disassembly, false, false );
       document.Show( Core.MainForm.panelMain );
     }
 

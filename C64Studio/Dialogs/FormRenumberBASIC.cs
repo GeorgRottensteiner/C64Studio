@@ -117,7 +117,7 @@ namespace RetroDevStudio.Dialogs
         newText = Parser.BasicFileParser.MakeLowerCase( newText, !m_Core.Settings.BASICUseNonC64Font );
       }
 
-      m_Basic.FillContent( newText, true );
+      m_Basic.FillContent( newText, true, true );
       Close();
     }
 

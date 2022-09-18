@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FastColoredTextBoxNS
 {
@@ -1094,4 +1095,69 @@ namespace FastColoredTextBoxNS
       return result;
     }
   }
+
+
+
+  /// <summary>
+  /// Remembers current bookmark state and restore it after Undo
+  /// </summary>
+  public class BookmarkCommand : UndoableCommand
+  {
+    List<int>       _BookmarkState = new List<int>();
+
+
+
+    public BookmarkCommand( TextSource ts )
+      : base( ts )
+    {
+    }
+
+
+
+    public override void Execute()
+    {
+      // this is also used for redo
+      if ( _BookmarkState.Count == 0 )
+      {
+        _BookmarkState.AddRange( ts.CurrentTB.Bookmarks.Select( b => b.LineIndex ) );
+      }
+      else
+      {
+        ts.CurrentTB.Bookmarks.Clear();
+        foreach ( var bookmark in _BookmarkState )
+        {
+          ts.CurrentTB.Bookmarks.Add( bookmark );
+        }
+      }
+    }
+
+
+
+    protected override void OnTextChanged( bool invert )
+    {
+    }
+
+    public override void Undo()
+    {
+      //restore bookmarks
+      ts.CurrentTB.Bookmarks.Clear();
+      foreach ( var bookmark in _BookmarkState )
+      {
+        ts.CurrentTB.Bookmarks.Add( bookmark );
+      }
+    }
+
+    public override UndoableCommand Clone()
+    {
+      var result = new BookmarkCommand( ts );
+      if ( _BookmarkState != null )
+      {
+        result._BookmarkState = new List<int>( _BookmarkState );
+      }
+      return result;
+    }
+  }
+
+
+
 }
