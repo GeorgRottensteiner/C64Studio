@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
@@ -1001,7 +1002,8 @@ namespace GR.Forms
 
         switch ( se.Type )
         {
-          case ScrollEventType.First:newValue = 0;
+          case ScrollEventType.First:
+            newValue = 0;
             break;
           case ScrollEventType.Last:
             newValue = maxValue;
@@ -1089,6 +1091,44 @@ namespace GR.Forms
         if ( SelectedIndex >= m_ItemsPerLine )
         {
           SetSelection( SelectedIndex - m_ItemsPerLine, false, -1, false );
+        }
+        return true;
+      }
+      else if ( keyData == Keys.PageUp )
+      {
+        int visibleItems = m_DisplayHeight / m_ItemHeight;
+
+        if ( ( SelectedIndex == -1 )
+        &&   ( Items.Count > 0 ) )
+        {
+          SetSelection( 0, false, -1, false );
+        }
+        if ( SelectedIndex >= m_ItemsPerLine * visibleItems )
+        {
+          SetSelection( SelectedIndex - m_ItemsPerLine * visibleItems, false, -1, false );
+        }
+        else
+        {
+          SetSelection( 0, false, -1, false );
+        }
+        return true;
+      }
+      else if ( keyData == Keys.PageDown )
+      {
+        int visibleItems = m_DisplayHeight / m_ItemHeight;
+
+        if ( ( SelectedIndex == -1 )
+        &&   ( Items.Count > 0 ) )
+        {
+          SetSelection( Items.Count - 1, false, -1, false );
+        }
+        if ( SelectedIndex + m_ItemsPerLine * visibleItems < Items.Count )
+        {
+          SetSelection( SelectedIndex + m_ItemsPerLine * visibleItems, false, -1, false );
+        }
+        else
+        {
+          SetSelection( Items.Count - 1, false, -1, false );
         }
         return true;
       }

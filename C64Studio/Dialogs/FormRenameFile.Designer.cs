@@ -70,7 +70,6 @@ namespace RetroDevStudio.Dialogs
       // 
       // listPETSCII
       // 
-      this.listPETSCII.AutoScroll = true;
       this.listPETSCII.AutoScrollHorizontalMaximum = 100;
       this.listPETSCII.AutoScrollHorizontalMinimum = 0;
       this.listPETSCII.AutoScrollHPos = 0;
@@ -88,13 +87,15 @@ namespace RetroDevStudio.Dialogs
       this.listPETSCII.SelectedIndex = -1;
       this.listPETSCII.Size = new System.Drawing.Size(587, 233);
       this.listPETSCII.TabIndex = 3;
-      this.listPETSCII.VisibleAutoScrollHorizontal = true;
+      this.listPETSCII.VisibleAutoScrollHorizontal = false;
       this.listPETSCII.VisibleAutoScrollVertical = false;
       this.listPETSCII.SizeChanged += new System.EventHandler(this.listPETSCII_SizeChanged);
       this.listPETSCII.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listPETSCII_MouseDoubleClick);
       // 
       // editFilename
       // 
+      this.editFilename.CurrentChar = 'e';
+      this.editFilename.CursorPos = 0;
       this.editFilename.Font = new System.Drawing.Font("Courier New", 9F);
       this.editFilename.LetterWidth = 18;
       this.editFilename.Location = new System.Drawing.Point(83, 9);
