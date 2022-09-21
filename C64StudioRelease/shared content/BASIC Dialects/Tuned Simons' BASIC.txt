@@ -221,6 +221,7 @@ ERR;647e;eR
 ERRLN;647e;
 ERRN;647e;
 OUT;647f;oU
+CLS;64b3;cL
 
 #from here on it's extended opcodes, required for C64Studio extensions
 ExOpcodes

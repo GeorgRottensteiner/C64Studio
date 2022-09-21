@@ -3264,15 +3264,33 @@ namespace RetroDevStudio.Parser
             if ( ( newChar >= 0xee01 )
             &&   ( newChar <= 0xee01 + 25 ) )
             {
+              // upper case A-Z
               sb.Append( (char)( newChar - 0xee01 + 'A' ) );
+            }
+            else if ( ( newChar >= 0xee41 )
+            &&        ( newChar <= 0xee41 + 25 ) )
+            {
+              // lower case A-Z
+              sb.Append( (char)( newChar - 0xee41 + 'a' ) );
+            }
+            else if ( ( newChar >= 'A' )
+            &&        ( newChar <= 'Z' ) )
+            {
+              sb.Append( (char)( newChar + 0xe000 ) );
             }
             else
             {
               sb.Append( newChar );
             }
           }
+          else if ( ( singleChar >= 'A' )
+          &&        ( singleChar <= 'Z' ) )
+          {
+            // regular uppercase to shifted letters
+            sb.Append( (char)( singleChar - 'A' + 0xee41 ) );
+          }
           else if ( ( singleChar >= 0x61 )
-          && ( singleChar <= 0x7a ) )
+          &&        ( singleChar <= 0x7a ) )
           {
             sb.Append( (char)( singleChar - 0x20 ) );
           }
@@ -3312,26 +3330,33 @@ namespace RetroDevStudio.Parser
       {
         if ( !NonC64Font )
         {
-          if ( ( singleChar & 0xff00 ) == 0xee00 )
+          if ( ( singleChar >= 0xee41 )
+          &&   ( singleChar <= 0xee5a ) )
           {
-            char    newChar = (char)( ( singleChar & 0x00ff ) | 0xef00 );
-            if ( ( newChar >= 'A' )
-            &&   ( newChar <= 'Z' ) )
-            {
-              sb.Append( (char)( newChar + 0xef01 - 'A' ) );
-            }
-            else
-            {
-              sb.Append( newChar );
-            }
+            // shifted letters turn to upper case
+            sb.Append( (char)( singleChar - 0xee41 + 'A' ) );
           }
           else if ( ( singleChar >= 'A' )
           &&        ( singleChar <= 'Z' ) )
           {
-            sb.Append( (char)( singleChar + 0xef01 - 'A' ) );
+            // regular upper case to lower case
+            sb.Append( (char)( singleChar + 'a' - 'A' ) );
+          }
+          else if ( ( singleChar >= 0xee01 )
+          &&        ( singleChar <= 0xee1a ) )
+          {
+            // unicode upper case to regular lower case
+            sb.Append( (char)( singleChar - 0xee01 + 'a' ) );
+          }
+          else if ( ( singleChar >= 0xee00 )
+          &&        ( singleChar <= 0xeeff ) )
+          {
+            // plain lower case
+            sb.Append( (char)( ( singleChar & 0x00ff ) | 0xef00 ) );
           }
           else
           {
+            // keep as is
             sb.Append( singleChar );
           }
         }
