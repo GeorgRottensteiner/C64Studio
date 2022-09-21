@@ -597,9 +597,18 @@ namespace RetroDevStudio.Controls
         OnPaletteChanged();
       }
 
-      _ColorSettingsDlg.ColorChanged( ColorType.BACKGROUND, mcSettings.BackgroundColor );
-      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, mcSettings.MultiColor1 );
-      _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_2, mcSettings.MultiColor2 );
+      if ( mcSettings.BackgroundColor != -1 )
+      {
+        _ColorSettingsDlg.ColorChanged( ColorType.BACKGROUND, mcSettings.BackgroundColor );
+      }
+      if ( mcSettings.MultiColor1 != -1 )
+      {
+        _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_1, mcSettings.MultiColor1 );
+      }
+      if ( mcSettings.MultiColor2 != -1 )
+      {
+        _ColorSettingsDlg.ColorChanged( ColorType.MULTICOLOR_2, mcSettings.MultiColor2 );
+      }
 
       int charsX = ( mappedImage.Width + 7 ) / 8;
       int charsY = ( mappedImage.Height + 7 ) / 8;
