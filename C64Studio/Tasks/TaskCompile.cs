@@ -290,8 +290,9 @@ namespace RetroDevStudio.Tasks
           }
 
           // only connect with debugger if VICE
-          if ( ( string.IsNullOrEmpty( Core.Executing.RunProcess.MainWindowTitle ) )
-          && ( waitForInputIdleFailed ) )
+          if ( ( Core.Executing.RunProcess != null )
+          &&   ( string.IsNullOrEmpty( Core.Executing.RunProcess.MainWindowTitle ) )
+          &&   ( waitForInputIdleFailed ) )
           {
             // assume GTK VICE
             numConnectionAttempts = 10;

@@ -1,6 +1,7 @@
 ﻿using RetroDevStudio;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace RetroDevStudio.Displayer
@@ -121,14 +122,18 @@ namespace RetroDevStudio.Displayer
                   break;
               }
 
-              uint color = Palette.ColorValues[pixelValue];
-
-              Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX, Y + j * pixelStepY + pp, color );
-              Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 1, Y + j * pixelStepY + pp, color );
-              if ( pixelStepX == 2 )
+              if ( ( pixelValue >= 0 )
+              &&   ( pixelValue < Palette.ColorValues.Length ) )
               {
-                Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 2, Y + j * pixelStepY + pp, color );
-                Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 3, Y + j * pixelStepY + pp, color );
+                uint color = Palette.ColorValues[pixelValue];
+
+                Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX, Y + j * pixelStepY + pp, color );
+                Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 1, Y + j * pixelStepY + pp, color );
+                if ( pixelStepX == 2 )
+                {
+                  Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 2, Y + j * pixelStepY + pp, color );
+                  Target.SetPixel( X + k * 8 * pixelStepX + i * 2 * pixelStepX + 3, Y + j * pixelStepY + pp, color );
+                }
               }
             }
           }

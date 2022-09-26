@@ -3252,18 +3252,18 @@ namespace RetroDevStudio.Documents
       {
         DocumentInfo.UndoManager.AddUndoTask( new Undo.UndoMapTileModified( this, m_MapProject, m_CurrentEditedTile.Index ) );
 
-        nextChar.Character  = m_CurrentTileChar.Character;
-        nextChar.Color      = m_CurrentTileChar.Color;
+        nextChar.Character = m_CurrentTileChar.Character;
+        nextChar.Color = m_CurrentTileChar.Color;
 
         listTileChars.Items[currentTileCharIndex + 1].SubItems[1].Text = nextChar.Character.ToString();
         listTileChars.Items[currentTileCharIndex + 1].SubItems[2].Text = nextChar.Color.ToString();
         RedrawTile();
         RedrawMap();
         SetModified();
-
-        listTileChars.SelectedIndices.Clear();
-        listTileChars.SelectedIndices.Add( currentTileCharIndex + 1 );
       }
+      // move selection to next in any case
+      listTileChars.SelectedIndices.Clear();
+      listTileChars.SelectedIndices.Add( currentTileCharIndex + 1 );
     }
 
 
@@ -3296,10 +3296,10 @@ namespace RetroDevStudio.Documents
         RedrawTile();
         RedrawMap();
         SetModified();
-
-        listTileChars.SelectedIndices.Clear();
-        listTileChars.SelectedIndices.Add( currentTileCharIndex + 1 );
       }
+      // move selection to next in any case
+      listTileChars.SelectedIndices.Clear();
+      listTileChars.SelectedIndices.Add( currentTileCharIndex + 1 );
     }
 
 
