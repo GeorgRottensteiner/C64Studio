@@ -389,5 +389,21 @@ namespace RetroDevStudio.Documents
 
 
 
+    private void listBreakpoints_ItemActivate( object sender, EventArgs e )
+    {
+      if ( listBreakpoints.SelectedItems.Count > 0 )
+      {
+        Types.Breakpoint bp = (Types.Breakpoint)listBreakpoints.SelectedItems[0].Tag;
+
+        if ( ( bp.LineIndex != -1 )
+        &&   ( !string.IsNullOrEmpty( bp.DocumentFilename ) ) )
+        {
+          Core.Navigating.OpenDocumentAndGotoLine( Core.Navigating.Project, Core.Navigating.FindDocumentInfoByPath( bp.DocumentFilename ), bp.LineIndex );
+        }
+      }
+    }
+
+
+
   }
 }

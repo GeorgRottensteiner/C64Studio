@@ -66,12 +66,14 @@
             this.columnHeader3,
             this.columnHeader2});
       this.listBreakpoints.FullRowSelect = true;
+      this.listBreakpoints.HideSelection = false;
       this.listBreakpoints.Location = new System.Drawing.Point(12, 12);
       this.listBreakpoints.Name = "listBreakpoints";
       this.listBreakpoints.Size = new System.Drawing.Size(510, 166);
       this.listBreakpoints.TabIndex = 0;
       this.listBreakpoints.UseCompatibleStateImageBehavior = false;
       this.listBreakpoints.View = System.Windows.Forms.View.Details;
+      this.listBreakpoints.ItemActivate += new System.EventHandler(this.listBreakpoints_ItemActivate);
       this.listBreakpoints.SelectedIndexChanged += new System.EventHandler(this.listBreakpoints_SelectedIndexChanged);
       // 
       // columnHeader1
@@ -105,6 +107,7 @@
       // 
       // btnAddBreakpoint
       // 
+      this.btnAddBreakpoint.DisabledTextColor = System.Drawing.SystemColors.GrayText;
       this.btnAddBreakpoint.Enabled = false;
       this.btnAddBreakpoint.Location = new System.Drawing.Point(12, 184);
       this.btnAddBreakpoint.Name = "btnAddBreakpoint";
@@ -116,6 +119,7 @@
       // 
       // btnDeleteBreakpoint
       // 
+      this.btnDeleteBreakpoint.DisabledTextColor = System.Drawing.SystemColors.GrayText;
       this.btnDeleteBreakpoint.Enabled = false;
       this.btnDeleteBreakpoint.Location = new System.Drawing.Point(93, 184);
       this.btnDeleteBreakpoint.Name = "btnDeleteBreakpoint";
@@ -127,6 +131,7 @@
       // 
       // btnApplyChanges
       // 
+      this.btnApplyChanges.DisabledTextColor = System.Drawing.SystemColors.GrayText;
       this.btnApplyChanges.Location = new System.Drawing.Point(271, 184);
       this.btnApplyChanges.Name = "btnApplyChanges";
       this.btnApplyChanges.Size = new System.Drawing.Size(75, 23);
@@ -245,6 +250,7 @@
       // 
       // btnDeleteAll
       // 
+      this.btnDeleteAll.DisabledTextColor = System.Drawing.SystemColors.GrayText;
       this.btnDeleteAll.Location = new System.Drawing.Point(174, 184);
       this.btnDeleteAll.Name = "btnDeleteAll";
       this.btnDeleteAll.Size = new System.Drawing.Size(75, 23);
@@ -278,9 +284,6 @@
     private System.Windows.Forms.ColumnHeader columnHeader1;
     private System.Windows.Forms.ColumnHeader columnHeader2;
     private System.Windows.Forms.ColumnHeader columnHeader3;
-    private System.Windows.Forms.Button btnAddBreakpoint;
-    private System.Windows.Forms.Button btnDeleteBreakpoint;
-    private System.Windows.Forms.Button btnApplyChanges;
     private System.Windows.Forms.GroupBox groupBreakpointData;
     private System.Windows.Forms.TextBox editTriggerConditions;
     private System.Windows.Forms.Label label2;
@@ -294,6 +297,9 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.ColumnHeader columnHeader6;
     private System.Windows.Forms.ComboBox comboSymbols;
-    private System.Windows.Forms.Button btnDeleteAll;
-  }
+        private Controls.ThemedButton btnAddBreakpoint;
+        private Controls.ThemedButton btnDeleteBreakpoint;
+        private Controls.ThemedButton btnApplyChanges;
+        private Controls.ThemedButton btnDeleteAll;
+    }
 }

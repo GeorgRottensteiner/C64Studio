@@ -762,6 +762,18 @@ namespace RetroDevStudio
               if ( !Core.Compiling.IsCurrentlyBuilding() )
               {
                 Element.DocumentInfo.SetASMFileInfo( element.DocumentInfo.ASMFileInfo, element.DocumentInfo.KnownKeywords, element.DocumentInfo.KnownTokens );
+
+                var sourceASM = (SourceASMEx)Element.Document;
+                foreach ( var bps in Core.Debugging.BreakPoints.Values )
+                {
+                  foreach ( var bp in bps )
+                  {
+                    if ( bp.DocumentFilename == Element.DocumentInfo.FullPath )
+                    {
+                      sourceASM.AddBreakpoint( bp );
+                    }
+                  }
+                }
               }
               setFromMainDoc = true;
             }
